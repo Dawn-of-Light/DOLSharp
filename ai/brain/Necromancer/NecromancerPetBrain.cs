@@ -141,6 +141,16 @@ namespace DOL.AI.Brain
 					CheckSpellQueue();
 				}
 			}
+            else if (e == GameLivingEvent.Dying)
+            {
+                // At necropet Die, we check DamageRvRMemory for transfer it to owner if necessary.
+                GamePlayer playerowner = GetPlayerOwner();
+                if (playerowner != null && Body.DamageRvRMemory > 0)
+                {
+                    playerowner.DamageRvRMemory = Body.DamageRvRMemory;
+                }
+                return;
+            }
             else if (e == GameLivingEvent.CastFinished)
             {
                 // Remove the spell that has finished casting from the queue, if

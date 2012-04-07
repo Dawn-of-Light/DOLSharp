@@ -602,6 +602,21 @@ namespace DOL.GS
 			noCombatTimer.Start(11000);
 		}
 
+        /// <summary>
+        /// gets the DamageRvR Memory of this player
+        /// </summary>
+        public override long DamageRvRMemory
+        {
+            get
+            {
+                return m_damageRvRMemory;
+            }
+            set
+            {
+                m_damageRvRMemory = value;
+            }
+        }
+
 		public int InCombatTimerExpired(RegionTimer timer)
 		{
 			Out.SendUpdateMaxSpeed();
@@ -2168,9 +2183,25 @@ namespace DOL.GS
 				ChangeHealth(this, eHealthChangeType.Regenerate, GetModified(eProperty.HealthRegenerationRate));
 			}
 
+            #region PVP DAMAGE
+
+            if (DamageRvRMemory > 0)
+                DamageRvRMemory -= (long)Math.Max(GetModified(eProperty.HealthRegenerationRate), 0);
+
+            #endregion PVP DAMAGE
+
 			//If we are fully healed, we stop the timer
 			if (Health >= MaxHealth)
 			{
+
+                #region PVP DAMAGE
+
+                // Fully Regenerated, Set DamageRvRMemory to 0
+                if (DamageRvRMemory > 0)
+                    DamageRvRMemory = 0;
+
+                #endregion PVP DAMAGE
+
 				//We clean all damagedealers if we are fully healed,
 				//no special XP calculations need to be done
 				lock (m_xpGainers.SyncRoot)
@@ -6810,6 +6841,17 @@ namespace DOL.GS
 
 		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
+
+            #region PVP DAMAGE
+
+            if (source is GamePlayer || (source is GameNPC && (source as GameNPC).Brain is IControlledBrain && ((source as GameNPC).Brain as IControlledBrain).GetPlayerOwner() != null))
+            {
+                if (Realm != source.Realm && source.Realm != 0)
+                    DamageRvRMemory += (long)(damageAmount + criticalAmount);
+            }
+
+            #endregion PVP DAMAGE
+
 			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
 			if(this.HasAbility(Abilities.DefensiveCombatPowerRegeneration))
 			{
