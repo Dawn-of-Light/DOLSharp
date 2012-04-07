@@ -650,6 +650,12 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("rates", "pvp_spell_damage", "The PvP Spell Damage Modifier - Edit this to change the amount of spell damage done when fighting players e.g 1.5 is 50% more damage 2.0 is twice the damage (100%) 0.5 is half the damage (50%)", 1.0)]
 		public static double PVP_SPELL_DAMAGE;
 
+        /// <summary>
+        /// The % value of gainrps when heal a players recently damaged in rvr.
+        /// </summary>
+        [ServerProperty("rates", "heal_pvp_damage_value_rp", "How many % of heal final value is obtained in rps?", 8)]
+        public static int HEAL_PVP_DAMAGE_VALUE_RP;
+
 		/// <summary>
 		/// The highest possible Block Rate against an Enemy (Hard Cap)
 		/// </summary>

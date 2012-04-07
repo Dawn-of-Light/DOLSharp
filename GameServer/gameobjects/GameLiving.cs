@@ -765,6 +765,22 @@ namespace DOL.GS
 			}
 		}
 
+        /// <summary>
+        /// Total damage RvR Value
+        /// </summary>
+        protected long m_damageRvRMemory;
+        /// <summary>
+        /// gets the DamageRvR Memory of this living (always 0 for Gameliving)
+        /// </summary>
+        public virtual long DamageRvRMemory
+        {
+            get { return 0; }
+            set
+            {
+                m_damageRvRMemory = 0;
+            }
+        }
+
 		/// <summary>
 		/// Gets the swing time left
 		/// </summary>
@@ -2842,43 +2858,7 @@ namespace DOL.GS
 							return;
 						}
 					case eAttackResult.OutOfRange:
-						{
-							if (owner is GameNPC == false)
-								break;
-
-							GameNPC ownerNPC = owner as GameNPC;
-							StandardMobBrain brain = ownerNPC.Brain as StandardMobBrain;
-
-							if (brain == null)
-								break;
-
-							bool hit = false;
-
-							foreach (GameNPC npc in owner.GetNPCsInRadius((ushort)owner.AttackRange))
-							{
-								if (brain.GetAggroAmountForLiving(npc) > 0)
-								{
-									new WeaponOnTargetAction(owner, npc, mainWeapon, leftWeapon, 1.0, owner.AttackSpeed(mainWeapon, leftWeapon), style);
-									hit = true;
-									break;
-								}
-							}
-
-							if (hit)
-								break;
-
-							foreach (GamePlayer player in owner.GetPlayersInRadius((ushort)owner.AttackRange))
-							{
-								if (brain.GetAggroAmountForLiving(player) > 0)
-								{
-									new WeaponOnTargetAction(owner, player, mainWeapon, leftWeapon, 1.0, owner.AttackSpeed(mainWeapon, leftWeapon), style);
-									hit = true;
-									break;
-								}
-							}
-
 							break;
-						}
 				}
 
 				// unstealth before attack animation
@@ -3938,6 +3918,27 @@ namespace DOL.GS
 
 			double damageDealt = damageAmount + criticalAmount;
 
+            #region PVP DAMAGE
+
+            // Is this a GamePlayer behind the source?
+            if (source is GamePlayer || (source is GameNPC && (source as GameNPC).Brain is IControlledBrain && ((source as GameNPC).Brain as IControlledBrain).GetPlayerOwner() != null))
+            {
+                // Only apply to necropet.
+                if (this is NecromancerPet)
+                {
+                    //And if a GamePlayer is behind
+                    GamePlayer this_necro_pl = null;
+
+                    if (this is GameNPC && (this as GameNPC).Brain is IControlledBrain)
+                        this_necro_pl = ((this as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+
+                    if (this_necro_pl != null && this_necro_pl.Realm != source.Realm && source.Realm != 0)
+                        DamageRvRMemory += (long)damageDealt + (long)criticalAmount;
+                }
+            }
+
+            #endregion PVP DAMAGE
+
 			if (source is GameNPC)
 			{
 				IControlledBrain brain = ((GameNPC)source).Brain as IControlledBrain;
@@ -4187,7 +4188,8 @@ namespace DOL.GS
 					if (attacker is GameLiving)
 					{
 						(attacker as GameLiving).Notify(GameLivingEvent.EnemyHealed, attacker, args);
-						(attacker as GameLiving).AddXPGainer(changeSource, healthChanged);
+                        // Desactivate XPGainer, Heal Rps implentation.
+                        //(attacker as GameLiving).AddXPGainer(changeSource, healthChanged);
 					}
 				}
 			}
@@ -4380,9 +4382,9 @@ namespace DOL.GS
 			Health = 0;
 
 			// Remove all last attacked times
+            
 			LastAttackedByEnemyTickPvE = 0;
 			LastAttackedByEnemyTickPvP = 0;
-
 			//Let's send the notification at the end
 			Notify(GameLivingEvent.Dying, this, new DyingEventArgs(killer));
 		}
@@ -5131,9 +5133,39 @@ namespace DOL.GS
 				ChangeHealth(this, eHealthChangeType.Regenerate, GetModified(eProperty.HealthRegenerationRate));
 			}
 
+            #region PVP DAMAGE
+
+            
+            if (this is NecromancerPet)
+            {
+                GamePlayer this_necro_pl = null;
+
+                this_necro_pl = ((this as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner();
+
+                if (DamageRvRMemory > 0 && this_necro_pl != null)
+                    DamageRvRMemory -= (long)Math.Max(GetModified(eProperty.HealthRegenerationRate), 0);
+            }
+
+            #endregion PVP DAMAGE
+
 			//If we are fully healed, we stop the timer
 			if (Health >= MaxHealth)
-			{
+            {
+
+                #region PVP DAMAGE
+
+                if (this is NecromancerPet)
+                {
+                    GamePlayer this_necro_pl = null;
+
+                    this_necro_pl = ((this as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner();
+
+                    if (DamageRvRMemory > 0 && this_necro_pl != null)
+                        DamageRvRMemory = 0;
+                }
+
+                #endregion PVP DAMAGE
+
 				//We clean all damagedealers if we are fully healed,
 				//no special XP calculations need to be done
 				lock (m_xpGainers.SyncRoot)

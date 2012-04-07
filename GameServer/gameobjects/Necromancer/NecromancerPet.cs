@@ -35,6 +35,21 @@ namespace DOL.GS
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        /// <summary>
+        /// gets the DamageRvR Memory of this NecromancerPet
+        /// </summary>
+        public override long DamageRvRMemory
+        {
+            get
+            {
+                return m_damageRvRMemory;
+            }
+            set
+            {
+                m_damageRvRMemory = value;
+            }
+        }
+
 		/// <summary>
 		/// Proc IDs for various pet weapons.
 		/// </summary>

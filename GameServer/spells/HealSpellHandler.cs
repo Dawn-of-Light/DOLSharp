@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
+using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
@@ -189,6 +190,19 @@ namespace DOL.GS.Spells
 
             int heal = target.ChangeHealth(Caster, GameLiving.eHealthChangeType.Spell, amount);
 
+            #region PVP DAMAGE
+
+            long healedrp = 0;
+
+            if (target.DamageRvRMemory > 0 &&
+                (target is NecromancerPet &&
+                ((target as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null
+                || target is GamePlayer))
+            {
+                healedrp = (long)Math.Max(heal, 0);
+                target.DamageRvRMemory -= healedrp;
+            }
+
             if (heal == 0)
             {
                 if (Spell.Pulse == 0)
@@ -201,18 +215,83 @@ namespace DOL.GS.Spells
                 return false;
             }
 
+            if (m_caster is GamePlayer && target is NecromancerPet &&
+                ((target as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null
+                || target is GamePlayer && healedrp > 0)
+            {
+                int POURCENTAGE_SOIN_RP = ServerProperties.Properties.HEAL_PVP_DAMAGE_VALUE_RP; // ...% de bonus RP pour les soins effectués
+
+                if (m_spell.Pulse == 0 && m_caster.CurrentRegionID != 242 && // On Exclu zone COOP
+                    m_spell.SpellType.ToLower() != "spreadheal" && target != m_caster &&
+                    m_spellLine.KeyName != GlobalSpellsLines.Item_Spells &&
+                    m_spellLine.KeyName != GlobalSpellsLines.Potions_Effects &&
+                    m_spellLine.KeyName != GlobalSpellsLines.Combat_Styles_Effect &&
+                    m_spellLine.KeyName != GlobalSpellsLines.Reserved_Spells)
+                {
+                    GamePlayer player = m_caster as GamePlayer;
+
+                    if (player != null)
+                    {
+                        long Bonus_RP_Soin = Convert.ToInt64((double)healedrp * POURCENTAGE_SOIN_RP / 100.0);
+
+                        if (Bonus_RP_Soin >= 1)
+                        {
+                            PlayerStatistics stats = player.Statistics as PlayerStatistics;
+
+                            if (stats != null)
+                            {
+                                stats.RPEarnedFromHitPointsHealed += (uint)Bonus_RP_Soin;
+                                stats.HitPointsHealed += (uint)healedrp;
+                            }
+
+                            player.GainRealmPoints(Bonus_RP_Soin, false);
+                            player.Out.SendMessage("Vous gagnez " + Bonus_RP_Soin.ToString() + " points de royaume pour avoir soigné un membre de votre royaume.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                        }
+                    }
+                }
+            }
+
+            #endregion PVP DAMAGE
+
             if (m_caster == target)
             {
                 MessageToCaster("You heal yourself for " + heal + " hit points.", eChatType.CT_Spell);
                 if (heal < amount)
+                {
+                    #region PVP DAMAGE
+
+                    if (target is NecromancerPet &&
+                        ((target as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || target is GamePlayer)
+                    {
+                        if (target.DamageRvRMemory > 0)
+                            target.DamageRvRMemory = 0; //Remise a zéro compteur dommages/heal rps
+                    }
+
+                    #endregion PVP DAMAGE
+
                     MessageToCaster("You are fully healed.", eChatType.CT_Spell);
+                }
             }
             else
             {
                 MessageToCaster("You heal " + target.GetName(0, false) + " for " + heal + " hit points!", eChatType.CT_Spell);
                 MessageToLiving(target, "You are healed by " + m_caster.GetName(0, false) + " for " + heal + " hit points.", eChatType.CT_Spell);
                 if (heal < amount)
+                {
+
+                    #region PVP DAMAGE
+
+                    if (target is NecromancerPet &&
+                        ((target as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || target is GamePlayer)
+                    {
+                        if (target.DamageRvRMemory > 0)
+                            target.DamageRvRMemory = 0; //Remise a zéro compteur dommages/heal rps
+                    }
+
+                    #endregion PVP DAMAGE
+
                     MessageToCaster(target.GetName(0, true) + " is fully healed.", eChatType.CT_Spell);
+                }
                 if (heal > 0 && criticalvalue > 0)
                     MessageToCaster("Your heal criticals for an extra " + criticalvalue + " amount of hit points!", eChatType.CT_Spell);
             }
@@ -250,13 +329,46 @@ namespace DOL.GS.Spells
 				if (heal < amount)
 				{
 					MessageToCaster("You are fully healed.", eChatType.CT_Spell);
+                    #region PVP DAMAGE
+
+                    if (target is NecromancerPet &&
+                        ((target as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || target is GamePlayer)
+                    {
+                        if (target.DamageRvRMemory > 0)
+                            target.DamageRvRMemory = 0; //Remise a zéro compteur dommages/heal rps
+                    }
+
+                    #endregion PVP DAMAGE
 				}
 			}
 			else if (heal > 0)
 			{
 				MessageToCaster("You heal " + target.GetName(0, false) + " for " + heal + " hit points!", eChatType.CT_Spell);
 				MessageToLiving(target, "You are healed by " + m_caster.GetName(0, false) + " for " + heal + " hit points.", eChatType.CT_Spell);
-			}
+                
+                #region PVP DAMAGE
+
+                if (heal < amount)
+                {
+                    if (target is NecromancerPet &&
+                        ((target as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || target is GamePlayer)
+                    {
+                        if (target.DamageRvRMemory > 0)
+                            target.DamageRvRMemory = 0; //Remise a zéro compteur dommages/heal rps
+                    }
+                }
+                else
+                {
+                    if (target is NecromancerPet &&
+                        ((target as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || target is GamePlayer)
+                    {
+                        if (target.DamageRvRMemory > 0)
+                            target.DamageRvRMemory -= (long)Math.Max(heal, 0);
+                    }
+                }
+            }
+
+            #endregion PVP DAMAGE
 
 			return true;
 		}
