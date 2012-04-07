@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DOL.GS.PacketHandler;
+using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
@@ -69,10 +70,31 @@ namespace DOL.GS.Spells
 			if (heal > 0)
 			{
 				MessageToCaster("You steal " + heal + " hit point" + (heal == 1 ? "." : "s."), eChatType.CT_Spell);
+
+
+                #region PVP DAMAGE
+
+                if (m_caster is NecromancerPet && ((m_caster as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || m_caster is GamePlayer)
+                {
+                    if (m_caster.DamageRvRMemory > 0)
+                        m_caster.DamageRvRMemory -= (long)Math.Max(heal, 0);
+                }
+
+                #endregion PVP DAMAGE
+
 			}
 			else
 			{
 				MessageToCaster("You cannot absorb any more life.", eChatType.CT_SpellResisted);
+
+                #region PVP DAMAGE
+
+                if (m_caster is NecromancerPet && ((m_caster as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || m_caster is GamePlayer)
+                {
+                    if (m_caster.DamageRvRMemory > 0)
+                        m_caster.DamageRvRMemory = 0; //Remise a zéro compteur dommages/heal rps
+                }
+                #endregion PVP DAMAGE
 			}
 		}
 		/// <summary>

@@ -68,6 +68,7 @@ namespace DOL.GS
 		protected ushort m_Deathblows = 0;
 		protected ushort m_Deaths = 0;
 		protected uint m_HitpointsHealed = 0;
+        protected uint m_RPEarnedFromHitPointsHealed = 0;
 		protected ushort m_RessurectionsPerformed = 0;
 		protected DateTime m_LoginTime;
 
@@ -131,6 +132,15 @@ namespace DOL.GS
 				m_HitpointsHealed = value;
 			}
 		}
+
+        public uint RPEarnedFromHitPointsHealed
+        {
+            get { return m_RPEarnedFromHitPointsHealed; }
+            set
+            {
+                m_RPEarnedFromHitPointsHealed = value;
+            }
+        }
 
 		public ushort RessurectionsPerformed
 		{
@@ -206,6 +216,7 @@ namespace DOL.GS
             List<StatToCount> allstatsirs = new List<StatToCount>();
             List<StatToCount> allstatsheal = new List<StatToCount>();
             List<StatToCount> allstatsres = new List<StatToCount>();
+            List<StatToCount> allstatsrpearnedfromheal = new List<StatToCount>();
 
             foreach (GameClient c in WorldMgr.GetAllPlayingClients())
             {
@@ -227,6 +238,7 @@ namespace DOL.GS
                     allstatsdeath.Add(new StatToCount(c.Player.Name, stats.Deathblows));
                     allstatsheal.Add(new StatToCount(c.Player.Name, stats.HitPointsHealed));
                     allstatsres.Add(new StatToCount(c.Player.Name, stats.RessurectionsPerformed));
+                    allstatsrpearnedfromheal.Add(new StatToCount(c.Player.Name, stats.RPEarnedFromHitPointsHealed));
                 }
             }
             allstatsrp.Sort((ctc1, ctc2) => ctc1.count.CompareTo(ctc2.count)); allstatsrp.Reverse();
@@ -236,6 +248,7 @@ namespace DOL.GS
             allstatsirs.Sort((ctc1, ctc2) => ctc1.count.CompareTo(ctc2.count)); allstatsirs.Reverse();
             allstatsheal.Sort((ctc1, ctc2) => ctc1.count.CompareTo(ctc2.count)); allstatsheal.Reverse();
             allstatsres.Sort((ctc1, ctc2) => ctc1.count.CompareTo(ctc2.count)); allstatsres.Reverse();
+            allstatsrpearnedfromheal.Sort((ctc1, ctc2) => ctc1.count.CompareTo(ctc2.count)); allstatsrpearnedfromheal.Reverse();
 
             statsrp = ""; statslrp = ""; statskills = ""; statsdeath = ""; statsirs = ""; statsheal = ""; statsres = "";
             for (int c = 0; c < allstatsrp.Count; c++) { if (c > 19 || allstatsrp[c].count < 1) break; statsrp += (c + 1) + ". " + allstatsrp[c].name + " with " + allstatsrp[c].count.ToString() + " RP\n"; }
@@ -243,7 +256,7 @@ namespace DOL.GS
             for (int c = 0; c < allstatskills.Count; c++) { if (c > 19 || allstatskills[c].count < 1) break; statskills += (c + 1) + ". " + allstatskills[c].name + " with " + allstatskills[c].count.ToString() + " kills\n"; }
             for (int c = 0; c < allstatsdeath.Count; c++) { if (c > 19 || allstatsdeath[c].count < 1) break; statsdeath += (c + 1) + ". " + allstatsdeath[c].name + " with " + allstatsdeath[c].count.ToString() + " deathblows\n"; }
             for (int c = 0; c < allstatsirs.Count; c++) { if (c > 19 || allstatsirs[c].count < 1) break; statsirs += (c + 1) + ". " + allstatsirs[c].name + " with " + allstatsirs[c].count.ToString() + " RP/death\n"; }
-            for (int c = 0; c < allstatsheal.Count; c++) { if (c > 19 || allstatsheal[c].count < 1) break; statsheal += (c + 1) + ". " + allstatsheal[c].name + " with " + allstatsheal[c].count.ToString() + " HP\n"; }
+            for (int c = 0; c < allstatsheal.Count; c++) { if (c > 19 || allstatsheal[c].count < 1) break; statsheal += (c + 1) + ". " + allstatsheal[c].name + " with " + allstatsheal[c].count.ToString() + " HP and " + allstatsrpearnedfromheal[c].count.ToString() + " RP gained from heal\n"; }
             for (int c = 0; c < allstatsres.Count; c++) { if (c > 19 || allstatsres[c].count < 1) break; statsres += (c + 1) + ". " + allstatsres[c].name + " with " + allstatsres[c].count.ToString() + " res\n"; }
 
             m_lastUpdatedTime = player.CurrentRegion.Time;
@@ -270,7 +283,7 @@ namespace DOL.GS
                                     "Kills that have earned RP: " + KillsThatHaveEarnedRPs + "\n" +
                                     "Deathblows: " + Deathblows + "\n" +
                                     "Deaths: " + Deaths + "\n" +
-                                    "HP healed: " + HitPointsHealed + "\n" +
+                                    "HP healed: " + HitPointsHealed + " and " + RPEarnedFromHitPointsHealed + " RP gained from this heal\n" +
                                     "Resurrections performed: " + RessurectionsPerformed + "\n" +
                                     stringOnlineTime +
                                     "RP/hour: " + RPsPerHour(TotalRP, onlineTime) + "\n" +
