@@ -2258,7 +2258,11 @@ namespace DOL.GS.Commands
 			text.Add("  - Realm Level Class : " + GlobalConstants.RealmToName(player.Realm) + " " + player.Level + " " + player.CharacterClass.Name + " (" + player.CharacterClass.ID + ")");
 			text.Add("  - Guild : " + player.GuildName + " " + (player.GuildRank != null ? "Rank: " + player.GuildRank.RankLevel.ToString() : ""));
 			text.Add("  - XPs/RPs/BPs : " + player.Experience + " xp, " + player.RealmPoints + " rp, " + player.BountyPoints + " bp");
-			if (player.Champion)
+
+            if (player.DamageRvRMemory > 0)
+                text.Add("  - Damage RvR Memory: " + player.DamageRvRMemory);
+			
+            if (player.Champion)
 			{
 				text.Add("  - Champion :  CL " + player.ChampionLevel + ", " + player.ChampionExperience + " clxp");
 
