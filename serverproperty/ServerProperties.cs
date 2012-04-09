@@ -99,13 +99,37 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("system", "client_version_max", "Maximum Client Version - Edit this to change which client version at the most have to be used: -1 = any, 1.80 = 180", -1)]
 		public static int CLIENT_VERSION_MAX;
 
-		/// <summary>
-		/// Should the server load quests
-		/// </summary>
-		[ServerProperty("system", "load_quests", "Should the server load quests, values True,False", true)]
-		public static readonly bool LOAD_QUESTS;
+        /// <summary>
+        /// Should the server load quests
+        /// </summary>
+        [ServerProperty("system", "load_quests", "Should the server load quests, values True,False", true)]
+        public static readonly bool LOAD_QUESTS;
 
-		/// <summary>
+        /// <summary>
+        /// Should the server load Buff Tokens
+        /// </summary>
+        [ServerProperty("system", "load_buff_tokens", "Should the server load buff tokens (npc and items), values True,False", true)]
+        public static readonly bool LOAD_BUFF_TOKENS;
+
+        /// <summary>
+        /// Should the server load Arrow Summoning items
+        /// </summary>
+        [ServerProperty("system", "load_arrow_summoning", "Should the server load Arrow Summoning items, values True,False", true)]
+        public static readonly bool LOAD_ARROW_SUMMONING;
+
+        /// <summary>
+        /// Should the server load Housing items
+        /// </summary>
+        [ServerProperty("system", "load_housing_items", "Should the server load Housing items, values True,False", true)]
+        public static readonly bool LOAD_HOUSING_ITEMS;
+
+        /// <summary>
+        /// Should the server load Housing NPC
+        /// </summary>
+        [ServerProperty("system", "load_housing_npc", "Should the server load Housing npc, values True,False", true)]
+        public static readonly bool LOAD_HOUSING_NPC;
+
+        /// <summary>
 		/// Disable Bug Reports
 		/// </summary>
 		[ServerProperty("system", "disable_bug_reports", "Set to true to disable bug reporting, and false to enable bug reporting", true)]
