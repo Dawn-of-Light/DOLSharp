@@ -265,8 +265,8 @@ namespace DOL.GS
 			}
 
 			InventoryLogging.LogInventoryAction(player, "(salvage)", eInventoryActionType.Craft, itemToSalvage.Template, itemToSalvage.Count);
-			
-			Hashtable changedSlots = new Hashtable(5); // value: < 0 = new item count; > 0 = add to old
+
+			Dictionary<int, int> changedSlots = new Dictionary<int, int>(5); // value: < 0 = new item count; > 0 = add to old
 			lock(player.Inventory)
 			{
 				int count = materialCount;
@@ -302,9 +302,11 @@ namespace DOL.GS
 			InventoryItem newItem = null;
 
 			player.Inventory.BeginChanges();
-			foreach(DictionaryEntry de in changedSlots)
+			Dictionary<int, int>.Enumerator enumerator = changedSlots.GetEnumerator();
+			while (enumerator.MoveNext())
 			{
-				int countToAdd = (int) de.Value;
+				KeyValuePair<int, int> de = enumerator.Current;
+				int countToAdd = de.Value;
 				if(countToAdd > 0)	// Add to exiting item
 				{
 					newItem = player.Inventory.GetItem((eInventorySlot)de.Key);

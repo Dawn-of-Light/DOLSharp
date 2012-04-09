@@ -316,12 +316,12 @@ namespace DOL.AI.Brain
 		/// <summary>
 		/// List of livings that this npc has aggro on, living => aggroamount
 		/// </summary>
-		protected readonly Hashtable m_aggroTable = new Hashtable();
+		protected readonly Dictionary<GameLiving, long> m_aggroTable = new Dictionary<GameLiving, long>();
 
 		/// <summary>
 		/// The aggression table for this mob
 		/// </summary>
-		public Hashtable AggroTable
+      public Dictionary<GameLiving, long> AggroTable
 		{
 			get { return m_aggroTable; }
 		}
@@ -352,7 +352,7 @@ namespace DOL.AI.Brain
 			get
 			{
 				bool hasAggro = false;
-				lock (m_aggroTable.SyncRoot)
+				lock ((m_aggroTable as ICollection).SyncRoot)
 				{
 					hasAggro = (m_aggroTable.Count > 0);
 				}
@@ -372,11 +372,11 @@ namespace DOL.AI.Brain
 			// do not modify aggro list if dead
 			if (!brain.Body.IsAlive) return;
 
-			lock (m_aggroTable.SyncRoot)
+			lock ((m_aggroTable as ICollection).SyncRoot)
 			{
-				IDictionaryEnumerator dictEnum = m_aggroTable.GetEnumerator();
+				Dictionary<GameLiving, long>.Enumerator dictEnum = m_aggroTable.GetEnumerator();
 				while (dictEnum.MoveNext())
-					brain.AddToAggroList((GameLiving)dictEnum.Key, Body.MaxHealth);
+					brain.AddToAggroList(dictEnum.Current.Key, Body.MaxHealth);
 			}
 		}
 
@@ -449,11 +449,11 @@ namespace DOL.AI.Brain
 				
 				if (player.Group != null)
 				{ // player is in group, add whole group to aggro list
-					lock (m_aggroTable.SyncRoot)
+					lock ((m_aggroTable as ICollection).SyncRoot)
 					{
 						foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 						{
-							if (m_aggroTable[p] == null)
+							if (!m_aggroTable.ContainsKey(p))
 							{
 								m_aggroTable[p] = 1L;	// add the missing group member on aggro table
 							}
@@ -491,28 +491,22 @@ namespace DOL.AI.Brain
 						protect.ProtectSource.Out.SendMessage(LanguageMgr.GetTranslation(protect.ProtectSource.Client, "AI.Brain.StandardMobBrain.YouProtDist", player.GetName(0, false), Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						//player.Out.SendMessage("You are protected by " + protect.ProtectSource.GetName(0, false) + " from " + Body.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-						lock (m_aggroTable.SyncRoot)
+						lock ((m_aggroTable as ICollection).SyncRoot)
 						{
-							if (m_aggroTable[protect.ProtectSource] != null)
-							{
-								long amount = (long)m_aggroTable[protect.ProtectSource];
-								amount += protectAmount;
-								m_aggroTable[protect.ProtectSource] = amount;
-							}
+							if (m_aggroTable.ContainsKey(protect.ProtectSource))
+								m_aggroTable[protect.ProtectSource] += protectAmount;
 							else
-							{
-								m_aggroTable[protect.ProtectSource] = (long)protectAmount;
-							}
+								m_aggroTable[protect.ProtectSource] = protectAmount;
 						}
 					}
 				}
 			}
 
-			lock (m_aggroTable.SyncRoot)
+			lock ((m_aggroTable as ICollection).SyncRoot)
 			{
-				if (m_aggroTable[living] != null)
+				if (m_aggroTable.ContainsKey(living))
 				{
-					long amount = (long)m_aggroTable[living];
+					long amount = m_aggroTable[living];
 					amount += aggroamount;
 
 					// can't be removed this way, set to minimum
@@ -525,7 +519,7 @@ namespace DOL.AI.Brain
 				{
 					if (aggroamount > 0)
 					{
-						m_aggroTable[living] = (long)aggroamount;
+						m_aggroTable[living] = aggroamount;
 					}
 					else
 					{
@@ -543,11 +537,11 @@ namespace DOL.AI.Brain
 		/// <returns></returns>
 		public virtual long GetAggroAmountForLiving(GameLiving living)
 		{
-			lock (m_aggroTable.SyncRoot)
+			lock ((m_aggroTable as ICollection).SyncRoot)
 			{
-				if (m_aggroTable[living] != null)
+				if (m_aggroTable.ContainsKey(living))
 				{
-					return (long)m_aggroTable[living];
+					return m_aggroTable[living];
 				}
 				return 0;
 			}
@@ -559,7 +553,7 @@ namespace DOL.AI.Brain
 		/// <param name="living"></param>
 		public virtual void RemoveFromAggroList(GameLiving living)
 		{
-			lock (m_aggroTable.SyncRoot)
+			lock ((m_aggroTable as ICollection).SyncRoot)
 			{
 				m_aggroTable.Remove(living);
 			}
@@ -570,7 +564,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public virtual void ClearAggroList()
 		{
-			lock (m_aggroTable.SyncRoot)
+			lock ((m_aggroTable as ICollection).SyncRoot)
 			{
 				m_aggroTable.Clear();
 				Body.TempProperties.removeProperty(Body.Attackers);
@@ -581,11 +575,11 @@ namespace DOL.AI.Brain
 		/// Makes a copy of current aggro list
 		/// </summary>
 		/// <returns></returns>
-		public virtual Hashtable CloneAggroList()
+      public virtual Dictionary<GameLiving, long> CloneAggroList()
 		{
-			lock (m_aggroTable.SyncRoot)
+			lock ((m_aggroTable as ICollection).SyncRoot)
 			{
-				return (Hashtable)m_aggroTable.Clone();
+				return new Dictionary<GameLiving, long>(m_aggroTable);
 			}
 		}
 
@@ -615,14 +609,14 @@ namespace DOL.AI.Brain
 		protected virtual GameLiving CalculateNextAttackTarget()
 		{
 			GameLiving maxAggroObject = null;
-			lock (m_aggroTable.SyncRoot)
+			lock ((m_aggroTable as ICollection).SyncRoot)
 			{
 				double maxAggro = 0;
-				IDictionaryEnumerator aggros = m_aggroTable.GetEnumerator();
+				Dictionary<GameLiving, long>.Enumerator aggros = m_aggroTable.GetEnumerator();
 				List<GameLiving> removable = new List<GameLiving>();
 				while (aggros.MoveNext())
 				{
-					GameLiving living = (GameLiving)aggros.Key;
+					GameLiving living = aggros.Current.Key;
 
 					// check to make sure this target is still valid
 					if (living.IsAlive == false ||
@@ -639,7 +633,7 @@ namespace DOL.AI.Brain
 					if (living.EffectList.GetOfType<NecromancerShadeEffect>() != null)
 						continue;
 					
-					long amount = (long)aggros.Value;
+					long amount = aggros.Current.Value;
 
 					if (living.IsAlive
 					    && amount > maxAggro
@@ -789,7 +783,7 @@ namespace DOL.AI.Brain
 				if (eArgs != null && eArgs.HealSource is GameLiving)
 				{
 					// first check to see if the healer is in our aggrolist so we don't go attacking anyone who heals
-					if (m_aggroTable[(GameLiving)eArgs.HealSource] != null)
+					if (m_aggroTable.ContainsKey(eArgs.HealSource as GameLiving))
 					{
 						if (eArgs.HealSource is GamePlayer || (eArgs.HealSource is GameNPC && (((GameNPC)eArgs.HealSource).Flags & GameNPC.eFlags.PEACE) == 0))
 						{

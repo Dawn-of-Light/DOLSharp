@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Collections.Generic;
 using DOL.GS;
 
 namespace DOL.AI.Brain
@@ -45,7 +45,7 @@ namespace DOL.AI.Brain
 		/// Makes a copy of current aggro list
 		/// </summary>
 		/// <returns></returns>
-		Hashtable CloneAggroList();
+		Dictionary<GameLiving, long> CloneAggroList();
 
 		/// <summary>
 		/// calculate the aggro of this npc against another living

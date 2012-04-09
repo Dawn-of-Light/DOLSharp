@@ -6219,7 +6219,7 @@ namespace DOL.GS
 		/// Table of skills currently disabled
 		/// skill => disabletimeout (ticks) or 0 when endless
 		/// </summary>
-		protected readonly Hashtable m_disabledSkills = new Hashtable();
+		protected readonly Dictionary<Skill, long> m_disabledSkills = new Dictionary<Skill, long>();
 
 		/// <summary>
 		/// Gets the time left for disabling this skill in milliseconds
@@ -6228,12 +6228,11 @@ namespace DOL.GS
 		/// <returns>milliseconds left for disable</returns>
 		public virtual int GetSkillDisabledDuration(Skill skill)
 		{
-			lock (m_disabledSkills.SyncRoot)
+			lock ((m_disabledSkills as ICollection).SyncRoot)
 			{
-				object time = m_disabledSkills[skill];
-				if (time != null)
+				if (m_disabledSkills.ContainsKey(skill))
 				{
-					long timeout = (long)time;
+					long timeout = m_disabledSkills[skill];
 					long left = timeout - CurrentRegion.Time;
 					if (left <= 0)
 					{
@@ -6252,9 +6251,9 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual ICollection GetAllDisabledSkills()
 		{
-			lock (m_disabledSkills.SyncRoot)
+			lock ((m_disabledSkills as ICollection).SyncRoot)
 			{
-				return ((Hashtable)m_disabledSkills.Clone()).Keys;
+				return new List<Skill>(m_disabledSkills.Keys);
 			}
 		}
 
@@ -6265,7 +6264,7 @@ namespace DOL.GS
 		/// <param name="duration">duration of disable in milliseconds</param>
 		public virtual void DisableSkill(Skill skill, int duration)
 		{
-			lock (m_disabledSkills.SyncRoot)
+			lock ((m_disabledSkills as ICollection).SyncRoot)
 			{
 				if (duration > 0)
 				{
