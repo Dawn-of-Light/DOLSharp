@@ -2617,12 +2617,12 @@ namespace DOL.GS
 		/// Holds the player specializable skills and style lines
 		/// (KeyName -> Specialization)
 		/// </summary>
-		protected readonly Hashtable m_specialization = new Hashtable();
+		protected readonly Dictionary<string, Specialization> m_specialization = new Dictionary<string, Specialization>();
 
 		/// <summary>
 		/// Holds the players specs again but ordered
 		/// </summary>
-		protected readonly ArrayList m_specList = new ArrayList();
+		protected readonly List<Specialization> m_specList = new List<Specialization>();
 
 		/// <summary>
 		/// Holds the Spell lines the player can use
@@ -2643,11 +2643,6 @@ namespace DOL.GS
 		/// Used to lock the style list
 		/// </summary>
 		public Object lockStyleList = new Object();
-
-		/// <summary>
-		/// Holds all non trainable skills in determined order without styles
-		/// </summary>
-		//protected readonly ArrayList m_skillList = new ArrayList();
 
 		/// <summary>
 		/// Temporary Stats Boni
@@ -2866,14 +2861,14 @@ namespace DOL.GS
 		{
 			if (skill == null)
 				return;
-			Specialization oldskill = m_specialization[skill.KeyName] as Specialization;
-			if (oldskill == null)
+
+			Specialization oldskill = null;
+			if (!m_specialization.TryGetValue(skill.KeyName, out oldskill))
 			{
 				//DOLConsole.WriteLine("Spec "+skill.Name+" added");
-				m_specialization[skill.KeyName] = skill;
-				lock (m_specialization.SyncRoot)
+				lock ((m_specialization as ICollection).SyncRoot)
 				{
-					lock (m_specList.SyncRoot)
+					lock ((m_specList as ICollection).SyncRoot)
 					{
 						m_specialization[skill.KeyName] = skill;
 						m_specList.Add(skill);
@@ -2898,12 +2893,11 @@ namespace DOL.GS
 		public virtual bool RemoveSpecialization(string specKeyName)
 		{
 			Specialization playerSpec = null;
-			lock (m_specialization.SyncRoot)
+			lock ((m_specialization as ICollection).SyncRoot)
 			{
-				lock (m_specList.SyncRoot)
+				lock ((m_specList as ICollection).SyncRoot)
 				{
-					playerSpec = (Specialization)m_specialization[specKeyName];
-					if (playerSpec == null)
+					if (!m_specialization.TryGetValue(specKeyName, out playerSpec))
 						return false;
 					m_specList.Remove(playerSpec);
 					m_specialization.Remove(specKeyName);
@@ -3110,9 +3104,9 @@ namespace DOL.GS
 		/// <returns>the found specialization or null</returns>
 		public virtual Specialization GetSpecialization(string keyName)
 		{
-			Specialization spec = m_specialization[keyName] as Specialization;
+			Specialization spec = null;
 
-			if (spec == null)
+			if (!m_specialization.TryGetValue(keyName, out spec ))
 			{
 				// try case insensitive search
 				foreach (Specialization sp in m_specialization.Values)
@@ -3136,7 +3130,7 @@ namespace DOL.GS
 		/// <returns>found specialization or null</returns>
 		public virtual Specialization GetSpecializationByName(string name, bool caseSensitive)
 		{
-			lock (m_specList.SyncRoot)
+			lock ((m_specList as ICollection).SyncRoot)
 			{
 				if (caseSensitive)
 				{
@@ -3226,7 +3220,7 @@ namespace DOL.GS
 		public virtual void RemoveAllSpecs()
 		{
 			ArrayList specs = new ArrayList();
-			lock (m_specList.SyncRoot)
+			lock ((m_specList as ICollection).SyncRoot)
 			{
 				foreach (Specialization spec in m_specList)
 					specs.Add(spec);
@@ -3261,7 +3255,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual bool HasSpecialization(string keyName)
 		{
-			return m_specialization[keyName] is Specialization;
+			return m_specialization.ContainsKey(keyName);
 		}
 
 		/// <summary>
@@ -3373,10 +3367,10 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override int GetBaseSpecLevel(string keyName)
 		{
-			Specialization spec = m_specialization[keyName] as Specialization;
-			if (spec == null)
-				return 0;
-			return spec.Level;
+			Specialization spec = null;
+			if (m_specialization.TryGetValue(keyName, out spec))
+				return m_specialization[keyName].Level;
+			return 0;
 		}
 
 		/// <summary>
@@ -3390,8 +3384,8 @@ namespace DOL.GS
 			if (keyName == GlobalSpellsLines.Champion_Spells)
 				return 50;
 
-			Specialization spec = m_specialization[keyName] as Specialization;
-			if (spec == null)
+			Specialization spec = null;
+			if (!m_specialization.TryGetValue(keyName, out spec))
 			{
 				if (keyName == GlobalSpellsLines.Combat_Styles_Effect)
 				{
@@ -3746,7 +3740,7 @@ namespace DOL.GS
 			IList newStyles = new ArrayList();
 			lock (lockStyleList)
 			{
-				lock (m_specList.SyncRoot)
+				lock ((m_specList as ICollection).SyncRoot)
 				{
 					foreach (Specialization spec in m_specList)
 					{
@@ -12286,7 +12280,7 @@ namespace DOL.GS
 					}
 				}
 			}
-			lock (m_specList.SyncRoot)
+			lock ((m_specList as ICollection).SyncRoot)
 			{
 				foreach (Specialization spec in m_specList)
 				{
@@ -12409,7 +12403,7 @@ namespace DOL.GS
 			#endregion
 
 			#region Load Specs
-			lock (m_specList.SyncRoot)
+			lock ((m_specList as ICollection).SyncRoot)
 			{
 				tmpStr = character.SerializedSpecs;
 				if (tmpStr != null && tmpStr.Length > 0)
@@ -12461,7 +12455,7 @@ namespace DOL.GS
 
 			RemoveAllSpellLines();
 
-			Hashtable disabledSpells = new Hashtable();
+			Dictionary<ushort, int> disabledSpells = new Dictionary<ushort, int>();
 
 			//Load the disabled spells
 			string tmpStr = character.DisabledSpells;
@@ -12474,7 +12468,7 @@ namespace DOL.GS
 					int duration;
 					if (values.Length >= 2 && ushort.TryParse(values[0], out spellid) && int.TryParse(values[1], out duration))
 					{
-						if (disabledSpells.Contains(spellid))
+						if (disabledSpells.ContainsKey(spellid))
 							continue;
 						disabledSpells.Add(spellid, duration);
 					}
@@ -12509,7 +12503,7 @@ namespace DOL.GS
 									foreach (Spell spell in SkillBase.GetSpellList(splLine.KeyName))
 									{
 										if (disabledSpells.ContainsKey(spell.ID))
-											DisableSkill(spell, (int)disabledSpells[spell.ID]);
+											DisableSkill(spell, disabledSpells[spell.ID]);
 									}
 								}
 								else if (log.IsErrorEnabled)
@@ -15534,7 +15528,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Load champion spells of this player
 		/// </summary>
-		protected virtual void LoadChampionSpells(Hashtable disabledSpells)
+		protected virtual void LoadChampionSpells(Dictionary<ushort, int> disabledSpells)
 		{
 			try
 			{
@@ -15570,7 +15564,7 @@ namespace DOL.GS
 					foreach (Spell spell in SkillBase.GetSpellList(ChampionSpellLineName))
 					{
 						if (disabledSpells.ContainsKey(spell.ID))
-							DisableSkill(spell, (int)disabledSpells[spell.ID]);
+							DisableSkill(spell, disabledSpells[spell.ID]);
 					}
 				}
 			}

@@ -298,11 +298,12 @@ namespace DOL.AI.Brain
 
 			ArrayList inRangeLiving = new ArrayList();
 
-			lock (m_aggroTable.SyncRoot)
+			lock ((m_aggroTable as ICollection).SyncRoot)
             {
-				foreach (DictionaryEntry dictEntry in m_aggroTable)
+				Dictionary<GameLiving, long>.Enumerator enumerator = m_aggroTable.GetEnumerator();
+				while (enumerator.MoveNext())
 				{
-					GameLiving living = dictEntry.Key as GameLiving;
+					GameLiving living = enumerator.Current.Key;
 					if (living != null && 
 						living.IsAlive &&
 						living.EffectList.GetOfType<NecromancerShadeEffect>() == null && 

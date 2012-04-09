@@ -470,7 +470,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual bool RemoveUsedMaterials(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials)
 		{
-			Hashtable dataSlots = new Hashtable(10);
+			Dictionary<int, int?> dataSlots = new Dictionary<int, int?>(10);
 
 			lock (player.Inventory)
 			{
@@ -520,20 +520,22 @@ namespace DOL.GS
 			}
 
 			player.Inventory.BeginChanges();
-			foreach (DictionaryEntry de in dataSlots)
+			Dictionary<int, int?>.Enumerator enumerator = dataSlots.GetEnumerator();
+			while (enumerator.MoveNext())
 			{
+				KeyValuePair<int, int?> de = enumerator.Current;
 				InventoryItem item = player.Inventory.GetItem((eInventorySlot)de.Key);
 				if (item != null)
 				{
-					if (de.Value == null)
+					if (!de.Value.HasValue)
 					{
 						player.Inventory.RemoveItem(item);
 					}
 					else
 					{
-						player.Inventory.RemoveCountFromStack(item, (int)de.Value);
+						player.Inventory.RemoveCountFromStack(item, de.Value.Value);
 					}
-					InventoryLogging.LogInventoryAction(player, "(craft)", eInventoryActionType.Craft, item.Template, (de.Value is int ? (int)de.Value : item.Count));
+					InventoryLogging.LogInventoryAction(player, "(craft)", eInventoryActionType.Craft, item.Template, de.Value.HasValue ? de.Value.Value : item.Count);
 				}
 			}
 			player.Inventory.CommitChanges();
@@ -549,7 +551,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected virtual void BuildCraftedItem(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft)
 		{
-			Hashtable changedSlots = new Hashtable(5); // key : > 0 inventory ; < 0 ground || value: < 0 = new item count; > 0 = add to old
+			Dictionary<int, int> changedSlots = new Dictionary<int, int>(5); // key : > 0 inventory ; < 0 ground || value: < 0 = new item count; > 0 = add to old
 
 			lock (player.Inventory)
 			{
@@ -597,9 +599,11 @@ namespace DOL.GS
 
 				player.Inventory.BeginChanges();
 
-				foreach (DictionaryEntry slot in changedSlots)
+				Dictionary<int, int>.Enumerator enumerator = changedSlots.GetEnumerator();
+				while (enumerator.MoveNext())
 				{
-					int countToAdd = (int)slot.Value;
+					KeyValuePair<int, int> slot = enumerator.Current;
+					int countToAdd = slot.Value;
 					if (countToAdd > 0)	// Add to exiting item
 					{
 						newItem = player.Inventory.GetItem((eInventorySlot)slot.Key);
@@ -636,7 +640,7 @@ namespace DOL.GS
 					newItem.Creator = player.Name;
 					newItem.Count = -countToAdd;
 
-					if ((int)slot.Key > 0)	// Create new item in the backpack
+					if (slot.Key > 0)	// Create new item in the backpack
 					{
 						player.Inventory.AddItem((eInventorySlot)slot.Key, newItem);
 						InventoryLogging.LogInventoryAction("(craft)", player, eInventoryActionType.Craft, newItem.Template, newItem.Count);

@@ -3074,7 +3074,7 @@ namespace DOL.GS.Commands
 
 			if (targetMob.Brain != null && targetMob.Brain is StandardMobBrain)
 			{
-				Hashtable aggroList = (targetMob.Brain as StandardMobBrain).AggroTable;
+				Dictionary<GameLiving, long> aggroList = (targetMob.Brain as StandardMobBrain).AggroTable;
 
 				if (aggroList.Count > 0)
 				{
@@ -3083,7 +3083,7 @@ namespace DOL.GS.Commands
 
 					foreach (GameLiving living in aggroList.Keys)
 					{
-						text.Add(living.Name + ": " + (long)aggroList[living]);
+						text.Add(living.Name + ": " + aggroList[living]);
 					}
 				}
 			}

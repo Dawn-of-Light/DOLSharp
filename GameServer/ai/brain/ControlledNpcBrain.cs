@@ -753,7 +753,7 @@ namespace DOL.AI.Brain
 				m_orderAttackTarget = null;
 			}
 
-			lock (m_aggroTable.SyncRoot)
+			lock ((m_aggroTable as ICollection).SyncRoot)
 			{
 				IDictionaryEnumerator aggros = m_aggroTable.GetEnumerator();
 				List<GameLiving> removable = new List<GameLiving>();
