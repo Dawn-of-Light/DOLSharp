@@ -50,7 +50,7 @@ namespace DOL.GS.Behaviour.Actions
             int count = Q;
             ItemTemplate itemToRemove = P;
 
-            Hashtable dataSlots = new Hashtable(10);
+			Dictionary<InventoryItem, int?> dataSlots = new Dictionary<InventoryItem, int?>(10);
             lock (player.Inventory)
             {
                 var allBackpackItems = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
@@ -104,17 +104,19 @@ namespace DOL.GS.Behaviour.Actions
 
                 GamePlayerInventory playerInventory = player.Inventory as GamePlayerInventory;
                 playerInventory.BeginChanges();
-                foreach (DictionaryEntry de in dataSlots)
+				Dictionary<InventoryItem, int?>.Enumerator enumerator = dataSlots.GetEnumerator();
+                while (enumerator.MoveNext())
                 {
-                    if (de.Value == null)
+					KeyValuePair<InventoryItem, int?> de = enumerator.Current;
+                    if (de.Value.HasValue)
                     {
-                        playerInventory.RemoveItem((InventoryItem)de.Key);
-                        InventoryLogging.LogInventoryAction(player, NPC, eInventoryActionType.Quest, ((InventoryItem)de.Key).Template, ((InventoryItem)de.Key).Count);
+                        playerInventory.RemoveItem(de.Key);
+                        InventoryLogging.LogInventoryAction(player, NPC, eInventoryActionType.Quest, de.Key.Template, de.Key.Count);
                     }
                     else
                     {
-                        playerInventory.RemoveCountFromStack((InventoryItem)de.Key, (int)de.Value);
-                        InventoryLogging.LogInventoryAction(player, NPC, eInventoryActionType.Quest, ((InventoryItem)de.Key).Template, (int)de.Value);
+                        playerInventory.RemoveCountFromStack(de.Key, de.Value.Value);
+                        InventoryLogging.LogInventoryAction(player, NPC, eInventoryActionType.Quest, de.Key.Template, de.Value.Value);
                     }
                 }
                 playerInventory.CommitChanges();
