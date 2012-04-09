@@ -101,7 +101,10 @@ namespace DOL.GS.Housing
 
 		private static void CheckItemTemplates()
 		{
-			//lot marker
+            if (!ServerProperties.Properties.LOAD_HOUSING_ITEMS)
+                return;            
+            
+            //lot marker
 			CheckItemTemplate("Albion cottage deed", "housing_alb_cottage_deed", 498, 0, 10000000, 0, 0, 0, 0, 1);
 			CheckItemTemplate("Albion house deed", "housing_alb_house_deed", 498, 0, 50000000, 0, 0, 0, 0, 1);
 			CheckItemTemplate("Albion villa deed", "housing_alb_villa_deed", 498, 0, 100000000, 0, 0, 0, 0, 1);
@@ -159,7 +162,10 @@ namespace DOL.GS.Housing
 
 		private static void CheckMerchantItemTemplates()
 		{
-			//lot markers
+            if (!ServerProperties.Properties.LOAD_HOUSING_ITEMS)
+                return;
+            
+            //lot markers
 			string[] alblotmarkeritems = {
 			                             	"housing_alb_cottage_deed", "housing_alb_house_deed", "housing_alb_villa_deed", "housing_alb_mansion_deed",
 			                             	"housing_porch_deed", "housing_porch_remove_deed", //"housing_deed_of_guild_transfer"
@@ -269,7 +275,10 @@ namespace DOL.GS.Housing
 
 		private static void CheckNPCTemplates()
 		{
-			// These are default npc's
+            if (!ServerProperties.Properties.LOAD_HOUSING_NPC)
+                return;
+            
+            // These are default npc's
 
 			CheckNPCTemplate(Properties.HOUSING_STARTING_NPCTEMPLATE_ID,     "DOL.GS.GameHastener", "Piper", "Hastener", "0", "", "");
 			CheckNPCTemplate(Properties.HOUSING_STARTING_NPCTEMPLATE_ID + 1, "DOL.GS.Blacksmith", "Blacksmith", "Smith", "0", "", "");

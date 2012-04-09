@@ -1260,7 +1260,10 @@ namespace DOL.GS.Items
 		[GameServerStartedEvent]
 		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
 		{
-			ItemTemplate item;
+            if (!ServerProperties.Properties.LOAD_BUFF_TOKENS)
+                return;
+            
+            ItemTemplate item;
 			
 			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("Full_Buffs_Token");
 			if (item == null)
@@ -1615,6 +1618,9 @@ namespace DOL.GS.Items
         [GameServerStartedEvent]
         public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
         {
+            if (!ServerProperties.Properties.LOAD_BUFF_TOKENS)
+                return;
+            
             ItemTemplate item;
 
             item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPFull_Buffs_Token");
