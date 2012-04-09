@@ -99,7 +99,10 @@ namespace DOL.GS.RealmAbilities
 		[ScriptLoadedEvent]
 		public static void OnScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
-			ItemTemplate arrow_summoning1 = GameServer.Database.FindObjectByKey<ItemTemplate>("arrow_summoning1");
+            if (!ServerProperties.Properties.LOAD_ARROW_SUMMONING)
+                return;            
+            
+            ItemTemplate arrow_summoning1 = GameServer.Database.FindObjectByKey<ItemTemplate>("arrow_summoning1");
 			if (arrow_summoning1 == null)
 			{
 				arrow_summoning1 = new ItemTemplate();
