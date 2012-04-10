@@ -2463,10 +2463,13 @@ namespace DOL.GS.Commands
 						}
 					}
 
-					targetMob.LoadFromDatabase(dbMob);
+					if (targetMob != null)
+					{
+						targetMob.LoadFromDatabase(dbMob);
+					}
 				}
 
-				if (mob == null)
+				if (mob == null || targetMob == null)
 				{
 					client.Out.SendMessage("Unable to find mob named:  " + mobName, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
