@@ -54,7 +54,7 @@ namespace DOL.GS
 		public class GameCommand
 		{
 			public List<string> Usage { get; set; }
-			public string Name;			
+			public string Name;
 			public List<string> Levels;
 			public string Description;
 			public ICommandHandler CmdHandler;
@@ -214,36 +214,45 @@ namespace DOL.GS
 						if (type.GetInterface("DOL.GS.Commands.ICommandHandler") == null) continue;
 
 
-
-						//use this to populate the DBCommand table
-						/*
-						object[] objs = type.GetCustomAttributes(typeof(CmdAttribute), false);
-						foreach (CmdAttribute attrib in objs)
+						#region  Populates the DBCommand table
+						if (!dbcommands.ContainsKey(type.FullName))
 						{
-							DBCommand dbcom = new DBCommand();
-							dbcom.Name = attrib.Cmd;
-							if (attrib.Aliases != null)
-								dbcom.Aliases = string.Join(";", attrib.Aliases.ToArray());
-							dbcom.Description = attrib.Description;
-							dbcom.Implementation = type.FullName;
-							if (attrib.Usage != null)
-								dbcom.Usages = string.Join("\n", attrib.Usage.ToArray());
-							List<string> privlvl = new List<string>();
-							switch(attrib.Level)
+							object[] objs = type.GetCustomAttributes(typeof(CmdAttribute), false);
+							foreach (CmdAttribute attrib in objs)
 							{
-								case 1: privlvl.Add("1"); privlvl.Add("2"); privlvl.Add("3"); break;
-								case 2: privlvl.Add("2"); privlvl.Add("3"); break;
-								case 3: privlvl.Add("3"); break;
+								DBCommand dbcom = new DBCommand();
+								dbcom.Name = attrib.Cmd;
+								if (attrib.Aliases != null)
+									dbcom.Aliases = string.Join(";", attrib.Aliases.ToArray());
+								dbcom.Description = attrib.Description;
+								dbcom.Implementation = type.FullName;
+								if (attrib.Usage != null)
+									dbcom.Usages = string.Join("\n", attrib.Usage.ToArray());
+								List<string> privlvl = new List<string>();
+								switch (attrib.Level)
+								{
+									case 1: privlvl.Add("1"); privlvl.Add("2"); privlvl.Add("3"); break;
+									case 2: privlvl.Add("2"); privlvl.Add("3"); break;
+									case 3: privlvl.Add("3"); break;
+								}
+								dbcom.PrivLevels = string.Join(";", privlvl.ToArray());
+								try
+								{
+									GameServer.Database.AddObject(dbcom);
+									if (!dbcommands.ContainsKey(type.FullName))
+										dbcommands.Add(type.FullName, dbcom);
+									log.Info("Command handler " + type.FullName + " added to database");
+								}
+								catch(Exception e)
+								{
+									if (log.IsErrorEnabled)
+										log.Error("Populating table Commands", e);
+								}								
 							}
-							dbcom.PrivLevels = string.Join(";", privlvl.ToArray());
-							GameServer.Database.AddObject(dbcom);
 						}
-						continue;
-						*/
+						#endregion Populates the DBCommand table
 
 
-
-						if (!dbcommands.ContainsKey(type.FullName)) continue;
 						DBCommand dbcommand = dbcommands[type.FullName];
 						if (disabled.Contains(dbcommand.Name.Replace('&', '/')))
 						{

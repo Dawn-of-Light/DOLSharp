@@ -90,7 +90,7 @@ namespace DOL.GS.Commands
 
 		public virtual void DisplaySyntax(GameClient client)
 		{
-			if (client == null || !client.IsPlaying)
+			if (client == null || !client.IsPlaying || Command == null)
 				return;
 
 			ChatUtil.SendSystemMessage(client, Command.Description, null);
@@ -105,7 +105,7 @@ namespace DOL.GS.Commands
 
 		public virtual void DisplaySyntax(GameClient client, string subcommand)
 		{
-			if (client == null || !client.IsPlaying)
+			if (client == null || !client.IsPlaying || Command == null)
 				return;
 
 			foreach (string sentence in Command.Usage)
@@ -123,7 +123,7 @@ namespace DOL.GS.Commands
 
 		public virtual void DisplaySyntax(GameClient client, string subcommand1, string subcommand2)
 		{
-			if (client == null || !client.IsPlaying)
+			if (client == null || !client.IsPlaying || Command == null)
 				return;
 
 			foreach (string sentence in Command.Usage)
