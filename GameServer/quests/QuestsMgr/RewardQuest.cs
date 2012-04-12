@@ -109,6 +109,15 @@ namespace DOL.GS.Quests
 
 
 		/// <summary>
+		/// The NPC giving the quest.
+		/// </summary>
+		public GameNPC QuestGiver
+		{
+			get { return (QuestGivers != null && QuestGivers.Count > 0) ? QuestGivers[0] : null; }
+			set { m_questGivers = new List<GameNPC> { value }; }
+		}
+
+		/// <summary>
 		/// The NPCs giving the quest.
 		/// </summary>
 		public List<GameNPC> QuestGivers
@@ -137,7 +146,15 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// The fully-fledged story to the quest.
 		/// </summary>
-		public virtual String Story(GamePlayer player)
+		public virtual String Story
+		{
+			get { return StoryForPlayer(null); }
+		}
+
+		/// <summary>
+		/// The fully-fledged story to the quest for a player
+		/// </summary>
+		public virtual String StoryForPlayer(GamePlayer player)
 		{
 			return "QUEST STORY UNDEFINED";
 		}
@@ -145,7 +162,15 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// A summary of the quest text.
 		/// </summary>
-		public virtual String Summary(GamePlayer player)
+		public virtual String Summary
+		{
+			get { return SummaryForPlayer(null); }
+		}
+
+		/// <summary>
+		/// A summary of the quest text for a player
+		/// </summary>
+		public virtual String SummaryForPlayer(GamePlayer player)
 		{
 			return "QUEST SUMMARY UNDEFINED";
 		}
@@ -153,7 +178,15 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// Text showing upon finishing the quest.
 		/// </summary>
-		public virtual String Conclusion(GamePlayer player)
+		public virtual String Conclusion
+		{
+			get { return ConclusionForPlayer(null); }
+		}
+
+		/// <summary>
+		/// Text showing upon finishing the quest for a player
+		/// </summary>
+		public virtual String ConclusionForPlayer(GamePlayer player)
 		{
 			return "QUEST CONCLUSION UNDEFINED";
 		}
@@ -593,6 +626,15 @@ namespace DOL.GS.Quests
 			/// Add a basic reward (up to a maximum of 8).
 			/// </summary>
 			/// <param name="reward"></param>
+			public void AddBasicItem(ItemTemplate reward)
+			{
+				AddBasicItem(0, reward);
+			}
+
+			/// <summary>
+			/// Add a basic reward (up to a maximum of 8).
+			/// </summary>
+			/// <param name="reward"></param>
 			public void AddBasicItem(int classID, ItemTemplate reward)
 			{
 				if (!m_basicItems.ContainsKey(classID))
@@ -600,6 +642,15 @@ namespace DOL.GS.Quests
 
 				if (m_basicItems[classID].Count < 8)
 					m_basicItems[classID].Add(reward);
+			}
+
+			/// <summary>
+			/// Add an optional reward (up to a maximum of 8).
+			/// </summary>
+			/// <param name="reward"></param>
+			public void AddOptionalItem(ItemTemplate reward)
+			{
+				AddOptionalItem(0, reward);
 			}
 
 			/// <summary>

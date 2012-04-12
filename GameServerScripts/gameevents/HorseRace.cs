@@ -133,7 +133,7 @@ namespace DOL.GS.GameEvents
 			{
 				if (!base.Interact(player))
 					return false;
-				if (Riders.Length >= 1)
+				if (Riders.Count >= 1)
 					return false;
 
 				player.MountSteed(this, false);
@@ -571,7 +571,7 @@ namespace DOL.GS.GameEvents
 		{
 			lock (m_horses)
 			{
-				foreach (GamePlayer ply in horse.Riders)
+				foreach (GamePlayer ply in horse.Riders.Values)
 				{
 					//Dismount the rider
 					ply.DismountSteed(true);

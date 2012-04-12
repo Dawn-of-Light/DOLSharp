@@ -68,39 +68,39 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0x01); // Wrap
 			pak.WritePascalString(quest.Name);
 
-			if (quest.Summary(player).Length > 255)
+			if (quest.SummaryForPlayer(player).Length > 255)
 			{
-				pak.WritePascalString(quest.Summary(player).Substring(0, 255));
+				pak.WritePascalString(quest.SummaryForPlayer(player).Substring(0, 255));
 			}
 			else
 			{
-				pak.WritePascalString(quest.Summary(player));
+				pak.WritePascalString(quest.SummaryForPlayer(player));
 			}
 
 			if (offer)
 			{
-				if (quest.Story(player).Length > (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH)
+				if (quest.StoryForPlayer(player).Length > (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH)
 				{
 					pak.WriteShort((ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH);
-					pak.WriteStringBytes(quest.Story(player).Substring(0, (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH));
+					pak.WriteStringBytes(quest.StoryForPlayer(player).Substring(0, (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH));
 				}
 				else
 				{
-					pak.WriteShort((ushort)quest.Story(player).Length);
-					pak.WriteStringBytes(quest.Story(player));
+					pak.WriteShort((ushort)quest.StoryForPlayer(player).Length);
+					pak.WriteStringBytes(quest.StoryForPlayer(player));
 				}
 			}
 			else
 			{
-				if (quest.Conclusion(player).Length > (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH)
+				if (quest.ConclusionForPlayer(player).Length > (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH)
 				{
 					pak.WriteShort((ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH);
-					pak.WriteStringBytes(quest.Conclusion(player).Substring(0, (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH));
+					pak.WriteStringBytes(quest.ConclusionForPlayer(player).Substring(0, (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH));
 				}
 				else
 				{
-					pak.WriteShort((ushort)quest.Conclusion(player).Length);
-					pak.WriteStringBytes(quest.Conclusion(player));
+					pak.WriteShort((ushort)quest.ConclusionForPlayer(player).Length);
+					pak.WriteStringBytes(quest.ConclusionForPlayer(player));
 				}
 			}
 
