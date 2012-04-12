@@ -26,7 +26,7 @@ namespace DOL.GS.Commands
 		ePrivLevel.GM,
 		"Makes the specified UI Part of your target or yourself blinking.",
 		"/blink <id>: type /blink for a list of possible IDs")]
-	public class BlinkCommandHandler : ICommandHandler
+	public class BlinkCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{

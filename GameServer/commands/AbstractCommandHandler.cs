@@ -28,6 +28,7 @@ namespace DOL.GS.Commands
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		public ScriptMgr.GameCommand Command = null;
 
 		/// <summary>
 		/// Is this player spamming this command
@@ -92,16 +93,12 @@ namespace DOL.GS.Commands
 			if (client == null || !client.IsPlaying)
 				return;
 
-			var attrib = (CmdAttribute[]) GetType().GetCustomAttributes(typeof (CmdAttribute), false);
-			if (attrib.Length == 0)
-				return;
+			ChatUtil.SendSystemMessage(client, Command.Description, null);
 
-			ChatUtil.SendSystemMessage(client, attrib[0].Description, null);
-
-			foreach (string sentence in attrib[0].Usage)
+			foreach (string sentence in Command.Usage)
 			{
 				ChatUtil.SendSystemMessage(client, sentence, null);
-			}
+			}		
 
 			return;
 		}
@@ -111,14 +108,9 @@ namespace DOL.GS.Commands
 			if (client == null || !client.IsPlaying)
 				return;
 
-			var attrib = (CmdAttribute[]) GetType().GetCustomAttributes(typeof (CmdAttribute), false);
-
-			if (attrib.Length == 0)
-				return;
-
-			foreach (string sentence in attrib[0].Usage)
+			foreach (string sentence in Command.Usage)
 			{
-				string[] words = sentence.Split(new[] {' '}, 3);
+				string[] words = sentence.Split(new[] { ' ' }, 3);
 
 				if (words.Length >= 2 && words[1].Equals(subcommand))
 				{
@@ -134,12 +126,7 @@ namespace DOL.GS.Commands
 			if (client == null || !client.IsPlaying)
 				return;
 
-			var attrib = (CmdAttribute[]) GetType().GetCustomAttributes(typeof (CmdAttribute), false);
-
-			if (attrib.Length == 0)
-				return;
-
-			foreach (string sentence in attrib[0].Usage)
+			foreach (string sentence in Command.Usage)
 			{
 				string[] words = sentence.Split(new[] {' '}, 4);
 

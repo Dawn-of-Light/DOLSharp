@@ -24,7 +24,7 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player, //minimum privelege level
 		"Drops the Minotaurrelic.", //command description
 		"/dropmr")] //usage
-	public class DropmrCommandHandler : ICommandHandler
+	public class DropmrCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{

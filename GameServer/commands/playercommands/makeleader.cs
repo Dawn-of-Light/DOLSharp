@@ -29,7 +29,7 @@ namespace DOL.GS.Commands
 		 "Set a new group leader (can be used by current leader).",
 		 "/makeleader <playerName>")]
 
-	public class MakeLeaderCommandHandler : ICommandHandler
+	public class MakeLeaderCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{

@@ -30,7 +30,7 @@ namespace DOL.GS.Commands
 		"Reload various elements",
 		"/reload mob|object|CL|specs|spells"
 		)]
-	public class ReloadCommandHandler :ICommandHandler
+	public class ReloadCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 		

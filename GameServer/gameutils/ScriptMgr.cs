@@ -26,6 +26,7 @@ using System.Reflection;
 using System.Text;
 using DOL.AI.Brain;
 using DOL.Config;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerRules;
 using DOL.GS.Spells;
@@ -52,11 +53,11 @@ namespace DOL.GS
 		/// </summary>
 		public class GameCommand
 		{
-			public String[] Usage { get; set; }
-			public string m_cmd;
-			public uint m_lvl;
-			public string m_desc;
-			public ICommandHandler m_cmdHandler;
+			public List<string> Usage { get; set; }
+			public string Name;			
+			public List<string> Levels;
+			public string Description;
+			public ICommandHandler CmdHandler;
 		}
 
 		/// <summary>
@@ -143,15 +144,15 @@ namespace DOL.GS
 
 				if (cmdString[0] == '&')
 					cmdString = '/' + cmdString.Remove(0, 1);
-				if ((uint)plvl >= cmd.m_lvl)
+				if (cmd.Levels.Contains(((uint)plvl).ToString()))
 				{
 					if (addDesc)
 					{
-						list.Add(cmdString + " - " + cmd.m_desc);
+						list.Add(cmdString + " - " + cmd.Description);
 					}
 					else
 					{
-						list.Add(cmd.m_cmd);
+						list.Add(cmd.Name);
 					}
 				}
 			}
@@ -196,7 +197,8 @@ namespace DOL.GS
 			asms.Add(typeof(GameServer).Assembly);
 
 			//build array of disabled commands
-			string[] disabledarray = ServerProperties.Properties.DISABLED_COMMANDS.Split(';');
+			List<string> disabled = ServerProperties.Properties.DISABLED_COMMANDS.Split(';').ToList();
+			Dictionary<string, DBCommand> dbcommands = GameServer.Database.SelectAllObjects<DBCommand>().ToDictionary(v => v.Implementation, v => v);
 
 			foreach (Assembly script in asms)
 			{
@@ -205,51 +207,70 @@ namespace DOL.GS
 				// Walk through each type in the assembly
 				foreach (Type type in script.GetTypes())
 				{
-					// Pick up a class
-					if (type.IsClass != true) continue;
-					if (type.GetInterface("DOL.GS.Commands.ICommandHandler") == null) continue;
-
 					try
 					{
+						// Pick up a class
+						if (type.IsClass != true) continue;
+						if (type.GetInterface("DOL.GS.Commands.ICommandHandler") == null) continue;
+
+
+
+						//use this to populate the DBCommand table
+						/*
 						object[] objs = type.GetCustomAttributes(typeof(CmdAttribute), false);
 						foreach (CmdAttribute attrib in objs)
 						{
-							bool disabled = false;
-							foreach (string str in disabledarray)
-							{
-								if (attrib.Cmd.Replace('&', '/') == str)
-								{
-									disabled = true;
-									log.Info("Will not load command " + attrib.Cmd + " as it is disabled in server properties");
-									break;
-								}
-							}
-
-							if (disabled)
-								continue;
-
-							if (m_gameCommands.ContainsKey(attrib.Cmd))
-							{
-								log.Info(attrib.Cmd + " from " + script.GetName() + " has been suppressed, a command of that type already exists!");
-								continue;
-							}
-							if (ServerProperties.Properties.VERBOSE_LEVEL <= 1 && log.IsDebugEnabled)
-								log.Debug("ScriptMgr: Command - '" + attrib.Cmd + "' - (" + attrib.Description + ") required plvl:" + attrib.Level);
-
-							GameCommand cmd = new GameCommand();
-							cmd.Usage = attrib.Usage;
-							cmd.m_cmd = attrib.Cmd;
-							cmd.m_lvl = attrib.Level;
-							cmd.m_desc = attrib.Description;
-							cmd.m_cmdHandler = (ICommandHandler)Activator.CreateInstance(type);
-							m_gameCommands.Add(attrib.Cmd, cmd);
+							DBCommand dbcom = new DBCommand();
+							dbcom.Name = attrib.Cmd;
 							if (attrib.Aliases != null)
+								dbcom.Aliases = string.Join(";", attrib.Aliases.ToArray());
+							dbcom.Description = attrib.Description;
+							dbcom.Implementation = type.FullName;
+							if (attrib.Usage != null)
+								dbcom.Usages = string.Join("\n", attrib.Usage.ToArray());
+							List<string> privlvl = new List<string>();
+							switch(attrib.Level)
 							{
-								foreach (string alias in attrib.Aliases)
-								{
-									m_gameCommands.Add(alias, cmd);
-								}
+								case 1: privlvl.Add("1"); privlvl.Add("2"); privlvl.Add("3"); break;
+								case 2: privlvl.Add("2"); privlvl.Add("3"); break;
+								case 3: privlvl.Add("3"); break;
 							}
+							dbcom.PrivLevels = string.Join(";", privlvl.ToArray());
+							GameServer.Database.AddObject(dbcom);
+						}
+						continue;
+						*/
+
+
+
+						if (!dbcommands.ContainsKey(type.FullName)) continue;
+						DBCommand dbcommand = dbcommands[type.FullName];
+						if (disabled.Contains(dbcommand.Name.Replace('&', '/')))
+						{
+							log.Info("Will not load command " + dbcommand.Name + " as it is disabled in server properties");
+							continue;
+						}
+						if (m_gameCommands.ContainsKey(dbcommand.Name))
+						{
+							log.Info(dbcommand.Name + " from " + script.GetName() + " has been suppressed, a command of that type already exists!");
+							continue;
+						}
+						if (ServerProperties.Properties.VERBOSE_LEVEL <= 1 && log.IsDebugEnabled)
+							log.Debug("ScriptMgr: Command - '" + dbcommand.Name + "' - (" + dbcommand.Description + ") required plvl:" + dbcommand.PrivLevels);
+						GameCommand cmd = new GameCommand();
+						if (!string.IsNullOrEmpty(dbcommand.Usages))
+							cmd.Usage = dbcommand.Usages.Split('\n').ToList();
+						cmd.Name = dbcommand.Name;
+						cmd.Levels = dbcommand.PrivLevels.Split(';').ToList();
+						cmd.Description = dbcommand.Description;
+						cmd.CmdHandler = (ICommandHandler)Activator.CreateInstance(type);
+						if (cmd.CmdHandler is AbstractCommandHandler)
+							((AbstractCommandHandler)cmd.CmdHandler).Command = cmd;
+						m_gameCommands.Add(dbcommand.Name, cmd);
+						if (!string.IsNullOrEmpty(dbcommand.Aliases))
+						{
+							foreach (string alias in dbcommand.Aliases.Split(';'))
+								m_gameCommands.Add(alias, cmd);
 						}
 					}
 					catch (Exception e)
@@ -280,7 +301,7 @@ namespace DOL.GS
 				//If there is no such command, return false
 				if (myCommand == null) return false;
 
-				if (client.Account.PrivLevel < myCommand.m_lvl)
+				if (!myCommand.Levels.Contains(((uint)client.Account.PrivLevel).ToString()))
 				{
 					if (!SinglePermission.HasPermission(client.Player, pars[0].Substring(1, pars[0].Length - 1)))
 					{
@@ -288,7 +309,7 @@ namespace DOL.GS
 							pars[0] = '/' + pars[0].Remove(0, 1);
 						//client.Out.SendMessage("You do not have enough priveleges to use " + pars[0], eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						//why should a player know the existing commands..
-						client.Out.SendMessage("No such command ("+pars[0]+")",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage("No such command (" + pars[0] + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return true;
 					}
 					//else execute the command
@@ -398,10 +419,10 @@ namespace DOL.GS
 		{
 			// what you type in script is what you get; needed for overloaded scripts,
 			// like emotes, to handle case insensitive and guessed commands correctly
-			pars[0] = myCommand.m_cmd;
+			pars[0] = myCommand.Name;
 
 			//Log the command usage
-			if (client.Account == null || ((ServerProperties.Properties.LOG_ALL_GM_COMMANDS && client.Account.PrivLevel > 1) || myCommand.m_lvl > 1))
+			if (client.Account == null || ((ServerProperties.Properties.LOG_ALL_GM_COMMANDS && client.Account.PrivLevel > 1) || !myCommand.Levels.Contains("1")))
 			{
 				string commandText = String.Join(" ", pars);
 				string targetName = "(no target)";
@@ -425,7 +446,7 @@ namespace DOL.GS
 			{
 				client.Player.Notify(DOL.Events.GamePlayerEvent.ExecuteCommand, new ExecuteCommandEventArgs(client.Player, myCommand, pars));
 			}
-			myCommand.m_cmdHandler.OnCommand(client, pars);
+			myCommand.CmdHandler.OnCommand(client, pars);
 		}
 
 		/// <summary>
@@ -486,7 +507,7 @@ namespace DOL.GS
 						foreach (FileInfo finfo in files)
 						{
 							if (config[finfo.FullName]["size"].GetInt(0) != finfo.Length
-							    || config[finfo.FullName]["lastmodified"].GetLong(0) != finfo.LastWriteTime.ToFileTime())
+								|| config[finfo.FullName]["lastmodified"].GetLong(0) != finfo.LastWriteTime.ToFileTime())
 							{
 								//Recompile required
 								recompileRequired = true;
@@ -557,13 +578,13 @@ namespace DOL.GS
 				{
 					compiler = new CSharpCodeProvider(new Dictionary<string, string> { { "CompilerVersion", "v4.0" } });
 				}
-				
+
 				// Graveen: allow script compilation in debug or release mode
-				#if DEBUG
+#if DEBUG
 				CompilerParameters param = new CompilerParameters(asm_names, dllName, true);
-				#else
+#else
 				CompilerParameters param = new CompilerParameters(asm_names, dllName, false);
-				#endif
+#endif
 				param.GenerateExecutable = false;
 				param.GenerateInMemory = false;
 				param.WarningLevel = 2;
@@ -1121,10 +1142,10 @@ namespace DOL.GS
 
 			foreach (Assembly asm in asms)
 				foreach (Type t in asm.GetTypes())
-			{
-				if (t.IsClass && baseType.IsAssignableFrom(t))
-					types.Add(t);
-			}
+				{
+					if (t.IsClass && baseType.IsAssignableFrom(t))
+						types.Add(t);
+				}
 
 			return (Type[])types.ToArray(typeof(Type));
 		}
