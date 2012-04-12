@@ -43,6 +43,7 @@ namespace DOL.AI
 		/// </summary>
 		public APlayerVicinityBrain() : base()
 		{
+			m_disableAutoStop = false;
 		}
 
 		/// <summary>
@@ -72,6 +73,17 @@ namespace DOL.AI
 			get { return 45000; }
 		}
 
+		private bool m_disableAutoStop;
+
+		/// <summary>
+		/// Prevents the brain to autostop for inactivity
+		/// </summary>
+		public virtual bool DisableAutoStop
+		{
+			get { return m_disableAutoStop; }
+			set { m_disableAutoStop = value; }
+		}
+
 		/// <summary>
 		/// Starts the brain thinking and resets the inactivity countdown
 		/// </summary>
@@ -92,7 +104,7 @@ namespace DOL.AI
 		/// <param name="callingTimer"></param>
 		protected override int BrainTimerCallback(RegionTimer callingTimer)
 		{
-			if (Interlocked.Decrement(ref noPlayersStopCountdown) <= 0)
+			if (!DisableAutoStop && Interlocked.Decrement(ref noPlayersStopCountdown) <= 0)
 			{
 				//Stop the brain timer
 				Stop();

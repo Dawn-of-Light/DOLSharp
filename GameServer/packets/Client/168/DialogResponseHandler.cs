@@ -20,6 +20,8 @@
 using DOL.Events;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
+using System;
+using System.Reflection;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
@@ -241,7 +243,46 @@ namespace DOL.GS.PacketHandler.Client.v168
 									return;
 								}
 
-								var group = new Group(groupLeader);
+								Group group = null;// new Group(groupLeader);
+
+								Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
+
+								try
+								{
+									group = (Group)gasm.CreateInstance(ServerProperties.Properties.GROUP_CLASS, false, BindingFlags.CreateInstance, null, new object[] { groupLeader }, null, null);
+								}
+								catch (Exception e)
+								{
+									if (log.IsErrorEnabled)
+										log.Error("CreateGroup", e);
+								}
+
+								if (group == null)
+								{
+									foreach (Assembly asm in ScriptMgr.Scripts)
+									{
+										try
+										{
+											group = (Group)asm.CreateInstance(ServerProperties.Properties.GROUP_CLASS, false, BindingFlags.CreateInstance, null, new object[] { groupLeader }, null, null);
+										}
+										catch (Exception e)
+										{
+											if (log.IsErrorEnabled)
+												log.Error("CreateGroup", e);
+										}
+										if (group != null)
+											break;
+									}
+								}
+
+								if (group == null)
+								{
+									log.ErrorFormat("Could not instantiate group class '{0}', using Group instead!", ServerProperties.Properties.GROUP_CLASS);
+									group = new Group(groupLeader);
+								}
+
+
+
 								GroupMgr.AddGroup(group, group);
 
 								group.AddMember(groupLeader);

@@ -123,6 +123,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				var player = (GamePlayer) m_actionSource;
 
+				player.Notify(DOL.Events.GamePlayerEvent.UseSpell, player, new DOL.Events.UseSpellEventArgs(m_spellLevel, m_spellLineIndex));
+
 				if ((m_flagSpeedData & 0x200) != 0)
 				{
 					player.CurrentSpeed = (short)(-(m_flagSpeedData & 0x1ff)); // backward movement

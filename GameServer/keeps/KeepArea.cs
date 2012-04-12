@@ -77,8 +77,11 @@ namespace DOL.GS.Keeps
 		public override void LoadFromDatabase(DBArea area)
 		{
 			base.LoadFromDatabase(area);
-			GameServer.KeepManager.Log.Debug("KeepArea " + area.Description + " LoadFromDatabase called");
-			GameServer.KeepManager.Log.Debug("X: " + area.X + "(" + m_X + ") Y: " + area.Y + "(" + m_Y + ") Region:" + area.Region + " Radius: " + m_Radius);
+			if (ServerProperties.Properties.VERBOSE_LEVEL <= 1)
+			{
+				GameServer.KeepManager.Log.Debug("KeepArea " + area.Description + " LoadFromDatabase called");
+				GameServer.KeepManager.Log.Debug("X: " + area.X + "(" + m_X + ") Y: " + area.Y + "(" + m_Y + ") Region:" + area.Region + " Radius: " + m_Radius);
+			}
 		}
 	}
 }

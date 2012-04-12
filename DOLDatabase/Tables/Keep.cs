@@ -44,6 +44,10 @@ namespace DOL.Database
 		private int m_type;
 		private byte m_baseLevel;
 		private string m_createInfo;
+		private int m_spawnX;
+		private int m_spawnY;
+		private int m_spawnZ;
+		private ushort m_spawnHeading;
 
 
 		public DBKeep()
@@ -352,5 +356,59 @@ namespace DOL.Database
 				Dirty = true; m_createInfo = value;
 			}
 		}
+
+		[DataElement(AllowDbNull = true)]
+		public int SpawnX
+		{
+			get
+			{
+				return m_spawnX;
+			}
+			set
+			{
+				Dirty = true; m_spawnX = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int SpawnY
+		{
+			get
+			{
+				return m_spawnY;
+			}
+			set
+			{
+				Dirty = true; m_spawnY = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int SpawnZ
+		{
+			get
+			{
+				return m_spawnZ;
+			}
+			set
+			{
+				Dirty = true; m_spawnZ = value;
+			}
+		}
+
+
+		[DataElement(AllowDbNull = true)]
+		public ushort SpawnHeading
+		{
+			get
+			{
+				return m_spawnHeading;
+			}
+			set
+			{
+				Dirty = true; m_spawnHeading = value;
+			}
+		}
+
 	}
 }

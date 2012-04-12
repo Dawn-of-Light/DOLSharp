@@ -43,7 +43,7 @@ namespace DOL.GS.Commands
 				foreach (AbstractQuest quest in client.Player.QuestList)
 				{
 					message += String.Format("On step {0} of quest '{1}'\n", quest.Step, quest.Name);
-					message += String.Format("What to do: {0}", quest.Description);
+					message += String.Format("What to do: {0}", quest.DescriptionForPlayer(client.Player));
 				}
 			}
 			if (client.Player.QuestListFinished.Count == 0)

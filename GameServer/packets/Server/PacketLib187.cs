@@ -1,21 +1,21 @@
- /*
- * DAWN OF LIGHT - The first free open source DAoC server emulator
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
- */
+/*
+* DAWN OF LIGHT - The first free open source DAoC server emulator
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*
+*/
 #define NOENCRYPTION
 using System;
 using log4net;
@@ -53,7 +53,7 @@ namespace DOL.GS.PacketHandler
 			SendQuestWindow(questNPC, player, quest, false);
 		}
 
-		protected override void SendQuestWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest,	bool offer)
+		protected override void SendQuestWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest, bool offer)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Dialog));
 			ushort QuestID = QuestMgr.GetIDForQuestType(quest.GetType());
@@ -68,39 +68,39 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0x01); // Wrap
 			pak.WritePascalString(quest.Name);
 
-			if (quest.Summary.Length > 255)
+			if (quest.Summary(player).Length > 255)
 			{
-				pak.WritePascalString(quest.Summary.Substring(0, 255));
+				pak.WritePascalString(quest.Summary(player).Substring(0, 255));
 			}
 			else
 			{
-				pak.WritePascalString(quest.Summary);
+				pak.WritePascalString(quest.Summary(player));
 			}
 
 			if (offer)
 			{
-				if (quest.Story.Length > (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH)
+				if (quest.Story(player).Length > (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH)
 				{
 					pak.WriteShort((ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH);
-					pak.WriteStringBytes(quest.Story.Substring(0, (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH));
+					pak.WriteStringBytes(quest.Story(player).Substring(0, (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH));
 				}
 				else
 				{
-					pak.WriteShort((ushort)quest.Story.Length);
-					pak.WriteStringBytes(quest.Story);
+					pak.WriteShort((ushort)quest.Story(player).Length);
+					pak.WriteStringBytes(quest.Story(player));
 				}
 			}
 			else
 			{
-				if (quest.Conclusion.Length > (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH)
+				if (quest.Conclusion(player).Length > (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH)
 				{
 					pak.WriteShort((ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH);
-					pak.WriteStringBytes(quest.Conclusion.Substring(0, (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH));
+					pak.WriteStringBytes(quest.Conclusion(player).Substring(0, (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH));
 				}
 				else
 				{
-					pak.WriteShort((ushort)quest.Conclusion.Length);
-					pak.WriteStringBytes(quest.Conclusion);
+					pak.WriteShort((ushort)quest.Conclusion(player).Length);
+					pak.WriteStringBytes(quest.Conclusion(player));
 				}
 			}
 
@@ -113,12 +113,12 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte)quest.Level);
 			pak.WriteByte((byte)quest.Rewards.MoneyPercent);
 			pak.WriteByte((byte)quest.Rewards.ExperiencePercent(player));
-			pak.WriteByte((byte)quest.Rewards.BasicItems.Count);
-			foreach (ItemTemplate reward in quest.Rewards.BasicItems)
+			pak.WriteByte((byte)quest.Rewards.BasicItems(player).Count);
+			foreach (ItemTemplate reward in quest.Rewards.BasicItems(player))
 				WriteTemplateData(pak, reward, 1);
 			pak.WriteByte((byte)quest.Rewards.ChoiceOf);
-			pak.WriteByte((byte)quest.Rewards.OptionalItems.Count);
-			foreach (ItemTemplate reward in quest.Rewards.OptionalItems)
+			pak.WriteByte((byte)quest.Rewards.OptionalItems(player).Count);
+			foreach (ItemTemplate reward in quest.Rewards.OptionalItems(player))
 				WriteTemplateData(pak, reward, 1);
 			SendTCP(pak);
 		}
@@ -234,7 +234,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte)quest.Goals.Count);
 			pak.WriteByte((byte)quest.Level);
 			pak.WriteStringBytes(quest.Name);
-			pak.WritePascalString(quest.Description);
+			pak.WritePascalString(quest.DescriptionForPlayer(m_gameClient.Player));
 			foreach (RewardQuest.QuestGoal goal in quest.Goals)
 			{
 				String goalDesc = String.Format("{0}\r", goal.Description);

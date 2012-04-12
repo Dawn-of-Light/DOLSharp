@@ -851,10 +851,11 @@ namespace DOL.GS
 
 			if (myMobCount + myItemCount + myMerchantCount + myBindCount > 0)
 			{
-				if (log.IsInfoEnabled)
+				if (ServerProperties.Properties.VERBOSE_LEVEL < 1 && log.IsInfoEnabled)
 					log.Info(String.Format("Region: {0} ({1}) loaded {2} mobs, {3} merchants, {4} items {5} bindpoints, from DB ({6})", Description, ID, myMobCount, myMerchantCount, myItemCount, myBindCount, TimeManager.Name));
 
-				log.Debug("Used Memory: " + GC.GetTotalMemory(false) / 1024 + "KB");
+				if (ServerProperties.Properties.VERBOSE_LEVEL < 1)
+					log.Debug("Used Memory: " + GC.GetTotalMemory(false) / 1024 + "KB");
 
 				if (allErrors != string.Empty)
 					log.Error("Error loading the following NPC ClassType(s), GameNPC used instead:" + allErrors.TrimEnd(','));

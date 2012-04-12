@@ -148,6 +148,7 @@ namespace DOL.Database
 		protected int m_procSpellID1;
 		protected int m_charges1;
 		protected int m_maxCharges1;
+		protected int m_passiveSpell;
 		protected byte m_procChance;
 		protected int m_poisonSpellID;
 		protected int m_poisonMaxCharges;
@@ -227,6 +228,7 @@ namespace DOL.Database
 			m_spellID1 = 0;
 			m_procSpellID = 0;
 			m_procSpellID1 = 0;
+			m_passiveSpell = 0;
 			m_procChance = 0;
 			m_charges1 = 0;
 			m_maxCharges1 = 0;
@@ -309,6 +311,7 @@ namespace DOL.Database
 			SpellID1 = template.SpellID1;
 			ProcSpellID = template.ProcSpellID;
 			ProcSpellID1 = template.ProcSpellID1;
+			PassiveSpell = template.PassiveSpell;
 			ProcChance = template.ProcChance;
 			PoisonSpellID = template.PoisonSpellID;
 			PoisonCharges = template.PoisonCharges;
@@ -962,6 +965,20 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_maxCharges1 = value;
+			}
+		}
+
+		/// <summary>
+		/// Passive Spell for an item
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int PassiveSpell
+		{
+			get { return m_passiveSpell; }
+			set
+			{
+				Dirty = true;
+				m_passiveSpell = value;
 			}
 		}
 

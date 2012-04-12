@@ -60,7 +60,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0x01); // Wrap
 			pak.WritePascalString(quest.Name);
 
-			String personalizedSummary = BehaviourUtils.GetPersonalizedMessage(quest.Description, player);
+			String personalizedSummary = BehaviourUtils.GetPersonalizedMessage(quest.DescriptionForPlayer(player), player);
 			if (personalizedSummary.Length > 255)
 			{
 				pak.WritePascalString(personalizedSummary.Substring(0, 255)); // Summary is max 255 bytes !
@@ -120,7 +120,7 @@ namespace DOL.GS.PacketHandler
 		}
 
 
-		protected override void SendQuestWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest,	bool offer)
+		protected override void SendQuestWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest, bool offer)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Dialog));
 			ushort QuestID = QuestMgr.GetIDForQuestType(quest.GetType());
@@ -135,7 +135,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0x01); // Wrap
 			pak.WritePascalString(quest.Name);
 
-			String personalizedSummary = BehaviourUtils.GetPersonalizedMessage(quest.Summary, player);
+			String personalizedSummary = BehaviourUtils.GetPersonalizedMessage(quest.Summary(player), player);
 			if (personalizedSummary.Length > 255)
 				pak.WritePascalString(personalizedSummary.Substring(0, 255)); // Summary is max 255 bytes !
 			else
@@ -143,7 +143,7 @@ namespace DOL.GS.PacketHandler
 
 			if (offer)
 			{
-				String personalizedStory = BehaviourUtils.GetPersonalizedMessage(quest.Story, player);
+				String personalizedStory = BehaviourUtils.GetPersonalizedMessage(quest.Story(player), player);
 
 				if (personalizedStory.Length > ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH)
 				{
@@ -158,15 +158,15 @@ namespace DOL.GS.PacketHandler
 			}
 			else
 			{
-				if (quest.Conclusion.Length > (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH)
+				if (quest.Conclusion(player).Length > (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH)
 				{
 					pak.WriteShort((ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH);
-					pak.WriteStringBytes(quest.Conclusion.Substring(0, (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH));
+					pak.WriteStringBytes(quest.Conclusion(player).Substring(0, (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH));
 				}
 				else
 				{
-					pak.WriteShort((ushort)quest.Conclusion.Length);
-					pak.WriteStringBytes(quest.Conclusion);
+					pak.WriteShort((ushort)quest.Conclusion(player).Length);
+					pak.WriteStringBytes(quest.Conclusion(player));
 				}
 			}
 
@@ -178,14 +178,14 @@ namespace DOL.GS.PacketHandler
 			}
 			pak.WriteInt((uint)(quest.Rewards.Money)); // unknown, new in 1.94
 			pak.WriteByte((byte)quest.Rewards.ExperiencePercent(player));
-			pak.WriteByte((byte)quest.Rewards.BasicItems.Count);
-			foreach (ItemTemplate reward in quest.Rewards.BasicItems)
+			pak.WriteByte((byte)quest.Rewards.BasicItems(player).Count);
+			foreach (ItemTemplate reward in quest.Rewards.BasicItems(player))
 			{
 				WriteItemData(pak, GameInventoryItem.Create<ItemTemplate>(reward));
 			}
 			pak.WriteByte((byte)quest.Rewards.ChoiceOf);
-			pak.WriteByte((byte)quest.Rewards.OptionalItems.Count);
-			foreach (ItemTemplate reward in quest.Rewards.OptionalItems)
+			pak.WriteByte((byte)quest.Rewards.OptionalItems(player).Count);
+			foreach (ItemTemplate reward in quest.Rewards.OptionalItems(player))
 			{
 				WriteItemData(pak, GameInventoryItem.Create<ItemTemplate>(reward));
 			}

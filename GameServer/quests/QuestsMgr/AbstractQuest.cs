@@ -61,7 +61,11 @@ namespace DOL.GS.Quests
 		/// and the quest. Eg. QuestStep etc.
 		/// </summary>
 		private DBQuest m_dbQuest = null;
-
+		public DBQuest QuestDB
+		{
+			get { return m_dbQuest; }
+			//set { m_dbQuest = value; }
+		}
 		/// <summary>
 		/// List of all QuestParts that can be fired on notify method of quest.
 		/// </summary>
@@ -212,7 +216,15 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual string Description
 		{
-			get { return "QUEST DESCRIPTION UNDEFINED!"; }
+			get { return DescriptionForPlayer(null); }
+		}
+
+		/// <summary>
+		/// Retrieves the description for the current quest step for a player
+		/// </summary>
+		public virtual string DescriptionForPlayer(GamePlayer player)
+		{
+			return "QUEST DESCRIPTION UNDEFINED!";
 		}
 
 		/// <summary>
@@ -645,22 +657,22 @@ namespace DOL.GS.Quests
 			return GiveItem(source, player, itemTemplate, false);
 		}
 
-		protected static bool GiveItem(GamePlayer player, ItemTemplate itemTemplate)
+		public static bool GiveItem(GamePlayer player, ItemTemplate itemTemplate)
 		{
 			return GiveItem(null, player, itemTemplate, true);
 		}
 
-		protected static bool GiveItem(GamePlayer player, ItemTemplate itemTemplate, bool canDrop)
+		public static bool GiveItem(GamePlayer player, ItemTemplate itemTemplate, bool canDrop)
 		{
 			return GiveItem(null, player, itemTemplate, canDrop);
 		}
 
-		protected static bool GiveItem(GameLiving source, GamePlayer player, ItemTemplate itemTemplate)
+		public static bool GiveItem(GameLiving source, GamePlayer player, ItemTemplate itemTemplate)
 		{
 			return GiveItem(source, player, itemTemplate, true);
 		}
 
-		protected static bool GiveItem(GameLiving source, GamePlayer player, ItemTemplate itemTemplate, bool canDrop)
+		public static bool GiveItem(GameLiving source, GamePlayer player, ItemTemplate itemTemplate, bool canDrop)
 		{
 			InventoryItem item = null;
 

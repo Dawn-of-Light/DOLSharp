@@ -30,13 +30,17 @@ namespace DOL.Events
 		/// The player who enter or leave region
 		/// </summary>
 		private GamePlayer m_player;
+		private ushort m_oldregion;
+		private ushort m_newregion;
 
 		/// <summary>
 		/// Constructs a new player enter or leave region event args
 		/// </summary>
-		public RegionPlayerEventArgs(GamePlayer player)
+		public RegionPlayerEventArgs(GamePlayer player, ushort oldregion, ushort newregion)
 		{
 			this.m_player=player;
+			this.m_oldregion = oldregion;
+			this.m_newregion = newregion;
 		}
 
 		/// <summary>
@@ -45,6 +49,14 @@ namespace DOL.Events
 		public GamePlayer Player
 		{
 			get { return m_player; }
+		}
+		public ushort OldRegion
+		{
+			get { return m_oldregion; }
+		}
+		public ushort NewRegion
+		{
+			get { return m_newregion; }
 		}
 	}
 }

@@ -83,7 +83,8 @@ namespace DOL.GS.Keeps
 				m_frontierRegionsList.Add(DEFAULT_FRONTIERS_REGION);
 			}
 
-			ClothingMgr.LoadTemplates();
+			if (ServerProperties.Properties.AUTOEQUIP_GUARDS_LOADED_FROM_DB)
+				ClothingMgr.LoadTemplates();
 
             //Dinberg - moved this here, battlegrounds must be loaded before keepcomponents are.
             LoadBattlegroundCaps();
@@ -298,7 +299,8 @@ namespace DOL.GS.Keeps
         public virtual void RegisterKeep(int keepID, AbstractGameKeep keep)
         {
             m_keeps.Add(keepID, keep);
-            log.Info("Registered Keep: " + keep.Name);
+			if (ServerProperties.Properties.VERBOSE_LEVEL < 1)
+				log.Info("Registered Keep: " + keep.Name);
         }
 
         /// <summary>

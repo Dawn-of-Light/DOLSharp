@@ -316,5 +316,53 @@ namespace DOL.GS
             foreach (var cur in array)
                 action(cur);
         }
+
+		static public string RealmRankToString(int realmpoints)
+		{
+			string result = realmpoints.ToString();
+
+			if (realmpoints >= 100) result = result[0] + result[1] + "L" + result[2];
+			else result = result[0] + "L" + result[1];
+
+			return result;
+		}
+
+		static public int RealmRankToInt(string realmrank)
+		{
+			if (!IsRealmRank(realmrank)) return -1;
+
+			int index = realmrank.IndexOf('L');
+
+			if (index == -1)
+				return -1;
+
+			string t = realmrank.Remove(index, 1);
+
+			return int.Parse(t);
+		}
+
+		static public bool IsNumber(string str)
+		{
+			foreach (char c in str)
+			{
+				if (c < 48 || c > 57) return false;
+			}
+			return true;
+		}
+
+		static public bool IsRealmRank(string realmrank)
+		{
+			if (realmrank.Length <= 2 || realmrank.Length > 4)
+				return false;
+
+			int index = realmrank.IndexOf("L");
+
+			if (index == -1)
+				return false;
+
+			string t = realmrank.Remove(index, 1);
+
+			return (IsNumber(t));
+		}
 	}
 }

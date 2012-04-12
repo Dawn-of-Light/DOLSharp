@@ -1349,7 +1349,7 @@ namespace DOL.GS
 				m_spellLists.Add(line.KeyName, spell_list);
 
 				RegisterSpellLine(new SpellLine(line.KeyName, line.Name, line.Spec, line.IsBaseLine));
-				if (log.IsDebugEnabled)
+				if (ServerProperties.Properties.VERBOSE_LEVEL <= 1 && log.IsDebugEnabled)
 					log.Debug("SpellLine: " + line.KeyName + ", " + dbo2.Count + " spells");
 			}
 			if (log.IsInfoEnabled)
@@ -1619,7 +1619,8 @@ namespace DOL.GS
 						{
 							styleCount = spec.Styles.Length;
 						}
-						log.Debug("Specialization: " + spec.Name + ", " + styleCount + " styles, " + specAbCount + " abilities");
+						if (ServerProperties.Properties.VERBOSE_LEVEL <= 1)
+							log.Debug("Specialization: " + spec.Name + ", " + styleCount + " styles, " + specAbCount + " abilities");
 					}
 				}
 
@@ -1651,7 +1652,7 @@ namespace DOL.GS
 			{
 				string key = (string)entry.Key;
 
-				if (log.IsDebugEnabled)
+				if (ServerProperties.Properties.VERBOSE_LEVEL <= 1 && log.IsDebugEnabled)
 					log.Debug("\tFound ability handler for " + key);
 
 				if (!m_abilityActionHandler.ContainsKey(key))

@@ -23,8 +23,26 @@ namespace DOL.GS
 					AbstractArea area = (AbstractArea)gasm.CreateInstance(thisArea.ClassType, false);
 					if (area == null)
 					{
-						log.Debug("area type " + thisArea.ClassType + " cannot be created, skipping");
-						continue;
+						foreach (Assembly asm in ScriptMgr.Scripts)
+						{
+							try
+							{
+								area = (AbstractArea)asm.CreateInstance(thisArea.ClassType, false);
+							}
+							catch (Exception e)
+							{
+								if (log.IsErrorEnabled)
+									log.Error("LoadAllAreas", e);
+							}
+							if (area != null)
+								break;
+						}
+
+						if (area == null)
+						{
+							log.Error("area type " + thisArea.ClassType + " cannot be created, skipping");
+							continue;
+						}
 					}
 					area.LoadFromDatabase(thisArea);
 					area.Sound = thisArea.Sound;

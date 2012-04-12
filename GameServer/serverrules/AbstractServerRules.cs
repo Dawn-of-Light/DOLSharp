@@ -134,7 +134,7 @@ namespace DOL.GS.ServerRules
 				if (WorldMgr.GetAllClients().Count >= Properties.MAX_PLAYERS)
 				{
 					// GMs are still allowed to enter server
-					if (account == null || (account.PrivLevel == 1 && account.Status <= 0))
+					if (account == null || (account.PrivLevel == 1 && account.StatusOLD <= 0))
 					{
 						// Normal Players will not be allowed over the max
 						client.Out.SendLoginDenied(eLoginError.TooManyPlayersLoggedIn);

@@ -38,6 +38,11 @@ namespace DOL.Events
 		/// </summary>
 		public static readonly DatabaseEvent AccountCreated = new DatabaseEvent("Database.AccountCreated");
 		/// <summary>
+		/// The AccountDeleted event is fired whenever an account is deleted.
+		/// <seealso cref="AccountEventArgs"/>
+		/// </summary>
+		public static readonly DatabaseEvent AccountDeleted = new DatabaseEvent("Database.AccountDeleted");
+		/// <summary>
 		/// The CharacterCreated event is fired whenever a new character is created
 		/// <seealso cref="CharacterEventArgs"/>
 		/// </summary>

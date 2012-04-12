@@ -973,7 +973,7 @@ namespace DOL.GS
 				return m_targetPosition;
 			}
 
-			protected set
+			set
 			{
 				if (value != m_targetPosition)
 				{
@@ -1267,7 +1267,7 @@ namespace DOL.GS
 		/// <param name="target"></param>
 		/// <param name="speed"></param>
 		/// <returns></returns>
-		private int GetTicksToArriveAt(IPoint3D target, int speed)
+		public virtual int GetTicksToArriveAt(IPoint3D target, int speed)
 		{
 			return GetDistanceTo(target) * 1000 / speed;
 		}
@@ -1449,13 +1449,18 @@ namespace DOL.GS
 		private const int STICKMINIMUMRANGE = 100;
 		private const int STICKMAXIMUMRANGE = 5000;
 
+		public virtual void Follow(GameObject target, int minDistance, int maxDistance)
+		{
+			Follow(target, minDistance, maxDistance, 100);
+		}
+
 		/// <summary>
 		/// Follow given object
 		/// </summary>
 		/// <param name="target">Target to follow</param>
 		/// <param name="minDistance">Min distance to keep to the target</param>
 		/// <param name="maxDistance">Max distance to keep following</param>
-		public virtual void Follow(GameObject target, int minDistance, int maxDistance)
+		public virtual void Follow(GameObject target, int minDistance, int maxDistance, int delay)
 		{
 			if (m_followTimer.IsAlive)
 				m_followTimer.Stop();
@@ -1467,6 +1472,17 @@ namespace DOL.GS
 			m_followMinDist = minDistance;
 			m_followTarget.Target = target;
 			m_followTimer.Start(100);
+		}
+
+		public bool IsFollowing
+		{
+			get
+			{
+				return (m_followTimer != null
+					&& m_followTimer.IsAlive
+					&& m_followTarget != null
+					&& m_followTarget.Target != null);
+			}
 		}
 
 		/// <summary>
@@ -1662,7 +1678,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Is the NPC returning home, if so, we don't want it to think
 		/// </summary>
-		public bool IsReturningHome
+		public virtual bool IsReturningHome
 		{
 			get { return m_isReturningHome; }
 			set { m_isReturningHome = value; }
@@ -1939,6 +1955,9 @@ namespace DOL.GS
 			Size = dbMob.Size;
 			Level = dbMob.Level;	// health changes when GameNPC.Level changes
 			Flags = (eFlags)dbMob.Flags;
+			ItemsListTemplateID = dbMob.ItemsListTemplateID;
+			SerializedSpells = dbMob.Spells;
+			SerializedStyles = dbMob.Styles;
 			m_packageID = dbMob.PackageID;
 
 			Strength = (short)dbMob.Strength;
@@ -2146,6 +2165,7 @@ namespace DOL.GS
 				mob.AggroRange = aggroBrain.AggroRange;
 			}
 			mob.EquipmentTemplateID = EquipmentTemplateID;
+			mob.ItemsListTemplateID = ItemsListTemplateID;
 
 			if (m_faction != null)
 				mob.FactionID = m_faction.ID;
@@ -2170,6 +2190,8 @@ namespace DOL.GS
 			mob.VisibleWeaponSlots = this.m_visibleActiveWeaponSlots;
 			mob.PackageID = PackageID;
 			mob.OwnerID = OwnerID;
+			mob.Spells = SerializedSpells;
+			mob.Styles = SerializedStyles;
 
 			if (InternalID == null)
 			{
@@ -2390,6 +2412,47 @@ namespace DOL.GS
 			get { return m_equipmentTemplateID; }
 			set { m_equipmentTemplateID = value; }
 		}
+
+		/// <summary>
+		/// Items list templateID
+		/// </summary>
+		protected string m_itemsListTemplateID;
+		/// <summary>
+		/// The items list template id of this npc
+		/// </summary>
+		public string ItemsListTemplateID
+		{
+			get { return m_itemsListTemplateID; }
+			set { m_itemsListTemplateID = value; }
+		}
+
+		/// <summary>
+		/// Serialized spells
+		/// </summary>
+		private string m_serializedSpells = "";
+		/// <summary>
+		/// Serialized available spells for this npc (saved and loaded from DB)
+		/// </summary>
+		public virtual string SerializedSpells
+		{
+			get { return m_serializedSpells; }
+			set { m_serializedSpells = value; }
+		}
+
+		/// <summary>
+		/// Serialized styles
+		/// </summary>
+		private string m_serializedStyles = "";
+		/// <summary>
+		/// Serialized available styles for this npc (saved and loaded from DB)
+		/// </summary>
+		public virtual string SerializedStyles
+		{
+			get { return m_serializedStyles; }
+			set { m_serializedStyles = value; }
+		}
+
+
 		/// <summary>
 		/// Updates the items on a character
 		/// </summary>
@@ -2606,7 +2669,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the rider of this NPC as weak reference
 		/// </summary>
-		public GamePlayer[] Riders;
+		public Dictionary<int, GamePlayer> Riders;
 
 		/// <summary>
 		/// This function is called when a rider mounts this npc
@@ -2670,7 +2733,7 @@ namespace DOL.GS
 		/// <returns>true if dismounted successfully</returns>
 		public virtual bool RiderDismount(bool forced, GamePlayer player)
 		{
-			if (Riders.Length <= 0)
+			if (Riders.Count <= 0)
 				return false;
 
 			int slot = RiderArrayLocation(player);
@@ -2762,7 +2825,7 @@ namespace DOL.GS
 				List<GamePlayer> list = new List<GamePlayer>(MAX_PASSENGERS);
 				for (int i = 0; i < MAX_PASSENGERS; i++)
 				{
-					if (Riders == null || i >= Riders.Length)
+					if (Riders == null || i >= Riders.Count)
 						break;
 
 					GamePlayer player = Riders[i];
@@ -2813,7 +2876,7 @@ namespace DOL.GS
 			if (!base.AddToWorld()) return false;
 
 			if (MAX_PASSENGERS > 0)
-				Riders = new GamePlayer[MAX_PASSENGERS];
+				Riders = new Dictionary<int, GamePlayer>(MAX_PASSENGERS);
 
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
@@ -2853,7 +2916,7 @@ namespace DOL.GS
 				}
 			}
 
-			if (m_houseNumber > 0 && !(this is GameConsignmentMerchant))
+			if (m_houseNumber > 0 && m_houseNumber < 0xFFFF && !(this is GameConsignmentMerchant))
 			{
 				log.Info("NPC '" + Name + "' added to house " + m_houseNumber);
 				CurrentHouse = HouseMgr.GetHouse(m_houseNumber);
@@ -2874,6 +2937,42 @@ namespace DOL.GS
 			if (GameServer.Instance.ServerStatus == eGameServerStatus.GSS_Open)
 				FireAmbientSentence(eAmbientTrigger.spawning);
 
+			if (SerializedSpells != null && SerializedSpells.Length > 0)
+			{
+				string[] spells = SerializedSpells.Split(';');
+				foreach (string spell in spells)
+				{
+					int spellid;
+					if (Int32.TryParse(spell, out spellid))
+					{
+						Spell sp = SkillBase.GetSpellByID(spellid);
+						if (sp != null && !Spells.Contains(sp))
+							Spells.Add(sp);
+					}
+				}
+			}
+
+			if (SerializedStyles != null && SerializedStyles.Length > 0)
+			{
+				string[] styles = SerializedStyles.Split(';');
+				foreach (string style in styles)
+				{
+					string[] styl = style.Split('|');
+					if (styl.Length != 2) continue;
+					int styleid; int classid;
+					if (Int32.TryParse(styl[0], out styleid))
+					{
+						if (Int32.TryParse(styl[1], out classid))
+						{
+							Styles.Style st = SkillBase.GetStyleByID(styleid, classid);
+							if (st != null && !Styles.Contains(st))
+							{
+								Styles.Add(st);
+							}
+						}
+					}
+				}
+			}
 
 			if (ShowTeleporterIndicator)
 			{
@@ -3447,26 +3546,26 @@ namespace DOL.GS
 			if (source is GamePlayer == false)
 				return true;
 
-			GamePlayer player = (GamePlayer) source;
+			GamePlayer player = (GamePlayer)source;
 
 			//TODO: Guards in rvr areas doesn't need check
 			if (text == "task")
 			{
 				if (source.TargetObject == null)
 					return false;
-				if (KillTask.CheckAvailability(player, (GameLiving) source.TargetObject))
+				if (KillTask.CheckAvailability(player, (GameLiving)source.TargetObject))
 				{
-					KillTask.BuildTask(player, (GameLiving) source.TargetObject);
+					KillTask.BuildTask(player, (GameLiving)source.TargetObject);
 					return true;
 				}
-				else if (MoneyTask.CheckAvailability(player, (GameLiving) source.TargetObject))
+				else if (MoneyTask.CheckAvailability(player, (GameLiving)source.TargetObject))
 				{
-					MoneyTask.BuildTask(player, (GameLiving) source.TargetObject);
+					MoneyTask.BuildTask(player, (GameLiving)source.TargetObject);
 					return true;
 				}
-				else if (CraftTask.CheckAvailability(player, (GameLiving) source.TargetObject))
+				else if (CraftTask.CheckAvailability(player, (GameLiving)source.TargetObject))
 				{
-					CraftTask.BuildTask(player, (GameLiving) source.TargetObject);
+					CraftTask.BuildTask(player, (GameLiving)source.TargetObject);
 					return true;
 				}
 			}
@@ -3514,7 +3613,7 @@ namespace DOL.GS
 			}
 		}
 		#endregion
-		
+
 		#region Combat
 
 		/// <summary>
@@ -3549,9 +3648,9 @@ namespace DOL.GS
 			long lastTick = this.TempProperties.getProperty<long>(LAST_LOS_TICK_PROPERTY);
 
 			if (ServerProperties.Properties.ALWAYS_CHECK_PET_LOS &&
-			    Brain != null &&
-			    Brain is IControlledBrain &&
-			    (target is GamePlayer || (target is GameNPC && (target as GameNPC).Brain != null && (target as GameNPC).Brain is IControlledBrain)))
+				Brain != null &&
+				Brain is IControlledBrain &&
+				(target is GamePlayer || (target is GameNPC && (target as GameNPC).Brain != null && (target as GameNPC).Brain is IControlledBrain)))
 			{
 				GameObject lastTarget = (GameObject)this.TempProperties.getProperty<object>(LAST_LOS_TARGET_PROPERTY, null);
 				if (lastTarget != null && lastTarget == target)
@@ -3662,8 +3761,8 @@ namespace DOL.GS
 
 				GamePlayer owner = null;
 
-                if ((owner = ((IControlledBrain)Brain).GetPlayerOwner()) != null)
-                        owner.Stealth(false);
+				if ((owner = ((IControlledBrain)Brain).GetPlayerOwner()) != null)
+					owner.Stealth(false);
 			}
 
 			SetLastMeleeAttackTick();
@@ -3695,9 +3794,9 @@ namespace DOL.GS
 			base.RangedAttackFinished();
 
 			if (ServerProperties.Properties.ALWAYS_CHECK_PET_LOS &&
-			    Brain != null &&
-			    Brain is IControlledBrain &&
-			    (TargetObject is GamePlayer || (TargetObject is GameNPC && (TargetObject as GameNPC).Brain != null && (TargetObject as GameNPC).Brain is IControlledBrain)))
+				Brain != null &&
+				Brain is IControlledBrain &&
+				(TargetObject is GamePlayer || (TargetObject is GameNPC && (TargetObject as GameNPC).Brain != null && (TargetObject as GameNPC).Brain is IControlledBrain)))
 			{
 				GamePlayer player = null;
 
@@ -3745,7 +3844,7 @@ namespace DOL.GS
 		}
 
 
-		private void SetLastMeleeAttackTick()
+		public void SetLastMeleeAttackTick()
 		{
 			if (TargetObject.Realm == 0 || Realm == 0)
 				m_lastAttackTickPvE = m_CurrentRegion.Time;
@@ -3866,7 +3965,7 @@ namespace DOL.GS
 		{
 			FireAmbientSentence(eAmbientTrigger.dieing, killer as GameLiving);
 
-			if(killer!=null)
+			if (killer != null)
 			{
 				if (IsWorthReward)
 					DropLoot(killer);
@@ -3880,7 +3979,7 @@ namespace DOL.GS
 			if (Group != null)
 				Group.RemoveMember(this);
 
-			if(killer!=null)
+			if (killer != null)
 			{
 				base.Die(killer);
 				// deal out exp and realm points based on server rules
@@ -4057,7 +4156,7 @@ namespace DOL.GS
 			{
 				if (attackType == AttackData.eAttackType.Ranged || attackType == AttackData.eAttackType.Spell)
 				{
-					if( this.IsWithinRadius( attacker, 150 ) == false )
+					if (this.IsWithinRadius(attacker, 150) == false)
 						return false;
 				}
 			}
@@ -4070,9 +4169,9 @@ namespace DOL.GS
 					SwitchToMelee(attacker);
 				}
 				else if (ActiveWeaponSlot != eActiveWeaponSlot.Distance &&
-				         Inventory != null &&
-				         Inventory.GetItem(eInventorySlot.DistanceWeapon) != null &&
-				         GetDistanceTo(attacker) > 500)
+						 Inventory != null &&
+						 Inventory.GetItem(eInventorySlot.DistanceWeapon) != null &&
+						 GetDistanceTo(attacker) > 500)
 				{
 					SwitchToRanged(attacker);
 				}
@@ -4100,7 +4199,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				if ( m_respawnInterval > 0 || m_respawnInterval < 0 )
+				if (m_respawnInterval > 0 || m_respawnInterval < 0)
 					return m_respawnInterval;
 
 				int minutes = Util.Random(ServerProperties.Properties.NPC_MIN_RESPAWN_INTERVAL, ServerProperties.Properties.NPC_MIN_RESPAWN_INTERVAL + 5);
@@ -4309,7 +4408,7 @@ namespace DOL.GS
 
 				foreach (ItemTemplate lootTemplate in lootTemplates)
 				{
-					if(lootTemplate==null) continue;
+					if (lootTemplate == null) continue;
 					GameStaticItem loot;
 					if (GameMoney.IsItemMoney(lootTemplate.Name))
 					{
@@ -4365,7 +4464,7 @@ namespace DOL.GS
 					else
 					{
 						InventoryItem invitem;
-						
+
 						if (lootTemplate is ItemUnique)
 						{
 							GameServer.Database.AddObject(lootTemplate);
@@ -4373,7 +4472,7 @@ namespace DOL.GS
 						}
 						else
 							invitem = GameInventoryItem.Create<ItemTemplate>(lootTemplate);
-						
+
 						loot = new WorldInventoryItem(invitem);
 						loot.X = X;
 						loot.Y = Y;
@@ -4387,9 +4486,9 @@ namespace DOL.GS
 						// is dealing strictly with ItemTemplate objects, while you need the InventoryItem in order
 						// to be able to set the Count property.
 						// Converts single drops of loot with PackSize > 1 (and MaxCount >= PackSize) to stacks of Count = PackSize
-						if ( ( (WorldInventoryItem)loot ).Item.PackSize > 1 && ( (WorldInventoryItem)loot ).Item.MaxCount >= ( (WorldInventoryItem)loot ).Item.PackSize )
+						if (((WorldInventoryItem)loot).Item.PackSize > 1 && ((WorldInventoryItem)loot).Item.MaxCount >= ((WorldInventoryItem)loot).Item.PackSize)
 						{
-							( (WorldInventoryItem)loot ).Item.Count = ( (WorldInventoryItem)loot ).Item.PackSize;
+							((WorldInventoryItem)loot).Item.Count = ((WorldInventoryItem)loot).Item.PackSize;
 						}
 					}
 
@@ -4415,7 +4514,7 @@ namespace DOL.GS
 					}
 					if (playerAttacker == null) return; // no loot if mob kills another mob
 
-					
+
 					droplist.Add(loot.GetName(1, false));
 					loot.AddToWorld();
 
@@ -4645,7 +4744,7 @@ namespace DOL.GS
 				else
 				{
 					//If we aren't a distance NPC, lets make sure we are in range to attack the target!
-					if (owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance && !owner.IsWithinRadius( owner.TargetObject, STICKMINIMUMRANGE ) )
+					if (owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance && !owner.IsWithinRadius(owner.TargetObject, STICKMINIMUMRANGE))
 						((GameNPC)owner).Follow(owner.TargetObject, STICKMINIMUMRANGE, STICKMAXIMUMRANGE);
 				}
 
@@ -4665,6 +4764,29 @@ namespace DOL.GS
 		private const string LOSCURRENTLINE = "LOSCURRENTLINE";
 		private const string LOSSPELLTARGET = "LOSSPELLTARGET";
 
+		/// <summary>
+		/// Does a check for a gameplayer to start gamenpcs have LOS checks
+		/// </summary>
+		/// <param name="spell"></param>
+		/// <param name="line"></param>
+		protected bool m_waitingforlos = false;
+
+		public bool WaitingForLOS
+		{
+			get
+			{
+				if (LastWaitingForLOS > 0 && LastWaitingForLOS + 2000 < CurrentRegion.Time) //assume max 2sec to get answer
+					m_waitingforlos = false;
+
+				return m_waitingforlos;
+			}
+			set
+			{
+				m_waitingforlos = value;
+				LastWaitingForLOS = CurrentRegion.Time;
+			}
+		}
+		protected long LastWaitingForLOS;
 
 		/// <summary>
 		/// Cast a spell, with optional LOS check
@@ -4672,14 +4794,16 @@ namespace DOL.GS
 		/// <param name="spell"></param>
 		/// <param name="line"></param>
 		/// <param name="checkLOS"></param>
-		public virtual void CastSpell(Spell spell, SpellLine line, bool checkLOS)
+		public virtual bool CastSpell(Spell spell, SpellLine line, bool checkLOS)
 		{
+			bool casted = false;
+
 			if (IsIncapacitated)
-				return;
+				return false;
 
 			if (checkLOS)
 			{
-				CastSpell(spell, line);
+				casted = CastSpell(spell, line);
 			}
 			else
 			{
@@ -4696,8 +4820,9 @@ namespace DOL.GS
 					spellToCast = spell;
 				}
 
-				base.CastSpell(spellToCast, line);
+				return base.CastSpell(spellToCast, line);
 			}
+			return casted;
 		}
 
 		/// <summary>
@@ -4705,14 +4830,15 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="spell"></param>
 		/// <param name="line"></param>
-		public override void CastSpell(Spell spell, SpellLine line)
+		public override bool CastSpell(Spell spell, SpellLine line)
 		{
+			bool casted = false;
 			if (IsIncapacitated)
-				return;
+				return false;
 
 			if (m_runningSpellHandler != null || TempProperties.getProperty<Spell>(LOSCURRENTSPELL, null) != null)
 			{
-				return;
+				return false;
 			}
 
 			Spell spellToCast = null;
@@ -4734,14 +4860,17 @@ namespace DOL.GS
 			if (tempProp <= 0)
 			{
 				GamePlayer LOSChecker = TargetObject as GamePlayer;
-				if (LOSChecker == null)
+				if (TargetObject != this)
 				{
-					foreach (GamePlayer ply in GetPlayersInRadius(350))
+					if (LOSChecker == null)
 					{
-						if (ply != null)
+						foreach (GamePlayer ply in GetPlayersInRadius(350))
 						{
-							LOSChecker = ply;
-							break;
+							if (ply != null)
+							{
+								LOSChecker = ply;
+								break;
+							}
 						}
 					}
 				}
@@ -4749,7 +4878,15 @@ namespace DOL.GS
 				if (LOSChecker == null)
 				{
 					TempProperties.setProperty(LOSTEMPCHECKER, 0);
-					base.CastSpell(spellToCast, line);
+					m_waitingforlos = false;
+
+					if (!spell.MoveCast && spell.CastTime > 0)
+					{
+						StopFollowing();
+						if (TargetObject != this)
+							TurnTo(TargetObject);
+					}
+					casted = base.CastSpell(spellToCast, line);
 				}
 				else
 				{
@@ -4757,6 +4894,8 @@ namespace DOL.GS
 					TempProperties.setProperty(LOSCURRENTSPELL, spellToCast);
 					TempProperties.setProperty(LOSCURRENTLINE, line);
 					TempProperties.setProperty(LOSSPELLTARGET, TargetObject);
+					casted = false;
+					m_waitingforlos = true;
 					LOSChecker.Out.SendCheckLOS(LOSChecker, this, new CheckLOSResponse(StartSpellAttackCheckLOS));
 				}
 			}
@@ -4765,8 +4904,7 @@ namespace DOL.GS
 				TempProperties.setProperty(LOSTEMPCHECKER, tempProp - 1);
 			}
 
-			return;
-
+			return casted;
 		}
 
 		public void StartSpellAttackCheckLOS(GamePlayer player, ushort response, ushort targetOID)
@@ -4806,7 +4944,7 @@ namespace DOL.GS
 		}
 
 		#endregion
-		
+
 		#region Notify
 
 		/// <summary>
@@ -4843,12 +4981,12 @@ namespace DOL.GS
 			if (IsSilent || ambientTexts == null || ambientTexts.Count == 0) return;
 			if (trigger == eAmbientTrigger.interact && living == null) return;
 			List<MobXAmbientBehaviour> mxa = (from i in ambientTexts where i.Trigger == trigger.ToString() select i).ToList();
-			if (mxa.Count==0) return;
+			if (mxa.Count == 0) return;
 
 			// grab random sentence
-			var chosen = mxa[Util.Random(mxa.Count-1)];
+			var chosen = mxa[Util.Random(mxa.Count - 1)];
 			if (!Util.Chance(chosen.Chance)) return;
-			
+
 			string controller = string.Empty;
 			if (Brain is IControlledBrain)
 			{
@@ -4857,18 +4995,18 @@ namespace DOL.GS
 					controller = playerOwner.Name;
 			}
 
-			string text = chosen.Text.Replace("{sourcename}",Name).Replace("{targetname}",living==null?string.Empty:living.Name).Replace("{controller}", controller);
+			string text = chosen.Text.Replace("{sourcename}", Name).Replace("{targetname}", living == null ? string.Empty : living.Name).Replace("{controller}", controller);
 
 			if (chosen.Emote != 0)
 			{
 				Emote((eEmote)chosen.Emote);
 			}
-			
+
 			// issuing text
 			if (living is GamePlayer)
-				text = text.Replace("{class}",(living as GamePlayer).CharacterClass.Name).Replace("{race}",(living as GamePlayer).RaceName);
+				text = text.Replace("{class}", (living as GamePlayer).CharacterClass.Name).Replace("{race}", (living as GamePlayer).RaceName);
 			if (living is GameNPC)
-				text = text.Replace("{class}","NPC").Replace("{race}","NPC");
+				text = text.Replace("{class}", "NPC").Replace("{race}", "NPC");
 
 			// for interact text we pop up a window
 			if (trigger == eAmbientTrigger.interact)
@@ -4894,7 +5032,7 @@ namespace DOL.GS
 			Say(text);
 		}
 		#endregion
-		
+
 		#region ControlledNPCs
 
 		/// <summary>
@@ -4975,25 +5113,25 @@ namespace DOL.GS
 		/// Broadcast loot to the raid.
 		/// </summary>
 		/// <param name="dropMessages">List of drop messages to broadcast.</param>
-        protected virtual void BroadcastLoot(ArrayList droplist)
+		protected virtual void BroadcastLoot(ArrayList droplist)
 		{
-            if (droplist.Count > 0)
-            {
-                String lastloot;
-                foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
-                {
-                    lastloot = "";
-                    foreach (string str in droplist)
-                    {
-                        // Suppress identical messages (multiple item drops).
-                        if (str != lastloot)
-                        {
-                            player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "GameNPC.DropLoot.Drops", GetName(0, true), str)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
-                            lastloot = str;
-                        }
-                    }
-                }
-            }
+			if (droplist.Count > 0)
+			{
+				String lastloot;
+				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+				{
+					lastloot = "";
+					foreach (string str in droplist)
+					{
+						// Suppress identical messages (multiple item drops).
+						if (str != lastloot)
+						{
+							player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "GameNPC.DropLoot.Drops", GetName(0, true), str)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+							lastloot = str;
+						}
+					}
+				}
+			}
 		}
 
 
@@ -5004,7 +5142,7 @@ namespace DOL.GS
 
 		public GameNPC Copy()
 		{
-			return Copy( null );
+			return Copy(null);
 		}
 
 
@@ -5013,12 +5151,12 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="copyTarget">A GameNPC to copy this GameNPC to (can be null)</param>
 		/// <returns>The GameNPC this GameNPC was copied to</returns>
-		public GameNPC Copy( GameNPC copyTarget )
+		public GameNPC Copy(GameNPC copyTarget)
 		{
-			if ( copyTarget == null )
+			if (copyTarget == null)
 				copyTarget = new GameNPC();
 
-            copyTarget.TranslationId = TranslationId;
+			copyTarget.TranslationId = TranslationId;
 			copyTarget.BlockChance = BlockChance;
 			copyTarget.BodyType = BodyType;
 			copyTarget.CanUseLefthandedWeapon = CanUseLefthandedWeapon;
@@ -5033,8 +5171,8 @@ namespace DOL.GS
 			copyTarget.Faction = Faction;
 			copyTarget.Flags = Flags;
 			copyTarget.GuildName = GuildName;
-            copyTarget.ExamineArticle = ExamineArticle;
-            copyTarget.MessageArticle = MessageArticle;
+			copyTarget.ExamineArticle = ExamineArticle;
+			copyTarget.MessageArticle = MessageArticle;
 			copyTarget.Heading = Heading;
 			copyTarget.Intelligence = Intelligence;
 			copyTarget.IsCloakHoodUp = IsCloakHoodUp;
@@ -5047,7 +5185,7 @@ namespace DOL.GS
 			copyTarget.MeleeDamageType = MeleeDamageType;
 			copyTarget.Model = Model;
 			copyTarget.Name = Name;
-            copyTarget.Suffix = Suffix;
+			copyTarget.Suffix = Suffix;
 			copyTarget.NPCTemplate = NPCTemplate;
 			copyTarget.ParryChance = ParryChance;
 			copyTarget.PathID = PathID;
@@ -5068,57 +5206,59 @@ namespace DOL.GS
 			copyTarget.Z = Z;
 			copyTarget.OwnerID = OwnerID;
 			copyTarget.PackageID = PackageID;
+			copyTarget.SerializedSpells = SerializedSpells;
+			copyTarget.SerializedStyles = SerializedStyles;
 
-			if ( Abilities != null && Abilities.Count > 0 )
+			if (Abilities != null && Abilities.Count > 0)
 			{
 				foreach (Ability targetAbility in Abilities.Values)
 				{
-					if ( targetAbility != null )
-						copyTarget.AddAbility( targetAbility );
+					if (targetAbility != null)
+						copyTarget.AddAbility(targetAbility);
 				}
 			}
 
 			ABrain brain = null;
-			foreach ( Assembly assembly in AppDomain.CurrentDomain.GetAssemblies() )
+			foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
 			{
-				brain = (ABrain)assembly.CreateInstance( Brain.GetType().FullName, true );
-				if ( brain != null )
+				brain = (ABrain)assembly.CreateInstance(Brain.GetType().FullName, true);
+				if (brain != null)
 					break;
 			}
 
-			if ( brain == null )
+			if (brain == null)
 			{
-				log.Warn( "GameNPC.Copy():  Unable to create brain:  " + Brain.GetType().FullName + ", using StandardMobBrain." );
+				log.Warn("GameNPC.Copy():  Unable to create brain:  " + Brain.GetType().FullName + ", using StandardMobBrain.");
 				brain = new StandardMobBrain();
 			}
 
 			StandardMobBrain newBrainSMB = brain as StandardMobBrain;
 			StandardMobBrain thisBrainSMB = this.Brain as StandardMobBrain;
 
-			if ( newBrainSMB != null && thisBrainSMB != null )
+			if (newBrainSMB != null && thisBrainSMB != null)
 			{
 				newBrainSMB.AggroLevel = thisBrainSMB.AggroLevel;
 				newBrainSMB.AggroRange = thisBrainSMB.AggroRange;
 			}
 
-			copyTarget.SetOwnBrain( brain );
+			copyTarget.SetOwnBrain(brain);
 
-			if ( Inventory != null && Inventory.AllItems.Count > 0 )
+			if (Inventory != null && Inventory.AllItems.Count > 0)
 			{
 				GameNpcInventoryTemplate inventoryTemplate = Inventory as GameNpcInventoryTemplate;
 
-				if( inventoryTemplate != null )
+				if (inventoryTemplate != null)
 					copyTarget.Inventory = inventoryTemplate.CloneTemplate();
 			}
 
-			if ( Spells != null && Spells.Count > 0 )
-				copyTarget.Spells = new ArrayList( Spells );
+			if (Spells != null && Spells.Count > 0)
+				copyTarget.Spells = new ArrayList(Spells);
 
-			if ( Styles != null && Styles.Count > 0 )
-				copyTarget.Styles = new ArrayList( Styles );
+			if (Styles != null && Styles.Count > 0)
+				copyTarget.Styles = new ArrayList(Styles);
 
-			if ( copyTarget.Inventory != null )
-				copyTarget.SwitchWeapon( ActiveWeaponSlot );
+			if (copyTarget.Inventory != null)
+				copyTarget.SwitchWeapon(ActiveWeaponSlot);
 
 			return copyTarget;
 		}
@@ -5150,7 +5290,7 @@ namespace DOL.GS
 			m_roamingRange = 0; // default to non roaming - tolakram
 			m_ownerID = "";
 
-			if ( m_spawnPoint == null )
+			if (m_spawnPoint == null)
 				m_spawnPoint = new Point3D();
 
 			//m_factionName = "";

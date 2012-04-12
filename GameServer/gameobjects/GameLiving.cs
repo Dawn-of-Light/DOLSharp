@@ -1176,19 +1176,6 @@ namespace DOL.GS
 			}
 		}
 
-		protected bool m_isMuted = false;
-		/// <summary>
-		/// returns if this living is muted
-		/// </summary>
-		public virtual bool IsMuted
-		{
-			get { return m_isMuted; }
-			set
-			{
-				m_isMuted = value;
-			}
-		}
-
 		/// <summary>
 		/// Check this flag to see if this living is involved in combat
 		/// </summary>
@@ -6421,18 +6408,18 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="spell">spell to cast</param>
 		/// <param name="line">Spell line of the spell (for bonus calculations)</param>
-		public virtual void CastSpell(Spell spell, SpellLine line)
+		public virtual bool CastSpell(Spell spell, SpellLine line)
 		{
 			if (IsStunned || IsMezzed)
 			{
 				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.CrowdControlled));
-				return;
+				return false;
 			}
 
 			if ((m_runningSpellHandler != null && spell.CastTime > 0))
 			{
 				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.AlreadyCasting));
-				return;
+				return false;
 			}
 
 			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(this, spell, line);
@@ -6440,13 +6427,13 @@ namespace DOL.GS
 			{
 				m_runningSpellHandler = spellhandler;
 				spellhandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
-				spellhandler.CastSpell();
+				return spellhandler.CastSpell();
 			}
 			else
 			{
 				if (log.IsWarnEnabled)
 					log.Warn(Name + " wants to cast but spell " + spell.Name + " not implemented yet");
-				return;
+				return false;
 			}
 		}
 
@@ -6620,7 +6607,17 @@ namespace DOL.GS
 			set { m_groupIndex = value; }
 		}
 		#endregion
-		
+
+		#region Siege Weapon
+		private GameSiegeWeapon m_siegeWeapon;
+
+		public GameSiegeWeapon SiegeWeapon
+		{
+			get { return m_siegeWeapon; }
+			set { m_siegeWeapon = value; }
+		}
+		#endregion
+
 		/// <summary>
 		/// Handle event notifications.
 		/// </summary>

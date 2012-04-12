@@ -282,7 +282,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the account being used by this client
 		/// </summary>
-		public Account Account
+		public virtual Account Account
 		{
 			get { return m_account; }
 			set

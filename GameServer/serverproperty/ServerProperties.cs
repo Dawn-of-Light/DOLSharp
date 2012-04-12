@@ -56,13 +56,19 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("system", "enable_debug", "Enable Debug mode? Used to alter some features during server startup to make debugging easier", false)]
 		public static bool ENABLE_DEBUG;
 
-		/// <summary>
-		/// Whether to use the sync timer utility or not
-		/// </summary>
-		[ServerProperty("system", "use_sync_timer", "Shall we use the sync timers utility?", true)]
-		public static readonly bool USE_SYNC_UTILITY;
+        /// <summary>
+        /// Customize the server message, when a player enters game
+        /// </summary>
+        [ServerProperty("system", "server_message", "Customize the server message, when a player enters game ({ASM}=Assembly Name, {VER}=Version)", "Dawn of Light {ASM} Version: {VER}")]
+        public static readonly string SERVER_MESSAGE;
 
-		/// <summary>
+        /// <summary>
+        /// Whether to use the sync timer utility or not
+        /// </summary>
+        [ServerProperty("system", "use_sync_timer", "Shall we use the sync timers utility?", true)]
+        public static readonly bool USE_SYNC_UTILITY;
+
+        /// <summary>
 		/// Ignore too long outcoming packet or not
 		/// </summary>
 		[ServerProperty("system", "ignore_too_long_outcoming_packet", "Shall we ignore too long outcoming packet ?", false)]
@@ -145,6 +151,18 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("system", "player_class", "What class should the server use for players", "DOL.GS.GamePlayer")]
 		public static string PLAYER_CLASS;
+
+		/// <summary>
+		/// What class should the server use for clients
+		/// </summary>
+		[ServerProperty("system", "client_class", "What class should the server use for clients", "DOL.GS.GameClient")]
+		public static string CLIENT_CLASS;
+
+		/// <summary>
+		/// What class should the server use for groups
+		/// </summary>
+		[ServerProperty("system", "group_class", "What class should the server use for clients", "DOL.GS.Group")]
+		public static string GROUP_CLASS;
 
 		/// <summary>
 		/// A serialised list of RegionIDs that will load objects
@@ -268,6 +286,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("system", "enable_audit_log", "Whether or not to enable the audit log", false)]
 		public static bool ENABLE_AUDIT_LOG;
+
+		/// <summary>
+		/// Allow to print less Log.Info and Log.Debug at server start
+		/// </summary>
+		[ServerProperty("system", "verbose_level", "Allow to print less Log.Info and Log.Debug at server start (0=print all, 1=skip Infos, 2=skip Infos and Debug), ", 0)]
+		public static int VERBOSE_LEVEL;
 
 		#endregion
 
@@ -1713,7 +1737,7 @@ namespace DOL.GS.ServerProperties
 				GameServer.Database.AddObject(property);
 				log.Debug("Cannot find server property " + key + " creating it");
 			}
-			log.Debug("Loading " + key + " Value is " + property.Value);
+			//log.Debug("Loading " + key + " Value is " + property.Value);
 					
 			try
 			{

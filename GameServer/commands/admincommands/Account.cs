@@ -21,6 +21,7 @@ using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.PacketHandler.Client.v168;
 using DOL.Language;
+using DOL.Events;
 
 namespace DOL.GS.Commands
 {
@@ -142,7 +143,8 @@ namespace DOL.GS.Commands
 
 						KickAccount(acc);
 						GameServer.Database.DeleteObject(acc);
-
+						GameEventMgr.Notify(DatabaseEvent.AccountDeleted, new AccountEventArgs(acc));
+						
 						// Log change
 						AuditMgr.AddAuditEntry(client, AuditType.Account, AuditSubtype.AccountDelete, "acct="+AccountName, (client.Player != null ? client.Player.Name : ""));
 
@@ -281,9 +283,9 @@ namespace DOL.GS.Commands
 						try { status=Convert.ToInt32(args[3]); } catch(Exception) { DisplaySyntax(client); return; }
 						if(status >= 0 && status < 256 )
 						{
-							acc.Status=status;
+							acc.StatusOLD=status;
 							GameServer.Database.SaveObject(acc);
-							DisplayMessage(client, "Account "+acc.Name+" Status is now set to : "+acc.Status);
+							DisplayMessage(client, "Account "+acc.Name+" Status is now set to : "+acc.StatusOLD);
 						}
 						else DisplaySyntax(client);
 						return;

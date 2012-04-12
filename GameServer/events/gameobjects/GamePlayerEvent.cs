@@ -84,6 +84,14 @@ namespace DOL.Events
 		/// </summary>
 		public static readonly GamePlayerEvent UseSlot = new GamePlayerEvent("GamePlayer.UseSlot");
 		/// <summary>
+		/// The UseSkill event is fired whenever the player tries to use a skill
+		/// </summary>
+		public static readonly GamePlayerEvent UseSkill = new GamePlayerEvent("GamePlayer.UseSkill");
+		/// <summary>
+		/// The UseSpell event is fired whenever the player tries to use a spell
+		/// </summary>
+		public static readonly GamePlayerEvent UseSpell = new GamePlayerEvent("GamePlayer.UseSpell");
+		/// <summary>
 		/// The StealthStateChanged event is fired whenever the player's stealth state changes
 		/// </summary>
 		public static readonly GamePlayerEvent StealthStateChanged = new GamePlayerEvent("GamePlayer.StealthStateChanged");
@@ -147,6 +155,10 @@ namespace DOL.Events
 		/// The AcceptGroup event is fired whenever the player accept a Group invitation.
 		/// </summary>
 		public static readonly GamePlayerEvent AcceptGroup = new GamePlayerEvent("GamePlayer.AcceptGroup");
+		/// <summary>
+		/// The DropMinotaurRelic event is fired whenever the player loose the relic.
+		/// </summary>
+		public static readonly GamePlayerEvent DropMinotaurRelic = new GamePlayerEvent("GamePlayer.DropMinotaurRelic");
 		/// <summary>
 		/// The LeaveGroup event is fired when the player disbands/is removed from a group.
 		/// </summary>

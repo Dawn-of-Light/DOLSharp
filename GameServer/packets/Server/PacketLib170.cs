@@ -261,7 +261,7 @@ namespace DOL.GS.PacketHandler
 			else
 			{
 				string name = quest.Name;
-				string desc = quest.Description;
+				string desc = quest.DescriptionForPlayer(m_gameClient.Player);
 				if (name.Length > byte.MaxValue)
 				{
 					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": name is too long for 1.68+ clients (" + name.Length + ") '" + name + "'");

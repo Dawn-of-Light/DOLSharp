@@ -74,7 +74,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.CurrentUpdateArray.SetAll(false);
 				// update the region color scheme which may be wrong due to ALLOW_ALL_REALMS support
 				player.Out.SendRegionColorScheme();
-				player.CurrentRegion.Notify(RegionEvent.PlayerEnter, player.CurrentRegion, new RegionPlayerEventArgs(player));
+				player.CurrentRegion.Notify(RegionEvent.PlayerEnter, player.CurrentRegion, new RegionPlayerEventArgs(player, player.CurrentRegionID, player.CurrentRegionID));
 				int mobs = SendMobsAndMobEquipmentToPlayer(player);
 				player.Out.SendTime();
 				WeatherMgr.UpdatePlayerWeather(player);
@@ -139,8 +139,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 				player.Out.SendMasterLevelWindow(0);
 				AssemblyName an = Assembly.GetExecutingAssembly().GetName();
-				player.Out.SendMessage("Dawn of Light " + an.Name + " Version: " + an.Version, eChatType.CT_System,
-				                       eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(ServerProperties.Properties.SERVER_MESSAGE.Replace("{ASM}", an.Name).Replace("{VER}", an.Version.ToString()),
+                                            eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				CheckIfPlayerLogsNearEnemyKeepAndMoveIfNecessary(player);
 				CheckBGLevelCapForPlayerAndMoveIfNecessary(player);
 

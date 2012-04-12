@@ -30,6 +30,7 @@ using DOL.GS.SkillHandler;
 using DOL.GS.Keeps;
 using DOL.Language;
 using log4net;
+using DOL.GS.Spells;
 
 namespace DOL.AI.Brain
 {
@@ -99,7 +100,7 @@ namespace DOL.AI.Brain
 
 			// If the NPC is tethered and has been pulled too far it will
 			// de-aggro and return to its spawn point.
-			if (Body.IsOutOfTetherRange && !Body.InCombat)
+			if (Body.IsOutOfTetherRange /*&& !Body.InCombat*/)
 			{
 				Body.WalkToSpawn();
 				return;
@@ -316,14 +317,15 @@ namespace DOL.AI.Brain
 		/// <summary>
 		/// List of livings that this npc has aggro on, living => aggroamount
 		/// </summary>
-		protected readonly Dictionary<GameLiving, long> m_aggroTable = new Dictionary<GameLiving, long>();
+		protected Dictionary<GameLiving, long> m_aggroTable = new Dictionary<GameLiving, long>();
 
 		/// <summary>
 		/// The aggression table for this mob
 		/// </summary>
-      public Dictionary<GameLiving, long> AggroTable
+		public Dictionary<GameLiving, long> AggroTable
 		{
 			get { return m_aggroTable; }
+			set { m_aggroTable = value; }
 		}
 
 		/// <summary>
@@ -591,13 +593,20 @@ namespace DOL.AI.Brain
 			if (!IsActive)
 				return;
 
-			Body.TargetObject = CalculateNextAttackTarget();
-
-			if (Body.TargetObject != null)
+			GameLiving target = CalculateNextAttackTarget();
+			if (target != null)
 			{
-				if (!CheckSpells(eCheckSpellType.Offensive))
+				if (!Body.AttackState || target != Body.TargetObject)
 				{
-					Body.StartAttack(Body.TargetObject);
+					if (Body.ControlledBrain != null && Body.ControlledBrain.Body != null && Body.ControlledBrain.Body.IsAlive && !Body.ControlledBrain.Body.AttackState)
+					{
+						Body.ControlledBrain.Body.StartAttack(target);
+					}
+
+					if (!CheckSpells(eCheckSpellType.Offensive))
+					{
+						Body.StartAttack(target);
+					}
 				}
 			}
 		}
@@ -992,7 +1001,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		/// <param name="attacker">The original attacker.</param>
 		/// <returns></returns>
-		protected virtual GamePlayer PickTarget(GamePlayer attacker)
+		public virtual GamePlayer PickTarget(GamePlayer attacker)
 		{
 			Group attackerGroup = attacker.Group;
 
@@ -1038,7 +1047,7 @@ namespace DOL.AI.Brain
 				{
 					foreach (Spell spell in Body.Spells)
 					{
-						if (!Body.IsBeingInterrupted && Body.GetSkillDisabledDuration(spell) == 0 && CheckDefensiveSpells(spell))
+						if ((!Body.IsBeingInterrupted || spell.CastTime == 0 || spell.Uninterruptible) && Body.GetSkillDisabledDuration(spell) == 0 && CheckDefensiveSpells(spell))
 						{
 							casted = true;
 							break;
@@ -1061,7 +1070,7 @@ namespace DOL.AI.Brain
 							}
 							else
 							{
-								CheckInstantSpells(spell);
+								casted = CheckInstantSpells(spell);
 							}
 						}
 					}
@@ -1140,6 +1149,14 @@ namespace DOL.AI.Brain
 				case "Summon":
 					Body.TargetObject = Body;
 					break;
+				case "SummonSimulacrum":
+				case "SummonDruidPet":
+				case "SummonUnderhill":
+				case "SummonHunterPet":
+				case "SummonSpiritFighter":
+					if (Body.ControlledBrain != null) break;
+					Body.TargetObject = Body;
+					break;
 				case "SummonMinion":
 					//If the list is null, lets make sure it gets initialized!
 					if (Body.ControlledNpcList == null)
@@ -1172,6 +1189,18 @@ namespace DOL.AI.Brain
 						break;
 					}
 
+					if (spell.Range > 0 && spell.Target == "Realm"
+						&& Body.TargetObject == null && Body.Realm != eRealm.None
+						&& Util.Chance(75))
+					{
+						foreach (GameNPC n in Body.GetNPCsInRadius((ushort)spell.Range))
+							if (n.Realm == Body.Realm && n.HealthPercent < 40)
+							{
+								Body.TargetObject = n;
+								break;
+							}
+					}
+
 					break;
 					#endregion
 			}
@@ -1184,10 +1213,14 @@ namespace DOL.AI.Brain
 				if (Body.TargetObject != Body && spell.CastTime > 0)
 					Body.TurnTo(Body.TargetObject);
 
-				Body.CastSpell(spell, m_mobSpellLine);
+				bool casted = false;
+
+				if (spell.Range > 50 && !Body.IsWithinRadius(Body.TargetObject, (int)Math.Round((double)spell.Range * 0.8))) //20% tolerance to move closer
+					casted = false;
+				else casted = Body.CastSpell(spell, m_mobSpellLine);
 
 				Body.TargetObject = lastTarget;
-				return true;
+				return casted;
 			}
 
 			Body.TargetObject = lastTarget;
@@ -1203,17 +1236,101 @@ namespace DOL.AI.Brain
 			if (spell.Target.ToLower() != "enemy" && spell.Target.ToLower() != "area" && spell.Target.ToLower() != "cone")
 				return false;
 
-			if (Body.TargetObject != null)
+			if (Body.WaitingForLOS)
+				return false;
+
+			if (Body.TargetObject != null && spell.Range > 0)
 			{
-				if (Body.IsMoving && spell.CastTime > 0)
-					Body.StopFollowing();
+				bool casted = false;
+				SpellHandler handler = new SpellHandler(Body, spell, m_mobSpellLine);
+				if (handler != null)
+				{
+					if (Body.TargetObject is GameLiving)
+					{
+						GameLiving living = Body.TargetObject as GameLiving;
+						switch (spell.SpellType)
+						{
+							case "Mesmerize":
+							case "Disease":
+							case "SpeedDecrease":
+							case "Stun":
+								{
+									if (spell.Radius <= 0)
+									{
+										if (LivingHasEffect(living, spell))
+											return false;
+									}
+									else
+									{
+										bool imun = true;
+										foreach (GamePlayer plr in living.GetPlayersInRadius((ushort)spell.Radius))
+										{
+											if (plr != null && !LivingHasEffect(plr, spell) && GameServer.ServerRules.IsAllowedToAttack(Body, plr, true))
+											{
+												imun = false;
+												break;
+											}
+										}
+										if (imun)
+										{
+											foreach (GameNPC npc in living.GetNPCsInRadius((ushort)spell.Radius))
+											{
+												if (npc != null && !LivingHasEffect(npc, spell) && GameServer.ServerRules.IsAllowedToAttack(Body, npc, true))
+												{
+													imun = false;
+													break;
+												}
+											}
+										}
+										if (imun) return false;
+									}
+									break;
+								}
+							default: break;
+						}
+					}
 
-				if (Body.TargetObject != Body && spell.CastTime > 0)
-					Body.TurnTo(Body.TargetObject);
-
-				Body.CastSpell(spell, m_mobSpellLine);
-				return true;
+					casted = handler.CheckBeginCast(Body.TargetObject as GameLiving, true);
+					if (casted)
+						casted = Body.CastSpell(spell, m_mobSpellLine);
+				}
+				return casted;
 			}
+			else if (spell.Range <= 0)
+			{
+				bool casted = false;
+				SpellHandler handler = new SpellHandler(Body, spell, m_mobSpellLine);
+
+				if (handler != null)
+				{
+					bool imun = true;
+					foreach (GamePlayer plr in Body.GetPlayersInRadius((ushort)spell.Radius))
+					{
+						if (plr != null && !LivingHasEffect(plr, spell) && GameServer.ServerRules.IsAllowedToAttack(Body, plr, true))
+						{
+							imun = false;
+							break;
+						}
+					}
+					if (imun)
+					{
+						foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)spell.Radius))
+						{
+							if (npc != null && !LivingHasEffect(npc, spell) && GameServer.ServerRules.IsAllowedToAttack(Body, npc, true))
+							{
+								imun = false;
+								break;
+							}
+						}
+					}
+					if (imun) return false;
+
+					casted = handler.CheckBeginCast(Body.TargetObject is GameLiving ? Body.TargetObject as GameLiving : null, true);/*handler.CastSpell();*/ //Body.CastSpell(spell, m_mobSpellLine);
+					if (casted)
+						casted = Body.CastSpell(spell, m_mobSpellLine);
+				}
+			}
+
 			return false;
 		}
 
@@ -1222,8 +1339,9 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected virtual bool CheckInstantSpells(Spell spell)
 		{
+			bool casted = false;
 			GameObject lastTarget = Body.TargetObject;
-			Body.TargetObject = null;
+			//Body.TargetObject = null;
 
 			switch (spell.SpellType)
 			{
@@ -1242,14 +1360,15 @@ namespace DOL.AI.Brain
 				case "Stun":
 				case "Mez":
 				case "Taunt":
-					if (!LivingHasEffect(lastTarget as GameLiving, spell))
+					if (Util.Chance(10) && !LivingHasEffect(lastTarget as GameLiving, spell))
 					{
-						Body.TargetObject = lastTarget;
+						//Body.TargetObject = lastTarget;
+						casted = true;
 					}
 					break;
-					#endregion
+				#endregion
 
-					#region Combat Spells
+				#region Combat Spells
 				case "CombatHeal":
 				case "DamageAdd":
 				case "ArmorFactorBuff":
@@ -1262,20 +1381,24 @@ namespace DOL.AI.Brain
 					if (!LivingHasEffect(Body, spell))
 					{
 						Body.TargetObject = Body;
+						casted = true;
 					}
 					break;
 					#endregion
 			}
 
-			if (Body.TargetObject != null)
+			if (Body.TargetObject != null && casted)
 			{
-				Body.CastSpell(spell, m_mobSpellLine);
-				Body.TargetObject = lastTarget;
-				return true;
+				if (spell.Range > 50 && !Body.IsWithinRadius(Body.TargetObject, spell.Range - 50))
+					casted = false;
+				else casted = Body.CastSpell(spell, m_mobSpellLine);
+				return casted;
 			}
 
-			Body.TargetObject = lastTarget;
-			return false;
+			if (Body.TargetObject != lastTarget)
+				Body.TargetObject = lastTarget;
+			return casted;
+
 		}
 
 		protected static SpellLine m_mobSpellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);

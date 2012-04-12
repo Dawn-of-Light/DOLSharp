@@ -42,7 +42,7 @@ namespace DOL
 			private string m_lastLoginIP;
 			private string m_language;
 			private string m_lastClientVersion;
-			private bool m_isMuted;
+			private DateTime m_MutedTime;
 			
 			/// <summary>
 			/// Create account row in DB
@@ -54,7 +54,6 @@ namespace DOL
 				m_creationDate = DateTime.Now;
 				m_plvl = 1;
 				m_realm = 0;
-				m_isMuted = false;
 			}
 
 			/// <summary>
@@ -163,7 +162,7 @@ namespace DOL
 			/// Status of this account
 			/// </summary>
 			[DataElement(AllowDbNull = true)]
-			public int Status {
+			public int StatusOLD {
 				get { return m_state; }
 				set { Dirty = true; m_state = value; }
 			}
@@ -210,11 +209,18 @@ namespace DOL
 			/// <summary>
 			/// Is this account muted from public channels?
 			/// </summary>
-			[DataElement(AllowDbNull = true)]
+			//[DataElement(AllowDbNull = true)]
 			public bool IsMuted
 			{
-				get { return m_isMuted; }
-				set { Dirty = true; m_isMuted = value; }
+				get { return m_MutedTime > DateTime.Now; }
+				//set { Dirty = true; m_isMuted = value; }
+			}
+
+			[DataElement(AllowDbNull = true)]
+			public DateTime MutedTime
+			{
+				get { return m_MutedTime; }
+				set { Dirty = true; m_MutedTime = value; }
 			}
 
 			/// <summary>

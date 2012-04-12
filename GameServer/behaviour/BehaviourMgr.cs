@@ -68,7 +68,7 @@ namespace DOL.GS.Behaviour
                         ActionAttribute attr = GetActionAttribute(type);
                         if (attr != null)
                         {
-                            if (log.IsInfoEnabled)
+                            if (ServerProperties.Properties.VERBOSE_LEVEL < 1 && log.IsInfoEnabled)
                                 log.Info("Registering BehaviourAction: " + type.FullName);
                             RegisterBehaviourAction(attr.ActionType, type);
                         }
@@ -80,7 +80,7 @@ namespace DOL.GS.Behaviour
                         TriggerAttribute attr = getTriggerAttribute(type);
                         if (attr != null)
                         {
-                            if (log.IsInfoEnabled)
+                            if (ServerProperties.Properties.VERBOSE_LEVEL < 1 && log.IsInfoEnabled)
                                 log.Info("Registering BehaviourTrigger: " + type.FullName);
                             RegisterBehaviourTrigger(attr.TriggerType, type);
                         }
@@ -92,7 +92,7 @@ namespace DOL.GS.Behaviour
                         RequirementAttribute attr = getRequirementAttribute(type);
                         if (attr != null)
                         {
-                            if (log.IsInfoEnabled)
+                            if (ServerProperties.Properties.VERBOSE_LEVEL < 1 && log.IsInfoEnabled)
                                 log.Info("Registering BehaviourRequirement: " + type.FullName);
                             RegisterBehaviourRequirement(attr.RequirementType, type);
                         }

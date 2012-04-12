@@ -436,7 +436,9 @@ namespace DOL.AI.Brain
 			{
 				foreach (Spell spell in Body.Spells)
 				{
-					if (!Body.IsBeingInterrupted && Body.GetSkillDisabledDuration(spell) == 0 && CheckDefensiveSpells(spell))
+					if ((!Body.IsBeingInterrupted || spell.Uninterruptible)
+						&& Body.GetSkillDisabledDuration(spell) == 0
+						&& CheckDefensiveSpells(spell))
 					{
 						casted = true;
 						break;
@@ -451,19 +453,24 @@ namespace DOL.AI.Brain
 					{
 						if (spell.CastTime > 0)
 						{
-							if (!Body.IsBeingInterrupted && CheckOffensiveSpells(spell))
+							if ((!Body.IsBeingInterrupted || spell.Uninterruptible)
+								&& CheckOffensiveSpells(spell))
 							{
 								casted = true;
 								break;
 							}
 						}
-						else
+						else if (Util.Chance(20))
 							CheckInstantSpells(spell);
 					}
 				}
 			}
 
-			if (!Body.AttackState && Owner != null)
+			if (!Body.AttackState
+				&& !casted
+				&& !Body.WaitingForLOS
+				&& m_orderAttackTarget == null
+				&& Owner != null)
 			{
 				Follow(Owner);
 			}

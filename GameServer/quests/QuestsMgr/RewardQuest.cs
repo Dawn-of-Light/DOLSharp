@@ -35,11 +35,12 @@ namespace DOL.GS.Quests
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		private GameNPC m_questGiver;
+		private List<GameNPC> m_questGivers;
 		private List<QuestGoal> m_goals;
 		private QuestRewards m_rewards;
 
-		public RewardQuest() : base()
+		public RewardQuest()
+			: base()
 		{
 			m_rewards = new QuestRewards(this);
 			m_goals = new List<QuestGoal>();
@@ -49,7 +50,7 @@ namespace DOL.GS.Quests
 		/// Constructs a new RewardQuest.
 		/// </summary>
 		/// <param name="questingPlayer">The player doing this quest</param>
-		public RewardQuest(GamePlayer questingPlayer) 
+		public RewardQuest(GamePlayer questingPlayer)
 			: this(questingPlayer, 1) { }
 
 		/// <summary>
@@ -57,7 +58,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		/// <param name="questingPlayer">The player doing this quest</param>
 		/// <param name="step">The current step the player is on</param>
-		public RewardQuest(GamePlayer questingPlayer,int step) 
+		public RewardQuest(GamePlayer questingPlayer, int step)
 			: base(questingPlayer, step)
 		{
 			m_rewards = new QuestRewards(this);
@@ -69,7 +70,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		/// <param name="questingPlayer">The player doing the quest</param>
 		/// <param name="dbQuest">The database object</param>
-		public RewardQuest(GamePlayer questingPlayer, DBQuest dbQuest) 
+		public RewardQuest(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest)
 		{
 			m_rewards = new QuestRewards(this);
@@ -83,7 +84,7 @@ namespace DOL.GS.Quests
 		/// <param name="type"></param>
 		/// <param name="targetNumber"></param>
 		/// <param name="questItem"></param>
-		protected QuestGoal AddGoal(string description, QuestGoal.GoalType type, int targetNumber, ItemTemplate questItem)
+		public QuestGoal AddGoal(string description, QuestGoal.GoalType type, int targetNumber, ItemTemplate questItem)
 		{
 			QuestGoal goal = new QuestGoal("none", this, description, type, m_goals.Count + 1, targetNumber, questItem);
 			m_goals.Add(goal);
@@ -108,12 +109,12 @@ namespace DOL.GS.Quests
 
 
 		/// <summary>
-		/// The NPC giving the quest.
+		/// The NPCs giving the quest.
 		/// </summary>
-		public GameNPC QuestGiver
+		public List<GameNPC> QuestGivers
 		{
-			get { return m_questGiver; }
-			set { m_questGiver = value; }
+			get { return m_questGivers; }
+			set { m_questGivers = value; }
 		}
 
 		/// <summary>
@@ -136,25 +137,25 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// The fully-fledged story to the quest.
 		/// </summary>
-		public virtual String Story
+		public virtual String Story(GamePlayer player)
 		{
-			get { return "QUEST STORY UNDEFINED"; }
+			return "QUEST STORY UNDEFINED";
 		}
 
 		/// <summary>
 		/// A summary of the quest text.
 		/// </summary>
-		public virtual String Summary
+		public virtual String Summary(GamePlayer player)
 		{
-			get { return "QUEST SUMMARY UNDEFINED"; }
+			return "QUEST SUMMARY UNDEFINED";
 		}
 
 		/// <summary>
 		/// Text showing upon finishing the quest.
 		/// </summary>
-		public virtual String Conclusion
+		public virtual String Conclusion(GamePlayer player)
 		{
-			get { return "QUEST CONCLUSION UNDEFINED"; }
+			return "QUEST CONCLUSION UNDEFINED";
 		}
 
 		public override bool CheckQuestQualification(GamePlayer player)
@@ -171,7 +172,10 @@ namespace DOL.GS.Quests
 			if (CheckQuestQualification(player))
 			{
 				OfferPlayer = player;
-				player.Out.SendQuestOfferWindow(QuestGiver, player, this);
+				if (player.TargetObject != null && player.TargetObject is GameNPC && QuestGivers.Contains(player.TargetObject as GameNPC))
+					player.Out.SendQuestOfferWindow(player.TargetObject as GameNPC, player, this);
+				else
+					player.Out.SendQuestOfferWindow(QuestGivers[0], player, this);
 			}
 		}
 
@@ -181,7 +185,9 @@ namespace DOL.GS.Quests
 		/// <param name="player"></param>
 		public virtual void ChooseRewards(GamePlayer player)
 		{
-			player.Out.SendQuestRewardWindow(QuestGiver, player, this);
+			if (player.TargetObject != null && player.TargetObject is GameNPC && QuestGivers.Contains(player.TargetObject as GameNPC))
+				player.Out.SendQuestRewardWindow(player.TargetObject as GameNPC, player, this);
+			else player.Out.SendQuestRewardWindow(QuestGivers[0], player, this);
 		}
 
 		/// <summary>
@@ -205,14 +211,23 @@ namespace DOL.GS.Quests
 					return;
 
 				for (int reward = 0; reward < rewardArgs.CountChosen; ++reward)
-					Rewards.Choose(rewardArgs.ItemsChosen[reward]);
+					Rewards.Choose(QuestPlayer.CharacterClass.ID, rewardArgs.ItemsChosen[reward]);
 
-                //k109: Handle the player not choosing a reward.
-                if (Rewards.ChoiceOf > 0 && rewardArgs.CountChosen <= 0)
-                {
-                    QuestPlayer.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RewardQuest.Notify"), eChatType.CT_System, eChatLoc.CL_ChatWindow);
-                    return;
-                }
+				//k109: Handle the player not choosing a reward.
+				if (Rewards.ChoiceOf > 0 && rewardArgs.CountChosen <= 0)
+				{
+					QuestPlayer.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RewardQuest.Notify"), eChatType.CT_System, eChatLoc.CL_ChatWindow);
+					ChooseRewards(QuestPlayer);
+					return;
+				}
+
+				if ((Rewards.ChoiceMin > 0 && rewardArgs.CountChosen < Rewards.ChoiceMin) || (Rewards.ChoiceMax > 0 && rewardArgs.CountChosen > Rewards.ChoiceMax))
+				{
+					QuestPlayer.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RewardQuest.NotifyCount", Rewards.ChoiceMin), eChatType.CT_System, eChatLoc.CL_ChatWindow);
+					Rewards.Clear();
+					ChooseRewards(QuestPlayer);
+					return;
+				}
 
 				FinishQuest();
 			}
@@ -224,8 +239,8 @@ namespace DOL.GS.Quests
 		/// <param name="player"></param>
 		public override void OnQuestAssigned(GamePlayer player)
 		{
-            player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RewardQuest.OnQuestAssigned", Name)), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
-            player.Out.SendSoundEffect(7, 0, 0, 0, 0, 0);
+			player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RewardQuest.OnQuestAssigned", Name)), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+			player.Out.SendSoundEffect(7, 0, 0, 0, 0, 0);
 		}
 
 		/// <summary>
@@ -233,7 +248,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public override void FinishQuest()
 		{
-			int inventorySpaceRequired = Rewards.BasicItems.Count + Rewards.ChosenItems.Count;
+			int inventorySpaceRequired = Rewards.BasicItems(QuestPlayer).Count + Rewards.ChosenItems.Count;
 
 			if (QuestPlayer.Inventory.IsSlotsFree(inventorySpaceRequired, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
@@ -241,13 +256,13 @@ namespace DOL.GS.Quests
 				QuestPlayer.Out.SendSoundEffect(11, 0, 0, 0, 0, 0);
 				QuestPlayer.GainExperience(GameLiving.eXPSource.Quest, Rewards.Experience);
 				QuestPlayer.AddMoney(Rewards.Money);
-                InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", QuestPlayer, eInventoryActionType.Quest, Rewards.Money);
+				InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", QuestPlayer, eInventoryActionType.Quest, Rewards.Money);
 				if (Rewards.GiveBountyPoints > 0)
 					QuestPlayer.GainBountyPoints(Rewards.GiveBountyPoints);
 				if (Rewards.GiveRealmPoints > 0)
 					QuestPlayer.GainRealmPoints(Rewards.GiveRealmPoints);
 
-				foreach (ItemTemplate basicReward in Rewards.BasicItems)
+				foreach (ItemTemplate basicReward in Rewards.BasicItems(QuestPlayer))
 				{
 					GiveItem(QuestPlayer, basicReward);
 				}
@@ -256,10 +271,15 @@ namespace DOL.GS.Quests
 				{
 					GiveItem(QuestPlayer, optionalReward);
 				}
-                eQuestIndicator indicator = eQuestIndicator.None;
-                if (QuestGiver.CanGiveOneQuest(QuestPlayer))
-                    indicator = eQuestIndicator.Available;
-				QuestPlayer.Out.SendNPCsQuestEffect(QuestGiver, indicator);
+				eQuestIndicator indicator = eQuestIndicator.None;
+				foreach (GameNPC npc in QuestGivers)
+				{
+					if (npc.CurrentRegionID == QuestPlayer.CurrentRegionID
+						&& npc.CanGiveOneQuest(QuestPlayer))
+						indicator = eQuestIndicator.Available;
+					else indicator = eQuestIndicator.None;
+					QuestPlayer.Out.SendNPCsQuestEffect(npc, indicator);
+				}
 			}
 			else
 			{
@@ -320,7 +340,7 @@ namespace DOL.GS.Quests
 			/// </summary>
 			public string Description
 			{
-                get { return String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RewardQuest.Description", m_description, Current, Target)); }
+				get { return String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RewardQuest.Description", m_description, Current, Target)); }
 			}
 
 			/// <summary>
@@ -345,7 +365,7 @@ namespace DOL.GS.Quests
 			/// </summary>
 			protected int Current
 			{
-				get 
+				get
 				{
 					if (m_quest.QuestPlayer == null)
 						return m_current;
@@ -355,9 +375,9 @@ namespace DOL.GS.Quests
 						Current = 0;
 						return Current;
 					}
-					return Int16.Parse(propertyValue); 
+					return Int16.Parse(propertyValue);
 				}
-				set 
+				set
 				{
 					if (m_quest.QuestPlayer == null)
 						m_current = value;
@@ -374,7 +394,7 @@ namespace DOL.GS.Quests
 			/// </summary>
 			protected int Target
 			{
-				get 
+				get
 				{
 					if (m_quest.QuestPlayer == null)
 						return m_current;
@@ -384,9 +404,9 @@ namespace DOL.GS.Quests
 						Target = 0;
 						return Target;
 					}
-					return Int16.Parse(propertyValue); 
+					return Int16.Parse(propertyValue);
 				}
-				set 
+				set
 				{
 					if (m_quest.QuestPlayer == null)
 						m_target = value;
@@ -408,11 +428,19 @@ namespace DOL.GS.Quests
 
 			public void Advance()
 			{
+				Advance(false);
+			}
+
+			public void Advance(bool quiet)
+			{
 				if (Current < Target)
 				{
 					Current++;
-					m_quest.QuestPlayer.Out.SendMessage(Description, eChatType.CT_ScreenCenter, 
-						eChatLoc.CL_SystemWindow);
+					if (!quiet)
+					{
+						m_quest.QuestPlayer.Out.SendMessage(Description, eChatType.CT_ScreenCenter,
+						   eChatLoc.CL_SystemWindow);
+					}
 					m_quest.QuestPlayer.Out.SendQuestUpdate(m_quest);
 				}
 			}
@@ -461,46 +489,48 @@ namespace DOL.GS.Quests
 			private RewardQuest m_quest;
 			private int m_moneyPercent;
 			private long m_experience;
-			private List<ItemTemplate> m_basicItems, m_optionalItems;
+			private Dictionary<int, List<ItemTemplate>> m_basicItems, m_optionalItems;
 			private int m_choiceOf;
+			private int m_choiceMin;
+			private int m_choiceMax;
 			private List<ItemTemplate> m_chosenItems;
 			private int m_bountypoints;
-			private int	m_realmpoints;
-			private int	m_gold;
-			
+			private int m_realmpoints;
+			private int m_gold;
+
 			public QuestRewards(RewardQuest quest)
 			{
 				m_quest = quest;
 				m_moneyPercent = 0;
 				m_experience = 0;
-				m_basicItems = new List<ItemTemplate>();
-				m_optionalItems = new List<ItemTemplate>();
+				m_basicItems = new Dictionary<int, List<ItemTemplate>>();
+				m_optionalItems = new Dictionary<int, List<ItemTemplate>>();
 				m_choiceOf = 0;
 				m_chosenItems = new List<ItemTemplate>();
 				m_bountypoints = 0;
 				m_realmpoints = 0;
 				m_gold = 0;
-				
+
 			}
-			
+
 			public int GiveGold
 			{
 				get { return m_gold; }
-				set { m_gold = value;}
+				set { m_gold = value; }
 			}
-			
+
 			public int GiveRealmPoints
 			{
 				get { return m_realmpoints; }
-				set { m_realmpoints = value;}
+				set { m_realmpoints = value; }
 			}
-			
+
 			public int GiveBountyPoints
 			{
 				get { return m_bountypoints; }
-				set { m_bountypoints = value;}
+				set { m_bountypoints = value; }
 			}
-			
+
 			/// <summary>
 			/// The maximum amount of copper awarded for a quest with a
 			/// particular level.
@@ -558,25 +588,39 @@ namespace DOL.GS.Quests
 				11018817,
 				11018817	// level 50, this appears to be the overall cap
 			};
-			
+
 			/// <summary>
 			/// Add a basic reward (up to a maximum of 8).
 			/// </summary>
 			/// <param name="reward"></param>
-			public void AddBasicItem(ItemTemplate reward)
+			public void AddBasicItem(int classID, ItemTemplate reward)
 			{
-				if (m_basicItems.Count < 8)
-					m_basicItems.Add(reward);
+				if (!m_basicItems.ContainsKey(classID))
+					m_basicItems.Add(classID, new List<ItemTemplate>());
+
+				if (m_basicItems[classID].Count < 8)
+					m_basicItems[classID].Add(reward);
 			}
 
 			/// <summary>
 			/// Add an optional reward (up to a maximum of 8).
 			/// </summary>
 			/// <param name="reward"></param>
-			public void AddOptionalItem(ItemTemplate reward)
+			public void AddOptionalItem(int classID, ItemTemplate reward)
 			{
-				if (m_optionalItems.Count < 8)
-					m_optionalItems.Add(reward);
+				if (!m_optionalItems.ContainsKey(classID))
+					m_optionalItems.Add(classID, new List<ItemTemplate>());
+
+				if (m_optionalItems[classID].Count < 8)
+					m_optionalItems[classID].Add(reward);
+			}
+
+			public void SetOptionalItem(int classID, List<ItemTemplate> rewards)
+			{
+				if (!m_optionalItems.ContainsKey(classID))
+					m_optionalItems.Add(classID, new List<ItemTemplate>());
+
+				m_optionalItems[classID] = rewards;
 			}
 
 			/// <summary>
@@ -584,13 +628,21 @@ namespace DOL.GS.Quests
 			/// </summary>
 			/// <param name="reward"></param>
 			/// <returns></returns>
-			public bool Choose(int reward)
+			public bool Choose(int classID, int reward)
 			{
+				if (!m_optionalItems.ContainsKey(classID)) classID = 0;
+				if (!m_optionalItems.ContainsKey(classID)) return false;
+
 				if (reward > m_optionalItems.Count)
 					return false;
 
-				m_chosenItems.Add(m_optionalItems[reward]);
+				m_chosenItems.Add(m_optionalItems[classID][reward]);
 				return true;
+			}
+
+			public void Clear()
+			{
+				m_chosenItems.Clear();
 			}
 
 			/// <summary>
@@ -605,6 +657,7 @@ namespace DOL.GS.Quests
 				set { if (value >= 0 && value <= 100) m_moneyPercent = value; }
 			}
 
+			private long m_Money = 0;
 			/// <summary>
 			/// Money awarded for completing this quest. This is a flat value.
 			/// You shouldn't be able to set this directly, because a level dependent
@@ -612,9 +665,14 @@ namespace DOL.GS.Quests
 			/// </summary>
 			public long Money
 			{
-				get 
+				get
 				{
+					if (m_Money > 0) return m_Money;
 					return (long)((m_maxCopperForLevel[m_quest.Level] * MoneyPercent / 100) + (GiveGold * 10000));
+				}
+				set
+				{
+					m_Money = value;
 				}
 			}
 
@@ -644,27 +702,53 @@ namespace DOL.GS.Quests
 			{
 				get { return m_experience; }
 				set
-                {
-                    m_experience = value;
-                    if (m_experience < 0)
-                        m_experience = 0;
-                }
+				{
+					m_experience = value;
+					if (m_experience < 0)
+						m_experience = 0;
+				}
 			}
 
 			/// <summary>
 			/// List of basic item rewards.
 			/// </summary>
-			public List<ItemTemplate> BasicItems
+			public virtual List<ItemTemplate> BasicItems(GamePlayer player)
 			{
-				get { return m_basicItems; }
+				List<ItemTemplate> items = new List<ItemTemplate>();
+
+				if (player == null || player.CharacterClass == null || !m_basicItems.ContainsKey(player.CharacterClass.ID))
+				{
+					if (m_basicItems.ContainsKey(0))
+					{
+						foreach (ItemTemplate it in m_basicItems[0])
+						{
+							if (!items.Contains(it))
+								items.Add(it);
+						}
+
+						return items;
+					}
+					return items;
+				}
+				foreach (ItemTemplate it in m_basicItems[player.CharacterClass.ID])
+				{
+					if (!items.Contains(it))
+						items.Add(it);
+				}
+				return items;
 			}
 
 			/// <summary>
 			/// List of optional item rewards.
 			/// </summary>
-			public List<ItemTemplate> OptionalItems
+			public List<ItemTemplate> OptionalItems(GamePlayer player)
 			{
-				get { return m_optionalItems; }
+				if (player == null || player.CharacterClass == null || !m_optionalItems.ContainsKey(player.CharacterClass.ID))
+				{
+					if (m_optionalItems.ContainsKey(0)) return m_optionalItems[0];
+					return new List<ItemTemplate>();
+				}
+				return m_optionalItems[player.CharacterClass.ID];
 			}
 
 			/// <summary>
@@ -682,11 +766,23 @@ namespace DOL.GS.Quests
 			public int ChoiceOf
 			{
 				get { return m_choiceOf; }
-				set 
+				set
 				{
 					if (m_optionalItems.Count > 0)
 						m_choiceOf = Math.Min(Math.Max(1, value), m_optionalItems.Count);
 				}
+			}
+
+			public int ChoiceMin
+			{
+				get { return m_choiceMin; }
+				set { m_choiceMin = value; }
+			}
+
+			public int ChoiceMax
+			{
+				get { return m_choiceMax; }
+				set { m_choiceMax = value; }
 			}
 		}
 	}

@@ -29,15 +29,15 @@ namespace DOL.Database
 	/// </summary>
 	[DataTable(TableName = "Mob")]
 	public class Mob : DataObject
-    {
-        #region Variables
-        private string m_type;
-        private string m_translationId = string.Empty;
+	{
+		#region Variables
+		private string m_type;
+		private string m_translationId = string.Empty;
 		private string m_name;
-        private string m_suffix = string.Empty;
+		private string m_suffix = string.Empty;
 		private string m_guild;
-        private string m_examineArticle = string.Empty;
-        private string m_messageArticle = string.Empty;
+		private string m_examineArticle = string.Empty;
+		private string m_messageArticle = string.Empty;
 		private int m_x;
 		private int m_y;
 		private int m_z;
@@ -76,11 +76,13 @@ namespace DOL.Database
 		private bool m_isCloakHoodUp;
 		private string m_packageID;
 		private byte m_visibleWeaponSlots;
+		private string m_spells;
+		private string m_styles;
 
 		public static readonly string DEFAULT_NPC_CLASSTYPE = "DOL.GS.GameNPC";
-        #endregion Variables
+		#endregion Variables
 
-        /// <summary>
+		/// <summary>
 		/// The Constructor
 		/// </summary>
 		public Mob()
@@ -107,10 +109,12 @@ namespace DOL.Database
 			m_ownerID = "";
 			m_roamingRange = -1;
 			m_gender = 0;
+			m_spells = "";
+			m_styles = "";
 		}
 
-        #region Properties
-        /// <summary>
+		#region Properties
+		/// <summary>
 		/// The Mob's ClassType
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
@@ -127,19 +131,19 @@ namespace DOL.Database
 			}
 		}
 
-        /// <summary>
-        /// Gets or sets the translation id of the mob
-        /// </summary>
-        [DataElement(AllowDbNull = true)]
-        public string TranslationId
-        {
-            get { return m_translationId; }
-            set
-            {
-                Dirty = true;
-                m_translationId = value;
-            }
-        }
+		/// <summary>
+		/// Gets or sets the translation id of the mob
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string TranslationId
+		{
+			get { return m_translationId; }
+			set
+			{
+				Dirty = true;
+				m_translationId = value;
+			}
+		}
 
 		/// <summary>
 		/// The Mob's Name
@@ -158,23 +162,23 @@ namespace DOL.Database
 			}
 		}
 
-        /// <summary>
-        /// Gets or sets the name suffix (currently used by necromancer pets).
-        /// 
-        /// The XYZ spell is no longer in the Death Servant's queue.
-        /// 
-        /// 's = the suffix.
-        /// </summary>
-        [DataElement(AllowDbNull = true)]
-        public string Suffix
-        {
-            get { return m_suffix; }
-            set
-            {
-                Dirty = true;
-                m_suffix = value;
-            }
-        }
+		/// <summary>
+		/// Gets or sets the name suffix (currently used by necromancer pets).
+		/// 
+		/// The XYZ spell is no longer in the Death Servant's queue.
+		/// 
+		/// 's = the suffix.
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string Suffix
+		{
+			get { return m_suffix; }
+			set
+			{
+				Dirty = true;
+				m_suffix = value;
+			}
+		}
 
 		/// <summary>
 		/// The Mob's Guild Name
@@ -193,41 +197,41 @@ namespace DOL.Database
 			}
 		}
 
-        /// <summary>
-        /// Gets or sets the examine article.
-        /// 
-        /// You examine the Tree.
-        /// 
-        /// the = the examine article.
-        /// </summary>
-        [DataElement(AllowDbNull = true)]
-        public string ExamineArticle
-        {
-            get { return m_examineArticle; }
-            set
-            {
-                Dirty = true;
-                m_examineArticle = value;
-            }
-        }
+		/// <summary>
+		/// Gets or sets the examine article.
+		/// 
+		/// You examine the Tree.
+		/// 
+		/// the = the examine article.
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string ExamineArticle
+		{
+			get { return m_examineArticle; }
+			set
+			{
+				Dirty = true;
+				m_examineArticle = value;
+			}
+		}
 
-        /// <summary>
-        /// Gets or sets the message article.
-        /// 
-        /// GamePlayer has been killed by a Tree.
-        /// 
-        /// a = the message article.
-        /// </summary>
-        [DataElement(AllowDbNull = true)]
-        public string MessageArticle
-        {
-            get { return m_messageArticle; }
-            set
-            {
-                Dirty = true;
-                m_messageArticle = value;
-            }
-        }
+		/// <summary>
+		/// Gets or sets the message article.
+		/// 
+		/// GamePlayer has been killed by a Tree.
+		/// 
+		/// a = the message article.
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string MessageArticle
+		{
+			get { return m_messageArticle; }
+			set
+			{
+				Dirty = true;
+				m_messageArticle = value;
+			}
+		}
 
 		/// <summary>
 		/// The Mob's X Position
@@ -500,7 +504,7 @@ namespace DOL.Database
 				m_Charisma = value;
 			}
 		}
-		
+
 		/// <summary>
 		/// The Mob's Level
 		/// </summary>
@@ -583,7 +587,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement( AllowDbNull = true )]
+		[DataElement(AllowDbNull = true)]
 		public int Race
 		{
 			get
@@ -740,7 +744,7 @@ namespace DOL.Database
 		/// <summary>
 		/// An OwnerID for this mob
 		/// </summary>
-		[DataElement(AllowDbNull = false, Varchar = 255)]
+		[DataElement(AllowDbNull = true, Varchar = 255)]
 		public string OwnerID
 		{
 			get
@@ -821,7 +825,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull = true)]
 		public byte VisibleWeaponSlots
 		{
 			get
@@ -833,9 +837,43 @@ namespace DOL.Database
 				this.m_visibleWeaponSlots = value;
 				this.Dirty = true;
 			}
-        }
-        #endregion Properties
-    }
+		}
+
+		/// <summary>
+		/// SpellID list
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string Spells
+		{
+			get
+			{
+				return this.m_spells;
+			}
+			set
+			{
+				this.m_spells = value;
+				this.Dirty = true;
+			}
+		}
+
+		/// <summary>
+		/// StyleID list
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string Styles
+		{
+			get
+			{
+				return this.m_styles;
+			}
+			set
+			{
+				this.m_styles = value;
+				this.Dirty = true;
+			}
+		}
+		#endregion Properties
+	}
 }
 
 

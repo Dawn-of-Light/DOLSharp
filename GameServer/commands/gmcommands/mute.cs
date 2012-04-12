@@ -26,7 +26,6 @@ namespace DOL.GS.Commands
 		ePrivLevel.GM,
 		"Command to mute annoying players.  Player mutes are temporary, allchars are set on an account and must be removed.",
 		"/mute <playername or #ClientID> - example /mute #24  to mute player on client id 24",
-		"/mute <playername or #ClientID> allchars - this applies an account mute to this player",
 		"/mute <playername or #ClientID> remove - remove all mutes from this players account")]
 	public class MuteCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
@@ -73,12 +72,11 @@ namespace DOL.GS.Commands
 
 			bool mutedAccount = false;
 
-			if (args.Length > 2 && (args[2].ToLower() == "account" || args[2].ToLower() == "allchars"))
+			if (args.Length == 2)
 			{
 				if (playerClient != null)
 				{
-					playerClient.Account.IsMuted = true;
-					playerClient.Player.IsMuted = true;
+					playerClient.Account.MutedTime = DateTime.MaxValue;
 					GameServer.Database.SaveObject(playerClient.Account);
 					mutedAccount = true;
 				}
@@ -87,27 +85,13 @@ namespace DOL.GS.Commands
 			{
 				if (playerClient != null)
 				{
-					playerClient.Account.IsMuted = false;
-					playerClient.Player.IsMuted = false;
+					playerClient.Account.MutedTime = DateTime.MinValue;
 					GameServer.Database.SaveObject(playerClient.Account);
 					mutedAccount = true;
 				}
 			}
-			else
-			{
-				if (playerClient != null)
-				{
-					if (playerClient.Account.IsMuted)
-					{
-						DisplayMessage(client, "This player has an allchars mute which must be removed first.");
-						return;
-					}
 
-					playerClient.Player.IsMuted = !playerClient.Player.IsMuted;
-				}
-			}
-
-			if (playerClient.Player.IsMuted)
+			if (playerClient.Account.IsMuted)
 			{
 				playerClient.Player.Out.SendMessage("You have been muted from public channels by staff member " + client.Player.Name + "!", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
 				client.Player.Out.SendMessage("You have muted player " + playerClient.Player.Name + " from public channels!", eChatType.CT_Staff, eChatLoc.CL_SystemWindow);

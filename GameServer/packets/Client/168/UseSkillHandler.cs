@@ -88,6 +88,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			protected override void OnTick()
 			{
 				var player = (GamePlayer) m_actionSource;
+				
+				player.Notify(DOL.Events.GamePlayerEvent.UseSkill, player, new DOL.Events.UseSkillEventArgs(m_index, m_type));
+				
 				int index = m_index;
 
 				if ((m_flagSpeedData & 0x200) != 0)

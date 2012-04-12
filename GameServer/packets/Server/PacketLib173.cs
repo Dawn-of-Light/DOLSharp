@@ -52,81 +52,81 @@ namespace DOL.GS.PacketHandler
 		{
 		}
 
-        public override void SendWarlockChamberEffect(GamePlayer player)
-        {
-            GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VisualEffect));
+		public override void SendWarlockChamberEffect(GamePlayer player)
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VisualEffect));
 
-            pak.WriteShort((ushort)player.ObjectID);
-            pak.WriteByte((byte)3);
+			pak.WriteShort((ushort)player.ObjectID);
+			pak.WriteByte((byte)3);
 
-            SortedList sortList = new SortedList();
-            sortList.Add(1, null);
-            sortList.Add(2, null);
-            sortList.Add(3, null);
-            sortList.Add(4, null);
-            sortList.Add(5, null);
-            lock (player.EffectList)
-            {
-                foreach (IGameEffect fx in player.EffectList)
-                {
-                    if (fx is GameSpellEffect)
-                    {
-                        GameSpellEffect effect = (GameSpellEffect)fx;
-                        if (effect.SpellHandler.Spell != null && (effect.SpellHandler.Spell.SpellType == "Chamber"))
-                        {
-                            ChamberSpellHandler chamber = (ChamberSpellHandler)effect.SpellHandler;
-                            sortList[chamber.EffectSlot] = effect;
-                        }
-                    }
-                }
-                foreach (GameSpellEffect effect in sortList.Values)
-                {
-                    if (effect == null)
-                    {
-                        pak.WriteByte((byte)0);
-                    }
-                    else
-                    {
-                        ChamberSpellHandler chamber = (ChamberSpellHandler)effect.SpellHandler;
-                        if (chamber.PrimarySpell != null && chamber.SecondarySpell == null)
-                        {
-                            pak.WriteByte((byte)3);
-                        }
-                        else if (chamber.PrimarySpell != null && chamber.SecondarySpell != null)
-                        {
-                            if (chamber.SecondarySpell.SpellType == "Lifedrain")
-                                pak.WriteByte(0x11);
-                            else if (chamber.SecondarySpell.SpellType.IndexOf("SpeedDecrease") != -1)
-                                pak.WriteByte(0x33);
-                            else if (chamber.SecondarySpell.SpellType == "PowerRegenBuff")
-                                pak.WriteByte(0x77);
-                            else if (chamber.SecondarySpell.SpellType == "DirectDamage")
-                                pak.WriteByte(0x66);
-                            else if (chamber.SecondarySpell.SpellType == "SpreadHeal")
-                                pak.WriteByte(0x55);
-                            else if (chamber.SecondarySpell.SpellType == "Nearsight")
-                                pak.WriteByte(0x44);
-                            else if (chamber.SecondarySpell.SpellType == "DamageOverTime")
-                                pak.WriteByte(0x22);
-                        }
-                    }
-                }
-            }
-            //pak.WriteByte(0x11);
-            //pak.WriteByte(0x22);
-            //pak.WriteByte(0x33);
-            //pak.WriteByte(0x44);
-            //pak.WriteByte(0x55);
-            pak.WriteInt(0);
+			SortedList sortList = new SortedList();
+			sortList.Add(1, null);
+			sortList.Add(2, null);
+			sortList.Add(3, null);
+			sortList.Add(4, null);
+			sortList.Add(5, null);
+			lock (player.EffectList)
+			{
+				foreach (IGameEffect fx in player.EffectList)
+				{
+					if (fx is GameSpellEffect)
+					{
+						GameSpellEffect effect = (GameSpellEffect)fx;
+						if (effect.SpellHandler.Spell != null && (effect.SpellHandler.Spell.SpellType == "Chamber"))
+						{
+							ChamberSpellHandler chamber = (ChamberSpellHandler)effect.SpellHandler;
+							sortList[chamber.EffectSlot] = effect;
+						}
+					}
+				}
+				foreach (GameSpellEffect effect in sortList.Values)
+				{
+					if (effect == null)
+					{
+						pak.WriteByte((byte)0);
+					}
+					else
+					{
+						ChamberSpellHandler chamber = (ChamberSpellHandler)effect.SpellHandler;
+						if (chamber.PrimarySpell != null && chamber.SecondarySpell == null)
+						{
+							pak.WriteByte((byte)3);
+						}
+						else if (chamber.PrimarySpell != null && chamber.SecondarySpell != null)
+						{
+							if (chamber.SecondarySpell.SpellType == "Lifedrain")
+								pak.WriteByte(0x11);
+							else if (chamber.SecondarySpell.SpellType.IndexOf("SpeedDecrease") != -1)
+								pak.WriteByte(0x33);
+							else if (chamber.SecondarySpell.SpellType == "PowerRegenBuff")
+								pak.WriteByte(0x77);
+							else if (chamber.SecondarySpell.SpellType == "DirectDamage")
+								pak.WriteByte(0x66);
+							else if (chamber.SecondarySpell.SpellType == "SpreadHeal")
+								pak.WriteByte(0x55);
+							else if (chamber.SecondarySpell.SpellType == "Nearsight")
+								pak.WriteByte(0x44);
+							else if (chamber.SecondarySpell.SpellType == "DamageOverTime")
+								pak.WriteByte(0x22);
+						}
+					}
+				}
+			}
+			//pak.WriteByte(0x11);
+			//pak.WriteByte(0x22);
+			//pak.WriteByte(0x33);
+			//pak.WriteByte(0x44);
+			//pak.WriteByte(0x55);
+			pak.WriteInt(0);
 
-            foreach (GamePlayer plr in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-            {
-                if (player != plr)
-                    plr.Client.PacketProcessor.SendTCP(pak);
-            }
+			foreach (GamePlayer plr in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			{
+				if (player != plr)
+					plr.Client.PacketProcessor.SendTCP(pak);
+			}
 
-            SendTCP(pak);
-        }
+			SendTCP(pak);
+		}
 
 		public override void SendUpdateIcons(IList changedEffects, ref int lastUpdateEffectsCount)
 		{
@@ -207,7 +207,7 @@ namespace DOL.GS.PacketHandler
 				//				pak.WriteByte((byte)((region.Expansion + 1) << 4)); // Must be expansion
 				pak.WriteByte(0); // but this packet sended when client in old region. but this field must show expanstion for jump destanation region
 				//Dinberg - trying to get instances to work.
-                pak.WriteByte((byte)region.Skin); // This was pak.WriteByte((byte)region.ID);
+				pak.WriteByte((byte)region.Skin); // This was pak.WriteByte((byte)region.ID);
 				pak.Fill(0, 20);
 				pak.FillString(region.ServerPort.ToString(), 5);
 				pak.FillString(region.ServerPort.ToString(), 5);
@@ -335,30 +335,30 @@ namespace DOL.GS.PacketHandler
 								foreach (AbstractArea area in areas)
 								{
 									if (!area.DisplayMessage)
-                                        continue;
-                                    
-                                    description = area.Description;
+										continue;
 
-                                    DataObject translation = LanguageMgr.GetTranslation(m_gameClient, area);
-                                    if (translation != null)
-                                    {
-                                        if (!Util.IsEmpty(((DBLanguageArea)translation).ScreenDescription)) // Thats correct!
-                                            description = ((DBLanguageArea)translation).ScreenDescription;
-                                    }
+									description = area.Description;
+
+									DataObject translation = LanguageMgr.GetTranslation(m_gameClient, area);
+									if (translation != null)
+									{
+										if (!Util.IsEmpty(((DBLanguageArea)translation).ScreenDescription)) // Thats correct!
+											description = ((DBLanguageArea)translation).ScreenDescription;
+									}
 									break;
 								}
 
-                                if (description == "")
-                                {
-                                    description = zon.Description;
+								if (description == "")
+								{
+									description = zon.Description;
 
-                                    DataObject translation = LanguageMgr.GetTranslation(m_gameClient, zon);
-                                    if (translation != null)
-                                    {
-                                        if (!Util.IsEmpty(((DBLanguageZone)translation).ScreenDescription)) // Thats correct!
-                                            description = ((DBLanguageZone)translation).ScreenDescription;
-                                    }
-                                }
+									DataObject translation = LanguageMgr.GetTranslation(m_gameClient, zon);
+									if (translation != null)
+									{
+										if (!Util.IsEmpty(((DBLanguageZone)translation).ScreenDescription)) // Thats correct!
+											description = ((DBLanguageZone)translation).ScreenDescription;
+									}
+								}
 
 								pak.FillString(description, 24);
 							}
@@ -371,7 +371,7 @@ namespace DOL.GS.PacketHandler
 								pak.FillString(((eCharacterClass)characters[j].Class).ToString(), 24); //Class name
 
 							//pak.FillString(GamePlayer.RACENAMES[characters[j].Race], 24);
-                            pak.FillString(GamePlayer.RACENAMES(m_gameClient, characters[j].Race, characters[j].Gender), 24);
+							pak.FillString(GamePlayer.RACENAMES(m_gameClient, characters[j].Race, characters[j].Gender), 24);
 							pak.WriteByte((byte)characters[j].Level);
 							pak.WriteByte((byte)characters[j].Class);
 							pak.WriteByte((byte)characters[j].Realm);
@@ -484,7 +484,7 @@ namespace DOL.GS.PacketHandler
 							else
 								pak.WriteByte(0x01); //0x01=char in ShroudedIsles zone, classic client can't "play"
 							//pak.WriteByte(0x00);
-                            pak.WriteByte((byte)characters[j].Constitution);
+							pak.WriteByte((byte)characters[j].Constitution);
 							//pak.Fill(0x00,2);
 							written = true;
 						}
@@ -533,7 +533,7 @@ namespace DOL.GS.PacketHandler
 			SendTCP(pak);
 		}
 
-        public override void SendNPCsQuestEffect(GameNPC npc, eQuestIndicator indicator)
+		public override void SendNPCsQuestEffect(GameNPC npc, eQuestIndicator indicator)
 		{
 			if (m_gameClient.Player == null || npc == null)
 				return;
@@ -622,8 +622,8 @@ namespace DOL.GS.PacketHandler
 			SendRegions();
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.RegionChanged));
 
-            //Dinberg - Changing to allow instances...
-            pak.WriteShort(m_gameClient.Player.CurrentRegion.Skin);
+			//Dinberg - Changing to allow instances...
+			pak.WriteShort(m_gameClient.Player.CurrentRegion.Skin);
 			pak.WriteShort(0x00); // Zone ID?
 			pak.WriteShort(0x00); // ?
 			pak.WriteShort(0x01); // cause region change ?
@@ -644,7 +644,7 @@ namespace DOL.GS.PacketHandler
 			else
 			{
 				string name = quest.Name;
-				string desc = quest.Description;
+				string desc = quest.DescriptionForPlayer(m_gameClient.Player);
 				if (name.Length > byte.MaxValue)
 				{
 					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": name is too long for 1.71 clients (" + name.Length + ") '" + name + "'");
@@ -698,16 +698,16 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort(0); // SiegeTimer ?
 			pak.WriteShort((ushort)siegeWeapon.ObjectID);
 
-            string name = siegeWeapon.Name;
+			string name = siegeWeapon.Name;
 
-            DataObject translation = LanguageMgr.GetTranslation(m_gameClient, siegeWeapon);
-            if (translation != null)
-            {
-                if (!Util.IsEmpty(((DBLanguageNPC)translation).Name))
-                    name = ((DBLanguageNPC)translation).Name;
-            }
+			DataObject translation = LanguageMgr.GetTranslation(m_gameClient, siegeWeapon);
+			if (translation != null)
+			{
+				if (!Util.IsEmpty(((DBLanguageNPC)translation).Name))
+					name = ((DBLanguageNPC)translation).Name;
+			}
 
-            pak.WritePascalString(name + " (" + siegeWeapon.CurrentState.ToString() + ")");
+			pak.WritePascalString(name + " (" + siegeWeapon.CurrentState.ToString() + ")");
 			foreach (InventoryItem item in siegeWeapon.Ammo)
 			{
 				pak.WriteByte((byte)item.SlotPosition);

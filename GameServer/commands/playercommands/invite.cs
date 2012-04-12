@@ -17,6 +17,8 @@
  *
  */
 using DOL.GS.PacketHandler;
+using System.Reflection;
+using System;
 
 namespace DOL.GS.Commands
 {
@@ -26,6 +28,8 @@ namespace DOL.GS.Commands
 		"Invite a specified or targeted player to join your group", "/invite <player>")]
 	public class InviteCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		
 		public void OnCommand(GameClient client, string[] args)
 		{
 			if (client.Player.Group != null && client.Player.Group.Leader != client.Player)
@@ -97,7 +101,45 @@ namespace DOL.GS.Commands
 
 				if (client.Player.Group == null)
 				{
-					Group group = new Group(client.Player);
+					Group group = null;// new Group(groupLeader);
+
+					Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
+
+					try
+					{
+						group = (Group)gasm.CreateInstance(ServerProperties.Properties.GROUP_CLASS, false, BindingFlags.CreateInstance, null, new object[] { client.Player }, null, null);
+					}
+					catch (Exception e)
+					{
+						if (log.IsErrorEnabled)
+							log.Error("CreateGroup", e);
+					}
+
+					if (group == null)
+					{
+						foreach (Assembly asm in ScriptMgr.Scripts)
+						{
+							try
+							{
+								group = (Group)asm.CreateInstance(ServerProperties.Properties.GROUP_CLASS, false, BindingFlags.CreateInstance, null, new object[] { client.Player }, null, null);
+							}
+							catch (Exception e)
+							{
+								if (log.IsErrorEnabled)
+									log.Error("CreateGroup", e);
+							}
+							if (group != null)
+								break;
+						}
+					}
+
+					if (group == null)
+					{
+						log.ErrorFormat("Could not instantiate group class '{0}', using Group instead!", ServerProperties.Properties.GROUP_CLASS);
+						group = new Group(client.Player);
+					}
+
+
 					GroupMgr.AddGroup(group, group);
 					group.AddMember(client.Player);
 					group.AddMember(target);

@@ -389,7 +389,7 @@ namespace DOL.GS.Quests
 						m_rewardXPs.Add(Convert.ToInt64(str));
 					}
 				}
-				
+
 				lastParse = m_dataQuest.RewardCLXP;
 				if (string.IsNullOrEmpty(lastParse) == false)
 				{
@@ -399,7 +399,7 @@ namespace DOL.GS.Quests
 						m_rewardCLXPs.Add(Convert.ToInt64(str));
 					}
 				}
-				
+
 				lastParse = m_dataQuest.RewardRP;
 				if (string.IsNullOrEmpty(lastParse) == false)
 				{
@@ -409,7 +409,7 @@ namespace DOL.GS.Quests
 						m_rewardRPs.Add(Convert.ToInt64(str));
 					}
 				}
-				
+
 				lastParse = m_dataQuest.RewardBP;
 				if (string.IsNullOrEmpty(lastParse) == false)
 				{
@@ -419,7 +419,7 @@ namespace DOL.GS.Quests
 						m_rewardBPs.Add(Convert.ToInt64(str));
 					}
 				}
-				
+
 				lastParse = m_dataQuest.OptionalRewardItemTemplates;
 				if (string.IsNullOrEmpty(lastParse) == false)
 				{
@@ -621,7 +621,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public override int Level
 		{
-			get	{ return m_dataQuest.MinLevel; }
+			get { return m_dataQuest.MinLevel; }
 		}
 
 
@@ -644,14 +644,14 @@ namespace DOL.GS.Quests
 
 		public virtual short Count
 		{
-			get 
+			get
 			{
 				if (m_charQuest != null)
 				{
 					return m_charQuest.Count;
 				}
 
-				return 0; 
+				return 0;
 			}
 			set
 			{
@@ -663,7 +663,7 @@ namespace DOL.GS.Quests
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Maximum number of times this quest can be done
 		/// </summary>
@@ -681,25 +681,22 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// Description of this quest to show in quest log
 		/// </summary>
-		public override string Description
+		public override string DescriptionForPlayer(GamePlayer player)
 		{
-			get
+			if (Step == 0)
 			{
-				if (Step == 0)
+				if (m_dataQuest.Description == null)
 				{
-					if (m_dataQuest.Description == null)
-					{
-						return "";
-					}
-					else
-					{
-						return m_dataQuest.Description;
-					}
+					return "";
 				}
 				else
 				{
-					return StepText;
+					return m_dataQuest.Description;
 				}
+			}
+			else
+			{
+				return StepText;
 			}
 		}
 
@@ -889,7 +886,7 @@ namespace DOL.GS.Quests
 		/// <param name="player"></param>
 		public virtual void UpdateQuestIndicator(GameNPC npc, GamePlayer player)
 		{
-            player.Out.SendNPCsQuestEffect(npc, npc.GetQuestIndicator(player));
+			player.Out.SendNPCsQuestEffect(npc, npc.GetQuestIndicator(player));
 		}
 
 
@@ -1042,11 +1039,11 @@ namespace DOL.GS.Quests
 							text += ": " + StepItemTemplate;
 							text += " Target: " + TargetName;
 						}
-						else 
+						else
 						{
 							if (StepType == eStepType.Whisper || StepType == eStepType.WhisperFinish)
 							{
-							text += ": " + AdvanceText;
+								text += ": " + AdvanceText;
 							}
 
 							text += ", Target: " + TargetName + " sit: " + StepItemTemplate + " cit: " + CollectItemTemplate;
@@ -1187,7 +1184,7 @@ namespace DOL.GS.Quests
 				return 0;
 			}
 		}
-		
+
 		protected long RewardCLXP
 		{
 			get
@@ -1209,7 +1206,7 @@ namespace DOL.GS.Quests
 				return 0;
 			}
 		}
-		
+
 		protected long RewardRP
 		{
 			get
@@ -1231,7 +1228,7 @@ namespace DOL.GS.Quests
 				return 0;
 			}
 		}
-		
+
 		protected long RewardBP
 		{
 			get
@@ -1253,7 +1250,7 @@ namespace DOL.GS.Quests
 				return 0;
 			}
 		}
-		
+
 		protected virtual bool ExecuteCustomQuestStep(GamePlayer player, int step, eStepCheckType stepCheckType)
 		{
 			bool canContinue = true;
@@ -1410,23 +1407,23 @@ namespace DOL.GS.Quests
 					{
 						m_questPlayer.GainRealmPoints(RewardRP);
 					}
-					
+
 					if (RewardMoney > 0)
 					{
 						m_questPlayer.AddMoney(RewardMoney, "You are awarded {0}!");
-                        InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, RewardMoney);
+						InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, RewardMoney);
 					}
 
 					if (RewardCLXP > 0)
 					{
 						m_questPlayer.GainChampionExperience(RewardCLXP, GameLiving.eXPSource.Quest);
 					}
-					
+
 					if (RewardBP > 0)
 					{
 						m_questPlayer.GainBountyPoints(RewardBP);
 					}
-					
+
 					// Then advance step
 
 					Step++;
@@ -1644,8 +1641,8 @@ namespace DOL.GS.Quests
 						player.AddQuest(dq);
 						if (giver is GameNPC)
 						{
-                            GameNPC npc = giver as GameNPC;
-                            player.Out.SendNPCsQuestEffect(npc, npc.GetQuestIndicator(player));
+							GameNPC npc = giver as GameNPC;
+							player.Out.SendNPCsQuestEffect(npc, npc.GetQuestIndicator(player));
 						}
 						player.Out.SendSoundEffect(7, 0, 0, 0, 0, 0);
 						break;
@@ -1682,9 +1679,9 @@ namespace DOL.GS.Quests
 					{
 						if (ExecuteCustomQuestStep(player, 0, eStepCheckType.Finish))
 						{
-							if (Description.Trim() != "")
+							if (DescriptionForPlayer(player).Trim() != "")
 							{
-								SendMessage(player, Description, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+								SendMessage(player, DescriptionForPlayer(player), 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							}
 
 							if (m_finalRewards.Count > 0)
@@ -1713,26 +1710,26 @@ namespace DOL.GS.Quests
 							{
 								player.GainExperience(GameLiving.eXPSource.Quest, m_rewardXPs[0]);
 							}
-							
+
 							if (m_rewardCLXPs.Count > 0 && m_rewardCLXPs[0] > 0)
 							{
 								player.GainChampionExperience(m_rewardCLXPs[0], GameLiving.eXPSource.Quest);
 							}
-							
+
 							if (m_rewardRPs.Count > 0 && m_rewardRPs[0] > 0)
 							{
 								player.GainRealmPoints(m_rewardRPs[0]);
 							}
-							
+
 							if (m_rewardBPs.Count > 0 && m_rewardBPs[0] > 0)
 							{
 								player.GainBountyPoints(m_rewardBPs[0]);
 							}
-							
+
 							if (m_rewardMoneys.Count > 0 && m_rewardMoneys[0] > 0)
 							{
 								player.AddMoney(m_rewardMoneys[0], "You are awarded {0}!");
-                                InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", player, eInventoryActionType.Quest, m_rewardMoneys[0]);
+								InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", player, eInventoryActionType.Quest, m_rewardMoneys[0]);
 							}
 
 							charQuest.Count++;
@@ -1803,9 +1800,9 @@ namespace DOL.GS.Quests
 						}
 					}
 				}
-				else if (string.IsNullOrEmpty(Description) == false)
+				else if (string.IsNullOrEmpty(DescriptionForPlayer(player)) == false)
 				{
-					SendMessage(player, Description, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					SendMessage(player, DescriptionForPlayer(player), 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				}
 			}
 		}
@@ -2168,9 +2165,9 @@ namespace DOL.GS.Quests
 						{
 							if (ExecuteCustomQuestStep(player, 0, eStepCheckType.Finish))
 							{
-								if (Description.Trim() != "")
+								if (DescriptionForPlayer(player).Trim() != "")
 								{
-									SendMessage(player, Description, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+									SendMessage(player, DescriptionForPlayer(player), 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 								}
 
 								if (m_finalRewards.Count > 0)
@@ -2199,26 +2196,26 @@ namespace DOL.GS.Quests
 								{
 									player.GainExperience(GameLiving.eXPSource.Quest, m_rewardXPs[0]);
 								}
-								
+
 								if (m_rewardCLXPs.Count > 0 && m_rewardCLXPs[0] > 0)
 								{
 									player.GainChampionExperience(m_rewardCLXPs[0], GameLiving.eXPSource.Quest);
 								}
-								
+
 								if (m_rewardRPs.Count > 0 && m_rewardRPs[0] > 0)
 								{
 									player.GainRealmPoints(m_rewardRPs[0]);
 								}
-								
+
 								if (m_rewardBPs.Count > 0 && m_rewardBPs[0] > 0)
 								{
 									player.GainBountyPoints(m_rewardBPs[0]);
 								}
-								
+
 								if (m_rewardMoneys.Count > 0 && m_rewardMoneys[0] > 0)
 								{
 									player.AddMoney(m_rewardMoneys[0], "You are awarded {0}!");
-                                    InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", player, eInventoryActionType.Quest, m_rewardMoneys[0]);
+									InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", player, eInventoryActionType.Quest, m_rewardMoneys[0]);
 								}
 
 								charQuest.Count++;
@@ -2391,7 +2388,7 @@ namespace DOL.GS.Quests
 							m_questPlayer.GainChampionExperience(rewardCLXP, GameLiving.eXPSource.Quest);
 						}
 					}
-					
+
 					if (m_rewardBPs.Count > 0)
 					{
 						long rewardBP = m_rewardBPs[lastStep - 1];
@@ -2400,14 +2397,14 @@ namespace DOL.GS.Quests
 							m_questPlayer.GainBountyPoints(rewardBP);
 						}
 					}
-					
+
 					if (m_rewardMoneys.Count > 0)
 					{
 						long rewardMoney = m_rewardMoneys[lastStep - 1];
 						if (rewardMoney > 0)
 						{
 							m_questPlayer.AddMoney(rewardMoney, "You are awarded {0}!");
-                            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, rewardMoney);
+							InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, rewardMoney);
 						}
 					}
 				}

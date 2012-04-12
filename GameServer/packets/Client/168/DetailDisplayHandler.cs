@@ -420,10 +420,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 								List<ItemTemplate> rewards = null;
 								if (index < 8)
-									rewards = (q as RewardQuest).Rewards.BasicItems;
+									rewards = (q as RewardQuest).Rewards.BasicItems(client.Player);
 								else
 								{
-									rewards = (q as RewardQuest).Rewards.OptionalItems;
+									rewards = (q as RewardQuest).Rewards.OptionalItems(client.Player);
 									index -= 8;
 								}
 								if (rewards != null && index >= 0 && index < rewards.Count)

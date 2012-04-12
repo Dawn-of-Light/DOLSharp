@@ -95,6 +95,10 @@ namespace DOL.GS
 		/// An Admin
 		/// </summary>
 		Admin = 3,
+		/// <summary>
+		/// A Creator
+		/// </summary>
+		Creator = 4,
 	}
 
 	/// <summary>

@@ -1219,7 +1219,44 @@ namespace DOL.GS
 		/// <returns>An instance of a new client</returns>
 		protected override BaseClient GetNewClient()
 		{
-			var client = new GameClient(this);
+			GameClient client = null;
+
+			Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
+
+			try
+			{
+				client = (GameClient)gasm.CreateInstance(ServerProperties.Properties.CLIENT_CLASS, false, BindingFlags.CreateInstance, null, new object[] { this }, null, null);
+			}
+			catch (Exception e)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("GetNewClient", e);
+			}
+
+			if (client == null)
+			{
+				foreach (Assembly asm in ScriptMgr.Scripts)
+				{
+					try
+					{
+						client = (GameClient)asm.CreateInstance(ServerProperties.Properties.CLIENT_CLASS, false, BindingFlags.CreateInstance, null, new object[] { this }, null, null);
+					}
+					catch (Exception e)
+					{
+						if (log.IsErrorEnabled)
+							log.Error("GetNewClient", e);
+					}
+					if (client != null)
+						break;
+				}
+			}
+
+			if (client == null)
+			{
+				log.ErrorFormat("Could not instantiate client class '{0}', using GameClient instead!", ServerProperties.Properties.CLIENT_CLASS);
+				client = new GameClient(this);
+			}
+
 			GameEventMgr.Notify(GameClientEvent.Created, client);
 			client.UdpConfirm = false;
 
@@ -1290,8 +1327,8 @@ namespace DOL.GS
 							object[] attrib = type.GetCustomAttributes(typeof (DataTable), true);
 							if (attrib.Length > 0)
 							{
-								if (log.IsInfoEnabled)
-									log.Info("Registering table: " + type.FullName);
+								/*if (ServerProperties.Properties.VERBOSE_LEVEL < 1 && log.IsInfoEnabled)
+									log.Info("Registering table: " + type.FullName);*/
 								m_database.RegisterDataObject(type);
 							}
 						}

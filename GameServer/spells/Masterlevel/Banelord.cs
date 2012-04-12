@@ -111,10 +111,6 @@ namespace DOL.GS.Spells
     [SpellHandlerAttribute("Oppression")]
     public class OppressionSpellHandler : MasterlevelHandling
     {
-        public override bool IsOverwritable(GameSpellEffect compare)
-        {
-            return true;
-        }
         public override void FinishSpellCast(GameLiving target)
         {
             m_caster.Mana -= PowerCost(target);
@@ -227,7 +223,12 @@ namespace DOL.GS.Spells
     [SpellHandler("UnrresistableNonImunityStun")]
     public class UnrresistableNonImunityStun : MasterlevelHandling
     {
-        public override void FinishSpellCast(GameLiving target)
+		public override bool IsUnPurgeAble
+		{
+			get { return true; }
+		}
+
+		public override void FinishSpellCast(GameLiving target)
         {
             m_caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
@@ -344,6 +345,14 @@ namespace DOL.GS.Spells
         // constructor
         public BLToHit(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
+    [SpellHandlerAttribute("WLToHit")]
+    public class WLToHit : MasterlevelBuffHandling
+    {
+        public override eProperty Property1 { get { return eProperty.LivingEffectiveLevel; } }
+
+        // constructor
+        public WLToHit(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+    }
     #endregion
 
     //shared timer 5
@@ -406,7 +415,7 @@ namespace DOL.GS.Spells
     public class BanespikeHandler : MasterlevelBuffHandling
     {
         public override eProperty Property1 { get { return eProperty.MeleeDamage; } }
-
+        public override int BonusCategory1 { get { return 5; } }
         public BanespikeHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
     #endregion

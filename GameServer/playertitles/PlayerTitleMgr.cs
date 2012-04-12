@@ -66,7 +66,8 @@ namespace DOL.GS.PlayerTitles
 					continue;
 				}
 				m_titles.Add(title);
-				log.DebugFormat(" loaded player title: {0}", title.GetType().FullName);
+				if (ServerProperties.Properties.VERBOSE_LEVEL <= 1)
+					log.DebugFormat(" loaded player title: {0}", title.GetType().FullName);
 			}
 			
 			log.InfoFormat("Loaded {0} player titles", m_titles.Count);

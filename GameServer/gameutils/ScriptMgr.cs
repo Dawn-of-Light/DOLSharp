@@ -188,7 +188,7 @@ namespace DOL.GS
 		/// Searches the script assembly for all command handlers
 		/// </summary>
 		/// <returns>True if succeeded</returns>
-		public static bool LoadCommands(bool quiet = false)
+		public static bool LoadCommands()
 		{
 			m_gameCommands.Clear();
 
@@ -233,7 +233,7 @@ namespace DOL.GS
 								log.Info(attrib.Cmd + " from " + script.GetName() + " has been suppressed, a command of that type already exists!");
 								continue;
 							}
-							if (log.IsDebugEnabled && quiet == false)
+							if (ServerProperties.Properties.VERBOSE_LEVEL <= 1 && log.IsDebugEnabled)
 								log.Debug("ScriptMgr: Command - '" + attrib.Cmd + "' - (" + attrib.Description + ") required plvl:" + attrib.Level);
 
 							GameCommand cmd = new GameCommand();

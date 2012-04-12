@@ -75,14 +75,6 @@ namespace DOL.GS
 
 					foreach (LootOTD l in lootOTDs)
 					{
-						IList<Mob> mobs = GameServer.Database.SelectObjects<Mob>("Name = '" + GameServer.Database.Escape(l.MobName) + "'");
-
-						if (mobs == null || mobs.Count == 0)
-						{
-							log.ErrorFormat("Can't find MobName {0} for OTD {1}", l.MobName, l.ItemTemplateID);
-							continue;
-						}
-
 						ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(l.ItemTemplateID);
 
 						if (item == null)

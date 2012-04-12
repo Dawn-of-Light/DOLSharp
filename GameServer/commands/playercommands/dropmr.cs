@@ -16,20 +16,22 @@
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 *
 */
+using DOL.Events;
 
 namespace DOL.GS.Commands
 {
-    [CmdAttribute("&dropmr", //command to handle
-        ePrivLevel.Player, //minimum privelege level
-        "Drops the Minotaurrelic.", //command description
-        "/dropmr")] //usage
-    public class DropmrCommandHandler : ICommandHandler
-    {
-        public void OnCommand(GameClient client, string[] args)
-        {
-            if (client.Player.MinotaurRelic == null) return;
+	[CmdAttribute("&dropmr", //command to handle
+		ePrivLevel.Player, //minimum privelege level
+		"Drops the Minotaurrelic.", //command description
+		"/dropmr")] //usage
+	public class DropmrCommandHandler : ICommandHandler
+	{
+		public void OnCommand(GameClient client, string[] args)
+		{
+			GameEventMgr.Notify(GamePlayerEvent.DropMinotaurRelic, client.Player);
 
-            client.Player.MinotaurRelic.PlayerLoosesRelic(client.Player, false);
-        }
-    }
+			if (client.Player.MinotaurRelic != null)
+				client.Player.MinotaurRelic.PlayerLoosesRelic(client.Player, false);
+		}
+	}
 }
