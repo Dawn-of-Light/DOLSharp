@@ -980,7 +980,7 @@ namespace DOL.GS.PacketHandler
 		{
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DebugMode)))
 			{
-				if (m_gameClient.Account.PrivLevel == 1)
+				if (ScriptMgr.HasNoPrivileges(m_gameClient.Account))
 				{
 					pak.WriteByte((0x00));
 				}
@@ -2783,13 +2783,13 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendDebugMessage(string format, params object[] parameters)
 		{
-			if (m_gameClient.Account.PrivLevel > (int)ePrivLevel.Player || ServerProperties.Properties.ENABLE_DEBUG)
+			if (ScriptMgr.IsPlayerGM(m_gameClient.Account) || ServerProperties.Properties.ENABLE_DEBUG)
 				SendMessage(String.Format("[DEBUG] " + format, parameters), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		public virtual void SendDebugPopupMessage(string format, params object[] parameters)
 		{
-			if (m_gameClient.Account.PrivLevel > (int)ePrivLevel.Player || ServerProperties.Properties.ENABLE_DEBUG)
+			if (ScriptMgr.IsPlayerGM(m_gameClient.Account) || ServerProperties.Properties.ENABLE_DEBUG)
 				SendMessage(String.Format("[DEBUG] " + format, parameters), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 		}
 

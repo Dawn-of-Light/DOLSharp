@@ -230,7 +230,7 @@ namespace DOL.GS
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.MakeItem.NotAllMaterials"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-					if (player.Client.Account.PrivLevel == 1)
+					if (ScriptMgr.HasNoPrivileges(player.Client.Account))
 						return 0;
 				}
 
@@ -392,7 +392,7 @@ namespace DOL.GS
 						player.Out.SendMessage(materialName, eChatType.CT_Important, eChatLoc.CL_ChatWindow);
 					}
 
-					if (player.Client.Account.PrivLevel == (uint)ePrivLevel.Player) return false;
+					if (ScriptMgr.HasNoPrivileges(player.Client.Account)) return false;
 				}
 
 				return true;

@@ -90,7 +90,7 @@ namespace DOL.GS
                     }
                 }
             }
-            else if (m_player.Client.Account.PrivLevel == (int)ePrivLevel.Player)
+			else if (ScriptMgr.HasNoPrivileges(m_player.Client.Account))
             {
                 m_player.Out.SendMessage("You have left the group and your guild banner disappears!", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
                 m_player.GuildBanner = null;

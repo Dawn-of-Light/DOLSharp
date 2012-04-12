@@ -88,7 +88,7 @@ namespace DOL.GS.Keeps
 			//For players in frontiers only
 			if (GameServer.KeepManager.FrontierRegionsList.Contains(player.CurrentRegionID))
 			{
-				if (player.Client.Account.PrivLevel == (int)ePrivLevel.Player)
+				if (ScriptMgr.HasNoPrivileges(player.Client.Account))
 				{
 					if (player.Realm != this.Realm)
 						return false;

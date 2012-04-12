@@ -10,12 +10,12 @@ namespace DOL.GS.Commands
 	/// <summary>
 	/// command handler for /boat command
 	/// </summary>
-	[Cmd(
+	/*[Cmd(
 		"&boat",
 		new string[] { "&boatcommand" },
 		ePrivLevel.Player,
 		"Boat command (use /boat for options)",
-		"/boat <option>")]
+		"/boat <option>")]*/
 	public class BoatCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		/// <summary>

@@ -199,7 +199,7 @@ namespace DOL.GS
 
 				if (canReportNews && GameServer.ServerRules.CanGenerateNews(player) == false)
 				{
-					if (player.Client.Account.PrivLevel == (int)ePrivLevel.Player)
+					if (ScriptMgr.HasNoPrivileges(player.Client.Account))
 						canReportNews = false;
 				}
 

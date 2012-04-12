@@ -111,7 +111,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					return;
 				}
 
-				if (client.Account.PrivLevel == 1)
+				if (ScriptMgr.HasNoPrivileges(client.Account))
 				{
 					if (door.Locked == 0)
 					{
@@ -287,7 +287,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				else
 				{
 					//new frontiers we don't want this, i.e. relic gates etc
-					if (player.CurrentRegionID == 163 && player.Client.Account.PrivLevel == 1)
+					if (player.CurrentRegionID == 163 && ScriptMgr.HasNoPrivileges(player.Client.Account))
 						return;
 					/*
 					//create a bug report

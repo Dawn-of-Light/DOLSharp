@@ -474,7 +474,7 @@ namespace DOL.GS.Housing
 
 			text.Add(" ");
 
-			if (player.Client.Account.PrivLevel > (int)ePrivLevel.Player)
+			if (ScriptMgr.IsPlayerGM(player.Client.Account))
 			{
 				text.Add("GM: Model: " + Model);
 				text.Add("GM: Realm: " + GlobalConstants.RealmToName(Realm));
@@ -1296,7 +1296,7 @@ namespace DOL.GS.Housing
 			if (player == null)
 				return false;
 
-			if (player.Client.Account.PrivLevel == (int)ePrivLevel.Admin)
+			if (ScriptMgr.IsPlayerAdmin(player.Client.Account))
 				return true;
 
 			// check by character name/account if not guild house

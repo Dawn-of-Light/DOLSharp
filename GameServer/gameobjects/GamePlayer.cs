@@ -173,7 +173,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				if (Client.Account.PrivLevel > (int)ePrivLevel.Player)
+				if (ScriptMgr.IsPlayerGM(Client.Account))
 					return true;
 
 				return false;
@@ -335,7 +335,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return (Client.Account.PrivLevel < 2 && base.IsAttackable);
+				return (ScriptMgr.HasNoPrivileges(Client.Account) && base.IsAttackable);
 			}
 		}
 
@@ -480,7 +480,7 @@ namespace DOL.GS
 			}
 
 			//Gms can quit instantly
-			if (Client.Account.PrivLevel == 1)
+			if (ScriptMgr.HasNoPrivileges(Client.Account))
 			{
 				if (CraftTimer != null && CraftTimer.IsAlive)
 				{
@@ -699,7 +699,7 @@ namespace DOL.GS
 		private void CheckIfNearEnemyKeepAndAddToRvRLinkDeathListIfNecessary()
 		{
 			AbstractGameKeep keep = GameServer.KeepManager.GetKeepCloseToSpot(this.CurrentRegionID, this, WorldMgr.VISIBILITY_DISTANCE);
-			if (keep != null && this.Client.Account.PrivLevel == 1 && GameServer.KeepManager.IsEnemy(keep, this))
+			if (keep != null && ScriptMgr.HasNoPrivileges(this.Client.Account) && GameServer.KeepManager.IsEnemy(keep, this))
 			{
 				if (WorldMgr.RvRLinkDeadPlayers.ContainsKey(this.m_InternalID))
 				{
@@ -785,7 +785,7 @@ namespace DOL.GS
 				if (Level > bg.MaxLevel || RealmLevel >= bg.MaxRealmLevel)
 				{
 					// Only kick players out
-					if (Client.Account.PrivLevel == (int)ePrivLevel.Player)
+					if (ScriptMgr.HasNoPrivileges(Client.Account))
 					{
 						GameServer.KeepManager.ExitBattleground(this);
 					}
@@ -984,7 +984,7 @@ namespace DOL.GS
 			}
 			long lastBindTick = TempProperties.getProperty<long>(LAST_BIND_TICK);
 			long changeTime = CurrentRegion.Time - lastBindTick;
-			if (Client.Account.PrivLevel == 1 && changeTime < 60000 && changeTime > 0) //60 second rebind timer
+			if (ScriptMgr.HasNoPrivileges(Client.Account) && changeTime < 60000 && changeTime > 0) //60 second rebind timer
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.MustWait", (1 + (60000 - changeTime) / 1000)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -1873,7 +1873,7 @@ namespace DOL.GS
 					base.Model = value;
 
 					// Only GM's can persist model changes - Tolakram
-					if (Client.Account.PrivLevel > (int)ePrivLevel.Player && DBCharacter != null && DBCharacter.CurrentModel != base.Model)
+					if (ScriptMgr.IsPlayerGM(Client.Account) && DBCharacter != null && DBCharacter.CurrentModel != base.Model)
 					{
 						DBCharacter.CurrentModel = base.Model;
 					}
@@ -4458,7 +4458,7 @@ namespace DOL.GS
 
 			RealmPoints += amount;
 
-			if (m_guild != null && Client.Account.PrivLevel == 1)
+			if (m_guild != null && ScriptMgr.HasNoPrivileges(Client.Account))
 				m_guild.RealmPoints += amount;
 
 			if (sendMessage == true && amount > 0)
@@ -4606,7 +4606,7 @@ namespace DOL.GS
 
 			BountyPoints += amount;
 
-			if (m_guild != null && Client.Account.PrivLevel == 1)
+			if (m_guild != null && ScriptMgr.HasNoPrivileges(Client.Account))
 				m_guild.BountyPoints += amount;
 
 			if (sendMessage == true)
@@ -8033,7 +8033,7 @@ namespace DOL.GS
 		/// <param name="duration">duration of disable in milliseconds</param>
 		public override void DisableSkill(Skill skill, int duration)
 		{
-			if (this.Client.Account.PrivLevel > 1)
+			if (ScriptMgr.IsPlayerGM(this.Client.Account))
 				return;
 
 			base.DisableSkill(skill, duration);
@@ -9006,7 +9006,7 @@ namespace DOL.GS
 
 								long nextPotionAvailTime = TempProperties.getProperty<long>(NEXT_POTION_AVAIL_TIME + "_Type" + (spell.SharedTimerGroup));
 
-								if (Client.Account.PrivLevel == 1 && nextPotionAvailTime > CurrentRegion.Time)
+								if (ScriptMgr.HasNoPrivileges(Client.Account) && nextPotionAvailTime > CurrentRegion.Time)
 								{
 									Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.UseSlot.MustWaitBeforeUse", (nextPotionAvailTime - CurrentRegion.Time) / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								}
@@ -9131,7 +9131,7 @@ namespace DOL.GS
 								{
 									Out.SendMessage("In your state you can't discharge any object.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								}
-								else if (Client.Account.PrivLevel == 1 && (changeTime < delay || (CurrentRegion.Time - itemdelay) < itemreuse)) //2 minutes reuse timer
+								else if (ScriptMgr.HasNoPrivileges(Client.Account) && (changeTime < delay || (CurrentRegion.Time - itemdelay) < itemreuse)) //2 minutes reuse timer
 								{
 									if ((CurrentRegion.Time - itemdelay) < itemreuse)
 									{
@@ -9405,7 +9405,7 @@ namespace DOL.GS
 				return false;
 
 			int cooldown = item.CanUseAgainIn;
-			if (cooldown > 0 && Client.Account.PrivLevel == (uint)ePrivLevel.Player)
+			if (cooldown > 0 && ScriptMgr.HasNoPrivileges(Client.Account))
 			{
 				int minutes = cooldown / 60;
 				int seconds = cooldown % 60;
@@ -9679,7 +9679,7 @@ namespace DOL.GS
 				return false;
 			}
 
-			if (Client.Account.PrivLevel == 1 && target.Client.Account.PrivLevel > 1 && target.IsAnonymous)
+			if (ScriptMgr.HasNoPrivileges(Client.Account) && target.Client.Account.PrivLevel > 1 && target.IsAnonymous)
 				return true;
 
 			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Send.YouSendTo", str, target.Name), eChatType.CT_Send,
@@ -10806,7 +10806,7 @@ namespace DOL.GS
 		{
 			if (!IsAlive || ObjectState != eObjectState.Active)
 				return 0;
-			if (this.Client.Account.PrivLevel == 1)
+			if (ScriptMgr.HasNoPrivileges(Client.Account))
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.DrowningTimerCallback.CannotBreath"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.DrowningTimerCallback.Take5%Damage"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
@@ -10922,7 +10922,7 @@ namespace DOL.GS
 
 			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.LavaBurnTimerCallback.YourInLava"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.LavaBurnTimerCallback.Take34%Damage"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-			if (Client.Account.PrivLevel == 1)
+			if (ScriptMgr.HasNoPrivileges(Client.Account))
 			{
 				TakeDamage(null, eDamageType.Natural, (int)(MaxHealth * 0.34), 0);
 
@@ -11942,7 +11942,7 @@ namespace DOL.GS
 			if (floorObject.ObjectState != eObjectState.Active)
 				return false;
 
-			if (floorObject is GameStaticItemTimed && ((GameStaticItemTimed)floorObject).IsOwner(this) == false && Client.Account.PrivLevel == (int)ePrivLevel.Player)
+			if (floorObject is GameStaticItemTimed && ((GameStaticItemTimed)floorObject).IsOwner(this) == false && ScriptMgr.HasNoPrivileges(Client.Account))
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.PickupObject.LootDoesntBelongYou"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
@@ -12525,7 +12525,7 @@ namespace DOL.GS
 			if (allpoints != mypoints)
 			{
 				log.WarnFormat("Spec points total for player {0} incorrect: {1} instead of {2}.", Name, mypoints, allpoints);
-				if (Client.Account.PrivLevel == 1)
+				if (ScriptMgr.HasNoPrivileges(Client.Account))
 				{
 					mypoints = RespecAllLines();
 					SkillSpecialtyPoints = allpoints;

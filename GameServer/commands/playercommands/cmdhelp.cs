@@ -37,14 +37,15 @@ namespace DOL.GS.Commands
 			if (IsSpammingCommand(client.Player, "cmdhelp"))
 				return;
 
-			ePrivLevel privilegeLevel = (ePrivLevel)client.Account.PrivLevel;
+			//ePrivLevel privilegeLevel = (ePrivLevel)client.Account.PrivLevel;
+			uint privilegeLevel = client.Account.PrivLevel;
 			bool isCommand = true;
 
 			if (args.Length > 1)
 			{
 				try
 				{
-					privilegeLevel = (ePrivLevel)Convert.ToUInt32(args[1]);
+					privilegeLevel = Convert.ToUInt32(args[1]);
 				}
 				catch (Exception)
 				{
@@ -81,10 +82,10 @@ namespace DOL.GS.Commands
 			}
 		}
 
-        private static IDictionary<ePrivLevel, String[]> m_commandLists = new Dictionary<ePrivLevel, String[]>();
+        private static IDictionary<uint, String[]> m_commandLists = new Dictionary<uint, String[]>();
         private static object m_syncObject = new object();
 
-        private String[] GetCommandList(ePrivLevel privilegeLevel)
+        private String[] GetCommandList(uint privilegeLevel)
         {
             lock (m_syncObject)
             {

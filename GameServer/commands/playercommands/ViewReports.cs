@@ -42,7 +42,7 @@ namespace DOL.GS.Commands
 				{
 					case "close":
 						{
-							if (client.Account.PrivLevel < 2)
+							if (ScriptMgr.HasNoPrivileges(client.Account))
 							{
 								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.ViewReport.NoPriv"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
@@ -67,7 +67,7 @@ namespace DOL.GS.Commands
 						}
 					case "delete":
 						{
-							if (client.Account.PrivLevel < 2)
+							if (ScriptMgr.HasNoPrivileges(client.Account))
 							{
 								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.ViewReport.NoPriv"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
@@ -123,7 +123,7 @@ namespace DOL.GS.Commands
 				foreach (BugReport repo in dbo)
 				{
 					Reports += repo.ID + ")";
-					if (client.Account.PrivLevel > 2)
+					if (ScriptMgr.IsPlayerAdmin(client.Account))
 						Reports += repo.Submitter + "\n";
 					Reports += "Submitted: " + repo.DateSubmitted + "\n";
 					Reports += "Report: " + repo.Message + "\n";

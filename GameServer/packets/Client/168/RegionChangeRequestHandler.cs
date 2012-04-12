@@ -107,7 +107,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						     (client.Player.Mission as TaskDungeonMission).TaskRegion.Skin == reg.Skin) == false)
 						{
 							client.Out.SendMessage("This region has been disabled!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							if (client.Account.PrivLevel == 1)
+							if (ScriptMgr.HasNoPrivileges(client.Account))
 							{
 								return;
 							}

@@ -86,7 +86,7 @@ namespace DOL.GS.Commands
                         account = new Account();
                         account.Name = AccountName;
                         account.Password = PacketHandler.Client.v168.LoginRequestHandler.CryptPassword(Password);
-                        account.PrivLevel = (uint)ePrivLevel.Player;
+						account.PrivLevel = ScriptMgr.GetPlayerPrivLevel();
                         account.Realm = (int)eRealm.None;
                         account.CreationDate = DateTime.Now;
                         account.Language = ServerProperties.Properties.SERV_LANGUAGE;

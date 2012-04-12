@@ -89,13 +89,13 @@ namespace DOL.GS.Commands
 			{
 				GamePlayer addPlayer = serverClient.Player;
 				if (addPlayer == null) continue;
-				if (serverClient.Account.PrivLevel > (uint)ePrivLevel.Player && serverClient.Player.IsAnonymous == false)
+				if (ScriptMgr.IsPlayerGM(serverClient.Account) && serverClient.Player.IsAnonymous == false)
 				{
 					clientsList.Add(addPlayer.Client);
 					continue;
 				}
 				if (addPlayer.Client != client // always add self
-					&& client.Account.PrivLevel == (uint)ePrivLevel.Player
+					&& ScriptMgr.HasNoPrivileges(client.Account)
 					&& (addPlayer.IsAnonymous || !GameServer.ServerRules.IsSameRealm(addPlayer, client.Player, true)))
 				{
 					continue;
@@ -285,14 +285,14 @@ namespace DOL.GS.Commands
 			{
 				result.Append(" <ADV>");
 			}
-			if(player.Client.Account.PrivLevel == (uint)ePrivLevel.GM)
+			if (ScriptMgr.IsPlayerGM(player.Client.Account))
 			{
-				result.Append(" <GM>");
+				result.Append(" <" + ScriptMgr.GetPlayerPrivName(player.Client.Account) + ">");
 			}
-			if(player.Client.Account.PrivLevel == (uint)ePrivLevel.Admin)
+			/*if(player.Client.Account.PrivLevel == (uint)ePrivLevel.Admin)
 			{
 				result.Append(" <Admin>");
-			}
+			}*/
 			if (ServerProperties.Properties.ALLOW_CHANGE_LANGUAGE)
 			{
 				result.Append(" <" + player.Client.Account.Language + ">");
@@ -418,7 +418,7 @@ namespace DOL.GS.Commands
 		{
 			public bool ApplyFilter(GamePlayer player)
 			{
-				if(!player.IsAnonymous && player.Client.Account.PrivLevel > (uint)ePrivLevel.Player)
+				if (!player.IsAnonymous && ScriptMgr.IsPlayerGM(player.Client.Account))
 					return true;
 				return false;
 			}

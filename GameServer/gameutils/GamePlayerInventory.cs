@@ -640,7 +640,7 @@ namespace DOL.GS
 						valid = false;
 					}
 
-					if (valid && m_player.Client.Account.PrivLevel == 1)
+					if (valid && ScriptMgr.HasNoPrivileges(m_player.Client.Account))
 					{
 						if (m_player.CanUseHorseInventorySlot((int)fromSlot) == false || m_player.CanUseHorseInventorySlot((int)toSlot) == false)
 						{
@@ -911,7 +911,7 @@ namespace DOL.GS
 				if (valid && (fromItem.Realm > 0 && (int) m_player.Realm != fromItem.Realm) &&
 				    (toSlot >= eInventorySlot.HorseArmor && toSlot <= eInventorySlot.HorseBarding))
 				{
-					if (m_player.Client.Account.PrivLevel == 1)
+					if (ScriptMgr.HasNoPrivileges(m_player.Client.Account))
 					{
 						valid = false;
 					}

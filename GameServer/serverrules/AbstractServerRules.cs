@@ -441,7 +441,7 @@ namespace DOL.GS.ServerRules
 			if (player.Steed != null) return "GamePlayer.UseSlot.MustDismountBefore";
 			
 			// gm/admin overrides the other checks
-			if (player.Client.Account.PrivLevel != (uint)ePrivLevel.Player) return string.Empty;
+			if (ScriptMgr.IsPlayerGM(player.Client.Account)) return string.Empty;
 			
 			// player restrictions
 			if (player.IsMoving) return "GamePlayer.UseSlot.CantMountMoving";
@@ -548,7 +548,7 @@ namespace DOL.GS.ServerRules
 			GamePlayer player = living as GamePlayer;
 
 			// GMs can equip everything
-			if (player != null  && player.Client.Account.PrivLevel > (uint) ePrivLevel.Player)
+			if (player != null && ScriptMgr.IsPlayerGM(player.Client.Account))
 				return true;
 			
 			// allow usage of all house items

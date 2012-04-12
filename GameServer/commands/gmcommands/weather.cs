@@ -21,7 +21,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[Cmd(
+	/*[Cmd(
 		"&weather",
 		ePrivLevel.GM,
 		"Sets the weather for the current region",
@@ -29,7 +29,7 @@ namespace DOL.GS.Commands
 		"'/weather start <line> <duration> <speed> <diffusion> <intensity>' to start a storm in this region",
 		"'/weather start' to start a random storm in this region",
 		"'/weather restart' to restart the storm in this region",
-		"'/weather stop' to stop the storm in this region")]
+		"'/weather stop' to stop the storm in this region")]*/
 	public class WeatherCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void PrintStormInfo(GameClient client)

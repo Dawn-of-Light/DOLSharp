@@ -5882,7 +5882,7 @@ namespace DOL.GS
 			{
 				player = source as GamePlayer;
 				long whisperdelay = player.TempProperties.getProperty<long>("WHISPERDELAY");
-				if (whisperdelay > 0 && (CurrentRegion.Time - 1500) < whisperdelay && player.Client.Account.PrivLevel == 1)
+				if (whisperdelay > 0 && (CurrentRegion.Time - 1500) < whisperdelay && ScriptMgr.HasNoPrivileges(player.Client.Account))
 				{
 					//player.Out.SendMessage("Speak slower!", eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
 					return false;

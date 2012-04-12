@@ -15,7 +15,7 @@ namespace DOL.GS
 				return false;
 
 			//we need to disable them for players for now
-			if (player.Client.Account.PrivLevel == 1)
+			if (ScriptMgr.HasNoPrivileges(player.Client.Account))
 			{
 				SayTo(player, "I'm sorry, Task Dungeons are currently disabled!");
 				return true;

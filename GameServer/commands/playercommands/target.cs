@@ -48,7 +48,7 @@ namespace DOL.GS.Commands
 					client.Out.SendMessage("You target " + targetPlayer.GetName(0, true) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
-				if (client.Account.PrivLevel > 1)
+				if (ScriptMgr.IsPlayerGM(client.Account))
 				{
 					IEnumerator en = client.Player.GetNPCsInRadius(800).GetEnumerator();
 					while (en.MoveNext())
@@ -65,7 +65,7 @@ namespace DOL.GS.Commands
 				client.Out.SendMessage("You don't see " + args[1] + " around here!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (client.Account.PrivLevel > 1)
+			if (ScriptMgr.IsPlayerGM(client.Account))
 			{
 				client.Out.SendMessage("/target <player/mobname>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}

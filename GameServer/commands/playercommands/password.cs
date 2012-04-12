@@ -16,9 +16,9 @@ using DOL.GS.PacketHandler.Client.v168;
 
 namespace DOL.GS.Commands
 {
-	[Cmd("&password", ePrivLevel.Player,
+	/*[Cmd("&password", ePrivLevel.Player,
 		"Changes your account password",
-		"/password <current_password> <new_password>")]
+		"/password <current_password> <new_password>")]*/
 	public class PasswordCommand : AbstractCommandHandler, ICommandHandler
 	{
 		private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

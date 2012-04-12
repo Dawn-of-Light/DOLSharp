@@ -474,7 +474,7 @@ namespace DOL.GS
 			}
 
 			//Add admin info
-			if (player.Client.Account.PrivLevel > 1)
+			if (ScriptMgr.IsPlayerGM(player.Client.Account))
 			{
 				WriteTechnicalInfo(delve);
 			}

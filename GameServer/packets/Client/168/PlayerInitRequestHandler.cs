@@ -171,7 +171,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			private static void CheckBGLevelCapForPlayerAndMoveIfNecessary(GamePlayer player)
 			{
-				if (player.Client.Account.PrivLevel == 1 && player.CurrentRegion.IsRvR && player.CurrentRegionID != 163)
+				if (ScriptMgr.HasNoPrivileges(player.Client.Account) && player.CurrentRegion.IsRvR && player.CurrentRegionID != 163)
 				{
 					ICollection<AbstractGameKeep> list = GameServer.KeepManager.GetKeepsOfRegion(player.CurrentRegionID);
 
@@ -208,7 +208,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				int gracePeriodInMinutes = 0;
 				Int32.TryParse(Properties.RVR_LINK_DEATH_RELOG_GRACE_PERIOD, out gracePeriodInMinutes);
 				AbstractGameKeep keep = GameServer.KeepManager.GetKeepCloseToSpot(player.CurrentRegionID, player, WorldMgr.VISIBILITY_DISTANCE);
-				if (keep != null && player.Client.Account.PrivLevel == 1 && GameServer.KeepManager.IsEnemy(keep, player))
+				if (keep != null && ScriptMgr.HasNoPrivileges(player.Client.Account) && GameServer.KeepManager.IsEnemy(keep, player))
 				{
 					if (WorldMgr.RvRLinkDeadPlayers.ContainsKey(player.InternalID))
 					{

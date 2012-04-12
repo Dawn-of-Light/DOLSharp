@@ -39,7 +39,7 @@ namespace DOL.GS.SkillHandler
 		public void Execute(Specialization spec, GamePlayer player)
 		{
 			// Can't stealth while in combat
-			if(player.InCombat && !player.IsStealthed && player.Client.Account.PrivLevel == (int)ePrivLevel.Player)
+			if (player.InCombat && !player.IsStealthed && ScriptMgr.HasNoPrivileges(player.Client.Account))
 			{
 				player.Out.SendMessage("You've been in combat recently and can't hide yet!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;

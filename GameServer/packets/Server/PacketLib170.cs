@@ -363,7 +363,7 @@ namespace DOL.GS.PacketHandler
 				}
 
 				//Teleport
-				if (m_gameClient.Account.PrivLevel > (int)ePrivLevel.Player)
+				if (ScriptMgr.IsPlayerGM(m_gameClient.Account))
 				{
 					flag |= (byte)eRealmWarmapKeepFlags.Teleportable;
 				}

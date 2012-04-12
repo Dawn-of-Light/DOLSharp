@@ -122,7 +122,7 @@ namespace DOL.GS
 					SayTo(player, "You shall soon arrive in the Avalon Marsh.");
 					break;
 				case "battlegrounds":
-					if (!ServerProperties.Properties.BG_ZONES_OPENED && player.Client.Account.PrivLevel == (uint)ePrivLevel.Player)
+					if (!ServerProperties.Properties.BG_ZONES_OPENED && ScriptMgr.HasNoPrivileges(player.Client.Account))
 					{
 						SayTo(player, ServerProperties.Properties.BG_ZONES_CLOSED_MESSAGE);
 						return;

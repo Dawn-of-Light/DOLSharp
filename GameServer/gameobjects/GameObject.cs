@@ -180,53 +180,53 @@ namespace DOL.GS
 			set { m_Heading = (ushort)(value & 0xFFF); }
 		}
 
-        /// <summary>
-        /// Calculates the heading this object needs to have to face the target spot
-        /// </summary>
-        /// <param name="tx">target x</param>
-        /// <param name="ty">target y</param>
-        /// <returns>the heading towards the target spot</returns>
-        [Obsolete( "Use GetHeading" )]
-        public ushort GetHeadingToSpot( int tx, int ty )
-        {
-            return GetHeading( new Point2D( tx, ty ) );
-        }
+		/// <summary>
+		/// Calculates the heading this object needs to have to face the target spot
+		/// </summary>
+		/// <param name="tx">target x</param>
+		/// <param name="ty">target y</param>
+		/// <returns>the heading towards the target spot</returns>
+		[Obsolete("Use GetHeading")]
+		public ushort GetHeadingToSpot(int tx, int ty)
+		{
+			return GetHeading(new Point2D(tx, ty));
+		}
 
-        /// <summary>
-        /// Calculates the heading this object needs to have, to face the target
-        /// </summary>
-        /// <param name="target">IPoint3D target</param>
-        /// <returns>the heading towards the target</returns>
-        [Obsolete( "Use GetHeading" )]
-        public ushort GetHeadingToTarget( IPoint3D target )
-        {
-            return GetHeading( target );
-        }
+		/// <summary>
+		/// Calculates the heading this object needs to have, to face the target
+		/// </summary>
+		/// <param name="target">IPoint3D target</param>
+		/// <returns>the heading towards the target</returns>
+		[Obsolete("Use GetHeading")]
+		public ushort GetHeadingToTarget(IPoint3D target)
+		{
+			return GetHeading(target);
+		}
 
-        /// <summary>
-        /// Returns the angle towards a target, clockwise
-        /// </summary>
-        /// <param name="target">the target</param>
-        /// <returns>the angle towards the target</returns>
-        [Obsolete( "Use GetAngle" )]
-        public float GetAngleToTarget( GameObject target )
-        {
-            return GetAngle( target );
-        }
+		/// <summary>
+		/// Returns the angle towards a target, clockwise
+		/// </summary>
+		/// <param name="target">the target</param>
+		/// <returns>the angle towards the target</returns>
+		[Obsolete("Use GetAngle")]
+		public float GetAngleToTarget(GameObject target)
+		{
+			return GetAngle(target);
+		}
 
-        [Obsolete( "Use GetAngle" )]
-        public float GetAngleToSpot( int x, int y )
-        {
-            return GetAngle( new Point2D( x, y ) );
-        }
+		[Obsolete("Use GetAngle")]
+		public float GetAngleToSpot(int x, int y)
+		{
+			return GetAngle(new Point2D(x, y));
+		}
 
-        [Obsolete( "Use GetPointFromHeading" )]
-        public void GetSpotFromHeading( int distance, out int tx, out int ty )
-        {
-            Point2D point = GetPointFromHeading( this.Heading, distance );
-            tx = point.X;
-            ty = point.Y;
-        }
+		[Obsolete("Use GetPointFromHeading")]
+		public void GetSpotFromHeading(int distance, out int tx, out int ty)
+		{
+			Point2D point = GetPointFromHeading(this.Heading, distance);
+			tx = point.X;
+			ty = point.Y;
+		}
 
 		/// <summary>
 		/// Returns the angle towards a target spot in degrees, clockwise
@@ -234,9 +234,9 @@ namespace DOL.GS
 		/// <param name="tx">target x</param>
 		/// <param name="ty">target y</param>
 		/// <returns>the angle towards the spot</returns>
-		public float GetAngle( IPoint2D point )
+		public float GetAngle(IPoint2D point)
 		{
-			float headingDifference = ( GetHeading( point ) & 0xFFF ) - ( this.Heading & 0xFFF );
+			float headingDifference = (GetHeading(point) & 0xFFF) - (this.Heading & 0xFFF);
 
 			if (headingDifference < 0)
 				headingDifference += 4096.0f;
@@ -244,50 +244,50 @@ namespace DOL.GS
 			return (headingDifference * 360.0f / 4096.0f);
 		}
 
-        /// <summary>
-        /// Get distance to a point
-        /// </summary>
-        /// <remarks>
-        /// If either Z-value is zero, the z-axis is ignored
-        /// </remarks>
-        /// <param name="point">Target point</param>
-        /// <returns>Distance or int.MaxValue if distance cannot be calculated</returns>
-        public override int GetDistanceTo( IPoint3D point )
-        {
+		/// <summary>
+		/// Get distance to a point
+		/// </summary>
+		/// <remarks>
+		/// If either Z-value is zero, the z-axis is ignored
+		/// </remarks>
+		/// <param name="point">Target point</param>
+		/// <returns>Distance or int.MaxValue if distance cannot be calculated</returns>
+		public override int GetDistanceTo(IPoint3D point)
+		{
 			GameObject obj = point as GameObject;
 
-			if ( obj == null || this.CurrentRegionID == obj.CurrentRegionID )
+			if (obj == null || this.CurrentRegionID == obj.CurrentRegionID)
 			{
-				return base.GetDistanceTo( point );
+				return base.GetDistanceTo(point);
 			}
 			else
 			{
 				return int.MaxValue;
 			}
-        }
+		}
 
-        /// <summary>
-        /// Get distance to a point (with z-axis adjustment)
-        /// </summary>
-        /// <remarks>
-        /// If either Z-value is zero, the z-axis is ignored
-        /// </remarks>
-        /// <param name="point">Target point</param>
-        /// <param name="zfactor">Z-axis factor - use values between 0 and 1 to decrease the influence of Z-axis</param>
-        /// <returns>Adjusted distance or int.MaxValue if distance cannot be calculated</returns>
-        public override int GetDistanceTo( IPoint3D point, double zfactor )
-        {
+		/// <summary>
+		/// Get distance to a point (with z-axis adjustment)
+		/// </summary>
+		/// <remarks>
+		/// If either Z-value is zero, the z-axis is ignored
+		/// </remarks>
+		/// <param name="point">Target point</param>
+		/// <param name="zfactor">Z-axis factor - use values between 0 and 1 to decrease the influence of Z-axis</param>
+		/// <returns>Adjusted distance or int.MaxValue if distance cannot be calculated</returns>
+		public override int GetDistanceTo(IPoint3D point, double zfactor)
+		{
 			GameObject obj = point as GameObject;
 
-			if ( obj == null || this.CurrentRegionID == obj.CurrentRegionID )
+			if (obj == null || this.CurrentRegionID == obj.CurrentRegionID)
 			{
-				return base.GetDistanceTo( point, zfactor );
+				return base.GetDistanceTo(point, zfactor);
 			}
 			else
 			{
 				return int.MaxValue;
 			}
-        }
+		}
 
 		/// <summary>
 		/// Checks if an object is within a given radius, optionally ignoring z values
@@ -325,9 +325,9 @@ namespace DOL.GS
 			// if target is closer than 32 units it is considered always in view
 			// tested and works this way for normal evade, parry, block (in 1.69)
 			if (rangeCheck)
-                return this.IsWithinRadius( target, 32 );
+				return this.IsWithinRadius(target, 32);
 			else
-                return false;
+				return false;
 		}
 
 		/// <summary>
@@ -442,7 +442,7 @@ namespace DOL.GS
 		/// The name of the Object
 		/// </summary>
 		protected string m_name;
-		
+
 		/// <summary>
 		/// The guild name of the Object
 		/// </summary>
@@ -452,8 +452,8 @@ namespace DOL.GS
 		/// The model of the Object
 		/// </summary>
 		protected ushort m_model;
-		
-		
+
+
 		/// <summary>
 		/// Gets or Sets the current level of the Object
 		/// </summary>
@@ -504,88 +504,88 @@ namespace DOL.GS
 			set { m_model = value; }
 		}
 
-        /// <summary>
-        /// Whether or not the object can be attacked.
-        /// </summary>
-        public virtual bool IsAttackable
-        {
-            get
-            {
-                return false;
-            }
-        }
+		/// <summary>
+		/// Whether or not the object can be attacked.
+		/// </summary>
+		public virtual bool IsAttackable
+		{
+			get
+			{
+				return false;
+			}
+		}
 
-        public virtual bool IsAttackableDoor
-        {
-            get
-            {
-                if (this.Realm == eRealm.None)
-                    return true;
+		public virtual bool IsAttackableDoor
+		{
+			get
+			{
+				if (this.Realm == eRealm.None)
+					return true;
 
-                return false;
-            }
-        }
+				return false;
+			}
+		}
 
-        protected int m_health;
-        public virtual int Health
-        {
-            get { return m_health; }
-            set
-            {
+		protected int m_health;
+		public virtual int Health
+		{
+			get { return m_health; }
+			set
+			{
 
-                int maxhealth = MaxHealth;
-                if (value >= maxhealth)
-                {
-                    m_health = maxhealth;
-                }
-                else if (value > 0)
-                {
-                    m_health = value;
-                }
-                else
-                {
-                    m_health = 0;
-                }
+				int maxhealth = MaxHealth;
+				if (value >= maxhealth)
+				{
+					m_health = maxhealth;
+				}
+				else if (value > 0)
+				{
+					m_health = value;
+				}
+				else
+				{
+					m_health = 0;
+				}
 
-                /*    if (IsAlive && m_health < maxhealth)
-                    {
-                        StartHealthRegeneration();
-                    }*/
-            }
-        }
+				/*    if (IsAlive && m_health < maxhealth)
+					{
+						StartHealthRegeneration();
+					}*/
+			}
+		}
 
-        /// <summary>
-        /// Gets/sets the maximum amount of health
-        /// </summary>
-        protected int m_maxHealth;
-        public virtual int MaxHealth
-        {
-            get { return m_maxHealth; }
-            set
-            {
-                m_maxHealth = value;
-                //Health = Health; //cut extra hit points if there are any or start regeneration
-            }
-        }
+		/// <summary>
+		/// Gets/sets the maximum amount of health
+		/// </summary>
+		protected int m_maxHealth;
+		public virtual int MaxHealth
+		{
+			get { return m_maxHealth; }
+			set
+			{
+				m_maxHealth = value;
+				//Health = Health; //cut extra hit points if there are any or start regeneration
+			}
+		}
 
-        /// <summary>
-        /// Gets the Health in percent 0..100
-        /// </summary>
-        public virtual byte HealthPercent
-        {
-            get
-            {
-                return (byte)(MaxHealth <= 0 ? 0 : Health * 100 / MaxHealth);
-            }
-        }
+		/// <summary>
+		/// Gets the Health in percent 0..100
+		/// </summary>
+		public virtual byte HealthPercent
+		{
+			get
+			{
+				return (byte)(MaxHealth <= 0 ? 0 : Health * 100 / MaxHealth);
+			}
+		}
 
-        /// <summary>
-        /// Health as it should display in the group window.
-        /// </summary>
-        public virtual byte HealthPercentGroupWindow
-        {
-            get { return HealthPercent; }
-        }
+		/// <summary>
+		/// Health as it should display in the group window.
+		/// </summary>
+		public virtual byte HealthPercentGroupWindow
+		{
+			get { return HealthPercent; }
+		}
 
 		private const string m_vowels = "aeuio";
 
@@ -641,16 +641,16 @@ namespace DOL.GS
 				}
 		}
 
-        public String Capitalize(bool capitalize, String text)
-        {
-            if (!capitalize) return text;
+		public String Capitalize(bool capitalize, String text)
+		{
+			if (!capitalize) return text;
 
-            string result = "";
-            if (text == null || text.Length <= 0) return result;
-            result = text[0].ToString().ToUpper();
-            if (text.Length > 1) result += text.Substring(1, text.Length - 1);
-            return result;
-        }
+			string result = "";
+			if (text == null || text.Length <= 0) return result;
+			result = text[0].ToString().ToUpper();
+			if (text.Length > 1) result += text.Substring(1, text.Length - 1);
+			return result;
+		}
 
 		/// <summary>
 		/// Pronoun of this object in case you need to refer it in 3rd person
@@ -996,13 +996,13 @@ namespace DOL.GS
 
 		#region Interact
 
-        /// <summary>
-        /// The distance this object can be interacted with
-        /// </summary>
-        public virtual int InteractDistance
-        {
-            get { return WorldMgr.INTERACT_DISTANCE; }
-        }
+		/// <summary>
+		/// The distance this object can be interacted with
+		/// </summary>
+		public virtual int InteractDistance
+		{
+			get { return WorldMgr.INTERACT_DISTANCE; }
+		}
 
 		/// <summary>
 		/// This function is called from the ObjectInteractRequestHandler
@@ -1011,7 +1011,7 @@ namespace DOL.GS
 		/// <returns>false if interaction is prevented</returns>
 		public virtual bool Interact(GamePlayer player)
 		{
-			if (player.Client.Account.PrivLevel == 1 && !this.IsWithinRadius(player, InteractDistance))
+			if (ScriptMgr.HasNoPrivileges(player.Client.Account) && !this.IsWithinRadius(player, InteractDistance))
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObject.Interact.TooFarAway", GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				Notify(GameObjectEvent.InteractFailed, this, new InteractEventArgs(player));
@@ -1195,12 +1195,8 @@ namespace DOL.GS
 				//Eden - avoid server freeze
 				if (CurrentRegion.GetZone(X, Y) == null)
 				{
-					if (this is GamePlayer && (this as GamePlayer).Client.Account.PrivLevel < 3 && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned", false))
-					{
-						GamePlayer player = this as GamePlayer;
-						player.TempProperties.setProperty("isbeingbanned", true);
-						player.MoveToBind();
-					}
+					GamePlayer player = this as GamePlayer;
+					player.MoveToBind();
 				}
 				else
 				{
@@ -1420,31 +1416,31 @@ namespace DOL.GS
 
 		#endregion
 
-        #region Spell Cast
+		#region Spell Cast
 
-        /// <summary>
-        /// Returns true if the object has the spell effect,
-        /// else false.
-        /// </summary>
-        /// <param name="spell"></param>
-        /// <returns></returns>
-        public virtual bool HasEffect(Spell spell)
-        {
-            return false;
-        }
+		/// <summary>
+		/// Returns true if the object has the spell effect,
+		/// else false.
+		/// </summary>
+		/// <param name="spell"></param>
+		/// <returns></returns>
+		public virtual bool HasEffect(Spell spell)
+		{
+			return false;
+		}
 
-        /// <summary>
-        /// Returns true if the object has a spell effect of a
-        /// given type, else false.
-        /// </summary>
-        /// <param name="spell"></param>
-        /// <returns></returns>
-        public virtual bool HasEffect(Type effectType)
-        {
-            return false;
-        }
+		/// <summary>
+		/// Returns true if the object has a spell effect of a
+		/// given type, else false.
+		/// </summary>
+		/// <param name="spell"></param>
+		/// <returns></returns>
+		public virtual bool HasEffect(Type effectType)
+		{
+			return false;
+		}
 
-        #endregion
+		#endregion
 
 		/// <summary>
 		/// Returns the string representation of the GameObject
@@ -1464,14 +1460,14 @@ namespace DOL.GS
 				.ToString();
 		}
 
-        /// <summary>
-        /// All objects are neutral.
-        /// </summary>
-        public virtual eGender Gender
-        {
-            get { return eGender.Neutral; }
-            set { }
-        }
+		/// <summary>
+		/// All objects are neutral.
+		/// </summary>
+		public virtual eGender Gender
+		{
+			get { return eGender.Neutral; }
+			set { }
+		}
 
 		/// <summary>
 		/// Constructs a new empty GameObject

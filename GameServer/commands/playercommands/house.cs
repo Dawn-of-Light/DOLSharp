@@ -37,7 +37,7 @@ namespace DOL.GS.Commands
 		{
 			try
 			{
-				if (client.Account.PrivLevel > (int)ePrivLevel.Player)
+				if (ScriptMgr.IsPlayerGM(client.Account))
 				{
 					if (args.Length > 1)
 					{
@@ -45,12 +45,12 @@ namespace DOL.GS.Commands
 						return;
 					}
 
-					if (client.Account.PrivLevel >= (int)ePrivLevel.GM)
+					//if (client.Account.PrivLevel >= (int)ePrivLevel.GM)
 					{
 						DisplayMessage(client, "GM: info - Display house info for a nearby house");
 					}
 
-					if (client.Account.PrivLevel == (int)ePrivLevel.Admin)
+					if (ScriptMgr.IsPlayerAdmin(client.Account))// client.Account.PrivLevel == (int)ePrivLevel.Admin)
 					{
 						DisplayMessage(client, "Admin: model <1 - 12> - change house model");
 						DisplayMessage(client, "Admin: restart - restart the housing manager");
@@ -132,7 +132,7 @@ namespace DOL.GS.Commands
 
 		public void HouseAdmin(GamePlayer player, string [] args)
 		{
-			if (player.Client.Account.PrivLevel == (int)ePrivLevel.Admin)
+			if (ScriptMgr.IsPlayerAdmin(player.Client.Account))
 			{
 				if (args[1].ToLower() == "restart")
 				{
@@ -172,7 +172,7 @@ namespace DOL.GS.Commands
 
 			// The following commands are for Admins only
 
-			if (player.Client.Account.PrivLevel != (int)ePrivLevel.Admin)
+			if (!ScriptMgr.IsPlayerAdmin(player.Client.Account))
 				return;
 
 			if (args[1].ToLower() == "model")

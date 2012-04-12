@@ -69,7 +69,7 @@ namespace DOL.GS.Commands
 			if (player.Realm != obj.Realm)
 				return false;
 
-			if (player.Client.Account.PrivLevel > (int)ePrivLevel.Player)
+			if (ScriptMgr.IsPlayerGM(player.Client.Account))
 				return true;
 
 			if ((obj as GameLiving).InCombat)
@@ -233,7 +233,7 @@ namespace DOL.GS.Commands
 		}
 		public static double CalculateRepairChance(GamePlayer player, GameObject obj)
 		{
-			if (player.Client.Account.PrivLevel > (int)ePrivLevel.Player)
+			if (ScriptMgr.IsPlayerGM(player.Client.Account))
 				return 100;
 
 			double skill = player.GetCraftingSkillValue(eCraftingSkill.WoodWorking);

@@ -98,7 +98,7 @@ namespace DOL.GS
 			switch (destination.TeleportID.ToLower())
 			{
 				case "battlegrounds":
-					if (!ServerProperties.Properties.BG_ZONES_OPENED && player.Client.Account.PrivLevel == (uint)ePrivLevel.Player)
+					if (!ServerProperties.Properties.BG_ZONES_OPENED && ScriptMgr.HasNoPrivileges(player.Client.Account))
 					{
 						SayTo(player, ServerProperties.Properties.BG_ZONES_CLOSED_MESSAGE);
 						return;

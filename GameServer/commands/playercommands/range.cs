@@ -36,7 +36,7 @@ namespace DOL.GS.Commands
 			GameLiving living = client.Player.TargetObject as GameLiving;
 			if (client.Player.TargetObject == null)
 				DisplayMessage(client, (LanguageMgr.GetTranslation(client, "Scripts.Players.Range.NeedTarget")));
-			else if (living == null || (living != null && client.Account.PrivLevel > 1))
+			else if (living == null || (living != null && ScriptMgr.IsPlayerGM(client.Account)))
 			{
 				int range = client.Player.GetDistanceTo( client.Player.TargetObject );
 				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Range.Result", range, (client.Player.TargetInView ? "" : LanguageMgr.GetTranslation(client, "Scripts.Players.Range.NotVisible"))));

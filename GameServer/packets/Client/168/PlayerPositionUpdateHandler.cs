@@ -279,7 +279,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					builder.Append(jumpDetect);
 					ChatUtil.SendDebugMessage(client, builder.ToString());
 
-					if (client.Account.PrivLevel == 1)
+					if (ScriptMgr.HasNoPrivileges(client.Account))
 					{
 						GameServer.Instance.LogCheatAction(builder.ToString());
 
@@ -451,7 +451,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									client.Out.SendMessage("SH: Player would have been banned!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 							}
 
-							if ((client.Account.PrivLevel == 1) && SHcount >= ServerProperties.Properties.SPEEDHACK_TOLERANCE)
+							if (ScriptMgr.HasNoPrivileges(client.Account) && SHcount >= ServerProperties.Properties.SPEEDHACK_TOLERANCE)
 							{
 								if (ServerProperties.Properties.BAN_HACKERS)
 								{

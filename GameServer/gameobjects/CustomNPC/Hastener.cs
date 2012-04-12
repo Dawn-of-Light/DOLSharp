@@ -105,7 +105,7 @@ namespace DOL.GS
 						case "borderkeep":
 							if ((player.CurrentRegion.IsCapitalCity || IsSICity(player.CurrentZone.ID)) && player.Level < 10)
 							{
-								if (!ServerProperties.Properties.BG_ZONES_OPENED && player.Client.Account.PrivLevel == (uint)ePrivLevel.Player)
+								if (!ServerProperties.Properties.BG_ZONES_OPENED && ScriptMgr.HasNoPrivileges(player.Client.Account))
 								{
 									SayTo(player, ServerProperties.Properties.BG_ZONES_CLOSED_MESSAGE);
 								}

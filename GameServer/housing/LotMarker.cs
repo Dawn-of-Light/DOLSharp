@@ -68,7 +68,7 @@ namespace DOL.GS.Housing
 			if (house != null)
 			{
 				//the player might be targeting a lot he already purchased that has no house on it yet
-				if (house.HouseNumber != DatabaseItem.HouseNumber && player.Client.Account.PrivLevel != (int)ePrivLevel.Admin)
+				if (house.HouseNumber != DatabaseItem.HouseNumber && !ScriptMgr.IsPlayerAdmin(player.Client.Account))
 				{
 					ChatUtil.SendSystemMessage(player, "You already own a house!");
 					return false;
@@ -104,7 +104,7 @@ namespace DOL.GS.Housing
 				if (!string.IsNullOrEmpty(DatabaseItem.OwnerID))
 					return;
 
-				if (HouseMgr.GetHouseNumberByPlayer(player) != 0 && player.Client.Account.PrivLevel != (int)ePrivLevel.Admin)
+				if (HouseMgr.GetHouseNumberByPlayer(player) != 0 && !ScriptMgr.IsPlayerAdmin(player.Client.Account))
 				{
 					ChatUtil.SendMerchantMessage(player, "You already own another lot or house (Number " + HouseMgr.GetHouseNumberByPlayer(player) + ").");
 					return;

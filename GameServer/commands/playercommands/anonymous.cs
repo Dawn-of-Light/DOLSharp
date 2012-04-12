@@ -44,7 +44,7 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
-			if (client.Account.PrivLevel == 1 && ServerProperties.Properties.ANON_MODIFIER == -1)
+			if (ScriptMgr.HasNoPrivileges(client.Account) && ServerProperties.Properties.ANON_MODIFIER == -1)
 			{
 				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Anonymous.Error"));
 				return;

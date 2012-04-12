@@ -126,7 +126,7 @@ namespace DOL.GS
 		/// <param name="plvl">plvl of the commands to get</param>
 		/// <param name="addDesc"></param>
 		/// <returns></returns>
-		public static string[] GetCommandList(ePrivLevel plvl, bool addDesc)
+		public static string[] GetCommandList(uint plvl, bool addDesc)
 		{
 			IDictionaryEnumerator iter = m_gameCommands.GetEnumerator();
 
@@ -144,7 +144,7 @@ namespace DOL.GS
 
 				if (cmdString[0] == '&')
 					cmdString = '/' + cmdString.Remove(0, 1);
-				if (cmd.Levels.Contains(((uint)plvl).ToString()))
+				if (cmd.Levels.Contains(plvl.ToString()))
 				{
 					if (addDesc)
 					{
@@ -185,12 +185,84 @@ namespace DOL.GS
 			return files;
 		}
 
+
+		private static Dictionary<uint, string> m_privLevels;
+		/// <summary>
+		/// Load Privileges
+		/// </summary>
+		/// <returns></returns>
+		public static bool LoadPrivLevels()
+		{
+			IList<DBPrivLevel> dbprivlevels = GameServer.Database.SelectAllObjects<DBPrivLevel>();
+			m_privLevels = GameServer.Database.SelectAllObjects<DBPrivLevel>().ToDictionary(v => v.Level, v => v.Name);
+
+			//autopopulate:
+			if (m_privLevels == null || m_privLevels.Count == 0)
+			{
+				DBPrivLevel plvl = new DBPrivLevel();
+				plvl.Level = 1;
+				plvl.Name = "Player";
+				GameServer.Database.AddObject(plvl);
+				plvl = new DBPrivLevel();
+				plvl.Level = 2;
+				plvl.Name = "GM";
+				GameServer.Database.AddObject(plvl);
+				plvl = new DBPrivLevel();
+				plvl.Level = 3;
+				plvl.Name = "Admin";
+				GameServer.Database.AddObject(plvl);
+				m_privLevels = GameServer.Database.SelectAllObjects<DBPrivLevel>().ToDictionary(v => v.Level, v => v.Name);
+			}
+
+			log.Info("Loaded " + m_privLevels.Count + " privileges!");
+			return true;
+		}
+
+		private static uint m_privLevelPlayer = 0;
+		public static uint GetPlayerPrivLevel()
+		{
+			if(m_privLevelPlayer != 0) return m_privLevelPlayer;
+			if (!m_privLevels.ContainsValue("Player")) return 0;
+			m_privLevelPlayer = (from KeyValuePair<uint, string> pair in m_privLevels
+					where (pair.Value.Equals("Player"))
+					select pair.Key).First();
+			return m_privLevelPlayer;
+		}
+
+		public static string GetPlayerPrivName(Account account)
+		{
+			if (!m_privLevels.ContainsKey(account.PrivLevel)) return "Unknow";
+			return m_privLevels[account.PrivLevel];
+		}
+
+		public static bool IsPlayerAdmin(Account account)
+		{
+			if (!m_privLevels.ContainsKey(account.PrivLevel)) return false;
+			if (m_privLevels[account.PrivLevel] == "Admin") return true;
+			return false;
+		}
+
+		public static bool IsPlayerGM(Account account)
+		{
+			if (!m_privLevels.ContainsKey(account.PrivLevel)) return false;
+			if (m_privLevels[account.PrivLevel] != "Player") return true;
+			return false;
+		}
+
+		public static bool HasNoPrivileges(Account account)
+		{
+			return !IsPlayerGM(account);
+		}
+
 		/// <summary>
 		/// Searches the script assembly for all command handlers
 		/// </summary>
 		/// <returns>True if succeeded</returns>
 		public static bool LoadCommands()
 		{
+			//this method should be moved elsewhere:
+			LoadPrivLevels();
+
 			m_gameCommands.Clear();
 
 			ArrayList asms = new ArrayList(Scripts);
@@ -215,7 +287,7 @@ namespace DOL.GS
 
 
 						#region  Populates the DBCommand table
-						if (!dbcommands.ContainsKey(type.FullName))
+						/*if (!dbcommands.ContainsKey(type.FullName))
 						{
 							object[] objs = type.GetCustomAttributes(typeof(CmdAttribute), false);
 							foreach (CmdAttribute attrib in objs)
@@ -243,13 +315,13 @@ namespace DOL.GS
 										dbcommands.Add(type.FullName, dbcom);
 									log.Info("Command handler " + type.FullName + " added to database");
 								}
-								catch(Exception e)
+								catch (Exception e)
 								{
 									if (log.IsErrorEnabled)
 										log.Error("Populating table Commands", e);
-								}								
+								}
 							}
-						}
+						}*/
 						#endregion Populates the DBCommand table
 
 

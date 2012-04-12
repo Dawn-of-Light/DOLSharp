@@ -33,7 +33,7 @@ namespace DOL.GS.Commands
 			if (IsSpammingCommand(client.Player, "time", 1000))
 				return;
 
-			if (client.Account.PrivLevel == (int)ePrivLevel.Admin) // admins only
+			if (ScriptMgr.IsPlayerAdmin(client.Account))
 			{
 				try
 				{

@@ -559,7 +559,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							{
 								client.Out.SendInventorySlotsUpdate(new[] { slot });
 
-								if (client.Account.PrivLevel == (int)ePrivLevel.Admin)
+								if (ScriptMgr.IsPlayerAdmin(client.Account))
 								{
 									if (client.Player.TempProperties.getProperty<bool>(HousingConstants.AllowAddHouseHookpoint, false))
 									{
@@ -702,7 +702,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							{
 								client.Out.SendInventorySlotsUpdate(new[] { slot });
 
-								if (client.Account.PrivLevel == (int)ePrivLevel.Admin)
+								if (ScriptMgr.IsPlayerAdmin(client.Account))
 								{
 									if (client.Player.TempProperties.getProperty<bool>(HousingConstants.AllowAddHouseHookpoint, false))
 									{

@@ -3932,7 +3932,7 @@ namespace DOL.GS
 						{
 							//If a gameplayer with privlevel > 1 attacked the
 							//mob, then the players won't gain xp ...
-							if (((GamePlayer)obj).Client.Account.PrivLevel > 1)
+							if (ScriptMgr.IsPlayerGM(((GamePlayer)obj).Client.Account))
 								return false;
 							//If a player to which we are gray killed up we
 							//aren't worth anything either
