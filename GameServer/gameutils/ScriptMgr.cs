@@ -253,6 +253,7 @@ namespace DOL.GS
 						#endregion Populates the DBCommand table
 
 
+						if (!dbcommands.ContainsKey(type.FullName)) continue;
 						DBCommand dbcommand = dbcommands[type.FullName];
 						if (disabled.Contains(dbcommand.Name.Replace('&', '/')))
 						{
