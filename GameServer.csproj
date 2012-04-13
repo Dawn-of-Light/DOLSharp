@@ -2056,6 +2056,7 @@
     <Compile Include="spells\Artifacts\AllStatsPercentDebuff.cs" />
     <Compile Include="spells\Artifacts\AlvarusLeggings.cs" />
     <Compile Include="spells\Artifacts\Arrogance.cs" />
+    <Compile Include="spells\Artifacts\AtensShield.cs" />
     <Compile Include="spells\Artifacts\AtlantisTablet.cs" />
     <Compile Include="spells\Artifacts\bracerofzo.cs" />
     <Compile Include="spells\Artifacts\CeremonialBracer.cs" />
