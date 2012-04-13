@@ -27,11 +27,11 @@ namespace DOL.Database
 	[DataTable(TableName = "CharacterXDataQuest")]
 	public class CharacterXDataQuest : DataObject
 	{
-		private int m_id;
-		private string m_characterID;
-		private int m_dataQuestID;
-		private short m_step;
-		private short m_count;
+		protected int m_id;
+		protected string m_characterID;
+		protected int m_dataQuestID;
+		protected short m_step;
+		protected short m_count;
 
 		public CharacterXDataQuest()
 		{

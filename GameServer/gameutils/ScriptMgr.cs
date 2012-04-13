@@ -193,7 +193,6 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static bool LoadPrivLevels()
 		{
-			IList<DBPrivLevel> dbprivlevels = GameServer.Database.SelectAllObjects<DBPrivLevel>();
 			m_privLevels = GameServer.Database.SelectAllObjects<DBPrivLevel>().ToDictionary(v => v.Level, v => v.Name);
 
 			//autopopulate:
@@ -218,17 +217,29 @@ namespace DOL.GS
 			return true;
 		}
 
+		/// <summary>
+		/// Cache the player PrivLevel, so we won't access the collection anymore
+		/// </summary>
 		private static uint m_privLevelPlayer = 0;
+		/// <summary>
+		/// Returns the PrivLevel set for players
+		/// </summary>
+		/// <returns></returns>
 		public static uint GetPlayerPrivLevel()
 		{
 			if(m_privLevelPlayer != 0) return m_privLevelPlayer;
-			if (!m_privLevels.ContainsValue("Player")) return 0;
+			if (!m_privLevels.ContainsValue("Player")) return 1;
 			m_privLevelPlayer = (from KeyValuePair<uint, string> pair in m_privLevels
 					where (pair.Value.Equals("Player"))
 					select pair.Key).First();
 			return m_privLevelPlayer;
 		}
 
+		/// <summary>
+		/// Returns the full name of the player PrivLevel
+		/// </summary>
+		/// <param name="account"></param>
+		/// <returns></returns>
 		public static string GetPlayerPrivName(Account account)
 		{
 			if (!m_privLevels.ContainsKey(account.PrivLevel)) return "Unknow";
@@ -242,16 +253,21 @@ namespace DOL.GS
 			return false;
 		}
 
+		/// <summary>
+		/// If the player is a GM or an Admin returns 'true'
+		/// </summary>
+		/// <param name="account"></param>
+		/// <returns></returns>
 		public static bool IsPlayerGM(Account account)
 		{
-			if (!m_privLevels.ContainsKey(account.PrivLevel)) return false;
-			if (m_privLevels[account.PrivLevel] != "Player") return true;
-			return false;
+			if (account == null) return false;
+			return account.PrivLevel != GetPlayerPrivLevel();
 		}
 
 		public static bool HasNoPrivileges(Account account)
 		{
-			return !IsPlayerGM(account);
+			if (account == null) return true;
+			return account.PrivLevel == GetPlayerPrivLevel();
 		}
 
 		/// <summary>

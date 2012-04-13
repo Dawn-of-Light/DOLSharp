@@ -29,10 +29,10 @@ namespace DOL.Database
 	[DataTable(TableName="Quest")]
 	public class DBQuest : DataObject
 	{
-		private string		m_name;
-		private	string		m_characterid;
-		private	int			m_step;
-		private string		m_customPropertiesString;
+		protected string m_name;
+		protected string m_characterid;
+		protected int m_step;
+		protected string m_customPropertiesString;
 
 		/// <summary>
 		/// Constructor

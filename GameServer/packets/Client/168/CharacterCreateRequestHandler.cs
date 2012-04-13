@@ -214,14 +214,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int occurences = 0;
 			List<string> disabled_classes = Properties.DISABLED_CLASSES.SplitCSV(true);
 			occurences = (from j in disabled_classes
-			              where j == ch.Class.ToString()
-			              select j).Count();
+						  where j == ch.Class.ToString()
+						  select j).Count();
 
 			if (occurences > 0 && ScriptMgr.HasNoPrivileges(client.Account))
 			{
 				log.Debug("Client " + client.Account.Name + " tried to create a disabled classe: " + (eCharacterClass)ch.Class);
 				client.Out.SendCharacterOverview((eRealm)ch.Realm);
-			    return;
+				return;
 			}
 
 			if (client.Version >= GameClient.eClientVersion.Version193)
@@ -250,7 +250,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
 					client.Disconnect();
 				}
-			    return;
+				return;
 			}
 
 			ch.AccountSlot = accountSlot + ch.Realm * 100;
@@ -267,13 +267,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			List<string> disabled_races = new List<string>(Properties.DISABLED_RACES.SplitCSV(true));
 			occurences = (from j in disabled_races
-			              where j == ch.Race.ToString()
-			              select j).Count();
+						  where j == ch.Race.ToString()
+						  select j).Count();
 			if (occurences > 0 && ScriptMgr.HasNoPrivileges(client.Account))
 			{
 				log.Debug("Client " + client.Account.Name + " tried to create a disabled race: " + (eRace)ch.Race);
 				client.Out.SendCharacterOverview((eRealm)ch.Realm);
-			    return;
+				return;
 			}
 
 			ch.Gender = ((startRaceGender >> 4) & 0x01);
@@ -317,7 +317,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				// This is not live like but unfortunately we are missing code / packet support to stay on character create screen if something is invalid
 				client.Out.SendCharacterOverview((eRealm)ch.Realm);
-			    return;
+				return;
 			}
 
 			ch.CreationDate = DateTime.Now;
@@ -334,9 +334,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				switch (ch.Realm)
 				{
-						case 1: ch.Region = 1; break;
-						case 2: ch.Region = 100; break;
-						case 3: ch.Region = 200; break;
+					case 1: ch.Region = 1; break;
+					case 2: ch.Region = 100; break;
+					case 3: ch.Region = 200; break;
 				}
 			}
 
@@ -454,7 +454,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								break;
 						}
 						break;
-						default: break;
+					default: break;
 				}
 
 				if (ch.GuildID != "")
@@ -465,7 +465,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			if (Properties.STARTING_BPS > 0)
 				ch.BountyPoints = Properties.STARTING_BPS;
-			
+
 			if (Properties.STARTING_MONEY > 0)
 			{
 				long value = Properties.STARTING_MONEY;
@@ -515,7 +515,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			GameServer.Database.FillObjectRelations(client.Account);
 			client.Out.SendCharacterOverview((eRealm)ch.Realm);
 
-		    return;
+			return;
 		}
 
 		#endregion Create Character
@@ -630,15 +630,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 								pointsUsed += Math.Max(0, result - 15); //three points used
 
 								log.Info(string.Format("{0,-2} {1,-3}:{2, 3} {3,3} {4,3} {5,3} {6,2} {7} {8}",
-								                       statCategory,
-								                       (stat == eStat.STR) ? "STR" : stat.ToString(),
-								                       stats[j],
-								                       leveledStats[j],
-								                       stats[j] - leveledStats[j],
-								                       raceStats[j],
-								                       result,
-								                       pointsUsed,
-								                       (validBeginStat) ? "" : "Not Valid"));
+													   statCategory,
+													   (stat == eStat.STR) ? "STR" : stat.ToString(),
+													   stats[j],
+													   leveledStats[j],
+													   stats[j] - leveledStats[j],
+													   raceStats[j],
+													   result,
+													   pointsUsed,
+													   (validBeginStat) ? "" : "Not Valid"));
 
 								points += pointsUsed;
 
@@ -807,58 +807,176 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						if (Properties.BACKUP_DELETED_CHARACTERS)
 						{
+							//backup character
 							DOLCharactersBackup backupCharacter = new DOLCharactersBackup(character);
 							GameServer.Database.AddObject(backupCharacter);
-							log.WarnFormat("DB Character {0} backed up to DOLCharactersBackup and no associated content deleted.", character.ObjectId);
-						}
-						else
-						{
-							// delete associated data
 
+							//backup items
+							int itemscount = 0;
 							try
 							{
 								var objs = GameServer.Database.SelectObjects<InventoryItem>("OwnerID = '" + GameServer.Database.Escape(character.ObjectId) + "'");
 								foreach (InventoryItem item in objs)
 								{
-									GameServer.Database.DeleteObject(item);
+									InventoryBackup backupItem = new InventoryBackup(backupCharacter, item);
+									GameServer.Database.AddObject(backupItem);
+									itemscount++;
 								}
 							}
 							catch (Exception e)
 							{
 								if (log.IsErrorEnabled)
-									log.Error("Error deleting char items, char OID=" + character.ObjectId, e);
+									log.Error("Error backuping char items, char OID=" + character.ObjectId, e);
 							}
 
-							// delete quests
+							//backup quests
+							int questscount = 0;
 							try
 							{
 								var objs = GameServer.Database.SelectObjects<DBQuest>("Character_ID = '" + GameServer.Database.Escape(character.ObjectId) + "'");
 								foreach (DBQuest quest in objs)
 								{
-									GameServer.Database.DeleteObject(quest);
+									DBQuestBackup backupQuest = new DBQuestBackup(backupCharacter, quest);
+									GameServer.Database.AddObject(backupQuest);
+									questscount++;
 								}
 							}
 							catch (Exception e)
 							{
 								if (log.IsErrorEnabled)
-									log.Error("Error deleting char quests, char OID=" + character.ObjectId, e);
+									log.Error("Error backuping char quests, char OID=" + character.ObjectId, e);
 							}
 
-							// delete ML steps
+							//backup quest datas
+							int datascount = 0;
+							try
+							{
+								var objs = GameServer.Database.SelectObjects<CharacterXDataQuest>("Character_ID = '" + GameServer.Database.Escape(character.ObjectId) + "'");
+								foreach (CharacterXDataQuest data in objs)
+								{
+									CharacterXDataQuestBackup backupData = new CharacterXDataQuestBackup(backupCharacter, data);
+									GameServer.Database.AddObject(backupData);
+									datascount++;
+								}
+							}
+							catch (Exception e)
+							{
+								if (log.IsErrorEnabled)
+									log.Error("Error backuping char quest datas, char OID=" + character.ObjectId, e);
+							}
+
+							//backup ML steps
+							int mlstepscount = 0;
 							try
 							{
 								var objs = GameServer.Database.SelectObjects<DBCharacterXMasterLevel>("Character_ID = '" + GameServer.Database.Escape(character.ObjectId) + "'");
 								foreach (DBCharacterXMasterLevel mlstep in objs)
 								{
-									GameServer.Database.DeleteObject(mlstep);
+									DBCharacterXMasterLevelBackup backupMLStep = new DBCharacterXMasterLevelBackup(backupCharacter, mlstep);
+									GameServer.Database.AddObject(backupMLStep);
+									mlstepscount++;
 								}
 							}
 							catch (Exception e)
 							{
 								if (log.IsErrorEnabled)
-									log.Error("Error deleting char ml steps, char OID=" + character.ObjectId, e);
+									log.Error("Error backuping char ml steps, char OID=" + character.ObjectId, e);
+							}
+
+							//backup OTDs
+							int otdscount = 0;
+							try
+							{
+								var objs = GameServer.Database.SelectObjects<CharacterXOneTimeDrop>("CharacterID = '" + GameServer.Database.Escape(character.ObjectId) + "'");
+								foreach (CharacterXOneTimeDrop otd in objs)
+								{
+									CharacterXOneTimeDropBackup backupOTD = new CharacterXOneTimeDropBackup(backupCharacter, otd);
+									GameServer.Database.AddObject(backupOTD);
+									otdscount++;
+								}
+							}
+							catch (Exception e)
+							{
+								if (log.IsErrorEnabled)
+									log.Error("Error backuping char otd, char OID=" + character.ObjectId, e);
+							}
+
+							log.WarnFormat("DB Character {0} backed up to DOLCharactersBackup, with {1} items, {2} quests, {5} quest datas, {3} ML steps, {4} otd.", character.ObjectId, itemscount, questscount, mlstepscount, otdscount, datascount);
+						}
+
+						//delete inventory
+						try
+						{
+							var objs = GameServer.Database.SelectObjects<InventoryItem>("OwnerID = '" + GameServer.Database.Escape(character.ObjectId) + "'");
+							foreach (InventoryItem item in objs)
+							{
+								GameServer.Database.DeleteObject(item);
 							}
 						}
+						catch (Exception e)
+						{
+							if (log.IsErrorEnabled)
+								log.Error("Error deleting char items, char OID=" + character.ObjectId, e);
+						}
+
+						// delete quests
+						try
+						{
+							var objs = GameServer.Database.SelectObjects<DBQuest>("Character_ID = '" + GameServer.Database.Escape(character.ObjectId) + "'");
+							foreach (DBQuest quest in objs)
+							{
+								GameServer.Database.DeleteObject(quest);
+							}
+						}
+						catch (Exception e)
+						{
+							if (log.IsErrorEnabled)
+								log.Error("Error deleting char quests, char OID=" + character.ObjectId, e);
+						}
+						//delete quest datas
+						try
+						{
+							var objs = GameServer.Database.SelectObjects<CharacterXDataQuest>("Character_ID = '" + GameServer.Database.Escape(character.ObjectId) + "'");
+							foreach (CharacterXDataQuest data in objs)
+							{
+								GameServer.Database.DeleteObject(data);
+							}
+						}
+						catch (Exception e)
+						{
+							if (log.IsErrorEnabled)
+								log.Error("Error deleting char quest datas, char OID=" + character.ObjectId, e);
+						}
+
+						// delete ML steps
+						try
+						{
+							var objs = GameServer.Database.SelectObjects<DBCharacterXMasterLevel>("Character_ID = '" + GameServer.Database.Escape(character.ObjectId) + "'");
+							foreach (DBCharacterXMasterLevel mlstep in objs)
+							{
+								GameServer.Database.DeleteObject(mlstep);
+							}
+						}
+						catch (Exception e)
+						{
+							if (log.IsErrorEnabled)
+								log.Error("Error deleting char ml steps, char OID=" + character.ObjectId, e);
+						}
+						// delete OTDs
+						try
+						{
+							var objs = GameServer.Database.SelectObjects<CharacterXOneTimeDrop>("CharacterID = '" + GameServer.Database.Escape(character.ObjectId) + "'");
+							foreach (CharacterXOneTimeDrop otd in objs)
+							{
+								GameServer.Database.DeleteObject(otd);
+							}
+						}
+						catch (Exception e)
+						{
+							if (log.IsErrorEnabled)
+								log.Error("Error deleting char otd, char OID=" + character.ObjectId, e);
+						}
+
 
 						string deletedChar = character.Name;
 
@@ -1585,58 +1703,58 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			switch (ch.Class)
 			{
-					//Alb
-					case (int)eCharacterClass.Armsman: return (int)eCharacterClass.Fighter;
-					case (int)eCharacterClass.Mercenary: return (int)eCharacterClass.Fighter;
-					case (int)eCharacterClass.Paladin: return (int)eCharacterClass.Fighter;
-					case (int)eCharacterClass.MaulerAlb: return (int)eCharacterClass.Fighter;
-					case (int)eCharacterClass.Reaver: return (int)eCharacterClass.Fighter;
-					case (int)eCharacterClass.Cleric: return (int)eCharacterClass.Acolyte;
-					case (int)eCharacterClass.Friar: return (int)eCharacterClass.Acolyte;
-					case (int)eCharacterClass.Heretic: return (int)eCharacterClass.Acolyte;
-					case (int)eCharacterClass.Infiltrator: return (int)eCharacterClass.AlbionRogue;
-					case (int)eCharacterClass.Scout: return (int)eCharacterClass.AlbionRogue;
-					case (int)eCharacterClass.Minstrel: return (int)eCharacterClass.AlbionRogue;
-					case (int)eCharacterClass.Cabalist: return (int)eCharacterClass.Mage;
-					case (int)eCharacterClass.Sorcerer: return (int)eCharacterClass.Mage;
-					case (int)eCharacterClass.Theurgist: return (int)eCharacterClass.Elementalist;
-					case (int)eCharacterClass.Wizard: return (int)eCharacterClass.Elementalist;
-					case (int)eCharacterClass.Necromancer: return (int)eCharacterClass.Disciple;
-					//Hib
-					case (int)eCharacterClass.Hero: return (int)eCharacterClass.Guardian;
-					case (int)eCharacterClass.Champion: return (int)eCharacterClass.Guardian;
-					case (int)eCharacterClass.Blademaster: return (int)eCharacterClass.Guardian;
-					case (int)eCharacterClass.MaulerHib: return (int)eCharacterClass.Guardian;
-					case (int)eCharacterClass.Bard: return (int)eCharacterClass.Naturalist;
-					case (int)eCharacterClass.Druid: return (int)eCharacterClass.Naturalist;
-					case (int)eCharacterClass.Warden: return (int)eCharacterClass.Naturalist;
-					case (int)eCharacterClass.Ranger: return (int)eCharacterClass.Stalker;
-					case (int)eCharacterClass.Nightshade: return (int)eCharacterClass.Stalker;
-					case (int)eCharacterClass.Vampiir: return (int)eCharacterClass.Stalker;
-					case (int)eCharacterClass.Bainshee: return (int)eCharacterClass.Magician;
-					case (int)eCharacterClass.Eldritch: return (int)eCharacterClass.Magician;
-					case (int)eCharacterClass.Enchanter: return (int)eCharacterClass.Magician;
-					case (int)eCharacterClass.Mentalist: return (int)eCharacterClass.Magician;
-					case (int)eCharacterClass.Animist: return (int)eCharacterClass.Forester;
-					case (int)eCharacterClass.Valewalker: return (int)eCharacterClass.Forester;
-					//Mid
-					case (int)eCharacterClass.Berserker: return (int)eCharacterClass.Viking;
-					case (int)eCharacterClass.MaulerMid: return (int)eCharacterClass.Viking;
-					case (int)eCharacterClass.Savage: return (int)eCharacterClass.Viking;
-					case (int)eCharacterClass.Skald: return (int)eCharacterClass.Viking;
-					case (int)eCharacterClass.Thane: return (int)eCharacterClass.Viking;
-					case (int)eCharacterClass.Valkyrie: return (int)eCharacterClass.Viking;
-					case (int)eCharacterClass.Warrior: return (int)eCharacterClass.Viking;
-					case (int)eCharacterClass.Hunter: return (int)eCharacterClass.MidgardRogue;
-					case (int)eCharacterClass.Shadowblade: return (int)eCharacterClass.MidgardRogue;
-					case (int)eCharacterClass.Healer: return (int)eCharacterClass.Seer;
-					case (int)eCharacterClass.Shaman: return (int)eCharacterClass.Seer;
-					case (int)eCharacterClass.Bonedancer: return (int)eCharacterClass.Mystic;
-					case (int)eCharacterClass.Runemaster: return (int)eCharacterClass.Mystic;
-					case (int)eCharacterClass.Warlock: return (int)eCharacterClass.Mystic;
-					case (int)eCharacterClass.Spiritmaster: return (int)eCharacterClass.Mystic;
-					//older client support
-					default: return ch.Class;
+				//Alb
+				case (int)eCharacterClass.Armsman: return (int)eCharacterClass.Fighter;
+				case (int)eCharacterClass.Mercenary: return (int)eCharacterClass.Fighter;
+				case (int)eCharacterClass.Paladin: return (int)eCharacterClass.Fighter;
+				case (int)eCharacterClass.MaulerAlb: return (int)eCharacterClass.Fighter;
+				case (int)eCharacterClass.Reaver: return (int)eCharacterClass.Fighter;
+				case (int)eCharacterClass.Cleric: return (int)eCharacterClass.Acolyte;
+				case (int)eCharacterClass.Friar: return (int)eCharacterClass.Acolyte;
+				case (int)eCharacterClass.Heretic: return (int)eCharacterClass.Acolyte;
+				case (int)eCharacterClass.Infiltrator: return (int)eCharacterClass.AlbionRogue;
+				case (int)eCharacterClass.Scout: return (int)eCharacterClass.AlbionRogue;
+				case (int)eCharacterClass.Minstrel: return (int)eCharacterClass.AlbionRogue;
+				case (int)eCharacterClass.Cabalist: return (int)eCharacterClass.Mage;
+				case (int)eCharacterClass.Sorcerer: return (int)eCharacterClass.Mage;
+				case (int)eCharacterClass.Theurgist: return (int)eCharacterClass.Elementalist;
+				case (int)eCharacterClass.Wizard: return (int)eCharacterClass.Elementalist;
+				case (int)eCharacterClass.Necromancer: return (int)eCharacterClass.Disciple;
+				//Hib
+				case (int)eCharacterClass.Hero: return (int)eCharacterClass.Guardian;
+				case (int)eCharacterClass.Champion: return (int)eCharacterClass.Guardian;
+				case (int)eCharacterClass.Blademaster: return (int)eCharacterClass.Guardian;
+				case (int)eCharacterClass.MaulerHib: return (int)eCharacterClass.Guardian;
+				case (int)eCharacterClass.Bard: return (int)eCharacterClass.Naturalist;
+				case (int)eCharacterClass.Druid: return (int)eCharacterClass.Naturalist;
+				case (int)eCharacterClass.Warden: return (int)eCharacterClass.Naturalist;
+				case (int)eCharacterClass.Ranger: return (int)eCharacterClass.Stalker;
+				case (int)eCharacterClass.Nightshade: return (int)eCharacterClass.Stalker;
+				case (int)eCharacterClass.Vampiir: return (int)eCharacterClass.Stalker;
+				case (int)eCharacterClass.Bainshee: return (int)eCharacterClass.Magician;
+				case (int)eCharacterClass.Eldritch: return (int)eCharacterClass.Magician;
+				case (int)eCharacterClass.Enchanter: return (int)eCharacterClass.Magician;
+				case (int)eCharacterClass.Mentalist: return (int)eCharacterClass.Magician;
+				case (int)eCharacterClass.Animist: return (int)eCharacterClass.Forester;
+				case (int)eCharacterClass.Valewalker: return (int)eCharacterClass.Forester;
+				//Mid
+				case (int)eCharacterClass.Berserker: return (int)eCharacterClass.Viking;
+				case (int)eCharacterClass.MaulerMid: return (int)eCharacterClass.Viking;
+				case (int)eCharacterClass.Savage: return (int)eCharacterClass.Viking;
+				case (int)eCharacterClass.Skald: return (int)eCharacterClass.Viking;
+				case (int)eCharacterClass.Thane: return (int)eCharacterClass.Viking;
+				case (int)eCharacterClass.Valkyrie: return (int)eCharacterClass.Viking;
+				case (int)eCharacterClass.Warrior: return (int)eCharacterClass.Viking;
+				case (int)eCharacterClass.Hunter: return (int)eCharacterClass.MidgardRogue;
+				case (int)eCharacterClass.Shadowblade: return (int)eCharacterClass.MidgardRogue;
+				case (int)eCharacterClass.Healer: return (int)eCharacterClass.Seer;
+				case (int)eCharacterClass.Shaman: return (int)eCharacterClass.Seer;
+				case (int)eCharacterClass.Bonedancer: return (int)eCharacterClass.Mystic;
+				case (int)eCharacterClass.Runemaster: return (int)eCharacterClass.Mystic;
+				case (int)eCharacterClass.Warlock: return (int)eCharacterClass.Mystic;
+				case (int)eCharacterClass.Spiritmaster: return (int)eCharacterClass.Mystic;
+				//older client support
+				default: return ch.Class;
 
 			}
 		}

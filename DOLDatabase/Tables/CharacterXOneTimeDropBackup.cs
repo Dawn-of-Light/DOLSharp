@@ -28,49 +28,57 @@ namespace DOL
 		/// <summary>
 		/// List of characters and the one time drops they have received.
 		/// </summary>
-		[DataTable(TableName="CharacterXOneTimeDrop")]
-		public class CharacterXOneTimeDrop : DataObject
+		[DataTable(TableName="CharacterXOneTimeDropBackup")]
+		public class CharacterXOneTimeDropBackup : CharacterXOneTimeDrop
 		{
-			protected string m_characterID;
-			protected string m_itemTemplateID;
+			string m_deletedOwnerName = "";
+			private DateTime m_deleteDate;
 
-			public CharacterXOneTimeDrop()
+			public CharacterXOneTimeDropBackup()
 			{
-				m_itemTemplateID = "";
-				m_characterID = "";
+				m_deleteDate = DateTime.Now;
+			}
+
+			public CharacterXOneTimeDropBackup(DOLCharactersBackup deleted, CharacterXOneTimeDrop otd)
+			{
+				DeletedOwnerName = deleted.Name;
+				m_deleteDate = DateTime.Now;
+
+				m_characterID = deleted.ObjectId;
+				m_itemTemplateID = otd.ItemTemplateID;
 			}
 
 			/// <summary>
-			/// The DOLCharacters_ID of the player who gets the drop
+			/// Name of the character - indexed but not unique for backups
 			/// </summary>
-			[DataElement(AllowDbNull = false, Varchar = 100, Index = true)]
-			public string CharacterID
+			[DataElement(AllowDbNull = false, Index = true)]
+			public string DeletedOwnerName
 			{
 				get
 				{
-					return m_characterID;
+					return m_deletedOwnerName;
 				}
 				set
 				{
 					Dirty = true;
-					m_characterID = value;
+					m_deletedOwnerName = value;
 				}
 			}
 
 			/// <summary>
-			/// The item id_nb that was dropped
+			/// The deletion date of this character
 			/// </summary>
-			[DataElement(AllowDbNull = false, Varchar = 100, Index = true)]
-			public string ItemTemplateID
+			[DataElement(AllowDbNull = false)]
+			public DateTime DeleteDate
 			{
 				get
 				{
-					return m_itemTemplateID;
+					return m_deleteDate;
 				}
 				set
 				{
 					Dirty = true;
-					m_itemTemplateID = value;
+					m_deleteDate = value;
 				}
 			}
 		}

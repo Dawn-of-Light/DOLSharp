@@ -71,7 +71,9 @@ namespace DOL.GS
 				//if equipable item, equip
 				foreach (eInventorySlot slot in GameLivingInventory.EQUIP_SLOTS)
 				{
-					if (slot == (eInventorySlot)inventoryItem.Item_Type)
+					if (slot == (eInventorySlot)inventoryItem.Item_Type
+						|| (inventoryItem.Item_Type == Slot.LEFTRING && slot == eInventorySlot.RightRing)//ring
+						|| (inventoryItem.Item_Type == Slot.LEFTWRIST && slot == eInventorySlot.RightBracer))//bracer
 					{
 						eInventorySlot chosenSlot = eInventorySlot.FirstEmptyBackpack;
 
@@ -86,7 +88,7 @@ namespace DOL.GS
 
 						if (usedSlots.ContainsKey(chosenSlot))
 						{
-							GameServer.Instance.Logger.Error("Cannot add item " + item.TemplateID + " to class " + item.Class + " already an item for that slot assigned!");
+							//GameServer.Instance.Logger.Error("Cannot add item " + item.TemplateID + " to class " + item.Class + " already an item for that slot assigned!");
 							continue;
 						}
 
