@@ -149,7 +149,7 @@ namespace DOL.GS.GameEvents
 				if (log.IsInfoEnabled)
 				{
 					StringBuilder stats = new StringBuilder(256)
-						.Append("-stats- Mem=").Append(GC.GetTotalMemory(false)/1024).Append("kb")
+						.Append("-stats- Mem=").Append(GC.GetTotalMemory(false)/1024/1024).Append("MB")
 						.Append("  Clients=").Append(GameServer.Instance.ClientCount)
 						.Append("  Down=").Append(inRate/1024).Append( "kb/s (" ).Append(Statistics.BytesIn/1024/1024).Append( "MB)" )
 						.Append("  Up=").Append(outRate/1024).Append( "kb/s (" ).Append(Statistics.BytesOut/1024/1024).Append( "MB)" )
