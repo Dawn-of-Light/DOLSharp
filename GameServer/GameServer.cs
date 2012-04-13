@@ -651,6 +651,16 @@ namespace DOL.GS
 				InitComponent(MailMgr.Init(), "Mail Manager Initialization");
 
 				//---------------------------------------------------------------
+				//Try to load PrivLevels
+				if (!InitComponent(ScriptMgr.LoadPrivLevels(), "PrivLevels Initialization"))
+					return false;
+
+				//---------------------------------------------------------------
+				//Try to load Commands
+				if (!InitComponent(ScriptMgr.LoadCommands(), "Commands Initialization"))
+					return false;
+
+				//---------------------------------------------------------------
 				//Try to compile the Scripts
 				if (!InitComponent(CompileScripts(), "Script compilation"))
 					return false;

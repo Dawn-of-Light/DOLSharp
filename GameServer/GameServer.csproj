@@ -2193,11 +2193,8 @@
     <Compile Include="spells\Vampiir\VampMagicalStrike.cs" />
     <Compile Include="spells\Vampiir\VampMaintainedSpeedDecrease.cs" />
     <Compile Include="spells\Warlock\ChamberSpellHandler.cs" />
-    <Compile Include="spells\Warlock\PowerlessSpellHandler.cs" />
     <Compile Include="spells\Warlock\PrimerSpellHandler.cs" />
-    <Compile Include="spells\Warlock\RangeSpellHandler.cs" />
-    <Compile Include="spells\Warlock\UninterruptableSpellHandler.cs" />
-    <Compile Include="spells\Warlock\WarlockSpeedDecreaseSpellHandler.cs" />
+    <Compile Include="spells\Warlock\WarlockSpells.cs" />
     <Compile Include="spells\WaterBreathingSpellHandler.cs" />
     <Compile Include="spells\CureDiseaseSpellHandler.cs">
       <SubType>Code</SubType>

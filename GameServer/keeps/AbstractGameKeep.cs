@@ -519,7 +519,8 @@ namespace DOL.GS.Keeps
 			{
 				if (a is KeepArea && a.Description == keep.Name)
 				{
-					log.Debug("Found a DBArea entry for " + keep.Name + ", loading that instead of creating a new one.");
+					if (ServerProperties.Properties.VERBOSE_LEVEL < 2)
+						log.Debug("Found a DBArea entry for " + keep.Name + ", loading that instead of creating a new one.");
 					area = a as KeepArea;
 					area.Keep = this;
 					break;

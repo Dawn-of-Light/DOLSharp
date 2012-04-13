@@ -16,33 +16,20 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
 using System;
-using System.Collections;
-using System.Reflection;
-using System.Text;
-using DOL.AI.Brain;
-using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using DOL.GS.SkillHandler;
-using log4net;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// 
-	/// </summary>
+    #region PrimerSpell
     public class PrimerSpellHandler : SpellHandler
 	{
-		/// <summary>
-		/// Cast Powerless
-		/// </summary>
-		/// <param name="target"></param>
-		public override void FinishSpellCast(GameLiving target)
+        public override void FinishSpellCast(GameLiving target)
 		{
 			m_caster.Mana -= PowerCost(target);
-			
 			base.FinishSpellCast(target);
 		}
 
@@ -61,37 +48,195 @@ namespace DOL.GS.Spells
 		{
 			if(effect.Owner is GamePlayer && !noMessages)
 				((GamePlayer)effect.Owner).Out.SendMessage("You modification spell effect has expired.", eChatType.CT_SpellExpires, eChatLoc.CL_SystemWindow);
-
 			GameEventMgr.RemoveHandler(effect.Owner, GamePlayerEvent.Moving, new DOLEventHandler(OnMove));
-
 			return base.OnEffectExpires (effect, false);
 		}
 
-	
-		/// <summary>
-		/// Handles attacks on player/by player
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="arguments"></param>
 		private void OnMove(DOLEvent e, object sender, EventArgs arguments)
 		{
-			GameLiving living = sender as GameLiving;
-			if (living == null) return;
-			if(living.IsMoving)
-			{
-				// remove speed buff if in combat
-				GameSpellEffect effect = SpellHandler.FindEffectOnTarget(living, this);
-				if (effect != null)
-				{
-					effect.Cancel(false);
-					((GamePlayer)living).Out.SendMessage("You move and break your modification spell.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-				}
-			}
+            GameLiving living = sender as GameLiving;
+            if (living == null) return;
+            if (living.IsMoving)
+            {
+                GameSpellEffect effect = SpellHandler.FindEffectOnTarget(living, this);
+                if (effect != null)
+                {
+                    effect.Cancel(false);
+                    ((GamePlayer)living).Out.SendMessage("You move and break your modification spell.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                }
+            }            
 		}
 
+        public PrimerSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+    }
+    #endregion PrimerSpell
 
-		// constructor
-		public PrimerSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
-	}
+    #region Powerless
+    [SpellHandlerAttribute("Powerless")]
+    public class PowerlessSpellHandler : PrimerSpellHandler
+    {
+        public override bool CheckBeginCast(GameLiving selectedTarget)
+        {
+            if (!base.CheckBeginCast(selectedTarget))
+                return false;
+
+            bool powerless = Caster.TempProperties.getProperty("Warlock-Powerless", false);
+            bool range = Caster.TempProperties.getProperty("Warlock-Range", false);
+            bool uninterruptable = Caster.TempProperties.getProperty("Warlock-Uninterruptable", false);
+
+            if (range)
+            {
+                MessageToCaster("You already preparing a Range spell", eChatType.CT_System);
+                return false;
+            }
+            if (uninterruptable)
+            {
+                MessageToCaster("You already preparing a Uninterruptable spell", eChatType.CT_System);
+                return false;
+            }
+            if (powerless)
+            {
+                MessageToCaster("You already preparing this effect", eChatType.CT_System);
+                return false;
+            }
+
+            Caster.TempProperties.setProperty("Warlock-CastingPowerless", true);
+            return true;
+        }
+
+        public override bool CheckEndCast(GameLiving target)
+        {
+            Caster.TempProperties.setProperty("Warlock-CastingPowerless", false);
+            return base.CheckEndCast(target);
+        }
+
+        public override void OnEffectStart(GameSpellEffect effect)
+        {
+            Caster.TempProperties.setProperty("Warlock-Powerless", true);
+            base.OnEffectStart(effect);
+        }
+
+        public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
+        {
+            Caster.TempProperties.setProperty("Warlock-Powerless", false);
+            return base.OnEffectExpires(effect, noMessages);
+        }
+
+        public PowerlessSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+    }
+    #endregion Powerless
+
+    #region Range
+    [SpellHandlerAttribute("Range")]
+    public class RangeSpellHandler : PrimerSpellHandler
+    {
+        public override bool CheckBeginCast(GameLiving selectedTarget)
+        {
+            if (!base.CheckBeginCast(selectedTarget))
+                return false;
+
+            bool powerless = Caster.TempProperties.getProperty("Warlock-Powerless", false);
+            bool range = Caster.TempProperties.getProperty("Warlock-Range", false);
+            bool uninterruptable = Caster.TempProperties.getProperty("Warlock-Uninterruptable", false);
+
+            if (powerless)
+            {
+                MessageToCaster("You already preparing a Powerless spell", eChatType.CT_System);
+                return false;
+            }
+            if (uninterruptable)
+            {
+                MessageToCaster("You already preparing a Uninterruptable spell", eChatType.CT_System);
+                return false;
+            }
+            if (range)
+            {
+                MessageToCaster("You already preparing this effect", eChatType.CT_System);
+                return false;
+            }
+
+            Caster.TempProperties.setProperty("Warlock-CastingRange", true);
+            Caster.TempProperties.setProperty("Warlock-RangeValue", (int)Spell.Range);
+            return true;
+        }
+
+        public override bool CheckEndCast(GameLiving target)
+        {
+            Caster.TempProperties.setProperty("Warlock-CastingRange", false);
+            return base.CheckEndCast(target);
+        }
+
+        public override void OnEffectStart(GameSpellEffect effect)
+        {
+            Caster.TempProperties.setProperty("Warlock-Range", true);
+            Caster.TempProperties.setProperty("Warlock-RangeValue", (int)Spell.Range);
+            base.OnEffectStart(effect);
+        }
+
+        public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
+        {
+            Caster.TempProperties.setProperty("Warlock-Range", false);
+            Caster.TempProperties.setProperty("Warlock-RangeValue", 0);
+            return base.OnEffectExpires(effect, noMessages);
+        }
+
+        public RangeSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+    }
+    #endregion Range
+
+    #region Uninterruptable
+    [SpellHandlerAttribute("Uninterruptable")]
+    public class UninterruptableSpellHandler : PrimerSpellHandler
+    {
+        public override bool CheckBeginCast(GameLiving selectedTarget)
+        {
+            if (!base.CheckBeginCast(selectedTarget))
+                return false;
+
+            bool powerless = Caster.TempProperties.getProperty("Warlock-Powerless", false);
+            bool range = Caster.TempProperties.getProperty("Warlock-Range", false);
+            bool uninterruptable = Caster.TempProperties.getProperty("Warlock-Uninterruptable", false);
+
+            if (powerless)
+            {
+                MessageToCaster("You already preparing a Powerless spell", eChatType.CT_System);
+                return false;
+            }
+            if (range)
+            {
+                MessageToCaster("You already preparing a Range spell", eChatType.CT_System);
+                return false;
+            }
+            if (uninterruptable)
+            {
+                MessageToCaster("You already preparing this effect", eChatType.CT_System);
+                return false;
+            }
+
+            Caster.TempProperties.setProperty("Warlock-CastingUninterruptable", true);
+            Caster.TempProperties.setProperty("Warlock-UninterruptableValue", (double)Spell.Value);
+            return true;
+        }
+
+        public override bool CheckEndCast(GameLiving target)
+        {
+            Caster.TempProperties.setProperty("Warlock-CastingUninterruptable", false);
+            return base.CheckEndCast(target);
+        }
+
+        public override void OnEffectStart(GameSpellEffect effect)
+        {
+            Caster.TempProperties.setProperty("Warlock-Uninterruptable", true);
+            base.OnEffectStart(effect);
+        }
+
+        public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
+        {
+            Caster.TempProperties.setProperty("Warlock-Uninterruptable", false);
+            return base.OnEffectExpires(effect, noMessages);
+        }
+
+        public UninterruptableSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+    }
+    #endregion Uninterruptable
 }

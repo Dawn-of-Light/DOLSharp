@@ -52,7 +52,9 @@ namespace DOL.GS
 					if (region == null)
 						continue;
 					region.AddArea(area);
-					log.Info("Area added: " + thisArea.Description);
+
+					if (ServerProperties.Properties.VERBOSE_LEVEL < 1)
+						log.Info("Area added: " + thisArea.Description);
 				}
 				return true;
 			}

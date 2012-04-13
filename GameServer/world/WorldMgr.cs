@@ -1197,7 +1197,8 @@ namespace DOL.GS
 				m_zones.Add(zoneID, zone);
 			}
 
-			log.Info("Added a zone, " + zoneData.Description + ", to region " + region.Name);
+			if (ServerProperties.Properties.VERBOSE_LEVEL < 1)
+				log.Info("Added a zone, " + zoneData.Description + ", to region " + region.Name);
 		}
 
 		/// <summary>

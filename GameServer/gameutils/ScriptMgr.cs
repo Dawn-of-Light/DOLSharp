@@ -276,9 +276,6 @@ namespace DOL.GS
 		/// <returns>True if succeeded</returns>
 		public static bool LoadCommands()
 		{
-			//this method should be moved elsewhere:
-			LoadPrivLevels();
-
 			m_gameCommands.Clear();
 
 			ArrayList asms = new ArrayList(Scripts);
