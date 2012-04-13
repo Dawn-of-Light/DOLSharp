@@ -314,7 +314,7 @@ namespace DOL.GS
 		/// <param name="regionsData">The loaded regions data</param>
 		public static bool EarlyInit(out RegionData[] regionsData)
 		{
-			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - World Manager: EarlyInit");
+			log.Debug(GC.GetTotalMemory(true) / 1024 / 1024 + "MB - World Manager: EarlyInit");
 
 			lock (m_regions.SyncRoot)
 				m_regions.Clear();
@@ -449,7 +449,7 @@ namespace DOL.GS
 
 			regions.Sort();
 
-			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - Region Data Loaded");
+			log.Debug(GC.GetTotalMemory(true) / 1024 / 1024 + "MB - Region Data Loaded");
 
 			int cpuCount = GameServer.Instance.Configuration.CpuCount;
 			if (cpuCount < 1)
@@ -469,7 +469,7 @@ namespace DOL.GS
 				RegisterRegion(timers[FastMath.Abs(i % (cpuCount * 2) - cpuCount) % cpuCount], region);
 			}
 
-			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - " + m_regions.Count + " Regions Loaded");
+			log.Debug(GC.GetTotalMemory(true) / 1024 / 1024 + "MB - " + m_regions.Count + " Regions Loaded");
 
 			// if we don't have at least one frontier region add the default
 			if (hasFrontierRegion == false)
@@ -546,7 +546,7 @@ namespace DOL.GS
 			}
 
 
-			log.Debug(GC.GetTotalMemory(true) / 1000 + "kb - Zones Loaded for All Regions");
+			log.Debug(GC.GetTotalMemory(true) / 1024 / 1024 + "MB - Zones Loaded for All Regions");
 
 			regionsData = regions.ToArray();
 			return true;
