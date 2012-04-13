@@ -40,7 +40,7 @@ namespace DOL.GS
 		ushort ZoneID { get; }
 		eRealm Realm {get;}
 		int DoorID	{get;}
-		int ObjectID	{get;}
+		ushort ObjectID	{get;}
 		eDoorState State {get; set;}
 		void Open();
 		void Close();

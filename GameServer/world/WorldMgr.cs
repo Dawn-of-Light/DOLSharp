@@ -17,7 +17,7 @@
  *
  */
 using System;
-using System.Collections;
+//using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -29,6 +29,7 @@ using log4net;
 using DOL.Config;
 using Timer=System.Threading.Timer;
 using System.Collections.Generic;
+using System.Linq;
 using DOL.GS.Housing;
 
 namespace DOL.GS
@@ -44,6 +45,11 @@ namespace DOL.GS
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		/// <summary>
+		/// The lock object
+		/// </summary>
+		private static object LockObject = new object();
 
 		/// <summary>
 		/// Ping timeout definition in seconds
@@ -173,9 +179,9 @@ namespace DOL.GS
 		/// <summary>
 		/// This hashtable holds all regions in the world
 		/// </summary>
-		private static readonly Hashtable m_regions = new Hashtable();
+		private static readonly Dictionary<ushort, Region> m_regions = new Dictionary<ushort, Region>();
 
-		public static Hashtable Regions
+		public static Dictionary<ushort, Region> Regions
 		{
 			get { return m_regions; }
 		}
@@ -183,9 +189,9 @@ namespace DOL.GS
 		/// <summary>
 		/// This hashtable holds all zones in the world, for easy access
 		/// </summary>
-		private static readonly Hashtable m_zones = new Hashtable();
+		private static readonly Dictionary<ushort, Zone> m_zones = new Dictionary<ushort, Zone>();
 
-		public static Hashtable Zones
+		public static Dictionary<ushort, Zone> Zones
 		{
 			get { return m_zones; }
 		}
@@ -316,9 +322,9 @@ namespace DOL.GS
 		{
 			log.Debug(GC.GetTotalMemory(true) / 1024 / 1024 + "MB - World Manager: EarlyInit");
 
-			lock (m_regions.SyncRoot)
+			lock (LockObject)
 				m_regions.Clear();
-			lock (m_zones.SyncRoot)
+			lock (LockObject)
 				m_zones.Clear();
 
 			//If the files are missing this method
@@ -339,7 +345,7 @@ namespace DOL.GS
 			//Dinberg: We now need to save regionData, indexed by regionID, for instances.
 			//The information generated here is oddly ordered by number of mbos in the region,
 			//so I'm contriving to generate this list myself.
-			m_regionData = new Hashtable();
+			m_regionData = new Dictionary<ushort, RegionData>();
 
 			//We also will need to store zones, because we need at least one zone per region - hence
 			//we will create zones inside our instances or the player gets banned by anti-telehack scripts.
@@ -726,7 +732,7 @@ namespace DOL.GS
 					Thread.Sleep(200); // check every 200ms for needed relocs
 					int start = Environment.TickCount;
 
-					Hashtable regionsClone = (Hashtable)m_regions.Clone();
+					Dictionary<ushort, Region> regionsClone = new Dictionary<ushort, Region>(m_regions);
 
 					foreach (Region region in regionsClone.Values)
 					{
@@ -905,13 +911,13 @@ namespace DOL.GS
 
 						if (Environment.TickCount - player.LastWorldUpdate > (int)(ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL >= 100 ? ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL : 100))
 						{
-							BitArray carray = player.CurrentUpdateArray;
-							BitArray narray = player.NewUpdateArray;
+							System.Collections.BitArray carray = player.CurrentUpdateArray;
+							System.Collections.BitArray narray = player.NewUpdateArray;
 							narray.SetAll(false);
 
 							int npcsUpdated = 0, objectsUpdated = 0, doorsUpdated = 0, housesUpdated = 0;
 
-							lock (player.CurrentRegion.ObjectsSyncLock)
+							lock (player.CurrentRegion.ObjectsLock)
 							{
 								foreach (GameNPC npc in player.GetNPCsInRadius(VISIBILITY_DISTANCE))
 								{
@@ -957,7 +963,7 @@ namespace DOL.GS
 									{
 										if (client.Player.HousingUpdateArray == null)
 										{
-											client.Player.HousingUpdateArray = new BitArray(ServerProperties.Properties.MAX_NUM_HOUSES, false);
+											client.Player.HousingUpdateArray = new System.Collections.BitArray(ServerProperties.Properties.MAX_NUM_HOUSES, false);
 										}
 
 										var houses = HouseMgr.GetHouses(client.Player.CurrentRegionID);
@@ -1078,7 +1084,7 @@ namespace DOL.GS
 		public static Region RegisterRegion(GameTimer.TimeManager time, RegionData data)
 		{
 			Region region =  Region.Create(time, data);
-			lock (m_regions.SyncRoot)
+			lock (LockObject)
 			{
 				m_regions.Add(data.Id, region);
 			}
@@ -1093,11 +1099,11 @@ namespace DOL.GS
 		{
 			RegionEntry[] regs = null;
 
-			lock (m_regions.SyncRoot)
+			lock (LockObject)
 			{
 				regs = new RegionEntry[m_regions.Count];
 
-				IDictionaryEnumerator iter = m_regions.GetEnumerator();
+				Dictionary<ushort, Region>.Enumerator iter = m_regions.GetEnumerator();
 
 				string port = string.Format("{0:D00000}", GameServer.Instance.Configuration.RegionPort);
 				string ip = GameServer.Instance.Configuration.RegionIP.ToString();
@@ -1106,7 +1112,7 @@ namespace DOL.GS
 
 				while (iter.MoveNext())
 				{
-					Region reg = (Region)iter.Value;
+					Region reg = iter.Current.Value;
 					//Dinberg - we want to use the skinID, not the ID, for regions like this.
 					regs[i].id = reg.ID; // reg.Skin;// reg.ID; //Dinberg - changed it back.
 					regs[i].ip = ip;
@@ -1126,9 +1132,9 @@ namespace DOL.GS
 		/// Returns all the regions of the world
 		/// </summary>
 		/// <returns></returns>
-		public static ICollection GetAllRegions()
+		public static List<Region> GetAllRegions()
 		{
-			return m_regions.Values;
+			return m_regions.Values.ToList();
 		}
 
 		/// <summary>
@@ -1188,11 +1194,11 @@ namespace DOL.GS
                     width * 8192,
                     height * 8192);*/
 
-			lock (region.Zones.SyncRoot)
+			lock (LockObject)
 			{
 				region.Zones.Add(zone);
 			}
-			lock (m_zones.SyncRoot)
+			lock (LockObject)
 			{
 				m_zones.Add(zoneID, zone);
 			}
@@ -1207,7 +1213,7 @@ namespace DOL.GS
 		/// <returns>true</returns>
 		public static bool StartRegionMgrs()
 		{
-			lock (m_regions.SyncRoot)
+			lock (LockObject)
 			{
 				foreach (Region reg in m_regions.Values)
 					reg.StartRegionMgr();
@@ -1222,7 +1228,7 @@ namespace DOL.GS
 		{
 			if (log.IsDebugEnabled)
 				log.Debug("Stopping region managers...");
-			lock (m_regions.SyncRoot)
+			lock (LockObject)
 			{
 				foreach (Region reg in m_regions.Values)
 				{
@@ -1241,7 +1247,7 @@ namespace DOL.GS
 		/// <returns>Region or null if not found</returns>
 		public static Region GetRegion(ushort regionID)
 		{
-			return (Region)m_regions[regionID];
+			return m_regions[regionID];
 		}
 
 		public static ushort m_lastZoneError = 0;
@@ -1253,7 +1259,7 @@ namespace DOL.GS
 		/// <returns>the zone object or null</returns>
 		public static Zone GetZone(ushort zoneID)
 		{
-			if (!m_zones.Contains(zoneID))
+			if (!m_zones.ContainsKey(zoneID))
 			{
 				if (m_lastZoneError != zoneID)
 				{
@@ -1264,7 +1270,7 @@ namespace DOL.GS
 				return null;
 			}
 
-			return (Zone)m_zones[zoneID];
+			return m_zones[zoneID];
 		}
 
 
@@ -1294,20 +1300,20 @@ namespace DOL.GS
 		/// <param name="regionID">The region to search</param>
 		/// <param name="objectType">The type of the object you search</param>
 		/// <returns>All objects with the specified parameters</returns>
-		public static GameObject[] GetobjectsFromRegion( ushort regionID, Type objectType)
+		public static List<GameObject> GetobjectsFromRegion( ushort regionID, Type objectType)
 		{
-			Region reg = (Region)m_regions[regionID];
+			Region reg = m_regions[regionID];
 			if (reg == null)
-				return new GameObject[0];
-			GameObject[] objs = reg.Objects;
-			ArrayList returnObjs = new ArrayList();
-			for (int i = 0; i < objs.Length; i++)
+				return new List<GameObject>(0);
+			List<GameObject> objs = reg.Objects.Values.ToList();
+			List<GameObject> returnObjs = new List<GameObject>();
+			for (int i = 0; i < objs.Count; i++)
 			{
 				GameObject obj = objs[i];
 				if (obj != null && objectType.IsInstanceOfType(obj))
 					returnObjs.Add(obj);
 			}
-			return (GameObject[])returnObjs.ToArray(objectType);
+			return returnObjs;
 		}
 		
 		/// <summary>
@@ -1315,9 +1321,9 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="regionID">The region to search</param>
 		/// <returns>All NPCs with the specified parameters</returns>
-		public static GameStaticItem[] GetStaticItemFromRegion(ushort regionID)
+		public static List<GameStaticItem> GetStaticItemFromRegion(ushort regionID)
 		{
-			return (GameStaticItem[])GetobjectsFromRegion(regionID, typeof(GameStaticItem));
+			return GetobjectsFromRegion(regionID, typeof(GameStaticItem)).Cast<GameStaticItem>().ToList();
 		}
 
 		/// <summary>
@@ -1328,20 +1334,20 @@ namespace DOL.GS
 		/// <param name="realm">The realm of the object we search!</param>
 		/// <param name="objectType">The type of the object you search</param>
 		/// <returns>All objects with the specified parameters</returns>
-		public static GameObject[] GetObjectsByNameFromRegion(string name, ushort regionID, eRealm realm, Type objectType)
+		public static List<GameObject> GetObjectsByNameFromRegion(string name, ushort regionID, eRealm realm, Type objectType)
 		{
 			Region reg = (Region)m_regions[regionID];
 			if (reg == null)
-				return new GameObject[0];
-			GameObject[] objs = reg.Objects;
-			ArrayList returnObjs = new ArrayList();
-			for (int i = 0; i < objs.Length; i++)
+				return new List<GameObject>(0);
+			List<GameObject> objs = reg.Objects.Values.ToList();
+			List<GameObject> returnObjs = new List<GameObject>();
+			for (int i = 0; i < objs.Count; i++)
 			{
 				GameObject obj = objs[i];
 				if (obj != null && objectType.IsInstanceOfType(obj) && obj.Realm == realm && obj.Name == name)
 					returnObjs.Add(obj);
 			}
-			return (GameObject[])returnObjs.ToArray(objectType);
+			return returnObjs;
 		}
 
 		//Added by Dinberg, i want to know if we should so freely enumerate reg.Objects?
@@ -1349,20 +1355,20 @@ namespace DOL.GS
 		/// Returns the npcs in a given region
 		/// </summary>
 		/// <returns></returns>
-		public static GameNPC[] GetNPCsFromRegion(ushort regionID)
+		public static List<GameNPC> GetNPCsFromRegion(ushort regionID)
 		{
 			Region reg = (Region)m_regions[regionID];
 			if (reg == null)
-				return new GameNPC[0];
-			GameObject[] objs = reg.Objects;
-			ArrayList returnObjs = new ArrayList();
-			for (int i = 0; i < objs.Length; i++)
+				return new List<GameNPC>(0);
+			List<GameObject> objs = reg.Objects.Values.ToList();
+			List<GameNPC> returnObjs = new List<GameNPC>();
+			for (int i = 0; i < objs.Count; i++)
 			{
 				GameNPC obj = objs[i] as GameNPC;
 				if (obj != null)
 					returnObjs.Add(obj);
 			}
-			return (GameNPC[])returnObjs.ToArray(typeof(GameNPC));
+			return returnObjs;
 		}
 
 		/// <summary>
@@ -1372,12 +1378,12 @@ namespace DOL.GS
 		/// <param name="realm">The realm of the object we search!</param>
 		/// <param name="objectType">The type of the object you search</param>
 		/// <returns>All objects with the specified parameters</returns>b
-		public static GameObject[] GetObjectsByName(string name, eRealm realm, Type objectType)
+		public static List<GameObject> GetObjectsByName(string name, eRealm realm, Type objectType)
 		{
-			ArrayList returnObjs = new ArrayList();
+			List<GameObject> returnObjs = new List<GameObject>();
 			foreach (Region reg in m_regions.Values)
 				returnObjs.AddRange(GetObjectsByNameFromRegion(name, reg.ID, realm, objectType));
-			return (GameObject[])returnObjs.ToArray(objectType);
+			return returnObjs;
 		}
 
 		/// <summary>
@@ -1387,9 +1393,9 @@ namespace DOL.GS
 		/// <param name="regionID">The region to search</param>
 		/// <param name="realm">The realm of the object we search!</param>
 		/// <returns>All NPCs with the specified parameters</returns>
-		public static GameNPC[] GetNPCsByNameFromRegion(string name, ushort regionID, eRealm realm)
+		public static List<GameNPC> GetNPCsByNameFromRegion(string name, ushort regionID, eRealm realm)
 		{
-			return (GameNPC[])GetObjectsByNameFromRegion(name, regionID, realm, typeof(GameNPC));
+			return GetObjectsByNameFromRegion(name, regionID, realm, typeof(GameNPC)).Cast<GameNPC>().ToList();
 		}
 
 		/// <summary>
@@ -1398,9 +1404,9 @@ namespace DOL.GS
 		/// <param name="name">The name of the object to search</param>
 		/// <param name="realm">The realm of the object we search!</param>
 		/// <returns>All NPCs with the specified parameters</returns>b
-		public static GameNPC[] GetNPCsByName(string name, eRealm realm)
+		public static List<GameNPC> GetNPCsByName(string name, eRealm realm)
 		{
-			return (GameNPC[])GetObjectsByName(name, realm, typeof(GameNPC));
+			return GetObjectsByName(name, realm, typeof(GameNPC)).Cast<GameNPC>().ToList();
 		}
 
 		/// <summary>
@@ -1414,7 +1420,7 @@ namespace DOL.GS
 			List<GameNPC> returnNPCs = new List<GameNPC>();
 			foreach (Region r in m_regions.Values)
 			{
-				foreach (GameObject obj in r.Objects)
+				foreach (GameObject obj in r.Objects.Values)
 				{
 					GameNPC npc = obj as GameNPC;
 					if (npc == null)
@@ -1437,7 +1443,7 @@ namespace DOL.GS
 			List<GameNPC> returnNPCs = new List<GameNPC>();
 			foreach (Region r in m_regions.Values)
 			{
-				foreach (GameObject obj in r.Objects)
+				foreach (GameObject obj in r.Objects.Values)
 				{
 					GameNPC npc = obj as GameNPC;
 					if (npc == null)
@@ -1461,7 +1467,7 @@ namespace DOL.GS
 			Region r = GetRegion(region);
 			if (r == null)
 				return returnNPCs;
-			foreach (GameObject obj in r.Objects)
+			foreach (GameObject obj in r.Objects.Values)
 			{
 				GameNPC npc = obj as GameNPC;
 				if (npc == null)
@@ -2092,11 +2098,11 @@ namespace DOL.GS
 		/// <param name="withDistance">Wether or not to return the objects with distance</param>
 		/// <param name="radiusToCheck">Radius to sarch for GameClients</param>
 		/// <returns>IEnumerator that can be used to go through all players</returns>
-		public static IEnumerable GetPlayersCloseToSpot(ushort regionid, int x, int y, int z, ushort radiusToCheck, bool withDistance)
+		public static IEnumerable<GamePlayer> GetPlayersCloseToSpot(ushort regionid, int x, int y, int z, ushort radiusToCheck, bool withDistance)
 		{
 			Region reg = GetRegion(regionid);
 			if (reg == null)
-				return new Region.EmptyEnumerator();
+				return new Region.EmptyEnumerator().Cast<GamePlayer>();
 			return reg.GetPlayersInRadius(x, y, z, radiusToCheck, withDistance, false);
 		}
 
@@ -2107,7 +2113,7 @@ namespace DOL.GS
 		/// <param name="location">the game location to search from</param>
 		/// <param name="radiusToCheck">Radius to sarch for GameClients</param>
 		/// <returns>IEnumerator that can be used to go through all players</returns>
-		public static IEnumerable GetPlayersCloseToSpot(IGameLocation location, ushort radiusToCheck)
+		public static IEnumerable<GamePlayer> GetPlayersCloseToSpot(IGameLocation location, ushort radiusToCheck)
 		{
 			return GetPlayersCloseToSpot(location.RegionID, location.X, location.Y, location.Z, radiusToCheck, false);
 		}
@@ -2120,7 +2126,7 @@ namespace DOL.GS
 		/// <param name="point">the 3D point to search from</param>
 		/// <param name="radiusToCheck">Radius to sarch for GameClients</param>
 		/// <returns>IEnumerator that can be used to go through all players</returns>
-		public static IEnumerable GetPlayersCloseToSpot(ushort regionid, IPoint3D point, ushort radiusToCheck)
+		public static IEnumerable<GamePlayer> GetPlayersCloseToSpot(ushort regionid, IPoint3D point, ushort radiusToCheck)
 		{
 			return GetPlayersCloseToSpot(regionid, point.X, point.Y, point.Z, radiusToCheck, false);
 		}
@@ -2135,7 +2141,7 @@ namespace DOL.GS
 		/// <param name="z">Z inside region</param>
 		/// <param name="radiusToCheck">Radius to sarch for GameClients</param>
 		/// <returns>IEnumerator that can be used to go through all players</returns>
-		public static IEnumerable GetPlayersCloseToSpot(ushort regionid, int x, int y, int z, ushort radiusToCheck)
+		public static IEnumerable<GamePlayer> GetPlayersCloseToSpot(ushort regionid, int x, int y, int z, ushort radiusToCheck)
 		{
 			return GetPlayersCloseToSpot(regionid, x, y, z, radiusToCheck, false);
 		}
@@ -2151,11 +2157,11 @@ namespace DOL.GS
 		/// <param name="radiusToCheck">Radius to sarch for GameNPCs</param>
 		/// <param name="withDistance">Wether or not to return the objects with distance</param>
 		/// <returns>IEnumerator that can be used to go through all NPCs</returns>
-		public static IEnumerable GetNPCsCloseToSpot(ushort regionid, int x, int y, int z, ushort radiusToCheck, bool withDistance)
+		public static IEnumerable<GameNPC> GetNPCsCloseToSpot(ushort regionid, int x, int y, int z, ushort radiusToCheck, bool withDistance)
 		{
 			Region reg = GetRegion(regionid);
 			if (reg == null)
-				return new Region.EmptyEnumerator();
+				return new Region.EmptyEnumerator().Cast<GameNPC>();
 			return reg.GetNPCsInRadius(x, y, z, radiusToCheck, withDistance, false);
 		}
 
@@ -2169,7 +2175,7 @@ namespace DOL.GS
 		/// <param name="z">Z inside region</param>
 		/// <param name="radiusToCheck">Radius to sarch for GameNPCs</param>
 		/// <returns>IEnumerator that can be used to go through all NPCs</returns>
-		public static IEnumerable GetNPCsCloseToSpot(ushort regionid, int x, int y, int z, ushort radiusToCheck)
+		public static IEnumerable<GameNPC> GetNPCsCloseToSpot(ushort regionid, int x, int y, int z, ushort radiusToCheck)
 		{
 			return GetNPCsCloseToSpot(regionid, x, y, z, radiusToCheck, false);
 		}
@@ -2185,11 +2191,11 @@ namespace DOL.GS
 		/// <param name="radiusToCheck">Radius to sarch for GameItems</param>
 		/// <param name="withDistance">Wether or not to return the objects with distance</param>
 		/// <returns>IEnumerator that can be used to go through all items</returns>
-		public static IEnumerable GetItemsCloseToSpot(ushort regionid, int x, int y, int z, ushort radiusToCheck, bool withDistance)
+		public static IEnumerable<GameStaticItem> GetItemsCloseToSpot(ushort regionid, int x, int y, int z, ushort radiusToCheck, bool withDistance)
 		{
 			Region reg = GetRegion(regionid);
 			if (reg == null)
-				return new Region.EmptyEnumerator();
+				return new Region.EmptyEnumerator().Cast<GameStaticItem>();
 
 			return reg.GetItemsInRadius(x, y, z, radiusToCheck, withDistance);
 		}
@@ -2238,9 +2244,9 @@ namespace DOL.GS
 		/// <summary>
 		/// Stores the region Data parsed from the regions xml file.
 		/// </summary>
-		private static Hashtable m_regionData;
+		private static Dictionary<ushort, RegionData> m_regionData;
 
-		public static Hashtable RegionData
+		public static Dictionary<ushort, RegionData> RegionData
 		{
 			get { return m_regionData; }
 		}
@@ -2335,7 +2341,7 @@ namespace DOL.GS
 
 			//I'm welcome to suggestions on how to improve this
 			//              -Dinberg.
-			lock (m_regions.SyncRoot)
+			lock (LockObject)
 			{
 				if (!RequestedAnID)
 				{
@@ -2396,7 +2402,7 @@ namespace DOL.GS
 			foreach (ZoneData dat in list)
 			{
 				//we need to get an id for each one.
-				lock (m_zones.SyncRoot)
+				lock (LockObject)
 				{
 					while (m_zones.ContainsKey(zoneID))
 						zoneID++;
@@ -2422,13 +2428,13 @@ namespace DOL.GS
 		public static void RemoveInstance(BaseInstance instance)
 		{
 			//Remove the region
-			lock (m_regions.SyncRoot)
+			lock (LockObject)
 			{
 				m_regions.Remove(instance.ID);
 			}
 
 			//Remove zones
-			lock (m_zones.SyncRoot)
+			lock (LockObject)
 			{
 				foreach (Zone zn in instance.Zones)
 				{

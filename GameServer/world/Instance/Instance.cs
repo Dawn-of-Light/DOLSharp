@@ -64,7 +64,8 @@ namespace DOL.GS
 		{
 			m_zoneSkinMap.Clear();
 
-			foreach (IArea area in (Areas.Clone() as ArrayList))
+			List<IArea> areas = new List<IArea>(Areas);
+			foreach (IArea area in areas)
 			{
 				RemoveArea(area);
 			}
@@ -197,10 +198,10 @@ namespace DOL.GS
 		/// <param name="p"></param>
 		/// <param name="checkZ"></param>
 		/// <returns></returns>
-		public override IList GetAreasOfZone(Zone zone, IPoint3D p, bool checkZ)
+		public override List<IArea> GetAreasOfZone(Zone zone, IPoint3D p, bool checkZ)
 		{
 			Zone checkZone = zone;
-			IList areas = new ArrayList();
+			List<IArea> areas = new List<IArea>();
 
 			if (checkZone == null)
 			{
@@ -217,13 +218,13 @@ namespace DOL.GS
 
 			if (zoneIndex >= 0)
 			{
-				lock (m_Areas.SyncRoot)
+				lock (AreasLock)
 				{
 					try
 					{
 						for (int i = 0; i < m_ZoneAreasCount[zoneIndex]; i++)
 						{
-							IArea area = (IArea)m_Areas[m_ZoneAreas[zoneIndex][i]];
+							IArea area = m_Areas[m_ZoneAreas[zoneIndex][i]];
 							if (area.IsContaining(p, checkZ))
 							{
 								areas.Add(area);
@@ -240,10 +241,10 @@ namespace DOL.GS
 			return areas;
 		}
 
-		public override IList GetAreasOfZone(Zone zone, int x, int y, int z)
+		public override List<IArea> GetAreasOfZone(Zone zone, int x, int y, int z)
 		{
 			Zone checkZone = zone;
-			IList areas = new ArrayList();
+			List<IArea> areas = new List<IArea>();
 
 			if (checkZone == null)
 			{
@@ -260,13 +261,13 @@ namespace DOL.GS
 
 			if (zoneIndex >= 0)
 			{
-				lock (m_Areas.SyncRoot)
+				lock (AreasLock)
 				{
 					try
 					{
 						for (int i = 0; i < m_ZoneAreasCount[zoneIndex]; i++)
 						{
-							IArea area = (IArea)m_Areas[m_ZoneAreas[zoneIndex][i]];
+							IArea area = m_Areas[m_ZoneAreas[zoneIndex][i]];
 							if (area.IsContaining(x, y, z))
 								areas.Add(area);
 						}
@@ -294,7 +295,7 @@ namespace DOL.GS
 		{
 			double level = 0;
 			double count = 0;
-			foreach (GameObject obj in Objects)
+			foreach (GameObject obj in Objects.Values)
 			{
 				if (obj == null)
 					continue;

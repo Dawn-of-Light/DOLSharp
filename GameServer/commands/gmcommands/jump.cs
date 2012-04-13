@@ -118,9 +118,9 @@ namespace DOL.GS.Commands
 
 					if (clientc == null)
 					{
-						GameNPC[] npcs = WorldMgr.GetNPCsByName(args[2], eRealm.None);
+						List<GameNPC> npcs = WorldMgr.GetNPCsByName(args[2], eRealm.None);
 
-						if (npcs.Length > 0)
+						if (npcs.Count > 0)
 						{
 							// for multiple npc's first try to jump to the npc in the players current region
 							GameNPC jumpTarget = npcs[0];
@@ -175,9 +175,9 @@ namespace DOL.GS.Commands
 						int realm = 0;
 						int.TryParse(args[3], out realm);
 
-						GameNPC[] npcs = WorldMgr.GetNPCsByName(args[2], (eRealm)realm);
+						List<GameNPC> npcs = WorldMgr.GetNPCsByName(args[2], (eRealm)realm);
 
-						if (npcs.Length > 0)
+						if (npcs.Count > 0)
 						{
 							// for multiple npc's first try to jump to the npc in the players current region
 							GameNPC jumpTarget = npcs[0];

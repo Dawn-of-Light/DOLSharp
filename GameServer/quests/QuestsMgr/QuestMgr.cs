@@ -151,11 +151,11 @@ namespace DOL.GS.Quests
                 // TODO: Dirty Hack this should be done better
 				Mob mob = GameServer.Database.SelectObject<Mob>("MobID='" + GameServer.Database.Escape(tempID) + "' OR Name='" + GameServer.Database.Escape(tempID) + "'");
 
-                GameNPC[] livings = WorldMgr.GetNPCsByName(mob.Name,(eRealm) mob.Realm);
+                List<GameNPC> livings = WorldMgr.GetNPCsByName(mob.Name,(eRealm) mob.Realm);
 
-                if (livings.Length == 1)
+                if (livings.Count == 1)
                     living = livings[0];
-                else if (livings.Length > 1)
+                else if (livings.Count > 1)
                 {
                     if (log.IsWarnEnabled)
                         log.Warn("Found more than one living with name :" + tempID + " in " + (lookupDB ? "Database" : "WorldMgr"));
@@ -214,13 +214,13 @@ namespace DOL.GS.Quests
 
                 Mob mob = GameServer.Database.SelectObject<Mob>("MobID='" + GameServer.Database.Escape(tempID) + "' OR Name='" + GameServer.Database.Escape(tempID) + "'");
 
-				GameNPC[] npcs = WorldMgr.GetNPCsByName(mob.Name,(eRealm) mob.Realm);
+				List<GameNPC> npcs = WorldMgr.GetNPCsByName(mob.Name,(eRealm) mob.Realm);
 
-                if (npcs.Length == 1)
+                if (npcs.Count == 1)
                 {
                     npc = npcs[0];
                 }
-                else if (npcs.Length > 1)
+                else if (npcs.Count > 1)
                 {
                     if (log.IsWarnEnabled)
                         log.Warn("Found more than one npc with id or name:" + tempID + " in WorldMgr");

@@ -17,7 +17,7 @@
  *
  */
 using System;
-using System.Collections;
+//using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
@@ -27,6 +27,7 @@ using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.Keeps;
 using DOL.GS.Utils;
+using System.Linq;
 using DOL.GS.ServerProperties;
 using log4net;
 
@@ -55,13 +56,28 @@ namespace DOL.GS
 		/// <summary>
 		/// This holds all objects inside this region. Their index = their id!
 		/// </summary>
-		protected GameObject[] m_objects;
+		protected Dictionary<ushort, GameObject> m_objects;
 
 
 		/// <summary>
 		/// Object to lock when changing objects in the array
 		/// </summary>
-		public readonly object ObjectsSyncLock = new object();
+		public readonly object ObjectsLock = new object();
+
+		/// <summary>
+		/// Object to lock when changing areas
+		/// </summary>
+		public readonly object AreasLock = new object();
+
+		/// <summary>
+		/// Object to lock when changing zones
+		/// </summary>
+		public readonly object ZonesLock = new object();
+
+		/// <summary>
+		/// Object to lock when changing areas
+		/// </summary>
+		public readonly object GravestonesLock = new object();
 
 		/// <summary>
 		/// This holds a counter with the absolute count of all objects that are actually in this region
@@ -81,24 +97,25 @@ namespace DOL.GS
 		/// Its used to know which slots in region object array are free and what allocated
 		/// This is used to accelerate inserts a lot
 		/// </summary>
-		protected uint[] m_objectsAllocatedSlots;
+		//protected ushort[] m_objectsAllocatedSlots;
+		protected bool[] m_objectsSlots = new bool[ushort.MaxValue];
 
 		/// <summary>
 		/// This holds the index of a possible next object slot
 		/// but needs further checks (basically its lastaddedobjectIndex+1)
 		/// </summary>
-		protected int m_nextObjectSlot;
+		protected ushort m_nextObjectSlot;
 
 		/// <summary>
 		/// This holds the gravestones in this region for fast access
 		/// Player unique id(string) -> GameGraveStone
 		/// </summary>
-		protected readonly Hashtable m_graveStones;
+		protected readonly Dictionary<string, GameGravestone> m_graveStones;
 
 		/// <summary>
 		/// Holds all the Zones inside this Region
 		/// </summary>
-		protected readonly ArrayList m_Zones;
+		protected readonly List<Zone> m_Zones;
 
 		/// <summary>
 		/// Holds all the Areas inside this Region
@@ -106,9 +123,9 @@ namespace DOL.GS
 		/// Areas can be registed to a reagion via AddArea
 		/// and events will be thrown if players/npcs/objects enter leave area
 		/// </summary>
-		protected readonly ArrayList m_Areas;
+		protected readonly List<IArea> m_Areas;
 
-		public ArrayList Areas
+		public List<IArea> Areas
 		{
 			get { return m_Areas; }
 		}
@@ -214,14 +231,16 @@ namespace DOL.GS
 		public Region(GameTimer.TimeManager time, RegionData data)
 		{
 			m_regionData = data;
-			m_objects = new GameObject[0];
+			m_objects = new Dictionary<ushort, GameObject>(0);
 			m_objectsInRegion = 0;
-			m_nextObjectSlot = 0;
-			m_objectsAllocatedSlots = new uint[0];
+			m_objectsSlots[0] = true; //0 id denied
+			m_nextObjectSlot = 1;
+			//m_nextObjectSlot = 0;
+			//m_objectsAllocatedSlots = new ushort[0];
 
-			m_graveStones = new Hashtable();
+			m_graveStones = new Dictionary<string, GameGravestone>();
 
-			m_Zones = new ArrayList(1);
+			m_Zones = new List<Zone>(1);
 			m_ZoneAreas = new ushort[64][];
 			m_ZoneAreasCount = new ushort[64];
 			for (int i = 0; i < 64; i++)
@@ -229,7 +248,7 @@ namespace DOL.GS
 				m_ZoneAreas[i] = new ushort[AbstractArea.MAX_AREAS_PER_ZONE];
 			}
 
-			m_Areas = new ArrayList(1);
+			m_Areas = new List<IArea>(1);
 
 			m_timeManager = time;
 
@@ -282,7 +301,7 @@ namespace DOL.GS
 		public virtual void OnCollapse()
 		{
 			//Delete objects
-			foreach (GameObject obj in m_objects)
+			foreach (GameObject obj in m_objects.Values)
 			{
 				if (obj != null)
 				{
@@ -455,7 +474,7 @@ namespace DOL.GS
 		/// <summary>
 		/// An ArrayList of all Zones within this Region
 		/// </summary>
-		public ArrayList Zones
+		public List<Zone> Zones
 		{
 			get { return m_Zones; }
 		}
@@ -463,7 +482,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Returns the object array of this region
 		/// </summary>
-		public GameObject[] Objects
+		public Dictionary <ushort, GameObject> Objects
 		{
 			get { return m_objects; }
 		}
@@ -654,29 +673,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Reallocates objects array with given size
-		/// </summary>
-		/// <param name="count">The size of new objects array, limited by MAXOBJECTS</param>
-		public virtual void PreAllocateRegionSpace(int count)
-		{
-			if (count > Properties.REGION_MAX_OBJECTS)
-				count = Properties.REGION_MAX_OBJECTS;
-			lock (ObjectsSyncLock)
-			{
-				if (m_objects.Length > count) return;
-				GameObject[] newObj = new GameObject[count];
-				Array.Copy(m_objects, newObj, m_objects.Length);
-				if (count / 32 + 1 > m_objectsAllocatedSlots.Length)
-				{
-					uint[] slotarray = new uint[count / 32 + 1];
-					Array.Copy(m_objectsAllocatedSlots, slotarray, m_objectsAllocatedSlots.Length);
-					m_objectsAllocatedSlots = slotarray;
-				}
-				m_objects = newObj;
-			}
-		}
-
-		/// <summary>
 		/// Loads the region from database
 		/// </summary>
 		/// <param name="mobObjs"></param>
@@ -693,7 +689,6 @@ namespace DOL.GS
 			var staticObjs = GameServer.Database.SelectObjects<WorldObject>("Region = " + ID);
 			var bindPoints = GameServer.Database.SelectObjects<BindPoint>("Region = " + ID);
 			int count = mobObjs.Length + staticObjs.Count;
-			if (count > 0) PreAllocateRegionSpace(count + 100);
 			int myItemCount = staticObjs.Count;
 			int myMobCount = 0;
 			int myMerchantCount = 0;
@@ -874,7 +869,6 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		internal bool AddObject(GameObject obj)
 		{
-			//Thread.Sleep(10000);
 			Zone zone = GetZone(obj.X, obj.Y);
 			if (zone == null)
 			{
@@ -883,11 +877,11 @@ namespace DOL.GS
 			}
 
 			//Assign a new id
-			lock (ObjectsSyncLock)
+			lock (ObjectsLock)
 			{
-				if (obj.ObjectID != -1)
+				if (obj.ObjectID != 0)
 				{
-					if (obj.ObjectID < m_objects.Length && obj == m_objects[obj.ObjectID - 1])
+					if (m_objects.ContainsKey(obj.ObjectID) && m_objects[obj.ObjectID] == obj)
 					{
 						log.WarnFormat("Object is already in the region ({0})", obj.ToString());
 						return false;
@@ -896,145 +890,43 @@ namespace DOL.GS
 					return false;
 				}
 
-				GameObject[] objectsRef = m_objects;
-
-				//*** optimized object management for memory saving primary but keeping it very fast - Blue ***
-
-				// find first free slot for the object
-				int objID = m_nextObjectSlot;
-				if (objID >= m_objects.Length || m_objects[objID] != null)
+				ushort objID = m_nextObjectSlot;
+				if(m_objectsSlots[objID])
 				{
-
-					// we are at array end, are there any holes left?
-					if (m_objects.Length > m_objectsInRegion)
-					{
-						// yes there are some places left in current object array, try to find them
-						// by using the bit array (can check 32 slots at once!)
-
-						int i = m_objects.Length / 32;
-						// INVARIANT: i * 32 is always lower or equal to m_objects.Length (integer division property)
-						if (i * 32 == m_objects.Length)
-						{
-							i -= 1;
-						}
-
-						bool found = false;
-						objID = -1;
-
-						while (!found && (i >= 0))
-						{
-							if (m_objectsAllocatedSlots[i] != 0xffffffff)
-							{
-								// we found a free slot
-								// => search for exact place
-
-								int currentIndex = i * 32;
-								int upperBound = (i + 1) * 32;
-								while (!found && (currentIndex < m_objects.Length) && (currentIndex < upperBound))
-								{
-									if (m_objects[currentIndex] == null)
-									{
-										found = true;
-										objID = currentIndex;
-									}
-
-									currentIndex++;
-								}
-
-								// INVARIANT: at this point, found must be true (otherwise the underlying data structure is corrupt)
-							}
-
-							i--;
-						}
-					}
-					else
-					{ // our array is full, we must resize now to fit new objects
-
-						if (objectsRef.Length == 0)
-						{
-
-							// there is no array yet, so set it to a minimum at least
-							objectsRef = new GameObject[MINIMUMSIZE];
-							Array.Copy(m_objects, objectsRef, m_objects.Length);
-							objID = 0;
-
-						}
-						else if (objectsRef.Length >= Properties.REGION_MAX_OBJECTS)
-						{
-
-							// no available slot
-							if (log.IsErrorEnabled)
-								log.Error("Can't add new object - region '" + Description + "' is full. (object: " + obj.ToString() + ")");
-							return false;
-
-						}
-						else
-						{
-
-							// we need to add a certain amount to grow
-							int size = (int)(m_objects.Length * 1.20);
-							if (size < m_objects.Length + 256)
-								size = m_objects.Length + 256;
-							if (size > Properties.REGION_MAX_OBJECTS)
-								size = Properties.REGION_MAX_OBJECTS;
-							objectsRef = new GameObject[size]; // grow the array by 20%, at least 256
-							Array.Copy(m_objects, objectsRef, m_objects.Length);
-							objID = m_objects.Length; // new object adds right behind the last object in old array
-
-						}
-						// resize the bitarray as well
-						int diff = objectsRef.Length / 32 - m_objectsAllocatedSlots.Length;
-						if (diff >= 0)
-						{
-							uint[] newBitArray = new uint[Math.Max(m_objectsAllocatedSlots.Length + diff + 50, 100)];	// add at least 100 integers, makes it resize less often, serves 3200 new objects, only 400 bytes
-							Array.Copy(m_objectsAllocatedSlots, newBitArray, m_objectsAllocatedSlots.Length);
-							m_objectsAllocatedSlots = newBitArray;
-						}
-					}
+					do { objID++; }
+					while (m_objectsSlots[objID] && objID != m_nextObjectSlot); //if objID==m_nextObjectSlot means we did a full loop of the ushort
+					if (m_objectsSlots[objID]) objID = 0; //means it's full
 				}
-
-				if (objID < 0)
+				if (objID == 0)
 				{
-					log.Warn("There was an unexpected problem while adding " + obj.Name + " to " + Description);
+					log.WarnFormat("Zone seems full to add a new object ({0})", obj.ToString());
 					return false;
 				}
+				
+				obj.ObjectID = objID;
+				m_objectsSlots[objID] = true;
+				m_nextObjectSlot++;
+				m_objects.Add(objID, obj);
+				Thread.MemoryBarrier();
 
-				// if we found a slot add the object
-				GameObject oidObj = objectsRef[objID];
-				if (oidObj == null)
+				if (obj is GamePlayer)
 				{
-					objectsRef[objID] = obj;
-					m_nextObjectSlot = objID + 1;
-					m_objectsInRegion++;
-					obj.ObjectID = objID + 1;
-					m_objectsAllocatedSlots[objID / 32] |= (uint)1 << (objID % 32);
-					Thread.MemoryBarrier();
-					m_objects = objectsRef;
-
-					if (obj is GamePlayer)
-					{
-						++m_numPlayer;
-					}
-					else
-					{
-						if (obj is GameGravestone)
-						{
-							lock (m_graveStones.SyncRoot)
-							{
-								m_graveStones[obj.InternalID] = obj;
-							}
-						}
-					}
-
-					return true;
+					++m_numPlayer;
 				}
 				else
 				{
-					// no available slot
-					if (log.IsErrorEnabled)
-						log.Error("Can't add new object - region '" + Description + "' (object: " + obj.ToString() + "); OID is used by " + oidObj.ToString());
-					return false;
+					if (obj is GameGravestone)
+					{
+						lock (GravestonesLock)
+						{
+							if (!m_graveStones.ContainsKey(obj.InternalID))
+								m_graveStones.Add(obj.InternalID, obj as GameGravestone);
+							else m_graveStones[obj.InternalID] = obj as GameGravestone;
+						}
+					}
 				}
+
+				return true;
 			}
 		}
 
@@ -1044,14 +936,8 @@ namespace DOL.GS
 		/// <param name="obj">A GameObject to be removed from the region</param>
 		internal void RemoveObject(GameObject obj)
 		{
-			lock (ObjectsSyncLock)
+			lock (ObjectsLock)
 			{
-				int index = obj.ObjectID - 1;
-				if (index < 0)
-				{
-					return;
-				}
-
 				if (obj is GamePlayer)
 				{
 					--m_numPlayer;
@@ -1060,38 +946,30 @@ namespace DOL.GS
 				{
 					if (obj is GameGravestone)
 					{
-						lock (m_graveStones.SyncRoot)
+						lock (GravestonesLock)
 						{
-							m_graveStones.Remove(obj.InternalID);
+							if (m_graveStones.ContainsKey(obj.InternalID))
+								m_graveStones.Remove(obj.InternalID);
 						}
 					}
 				}
 
-				GameObject inPlace = m_objects[obj.ObjectID - 1];
-				if (inPlace == null)
+				if (!m_objectsSlots[obj.ObjectID])
 				{
-					log.Error("RemoveObject conflict! OID" + obj.ObjectID + " " + obj.Name + "(" + obj.CurrentRegionID + ") but there was no object at that slot");
-					log.Error(new StackTrace().ToString());
-					return;
-				}
-				if (obj != inPlace)
-				{
-					log.Error("RemoveObject conflict! OID" + obj.ObjectID + " " + obj.Name + "(" + obj.CurrentRegionID + ") but there was another object already " + inPlace.Name + " region:" + inPlace.CurrentRegionID + " state:" + inPlace.ObjectState);
-					log.Error(new StackTrace().ToString());
+					log.Error("RemoveObject conflict! OID" + obj.ObjectID + " " + obj.Name + "(" + obj.CurrentRegionID + ") but there was no object at that slot!\n" + Environment.StackTrace);
 					return;
 				}
 
-				if (m_objects[index] != obj)
+				GameObject current = m_objects[obj.ObjectID];
+				if (current != obj)
 				{
-					log.Error("Object OID is already used by another object! (used by:" + m_objects[index].ToString() + ")");
+					log.Error("RemoveObject conflict! OID" + obj.ObjectID + " " + obj.Name + "(" + obj.CurrentRegionID + ") but there was another object already " + current.Name + " region:" + current.CurrentRegionID + " state:" + current.ObjectState + "\n" + Environment.StackTrace);
+					return;
 				}
-				else
-				{
-					m_objects[index] = null;
-					m_nextObjectSlot = index;
-					m_objectsAllocatedSlots[index / 32] &= ~(uint)(1 << (index % 32));
-				}
-				obj.ObjectID = -1; // invalidate object id
+				
+				m_objects.Remove(obj.ObjectID);
+				m_objectsSlots[obj.ObjectID] = false;
+				obj.ObjectID = 0;
 				m_objectsInRegion--;
 			}
 		}
@@ -1103,9 +981,11 @@ namespace DOL.GS
 		/// <returns>the found gravestone or null</returns>
 		public GameGravestone FindGraveStone(GamePlayer player)
 		{
-			lock (m_graveStones.SyncRoot)
+			lock (GravestonesLock)
 			{
-				return (GameGravestone)m_graveStones[player.InternalID];
+				if (m_graveStones.ContainsKey(player.InternalID))
+					return m_graveStones[player.InternalID];
+				else return null;
 			}
 		}
 
@@ -1116,9 +996,9 @@ namespace DOL.GS
 		/// <returns>The object with the specified ID, null if it didn't exist</returns>
 		public GameObject GetObject(ushort id)
 		{
-			if (m_objects == null || id <= 0 || id > m_objects.Length)
+			if (m_objects == null || !m_objects.ContainsKey(id))
 				return null;
-			return m_objects[id - 1];
+			return m_objects[id];
 		}
 
 		/// <summary>
@@ -1225,7 +1105,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual IArea AddArea(IArea area)
 		{
-			lock (m_Areas.SyncRoot)
+			lock (AreasLock)
 			{
 				m_Areas.Add(area);
 				area.ID = (ushort)(m_Areas.Count - 1);
@@ -1248,7 +1128,7 @@ namespace DOL.GS
 		/// <param name="area"></param>
 		public virtual void RemoveArea(IArea area)
 		{
-			lock (m_Areas.SyncRoot)
+			lock (AreasLock)
 			{
 				m_Areas.Remove(area);
 
@@ -1278,7 +1158,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="point"></param>
 		/// <returns></returns>
-		public virtual IList GetAreasOfSpot(IPoint3D point)
+		public virtual List<IArea> GetAreasOfSpot(IPoint3D point)
 		{
 			Zone zone = GetZone(point.X, point.Y);
 			return GetAreasOfZone(zone, point);
@@ -1292,14 +1172,14 @@ namespace DOL.GS
 		/// <param name="y"></param>
 		/// <param name="z"></param>
 		/// <returns></returns>
-		public virtual IList GetAreasOfSpot(int x, int y, int z)
+		public virtual List<IArea> GetAreasOfSpot(int x, int y, int z)
 		{
 			Zone zone = GetZone(x, y);
 			Point3D p = new Point3D(x, y, z);
 			return GetAreasOfZone(zone, p);
 		}
 
-		public virtual IList GetAreasOfZone(Zone zone, IPoint3D p)
+		public virtual List<IArea> GetAreasOfZone(Zone zone, IPoint3D p)
 		{
 			return GetAreasOfZone(zone, p, true);
 		}
@@ -1311,12 +1191,12 @@ namespace DOL.GS
 		/// <param name="p"></param>
 		/// <param name="checkZ"></param>
 		/// <returns></returns>
-		public virtual IList GetAreasOfZone(Zone zone, IPoint3D p, bool checkZ)
+		public virtual List<IArea> GetAreasOfZone(Zone zone, IPoint3D p, bool checkZ)
 		{
-			lock (m_Areas.SyncRoot)
+			lock (ObjectsLock)
 			{
 				int zoneIndex = Zones.IndexOf(zone);
-				IList areas = new ArrayList();
+				List<IArea> areas = new List<IArea>();
 
 				if (zoneIndex >= 0)
 				{
@@ -1324,7 +1204,7 @@ namespace DOL.GS
 					{
 						for (int i = 0; i < m_ZoneAreasCount[zoneIndex]; i++)
 						{
-							IArea area = (IArea)m_Areas[m_ZoneAreas[zoneIndex][i]];
+							IArea area = m_Areas[m_ZoneAreas[zoneIndex][i]];
 							if (area.IsContaining(p, checkZ))
 							{
 								areas.Add(area);
@@ -1341,12 +1221,12 @@ namespace DOL.GS
 			}
 		}
 
-		public virtual IList GetAreasOfZone(Zone zone, int x, int y, int z)
+		public virtual List<IArea> GetAreasOfZone(Zone zone, int x, int y, int z)
 		{
-			lock (m_Areas.SyncRoot)
+			lock (AreasLock)
 			{
 				int zoneIndex = Zones.IndexOf(zone);
-				IList areas = new ArrayList();
+				List<IArea> areas = new List<IArea>();
 
 				if (zoneIndex >= 0)
 				{
@@ -1354,7 +1234,7 @@ namespace DOL.GS
 					{
 						for (int i = 0; i < m_ZoneAreasCount[zoneIndex]; i++)
 						{
-							IArea area = (IArea)m_Areas[m_ZoneAreas[zoneIndex][i]];
+							IArea area = m_Areas[m_ZoneAreas[zoneIndex][i]];
 							if (area.IsContaining(x, y, z))
 								areas.Add(area);
 						}
@@ -1408,14 +1288,14 @@ namespace DOL.GS
 		/// <param name="radius">radius around origin</param>
 		/// <param name="withDistance">Get an ObjectDistance enumerator</param>
 		/// <returns>IEnumerable to be used with foreach</returns>
-		protected IEnumerable GetInRadius(Zone.eGameObjectType type, int x, int y, int z, ushort radius, bool withDistance, bool ignoreZ)
+		protected IEnumerable<object> GetInRadius(Zone.eGameObjectType type, int x, int y, int z, ushort radius, bool withDistance, bool ignoreZ)
 		{
 			// check if we are around borders of a zone
 			Zone startingZone = GetZone(x, y);
 
 			if (startingZone != null)
 			{
-				ArrayList res = startingZone.GetObjectsInRadius(type, x, y, z, radius, new ArrayList(), ignoreZ);
+				List<GameObject> res = startingZone.GetObjectsInRadius(type, x, y, z, radius, new List<GameObject>(), ignoreZ);
 
 				uint sqRadius = (uint)radius * radius;
 
@@ -1425,7 +1305,7 @@ namespace DOL.GS
 				Zone currentZone = null;
 				for (int i = 0; i < sz; ++i)
 				{
-					currentZone = (Zone)m_Zones[i];
+					currentZone = m_Zones[i];
 					if ((currentZone != startingZone)
 					    && (currentZone.TotalNumberOfObjects > 0)
 					    && CheckShortestDistance(currentZone, x, y, sqRadius))
@@ -1434,7 +1314,7 @@ namespace DOL.GS
 					}
 				}
 				//Return required enumerator
-				IEnumerable tmp = null;
+				IEnumerable<object> tmp = null;
 				if (withDistance)
 				{
 					switch (type)
@@ -1522,9 +1402,9 @@ namespace DOL.GS
 		/// <param name="radius">radius around origin</param>
 		/// <param name="withDistance">Get an ObjectDistance enumerator</param>
 		/// <returns>IEnumerable to be used with foreach</returns>
-		public IEnumerable GetItemsInRadius(int x, int y, int z, ushort radius, bool withDistance)
+		public IEnumerable<GameStaticItem> GetItemsInRadius(int x, int y, int z, ushort radius, bool withDistance)
 		{
-			return GetInRadius(Zone.eGameObjectType.ITEM, x, y, z, radius, withDistance, false);
+			return GetInRadius(Zone.eGameObjectType.ITEM, x, y, z, radius, withDistance, false).Cast<GameStaticItem>();
 		}
 
 		/// <summary>
@@ -1536,9 +1416,9 @@ namespace DOL.GS
 		/// <param name="radius">radius around origin</param>
 		/// <param name="withDistance">Get an ObjectDistance enumerator</param>
 		/// <returns>IEnumerable to be used with foreach</returns>
-		public IEnumerable GetNPCsInRadius(int x, int y, int z, ushort radius, bool withDistance, bool ignoreZ)
+		public IEnumerable<GameNPC> GetNPCsInRadius(int x, int y, int z, ushort radius, bool withDistance, bool ignoreZ)
 		{
-			return GetInRadius(Zone.eGameObjectType.NPC, x, y, z, radius, withDistance, ignoreZ);
+			return GetInRadius(Zone.eGameObjectType.NPC, x, y, z, radius, withDistance, ignoreZ).Cast<GameNPC>();
 		}
 
 		/// <summary>
@@ -1550,9 +1430,9 @@ namespace DOL.GS
 		/// <param name="radius">radius around origin</param>
 		/// <param name="withDistance">Get an ObjectDistance enumerator</param>
 		/// <returns>IEnumerable to be used with foreach</returns>
-		public IEnumerable GetPlayersInRadius(int x, int y, int z, ushort radius, bool withDistance, bool ignoreZ)
+		public IEnumerable<GamePlayer> GetPlayersInRadius(int x, int y, int z, ushort radius, bool withDistance, bool ignoreZ)
 		{
-			return GetInRadius(Zone.eGameObjectType.PLAYER, x, y, z, radius, withDistance, ignoreZ);
+			return GetInRadius(Zone.eGameObjectType.PLAYER, x, y, z, radius, withDistance, ignoreZ).Cast<GamePlayer>();
 		}
 
 		/// <summary>
@@ -1564,9 +1444,9 @@ namespace DOL.GS
 		/// <param name="radius">radius around origin</param>
 		/// <param name="withDistance">Get an ObjectDistance enumerator</param>
 		/// <returns>IEnumerable to be used with foreach</returns>
-		public virtual IEnumerable GetDoorsInRadius(int x, int y, int z, ushort radius, bool withDistance)
+		public virtual IEnumerable<GameDoor> GetDoorsInRadius(int x, int y, int z, ushort radius, bool withDistance)
 		{
-			return GetInRadius(Zone.eGameObjectType.DOOR, x, y, z, radius, withDistance, false);
+			return GetInRadius(Zone.eGameObjectType.DOOR, x, y, z, radius, withDistance, false).Cast<GameDoor>();
 		}
 
 		#endregion
@@ -1579,13 +1459,18 @@ namespace DOL.GS
 		/// An empty enumerator returned when no objects are found
 		/// close to a certain range
 		/// </summary>
-		public class EmptyEnumerator : IEnumerator, IEnumerable
+		public class EmptyEnumerator : IEnumerator<GameObject>, IEnumerable<GameObject>
 		{
 			/// <summary>
 			/// Implementation of the IEnumerable interface
 			/// </summary>
 			/// <returns>An Enumeration Interface of this class</returns>
-			public IEnumerator GetEnumerator()
+			public IEnumerator<GameObject> GetEnumerator()
+			{
+				return this;
+			}
+
+			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 			{
 				return this;
 			}
@@ -1604,7 +1489,12 @@ namespace DOL.GS
 			/// always returns null because it shouldn't be
 			/// called at all.
 			/// </summary>
-			public object Current
+			public GameObject Current
+			{
+				get { return null; }
+			}
+
+			object System.Collections.IEnumerator.Current
 			{
 				get { return null; }
 			}
@@ -1613,6 +1503,10 @@ namespace DOL.GS
 			/// Implementation of the IEnumerator interface
 			/// </summary>
 			public void Reset()
+			{
+			}
+
+			public void Dispose()
 			{
 			}
 		}
@@ -1626,36 +1520,42 @@ namespace DOL.GS
 		/// certain objects and do some testing before returning an
 		/// object.
 		/// </summary>
-		public class ObjectEnumerator : IEnumerator, IEnumerable
+		public class ObjectEnumerator : IEnumerator<object>, IEnumerable<object>
 		{
 			/// <summary>
 			/// Counter to the current object
 			/// </summary>
 			protected int m_current = -1;
 
-			protected GameObject[] elements = null;
+			protected List<GameObject> elements = null;
 			//protected ArrayList elements = null;
 
 			protected object m_currentObj = null;
 
 			protected int m_count;
 
-			public IEnumerator GetEnumerator()
+			public IEnumerator<object> GetEnumerator()
 			{
 				return this;
 			}
 
-			public ObjectEnumerator(ArrayList objectSet)
+			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+			{
+				return this;
+			}
+
+			public ObjectEnumerator(List<GameObject> objectSet)
 			{
 				//objectSet.DumpInfo();
-				elements = new GameObject[objectSet.Count];
-				objectSet.CopyTo(elements);
-				m_count = elements.Length;
+				//elements = new GameObject[objectSet.Count];
+				//objectSet.CopyTo(elements);
+				elements = new List<GameObject>(objectSet);
+				m_count = elements.Count;
 			}
 
 
 			/// <summary>
-			/// Get the next GameObjcte from the zone subset created in constructor
+			/// Get the next GameObject from the zone subset created in constructor
 			/// and by restrictuing according distance
 			/// </summary>
 			/// <returns>The Next GameObject of this Enumerator</returns>
@@ -1690,6 +1590,11 @@ namespace DOL.GS
 				get { return m_currentObj; }
 			}
 
+			object System.Collections.IEnumerator.Current
+			{
+				get { return m_currentObj; }
+			}
+
 			/// <summary>
 			/// Resets the Enumerator
 			/// </summary>
@@ -1697,6 +1602,11 @@ namespace DOL.GS
 			{
 				m_currentObj = null;
 				m_current = -1;
+			}
+
+			public void Dispose()
+			{
+
 			}
 		}
 
@@ -1710,7 +1620,7 @@ namespace DOL.GS
 			protected int m_Y;
 			protected int m_Z;
 
-			public DistanceEnumerator(int x, int y, int z, ArrayList elements)
+			public DistanceEnumerator(int x, int y, int z, List<GameObject> elements)
 				: base(elements)
 			{
 				m_X = x;
@@ -1724,7 +1634,7 @@ namespace DOL.GS
 		/// </summary>
 		public class PlayerDistanceEnumerator : DistanceEnumerator
 		{
-			public PlayerDistanceEnumerator(int x, int y, int z, ArrayList elements)
+			public PlayerDistanceEnumerator(int x, int y, int z, List<GameObject> elements)
 				: base(x, y, z, elements)
 			{
 			}
@@ -1744,7 +1654,7 @@ namespace DOL.GS
 		/// </summary>
 		public class NPCDistanceEnumerator : DistanceEnumerator
 		{
-			public NPCDistanceEnumerator(int x, int y, int z, ArrayList elements)
+			public NPCDistanceEnumerator(int x, int y, int z, List<GameObject> elements)
 				: base(x, y, z, elements)
 			{
 			}
@@ -1764,7 +1674,7 @@ namespace DOL.GS
 		/// </summary>
 		public class ItemDistanceEnumerator : DistanceEnumerator
 		{
-			public ItemDistanceEnumerator(int x, int y, int z, ArrayList elements)
+			public ItemDistanceEnumerator(int x, int y, int z, List<GameObject> elements)
 				: base(x, y, z, elements)
 			{
 			}
@@ -1784,7 +1694,7 @@ namespace DOL.GS
 		/// </summary>
 		public class DoorDistanceEnumerator : DistanceEnumerator
 		{
-			public DoorDistanceEnumerator(int x, int y, int z, ArrayList elements)
+			public DoorDistanceEnumerator(int x, int y, int z, List<GameObject> elements)
 				: base(x, y, z, elements)
 			{
 			}
@@ -1807,11 +1717,11 @@ namespace DOL.GS
 
 		public void Relocate()
 		{
-			lock (m_Zones.SyncRoot)
+			lock (ZonesLock)
 			{
 				for (int i = 0; i < m_Zones.Count; i++)
 				{
-					((Zone)m_Zones[i]).Relocate(null);
+					m_Zones[i].Relocate(null);
 				}
 				m_lastRelocationTime = DateTime.Now.Ticks / (10 * 1000);
 			}
@@ -1823,6 +1733,18 @@ namespace DOL.GS
 	}
 
 	#region Helpers classes
+
+	public class ObjectDistEntry
+	{
+		public ObjectDistEntry(GameObject o, int distance)
+		{
+			Item = o;
+			Distance = distance;
+		}
+
+		public GameObject Item;
+		public int Distance;
+	}
 
 	/// <summary>
 	/// Holds a Object and it's distance towards the center

@@ -169,8 +169,8 @@ namespace DOL.GS.Quests.Atlantis
 
 			#region defineNPCs
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "ArtifactTurnInQuest.Init.ArtifactScholarFemale") + " Alaria", eRealm.Midgard);
-			if (npcs.Length == 0)
+			List<GameNPC> npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "ArtifactTurnInQuest.Init.ArtifactScholarFemale") + " Alaria", eRealm.Midgard);
+			if (npcs.Count == 0)
 			{
 				m_scholarAlaria = new ArtifactScholar();
 				m_scholarAlaria.Model = 226;
@@ -195,7 +195,7 @@ namespace DOL.GS.Quests.Atlantis
 				m_scholarAlaria = npcs[0] as ArtifactScholar;
 
 			npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "ArtifactTurnInQuest.Init.ArtifactScholarMale") + " Jarron", eRealm.Albion);
-			if (npcs.Length == 0)
+			if (npcs.Count == 0)
 			{
 				m_scholarJarron = new ArtifactScholar();
 				m_scholarJarron.Model = 50;
@@ -220,7 +220,7 @@ namespace DOL.GS.Quests.Atlantis
 				m_scholarJarron = npcs[0] as ArtifactScholar;
 
 			npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "ArtifactTurnInQuest.Init.ArtifactScholarMale") + " Elmer", eRealm.Hibernia);
-			if (npcs.Length == 0)
+			if (npcs.Count == 0)
 			{
 				m_scholarElmer = new ArtifactScholar();
 				m_scholarElmer.Model = 374;

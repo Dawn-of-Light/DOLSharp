@@ -3085,7 +3085,7 @@ namespace DOL.GS
 		/// that can change at any time
 		/// </summary>
 		/// <returns>list of Spec's</returns>
-		public virtual IList GetSpecList()
+		public virtual List<Specialization> GetSpecList()
 		{
 			return m_specList;
 		}

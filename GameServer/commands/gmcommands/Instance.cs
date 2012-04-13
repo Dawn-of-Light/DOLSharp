@@ -333,7 +333,7 @@ namespace DOL.GS.Commands
 
 							if (success)
 							{
-								SendMessage(client, "Welcome to Instance ID " + newInstance.ID + ", Skin: " + newInstance.Skin + ", with " + newInstance.Zones.Count + " zones and " + newInstance.Objects.Length + " objects inside the region!");
+								SendMessage(client, "Welcome to Instance ID " + newInstance.ID + ", Skin: " + newInstance.Skin + ", with " + newInstance.Zones.Count + " zones and " + newInstance.Objects.Count + " objects inside the region!");
 								SendMessage(client, "Use '/instance exit' to leave if you get stuck.");
 							}
 						}

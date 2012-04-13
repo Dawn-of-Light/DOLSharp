@@ -77,7 +77,7 @@ namespace DOL.GS.Quests.Atlantis
 			if (scholars != null)
 			{
 				eRealm realm = eRealm.Albion;
-				GameNPC[] npcs;
+				List<GameNPC> npcs;
 
 				foreach (String scholar in scholars)
 				{
@@ -93,7 +93,7 @@ namespace DOL.GS.Quests.Atlantis
 							title = "Loremaster";
 							npcs = WorldMgr.GetNPCsByName(String.Format("{0} {1}", title, scholar), realm);
 
-							if (npcs.Length == 0)
+							if (npcs.Count == 0)
 							{
 								title = "Loremistress";
 								npcs = WorldMgr.GetNPCsByName(String.Format("{0} {1}", title, scholar), realm);
@@ -105,11 +105,11 @@ namespace DOL.GS.Quests.Atlantis
 							break;
 						default:
 							title = "<unknown title>";
-							npcs = new GameNPC[0];
+							npcs = new List<GameNPC>(0);
 							break;
 					}
 
-					if (npcs.Length == 0)
+					if (npcs.Count == 0)
 					{
 						log.Warn(String.Format("ARTIFACTQUEST: {0} {1} not found in {2} for artifact {3}", title, scholar, GlobalConstants.RealmToName(realm), artifactID));
 					}

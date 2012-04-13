@@ -6180,11 +6180,11 @@ namespace DOL.GS
 		/// returns all abilities in a copied list
 		/// </summary>
 		/// <returns></returns>
-		public IList GetAllAbilities()
+		public List<Ability> GetAllAbilities()
 		{
 			lock (m_lockAbilities)
 			{
-				ArrayList list = new ArrayList();
+				List<Ability> list = new List<Ability>();
 				list.AddRange(m_abilities.Values);
 				return list;
 			}

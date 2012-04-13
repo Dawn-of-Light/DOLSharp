@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
@@ -39,8 +40,8 @@ namespace DOL.GS.Commands
 			if (targetnpc != null && CheckTargetIsGuard(targetnpc))
 			{
 				string name = String.Join(" ", args, 1, args.Length - 1);
-				GameNPC[] npcs = WorldMgr.GetNPCsByNameFromRegion(name, client.Player.CurrentRegionID, (eRealm) client.Player.Realm);
-				if (npcs == null || npcs.Length <= 0)
+				List<GameNPC> npcs = WorldMgr.GetNPCsByNameFromRegion(name, client.Player.CurrentRegionID, (eRealm) client.Player.Realm);
+				if (npcs == null || npcs.Count <= 0)
 				{
 					targetnpc.SayTo(client.Player, "Sorry, i do not know this person.");
 					return;

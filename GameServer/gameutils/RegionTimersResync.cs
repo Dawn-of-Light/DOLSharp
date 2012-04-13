@@ -129,7 +129,7 @@ namespace DOL.GS.GameEvents
 					{
 						if (reg.TimeManager == mgr)
 						{							
-							foreach (GameObject obj in reg.Objects)
+							foreach (GameObject obj in reg.Objects.Values)
 							{
 								//Restart Player regen & remove PvP immunity
 								if (obj is GamePlayer)
