@@ -114,6 +114,11 @@ namespace DOL.GS
 		protected ushort m_doorUpdateRegionID;
 
 		/// <summary>
+		/// The last time a Passive spell has been cast
+		/// </summary>
+		private long LastPassiveSpellUse = 0;
+
+		/// <summary>
 		/// Send a door state to this client
 		/// </summary>
 		/// <param name="door">the door</param>
@@ -1749,6 +1754,24 @@ namespace DOL.GS
 				if (Line == null) return;
 				ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(player, GlobalSpells.PvERezIllness, Line);
 				spellHandler.StartSpell(player);
+
+				//Passive Spells
+				foreach (InventoryItem item in player.Inventory.EquippedItems)
+				{
+					if (item != null && item.PassiveSpell != 0)
+					{
+						Spell passiveSpell = SkillBase.GetSpellByID(item.PassiveSpell);
+						if (passiveSpell != null)
+						{
+							ISpellHandler passiveHandler = ScriptMgr.CreateSpellHandler(player, passiveSpell, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects));
+							if (passiveHandler != null)
+							{
+								LastPassiveSpellUse = player.CurrentRegion.Time;
+								passiveHandler.StartSpell(player);
+							}
+						}
+					}
+				}
 			}
 			GameEventMgr.RemoveHandler(this, GamePlayerEvent.Revive, new DOLEventHandler(OnRevive));
 		}
@@ -11407,6 +11430,22 @@ namespace DOL.GS
 				return;
 			}
 
+			if (ObjectState == eObjectState.Active
+				&& (LastPassiveSpellUse <= 0 || LastPassiveSpellUse + 2000 < CurrentRegion.Time)
+				&& item.PassiveSpell != 0)
+			{
+				Spell passiveSpell = SkillBase.GetSpellByID(item.PassiveSpell);
+				if (passiveSpell != null)
+				{
+					ISpellHandler passiveHandler = ScriptMgr.CreateSpellHandler(this, passiveSpell, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects));
+					if (passiveHandler != null)
+					{
+						LastPassiveSpellUse = CurrentRegion.Time;
+						passiveHandler.StartSpell(this);
+					}
+				}
+			}
+
 			if (!item.IsMagical) return;
 
 			Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client, "GamePlayer.OnItemEquipped.Magic", item.GetName(0, false))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
@@ -11553,6 +11592,17 @@ namespace DOL.GS
 				ActiveHorse.Barding = 0;
 				//				Out.SendDebugMessage("Try unapply barding.");
 				return;
+			}
+
+			if (ObjectState == eObjectState.Active && item.PassiveSpell != 0)
+			{
+				Spell passiveSpell = SkillBase.GetSpellByID(item.PassiveSpell);
+				if (passiveSpell != null)
+				{
+					GameSpellEffect passiveEffect = SpellHandler.FindEffectOnTarget(this, passiveSpell.SpellType, passiveSpell.Name);
+					if (passiveEffect != null)
+						passiveEffect.Cancel(false);
+				}
 			}
 
 			if (!item.IsMagical) return;

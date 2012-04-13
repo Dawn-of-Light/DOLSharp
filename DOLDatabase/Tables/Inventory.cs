@@ -545,6 +545,11 @@ namespace DOL.Database
 			get { return Template.SpellID1; }
 			set { Template.SpellID1 = value; }
 		}
+		public virtual int PassiveSpell
+		{
+			get { return Template.PassiveSpell; }
+			set { Template.PassiveSpell = value; }
+		}
 		public virtual int MaxCharges1
 		{
 			get { return Template.MaxCharges1; }

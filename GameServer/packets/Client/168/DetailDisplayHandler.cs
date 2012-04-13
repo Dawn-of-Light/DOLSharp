@@ -1081,6 +1081,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			output.Add("      SpellID: " + item.SpellID + " (" + item.Charges + "/" + item.MaxCharges + ")");
 			output.Add("     SpellID1: " + item.SpellID1 + " (" + item.Charges1 + "/" + item.MaxCharges1 + ")");
 			output.Add("PoisonSpellID: " + item.PoisonSpellID + " (" + item.PoisonCharges + "/" + item.PoisonMaxCharges + ") ");
+			output.Add(" PassiveSpell: " + item.PassiveSpell);
 
 			if (GlobalConstants.IsWeapon(item.Object_Type))
 			{
@@ -1407,7 +1408,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			if (!shortInfo)
 			{
-				if (item.ProcSpellID != 0 || item.ProcSpellID1 != 0 || item.SpellID != 0 || item.SpellID1 != 0)
+				if (item.ProcSpellID != 0 || item.ProcSpellID1 != 0 || item.SpellID != 0 || item.SpellID1 != 0 || item.PassiveSpell != 0)
 				{
 					int requiredLevel = item.LevelRequirement > 0 ? item.LevelRequirement : Math.Min(50, item.Level);
 					output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired2", requiredLevel));
@@ -1593,6 +1594,38 @@ namespace DOL.GS.PacketHandler.Client.v168
 					output.Add(" ");
 				}
 				#endregion
+
+				#region PassiveSpell
+				if (item.PassiveSpell != 0)
+				{
+					SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+					if (chargeEffectsLine != null)
+					{
+						Spell spell = SkillBase.FindSpell(item.PassiveSpell, chargeEffectsLine);
+						if (spell != null)
+						{
+							ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, chargeEffectsLine);
+
+							if (spellHandler != null)
+							{
+								output.AddRange(spellHandler.DelveInfo);
+								output.Add(" ");
+								output.Add("- This spell is cast when the item is used.");
+							}
+							else
+							{
+								output.Add("- Item_Effects Spell Line Missing");
+							}
+						}
+						else
+						{
+							output.Add("- Spell Not Found: " + item.SpellID1);
+						}
+					}
+
+					output.Add(" ");
+				}
+				#endregion PassiveSpell
 				#region Poison
 				if (item.PoisonSpellID != 0)
 				{
