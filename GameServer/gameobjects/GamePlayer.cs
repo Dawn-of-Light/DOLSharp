@@ -174,19 +174,6 @@ namespace DOL.GS
 			}
 		}
 
-		public override GameObject TargetObject
-		{
-			get
-			{
-				return base.TargetObject;
-			}
-			set
-			{
-				ActiveInventoryObject = null; // windows close on change target so also clear any active inventory objects
-				base.TargetObject = value;
-			}
-		}
-
 		/// <summary>
 		/// Gets or sets the targetObject's visibility
 		/// </summary>

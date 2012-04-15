@@ -224,24 +224,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			// We did not drop an item on a game object, which means we should have valid from and to slots 
 			// since we are moving an item from one window to another.
 
-			// First check for activated InventoryObjects even if the player does not have one targeted
+			// First check for an active InventoryObject
 
 			if (client.Player.ActiveInventoryObject != null && client.Player.ActiveInventoryObject.MoveItem(client.Player, fromClientSlot, toClientSlot))
 			{
 				//ChatUtil.SendDebugMessage(client, "ActiveInventoryObject handled move");
 				return;
-			}
-
-			// Check to see if the player has a target object of type IGameInventoryObject and 
-			// if they do let the object check and handle the move if it can
-
-			if (client.Player.TargetObject is IGameInventoryObject && (client.Player.TargetObject as IGameInventoryObject).CanHandleMove(client.Player, fromClientSlot, toClientSlot))
-			{
-				if ((client.Player.TargetObject as IGameInventoryObject).MoveItem(client.Player, fromClientSlot, toClientSlot))
-				{
-					//ChatUtil.SendDebugMessage(client, "IGameInventoryObject target handled move");
-					return;
-				}
 			}
 
 			//Do we want to move an item from immediate inventory to immediate inventory or drop on the ground
