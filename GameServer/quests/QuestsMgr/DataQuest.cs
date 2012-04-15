@@ -1436,6 +1436,8 @@ namespace DOL.GS.Quests
 
 					if (string.IsNullOrEmpty(SourceText) == false)
 					{
+						TryTurnTo(obj, m_questPlayer);
+
 						if (obj.Realm == eRealm.None)
 						{
 							SendMessage(m_questPlayer, SourceText, 0, eChatType.CT_Say, eChatLoc.CL_ChatWindow);
@@ -1680,6 +1682,8 @@ namespace DOL.GS.Quests
 
 					if (charQuest.Count < MaxQuestCount)
 					{
+						TryTurnTo(obj, player);
+
 						if (ExecuteCustomQuestStep(player, 0, eStepCheckType.Finish))
 						{
 							if (Description.Trim() != "")
@@ -1775,6 +1779,7 @@ namespace DOL.GS.Quests
 					{
 						if (string.IsNullOrEmpty(m_sourceTexts[0]) == false)
 						{
+							TryTurnTo(obj, player);
 							SendMessage(player, m_sourceTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 						}
 					}
@@ -1796,6 +1801,8 @@ namespace DOL.GS.Quests
 					GameNPC offerNPC = obj as GameNPC;
 					if (offerNPC != null)
 					{
+						TryTurnTo(obj, player);
+
 						// Note: If the offer is handled by the custom step then it should return false to prevent a double offer
 						if (ExecuteCustomQuestStep(player, 0, eStepCheckType.Offer))
 						{
@@ -1805,8 +1812,19 @@ namespace DOL.GS.Quests
 				}
 				else if (string.IsNullOrEmpty(Description) == false)
 				{
+					TryTurnTo(obj, player);
 					SendMessage(player, Description, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				}
+			}
+		}
+
+		protected virtual void TryTurnTo(GameObject obj, GamePlayer player)
+		{
+			GameNPC npc = obj as GameNPC;
+
+			if (npc != null)
+			{
+				npc.TurnTo(player, 10000);
 			}
 		}
 
@@ -1831,6 +1849,8 @@ namespace DOL.GS.Quests
 
 				if (charQuest.Count < MaxQuestCount)
 				{
+					TryTurnTo(obj, player);
+
 					if (item.Count == 1)
 					{
 						RemoveItem(obj, player, item, false);
@@ -1872,7 +1892,8 @@ namespace DOL.GS.Quests
 
 			if (CheckQuestQualification(player) && DBDataQuest.StartType == (byte)eStartType.Standard && DBDataQuest.AcceptText == text)
 			{
-				//log.DebugFormat("Adding quest {0} to player {1}", Name, player.Name);
+				TryTurnTo(living, player);
+
 				CharacterXDataQuest charQuest = GetCharacterQuest(player, ID, true);
 				DataQuest dq = new DataQuest(player, living, DBDataQuest, charQuest);
 				dq.Step = 1;
@@ -1907,6 +1928,8 @@ namespace DOL.GS.Quests
 				{
 					case eStepType.Interact:
 						{
+							TryTurnTo(obj, player);
+
 							if (string.IsNullOrEmpty(TargetText) == false)
 							{
 								SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -1923,6 +1946,8 @@ namespace DOL.GS.Quests
 								GameNPC finishNPC = obj as GameNPC;
 								if (finishNPC != null)
 								{
+									TryTurnTo(obj, player);
+
 									// Custom step can modify rewards here.  Should return false if it sends the reward window
 									if (ExecuteCustomQuestStep(player, 0, eStepCheckType.Finish))
 									{
@@ -1945,6 +1970,7 @@ namespace DOL.GS.Quests
 						{
 							if (string.IsNullOrEmpty(TargetText) == false)
 							{
+								TryTurnTo(obj, player);
 								SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							}
 						}
@@ -1977,6 +2003,8 @@ namespace DOL.GS.Quests
 						case eStepType.Deliver:
 						case eStepType.Collect:
 							{
+								TryTurnTo(obj, player);
+
 								if (string.IsNullOrEmpty(TargetText) == false)
 								{
 									if (obj.Realm == eRealm.None)
@@ -2016,6 +2044,8 @@ namespace DOL.GS.Quests
 					// Current step must be a delivery so take the item and advance the quest
 					if (StepType == eStepType.Deliver)
 					{
+						TryTurnTo(obj, player);
+
 						if (string.IsNullOrEmpty(TargetText) == false)
 						{
 							if (obj.Realm == eRealm.None)
@@ -2314,6 +2344,8 @@ namespace DOL.GS.Quests
 				return false;
 
 			int lastStep = Step;
+
+			TryTurnTo(obj, m_questPlayer);
 
 			if (checkCustomStep && ExecuteCustomQuestStep(QuestPlayer, Step, eStepCheckType.Finish) == false)
 				return false;
