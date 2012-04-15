@@ -64,6 +64,14 @@ namespace DOL.GS
 		{
 			if (!base.Interact(player))
 				return false;
+
+			if (player.ActiveInventoryObject != null)
+			{
+				player.ActiveInventoryObject.RemoveObserver(player);
+			}
+
+			player.ActiveInventoryObject = null;
+
 			TurnTo(player, 10000);
 			var items = player.Inventory.GetItemRange(eInventorySlot.FirstVault, eInventorySlot.LastVault);
 			player.Out.SendInventoryItemsUpdate(eInventoryWindowType.PlayerVault, items.Count > 0 ? items : null);
