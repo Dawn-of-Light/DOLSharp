@@ -91,19 +91,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							IGameInventoryObject invObject = client.Player.TargetObject as IGameInventoryObject;
 
-							// First try target object, this allows for InventoryObjects to use Immediate Windows like Player Vault
-							if (invObject != null && invObject.GetClientInventory(client.Player) != null)
-							{
-								invObject.GetClientInventory(client.Player).TryGetValue(objectID, out invItem);
-							}
-
-							// next try direct inventory access
-							if (invItem == null)
-							{
-								invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
-							}
-
-							// finally try active inventory object
+							// first try any active inventory object
 							if (invItem == null)
 							{
 								if (client.Player.ActiveInventoryObject != null)
@@ -112,8 +100,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 									invObject.GetClientInventory(client.Player).TryGetValue(objectID, out invItem);
 								}
 							}
-								
-							// Failed to get any inventor
+
+							// finally try direct inventory access
+							if (invItem == null)
+							{
+								invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
+							}
+
+							// Failed to get any inventory
 							if (invItem == null)
 								return;
 
