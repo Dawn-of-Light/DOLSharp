@@ -616,6 +616,12 @@ namespace DOL.GS
 			if (log.IsInfoEnabled)
 				log.Info("Player " + Name + "(" + Client.Account.Name + ") went linkdead!");
 
+            // LD Necros need to be "Unshaded"
+            if (Client.Player.CharacterClass.Player.IsShade)
+            {
+                Client.Player.CharacterClass.Player.Shade(false);
+            }
+
 			// Dead link-dead players release on live servers
 			if (!IsAlive)
 			{
