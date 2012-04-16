@@ -613,7 +613,7 @@ namespace DOL.GS
 					spell.Icon = 1506;
 					spell.Duration = 9600;
 					spell.Value = 90; //effective buff 67
-					spell.Name = "Spec AF Buff";
+					spell.Name = "Armor of the Realm";
 					spell.Description = "Adds to the recipient's Armor Factor (AF), resulting in better protection against some forms of attack. It acts in addition to any armor the target is wearing.";
 					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
 					spell.SpellID = 88014;
@@ -643,7 +643,7 @@ namespace DOL.GS
 					spell.Icon = 1506;
 					spell.Duration = 7200;
 					spell.Value = 67; //effective buff 67
-					spell.Name = "Spec AF Buff";
+                    spell.Name = "Armor of the Realm";
 					spell.Description = "Adds to the recipient's Armor Factor (AF), resulting in better protection against some forms of attack. It acts in addition to any armor the target is wearing.";
 					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
 					spell.SpellID = 89014;
