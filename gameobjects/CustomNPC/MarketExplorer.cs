@@ -37,6 +37,7 @@ namespace DOL.GS
 
 			if (ServerProperties.Properties.MARKET_ENABLE)
 			{
+				player.ActiveInventoryObject = this;
 				player.Out.SendMarketExplorerWindow();
 			}
 			else
@@ -152,14 +153,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual bool CanHandleMove(GamePlayer player, ushort fromClientSlot, ushort toClientSlot)
 		{
-			if (player == null || player.TargetObject == null || (player.TargetObject is MarketExplorer) == false)
+			if (player == null || player.ActiveInventoryObject != this)
 				return false;
-
-			if (player.ActiveInventoryObject is GameConsignmentMerchant)
-			{
-				// transfer control to active consignment merchant
-				return player.ActiveInventoryObject.CanHandleMove(player, fromClientSlot, toClientSlot);
-			}
 
 			bool canHandle = false;
 
@@ -181,27 +176,17 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual bool MoveItem(GamePlayer player, ushort fromClientSlot, ushort toClientSlot)
 		{
-			// if we've activated a CM then let them handle all the moves
-			if (player.ActiveInventoryObject is GameConsignmentMerchant)
-			{
-				return player.ActiveInventoryObject.MoveItem(player, fromClientSlot, toClientSlot);
-			}
-
 			// this move represents a buy item request
 			if (fromClientSlot >= (ushort)eInventorySlot.MarketExplorerFirst && 
 				toClientSlot >= (ushort)eInventorySlot.FirstBackpack && 
 				toClientSlot <= (ushort)eInventorySlot.LastBackpack &&
-				player.ActiveInventoryObject == null)
+				player.ActiveInventoryObject == this)
 			{
-				if (player.TargetObject == null)
-					return false;
-
-				if (!(player.TargetObject is MarketExplorer))
-					return false;
-
 				var list = player.TempProperties.getProperty<List<InventoryItem>>(EXPLORER_ITEM_LIST, null);
 				if (list == null)
+				{
 					return false;
+				}
 
 				int itemSlot = fromClientSlot - (int)eInventorySlot.MarketExplorerFirst;
 
@@ -247,6 +232,11 @@ namespace DOL.GS
 				player.Out.SendMessage("I can't find the consigmnent merchant for this item!", eChatType.CT_Merchant, eChatLoc.CL_ChatWindow);
 				log.ErrorFormat("ME: Error finding consignment merchant for lot {0}; {1}:{2} trying to buy {3}", item.OwnerLot, player.Name, player.Client.Account.Name, item.Name);
 				return;
+			}
+
+			if (player.ActiveInventoryObject != null)
+			{
+				player.ActiveInventoryObject.RemoveObserver(player);
 			}
 
 			player.ActiveInventoryObject = cm; // activate the target con merchant
