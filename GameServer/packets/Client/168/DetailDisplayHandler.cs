@@ -97,7 +97,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 								if (client.Player.ActiveInventoryObject != null)
 								{
 									invObject = client.Player.ActiveInventoryObject;
-									invObject.GetClientInventory(client.Player).TryGetValue(objectID, out invItem);
+
+									if (invObject != null || invObject.GetClientInventory(client.Player) != null)
+									{
+										invObject.GetClientInventory(client.Player).TryGetValue(objectID, out invItem);
+									}
 								}
 							}
 
