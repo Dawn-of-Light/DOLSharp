@@ -79,14 +79,19 @@ namespace DOL.AI.Brain
 		public ControlledNpcBrain(GameLiving owner)
 			: base()
 		{
-			if (owner == null)
-				throw new ArgumentNullException("owner");
+            if (owner == null)
+                throw new ArgumentNullException("owner");
 
-			m_owner = owner;
-			m_aggressionState = eAggressionState.Defensive;
-			m_walkState = eWalkState.Follow;
-			m_aggroLevel = 99;
-			m_aggroMaxRange = 1500;
+            m_owner = owner;
+            m_aggressionState = eAggressionState.Defensive;
+            m_walkState = eWalkState.Follow;
+            if (owner is GameNPC && (owner as GameNPC).Brain is StandardMobBrain)
+            {
+                m_aggroLevel = ((owner as GameNPC).Brain as StandardMobBrain).AggroLevel;
+            }
+            else
+                m_aggroLevel = 99;
+            m_aggroMaxRange = 1500;
 		}
 
 		protected bool m_isMainPet = true;
@@ -127,36 +132,78 @@ namespace DOL.AI.Brain
 			get { return m_owner; }
 		}
 
-		/// <summary>
-		/// Find the player owner of the pets at the top of the tree
-		/// </summary>
-		/// <returns>Player owner at the top of the tree.  If there was no player, then return null.</returns>
-		public virtual GamePlayer GetPlayerOwner()
-		{
-			GameLiving owner = Owner;
-			int i = 0;
-			while (owner is GameNPC && owner != null)
-			{
-				i++;
-				if (i > 50)
-					throw new Exception("GetPlayerOwner() from " + Owner.Name + "caused a cyclical loop.");
-				//If this is a pet, get its owner
-				if (((GameNPC)owner).Brain is IControlledBrain)
-					owner = ((IControlledBrain)((GameNPC)owner).Brain).Owner;
-				//This isn't a pet, that means it's at the top of the tree.  This case will only happen if
-				//owner is not a GamePlayer
-				else
-					break;
-			}
-			//Return if we found the gameplayer
-			if (owner is GamePlayer)
-				return (GamePlayer)owner;
-			//If the root owner was not a player or npc then make sure we know that something went wrong!
-			if (!(owner is GameNPC))
-				throw new Exception("Unrecognized owner: " + owner.GetType().FullName);
-			//No GamePlayer at the top of the tree
-			return null;
-		}
+        /// <summary>
+        /// Find the player owner of the pets at the top of the tree
+        /// </summary>
+        /// <returns>Player owner at the top of the tree.  If there was no player, then return null.</returns>
+        public virtual GamePlayer GetPlayerOwner()
+        {
+            GameLiving owner = Owner;
+            int i = 0;
+            while (owner is GameNPC && owner != null)
+            {
+                i++;
+                if (i > 50)
+                    throw new Exception("GetPlayerOwner() from " + Owner.Name + "caused a cyclical loop.");
+                //If this is a pet, get its owner
+                if (((GameNPC)owner).Brain is IControlledBrain)
+                    owner = ((IControlledBrain)((GameNPC)owner).Brain).Owner;
+                //This isn't a pet, that means it's at the top of the tree.  This case will only happen if
+                //owner is not a GamePlayer
+                else
+                    break;
+            }
+            //Return if we found the gameplayer
+            if (owner is GamePlayer)
+                return (GamePlayer)owner;
+            //If the root owner was not a player or npc then make sure we know that something went wrong!
+            if (!(owner is GameNPC))
+                throw new Exception("Unrecognized owner: " + owner.GetType().FullName);
+            //No GamePlayer at the top of the tree
+            return null;
+        }
+
+        public virtual GameNPC GetNPCOwner()
+        {
+            if (!(Owner is GameNPC))
+                return null;
+
+            GameNPC owner = Owner as GameNPC;
+
+            int i = 0;
+            while (owner != null)
+            {
+                i++;
+                if (i > 50)
+                {
+                    log.Error("Boucle itérative dans GetNPCOwner !");
+                    break;
+                }
+                if (owner.Brain is IControlledBrain)
+                {
+                    if ((owner.Brain as IControlledBrain).Owner is GamePlayer)
+                        return null;
+                    else
+                        owner = (owner.Brain as IControlledBrain).Owner as GameNPC;
+                }
+                else
+                    break;
+            }
+            return owner;
+        }
+
+        public virtual GameLiving GetLivingOwner()
+        {
+            GamePlayer player = GetPlayerOwner();
+            if (player != null)
+                return player;
+
+            GameNPC npc = GetNPCOwner();
+            if (npc != null)
+                return npc;
+
+            return null;
+        }
 
 		/// <summary>
 		/// Gets or sets the walk state of the brain
@@ -337,7 +384,7 @@ namespace DOL.AI.Brain
 		{
 			GamePlayer playerowner = GetPlayerOwner();
 			
-			if (!playerowner.CurrentUpdateArray[Body.ObjectID - 1])
+			if (playerowner != null && !playerowner.CurrentUpdateArray[Body.ObjectID - 1])
 			{
 				playerowner.Out.SendObjectUpdate(Body);
 				playerowner.CurrentUpdateArray[Body.ObjectID - 1] = true;
@@ -719,8 +766,13 @@ namespace DOL.AI.Brain
 		/// <param name="aggroamount"></param>
 		public override void AddToAggroList(GameLiving living, int aggroamount)
 		{
-			if (living == Owner) return;
-			base.AddToAggroList(living, aggroamount);
+            GameNPC npc_owner = GetNPCOwner();
+            if (npc_owner == null || !(npc_owner.Brain is StandardMobBrain))
+                base.AddToAggroList(living, aggroamount);
+            else
+            {
+                (npc_owner.Brain as StandardMobBrain).AddToAggroList(living, aggroamount);
+            }
 		}
 
 		public override int CalculateAggroLevelToTarget(GameLiving target)
@@ -795,6 +847,24 @@ namespace DOL.AI.Brain
 		protected override void AttackMostWanted()
 		{
 			if (!IsActive) return;
+
+            GameNPC owner_npc = GetNPCOwner();
+            if (owner_npc != null && owner_npc.Brain is StandardMobBrain)
+            {
+                if ((owner_npc.IsCasting || owner_npc.IsAttacking) &&
+                    owner_npc.TargetObject != null &&
+                    owner_npc.TargetObject is GameLiving &&
+                    GameServer.ServerRules.IsAllowedToAttack(owner_npc, owner_npc.TargetObject as GameLiving, false))
+                {
+
+                    if (!CheckSpells(eCheckSpellType.Offensive))
+                    {
+                        Body.StartAttack(owner_npc.TargetObject);
+                    }
+                    return;
+                }
+            }
+
 			GameLiving target = CalculateNextAttackTarget();
 
 			if (target != null)

@@ -2024,10 +2024,11 @@ namespace DOL.GS
 				IControlledBrain brain = ((GameNPC)ad.Target).Brain as IControlledBrain;
 				if (brain != null)
 				{
-					GamePlayer owner = brain.GetPlayerOwner();
-					excludes.Add(owner);
-					if (owner != null && owner.ControlledBrain != null && ad.Target == owner.ControlledBrain.Body)
+                    GameLiving owner_living = brain.GetLivingOwner();
+                    excludes.Add(owner_living);
+                    if (owner_living != null && owner_living is GamePlayer && owner_living.ControlledBrain != null && ad.Target == owner_living.ControlledBrain.Body)
 					{
+                        GamePlayer owner = owner_living as GamePlayer;
 						switch (ad.AttackResult)
 						{
 							case eAttackResult.Blocked:
@@ -3939,11 +3940,11 @@ namespace DOL.GS
 
             #endregion PVP DAMAGE
 
-			if (source is GameNPC)
+            if (source != null && source is GameNPC)
 			{
 				IControlledBrain brain = ((GameNPC)source).Brain as IControlledBrain;
 				if (brain != null)
-					source = brain.GetPlayerOwner();
+                    source = brain.GetLivingOwner();
 			}
 
 			GamePlayer attackerPlayer = source as GamePlayer;

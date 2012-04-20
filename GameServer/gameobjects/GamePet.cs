@@ -103,7 +103,14 @@ namespace DOL.GS
 		/// </summary>
 		public override double Effectiveness
 		{
-			get { return (Brain as IControlledBrain).GetPlayerOwner().Effectiveness; }
+			get 
+            {
+                GameLiving gl = (Brain as IControlledBrain).GetLivingOwner();
+                if (gl != null)
+                    return gl.Effectiveness;
+
+                return 1.0;
+            }
 		}
 
 		/// <summary>
@@ -122,7 +129,7 @@ namespace DOL.GS
 				case Specs.Critical_Strike:
 				case Specs.Large_Weapons:
 					return Level;
-					default: return (Brain as IControlledBrain).GetPlayerOwner().GetModifiedSpecLevel(keyName);
+                default: return (Brain as IControlledBrain).GetLivingOwner().GetModifiedSpecLevel(keyName);
 			}
 		}
 
@@ -145,7 +152,7 @@ namespace DOL.GS
 		/// </summary>
 		public override int SpellCriticalChance
 		{
-			get { return (Brain as IControlledBrain).GetPlayerOwner().GetModified(eProperty.CriticalSpellHitChance); }
+            get { return (Brain as IControlledBrain).GetLivingOwner().GetModified(eProperty.CriticalSpellHitChance); }
 			set { }
 		}
 
@@ -396,7 +403,7 @@ namespace DOL.GS
 			GameObject tempobj = obj;
 			if (Brain is IControlledBrain)
 			{
-				GamePlayer player = (Brain as IControlledBrain).GetPlayerOwner();
+                GameLiving player = (Brain as IControlledBrain).GetLivingOwner();
 				if (player != null)
 					tempobj = player;
 			}

@@ -72,7 +72,7 @@ namespace DOL.AI.Brain
 			{
 				GamePlayer playerowner = GetPlayerOwner();
 
-				if (!playerowner.CurrentUpdateArray[Body.ObjectID - 1])
+                if (playerowner != null && !playerowner.CurrentUpdateArray[Body.ObjectID - 1])
 				{
 					playerowner.Out.SendObjectUpdate(Body);
 					playerowner.CurrentUpdateArray[Body.ObjectID - 1] = true;

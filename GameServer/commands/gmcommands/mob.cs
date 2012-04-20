@@ -1235,7 +1235,7 @@ namespace DOL.GS.Commands
 			{
 				try
 				{
-					info.Add(" + -- Owner: " + (targetMob.Brain as IControlledBrain).GetPlayerOwner().Name);
+                    info.Add(" + -- Owner: " + (targetMob.Brain as IControlledBrain).GetPlayerOwner() != null ? (targetMob.Brain as IControlledBrain).GetPlayerOwner().Name : (targetMob.Brain as IControlledBrain).GetNPCOwner().Name);
 				}
 				catch
 				{

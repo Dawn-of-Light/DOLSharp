@@ -59,7 +59,7 @@ namespace DOL.GS.ServerRules
 				IControlledBrain controlled = ((GameNPC)attacker).Brain as IControlledBrain;
 				if (controlled != null)
 				{
-					attacker = controlled.GetPlayerOwner();
+                    attacker = controlled.GetLivingOwner();
 					quiet = true; // silence all attacks by controlled npc
 				}
 			}
@@ -67,7 +67,7 @@ namespace DOL.GS.ServerRules
 			{
 				IControlledBrain controlled = ((GameNPC)defender).Brain as IControlledBrain;
 				if (controlled != null)
-					defender = controlled.GetPlayerOwner();
+                    defender = controlled.GetLivingOwner();
 			}
 
 			//"You can't attack yourself!"
@@ -107,7 +107,7 @@ namespace DOL.GS.ServerRules
 				IControlledBrain controlled = ((GameNPC)source).Brain as IControlledBrain;
 				if (controlled != null)
 				{
-					source = controlled.GetPlayerOwner();
+                    source = controlled.GetLivingOwner();
 					quiet = true; // silence all attacks by controlled npc
 				}
 			}
@@ -115,7 +115,7 @@ namespace DOL.GS.ServerRules
 			{
 				IControlledBrain controlled = ((GameNPC)target).Brain as IControlledBrain;
 				if (controlled != null)
-					target = controlled.GetPlayerOwner();
+                    target = controlled.GetLivingOwner();
 			}
 
 			if (source == target)
