@@ -33,7 +33,26 @@ namespace DOL.AI.Brain
 				m_target = m_owner.TargetObject as GameLiving;
 			AggroLevel = 100;
 			IsMainPet = false;
-		}
+        }
+
+        public virtual GameNPC GetNPCOwner()
+        {
+            return null;
+        }
+        public virtual GameLiving GetLivingOwner()
+        {
+            GamePlayer player = GetPlayerOwner();
+            if (player != null)
+                return player;
+
+            GameNPC npc = GetNPCOwner();
+            if (npc != null)
+                return npc;
+
+            return null;
+        }
+
+		
 
 		public override int ThinkInterval { get { return 1500; } }
 

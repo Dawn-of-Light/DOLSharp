@@ -49,7 +49,7 @@ namespace DOL.AI.Brain
 		public override void Think()
 		{
 		  GamePlayer playerowner = GetPlayerOwner();
-		  if (!playerowner.CurrentUpdateArray[Body.ObjectID - 1])
+          if (playerowner != null && !playerowner.CurrentUpdateArray[Body.ObjectID - 1])
 		  {
 			playerowner.Out.SendObjectUpdate(Body);
 			playerowner.CurrentUpdateArray[Body.ObjectID - 1] = true;
@@ -227,6 +227,9 @@ namespace DOL.AI.Brain
 				{
 					return Body;
 				}
+
+                if (npc == GetLivingOwner())
+                    return npc;
 
 				ListDefensiveTarget.Add(npc);
 			}
