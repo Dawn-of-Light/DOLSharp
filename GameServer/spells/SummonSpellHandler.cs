@@ -224,18 +224,19 @@ namespace DOL.GS.Spells
 		/// <param name="arguments"></param>
 		protected virtual void OnNpcReleaseCommand(DOLEvent e, object sender, EventArgs arguments)
 		{
-			if (!(sender is GameNPC) || !((sender as GameNPC).Brain is IControlledBrain) || !(((sender as GameNPC).Brain as IControlledBrain).Owner is GamePlayer))
-				return;
-			GameNPC pet = sender as GameNPC;
-			IControlledBrain brain = pet.Brain as IControlledBrain;
-			GamePlayer player = brain.Owner as GamePlayer;
+            if (!(sender is GameNPC) || !((sender as GameNPC).Brain is IControlledBrain))
+                return;
 
-			player.SetControlledBrain(null);
-			GameEventMgr.RemoveHandler(pet, GameLivingEvent.PetReleased, new DOLEventHandler(OnNpcReleaseCommand));
+            GameNPC pet = sender as GameNPC;
+            IControlledBrain brain = pet.Brain as IControlledBrain;
+            GameLiving living = brain.Owner;
+            living.SetControlledBrain(null);
 
-			GameSpellEffect effect = FindEffectOnTarget(pet, this);
-			if (effect != null)
-				effect.Cancel(false);
+            GameEventMgr.RemoveHandler(pet, GameLivingEvent.PetReleased, new DOLEventHandler(OnNpcReleaseCommand));
+
+            GameSpellEffect effect = FindEffectOnTarget(pet, this);
+            if (effect != null)
+                effect.Cancel(false);
 		}
 
 		/// <summary>

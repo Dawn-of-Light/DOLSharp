@@ -49,6 +49,23 @@ namespace DOL.AI.Brain
 			IsMainPet = false;
 		}
 
+        public virtual GameNPC GetNPCOwner()
+        {
+            return null;
+        }
+        public virtual GameLiving GetLivingOwner()
+        {
+            GamePlayer player = GetPlayerOwner();
+            if (player != null)
+                return player;
+
+            GameNPC npc = GetNPCOwner();
+            if (npc != null)
+                return npc;
+
+            return null;
+        }
+
 		public override int ThinkInterval { get { return 1500; } }
 
 		public override void Think() { AttackMostWanted(); }

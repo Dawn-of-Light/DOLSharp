@@ -131,7 +131,7 @@ namespace DOL.GS.PropertyCalc
 					IControlledBrain brain = ((GameNPC)living).Brain as IControlledBrain;
 					if (brain != null)
 					{
-						GamePlayer owner = brain.GetPlayerOwner();
+                        GameLiving owner = brain.GetLivingOwner();
 						if (owner != null)
 						{
 							if (owner == brain.Body.CurrentFollowTarget)
@@ -145,8 +145,8 @@ namespace DOL.GS.PropertyCalc
 									speed *= ownerSpeedAdjust;
 								}
 
-								if (owner.IsOnHorse)
-								{
+                                if (owner is GamePlayer && (owner as GamePlayer).IsOnHorse)
+                                {
 									speed *= 1.45;
 								}
 							}

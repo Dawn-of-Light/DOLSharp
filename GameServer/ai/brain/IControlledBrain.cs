@@ -62,19 +62,21 @@ namespace DOL.AI.Brain
 	/// </summary>
 	public interface IControlledBrain
 	{
-		eWalkState WalkState { get; }
-		eAggressionState AggressionState { get; set; }
-		GameNPC Body { get; }
-		GameLiving Owner { get; }
-		void Attack(GameObject target);
-		void Follow(GameObject target);
-		void FollowOwner();
-		void Stay();
-		void ComeHere();
-		void Goto(GameObject target);
-		void UpdatePetWindow();
-		GamePlayer GetPlayerOwner();
-		void SetAggressionState(eAggressionState state);
-		bool IsMainPet { get; set; }
+        eWalkState WalkState { get; }
+        eAggressionState AggressionState { get; set; }
+        GameNPC Body { get; }
+        GameLiving Owner { get; }
+        void Attack(GameObject target);
+        void Follow(GameObject target);
+        void FollowOwner();
+        void Stay();
+        void ComeHere();
+        void Goto(GameObject target);
+        void UpdatePetWindow();
+        GamePlayer GetPlayerOwner();
+        GameNPC GetNPCOwner();
+        GameLiving GetLivingOwner();
+        void SetAggressionState(eAggressionState state);
+        bool IsMainPet { get; set; }
 	}
 }

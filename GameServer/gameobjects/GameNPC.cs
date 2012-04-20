@@ -3859,12 +3859,24 @@ namespace DOL.GS
 			}
 		}
 
+        protected void ControlledNPC_Release()
+        {
+            if (this.ControlledBrain != null)
+            {
+                //log.Info("On tue le pet !");
+                this.Notify(GameLivingEvent.PetReleased, ControlledBrain.Body);
+            }
+        }
+
 		/// <summary>
 		/// Called when this living dies
 		/// </summary>
 		public override void Die(GameObject killer)
 		{
 			FireAmbientSentence(eAmbientTrigger.dieing, killer as GameLiving);
+
+            if (ControlledBrain != null)
+                ControlledNPC_Release();
 
 			if(killer!=null)
 			{
@@ -3889,11 +3901,24 @@ namespace DOL.GS
 
 			Delete();
 
-			if ((Faction != null) && (killer is GamePlayer))
-			{
-				GamePlayer player = killer as GamePlayer;
-				Faction.KillMember(player);
-			}
+            if ((Faction != null) && (killer is GamePlayer))
+            {
+                // Tyriada(Carmélide) : il faut donner la faction à tous les membres attaquants ainsi que leur groupe
+
+                foreach (DictionaryEntry de in this.XPGainers)
+                {
+                    GameLiving living = de.Key as GameLiving;
+                    GamePlayer player = living as GamePlayer;
+
+                    if (living is GameNPC && (living as GameNPC).Brain is IControlledBrain) // Tout les pets renvoient sur leurs owners.
+                        player = ((living as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+
+                    if (player != null && player.ObjectState == GameObject.eObjectState.Active && player.IsAlive && player.IsWithinRadius(this, WorldMgr.MAX_EXPFORKILL_DISTANCE))
+                    {
+                        Faction.KillMember(player);
+                    }
+                }
+            }
 
 			// remove temp properties
 			TempProperties.removeAllProperties();
@@ -4319,6 +4344,13 @@ namespace DOL.GS
 						if (ServerProperties.Properties.ENABLE_ZONE_BONUSES)
 						{
 							GamePlayer killerPlayer = killer as GamePlayer;
+
+                            if (killer is GameNPC)
+                            {
+                                if (killer is GameNPC && ((killer as GameNPC).Brain is IControlledBrain))
+                                    killerPlayer = ((killer as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+                                else return;
+                            }
 
 							int zoneBonus = (((int)value * ZoneBonus.GetCoinBonus(killerPlayer) / 100));
 							if (zoneBonus > 0)
@@ -4894,50 +4926,57 @@ namespace DOL.GS
 			Say(text);
 		}
 		#endregion
-		
-		#region ControlledNPCs
 
-		/// <summary>
-		/// Gets the controlled object of this NPC
-		/// </summary>
-		public override IControlledBrain ControlledBrain
-		{
-			get
-			{
-				if (m_controlledBrain == null) return null;
-				return m_controlledBrain[0];
-			}
-		}
+        #region ControlledNPCs
 
-		/// <summary>
-		/// Gets the controlled array of this NPC
-		/// </summary>
-		public IControlledBrain[] ControlledNpcList
-		{
-			get { return m_controlledBrain; }
-		}
+        public override void SetControlledBrain(IControlledBrain controlledBrain)
+        {
+            if (ControlledBrain == null)
+                InitControlledBrainArray(1);
 
-		/// <summary>
-		/// Adds a pet to the current array of pets
-		/// </summary>
-		/// <param name="controlledNpc">The brain to add to the list</param>
-		/// <returns>Whether the pet was added or not</returns>
-		public virtual bool AddControlledNpc(IControlledBrain controlledNpc)
-		{
-			return true;
-		}
+            ControlledBrain = controlledBrain;
+        }
+        /// <summary>
+        /// Gets the controlled object of this NPC
+        /// </summary>
+        public override IControlledBrain ControlledBrain
+        {
+            get
+            {
+                if (m_controlledBrain == null) return null;
+                return m_controlledBrain[0];
+            }
+        }
 
-		/// <summary>
-		/// Removes the brain from
-		/// </summary>
-		/// <param name="controlledNpc">The brain to find and remove</param>
-		/// <returns>Whether the pet was removed</returns>
-		public virtual bool RemoveControlledNpc(IControlledBrain controlledNpc)
-		{
-			return true;
-		}
+        /// <summary>
+        /// Gets the controlled array of this NPC
+        /// </summary>
+        public IControlledBrain[] ControlledNpcList
+        {
+            get { return m_controlledBrain; }
+        }
 
-		#endregion
+        /// <summary>
+        /// Adds a pet to the current array of pets
+        /// </summary>
+        /// <param name="controlledNpc">The brain to add to the list</param>
+        /// <returns>Whether the pet was added or not</returns>
+        public virtual bool AddControlledNpc(IControlledBrain controlledNpc)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Removes the brain from
+        /// </summary>
+        /// <param name="controlledNpc">The brain to find and remove</param>
+        /// <returns>Whether the pet was removed</returns>
+        public virtual bool RemoveControlledNpc(IControlledBrain controlledNpc)
+        {
+            return true;
+        }
+
+        #endregion
 
 		/// <summary>
 		/// Whether this NPC is available to add on a fight.
