@@ -3296,7 +3296,7 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 			if (m_caster is GamePet)
 			{
 				IControlledBrain brain = (m_caster as GameNPC).Brain as IControlledBrain;
-				speclevel = brain.GetPlayerOwner().Level;
+                speclevel = brain.GetLivingOwner().Level;
 			}
 			else if (m_caster is GamePlayer)
 			{
@@ -3326,7 +3326,7 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 			else if (m_caster is GameNPC && ((GameNPC)m_caster).Brain is IControlledBrain)
 			{
 				//Get the root owner
-				GamePlayer owner = ((IControlledBrain)((GameNPC)m_caster).Brain).GetPlayerOwner();
+                GameLiving owner = ((IControlledBrain)((GameNPC)m_caster).Brain).GetLivingOwner();
 				if (owner != null)
 				{
 					min += GetLevelModFactor() * (owner.Level - target.Level);

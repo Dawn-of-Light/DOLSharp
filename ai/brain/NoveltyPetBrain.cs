@@ -35,6 +35,23 @@ namespace DOL.AI.Brain
 			m_owner = owner;
 		}
 
+        public virtual GameNPC GetNPCOwner()
+        {
+            return null;
+        }
+        public virtual GameLiving GetLivingOwner()
+        {
+            GamePlayer player = GetPlayerOwner();
+            if (player != null)
+                return player;
+
+            GameNPC npc = GetNPCOwner();
+            if (npc != null)
+                return npc;
+
+            return null;
+        }
+
 		#region Think
 
 		public override int ThinkInterval
