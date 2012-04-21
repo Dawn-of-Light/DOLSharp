@@ -42,8 +42,8 @@ namespace DOL.GS
 		int DoorID	{get;}
 		int ObjectID	{get;}
 		eDoorState State {get; set;}
-		void Open();
-		void Close();
+		void Open(GameLiving opener = null);
+		void Close(GameLiving closer = null);
 		void NPCManipulateDoorRequest(GameNPC npc, bool open);
 		void LoadFromDatabase(DataObject obj);
 	}
