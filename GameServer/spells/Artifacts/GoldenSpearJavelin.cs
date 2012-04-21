@@ -37,7 +37,7 @@ namespace DOL.GS.Spells
             : base(caster, spell, line)
         {
             _artefJavelin = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Artef_Javelin'") ?? Javelin;
-            item = GameInventoryItem.Create<ItemTemplate>(_artefJavelin);
+            items.Add (GameInventoryItem.Create<ItemTemplate>(_artefJavelin));
         }
 
         private ItemTemplate Javelin
