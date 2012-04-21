@@ -100,7 +100,7 @@ namespace DOL.GS.Relics
 		/// <summary>
 		/// Make the pillar start moving down.
 		/// </summary>
-		public void Open()
+		public void Open(GameLiving opener = null)
 		{
 			State = eDoorState.Open;
 		}
@@ -108,7 +108,7 @@ namespace DOL.GS.Relics
 		/// <summary>
 		/// Reset pillar.
 		/// </summary>
-		public void Close()
+		public void Close(GameLiving closer = null)
 		{
 			State = eDoorState.Closed;
 		}

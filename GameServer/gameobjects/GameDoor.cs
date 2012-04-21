@@ -214,7 +214,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Call this function to open the door
 		/// </summary>
-		public virtual void Open()
+		public virtual void Open(GameLiving opener = null)
 		{
 			if (Locked == 0)
 				this.State = eDoorState.Open;
@@ -244,7 +244,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Call this function to close the door
 		/// </summary>
-		public virtual void Close()
+		public virtual void Close(GameLiving closer = null)
 		{
 			if (!m_openDead)
 				this.State = eDoorState.Closed;
