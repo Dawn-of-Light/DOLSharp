@@ -1189,11 +1189,13 @@ namespace DOL.GS.Spells
     #region SummonItemBase
     public class SummonItemSpellHandler : MasterlevelHandling
     {
-        protected InventoryItem item;
+        protected IList<InventoryItem> items;
+
         /// <summary>
         /// Execute create item spell
         /// </summary>
         /// <param name="target"></param>
+        /// 
         public override void FinishSpellCast(GameLiving target)
         {
             m_caster.Mana -= PowerCost(target);
@@ -1216,20 +1218,29 @@ namespace DOL.GS.Spells
             if (target == null || !target.IsAlive)
                 return;
 
-            if (target is GamePlayer && item != null)
+            if (target is GamePlayer && items != null)
             {
                 GamePlayer targetPlayer = target as GamePlayer;
-                if (targetPlayer.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
+
+                foreach (InventoryItem item in items)
                 {
-                    InventoryLogging.LogInventoryAction(Caster, targetPlayer, eInventoryActionType.Other, item.Template, item.Count);
-                    targetPlayer.Out.SendMessage("Item created: " + item.GetName(0, false), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    if (targetPlayer.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
+                    {
+
+                        InventoryLogging.LogInventoryAction(Caster, targetPlayer, eInventoryActionType.Other, item.Template, item.Count);
+                        targetPlayer.Out.SendMessage("Item created: " + item.GetName(0, false), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    }
                 }
             }
 
         }
 
-        public SummonItemSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-    }	
+        public SummonItemSpellHandler(GameLiving caster, Spell spell, SpellLine line)
+            : base(caster, spell, line)
+        {
+            items = new List<InventoryItem>();
+        }
+    }
     #endregion
 
     #region TargetModifier
