@@ -271,9 +271,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 							if (player.IsWithinRadius(mydoor, m_radius))
 							{
 								if (m_doorState == 0x01)
-									mydoor.Open();
+									mydoor.Open(player);
 								else
-									mydoor.Close();
+									mydoor.Close(player);
 								success = true;
 							}
 						}
@@ -309,7 +309,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					door.Z = player.Z;
 					door.Realm = eRealm.Door;
 					door.CurrentRegion = player.CurrentRegion;
-					door.Open();
+					door.Open(player);
 				}
 			}
 		}

@@ -682,14 +682,14 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// call when player try to open door
 		/// </summary>
-		public void Open()
+		public void Open(GameLiving opener = null)
 		{
 			//do nothing because gamekeep must be destroyed to be open
 		}
 		/// <summary>
 		/// call when player try to close door
 		/// </summary>
-		public void Close()
+		public void Close(GameLiving closer = null)
 		{
 			//do nothing because gamekeep must be destroyed to be open
 		}
