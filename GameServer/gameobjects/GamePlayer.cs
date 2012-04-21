@@ -831,9 +831,14 @@ namespace DOL.GS
 					return false;
 				}
 
-				string stats = Statistics.GetStatisticsMessage();
-				if (stats != "")
-					Out.SendMessage(stats, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if (Statistics != null)
+				{
+					string stats = Statistics.GetStatisticsMessage();
+					if (stats != "")
+					{
+						Out.SendMessage(stats, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+				}
 
 				if (!IsSitting)
 				{
