@@ -633,7 +633,7 @@ namespace DOL.GS
         /// <summary>
         /// Determine if the current time is AM.
         /// </summary>
-        public bool IsAM
+        public virtual bool IsAM
         {
             get
             {
@@ -647,7 +647,7 @@ namespace DOL.GS
         /// <summary>
         /// Determine if the current time is PM.
         /// </summary>
-        public bool IsPM
+        public virtual bool IsPM
         {
             get
             {
@@ -680,7 +680,7 @@ namespace DOL.GS
         /// <summary>
         /// Determine if current time is between 6PM and 6AM, can be used for conditional spells.
         /// </summary>
-        public bool IsNightTime
+        public virtual bool IsNightTime
         {
             get
             {
