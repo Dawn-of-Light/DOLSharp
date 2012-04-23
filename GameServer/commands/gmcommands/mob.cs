@@ -2692,8 +2692,10 @@ namespace DOL.GS.Commands
 			{
 				string pathname = String.Join(" ", args, 2, args.Length - 2);
 
-				if (MovementMgr.LoadPath(pathname) == null)
+				if (pathname != "" && MovementMgr.LoadPath(pathname) == null)
+				{
 					client.Out.SendMessage("The specified path does not exist", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
 				else
 				{
 					targetMob.PathID = pathname;
