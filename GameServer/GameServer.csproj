@@ -365,6 +365,7 @@
     <Compile Include="gameobjects\CharacterClasses\Midgard\CharacterClassBoneDancer.cs" />
     <Compile Include="gameobjects\CustomNPC\BuffMerchant.cs" />
     <Compile Include="gameobjects\GameInventoryObject.cs" />
+    <Compile Include="gameobjects\GameMythirian.cs" />
     <Compile Include="gameutils\MarketSearch.cs" />
     <Compile Include="gameutils\InventoryLogging.cs" />
     <Compile Include="gameutils\MarketCache.cs" />
@@ -1078,6 +1079,7 @@
     <Compile Include="propertycalc\CriticalMeleeHitChanceCalculator.cs" />
     <Compile Include="propertycalc\ExtraHPPercentCalculator.cs" />
     <Compile Include="propertycalc\ResistPiercePropertyCalculator.cs" />
+    <Compile Include="propertycalc\MythicalSafeFallCalculator.cs" />
     <Compile Include="propertycalc\SpellLevelCalculator.cs" />
     <Compile Include="propertycalc\StyleAbsorbPercentCalculator.cs" />
     <Compile Include="propertycalc\WaterSpeedCalculator.cs" />

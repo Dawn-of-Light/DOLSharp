@@ -785,8 +785,9 @@ namespace DOL.GS
 		DPS = 230,
 		MagicAbsorption = 231,
 		CriticalHealHitChance = 232,
-		
-		// 233 - 246 Available
+
+        MythicalSafeFall = 233,
+		// 234 - 246 Available
 
 		BountyPoints = 247,
 		XpPoints = 248,

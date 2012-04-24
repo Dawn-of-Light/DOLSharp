@@ -215,6 +215,7 @@ PlayerPositionUpdateHandler.Entered:			You have entered {0}.
 PlayerPositionUpdateHandler.FallingDamage:		You take falling damage!
 PlayerPositionUpdateHandler.FallPercent:		You take {0}% of your max hits in damage.
 PlayerPositionUpdateHandler.SafeFall:			The damage was lessened by your Safe Fall ability!
+PlayerPositionUpdateHandler.MythSafeFall:		The damage was lessened by your equipment!
 PlayerPositionUpdateHandler.UnknownZone:		Unknown zone, moving to bind point.
 
 # REALMABILITIES

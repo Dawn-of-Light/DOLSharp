@@ -2502,11 +2502,72 @@ namespace DOL.GS
 			get { return GetModified(eProperty.MaxConcentration); }
 		}
 
-		#endregion
+        #region Calculate Fall Damage
 
-		#region Class/Race
+        /// <summary>
+        /// Calculates fall damage taking fall damage reduction bonuses into account
+        /// </summary>
+        /// <returns></returns>
+        public virtual void CalcFallDamage(int fallDamagePercent)
+        {
+            if (fallDamagePercent > 0)
+            {
+                int safeFallLevel = GetAbilityLevel(Abilities.SafeFall);
+                int mythSafeFall = GetModified(eProperty.MythicalSafeFall);
 
-		/// <summary>
+                if (mythSafeFall > 0 & mythSafeFall < fallDamagePercent)
+                {
+                    Client.Out.SendMessage(LanguageMgr.GetTranslation(Client, "PlayerPositionUpdateHandler.MythSafeFall"),
+                        eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+                    fallDamagePercent = mythSafeFall;
+                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "PlayerPositionUpdateHandler.FallPercent", fallDamagePercent),
+                        eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+                }
+                if (safeFallLevel > 0 & mythSafeFall == 0)
+                {
+                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "PlayerPositionUpdateHandler.SafeFall"),
+                        eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+                }
+                if (mythSafeFall == 0)
+                {
+                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "PlayerPositionUpdateHandler.FallPercent", fallDamagePercent),
+                        eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+                }
+
+                Endurance -= MaxEndurance * fallDamagePercent / 100;
+                double damage = (0.01 * fallDamagePercent * (MaxHealth - 1));
+
+                // [Freya] Nidel: CloudSong falling damage reduction
+                GameSpellEffect cloudSongFall = SpellHandler.FindEffectOnTarget(this, "CloudsongFall");
+                if (cloudSongFall != null)
+                {
+                    damage -= (damage * cloudSongFall.Spell.Value) * 0.01;
+                }
+
+                //Mattress: SafeFall property for Mythirians, the value of the MythicalSafeFall property represents the percent damage taken in a fall.
+                if (mythSafeFall != 0 && damage > mythSafeFall)
+                {
+                    damage = ((MaxHealth - 1) * (mythSafeFall * 0.01));
+                }
+
+                TakeDamage(null, eDamageType.Falling, (int)damage, 0);
+
+                //Update the player's health to all other players around
+                foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                    Out.SendCombatAnimation(null, Client.Player, 0, 0, 0, 0, 0, HealthPercent);
+
+                return;
+            }
+            return;
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Class/Race
+
+        /// <summary>
 		/// Returns localized race names
 		/// </summary>
 		/// <param name="client"></param>
