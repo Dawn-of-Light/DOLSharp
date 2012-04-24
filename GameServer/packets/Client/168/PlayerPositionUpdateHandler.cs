@@ -593,40 +593,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 						fallMinSpeed = 500;
 						fallDivide = 15;
 					}
-					if (fallSpeed > fallMinSpeed)
-					{
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.FallingDamage"),
-						                       eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 
-						int fallPercent = Math.Min(99, (fallSpeed - (fallMinSpeed + 1)) / fallDivide);
-						if (fallPercent > 0)
-						{
-							if (safeFallLevel > 0)
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.SafeFall"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-							
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.FallPercent", fallPercent),
-							                       eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+                    int fallPercent = Math.Min(99, (fallSpeed - (fallMinSpeed + 1)) / fallDivide);
 
-							client.Player.Endurance -= client.Player.MaxEndurance * fallPercent / 100;
-							double damage = (0.01 * fallPercent * (client.Player.MaxHealth - 1));
-							// [Freya] Nidel: CloudSong falling damage reduction
-							Effects.GameSpellEffect cloudSongFall = Spells.SpellHandler.FindEffectOnTarget(client.Player, "CloudsongFall");
-							if(cloudSongFall != null)
-							{
-								damage -= (damage * cloudSongFall.Spell.Value ) * 0.01;
-							}
-							client.Player.TakeDamage(null, eDamageType.Falling, (int)damage, 0);
+                    if (fallSpeed > fallMinSpeed)
+                    {
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.FallingDamage"),
+                        eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+                        client.Player.CalcFallDamage(fallPercent);
+                    }
 
-							//Update the player's health to all other players around
-							foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-								player.Out.SendCombatAnimation(null, client.Player, 0, 0, 0, 0, 0, client.Player.HealthPercent);
-						}
-						
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.Endurance"),
-						                       eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-					}
 					client.Player.MaxLastZ = client.Player.Z;
 				}
+
 				else
 				{
 					// always set Z if on the ground
