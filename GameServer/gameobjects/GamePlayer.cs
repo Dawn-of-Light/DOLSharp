@@ -11344,6 +11344,12 @@ namespace DOL.GS
 				if (iBaneLordEffect != null)
 					enc *= 1.00 - (iBaneLordEffect.Spell.Value * 0.01);
 
+                // Apply Mythirian Bonus
+                if (GetModified(eProperty.MythicalDiscumbering) > 0)
+                {
+                    enc += GetModified(eProperty.MythicalDiscumbering);
+                }
+
 				return (int)enc;
 			}
 		}

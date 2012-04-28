@@ -1072,6 +1072,7 @@
     <Compile Include="propertycalc\ArcaneSyphonCalculator.cs" />
     <Compile Include="propertycalc\ConversionPercentCalculator.cs" />
     <Compile Include="propertycalc\BountyPointsCalculator.cs" />
+    <Compile Include="propertycalc\MythicalDiscumberingCalculator.cs" />
     <Compile Include="propertycalc\RealmPointsCalculator.cs" />
     <Compile Include="propertycalc\FatigueCalculator.cs" />
     <Compile Include="propertycalc\CriticalSpellHitChanceCalculator.cs" />
