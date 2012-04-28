@@ -787,7 +787,8 @@ namespace DOL.GS
 		CriticalHealHitChance = 232,
 
         MythicalSafeFall = 233,
-		// 234 - 246 Available
+        MythicalDiscumbering = 234,
+		// 235 - 246 Available
 
 		BountyPoints = 247,
 		XpPoints = 248,
