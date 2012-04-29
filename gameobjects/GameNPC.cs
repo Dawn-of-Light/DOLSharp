@@ -4339,12 +4339,12 @@ namespace DOL.GS
 					if (GameMoney.IsItemMoney(lootTemplate.Name))
 					{
 						long value = lootTemplate.Price;
+                        //GamePlayer killerPlayer = killer as GamePlayer;
 
 						//[StephenxPimentel] - Zone Bonus XP Support
 						if (ServerProperties.Properties.ENABLE_ZONE_BONUSES)
 						{
 							GamePlayer killerPlayer = killer as GamePlayer;
-
                             if (killer is GameNPC)
                             {
                                 if (killer is GameNPC && ((killer as GameNPC).Brain is IControlledBrain))
@@ -4376,6 +4376,18 @@ namespace DOL.GS
 								killerPlayer.Out.SendMessage(LanguageMgr.GetTranslation(killerPlayer.Client, "GameNPC.DropLoot.AdditionalMoney", Money.GetString(value - lootTemplate.Price)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
 						}
 
+                        //Mythical Coin bonus property (Can be used for any equipped item, bonus 235)
+                        if (killer is GamePlayer)
+                        {
+                            GamePlayer killerPlayer = killer as GamePlayer;
+                            if (killerPlayer.GetModified(eProperty.MythicalCoin) > 0)
+                            {
+                                value += (value * killerPlayer.GetModified(eProperty.MythicalCoin)) / 100;
+                                killerPlayer.Out.SendMessage(LanguageMgr.GetTranslation(killerPlayer.Client,
+                                    "GameNPC.DropLoot.ItemAdditionalMoney", Money.GetString(value - lootTemplate.Price)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+                            }
+                        }
+                        
 						loot = new GameMoney(value, this);
 						loot.Name = lootTemplate.Name;
 						loot.Model = (ushort)lootTemplate.Model;
