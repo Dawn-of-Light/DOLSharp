@@ -788,7 +788,8 @@ namespace DOL.GS
 
         MythicalSafeFall = 233,
         MythicalDiscumbering = 234,
-		// 235 - 246 Available
+        MythicalCoin = 235,
+		// 236 - 246 Available
 
 		BountyPoints = 247,
 		XpPoints = 248,
