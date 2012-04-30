@@ -31,6 +31,9 @@ namespace DOL.GS.Commands
 		 "GMCommands.KeepComponents.Usage.Create.TID",
 		 "GMCommands.KeepComponents.Usage.Create.T",
 		 "GMCommands.KeepComponents.Usage.Skin",
+		 "/keepcomponent move - move to your position",
+		 "/keepcomponent rotate [0 - 3]",
+		 "/keepcomponent reload",
 		 "'/keepcomponent save' to save the component in the DB",
 		 "GMCommands.KeepComponents.Usage.Delete")]
 	public class KeepComponentCommandHandler : AbstractCommandHandler, ICommandHandler
@@ -183,7 +186,33 @@ namespace DOL.GS.Commands
 						client.Out.SendMessage("Component moved.  Use /keepcomponent save to save, or reload to reload the original position.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     } break;
                 #endregion
-                #region Skin
+				#region Rotate
+				case "rotate":
+					{
+						try
+						{
+							ushort amount = Convert.ToUInt16(args[2]);
+
+							if (amount > 3)
+								amount = 3;
+
+							GameKeepComponent component = client.Player.TargetObject as GameKeepComponent;
+
+							component.ComponentHeading = amount;
+							component.Heading = (ushort)(component.ComponentHeading * 1024 + myKeep.Heading);
+
+							client.Out.SendKeepInfo(myKeep);
+							client.Out.SendKeepComponentInfo(component);
+							client.Out.SendKeepComponentDetailUpdate(component);
+							client.Out.SendMessage("Component rotated.  Use /keepcomponent save to save, or reload to reload the original position.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						catch
+						{
+							DisplayMessage(client, "/keepcomponent rotate [0 - 3]");
+						}
+					} break;
+				#endregion
+				#region Skin
                 case "skin":
 					{
 						if (args.Length < 3)
