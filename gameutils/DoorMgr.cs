@@ -50,7 +50,7 @@ namespace DOL.GS
 				if (!LoadDoor(door))
 				{
 					log.Error("Unable to load door id " + door.ObjectId + ", correct your database");
-					return false;
+					// continue loading, no need to stop server for one bad door!
 				}
 			}
 			return true;
