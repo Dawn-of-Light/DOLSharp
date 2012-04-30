@@ -35,6 +35,8 @@ namespace DOL.GS.Keeps
 	/// </summary>
 	public class GameKeepDoor : GameLiving, IDoor, IKeepItem
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		#region properties
 
 		protected int m_oldMaxHealth;
@@ -636,9 +638,17 @@ namespace DOL.GS.Keeps
 			m_doorID = GenerateDoorID();
 			this.m_model = 0xFFFF;
 			m_state = eDoorState.Closed;
-			this.AddToWorld();
-			StartHealthRegeneration();
-			DoorMgr.RegisterDoor(this);
+
+			if (AddToWorld())
+			{
+				StartHealthRegeneration();
+				DoorMgr.RegisterDoor(this);
+			}
+			else
+			{
+				log.Error("Failed to load keep door from position! DoorID=" + m_doorID + ". Component SkinID=" + component.Skin + ". KeepID=" + component.Keep.KeepID);
+			}
+
 		}
 
 		public void MoveToPosition(DBKeepPosition position)
@@ -653,10 +663,16 @@ namespace DOL.GS.Keeps
 			if (m_component.Keep is GameKeepTower)
 			{
 				GameKeepTower tower = m_component.Keep as GameKeepTower;
+
 				if (tower.Keep != null)
 				{
 					ownerKeepID = tower.Keep.KeepID;
 				}
+				else
+				{
+					ownerKeepID = tower.OwnerKeepID;
+				}
+
 				towerIndex = tower.KeepID >> 8;
 			}
 			else

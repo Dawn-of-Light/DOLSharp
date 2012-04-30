@@ -22,6 +22,27 @@ using DOL.Database.Attributes;
 namespace DOL.Database
 {
 	/// <summary>
+	/// Skin types to use for this keep
+	/// 0 = any, 1 = old, 2 = new
+	/// </summary>
+	public enum eKeepSkinType : byte
+	{
+		/// <summary>
+		/// Use server proerty to determine skin
+		/// </summary>
+		Any = 0,
+		/// <summary>
+		/// Use old skins
+		/// </summary>
+		Old = 1,
+		/// <summary>
+		/// Use new skins
+		/// </summary>
+		New = 2,
+	}
+
+
+	/// <summary>
 	/// DB Keep is database of keep
 	/// </summary>
 	[DataTable(TableName = "Keep")]
@@ -44,6 +65,7 @@ namespace DOL.Database
 		private int m_type;
 		private byte m_baseLevel;
 		private string m_createInfo;
+		private byte m_skinType;
 
 
 		public DBKeep()
@@ -337,6 +359,38 @@ namespace DOL.Database
 			set
 			{
 				Dirty = true; m_baseLevel = value;
+			}
+		}
+
+		/// <summary>
+		/// Use old or new skins for this keep.  0 = any, 1 = old, 2 = new
+		/// Access via KeepSkinType
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public byte SkinType
+		{
+			get
+			{
+				return m_skinType;
+			}
+			set
+			{
+				Dirty = true; m_skinType = value;
+			}
+		}
+
+		/// <summary>
+		/// What skin type does this keep use?
+		/// </summary>
+		public eKeepSkinType KeepSkinType
+		{
+			get
+			{
+				return (eKeepSkinType)SkinType;
+			}
+			set
+			{
+				SkinType = (byte)value;
 			}
 		}
 

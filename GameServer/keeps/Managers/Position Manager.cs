@@ -423,7 +423,7 @@ namespace DOL.GS.Keeps
 
 			GameServer.Database.AddObject(pos);
 
-			player.Out.SendMessage("Added door successfully, restart the server", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage("Added door as a position to keep.  A server restart will be required to load this position.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 	}
 }
