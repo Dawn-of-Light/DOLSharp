@@ -107,8 +107,8 @@ namespace DOL.GS.Keeps
                     //in this manner whether the keep is old, new or 'both'. A keep will be 'both' if it is found to
                     //have components of both sets, which is possible.
 
-                    bool isOld = false;
-                    bool isNew = false;
+                    bool hasOldComponents = false;
+                    bool hasNewComponents = false;
 
                     //I don't want to touch the loading order of hookpoints, as i think they may depend on the
                     //assumption keeps and towers are linked before population. So we will settle for a second
@@ -117,24 +117,37 @@ namespace DOL.GS.Keeps
                     var currentKeepComponents = GameServer.Database.SelectObjects<DBKeepComponent>("`KeepID` = '" + datakeep.KeepID + "'");
 				
                     //Pass through, and depending on the outcome of the components, determine the 'age' of the keep.
-                    foreach (DBKeepComponent dum in currentKeepComponents)
+                    foreach (DBKeepComponent comp in currentKeepComponents)
                     {
-                        if (dum.Skin >= 0 && dum.Skin <= 20) //these are the min/max ids for old keeps.
-                            isOld = true;
-                        if (dum.Skin > 20) //any skinID greater than this are ids for new keeps.
-                            isNew = true;
+                        if (comp.Skin >= 0 && comp.Skin <= 20) //these are the min/max ids for old keeps.
+                            hasOldComponents = true;
+                        if (comp.Skin > 20) //any skinID greater than this are ids for new keeps.
+                            hasNewComponents = true;
                     }
 
-                    //Now, consult server properties to decide our plan!
 
-                    //Quote: ServerProperties.cs
-                    //"use_new_keeps", "Keeps to load. 0 for Old Keeps, 1 for new keeps, 2 for both.", 2
+					if (datakeep.KeepSkinType != eKeepSkinType.Any)
+					{
+						if (datakeep.KeepSkinType == eKeepSkinType.New && hasNewComponents == false)
+						{
+							continue;
+						}
+						else if (datakeep.KeepSkinType == eKeepSkinType.Old && hasOldComponents == false)
+						{
+							continue;
+						}
+					}
+					else
+					{
+						// Use server properties to determine correct keep to load
+						//"use_new_keeps", "Keeps to load. 0 for Old Keeps, 1 for new keeps, 2 for both.", 2
 
-                    if (ServerProperties.Properties.USE_NEW_KEEPS == 0 && isNew)
-                        continue;
+						if (ServerProperties.Properties.USE_NEW_KEEPS == 0 && hasNewComponents)
+							continue;
 
-                    if (ServerProperties.Properties.USE_NEW_KEEPS == 1 && isOld)
-                        continue;
+						if (ServerProperties.Properties.USE_NEW_KEEPS == 1 && hasOldComponents)
+							continue;
+					}
 
                     //If we've got this far, we are permitted to load as per normal!
 
@@ -165,6 +178,12 @@ namespace DOL.GS.Keeps
 							ownerKeep.AddTower(tower);
 						}
 						tower.Keep = ownerKeep;
+						tower.OwnerKeepID = index;
+
+						if (tower.OwnerKeepID < 10)
+						{
+							log.WarnFormat("Tower.OwnerKeepID < 10 for KeepID {0}.  Doors on this tower will not be targetable! ({0} & 0xFF < 10).  Choose a different KeepID to correct this issue.", tower.KeepID);
+						}
 					}
 				}
 
@@ -173,19 +192,33 @@ namespace DOL.GS.Keeps
 				var keepcomponents = GameServer.Database.SelectAllObjects<DBKeepComponent>();
 				foreach (DBKeepComponent component in keepcomponents)
 				{
-					// if use old keeps don't try to load new components
-					if (ServerProperties.Properties.USE_NEW_KEEPS == 0 && IsNewKeepComponent(component.Skin))
-						continue;
-					
-					// if use new keeps don't try and load old components
-					if (ServerProperties.Properties.USE_NEW_KEEPS == 1 && !IsNewKeepComponent(component.Skin))
-						continue;
-
 					AbstractGameKeep keep = GetKeepByID(component.KeepID);
 					if (keep == null)
 					{
 						missingKeeps = true;
 						continue;
+					}
+
+					if (keep.DBKeep.KeepSkinType != eKeepSkinType.Any)
+					{
+						if (keep.DBKeep.KeepSkinType == eKeepSkinType.New && IsNewKeepComponent(component.Skin) == false)
+						{
+							continue;
+						}
+						else if (keep.DBKeep.KeepSkinType == eKeepSkinType.Old && IsNewKeepComponent(component.Skin))
+						{
+							continue;
+						}
+					}
+					else
+					{
+						// if use old keeps don't try to load new components
+						if (ServerProperties.Properties.USE_NEW_KEEPS == 0 && IsNewKeepComponent(component.Skin))
+							continue;
+
+						// if use new keeps don't try and load old components
+						if (ServerProperties.Properties.USE_NEW_KEEPS == 1 && !IsNewKeepComponent(component.Skin))
+							continue;
 					}
 
 					GameKeepComponent gamecomponent = keep.CurrentRegion.CreateGameKeepComponent();
@@ -195,7 +228,7 @@ namespace DOL.GS.Keeps
 
 				if (missingKeeps && log.IsWarnEnabled)
 				{
-					log.WarnFormat("Some keeps not found while loading components, possibly old/new keeptype; see server properties");
+					log.WarnFormat("Some keeps not found while loading components, possibly old/new keeptypes.");
 				}
 
 				if (m_keeps.Count != 0)

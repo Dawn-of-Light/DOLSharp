@@ -36,6 +36,18 @@ namespace DOL.GS.Keeps
 			get { return m_keep; }
 		}
 
+		private int m_ownerKeepID;
+
+		/// <summary>
+		/// This is the computed ID of the keep that owns this tower.
+		/// Owner Keep may not exist but this number is needed to find tower doors
+		/// </summary>
+		public int OwnerKeepID
+		{
+			set { m_ownerKeepID = value; }
+			get { return m_ownerKeepID; }
+		}
+
 		/// <summary>
 		/// The time for a tower to upgrade
 		/// </summary>

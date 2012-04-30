@@ -36,7 +36,8 @@ namespace DOL.GS.Commands
 		"GMCommands.Keep.Usage.KeepID",
 		"GMCommands.Keep.Usage.Level",
 		"GMCommands.Keep.Usage.BaseLevel",
-		//"GMCommands.Keep.Usage.MoveHere",
+		"/keep move {[x,y,z,h] [amount]} - admin only",
+		"/keep skintype [0 = any, 1 = old, 2 = new] - force keep to use old or new skins",
 		//"GMCommands.Keep.Usage.AddComponent",
 		"GMCommands.Keep.Usage.Save",
 		"GMCommands.Keep.Usage.AddTeleporter",
@@ -95,7 +96,7 @@ namespace DOL.GS.Commands
 			
 			switch (args[1])
 			{
-					#region FastCreate
+				#region FastCreate
 				case "fastcreate":
 					{
 						#region DisplayTemplates
@@ -1990,7 +1991,7 @@ namespace DOL.GS.Commands
 						break;
 					}
 					#endregion FastCreate
-					#region TowerCreate
+				#region TowerCreate
 				case "towercreate":
 					{
 						if (args.Length < 5)
@@ -2044,7 +2045,7 @@ namespace DOL.GS.Commands
 						keep.BaseLevel = baseLevel;
 						GameServer.Database.AddObject(keep);
 
-						DBKeepComponent towerComponent = new DBKeepComponent(1, (int)GameKeepComponent.eComponentSkin.Tower, 0, 0, 0, 0, 3200, keep.KeepID, client.Player.Name + ";/keep towercreate");
+						DBKeepComponent towerComponent = new DBKeepComponent(0, (int)GameKeepComponent.eComponentSkin.Tower, 0, 0, 0, 0, 3200, keep.KeepID, client.Player.Name + ";/keep towercreate");
 						GameServer.Database.AddObject(towerComponent);
 
 						GameKeepTower k = new GameKeepTower();
@@ -2055,15 +2056,18 @@ namespace DOL.GS.Commands
 						foreach (GameClient c in WorldMgr.GetClientsOfRegion(client.Player.CurrentRegionID))
 						{
 							c.Out.SendKeepInfo(k);
+							c.Out.SendKeepComponentUpdate(k, false);
+
 							foreach (GameKeepComponent keepComponent in k.KeepComponents)
 							{
 								c.Out.SendKeepComponentInfo(keepComponent);
+								c.Out.SendKeepComponentDetailUpdate(keepComponent);
 							}
 						}
 						break;
 					}
 					#endregion TowerCreate
-					#region Create
+				#region Create
 				case "create":
 					{
 						if (args.Length < 6)
@@ -2186,7 +2190,7 @@ namespace DOL.GS.Commands
 						break;
 					}
 					#endregion Create
-					#region Remove
+				#region Remove
 				case "remove":
 					{
 						KeepArea karea = null;
@@ -2211,7 +2215,7 @@ namespace DOL.GS.Commands
 						break;
 					}
 					#endregion Remove
-					#region Name
+				#region Name
 				case "name":
 					{
 						if (args.Length < 3)
@@ -2229,7 +2233,7 @@ namespace DOL.GS.Commands
 						break;
 					}
 					#endregion Name
-					#region KeepID
+				#region KeepID
 				case "keepid":
 					{
 						if (args.Length < 3)
@@ -2257,7 +2261,7 @@ namespace DOL.GS.Commands
 						break;
 					}
 					#endregion KeepID
-					#region Level
+				#region Level
 				case "level":
 					{
 						if (args.Length < 3)
@@ -2285,7 +2289,7 @@ namespace DOL.GS.Commands
 						break;
 					}
 					#endregion Level
-					#region BaseLevel
+				#region BaseLevel
 				case "baselevel":
 					{
 						if (args.Length < 3)
@@ -2315,7 +2319,7 @@ namespace DOL.GS.Commands
 						break;
 					}
 					#endregion BaseLevel
-					#region Realm
+				#region Realm
 				case "realm":
 					{
 						if (args.Length < 3)
@@ -2343,7 +2347,7 @@ namespace DOL.GS.Commands
 						break;
 					}
 					#endregion Realm
-					#region Radius
+				#region Radius
 				case "radius":
 					{
 						if (args.Length < 3)
@@ -2371,7 +2375,7 @@ namespace DOL.GS.Commands
 						break;
 					}
 					#endregion Radius
-					#region Save
+				#region Save
 				case "save":
 					{
 						if (myKeep == null)
@@ -2384,7 +2388,7 @@ namespace DOL.GS.Commands
 						break;
 					}
 					#endregion Save
-					#region AddTeleport
+				#region AddTeleport
 				case "addteleporter":
 					{
 						GameKeepComponent component = client.Player.TargetObject as GameKeepComponent;
@@ -2409,7 +2413,7 @@ namespace DOL.GS.Commands
 						break;
 					}
 					#endregion AddTeleport
-					#region AddBanner
+				#region AddBanner
 				case "addbanner":
 					{
 						GameKeepBanner.eBannerType bannerType = GameKeepBanner.eBannerType.Realm;
@@ -2464,6 +2468,122 @@ namespace DOL.GS.Commands
 						break;
 					}
 					#endregion Addbanner
+				#region Move
+				case "move":
+					{
+						if (client.Account.PrivLevel < 3)
+							return;
+
+						if (myKeep == null)
+						{
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
+							return;
+						}
+
+						if (args.Length < 3)
+						{
+							// simple move to player location
+							myKeep.X = client.Player.X;
+							myKeep.Y = client.Player.Y;
+							myKeep.Z = client.Player.Z;
+							myKeep.Heading = client.Player.Heading;
+						}
+						else if (args.Length < 4)
+						{
+							DisplayMessage(client, "/keep move [direction] [amount]");
+							return;
+						}
+						else
+						{
+							string direction = args[2];
+							int amount = Convert.ToInt32(args[3]);
+
+							switch (direction.ToLower())
+							{
+								case "x":
+									myKeep.X += amount;
+									break;
+
+								case "y":
+									myKeep.Y += amount;
+									break;
+
+								case "z":
+									myKeep.Z += amount;
+									break;
+
+								case "h":
+
+									if (amount < 0 && myKeep.Heading - Math.Abs(amount) < 0)
+									{
+										int diff = myKeep.Heading - Math.Abs(amount);
+										myKeep.Heading = (ushort)(4095 + diff);
+									}
+									else
+									{
+										myKeep.Heading += (ushort)amount;
+									}
+
+									if (myKeep.Heading > 4095)
+									{
+										myKeep.Heading = (ushort)(myKeep.Heading - 4095);
+									}
+
+									break;
+
+								default:
+									break;
+							}
+						}
+
+						foreach (GameClient c in WorldMgr.GetClientsOfRegion(client.Player.CurrentRegionID))
+						{
+							c.Out.SendKeepRemove(myKeep);
+							c.Out.SendKeepInfo(myKeep);
+							foreach (GameKeepComponent keepComponent in myKeep.KeepComponents)
+							{
+								c.Out.SendKeepComponentInfo(keepComponent);
+								c.Out.SendKeepComponentDetailUpdate(keepComponent);
+							}
+						}
+
+						DisplayMessage(client, "Keep moved.  Don't forget to '/keep save' your changes.");
+
+						break;
+					}
+				#endregion Move
+				#region SkinType
+				case "skintype":
+					{
+						if (myKeep == null)
+						{
+							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
+							return;
+						}
+
+						try
+						{
+							byte skinType = Convert.ToByte(args[2]);
+
+							if (skinType < 3)
+							{
+								myKeep.DBKeep.KeepSkinType = (eKeepSkinType)skinType;
+								DisplayMessage(client, "Keep skin type changed to " + myKeep.DBKeep.KeepSkinType + ". Don't forget to '/keep save' your changes.");
+							}
+							else
+							{
+								DisplayMessage(client, "/keep skintype [0 = any, 1 = old, 2 = new]");
+							}
+						}
+						catch
+						{
+							DisplayMessage(client, "/keep skintype [0 = any, 1 = old, 2 = new]");
+						}
+
+						break;
+					}
+				#endregion Move
+
 					#region Default
 				default:
 					{

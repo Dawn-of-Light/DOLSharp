@@ -77,6 +77,12 @@ namespace DOL.GS.Commands
 				return;
 			}
 
+			if (client.Player.CurrentRegion.IsInstance)
+			{
+				client.Out.SendMessage("You can't add doors inside an instance.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
 			if (client.Player.TargetObject == null)
 			{
 				client.Out.SendMessage("You must target a door", eChatType.CT_System, eChatLoc.CL_SystemWindow);

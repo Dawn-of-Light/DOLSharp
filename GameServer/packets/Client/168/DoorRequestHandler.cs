@@ -74,6 +74,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 					client.Out.SendDebugMessage(
 						"Keep Door ID: {0} state:{1} (Owner Keep: {6} KeepID:{2} ComponentID:{3} DoorIndex:{4} TowerNumber:{5})", doorID,
 						doorState, keepID, componentID, doorIndex, towerNum, ownerKeepId);
+
+					if (keepID > 255 && ownerKeepId < 10)
+					{
+						ChatUtil.SendDebugMessage(client, "Warning: Towers with an Owner Keep ID < 10 will have untargetable doors!");
+					}
 				}
 				else if (doorType == 9)
 				{
