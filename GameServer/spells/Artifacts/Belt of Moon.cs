@@ -40,37 +40,31 @@ namespace DOL.GS.Spells
             {
                 if (caster.Realm == eRealm.Albion)
                 {
-
                     m_MoonMace = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Moon_Mace'") ?? Mace;
                     items.Add(GameInventoryItem.Create<ItemTemplate>(m_MoonMace));
 
                     m_MoonStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Moon_Staff'") ?? Staff;
                     items.Add(GameInventoryItem.Create<ItemTemplate>(m_MoonStaff));
                     return;
-
                 }
 
                 if (caster.Realm == eRealm.Midgard)
                 {
-
                     m_MoonMace = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Moon_MaceM'") ?? MaceM;
                     items.Add(GameInventoryItem.Create<ItemTemplate>(m_MoonMace));
 
                     m_MoonStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Moon_Staff'") ?? Staff;
                     items.Add(GameInventoryItem.Create<ItemTemplate>(m_MoonStaff));
-
                     return;
                 }
 
                 if (caster.Realm == eRealm.Hibernia)
                 {
-
                     m_MoonMace = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Moon_MaceH'") ?? MaceH;
                     items.Add(GameInventoryItem.Create<ItemTemplate>(m_MoonMace));
 
                     m_MoonStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Moon_Staff'") ?? Staff;
                     items.Add(GameInventoryItem.Create<ItemTemplate>(m_MoonStaff));
-
                     return;
                 }
             }
@@ -251,6 +245,7 @@ namespace DOL.GS.Spells
                     m_MoonStaff.Type_Damage = 0;
                     m_MoonStaff.Object_Type = 8;
                     m_MoonStaff.Item_Type = 12;
+                    m_MoonStaff.Hand = 1;
                     m_MoonStaff.Color = 43;
                     m_MoonStaff.Effect = 45;
                     m_MoonStaff.Model = 566;
