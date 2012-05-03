@@ -226,15 +226,15 @@ namespace DOL.GS.Spells
         
         public StrengthConstitutionDrain(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
-    
+
     /// <summary>
     /// ABS Damage shield spell handler
     /// </summary>
     [SpellHandlerAttribute("ABSDamageShield")]
     public class ABSDamageShield : AblativeArmorSpellHandler
     {
-  		protected override void OnDamageAbsorbed(AttackData ad, int DamageAmount)
-		{
+        protected override void OnDamageAbsorbed(AttackData ad, int DamageAmount)
+        {
             AttackData newad = new AttackData();
             newad.Attacker = ad.Target;
             newad.Target = ad.Attacker;
@@ -242,10 +242,10 @@ namespace DOL.GS.Spells
             newad.DamageType = Spell.DamageType;
             newad.AttackType = AttackData.eAttackType.Spell;
             newad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
-			newad.SpellHandler = this; 
-            ad.Target.OnAttackedByEnemy(newad);
-            ad.Attacker.DealDamage(newad); 			
-		}       
+            newad.SpellHandler = this;
+            newad.Target.OnAttackedByEnemy(newad);
+            newad.Attacker.DealDamage(newad);
+        }
         public ABSDamageShield(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
     
