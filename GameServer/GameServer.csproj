@@ -2113,6 +2113,7 @@
     <Compile Include="spells\CharmSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="spells\CommonAstralSpells.cs" />
     <Compile Include="spells\Fury.cs" />
     <Compile Include="spells\CombatHealSpellHandler.cs">
       <SubType>Code</SubType>
