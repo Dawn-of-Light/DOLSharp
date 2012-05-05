@@ -32,7 +32,7 @@ namespace DOL.GS.Spells
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
             //Template of the Illusionblade NPC
-            INpcTemplate template = NpcTemplateMgr.GetTemplate((ushort)Spell.LifeDrainReturn);
+            INpcTemplate template = NpcTemplateMgr.GetTemplate(Spell.LifeDrainReturn);
 
             if (template == null)
             {
@@ -45,7 +45,6 @@ namespace DOL.GS.Spells
             GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
             IControlledBrain brain = GetPetBrain(Caster);
             m_pet = GetGamePet(template);
-            //brain.WalkState = eWalkState.Stay;
             m_pet.SetOwnBrain(brain as AI.ABrain);
             int x, y, z;
             ushort heading;
@@ -58,8 +57,9 @@ namespace DOL.GS.Spells
             m_pet.Z = z;
             m_pet.Heading = heading;
             m_pet.CurrentRegion = region;
-            m_pet.CurrentSpeed = 0;
+           // m_pet.CurrentSpeed = 0;
             m_pet.Realm = Caster.Realm;
+            m_pet.Race = 0;
             m_pet.Level = 44; // lowered in patch 1109b
             m_pet.AddToWorld();
             //Check for buffs
@@ -71,7 +71,6 @@ namespace DOL.GS.Spells
             m_pet.AutoSetStats();
             effect.Start(m_pet);
             //Set pet infos & Brain
-
         }
 
         protected override GamePet GetGamePet(INpcTemplate template) { return new IllusionBladePet(template); }
