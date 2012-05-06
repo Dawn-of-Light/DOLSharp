@@ -150,35 +150,28 @@ namespace DOL.GS.Commands
 					{
 						uint plvl = 1;
 
-						if( !UInt32.TryParse( args[1], out plvl ) )
+						if (!UInt32.TryParse(args[1], out plvl))
 						{
-							DisplaySyntax( client );
+							DisplaySyntax(client);
 							return;
 						}
 
-						if( args.Length > 2 )
-							{
-							GameClient targetClient = WorldMgr.GetClientByPlayerName( args[2], true, true );
+						if (args.Length > 2)
+						{
+							GameClient targetClient = WorldMgr.GetClientByPlayerName(args[2], true, true);
 
-							if( targetClient != null )
+							if (targetClient != null)
 								target = targetClient.Player;
-							}
+						}
 
-									target.Client.Account.PrivLevel = plvl;
-						GameServer.Database.SaveObject( target.Client.Account );
+						target.Client.Account.PrivLevel = plvl;
+						GameServer.Database.SaveObject(target.Client.Account);
+						client.Player.RefreshWorld();
 
-						foreach( GameNPC npc in client.Player.GetNPCsInRadius( WorldMgr.VISIBILITY_DISTANCE ) )
-									{
-							if( ( npc.Flags & GameNPC.eFlags.CANTTARGET ) != 0 || ( npc.Flags & GameNPC.eFlags.DONTSHOWNAME ) != 0 )
-										{
-								client.Out.SendNPCCreate( npc );
-										}
-									}
+						target.Client.Out.SendMessage(LanguageMgr.GetTranslation(client, "AdminCommands.plvl.YourPlvlHasBeenSetted", plvl.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
-						target.Client.Out.SendMessage( LanguageMgr.GetTranslation( client, "AdminCommands.plvl.YourPlvlHasBeenSetted", plvl.ToString() ), eChatType.CT_Important, eChatLoc.CL_SystemWindow );
-
-						if( target != client.Player )
-							client.Out.SendMessage( LanguageMgr.GetTranslation( client, "AdminCommands.plvl.PlayerPlvlHasBeenSetted", target.Name, plvl.ToString() ), eChatType.CT_Important, eChatLoc.CL_SystemWindow );
+						if (target != client.Player)
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "AdminCommands.plvl.PlayerPlvlHasBeenSetted", target.Name, plvl.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 						break;
 					}
