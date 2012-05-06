@@ -10354,7 +10354,7 @@ namespace DOL.GS
 			CurrentUpdateArray.SetAll(false);
 			HousingUpdateArray = null;
 
-			foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE * 2))
 			{
 				Out.SendNPCCreate(npc);
 				if (npc.Inventory != null)
