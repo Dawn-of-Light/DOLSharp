@@ -11631,6 +11631,11 @@ namespace DOL.GS
 				}
 			}
 
+            if (prevSlot == Slot.MYTHICAL && item.Item_Type == (int)eInventorySlot.Mythical)
+            {
+                (item as GameMythirian).OnUnEquipped(this);
+            }
+
 			if (item.Item_Type == (int)eInventorySlot.Horse)
 			{
 				if (IsOnHorse)
