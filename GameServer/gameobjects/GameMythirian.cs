@@ -23,6 +23,7 @@ using DOL.Language;
 using DOL.GS.PacketHandler;
 using DOL.Database;
 using DOL.GS.Spells;
+using DOL.GS.Effects;
 using log4net;
 
 namespace DOL.GS
@@ -56,13 +57,34 @@ namespace DOL.GS
                                 {
                                         return true;
                                 }
-
-                                // maybe display some message to player here?
+                                player.Out.SendMessage("You do not meet the Champion Level requirement to equip this item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                         }
-
                         return false;
                 }
+                
+                #region Overrides
 
-      }
+                public override void OnEquipped(GamePlayer player)
+                {
+                    if (this.Name.ToLower().Contains("ektaktos"))
+                    {
+                        player.CanBreathUnderWater = true;
+                        player.Out.SendMessage("You find yourself able to breathe water like air!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    }
+                    base.OnEquipped(player);
+                }
+
+                public override void OnUnEquipped(GamePlayer player)
+                {
+                    if (this.Name.ToLower().Contains("ektaktos") && SpellHandler.FindEffectOnTarget(player, "WaterBreathing") == null)
+                    {
+                        player.CanBreathUnderWater = false;
+                        player.Out.SendMessage("With a gulp and a gasp you realize that you are unable to breathe underwater any longer!", eChatType.CT_SpellExpires, eChatLoc.CL_SystemWindow);
+                    }
+                    base.OnUnEquipped(player);
+                }
+                #endregion
+
+        }
 }
  
