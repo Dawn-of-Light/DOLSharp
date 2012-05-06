@@ -187,7 +187,7 @@ namespace DOL.GS.Keeps
 
 		private Hashtable m_hookPoints;
 		protected byte m_oldHealthPercent;
-		private bool m_isRaized;
+		protected bool m_isRaized;
 
 		public Hashtable HookPoints
 		{
@@ -671,7 +671,7 @@ namespace DOL.GS.Keeps
 				return 0;
 		}
 
-		public byte Status
+		public virtual byte Status
 		{
 			get
 			{
@@ -695,7 +695,7 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		public void UpdateLevel()
+		public virtual void UpdateLevel()
 		{
 			if ((IsRaized == false) && (MaxHealth != m_oldMaxHealth))
 			{
@@ -711,7 +711,7 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		public bool IsRaized
+		public virtual bool IsRaized
 		{
 			get { return m_isRaized; }
 			set
@@ -735,7 +735,7 @@ namespace DOL.GS.Keeps
 		protected RegionTimer m_repairTimer;
 		protected static int repairInterval = 30 * 60 * 1000;
 
-		public int RepairTimerCallback(RegionTimer timer)
+		public virtual int RepairTimerCallback(RegionTimer timer)
 		{
 			if (HealthPercent == 100 || Keep.InCombat)
 				return repairInterval;
@@ -744,7 +744,7 @@ namespace DOL.GS.Keeps
 			return repairInterval;
 		}
 
-		public void Repair(int amount)
+		public virtual void Repair(int amount)
 		{
 			if (amount > 0)
 			{
