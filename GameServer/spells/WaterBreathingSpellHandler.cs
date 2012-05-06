@@ -19,6 +19,7 @@
 using System;
 using System.Reflection;
 using DOL.GS.PacketHandler;
+using DOL.Database;
 using DOL.GS.Effects;
 using DOL.Events;
 using log4net;
@@ -35,9 +36,10 @@ namespace DOL.GS.Spells
 		{
 
 			GamePlayer player = effect.Owner as GamePlayer;
+            
 			if (player != null)
 			{
-				player.CanBreathUnderWater = true;
+                player.CanBreathUnderWater = true;
 				player.BaseBuffBonusCategory[(int)eProperty.WaterSpeed] += (int)Spell.Value;
 				player.Out.SendUpdateMaxSpeed();
 			}
@@ -53,12 +55,18 @@ namespace DOL.GS.Spells
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			GamePlayer player = effect.Owner as GamePlayer;
-			if (player != null)
+			
+            if (player != null)
 			{
-				player.CanBreathUnderWater = false;
+                //Check for Mythirian of Ektaktos on effect expiration to prevent unneccessary removal of Water Breathing Effect
+                InventoryItem item = player.Inventory.GetItem((eInventorySlot)37);
+                if (item == null || !item.Name.ToLower().Contains("ektaktos"))
+                {
+                    player.CanBreathUnderWater = false;
+                }
 				player.BaseBuffBonusCategory[(int)eProperty.WaterSpeed] -= (int)Spell.Value;
 				player.Out.SendUpdateMaxSpeed();
-				if (player.IsDiving)
+				if (player.IsDiving & player.CanBreathUnderWater == false)
 					MessageToLiving(effect.Owner, "With a gulp and a gasp you realize that you are unable to breathe underwater any longer!", eChatType.CT_SpellExpires);
 			}
 			return base.OnEffectExpires(effect, noMessages);

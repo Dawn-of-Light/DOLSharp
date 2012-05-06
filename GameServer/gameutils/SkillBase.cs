@@ -851,6 +851,10 @@ namespace DOL.GS
 			m_propertyNames.Add(eProperty.SlashResCapBonus, "Slash cap");
 			m_propertyNames.Add(eProperty.SpiritResCapBonus, "Spirit cap");
 			m_propertyNames.Add(eProperty.ThrustResCapBonus, "Thrust cap");
+            m_propertyNames.Add(eProperty.MythicalSafeFall, "Mythical Safe Fall");
+            m_propertyNames.Add(eProperty.MythicalDiscumbering, "Mythical Discumbering");
+            m_propertyNames.Add(eProperty.MythicalCoin, "Mythical Coin");
+            m_propertyNames.Add(eProperty.SpellLevel, "Spell Focus");
 			//Eden - special actifacts bonus
 			m_propertyNames.Add(eProperty.Conversion, "Conversion");
 			m_propertyNames.Add(eProperty.ExtraHP, "Extra Health Points");
