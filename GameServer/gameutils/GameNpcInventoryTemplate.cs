@@ -132,7 +132,7 @@ namespace DOL.GS
 		/// <param name="effect">The equipment effect</param>
 		/// <param name="extension">The equipment extension</param>
 		/// <returns>true if added</returns>
-		public bool AddNPCEquipment(eInventorySlot slot, int model, int color, int effect, int extension)
+		public bool AddNPCEquipment(eInventorySlot slot, int model, int color, int effect, int extension, int emblem = 0)
 		{
 			lock (m_items)
 			{
@@ -165,6 +165,7 @@ namespace DOL.GS
 						item.Color = color;
 						item.Effect = effect;
 						item.Extension = (byte)extension;
+						item.Emblem = emblem;
 						item.SlotPosition = (int)slot;
 					}
 					else
@@ -265,6 +266,7 @@ namespace DOL.GS
 					item.Color = oldItem.Color;
 					item.Effect = oldItem.Effect;
 					item.Extension = oldItem.Extension;
+					item.Emblem = oldItem.Emblem;
 					item.SlotPosition = oldItem.SlotPosition;
 					clone.m_items.Add(de.Key, item);
 				}
@@ -311,7 +313,7 @@ namespace DOL.GS
 				
 				foreach (NPCEquipment npcItem in npcEquip)
 				{
-					if (!AddNPCEquipment((eInventorySlot)npcItem.Slot, npcItem.Model, npcItem.Color, npcItem.Effect, npcItem.Extension))
+					if (!AddNPCEquipment((eInventorySlot)npcItem.Slot, npcItem.Model, npcItem.Color, npcItem.Effect, npcItem.Extension, npcItem.Emblem))
 					{
 						if (log.IsWarnEnabled)
 							log.Warn("Error adding NPC equipment, ObjectId=" + npcItem.ObjectId);
@@ -384,12 +386,13 @@ namespace DOL.GS
 							if (item.SlotPosition != npcItem.Slot)
 								continue;
 
-							if (item.Model != npcItem.Model || item.Color != npcItem.Color || item.Effect != npcItem.Effect)
+							if (item.Model != npcItem.Model || item.Color != npcItem.Color || item.Effect != npcItem.Effect || item.Emblem != npcItem.Emblem)
 							{
 								npcItem.Model = item.Model;
 								npcItem.Color = item.Color;
 								npcItem.Effect = item.Effect;
 								npcItem.Extension = item.Extension;
+								npcItem.Emblem = item.Emblem;
 								GameServer.Database.SaveObject(npcItem);
 							}
 
@@ -407,6 +410,7 @@ namespace DOL.GS
 							npcItem.Effect = item.Effect;
 							npcItem.TemplateID = templateID;
 							npcItem.Extension = item.Extension;
+							npcItem.Emblem = item.Emblem;
 							GameServer.Database.AddObject(npcItem);
 						}
 					}

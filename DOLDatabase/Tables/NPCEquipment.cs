@@ -53,6 +53,10 @@ namespace DOL.Database
 		/// The Item Extension
 		/// </summary>
 		protected int		m_extension;
+		/// <summary>
+		/// The Item Emblem
+		/// </summary>
+		protected int		m_emblem;
 
 		/// <summary>
 		/// The Constructor
@@ -160,6 +164,23 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_extension = value;
+			}
+		}
+
+		/// <summary>
+		/// Emblem
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public int Emblem
+		{
+			get
+			{
+				return m_emblem;
+			}
+			set
+			{
+				Dirty = true;
+				m_emblem = value;
 			}
 		}
 	}
