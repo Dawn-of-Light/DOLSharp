@@ -43,6 +43,11 @@ namespace DOL.GS
 		/// </summary>
 		private bool m_isRemoved = false;
 
+        public override LanguageDataObject.eTranslationIdentifier TranslationIdentifier
+        {
+            get { return LanguageDataObject.eTranslationIdentifier.eItem; }
+        }
+
 
 		/// <summary>
 		/// Constructs an empty GameInventoryItem

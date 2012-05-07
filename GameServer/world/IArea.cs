@@ -16,8 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
 using System;
+
 using DOL.Events;
+using DOL.Language;
 
 namespace DOL.GS
 {	
@@ -27,7 +30,7 @@ namespace DOL.GS
 	/// - Area.Cricle
 	/// - Area.Square
 	/// </summary>
-	public interface IArea
+	public interface IArea : ITranslatableObject
 	{					
 		/// <summary>
 		/// Returns the ID of this zone
