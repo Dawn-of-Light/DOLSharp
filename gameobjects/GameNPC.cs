@@ -136,6 +136,11 @@ namespace DOL.GS
 			}
 		}
 
+        public virtual LanguageDataObject.eTranslationIdentifier TranslationIdentifier
+        {
+            get { return LanguageDataObject.eTranslationIdentifier.eNPC; }
+        }
+
         /// <summary>
         /// Holds the translation id.
         /// </summary>

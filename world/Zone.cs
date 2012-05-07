@@ -288,6 +288,11 @@ namespace DOL.GS
 		#endregion
 
 		#region properties
+        public virtual LanguageDataObject.eTranslationIdentifier TranslationIdentifier
+        {
+            get { return LanguageDataObject.eTranslationIdentifier.eZone; }
+        }
+
         public string TranslationId
         {
             get { return ID.ToString(); }
