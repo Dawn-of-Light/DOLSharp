@@ -1675,22 +1675,6 @@ namespace DOL.GS.ServerProperties
 
 		#endregion
 
-		#region LANGUAGE
-
-		/// <summary>
-		/// Holds all custom language keys that are allowed to use on the server, separated by semi-colon (DE; FR; IT etc.). There is no need to add english (EN), it's supported by default.
-		/// </summary>
-		[ServerProperty("language", "allowed_custom_language_keys", "Holds all custom language keys that are allowed to use on the server, separated by semi-colon (DE; FR; IT etc.). There is no need to add english (EN), it's supported by default.", "CU; DE; FR; IT")]
-		public static string ALLOWED_CUSTOM_LANGUAGE_KEYS;
-
-		/// <summary>
-		/// Should we use the new language system? True = yes, False = no | Default: false
-		/// </summary>
-		[ServerProperty("language", "use_new_language_system", "Should we use the new language system? True = yes, False = no", false)]
-		public static bool USE_NEW_LANGUAGE_SYSTEM;
-
-		#endregion
-
 		/// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
