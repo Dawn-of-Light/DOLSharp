@@ -88,6 +88,11 @@ namespace DOL.GS
 			}
 		}
 
+        public virtual LanguageDataObject.eTranslationIdentifier TranslationIdentifier
+        {
+            get { return LanguageDataObject.eTranslationIdentifier.eObject; }
+        }
+
         /// <summary>
         /// The translation id
         /// </summary>

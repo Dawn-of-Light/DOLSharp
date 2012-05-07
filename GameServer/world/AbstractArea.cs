@@ -121,6 +121,11 @@ namespace DOL.GS
 			set { m_ID = value; }
 		}
 
+        public virtual LanguageDataObject.eTranslationIdentifier TranslationIdentifier
+        {
+            get { return LanguageDataObject.eTranslationIdentifier.eArea; }
+        }
+
         /// <summary>
         /// Gets or sets the translation id
         /// </summary>

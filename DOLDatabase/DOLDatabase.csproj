@@ -128,6 +128,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ILanguageTable.cs" />
+    <Compile Include="LanguageDataObject.cs" />
     <Compile Include="Tables\CharacterXDataQuest.cs" />
     <Compile Include="Tables\HousingConsignmentMerchant.cs" />
     <Compile Include="Tables\LanguageDoor.cs" />
