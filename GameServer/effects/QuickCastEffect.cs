@@ -72,7 +72,7 @@ namespace DOL.GS.Effects
 			get
 			{
 				var delveInfoList = new List<string>();
-                delveInfoList.Add("Can't be interrupted on the following spell.");
+                delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.Quickcast.DelveInfo"));
 
                 return delveInfoList;
 			}

@@ -14,6 +14,8 @@ Skill.Ability.CannotUseInCombat:	You have been in combat recently and cannot use
 Skill.Ability.CannotUseTargetNull:	You need a target for this ability!
 Skill.Ability.CannotUseMustBeInGroup:	You must be in a group use this ability!
 Skill.Ability.CannotUseWhileStealthed:	You cannot use this ability while stealthed!
+Skill.Ability.MinRemaining:	  minutes remaining.
+Skill.Ability.SecRemaining:	  seconds remaining.
 
 Skill.Ability.CannotUseCamouflageMezzed:	You can't use camouflage while mesmerized!
 Skill.Ability.CannotUseCamouflageStunned:	You can't use camouflage while stunned!
@@ -35,6 +37,8 @@ Skill.Ability.CriticalShot.AlreadyFiring:	You are already firing this weapon!
 
 Skill.Ability.DirtyTricks.EffectCancel:	Your attacks return to normal.
 Skill.Ability.DirtyTricks.EffectStart:	You get dirt thrown in your face!
+Skill.Ability.DirtyTricks.Name:	Dirty Tricks
+Skill.Ability.DirtyTricks.Description:	The player will toss dirt into the face of the enemy and causes his fumble rate to increase temporarily.
 
 Skill.Ability.Engage.CannotUseDead:	You can't enter combat mode while lying down!
 Skill.Ability.Engage.CannotUseStanding:	You can't enter combat mode while sitting down!

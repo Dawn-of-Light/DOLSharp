@@ -150,7 +150,7 @@ namespace DOL.GS.Effects
 			}
 		}
 
-		public override string Name { get { return "Dirty Tricks"; } }
+        public override string Name { get { return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Skill.Ability.DirtyTricks.Name");} }
 
 		public override ushort Icon { get { return 478; } }
 
@@ -159,7 +159,7 @@ namespace DOL.GS.Effects
 			get
 			{
 				var list = new List<string>();
-				list.Add("The player will toss dirt into the face of the enemy and causes his fumble rate to increase temporarily. .");
+				list.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Skill.Ability.DirtyTricks.Description"));
 				list.AddRange(base.DelveInfo);
 				return list;
 			}
@@ -182,7 +182,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// The ability description
 		/// </summary>
-		protected const String delveString = "Causes target's fumble rate to increase.";
+        protected const String delveString = "Causes target's fumble rate to increase.";
 
 		/// <summary>
 		/// The owner of the effect
@@ -271,7 +271,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-		public override string Name { get { return "Dirty Tricks"; } }
+        public override string Name { get { return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Skill.Ability.DirtyTricks.Name"); } }
 
 		/// <summary>
 		/// Remaining Time of the effect in milliseconds
@@ -307,9 +307,9 @@ namespace DOL.GS.Effects
 				{
 					delveInfoList.Add(" "); //empty line
 					if (seconds > 60)
-						delveInfoList.Add("- " + seconds / 60 + ":" + (seconds % 60).ToString("00") + " minutes remaining.");
+						delveInfoList.Add("- " + seconds / 60 + ":" + (seconds % 60).ToString("00") + LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Skill.Ability.MinRemaining"));
 					else
-						delveInfoList.Add("- " + seconds + " seconds remaining.");
+						delveInfoList.Add("- " + seconds + LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Skill.Ability.SecRemaining"));
 				}
 
 				return delveInfoList;
