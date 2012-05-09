@@ -24,7 +24,7 @@ using DOL.Language;
 namespace DOL.GS.SkillHandler
 {
 	/// <summary>
-	/// Handler for Sprint Ability clicks
+    /// Handler for Quick Cast Ability clicks
 	/// </summary>
 	[SkillHandlerAttribute(Abilities.Quickcast)]
 	public class QuickCastAbilityHandler : IAbilityActionHandler
@@ -73,7 +73,6 @@ namespace DOL.GS.SkillHandler
 			long changeTime = player.CurrentRegion.Time - quickcastChangeTick;
 			if(changeTime < DISABLE_DURATION)
 			{
-				player.Out.SendMessage("You must wait " + ((DISABLE_DURATION-changeTime)/1000) + " more second to attempt to quick cast!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.QuickCast.CannotUseChangeTick", ((DISABLE_DURATION - changeTime) / 1000)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 //30 sec is time between 2 quick cast 
 				return;
