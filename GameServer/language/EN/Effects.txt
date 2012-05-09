@@ -1,6 +1,7 @@
 ﻿
 Effects.DelveInfo.MinutesRemaining:				- {0}: {1} minutes remaining.
 Effects.DelveInfo.SecondsRemaining:				- {0} seconds remaining.
+Effects.CantRemoveThis:	You can't remove this effect!
 
 Effects.Necro.TauntEffect.SeemsChange:			{0} seems to change in demeanor, appearing more aggressive than before.
 Effects.Necro.TauntEffect.SeemsLessAgg:			{0} seems to be less aggressive than before.
@@ -85,6 +86,7 @@ Effects.QuickCastEffect.YouActivatedQC:			You have activated quickcast.
 Effects.QuickCastEffect.YourNextSpellNoQCed:	Your next spell will not be quickcasted.
 Effects.QuickCastEffect.Name:					QuickCast
 Effects.QuickCastEffect.InfoEffect:				This allows them to cast a single spell with a quickened casting time, but costs twice the power. It cannot be interrupted by melee or spells. The only exception to this is the Necromancer form of Quickcast (Facilitate Painworking). It allows the Necromancer's summoned undead pet to have six seconds of uninterrupted casting time.
+Effects.Quickcast.DelveInfo:	Can't be interrupted on the following spell.
 
 Effects.RapidFireEffect.YouSwitchRFMode:		You switch to rapid fire mode!
 Effects.RapidFireEffect.Name:					Rapid Fire

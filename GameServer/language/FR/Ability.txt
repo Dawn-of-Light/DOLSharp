@@ -14,6 +14,8 @@ Skill.Ability.CannotUseInCombat:	Vous étiez en combat récemment et ne pouvez p
 Skill.Ability.CannotUseTargetNull:	Vous devez avoir une cible pour utiliser cette abilité!
 Skill.Ability.CannotUseMustBeInGroup:	Vous devez faire parti(e) d'un groupe pour utiliser cette abilité.
 Skill.Ability.CannotUseWhileStealthed:	Vous ne pouvez pas utiliser cette abilité en étant dissimulé.
+Skill.Ability.MinRemaining:	  minutes restantes.
+Skill.Ability.SecRemaining:	  secondes restantes.
 
 Skill.Ability.CannotUse.Camouflage.Mezzed:	Vous ne pouvez pas utiliser camouflage en étant hypnotisé(e)!
 Skill.Ability.CannotUse.Camouflage.Stunned:	Vous ne pouvez pas utiliser camouflage en étant étourdi(e)!
@@ -35,6 +37,8 @@ Skill.Ability.CriticalShot.AlreadyFiring:	Vous tirez déjà avec cette arme.
 
 Skill.Ability.DirtyTricks.EffectCancel:	Vos attaques retournent à la normal.
 Skill.Ability.DirtyTricks.EffectStart:	Vous recevez un jet de poussières dans les yeux!
+Skill.Ability.DirtyTricks.Name:	Dirty Tricks
+Skill.Ability.DirtyTricks.Description:	The player will toss dirt into the face of the enemy and causes his fumble rate to increase temporarily.
 
 Skill.Ability.Engage.CannotUseDead:	Vous ne pouvez pas entrer en mode combat en étant mort(e)!
 Skill.Ability.Engage.CannotUseStanding:	Vous ne pouvez pas entrer en mode combat en étant assis(e)!

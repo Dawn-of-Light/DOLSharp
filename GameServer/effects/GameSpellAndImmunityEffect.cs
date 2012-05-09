@@ -19,6 +19,7 @@
 using System;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
+using DOL.Language;
 
 namespace DOL.GS.Effects
 {
@@ -97,7 +98,7 @@ namespace DOL.GS.Effects
 			if (playerCanceled)
 			{
 				if (Owner is GamePlayer)
-					((GamePlayer) Owner).Out.SendMessage("You can't remove this effect!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    ((GamePlayer)Owner).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.CantRemoveThis"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
