@@ -20,6 +20,7 @@ using System.Reflection;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using log4net;
+using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
@@ -60,22 +61,22 @@ namespace DOL.GS.SkillHandler
 
             if (!player.IsAlive)
             {
-                player.Out.SendMessage("You cannot use this while Dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
             if (player.IsMezzed)
             {
-                player.Out.SendMessage("You cannot use this while Mezzed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseMezzed"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
             if (player.IsStunned)
             {
-                player.Out.SendMessage("You cannot use this while Stunned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseStunned"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
 			if (player.IsSitting)
 			{
-				player.Out.SendMessage("You must be standing to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseStanding"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 

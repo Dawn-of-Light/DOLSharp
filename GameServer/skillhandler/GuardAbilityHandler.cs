@@ -21,7 +21,7 @@ using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS;
 using log4net;
-
+using DOL.Language;
 namespace DOL.GS.SkillHandler
 {
 	/// <summary>
@@ -57,16 +57,16 @@ namespace DOL.GS.SkillHandler
 					if (guard.GuardSource == player)
 						guard.Cancel(false);
 				}
-				player.Out.SendMessage("You are no longer guarding anyone.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Guard.CancelTargetNull"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			// You cannot guard attacks on yourself            
 			GamePlayer guardTarget = player.TargetObject as GamePlayer;
 			if (guardTarget == player)
 			{
-				player.Out.SendMessage("You can't guard yourself!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Guard.CannotUse.GuardTargetIsGuardSource"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			// Only attacks on other players may be guarded. 
@@ -74,8 +74,8 @@ namespace DOL.GS.SkillHandler
 			Group group = player.Group;
 			if (guardTarget == null || group == null || !group.IsInTheGroup(guardTarget))
 			{
-				player.Out.SendMessage("You can only guard players in your group!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Guard.CannotUse.NotInGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			// check if someone is guarding the target
@@ -89,8 +89,8 @@ namespace DOL.GS.SkillHandler
 				}
 				if(!(guard.GuardSource is GameNPC))
 				{
-					player.Out.SendMessage(string.Format("{0} is already guarding {1}!", guard.GuardSource.GetName(0, true), guard.GuardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Guard.CannotUse.GuardTargetAlreadyGuarded", guard.GuardSource.GetName(0, true), guard.GuardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
 				}
 			}
 

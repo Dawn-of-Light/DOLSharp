@@ -1,5 +1,6 @@
 using System.Collections;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
@@ -71,7 +72,7 @@ namespace DOL.GS.SkillHandler
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You cannot use this ability while dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
@@ -79,7 +80,7 @@ namespace DOL.GS.SkillHandler
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You cannot use this ability while mesmerized!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseMezzed"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
@@ -87,7 +88,7 @@ namespace DOL.GS.SkillHandler
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You cannot use this ability while stunned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseStunned"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
@@ -95,7 +96,7 @@ namespace DOL.GS.SkillHandler
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You cannot use this ability while sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseStanding"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
@@ -103,7 +104,7 @@ namespace DOL.GS.SkillHandler
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You have been in combat recently and cannot use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
@@ -111,7 +112,7 @@ namespace DOL.GS.SkillHandler
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You must be in combat recently to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
@@ -119,18 +120,18 @@ namespace DOL.GS.SkillHandler
 			{
 				if (player != null)
 				{
-					player.Out.SendMessage("You cannot use this ability while stealthed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseWhileStealthed"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return true;
 			}
 			if (player != null && (bitmask & NOTINGROUP) != 0 && player.Group == null)
 			{
-				player.Out.SendMessage("You must be in a group use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseMustBeInGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return true;
 			}
 			if (player != null && (bitmask & TARGET) != 0 && player.TargetObject == null)
 			{
-				player.Out.SendMessage("You need a target for this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseTargetNull"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return true;
 			}
 			return false;
