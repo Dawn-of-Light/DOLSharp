@@ -2,6 +2,7 @@
 
 Effects.DelveInfo.MinutesRemaining:            - {0}: {1} minutes restantes.
 Effects.DelveInfo.SecondsRemaining:            - {0} secondes restantes.
+Effects.CantRemoveThis:	Vous ne pouvez pas retirer cette effet!
 
 Effects.Necro.TauntEffect.SeemsChange:         {0} semble changer dans son comportement, il apparait plus aggressif envers vous qu'avant.
 Effects.Necro.TauntEffect.SeemsLessAgg:         {0} semble être moins aggressif envers vous qu'avant.
@@ -86,6 +87,7 @@ Effects.QuickCastEffect.YouActivatedQC:         Vous avez activé votre Incantat
 Effects.QuickCastEffect.YourNextSpellNoQCed:   Votre prochain sort ne sera pas incanté rapidement.
 Effects.QuickCastEffect.Name:               Incantation Rapide
 Effects.QuickCastEffect.InfoEffect:            Cette capacité permet d'incanter un sort avec un temps d'incantation plus rapide, mais double le coût en mana. L'incantation ne peut pas être interrompu par les attaques physiques et magiques. L'unique exception est le prêtre d'Arawn en forme d'ombre. Elle permet au serviteur invoqué du prêtre d'Arawn d'avoir 6 secondes d'incantation ininterrompue.
+Effects.Quickcast.DelveInfo:	Votre prochaine incantation ne pourra pas être intérrompu.
 
 Effects.RapidFireEffect.YouSwitchRFMode:      Vous passez en mode Tir Rapide!
 Effects.RapidFireEffect.Name:               Tir Rapide
