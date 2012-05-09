@@ -2766,6 +2766,7 @@
     <Content Include="language\EN\GameObjects\GameDoor.txt" />
     <Content Include="language\EN\GameObjects\GameGuard.txt" />
     <Content Include="language\EN\PlayerRealmTitles.txt" />
+    <None Include="language\EN\Ability.txt" />
     <Content Include="language\EN\Zones.txt" />
     <None Include="language\FR\GameObjects\CustomNPC\Enchanter.txt" />
     <None Include="language\FR\GameObjects\CustomNPC\GameBoatStableMaster.txt" />
@@ -2773,6 +2774,7 @@
     <None Include="language\FR\GameObjects\CustomNPC\NameRegistrar.txt" />
     <None Include="language\FR\GameObjects\CustomNPC\VaultKeeper.txt" />
     <None Include="language\FR\GameObjects\GameDoor.txt" />
+    <None Include="language\FR\Ability.txt" />
     <Content Include="language\FR\GameObjects\GameGuard.txt" />
     <Content Include="language\FR\Quests\Hibernia\WingsOfTheIsle.txt" />
     <Content Include="language\IT\GameObject\GameDoor.txt" />

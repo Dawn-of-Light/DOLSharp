@@ -19,7 +19,8 @@
 using System;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
- 
+using DOL.Language;
+
 namespace DOL.GS.SkillHandler
 {
 	/// <summary>
@@ -40,8 +41,8 @@ namespace DOL.GS.SkillHandler
 
 			if(!player.IsAlive)
 			{
-				player.Out.SendMessage("You can't switch to rapid fire when dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.RapidFire.CannotUseDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			SureShotEffect sureShot = player.EffectList.GetOfType<SureShotEffect>();
