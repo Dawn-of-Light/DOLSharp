@@ -20,7 +20,7 @@ using System.Reflection;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using log4net;
-
+using DOL.Language;
 namespace DOL.GS.SkillHandler
 {
 	/// <summary>
@@ -67,8 +67,8 @@ namespace DOL.GS.SkillHandler
 						continue;
 					intercept.Cancel(false);
 				}
-				player.Out.SendMessage("You are no longer attempting to intercept attacks for anyone.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Intercept.CancelTargetNull"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			// Only attacks on other players may be intercepted. 
@@ -77,8 +77,8 @@ namespace DOL.GS.SkillHandler
 			GamePlayer interceptTarget = targetObject as GamePlayer;
 			if (interceptTarget == null || group == null || !group.IsInTheGroup(interceptTarget) || interceptTarget == player)
 			{
-				player.Out.SendMessage("You can only take intercept attacks for players in your group!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Intercept.CannotUse.NotInGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			// check if someone is already intercepting for that target
@@ -88,8 +88,8 @@ namespace DOL.GS.SkillHandler
 					continue;
 				if (intercept.InterceptSource != player && !(intercept.InterceptSource is GameNPC))
 				{
-					player.Out.SendMessage(string.Format("{0} is already intercepting for {1}.", intercept.InterceptSource.GetName(0, true), intercept.InterceptTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Intercept.CannotUse.InterceptTargetAlreadyInterceptedEffect", intercept.InterceptSource.GetName(0, true), intercept.InterceptTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
 				}
 			}
 

@@ -20,6 +20,7 @@ using System.Reflection;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using log4net;
+using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
@@ -71,40 +72,40 @@ namespace DOL.GS.SkillHandler
 			 */
 			if (!player.IsAlive)
 			{
-				player.Out.SendMessage("You can't enter combat mode while lying down!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Engage.CannotUseDead"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			if (player.IsSitting)
 			{
-				player.Out.SendMessage("You can't enter combat mode while sitting down!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Engage.CannotUseStanding"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			if (player.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.Distance)
 			{
-				player.Out.SendMessage("You can't enter melee combat mode with a fired weapon!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Engage.CannotUseNoCaCWeapons"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			GameLiving target = player.TargetObject as GameLiving;
 			if (target == null)
 			{
-				player.Out.SendMessage("You can only engage mobs hostile to you.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Engage.NoTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			// You cannot engage a mob that was attacked within the last 5 seconds...
 			if (target.LastAttackedByEnemyTick > target.CurrentRegion.Time - EngageAbilityHandler.ENGAGE_ATTACK_DELAY_TICK)
 			{
-				player.Out.SendMessage(target.GetName(0, true) + " has been attacked recently and you are unable to engage.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Engage.TargetAttackedRecently", target.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			if (!GameServer.ServerRules.IsAllowedToAttack(player, target, true))
 			{
-				player.Out.SendMessage("You are not allowed to engage " + target.GetName(0, false), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Engage.NotAllowedToEngageTarget", target.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 			//Cancel old engage effects on player
 			foreach (EngageEffect engage in player.EffectList.GetAllOfType<EngageEffect>())

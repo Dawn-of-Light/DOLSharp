@@ -21,6 +21,7 @@ using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS;
 using log4net;
+using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
@@ -44,7 +45,7 @@ namespace DOL.GS.SkillHandler
         {
             if (!player.IsAlive)
             {
-                player.Out.SendMessage("You're dead and can't Bodyguard!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUse.Bodyguard.Dead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
             if (player == null)
@@ -62,7 +63,7 @@ namespace DOL.GS.SkillHandler
                     if (bg.GuardSource == player)
                         bg.Cancel(false);
                 }
-                player.Out.SendMessage("You are no longer Bodyguarding anyone.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUse.Bodyguard.Dead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
 
@@ -70,7 +71,7 @@ namespace DOL.GS.SkillHandler
             GamePlayer guardTarget = player.TargetObject as GamePlayer;
             if (guardTarget == player)
             {
-                player.Out.SendMessage("You can't Bodyguard yourself!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUse.Bodyguard.GuardTargetIsGuardSource"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
 
@@ -79,7 +80,7 @@ namespace DOL.GS.SkillHandler
             Group group = player.Group;
             if (guardTarget == null || group == null || !group.IsInTheGroup(guardTarget))
             {
-                player.Out.SendMessage("You can only guard players in your group!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUse.Bodyguard.GuardTargetIsGuardSource"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
 
@@ -92,7 +93,7 @@ namespace DOL.GS.SkillHandler
                     bg.Cancel(false);
                     return;
                 }
-                player.Out.SendMessage(string.Format("{0} is already guarding {1}!", bg.GuardSource.GetName(0, true), bg.GuardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUse.Bodyguard.GuardTargetAlreadyBodyGuarded", bg.GuardSource.GetName(0, true), bg.GuardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
 
@@ -100,7 +101,7 @@ namespace DOL.GS.SkillHandler
             {
                     if (bg != null && player == bg.GuardTarget)
                     {
-                        player.Out.SendMessage("You cannot bodyguard someone if you are Bodyguarded!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUse.Bodyguard.GuardSourceBodyGuarded"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                         return;
                     }
             }

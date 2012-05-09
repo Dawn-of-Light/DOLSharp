@@ -24,6 +24,7 @@ using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using log4net;
+using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
@@ -63,24 +64,24 @@ namespace DOL.GS.SkillHandler
 
 			if (!player.IsAlive)
 			{
-				player.Out.SendMessage("You are dead and can't use that ability!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseDead"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			if (player.IsMezzed)
 			{
-				player.Out.SendMessage("You cannot use this while Mezzed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseMezzed"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 			if (player.IsStunned)
 			{
-				player.Out.SendMessage("You cannot use this while Stunned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseStunned"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 			if (player.IsSitting)
 			{
-				player.Out.SendMessage("You must be standing to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseStanding"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			player.DisableSkill(ab, REUSE_TIMER);
@@ -215,7 +216,7 @@ namespace DOL.GS.Effects
 			//  }
 			GamePlayer player = living as GamePlayer;
 			if (player != null)
-				player.Out.SendMessage("You get dirt thrown in your face!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.DirtyTricks.EffectStart"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		/// <summary>
@@ -231,7 +232,7 @@ namespace DOL.GS.Effects
 			m_player.DebuffCategory[(int)eProperty.FumbleChance] -= 50;
 			GamePlayer player = m_player as GamePlayer;
 			if (player != null)
-				player.Out.SendMessage("Your attacks return to normal.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.DirtyTricks.EffectCancel"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		/// <summary>

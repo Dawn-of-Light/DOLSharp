@@ -20,6 +20,7 @@ using System.Reflection;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using log4net;
+using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
@@ -56,15 +57,15 @@ namespace DOL.GS.SkillHandler
 					if (protect.ProtectSource == player)
 						protect.Cancel(false);
 				}
-				player.Out.SendMessage("You are no longer protecting anyone.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Protect.CancelTargetNull"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			// You cannot protect attacks on yourself            
 			GamePlayer protectTarget = player.TargetObject as GamePlayer;
 			if (protectTarget == player)
 			{
-				player.Out.SendMessage("You can't protect yourself!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Protect.CannotUse.CantProtectYourself"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -73,7 +74,7 @@ namespace DOL.GS.SkillHandler
 			Group group = player.Group;
 			if (protectTarget == null || group == null || !group.IsInTheGroup(protectTarget))
 			{
-				player.Out.SendMessage("You can only protect players in your group!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Protect.CannotUse.NotInGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -87,7 +88,7 @@ namespace DOL.GS.SkillHandler
 					protect.Cancel(false);
 					return;
 				}
-				player.Out.SendMessage(string.Format("{0} is already protecting {1}!", protect.ProtectSource.GetName(0, true), protect.ProtectTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Protect.CannotUse.ProtectTargetAlreadyProtectEffect", protect.ProtectSource.GetName(0, true), protect.ProtectTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
