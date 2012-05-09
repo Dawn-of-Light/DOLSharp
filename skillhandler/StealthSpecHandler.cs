@@ -22,6 +22,7 @@ using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using System.Collections;
 using DOL.AI.Brain;
+using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
@@ -41,16 +42,16 @@ namespace DOL.GS.SkillHandler
 			// Can't stealth while in combat
 			if(player.InCombat && !player.IsStealthed && player.Client.Account.PrivLevel == (int)ePrivLevel.Player)
 			{
-				player.Out.SendMessage("You've been in combat recently and can't hide yet!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Stealth.CannotUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			long stealthChangeTick = player.TempProperties.getProperty<long>(GamePlayer.STEALTH_CHANGE_TICK);
 			long changeTime = player.CurrentRegion.Time - stealthChangeTick;
 			if(changeTime < 2000)
 			{
-				player.Out.SendMessage("You must wait " + ((2000-changeTime)/1000).ToString() + " more second to attempt to hide!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Stealth.CannotUseStealthChangeTick", ((2000 - changeTime) / 1000).ToString()), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 			player.TempProperties.setProperty(GamePlayer.STEALTH_CHANGE_TICK, player.CurrentRegion.Time);
 
@@ -59,15 +60,15 @@ namespace DOL.GS.SkillHandler
 				// Dead can't stealth
 				if(!player.IsAlive)
 				{
-					player.Out.SendMessage("You can't hide when dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Stealth.CannotUseDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
 				}
 
 				// Can't stealth if in attack mode
 				if(player.AttackState || (player.CurrentSpellHandler != null && player.CurrentSpellHandler.IsCasting))
 				{
-					player.Out.SendMessage("You must end your current action before hiding!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Stealth.CannotUseCombatState"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
 				}
 
 				//TODO: more checks in this order
@@ -76,22 +77,22 @@ namespace DOL.GS.SkillHandler
 
 				if (player.ConcentrationEffects.GetOfType(typeof (PulsingSpellEffect)) != null)
 				{
-					player.Out.SendMessage("You currently have an active, pulsing spell effect and cannot hide!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Stealth.CannotUseActivePulsingSpell"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
 				}
 
 				//HasVanishRealmAbilityActivated -> Allow stealthing, Stop further checks ...
 
 				if (player.IsMezzed)
 				{
-					player.Out.SendMessage("You can't hide while mesmerized!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Stealth.CannotUseMezzed"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
 				}
 
 				if (player.IsStunned)
 				{
-					player.Out.SendMessage("You can't hide while stunned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Stealth.CannotUseStunned"), eChatType.CT_System, eChatLoc.CL_SystemWindow); 
+                    return;
 				}
 
 				// Check if enemy player is close
@@ -117,7 +118,7 @@ namespace DOL.GS.SkillHandler
 					//Range check
 					if (!IsObjectTooClose(ply, player)) continue;
 
-					player.Out.SendMessage("You are too close to an enemy to hide!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Stealth.CannotUseToCloseAnEnemy"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 
@@ -135,8 +136,8 @@ namespace DOL.GS.SkillHandler
 					//Range check
 					if (!IsObjectTooClose(npc, player)) continue;
 
-					player.Out.SendMessage("You are too close to an enemy to hide!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Stealth.CannotUseToCloseAnEnemy"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				    return;
 				}
 			}
 			//since 1.88 (?), players which stealth, doesn't be followed by mobs [by Suncheck]

@@ -20,6 +20,7 @@ using System;
 using DOL.GS.PacketHandler;
 using DOL.GS;
 using DOL.GS.Effects;
+using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
@@ -55,7 +56,8 @@ namespace DOL.GS.SkillHandler
                         if (oEffect.Spell.SpellType.ToLower().IndexOf("speeddecrease") != -1 && oEffect.Spell.Value != 99)
                         {            
                         	GamePlayer player = living as GamePlayer;
-                        	if(player!=null) player.Out.SendMessage("You may not use this ability while snared!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            if (player != null)
+                                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseSnared"), eChatType.CT_System, eChatLoc.CL_SystemWindow);      
                             return true;
                         }
                     }

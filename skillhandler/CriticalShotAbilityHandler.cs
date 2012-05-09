@@ -19,6 +19,7 @@
 using System;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
+using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
@@ -32,13 +33,13 @@ namespace DOL.GS.SkillHandler
 		{
 			if (player.ActiveWeaponSlot != GameLiving.eActiveWeaponSlot.Distance)
 			{
-				player.Out.SendMessage("You must ready a ranged weapon in your hands!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUse.CriticalShot.NoRangedWeapons"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                return;
 			}
 			if (player.IsSitting)
 			{
-				player.Out.SendMessage("You must be standing to attempt a ranged attack!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUse.CriticalShot.MustBeStanding"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+                return;
 			}
 
 			// cancel rapid fire effect
@@ -59,12 +60,12 @@ namespace DOL.GS.SkillHandler
 			{
 				if (player.RangedAttackType == GameLiving.eRangedAttackType.Critical)
 				{
-					player.Out.SendMessage("You switch to a regular shot!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CriticalShot.SwitchToRegular"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					player.RangedAttackType = GameLiving.eRangedAttackType.Normal;
 				}
 				else
 				{
-					player.Out.SendMessage("You are already firing this weapon!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CriticalShot.AlreadyFiring"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
 				return;
 			}

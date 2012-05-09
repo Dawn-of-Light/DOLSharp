@@ -22,6 +22,7 @@ using DOL.GS.Effects;
 using log4net;
 using DOL.GS.Keeps;
 using DOL.GS.Spells;
+using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
@@ -59,61 +60,61 @@ namespace DOL.GS.SkillHandler
 			#region precheck
 			if (!player.IsAlive)
 			{
-				player.Out.SendMessage("You cannot use this while Dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 			if (player.IsMezzed)
 			{
-				player.Out.SendMessage("You cannot use this while Mezzed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseMezzed"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 			if (player.IsStunned)
 			{
-				player.Out.SendMessage("You cannot use this while Stunned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseStunned"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 			if (player.IsSitting)
 			{
-				player.Out.SendMessage("You must be standing to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseStanding"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 			if (player.TargetObject == null)
 			{
-				player.Out.SendMessage("You need a target to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseNoTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 			if (!(player.TargetObject is GamePlayer || player.TargetObject is GameKeepGuard))
 			{
-				player.Out.SendMessage("You can only attack players or guards of the enemy realms with this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Flurry.TargetNotPlayerOrGuards"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 			if (!GameServer.ServerRules.IsAllowedToAttack(player, (GameLiving)player.TargetObject, true))
 			{
-				player.Out.SendMessage("You cannot attack " + player.TargetObject.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotAttackTarget", player.TargetObject.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 			if (!player.IsObjectInFront(player.TargetObject, 180) || !player.TargetInView)
 			{
-				player.Out.SendMessage("You cannot see " + player.TargetObject.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotSeeTarget", player.TargetObject.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 			if (!player.IsWithinRadius(player.TargetObject, 135)) //Didn't use AttackRange cause of the fact that player could use a Bow
 			{
-				player.Out.SendMessage("Your target is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.TargetIsWithinRadius"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 			if (player.TargetObject is GamePlayer && SpellHandler.FindEffectOnTarget((GamePlayer)player.TargetObject, "Phaseshift") != null)
 			{
-				player.Out.SendMessage(player.TargetObject.Name + " is Phaseshifted and can't be attacked!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.TargetIsPhaseshifted", player.TargetObject.Name), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+                return;
 			}
 			if(player.TargetObject is GamePlayer)
 			{
 				SputinsLegacyEffect SputinLegacy = (player.TargetObject as GamePlayer).EffectList.GetOfType<SputinsLegacyEffect>();
 				if(SputinLegacy != null)
 				{
-                    player.Out.SendMessage(player.TargetObject.Name + " is under Sputin Legacy effect and can't be attacked!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-					return;
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.TargetIsUnderSputinLegacy", player.TargetObject.Name), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+                    return;
 				}
 			}
 			#endregion
@@ -158,10 +159,11 @@ namespace DOL.GS.SkillHandler
 			foreach (GamePlayer effPlayer in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				effPlayer.Out.SendSpellEffectAnimation(player, target, 7103, 0, false, 0x01);
 
-			player.Out.SendMessage("You hit " + target.GetName(0, false) + " for " + damage + " damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-			if (target is GamePlayer)
-				(target as GamePlayer).Out.SendMessage(player.Name + " flurry hits you for " + damage + " damage!", eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);		
-			
+            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.Flurry.YouHit", target.GetName(0, false), damage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+                    
+            if (target is GamePlayer)
+                (target as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((target as GamePlayer).Client, "Skill.Ability.Flurry.HitYou", player.Name, damage), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+
 			player.LastAttackTickPvP = player.CurrentRegion.Time;
 			target.LastAttackedByEnemyTickPvP = target.CurrentRegion.Time;
 

@@ -19,6 +19,7 @@
 using System;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
@@ -37,30 +38,34 @@ namespace DOL.GS.SkillHandler
 		/// <param name="player"></param>
 		public void Execute(Ability ab, GamePlayer player)
 		{
+
 			#region Check
+
 			if (!player.IsStealthed)
 			{
 				if (player.IsMezzed)
 				{
-					player.Out.SendMessage("You can't use camouflage while mesmerized!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUse.Camouflage.Mezzed"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
 				}
 
 				if (player.IsStunned)
 				{
-					player.Out.SendMessage("You can't use camouflage while stunned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUse.Camouflage.Stunned"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
 				}
 
-				player.Out.SendMessage("You can't use camouflage while not stealthed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUse.Camouflage.NotStealthed"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 			if (!player.IsAlive)
 			{
-				player.Out.SendMessage("You can't use camouflage when dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUse.Camouflage.Dead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
+
 			#endregion
+
 			CamouflageEffect camouflage = player.EffectList.GetOfType<CamouflageEffect>();
 			if (camouflage != null)
 			{
@@ -70,8 +75,8 @@ namespace DOL.GS.SkillHandler
 			long changeTime = player.CurrentRegion.Time - player.LastAttackTickPvP;
 			if (player.CurrentRegion.IsRvR && changeTime < DISABLE_DURATION)
 			{
-				player.Out.SendMessage("You must wait " + ((DISABLE_DURATION - changeTime) / 1000) + " more second to attempt to use camouflage!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUse.Camouflage.DisableDuration", ((DISABLE_DURATION - changeTime) / 1000)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
 			}
 			player.DisableSkill(ab, DISABLE_DURATION);
 			new CamouflageEffect().Start(player);
