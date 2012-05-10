@@ -24,6 +24,7 @@
  */
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Spells
 {
@@ -46,20 +47,23 @@ namespace DOL.GS.Spells
 		{
 			if (Caster.GroundTarget == null)
 			{
-				MessageToCaster("You have to set a ground target for this Spell.", eChatType.CT_SpellResisted);
-				return false;
+                if (Caster is GamePlayer)
+                    MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistPet.CheckBeginCast.GroundTargetNull"), eChatType.CT_SpellResisted);
+                return false;
 			}
 
 			if (!Caster.GroundTargetInView)
 			{
-				MessageToCaster("Your ground target is not in view.", eChatType.CT_SpellResisted);
-				return false;
+                if (Caster is GamePlayer)
+                    MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistPet.CheckBeginCast.GroundTargetNotInView"), eChatType.CT_SpellResisted);
+                return false;
 			}
 
 			if (!Caster.IsWithinRadius(Caster.GroundTarget, CalculateSpellRange()))
 			{
-				MessageToCaster("You have to select a closer ground target.", eChatType.CT_SpellResisted);
-				return false;
+                if (Caster is GamePlayer)
+                    MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistPet.CheckBeginCast.GroundTargetNotInSpellRange"), eChatType.CT_SpellResisted);
+                return false;
 			}
 
 			return base.CheckBeginCast(selectedTarget);
@@ -68,20 +72,23 @@ namespace DOL.GS.Spells
 		{
 			if (Caster.GroundTarget == null)
 			{
-				MessageToCaster("You have to set a ground target for this Spell.", eChatType.CT_SpellResisted);
-				return;
+                if (Caster is GamePlayer)
+                    MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistPet.CheckBeginCast.GroundTargetNull"), eChatType.CT_SpellResisted);
+                return;
 			}
 
 			if (!Caster.GroundTargetInView)
 			{
-				MessageToCaster("Your ground target is not in view.", eChatType.CT_SpellResisted);
-				return;
+                if (Caster is GamePlayer)
+                    MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistPet.CheckBeginCast.GroundTargetNotInView"), eChatType.CT_SpellResisted);
+                return;
 			}
 
 			if (!Caster.IsWithinRadius(Caster.GroundTarget, CalculateSpellRange()))
 			{
-				MessageToCaster("You have to select a closer ground target.", eChatType.CT_SpellResisted);
-				return;
+                if (Caster is GamePlayer)
+                    MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistPet.CheckBeginCast.GroundTargetNotInSpellRange"), eChatType.CT_SpellResisted);
+                return;
 			}
 
 			base.FinishSpellCast(target);

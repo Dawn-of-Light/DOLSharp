@@ -18,6 +18,7 @@
  */
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Spells
 {
@@ -37,24 +38,28 @@ namespace DOL.GS.Spells
 
 			if(selectedTarget == null)
 			{
-				MessageToCaster("You must cast this spell on a creature you are controlling", eChatType.CT_SpellResisted);
-				return false;
+                if (Caster is GamePlayer)
+                    MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "TurretsRelease.CheckBeginCast.NoSelectedTarget"), eChatType.CT_SpellResisted);
+                return false;
 			}
 			GameNPC target = selectedTarget as GameNPC;
 			if(target == null || !(target.Brain is TurretBrain) || !Caster.IsControlledNPC(target))
 			{
-				MessageToCaster("You must cast this spell on a creature you are controlling", eChatType.CT_SpellResisted);
-				return false;
+                if (Caster is GamePlayer)
+                    MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "TurretsRelease.CheckBeginCast.NoSelectedTarget"), eChatType.CT_SpellResisted);
+                return false;
 			}
 			if((target.Brain is TurretBrain) && !Caster.IsControlledNPC(target))
 			{
-				MessageToCaster("You must cast this spell on a creature you are controlling", eChatType.CT_SpellResisted);
-				return false;
+                if (Caster is GamePlayer)
+                    MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "TurretsRelease.CheckBeginCast.NoSelectedTarget"), eChatType.CT_SpellResisted);
+                return false;
 			}
             if ( !Caster.IsWithinRadius( target, Spell.Range ) )
 			{
-				MessageToCaster("Your target is too far away", eChatType.CT_SpellResisted);
-				return false;
+                if (Caster is GamePlayer)
+                    MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "TurretsRelease.CheckBeginCast.TargetTooFarAway"), eChatType.CT_SpellResisted);
+                return false;
 			}
 			return base.CheckBeginCast(selectedTarget);
 		}

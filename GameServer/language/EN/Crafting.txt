@@ -114,6 +114,7 @@ AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoMetalworkingSkill:		
 AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill:		You don't have the minimum necessary Woodworking skill ({0}) to create the {1}!
 AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.Rawmaterial:			Cannot find an item by the ID of {0} please report this!
 
+AbstractCraftingSkill.CraftItem.CantCraftInCombat:   You can't craft while in combat.
 AbstractCraftingSkill.CraftItem.BeginWork:		You begin work on the {0} ({1}%).
 AbstractCraftingSkill.CraftItem.ChanceToGainPoint:	Chance to gain point in your primary crafting skill is {0}%.
 AbstractCraftingSkill.CraftItem.CurrentlyMaking:	Currently Making: {0}

@@ -18,6 +18,7 @@
  */
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Spells
 {
@@ -47,11 +48,11 @@ namespace DOL.GS.Spells
 			 * -Select automatically Main controlled Turret if player don't have target or Turret target.
 			 * -Cast only on our turrets.
 			 */
-			if(Caster.ControlledBrain == null || Caster.ControlledBrain.Body == null)
-			{
-				MessageToCaster("You must cast this spell on a creature you are controlling.", eChatType.CT_System);
-				return false;
-			}
+            if (Caster.ControlledBrain == null || Caster.ControlledBrain.Body == null)
+            {
+                MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "PetPBAOE.CheckBeginCast.NoPet"), eChatType.CT_System);
+                return false;
+            }
 			TurretPet target = selectedTarget as TurretPet;
 
 			if(target == null || !Caster.IsControlledNPC(target))

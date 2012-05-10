@@ -38,19 +38,19 @@ namespace DOL.GS.PlayerClass
 			m_manaStat = eStat.INT;
 		}
 
-		public override string GetTitle(int level) 
+		public override string GetTitle(GamePlayer player, int level) 
 		{
-			if (level >= 50) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Theurgist.GetTitle.50");
-			if (level >= 45) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Theurgist.GetTitle.45");
-			if (level >= 40) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Theurgist.GetTitle.40");
-			if (level >= 35) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Theurgist.GetTitle.35");
-			if (level >= 30) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Theurgist.GetTitle.30");
-			if (level >= 25) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Theurgist.GetTitle.25");
-			if (level >= 20) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Theurgist.GetTitle.20");
-			if (level >= 15) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Theurgist.GetTitle.15");
-			if (level >= 10) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Theurgist.GetTitle.10");
-			if (level >= 5) return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Theurgist.GetTitle.5");
-			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
+			if (level >= 50) return LanguageMgr.GetTranslation(player.Client, "PlayerClass.Theurgist.GetTitle.50");
+			if (level >= 45) return LanguageMgr.GetTranslation(player.Client, "PlayerClass.Theurgist.GetTitle.45");
+			if (level >= 40) return LanguageMgr.GetTranslation(player.Client, "PlayerClass.Theurgist.GetTitle.40");
+			if (level >= 35) return LanguageMgr.GetTranslation(player.Client, "PlayerClass.Theurgist.GetTitle.35");
+			if (level >= 30) return LanguageMgr.GetTranslation(player.Client, "PlayerClass.Theurgist.GetTitle.30");
+			if (level >= 25) return LanguageMgr.GetTranslation(player.Client, "PlayerClass.Theurgist.GetTitle.25");
+			if (level >= 20) return LanguageMgr.GetTranslation(player.Client, "PlayerClass.Theurgist.GetTitle.20");
+			if (level >= 15) return LanguageMgr.GetTranslation(player.Client, "PlayerClass.Theurgist.GetTitle.15");
+			if (level >= 10) return LanguageMgr.GetTranslation(player.Client, "PlayerClass.Theurgist.GetTitle.10");
+			if (level >= 5) return LanguageMgr.GetTranslation(player.Client, "PlayerClass.Theurgist.GetTitle.5");
+			return LanguageMgr.GetTranslation(player.Client, "PlayerClass.GetTitle.none");
 		}
 
 		/// <summary>

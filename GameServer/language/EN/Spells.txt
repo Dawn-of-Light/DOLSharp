@@ -59,6 +59,8 @@ NearsightSpellHandler.DelveInfo.Function:		Function: {0}
 # ProcSpellHandler
 ProcSpellHandler.DelveInfo.Function:			Function: {0}
 
+Summon.CheckBeginCast.AlreadyHaveaPet:	You already have a charmed creature, release it first!
+
 # SummonCommanderPet
 SummonCommanderPet.CheckBeginCast.Text:			You already have a charmed creature, release it first!
 SummonCommanderPet.DelveInfo.Text1:			Function: summon
@@ -73,3 +75,21 @@ SummonMinionHandler.CheckBeginCast.Text2:		Your general already has as many foll
 SummonMinionHandler.DelveInfo.Text1:			Target: {0}
 SummonMinionHandler.DelveInfo.Text2:			Power cost: {0}%
 SummonMinionHandler.DelveInfo.Text3:			Casting time: {0}
+
+#PetPBAOE
+PetPBAOE.CheckBeginCast.NoPet:		You must cast this spell on a creature you are controlling.
+
+#SummonAnimistFnF
+SummonAnimistFnF.CheckBeginCast.NoGroundTarget:		You can't summon Turret without ground-target !
+SummonAnimistFnF.CheckBeginCast.TurretAreaCap:	You can't summon anymore Turrets in this Area!
+SummonAnimistFnF.CheckBeginCast.TurretPlayerCap:	You cannot control anymore Turrets!
+
+#SummonAnimistPet
+SummonAnimistPet.CheckBeginCast.AlreadyHaveaPet:	You already have a charmed creature, release it first!
+SummonAnimistPet.CheckBeginCast.GroundTargetNull:	You have to set a ground target for this Spell.
+SummonAnimistPet.CheckBeginCast.GroundTargetNotInView:	Your ground target is not in view.
+SummonAnimistPet.CheckBeginCast.GroundTargetNotInSpellRange:	You have to select a closer ground target.
+
+#TurretsRelease
+TurretsRelease.CheckBeginCast.NoSelectedTarget:	You must cast this spell on a creature you are controlling
+TurretsRelease.CheckBeginCast.TargetTooFarAway:	Your target is too far away

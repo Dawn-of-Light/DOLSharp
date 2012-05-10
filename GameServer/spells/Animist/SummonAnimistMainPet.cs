@@ -23,6 +23,7 @@
  */
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Spells
 {
@@ -41,7 +42,7 @@ namespace DOL.GS.Spells
     {
       if(Caster is GamePlayer && Caster.ControlledBrain != null)
       {
-        MessageToCaster("You already have a charmed creature, release it first!", eChatType.CT_SpellResisted);
+        MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistPet.CheckBeginCast.AlreadyHaveaPet"), eChatType.CT_SpellResisted);
         return false;
       }
       return base.CheckBeginCast(selectedTarget);

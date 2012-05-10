@@ -147,7 +147,7 @@ namespace DOL.GS.PacketHandler
 
 			pak.WriteByte(0x00); //unk
 
-			pak.WritePascalString(player.CharacterClass.GetTitle(player.Level));
+            pak.WritePascalString(player.CharacterClass.GetTitle(player, player.Level));
 
 			//todo make function to calcule realm rank
 			//client.Player.RealmPoints
