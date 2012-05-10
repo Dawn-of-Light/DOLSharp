@@ -35,9 +35,9 @@ namespace DOL.GS.PlayerClass
 			m_manaStat = eStat.PIE;
 		}
 
-		public override string GetTitle(int level)
+		public override string GetTitle(GamePlayer player, int level)
 		{
-			return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.GetTitle.none");
+			return LanguageMgr.GetTranslation(player.Client, "PlayerClass.GetTitle.none");
 		}
 
 		public override eClassType ClassType

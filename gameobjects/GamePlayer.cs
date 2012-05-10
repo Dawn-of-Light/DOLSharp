@@ -5430,10 +5430,10 @@ namespace DOL.GS
 
 			// Echostorm - Code for display of new title on level up
 			// Get old and current rank titles
-			string currenttitle = CharacterClass.GetTitle(Level);
+			string currenttitle = CharacterClass.GetTitle(this, Level);
 
 			// check for difference
-			if (CharacterClass.GetTitle(previouslevel) != currenttitle)
+            if (CharacterClass.GetTitle(this, previouslevel) != currenttitle)
 			{
 				// Inform player of new title.
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.AttainedRank", currenttitle), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -13945,7 +13945,7 @@ namespace DOL.GS
 				AbstractCraftingSkill craftingSkill = CraftingMgr.getSkillbyEnum(CraftingPrimarySkill);
 
 				return (craftingSkill is AbstractProfession)
-					? (craftingSkill as AbstractProfession).GetTitle((int)m_craftingSkills[CraftingPrimarySkill])
+					? (craftingSkill as AbstractProfession).GetTitle(this, (int)m_craftingSkills[CraftingPrimarySkill])
 					: "";
 			}
 		}

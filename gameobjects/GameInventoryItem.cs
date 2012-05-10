@@ -506,17 +506,17 @@ namespace DOL.GS
 		{
 			int oldCount = output.Count;
 
-			WriteBonusLine(output, Bonus1Type, Bonus1);
-			WriteBonusLine(output, Bonus2Type, Bonus2);
-			WriteBonusLine(output, Bonus3Type, Bonus3);
-			WriteBonusLine(output, Bonus4Type, Bonus4);
-			WriteBonusLine(output, Bonus5Type, Bonus5);
-			WriteBonusLine(output, Bonus6Type, Bonus6);
-			WriteBonusLine(output, Bonus7Type, Bonus7);
-			WriteBonusLine(output, Bonus8Type, Bonus8);
-			WriteBonusLine(output, Bonus9Type, Bonus9);
-			WriteBonusLine(output, Bonus10Type, Bonus10);
-			WriteBonusLine(output, ExtraBonusType, ExtraBonus);
+            WriteBonusLine(output, client, Bonus1Type, Bonus1);
+            WriteBonusLine(output, client, Bonus2Type, Bonus2);
+            WriteBonusLine(output, client, Bonus3Type, Bonus3);
+            WriteBonusLine(output, client, Bonus4Type, Bonus4);
+            WriteBonusLine(output, client, Bonus5Type, Bonus5);
+            WriteBonusLine(output, client, Bonus6Type, Bonus6);
+            WriteBonusLine(output, client, Bonus7Type, Bonus7);
+            WriteBonusLine(output, client, Bonus8Type, Bonus8);
+            WriteBonusLine(output, client, Bonus9Type, Bonus9);
+            WriteBonusLine(output, client, Bonus10Type, Bonus10);
+            WriteBonusLine(output, client, ExtraBonusType, ExtraBonus);
 
 			if (output.Count > oldCount)
 			{
@@ -831,7 +831,7 @@ namespace DOL.GS
 		}
 
 
-		protected virtual void WriteBonusLine(IList<string> list, int bonusCat, int bonusValue)
+        protected virtual void WriteBonusLine(IList<string> list, GameClient client, int bonusCat, int bonusValue)
 		{
 			if (bonusCat != 0 && bonusValue != 0 && !SkillBase.CheckPropertyType((eProperty)bonusCat, ePropertyType.Focus))
 			{
@@ -865,8 +865,8 @@ namespace DOL.GS
 						 || bonusCat == (int)eProperty.ArcaneSyphon
 						 || bonusCat == (int)eProperty.BountyPoints
 						 || bonusCat == (int)eProperty.XpPoints)
-						? ((bonusCat == (int)eProperty.PowerPool) ? LanguageMgr.GetTranslation(DOL.GS.ServerProperties.Properties.SERV_LANGUAGE, "DetailDisplayHandler.WriteBonusLine.PowerPool") : "%")
-						: LanguageMgr.GetTranslation(DOL.GS.ServerProperties.Properties.SERV_LANGUAGE, "DetailDisplayHandler.WriteBonusLine.Points")
+                        ? ((bonusCat == (int)eProperty.PowerPool) ? LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteBonusLine.PowerPool") : "%")
+                        : LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteBonusLine.Points")
 					));
 				}
 			}

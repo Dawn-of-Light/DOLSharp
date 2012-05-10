@@ -54,6 +54,8 @@ NearsightSpellHandler.DelveInfo.Function:		Fonction: Réduction de Portée {0}
 # ProcSpellHandler
 ProcSpellHandler.DelveInfo.Function:			Fonction: {0}
 
+Summon.CheckBeginCast.AlreadyHaveaPet:	Vous avez déjà une créature sous votre contrôle.
+
 # SummonCommanderPet
 SummonCommanderPet.CheckBeginCast.Text:			Vous avez déjà un commmandant sous votre contrôle!
 SummonCommanderPet.DelveInfo.Text1:			Fonction: Invocation
@@ -68,3 +70,21 @@ SummonMinionHandler.CheckBeginCast.Text2:		Votre Commandant dispose déjà du ma
 SummonMinionHandler.DelveInfo.Text1:			Cible: {0}
 SummonMinionHandler.DelveInfo.Text2:			Coût en mana: {0}%
 SummonMinionHandler.DelveInfo.Text3:			Temps d'Incantation: {0}
+
+#PetPBAOE
+PetPBAOE.CheckBeginCast.NoPet:		Vous ne pouvez pas lancer ce sort sur une créature que vous ne contrôlez pas.
+
+#SummonAnimistFnF
+SummonAnimistFnF.CheckBeginCast.NoGroundTarget:		Vous devez positionner une cible au sol pour ce sort!
+SummonAnimistFnF.CheckBeginCast.TurretAreaCap:	Vous ne pouvez pas contrôler d'avantage de tourelles dans cette zone!
+SummonAnimistFnF.CheckBeginCast.TurretPlayerCap:	Vous ne pouvez pas contrôler d'avantage de tourelles!
+
+#SummonAnimistPet
+SummonAnimistPet.CheckBeginCast.AlreadyHaveaPet:	Vous avez déjà une créature sous votre contrôle!
+SummonAnimistPet.CheckBeginCast.GroundTargetNull:	Vous devez positionner une cible au sol pour ce sort!
+SummonAnimistPet.CheckBeginCast.GroundTargetNotInView:	Votre cible au sol n'est pas en vue.
+SummonAnimistPet.CheckBeginCast.GroundTargetNotInSpellRange:	Vous devez sélectionner une cible au sol moins éloignée.
+
+#TurretsRelease
+TurretsRelease.CheckBeginCast.NoSelectedTarget:	Vous ne pouvez lancer ce sort que sur une créature que vous contrôlez.
+TurretsRelease.CheckBeginCast.TargetTooFarAway:	Votre cible est trop éloignée.

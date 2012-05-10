@@ -227,7 +227,7 @@ namespace DOL.GS
 			get { return 1; }
 		}
 
-		public virtual string GetTitle(int level)
+		public virtual string GetTitle(GamePlayer player, int level)
 		{
 			return "None";
 		}

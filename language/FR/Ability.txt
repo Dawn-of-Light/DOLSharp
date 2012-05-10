@@ -37,8 +37,9 @@ Skill.Ability.CriticalShot.AlreadyFiring:	Vous tirez déjà avec cette arme.
 
 Skill.Ability.DirtyTricks.EffectCancel:	Vos attaques retournent à la normal.
 Skill.Ability.DirtyTricks.EffectStart:	Vous recevez un jet de poussières dans les yeux!
-Skill.Ability.DirtyTricks.Name:	Dirty Tricks
-Skill.Ability.DirtyTricks.Description:	The player will toss dirt into the face of the enemy and causes his fumble rate to increase temporarily.
+Skill.Ability.DirtyTricks.Name:	Coups Bas
+Skill.Ability.DirtyTricks.Description:	Active un effet à déclenchement offensif de 30 secondes sur le Mercenaire, ce qui lance à chaque touché un sort d'affaiblissement de 10 secondes sur sa cible. Ce sort d'affaiblissement augmente de 50 % la probabilité que l'adversaire du Mercenaire rate lamentablement toutes ses attaques de mêlée.
+Skill.Ability.DirtyTricks.DelveString:	Cette abilité augmente de 50 % la probabilité de raté lamentablement toutes les attaques de mêlée de la cible.
 
 Skill.Ability.Engage.CannotUseDead:	Vous ne pouvez pas entrer en mode combat en étant mort(e)!
 Skill.Ability.Engage.CannotUseStanding:	Vous ne pouvez pas entrer en mode combat en étant assis(e)!

@@ -113,6 +113,7 @@ AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoMetalworkingSkill:  
 AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill:      Vous n'avez pas le niveau minimum dans la compétence Menuiserie ({0}) Pour confectionner le {1}!
 AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.Rawmaterial:			Impossible de trouver l'objet avec l'ID de {0}, veuillez nous contacter!
 
+AbstractCraftingSkill.CraftItem.CantCraftInCombat:   Vous ne pouvez pas faire d'artisanat, vous étiez en combat récemment.
 AbstractCraftingSkill.CraftItem.BeginWork:      Vous commencez à travailler sur le {0} ({1}%).
 AbstractCraftingSkill.CraftItem.ChanceToGainPoint:   Chance de gagner des points sur votre compétence primaire {0}%.
 AbstractCraftingSkill.CraftItem.CurrentlyMaking:   Artisanat en cours: {0}
