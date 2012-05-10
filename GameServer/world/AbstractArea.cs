@@ -219,7 +219,7 @@ namespace DOL.GS
                 string description = Description;
                 string screenDescription = description;
 
-                DataObject translation = LanguageMgr.GetTranslation(player.Client, this);
+                LanguageDataObject translation = LanguageMgr.GetTranslation(player.Client, this);
                 if (translation != null)
                 {
                     if (!Util.IsEmpty(((DBLanguageArea)translation).Description))

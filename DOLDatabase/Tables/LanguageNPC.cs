@@ -22,34 +22,23 @@ using DOL.Database.Attributes;
 namespace DOL.Database
 {
     [DataTable(TableName = "LanguageNPC")]
-    public class DBLanguageNPC : DataObject, ILanguageTable
+    public class DBLanguageNPC : LanguageDataObject
     {
         #region Variables
-        private string m_translationId = "";
         private string m_name = "";
         private string m_suffix = "";
         private string m_guildName = "";
         private string m_examineArticle = "";
         private string m_messageArticle = "";
-        private string m_language = "";
-        private string m_tag = "";
         #endregion Variables
 
-        public DBLanguageNPC() { }
+        public DBLanguageNPC()
+            : base() { }
 
         #region Properties
-        /// <summary>
-        /// Gets or sets the translation id.
-        /// </summary>
-        [DataElement(AllowDbNull = false, Index = true)]
-        public string TranslationId
+        public override eTranslationIdentifier TranslationIdentifier
         {
-            get { return m_translationId; }
-            set
-            {
-                Dirty = true;
-                m_translationId = value;
-            }
+            get { return eTranslationIdentifier.eNPC; }
         }
 
         /// <summary>
@@ -131,34 +120,6 @@ namespace DOL.Database
             {
                 Dirty = true;
                 m_messageArticle = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the language.
-        /// </summary>
-        [DataElement(AllowDbNull = false)]
-        public string Language
-        {
-            get { return m_language; }
-            set
-            {
-                Dirty = true;
-                m_language = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets costum data of / for the database row. Can be used to sort rows.
-        /// </summary>
-        [DataElement(AllowDbNull = true)]
-        public string Tag
-        {
-            get { return m_tag; }
-            set
-            {
-                Dirty = true;
-                m_tag = value;
             }
         }
         #endregion Properties

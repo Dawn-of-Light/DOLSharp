@@ -17,12 +17,37 @@
  *
  */
 
+using DOL.Database.Attributes;
+
 namespace DOL.Database
 {
-    public interface ILanguageTable
+    [DataTable(TableName = "LanguageSystem")]
+    public class DBLanguageSystem : LanguageDataObject
     {
-        string Language { get; set; }
+        #region Variables
+        private string m_text = "";
+        #endregion Variables
 
-        string TranslationId { get; set; }
+        public DBLanguageSystem()
+            : base() { }
+
+
+        #region Properties
+        public override eTranslationIdentifier TranslationIdentifier
+        {
+            get { return eTranslationIdentifier.eSystem; }
+        }
+
+        [DataElement(AllowDbNull = false)]
+        public string Text
+        {
+            get { return m_text; }
+            set
+            {
+                Dirty = true;
+                m_text = value;
+            }
+        }
+        #endregion Properties
     }
 }

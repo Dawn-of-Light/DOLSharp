@@ -8,11 +8,11 @@
 # Please try to keep ID's alphabetical order
 
 # LANGUAGEMGR
-System.LanguagesName.English:				Inglés
-System.LanguagesName.French:				Francés
-System.LanguagesName.German:				Alemán
-System.LanguagesName.Spanish:				Español
-System.LanguagesName.Czech:					Czech
+System.LanguagesName.EN:				Inglés
+System.LanguagesName.FR:				Francés
+System.LanguagesName.DE:				Alemán
+System.LanguagesName.ES:				Español
+System.LanguagesName.CZ:					Czech
 
 # SYSTEM
 System.NoSense:								Eso no tiene sentido!

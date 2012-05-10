@@ -1,10 +1,10 @@
 ﻿
 
 # Languages
-System.LanguagesName.English:				English
-System.LanguagesName.Italian:				Italian
-System.LanguagesName.French:				French
-System.LanguagesName.German:				German
+System.LanguagesName.EN:				English
+System.LanguagesName.IT:				Italian
+System.LanguagesName.FR:				French
+System.LanguagesName.DE:				German
 
 
 # System
