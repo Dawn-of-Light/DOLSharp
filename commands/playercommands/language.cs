@@ -16,87 +16,97 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
 using System;
-using DOL.GS.PacketHandler;
+using System.Linq;
+
+using DOL.Database;
 using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
-		"&language",
-		ePrivLevel.Player,
-		"Change your server-language display. Custom 'CU' is what your administrator decides.",
-		"/language <EN|IT|FR|DE|CU>")]
-	public class LanguageCommandHandler : AbstractCommandHandler, ICommandHandler
-	{
-		private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    [Cmd("&language", ePrivLevel.Player, "Change your language.",
+        "Use '/language current' to see your current used language.",
+        "Use '/language set [language]' to set your language.",
+        "Use '/language show' to show all available languages and to see your current used language."
+    )]
+    public class LanguageCommandHandler : AbstractCommandHandler, ICommandHandler
+    {
+        public void OnCommand(GameClient client, string[] args)
+        {
+            if (IsSpammingCommand(client.Player, "language"))
+                return;
 
-		public void OnCommand(GameClient client, string[] args)
-		{
-			if (IsSpammingCommand(client.Player, "language"))
-				return;
+            if (client.Account.PrivLevel == (uint)ePrivLevel.Player && !DOL.GS.ServerProperties.Properties.ALLOW_CHANGE_LANGUAGE)
+            {
+                DisplayMessage(client, "This server does not support changing languages.");
+                return;
+            }
 
-			if (client.Account.PrivLevel == (uint) ePrivLevel.Player &&
-			    DOL.GS.ServerProperties.Properties.ALLOW_CHANGE_LANGUAGE == false)
-			{
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Language.Current", LanguageMgr.LangsToCompleteName(client, LanguageMgr.NameToLangs(client.Account.Language))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				DisplayMessage(client, "This server does not support changing languages");
-				return;
-			}
+            if (args.Length < 2)
+            {
+                DisplaySyntax(client);
+                return;
+            }
 
+            switch (args[1].ToLower())
+            {
+                #region current
+                case "current":
+                    {
+                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Language.Current"), client.Account.Language);
+                        return;
+                    }
+                #endregion current
 
-			if (args.Length == 1)
-			{
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Language.Current", LanguageMgr.LangsToCompleteName(client, LanguageMgr.NameToLangs(client.Account.Language))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				DisplaySyntax(client);
-			}
-			else
-			{
-				if (client.Account.PrivLevel != (uint)ePrivLevel.Player)
-				{
-					switch (args[1].ToLower())
-					{
-						case "debug": //receive extended messages
-							{
-								bool debug = client.Player.TempProperties.getProperty("LANGUAGEMGR-DEBUG", false);
-								debug = !debug;
-								client.Player.TempProperties.setProperty("LANGUAGEMGR-DEBUG", debug);
-								client.Out.SendMessage("[LanguageMgr] Debug mode : " + (debug ? "ON" : "OFF"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-						case "load": //refresh from database
-							{
-								if (args.Length != 3)
-								{
-									DisplayMessage(client, "[LanguageMgr] Usage : '/lang load GamePlayer.AddAbility.YouLearn'");
-									return;
-								}
-								if (!LanguageMgr.IDSentences.ContainsKey(args[2]))
-								{
-									DisplayMessage(client, "[LanguageMgr] Can't find TranslationID <" + args[2] + "> !");
-									return;
-								}
-								if (LanguageMgr.Refresh(args[2]))
-								{
-									DisplayMessage(client, "[LanguageMgr] TranslationID <" + args[2] + "> updated successfully !");
-									return;
-								}
-								DisplayMessage(client, "[LanguageMgr] An error occured.");
-								return;
-							}
-					}
-				}
+                #region set
+                case "set":
+                    {
+                        if (args.Length < 3)
+                        {
+                            DisplaySyntax(client, "set");
+                            return;
+                        }
 
-				// Valid language -> English default
-				client.Account.Language = LanguageMgr.LangsToName(LanguageMgr.NameToLangs(args[1].ToUpper()));
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Language.Set", LanguageMgr.LangsToCompleteName(client, LanguageMgr.NameToLangs(client.Account.Language))), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				GameServer.Database.SaveObject(client.Account);
+                        if (!LanguageMgr.Languages.Contains(args[2].ToUpper()))
+                        {
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Language.LanguageNotSupported", args[2].ToUpper()));
+                            return;
+                        }
 
-				if (log.IsInfoEnabled)
-				{
-					log.Info(client.Player.Name + " (" + client.Account.Name + ") changed language.");
-				}
-			}
-		}
-	}
+                        client.Account.Language = args[2];
+                        GameServer.Database.SaveObject(client.Account);
+                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Language.Set", args[2].ToUpper()));
+                        return;
+                    }
+                #endregion set
+
+                #region show
+                case "show":
+                    {
+                        string languages = "";
+                        foreach (string language in LanguageMgr.Languages)
+                        {
+                            if (client.Account.Language == language)
+                                languages += ("*" + language + ","); // The * marks a language as the players current used language
+                            else
+                                languages += (language + ",");
+                        }
+
+                        if (languages.EndsWith(","))
+                            languages = languages.Substring(0, languages.Length - 1);
+
+                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Language.AvailableLanguages", languages));
+                        return;
+                    }
+                #endregion show
+
+                default:
+                    {
+                        DisplaySyntax(client);
+                        return;
+                    }
+            }
+        }
+    }
 }

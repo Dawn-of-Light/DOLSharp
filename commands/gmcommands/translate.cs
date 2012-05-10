@@ -16,470 +16,465 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+
 using System;
-using DOL.Database;
-using DOL.GS.PacketHandler;
-using DOL.Language;
+using System.Collections.Generic;
 using System.Linq;
+
+using DOL.Database;
+using DOL.Language;
 using DOL.GS.Keeps;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&translate", ePrivLevel.GM,
-	              "'/translate <TranslationID> <text in your actual language>' : translate the string in current language",
-	              "'/translate showid <sentence>' : show the TranslationID related to the sentence",
-	              "example : '/translate Effects.StaticEffect.YouCantRemoveThisEffect You can't remove this effect!'",
-                  "'/translate name <language> <name>' to add or change the name of your target.",
-                  "'/translate suffix <language> <suffix>' to add or change the suffix of your target.",
-                  "'/translate guildname <language> <guild name> to add or change the guild name of your target.",
-                  "'/translate examinearticle <language> <examine article>' to add or change the examine article of your target.",
-                  "'/translate messagearticle <language> <message article>' to add or change the message article of your target.")]
-	public class GMLanguageBaseCommandHandler : AbstractCommandHandler, ICommandHandler
-	{
-		public void OnCommand(GameClient client, string[] args)
-		{
-			if (client == null || client.Player == null || args.Length < 3)
-			{
-				DisplaySyntax(client);
-				return;
-			}
+    [Cmd("&translate", ePrivLevel.GM,
+         "Use '/translate add [Language] [TranslationId] [Text]' to add a new translation.",
+         "Use '/translate debug' to activate / deactivate the LanguageMgr debug mode for you and to receive extended messages or not.",
+         "Use '/translate memadd [Language] [TranslationId]' to add a language object to your temporary properties. Use this sub command if the combination of a translation id and text is longer than the DAoC chat allows for one \"line\".",
+         "Use '/translate memclear' to remove the previously added language object from your temporary properties.",
+         "Use '/translate memsave [Text]' to add a text to your language object and to save it into the database. This command will also register your new translation in the LanguageMgr.",
+         "Use '/translate memshow' to show the translation id and the language of your language object.",
+         "Use '/translate refresh [Language] [TranslationId] [Text]' to refresh a existing translation.",
+         "Use '/translate select [Language] [TranslationId]' to select a existing translation and to add it's language object into your temporary properties. Use this sub command if the combination of a translation id and text is longer than the DAoC chat allows for one \"line\".",
+         "Use '/translate selectclear' to remove the previously selected language object from your temporary properties.",
+         "Use '/translate selectsave [Text]' to refresh the text of the selected translation and to save it's language object into the database.",
+         "Use '/translate selectshow' to show the language, translation id and the text of your selected language object.",
+         "Use '/translate show [Language] [TranslationId]' to show the translated text of the given language and translation id.")]
+    //"Use '/translate showlist [showall or Language]' to show a sorted list of all registered translations or to show a list of all translations of a language.")]
+    public class TranslateCommandHandler : AbstractCommandHandler, ICommandHandler
+    {
+        private const string LANGUAGEMGR_MEM_LNG_OBJ = "LANGUAGEMGR_MEM_LNG_OBJ";
+        private const string LANGUAGEMGR_SEL_LNG_OBJ = "LANGUAGEMGR_SEL_LNG_OBJ";
 
-            GameObject target = null;
+        public void OnCommand(GameClient client, string[] args)
+        {
+            if (IsSpammingCommand(client.Player, "translate"))
+                return;
 
-            if (client.Player.TargetObject != null && client.Player.TargetObject is GameObject)
-                target = (GameObject)client.Player.TargetObject;
+            if (args.Length < 2)
+            {
+                DisplaySyntax(client);
+                return;
+            }
 
-            //switch (args[1].ToLower())
-            //{
-                //case "name":
-                //    {
-                //        if (target == null || target is IDoor)
-                //            client.Out.SendMessage("You need a valid target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                //        else
-                //            name(client, target, args);
+            switch (args[1].ToLower())
+            {
+                #region add
+                case "add":
+                    {
+                        if (client.Account.PrivLevel != (uint)ePrivLevel.Player)
+                        {
+                            if (args.Length < 5)
+                            {
+                                DisplayMessage(client, "[Language-Manager] Usage: '/translate add [Language] [TranslationId] [Text]'");
+                                return;
+                            }
 
-                //        return;
-                //    }
-                //case "suffix":
-                //    {
-                //        if (target == null || target is IDoor)
-                //            client.Out.SendMessage("You need a valid target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                //        else
-                //            suffix(client, target, args);
+                            LanguageDataObject translation = LanguageMgr.GetLanguageDataObject(args[2].ToUpper(), args[3], LanguageDataObject.eTranslationIdentifier.eSystem);
+                            if (translation != null)
+                            {
+                                DisplayMessage(client, "[Language-Manager] This translation id is already in use by the given language! ( Language <" + args[2].ToUpper() + "> - TranslationId <" + args[3] + "> )");
+                                return;
+                            }
 
-                //        return;
-                //    }
-                //case "guildname":
-                //    {
-                //        if (target == null || target is IDoor)
-                //            client.Out.SendMessage("You need a valid target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                //        else
-                //            guildname(client, target, args);
+                            translation = new DBLanguageSystem();
+                            ((DBLanguageSystem)translation).TranslationId = args[3];
+                            ((DBLanguageSystem)translation).Text = args[4];
+                            ((DBLanguageSystem)translation).Language = args[2];
 
-                //        return;
-                //    }
-                //case "examinearticle":
-                //    {
-                //        if (target == null || target is IDoor)
-                //            client.Out.SendMessage("You need a valid target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                //        else
-                //            examinearticle(client, target, args);
+                            GameServer.Database.AddObject(translation);
+                            LanguageMgr.RegisterLanguageDataObject(translation);
+                            DisplayMessage(client, "[Language-Manager] Translation successfully added! (Language <" + args[2].ToUpper() + "> - TranslationId <" + args[3] + "> )");
+                            return;
+                        }
 
-                //        return;
-                //    }
-                //case "messagearticle":
-                //    {
-                //        if (target == null || target is IDoor)
-                //            client.Out.SendMessage("You need a valid target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                //        else
-                //            messagearticle(client, target, args);
+                        return;
+                    }
+                #endregion add
 
-                //        return;
-                //    }
-            //    default:
-            //        break;
-            //}
+                #region debug
+                case "debug":
+                    {
+                        bool debug = client.Player.TempProperties.getProperty("LANGUAGEMGR-DEBUG", false);
+                        debug = !debug;
+                        client.Player.TempProperties.setProperty("LANGUAGEMGR-DEBUG", debug);
+                        DisplayMessage(client, "[Language-Manager] Debug mode: " + (debug ? "ON" : "OFF"));
+                        return;
+                    }
+                #endregion debug
 
-			string lang = Language.LanguageMgr.LangsToName(client.Account.Language);
-			
-			// ShowId displays the related translation.
-			// If a GM find an incorrect sentence, he could 
-			// grab its TranslationID with part of the translated text
-			// ie: /translate showid Can't Mount
-			// will list every translation in its language containing 'Can't Mount'
-			if (args[1].ToLower().Contains("showid"))
-			{
-				var sentences = GameServer.Database.SelectObjects<DBLanguage>("`" + lang + "` LIKE '%" + GameServer.Database.Escape(String.Join(" ", args, 2, args.Length - 2)) + "%'");
-				foreach (var text in sentences)
-					DisplayMessage(client.Player, string.Format("{0} -> {1}", text.TranslationID, LanguageMgr.GetTranslation(client, text.TranslationID)));
-				return;
-			}
+                #region memadd
+                case "memadd":
+                    {
+                        // This sub command adds a new language object to your temp properties which will "pre save" the given translation id
+                        // and language. Use this sub command if the translation id or text of your new translation requires more room
+                        // as the DAoC chat allows you to use in one line. Use the memsave sub command to add a text to this language object
+                        // and to save it into the database - or use "memclear" to remove the language object from your temp properties.
 
-			string id = args[1];
-			if (!LanguageMgr.IDSentences.ContainsKey(id))
-			{
-				DisplayMessage(client, "The TranslationID <" + id + "> does not exist!");
-				return;
-			}
-			if (!LanguageMgr.IDSentences[id].ContainsKey(lang))
-			{
-				DisplayMessage(client, "The TranslationID <" + id + "> does not contain the language <" + lang + "> !");
-				return;
-			}
-			string sentence = String.Join(" ", args, 2, args.Length - 2);
-			client.Player.TempProperties.setProperty("LANGUAGEMGR-ID", id);
-			client.Player.TempProperties.setProperty("LANGUAGEMGR-LANG", lang);
-			client.Player.TempProperties.setProperty("LANGUAGEMGR-TEXT", sentence);
-			client.Out.SendCustomDialog("Please confirm the change : \n[" + id + "][" + lang + "] = \n\"" + sentence + "\"", new CustomDialogResponse(Confirm));
-		}
-		
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="response"></param>
-		private void Confirm(GamePlayer player, byte response)
-		{
-			if (player == null || response != 0x01) return;
-			string id = player.TempProperties.getProperty<string>("LANGUAGEMGR-ID", "");
-			string lang = player.TempProperties.getProperty<string>("LANGUAGEMGR-LANG", "");
-			string sentence = player.TempProperties.getProperty<string>("LANGUAGEMGR-TEXT", "");
-			if (id == "" || lang == "" || sentence == "") return;
-			player.TempProperties.removeProperty("LANGUAGEMGR-ID");
-			player.TempProperties.removeProperty("LANGUAGEMGR-LANG");
-			player.TempProperties.removeProperty("LANGUAGEMGR-TEXT");
-			if (!LanguageMgr.IDSentences.ContainsKey(id))
-			{
-				DisplayMessage(player.Client, "The TranslationID <" + id + "> does not exist!");
-				return;
-			}
-			if (!LanguageMgr.IDSentences[id].ContainsKey(lang))
-			{
-				DisplayMessage(player.Client, "The TranslationID <" + id + "> does not contain the language <" + lang + "> !");
-				return;
-			}
-			LanguageMgr.IDSentences[id][lang] = sentence;
-			bool create = false;
-			DBLanguage obj = GameServer.Database.SelectObject<DBLanguage>("`TranslationID` = '" + GameServer.Database.Escape(id) + "'");
-			if (obj == null)
-			{
-				obj = new DBLanguage();
-				obj.TranslationID = id;
-				create = true;
-			}
-			switch (lang)
-			{
-					case "EN": obj.EN = sentence; break;
-					case "DE": obj.DE = sentence; break;
-					case "FR": obj.FR = sentence; break;
-					case "IT": obj.IT = sentence; break;
-					case "CU": obj.CU = sentence; break;
-					default: break;
-			}
-			if (create) GameServer.Database.AddObject(obj);
-			else GameServer.Database.SaveObject(obj);
-			DisplayMessage(player.Client, "The Translation [" + id + "] [" + lang + "] is now <" + sentence + "> (" + (create ? "created" : "updated") + ") !");
-			LanguageMgr.Refresh(id);
-		}
+                        if (args.Length < 4)
+                            DisplayMessage(client, "[Language-Manager] Usage: '/translate memadd [Language] [TranslationId]'");
+                        else
+                        {
+                            LanguageDataObject lngObj = (LanguageDataObject)client.Player.TempProperties.getProperty<object>(LANGUAGEMGR_MEM_LNG_OBJ, null);
 
-        //private void name(GameClient client, GameObject target, string[] args)
-        //{
-        //    if (args.Length < 4)
-        //    {
-        //        DisplaySyntax(client, args[1]);
-        //        return;
-        //    }
+                            if (lngObj != null)
+                                DisplayMessage(client, "[Language-Manager] Can't add language object, there is already another one!");
+                            else
+                            {
+                                lngObj = LanguageMgr.GetLanguageDataObject(args[2].ToUpper(), args[3], LanguageDataObject.eTranslationIdentifier.eSystem);
 
-        //    if (target is GameStaticItem)
-        //    {
-        //        client.Out.SendMessage("Not supported yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        //        return;
-        //    }
+                                if (lngObj != null)
+                                    DisplayMessage(client, "[Language-Manager] The combination of the given TranslationId <" + args[3] + "> and Language <" + args[2].ToUpper() + "> is already in use!");
+                                else
+                                {
+                                    lngObj = new DBLanguageSystem();
+                                    ((DBLanguageSystem)lngObj).TranslationId = args[3];
+                                    ((DBLanguageSystem)lngObj).Language = args[2];
 
-        //    if (target is GameNPC)
-        //    {
-        //        GameNPC npc = (GameNPC)target;
-        //        if (Util.IsEmpty(npc.TranslationId))
-        //        {
-        //            client.Out.SendMessage("Your target doesn't have a translation id, please use '/mob translationid <translation id>' first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        //            return;
-        //        }
+                                    client.Player.TempProperties.setProperty(LANGUAGEMGR_MEM_LNG_OBJ, lngObj);
+                                    DisplayMessage(client, "[Language-Manager] Language object successfully added to your temporary properties! ( Language <" + args[2].ToUpper() + "> TranslationId <" + args[3] + "> )");
+                                }
+                            }
+                        }
 
-        //        DBLanguageNPC result = GameServer.Database.SelectObject<DBLanguageNPC>("TranslationId = '" + GameServer.Database.Escape(npc.TranslationId) +
-        //                                                                               "' and Language = '" + args[2].ToUpper() + "'");
-        //        if (result != null)
-        //            GameServer.Database.DeleteObject(result);
-        //        else
-        //        {
-        //            result = new DBLanguageNPC();
-        //            result.TranslationId = npc.TranslationId;
-        //            result.Suffix = string.Empty;
-        //            result.GuildName = string.Empty;
-        //            result.ExamineArticle = string.Empty;
-        //            result.MessageArticle = string.Empty;
-        //            result.Language = args[2].ToUpper();
-        //        }
+                        return;
+                    }
+                #endregion memadd
 
-        //        if (args.Length > 4)
-        //            result.Name = string.Join(" ", args, 3, args.Length - 3);
-        //        else
-        //            result.Name = args[3];
+                #region memclear
+                case "memclear":
+                    {
+                        // Removes the language object from your temp properties you've previously added with the "memadd" sub command.
+                        LanguageDataObject lngObj = (LanguageDataObject)client.Player.TempProperties.getProperty<object>(LANGUAGEMGR_MEM_LNG_OBJ, null);
 
-        //        GameServer.Database.AddObject(result);
+                        if (lngObj == null)
+                            DisplayMessage(client, "[Language-Manager] No language object found.");
+                        else
+                        {
+                            client.Player.TempProperties.removeProperty(LANGUAGEMGR_MEM_LNG_OBJ);
+                            DisplayMessage(client, "[Language-Manager] Language object successfully removed.");
+                        }
 
-        //        if (!(npc is GameMovingObject) && !(npc is GamePet) && client.Account.Language.ToUpper() == args[2].ToUpper())
-        //        {
-        //            npc.RemoveFromWorld();
-        //            GameNPC.RefreshTranslation(args[2].ToUpper(), result.TranslationId);
-        //            npc.AddToWorld();
-        //        }
-        //        else
-        //            GameNPC.RefreshTranslation(args[2].ToUpper(), result.TranslationId);
+                        return;
+                    }
+                #endregion memclear
 
-        //        client.Out.SendMessage("Name for language '" + args[2].ToUpper() + "' changed to: " + result.Name, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        //        return;
-        //    }
+                #region memsave
+                case "memsave":
+                    {
+                        // See "memadd" sub command for a description.
+                        if (args.Length < 3)
+                            DisplayMessage(client, "[Language-Manager] Usage: '/translate memsave [Text]'");
+                        else
+                        {
+                            LanguageDataObject lngObj = (LanguageDataObject)client.Player.TempProperties.getProperty<object>(LANGUAGEMGR_MEM_LNG_OBJ, null);
 
-        //    DisplaySyntax(client, args[1]);
-        //}
+                            if (lngObj == null)
+                                DisplayMessage(client, "[Language-Manager] No language object found.");
+                            else
+                            {
+                                if (args.Length > 3)
+                                    ((DBLanguageSystem)lngObj).Text = string.Join(" ", args, 2, args.Length - 2);
+                                else
+                                    ((DBLanguageSystem)lngObj).Text = args[2];
 
-        //private void suffix(GameClient client, GameObject target, string[] args)
-        //{
-        //    if (args.Length < 4)
-        //    {
-        //        DisplaySyntax(client, args[1]);
-        //        return;
-        //    }
+                                if (!LanguageMgr.RegisterLanguageDataObject(lngObj))
+                                    DisplayMessage(client, "[Language-Manager] Can't register language object in LanguageMgr, there is already another one!");
+                                else
+                                {
+                                    GameServer.Database.AddObject(lngObj);
+                                    client.Player.TempProperties.removeProperty(LANGUAGEMGR_MEM_LNG_OBJ);
+                                    DisplayMessage(client, "[Language-Manager] Translation successfully added into the database and registered in LanguageMgr.");
+                                }
+                            }
+                        }
 
-        //    if (target is GameStaticItem)
-        //    {
-        //        client.Out.SendMessage("GameStaticItems don't have a suffix!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        //        return;
-        //    }
+                        return;
+                    }
+                #endregion memsave
 
-        //    if (target is GameNPC)
-        //    {
-        //        GameNPC npc = (GameNPC)target;
-        //        if (Util.IsEmpty(npc.TranslationId))
-        //        {
-        //            client.Out.SendMessage("Your target doesn't have a translation id, please use '/mob translationid <translation id>' first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        //            return;
-        //        }
+                #region memshow
+                case "memshow":
+                    {
+                        LanguageDataObject lngObj = (LanguageDataObject)client.Player.TempProperties.getProperty<object>(LANGUAGEMGR_MEM_LNG_OBJ, null);
 
-        //        if (target is GameMovingObject)
-        //        {
-        //            client.Out.SendMessage("You cannot set a suffix for GameMovingObjects.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        //            return;
-        //        }
-        //        else // GameNPC, GamePet etc.
-        //        {
-        //            DBLanguageNPC result = GameServer.Database.SelectObject<DBLanguageNPC>("TranslationId = '" + GameServer.Database.Escape(npc.TranslationId) +
-        //                                               "' and Language = '" + args[2].ToUpper() + "'");
-        //            if (result != null)
-        //                GameServer.Database.DeleteObject(result);
-        //            else
-        //            {
-        //                result = new DBLanguageNPC();
-        //                result.TranslationId = npc.TranslationId;
-        //                result.Name = string.Empty;
-        //                result.GuildName = string.Empty;
-        //                result.ExamineArticle = string.Empty;
-        //                result.MessageArticle = string.Empty;
-        //                result.Language = args[2].ToUpper();
-        //            }
+                        if (lngObj == null)
+                            DisplayMessage(client, "[Language-Manager] No language object found.");
+                        else
+                            DisplayMessage(client, "[Language-Manager] Language object info: Language <" + lngObj.Language + "> TranslationId <" + lngObj.TranslationId + ">");
 
-        //            if (args.Length > 4)
-        //                result.Suffix = string.Join(" ", args, 3, args.Length - 3);
-        //            else
-        //                result.Suffix = args[3];
+                        return;
+                    }
+                #endregion memshow
 
-        //            GameServer.Database.AddObject(result);
-        //            GameNPC.RefreshTranslation(args[2].ToUpper(), result.TranslationId);
-        //            client.Out.SendMessage("Suffix for language '" + args[2].ToUpper() + "' changed to: " + result.Suffix, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        //            return;
-        //        }
-        //    }
+                #region refresh
+                case "refresh":
+                    {
+                        if (args.Length < 5)
+                            DisplayMessage(client, "[Language-Manager] Usage: '/translate refresh [Language] [TranslationId] [Text]'");
+                        else
+                        {
+                            LanguageDataObject lngObj = LanguageMgr.GetLanguageDataObject(args[2].ToUpper(), args[3], LanguageDataObject.eTranslationIdentifier.eSystem);
 
-        //    DisplaySyntax(client, args[1]);
-        //}
+                            if (lngObj == null)
+                                DisplayMessage(client, "[Language-Manager] Can't find TranslationId <" + args[3] + "> (Language <" + args[2].ToUpper() + "> !");
+                            else
+                            {
+                                ((DBLanguageSystem)lngObj).Text = args[3];
+                                GameServer.Database.SaveObject(lngObj);
+                                DisplayMessage(client, "[Language-Manager] TranslationId <" + args[3] + "> (Language: " + args[2].ToUpper() + " ) successfully updated in database!");
+                            }
+                        }
 
-        //private void guildname(GameClient client, GameObject target, string[] args)
-        //{
-        //    if (args.Length < 4)
-        //    {
-        //        DisplaySyntax(client, args[1]);
-        //        return;
-        //    }
+                        return;
+                    }
+                #endregion refresh
 
-        //    if (target is GameStaticItem)
-        //    {
-        //        client.Out.SendMessage("GameStaticObjects don't have a guild name!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        //        return;
-        //    }
+                #region select
+                case "select":
+                    {
+                        if (args.Length < 4)
+                            DisplayMessage(client, "[Language-Manager] Usage: '/translate select [Language] [TranslationId]'");
+                        else
+                        {
+                            LanguageDataObject lngObj = (LanguageDataObject)client.Player.TempProperties.getProperty<object>(LANGUAGEMGR_SEL_LNG_OBJ, null);
 
-        //    if (target is GameNPC)
-        //    {
-        //        if (target is GameKeepGuard)
-        //        {
-        //            client.Out.SendMessage("You cannot translate the guild name of a GameKeepGuard!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        //            return;
-        //        }
+                            if (lngObj != null)
+                            {
+                                DisplayMessage(client, "[Language-Manager] You already have selected a language object! ( Language <" + ((DBLanguageSystem)lngObj).Language +
+                                                       "> - TranslationId <" + ((DBLanguageSystem)lngObj).TranslationId + "> )");
+                            }
+                            else
+                            {
+                                lngObj = LanguageMgr.GetLanguageDataObject(args[2].ToUpper(), args[3], LanguageDataObject.eTranslationIdentifier.eSystem);
 
-        //        if (target is GameMovingObject)
-        //        {
-        //            client.Out.SendMessage("GameMovingObjects don't have a guild name!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        //            return;
-        //        }
+                                if (lngObj == null)
+                                {
+                                    DisplayMessage(client, "[Language-Manager] Can't find language object. ( Language <" + args[2].ToUpper() +
+                                                           "> - TranslationId <" + args[3] + "> )");
+                                }
+                                else
+                                {
+                                    client.Player.TempProperties.setProperty(LANGUAGEMGR_SEL_LNG_OBJ, lngObj);
+                                    DisplayMessage(client, "[Language-Manager] Language object found and added to your temporary properties! ( Language <" + args[2].ToUpper() +
+                                                           "> - TranslationId <" + args[3] + "> )");
+                                }
+                            }
+                        }
 
-        //        // Not sure if we should allow (or not) guild name translations for GamePets.
+                        return;
+                    }
+                #endregion select
 
-        //        GameNPC npc = (GameNPC)target;
-        //        if (Util.IsEmpty(npc.TranslationId))
-        //        {
-        //            client.Out.SendMessage("Your target doesn't have a translation id, please use '/mob translationid <translation id>' first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        //            return;
-        //        }
+                #region selectclear
+                case "selectclear":
+                    {
+                        // Removes the language object from your temp properties you've previously selected with the "select" sub command.
+                        LanguageDataObject lngObj = (LanguageDataObject)client.Player.TempProperties.getProperty<object>(LANGUAGEMGR_SEL_LNG_OBJ, null);
 
-        //        DBLanguageNPC result = GameServer.Database.SelectObject<DBLanguageNPC>("TranslationId = '" + GameServer.Database.Escape(npc.TranslationId) +
-        //                                                                               "' and Language = '" + args[2].ToUpper() + "'");
-        //        if (result != null)
-        //            GameServer.Database.DeleteObject(result);
-        //        else
-        //        {
-        //            result = new DBLanguageNPC();
-        //            result.TranslationId = npc.TranslationId;
-        //            result.Name = string.Empty;
-        //            result.Suffix = string.Empty;
-        //            result.ExamineArticle = string.Empty;
-        //            result.MessageArticle = string.Empty;
-        //            result.Language = args[2].ToUpper();
-        //        }
+                        if (lngObj == null)
+                            DisplayMessage(client, "[Language-Manager] No language object selected!");
+                        else
+                        {
+                            client.Player.TempProperties.removeProperty(LANGUAGEMGR_SEL_LNG_OBJ);
+                            DisplayMessage(client, "[Language-Manager] Language object successfully removed from your temporary properties." +
+                                                   "( Language <" + ((DBLanguageSystem)lngObj).Language +
+                                                   "> - TranslationId <" + ((DBLanguageSystem)lngObj).TranslationId + "> )");
+                        }
 
-        //        if (args.Length > 4)
-        //            result.GuildName = string.Join(" ", args, 3, args.Length - 3);
-        //        else
-        //            result.GuildName = args[3];
+                        return;
+                    }
+                #endregion selectclear
 
-        //        GameServer.Database.AddObject(result);
+                #region selectsave
+                case "selectsave":
+                    {
+                        if (args.Length < 3)
+                            DisplayMessage(client, "[Language-Manager] Usage: '/translate selectsave [Text]'");
+                        else
+                        {
+                            LanguageDataObject lngObj = (LanguageDataObject)client.Player.TempProperties.getProperty<object>(LANGUAGEMGR_SEL_LNG_OBJ, null);
 
-        //        if (!(npc is GameMovingObject) && !(npc is GamePet) && client.Account.Language.ToUpper() == args[2].ToUpper())
-        //        {
-        //            npc.RemoveFromWorld();
-        //            GameNPC.RefreshTranslation(args[2].ToUpper(), result.TranslationId);
-        //            npc.AddToWorld();
-        //        }
-        //        else
-        //            GameNPC.RefreshTranslation(args[2].ToUpper(), result.TranslationId);
+                            if (lngObj == null)
+                                DisplayMessage(client, "[Language-Manager] No language object selected!");
+                            else
+                            {
+                                if (args.Length > 3)
+                                    ((DBLanguageSystem)lngObj).Text = string.Join(" ", args, 2, args.Length - 2);
+                                else
+                                    ((DBLanguageSystem)lngObj).Text = args[2];
 
-        //        client.Out.SendMessage("Guild name for language '" + args[2].ToUpper() + "' changed to: " + result.GuildName, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        //        return;
-        //    }
+                                GameServer.Database.SaveObject(lngObj);
+                                client.Player.TempProperties.removeProperty(LANGUAGEMGR_SEL_LNG_OBJ);
+                                DisplayMessage(client, "[Language-Manager] Language object successfully changed and saved in database." +
+                                                       "( Language <" + ((DBLanguageSystem)lngObj).Language +
+                                                       "> - TranslationId <" + ((DBLanguageSystem)lngObj).TranslationId +
+                                                       "> - Text <" + ((DBLanguageSystem)lngObj).Text + "> )");
+                            }
+                        }
 
-        //    DisplaySyntax(client, args[1]);
-        //}
+                        return;
+                    }
+                #endregion selectsave
 
-        //private void examinearticle(GameClient client, GameObject target, string[] args)
-        //{
-        //    if (args.Length < 4)
-        //    {
-        //        DisplaySyntax(client, args[1]);
-        //        return;
-        //    }
+                #region selectshow
+                case "selectshow":
+                    {
+                        LanguageDataObject lngObj = (LanguageDataObject)client.Player.TempProperties.getProperty<object>(LANGUAGEMGR_SEL_LNG_OBJ, null);
 
-        //    if (target is GameStaticItem)
-        //    {
-        //        client.Out.SendMessage("Not supported yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        //        return;
-        //    }
+                        if (lngObj == null)
+                            DisplayMessage(client, "[Language-Manager] No language object selected!");
+                        else
+                            DisplayMessage(client, "[Language-Manager] Language object info: Language <" + lngObj.Language + "> - TranslationId <" + lngObj.TranslationId +
+                                                   "> - Text <" + ((DBLanguageSystem)lngObj).Text + ">");
+                        return;
+                    }
+                #endregion selectshow
 
-        //    if (target is GameNPC)
-        //    {
-        //        GameNPC npc = (GameNPC)target;
-        //        if (Util.IsEmpty(npc.TranslationId))
-        //        {
-        //            client.Out.SendMessage("Your target doesn't have a translation id, please use '/mob translationid <translation id>' first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        //            return;
-        //        }
+                #region show
+                case "show":
+                    {
+                        if (args.Length < 4)
+                            DisplayMessage(client, "[Language-Manager] Usage: '/translate show [Language] [TranslationId]'");
+                        else
+                        {
+                            LanguageDataObject lngObj = LanguageMgr.GetLanguageDataObject(args[2].ToUpper(), args[3], LanguageDataObject.eTranslationIdentifier.eSystem);
 
-        //        DBLanguageNPC result = GameServer.Database.SelectObject<DBLanguageNPC>("TranslationId = '" + GameServer.Database.Escape(npc.TranslationId) +
-        //                                                                               "' and Language = '" + args[2].ToUpper() + "'");
-        //        if (result != null)
-        //            GameServer.Database.DeleteObject(result);
-        //        else
-        //        {
-        //            result = new DBLanguageNPC();
-        //            result.TranslationId = npc.TranslationId;
-        //            result.Name = string.Empty;
-        //            result.Suffix = string.Empty;
-        //            result.GuildName = string.Empty;
-        //            result.MessageArticle = string.Empty;
-        //            result.Language = args[2].ToUpper();
-        //        }
+                            if (lngObj == null)
+                                DisplayMessage(client, "[Language-Manager] Can't find language object. ( Language <" + args[2].ToUpper() +
+                                                       "> - TranslationId <" + args[3] + "> )");
+                            else
+                                DisplayMessage(client, "[Language-Manager] " + ((DBLanguageSystem)lngObj).Text);
+                        }
 
-        //        if (args.Length > 4)
-        //            result.ExamineArticle = string.Join(" ", args, 3, args.Length - 3);
-        //        else
-        //            result.ExamineArticle = args[3];
+                        return;
+                    }
+                #endregion show
 
-        //        GameServer.Database.AddObject(result);
-        //        GameNPC.RefreshTranslation(args[2].ToUpper(), result.TranslationId);
-        //        client.Out.SendMessage("Examine article for language '" + args[2].ToUpper() + "' changed to: " + result.ExamineArticle, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        //        return;
-        //    }
+                #region showlist
+                /*
+                 * The code works fine, but DAoC does not support a such huge list.
+                 * 
+                 * case "showlist":
+                    {
+                        if (args.Length < 3)
+                            DisplayMessage(client, "aaa");
+                        else
+                        {
+                            #region showall
+                            if (args[2].ToLower() == "showall")
+                            {
+                                IDictionary<string, IList<string>> idLangs = new Dictionary<string, IList<string>>();
+                                List<string> languages = new List<string>();
+                                languages.AddRange(LanguageMgr.Languages);
+                                IList<string> data = new List<string>();
 
-        //    DisplaySyntax(client, args[1]);
-        //}
+                                foreach (string language in LanguageMgr.Translations.Keys)
+                                {
+                                    if (!LanguageMgr.Translations[language].ContainsKey(LanguageDataObject.eTranslationIdentifier.eSystem))
+                                        continue;
 
-        //private void messagearticle(GameClient client, GameObject target, string[] args)
-        //{
-        //    if (args.Length < 4)
-        //    {
-        //        DisplaySyntax(client, args[1]);
-        //        return;
-        //    }
+                                    data.Add("======== Language <" + language + "> ========\n\n");
 
-        //    if (target is GameStaticItem)
-        //    {
-        //        client.Out.SendMessage("Not supported yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        //        return;
-        //    }
+                                    foreach (LanguageDataObject lngObj in LanguageMgr.Translations[language][LanguageDataObject.eTranslationIdentifier.eSystem])
+                                    {
+                                        data.Add("TranslationId: " + lngObj.TranslationId + "\nText: " + ((DBLanguageSystem)lngObj).Text + "\n\n");
 
-        //    if (target is GameNPC)
-        //    {
-        //        GameNPC npc = (GameNPC)target;
-        //        if (Util.IsEmpty(npc.TranslationId))
-        //        {
-        //            client.Out.SendMessage("Your target doesn't have a translation id, please use '/mob translationid <translation id>' first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        //            return;
-        //        }
+                                        if (!idLangs.ContainsKey(lngObj.TranslationId))
+                                        {
+                                            IList<string> langs = new List<string>();
+                                            langs.Add(lngObj.Language);
+                                            idLangs.Add(lngObj.TranslationId, langs);
+                                            continue;
+                                        }
 
-        //        DBLanguageNPC result = GameServer.Database.SelectObject<DBLanguageNPC>("TranslationId = '" + GameServer.Database.Escape(npc.TranslationId) +
-        //                                                                               "' and Language = '" + args[2].ToUpper() + "'");
-        //        if (result != null)
-        //            GameServer.Database.DeleteObject(result);
-        //        else
-        //        {
-        //            result = new DBLanguageNPC();
-        //            result.TranslationId = npc.TranslationId;
-        //            result.Name = string.Empty;
-        //            result.Suffix = string.Empty;
-        //            result.GuildName = string.Empty;
-        //            result.ExamineArticle = string.Empty;
-        //            result.Language = args[2].ToUpper();
-        //        }
+                                        if (!idLangs[lngObj.TranslationId].Contains(lngObj.Language))
+                                            idLangs[lngObj.TranslationId].Add(lngObj.Language);
 
-        //        if (args.Length > 4)
-        //            result.MessageArticle = string.Join(" ", args, 3, args.Length - 3);
-        //        else
-        //            result.MessageArticle = args[3];
+                                        continue;
+                                    }
+                                }
 
-        //        GameServer.Database.AddObject(result);
-        //        GameNPC.RefreshTranslation(args[2].ToUpper(), result.TranslationId);
-        //        client.Out.SendMessage("Message article for language '" + args[2].ToUpper() + "' changed to: " + result.MessageArticle, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        //        return;
-        //    }
+                                IDictionary<string, IList<string>> missingLanguageTranslations = new Dictionary<string, IList<string>>();
 
-        //    DisplaySyntax(client, args[1]);
-        //}
-	}
+                                foreach (string translationId in idLangs.Keys)
+                                {
+                                    foreach (string language in languages)
+                                    {
+                                        if (idLangs[translationId].Contains(language))
+                                            continue;
+
+                                        if (!missingLanguageTranslations.ContainsKey(translationId))
+                                        {
+                                            IList<string> langs = new List<string>();
+                                            langs.Add(language);
+                                            missingLanguageTranslations.Add(translationId, langs);
+                                            continue;
+                                        }
+
+                                        if (!missingLanguageTranslations[translationId].Contains(language))
+                                            missingLanguageTranslations[translationId].Add(language);
+
+                                        continue;
+                                    }
+                                }
+
+                                if (missingLanguageTranslations.Count > 0)
+                                {
+                                    data.Add("======== Missing language translations ========\n\n");
+
+                                    foreach (string translationId in missingLanguageTranslations.Keys)
+                                    {
+                                        string str = ("TranslationId: " + translationId + "\nLanguages: ");
+
+                                        foreach (string language in missingLanguageTranslations[translationId])
+                                            str += (language + ",");
+
+                                        if (str[(str.Length - 1)] == ',')
+                                            str = str.Remove(str.Length - 1);
+
+                                        data.Add(str);
+                                    }
+                                }
+
+                                client.Out.SendCustomTextWindow("[Language-Manager] Translations", data); // I wish you a merry christmas and a happy new year (2112)! :-)
+                            }
+                            #endregion  showall
+
+                            #region language
+                            else
+                            {
+                                if (!LanguageMgr.Languages.Contains(args[2].ToUpper()))
+                                    DisplayMessage(client, "aaa");
+                                else
+                                {
+                                    if (!LanguageMgr.Translations[args[2].ToUpper()].ContainsKey(LanguageDataObject.eTranslationIdentifier.eSystem))
+                                        DisplayMessage(client, "aaa");
+                                    else
+                                    {
+                                        IList<string> data = new List<string>();
+
+                                        foreach (LanguageDataObject lngObj in LanguageMgr.Translations[args[2].ToUpper()][LanguageDataObject.eTranslationIdentifier.eSystem])
+                                            data.Add("TranslationId: " + lngObj.TranslationId + "\nText: " + ((DBLanguageSystem)lngObj).Text + "\n\n");
+
+                                        client.Out.SendCustomTextWindow("[Language-Manager] Language translations <" + args[2].ToUpper() + ">", data);
+                                    }
+                                }
+                            }
+                            #endregion language
+                        }
+
+                        return;
+                    }*/
+                #endregion showlist
+
+                default:
+                    {
+                        DisplaySyntax(client);
+                        return;
+                    }
+            }
+        }
+    }
 }

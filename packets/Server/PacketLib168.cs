@@ -234,7 +234,7 @@ namespace DOL.GS.PacketHandler
                                     
                                     description = area.Description;
 
-                                    DataObject translation = LanguageMgr.GetTranslation(m_gameClient, area);
+                                    LanguageDataObject translation = LanguageMgr.GetTranslation(m_gameClient, area);
                                     if (translation != null)
                                     {
                                         if (!Util.IsEmpty(((DBLanguageArea)translation).ScreenDescription)) // Thats correct!
@@ -247,7 +247,7 @@ namespace DOL.GS.PacketHandler
                                 {
                                     description = zon.Description;
 
-                                    DataObject translation = LanguageMgr.GetTranslation(m_gameClient, zon);
+                                    LanguageDataObject translation = LanguageMgr.GetTranslation(m_gameClient, zon);
                                     if (translation != null)
                                     {
                                         if (!Util.IsEmpty(((DBLanguageZone)translation).ScreenDescription)) // Thats correct!
@@ -946,7 +946,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShort((ushort) flag);
 
                 string name = obj.Name;
-                DataObject translation = null;
+                LanguageDataObject translation = null;
                 if (obj is GameStaticItem)
                 {
                     translation = LanguageMgr.GetTranslation(m_gameClient, (GameStaticItem)obj);
@@ -1081,7 +1081,7 @@ namespace DOL.GS.PacketHandler
                 string name = npc.Name;
                 string guildName = npc.GuildName;
 
-                DataObject translation = LanguageMgr.GetTranslation(m_gameClient, npc);
+                LanguageDataObject translation = LanguageMgr.GetTranslation(m_gameClient, npc);
                 if (translation != null)
                 {
                     if(!Util.IsEmpty(((DBLanguageNPC)translation).Name))
@@ -3293,7 +3293,7 @@ namespace DOL.GS.PacketHandler
 
                 string name = obj.Name;
 
-                DataObject translation = LanguageMgr.GetTranslation(m_gameClient, obj);
+                LanguageDataObject translation = LanguageMgr.GetTranslation(m_gameClient, obj);
                 if (translation != null)
                 {
                     if (!Util.IsEmpty(((DBLanguageNPC)translation).Name))
@@ -3324,7 +3324,7 @@ namespace DOL.GS.PacketHandler
 
                 string name = siegeWeapon.Name;
 
-                DataObject translation = LanguageMgr.GetTranslation(m_gameClient, siegeWeapon);
+                LanguageDataObject translation = LanguageMgr.GetTranslation(m_gameClient, siegeWeapon);
                 if (translation != null)
                 {
                     if (!Util.IsEmpty(((DBLanguageNPC)translation).Name))

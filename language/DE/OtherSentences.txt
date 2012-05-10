@@ -1,10 +1,10 @@
 ﻿# LANGUAGEMGR
-System.LanguagesName.Czech:				Tschechisch
-System.LanguagesName.English:				Englisch
-System.LanguagesName.French:				Französisch
-System.LanguagesName.German:				Deutsch
-System.LanguagesName.Italian:				Italienisch
-System.LanguagesName.Spanish:				Spanisch
+System.LanguagesName.CZ:				Tschechisch
+System.LanguagesName.EN:				Englisch
+System.LanguagesName.FR:				Französisch
+System.LanguagesName.DE:				Deutsch
+System.LanguagesName.IT:				Italienisch
+System.LanguagesName.ES:				Spanisch
 
 # System
 System.NoSense:						Das würde keinen Sinn machen!

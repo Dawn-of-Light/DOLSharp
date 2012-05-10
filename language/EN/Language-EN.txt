@@ -817,6 +817,7 @@ Scripts.Players.Guild.AllianceNoLeader:			No alliance leader
 # /Language
 Scripts.Players.Language.Current:			Your language is currently set to: {0}.
 Scripts.Players.Language.Set:				You change your server display language to {0}.
+Scripts.Players.Language.AvailableLanguages: Available languages: {0}
 
 # /Range
 Scripts.Players.Range.InvalidObject:			This command only works on objects.

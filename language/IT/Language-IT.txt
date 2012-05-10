@@ -8,12 +8,12 @@
 # Please try to keep ID's alphabetical order
 
 # LANGUAGEMGR
-System.LanguagesName.English:				Inglese
-System.LanguagesName.French:				Francese
-System.LanguagesName.German:				Tedesco
-System.LanguagesName.Spanish:				Spagnolo
-System.LanguagesName.Czech:					Cecoslovacco
-System.LanguagesName.Italian:				Italiano
+System.LanguagesName.EN:				Inglese
+System.LanguagesName.FR:				Francese
+System.LanguagesName.DE:				Tedesco
+System.LanguagesName.ES:				Spagnolo
+System.LanguagesName.CZ:					Cecoslovacco
+System.LanguagesName.IT:				Italiano
 
 # SYSTEM
 System.NoSense:								Non ha senso!
