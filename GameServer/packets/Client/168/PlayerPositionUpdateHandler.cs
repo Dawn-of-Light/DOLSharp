@@ -179,7 +179,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                 string description = newZone.Description;
                 string screenDescription = description;
 
-                DataObject translation = LanguageMgr.GetTranslation(client, newZone);
+                LanguageDataObject translation = LanguageMgr.GetTranslation(client, newZone);
                 if (translation != null)
                 {
                     if (!Util.IsEmpty(((DBLanguageZone)translation).Description))

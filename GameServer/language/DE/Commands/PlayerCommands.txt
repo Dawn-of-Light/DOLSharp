@@ -521,6 +521,7 @@ HorseEmote.trick.NoTargetToSource:			You stand on your mount to impress everyone
 # /Language
 Scripts.Players.Language.Current:			Die aktuell auf dem Server angezeigte Sprache ist: {0}.
 Scripts.Players.Language.Set:				Ihr ändert die vom Server angezeigte Sprache auf {0}.
+Scripts.Players.Language.AvailableLanguages: Verfügbare Sprachen: {0}
 
 # /Range
 Scripts.Players.Range.InvalidObject:			Dieser Befehl ist nur bei Gegenständen gültig.

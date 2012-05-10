@@ -8,11 +8,11 @@
 # Please try to keep ID's alphabetical order
 
 # LANGUAGEMGR
-System.LanguagesName.English:				Anglictina
-System.LanguagesName.French:				Francouzstina
-System.LanguagesName.German:				Nemcina
-System.LanguagesName.Spanish:				Spanelstina
-System.LanguagesName.Czech:				Cestina
+System.LanguagesName.EN:				Anglictina
+System.LanguagesName.FR:				Francouzstina
+System.LanguagesName.DE:				Nemcina
+System.LanguagesName.ES:				Spanelstina
+System.LanguagesName.CZ:				Cestina
 
 # SYSTEM
 System.NoSense:								To nedava smysl!

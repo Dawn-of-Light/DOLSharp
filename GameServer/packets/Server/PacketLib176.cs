@@ -129,7 +129,7 @@ namespace DOL.GS.PacketHandler
 			else pak.WriteInt(0);
 
             string name = obj.Name;
-            DataObject translation = null;
+            LanguageDataObject translation = null;
             if (obj is GameStaticItem)
             {
                 translation = LanguageMgr.GetTranslation(m_gameClient, (GameStaticItem)obj);

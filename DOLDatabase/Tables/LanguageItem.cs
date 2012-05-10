@@ -22,37 +22,11 @@ using DOL.Database.Attributes;
 namespace DOL.Database
 {
     // data table attribute not set until item translations are supported.
-    class LanguageItem : DataObject, ILanguageTable
+    class LanguageItem : LanguageDataObject
     {
-        private string m_id = "";
-        private string m_language = "";
-
-        /// <summary>
-        /// The translation id
-        /// </summary>
-        [DataElement(AllowDbNull = false, Index = true)]
-        public string TranslationId
+        public override eTranslationIdentifier TranslationIdentifier
         {
-            get { return m_id; }
-            set
-            {
-                Dirty = true;
-                m_id = value;
-            }
-        }
-
-        /// <summary>
-        /// The language
-        /// </summary>
-        [DataElement(AllowDbNull = false, Index = true)]
-        public string Language
-        {
-            get { return m_language; }
-            set
-            {
-                Dirty = true;
-                m_language = value;
-            }
+            get { return eTranslationIdentifier.eItem; }
         }
     }
 }

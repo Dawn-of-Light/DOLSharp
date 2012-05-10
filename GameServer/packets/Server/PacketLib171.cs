@@ -110,7 +110,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteInt(0x0); //TODO: unknown, new in 1.71
 
             string name = obj.Name;
-            DataObject translation = null;
+            LanguageDataObject translation = null;
             if (obj is GameStaticItem)
             {
                 translation = LanguageMgr.GetTranslation(m_gameClient, (GameStaticItem)obj);
@@ -240,7 +240,7 @@ namespace DOL.GS.PacketHandler
             string name = npc.Name;
             string guildName = npc.GuildName;
 
-            DataObject translation = LanguageMgr.GetTranslation(m_gameClient, npc);
+            LanguageDataObject translation = LanguageMgr.GetTranslation(m_gameClient, npc);
             if (translation != null)
             {
                 if (!Util.IsEmpty(((DBLanguageNPC)translation).Name))

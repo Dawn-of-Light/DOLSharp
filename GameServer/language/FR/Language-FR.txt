@@ -9,12 +9,12 @@
 # Please try to keep ID's alphabetical order
 
 # LANGUAGEMGR
-System.LanguagesName.English:					Anglais
-System.LanguagesName.French:					Français
-System.LanguagesName.German:					Allemand
-System.LanguagesName.Spanish:					Espagnol
-System.LanguagesName.Czech:						Tchèque
-System.LanguagesName.Italian:					Italien 
+System.LanguagesName.EN:					Anglais
+System.LanguagesName.FR:					Français
+System.LanguagesName.DE:					Allemand
+System.LanguagesName.ES:					Espagnol
+System.LanguagesName.CZ:						Tchèque
+System.LanguagesName.IT:					Italien 
 
 
 PlayerPickUpRequestHandler.HandlePacket.Target:		Vous devez avoir une cible valide a ramassé.

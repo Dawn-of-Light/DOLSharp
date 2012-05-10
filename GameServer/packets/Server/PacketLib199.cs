@@ -129,7 +129,7 @@ namespace DOL.GS.PacketHandler
                                     
                                     description = area.Description;
 
-                                    DataObject translation = LanguageMgr.GetTranslation(m_gameClient, area);
+                                    LanguageDataObject translation = LanguageMgr.GetTranslation(m_gameClient, area);
                                     if (translation != null)
                                     {
                                         if (!Util.IsEmpty(((DBLanguageArea)translation).ScreenDescription)) // Thats correct!
@@ -142,7 +142,7 @@ namespace DOL.GS.PacketHandler
                                 {
                                     description = zon.Description;
 
-                                    DataObject translation = LanguageMgr.GetTranslation(m_gameClient, zon);
+                                    LanguageDataObject translation = LanguageMgr.GetTranslation(m_gameClient, zon);
                                     if (translation != null)
                                     {
                                         if (!Util.IsEmpty(((DBLanguageZone)translation).ScreenDescription)) // Thats correct!

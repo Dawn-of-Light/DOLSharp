@@ -344,6 +344,7 @@
     <Compile Include="database\converters\Version005.cs" />
     <Compile Include="database\updaters\DatabaseUpdateAttribute.cs" />
     <Compile Include="database\updaters\IDatabaseUpdater.cs" />
+    <Compile Include="database\updaters\LanguageSystemUpdate.cs" />
     <Compile Include="database\updaters\SalvageYieldsUpdate.cs" />
     <Compile Include="database\updaters\ServerPropertiesUpdate.cs" />
     <Compile Include="effects\DummyEffect.cs" />
@@ -2576,8 +2577,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="language\CU\CZ - General.txt" />
-    <None Include="language\CU\ES - General.txt" />
     <None Include="language\DE\AI.txt" />
     <None Include="language\DE\Atlantis.txt" />
     <None Include="language\DE\Behaviour.txt" />
@@ -2755,9 +2754,10 @@
     <None Include="language\IT\Commands\GMCommands.txt" />
     <None Include="language\IT\Effects.txt" />
     <None Include="language\IT\Language-IT.txt" />
-    <None Include="language\CU\NL - AdminCommands.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="language\NL\NL - AdminCommands.txt" />
+    <None Include="language\CZ\CZ - General.txt" />
     <Content Include="language\DE\GameObjects\GameDoor.txt" />
     <Content Include="language\DE\GameObjects\GameGuard.txt" />
     <Content Include="language\DE\PlayerRealmTitles.txt" />
@@ -2775,6 +2775,7 @@
     <None Include="language\FR\GameObjects\CustomNPC\VaultKeeper.txt" />
     <None Include="language\FR\GameObjects\GameDoor.txt" />
     <None Include="language\FR\Ability.txt" />
+    <None Include="language\ES\ES - General.txt" />
     <Content Include="language\FR\GameObjects\GameGuard.txt" />
     <Content Include="language\FR\Quests\Hibernia\WingsOfTheIsle.txt" />
     <Content Include="language\IT\GameObject\GameDoor.txt" />
