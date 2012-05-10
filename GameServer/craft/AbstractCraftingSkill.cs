@@ -192,7 +192,7 @@ namespace DOL.GS
 
 			if (player.InCombat)
 			{
-				player.Out.SendMessage("You can't craft while in combat.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractCraftingSkill.CraftItem.CantCraftInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 

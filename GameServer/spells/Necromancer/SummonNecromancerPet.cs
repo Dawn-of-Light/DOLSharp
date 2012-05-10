@@ -78,8 +78,8 @@ namespace DOL.GS.Spells
             }
 			if (Caster is GamePlayer && Caster.ControlledBrain != null)
 			{
-				MessageToCaster("You already have a charmed creature, release it first!", eChatType.CT_SpellResisted);
-				return false;
+                MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "Summon.CheckBeginCast.AlreadyHaveaPet"), eChatType.CT_SpellResisted);
+                return false;
 			}
             return base.CheckBeginCast(selectedTarget);
         }

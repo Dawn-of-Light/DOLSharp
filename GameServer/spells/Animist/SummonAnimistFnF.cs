@@ -22,6 +22,7 @@ using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
 using DOL.GS.Effects;
 using DOL.GS.ServerProperties;
+using DOL.Language;
 
 namespace DOL.GS.Spells
 {
@@ -41,8 +42,9 @@ namespace DOL.GS.Spells
 
 			if (rgn == null || rgn.GetZone(Caster.GroundTarget.X, Caster.GroundTarget.Y) == null)
 			{
-				MessageToCaster("You can't summon Turret without ground-target !", eChatType.CT_SpellResisted);
-				return false;
+                if (Caster is GamePlayer)
+                    MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistFnF.CheckBeginCast.NoGroundTarget"), eChatType.CT_SpellResisted);
+                return false;
 			}
 
 			foreach (GameNPC npc in Caster.CurrentRegion.GetNPCsInRadius(Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Properties.TURRET_AREA_CAP_RADIUS, false, true))
@@ -51,14 +53,16 @@ namespace DOL.GS.Spells
 
 			if (nCount >= Properties.TURRET_AREA_CAP_COUNT)
 			{
-				MessageToCaster("You can't summon anymore Turrets in this Area!", eChatType.CT_SpellResisted);
-				return false;
+                if (Caster is GamePlayer)
+                    MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistFnF.CheckBeginCast.TurretAreaCap"), eChatType.CT_SpellResisted);
+                return false;
 			}
 
 			if (Caster.PetCount >= Properties.TURRET_PLAYER_CAP_COUNT)
 			{
-				MessageToCaster("You cannot control anymore Turrets!", eChatType.CT_SpellResisted);
-				return false;
+                if (Caster is GamePlayer)
+                    MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistFnF.CheckBeginCast.TurretPlayerCap"), eChatType.CT_SpellResisted);
+                return false;
 			}
 
 			return base.CheckBeginCast(selectedTarget);

@@ -117,7 +117,7 @@ namespace DOL.GS
 			get;
 		}
 
-		string GetTitle(int level);
+		string GetTitle(GamePlayer player, int level);
 		void OnLevelUp(GamePlayer player, int previousLevel);
 		void OnRealmLevelUp(GamePlayer player);
 		void OnSkillTrained(GamePlayer player, Specialization skill);
