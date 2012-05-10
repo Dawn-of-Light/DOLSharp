@@ -33,35 +33,34 @@ namespace DOL.GS
 
         protected abstract String Profession { get; }
 
-        public static String GetTitleFormat(int skillLevel)
+        public static String GetTitleFormat(GamePlayer player, int skillLevel)
         {
             if (skillLevel < 0)
                 throw new ArgumentOutOfRangeException("crafter skill level must be >= 0");
 
-            String language = ServerProperties.Properties.SERV_LANGUAGE;
 
             switch (skillLevel / 100)
             {
-                case 0: return LanguageMgr.GetTranslation(language, "CraftersTitle.Helper");
-                case 1: return LanguageMgr.GetTranslation(language, "CraftersTitle.JuniorApprentice");
-                case 2: return LanguageMgr.GetTranslation(language, "CraftersTitle.Apprentice");
-                case 3: return LanguageMgr.GetTranslation(language, "CraftersTitle.Neophyte");
-                case 4: return LanguageMgr.GetTranslation(language, "CraftersTitle.Assistant");
-                case 5: return LanguageMgr.GetTranslation(language, "CraftersTitle.Junior");
-                case 6: return LanguageMgr.GetTranslation(language, "CraftersTitle.Journeyman");
-                case 7: return LanguageMgr.GetTranslation(language, "CraftersTitle.Senior");
-                case 8: return LanguageMgr.GetTranslation(language, "CraftersTitle.Master");
-                case 9: return LanguageMgr.GetTranslation(language, "CraftersTitle.Grandmaster");
-                case 10: return LanguageMgr.GetTranslation(language, "CraftersTitle.Legendary");
-                default: return LanguageMgr.GetTranslation(language, "CraftersTitle.LegendaryGrandmaster");
+                case 0: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.Helper");
+                case 1: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.JuniorApprentice");
+                case 2: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.Apprentice");
+                case 3: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.Neophyte");
+                case 4: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.Assistant");
+                case 5: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.Junior");
+                case 6: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.Journeyman");
+                case 7: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.Senior");
+                case 8: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.Master");
+                case 9: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.Grandmaster");
+                case 10: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.Legendary");
+                default: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.LegendaryGrandmaster");
             }
         }
 
-        public String GetTitle(int skillLevel)
+        public String GetTitle(GamePlayer player, int skillLevel)
         {
             try
             {
-                return String.Format(GetTitleFormat(skillLevel), Profession);
+                return String.Format(GetTitleFormat(player, skillLevel), Profession);
             }
             catch
             {
