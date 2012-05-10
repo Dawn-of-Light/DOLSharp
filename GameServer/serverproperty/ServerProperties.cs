@@ -443,6 +443,12 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("server", "use_dblanguage", "Use Database Language datas instead of files (if empty = build the table from files)", false)]
 		public static bool USE_DBLANGUAGE;
 
+        /// <summary>
+        /// Update existing rows within the LanguageSystem table from language files.
+        /// </summary>
+        [ServerProperty("server", "update_existing_db_system_sentences_from_files", "Update existing rows within the LanguageSystem table from language files.", false)]
+        public static bool UPDATE_EXISTING_DB_SYSTEM_SENTENCES_FROM_FILES;
+
 		/// <summary>
 		/// Set the maximum number of objects allowed in a region.  Smaller numbers offer better performance.  This is used to allocate arrays for both Regions and GamePlayers
 		/// </summary>

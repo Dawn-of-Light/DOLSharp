@@ -1,8 +1,8 @@
 ﻿
 
 # Languages
-System.LanguagesName.English:				English
-System.LanguagesName.Italian:				Italian
+System.LanguagesName.EN:				English
+System.LanguagesName.IT:				Italian
 
 
 # SYSTEM

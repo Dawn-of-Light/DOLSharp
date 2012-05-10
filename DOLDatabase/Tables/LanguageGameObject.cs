@@ -22,27 +22,20 @@ using DOL.Database.Attributes;
 namespace DOL.Database
 {
     [DataTable(TableName = "LanguageGameObject")]
-    public class DBLanguageGameObject : DataObject, ILanguageTable
+    public class DBLanguageGameObject : LanguageDataObject
     {
-        private string m_id = "";
+        #region Variables
         private string m_name = "";
         private string m_examineArticle = "";
-        private string m_language = "";
+        #endregion Variables
 
-        public DBLanguageGameObject() { }
+        public DBLanguageGameObject()
+            : base() { }
 
-        /// <summary>
-        /// The translation id
-        /// </summary>
-        [DataElement(AllowDbNull = false, Index = true)]
-        public string TranslationId
+        #region Properties
+        public override eTranslationIdentifier TranslationIdentifier
         {
-            get { return m_id; }
-            set
-            {
-                Dirty = true;
-                m_id = value;
-            }
+            get { return eTranslationIdentifier.eObject; }
         }
 
         /// <summary>
@@ -76,19 +69,6 @@ namespace DOL.Database
                 m_examineArticle = value;
             }
         }
-
-        /// <summary>
-        /// The language
-        /// </summary>
-        [DataElement(AllowDbNull = false, Index = true)]
-        public string Language
-        {
-            get { return m_language; }
-            set
-            {
-                Dirty = true;
-                m_language = value;
-            }
-        }
+        #endregion Properties
     }
 }

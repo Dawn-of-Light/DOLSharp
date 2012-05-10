@@ -127,7 +127,6 @@
     <Compile Include="Handlers\XMLObjectDatabase.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ILanguageTable.cs" />
     <Compile Include="LanguageDataObject.cs" />
     <Compile Include="Tables\CharacterXDataQuest.cs" />
     <Compile Include="Tables\HousingConsignmentMerchant.cs" />
@@ -135,6 +134,7 @@
     <Compile Include="Tables\LanguageGameObject.cs" />
     <Compile Include="Tables\LanguageItem.cs" />
     <Compile Include="Tables\LanguageNPC.cs" />
+    <Compile Include="Tables\LanguageSystem.cs" />
     <Compile Include="Tables\Regions.cs" />
     <Compile Include="Tables\SalvageYield.cs" />
     <Compile Include="Tables\DropTemplateXItemTemplate.cs" />
@@ -178,7 +178,6 @@
     <Compile Include="Tables\ClassXRealmAbility.cs" />
     <Compile Include="Tables\Battleground.cs" />
     <Compile Include="Tables\AuditEntry.cs" />
-    <Compile Include="Tables\Language.cs" />
     <Compile Include="Tables\PvPKillsLog.cs" />
     <Compile Include="Tables\HouseHookpointOffset.cs" />
     <Compile Include="Tables\InstanceXElement.cs" />
