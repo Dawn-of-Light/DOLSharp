@@ -140,7 +140,7 @@ namespace DOL.GS.DatabaseUpdate
                                 lngObj = new DBLanguageSystem();
                                 lngObj.TranslationId = obj.TranslationID;
                                 lngObj.Language = "DE";
-                                lngObj.Text = obj.EN;
+                                lngObj.Text = obj.DE;
                                 lngObj.Tag = obj.PackageID;
                                 lngObjs.Add(lngObj);
                             }
