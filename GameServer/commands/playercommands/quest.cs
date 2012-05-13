@@ -51,8 +51,19 @@ namespace DOL.GS.Commands
 			else
 			{
 				message += "\nYou have completed the following quests:\n";
+
+				// Need to protect from too long a list.  
+				// We'll do an easy sloppy chop at 1500 characters (packet limit is 2048)
 				foreach (AbstractQuest quest in client.Player.QuestListFinished)
+				{
 					message += quest.Name + ", completed.\n";
+
+					if (message.Length > 1500)
+					{
+						DisplayMessage(client, message);
+						message = "";
+					}
+				}
 			}
 			DisplayMessage(client, message);
 		}
