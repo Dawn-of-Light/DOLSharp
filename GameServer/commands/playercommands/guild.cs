@@ -2907,6 +2907,7 @@ namespace DOL.GS.Commands
 			else // sort and display entire list
 			{
 				sortedWindowList = new SortedList<string, GuildMgr.GuildMemberDisplay>();
+				int keyIncrement = 0;
 
 				foreach (GuildMgr.GuildMemberDisplay memberDisplay in allGuildMembers.Values)
 				{
@@ -2926,7 +2927,7 @@ namespace DOL.GS.Commands
 
 					if (sortedWindowList.ContainsKey(key))
 					{
-						key += sortedWindowList.Count.ToString();
+						key += keyIncrement++;
 					}
 
 					try
