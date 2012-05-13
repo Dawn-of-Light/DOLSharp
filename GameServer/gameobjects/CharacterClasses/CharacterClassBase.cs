@@ -424,9 +424,13 @@ namespace DOL.GS
 			}
 			else
 			{
+				if (Player.ShadeEffect != null)
+				{
+					// Drop shade form.
+					Player.ShadeEffect.Stop();
+					Player.ShadeEffect = null;
+				}
 				// Drop shade form.
-				Player.ShadeEffect.Stop();
-				Player.ShadeEffect = null;
 				Player.Model = Player.CreationModel;
 				Player.Out.SendMessage(LanguageMgr.GetTranslation(Player.Client, "GamePlayer.Shade.NoLongerShade"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
