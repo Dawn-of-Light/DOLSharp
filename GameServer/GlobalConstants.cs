@@ -1544,26 +1544,26 @@ namespace DOL.GS
 			}
 		}
 
-		public static string CraftLevelToCraftTitle(int craftLevel)
+		public static string CraftLevelToCraftTitle(GameClient client, int craftLevel)
 		{
 			switch ((int)(craftLevel / 100))
 			{
-					case 0: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Helper");
-					case 1: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.JuniorApprentice");
-					case 2: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Apprentice");
-					case 3: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Neophyte");
-					case 4: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Assistant");
-					case 5: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Junior");
-					case 6: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Journeyman");
-					case 7: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Senior");
-					case 8: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Master");
-					case 9: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Grandmaster");
-					case 10: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.Legendary");
-					case 11: return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.LegendaryGrandmaster");
+                case 0: return LanguageMgr.GetTranslation(client, "CraftLevelToCraftTitle.Helper");
+                case 1: return LanguageMgr.GetTranslation(client, "CraftLevelToCraftTitle.JuniorApprentice");
+                case 2: return LanguageMgr.GetTranslation(client, "CraftLevelToCraftTitle.Apprentice");
+                case 3: return LanguageMgr.GetTranslation(client, "CraftLevelToCraftTitle.Neophyte");
+                case 4: return LanguageMgr.GetTranslation(client, "CraftLevelToCraftTitle.Assistant");
+                case 5: return LanguageMgr.GetTranslation(client, "CraftLevelToCraftTitle.Junior");
+                case 6: return LanguageMgr.GetTranslation(client, "CraftLevelToCraftTitle.Journeyman");
+                case 7: return LanguageMgr.GetTranslation(client, "CraftLevelToCraftTitle.Senior");
+                case 8: return LanguageMgr.GetTranslation(client, "CraftLevelToCraftTitle.Master");
+                case 9: return LanguageMgr.GetTranslation(client, "CraftLevelToCraftTitle.Grandmaster");
+                case 10: return LanguageMgr.GetTranslation(client, "CraftLevelToCraftTitle.Legendary");
+                case 11: return LanguageMgr.GetTranslation(client, "CraftLevelToCraftTitle.LegendaryGrandmaster");
 			}
 			if (craftLevel > 1100)
 			{
-				return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "CraftLevelToCraftTitle.LegendaryGrandmaster");
+                return LanguageMgr.GetTranslation(client, "CraftLevelToCraftTitle.LegendaryGrandmaster");
 			}
 			return "";
 		}

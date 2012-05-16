@@ -476,7 +476,7 @@ namespace DOL.GS
 			//Add admin info
 			if (player.Client.Account.PrivLevel > 1)
 			{
-				WriteTechnicalInfo(delve);
+                WriteTechnicalInfo(delve, player.Client);
 			}
 		}
 
@@ -1158,7 +1158,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="output"></param>
 		/// <param name="item"></param>
-		public virtual void WriteTechnicalInfo(List<String> delve)
+		public virtual void WriteTechnicalInfo(List<String> delve, GameClient client)
 		{
 			delve.Add("");
 			delve.Add("--- Technical Information ---");
@@ -1249,7 +1249,7 @@ namespace DOL.GS
 			}
 
 			delve.Add("");
-			delve.Add("   Value/Price: " + Money.GetShortString(Price) + " / " + Money.GetShortString((long)(Price * (long)ServerProperties.Properties.ITEM_SELL_RATIO * .01)));
+            delve.Add("   Value/Price: " + Money.GetShortString(Price) + " / " + Money.GetShortString((long)(Price * (long)ServerProperties.Properties.ITEM_SELL_RATIO * .01)));
 			delve.Add("Count/MaxCount: " + Count + " / " + MaxCount);
 			delve.Add("        Weight: " + (Weight / 10.0f) + "lbs");
 			delve.Add("       Quality: " + Quality + "%");

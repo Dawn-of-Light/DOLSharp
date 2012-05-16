@@ -210,7 +210,7 @@ namespace DOL.GS.Quests
                 //k109: Handle the player not choosing a reward.
                 if (Rewards.ChoiceOf > 0 && rewardArgs.CountChosen <= 0)
                 {
-                    QuestPlayer.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RewardQuest.Notify"), eChatType.CT_System, eChatLoc.CL_ChatWindow);
+                    QuestPlayer.Out.SendMessage(LanguageMgr.GetTranslation(QuestPlayer.Client, "RewardQuest.Notify"), eChatType.CT_System, eChatLoc.CL_ChatWindow);
                     return;
                 }
 
@@ -224,7 +224,7 @@ namespace DOL.GS.Quests
 		/// <param name="player"></param>
 		public override void OnQuestAssigned(GamePlayer player)
 		{
-            player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RewardQuest.OnQuestAssigned", Name)), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+            player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "RewardQuest.OnQuestAssigned", Name)), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
             player.Out.SendSoundEffect(7, 0, 0, 0, 0, 0);
 		}
 
@@ -320,7 +320,7 @@ namespace DOL.GS.Quests
 			/// </summary>
 			public string Description
 			{
-                get { return String.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RewardQuest.Description", m_description, Current, Target)); }
+                get { return String.Format(LanguageMgr.GetTranslation((m_quest.QuestPlayer as GamePlayer).Client, "RewardQuest.Description", m_description, Current, Target)); }
 			}
 
 			/// <summary>
