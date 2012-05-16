@@ -1609,7 +1609,7 @@ namespace DOL.GS.Quests
 
 							if (NumOptionalRewardsChoice > 0 && rewardArgs.CountChosen <= 0)
 							{
-								QuestPlayer.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RewardQuest.Notify"), eChatType.CT_System, eChatLoc.CL_ChatWindow);
+                                QuestPlayer.Out.SendMessage(LanguageMgr.GetTranslation(QuestPlayer.Client, "RewardQuest.Notify"), eChatType.CT_System, eChatLoc.CL_ChatWindow);
 								return;
 							}
 						}
