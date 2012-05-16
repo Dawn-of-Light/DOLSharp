@@ -205,12 +205,21 @@ namespace DOL.GS.PacketHandler
 
 						foreach (Spell sp in lss)
 						{
+
 							pak.WritePascalString(sp.Name);
 							paksub.WriteByte((byte)Math.Min(50, sp.Level));
 							paksub.WriteShort((ushort)sp.Icon);
-							paksub.WriteByte((byte)sp.SkillType);
-							paksub.WriteByte(0);	// unk
-							paksub.WriteByte((byte)((byte)sp.SkillType == 3 ? 254 : 255));
+                            if (sp.InstrumentRequirement == 0)
+                            {
+                                paksub.WriteByte((byte)eSkillPage.Spells);
+                                paksub.WriteByte(0);
+                            }
+                            else
+                            {
+                                paksub.WriteByte((byte)eSkillPage.Songs);
+                                paksub.WriteByte(0);
+                            }
+                            paksub.WriteByte((byte)((byte)sp.SkillType == 3 ? 254 : 255));
 							paksub.WriteShort((ushort)sp.ID);
 						}
 						SendTCP(pak);

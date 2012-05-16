@@ -284,7 +284,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//Add admin info
 						if (client.Account.PrivLevel > 1)
 						{
-							WriteTechnicalInfo(objectInfo, invItem);
+							WriteTechnicalInfo(objectInfo, client, invItem);
 						}
 
 						break;
@@ -524,7 +524,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//Add admin info
 						if (client.Account.PrivLevel > 1)
 						{
-							WriteTechnicalInfo(objectInfo, GameInventoryItem.Create<ItemTemplate>(item), item.MaxDurability, item.MaxCondition);
+							WriteTechnicalInfo(objectInfo, client, GameInventoryItem.Create<ItemTemplate>(item), item.MaxDurability, item.MaxCondition);
 						}
 						break;
 
@@ -665,7 +665,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//Add admin info
 						if (client.Account.PrivLevel > 1)
 						{
-							WriteTechnicalInfo(objectInfo, invItem);
+							WriteTechnicalInfo(objectInfo, client, invItem);
 						}
 
 						break;
@@ -859,6 +859,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						break;
 					}
 					//spells
+				case 21:
 				case 22:
 					{
 						Spell spell = SkillBase.GetSpellByID((int)objectID);
@@ -1042,12 +1043,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 		}
 
-		public void WriteTechnicalInfo(IList<string> output, InventoryItem item)
+        public void WriteTechnicalInfo(IList<string> output, GameClient client, InventoryItem item)
 		{
-			WriteTechnicalInfo(output, item, item.Durability, item.Condition);
+            WriteTechnicalInfo(output, client, item, item.Durability, item.Condition);
 		}
 
-		public void WriteTechnicalInfo(IList<string> output, InventoryItem item, int dur, int con)
+		public void WriteTechnicalInfo(IList<string> output, GameClient client, InventoryItem item, int dur, int con)
 		{
 			output.Add(" ");
 			output.Add("--- Item Technical Information ---");
@@ -1363,17 +1364,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			int oldCount = output.Count;
 
-			WriteBonusLine(output, item.Bonus1Type, item.Bonus1);
-			WriteBonusLine(output, item.Bonus2Type, item.Bonus2);
-			WriteBonusLine(output, item.Bonus3Type, item.Bonus3);
-			WriteBonusLine(output, item.Bonus4Type, item.Bonus4);
-			WriteBonusLine(output, item.Bonus5Type, item.Bonus5);
-			WriteBonusLine(output, item.Bonus6Type, item.Bonus6);
-			WriteBonusLine(output, item.Bonus7Type, item.Bonus7);
-			WriteBonusLine(output, item.Bonus8Type, item.Bonus8);
-			WriteBonusLine(output, item.Bonus9Type, item.Bonus9);
-			WriteBonusLine(output, item.Bonus10Type, item.Bonus10);
-			WriteBonusLine(output, item.ExtraBonusType, item.ExtraBonus);
+			WriteBonusLine(output, client, item.Bonus1Type, item.Bonus1);
+            WriteBonusLine(output, client, item.Bonus2Type, item.Bonus2);
+            WriteBonusLine(output, client, item.Bonus3Type, item.Bonus3);
+            WriteBonusLine(output, client, item.Bonus4Type, item.Bonus4);
+            WriteBonusLine(output, client, item.Bonus5Type, item.Bonus5);
+            WriteBonusLine(output, client, item.Bonus6Type, item.Bonus6);
+            WriteBonusLine(output, client, item.Bonus7Type, item.Bonus7);
+            WriteBonusLine(output, client, item.Bonus8Type, item.Bonus8);
+            WriteBonusLine(output, client, item.Bonus9Type, item.Bonus9);
+            WriteBonusLine(output, client, item.Bonus10Type, item.Bonus10);
+            WriteBonusLine(output, client, item.ExtraBonusType, item.ExtraBonus);
 
 			if (output.Count > oldCount)
 			{
@@ -1684,7 +1685,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 		}
 
-		protected void WriteBonusLine(IList<string> list, int bonusCat, int bonusValue)
+        protected void WriteBonusLine(IList<string> list, GameClient client, int bonusCat, int bonusValue)
 		{
 			if (bonusCat != 0 && bonusValue != 0 && !SkillBase.CheckPropertyType((eProperty)bonusCat, ePropertyType.Focus))
 			{
@@ -1718,8 +1719,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						 || bonusCat == (int)eProperty.ArcaneSyphon
 						 || bonusCat == (int)eProperty.BountyPoints
 						 || bonusCat == (int)eProperty.XpPoints)
-						? ((bonusCat == (int)eProperty.PowerPool) ? LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DetailDisplayHandler.WriteBonusLine.PowerPool") : "%")
-						: LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "DetailDisplayHandler.WriteBonusLine.Points")
+                        ? ((bonusCat == (int)eProperty.PowerPool) ? LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteBonusLine.PowerPool") : "%")
+						: LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteBonusLine.Points")
 					));
 				}
 			}
