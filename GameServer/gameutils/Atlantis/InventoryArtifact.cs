@@ -283,7 +283,7 @@ namespace DOL.GS
 			}
 
 			if (player.Client.Account.PrivLevel > 1)
-				WriteTechnicalInfo(delve);
+                WriteTechnicalInfo(delve, player.Client);
 			
 		}
 
@@ -543,7 +543,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="output"></param>
 		/// <param name="item"></param>
-		public override void WriteTechnicalInfo(List<String> delve)
+        public override void WriteTechnicalInfo(List<String> delve, GameClient client)
 		{
 			delve.Add(" ");
 			delve.Add("--- Artifact/Item technical information ---");

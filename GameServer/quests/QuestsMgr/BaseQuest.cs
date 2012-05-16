@@ -270,7 +270,7 @@ namespace DOL.GS.Quests
 
 			if (location.Name != null)
 			{
-                m_questPlayer.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "BaseQuest.TeleportTo.Text1", target.Name, location.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                m_questPlayer.Out.SendMessage(LanguageMgr.GetTranslation(m_questPlayer.Client, "BaseQuest.TeleportTo.Text1", target.Name, location.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
             }
 
 		}

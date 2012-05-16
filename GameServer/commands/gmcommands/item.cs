@@ -295,7 +295,7 @@ namespace DOL.GS.Commands
 							}
 							GameInventoryItem invItem = GameInventoryItem.Create<ItemTemplate>(obj);
 							var objectInfo = new List<string>();
-							invItem.WriteTechnicalInfo(objectInfo);
+                            invItem.WriteTechnicalInfo(objectInfo, client);
 							client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client, "GMCommands.Item.Info.Informations", obj.Id_nb), objectInfo);
 							break;
 						}
