@@ -1,11 +1,11 @@
-Mid.ABearyBadProblem.EnemyKilled:	Schwarzmalmerjunges
+ï»¿Mid.ABearyBadProblem.EnemyKilled:	Schwarzmalmerjunges
 Mid.ABearyBadProblem.GoodJob:		Gute Arbeit!
 Mid.ABearyBadProblem.NPCKreimhilde:	Kreimhilde die Wikingerin
-Mid.ABearyBadProblem.OfferQuest:	Nehmt Ihr die Quest "Ein bärig-böses Problem" an?
-Mid.ABearyBadProblem.QuestTitle:	Ein bärig-böses Problem
-Mid.ABearyBadProblem.Step1:		Tötet ein Schwarzmalmerjunges.
-Mid.ABearyBadProblem.Step2:		Kehrt mit dem Fell zu Kreimhilde der Wikingerin zurück.
-Mid.ABearyBadProblem.Talk1:		Ihr seid also einer der Neuankömmlinge, wie? Entschuldigt, doch ich belauschte Euer Gespräch mit Eurem Ausbilder.
-Mid.ABearyBadProblem.Talk2:		Was Ihr über unseren Mangel an Wikinger-Wachen gehört habt, entspricht leider der Wahrheit. König Eirik hat unsere Verteidigung ziemlich geschwächt und das Volk in der Gegend hinsichtlich seiner Sicherheit sehr nervös gemacht. Dafür kann er nichts, wir haben dieser Tage einfach zu viele Gegner, um die wir uns kümmern müssen.
-Mid.ABearyBadProblem.Talk3:		Falls Ihr wahrlich bereit seid zu helfen, wie Ihr es sagt, dann kann ich Eure Hilfe gut gebrauchen. Der "natürliche" Tierbestand ist in der letzten Zeit etwas außer Kontrolle geraten und es gibt mehr und mehr Meldungen über unglückselige "Vorfälle" zwischen Stadtleuten und wilden Tieren. Erst neulich wurde ein Junge von einem Schwarzmalmer angegriffen, als er mit seiner Familie in den nahe gelegenen Bergen im Norden wanderte.
-Mid.ABearyBadProblem.Talk4:		Ein paar Freiwillige hatte ich schon, die halfen, den Bärenbestand auszudünnen. Würdet auch Ihr davei helfen?
+Mid.ABearyBadProblem.OfferQuest:	Nehmt Ihr die Quest "Ein bÃ¤rig-bÃ¶ses Problem" an?
+Mid.ABearyBadProblem.QuestTitle:	Ein bÃ¤rig-bÃ¶ses Problem
+Mid.ABearyBadProblem.Step1:		TÃ¶tet ein Schwarzmalmerjunges.
+Mid.ABearyBadProblem.Step2:		Kehrt mit dem Fell zu Kreimhilde der Wikingerin zurÃ¼ck.
+Mid.ABearyBadProblem.Talk1:		Ihr seid also einer der NeuankÃ¶mmlinge, wie? Entschuldigt, doch ich belauschte Euer GesprÃ¤ch mit Eurem Ausbilder.
+Mid.ABearyBadProblem.Talk2:		Was Ihr Ã¼ber unseren Mangel an Wikinger-Wachen gehÃ¶rt habt, entspricht leider der Wahrheit. KÃ¶nig Eirik hat unsere Verteidigung ziemlich geschwÃ¤cht und das Volk in der Gegend hinsichtlich seiner Sicherheit sehr nervÃ¶s gemacht. DafÃ¼r kann er nichts, wir haben dieser Tage einfach zu viele Gegner, um die wir uns kÃ¼mmern mÃ¼ssen.
+Mid.ABearyBadProblem.Talk3:		Falls Ihr wahrlich bereit seid zu helfen, wie Ihr es sagt, dann kann ich Eure Hilfe gut gebrauchen. Der "natÃ¼rliche" Tierbestand ist in der letzten Zeit etwas auÃŸer Kontrolle geraten und es gibt mehr und mehr Meldungen Ã¼ber unglÃ¼ckselige "VorfÃ¤lle" zwischen Stadtleuten und wilden Tieren. Erst neulich wurde ein Junge von einem Schwarzmalmer angegriffen, als er mit seiner Familie in den nahe gelegenen Bergen im Norden wanderte.
+Mid.ABearyBadProblem.Talk4:		Ein paar Freiwillige hatte ich schon, die halfen, den BÃ¤renbestand auszudÃ¼nnen. WÃ¼rdet auch Ihr davei helfen?

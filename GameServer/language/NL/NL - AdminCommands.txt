@@ -1,4 +1,4 @@
-
+﻿
 # /serverproperties Command
 AdminCommands.ServerProperties.Description:			Herlaad server eigenschappen van de database
 AdminCommands.ServerProperties.Usage:				/serverproperties
