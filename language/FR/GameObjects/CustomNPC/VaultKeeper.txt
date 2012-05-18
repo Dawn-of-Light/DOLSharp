@@ -1,2 +1,2 @@
-VaultKeeper.YouExamine:		You examine {0}. {1} is {2} and vaultkeeper.
-VaultKeeper.RightClick:		[Right click to display a vault window]
+﻿VaultKeeper.YouExamine:		Vous examinez {0}. {1} est {2} et c'est un Gardien.
+VaultKeeper.RightClick:		[Clique droit pour afficher une fenêtre de Coffre]
