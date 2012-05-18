@@ -1,4 +1,4 @@
-# Race names male
+﻿# Race names male
 GamePlayer.PlayerRace.Unknown:					Unbekannt
 GamePlayer.PlayerRace.Male.Briton:				Bretone
 GamePlayer.PlayerRace.Male.Avalonian:			Avalonier
