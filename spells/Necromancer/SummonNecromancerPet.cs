@@ -73,7 +73,7 @@ namespace DOL.GS.Spells
         {
             if (FindStaticEffectOnTarget(Caster, typeof(ShadeEffect)) != null)
             {
-                MessageToCaster("You are already a shade!", eChatType.CT_System);
+                MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonNecromancerPet.CheckBeginCast.ShadeEffectIsNotNull"), eChatType.CT_System);
                 return false;
             }
 			if (Caster is GamePlayer && Caster.ControlledBrain != null)
@@ -125,13 +125,13 @@ namespace DOL.GS.Spells
 			get
 			{
 				var delve = new List<string>();
-				delve.Add("Function: shade summon");
+                delve.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonNecromancerPet.DelveInfo.Function"));
 				delve.Add("");
-				delve.Add("Summons an undead pet to serve the caster. The caster is transformed into a shade, and acts through the pet.");
+                delve.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonNecromancerPet.DelveInfo.Description"));
 				delve.Add("");
-				delve.Add(String.Format("Target: {0}", Spell.Target));
-				delve.Add(String.Format("Power cost: {0}%", Math.Abs(Spell.Power)));
-				delve.Add(String.Format("Casting time: {0}", (Spell.CastTime / 1000).ToString("0.0## sec")));
+                delve.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonNecromancerPet.DelveInfo.Target", Spell.Target));
+                delve.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonNecromancerPet.DelveInfo.Power", Math.Abs(Spell.Power)));
+                delve.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonNecromancerPet.DelveInfo.CastingTime", (Spell.CastTime / 1000).ToString("0.0## " + LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SpellHandler.DelveInfo.Sec"))));
 				return delve;
 			}
 		}

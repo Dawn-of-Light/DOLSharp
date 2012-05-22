@@ -23,6 +23,7 @@ using DOL.GS.Spells;
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
 using DOL.Events;
+using DOL.Language;
 
 namespace DOL.GS.Spells
 {
@@ -88,8 +89,7 @@ namespace DOL.GS.Spells
 
 			if (Caster.ControlledBrain == null)
 			{
-				MessageToCaster("You must have a pet summoned to cast this spell!",
-					eChatType.CT_SpellResisted);
+				MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "PetSpellHandler.CheckBeginCast.NoControlledBrainForCast"), eChatType.CT_SpellResisted);
 				return false;
 			}
 			return true;

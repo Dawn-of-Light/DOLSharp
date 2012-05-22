@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Spells
 {
@@ -50,8 +51,8 @@ namespace DOL.GS.Spells
 			int cost = PowerCost(Caster);
 			if (Caster.Health < cost)
 			{
-				MessageToCaster("You do not have enough health to cast that!", eChatType.CT_SpellResisted);
-				return false;
+                MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SavageEnduranceHeal.CheckBeginCast.InsuffiscientHealth"), eChatType.CT_SpellResisted);
+                return false;
 			}
 			return base.CheckBeginCast(Caster);
 		}
