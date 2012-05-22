@@ -49,7 +49,7 @@ namespace DOL.GS.Spells
 
 			var text = new List<string>();
 			text.Add("Class: "+player.CharacterClass.Name);
-			text.Add("Realmpoints: "+player.RealmPoints+" = "+string.Format("{0:#L#} {1}",player.RealmLevel+10,player.RealmTitle));
+			text.Add("Realmpoints: "+player.RealmPoints+" = "+string.Format("{0:#L#} {1}",player.RealmLevel+10,player.RealmRankTitle(player.Client.Account.Language)));
 			text.Add("----------------------------------------------------");
 			text.Add("Str: "+player.Strength+" Dex: "+player.Dexterity+" Con: "+player.Constitution);
 			text.Add("Qui: "+player.Quickness+" Emp: "+player.Empathy+" Cha: "+player.Charisma);
