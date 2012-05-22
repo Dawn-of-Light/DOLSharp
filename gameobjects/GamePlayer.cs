@@ -4392,7 +4392,7 @@ namespace DOL.GS
                 translationId += "UnknownRealm"; //Returns 'Unknown Realm'
 
             string translation;
-            if (!LanguageMgr.TryGetTranslation(out translation, Client, translationId))
+            if (!LanguageMgr.TryGetTranslation(out translation, language, translationId))
                 translation = RealmTitle;
 
             return translation;
