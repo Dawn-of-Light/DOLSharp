@@ -3,6 +3,7 @@
 Scripts.Player.Guild.AccountRemoved:			{0} a été retiré par {1} de la guilde.	
 Scripts.Player.Guild.ActiveBuff:			Votre guilde possède déjà un sort d'amélioration. Vous devez attendre que le sort expire pour le relancer.	
 Scripts.Player.Guild.AllianceAlreadyOther:		Cette guilde possède déjà une alliance.	
+Scripts.Player.Guild.AllianceAlreadyIn:		Cette guilde fait déjà partie de votre alliance.	
 Scripts.Player.Guild.AllianceAnsCancel:			L'offre d'alliance a été annulée.	
 Scripts.Player.Guild.AllianceDeclined:			Vous déclinez la proposition d'alliance.
 Scripts.Player.Guild.AllianceDeclinedOther:		L'offre d'alliance a été annulée	
@@ -82,7 +83,7 @@ Scripts.Player.Guild.Help.GuildClaim:			'/gc claim' Réclame une tour ou un fort
 Scripts.Player.Guild.Help.GuildDecline:			'/gc decline' Décline une invitation à rejoindre la guilde.
 Scripts.Player.Guild.Help.GuildDemote:			'/gc demote <rank#> [name]' Rétrograde le joueur indiqué au rang désiré.
 Scripts.Player.Guild.Help.GuildDeposit:			'/gc deposit <amount>' Dépose une somme dans la caisse de guilde.	
-Scripts.Player.Guild.Help.GuildDues:			'/gc dues <amount>' Active ou désactive le système de taxation de la guilde (2% de l'argent gagné sur des créatures).
+Scripts.Player.Guild.Help.GuildDues:			'/gc dues <amount>' Active ou désactive le système de taxation de la guilde (x% de l'argent gagné sur des créatures) (x = 0 à 10).
 Scripts.Player.Guild.Help.GuildEdit:			'/gc edit' Listes les parties modifiables de la structure de guilde.
 Scripts.Player.Guild.Help.GuildEditACHear:		'/gc edit <ranknum> achear <y/n>' Permet à un rang de pouvoir lire le canal d'alliance.
 Scripts.Player.Guild.Help.GuildEditACSpeak:		'/gc edit <ranknum> acspeak <y/n>' Permet à un rang de pouvoir parler sur le canal alliance.
