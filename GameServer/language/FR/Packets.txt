@@ -59,12 +59,12 @@ DetailDisplayHandler.HandlePacket.VeryLow:		Très bas
 DetailDisplayHandler.HandlePacket.VeryLowBonus:		Très bas Bonus
 DetailDisplayHandler.HandlePacket.VeryLowPenalty:	Très basse pénalité
 DetailDisplayHandler.HandlePacket.VeryStrange:		C'est très étrange, je ne reconnais pas ce type d'objets.
-DetailDisplayHandler.HandlePacket.WeaponType:		Type d'arme: {0}
+DetailDisplayHandler.HandlePacket.WeaponType:		Type d'armes: {0}
 DetailDisplayHandler.HandlePacket.YouBlock:		Vous bloquez
 DetailDisplayHandler.HandlePacket.YouEvade:		Vous esquivez
-DetailDisplayHandler.HandlePacket.YouFumble:		Vous loupez lamentablement
+DetailDisplayHandler.HandlePacket.YouFumble:		Vous ratez lamentablement
 DetailDisplayHandler.HandlePacket.YouHit:		Vous touchez
-DetailDisplayHandler.HandlePacket.YouMiss:		Vous loupez
+DetailDisplayHandler.HandlePacket.YouMiss:		Vous ratez
 DetailDisplayHandler.HandlePacket.YouParry:		Vous parez
 DetailDisplayHandler.WriteBonusLine.Points:		 pts
 DetailDisplayHandler.WriteBonusLine.PowerPool:		% of power pool.
@@ -108,6 +108,7 @@ DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic:	Charged Magic Ability:
 DetailDisplayHandler.WriteMagicalBonuses.Charges:	- {0} Charges
 DetailDisplayHandler.WriteMagicalBonuses.FocusBonus:	Bonus au focus:
 DetailDisplayHandler.WriteMagicalBonuses.Level:		- {0} Niveau
+DetailDisplayHandler.WriteMagicalBonuses.LevelRequired:	Level Requis:
 DetailDisplayHandler.WriteMagicalBonuses.LevelRequired2:	Niveau requis: {0} Niveau
 DetailDisplayHandler.WriteMagicalBonuses.MagicAbility:	Capacité magique:
 DetailDisplayHandler.WriteMagicalBonuses.MagicBonus:	Bonus Magiques:
@@ -160,13 +161,13 @@ HousingPlaceItemHandler.PutMoney:			Vous déposez de l'argent sur le compte de v
 # /PlayerBonusesListRequestHandler
 PlayerBonusesListRequestHandler.HandlePacket.Bonuses:	Bonuses (snapshot)
 PlayerBonusesListRequestHandler.HandlePacket.Magic:		Bonus Magique: {0}%
-PlayerBonusesListRequestHandler.HandlePacket.Melee:		Bonus de melee: {0}%
+PlayerBonusesListRequestHandler.HandlePacket.Melee:		Bonus de mêlée: {0}%
 PlayerBonusesListRequestHandler.HandlePacket.Outpost:	Outpost Bonuses
 PlayerBonusesListRequestHandler.HandlePacket.Realm:		Primes de Royaume
 PlayerBonusesListRequestHandler.HandlePacket.Relic:		Bonus de Relique
-PlayerBonusesListRequestHandler.HandlePacket.Resist:	Resistances
-PlayerBonusesListRequestHandler.HandlePacket.Special:	Bonus d'objets speciaux
-PlayerBonusesListRequestHandler.HandlePacket.Specs:		+{0} pour toutes les spé
+PlayerBonusesListRequestHandler.HandlePacket.Resist:	Résistances
+PlayerBonusesListRequestHandler.HandlePacket.Special:	Bonus d'objets spéciaux
+PlayerBonusesListRequestHandler.HandlePacket.Specs:		+{0} toutes compétences
 
 # /PlayerInitRequestHandler
 PlayerInitRequestHandler.AllianceMessage:	Message d'Alliance : {0}
@@ -184,7 +185,7 @@ PlayerPositionUpdateHandler.Endurance:		Vous perdez de l'endurance !
 PlayerPositionUpdateHandler.Entered:		Vous êtes entré(e) dans {0}.
 PlayerPositionUpdateHandler.FallingDamage:	Vous encaissez des dégats de chute!
 PlayerPositionUpdateHandler.FallPercent:	Vous perdez {0}% de votre total de points de vie.
-PlayerPositionUpdateHandler.SafeFall:		Les dommages ont été réduits grâce à votre habileté de chute contrôlée!
+PlayerPositionUpdateHandler.SafeFall:		Les dommages ont été réduits grâce à votre abilité de chute contrôlée!
 PlayerPositionUpdateHandler.UnknownZone:	Zone inconnue, Votre client ne possède pas les fichiers necessaires!
 
 

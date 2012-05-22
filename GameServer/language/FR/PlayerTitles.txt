@@ -501,6 +501,10 @@ PlayerClass.Warden.GetTitle.5:		Gardien du Bosquet
 
 # TITLES
 
+# /Reliques
+Titles.Reliques.PorteurRelique: Porteur de Reliques
+Titles.Reliques.ProtecteurReliques: Protecteur de Reliques
+
 # /Claim
 Titles.Claim.Frontier.FrontierChallenger: Défenseur des Frontières
 Titles.Claim.Frontier.FrontierVindicator: Gardien des Frontières

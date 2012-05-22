@@ -1,12 +1,12 @@
 ﻿# /SkillBase
 SkillBase.RegisterPropertyNames.Acuity:               Acuité
 SkillBase.RegisterPropertyNames.AcuityBonusCap:         Bonus au cap d'attribut : Acuité
-SkillBase.RegisterPropertyNames.AllArcherySkills:      Toutes les compétences d'Archererie
-SkillBase.RegisterPropertyNames.AllDualWieldingSkills:   Toutes compétences deux armes
-SkillBase.RegisterPropertyNames.AllMagicSkills:         Toutes les compétences Magique
-SkillBase.RegisterPropertyNames.AllMeleeWeaponSkills:   Toutes les compétences d'armes de mêlée
-SkillBase.RegisterPropertyNames.AllSkills:            Toutes les compétences
-SkillBase.RegisterPropertyNames.ALLSpellLines:         Toutes les lignes de sorts
+SkillBase.RegisterPropertyNames.AllArcherySkills:      Toutes compétences d'Archerie
+SkillBase.RegisterPropertyNames.AllDualWieldingSkills:   Toutes compétences Deux armes
+SkillBase.RegisterPropertyNames.AllMagicSkills:         Toutes compétences Magique
+SkillBase.RegisterPropertyNames.AllMeleeWeaponSkills:   Toutes compétences d'Armes de mêlée
+SkillBase.RegisterPropertyNames.AllSkills:            Toutes compétences
+SkillBase.RegisterPropertyNames.ALLSpellLines:         Toutes lignes de sorts
 SkillBase.RegisterPropertyNames.Arboreal:             Voie Arboréale
 SkillBase.RegisterPropertyNames.ArborealFocus:         Focus : Voie Arboréale
 SkillBase.RegisterPropertyNames.ArcheryRange:         Portée d'archerie
@@ -22,8 +22,8 @@ SkillBase.RegisterPropertyNames.BladeturnReinforcement:   Renforcement de la bul
 SkillBase.RegisterPropertyNames.BlockChance:         -Taux de blocage: {0}% (PvE Uniquement)
 SkillBase.RegisterPropertyNames.Blunt:               Masse
 SkillBase.RegisterPropertyNames.Body:               Corps
-SkillBase.RegisterPropertyNames.BodyMagic:            Alitération
-SkillBase.RegisterPropertyNames.BodyMagicFocus:         Focus : Alitération
+SkillBase.RegisterPropertyNames.BodyMagic:            Altération
+SkillBase.RegisterPropertyNames.BodyMagicFocus:         Focus : Altération
 SkillBase.RegisterPropertyNames.BoneArmy:            Armée Squelettique
 SkillBase.RegisterPropertyNames.BoneArmyFocus:        Focus : Armée Squelettique
 SkillBase.RegisterPropertyNames.BonusToArmorAbsorption:   Bonus d'Absorption (Abs)
@@ -32,7 +32,7 @@ SkillBase.RegisterPropertyNames.CastingSpeed:         Bonus à la vitesse d'inca
 SkillBase.RegisterPropertyNames.CaveMagic:            Magie Abyssale
 SkillBase.RegisterPropertyNames.CelticDual:            Art de Combat
 SkillBase.RegisterPropertyNames.CelticSpear:         Lance Celtique
-SkillBase.RegisterPropertyNames.Chants:               Cantique
+SkillBase.RegisterPropertyNames.Chants:               Cantiques
 SkillBase.RegisterPropertyNames.Charisma:            Charisme
 SkillBase.RegisterPropertyNames.CharismaBonusCap:      Bonus au cap d'attribut : Charisme
 SkillBase.RegisterPropertyNames.Cold:               Froid
@@ -45,12 +45,12 @@ SkillBase.RegisterPropertyNames.ConstitutionBonusCap:   Bonus au cap d'attribut 
 SkillBase.RegisterPropertyNames.Creeping:            Voie Sylvestre
 SkillBase.RegisterPropertyNames.CreepingPathFocus:      Focus : Voie Sylvestre
 SkillBase.RegisterPropertyNames.CriticalArcheryHit:      Bonus aux chances de critique Archerie
-SkillBase.RegisterPropertyNames.CriticalMeleeHit:      Bonus aux chance de critique en mélée
-SkillBase.RegisterPropertyNames.CriticalSpellHit:		Bonus to critical spell hit chance
-SkillBase.RegisterPropertyNames.CriticalHealHit:		Bonus to critical heal hit chance
+SkillBase.RegisterPropertyNames.CriticalMeleeHit:      Bonus aux chances de critique en mélée
+SkillBase.RegisterPropertyNames.CriticalSpellHit:		Bonus % chances de faire des dégats critique
+SkillBase.RegisterPropertyNames.CriticalHealHit:		Bonus % chances de soins critique
 SkillBase.RegisterPropertyNames.CriticalStrike:         Attaques Surnoises
 SkillBase.RegisterPropertyNames.Crossbows:            Arbalètes
-SkillBase.RegisterPropertyNames.Crush:               Contendant
+SkillBase.RegisterPropertyNames.Crush:               Contondant
 SkillBase.RegisterPropertyNames.Crushing:            Contondant
 SkillBase.RegisterPropertyNames.Cursing:            Sortilèges
 SkillBase.RegisterPropertyNames.CursingFocus:         Focus : Sortilèges

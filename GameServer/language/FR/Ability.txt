@@ -30,6 +30,7 @@ Skill.Ability.CannotUse.Bodyguard.NotInGroup:	Vous ne pouvez être le garde de c
 Skill.Ability.CannotUse.Bodyguard.GuardTargetAlreadyBodyGuarded:	{0} est déjà en train de garder {1}!
 Skill.Ability.CannotUse.Bodyguard.GuardSourceBodyGuarded:	Vous ne pouvez pas être le garde corps de quelqu'un lorsque quelqu'un est garde du corps pour vous-même!
 
+Skill.Ability.CannotUse.CriticalShot.InCombat:	Vous ne pouvez pas utiliser tir critique en étant en combat.
 Skill.Ability.CannotUse.CriticalShot.NoRangedWeapons:	Vous devez disposer d'un arc dans vos mains pour utiliser cette abilité!
 Skill.Ability.CannotUse.CriticalShot.MustBeStanding:	Vous devez être debout pour utiliser cette abilité!
 Skill.Ability.CriticalShot.SwitchToRegular:	Vous changez votre tir en tir normal.
@@ -82,3 +83,9 @@ Skill.Ability.Protect.CannotUse.ProtectTargetAlreadyProtectEffect:	{0} protége 
 Skill.Ability.Protect.CannotUse.NotInGroup:	Vous ne pouvez pas proteger quelqu'un ne faisant pas partie de votre groupe!
 Skill.Ability.Protect.CannotUse.CantProtectYourself:	Vous ne pouvez pas vous proteger vous même!
 Skill.Ability.Protect.CancelTargetNull:	Vous ne protegez plus personne.
+
+Skill.Ability.Distraction.CannotUse.NeedGroundTarget:	Vous devez positionner une cible au sol pour utiliser cette abilité.
+Skill.Ability.Distraction.YouLaunch:	Vous lancez votre compétence Distraction!
+
+Skill.Ability.Stealth.CannotUse.CarryingRelic:	Vous ne pouvez pas vous dissimuler en portant une Relique!
+Skill.Ability.CannotUse.AlreadyHaveSameEffectType:	Vous avez déjà un effet de ce type!
