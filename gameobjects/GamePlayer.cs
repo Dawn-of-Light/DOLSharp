@@ -430,7 +430,12 @@ namespace DOL.GS
 		/// if player uses debug before (to prevent hack client fly mode for players using debug and then turning it off)
 		/// </summary>
 		protected bool m_canFly;
-		public bool CanFly
+
+		/// <summary>
+		/// Is this player allowed to fly?
+		/// This should only be set in debug command handler.  If player is flying but this flag is false then fly hack is detected
+		/// </summary>
+		public bool IsAllowedToFly
 		{
 			get
 			{

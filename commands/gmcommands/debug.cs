@@ -30,6 +30,20 @@ namespace DOL.GS.Commands
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
+			if (client == null || client.Player == null)
+			{
+				return;
+			}
+
+			if (IsSpammingCommand(client.Player, "Debug"))
+			{
+				return;
+			}
+
+			// extra check to disallow all but server GM's
+			if (client.Account.PrivLevel < 2)
+				return;
+
 			if (args.Length < 2)
 			{
 				DisplaySyntax(client);
@@ -37,8 +51,8 @@ namespace DOL.GS.Commands
 			}
 			if (args[1].ToLower().Equals("on"))
 			{
-				client.Player.TempProperties.setProperty(GamePlayer.DEBUG_MODE_PROPERTY, this);
-				client.Player.CanFly = true;
+				client.Player.TempProperties.setProperty(GamePlayer.DEBUG_MODE_PROPERTY, true);
+				client.Player.IsAllowedToFly = true;
 				client.Out.SendDebugMode(true);
 				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Debug.ModeON"));
 			}
@@ -46,6 +60,7 @@ namespace DOL.GS.Commands
 			{
 				client.Player.TempProperties.removeProperty(GamePlayer.DEBUG_MODE_PROPERTY);
 				client.Out.SendDebugMode(false);
+				client.Player.IsAllowedToFly = false;
 				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Debug.ModeOFF"));
 			}
 		}
