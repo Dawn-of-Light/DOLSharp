@@ -1,7 +1,7 @@
 ﻿GamePlayer.CastSpell.MustWaitBeforeCast:	Vous devez attendre {0} secondes pour lancer un sort!
+SpellHandler.DelveInfo.Sec:	sec
 
 # DelveInfo
-
 DelveInfo.CastingTime:					Temps d'Incantation: {0}
 DelveInfo.ConcentrationCost:				Coûts en Concentration: {0}
 DelveInfo.Damage:					Dommages: {0}
@@ -88,3 +88,17 @@ SummonAnimistPet.CheckBeginCast.GroundTargetNotInSpellRange:	Vous devez sélecti
 #TurretsRelease
 TurretsRelease.CheckBeginCast.NoSelectedTarget:	Vous ne pouvez lancer ce sort que sur une créature que vous contrôlez.
 TurretsRelease.CheckBeginCast.TargetTooFarAway:	Votre cible est trop éloignée.
+
+#PetSpellHandler
+PetSpellHandler.CheckBeginCast.NoControlledBrainForCast:	Vous devez posséder un familier pour lancer ce sort!
+
+#SummonNecromancerPet
+SummonNecromancerPet.CheckBeginCast.ShadeEffectIsNotNull:	Vous êtes déjà sous forme d'ombre!
+SummonNecromancerPet.DelveInfo.Function:	Fonction: Invocation de Familier
+SummonNecromancerPet.DelveInfo.Description:	Invoque un familier mort-vivant pour servir le lanceur de sort. Le lanceur de sort est transformé en ombre, et agit à travers son familier.
+SummonNecromancerPet.DelveInfo.Target:	Cible: {0}
+SummonNecromancerPet.DelveInfo.Power:	Coût en mana: {0}%
+SummonNecromancerPet.DelveInfo.CastingTime:	Temp d'Incantation: {0}
+
+#SavageEnduranceHeal
+SavageEnduranceHeal.CheckBeginCast.InsuffiscientHealth:	Vous n'avez pas assez de vie pour lancer ce sort!

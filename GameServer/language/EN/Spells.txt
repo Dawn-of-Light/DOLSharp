@@ -1,5 +1,10 @@
-﻿GamePlayer.CastSpell.MustWaitBeforeCast:	You need to wait {0} mores secondes for cast a spell!
-
+﻿SpellHandler.CancelEffect:	You cancel your effect.
+SpellHandler.CancelPulsingSpell:	You stop playing your song.
+SpellHandler.NoPowerStopPulsingSpell:	You do not have enough mana and your spell was cancelled.
+SpellHandler.NoInstrumentStopPlayingSong:	You stop playing your song.
+SpellHandler.MoveInterruptFocus:	Your spell was cancelled.
+GamePlayer.CastSpell.MustWaitBeforeCast:	You need to wait {0} mores secondes for cast a spell!
+SpellHandler.DelveInfo.Sec:	sec
 # DelveInfo
 DelveInfo.CastingTime:					Casting time: {0}
 DelveInfo.ConcentrationCost:				Concentration cost: {0}
@@ -16,6 +21,7 @@ DelveInfo.Range:					Range: {0}
 DelveInfo.RecastTime:					Recast time: 
 DelveInfo.Target:					Target: {0}
 DelveInfo.Value:					Value: {0}
+DelveInfo.ValueNegative:					Value: -{0}
 
 # AblativeArmor
 AblativeArmor.DelveInfo.Function:			Function: melee hitpoint buffer (?)
@@ -93,3 +99,17 @@ SummonAnimistPet.CheckBeginCast.GroundTargetNotInSpellRange:	You have to select 
 #TurretsRelease
 TurretsRelease.CheckBeginCast.NoSelectedTarget:	You must cast this spell on a creature you are controlling
 TurretsRelease.CheckBeginCast.TargetTooFarAway:	Your target is too far away
+
+#PetSpellHandler
+PetSpellHandler.CheckBeginCast.NoControlledBrainForCast:	You must have a pet summoned to cast this spell!
+
+#SummonNecromancerPet
+SummonNecromancerPet.CheckBeginCast.ShadeEffectIsNotNull:	You are already a shade!
+SummonNecromancerPet.DelveInfo.Function:	Function: shade summon
+SummonNecromancerPet.DelveInfo.Description:	Summons an undead pet to serve the caster. The caster is transformed into a shade, and acts through the pet.
+SummonNecromancerPet.DelveInfo.Target:	Target: {0}
+SummonNecromancerPet.DelveInfo.Power:	Power cost: {0}%
+SummonNecromancerPet.DelveInfo.CastingTime:	Casting time: {0}
+
+#SavageEnduranceHeal
+SavageEnduranceHeal.CheckBeginCast.InsuffiscientHealth:	You do not have enough health to cast that!

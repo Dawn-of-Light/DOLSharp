@@ -5,10 +5,10 @@ StyleProcessor.ExecuteStyle.BackStrike:         Vous infligez un coup critique d
 StyleProcessor.ExecuteStyle.ExecuteFail:      Vous ne parvenez pas à effectuer votre {0} parfaitement!
 StyleProcessor.ExecuteStyle.PerformPerfectly:      Vous effectuez votre {0} Parfaitement ! {1}
 StyleProcessor.ExecuteStyle.PerformsPerfectly:      Votre {0} effectue {1} Parfaitement ! {2}
-StyleProcessor.ExecuteStyle.StyleNameBackstab:      Backstab
-StyleProcessor.ExecuteStyle.StyleNameBackstabII:   Backstab II
-StyleProcessor.ExecuteStyle.StyleNamePerforateArtery:   Perfore artère
-StyleProcessor.ExecuteStyle.ThroatStrike:      Vous infligez un coup critique dans le throat de votre cible.
+StyleProcessor.ExecuteStyle.StyleNameBackstab:      Attaque sournoise I
+StyleProcessor.ExecuteStyle.StyleNameBackstabII:   Attaque sournoise II
+StyleProcessor.ExecuteStyle.StyleNamePerforateArtery:   Perfore Artère
+StyleProcessor.ExecuteStyle.ThroatStrike:      Vous infligez un coup critique à la gorge de votre cible.
 StyleProcessor.TryToUseStyle.AlreadyPreparing:      Vous êtes déjà en train de préparer cette attaquer ! Tapez /cancelstyle pour arrêter l'attaque en cours.
 StyleProcessor.TryToUseStyle.AlreadySelectedStyles:   Vous avez déjà choisi votre attaque pour ce tour !
 StyleProcessor.TryToUseStyle.BackupStyle:      Vous vous préparer maintenant à exécuter un {0} attaque à la place de {1}!
