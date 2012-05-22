@@ -37,11 +37,11 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// list of all keeps
 		/// </summary>
-		protected Hashtable m_keeps = new Hashtable();
+		protected Hashtable m_keepList = new Hashtable();
 
 		public virtual Hashtable Keeps
 		{
-			get { return m_keeps; }
+			get { return m_keepList; }
 		}
 
 		protected List<Battleground> m_battlegrounds = new List<Battleground>();
@@ -91,9 +91,9 @@ namespace DOL.GS.Keeps
 			if (!ServerProperties.Properties.LOAD_KEEPS)
 				return true;
 
-			lock (m_keeps.SyncRoot)
+			lock (m_keepList.SyncRoot)
 			{
-				m_keeps.Clear();
+				m_keepList.Clear();
 
 				var keeps = GameServer.Database.SelectAllObjects<DBKeep>();
 				foreach (DBKeep datakeep in keeps)
@@ -166,7 +166,7 @@ namespace DOL.GS.Keeps
 				}
 
 				// This adds owner keeps to towers / portal keeps
-				foreach (AbstractGameKeep keep in m_keeps.Values)
+				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{
 					GameKeepTower tower = keep as GameKeepTower;
 					if (tower != null)
@@ -231,9 +231,9 @@ namespace DOL.GS.Keeps
 					log.WarnFormat("Some keeps not found while loading components, possibly old/new keeptypes.");
 				}
 
-				if (m_keeps.Count != 0)
+				if (m_keepList.Count != 0)
 				{
-					foreach (AbstractGameKeep keep in m_keeps.Values)
+					foreach (AbstractGameKeep keep in m_keepList.Values)
 					{
 						if (keep.KeepComponents.Count != 0)
 							keep.KeepComponents.Sort();
@@ -241,7 +241,7 @@ namespace DOL.GS.Keeps
 				}
 				LoadHookPoints();
 
-				log.Info("Loaded " + m_keeps.Count + " keeps successfully");
+				log.Info("Loaded " + m_keepList.Count + " keeps successfully");
 			}
 
 			if (ServerProperties.Properties.USE_KEEP_BALANCING)
@@ -281,7 +281,7 @@ namespace DOL.GS.Keeps
 					currentArray = hookPointList[key];
 				currentArray.Add(dbhookPoint);
 			}
-			foreach (AbstractGameKeep keep in m_keeps.Values)
+			foreach (AbstractGameKeep keep in m_keepList.Values)
 			{
 				foreach (GameKeepComponent component in keep.KeepComponents)
 				{
@@ -313,7 +313,7 @@ namespace DOL.GS.Keeps
 
 			//fill existing hookpoints with objects
 			IList<DBKeepHookPointItem> items = GameServer.Database.SelectAllObjects<DBKeepHookPointItem>();
-			foreach (AbstractGameKeep keep in m_keeps.Values)
+			foreach (AbstractGameKeep keep in m_keepList.Values)
 			{
 				foreach (GameKeepComponent component in keep.KeepComponents)
 				{
@@ -330,7 +330,7 @@ namespace DOL.GS.Keeps
 
         public virtual void RegisterKeep(int keepID, AbstractGameKeep keep)
         {
-            m_keeps.Add(keepID, keep);
+            m_keepList.Add(keepID, keep);
             log.Info("Registered Keep: " + keep.Name);
         }
 
@@ -341,7 +341,7 @@ namespace DOL.GS.Keeps
 		/// <returns> Game keep object with keepid = id</returns>
 		public virtual AbstractGameKeep GetKeepByID(int id)
 		{
-			return m_keeps[id] as AbstractGameKeep;
+			return m_keepList[id] as AbstractGameKeep;
 		}
 
 		/// <summary>
@@ -377,7 +377,7 @@ namespace DOL.GS.Keeps
 		{
 			List<AbstractGameKeep> myKeeps = new List<AbstractGameKeep>();
 			SortedList keepsByID = new SortedList();
-			foreach (AbstractGameKeep keep in m_keeps.Values)
+			foreach (AbstractGameKeep keep in m_keepList.Values)
 			{
 				if (m_frontierRegionsList.Contains(keep.CurrentRegion.ID) == false)
 					continue;
@@ -400,7 +400,7 @@ namespace DOL.GS.Keeps
 			AbstractGameKeep tempKeep = null;
 
 			//iterate through keeps and find all those which we aren't capped out for
-			foreach (AbstractGameKeep keep in m_keeps.Values)
+			foreach (AbstractGameKeep keep in m_keepList.Values)
 			{
 				// find keeps in the battlegrounds that arent portal keeps
 				if (m_frontierRegionsList.Contains(keep.Region) == false && keep.IsPortalKeep == false) continue;
@@ -441,14 +441,16 @@ namespace DOL.GS.Keeps
 
 		public virtual ICollection<AbstractGameKeep> GetKeepsOfRegion(ushort region)
 		{
-			List<AbstractGameKeep> myKeeps = new List<AbstractGameKeep>();
-			foreach (AbstractGameKeep keep in m_keeps.Values)
+			List<AbstractGameKeep> regionKeeps = new List<AbstractGameKeep>();
+			foreach (AbstractGameKeep keep in m_keepList.Values)
 			{
 				if (keep.CurrentRegion.ID != region)
 					continue;
-				myKeeps.Add(keep);
+
+				regionKeeps.Add(keep);
 			}
-			return myKeeps;
+
+			return regionKeeps;
 		}
 
 		/// <summary>
@@ -462,22 +464,27 @@ namespace DOL.GS.Keeps
 		/// <returns></returns>
 		public virtual ICollection<AbstractGameKeep> GetKeepsCloseToSpot(ushort regionid, int x, int y, int z, int radius)
 		{
-			List<AbstractGameKeep> myKeeps = new List<AbstractGameKeep>();
+			List<AbstractGameKeep> closeKeeps = new List<AbstractGameKeep>();
 			long radiussqrt = radius * radius;
-			lock (m_keeps.SyncRoot)
+
+			lock (m_keepList.SyncRoot)
 			{
-				foreach (AbstractGameKeep keep in m_keeps.Values)
+				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{
-					if (keep.CurrentRegion.ID != regionid)
+					if (keep.DBKeep == null || keep.CurrentRegion.ID != regionid)
 						continue;
+
 					long xdiff = keep.DBKeep.X - x;
 					long ydiff = keep.DBKeep.Y - y;
 					long range = xdiff * xdiff + ydiff * ydiff;
 					if (range < radiussqrt)
-						myKeeps.Add(keep);
+					{
+						closeKeeps.Add(keep);
+					}
 				}
 			}
-			return myKeeps;
+
+			return closeKeeps;
 		}
 
 		/// <summary>
@@ -491,28 +498,34 @@ namespace DOL.GS.Keeps
 		/// <returns></returns>
 		public virtual AbstractGameKeep GetKeepCloseToSpot(ushort regionid, int x, int y, int z, int radius)
 		{
-			AbstractGameKeep myKeep = null;
-			lock (m_keeps.SyncRoot)
+			AbstractGameKeep closestKeep = null;
+
+			lock (m_keepList.SyncRoot)
 			{
 				long radiussqrt = radius * radius;
-				long myKeepRange = radiussqrt;
-				foreach (AbstractGameKeep keep in m_keeps.Values)
+				long lastKeepDistance = radiussqrt;
+
+				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{
-					if (keep.DBKeep.Region != regionid)
+					if (keep.DBKeep == null || keep.DBKeep.Region != regionid)
 						continue;
+
 					long xdiff = keep.DBKeep.X - x;
 					long ydiff = keep.DBKeep.Y - y;
 					long range = xdiff * xdiff + ydiff * ydiff;
+
 					if (range > radiussqrt)
 						continue;
-					if (myKeep == null || range <= myKeepRange)
+
+					if (closestKeep == null || range <= lastKeepDistance)
 					{
-						myKeep = keep;
-						myKeepRange = range;
+						closestKeep = keep;
+						lastKeepDistance = range;
 					}
 				}
 			}
-			return myKeep;
+
+			return closestKeep;
 		}
 
 		/// <summary>
@@ -523,9 +536,9 @@ namespace DOL.GS.Keeps
 		public virtual int GetTowerCountByRealm(eRealm realm)
 		{
 			int index = 0;
-			lock (m_keeps.SyncRoot)
+			lock (m_keepList.SyncRoot)
 			{
-				foreach (AbstractGameKeep keep in m_keeps.Values)
+				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{
 					if (m_frontierRegionsList.Contains(keep.Region) == false) continue;
 					if (((eRealm)keep.Realm == realm) && (keep is GameKeepTower))
@@ -546,9 +559,9 @@ namespace DOL.GS.Keeps
 			realmXTower.Add(eRealm.Hibernia, 0);
 			realmXTower.Add(eRealm.Midgard, 0);
 
-			lock (m_keeps.SyncRoot)
+			lock (m_keepList.SyncRoot)
 			{
-				foreach (AbstractGameKeep keep in m_keeps.Values)
+				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{
 					if (m_frontierRegionsList.Contains(keep.Region) && keep is GameKeepTower)
 					{
@@ -572,9 +585,9 @@ namespace DOL.GS.Keeps
 			realmXTower.Add(eRealm.Midgard, 0);
 			realmXTower.Add(eRealm.None, 0);
 
-			lock (m_keeps.SyncRoot)
+			lock (m_keepList.SyncRoot)
 			{
-				foreach (AbstractGameKeep keep in m_keeps.Values)
+				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{
 					if (m_frontierRegionsList.Contains(keep.Region) && keep is GameKeepTower && zones.Contains(keep.CurrentZone.ID))
 					{
@@ -594,9 +607,9 @@ namespace DOL.GS.Keeps
 		public virtual int GetKeepCountByRealm(eRealm realm)
 		{
 			int index = 0;
-			lock (m_keeps.SyncRoot)
+			lock (m_keepList.SyncRoot)
 			{
-				foreach (AbstractGameKeep keep in m_keeps.Values)
+				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{
 					if (m_frontierRegionsList.Contains(keep.Region) == false) continue;
 					if (((eRealm)keep.Realm == realm) && (keep is GameKeep))
@@ -609,7 +622,7 @@ namespace DOL.GS.Keeps
 		public virtual ICollection<AbstractGameKeep> GetAllKeeps()
 		{
 			List<AbstractGameKeep> myKeeps = new List<AbstractGameKeep>();
-			foreach (AbstractGameKeep keep in m_keeps.Values)
+			foreach (AbstractGameKeep keep in m_keepList.Values)
 			{
 				myKeeps.Add(keep);
 			}
@@ -816,9 +829,9 @@ namespace DOL.GS.Keeps
 
 		public virtual void UpdateBaseLevels()
 		{
-			lock (m_keeps.SyncRoot)
+			lock (m_keepList.SyncRoot)
 			{
-				foreach (AbstractGameKeep keep in m_keeps.Values)
+				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{
 					if (m_frontierRegionsList.Contains(keep.Region) == false) 
 						continue;
