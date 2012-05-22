@@ -326,7 +326,8 @@ namespace DOL.GS.ServerRules
 		{
 			if (IsSameRealm(source, target, true))
 				return target.LastName;
-			return target.RealmTitle;
+
+			return target.RealmRankTitle(source.Client.Account.Language);
 		}
 
 		/// <summary>

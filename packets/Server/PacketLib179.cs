@@ -66,7 +66,7 @@ namespace DOL.GS.PacketHandler
 			//client.Player.RealmPoints
 			//todo i think it s realmpoint percent not realrank
 			pak.WriteByte((byte) player.RealmLevel); //urealm rank
-			pak.WritePascalString(player.RealmTitle); // Realm title
+			pak.WritePascalString(player.RealmRankTitle(player.Client.Account.Language)); // Realm title
 			pak.WriteByte((byte) player.RealmSpecialtyPoints); // realm skill points
 			pak.WritePascalString(player.CharacterClass.BaseName); // base class
 			pak.WriteByte((byte)(HouseMgr.GetHouseNumberByPlayer(player) >> 8)); // personal house high byte
