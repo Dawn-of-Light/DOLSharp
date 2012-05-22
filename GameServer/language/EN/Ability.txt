@@ -17,11 +17,11 @@ Skill.Ability.CannotUseWhileStealthed:	You cannot use this ability while stealth
 Skill.Ability.MinRemaining:	  minutes remaining.
 Skill.Ability.SecRemaining:	  seconds remaining.
 
-Skill.Ability.CannotUseCamouflageMezzed:	You can't use camouflage while mesmerized!
-Skill.Ability.CannotUseCamouflageStunned:	You can't use camouflage while stunned!
-Skill.Ability.CannotUseCamouflageNotStealthed:	You can't use camouflage while not stealthed!
-Skill.Ability.CannotUseCamouflageDead:	You can't use camouflage when dead!
-Skill.Ability.CannotUseCamouflageDisableDuration:	You must wait {0} more second to attempt to use camouflage!
+Skill.Ability.CannotUse.Camouflage.Mezzed:	You can't use camouflage while mesmerized!
+Skill.Ability.CannotUse.Camouflage.Stunned:	You can't use camouflage while stunned!
+Skill.Ability.CannotUse.Camouflage.NotStealthed:	You can't use camouflage while not stealthed!
+Skill.Ability.CannotUse.Camouflage.Dead:	You can't use camouflage when dead!
+Skill.Ability.CannotUse.Camouflage.DisableDuration:	You must wait {0} more second to attempt to use camouflage!
 
 Skill.Ability.CannotUse.Bodyguard.Dead:	You're dead and can't Bodyguard!
 Skill.Ability.CannotUse.Bodyguard.CancelTargetNull:	You are no longer Bodyguarding anyone.
