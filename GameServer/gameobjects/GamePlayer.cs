@@ -4026,17 +4026,18 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Returns a realm rank title by the given players realm and players gender
+		/// Returns the translated realm rank title of the player.
 		/// </summary>
 		/// <param name="Realm"></param>
 		/// <param name="Gender"></param>
 		/// <returns></returns>
-		public virtual string RealmRankTitles(eRealm Realm, int Gender)
+		public virtual string RealmRankTitle(string language)
 		{
-			if (Realm != eRealm.None)
+            string translationId = "GamePlayer.RealmTitle.";
+
+            if (Realm != eRealm.None)
 			{
 				int m_RR = DBCharacter.RealmLevel / 10;
-
 				switch (m_RR)
 				{
 						//Because realm levels are only start to count at realm rank 1 (and so we need 120 levels to get realm rank 13), our first case
@@ -4053,39 +4054,34 @@ namespace DOL.GS
 
 							//Because albion and midgard using the same title, we only check if the realm is unequal to hibernia
 							if (Realm != eRealm.Hibernia)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Invader");
-							}
-							//Otherwise we return the hibernian title
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Defender");
+                                translationId += "Invader";
+                            else //Otherwise we return the hibernian title
+                                translationId += "Defender";
 						}
 						else
 						{
 							if (Realm == eRealm.Albion)
 							{
 								if (Gender != 0)
-								{
-									return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.Guardian");
-								}
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.Guardian");
+                                    translationId += "Female.Guardian";
+                                else
+                                    translationId += "Male.Guardian";
 							}
 
 							if (Realm == eRealm.Midgard)
 							{
 								if (Gender != 0)
-								{
-									return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.Skiltvakten");
-								}
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.Skiltvakten");
+                                    translationId += "Female.Skiltvakten";
+                                else
+                                    translationId += "Male.Skiltvakten";
 							}
 
 							if (Realm == eRealm.Hibernia)
 							{
 								if (Gender != 0)
-								{
-									return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.Savant");
-								}
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.Savant");
+                                    translationId += "Female.Savant";
+                                else
+                                    translationId += "Male.Savant";
 							}
 						}
 						break;
@@ -4093,342 +4089,432 @@ namespace DOL.GS
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.Warder");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.Warder");
+                                translationId += "Female.Warder";
+                            else
+                                translationId += "Male.Warder";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.IsenVakten");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.IsenVakten");
+                                translationId += "Female.IsenVakten";
+                            else
+                                translationId += "Male.IsenVakten";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.Cosantoir");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.Cosantoir");
+                                translationId += "Female.Cosantoir";
+                            else
+                                translationId += "Male.Cosantoir";
 						}
 						break;
 					case 2:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.Myrmidon");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.Myrmidon");
+                                translationId += "Female.Myrmidon";
+                            else
+                                translationId += "Male.Myrmidon";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.FlammenVakten");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.FlammenVakten");
+                                translationId += "Female.FlammenVakten";
+                            else
+                                translationId += "Male.FlammenVakten";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.Brehon");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.Brehon");
+                                translationId += "Female.Brehon";
+                            else
+                                translationId += "Male.Brehon";
 						}
 						break;
 					case 3:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.GryphonKnight");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.GryphonKnight");
+                                translationId += "Female.GryphonKnight";
+                            else
+                                translationId += "Male.GryphonKnight";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.EldingVakten");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.EldingVakten");
+                                translationId += "Female.EldingVakten";
+                            else
+                                translationId += "Male.EldingVakten";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.GroveProtector");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.GroveProtector");
+                                translationId += "Female.GroveProtector";
+                            else
+                                translationId += "Male.GroveProtector";
 						}
 						break;
 					case 4:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.EagleKnight");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.EagleKnight");
+                                translationId += "Female.EagleKnight";
+                            else
+                                translationId += "Male.EagleKnight";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.StormurVakten");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.StormurVakten");
+                                translationId += "Female.StormurVakten";
+                            else
+                                translationId += "Male.StormurVakten";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.RavenArdent");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.RavenArdent");
+                                translationId += "Female.RavenArdent";
+                            else
+                                translationId += "Male.RavenArdent";
 						}
 						break;
 					case 5:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.PhoenixKnight");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.PhoenixKnight");
+                                translationId += "Female.PhoenixKnight";
+                            else
+                                translationId += "Male.PhoenixKnight";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.IsenFru");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.IsenHerra");
+                                translationId += "Female.IsenFru";
+                            else
+                                translationId += "Male.IsenHerra";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.SilverHand");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.SilverHand");
+                                translationId += "Female.SilverHand";
+                            else
+                                translationId += "Male.SilverHand";
 						}
 						break;
 					case 6:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.AlerionKnight");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.AlerionKnight");
+                                translationId += "Female.AlerionKnight";
+                            else
+                                translationId += "Male.AlerionKnight";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.FlammenFru");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.FlammenHerra");
+                                translationId += "Female.FlammenFru";
+                            else
+                                translationId += "Male.FlammenHerra";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.Thunderer");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.Thunderer");
+                                translationId += "Female.Thunderer";
+                            else
+                                translationId += "Male.Thunderer";
 						}
 						break;
 					case 7:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.UnicornKnight");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.UnicornKnight");
+                                translationId += "Female.UnicornKnight";
+                            else
+                                translationId += "Male.UnicornKnight";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.EldingFru");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.EldingHerra");
+                                translationId += "Female.EldingFru";
+                            else
+                                translationId += "Male.EldingHerra";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.GildedSpear");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.GildedSpear");
+                                translationId += "Female.GildedSpear";
+                            else
+                                translationId += "Male.GildedSpear";
 						}
 						break;
 					case 8:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.LionKnight");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.LionKnight");
+                                translationId += "Female.LionKnight";
+                            else
+                                translationId += "Male.LionKnight";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.StormurFru");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.StormurHerra");
+                                translationId += "Female.StormurFru";
+                            else
+                                translationId += "Male.StormurHerra";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.Bantiarna");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.Tiarna");
+                                translationId += "Female.Bantiarna";
+                            else
+                                translationId += "Male.Tiarna";
 						}
 						break;
 					case 9:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.DragonKnight");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.DragonKnight");
+                                translationId += "Female.DragonKnight";
+                            else
+                                translationId += "Male.DragonKnight";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.Einherjar");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.Einherjar");
+                                translationId += "Female.Einherjar";
+                            else
+                                translationId += "Male.Einherjar";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.EmeraldRidere");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.EmeraldRidere");
+                                translationId += "Female.EmeraldRidere";
+                            else
+                                translationId += "Male.EmeraldRidere";
 						}
 						break;
 					case 10:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.Lady");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.Lord");
+                                translationId += "Female.Lady";
+                            else
+                                translationId += "Male.Lord";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.Fru");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.Herra");
+                                translationId += "Female.Fru";
+                            else
+                                translationId += "Male.Herra";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.Banbharun");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.Barun");
+                                translationId += "Female.Banbharun";
+                            else
+                                translationId += "Male.Barun";
 						}
 						break;
 					case 11:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.Baronetess");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.Baronet");
+                                translationId += "Female.Baronetess";
+                            else
+                                translationId += "Male.Baronet";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.Baronsfru");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.Hersir");
+                                translationId += "Female.Baronsfru";
+                            else
+                                translationId += "Male.Hersir";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.ArdBantiarna");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.ArdTiarna");
+                                translationId += "Female.ArdBantiarna";
+                            else
+                                translationId += "Male.ArdTiarna";
 						}
 						break;
 					case 12:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.Baroness");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.Baron");
+                                translationId += "Female.Baroness";
+                            else
+                                translationId += "Male.Baron";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.Vicomtessa");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.Vicomte");
+                                translationId += "Female.Vicomtessa";
+                            else
+                                translationId += "Male.Vicomte";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-							{
-								return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Female.CiannCath");
-							}
-							return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.Male.CiannCath");
+                                translationId += "Female.CiannCath";
+                            else
+                                translationId += "Male.CiannCath";
 						}
 						break;
 				}
 			}
-			return LanguageMgr.GetTranslation(Client, "GamePlayer.RealmTitle.UnknownRealm"); //Returns 'Unknown Realm'
+
+            if (translationId == "GamePlayer.RealmTitle.")
+                translationId += "UnknownRealm"; //Returns 'Unknown Realm'
+
+            string translation;
+            if (!LanguageMgr.TryGetTranslation(out translation, Client, translationId))
+                translation = RealmTitle;
+
+            return translation;
 		}
+
+        /// <summary>
+        /// Holds all realm rank names
+        /// sirru mod 20.11.06
+        /// </summary>
+        public static string[, ,] REALM_RANK_NAMES = new string[,,]
+		{
+			// Albion
+			{
+				// Male
+				{
+					"Guardian",
+					"Warder",
+					"Myrmidon",
+					"Gryphon Knight",
+					"Eagle Knight",
+					"Phoenix Knight",
+					"Alerion Knight",
+					"Unicorn Knight",
+					"Lion Knight",
+					"Dragon Knight",
+					"Lord",
+					"Baronet",
+					"Baron"
+				}
+				,
+				// Female
+				{
+					"Guardian",
+					"Warder",
+					"Myrmidon",
+					"Gryphon Knight",
+					"Eagle Knight",
+					"Phoenix Knight",
+					"Alerion Knight",
+					"Unicorn Knight",
+					"Lion Knight",
+					"Dragon Knight",
+					"Lady",
+					"Baronetess",
+					"Baroness"
+				}
+			}
+			,
+			// Midgard
+			{
+				// Male
+				{
+					"Skiltvakten",
+					"Isen Vakten",
+					"Flammen Vakten",
+					"Elding Vakten",
+					"Stormur Vakten",
+					"Isen Herra",
+					"Flammen Herra",
+					"Elding Herra",
+					"Stormur Herra",
+					"Einherjar",
+					"Herra",
+					"Hersir",
+					"Vicomte"
+				}
+				,
+				// Female
+				{
+					"Skiltvakten",
+					"Isen Vakten",
+					"Flammen Vakten",
+					"Elding Vakten",
+					"Stormur Vakten",
+					"Isen Fru",
+					"Flammen Fru",
+					"Elding Fru",
+					"Stormur Fru",
+					"Einherjar",
+					"Fru",
+					"Baronsfru",
+					"Vicomtessa"
+				}
+			}
+			,
+			// Hibernia
+			{
+				// Male
+				{
+					"Savant",
+					"Cosantoir",
+					"Brehon",
+					"Grove Protector",
+					"Raven Ardent",
+					"Silver Hand",
+					"Thunderer",
+					"Gilded Spear",
+					"Tiarna",
+					"Emerald Ridere",
+					"Barun",
+					"Ard Tiarna",
+					"Ciann Cath"
+				}
+				,
+				// Female
+				{
+					"Savant",
+					"Cosantoir",
+					"Brehon",
+					"Grove Protector",
+					"Raven Ardent",
+					"Silver Hand",
+					"Thunderer",
+					"Gilded Spear",
+					"Bantiarna",
+					"Emerald Ridere",
+					"Banbharun",
+					"Ard Bantiarna",
+					"Ciann Cath"
+				}
+			}
+		};
 
 		/// <summary>
 		/// Gets player realm rank name
@@ -4438,7 +4524,10 @@ namespace DOL.GS
 		{
 			get
 			{
-				return RealmRankTitles(Realm, DBCharacter.Gender);
+                if (Realm == eRealm.None)
+                    return "Unknown Realm";
+
+                return REALM_RANK_NAMES[(int)Realm - 1, (int)Gender, (DBCharacter.RealmLevel / 10)];
 			}
 		}
 
@@ -4532,7 +4621,7 @@ namespace DOL.GS
 					Out.SendUpdatePlayerSkills();
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.GainedRank"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.ReachedRank", (RealmLevel / 10) + 1), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
-					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.NewRealmTitle", RealmTitle), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.NewRealmTitle", RealmRankTitle(Client.Account.Language)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.GainBonus", RealmLevel / 10), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						plr.Out.SendLivingDataUpdate(this, true);
