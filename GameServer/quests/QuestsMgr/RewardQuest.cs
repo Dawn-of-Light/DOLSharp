@@ -320,7 +320,15 @@ namespace DOL.GS.Quests
 			/// </summary>
 			public string Description
 			{
-                get { return String.Format(LanguageMgr.GetTranslation((m_quest.QuestPlayer as GamePlayer).Client, "RewardQuest.Description", m_description, Current, Target)); }
+                get 
+				{
+					if (m_quest.QuestPlayer != null)
+					{
+						return String.Format(LanguageMgr.GetTranslation((m_quest.QuestPlayer as GamePlayer).Client, "RewardQuest.Description", m_description, Current, Target));
+					}
+
+					return m_description;
+				}
 			}
 
 			/// <summary>
