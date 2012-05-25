@@ -33,7 +33,7 @@ namespace DOL.Language
     public class LanguageMgr
     {
         #region Variables
-        private const string TRANSLATION_ID_EMPTY = "[Language-Manager] Empty translation id.";
+        private const string TRANSLATION_ID_EMPTY = "Empty translation id.";
         private const string TRANSLATION_NULL = "NULL";
 
         /// <summary>
@@ -522,36 +522,68 @@ namespace DOL.Language
             return result;
         }
 
+
+
+		/// <summary>
+		/// This returns the last part of the translation text id id actual translation fails
+		/// This helps to avoid returning strings that are too long and overflow the client
+		/// When the name overflows players my not be targetable or even visible!
+		/// DO NOT REMOVE THIS FUNCTIONALITY!  - tolakram
+		/// </summary>
+		/// <param name="TranslationID"></param>
+		/// <returns></returns>
+		public static string GetTranslationErrorText(string lang, string TranslationID)
+		{
+			try
+			{
+				return lang + TranslationID.Substring(TranslationID.LastIndexOf(".") + 1);
+			}
+			catch
+			{
+			}
+
+			return lang + "Error";
+		}
+		
+
         public static bool TryGetTranslation(out string translation, string language, string translationId, params object[] args)
         {
+			translation = "";
+
             if (Util.IsEmpty(translationId))
             {
                 translation = TRANSLATION_ID_EMPTY;
                 return false;
             }
 
-            if (Util.IsEmpty(language) || !m_translations.ContainsKey(language))
-                language = DefaultLanguage;
+			if (Util.IsEmpty(language) || !m_translations.ContainsKey(language))
+			{
+				language = DefaultLanguage;
+			}
 
             LanguageDataObject result = GetLanguageDataObject(language, translationId, LanguageDataObject.eTranslationIdentifier.eSystem);
             if (result == null)
             {
-                translation = translationId;
+                translation = GetTranslationErrorText(language, translationId);
                 return false;
             }
             else
             {
-                if (!Util.IsEmpty(((DBLanguageSystem)result).Text))
-                    translation = ((DBLanguageSystem)result).Text;
-                else
-                {
-                    translation = translationId;
-                    return false;
-                }
+				if (!Util.IsEmpty(((DBLanguageSystem)result).Text))
+				{
+					translation = ((DBLanguageSystem)result).Text;
+				}
+				else
+				{
+					translation = GetTranslationErrorText(language, translationId);
+					return false;
+				}
             }
 
-            if (args == null)
-                args = new object[0];
+			if (args == null)
+			{
+				args = new object[0];
+			}
 
             try
             {
