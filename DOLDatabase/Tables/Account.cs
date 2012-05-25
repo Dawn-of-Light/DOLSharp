@@ -204,7 +204,7 @@ namespace DOL
 			public string Language
 			{
 				get { return m_language; }
-				set { Dirty = true; m_language = value; }
+				set { Dirty = true; m_language = value.ToUpper(); }
 			}
 
 			/// <summary>
