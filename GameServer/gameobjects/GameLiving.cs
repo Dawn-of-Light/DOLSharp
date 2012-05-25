@@ -2919,10 +2919,11 @@ namespace DOL.GS
 			if (weapon == null)
 				return;
 
-			// do not allow procs on keeps unless using Bruiser (model 1671/2113) - Mattress
+			// Mattress - do not allow procs on keeps unless using Bruiser/Fools Bow/etc, items must be set to DOL.GS.GameSiegeItem
             if (ad.Target is GameKeepComponent || ad.Target is GameKeepDoor)
             {
-                if (weapon.Model != 1671 & weapon.Model != 2113) return;
+                if (weapon is GameSiegeItem) {}
+                else return;
             }
 
 			// Proc chance is 2.5% per SPD, i.e. 10% for a 3.5 SPD weapon. - Tolakram, changed average speed to 3.5
