@@ -2776,6 +2776,7 @@
     <None Include="language\FR\GameObjects\GameDoor.txt" />
     <None Include="language\FR\Ability.txt" />
     <None Include="language\ES\ES - General.txt" />
+    <Content Include="language\FR\Commands\Player\PlayerCommands.txt" />
     <Content Include="language\FR\GameObjects\GameGuard.txt" />
     <Content Include="language\FR\Quests\Hibernia\WingsOfTheIsle.txt" />
     <Content Include="language\IT\GameObject\GameDoor.txt" />
