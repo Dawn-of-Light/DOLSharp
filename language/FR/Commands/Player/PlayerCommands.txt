@@ -1,0 +1,8 @@
+﻿# /FreeLevel
+PLCommands.FreeLevel.AboveMaximumLevel:	Vous êtes au dessus du level maximum pour obtenir un level supplémentaire.
+PLCommands.FreeLevel.EligibleFreeLevel:	Vous êtes elligible a un level gratuit! Clicker sur votre Instructeur pour le reçevoir (ou /freelevel decline pour l'annuler).
+PLCommands.FreeLevel.FreeLevelIn:	Vous serez elligible a un level gratuit dans: {0} jour {1} heures {2} minutes.
+PLCommands.FreeLevel.FreeLevelIn2:	Vous serez bientôt elligible a un level gratuit, lorsque vous gagnerez un level et dans: {0} jour {1} heures {2} minutes.
+PLCommands.FreeLevel.FreeLevelSoon:	Vous serez bientôt elligible a un level gratuit, lorsque vous gagnerez un level.
+PLCommands.FreeLevel.NoFreeLevel:	Vosu n'avez aucun level gratuit!
+PLCommands.FreeLevel.Removed:		Votre level gratuit à été supprimé.
