@@ -4527,7 +4527,14 @@ namespace DOL.GS
                 if (Realm == eRealm.None)
                     return "Unknown Realm";
 
-                return REALM_RANK_NAMES[(int)Realm - 1, (int)Gender, (DBCharacter.RealmLevel / 10)];
+				try
+				{
+					return REALM_RANK_NAMES[(int)Realm - 1, (int)Gender, (DBCharacter.RealmLevel / 10)];
+				}
+				catch
+				{
+					return "Unknown Rank"; // why aren't all the realm ranks defined above?
+				}
 			}
 		}
 
