@@ -282,6 +282,18 @@ namespace DOL.GS.Keeps
 
 		#region function override
 
+		/// <summary>
+		/// Procs don't normally fire on game keep components
+		/// </summary>
+		/// <param name="ad"></param>
+		/// <param name="weapon"></param>
+		/// <returns></returns>
+		public override bool AllowWeaponMagicalEffect(AttackData ad, InventoryItem weapon, Spell weaponSpell)
+		{
+			return false; // special code goes here
+		}
+
+
 		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
 			if (damageAmount > 0)
