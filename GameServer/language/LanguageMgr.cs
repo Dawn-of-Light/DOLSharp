@@ -514,7 +514,7 @@ namespace DOL.Language
                     {
                         bool debug = client.Player.TempProperties.getProperty("LANGUAGEMGR-DEBUG", false);
                         if (debug)
-                            translation = ("[Id: " + translationId + "] " + translation);
+                            translation = ("Id is " + translationId + " " + translation);
                     }
                 }
             }

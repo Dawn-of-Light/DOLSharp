@@ -256,6 +256,16 @@ namespace DOL.GS.Keeps
 			return list;
 		}
 
+		/// <summary>
+		/// Procs don't normally fire on game keep components
+		/// </summary>
+		/// <param name="ad"></param>
+		/// <param name="weapon"></param>
+		/// <returns></returns>
+		public override bool AllowWeaponMagicalEffect(AttackData ad, InventoryItem weapon, Spell weaponSpell)
+		{
+			return false; // special code goes here to check for spell handler etc.
+		}
 
 		/// <summary>
 		/// do not regen
