@@ -2910,6 +2910,17 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Does this living allow procs to be cast on it?
+		/// </summary>
+		/// <param name="ad"></param>
+		/// <param name="weapon"></param>
+		/// <returns></returns>
+		public virtual bool AllowWeaponMagicalEffect(AttackData ad, InventoryItem weapon, Spell weaponSpell)
+		{
+			return true;
+		}
+
+		/// <summary>
 		/// Check if we can make a proc on a weapon go off.  Weapon Procs
 		/// </summary>
 		/// <param name="ad"></param>
@@ -2918,13 +2929,6 @@ namespace DOL.GS
 		{
 			if (weapon == null)
 				return;
-
-			// Mattress - do not allow procs on keeps unless using Bruiser/Fools Bow/etc, items must be set to DOL.GS.GameSiegeItem
-            if (ad.Target is GameKeepComponent || ad.Target is GameKeepDoor)
-            {
-                if (weapon is GameSiegeItem) {}
-                else return;
-            }
 
 			// Proc chance is 2.5% per SPD, i.e. 10% for a 3.5 SPD weapon. - Tolakram, changed average speed to 3.5
 
@@ -2988,24 +2992,28 @@ namespace DOL.GS
 
 				if (procSpell != null)
 				{
-					if (ignoreLevel == false)
+					// check with target to see if it allows procs to cast on it (primarily used for keep components)
+					if (ad.Target.AllowWeaponMagicalEffect(ad, weapon, procSpell))
 					{
-						int requiredLevel = weapon.Template.LevelRequirement > 0 ? weapon.Template.LevelRequirement : Math.Min(50, weapon.Level);
-
-						if (requiredLevel > Level)
+						if (ignoreLevel == false)
 						{
-							if (this is GamePlayer)
-							{
-								(this as GamePlayer).Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-							}
-							return;
-						}
-					}
+							int requiredLevel = weapon.Template.LevelRequirement > 0 ? weapon.Template.LevelRequirement : Math.Min(50, weapon.Level);
 
-					ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(ad.Attacker, procSpell, spellLine);
-					if (spellHandler != null)
-					{
-						spellHandler.StartSpell(ad.Target, weapon);
+							if (requiredLevel > Level)
+							{
+								if (this is GamePlayer)
+								{
+									(this as GamePlayer).Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+								}
+								return;
+							}
+						}
+
+						ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(ad.Attacker, procSpell, spellLine);
+						if (spellHandler != null)
+						{
+							spellHandler.StartSpell(ad.Target, weapon);
+						}
 					}
 				}
 			}
