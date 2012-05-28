@@ -24,9 +24,9 @@ using DOL.Language;
 namespace DOL.GS.Commands
 {
 	[CmdAttribute("&freelevel", //command to handle
-		ePrivLevel.Player, //minimum privelege level
-		"Display state of FreeLevel", //command description
-		"/freelevel")] //command usage
+	              ePrivLevel.Player, //minimum privelege level
+	              "Display state of FreeLevel", //command description
+	              "/freelevel")] //command usage
 	public class FreelevelCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
@@ -40,7 +40,7 @@ namespace DOL.GS.Commands
 				if (state == 2)
 				{
 					// NOT SURE FOR THIS MESSAGE
-                    message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.Removed");
+					message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.Removed");
 					// we decline THIS ONE, but next level, we will gain another freelevel !!
 					client.Player.DBCharacter.LastFreeLevel = client.Player.Level - 1;
 					client.Player.Out.SendPlayerFreeLevelUpdate();
@@ -48,47 +48,47 @@ namespace DOL.GS.Commands
 				else
 				{
 					// NOT SURE FOR THIS MESSAGE
-                    message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.NoFreeLevel");
-                }
+					message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.NoFreeLevel");
+				}
 				client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-            TimeSpan t = new TimeSpan();
+			TimeSpan t = new TimeSpan();
 
-            switch (client.Player.Realm)
-            {
-                case eRealm.Albion:
-                    t = client.Player.DBCharacter.LastFreeLeveled.AddDays(DOL.GS.ServerProperties.Properties.FREELEVEL_DAYS_ALBION) - DateTime.Now;
-                    break;
-                case eRealm.Midgard:
-                    t = client.Player.DBCharacter.LastFreeLeveled.AddDays(DOL.GS.ServerProperties.Properties.FREELEVEL_DAYS_MIDGARD) - DateTime.Now;
-                    break;
-                case eRealm.Hibernia:
-                    t = client.Player.DBCharacter.LastFreeLeveled.AddDays(DOL.GS.ServerProperties.Properties.FREELEVEL_DAYS_HIBERNIA) - DateTime.Now;
-                    Console.WriteLine("derp");
-                    break;
-            }
+			switch (client.Player.Realm)
+			{
+				case eRealm.Albion:
+					t = client.Player.DBCharacter.LastFreeLeveled.AddDays(DOL.GS.ServerProperties.Properties.FREELEVEL_DAYS_ALBION) - DateTime.Now;
+					break;
+				case eRealm.Midgard:
+					t = client.Player.DBCharacter.LastFreeLeveled.AddDays(DOL.GS.ServerProperties.Properties.FREELEVEL_DAYS_MIDGARD) - DateTime.Now;
+					break;
+				case eRealm.Hibernia:
+					t = client.Player.DBCharacter.LastFreeLeveled.AddDays(DOL.GS.ServerProperties.Properties.FREELEVEL_DAYS_HIBERNIA) - DateTime.Now;
+					Console.WriteLine("derp");
+					break;
+			}
 
 			switch (state)
 			{
 				case 1:
-                    message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.AboveMaximumLevel");
-                    break;
+					message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.AboveMaximumLevel");
+					break;
 				case 2:
-                    message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.EligibleFreeLevel");
-                    break;
+					message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.EligibleFreeLevel");
+					break;
 				case 3:
-                    // NOT SURE FOR THIS MESSAGE
-                    message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.FreeLevelIn", t.Days, t.Hours, t.Minutes);
-                    break;
+					// NOT SURE FOR THIS MESSAGE
+					message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.FreeLevelIn", t.Days, t.Hours, t.Minutes);
+					break;
 				case 4:
 					// NOT SURE FOR THIS MESSAGE
-                    message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.FreeLevelIn2", t.Days, t.Hours, t.Minutes);
-                    break;
+					message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.FreeLevelIn2", t.Days, t.Hours, t.Minutes);
+					break;
 				case 5:
-                    message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.FreeLevelSoon");
-                    break;
+					message = LanguageMgr.GetTranslation(client, "PLCommands.FreeLevel.FreeLevelSoon");
+					break;
 
 			}
 			client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);

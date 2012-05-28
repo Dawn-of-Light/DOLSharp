@@ -141,7 +141,8 @@ namespace DOL.GS
 			Version1109 = 1109,
 			Version1110 = 1110,
 			Version1111 = 1111,
-			_LastVersion = 1111,
+			Version1112 = 1112,
+			_LastVersion = 1112,
 		}
 
 		#endregion

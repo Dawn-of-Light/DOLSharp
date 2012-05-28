@@ -765,21 +765,21 @@ namespace DOL.GS
 			}
 		}
 
-        /// <summary>
-        /// Total damage RvR Value
-        /// </summary>
-        protected long m_damageRvRMemory;
-        /// <summary>
-        /// gets the DamageRvR Memory of this living (always 0 for Gameliving)
-        /// </summary>
-        public virtual long DamageRvRMemory
-        {
-            get { return 0; }
-            set
-            {
-                m_damageRvRMemory = 0;
-            }
-        }
+		/// <summary>
+		/// Total damage RvR Value
+		/// </summary>
+		protected long m_damageRvRMemory;
+		/// <summary>
+		/// gets the DamageRvR Memory of this living (always 0 for Gameliving)
+		/// </summary>
+		public virtual long DamageRvRMemory
+		{
+			get { return 0; }
+			set
+			{
+				m_damageRvRMemory = 0;
+			}
+		}
 
 		/// <summary>
 		/// Gets the swing time left
@@ -1095,7 +1095,7 @@ namespace DOL.GS
 			{
 				return (IsAlive &&
 				        !IsStealthed &&
-						EffectList.GetOfType<NecromancerShadeEffect>() == null &&
+				        EffectList.GetOfType<NecromancerShadeEffect>() == null &&
 				        ObjectState == GameObject.eObjectState.Active);
 			}
 		}
@@ -1210,23 +1210,23 @@ namespace DOL.GS
 			}
 		}
 
-        /// <summary>
-        /// Check this flag to see if this living has been involved in combat in the given milliseconds
-        /// </summary>
-        public virtual bool InCombatInLast(int milliseconds)
-        {
-            if ((InCombatPvEInLast(milliseconds) || InCombatPvPInLast(milliseconds)) == false)
-            {
-                if (Attackers.Count > 0)
-                {
-                    Attackers.Clear();
-                }
+		/// <summary>
+		/// Check this flag to see if this living has been involved in combat in the given milliseconds
+		/// </summary>
+		public virtual bool InCombatInLast(int milliseconds)
+		{
+			if ((InCombatPvEInLast(milliseconds) || InCombatPvPInLast(milliseconds)) == false)
+			{
+				if (Attackers.Count > 0)
+				{
+					Attackers.Clear();
+				}
 
-                return false;
-            }
+				return false;
+			}
 
-            return true;
-        }
+			return true;
+		}
 
 		/// <summary>
 		/// checks if the living is involved in pvp combat
@@ -1246,20 +1246,20 @@ namespace DOL.GS
 			}
 		}
 
-        /// <summary>
-        /// checks if the living is involved in pvp combat in the given milliseconds
-        /// </summary>
-        public virtual bool InCombatPvPInLast(int milliseconds)
-        {
-            Region region = CurrentRegion;
-            if (region == null)
-                return false;
+		/// <summary>
+		/// checks if the living is involved in pvp combat in the given milliseconds
+		/// </summary>
+		public virtual bool InCombatPvPInLast(int milliseconds)
+		{
+			Region region = CurrentRegion;
+			if (region == null)
+				return false;
 
-            if (LastCombatTickPvP == 0)
-                return false;
+			if (LastCombatTickPvP == 0)
+				return false;
 
-            return LastCombatTickPvP + milliseconds >= region.Time;
-        }
+			return LastCombatTickPvP + milliseconds >= region.Time;
+		}
 
 		/// <summary>
 		/// checks if the living is involved in pve combat
@@ -1282,23 +1282,23 @@ namespace DOL.GS
 			}
 		}
 
-        /// <summary>
-        /// checks if the living is involved in pve combat in the given milliseconds
-        /// </summary>
-        public virtual bool InCombatPvEInLast(int milliseconds)
-        {
-            Region region = CurrentRegion;
-            if (region == null)
-                return false;
+		/// <summary>
+		/// checks if the living is involved in pve combat in the given milliseconds
+		/// </summary>
+		public virtual bool InCombatPvEInLast(int milliseconds)
+		{
+			Region region = CurrentRegion;
+			if (region == null)
+				return false;
 
-            if (LastCombatTickPvE == 0)
-                return false;
+			if (LastCombatTickPvE == 0)
+				return false;
 
-            //if (LastCombatTickPvE + 10000 - region.Time > 0 && this is GameNPC && (this as GameNPC).Brain is IControlledBrain)
-            //	log.Debug(Name + " in combat " + (LastCombatTickPvE + 10000 - region.Time));
+			//if (LastCombatTickPvE + 10000 - region.Time > 0 && this is GameNPC && (this as GameNPC).Brain is IControlledBrain)
+			//	log.Debug(Name + " in combat " + (LastCombatTickPvE + 10000 - region.Time));
 
-            return LastCombatTickPvE + milliseconds >= region.Time;
-        }
+			return LastCombatTickPvE + milliseconds >= region.Time;
+		}
 
 		/// <summary>
 		/// Returns the amount of experience this living is worth
@@ -2024,11 +2024,11 @@ namespace DOL.GS
 				IControlledBrain brain = ((GameNPC)ad.Target).Brain as IControlledBrain;
 				if (brain != null)
 				{
-                    GameLiving owner_living = brain.GetLivingOwner();
-                    excludes.Add(owner_living);
-                    if (owner_living != null && owner_living is GamePlayer && owner_living.ControlledBrain != null && ad.Target == owner_living.ControlledBrain.Body)
+					GameLiving owner_living = brain.GetLivingOwner();
+					excludes.Add(owner_living);
+					if (owner_living != null && owner_living is GamePlayer && owner_living.ControlledBrain != null && ad.Target == owner_living.ControlledBrain.Body)
 					{
-                        GamePlayer owner = owner_living as GamePlayer;
+						GamePlayer owner = owner_living as GamePlayer;
 						switch (ad.AttackResult)
 						{
 							case eAttackResult.Blocked:
@@ -2669,7 +2669,7 @@ namespace DOL.GS
 				leftHandEffectiveness *= owner.CalculateLeftHandEffectiveness(mainWeapon, leftWeapon);
 
 				if (owner.CanUseLefthandedWeapon && leftWeapon != null && leftWeapon.Object_Type != (int)eObjectType.Shield
-					&& mainWeapon != null && (mainWeapon.Item_Type == Slot.RIGHTHAND || mainWeapon.Item_Type == Slot.LEFTHAND))
+				    && mainWeapon != null && (mainWeapon.Item_Type == Slot.RIGHTHAND || mainWeapon.Item_Type == Slot.LEFTHAND))
 				{
 					leftHandSwingCount = owner.CalculateLeftHandSwingCount();
 				}
@@ -2859,7 +2859,7 @@ namespace DOL.GS
 							return;
 						}
 					case eAttackResult.OutOfRange:
-							break;
+						break;
 				}
 
 				// unstealth before attack animation
@@ -3694,8 +3694,8 @@ namespace DOL.GS
 			if( player != null )
 			{
 				if (player.HasAbility(Abilities.Advanced_Evade) ||
-					player.EffectList.GetOfType<CombatAwarenessEffect>() != null ||
-					player.EffectList.GetOfType<RuneOfUtterAgilityEffect>() != null)
+				    player.EffectList.GetOfType<CombatAwarenessEffect>() != null ||
+				    player.EffectList.GetOfType<RuneOfUtterAgilityEffect>() != null)
 					evadeChance = GetModified( eProperty.EvadeChance );
 				else if( IsObjectInFront( ad.Attacker, 180 ) && ( evadeBuff != null || player.HasAbility( Abilities.Evade ) ) )
 				{
@@ -3930,32 +3930,32 @@ namespace DOL.GS
 
 			double damageDealt = damageAmount + criticalAmount;
 
-            #region PVP DAMAGE
+			#region PVP DAMAGE
 
-            // Is this a GamePlayer behind the source?
-            if (source is GamePlayer || (source is GameNPC && (source as GameNPC).Brain is IControlledBrain && ((source as GameNPC).Brain as IControlledBrain).GetPlayerOwner() != null))
-            {
-                // Only apply to necropet.
-                if (this is NecromancerPet)
-                {
-                    //And if a GamePlayer is behind
-                    GamePlayer this_necro_pl = null;
+			// Is this a GamePlayer behind the source?
+			if (source is GamePlayer || (source is GameNPC && (source as GameNPC).Brain is IControlledBrain && ((source as GameNPC).Brain as IControlledBrain).GetPlayerOwner() != null))
+			{
+				// Only apply to necropet.
+				if (this is NecromancerPet)
+				{
+					//And if a GamePlayer is behind
+					GamePlayer this_necro_pl = null;
 
-                    if (this is GameNPC && (this as GameNPC).Brain is IControlledBrain)
-                        this_necro_pl = ((this as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+					if (this is GameNPC && (this as GameNPC).Brain is IControlledBrain)
+						this_necro_pl = ((this as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
 
-                    if (this_necro_pl != null && this_necro_pl.Realm != source.Realm && source.Realm != 0)
-                        DamageRvRMemory += (long)damageDealt + (long)criticalAmount;
-                }
-            }
+					if (this_necro_pl != null && this_necro_pl.Realm != source.Realm && source.Realm != 0)
+						DamageRvRMemory += (long)damageDealt + (long)criticalAmount;
+				}
+			}
 
-            #endregion PVP DAMAGE
+			#endregion PVP DAMAGE
 
-            if (source != null && source is GameNPC)
+			if (source != null && source is GameNPC)
 			{
 				IControlledBrain brain = ((GameNPC)source).Brain as IControlledBrain;
 				if (brain != null)
-                    source = brain.GetLivingOwner();
+					source = brain.GetLivingOwner();
 			}
 
 			GamePlayer attackerPlayer = source as GamePlayer;
@@ -4200,8 +4200,8 @@ namespace DOL.GS
 					if (attacker is GameLiving)
 					{
 						(attacker as GameLiving).Notify(GameLivingEvent.EnemyHealed, attacker, args);
-                        // Desactivate XPGainer, Heal Rps implentation.
-                        //(attacker as GameLiving).AddXPGainer(changeSource, healthChanged);
+						// Desactivate XPGainer, Heal Rps implentation.
+						//(attacker as GameLiving).AddXPGainer(changeSource, healthChanged);
 					}
 				}
 			}
@@ -4394,7 +4394,7 @@ namespace DOL.GS
 			Health = 0;
 
 			// Remove all last attacked times
-            
+			
 			LastAttackedByEnemyTickPvE = 0;
 			LastAttackedByEnemyTickPvP = 0;
 			//Let's send the notification at the end
@@ -5145,38 +5145,38 @@ namespace DOL.GS
 				ChangeHealth(this, eHealthChangeType.Regenerate, GetModified(eProperty.HealthRegenerationRate));
 			}
 
-            #region PVP DAMAGE
+			#region PVP DAMAGE
 
-            
-            if (this is NecromancerPet)
-            {
-                GamePlayer this_necro_pl = null;
+			
+			if (this is NecromancerPet)
+			{
+				GamePlayer this_necro_pl = null;
 
-                this_necro_pl = ((this as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner();
+				this_necro_pl = ((this as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner();
 
-                if (DamageRvRMemory > 0 && this_necro_pl != null)
-                    DamageRvRMemory -= (long)Math.Max(GetModified(eProperty.HealthRegenerationRate), 0);
-            }
+				if (DamageRvRMemory > 0 && this_necro_pl != null)
+					DamageRvRMemory -= (long)Math.Max(GetModified(eProperty.HealthRegenerationRate), 0);
+			}
 
-            #endregion PVP DAMAGE
+			#endregion PVP DAMAGE
 
 			//If we are fully healed, we stop the timer
 			if (Health >= MaxHealth)
-            {
+			{
 
-                #region PVP DAMAGE
+				#region PVP DAMAGE
 
-                if (this is NecromancerPet)
-                {
-                    GamePlayer this_necro_pl = null;
+				if (this is NecromancerPet)
+				{
+					GamePlayer this_necro_pl = null;
 
-                    this_necro_pl = ((this as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner();
+					this_necro_pl = ((this as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner();
 
-                    if (DamageRvRMemory > 0 && this_necro_pl != null)
-                        DamageRvRMemory = 0;
-                }
+					if (DamageRvRMemory > 0 && this_necro_pl != null)
+						DamageRvRMemory = 0;
+				}
 
-                #endregion PVP DAMAGE
+				#endregion PVP DAMAGE
 
 				//We clean all damagedealers if we are fully healed,
 				//no special XP calculations need to be done
@@ -6150,8 +6150,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		public Ability GetAbility(string abilityKey)
 		{
-		    Ability ab;
-            return m_abilities.TryGetValue(abilityKey, out ab) ? ab : null;
+			Ability ab;
+			return m_abilities.TryGetValue(abilityKey, out ab) ? ab : null;
 		}
 
 		/// <summary>
