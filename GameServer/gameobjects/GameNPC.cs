@@ -56,9 +56,9 @@ namespace DOL.GS
 		/// </remarks>
 		public const int CONST_WALKTOTOLERANCE = 25;
 
-        #region Formations/Spacing
+		#region Formations/Spacing
 
-        //Space/Offsets used in formations
+		//Space/Offsets used in formations
 		// Normal = 1
 		// Big = 2
 		// Huge = 3
@@ -136,24 +136,24 @@ namespace DOL.GS
 			}
 		}
 
-        public virtual LanguageDataObject.eTranslationIdentifier TranslationIdentifier
-        {
-            get { return LanguageDataObject.eTranslationIdentifier.eNPC; }
-        }
+		public virtual LanguageDataObject.eTranslationIdentifier TranslationIdentifier
+		{
+			get { return LanguageDataObject.eTranslationIdentifier.eNPC; }
+		}
 
-        /// <summary>
-        /// Holds the translation id.
-        /// </summary>
-        protected string m_translationId = "";
+		/// <summary>
+		/// Holds the translation id.
+		/// </summary>
+		protected string m_translationId = "";
 
-        /// <summary>
-        /// Gets or sets the translation id.
-        /// </summary>
-        public string TranslationId
-        {
-            get { return m_translationId; }
-            set { m_translationId = (value == null ? "" : value); }
-        }
+		/// <summary>
+		/// Gets or sets the translation id.
+		/// </summary>
+		public string TranslationId
+		{
+			get { return m_translationId; }
+			set { m_translationId = (value == null ? "" : value); }
+		}
 
 		/// <summary>
 		/// Gets or sets the model of this npc
@@ -222,18 +222,18 @@ namespace DOL.GS
 
 		public virtual void AutoSetStats()
 		{
-            // Values changed by Argo, based on Tolakrams Advice for how to change the Multiplier for Autoset str
+			// Values changed by Argo, based on Tolakrams Advice for how to change the Multiplier for Autoset str
 
-            Strength = (short)(Properties.MOB_AUTOSET_STR_BASE + Level * 10 * Properties.MOB_AUTOSET_STR_MULTIPLIER);
-            Constitution = (short)(Properties.MOB_AUTOSET_CON_BASE + Level * Properties.MOB_AUTOSET_CON_MULTIPLIER);
-            Quickness = (short)(Properties.MOB_AUTOSET_QUI_BASE + Level * Properties.MOB_AUTOSET_QUI_MULTIPLIER);
-            Dexterity = (short)(Properties.MOB_AUTOSET_DEX_BASE + Level * Properties.MOB_AUTOSET_DEX_MULTIPLIER);
-            
+			Strength = (short)(Properties.MOB_AUTOSET_STR_BASE + Level * 10 * Properties.MOB_AUTOSET_STR_MULTIPLIER);
+			Constitution = (short)(Properties.MOB_AUTOSET_CON_BASE + Level * Properties.MOB_AUTOSET_CON_MULTIPLIER);
+			Quickness = (short)(Properties.MOB_AUTOSET_QUI_BASE + Level * Properties.MOB_AUTOSET_QUI_MULTIPLIER);
+			Dexterity = (short)(Properties.MOB_AUTOSET_DEX_BASE + Level * Properties.MOB_AUTOSET_DEX_MULTIPLIER);
+			
 			Intelligence = (short)(30);
-            Empathy = (short)(30);
-            Piety = (short)(30);
-            Charisma = (short)(30);
-             
+			Empathy = (short)(30);
+			Piety = (short)(30);
+			Charisma = (short)(30);
+			
 		}
 
 		/// <summary>
@@ -300,29 +300,29 @@ namespace DOL.GS
 			}
 		}
 
-        /// <summary>
-        /// Holds the suffix.
-        /// </summary>
-        private string m_suffix = string.Empty;
-        /// <summary>
-        /// Gets or sets the suffix.
-        /// </summary>
-        public string Suffix
-        {
-            get { return m_suffix; }
-            set
-            {
-                if (value == null)
-                    m_suffix = string.Empty;
-                else
-                {
-                    if (value == m_suffix)
-                        return;
-                    else
-                        m_suffix = value;
-                }
-            }
-        }
+		/// <summary>
+		/// Holds the suffix.
+		/// </summary>
+		private string m_suffix = string.Empty;
+		/// <summary>
+		/// Gets or sets the suffix.
+		/// </summary>
+		public string Suffix
+		{
+			get { return m_suffix; }
+			set
+			{
+				if (value == null)
+					m_suffix = string.Empty;
+				else
+				{
+					if (value == m_suffix)
+						return;
+					else
+						m_suffix = value;
+				}
+			}
+		}
 
 		/// <summary>
 		/// Gets or sets the guild name
@@ -346,53 +346,53 @@ namespace DOL.GS
 			}
 		}
 
-        /// <summary>
-        /// Holds the examine article.
-        /// </summary>
-        private string m_examineArticle = string.Empty;
-        /// <summary>
-        /// Gets or sets the examine article.
-        /// </summary>
-        public string ExamineArticle
-        {
-            get { return m_examineArticle; }
-            set
-            {
-                if (value == null)
-                    m_examineArticle = string.Empty;
-                else
-                {
-                    if (value == m_examineArticle)
-                        return;
-                    else
-                        m_examineArticle = value;
-                }
-            }
-        }
+		/// <summary>
+		/// Holds the examine article.
+		/// </summary>
+		private string m_examineArticle = string.Empty;
+		/// <summary>
+		/// Gets or sets the examine article.
+		/// </summary>
+		public string ExamineArticle
+		{
+			get { return m_examineArticle; }
+			set
+			{
+				if (value == null)
+					m_examineArticle = string.Empty;
+				else
+				{
+					if (value == m_examineArticle)
+						return;
+					else
+						m_examineArticle = value;
+				}
+			}
+		}
 
-        /// <summary>
-        /// Holds the message article.
-        /// </summary>
-        private string m_messageArticle = string.Empty;
-        /// <summary>
-        /// Gets or sets the message article.
-        /// </summary>
-        public string MessageArticle
-        {
-            get { return m_messageArticle; }
-            set
-            {
-                if (value == null)
-                    m_messageArticle = string.Empty;
-                else
-                {
-                    if (value == m_messageArticle)
-                        return;
-                    else
-                        m_messageArticle = value;
-                }
-            }
-        }
+		/// <summary>
+		/// Holds the message article.
+		/// </summary>
+		private string m_messageArticle = string.Empty;
+		/// <summary>
+		/// Gets or sets the message article.
+		/// </summary>
+		public string MessageArticle
+		{
+			get { return m_messageArticle; }
+			set
+			{
+				if (value == null)
+					m_messageArticle = string.Empty;
+				else
+				{
+					if (value == m_messageArticle)
+						return;
+					else
+						m_messageArticle = value;
+				}
+			}
+		}
 
 		private Faction m_faction = null;
 		/// <summary>
@@ -1926,12 +1926,12 @@ namespace DOL.GS
 				LoadTemplate(npcTemplate);
 			}
 
-            TranslationId = dbMob.TranslationId;
+			TranslationId = dbMob.TranslationId;
 			Name = dbMob.Name;
-            Suffix = dbMob.Suffix;
+			Suffix = dbMob.Suffix;
 			GuildName = dbMob.Guild;
-            ExamineArticle = dbMob.ExamineArticle;
-            MessageArticle = dbMob.MessageArticle;
+			ExamineArticle = dbMob.ExamineArticle;
+			MessageArticle = dbMob.MessageArticle;
 			m_x = dbMob.X;
 			m_y = dbMob.Y;
 			m_z = dbMob.Z;
@@ -2050,8 +2050,8 @@ namespace DOL.GS
 			Gender = (eGender)dbMob.Gender;
 			OwnerID = dbMob.OwnerID;
 
-            if (npcTemplate != null && npcTemplate.ReplaceMobValues > 0)
-                LoadTemplate(npcTemplate);
+			if (npcTemplate != null && npcTemplate.ReplaceMobValues > 0)
+				LoadTemplate(npcTemplate);
 		}
 
 		/// <summary>
@@ -2109,12 +2109,12 @@ namespace DOL.GS
 				}
 			}
 
-            mob.TranslationId = TranslationId;
+			mob.TranslationId = TranslationId;
 			mob.Name = Name;
-            mob.Suffix = Suffix;
+			mob.Suffix = Suffix;
 			mob.Guild = GuildName;
-            mob.ExamineArticle = ExamineArticle;
-            mob.MessageArticle = MessageArticle;
+			mob.ExamineArticle = ExamineArticle;
+			mob.MessageArticle = MessageArticle;
 			mob.X = X;
 			mob.Y = Y;
 			mob.Z = Z;
@@ -2197,12 +2197,12 @@ namespace DOL.GS
 				return;
 
 			IList m_templatedInventory = new ArrayList();
-            this.TranslationId = template.TranslationId;
+			this.TranslationId = template.TranslationId;
 			this.Name = template.Name;
-            this.Suffix = template.Suffix;
+			this.Suffix = template.Suffix;
 			this.GuildName = template.GuildName;
-            this.ExamineArticle = template.ExamineArticle;
-            this.MessageArticle = template.MessageArticle;
+			this.ExamineArticle = template.ExamineArticle;
+			this.MessageArticle = template.MessageArticle;
 			
 			#region Models, Sizes, Levels
 			// Grav: this.Model/Size/Level accessors are triggering SendUpdate()
@@ -2362,11 +2362,11 @@ namespace DOL.GS
 			BuffBonusCategory4[(int)eStat.CHR] += template.Charisma;
 
 			m_ownBrain = new StandardMobBrain
-				{
-					Body = this,
-					AggroLevel = template.AggroLevel,
-					AggroRange = template.AggroRange
-				};
+			{
+				Body = this,
+				AggroLevel = template.AggroLevel,
+				AggroRange = template.AggroRange
+			};
 			this.NPCTemplate = template as NpcTemplate;
 		}
 
@@ -2497,7 +2497,7 @@ namespace DOL.GS
 			if (CanGiveOneQuest(player)) return eQuestIndicator.Available;
 			if (player.HasFinishedQuest(questType)>0) return eQuestIndicator.Finish;
 			return eQuestIndicator.None;
-		}		
+		}
 		
 		protected GameNPC m_teleporterIndicator = null;
 
@@ -2517,10 +2517,10 @@ namespace DOL.GS
 		/// <returns>True if the NPC should show quest indicator, false otherwise</returns>
 		public virtual eQuestIndicator GetQuestIndicator(GamePlayer player)
 		{
-            if (CanGiveOneQuest(player))
-                return eQuestIndicator.Available;
+			if (CanGiveOneQuest(player))
+				return eQuestIndicator.Available;
 
-            return eQuestIndicator.None;
+			return eQuestIndicator.None;
 		}
 
 		/// <summary>
@@ -3291,21 +3291,21 @@ namespace DOL.GS
 					}
 			}
 		}
-        /// <summary>
-        /// Pick a random style for now.
-        /// </summary>
-        /// <returns></returns>
-        protected override Style GetStyleToUse()
-        {
-            if (Styles != null && Styles.Count > 0 && Util.Chance(Properties.GAMENPC_CHANCES_TO_STYLE + Styles.Count))
-            {
-                Style style = (Style)Styles[Util.Random(Styles.Count - 1)];
-                if (StyleProcessor.CanUseStyle(this, style, AttackWeapon))
-                    return style;
-            }
+		/// <summary>
+		/// Pick a random style for now.
+		/// </summary>
+		/// <returns></returns>
+		protected override Style GetStyleToUse()
+		{
+			if (Styles != null && Styles.Count > 0 && Util.Chance(Properties.GAMENPC_CHANCES_TO_STYLE + Styles.Count))
+			{
+				Style style = (Style)Styles[Util.Random(Styles.Count - 1)];
+				if (StyleProcessor.CanUseStyle(this, style, AttackWeapon))
+					return style;
+			}
 
-            return base.GetStyleToUse();
-        }
+			return base.GetStyleToUse();
+		}
 		/// <summary>
 		/// Adds messages to ArrayList which are sent when object is targeted
 		/// </summary>
@@ -3667,8 +3667,8 @@ namespace DOL.GS
 
 				GamePlayer owner = null;
 
-                if ((owner = ((IControlledBrain)Brain).GetPlayerOwner()) != null)
-                        owner.Stealth(false);
+				if ((owner = ((IControlledBrain)Brain).GetPlayerOwner()) != null)
+					owner.Stealth(false);
 			}
 
 			SetLastMeleeAttackTick();
@@ -3864,14 +3864,14 @@ namespace DOL.GS
 			}
 		}
 
-        protected void ControlledNPC_Release()
-        {
-            if (this.ControlledBrain != null)
-            {
-                //log.Info("On tue le pet !");
-                this.Notify(GameLivingEvent.PetReleased, ControlledBrain.Body);
-            }
-        }
+		protected void ControlledNPC_Release()
+		{
+			if (this.ControlledBrain != null)
+			{
+				//log.Info("On tue le pet !");
+				this.Notify(GameLivingEvent.PetReleased, ControlledBrain.Body);
+			}
+		}
 
 		/// <summary>
 		/// Called when this living dies
@@ -3880,8 +3880,8 @@ namespace DOL.GS
 		{
 			FireAmbientSentence(eAmbientTrigger.dieing, killer as GameLiving);
 
-            if (ControlledBrain != null)
-                ControlledNPC_Release();
+			if (ControlledBrain != null)
+				ControlledNPC_Release();
 
 			if(killer!=null)
 			{
@@ -3906,24 +3906,24 @@ namespace DOL.GS
 
 			Delete();
 
-            if ((Faction != null) && (killer is GamePlayer))
-            {
-                // Tyriada(Carmélide) : il faut donner la faction à tous les membres attaquants ainsi que leur groupe
+			if ((Faction != null) && (killer is GamePlayer))
+			{
+				// Tyriada(Carmélide) : il faut donner la faction à tous les membres attaquants ainsi que leur groupe
 
-                foreach (DictionaryEntry de in this.XPGainers)
-                {
-                    GameLiving living = de.Key as GameLiving;
-                    GamePlayer player = living as GamePlayer;
+				foreach (DictionaryEntry de in this.XPGainers)
+				{
+					GameLiving living = de.Key as GameLiving;
+					GamePlayer player = living as GamePlayer;
 
-                    if (living is GameNPC && (living as GameNPC).Brain is IControlledBrain) // Tout les pets renvoient sur leurs owners.
-                        player = ((living as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+					if (living is GameNPC && (living as GameNPC).Brain is IControlledBrain) // Tout les pets renvoient sur leurs owners.
+						player = ((living as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
 
-                    if (player != null && player.ObjectState == GameObject.eObjectState.Active && player.IsAlive && player.IsWithinRadius(this, WorldMgr.MAX_EXPFORKILL_DISTANCE))
-                    {
-                        Faction.KillMember(player);
-                    }
-                }
-            }
+					if (player != null && player.ObjectState == GameObject.eObjectState.Active && player.IsAlive && player.IsWithinRadius(this, WorldMgr.MAX_EXPFORKILL_DISTANCE))
+					{
+						Faction.KillMember(player);
+					}
+				}
+			}
 
 			// remove temp properties
 			TempProperties.removeAllProperties();
@@ -4344,26 +4344,26 @@ namespace DOL.GS
 					if (GameMoney.IsItemMoney(lootTemplate.Name))
 					{
 						long value = lootTemplate.Price;
-                        //GamePlayer killerPlayer = killer as GamePlayer;
+						//GamePlayer killerPlayer = killer as GamePlayer;
 
 						//[StephenxPimentel] - Zone Bonus XP Support
 						if (ServerProperties.Properties.ENABLE_ZONE_BONUSES)
 						{
 							GamePlayer killerPlayer = killer as GamePlayer;
-                            if (killer is GameNPC)
-                            {
-                                if (killer is GameNPC && ((killer as GameNPC).Brain is IControlledBrain))
-                                    killerPlayer = ((killer as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
-                                else return;
-                            }
+							if (killer is GameNPC)
+							{
+								if (killer is GameNPC && ((killer as GameNPC).Brain is IControlledBrain))
+									killerPlayer = ((killer as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+								else return;
+							}
 
 							int zoneBonus = (((int)value * ZoneBonus.GetCoinBonus(killerPlayer) / 100));
 							if (zoneBonus > 0)
 							{
 								long amount = (long)(zoneBonus * ServerProperties.Properties.MONEY_DROP);
 								killerPlayer.AddMoney(amount,
-									ZoneBonus.GetBonusMessage(killerPlayer, (int)(zoneBonus * ServerProperties.Properties.MONEY_DROP), ZoneBonus.eZoneBonusType.COIN),
-									eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+								                      ZoneBonus.GetBonusMessage(killerPlayer, (int)(zoneBonus * ServerProperties.Properties.MONEY_DROP), ZoneBonus.eZoneBonusType.COIN),
+								                      eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 								InventoryLogging.LogInventoryAction(this, killerPlayer, eInventoryActionType.Loot, amount);
 							}
 						}
@@ -4381,18 +4381,18 @@ namespace DOL.GS
 								killerPlayer.Out.SendMessage(LanguageMgr.GetTranslation(killerPlayer.Client, "GameNPC.DropLoot.AdditionalMoney", Money.GetString(value - lootTemplate.Price)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
 						}
 
-                        //Mythical Coin bonus property (Can be used for any equipped item, bonus 235)
-                        if (killer is GamePlayer)
-                        {
-                            GamePlayer killerPlayer = killer as GamePlayer;
-                            if (killerPlayer.GetModified(eProperty.MythicalCoin) > 0)
-                            {
-                                value += (value * killerPlayer.GetModified(eProperty.MythicalCoin)) / 100;
-                                killerPlayer.Out.SendMessage(LanguageMgr.GetTranslation(killerPlayer.Client,
-                                    "GameNPC.DropLoot.ItemAdditionalMoney", Money.GetString(value - lootTemplate.Price)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
-                            }
-                        }
-                        
+						//Mythical Coin bonus property (Can be used for any equipped item, bonus 235)
+						if (killer is GamePlayer)
+						{
+							GamePlayer killerPlayer = killer as GamePlayer;
+							if (killerPlayer.GetModified(eProperty.MythicalCoin) > 0)
+							{
+								value += (value * killerPlayer.GetModified(eProperty.MythicalCoin)) / 100;
+								killerPlayer.Out.SendMessage(LanguageMgr.GetTranslation(killerPlayer.Client,
+								                                                        "GameNPC.DropLoot.ItemAdditionalMoney", Money.GetString(value - lootTemplate.Price)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+							}
+						}
+						
 						loot = new GameMoney(value, this);
 						loot.Name = lootTemplate.Name;
 						loot.Model = (ushort)lootTemplate.Model;
@@ -4944,56 +4944,56 @@ namespace DOL.GS
 		}
 		#endregion
 
-        #region ControlledNPCs
+		#region ControlledNPCs
 
-        public override void SetControlledBrain(IControlledBrain controlledBrain)
-        {
-            if (ControlledBrain == null)
-                InitControlledBrainArray(1);
+		public override void SetControlledBrain(IControlledBrain controlledBrain)
+		{
+			if (ControlledBrain == null)
+				InitControlledBrainArray(1);
 
-            ControlledBrain = controlledBrain;
-        }
-        /// <summary>
-        /// Gets the controlled object of this NPC
-        /// </summary>
-        public override IControlledBrain ControlledBrain
-        {
-            get
-            {
-                if (m_controlledBrain == null) return null;
-                return m_controlledBrain[0];
-            }
-        }
+			ControlledBrain = controlledBrain;
+		}
+		/// <summary>
+		/// Gets the controlled object of this NPC
+		/// </summary>
+		public override IControlledBrain ControlledBrain
+		{
+			get
+			{
+				if (m_controlledBrain == null) return null;
+				return m_controlledBrain[0];
+			}
+		}
 
-        /// <summary>
-        /// Gets the controlled array of this NPC
-        /// </summary>
-        public IControlledBrain[] ControlledNpcList
-        {
-            get { return m_controlledBrain; }
-        }
+		/// <summary>
+		/// Gets the controlled array of this NPC
+		/// </summary>
+		public IControlledBrain[] ControlledNpcList
+		{
+			get { return m_controlledBrain; }
+		}
 
-        /// <summary>
-        /// Adds a pet to the current array of pets
-        /// </summary>
-        /// <param name="controlledNpc">The brain to add to the list</param>
-        /// <returns>Whether the pet was added or not</returns>
-        public virtual bool AddControlledNpc(IControlledBrain controlledNpc)
-        {
-            return true;
-        }
+		/// <summary>
+		/// Adds a pet to the current array of pets
+		/// </summary>
+		/// <param name="controlledNpc">The brain to add to the list</param>
+		/// <returns>Whether the pet was added or not</returns>
+		public virtual bool AddControlledNpc(IControlledBrain controlledNpc)
+		{
+			return true;
+		}
 
-        /// <summary>
-        /// Removes the brain from
-        /// </summary>
-        /// <param name="controlledNpc">The brain to find and remove</param>
-        /// <returns>Whether the pet was removed</returns>
-        public virtual bool RemoveControlledNpc(IControlledBrain controlledNpc)
-        {
-            return true;
-        }
+		/// <summary>
+		/// Removes the brain from
+		/// </summary>
+		/// <param name="controlledNpc">The brain to find and remove</param>
+		/// <returns>Whether the pet was removed</returns>
+		public virtual bool RemoveControlledNpc(IControlledBrain controlledNpc)
+		{
+			return true;
+		}
 
-        #endregion
+		#endregion
 
 		/// <summary>
 		/// Whether this NPC is available to add on a fight.
@@ -5031,25 +5031,25 @@ namespace DOL.GS
 		/// Broadcast loot to the raid.
 		/// </summary>
 		/// <param name="dropMessages">List of drop messages to broadcast.</param>
-        protected virtual void BroadcastLoot(ArrayList droplist)
+		protected virtual void BroadcastLoot(ArrayList droplist)
 		{
-            if (droplist.Count > 0)
-            {
-                String lastloot;
-                foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
-                {
-                    lastloot = "";
-                    foreach (string str in droplist)
-                    {
-                        // Suppress identical messages (multiple item drops).
-                        if (str != lastloot)
-                        {
-                            player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "GameNPC.DropLoot.Drops", GetName(0, true), str)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
-                            lastloot = str;
-                        }
-                    }
-                }
-            }
+			if (droplist.Count > 0)
+			{
+				String lastloot;
+				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+				{
+					lastloot = "";
+					foreach (string str in droplist)
+					{
+						// Suppress identical messages (multiple item drops).
+						if (str != lastloot)
+						{
+							player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "GameNPC.DropLoot.Drops", GetName(0, true), str)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+							lastloot = str;
+						}
+					}
+				}
+			}
 		}
 
 
@@ -5074,7 +5074,7 @@ namespace DOL.GS
 			if ( copyTarget == null )
 				copyTarget = new GameNPC();
 
-            copyTarget.TranslationId = TranslationId;
+			copyTarget.TranslationId = TranslationId;
 			copyTarget.BlockChance = BlockChance;
 			copyTarget.BodyType = BodyType;
 			copyTarget.CanUseLefthandedWeapon = CanUseLefthandedWeapon;
@@ -5089,8 +5089,8 @@ namespace DOL.GS
 			copyTarget.Faction = Faction;
 			copyTarget.Flags = Flags;
 			copyTarget.GuildName = GuildName;
-            copyTarget.ExamineArticle = ExamineArticle;
-            copyTarget.MessageArticle = MessageArticle;
+			copyTarget.ExamineArticle = ExamineArticle;
+			copyTarget.MessageArticle = MessageArticle;
 			copyTarget.Heading = Heading;
 			copyTarget.Intelligence = Intelligence;
 			copyTarget.IsCloakHoodUp = IsCloakHoodUp;
@@ -5103,7 +5103,7 @@ namespace DOL.GS
 			copyTarget.MeleeDamageType = MeleeDamageType;
 			copyTarget.Model = Model;
 			copyTarget.Name = Name;
-            copyTarget.Suffix = Suffix;
+			copyTarget.Suffix = Suffix;
 			copyTarget.NPCTemplate = NPCTemplate;
 			copyTarget.ParryChance = ParryChance;
 			copyTarget.PathID = PathID;
@@ -5233,6 +5233,23 @@ namespace DOL.GS
 			m_template = template;
 
 			LoadTemplate(template);
+		}
+		
+		// camp bonus
+		private double m_campBonus = 1;
+		/// <summary>
+		/// gets/sets camp bonus experience this gameliving grants
+		/// </summary>
+		public virtual double CampBonus
+		{
+			get
+			{
+				return m_campBonus;
+			}
+			set
+			{
+				m_campBonus = value;
+			}
 		}
 	}
 }

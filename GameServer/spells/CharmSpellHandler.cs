@@ -177,7 +177,7 @@ namespace DOL.GS.Spells
 				if (brain != null && (brain.Owner as GamePlayer)!=Caster)
 				{
 					// TODO: proper message
-                    MessageToCaster("Your target is not valid.", eChatType.CT_SpellResisted);
+					MessageToCaster("Your target is not valid.", eChatType.CT_SpellResisted);
 					return;
 				}
 			}
@@ -195,9 +195,9 @@ namespace DOL.GS.Spells
 				if (this.Spell.Pulse > 0) // not permanent
 				{
 					/*
-					 * The Minstrel/Mentalist has an almost certain chance to charm/retain control of 
+					 * The Minstrel/Mentalist has an almost certain chance to charm/retain control of
 					 * a creature his level or lower, although there is a small random chance that it
-					 * could fail. The higher the level of the charmed creature compared to the 
+					 * could fail. The higher the level of the charmed creature compared to the
 					 * Minstrel/Mentalist, the greater the chance the monster has of breaking the charm.
 					 * Please note that your specialization level in the magic skill that contains the
 					 * charm spell will modify your base chance of charming and retaining control.
@@ -272,8 +272,8 @@ namespace DOL.GS.Spells
 				// hmm
 				if (log.IsWarnEnabled)
 					log.Warn(string.Format("charm effect start: Caster={0} effect.Owner={1}",
-						(Caster == null ? "(null)" : Caster.GetType().ToString()),
-						(effect.Owner == null ? "(null)" : effect.Owner.GetType().ToString())));
+					                       (Caster == null ? "(null)" : Caster.GetType().ToString()),
+					                       (effect.Owner == null ? "(null)" : effect.Owner.GetType().ToString())));
 			}
 		}
 
@@ -382,8 +382,8 @@ namespace DOL.GS.Spells
 			{
 				if (log.IsWarnEnabled)
 					log.Warn(string.Format("charm effect expired: Caster={0} effect.Owner={1}",
-						(Caster == null ? "(null)" : Caster.GetType().ToString()),
-						(effect.Owner == null ? "(null)" : effect.Owner.GetType().ToString())));
+					                       (Caster == null ? "(null)" : Caster.GetType().ToString()),
+					                       (effect.Owner == null ? "(null)" : effect.Owner.GetType().ToString())));
 			}
 
 			return 0;
@@ -429,36 +429,36 @@ namespace DOL.GS.Spells
 			{
 				var list = new List<string>();
 
-                list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "CharmSpellHandler.DelveInfo.Function", (Spell.SpellType == "" ? "(not implemented)" : Spell.SpellType)));
+				list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "CharmSpellHandler.DelveInfo.Function", (Spell.SpellType == "" ? "(not implemented)" : Spell.SpellType)));
 				list.Add(" "); //empty line
 				list.Add(Spell.Description);
 				list.Add(" "); //empty line
 				if (Spell.InstrumentRequirement != 0)
-                    list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.InstrumentRequire", GlobalConstants.InstrumentTypeToName(Spell.InstrumentRequirement)));
-                list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Target", Spell.Target));
+					list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.InstrumentRequire", GlobalConstants.InstrumentTypeToName(Spell.InstrumentRequirement)));
+				list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Target", Spell.Target));
 				if (Spell.Range != 0)
-                    list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Range", Spell.Range));
+					list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Range", Spell.Range));
 				if (Spell.Duration >= ushort.MaxValue * 1000)
-                    list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Duration") + " Permanent.");
+					list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Duration") + " Permanent.");
 				else if (Spell.Duration > 60000)
-                    list.Add(string.Format(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Duration") + Spell.Duration / 60000 + ":" + (Spell.Duration % 60000 / 1000).ToString("00") + " min"));
+					list.Add(string.Format(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Duration") + Spell.Duration / 60000 + ":" + (Spell.Duration % 60000 / 1000).ToString("00") + " min"));
 				else if (Spell.Duration != 0)
-                    list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Duration") + (Spell.Duration / 1000).ToString("0' sec';'Permanent.';'Permanent.'"));
+					list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Duration") + (Spell.Duration / 1000).ToString("0' sec';'Permanent.';'Permanent.'"));
 				if (Spell.Frequency != 0)
-                    list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Frequency", (Spell.Frequency * 0.001).ToString("0.0")));
+					list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Frequency", (Spell.Frequency * 0.001).ToString("0.0")));
 				if (Spell.Power != 0)
-                    list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.PowerCost", Spell.Power.ToString("0;0'%'")));
-                list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.CastingTime", (Spell.CastTime * 0.001).ToString("0.0## sec;-0.0## sec;'instant'")));
+					list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.PowerCost", Spell.Power.ToString("0;0'%'")));
+				list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.CastingTime", (Spell.CastTime * 0.001).ToString("0.0## sec;-0.0## sec;'instant'")));
 				if (Spell.RecastDelay > 60000)
-                    list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.RecastTime") + Spell.RecastDelay / 60000 + ":" + (Spell.RecastDelay % 60000 / 1000).ToString("00") + " min");
+					list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.RecastTime") + Spell.RecastDelay / 60000 + ":" + (Spell.RecastDelay % 60000 / 1000).ToString("00") + " min");
 				else if (Spell.RecastDelay > 0)
-                    list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.RecastTime") + (Spell.RecastDelay / 1000).ToString() + " sec");
+					list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.RecastTime") + (Spell.RecastDelay / 1000).ToString() + " sec");
 				if (Spell.Concentration != 0)
-                    list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.ConcentrationCost", Spell.Concentration));
+					list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.ConcentrationCost", Spell.Concentration));
 				if (Spell.Radius != 0)
-                    list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Radius", Spell.Radius));
+					list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Radius", Spell.Radius));
 				if (Spell.DamageType != eDamageType.Natural)
-                    list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Damage", GlobalConstants.DamageTypeToName(Spell.DamageType)));
+					list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Damage", GlobalConstants.DamageTypeToName(Spell.DamageType)));
 
 				return list;
 			}
@@ -482,33 +482,33 @@ namespace DOL.GS.Spells
 
 		http://vnboards.ign.com/message.asp?topic=87170081&start=87173224&search=charm
 
-		More info in the sticky thread, but... 
+		More info in the sticky thread, but...
 
 
-		<copies and pastes her charm spell info> 
+		<copies and pastes her charm spell info>
 
-		What you can charm: 
-		4 - humanoids 
-		10 - humanoids, animals 
-		17 - humanoids, animals, insects 
-		25 - humanoids, animals, insects, magical 
-		33 - humanoids, animals, insects, magical, undead 
-		42 - anything charmable 
+		What you can charm:
+		4 - humanoids
+		10 - humanoids, animals
+		17 - humanoids, animals, insects
+		25 - humanoids, animals, insects, magical
+		33 - humanoids, animals, insects, magical, undead
+		42 - anything charmable
 
-		Always use lowest charm to save power. 
+		Always use lowest charm to save power.
 
-		Safety level formula: 
-		(level * .66) + (spec level * .33) 
-		spec level includes: trainings, items, and realm rank 
+		Safety level formula:
+		(level * .66) + (spec level * .33)
+		spec level includes: trainings, items, and realm rank
 
-		Mastery of Focus: 
-		Mastery of Focus affects SPELL level. Notice that SPELL level is not included in the above formula. SPEC level is important. If you raise the lvl 4 charm up to lvl 20 it makes NO difference to what you can charm. 
+		Mastery of Focus:
+		Mastery of Focus affects SPELL level. Notice that SPELL level is not included in the above formula. SPEC level is important. If you raise the lvl 4 charm up to lvl 20 it makes NO difference to what you can charm.
 
-		Current charm bugs: 
-		- Porting has the chance to completely break your charm if there is a delay in porting. Pet will show up at portal location very very mad. 
-		- Porting also causes your pet to completely disappear. Walk away and it should reappear. Maybe 
+		Current charm bugs:
+		- Porting has the chance to completely break your charm if there is a delay in porting. Pet will show up at portal location very very mad.
+		- Porting also causes your pet to completely disappear. Walk away and it should reappear. Maybe
 
-		NOT A BUG, working as intended 
+		NOT A BUG, working as intended
 		- Artifact chants (Cloudsong, Crown, etc.) will interfere and overwrite your charm.
 
 
@@ -577,16 +577,16 @@ namespace DOL.GS.Spells
 
 		[09:00:12] <Begin Info: Attracting Melodies>
 		[09:00:12] Function: charm
-		[09:00:12]  
+		[09:00:12]
 		[09:00:12] Attempts to bring the target under the caster's control.
-		[09:00:12]  
+		[09:00:12]
 		[09:00:12] Target: Targetted
 		[09:00:12] Range: 2000
 		[09:00:12] Duration: 10 sec
 		[09:00:12] Frequency:      5.0 sec
 		[09:00:12] Casting time: instant
 		[09:00:12] Recast time: 5 sec
-		[09:00:12]  
+		[09:00:12]
 		[09:00:12] <End Info>
 
 		[09:05:56] You command the the worker ant to kill your target!
@@ -600,6 +600,6 @@ namespace DOL.GS.Spells
 		[09:06:55] The worker ant attacks the worker ant and hits!
 		[09:06:55] The worker ant resists the charm!
 
-		*/
+		 */
 	}
 }
