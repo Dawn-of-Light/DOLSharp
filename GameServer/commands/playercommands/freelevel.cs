@@ -53,7 +53,22 @@ namespace DOL.GS.Commands
 				client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-            TimeSpan t = (client.Player.DBCharacter.LastFreeLeveled.AddDays(DOL.GS.ServerProperties.Properties.FREELEVEL_DAYS) - DateTime.Now);
+
+            TimeSpan t = new TimeSpan();
+
+            switch (client.Player.Realm)
+            {
+                case eRealm.Albion:
+                    t = client.Player.DBCharacter.LastFreeLeveled.AddDays(DOL.GS.ServerProperties.Properties.FREELEVEL_DAYS_ALBION) - DateTime.Now;
+                    break;
+                case eRealm.Midgard:
+                    t = client.Player.DBCharacter.LastFreeLeveled.AddDays(DOL.GS.ServerProperties.Properties.FREELEVEL_DAYS_MIDGARD) - DateTime.Now;
+                    break;
+                case eRealm.Hibernia:
+                    t = client.Player.DBCharacter.LastFreeLeveled.AddDays(DOL.GS.ServerProperties.Properties.FREELEVEL_DAYS_HIBERNIA) - DateTime.Now;
+                    Console.WriteLine("derp");
+                    break;
+            }
 
 			switch (state)
 			{

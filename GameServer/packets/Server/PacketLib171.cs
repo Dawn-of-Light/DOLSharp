@@ -385,7 +385,18 @@ namespace DOL.GS.PacketHandler
 
 			ushort time = 0;
 			//time is in minutes
-			time = (ushort)((ServerProperties.Properties.FREELEVEL_DAYS * 24 * 60) - t.TotalMinutes);
+            switch (player.Realm)
+            {
+                case eRealm.Albion:
+                    time = (ushort)((ServerProperties.Properties.FREELEVEL_DAYS_ALBION * 24 * 60) - t.TotalMinutes);
+                    break;
+                case eRealm.Midgard:
+                    time = (ushort)((ServerProperties.Properties.FREELEVEL_DAYS_MIDGARD * 24 * 60) - t.TotalMinutes);
+                    break;
+                case eRealm.Hibernia:
+                    time = (ushort)((ServerProperties.Properties.FREELEVEL_DAYS_HIBERNIA * 24 * 60) - t.TotalMinutes);
+                    break;
+            }
 
 			//flag 1 = above level, 2 = elligable, 3= time until, 4 = level and time until, 5 = level until
 			pak.WriteByte(flag); //flag

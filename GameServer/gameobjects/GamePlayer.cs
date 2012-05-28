@@ -594,20 +594,20 @@ namespace DOL.GS
 			noCombatTimer.Start(11000);
 		}
 
-        /// <summary>
-        /// gets the DamageRvR Memory of this player
-        /// </summary>
-        public override long DamageRvRMemory
-        {
-            get
-            {
-                return m_damageRvRMemory;
-            }
-            set
-            {
-                m_damageRvRMemory = value;
-            }
-        }
+		/// <summary>
+		/// gets the DamageRvR Memory of this player
+		/// </summary>
+		public override long DamageRvRMemory
+		{
+			get
+			{
+				return m_damageRvRMemory;
+			}
+			set
+			{
+				m_damageRvRMemory = value;
+			}
+		}
 
 		public int InCombatTimerExpired(RegionTimer timer)
 		{
@@ -621,11 +621,11 @@ namespace DOL.GS
 			if (log.IsInfoEnabled)
 				log.Info("Player " + Name + "(" + Client.Account.Name + ") went linkdead!");
 
-            // LD Necros need to be "Unshaded"
-            if (Client.Player.CharacterClass.Player.IsShade)
-            {
-                Client.Player.CharacterClass.Player.Shade(false);
-            }
+			// LD Necros need to be "Unshaded"
+			if (Client.Player.CharacterClass.Player.IsShade)
+			{
+				Client.Player.CharacterClass.Player.Shade(false);
+			}
 
 			// Dead link-dead players release on live servers
 			if (!IsAlive)
@@ -1953,13 +1953,35 @@ namespace DOL.GS
 		{
 			get
 			{
-				if (ServerProperties.Properties.FREELEVEL_DAYS == -1)
-					return 1;
+				int freelevel_days = 7;
+				switch (Realm)
+				{
+					case eRealm.Albion:
+						if (ServerProperties.Properties.FREELEVEL_DAYS_ALBION == -1)
+							return 1;
+						else
+							freelevel_days = ServerProperties.Properties.FREELEVEL_DAYS_ALBION;
+						break;
+					case eRealm.Midgard:
+						if (ServerProperties.Properties.FREELEVEL_DAYS_MIDGARD == -1)
+							return 1;
+						else
+							freelevel_days = ServerProperties.Properties.FREELEVEL_DAYS_MIDGARD;
+						break;
+					case eRealm.Hibernia:
+						if (ServerProperties.Properties.FREELEVEL_DAYS_HIBERNIA == -1)
+							return 1;
+						else
+							freelevel_days = ServerProperties.Properties.FREELEVEL_DAYS_HIBERNIA;
+						break;
+				}
+
 				//flag 1 = above level, 2 = elligable, 3= time until, 4 = level and time until, 5 = level until
 				if (Level >= 48)
 					return 1;
+				
 				TimeSpan t = new TimeSpan((long)(DateTime.Now.Ticks - DBCharacter.LastFreeLeveled.Ticks));
-				if (t.Days >= ServerProperties.Properties.FREELEVEL_DAYS)
+				if (t.Days >= freelevel_days)
 				{
 					if (Level >= DBCharacter.LastFreeLevel + 2)
 						return 2;
@@ -2186,24 +2208,24 @@ namespace DOL.GS
 				ChangeHealth(this, eHealthChangeType.Regenerate, GetModified(eProperty.HealthRegenerationRate));
 			}
 
-            #region PVP DAMAGE
+			#region PVP DAMAGE
 
-            if (DamageRvRMemory > 0)
-                DamageRvRMemory -= (long)Math.Max(GetModified(eProperty.HealthRegenerationRate), 0);
+			if (DamageRvRMemory > 0)
+				DamageRvRMemory -= (long)Math.Max(GetModified(eProperty.HealthRegenerationRate), 0);
 
-            #endregion PVP DAMAGE
+			#endregion PVP DAMAGE
 
 			//If we are fully healed, we stop the timer
 			if (Health >= MaxHealth)
 			{
 
-                #region PVP DAMAGE
+				#region PVP DAMAGE
 
-                // Fully Regenerated, Set DamageRvRMemory to 0
-                if (DamageRvRMemory > 0)
-                    DamageRvRMemory = 0;
+				// Fully Regenerated, Set DamageRvRMemory to 0
+				if (DamageRvRMemory > 0)
+					DamageRvRMemory = 0;
 
-                #endregion PVP DAMAGE
+				#endregion PVP DAMAGE
 
 				//We clean all damagedealers if we are fully healed,
 				//no special XP calculations need to be done
@@ -2507,72 +2529,72 @@ namespace DOL.GS
 			get { return GetModified(eProperty.MaxConcentration); }
 		}
 
-        #region Calculate Fall Damage
+		#region Calculate Fall Damage
 
-        /// <summary>
-        /// Calculates fall damage taking fall damage reduction bonuses into account
-        /// </summary>
-        /// <returns></returns>
-        public virtual void CalcFallDamage(int fallDamagePercent)
-        {
-            if (fallDamagePercent > 0)
-            {
-                int safeFallLevel = GetAbilityLevel(Abilities.SafeFall);
-                int mythSafeFall = GetModified(eProperty.MythicalSafeFall);
+		/// <summary>
+		/// Calculates fall damage taking fall damage reduction bonuses into account
+		/// </summary>
+		/// <returns></returns>
+		public virtual void CalcFallDamage(int fallDamagePercent)
+		{
+			if (fallDamagePercent > 0)
+			{
+				int safeFallLevel = GetAbilityLevel(Abilities.SafeFall);
+				int mythSafeFall = GetModified(eProperty.MythicalSafeFall);
 
-                if (mythSafeFall > 0 & mythSafeFall < fallDamagePercent)
-                {
-                    Client.Out.SendMessage(LanguageMgr.GetTranslation(Client, "PlayerPositionUpdateHandler.MythSafeFall"),
-                        eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-                    fallDamagePercent = mythSafeFall;
-                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "PlayerPositionUpdateHandler.FallPercent", fallDamagePercent),
-                        eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-                }
-                if (safeFallLevel > 0 & mythSafeFall == 0)
-                {
-                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "PlayerPositionUpdateHandler.SafeFall"),
-                        eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-                }
-                if (mythSafeFall == 0)
-                {
-                    Out.SendMessage(LanguageMgr.GetTranslation(Client, "PlayerPositionUpdateHandler.FallPercent", fallDamagePercent),
-                        eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-                }
+				if (mythSafeFall > 0 & mythSafeFall < fallDamagePercent)
+				{
+					Client.Out.SendMessage(LanguageMgr.GetTranslation(Client, "PlayerPositionUpdateHandler.MythSafeFall"),
+					                       eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+					fallDamagePercent = mythSafeFall;
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "PlayerPositionUpdateHandler.FallPercent", fallDamagePercent),
+					                eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+				}
+				if (safeFallLevel > 0 & mythSafeFall == 0)
+				{
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "PlayerPositionUpdateHandler.SafeFall"),
+					                eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+				}
+				if (mythSafeFall == 0)
+				{
+					Out.SendMessage(LanguageMgr.GetTranslation(Client, "PlayerPositionUpdateHandler.FallPercent", fallDamagePercent),
+					                eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+				}
 
-                Endurance -= MaxEndurance * fallDamagePercent / 100;
-                double damage = (0.01 * fallDamagePercent * (MaxHealth - 1));
+				Endurance -= MaxEndurance * fallDamagePercent / 100;
+				double damage = (0.01 * fallDamagePercent * (MaxHealth - 1));
 
-                // [Freya] Nidel: CloudSong falling damage reduction
-                GameSpellEffect cloudSongFall = SpellHandler.FindEffectOnTarget(this, "CloudsongFall");
-                if (cloudSongFall != null)
-                {
-                    damage -= (damage * cloudSongFall.Spell.Value) * 0.01;
-                }
+				// [Freya] Nidel: CloudSong falling damage reduction
+				GameSpellEffect cloudSongFall = SpellHandler.FindEffectOnTarget(this, "CloudsongFall");
+				if (cloudSongFall != null)
+				{
+					damage -= (damage * cloudSongFall.Spell.Value) * 0.01;
+				}
 
-                //Mattress: SafeFall property for Mythirians, the value of the MythicalSafeFall property represents the percent damage taken in a fall.
-                if (mythSafeFall != 0 && damage > mythSafeFall)
-                {
-                    damage = ((MaxHealth - 1) * (mythSafeFall * 0.01));
-                }
+				//Mattress: SafeFall property for Mythirians, the value of the MythicalSafeFall property represents the percent damage taken in a fall.
+				if (mythSafeFall != 0 && damage > mythSafeFall)
+				{
+					damage = ((MaxHealth - 1) * (mythSafeFall * 0.01));
+				}
 
-                TakeDamage(null, eDamageType.Falling, (int)damage, 0);
+				TakeDamage(null, eDamageType.Falling, (int)damage, 0);
 
-                //Update the player's health to all other players around
-                foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                    Out.SendCombatAnimation(null, Client.Player, 0, 0, 0, 0, 0, HealthPercent);
+				//Update the player's health to all other players around
+				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					Out.SendCombatAnimation(null, Client.Player, 0, 0, 0, 0, 0, HealthPercent);
 
-                return;
-            }
-            return;
-        }
+				return;
+			}
+			return;
+		}
 
-        #endregion
+		#endregion
 
-        #endregion
+		#endregion
 
-        #region Class/Race
+		#region Class/Race
 
-        /// <summary>
+		/// <summary>
 		/// Returns localized race names
 		/// </summary>
 		/// <param name="client"></param>
@@ -4033,9 +4055,9 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual string RealmRankTitle(string language)
 		{
-            string translationId = "GamePlayer.RealmTitle.";
+			string translationId = "GamePlayer.RealmTitle.";
 
-            if (Realm != eRealm.None)
+			if (Realm != eRealm.None)
 			{
 				int m_RR = DBCharacter.RealmLevel / 10;
 				switch (m_RR)
@@ -4054,34 +4076,34 @@ namespace DOL.GS
 
 							//Because albion and midgard using the same title, we only check if the realm is unequal to hibernia
 							if (Realm != eRealm.Hibernia)
-                                translationId += "Invader";
-                            else //Otherwise we return the hibernian title
-                                translationId += "Defender";
+								translationId += "Invader";
+							else //Otherwise we return the hibernian title
+								translationId += "Defender";
 						}
 						else
 						{
 							if (Realm == eRealm.Albion)
 							{
 								if (Gender != 0)
-                                    translationId += "Female.Guardian";
-                                else
-                                    translationId += "Male.Guardian";
+									translationId += "Female.Guardian";
+								else
+									translationId += "Male.Guardian";
 							}
 
 							if (Realm == eRealm.Midgard)
 							{
 								if (Gender != 0)
-                                    translationId += "Female.Skiltvakten";
-                                else
-                                    translationId += "Male.Skiltvakten";
+									translationId += "Female.Skiltvakten";
+								else
+									translationId += "Male.Skiltvakten";
 							}
 
 							if (Realm == eRealm.Hibernia)
 							{
 								if (Gender != 0)
-                                    translationId += "Female.Savant";
-                                else
-                                    translationId += "Male.Savant";
+									translationId += "Female.Savant";
+								else
+									translationId += "Male.Savant";
 							}
 						}
 						break;
@@ -4089,320 +4111,320 @@ namespace DOL.GS
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-                                translationId += "Female.Warder";
-                            else
-                                translationId += "Male.Warder";
+								translationId += "Female.Warder";
+							else
+								translationId += "Male.Warder";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-                                translationId += "Female.IsenVakten";
-                            else
-                                translationId += "Male.IsenVakten";
+								translationId += "Female.IsenVakten";
+							else
+								translationId += "Male.IsenVakten";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-                                translationId += "Female.Cosantoir";
-                            else
-                                translationId += "Male.Cosantoir";
+								translationId += "Female.Cosantoir";
+							else
+								translationId += "Male.Cosantoir";
 						}
 						break;
 					case 2:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-                                translationId += "Female.Myrmidon";
-                            else
-                                translationId += "Male.Myrmidon";
+								translationId += "Female.Myrmidon";
+							else
+								translationId += "Male.Myrmidon";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-                                translationId += "Female.FlammenVakten";
-                            else
-                                translationId += "Male.FlammenVakten";
+								translationId += "Female.FlammenVakten";
+							else
+								translationId += "Male.FlammenVakten";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-                                translationId += "Female.Brehon";
-                            else
-                                translationId += "Male.Brehon";
+								translationId += "Female.Brehon";
+							else
+								translationId += "Male.Brehon";
 						}
 						break;
 					case 3:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-                                translationId += "Female.GryphonKnight";
-                            else
-                                translationId += "Male.GryphonKnight";
+								translationId += "Female.GryphonKnight";
+							else
+								translationId += "Male.GryphonKnight";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-                                translationId += "Female.EldingVakten";
-                            else
-                                translationId += "Male.EldingVakten";
+								translationId += "Female.EldingVakten";
+							else
+								translationId += "Male.EldingVakten";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-                                translationId += "Female.GroveProtector";
-                            else
-                                translationId += "Male.GroveProtector";
+								translationId += "Female.GroveProtector";
+							else
+								translationId += "Male.GroveProtector";
 						}
 						break;
 					case 4:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-                                translationId += "Female.EagleKnight";
-                            else
-                                translationId += "Male.EagleKnight";
+								translationId += "Female.EagleKnight";
+							else
+								translationId += "Male.EagleKnight";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-                                translationId += "Female.StormurVakten";
-                            else
-                                translationId += "Male.StormurVakten";
+								translationId += "Female.StormurVakten";
+							else
+								translationId += "Male.StormurVakten";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-                                translationId += "Female.RavenArdent";
-                            else
-                                translationId += "Male.RavenArdent";
+								translationId += "Female.RavenArdent";
+							else
+								translationId += "Male.RavenArdent";
 						}
 						break;
 					case 5:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-                                translationId += "Female.PhoenixKnight";
-                            else
-                                translationId += "Male.PhoenixKnight";
+								translationId += "Female.PhoenixKnight";
+							else
+								translationId += "Male.PhoenixKnight";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-                                translationId += "Female.IsenFru";
-                            else
-                                translationId += "Male.IsenHerra";
+								translationId += "Female.IsenFru";
+							else
+								translationId += "Male.IsenHerra";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-                                translationId += "Female.SilverHand";
-                            else
-                                translationId += "Male.SilverHand";
+								translationId += "Female.SilverHand";
+							else
+								translationId += "Male.SilverHand";
 						}
 						break;
 					case 6:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-                                translationId += "Female.AlerionKnight";
-                            else
-                                translationId += "Male.AlerionKnight";
+								translationId += "Female.AlerionKnight";
+							else
+								translationId += "Male.AlerionKnight";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-                                translationId += "Female.FlammenFru";
-                            else
-                                translationId += "Male.FlammenHerra";
+								translationId += "Female.FlammenFru";
+							else
+								translationId += "Male.FlammenHerra";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-                                translationId += "Female.Thunderer";
-                            else
-                                translationId += "Male.Thunderer";
+								translationId += "Female.Thunderer";
+							else
+								translationId += "Male.Thunderer";
 						}
 						break;
 					case 7:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-                                translationId += "Female.UnicornKnight";
-                            else
-                                translationId += "Male.UnicornKnight";
+								translationId += "Female.UnicornKnight";
+							else
+								translationId += "Male.UnicornKnight";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-                                translationId += "Female.EldingFru";
-                            else
-                                translationId += "Male.EldingHerra";
+								translationId += "Female.EldingFru";
+							else
+								translationId += "Male.EldingHerra";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-                                translationId += "Female.GildedSpear";
-                            else
-                                translationId += "Male.GildedSpear";
+								translationId += "Female.GildedSpear";
+							else
+								translationId += "Male.GildedSpear";
 						}
 						break;
 					case 8:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-                                translationId += "Female.LionKnight";
-                            else
-                                translationId += "Male.LionKnight";
+								translationId += "Female.LionKnight";
+							else
+								translationId += "Male.LionKnight";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-                                translationId += "Female.StormurFru";
-                            else
-                                translationId += "Male.StormurHerra";
+								translationId += "Female.StormurFru";
+							else
+								translationId += "Male.StormurHerra";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-                                translationId += "Female.Bantiarna";
-                            else
-                                translationId += "Male.Tiarna";
+								translationId += "Female.Bantiarna";
+							else
+								translationId += "Male.Tiarna";
 						}
 						break;
 					case 9:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-                                translationId += "Female.DragonKnight";
-                            else
-                                translationId += "Male.DragonKnight";
+								translationId += "Female.DragonKnight";
+							else
+								translationId += "Male.DragonKnight";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-                                translationId += "Female.Einherjar";
-                            else
-                                translationId += "Male.Einherjar";
+								translationId += "Female.Einherjar";
+							else
+								translationId += "Male.Einherjar";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-                                translationId += "Female.EmeraldRidere";
-                            else
-                                translationId += "Male.EmeraldRidere";
+								translationId += "Female.EmeraldRidere";
+							else
+								translationId += "Male.EmeraldRidere";
 						}
 						break;
 					case 10:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-                                translationId += "Female.Lady";
-                            else
-                                translationId += "Male.Lord";
+								translationId += "Female.Lady";
+							else
+								translationId += "Male.Lord";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-                                translationId += "Female.Fru";
-                            else
-                                translationId += "Male.Herra";
+								translationId += "Female.Fru";
+							else
+								translationId += "Male.Herra";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-                                translationId += "Female.Banbharun";
-                            else
-                                translationId += "Male.Barun";
+								translationId += "Female.Banbharun";
+							else
+								translationId += "Male.Barun";
 						}
 						break;
 					case 11:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-                                translationId += "Female.Baronetess";
-                            else
-                                translationId += "Male.Baronet";
+								translationId += "Female.Baronetess";
+							else
+								translationId += "Male.Baronet";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-                                translationId += "Female.Baronsfru";
-                            else
-                                translationId += "Male.Hersir";
+								translationId += "Female.Baronsfru";
+							else
+								translationId += "Male.Hersir";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-                                translationId += "Female.ArdBantiarna";
-                            else
-                                translationId += "Male.ArdTiarna";
+								translationId += "Female.ArdBantiarna";
+							else
+								translationId += "Male.ArdTiarna";
 						}
 						break;
 					case 12:
 						if (Realm == eRealm.Albion)
 						{
 							if (Gender != 0)
-                                translationId += "Female.Baroness";
-                            else
-                                translationId += "Male.Baron";
+								translationId += "Female.Baroness";
+							else
+								translationId += "Male.Baron";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
 							if (Gender != 0)
-                                translationId += "Female.Vicomtessa";
-                            else
-                                translationId += "Male.Vicomte";
+								translationId += "Female.Vicomtessa";
+							else
+								translationId += "Male.Vicomte";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
 							if (Gender != 0)
-                                translationId += "Female.CiannCath";
-                            else
-                                translationId += "Male.CiannCath";
+								translationId += "Female.CiannCath";
+							else
+								translationId += "Male.CiannCath";
 						}
 						break;
 				}
 			}
 
-            if (translationId == "GamePlayer.RealmTitle.")
-                translationId += "UnknownRealm"; //Returns 'Unknown Realm'
+			if (translationId == "GamePlayer.RealmTitle.")
+				translationId += "UnknownRealm"; //Returns 'Unknown Realm'
 
-            string translation;
-            if (!LanguageMgr.TryGetTranslation(out translation, language, translationId))
-                translation = RealmTitle;
+			string translation;
+			if (!LanguageMgr.TryGetTranslation(out translation, language, translationId))
+				translation = RealmTitle;
 
-            return translation;
+			return translation;
 		}
 
-        /// <summary>
-        /// Holds all realm rank names
-        /// sirru mod 20.11.06
-        /// </summary>
-        public static string[, ,] REALM_RANK_NAMES = new string[,,]
+		/// <summary>
+		/// Holds all realm rank names
+		/// sirru mod 20.11.06
+		/// </summary>
+		public static string[, ,] REALM_RANK_NAMES = new string[,,]
 		{
 			// Albion
 			{
@@ -4524,8 +4546,8 @@ namespace DOL.GS
 		{
 			get
 			{
-                if (Realm == eRealm.None)
-                    return "Unknown Realm";
+				if (Realm == eRealm.None)
+					return "Unknown Realm";
 
 				try
 				{
@@ -5534,7 +5556,7 @@ namespace DOL.GS
 			string currenttitle = CharacterClass.GetTitle(this, Level);
 
 			// check for difference
-            if (CharacterClass.GetTitle(this, previouslevel) != currenttitle)
+			if (CharacterClass.GetTitle(this, previouslevel) != currenttitle)
 			{
 				// Inform player of new title.
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.AttainedRank", currenttitle), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -6996,15 +7018,15 @@ namespace DOL.GS
 		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
 
-            #region PVP DAMAGE
+			#region PVP DAMAGE
 
-            if (source is GamePlayer || (source is GameNPC && (source as GameNPC).Brain is IControlledBrain && ((source as GameNPC).Brain as IControlledBrain).GetPlayerOwner() != null))
-            {
-                if (Realm != source.Realm && source.Realm != 0)
-                    DamageRvRMemory += (long)(damageAmount + criticalAmount);
-            }
+			if (source is GamePlayer || (source is GameNPC && (source as GameNPC).Brain is IControlledBrain && ((source as GameNPC).Brain as IControlledBrain).GetPlayerOwner() != null))
+			{
+				if (Realm != source.Realm && source.Realm != 0)
+					DamageRvRMemory += (long)(damageAmount + criticalAmount);
+			}
 
-            #endregion PVP DAMAGE
+			#endregion PVP DAMAGE
 
 			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
 			if(this.HasAbility(Abilities.DefensiveCombatPowerRegeneration))
@@ -7018,7 +7040,7 @@ namespace DOL.GS
 		/// on the character but not used in any damage equations.
 		/// </summary>
 		public override int EffectiveOverallAF
-		{ 
+		{
 			get
 			{
 				int eaf = 0;
@@ -9164,9 +9186,9 @@ namespace DOL.GS
 
 					// Artifacts don't require charges.
 
-                    if ((type < 2 && useItem.SpellID > 0 && useItem.Charges < 1 && useItem.MaxCharges > -1 && !(useItem is InventoryArtifact)) ||
-                        (type == 2 && useItem.SpellID1 > 0 && useItem.Charges1 < 1 && useItem.MaxCharges1 > -1 && !(useItem is InventoryArtifact)) ||
-                        (useItem.PoisonSpellID > 0 && useItem.PoisonCharges < 1))
+					if ((type < 2 && useItem.SpellID > 0 && useItem.Charges < 1 && useItem.MaxCharges > -1 && !(useItem is InventoryArtifact)) ||
+					    (type == 2 && useItem.SpellID1 > 0 && useItem.Charges1 < 1 && useItem.MaxCharges1 > -1 && !(useItem is InventoryArtifact)) ||
+					    (useItem.PoisonSpellID > 0 && useItem.PoisonCharges < 1))
 					{
 						Out.SendMessage("The " + useItem.Name + " is out of charges.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
@@ -11445,11 +11467,11 @@ namespace DOL.GS
 				if (iBaneLordEffect != null)
 					enc *= 1.00 - (iBaneLordEffect.Spell.Value * 0.01);
 
-                // Apply Mythirian Bonus
-                if (GetModified(eProperty.MythicalDiscumbering) > 0)
-                {
-                    enc += GetModified(eProperty.MythicalDiscumbering);
-                }
+				// Apply Mythirian Bonus
+				if (GetModified(eProperty.MythicalDiscumbering) > 0)
+				{
+					enc += GetModified(eProperty.MythicalDiscumbering);
+				}
 
 				return (int)enc;
 			}
@@ -11733,9 +11755,9 @@ namespace DOL.GS
 			}
 
 			if (prevSlot == Slot.MYTHICAL && item.Item_Type == (int)eInventorySlot.Mythical && item is GameMythirian)
-            {
-                (item as GameMythirian).OnUnEquipped(this);
-            }
+			{
+				(item as GameMythirian).OnUnEquipped(this);
+			}
 
 			if (item.Item_Type == (int)eInventorySlot.Horse)
 			{
@@ -11861,62 +11883,62 @@ namespace DOL.GS
 		public virtual void RefreshItemBonuses()
 		{
 			m_itemBonus = new PropertyIndexer();
-            string slotToLoad = "";
-            switch (VisibleActiveWeaponSlots)
-            {
-                case 16: slotToLoad = "rightandleftHandSlot"; break;
-                case 18: slotToLoad = "leftandtwoHandSlot"; break;
-                case 31: slotToLoad = "leftHandSlot"; break;
-                case 34: slotToLoad = "twoHandSlot"; break;
-                case 51: slotToLoad = "distanceSlot"; break;
-                case 240: slotToLoad = "righttHandSlot"; break;
-                case 242: slotToLoad = "twoHandSlot"; break;
-                default: break;
-            }
+			string slotToLoad = "";
+			switch (VisibleActiveWeaponSlots)
+			{
+					case 16: slotToLoad = "rightandleftHandSlot"; break;
+					case 18: slotToLoad = "leftandtwoHandSlot"; break;
+					case 31: slotToLoad = "leftHandSlot"; break;
+					case 34: slotToLoad = "twoHandSlot"; break;
+					case 51: slotToLoad = "distanceSlot"; break;
+					case 240: slotToLoad = "righttHandSlot"; break;
+					case 242: slotToLoad = "twoHandSlot"; break;
+					default: break;
+			}
 
-            //log.Debug("VisibleActiveWeaponSlots= " + VisibleActiveWeaponSlots);
-            foreach (InventoryItem item in Inventory.EquippedItems)
-            {
-                if (item == null)
-                    continue;
-                // skip weapons. only active weapons should fire equip event, done in player.SwitchWeapon
-                bool add = true;
-                if (slotToLoad != "")
-                {
-                    switch (item.SlotPosition)
-                    {
+			//log.Debug("VisibleActiveWeaponSlots= " + VisibleActiveWeaponSlots);
+			foreach (InventoryItem item in Inventory.EquippedItems)
+			{
+				if (item == null)
+					continue;
+				// skip weapons. only active weapons should fire equip event, done in player.SwitchWeapon
+				bool add = true;
+				if (slotToLoad != "")
+				{
+					switch (item.SlotPosition)
+					{
 
-                        case Slot.TWOHAND:
-                            if (slotToLoad.Contains("twoHandSlot") == false)
-                            {
-                                add = false;
-                            }
-                            break;
+						case Slot.TWOHAND:
+							if (slotToLoad.Contains("twoHandSlot") == false)
+							{
+								add = false;
+							}
+							break;
 
-                        case Slot.RIGHTHAND:
-                            if (slotToLoad.Contains("right") == false)
-                            {
-                                add = false;
-                            }
-                            break;
-                        case Slot.SHIELD:
-                        case Slot.LEFTHAND:
-                            if (slotToLoad.Contains("left") == false)
-                            {
-                                add = false;
-                            }
-                            break;
-                        case Slot.RANGED:
-                            if (slotToLoad != "distanceSlot")
-                            {
-                                add = false;
-                            }
-                            break;
-                        default: break;
-                    }
-                }
+						case Slot.RIGHTHAND:
+							if (slotToLoad.Contains("right") == false)
+							{
+								add = false;
+							}
+							break;
+						case Slot.SHIELD:
+						case Slot.LEFTHAND:
+							if (slotToLoad.Contains("left") == false)
+							{
+								add = false;
+							}
+							break;
+						case Slot.RANGED:
+							if (slotToLoad != "distanceSlot")
+							{
+								add = false;
+							}
+							break;
+							default: break;
+					}
+				}
 
-                if (!add) continue;
+				if (!add) continue;
 				if (item is IGameInventoryItem)
 				{
 					(item as IGameInventoryItem).CheckValid(this);
@@ -13153,10 +13175,10 @@ namespace DOL.GS
 				m_isWireframe = value;
 				if (needUpdate && ObjectState == eObjectState.Active)
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-					{
-						if (player == null) continue;
-						player.Out.SendPlayerModelTypeChange(this, (byte)(value ? 1 : 0));
-					}
+				{
+					if (player == null) continue;
+					player.Out.SendPlayerModelTypeChange(this, (byte)(value ? 1 : 0));
+				}
 			}
 		}
 
@@ -14515,14 +14537,14 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets flag indication whether player is in shade mode
 		/// </summary>
-        public bool IsShade
-        {
-            get
-            {
-                bool shadeModel = Model == ShadeModel;
-                return m_ShadeEffect != null ? true : shadeModel;
-            }
-        }
+		public bool IsShade
+		{
+			get
+			{
+				bool shadeModel = Model == ShadeModel;
+				return m_ShadeEffect != null ? true : shadeModel;
+			}
+		}
 
 		/// <summary>
 		/// Create a shade effect for this player.
@@ -14571,7 +14593,7 @@ namespace DOL.GS
 						// Midgard Models.
 						case 6:  return (ushort)(DBCharacter.Gender + 1363); //Troll
 						case 7:  return (ushort)(DBCharacter.Gender + 1369); //Dwarf
-                        case 5: return (ushort)(DBCharacter.Gender + 1365); //Norseman
+						case 5: return (ushort)(DBCharacter.Gender + 1365); //Norseman
 						case 8:  return (ushort)(DBCharacter.Gender + 1367); //Kobold
 						case 14: return (ushort)(DBCharacter.Gender + 1371); //Valkyn
 						case 17: return (ushort)(DBCharacter.Gender + 1373); //Frostalf
@@ -16381,7 +16403,7 @@ namespace DOL.GS
 
 
 
-        public virtual double GetEvadeChance()
+		public virtual double GetEvadeChance()
 		{
 			double evadeChance = 0;
 
@@ -16408,7 +16430,7 @@ namespace DOL.GS
 			}
 			return Math.Round(evadeChance*10000)/100;
 		}
-        public virtual double GetBlockChance()
+		public virtual double GetBlockChance()
 		{
 			double blockChance = 0;
 			InventoryItem lefthand = null;
@@ -16434,7 +16456,7 @@ namespace DOL.GS
 
 			return Math.Round(blockChance*10000)/100;
 		}
-        public virtual double GetParryChance()
+		public virtual double GetParryChance()
 		{
 			double parryChance = 0;
 			
