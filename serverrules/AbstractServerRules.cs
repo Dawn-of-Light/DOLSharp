@@ -264,7 +264,7 @@ namespace DOL.GS.ServerRules
 				if (((attacker as GameNPC).Brain is IControlledBrain) &&
 				    defender is GamePlayer &&
 				    playerAttacker.TargetObject != defender)
-						return false;
+					return false;
 			
 			// GMs can't be attacked
 			if (playerDefender != null && playerDefender.Client.Account.PrivLevel > 1)
@@ -1002,15 +1002,25 @@ namespace DOL.GS.ServerRules
 						xpReward = expCap;
 
 					#region Camp Bonus
-					// camp bonus
+					// average max camp bonus is somewhere between 50 and 60%
 					double fullCampBonus = ServerProperties.Properties.MAX_CAMP_BONUS;
-					const double fullCampBonusTicks = 600000; //1 hour (in ms) = full 100%
-					long livingLifeSpan = killedNPC.CurrentRegion.Time - killedNPC.SpawnTick;
-					double campBonusPerc = fullCampBonus * (livingLifeSpan / fullCampBonusTicks);
+					double campBonusPerc = 0;
+
+					if (killedNPC.CurrentRegion.Time - killedNPC.SpawnTick > 1800000) // spawn of this NPC was more than 30 minutes ago -> full camp bonus
+					{
+						campBonusPerc = fullCampBonus;
+						killedNPC.CampBonus = 0.95;
+					}
+					else
+					{
+						campBonusPerc = fullCampBonus * killedNPC.CampBonus;
+						if (killedNPC.CampBonus >= 0.05) killedNPC.CampBonus -= 0.05; // decrease camp bonus by 5% per kill
+					}
+
 					//1.49 http://news-daoc.goa.com/view_patchnote_archive.php?id_article=2478
 					//"Camp bonuses" have been substantially upped in dungeons. Now camp bonuses in dungeons are, on average, 20% higher than outside camp bonuses.
 					if (killer.CurrentZone.IsDungeon)
-						campBonusPerc += 0.20;
+						campBonusPerc *= 1.20;
 
 					if (campBonusPerc < 0.01)
 						campBonusPerc = 0;
@@ -1425,7 +1435,7 @@ namespace DOL.GS.ServerRules
 						}
 						//long money = (long)(Money.GetMoney(0, 0, 17, 85, 0) * damagePercent * killedPlayer.Level / 50);
 						player.AddMoney(money, "You recieve {0}");
-                        InventoryLogging.LogInventoryAction(killer, player, eInventoryActionType.Other, money);
+						InventoryLogging.LogInventoryAction(killer, player, eInventoryActionType.Other, money);
 					}
 
 					if (killedPlayer.ReleaseType != GamePlayer.eReleaseType.Duel && expGainPlayer != null)

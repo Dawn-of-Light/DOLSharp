@@ -109,26 +109,26 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort)flag);
 			pak.WriteInt(0x0); //TODO: unknown, new in 1.71
 
-            string name = obj.Name;
-            LanguageDataObject translation = null;
-            if (obj is GameStaticItem)
-            {
-                translation = LanguageMgr.GetTranslation(m_gameClient, (GameStaticItem)obj);
-                if (translation != null)
-                {
-                    if (obj is WorldInventoryItem)
-                    {
-                        //if (!Util.IsEmpty(((DBLanguageItem)translation).Name))
-                        //    name = ((DBLanguageItem)translation).Name;
-                    }
-                    else
-                    {
-                        if (!Util.IsEmpty(((DBLanguageGameObject)translation).Name))
-                            name = ((DBLanguageGameObject)translation).Name;
-                    }
-                }
-            }
-            pak.WritePascalString(name);
+			string name = obj.Name;
+			LanguageDataObject translation = null;
+			if (obj is GameStaticItem)
+			{
+				translation = LanguageMgr.GetTranslation(m_gameClient, (GameStaticItem)obj);
+				if (translation != null)
+				{
+					if (obj is WorldInventoryItem)
+					{
+						//if (!Util.IsEmpty(((DBLanguageItem)translation).Name))
+						//    name = ((DBLanguageItem)translation).Name;
+					}
+					else
+					{
+						if (!Util.IsEmpty(((DBLanguageGameObject)translation).Name))
+							name = ((DBLanguageGameObject)translation).Name;
+					}
+				}
+			}
+			pak.WritePascalString(name);
 
 			if (obj is IDoor)
 			{
@@ -216,39 +216,39 @@ namespace DOL.GS.PacketHandler
 			if( ( npc.Flags & GameNPC.eFlags.STEALTH ) > 0 )
 				flags2 |= 0x04;
 
-            eQuestIndicator questIndicator = npc.GetQuestIndicator(m_gameClient.Player);
+			eQuestIndicator questIndicator = npc.GetQuestIndicator(m_gameClient.Player);
 
-            if (questIndicator == eQuestIndicator.Available)
-                flags2 |= 0x08;//hex 8 - quest available
-            if (questIndicator == eQuestIndicator.Finish)
-                flags2 |= 0x10;//hex 16 - quest finish
-            //flags2 |= 0x20;//hex 32 - water mob?
-            //flags2 |= 0x40;//hex 64 - unknown
-            //flags2 |= 0x80;//hex 128 - has owner
- 
+			if (questIndicator == eQuestIndicator.Available)
+				flags2 |= 0x08;//hex 8 - quest available
+			if (questIndicator == eQuestIndicator.Finish)
+				flags2 |= 0x10;//hex 16 - quest finish
+			//flags2 |= 0x20;//hex 32 - water mob?
+			//flags2 |= 0x40;//hex 64 - unknown
+			//flags2 |= 0x80;//hex 128 - has owner
+			
 
 			pak.WriteByte(flags2); // flags 2
 
-            byte flags3 = 0x00;
-            if (questIndicator == eQuestIndicator.Lesson)
-                flags3 |= 0x01;
-            if (questIndicator == eQuestIndicator.Lore)
-                flags3 |= 0x02;
-            pak.WriteByte(flags3); // new in 1.71 (region instance ID from StoC_0x20) OR flags 3?
+			byte flags3 = 0x00;
+			if (questIndicator == eQuestIndicator.Lesson)
+				flags3 |= 0x01;
+			if (questIndicator == eQuestIndicator.Lore)
+				flags3 |= 0x02;
+			pak.WriteByte(flags3); // new in 1.71 (region instance ID from StoC_0x20) OR flags 3?
 			pak.WriteShort(0x00); // new in 1.71 unknown
 
-            string name = npc.Name;
-            string guildName = npc.GuildName;
+			string name = npc.Name;
+			string guildName = npc.GuildName;
 
-            LanguageDataObject translation = LanguageMgr.GetTranslation(m_gameClient, npc);
-            if (translation != null)
-            {
-                if (!Util.IsEmpty(((DBLanguageNPC)translation).Name))
-                    name = ((DBLanguageNPC)translation).Name;
+			LanguageDataObject translation = LanguageMgr.GetTranslation(m_gameClient, npc);
+			if (translation != null)
+			{
+				if (!Util.IsEmpty(((DBLanguageNPC)translation).Name))
+					name = ((DBLanguageNPC)translation).Name;
 
-                if (!Util.IsEmpty(((DBLanguageNPC)translation).GuildName))
-                    guildName = ((DBLanguageNPC)translation).GuildName;
-            }
+				if (!Util.IsEmpty(((DBLanguageNPC)translation).GuildName))
+					guildName = ((DBLanguageNPC)translation).GuildName;
+			}
 
 			if (name.Length + add.Length + 2 > 47) // clients crash with too long names
 				name = name.Substring(0, 47 - add.Length - 2);
@@ -257,9 +257,9 @@ namespace DOL.GS.PacketHandler
 
 			pak.WritePascalString(name);
 
-            if (guildName.Length > 47)
-                pak.WritePascalString(guildName.Substring(0, 47));
-            else pak.WritePascalString(guildName);
+			if (guildName.Length > 47)
+				pak.WritePascalString(guildName.Substring(0, 47));
+			else pak.WritePascalString(guildName);
 
 			pak.WriteByte(0x00);
 			SendTCP(pak);
@@ -385,18 +385,18 @@ namespace DOL.GS.PacketHandler
 
 			ushort time = 0;
 			//time is in minutes
-            switch (player.Realm)
-            {
-                case eRealm.Albion:
-                    time = (ushort)((ServerProperties.Properties.FREELEVEL_DAYS_ALBION * 24 * 60) - t.TotalMinutes);
-                    break;
-                case eRealm.Midgard:
-                    time = (ushort)((ServerProperties.Properties.FREELEVEL_DAYS_MIDGARD * 24 * 60) - t.TotalMinutes);
-                    break;
-                case eRealm.Hibernia:
-                    time = (ushort)((ServerProperties.Properties.FREELEVEL_DAYS_HIBERNIA * 24 * 60) - t.TotalMinutes);
-                    break;
-            }
+			switch (player.Realm)
+			{
+				case eRealm.Albion:
+					time = (ushort)((ServerProperties.Properties.FREELEVEL_DAYS_ALBION * 24 * 60) - t.TotalMinutes);
+					break;
+				case eRealm.Midgard:
+					time = (ushort)((ServerProperties.Properties.FREELEVEL_DAYS_MIDGARD * 24 * 60) - t.TotalMinutes);
+					break;
+				case eRealm.Hibernia:
+					time = (ushort)((ServerProperties.Properties.FREELEVEL_DAYS_HIBERNIA * 24 * 60) - t.TotalMinutes);
+					break;
+			}
 
 			//flag 1 = above level, 2 = elligable, 3= time until, 4 = level and time until, 5 = level until
 			pak.WriteByte(flag); //flag
