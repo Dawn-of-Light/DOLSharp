@@ -99,37 +99,37 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("system", "client_version_max", "Maximum Client Version - Edit this to change which client version at the most have to be used: -1 = any, 1.80 = 180", -1)]
 		public static int CLIENT_VERSION_MAX;
 
-        /// <summary>
-        /// Should the server load quests
-        /// </summary>
-        [ServerProperty("system", "load_quests", "Should the server load quests, values True,False", true)]
-        public static readonly bool LOAD_QUESTS;
+		/// <summary>
+		/// Should the server load quests
+		/// </summary>
+		[ServerProperty("system", "load_quests", "Should the server load quests, values True,False", true)]
+		public static readonly bool LOAD_QUESTS;
 
-        /// <summary>
-        /// Should the server load Buff Tokens
-        /// </summary>
-        [ServerProperty("system", "load_buff_tokens", "Should the server load buff tokens (npc and items), values True,False", true)]
-        public static readonly bool LOAD_BUFF_TOKENS;
+		/// <summary>
+		/// Should the server load Buff Tokens
+		/// </summary>
+		[ServerProperty("system", "load_buff_tokens", "Should the server load buff tokens (npc and items), values True,False", true)]
+		public static readonly bool LOAD_BUFF_TOKENS;
 
-        /// <summary>
-        /// Should the server load Arrow Summoning items
-        /// </summary>
-        [ServerProperty("system", "load_arrow_summoning", "Should the server load Arrow Summoning items, values True,False", true)]
-        public static readonly bool LOAD_ARROW_SUMMONING;
+		/// <summary>
+		/// Should the server load Arrow Summoning items
+		/// </summary>
+		[ServerProperty("system", "load_arrow_summoning", "Should the server load Arrow Summoning items, values True,False", true)]
+		public static readonly bool LOAD_ARROW_SUMMONING;
 
-        /// <summary>
-        /// Should the server load Housing items
-        /// </summary>
-        [ServerProperty("system", "load_housing_items", "Should the server load Housing items, values True,False", true)]
-        public static readonly bool LOAD_HOUSING_ITEMS;
+		/// <summary>
+		/// Should the server load Housing items
+		/// </summary>
+		[ServerProperty("system", "load_housing_items", "Should the server load Housing items, values True,False", true)]
+		public static readonly bool LOAD_HOUSING_ITEMS;
 
-        /// <summary>
-        /// Should the server load Housing NPC
-        /// </summary>
-        [ServerProperty("system", "load_housing_npc", "Should the server load Housing npc, values True,False", true)]
-        public static readonly bool LOAD_HOUSING_NPC;
+		/// <summary>
+		/// Should the server load Housing NPC
+		/// </summary>
+		[ServerProperty("system", "load_housing_npc", "Should the server load Housing npc, values True,False", true)]
+		public static readonly bool LOAD_HOUSING_NPC;
 
-        /// <summary>
+		/// <summary>
 		/// Disable Bug Reports
 		/// </summary>
 		[ServerProperty("system", "disable_bug_reports", "Set to true to disable bug reporting, and false to enable bug reporting", true)]
@@ -443,11 +443,11 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("server", "use_dblanguage", "Use Database Language datas instead of files (if empty = build the table from files)", false)]
 		public static bool USE_DBLANGUAGE;
 
-        /// <summary>
-        /// Update existing rows within the LanguageSystem table from language files.
-        /// </summary>
-        [ServerProperty("server", "update_existing_db_system_sentences_from_files", "Update existing rows within the LanguageSystem table from language files.", false)]
-        public static bool UPDATE_EXISTING_DB_SYSTEM_SENTENCES_FROM_FILES;
+		/// <summary>
+		/// Update existing rows within the LanguageSystem table from language files.
+		/// </summary>
+		[ServerProperty("server", "update_existing_db_system_sentences_from_files", "Update existing rows within the LanguageSystem table from language files.", false)]
+		public static bool UPDATE_EXISTING_DB_SYSTEM_SENTENCES_FROM_FILES;
 
 		/// <summary>
 		/// Set the maximum number of objects allowed in a region.  Smaller numbers offer better performance.  This is used to allocate arrays for both Regions and GamePlayers
@@ -680,11 +680,11 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("rates", "pvp_spell_damage", "The PvP Spell Damage Modifier - Edit this to change the amount of spell damage done when fighting players e.g 1.5 is 50% more damage 2.0 is twice the damage (100%) 0.5 is half the damage (50%)", 1.0)]
 		public static double PVP_SPELL_DAMAGE;
 
-        /// <summary>
-        /// The % value of gainrps when heal a players recently damaged in rvr.
-        /// </summary>
-        [ServerProperty("rates", "heal_pvp_damage_value_rp", "How many % of heal final value is obtained in rps?", 8)]
-        public static int HEAL_PVP_DAMAGE_VALUE_RP;
+		/// <summary>
+		/// The % value of gainrps when heal a players recently damaged in rvr.
+		/// </summary>
+		[ServerProperty("rates", "heal_pvp_damage_value_rp", "How many % of heal final value is obtained in rps?", 8)]
+		public static int HEAL_PVP_DAMAGE_VALUE_RP;
 
 		/// <summary>
 		/// The highest possible Block Rate against an Enemy (Hard Cap)
@@ -767,98 +767,98 @@ namespace DOL.GS.ServerProperties
 		#endregion
 
 		#region NPCs
-        /// <summary>
-        /// Base Value to use when auto-setting STR stat.
-        /// </summary>
-        [ServerProperty("npc", "mob_autoset_str_base", "Base Value to use when auto-setting STR stat. ", 30.0)]
-        public static double MOB_AUTOSET_STR_BASE;
+		/// <summary>
+		/// Base Value to use when auto-setting STR stat.
+		/// </summary>
+		[ServerProperty("npc", "mob_autoset_str_base", "Base Value to use when auto-setting STR stat. ", 30.0)]
+		public static double MOB_AUTOSET_STR_BASE;
 
-        /// <summary>
-        /// Multiplier to use when auto-setting STR stat.
-        /// </summary>
-        [ServerProperty("npc", "mob_autoset_str_multiplier", "Multiplier to use when auto-setting STR stat. ", 1.0)]
-        public static double MOB_AUTOSET_STR_MULTIPLIER;
+		/// <summary>
+		/// Multiplier to use when auto-setting STR stat.
+		/// </summary>
+		[ServerProperty("npc", "mob_autoset_str_multiplier", "Multiplier to use when auto-setting STR stat. ", 1.0)]
+		public static double MOB_AUTOSET_STR_MULTIPLIER;
 
-        /// <summary>
-        /// Base Value to use when auto-setting CON stat.
-        /// </summary>
-        [ServerProperty("npc", "mob_autoset_con_base", "Base Value to use when auto-setting CON stat. ", 30.0)]
-        public static double MOB_AUTOSET_CON_BASE;
+		/// <summary>
+		/// Base Value to use when auto-setting CON stat.
+		/// </summary>
+		[ServerProperty("npc", "mob_autoset_con_base", "Base Value to use when auto-setting CON stat. ", 30.0)]
+		public static double MOB_AUTOSET_CON_BASE;
 
-        /// <summary>
-        /// Multiplier to use when auto-setting CON stat.
-        /// </summary>
-        [ServerProperty("npc", "mob_autoset_con_multiplier", "Multiplier to use when auto-setting CON stat. ", 1.0)]
-        public static double MOB_AUTOSET_CON_MULTIPLIER;
+		/// <summary>
+		/// Multiplier to use when auto-setting CON stat.
+		/// </summary>
+		[ServerProperty("npc", "mob_autoset_con_multiplier", "Multiplier to use when auto-setting CON stat. ", 1.0)]
+		public static double MOB_AUTOSET_CON_MULTIPLIER;
 
-        /// <summary>
-        /// Base Value to use when auto-setting QUI stat.
-        /// </summary>
-        [ServerProperty("npc", "mob_autoset_qui_base", "Base Value to use when auto-setting qui stat. ", 30.0)]
-        public static double MOB_AUTOSET_QUI_BASE;
+		/// <summary>
+		/// Base Value to use when auto-setting QUI stat.
+		/// </summary>
+		[ServerProperty("npc", "mob_autoset_qui_base", "Base Value to use when auto-setting qui stat. ", 30.0)]
+		public static double MOB_AUTOSET_QUI_BASE;
 
-        /// <summary>
-        /// Multiplier to use when auto-setting QUI stat.
-        /// </summary>
-        [ServerProperty("npc", "mob_autoset_qui_multiplier", "Multiplier to use when auto-setting QUI stat. ", 1.0)]
-        public static double MOB_AUTOSET_QUI_MULTIPLIER;
+		/// <summary>
+		/// Multiplier to use when auto-setting QUI stat.
+		/// </summary>
+		[ServerProperty("npc", "mob_autoset_qui_multiplier", "Multiplier to use when auto-setting QUI stat. ", 1.0)]
+		public static double MOB_AUTOSET_QUI_MULTIPLIER;
 
-        /// <summary>
-        /// Base Value to use when auto-setting DEX stat.
-        /// </summary>
-        [ServerProperty("npc", "mob_autoset_dex_base", "Base Value to use when auto-setting DEX stat. ", 30.0)]
-        public static double MOB_AUTOSET_DEX_BASE;
+		/// <summary>
+		/// Base Value to use when auto-setting DEX stat.
+		/// </summary>
+		[ServerProperty("npc", "mob_autoset_dex_base", "Base Value to use when auto-setting DEX stat. ", 30.0)]
+		public static double MOB_AUTOSET_DEX_BASE;
 
-        /// <summary>
-        /// Multiplier to use when auto-setting DEX stat.
-        /// </summary>
-        [ServerProperty("npc", "mob_autoset_dex_multiplier", "Multiplier to use when auto-setting DEX stat. ", 1.0)]
-        public static double MOB_AUTOSET_DEX_MULTIPLIER;
+		/// <summary>
+		/// Multiplier to use when auto-setting DEX stat.
+		/// </summary>
+		[ServerProperty("npc", "mob_autoset_dex_multiplier", "Multiplier to use when auto-setting DEX stat. ", 1.0)]
+		public static double MOB_AUTOSET_DEX_MULTIPLIER;
 
-        /// <summary>
-        /// Base Value to use when auto-setting pet STR stat.
-        /// </summary>
-        [ServerProperty("npc", "pet_autoset_str_base", "Base Value to use when auto-setting Pet STR stat. ", 20.0)]
-        public static double PET_AUTOSET_STR_BASE;
+		/// <summary>
+		/// Base Value to use when auto-setting pet STR stat.
+		/// </summary>
+		[ServerProperty("npc", "pet_autoset_str_base", "Base Value to use when auto-setting Pet STR stat. ", 20.0)]
+		public static double PET_AUTOSET_STR_BASE;
 
-        /// <summary>
-        /// Multiplier to use when auto-setting pet STR stat.
-        /// </summary>
-        [ServerProperty("npc", "pet_autoset_str_multiplier", "Multiplier to use when auto-setting Pet STR stat. ", 6.0)]
-        public static double PET_AUTOSET_STR_MULTIPLIER;
-        
-        /// Base Value to use when auto-setting pet CON stat.
-        /// </summary>
-        [ServerProperty("npc", "pet_autoset_con_base", "Base Value to use when auto-setting Pet CON stat. ", 30.0)]
-        public static double PET_AUTOSET_CON_BASE;
+		/// <summary>
+		/// Multiplier to use when auto-setting pet STR stat.
+		/// </summary>
+		[ServerProperty("npc", "pet_autoset_str_multiplier", "Multiplier to use when auto-setting Pet STR stat. ", 6.0)]
+		public static double PET_AUTOSET_STR_MULTIPLIER;
+		
+		/// Base Value to use when auto-setting pet CON stat.
+		/// </summary>
+		[ServerProperty("npc", "pet_autoset_con_base", "Base Value to use when auto-setting Pet CON stat. ", 30.0)]
+		public static double PET_AUTOSET_CON_BASE;
 
-        /// <summary>
-        /// Multiplier to use when auto-setting pet CON stat.
-        /// </summary>
-        [ServerProperty("npc", "pet_autoset_con_multiplier", "Multiplier to use when auto-setting Pet CON stat. ", 1.0)]
-        public static double PET_AUTOSET_CON_MULTIPLIER;
+		/// <summary>
+		/// Multiplier to use when auto-setting pet CON stat.
+		/// </summary>
+		[ServerProperty("npc", "pet_autoset_con_multiplier", "Multiplier to use when auto-setting Pet CON stat. ", 1.0)]
+		public static double PET_AUTOSET_CON_MULTIPLIER;
 
-        /// Base Value to use when auto-setting Pet DEX stat.
-        /// </summary>
-        [ServerProperty("npc", "pet_autoset_dex_base", "Base Value to use when auto-setting Pet DEX stat. ", 30.0)]
-        public static double PET_AUTOSET_DEX_BASE;
+		/// Base Value to use when auto-setting Pet DEX stat.
+		/// </summary>
+		[ServerProperty("npc", "pet_autoset_dex_base", "Base Value to use when auto-setting Pet DEX stat. ", 30.0)]
+		public static double PET_AUTOSET_DEX_BASE;
 
-        /// <summary>
-        /// Multiplier to use when auto-setting pet DEX stat.
-        /// </summary>
-        [ServerProperty("npc", "pet_autoset_dex_multiplier", "Multiplier to use when auto-setting Pet DEX stat. ", 1.0)]
-        public static double PET_AUTOSET_DEX_MULTIPLIER;
+		/// <summary>
+		/// Multiplier to use when auto-setting pet DEX stat.
+		/// </summary>
+		[ServerProperty("npc", "pet_autoset_dex_multiplier", "Multiplier to use when auto-setting Pet DEX stat. ", 1.0)]
+		public static double PET_AUTOSET_DEX_MULTIPLIER;
 
-        /// Base Value to use when auto-setting Pet QUI stat.
-        /// </summary>
-        [ServerProperty("npc", "pet_autoset_qui_base", "Base Value to use when auto-setting Pet QUI stat. ", 30.0)]
-        public static double PET_AUTOSET_QUI_BASE;
+		/// Base Value to use when auto-setting Pet QUI stat.
+		/// </summary>
+		[ServerProperty("npc", "pet_autoset_qui_base", "Base Value to use when auto-setting Pet QUI stat. ", 30.0)]
+		public static double PET_AUTOSET_QUI_BASE;
 
-        /// <summary>
-        /// Multiplier to use when auto-setting pet QUI stat.
-        /// </summary>
-        [ServerProperty("npc", "pet_autoset_qui_multiplier", "Multiplier to use when auto-setting Pet QUI stat. ", 1.0)]
-        public static double PET_AUTOSET_QUI_MULTIPLIER;
+		/// <summary>
+		/// Multiplier to use when auto-setting pet QUI stat.
+		/// </summary>
+		[ServerProperty("npc", "pet_autoset_qui_multiplier", "Multiplier to use when auto-setting Pet QUI stat. ", 1.0)]
+		public static double PET_AUTOSET_QUI_MULTIPLIER;
 
 		/// <summary>
 		/// How often should pets think?  Default 1500 or 1.5 seconds
@@ -1423,10 +1423,22 @@ namespace DOL.GS.ServerProperties
 		public static string DISABLED_RACES;
 
 		/// <summary>
-		/// Days before your elligable for a free level
+		/// Days before your elligable for a free level in Albion
 		/// </summary>
-		[ServerProperty("classes", "freelevel_days", "days before your elligable for a free level, use -1 to deactivate", 7)]
-		public static int FREELEVEL_DAYS;
+		[ServerProperty("classes", "freelevel_days_albion", "days before your elligable for a free level in Albion, use -1 to deactivate", 7)]
+		public static int FREELEVEL_DAYS_ALBION;
+		
+		/// <summary>
+		/// Days before your elligable for a free level in Midgard
+		/// </summary>
+		[ServerProperty("classes", "freelevel_days_midgard", "days before your elligable for a free level in Midgard, use -1 to deactivate", 7)]
+		public static int FREELEVEL_DAYS_MIDGARD;
+
+		/// <summary>
+		/// Days before your elligable for a free level in Hibernia
+		/// </summary>
+		[ServerProperty("classes", "freelevel_days_hibernia", "days before your elligable for a free level in Hibernia, use -1 to deactivate", 7)]
+		public static int FREELEVEL_DAYS_HIBERNIA;
 
 		/// <summary>
 		/// Buff Range, 0 for unlimited
@@ -1704,7 +1716,7 @@ namespace DOL.GS.ServerProperties
 				log.Debug("Cannot find server property " + key + " creating it");
 			}
 			log.Debug("Loading " + key + " Value is " + property.Value);
-					
+			
 			try
 			{
 				//we do this because we need "1.0" to be considered double sometimes its "1,0" in other countries
