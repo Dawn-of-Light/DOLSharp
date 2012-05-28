@@ -1264,7 +1264,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Max camp bonus
 		/// </summary>
-		[ServerProperty("pve", "max_camp_bonus", "Max camp bonus", 2.0)]
+		[ServerProperty("pve", "max_camp_bonus", "Max camp bonus, 0.55 = 55%", 0.55)]
 		public static double MAX_CAMP_BONUS;
 
 		/// <summary>
