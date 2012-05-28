@@ -151,7 +151,7 @@ namespace DOL.GS.Spells
 
 				if (m_spell.AmnesiaChance != 0)
 				{
-					if (((GameNPC)target).BodyType != m_spell.AmnesiaChance)
+					if (((GameNPC)target).BodyType >= m_spell.AmnesiaChance)
 					{
 						MessageToCaster("This spell does not charm this type of monster!", eChatType.CT_SpellResisted);
 						return;
