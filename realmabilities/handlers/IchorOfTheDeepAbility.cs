@@ -1,12 +1,10 @@
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.GS.Spells;
 using DOL.Events;
 using DOL.Database;
+using DOL.Language;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -120,7 +118,7 @@ namespace DOL.GS.RealmAbilities
 
 			if (caster.IsMoving)
 			{
-				caster.Out.SendMessage("You move and interrupt your spellcast!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+                caster.Out.SendMessage(LanguageMgr.GetTranslation(caster.Client, "SpellHandler.CasterMove"), eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 				caster.DisableSkill(this, 3000);
 				return 0;
 			}

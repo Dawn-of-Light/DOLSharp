@@ -11286,7 +11286,7 @@ namespace DOL.GS
 			if (IsCastingRealmAbility)
 			{
 				Out.SendInterruptAnimation(this);
-				Out.SendMessage("You move and interrupt your spellcast!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                Out.SendMessage(LanguageMgr.GetTranslation(Client, "SpellHandler.CasterMove"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				RealmAbilityCastTimer.Stop();
 				RealmAbilityCastTimer = null;
 			}

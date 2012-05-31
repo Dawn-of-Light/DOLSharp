@@ -2,6 +2,7 @@
 
 Effects.DelveInfo.MinutesRemaining:            - {0}: {1} minutes restantes.
 Effects.DelveInfo.SecondsRemaining:            - {0} secondes restantes.
+Effects.DelveInfo.Seconds:						secondes.
 Effects.CantRemoveThis:	Vous ne pouvez pas retirer cette effet!
 
 Effects.Necro.TauntEffect.SeemsChange:         {0} semble changer dans son comportement, il apparait plus aggressif envers vous qu'avant.

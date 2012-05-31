@@ -3,12 +3,14 @@ SpellHandler.CancelPulsingSpell:	You stop playing your song.
 SpellHandler.NoPowerStopPulsingSpell:	You do not have enough mana and your spell was cancelled.
 SpellHandler.NoInstrumentStopPlayingSong:	You stop playing your song.
 SpellHandler.MoveInterruptFocus:	Your spell was cancelled.
+SpellHandler.CasterMove:	You move and interrupt your spellcast!
 GamePlayer.CastSpell.MustWaitBeforeCast:	You need to wait {0} mores secondes for cast a spell!
 SpellHandler.DelveInfo.Sec:	sec
 # DelveInfo
 DelveInfo.CastingTime:					Casting time: {0}
 DelveInfo.ConcentrationCost:				Concentration cost: {0}
 DelveInfo.Damage:					Damage: {0}
+DelveInfo.DamageType:					Damage Type: {0}
 DelveInfo.Duration:					Duration: 
 DelveInfo.Focus:					This is a focus spell. Cancels if you do any action.
 DelveInfo.Frequency:					Frequency: {0}
@@ -113,3 +115,11 @@ SummonNecromancerPet.DelveInfo.CastingTime:	Casting time: {0}
 
 #SavageEnduranceHeal
 SavageEnduranceHeal.CheckBeginCast.InsuffiscientHealth:	You do not have enough health to cast that!
+
+#AblativeArmor
+AblativeArmor.Target:	Your ablative absorbs {0} damage!
+AblativeArmor.Attacker:	A barrier absorbs {0} damage of your attack!
+
+#Amnesia
+Amnesia.MessageToTarget:	Your mind goes blank and you forget what you were doing!
+
