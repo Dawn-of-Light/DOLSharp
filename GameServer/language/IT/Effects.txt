@@ -1,7 +1,7 @@
 ﻿
 Effects.DelveInfo.MinutesRemaining:				- Rimangono {0}: {1} minuti
 Effects.DelveInfo.SecondsRemaining:				- Rimangono {0} secondi.
-
+Effects.DelveInfo.Seconds:				{0} secondi.
 Effects.Necro.TauntEffect.SeemsChange:			{0} sembra che sta per cambiare comportamento, mentre sta comportandosi sempre più aggressivo rispetto a prima.
 Effects.Necro.TauntEffect.SeemsLessAgg:			{0} sembra essere meno aggressivo rispetto a prima.
 
