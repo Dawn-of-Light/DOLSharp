@@ -21,6 +21,7 @@ using System.Collections;
 using DOL.AI.Brain;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
+using DOL.Language;
 
 namespace DOL.GS.Spells
 {
@@ -66,7 +67,9 @@ namespace DOL.GS.Spells
 				((GamePlayer)target).NextCombatBackupStyle = null;
 			}
 			target.StopCurrentSpellcast(); //stop even if MoC or QC
-			MessageToLiving (target, "Your mind goes blank and you forget what you were doing!", eChatType.CT_Spell);
+
+            if (target is GamePlayer)
+                MessageToLiving(target, LanguageMgr.GetTranslation((target as GamePlayer).Client, "Amnesia.MessageToTarget"), eChatType.CT_Spell);
 
             GameSpellEffect effect;
             effect = SpellHandler.FindEffectOnTarget(target, "Mesmerize");

@@ -1,5 +1,6 @@
 ﻿GamePlayer.CastSpell.MustWaitBeforeCast:	Vous devez attendre {0} secondes pour lancer un sort!
 SpellHandler.DelveInfo.Sec:	sec
+SpellHandler.CasterMove:	Vous bougez et intérromper votre sort!
 
 # DelveInfo
 DelveInfo.CastingTime:					Temps d'Incantation: {0}
@@ -18,7 +19,7 @@ DelveInfo.RecastTime:					Délai de réutilisation:
 DelveInfo.Target:					Cible: {0}
 DelveInfo.Value:					Valeur: {0}
 DelveInfo.ValueNegative:					Valeur: -{0}
-
+DelveInfo.DamageType:					Type de Dégats: {0}
 # DamageSpeedDecrease
 DamageSpeedDecrease.DelveInfo.Decrease:			Ralentissement de vitesse: {0}%
 DamageSpeedDecrease.DelveInfo.Function:			Fonction: Ralentissement de Vitesse + Dommage
@@ -102,3 +103,10 @@ SummonNecromancerPet.DelveInfo.CastingTime:	Temp d'Incantation: {0}
 
 #SavageEnduranceHeal
 SavageEnduranceHeal.CheckBeginCast.InsuffiscientHealth:	Vous n'avez pas assez de vie pour lancer ce sort!
+
+#AblativeArmorSpellHandler
+AblativeArmor.Target:	Votre bouclier absorbe {0} points de dégats!
+AblativeArmor.Attacker:	Un bouclier absorbe {0} points de dégats de votre attaque!
+
+#Amnesia
+Amnesia.MessageToTarget:	Votre esprit s'emmêle et vous oubliez ce que vous étiez en train de faire!

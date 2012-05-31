@@ -527,7 +527,8 @@ namespace DOL.GS.Spells
 				return;
 
 			InterruptCasting();
-			MessageToCaster("You move and interrupt your spellcast!", eChatType.CT_Important);
+            if (Caster is GamePlayer)
+                (Caster as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SpellHandler.CasterMove"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 		}
 
 		/// <summary>
