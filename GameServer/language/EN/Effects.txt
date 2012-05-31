@@ -1,6 +1,7 @@
 ﻿
 Effects.DelveInfo.MinutesRemaining:				- {0}: {1} minutes remaining.
 Effects.DelveInfo.SecondsRemaining:				- {0} seconds remaining.
+Effects.DelveInfo.Seconds:				{0} seconds.
 Effects.CantRemoveThis:	You can't remove this effect!
 
 Effects.Necro.TauntEffect.SeemsChange:			{0} seems to change in demeanor, appearing more aggressive than before.

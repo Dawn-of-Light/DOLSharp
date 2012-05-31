@@ -100,9 +100,11 @@ namespace DOL.GS.Spells
 			ad.Damage -= damageAbsorbed;
 			OnDamageAbsorbed(ad, damageAbsorbed);
 
-			//TODO correct messages
-            MessageToLiving(ad.Target, string.Format("Your ablative absorbs {0} damage!", damageAbsorbed), eChatType.CT_Spell);//since its not always Melee absorbing
-			MessageToLiving(ad.Attacker, string.Format("A barrier absorbs {0} damage of your attack!", damageAbsorbed), eChatType.CT_Spell);
+            if (ad.Target is GamePlayer)
+                (ad.Target as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((ad.Target as GamePlayer).Client, "AblativeArmor.Target", damageAbsorbed), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+
+            if (ad.Attacker is GamePlayer)
+                (ad.Attacker as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((ad.Attacker as GamePlayer).Client, "AblativeArmor.Attacker", damageAbsorbed), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 
 			if(ablativehp <= 0)
 			{
@@ -199,7 +201,7 @@ namespace DOL.GS.Spells
                     list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "AblativeArmor.DelveInfo.CastingTime"));
                 else if (Spell.CastTime > 0)
                     list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.CastingTime", (Spell.CastTime * 0.001).ToString("0.0## sec;-0.0## sec;'instant'")));
-                
+
                 if (ServerProperties.Properties.SERV_LANGUAGE != "DE")
                 {
                     //SpellType
@@ -207,15 +209,14 @@ namespace DOL.GS.Spells
 
                     //Radius
                     if (Spell.Radius != 0)
-                        list.Add("Radius: " + Spell.Radius);
+                        list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Radius", Spell.Radius));
 
                     //Frequency
                     if (Spell.Frequency != 0)
-                        list.Add("Frequency: " + (Spell.Frequency * 0.001).ToString("0.0"));
-
+                        list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Frequency", (Spell.Frequency * 0.001).ToString("0.0")));
                     //DamageType
                     if (Spell.DamageType != 0)
-                        list.Add("Damage Type: " + Spell.DamageType);
+                        list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.DamageType", Spell.DamageType));
                 }
                 return list;
 			}

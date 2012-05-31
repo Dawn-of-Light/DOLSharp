@@ -16,13 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
-using System.Text;
 using DOL.GS.Effects;
 using DOL.Database;
-using System.Collections;
-
+using DOL.Language;
+using DOL.GS.PacketHandler;
 namespace DOL.GS.Spells
 {
 	/// <summary>
@@ -116,7 +114,8 @@ namespace DOL.GS.Spells
 		public override void CasterMoves()
 		{
 			InterruptCasting();
-			MessageToCaster("You move and interrupt your spellcast!", DOL.GS.PacketHandler.eChatType.CT_Important);
+			if (Caster is GamePlayer)
+                (Caster as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SpellHandler.CasterMove"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 		}
 
 
