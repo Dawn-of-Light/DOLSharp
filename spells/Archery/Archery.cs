@@ -295,7 +295,7 @@ namespace DOL.GS.Spells
 			}
 			else
 			{
-				return eDamageType.Crush;
+				return eDamageType.Slash;
 			}
 		}
 
