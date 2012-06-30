@@ -215,7 +215,7 @@ GamePlayer.Quit.CantQuitMount:				Musis slezt z kone, nez ukoncis hru.
 GamePlayer.Quit.CantQuitStanding:			Musis stat na miste, pokud chces ukoncit hru.
 GamePlayer.Quit.CantQuitCrafting:			Nemuzes ukoncit hru behem vyrabeni.
 GamePlayer.Quit.RecentlyInCombat:			Nedavno jsi byl v boji a musis jeste chvilku pockat, nez budes smet opustit hru.
-GamePlayer.Quit.YouWillQuit:				Opustis hru za {0} sekund sezeni. Napis '/stand' nebo se pohni, pokud hru nechces opustit.
+GamePlayer.Quit.YouWillQuit2:				Opustis hru za {0} sekund sezeni. Napis '/stand' nebo se pohni, pokud hru nechces opustit.
 GamePlayer.RealmTitle.UnknownRealm:			Neznamy realm
 GamePlayer.ReceiveTradeItem.StillSelfcrafting:	You are still selfcrafting.
 GamePlayer.ReceiveTradeItem.CantTrade:		Nemuzes obchodovat s timto predmetem!

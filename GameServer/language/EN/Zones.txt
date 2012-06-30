@@ -284,8 +284,8 @@ Zone.Description.TurSuil:							Tur Suil
 Zone.ScreenDescription.TurSuil:						Tur Suil
 Zone.Description.Galladoria:						Galladoria
 Zone.ScreenDescription.Galladoria:					Galladoria
-Zone.Description.LeSanctuaireDuHautConsule:			Le Sanctuaire Du Haut Consule
-Zone.ScreenDescription.LeSanctuaireDuHautConsule:	Le Sanctuaire Du Haut Consule
+Zone.Description.LeSanctuaireDuHautConsule:			The High Consul's Sanctum
+Zone.ScreenDescription.LeSanctuaireDuHautConsule:	The High Consul's Sanctum
 Zone.Description.Midgard'sOtherworld:				Otherworld
 Zone.ScreenDescription.Midgard'sOtherworld:			Otherworld
 Zone.Description.Albion'sOtherworld:				Otherworld
@@ -534,12 +534,12 @@ Zone.Description.ShaftsoftheTenebrae:				Shafts of the Tenebrae
 Zone.ScreenDescription.ShaftsoftheTenebrae:			Shafts of the Tenebrae
 Zone.Description.LairoftheExiled:					Lair of the Exiled
 Zone.ScreenDescription.LairoftheExiled:				Lair of the Exiled
-Zone.Description.LaTourdesArcanesALB:				La Tour des Arcanes ALB
-Zone.ScreenDescription.LaTourdesArcanesALB:			La Tour des Arcanes ALB
-Zone.Description.LaTourdesArcanesMID:				La Tour des Arcanes MID
-Zone.ScreenDescription.LaTourdesArcanesMID:			La Tour des Arcanes MID
-Zone.Description.LaTourdesArcanesHIB:				La Tour des Arcanes HIB
-Zone.ScreenDescription.LaTourdesArcanesHIB:			La Tour des Arcanes HIB
+Zone.Description.LaTourdesArcanesALB:				Arcane Tower ALB
+Zone.ScreenDescription.LaTourdesArcanesALB:			Arcane Tower ALB
+Zone.Description.LaTourdesArcanesMID:				Arcane Tower MID
+Zone.ScreenDescription.LaTourdesArcanesMID:			Arcane Tower MID
+Zone.Description.LaTourdesArcanesHIB:				Arcane Tower HIB
+Zone.ScreenDescription.LaTourdesArcanesHIB:			Arcane Tower HIB
 Zone.Description.TheHallofReawakening:				The Hall of Reawakening
 Zone.ScreenDescription.TheHallofReawakening:		The Hall of Reawakening
 Zone.Description.TheHiddenCrypt:					The Hidden Crypt

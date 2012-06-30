@@ -542,7 +542,6 @@ Titles.Level.Level20: Level {0}
 # /PrivLevel
 Titles.PrivLevel.Administrator: Administrateur
 Titles.PrivLevel.Gamemaster: Maître du jeu
-Titles.PrivLevel.Benevole: Bénévole
 
 # /Solokills
 Titles.Solokills.DuelMaster: Maître duelliste
