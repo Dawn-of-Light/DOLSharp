@@ -453,10 +453,10 @@ GameTrainer.ReceiveItem.RespecSingle:			Grazie, ti ho aggiunto un single spec re
 GameTrainer.Train.SeekElsewhere:			{0} dice, "Devi cercare altro per allenarti."
 
 # /EnchanterTrainer
-EnchanterTrainer.Interact.PathOfEssence:		{0} dice, "Scegli di allenarti come Enchanter e seguire il Percorso dell'Essenza? La vita da [Enchanter] e' tanto gratificante quanto pericolosa, ma sara' tua se la scegli."
-EnchanterTrainer.Interact.SmallTalk:			{0} dice, "Impari velocemente, {1}. Ma non essere troppo affrettato. C'e' sempre altro da imparare."
-EnchanterTrainer.WhisperReceive.CaseEnchanter:		Enchanter
-EnchanterTrainer.WhisperReceive.Welcome:		Benvenuto, {0}. Da oggi in poi sarai riconosciuto come Enchanter. Ecco, {0}. Prendi questo dono per aiutarti nel tuo percorso.
+EnchanterTrainer.Interact.Text1:			{0} dice, "Scegli di allenarti come Enchanter e seguire il Percorso dell'Essenza? La vita da[Enchanter] e' tanto gratificante quanto pericolosa, ma sara' tua se la scegli."
+EnchanterTrainer.Interact.Text2:			{0} dice, "Impari velocemente, {1}. Ma non essere troppo affrettato. C'e' sempre altro da imparare."
+EnchanterTrainer.WhisperReceiveCase.Text1:		enchanter
+EnchanterTrainer.WhisperReceive.Text1:			Benvenuto, {0}. Da oggi in poi sarai riconosciuto come Enchanter. Ecco, {0}. Prendi questo dono per 							aiutarti nel tuo percorso.
 
 # /gameobjects/CustomNPC
 # /GameStableMaster

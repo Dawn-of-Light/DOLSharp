@@ -24,7 +24,7 @@ GamePlayer.Quit.CantQuitMount:				Has de desmontar antes de poder salir.
 GamePlayer.Quit.CantQuitStanding:			Has de estar parado para salir.
 GamePlayer.Quit.CantQuitCrafting:			No puedes salir mientras estás crafteando.
 GamePlayer.Quit.RecentlyInCombat:			Has estado en combate recientemente, debes esperar para poder salir.
-GamePlayer.Quit.YouWillQuit:				Saldrás una vez sentado en {0} segundos. Escribe '/stand' o muévete si no quieres salir.
+GamePlayer.Quit.YouWillQuit2:				Saldrás una vez sentado en {0} segundos. Escribe '/stand' o muévete si no quieres salir.
 GamePlayer.Release.NotDead:					No estás muerto!
 GamePlayer.Release.CantReleaseDuel:			Tu cuerpo se recuperará automáticamente en una muerte de duelo.
 GamePlayer.Release.NoLongerReleaseAuto:		Te recuperarás automáticamente en ({0} segundos más).
