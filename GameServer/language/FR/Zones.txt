@@ -1,0 +1,7 @@
+Zone.Description.LaTourdesArcanesALB:				La Tour des Arcanes ALB
+Zone.ScreenDescription.LaTourdesArcanesALB:			La Tour des Arcanes ALB
+Zone.Description.LaTourdesArcanesMID:				La Tour des Arcanes MID
+Zone.ScreenDescription.LaTourdesArcanesMID:			La Tour des Arcanes MID
+Zone.Description.LaTourdesArcanesHIB:				La Tour des Arcanes HIB
+Zone.ScreenDescription.LaTourdesArcanesHIB:			La Tour des Arcanes HIB
+Zone.Description.LeSanctuaireDuHautConsule:			Le Sanctuaire Du Haut Consule
