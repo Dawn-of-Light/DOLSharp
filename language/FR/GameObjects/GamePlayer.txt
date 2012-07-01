@@ -240,7 +240,7 @@ GamePlayer.SendReceive.Sends:				{0} envoie, "{1}"
 GamePlayer.SendReceive.FalseLanguage:         {0} envoi quelquechose dans un langage que vous ne comprenez pas.
 GamePlayer.SendReceive.Afk:                  {0} est AFK.
 GamePlayer.SendReceive.AfkMessage:            <AFK> {0} envoi, "{1}"
-GamePlayer.Send.DontUnderstandYou:            {0} ne vous comprend pas.
+GamePlayer.Send.target.DontUnderstandYou:            {0} ne vous comprend pas.
 GamePlayer.SetControlledNpc.ReleaseTarget:	Vous relâchez le contrôle de votre cible.
 GamePlayer.SetControlledNpc.ReleaseTarget2:      Vous perdez le controle de votre {0}.
 GamePlayer.Shade.AlreadyShade:				Vous êtes déjà dissimulé(e) !

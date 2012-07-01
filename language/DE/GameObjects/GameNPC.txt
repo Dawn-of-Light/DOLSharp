@@ -1,4 +1,5 @@
 ﻿GameNPC.DropLoot.AdditionalMoney:		Ihr bekommt zusätzlich {0}, da Euer Reich im Grenzgebiet einen Außenposten kontrolliert!
+GameNPC.DropLoot.ItemAdditionalMoney:		Ihr bekommt zusätzlich {0} zur Ausrüstung dazu!
 GameNPC.DropLoot.Drops:				{0} lässt etwas fallen, {1} wird von Euch eingesteckt.
 GameNPC.GetAggroLevelString.Aggressive1:	ausgesprochen aggressiv
 GameNPC.GetAggroLevelString.Aggressive2:	Aggressiv

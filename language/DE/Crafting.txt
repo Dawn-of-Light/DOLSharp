@@ -13,6 +13,7 @@ AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoWoodworkingSkill:		I
 AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.Rawmaterial:			Der Gegenstand mit der ID {0} ist nicht verfügbar. Bitte meldet das!
 
 AbstractCraftingSkill.CraftItem.BeginWork:		Ihr macht Euch an die Arbeit, {0} nimmt langsam Gestalt an ...({1}%).
+AbstractCraftingSkill.CraftItem.CantCraftInCombat:   	Ihr könnt nichts herstellen, während Ihr kämpft.
 AbstractCraftingSkill.CraftItem.ChanceToGainPoint:	Die Chance Punkte in Eurem primären Handwerk zu erhalten beträgt {0}%.
 AbstractCraftingSkill.CraftItem.CurrentlyMaking:	Stelle {0} her...
 AbstractCraftingSkill.CraftItem.MoveAndInterrupt:	Ihr bewegt Euch und unterbrecht damit Eure Arbeit.
@@ -144,7 +145,7 @@ Repair.IsAllowedToBeginWork.BackpackItems:		Ihr könnt nur Gegenstände reparier
 Repair.IsAllowedToBeginWork.CantRepair:			Ihr könnt {0} nicht reparieren!
 Repair.IsAllowedToBeginWork.EndCurrentAction:		Ihr müsst erst Eure laufende Handlung beenden, bevor Ihr repariren könnt!
 Repair.IsAllowedToBeginWork.FullyRepaired:		{0} wurde erfolgreich repariert!
-Repair.IsAllowedToBeginWork.NoEnoughSkill:		Ihr habt nicht genug Erfahrung um {0} reparieren zu können!
+Repair.IsAllowedToBeginWork.NotEnoughSkill:		Ihr habt nicht genug Erfahrung um {0} reparieren zu können!
 Repair.IsAllowedToBeginWork.WeaponCrafter:		Ihr müsst ein Waffenschmied sein, um Belagerungswaffen reparieren zu können.
 Repair.Proceed.FailImprove1:				Ihr konntet den Zustand von {0} nicht verbessern.
 Repair.Proceed.FailImprove2:				{0} konnte den Zustand von {1} nicht verbessern.
@@ -160,7 +161,7 @@ Salvage.BeginWork.NoSalvage:				Ihr könnt {0} nicht verwerten!
 Salvage.BeginWork.Salvaging:				Verwertung: {0}
 Salvage.IsAllowedToBeginWork.BackpackItems:		Ihr könnt nur Gegenstände verwerten, die sich in Eurem Gepäck befinden!
 Salvage.IsAllowedToBeginWork.EndCurrentAction:		Ihr müsst erst Eure laufende Handlung beenden, bevor Ihr verwerten könnt!
-Salvage.IsAllowedToBeginWork.NoEnoughSkill:		Ihr habt nicht genug Erfahrung um {0} verwerten zu können!
+Salvage.IsAllowedToBeginWork.NotEnoughSkill:		Ihr habt nicht genug Erfahrung um {0} verwerten zu können!
 Salvage.Proceed.GetBackMaterial:			Ihr bekommt {0} {1} durch die Verwertung von {2} zurück.
 
 # /SpellCrafting
