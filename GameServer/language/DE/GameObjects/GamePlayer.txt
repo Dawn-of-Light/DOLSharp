@@ -46,7 +46,7 @@ GamePlayer.Attack.TooFarAway:				{0} ist zu weit weg für einen Angriff!
 GamePlayer.Attack.TooTired:				Es ist Euch zu anstrengend, das Ziel noch länger anzuvisieren!	
 GamePlayer.Attack.Type.Shot:				Schuss	
 GamePlayer.Attack.Type.Throw:				Wurf	
-GamePlayer.Attack.WithYour:				 
+GamePlayer.Attack.WithYour:				Euer
 GamePlayer.Attack.YouAttack:				Ihr greift an,
 GamePlayer.Attack.YouShot:				Ihr schießt	
 GamePlayer.Bind.Bound:					Eure Seele ist nun an diesen Ort gebunden.
@@ -59,6 +59,7 @@ GamePlayer.CastSpell.AlreadyCastNoQueue:		Ihr zaubert bereits, um Folgezauber zu
 GamePlayer.CastSpell.AlreadyPlaySong:			Ihr spielt bereits ein Lied!		
 GamePlayer.CastSpell.CantCastMezzed:			Ihr könnt nichts machen, wenn Ihr hypnotisiert seid!		
 GamePlayer.CastSpell.CantCastStunned:			Ihr könnt nichts machen, wenn Ihr betäubt seid!		
+GamePlayer.CastSpell.MustWaitBeforeCast:		Ihr müsst noch {0} Sekunden warten, um den nächsten Zauber sprechen zukönnen!
 GamePlayer.CommandNpcAttack.TooFarAwayForPet:		Das Ziel ist zu weit entfernt für einen Angriff durch Euer Wesen!			
 GamePlayer.CommandNpcGoTarget.MustSelectDestination:	Ihr müsst erst ein Ziel auswählen für Euer Wesen.				
 GamePlayer.CraftItem.DontHaveAbilityMake:		Ihr habt nicht die Fähigkeit, diesen Gegenstand herzustellen.			
@@ -127,6 +128,8 @@ GamePlayer.ItemBonusName.Bonus16:			Materieresistenz
 GamePlayer.ItemBonusName.Bonus17:			Schnittresistenz
 GamePlayer.ItemBonusName.Bonus18:			Geistresistenz
 GamePlayer.ItemBonusName.Bonus19:			Stoßresistenz
+GamePlayer.LavaBurnTimerCallback.Take34%Damage:		Ihr erleidet 34% Eurer maximalen Trefferpunkte als Schaden.
+GamePlayer.LavaBurnTimerCallback.YourInLava:		Ihr erleidet Schaden durch die Lava!
 GamePlayer.OnItemEquipped.Increased:			Eure {0} hat sich erhöht.
 GamePlayer.IsOnHorse.MountSteed:			Ihr besteigt Euer Pferd.
 GamePlayer.OnItemEquipped.Magic:			{0} lässt reine Magie durch Euren Körper strömen.		
@@ -237,6 +240,7 @@ GamePlayer.SendReceive.AfkMessage:			<AFK> {0} sendet: "{1}"
 GamePlayer.Send.target.DontUnderstandYou:		{0} scheint Euch nicht zu verstehen!
 GamePlayer.Send.YouSendTo:				Ihr sendet: "{0}" an {1}.
 GamePlayer.SetControlledNpc.ReleaseTarget:		Ihr verliert die Kontrolle über Euer Wesen.
+GamePlayer.SetControlledNpc.ReleaseTarget2:		Ihr verliert die Kontrolle über {0}.
 GamePlayer.Shade.AlreadyShade:				Ihr seid bereits ein Schatten!	
 GamePlayer.Shade.NoLongerShade:				Ihr seid nicht länger ein Schatten!	
 GamePlayer.Sit.AlreadySitting:				Ihr sitzt bereits!	
