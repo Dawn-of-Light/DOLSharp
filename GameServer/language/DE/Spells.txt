@@ -2,6 +2,7 @@
 DelveInfo.CastingTime:					Zauberzeit: {0}
 DelveInfo.ConcentrationCost:				Konzentrationsaufwand: {0} Punkte
 DelveInfo.Damage:					Schaden: {0}
+DelveInfo.DamageType:					Schadenstyp: {0}
 DelveInfo.Duration:					Dauer: 
 DelveInfo.Focus:					This is a focus spell. Cancels if you do any action.
 DelveInfo.Frequency:					Frequency: {0}
@@ -14,6 +15,7 @@ DelveInfo.Range:					Reichweite: {0}
 DelveInfo.RecastTime:					Wiederholungszeit:
 DelveInfo.Target:					Ziel: {0}
 DelveInfo.Value:					Wert: {0}
+DelveInfo.ValueNegative:				Wert: -{0}
 
 # AblativeArmor
 AblativeArmor.DelveInfo.Function:			Wirkung: Nahkampf-Trefferpunktpuffer
@@ -30,7 +32,7 @@ DamageSpeedDecrease.DelveInfo.Function:			Wirkung: Schaden/Verringert Geschwindi
 ResistDebuff.DelveInfo.Decrease:			Resistenz herabgesetzt ({0}): {1}
 ResistDebuff.DelveInfo.Function:			Wirkung: Weniger Resistenz
 
-#CharmSpellHandler
+# CharmSpellHandler
 CharmSpellHandler.DelveInfo.Function:			Wirkung: {0}
 
 # DamageAddAndShield
@@ -54,8 +56,17 @@ DoTSpellHandler.SendDamageMessages.YourHitsFor:		{0} trifft und {1} erleidet {2}
 # NearsightSpellHandler
 NearsightSpellHandler.DelveInfo.Function:		Wirkung: {0}
 
+# PetPBAOE
+PetPBAOE.CheckBeginCast.NoPet:				Dieser Zauberspruch kann nur auf ein kontrolliertes Wesen angewendet werden!
+
+# PetSpellHandler
+PetSpellHandler.CheckBeginCast.NoControlledBrainForCast:Ihr müsst ein Wesen kontrollieren, auf das Ihr den Zauberspruch anwenden könnt!
+
 # ProcSpellHandler
 ProcSpellHandler.DelveInfo.Function:			Wirkung: {0}
+
+# SavageEnduranceHeal
+SavageEnduranceHeal.CheckBeginCast.InsuffiscientHealth:	Ihr seid nicht gesund genug umd dies zu machen!
 
 # SummonCommanderPet
 SummonCommanderPet.CheckBeginCast.Text:			Ihr habt doch schon ein Wesen unter Eurer Kontrolle ... lasst das erst frei!
@@ -65,7 +76,7 @@ SummonCommanderPet.DelveInfo.Text3:			Ziel: {0}
 SummonCommanderPet.DelveInfo.Text4:			Magiekraftkosten: {0}%
 SummonCommanderPet.DelveInfo.Text5:			Zauberzeit: {0}
 
-#SummonMinionHandler
+# SummonMinionHandler
 SummonMinionHandler.CheckBeginCast.Text1:		Ihr müsst eines der Anführer-Monster kontrollieren, um der Gruppe weitere Monster hinzuzufügen!
 SummonMinionHandler.CheckBeginCast.Text2:		Euer Anführer hat schon seine maximale Anzahl an Gefolgsleuten erreicht!
 SummonMinionHandler.DelveInfo.Text1:			Ziel: {0}

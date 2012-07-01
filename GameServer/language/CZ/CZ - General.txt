@@ -249,7 +249,7 @@ GamePlayer.RemoveAbility.YouLose:			Prisel jsi o dovednost {0}!
 GamePlayer.RemoveSpecialization.YouLose:	Prisel jsi o dovednost {0}!
 GamePlayer.RemoveSpellLine.YouLose:			Prisel jsi o {0} magii!
 GamePlayer.SaveIntoDatabase.CharacterSaved:	Tvoje postava byla ulozena.
-GamePlayer.Send.DontUnderstandYou:         {0} se nezda ze ti rozumi.
+GamePlayer.Send.target.DontUnderstandYou:         {0} se nezda ze ti rozumi.
 GamePlayer.Send.YouSendTo:            Poslal jsi, "{0}" k {1}.
 GamePlayer.SendReceive.Afk:            {0} je v soucasne dobe AFK.
 GamePlayer.SendReceive.AfkMessage:         <AFK> {0} posila, "{1}"
