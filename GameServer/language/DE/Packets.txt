@@ -220,6 +220,7 @@ PlayerPositionUpdateHandler.Endurance:			Ihr verliert Ausdauer!
 PlayerPositionUpdateHandler.Entered:			Ihr befindet Euch nun {0}.
 PlayerPositionUpdateHandler.FallingDamage:		Ihr erleidet Sturzschaden!
 PlayerPositionUpdateHandler.FallPercent:		Ihr erleidet Schaden und verliert {0}% Eurer Trefferpunkte.
+PlayerPositionUpdateHandler.MythSafeFall:		Der Fallschaden wurde durch Ihre Ausrüstung verringert!
 PlayerPositionUpdateHandler.SafeFall:			Der Schaden wurde durch Eure Fallschutz-Fähigkeit vermindert!
 PlayerPositionUpdateHandler.UnknownZone:		Unbekannte Zone! Ihr werdet zu Eurem letzten Bindepunkt gebracht.
 

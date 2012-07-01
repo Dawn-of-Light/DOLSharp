@@ -11,6 +11,12 @@ GameObjects.CommanderPet.WR.Assist.Text:		Diese Funktion wurde noch nicht implem
 GameObjects.CommanderPet.WR.Combat:			Der {0} sagt: "Meine Untergebenen werden mich [unterstützen] und die von Euch vorgegebenen Ziele zusammen mit mir angreifen oder für sich kämpfen und eigene Ziele wählen. Ich kann zudem versuchen, Eure Gegner so zu [verärgern], dass diese mich statt Euch angreifen."
 GameObjects.CommanderPet.WR.CommNoTaunt:		Euer Kommandant wird nicht länger die Feinde verärgern!
 GameObjects.CommanderPet.WR.CommStartTaunt:		Euer Kommandant wird jetzt die Feinde verärgern!
+GameObjects.CommanderPet.WR.Const.1HandedSword:		Einhandschwert
+GameObjects.CommanderPet.WR.Const.2HandedSword:		Zweihandschwert
+GameObjects.CommanderPet.WR.Const.1HandedHammer:	Einhandhammer
+GameObjects.CommanderPet.WR.Const.2HandedHammer:	Zweihandhammer
+GameObjects.CommanderPet.WR.Const.1HandedAxe:		Einhandaxt
+GameObjects.CommanderPet.WR.Const.2HandedAxe:		Zweihandaxt
 GameObjects.CommanderPet.WR.Const.Assist:		unterstützen
 GameObjects.CommanderPet.WR.Const.Combat:		kampf
 GameObjects.CommanderPet.WR.Const.Commander:		kommandant
