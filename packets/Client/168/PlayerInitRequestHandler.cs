@@ -74,7 +74,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.CurrentUpdateArray.SetAll(false);
 				// update the region color scheme which may be wrong due to ALLOW_ALL_REALMS support
 				player.Out.SendRegionColorScheme();
-				player.CurrentRegion.Notify(RegionEvent.PlayerEnter, player.CurrentRegion, new RegionPlayerEventArgs(player));
+				if (player.CurrentRegion != null)
+				{
+					player.CurrentRegion.Notify(RegionEvent.PlayerEnter, player.CurrentRegion, new RegionPlayerEventArgs(player));
+				}
 				int mobs = SendMobsAndMobEquipmentToPlayer(player);
 				player.Out.SendTime();
 				WeatherMgr.UpdatePlayerWeather(player);
@@ -144,9 +147,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 				CheckIfPlayerLogsNearEnemyKeepAndMoveIfNecessary(player);
 				CheckBGLevelCapForPlayerAndMoveIfNecessary(player);
 
-				if (checkInstanceLogin && player.CurrentRegion.IsInstance)
+				if (checkInstanceLogin)
 				{
-					player.MoveToBind();
+					if (player.CurrentRegion == null || player.CurrentRegion.IsInstance)
+					{
+						Log.WarnFormat("{0}:{1} logging into instance or CurrentRegion is null, moving to bind!", player.Name, player.Client.Account.Name);
+						player.MoveToBind();
+					}
 				}
 
 				if (player.IsUnderwater)
