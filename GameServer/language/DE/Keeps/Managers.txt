@@ -2,7 +2,7 @@
 #All
 SetGuardName.Commander:		Kommandant von {0}
 SetGuardName.Hastener:		Antreiber
-#SetGuardName.Renegade:		Renegade {0}
+#SetGuardName.Renegade:		Abtrünniger {0}
 SetGuardName.TowerCaptain:	Turmhauptmann
 
 #Albion

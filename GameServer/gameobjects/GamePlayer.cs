@@ -4661,13 +4661,13 @@ namespace DOL.GS
 				if (CanGenerateNews && ((RealmLevel >= 40 && RealmLevel % 10 == 0) || RealmLevel >= 60))
 				{
 					string message = LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.ReachedRankNews", Name, RealmLevel + 10, LastPositionUpdateZone.Description);
-					string newsmessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.GainRealmPoints.ReachedRankNews", Name, RealmLevel + 10, LastPositionUpdateZone.Description);
-					NewsMgr.CreateNews(newsmessage, this.Realm, eNewsType.RvRLocal, true);
+                    string newsmessage = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.GainRealmPoints.ReachedRankNews", Name, RealmLevel + 10, LastPositionUpdateZone.Description);
+                    NewsMgr.CreateNews(newsmessage, this.Realm, eNewsType.RvRLocal, true);
 				}
 				if (CanGenerateNews && RealmPoints >= 1000000 && RealmPoints - amount < 1000000)
 				{
 					string message = LanguageMgr.GetTranslation(Client, "GamePlayer.GainRealmPoints.Earned", Name, LastPositionUpdateZone.Description);
-					string newsmessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.GainRealmPoints.Earned", Name, LastPositionUpdateZone.Description);
+                    string newsmessage = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.GainRealmPoints.Earned", Name, LastPositionUpdateZone.Description);
 					NewsMgr.CreateNews(newsmessage, this.Realm, eNewsType.RvRLocal, true);
 				}
 			}
@@ -5486,7 +5486,7 @@ namespace DOL.GS
 						if (CanGenerateNews)
 						{
 							string message = LanguageMgr.GetTranslation(Client, "GamePlayer.OnLevelUp.Reached", Name, Level, LastPositionUpdateZone.Description);
-							string newsmessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.OnLevelUp.Reached", Name, Level, LastPositionUpdateZone.Description);
+                            string newsmessage = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnLevelUp.Reached", Name, Level, LastPositionUpdateZone.Description);
 							NewsMgr.CreateNews(newsmessage, Realm, eNewsType.PvE, true);
 						}
 						break;
@@ -6540,12 +6540,8 @@ namespace DOL.GS
 
 					string hitWeapon = "";
 
-					switch (ServerProperties.Properties.SERV_LANGUAGE)
-					{
-						case "EN":
-							if (weapon != null)
-								hitWeapon = GlobalConstants.NameToShortName(weapon.Name);
-							break;
+                    switch (Client.Account.Language)
+                    {
 						case "DE":
 							if (weapon != null)
 								hitWeapon = weapon.Name;
@@ -7781,12 +7777,12 @@ namespace DOL.GS
 				if (realmDeath)
 				{
 					playerMessage = LanguageMgr.GetTranslation(Client, "GamePlayer.Die.KilledLocation", GetName(0, true), location);
-					publicMessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.Die.KilledLocation", GetName(0, true), location);
+                    publicMessage = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Die.KilledLocation", GetName(0, true), location);
 				}
 				else
 				{
 					playerMessage = LanguageMgr.GetTranslation(Client, "GamePlayer.Die.Killed", GetName(0, true));
-					publicMessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.Die.Killed", GetName(0, true));
+                    publicMessage = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Die.Killed", GetName(0, true));
 				}
 			}
 			else
@@ -7796,7 +7792,7 @@ namespace DOL.GS
 					m_releaseType = eReleaseType.Duel;
 					messageDistance = WorldMgr.YELL_DISTANCE;
 					playerMessage = LanguageMgr.GetTranslation(Client, "GamePlayer.Die.DuelDefeated", GetName(0, true), killer.GetName(1, false));
-					publicMessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.Die.DuelDefeated", GetName(0, true), killer.GetName(1, false));
+                    publicMessage = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Die.DuelDefeated", GetName(0, true), killer.GetName(1, false));
 				}
 				else
 				{
@@ -7804,12 +7800,12 @@ namespace DOL.GS
 					if (realmDeath)
 					{
 						playerMessage = LanguageMgr.GetTranslation(Client, "GamePlayer.Die.KilledByLocation", GetName(0, true), killer.GetName(1, false), location);
-						publicMessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.Die.KilledByLocation", GetName(0, true), killer.GetName(1, false), location);
+                        publicMessage = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Die.KilledByLocation", GetName(0, true), killer.GetName(1, false), location);
 					}
 					else
 					{
 						playerMessage = LanguageMgr.GetTranslation(Client, "GamePlayer.Die.KilledBy", GetName(0, true), killer.GetName(1, false));
-						publicMessage = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GamePlayer.Die.KilledBy", GetName(0, true), killer.GetName(1, false));
+                        publicMessage = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Die.KilledBy", GetName(0, true), killer.GetName(1, false));
 					}
 				}
 			}

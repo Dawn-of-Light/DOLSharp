@@ -1,11 +1,9 @@
 ﻿SpellHandler.CancelEffect:	You cancel your effect.
 SpellHandler.CancelPulsingSpell:	You stop playing your song.
-SpellHandler.NoPowerStopPulsingSpell:	You do not have enough mana and your spell was cancelled.
-SpellHandler.NoInstrumentStopPlayingSong:	You stop playing your song.
-SpellHandler.MoveInterruptFocus:	Your spell was cancelled.
 SpellHandler.CasterMove:	You move and interrupt your spellcast!
 GamePlayer.CastSpell.MustWaitBeforeCast:	You need to wait {0} mores secondes for cast a spell!
 SpellHandler.DelveInfo.Sec:	sec
+
 # DelveInfo
 DelveInfo.CastingTime:					Casting time: {0}
 DelveInfo.ConcentrationCost:				Concentration cost: {0}
