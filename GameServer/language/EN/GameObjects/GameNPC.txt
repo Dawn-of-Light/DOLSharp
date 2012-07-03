@@ -1,5 +1,4 @@
-﻿GameNPC.EpicEncounterTag:					Epic Encounter
-GameNPC.DropLoot.AdditionalMoney:			You find an additional {0} thanks to your realm owning outposts!
+﻿GameNPC.DropLoot.AdditionalMoney:			You find an additional {0} thanks to your realm owning outposts!
 GameNPC.DropLoot.ItemAdditionalMoney:		You get an additional {0} thanks to your equipment!
 GameNPC.DropLoot.Drops:						{0} drops {1}.
 GameNPC.GetAggroLevelString.Aggressive1:	aggressive
