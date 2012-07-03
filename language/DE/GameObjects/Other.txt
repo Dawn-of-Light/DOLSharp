@@ -11,3 +11,5 @@ KingNPC.WhisperReceive.AlreadyChampion:			Ihr seid bereits ein Champion!
 KingNPC.WhisperReceive.AskForChampion:			Würdet Ihr gerne das Leben eines [Champions] führen?
 KingNPC.WhisperReceive.IsNowChampion:			Ihr habt Euch soeben für das Leben eines Champions entschieden!
 
+# /GameHousingHastener
+GameHousingHastener.GetExamineMessages.Examine:		Es interessiert Euch {0}. {1} ist Euch {2} gesonnen und treibt Handel.
