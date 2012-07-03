@@ -109,7 +109,7 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		public bool IsPortalKeep
+		public virtual bool IsPortalKeep
 		{
 			get
 			{
