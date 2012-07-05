@@ -251,8 +251,11 @@ namespace DOL.GS.Commands
 							try
 							{
 								craftingSkillID = (eCraftingSkill)Convert.ToUInt16(args[2]);
+
 								if (args.Length > 3)
-									amount = Convert.ToUInt16(args[3]);
+								{
+									amount = Convert.ToInt32(args[3]);
+								}
 
 								AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(craftingSkillID);
 								if (skill == null)
@@ -267,7 +270,14 @@ namespace DOL.GS.Commands
 										return;
 									}
 
-									target.GainCraftingSkill(craftingSkillID, amount);
+									if (amount > 0)
+									{
+										target.GainCraftingSkill(craftingSkillID, amount);
+									}
+									else
+									{
+										target.CraftingSkills[craftingSkillID] += amount;
+									}
 									target.Out.SendUpdateCraftingSkills();
 									target.SaveIntoDatabase();
 									DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Crafting.SkillChanged", skill.Name));
