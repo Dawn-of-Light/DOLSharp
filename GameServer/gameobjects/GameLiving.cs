@@ -2917,7 +2917,9 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual bool AllowWeaponMagicalEffect(AttackData ad, InventoryItem weapon, Spell weaponSpell)
 		{
-			return true;
+			if (weapon.Flags == 10) //Itemtemplates with "Flags" set to 10 will not proc on living (ex. Bruiser)
+				return false;
+			else return true;
 		}
 
 		/// <summary>
