@@ -264,7 +264,9 @@ namespace DOL.GS.Keeps
 		/// <returns></returns>
 		public override bool AllowWeaponMagicalEffect(AttackData ad, InventoryItem weapon, Spell weaponSpell)
 		{
-			return false; // special code goes here to check for spell handler etc.
+			if (weapon.Flags == 10) //Bruiser or any other item needs Itemtemplate "Flags" set to 10 to proc on keep components
+				return true;
+			else return false;
 		}
 
 		/// <summary>
