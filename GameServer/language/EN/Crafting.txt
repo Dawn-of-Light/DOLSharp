@@ -106,7 +106,7 @@ AbstractCraftingSkill.CheckRawMaterial.NoIngredients:	You do not have the ingred
 AbstractCraftingSkill.CheckRawMaterial.RawMaterial:	Cannot find an item by the ID of {0} please report this!
 AbstractCraftingSkill.CheckRawMaterial.YouAreMissing:	You are missing :
 AdvancedCraftingSkill.IsAllowedToCombine.NoGoodCombine:	This items can't be imbued with this tincture!
-AdvancedCraftingSkill.IsAllowedToCombine.ProblemCombine:	The tincture item need to be configured,send a gm or reprt it!
+AdvancedCraftingSkill.IsAllowedToCombine.ProblemCombine:The tincture item need to be configured,send a gm or report it!
 
 AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoClothworkingSkill:		You don't have the minimum necessary Clothworking skill ({0}) to create the {1}!
 AbstractCraftingSkill.CheckSecondCraftingSkillRequirement.NoLeathercraftingSkill:	You don't have the minimum necessary Leathercrafting skill ({0}) to create the {1}!

@@ -222,7 +222,7 @@ FirstAidAbility.AddEffectsInfo.Info3:			Stufe 3: Wert: 100%
 FirstAidAbility.AddEffectsInfo.Info4:			Ziel: Selbst
 FirstAidAbility.AddEffectsInfo.Info5:			Zauberzeit: Sofort
 FirstAidAbility.AddEffectsInfo.Info6:			Dieser Zauberspruch kann nicht während eines Kampfes ausgesprochen werden.
-FirstAidAbility.Execute.FullyHealed:			Ihr seit wieder geheilt.
+FirstAidAbility.Execute.FullyHealed:			Ihr seid wieder geheilt.
 FirstAidAbility.Execute.HealYourself:			Ihr habt Euch selbst um {0} Trefferpunkte geheilt.
 
 # /PurgeAbility
@@ -237,7 +237,7 @@ RealmAbility.AddReUseDelayInfo.Every:			Stufe {0}: Nutzbar alle: {1}
 RealmAbility..CheckPreconditions.BeInCombat:		Dieser Zauberspruch kann nur während eines Kampfes ausgesprochen werden!
 RealmAbility..CheckPreconditions.BeInGroup:		Dieser Zauberspruch kann nur als Mitglied einer Gruppe ausgesprochen werden!
 RealmAbility..CheckPreconditions.Combat:		Dieser Zauberspruch kann nicht während eines Kampfes ausgesprochen werden!
-RealmAbility..CheckPreconditions.Dead:			Ihr könnt diese Fähigkeit nicht nutzen, da Ihr tot seit!
+RealmAbility..CheckPreconditions.Dead:			Ihr könnt diese Fähigkeit nicht nutzen, da Ihr tot seid!
 RealmAbility..CheckPreconditions.Mesmerized:		Ihr könnt diese Fähigkeit nicht nutzen,while mesmerized!
 RealmAbility..CheckPreconditions.Sitting:		Ihr könnt diese Fähigkeit nicht nutzen,while sitting!
 RealmAbility..CheckPreconditions.Stealthed:		Ihr könnt diese Fähigkeit nicht nutzen,while stealthed!
