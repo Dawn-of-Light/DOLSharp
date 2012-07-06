@@ -1,0 +1,85 @@
+﻿Skill.Ability.CannotUseDead:			Ihr könnt das nicht machen, da Ihr tot seid!
+Skill.Ability.CannotUseMezzed:			Ihr seid hypnotisiert und könnt das jetzt nicht machen!
+Skill.Ability.CannotUseStunned:			Ihr seid betäubt und könnt das jetzt nicht machen!
+Skill.Ability.CannotUseStanding:		Ihr müsst stehen um die Fähigkeit anwenden zu können!
+Skill.Ability.CannotUseSnared:			Ihr könnt diese Fähigkeit nicht anwenden, da Ihr in einer Schlinge steckt!
+Skill.Ability.CannotUseNoTarget:		Ihr braucht ein Ziel für diese Fähigkeit!
+Skill.Ability.CannotAttackTarget:		Ihr könnt {0} angreifen!
+Skill.Ability.CannotSeeTarget:			Ihr könnt {0} nicht sehen!
+Skill.Ability.TargetIsWithinRadius:		Ihr könnt diese Fähigkeit nicht anwenden, da Euer Ziel zu weit weg ist!
+Skill.Ability.TargetIsPhaseshifted:		{0} ist phasenverschoben und kann nicht angegriffen werden!
+Skill.Ability.TargetIsUnderSputinLegacy:	{0} steht unter dem Effekt von "Sputins Vermächtnis" und kann nicht angegriffen werden!
+Skill.Ability.CannotUseAlreadyActive:		Diese Fähigkeit ist bereits aktiv, wartet bis die Zeit abgelaufen ist.
+Skill.Ability.CannotUseInCombat:		Ihr befindet Euch gerade im Kampf und könnt deshalb diese Fähigkeit nicht anwenden!
+Skill.Ability.CannotUseTargetNull:		Ihr braucht ein Ziel für diese Fähigkeit!
+Skill.Ability.CannotUseMustBeInGroup:		Ihr müsst in einer Gruppe sein um diese Fähigkeit zu nutzen!
+Skill.Ability.CannotUseWhileStealthed:		Ihr könnt diese Fähigkeit während des Schleichens nicht anwenden!
+Skill.Ability.MinRemaining:	  		Minuten.
+Skill.Ability.SecRemaining:	  		Sekunden.
+
+Skill.Ability.CannotUse.Camouflage.Mezzed:				Ihr könnt Euch nicht tarnen während Ihr hypnotisiert seid!
+Skill.Ability.CannotUse.Camouflage.Stunned:				Ihr könnt Euch nicht tarnen während Ihr betäubt seid!
+Skill.Ability.CannotUse.Camouflage.NotStealthed:			Ihr könnt Euch nicht tarnen, da Ihr nicht schleicht!
+Skill.Ability.CannotUse.Camouflage.Dead:				Ihr könnt Euch nicht tarnen, da Ihr tot seid!
+Skill.Ability.CannotUse.Camouflage.DisableDuration:			Ihr müsst noch {0} Sekunden warten um Tarnung anzuwenden!
+
+Skill.Ability.CannotUse.Bodyguard.Dead:					Als Toter könnt Ihr kein Leibwächter sein!
+Skill.Ability.CannotUse.Bodyguard.CancelTargetNull:			Ihr seid nicht länger mehr Leibwächter.
+Skill.Ability.CannotUse.Bodyguard.GuardTargetIsGuardSource:		Ihr könnt nicht Euer eigener Leibwächter sein!
+Skill.Ability.CannotUse.Bodyguard.NotInGroup:				Ihr könnt nur Mitglieder Eurer Gruppe bewachen!
+Skill.Ability.CannotUse.Bodyguard.GuardTargetAlreadyBodyGuarded:	{0} wird bereits von {1} bewacht!
+Skill.Ability.CannotUse.Bodyguard.GuardSourceBodyGuarded:		Ihr könnt niemanden bewachen, wenn Ihr selbst einen Leibwächter habt!
+
+Skill.Ability.CannotUse.CriticalShot.NoRangedWeapons:			Ihr müsst eine Weitbereichswaffe in Euren Händen halten!
+Skill.Ability.CannotUse.CriticalShot.MustBeStanding:			Ihr müsst für einen Weitbereichs-Angriff bereit sein!
+Skill.Ability.CriticalShot.SwitchToRegular:				Ihr wechselt zu einem normalen Schuss um!
+Skill.Ability.CriticalShot.AlreadyFiring:				Ihr seid bereit, um diese Waffe abzufeuern!
+
+Skill.Ability.DirtyTricks.EffectCancel:			Ihr greift jetzt wieder normal an.
+Skill.Ability.DirtyTricks.EffectStart:			Ihr bekommt Sand in die Augen geworfen!
+Skill.Ability.DirtyTricks.Name:				Schmutzige Tricks
+Skill.Ability.DirtyTricks.Description:			Der Spieler wirft Sand in die Augen seines Gegners, dadurch wird die Warscheinlichkeit, dass dieser im Nahkampf stolpert zeitweilig um 50% erhöht.
+Skill.Ability.DirtyTricks.DelveString:			Die Stolperwarscheinlichkeit des Ziels wird um 50% erhöht.
+
+Skill.Ability.Engage.CannotUseDead:			Ihr könnt nicht kämpfen, während Ihr tot am Boden liegt!
+Skill.Ability.Engage.CannotUseStanding:			Ihr könnt nicht kämpfen, während Ihr sitzt!
+Skill.Ability.Engage.CannotUseNoCaCWeapons:		Ihr könnt nicht in den Nahkampf gehen mit einer Schusswaffe!
+Skill.Ability.Engage.NoTarget:				Ihr könnt nur Kreaturen aktiv blocken, die Euch feindlich gesonnen sind.
+Skill.Ability.Engage.TargetAttackedRecently:		{0} wurde gerade angegriffen und deshalb ist es Euch unmöglich aktiv zu blocken.
+Skill.Ability.Engage.NotAllowedToEngageTarget:		Ihr dürft {0} nicht aktiv blocken.
+
+Skill.Ability.Flurry.TargetNotPlayerOrGuards:		Ihr könnt mit dieser Fähigkeit nur Spieler oder Wächter feindlicher Reiche angreifen!
+Skill.Ability.Flurry.YouHit:				Ihr trefft {0} und macht {1} Schaden!
+Skill.Ability.Flurry.HitYou:				{0} greift Euch hektisch an und macht damit {1} Schaden!
+
+Skill.Ability.QuickCast.CannotUseIsCasting:		Ihr könnt Schnellzaubern nicht vorbereiten, da Ihr bereits zaubert!
+Skill.Ability.QuickCast.CannotUseDead:			Ihr könnt nicht schnellzaubern, wenn Ihr tot seid!
+Skill.Ability.QuickCast.CannotUseInMeleeCombat:		Ihr könnt im Nahkampf nicht zaubern.
+Skill.Ability.QuickCast.CannotUseChangeTick:		Ihr müsst noch weitere {0} Sekunden warten, bevor Ihr Schnellzaubern vorbereitet!
+
+Skill.Ability.Guard.CancelTargetNull:						Ihr bewacht nun niemanden mehr.
+Skill.Ability.Guard.CannotUse.GuardTargetIsGuardSource:				Ihr könnt Euch nicht selbst bewachen!
+Skill.Ability.Guard.CannotUse.NotInGroup:					Ihr könnt nur Mitglieder Eurer Gruppe bewachen!
+Skill.Ability.Guard.CannotUse.GuardTargetAlreadyGuarded:			{0} wird bereits von {1} bewacht!
+
+Skill.Ability.Intercept.CannotUse.InterceptTargetAlreadyInterceptedEffect:	{0} fängt bereits für {1} ab.
+Skill.Ability.Intercept.CannotUse.NotInGroup:					Ihr könnt nur für Mitglieder Eurer Gruppe abfangen!
+Skill.Ability.Intercept.CancelTargetNull:					Ihr fangt nicht länger für jemanden ab.
+
+Skill.Ability.Protect.CannotUse.ProtectTargetAlreadyProtectEffect:		{0} beschützt bereits {1}!
+Skill.Ability.Protect.CannotUse.NotInGroup:					Ihr könnt nur Mitglieder Eurer Gruppe beschützen!
+Skill.Ability.Protect.CannotUse.CantProtectYourself:				Ihr könnt Euch nicht selbst beschützen!
+Skill.Ability.Protect.CancelTargetNull:						Ihr beschützt nicht länger irgendjemanden.
+
+Skill.Ability.RapidFire.CannotUseDead:			Ihr könnt nicht umstellen auf Schnellfeuer, wenn Ihr tot seid!
+
+Skill.Ability.Stealth.CannotUseToCloseAnEnemy:		Ihr seid zu nah an einen Feind um zu schleichen!
+Skill.Ability.Stealth.CannotUseStunned:			Ihr könnt nicht schleichen während Ihr betäubt seid!
+Skill.Ability.Stealth.CannotUseMezzed:			Ihr könnt nicht schleichen während Ihr hypnotisiert seid!
+Skill.Ability.Stealth.CannotUseActivePulsingSpell:	Ein "?Puls-Zauberspruch?"-Effekt verhindert Eure Tarnung!
+Skill.Ability.Stealth.CannotUseCombatState:		Ihr müsst Eure aktuelle Handlung beenden bevor Ihr Euch tarnen könnt!
+Skill.Ability.Stealth.CannotUseDead:			Ihr könnt Euch nicht tarnen, da Ihr tot seid!
+Skill.Ability.Stealth.CannotUseInCombat: 		Im Nahkampf könnt Ihr Euch nicht tarnen!
+Skill.Ability.Stealth.CannotUseStealthChangeTick:	Ihr müsst noch weitere {0} Sekunden warten, bevor Ihr Euch tarnen könnt!
+
+Skill.Ability.SureShot.CannotUseDead:			Ihr könnt keinen sicheren Schuss vorbereiten, da Ihr tot seid!

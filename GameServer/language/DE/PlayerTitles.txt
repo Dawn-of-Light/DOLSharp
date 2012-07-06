@@ -341,7 +341,7 @@ PlayerClass.Animist.GetTitle.35:	Waldmagier
 PlayerClass.Animist.GetTitle.30:	Diener Gaias
 PlayerClass.Animist.GetTitle.25:	Geweihter der Wälder
 PlayerClass.Animist.GetTitle.20:	Pflanzenfreund
-#PlayerClass.Animist.GetTitle.15:	Friend of Gaia
+PlayerClass.Animist.GetTitle.15:	Gaias Freund
 #PlayerClass.Animist.GetTitle.10:	Arboreal Apprentice
 #PlayerClass.Animist.GetTitle.5:	Grove Initiate
 
