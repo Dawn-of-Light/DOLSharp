@@ -1,6 +1,6 @@
 ﻿#GameKeepGuard
-GameKeepGuard.GetExamineMessages.Balancing:	{0} has keep balancing level ({1})
-GameKeepGuard.GetExamineMessages.Upgraded:	{0} has upgraded equipment ({1}).
+GameKeepGuard.GetExamineMessages.Balancing:	{0} hat die Festungsstufe angeglichen ({1}).
+GameKeepGuard.GetExamineMessages.Upgraded:	{0} hat die Ausrüstung angepasst ({1}).
 GameKeepGuard.GetExamineMessages.YouExamine:	Es interessiert Euch {0}. {1} ist Euch {2} gesonnen und gehört der Reichswache an.
 GameKeepGuard.GetExamineMessages.YouTarget:	Es wird {0} als Ziel erfasst.
 GameKeepGuard.GetPronoun.He:			Er
