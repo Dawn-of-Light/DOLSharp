@@ -1,5 +1,5 @@
 ﻿# /DetailDisplayHandler
-DetailDisplayHandler.GetShortItemInfo.CrafterName:	Crafter : {0}
+DetailDisplayHandler.GetShortItemInfo.CrafterName:	Handwerker : {0}
 DetailDisplayHandler.GetShortItemInfo.NoDrop:		 Nicht ablegbar.
 DetailDisplayHandler.GetShortItemInfo.NoSell:		 Nicht verkaufbar.
 DetailDisplayHandler.GetShortItemInfo.NoTrade:		 Nicht handelbar.
@@ -59,7 +59,7 @@ DetailDisplayHandler.HandlePacket.VeryHighPenalty:	Sehr hoher Abzug
 DetailDisplayHandler.HandlePacket.VeryLow:		Sehr Niedrig
 DetailDisplayHandler.HandlePacket.VeryLowBonus:		Sehr niedriger Bonus
 DetailDisplayHandler.HandlePacket.VeryLowPenalty:	Sehr niedriger Abzug
-DetailDisplayHandler.HandlePacket.VeryStrange:		It's very strange, i cant recognise this item.
+DetailDisplayHandler.HandlePacket.VeryStrange:		Es ist sehr seltsam, ich kann diesen Gegenstand nicht erkennen.
 DetailDisplayHandler.HandlePacket.WeaponType:		Waffentyp: {0}
 DetailDisplayHandler.HandlePacket.YouBlock:		Ihr blockt ab
 DetailDisplayHandler.HandlePacket.YouEvade:		Ihr weicht aus
@@ -124,8 +124,8 @@ DetailDisplayHandler.WritePoisonInfo.Charges:		- {0} Ladungen
 DetailDisplayHandler.WritePoisonInfo.Level:		- Stufe {0}
 DetailDisplayHandler.WritePoisonInfo.LevelRequired:	Benötigte Erfahrung:
 DetailDisplayHandler.WritePoisonInfo.MaxCharges:	- {0} Max
-DetailDisplayHandler.WritePoisonInfo.ProcAbility:	Offensive Proc Fähigkeit:
-DetailDisplayHandler.WritePotionInfo.ChargedMagic:	Charged Magic Fähigkeit:
+#DetailDisplayHandler.WritePoisonInfo.ProcAbility:	Offensive Proc Fähigkeit:
+#DetailDisplayHandler.WritePotionInfo.ChargedMagic:	Charged Magic Fähigkeit:
 DetailDisplayHandler.WritePotionInfo.Charges:		- {0} Ladungen
 DetailDisplayHandler.WritePotionInfo.Level:		- Stufe {0}
 DetailDisplayHandler.WritePotionInfo.LevelRequired:	Benötigte Erfahrung:
@@ -194,7 +194,7 @@ PlayerBonusesListRequestHandler.HandlePacket.Bonuses:	Momentane Boni
 PlayerBonusesListRequestHandler.HandlePacket.Magic:	Magiebonus: {0}%
 PlayerBonusesListRequestHandler.HandlePacket.Melee:	Nahkampfbonus: {0}%
 PlayerBonusesListRequestHandler.HandlePacket.Outpost:	Festungsboni:
-PlayerBonusesListRequestHandler.HandlePacket.Realm:	Realm Rank Bonuses
+PlayerBonusesListRequestHandler.HandlePacket.Realm:	Reichsrang-Boni
 PlayerBonusesListRequestHandler.HandlePacket.Relic:	Reliktboni:
 PlayerBonusesListRequestHandler.HandlePacket.Resist:	Resistenzen:
 PlayerBonusesListRequestHandler.HandlePacket.Special:	Besondere Gegenstandsboni:
@@ -225,7 +225,7 @@ PlayerPositionUpdateHandler.SafeFall:			Der Schaden wurde durch Eure Fallschutz-
 PlayerPositionUpdateHandler.UnknownZone:		Unbekannte Zone! Ihr werdet zu Eurem letzten Bindepunkt gebracht.
 
 # /PacketLib168
-SendMasterLevelWindow.Complete.ML1.Step1:		[Erledigt][1.1] Ihr habt Ianetors elementare Flammen gelöscht!
+SendMasterLevelWindow.Complete.ML1.Step1:	[Erledigt][1.1] Ihr habt Ianetors elementare Flammen gelöscht!
 SendMasterLevelWindow.Complete.ML1.Step2:       [Erledigt][1.2] Der Gerechtigkeit für Lornas wurde Genüge getan!
 SendMasterLevelWindow.Complete.ML1.Step3:       [Erledigt][1.3] Der Gegner wurde besiegt! Die sterbende Sippe kann nun aufblühen!
 SendMasterLevelWindow.Complete.ML1.Step4:       [Erledigt][1.4] Fadrin und seine Barriere sind gefallen! Die Verdammten sind nun frei!
@@ -324,102 +324,102 @@ SendMasterLevelWindow.Complete.ML9.Step8:       [Erledigt][9.8] Ihr habt Euch de
 SendMasterLevelWindow.Complete.ML9.Step9:       [Erledigt][9.9] Neola hat versagt, ihre Schwestern zu beschützen.
 SendMasterLevelWindow.Complete.ML9.Step10:      [Erledigt][9.10] Der Phönix ist gefallen!
 
-SendMasterLevelWindow.Uncomplete.ML1.Step1:		[1.1] Ianetor spielt gerne mit dem Feuer und sucht Abenteurer, die an einem explosiven Spiel in Oceanus Anatole teilnehmen wollen! Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML1.Step2:		[1.2] Der Dieb, der Lornas bestohlen hat, lebt noch immer! Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML1.Step3:		[1.3] Die Triton-Sippen der Zhton und Kyhnroe in Messothalassa und Oceanus Boreal sterben, trotzdem bekriegen sie sich noch immer! Beide Sippen suchen nach Abenteurern, die für ihre Sache kämpfen! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML1.Step4:		[1.4] Die Barriere hält noch immer jene zurück, die durch die verfluchte See von Oceanus Hesperos genommen wurden! Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML1.Step5:		[1.5] Ihr habt Euch noch nicht gegen die Macht von Lord Krojers Champions im einzelnen Kampf bewiesen! Dies ist eine Einzelbegegnung.
-SendMasterLevelWindow.Uncomplete.ML1.Step6:		[1.6] Kirkleis betrachtet sich noch immer mit Hass in dem Spiegel, der seinen Fluch lächerlich macht! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML1.Step7:		[1.7] Das Portal liegt ruhig und dunkel! Der Rassa bleibt weiterhin vor jenen, die seine Macht wollen, verschlossen! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML1.Step8:		[1.8] Der Rubin liegt im Sand neben dem Kopf, dessen Auge in die ewigen Tiefen starrt! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML1.Step9:		[1.9] Desmona trägt ihre Krone noch immer, das benötigte Zeichen bleibt verschollen! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step1:	[1.1] Ianetor spielt gerne mit dem Feuer und sucht Abenteurer, die an einem explosiven Spiel in Oceanus Anatole teilnehmen wollen! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step2:	[1.2] Der Dieb, der Lornas bestohlen hat, lebt noch immer! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step3:	[1.3] Die Triton-Sippen der Zhton und Kyhnroe in Messothalassa und Oceanus Boreal sterben, trotzdem bekriegen sie sich noch immer! Beide Sippen suchen nach Abenteurern, die für ihre Sache kämpfen! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step4:	[1.4] Die Barriere hält noch immer jene zurück, die durch die verfluchte See von Oceanus Hesperos genommen wurden! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step5:	[1.5] Ihr habt Euch noch nicht gegen die Macht von Lord Krojers Champions im einzelnen Kampf bewiesen! Dies ist eine Einzelbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step6:	[1.6] Kirkleis betrachtet sich noch immer mit Hass in dem Spiegel, der seinen Fluch lächerlich macht! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step7:	[1.7] Das Portal liegt ruhig und dunkel! Der Rassa bleibt weiterhin vor jenen, die seine Macht wollen, verschlossen! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step8:	[1.8] Der Rubin liegt im Sand neben dem Kopf, dessen Auge in die ewigen Tiefen starrt! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML1.Step9:	[1.9] Desmona trägt ihre Krone noch immer, das benötigte Zeichen bleibt verschollen! Dies ist eine Kampfgruppenbegegnung.
 SendMasterLevelWindow.Uncomplete.ML1.Step10:	[1.10] Tretet Cetus mit einem Ring, einem Rubin, einem Spiegel und einer Krone entgegen! Dies ist eine Kampfgruppenbegegnung.
 
-SendMasterLevelWindow.Uncomplete.ML2.Step1:		[2.1] Der Tod nähert sich Euch aus dem Schatten im Tempel der Sobekite-Ewigkeit! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML2.Step2:		[2.2] Die Assassinen des Betrügers beseitigen die Wächter des Tempels der Sobekite-Ewigkeit! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML2.Step3:		[2.3] Die Triton-Häuptlinge und ihre Anhänger horten in den überfluteten Tiefen des Tempels der Sobekite-Ewigkeit gestohlene Güter! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML2.Step4:		[2.4] Rrionnes Spiegelbild ist der Schlüssel zu ihrer Unverwundbarkeit! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML2.Step5:		[2.5] Ihr habt Chaths Test der Strategie noch nicht bestanden! Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML2.Step6:		[2.6] Kanakhts Test scheint zu schwer für Euch zu sein! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML2.Step7:		[2.7] Ihr müsst Euch noch immer Angst, Furcht und Schrecken stellen! Dies ist eine Einzel-, Gruppen- oder Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML2.Step8:		[2.8] Um erfolgreich zu sein, müsst Ihr Euch selbst entgegentreten! Dies ist eine Einzelbegegnung.
-SendMasterLevelWindow.Uncomplete.ML2.Step9:		[2.9] Besiegt die Meister des Kampfes, die einst die Prüfung der Sobekite-Ewigkeit geschafft haben! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML2.Step1:	[2.1] Der Tod nähert sich Euch aus dem Schatten im Tempel der Sobekite-Ewigkeit! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML2.Step2:	[2.2] Die Assassinen des Betrügers beseitigen die Wächter des Tempels der Sobekite-Ewigkeit! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML2.Step3:	[2.3] Die Triton-Häuptlinge und ihre Anhänger horten in den überfluteten Tiefen des Tempels der Sobekite-Ewigkeit gestohlene Güter! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML2.Step4:	[2.4] Rrionnes Spiegelbild ist der Schlüssel zu ihrer Unverwundbarkeit! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML2.Step5:	[2.5] Ihr habt Chaths Test der Strategie noch nicht bestanden! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML2.Step6:	[2.6] Kanakhts Test scheint zu schwer für Euch zu sein! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML2.Step7:	[2.7] Ihr müsst Euch noch immer Angst, Furcht und Schrecken stellen! Dies ist eine Einzel-, Gruppen- oder Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML2.Step8:	[2.8] Um erfolgreich zu sein, müsst Ihr Euch selbst entgegentreten! Dies ist eine Einzelbegegnung.
+SendMasterLevelWindow.Uncomplete.ML2.Step9:	[2.9] Besiegt die Meister des Kampfes, die einst die Prüfung der Sobekite-Ewigkeit geschafft haben! Dies ist eine Kampfgruppenbegegnung.
 SendMasterLevelWindow.Uncomplete.ML2.Step10:	[2.10] Ein Betrüger hat den Ankh des Lebens gestohlen, der ihm die Unsterblichkeit garantiert, solange er im Tempel der Sobekite-Ewigkeit bleibt! Dies ist eine Kampfgruppenbegegnung.
 
-SendMasterLevelWindow.Uncomplete.ML3.Step1:		[3.1] Moirai besitzt hinter ihrem magischen Schild noch immer die Rune der Macht! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML3.Step2:		[3.2] Kepa ist geschwächt und hält verzweifelt an ihrer Macht fest! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML3.Step3:		[3.3] Casta benutzt nach wie vor ihre Artefakte, um jeden zu töten, der ihr Versteck betritt! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML3.Step4:		[3.4] Laodameia bewacht nach wie vor energisch ihr Versteck! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML3.Step5:		[3.5] Antioos gibt damit an, dass ihre Macht größer als alle anderen sei! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML3.Step6:		[3.6] Ein seltsamer Barrakuda wohnt in der Dunkelheit und leuchtet vor Macht! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML3.Step7:		[3.7] Shraogh erfüllt die Herzen jener, die ihn herausfordern, weiterhin mit Schrecken! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML3.Step8:		[3.8] Der Stachelrochen schwebt mit einem unnatürlichen Leuchten umher! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML3.Step9:		[3.9] Der Krake Sinovia frisst jeden, der ihm zu Nahe kommt! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML3.Step1:	[3.1] Moirai besitzt hinter ihrem magischen Schild noch immer die Rune der Macht! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML3.Step2:	[3.2] Kepa ist geschwächt und hält verzweifelt an ihrer Macht fest! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML3.Step3:	[3.3] Casta benutzt nach wie vor ihre Artefakte, um jeden zu töten, der ihr Versteck betritt! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML3.Step4:	[3.4] Laodameia bewacht nach wie vor energisch ihr Versteck! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML3.Step5:	[3.5] Antioos gibt damit an, dass ihre Macht größer als alle anderen sei! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML3.Step6:	[3.6] Ein seltsamer Barrakuda wohnt in der Dunkelheit und leuchtet vor Macht! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML3.Step7:	[3.7] Shraogh erfüllt die Herzen jener, die ihn herausfordern, weiterhin mit Schrecken! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML3.Step8:	[3.8] Der Stachelrochen schwebt mit einem unnatürlichen Leuchten umher! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML3.Step9:	[3.9] Der Krake Sinovia frisst jeden, der ihm zu Nahe kommt! Dies ist eine Kampfgruppenbegegnung.
 SendMasterLevelWindow.Uncomplete.ML3.Step10:	[3.10] Medusa verwandelt ihre Gegner nach wie vor in Stein! Dies ist eine Kampfgruppenbegegnung.
 
-SendMasterLevelWindow.Uncomplete.ML4.Step1:		[4.1] Colossal muss erst von den Skorpionen in der Wüste von Stygia herbeigerufen werden! Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML4.Step2:		[4.2] Die Festung der Stürme wurde nicht eingenommen! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML4.Step3:		[4.3] Man sagt, dass das mächtige Auge von Ra weiterhin im wüsten Land von Atum umherstreift! Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML4.Step4:		[4.4] Was für manchen ein wertvoller Juwel ist, ist für eine Göttin nur eine Spielerei! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML4.Step5:		[4.5] Der Jann aus dem Land von Atum wirbelt zwischen den Dünen umher! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML4.Step6:		[4.6] Oukesson, der Ghillan, vervielfältigt sich nach wie vor, wenn man gegen ihn kämpft. Er wird seinen Schatz erst preisgeben, wenn er wirklich besiegt ist! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML4.Step7:		[4.7] Die Wächter des Flusses Iter müssen noch erweckt werden! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML4.Step8:		[4.8] Das Blut von Daehien fließt weiterhin im Land von Atum! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML4.Step9:		[4.9] Der Marid Gaurmaes wird weiterhin von Staubstürmen geschützt! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML4.Step1:	[4.1] Colossal muss erst von den Skorpionen in der Wüste von Stygia herbeigerufen werden! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML4.Step2:	[4.2] Die Festung der Stürme wurde nicht eingenommen! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML4.Step3:	[4.3] Man sagt, dass das mächtige Auge von Ra weiterhin im wüsten Land von Atum umherstreift! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML4.Step4:	[4.4] Was für manchen ein wertvoller Juwel ist, ist für eine Göttin nur eine Spielerei! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML4.Step5:	[4.5] Der Jann aus dem Land von Atum wirbelt zwischen den Dünen umher! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML4.Step6:	[4.6] Oukesson, der Ghillan, vervielfältigt sich nach wie vor, wenn man gegen ihn kämpft. Er wird seinen Schatz erst preisgeben, wenn er wirklich besiegt ist! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML4.Step7:	[4.7] Die Wächter des Flusses Iter müssen noch erweckt werden! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML4.Step8:	[4.8] Das Blut von Daehien fließt weiterhin im Land von Atum! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML4.Step9:	[4.9] Der Marid Gaurmaes wird weiterhin von Staubstürmen geschützt! Dies ist eine Kampfgruppenbegegnung.
 SendMasterLevelWindow.Uncomplete.ML4.Step10:	[4.10] Martikhoras herrscht nach wie vor in seiner Pyramide! Dies ist eine Kampfgruppenbegegnung.
 
-SendMasterLevelWindow.Uncomplete.ML5.Step1:		[5.1] Die Totenurne - Die Eingeweide müssen vom Echo des Qebehsenuef gestohlen werden! Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML5.Step2:		[5.2] Eine weitere Totenurne - Der Magen muss vom Echo des Duamutef gestohlen werden! Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML5.Step3:		[5.3] Eine weitere Totenurne - Die Lungen müssen vom Echo des Hapy gestohlen werden! Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML5.Step4:		[5.4] Eine weitere Totenurne - Die Leber muss vom Echo des Imsety gestohlen werden! Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML5.Step5:		[5.5] Die Gorgonen von Aerus besitzen weiterhin Cau Suraes Spiegel des Ra! Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML5.Step6:		[5.6] Die Verbundenen besitzen das Konservierungsharz! Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML5.Step7:		[5.7] Die Verbundenen besitzen eine Maske, die Ihr noch benötigt, um Ammut entegegenzutreten! Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML5.Step8:		[5.8] Binden können bei den Verbundenen gefunden werden. Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML5.Step9:		[5.9] Ihr müsst von den vergifteten Wassern trinken, um von Mahaf Hilfe zu erhalten! Dies ist eine Einzelbegegnung.
+SendMasterLevelWindow.Uncomplete.ML5.Step1:	[5.1] Die Totenurne - Die Eingeweide müssen vom Echo des Qebehsenuef gestohlen werden! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML5.Step2:	[5.2] Eine weitere Totenurne - Der Magen muss vom Echo des Duamutef gestohlen werden! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML5.Step3:	[5.3] Eine weitere Totenurne - Die Lungen müssen vom Echo des Hapy gestohlen werden! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML5.Step4:	[5.4] Eine weitere Totenurne - Die Leber muss vom Echo des Imsety gestohlen werden! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML5.Step5:	[5.5] Die Gorgonen von Aerus besitzen weiterhin Cau Suraes Spiegel des Ra! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML5.Step6:	[5.6] Die Verbundenen besitzen das Konservierungsharz! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML5.Step7:	[5.7] Die Verbundenen besitzen eine Maske, die Ihr noch benötigt, um Ammut entegegenzutreten! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML5.Step8:	[5.8] Binden können bei den Verbundenen gefunden werden. Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML5.Step9:	[5.9] Ihr müsst von den vergifteten Wassern trinken, um von Mahaf Hilfe zu erhalten! Dies ist eine Einzelbegegnung.
 SendMasterLevelWindow.Uncomplete.ML5.Step10:	[5.10] Ihr müsst Ammut in den Tiefen von Ma'atis Hallen entgegentreten und beurteilt werden! Dies ist eine Kampfgruppenbegegnung.
 
-SendMasterLevelWindow.Uncomplete.ML6.Step1:		[6.1] Sucht nach einem seltenen Uraeus da wo sie erscheinen. Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML6.Step2:		[6.2] Die Opferung findet nun statt, der Salamander wurde geboren! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML6.Step3:		[6.3] Lateef beklagt sein Schicksal als Anhänger des Am-he und wünscht sich in die Wüste zurück! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML6.Step4:		[6.4] Pallida-Uraei ist erschienen! Sucht die Heimstätten der Uraei! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML6.Step5:		[6.5] Die Flammensäulen im östlichen Volcanus bewachen die Gegenstände, die Flammen müssen gekühlt werden! Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML6.Step6:		[6.6] Suchet den Opferer Siraadi inmitten der Säulen der Rache in Typhons Gebiet! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML6.Step7:		[6.7] Drei der Ankhkare-Wächter beschützen ihn gut. Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML6.Step8:		[6.8] Im Zentrum der Insel rufen die Feuer der Bronzeschalen nach wie vor die Efreet herbei! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML6.Step9:		[6.9] Vazuls Festung auf den Ascheinseln muß dennoch durchbrochen werden! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML6.Step1:	[6.1] Sucht nach einem seltenen Uraeus da wo sie erscheinen. Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML6.Step2:	[6.2] Die Opferung findet nun statt, der Salamander wurde geboren! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML6.Step3:	[6.3] Lateef beklagt sein Schicksal als Anhänger des Am-he und wünscht sich in die Wüste zurück! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML6.Step4:	[6.4] Pallida-Uraei ist erschienen! Sucht die Heimstätten der Uraei! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML6.Step5:	[6.5] Die Flammensäulen im östlichen Volcanus bewachen die Gegenstände, die Flammen müssen gekühlt werden! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML6.Step6:	[6.6] Suchet den Opferer Siraadi inmitten der Säulen der Rache in Typhons Gebiet! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML6.Step7:	[6.7] Drei der Ankhkare-Wächter beschützen ihn gut. Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML6.Step8:	[6.8] Im Zentrum der Insel rufen die Feuer der Bronzeschalen nach wie vor die Efreet herbei! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML6.Step9:	[6.9] Vazuls Festung auf den Ascheinseln muß dennoch durchbrochen werden! Dies ist eine Kampfgruppenbegegnung.
 SendMasterLevelWindow.Uncomplete.ML6.Step10:	[6.10] Die Chimäre hält sich immer noch in ihrer Festung im Osten der Ascheinsel verschanzt! Dies ist eine Kampfgruppenbegegnung.
 
-SendMasterLevelWindow.Uncomplete.ML7.Step1:		[7.1] Ihr müßt Euch die Handschuhe des Feuers beschaffen! Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML7.Step2:		[7.2] Lernt alles über Eure Gegner im Kampf, aber wenn es Vier sind, vervielfacht sich die Zeit. Ihr könnt die Fehde nicht beenden, trotzdem müssen Euch erst alle als Bedrohung erkannt haben, damit ihr weitermachen könnt. Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML7.Step3:		[7.3] Die Apophians wünschen Eure Ausdauer zu testen. Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML7.Step4:		[7.4] Die Volurgons wünschen Eure Ausdauer zu testen. Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML7.Step5:		[7.5] Die Shaitan wünschen Eure Ausdauer zu testen. Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML7.Step6:		[7.6] Die Hephaestians wünschen Eure Ausdauer zu testen. Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML7.Step7:		[7.7] Ihr müßt Euch einer Herausforderung in den Kammern der Flammen stellen! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML7.Step8:		[7.8] Katoriis Blick vernichtet alles Leben auf das er fällt, dennoch muß sie vernichtet werden! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML7.Step9:		[7.9] Eine geheimnisvolle Kraft versperrt den Weg! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML7.Step1:	[7.1] Ihr müßt Euch die Handschuhe des Feuers beschaffen! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML7.Step2:	[7.2] Lernt alles über Eure Gegner im Kampf, aber wenn es Vier sind, vervielfacht sich die Zeit. Ihr könnt die Fehde nicht beenden, trotzdem müssen Euch erst alle als Bedrohung erkannt haben, damit ihr weitermachen könnt. Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML7.Step3:	[7.3] Die Apophians wünschen Eure Ausdauer zu testen. Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML7.Step4:	[7.4] Die Volurgons wünschen Eure Ausdauer zu testen. Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML7.Step5:	[7.5] Die Shaitan wünschen Eure Ausdauer zu testen. Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML7.Step6:	[7.6] Die Hephaestians wünschen Eure Ausdauer zu testen. Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML7.Step7:	[7.7] Ihr müßt Euch einer Herausforderung in den Kammern der Flammen stellen! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML7.Step8:	[7.8] Katoriis Blick vernichtet alles Leben auf das er fällt, dennoch muß sie vernichtet werden! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML7.Step9:	[7.9] Eine geheimnisvolle Kraft versperrt den Weg! Dies ist eine Kampfgruppenbegegnung.
 SendMasterLevelWindow.Uncomplete.ML7.Step10:	[7.10] Typhon liegt im Lavabassin im Zentrum von Volcanus Tiefen! Dies ist eine Kampfgruppenbegegnung.
 
-SendMasterLevelWindow.Uncomplete.ML8.Step1:		[8.1] Der Jinni Bisul besitzt immer noch den Bedienungskristall! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML8.Step2:		[8.2] Agnes Schild wurde vor langer Zeit vernichtet, aber es gibt ein Zwillingschild, das sich im Besitz von Tholos befindet! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML8.Step3:		[8.3] Das Schwert der großen Agne befindet sich in den Händen eines bösartigen Jinns! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML8.Step4:		[8.4] Die einst edle und stolze Agne, ist jetzt über das Zuhause der Zentauren verstreut. Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML8.Step5:		[8.5] Kratos hat Agnes Bein nicht abgegeben! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML8.Step6:		[8.6] Dawars Diener tragen Agnes Kopf! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML8.Step7:		[8.7] Findet den Rumpf der Agne inmitten der Statuen von Aerus! Dies ist eine Gruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML8.Step8:		[8.8] Eine Gruppe Gorgonen hat sich zusammengetan, um Euch beim Wiederaufbau von Agne zu hindern. Sie haben seinen linken Arm versteckt, weil bei den bisherigen Prüfungen etliche Gorgonen getötet wurden. Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML8.Step9:		[8.9] Der rechte Arm liegt in einer einst großen Halle eines zerstörten atlantischen Tempels. Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML8.Step1:	[8.1] Der Jinni Bisul besitzt immer noch den Bedienungskristall! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML8.Step2:	[8.2] Agnes Schild wurde vor langer Zeit vernichtet, aber es gibt ein Zwillingschild, das sich im Besitz von Tholos befindet! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML8.Step3:	[8.3] Das Schwert der großen Agne befindet sich in den Händen eines bösartigen Jinns! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML8.Step4:	[8.4] Die einst edle und stolze Agne, ist jetzt über das Zuhause der Zentauren verstreut. Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML8.Step5:	[8.5] Kratos hat Agnes Bein nicht abgegeben! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML8.Step6:	[8.6] Dawars Diener tragen Agnes Kopf! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML8.Step7:	[8.7] Findet den Rumpf der Agne inmitten der Statuen von Aerus! Dies ist eine Gruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML8.Step8:	[8.8] Eine Gruppe Gorgonen hat sich zusammengetan, um Euch beim Wiederaufbau von Agne zu hindern. Sie haben seinen linken Arm versteckt, weil bei den bisherigen Prüfungen etliche Gorgonen getötet wurden. Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML8.Step9:	[8.9] Der rechte Arm liegt in einer einst großen Halle eines zerstörten atlantischen Tempels. Dies ist eine Gruppenbegegnung.
 SendMasterLevelWindow.Uncomplete.ML8.Step10:	[8.10] Zuerst müßt ihr Agnes Armee auf ihrem Schlachtfeld besiegen, dann Talos in seinem Tempel stürzen! Dies ist eine Kampfgruppenbegegnung.
 
-SendMasterLevelWindow.Uncomplete.ML9.Step1:		[9.1] Vor langer Zeit bewies sich Kyros selbst, dass er der ultimative Krieger ist, indem er verschiedene Rollen im Kampf übernahm. Würdet Ihr Euch trauen ihn herauszufordern? Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML9.Step2:		[9.2] Lachlen war ein großer Entdecker, der immer darauf vorbereitet war, sich den einzigartigen Gefahren zu stellen, die in jedem neuen Reich lauern! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML9.Step3:		[9.3] Vor langer Zeit vereinigte Evzen drei sich bekriegende Gebiete, nachdem jeder Kriegsherr getötet wurde, regierte er die vereinten Länder mit eiserner Faust! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML9.Step4:		[9.4] Vier Bilder von Königen ruhen und müssen erweckt werden! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML9.Step5:		[9.5] Nelos würde Euch gern eine Lektion erteilen, die Ihr nicht überleben könnt! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML9.Step6:		[9.6] Zentaurenpatrouillen unter der Führung von Katri hindern Euch daran Euer Ziel zu erreichen! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML9.Step7:		[9.7] Nur die stärksten Iaculi überleben, da sie sich gegenseitig auffressen. Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML9.Step8:		[9.8] Ihr habt Euch noch nicht den Phönixwächtern gegenüber als würdig erwiesen! Dies ist eine Kampfgruppenbegegnung.
-SendMasterLevelWindow.Uncomplete.ML9.Step9:		[9.9] Neola beschützt ihre Schwestern immer noch gut. Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML9.Step1:	[9.1] Vor langer Zeit bewies sich Kyros selbst, dass er der ultimative Krieger ist, indem er verschiedene Rollen im Kampf übernahm. Würdet Ihr Euch trauen ihn herauszufordern? Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML9.Step2:	[9.2] Lachlen war ein großer Entdecker, der immer darauf vorbereitet war, sich den einzigartigen Gefahren zu stellen, die in jedem neuen Reich lauern! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML9.Step3:	[9.3] Vor langer Zeit vereinigte Evzen drei sich bekriegende Gebiete, nachdem jeder Kriegsherr getötet wurde, regierte er die vereinten Länder mit eiserner Faust! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML9.Step4:	[9.4] Vier Bilder von Königen ruhen und müssen erweckt werden! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML9.Step5:	[9.5] Nelos würde Euch gern eine Lektion erteilen, die Ihr nicht überleben könnt! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML9.Step6:	[9.6] Zentaurenpatrouillen unter der Führung von Katri hindern Euch daran Euer Ziel zu erreichen! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML9.Step7:	[9.7] Nur die stärksten Iaculi überleben, da sie sich gegenseitig auffressen. Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML9.Step8:	[9.8] Ihr habt Euch noch nicht den Phönixwächtern gegenüber als würdig erwiesen! Dies ist eine Kampfgruppenbegegnung.
+SendMasterLevelWindow.Uncomplete.ML9.Step9:	[9.9] Neola beschützt ihre Schwestern immer noch gut. Dies ist eine Kampfgruppenbegegnung.
 SendMasterLevelWindow.Uncomplete.ML9.Step10:	[9.10] Der Phönix ist noch nicht geschwächt und regiert immer noch! Dies ist eine Kampfgruppenbegegnung.
 
