@@ -61,7 +61,7 @@ NearsightSpellHandler.DelveInfo.Function:		Wirkung: {0}
 PetPBAOE.CheckBeginCast.NoPet:				Dieser Zauberspruch kann nur auf ein kontrolliertes Wesen angewendet werden!
 
 # PetSpellHandler
-PetSpellHandler.CheckBeginCast.NoControlledBrainForCast:	Ihr müsst ein Wesen kontrollieren, auf das Ihr den Zauberspruch anwenden könnt!
+PetSpellHandler.CheckBeginCast.NoControlledBrainForCast:Ihr müsst ein Wesen kontrollieren, auf das Ihr den Zauberspruch anwenden könnt!
 
 # ProcSpellHandler
 ProcSpellHandler.DelveInfo.Function:			Wirkung: {0}
