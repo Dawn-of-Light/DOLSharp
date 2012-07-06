@@ -15,12 +15,54 @@ Scripts.Players.Anonymous.Error:			Anonymer Modus ist deaktiviert.
 Scripts.Players.Anonymous.Off:				Anonymer Modus AUS.
 Scripts.Players.Anonymous.On:				Anonymer Modus AN.
 
+# /Appeal
+Scripts.Players.Appeal.AlreadyActiveAppeal:		Es gibt bereits eine aktive Anfrage von Euch, bitte wartet bis sich ein Gamemaster darum kümmert, bevor Ihr einen weiteren Hilferuf abschickt.	
+Scripts.Players.Appeal.AppealSubmitted:			Eure Anfrage wurde bereits übertragen...  gebt "/checkappeal" ein um den Status abzufragen.
+Scripts.Players.Appeal.BeingHelped:			Diesem Spieler wurde bereits geholfen.
+Scripts.Players.Appeal.CanceledYourAppeal:		Ihr habt Eure Anfrage zurück gezogen.	
+Scripts.Players.Appeal.CantCancelWhile:			Ihr könnt Eure Anfrage nicht mehr zurück ziehen, da Euch bereits geholfen wurde.
+Scripts.Players.Appeal.CantFindAppeal:			Es konnte keine Anfrage von einem Spieler dieses Namens gefunden werden. Bitte überprüft die Schreibweise.
+Scripts.Players.Appeal.CriticalMessage:			Dringende Anfragen werden bevorzugt behandelt!
+Scripts.Players.Appeal.CurrentStaffAvailable:		Es sind aktuell {0} Gamemaster online und {1} Anfragen in der Warteschlange.	
+Scripts.Players.Appeal.DoesntHaveAppeal:		Dieser Spieler hat seine Anfrage zurück gezogen oder hat keine mehr aktiv.	
+Scripts.Players.Appeal.DoNotHaveAppeal:			Ihr habt keine Anfrage laufen, die Ihr zurück ziehen könnt oder diese wurde bereits geschlossen.
+Scripts.Players.Appeal.IfYouLogOut:			Eine aktive Anfrage wird beim Abmelden gespeichert und bei Eurem Einloggen wieder aktiviert.  (Auch bei Charakterwechsel)
+Scripts.Players.Appeal.LoginMessage:			Falls Ihr Hilfe im Spiel von einem Gamemaster braucht (wie z.B. beim Feststecken Eures Charakters) gebt bitte "/appeal" ein.
+Scripts.Players.Appeal.MustBeAssisting:			Die Anfrage eines aktiven Spielers wird zuerst bearbeitet.
+Scripts.Players.Appeal.NameNotUnique:			Der Name des Charakters ist nicht eindeutig.
+Scripts.Players.Appeal.NeedMoreDetail:			Euer Report wurde nicht entgegengenommen. Bitte sendet diesen noch einmal mit etwas mehr Details.
+Scripts.Players.Appeal.NoAppealsinQueue:		Es befinden sich z.Zt. keine Anfragen in der Warteschlange.
+Scripts.Players.Appeal.NoAppealToView:			Es gibt keine aktuelle Anfrage von Euch.
+Scripts.Players.Appeal.NoLocationToJump:		Kein Ort um zurück zuspringen.
+Scripts.Players.Appeal.NoLongerReceiveMsg:		Ihr erhaltet keine weiteren Anfrage-Nachrichten.	
+Scripts.Players.Appeal.NotBeingHelped:			Ihr müsst diesem Spieler erst helfen bei seiner Anfrage, bevor Ihr diese freigeben könnt.
+Scripts.Players.Appeal.NowReceiveMsg:			Ihr erhaltet wieder Anfrage-Nachrichten.
+Scripts.Players.Appeal.PlayerNotFound:			{0} befindet sich nicht im Spiel.
+Scripts.Players.Appeal.PleaseBePatient:			Bitte habt etwas Geduld, während wir an Eurer Anfrage arbeiten, um Euch so schnell wie möglich zu helfen.
+Scripts.Players.Appeal.RandMessage0:			Hallo {0}, danke dass Ihr gewartet habt. Wie kann ich Euch helfen?
+Scripts.Players.Appeal.RandMessage1:			Hallo {0}, was kann ich heute für Euch tun?
+Scripts.Players.Appeal.RandMessage2:			Seid gegrüßt {0}! Ich bin hier um Euch zu unterstützen. Wie kann ich Euch helfen?
+Scripts.Players.Appeal.RandMessage3:			Hi {0}, Wie ich verstanden habe, sucht Ihr Hilfe. Was kann ich heute für Euch tun?
+Scripts.Players.Appeal.RandMessage4:			Hallo {0}, es tut mir leid, dass Ihr Probleme habt, worin bestehen diese?
+Scripts.Players.Appeal.StaffChangedStatus:		Der Gamemaster {0} hat den Status Eurer Anfrage auf {1} geändert.
+Scripts.Players.Appeal.StaffClosedYourAppeal:		Der Gamemaster {0} hat Eure Anfrage geschlossen.
+Scripts.Players.Appeal.SystemDisabled:			Das Supportsystem ist derzeit geschlossen.
+Scripts.Players.Appeal.ToCancelYourAppeal:		Eure Anfrage könnt Ihr mit dem Befehl "/checkappeal cancel" zurück ziehen.	
+Scripts.Players.Appeal.UseCmdTurnBackOff:		Der Befehl "/gmappeal mute again" schaltet den Empfang von Anfrage-Nachrichten aus.
+Scripts.Players.Appeal.UseCmdTurnBackOn:		Der Befehl "/gmappeal mute again" schaltet den Empfang von Anfrage-Nachrichten ein.	
+Scripts.Players.Appeal.UseGMappeal:			Benutzt "/gmappeal" um Spieler bei deren Hilfeersuchen zu unterstützen.
+Scripts.Players.Appeal.YouAreMuted:			Ihr habt den Empfang von Anfrage-Nachrichten abgeschaltet und seid deshalb z.Zt. nicht berechtigt Anfragen zu stellen.
+Scripts.Players.Appeal.YouHavePendingAppeal:		Ihr habt eine unerledigte Anfrage in der Warteschlange stehen, bitte gebt "/checkappeal" ein um den Status abzufragen oder diese zurück zuziehen.	
+
 # /Assist
 Scripts.Players.Assist.CantAssistYourself:		Ihr könnt Euch nicht selbst helfen.
 Scripts.Players.Assist.DoesntHaveTarget:		 hat zur Zeit kein Ziel.
 Scripts.Players.Assist.DontSee:				Ihr seht hier weit und breit niemanden mit dem Namen {0}!
+Scripts.Players.Assist.MemberNotFound:			Es gibt keinen Spieler mit diesem Namen hier in der Gegend.
+Scripts.Players.Assist.NoRealmMember:			{0} ist kein Mitglied Eures Reiches!
 Scripts.Players.Assist.NoTarget:			Ihr müsst einen Mitbürger Eures Heimatreiches aussuchen, dem Ihr helfen wollt.
 Scripts.Players.Assist.NotValid:			Hier gibt es niemanden, der so heißt.
+Scripts.Players.Assist.SelectMember:			Ihr müsst erst ein Mitglied Eures Reiches auswählen um es zu unterstützen.
 Scripts.Players.Assist.YouAssist:			Ihr helft {0}.
 
 # /Autoloot
@@ -37,6 +79,7 @@ Scripts.Players.Autosplit.On:				Der Leiter hat den Autosplit-Status auf EIN ges
 Scripts.Players.Autosplit.Self:				{0} ändert 
 
 # /Battlegroup
+Scripts.Players.Battlegroup.AlreadyInBattlegroup:	Ihr seid bereits in einer Kampfgruppe.
 Scripts.Players.Battlegroup.BattlegroupCount:		Im Moment sind {1} Mitglieder in der Kampfgruppe. 			
 Scripts.Players.Battlegroup.BattleGroupLootNormal:	Der Loottyp der Kampfgruppe wurde auf normal gesetzt.    			
 Scripts.Players.Battlegroup.BattlegroupLootThresholdOff:Das Lootlevel der Kampfgruppe ist momentan ausgeschaltet.			
@@ -67,7 +110,7 @@ Scripts.Players.Battlegroup.Help.PasswordNew:		/bg password <Neues Passwort> - S
 Scripts.Players.Battlegroup.Help.Private:		/bg private - Schaltet die Kampfgruppe auf Nicht-Öffentlich. Man muss das Passwort kenne oder von einem Leiter eingeladen werden um beizutreten. (Nur Leiter)
 Scripts.Players.Battlegroup.Help.Public:		/bg public - Schaltet die Kampfgruppe "Öffentlich". Dann kann jeder mit "/cg join <Leitername>" der Kampfgruppe beitreten. Ausserdem ist sie dann unter "/who BG" finden. (Nur Leiter)
 Scripts.Players.Battlegroup.Help.Remove:		/bg remove <Name> - Wirft einen Spieler aus der Kampfgruppe. (Nur Leiter)
-Scripts.Players.Battelgroup.Help.Status:		/bg status - Zeigt Informationen wie den Leiter, die Moderatoren und Beuteverteilungseinstellungen an.
+Scripts.Players.Battlegroup.Help.Status:		/bg status - Zeigt Informationen wie den Leiter, die Moderatoren und Beuteverteilungseinstellungen an.
 Scripts.Players.Battlegroup.Help.Treasurer:		/bg treasurer <name> – Setzt einen Spieler in der Kampfgruppe als Schatzhüter ein. Dieser Spieler erhält (wenn "/bg loot treasurer" an ist) alle Gegenstände, die ein höheres Level als mit "/bg lootlevel" festgelegt. Dies funktioniert nur in einer bestimmten Reichweite (4.000 Einheiten?) um den aufgehobenen Gegenstand und nicht über Ladezonen-Grenzen hinweg. (Nur Leiter) 			
 Scripts.Players.Battlegroup.Help.Usage:			Befehle für "/bg" sind:
 Scripts.Players.Battlegroup.Help.Who:			/bg who - Zeigt alle Mitglieder der Kampfgruppe.
@@ -91,32 +134,6 @@ Scripts.Players.Battlegroup.Private:			Dies ist nun eine private Kampfgruppe.
 Scripts.Players.Battlegroup.Public:			Dies ist nun eine öffentliche Kampfgruppe.
 Scripts.Players.Battlegroup.Usage:			Verwendet: /bc <text>
 Scripts.Players.Battlegroup.UsageInvite:		Verwendet: /bg invite <playername>
-
-# /FreeLevel
-PLCommands.FreeLevel.AboveMaximumLevel:			Eure Erfahrung ist zu groß für eine weitere freie Stufe.
-PLCommands.FreeLevel.EligibleFreeLevel:			Ihr seid nun würdig, eine freie Stufe zu erhalten. Klickt auf Euren Ausbilder, um sie zu bekommen! (Der Befehl "/freelevel decline" entfernt diese freie Stufe.)
-PLCommands.FreeLevel.FreeLevelIn:			Ihr habt eine neue Stufe erreicht und seid Eurer nächsten freien Stufe in {0} Tage, {1} Stunden und {2} Minuten  würdig.
-PLCommands.FreeLevel.FreeLevelIn2:			Ihr müsst noch {0} Tage, {1} Stunden und {2} Minuten warten, bis der Zeitraum der nächsten freien Stufe beginnt.
-PLCommands.FreeLevel.FreeLevelSoon:			Ihr braucht eine weitere Stufe, um der nächsten freien Stufe würdig zu sein.
-PLCommands.FreeLevel.NoFreeLevel:			Ihr habt keine freie Stufe !
-PLCommands.FreeLevel.Removed:				Diese freie Stufe wurde entfernt.
-
-# /Realm
-Scripts.Players.Realm.AlbKeeps:            	Albion Festungen
-Scripts.Players.Realm.DarknessFalls:      	Darkness Falls
-Scripts.Players.Realm.HibKeeps:           	Hibernia Festungen
-Scripts.Players.Realm.MidKeeps:           	Midgard Festungen
-Scripts.Players.Realm.Title:            	Reichsstatus
-Scripts.Players.Realm.UseRelicCommand:      Gebt '/relic' für den Reliktstatus ein.
-
-# /Relic
-Scripts.Players.Relic.AlbRelics:         Albion Relikte
-Scripts.Players.Relic.HibRelics:         Hibernia Relikte
-Scripts.Players.Relic.MidRelics:         Midgard Relikte
-Scripts.Players.Relic.Power:            Magie
-Scripts.Players.Relic.Strength:            Stärke
-Scripts.Players.Relic.Title:            Reliktstatus
-Scripts.Players.Relic.UseRealmCommand:      Gebt '/realm' für den Reichsstatus ein.
 
 # Boats
 Scripts.Player.Boat.AlreadyOnBoat:			Dieser Spieler ist bereits in einem Boot!
@@ -162,18 +179,17 @@ Scripts.Players.Boot.YouRemoved:			Ihr wurdet von {0} aus dem Haus geworfen!
 # /Bountyrent
 #Scripts.Players.Bountyrent.InHouseError:		Ihr müsst Euch in Eurem Haus befinden, um diesen Befehl verwenden zu können!
 #Scripts.Players.Bountyrent.NoHouseError:		Ihr besitzt kein Haus!
-Scripts.Players.Bountyrent.AlreadyMaxMoney:            In dieser Mietkasse ist bereits das Maximum an möglichem Gold!
-Scripts.Players.Bountyrent.CmdUsage:                   1 Kopfgeldpunkt wird zurzeit in {0} Kupfer umgewandelt. Benutzt '/bountyrent personal/guild <amount>' zum Bezahlen.
-Scripts.Players.Bountyrent.CorrectFormat:              Das korrekte Format ist '/bountyrent personal | guild <Anzahl>'
-Scripts.Players.Bountyrent.NotAHouseGuildLeader:       Dieses Haus gehört keiner Gilde, deren Gildenleiter Ihr seid!
-Scripts.Players.Bountyrent.NotEnoughBp:                Ihr habt nicht so viele Kopfgeldpunkte.
-#Apo: please replace "NotEnoughGuildBp" with the correct german message
-Scripts.Players.Bountyrent.NotEnoughGuildBp:           Eure Gilde hat nicht so viele Kopfgeldpunkte.
-Scripts.Players.Bountyrent.NoPayRentPerm:              Ihr habt nicht die Erlaubnis, den '/bountyrent'-Befehl hier zu benutzen!
-Scripts.Players.Bountyrent.RangeOfAHouse:		       Um den '/bountyrent'-Befehl zu benutzen, müsst Ihr Euch in der Nähe eines Hauses aufhalten.
-Scripts.Players.Bountyrent.ToManyMoney:                Soviel Gold passt nicht in die Mietkasse! Einzahlung abgebrochen.
-Scripts.Players.Bountyrent.YouSpend:                   Ihr bezahlt {0} eigene Kopfgeldpunkte was einer Mietzahlung in Hohe von {1} Goldmünzen entspricht.
-Scripts.Players.Bountyrent.YouSpendGuild:              Ihr bezahlt {0} Gildenkopfgeldpunkte was einer Mietzahlung in Hohe von {1} Goldmünzen entspricht.
+Scripts.Players.Bountyrent.AlreadyMaxMoney:		In dieser Mietkasse ist bereits das Maximum an möglichem Gold!
+Scripts.Players.Bountyrent.CmdUsage:                   	Ein Kopfgeldpunkt wird zurzeit in {0} Kupfer umgewandelt. Benutzt '/bountyrent personal/guild <amount>' zum Bezahlen.
+Scripts.Players.Bountyrent.CorrectFormat:		Das korrekte Format ist '/bountyrent personal | guild <Anzahl>'
+Scripts.Players.Bountyrent.NotAHouseGuildLeader:	Dieses Haus gehört keiner Gilde, deren Gildenleiter Ihr seid!
+Scripts.Players.Bountyrent.NotEnoughBp:			Ihr habt nicht genug Kopfgeldpunkte.
+Scripts.Players.Bountyrent.NotEnoughGuildBp:		Eure Gilde hat nicht genug Kopfgeldpunkte.
+Scripts.Players.Bountyrent.NoPayRentPerm:		Ihr habt nicht die Erlaubnis, den '/bountyrent'-Befehl hier zu benutzen!
+Scripts.Players.Bountyrent.RangeOfAHouse:		Um den '/bountyrent'-Befehl zu benutzen, müsst Ihr Euch in der Nähe eines Hauses aufhalten.
+Scripts.Players.Bountyrent.ToManyMoney:			Soviel Gold passt nicht in die Mietkasse! Einzahlung abgebrochen.
+Scripts.Players.Bountyrent.YouSpend:			Ihr bezahlt {0} eigene Kopfgeldpunkte was einer Mietzahlung in Hohe von {1} Goldmünzen entspricht.
+Scripts.Players.Bountyrent.YouSpendGuild:		Ihr bezahlt {0} Gildenkopfgeldpunkte was einer Mietzahlung in Hohe von {1} Goldmünzen entspricht.
 
 # /Broadcast
 Scripts.Players.Broadcast.Message:			[Broadcast] {0}: {1}
@@ -218,10 +234,14 @@ Scripts.Players.Chatgroup.NotPublic:			Das ist keine öffentliche Chat-Gruppe.
 Scripts.Players.Chatgroup.OnlyModerator:		Nur der Leiter oder ein Moderator kann in dieser Chat-Gruppe sprechen.	
 Scripts.Players.Chatgroup.OwnChatGroup:			Eurer eigenen Chat-Gruppe könnt Ihr nicht beitreten.
 Scripts.Players.Chatgroup.Password:			Das Passwort der Chat-Gruppe lautet: {0}.
-Scripts.Players.Chatgroup.PasswordChanged:		Ihr habt das Passwort der Chat-Gruppe geändert in: {0}.	
-Scripts.Players.Chatgroup.PlayerInChatgroup:		{0} ist bereits Mitglied einer Chat-Gruppe.	
+Scripts.Players.Chatgroup.PasswordChanged:		Ihr habt das Passwort der Chat-Gruppe geändert in: {0}.
+Scripts.Players.Chatgroup.PasswordClear:		Das Passwort dieser Chat-Gruppe wurde gelöscht.
+Scripts.Players.Chatgroup.PasswordUnset:		Diese Chat-Gruppe hat kein Passwort.
+Scripts.Players.Chatgroup.PlayerInChatgroup:		{0} ist bereits Mitglied einer Chat-Gruppe.
 Scripts.Players.Chatgroup.Private:			Das ist nun eine private Chat-Gruppe.
+Scripts.Players.Chatgroup.PrivateAlready:		Das ist bereits eine private Chat-Gruppe.
 Scripts.Players.Chatgroup.Public:			Das ist nun eine öffentliche Chat-Gruppe.
+Scripts.Players.Chatgroup.PublicAlready:		Das ist bereits eine öffentliche Chat-Gruppe.
 Scripts.Players.Chatgroup.Usage:			Verwendet: /c <text>
 Scripts.Players.Chatgroup.UsageInvite:			Verwendet: /cg invite <playername>"
 
@@ -234,7 +254,7 @@ Scripts.Players.Cmdhelp.Usage:				>-------Befehlsform für {0}-------<
 Scripts.Players.Disband.Disbanded:			{o} wurde aus der Gruppe entlassen.
 Scripts.Players.Disband.NoPlayer:			In der Gruppe gibt es keinen Spieler mit diesem Namen.
 Scripts.Players.Disband.NotInGroup:			Ihr seid zur Zeit in keiner Gruppe.
-Scripts.Players.Disband.NotLeader:			Ihr seit nicht der Leiter Eurer Gruppe.
+Scripts.Players.Disband.NotLeader:			Ihr seid nicht der Leiter Eurer Gruppe.
 Scripts.Players.Disband.NoYourself:			Auf diesem Wege könnt Ihr die Gruppe nicht verlassen.
 
 # /Dismount
@@ -269,8 +289,17 @@ Scripts.Players.Duel.YouHaventChallenged:		Ihr habt niemanden zu einem Duell her
 Scripts.Players.Duel.YouHealth:				Ihr müsst erst völlig gesund sein.
 Scripts.Players.Duel.YouInCombat:			Ihr befindet Euch in einem Kampf.
 Scripts.Players.Duel.YouInDuel:				Ihr befindet Euch schon in einem Duell.
-Scripts.Players.Duel.YouInGroup:			Ihr seit Mitglied einer Gruppe.
+Scripts.Players.Duel.YouInGroup:			Ihr seid Mitglied einer Gruppe.
 Scripts.Players.Duel.YouSurrender:			Ihr ergebt Euch {0}!
+
+# /FreeLevel
+PLCommands.FreeLevel.AboveMaximumLevel:			Eure Erfahrung ist zu groß für eine weitere freie Stufe.
+PLCommands.FreeLevel.EligibleFreeLevel:			Ihr seid nun würdig, eine freie Stufe zu erhalten. Klickt auf Euren Ausbilder, um sie zu bekommen! (Der Befehl "/freelevel decline" entfernt diese freie Stufe.)
+PLCommands.FreeLevel.FreeLevelIn:			Ihr habt eine neue Stufe erreicht und seid Eurer nächsten freien Stufe in {0} Tage, {1} Stunden und {2} Minuten  würdig.
+PLCommands.FreeLevel.FreeLevelIn2:			Ihr müsst noch {0} Tage, {1} Stunden und {2} Minuten warten, bis der Zeitraum der nächsten freien Stufe beginnt.
+PLCommands.FreeLevel.FreeLevelSoon:			Ihr braucht eine weitere Stufe, um der nächsten freien Stufe würdig zu sein.
+PLCommands.FreeLevel.NoFreeLevel:			Ihr habt keine freie Stufe !
+PLCommands.FreeLevel.Removed:				Diese freie Stufe wurde entfernt.
 
 # /Guilds
 Scripts.Player.Guild.AccountRemoved:			{0} hat {1} aus der Gilde entfernt.
@@ -380,12 +409,12 @@ Scripts.Player.Guild.Help.GuildEditWithdraw:		/gc edit <ranknum> withdraw <y/n> 
 Scripts.Player.Guild.Help.GuildEmail:			/gc email <contact@guildpage.com> - Legt die Emailadresse der Gilde fest. Diese Informationen werden mit /gc info und in den Chroniken angezeigt.
 Scripts.Player.Guild.Help.GuildEmblem:			/gc emblem - das Gildenwappen durch einen Gildenregistrar erstellen lassen
 Scripts.Player.Guild.Help.GuildForm:			/gc form <Name> - eine Gilde mit allen Gruppenmitgliedern gründen	
-Scripts.Player.Guild.Help.GuildGMAddPlayer:		/gc addplayer <player> to <guild> - to add player to guild	
-Scripts.Player.Guild.Help.GuildGMCommands:		Game Master commands:	
-Scripts.Player.Guild.Help.GuildGMCreate:		/gc create <Name> - Create a new guild with targeted player as leader	
-Scripts.Player.Guild.Help.GuildGMPurge:			/gc purge <Name> - Purge a guild completely	
-Scripts.Player.Guild.Help.GuildGMRemovePlayer:		/gc removeplayer <player> from <guild> - to remove player from a guild	
-Scripts.Player.Guild.Help.GuildGMRename:		/gc rename <OldName> to <NewName - Rename guild from OldName to NewName	
+Scripts.Player.Guild.Help.GuildGMAddPlayer:		/gc addplayer <player> to <guild> - fügt einen Spieler der Gilde hinzu	
+Scripts.Player.Guild.Help.GuildGMCommands:		Game Master commands:
+Scripts.Player.Guild.Help.GuildGMCreate:		/gc create <Name> - erstellt eine neue Gilde mit dem ausgewählten Spieler als Leiter	
+Scripts.Player.Guild.Help.GuildGMPurge:			/gc purge <Name> - löscht eine Gilde komplett
+Scripts.Player.Guild.Help.GuildGMRemovePlayer:		/gc removeplayer <player> from <guild> - entfernt einen Spieler aus der Gilde	
+Scripts.Player.Guild.Help.GuildGMRename:		/gc rename <OldName> to <NewName - benennt eine Gilde um
 Scripts.Player.Guild.Help.GuildInfo:			/gc info - Anzeige der Gildeninformationen
 Scripts.Player.Guild.Help.GuildInvite:			/gc invite [name] -  Spieler in die Gilde einladen, ohne Namensangabe wird anvisierter Spieler eingeladen
 Scripts.Player.Guild.Help.GuildLeader:			/gc leader [name] - einen neuen Gildenanführer ernennen
@@ -442,6 +471,7 @@ Scripts.Player.Guild.OMotdSet:				Ihr habt die "Nachricht des Tages" für die Of
 Scripts.Player.Guild.PlayerNotFound:			Dieser Spieler ist nicht auf dieser Welt.
 Scripts.Player.Guild.PromotedOther:			{0} wurde zum {1} befördert.	
 Scripts.Player.Guild.PromotedSelf:			Ihr wurdet zum {0} befördert.	
+Scripts.Player.Guild.PromoteHaveToUseDemote:		Ihr könnt dieses Gildenmitglied nicht degradieren mit dem "promote"-Befehl. Verwendet "/gc demote <ranklevel> Name".
 Scripts.Player.Guild.PromoteHigherThanPlayer:		Ihr könnt nur Ränge vergeben, die unter dem Euren liegen.	
 Scripts.Player.Guild.Purged:				{0} wurde gepurged.
 Scripts.Player.Guild.RankACHearSet:			Ihr habt {0} the ACHear of the rank {1}.	
@@ -487,54 +517,71 @@ HorseEmote.MustBeOnMount:				Ihr könnt dies nicht machen während Ihr reitet.
 HorseEmote.You:						Ihr
 HorseEmote.courbette.ToOthers:				-
 HorseEmote.courbette.ToSource:				-
-HorseEmote.courbette.NoTargetToOthers:			{0}'s mount performs a courbette.
-HorseEmote.courbette.NoTargetToSource:			Your mount performs a courbette.
+HorseEmote.courbette.NoTargetToOthers:			{0}s Reittier verbeugt sich.
+HorseEmote.courbette.NoTargetToSource:			Euer Reittier verbeugt sich.
 HorseEmote.graze.ToOthers:				-
 HorseEmote.graze.ToSource:				-
-HorseEmote.graze.NoTargetToOthers:			{0} lets {1} mount graze.
-HorseEmote.graze.NoTargetToSource:			You let your mount graze.
-HorseEmote.halt.ToOthers:				{0} orders {1} to halt.
-HorseEmote.halt.ToSource:				You order {0} to halt.
-HorseEmote.halt.NoTargetToOthers:			{0} orders everyone to halt.
-HorseEmote.halt.NoTargetToSource:			You order everyone to halt.
-HorseEmote.nod.ToOthers:				{0}'s mount nods at {1}.
-HorseEmote.nod.ToSource:				Your mount nods at {0}.
-HorseEmote.nod.NoTargetToOthers:			{0}'s mount nods.
-HorseEmote.nod.NoTargetToSource:			Your mount nods.
+HorseEmote.graze.NoTargetToOthers:			{0} lässt {1} Reittier grasen.
+HorseEmote.graze.NoTargetToSource:			Ihr lasst Euer Reittier grasen.
+HorseEmote.halt.ToOthers:				{0} befiehlt {1} zu halten.
+HorseEmote.halt.ToSource:				Ihr befehlt {0} zu halten.
+HorseEmote.halt.NoTargetToOthers:			{0} befiehlt jedem zu halten.
+HorseEmote.halt.NoTargetToSource:			Ihr befehlt jedem zu halten.
+HorseEmote.nod.ToOthers:				{0}s Reittier nickt {1} zu.
+HorseEmote.nod.ToSource:				Euer Reiitier nickt {0} zu.
+HorseEmote.nod.NoTargetToOthers:			{0}s Reittier nickt.
+HorseEmote.nod.NoTargetToSource:			Euer Reittier nickt.
 HorseEmote.pet.ToOthers:				-
 HorseEmote.pet.ToSource:				-
-HorseEmote.pet.NoTargetToOthers:			{0} pets {1} mount.
-HorseEmote.pet.NoTargetToSource:			You pet your mount.
-HorseEmote.rear.ToOthers:				{0}'s mount rears at the sight of {1}.
-HorseEmote.rear.ToSource:				Your mount rears at the sight of {0}.
-HorseEmote.rear.NoTargetToOthers:			{0}'s mount rears.
-HorseEmote.rear.NoTargetToSource:			Your mount rears.
-HorseEmote.startle.ToOthers:				{0}'s mount is startled by {1}.
-HorseEmote.startle.ToSource:				Your mount is startled by {0}.
-HorseEmote.startle.NoTargetToOthers:			{0}'s mount is startled.
-HorseEmote.startle.NoTargetToSource:			Your mount is startled.
-HorseEmote.trick.ToOthers:				{0} stands on {2} mount to impress {1}.
-HorseEmote.trick.ToSource:				You stand on your mount to impress {0}.
-HorseEmote.trick.NoTargetToOthers:			{0} stands on {1} mount to impress everyone.
-HorseEmote.trick.NoTargetToSource:			You stand on your mount to impress everyone.
+HorseEmote.pet.NoTargetToOthers:			{0} streichelt {1} Reittier.
+HorseEmote.pet.NoTargetToSource:			Ihr streichelt Euer Reittier.
+HorseEmote.rear.ToOthers:				{0}s Reittier bäumt sich auf beim Anblick von {1}.
+HorseEmote.rear.ToSource:				Euer Reittier bäumt sich auf beim Anblick von {0}.
+HorseEmote.rear.NoTargetToOthers:			{0}s Reittier bäumt sich auf.
+HorseEmote.rear.NoTargetToSource:			Euer Reittier bäumt sich auf.
+HorseEmote.startle.ToOthers:				{0}s Reittier erschreckt sich durch {1}.
+HorseEmote.startle.ToSource:				Euer Reittier erschreckt sich durch {0}.
+HorseEmote.startle.NoTargetToOthers:			{0}s Reittier erschreckt sich.
+HorseEmote.startle.NoTargetToSource:			Euer Reittier is erschreckt sich.
+HorseEmote.trick.ToOthers:				{0} steht auf {2} Reittier um {1} zu beeindrucken.
+HorseEmote.trick.ToSource:				Ihr steht auf Eurem Reittier um {0} zu beeindrucken.
+HorseEmote.trick.NoTargetToOthers:			{0} steht auf {1} Reittier um alle zu beeindrucken.
+HorseEmote.trick.NoTargetToSource:			Ihr steht auf Eurem Reittier um alle zu beeindrucken.
 
 # /Language
 Scripts.Players.Language.Current:			Die aktuell auf dem Server angezeigte Sprache ist: {0}.
 Scripts.Players.Language.Set:				Ihr ändert die vom Server angezeigte Sprache auf {0}.
-Scripts.Players.Language.AvailableLanguages: Verfügbare Sprachen: {0}
+Scripts.Players.Language.AvailableLanguages: 		Verfügbare Sprachen: {0}
 
 # /Range
 Scripts.Players.Range.InvalidObject:			Dieser Befehl ist nur bei Gegenständen gültig.
 Scripts.Players.Range.NeedTarget:			Distanz zum Ziel: Ihr habt kein Ziel ausgewählt.
-Scripts.Players.Range.NotVisible:			 (Ziel nicht sichtbar)
+Scripts.Players.Range.NotVisible:			(Ziel nicht sichtbar)
 Scripts.Players.Range.Result:				Distanz zum Ziel: {0} Einheiten. {1}
+
+# /Realm
+Scripts.Players.Realm.AlbKeeps:				Albion Festungen
+Scripts.Players.Realm.DarknessFalls:			Darkness Falls
+Scripts.Players.Realm.HibKeeps:				Hibernia Festungen
+Scripts.Players.Realm.MidKeeps:				Midgard Festungen
+Scripts.Players.Realm.Title:				Reichsstatus
+Scripts.Players.Realm.UseRelicCommand:			Gebt '/relic' für den Reliktstatus ein.
+
+# /Relic
+Scripts.Players.Relic.AlbRelics:			Albion Relikte
+Scripts.Players.Relic.HibRelics:			Hibernia Relikte
+Scripts.Players.Relic.MidRelics:			Midgard Relikte
+Scripts.Players.Relic.Power:				Magie
+Scripts.Players.Relic.Strength:				Stärke
+Scripts.Players.Relic.Title:				Reliktstatus
+Scripts.Players.Relic.UseRealmCommand:			Gebt '/realm' für den Reichsstatus ein.
 
 # /ViewReport
 Scripts.Player.ViewReport.Help.Close:			'/viewreport close <report #>' Schließt den Bericht mit der ID #. 
 Scripts.Player.ViewReport.Help.Delete:			'/viewreport delete <report #' Löscht den Bericht mit der ID #. 
 Scripts.Player.ViewReport.InvalidReport:		Das ist kein gültiger Bericht.
-Scripts.Player.ViewReport.NoPriv:			Ihr seid nicht befugt Berichte zu verändern.
+Scripts.Player.ViewReport.NoPriv:			Ihr seid nicht berechtigt Berichte zu verändern.
 Scripts.Player.ViewReport.ReportDeleted:		Bericht {0} wurde gelöscht. 
 Scripts.Player.ViewReport.UnknownCommand:		Das ist kein gültiger Befehl. 
-Scripts.Player.VeiwReport.Usage:			Verwendet: 
+Scripts.Player.ViewReport.Usage:			Verwendet: 
 

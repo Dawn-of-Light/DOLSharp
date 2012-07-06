@@ -202,7 +202,7 @@ GamePlayer.PickupObject.MustHaveTarget:			Ihr müsst erst etwas auswählen, um e
 GamePlayer.PickupObject.NoOneGroupWantsMoney:		Niemand in der Gruppe will das Geld haben.			
 GamePlayer.PickupObject.NoOneWantsThis:			Keiner in der Gruppe will den Gegenstand [{0}].
 GamePlayer.PickupObject.ObjectTooFarAway:		[{0}] zu weit weg, um es aufzuheben!
-GamePlayer.PickupObject.TooFarFromBoat:			Ihr seit zu weit weg vom Boot um einzusteigen!
+GamePlayer.PickupObject.TooFarFromBoat:			Ihr seid zu weit weg vom Boot um einzusteigen!
 GamePlayer.PickupObject.YouGet:				Ihr steckt {0} in Euren Rucksack.
 GamePlayer.PickupObject.YouPickUp:			Ihr hebt {0} auf.
 GamePlayer.PickupObject.YourLootShare:			Euer Anteil an der Beute ist [{0}].
@@ -259,7 +259,7 @@ GamePlayer.Release.GraveErected:			Es wurde ein Grabstein an der Stelle Eures To
 GamePlayer.Release.LostConstitution:			Ihr habt einen Teil Eurer Konstitution verloren. Geht zu einen Heiler, um diese wieder herzustellen!		
 GamePlayer.Release.NoLongerReleaseAuto:			Ihr werdet nicht länger automatisch wieder auferstehen. ({0} Sekunden)		
 GamePlayer.Release.NotDead:				Ihr seid nicht tot!	
-GamePlayer.Release.NoValidBindpoint:			Es gibt keinen Ort, an dem Ihr Euch gebunden habt und seit stattdessen hier wiederauferstanden!		
+GamePlayer.Release.NoValidBindpoint:			Es gibt keinen Ort, an dem Ihr Euch gebunden habt und seid stattdessen hier wiederauferstanden!		
 GamePlayer.Release.ReleaseToPortalKeep:			You will now release to the nearest border or portal keep in {0} more seconds!
 GamePlayer.Release.ReleaseToHouse:			You will now release to your house in {0} more seconds!
 GamePlayer.Release.ReturnToPray:			Betet an Eurem Grabstein, um einen Teil Eurer verlorenen Erfahrungspunkte zurück zu erhalten.		
@@ -308,7 +308,7 @@ GamePlayer.Sit.NotSitting:				Ihr sitzt nicht mehr!
 GamePlayer.Sit.YouSitDown:				Ihr setzt Euch. Bewegt Euch einfach, wenn Ihr wieder aufstehen wollt.	
 GamePlayer.Sit.YouStandUp:				Ihr erhebt Euch.	
 
-GamePlayer.Spell.NotEnoughPowerful:			Ihr seit nicht mächtig genug, um den Zauber dieses Gegenstandes anwenden zu können.		
+GamePlayer.Spell.NotEnoughPowerful:			Ihr seid nicht mächtig genug, um den Zauber dieses Gegenstandes anwenden zu können.		
 GamePlayer.Spell.NotImplemented:			{0} ({1}) ist noch nicht implementiert auf diesem Server.		
 GamePlayer.Spell.Proc.NotImplemented:			Der Reaktionseffekt (ID {0}) ist noch nicht implementiert auf diesem Server.		
 GamePlayer.Spell.ResurrectionIllness:			Resurrection Illness
@@ -364,6 +364,7 @@ GamePlayer.UseSlot.CantMountStealthed:			Ihr könnt nicht aufsitzen, während Ih
 GamePlayer.UseSlot.CantMountWhileDead:			Ihr könnt nicht aufsteigen, weil Ihr tot seid.		
 GamePlayer.UseSlot.CantSeeTarget:			Ihr könnt Euer Ziel nicht sehen!		
 GamePlayer.UseSlot.CantSummonRvR:			Ihr könnt das Pferd nicht in RvR-Zonen rufen.		
+GamePlayer.UseSlot.CantUseCast:				Ihr müsst erst Eure aktuelle Aktion beenden um Euer {0} zu verwenden!
 GamePlayer.UseSlot.CantUseFromBackpack:			Ihr müsst diesen Gegenstand erst anlegen, bevor Ihr ihn verwenden könnt!			
 GamePlayer.UseSlot.CantUseInCombat:			Ihr könnt diesen Gegenstand nicht im Kampf benutzen!		
 GamePlayer.UseSlot.CantUseState:			In Eurem Zustand könnt Ihr "{0}" nicht anwenden.
@@ -371,7 +372,7 @@ GamePlayer.UseSlot.IllegalSourceObject:			In dieser Position tragt Ihr nichts.
 GamePlayer.UseSlot.MustDismountBefore:			Ihr müsst vorher absteigen.		
 GamePlayer.UseSlot.MustWaitBeforeUse:			Ihr müsst noch {0} Sekunden warten, bevor Ihr diesen Zaubertrank anwenden könnt.
 GamePlayer.UseSlot.NoAutoReleaseShotReload:		Eurer Schuss wird nun nicht länger automatisch nachgeladen und freigegeben.			
-GamePlayer.UseSlot.NotEnouthPower:			Ihr seit nicht mächtig genug, um den Zauber dieses Gegenstandes anwenden zu können.		
+GamePlayer.UseSlot.NotEnouthPower:			Ihr seid nicht mächtig genug, um den Zauber dieses Gegenstandes anwenden zu können.		
 GamePlayer.UseSlot.OutOfCharges:			{0} hat keine Ladungen mehr.
 GamePlayer.UseSlot.StopCallingMount:			Ihr ruft nicht mehr nach Eurem Pferd.
 GamePlayer.UseSlot.SummonHorseLevel:			Ihr könnt dieses Pferd erst ab der Erfahrungsstufe {0} rufen.		
