@@ -1,0 +1,628 @@
+Zone.Description.Albion'sAbandonedMines:		in den Verlassenen Minen
+Zone.ScreenDescription.Albion'sAbandonedMines:		Verlassene Minen
+Zone.Description.Hibernia'sAbandonedMines:		in den Verlassenen Minen
+Zone.ScreenDescription.Hibernia'sAbandonedMines:	Verlassene Minen
+Zone.Description.Midgard'sAbandonedMines:		in den Verlassenen Minen
+Zone.ScreenDescription.Midgard'sAbandonedMines:		Verlassene Minen
+Zone.Description.Aberillan:				in Aberillan
+Zone.ScreenDescription.Aberillan:			Aberillan
+Zone.Description.Aegir'sLanding:			in Aegirs Bucht
+Zone.ScreenDescription.Aegir'sLanding:			Aegirs Bucht
+Zone.Description.Agramon:				in Agramon
+Zone.ScreenDescription.Agramon:				Agramon
+Zone.Description.Alb45Dungeon:				Alb 45 Dungeon
+Zone.ScreenDescription.Alb45Dungeon:			Alb 45 Dungeon
+Zone.Description.AlbLaunch:				in Alb Start
+Zone.ScreenDescription.AlbLaunch:			Alb Start
+Zone.Description.AlbLaunch2:				in Alb Start
+Zone.ScreenDescription.AlbLaunch2:			Alb Start
+Zone.Description.Aldland:				in Aldland
+Zone.ScreenDescription.Aldland:				Aldland
+Zone.Description.AlltaFearann:				in Allta Fearann
+Zone.ScreenDescription.AlltaFearann:			Allta Fearann
+Zone.Description.Anataeus'Sanctuary:			im Anataeus Heiligtum
+Zone.ScreenDescription.Anataeus'Sanctuary:		Anataeus Heiligtum
+Zone.Description.Aphophian:				in Aphophian
+Zone.ScreenDescription.Aphophian:			Aphophian
+Zone.Description.Arachnid'sLabyrinth:			in Arachnids Labyrinth
+Zone.ScreenDescription.Arachnid'sLabyrinth:		Arachnids Labyrinth
+Zone.Description.ArborGlen:				in Arbor Glen
+Zone.ScreenDescription.ArborGlen:			Arbor Glen
+Zone.Description.LaTourdesArcanesALB:			im arkanen Turm
+Zone.ScreenDescription.LaTourdesArcanesALB:		arkaner Turm
+Zone.Description.LaTourdesArcanesHIB:			im arkanen Turm
+Zone.ScreenDescription.LaTourdesArcanesHIB:		arkaner Turm
+Zone.Description.LaTourdesArcanesMID:			im arkanen Turm
+Zone.ScreenDescription.LaTourdesArcanesMID:		arkaner Turm
+Zone.Description.Arothi:				in Arothi
+Zone.ScreenDescription.Arothi:				Arothi
+Zone.Description.ArtInside:				ArtInside
+Zone.ScreenDescription.ArtInside:			ArtInside
+Zone.Description.ArtOutside:				ArtOutside
+Zone.ScreenDescription.ArtOutside:			ArtOutside
+Zone.Description.AshenIsles:				auf den Ascheinseln
+Zone.ScreenDescription.AshenIsles:			Ascheinseln
+Zone.Description.AvalonCity:				in Avalon-Stadt
+Zone.ScreenDescription.AvalonCity:			Avalon-Stadt
+Zone.Description.AvalonIsle:				auf der Insel Avalon
+Zone.ScreenDescription.AvalonIsle:			Insel Avalon
+Zone.Description.AvalonMarsh:				in den Avalon-Sümpfen
+Zone.ScreenDescription.AvalonMarsh:			Avalon-Sümpfe
+Zone.Description.Aylesbury:				in Aylesbury
+Zone.ScreenDescription.Aylesbury:			Aylesbury
+Zone.Description.BanditLair:				im Banditen-Lager
+Zone.ScreenDescription.BanditLair:			Banditen-Lager
+Zone.Description.BlackMtns.North:			in den nördlichen Schwarzbergen
+Zone.ScreenDescription.BlackMtns.North:			nördliche Schwarzberge
+Zone.Description.BlackMtns.South:			in den südlichen Schwarzbergen
+Zone.ScreenDescription.BlackMtns.South:			südliche Schwarzberge
+Zone.Description.Blathnait'sRefuge:			in Blathnaits Zuflucht
+Zone.ScreenDescription.Blathnait'sRefuge:		Blathnaits Zuflucht
+Zone.Description.BogofCullen:				im Cullen-Moor
+Zone.ScreenDescription.BogofCullen:			Cullen-Moor
+Zone.Description.Braemar:				in Braemar
+Zone.ScreenDescription.Braemar:				Braemar
+Zone.Description.Breifine:				in Briefine
+Zone.ScreenDescription.Breifine:			Breifine
+Zone.Description.BrimstoneCaverns:			in den Schwefelhöhlen
+Zone.ScreenDescription.BrimstoneCaverns:		Schwefelhöhlen
+Zone.Description.Brisworthy:				in Brisworthy
+Zone.ScreenDescription.Brisworthy:			Brisworthy
+Zone.Description.BrokenMirrors:				in den Zerbrochenen Spiegeln
+Zone.ScreenDescription.BrokenMirrors:			Zerbrochene Spiegel
+Zone.Description.Broughshane:				in Broughshane
+Zone.ScreenDescription.Broughshane:			Broughshane
+Zone.Description.BrutalRealization:			in der Brutalen Realisation
+Zone.ScreenDescription.BrutalRealization:		Brutale Realisation
+Zone.Description.BurialGrounds:				in den Grabkammern
+Zone.ScreenDescription.BurialGrounds:			Grabkammern
+Zone.Description.BurialTomb:				Burial Tomb
+Zone.ScreenDescription.BurialTomb:			Burial Tomb
+Zone.Description.CaerSidi:				in Caer Sidi
+Zone.ScreenDescription.CaerSidi:			Caer Sidi
+Zone.Description.Caerwent:				in Caerwent
+Zone.ScreenDescription.Caerwent:			Caerwent
+Zone.Description.CaillteGarran:				in Caillte Garran
+Zone.ScreenDescription.CaillteGarran:			Caillte Garran
+Zone.Description.Caldey:				Caldey
+Zone.ScreenDescription.Caldey:				Caldey
+Zone.Description.CamelotHills:				in den Hügeln von Camelot
+Zone.ScreenDescription.CamelotHills:			Hügel von Camelot
+Zone.Description.CampacorentinForest:			im Campacorentin-Wald
+Zone.ScreenDescription.CampacorentinForest:		Campacorentin-Wald
+Zone.Description.Carlingford:				in Carlingford
+Zone.ScreenDescription.Carlingford:			Carlingford
+Zone.Description.CatacombsofCardova:			in den Katakomben von Cardova
+Zone.ScreenDescription.CatacombsofCardova:		Katakomben von Cardova
+Zone.Description.CathalValley:				im Tal von Cathal
+Zone.ScreenDescription.CathalValley:			Tal von Cathal
+Zone.Description.CaveofCruachan:			in der Höhle von Cruachan
+Zone.ScreenDescription.CaveofCruachan:			Höhle von Cruachan
+Zone.Description.CavernsofMadness:			in den Höhlen des Wahnsinns
+Zone.ScreenDescription.CavernsofMadness:		Höhlen des Wahnsinns
+Zone.Description.Cetus'Pit:				in der Cetus Höhle
+Zone.ScreenDescription.Cetus'Pit:			Cetus Höhle
+Zone.Description.Chiltern:				in Chiltern
+Zone.ScreenDescription.Chiltern:			Chiltern
+Zone.Description.CityofAerus:				in Aerus-Stadt
+Zone.ScreenDescription.CityofAerus:			Aerus-Stadt
+Zone.Description.CityofCamelot:				in Camelot
+Zone.ScreenDescription.CityofCamelot:			Camelot
+Zone.Description.CliffsofMoher:				an den Klippen von Moher
+Zone.ScreenDescription.CliffsofMoher:			Klippen von Moher
+Zone.Description.ConcealedGuardhouse:			bei der Verborgenen Wache
+Zone.ScreenDescription.ConcealedGuardhouse:		Verborgene Wache
+Zone.Description.Connacht:				in Connacht
+Zone.ScreenDescription.Connacht:			Connacht
+Zone.Description.Constantine'sSound:			auf Constantines Insel
+Zone.ScreenDescription.Constantine'sSound:		Constantines Insel
+Zone.Description.Cornwall:				in Cornwall
+Zone.ScreenDescription.Cornwall:			Cornwall
+Zone.Description.CoruscatingMine:			in der Funkelmine
+Zone.ScreenDescription.CoruscatingMine:			Funkelmine
+Zone.Description.CothromGorge:				in der Cothrom-Schlucht
+Zone.ScreenDescription.CothromGorge:			Cothrom-Schlucht
+Zone.Description.CruachanGorge:				in der Cruachan-Schlucht
+Zone.ScreenDescription.CruachanGorge:			Cruachan-Schlucht
+Zone.Description.CrystalCave:				in der Kristallhöhle
+Zone.ScreenDescription.CrystalCave:			Kristallhöhle
+Zone.Description.CursedForest:				im Verfluchten Wald
+Zone.ScreenDescription.CursedForest:			Verfluchter Wald
+Zone.Description.CursedTomb:				im Verfluchten Grabmal
+Zone.ScreenDescription.CursedTomb			Cursed Tomb:	Verfluchtes Grabmal
+Zone.Description.DalesofDevwy:				in den Tälern von Devwy
+Zone.ScreenDescription.DalesofDevwy:			Täler von Devwy
+Zone.Description.Dalton:				in Dalton
+Zone.ScreenDescription.Dalton:				Dalton
+Zone.Description.DampCavern:				Damp Cavern
+Zone.ScreenDescription.DampCavern:			Damp Cavern
+Zone.Description.DarkCavern:				Dark Cavern
+Zone.ScreenDescription.DarkCavern:			Dark Cavern
+Zone.Description.DarknessFalls:				in Darkness Falls
+Zone.ScreenDescription.DarknessFalls:			Darkness Falls
+Zone.Description.Albion'sDarkspire:			in Darkspire
+Zone.Description.Hibernia'sDarkspire:			Darkspire
+Zone.Description.Midgard'sDarkspire:			in Darkspire
+Zone.ScreenDescription.Albion'sDarkspire:		Darkspire
+Zone.ScreenDescription.Hibernia'sDarkspire:		in Darkspire
+Zone.ScreenDescription.Midgard'sDarkspire:		Darkspire
+Zone.Description.Dartmoor:				in Dartmoor
+Zone.ScreenDescription.Dartmoor:			Dartmoor
+Zone.Description.Hibernia'sDeadlands:			im Totenland von Annwn
+Zone.Description.Midgard'sDeadlands:			im Totenland von Annwn
+Zone.ScreenDescription.Hibernia'sDeadlands:		Totenland von Annwn
+Zone.ScreenDescription.Midgard'sDeadlands:		Totenland von Annwn
+Zone.Description.DeepVolcanus:				Deep Volcanus
+Zone.ScreenDescription.DeepVolcanus:			Deep Volcanus
+Zone.Description.Deliah'sSanctuary:			in Deliahs Heiligtum
+Zone.ScreenDescription.Deliah'sSanctuary:		Deliahs Heiligtum
+Zone.Description.DellingCrater:				im Delling-Krater
+Zone.ScreenDescription.DellingCrater:			Delling-Krater
+Zone.Description.DemonicPrison:				im Dämonischen Gefängnis
+Zone.ScreenDescription.DemonicPrison:			Dämonisches Gefängnis
+Zone.Description.Demonsbreach:				im Dämonenbruch
+Zone.ScreenDescription.Demonsbreach:			Dämonenbruch
+Zone.Description.DenofBones:				in der Knochenhöhle
+Zone.ScreenDescription.DenofBones:			Knochenhöhle
+Zone.Description.DepthsofDespair:			in den Tiefen der Verzweiflung
+Zone.ScreenDescription.DepthsofDespair:			Tiefen der Verzweiflung
+Zone.Description.DesecratedGrounds:			Desecrated Grounds
+Zone.ScreenDescription.DesecratedGrounds:		Desecrated Grounds
+Zone.Description.DismalGrotto:				in der Trostlosen Grotte
+Zone.ScreenDescription.DismalGrotto:			Trostlose Grotte
+Zone.Description.Domnann:				in Domnann
+Zone.ScreenDescription.Domnann:				Domnann
+Zone.Description.DummyZone:				Dummy Zone
+Zone.ScreenDescription.DummyZone:			Dummy Zone
+Zone.Description.Dunshire:				in Dunshire
+Zone.ScreenDescription.Dunshire:			Dunshire
+Zone.Description.EastSvealand:				in Ost-Svealand
+Zone.ScreenDescription.EastSvealand:			Ost-Svealand
+Zone.Description.EmainMacha:				in Emain Macha
+Zone.ScreenDescription.EmainMacha:			Emain Macha
+Zone.Description.Erikstaad:				in Erikstaad
+Zone.ScreenDescription.Erikstaad:			Erikstaad
+Zone.Description.Faraheim:				in Faraheim
+Zone.ScreenDescription.Faraheim:			Faraheim
+Zone.Description.Felena'sSorrow:			in Felenas Sorge
+Zone.ScreenDescription.Felena'sSorrow:			Felenas Sorge
+Zone.Description.Fomor:					in Fomoria
+Zone.ScreenDescription.Fomor:				Fomoria
+Zone.Description.ForestSauvage:				im Sauvage-Wald
+Zone.ScreenDescription.ForestSauvage:			Sauvage-Wald
+Zone.Description.ForgesofFlame:				in der Schmiede der Flammen
+Zone.ScreenDescription.ForgesofFlame:			Schmiede der Flammen
+Zone.Description.ForgottenMines:			in den Vergessenen Minen
+Zone.ScreenDescription.ForgottenMines:			Vergessene Mine
+Zone.Description.ForgottenSepulchre:			in der Vergessenen Grabstätte
+Zone.ScreenDescription.ForgottenSepulchre:		Vergessene Grabstätte
+Zone.Description.Frisia:				in Frisia
+Zone.ScreenDescription.Frisia:				Frisia
+Zone.Description.Albion'sFrontlines:			an den Grenzlinien
+Zone.Description.Hibernia'sFrontlines:			an den Grenzlinien
+Zone.ScreenDescription.Albion'sFrontlines:		Grenzlinien
+Zone.ScreenDescription.Hibernia'sFrontlines:		Grenzlinien
+Zone.Description.Galladoria:				in Galladoria
+Zone.ScreenDescription.Galladoria:			Galladoria
+Zone.Description.Hibernia'sGlashtinForge:		in der Glaschtin-Schmiede
+Zone.ScreenDescription.Hibernia'sGlashtinForge:		Glaschtin-Schmiede
+Zone.Description.Albion'sGlashtinForges:		in der Glaschtin-Schmiede
+Zone.Description.Midgard'sGlashtinForges:		Glaschtin-Schmiede
+Zone.ScreenDescription.Albion'sGlashtinForges:		in der Glaschtin-Schmiede
+Zone.ScreenDescription.Midgard'sGlashtinForges:		Glaschtin-Schmiede
+Zone.Description.GnollLair:				im Gnoll-Lager
+Zone.ScreenDescription.GnollLair:			Gnoll-Lager
+Zone.Description.Goblin'sCookery:			in der Goblin-Küche
+Zone.ScreenDescription.Goblin'sCookery:			Goblin-Küche
+Zone.Description.Gotar:					in Gotar
+Zone.ScreenDescription.Gotar:				Gotar
+Zone.Description.GreenGlades:				auf den Grünen Lichtungen
+Zone.ScreenDescription.GreenGlades:			Grüne Lichtungen
+Zone.Description.Grenlock'sSound:			auf Grenlocks Insel
+Zone.ScreenDescription.Grenlock'sSound:			Grenlocks Insel
+Zone.Description.GripklosaMountains:			in den Gripklosa-Bergen
+Zone.ScreenDescription.GripklosaMountains:		Gripklosa-Berge
+Zone.Description.Gwyddneau:				in Gwyddneau
+Zone.ScreenDescription.Gwyddneau:			Gwyddneau
+Zone.Description.Hadrian'sWall:				am Hadrians Wall
+Zone.ScreenDescription.Hadrian'sWall:			Hadrians Wall
+Zone.Description.HalfOrcCommandPost:			im Halbork-Kommandoposten
+Zone.ScreenDescription.HalfOrcCommandPost:		Halbork-Kommandoposten
+Zone.Description.Half-OrcCamp:				im Halbork-Lager
+Zone.ScreenDescription.Half-OrcCamp:			Halbork-Lager
+Zone.Description.HallsofHelgardh:			in den Hallen von Helgardh
+Zone.ScreenDescription.HallsofHelgardh:			Hallen von Helgardh
+Zone.Description.HallsofMa'ati:				in Ma'atis Hallen
+Zone.ScreenDescription.HallsofMa'ati:			Ma'atis Hallen
+Zone.Description.HammerHugak'sSmithy:			in Hugaks Schmiede
+Zone.ScreenDescription.HammerHugak'sSmithy:		Hugaks Schmiede
+Zone.Description.Hephaestian:				in Hephaestian
+Zone.ScreenDescription.Hephaestian:			Hephaestian
+Zone.Description.Hib30Dungeon:				Hib 30 Dungeon
+Zone.ScreenDescription.Hib30Dungeon:			Hib 30 Dungeon
+Zone.Description.Hib45Dungeon:				Hib 45 Dungeon
+Zone.ScreenDescription.Hib45Dungeon:			Hib 45 Dungeon
+Zone.Description.HibLaunch:				in Hib Start
+Zone.ScreenDescription.HibLaunch:			Hib Start
+Zone.Description.HibLaunch2:				in Hib Start
+Zone.ScreenDescription.HibLaunch2:			Hib Start
+Zone.Description.HistoryRepeatsItself:			in der Erneuten Geschichte
+Zone.ScreenDescription.HistoryRepeatsItself:		Erneute Geschichte
+Zone.Description.Holmestrand:				in Holmestrand
+Zone.ScreenDescription.Holmestrand:			Holmestrand
+Zone.Description.HoundsofArawn:				bei den Hunden von Arwan
+Zone.ScreenDescription.HoundsofArawn:			Hunde von Arwan
+Zone.Description.Iarnvidiur'sLair:			in Iarnvidiurs Lager
+Zone.ScreenDescription.Iarnvidiur'sLair:		Iarnvidiurs Lager
+Zone.Description.Iarnwood:				in Iarnwood
+Zone.ScreenDescription.Iarnwood:			Iarnwood
+Zone.Description.InconnuCrypt:				in der Inconnu-Krypta
+Zone.ScreenDescription.InconnuCrypt:			Inconnu-Krypta
+Zone.Description.InishailIsland:			auf der Insel Inishail
+Zone.ScreenDescription.InishailIsland:			Insel Inishail
+Zone.Description.InnerSanctum:				in der Inneren Opferstätte
+Zone.ScreenDescription.InnerSanctum:			Innere Opferstätte
+Zone.Description.IrishSea:				bei der Irischen See
+Zone.ScreenDescription.IrishSea:			Irischen See
+Zone.Description.IsleofGlass:				auf der Glasinsel
+Zone.ScreenDescription.IsleofGlass:			Glasinsel
+Zone.Description.JamtlandMountains:			in den Jamtland-Bergen
+Zone.ScreenDescription.JamtlandMountains:		Jamtland-Berge
+Zone.Description.Jarlsberg'sHideout:			in Jarlsbergs Versteck
+Zone.ScreenDescription.Jarlsberg'sHideout:		Jarlsbergs Versteck
+Zone.Description.Jordheim:				in Jordheim
+Zone.ScreenDescription.Jordheim:			Jordheim
+Zone.Description.Kaupang:				in Kaupang
+Zone.ScreenDescription.Kaupang:				Kaupang
+Zone.Description.KeeperGarran'sSanctuary:		in Bewahrer Garrans Heiligtum
+Zone.ScreenDescription.KeeperGarran'sSanctuary:		Bewahrer Garrans Heiligtum
+Zone.Description.KeeperIraeda'sSanctuary:		in Bewahrerin Iraedas Heiligtum
+Zone.ScreenDescription.KeeperIraeda'sSanctuary:		Bewahrerin Iraedas Heiligtum
+Zone.Description.KeltoiFogou:				in Keltoi Fogou
+Zone.ScreenDescription.KeltoiFogou:			Keltoi Fogou
+Zone.Description.Kilcullen:				in Kilcullen
+Zone.ScreenDescription.Kilcullen:			Kilcullen
+Zone.Description.Killaloe:				in Killaloe
+Zone.ScreenDescription.Killaloe:			Killaloe
+Zone.Description.KingConstantine'sThroneRoom:		in König Constantines Thronsaal
+Zone.ScreenDescription.KingConstantine'sThroneRoom:	König Constantines Thronsaal
+Zone.Description.KingEirik'sThroneRoom:			in König Eiriks Thronsaal
+Zone.ScreenDescription.KingEirik'sThroneRoom:		König Eiriks Thronsaal
+Zone.Description.KingLamfhotas'ThroneRoom:		in König Lamfhotas Thronsaal
+Zone.ScreenDescription.KingLamfhotas'ThroneRoom:	König Lamfhotas Thronsaal
+Zone.Description.KoalinthCaverns:			in den Koalinth-Höhlen
+Zone.ScreenDescription.KoalinthCaverns:			Koalinth-Höhlen
+Zone.Description.KoboldUndercity:			in der Kobold-Höhlenstadt
+Zone.ScreenDescription.KoboldUndercity:			Kobold-Höhlenstadt
+Zone.Description.Krondon:				in Krondon
+Zone.ScreenDescription.Krondon:				Krondon
+Zone.Description.Labyrinth:				im Labyrinth
+Zone.ScreenDescription.Labyrinth:			Labyrinth
+Zone.Description.LairofDoom:				im Schicksalslager
+Zone.ScreenDescription.LairofDoom:			Schicksalslager
+Zone.Description.LairoftheDemonLord:			im Lager des Dämonenlords
+Zone.ScreenDescription.LairoftheDemonLord:		Lager des Dämonenlords
+Zone.Description.LairoftheExiled:			im Lager der Verbannten
+Zone.ScreenDescription.LairoftheExiled:			Lager der Verbannten
+Zone.Description.Lamfhota'sSound:			auf Lamfhotas Insel
+Zone.ScreenDescription.Lamfhota'sSound:			Lamfhotas Insel
+Zone.Description.LandofAtum:				im Land von Atum
+Zone.ScreenDescription.LandofAtum:			Land von Atum
+Zone.Description.Leirvik:				in Leirvik
+Zone.ScreenDescription.Leirvik:				Leirvik
+Zone.Description.Lich'esUnrest:				in Liches Unruhe
+Zone.ScreenDescription.Liche'sUnrest:			Liches Unruhe
+Zone.Description.Lios'sEternalRest:			in Lios Ewiger Ruhe
+Zone.ScreenDescription.Lios'sEternalRest:		Lios Ewige Ruhe
+Zone.Description.LlynBarfog:				in Llyn Barfog
+Zone.ScreenDescription.Llyn Barfog:			Llyn Barfog
+Zone.Description.LostPassages:				in der verborgenen Passage
+Zone.ScreenDescription.LostPassages:			verborgene Passage
+Zone.Description.LoughDerg:				in Lough Derg
+Zone.ScreenDescription.LoughDerg:			Lough Derg
+Zone.Description.LoughGur:				in Lough Gur
+Zone.ScreenDescription.LoughGur:			Lough Gur
+Zone.Description.LowerCrypt:				in der Unteren Krypta
+Zone.ScreenDescription.LowerCrypt:			Untere Krypta
+Zone.Description.Lyonesse:				in Lyonesse
+Zone.ScreenDescription.Lyonesse:			Lyonesse
+Zone.Description.Malmohus:				in Malmohus
+Zone.ScreenDescription.Malmohus:			Malmohus
+Zone.Description.Marik'sWorkroom:			in Mariks Arbeitsraum
+Zone.ScreenDescription.Marik'sWorkroom:			Mariks Arbeitsraum
+Zone.Description.MazeofMadness:				im Irrgarten des Wahnsinns
+Zone.ScreenDescription.MazeofMadness:			Irrgarten des Wahnsinns
+Zone.Description.MazeofTribulation:			im Irrgarten des Trübsals
+Zone.ScreenDescription.MazeofTribulation:		Irrgarten des Trübsals
+Zone.Description.Meath:					in Meath
+Zone.ScreenDescription.Meath:				Meath
+Zone.Description.Mesothalassa:				in Mesothalassa
+Zone.ScreenDescription.Mesothalassa:			Mesothalassa
+Zone.Description.Mid30Dungeon:				Mid 30 Dungeon
+Zone.ScreenDescription.Mid30Dungeon:			Mid 30 Dungeon
+Zone.Description.Mid45Dungeon:				Mid 45 Dungeon
+Zone.ScreenDescription.Mid45Dungeon:			Mid 45 Dungeon
+Zone.Description.MidLaunch:				Mid Start
+Zone.ScreenDescription.MidLaunch:			Mid Start
+Zone.Description.MidLaunch2:				Mid Start
+Zone.ScreenDescription.MidLaunch2:			Mid Start
+Zone.Description.Modernagrav:				in Modernagrav
+Zone.ScreenDescription.Modernagrav:			Modernagrav
+Zone.Description.Molvik:				in Molvik
+Zone.ScreenDescription.Molvik:				Molvik
+Zone.Description.Morfesa'sGaol:				in Morfesas Kerker
+Zone.ScreenDescription.Morfesa'sGaol:			Morfesas Kerker
+Zone.Description.MountCollory:				am Berg Collory
+Zone.ScreenDescription.MountCollory:			Berg Collory
+Zone.Description.Moycullen:				in Moycullen
+Zone.ScreenDescription.Moycullen:			Moycullen
+Zone.Description.MuireTomb:				im Muiregrab
+Zone.ScreenDescription.MuireTomb:			Muiregrab
+Zone.Description.MuninSound:				in Muninsund
+Zone.ScreenDescription.MuninSound:			Muninsund
+Zone.Description.Muspelheim:				in Muspelheim
+Zone.ScreenDescription.Muspelheim:			Muspelheim
+Zone.Description.MyrkwoodForest:			im Myrkwood-Wald
+Zone.ScreenDescription.MyrkwoodForest:			Myrkwood-Wald
+Zone.Description.Nephraal'sGaol:			in Nephraals Kerker
+Zone.ScreenDescription.Nephraal'sGaol:			Nephraals Kerker
+Zone.Description.Nisse'sLair:				in Nisses Versteck
+Zone.ScreenDescription.Nisse'sLair:			Nisses Versteck
+Zone.Description.Nisse'sRetreat:			in Nisses Refugium
+Zone.ScreenDescription.Nisse'sRetreat:			Nisses Refugium
+Zone.Description.Nittedal:				in Nittedal
+Zone.ScreenDescription.Nittedal:			Nittedal
+Zone.Description.Nyttheim:				in Nyttheim
+Zone.ScreenDescription.Nyttheim:			Nyttheim
+Zone.Description.OceanusAnatole:			in Oceanus Anatole
+Zone.ScreenDescription.OceanusAnatole:			Oceanus Anatole
+Zone.Description.OceanusBoreal:				in Oceanus Boreal
+Zone.ScreenDescription.OceanusBoreal:			Oceanus Boreal
+Zone.Description.OceanusHesperos:			in Oceanus Hesperos
+Zone.ScreenDescription.OceanusHesperos:			Oceanus Hesperos
+Zone.Description.OceanusNotos:				in Oceanus Notos
+Zone.ScreenDescription.OceanusNotos:			Oceanus Notos
+Zone.Description.Odin'sGate:				an Odins Tor
+Zone.ScreenDescription.Odin'sGate:			Odins Tor
+Zone.Description.OldSarum:				in Alt-Sarum
+Zone.ScreenDescription.OldSarum:			Alt-Sarum
+Zone.Description.Albion'sOtherworld:			in der Anderwelt
+Zone.Description.Midgard'sOtherworld:			Anderwelt
+Zone.Description.TheOtherworld:				in der Anderwelt
+Zone.ScreenDescription.Albion'sOtherworld:		Anderwelt
+Zone.ScreenDescription.Midgard'sOtherworld:		in der Anderwelt
+Zone.ScreenDescription.TheOtherworld:			Anderwelt
+Zone.Description.PassageofConflict:			in der Passage des Konflikts
+Zone.ScreenDescription.PassageofConflict:		Passage des Konflikts
+Zone.Description.PassageofEchoes:			in der Passage der Echos
+Zone.ScreenDescription.PassageofEchoes:			Passage der Echos
+Zone.Description.PastandPresent:			in Gestern und Heute
+Zone.ScreenDescription.PastandPresent:			Gestern und Heute
+Zone.Description.PennineMountains:			in den Pennine-Bergen
+Zone.ScreenDescription.PennineMountains:		Pennine-Berge
+Zone.Description.Raumarik:				in Raumarik
+Zone.ScreenDescription.Raumarik:			Raumarik
+Zone.Description.RebelHalfOrcLair:			im Halbork-Rebellenlager
+Zone.ScreenDescription.RebelHalfOrcLair:		Halbork-Rebellenlager
+Zone.Description.Rilan:					in Rilan
+Zone.ScreenDescription.Rilan:				Rilan
+Zone.Description.RiseoftheSpraggons:			im Aufstieg der Spraggons
+Zone.ScreenDescription.RiseoftheSpraggons:		Aufstieg der Spraggons
+Zone.Description.RomanAqueducts:			in den Römischen Aquädukten
+Zone.ScreenDescription.RomanAqueducts:			Römische Aquädukte
+Zone.Description.Rugnog'sHaven:				in Rugnogs Zuflucht
+Zone.ScreenDescription.Rugnog'sHaven:			Rugnogs Zuflucht
+Zone.Description.RuineraravAtlantis:			in Ruinerar av Atlantis
+Zone.ScreenDescription.RuineraravAtlantis:		Ruinerar av Atlantis
+Zone.Description.RuinsofAtlantis:			in den Ruinen von Atlantis
+Zone.ScreenDescription.RuinsofAtlantis:			Ruinen von Atlantis
+Zone.Description.Saeranthal:				in Saeranthal
+Zone.ScreenDescription.Saeranthal:			Saeranthal
+Zone.Description.SalisburyPlains:			in den Ebenen von Salisbury
+Zone.ScreenDescription.SalisburyPlains:			Ebenen von Salisbury
+Zone.Description.ScriosdeAtlantis:			in Scrios de Atlantis
+Zone.ScreenDescription.ScriosdeAtlantis:		Scrios de Atlantis
+Zone.Description.Serf'sFolly:				in Serfs Wahnwitz
+Zone.ScreenDescription.Serf'sFolly:			Serfs Wahnwitz
+Zone.Description.ShaftsoftheTenebrae:			in Shafts of the Tenebrae
+Zone.ScreenDescription.ShaftsoftheTenebrae:		Shafts of the Tenebrae
+Zone.Description.Shaitan:				in Shaitan
+Zone.ScreenDescription.Shaitan:				Shaitan
+Zone.Description.ShannonEstuary:			an der Shannon-Mündung
+Zone.ScreenDescription.ShannonEstuary:			Shannon-Mündung
+Zone.Description.SharLabyrinth:				im Shar-Labyrinth
+Zone.ScreenDescription.SharLabyrinth:			Shar-Labyrinth
+Zone.Description.SheeroeHills:				in den Sheeroe-Hügeln
+Zone.ScreenDescription.SheeroeHills:			Sheeroe-Hügel
+Zone.Description.Sherborne:				in Sherborne
+Zone.ScreenDescription.Sherborne:			Sherborne
+Zone.Description.SilvermineMts.:			in den Silberminen-Bergen
+Zone.ScreenDescription.SilvermineMts.:			Silberminen-Berge
+Zone.Description.SkonaRavine:				in der Skona-Schlucht
+Zone.ScreenDescription.SkonaRavine:			Skona-Schlucht
+Zone.Description.Snarg'sGrotto:				in Snargs Grotte
+Zone.ScreenDescription.Snarg'sGrotto:			Snargs Grotte
+Zone.Description.Snowdonia:				in Snowdonia
+Zone.ScreenDescription.Snowdonia:			Snowdonia
+Zone.Description.Snyblem'sLair:				in Snyblems Lager
+Zone.ScreenDescription.Snyblem'sLair:			Snyblems Lager
+Zone.Description.SobekiteEternal:			in der Sobekite-Ewigkeit
+Zone.ScreenDescription.SobekiteEternal:			Sobekite-Ewigkeit
+Zone.Description.Spindelhalla:				in Spindelhalla
+Zone.ScreenDescription.Spindelhalla:			Spindelhalla
+Zone.Description.SpraggonDen:				im Spraggonnest
+Zone.ScreenDescription.SpraggonDen:			Spraggonnest
+Zone.Description.Stavgaard:				in Stavgaard
+Zone.ScreenDescription.Stavgaard:			Stavgaard
+Zone.Description.StonehengeBarrows:			in den Stonehenge-Gräbern
+Zone.ScreenDescription.StonehengeBarrows:		Stonehenge-Gräber
+Zone.Description.Stoneleigh:				in Stoneleigh
+Zone.ScreenDescription.Stoneleigh:			Stoneleigh
+Zone.Description.StygianDelta:				im Stygia-Delta
+Zone.ScreenDescription.StygianDelta:			Stygia-Delta
+Zone.Description.Summoner'sHall:			in der Halle der Toten
+Zone.ScreenDescription.Summoner'sHall:			Halle der Toten
+Zone.Description.TempleofTwilight:			im Tempel des Zwielichts
+Zone.ScreenDescription.TempleofTwilight:		Tempel des Zwielichts
+Zone.Description.Tepok'sMine:				in Tepoks Mine
+Zone.ScreenDescription.Tepok'sMine:			Tepoks Mine
+Zone.Description.TestBG:				TestBG
+Zone.ScreenDescription.TestBG:				TestBG
+Zone.Description.TheAccursedCaves:			The Accursed Caves
+Zone.ScreenDescription.TheAccursedCaves:		The Accursed Caves
+Zone.Description.TheAncient'sRetreat:			in der Uralten Zuflucht
+Zone.ScreenDescription.TheAncient'sRetreat:		Die Uralte Zuflucht
+Zone.Description.TheArena:				in der Arena
+Zone.ScreenDescription.TheArena:			Die Arena
+Zone.Description.TheBaron'sGaol:			im Kerker des Barons
+Zone.ScreenDescription.TheBaron'sGaol:			Der Kerker des Barons
+Zone.Description.TheBeastmaster'sDen:			im Tiermeisterlager
+Zone.ScreenDescription.TheBeastmaster'sDen:		Das Tiermeisterlager
+Zone.Description.TheBetrayer'sDen:			im Verräterlager
+Zone.ScreenDescription.TheBetrayer'sDen:		Das Verräterlager
+Zone.Description.TheBrawler'sDen:			in der Höhle der Zänker
+Zone.ScreenDescription.TheBrawler'sDen:			Die Höhle der Zänker
+Zone.Description.TheBurrow:				im Erdloch
+Zone.ScreenDescription.TheBurrow:			Das Erdloch
+Zone.Description.TheCursedBarrow:			The Cursed Barrow
+Zone.ScreenDescription.TheCursedBarrow:			The Cursed Barrow
+Zone.Description.TheCursedLair:				im Verfluchten Lager
+Zone.ScreenDescription.TheCursedLair:			Das Verfluchtes Lager
+Zone.Description.TheDeadlandsofAnnwn:			im Totenland von Annwn
+Zone.ScreenDescription.TheDeadlandsofAnnwn:		Das Totenland von Annwn
+Zone.Description.theDeep:				in der Tiefe
+Zone.ScreenDescription.theDeep:				Die Tiefe
+Zone.Description.TheFoothillsofAlbion:			in den abgelegenen Hügeln
+Zone.ScreenDescription.TheFoothillsofAlbion:		Die Abgelegenen Hügeln
+Zone.Description.TheFoothillsofHibernia:		in den abgelegenen Hügeln
+Zone.ScreenDescription.TheFoothillsofHibernia:		Die Abgelegenen Hügeln
+Zone.Description.TheFoothillsofMidgard:			in den abgelegenen Hügeln
+Zone.ScreenDescription.TheFoothillsofMidgard:		Die Abgelegenen Hügeln
+Zone.Description.TheForgottenVein:			in der Vergessenen Ader
+Zone.ScreenDescription.TheForgottenVein:		Die Vergessene Ader
+Zone.Description.TheFrontlines:				an den Grenzlinien
+Zone.ScreenDescription.TheFrontlines:			Die Grenzlinien
+Zone.Description.TheFuneraryHall:			in der Begräbnishalle
+Zone.ScreenDescription.TheFuneraryHall:			Die Begräbnishalle
+Zone.Description.theGnollsDen:				in der Gnoll-Höhle
+Zone.ScreenDescription.theGnollsDen:			Gnoll-Höhle
+Zone.Description.theGoblinWorkshop:			in der Goblin-Werkstatt
+Zone.ScreenDescription.theGoblinWorkshop:		Die Goblin-Werkstatt
+Zone.Description.TheGossamerGrotto:			in der Spinnwebengrotte
+Zone.ScreenDescription.TheGossamerGrotto:		Die Spinnwebengrotte
+Zone.Description.theGreatPyramidofStygia:		in der Großen Pyramide
+Zone.ScreenDescription.theGreatPyramidofStygia:		Die Große Pyramide
+Zone.Description.TheHallofReawakening:			in der Halle der Wiedererweckung
+Zone.ScreenDescription.TheHallofReawakening:		Die Halle der Wiedererweckung
+Zone.Description.TheHauntedHalls:			in den Spukhallen
+Zone.ScreenDescription.TheHauntedHalls:			Die Spukhallen
+Zone.Description.TheHiddenCrypt:			in der Versteckten Krypta
+Zone.ScreenDescription.TheHiddenCrypt:			Die Versteckte Krypta
+Zone.Description.LeSanctuaireDuHautConsule:		in der Höhle des Hochkonsuls
+Zone.ScreenDescription.LeSanctuaireDuHautConsule:	Die Höhle des Hochkonsuls
+Zone.Description.TheHillsofClaret:			in den Hügeln von Claret
+Zone.ScreenDescription.TheHillsofClaret:		Die Hügel von Claret
+Zone.Description.TheLionsDen:				in der Löwengrube
+Zone.ScreenDescription.TheLionsDen:			Die Löwengrube
+Zone.Description.TheLostBurrow:				im Vergessenen Erdloch
+Zone.ScreenDescription.TheLostBurrow:			Das Vergessene Erdloch
+Zone.Description.TheLostWing:				im Vergessenen Flügel
+Zone.ScreenDescription.TheLostWing:			Der Vergessene Flügel
+Zone.Description.TheMaster'sLair:			im Meisterlager
+Zone.ScreenDescription.TheMaster'sLair:			Das Meisterlager
+Zone.Description.ThePitofDespair:			in der Grube der Verzweiflung
+Zone.ScreenDescription.ThePitofDespair:			Die Grube der Verzweiflung
+Zone.Description.thePlutonianShore:			am Plutonisches Ufer
+Zone.ScreenDescription.thePlutonianShore:		Das Plutonisches Ufer
+Zone.Description.TheProvingGrounds:			im Sandkasten
+Zone.ScreenDescription.TheProvingGrounds:		Der Sandkasten
+Zone.Description.TheQueen'sLabyrinth:			im Labyrinth der Königin
+Zone.ScreenDescription.TheQueen'sLabyrinth:		Das Labyrinth der Königin
+Zone.Description.theRealmoftheDamned:			im Reich der Verdammten
+Zone.ScreenDescription.theRealmoftheDamned:		Das Reich der Verdammten
+Zone.Description.TheRitualHall:				in der Kulthalle
+Zone.ScreenDescription.TheRitualHall:			Die Kulthalle
+Zone.Description.TheShaman'sInnerSanctum:		in der Inneren Schamanenhöhle
+Zone.ScreenDescription.TheShaman'sInnerSanctum:		Die Innere Schamanenhöhle
+Zone.Description.theShatteredLands:			im Zerschmetterten Land
+Zone.ScreenDescription.theShatteredLands:		Das Zerschmetterte Land
+Zone.Description.TheSmeltingPot:			im Schmelztopf
+Zone.ScreenDescription.TheSmeltingPot:			Der Schmelztopf
+Zone.Description.TheSteward'sCrypt:			in der Krypta des Stewards
+Zone.ScreenDescription.TheSteward'sCrypt:		Die Krypta des Stewards
+Zone.Description.theSunderedTombs:			in den getrennten Gräbern
+Zone.ScreenDescription.theSunderedTombs:		Die Getrennten Gräbern
+Zone.Description.TheWarrens:				im Kaninchenbau
+Zone.ScreenDescription.TheWarrens:			Der Kaninchenbau
+Zone.Description.Thidranki:				in Thidranki
+Zone.ScreenDescription.Thidranki:			Thidranki
+Zone.Description.ThievesDen:				im Diebesversteck
+Zone.ScreenDescription.ThievesDen:			Diebesversteck
+Zone.Description.TirnaNog:				in Tir na nOgh
+Zone.ScreenDescription.TirnaNog:			Tir na nOgh
+Zone.Description.TombofMithra:				in Mithras Gruft
+Zone.ScreenDescription.TombofMithra:			Mithras Gruft
+Zone.Description.TomtePrison:				im Tomte-Gefängnis
+Zone.ScreenDescription.TomtePrison:			Tomte-Gefängnis
+Zone.Description.Torrylin:				in Torrylin
+Zone.ScreenDescription.Torrylin:			Torrylin
+Zone.Description.TreibhCaillte:				in Treibh Caillte
+Zone.ScreenDescription.TreibhCaillte:			Treibh Caillte
+Zone.Description.Trollheim:				in Trollheim
+Zone.ScreenDescription.Trollheim:			Trollheim
+Zone.Description.Tullamore:				in Tullamore
+Zone.ScreenDescription.Tullamore:			Tullamore
+Zone.Description.TurSuil:				in Tur Suil
+Zone.ScreenDescription.TurSuil:				Tur Suil
+Zone.Description.TuscaranGlacier:			in den Gletscherhöhlen
+Zone.ScreenDescription.TuscaranGlacier:			Gletscherhöhlen
+Zone.Description.Typhon'sReach:				in Typhons Gebiet
+Zone.ScreenDescription.Typhon'sReach:			Typhons Gebiet
+Zone.Description.UnamedSea2:				Unamed Sea 2
+Zone.ScreenDescription.UnamedSea2:			Unamed Sea 2
+Zone.Description.Albion'sUndergroundForest:		im Untergrundwald
+Zone.Description.Hibernia'sUndergroundForest:		Untergrundwald
+Zone.Description.Midgard'sUndergroundForest:		im Untergrundwald
+Zone.ScreenDescription.Albion'sUndergroundForest:	Untergrundwald
+Zone.ScreenDescription.Hibernia'sUndergroundForest:	im Untergrundwald
+Zone.ScreenDescription.Midgard'sUndergroundForest:	Untergrundwald
+Zone.Description.UndergroundTunnel:			im Untergrundtunnel
+Zone.ScreenDescription.UndergroundTunnel:		Untergrundtunnel
+Zone.Description.UnrestfulTomb:				im Ruhelosen Grab
+Zone.ScreenDescription.UnrestfulTomb:			Ruheloses Grab
+Zone.Description.UnusedMine:				in der Unbenutzten Mine
+Zone.ScreenDescription.UnusedMine:			Unbenutzte Mine
+Zone.Description.Uppland:				im Uppland
+Zone.ScreenDescription.Uppland:				Uppland
+Zone.Description.ValeofBalor:				im Tal von Balor
+Zone.ScreenDescription.ValeofBalor:			Tal von Balor
+Zone.Description.ValeofMularn:				im Mularntal
+Zone.ScreenDescription.ValeofMularn:			Mularntal
+Zone.Description.ValleyofBriLeith:			im Tal von Bri Leith
+Zone.ScreenDescription.ValleyofBriLeith:		Tal von Bri Leith
+Zone.Description.Vandr'sBane:				in Vandrs Fluch
+Zone.ScreenDescription.Vandr'sBane:			Vandrs Fluch
+Zone.Description.VanernSwamp:				im Vanern-Sumpf
+Zone.ScreenDescription.VanernSwamp:			Vanern-Sumpf
+Zone.Description.Varulvhamn:				im Varulvhamn
+Zone.ScreenDescription.Varulvhamn:			Varulvhamn
+Zone.Description.VeilRift:				im Schleierriss
+Zone.ScreenDescription.VeilRift:			Schleierriss
+Zone.Description.VendoCaverns:				in den Vendo-Höhlen
+Zone.ScreenDescription.VendoCaverns:			Vendo-Höhlen
+Zone.Description.VigilantRock:				auf den Vigilant-Felsen
+Zone.ScreenDescription.VigilantRock:			Vigilant-Felsen
+Zone.Description.Volurgon:				in Volurgon
+Zone.ScreenDescription.Volurgon:			Volurgon
+Zone.Description.WestSvealand:				in West-Svealand
+Zone.ScreenDescription.WestSvealand:			West-Svealand
+Zone.Description.Wilton:				in Wilton
+Zone.ScreenDescription.Wilton:				Wilton
+Zone.Description.Wolak'sCrucible:			in Wolaks Schmelztiegel
+Zone.ScreenDescription.Wolak'sCrucible:			Wolaks Schmelztiegel
+Zone.Description.World'sEnd:				am Ende der Welt
+Zone.ScreenDescription.World'sEnd:			Ende der Welt
+Zone.Description.Wyndham:				in Wyndham
+Zone.ScreenDescription.Wyndham:				Wyndham
+Zone.Description.YggdraForest:				im Yggdra-Wald
+Zone.ScreenDescription.YggdraForest:			Yggdra-Wald

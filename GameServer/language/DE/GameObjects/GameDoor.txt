@@ -1,2 +1,2 @@
 # GAMEDOOR
-GameDoor.NowOpen:					The {0} is now open!
+GameDoor.NowOpen:	{0} ist nun geöffnet!
