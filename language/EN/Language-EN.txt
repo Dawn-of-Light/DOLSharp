@@ -921,7 +921,7 @@ Titles.ML.Line7:					Stormlord
 Titles.ML.Line8:					Warlord
 
 # VIEWREPORTS
-Scripts.Player.VeiwReport.Usage: 			Usage:
+Scripts.Player.ViewReport.Usage: 			Usage:
 Scripts.Player.ViewReport.Help.Close:			'/viewreport close <report #>' Will close the report of id #.
 Scripts.Player.ViewReport.Help.Delete:			'/viewreport delete <report #' Deletes a report of id #.
 Scripts.Player.ViewReport.InvalidReport:		That is not a valid report.

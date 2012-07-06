@@ -12,7 +12,7 @@ System.MustSelectTarget:		Ihr müsst ein Ziel auswählen!
 System.ReleaseTimer:			Automatischer Release
 
 # PropertyCalculator
-PropertyCalc.MaxSpeed.YouAreEncumbered:	Ihr seit überlastet und könnt euch nicht bewegen.
+PropertyCalc.MaxSpeed.YouAreEncumbered:	Ihr seid überlastet und könnt euch nicht bewegen.
 
 # GAMEGRAVESTONE
 GameGravestone.GameGravestone.Grave:	Grabstein von {0}
@@ -25,8 +25,8 @@ GameStaticItem.GetName.Article1:	{0}
 GameStaticItem.GetName.Article2:	{0}
 
 # /Playerenterexit
-Scripts.Events.PlayerEnterExit.Entered:	{0} betritt gerade das Spiel!
-Scripts.Events.PlayerEnterExit.Left:	{0} verlässt gerade das Spiel!
+Scripts.Events.PlayerEnterExit.Entered:	{0} betritt gerade diese Welt!
+Scripts.Events.PlayerEnterExit.Left:	{0} verlässt gerade diese Welt!
 Scripts.Events.PlayerEnterExit.Staff:	[Staff] {0}
 
 # /Emotes

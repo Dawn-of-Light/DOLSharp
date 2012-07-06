@@ -28,6 +28,8 @@ AdvancedCraftingSkill.CombineItems.OnlyCombine:		Ihr könnt Eure Gegenstände nu
 AdvancedCraftingSkill.IsAllowedToCombine.CraftedItems:	Nur von Spielern hergestellte Gegenstände können verzaubert werden!
 AdvancedCraftingSkill.IsAllowedToCombine.Imbue:		Ihr braucht irgendetwas um {0} zu verzaubern!
 AdvancedCraftingSkill.IsAllowedToCombine.NoEnchanted:	Dieser Gegenstand kann nicht verzaubert werden!
+AdvancedCraftingSkill.IsAllowedToCombine.NoGoodCombine:	Dieser Gegenstand kann mit der Tinktur nicht getränkt werden!
+AdvancedCraftingSkill.IsAllowedToCombine.ProblemCombine:Diese Tinktur muss noch konfiguriert werden. Schreibt dies bitte in den Bugreport!
 
 # /Alchemy
 Alchemy.IsAllowedToCombine.AlchemyTinctures:		Ihr könnt nur Alchimietinkturen vermischen!

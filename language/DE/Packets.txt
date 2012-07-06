@@ -34,7 +34,7 @@ DetailDisplayHandler.HandlePacket.MediumPenalty:	Normaler Abzug
 DetailDisplayHandler.HandlePacket.MustBeInChatGroup:	Ihr müsst in einer Chatgruppe sein.
 DetailDisplayHandler.HandlePacket.MustBeInBattleGroup:	Ihr müsst in einer Battlegruppe sein.
 DetailDisplayHandler.HandlePacket.NoBonus:		Kein Bonus
-DetailDisplayHandler.HandlePacket.NoGroup:		Ihr seit kein Mitglied einer Gruppe.
+DetailDisplayHandler.HandlePacket.NoGroup:		Ihr seid kein Mitglied einer Gruppe.
 DetailDisplayHandler.HandlePacket.NoInformation:	Keine besonderen Informationen!
 DetailDisplayHandler.HandlePacket.NoPermissionToSpeak:	Ihr habt nicht das Recht um mit der Gilde zu reden.	
 DetailDisplayHandler.HandlePacket.OnlyModerator:	Nur der Moderator darf in dieser Chatgruppe reden.
@@ -209,7 +209,7 @@ PlayerInitRequestHandler.OfficerMessage:		Offiziersnachricht: {0}
 PlayerInitRequestHandler.SaferLocation:			Diese Gegend ist im Moment nicht sicher. Ihr werdet an einen sicheren Ort versetzt.
 
 # /PlayerMoveItemRequestHandler
-PlayerMoveItemRequestHandler.TooFarAway:		Ihr seit zu weit weg, um {0} etwas zu geben.
+PlayerMoveItemRequestHandler.TooFarAway:		Ihr seid zu weit weg, um {0} etwas zu geben.
 
 # /PlayerPickUpRequestHandler
 PlayerPickUpRequestHandler.HandlePacket.InvalidTarget:	Dieses Ziel könnt Ihr nicht auswählen!

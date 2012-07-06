@@ -16,7 +16,7 @@ Hib.ImportantDelivery.Description.Step7:		Schritt 7: Gebt Stallmeister Freagus d
 Hib.ImportantDelivery.Description.Step8:		Schritt 8: Hört Stallmeister Freagus eine Weile zu. Falls er aufhört, mit Euch zu reden, fragt ihn nach Eurer [Belohnung] für die harte Arbeit und Eure Dienste für Hibernia.
 Hib.ImportantDelivery.FinishQuest.RecieveReward:	Ihr erhaltet {0} als Belohnung.
 Hib.ImportantDelivery.Notify.RentingHorse:		Guten Tag, {0}. Falls Ihr daran interessiert seid ein Reitpferd zu mieten, dann kauft ein Ticket und gebt es mir. Ich wünsche Euch einen sicheren Weg!
-Hib.ImportantDelivery.Notify.Supplies:			Ah! Die Vorräte, auf die ich schon warte. Ich danke Euch {0}. Diese werden uns auf alle Fälle in den kommenden Wochen weiter helfen. Ich habe einen weiteren [Auftrag]. Seit Ihr daran interessiert?
+Hib.ImportantDelivery.Notify.Supplies:			Ah! Die Vorräte, auf die ich schon warte. Ich danke Euch {0}. Diese werden uns auf alle Fälle in den kommenden Wochen weiter helfen. Ich habe einen weiteren [Auftrag]. Seid Ihr daran interessiert?
 Hib.ImportantDelivery.Notify.Vegetables:		Ah! Das muss von Aethic aus Tir na mBeo sein. Ich habe schon eine ganze Weile auf gutes Gemüse gewartet. Meine Familie, mein Pferd und ich werden eine ganze Zeit damit auskommen. Meinen Dank an Euch. Hier nehmt diese [Belohnung] für Eure harte Arbeit.
 Hib.ImportantDelivery.QuestTitle:			Wichtige Lieferung
 Hib.ImportantDelivery.TalkToAddrir.Abort:		Wollt Ihr wirklich diese Aufgabe abbrechen, wobei Euch alle damit verbundenen Gegenstände verloren gehen?
@@ -39,7 +39,7 @@ Hib.ImportantDelivery.TalkToAddrir.Training:		Seid Ihr bereit Eure Ausbildung zu
 Hib.ImportantDelivery.TalkToAethic.CaseErrand:		Auftrag
 Hib.ImportantDelivery.TalkToAethic.Errand:		Ich brauche Euch, um diese Kiste mit Gemüse zu Freagus nach Ardee zu bringen. Ich bin sicher, dass Ihr geeignet seid für diese Aufgabe. Nehmt dieses Pferdeticket und gebt es Stallmeister Truichon. Und nun beeilt Euch, bevor dieses Gemüse verdirbt.
 Hib.ImportantDelivery.TalkToAethic.Greetings:		Seid gegrüßt, Reisender. Ich habe Euch vorher noch nie hier gesehen. Ihr müsst ein neuer Rekrut sein. Wie auch immer, womit kann ich Euch helfen?
-Hib.ImportantDelivery.TalkToAethic.Supplies:		Ah! Die Vorräte, auf die ich schon warte. Ich danke Euch {0}. Diese werden uns auf alle Fälle in den kommenden Wochen weiter helfen. Ich habe einen weiteren [Auftrag]. Seit Ihr daran interessiert?
+Hib.ImportantDelivery.TalkToAethic.Supplies:		Ah! Die Vorräte, auf die ich schon warte. Ich danke Euch {0}. Diese werden uns auf alle Fälle in den kommenden Wochen weiter helfen. Ich habe einen weiteren [Auftrag]. Seid Ihr daran interessiert?
 Hib.ImportantDelivery.TalkToAethic.Vegetables:		Ich brauche Euch, um diese Kiste mit Gemüse zu Freagus nach Ardee zu bringen. Ich bin sicher, dass Ihr geeignet seid für diese Aufgabe. Nehmt dieses Pferdeticket und gebt es Stallmeister Truichon. Und nun beeilt Euch, bevor dieses Gemüse verdirbt.
 Hib.ImportantDelivery.TalkToFreagus.CaseReward:		Belohnung
 Hib.ImportantDelivery.TalkToFreagus.Errand:		Geht nicht gleich wieder weg, Freund. Ich habe noch einen anderen Auftrag für Euch.
