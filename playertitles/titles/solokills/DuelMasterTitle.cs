@@ -39,7 +39,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title description.</returns>
 		public override string GetDescription(GamePlayer player)
 		{
-			return LanguageMgr.GetTranslation(player.Client, "Titles.Solokills.DuelMaster");
+			return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Solokills.DuelMaster");
 		}
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title value.</returns>
 		public override string GetValue(GamePlayer player)
 		{
-			return LanguageMgr.GetTranslation(player.Client, "Titles.Solokills.DuelMaster");
+			return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Solokills.DuelMaster");
 		}
 
 		/// <summary>

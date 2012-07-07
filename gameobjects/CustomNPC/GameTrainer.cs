@@ -113,9 +113,9 @@ namespace DOL.GS
 			}
 
 			IList list = new ArrayList();
-			list.Add(LanguageMgr.GetTranslation(player.Client, "GameTrainer.GetExamineMessages.YouTarget", GetName(0, false)));
-			list.Add(LanguageMgr.GetTranslation(player.Client, "GameTrainer.GetExamineMessages.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false), TrainerClassName));
-			list.Add(LanguageMgr.GetTranslation(player.Client, "GameTrainer.GetExamineMessages.RightClick"));
+			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.GetExamineMessages.YouTarget", GetName(0, false)));
+			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.GetExamineMessages.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false), TrainerClassName));
+			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.GetExamineMessages.RightClick"));
 			return list;
 		}
 		#endregion
@@ -188,7 +188,7 @@ namespace DOL.GS
 			if (player == null) return false;
 			
 			//level respec for players
-			if (CanTrain(player) && text == LanguageMgr.GetTranslation(player.Client, "GameTrainer.Interact.CaseRespecialize"))
+			if (CanTrain(player) && text == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.Interact.CaseRespecialize"))
 			{
 				if (player.Level == 5 && !player.IsLevelRespecUsed)
 				{
@@ -203,7 +203,7 @@ namespace DOL.GS
 						player.SkillSpecialtyPoints += specPoints;
 						player.RemoveAllStyles(); // Kill styles
 						player.UpdateSpellLineLevels(false);
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.Interact.RegainPoints", specPoints), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.Interact.RegainPoints", specPoints), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					player.RefreshSpecDependantSkills(false);
 					// Notify Player of points
@@ -248,12 +248,12 @@ namespace DOL.GS
 						if (player.Inventory.IsSlotsFree(item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == true)
 					{
 						player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack), item.Count);
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.CheckAbilityToUseItem.Text1", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.CheckAbilityToUseItem.Text1", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					else
 					{
 						player.Inventory.MoveItem((eInventorySlot)item.SlotPosition, eInventorySlot.Ground, item.Count);
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.CheckAbilityToUseItem.Text1", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.CheckAbilityToUseItem.Text1", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 				}
 			}
@@ -279,7 +279,7 @@ namespace DOL.GS
 							player.Inventory.RemoveCountFromStack(item, 1);
 							InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template);
 							player.RespecAmountSingleSkill++;
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.ReceiveItem.RespecSingle"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.ReceiveItem.RespecSingle"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							return true;
 						}
 					case "respec_full":
@@ -287,7 +287,7 @@ namespace DOL.GS
 							player.Inventory.RemoveCountFromStack(item, 1);
 							InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template);
 							player.RespecAmountAllSkill++;
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.ReceiveItem.RespecFull", item.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.ReceiveItem.RespecFull", item.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							return true;
 						}
 					case "respec_realm":
@@ -295,7 +295,7 @@ namespace DOL.GS
 							player.Inventory.RemoveCountFromStack(item, 1);
 							InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template);
 							player.RespecAmountRealmSkill++;
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.ReceiveItem.RespecRealm"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.ReceiveItem.RespecRealm"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							return true;
 						}
 				}
@@ -330,8 +330,8 @@ namespace DOL.GS
 				player.RemoveAllStyles();
 
 				if (messageToPlayer != "")
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.PromotePlayer.Says", this.Name, messageToPlayer), eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.PromotePlayer.Upgraded", player.CharacterClass.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.PromotePlayer.Says", this.Name, messageToPlayer), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.PromotePlayer.Upgraded", player.CharacterClass.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 				player.CharacterClass.OnLevelUp(player, player.Level);
 				player.UpdateSpellLineLevels(true);
@@ -351,7 +351,7 @@ namespace DOL.GS
 				}
 
 				// after gifts
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.PromotePlayer.Accepted", player.CharacterClass.Profession), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.PromotePlayer.Accepted", player.CharacterClass.Profession), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 				Notify(GameTrainerEvent.PlayerPromoted, this, new PlayerPromotedEventArgs(player, oldClass));
 
@@ -374,7 +374,7 @@ namespace DOL.GS
 			{
 				if (!player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(temp), 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameTrainer.AddGift.NotEnoughSpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.AddGift.NotEnoughSpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 				InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Other, temp);
@@ -390,7 +390,7 @@ namespace DOL.GS
 		{
 			if (CanTrainChampionLevels(player) == false)
 			{
-				SayTo(player, eChatLoc.CL_ChatWindow, LanguageMgr.GetTranslation(player.Client, "GameTrainer.Train.SeekElsewhere"));
+				SayTo(player, eChatLoc.CL_ChatWindow, LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.Train.SeekElsewhere"));
 			}
 		}
 
@@ -400,7 +400,7 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		protected virtual void OfferTraining(GamePlayer player)
 		{
-			SayTo(player, eChatLoc.CL_ChatWindow, LanguageMgr.GetTranslation(player.Client, "GameTrainer.Train.WouldYouLikeTo"));
+			SayTo(player, eChatLoc.CL_ChatWindow, LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.Train.WouldYouLikeTo"));
 		}
 		
 		/// <summary>

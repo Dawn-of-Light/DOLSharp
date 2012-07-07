@@ -61,7 +61,7 @@ namespace DOL.GS.Effects
 					? eChatType.CT_Spell
 					: eChatType.CT_System;
 
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Effects.Necro.TauntEffect.SeemsChange", target.GetName(0, true)), chatType, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Effects.Necro.TauntEffect.SeemsChange", target.GetName(0, true)), chatType, eChatLoc.CL_SystemWindow);
 			}
 		}
 
@@ -85,7 +85,7 @@ namespace DOL.GS.Effects
 					? eChatType.CT_SpellExpires
 					: eChatType.CT_System;
 
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Effects.Necro.TauntEffect.SeemsLessAgg", Owner.GetName(0, true)), chatType, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Effects.Necro.TauntEffect.SeemsLessAgg", Owner.GetName(0, true)), chatType, eChatLoc.CL_SystemWindow);
 			}
 		}
 	}

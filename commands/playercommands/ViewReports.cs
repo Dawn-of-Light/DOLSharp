@@ -44,12 +44,12 @@ namespace DOL.GS.Commands
 						{
 							if (client.Account.PrivLevel < 2)
 							{
-								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.ViewReport.NoPriv"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.ViewReport.NoPriv"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
 							if (args[2] == "")
 							{
-								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.ViewReport.Help.Close"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.ViewReport.Help.Close"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								break;
 							}
 
@@ -57,7 +57,7 @@ namespace DOL.GS.Commands
 							BugReport report = GameServer.Database.FindObjectByKey<BugReport>(repor);
 							if (report == null)
 							{
-								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.ViewReport.InvalidReport"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.ViewReport.InvalidReport"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								break;
 							}
 							report.ClosedBy = client.Player.Name;
@@ -69,19 +69,19 @@ namespace DOL.GS.Commands
 						{
 							if (client.Account.PrivLevel < 2)
 							{
-								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.ViewReport.NoPriv"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.ViewReport.NoPriv"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
 							if (args[2] == "")
 							{
-								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.ViewReport.Help.Delete"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.ViewReport.Help.Delete"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								break;
 							}
 							int repor = int.Parse(args[2]);
 							BugReport report = GameServer.Database.FindObjectByKey<BugReport>(repor);
 							if (report == null)
 							{
-								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.ViewReport.InvalidReport"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.ViewReport.InvalidReport"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								break;
 							}
 							// Create a counter to keep track of our BugReport ID
@@ -96,12 +96,12 @@ namespace DOL.GS.Commands
 								GameServer.Database.SaveObject(curReport);
 								count++;
 							}
-							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.ViewReport.ReportDeleted", report.ID), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.ViewReport.ReportDeleted", report.ID), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							break;
 						}
 					default:
 						{
-							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.ViewReport.UnknownCommand"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.ViewReport.UnknownCommand"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							DisplayHelp(client);
 						}
 						break;
@@ -137,9 +137,9 @@ namespace DOL.GS.Commands
 
 		public void DisplayHelp(GameClient client)
 		{
-			client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.ViewReport.Usage"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.ViewReport.Help.Close"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Player.ViewReport.Help.Delete"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.ViewReport.Usage"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.ViewReport.Help.Close"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.ViewReport.Help.Delete"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 	}

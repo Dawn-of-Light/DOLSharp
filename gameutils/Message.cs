@@ -123,7 +123,7 @@ namespace DOL.GS
 				if (!excluded)
 				*/
 				if (!(centerObject is GamePlayer && centerObject == player))
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, LanguageMessageID, args), chatType, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, LanguageMessageID, args), chatType, eChatLoc.CL_SystemWindow);
 			}
 		}
 

@@ -286,7 +286,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 					if (!success)
 						player.Out.SendMessage(
-							LanguageMgr.GetTranslation(player.Client, "DoorRequestHandler.OnTick.TooFarAway", doorList[0].Name),
+							LanguageMgr.GetTranslation(player.Client.Account.Language, "DoorRequestHandler.OnTick.TooFarAway", doorList[0].Name),
 							eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else

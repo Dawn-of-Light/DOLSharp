@@ -83,7 +83,7 @@ namespace DOL.GS.Commands
 			{
 				if (client.Player != null)
 				{
-					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "AdminCommands.Code.ErrorCompiling"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Code.ErrorCompiling"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 
 					foreach (CompilerError err in cr.Errors)
 						client.Out.SendMessage(err.ErrorText, eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -106,7 +106,7 @@ namespace DOL.GS.Commands
 
 				if (client.Player != null)
 				{
-					client.Out.SendMessage(LanguageMgr.GetTranslation(client, "AdminCommands.Code.CodeExecuted"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Code.CodeExecuted"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else
 				{

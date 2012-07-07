@@ -138,7 +138,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				if (player.FreeLevelState == 2)
 				{
 					player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true,
-					                         LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.FreeLevel"));
+					                         LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerInitRequestHandler.FreeLevel"));
 				}
 				player.Out.SendMasterLevelWindow(0);
 				AssemblyName an = Assembly.GetExecutingAssembly().GetName();
@@ -190,7 +190,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						if (player.Level > k.BaseLevel)
 						{
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.LevelCap"),
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerInitRequestHandler.LevelCap"),
 							                       eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
 							player.MoveTo((ushort) player.DBCharacter.BindRegion, player.DBCharacter.BindXpos,
 							              player.DBCharacter.BindYpos, player.DBCharacter.BindZpos,
@@ -244,7 +244,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			private static void SendMessageAndMoveToSafeLocation(GamePlayer player)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.SaferLocation"),
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerInitRequestHandler.SaferLocation"),
 				                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				player.MoveTo((ushort) player.DBCharacter.BindRegion, player.DBCharacter.BindXpos,
 				              player.DBCharacter.BindYpos, player.DBCharacter.BindZpos,
@@ -280,20 +280,20 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					if (player.GuildRank.GcHear && player.Guild.Motd != "")
 					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.GuildMessage"),
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerInitRequestHandler.GuildMessage"),
 						                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						player.Out.SendMessage(player.Guild.Motd, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					if (player.GuildRank.OcHear && player.Guild.Omotd != "")
 					{
 						player.Out.SendMessage(
-							LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.OfficerMessage", player.Guild.Omotd),
+							LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerInitRequestHandler.OfficerMessage", player.Guild.Omotd),
 							eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					if (player.Guild.alliance != null && player.GuildRank.AcHear && player.Guild.alliance.Dballiance.Motd != "")
 					{
 						player.Out.SendMessage(
-							LanguageMgr.GetTranslation(player.Client, "PlayerInitRequestHandler.AllianceMessage",
+							LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerInitRequestHandler.AllianceMessage",
 							                           player.Guild.alliance.Dballiance.Motd), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 				}

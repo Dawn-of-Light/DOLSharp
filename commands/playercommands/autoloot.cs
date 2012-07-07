@@ -39,12 +39,12 @@ namespace DOL.GS.Commands
 			if (args[1].ToLower().Equals("on"))
 			{
 				client.Player.Autoloot = true;
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Autoloot.On"));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Autoloot.On"));
             }
 			else if (args[1].ToLower().Equals("off"))
 			{
 				client.Player.Autoloot = false;
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Autoloot.Off"));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Autoloot.Off"));
             }
 		}
 	}

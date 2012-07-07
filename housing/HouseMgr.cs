@@ -701,7 +701,7 @@ namespace DOL.GS.Housing
 			}
 
 			// send house xfer prompt to player
-			player.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.TransferToGuild", player.Guild.Name), MakeGuildLot);
+			player.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Housing.TransferToGuild", player.Guild.Name), MakeGuildLot);
 
 			return true;
 		}
@@ -730,7 +730,7 @@ namespace DOL.GS.Housing
 
 			// notify guild members of the guild house acquisition
 			player.Guild.SendMessageToGuildMembers(
-				LanguageMgr.GetTranslation(player.Client, "Scripts.Player.Housing.GuildNowOwns", player.Guild.Name, player.Name),
+				LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Housing.GuildNowOwns", player.Guild.Name, player.Name),
 				eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 
 			// save the guild and broadcast updates

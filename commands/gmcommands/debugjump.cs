@@ -40,14 +40,14 @@ namespace DOL.GS.Commands
 			ushort zoneID = 0;
 			if (!ushort.TryParse(args[1], out zoneID))
 			{
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.DebugJump.InvalidZoneID", args[1]));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.DebugJump.InvalidZoneID", args[1]));
 				return;
 			}
 
 			Zone z = WorldMgr.GetZone(zoneID);
 			if (z == null)
 			{
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.DebugJump.UnknownZoneID", args[1]));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.DebugJump.UnknownZoneID", args[1]));
 				return;
 			}
 			
@@ -68,12 +68,12 @@ namespace DOL.GS.Commands
 			Region reg = WorldMgr.GetRegion(RegionID);
 			if (reg == null)
 			{
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.DebugJump.UnknownRegion", RegionID.ToString()));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.DebugJump.UnknownRegion", RegionID.ToString()));
 				return false;
 			}
 			else if (reg.Expansion > (int)client.ClientType)
 			{
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.DebugJump.RegionNotSuppByClient", reg.Description));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.DebugJump.RegionNotSuppByClient", reg.Description));
 				return false;
 			}
 			return true;

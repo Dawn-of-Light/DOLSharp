@@ -125,7 +125,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 					client.Player.TempProperties.setProperty(DeedWeak, new WeakRef(orgitem));
 					client.Player.TempProperties.setProperty(TargetHouse, house);
-					client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "WARNING: You are about to delete this house and all indoor and outdoor items attached to it!"), HouseRemovalDialog);
+					client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client.Account.Language, "WARNING: You are about to delete this house and all indoor and outdoor items attached to it!"), HouseRemovalDialog);
 
 					return;
 				}
@@ -567,7 +567,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 										ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointID", +_position);
 										ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointCloser", null);
 
-										client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointLogLoc"), LogLocation);
+										client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Housing.HookPointLogLoc"), LogLocation);
 									}
 									else
 									{
@@ -710,7 +710,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 										ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointID", +_position);
 										ChatUtil.SendSystemMessage(client, "Scripts.Player.Housing.HookPointCloser", null);
 
-										client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Player.Housing.HookPointLogLoc"), LogLocation);
+										client.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Housing.HookPointLogLoc"), LogLocation);
 									}
 									else
 									{

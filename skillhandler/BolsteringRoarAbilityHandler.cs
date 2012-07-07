@@ -57,7 +57,7 @@ namespace DOL.GS.SkillHandler
                         {            
                         	GamePlayer player = living as GamePlayer;
                             if (player != null)
-                                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUseSnared"), eChatType.CT_System, eChatLoc.CL_SystemWindow);      
+                                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.CannotUseSnared"), eChatType.CT_System, eChatLoc.CL_SystemWindow);      
                             return true;
                         }
                     }

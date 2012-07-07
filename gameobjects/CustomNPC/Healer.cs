@@ -56,7 +56,7 @@ namespace DOL.GS
 		public override IList GetExamineMessages(GamePlayer player)
         {
 			IList list = new ArrayList();
-            list.Add(LanguageMgr.GetTranslation(player.Client, "Healer.GetExamineMessages.Text1", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.GetExamineMessages.Text1", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
             return list;
 		}
 
@@ -71,18 +71,18 @@ namespace DOL.GS
 			if (effect != null)
 			{
 				effect.Cancel(false);
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Healer.Interact.Text1", GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.Interact.Text1", GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
             }
 
 			if (player.TotalConstitutionLostAtDeath > 0)
 			{
 				int oneConCost = GamePlayer.prcRestore[player.Level < GamePlayer.prcRestore.Length ? player.Level : GamePlayer.prcRestore.Length - 1];
 				player.TempProperties.setProperty(COST_BY_PTS, (long)oneConCost);
-                player.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client, "Healer.Interact.Text2", Money.GetString(player.TotalConstitutionLostAtDeath * (long)oneConCost)), new CustomDialogResponse(HealerDialogResponse));
+                player.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.Interact.Text2", Money.GetString(player.TotalConstitutionLostAtDeath * (long)oneConCost)), new CustomDialogResponse(HealerDialogResponse));
             }
 			else
 			{
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Healer.Interact.Text3"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.Interact.Text3"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
             }
 			return true;
 		}
@@ -91,13 +91,13 @@ namespace DOL.GS
         {
             if (!this.IsWithinRadius(player, WorldMgr.INTERACT_DISTANCE))
             {
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Healer.HealerDialogResponse.Text1", GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.HealerDialogResponse.Text1", GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
 
             if (response != 0x01) //declined
             {
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Healer.HealerDialogResponse.Text2"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.HealerDialogResponse.Text2"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
 
@@ -110,13 +110,13 @@ namespace DOL.GS
             if (player.RemoveMoney(totalCost))
             {
                 InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, totalCost);
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Healer.HealerDialogResponse.Text3", this.Name, Money.GetString(totalCost)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.HealerDialogResponse.Text3", this.Name, Money.GetString(totalCost)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 player.TotalConstitutionLostAtDeath -= restorePoints;
                 player.Out.SendCharStatsUpdate();
             }
             else
             {
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Healer.HealerDialogResponse.Text4", Money.GetString(totalCost), restorePoints), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.HealerDialogResponse.Text4", Money.GetString(totalCost), restorePoints), eChatType.CT_System, eChatLoc.CL_SystemWindow);
             }
             return;
         }

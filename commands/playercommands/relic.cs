@@ -65,48 +65,48 @@ namespace DOL.GS.Commands
                     case eRealm.Albion:
                         {
                             if (relic.RelicType == eRelicType.Strength)
-								albStr = LanguageMgr.GetTranslation(client, "Scripts.Players.Relic.Strength") + ": " + GlobalConstants.RealmToName(relic.Realm);
+								albStr = LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Relic.Strength") + ": " + GlobalConstants.RealmToName(relic.Realm);
                             if (relic.RelicType == eRelicType.Magic)
-								albPwr = LanguageMgr.GetTranslation(client, "Scripts.Players.Relic.Power") + ": " + GlobalConstants.RealmToName(relic.Realm);
+								albPwr = LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Relic.Power") + ": " + GlobalConstants.RealmToName(relic.Realm);
                             break;
                         }
 
                     case eRealm.Midgard:
                         {
                             if (relic.RelicType == eRelicType.Strength)
-								midStr = LanguageMgr.GetTranslation(client, "Scripts.Players.Relic.Strength") + ": " + GlobalConstants.RealmToName(relic.Realm);
+								midStr = LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Relic.Strength") + ": " + GlobalConstants.RealmToName(relic.Realm);
                             if (relic.RelicType == eRelicType.Magic)
-								midPwr = LanguageMgr.GetTranslation(client, "Scripts.Players.Relic.Power") + ": " + GlobalConstants.RealmToName(relic.Realm);
+								midPwr = LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Relic.Power") + ": " + GlobalConstants.RealmToName(relic.Realm);
                             break;
                         }
 
                     case eRealm.Hibernia:
                         {
                             if (relic.RelicType == eRelicType.Strength)
-								hibStr = LanguageMgr.GetTranslation(client, "Scripts.Players.Relic.Strength") + ": " + GlobalConstants.RealmToName(relic.Realm);
+								hibStr = LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Relic.Strength") + ": " + GlobalConstants.RealmToName(relic.Realm);
                             if (relic.RelicType == eRelicType.Magic)
-								hibPwr = LanguageMgr.GetTranslation(client, "Scripts.Players.Relic.Power") + ": " + GlobalConstants.RealmToName(relic.Realm);
+								hibPwr = LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Relic.Power") + ": " + GlobalConstants.RealmToName(relic.Realm);
                             break;
                         }
                 }
             }
             #endregion
 
-            relicInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Relic.AlbRelics")+ ":");
+            relicInfo.Add(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Relic.AlbRelics")+ ":");
             relicInfo.Add(albStr);
             relicInfo.Add(albPwr);
             relicInfo.Add("");
-            relicInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Relic.MidRelics") + ":");
+            relicInfo.Add(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Relic.MidRelics") + ":");
             relicInfo.Add(midStr);
             relicInfo.Add(midPwr);
             relicInfo.Add("");
-            relicInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Relic.HibRelics") + ":");
+            relicInfo.Add(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Relic.HibRelics") + ":");
             relicInfo.Add(hibStr);
             relicInfo.Add(hibPwr);
             relicInfo.Add("");
-            relicInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Relic.UseRealmCommand"));
+            relicInfo.Add(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Relic.UseRealmCommand"));
 
-            client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client, "Scripts.Players.Relic.Title"), relicInfo);
+            client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Relic.Title"), relicInfo);
         }
    }
 }

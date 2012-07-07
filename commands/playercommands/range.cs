@@ -35,14 +35,14 @@ namespace DOL.GS.Commands
 
 			GameLiving living = client.Player.TargetObject as GameLiving;
 			if (client.Player.TargetObject == null)
-				DisplayMessage(client, (LanguageMgr.GetTranslation(client, "Scripts.Players.Range.NeedTarget")));
+				DisplayMessage(client, (LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Range.NeedTarget")));
 			else if (living == null || (living != null && client.Account.PrivLevel > 1))
 			{
 				int range = client.Player.GetDistanceTo( client.Player.TargetObject );
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Range.Result", range, (client.Player.TargetInView ? "" : LanguageMgr.GetTranslation(client, "Scripts.Players.Range.NotVisible"))));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Range.Result", range, (client.Player.TargetInView ? "" : LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Range.NotVisible"))));
 			}
 			else
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Range.InvalidObject"));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Range.InvalidObject"));
 		}
 	}
 }

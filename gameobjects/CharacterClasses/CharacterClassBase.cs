@@ -325,8 +325,8 @@ namespace DOL.GS
 			if (controlledBrain == null)
 			{
 				Player.Out.SendPetWindow(null, ePetWindowAction.Close, 0, 0);
-				Player.Out.SendMessage(LanguageMgr.GetTranslation(Player.Client, "GamePlayer.SetControlledNpc.ReleaseTarget2", Player.ControlledBrain.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				Player.Out.SendMessage(LanguageMgr.GetTranslation(Player.Client, "GamePlayer.SetControlledNpc.ReleaseTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Player.Out.SendMessage(LanguageMgr.GetTranslation(Player.Client.Account.Language, "GamePlayer.SetControlledNpc.ReleaseTarget2", Player.ControlledBrain.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Player.Out.SendMessage(LanguageMgr.GetTranslation(Player.Client.Account.Language, "GamePlayer.SetControlledNpc.ReleaseTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
@@ -411,7 +411,7 @@ namespace DOL.GS
 			if (Player.IsShade == makeShade)
 			{
 				if (makeShade && (Player.ObjectState == GameObject.eObjectState.Active))
-					Player.Out.SendMessage(LanguageMgr.GetTranslation(Player.Client, "GamePlayer.Shade.AlreadyShade"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Player.Out.SendMessage(LanguageMgr.GetTranslation(Player.Client.Account.Language, "GamePlayer.Shade.AlreadyShade"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -432,7 +432,7 @@ namespace DOL.GS
 				}
 				// Drop shade form.
 				Player.Model = Player.CreationModel;
-				Player.Out.SendMessage(LanguageMgr.GetTranslation(Player.Client, "GamePlayer.Shade.NoLongerShade"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Player.Out.SendMessage(LanguageMgr.GetTranslation(Player.Client.Account.Language, "GamePlayer.Shade.NoLongerShade"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
 

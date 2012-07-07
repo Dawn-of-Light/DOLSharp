@@ -89,7 +89,7 @@ namespace DOL.GS.Commands
 						newArea.CanBroadcast = area.CanBroadcast;
 						WorldMgr.GetRegion(client.Player.CurrentRegionID).AddArea(newArea);
 						GameServer.Database.AddObject(area);
-						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Area.AreaCreated", area.Description, area.X, area.Z, area.Radius, area.CanBroadcast.ToString(), area.Sound));
+						DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Area.AreaCreated", area.Description, area.X, area.Z, area.Radius, area.CanBroadcast.ToString(), area.Sound));
 						break;
 					}
 				#endregion Create
