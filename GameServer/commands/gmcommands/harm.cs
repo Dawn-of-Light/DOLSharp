@@ -47,7 +47,7 @@ namespace DOL.GS.Commands
 				if (living != null)
 					living.TakeDamage(client.Player, eDamageType.GM, amount, 0);
 				else
-					DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Harm.InvalidTarget"));
+					DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Harm.InvalidTarget"));
 			}
 			catch (Exception ex)
 			{

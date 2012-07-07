@@ -224,7 +224,7 @@ namespace DOL.GS.Quests
 		/// <param name="player"></param>
 		public override void OnQuestAssigned(GamePlayer player)
 		{
-            player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "RewardQuest.OnQuestAssigned", Name)), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+            player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client.Account.Language, "RewardQuest.OnQuestAssigned", Name)), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
             player.Out.SendSoundEffect(7, 0, 0, 0, 0, 0);
 		}
 

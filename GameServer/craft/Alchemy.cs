@@ -91,7 +91,7 @@ namespace DOL.GS
 			if (((InventoryItem)player.TradeWindow.TradeItems[0]).Object_Type != 
                 (int)eObjectType.AlchemyTincture)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, 
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, 
                     "Alchemy.IsAllowedToCombine.AlchemyTinctures"), PacketHandler.eChatType.CT_System, 
                     PacketHandler.eChatLoc.CL_SystemWindow);
 				
@@ -100,7 +100,7 @@ namespace DOL.GS
 
 			if (player.TradeWindow.ItemsCount > 1)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client,
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language,
                     "Alchemy.IsAllowedToCombine.OneTincture"), PacketHandler.eChatType.CT_System, 
                     PacketHandler.eChatLoc.CL_SystemWindow);
 
@@ -109,7 +109,7 @@ namespace DOL.GS
 
 			if (item.ProcSpellID != 0 || item.SpellID != 0)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, 
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, 
                     "Alchemy.IsAllowedToCombine.AlreadyImbued", item.Name), 
                     PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
 

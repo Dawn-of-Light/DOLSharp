@@ -43,8 +43,8 @@ namespace DOL.GS
 		public override IList GetExamineMessages(GamePlayer player)
 		{
             IList list = new ArrayList();
-            list.Add(LanguageMgr.GetTranslation(player.Client, "Enchanter.GetExamineMessages.Text1", GetName(0, false)));
-            list.Add(LanguageMgr.GetTranslation(player.Client, "Enchanter.GetExamineMessages.Text2", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.GetExamineMessages.Text1", GetName(0, false)));
+            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.GetExamineMessages.Text2", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
             return list;
 		}
 
@@ -59,7 +59,7 @@ namespace DOL.GS
 				else
                     Material = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Enchanter.Interact.Text2");
 
-                SayTo(player, eChatLoc.CL_ChatWindow, LanguageMgr.GetTranslation(player.Client, "Enchanter.Interact.Text3", Material));
+                SayTo(player, eChatLoc.CL_ChatWindow, LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.Interact.Text3", Material));
                 return true;
 			}
 			return false;
@@ -109,7 +109,7 @@ namespace DOL.GS
 			if (item == null || item.SlotPosition == (int) eInventorySlot.Ground
 				|| item.OwnerID == null || item.OwnerID != player.InternalID)
 			{
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Enchanter.EnchanterDialogResponse.Text1"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.EnchanterDialogResponse.Text1"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
 			}
 
@@ -117,7 +117,7 @@ namespace DOL.GS
 
 			if (player.GetCurrentMoney() < Fee)
 			{
-                SayTo(player, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(player.Client, "Enchanter.EnchanterDialogResponse.Text2", Money.GetString(Fee)));
+                SayTo(player, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.EnchanterDialogResponse.Text2", Money.GetString(Fee)));
                 return;
 			}
 			if (item.Level < 50)
@@ -125,12 +125,12 @@ namespace DOL.GS
 			else
 				item.Bonus = 35;
 
-            item.Name = LanguageMgr.GetTranslation(player.Client, "Enchanter.EnchanterDialogResponse.Text3") + " " + item.Name;
+            item.Name = LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.EnchanterDialogResponse.Text3") + " " + item.Name;
             player.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
-            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Enchanter.EnchanterDialogResponse.Text4", GetName(0, false), Money.GetString(Fee)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.EnchanterDialogResponse.Text4", GetName(0, false), Money.GetString(Fee)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
             player.RemoveMoney(Fee, null);
             InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, Fee);
-            SayTo(player, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(player.Client, "Enchanter.EnchanterDialogResponse.Text5", item.GetName(1, false)));
+            SayTo(player, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.EnchanterDialogResponse.Text5", item.GetName(1, false)));
             return;
 		}
 

@@ -39,17 +39,17 @@ namespace DOL.GS.Commands
 			ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 			if (mychatgroup == null)
 			{
-				client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			if (mychatgroup.Listen == true && (((bool)mychatgroup.Members[client.Player]) == false))
 			{
-				client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.OnlyModerator"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.OnlyModerator"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			if (args.Length < 2)
 			{
-				client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Usage"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.Usage"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -101,24 +101,24 @@ namespace DOL.GS.Commands
 					{
 						if (args.Length < 3)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.UsageInvite"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.UsageInvite"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						GameClient inviteeclient = WorldMgr.GetClientByPlayerName(args[2], false, true);
 						if (inviteeclient == null || !GameServer.ServerRules.IsSameRealm(inviteeclient.Player, client.Player, true)) // allow priv level>1 to invite anyone
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.NoPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.NoPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						if (client == inviteeclient)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.InviteYourself"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.InviteYourself"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						ChatGroup oldchatgroup = (ChatGroup)inviteeclient.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (oldchatgroup != null)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.PlayerInChatgroup", inviteeclient.Player.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.PlayerInChatgroup", inviteeclient.Player.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
@@ -129,11 +129,11 @@ namespace DOL.GS.Commands
 						}
 						else if (((bool)mychatgroup.Members[client.Player]) == false)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.LeaderInvite"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.LeaderInvite"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						inviteeclient.Player.TempProperties.setProperty(JOIN_CHATGROUP_PROPERTY, mychatgroup);
-						inviteeclient.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.JoinChatGroup", client.Player.Name), new CustomDialogResponse(JoinChatGroup));
+						inviteeclient.Player.Out.SendCustomDialog(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.JoinChatGroup", client.Player.Name), new CustomDialogResponse(JoinChatGroup));
 					}
 					break;
 				case "who":
@@ -141,7 +141,7 @@ namespace DOL.GS.Commands
 						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						int i = 0;
@@ -172,7 +172,7 @@ namespace DOL.GS.Commands
 						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						if (args.Length < 3)
@@ -182,7 +182,7 @@ namespace DOL.GS.Commands
 						GameClient inviteeclient = WorldMgr.GetClientByPlayerName(args[2], false, false);
 						if (inviteeclient == null)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.NoPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.NoPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						mychatgroup.RemovePlayer(inviteeclient.Player);
@@ -193,7 +193,7 @@ namespace DOL.GS.Commands
 						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						mychatgroup.RemovePlayer(client.Player);
@@ -204,16 +204,16 @@ namespace DOL.GS.Commands
 						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						if ((bool)mychatgroup.Members[client.Player] == false)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.LeaderCommand"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.LeaderCommand"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						mychatgroup.Listen = !mychatgroup.Listen;
-						string message = LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.ListenMode") + (mychatgroup.Listen ? "on." : "off.");
+						string message = LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.ListenMode") + (mychatgroup.Listen ? "on." : "off.");
 						foreach (GamePlayer ply in mychatgroup.Members.Keys)
 						{
 							ply.Out.SendMessage(message, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
@@ -225,12 +225,12 @@ namespace DOL.GS.Commands
 						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						if ((bool)mychatgroup.Members[client.Player] == false)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.LeaderCommand"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.LeaderCommand"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						if (args.Length < 3)
@@ -241,11 +241,11 @@ namespace DOL.GS.Commands
 						GameClient inviteeclient = WorldMgr.GetClientByPlayerName(invitename, false, false);
 						if (inviteeclient == null)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.NoPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.NoPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						mychatgroup.Members[inviteeclient.Player] = true;
-						string message = LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Moderator", inviteeclient.Player.Name);
+						string message = LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.Moderator", inviteeclient.Player.Name);
 						foreach (GamePlayer ply in mychatgroup.Members.Keys)
 						{
 							ply.Out.SendMessage(message, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
@@ -257,23 +257,23 @@ namespace DOL.GS.Commands
 						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						if ((bool)mychatgroup.Members[client.Player] == false)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.LeaderCommand"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.LeaderCommand"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						if (mychatgroup.IsPublic)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.PublicAlready"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.PublicAlready"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						else
 						{
 							mychatgroup.IsPublic = true;
-							string message = LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Public");
+							string message = LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.Public");
 							foreach (GamePlayer ply in mychatgroup.Members.Keys)
 							{
 								ply.Out.SendMessage(message, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
@@ -286,23 +286,23 @@ namespace DOL.GS.Commands
 						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						if ((bool)mychatgroup.Members[client.Player] == false)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.LeaderCommand"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.LeaderCommand"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						if (!mychatgroup.IsPublic)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.PrivateAlready"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.PrivateAlready"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						else
 						{
 							mychatgroup.IsPublic = false;
-							string message = LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Private");
+							string message = LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.Private");
 							foreach (GamePlayer ply in mychatgroup.Members.Keys)
 							{
 								ply.Out.SendMessage(message, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
@@ -320,24 +320,24 @@ namespace DOL.GS.Commands
 						GameClient inviteeclient = WorldMgr.GetClientByPlayerName(args[2], false, false);
 						if (inviteeclient == null || !GameServer.ServerRules.IsSameRealm(client.Player, inviteeclient.Player, true)) // allow priv level>1 to join anywhere
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.NoPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.NoPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						if (client == inviteeclient)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.OwnChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.OwnChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 
 						ChatGroup mychatgroup = (ChatGroup)inviteeclient.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.NotChatGroupMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.NotChatGroupMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						if ((bool)mychatgroup.Members[inviteeclient.Player] == false)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.NotChatGroupLeader"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.NotChatGroupLeader"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						if (!mychatgroup.IsPublic)
@@ -348,7 +348,7 @@ namespace DOL.GS.Commands
 							}
 							else
 							{
-								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.NotPublic"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.NotPublic"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 						}
 						else
@@ -360,35 +360,35 @@ namespace DOL.GS.Commands
 						ChatGroup mychatgroup = (ChatGroup)client.Player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
 						if (mychatgroup == null)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						if ((bool)mychatgroup.Members[client.Player] == false)
 						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.LeaderCommand"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.LeaderCommand"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						if (args.Length < 3)
 						{
 							if (mychatgroup.Password.Equals(""))
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.PasswordUnset", mychatgroup.Password), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.PasswordUnset", mychatgroup.Password), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
 							else
 							{
-								client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Password", mychatgroup.Password), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.Password", mychatgroup.Password), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
 						}
 						if (args[2] == "clear")
 						{
 							mychatgroup.Password = "";
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.PasswordClear", mychatgroup.Password), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.PasswordClear", mychatgroup.Password), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						mychatgroup.Password = args[2];
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.PasswordChanged", mychatgroup.Password), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.PasswordChanged", mychatgroup.Password), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					break;
 			}
@@ -396,21 +396,21 @@ namespace DOL.GS.Commands
 
 		public void PrintHelp(GameClient client)
 		{
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Help.Usage"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Help.Help"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Help.Invite"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Help.Who"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Help.Remove"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Help.Leave"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Help.Listen"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Help.Leader"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Help.Public"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Help.Private"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Help.JoinPublic"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Help.JoinPrivate"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Help.PasswordDisplay"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Help.PasswordClear"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Chatgroup.Help.PasswordNew"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.Help.Usage"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.Help.Help"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.Help.Invite"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.Help.Who"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.Help.Remove"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.Help.Leave"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.Help.Listen"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.Help.Leader"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.Help.Public"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.Help.Private"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.Help.JoinPublic"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.Help.JoinPrivate"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.Help.PasswordDisplay"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.Help.PasswordClear"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.Help.PasswordNew"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		protected const string JOIN_CHATGROUP_PROPERTY = "JOIN_CHATGROUP_PROPERTY";
@@ -423,7 +423,7 @@ namespace DOL.GS.Commands
 			{
 				if (mychatgroup.Members.Count < 1)
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Players.Chatgroup.NoChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Players.Chatgroup.NoChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				if (response == 0x01)

@@ -43,7 +43,7 @@ namespace DOL.GS.Commands
 
 			if (ServerProperties.Properties.DISABLE_APPEALSYSTEM)
             {
-                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.SystemDisabled"));
+                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.SystemDisabled"));
                 return;
             }
 
@@ -58,7 +58,7 @@ namespace DOL.GS.Commands
                 DisplaySyntax(client);
                 if (client.Account.PrivLevel > (uint)ePrivLevel.Player)
                 {
-                    AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.UseGMappeal"));
+                    AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.UseGMappeal"));
                 }
             }
 
@@ -76,12 +76,12 @@ namespace DOL.GS.Commands
                 bool HasPendingAppeal = client.Player.TempProperties.getProperty<bool>("HasPendingAppeal");
                 if (HasPendingAppeal)
                 {
-                    AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.AlreadyActiveAppeal", client.Player.Name));
+                    AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.AlreadyActiveAppeal", client.Player.Name));
                     return;
                 }
                 if (args.Length < 5)
                 {
-                    AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NeedMoreDetail"));
+                    AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.NeedMoreDetail"));
                     return;
                 }
                 int severity = 0;
@@ -140,13 +140,13 @@ namespace DOL.GS.Commands
         {
             if (ServerProperties.Properties.DISABLE_APPEALSYSTEM)
             {
-                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.SystemDisabled"));
+                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.SystemDisabled"));
                 return;
             }
 
             if (args.Length < 5)
             {
-                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NeedMoreDetail"));
+                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.NeedMoreDetail"));
                 return;
             }
 
@@ -184,18 +184,18 @@ namespace DOL.GS.Commands
         {
             if (ServerProperties.Properties.DISABLE_APPEALSYSTEM)
             {
-                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.SystemDisabled"));
+                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.SystemDisabled"));
                 return;
             }
             bool HasPendingAppeal = client.Player.TempProperties.getProperty<bool>("HasPendingAppeal");
             if (HasPendingAppeal)
             {
-                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.AlreadyActiveAppeal", client.Player.Name));
+                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.AlreadyActiveAppeal", client.Player.Name));
                 return;
             }
             if (args.Length < 7)
             {
-                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NeedMoreDetail"));
+                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.NeedMoreDetail"));
                 return;
             }
             //strip these words if they are the first word in the appeal text
@@ -230,18 +230,18 @@ namespace DOL.GS.Commands
         {
             if (ServerProperties.Properties.DISABLE_APPEALSYSTEM)
             {
-                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.SystemDisabled"));
+                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.SystemDisabled"));
                 return;
             }
             bool HasPendingAppeal = client.Player.TempProperties.getProperty<bool>("HasPendingAppeal");
             if (HasPendingAppeal)
             {
-                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.AlreadyActiveAppeal", client.Player.Name));
+                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.AlreadyActiveAppeal", client.Player.Name));
                 return;
             }
             if (args.Length < 7)
             {
-                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NeedMoreDetail"));
+                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.NeedMoreDetail"));
                 return;
             }
             switch (args[1])
@@ -304,18 +304,18 @@ namespace DOL.GS.Commands
         {
             if (ServerProperties.Properties.DISABLE_APPEALSYSTEM)
             {
-                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.SystemDisabled"));
+                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.SystemDisabled"));
                 return;
             }
             bool HasPendingAppeal = client.Player.TempProperties.getProperty<bool>("HasPendingAppeal");
             if (HasPendingAppeal)
             {
-                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.AlreadyActiveAppeal", client.Player.Name));
+                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.AlreadyActiveAppeal", client.Player.Name));
                 return;
             }
             if (args.Length < 5)
             {
-                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NeedMoreDetail"));
+                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.NeedMoreDetail"));
                 return;
             }
             //strip these words if they are the first word in the appeal text
@@ -350,18 +350,18 @@ namespace DOL.GS.Commands
         {
             if (ServerProperties.Properties.DISABLE_APPEALSYSTEM)
             {
-                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.SystemDisabled"));
+                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.SystemDisabled"));
                 return;
             }
             bool HasPendingAppeal = client.Player.TempProperties.getProperty<bool>("HasPendingAppeal");
             if (HasPendingAppeal)
             {
-                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.AlreadyActiveAppeal", client.Player.Name));
+                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.AlreadyActiveAppeal", client.Player.Name));
                 return;
             }
             if (args.Length < 5)
             {
-                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NeedMoreDetail"));
+                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.NeedMoreDetail"));
                 return;
             }
             //strip these words if they are the first word in the appeal text

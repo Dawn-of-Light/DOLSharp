@@ -53,12 +53,12 @@ namespace DOL.GS.Commands
 			}
 			catch
 			{
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.InvalidId"));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Cast.InvalidId"));
 				return;
 			}
 			if (id < 0)
 			{
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.IdNegative"));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Cast.IdNegative"));
 				return;
 			}
 
@@ -87,7 +87,7 @@ namespace DOL.GS.Commands
 					#region Effect
 				case "effect":
 					{
-						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.EffectExecuted", id.ToString()));
+						DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Cast.EffectExecuted", id.ToString()));
 
 						DummyEffect effect = new DummyEffect((ushort)id);
 						effect.Start(client.Player);
@@ -101,7 +101,7 @@ namespace DOL.GS.Commands
 					#region Cast
 				case "cast":
 					{
-						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.CastExecuted", id.ToString()));
+						DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Cast.CastExecuted", id.ToString()));
 						foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 							player.Out.SendSpellCastAnimation(client.Player, (ushort)id, 30);
 						break;
@@ -116,11 +116,11 @@ namespace DOL.GS.Commands
 						{
 							if ((target is GamePlayer) && (target != client.Player) && (spell.Target.ToLower() != "self"))
 							{
-								DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.Spell.CastOnLiving", spell.Name, target.Name));
+								DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Cast.Spell.CastOnLiving", spell.Name, target.Name));
 								DisplayMessage(((GamePlayer)target).Client, LanguageMgr.GetTranslation(((GamePlayer)target).Client, "GMCommands.Cast.Spell.GMCastOnYou", ((client.Account.PrivLevel == 2) ? "GM" : "Admin"), client.Player.Name));
 							}
 							else if ((target == client.Player) || (spell.Target.ToLower() == "self"))
-								DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.Spell.CastOnSelf", spell.Name));
+								DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Cast.Spell.CastOnSelf", spell.Name));
 
 							ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, line);
 							if (spellHandler != null)
@@ -128,7 +128,7 @@ namespace DOL.GS.Commands
 						}
 						else
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Cast.Spell.Inexistent", id.ToString()));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Cast.Spell.Inexistent", id.ToString()));
 						}
 						break;
 					}
@@ -149,7 +149,7 @@ namespace DOL.GS.Commands
 					#region Sound
 				case "sound":
 					DisplayMessage(client,
-					               LanguageMgr.GetTranslation(client, "GMCommands.Cast.SoundPlayed", id.ToString()));
+					               LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Cast.SoundPlayed", id.ToString()));
 					client.Player.Out.SendSoundEffect((ushort)id, 0, 0, 0, 0, 0);
 					break;
 					#endregion

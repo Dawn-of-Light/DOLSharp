@@ -95,16 +95,16 @@ namespace DOL.GS.Commands
 				}
 			}
 			var realmInfo = new List<string>();
-			realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.AlbKeeps") + ":");
+			realmInfo.Add(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Realm.AlbKeeps") + ":");
 			realmInfo.Add(albKeeps);
-			realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.MidKeeps") + ":");
+			realmInfo.Add(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Realm.MidKeeps") + ":");
 			realmInfo.Add(midKeeps);
-			realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.HibKeeps") + ":");
+			realmInfo.Add(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Realm.HibKeeps") + ":");
 			realmInfo.Add(hibKeeps);
-			realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.DarknessFalls") + ": " + GlobalConstants.RealmToName(DFEnterJumpPoint.DarknessFallOwner));
+			realmInfo.Add(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Realm.DarknessFalls") + ": " + GlobalConstants.RealmToName(DFEnterJumpPoint.DarknessFallOwner));
 			realmInfo.Add(" ");
-			realmInfo.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.UseRelicCommand"));
-			client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client, "Scripts.Players.Realm.Title"), realmInfo);
+			realmInfo.Add(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Realm.UseRelicCommand"));
+			client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Realm.Title"), realmInfo);
 		}
 
 		private string KeepStringBuilder(AbstractGameKeep keep)

@@ -44,7 +44,7 @@ namespace DOL.GS.SkillHandler
 			// Cannot change QC state if already casting a spell (can't turn it off!)
 			if(player.CurrentSpellHandler != null)
 			{
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.QuickCast.CannotUseIsCasting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.QuickCast.CannotUseIsCasting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
 			}
 
@@ -58,14 +58,14 @@ namespace DOL.GS.SkillHandler
 			// Dead can't quick cast
 			if(!player.IsAlive)
 			{
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.QuickCast.CannotUseDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.QuickCast.CannotUseDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
 			}
 
 			// Can't quick cast if in attack mode
 			if(player.AttackState)
 			{
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.QuickCast.CannotUseInMeleeCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.QuickCast.CannotUseInMeleeCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
 			}
 
@@ -73,7 +73,7 @@ namespace DOL.GS.SkillHandler
 			long changeTime = player.CurrentRegion.Time - quickcastChangeTick;
 			if(changeTime < DISABLE_DURATION)
 			{
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.QuickCast.CannotUseChangeTick", ((DISABLE_DURATION - changeTime) / 1000)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.QuickCast.CannotUseChangeTick", ((DISABLE_DURATION - changeTime) / 1000)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 //30 sec is time between 2 quick cast 
 				return;
 			}

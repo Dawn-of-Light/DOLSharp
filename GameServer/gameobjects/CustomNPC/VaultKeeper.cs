@@ -46,8 +46,8 @@ namespace DOL.GS
 		public override IList GetExamineMessages(GamePlayer player)
 		{
 			IList list = new ArrayList();
-            list.Add(LanguageMgr.GetTranslation(player.Client, "VaultKeeper.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
-            list.Add(LanguageMgr.GetTranslation(player.Client, "VaultKeeper.RightClick"));
+            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "VaultKeeper.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "VaultKeeper.RightClick"));
             return list;
 		}
 

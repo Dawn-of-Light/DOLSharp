@@ -32,7 +32,7 @@ namespace DOL.GS.Commands
 			if (client.Player.TempProperties.getProperty<string>(GamePlayer.AFK_MESSAGE) != null && args.Length == 1)
 			{
 				client.Player.TempProperties.removeProperty(GamePlayer.AFK_MESSAGE);
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Afk.Off"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Afk.Off"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
@@ -45,7 +45,7 @@ namespace DOL.GS.Commands
 				{
 					client.Player.TempProperties.setProperty(GamePlayer.AFK_MESSAGE, "");
 				}
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Afk.On"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Afk.On"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
 	}

@@ -171,7 +171,7 @@ namespace DOL.GS.Commands
                     }
                 }
 
-                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.MemberNotFound"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Assist.MemberNotFound"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
             
@@ -477,7 +477,7 @@ namespace DOL.GS.Commands
                 }
             }
 
-            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.SelectMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Assist.SelectMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
             return;
 		}
 
@@ -489,7 +489,7 @@ namespace DOL.GS.Commands
                 return true;
 
             //We cannot assist our target when it has no target.
-            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.DoesntHaveTarget", livingToCheck.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Assist.DoesntHaveTarget", livingToCheck.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
             return false;
         }
 
@@ -500,7 +500,7 @@ namespace DOL.GS.Commands
             //The original text sounds stupid if we use it for rams or other things: The battle ram is not a member of your realm!
             //
             //But the text is also used for rams that are a member of our realm, so we don't use it.
-            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.NotValid", livingToAssist.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Assist.NotValid", livingToAssist.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
             return;
         }
 
@@ -518,13 +518,13 @@ namespace DOL.GS.Commands
             }
 
             //We cannot assist livings of an enemy realm.
-            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.NoRealmMember", livingToCheck.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Assist.NoRealmMember", livingToCheck.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
             return false;
         }
 
         private void YouAssist(GameClient client, string targetName, GameObject assistTarget)
         {
-            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Assist.YouAssist", targetName), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Assist.YouAssist", targetName), eChatType.CT_System, eChatLoc.CL_SystemWindow);
             client.Out.SendChangeTarget(assistTarget);
             return;
         }

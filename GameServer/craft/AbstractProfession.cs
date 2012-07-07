@@ -41,18 +41,18 @@ namespace DOL.GS
 
             switch (skillLevel / 100)
             {
-                case 0: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.Helper");
-                case 1: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.JuniorApprentice");
-                case 2: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.Apprentice");
-                case 3: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.Neophyte");
-                case 4: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.Assistant");
-                case 5: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.Junior");
-                case 6: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.Journeyman");
-                case 7: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.Senior");
-                case 8: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.Master");
-                case 9: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.Grandmaster");
-                case 10: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.Legendary");
-                default: return LanguageMgr.GetTranslation(player.Client, "CraftersTitle.LegendaryGrandmaster");
+                case 0: return LanguageMgr.GetTranslation(player.Client.Account.Language, "CraftersTitle.Helper");
+                case 1: return LanguageMgr.GetTranslation(player.Client.Account.Language, "CraftersTitle.JuniorApprentice");
+                case 2: return LanguageMgr.GetTranslation(player.Client.Account.Language, "CraftersTitle.Apprentice");
+                case 3: return LanguageMgr.GetTranslation(player.Client.Account.Language, "CraftersTitle.Neophyte");
+                case 4: return LanguageMgr.GetTranslation(player.Client.Account.Language, "CraftersTitle.Assistant");
+                case 5: return LanguageMgr.GetTranslation(player.Client.Account.Language, "CraftersTitle.Junior");
+                case 6: return LanguageMgr.GetTranslation(player.Client.Account.Language, "CraftersTitle.Journeyman");
+                case 7: return LanguageMgr.GetTranslation(player.Client.Account.Language, "CraftersTitle.Senior");
+                case 8: return LanguageMgr.GetTranslation(player.Client.Account.Language, "CraftersTitle.Master");
+                case 9: return LanguageMgr.GetTranslation(player.Client.Account.Language, "CraftersTitle.Grandmaster");
+                case 10: return LanguageMgr.GetTranslation(player.Client.Account.Language, "CraftersTitle.Legendary");
+                default: return LanguageMgr.GetTranslation(player.Client.Account.Language, "CraftersTitle.LegendaryGrandmaster");
             }
         }
 

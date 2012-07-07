@@ -49,7 +49,7 @@ namespace DOL.GS.Commands
 			const string BROAD_TICK = "Broad_Tick";
 			if (args.Length < 2)
 			{
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Broadcast.NoText"));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Broadcast.NoText"));
 				return;
 			}
 			if (client.Player.IsMuted)
@@ -82,7 +82,7 @@ namespace DOL.GS.Commands
 			{
 				if (GameServer.ServerRules.IsAllowedToUnderstand(p, player) || ((eBroadcastType)ServerProperties.Properties.BROADCAST_TYPE == eBroadcastType.Server))
 				{
-					p.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Players.Broadcast.Message", player.Name, message), eChatType.CT_Broadcast, eChatLoc.CL_ChatWindow);
+					p.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Players.Broadcast.Message", player.Name, message), eChatType.CT_Broadcast, eChatLoc.CL_ChatWindow);
 				}
 			}
 
@@ -113,7 +113,7 @@ namespace DOL.GS.Commands
 						}
 						if (!found)
 						{
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Players.Broadcast.NoHere"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Players.Broadcast.NoHere"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						break;
 					}

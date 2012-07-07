@@ -1,6 +1,7 @@
 ﻿GamePlayer.AddAbility.YouLearn:				You learn the {0} ability!	
 GamePlayer.AddSpecialisation.YouLearn:		You learn the {0} skill!		
 GamePlayer.AddSpellLine.YouLearn:			You learn the {0} spell list!		
+GamePlayer.AddToWorld.SpecsPointsIncorrect:		Your Specs points total was incorrect. Now corrected, please train again.
 GamePlayer.ApplyPoison.CantApplyRecentCombat:	You have been in combat recently and can't apply a poison yet!			
 GamePlayer.ApplyPoison.CantPoisonWeapon:		You can't poison this weapon!			
 GamePlayer.ApplyPoison.CantUsePoison:			You can't use this poison.		

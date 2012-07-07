@@ -54,14 +54,14 @@ namespace DOL.GS.Commands
 				client.Player.TempProperties.setProperty(GamePlayer.DEBUG_MODE_PROPERTY, true);
 				client.Player.IsAllowedToFly = true;
 				client.Out.SendDebugMode(true);
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Debug.ModeON"));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Debug.ModeON"));
 			}
 			else if (args[1].ToLower().Equals("off"))
 			{
 				client.Player.TempProperties.removeProperty(GamePlayer.DEBUG_MODE_PROPERTY);
 				client.Out.SendDebugMode(false);
 				client.Player.IsAllowedToFly = false;
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Debug.ModeOFF"));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Debug.ModeOFF"));
 			}
 		}
 	}

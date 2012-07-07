@@ -32,8 +32,8 @@ namespace DOL.GS.Commands
 				return;
 
 			client.Player.CancelStyle = !client.Player.CancelStyle;
-			DisplayMessage(client, string.Format(LanguageMgr.GetTranslation(client, "Scripts.Players.Cancelstyle.Set",
-				(client.Player.CancelStyle ? LanguageMgr.GetTranslation(client, "Scripts.Players.Cancelstyle.On") : LanguageMgr.GetTranslation(client, "Scripts.Players.Cancelstyle.Off")))));
+			DisplayMessage(client, string.Format(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Cancelstyle.Set",
+				(client.Player.CancelStyle ? LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Cancelstyle.On") : LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Cancelstyle.Off")))));
 		}
 	}
 }

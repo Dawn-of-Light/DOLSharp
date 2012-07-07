@@ -81,23 +81,23 @@ namespace DOL.GS
 
             if (GameServer.ServerRules.IsSameRealm(this, player, true))
             {
-                if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client, 
+                if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client.Account.Language, 
                     "GameNPC.GetAggroLevelString.Friendly2");
-                else aggroLevelString = LanguageMgr.GetTranslation(player.Client, 
+                else aggroLevelString = LanguageMgr.GetTranslation(player.Client.Account.Language, 
                     "GameNPC.GetAggroLevelString.Friendly1");
             }
             else if (aggroBrain != null && aggroBrain.AggroLevel > 0)
             {
-                if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client, 
+                if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client.Account.Language, 
                     "GameNPC.GetAggroLevelString.Aggressive2");
-                else aggroLevelString = LanguageMgr.GetTranslation(player.Client, 
+                else aggroLevelString = LanguageMgr.GetTranslation(player.Client.Account.Language, 
                     "GameNPC.GetAggroLevelString.Aggressive1");
             }
             else
             {
-                if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client, 
+                if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client.Account.Language, 
                     "GameNPC.GetAggroLevelString.Neutral2");
-                else aggroLevelString = LanguageMgr.GetTranslation(player.Client, 
+                else aggroLevelString = LanguageMgr.GetTranslation(player.Client.Account.Language, 
                     "GameNPC.GetAggroLevelString.Neutral1");
             }
 
@@ -112,10 +112,10 @@ namespace DOL.GS
         public override IList GetExamineMessages(GamePlayer player)
         {
             IList list = new ArrayList(4);
-			list.Add(String.Format(LanguageMgr.GetTranslation(player.Client, "Researcher.GetExamineMessages.YouExamine",
+			list.Add(String.Format(LanguageMgr.GetTranslation(player.Client.Account.Language, "Researcher.GetExamineMessages.YouExamine",
 									Name, (Name.EndsWith("a") || Name.EndsWith("le")) ?
-									LanguageMgr.GetTranslation(player.Client, "Researcher.GetExamineMessages.She") :
-									LanguageMgr.GetTranslation(player.Client, "Researcher.GetExamineMessages.He"),
+									LanguageMgr.GetTranslation(player.Client.Account.Language, "Researcher.GetExamineMessages.She") :
+									LanguageMgr.GetTranslation(player.Client.Account.Language, "Researcher.GetExamineMessages.He"),
 									GetAggroLevelString(player, false))));
             return list;
         }

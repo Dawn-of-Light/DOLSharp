@@ -129,7 +129,7 @@ namespace DOL.AI.Brain
 
 				if (SpellsQueued)
 				{
-					MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.CastSpellAfterAction", Body.Name), eChatType.CT_System);
+					MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client.Account.Language, "AI.Brain.Necromancer.CastSpellAfterAction", Body.Name), eChatType.CT_System);
 					hadQueuedSpells = true;
 				}
 
@@ -184,20 +184,20 @@ namespace DOL.AI.Brain
                 {
                     case CastFailedEventArgs.Reasons.TargetTooFarAway:
 
-                        MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, 
+                        MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client.Account.Language, 
                             "AI.Brain.Necromancer.ServantFarAwayToCast"), eChatType.CT_SpellResisted);
                         break;
 
                     case CastFailedEventArgs.Reasons.TargetNotInView:
 
-                        MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, 
+                        MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client.Account.Language, 
                             "AI.Brain.Necromancer.PetCantSeeTarget", Body.Name), eChatType.CT_SpellResisted);
                         break;
 
 					case CastFailedEventArgs.Reasons.NotEnoughPower:
 
 						RemoveSpellFromQueue();
-						MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client,
+						MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client.Account.Language,
 							"AI.Brain.Necromancer.NoPower", Body.Name), eChatType.CT_SpellResisted);
 
 						break;
@@ -221,7 +221,7 @@ namespace DOL.AI.Brain
                 if (spellLine.Name != (Body as NecromancerPet).PetInstaSpellLine)
                 {
                     Owner.Notify(GameLivingEvent.CastStarting, Body, new CastingEventArgs(Body.CurrentSpellHandler));
-                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "AI.Brain.Necromancer.PetCastingSpell", Body.Name), eChatType.CT_System);
+                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client.Account.Language, "AI.Brain.Necromancer.PetCastingSpell", Body.Name), eChatType.CT_System);
                 }
 
                 // If pet is casting an offensive spell and is not set to
@@ -262,17 +262,17 @@ namespace DOL.AI.Brain
                 SetTetherTimer(secondsRemaining);
 
                 if (secondsRemaining == 10)
-                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client,
+                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client.Account.Language,
                         "AI.Brain.Necromancer.PetTooFarBeLostSecIm", secondsRemaining), eChatType.CT_System);
                 else if (secondsRemaining == 5)
-                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client,
+                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client.Account.Language,
                         "AI.Brain.Necromancer.PetTooFarBeLostSec", secondsRemaining), eChatType.CT_System);
             }
             else if (e == GameNPCEvent.PetLost)
             {
                 // Pet despawn is imminent, notify owner.
 
-                MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client,
+                MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client.Account.Language,
                     "AI.Brain.Necromancer.HaveLostBondToPet"), eChatType.CT_System);
             }
 		}
@@ -438,7 +438,7 @@ namespace DOL.AI.Brain
 			lock (m_spellQueue)
 			{
 				if (m_spellQueue.Count >= 2)
-                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, 
+                    MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client.Account.Language, 
                         "AI.Brain.Necromancer.SpellNoLongerInQueue", 
                         (m_spellQueue.Dequeue()).Spell.Name, Body.Name), 
                         eChatType.CT_Spell);

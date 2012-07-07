@@ -35,7 +35,7 @@ namespace DOL.GS.Commands
 
 			if (args.Length < 2)
 			{
-                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.CmdUsage", bpWorth),
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Bountyrent.CmdUsage", bpWorth),
                     eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 				return;
@@ -43,7 +43,7 @@ namespace DOL.GS.Commands
 
             if (args.Length < 3)
             {
-                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.CorrectFormat"),
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Bountyrent.CorrectFormat"),
                     eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
                 return;
@@ -52,7 +52,7 @@ namespace DOL.GS.Commands
             House house = client.Player.CurrentHouse;
 			if (house == null)
 			{
-                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.RangeOfAHouse"),
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Bountyrent.RangeOfAHouse"),
                     eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 				return;
@@ -65,7 +65,7 @@ namespace DOL.GS.Commands
             }
             catch
             {
-                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.CorrectFormat"),
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Bountyrent.CorrectFormat"),
                     eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
                 return;
@@ -77,7 +77,7 @@ namespace DOL.GS.Commands
 					{
                         if (!house.CanPayRent(client.Player))
                         {
-                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.NoPayRentPerm"),
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Bountyrent.NoPayRentPerm"),
                                 eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
                             return;
@@ -85,7 +85,7 @@ namespace DOL.GS.Commands
 
 						if ((client.Player.BountyPoints -= BPsToAdd) < 0)
 						{
-                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.NotEnoughBp"),
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Bountyrent.NotEnoughBp"),
                                 eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 							return;
@@ -93,7 +93,7 @@ namespace DOL.GS.Commands
 
                         if (house.KeptMoney >= (HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS))
                         {
-                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.AlreadyMaxMoney"),
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Bountyrent.AlreadyMaxMoney"),
                                 eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
                             return;
@@ -101,7 +101,7 @@ namespace DOL.GS.Commands
 
                         if ((house.KeptMoney + (BPsToAdd * bpWorth)) > (HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS))
                         {
-                            client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.ToManyMoney"),
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Bountyrent.ToManyMoney"),
                                 eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
                             return;
@@ -114,7 +114,7 @@ namespace DOL.GS.Commands
                         client.Player.SaveIntoDatabase();
 
                         client.Out.SendUpdatePoints();
-                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.YouSpend", BPsToAdd, ((BPsToAdd * bpWorth) / bpWorth)),
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Bountyrent.YouSpend", BPsToAdd, ((BPsToAdd * bpWorth) / bpWorth)),
                             eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					} break;
 				case "guild":
@@ -125,14 +125,14 @@ namespace DOL.GS.Commands
                             {
                                 if ((client.Player.Guild.BountyPoints -= BPsToAdd) < 0)
                                 {
-                                    client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.NotEnoughGuildBp"),
+                                    client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Bountyrent.NotEnoughGuildBp"),
                                         eChatType.CT_System, eChatLoc.CL_SystemWindow);
                                     return;
                                 }
 
                                 if (house.KeptMoney >= (HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS))
                                 {
-                                    client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.AlreadyMaxMoney"),
+                                    client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Bountyrent.AlreadyMaxMoney"),
                                         eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
                                     return;
@@ -140,7 +140,7 @@ namespace DOL.GS.Commands
 
                                 if ((house.KeptMoney + (BPsToAdd * bpWorth)) > (HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS))
                                 {
-                                    client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.ToManyMoney"),
+                                    client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Bountyrent.ToManyMoney"),
                                         eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
                                     return;
@@ -152,25 +152,25 @@ namespace DOL.GS.Commands
                                 client.Player.Guild.BountyPoints -= BPsToAdd;
                                 client.Player.Guild.SaveIntoDatabase();
 
-                                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.YouSpendGuild", BPsToAdd, ((BPsToAdd * bpWorth) / bpWorth)),
+                                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Bountyrent.YouSpendGuild", BPsToAdd, ((BPsToAdd * bpWorth) / bpWorth)),
                                     eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
                                 return;
                             }
                             else
                             {
-                                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.NoPayRentPerm"),
+                                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Bountyrent.NoPayRentPerm"),
                                     eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
                                 return;
                             }
                         }
 
-                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.NotAHouseGuildLeader"));
+                        DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Bountyrent.NotAHouseGuildLeader"));
 					} break;
 				default:
 					{
-                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Bountyrent.CorrectFormat"));
+                        DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Bountyrent.CorrectFormat"));
 					} break;
 			}
 		}

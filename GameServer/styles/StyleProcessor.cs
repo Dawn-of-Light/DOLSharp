@@ -195,7 +195,7 @@ namespace DOL.GS.Styles
 				if (!living.IsAlive)
 				{
 					if (player != null)
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.CantCombatMode"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "StyleProcessor.TryToUseStyle.CantCombatMode"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 					
 					return;
 				}
@@ -208,7 +208,7 @@ namespace DOL.GS.Styles
 				if (living.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.Distance)
 				{
 					if (player != null)
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.CantMeleeCombat"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "StyleProcessor.TryToUseStyle.CantMeleeCombat"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 					return;
 				}
 
@@ -222,7 +222,7 @@ namespace DOL.GS.Styles
 				if (living.TargetObject == null)
 				{
 					if (player != null)
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.MustHaveTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "StyleProcessor.TryToUseStyle.MustHaveTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 
@@ -233,9 +233,9 @@ namespace DOL.GS.Styles
 					if (player != null)
 					{
 						if (style.WeaponTypeRequirement == Style.SpecialWeaponType.DualWield)
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.DualWielding"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "StyleProcessor.TryToUseStyle.DualWielding"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						else
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.StyleRequires", style.GetRequiredWeaponName()), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "StyleProcessor.TryToUseStyle.StyleRequires", style.GetRequiredWeaponName()), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					return;
 				}
@@ -245,7 +245,7 @@ namespace DOL.GS.Styles
 					int fatCost = CalculateEnduranceCost(player, style, weapon.SPD_ABS);
 					if (player.Endurance < fatCost)
 					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.Fatigued"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "StyleProcessor.TryToUseStyle.Fatigued"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
 					}
 				}
@@ -267,14 +267,14 @@ namespace DOL.GS.Styles
 							|| lastAD.Style == null
 							|| lastAD.Style.ID != style.OpeningRequirementValue)
 							{
-								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.PerformStyleBefore", preRequireStyle.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "StyleProcessor.TryToUseStyle.PerformStyleBefore", preRequireStyle.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
 						}
 
 						player.NextCombatStyle = style;
 						player.NextCombatBackupStyle = null;
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.PreparePerform", style.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "StyleProcessor.TryToUseStyle.PreparePerform", style.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 						if (living.IsEngaging)
 						{
@@ -295,7 +295,7 @@ namespace DOL.GS.Styles
 						if (player.NextCombatBackupStyle != null)
 						{
 							//All styles set, can't change anything now
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.AlreadySelectedStyles"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "StyleProcessor.TryToUseStyle.AlreadySelectedStyles"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 						else
 						{
@@ -305,13 +305,13 @@ namespace DOL.GS.Styles
 								if (player.CancelStyle)
 								{
 									//If yes, we cancel the style
-									player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.NoLongerPreparing", player.NextCombatStyle.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "StyleProcessor.TryToUseStyle.NoLongerPreparing", player.NextCombatStyle.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									player.NextCombatStyle = null;
 									player.NextCombatBackupStyle = null;
 								}
 								else
 								{
-									player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.AlreadyPreparing"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "StyleProcessor.TryToUseStyle.AlreadyPreparing"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								}
 							}
 							else
@@ -324,13 +324,13 @@ namespace DOL.GS.Styles
 									|| lastAD.Style == null
 									|| lastAD.Style.ID != style.OpeningRequirementValue)
 									{
-										player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.PerformStyleBefore", preRequireStyle.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+										player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "StyleProcessor.TryToUseStyle.PerformStyleBefore", preRequireStyle.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 										return;
 									}
 								}
 								//If no, set the secondary backup style
 								player.NextCombatBackupStyle = style;
-								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.TryToUseStyle.BackupStyle", style.Name, player.NextCombatStyle.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "StyleProcessor.TryToUseStyle.BackupStyle", style.Name, player.NextCombatStyle.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
 						}
 					}
@@ -397,7 +397,7 @@ namespace DOL.GS.Styles
 
 						//"You must be hidden to perform this style!"
 						//Print a style-fail message
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "StyleProcessor.ExecuteStyle.ExecuteFail", attackData.Style.Name), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "StyleProcessor.ExecuteStyle.ExecuteFail", attackData.Style.Name), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 					}
 					return false;
 				}
@@ -696,30 +696,30 @@ namespace DOL.GS.Styles
 		/// <param name="player"></param>
 		public static void DelveWeaponStyle(IList<string> delveInfo, Style style, GamePlayer player)
 		{
-			delveInfo.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.WeaponType", style.GetRequiredWeaponName()));
-			string temp = LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.Opening") + " ";
+			delveInfo.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.WeaponType", style.GetRequiredWeaponName()));
+			string temp = LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Opening") + " ";
 			if (Style.eOpening.Offensive == style.OpeningRequirementType)
 			{
 				//attacker action result is opening
 				switch (style.AttackResultRequirement)
 				{
 					case Style.eAttackResult.Hit:
-						temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.YouHit");
+						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.YouHit");
 						break;
 					case Style.eAttackResult.Miss:
-						temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.YouMiss");
+						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.YouMiss");
 						break;
 					case Style.eAttackResult.Parry:
-						temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.TargetParrys");
+						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.TargetParrys");
 						break;
 					case Style.eAttackResult.Block:
-						temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.TargetBlocks");
+						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.TargetBlocks");
 						break;
 					case Style.eAttackResult.Evade:
-						temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.TargetEvades");
+						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.TargetEvades");
 						break;
 					case Style.eAttackResult.Fumble:
-						temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.YouFumble");
+						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.YouFumble");
 						break;
 					case Style.eAttackResult.Style:
 						Style reqStyle = SkillBase.GetStyleByID(style.OpeningRequirementValue, player.CharacterClass.ID);
@@ -727,7 +727,7 @@ namespace DOL.GS.Styles
 						{
 							reqStyle = SkillBase.GetStyleByID(style.OpeningRequirementValue, 0);
 						}
-						temp = LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.OpeningStyle") + " ";
+						temp = LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.OpeningStyle") + " ";
 						if (reqStyle == null)
 						{
 							temp += "(style not found " + style.OpeningRequirementValue + ")";
@@ -738,7 +738,7 @@ namespace DOL.GS.Styles
 						}
 						break;
 					default:
-						temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.Any");
+						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Any");
 						break;
 				}
 			}
@@ -748,45 +748,45 @@ namespace DOL.GS.Styles
 				switch (style.AttackResultRequirement)
 				{
 					case Style.eAttackResult.Miss:
-						temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.TargetMisses");
+						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.TargetMisses");
 						break;
 					case Style.eAttackResult.Hit:
-						temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.TargetHits");
+						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.TargetHits");
 						break;
 					case Style.eAttackResult.Parry:
-						temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.YouParry");
+						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.YouParry");
 						break;
 					case Style.eAttackResult.Block:
-						temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.YouBlock");
+						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.YouBlock");
 						break;
 					case Style.eAttackResult.Evade:
-						temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.YouEvade");
+						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.YouEvade");
 						break;
 					case Style.eAttackResult.Fumble:
-						temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.TargetFumbles");
+						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.TargetFumbles");
 						break;
 					case Style.eAttackResult.Style:
-						temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.TargetStyle");
+						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.TargetStyle");
 						break;
 					default:
-						temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.Any");
+						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Any");
 						break;
 				}
 			}
 			else if (Style.eOpening.Positional == style.OpeningRequirementType)
 			{
 				//attacker position to target is opening
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.Positional");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Positional");
 				switch (style.OpeningRequirementValue)
 				{
 					case (int)Style.eOpeningPosition.Front:
-						temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.Front");
+						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Front");
 						break;
 					case (int)Style.eOpeningPosition.Back:
-						temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.Back");
+						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Back");
 						break;
 					case (int)Style.eOpeningPosition.Side:
-						temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.Side");
+						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Side");
 						break;
 
 				}
@@ -805,7 +805,7 @@ namespace DOL.GS.Styles
 			{
 				if (st.AttackResultRequirement == Style.eAttackResult.Style && st.OpeningRequirementValue == style.ID)
 				{
-					temp = (temp == "" ? st.Name : temp + LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.Or", st.Name));
+					temp = (temp == "" ? st.Name : temp + LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Or", st.Name));
 				}
 			}
 
@@ -815,108 +815,108 @@ namespace DOL.GS.Styles
 				{
 					if (st.AttackResultRequirement == Style.eAttackResult.Style && st.OpeningRequirementValue == style.ID)
 					{
-						temp = (temp == "" ? st.Name : temp + LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.Or", st.Name));
+						temp = (temp == "" ? st.Name : temp + LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Or", st.Name));
 					}
 				}
 			}
 
 			if (temp != "")
 			{
-				delveInfo.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.FollowupStyle", temp));
+				delveInfo.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.FollowupStyle", temp));
 			}
 
-			temp = LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.FatigueCost") + " ";
+			temp = LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.FatigueCost") + " ";
 
 			if (style.EnduranceCost < 5)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.VeryLow");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.VeryLow");
 			else if (style.EnduranceCost < 10)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.Low");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Low");
 			else if (style.EnduranceCost < 15)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.Medium");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Medium");
 			else if (style.EnduranceCost < 20)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.High");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.High");
 			else
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.VeryHigh");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.VeryHigh");
 
 			delveInfo.Add(temp);
 
-			temp = LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.Damage") + " ";
+			temp = LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Damage") + " ";
 
 
 			if (style.GrowthRate == 0)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.NoBonus");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.NoBonus");
 			else if (style.GrowthRate < .1)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.VeryLow");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.VeryLow");
 			else if (style.GrowthRate < .25)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.Low");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Low");
 			else if (style.GrowthRate < .5)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.Medium");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Medium");
 			else if (style.GrowthRate < 1.0)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.High");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.High");
 			else
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.VeryHigh");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.VeryHigh");
 
 			temp += " (" + style.GrowthRate + ")";
 
 			delveInfo.Add(temp);
 
-			temp = LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.ToHit") + " ";
+			temp = LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.ToHit") + " ";
 
 			if (style.BonusToHit <= -20)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.VeryHighPenalty");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.VeryHighPenalty");
 			else if (style.BonusToHit <= -15)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.HighPenalty");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.HighPenalty");
 			else if (style.BonusToHit <= -10)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.MediumPenalty");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.MediumPenalty");
 			else if (style.BonusToHit <= -5)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.LowPenalty");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.LowPenalty");
 			else if (style.BonusToHit < 0)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.VeryLowPenalty");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.VeryLowPenalty");
 			else if (style.BonusToHit == 0)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.NoBonus");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.NoBonus");
 			else if (style.BonusToHit < 5)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.VeryLowBonus");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.VeryLowBonus");
 			else if (style.BonusToHit < 10)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.LowBonus");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.LowBonus");
 			else if (style.BonusToHit < 15)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.MediumBonus");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.MediumBonus");
 			else if (style.BonusToHit < 20)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.HighBonus");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.HighBonus");
 			else
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.VeryHighBonus");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.VeryHighBonus");
 
 			delveInfo.Add(temp);
 
-			temp = LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.Defense") + " ";
+			temp = LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Defense") + " ";
 
 			if (style.BonusToDefense <= -20)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.VeryHighPenalty");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.VeryHighPenalty");
 			else if (style.BonusToDefense <= -15)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.HighPenalty");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.HighPenalty");
 			else if (style.BonusToDefense <= -10)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.MediumPenalty");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.MediumPenalty");
 			else if (style.BonusToDefense <= -5)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.LowPenalty");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.LowPenalty");
 			else if (style.BonusToDefense < 0)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.VeryLowPenalty");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.VeryLowPenalty");
 			else if (style.BonusToDefense == 0)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.NoBonus");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.NoBonus");
 			else if (style.BonusToDefense < 5)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.VeryLowBonus");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.VeryLowBonus");
 			else if (style.BonusToDefense < 10)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.LowBonus");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.LowBonus");
 			else if (style.BonusToDefense < 15)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.MediumBonus");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.MediumBonus");
 			else if (style.BonusToDefense < 20)
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.HighBonus");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.HighBonus");
 			else
-				temp += LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.VeryHighBonus");
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.VeryHighBonus");
 
 			delveInfo.Add(temp);
 
 			if (style.Procs.Count > 0)
 			{
-				temp = LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.TargetEffect") + " ";
+				temp = LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.TargetEffect") + " ";
 
 				SpellLine styleLine = SkillBase.GetSpellLine(GlobalSpellsLines.Combat_Styles_Effect);
 				if (styleLine != null)

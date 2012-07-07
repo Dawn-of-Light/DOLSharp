@@ -39,9 +39,9 @@ namespace DOL.GS.Commands
 
 			client.Player.Advisor = !client.Player.Advisor;
 			if (client.Player.Advisor)
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Advisor.On"));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Advisor.On"));
 			else
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Advisor.Off"));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Advisor.Off"));
 		}
 	}
 }

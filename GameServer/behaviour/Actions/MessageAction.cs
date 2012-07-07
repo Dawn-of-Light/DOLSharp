@@ -70,7 +70,7 @@ namespace DOL.GS.Behaviour.Actions
                     }
                     break;
                 case eTextType.Read:
-                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Behaviour.MessageAction.ReadMessage", message), eChatType.CT_Emote, eChatLoc.CL_PopupWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Behaviour.MessageAction.ReadMessage", message), eChatType.CT_Emote, eChatLoc.CL_PopupWindow);
                     break;  
                 case eTextType.None:
                     //nohting
