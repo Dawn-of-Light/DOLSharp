@@ -2,7 +2,9 @@
 
 GamePlayer.AddSpecialisation.YouLearn:			Ihr erlernt die Fähigkeit "{0}"!
 
-GamePlayer.AddSpellLine.YouLearn:			Ihr erlernt die Zauber der "{0}"-Liste!		
+GamePlayer.AddSpellLine.YouLearn:			Ihr erlernt die Zauber der "{0}"-Liste!
+
+GamePlayer.AddToWorld.SpecsPointsIncorrect:		Die Summe Eurer Spezialisierungspunkte war falsch und wurden korrigiert. Bitte meldet Euch bei Eurem Ausbilder für ein neues Trainig.		
 
 GamePlayer.ApplyPoison.CantApplyRecentCombat:		Ihr habt gerade gekämpft und könnt deshalb im Moment kein Gift auftragen!			
 GamePlayer.ApplyPoison.CantPoisonWeapon:		Diese Waffe könnt Ihr nicht vergiften!			

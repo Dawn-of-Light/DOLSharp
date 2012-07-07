@@ -40,7 +40,7 @@ namespace DOL.GS.Commands
 
 			if (args.Length < 2)
 			{
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Broadcast.NoText"));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Broadcast.NoText"));
 				return;
 			}
 			if (client.Player.IsMuted)
@@ -73,7 +73,7 @@ namespace DOL.GS.Commands
 			{
 				if (GameServer.ServerRules.IsAllowedToUnderstand(c.Player, player))
 				{
-					c.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Players.LFG.Message", player.Name, message), eChatType.CT_LFG, eChatLoc.CL_ChatWindow);
+					c.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Players.LFG.Message", player.Name, message), eChatType.CT_LFG, eChatLoc.CL_ChatWindow);
 				}
 			}
 

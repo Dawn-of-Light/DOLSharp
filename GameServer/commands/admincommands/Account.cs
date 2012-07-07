@@ -64,21 +64,21 @@ namespace DOL.GS.Commands
                         {
                             if ((c < '0' || c > '9') && (c < 'a' || c > 'z'))
                             {
-                                DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.InvalidAccountName"));
+                                DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.InvalidAccountName"));
                                 return;
                             }
                         }
 
                         if (AccountName.Length < 4 || Password.Length < 4)
                         {
-                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.InvalidAccountNameOrPassword"));
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.InvalidAccountNameOrPassword"));
                             return;
                         }
 
                         Account account = GetAccount(AccountName);
                         if (account != null)
                         {
-                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountNameAlreadyRegistered"));
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.AccountNameAlreadyRegistered"));
                             return;
                         }
                         
@@ -91,7 +91,7 @@ namespace DOL.GS.Commands
                         account.Language = ServerProperties.Properties.SERV_LANGUAGE;
                         GameServer.Database.AddObject(account);
 
-                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountCreated"));
+                        DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.AccountCreated"));
                     }
                     break;
                 #endregion Create
@@ -110,7 +110,7 @@ namespace DOL.GS.Commands
 						Account acc = GetAccount(accountname);
 						if (acc == null)
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountNotFound", accountname));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.AccountNotFound", accountname));
 							return;
 						}
 
@@ -136,7 +136,7 @@ namespace DOL.GS.Commands
 
 						if (acc == null)
 						{
-                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountNotFound", AccountName));
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.AccountNotFound", AccountName));
 							return;
 						}
 
@@ -146,7 +146,7 @@ namespace DOL.GS.Commands
 						// Log change
 						AuditMgr.AddAuditEntry(client, AuditType.Account, AuditSubtype.AccountDelete, "acct="+AccountName, (client.Player != null ? client.Player.Name : ""));
 
-                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountDeleted", acc.Name));
+                        DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.AccountDeleted", acc.Name));
 						return;
 					}
 				#endregion Delete
@@ -164,7 +164,7 @@ namespace DOL.GS.Commands
 
                         if (cha == null)
                         {
-                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterNotFound", charname));
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.CharacterNotFound", charname));
                             return;
                         }
 
@@ -174,7 +174,7 @@ namespace DOL.GS.Commands
 						// Log change
 						AuditMgr.AddAuditEntry(client, AuditType.Character, AuditSubtype.CharacterDelete, "char="+charname, (client.Player != null ? client.Player.Name : ""));
 
-                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterDeleted", cha.Name));
+                        DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.CharacterDeleted", cha.Name));
                         return;
                     }
                 #endregion DeleteCharacter
@@ -193,14 +193,14 @@ namespace DOL.GS.Commands
                         DOLCharacters cha = GetCharacter(charname);
                         if (cha == null)
                         {
-                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterNotFound", charname));
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.CharacterNotFound", charname));
                             return;
                         }
 
                         Account acc = GetAccount(accountname);
                         if (acc == null)
                         {
-                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountNotFound", accountname));
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.AccountNotFound", accountname));
                             return;
                         }
 
@@ -217,7 +217,7 @@ namespace DOL.GS.Commands
                                 firstAccountSlot = 3 * 8;
                                 break;
                             default:
-                                DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharNotFromValidRealm"));
+                                DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.CharNotFromValidRealm"));
                                 return;
                         }
 
@@ -240,7 +240,7 @@ namespace DOL.GS.Commands
 
                         if (freeslot == 0)
                         {
-                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountHasNoFreeSlots", accountname));
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.AccountHasNoFreeSlots", accountname));
                             return;
                         }
 
@@ -255,7 +255,7 @@ namespace DOL.GS.Commands
                         cha.AccountSlot = freeslot;
 
                         GameServer.Database.SaveObject(cha);
-                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterMovedToAccount", cha.Name, acc.Name));
+                        DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.CharacterMovedToAccount", cha.Name, acc.Name));
                         return;
                     }
                 #endregion MoveCharacter
@@ -273,7 +273,7 @@ namespace DOL.GS.Commands
 
 						if (acc == null)
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountNotFound", accountname));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.AccountNotFound", accountname));
 							return;
 						}
 
@@ -303,14 +303,14 @@ namespace DOL.GS.Commands
 
 						if (acc == null)
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountNotFound", accountname));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.AccountNotFound", accountname));
 							return;
 						}
 
                         var banacc = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(accountname) + "')");
 						if (banacc.Count == 0)
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccountNotFound", accountname));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.AccountNotFound", accountname));
 							return;
 						}
 						
@@ -338,12 +338,12 @@ namespace DOL.GS.Commands
                         
                         if (Char == null)
                         {
-                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.CharacterNotFound", CharName));
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.CharacterNotFound", CharName));
                             return;
                         }
 
                         string AccName = GetAccountName(Char.Name);
-                        DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.Account.AccNameForChar", Char.Name, AccName));
+                        DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.AccNameForChar", Char.Name, AccName));
                         
                         return;
                     }

@@ -18,7 +18,7 @@ namespace DOL.GS.Commands
             House house = client.Player.CurrentHouse;
 			if (house == null)
 			{
-                DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Boot.InHouseError"));
+                DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Boot.InHouseError"));
 				return;
 			}
 

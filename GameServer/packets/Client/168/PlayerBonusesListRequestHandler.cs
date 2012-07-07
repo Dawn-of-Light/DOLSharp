@@ -50,7 +50,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			client.Player.GetBonuses(info);
 
-			client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client, "PlayerBonusesListRequestHandler.HandlePacket.Bonuses"), info);
+			client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client.Account.Language, "PlayerBonusesListRequestHandler.HandlePacket.Bonuses"), info);
 		}
 	}
 }

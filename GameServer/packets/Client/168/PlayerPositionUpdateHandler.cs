@@ -179,7 +179,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                 string description = newZone.Description;
                 string screenDescription = description;
 
-                LanguageDataObject translation = LanguageMgr.GetTranslation(client, newZone);
+                LanguageDataObject translation = LanguageMgr.GetTranslation(client.Account.Language, newZone);
                 if (translation != null)
                 {
                     if (!Util.IsEmpty(((DBLanguageZone)translation).Description))
@@ -189,7 +189,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                         screenDescription = ((DBLanguageZone)translation).ScreenDescription;
                 }
 
-                client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.Entered", description),
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "PlayerPositionUpdateHandler.Entered", description),
 				                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 client.Out.SendMessage(screenDescription, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
 
@@ -598,7 +598,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
                     if (fallSpeed > fallMinSpeed)
                     {
-                        client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPositionUpdateHandler.FallingDamage"),
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "PlayerPositionUpdateHandler.FallingDamage"),
                         eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
                         client.Player.CalcFallDamage(fallPercent);
                     }

@@ -22,7 +22,7 @@ namespace DOL.GS
         public override IList GetExamineMessages(GamePlayer player)
         {
             IList list = new ArrayList(4);
-            list.Add(LanguageMgr.GetTranslation(player.Client, "GameGuard.GetExamineMessages.Examine", GetName(0, true), GetPronoun(0, true), GetAggroLevelString(player, false)));
+            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameGuard.GetExamineMessages.Examine", GetName(0, true), GetPronoun(0, true), GetAggroLevelString(player, false)));
             return list;
         }
 
@@ -36,11 +36,11 @@ namespace DOL.GS
                     switch (Realm)
                     {
                         case eRealm.Albion:
-                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameGuard.Albion.StartAttackSay"), eChatType.CT_System, eChatLoc.CL_SystemWindow); break;
+                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameGuard.Albion.StartAttackSay"), eChatType.CT_System, eChatLoc.CL_SystemWindow); break;
                         case eRealm.Midgard:
-                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameGuard.Midgard.StartAttackSay"), eChatType.CT_System, eChatLoc.CL_SystemWindow); break;
+                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameGuard.Midgard.StartAttackSay"), eChatType.CT_System, eChatLoc.CL_SystemWindow); break;
                         case eRealm.Hibernia:
-                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameGuard.Hibernia.StartAttackSay"), eChatType.CT_System, eChatLoc.CL_SystemWindow); break;
+                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameGuard.Hibernia.StartAttackSay"), eChatType.CT_System, eChatLoc.CL_SystemWindow); break;
                     }
             }
         }

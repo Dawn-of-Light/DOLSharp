@@ -276,11 +276,11 @@ namespace DOL.GS
 					if (ConditionPercent != oldPercent)
 					{
 						if (ConditionPercent == 90)
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.Attack.CouldRepair", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.CouldRepair", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						else if (ConditionPercent == 80)
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.Attack.NeedRepair", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.NeedRepair", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						else if (ConditionPercent == 70)
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.Attack.NeedRepairDire", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.NeedRepairDire", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 						player.Out.SendUpdateWeaponAndArmorStats();
 						player.Out.SendInventorySlotsUpdate(new int[] { SlotPosition });
@@ -320,11 +320,11 @@ namespace DOL.GS
 					if (ConditionPercent != oldPercent)
 					{
 						if (ConditionPercent == 90)
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.Attack.CouldRepair", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.CouldRepair", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						else if (ConditionPercent == 80)
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.Attack.NeedRepair", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.NeedRepair", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						else if (ConditionPercent == 70)
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.Attack.NeedRepairDire", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.NeedRepairDire", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 						player.Out.SendUpdateWeaponAndArmorStats();
 						player.Out.SendInventorySlotsUpdate(new int[] { SlotPosition });
@@ -370,7 +370,7 @@ namespace DOL.GS
 			//**********************************
 			if (IsCrafted)
 			{
-				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.CrafterName", Creator));
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.CrafterName", Creator));
 				delve.Add(" ");
 			}
 			else if (Description != null && Description != "")
@@ -459,18 +459,18 @@ namespace DOL.GS
 				delve.Add(" ");
 
 			if (!IsPickable)
-				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.CannotTraded"));
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.CannotTraded"));
 
 			if (!IsDropable)
-				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.CannotSold"));
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.CannotSold"));
 
 			if (IsIndestructible)
-				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.CannotDestroyed"));
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.CannotDestroyed"));
 
 			if (BonusLevel > 0)
 			{
 				delve.Add(" ");
-				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.HandlePacket.BonusLevel", BonusLevel));
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.BonusLevel", BonusLevel));
 			}
 
 			//Add admin info
@@ -485,7 +485,7 @@ namespace DOL.GS
 			if (Util.IsEmpty(AllowedClasses, true))
 				return;
 
-			output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteUsableClasses.UsableBy"));
+            output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteUsableClasses.UsableBy"));
 
 			foreach (string allowed in AllowedClasses.SplitCSV(true))
 			{
@@ -521,7 +521,7 @@ namespace DOL.GS
 			if (output.Count > oldCount)
 			{
 				output.Add(" ");
-				output.Insert(oldCount, LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MagicBonus"));
+                output.Insert(oldCount, LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.MagicBonus"));
 				output.Insert(oldCount, " ");
 			}
 
@@ -542,7 +542,7 @@ namespace DOL.GS
 			if (output.Count > oldCount)
 			{
 				output.Add(" ");
-				output.Insert(oldCount, LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.FocusBonus"));
+                output.Insert(oldCount, LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.FocusBonus"));
 				output.Insert(oldCount, " ");
 			}
 
@@ -553,7 +553,7 @@ namespace DOL.GS
 					int requiredLevel = LevelRequirement > 0 ? LevelRequirement : Math.Min(50, Level);
 					if (requiredLevel > 1)
 					{
-						output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired2", requiredLevel));
+                        output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired2", requiredLevel));
 						output.Add(" ");
 					}
 				}
@@ -569,14 +569,14 @@ namespace DOL.GS
 				if (ProcSpellID != 0)
 				{
 					string spellNote = "";
-					output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MagicAbility"));
+                    output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.MagicAbility"));
 					if (GlobalConstants.IsWeapon(Object_Type))
 					{
-						spellNote = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.StrikeEnemy");
+                        spellNote = LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.StrikeEnemy");
 					}
 					else if (GlobalConstants.IsArmor(Object_Type))
 					{
-						spellNote = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.StrikeArmor");
+                        spellNote = LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.StrikeArmor");
 					}
 
 					SpellLine line = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
@@ -616,14 +616,14 @@ namespace DOL.GS
 				if (ProcSpellID1 != 0)
 				{
 					string spellNote = "";
-					output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MagicAbility"));
+                    output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.MagicAbility"));
 					if (GlobalConstants.IsWeapon(Object_Type))
 					{
-						spellNote = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.StrikeEnemy");
+                        spellNote = LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.StrikeEnemy");
 					}
 					else if (GlobalConstants.IsArmor(Object_Type))
 					{
-						spellNote = LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.StrikeArmor");
+                        spellNote = LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.StrikeArmor");
 					}
 
 					SpellLine line = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
@@ -674,9 +674,9 @@ namespace DOL.GS
 							{
 								if (MaxCharges > 0)
 								{
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Charges", Charges));
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", MaxCharges));
+                                    output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
+                                    output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.Charges", Charges));
+                                    output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", MaxCharges));
 									output.Add(" ");
 								}
 
@@ -713,9 +713,9 @@ namespace DOL.GS
 							{
 								if (MaxCharges > 0)
 								{
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Charges", Charges1));
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", MaxCharges1));
+                                    output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
+                                    output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.Charges", Charges1));
+                                    output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", MaxCharges1));
 									output.Add(" ");
 								}
 
@@ -751,12 +751,12 @@ namespace DOL.GS
 								if (spl.ID == PoisonSpellID)
 								{
 									output.Add(" ");
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
+                                    output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
+                                    output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
 									output.Add(" ");
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Charges", PoisonCharges));
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", PoisonMaxCharges));
+                                    output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
+                                    output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.Charges", PoisonCharges));
+                                    output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", PoisonMaxCharges));
 									output.Add(" ");
 
 									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, poisonLine);
@@ -769,7 +769,7 @@ namespace DOL.GS
 									{
 										output.Add("-" + spl.Name + "(Not implemented yet)");
 									}
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.StrikeEnemy"));
+                                    output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.StrikeEnemy"));
 									return;
 								}
 							}
@@ -785,18 +785,18 @@ namespace DOL.GS
 							if (spl.ID == SpellID)
 							{
 								output.Add(" ");
-								output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
-								output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
+                                output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.LevelRequired"));
+                                output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.Level", spl.Level));
 								output.Add(" ");
 								if (MaxCharges > 0)
 								{
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.Charges", Charges));
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", MaxCharges));
+									output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.ChargedMagic"));
+									output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.Charges", Charges));
+									output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.MaxCharges", MaxCharges));
 								}
 								else
 								{
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MagicAbility"));
+									output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.MagicAbility"));
 								}
 								output.Add(" ");
 
@@ -810,17 +810,17 @@ namespace DOL.GS
 								{
 									output.Add("-" + spl.Name + "(Not implemented yet)");
 								}
-								output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UsedItem"));
+								output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.UsedItem"));
 								output.Add(" ");
 								if (spl.RecastDelay > 0)
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UseItem1", Util.FormatTime(spl.RecastDelay / 1000)));
+									output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.UseItem1", Util.FormatTime(spl.RecastDelay / 1000)));
 								else
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UseItem2"));
+									output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.UseItem2"));
 								long lastChargedItemUseTick = client.Player.TempProperties.getProperty<long>(GamePlayer.LAST_CHARGED_ITEM_USE_TICK);
 								long changeTime = client.Player.CurrentRegion.Time - lastChargedItemUseTick;
 								long recastDelay = (spl.RecastDelay > 0) ? spl.RecastDelay : 60000 * 3;
 								if (changeTime < recastDelay) //3 minutes reuse timer
-									output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.UseItem3", Util.FormatTime((recastDelay - changeTime) / 1000)));
+									output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.UseItem3", Util.FormatTime((recastDelay - changeTime) / 1000)));
 								return;
 							}
 						}
@@ -865,8 +865,8 @@ namespace DOL.GS
 						 || bonusCat == (int)eProperty.ArcaneSyphon
 						 || bonusCat == (int)eProperty.BountyPoints
 						 || bonusCat == (int)eProperty.XpPoints)
-                        ? ((bonusCat == (int)eProperty.PowerPool) ? LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteBonusLine.PowerPool") : "%")
-                        : LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteBonusLine.Points")
+                        ? ((bonusCat == (int)eProperty.PowerPool) ? LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteBonusLine.PowerPool") : "%")
+                        : LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteBonusLine.Points")
 					));
 				}
 			}
@@ -916,12 +916,12 @@ namespace DOL.GS
 						if (spl.ID == PoisonSpellID)
 						{
 							list.Add(" ");
-							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePoisonInfo.LevelRequired"));
-							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePoisonInfo.Level", spl.Level));
+							list.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WritePoisonInfo.LevelRequired"));
+							list.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WritePoisonInfo.Level", spl.Level));
 							list.Add(" ");
-							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePoisonInfo.ProcAbility"));
-							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePoisonInfo.Charges", PoisonCharges));
-							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePoisonInfo.MaxCharges", PoisonMaxCharges));
+							list.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WritePoisonInfo.ProcAbility"));
+							list.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WritePoisonInfo.Charges", PoisonCharges));
+							list.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WritePoisonInfo.MaxCharges", PoisonMaxCharges));
 							list.Add(" ");
 
 							ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, poisonLine);
@@ -954,9 +954,9 @@ namespace DOL.GS
 					{
 						if (spl.ID == SpellID)
 						{
-							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.ChargedMagic"));
-							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Charges", Charges));
-							list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.MaxCharges", MaxCharges));
+							list.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WritePotionInfo.ChargedMagic"));
+							list.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WritePotionInfo.Charges", Charges));
+							list.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WritePotionInfo.MaxCharges", MaxCharges));
 							list.Add(" ");
 							WritePotionSpellsInfos(list, client, spl, potionLine);
 							list.Add(" ");
@@ -965,7 +965,7 @@ namespace DOL.GS
 							// into Future, set with value of "itemtemplate.CanUseEvery" and no longer back into past
 							if (nextPotionAvailTime > client.Player.CurrentRegion.Time)
 							{
-								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.UseItem3", Util.FormatTime((nextPotionAvailTime - client.Player.CurrentRegion.Time) / 1000)));
+								list.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WritePotionInfo.UseItem3", Util.FormatTime((nextPotionAvailTime - client.Player.CurrentRegion.Time) / 1000)));
 							}
 							else
 							{
@@ -985,7 +985,7 @@ namespace DOL.GS
 							if (spl.CastTime > 0)
 							{
 								list.Add(" ");
-								list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.NoUseInCombat"));
+								list.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WritePotionInfo.NoUseInCombat"));
 							}
 							break;
 						}
@@ -999,19 +999,19 @@ namespace DOL.GS
 		{
 			if (spl != null)
 			{
-				list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteMagicalBonuses.MagicAbility"));
-				list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Type", spl.SpellType));
+				list.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteMagicalBonuses.MagicAbility"));
+				list.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WritePotionInfo.Type", spl.SpellType));
 				list.Add(" ");
 				list.Add(spl.Description);
 				list.Add(" ");
 				if (spl.Value != 0)
 				{
-					list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Value", spl.Value));
+					list.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WritePotionInfo.Value", spl.Value));
 				}
-				list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Target", spl.Target));
+				list.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WritePotionInfo.Target", spl.Target));
 				if (spl.Range > 0)
 				{
-					list.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WritePotionInfo.Range", spl.Range));
+					list.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WritePotionInfo.Range", spl.Range));
 				}
 				list.Add(" ");
 				list.Add(" ");
@@ -1039,24 +1039,24 @@ namespace DOL.GS
 
 			output.Add(" ");
 			output.Add(" ");
-			output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.DamageMod"));
+			output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteClassicShieldInfos.DamageMod"));
 			if (itemDPS != 0)
 			{
-				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.BaseDPS", itemDPS.ToString("0.0")));
-				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.ClampDPS", clampedDPS.ToString("0.0")));
+				output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteClassicShieldInfos.BaseDPS", itemDPS.ToString("0.0")));
+				output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteClassicShieldInfos.ClampDPS", clampedDPS.ToString("0.0")));
 			}
 			if (SPD_ABS >= 0)
 			{
-				output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.SPD", itemSPD.ToString("0.0")));
+				output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteClassicShieldInfos.SPD", itemSPD.ToString("0.0")));
 			}
 
 			output.Add(" ");
 
 			switch (Type_Damage)
 			{
-					case 1: output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.Small")); break;
-					case 2: output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.Medium")); break;
-					case 3: output.Add(LanguageMgr.GetTranslation(client, "DetailDisplayHandler.WriteClassicShieldInfos.Large")); break;
+					case 1: output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteClassicShieldInfos.Small")); break;
+					case 2: output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteClassicShieldInfos.Medium")); break;
+					case 3: output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteClassicShieldInfos.Large")); break;
 			}
 		}
 
@@ -1069,36 +1069,36 @@ namespace DOL.GS
 			double effectiveDPS = clampedDPS * Quality / 100.0 * Condition / MaxCondition;
 
 			delve.Add(" ");
-			delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicWeaponInfos.DamageMod"));
+			delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.WriteClassicWeaponInfos.DamageMod"));
 
 			if (itemDPS != 0)
 			{
-				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicWeaponInfos.BaseDPS", itemDPS.ToString("0.0")));
-				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicWeaponInfos.ClampDPS", clampedDPS.ToString("0.0")));
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.WriteClassicWeaponInfos.BaseDPS", itemDPS.ToString("0.0")));
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.WriteClassicWeaponInfos.ClampDPS", clampedDPS.ToString("0.0")));
 			}
 
 			if (SPD_ABS >= 0)
 			{
-				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicWeaponInfos.SPD", itemSPD.ToString("0.0")));
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.WriteClassicWeaponInfos.SPD", itemSPD.ToString("0.0")));
 			}
 
 			if (Quality != 0)
 			{
-				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicWeaponInfos.Quality", Quality));
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.WriteClassicWeaponInfos.Quality", Quality));
 			}
 
 			if (Condition != 0)
 			{
-				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicWeaponInfos.Condition", ConditionPercent));
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.WriteClassicWeaponInfos.Condition", ConditionPercent));
 			}
 
-			delve.Add(LanguageMgr.GetTranslation(player.Client,
+			delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language,
 			                                     "DetailDisplayHandler.WriteClassicWeaponInfos.DamageType",
 			                                     (Type_Damage == 0 ? "None" : GlobalConstants.WeaponDamageTypeToName(Type_Damage))));
 
 			delve.Add(" ");
 
-			delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicWeaponInfos.EffDamage"));
+			delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.WriteClassicWeaponInfos.EffDamage"));
 
 			if (itemDPS != 0)
 			{
@@ -1108,7 +1108,7 @@ namespace DOL.GS
 
 		protected virtual void DelveArmorStats(List<String> delve, GamePlayer player)
 		{
-			delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicArmorInfos.ArmorMod"));
+			delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.WriteClassicArmorInfos.ArmorMod"));
 
 			double af = 0;
 			int afCap = player.Level;
@@ -1116,7 +1116,7 @@ namespace DOL.GS
 
 			if (DPS_AF != 0)
 			{
-				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicArmorInfos.BaseFactor", DPS_AF));
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.WriteClassicArmorInfos.BaseFactor", DPS_AF));
 
 				if (Object_Type != (int)eObjectType.Cloth)
 				{
@@ -1125,31 +1125,31 @@ namespace DOL.GS
 
 				af = Math.Min(afCap, DPS_AF);
 
-				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicArmorInfos.ClampFact", (int)af));
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.WriteClassicArmorInfos.ClampFact", (int)af));
 			}
 
 			if (SPD_ABS >= 0)
 			{
-				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicArmorInfos.Absorption", SPD_ABS));
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.WriteClassicArmorInfos.Absorption", SPD_ABS));
 			}
 
 			if (Quality != 0)
 			{
-				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicArmorInfos.Quality", Quality));
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.WriteClassicArmorInfos.Quality", Quality));
 			}
 
 			if (Condition != 0)
 			{
-				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicArmorInfos.Condition", ConditionPercent));
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.WriteClassicArmorInfos.Condition", ConditionPercent));
 			}
 
 			delve.Add(" ");
-			delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicArmorInfos.EffArmor"));
+			delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.WriteClassicArmorInfos.EffArmor"));
 
 			if (DPS_AF != 0)
 			{
 				effectiveAF = af * Quality / 100.0 * Condition / MaxCondition * (1 + SPD_ABS / 100.0);
-				delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicArmorInfos.Factor", (int)effectiveAF));
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.WriteClassicArmorInfos.Factor", (int)effectiveAF));
 			}
 		}
 

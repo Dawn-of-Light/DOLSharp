@@ -35,7 +35,7 @@ namespace DOL.GS.Commands
 			// If they are not in a group, then this command should not work at all
 			if (client.Player.Group == null)
 			{
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Autosplit.InGroup"));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Autosplit.InGroup"));
 				return;
 			}
 
@@ -52,7 +52,7 @@ namespace DOL.GS.Commands
 			{
 				if (client.Player != client.Player.Group.Leader)
 				{
-					DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Autosplit.Leader"));
+					DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Autosplit.Leader"));
 					return;
 				}
 
@@ -62,7 +62,7 @@ namespace DOL.GS.Commands
 						{
 							client.Player.Group.AutosplitLoot = true;
 							client.Player.Group.AutosplitCoins = true;
-							client.Player.Group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client, "Scripts.Players.Autosplit.On"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Player.Group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Autosplit.On"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							break;
 						}
 
@@ -70,19 +70,19 @@ namespace DOL.GS.Commands
 						{
 							client.Player.Group.AutosplitLoot = false;
 							client.Player.Group.AutosplitCoins = false;
-							client.Player.Group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client, "Scripts.Players.Autosplit.Off"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Player.Group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Autosplit.Off"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							break;
 						}
 					case "coins":
 						{
 							client.Player.Group.AutosplitCoins = !client.Player.Group.AutosplitCoins;
-							client.Player.Group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client, "Scripts.Players.Autosplit.Coins") + (client.Player.Group.AutosplitCoins ? "on" : "off") + " the autosplit coin", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Player.Group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Autosplit.Coins") + (client.Player.Group.AutosplitCoins ? "on" : "off") + " the autosplit coin", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							break;
 						}
 					case "loot":
 						{
 							client.Player.Group.AutosplitLoot = !client.Player.Group.AutosplitLoot;
-							client.Player.Group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client, "Scripts.Players.Autosplit.Loot") + (client.Player.Group.AutosplitCoins ? "on" : "off") + " the autosplit coin", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Player.Group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Autosplit.Loot") + (client.Player.Group.AutosplitCoins ? "on" : "off") + " the autosplit coin", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							break;
 						}
 				}
@@ -93,7 +93,7 @@ namespace DOL.GS.Commands
 			if (command == "self")
 			{
 				client.Player.AutoSplitLoot = !client.Player.AutoSplitLoot;
-				client.Player.Group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client, "Scripts.Players.Autosplit.Self", client.Player.Name) + (client.Player.AutoSplitLoot ? "on" : "off") + " their autosplit loot", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Player.Group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Autosplit.Self", client.Player.Name) + (client.Player.AutoSplitLoot ? "on" : "off") + " their autosplit loot", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 

@@ -40,7 +40,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title description.</returns>
 		public override string GetDescription(GamePlayer player)
 		{
-			return LanguageMgr.GetTranslation(player.Client, "Titles.Time.Account.ElderTitle");
+			return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Time.Account.ElderTitle");
 		}
 
 		/// <summary>
@@ -50,7 +50,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title value.</returns>
 		public override string GetValue(GamePlayer player)
 		{
-			return LanguageMgr.GetTranslation(player.Client, "Titles.Time.Account.ElderTitle");
+			return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Time.Account.ElderTitle");
 		}
 
 		/// <summary>

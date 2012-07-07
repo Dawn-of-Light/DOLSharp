@@ -3207,34 +3207,34 @@ namespace DOL.GS
 			{
 				aggroLevel = Faction.GetAggroToFaction(player);
 				if (aggroLevel > 75)
-					aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Aggressive1");
+					aggroLevelString = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.GetAggroLevelString.Aggressive1");
 				else if (aggroLevel > 50)
-					aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Hostile1");
+					aggroLevelString = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.GetAggroLevelString.Hostile1");
 				else if (aggroLevel > 25)
-					aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Neutral1");
+					aggroLevelString = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.GetAggroLevelString.Neutral1");
 				else
-					aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Friendly1");
+					aggroLevelString = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.GetAggroLevelString.Friendly1");
 			}
 			else
 			{
 				IOldAggressiveBrain aggroBrain = Brain as IOldAggressiveBrain;
 				if (GameServer.ServerRules.IsSameRealm(this, player, true))
 				{
-					if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Friendly2");
-					else aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Friendly1");
+					if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.GetAggroLevelString.Friendly2");
+					else aggroLevelString = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.GetAggroLevelString.Friendly1");
 				}
 				else if (aggroBrain != null && aggroBrain.AggroLevel > 0)
 				{
-					if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Aggressive2");
-					else aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Aggressive1");
+					if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.GetAggroLevelString.Aggressive2");
+					else aggroLevelString = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.GetAggroLevelString.Aggressive1");
 				}
 				else
 				{
-					if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Neutral2");
-					else aggroLevelString = LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.Neutral1");
+					if (firstLetterUppercase) aggroLevelString = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.GetAggroLevelString.Neutral2");
+					else aggroLevelString = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.GetAggroLevelString.Neutral1");
 				}
 			}
-			return LanguageMgr.GetTranslation(player.Client, "GameNPC.GetAggroLevelString.TowardsYou", aggroLevelString);
+			return LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.GetAggroLevelString.TowardsYou", aggroLevelString);
 		}
 
 		/// <summary>
@@ -3314,7 +3314,7 @@ namespace DOL.GS
 		public override IList GetExamineMessages(GamePlayer player)
 		{
 			IList list = base.GetExamineMessages(player);
-			list.Add(LanguageMgr.GetTranslation(player.Client, "GameNPC.GetExamineMessages.YouExamine",
+			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.GetExamineMessages.YouExamine",
 			                                    GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
 
 			return list;
@@ -3398,7 +3398,7 @@ namespace DOL.GS
 			if (!base.Interact(player)) return false;
 			if (!GameServer.ServerRules.IsSameRealm(this, player, true))
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameNPC.Interact.DirtyLook", GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.Interact.DirtyLook", GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				Notify(GameObjectEvent.InteractFailed, this, new InteractEventArgs(player));
 				return false;
 			}
@@ -3412,13 +3412,13 @@ namespace DOL.GS
 
 				if (RiderSlot(player) != -1)
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameNPC.Interact.AlreadyRiding", name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.Interact.AlreadyRiding", name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 
 				if (GetFreeArrayLocation() == -1)
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameNPC.Interact.IsFull", name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.Interact.IsFull", name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 
@@ -5044,7 +5044,7 @@ namespace DOL.GS
 						// Suppress identical messages (multiple item drops).
 						if (str != lastloot)
 						{
-							player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client, "GameNPC.DropLoot.Drops", GetName(0, true), str)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.DropLoot.Drops", GetName(0, true), str)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
 							lastloot = str;
 						}
 					}

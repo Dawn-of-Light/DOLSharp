@@ -49,9 +49,9 @@ namespace DOL.GS
 		public override IList GetExamineMessages(GamePlayer player)
 		{
 			IList list = new ArrayList();
-			list.Add(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.YouTarget", GetName(0, false)));
-			list.Add(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
-			list.Add(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.GiveObject", GetPronoun(0, true)));
+			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Blacksmith.YouTarget", GetName(0, false)));
+			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Blacksmith.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Blacksmith.GiveObject", GetPronoun(0, true)));
 			return list;
 		}
 
@@ -67,7 +67,7 @@ namespace DOL.GS
 
 			TurnTo(player, 1000);
 
-			SayTo(player, eChatLoc.CL_PopupWindow, LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.Say"));
+			SayTo(player, eChatLoc.CL_PopupWindow, LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Blacksmith.Say"));
 			return true;
 		}
 
@@ -83,7 +83,7 @@ namespace DOL.GS
 
 			if (item.Count != 1)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client,
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language,
 				                                                  "Scripts.Blacksmith.StackedObjets", GetName(0, false)),
 				                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
@@ -96,7 +96,7 @@ namespace DOL.GS
 				case (int)eObjectType.Magical:
 				case (int)eObjectType.Instrument:
 				case (int)eObjectType.Poison:
-					SayTo(player, LanguageMgr.GetTranslation(player.Client,
+					SayTo(player, LanguageMgr.GetTranslation(player.Client.Account.Language,
 					                                         "Scripts.Blacksmith.CantRepairThat"));
 
 					return false;
@@ -106,7 +106,7 @@ namespace DOL.GS
 			{
 				if (item.Durability <= 0)
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client,
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language,
 					                                                  "Scripts.Blacksmith.ObjectCantRepaired"), eChatType.CT_System,
 					                       eChatLoc.CL_SystemWindow);
 
@@ -115,7 +115,7 @@ namespace DOL.GS
 				else
 				{
 					player.TempProperties.setProperty(REPAIR_ITEM_WEAK, new WeakRef(item));
-					player.Client.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client,
+					player.Client.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client.Account.Language,
 					                                                              "Scripts.Blacksmith.RepairCostAccept",
 					                                                              Money.GetString(item.RepairCost), item.Name),
 					                                   new CustomDialogResponse(BlacksmithDialogResponse));
@@ -123,7 +123,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client,
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language,
 				                                                  "Scripts.Blacksmith.NoNeedRepair"), eChatType.CT_System,
 				                       eChatLoc.CL_SystemWindow);
 			}
@@ -144,7 +144,7 @@ namespace DOL.GS
 
 			if (response != 0x01)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client,
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language,
 				                                                  "Scripts.Blacksmith.AbortRepair", item.Name), eChatType.CT_System,
 				                       eChatLoc.CL_SystemWindow);
 
@@ -155,7 +155,7 @@ namespace DOL.GS
 			if (item == null || item.SlotPosition == (int)eInventorySlot.Ground
 			    || item.OwnerID == null || item.OwnerID != player.InternalID)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client,
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language,
 				                                                  "Scripts.Blacksmith.InvalidItem"), eChatType.CT_System,
 				                       eChatLoc.CL_SystemWindow);
 
@@ -167,14 +167,14 @@ namespace DOL.GS
 			if (!player.RemoveMoney(item.RepairCost))
 			{
                 InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.RepairCost);
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client,
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language,
 				                                                  "Scripts.Blacksmith.NotEnoughMoney"), eChatType.CT_System,
 				                       eChatLoc.CL_SystemWindow);
 
 				return;
 			}
 
-			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Blacksmith.YouPay",
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Blacksmith.YouPay",
 			                                                  GetName(0, false), Money.GetString(item.RepairCost)), eChatType.CT_System,
 			                       eChatLoc.CL_SystemWindow);
 
@@ -183,7 +183,7 @@ namespace DOL.GS
 			{
 				item.Condition = item.Condition + item.Durability;
 				item.Durability = 0;
-				SayTo(player, LanguageMgr.GetTranslation(player.Client,
+				SayTo(player, LanguageMgr.GetTranslation(player.Client.Account.Language,
 				                                         "Scripts.Blacksmith.ObjectRatherOld", item.Name));
 			}
 			else
@@ -194,7 +194,7 @@ namespace DOL.GS
 
 
 			player.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
-			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client,
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language,
 			                                                  "Scripts.Blacksmith.ItsDone", item.Name), eChatType.CT_System,
 			                       eChatLoc.CL_SystemWindow);
 

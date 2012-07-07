@@ -46,7 +46,7 @@ namespace DOL.GS.Commands
 		{
 			if (client.Account.PrivLevel == 1 && ServerProperties.Properties.ANON_MODIFIER == -1)
 			{
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Anonymous.Error"));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Anonymous.Error"));
 				return;
 			}
 
@@ -57,7 +57,7 @@ namespace DOL.GS.Commands
 				};
 			if (client.Player.IsAnonymous)
 			{
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Anonymous.On"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Anonymous.On"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				foreach (GameClient pclient in WorldMgr.GetAllPlayingClients())
 				{
 					if (pclient.Player.Friends.Contains(client.Player.Name))
@@ -66,7 +66,7 @@ namespace DOL.GS.Commands
 			}
 			else
 			{
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "Scripts.Players.Anonymous.Off"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Anonymous.Off"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				foreach (GameClient pclient in WorldMgr.GetAllPlayingClients())
 				{
 					if (pclient.Player.Friends.Contains(client.Player.Name))

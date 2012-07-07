@@ -41,7 +41,7 @@ namespace DOL.GS.Commands
 				}
 				catch (Exception e)
 				{
-					DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Error", e.Message));
+					DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Error", e.Message));
 					return;
 				}
 			}
@@ -53,7 +53,7 @@ namespace DOL.GS.Commands
 			bp.Radius = bindRadius;
 			GameServer.Database.AddObject(bp);
 			client.Player.CurrentRegion.AddArea(new Area.BindArea("bind point", bp));
-			DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.AddBind.BindPointAdded", bp.X, bp.Y, bp.Z, bp.Radius, bp.Region));
+			DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.AddBind.BindPointAdded", bp.X, bp.Y, bp.Z, bp.Radius, bp.Region));
 		}
 	}
 }

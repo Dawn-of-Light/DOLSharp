@@ -46,7 +46,7 @@ namespace DOL.GS.Commands
 			
 			if (clientc == null)
 			{
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Kick.NoPlayerOnLine"));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Kick.NoPlayerOnLine"));
 				return;
 			}
 

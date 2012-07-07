@@ -63,7 +63,7 @@ namespace DOL.GS.Commands
 						}
 
 						SinglePermission.setPermission(target, args[2]);
-						DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.plvl.AddedSinglePermission", target.Name, args[2]));
+						DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.plvl.AddedSinglePermission", target.Name, args[2]));
 
 						break;
 					}
@@ -87,7 +87,7 @@ namespace DOL.GS.Commands
 						}
 
 						SinglePermission.setPermissionAccount( target, args[2] );
-						DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.plvl.AddedSingleAccountPermission", target.Client.Account.Name, args[2]));
+						DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.plvl.AddedSingleAccountPermission", target.Client.Account.Name, args[2]));
 
 						break;
 					}
@@ -111,9 +111,9 @@ namespace DOL.GS.Commands
 						}
 
 						if( SinglePermission.removePermission( target, args[2] ) )
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.plvl.RemoveSinglePermission", target.Name, args[2]));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.plvl.RemoveSinglePermission", target.Name, args[2]));
 						else
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.plvl.NoPermissionForCommand", target.Name, args[2]));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.plvl.NoPermissionForCommand", target.Name, args[2]));
 
 						break;
 					}
@@ -137,9 +137,9 @@ namespace DOL.GS.Commands
                         }
 
                         if (SinglePermission.removePermissionAccount(target, args[2]))
-                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.plvl.RemoveSingleAccountPermission", target.Client.Account.Name, args[2]));
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.plvl.RemoveSingleAccountPermission", target.Client.Account.Name, args[2]));
                         else
-                            DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.plvl.NoPermissionForCommand", target.Client.Account.Name, args[2]));
+                            DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.plvl.NoPermissionForCommand", target.Client.Account.Name, args[2]));
 
                         break;
                     }
@@ -168,10 +168,10 @@ namespace DOL.GS.Commands
 						GameServer.Database.SaveObject(target.Client.Account);
 						client.Player.RefreshWorld();
 
-						target.Client.Out.SendMessage(LanguageMgr.GetTranslation(client, "AdminCommands.plvl.YourPlvlHasBeenSetted", plvl.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						target.Client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.plvl.YourPlvlHasBeenSetted", plvl.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 						if (target != client.Player)
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client, "AdminCommands.plvl.PlayerPlvlHasBeenSetted", target.Name, plvl.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.plvl.PlayerPlvlHasBeenSetted", target.Name, plvl.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 						break;
 					}

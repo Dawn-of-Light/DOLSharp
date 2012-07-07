@@ -35,7 +35,7 @@ namespace DOL.GS.Commands
 				if (client.Player.IsOnHorse)
 					client.Player.IsOnHorse = false;
 				else
-					DisplayMessage(client, (LanguageMgr.GetTranslation(client, "Scripts.Players.Dismount")));
+					DisplayMessage(client, (LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Dismount")));
 			}
 			else 
 				client.Player.DismountSteed(false);

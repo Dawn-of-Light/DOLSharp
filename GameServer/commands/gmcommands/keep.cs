@@ -102,7 +102,7 @@ namespace DOL.GS.Commands
 						#region DisplayTemplates
 						if (args.Length < 5)
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.FastCreate.TypeOfKeep"));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.FastCreate.TypeOfKeep"));
 							int i = 1;
 							foreach (string str in Enum.GetNames(typeof(eKeepTypes)))
 							{
@@ -1968,11 +1968,11 @@ namespace DOL.GS.Commands
 						foreach (GameKeepComponent comp in keep.KeepComponents)
 						{
 							if (comp.InternalID != null)
-								DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.FastCreate.CompCreated", comp.InternalID, comp.Keep.KeepID));
+								DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.FastCreate.CompCreated", comp.InternalID, comp.Keep.KeepID));
 
 							comp.Health = comp.MaxHealth;
 						}
-						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.FastCreate.KeepCreated"));
+						DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.FastCreate.KeepCreated"));
 
 						log.Debug("Keep creation: check of components complete");
 
@@ -2003,13 +2003,13 @@ namespace DOL.GS.Commands
 						int keepid = -1;
 						if (!int.TryParse(args[2], out keepid))
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.TowerCreate.InvalidKeepID"));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.TowerCreate.InvalidKeepID"));
 							return;
 						}
 
 						if (GameServer.KeepManager.GetKeepByID(keepid) != null)
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.TowerCreate.KeepIDExists", keepid));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.TowerCreate.KeepIDExists", keepid));
 							return;
 						}
 
@@ -2018,14 +2018,14 @@ namespace DOL.GS.Commands
 						// We must check that the client is not trying to create a tower with a lower KeepID
 						if ((keepid >> 8) == 0)
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.TowerCreate.WrongKeepID", keepid));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.TowerCreate.WrongKeepID", keepid));
 							return;
 						}
 
 						byte baseLevel = 50;
 						if (!byte.TryParse(args[3], out baseLevel))
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.TowerCreate.InvalidBaseLev"));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.TowerCreate.InvalidBaseLev"));
 							return;
 						}
 
@@ -2051,7 +2051,7 @@ namespace DOL.GS.Commands
 						GameKeepTower k = new GameKeepTower();
 						k.Load(keep);
 						new GameKeepComponent().LoadFromDatabase(towerComponent);
-						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.TowerCreate.CreatedSaved"));
+						DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.TowerCreate.CreatedSaved"));
 						//send the creation packets
 						foreach (GameClient c in WorldMgr.GetClientsOfRegion(client.Player.CurrentRegionID))
 						{
@@ -2089,7 +2089,7 @@ namespace DOL.GS.Commands
 
 						if (GameServer.KeepManager.GetKeepByID(keepid) != null)
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.TowerCreate.KeepIDExists", keepid));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.TowerCreate.KeepIDExists", keepid));
 							return;
 						}
 
@@ -2098,7 +2098,7 @@ namespace DOL.GS.Commands
 						// We must check that the client is not trying to create a keep with a higher KeepID
 						if ((keepid >> 8) != 0)
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.TowerCreate.WrongKeepID", keepid));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.TowerCreate.WrongKeepID", keepid));
 							return;
 						}
 
@@ -2174,7 +2174,7 @@ namespace DOL.GS.Commands
 							(door as GameObject).Delete();
 						}
 						client.Player.TempProperties.setProperty(TEMP_KEEP_LAST, k);
-						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.FastCreate.KeepCreated"));
+						DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.FastCreate.KeepCreated"));
 
 						//send the creation packets
 						foreach (GameClient c in WorldMgr.GetClientsOfRegion(client.Player.CurrentRegionID))
@@ -2205,13 +2205,13 @@ namespace DOL.GS.Commands
 
 						if (karea == null)
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.YourNotInAKeepArea"));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.Remove.YourNotInAKeepArea"));
 							return;
 						}
 
 						karea.Keep.Remove(karea);
 
-						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.KeepUnloaded"));
+						DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.Remove.KeepUnloaded"));
 						break;
 					}
 					#endregion Remove
@@ -2225,11 +2225,11 @@ namespace DOL.GS.Commands
 						}
 						if (myKeep == null)
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
 							return;
 						}
 						myKeep.Name = String.Join(" ", args, 2, args.Length - 2);
-						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.YouChangeKeepName", myKeep.Name));
+						DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.Remove.YouChangeKeepName", myKeep.Name));
 						break;
 					}
 					#endregion Name
@@ -2243,7 +2243,7 @@ namespace DOL.GS.Commands
 						}
 						if (myKeep == null)
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
 							return;
 						}
 						int keepid = 0;
@@ -2271,7 +2271,7 @@ namespace DOL.GS.Commands
 						}
 						if (myKeep == null)
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
 							return;
 						}
 						byte keepLevel = 0;
@@ -2285,7 +2285,7 @@ namespace DOL.GS.Commands
 							return;
 						}
 						myKeep.ChangeLevel(keepLevel);
-						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Level.YouChangeKeepLevel", keepLevel));
+						DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.Level.YouChangeKeepLevel", keepLevel));
 						break;
 					}
 					#endregion Level
@@ -2299,7 +2299,7 @@ namespace DOL.GS.Commands
 						}
 						if (myKeep == null)
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
 							return;
 						}
 						byte keepLevel = 0;
@@ -2314,7 +2314,7 @@ namespace DOL.GS.Commands
 						}
 						myKeep.DBKeep.BaseLevel = keepLevel;
 						myKeep.ChangeLevel(myKeep.Level);
-						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.BaseLevel.YouChangeBaseLev", keepLevel));
+						DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.BaseLevel.YouChangeBaseLev", keepLevel));
 
 						break;
 					}
@@ -2329,7 +2329,7 @@ namespace DOL.GS.Commands
 						}
 						if (myKeep == null)
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
 							return;
 						}
 						eRealm realm = eRealm.None;
@@ -2343,7 +2343,7 @@ namespace DOL.GS.Commands
 							return;
 						}
 						myKeep.Reset(realm);
-						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Realm.YouChangeKeepRealm", GlobalConstants.RealmToName(realm)));
+						DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.Realm.YouChangeKeepRealm", GlobalConstants.RealmToName(realm)));
 						break;
 					}
 					#endregion Realm
@@ -2357,7 +2357,7 @@ namespace DOL.GS.Commands
 						}
 						if (myKeep == null)
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
 							return;
 						}
 						int radius = 0;
@@ -2371,7 +2371,7 @@ namespace DOL.GS.Commands
 							return;
 						}
 						myKeep.Area.ChangeRadius(radius);
-						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Radius.YouChangeKeepRadius", radius));
+						DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.Radius.YouChangeKeepRadius", radius));
 						break;
 					}
 					#endregion Radius
@@ -2380,11 +2380,11 @@ namespace DOL.GS.Commands
 					{
 						if (myKeep == null)
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
 							return;
 						}
 						myKeep.SaveIntoDatabase();
-						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Save.KeepSavedInDatabase"));
+						DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.Save.KeepSavedInDatabase"));
 						break;
 					}
 					#endregion Save
@@ -2409,7 +2409,7 @@ namespace DOL.GS.Commands
 							stone.SaveIntoDatabase();
 							stone.AddToWorld();
 						}
-						DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.AddTeleport.StoneAdded"));
+						DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.AddTeleport.StoneAdded"));
 						break;
 					}
 					#endregion AddTeleport
@@ -2476,7 +2476,7 @@ namespace DOL.GS.Commands
 
 						if (myKeep == null)
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
 							return;
 						}
 
@@ -2557,7 +2557,7 @@ namespace DOL.GS.Commands
 					{
 						if (myKeep == null)
 						{
-							DisplayMessage(client, LanguageMgr.GetTranslation(client, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
 							return;
 						}
 

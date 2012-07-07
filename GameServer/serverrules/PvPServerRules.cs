@@ -507,12 +507,12 @@ namespace DOL.GS.ServerRules
 			//only show if there is a kill [by Suncheck]
 			if ((player.KillsAlbionPlayers + player.KillsMidgardPlayers + player.KillsHiberniaPlayers) > 0)
 			{
-				stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Kill.Title"));
-				if (player.KillsAlbionPlayers > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Kill.AlbionPlayer") + ": " + player.KillsAlbionPlayers.ToString("N0"));
-				if (player.KillsMidgardPlayers > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Kill.MidgardPlayer") + ": " + player.KillsMidgardPlayers.ToString("N0"));
-				if (player.KillsHiberniaPlayers > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Kill.HiberniaPlayer") + ": " + player.KillsHiberniaPlayers.ToString("N0"));
+				stat.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerStatistic.Kill.Title"));
+				if (player.KillsAlbionPlayers > 0) stat.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerStatistic.Kill.AlbionPlayer") + ": " + player.KillsAlbionPlayers.ToString("N0"));
+				if (player.KillsMidgardPlayers > 0) stat.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerStatistic.Kill.MidgardPlayer") + ": " + player.KillsMidgardPlayers.ToString("N0"));
+				if (player.KillsHiberniaPlayers > 0) stat.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerStatistic.Kill.HiberniaPlayer") + ": " + player.KillsHiberniaPlayers.ToString("N0"));
 				total = player.KillsMidgardPlayers + player.KillsAlbionPlayers + player.KillsHiberniaPlayers;
-				stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Kill.TotalPlayers") + ": " + total.ToString("N0"));
+				stat.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerStatistic.Kill.TotalPlayers") + ": " + total.ToString("N0"));
 			}
 			#endregion
 			stat.Add(" ");
@@ -521,11 +521,11 @@ namespace DOL.GS.ServerRules
 			if ((player.KillsAlbionDeathBlows + player.KillsMidgardDeathBlows + player.KillsHiberniaDeathBlows) > 0)
 			{
 				total = 0;
-				if (player.KillsAlbionDeathBlows > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Deathblows.AlbionPlayer") + ": " + player.KillsAlbionDeathBlows.ToString("N0"));
-				if (player.KillsMidgardDeathBlows > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Deathblows.MidgardPlayer") + ": " + player.KillsMidgardDeathBlows.ToString("N0"));
-				if (player.KillsHiberniaDeathBlows > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Deathblows.HiberniaPlayer") + ": " + player.KillsHiberniaDeathBlows.ToString("N0"));
+				if (player.KillsAlbionDeathBlows > 0) stat.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerStatistic.Deathblows.AlbionPlayer") + ": " + player.KillsAlbionDeathBlows.ToString("N0"));
+				if (player.KillsMidgardDeathBlows > 0) stat.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerStatistic.Deathblows.MidgardPlayer") + ": " + player.KillsMidgardDeathBlows.ToString("N0"));
+				if (player.KillsHiberniaDeathBlows > 0) stat.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerStatistic.Deathblows.HiberniaPlayer") + ": " + player.KillsHiberniaDeathBlows.ToString("N0"));
 				total = player.KillsMidgardDeathBlows + player.KillsAlbionDeathBlows + player.KillsHiberniaDeathBlows;
-				stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Deathblows.TotalPlayers") + ": " + total.ToString("N0"));
+				stat.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerStatistic.Deathblows.TotalPlayers") + ": " + total.ToString("N0"));
 			}
 			#endregion
 			stat.Add(" ");
@@ -534,11 +534,11 @@ namespace DOL.GS.ServerRules
 			if ((player.KillsAlbionSolo + player.KillsMidgardSolo + player.KillsHiberniaSolo) > 0)
 			{
 				total = 0;
-				if (player.KillsAlbionSolo > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Solo.AlbionPlayer") + ": " + player.KillsAlbionSolo.ToString("N0"));
-				if (player.KillsMidgardSolo > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Solo.MidgardPlayer") + ": " + player.KillsMidgardSolo.ToString("N0"));
-				if (player.KillsHiberniaSolo > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Solo.HiberniaPlayer") + ": " + player.KillsHiberniaSolo.ToString("N0"));
+				if (player.KillsAlbionSolo > 0) stat.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerStatistic.Solo.AlbionPlayer") + ": " + player.KillsAlbionSolo.ToString("N0"));
+				if (player.KillsMidgardSolo > 0) stat.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerStatistic.Solo.MidgardPlayer") + ": " + player.KillsMidgardSolo.ToString("N0"));
+				if (player.KillsHiberniaSolo > 0) stat.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerStatistic.Solo.HiberniaPlayer") + ": " + player.KillsHiberniaSolo.ToString("N0"));
 				total = player.KillsMidgardSolo + player.KillsAlbionSolo + player.KillsHiberniaSolo;
-				stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Solo.TotalPlayers") + ": " + total.ToString("N0"));
+				stat.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerStatistic.Solo.TotalPlayers") + ": " + total.ToString("N0"));
 			}
 			#endregion
 			stat.Add(" ");
@@ -546,17 +546,17 @@ namespace DOL.GS.ServerRules
 			//only show if there is a capture [by Suncheck]
 			if ((player.CapturedKeeps + player.CapturedTowers) > 0)
 			{
-				stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Capture.Title"));
+				stat.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerStatistic.Capture.Title"));
 				//stat.Add("Relics Taken: " + player.RelicsTaken.ToString("N0"));
 				//stat.Add("Albion Keeps Captured: " + player.CapturedAlbionKeeps.ToString("N0"));
 				//stat.Add("Midgard Keeps Captured: " + player.CapturedMidgardKeeps.ToString("N0"));
 				//stat.Add("Hibernia Keeps Captured: " + player.CapturedHiberniaKeeps.ToString("N0"));
-				if (player.CapturedKeeps > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Capture.Keeps") + ": " + player.CapturedKeeps.ToString("N0"));
+				if (player.CapturedKeeps > 0) stat.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerStatistic.Capture.Keeps") + ": " + player.CapturedKeeps.ToString("N0"));
 				//stat.Add("Keep Lords Slain: " + player.KeepLordsSlain.ToString("N0"));
 				//stat.Add("Albion Towers Captured: " + player.CapturedAlbionTowers.ToString("N0"));
 				//stat.Add("Midgard Towers Captured: " + player.CapturedMidgardTowers.ToString("N0"));
 				//stat.Add("Hibernia Towers Captured: " + player.CapturedHiberniaTowers.ToString("N0"));
-				if (player.CapturedTowers > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.Capture.Towers") + ": " + player.CapturedTowers.ToString("N0"));
+				if (player.CapturedTowers > 0) stat.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerStatistic.Capture.Towers") + ": " + player.CapturedTowers.ToString("N0"));
 				//stat.Add("Tower Captains Slain: " + player.TowerCaptainsSlain.ToString("N0"));
 				//stat.Add("Realm Guard Kills Albion: " + player.RealmGuardTotalKills.ToString("N0"));
 				//stat.Add("Realm Guard Kills Midgard: " + player.RealmGuardTotalKills.ToString("N0"));
@@ -569,10 +569,10 @@ namespace DOL.GS.ServerRules
 			//only show if there is a kill [by Suncheck]
 			if ((player.KillsDragon + player.KillsEpicBoss + player.KillsLegion) > 0)
 			{
-				stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.PvE.Title"));
-				if (player.KillsDragon > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.PvE.KillsDragon") + ": " + player.KillsDragon.ToString("N0"));
-				if (player.KillsEpicBoss > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.PvE.KillsEpic") + ": " + player.KillsEpicBoss.ToString("N0"));
-				if (player.KillsLegion > 0) stat.Add(LanguageMgr.GetTranslation(player.Client, "PlayerStatistic.PvE.KillsLegion") + ": " + player.KillsLegion.ToString("N0"));
+				stat.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerStatistic.PvE.Title"));
+				if (player.KillsDragon > 0) stat.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerStatistic.PvE.KillsDragon") + ": " + player.KillsDragon.ToString("N0"));
+				if (player.KillsEpicBoss > 0) stat.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerStatistic.PvE.KillsEpic") + ": " + player.KillsEpicBoss.ToString("N0"));
+				if (player.KillsLegion > 0) stat.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerStatistic.PvE.KillsLegion") + ": " + player.KillsLegion.ToString("N0"));
 			}
 			#endregion
 

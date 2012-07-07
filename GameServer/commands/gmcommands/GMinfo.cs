@@ -594,52 +594,52 @@ namespace DOL.GS.Commands
 					TimeSpan due = (house.LastPaid.AddDays(ServerProperties.Properties.RENT_DUE_DAYS).AddHours(1) - DateTime.Now);
 					
 					info.Add("  ------- HOUSE ------\n");
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.Owner", name));
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.Lotnum", house.HouseNumber));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.Owner", name));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.Lotnum", house.HouseNumber));
 					info.Add("Unique ID: "+house.UniqueID);
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.Level", level));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.Level", level));
 					info.Add(" ");
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.Porch"));
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.PorchEnabled", (house.Porch ? " Present" : " Not Present")));
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.PorchRoofColor",  Color(house.PorchRoofColor)));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.Porch"));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.PorchEnabled", (house.Porch ? " Present" : " Not Present")));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.PorchRoofColor",  Color(house.PorchRoofColor)));
 					info.Add(" ");
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.ExteriorMaterials"));
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.RoofMaterial", MaterialWall(house.RoofMaterial)));
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.WallMaterial", MaterialWall(house.WallMaterial)));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.ExteriorMaterials"));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.RoofMaterial", MaterialWall(house.RoofMaterial)));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.WallMaterial", MaterialWall(house.WallMaterial)));
 					
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.DoorMaterial", MaterialDoor(house.DoorMaterial)));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.DoorMaterial", MaterialDoor(house.DoorMaterial)));
 					
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.TrussMaterial", MaterialTruss(house.TrussMaterial)));
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.PorchMaterial", MaterialTruss(house.PorchMaterial)));
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.WindowMaterial", MaterialTruss(house.WindowMaterial)));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.TrussMaterial", MaterialTruss(house.TrussMaterial)));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.PorchMaterial", MaterialTruss(house.PorchMaterial)));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.WindowMaterial", MaterialTruss(house.WindowMaterial)));
 					
 					info.Add(" ");
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.ExteriorUpgrades"));
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.OutdoorGuildBanner", ((house.OutdoorGuildBanner) ? " Present" : " Not Present")));
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.OutdoorGuildShield", ((house.OutdoorGuildShield) ? " Present" : " Not Present")));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.ExteriorUpgrades"));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.OutdoorGuildBanner", ((house.OutdoorGuildBanner) ? " Present" : " Not Present")));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.OutdoorGuildShield", ((house.OutdoorGuildShield) ? " Present" : " Not Present")));
 					info.Add(" ");
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.InteriorUpgrades"));
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.IndoorGuildBanner", ((house.IndoorGuildBanner) ? " Present" : " Not Present")));
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.IndoorGuildShield",((house.IndoorGuildShield) ? " Present" : " Not Present")));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.InteriorUpgrades"));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.IndoorGuildBanner", ((house.IndoorGuildBanner) ? " Present" : " Not Present")));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.IndoorGuildShield",((house.IndoorGuildShield) ? " Present" : " Not Present")));
 					info.Add(" ");
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.InteriorCarpets"));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.InteriorCarpets"));
 					if (house.Rug1Color != 0)
-						info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.Rug1Color", Color(house.Rug1Color)));
+						info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.Rug1Color", Color(house.Rug1Color)));
 					if (house.Rug2Color != 0)
-						info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.Rug2Color", Color(house.Rug2Color)));
+						info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.Rug2Color", Color(house.Rug2Color)));
 					if (house.Rug3Color != 0)
-						info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.Rug3Color", Color(house.Rug3Color)));
+						info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.Rug3Color", Color(house.Rug3Color)));
 					if (house.Rug4Color != 0)
-						info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.Rug4Color", Color(house.Rug4Color)));
+						info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.Rug4Color", Color(house.Rug4Color)));
 					info.Add(" ");
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.Lockbox", Money.GetString(house.KeptMoney)));
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.RentalPrice", Money.GetString(HouseMgr.GetRentByModel(house.Model))));
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.MaxLockbox", Money.GetString(HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS)));
-					info.Add(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.RentDueIn", due.Days, due.Hours));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.Lockbox", Money.GetString(house.KeptMoney)));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.RentalPrice", Money.GetString(HouseMgr.GetRentByModel(house.Model))));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.MaxLockbox", Money.GetString(HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS)));
+					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.RentDueIn", due.Days, due.Hours));
 
 					#endregion House
 
-					client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client, "House.SendHouseInfo.HouseOwner", name), info);
+					client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.HouseOwner", name), info);
 				}
 				else // No target and not in a house
 				{
