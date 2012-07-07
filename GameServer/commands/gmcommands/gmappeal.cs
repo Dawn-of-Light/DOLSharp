@@ -50,7 +50,7 @@ namespace DOL.GS.Commands
         {
             if (ServerProperties.Properties.DISABLE_APPEALSYSTEM)
             {
-                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.SystemDisabled"));
+                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.SystemDisabled"));
                 return;
             }
 
@@ -77,7 +77,7 @@ namespace DOL.GS.Commands
                         switch (result)
                         {
                             case 2: // name not unique
-                                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NameNotUnique"));
+                                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.NameNotUnique"));
                                 return;
                             case 3: // exact match
                             case 4: // guessed name
@@ -88,7 +88,7 @@ namespace DOL.GS.Commands
                         {
 
                             // nothing found
-                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.PlayerNotFound", targetName));
+                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.PlayerNotFound", targetName));
                             return;
                         }
 
@@ -98,7 +98,7 @@ namespace DOL.GS.Commands
                             if (appeal.Status != "Being Helped")
                             {
                                 AppealMgr.ChangeStatus(client.Player.Name, targetClient.Player, appeal, "Being Helped");
-                                string message = LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.RandMessage" + Util.Random(4), targetClient.Player.Name);
+                                string message = LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.RandMessage" + Util.Random(4), targetClient.Player.Name);
                                 client.Player.TempProperties.setProperty("AppealAssist", targetClient.Player);
                                 client.Player.SendPrivateMessage(targetClient.Player, message);
                                 targetClient.Out.SendPlaySound(eSoundType.Craft, 0x04);
@@ -106,11 +106,11 @@ namespace DOL.GS.Commands
                             }
                             else
                             {
-                                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.BeingHelped"));
+                                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.BeingHelped"));
                                 break;
                             }
                         }
-                        AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.DoesntHaveAppeal"));
+                        AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.DoesntHaveAppeal"));
                         break;
                     }
                 #endregion gmappeal assist
@@ -130,7 +130,7 @@ namespace DOL.GS.Commands
                         {
 
                             case 2: // name not unique
-                                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NameNotUnique"));
+                                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.NameNotUnique"));
                                 return;
                             case 3: // exact match
                             case 4: // guessed name
@@ -140,7 +140,7 @@ namespace DOL.GS.Commands
                         {
 
                             // nothing found
-                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.PlayerNotFound", targetName));
+                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.PlayerNotFound", targetName));
                             return;
                         }
                         DBAppeal appeal = AppealMgr.GetAppealByPlayerName(targetClient.Player.Name);
@@ -155,7 +155,7 @@ namespace DOL.GS.Commands
                             client.Out.SendCustomTextWindow("Viewing " + appeal.Name + "'s Appeal", msg);
                             return;
                         }
-                        AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.DoesntHaveAppeal"));
+                        AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.DoesntHaveAppeal"));
                         break;
                     }
                 #endregion gmappeal view
@@ -173,7 +173,7 @@ namespace DOL.GS.Commands
                         switch (result)
                         {
                             case 2: // name not unique
-                                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NameNotUnique"));
+                                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.NameNotUnique"));
                                 return;
                             case 3: // exact match
                             case 4: // guessed name
@@ -184,7 +184,7 @@ namespace DOL.GS.Commands
                         {
 
                             // nothing found
-                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.PlayerNotFound", targetName));
+                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.PlayerNotFound", targetName));
                             return;
                         }
 
@@ -199,11 +199,11 @@ namespace DOL.GS.Commands
                             }
                             else
                             {
-                                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NotBeingHelped"));
+                                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.NotBeingHelped"));
                                 return;
                             }
                         }
-                        AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.DoesntHaveAppeal"));
+                        AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.DoesntHaveAppeal"));
                         return;
                     }
                 #endregion gmappeal release
@@ -233,7 +233,7 @@ namespace DOL.GS.Commands
 
                         if (appeallist.Count < 1 || appeallist == null)
                         {
-                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NoAppealsinQueue"));
+                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.NoAppealsinQueue"));
                             return;
                         }
 
@@ -256,7 +256,7 @@ namespace DOL.GS.Commands
                             }
                         }
                         int total = appeallist.Count;
-                        msg.Add(LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.CurrentStaffAvailable", AppealMgr.StaffList.Count, total) + "\n");
+                        msg.Add(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.CurrentStaffAvailable", AppealMgr.StaffList.Count, total) + "\n");
                         msg.Add("Appeals ordered by severity: ");
                         msg.Add("Critical:" + crit + ", High:" + high + " Med:" + med + ", Low:" + low + ".\n");
                         if (crit > 0)
@@ -322,7 +322,7 @@ namespace DOL.GS.Commands
                         switch (result)
                         {
                             case 2: // name not unique
-                                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NameNotUnique"));
+                                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.NameNotUnique"));
                                 return;
                             case 3: // exact match
                             case 4: // guessed name
@@ -333,14 +333,14 @@ namespace DOL.GS.Commands
                         {
 
                             // nothing found
-                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.PlayerNotFound", targetName));
+                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.PlayerNotFound", targetName));
                             return;
                         }
 
                         DBAppeal appeal = AppealMgr.GetAppealByPlayerName(targetClient.Player.Name);
                         if (appeal == null)
                         {
-                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.DoesntHaveAppeal"));
+                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.DoesntHaveAppeal"));
                             return;
                         }
                         AppealMgr.CloseAppeal(client.Player.Name, targetClient.Player, appeal);
@@ -361,7 +361,7 @@ namespace DOL.GS.Commands
                         DBAppeal appeal = AppealMgr.GetAppealByPlayerName(targetName);
                         if (appeal == null)
                         {
-                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.CantFindAppeal"));
+                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.CantFindAppeal"));
                             return;
                         }
                         AppealMgr.CloseAppeal(client.Player.Name, appeal);
@@ -373,7 +373,7 @@ namespace DOL.GS.Commands
                         switch (resultTwo)
                         {
                             case 2: // name not unique
-                                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NameNotUnique"));
+                                AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.NameNotUnique"));
                                 return;
                             case 3: // exact match
                             case 4: // guessed name
@@ -388,7 +388,7 @@ namespace DOL.GS.Commands
                         else
                         {
                             //cleaning up the player since he really was online.
-                            AppealMgr.MessageToClient(targetClient, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.StaffClosedYourAppeal", client.Player.Name));
+                            AppealMgr.MessageToClient(targetClient, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.StaffClosedYourAppeal", client.Player.Name));
                             targetClient.Out.SendPlaySound(eSoundType.Craft, 0x02);
                             targetClient.Player.TempProperties.setProperty("HasPendingAppeal", false);
                         }
@@ -412,7 +412,7 @@ namespace DOL.GS.Commands
                         }
                         catch
                         {
-                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.MustBeAssisting"));
+                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.MustBeAssisting"));
                             break;
                         }
                     }
@@ -428,7 +428,7 @@ namespace DOL.GS.Commands
                         }
                         else
                         {
-                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NoLocationToJump"));
+                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.NoLocationToJump"));
                         }
                         break;
                     }
@@ -441,15 +441,15 @@ namespace DOL.GS.Commands
                         if (mute == false)
                         {
                             client.Player.TempProperties.setProperty("AppealMute", true);
-                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NoLongerReceiveMsg"));
-                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.UseCmdTurnBackOn"));
+                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.NoLongerReceiveMsg"));
+                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.UseCmdTurnBackOn"));
                             AppealMgr.StaffList.Remove(client.Player);
                         }
                         else
                         {
                             client.Player.TempProperties.setProperty("AppealMute", false);
-                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.NowReceiveMsg"));
-                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Appeal.UseCmdTurnBackOff"));
+                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.NowReceiveMsg"));
+                            AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.UseCmdTurnBackOff"));
                             AppealMgr.StaffList.Add(client.Player);
                         }
 

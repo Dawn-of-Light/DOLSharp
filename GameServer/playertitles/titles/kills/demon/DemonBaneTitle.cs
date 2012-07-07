@@ -41,7 +41,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title description.</returns>
 		public override string GetDescription(GamePlayer player)
 		{
-			return LanguageMgr.GetTranslation(player.Client, "Titles.Kills.Demon.DemonBane");
+			return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Kills.Demon.DemonBane");
 		}
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title value.</returns>
 		public override string GetValue(GamePlayer player)
 		{
-			return LanguageMgr.GetTranslation(player.Client, "Titles.Kills.Demon.DemonBane");
+			return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Kills.Demon.DemonBane");
 		}
 
 

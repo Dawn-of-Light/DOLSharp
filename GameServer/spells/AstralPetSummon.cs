@@ -35,8 +35,8 @@ namespace DOL.GS.Spells
    [SpellHandler("AstralPetSummon")]
     public class AstralPetSummon : SummonSpellHandler
     {
-    	#warning Graveen: Not implemented property - can be interesting
-    	/*
+    	//Graveen: Not implemented property - can be interesting
+        /* 
         public bool Controllable
         {
             get { return false; }

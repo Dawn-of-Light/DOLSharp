@@ -50,14 +50,14 @@ namespace DOL.GS.Trainer
 			// check if class matches.
 			if (player.CharacterClass.ID == (int)TrainedClass)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "ValkyrieTrainer.Interact.Text2", this.Name), eChatType.CT_System, eChatLoc.CL_ChatWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "ValkyrieTrainer.Interact.Text2", this.Name), eChatType.CT_System, eChatLoc.CL_ChatWindow);
 			}
 			else
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "ValkyrieTrainer.Interact.Text1", this.Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "ValkyrieTrainer.Interact.Text1", this.Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 					if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);
@@ -95,12 +95,12 @@ namespace DOL.GS.Trainer
 
 			String lowerCase = text.ToLower();
 
-			if (lowerCase == LanguageMgr.GetTranslation(player.Client, "ValkyrieTrainer.WhisperReceiveCase.Text1"))
+			if (lowerCase == LanguageMgr.GetTranslation(player.Client.Account.Language, "ValkyrieTrainer.WhisperReceiveCase.Text1"))
 			{
 				// promote player to other class
 				if (CanPromotePlayer(player))
 				{
-					PromotePlayer(player, (int)eCharacterClass.Valkyrie, LanguageMgr.GetTranslation(player.Client, "ValkyrieTrainer.WhisperReceive.Text1"), null);
+					PromotePlayer(player, (int)eCharacterClass.Valkyrie, LanguageMgr.GetTranslation(player.Client.Account.Language, "ValkyrieTrainer.WhisperReceive.Text1"), null);
 
 					CheckAbilityToUseItem(player);
 				}
@@ -108,15 +108,15 @@ namespace DOL.GS.Trainer
 			else if ((player.Inventory.GetFirstItemByID(WEAPON_ID1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null) &&
 			         (player.Inventory.GetFirstItemByID(WEAPON_ID2, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null))
 			{
-				if (lowerCase == LanguageMgr.GetTranslation(player.Client, "ValkyrieTrainer.WhisperReceiveCase.Text2"))
+				if (lowerCase == LanguageMgr.GetTranslation(player.Client.Account.Language, "ValkyrieTrainer.WhisperReceiveCase.Text2"))
 				{
 					player.ReceiveItem(this, WEAPON_ID1);
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "ValkyrieTrainer.WhisperReceive.Text2"), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "ValkyrieTrainer.WhisperReceive.Text2"), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 				}
-				else if (lowerCase == LanguageMgr.GetTranslation(player.Client, "ValkyrieTrainer.WhisperReceiveCase.Text3"))
+				else if (lowerCase == LanguageMgr.GetTranslation(player.Client.Account.Language, "ValkyrieTrainer.WhisperReceiveCase.Text3"))
 				{
 					player.ReceiveItem(this, WEAPON_ID2);
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "ValkyrieTrainer.WhisperReceive.Text2"), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "ValkyrieTrainer.WhisperReceive.Text2"), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 				}
 			}
 			return true;

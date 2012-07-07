@@ -33,12 +33,12 @@ namespace DOL.GS.SkillHandler
 		{
 			if (player.ActiveWeaponSlot != GameLiving.eActiveWeaponSlot.Distance)
 			{
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUse.CriticalShot.NoRangedWeapons"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.CannotUse.CriticalShot.NoRangedWeapons"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                 return;
 			}
 			if (player.IsSitting)
 			{
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CannotUse.CriticalShot.MustBeStanding"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.CannotUse.CriticalShot.MustBeStanding"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
                 return;
 			}
 
@@ -60,12 +60,12 @@ namespace DOL.GS.SkillHandler
 			{
 				if (player.RangedAttackType == GameLiving.eRangedAttackType.Critical)
 				{
-                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CriticalShot.SwitchToRegular"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.CriticalShot.SwitchToRegular"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					player.RangedAttackType = GameLiving.eRangedAttackType.Normal;
 				}
 				else
 				{
-                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Skill.Ability.CriticalShot.AlreadyFiring"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.CriticalShot.AlreadyFiring"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
 				return;
 			}

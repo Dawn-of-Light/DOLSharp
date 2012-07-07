@@ -55,7 +55,7 @@ namespace DOL.GS.Commands
 			if (isCommand)
 			{
                 String[] commandList = GetCommandList(privilegeLevel);
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Cmdhelp.PlvlCommands", privilegeLevel.ToString()));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Cmdhelp.PlvlCommands", privilegeLevel.ToString()));
 
                 foreach (String command in commandList)
 					DisplayMessage(client, command);
@@ -70,10 +70,10 @@ namespace DOL.GS.Commands
 				ScriptMgr.GameCommand gameCommand = ScriptMgr.GetCommand(command);
 
 				if (gameCommand == null)
-                    DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Cmdhelp.NoCommand", command));
+                    DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Cmdhelp.NoCommand", command));
                 else
 				{
-					DisplayMessage(client, LanguageMgr.GetTranslation(client, "Scripts.Players.Cmdhelp.Usage", command));
+					DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Cmdhelp.Usage", command));
 
 					foreach (String usage in gameCommand.Usage)
 						DisplayMessage(client, usage);

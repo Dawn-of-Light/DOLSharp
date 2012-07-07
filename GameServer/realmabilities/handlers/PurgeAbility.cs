@@ -112,7 +112,7 @@ namespace DOL.GS.RealmAbilities
                 }
                 if (removed)
                 {
-                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PurgeAbility.RemoveNegativeEffects.FallFromYou"), eChatType.CT_Advise, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "PurgeAbility.RemoveNegativeEffects.FallFromYou"), eChatType.CT_Advise, eChatLoc.CL_SystemWindow);
                 }
                 else
                 {
@@ -153,7 +153,7 @@ namespace DOL.GS.RealmAbilities
                     GamePlayer player = m_caster as GamePlayer;
                     if (player != null)
                     {
-                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "PurgeAbility.OnTick.PurgeActivate", counter), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "PurgeAbility.OnTick.PurgeActivate", counter), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     }
                     counter--;
                     return;

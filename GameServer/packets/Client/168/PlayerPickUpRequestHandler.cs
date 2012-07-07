@@ -38,12 +38,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			GameObject target = client.Player.TargetObject;
 			if (target == null)
 			{
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPickUpRequestHandler.HandlePacket.Target"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "PlayerPickUpRequestHandler.HandlePacket.Target"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			if (target.ObjectState != GameObject.eObjectState.Active)
 			{
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "PlayerPickUpRequestHandler.HandlePacket.InvalidTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "PlayerPickUpRequestHandler.HandlePacket.InvalidTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			

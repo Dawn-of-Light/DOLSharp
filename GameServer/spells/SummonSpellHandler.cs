@@ -59,7 +59,7 @@ namespace DOL.GS.Spells
 			foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 			{
 				if (player != m_caster)
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObject.Casting.CastsASpell", m_caster.GetName(0, true)), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObject.Casting.CastsASpell", m_caster.GetName(0, true)), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 			}
 
 			m_caster.Mana -= PowerCost(target);

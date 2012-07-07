@@ -37,7 +37,7 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(GamePlayer player, int level)
 		{
-			return LanguageMgr.GetTranslation(player.Client, "PlayerClass.GetTitle.none");
+			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
 		public override eClassType ClassType

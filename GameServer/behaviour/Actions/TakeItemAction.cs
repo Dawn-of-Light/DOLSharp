@@ -123,11 +123,11 @@ namespace DOL.GS.Behaviour.Actions
 
                 if (NPC != null)
                 {
-                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Behaviour.TakeItemAction.YouGiveItemToNPC", itemToRemove.Name, NPC.GetName(0, false)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Behaviour.TakeItemAction.YouGiveItemToNPC", itemToRemove.Name, NPC.GetName(0, false)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
                 }
                 else
                 {
-                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Behaviour.TakeItemAction.YouGiveItem", itemToRemove.Name), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Behaviour.TakeItemAction.YouGiveItem", itemToRemove.Name), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
                 }
             }
         }

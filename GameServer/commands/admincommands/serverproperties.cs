@@ -33,11 +33,11 @@ namespace DOL.GS.Commands
 		{
 			if (GameServer.Instance.Configuration.DBType == DOL.Database.Connection.ConnectionType.DATABASE_XML)
 			{
-				DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.ServerProperties.DataBaseXML"));
+				DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.ServerProperties.DataBaseXML"));
 				return;
 			}
 			ServerProperties.Properties.Refresh();
-			DisplayMessage(client, LanguageMgr.GetTranslation(client, "AdminCommands.ServerProperties.PropertiesRefreshed"));
+			DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.ServerProperties.PropertiesRefreshed"));
 		}
 	}
 }

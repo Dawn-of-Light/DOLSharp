@@ -66,7 +66,7 @@ namespace DOL.GS.Spells
 			
 			if (player.InCombat || GameRelic.IsPlayerCarryingRelic(player))
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GamePlayer.UseSlot.CantUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.UseSlot.CantUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			

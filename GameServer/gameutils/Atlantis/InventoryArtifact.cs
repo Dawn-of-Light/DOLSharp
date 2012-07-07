@@ -457,30 +457,30 @@ namespace DOL.GS
 
 			if (itemDPS != 0)
 			{
-				delve.Add(LanguageMgr.GetTranslation(player.Client,
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language,
 				                                     "DetailDisplayHandler.WriteClassicWeaponInfos.BaseDPS", itemDPS.ToString("0.0")));
-				delve.Add(LanguageMgr.GetTranslation(player.Client,
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language,
 				                                     "DetailDisplayHandler.WriteClassicWeaponInfos.ClampDPS", clampedDPS.ToString("0.0")));
 			}
 
 			if (SPD_ABS >= 0)
-				delve.Add(LanguageMgr.GetTranslation(player.Client,
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language,
 				                                     "DetailDisplayHandler.WriteClassicWeaponInfos.SPD", itemSPD.ToString("0.0")));
 
 			if (Quality != 0)
-				delve.Add(LanguageMgr.GetTranslation(player.Client,
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language,
 				                                     "DetailDisplayHandler.WriteClassicWeaponInfos.Quality", Quality));
 
 			if (Condition != 0)
-				delve.Add(LanguageMgr.GetTranslation(player.Client,
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language,
 				                                     "DetailDisplayHandler.WriteClassicWeaponInfos.Condition", ConditionPercent));
 
-			delve.Add(LanguageMgr.GetTranslation(player.Client,
+			delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language,
 			                                     "DetailDisplayHandler.WriteClassicWeaponInfos.DamageType",
 			                                     (Type_Damage == 0 ? "None" : GlobalConstants.WeaponDamageTypeToName(Type_Damage))));
 			delve.Add(" ");
 
-			delve.Add(LanguageMgr.GetTranslation(player.Client,
+			delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language,
 			                                     "DetailDisplayHandler.WriteClassicWeaponInfos.EffDamage"));
 			
 			if (itemDPS != 0)
@@ -494,7 +494,7 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		protected override void DelveArmorStats(List<String> delve, GamePlayer player)
 		{
-			delve.Add(LanguageMgr.GetTranslation(player.Client, "DetailDisplayHandler.WriteClassicArmorInfos.ArmorMod"));
+			delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.WriteClassicArmorInfos.ArmorMod"));
 
 			double af = 0;
 			int afCap = player.Level;
@@ -502,7 +502,7 @@ namespace DOL.GS
 
 			if (DPS_AF != 0)
 			{
-				delve.Add(LanguageMgr.GetTranslation(player.Client,
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language,
 				                                     "DetailDisplayHandler.WriteClassicArmorInfos.BaseFactor", DPS_AF));
 
 				if (Object_Type != (int)eObjectType.Cloth)
@@ -510,30 +510,30 @@ namespace DOL.GS
 
 				af = Math.Min(afCap, DPS_AF);
 
-				delve.Add(LanguageMgr.GetTranslation(player.Client,
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language,
 				                                     "DetailDisplayHandler.WriteClassicArmorInfos.ClampFact", (int)af));
 			}
 
 			if (SPD_ABS >= 0)
-				delve.Add(LanguageMgr.GetTranslation(player.Client,
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language,
 				                                     "DetailDisplayHandler.WriteClassicArmorInfos.Absorption", SPD_ABS));
 
 			if (Quality != 0)
-				delve.Add(LanguageMgr.GetTranslation(player.Client,
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language,
 				                                     "DetailDisplayHandler.WriteClassicArmorInfos.Quality", Quality));
 
 			if (Condition != 0)
-				delve.Add(LanguageMgr.GetTranslation(player.Client,
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language,
 				                                     "DetailDisplayHandler.WriteClassicArmorInfos.Condition", ConditionPercent));
 
 			delve.Add(" ");
-			delve.Add(LanguageMgr.GetTranslation(player.Client,
+			delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language,
 			                                     "DetailDisplayHandler.WriteClassicArmorInfos.EffArmor"));
 
 			if (DPS_AF != 0)
 			{
 				effectiveAF = af * Quality / 100.0 * Condition / MaxCondition * (1 + SPD_ABS / 100.0);
-				delve.Add(LanguageMgr.GetTranslation(player.Client,
+				delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language,
 				                                     "DetailDisplayHandler.WriteClassicArmorInfos.Factor", (int)effectiveAF));
 			}
 		}

@@ -43,7 +43,7 @@ namespace DOL.GS
 		public override IList GetExamineMessages(GamePlayer player)
 		{
 			IList list = new ArrayList();
-			list.Add(LanguageMgr.GetTranslation(player.Client, "Scripts.Recharger.GetExamineMessages", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.GetExamineMessages", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
 			return list;
 		}
 
@@ -53,7 +53,7 @@ namespace DOL.GS
 				return false;
 
 			TurnTo(player.X, player.Y);
-			SayTo(player, eChatLoc.CL_ChatWindow, LanguageMgr.GetTranslation(player.Client, "Scripts.Recharger.Interact"));
+			SayTo(player, eChatLoc.CL_ChatWindow, LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.Interact"));
 			return true;
 		}
 
@@ -69,7 +69,7 @@ namespace DOL.GS
 
 			if (item.Count != 1)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Recharger.ReceiveItem.StackedObjects", GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.ReceiveItem.StackedObjects", GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
@@ -77,12 +77,12 @@ namespace DOL.GS
 				(item.Object_Type == (int)eObjectType.Poison) ||
 				(item.Object_Type == (int)eObjectType.Magical && (item.Item_Type == 40 || item.Item_Type == 41)))
 			{
-				SayTo(player, LanguageMgr.GetTranslation(player.Client, "Scripts.Recharger.ReceiveItem.CantThat"));
+				SayTo(player, LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.ReceiveItem.CantThat"));
 				return false;
 			}
 			if(item.Charges == item.MaxCharges && item.Charges1 == item.MaxCharges1)
 			{
-				SayTo(player, LanguageMgr.GetTranslation(player.Client, "Scripts.Recharger.ReceiveItem.FullyCharged"));
+				SayTo(player, LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.ReceiveItem.FullyCharged"));
 				return false;
 			}
 
@@ -99,7 +99,7 @@ namespace DOL.GS
 			}
 			if(NeededMoney > 0)
 			{
-				player.Client.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client, "Scripts.Recharger.ReceiveItem.Cost", Money.GetString(NeededMoney)), new CustomDialogResponse(RechargerDialogResponse));
+				player.Client.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.ReceiveItem.Cost", Money.GetString(NeededMoney)), new CustomDialogResponse(RechargerDialogResponse));
 				return true;
 			}
 			return false;
@@ -119,13 +119,13 @@ namespace DOL.GS
 			if (item == null || item.SlotPosition == (int) eInventorySlot.Ground
 				|| item.OwnerID == null || item.OwnerID != player.InternalID)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Recharger.RechargerDialogResponse.InvalidItem"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.RechargerDialogResponse.InvalidItem"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			if (response != 0x01)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Recharger.RechargerDialogResponse.Decline", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.RechargerDialogResponse.Decline", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -142,17 +142,17 @@ namespace DOL.GS
 
 			if(!player.RemoveMoney(cost))
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Recharger.RechargerDialogResponse.NotMoney"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.RechargerDialogResponse.NotMoney"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
             InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, cost);
 
-			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Scripts.Recharger.RechargerDialogResponse.GiveMoney", GetName(0, false), Money.GetString((long)cost)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.RechargerDialogResponse.GiveMoney", GetName(0, false), Money.GetString((long)cost)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			item.Charges = item.MaxCharges;
 			item.Charges1 = item.MaxCharges1;
 
 			player.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
-			SayTo(player, LanguageMgr.GetTranslation(player.Client, "Scripts.Recharger.RechargerDialogResponse.FullyCharged"));
+			SayTo(player, LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.RechargerDialogResponse.FullyCharged"));
 			return;
 		}
 

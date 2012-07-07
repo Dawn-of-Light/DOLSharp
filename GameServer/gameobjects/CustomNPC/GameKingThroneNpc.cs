@@ -41,7 +41,7 @@ namespace DOL.GS
 			TurnTo(player, 5000);
 			if (!player.Champion && player.Level == 50)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "KingNPC.WhisperReceive.AskForChampion"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "KingNPC.WhisperReceive.AskForChampion"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 			}
 
 			if (player.Champion)
@@ -81,7 +81,7 @@ namespace DOL.GS
 			{
 				if (player.Champion == true)
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "KingNPC.WhisperReceive.AlreadyChampion"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "KingNPC.WhisperReceive.AlreadyChampion"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					return false;
 				}
 
@@ -89,7 +89,7 @@ namespace DOL.GS
 				player.Champion = true;
 				player.Out.SendUpdatePlayer();
 				player.SaveIntoDatabase();
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "KingNPC.WhisperReceive.IsNowChampion"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "KingNPC.WhisperReceive.IsNowChampion"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				return true;
 			}
 
@@ -161,7 +161,7 @@ namespace DOL.GS
 							player.Inventory.RemoveCountFromStack(item, 1);
                             InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Other, item.Template);
 							player.RespecAmountChampionSkill++;
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "CLWeaponNPC.ReceiveItem.RespecCL"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "CLWeaponNPC.ReceiveItem.RespecCL"), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							return true;
 						}
 				}

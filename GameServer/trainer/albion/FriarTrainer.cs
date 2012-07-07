@@ -53,20 +53,20 @@ namespace DOL.GS.Trainer
 			// check if class matches.
 			if (player.CharacterClass.ID == (int)TrainedClass)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "FriarTrainer.Interact.Text2", this.Name), eChatType.CT_System, eChatLoc.CL_ChatWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "FriarTrainer.Interact.Text2", this.Name), eChatType.CT_System, eChatLoc.CL_ChatWindow);
 
 				if (player.Level >= 10 && player.Level < 15)
 				{
 					if (player.Inventory.GetFirstItemByID(ARMOR_ID3, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
 					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "FriarTrainer.Interact.Text4", this.Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "FriarTrainer.Interact.Text4", this.Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 						addGift(ARMOR_ID3, player);
 					}
 					if (player.Inventory.GetFirstItemByID(ARMOR_ID1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null)
 					{}
 					else
 					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "FriarTrainer.Interact.Text3", this.Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "FriarTrainer.Interact.Text3", this.Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 					}
 				}
 			}
@@ -75,7 +75,7 @@ namespace DOL.GS.Trainer
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "FriarTrainer.Interact.Text1", this.Name, player.CharacterClass.Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "FriarTrainer.Interact.Text1", this.Name, player.CharacterClass.Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 					if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);
@@ -111,12 +111,12 @@ namespace DOL.GS.Trainer
 			GamePlayer player = source as GamePlayer;
 			String lowerCase = text.ToLower();
 
-			if (lowerCase == LanguageMgr.GetTranslation(player.Client, "FriarTrainer.WhisperReceiveCase.Text1"))
+			if (lowerCase == LanguageMgr.GetTranslation(player.Client.Account.Language, "FriarTrainer.WhisperReceiveCase.Text1"))
 			{
 				// promote player to other class
 				if (CanPromotePlayer(player))
 				{
-					PromotePlayer(player, (int)eCharacterClass.Friar, LanguageMgr.GetTranslation(player.Client, "FriarTrainer.WhisperReceive.Text1"), null);
+					PromotePlayer(player, (int)eCharacterClass.Friar, LanguageMgr.GetTranslation(player.Client.Account.Language, "FriarTrainer.WhisperReceive.Text1"), null);
 					addGift(ARMOR_ID1, player);
 				}
 			}
@@ -138,7 +138,7 @@ namespace DOL.GS.Trainer
 			if (player.Level >= 10 && player.Level < 15 && item.Id_nb == ARMOR_ID1)
 			{
 				player.Inventory.RemoveCountFromStack(item, 1);
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "FriarTrainer.ReceiveItem.Text1", this.Name, player.Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "FriarTrainer.ReceiveItem.Text1", this.Name, player.Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 				addGift(ARMOR_ID2, player);
 			}
 			return base.ReceiveItem(source, item);

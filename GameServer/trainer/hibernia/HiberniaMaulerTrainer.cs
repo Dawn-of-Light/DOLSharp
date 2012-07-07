@@ -49,14 +49,14 @@ namespace DOL.GS.Trainer
 			// check if class matches.
 			if (player.CharacterClass.ID == (int) TrainedClass)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "MaulerHibTrainer.Interact.Text2", this.Name), eChatType.CT_System, eChatLoc.CL_ChatWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "MaulerHibTrainer.Interact.Text2", this.Name), eChatType.CT_System, eChatLoc.CL_ChatWindow);
 			}
 			else
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "MaulerHibTrainer.Interact.Text1", this.Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "MaulerHibTrainer.Interact.Text1", this.Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 
 					if (!player.IsLevelRespecUsed)
 					{
@@ -95,7 +95,7 @@ namespace DOL.GS.Trainer
 
 			String lowerCase = text.ToLower();
 
-			if (lowerCase == LanguageMgr.GetTranslation(player.Client, "MaulerHibTrainer.WhisperReceiveCase.Text1"))
+			if (lowerCase == LanguageMgr.GetTranslation(player.Client.Account.Language, "MaulerHibTrainer.WhisperReceiveCase.Text1"))
 			{
 				// promote player to other class
 				if (CanPromotePlayer(player))
@@ -105,7 +105,7 @@ namespace DOL.GS.Trainer
 					player.RemoveAllStyles();
 
 					// Mauler_Hib = 62
-					PromotePlayer(player, (int)eCharacterClass.MaulerHib, LanguageMgr.GetTranslation(player.Client, "MaulerHibTrainer.WhisperReceive.Text1"), null);
+					PromotePlayer(player, (int)eCharacterClass.MaulerHib, LanguageMgr.GetTranslation(player.Client.Account.Language, "MaulerHibTrainer.WhisperReceive.Text1"), null);
 
 					CheckAbilityToUseItem(player);
 				}
@@ -113,16 +113,16 @@ namespace DOL.GS.Trainer
 			else if ((player.Inventory.GetFirstItemByID(WEAPON_ID1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null) &&
 			         (player.Inventory.GetFirstItemByID(WEAPON_ID2, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null))
 			{
-				if (lowerCase == LanguageMgr.GetTranslation(player.Client, "MaulerHibTrainer.WhisperReceiveCase.Text2"))
+				if (lowerCase == LanguageMgr.GetTranslation(player.Client.Account.Language, "MaulerHibTrainer.WhisperReceiveCase.Text2"))
 				{
 					player.ReceiveItem(this, WEAPON_ID1);
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "MaulerHibTrainer.WhisperReceive.Text2"), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "MaulerHibTrainer.WhisperReceive.Text2"), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 				}
-				else if (lowerCase == LanguageMgr.GetTranslation(player.Client, "MaulerHibTrainer.WhisperReceiveCase.Text3"))
+				else if (lowerCase == LanguageMgr.GetTranslation(player.Client.Account.Language, "MaulerHibTrainer.WhisperReceiveCase.Text3"))
 				{
 					player.ReceiveItem(this, WEAPON_ID2);
 					player.ReceiveItem(this, WEAPON_ID2);
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "MaulerHibTrainer.WhisperReceive.Text2"), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "MaulerHibTrainer.WhisperReceive.Text2"), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 				}
 			}
 

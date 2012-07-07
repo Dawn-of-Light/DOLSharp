@@ -202,7 +202,7 @@ namespace DOL.GS
 		public virtual void OnPlayerLeave(GamePlayer player)
 		{
             if (m_displayMessage && Description != null && Description != "")
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractArea.Left", Description),
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "AbstractArea.Left", Description),
                     eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			player.Notify(AreaEvent.PlayerLeave, this, new AreaEventArgs(this, player));
@@ -219,7 +219,7 @@ namespace DOL.GS
                 string description = Description;
                 string screenDescription = description;
 
-                LanguageDataObject translation = LanguageMgr.GetTranslation(player.Client, this);
+                LanguageDataObject translation = LanguageMgr.GetTranslation(player.Client.Account.Language, this);
                 if (translation != null)
                 {
                     if (!Util.IsEmpty(((DBLanguageArea)translation).Description))
@@ -229,7 +229,7 @@ namespace DOL.GS
                         screenDescription = ((DBLanguageArea)translation).ScreenDescription;
                 }
 
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "AbstractArea.Entered", description),
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "AbstractArea.Entered", description),
                     eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 				//Changed by Apo 9. August 2010: Areas never send an screen description, but we will support it with an server property

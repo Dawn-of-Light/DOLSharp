@@ -689,7 +689,7 @@ namespace DOL.GS
 		public virtual IList GetExamineMessages(GamePlayer player)
 		{
 			IList list = new ArrayList(4);
-			list.Add(LanguageMgr.GetTranslation(player.Client, "GameObject.GetExamineMessages.YouTarget", GetName(0, false)));
+			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObject.GetExamineMessages.YouTarget", GetName(0, false)));
 			return list;
 		}
 
@@ -1013,7 +1013,7 @@ namespace DOL.GS
 		{
 			if (player.Client.Account.PrivLevel == 1 && !this.IsWithinRadius(player, InteractDistance))
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameObject.Interact.TooFarAway", GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObject.Interact.TooFarAway", GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				Notify(GameObjectEvent.InteractFailed, this, new InteractEventArgs(player));
 				return false;
 			}

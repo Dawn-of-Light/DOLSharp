@@ -41,17 +41,17 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(GamePlayer player, int level) 
 		{
-			if (level >= 50) return LanguageMgr.GetTranslation(player.Client, "PlayerClass.Wizard.GetTitle.50");
-			if (level >= 45) return LanguageMgr.GetTranslation(player.Client, "PlayerClass.Wizard.GetTitle.45");
-			if (level >= 40) return LanguageMgr.GetTranslation(player.Client, "PlayerClass.Wizard.GetTitle.40");
-			if (level >= 35) return LanguageMgr.GetTranslation(player.Client, "PlayerClass.Wizard.GetTitle.35");
-			if (level >= 30) return LanguageMgr.GetTranslation(player.Client, "PlayerClass.Wizard.GetTitle.30");
-			if (level >= 25) return LanguageMgr.GetTranslation(player.Client, "PlayerClass.Wizard.GetTitle.25");
-			if (level >= 20) return LanguageMgr.GetTranslation(player.Client, "PlayerClass.Wizard.GetTitle.20");
-			if (level >= 15) return LanguageMgr.GetTranslation(player.Client, "PlayerClass.Wizard.GetTitle.15");
-			if (level >= 10) return LanguageMgr.GetTranslation(player.Client, "PlayerClass.Wizard.GetTitle.10");
-			if (level >= 5) return LanguageMgr.GetTranslation(player.Client, "PlayerClass.Wizard.GetTitle.5");
-			return LanguageMgr.GetTranslation(player.Client, "PlayerClass.GetTitle.none");
+			if (level >= 50) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Wizard.GetTitle.50");
+			if (level >= 45) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Wizard.GetTitle.45");
+			if (level >= 40) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Wizard.GetTitle.40");
+			if (level >= 35) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Wizard.GetTitle.35");
+			if (level >= 30) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Wizard.GetTitle.30");
+			if (level >= 25) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Wizard.GetTitle.25");
+			if (level >= 20) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Wizard.GetTitle.20");
+			if (level >= 15) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Wizard.GetTitle.15");
+			if (level >= 10) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Wizard.GetTitle.10");
+			if (level >= 5) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Wizard.GetTitle.5");
+			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
 		/// <summary>

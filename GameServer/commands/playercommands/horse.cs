@@ -19,7 +19,7 @@ namespace DOL.GS.Commands
 
 			if (!client.Player.IsOnHorse)
 			{
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client, "HorseEmote.MustBeOnMount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "HorseEmote.MustBeOnMount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -81,11 +81,11 @@ namespace DOL.GS.Commands
 			bool targetMatters = false;
 			if (targetObject != null)
 			{
-				messageToSource = LanguageMgr.GetTranslation(client, string.Format("HorseEmote.{0}.ToSource", emoteType), targetObject.GetName(0, false));
-				messageToOthers = LanguageMgr.GetTranslation(client, string.Format("HorseEmote.{0}.ToOthers", emoteType), sourcePlayer.Name, targetObject.GetName(0, false), sourcePlayer.GetPronoun(1, false));
+				messageToSource = LanguageMgr.GetTranslation(client.Account.Language, string.Format("HorseEmote.{0}.ToSource", emoteType), targetObject.GetName(0, false));
+				messageToOthers = LanguageMgr.GetTranslation(client.Account.Language, string.Format("HorseEmote.{0}.ToOthers", emoteType), sourcePlayer.Name, targetObject.GetName(0, false), sourcePlayer.GetPronoun(1, false));
 
 				if (targetObject is GamePlayer)
-					messageToTarget = LanguageMgr.GetTranslation(client, string.Format("HorseEmote.{0}.ToOthers", emoteType), sourcePlayer.Name, LanguageMgr.GetTranslation(client, "HorseEmote.You"), sourcePlayer.GetPronoun(1, false));
+					messageToTarget = LanguageMgr.GetTranslation(client.Account.Language, string.Format("HorseEmote.{0}.ToOthers", emoteType), sourcePlayer.Name, LanguageMgr.GetTranslation(client.Account.Language, "HorseEmote.You"), sourcePlayer.GetPronoun(1, false));
 
 
 				if (messageToSource != "-" && messageToOthers != "-")
@@ -95,8 +95,8 @@ namespace DOL.GS.Commands
 			if (!targetMatters)
 			{
 				targetObject = null;
-				messageToSource = LanguageMgr.GetTranslation(client, string.Format("HorseEmote.{0}.NoTargetToSource", emoteType));
-				messageToOthers = LanguageMgr.GetTranslation(client, string.Format("HorseEmote.{0}.NoTargetToOthers", emoteType), sourcePlayer.Name, sourcePlayer.GetPronoun(1, false));
+				messageToSource = LanguageMgr.GetTranslation(client.Account.Language, string.Format("HorseEmote.{0}.NoTargetToSource", emoteType));
+				messageToOthers = LanguageMgr.GetTranslation(client.Account.Language, string.Format("HorseEmote.{0}.NoTargetToOthers", emoteType), sourcePlayer.Name, sourcePlayer.GetPronoun(1, false));
 			}
 
 			foreach (GamePlayer player in sourcePlayer.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))

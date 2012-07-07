@@ -153,7 +153,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "GameStableMaster.ReceiveItem.UnknownWay"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameStableMaster.ReceiveItem.UnknownWay"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 			}
 			return false;

@@ -41,7 +41,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title description.</returns>
 		public override string GetDescription(GamePlayer player)
 		{
-			return LanguageMgr.GetTranslation(player.Client, "Titles.Claim.Frontier.FrontierVindicator");
+			return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Claim.Frontier.FrontierVindicator");
 		}
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title value.</returns>
 		public override string GetValue(GamePlayer player)
 		{
-			return LanguageMgr.GetTranslation(player.Client, "Titles.Claim.Frontier.FrontierVindicator");
+			return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Claim.Frontier.FrontierVindicator");
 		}
 
 
