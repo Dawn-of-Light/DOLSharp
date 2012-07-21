@@ -377,7 +377,7 @@ namespace DOL.GS.Commands
 
 			var info = new List<string>();
 
-			info.Add(" + Info sur la porte :  " + targetDoor.Name);
+			info.Add(" + Door Info :  " + targetDoor.Name);
 			info.Add("  ");
 			info.Add(" + Name : " + targetDoor.Name);
 			info.Add(" + ID : " + DoorID);
