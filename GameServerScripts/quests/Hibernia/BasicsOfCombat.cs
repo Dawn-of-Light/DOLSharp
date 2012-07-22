@@ -42,6 +42,7 @@ namespace DOL.GS.Quests.Hibernia
 
 		protected const string questTitle = "Basics of Combat";
 		protected const eRealm realm = eRealm.Hibernia;
+		
 		private const int minimumLevel = 1;
 		private const int maximumLevel = 10;
 
@@ -142,7 +143,7 @@ namespace DOL.GS.Quests.Hibernia
 				questGiver.Name = questGiverName;
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find " + questGiver.Name + ", creating him ...");
-				//k109: My preference, no guildname for quest NPCs.  Uncomment if you like that...
+
 				//Richael.GuildName = "Part of " + questTitle + " Quest";
 				questGiver.Realm = realm;
 				questGiver.CurrentRegionID = 27;
@@ -292,7 +293,7 @@ namespace DOL.GS.Quests.Hibernia
 			a.AddTrigger(eTriggerType.EnemyKilled, sparringGuardName, null);
 			a.AddRequirement(eRequirementType.QuestStep, typeof(BasicsOfCombat), 5, eComparator.Equal);
 			a.AddAction(eActionType.IncQuestStep, typeof(BasicsOfCombat), null);
-			a.AddAction(eActionType.CustomDialog, message12);
+			a.AddAction(eActionType.Talk, message12, questGiverName);
 			AddBehaviour(a);
 
 			a = builder.CreateBehaviour(questGiver, -1);
