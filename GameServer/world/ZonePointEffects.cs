@@ -23,14 +23,18 @@ using DOL.Events;
 using log4net;
 using System.Collections.Generic;
 using DOL.Database;
+using DOL.Language;
 
 namespace DOL.GS.GameEvents
 {
 	public class ZonePointEffect
 	{
+		protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		[ScriptLoadedEvent]
 		public static void OnScriptsCompiled(DOLEvent e, object sender, EventArgs args)
 		{
+
 			// What npctemplate should we use for the zonepoint ?
 			ushort model;
 			NpcTemplate zp;
@@ -47,21 +51,26 @@ namespace DOL.GS.GameEvents
 			IList<ZonePoint> zonePoints = GameServer.Database.SelectAllObjects<ZonePoint>();
 			foreach (ZonePoint z in zonePoints)
 			{
-				if (z.SourceRegion == 0)
-					continue;
-				//find region
+				if (z.SourceRegion == 0) continue;
+				
+				// find target region for the current zonepoint
 				Region r = WorldMgr.GetRegion(z.TargetRegion);
+				if (r == null)
+				{
+					log.Warn("Zonepoint Id (" + z.Id +  ") references an inexistent target region " + z.TargetRegion + " - skipping, ZP not created");
+					continue;
+				}
+				
 				GameNPC npc = new GameNPC(zp);
 
 				npc.CurrentRegionID = z.SourceRegion;
 				npc.X = z.SourceX;
 				npc.Y = z.SourceY;
 				npc.Z = z.SourceZ;
-
 				npc.Name = r.Description;
-				if (r.IsDisabled)
-					npc.GuildName = "ZonePoint (Closed)";
-				else npc.GuildName = "ZonePoint (Open)";
+				npc.GuildName = "ZonePoint (Open)";			
+				if (r.IsDisabled) npc.GuildName = "ZonePoint (Closed)";
+				
 				npc.AddToWorld();
 			}
 		}
