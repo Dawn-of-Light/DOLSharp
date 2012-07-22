@@ -29,7 +29,7 @@ namespace DOL.GS.Behaviour.Attributes
         private bool global;
 
         /// <summary>
-        /// Defiens wether the trigger is registered globaly (doesn't depends on implicity quests notifying of player etc or not
+        /// Define wether the trigger is registered globaly (doesn't depends on implicity quests notifying of player etc or not
         /// </summary>
         public bool Global
         {
