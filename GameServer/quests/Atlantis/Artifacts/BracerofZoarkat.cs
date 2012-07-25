@@ -31,12 +31,12 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 	/// Quest for the Bracer of Zo'arkat artifact.
 	/// </summary>
 	/// <author>Aredhel</author>
-	class BracerofZoarkat : ArtifactQuest
+	class BraceletofZoarkat : ArtifactQuest
 	{
-		public BracerofZoarkat()
+		public BraceletofZoarkat()
 			: base() { }
 
-		public BracerofZoarkat(GamePlayer questingPlayer)
+		public BraceletofZoarkat(GamePlayer questingPlayer)
 			: base(questingPlayer) { }
 
 		/// <summary>
@@ -44,7 +44,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// </summary>
 		/// <param name="questingPlayer"></param>
 		/// <param name="dbQuest"></param>
-        public BracerofZoarkat(GamePlayer questingPlayer, DBQuest dbQuest)
+        public BraceletofZoarkat(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest) { }
 
 		/// <summary>
@@ -52,7 +52,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// </summary>
 		public static void Init()
 		{
-            ArtifactQuest.Init("Bracer of Zo'arkat", typeof(BracerofZoarkat));
+            ArtifactQuest.Init("Bracelet of Zo'arkat", typeof(BraceletofZoarkat));
 		}
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 
 			if (Step == 1 && text.ToLower() == ArtifactID.ToLower())
 			{
-                String reply = "Oh, the mysterious Bracer of Zo'arkat. Do you have the scrolls on it? I've found a few that allude to its true nature, but haven't found anything with any detail.";
+                String reply = "Oh, the mysterious Bracelet of Zo'arkat. Do you have the scrolls on it? I've found a few that allude to its true nature, but haven't found anything with any detail.";
 				scholar.TurnTo(player);
 				scholar.SayTo(player, eChatLoc.CL_PopupWindow, reply);
 				Step = 2;
@@ -162,7 +162,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// </summary>
 		public override string Name
 		{
-            get { return "Bracer of Zo'arkat"; }
+            get { return "Bracelet of Zo'arkat"; }
 		}
 
 		/// <summary>
@@ -170,7 +170,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// </summary>
 		public override String ArtifactID
 		{
-            get { return "Bracer of Zo'arkat"; }
+            get { return "Bracelet of Zo'arkat"; }
 		}
 	}
 }

@@ -31,7 +31,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int sessionId = packet.ReadShort();
 			ushort targetOid = packet.ReadShort();
 
-#warning TODO: utilize these client-sent coordinates to possibly check for exploits which are spoofing position packets but not spoofing them everywhere
+            //TODO: utilize these client-sent coordinates to possibly check for exploits which are spoofing position packets but not spoofing them everywhere
 			new InteractActionHandler(client.Player, targetOid).Start(1);
 		}
 

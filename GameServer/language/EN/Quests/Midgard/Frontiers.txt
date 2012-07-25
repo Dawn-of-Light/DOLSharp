@@ -16,7 +16,6 @@ Mid.Frontiers.Notify.Text3:			Scryer Idora takes out a piece of parchment and be
 Mid.Frontiers.Notify.Text4:			Excellent work. Now, if you will please just wait a moment, I need to read this.
 Mid.Frontiers.Notify.Text5:			Dalikor holds up the parchment and slowly reads the information written on it. When he is done, he folds it up and places it in his pocket.
 Mid.Frontiers.NPCGriffinHandlerNjiedi:		Griffin Handler Njiedi
-Mid.Frontiers.NPCGryphon:			Gryphon
 Mid.Frontiers.NPCScryerIdora:			Scryer Idora
 Mid.Frontiers.QuestTitle:			Frontiers (Mid)
 Mid.Frontiers.TalkToAnnark.Talk1:		Huginn and Munnin guide you all and return with news of your journeys.

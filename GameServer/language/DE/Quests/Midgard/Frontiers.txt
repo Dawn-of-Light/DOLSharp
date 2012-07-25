@@ -16,7 +16,6 @@ Mid.Frontiers.Notify.Text3:			Wahrsagerin Idora nimmt ein Stück Pergament und b
 Mid.Frontiers.Notify.Text4:			Ausgezeichnete Arbeit. So denn, falls Ihr nun einen Augenblick warten könntet, ich muss dies zunächst lesen.
 Mid.Frontiers.Notify.Text5:			Dalikor liest das Pergament zwar schnell aber auch sehr sorgfältig. Als er das Ende erreicht, lächelt er.
 Mid.Frontiers.NPCGriffinHandlerNjiedi:		Greifenabrichter Njiedi
-Mid.Frontiers.NPCGryphon:			gezähmter Greif
 Mid.Frontiers.NPCScryerIdora:			Wahrsagerin Idora
 Mid.Frontiers.QuestTitle:			Reichsgrenzen
 Mid.Frontiers.TalkToAnnark.Talk1:		Huginn und Munnin mögen Euch begleiten. Kommt zurück von der Reise mit Neuigkeiten.

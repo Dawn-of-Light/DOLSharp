@@ -26,15 +26,15 @@ using DOL.Database;
 namespace DOL.GS.Quests.Atlantis.Encounters
 {
 	/// <summary>
-    /// Encounter for the Bracer of Zo'arkat artifact.
+    /// Encounter for the Bracelet of Zo'arkat artifact.
 	/// </summary>
 	/// <author>Aredhel</author>
-	public class BracerofZoarkat : ArtifactEncounter
+	public class BraceletofZoarkat : ArtifactEncounter
 	{
-		public BracerofZoarkat(GamePlayer questingPlayer)
+		public BraceletofZoarkat(GamePlayer questingPlayer)
 			: base(questingPlayer) { }
 
-        public BracerofZoarkat(GamePlayer questingPlayer, DBQuest dbQuest)
+        public BraceletofZoarkat(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest) { }
 
 		/// <summary>
@@ -42,7 +42,7 @@ namespace DOL.GS.Quests.Atlantis.Encounters
 		/// </summary>
 		public override string Name
 		{
-            get { return "Bracer of Zo'arkat Encounter"; }
+            get { return "Bracelet of Zo'arkat Encounter"; }
 		}
 	}
 }

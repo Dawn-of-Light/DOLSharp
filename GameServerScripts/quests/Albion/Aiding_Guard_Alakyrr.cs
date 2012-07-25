@@ -134,14 +134,14 @@ namespace DOL.GS.Quests.Albion
 			if (enchantedtenebrousflask == null)
 			{
 				if (log.IsWarnEnabled)
-					log.Warn("Could not find Wooden Bucket, creating it ...");
+                    log.Warn("Could not find Enchanted Tenebrous Flask, creating it ...");
 				enchantedtenebrousflask = new ItemTemplate();
                 enchantedtenebrousflask.Name = "enchanted tenebrous flask";
 				enchantedtenebrousflask.Level = 1;
 				enchantedtenebrousflask.Weight = 10;
 				enchantedtenebrousflask.Model = 1610;
 				enchantedtenebrousflask.Object_Type = (int)eObjectType.GenericItem;
-                enchantedtenebrousflask.Id_nb = "enchanted tenebrous flask";
+                enchantedtenebrousflask.Id_nb = "enchantedtenebrousflask";
 				enchantedtenebrousflask.Price = 0;
 				enchantedtenebrousflask.IsPickable = false;
 				enchantedtenebrousflask.IsDropable = false;
@@ -157,7 +157,7 @@ namespace DOL.GS.Quests.Albion
 			if (quarterfulltenebrousflask == null)
 			{
 				if (log.IsWarnEnabled)
-					log.Warn("Could not find Full Wooden Bucket, creating it ...");
+                    log.Warn("Could not find Quarter Full Tenebrous Flask, creating it ...");
 				quarterfulltenebrousflask = new ItemTemplate();
                 quarterfulltenebrousflask.Name = "quarter full tenebrous flask";
 				quarterfulltenebrousflask.Level = 1;
@@ -180,7 +180,7 @@ namespace DOL.GS.Quests.Albion
 			if (halffulltenebrousflask == null)
 			{
 				if (log.IsWarnEnabled)
-					log.Warn("Could not find Full Wooden Bucket, creating it ...");
+                    log.Warn("Could not find Half Full Tenebrous Flask, creating it ...");
 				halffulltenebrousflask = new ItemTemplate();
                 halffulltenebrousflask.Name = "half full tenebrous flask";
 				halffulltenebrousflask.Level = 1;
@@ -203,7 +203,7 @@ namespace DOL.GS.Quests.Albion
             if (threequarterfulltenebrousflask == null)
 			{
 				if (log.IsWarnEnabled)
-					log.Warn("Could not find Full Wooden Bucket, creating it ...");
+                    log.Warn("Could not find Three Quarter Full Tenebrous Flask, creating it ...");
                 threequarterfulltenebrousflask = new ItemTemplate();
                 threequarterfulltenebrousflask.Name = "three quarter full tenebrous flask";
                 threequarterfulltenebrousflask.Level = 1;
@@ -226,7 +226,7 @@ namespace DOL.GS.Quests.Albion
              if (fullflaskoftenebrousessence == null)
              {
                  if (log.IsWarnEnabled)
-                     log.Warn("Could not find Full Wooden Bucket, creating it ...");
+                     log.Warn("Could not find Full Flask Of Tenebrous Essence, creating it ...");
                  fullflaskoftenebrousessence = new ItemTemplate();
                  fullflaskoftenebrousessence.Name = "full flask of tenebrous essence";
                  fullflaskoftenebrousessence.Level = 1;
