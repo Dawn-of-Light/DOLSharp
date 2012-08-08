@@ -351,6 +351,13 @@ namespace DOL.GS
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Salvage.BeginWork.NoSalvage", item.Name + ".  This item is indestructible"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
+
+			// using negative numbers to indicate item cannot be salvaged
+			if (item.SalvageYieldID < 0)
+			{
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "Salvage.BeginWork.NoSalvage", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
 			
 			if(item.SlotPosition < (int)eInventorySlot.FirstBackpack || item.SlotPosition > (int)eInventorySlot.LastBackpack)
 			{
