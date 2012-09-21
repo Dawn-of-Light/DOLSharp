@@ -69,6 +69,9 @@ namespace DOL.GS
 		Door = 6,
 	};
 
+	/// <summary>
+	/// Flags applicables to an item
+	/// </summary>
 	public enum eItemFlags
 	{
 		CannotBeSoldToMerchants = 0x1,
