@@ -128,8 +128,7 @@ namespace DOL.Language
             bool defaultLanguageFilesFound = false;
             foreach (string langDir in Directory.GetDirectories(LangPath, "*", SearchOption.TopDirectoryOnly))
             {
-                string language = (langDir.Substring(langDir.LastIndexOf('\\') + 1)).ToUpper();
-
+                string language = (langDir.Substring(langDir.LastIndexOf(Path.DirectorySeparatorChar) + 1)).ToUpper();
                 if (language != DefaultLanguage)
                 {
                     if (language != "CU") // Ignore the custom language folder. This check should be removed in the future! (code written: may 2012)
@@ -332,7 +331,7 @@ namespace DOL.Language
         #region ReadLanguageDirectory
         private static ArrayList ReadLanguageDirectory(string path, string language)
         {
-            ArrayList sentences = new ArrayList();
+		    ArrayList sentences = new ArrayList();
             foreach (string languageFile in Directory.GetFiles(path, "*", SearchOption.AllDirectories))
             {
                 if (!languageFile.EndsWith(".txt"))
