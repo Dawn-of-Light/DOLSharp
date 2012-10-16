@@ -107,8 +107,10 @@ namespace DOL.GS.Behaviour.Actions
 				Dictionary<InventoryItem, int?>.Enumerator enumerator = dataSlots.GetEnumerator();
                 while (enumerator.MoveNext())
                 {
-					KeyValuePair<InventoryItem, int?> de = enumerator.Current;
-                    if (de.Value.HasValue)
+		
+		KeyValuePair<InventoryItem, int?> de = enumerator.Current;
+                    
+		if (de.Value.HasValue)
                     {
                         playerInventory.RemoveCountFromStack(de.Key, de.Value.Value);
                         InventoryLogging.LogInventoryAction(player, NPC, eInventoryActionType.Quest, de.Key.Template, de.Value.Value);
