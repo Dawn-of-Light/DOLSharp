@@ -110,13 +110,14 @@ namespace DOL.GS.Behaviour.Actions
 					KeyValuePair<InventoryItem, int?> de = enumerator.Current;
                     if (de.Value.HasValue)
                     {
-                        playerInventory.RemoveItem(de.Key);
-                        InventoryLogging.LogInventoryAction(player, NPC, eInventoryActionType.Quest, de.Key.Template, de.Key.Count);
+                        playerInventory.RemoveCountFromStack(de.Key, de.Value.Value);
+                        InventoryLogging.LogInventoryAction(player, NPC, eInventoryActionType.Quest, de.Key.Template, de.Value.Value);
                     }
                     else
                     {
-                        playerInventory.RemoveCountFromStack(de.Key, de.Value.Value);
-                        InventoryLogging.LogInventoryAction(player, NPC, eInventoryActionType.Quest, de.Key.Template, de.Value.Value);
+
+                        playerInventory.RemoveItem(de.Key);
+                        InventoryLogging.LogInventoryAction(player, NPC, eInventoryActionType.Quest, de.Key.Template, de.Key.Count);
                     }
                 }
                 playerInventory.CommitChanges();
