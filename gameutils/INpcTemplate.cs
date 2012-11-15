@@ -38,7 +38,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Do we want the npctemplate replace db mob's values ?
 		/// </summary>
-		int ReplaceMobValues { get; }
+		bool ReplaceMobValues { get; }
 		
 		/// <summary>
 		/// Gets the template 'physical' attributes
