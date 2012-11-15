@@ -74,7 +74,7 @@ namespace DOL.Database
 		private int m_maxdistance = 0;
 		private int m_tetherRange = 0;
 		private byte m_visibleWeaponSlots = 0;
-		private int m_replaceMobValues =  0;
+		private bool m_replaceMobValues =  false;
 		private string m_packageID = "";
         #endregion Variables
 
@@ -603,7 +603,7 @@ namespace DOL.Database
 			}
 		}
 		[DataElement(AllowDbNull = true)]
-		public int ReplaceMobValues
+		public bool ReplaceMobValues
 		{
 			get
 			{
