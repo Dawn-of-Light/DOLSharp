@@ -76,7 +76,7 @@ namespace DOL.GS
 		protected ushort m_bodyType;
 		protected int m_maxdistance;
 		protected int m_tetherRange;
-		protected int m_replaceMobValues;
+		protected bool m_replaceMobValues;
 		protected byte m_visibleActiveWeaponSlot;
 
 		/// <summary>
@@ -635,7 +635,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Should we get this template values as reference or mob's one ?
 		/// </summary>
-		public int ReplaceMobValues
+		public bool ReplaceMobValues
 		{
 			get { return m_replaceMobValues;  }
 			set { m_replaceMobValues = value; }
