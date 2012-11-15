@@ -1921,7 +1921,7 @@ namespace DOL.GS
 			Mob dbMob = (Mob)obj;
 			INpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(dbMob.NPCTemplateID);
 			
-			if (npcTemplate != null && npcTemplate.ReplaceMobValues == 0)
+			if (npcTemplate != null && !npcTemplate.ReplaceMobValues)
 			{
 				LoadTemplate(npcTemplate);
 			}
@@ -2050,7 +2050,7 @@ namespace DOL.GS
 			Gender = (eGender)dbMob.Gender;
 			OwnerID = dbMob.OwnerID;
 
-			if (npcTemplate != null && npcTemplate.ReplaceMobValues > 0)
+			if (npcTemplate != null && npcTemplate.ReplaceMobValues)
 				LoadTemplate(npcTemplate);
 		}
 
