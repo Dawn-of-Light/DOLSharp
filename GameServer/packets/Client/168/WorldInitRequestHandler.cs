@@ -187,6 +187,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.Out.SendStatusUpdate();
 				player.Out.SendUpdatePoints();
 				player.Out.SendEncumberance();
+                player.Out.SendConcentrationList();
 				// Visual 0x4C - Color Name style (0 0 5 0 0 0 0 0) for RvR or (0 0 5 1 0 0 0 0) for PvP
 				// 0xBE - 0 1 0 0
 				//used only on PvP, sets THIS players ID for nearest friend/enemy buttons and "friendly" name colors
