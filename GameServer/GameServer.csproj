@@ -372,6 +372,7 @@
     <Compile Include="gameutils\MarketSearch.cs" />
     <Compile Include="gameutils\InventoryLogging.cs" />
     <Compile Include="gameutils\MarketCache.cs" />
+    <Compile Include="gameutils\ServerListUpdate.cs" />
     <Compile Include="keeps\IKeepManager.cs" />
     <Compile Include="keeps\Relics\GameInventoryRelic.cs" />
     <Compile Include="gameobjects\CustomNPC\RoyalTreasuryClerk.cs" />
