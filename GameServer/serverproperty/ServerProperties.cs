@@ -341,6 +341,24 @@ namespace DOL.GS.ServerProperties
 
 		#region SERVER
 
+        /// <summary>
+        /// Enable integrated serverlistupdate script?
+        /// </summary>
+        [ServerProperty("server", "enable_serverlistupdate", "Enable in-built serverlistupdate script?", false)]
+        public static bool USE_SERVER_LIST_UPDATE_INTEGRATED;
+
+        /// <summary>
+        /// The username for server list update.
+        /// </summary>
+        [ServerProperty("server", "serverlistupdate_user", "Username for serverlistupdate.", "")]
+        public static string SERVER_LIST_UPDATE_USER;
+
+        /// <summary>
+        /// The password for server list update.
+        /// </summary>
+        [ServerProperty("server", "serverlistupdate_password", "Password for serverlistupdate.", "")]
+        public static string SERVER_LIST_UPDATE_PASS;
+
 		/// <summary>
 		/// The money drop modifier
 		/// </summary>
