@@ -23,6 +23,7 @@ using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using System.Collections.Generic;
 
 using log4net;
 
@@ -75,6 +76,8 @@ namespace DOL.GS
 					pad.RemoveRelic();
 				}
 
+				// if relics are on the ground during init we will return them to their owners
+				List<GameRelic> lostRelics = new List<GameRelic>();
 
 				var relics = GameServer.Database.SelectAllObjects<DBRelic>();
 				foreach (DBRelic datarelic in relics)
@@ -101,11 +104,51 @@ namespace DOL.GS
 						relic.RelicPadTakesOver(pad, true);
 						log.Debug("DBRelic: " + relic.Name + " has been loaded and added to pad " + pad.Name + ".");
 					}
-
-
+					else
+					{
+						lostRelics.Add(relic);
+					}
 				}
 
+				foreach (GameRelic lostRelic in m_relics.Values)
+				{
+					eRealm returnRealm = (eRealm)lostRelic.LastRealm;
+
+					if (returnRealm == eRealm.None)
+					{
+						returnRealm = lostRelic.OriginalRealm;
+					}
+
+					// ok, now we have a realm to return the relic too, lets find a pad
+
+					foreach (GameRelicPad pad in m_relicPads)
+					{
+						if (pad.MountedRelic == null && pad.Realm == returnRealm)
+						{
+							lostRelic.RelicPadTakesOver(pad, true);
+							log.Debug("Lost Relic: " + lostRelic.Name + " has returned to last pad: " + pad.Name + ".");
+						}
+					}
+				}
+
+				// Final cleanup.  If any relic is still unmounted then mount the damn thing to any empty pad
+
+				foreach (GameRelic lostRelic in m_relics.Values)
+				{
+					if (lostRelic.CurrentRelicPad == null)
+					{
+						foreach (GameRelicPad pad in m_relicPads)
+						{
+							if (pad.MountedRelic == null)
+							{
+								lostRelic.RelicPadTakesOver(pad, true);
+								log.Debug("Lost Relic: " + lostRelic.Name + " auto assigned to pad: " + pad.Name + ".");
+							}
+						}
+					}
+				}
 			}
+
 			log.Debug(m_relicPads.Count + " relicpads" + ((m_relicPads.Count > 1) ? "s were" : " was") + " loaded.");
 			log.Debug(m_relics.Count + " relic" + ((m_relics.Count > 1) ? "s were" : " was") + " loaded.");
 			return true;
