@@ -34,6 +34,7 @@ namespace DOL.Database
 		private int m_heading;
 		private int m_realm;
 		private int m_originalRealm;
+		private int m_lastRealm;
 		private int m_type;
 
 
@@ -164,7 +165,7 @@ namespace DOL.Database
 
 
 		/// <summary>
-		/// Realm at start
+		/// The default realm of this relic
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
 		public int OriginalRealm
@@ -179,6 +180,24 @@ namespace DOL.Database
 				m_originalRealm = value;
 			}
 		}
+
+		/// <summary>
+		/// The last realm that captured this relic
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public int LastRealm
+		{
+			get
+			{
+				return m_lastRealm;
+			}
+			set
+			{
+				Dirty = true;
+				m_lastRealm = value;
+			}
+		}
+
 
 		/// <summary>
 		/// relic type, 0 is melee, 1 is magic
