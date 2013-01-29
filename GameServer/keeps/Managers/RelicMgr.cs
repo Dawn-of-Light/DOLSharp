@@ -99,10 +99,13 @@ namespace DOL.GS
 
 					relic.AddToWorld();
 					GameRelicPad pad = GetPadAtRelicLocation(relic);
-					if (pad != null && relic.RelicType == pad.PadType)
+					if (pad != null)
 					{
-						relic.RelicPadTakesOver(pad, true);
-						log.Debug("DBRelic: " + relic.Name + " has been loaded and added to pad " + pad.Name + ".");
+						if (relic.RelicType == pad.PadType)
+						{
+							relic.RelicPadTakesOver(pad, true);
+							log.Debug("DBRelic: " + relic.Name + " has been loaded and added to pad " + pad.Name + ".");
+						}
 					}
 					else
 					{
@@ -123,7 +126,7 @@ namespace DOL.GS
 
 					foreach (GameRelicPad pad in m_relicPads)
 					{
-						if (pad.MountedRelic == null && pad.Realm == returnRealm)
+						if (pad.MountedRelic == null && pad.Realm == returnRealm && pad.PadType == lostRelic.RelicType)
 						{
 							lostRelic.RelicPadTakesOver(pad, true);
 							log.Debug("Lost Relic: " + lostRelic.Name + " has returned to last pad: " + pad.Name + ".");
@@ -139,7 +142,7 @@ namespace DOL.GS
 					{
 						foreach (GameRelicPad pad in m_relicPads)
 						{
-							if (pad.MountedRelic == null)
+							if (pad.MountedRelic == null && pad.PadType == lostRelic.RelicType)
 							{
 								lostRelic.RelicPadTakesOver(pad, true);
 								log.Debug("Lost Relic: " + lostRelic.Name + " auto assigned to pad: " + pad.Name + ".");
