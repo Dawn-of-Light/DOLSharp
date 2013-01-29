@@ -74,6 +74,23 @@ namespace DOL.GS
 			}
 		}
 
+		private eRealm m_lastRealm = eRealm.None;
+
+		/// <summary>
+		/// Get the Realm who last owned this relic
+		/// </summary>
+		public eRealm LastRealm
+		{
+			get
+			{
+				return m_lastRealm;
+			}
+			set
+			{
+				m_lastRealm = value;
+			}
+		}
+
 		/// <summary>
 		/// Returns the carriing player if there is one.
 		/// </summary>
@@ -158,6 +175,7 @@ namespace DOL.GS
 		{
 			m_currentRelicPad = pad;
 			Realm = pad.Realm;
+			LastRealm = pad.Realm;
 			pad.MountRelic(this, returning);
 			CurrentRegionID = pad.CurrentRegionID;
 			PlayerLoosesRelic(true);
@@ -235,6 +253,7 @@ namespace DOL.GS
 				{
 					m_currentRelicPad.RemoveRelic(this);
 					ReturnRelicPad = m_currentRelicPad;
+					LastRealm = m_currentRelicPad.Realm; // save who owned this in case of server restart while relic is off pad
 					m_currentRelicPad = null;
 				}
 
@@ -482,6 +501,7 @@ namespace DOL.GS
 			m_relicType = (eRelicType)m_dbRelic.relicType;
 			Realm = (eRealm)m_dbRelic.Realm;
 			m_originalRealm = (eRealm)m_dbRelic.OriginalRealm;
+			m_lastRealm = (eRealm)m_dbRelic.LastRealm;
 
 
 			//get constant values
@@ -520,6 +540,7 @@ namespace DOL.GS
 		{
 			m_dbRelic.Realm = (int)Realm;
 			m_dbRelic.OriginalRealm = (int)OriginalRealm;
+			m_dbRelic.LastRealm = (int)m_lastRealm;
 			m_dbRelic.Heading = (int)Heading;
 			m_dbRelic.Region = (int)CurrentRegionID;
 			m_dbRelic.relicType = (int)RelicType;
