@@ -113,7 +113,7 @@ namespace DOL.GS
 					}
 				}
 
-				foreach (GameRelic lostRelic in m_relics.Values)
+				foreach (GameRelic lostRelic in lostRelics)
 				{
 					eRealm returnRealm = (eRealm)lostRelic.LastRealm;
 
@@ -136,7 +136,7 @@ namespace DOL.GS
 
 				// Final cleanup.  If any relic is still unmounted then mount the damn thing to any empty pad
 
-				foreach (GameRelic lostRelic in m_relics.Values)
+				foreach (GameRelic lostRelic in lostRelics)
 				{
 					if (lostRelic.CurrentRelicPad == null)
 					{
