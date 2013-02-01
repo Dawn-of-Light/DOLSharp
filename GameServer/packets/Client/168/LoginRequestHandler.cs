@@ -76,6 +76,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
+			if (client == null)
+				return;
+
 			string ipAddress = client.TcpEndpointAddress;
 
 			packet.Skip(2); //Skip the client_type byte
@@ -217,20 +220,31 @@ namespace DOL.GS.PacketHandler.Client.v168
 					bool goodname = true;
 					foreach (char c in userName.ToLower())
 					{
-						if ((c < '0' || c > '9') && (c < 'a' || c > 'z') && client.Account.PrivLevel == (uint)ePrivLevel.Player)
+						if ((c < '0' || c > '9') && (c < 'a' || c > 'z'))
 						{
-							goodname = false;
-							break;
+							if (client.Account == null || client.Account.PrivLevel == (uint)ePrivLevel.Player)
+							{
+								goodname = false;
+								break;
+							}
 						}
 					}
 
-					// Yes! Stoping!
+					// Yes! Stopping!
 					if (!goodname)
 					{
 						if (Log.IsInfoEnabled)
 							Log.Info("Invalid symbols in account name \"" + userName + "\" found!");
 
-						client.Out.SendLoginDenied(eLoginError.AccountInvalid);
+						if (client != null && client.Out != null)
+						{
+							client.Out.SendLoginDenied(eLoginError.AccountInvalid);
+						}
+						else
+						{
+							Log.Warn("Client or Client.Out null on invalid name failure.  Disconnecting.");
+						}
+
 						GameServer.Instance.Disconnect(client);
 
 						return;
