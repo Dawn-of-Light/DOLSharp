@@ -4084,7 +4084,7 @@ namespace DOL.GS
 						{
 							if (Realm == eRealm.Albion)
 							{
-								if (Gender != 0)
+								if (Gender == eGender.Female)
 									translationId += "Female.Guardian";
 								else
 									translationId += "Male.Guardian";
@@ -4092,7 +4092,7 @@ namespace DOL.GS
 
 							if (Realm == eRealm.Midgard)
 							{
-								if (Gender != 0)
+								if (Gender == eGender.Female)
 									translationId += "Female.Skiltvakten";
 								else
 									translationId += "Male.Skiltvakten";
@@ -4100,7 +4100,7 @@ namespace DOL.GS
 
 							if (Realm == eRealm.Hibernia)
 							{
-								if (Gender != 0)
+								if (Gender == eGender.Female)
 									translationId += "Female.Savant";
 								else
 									translationId += "Male.Savant";
@@ -4110,7 +4110,7 @@ namespace DOL.GS
 					case 1:
 						if (Realm == eRealm.Albion)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.Warder";
 							else
 								translationId += "Male.Warder";
@@ -4118,7 +4118,7 @@ namespace DOL.GS
 
 						if (Realm == eRealm.Midgard)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.IsenVakten";
 							else
 								translationId += "Male.IsenVakten";
@@ -4126,7 +4126,7 @@ namespace DOL.GS
 
 						if (Realm == eRealm.Hibernia)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.Cosantoir";
 							else
 								translationId += "Male.Cosantoir";
@@ -4135,7 +4135,7 @@ namespace DOL.GS
 					case 2:
 						if (Realm == eRealm.Albion)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.Myrmidon";
 							else
 								translationId += "Male.Myrmidon";
@@ -4143,7 +4143,7 @@ namespace DOL.GS
 
 						if (Realm == eRealm.Midgard)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.FlammenVakten";
 							else
 								translationId += "Male.FlammenVakten";
@@ -4151,7 +4151,7 @@ namespace DOL.GS
 
 						if (Realm == eRealm.Hibernia)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.Brehon";
 							else
 								translationId += "Male.Brehon";
@@ -4160,7 +4160,7 @@ namespace DOL.GS
 					case 3:
 						if (Realm == eRealm.Albion)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.GryphonKnight";
 							else
 								translationId += "Male.GryphonKnight";
@@ -4168,7 +4168,7 @@ namespace DOL.GS
 
 						if (Realm == eRealm.Midgard)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.EldingVakten";
 							else
 								translationId += "Male.EldingVakten";
@@ -4176,7 +4176,7 @@ namespace DOL.GS
 
 						if (Realm == eRealm.Hibernia)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.GroveProtector";
 							else
 								translationId += "Male.GroveProtector";
@@ -4185,7 +4185,7 @@ namespace DOL.GS
 					case 4:
 						if (Realm == eRealm.Albion)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.EagleKnight";
 							else
 								translationId += "Male.EagleKnight";
@@ -4193,7 +4193,7 @@ namespace DOL.GS
 
 						if (Realm == eRealm.Midgard)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.StormurVakten";
 							else
 								translationId += "Male.StormurVakten";
@@ -4201,7 +4201,7 @@ namespace DOL.GS
 
 						if (Realm == eRealm.Hibernia)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.RavenArdent";
 							else
 								translationId += "Male.RavenArdent";
@@ -4210,7 +4210,7 @@ namespace DOL.GS
 					case 5:
 						if (Realm == eRealm.Albion)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.PhoenixKnight";
 							else
 								translationId += "Male.PhoenixKnight";
@@ -4218,7 +4218,7 @@ namespace DOL.GS
 
 						if (Realm == eRealm.Midgard)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.IsenFru";
 							else
 								translationId += "Male.IsenHerra";
@@ -4226,7 +4226,7 @@ namespace DOL.GS
 
 						if (Realm == eRealm.Hibernia)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.SilverHand";
 							else
 								translationId += "Male.SilverHand";
@@ -4235,7 +4235,7 @@ namespace DOL.GS
 					case 6:
 						if (Realm == eRealm.Albion)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.AlerionKnight";
 							else
 								translationId += "Male.AlerionKnight";
@@ -4243,7 +4243,7 @@ namespace DOL.GS
 
 						if (Realm == eRealm.Midgard)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.FlammenFru";
 							else
 								translationId += "Male.FlammenHerra";
@@ -4251,7 +4251,7 @@ namespace DOL.GS
 
 						if (Realm == eRealm.Hibernia)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.Thunderer";
 							else
 								translationId += "Male.Thunderer";
@@ -4260,7 +4260,7 @@ namespace DOL.GS
 					case 7:
 						if (Realm == eRealm.Albion)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.UnicornKnight";
 							else
 								translationId += "Male.UnicornKnight";
@@ -4268,7 +4268,7 @@ namespace DOL.GS
 
 						if (Realm == eRealm.Midgard)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.EldingFru";
 							else
 								translationId += "Male.EldingHerra";
@@ -4276,7 +4276,7 @@ namespace DOL.GS
 
 						if (Realm == eRealm.Hibernia)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.GildedSpear";
 							else
 								translationId += "Male.GildedSpear";
@@ -4285,7 +4285,7 @@ namespace DOL.GS
 					case 8:
 						if (Realm == eRealm.Albion)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.LionKnight";
 							else
 								translationId += "Male.LionKnight";
@@ -4293,7 +4293,7 @@ namespace DOL.GS
 
 						if (Realm == eRealm.Midgard)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.StormurFru";
 							else
 								translationId += "Male.StormurHerra";
@@ -4301,7 +4301,7 @@ namespace DOL.GS
 
 						if (Realm == eRealm.Hibernia)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.Bantiarna";
 							else
 								translationId += "Male.Tiarna";
@@ -4310,7 +4310,7 @@ namespace DOL.GS
 					case 9:
 						if (Realm == eRealm.Albion)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.DragonKnight";
 							else
 								translationId += "Male.DragonKnight";
@@ -4318,7 +4318,7 @@ namespace DOL.GS
 
 						if (Realm == eRealm.Midgard)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.Einherjar";
 							else
 								translationId += "Male.Einherjar";
@@ -4326,84 +4326,84 @@ namespace DOL.GS
 
 						if (Realm == eRealm.Hibernia)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.EmeraldRidere";
-							else
+							if (Gender == eGender.Male)
 								translationId += "Male.EmeraldRidere";
 						}
 						break;
 					case 10:
 						if (Realm == eRealm.Albion)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.Lady";
-							else
+							if (Gender == eGender.Male)
 								translationId += "Male.Lord";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.Fru";
-							else
+							if (Gender == eGender.Male)
 								translationId += "Male.Herra";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.Banbharun";
-							else
+							if (Gender == eGender.Male)
 								translationId += "Male.Barun";
 						}
 						break;
 					case 11:
 						if (Realm == eRealm.Albion)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.Baronetess";
-							else
+							if (Gender == eGender.Male)
 								translationId += "Male.Baronet";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.Baronsfru";
-							else
+							if (Gender == eGender.Male)
 								translationId += "Male.Hersir";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.ArdBantiarna";
-							else
+							if (Gender == eGender.Male)
 								translationId += "Male.ArdTiarna";
 						}
 						break;
 					case 12:
 						if (Realm == eRealm.Albion)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.Baroness";
-							else
+							if (Gender == eGender.Male)
 								translationId += "Male.Baron";
 						}
 
 						if (Realm == eRealm.Midgard)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.Vicomtessa";
-							else
+							if (Gender == eGender.Male)
 								translationId += "Male.Vicomte";
 						}
 
 						if (Realm == eRealm.Hibernia)
 						{
-							if (Gender != 0)
+							if (Gender == eGender.Female)
 								translationId += "Female.CiannCath";
-							else
+							if (Gender == eGender.Male)
 								translationId += "Male.CiannCath";
 						}
 						break;
