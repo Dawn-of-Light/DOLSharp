@@ -347,8 +347,18 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(midMagic);
 			pak.WriteByte(hibMagic);
 			foreach (AbstractGameKeep keep in list)
-			{
-				int id = keep.KeepID & 0xFF;
+            {
+                int keepId = keep.KeepID;
+
+                if (ServerProperties.Properties.USE_NEW_KEEPS == 1)
+                {
+                    keepId -= 12;
+                    if ((keep.KeepID > 74 && keep.KeepID < 114) || (keep.KeepID > 330 && keep.KeepID < 370) || (keep.KeepID > 586 && keep.KeepID < 626) 
+                        || (keep.KeepID > 842 && keep.KeepID < 882) || (keep.KeepID > 1098 && keep.KeepID < 1138)) 
+                        keepId += 5;
+                }
+
+                int id = keepId & 0xFF;
 				int tower = keep.KeepID >> 8;
 				int map = (id - 25) / 25;
 				int index = id - (map * 25 + 25);
