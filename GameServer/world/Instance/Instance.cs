@@ -292,6 +292,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		public int GetInstanceLevel()
 		{
+			if (Objects == null)
+				return 0;
 			double level = 0;
 			double count = 0;
 			foreach (GameObject obj in Objects)
