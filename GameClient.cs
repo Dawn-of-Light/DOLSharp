@@ -269,6 +269,11 @@ namespace DOL.GS
 			}
 		}
 
+        /// <summary>
+        /// Variable is false if account/player is Ban, for a wrong password, if server is closed etc ... 
+        /// </summary>
+        public bool IsConnected = true;
+
 		/// <summary>
 		/// Gets whether or not the client is playing
 		/// </summary>
