@@ -354,7 +354,9 @@ namespace DOL.GS.PacketHandler
 				PacketProcessor pakProc = client.PacketProcessor;
 				Queue<byte[]> q = pakProc.m_tcpQueue;
 
-				int sent = client.Socket.EndSend(ar);
+                int sent = 0;
+                if (client.IsConnected)
+                    sent = client.Socket.EndSend(ar);
 
 				int count = 0;
 				byte[] data = pakProc.m_tcpSendBuffer;

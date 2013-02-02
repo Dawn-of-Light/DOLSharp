@@ -60,6 +60,7 @@ namespace DOL.GS.ServerRules
 			objs = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(username) + "')");
 			if (objs.Count > 0)
 			{
+                client.IsConnected = false;
 				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
 				log.Debug("IsAllowedToConnect deny access to username " + username);
 				return false;
@@ -69,7 +70,8 @@ namespace DOL.GS.ServerRules
 			string accip = GameServer.Database.Escape(client.TcpEndpointAddress);
 			objs = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='I' OR Type='B') AND '" + GameServer.Database.Escape(accip) + "' LIKE Ip)");
 			if (objs.Count > 0)
-			{
+            {
+                client.IsConnected = false;
 				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
 				log.Debug("IsAllowedToConnect deny access to IP " + accip);
 				return false;
@@ -77,7 +79,8 @@ namespace DOL.GS.ServerRules
 
 			GameClient.eClientVersion min = (GameClient.eClientVersion)Properties.CLIENT_VERSION_MIN;
 			if (min != GameClient.eClientVersion.VersionNotChecked && client.Version < min)
-			{
+            {
+                client.IsConnected = false;
 				client.Out.SendLoginDenied(eLoginError.ClientVersionTooLow);
 				log.Debug("IsAllowedToConnect deny access to client version (too low) " + client.Version);
 				return false;
@@ -85,7 +88,8 @@ namespace DOL.GS.ServerRules
 
 			GameClient.eClientVersion max = (GameClient.eClientVersion)Properties.CLIENT_VERSION_MAX;
 			if (max != GameClient.eClientVersion.VersionNotChecked && client.Version > max)
-			{
+            {
+                client.IsConnected = false;
 				client.Out.SendLoginDenied(eLoginError.NotAuthorizedToUseExpansionVersion);
 				log.Debug("IsAllowedToConnect deny access to client version (too high) " + client.Version);
 				return false;
@@ -95,7 +99,8 @@ namespace DOL.GS.ServerRules
 			{
 				GameClient.eClientType type = (GameClient.eClientType)Properties.CLIENT_TYPE_MAX;
 				if ((int)client.ClientType > (int)type )
-				{
+                {
+                    client.IsConnected = false;
 					client.Out.SendLoginDenied(eLoginError.ExpansionPacketNotAllowed);
 					log.Debug("IsAllowedToConnect deny access to expansion pack.");
 					return false;
@@ -136,7 +141,8 @@ namespace DOL.GS.ServerRules
 					// GMs are still allowed to enter server
 					if (account == null || (account.PrivLevel == 1 && account.Status <= 0))
 					{
-						// Normal Players will not be allowed over the max
+                        // Normal Players will not be allowed over the max
+                        client.IsConnected = false;
 						client.Out.SendLoginDenied(eLoginError.TooManyPlayersLoggedIn);
 						log.Debug("IsAllowedToConnect deny access due to too many players.");
 						return false;
@@ -150,7 +156,8 @@ namespace DOL.GS.ServerRules
 				if (account == null || account.PrivLevel == 1)
 				{
 					// GMs are still allowed to enter server
-					// Normal Players will not be allowed to Log in
+                    // Normal Players will not be allowed to Log in
+                    client.IsConnected = false;
 					client.Out.SendLoginDenied(eLoginError.GameCurrentlyClosed);
 					log.Debug("IsAllowedToConnect deny access; staff only login");
 					return false;
@@ -169,7 +176,8 @@ namespace DOL.GS.ServerRules
 							if (cln.Account != null && cln.Account.PrivLevel > 1)
 							{
 								break;
-							}
+                            }
+                            client.IsConnected = false;
 							client.Out.SendLoginDenied(eLoginError.AccountAlreadyLoggedIntoOtherServer);
 							log.Debug("IsAllowedToConnect deny access; dual login not allowed");
 							return false;
