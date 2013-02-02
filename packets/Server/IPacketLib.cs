@@ -117,6 +117,7 @@ namespace DOL.GS.PacketHandler
 		PlaySound = 0xD3,
 		PlayerCreate = 0xD4,
 		DisableSkills = 0xD6,
+		DelveInfo = 0xD8,
 		ObjectCreate = 0xD9,
 		NPCCreate = 0xDA,
 		ModelChange = 0xDB,
@@ -594,6 +595,7 @@ namespace DOL.GS.PacketHandler
 		void SendUpdatePoints();
 		void SendUpdateMoney();
 		void SendUpdateMaxSpeed();
+		void SendDelveInfo(string info);
 
 		void SendCombatAnimation(GameObject attacker, GameObject defender, ushort weaponID, ushort shieldID, int style,
 		                         byte stance, byte result, byte targetHealthPercent);
