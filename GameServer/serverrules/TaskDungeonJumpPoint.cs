@@ -65,7 +65,7 @@ namespace DOL.GS.ServerRules
                 targetPoint.TargetY = loc.Y;
                 targetPoint.TargetZ = loc.Z;
                 targetPoint.TargetRegion = loc.RegionID;
-                targetPoint.TargetHeading = loc.RegionID;
+                targetPoint.TargetHeading = loc.Heading;
                 return true;
             }
 
