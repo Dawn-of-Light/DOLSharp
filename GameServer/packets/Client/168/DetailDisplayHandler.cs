@@ -19,8 +19,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-
+using System.Text;
 using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.Quests;
@@ -940,7 +941,24 @@ namespace DOL.GS.PacketHandler.Client.v168
 						return;
 					}
 					#endregion
-					#region ChampionAbilities delve from trainer window
+				#region v1.110+
+				case 0x18://SpellsNew
+			        client.Out.SendDelveInfo(DelveSpell(client, objectID));
+					break;
+				case 0x19://StylesNew
+                    client.Out.SendDelveInfo(DelveStyle(client, objectID));
+                    break;
+				case 0x1A://SongsNew
+					client.Out.SendDelveInfo(DelveSong(client, objectID));
+					break;
+				case 0x1B://RANew
+                    client.Out.SendDelveInfo(DelveRealmAbility(client, objectID));
+                    break;
+				case 0x1C://AbilityNew
+			        client.Out.SendDelveInfo(DelveAbility(client, objectID));
+			        break;
+				#endregion
+				#region ChampionAbilities delve from trainer window
 				default:
 					{
 						// Try and handle all Champion lines, including custom lines
@@ -1941,5 +1959,370 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 			}
 		}
-	}
+
+		 #region v1.110+
+        /// <summary>
+        /// Writer for v1.110+ delves
+        /// 
+        /// Examples: 
+        /// <example>
+        ///  (Spell (Function "")(Index " "))
+        /// </example>
+        /// 
+        /// @author mlinder
+        /// </summary>
+        public sealed class DelveWriter {
+
+            private int _openTags = 0;
+            private readonly StringBuilder _str = new StringBuilder();
+
+            /// <summary>
+            /// Begins a new tag
+            /// </summary>
+            /// <param name="name">Name of the tag, e.g. Spell</param>
+            public DelveWriter Begin(string name) {
+                _str.Append('(');
+                _str.Append(name);
+                _str.Append(' ');
+                _openTags++;
+                return this;
+            }
+
+            /// <summary>
+            /// Adds a subtag key-value pair
+            /// </summary>
+            /// <param name="name">Name of the sub-tag, e.g. Index</param>
+            /// <param name="value">Value of the sub-tag, e.g. 3</param>
+            public DelveWriter Value(string name, object value) {
+                Begin(name).Value(value).End();
+                return this;
+            }
+
+            /// <summary>
+            /// Subtag which is only added if the specified condition matches
+            /// </summary>
+            /// <param name="name">Name of the sub-tag</param>
+            /// <param name="value">Value of the sub-tag</param>
+            /// <param name="condition">Condition which has to match</param>
+            public DelveWriter Value(string name, object value, bool condition)
+            {
+				if (condition)
+					Begin(name).Value(value).End();
+                return this;
+            }
+
+            /// <summary>
+            /// Only writes the value of a tag
+            /// </summary>
+            /// <param name="value">e.g. 3</param>
+            public DelveWriter Value(object value) {
+                _str.Append("\"");
+                _str.Append((value ?? "").ToString().Replace("\"", "\\\""));
+                _str.Append("\"");
+                return this;
+            }
+
+            /// <summary>
+            /// Closes an opened tag. Can only be called after a previous Begin()
+            /// </summary>
+            /// <returns></returns>
+            public DelveWriter End() {
+                _str.Append(')');
+                _openTags--;
+                if (_openTags < 0) 
+                    throw new ArgumentException("More End() than Begin() calls");
+                return this;
+            }
+
+            public override string ToString() {
+                while (_openTags > 0)
+                    End();
+                return _str.ToString();
+            }
+        }
+
+        /** General info @ v1.110:
+         *  - Examples can be found at http://dl.dropbox.com/u/48908369/delve.txt
+         *  - 'Expires' can be left out
+         *  - No idea what 'Fingerprint' does
+         **/
+
+        static string DelveAbility(GameClient clt, int id) { /* or skill */
+            Skill s = clt.Player.GetNonTrainableSkillList().Cast<Skill>().Where(sk => sk.ID == id).FirstOrDefault();
+            var dw = new DelveWriter().Begin(s is Ability ? "Ability" : "Skill").Value("Index", id);
+            if (s != null) {
+                dw.Value("Name", s.Name);
+            }
+            else dw.Value("Name", "(not found)");
+            return dw.ToString();
+        }
+
+
+		/// <summary>
+		/// Delve Info for Songs (V1.110+)
+		/// </summary>
+		/// <param name="clt">Client</param>
+		/// <param name="id">SpellID</param>
+		/// <returns></returns>
+		public static string DelveSong(GameClient clt, int id)
+		{
+			var dw = new DelveWriter();
+
+			Spell spell = SkillBase.GetSpellByID(id);
+		
+	
+			if (spell != null)
+			{
+	
+					dw.Begin("Song")
+						.Value("Index", id)
+						.Value("Name", spell.Name)
+						.Value("effect", spell.ClientEffect)
+						.Value("description_string", spell.Description, !string.IsNullOrEmpty(spell.Description))
+						;
+					//log.Info(dw.ToString());
+					return dw.ToString();
+			}
+
+			// not found
+			return dw.Begin("Song").Value("Name", "(not found)").Value("Index", id).ToString();
+		}
+
+		/// <summary>
+		/// Delve Info for Spells (V1.110+)
+		/// </summary>
+		/// <param name="clt">Client</param>
+		/// <param name="id">SpellID</param>
+		/// <returns></returns>
+        public static string DelveSpell(GameClient clt, int id) {
+            var dw = new DelveWriter();
+			
+			var spell = SkillBase.GetSpellByID(id);
+
+			//if (spell != null && spellLine != null)
+			{
+				/*
+				var spellLine = clt.Player.GetSpellLines()[lineId] as SpellLine;
+				if (spellLine != null) {
+					Spell spell = null;
+					foreach (Spell spl in SkillBase.GetSpellList(spellLine.KeyName)) {
+						if (spl.Level == level) {
+							spell = spl;
+							break;
+						}
+					}*/
+				//if (spell != null) {
+				// NOT GOOD SOLUTION SPELLLINE IS BETTER INCLUDED IN SPELL
+				ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(clt.Player, spell,SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
+				if (spellHandler != null)
+				{
+				dw.Begin("Spell")
+						.Value("Index", id)
+						.Value("Name", spell.Name)
+						//.Value("Function", spellHandler.FunctionName ?? "0")
+						.Value("cast_timer", spell.CastTime - 2000, spell.CastTime > 2000) //minus 2 seconds (why mythic?)
+						.Value("instant","1",spell.CastTime==0)
+						//.Value("damage", spellHandler.GetDelveValueDamage, spellHandler.GetDelveValueDamage != 0)
+						.Value("damage_type", (int) spell.DamageType + 1, (int) spell.DamageType > 0) // Damagetype not the same as dol
+						//.Value("type1", spellHandler.GetDelveValueType1, spellHandler.GetDelveValueType1 > 0)
+						.Value("level", spell.Level, spell.Level > 0)
+						.Value("power_cost", spell.Power, spell.Power != 0)
+						//.Value("round_cost",spellHandler.GetDelveValueRoundCost,spellHandler.GetDelveValueRoundCost!=0)
+						//.Value("power_level", spellHandler.GetDelveValuePowerLevel,spellHandler.GetDelveValuePowerLevel!=0)
+						.Value("range", spell.Range, spell.Range > 0)
+						.Value("duration", spell.Duration/1000, spell.Duration > 0) //seconds
+						.Value("dur_type", GetDurrationType(spell), GetDurrationType(spell) > 0)
+						//.Value("parm",spellHandler.GetDelveValueParm,spellHandler.GetDelveValueParm>0) 
+						.Value("timer_value", spell.RecastDelay/1000, spell.RecastDelay > 1000)
+						//.Value("bonus", spellHandler.GetDelveValueBonus, spellHandler.GetDelveValueBonus > 0)
+						//.Value("no_combat"," ",Util.Chance(50))//TODO
+						//.Value("link",14000)
+						//.Value("ability",4) // ??
+						//.Value("use_timer",4)
+						.Value("target", GetSpellTargetType(spell.Target), GetSpellTargetType(spell.Target) > 0)
+						//.Value("frequency", spellHandler.GetDelveValueFrequency, spellHandler.GetDelveValueFrequency != 0)
+						.Value("description_string", spell.Description, !string.IsNullOrEmpty(spell.Description))
+						.Value("radius", spell.Radius, spell.Radius > 0)
+						.Value("concentration_points", spell.Concentration, spell.Concentration > 0)
+						//.Value("num_targets", spellHandler.GetDelveValueNumTargets, spellHandler.GetDelveValueNumTargets>0)
+						//.Value("no_interrupt", spell.Interruptable ? (char)0 : (char)1) //Buggy?
+						;
+					//log.Info(dw.ToString());
+					return dw.ToString();
+					// }
+				}
+			}
+
+        	// not found
+            return dw.Begin("Spell").Value("Name", "(not found)").Value("Index", id).ToString();
+        }
+
+		#region delvespell methods
+
+		/// <summary>
+		/// Returns delve code for target
+		/// </summary>
+		/// <param name="target"></param>
+		/// <returns></returns>
+		static int GetSpellTargetType(string target)
+		{
+			switch (target)
+			{
+				case "Realm":
+					return 7;
+				case "Self":
+					return 0;
+				case "Enemy":
+					return 1;
+				case "Pet":
+					return 6;
+				case "Group":
+					return 3;
+				case "Area":
+					return 0; // TODO
+				default:
+					return 0;
+			}
+		}
+
+		static int GetDurrationType(Spell spell)
+		{
+			//2-seconds,4-conc,5-focus
+			if (spell.Duration>0)
+			{
+				return 2;
+			}
+			if (spell.Concentration>0)
+			{
+				return 4;
+			}
+
+
+			return 0;
+		}
+
+		#endregion
+
+		static string DelveStyle(GameClient clt, int id)
+        {
+            var style = SkillBase.GetStyleByID(id, clt.Player.CharacterClass.ID);
+
+            var dw = new DelveWriter()
+                .Begin("Style").Value("Index", id);
+            
+            if (style != null) {
+                // Not implemented:
+                // (Style (FollowupStyle "Sapphire Slash")(LevelBonus "2")(OpeningDamage "16")(Skill "1")(Expires "1343375647"))
+                // (Style (Fingerprint "1746652963")(FollowupStyle "Thigh Cut")(Hidden "1")OpeningDamage "55")(Skill "118")(SpecialNumber "1511")(SpecialType "1")(Expires "1342381240"))
+
+            	dw
+            		.Value("Name", style.Name)
+            		.Value("Icon", style.Icon)
+            		.Value("Level", style.Level)
+            		.Value("Fatigue", style.EnduranceCost)
+            		//.Value("SpecialType", (int)style.SpecialType, style.SpecialType != 0)
+					//.Value("SpecialNumber", GetSpecialNumber(style), GetSpecialNumber(style)!=0)
+            		.Value("DefensiveMod", style.BonusToDefense, style.BonusToDefense != 0)
+            		.Value("AttackMod", style.BonusToHit, style.BonusToHit != 0)
+            		.Value("OpeningType", (int)style.OpeningRequirementType)
+					.Value("OpeningNumber", style.OpeningRequirementValue, style.OpeningRequirementType == Style.eOpening.Positional)
+					//.Value("OpeningResult",GetOpeningResult(style,clt),GetOpeningResult(style,clt)>0)
+					//.Value("OpeningStyle",GetOpeningStyle(style),(Style.eAttackResult)GetOpeningResult(style,clt) == Style.eAttackResult.Style)
+            		.Value("Weapon", style.GetRequiredWeaponName(), style.WeaponTypeRequirement > 0)
+            		.Value("Hidden", "1",style.StealthRequirement)
+            		//.Value("TwoHandedIcon", 10, style.TwoHandAnimation > 0)
+					//.Value("Skill",43)
+					.Value("OpeningDamage",style.GrowthRate*100,style.GrowthRate>0)
+					//.Value("SpecialValue", GetSpecialValue(style),GetSpecialValue(style)!=0)
+					//.Value("FollowupStyle",style.DelveFollowUpStyles,!string.IsNullOrEmpty(style.DelveFollowUpStyles))
+            		;
+            }
+            else {
+                dw.Value("Name", "(not found)");
+            }
+            return dw.End().ToString();
+        }
+
+		#region style v1.110 methods
+		/*
+		public static int GetSpecialNumber(Style style)
+		{
+			if (style.SpecialType == Style.eSpecialType.Effect)
+			{
+				Spell spell = SkillBase.GetSpellById(style.SpecialValue);
+				if (spell != null)
+					return spell.ClientEffect;
+			}
+			return 0;
+		}
+
+		public static int GetSpecialValue(Style style)
+		{
+			switch(style.SpecialType)
+			{
+				case Style.eSpecialType.ExtendedRange:
+					return 128; // Extended Range für Reaver style
+				case Style.eSpecialType.Taunt:
+					return style.SpecialValue;
+			}
+			return 0;
+		}*/
+
+		
+		/*public static int GetOpeningResult(Style style,GameClient clt)
+		{
+			switch(StyleProcessor.ResolveAttackResult(style,clt.Player.PlayerCharacter.Class))
+			{
+				case GameLiving.eAttackResult.Any:
+					return (int)Style.eAttackResult.Any;
+				case GameLiving.eAttackResult.Missed:
+					return (int) Style.eAttackResult.Miss;
+				case GameLiving.eAttackResult.Parried:
+					return (int)Style.eAttackResult.Parry;
+				case GameLiving.eAttackResult.Evaded:
+					return (int)Style.eAttackResult.Evade;
+				case GameLiving.eAttackResult.Blocked:
+					return (int)Style.eAttackResult.Block;
+				case GameLiving.eAttackResult.Fumbled:
+					return (int)Style.eAttackResult.Fumble;
+				case GameLiving.eAttackResult.HitStyle:
+					return (int)Style.eAttackResult.Style;
+				case GameLiving.eAttackResult.HitUnstyled:
+					return (int)Style.eAttackResult.Hit;
+			}
+			return 0;
+		}*/
+		/*
+		public static string GetOpeningStyle(Style style)
+		{
+			if (style.OpeningRequirementValue > 0)
+			{
+				Style style2 = SkillBase.GetStyleByID(style.OpeningRequirementValue);
+				if (style2!=null)
+					return style2.Name;
+				return "";
+			}
+			return "";
+		}*/
+
+		#endregion
+
+		/// <summary>
+		/// Delve the realm abilities for v1.110+ clients
+		/// </summary>
+		/// <param name="clt"></param>
+		/// <param name="id"></param>
+		/// <returns></returns>
+        static string DelveRealmAbility(GameClient clt, int id) {
+            var dw = new DelveWriter().Begin("RealmAbility").Value("Index", id);
+            var ra = clt.Player.GetNonTrainableSkillList().Cast<Skill>().Where(sk => sk.ID == id).FirstOrDefault() as RealmAbility;
+            if (ra != null)
+            {
+                ra.AddDelve(dw);
+            }
+            else dw.Value("Name", "(not found)");
+            return dw.ToString();
+        }
+        #endregion
+    }
 }
