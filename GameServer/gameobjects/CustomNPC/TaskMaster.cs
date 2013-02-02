@@ -66,10 +66,10 @@ namespace DOL.GS
                         log.Info("INFO: TaskMaster Dungeons activated");
                         TaskDungeonMission mission;
                         if (player.Group != null)
-                            mission = new TaskDungeonMission(player.Group);
+                        	mission = new TaskDungeonMission(player.Group, TaskDungeonMission.eDungeonType.Ranged);
                         else
                         {
-                            mission = new TaskDungeonMission(player);
+                            mission = new TaskDungeonMission(player, TaskDungeonMission.eDungeonType.Melee);
                             player.Mission = mission;
                         }
                         /*
