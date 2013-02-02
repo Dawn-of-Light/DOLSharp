@@ -4056,5 +4056,9 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte) item.Position);
 			pak.WriteByte((byte) (item.PlacementMode - 2));
 		}
+
+		public virtual void SendDelveInfo(string info)
+		{
+		}
 	}
 }

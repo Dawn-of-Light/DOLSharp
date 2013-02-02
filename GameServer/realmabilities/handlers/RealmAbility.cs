@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.GS.PacketHandler.Client.v168;
 using DOL.Language;
 using System.Collections.Generic;
 
@@ -35,6 +36,22 @@ namespace DOL.GS.RealmAbilities
 		public virtual int MaxLevel
 		{
 			get { return 0; }
+		}
+
+		/// <summary>
+		/// Delve for this RA
+		/// </summary>
+		/// <param name="w"></param>
+		public virtual void AddDelve(DetailDisplayHandler.DelveWriter w)
+		{
+			w.Value("Name", Name);
+			w.Value("icon", Icon, Icon > 0);
+
+			for (int i = 0; i <= MaxLevel - 1; i++)
+			{
+				if (CostForUpgrade(i) > 0)
+					w.Value("TrainingCost_" + (i + 1), CostForUpgrade(i));
+			}
 		}
 
 		public override string Name
@@ -110,6 +127,16 @@ namespace DOL.GS.RealmAbilities
 			get
 			{
 				return 3;
+			}
+		}
+
+		public override void AddDelve(DetailDisplayHandler.DelveWriter w)
+		{
+			base.AddDelve(w);
+
+			for (int i = 1; i <= MaxLevel; i++)
+			{
+				w.Value("ReuseTimer_" + i, GetReUseDelay(i));
 			}
 		}
 
