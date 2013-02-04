@@ -1,3 +1,21 @@
+/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,7 +43,8 @@ namespace DOL.GS.Spells
 			{
 				base.OnEffectStart(effect);
 				GamePlayer player = effect.Owner as GamePlayer;
-				player.BaseBuffBonusCategory[0] = (int)player.Effectiveness;
+				player.TempProperties.setProperty("PreEffectivenessDebuff", player.Effectiveness);
+
 
 				double effectiveness =  player.Effectiveness;
 				double valueToAdd = (Spell.Value * effectiveness)/100;
@@ -44,6 +63,9 @@ namespace DOL.GS.Spells
 				MessageToLiving(effect.Owner, Spell.Message1, eChatType.CT_Spell);
 				Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, true)), eChatType.CT_Spell, effect.Owner);
 
+				// Added to fix?
+				player.Out.SendUpdateWeaponAndArmorStats();
+				player.Out.SendStatusUpdate();
 			}
 			
 		}
@@ -54,14 +76,19 @@ namespace DOL.GS.Spells
 			if (effect.Owner is GamePlayer)
 			{
 				GamePlayer player = effect.Owner as GamePlayer;
-				player.Effectiveness = player.BaseBuffBonusCategory[0];
-				player.BaseBuffBonusCategory[0] = 0;
+				player.Effectiveness = player.TempProperties.getProperty<double>("PreEffectivenessDebuff");
+				player.TempProperties.removeProperty("PreEffectivenessDebuff");
 				MessageToLiving(effect.Owner, Spell.Message3, eChatType.CT_Spell);
 				Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message4, effect.Owner.GetName(0, true)), eChatType.CT_Spell, effect.Owner);
-				
+
+				// Added to fix?
+				player.Out.SendUpdateWeaponAndArmorStats();
+				player.Out.SendStatusUpdate();
 			}
 			return 0;
 		}
+
+
 
 		
 		public override IList<string> DelveInfo 
