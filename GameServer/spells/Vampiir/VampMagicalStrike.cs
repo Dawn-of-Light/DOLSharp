@@ -17,10 +17,6 @@
  *
  */
 using System;
-using System.Collections;
-using DOL.AI.Brain;
-using DOL.GS.PacketHandler;
-using DOL.GS.Keeps;
 
 namespace DOL.GS.Spells
 {
