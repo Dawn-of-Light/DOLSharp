@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using DOL;
+using DOL.Database;
 using DOL.Language;
 using DOL.AI.Brain;
 using DOL.Events;
@@ -49,102 +50,27 @@ namespace DOL.GS.ServerRules
 		//TODO: 2min immunity after release if killed by player
 
 		/// <summary>
-		/// Constructor
-		/// </summary>
-		public PvPServerRules()
-		{
-			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(OnGameEntered));
-			GameEventMgr.AddHandler(GamePlayerEvent.RegionChanged, new DOLEventHandler(OnRegionChanged));
-			GameEventMgr.AddHandler(GamePlayerEvent.Released, new DOLEventHandler(OnReleased));
-			m_invExpiredCallback = new GamePlayer.InvulnerabilityExpiredCallback(ImmunityOverCallback);
-		}
-
-		#region PvP Immunity
-
-		/// <summary>
 		/// TempProperty set if killed by player
 		/// </summary>
 		protected const string KILLED_BY_PLAYER_PROP = "PvP killed by player";
 
-		/// <summary>
-		/// Level at which players safety flag has no effect
-		/// </summary>
-		protected int m_safetyLevel = 10;
-
-        /// <summary>
-        /// Called when player enters the game for first time
-        /// </summary>
-        /// <param name="e">event</param>
-        /// <param name="sender">GamePlayer object that has entered the game</param>
-        /// <param name="args"></param>
-        public virtual void OnGameEntered(DOLEvent e, object sender, EventArgs args)
-        {
-            SetImmunity((GamePlayer)sender, (ServerProperties.Properties.TIMER_REGION_CHANGED / 3)*1000); //Timer when a player enters game.
-        }
-
-        /// <summary>
-        /// Called when player has changed the region
-        /// </summary>
-        /// <param name="e">event</param>
-        /// <param name="sender">GamePlayer object that has changed the region</param>
-        /// <param name="args"></param>
-        public virtual void OnRegionChanged(DOLEvent e, object sender, EventArgs args)
-        {
-            SetImmunity((GamePlayer)sender, ServerProperties.Properties.TIMER_REGION_CHANGED*1000);//When a player changes Regions
-        }
-
-        /// <summary>
-        /// Called after player has released
-        /// </summary>
-        /// <param name="e">event</param>
-        /// <param name="sender">GamePlayer that has released</param>
-        /// <param name="args"></param>
-        public virtual void OnReleased(DOLEvent e, object sender, EventArgs args)
-        {
-            GamePlayer player = (GamePlayer)sender;
-            if (player.TempProperties.getProperty<object>(KILLED_BY_PLAYER_PROP, null) != null)
-            {
-                player.TempProperties.removeProperty(KILLED_BY_PLAYER_PROP);
-                SetImmunity(player, ServerProperties.Properties.TIMER_KILLED_BY_PLAYER*1000);//When Killed by a Player
-            }
-            else
-            {
-                SetImmunity(player, ServerProperties.Properties.TIMER_KILLED_BY_MOB*1000);//When Killed by a Mob
-            }
-        }
-
-		/// <summary>
-		/// Sets PvP immunity for a player and starts the timer if needed
-		/// </summary>
-		/// <param name="player">player that gets immunity</param>
-		/// <param name="duration">amount of milliseconds when immunity ends</param>
-		public virtual void SetImmunity(GamePlayer player, int duration)
-		{
-			// left for compatibility
-			player.StartInvulnerabilityTimer(duration, m_invExpiredCallback);
-		}
-
-		/// <summary>
-		/// Holds the delegate called when PvP invulnerability is expired
-		/// </summary>
-		protected GamePlayer.InvulnerabilityExpiredCallback m_invExpiredCallback;
-
-		/// <summary>
-		/// Removes PvP immunity from the players
-		/// </summary>
-		/// <player></player>
-		public virtual void ImmunityOverCallback(GamePlayer player)
+		public override void ImmunityExpiredCallback(GamePlayer player)
 		{
 			if (player.ObjectState != GameObject.eObjectState.Active) return;
 			if (player.Client.IsPlaying == false) return;
 
 			if (player.Level < m_safetyLevel && player.SafetyFlag)
-				player.Out.SendMessage("Your temporary pvp invulnerability timer has expired, but your /safety flag is still on.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("Your temporary invulnerability timer has expired, but your /safety flag is still on.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			else
-				player.Out.SendMessage("Your temporary pvp invulnerability timer has expired.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("Your temporary invulnerability timer has expired.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			return;
 		}
+
+		/// <summary>
+		/// Level at which players safety flag has no effect
+		/// </summary>
+		protected int m_safetyLevel = 10;
 
 		/// <summary>
 		/// Invoked on Player death and deals out
@@ -161,7 +87,37 @@ namespace DOL.GS.ServerRules
 				killedPlayer.TempProperties.removeProperty(KILLED_BY_PLAYER_PROP);
 		}
 
-		#endregion
+		public override void OnReleased(DOLEvent e, object sender, EventArgs args)
+		{
+			GamePlayer player = (GamePlayer)sender;
+			if (player.TempProperties.getProperty<object>(KILLED_BY_PLAYER_PROP, null) != null)
+			{
+				player.TempProperties.removeProperty(KILLED_BY_PLAYER_PROP);
+				StartImmunityTimer(player, ServerProperties.Properties.TIMER_KILLED_BY_PLAYER * 1000);//When Killed by a Player
+			}
+			else
+			{
+				StartImmunityTimer(player, ServerProperties.Properties.TIMER_KILLED_BY_MOB * 1000);//When Killed by a Mob
+			}
+		}
+
+
+		/// <summary>
+		/// Should be called whenever a player teleports to a new location
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="source"></param>
+		/// <param name="destination"></param>
+		public override void OnPlayerTeleport(GamePlayer player, GameLocation source, Teleport destination)
+		{
+			// Since region change already starts an immunity timer we only want to do this if a player
+			// is teleporting within the same region
+			if (source.RegionID == destination.RegionID)
+			{
+				StartImmunityTimer(player, ServerProperties.Properties.TIMER_PVP_TELEPORT * 1000);
+			}
+		}
+
 
 		/// <summary>
 		/// Regions where players can't be attacked

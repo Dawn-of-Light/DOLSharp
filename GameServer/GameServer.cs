@@ -188,10 +188,16 @@ namespace DOL.GS
 				if (Instance.m_serverRules == null)
 				{
 					Instance.m_serverRules = ScriptMgr.CreateServerRules(Instance.Configuration.ServerType);
-					if (Instance.m_serverRules == null && log.IsErrorEnabled)
+					if (Instance.m_serverRules != null)
 					{
-						log.Error(
-							"Something errored in created new server rules.  This is a test to see if this is what is causing the weird keep guard brain bug");
+						Instance.m_serverRules.Initialize();
+					}
+					else
+					{
+						if (log.IsErrorEnabled)
+						{
+							log.Error("ServerRules null on access and failed to create.");
+						}
 					}
 				}
 				return Instance.m_serverRules;
@@ -854,6 +860,8 @@ namespace DOL.GS
 				//---------------------------------------------------------------
 				//Create the server rules
 				m_serverRules = ScriptMgr.CreateServerRules(Configuration.ServerType);
+				m_serverRules.Initialize();
+
 				if (log.IsInfoEnabled)
 					log.Info("Server rules: true");
 

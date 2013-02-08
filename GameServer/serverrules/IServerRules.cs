@@ -31,6 +31,12 @@ namespace DOL.GS.ServerRules
 	public interface IServerRules
 	{
 		/// <summary>
+		/// This is called when server rules are created during server startup
+		/// </summary>
+		/// <returns></returns>
+		void Initialize();
+
+		/// <summary>
 		/// Allows or denies a client from connecting to the server ...
 		/// NOTE: The client has not been fully initialized when this method is called.
 		/// For example, no account or character data has been loaded yet.
@@ -245,6 +251,14 @@ namespace DOL.GS.ServerRules
 		/// <param name="living">the living that died</param>
 		/// <param name="killer"></param>
 		void OnLivingKilled(GameLiving living, GameObject killer);
+
+		/// <summary>
+		/// Invoked when a player teleports somewhere
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="source"></param>
+		/// <param name="destination"></param>
+		void OnPlayerTeleport(GamePlayer player, GameLocation source, Teleport destination);
 
 		/// <summary>
 		/// Gets the Realm of an living for name text coloring
