@@ -979,10 +979,22 @@ namespace DOL.GS.ServerProperties
 		public static int TIMER_KILLED_BY_PLAYER;
 
 		/// <summary>
-		/// PvP Immunity Timer - Region Changed (Enter World Timer Divided by 3 of this)
+		/// PvP Immunity Timer - Region Changed
 		/// </summary>
 		[ServerProperty("pvp", "Timer_Region_Changed", "Immunity Timer when player changes regions, in seconds", 30)] //30 seconds default
 		public static int TIMER_REGION_CHANGED;
+
+		/// <summary>
+		/// PvP Immunity Timer - Game Entered
+		/// </summary>
+		[ServerProperty("pvp", "Timer_Game_Entered", "Immunity Timer when player enters the game, in seconds", 10)] //10 seconds default
+		public static int TIMER_GAME_ENTERED;
+
+		/// <summary>
+		/// PvP Immunity Timer - Teleport
+		/// </summary>
+		[ServerProperty("pvp", "Timer_PvP_Teleport", "Immunity Timer when player teleports within the same region, in seconds", 30)] //30 seconds default
+		public static int TIMER_PVP_TELEPORT;
 
 		/// <summary>
 		/// Time after a relic lost in nature is returning to his ReturnRelicPad pad

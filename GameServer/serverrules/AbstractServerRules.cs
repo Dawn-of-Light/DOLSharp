@@ -23,6 +23,7 @@ using System.Reflection;
 
 using DOL.AI.Brain;
 using DOL.Database;
+using DOL.Events;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
@@ -38,6 +39,20 @@ namespace DOL.GS.ServerRules
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		/// <summary>
+		/// This is called after the rules are created to do any event binding or other tasks
+		/// </summary>
+		/// <param name="e"></param>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
+		public virtual void Initialize()
+		{
+			GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(OnGameEntered));
+			GameEventMgr.AddHandler(GamePlayerEvent.RegionChanged, new DOLEventHandler(OnRegionChanged));
+			GameEventMgr.AddHandler(GamePlayerEvent.Released, new DOLEventHandler(OnReleased));
+			m_invExpiredCallback = new GamePlayer.InvulnerabilityExpiredCallback(ImmunityExpiredCallback);
+		}
 
 		/// <summary>
 		/// Allows or denies a client from connecting to the server ...
@@ -188,6 +203,85 @@ namespace DOL.GS.ServerRules
 
 			return true;
 		}
+
+
+		/// <summary>
+		/// Called when player enters the game for first time
+		/// </summary>
+		/// <param name="e">event</param>
+		/// <param name="sender">GamePlayer object that has entered the game</param>
+		/// <param name="args"></param>
+		public virtual void OnGameEntered(DOLEvent e, object sender, EventArgs args)
+		{
+			StartImmunityTimer((GamePlayer)sender, ServerProperties.Properties.TIMER_GAME_ENTERED * 1000);
+		}
+
+		/// <summary>
+		/// Called when player has changed the region
+		/// </summary>
+		/// <param name="e">event</param>
+		/// <param name="sender">GamePlayer object that has changed the region</param>
+		/// <param name="args"></param>
+		public virtual void OnRegionChanged(DOLEvent e, object sender, EventArgs args)
+		{
+			StartImmunityTimer((GamePlayer)sender, ServerProperties.Properties.TIMER_REGION_CHANGED * 1000);
+		}
+
+		/// <summary>
+		/// Called after player has released
+		/// </summary>
+		/// <param name="e">event</param>
+		/// <param name="sender">GamePlayer that has released</param>
+		/// <param name="args"></param>
+		public virtual void OnReleased(DOLEvent e, object sender, EventArgs args)
+		{
+			GamePlayer player = (GamePlayer)sender;
+			StartImmunityTimer(player, ServerProperties.Properties.TIMER_KILLED_BY_MOB * 1000);//When Killed by a Mob
+		}
+
+		/// <summary>
+		/// Should be called whenever a player teleports to a new location
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="source"></param>
+		/// <param name="destination"></param>
+		public virtual void OnPlayerTeleport(GamePlayer player, GameLocation source, Teleport destination)
+		{
+			// override this in order to do something, like set immunity, when a player teleports
+		}
+
+		/// <summary>
+		/// Starts the immunity timer for a player
+		/// </summary>
+		/// <param name="player">player that gets immunity</param>
+		/// <param name="duration">amount of milliseconds when immunity ends</param>
+		public virtual void StartImmunityTimer(GamePlayer player, int duration)
+		{
+			if (duration > 0)
+			{
+				player.StartInvulnerabilityTimer(duration, m_invExpiredCallback);
+			}
+		}
+
+		/// <summary>
+		/// Holds the delegate called when PvP invulnerability is expired
+		/// </summary>
+		protected GamePlayer.InvulnerabilityExpiredCallback m_invExpiredCallback;
+
+		/// <summary>
+		/// Removes immunity from the players
+		/// </summary>
+		/// <player></player>
+		public virtual void ImmunityExpiredCallback(GamePlayer player)
+		{
+			if (player.ObjectState != GameObject.eObjectState.Active) return;
+			if (player.Client.IsPlaying == false) return;
+
+			player.Out.SendMessage("Your temporary invulnerability timer has expired.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+			return;
+		}
+
 
 		public abstract bool IsSameRealm(GameLiving source, GameLiving target, bool quiet);
 		public abstract bool IsAllowedCharsInAllRealms(GameClient client);
