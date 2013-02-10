@@ -1361,6 +1361,42 @@ namespace DOL.GS
 
 		}
 
+		/// <summary>
+		/// Reload all the DB spells from the database. 
+		/// Useful to load new spells added in preperation for ReloadSpellLine(linename) to update a spell line live
+		/// We want to add any new spells in the DB to the global spell list, m_spells, but not remove any added by scripts
+		/// </summary>
+		public static void ReloadDBSpells()
+		{
+			//load all spells
+			if (log.IsInfoEnabled)
+				log.Info("Reloading DB spells...");
+
+			var spelldb = GameServer.Database.SelectAllObjects<DBSpell>();
+
+			m_dbSpells = new Dictionary<int, DBSpell>(spelldb.Count);
+
+			int count = 0;
+
+			foreach (DBSpell spell in spelldb)
+			{
+				m_dbSpells.Add(spell.SpellID, spell);
+
+				if (m_spells.ContainsKey(spell.SpellID) == false)
+				{
+					m_spells.Add(spell.SpellID, new Spell(spell, 1));
+					count++;
+				}
+			}
+
+			if (log.IsInfoEnabled)
+			{
+				log.Info("Spells loaded from DB: " + spelldb.Count);
+				log.Info("Spells added to global spell list: " + count);
+			}
+
+		}
+
 		public static int ReloadSpellLine(string lineName)
 		{
 			int spellsLoaded = 0;
