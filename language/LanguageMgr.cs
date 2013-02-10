@@ -527,7 +527,7 @@ namespace DOL.Language
 		/// This returns the last part of the translation text id id actual translation fails
 		/// This helps to avoid returning strings that are too long and overflow the client
 		/// When the name overflows players my not be targetable or even visible!
-		/// DO NOT REMOVE THIS FUNCTIONALITY!  - tolakram
+		/// PLEASE DO NOT REMOVE THIS FUNCTIONALITY  - tolakram
 		/// </summary>
 		/// <param name="TranslationID"></param>
 		/// <returns></returns>
@@ -535,13 +535,22 @@ namespace DOL.Language
 		{
 			try
 			{
-				return lang + TranslationID.Substring(TranslationID.LastIndexOf(".") + 1);
+				if (TranslationID.Contains(".") && TranslationID.EndsWith(".") == false)
+				{
+					return lang + " " + TranslationID.Substring(TranslationID.LastIndexOf(".") + 1);
+				}
+				else
+				{
+					// Odds are a literal string was passed with no translation, so just return the string unmodified
+					return TranslationID;
+				}
 			}
-			catch
+			catch (Exception ex)
 			{
+				log.Error("Error Getting Translation Error Text for " + lang + ":" + TranslationID, ex);
 			}
 
-			return lang + "Error";
+			return lang + " Translation Error!";
 		}
 		
 
