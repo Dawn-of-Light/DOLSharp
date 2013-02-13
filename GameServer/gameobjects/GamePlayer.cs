@@ -10453,7 +10453,7 @@ namespace DOL.GS
 								if (icb != null && icb.Body != null)
 								{
 									GameNPC petBody2 = icb.Body;
-									if (petBody2 != null && IsWithinRadius(petBody2, 500))
+									if (petBody2 != null && originalPoint.IsWithinRadius(petBody2, 500))
 										petBody2.MoveInRegion(CurrentRegionID, point.X, point.Y, this.Z + 10, (ushort)((this.Heading + 2048) % 4096), false);
 								}
 							}
