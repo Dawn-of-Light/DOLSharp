@@ -44,7 +44,8 @@ namespace DOL.GS.Commands
 				  "'/object remove' to remove the targeted object",
 	              "'/object copy' to copy the targeted object",
 	              "'/object save' to save the object",
-	              "'/object target' to automatically target the nearest object")]
+	              "'/object target' to automatically target the nearest object",
+				  "'/object quests' to load any dataquests associated with the target object")]
 	public class ObjectCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
@@ -60,7 +61,7 @@ namespace DOL.GS.Commands
 
 			GameStaticItem targetObject = client.Player.TargetObject as GameStaticItem;
 
-			if ( targetObject == null && args[1] != "create" && args[1] != "fastcreate" && args[1] != "target" )
+			if (targetObject == null && args[1] != "create" && args[1] != "fastcreate" && args[1] != "target" && args[1] != "quests")
 			{
 				client.Out.SendMessage("Type /object for command overview", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -326,6 +327,30 @@ namespace DOL.GS.Commands
 							targetObject.RespawnInterval = respawn;
 							targetObject.SaveIntoDatabase();
 							DisplayMessage(client, "Object RespawnInterval set to " + targetObject.RespawnInterval + " seconds.");
+						}
+
+						break;
+					}
+				case "quests":
+					{
+						try
+						{
+							GameObject.FillDataQuestCache();
+							client.Player.TargetObject.LoadDataQuests();
+
+							if (client.Player.TargetObject is GameNPC)
+							{
+								foreach (GamePlayer player in client.Player.TargetObject.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+								{
+									player.Out.SendNPCsQuestEffect(client.Player.TargetObject as GameNPC, (client.Player.TargetObject as GameNPC).GetQuestIndicator(player));
+								}
+							}
+
+							client.Out.SendMessage(targetObject.DataQuestList.Count + " Data Quests loaded for this object.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						}
+						catch (Exception)
+						{
+							DisplayMessage(client, "Error refreshing quests.");
 						}
 
 						break;
