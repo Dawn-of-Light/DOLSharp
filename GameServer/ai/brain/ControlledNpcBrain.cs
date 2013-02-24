@@ -397,20 +397,24 @@ namespace DOL.AI.Brain
 					(Owner as GamePlayer).CommandNpcRelease();
 			}
 
-			//Check for buffs, heals, etc
-			if (Owner is GameNPC ||
-			    (Owner is GamePlayer && ((WalkState == eWalkState.ComeHere && AggressionState != eAggressionState.Aggressive) || WalkState == eWalkState.Follow)))
-			{
-				CheckSpells(eCheckSpellType.Defensive);
-			}
-
+			// if pet is in agressive mode then check aggressive spells and attacks first
 			if (AggressionState == eAggressionState.Aggressive)
 			{
 				CheckPlayerAggro();
 				CheckNPCAggro();
 				AttackMostWanted();
 			}
-			
+
+			if (Body.IsCasting == false && Body.IsAttacking == false)
+			{
+				// Check for buffs, heals, etc
+				// Only prevent casting if we are ordering pet to come to us or go to target
+				if (Owner is GameNPC || (Owner is GamePlayer && WalkState != eWalkState.ComeHere && WalkState != eWalkState.GoTarget))
+				{
+					CheckSpells(eCheckSpellType.Defensive);
+				}
+			}
+
 			// Stop hunting player entering in steath
 			if ( Body.TargetObject != null && Body.TargetObject is GamePlayer)
 			{
@@ -527,6 +531,8 @@ namespace DOL.AI.Brain
 			Body.TargetObject = null;
 			GamePlayer player = null;
 			GameLiving owner = null;
+
+			// clear current target, set target based on spell type, cast spell, return target to original target
 
 			switch (spell.SpellType)
 			{
@@ -694,6 +700,16 @@ namespace DOL.AI.Brain
 
 					#region Heals
 				case "Heal":
+					if (spell.Target.ToLower() == "self")
+					{
+						// if we have a self heal and health is less than 75% then heal, otherwise return false to try another spell or do nothing
+						if (Body.HealthPercent < 75)
+						{
+							Body.TargetObject = Body;
+						}
+						break;
+					}
+
 					//Heal self
 					if (Body.HealthPercent < 75)
 					{
@@ -733,6 +749,7 @@ namespace DOL.AI.Brain
 
 				if (Body.TargetObject != Body && spell.CastTime > 0)
 					Body.TurnTo(Body.TargetObject);
+
 				Body.CastSpell(spell, m_mobSpellLine);
 				Body.TargetObject = lastTarget;
 				return true;

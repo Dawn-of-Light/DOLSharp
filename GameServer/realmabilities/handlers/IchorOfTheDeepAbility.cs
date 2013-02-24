@@ -98,8 +98,14 @@ namespace DOL.GS.RealmAbilities
 
 			foreach (GamePlayer i_player in caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 			{
-				if (i_player == caster) i_player.Out.SendMessage("You cast " + this.Name + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-				else i_player.Out.SendMessage(caster.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				if (i_player == caster)
+				{
+					i_player.MessageToSelf("You cast " + this.Name + "!", eChatType.CT_Spell);
+				}
+				else
+				{
+					i_player.MessageFromArea(caster, caster.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				}
 
 				i_player.Out.SendSpellCastAnimation(caster, 7029, 20);
 			}

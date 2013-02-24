@@ -12,75 +12,81 @@ namespace DOL.GS.RealmAbilities
 	public class ThornweedFieldAbility : TimedRealmAbility
 	{
 		public ThornweedFieldAbility(DBAbility dba, int level) : base(dba, level) { }
-		private int dmgValue;
-		private uint duration;
-		private GamePlayer player;
+		private int m_dmgValue;
+		private uint m_duration;
+		private GamePlayer m_player;
 
 		public override void Execute(GameLiving living)
 		{
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
 
-			GamePlayer player = living as GamePlayer;
-			if (player == null)
+			GamePlayer caster = living as GamePlayer;
+			if (caster == null)
 				return;
 
-			if (player.IsMoving)
+			if (caster.IsMoving)
 			{
-				player.Out.SendMessage("You must be standing still to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				caster.Out.SendMessage("You must be standing still to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			if (player.GroundTarget == null )
+			if (caster.GroundTarget == null )
             {
-                player.Out.SendMessage( "You must set a ground target to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow );
+                caster.Out.SendMessage( "You must set a ground target to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow );
                 return;
             }
-            else if(!player.IsWithinRadius( player.GroundTarget, 1500 ))
+            else if(!caster.IsWithinRadius( caster.GroundTarget, 1500 ))
 			{
-				player.Out.SendMessage("Your ground target is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				caster.Out.SendMessage("Your ground target is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			this.player = player;
-			if (player.AttackState)
+			this.m_player = caster;
+			if (caster.AttackState)
 			{
-				player.StopAttack();
+				caster.StopAttack();
 			}
-			player.StopCurrentSpellcast();
+			caster.StopCurrentSpellcast();
 			switch (Level)
 			{
-				case 1: dmgValue = 25; duration = 10; break;
-				case 2: dmgValue = 100; duration = 20; break;
-				case 3: dmgValue = 250; duration = 30; break;
+				case 1: m_dmgValue = 25; m_duration = 10; break;
+				case 2: m_dmgValue = 100; m_duration = 20; break;
+				case 3: m_dmgValue = 250; m_duration = 30; break;
 				default: return;
 			}
-			foreach (GamePlayer i_player in player.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+			foreach (GamePlayer i_player in caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 			{
-				if (i_player == player) i_player.Out.SendMessage("You cast " + this.Name + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-				else i_player.Out.SendMessage(player.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				if (i_player == caster)
+				{
+					i_player.MessageToSelf("You cast " + this.Name + "!", eChatType.CT_Spell);
+				}
+				else
+				{
+					i_player.MessageFromArea(caster, caster.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				}
 
-				i_player.Out.SendSpellCastAnimation(player, 7028, 20);
+				i_player.Out.SendSpellCastAnimation(caster, 7028, 20);
 			}
 
-			if (player.RealmAbilityCastTimer != null)
+			if (caster.RealmAbilityCastTimer != null)
 			{
-				player.RealmAbilityCastTimer.Stop();
-				player.RealmAbilityCastTimer = null;
-				player.Out.SendMessage("You cancel your Spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				caster.RealmAbilityCastTimer.Stop();
+				caster.RealmAbilityCastTimer = null;
+				caster.Out.SendMessage("You cancel your Spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 			}
 
-			player.RealmAbilityCastTimer = new RegionTimer(player);
-			player.RealmAbilityCastTimer.Callback = new RegionTimerCallback(EndCast);
-			player.RealmAbilityCastTimer.Start(2000);
+			caster.RealmAbilityCastTimer = new RegionTimer(caster);
+			caster.RealmAbilityCastTimer.Callback = new RegionTimerCallback(EndCast);
+			caster.RealmAbilityCastTimer.Start(2000);
 		}
 
 		protected virtual int EndCast(RegionTimer timer)
 		{
-			if (player.IsMezzed || player.IsStunned || player.IsSitting)
+			if (m_player.IsMezzed || m_player.IsStunned || m_player.IsSitting)
 				return 0;
-			Statics.ThornweedFieldBase twf = new Statics.ThornweedFieldBase(dmgValue);
-			twf.CreateStatic(player, player.GroundTarget, duration, 3, 500);
-			DisableSkill(player);
+			Statics.ThornweedFieldBase twf = new Statics.ThornweedFieldBase(m_dmgValue);
+			twf.CreateStatic(m_player, m_player.GroundTarget, m_duration, 3, 500);
+			DisableSkill(m_player);
 			timer.Stop();
 			timer = null;
 			return 0;

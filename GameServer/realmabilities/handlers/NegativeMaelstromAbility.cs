@@ -21,29 +21,29 @@ namespace DOL.GS.RealmAbilities
         public override void Execute(GameLiving living)
         {
             if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
-            GamePlayer player = living as GamePlayer;
-			if (player.IsMoving)
+            GamePlayer caster = living as GamePlayer;
+			if (caster.IsMoving)
 			{
-				player.Out.SendMessage("You must be standing still to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				caster.Out.SendMessage("You must be standing still to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-            if ( player.GroundTarget == null || !player.IsWithinRadius( player.GroundTarget, 1500 ) )
+            if ( caster.GroundTarget == null || !caster.IsWithinRadius( caster.GroundTarget, 1500 ) )
             {
-				player.Out.SendMessage("You groundtarget is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				caster.Out.SendMessage("You groundtarget is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
             }
-            if (player.TempProperties.getProperty(IS_CASTING, false))
+            if (caster.TempProperties.getProperty(IS_CASTING, false))
             {
-                player.Out.SendMessage("You are already casting an ability.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                caster.Out.SendMessage("You are already casting an ability.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
-            this.player = player;
-            if (player.AttackState) 
+            this.player = caster;
+            if (caster.AttackState) 
             {
-                player.StopAttack();
+                caster.StopAttack();
             }
-            player.StopCurrentSpellcast();
+            caster.StopCurrentSpellcast();
 			switch (Level)
 			{
 				case 1: dmgValue = 120; break;
@@ -52,21 +52,27 @@ namespace DOL.GS.RealmAbilities
 				default: return;
 			}
 			duration = 30;
-			foreach (GamePlayer i_player in player.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+			foreach (GamePlayer i_player in caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 			{
-				if (i_player == player) i_player.Out.SendMessage("You cast " + this.Name + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-				else i_player.Out.SendMessage(player.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				if (i_player == caster)
+				{
+					i_player.MessageToSelf("You cast " + this.Name + "!", eChatType.CT_Spell);
+				}
+				else
+				{
+					i_player.MessageFromArea(caster, caster.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				}
 
-				i_player.Out.SendSpellCastAnimation(player, 7027, 20);
+				i_player.Out.SendSpellCastAnimation(caster, 7027, 20);
 			}
-            player.TempProperties.setProperty(IS_CASTING, true);
-            player.TempProperties.setProperty(NM_CAST_SUCCESS, true);
-            GameEventMgr.AddHandler(player, GamePlayerEvent.Moving, new DOLEventHandler(CastInterrupted));
-            GameEventMgr.AddHandler(player, GamePlayerEvent.AttackFinished, new DOLEventHandler(CastInterrupted));
-            GameEventMgr.AddHandler(player, GamePlayerEvent.Dying, new DOLEventHandler(CastInterrupted));
-            if (player != null)
+            caster.TempProperties.setProperty(IS_CASTING, true);
+            caster.TempProperties.setProperty(NM_CAST_SUCCESS, true);
+            GameEventMgr.AddHandler(caster, GamePlayerEvent.Moving, new DOLEventHandler(CastInterrupted));
+            GameEventMgr.AddHandler(caster, GamePlayerEvent.AttackFinished, new DOLEventHandler(CastInterrupted));
+            GameEventMgr.AddHandler(caster, GamePlayerEvent.Dying, new DOLEventHandler(CastInterrupted));
+            if (caster != null)
             {
-                new RegionTimer(player, new RegionTimerCallback(EndCast), 2000);
+                new RegionTimer(caster, new RegionTimerCallback(EndCast), 2000);
             }
 		}
 		protected virtual int EndCast(RegionTimer timer)

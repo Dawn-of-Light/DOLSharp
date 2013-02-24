@@ -12,52 +12,58 @@ namespace DOL.GS.RealmAbilities
 	{
         public StaticTempestAbility(DBAbility dba, int level) : base(dba, level) { }
 
-		private int stunDuration;
-		private uint duration;
-		private GamePlayer player;
+		private int m_stunDuration;
+		private uint m_duration;
+		private GamePlayer m_player;
         public override void Execute(GameLiving living)
 		{
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
-			GamePlayer player = living as GamePlayer;
-            if (player.TargetObject == null)
+			GamePlayer caster = living as GamePlayer;
+            if (caster.TargetObject == null)
             {
-                player.Out.SendMessage("You need a target for this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                caster.Out.SendMessage("You need a target for this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
 
-            if (!(player.TargetObject is GameLiving)
-                || !GameServer.ServerRules.IsAllowedToAttack(player, (GameLiving)player.TargetObject, true))
+            if (!(caster.TargetObject is GameLiving)
+                || !GameServer.ServerRules.IsAllowedToAttack(caster, (GameLiving)caster.TargetObject, true))
             {
-                player.Out.SendMessage("You cannot attack " + player.TargetObject.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                caster.Out.SendMessage("You cannot attack " + caster.TargetObject.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
-            if (!player.TargetInView)
+            if (!caster.TargetInView)
             {
-                player.Out.SendMessage("You cannot see " + player.TargetObject.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                caster.Out.SendMessage("You cannot see " + caster.TargetObject.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
-            if (!player.IsWithinRadius( player.TargetObject, 1500 ))
+            if (!caster.IsWithinRadius( caster.TargetObject, 1500 ))
             {
-                player.Out.SendMessage("You target is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                caster.Out.SendMessage("You target is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
-            this.player = player;
+            this.m_player = caster;
             switch (Level)
             {
-                case 1: duration = 10; break;
-                case 2: duration = 15; break;
-                case 3: duration = 30; break;
+                case 1: m_duration = 10; break;
+                case 2: m_duration = 15; break;
+                case 3: m_duration = 30; break;
                 default: return;
             }
-            stunDuration = 3;
-            foreach (GamePlayer i_player in player.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+            m_stunDuration = 3;
+            foreach (GamePlayer i_player in caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
             {
-                if (i_player == player) i_player.Out.SendMessage("You cast " + this.Name + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-                else i_player.Out.SendMessage(player.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-            }
-            Statics.StaticTempestBase st = new Statics.StaticTempestBase(stunDuration);
-            Point3D targetSpot = new Point3D(player.TargetObject.X, player.TargetObject.Y, player.TargetObject.Z);
-            st.CreateStatic(player, targetSpot, duration, 5, 360);
+				if (i_player == caster)
+				{
+					i_player.MessageToSelf("You cast " + this.Name + "!", eChatType.CT_Spell);
+				}
+				else
+				{
+					i_player.MessageFromArea(caster, caster.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				}
+			}
+            Statics.StaticTempestBase st = new Statics.StaticTempestBase(m_stunDuration);
+            Point3D targetSpot = new Point3D(caster.TargetObject.X, caster.TargetObject.Y, caster.TargetObject.Z);
+            st.CreateStatic(caster, targetSpot, m_duration, 5, 360);
             DisableSkill(living);
         }
         public override int GetReUseDelay(int level)

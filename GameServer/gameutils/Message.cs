@@ -106,24 +106,12 @@ namespace DOL.GS
 		public static void SystemToOthers2(GameObject centerObject, eChatType chatType, string LanguageMessageID, params object[] args)
 		{
 			if (LanguageMessageID == null || LanguageMessageID.Length <= 0) return;
-			//bool excluded;
 			foreach (GamePlayer player in centerObject.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 			{
-				/*
-				excluded = false;
-				if (excludes != null)
-				{
-					foreach (GameObject obj in excludes)
-						if (obj == player)
-						{
-							excluded = true;
-							break;
-						}
-				}
-				if (!excluded)
-				*/
 				if (!(centerObject is GamePlayer && centerObject == player))
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, LanguageMessageID, args), chatType, eChatLoc.CL_SystemWindow);
+				{
+					player.MessageFromArea(centerObject, LanguageMgr.GetTranslation(player.Client.Account.Language, LanguageMessageID, args), chatType, eChatLoc.CL_SystemWindow);
+				}
 			}
 		}
 
@@ -167,8 +155,10 @@ namespace DOL.GS
 							break;
 						}
 				}
-				if(!excluded)
-					player.Out.SendMessage(message, chatType, chatLoc);
+				if (!excluded)
+				{
+					player.MessageFromArea(centerObject, message, chatType, chatLoc);
+				}
 			}
 		}
 	}

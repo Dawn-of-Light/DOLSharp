@@ -33,8 +33,8 @@ namespace DOL.GS.RealmAbilities
         public const int DURATION = 20 * 1000;
         private const int SpellRange = 1500;
         private const ushort SpellRadius = 150;
-        private GamePlayer player = null;
-        private GamePlayer targetPlayer = null;
+        private GamePlayer m_player = null;
+        private GamePlayer m_targetPlayer = null;
 
         public SelectiveBlindnessAbility(DBAbility dba, int level) : base(dba, level) { }
 
@@ -48,47 +48,53 @@ namespace DOL.GS.RealmAbilities
 
             if (living is GamePlayer)
             {
-                player = living as GamePlayer;
-                if (player.TargetObject == null)
+                m_player = living as GamePlayer;
+                if (m_player.TargetObject == null)
                 {
-                    player.Out.SendMessage("You need a target for this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                    player.DisableSkill(this, 3 * 1000);
+                    m_player.Out.SendMessage("You need a target for this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    m_player.DisableSkill(this, 3 * 1000);
                     return;
                 }
-                if (!(player.TargetObject is GamePlayer))
+                if (!(m_player.TargetObject is GamePlayer))
                 {
-                    player.Out.SendMessage("This work only on players!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                    player.DisableSkill(this, 3 * 1000);
+                    m_player.Out.SendMessage("This work only on players!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    m_player.DisableSkill(this, 3 * 1000);
                     return;
                 }
-                if (!GameServer.ServerRules.IsAllowedToAttack(player, (GamePlayer)player.TargetObject, true))
+                if (!GameServer.ServerRules.IsAllowedToAttack(m_player, (GamePlayer)m_player.TargetObject, true))
                 {
-                    player.Out.SendMessage("This work only on enemies!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-                    player.DisableSkill(this, 3 * 1000);
+                    m_player.Out.SendMessage("This work only on enemies!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+                    m_player.DisableSkill(this, 3 * 1000);
                     return;
                 }
-                if ( !player.IsWithinRadius( player.TargetObject, SpellRange ) )
+                if ( !m_player.IsWithinRadius( m_player.TargetObject, SpellRange ) )
                 {
-                    player.Out.SendMessage(player.TargetObject + " is too far away!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-                    player.DisableSkill(this, 3 * 1000);
+                    m_player.Out.SendMessage(m_player.TargetObject + " is too far away!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+                    m_player.DisableSkill(this, 3 * 1000);
                     return;
                 }
-                foreach (GamePlayer radiusPlayer in player.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+                foreach (GamePlayer radiusPlayer in m_player.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
                 {
-                    if (radiusPlayer == player) radiusPlayer.Out.SendMessage("You cast " + this.Name + "!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-                    else radiusPlayer.Out.SendMessage(player.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+					if (radiusPlayer == m_player)
+					{
+						radiusPlayer.MessageToSelf("You cast " + this.Name + "!", eChatType.CT_Spell);
+					}
+					else
+					{
+						radiusPlayer.MessageFromArea(m_player, m_player.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+					}
 
-                    radiusPlayer.Out.SendSpellCastAnimation(player, 7059, 0);
+                    radiusPlayer.Out.SendSpellCastAnimation(m_player, 7059, 0);
                 }
 
-                if (player.RealmAbilityCastTimer != null)
+                if (m_player.RealmAbilityCastTimer != null)
                 {
-                    player.RealmAbilityCastTimer.Stop();
-                    player.RealmAbilityCastTimer = null;
-                    player.Out.SendMessage("You cancel your Spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                    m_player.RealmAbilityCastTimer.Stop();
+                    m_player.RealmAbilityCastTimer = null;
+                    m_player.Out.SendMessage("You cancel your Spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
                 }
 
-                targetPlayer = player.TargetObject as GamePlayer;
+                m_targetPlayer = m_player.TargetObject as GamePlayer;
 
                 //[StephenxPimentel]
                 //1.108 - this ability is now instant cast.
@@ -98,29 +104,29 @@ namespace DOL.GS.RealmAbilities
 
         private void EndCast()
         {
-            if (player == null || !player.IsAlive) return;
-            if (targetPlayer == null || !targetPlayer.IsAlive) return;
+            if (m_player == null || !m_player.IsAlive) return;
+            if (m_targetPlayer == null || !m_targetPlayer.IsAlive) return;
 
-            if (!GameServer.ServerRules.IsAllowedToAttack(player, targetPlayer, true))
+            if (!GameServer.ServerRules.IsAllowedToAttack(m_player, m_targetPlayer, true))
             {
-                player.Out.SendMessage("This work only on enemies.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-                player.DisableSkill(this, 3 * 1000);
+                m_player.Out.SendMessage("This work only on enemies.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+                m_player.DisableSkill(this, 3 * 1000);
                 return;
             }
-            if ( !player.IsWithinRadius( targetPlayer, SpellRange ) )
+            if ( !m_player.IsWithinRadius( m_targetPlayer, SpellRange ) )
             {
-                player.Out.SendMessage(targetPlayer + " is too far away.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-                player.DisableSkill(this, 3 * 1000);
+                m_player.Out.SendMessage(m_targetPlayer + " is too far away.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+                m_player.DisableSkill(this, 3 * 1000);
                 return;
             }
-            foreach (GamePlayer radiusPlayer in targetPlayer.GetPlayersInRadius(SpellRadius))
+            foreach (GamePlayer radiusPlayer in m_targetPlayer.GetPlayersInRadius(SpellRadius))
             {
-                if (!GameServer.ServerRules.IsAllowedToAttack(player, radiusPlayer, true))
+                if (!GameServer.ServerRules.IsAllowedToAttack(m_player, radiusPlayer, true))
                     continue;
 
 				SelectiveBlindnessEffect SelectiveBlindness = radiusPlayer.EffectList.GetOfType<SelectiveBlindnessEffect>();
                 if (SelectiveBlindness != null) SelectiveBlindness.Cancel(false);
-                new SelectiveBlindnessEffect(player).Start(radiusPlayer);
+                new SelectiveBlindnessEffect(m_player).Start(radiusPlayer);
             }
         }
 
