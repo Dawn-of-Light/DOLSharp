@@ -535,7 +535,7 @@ namespace DOL.Language
 		{
 			try
 			{
-				if (TranslationID.Contains(".") && TranslationID.EndsWith(".") == false)
+				if (TranslationID.Contains(".") && TranslationID.TrimEnd().EndsWith(".") == false && TranslationID.StartsWith("'") == false)
 				{
 					return lang + " " + TranslationID.Substring(TranslationID.LastIndexOf(".") + 1);
 				}
