@@ -9772,7 +9772,7 @@ namespace DOL.GS
 
 		#endregion
 
-		#region Send/Say/Yell/Whisper
+		#region Send/Say/Yell/Whisper/Messages
 
 		public bool IsIgnoring(GameLiving source)
 		{
@@ -10021,6 +10021,38 @@ namespace DOL.GS
 				Out.SendMessage("You whisper, \"" + str + "\" to " + target.GetName(0, false), eChatType.CT_Say,
 				                eChatLoc.CL_ChatWindow);
 			return true;
+		}
+
+		/// <summary>
+		/// A message to this player from some piece of code (message to ourself)
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="chatType"></param>
+		public override void MessageToSelf(string message, eChatType chatType)
+		{
+			Out.SendMessage(message, chatType, eChatLoc.CL_SystemWindow);
+		}
+
+		/// <summary>
+		/// A message from something we control, usually a pet
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="chatType"></param>
+		public override void MessageFromControlled(string message, eChatType chatType)
+		{
+			MessageToSelf(message, chatType);
+		}
+
+		/// <summary>
+		/// A general message from the area intended for this player.
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="message"></param>
+		/// <param name="chatType"></param>
+		/// <param name="chatLocation"></param>
+		public virtual void MessageFromArea(GameObject source, string message, eChatType chatType, eChatLoc chatLocation)
+		{
+			Out.SendMessage(message, chatType, chatLocation);
 		}
 
 		#endregion

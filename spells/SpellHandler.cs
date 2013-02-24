@@ -1855,7 +1855,7 @@ namespace DOL.GS.Spells
 				foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 				{
 					if (player != m_caster)
-						player.Out.SendMessage(m_caster.GetName(0, true) + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+						player.MessageFromArea(m_caster, m_caster.GetName(0, true) + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 				}
 			}
 
@@ -2911,14 +2911,16 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 		{
 			if (Caster is GamePlayer)
 			{
-				(Caster as GamePlayer).Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
+				(Caster as GamePlayer).MessageToSelf(message, type);
 			}
 			else if (Caster is GameNPC && (Caster as GameNPC).Brain is IControlledBrain
 			         && (type == eChatType.CT_YouHit || type == eChatType.CT_SpellResisted))
 			{
 				GamePlayer owner = ((Caster as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
 				if (owner != null)
-					owner.Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
+				{
+					owner.MessageFromControlled(message, type);
+				}
 			}
 		}
 
@@ -2930,9 +2932,9 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 		/// <param name="type"></param>
 		public void MessageToLiving(GameLiving living, string message, eChatType type)
 		{
-			if (living is GamePlayer && message != null && message.Length > 0)
+			if (message != null && message.Length > 0)
 			{
-				((GamePlayer)living).Out.SendMessage(message, type, eChatLoc.CL_SystemWindow);
+				living.MessageToSelf(message, type);
 			}
 		}
 

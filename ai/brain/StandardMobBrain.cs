@@ -1053,7 +1053,7 @@ namespace DOL.AI.Brain
             if (Body != null && Body.Spells != null && Body.Spells.Count > 0)
             {
                 ArrayList spell_rec = new ArrayList();
-                Spell tire = null;
+                Spell spellToCast = null;
                 bool needpet = false;
                 bool needheal = false;
 
@@ -1089,13 +1089,13 @@ namespace DOL.AI.Brain
                     }
                     if (spell_rec.Count > 0)
                     {
-                        tire = (Spell)spell_rec[Util.Random((spell_rec.Count - 1))];
+                        spellToCast = (Spell)spell_rec[Util.Random((spell_rec.Count - 1))];
                         if (!Body.IsReturningToSpawnPoint)
                         {
-                            if (tire.Uninterruptible && CheckDefensiveSpells(tire))
+                            if (spellToCast.Uninterruptible && CheckDefensiveSpells(spellToCast))
                                 casted = true;
                             else
-                                if (!Body.IsBeingInterrupted && CheckDefensiveSpells(tire))
+                                if (!Body.IsBeingInterrupted && CheckDefensiveSpells(spellToCast))
                                     casted = true;
                         }
                     }
@@ -1116,13 +1116,13 @@ namespace DOL.AI.Brain
                     }
                     if (spell_rec.Count > 0)
                     {
-                        tire = (Spell)spell_rec[Util.Random((spell_rec.Count - 1))];
+                        spellToCast = (Spell)spell_rec[Util.Random((spell_rec.Count - 1))];
 
 
-                        if (tire.Uninterruptible && CheckOffensiveSpells(tire))
+                        if (spellToCast.Uninterruptible && CheckOffensiveSpells(spellToCast))
                             casted = true;
                         else
-                            if (!Body.IsBeingInterrupted && CheckOffensiveSpells(tire))
+                            if (!Body.IsBeingInterrupted && CheckOffensiveSpells(spellToCast))
                                 casted = true;
                     }
                 }
@@ -1140,6 +1140,9 @@ namespace DOL.AI.Brain
 			if (spell == null) return false;
 			if (Body.GetSkillDisabledDuration(spell) > 0) return false;
 			GameObject lastTarget = Body.TargetObject;
+
+			// clear current target, set target based on spell type, cast spell, return target to original target
+
 			Body.TargetObject = null;
 			switch (spell.SpellType)
 			{
@@ -1244,9 +1247,18 @@ namespace DOL.AI.Brain
 
 					#region Heals
 				case "Heal":
-					// Chance to heal self when dropping below 30%, do NOT spam it.
+					if (spell.Target.ToLower() == "self")
+					{
+						// if we have a self heal and health is less than 75% then heal, otherwise return false to try another spell or do nothing
+						if (Body.HealthPercent < 75)
+						{
+							Body.TargetObject = Body;
+						}
+						break;
+					}
 
-                    if (Body.HealthPercent < 30 && Util.Chance(10) && spell.Target.ToLower() != "pet")
+					// Chance to heal self when dropping below 30%, do NOT spam it.
+					if (Body.HealthPercent < 30 && Util.Chance(10) && spell.Target.ToLower() != "pet")
                     {
                         Body.TargetObject = Body;
                         break;
