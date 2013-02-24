@@ -22,29 +22,36 @@ namespace DOL.GS.RealmAbilities
 
 			base.Execute(living);
 
-			GamePlayer player = living as GamePlayer;
-			if (player == null)
+			GamePlayer caster = living as GamePlayer;
+			if (caster == null)
 				return;
 
-			if (player.IsMoving)
+			if (caster.IsMoving)
 			{
-				player.Out.SendMessage("You must be standing still to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				caster.Out.SendMessage("You must be standing still to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			foreach (GamePlayer i_player in player.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+			foreach (GamePlayer i_player in caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 			{
-				if (i_player == player) i_player.Out.SendMessage("You cast a Wall of Flame!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-				else i_player.Out.SendMessage(player.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-				i_player.Out.SendSpellCastAnimation(player, 7028, 20);
+				if (i_player == caster)
+				{
+					i_player.MessageToSelf("You cast " + this.Name + "!", eChatType.CT_Spell);
+				}
+				else
+				{
+					i_player.MessageFromArea(caster, caster.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				}
+
+				i_player.Out.SendSpellCastAnimation(caster, 7028, 20);
 			}
 
 			Statics.WallOfFlameBase wof = new Statics.WallOfFlameBase(dmgValue);
-			Point3D targetSpot = new Point3D(player.X, player.Y, player.Z);
-			wof.CreateStatic(player, targetSpot, duration, 3, 150);
+			Point3D targetSpot = new Point3D(caster.X, caster.Y, caster.Z);
+			wof.CreateStatic(caster, targetSpot, duration, 3, 150);
 
 			DisableSkill(living);
-			player.StopCurrentSpellcast();
+			caster.StopCurrentSpellcast();
 
 		}
 

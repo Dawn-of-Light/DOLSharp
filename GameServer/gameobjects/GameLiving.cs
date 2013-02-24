@@ -5793,7 +5793,7 @@ namespace DOL.GS
 		}
 
 		#endregion
-		#region Say/Yell/Whisper/Emote
+		#region Say/Yell/Whisper/Emote/Messages
 
 		private bool m_isSilent = false;
 
@@ -5945,6 +5945,28 @@ namespace DOL.GS
 				player.Out.SendEmoteAnimation(this, emote);
 			}
 		}
+
+		/// <summary>
+		/// A message to this living
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="type"></param>
+		public virtual void MessageToSelf(string message, eChatType chatType)
+		{
+			// livings can't talk to themselves
+		}
+
+		/// <summary>
+		/// A message from something we control
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="chatType"></param>
+		public virtual void MessageFromControlled(string message, eChatType chatType)
+		{
+			// ignore for livings
+		}
+
+
 		#endregion
 		#region Item/Money
 

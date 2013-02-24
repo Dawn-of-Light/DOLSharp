@@ -132,7 +132,6 @@ namespace DOL.GS.Spells
                 }
             }
 
-            amount = (int)(amount * 1.00);
             //moc heal decrease
             double mocFactor = 1.0;
         	MasteryofConcentrationEffect moc = Caster.EffectList.GetOfType<MasteryofConcentrationEffect>();
