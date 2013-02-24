@@ -135,6 +135,12 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("system", "disable_bug_reports", "Set to true to disable bug reporting, and false to enable bug reporting", true)]
 		public static bool DISABLE_BUG_REPORTS;
 		/// <summary>
+		/// Max bug repots in Queue
+		/// </summary>
+		[ServerProperty("system", "max_bugreport_queue", "Maximum number of bug reports allowed in queue.  0 to disabled max check", 100)]
+		public static int MAX_BUGREPORT_QUEUE;
+
+		/// <summary>
 		/// The max number of players on the server
 		/// </summary>
 		[ServerProperty("system", "max_players", "Max Players - Edit this to set the maximum players allowed to connect at the same time set 0 for unlimited", 0)]
