@@ -28,8 +28,8 @@ namespace DOL.GS.Commands
 	[CmdAttribute(
 		"&report",
 		ePrivLevel.Player,
-		"Reports a bug",
-		"Usage: /report <message>")]
+		"'Reports a bug",
+		"'Usage: /report <message>  Please be as detailed as possible.")]
 	public class ReportCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		private const ushort MAX_REPORTS = 100;
@@ -59,30 +59,38 @@ namespace DOL.GS.Commands
 
 			string message = string.Join(" ", args, 1, args.Length - 1);
 			BugReport report = new BugReport();
-			
-			//Andraste
-			var reports = GameServer.Database.SelectAllObjects<BugReport>();
-            bool found = false; int i = 0;
-            for(i=0;i<MAX_REPORTS;i++)
+
+			if (ServerProperties.Properties.MAX_BUGREPORT_QUEUE > 0)
 			{
-				found=false;
-				foreach(BugReport rep in reports) if(rep.ID==i) found=true;
-				if(!found) break;
+				//Andraste
+				var reports = GameServer.Database.SelectAllObjects<BugReport>();
+				bool found = false; int i = 0;
+				for (i = 0; i < ServerProperties.Properties.MAX_BUGREPORT_QUEUE; i++)
+				{
+					found = false;
+					foreach (BugReport rep in reports) if (rep.ID == i) found = true;
+					if (!found) break;
+				}
+				if (found)
+				{
+					client.Player.Out.SendMessage("There are too many reports, please contact a GM or wait until they are cleaned.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return;
+				}
+
+				report.ID = i;
 			}
-			if(found)
+			else
 			{
-				client.Player.Out.SendMessage("There are too many reports, please contact a GM or wait until they are cleaned.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+				// This depends on bugs never being deleted from the report table!
+				report.ID = GameServer.Database.GetObjectCount<BugReport>() + 1;
 			}
 			
-			//report.ID = GameServer.Database.GetObjectCount<BugReport>() + 1;
-			report.ID = i;
 			report.Message = message;
 			report.Submitter = client.Player.Name + " [" + client.Account.Name + "]";
 			GameServer.Database.AddObject(report);
 			client.Player.Out.SendMessage("Report submitted, if this is not a bug report it will be ignored!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-			if (ServerProperties.Properties.BUG_REPORT_EMAIL_ADDRESSES != "")
+			if (ServerProperties.Properties.BUG_REPORT_EMAIL_ADDRESSES.Trim() != "")
 			{
 				if (client.Account.Mail == "")
 					client.Player.Out.SendMessage("If you enter your email address for your account with /email command, your bug reports will send an email to the staff!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
