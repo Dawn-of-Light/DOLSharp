@@ -53,7 +53,9 @@ namespace DOL.GS
 		{
 			IList list = base.GetExamineMessages(player);
 			list.RemoveAt(list.Count - 1);
-			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.GetExamineMessages.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.GetExamineMessages.YouExamine", 
+                                                GetName(0, false, player.Client.Account.Language, this), GetPronoun(0, true, player.Client.Account.Language),
+                                                GetAggroLevelString(player, false)));
 			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.GetExamineMessages.RightClick")); 
 			return list;
 		}
