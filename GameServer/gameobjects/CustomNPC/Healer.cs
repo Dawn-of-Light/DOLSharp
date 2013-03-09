@@ -56,7 +56,8 @@ namespace DOL.GS
 		public override IList GetExamineMessages(GamePlayer player)
         {
 			IList list = new ArrayList();
-            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.GetExamineMessages.Text1", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.GetExamineMessages.Text1",
+                GetName(0, false, player.Client.Account.Language, this), GetPronoun(0, true, player.Client.Account.Language), GetAggroLevelString(player, false)));
             return list;
 		}
 
@@ -71,14 +72,16 @@ namespace DOL.GS
 			if (effect != null)
 			{
 				effect.Cancel(false);
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.Interact.Text1", GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.Interact.Text1",
+                    GetName(0, false, player.Client.Account.Language, this)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
             }
 
 			if (player.TotalConstitutionLostAtDeath > 0)
 			{
 				int oneConCost = GamePlayer.prcRestore[player.Level < GamePlayer.prcRestore.Length ? player.Level : GamePlayer.prcRestore.Length - 1];
 				player.TempProperties.setProperty(COST_BY_PTS, (long)oneConCost);
-                player.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.Interact.Text2", Money.GetString(player.TotalConstitutionLostAtDeath * (long)oneConCost)), new CustomDialogResponse(HealerDialogResponse));
+                player.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.Interact.Text2", 
+                    Money.GetString(player.TotalConstitutionLostAtDeath * (long)oneConCost)), new CustomDialogResponse(HealerDialogResponse));
             }
 			else
 			{
@@ -91,7 +94,8 @@ namespace DOL.GS
         {
             if (!this.IsWithinRadius(player, WorldMgr.INTERACT_DISTANCE))
             {
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.HealerDialogResponse.Text1", GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.HealerDialogResponse.Text1",
+                    GetName(0, false, player.Client.Account.Language, this)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
 

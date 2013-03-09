@@ -87,20 +87,19 @@ namespace DOL.GS
 		public override IList GetExamineMessages(GamePlayer player)
 		{
 			string TrainerClassName = "";
-			switch (ServerProperties.Properties.SERV_LANGUAGE)
+            switch (player.Client.Account.Language)
 			{
-				case "EN":
-					{
-						int index = -1;
-						if (GuildName.Length > 0)
-							index = GuildName.IndexOf(" Trainer");
-						if (index >= 0)
-							TrainerClassName = GuildName.Substring(0, index);
-					}
-					break;
-				case "DE":
-					TrainerClassName = GuildName;
-					break;
+                case "DE":
+                    {
+//                        TrainerClassName = GuildName;
+                        var translation = (DBLanguageNPC)LanguageMgr.GetTranslation(player.Client.Account.Language, this);
+                        int index = -1;
+                        if (translation.GuildName.Length > 0)
+                            index = translation.GuildName.IndexOf("-Ausbilder");
+                        if (index >= 0)
+                            TrainerClassName = translation.GuildName.Substring(0, index);
+                    }
+                    break;
 				default:
 					{
 						int index = -1;
@@ -113,8 +112,11 @@ namespace DOL.GS
 			}
 
 			IList list = new ArrayList();
-			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.GetExamineMessages.YouTarget", GetName(0, false)));
-			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.GetExamineMessages.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false), TrainerClassName));
+            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.GetExamineMessages.YouTarget", 
+                                                GetName(0, false, player.Client.Account.Language, this)));
+            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.GetExamineMessages.YouExamine",
+                                                GetName(0, false, player.Client.Account.Language, this), GetPronoun(0, true, player.Client.Account.Language),
+                                                GetAggroLevelString(player, false), TrainerClassName));
 			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.GetExamineMessages.RightClick"));
 			return list;
 		}
