@@ -587,6 +587,22 @@ namespace DOL.GS
             get { return HealthPercent; }
         }
 
+        public virtual string GetName(int article, bool firstLetterUppercase, string lang, ITranslatableObject obj)
+        {
+            switch (lang)
+            {
+                case "EN":
+                    {
+                        return GetName(article, firstLetterUppercase);
+                    }
+                default:
+                    {
+                        var translation = (DBLanguageNPC)LanguageMgr.GetTranslation(lang, obj);
+                        return translation.Name;
+                    }
+            }
+        }
+
 		private const string m_vowels = "aeuio";
 
 		/// <summary>

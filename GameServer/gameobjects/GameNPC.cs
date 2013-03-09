@@ -3237,6 +3237,44 @@ namespace DOL.GS
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.GetAggroLevelString.TowardsYou", aggroLevelString);
 		}
 
+        public string GetPronoun(int form, bool capitalize, string lang)
+        {
+            switch (Gender)
+            {
+                case eGender.Male:
+                    switch (form)
+                    {
+                        case 1:
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(lang, "GameLiving.Pronoun.Male.Possessive"));
+                        case 2:
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(lang, "GameLiving.Pronoun.Male.Objective"));
+                        default:
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(lang, "GameLiving.Pronoun.Male.Subjective"));
+                    }
+
+                case eGender.Female:
+                    switch (form)
+                    {
+                        case 1:
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(lang, "GameLiving.Pronoun.Female.Possessive"));
+                        case 2:
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(lang, "GameLiving.Pronoun.Female.Objective"));
+                        default:
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(lang, "GameLiving.Pronoun.Female.Subjective"));
+                    }
+                default:
+                    switch (form)
+                    {
+                        case 1:
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(lang, "GameLiving.Pronoun.Neutral.Possessive"));
+                        case 2:
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(lang, "GameLiving.Pronoun.Neutral.Objective"));
+                        default:
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(lang, "GameLiving.Pronoun.Neutral.Subjective"));
+                    }
+            }
+        }
+
 		/// <summary>
 		/// Gets the proper pronoun including capitalization.
 		/// </summary>
@@ -3254,33 +3292,33 @@ namespace DOL.GS
 					{
 						case 1:
 							return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
-							                                                         "GameLiving.Pronoun.Male.Possessive"));
+                                                                                     "GameLiving.Pronoun.Male.Possessive"));
 						case 2:
-							return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
-							                                                         "GameLiving.Pronoun.Male.Objective"));
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
+                                                                                     "GameLiving.Pronoun.Male.Objective"));
 						default:
-							return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
-							                                                         "GameLiving.Pronoun.Male.Subjective"));
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language, 
+                                                                                     "GameLiving.Pronoun.Male.Subjective"));
 					}
 
 				case eGender.Female:
 					switch (form)
 					{
 						case 1:
-							return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
-							                                                         "GameLiving.Pronoun.Female.Possessive"));
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language, 
+                                                                                     "GameLiving.Pronoun.Female.Possessive"));
 						case 2:
-							return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
-							                                                         "GameLiving.Pronoun.Female.Objective"));
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
+                                                                                     "GameLiving.Pronoun.Female.Objective"));
 						default:
 							return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
-							                                                         "GameLiving.Pronoun.Female.Subjective"));
+                                                                                     "GameLiving.Pronoun.Female.Subjective"));
 					}
 				default:
 					switch (form)
 					{
 						case 1:
-							return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
+                            return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
 							                                                         "GameLiving.Pronoun.Neutral.Possessive"));
 						case 2:
 							return Capitalize(capitalize, LanguageMgr.GetTranslation(language,
@@ -3311,15 +3349,30 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player">GamePlayer that is examining this object</param>
 		/// <returns>list with string messages</returns>
-		public override IList GetExamineMessages(GamePlayer player)
-		{
-			IList list = base.GetExamineMessages(player);
-			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.GetExamineMessages.YouExamine",
-			                                    GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
-
-			return list;
-		}
-
+        public override IList GetExamineMessages(GamePlayer player)
+        {
+            switch (player.Client.Account.Language)
+            {
+                case "EN":
+                    {
+                        IList list = base.GetExamineMessages(player);
+                        list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.GetExamineMessages.YouExamine",
+                                                            GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+                        return list;
+                    }
+                default:
+                    {
+                        IList list = new ArrayList(4);
+                        list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObject.GetExamineMessages.YouTarget",
+                                                            GetName(0, false, player.Client.Account.Language, this)));
+                        list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.GetExamineMessages.YouExamine",
+                                                            GetName(0, false, player.Client.Account.Language, this),
+                                                            GetPronoun(0, true, player.Client.Account.Language), GetAggroLevelString(player, false)));
+                        return list;
+                    }
+            }
+        }
+        
 		/*		/// <summary>
 				/// Pronoun of this NPC in case you need to refer it in 3rd person
 				/// http://webster.commnet.edu/grammar/cases.htm
@@ -3398,7 +3451,7 @@ namespace DOL.GS
 			if (!base.Interact(player)) return false;
 			if (!GameServer.ServerRules.IsSameRealm(this, player, true))
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.Interact.DirtyLook", GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.Interact.DirtyLook", GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				Notify(GameObjectEvent.InteractFailed, this, new InteractEventArgs(player));
 				return false;
 			}
@@ -3500,14 +3553,14 @@ namespace DOL.GS
 				return;
 
 			TurnTo(target);
-			string resultText = LanguageMgr.GetTranslation(target.Client, "GameNPC.SayTo.Says", GetName(0, true), message);
+            string resultText = LanguageMgr.GetTranslation(target.Client.Account.Language, "GameNPC.SayTo.Says", GetName(0, true), message);
 			switch (loc)
 			{
 				case eChatLoc.CL_PopupWindow:
 					target.Out.SendMessage(resultText, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					if (announce)
 					{
-						Message.ChatToArea(this, LanguageMgr.GetTranslation(target.Client, "GameNPC.SayTo.SpeaksTo", GetName(0, true), target.GetName(0, false)), eChatType.CT_System, WorldMgr.SAY_DISTANCE, target);
+                        Message.ChatToArea(this, LanguageMgr.GetTranslation(target.Client.Account.Language, "GameNPC.SayTo.SpeaksTo", GetName(0, true), target.GetName(0, false)), eChatType.CT_System, WorldMgr.SAY_DISTANCE, target);
 					}
 					break;
 				case eChatLoc.CL_ChatWindow:
