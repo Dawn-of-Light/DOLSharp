@@ -598,7 +598,13 @@ namespace DOL.GS
                 default:
                     {
                         var translation = (DBLanguageNPC)LanguageMgr.GetTranslation(lang, obj);
-                        return translation.Name;
+
+						if (translation != null)
+						{
+							return translation.Name;
+						}
+
+						return GetName(article, firstLetterUppercase);;
                     }
             }
         }
