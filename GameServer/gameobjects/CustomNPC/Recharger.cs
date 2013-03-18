@@ -43,7 +43,8 @@ namespace DOL.GS
 		public override IList GetExamineMessages(GamePlayer player)
 		{
 			IList list = new ArrayList();
-			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.GetExamineMessages", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.GetExamineMessages",
+                 GetName(0, false, player.Client.Account.Language, this), GetPronoun(0, true, player.Client.Account.Language), GetAggroLevelString(player, false)));
 			return list;
 		}
 
@@ -69,7 +70,8 @@ namespace DOL.GS
 
 			if (item.Count != 1)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.ReceiveItem.StackedObjects", GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.ReceiveItem.StackedObjects",
+                    GetName(0, false, player.Client.Account.Language, this)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
@@ -147,7 +149,8 @@ namespace DOL.GS
 			}
             InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, cost);
 
-			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.RechargerDialogResponse.GiveMoney", GetName(0, false), Money.GetString((long)cost)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.RechargerDialogResponse.GiveMoney",
+                                   GetName(0, false, player.Client.Account.Language, this), Money.GetString((long)cost)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			item.Charges = item.MaxCharges;
 			item.Charges1 = item.MaxCharges1;
 
