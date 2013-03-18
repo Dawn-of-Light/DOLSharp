@@ -3451,7 +3451,9 @@ namespace DOL.GS
 			if (!base.Interact(player)) return false;
 			if (!GameServer.ServerRules.IsSameRealm(this, player, true))
 			{
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.Interact.DirtyLook", GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.Interact.DirtyLook",
+                    GetName(0, true, player.Client.Account.Language, this)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
 				Notify(GameObjectEvent.InteractFailed, this, new InteractEventArgs(player));
 				return false;
 			}
@@ -3553,14 +3555,14 @@ namespace DOL.GS
 				return;
 
 			TurnTo(target);
-            string resultText = LanguageMgr.GetTranslation(target.Client.Account.Language, "GameNPC.SayTo.Says", GetName(0, true), message);
+            string resultText = LanguageMgr.GetTranslation(target.Client.Account.Language, "GameNPC.SayTo.Says", GetName(0, true, target.Client.Account.Language, this), message);
 			switch (loc)
 			{
 				case eChatLoc.CL_PopupWindow:
 					target.Out.SendMessage(resultText, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					if (announce)
 					{
-                        Message.ChatToArea(this, LanguageMgr.GetTranslation(target.Client.Account.Language, "GameNPC.SayTo.SpeaksTo", GetName(0, true), target.GetName(0, false)), eChatType.CT_System, WorldMgr.SAY_DISTANCE, target);
+                        Message.ChatToArea(this, LanguageMgr.GetTranslation(target.Client.Account.Language, "GameNPC.SayTo.SpeaksTo", GetName(0, true, target.Client.Account.Language, this), target.GetName(0, false)), eChatType.CT_System, WorldMgr.SAY_DISTANCE, target);
 					}
 					break;
 				case eChatLoc.CL_ChatWindow:
@@ -5097,7 +5099,8 @@ namespace DOL.GS
 						// Suppress identical messages (multiple item drops).
 						if (str != lastloot)
 						{
-							player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.DropLoot.Drops", GetName(0, true), str)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.DropLoot.Drops", 
+                                GetName(0, true, player.Client.Account.Language, this), str)), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
 							lastloot = str;
 						}
 					}

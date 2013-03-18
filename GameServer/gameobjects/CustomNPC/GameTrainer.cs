@@ -91,13 +91,20 @@ namespace DOL.GS
 			{
                 case "DE":
                     {
-//                        TrainerClassName = GuildName;
                         var translation = (DBLanguageNPC)LanguageMgr.GetTranslation(player.Client.Account.Language, this);
-                        int index = -1;
-                        if (translation.GuildName.Length > 0)
-                            index = translation.GuildName.IndexOf("-Ausbilder");
-                        if (index >= 0)
-                            TrainerClassName = translation.GuildName.Substring(0, index);
+
+                        if (translation != null)
+                        {
+                            int index = -1;
+                            if (translation.GuildName.Length > 0)
+                                index = translation.GuildName.IndexOf("-Ausbilder");
+                            if (index >= 0)
+                                TrainerClassName = translation.GuildName.Substring(0, index);
+                        }
+                        else
+                        {
+                            TrainerClassName = GuildName;
+                        }
                     }
                     break;
 				default:

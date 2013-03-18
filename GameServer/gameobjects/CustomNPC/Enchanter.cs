@@ -43,8 +43,11 @@ namespace DOL.GS
 		public override IList GetExamineMessages(GamePlayer player)
 		{
             IList list = new ArrayList();
-            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.GetExamineMessages.Text1", GetName(0, false)));
-            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.GetExamineMessages.Text2", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
+            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.GetExamineMessages.Text1", 
+                                                GetName(0, false, player.Client.Account.Language, this)));
+            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.GetExamineMessages.Text2",
+                                                GetName(0, false, player.Client.Account.Language, this), GetPronoun(0, true, player.Client.Account.Language),
+                                                GetAggroLevelString(player, false)));
             return list;
 		}
 
@@ -127,7 +130,8 @@ namespace DOL.GS
 
             item.Name = LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.EnchanterDialogResponse.Text3") + " " + item.Name;
             player.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
-            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.EnchanterDialogResponse.Text4", GetName(0, false), Money.GetString(Fee)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.EnchanterDialogResponse.Text4", 
+                                    GetName(0, false, player.Client.Account.Language, this), Money.GetString(Fee)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
             player.RemoveMoney(Fee, null);
             InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, Fee);
             SayTo(player, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.EnchanterDialogResponse.Text5", item.GetName(1, false)));
