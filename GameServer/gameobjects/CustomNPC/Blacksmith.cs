@@ -49,9 +49,10 @@ namespace DOL.GS
 		public override IList GetExamineMessages(GamePlayer player)
 		{
 			IList list = new ArrayList();
-			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Blacksmith.YouTarget", GetName(0, false)));
-			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Blacksmith.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
-			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Blacksmith.GiveObject", GetPronoun(0, true)));
+            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Blacksmith.YouTarget", GetName(0, false, player.Client.Account.Language, this)));
+            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Blacksmith.YouExamine", GetName(0, false, player.Client.Account.Language, this),
+                                                GetPronoun(0, true, player.Client.Account.Language), GetAggroLevelString(player, false)));
+            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Blacksmith.GiveObject", GetPronoun(0, true, player.Client.Account.Language)));
 			return list;
 		}
 
