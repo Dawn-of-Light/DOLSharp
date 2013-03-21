@@ -31,7 +31,7 @@ namespace DOL.GS
 	/// <summary>
 	/// This class represents an inventory item
 	/// </summary>
-	public class GameInventoryItem : InventoryItem, IGameInventoryItem
+	public class GameInventoryItem : InventoryItem, IGameInventoryItem, ITranslatableObject
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -57,6 +57,25 @@ namespace DOL.GS
 		{
 			OwnerID = item.OwnerID;
 			ObjectId = item.ObjectId;
+		}
+
+		public virtual LanguageDataObject.eTranslationIdentifier TranslationIdentifier
+		{
+			get { return LanguageDataObject.eTranslationIdentifier.eItem; }
+		}
+
+		/// <summary>
+		/// Holds the translation id.
+		/// </summary>
+		protected string m_translationId = "";
+
+		/// <summary>
+		/// Gets or sets the translation id.
+		/// </summary>
+		public string TranslationId
+		{
+			get { return m_translationId; }
+			set { m_translationId = (value == null ? "" : value); }
 		}
 
 		/// <summary>
