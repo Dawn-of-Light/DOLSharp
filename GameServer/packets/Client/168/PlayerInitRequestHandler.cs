@@ -78,6 +78,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					player.CurrentRegion.Notify(RegionEvent.PlayerEnter, player.CurrentRegion, new RegionPlayerEventArgs(player));
 				}
+
 				int mobs = SendMobsAndMobEquipmentToPlayer(player);
 				player.Out.SendTime();
 				WeatherMgr.UpdatePlayerWeather(player);
@@ -144,12 +145,21 @@ namespace DOL.GS.PacketHandler.Client.v168
 				AssemblyName an = Assembly.GetExecutingAssembly().GetName();
 				player.Out.SendMessage("Dawn of Light " + an.Name + " Version: " + an.Version, eChatType.CT_System,
 				                       eChatLoc.CL_SystemWindow);
-				CheckIfPlayerLogsNearEnemyKeepAndMoveIfNecessary(player);
-				CheckBGLevelCapForPlayerAndMoveIfNecessary(player);
+
+
+				if (Properties.TELEPORT_LOGIN_NEAR_ENEMY_KEEP)
+				{
+					CheckIfPlayerLogsNearEnemyKeepAndMoveIfNecessary(player);
+				}
+
+				if (Properties.TELEPORT_LOGIN_BG_LEVEL_EXCEEDED)
+				{
+					CheckBGLevelCapForPlayerAndMoveIfNecessary(player);
+				}
 
 				if (checkInstanceLogin)
 				{
-					if (player.CurrentRegion == null || player.CurrentRegion.IsInstance)
+					if (WorldMgr.Regions[player.CurrentRegionID] == null || player.CurrentRegion == null || player.CurrentRegion.IsInstance)
 					{
 						Log.WarnFormat("{0}:{1} logging into instance or CurrentRegion is null, moving to bind!", player.Name, player.Client.Account.Name);
 						player.MoveToBind();
@@ -219,8 +229,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					if (WorldMgr.RvRLinkDeadPlayers.ContainsKey(player.InternalID))
 					{
-						if (DateTime.Now.Subtract(new TimeSpan(0, gracePeriodInMinutes, 0)) <=
-						    WorldMgr.RvRLinkDeadPlayers[player.InternalID])
+						if (DateTime.Now.Subtract(new TimeSpan(0, gracePeriodInMinutes, 0)) <= WorldMgr.RvRLinkDeadPlayers[player.InternalID])
 						{
 							SendMessageAndMoveToSafeLocation(player);
 						}
@@ -312,18 +321,23 @@ namespace DOL.GS.PacketHandler.Client.v168
 			private static int SendMobsAndMobEquipmentToPlayer(GamePlayer player)
 			{
 				int mobs = 0;
-				foreach (GameNPC npc in player.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				{
-					player.Out.SendNPCCreate(npc);
-					mobs++;
-					if (npc.Inventory != null)
-						player.Out.SendLivingEquipmentUpdate(npc);
-					player.CurrentUpdateArray[npc.ObjectID - 1] = true;
 
-					//The following line can cause a racing condition
-					//between client and server! Not neccessary
-					//player.Out.SendNPCUpdate(npc); <-- BIG NO NO!
+				if (player.CurrentRegion != null)
+				{
+					foreach (GameNPC npc in player.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					{
+						player.Out.SendNPCCreate(npc);
+						mobs++;
+						if (npc.Inventory != null)
+							player.Out.SendLivingEquipmentUpdate(npc);
+						player.CurrentUpdateArray[npc.ObjectID - 1] = true;
+
+						//The following line can cause a racing condition
+						//between client and server! Not neccessary
+						//player.Out.SendNPCUpdate(npc); <-- BIG NO NO!
+					}
 				}
+
 				return mobs;
 			}
 		}
