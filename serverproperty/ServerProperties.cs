@@ -1268,6 +1268,19 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("keeps", "pvp_unclaimed_keeps_enemy", "Are unclaimed keeps considered the enemy in PvP mode?", false)]
 		public static bool PVP_UNCLAIMED_KEEPS_ENEMY;
 
+		/// <summary>
+		/// Should players that log near enemy keeps be teleported to a safe area when logging in?
+		/// </summary>
+		[ServerProperty("keeps", "teleport_login_near_enemy_keep", "Should players that log near enemy keeps be teleported to a safe area?", true)]
+		public static bool TELEPORT_LOGIN_NEAR_ENEMY_KEEP;
+
+		/// <summary>
+		/// Should players that exceed BG level cap be moved out of BG when logging in?
+		/// </summary>
+		[ServerProperty("keeps", "teleport_login_bg_level_exceeded", "Should players that exceed BG level cap be moved out of BG when logging in?", true)]
+		public static bool TELEPORT_LOGIN_BG_LEVEL_EXCEEDED;
+
+
 		#endregion
 
 		#region PVE / TOA
