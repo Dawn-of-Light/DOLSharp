@@ -279,7 +279,10 @@ namespace DOL.GS
 		/// <param name="player">The player entering the region</param>
 		public static void UpdatePlayerWeather(GamePlayer player)
 		{
-			player.CurrentRegion.SendWeather(player);
+			if (player.CurrentRegion != null)
+			{
+				player.CurrentRegion.SendWeather(player);
+			}
 		}
 
 		public static void SendWeather(WeatherMgr mgr, GamePlayer player)
