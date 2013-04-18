@@ -442,25 +442,29 @@ namespace DOL.Language
         #region GetTranslation
         public static LanguageDataObject GetTranslation(GameClient client, ITranslatableObject obj)
         {
-            LanguageDataObject translation; TryGetTranslation(out translation, client, obj);
+            LanguageDataObject translation;
+			TryGetTranslation(out translation, client, obj);
             return translation;
         }
 
         public static LanguageDataObject GetTranslation(string language, ITranslatableObject obj)
         {
-            LanguageDataObject translation; TryGetTranslation(out translation, language, obj);
+            LanguageDataObject translation; 
+			TryGetTranslation(out translation, language, obj);
             return translation;
         }
 
         public static string GetTranslation(GameClient client, string translationId, params object[] args)
         {
-            string translation; TryGetTranslation(out translation, client, translationId, args);
+            string translation; 
+			TryGetTranslation(out translation, client, translationId, args);
             return translation;
         }
 
         public static string GetTranslation(string language, string translationId, params object[] args)
         {
-            string translation; TryGetTranslation(out translation, language, translationId, args);
+            string translation; 
+			TryGetTranslation(out translation, language, translationId, args);
             return translation;
         }
         #endregion GetTranslation
