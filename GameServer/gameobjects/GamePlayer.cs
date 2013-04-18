@@ -10320,9 +10320,11 @@ namespace DOL.GS
 		/// <returns>true if created, false if creation failed</returns>
 		public override bool AddToWorld()
 		{
-			//DOLConsole.WriteLine("add to world "+Name);
 			if (!base.AddToWorld())
+			{
+				log.Error("Failed to add player to world: " + Name);
 				return false;
+			}
 
 			IsJumping = false;
 			m_invulnerabilityTick = 0;
@@ -10338,11 +10340,13 @@ namespace DOL.GS
 				if (player != this)
 					player.Out.SendPlayerCreate(this);
 			}
+
 			UpdateEquipmentAppearance();
 
 			// display message
 			if (SpecPointsOk == false)
 			{
+				log.Debug(Name + " is told spec points are incorrect!");
                 Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language,"GamePlayer.AddToWorld.SpecsPointsIncorrect"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                 SpecPointsOk = true;
 			}
@@ -10436,7 +10440,9 @@ namespace DOL.GS
 			}
 			GroupMgr.RemovePlayerLooking(this);
 			if (log.IsDebugEnabled)
+			{
 				log.Debug("(" + Name + ") player.Delete()");
+			}
 			base.Delete();
 		}
 
