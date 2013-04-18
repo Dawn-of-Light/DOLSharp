@@ -12910,8 +12910,6 @@ namespace DOL.GS
 				return;
 			m_dbCharacter = (DOLCharacters)obj;
 
-			log.Debug(Name + " LoadFromDatabase 1");
-
 			Model = (ushort)m_dbCharacter.CurrentModel;
 
 			m_customFaceAttributes[(int)eCharFacePart.EyeSize] = m_dbCharacter.EyeSize;
@@ -12947,9 +12945,6 @@ namespace DOL.GS
 			}
 			#endregion
 
-			log.Debug(Name + " LoadFromDatabase 2");
-
-
 			#region setting world-init-position (delegate to PlayerCharacter dont make sense)
 			m_x = m_dbCharacter.Xpos;
 			m_y = m_dbCharacter.Ypos;
@@ -12974,8 +12969,6 @@ namespace DOL.GS
 			}
 			#endregion
 
-			log.Debug(Name + " LoadFromDatabase 3");
-
 			// stats first
 			m_charStat[eStat.STR - eStat._First] = (short)m_dbCharacter.Strength;
 			m_charStat[eStat.DEX - eStat._First] = (short)m_dbCharacter.Dexterity;
@@ -12996,8 +12989,6 @@ namespace DOL.GS
 
 			SwitchQuiver((eActiveQuiverSlot)(m_dbCharacter.ActiveWeaponSlot & 0xF0), false);
 			SwitchWeapon((eActiveWeaponSlot)(m_dbCharacter.ActiveWeaponSlot & 0x0F));
-
-			log.Debug(Name + " LoadFromDatabase 4");
 
 			if (m_dbCharacter.PlayedTime == 0)
 			{
@@ -13023,29 +13014,17 @@ namespace DOL.GS
 				Health = 1;
 			}
 
-			log.Debug(Name + " LoadFromDatabase 5");
-
 			if (RealmLevel == 0)
 				RealmLevel = CalculateRealmLevelFromRPs(RealmPoints);
 
 			//Need to load the skills at the end, so the stored values modify the
 			//existing skill levels for this player
-
-			log.Debug(Name + " LoadFromDatabase 6");
-
 			LoadSkillsFromCharacter();
 			LoadCraftingSkills();
 
-			log.Debug(Name + " LoadFromDatabase 7");
-
 			VerifySpecPoints();
 
-			log.Debug(Name + " LoadFromDatabase 8");
-
 			LoadQuests();
-
-			log.Debug(Name + " LoadFromDatabase 9");
-
 
 			// Load Task object of player ...
 			var tasks = GameServer.Database.SelectObjects<DBTask>("Character_ID ='" + GameServer.Database.Escape(InternalID) + "'");
@@ -13067,8 +13046,6 @@ namespace DOL.GS
 					m_mlSteps.Add(mlstep);
 			}
 
-			log.Debug(Name + " LoadFromDatabase 10");
-
 			m_previousLoginDate = m_dbCharacter.LastPlayed;
 
 			// Has to be updated on load to ensure time offline isn't added to character /played.
@@ -13084,8 +13061,6 @@ namespace DOL.GS
 			//let's only check if we can use /level once shall we,
 			//this is nice because i want to check the property often for the new catacombs classes
 
-			log.Debug(Name + " LoadFromDatabase 11");
-
 			//find all characters in the database
 			foreach (DOLCharacters plr in Client.Account.Characters)
 			{
@@ -13100,8 +13075,6 @@ namespace DOL.GS
 			// check the account for the Muted flag
 			if (Client.Account.IsMuted)
 				IsMuted = true;
-
-			log.Debug(Name + " LoadFromDatabase END");
 		}
 
 		/// <summary>
@@ -16276,9 +16249,6 @@ namespace DOL.GS
 		public GamePlayer(GameClient client, DOLCharacters dbChar)
 			: base()
 		{
-
-			log.Debug("GamePlayer constructor START");
-
 			IsJumping = false;
 			m_steed = new WeakRef(null);
 			m_rangeAttackAmmo = new WeakRef(null);
@@ -16316,11 +16286,7 @@ namespace DOL.GS
 			m_saveInDB = true;
 			LoadFromDatabase(dbChar);
 
-			log.Debug(Name + " CreateStatistics");
-
 			CreateStatistics();
-
-			log.Debug(Name + " GamePlayer constructor END");
 		}
 
 		/// <summary>
