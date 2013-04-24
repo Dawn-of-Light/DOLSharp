@@ -164,28 +164,11 @@ namespace DOL.GS.Spells
 				resist += (int)fury.Spell.Value;
 			}
 
-			if (target.EffectList.GetOfType<AllureofDeathEffect>() != null)
-			{
-				//[Shawn] : Added Specific Resist Effects To This Ability.
-				int basechance = base.CalculateSpellResistChance(target);
-				GameSpellEffect Nearsight = SpellHandler.FindEffectOnTarget(target, "Nearsight");
-				if (Nearsight == null)
-				{
-					basechance += (int)Nearsight.Spell.Value;
-				}
-				GameSpellEffect Mesmerize = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
-                if (Mesmerize == null)
-				{
-					basechance += (int)Mesmerize.Spell.Value;
-				}
-				GameSpellEffect Stun = SpellHandler.FindEffectOnTarget(target, "Stun");
-                if (Stun == null)
-				{
-					basechance += (int)Stun.Spell.Value;
-				}
-				return Math.Min(75, basechance);
-
-			}
+            //bonedancer rr5
+            if (target.EffectList.GetOfType<AllureofDeathEffect>() != null)
+            {
+                return AllureofDeathEffect.ccchance;
+            }
 
 			if (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
 				return 0;
