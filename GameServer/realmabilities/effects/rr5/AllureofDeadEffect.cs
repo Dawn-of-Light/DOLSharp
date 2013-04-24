@@ -38,6 +38,9 @@ namespace DOL.GS.Effects
         /// </summary>
         public AllureofDeathEffect() : base(60000) { }
 
+        public const int ccchance = 75;
+        public const int nschance = 100;
+
         /// <summary>
         /// Start the effect on player
         /// </summary>
