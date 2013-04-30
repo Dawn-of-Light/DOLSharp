@@ -271,7 +271,18 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Name of the effect
 		/// </summary>
-        public override string Name { get { return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Skill.Ability.DirtyTricks.Name"); } }
+        public override string Name 
+		{ 
+			get 
+			{ 
+				if (Owner != null && Owner is GamePlayer && (Owner as GamePlayer).Client != null)
+				{
+					return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Skill.Ability.DirtyTricks.Name"); 
+				}
+
+				return LanguageMgr.GetTranslation(LanguageMgr.DefaultLanguage, "Skill.Ability.DirtyTricks.Name"); 
+			} 
+		}
 
 		/// <summary>
 		/// Remaining Time of the effect in milliseconds
