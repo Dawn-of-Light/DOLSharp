@@ -597,12 +597,11 @@ namespace DOL.GS
                     }
                 default:
                     {
-                        var translation = (DBLanguageNPC)LanguageMgr.GetTranslation(lang, obj);
-
-						if (translation != null)
-						{
-							return translation.Name;
-						}
+                        if (obj is GameNPC)
+                        {
+                            var translation = (DBLanguageNPC)LanguageMgr.GetTranslation(lang, obj);
+                            if (translation != null) return translation.Name;
+                        }
 
 						return GetName(article, firstLetterUppercase);;
                     }
