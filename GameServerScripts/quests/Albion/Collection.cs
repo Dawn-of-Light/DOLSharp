@@ -173,7 +173,9 @@ namespace DOL.GS.Quests.Albion
 
 					general[i].Size = 49;
 					general[i].Level = 2;
-
+                    general[i].Race = 2007;
+                    general[i].BodyType = 8;
+                    
 					StandardMobBrain brain = new StandardMobBrain();
 					brain.AggroLevel = 80;
 					brain.AggroRange = 1000;
