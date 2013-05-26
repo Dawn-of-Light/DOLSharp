@@ -46,6 +46,7 @@ namespace DOL.GS
         protected string m_examineArticle;
         protected string m_messageArticle;
 		protected string m_model;
+		protected ushort m_gender;
 		protected string m_size;
 		protected string m_level;
 		protected string m_equipmentTemplateID;
@@ -97,6 +98,7 @@ namespace DOL.GS
             m_examineArticle = data.ExamineArticle;
             m_messageArticle = data.MessageArticle;
 			m_model = data.Model;
+			m_gender = data.Gender;
 			m_size = data.Size;
 			if (m_size == null)
 				m_size = "50";
@@ -412,6 +414,16 @@ namespace DOL.GS
 			get { return m_model; }
 			set { m_model = value; }
 		}
+		
+		/// <summary>
+		/// Gets the template npc model
+		/// </summary>
+		public ushort Gender
+		{
+			get { return m_gender; }
+			set { m_gender = value; }
+		}
+		
 		/// <summary>
 		/// Gets the template npc size
 		/// </summary>

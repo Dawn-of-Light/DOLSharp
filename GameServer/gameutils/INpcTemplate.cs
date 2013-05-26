@@ -50,6 +50,7 @@ namespace DOL.GS
         string ExamineArticle { get; }
         string MessageArticle { get; }
 		string Model { get; }
+		ushort Gender {get; }
 		string Size { get; }
 		string Level { get;}
 		short MaxSpeed { get; }
