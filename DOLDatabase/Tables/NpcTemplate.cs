@@ -45,6 +45,7 @@ namespace DOL.Database
         private string m_examineArticle = string.Empty;
         private string m_messageArticle = string.Empty;
 		private string m_model;
+		private ushort m_gender;
 		private string m_size = "50";
 		private string m_level = "0";
 		private short m_maxSpeed = 50;
@@ -224,6 +225,20 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Model
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public ushort Gender
+		{
+			get { return m_gender; }
+			set
+			{
+				Dirty = true;
+				m_gender = value;
+			}
+		}
+		
 		/// <summary>
 		/// Size
 		/// </summary>
