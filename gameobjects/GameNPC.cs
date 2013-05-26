@@ -2204,13 +2204,25 @@ namespace DOL.GS
 			this.ExamineArticle = template.ExamineArticle;
 			this.MessageArticle = template.MessageArticle;
 			
-			#region Models, Sizes, Levels
+			#region Models, Sizes, Levels, Gender
 			// Grav: this.Model/Size/Level accessors are triggering SendUpdate()
 			// so i must use them, and not directly use private variables
 			ushort choosenModel = 1;
 			var splitModel = template.Model.SplitCSV(true);
 			ushort.TryParse(splitModel[Util.Random(0,splitModel.Count-1)], out choosenModel);
 			this.Model = choosenModel;
+			
+			// Graveen: template.Gender is 0,1 or 2 for respectively eGender.Neutral("it"), eGender.Male ("he"), 
+			// eGender.Female ("she"). Any other value is randomly choosing a gender for current GameNPC
+			int choosenGender = template.Gender>2?Util.Random(0,2):template.Gender;
+
+			switch (choosenGender)
+			{
+				default	:
+				case 0	: this.Gender = eGender.Neutral; break;
+				case 1	: this.Gender = eGender.Male; break;
+				case 2	: this.Gender = eGender.Female; break;			
+			}
 			
 			byte choosenSize = 50;
 			if (!Util.IsEmpty(template.Size))
