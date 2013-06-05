@@ -1,17 +1,17 @@
 ﻿/* Created by Shawn
-* Date : March 29 2011
-* Version : 1.0
-* 
-* All you need to do when you add this to your core is 
-* /mob create DOL.GS.BuffMerchant
-* and then
-* /merchant sell add BuffTokens
-* 
-* Updated by Mattress to apply buffs equally to all class types, set values to match live.
-* Added option to purchase with bounty points.  Feb 6, 2012.
-* 
-* Enjoy!
-*/
+ * Date : March 29 2011
+ * Version : 1.0
+ * 
+ * All you need to do when you add this to your core is
+ * /mob create DOL.GS.BuffMerchant
+ * and then
+ * /merchant sell add BuffTokens
+ * 
+ * Updated by Mattress to apply buffs equally to all class types, set values to match live.
+ * Added option to purchase with bounty points.  Feb 6, 2012.
+ * 
+ * Enjoy!
+ */
 
 using System.Collections;
 using DOL.Events;
@@ -643,7 +643,7 @@ namespace DOL.GS
 					spell.Icon = 1506;
 					spell.Duration = 7200;
 					spell.Value = 67; //effective buff 67
-                    spell.Name = "Armor of the Realm";
+					spell.Name = "Armor of the Realm";
 					spell.Description = "Adds to the recipient's Armor Factor (AF), resulting in better protection against some forms of attack. It acts in addition to any armor the target is wearing.";
 					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
 					spell.SpellID = 89014;
@@ -802,7 +802,7 @@ namespace DOL.GS
 				return m_heal;
 			}
 		}
-		*/
+		 */
 		#endregion Non-live (commented out)
 
 		#endregion Spells
@@ -844,144 +844,144 @@ namespace DOL.GS
 
 		public override eQuestIndicator GetQuestIndicator(GamePlayer player)
 		{
-			return eQuestIndicator.Available;
+			return eQuestIndicator.Lore ;
 		}
-        #endregion
+		#endregion
 
-        private bool isBounty;
-        
-        public override bool Interact(GamePlayer player)
+		private bool isBounty;
+		
+		public override bool Interact(GamePlayer player)
 		{
-        	TradeItems = new MerchantTradeItems("BuffTokens");
+			TradeItems = new MerchantTradeItems("BuffTokens");
 			if (!base.Interact(player)) return false;
 			TurnTo(player, 10000);
 			player.Out.SendMessage("Greetings, " + player.Name + ". The King has instructed me to strengthen you so that you may defend the lands with valor. Simply hand me the token for the enhancement you desire, and I will empower you accordingly. Do you wish to purchase tokens with [Gold] or [Bounty Points]?", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 			isBounty = false;
 			SendMerchantWindow(player);
 			return true;
-        }
-
-        public override bool WhisperReceive(GameLiving source, string str)
-        {
-            if (!base.WhisperReceive(source, str))
-                return false;
-            GamePlayer player = source as GamePlayer;
-            if (player == null) return false;
-
-            switch (str)
-            {
-                case "Gold":
-                {
-                    TurnTo(player, 10000);
-                    isBounty = false;
-                    TradeItems = new MerchantTradeItems("BuffTokens");
-                    SendMerchantWindow(player);
-                }
-                break;
-                case "Bounty Points":
-                {
-                    TurnTo(player, 10000);
-                    isBounty = true;
-                    TradeItems = new MerchantTradeItems("BPBuffTokens");
-                    player.Out.SendMerchantWindow(TradeItems, eMerchantWindowType.Bp);
-                }
-                break;
-            }
-            return true;
 		}
 
-        public override void OnPlayerBuy(GamePlayer player, int item_slot, int number)
-        {
-            if (isBounty == true) //...pay with Bounty Points.
-            {
-                int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
-                int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+		public override bool WhisperReceive(GameLiving source, string str)
+		{
+			if (!base.WhisperReceive(source, str))
+				return false;
+			GamePlayer player = source as GamePlayer;
+			if (player == null) return false;
 
-                ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
-                if (template == null) return;
+			switch (str)
+			{
+				case "Gold":
+					{
+						TurnTo(player, 10000);
+						isBounty = false;
+						TradeItems = new MerchantTradeItems("BuffTokens");
+						SendMerchantWindow(player);
+					}
+					break;
+				case "Bounty Points":
+					{
+						TurnTo(player, 10000);
+						isBounty = true;
+						TradeItems = new MerchantTradeItems("BPBuffTokens");
+						player.Out.SendMerchantWindow(TradeItems, eMerchantWindowType.Bp);
+					}
+					break;
+			}
+			return true;
+		}
 
-                int amountToBuy = number;
-                if (template.PackSize > 0)
-                    amountToBuy *= template.PackSize;
+		public override void OnPlayerBuy(GamePlayer player, int item_slot, int number)
+		{
+			if (isBounty == true) //...pay with Bounty Points.
+			{
+				int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+				int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
-                if (amountToBuy <= 0) return;
+				ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
+				if (template == null) return;
 
-                long totalValue = number * (template.Price);
+				int amountToBuy = number;
+				if (template.PackSize > 0)
+					amountToBuy *= template.PackSize;
 
-                lock (player.Inventory)
-                {
-                    if (player.BountyPoints < totalValue)
-                    {
-                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeedBP", totalValue), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        return;
-                    }
-                    if (!player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
-                    {
-                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        return;
-                    }
-                    InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, template, amountToBuy);
+				if (amountToBuy <= 0) return;
 
-                    string message;
-                    if (number > 1)
-                        message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtPiecesBP", totalValue, template.GetName(1, false));
-                    else
-                        message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtBP", template.GetName(1, false), totalValue);
-                    player.BountyPoints -= totalValue;
-                    player.Out.SendUpdatePoints();
-                    player.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
-                }
-            }
-            if (isBounty == false) //...pay with Money.
-            {
-                int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
-                int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+				long totalValue = number * (template.Price);
 
-                ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
-                if (template == null) return;
+				lock (player.Inventory)
+				{
+					if (player.BountyPoints < totalValue)
+					{
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeedBP", totalValue), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return;
+					}
+					if (!player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+					{
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return;
+					}
+					InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, template, amountToBuy);
 
-                int amountToBuy = number;
-                if (template.PackSize > 0)
-                    amountToBuy *= template.PackSize;
+					string message;
+					if (number > 1)
+						message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtPiecesBP", totalValue, template.GetName(1, false));
+					else
+						message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtBP", template.GetName(1, false), totalValue);
+					player.BountyPoints -= totalValue;
+					player.Out.SendUpdatePoints();
+					player.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+				}
+			}
+			if (isBounty == false) //...pay with Money.
+			{
+				int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+				int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
-                if (amountToBuy <= 0) return;
+				ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
+				if (template == null) return;
 
-                long totalValue = number * template.Price;
+				int amountToBuy = number;
+				if (template.PackSize > 0)
+					amountToBuy *= template.PackSize;
 
-                lock (player.Inventory)
-                {
+				if (amountToBuy <= 0) return;
 
-                    if (player.GetCurrentMoney() < totalValue)
-                    {
-                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeed", Money.GetString(totalValue)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        return;
-                    }
+				long totalValue = number * template.Price;
 
-                    if (!player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
-                    {
-                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        return;
-                    }
-                    InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, template, amountToBuy);
+				lock (player.Inventory)
+				{
 
-                    string message;
-                    if (amountToBuy > 1)
-                        message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtPieces", amountToBuy, template.GetName(1, false), Money.GetString(totalValue));
-                    else
-                        message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.Bought", template.GetName(1, false), Money.GetString(totalValue));
+					if (player.GetCurrentMoney() < totalValue)
+					{
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeed", Money.GetString(totalValue)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return;
+					}
 
-                    if (!player.RemoveMoney(totalValue, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
-                    {
-                        throw new Exception("Money amount changed while adding items.");
-                    }
-                    InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, totalValue);
-                }
-            }
-            return;
-        }
+					if (!player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+					{
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						return;
+					}
+					InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, template, amountToBuy);
 
-        #region GiveTokens
-        public override bool ReceiveItem(GameLiving source, InventoryItem item)
+					string message;
+					if (amountToBuy > 1)
+						message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtPieces", amountToBuy, template.GetName(1, false), Money.GetString(totalValue));
+					else
+						message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.Bought", template.GetName(1, false), Money.GetString(totalValue));
+
+					if (!player.RemoveMoney(totalValue, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
+					{
+						throw new Exception("Money amount changed while adding items.");
+					}
+					InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, totalValue);
+				}
+			}
+			return;
+		}
+
+		#region GiveTokens
+		public override bool ReceiveItem(GameLiving source, InventoryItem item)
 		{
 			GamePlayer t = source as GamePlayer;
 			
@@ -992,7 +992,7 @@ namespace DOL.GS
 			}
 			if (t != null && item != null)
 			{
-                if (item.Id_nb == "Full_Buffs_Token" || item.Id_nb == "BPFull_Buffs_Token")
+				if (item.Id_nb == "Full_Buffs_Token" || item.Id_nb == "BPFull_Buffs_Token")
 				{
 					if (t.CharacterClass.ClassType == eClassType.ListCaster)
 					{
@@ -1029,7 +1029,7 @@ namespace DOL.GS
 					t.Inventory.RemoveItem(item);
 					return true;
 				}
-                if (item.Id_nb == "Specialization_Buffs_Token" || item.Id_nb == "BPSpecialization_Buffs_Token")
+				if (item.Id_nb == "Specialization_Buffs_Token" || item.Id_nb == "BPSpecialization_Buffs_Token")
 				{
 					if (t.CharacterClass.ClassType == eClassType.ListCaster)
 					{
@@ -1050,7 +1050,7 @@ namespace DOL.GS
 					return true;
 
 				}
-                if (item.Id_nb == "Baseline_Buffs_Token" || item.Id_nb == "BPBaseline_Buffs_Token")
+				if (item.Id_nb == "Baseline_Buffs_Token" || item.Id_nb == "BPBaseline_Buffs_Token")
 				{
 					if (t.CharacterClass.ClassType == eClassType.ListCaster)
 					{
@@ -1166,7 +1166,7 @@ namespace DOL.GS
 					}
 					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 					t.Inventory.RemoveItem(item);
-					return true;	   
+					return true;
 				}
 				if (item.Id_nb == "SpecAF_Buff_Token" || item.Id_nb == "BPSpecAF_Buff_Token")
 				{
@@ -1212,8 +1212,8 @@ namespace DOL.GS
 					t.Inventory.RemoveItem(item);
 					return true;
 				}
-				*/
-			   #endregion Non-live (commented out)
+				 */
+				#endregion Non-live (commented out)
 			}
 			#region Non-live (commented out)
 			/*if (item.Id_nb == "EnduReg_Buff_Token")
@@ -1242,7 +1242,7 @@ namespace DOL.GS
 				t.Inventory.RemoveItem(item);
 				return true;
 			}
-			*/
+			 */
 			#endregion Non-live (commented out)
 			return base.ReceiveItem(source, item);
 		}
@@ -1260,10 +1260,10 @@ namespace DOL.GS.Items
 		[GameServerStartedEvent]
 		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
 		{
-            if (!ServerProperties.Properties.LOAD_BUFF_TOKENS)
-                return;
-            
-            ItemTemplate item;
+			if (!ServerProperties.Properties.LOAD_BUFF_TOKENS)
+				return;
+			
+			ItemTemplate item;
 			
 			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("Full_Buffs_Token");
 			if (item == null)
@@ -1326,13 +1326,13 @@ namespace DOL.GS.Items
 			if (item == null)
 			{
 				item = new ItemTemplate();
-				item.Id_nb = "Strength_Buff_Token"; 
+				item.Id_nb = "Strength_Buff_Token";
 				item.Name = "Strength Buff Token";
-				item.Level = 1; 
-				item.Item_Type = 40; 
-				item.Model = 485; 
+				item.Level = 1;
+				item.Item_Type = 40;
+				item.Model = 485;
 				item.IsDropable = false;
-				item.IsPickable = true;  
+				item.IsPickable = true;
 				item.Price = 20000;
 				item.Weight = 1;
 				item.PackageID = "BuffTokens";
@@ -1607,251 +1607,251 @@ namespace DOL.GS.Items
 				if (log.IsDebugEnabled)
 					log.Debug("Added " + item.Id_nb);
 			}
-			*/
+			 */
 			#endregion Non-live (commented out)
 		}
 	}
-    public class BPBuffTokens
-    {
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+	public class BPBuffTokens
+	{
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        [GameServerStartedEvent]
-        public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
-        {
-            if (!ServerProperties.Properties.LOAD_BUFF_TOKENS)
-                return;
-            
-            ItemTemplate item;
+		[GameServerStartedEvent]
+		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+		{
+			if (!ServerProperties.Properties.LOAD_BUFF_TOKENS)
+				return;
+			
+			ItemTemplate item;
 
-            item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPFull_Buffs_Token");
-            if (item == null)
-            {
-                item = new ItemTemplate();
-                item.Id_nb = "BPFull_Buffs_Token";
-                item.Name = "Full Buffs Token";
-                item.Level = 1;
-                item.Item_Type = 40;
-                item.Model = 485;
-                item.IsDropable = false;
-                item.IsPickable = true;
-                item.Price = 32;
-                item.Weight = 1;
-                item.PackageID = "BPBuffTokens";
-                GameServer.Database.AddObject(item);
-                if (log.IsDebugEnabled)
-                    log.Debug("Added " + item.Id_nb);
-            }
+			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPFull_Buffs_Token");
+			if (item == null)
+			{
+				item = new ItemTemplate();
+				item.Id_nb = "BPFull_Buffs_Token";
+				item.Name = "Full Buffs Token";
+				item.Level = 1;
+				item.Item_Type = 40;
+				item.Model = 485;
+				item.IsDropable = false;
+				item.IsPickable = true;
+				item.Price = 32;
+				item.Weight = 1;
+				item.PackageID = "BPBuffTokens";
+				GameServer.Database.AddObject(item);
+				if (log.IsDebugEnabled)
+					log.Debug("Added " + item.Id_nb);
+			}
 
-            item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPSpecialization_Buffs_Token");
-            if (item == null)
-            {
-                item = new ItemTemplate();
-                item.Id_nb = "BPSpecialization_Buffs_Token";
-                item.Name = "Specialization Buffs Token";
-                item.Level = 1;
-                item.Item_Type = 40;
-                item.Model = 485;
-                item.IsDropable = false;
-                item.IsPickable = true;
-                item.Price = 24;
-                item.Weight = 1;
-                item.PackageID = "BPBuffTokens";
-                GameServer.Database.AddObject(item);
-                if (log.IsDebugEnabled)
-                    log.Debug("Added " + item.Id_nb);
-            }
+			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPSpecialization_Buffs_Token");
+			if (item == null)
+			{
+				item = new ItemTemplate();
+				item.Id_nb = "BPSpecialization_Buffs_Token";
+				item.Name = "Specialization Buffs Token";
+				item.Level = 1;
+				item.Item_Type = 40;
+				item.Model = 485;
+				item.IsDropable = false;
+				item.IsPickable = true;
+				item.Price = 24;
+				item.Weight = 1;
+				item.PackageID = "BPBuffTokens";
+				GameServer.Database.AddObject(item);
+				if (log.IsDebugEnabled)
+					log.Debug("Added " + item.Id_nb);
+			}
 
-            item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPBaseline_Buffs_Token");
-            if (item == null)
-            {
-                item = new ItemTemplate();
-                item.Id_nb = "BPBaseline_Buffs_Token";
-                item.Name = "Baseline Buffs Token";
-                item.Level = 1;
-                item.Item_Type = 40;
-                item.Model = 485;
-                item.IsDropable = false;
-                item.IsPickable = true;
-                item.Price = 8;
-                item.Weight = 1;
-                item.PackageID = "BPBuffTokens";
-                GameServer.Database.AddObject(item);
-                if (log.IsDebugEnabled)
-                    log.Debug("Added " + item.Id_nb);
-            }
+			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPBaseline_Buffs_Token");
+			if (item == null)
+			{
+				item = new ItemTemplate();
+				item.Id_nb = "BPBaseline_Buffs_Token";
+				item.Name = "Baseline Buffs Token";
+				item.Level = 1;
+				item.Item_Type = 40;
+				item.Model = 485;
+				item.IsDropable = false;
+				item.IsPickable = true;
+				item.Price = 8;
+				item.Weight = 1;
+				item.PackageID = "BPBuffTokens";
+				GameServer.Database.AddObject(item);
+				if (log.IsDebugEnabled)
+					log.Debug("Added " + item.Id_nb);
+			}
 
-            item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPStrength_Buff_Token");
-            if (item == null)
-            {
-                item = new ItemTemplate();
-                item.Id_nb = "BPStrength_Buff_Token";
-                item.Name = "Strength Buff Token";
-                item.Level = 1;
-                item.Item_Type = 40;
-                item.Model = 485;
-                item.IsDropable = false;
-                item.IsPickable = true;
-                item.Price = 2;
-                item.Weight = 1;
-                item.PackageID = "BPBuffTokens";
-                GameServer.Database.AddObject(item);
-                if (log.IsDebugEnabled)
-                    log.Debug("Added " + item.Id_nb);
-            }
+			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPStrength_Buff_Token");
+			if (item == null)
+			{
+				item = new ItemTemplate();
+				item.Id_nb = "BPStrength_Buff_Token";
+				item.Name = "Strength Buff Token";
+				item.Level = 1;
+				item.Item_Type = 40;
+				item.Model = 485;
+				item.IsDropable = false;
+				item.IsPickable = true;
+				item.Price = 2;
+				item.Weight = 1;
+				item.PackageID = "BPBuffTokens";
+				GameServer.Database.AddObject(item);
+				if (log.IsDebugEnabled)
+					log.Debug("Added " + item.Id_nb);
+			}
 
-            item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPFortification_Buff_Token");
-            if (item == null)
-            {
-                item = new ItemTemplate();
-                item.Id_nb = "BPFortification_Buff_Token";
-                item.Name = "Fortification Buff Token";
-                item.Level = 1;
-                item.Item_Type = 40;
-                item.Model = 485;
-                item.IsDropable = false;
-                item.IsPickable = true;
-                item.Price = 2;
-                item.Weight = 1;
-                item.PackageID = "BPBuffTokens";
-                GameServer.Database.AddObject(item);
-                if (log.IsDebugEnabled)
-                    log.Debug("Added " + item.Id_nb);
-            }
+			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPFortification_Buff_Token");
+			if (item == null)
+			{
+				item = new ItemTemplate();
+				item.Id_nb = "BPFortification_Buff_Token";
+				item.Name = "Fortification Buff Token";
+				item.Level = 1;
+				item.Item_Type = 40;
+				item.Model = 485;
+				item.IsDropable = false;
+				item.IsPickable = true;
+				item.Price = 2;
+				item.Weight = 1;
+				item.PackageID = "BPBuffTokens";
+				GameServer.Database.AddObject(item);
+				if (log.IsDebugEnabled)
+					log.Debug("Added " + item.Id_nb);
+			}
 
-            item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPDexterity_Buff_Token");
-            if (item == null)
-            {
-                item = new ItemTemplate();
-                item.Id_nb = "BPDexterity_Buff_Token";
-                item.Name = "Dexertity Buff Token";
-                item.Level = 1;
-                item.Item_Type = 40;
-                item.Model = 485;
-                item.IsDropable = false;
-                item.IsPickable = true;
-                item.Price = 2;
-                item.Weight = 1;
-                item.PackageID = "BPBuffTokens";
-                GameServer.Database.AddObject(item);
-                if (log.IsDebugEnabled)
-                    log.Debug("Added " + item.Id_nb);
-            }
+			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPDexterity_Buff_Token");
+			if (item == null)
+			{
+				item = new ItemTemplate();
+				item.Id_nb = "BPDexterity_Buff_Token";
+				item.Name = "Dexertity Buff Token";
+				item.Level = 1;
+				item.Item_Type = 40;
+				item.Model = 485;
+				item.IsDropable = false;
+				item.IsPickable = true;
+				item.Price = 2;
+				item.Weight = 1;
+				item.PackageID = "BPBuffTokens";
+				GameServer.Database.AddObject(item);
+				if (log.IsDebugEnabled)
+					log.Debug("Added " + item.Id_nb);
+			}
 
-            item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPArmor_Buff_Token");
-            if (item == null)
-            {
-                item = new ItemTemplate();
-                item.Id_nb = "BPArmor_Buff_Token";
-                item.Name = "Armor Buff Token";
-                item.Level = 1;
-                item.Item_Type = 40;
-                item.Model = 485;
-                item.IsDropable = false;
-                item.IsPickable = true;
-                item.Price = 2;
-                item.Weight = 1;
-                item.PackageID = "BPBuffTokens";
-                GameServer.Database.AddObject(item);
-                if (log.IsDebugEnabled)
-                    log.Debug("Added " + item.Id_nb);
-            }
+			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPArmor_Buff_Token");
+			if (item == null)
+			{
+				item = new ItemTemplate();
+				item.Id_nb = "BPArmor_Buff_Token";
+				item.Name = "Armor Buff Token";
+				item.Level = 1;
+				item.Item_Type = 40;
+				item.Model = 485;
+				item.IsDropable = false;
+				item.IsPickable = true;
+				item.Price = 2;
+				item.Weight = 1;
+				item.PackageID = "BPBuffTokens";
+				GameServer.Database.AddObject(item);
+				if (log.IsDebugEnabled)
+					log.Debug("Added " + item.Id_nb);
+			}
 
-            item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPStrCon_Buff_Token");
-            if (item == null)
-            {
-                item = new ItemTemplate();
-                item.Id_nb = "BPStrCon_Buff_Token";
-                item.Name = "Might Buff Token";
-                item.Level = 1;
-                item.Item_Type = 40;
-                item.Model = 485;
-                item.IsDropable = false;
-                item.IsPickable = true;
-                item.Price = 4;
-                item.Weight = 1;
-                item.PackageID = "BPBuffTokens";
-                GameServer.Database.AddObject(item);
-                if (log.IsDebugEnabled)
-                    log.Debug("Added " + item.Id_nb);
-            }
+			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPStrCon_Buff_Token");
+			if (item == null)
+			{
+				item = new ItemTemplate();
+				item.Id_nb = "BPStrCon_Buff_Token";
+				item.Name = "Might Buff Token";
+				item.Level = 1;
+				item.Item_Type = 40;
+				item.Model = 485;
+				item.IsDropable = false;
+				item.IsPickable = true;
+				item.Price = 4;
+				item.Weight = 1;
+				item.PackageID = "BPBuffTokens";
+				GameServer.Database.AddObject(item);
+				if (log.IsDebugEnabled)
+					log.Debug("Added " + item.Id_nb);
+			}
 
-            item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPDexQui_Buff_Token");
-            if (item == null)
-            {
-                item = new ItemTemplate();
-                item.Id_nb = "BPDexQui_Buff_Token";
-                item.Name = "Deftness Buff Token";
-                item.Level = 1;
-                item.Item_Type = 40;
-                item.Model = 485;
-                item.IsDropable = false;
-                item.IsPickable = true;
-                item.Price = 4;
-                item.Weight = 1;
-                item.PackageID = "BPBuffTokens";
-                GameServer.Database.AddObject(item);
-                if (log.IsDebugEnabled)
-                    log.Debug("Added " + item.Id_nb);
-            }
+			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPDexQui_Buff_Token");
+			if (item == null)
+			{
+				item = new ItemTemplate();
+				item.Id_nb = "BPDexQui_Buff_Token";
+				item.Name = "Deftness Buff Token";
+				item.Level = 1;
+				item.Item_Type = 40;
+				item.Model = 485;
+				item.IsDropable = false;
+				item.IsPickable = true;
+				item.Price = 4;
+				item.Weight = 1;
+				item.PackageID = "BPBuffTokens";
+				GameServer.Database.AddObject(item);
+				if (log.IsDebugEnabled)
+					log.Debug("Added " + item.Id_nb);
+			}
 
-            item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPAcu_Buff_Token");
-            if (item == null)
-            {
-                item = new ItemTemplate();
-                item.Id_nb = "BPAcu_Buff_Token";
-                item.Name = "Enlightenment Buff Token";
-                item.Level = 1;
-                item.Item_Type = 40;
-                item.Model = 485;
-                item.IsDropable = false;
-                item.IsPickable = true;
-                item.Price = 4;
-                item.Weight = 1;
-                item.PackageID = "BPBuffTokens";
-                GameServer.Database.AddObject(item);
-                if (log.IsDebugEnabled)
-                    log.Debug("Added " + item.Id_nb);
-            }
+			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPAcu_Buff_Token");
+			if (item == null)
+			{
+				item = new ItemTemplate();
+				item.Id_nb = "BPAcu_Buff_Token";
+				item.Name = "Enlightenment Buff Token";
+				item.Level = 1;
+				item.Item_Type = 40;
+				item.Model = 485;
+				item.IsDropable = false;
+				item.IsPickable = true;
+				item.Price = 4;
+				item.Weight = 1;
+				item.PackageID = "BPBuffTokens";
+				GameServer.Database.AddObject(item);
+				if (log.IsDebugEnabled)
+					log.Debug("Added " + item.Id_nb);
+			}
 
-            item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPSpecAF_Buff_Token");
-            if (item == null)
-            {
-                item = new ItemTemplate();
-                item.Id_nb = "BPSpecAF_Buff_Token";
-                item.Name = "Barrier Buff Token";
-                item.Level = 1;
-                item.Item_Type = 40;
-                item.Model = 485;
-                item.IsDropable = false;
-                item.IsPickable = true;
-                item.Price = 6;
-                item.Weight = 1;
-                item.PackageID = "BPBuffTokens";
-                GameServer.Database.AddObject(item);
-                if (log.IsDebugEnabled)
-                    log.Debug("Added " + item.Id_nb);
-            }
+			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPSpecAF_Buff_Token");
+			if (item == null)
+			{
+				item = new ItemTemplate();
+				item.Id_nb = "BPSpecAF_Buff_Token";
+				item.Name = "Barrier Buff Token";
+				item.Level = 1;
+				item.Item_Type = 40;
+				item.Model = 485;
+				item.IsDropable = false;
+				item.IsPickable = true;
+				item.Price = 6;
+				item.Weight = 1;
+				item.PackageID = "BPBuffTokens";
+				GameServer.Database.AddObject(item);
+				if (log.IsDebugEnabled)
+					log.Debug("Added " + item.Id_nb);
+			}
 
-            item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPHaste_Buff_Token");
-            if (item == null)
-            {
-                item = new ItemTemplate();
-                item.Id_nb = "BPHaste_Buff_Token";
-                item.Name = "Haste Buff Token";
-                item.Level = 1;
-                item.Item_Type = 40;
-                item.Model = 485;
-                item.IsDropable = false;
-                item.IsPickable = true;
-                item.Price = 6;
-                item.Weight = 1;
-                item.PackageID = "BPBuffTokens";
-                GameServer.Database.AddObject(item);
-                if (log.IsDebugEnabled)
-                    log.Debug("Added " + item.Id_nb);
-            }
-            #region Non-live (commented out)
-            /*
+			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("BPHaste_Buff_Token");
+			if (item == null)
+			{
+				item = new ItemTemplate();
+				item.Id_nb = "BPHaste_Buff_Token";
+				item.Name = "Haste Buff Token";
+				item.Level = 1;
+				item.Item_Type = 40;
+				item.Model = 485;
+				item.IsDropable = false;
+				item.IsPickable = true;
+				item.Price = 6;
+				item.Weight = 1;
+				item.PackageID = "BPBuffTokens";
+				GameServer.Database.AddObject(item);
+				if (log.IsDebugEnabled)
+					log.Debug("Added " + item.Id_nb);
+			}
+			#region Non-live (commented out)
+			/*
 			item = (ItemTemplate)GameServer.Database.FindObjectByKey<ItemTemplate>("Otherline_Buffs_Token");
 			if (item == null)
 			{
@@ -1965,83 +1965,83 @@ namespace DOL.GS.Items
 				if (log.IsDebugEnabled)
 					log.Debug("Added " + item.Id_nb);
 			}
-			*/
-            #endregion Non-live (commented out)
-        }
-    }
+			 */
+			#endregion Non-live (commented out)
+		}
+	}
 }
 #endregion
 
 #region MerchantList
 public class BuffTokensList
-	{
+{
 
-		[GameServerStartedEvent]
-		public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+	[GameServerStartedEvent]
+	public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+	{
+		ItemTemplate[] buffMerch = (ItemTemplate[])GameServer.Database.SelectObjects<ItemTemplate> ("PackageID like '" + GameServer.Database.Escape("BuffTokens") + "' ORDER by Item_Type");
+		MerchantItem m_item = null;
+		int pagenumber = 0;
+		int slotposition = 0;
+		m_item = (MerchantItem)GameServer.Database.SelectObject<MerchantItem>("ItemListID='BuffTokens'");
+		if (m_item == null)
 		{
-			ItemTemplate[] buffMerch = (ItemTemplate[])GameServer.Database.SelectObjects<ItemTemplate> ("PackageID like '" + GameServer.Database.Escape("BuffTokens") + "' ORDER by Item_Type");
-			MerchantItem m_item = null;
-			int pagenumber = 0;
-			int slotposition = 0;
-			m_item = (MerchantItem)GameServer.Database.SelectObject<MerchantItem>("ItemListID='BuffTokens'");
-			if (m_item == null)
+			foreach (ItemTemplate item in buffMerch)
 			{
-				foreach (ItemTemplate item in buffMerch)
+				m_item = new MerchantItem();
+				m_item.ItemListID = "BuffTokens";
+				m_item.ItemTemplateID = item.Id_nb;
+				m_item.PageNumber = pagenumber;
+				m_item.SlotPosition = slotposition;
+				m_item.AllowAdd = true;
+				GameServer.Database.AddObject(m_item);
+				if (slotposition == 29)
 				{
-					m_item = new MerchantItem();
-					m_item.ItemListID = "BuffTokens";
-					m_item.ItemTemplateID = item.Id_nb;
-					m_item.PageNumber = pagenumber;
-					m_item.SlotPosition = slotposition;
-					m_item.AllowAdd = true;
-					GameServer.Database.AddObject(m_item);
-					if (slotposition == 29)
-					{
-						slotposition = 0;
-						pagenumber += 1;
-					}
-					else
-					{
-						slotposition += 1;
-					}
+					slotposition = 0;
+					pagenumber += 1;
+				}
+				else
+				{
+					slotposition += 1;
 				}
 			}
 		}
 	}
+}
 public class BPBuffTokensList
 {
 
-    [GameServerStartedEvent]
-    public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
-    {
-        ItemTemplate[] buffMerch = (ItemTemplate[])GameServer.Database.SelectObjects<ItemTemplate>("PackageID like '" + GameServer.Database.Escape("BPBuffTokens") + "' ORDER by Item_Type");
-        MerchantItem m_item = null;
-        int pagenumber = 0;
-        int slotposition = 0;
-        m_item = (MerchantItem)GameServer.Database.SelectObject<MerchantItem>("ItemListID='BPBuffTokens'");
-        if (m_item == null)
-        {
-            foreach (ItemTemplate item in buffMerch)
-            {
-                m_item = new MerchantItem();
-                m_item.ItemListID = "BPBuffTokens";
-                m_item.ItemTemplateID = item.Id_nb;
-                m_item.PageNumber = pagenumber;
-                m_item.SlotPosition = slotposition;
-                m_item.AllowAdd = true;
-                GameServer.Database.AddObject(m_item);
-                if (slotposition == 29)
-                {
-                    slotposition = 0;
-                    pagenumber += 1;
-                }
-                else
-                {
-                    slotposition += 1;
-                }
-            }
-        }
-    }
+	[GameServerStartedEvent]
+	public static void OnServerStartup(DOLEvent e, object sender, EventArgs args)
+	{
+		ItemTemplate[] buffMerch = (ItemTemplate[])GameServer.Database.SelectObjects<ItemTemplate>("PackageID like '" + GameServer.Database.Escape("BPBuffTokens") + "' ORDER by Item_Type");
+		MerchantItem m_item = null;
+		int pagenumber = 0;
+		int slotposition = 0;
+		m_item = (MerchantItem)GameServer.Database.SelectObject<MerchantItem>("ItemListID='BPBuffTokens'");
+		if (m_item == null)
+		{
+			foreach (ItemTemplate item in buffMerch)
+			{
+				m_item = new MerchantItem();
+				m_item.ItemListID = "BPBuffTokens";
+				m_item.ItemTemplateID = item.Id_nb;
+				m_item.PageNumber = pagenumber;
+				m_item.SlotPosition = slotposition;
+				m_item.AllowAdd = true;
+				GameServer.Database.AddObject(m_item);
+				if (slotposition == 29)
+				{
+					slotposition = 0;
+					pagenumber += 1;
+				}
+				else
+				{
+					slotposition += 1;
+				}
+			}
+		}
+	}
 }
 #endregion
 
