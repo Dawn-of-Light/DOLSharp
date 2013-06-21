@@ -752,7 +752,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or Sets the internal ID (DB ID) of the Object
 		/// </summary>
-		public string InternalID
+		public virtual string InternalID
 		{
 			get { return m_InternalID; }
 			set { m_InternalID = value; }
