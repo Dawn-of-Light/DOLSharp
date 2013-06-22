@@ -191,7 +191,7 @@ namespace DOL.AI.Brain
 
 				if (HasAggro)
 				{
-					Body.FireAmbientSentence(GameNPC.eAmbientTrigger.fighting);
+					Body.FireAmbientSentence(GameNPC.eAmbientTrigger.fighting, Body.TargetObject as GameLiving);
 					AttackMostWanted();
 					return;
 				}
