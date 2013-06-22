@@ -17,9 +17,9 @@
  *
  */
 /*
- * Credits go to: 
+ * Credits go to:
  * - Echostorm's Mob Drop Loot System
- * - Roach's modifications to add loottemplate base mobdrops  
+ * - Roach's modifications to add loottemplate base mobdrops
  */
 using System;
 using System.Collections;
@@ -34,7 +34,7 @@ namespace DOL.GS
 	/// <summary>
 	/// TemplateLootGenerator
 	/// This implementation uses LootTemplates to relate loots to a specific mob type.
-	/// Used DB Tables: 
+	/// Used DB Tables:
 	///				MobxLootTemplate  (Relation between Mob and loottemplate
 	///				LootTemplate	(loottemplate containing possible loot items)
 	/// </summary>
@@ -278,7 +278,16 @@ namespace DOL.GS
 				if (player != null)
 				{
 					List<MobXLootTemplate> killedMobXLootTemplates = null;
-					if (m_mobXLootTemplates.ContainsKey(mob.Name.ToLower()))
+					
+					// Graveen: we first privilegiate the loottemplate named 'templateid' if it exists	
+					if (mob.NPCTemplate != null && m_mobXLootTemplates.ContainsKey(mob.NPCTemplate.TemplateId.ToString()))
+					{
+						killedMobXLootTemplates = m_mobXLootTemplates[mob.NPCTemplate.TemplateId.ToString()];
+					}
+					// else we are choosing the loottemplate named 'mob name'
+					// this is easily allowing us to affect different level choosen loots to different level choosen mobs
+					// with identical names
+					else if (m_mobXLootTemplates.ContainsKey(mob.Name.ToLower()))
 					{
 						killedMobXLootTemplates = m_mobXLootTemplates[mob.Name.ToLower()];
 					}
@@ -358,7 +367,7 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Add all loot templates specified in MobXLootTemplate for an entry in LootTemplates
-		/// If the item has a 100% drop chance add it as a fixed drop to the loot list.  
+		/// If the item has a 100% drop chance add it as a fixed drop to the loot list.
 		/// </summary>
 		/// <param name="mobXLootTemplate">Entry in MobXLootTemplate.</param>
 		/// <param name="lootTemplates">List of all itemtemplates this mob can drop and the chance to drop</param>
