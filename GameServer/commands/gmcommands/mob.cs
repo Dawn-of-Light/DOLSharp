@@ -725,36 +725,36 @@ namespace DOL.GS.Commands
 			}
 		}
 
-        //private void translationid(GameClient client, GameNPC targetMob, string[] args)
-        //{
-        //    if (targetMob.GetType().IsSubclassOf(typeof(GameMovingObject)))
-        //    {
-        //        // Can be funny when we remove (e.g.) a ram or a boat (why are we dropped on the sea???) from the world. ;-)
-        //        client.Out.SendMessage("The selected object is type of GameMovingObject and it's translation id cannot be changed " +
-        //                               "via command. Please change the translation id in your code / database.",
-        //                               eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        //        return;
-        //    }
+		//private void translationid(GameClient client, GameNPC targetMob, string[] args)
+		//{
+		//    if (targetMob.GetType().IsSubclassOf(typeof(GameMovingObject)))
+		//    {
+		//        // Can be funny when we remove (e.g.) a ram or a boat (why are we dropped on the sea???) from the world. ;-)
+		//        client.Out.SendMessage("The selected object is type of GameMovingObject and it's translation id cannot be changed " +
+		//                               "via command. Please change the translation id in your code / database.",
+		//                               eChatType.CT_System, eChatLoc.CL_SystemWindow);
+		//        return;
+		//    }
 
-        //    string id = "";
+		//    string id = "";
 
-        //    if (args.Length > 2)
-        //        id = String.Join("", args, 2, args.Length - 2);
+		//    if (args.Length > 2)
+		//        id = String.Join("", args, 2, args.Length - 2);
 
-        //    if (id != "")
-        //    {
-        //        targetMob.TranslationId = id;
-        //        targetMob.SaveIntoDatabase();
+		//    if (id != "")
+		//    {
+		//        targetMob.TranslationId = id;
+		//        targetMob.SaveIntoDatabase();
 
-        //        targetMob.RemoveFromWorld();
-        //        GameNPC.RefreshTranslation(null, id);
-        //        targetMob.AddToWorld();
+		//        targetMob.RemoveFromWorld();
+		//        GameNPC.RefreshTranslation(null, id);
+		//        targetMob.AddToWorld();
 
-        //        client.Out.SendMessage("Mob translation id changed to: " + id, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-        //    }
-        //    else
-        //        DisplaySyntax(client, args[1]);
-        //}
+		//        client.Out.SendMessage("Mob translation id changed to: " + id, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+		//    }
+		//    else
+		//        DisplaySyntax(client, args[1]);
+		//}
 
 		private void name(GameClient client, GameNPC targetMob, string[] args)
 		{
@@ -1228,14 +1228,14 @@ namespace DOL.GS.Commands
 			info.Add(" + Level: " + targetMob.Level);
 			info.Add(" + Brain: " + (targetMob.Brain == null ? "(null)" : targetMob.Brain.GetType().ToString()));
 
-            if (targetMob.DamageRvRMemory > 0)
-                info.Add("  - Damage RvR Memory: " + targetMob.DamageRvRMemory);
+			if (targetMob.DamageRvRMemory > 0)
+				info.Add("  - Damage RvR Memory: " + targetMob.DamageRvRMemory);
 
 			if (targetMob.Brain != null && targetMob.Brain is IControlledBrain)
 			{
 				try
 				{
-                    info.Add(" + -- Owner: " + (targetMob.Brain as IControlledBrain).GetPlayerOwner() != null ? (targetMob.Brain as IControlledBrain).GetPlayerOwner().Name : (targetMob.Brain as IControlledBrain).GetNPCOwner().Name);
+					info.Add(" + -- Owner: " + (targetMob.Brain as IControlledBrain).GetPlayerOwner() != null ? (targetMob.Brain as IControlledBrain).GetPlayerOwner().Name : (targetMob.Brain as IControlledBrain).GetNPCOwner().Name);
 				}
 				catch
 				{
@@ -1352,14 +1352,14 @@ namespace DOL.GS.Commands
 
 			info.Add("Current Resists:");
 			info.Add(" +  -- Crush/Slash/Thrust:  " + targetMob.GetModified(eProperty.Resist_Crush)
-					 + " / " + targetMob.GetModified(eProperty.Resist_Slash)
-					 + " / " + targetMob.GetModified(eProperty.Resist_Thrust));
+			         + " / " + targetMob.GetModified(eProperty.Resist_Slash)
+			         + " / " + targetMob.GetModified(eProperty.Resist_Thrust));
 			info.Add(" +  -- Heat/Cold/Matter:  " + targetMob.GetModified(eProperty.Resist_Heat)
-					 + " / " + targetMob.GetModified(eProperty.Resist_Cold)
-					 + " / " + targetMob.GetModified(eProperty.Resist_Matter));
+			         + " / " + targetMob.GetModified(eProperty.Resist_Cold)
+			         + " / " + targetMob.GetModified(eProperty.Resist_Matter));
 			info.Add(" +  -- Body/Spirit/Energy:  " + targetMob.GetModified(eProperty.Resist_Body)
-					 + " / " + targetMob.GetModified(eProperty.Resist_Spirit)
-					 + " / " + targetMob.GetModified(eProperty.Resist_Energy));
+			         + " / " + targetMob.GetModified(eProperty.Resist_Spirit)
+			         + " / " + targetMob.GetModified(eProperty.Resist_Energy));
 			info.Add(" +  -- Natural:  " + targetMob.GetModified(eProperty.Resist_Natural));
 
 			info.Add(" ");
@@ -2160,29 +2160,40 @@ namespace DOL.GS.Commands
 				text.Add("");
 				text.Add("LootGeneratorTemplate:");
 				text.Add("");
-				DisplayLoots<MobXLootTemplate, LootTemplate>(text, targetMob.Name);
+				DisplayLoots<MobXLootTemplate, LootTemplate>(text, targetMob);
 
 				text.Add("");
 				text.Add("LootGeneratorMobTemplate:");
 				text.Add("");
-				DisplayLoots<MobDropTemplate, DropTemplateXItemTemplate>(text, targetMob.Name);
+				DisplayLoots<MobDropTemplate, DropTemplateXItemTemplate>(text, targetMob);
 
 				client.Out.SendCustomTextWindow(targetMob.Name + "'s Loot Table", text);
 			}
 		}
 
-		private static void DisplayLoots<MobDropTemplateType, LootTemplateType>(List<string> text, string mobName)
+		private static void DisplayLoots<MobDropTemplateType, LootTemplateType>(List<string> text, GameNPC mob)
 			where MobDropTemplateType : MobXLootTemplate
 			where LootTemplateType : LootTemplate
 		{
 			bool didDefault = false;
-			var mobXloot = GameServer.Database.SelectObjects<MobDropTemplateType>("MobName = '" + GameServer.Database.Escape(mobName) + "'");
+			bool fromNPCT = false;
+			
+			// is a templated mob, so its drop list is
+			IEnumerable<MobDropTemplateType> mobXloot = null;
+			string mobName = mob.Name;
+			if (mob.NPCTemplate != null)
+			{
+				fromNPCT = true;
+				mobXloot = GameServer.Database.SelectObjects<MobDropTemplateType>("MobName = '" + GameServer.Database.Escape(mob.NPCTemplate.TemplateId.ToString()) + "'");
+			}
+			if (mobXloot==null || (mobXloot!=null && mobXloot.Count()==0)) mobXloot = GameServer.Database.SelectObjects<MobDropTemplateType>("MobName = '" + GameServer.Database.Escape(mobName) + "'");
+			
 			foreach (var mobXtemplate in mobXloot)
 			{
 				didDefault = didDefault || mobXtemplate.LootTemplateName == mobName;
 				var template = GameServer.Database.SelectObjects<LootTemplateType>("TemplateName = '" + GameServer.Database.Escape(mobXtemplate.LootTemplateName) + "'");
 				if (template.Count > 0)
-					text.Add("+ Mob's template: " + mobXtemplate.LootTemplateName + " (DropCount: " + mobXtemplate.DropCount + ")");
+					text.Add("+ Mob's template [from " + (fromNPCT?mob.NPCTemplate.TemplateId.ToString():mobName) + "]: "+ mobXtemplate.LootTemplateName + " (DropCount: " + mobXtemplate.DropCount + ")");
 				text.AddRange(
 					from loot in template
 					let drop = GameServer.Database.FindObjectByKey<ItemTemplate>(loot.ItemTemplateID)
