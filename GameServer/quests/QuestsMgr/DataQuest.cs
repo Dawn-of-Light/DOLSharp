@@ -693,7 +693,7 @@ namespace DOL.GS.Quests
 					}
 					else
 					{
-						return m_dataQuest.Description;
+						return ReplacePlayerValues(m_questPlayer, m_dataQuest.Description);
 					}
 				}
 				else
@@ -761,6 +761,34 @@ namespace DOL.GS.Quests
 		#endregion Properties
 
 		#region Utility
+
+        public string ReplacePlayerValues(GamePlayer player, string msg)
+        {
+            msg.Replace("$NAME", player.Name);
+            msg.Replace("$CLASS", player.CharacterClass.Name);
+            msg.Replace("$RACE", player.RaceName);
+            msg = msg.Replace("$REALMTITLE", player.RealmTitle);
+
+            if (msg.Contains("$GUILD"))
+            {
+                string guild = "";
+                if (player.Guild != null)
+                    guild = player.GuildName;
+
+                msg = msg.Replace("$GUILD", guild);
+            }
+
+            if (msg.Contains("$TITLE"))
+            {
+                string title = "";
+                if (player.CurrentTitle != null)
+                    title = player.CurrentTitle.GetValue(player);
+
+                msg = msg.Replace("$TITLE", title);
+            }
+
+            return msg;
+        }
 
 		/// <summary>
 		/// Get or create the CharacterXDataQuest for this player
