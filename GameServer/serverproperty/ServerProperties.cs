@@ -71,9 +71,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Maximum length for reward quest description text to prevent client crashes
 		/// </summary>
-		[ServerProperty("system", "max_rewardquest_description_length", "Maximum length for reward quest description text to prevent client crashes.", 255)]
+		[ServerProperty("system", "max_rewardquest_description_length", "Maximum length for reward quest description text to prevent client crashes.", 1000)]
 		public static int MAX_REWARDQUEST_DESCRIPTION_LENGTH;
-
 
 		/// <summary>
 		/// If the server should only accept connections from staff
