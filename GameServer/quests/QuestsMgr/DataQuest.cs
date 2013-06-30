@@ -581,7 +581,10 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public virtual string FinishText
 		{
-			get { return m_dataQuest.FinishText; }
+			get 
+            {
+                return BehaviourUtils.GetPersonalizedMessage(m_dataQuest.FinishText, m_questPlayer);
+            }
 		}
 
 		/// <summary>
@@ -695,12 +698,12 @@ namespace DOL.GS.Quests
 					}
 					else
 					{
-						return ReplacePlayerValues(m_questPlayer, m_dataQuest.Description);
+                        return BehaviourUtils.GetPersonalizedMessage(m_dataQuest.Description, m_questPlayer);
 					}
 				}
 				else
 				{
-					return StepText;
+                    return BehaviourUtils.GetPersonalizedMessage(StepText, m_questPlayer);
 				}
 			}
 		}
@@ -714,7 +717,8 @@ namespace DOL.GS.Quests
 			{
 				if (m_sourceTexts.Count > 0)
 				{
-					return m_sourceTexts[0];
+                    // BehaviorUtils will personalize this message in the packet handlers
+                    return m_sourceTexts[0];
 				}
 				else
 				{
@@ -763,37 +767,6 @@ namespace DOL.GS.Quests
 		#endregion Properties
 
 		#region Utility
-
-        public string ReplacePlayerValues(GamePlayer player, string msg)
-        {
-            if (player != null)
-            {
-                msg.Replace("<Player>", player.Name);
-                msg.Replace("<Class>", player.CharacterClass.Name);
-                msg.Replace("<Race>", player.RaceName);
-                msg = msg.Replace("<RealmTitle>", player.RealmTitle);
-
-                if (msg.Contains("<Guild>"))
-                {
-                    string guild = "";
-                    if (player.Guild != null)
-                        guild = player.GuildName;
-
-                    msg = msg.Replace("<Guild>", guild);
-                }
-
-                if (msg.Contains("<Title>"))
-                {
-                    string title = "";
-                    if (player.CurrentTitle != null)
-                        title = player.CurrentTitle.GetValue(player);
-
-                    msg = msg.Replace("<Title>", title);
-                }
-            }
-
-            return msg;
-        }
 
 		/// <summary>
 		/// Get or create the CharacterXDataQuest for this player
@@ -1061,32 +1034,32 @@ namespace DOL.GS.Quests
 			{
 				try
 				{
-					if (QuestPlayer != null && QuestPlayer.Client.Account.PrivLevel > 1)
-					{
-						string text = m_stepTexts[Step - 1];
-						text += " [DEBUG] StepType = " + StepType;
-						if (StepType == eStepType.Collect || StepType == eStepType.CollectFinish)
-						{
-							text += ": " + CollectItemTemplate;
-							text += ", Target: " + TargetName;
-						}
-						else if (StepType == eStepType.Deliver || StepType == eStepType.DeliverFinish)
-						{
-							text += ": " + StepItemTemplate;
-							text += " Target: " + TargetName;
-						}
-						else 
-						{
-							if (StepType == eStepType.Whisper || StepType == eStepType.WhisperFinish)
-							{
-							text += ": " + AdvanceText;
-							}
+                    //if (QuestPlayer != null && QuestPlayer.Client.Account.PrivLevel > 1)
+                    //{
+                    //    string text = m_stepTexts[Step - 1];
+                    //    text += " [DEBUG] StepType = " + StepType;
+                    //    if (StepType == eStepType.Collect || StepType == eStepType.CollectFinish)
+                    //    {
+                    //        text += ": " + CollectItemTemplate;
+                    //        text += ", Target: " + TargetName;
+                    //    }
+                    //    else if (StepType == eStepType.Deliver || StepType == eStepType.DeliverFinish)
+                    //    {
+                    //        text += ": " + StepItemTemplate;
+                    //        text += " Target: " + TargetName;
+                    //    }
+                    //    else 
+                    //    {
+                    //        if (StepType == eStepType.Whisper || StepType == eStepType.WhisperFinish)
+                    //        {
+                    //        text += ": " + AdvanceText;
+                    //        }
 
-							text += ", Target: " + TargetName + " sit: " + StepItemTemplate + " cit: " + CollectItemTemplate;
-						}
+                    //        text += ", Target: " + TargetName + " sit: " + StepItemTemplate + " cit: " + CollectItemTemplate;
+                    //    }
 
-						return text;
-					}
+                    //    return text;
+                    //}
 
 					return m_stepTexts[Step - 1];
 				}
