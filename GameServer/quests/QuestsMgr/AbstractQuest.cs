@@ -25,6 +25,7 @@ using System.Text;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.GS.Behaviour;
 using DOL.Language;
 using log4net;
 
@@ -629,32 +630,9 @@ namespace DOL.GS.Quests
         /// <param name="delay"></param>
         /// <param name="chatType"></param>
         /// <param name="chatLoc"></param>
-		protected static void SendMessage(GamePlayer player, String msg, uint delay, eChatType chatType, eChatLoc chatLoc)
+		protected static void SendMessage(GamePlayer player, string msg, uint delay, eChatType chatType, eChatLoc chatLoc)
 		{
-            // Do some replacements for the special <Value> entries
-
-            msg.Replace("<Player>", player.Name);
-            msg.Replace("<Class>", player.CharacterClass.Name);
-            msg.Replace("<Race>", player.RaceName);
-            msg = msg.Replace("<RealmTitle>", player.RealmTitle);
-
-            if (msg.Contains("<Guild>"))
-            {
-                string guild = "";
-                if (player.Guild != null)
-                    guild = player.GuildName;
-
-                msg = msg.Replace("<Guild>", guild);
-            }
-
-            if (msg.Contains("<Title>"))
-            {
-                string title = "";
-                if (player.CurrentTitle != null)
-                    title = player.CurrentTitle.GetValue(player);
-
-                msg = msg.Replace("<Title>", title);
-            }
+            msg = BehaviourUtils.GetPersonalizedMessage(msg, player);
 
             if (delay == 0)
             {

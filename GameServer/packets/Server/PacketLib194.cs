@@ -45,6 +45,9 @@ namespace DOL.GS.PacketHandler
 			SendQuestWindow(questNPC, player, quest, false);
 		}
 
+        const ushort MAX_STORY_LENGTH = 1000;   // Via trial and error, 1.108 client. 
+                                                // Often will cut off text around 990 but longer strings do not result in any errors. -Tolakram
+
 		protected override void SendQuestWindow(GameNPC questNPC, GamePlayer player, DataQuest quest, bool offer)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.Dialog));
@@ -63,7 +66,7 @@ namespace DOL.GS.PacketHandler
 			String personalizedSummary = BehaviourUtils.GetPersonalizedMessage(quest.Description, player);
 			if (personalizedSummary.Length > 255)
 			{
-				pak.WritePascalString(personalizedSummary.Substring(0, 255)); // Summary is max 255 bytes !
+				pak.WritePascalString(personalizedSummary.Substring(0, 255)); // Summary is max 255 bytes or client will crash !
 			}
 			else
 			{
@@ -72,23 +75,25 @@ namespace DOL.GS.PacketHandler
 
 			if (offer)
 			{
-				if (quest.Story.Length > (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH)
+                String personalizedStory = BehaviourUtils.GetPersonalizedMessage(quest.Story, player);
+
+                if (personalizedStory.Length > MAX_STORY_LENGTH)
 				{
-					pak.WriteShort((ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH);
-					pak.WriteStringBytes(quest.Story.Substring(0, (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH));
+                    pak.WriteShort(MAX_STORY_LENGTH);
+                    pak.WriteStringBytes(personalizedStory.Substring(0, MAX_STORY_LENGTH));
 				}
 				else
 				{
-					pak.WriteShort((ushort)quest.Story.Length);
-					pak.WriteStringBytes(quest.Story);
+                    pak.WriteShort((ushort)personalizedStory.Length);
+                    pak.WriteStringBytes(personalizedStory);
 				}
 			}
 			else
 			{
-				if (quest.FinishText.Length > (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH)
+                if (quest.FinishText.Length > MAX_STORY_LENGTH)
 				{
-					pak.WriteShort((ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH);
-					pak.WriteStringBytes(quest.FinishText.Substring(0, (ushort)ServerProperties.Properties.MAX_REWARDQUEST_DESCRIPTION_LENGTH));
+                    pak.WriteShort(MAX_STORY_LENGTH);
+                    pak.WriteStringBytes(quest.FinishText.Substring(0, MAX_STORY_LENGTH));
 				}
 				else
 				{
@@ -101,7 +106,15 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte)quest.StepTexts.Count); // #goals count
 			foreach (string text in quest.StepTexts)
 			{
-				pak.WritePascalString(String.Format("{0}\r", text));
+                string t = text;
+
+                // Need to protect for any text length > 255.  It does not crash client but corrupts RewardQuest display -Tolakram
+                if (text.Length > 253)
+                {
+                    t = text.Substring(0, 253);
+                }
+
+				pak.WritePascalString(String.Format("{0}\r", t));
 			}
 			pak.WriteInt((uint)(0));
 			pak.WriteByte((byte)0);
