@@ -766,27 +766,30 @@ namespace DOL.GS.Quests
 
         public string ReplacePlayerValues(GamePlayer player, string msg)
         {
-            msg.Replace("$NAME", player.Name);
-            msg.Replace("$CLASS", player.CharacterClass.Name);
-            msg.Replace("$RACE", player.RaceName);
-            msg = msg.Replace("$REALMTITLE", player.RealmTitle);
-
-            if (msg.Contains("$GUILD"))
+            if (player != null)
             {
-                string guild = "";
-                if (player.Guild != null)
-                    guild = player.GuildName;
+                msg.Replace("<Player>", player.Name);
+                msg.Replace("<Class>", player.CharacterClass.Name);
+                msg.Replace("<Race>", player.RaceName);
+                msg = msg.Replace("<RealmTitle>", player.RealmTitle);
 
-                msg = msg.Replace("$GUILD", guild);
-            }
+                if (msg.Contains("<Guild>"))
+                {
+                    string guild = "";
+                    if (player.Guild != null)
+                        guild = player.GuildName;
 
-            if (msg.Contains("$TITLE"))
-            {
-                string title = "";
-                if (player.CurrentTitle != null)
-                    title = player.CurrentTitle.GetValue(player);
+                    msg = msg.Replace("<Guild>", guild);
+                }
 
-                msg = msg.Replace("$TITLE", title);
+                if (msg.Contains("<Title>"))
+                {
+                    string title = "";
+                    if (player.CurrentTitle != null)
+                        title = player.CurrentTitle.GetValue(player);
+
+                    msg = msg.Replace("<Title>", title);
+                }
             }
 
             return msg;
