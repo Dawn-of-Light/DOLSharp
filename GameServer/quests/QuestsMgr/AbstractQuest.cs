@@ -621,18 +621,53 @@ namespace DOL.GS.Quests
 			SendMessage(player, msg, 0, eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 		}
 
+        /// <summary>
+        /// Send a message to player.  You can use $NAME, $CLASS, $RACE, $GUILD, $REALMTITLE, $TITLE to have text replaced with actual player values. 
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="msg"></param>
+        /// <param name="delay"></param>
+        /// <param name="chatType"></param>
+        /// <param name="chatLoc"></param>
 		protected static void SendMessage(GamePlayer player, String msg, uint delay, eChatType chatType, eChatLoc chatLoc)
 		{
-			if (delay == 0)
-				player.Out.SendMessage(msg, chatType, chatLoc);
-			else
-			{
-				m_sayMessageQueue.Enqueue(msg);
-				m_sayObjectQueue.Enqueue(player);
-				m_sayChatLocQueue.Enqueue(chatLoc);
-				m_sayChatTypeQueue.Enqueue(chatType);
-				m_sayTimerQueue.Enqueue(new RegionTimer(player, new RegionTimerCallback(MakeSaySequence), (int)delay * 100));
-			}
+            // Do some replacements for the special $VALUE entries
+
+            msg.Replace("$NAME", player.Name);
+            msg.Replace("$CLASS", player.CharacterClass.Name);
+            msg.Replace("$RACE", player.RaceName);
+            msg = msg.Replace("$REALMTITLE", player.RealmTitle);
+
+            if (msg.Contains("$GUILD"))
+            {
+                string guild = "";
+                if (player.Guild != null)
+                    guild = player.GuildName;
+
+                msg = msg.Replace("$GUILD", guild);
+            }
+
+            if (msg.Contains("$TITLE"))
+            {
+                string title = "";
+                if (player.CurrentTitle != null)
+                    title = player.CurrentTitle.GetValue(player);
+
+                msg = msg.Replace("$TITLE", title);
+            }
+
+            if (delay == 0)
+            {
+                player.Out.SendMessage(msg, chatType, chatLoc);
+            }
+            else
+            {
+                m_sayMessageQueue.Enqueue(msg);
+                m_sayObjectQueue.Enqueue(player);
+                m_sayChatLocQueue.Enqueue(chatLoc);
+                m_sayChatTypeQueue.Enqueue(chatType);
+                m_sayTimerQueue.Enqueue(new RegionTimer(player, new RegionTimerCallback(MakeSaySequence), (int)delay * 100));
+            }
 		}
 
 		protected static bool TryGiveItem(GamePlayer player, ItemTemplate itemTemplate)
