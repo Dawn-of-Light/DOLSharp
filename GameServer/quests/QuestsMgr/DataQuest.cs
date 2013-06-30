@@ -148,8 +148,8 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public enum eStepType : byte
 		{
-			Kill = 0,				// Kill the target to advance the quest.
-			KillFinish = 1,			// Killing the target finishes the quest and gives the reward
+			Kill = 0,				// Kill the target to advance the quest.  Can set chance to drop on StepItemTemplate.
+            KillFinish = 1,			// Killing the target finishes the quest and gives the reward.  Can set chance to drop on StepItemTemplate.
 			Deliver = 2,			// Deliver an item to the target to advance the quest
 			DeliverFinish = 3,		// Deliver an item to the target to finish the quest
 			Interact = 4,			// Interact with the target to advance the step
@@ -1407,6 +1407,8 @@ namespace DOL.GS.Quests
                                 return false;
                             }
                         }
+
+                        stepTemplates[0] = template[0];
                     }
 
 					if (nextStepType == eStepType.Deliver || nextStepType == eStepType.DeliverFinish)
