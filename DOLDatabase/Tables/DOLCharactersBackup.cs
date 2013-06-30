@@ -46,6 +46,7 @@ namespace DOL
 				this.AccountName = character.AccountName;
 				this.AccountSlot = character.AccountSlot;
 				this.ActiveWeaponSlot = character.ActiveWeaponSlot;
+                this.ActiveSaddleBags = character.ActiveSaddleBags;
 				this.Advisor = character.Advisor;
 				this.Autoloot = character.Autoloot;
 				this.BindHeading = character.BindHeading;
@@ -143,6 +144,7 @@ namespace DOL
 				this.MoodType = character.MoodType;
 				this.Name = character.Name;
 				this.NoHelp = character.NoHelp;
+                this.NotDisplayedInHerald = character.NotDisplayedInHerald;
 				this.Piety = character.Piety;
 				this.Platinum = character.Platinum;
 				this.PlayedTime = character.PlayedTime;
