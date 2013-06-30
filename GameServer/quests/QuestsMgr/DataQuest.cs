@@ -65,7 +65,9 @@ namespace DOL.GS.Quests
 	/// 
 	/// StepItemTemplates - Any items that need to be given to the player for a step.  Every step can give an item to a player. All
 	/// steps give an item at the completion of the step except Delivery and DeliveryFinish.  If StepItemTemplates are defined for a 
-	/// Delivery step then the item is given at the beginning of the step and accepted by a target to end the step. 
+	/// Delivery step then the item is given at the beginning of the step and accepted by a target to end the step.
+    /// For Kill steps, StepItemTemplates can include a drop chance behind the template name.  Ex: |some_template_name;50|  If the item does
+    /// not drop then the step is not advanced.
 	/// If no items are given to a player at any of the steps then this can be null, otherwise it must have values for each step. 
 	/// Empty values || are ok. 
 	/// 
@@ -1373,10 +1375,39 @@ namespace DOL.GS.Quests
 					// If completing this step or starting the next step requires giving the player an item then
 					// we need to check to make sure player has enough inventory space to accept the item, otherwise do not advance the step
 
+                    // NOTE: Original plan was to support more than one template per step, but only a single template is supported at this time
+
 					if (string.IsNullOrEmpty(StepItemTemplate) == false)
 					{
 						stepTemplates.Add(StepItemTemplate);
 					}
+
+                    // If this is a kill step with a drop then check for chance to drop an item
+
+                    if (stepTemplates.Count == 1 && (StepType == eStepType.Kill || StepType == eStepType.KillFinish))
+                    {
+                        string[] template = stepTemplates[0].Split(';');
+
+                        if (template.Length > 1)
+                        {
+                            int chance = 0;
+                            int.TryParse(template[1], out chance);
+
+                            if (chance > 0)
+                            {
+                                if (Util.Chance(chance) == false)
+                                {
+                                    // failed to drop, ignore step advance
+                                    return false;
+                                }
+                            }
+                            else
+                            {
+                                ChatUtil.SendDebugMessage(QuestPlayer, "[DEBUG] AdvanceQuestStep error; chance to drop StepTemplate is 0 when advancing from Step " + Step);
+                                return false;
+                            }
+                        }
+                    }
 
 					if (nextStepType == eStepType.Deliver || nextStepType == eStepType.DeliverFinish)
 					{
