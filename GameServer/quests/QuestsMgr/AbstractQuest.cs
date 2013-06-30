@@ -622,7 +622,7 @@ namespace DOL.GS.Quests
 		}
 
         /// <summary>
-        /// Send a message to player.  You can use $NAME, $CLASS, $RACE, $GUILD, $REALMTITLE, $TITLE to have text replaced with actual player values. 
+        /// Send a message to player.  You can use &lt;Player&gt;, &lt;Class&gt;, &lt;Race&gt;, &lt;Guild&gt;, &lt;RealmTitle&gt;, &lt;Title&gt; to have text replaced with actual player values. 
         /// </summary>
         /// <param name="player"></param>
         /// <param name="msg"></param>
@@ -631,29 +631,29 @@ namespace DOL.GS.Quests
         /// <param name="chatLoc"></param>
 		protected static void SendMessage(GamePlayer player, String msg, uint delay, eChatType chatType, eChatLoc chatLoc)
 		{
-            // Do some replacements for the special $VALUE entries
+            // Do some replacements for the special <Value> entries
 
-            msg.Replace("$NAME", player.Name);
-            msg.Replace("$CLASS", player.CharacterClass.Name);
-            msg.Replace("$RACE", player.RaceName);
-            msg = msg.Replace("$REALMTITLE", player.RealmTitle);
+            msg.Replace("<Player>", player.Name);
+            msg.Replace("<Class>", player.CharacterClass.Name);
+            msg.Replace("<Race>", player.RaceName);
+            msg = msg.Replace("<RealmTitle>", player.RealmTitle);
 
-            if (msg.Contains("$GUILD"))
+            if (msg.Contains("<Guild>"))
             {
                 string guild = "";
                 if (player.Guild != null)
                     guild = player.GuildName;
 
-                msg = msg.Replace("$GUILD", guild);
+                msg = msg.Replace("<Guild>", guild);
             }
 
-            if (msg.Contains("$TITLE"))
+            if (msg.Contains("<Title>"))
             {
                 string title = "";
                 if (player.CurrentTitle != null)
                     title = player.CurrentTitle.GetValue(player);
 
-                msg = msg.Replace("$TITLE", title);
+                msg = msg.Replace("<Title>", title);
             }
 
             if (delay == 0)

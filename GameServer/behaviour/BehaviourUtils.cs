@@ -171,6 +171,25 @@ namespace DOL.GS.Behaviour
 
             message = message.Replace(RACE, player.RaceName);
             message = message.Replace(CLASS, player.CharacterClass.Name);
+            message = message.Replace("<RealmTitle>", player.RealmTitle);
+
+            if (message.Contains("<Guild>"))
+            {
+                string guild = "";
+                if (player.Guild != null)
+                    guild = player.GuildName;
+
+                message = message.Replace("<Guild>", guild);
+            }
+
+            if (message.Contains("<Title>"))
+            {
+                string title = "";
+                if (player.CurrentTitle != null)
+                    title = player.CurrentTitle.GetValue(player);
+
+                message = message.Replace("<Title>", title);
+            }
 
             return message;
         }
