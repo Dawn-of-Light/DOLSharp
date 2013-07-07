@@ -3446,8 +3446,9 @@ namespace DOL.GS
 			killing,
 			moving,
 			interact,
+			seeing,
 		}
-		
+
 		/// <summary>
 		/// The ambient texts
 		/// </summary>
