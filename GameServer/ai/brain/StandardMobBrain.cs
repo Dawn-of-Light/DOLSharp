@@ -45,7 +45,10 @@ namespace DOL.AI.Brain
 		public const int MAX_AGGRO_DISTANCE = 3600;
 		public const int MAX_AGGRO_LIST_DISTANCE = 6000;
 		public const int MAX_PET_AGGRO_DISTANCE = 512; // Tolakram - Live test with caby pet - I was extremely close before auto aggro
-
+		
+		// Used for AmbientBehaviour "Seeing" - maintains a list of GamePlayer in range
+		public List<GamePlayer> PlayersSeen = new List<GamePlayer>();
+		
 		/// <summary>
 		/// Constructs a new StandardMobBrain
 		/// </summary>
@@ -105,7 +108,7 @@ namespace DOL.AI.Brain
 				return;
 			}
 			// If the NPC is Moving on path, it can detect closed doors and open them
-			if(Body.IsMovingOnPath)DetectDoor();	
+			if(Body.IsMovingOnPath) DetectDoor();	
 			//Instead - lets just let CheckSpells() make all the checks for us
 			//Check for just positive spells
 			CheckSpells(eCheckSpellType.Defensive);
@@ -182,6 +185,21 @@ namespace DOL.AI.Brain
 
 			if (Body.IsReturningHome == false)
 			{
+				if (!Body.AttackState && AggroRange > 0)
+				{
+					var currentPlayersSeen = new List<GamePlayer>();
+					foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange, true))
+					{
+						if (!PlayersSeen.Contains(player))
+						{
+							Body.FireAmbientSentence(GameNPC.eAmbientTrigger.seeing, player as GameLiving);
+							PlayersSeen.Add(player);
+						}
+						currentPlayersSeen.Add(player);
+					}
+					foreach(var pl in PlayersSeen) if (!currentPlayersSeen.Contains(pl)) PlayersSeen.Remove(pl);
+				}
+				
 				//If we have an aggrolevel above 0, we check for players and npcs in the area to attack
 				if (!Body.AttackState && AggroLevel > 0)
 				{
@@ -240,7 +258,7 @@ namespace DOL.AI.Brain
 				return;
 
 			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange, true))
-			{
+			{			
 				if (!GameServer.ServerRules.IsAllowedToAttack(Body, player, true)) continue;
 				// Don't aggro on immune players.
 
