@@ -108,7 +108,7 @@ namespace DOL.AI.Brain
 				return;
 			}
 			// If the NPC is Moving on path, it can detect closed doors and open them
-			if(Body.IsMovingOnPath) DetectDoor();	
+			if(Body.IsMovingOnPath) DetectDoor();
 			//Instead - lets just let CheckSpells() make all the checks for us
 			//Check for just positive spells
 			CheckSpells(eCheckSpellType.Defensive);
@@ -197,7 +197,12 @@ namespace DOL.AI.Brain
 						}
 						currentPlayersSeen.Add(player);
 					}
-					foreach(var pl in PlayersSeen) if (!currentPlayersSeen.Contains(pl)) PlayersSeen.Remove(pl);
+					
+					for (int i=0; i<PlayersSeen.Count; i++)
+					{
+						if (!currentPlayersSeen.Contains(PlayersSeen[i])) PlayersSeen.RemoveAt(i);
+					}
+					
 				}
 				
 				//If we have an aggrolevel above 0, we check for players and npcs in the area to attack
@@ -258,7 +263,7 @@ namespace DOL.AI.Brain
 				return;
 
 			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange, true))
-			{			
+			{
 				if (!GameServer.ServerRules.IsAllowedToAttack(Body, player, true)) continue;
 				// Don't aggro on immune players.
 
@@ -339,7 +344,7 @@ namespace DOL.AI.Brain
 		/// <summary>
 		/// The aggression table for this mob
 		/// </summary>
-      public Dictionary<GameLiving, long> AggroTable
+		public Dictionary<GameLiving, long> AggroTable
 		{
 			get { return m_aggroTable; }
 		}
@@ -506,8 +511,8 @@ namespace DOL.AI.Brain
 					if (protectAmount > 0)
 					{
 						aggroamount -= protectAmount;
-                        protect.ProtectSource.Out.SendMessage(LanguageMgr.GetTranslation(protect.ProtectSource.Client.Account.Language, "AI.Brain.StandardMobBrain.YouProtDist", player.GetName(0, false),
-                                                              Body.GetName(0, false, protect.ProtectSource.Client.Account.Language, Body)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						protect.ProtectSource.Out.SendMessage(LanguageMgr.GetTranslation(protect.ProtectSource.Client.Account.Language, "AI.Brain.StandardMobBrain.YouProtDist", player.GetName(0, false),
+						                                                                 Body.GetName(0, false, protect.ProtectSource.Client.Account.Language, Body)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						//player.Out.SendMessage("You are protected by " + protect.ProtectSource.GetName(0, false) + " from " + Body.GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 						lock ((m_aggroTable as ICollection).SyncRoot)
@@ -594,7 +599,7 @@ namespace DOL.AI.Brain
 		/// Makes a copy of current aggro list
 		/// </summary>
 		/// <returns></returns>
-      public virtual Dictionary<GameLiving, long> CloneAggroList()
+		public virtual Dictionary<GameLiving, long> CloneAggroList()
 		{
 			lock ((m_aggroTable as ICollection).SyncRoot)
 			{
@@ -699,20 +704,20 @@ namespace DOL.AI.Brain
 			if (GameServer.ServerRules.IsAllowedToAttack(Body, target, true) == false)
 				return 0;
 
-            // related to the pet owner if applicable
-            if (target is GameNPC)
-            {
-                IControlledBrain brain = ((GameNPC)target).Brain as IControlledBrain;
-                if (brain != null)
-                {
-                    GameLiving thisLiving = (((GameNPC)target).Brain as IControlledBrain).GetLivingOwner();
-                    if (thisLiving != null)
-                    {
-                        if (thisLiving.IsObjectGreyCon(Body))
-                            return 0;
-                    }
-                }
-            }
+			// related to the pet owner if applicable
+			if (target is GameNPC)
+			{
+				IControlledBrain brain = ((GameNPC)target).Brain as IControlledBrain;
+				if (brain != null)
+				{
+					GameLiving thisLiving = (((GameNPC)target).Brain as IControlledBrain).GetLivingOwner();
+					if (thisLiving != null)
+					{
+						if (thisLiving.IsObjectGreyCon(Body))
+							return 0;
+					}
+				}
+			}
 			
 			if (target.IsObjectGreyCon(Body)) return 0;	// only attack if green+ to target
 
@@ -726,16 +731,16 @@ namespace DOL.AI.Brain
 				GameNPC npc = (GameNPC)target;
 				if (npc.Faction != null)
 				{
-                    if (npc.Brain is IControlledBrain && (npc.Brain as IControlledBrain).GetPlayerOwner() != null)
-                    {
-                        GamePlayer factionChecker = (npc.Brain as IControlledBrain).GetPlayerOwner();
-                        AggroLevel = Body.Faction.GetAggroToFaction(factionChecker);
-                    }
-                    else
-                    {
-                        if (Body.Faction.EnemyFactions.Contains(npc.Faction))
-                            AggroLevel = 100;
-                    }
+					if (npc.Brain is IControlledBrain && (npc.Brain as IControlledBrain).GetPlayerOwner() != null)
+					{
+						GamePlayer factionChecker = (npc.Brain as IControlledBrain).GetPlayerOwner();
+						AggroLevel = Body.Faction.GetAggroToFaction(factionChecker);
+					}
+					else
+					{
+						if (Body.Faction.EnemyFactions.Contains(npc.Faction))
+							AggroLevel = 100;
+					}
 				}
 			}
 			
@@ -1057,99 +1062,99 @@ namespace DOL.AI.Brain
 			Defensive
 		}
 
-        /// <summary>
-        /// Checks if any spells need casting
-        /// </summary>
-        /// <param name="type">Which type should we go through and check for?</param>
-        /// <returns></returns>
-        public virtual bool CheckSpells(eCheckSpellType type)
-        {
-            if (Body.IsCasting)
-                return true;
+		/// <summary>
+		/// Checks if any spells need casting
+		/// </summary>
+		/// <param name="type">Which type should we go through and check for?</param>
+		/// <returns></returns>
+		public virtual bool CheckSpells(eCheckSpellType type)
+		{
+			if (Body.IsCasting)
+				return true;
 
-            bool casted = false;
+			bool casted = false;
 
-            if (Body != null && Body.Spells != null && Body.Spells.Count > 0)
-            {
-                ArrayList spell_rec = new ArrayList();
-                Spell spellToCast = null;
-                bool needpet = false;
-                bool needheal = false;
+			if (Body != null && Body.Spells != null && Body.Spells.Count > 0)
+			{
+				ArrayList spell_rec = new ArrayList();
+				Spell spellToCast = null;
+				bool needpet = false;
+				bool needheal = false;
 
-                if (type == eCheckSpellType.Defensive)
-                {
-                    foreach (Spell spell in Body.Spells)
-                    {
-                        if (Body.GetSkillDisabledDuration(spell) > 0) continue;
-                        if (spell.Target.ToLower() == "enemy" || spell.Target.ToLower() == "area" || spell.Target.ToLower() == "cone") continue;
-                        // If we have no pets
-                        if (Body.ControlledBrain == null)
-                        {
-                            if (spell.SpellType.ToLower() == "pet") continue;
-                            if (spell.SpellType.ToLower().Contains("summon"))
-                            {
-                                spell_rec.Add(spell);
-                                needpet = true;
-                            }
-                        }
-                        if (Body.ControlledBrain != null && Body.ControlledBrain.Body != null)
-                        {
-                            if (Util.Chance(30) && Body.ControlledBrain != null && spell.SpellType.ToLower() == "heal" &&
-                                Body.GetDistanceTo(Body.ControlledBrain.Body) <= spell.Range &&
-                                Body.ControlledBrain.Body.HealthPercent < 60 && spell.Target.ToLower() != "self")
-                            {
-                                spell_rec.Add(spell);
-                                needheal = true;
-                            }
-                            if (LivingHasEffect(Body.ControlledBrain.Body, spell) && (spell.Target.ToLower() != "self")) continue;
-                        }
-                        if (!needpet && !needheal)
-                            spell_rec.Add(spell);
-                    }
-                    if (spell_rec.Count > 0)
-                    {
-                        spellToCast = (Spell)spell_rec[Util.Random((spell_rec.Count - 1))];
-                        if (!Body.IsReturningToSpawnPoint)
-                        {
-                            if (spellToCast.Uninterruptible && CheckDefensiveSpells(spellToCast))
-                                casted = true;
-                            else
-                                if (!Body.IsBeingInterrupted && CheckDefensiveSpells(spellToCast))
-                                    casted = true;
-                        }
-                    }
-                }
-                else if (type == eCheckSpellType.Offensive)
-                {
-                    foreach (Spell spell in Body.Spells)
-                    {
+				if (type == eCheckSpellType.Defensive)
+				{
+					foreach (Spell spell in Body.Spells)
+					{
+						if (Body.GetSkillDisabledDuration(spell) > 0) continue;
+						if (spell.Target.ToLower() == "enemy" || spell.Target.ToLower() == "area" || spell.Target.ToLower() == "cone") continue;
+						// If we have no pets
+						if (Body.ControlledBrain == null)
+						{
+							if (spell.SpellType.ToLower() == "pet") continue;
+							if (spell.SpellType.ToLower().Contains("summon"))
+							{
+								spell_rec.Add(spell);
+								needpet = true;
+							}
+						}
+						if (Body.ControlledBrain != null && Body.ControlledBrain.Body != null)
+						{
+							if (Util.Chance(30) && Body.ControlledBrain != null && spell.SpellType.ToLower() == "heal" &&
+							    Body.GetDistanceTo(Body.ControlledBrain.Body) <= spell.Range &&
+							    Body.ControlledBrain.Body.HealthPercent < 60 && spell.Target.ToLower() != "self")
+							{
+								spell_rec.Add(spell);
+								needheal = true;
+							}
+							if (LivingHasEffect(Body.ControlledBrain.Body, spell) && (spell.Target.ToLower() != "self")) continue;
+						}
+						if (!needpet && !needheal)
+							spell_rec.Add(spell);
+					}
+					if (spell_rec.Count > 0)
+					{
+						spellToCast = (Spell)spell_rec[Util.Random((spell_rec.Count - 1))];
+						if (!Body.IsReturningToSpawnPoint)
+						{
+							if (spellToCast.Uninterruptible && CheckDefensiveSpells(spellToCast))
+								casted = true;
+							else
+								if (!Body.IsBeingInterrupted && CheckDefensiveSpells(spellToCast))
+									casted = true;
+						}
+					}
+				}
+				else if (type == eCheckSpellType.Offensive)
+				{
+					foreach (Spell spell in Body.Spells)
+					{
 
-                        if (Body.GetSkillDisabledDuration(spell) == 0)
-                        {
-                            if (spell.CastTime > 0)
-                            {
-                                if (spell.Target.ToLower() == "enemy" || spell.Target.ToLower() == "area" || spell.Target.ToLower() == "cone")
-                                    spell_rec.Add(spell);
-                            }
-                        }
-                    }
-                    if (spell_rec.Count > 0)
-                    {
-                        spellToCast = (Spell)spell_rec[Util.Random((spell_rec.Count - 1))];
+						if (Body.GetSkillDisabledDuration(spell) == 0)
+						{
+							if (spell.CastTime > 0)
+							{
+								if (spell.Target.ToLower() == "enemy" || spell.Target.ToLower() == "area" || spell.Target.ToLower() == "cone")
+									spell_rec.Add(spell);
+							}
+						}
+					}
+					if (spell_rec.Count > 0)
+					{
+						spellToCast = (Spell)spell_rec[Util.Random((spell_rec.Count - 1))];
 
 
-                        if (spellToCast.Uninterruptible && CheckOffensiveSpells(spellToCast))
-                            casted = true;
-                        else
-                            if (!Body.IsBeingInterrupted && CheckOffensiveSpells(spellToCast))
-                                casted = true;
-                    }
-                }
+						if (spellToCast.Uninterruptible && CheckOffensiveSpells(spellToCast))
+							casted = true;
+						else
+							if (!Body.IsBeingInterrupted && CheckOffensiveSpells(spellToCast))
+								casted = true;
+					}
+				}
 
-                return casted;
-            }
-            return casted;
-        }
+				return casted;
+			}
+			return casted;
+		}
 
 		/// <summary>
 		/// Checks defensive spells.  Handles buffs, heals, etc.
@@ -1196,49 +1201,49 @@ namespace DOL.AI.Brain
 				case "Bladeturn":
 				case "ToHitBuff":
 					{
-                        // Buff self, if not in melee, but not each and every mob
-                        // at the same time, because it looks silly.
-                        if (!LivingHasEffect(Body, spell) && !Body.AttackState && Util.Chance(40) && spell.Target.ToLower() != "pet")
-                        {
-                            Body.TargetObject = Body;
-                            break;
-                        }
-                        if (Body.ControlledBrain != null && Body.ControlledBrain.Body != null && Util.Chance(40) && Body.GetDistanceTo(Body.ControlledBrain.Body) <= spell.Range && !LivingHasEffect(Body.ControlledBrain.Body, spell) && spell.Target.ToLower() != "self")
-                        {
-                            Body.TargetObject = Body.ControlledBrain.Body;
-                            break;
-                        }
-                        break;
+						// Buff self, if not in melee, but not each and every mob
+						// at the same time, because it looks silly.
+						if (!LivingHasEffect(Body, spell) && !Body.AttackState && Util.Chance(40) && spell.Target.ToLower() != "pet")
+						{
+							Body.TargetObject = Body;
+							break;
+						}
+						if (Body.ControlledBrain != null && Body.ControlledBrain.Body != null && Util.Chance(40) && Body.GetDistanceTo(Body.ControlledBrain.Body) <= spell.Range && !LivingHasEffect(Body.ControlledBrain.Body, spell) && spell.Target.ToLower() != "self")
+						{
+							Body.TargetObject = Body.ControlledBrain.Body;
+							break;
+						}
+						break;
 					}
 					#endregion Buffs
 
 					#region Disease Cure/Poison Cure/Summon
-                case "CureDisease":
-                    if (Body.IsDiseased)
-                    {
-                        Body.TargetObject = Body;
-                        break;
-                    }
-                    if (Body.ControlledBrain != null && Body.ControlledBrain.Body != null && Body.ControlledBrain.Body.IsDiseased
-&& Body.GetDistanceTo(Body.ControlledBrain.Body) <= spell.Range && spell.Target.ToLower() != "self")
-                    {
-                        Body.TargetObject = Body.ControlledBrain.Body;
-                        break;
-                    }
-                    break;
-                case "CurePoison":
-                    if (LivingIsPoisoned(Body))
-                    {
-                        Body.TargetObject = Body;
-                        break;
-                    }
-                    if (Body.ControlledBrain != null && Body.ControlledBrain.Body != null && LivingIsPoisoned(Body.ControlledBrain.Body)
-&& Body.GetDistanceTo(Body.ControlledBrain.Body) <= spell.Range && spell.Target.ToLower() != "self")
-                    {
-                        Body.TargetObject = Body.ControlledBrain.Body;
-                        break;
-                    }
-                    break;
+				case "CureDisease":
+					if (Body.IsDiseased)
+					{
+						Body.TargetObject = Body;
+						break;
+					}
+					if (Body.ControlledBrain != null && Body.ControlledBrain.Body != null && Body.ControlledBrain.Body.IsDiseased
+					    && Body.GetDistanceTo(Body.ControlledBrain.Body) <= spell.Range && spell.Target.ToLower() != "self")
+					{
+						Body.TargetObject = Body.ControlledBrain.Body;
+						break;
+					}
+					break;
+				case "CurePoison":
+					if (LivingIsPoisoned(Body))
+					{
+						Body.TargetObject = Body;
+						break;
+					}
+					if (Body.ControlledBrain != null && Body.ControlledBrain.Body != null && LivingIsPoisoned(Body.ControlledBrain.Body)
+					    && Body.GetDistanceTo(Body.ControlledBrain.Body) <= spell.Range && spell.Target.ToLower() != "self")
+					{
+						Body.TargetObject = Body.ControlledBrain.Body;
+						break;
+					}
+					break;
 				case "Summon":
 					Body.TargetObject = Body;
 					break;
@@ -1278,35 +1283,35 @@ namespace DOL.AI.Brain
 
 					// Chance to heal self when dropping below 30%, do NOT spam it.
 					if (Body.HealthPercent < 30 && Util.Chance(10) && spell.Target.ToLower() != "pet")
-                    {
-                        Body.TargetObject = Body;
-                        break;
-                    }
+					{
+						Body.TargetObject = Body;
+						break;
+					}
 
-                    if (Body.ControlledBrain != null && Body.ControlledBrain.Body != null
-                        && Body.GetDistanceTo(Body.ControlledBrain.Body) <= spell.Range && Body.ControlledBrain.Body.HealthPercent < 60 && spell.Target.ToLower() != "self")
-                    {
-                        Body.TargetObject = Body.ControlledBrain.Body;
-                        break;
-                    }
-                    break;
+					if (Body.ControlledBrain != null && Body.ControlledBrain.Body != null
+					    && Body.GetDistanceTo(Body.ControlledBrain.Body) <= spell.Range && Body.ControlledBrain.Body.HealthPercent < 60 && spell.Target.ToLower() != "self")
+					{
+						Body.TargetObject = Body.ControlledBrain.Body;
+						break;
+					}
+					break;
 					#endregion
 
-                //case "SummonAnimistFnF":
-                //case "SummonAnimistPet":
-                case "SummonCommander":
-                case "SummonDruidPet":
-                case "SummonHunterPet":
-                case "SummonNecroPet":
-                case "SummonUnderhill":
-                case "SummonSimulacrum":
-                case "SummonSpiritFighter":
-                //case "SummonTheurgistPet":
-                    if (Body.ControlledBrain != null)
-                        break;
-                    Body.TargetObject = Body;
-                    break;
-            }
+					//case "SummonAnimistFnF":
+					//case "SummonAnimistPet":
+				case "SummonCommander":
+				case "SummonDruidPet":
+				case "SummonHunterPet":
+				case "SummonNecroPet":
+				case "SummonUnderhill":
+				case "SummonSimulacrum":
+				case "SummonSpiritFighter":
+					//case "SummonTheurgistPet":
+					if (Body.ControlledBrain != null)
+						break;
+					Body.TargetObject = Body;
+					break;
+			}
 
 			if (Body.TargetObject != null)
 			{
@@ -1495,7 +1500,7 @@ namespace DOL.AI.Brain
 				   0 means no roaming
 				   >0 means range of roaming
 				   defaut roaming range is defined in CanRandomWalk method
-				*/
+				 */
 				if (!DOL.GS.ServerProperties.Properties.ALLOW_ROAM)
 					return false;
 				if (Body.RoamingRange == 0)
@@ -1537,20 +1542,20 @@ namespace DOL.AI.Brain
 			foreach (IDoor door in Body.CurrentRegion.GetDoorsInRadius(Body.X, Body.Y, Body.Z, range, false))
 			{
 				if (door is GameKeepDoor)
-					{
-						if (Body.Realm != door.Realm) return;
-						door.Open();
-						//Body.Say("GameKeep Door is near by");
-						//somebody can insert here another action for GameKeep Doors
-						return;
- 					}
+				{
+					if (Body.Realm != door.Realm) return;
+					door.Open();
+					//Body.Say("GameKeep Door is near by");
+					//somebody can insert here another action for GameKeep Doors
+					return;
+				}
 				else
-					{
-						door.Open();
-						return ;	
-					}
+				{
+					door.Open();
+					return ;
+				}
 			}
-		return;
+			return;
 		}
 		#endregion
 	}
