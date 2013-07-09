@@ -1034,32 +1034,32 @@ namespace DOL.GS.Quests
 			{
 				try
 				{
-                    //if (QuestPlayer != null && QuestPlayer.Client.Account.PrivLevel > 1)
-                    //{
-                    //    string text = m_stepTexts[Step - 1];
-                    //    text += " [DEBUG] StepType = " + StepType;
-                    //    if (StepType == eStepType.Collect || StepType == eStepType.CollectFinish)
-                    //    {
-                    //        text += ": " + CollectItemTemplate;
-                    //        text += ", Target: " + TargetName;
-                    //    }
-                    //    else if (StepType == eStepType.Deliver || StepType == eStepType.DeliverFinish)
-                    //    {
-                    //        text += ": " + StepItemTemplate;
-                    //        text += " Target: " + TargetName;
-                    //    }
-                    //    else 
-                    //    {
-                    //        if (StepType == eStepType.Whisper || StepType == eStepType.WhisperFinish)
-                    //        {
-                    //        text += ": " + AdvanceText;
-                    //        }
+                    if (QuestPlayer != null && QuestPlayer.Client.Account.PrivLevel > 1)
+                    {
+                        string text = m_stepTexts[Step - 1];
+                        text += " [DEBUG] StepType = " + StepType;
+                        if (StepType == eStepType.Collect || StepType == eStepType.CollectFinish)
+                        {
+                            text += ": " + CollectItemTemplate;
+                            text += ", Target: " + TargetName;
+                        }
+                        else if (StepType == eStepType.Deliver || StepType == eStepType.DeliverFinish)
+                        {
+                            text += ": " + StepItemTemplate;
+                            text += " Target: " + TargetName;
+                        }
+                        else
+                        {
+                            if (StepType == eStepType.Whisper || StepType == eStepType.WhisperFinish)
+                            {
+                                text += ": " + AdvanceText;
+                            }
 
-                    //        text += ", Target: " + TargetName + " sit: " + StepItemTemplate + " cit: " + CollectItemTemplate;
-                    //    }
+                            text += ", Target: " + TargetName + " sit: " + StepItemTemplate + " cit: " + CollectItemTemplate;
+                        }
 
-                    //    return text;
-                    //}
+                        return text;
+                    }
 
 					return m_stepTexts[Step - 1];
 				}
