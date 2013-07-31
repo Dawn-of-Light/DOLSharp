@@ -133,7 +133,7 @@ namespace DOL.GS.GameEvents
 						switch (ch.Realm)
 						{
 							case 1: // alb
-								startLocation = new StartLocation(97607, 92032, 5696, 446);
+								startLocation = new StartLocation(95638, 101322, 5340, 998);
 								break;
 							case 2: // mid
 								startLocation = new StartLocation(226716, 232385, 5340, 1024);
