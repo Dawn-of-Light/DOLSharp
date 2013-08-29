@@ -59,8 +59,8 @@ namespace DOL.GS
 		#region Constructor/Declaration
 
 		// for client one page is 30 items, just need to use scrollbar to see them all
-		// item30 will be on page 1
-		// item31 will be on page 2
+		// item30 will be on page 0
+		// item31 will be on page 1
 
 		/// <summary>
 		/// Constructor
@@ -116,7 +116,7 @@ namespace DOL.GS
 					return false;
 				}
 
-				m_usedItemsTemplates[(int)pageSlot] = item;
+				m_usedItemsTemplates[(page*MAX_ITEM_IN_TRADEWINDOWS)+(int)pageSlot] = item;
 			}
 
 			return true;
@@ -134,8 +134,8 @@ namespace DOL.GS
 			{
 				slot = GetValidSlot(page, slot);
 				if (slot == eMerchantWindowSlot.Invalid) return false;
-				if (!m_usedItemsTemplates.Contains((int)slot)) return false;
-				m_usedItemsTemplates.Remove((int)slot);
+				if (!m_usedItemsTemplates.Contains((page*MAX_ITEM_IN_TRADEWINDOWS)+(int)slot)) return false;
+				m_usedItemsTemplates.Remove((page*MAX_ITEM_IN_TRADEWINDOWS)+(int)slot);
 				return true;
 			}
 		}
@@ -181,8 +181,8 @@ namespace DOL.GS
 				{
 					foreach (DictionaryEntry de in m_usedItemsTemplates)
 					{
-						if ((int)de.Key/MAX_ITEM_IN_TRADEWINDOWS == page)
-							itemsInPage[(int)de.Key] = (ItemTemplate)de.Value;
+						if ((int)de.Key >= (MAX_ITEM_IN_TRADEWINDOWS*page) && (int)de.Key < (MAX_ITEM_IN_TRADEWINDOWS*page+MAX_ITEM_IN_TRADEWINDOWS))
+							itemsInPage[(int)de.Key%MAX_ITEM_IN_TRADEWINDOWS] = (ItemTemplate)de.Value;
 					}
 				}
 				return itemsInPage;
@@ -211,7 +211,7 @@ namespace DOL.GS
 				ItemTemplate item;
 				lock (m_usedItemsTemplates.SyncRoot)
 				{
-					item = m_usedItemsTemplates[(int)slot] as ItemTemplate;
+					item = m_usedItemsTemplates[(int)slot+(page*MAX_ITEM_IN_TRADEWINDOWS)] as ItemTemplate;
 					if (item != null) return item;
 				}
 
@@ -242,7 +242,7 @@ namespace DOL.GS
 			try
 			{
 				Hashtable allItems = new Hashtable();
-				if (m_itemsListID != null)
+				if (m_itemsListID != null && m_itemsListID.Length > 0)
 				{
 					var itemList = GameServer.Database.SelectObjects<MerchantItem>("ItemListID = '" + GameServer.Database.Escape(m_itemsListID) + "'");
 					foreach (MerchantItem merchantitem in itemList)
