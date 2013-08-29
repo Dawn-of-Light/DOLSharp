@@ -26,31 +26,32 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <SourceAnalysisOverrideSettingsFile>C:\Users\RedFish\AppData\Roaming\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <NoStdLib>false</NoStdLib>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
     <WarningLevel>4</WarningLevel>
     <NoWarn>1570%3b1572%3b1573%3b1587%3b1591%3b1592</NoWarn>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>..\debug\lib\</OutputPath>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
+    <Optimize>False</Optimize>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <DebugType>Full</DebugType>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>..\release\lib\</OutputPath>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DebugSymbols>false</DebugSymbols>
-    <Optimize>true</Optimize>
+    <Optimize>True</Optimize>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <DebugType>None</DebugType>
     <ErrorReport>prompt</ErrorReport>
@@ -59,7 +60,7 @@
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <PlatformTarget>x86</PlatformTarget>
-    <RegisterForComInterop>false</RegisterForComInterop>
+    <RegisterForComInterop>False</RegisterForComInterop>
     <BaseAddress>285212672</BaseAddress>
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
@@ -170,6 +171,7 @@
     <Compile Include="commands\AdminCommands\Reload.cs" />
     <Compile Include="commands\AdminCommands\ServerProperties.cs" />
     <Compile Include="commands\AdminCommands\plvl.cs" />
+    <Compile Include="commands\admincommands\Shutdown.cs" />
     <Compile Include="commands\GMCommands\addbind.cs" />
     <Compile Include="commands\GMCommands\AddHookPoint.cs" />
     <Compile Include="commands\GMCommands\Announce.cs" />
@@ -178,6 +180,7 @@
     <Compile Include="commands\GMcommands\blink.cs" />
     <Compile Include="commands\GMCommands\cast.cs" />
     <Compile Include="commands\GMCommands\ClientList.cs" />
+    <Compile Include="commands\gmcommands\gmstealth.cs" />
     <Compile Include="commands\gmcommands\translate.cs" />
     <Compile Include="commands\GMCommands\zone.cs" />
     <Compile Include="commands\GMCommands\crafting.cs" />
