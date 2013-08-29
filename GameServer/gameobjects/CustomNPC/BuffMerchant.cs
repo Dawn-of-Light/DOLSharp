@@ -13,17 +13,20 @@
  * Enjoy!
  */
 
+using System;
+using System.Reflection;
 using System.Collections;
+
 using DOL.Events;
 using DOL.Database;
-using log4net;
+using DOL.AI.Brain;
 using DOL.Language;
 using DOL.GS;
 using DOL.GS.Spells;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
-using System;
-using System.Reflection;
+
+using log4net;
 
 namespace DOL.GS
 {
@@ -53,59 +56,44 @@ namespace DOL.GS
 		}
 
 		private Queue m_buffs = new Queue();
-		private Queue m_buffspet = new Queue();
+		private const int BUFFS_SPELL_DURATION = 7200;
+		private const bool BUFFS_PLAYER_PET = true;
 
 		public override bool AddToWorld()
 		{
 			Level = 50;
 			return base.AddToWorld();
 		}
-		public static void BuffPlayer(GamePlayer player, Spell spell, SpellLine spellLine)
+		public void BuffPlayer(GamePlayer player, Spell spell, SpellLine spellLine)
 		{
-			Queue m_buffs = new Queue();
-			Container con = new Container(spell, spellLine, player);
-			m_buffs.Enqueue(con);
+			if (m_buffs == null) m_buffs = new Queue();
+			
+			m_buffs.Enqueue(new Container(spell, spellLine, player));
 
-			CastBuffs(player, m_buffs);
-
-		}
-		public static void CastBuffs(GamePlayer player, Queue m_buffs)
-		{
-			Spell BuffSpell = null;
-			SpellLine BuffSpellLine = null;
-			GameLiving target = null;
-			while (m_buffs.Count > 0)
+			//don't forget his pet !
+			if(BUFFS_PLAYER_PET && player.ControlledBrain != null) 
 			{
-				Container con = (Container)m_buffs.Dequeue();
-				BuffSpell = con.Spell;
-				target = con.Target;
-				BuffSpellLine = con.SpellLine;
-
-				ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(player, BuffSpell, BuffSpellLine);
-				if (spellHandler != null)
+				if(player.ControlledBrain.Body != null) 
 				{
-					player.TargetObject = target;
-					spellHandler.StartSpell(target);
+					m_buffs.Enqueue(new Container(spell, spellLine, player.ControlledBrain.Body));
 				}
 			}
+
+			CastBuffs();
+
 		}
-		public void CastBuffsPet()
+		public void CastBuffs()
 		{
-			Spell BuffSpell = null;
-			SpellLine BuffSpellLine = null;
-			GameLiving target = null;
-			while (m_buffspet.Count > 0)
+			Container con = null;
+			while (m_buffs.Count > 0)
 			{
-				Container con = (Container)m_buffspet.Dequeue();
-				BuffSpell = con.Spell;
-				target = con.Target;
-				BuffSpellLine = con.SpellLine;
-				ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, BuffSpell, BuffSpellLine);
+				con = (Container)m_buffs.Dequeue();
+
+				ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, con.Spell, con.SpellLine);
+
 				if (spellHandler != null)
 				{
-					TargetObject = target.ControlledBrain.Body;
-					TurnTo(target.ControlledBrain.Body, 1000);
-					spellHandler.StartSpell(target.ControlledBrain.Body);
+					spellHandler.StartSpell(con.Target);
 				}
 			}
 		}
@@ -191,7 +179,7 @@ namespace DOL.GS
 					spell.Concentration = 1;
 					spell.ClientEffect = 1467;
 					spell.Icon = 1467;
-					spell.Duration = 9600;
+					spell.Duration = BUFFS_SPELL_DURATION;
 					spell.Value = 78; //Effective buff 58
 					spell.Name = "Armor of the Realm";
 					spell.Description = "Adds to the recipient's Armor Factor (AF) resulting in better protection againts some forms of attack. It acts in addition to any armor the target is wearing.";
@@ -221,7 +209,7 @@ namespace DOL.GS
 					spell.Concentration = 1;
 					spell.ClientEffect = 1467;
 					spell.Icon = 1467;
-					spell.Duration = 7200;
+					spell.Duration = BUFFS_SPELL_DURATION;
 					spell.Value = 58; //Effective buff 58
 					spell.Name = "Armor of the Realm";
 					spell.Description = "Adds to the recipient's Armor Factor (AF) resulting in better protection againts some forms of attack. It acts in addition to any armor the target is wearing.";
@@ -251,7 +239,7 @@ namespace DOL.GS
 					spell.Concentration = 1;
 					spell.ClientEffect = 1457;
 					spell.Icon = 1457;
-					spell.Duration = 9600;
+					spell.Duration = BUFFS_SPELL_DURATION;
 					spell.Value = 74; //effective buff 55
 					spell.Name = "Strength of the Realm";
 					spell.Description = "Increases target's Strength.";
@@ -281,7 +269,7 @@ namespace DOL.GS
 					spell.Concentration = 1;
 					spell.ClientEffect = 1457;
 					spell.Icon = 1457;
-					spell.Duration = 7200;
+					spell.Duration = BUFFS_SPELL_DURATION;
 					spell.Value = 55; //effective buff 55
 					spell.Name = "Strength of the Realm";
 					spell.Description = "Increases target's Strength.";
@@ -311,7 +299,7 @@ namespace DOL.GS
 					spell.Concentration = 1;
 					spell.ClientEffect = 1486;
 					spell.Icon = 1486;
-					spell.Duration = 9600;
+					spell.Duration = BUFFS_SPELL_DURATION;
 					spell.Value = 74; //effective buff 55
 					spell.Name = "Fortitude of the Realm";
 					spell.Description = "Increases target's Constitution.";
@@ -341,7 +329,7 @@ namespace DOL.GS
 					spell.Concentration = 1;
 					spell.ClientEffect = 1486;
 					spell.Icon = 1486;
-					spell.Duration = 7200;
+					spell.Duration = BUFFS_SPELL_DURATION;
 					spell.Value = 55; //effective buff 55
 					spell.Name = "Fortitude of the Realm";
 					spell.Description = "Increases target's Constitution.";
@@ -371,7 +359,7 @@ namespace DOL.GS
 					spell.Concentration = 1;
 					spell.ClientEffect = 1476;
 					spell.Icon = 1476;
-					spell.Duration = 9600;
+					spell.Duration = BUFFS_SPELL_DURATION;
 					spell.Value = 74; //effective buff 55
 					spell.Name = "Dexterity of the Realm";
 					spell.Description = "Increases Dexterity for a character.";
@@ -401,7 +389,7 @@ namespace DOL.GS
 					spell.Concentration = 1;
 					spell.ClientEffect = 1476;
 					spell.Icon = 1476;
-					spell.Duration = 7200;
+					spell.Duration = BUFFS_SPELL_DURATION;
 					spell.Value = 55; //effective buff 55
 					spell.Name = "Dexterity of the Realm";
 					spell.Description = "Increases Dexterity for a character.";
@@ -431,7 +419,7 @@ namespace DOL.GS
 					spell.Concentration = 1;
 					spell.ClientEffect = 1517;
 					spell.Icon = 1517;
-					spell.Duration = 9600;
+					spell.Duration = BUFFS_SPELL_DURATION;
 					spell.Value = 114; //effective buff 85
 					spell.Name = "Might of the Realm";
 					spell.Description = "Increases Str/Con for a character";
@@ -461,7 +449,7 @@ namespace DOL.GS
 					spell.Concentration = 1;
 					spell.ClientEffect = 1517;
 					spell.Icon = 1517;
-					spell.Duration = 7200;
+					spell.Duration = BUFFS_SPELL_DURATION;
 					spell.Value = 85; //effective buff 85
 					spell.Name = "Might of the Realm";
 					spell.Description = "Increases Str/Con for a character";
@@ -491,7 +479,7 @@ namespace DOL.GS
 					spell.Concentration = 1;
 					spell.ClientEffect = 1526;
 					spell.Icon = 1526;
-					spell.Duration = 9600;
+					spell.Duration = BUFFS_SPELL_DURATION;
 					spell.Value = 114; //effective buff 85
 					spell.Name = "Deftness of the Realm";
 					spell.Description = "Increases Dexterity and Quickness for a character.";
@@ -521,7 +509,7 @@ namespace DOL.GS
 					spell.Concentration = 1;
 					spell.ClientEffect = 1526;
 					spell.Icon = 1526;
-					spell.Duration = 7200;
+					spell.Duration = BUFFS_SPELL_DURATION;
 					spell.Value = 85; //effective buff 85
 					spell.Name = "Deftness of the Realm";
 					spell.Description = "Increases Dexterity and Quickness for a character.";
@@ -551,7 +539,7 @@ namespace DOL.GS
 					spell.Concentration = 1;
 					spell.ClientEffect = 1538;
 					spell.Icon = 1538;
-					spell.Duration = 9600;
+					spell.Duration = BUFFS_SPELL_DURATION;
 					spell.Value = 96; //effective buff 72;
 					spell.Name = "Acuity of the Realm";
 					spell.Description = "Increases Acuity (casting attribute) for a character.";
@@ -581,7 +569,7 @@ namespace DOL.GS
 					spell.Concentration = 1;
 					spell.ClientEffect = 1538;
 					spell.Icon = 1538;
-					spell.Duration = 7200;
+					spell.Duration = BUFFS_SPELL_DURATION;
 					spell.Value = 72; //effective buff 72;
 					spell.Name = "Acuity of the Realm";
 					spell.Description = "Increases Acuity (casting attribute) for a character.";
@@ -611,7 +599,7 @@ namespace DOL.GS
 					spell.Concentration = 1;
 					spell.ClientEffect = 1506;
 					spell.Icon = 1506;
-					spell.Duration = 9600;
+					spell.Duration = BUFFS_SPELL_DURATION;
 					spell.Value = 90; //effective buff 67
 					spell.Name = "Armor of the Realm";
 					spell.Description = "Adds to the recipient's Armor Factor (AF), resulting in better protection against some forms of attack. It acts in addition to any armor the target is wearing.";
@@ -641,7 +629,7 @@ namespace DOL.GS
 					spell.Concentration = 1;
 					spell.ClientEffect = 1506;
 					spell.Icon = 1506;
-					spell.Duration = 7200;
+					spell.Duration = BUFFS_SPELL_DURATION;
 					spell.Value = 67; //effective buff 67
 					spell.Name = "Armor of the Realm";
 					spell.Description = "Adds to the recipient's Armor Factor (AF), resulting in better protection against some forms of attack. It acts in addition to any armor the target is wearing.";
@@ -671,7 +659,7 @@ namespace DOL.GS
 					spell.Concentration = 1;
 					spell.ClientEffect = 407;
 					spell.Icon = 407;
-					spell.Duration = 9600;
+					spell.Duration = BUFFS_SPELL_DURATION;
 					spell.Value = 15;
 					spell.Name = "Haste of the Realm";
 					spell.Description = "Increases the target's combat speed.";
@@ -703,7 +691,7 @@ namespace DOL.GS
 					spell.Concentration = 1;
 					spell.ClientEffect = 980;
 					spell.Icon = 980;
-					spell.Duration = 7200;
+					spell.Duration = BUFFS_SPELL_DURATION;
 					spell.Value = 30;
 					spell.Name = "Power of the Realm";
 					spell.Description = "Target regenerates power regeneration during the duration of the spell";
@@ -732,7 +720,7 @@ namespace DOL.GS
 					spell.Concentration = 1;
 					spell.ClientEffect = 18;
 					spell.Icon = 18;
-					spell.Duration = 7200;
+					spell.Duration = BUFFS_SPELL_DURATION;
 					spell.Damage = 5.0;
 					spell.DamageType = 15;
 					spell.Name = "Damage of the Realm";
@@ -762,7 +750,7 @@ namespace DOL.GS
 					spell.Concentration = 1;
 					spell.ClientEffect = 1534;
 					spell.Icon = 1534;
-					spell.Duration = 7200;
+					spell.Duration = BUFFS_SPELL_DURATION;
 					spell.Value = 7;
 					spell.Name = "Health of the Realm";
 					spell.Description = "Target regenerates the given amount of health every tick";
