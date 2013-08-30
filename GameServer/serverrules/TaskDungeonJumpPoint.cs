@@ -61,8 +61,12 @@ namespace DOL.GS.ServerRules
 
             if (loc != null)
             {
-            	player.MoveTo(loc);
-                return false;
+                targetPoint.TargetX = loc.X;
+                targetPoint.TargetY = loc.Y;
+                targetPoint.TargetZ = loc.Z;
+                targetPoint.TargetRegion = loc.RegionID;
+                targetPoint.TargetHeading = loc.Heading;
+                return true;
             }
 
             player.Out.SendMessage("You need to have a proper mission before entering this area!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
