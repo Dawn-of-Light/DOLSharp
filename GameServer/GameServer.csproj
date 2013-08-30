@@ -372,6 +372,7 @@
     <Compile Include="gameobjects\GameInventoryObject.cs" />
     <Compile Include="gameobjects\GameMythirian.cs" />
     <Compile Include="gameobjects\GameSiegeItem.cs" />
+    <Compile Include="gameutils\LootGeneratorAurulite.cs" />
     <Compile Include="gameutils\MarketSearch.cs" />
     <Compile Include="gameutils\InventoryLogging.cs" />
     <Compile Include="gameutils\MarketCache.cs" />
@@ -1407,6 +1408,7 @@
     <Compile Include="relics\RelicMgr.cs" />
     <Compile Include="relics\RelicPad.cs" />
     <Compile Include="relics\RelicPillar.cs" />
+    <Compile Include="serverrules\AdventureWingJumpPoint.cs" />
     <Compile Include="serverrules\DemonsBreachJumpPoint.cs" />
     <Compile Include="serverrules\InstanceDoorJumpPoint.cs" />
     <Compile Include="serverrules\TaskDungeonJumpPoint.cs" />
@@ -2544,8 +2546,10 @@
     <Compile Include="world\IGameLocation.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="world\Instance\AdventureWingInstance.cs" />
     <Compile Include="world\Instance\BaseInstance.cs" />
     <Compile Include="world\Instance\Instance.cs" />
+    <Compile Include="world\Instance\RegionInstance.cs" />
     <Compile Include="world\IPoint2D.cs">
       <SubType>Code</SubType>
     </Compile>
