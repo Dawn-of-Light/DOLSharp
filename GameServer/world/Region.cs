@@ -798,6 +798,17 @@ namespace DOL.GS
                 {
                     GameNPC myMob = null;
                     string error = string.Empty;
+  
+                    // Default Classtype
+                    string classtype = ServerProperties.Properties.GAMENPC_DEFAULT_CLASSTYPE;
+                    
+                    // load template if any
+                    INpcTemplate template = null;
+                    if(mob.NPCTemplateID != -1)
+                    {
+                    	template = NpcTemplateMgr.GetTemplate(mob.NPCTemplateID);
+                    }
+                    
 
                     if (mob.Guild.Length > 0 && mob.Realm >= 0 && mob.Realm <= (int)eRealm._Last)
                     {
@@ -806,18 +817,9 @@ namespace DOL.GS
                         {
                             try
                             {
-                                Type[] constructorParams;
-                                if (mob.NPCTemplateID != -1)
-                                {
-                                    constructorParams = new Type[] { typeof(INpcTemplate) };
-                                    ConstructorInfo handlerConstructor = typeof(GameNPC).GetConstructor(constructorParams);
-                                    INpcTemplate template = NpcTemplateMgr.GetTemplate(mob.NPCTemplateID);
-                                    myMob = (GameNPC)handlerConstructor.Invoke(new object[] { template });
-                                }
-                                else
-                                {
-                                    myMob = (GameNPC)type.Assembly.CreateInstance(type.FullName);
-                                }
+                                
+                                myMob = (GameNPC)type.Assembly.CreateInstance(type.FullName);
+                               	
                             }
                             catch (Exception e)
                             {
@@ -827,12 +829,14 @@ namespace DOL.GS
                         }
                     }
 
-
+  
                     if (myMob == null)
                     {
-                        string classtype = ServerProperties.Properties.GAMENPC_DEFAULT_CLASSTYPE;
-
-                        if (mob.ClassType != null && mob.ClassType.Length > 0 && mob.ClassType != Mob.DEFAULT_NPC_CLASSTYPE)
+                    	if(template != null && template.ClassType != null && template.ClassType.Length > 0 && template.ClassType != Mob.DEFAULT_NPC_CLASSTYPE && template.ReplaceMobValues)
+                    	{
+                			classtype = template.ClassType;
+                    	}
+                        else if (mob.ClassType != null && mob.ClassType.Length > 0 && mob.ClassType != Mob.DEFAULT_NPC_CLASSTYPE)
                         {
                             classtype = mob.ClassType;
                         }
