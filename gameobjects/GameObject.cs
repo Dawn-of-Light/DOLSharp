@@ -973,7 +973,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Load any data driven quests for this object
 		/// </summary>
-		public void LoadDataQuests()
+		public void LoadDataQuests(GamePlayer player = null)
 		{
 			if (m_dataQuestCache == null)
 			{
@@ -986,9 +986,14 @@ namespace DOL.GS
 			{
 				if ((quest.StartRegionID == CurrentRegionID || quest.StartRegionID == 0) && quest.StartName == Name)
 				{
-					DataQuest dq = new DataQuest(quest);
-					dq.StartObject = this;
+					DataQuest dq = new DataQuest(quest, this);
 					AddDataQuest(dq);
+
+                    // if a player forced the reload report any errors
+                    if (player != null && dq.LastErrorText != "")
+                    {
+                        ChatUtil.SendErrorMessage(player, dq.LastErrorText);
+                    }
 				}
 			}
 		}

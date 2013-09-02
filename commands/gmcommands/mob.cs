@@ -1603,7 +1603,7 @@ namespace DOL.GS.Commands
 			try
 			{
 				GameObject.FillDataQuestCache();
-				targetMob.LoadDataQuests();
+				targetMob.LoadDataQuests(client.Player);
 				foreach (GamePlayer player in targetMob.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
 					player.Out.SendNPCsQuestEffect(targetMob, targetMob.GetQuestIndicator(player));
