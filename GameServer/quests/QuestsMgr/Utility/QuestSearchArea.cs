@@ -32,10 +32,14 @@ namespace DOL.GS.Quests
 {
 	public class QuestSearchArea : Area.Circle
 	{
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 		public const int DEFAULT_SEARCH_SECONDS = 5;
 		public const int DEFAULT_SEARCH_RADIUS = 150;
 
+        ushort m_regionId = 0;
 		Type m_questType;
+        DataQuest m_dataQuest = null;
 		int m_validStep;
 		int m_searchSeconds;
 		string m_popupText = "";
@@ -76,33 +80,124 @@ namespace DOL.GS.Quests
 			CreateArea(questType, validStep, searchSeconds, text, regionId);
 		}
 
+        /// <summary>
+        /// Search area for data quests.  Z is not checked, user must specify radius and time in data quest
+        /// </summary>
+        /// <param name="dataQuest"></param>
+        /// <param name="validStep"></param>
+        /// <param name="text"></param>
+        /// <param name="regionId"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="radius"></param>
+        /// <param name="searchSeconds"></param>
+        public QuestSearchArea(DataQuest dataQuest, int validStep, string text, ushort regionId, int x, int y, int radius = DEFAULT_SEARCH_RADIUS, int searchSeconds = DEFAULT_SEARCH_SECONDS)
+            : base(text, x, y, 0, radius)
+        {
+            CreateArea(dataQuest, validStep, searchSeconds, text, regionId);
+        }
+
 		protected void CreateArea(Type questType, int validStep, int searchSeconds, string text, ushort regionId)
 		{
+            m_regionId = regionId;
 			m_questType = questType;
 			m_validStep = validStep;
 			m_searchSeconds = searchSeconds;
 			m_popupText = text;
 			DisplayMessage = false;
 
-			if (WorldMgr.GetRegion(regionId) != null)
-			{
-				WorldMgr.GetRegion(regionId).AddArea(this);
-			}
+            if (WorldMgr.GetRegion(regionId) != null)
+            {
+                WorldMgr.GetRegion(regionId).AddArea(this);
+            }
+            else
+            {
+                log.Error("Could not find region " + regionId + " when trying to create QuestSearchArea for quest " + m_questType);
+            }
 		}
+
+        protected void CreateArea(DataQuest dataQuest, int validStep, int searchSeconds, string text, ushort regionId)
+        {
+            m_regionId = regionId;
+            m_questType = typeof(DataQuest);
+            m_dataQuest = dataQuest;
+            m_validStep = validStep;
+            m_searchSeconds = searchSeconds;
+            m_popupText = text;
+            DisplayMessage = false;
+
+            if (WorldMgr.GetRegion(regionId) != null)
+            {
+                WorldMgr.GetRegion(regionId).AddArea(this);
+            }
+            else
+            {
+                string errorText = "Could not find region " + regionId + " when trying to create QuestSearchArea! ";
+                dataQuest.LastErrorText += errorText;
+                log.Error(errorText);
+            }
+        }
+
+        public virtual void RemoveArea()
+        {
+            if (WorldMgr.GetRegion(m_regionId) != null)
+            {
+                WorldMgr.GetRegion(m_regionId).RemoveArea(this);
+            }
+        }
 
 		public override void OnPlayerEnter(GamePlayer player)
 		{
-			// popup a dialog telling the player they should search here
-			if (player.IsDoingQuest(m_questType) != null && player.IsDoingQuest(m_questType).Step == m_validStep && m_popupText != string.Empty)
-			{
-				player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, m_popupText);
-			}
-		}
+            bool showText = false;
+
+            if (m_dataQuest != null)
+            {
+                ChatUtil.SendDebugMessage(player, "Entered QuestSearchArea for DataQuest ID:" + m_dataQuest.ID + ", Step " + Step);
+
+                // first check active data quests
+   			    foreach (AbstractQuest quest in player.QuestList)
+			    {
+				    if (quest is DataQuest)
+				    {
+                        if ((quest as DataQuest).ID == m_dataQuest.ID && quest.Step == Step && m_popupText != string.Empty)
+                        {
+                            showText = true;
+                        }
+				    }
+			    }
+
+                // next check for searches that start a dataquest
+                if (Step == 0 && DataQuest.CheckQuestQualification(player))
+                {
+                    showText = true;
+                }
+            }
+            else
+            {
+                ChatUtil.SendDebugMessage(player, "Entered QuestSearchArea for " + m_questType.Name + ", Step " + Step);
+
+                // popup a dialog telling the player they should search here
+                if (player.IsDoingQuest(m_questType) != null && player.IsDoingQuest(m_questType).Step == m_validStep && PopupText != string.Empty)
+                {
+                    showText = true;
+                }
+            }
+
+            if (showText)
+            {
+                player.Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, m_popupText);
+            }
+        }
 
 		public Type QuestType
 		{
 			get { return m_questType; }
 		}
+
+        public DataQuest DataQuest
+        {
+            get { return m_dataQuest; }
+        }
 
 		public int Step
 		{
@@ -113,5 +208,10 @@ namespace DOL.GS.Quests
 		{
 			get { return m_searchSeconds; }
 		}
+
+        public string PopupText
+        {
+            get { return m_popupText; }
+        }
 	}
 }

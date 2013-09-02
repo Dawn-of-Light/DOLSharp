@@ -64,11 +64,6 @@ namespace DOL.GS
 		{
 			m_zoneSkinMap.Clear();
 
-			foreach (IArea area in (Areas.Clone() as ArrayList))
-			{
-				RemoveArea(area);
-			}
-
 			Areas.Clear();
 
 			base.OnCollapse();
@@ -217,13 +212,13 @@ namespace DOL.GS
 
 			if (zoneIndex >= 0)
 			{
-				lock (m_Areas.SyncRoot)
+				lock (m_lockAreas)
 				{
 					try
 					{
 						for (int i = 0; i < m_ZoneAreasCount[zoneIndex]; i++)
 						{
-							IArea area = (IArea)m_Areas[m_ZoneAreas[zoneIndex][i]];
+							IArea area = (IArea)Areas[m_ZoneAreas[zoneIndex][i]];
 							if (area.IsContaining(p, checkZ))
 							{
 								areas.Add(area);
@@ -260,13 +255,13 @@ namespace DOL.GS
 
 			if (zoneIndex >= 0)
 			{
-				lock (m_Areas.SyncRoot)
+				lock (m_lockAreas)
 				{
 					try
 					{
 						for (int i = 0; i < m_ZoneAreasCount[zoneIndex]; i++)
 						{
-							IArea area = (IArea)m_Areas[m_ZoneAreas[zoneIndex][i]];
+							IArea area = (IArea)Areas[m_ZoneAreas[zoneIndex][i]];
 							if (area.IsContaining(x, y, z))
 								areas.Add(area);
 						}
