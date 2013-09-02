@@ -100,15 +100,19 @@ namespace DOL.GS
         /// </summary>
         protected readonly ArrayList m_Zones;
 
+        protected object m_lockAreas = new object();
+
         /// <summary>
         /// Holds all the Areas inside this Region
+        /// 
+        /// ZoneID, AreaID, Area
         ///
         /// Areas can be registed to a reagion via AddArea
         /// and events will be thrown if players/npcs/objects enter leave area
         /// </summary>
-        protected readonly ArrayList m_Areas;
+        private Dictionary<ushort, IArea> m_Areas;
 
-        public ArrayList Areas
+        protected Dictionary<ushort, IArea> Areas
         {
             get { return m_Areas; }
         }
@@ -229,7 +233,7 @@ namespace DOL.GS
                 m_ZoneAreas[i] = new ushort[AbstractArea.MAX_AREAS_PER_ZONE];
             }
 
-            m_Areas = new ArrayList(1);
+            m_Areas = new Dictionary<ushort, IArea>();
 
             m_timeManager = time;
 
@@ -1321,46 +1325,63 @@ namespace DOL.GS
         /// <returns></returns>
         public virtual IArea AddArea(IArea area)
         {
-            lock (m_Areas.SyncRoot)
+            lock (m_lockAreas)
             {
-                m_Areas.Add(area);
-                area.ID = (ushort)(m_Areas.Count - 1);
+                ushort nextAreaID = 0;
 
-                for (int i = 0; i < Zones.Count; i++)
+                foreach (ushort areaID in m_Areas.Keys)
                 {
-                    Zone zone = (Zone)Zones[i];
+                    if (areaID >= nextAreaID)
+                    {
+                        nextAreaID = (ushort)(areaID + 1);
+                    }
+                }
+
+                area.ID = nextAreaID;
+                m_Areas.Add(area.ID, area);
+
+                for (ushort zonePos = 0; zonePos < Zones.Count; zonePos++)
+                {
+                    Zone zone = (Zone)Zones[zonePos];
                     if (!area.IsIntersectingZone(zone))
                         continue;
 
-                    m_ZoneAreas[i][m_ZoneAreasCount[i]++] = area.ID;
+                    m_ZoneAreas[zonePos][m_ZoneAreasCount[zonePos]++] = area.ID;
                 }
+
                 return area;
             }
         }
 
         /// <summary>
-        /// Removes an are from the list of areas and updates area-zone chache
+        /// Removes an area from the list of areas and updates area-zone cache
         /// </summary>
         /// <param name="area"></param>
         public virtual void RemoveArea(IArea area)
         {
-            lock (m_Areas.SyncRoot)
+            lock (m_lockAreas)
             {
-                m_Areas.Remove(area);
-
-                for (int i = 0; i < Zones.Count; i++)
+                if (m_Areas.ContainsKey(area.ID) == false)
                 {
-                    for (int j = 0; j < m_ZoneAreasCount[i]; j++)
-                    {
-                        if (m_ZoneAreas[i][j] == area.ID)
-                        {
-                            // skip rest of m_ZoneAreas array one to the left.
-                            for (int k = j; k < m_ZoneAreasCount[i] - 1; k++)
-                            {
-                                m_ZoneAreas[i][k] = m_ZoneAreas[i][k + 1];
-                            }
-                            m_ZoneAreasCount[i]--;
+                    return;
+                }
 
+                m_Areas.Remove(area.ID);
+
+                for (int zonePos = 0; zonePos < Zones.Count; zonePos++)
+                {
+                    for (int areaPos = 0; areaPos < m_ZoneAreasCount[zonePos]; areaPos++)
+                    {
+                        if (m_ZoneAreas[zonePos][areaPos] == area.ID)
+                        {
+                            // move the remaining m_ZoneAreas array one to the left
+
+                            for (int i = areaPos; i < m_ZoneAreasCount[zonePos] - 1; i++)
+                            {
+                                m_ZoneAreas[zonePos][i] = m_ZoneAreas[zonePos][i + 1];
+                            }
+
+                            m_ZoneAreasCount[zonePos]--;
                             break;
                         }
                     }
@@ -1409,7 +1430,7 @@ namespace DOL.GS
         /// <returns></returns>
         public virtual IList GetAreasOfZone(Zone zone, IPoint3D p, bool checkZ)
         {
-            lock (m_Areas.SyncRoot)
+            lock (m_lockAreas)
             {
                 int zoneIndex = Zones.IndexOf(zone);
                 IList areas = new ArrayList();
@@ -1439,7 +1460,7 @@ namespace DOL.GS
 
         public virtual IList GetAreasOfZone(Zone zone, int x, int y, int z)
         {
-            lock (m_Areas.SyncRoot)
+            lock (m_lockAreas)
             {
                 int zoneIndex = Zones.IndexOf(zone);
                 IList areas = new ArrayList();

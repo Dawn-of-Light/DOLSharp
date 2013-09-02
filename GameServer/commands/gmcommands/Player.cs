@@ -24,6 +24,7 @@ using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.Housing;
 using DOL.GS.PacketHandler;
+using DOL.GS.Quests;
 
 namespace DOL.GS.Commands
 {
@@ -62,7 +63,8 @@ namespace DOL.GS.Commands
 		"/player setmlstep <level> <step> [false] - Sets a step for an ML level to finished. 0 to set as unfinished.",
 		"/player articredit <artifact>",
         "/player allchars <PlayerName>", 
-        "/player class <list|classID> - view a list of classes, or change the targets class."
+        "/player class <list|classID> - view a list of classes, or change the targets class.",
+        "/player areas - list all the areas the player is currently inside of "
 		)]
 	public class PlayerCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
@@ -2138,6 +2140,44 @@ namespace DOL.GS.Commands
                         }
                     }
                     break; 
+                #endregion
+                #region areas
+                case "areas":
+                    {
+                        var targetPlayer = client.Player.TargetObject as GamePlayer;
+                        if (targetPlayer == null) targetPlayer = client.Player;
+
+                        List<string> areaList = new List<string>();
+
+                        foreach (AbstractArea area in targetPlayer.CurrentAreas)
+                        {
+                            string areaInfo = area.GetType().Name + ", ID:" + area.ID;
+                            if (area is QuestSearchArea)
+                            {
+                                QuestSearchArea questArea = area as QuestSearchArea;
+
+                                if (questArea.DataQuest != null)
+                                {
+                                    areaInfo += " : DataQuest ID: " + questArea.DataQuest.ID;
+
+                                    if (questArea.Step > 0)
+                                    {
+                                        areaInfo += ", Area Quest Step = " + questArea.Step;
+                                    }
+                                    else
+                                    {
+                                        areaInfo += ", Eligible = " + questArea.DataQuest.CheckQuestQualification(targetPlayer);
+                                    }
+                                }
+                            }
+                            areaList.Add(areaInfo);
+                        }
+
+                        if (areaList.Count == 0) areaList.Add("None");
+
+                        client.Player.Out.SendCustomTextWindow(targetPlayer.Name + " - Current Areas", areaList);
+                    }
+                    break;
                 #endregion
             }
         }
