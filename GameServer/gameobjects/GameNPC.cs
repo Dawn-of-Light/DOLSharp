@@ -2560,10 +2560,11 @@ namespace DOL.GS
 			{
 				foreach (DataQuest quest in DataQuestList)
 				{
-					if (quest.CheckQuestQualification(player) &&
-					    quest.StartType != DataQuest.eStartType.Collection &&
+					if (quest.StartType != DataQuest.eStartType.Collection &&
 					    quest.StartType != DataQuest.eStartType.KillComplete &&
-					    quest.StartType != DataQuest.eStartType.InteractComplete)
+					    quest.StartType != DataQuest.eStartType.InteractComplete &&
+                        quest.StartType != DataQuest.eStartType.SearchStart &&
+                        quest.CheckQuestQualification(player))
 					{
 						return true;
 					}

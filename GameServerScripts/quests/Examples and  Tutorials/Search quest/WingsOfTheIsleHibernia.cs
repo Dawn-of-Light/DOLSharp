@@ -160,7 +160,7 @@ namespace DOL.GS.Quests.Hibernia
 		/// For this quest will will give the player the item and advance the quest step.
 		/// </summary>
 		/// <param name="command"></param>
-		protected override void QuestCommandCompleted(AbstractQuest.eQuestCommand command)
+		protected override void QuestCommandCompleted(AbstractQuest.eQuestCommand command, GamePlayer player)
 		{
 			if (command == eQuestCommand.Search)
 			{

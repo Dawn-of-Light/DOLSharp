@@ -48,15 +48,29 @@ namespace DOL.GS.Commands
 				if (quest.Command(player, AbstractQuest.eQuestCommand.Search))
 				{
 					searched = true;
-					break;
 				}
 			}
+
+            // Also check for DataQuests started via searching
+
+            if (searched == false)
+            {
+                foreach (AbstractArea area in player.CurrentAreas)
+                {
+                    if (area is QuestSearchArea && (area as QuestSearchArea).DataQuest != null && (area as QuestSearchArea).Step == 0)
+                    {
+                        if ((area as QuestSearchArea).DataQuest.Command(player, AbstractQuest.eQuestCommand.SearchStart, area))
+                        {
+                            searched = true;
+                        }
+                    }
+                }
+            }
 
 			if (searched == false)
 			{
 				player.Out.SendMessage("You can't do that here!", DOL.GS.PacketHandler.eChatType.CT_Important, DOL.GS.PacketHandler.eChatLoc.CL_SystemWindow);
 			}
-
 		}
 	}
 }

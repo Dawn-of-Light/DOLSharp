@@ -74,7 +74,8 @@ namespace DOL.GS.Quests
 		public enum eQuestCommand
 		{
 			None,
-			Search
+			Search,
+            SearchStart,
 		}
 
 		private List<QuestSearchArea> m_searchAreas = new List<QuestSearchArea>();
@@ -328,7 +329,7 @@ namespace DOL.GS.Quests
 			}
 		}
 
-		public virtual bool Command(GamePlayer player, eQuestCommand command)
+		public virtual bool Command(GamePlayer player, eQuestCommand command, AbstractArea area = null)
 		{
 			if (m_searchAreas == null || m_searchAreas.Count == 0)
 				return false;
@@ -338,11 +339,11 @@ namespace DOL.GS.Quests
 
 			if (command == eQuestCommand.Search)
 			{
-				foreach (AbstractArea area in player.CurrentAreas)
+				foreach (AbstractArea playerArea in player.CurrentAreas)
 				{
-					if (area is QuestSearchArea)
+					if (playerArea is QuestSearchArea)
 					{
-						QuestSearchArea questArea = area as QuestSearchArea;
+						QuestSearchArea questArea = playerArea as QuestSearchArea;
 
 						if (questArea != null && questArea.Step == Step)
 						{
@@ -362,18 +363,30 @@ namespace DOL.GS.Quests
 			return false;
 		}
 
-		public virtual void StartQuestActionTimer(GamePlayer player, eQuestCommand command, int seconds)
+        /// <summary>
+        /// Starts the progress bar for a command.  Override QuestCommandCompleted to handle this command.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="command"></param>
+        /// <param name="seconds"></param>
+        /// <param name="label">optional label to display above progress bar</param>
+        public virtual void StartQuestActionTimer(GamePlayer player, eQuestCommand command, int seconds, string label = "")
 		{
 			if (player.QuestActionTimer == null)
 			{
 				m_currentCommand = command;
 				AddActionHandlers(player);
 
-				// Live progress dialog is labeled 'Area Action' but I dediced to make label more specific - tolakram
-				QuestPlayer.Out.SendTimerWindow(Enum.GetName(typeof(eQuestCommand), command), seconds);
-				QuestPlayer.QuestActionTimer = new RegionTimer(player);
-				QuestPlayer.QuestActionTimer.Callback = new RegionTimerCallback(QuestActionCallback);
-				QuestPlayer.QuestActionTimer.Start(seconds * 1000);
+                if (label == "")
+                {
+                    // Live progress dialog is labeled 'Area Action' but I decided to make label more specific - tolakram
+                    label = Enum.GetName(typeof(eQuestCommand), command);
+                }
+
+				player.Out.SendTimerWindow(label, seconds);
+				player.QuestActionTimer = new RegionTimer(player);
+				player.QuestActionTimer.Callback = new RegionTimerCallback(QuestActionCallback);
+				player.QuestActionTimer.Start(seconds * 1000);
 			}
 			else
 			{
@@ -383,12 +396,18 @@ namespace DOL.GS.Quests
 
 		protected virtual int QuestActionCallback(RegionTimer timer)
 		{
-			RemoveActionHandlers(QuestPlayer);
+            GamePlayer player = timer.Owner as GamePlayer;
 
-			QuestPlayer.Out.SendCloseTimerWindow();
-			QuestPlayer.QuestActionTimer.Stop();
-			QuestPlayer.QuestActionTimer = null;
-			QuestCommandCompleted(m_currentCommand);
+            if (player != null)
+            {
+                RemoveActionHandlers(player);
+
+                player.Out.SendCloseTimerWindow();
+                player.QuestActionTimer.Stop();
+                player.QuestActionTimer = null;
+                QuestCommandCompleted(m_currentCommand, player);
+            }
+
 			m_currentCommand = eQuestCommand.None;
 			return 0;
 		}
@@ -425,8 +444,15 @@ namespace DOL.GS.Quests
 			{
 				if (m_currentCommand != eQuestCommand.None)
 				{
-					player.Out.SendMessage("Your " + Enum.GetName(typeof(eQuestCommand), m_currentCommand).ToLower() + " is interrupted!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                    string commandName = Enum.GetName(typeof(eQuestCommand), m_currentCommand).ToLower();
+                    if (m_currentCommand == eQuestCommand.SearchStart)
+                    {
+                        commandName = Enum.GetName(typeof(eQuestCommand), eQuestCommand.Search).ToLower();
+                    }
+
+					player.Out.SendMessage("Your " + commandName + " is interrupted!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				}
+
 				RemoveActionHandlers(player);
 				player.Out.SendCloseTimerWindow();
 				player.QuestActionTimer.Stop();
@@ -435,7 +461,11 @@ namespace DOL.GS.Quests
 			}
 		}
 
-		protected virtual void QuestCommandCompleted(eQuestCommand command)
+        /// <summary>
+        /// Override this to respond to the completion of a quest command, such as /search
+        /// </summary>
+        /// <param name="command"></param>
+		protected virtual void QuestCommandCompleted(eQuestCommand command, GamePlayer player)
 		{
 			// override this to do whatever needs to be done when the command is completed
 			// Typically this would be: give player an item and advance the step
