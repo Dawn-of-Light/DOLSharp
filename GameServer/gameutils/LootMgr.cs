@@ -182,24 +182,61 @@ namespace DOL.GS
 			if (generator == null)
 				return;
 
+			// Loot Generator Name Indexed
 			if (!Util.IsEmpty(mobname))
-			{
-				IList nameList = (IList)m_mobNameGenerators[mobname];
-				if (nameList != null)
+			{	
+				
+				try 
 				{
-					nameList.Remove(generator);
+					// Parse CSV
+					List<string> mobNames = Util.SplitCSV(mobname);
+					
+					foreach(string mob in mobNames) 
+					{
+						if ((IList)m_mobNameGenerators[mob] != null)
+						{
+							((IList)m_mobNameGenerators[mob]).Remove(generator);
+						}
+					}
+
+				}
+				catch 
+				{
+					if (log.IsDebugEnabled)
+					{
+						log.Debug("Could not Parse mobNames for Removing LootGenerator : " + generator.GetType().FullName);
+					}
 				}
 			}
 
+			// Loot Generator Guild Indexed
 			if (!Util.IsEmpty(mobguild))
 			{
-				IList guildList = (IList)m_mobGuildGenerators[mobguild];
-				if (guildList != null)
+				
+				try 
 				{
-					guildList.Remove(generator);
+					// Parse CSV
+					List<string> mobGuilds = Util.SplitCSV(mobguild);
+					
+					foreach(string guild in mobGuilds) 
+					{
+						if ((IList)m_mobGuildGenerators[guild] != null)
+						{
+							((IList)m_mobGuildGenerators[guild]).Remove(generator);
+						}
+					}
+
+				}
+				catch 
+				{
+					if (log.IsDebugEnabled)
+					{
+						log.Debug("Could not Parse mobGuilds for Removing LootGenerator : " + generator.GetType().FullName);
+					}
 				}
 			}
 
+			// Loot Generator Region Indexed
             if (mobregion > 0)
             {
                 IList regionList = (IList)m_mobRegionGenerators[mobregion];
@@ -230,28 +267,58 @@ namespace DOL.GS
 			if (generator == null)
 				return;
 
+			// Loot Generator Name Indexed
 			if (!Util.IsEmpty(mobname))
 			{
-				IList nameList = (IList)m_mobNameGenerators[mobname];
-				if (nameList == null)
-				{
-					nameList = new ArrayList();
-					m_mobNameGenerators[mobname] = nameList;
+				// Parse CSV
+				try {
+					List<string> mobNames = Util.SplitCSV(mobname);
+					
+					foreach(string mob in mobNames) 
+					{
+						if ((IList)m_mobNameGenerators[mob] == null) 
+						{
+							m_mobNameGenerators[mob] = new ArrayList();
+						}
+						((IList)m_mobNameGenerators[mob]).Add(generator);
+					}
 				}
-				nameList.Add(generator);
+				catch 
+				{
+					if (log.IsDebugEnabled)
+					{
+						log.Debug("Could not Parse mobNames for Registering LootGenerator : " + generator.GetType().FullName);
+					}
+				}
+				
 			}
 
+			// Loot Generator Guild Indexed
 			if (!Util.IsEmpty(mobguild))
 			{
-				IList guildList = (IList)m_mobGuildGenerators[mobguild];
-				if (guildList == null)
-				{
-					guildList = new ArrayList();
-					m_mobGuildGenerators[mobname] = guildList;
+				// Parse CSV
+				try {
+					List<string> mobGuilds = Util.SplitCSV(mobguild);
+					
+					foreach(string guild in mobGuilds) 
+					{
+						if ((IList)m_mobGuildGenerators[guild] == null) 
+						{
+							m_mobGuildGenerators[guild] = new ArrayList();
+						}
+						((IList)m_mobGuildGenerators[guild]).Add(generator);
+					}
 				}
-				guildList.Add(generator);
+				catch 
+				{
+					if (log.IsDebugEnabled)
+					{
+						log.Debug("Could not Parse mobGuilds for Registering LootGenerator : " + generator.GetType().FullName);
+					}
+				}
 			}
 
+			// Loot Generator Region Indexed
 			if (mobregion > 0)
 			{
 				IList regionList = (IList)m_mobRegionGenerators[mobregion];
