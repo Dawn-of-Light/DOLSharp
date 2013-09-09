@@ -374,14 +374,14 @@ namespace DOL.GS.Spells
                     MessageToCaster(npc.GetName(0, true) + " is now under your control.", eChatType.CT_Spell);
 
                     player.SetControlledBrain(m_controlledBrain);
-                }
-
-                foreach (GamePlayer ply in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE)) {
-                    ply.Out.SendNPCCreate(npc);
-                    if (npc.Inventory != null)
-							ply.Out.SendLivingEquipmentUpdate(npc);
                     
-                   ply.Out.SendObjectGuildID(npc, player.Guild);                	
+	                foreach (GamePlayer ply in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE)) {
+	                    ply.Out.SendNPCCreate(npc);
+	                    if (npc.Inventory != null)
+								ply.Out.SendLivingEquipmentUpdate(npc);
+	                    
+	                   ply.Out.SendObjectGuildID(npc, player.Guild);
+	                }
                 }
                 
                 npc.BroadcastUpdate();
@@ -502,11 +502,17 @@ namespace DOL.GS.Spells
 
                     foreach (GamePlayer ply in npc.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
                     {
-                        ply.Out.SendNPCCreate(npc);
-                        if (npc.Inventory != null)
-							ply.Out.SendLivingEquipmentUpdate(npc);
-                        
-                        ply.Out.SendObjectGuildID(npc, null);
+                    	if(npc.IsAlive) {
+                    		
+                    		ply.Out.SendNPCCreate(npc);
+	                        
+                    		if (npc.Inventory != null)
+								ply.Out.SendLivingEquipmentUpdate(npc);
+	                        
+	                        ply.Out.SendObjectGuildID(npc, null);
+	                        
+                    	}
+
                     }
                     
                     npc.BroadcastUpdate();
