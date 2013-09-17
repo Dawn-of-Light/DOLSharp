@@ -2567,6 +2567,7 @@
     <Compile Include="world\RegionData.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="world\TeleportArea.cs" />
     <Compile Include="world\WeatherMgr.cs">
       <SubType>Code</SubType>
     </Compile>
