@@ -224,9 +224,18 @@ namespace DOL.Network
 			{
 				if (baseClient != null)
 				{
-					if (Log.IsInfoEnabled)
-						Log.Info(string.Format("{0}  {1}", baseClient.TcpEndpoint, e.Message));
-
+					if (Log.IsInfoEnabled) 
+					{
+						try
+						{
+							Log.Info(string.Format("{0}  {1}", baseClient.TcpEndpoint, e.Message));
+						}
+						catch (SocketException ex)
+						{
+							Log.Info(string.Format("EndPoint not availaible: {0}  {1}", e.Message, ex.Message));
+						}
+					}
+						
 					baseClient._srvr.Disconnect(baseClient);
 				}
 			}
