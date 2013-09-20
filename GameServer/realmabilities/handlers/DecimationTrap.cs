@@ -36,11 +36,26 @@ namespace DOL.GS.RealmAbilities
 			ushort Icon = 7026;
 			effectiveness = 0;
 			owner = living;
-			switch (Level)
+
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
 			{
-				case 1: effectiveness = 300; break;
-				case 2: effectiveness = 600; break;
-				case 3: effectiveness = 900; break;
+				switch (Level)
+				{
+					case 1: effectiveness = 300; break;
+					case 2: effectiveness = 450; break;
+					case 3: effectiveness = 600; break;
+					case 4: effectiveness = 750; break;
+					case 5: effectiveness = 900; break;
+				}
+			}
+			else
+			{
+				switch (Level)
+				{
+					case 1: effectiveness = 300; break;
+					case 2: effectiveness = 600; break;
+					case 3: effectiveness = 900; break;
+				}
 			}
 
 			if (living.GroundTarget == null)
@@ -194,15 +209,32 @@ namespace DOL.GS.RealmAbilities
 
 		public override void AddEffectsInfo(IList<string> list)
 		{
-			list.Add("Trap that deals the following damage in an 350 radius");
-			list.Add("Level 1: 300 Damage");
-			list.Add("Level 2: 600 Damage");
-			list.Add("Level 3: 900 Damage");
-			list.Add("");
-			list.Add("Range 1500");
-			list.Add("Target: Ground Target");
-			list.Add("Radius: 350");
-			list.Add("Casting time: 2 seconds");
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
+			{
+				list.Add("Trap that deals the following damage in an 350 radius");
+				list.Add("Level 1: 300 Damage");
+				list.Add("Level 2: 450 Damage");
+				list.Add("Level 3: 600 Damage");
+				list.Add("Level 4: 750 Damage");
+				list.Add("Level 5: 900 Damage");
+				list.Add("");
+				list.Add("Range 1500");
+				list.Add("Target: Ground Target");
+				list.Add("Radius: 350");
+				list.Add("Casting time: 2 seconds");
+			}
+			else
+			{
+				list.Add("Trap that deals the following damage in an 350 radius");
+				list.Add("Level 1: 300 Damage");
+				list.Add("Level 2: 600 Damage");
+				list.Add("Level 3: 900 Damage");
+				list.Add("");
+				list.Add("Range 1500");
+				list.Add("Target: Ground Target");
+				list.Add("Radius: 350");
+				list.Add("Casting time: 2 seconds");
+			}
 		}
 	}
 }

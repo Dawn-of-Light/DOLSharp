@@ -28,11 +28,26 @@ namespace DOL.GS.RealmAbilities
 
 			int duration = 0;
 			double speedBonus = 1;
-			switch (Level)
+
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
 			{
-				case 1: duration = 1000; speedBonus = 1.0; break;
-				case 2: duration = 2000; speedBonus = MaxSpeedCalculator.SPEED1; break;
-				case 3: duration = 5000; speedBonus = MaxSpeedCalculator.SPEED5; break;
+				switch (Level)
+				{
+					case 1: duration = 3000; speedBonus = 1.0; break;
+					case 2: duration = 3000; speedBonus = MaxSpeedCalculator.SPEED1; break;
+					case 3: duration = 4000; speedBonus = MaxSpeedCalculator.SPEED3; break;
+					case 4: duration = 5000; speedBonus = MaxSpeedCalculator.SPEED4; break;
+					case 5: duration = 6000; speedBonus = MaxSpeedCalculator.SPEED5; break;
+				}
+			}
+			else
+			{
+				switch (Level)
+				{
+					case 1: duration = 1000; speedBonus = 1.0; break;
+					case 2: duration = 2000; speedBonus = MaxSpeedCalculator.SPEED1; break;
+					case 3: duration = 5000; speedBonus = MaxSpeedCalculator.SPEED5; break;
+				}
 			}
 
 			GamePlayer player = living as GamePlayer;
@@ -87,15 +102,34 @@ namespace DOL.GS.RealmAbilities
 
 		public override void AddEffectsInfo(IList<string> list)
 		{
-			list.Add("Level 1: Normal Speed");
-			list.Add("Level 2: Speed 1");
-			list.Add("Level 3: Speed 5");
-			list.Add("");
-			list.Add("Target: Self");
-			list.Add("Level 1: Duration: 1 sec");
-			list.Add("Level 2: Duration: 2 sec");
-			list.Add("Level 3: Duration: 5 sec");
-			list.Add("Casting time: instant");
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
+			{
+				list.Add("Level 1: Normal Speed");
+				list.Add("Level 2: Speed 1");
+				list.Add("Level 3: Speed 3");
+				list.Add("Level 3: Speed 4");
+				list.Add("Level 3: Speed 5");
+				list.Add("");
+				list.Add("Target: Self");
+				list.Add("Level 1: Duration: 3 sec");
+				list.Add("Level 2: Duration: 3 sec");
+				list.Add("Level 3: Duration: 4 sec");
+				list.Add("Level 3: Duration: 5 sec");
+				list.Add("Level 3: Duration: 6 sec");
+				list.Add("Casting time: instant");
+			}
+			else
+			{
+				list.Add("Level 1: Normal Speed");
+				list.Add("Level 2: Speed 1");
+				list.Add("Level 3: Speed 5");
+				list.Add("");
+				list.Add("Target: Self");
+				list.Add("Level 1: Duration: 1 sec");
+				list.Add("Level 2: Duration: 2 sec");
+				list.Add("Level 3: Duration: 5 sec");
+				list.Add("Casting time: instant");
+			}
 		}
 	}
 }

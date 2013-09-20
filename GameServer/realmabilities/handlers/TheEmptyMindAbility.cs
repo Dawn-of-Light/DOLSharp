@@ -31,7 +31,33 @@ namespace DOL.GS.RealmAbilities
 					t_player.Out.SendMessage(living.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 				}
 			}
-			new TheEmptyMindEffect(this.Level).Start(living);
+			
+			int effectiveness = 10;
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
+			{
+				switch (Level)
+				{
+					case 1: effectiveness = 10; break;
+					case 2: effectiveness = 15; break;
+					case 3: effectiveness = 20; break;
+					case 4: effectiveness = 25; break;
+					case 5: effectiveness = 30; break;
+					default: effectiveness = 0; break;
+				}				
+			}
+			else
+			{
+				switch (Level)
+				{
+					case 1: effectiveness = 10; break;
+					case 2: effectiveness = 20; break;
+					case 3: effectiveness = 30; break;
+					default: effectiveness = 0; break;
+				}
+			}
+			
+			
+			new TheEmptyMindEffect(effectiveness).Start(living);
 			DisableSkill(living);
 		}
 

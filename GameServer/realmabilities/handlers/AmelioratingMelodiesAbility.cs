@@ -37,18 +37,41 @@ namespace DOL.GS.RealmAbilities
 			SendCasterSpellEffectAndCastMessage(living, 3021, true);
 
 			int heal = 0;
-
-			switch (Level)
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
 			{
-				case 1:
-					heal = 100;
-					break;
-				case 2:
-					heal = 250;
-					break;
-				case 3:
-					heal = 400;
-					break;
+				switch (Level)
+				{
+					case 1:
+						heal = 100;
+						break;
+					case 2:
+						heal = 175;
+						break;
+					case 3:
+						heal = 250;
+						break;					
+					case 4:
+						heal = 625;
+						break;					
+					case 5:
+						heal = 400;
+						break;
+				}							
+			}
+			else
+			{
+				switch (Level)
+				{
+					case 1:
+						heal = 100;
+						break;
+					case 2:
+						heal = 250;
+						break;
+					case 3:
+						heal = 400;
+						break;
+				}			
 			}
 
 			new AmelioratingMelodiesEffect(heal).Start(player);
@@ -71,13 +94,28 @@ namespace DOL.GS.RealmAbilities
 		/// </summary>
 		public override void AddEffectsInfo(IList<string> list)
 		{
-			list.Add("Level 1: Heals 100 / tick");
-			list.Add("Level 2: Heals 250 / tick");
-			list.Add("Level 3: Heals 400 / tick");
-			list.Add("");
-			list.Add("Target: Group, except the user");
-			list.Add("Duration: 30 sec");
-			list.Add("Casting time: instant");
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
+			{
+				list.Add("Level 1: Heals 100 / tick");
+				list.Add("Level 2: Heals 175 / tick");
+				list.Add("Level 3: Heals 250 / tick");
+				list.Add("Level 4: Heals 325 / tick");
+				list.Add("Level 5: Heals 400 / tick");
+				list.Add("");
+				list.Add("Target: Group, except the user");
+				list.Add("Duration: 30 sec");
+				list.Add("Casting time: instant");				
+			}
+			else
+			{
+				list.Add("Level 1: Heals 100 / tick");
+				list.Add("Level 2: Heals 250 / tick");
+				list.Add("Level 3: Heals 400 / tick");
+				list.Add("");
+				list.Add("Target: Group, except the user");
+				list.Add("Duration: 30 sec");
+				list.Add("Casting time: instant");				
+			}
 		}
 	}
 }

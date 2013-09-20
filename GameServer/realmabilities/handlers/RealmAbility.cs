@@ -84,7 +84,22 @@ namespace DOL.GS.RealmAbilities
 
 		public override int CostForUpgrade(int level)
 		{
-			return (level + 1) * 5;
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
+			{
+				switch(level)
+				{
+					case 0: return 5;
+					case 1: return 5;
+					case 2: return 5;
+					case 3: return 7;
+					case 4: return 8;
+					default: return 1000;
+				}
+			}
+			else
+			{
+				return (level + 1) * 5;
+			}
 		}
 
 		public override bool CheckRequirement(GamePlayer player)
@@ -126,7 +141,14 @@ namespace DOL.GS.RealmAbilities
 		{
 			get
 			{
-				return 3;
+				if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
+				{
+					return 5;
+				}
+				else
+				{
+					return 3;
+				}
 			}
 		}
 
@@ -359,14 +381,28 @@ namespace DOL.GS.RealmAbilities
 
 		public override bool CheckRequirement(GamePlayer player)
 		{
-			return Level <= 5;
+			if (ServerProperties.Properties.USE_NEW_PASSIVES_RAS_SCALING)
+			{
+				return Level <= 9;
+			}
+			else
+			{
+				return Level <= 5;
+			}
 		}
 
 		public override int MaxLevel
 		{
 			get
 			{
-				return 5;
+				if (ServerProperties.Properties.USE_NEW_PASSIVES_RAS_SCALING)
+				{
+					return 9;
+				}
+				else
+				{
+					return 5;
+				}
 			}
 		}
 	}

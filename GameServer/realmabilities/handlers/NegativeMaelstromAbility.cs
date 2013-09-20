@@ -44,13 +44,30 @@ namespace DOL.GS.RealmAbilities
                 caster.StopAttack();
             }
             caster.StopCurrentSpellcast();
-			switch (Level)
-			{
-				case 1: dmgValue = 120; break;
-				case 2: dmgValue = 240; break;
-				case 3: dmgValue = 360; break;
-				default: return;
-			}
+
+            if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
+            {
+	            switch (Level)
+				{
+					case 1: dmgValue = 175; break;
+					case 2: dmgValue = 260; break;
+					case 3: dmgValue = 350; break;
+					case 4: dmgValue = 425; break;
+					case 5: dmgValue = 500; break;
+					default: return;
+				}
+            }
+            else
+            {
+	            switch (Level)
+				{
+					case 1: dmgValue = 120; break;
+					case 2: dmgValue = 240; break;
+					case 3: dmgValue = 360; break;
+					default: return;
+				}
+            }
+            
 			duration = 30;
 			foreach (GamePlayer i_player in caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 			{

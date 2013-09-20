@@ -1295,7 +1295,7 @@ namespace DOL.GS.Spells
 				return false;
 			}
 
-			if (m_caster is GamePlayer && m_caster.Concentration < m_spell.Concentration)
+			if (m_caster is GamePlayer && m_spell.Concentration > 0 && m_caster.Concentration < m_spell.Concentration)
 			{
 				if (!quiet) MessageToCaster("This spell requires " + m_spell.Concentration + " concentration points to cast!", eChatType.CT_SpellResisted);
 				return false;
@@ -1470,7 +1470,7 @@ namespace DOL.GS.Spells
 				return false;
 			}
 
-			if (m_caster is GamePlayer && m_caster.Concentration < m_spell.Concentration)
+			if (m_caster is GamePlayer && m_spell.Concentration > 0 && m_caster.Concentration < m_spell.Concentration)
 			{
 				if (!quiet) MessageToCaster("This spell requires " + m_spell.Concentration + " concentration points to cast!", eChatType.CT_SpellResisted);
 				return false;
@@ -2410,10 +2410,10 @@ namespace DOL.GS.Spells
 
 			if (Caster.EffectList.GetOfType<MasteryofConcentrationEffect>() != null)
 			{
-				RealmAbility ra = Caster.GetAbility<MasteryofConcentrationAbility>();
+				MasteryofConcentrationAbility ra = Caster.GetAbility<MasteryofConcentrationAbility>();
 				if (ra != null && ra.Level > 0)
 				{
-					effectiveness *= System.Math.Round((double)ra.Level * 25 / 100, 2);
+					effectiveness *= System.Math.Round((double)ra.GetAmountForLevel(ra.Level) / 100, 2);
 				}
 			}
 
@@ -2422,10 +2422,10 @@ namespace DOL.GS.Spells
 			{
 				if ((Caster as NecromancerPet).Owner.EffectList.GetOfType<MasteryofConcentrationEffect>() != null)
 				{
-					RealmAbility necroRA = (Caster as NecromancerPet).Owner.GetAbility<MasteryofConcentrationAbility>();
+					MasteryofConcentrationAbility necroRA = (Caster as NecromancerPet).Owner.GetAbility<MasteryofConcentrationAbility>();
 					if (necroRA != null && necroRA.Level > 0)
 					{
-						effectiveness *= System.Math.Round((double)necroRA.Level * 25 / 100, 2);
+						effectiveness *= System.Math.Round((double)necroRA.GetAmountForLevel(necroRA.Level) / 100, 2);
 					}
 				}
 			}

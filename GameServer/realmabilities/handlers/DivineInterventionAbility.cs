@@ -24,13 +24,28 @@ namespace DOL.GS.RealmAbilities
 			}
 
 			int poolValue = 0;
+			
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
+			{
+	            switch (Level)
+	            {
+	                case 1: poolValue = 1000; break;
+	                case 2: poolValue = 1500; break;
+	                case 3: poolValue = 2000; break;
+	                case 4: poolValue = 2500; break;
+	                case 5: poolValue = 3000; break;
+	            }				
+			}
+			else
+			{
+	            switch (Level)
+	            {
+	                case 1: poolValue = 1000; break;
+	                case 2: poolValue = 2000; break;
+	                case 3: poolValue = 3000; break;
+	            }				
+			}
 
-            switch (Level)
-            {
-                case 1: poolValue = 1000; break;
-                case 2: poolValue = 2000; break;
-                case 3: poolValue = 3000; break;
-            }
 
 			foreach (GamePlayer groupMember in playerGroup.GetPlayersInTheGroup())
 			{
