@@ -23,11 +23,25 @@ namespace DOL.GS.RealmAbilities
 				return;
 
 			Int32 dmgValue = 0;
-			switch (Level)
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
 			{
-				case 1: dmgValue = 200; break;
-				case 2: dmgValue = 500; break;
-				case 3: dmgValue = 750; break;
+				switch (Level)
+				{
+					case 1: dmgValue = 200; break;
+					case 2: dmgValue = 350; break;
+					case 3: dmgValue = 500; break;
+					case 4: dmgValue = 625; break;
+					case 5: dmgValue = 750; break;
+				}
+			}
+			else
+			{
+				switch (Level)
+				{
+					case 1: dmgValue = 200; break;
+					case 2: dmgValue = 500; break;
+					case 3: dmgValue = 750; break;
+				}
 			}
 
 			//send cast messages

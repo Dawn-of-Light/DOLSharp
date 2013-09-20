@@ -54,14 +54,26 @@ namespace DOL.GS.RealmAbilities
 				return;
 			}
 
-			//150 dam/10 sec || 400/20  || 600/30
-			switch (Level)
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
 			{
-					case 1: dmgValue = 150; duration = 10000; break;
-					case 2: dmgValue = 400; duration = 20000; break;
-					case 3: dmgValue = 600; duration = 30000; break;
-					default: return;
+				switch (Level)
+				{
+						case 1: dmgValue = 150; duration = 10000; break;
+						case 2: dmgValue = 275; duration = 15000; break;
+						case 3: dmgValue = 400; duration = 20000; break;
+						case 4: dmgValue = 500; duration = 25000; break;
+						case 5: dmgValue = 600; duration = 30000; break;
+						default: return;
+				}				
 			}
+				//150 dam/10 sec || 400/20  || 600/30
+				switch (Level)
+				{
+						case 1: dmgValue = 150; duration = 10000; break;
+						case 2: dmgValue = 400; duration = 20000; break;
+						case 3: dmgValue = 600; duration = 30000; break;
+						default: return;
+				}
 
 			#region resist and det
 			GameLiving m_target = caster.TargetObject as GameLiving;

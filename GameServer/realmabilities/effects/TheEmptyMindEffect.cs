@@ -34,13 +34,7 @@ namespace DOL.GS.Effects
 		{
 			get
 			{
-				switch (m_level)
-				{
-					case 1: return 10;
-					case 2: return 20;
-					case 3: return 30;
-					default: return 0;
-				}
+				return m_value;
 			}
 		}
 
@@ -48,10 +42,10 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Constructs a new Empty Mind Effect
 		/// </summary>
-		public TheEmptyMindEffect(int level)
+		public TheEmptyMindEffect(int effectiveness)
 			: base(RealmAbilities.TheEmptyMindAbility.m_duration)
 		{
-			m_level = level;
+			m_value = effectiveness;
 		}
 
 		/// <summary>

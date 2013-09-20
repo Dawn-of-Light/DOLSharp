@@ -6,14 +6,14 @@ using DOL.GS.Effects;
 namespace DOL.GS.RealmAbilities
 {
 	/// <summary>
-	/// Effect handler for Barrier Of Fortitude
+	/// Effect handler for Adrenaline Rush
 	/// </summary>
 	public class AdrenalineRushEffect : TimedEffect, IGameEffect
 	{
 		private int m_value;
 
 		/// <summary>
-		/// Default constructor for AmelioratingMelodiesEffect
+		/// Default constructor for AdrenalineRushEffect
 		/// </summary>
 		public AdrenalineRushEffect(int duration, int value)
 			: base(duration)

@@ -21,11 +21,26 @@ namespace DOL.GS.RealmAbilities
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
 
 			int heal = 0;
-			switch (Level)
+			
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
 			{
-				case 1: heal = 25; break;
-				case 2: heal = 60; break;
-				case 3: heal = 100; break;
+				switch (Level)
+				{
+					case 1: heal = 25; break;
+					case 2: heal = 35; break;
+					case 3: heal = 50; break;
+					case 4: heal = 65; break;
+					case 5: heal = 80; break;
+				}
+			}
+			else
+			{
+				switch (Level)
+				{
+					case 1: heal = 25; break;
+					case 2: heal = 60; break;
+					case 3: heal = 100; break;
+				}
 			}
 			int healed = living.ChangeMana(living, GameLiving.eManaChangeType.Spell, living.MaxMana * heal / 100);
 
@@ -50,12 +65,26 @@ namespace DOL.GS.RealmAbilities
 
 		public override void AddEffectsInfo(IList<string> list)
 		{
-			list.Add("Level 1: Value: 25%");
-			list.Add("Level 2: Value: 60%");
-			list.Add("Level 3: Value: 100%");
-			list.Add("");
-			list.Add("Target: Self");
-			list.Add("Casting time: instant");
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
+			{
+				list.Add("Level 1: Value: 25%");
+				list.Add("Level 2: Value: 35%");
+				list.Add("Level 3: Value: 50%");
+				list.Add("Level 4: Value: 65%");
+				list.Add("Level 5: Value: 80%");
+				list.Add("");
+				list.Add("Target: Self");
+				list.Add("Casting time: instant");
+			}
+			else
+			{
+				list.Add("Level 1: Value: 25%");
+				list.Add("Level 2: Value: 60%");
+				list.Add("Level 3: Value: 100%");
+				list.Add("");
+				list.Add("Target: Self");
+				list.Add("Casting time: instant");
+			}
 		}
 	}
 }

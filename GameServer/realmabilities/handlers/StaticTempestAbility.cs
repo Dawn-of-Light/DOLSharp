@@ -42,12 +42,28 @@ namespace DOL.GS.RealmAbilities
                 return;
             }
             this.m_player = caster;
-            switch (Level)
+            
+            if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
             {
-                case 1: m_duration = 10; break;
-                case 2: m_duration = 15; break;
-                case 3: m_duration = 30; break;
-                default: return;
+	            switch (Level)
+	            {
+	                case 1: m_duration = 15; break;
+	                case 2: m_duration = 20; break;
+	                case 3: m_duration = 25; break;
+	                case 4: m_duration = 30; break;
+	                case 5: m_duration = 35; break;
+	                default: return;
+	            }
+            }
+            else
+            {
+	            switch (Level)
+	            {
+	                case 1: m_duration = 10; break;
+	                case 2: m_duration = 15; break;
+	                case 3: m_duration = 30; break;
+	                default: return;
+	            }
             }
             m_stunDuration = 3;
             foreach (GamePlayer i_player in caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
