@@ -91,5 +91,11 @@ namespace DOL.Events
 		/// <seealso cref="TakeDamageEventArgs"/>
 		/// </summary>
 		public static readonly GameObjectEvent TakeDamage = new GameObjectEvent("GameObject.TakeDamage");
+		
+		/// <summary>
+		/// The FinishedLosCheck event is fired whenever a LoS Check is finished.
+		/// </summary>
+		public static readonly GameObjectEvent FinishedLosCheck = new GameObjectEvent("GameObject.FinishLosCheck");
+		
 	}
 }
