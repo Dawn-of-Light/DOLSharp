@@ -314,7 +314,7 @@ namespace DOL.GS
 								{
 									ItemTemplate drop = GameServer.Database.FindObjectByKey<ItemTemplate>(lootTemplate.ItemTemplateID);
 
-									if (drop.Realm == (int)player.Realm || drop.Realm == 0 || player.CanUseCrossRealmItems)
+									if (drop != null && (drop.Realm == (int)player.Realm || drop.Realm == 0 || player.CanUseCrossRealmItems))
 									{
 										if (lootTemplate.Chance == 100)
 										{
@@ -347,7 +347,7 @@ namespace DOL.GS
 								{
 									ItemTemplate drop = GameServer.Database.FindObjectByKey<ItemTemplate>(lootTemplate.ItemTemplateID);
 
-									if (drop.Realm == (int)player.Realm || drop.Realm == 0 || player.CanUseCrossRealmItems)
+									if (drop != null && (drop.Realm == (int)player.Realm || drop.Realm == 0 || player.CanUseCrossRealmItems))
 									{
 										loot.AddRandom(lootTemplate.Chance, drop, 1);
 									}
@@ -359,7 +359,7 @@ namespace DOL.GS
 			}
 			catch (Exception ex)
 			{
-				log.ErrorFormat("Error in LootGeneratorTemplate for mob {0}.  Exception: {1}", mob.Name, ex.Message);
+				log.ErrorFormat("Error in LootGeneratorTemplate for mob {0}.  Exception: {1} {2}", mob.Name, ex.Message, ex.StackTrace);
 			}
 
 			return loot;
@@ -394,7 +394,7 @@ namespace DOL.GS
 				{
 					ItemTemplate drop = GameServer.Database.FindObjectByKey<ItemTemplate>(lootTemplate.ItemTemplateID);
 
-					if (drop.Realm == (int)player.Realm || drop.Realm == 0 || player.CanUseCrossRealmItems)
+					if (drop != null && (drop.Realm == (int)player.Realm || drop.Realm == 0 || player.CanUseCrossRealmItems))
 					{
 						if (lootTemplate.Chance == 100)
 						{
