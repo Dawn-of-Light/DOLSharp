@@ -8343,7 +8343,7 @@ namespace DOL.GS
 			foreach (Skill skl in GetAllDisabledSkills())
 			{
 				Out.SendDisableSkill(skl, 1);
-				m_disabledSkills.Remove(skl);
+				RemoveDisabledSkill(skl);
 			}
 		}
 		
@@ -14635,7 +14635,9 @@ namespace DOL.GS
 			npc.SetAggressionState(eAggressionState.Passive);
 			npc.Body.StopAttack();
 			npc.Body.StopCurrentSpellcast();
-			npc.Follow(this);
+			
+			if(npc.WalkState == eWalkState.Follow)
+				npc.FollowOwner();
 		}
 
 		/// <summary>
