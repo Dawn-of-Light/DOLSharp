@@ -579,7 +579,7 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("world", "los_player_check_frequency", "How often are we allowed to check LOS on the same player (seconds)", (ushort)5)]
 		public static ushort LOS_PLAYER_CHECK_FREQUENCY;
-
+	
 		/// <summary>
 		/// HPs gained per champion's level
 		/// </summary>
@@ -621,6 +621,114 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("world", "zonepoint_npctemplate", "Display the zonepoint with the following npctemplate. 0 for no display", 0)]
 		public static int ZONEPOINT_NPCTEMPLATE;
+
+		/// <summary>
+		/// Line of Sight Manager Enable
+		/// </summary>
+		[ServerProperty("world", "losmgr_enable", "Enable the Line of Sight Manager where overriden methods are implemented.", false)]
+		public static bool LOSMGR_ENABLE;
+
+		/// <summary>
+		/// Line of Sight Manager Debug Level
+		/// </summary>
+		[ServerProperty("world", "losmgr_debug_level", "Set the Level of Debug for the Line of Sight (LoS) Manager (do not set level 3 in production), 0 = no debug, 1 = info, 2 = warn, 3 = debug.", 0)]
+		public static int LOSMGR_DEBUG_LEVEL;
+
+		/// <summary>
+		/// Line of Sight Manager Cleanup Frequency
+		/// </summary>
+		[ServerProperty("world", "losmgr_cleanup_frequency", "How fast should the Line of Sight (LoS) Manager clean up its data (in milliseconds), don't get under 30000 ms, raise cleanup count if you put high number here.", 120000)]
+		public static int LOSMGR_CLEANUP_FREQUENCY;
+
+		/// <summary>
+		/// Line of Sight Manager number of entries to Cleanup
+		/// </summary>
+		[ServerProperty("world", "losmgr_cleanup_entries", "Number of Entries cleaned from Line of Sight (LoS) Manager each Cleanup ticks, if you need to go above 10 000 entries consider using a shorter cleanup frequency.", 1000)]
+		public static int LOSMGR_CLEANUP_ENTRIES;
+
+		/// <summary>
+		/// Line of Sight Manager Query Timeout
+		/// </summary>
+		[ServerProperty("world", "losmgr_query_timeout", "Timeout (in milliseconds) until Line of Sight (LoS) Manager tries to resend a LoS check, -1 to disable (don't get under 100ms except for Local Network).", 300)]
+		public static int LOSMGR_QUERY_TIMEOUT;
+
+		/// <summary>
+		/// Line of Sight Manager PvP Cache Timeout
+		/// </summary>
+		[ServerProperty("world", "losmgr_player_vs_player_cache_timeout", "Set Timeout (in milliseconds) for PvP Line of Sight (LoS) Manager cache data, 0 to disable.", 200)]
+		public static int LOSMGR_PLAYER_VS_PLAYER_CACHE_TIMEOUT;
+
+		/// <summary>
+		/// Line of Sight Manager PvE Cache Timeout
+		/// </summary>
+		[ServerProperty("world", "losmgr_player_vs_environment_cache_timeout", "Set Timeout (in milliseconds) for PvE Line of Sight (LoS) Manager cache data, 0 to disable. (Should be slightly above Brain Think timer to have any effect)", 1500)]
+		public static int LOSMGR_PLAYER_VS_ENVIRONMENT_CACHE_TIMEOUT;
+
+		/// <summary>
+		/// Line of Sight Manager EvE Cache Timeout
+		/// </summary>
+		[ServerProperty("world", "losmgr_environment_vs_environment_cache_timeout", "Set Timeout (in milliseconds) for EvE Line of Sight (LoS) Manager cache data, 0 to disable. (Should be at least 2 times PvE cache to lower LoS Queries)", 5000)]
+		public static int LOSMGR_ENVIRONMENT_VS_ENVIRONMENT_CACHE_TIMEOUT;
+
+		/// <summary>
+		/// Line of Sight Manager Player Check Frequency
+		/// </summary>
+		[ServerProperty("world", "losmgr_player_check_frequency", "Line of Sight (LoS) Manager will try to reduce player queries to this frequency (in millisecond), raise this if player are experiencing lags.", 100)]
+		public static int LOSMGR_PLAYER_CHECK_FREQUENCY;
+
+		/// <summary>
+		/// Line of Sight Manager PvP threshold
+		/// </summary>
+		[ServerProperty("world", "losmgr_player_vs_player_range_threshold", "Line of Sight (LoS) Manager won't check LoS for players within this range. (Should be low to prevent abuses)", 32)]
+		public static int LOSMGR_PLAYER_VS_PLAYER_RANGE_THRESHOLD;
+
+		/// <summary>
+		/// Line of Sight Manager PvE threshold
+		/// </summary>
+		[ServerProperty("world", "losmgr_player_vs_environment_range_threshold", "Line of Sight (LoS) Manager won't check LoS for mobs and NPC within this range. (Shouldn't be under default to prevent LoS flood)", 125)]
+		public static int LOSMGR_PLAYER_VS_ENVIRONMENT_RANGE_THRESHOLD;
+
+		/// <summary>
+		/// Line of Sight Manager EvE threshold
+		/// </summary>
+		[ServerProperty("world", "losmgr_environment__vs_environment_range_threshold", "Line of Sight (LoS) Manager won't check LoS for Mobs vs Mobs within this range. (Shouldn't be under PvE Threshold)", 350)]
+		public static int LOSMGR_ENVIRONMENT_VS_ENVIRONMENT_RANGE_THRESHOLD;
+
+		/// <summary>
+		/// Line of Sight Manager EvE Contamination
+		/// </summary>
+		[ServerProperty("world", "losmgr_max_contamination_radius", "Line of Sight (LoS) Manager will update LoS of Mobs/NPCs in this range of the checker if target is a Mob, and highest value used for contamination LoS updates.", 350)]
+		public static int LOSMGR_MAX_CONTAMINATION_RADIUS;
+
+		/// <summary>
+		/// Line of Sight Manager PvE Contamination
+		/// </summary>
+		[ServerProperty("world", "losmgr_npc_contamination_radius", "Line of Sight (LoS) Manager will update LoS of Mobs/NPCs in this range of the checker, and highest value used for Player contamination LoS updates.", 250)]
+		public static int LOSMGR_NPC_CONTAMINATION_RADIUS;
+
+		/// <summary>
+		/// Line of Sight Manager Pets Contamination
+		/// </summary>
+		[ServerProperty("world", "losmgr_pet_contamination_radius", "Line of Sight (LoS) Manager will update LoS of Player's Pet in this range of the checker, keep value low to prevent abuses.", 50)]
+		public static int LOSMGR_PET_CONTAMINATION_RADIUS;
+
+		/// <summary>
+		/// Line of Sight Manager Player Contamination
+		/// </summary>
+		[ServerProperty("world", "losmgr_players_contamination_radius", "Line of Sight (LoS) Manager will update LoS of Players in this range of the checker, should be disabled to prevent PvP abuses.", 0)]
+		public static int LOSMGR_PLAYER_CONTAMINATION_RADIUS;
+
+		/// <summary>
+		/// Line of Sight Manager Guards Contamination
+		/// </summary>
+		[ServerProperty("world", "losmgr_guard_contamination_radius", "Line of Sight (LoS) Manager will update LoS of Keep Guards in this range of the checker, raising this value will pack more Guards when Aggroing.", 200)]
+		public static int LOSMGR_GUARD_CONTAMINATION_RADIUS;
+
+		/// <summary>
+		/// Line of Sight Manager Contamination Z-Factor in range checks
+		/// </summary>
+		[ServerProperty("world", "losmgr_contamination_zfactor", "Line of Sight (LoS) Manager Contamination will use this to lower or raise the Z checks when updating LoS checks. 0 = Z must be exact, 1 = Z range is radius.", 0.5)]
+		public static double LOSMGR_CONTAMINATION_ZFACTOR;
 
 		#endregion
 
