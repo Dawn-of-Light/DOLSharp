@@ -22,7 +22,13 @@
 using System;
 using System.Text;
 using System.Reflection;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
 using log4net;
+
+using DOL.GS;
 using DOL.Database;
 
 namespace DOL.GS
@@ -58,6 +64,11 @@ namespace DOL.GS
 		{
 			StartRegionMgr();
 			BeginAutoClosureCountdown(10);
+			
+			foreach (Zone z in m_Zones)
+			{
+				m_zoneSkinMap.Add(z.ZoneSkinID, z);
+			}
 		}
 
         #region Inheritance and Region
@@ -184,6 +195,9 @@ namespace DOL.GS
 			get { return m_playersInInstance; }
 		}
 
+ 		/// <summary>
+		/// Event handler for player entering instance
+		/// </summary>
         public virtual void OnPlayerEnterInstance(GamePlayer player)
         { 
         //Increment the amount of players.
@@ -197,6 +211,9 @@ namespace DOL.GS
 			}
         }
 
+ 		/// <summary>
+		/// Event handler for player leaving instance
+		/// </summary>
         public virtual void OnPlayerLeaveInstance(GamePlayer player)
         {
             //Decrease the amount of players
@@ -256,6 +273,10 @@ namespace DOL.GS
 			}
 
 			DOL.Events.GameEventMgr.RemoveAllHandlersForObject(this);
+			
+			m_zoneSkinMap.Clear();
+
+			Areas.Clear();
 		}
 
 		~BaseInstance()
@@ -266,6 +287,10 @@ namespace DOL.GS
         private AutoCloseRegionTimer m_autoCloseRegionTimer;
 		private DelayCloseRegionTimer m_delayCloseRegionTimer;
 
+		/// <summary>
+		/// Setting this will ensure the instance stays around x minutes.  After that the region will be destroyed when empty
+		/// </summary>
+		/// <param name="minutes"></param>
         public void BeginAutoClosureCountdown(int minutes)
         {
 			if (m_autoCloseRegionTimer != null)
@@ -304,6 +329,9 @@ namespace DOL.GS
 			m_delayCloseRegionTimer.Start(minutes * 60000);
 		}
 
+		/// <summary>
+		/// Automated Closing Timer for Instances
+		/// </summary>
 		protected class AutoCloseRegionTimer : GameTimer
         {
             public AutoCloseRegionTimer(TimeManager time, BaseInstance i)
@@ -344,6 +372,9 @@ namespace DOL.GS
 
         }
 
+		/// <summary>
+		/// Delay Closing Timer for Instances
+		/// </summary>
 		protected class DelayCloseRegionTimer : GameTimer
 		{
 			public DelayCloseRegionTimer(TimeManager time, BaseInstance i)
@@ -372,5 +403,135 @@ namespace DOL.GS
 
         #endregion
 
+        
+		#region Area
+
+		/// <summary>
+		/// Zone Mapping for Instances
+		/// Update Leodagan : moved from Instance to BaseInstance to make Areas work !
+		/// </summary>
+		protected Dictionary<int, Zone> m_zoneSkinMap = new Dictionary<int, Zone>();
+
+		/// <summary>
+		/// Gets the areas for a certain spot
+		/// </summary>
+		/// <param name="zone"></param>
+		/// <param name="p"></param>
+		/// <param name="checkZ"></param>
+		/// <returns></returns>
+		public override IList GetAreasOfZone(Zone zone, IPoint3D p, bool checkZ)
+		{
+			Zone checkZone = zone;
+			IList areas = new ArrayList();
+
+			if (checkZone == null)
+			{
+				return areas;
+			}
+
+			// Players will always request the skinned zone so map it to the actual instance zone
+			if (m_zoneSkinMap.ContainsKey(zone.ID))
+			{
+				checkZone = m_zoneSkinMap[zone.ID];
+			}
+
+			int zoneIndex = Zones.IndexOf(checkZone);
+
+			if (zoneIndex >= 0)
+			{
+				lock (m_lockAreas)
+				{
+					try
+					{
+						for (int i = 0; i < m_ZoneAreasCount[zoneIndex]; i++)
+						{
+							IArea area = (IArea)Areas[m_ZoneAreas[zoneIndex][i]];
+							if (area.IsContaining(p, checkZ))
+							{
+								areas.Add(area);
+							}
+						}
+					}
+					catch (Exception e)
+					{
+						log.Error("GetAreaOfZone: Caught exception for Zone " + zone.Description + ", Area count " + m_ZoneAreasCount[zoneIndex] + ".", e);
+					}
+				}
+			}
+
+			return areas;
+		}
+
+		/// <summary>
+		/// Gets the areas for a certain spot
+		/// </summary>
+		/// <param name="zone"></param>
+		/// <param name="p"></param>
+		/// <param name="checkZ"></param>
+		/// <returns></returns>
+		public override IList GetAreasOfZone(Zone zone, int x, int y, int z)
+		{
+			Zone checkZone = zone;
+			IList areas = new ArrayList();
+
+			if (checkZone == null)
+			{
+				return areas;
+			}
+
+			// Players will always request the skinned zone so map it to the actual instance zone
+			if (m_zoneSkinMap.ContainsKey(zone.ID))
+			{
+				checkZone = m_zoneSkinMap[zone.ID];
+			}
+
+			int zoneIndex = Zones.IndexOf(checkZone);
+
+			if (zoneIndex >= 0)
+			{
+				lock (m_lockAreas)
+				{
+					try
+					{
+						for (int i = 0; i < m_ZoneAreasCount[zoneIndex]; i++)
+						{
+							IArea area = (IArea)Areas[m_ZoneAreas[zoneIndex][i]];
+							if (area.IsContaining(x, y, z))
+								areas.Add(area);
+						}
+					}
+					catch (Exception e)
+					{
+						log.Error("GetArea exception.Area count " + m_ZoneAreasCount[zoneIndex], e);
+					}
+				}
+			}
+
+			return areas;
+		}
+
+		#endregion
+
+		#region mobcount
+
+		/// <summary>
+		/// Get an Enumerable of Mobs inside instance, Meant for mini-quest finished conditions.
+		/// Can be used to update all mobs in area depending on player levels or other conditions.
+		/// </summary>
+		/// <param name="alive">Return Alive mobs or all mobs</param>
+		/// <returns>List of Mobs</returns>
+		public IEnumerable<GameNPC> GetMobsInsideInstance(bool alive)
+		{
+			if(alive)
+			{
+				return (from regionObjects in this.Objects where (regionObjects is GameNPC) && ((((GameNPC)regionObjects).Flags & GameNPC.eFlags.PEACE) != GameNPC.eFlags.PEACE) && ((GameNPC)regionObjects).IsAlive select (GameNPC)regionObjects);
+			}
+			else
+			{
+				return (from regionObjects in this.Objects where (regionObjects is GameNPC) && ((((GameNPC)regionObjects).Flags & GameNPC.eFlags.PEACE) != GameNPC.eFlags.PEACE) select (GameNPC)regionObjects);
+			}
+		}
+		
+		#endregion
     }
 }
