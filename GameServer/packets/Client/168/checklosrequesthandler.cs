@@ -77,17 +77,28 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
+				// Check for Old Callback first
+				
 				string key = string.Format("LOS C:0x{0} T:0x{1}", m_checkerOid, m_targetOid);
 
-				var player = (GamePlayer) m_actionSource;
+				GamePlayer player = (GamePlayer) m_actionSource;
 
-				var callback = player.TempProperties.getProperty<CheckLOSResponse>(key, null);
-				if (callback == null)
-					return;
-
-				callback(player, (ushort) m_response, (ushort) m_targetOid);
-
-				player.TempProperties.removeProperty(key);
+				CheckLOSResponse callback = player.TempProperties.getProperty<CheckLOSResponse>(key, null);
+				if (callback != null) 
+				{
+					callback(player, (ushort) m_response, (ushort) m_targetOid);
+					player.TempProperties.removeProperty(key);
+				}
+				
+				string newkey = string.Format("LOSMGR C:0x{0} T:0x{1}", m_checkerOid, m_targetOid);
+				
+				CheckLOSMgrResponse new_callback = player.TempProperties.getProperty<CheckLOSMgrResponse>(newkey, null);
+				
+				if(new_callback != null)
+				{
+					new_callback(player, (ushort) m_response,  (ushort) m_checkerOid, (ushort) m_targetOid);
+					player.TempProperties.removeProperty(newkey);
+				}
 			}
 		}
 
