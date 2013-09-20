@@ -365,10 +365,16 @@ namespace DOL.GS.ServerProperties
         public static string SERVER_LIST_UPDATE_PASS;
 
 		/// <summary>
-		/// The money drop modifier
+		/// Post 1.108 Passive RA 9-Tiers
 		/// </summary>
 		[ServerProperty("server", "use_new_passives_ras_scaling", "Use new passives realmabilities scaling (1.108+) ?", false)]
 		public static bool USE_NEW_PASSIVES_RAS_SCALING;
+
+		/// <summary>
+		/// Post 1.108 Active RA 5-Tiers
+		/// </summary>
+		[ServerProperty("server", "use_new_actives_ras_scaling", "Use new actives realmabilities (5-Tiers) scaling (1.108+) ?", false)]
+		public static bool USE_NEW_ACTIVES_RAS_SCALING;
 
 		/// <summary>
 		/// Use pre 1.105 train or livelike
@@ -1320,6 +1326,13 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("pve", "atlantis_teleport_plvl", "Set the minimum privilege level required to enter Atlantis zones.", 2)]
 		public static int ATLANTIS_TELEPORT_PLVL;
+		
+		/// <summary>
+		/// Time Before Adventure Wings Instances Destroy when Empty
+		/// </summary>
+		[ServerProperty("pve", "adventurewing_time_to_destroy", "Set the time before Instanced Adventure Wings (Catacombs) are destroy when empty (in minutes).", 5)]
+		public static int ADVENTUREWING_TIME_TO_DESTROY;
+
 		#endregion
 
 		#region HOUSING
