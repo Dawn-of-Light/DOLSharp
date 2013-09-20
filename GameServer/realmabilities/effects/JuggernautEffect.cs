@@ -8,7 +8,7 @@ using DOL.Events;
 namespace DOL.GS.Effects
 {
 	/// <summary>
-	/// Effect handler for Barrier Of Fortitude
+	/// Effect handler for Juggernaut
 	/// </summary>
 	public class JuggernautEffect : StaticEffect, IGameEffect
 	{
@@ -18,11 +18,11 @@ namespace DOL.GS.Effects
 		private RegionTimer m_expireTimer;
 		private byte m_value;
 		private int m_growSize = 15;
-
+		public const int JUGGERNAUT_CAP_EFFECT = 70;
 
 
 		/// <summary>
-		/// Default constructor for AmelioratingMelodiesEffect
+		/// Default constructor for JuggernautEffect
 		/// </summary>
 		public JuggernautEffect()
 		{
@@ -35,11 +35,11 @@ namespace DOL.GS.Effects
 		/// <param name="player">The player to start the effect for</param>
 		/// <param name="duration">The effectduration in secounds</param>
 		/// <param name="value">The increment of effective level</param>
-		public void Start(GamePlayer player, int duration, byte value)
+		public void Start(GameLiving living, int duration, byte value)
 		{
-			if (player.ControlledBrain == null)
+			if (living.ControlledBrain == null)
 				return;
-			m_living = player.ControlledBrain.Body;
+			m_living = living.ControlledBrain.Body;
 			m_effectDuration = duration;
 			m_value = value;
 
@@ -47,7 +47,7 @@ namespace DOL.GS.Effects
 			StartTimers();
 
 			m_living.Size += (byte)m_growSize;
-			m_living.Level += m_value;
+			m_living.Level = (byte)Math.Min(m_living.Level+m_value, JUGGERNAUT_CAP_EFFECT);
 			m_living.EffectList.Add(this);
 
 		}

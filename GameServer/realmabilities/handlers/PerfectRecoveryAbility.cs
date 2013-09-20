@@ -52,11 +52,26 @@ namespace DOL.GS.RealmAbilities
 				return;
 			}
 
-			switch (Level)
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
 			{
-				case 2: m_resurrectValue = 50; break;
-				case 3: m_resurrectValue = 100; break;
+				switch (Level)
+				{
+					case 1: m_resurrectValue = 10; break;
+					case 2: m_resurrectValue = 25; break;
+					case 3: m_resurrectValue = 50; break;
+					case 4: m_resurrectValue = 75; break;
+					case 5: m_resurrectValue = 100; break;
+				}
 			}
+			else
+			{
+				switch (Level)
+				{
+					case 2: m_resurrectValue = 50; break;
+					case 3: m_resurrectValue = 100; break;
+				}
+			}
+			
 			GameLiving resurrectionCaster = targetPlayer.TempProperties.getProperty<object>(RESURRECT_CASTER_PROPERTY, null) as GameLiving;
 			if (resurrectionCaster != null)
 			{

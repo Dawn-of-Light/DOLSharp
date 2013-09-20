@@ -22,21 +22,53 @@ namespace DOL.GS.RealmAbilities
         public override void Execute(GameLiving living)
         {
             if (CheckPreconditions(living, DEAD | SITTING)) return;
-
-            if (Level < 2)
+            
+            if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
             {
-                PurgeTimer timer = new PurgeTimer(living, this);
-                timer.Interval = 1000;
-                timer.Start(1);
-                DisableSkill(living);
+            	int seconds = 0;
+            	switch(Level)
+            	{
+            		case 1:
+            			seconds = 5;
+            		break;
+            		case 2 :
+            			seconds = 2;
+            		break;
+            	}
+            	
+            	if(seconds > 0)
+            	{
+	                PurgeTimer timer = new PurgeTimer(living, this, seconds);
+	                timer.Interval = 1000;
+	                timer.Start(1);
+	                DisableSkill(living);            		
+            	}
+            	else
+            	{
+	                SendCastMessage(living);
+	                if (RemoveNegativeEffects(living, this))
+	                {
+	                    DisableSkill(living);
+	                }            		
+            	}
             }
             else
             {
-                SendCastMessage(living);
-                if (RemoveNegativeEffects(living, this))
-                {
-                    DisableSkill(living);
-                }
+	            if (Level < 2)
+	            {
+	                PurgeTimer timer = new PurgeTimer(living, this, 5);
+	                timer.Interval = 1000;
+	                timer.Start(1);
+	                DisableSkill(living);
+	            }
+	            else
+	            {
+	                SendCastMessage(living);
+	                if (RemoveNegativeEffects(living, this))
+	                {
+	                    DisableSkill(living);
+	                }
+	            }
             }
         }
 
@@ -130,12 +162,12 @@ namespace DOL.GS.RealmAbilities
             PurgeAbility m_purge;
             int counter;
 
-            public PurgeTimer(GameLiving caster, PurgeAbility purge)
+            public PurgeTimer(GameLiving caster, PurgeAbility purge, int count)
                 : base(caster.CurrentRegion.TimeManager)
             {
                 m_caster = caster;
                 m_purge = purge;
-                counter = 5;
+                counter = count;
             }
             protected override void OnTick()
             {
@@ -166,7 +198,22 @@ namespace DOL.GS.RealmAbilities
 
         public override int GetReUseDelay(int level)
         {
-            return (level < 3) ? 900 : 300;
+        	if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
+        	{
+        		switch(level)
+        		{
+        			case 4 :
+        				return 600;
+        			case 5 :
+        				return 300;
+        			default :
+        				return 900;        				
+        		}
+        	}
+        	else 
+        	{
+            	return (level < 3) ? 900 : 300;
+        	}
         }
 
         public override void AddEffectsInfo(IList<string> list)

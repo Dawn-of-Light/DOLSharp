@@ -138,9 +138,9 @@ namespace DOL.GS.Spells
             if (moc != null)
             {
                 GamePlayer playerCaster = Caster as GamePlayer;
-                RealmAbility ra = playerCaster.GetAbility<MasteryofConcentrationAbility>();
+                MasteryofConcentrationAbility ra = playerCaster.GetAbility<MasteryofConcentrationAbility>();
                 if (ra != null)
-                    mocFactor = System.Math.Round((double)ra.Level * 25 / 100, 2);
+                	mocFactor = System.Math.Round((double)ra.GetAmountForLevel(ra.Level) / 100, 2);
                 amount = (int)Math.Round(amount * mocFactor);
             }
             int criticalvalue = 0;

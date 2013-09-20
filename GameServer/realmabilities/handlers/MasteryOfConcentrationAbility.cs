@@ -81,5 +81,30 @@ namespace DOL.GS.RealmAbilities
         {
             return 600;
         }
+        
+        public virtual int GetAmountForLevel(int level)
+		{
+        	if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
+        	{
+        		switch(level)
+        		{
+        			case 1: return 25;
+        			case 2: return 35;
+        			case 3: return 50;
+        			case 4: return 60;
+        			case 5: return 75;
+        		}
+        	}
+        	else
+        	{
+         		switch(level)
+        		{
+        			case 1: return 25;
+        			case 2: return 50;
+        			case 3: return 75;
+        		}       		
+        	}
+        	return 25;
+		}
 	}
 }

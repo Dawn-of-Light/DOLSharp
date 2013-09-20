@@ -59,13 +59,28 @@ namespace DOL.GS.RealmAbilities
 
 		public override int GetReUseDelay(int level)
 		{
-			switch (level)
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
 			{
+				switch (level)
+				{
 					case 1: return 900;
-					case 2: return 300;
-					case 3: return 90;
+					case 2: return 600;
+					case 3: return 300;
+					case 4: return 180;
+					case 5: return 90;
+					default: return 600;
+				}				
 			}
-			return 600;
+			else
+			{
+				switch (level)
+				{
+						case 1: return 900;
+						case 2: return 300;
+						case 3: return 90;
+				}
+				return 600;
+			}
 		}
 
 		public override bool CheckRequirement(GamePlayer player)

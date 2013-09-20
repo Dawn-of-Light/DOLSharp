@@ -44,13 +44,30 @@ namespace DOL.GS.RealmAbilities
 		{
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
 			m_player = living as GamePlayer;
-			switch (Level)
+			
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
 			{
-				case 1: m_damage = 10.0; break;
-				case 2: m_damage = 20.0; break;
-				case 3: m_damage = 30.0; break;
-				default: return;
+				switch (Level)
+				{
+					case 1: m_damage = 10.0; break;
+					case 2: m_damage = 15.0; break;
+					case 3: m_damage = 20.0; break;
+					case 4: m_damage = 25.0; break;
+					case 5: m_damage = 30.0; break;
+					default: return;
+				}				
 			}
+			else
+			{
+				switch (Level)
+				{
+					case 1: m_damage = 10.0; break;
+					case 2: m_damage = 20.0; break;
+					case 3: m_damage = 30.0; break;
+					default: return;
+				}				
+			}
+
 
 			CreateSpell(m_damage);
 			CastSpell(m_player);
@@ -74,13 +91,29 @@ namespace DOL.GS.RealmAbilities
 
 		public override void AddEffectsInfo(IList<string> list)
 		{
-			list.Add("Level 1: Adds 10 DPS");
-			list.Add("Level 2: Adds 20 DPS");
-			list.Add("Level 3: Adds 30 DPS");
-			list.Add("");
-			list.Add("Target: Group");
-			list.Add("Duration: 30 sec");
-			list.Add("Casting time: instant");
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
+			{
+				list.Add("Level 1: Adds 10 DPS");
+				list.Add("Level 2: Adds 15 DPS");
+				list.Add("Level 3: Adds 20 DPS");
+				list.Add("Level 4: Adds 25 DPS");
+				list.Add("Level 5: Adds 30 DPS");
+				list.Add("");
+				list.Add("Target: Group");
+				list.Add("Duration: 30 sec");
+				list.Add("Casting time: instant");				
+			}
+			else
+			{
+				list.Add("Level 1: Adds 10 DPS");
+				list.Add("Level 2: Adds 20 DPS");
+				list.Add("Level 3: Adds 30 DPS");
+				list.Add("");
+				list.Add("Target: Group");
+				list.Add("Duration: 30 sec");
+				list.Add("Casting time: instant");				
+			}
+
 		}
 	}
 }

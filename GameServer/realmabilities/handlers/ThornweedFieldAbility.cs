@@ -47,13 +47,30 @@ namespace DOL.GS.RealmAbilities
 				caster.StopAttack();
 			}
 			caster.StopCurrentSpellcast();
-			switch (Level)
+
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
 			{
-				case 1: m_dmgValue = 25; m_duration = 10; break;
-				case 2: m_dmgValue = 100; m_duration = 20; break;
-				case 3: m_dmgValue = 250; m_duration = 30; break;
-				default: return;
+				switch (Level)
+				{
+					case 1: m_dmgValue = 25; m_duration = 10; break;
+					case 2: m_dmgValue = 50; m_duration = 15; break;
+					case 3: m_dmgValue = 100; m_duration = 20; break;
+					case 4: m_dmgValue = 175; m_duration = 25; break;
+					case 5: m_dmgValue = 250; m_duration = 30; break;
+					default: return;
+				}
 			}
+			else
+			{
+				switch (Level)
+				{
+					case 1: m_dmgValue = 25; m_duration = 10; break;
+					case 2: m_dmgValue = 100; m_duration = 20; break;
+					case 3: m_dmgValue = 250; m_duration = 30; break;
+					default: return;
+				}
+			}
+
 			foreach (GamePlayer i_player in caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 			{
 				if (i_player == caster)
