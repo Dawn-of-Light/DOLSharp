@@ -17,11 +17,14 @@
  *
  */
 using System;
-using DOL.Database;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
+
+using DOL.GS;
+using DOL.Database;
+
+using log4net;
 
 namespace DOL.GS
 {
@@ -29,27 +32,46 @@ namespace DOL.GS
 	/// Description of RegionInstance.
 	/// Clone a RegionData to a New BaseInstance
 	/// Can duplicate any "Region" of the Game into a dedicated Instance
+	/// Handle Zones and Areas, doesn't Handle Persistence.
 	/// </summary>
 	public class RegionInstance : BaseInstance
 	{
+		/// <summary>
+		/// Console Logger
+		/// </summary>
+		private static readonly ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-		
+		/// <summary>
+		/// List Containing players in instance
+		/// </summary>
 		private List<GamePlayer> m_players_in;
 		
+		/// <summary>
+		/// Entrance location of Instance, needed to force exit players.
+		/// </summary>
 		protected GameLocation m_sourceentrance;
 		
+		/// <summary>
+		/// List Containing players in instance
+		/// </summary>
 		protected List<GamePlayer> PlayersInside
 		{
 			get { return m_players_in; }
 		}
 
+		/// <summary>
+		/// Entrance location of Instance, needed to force exit players.
+		/// </summary>
 		public GameLocation SourceEntrance
 		{
 			get { return m_sourceentrance; }
 			set { m_sourceentrance = value; }
 		}
 		
+		/// <summary>
+		/// On Player Enter override to add him to container
+		/// </summary>
+		/// <param name="player"></param>
 		public override void OnPlayerEnterInstance(GamePlayer player)
 		{
 			//Add Player
@@ -58,6 +80,10 @@ namespace DOL.GS
 			base.OnPlayerEnterInstance(player);
 		}
 		
+		/// <summary>
+		/// On Player Exit override to remove him from container
+		/// </summary>
+		/// <param name="player"></param>
 		public override void OnPlayerLeaveInstance(GamePlayer player)
         {
             //Decrease the amount of players
@@ -65,6 +91,10 @@ namespace DOL.GS
             this.m_players_in.Remove(player);
         }
 		
+		/// <summary>
+		/// RegionInstance Constructor
+		/// </summary>
+		/// <param name="player"></param>
 		public RegionInstance(ushort ID, GameTimer.TimeManager time, RegionData dat)
 			: base(ID, time, dat)
 		{	
@@ -72,6 +102,10 @@ namespace DOL.GS
 			this.DestroyWhenEmpty = false;
 		}
 		
+		/// <summary>
+		/// Load from Database override to clone objects from original Region.
+		/// Loads Objects, Mobs, Areas from Database using "SkinID"
+		/// </summary>
 		public override void LoadFromDatabase(Mob[] mobObjs, ref long mobCount, ref long merchantCount, ref long itemCount, ref long bindCount)
         {
             if (!LoadObjects)
@@ -79,6 +113,7 @@ namespace DOL.GS
 
             Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
             var staticObjs = GameServer.Database.SelectObjects<WorldObject>("Region = " + Skin);
+            var areaObjs = GameServer.Database.SelectObjects<DBArea>("Region = " + Skin);
             
             
             int count = mobObjs.Length + staticObjs.Count;
@@ -245,10 +280,41 @@ namespace DOL.GS
                 }
             }
 
+            int areaCnt = 0;
+            // Add missing area
+            foreach(DBArea area in areaObjs) 
+            {
+            	// Don't bind in instance.
+            	if(area.ClassType.Equals("DOL.GS.Area+BindArea"))
+            		continue;
+            	
+            	// clone DB object.
+            	DBArea newDBArea = ((DBArea)area.Clone());
+            	newDBArea.AllowAdd = false;
+            	newDBArea.Region = this.ID;
+            	// Instantiate Area with cloned DB object and add to region
+            	try
+            	{
+            		AbstractArea newArea = (AbstractArea)gasm.CreateInstance(newDBArea.ClassType, false);
+            		newArea.LoadFromDatabase(newDBArea);
+					newArea.Sound = newDBArea.Sound;
+					newArea.CanBroadcast = newDBArea.CanBroadcast;
+					newArea.CheckLOS = newDBArea.CheckLOS;
+					this.AddArea(newArea);
+					areaCnt++;
+	            }
+            	catch
+            	{
+            		log.Warn("area type " + area.ClassType + " cannot be created, skipping");
+            		continue;
+            	}
+
+            }
+            
             if (myMobCount + myItemCount + myMerchantCount > 0)
             {
                 if (log.IsInfoEnabled)
-                    log.Info(String.Format("AdventureWingInstance: {0} ({1}) loaded {2} mobs, {3} merchants, {4} items, from DB ({5})", Description, ID, myMobCount, myMerchantCount, myItemCount, TimeManager.Name));
+                    log.Info(String.Format("AdventureWingInstance: {0} ({1}) loaded {2} mobs, {3} merchants, {4} items, {5}/{6} areas from DB ({7})", Description, ID, myMobCount, myMerchantCount, myItemCount, areaCnt, areaObjs.Count, TimeManager.Name));
 
                 log.Debug("Used Memory: " + GC.GetTotalMemory(false) / 1024 / 1024 + "MB");
 
