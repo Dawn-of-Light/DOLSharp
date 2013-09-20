@@ -35,12 +35,27 @@ namespace DOL.GS.RealmAbilities
 				return;
 			}
 
-			switch (Level)
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
 			{
-				case 1: m_dmgValue = 200; break;
-				case 2: m_dmgValue = 500; break;
-				case 3: m_dmgValue = 750; break;
-				default: return;
+				switch (Level)
+				{
+					case 1: m_dmgValue = 200; break;
+					case 2: m_dmgValue = 350; break;
+					case 3: m_dmgValue = 500; break;
+					case 4: m_dmgValue = 625; break;
+					case 5: m_dmgValue = 750; break;
+					default: return;
+				}
+			}
+			else
+			{
+				switch (Level)
+				{
+					case 1: m_dmgValue = 200; break;
+					case 2: m_dmgValue = 500; break;
+					case 3: m_dmgValue = 750; break;
+					default: return;
+				}
 			}
 
 			foreach (GamePlayer i_player in m_caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))

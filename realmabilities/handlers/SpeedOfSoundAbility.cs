@@ -31,12 +31,27 @@ namespace DOL.GS.RealmAbilities
 				return;
 			}
 
-			switch (Level)
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
 			{
-				case 1: m_duration = 10000; break;
-				case 2: m_duration = 30000; break;
-				case 3: m_duration = 60000; break;
-				default: return;
+				switch (Level)
+				{
+					case 1: m_duration = 10000; break;
+					case 2: m_duration = 20000; break;
+					case 3: m_duration = 30000; break;
+					case 4: m_duration = 45000; break;
+					case 5: m_duration = 60000; break;
+					default: return;
+				}
+			}
+			else
+			{
+				switch (Level)
+				{
+					case 1: m_duration = 10000; break;
+					case 2: m_duration = 30000; break;
+					case 3: m_duration = 60000; break;
+					default: return;
+				}
 			}
 
 			DisableSkill(living);

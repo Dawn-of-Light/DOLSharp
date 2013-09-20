@@ -27,12 +27,27 @@ namespace DOL.GS.RealmAbilities
 				player.Out.SendMessage("You already an effect of that type!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			switch (Level)
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
 			{
-				case 1: m_value = 5; break;
-				case 2: m_value = 15; break;
-				case 3: m_value = 25; break;
-				default: return;
+				switch (Level)
+				{
+					case 1: m_value = 5; break;
+					case 2: m_value = 10; break;
+					case 3: m_value = 15; break;
+					case 4: m_value = 20; break;
+					case 5: m_value = 30; break;
+					default: return;
+				}
+			}
+			else
+			{
+				switch (Level)
+				{
+					case 1: m_value = 5; break;
+					case 2: m_value = 15; break;
+					case 3: m_value = 25; break;
+					default: return;
+				}
 			}
 			DisableSkill(living);
 			ArrayList targets = new ArrayList();

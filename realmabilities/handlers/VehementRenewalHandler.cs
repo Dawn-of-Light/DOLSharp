@@ -21,11 +21,26 @@ namespace DOL.GS.RealmAbilities
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED | NOTINGROUP)) return;
 
 			int heal = 0;
-			switch (Level)
+			
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
 			{
-				case 1: heal = 375; break;
-				case 2: heal = 750; break;
-				case 3: heal = 1500; break;
+				switch (Level)
+				{
+					case 1: heal = 375; break;
+					case 2: heal = 525; break;
+					case 3: heal = 750; break;
+					case 4: heal = 1125; break;
+					case 5: heal = 1500; break;
+				}
+			}
+			else
+			{
+				switch (Level)
+				{
+					case 1: heal = 375; break;
+					case 2: heal = 750; break;
+					case 3: heal = 1500; break;
+				}
 			}
 
 			bool used = false;
@@ -67,12 +82,26 @@ namespace DOL.GS.RealmAbilities
 
 		public override void AddEffectsInfo(IList<string> list)
 		{
-			list.Add("Level 1: Value: 375");
-			list.Add("Level 2: Value: 750");
-			list.Add("Level 3: Value: 1500");
-			list.Add("");
-			list.Add("Target: Group");
-			list.Add("Casting time: instant");
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
+			{
+				list.Add("Level 1: Value: 375");
+				list.Add("Level 2: Value: 525");
+				list.Add("Level 3: Value: 750");
+				list.Add("Level 4: Value: 1125");
+				list.Add("Level 5: Value: 1500");
+				list.Add("");
+				list.Add("Target: Group");
+				list.Add("Casting time: instant");
+			}
+			else
+			{
+				list.Add("Level 1: Value: 375");
+				list.Add("Level 2: Value: 750");
+				list.Add("Level 3: Value: 1500");
+				list.Add("");
+				list.Add("Target: Group");
+				list.Add("Casting time: instant");
+			}
 		}
 	}
 }

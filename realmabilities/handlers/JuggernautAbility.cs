@@ -22,69 +22,102 @@ namespace DOL.GS.RealmAbilities
 		{
 			GamePlayer player = living as GamePlayer;
 			#region preCheck
-			if (player == null)
+			if (living == null)
 			{
 				log.Warn("Could not retrieve player in JuggernautAbilityHandler.");
 				return;
 			}
 
-			if (!(player.IsAlive))
+			if (!(living.IsAlive))
 			{
-				player.Out.SendMessage("You cannot use this ability while dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if(player != null)
+					player.Out.SendMessage("You cannot use this ability while dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (player.IsMezzed)
+			if (living.IsMezzed)
 			{
-				player.Out.SendMessage("You cannot use this ability while mesmerized!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if(player != null)
+					player.Out.SendMessage("You cannot use this ability while mesmerized!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (player.IsStunned)
+			if (living.IsStunned)
 			{
-				player.Out.SendMessage("You cannot use this ability while stunned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if(player != null)
+					player.Out.SendMessage("You cannot use this ability while stunned!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (player.IsSitting)
+			if (living.IsSitting)
 			{
-				player.Out.SendMessage("You cannot use this ability while sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if(player != null)
+					player.Out.SendMessage("You cannot use this ability while sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (player.ControlledBrain == null)
+			if (living.ControlledBrain == null)
 			{
-				player.Out.SendMessage("You must have a pet controlled to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if(player != null)
+					player.Out.SendMessage("You must have a pet controlled to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (!player.IsWithinRadius( player.ControlledBrain.Body, m_range ))
+			if (!living.IsWithinRadius( player.ControlledBrain.Body, m_range ))
 			{
-				player.Out.SendMessage("Your pet is too far away!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if(player != null)
+					player.Out.SendMessage("Your pet is too far away!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-            GameSpellEffect ml9=SpellHandler.FindEffectOnTarget(player.ControlledBrain.Body,"SummonMastery");
+            GameSpellEffect ml9=SpellHandler.FindEffectOnTarget(living.ControlledBrain.Body,"SummonMastery");
             if (ml9 != null)
             {
-                player.Out.SendMessage("Your Pet already has an ability of this type active", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				if(player != null)
+	                player.Out.SendMessage("Your Pet already has an ability of this type active", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
                 return;
             }
 
 			#endregion
 
-			switch (this.Level)
+			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
 			{
-				case 1:
-					m_value = 10;
-					break;
-				case 2:
-					m_value = 20;
-					break;
-				case 3:
-					m_value = 30;
-					break;
-				default:
-					return;
+				switch (this.Level)
+				{
+					case 1:
+						m_value = 10;
+						break;
+					case 2:
+						m_value = 15;
+						break;
+					case 3:
+						m_value = 20;
+						break;
+					case 4:
+						m_value = 25;
+						break;
+					case 5:
+						m_value = 30;
+						break;
+					default:
+						return;
+				}
+			}
+			else
+			{
+				switch (this.Level)
+				{
+					case 1:
+						m_value = 10;
+						break;
+					case 2:
+						m_value = 20;
+						break;
+					case 3:
+						m_value = 30;
+						break;
+					default:
+						return;
+				}
 			}
 
-			new JuggernautEffect().Start(player, m_duration, m_value);
+			new JuggernautEffect().Start(living, m_duration, m_value);
 
-			DisableSkill(player);
+			DisableSkill(living);
 		}
 
 		public override int GetReUseDelay(int level)
