@@ -6248,7 +6248,7 @@ namespace DOL.GS
 		/// Table of skills currently disabled
 		/// skill => disabletimeout (ticks) or 0 when endless
 		/// </summary>
-		protected readonly Dictionary<Skill, long> m_disabledSkills = new Dictionary<Skill, long>();
+		private readonly Dictionary<KeyValuePair<ushort, Type>, KeyValuePair<long, Skill>> m_disabledSkills = new Dictionary<KeyValuePair<ushort, Type>, KeyValuePair<long, Skill>>();
 
 		/// <summary>
 		/// Gets the time left for disabling this skill in milliseconds
@@ -6259,14 +6259,15 @@ namespace DOL.GS
 		{
 			lock ((m_disabledSkills as ICollection).SyncRoot)
 			{
-				if (m_disabledSkills.ContainsKey(skill))
+				KeyValuePair<ushort, Type> key = new KeyValuePair<ushort, Type>(skill.ID, skill.GetType());
+				if (m_disabledSkills.ContainsKey(key))
 				{
-					long timeout = m_disabledSkills[skill];
+					long timeout = m_disabledSkills[key].Key;
 					long left = timeout - CurrentRegion.Time;
 					if (left <= 0)
 					{
 						left = 0;
-						m_disabledSkills.Remove(skill);
+						m_disabledSkills.Remove(key);
 					}
 					return (int)left;
 				}
@@ -6282,7 +6283,12 @@ namespace DOL.GS
 		{
 			lock ((m_disabledSkills as ICollection).SyncRoot)
 			{
-				return new List<Skill>(m_disabledSkills.Keys);
+				List<Skill> skillList = new List<Skill>();
+				
+				foreach(KeyValuePair<long, Skill> disabled in m_disabledSkills.Values)
+					skillList.Add(disabled.Value);
+				
+				return skillList;
 			}
 		}
 
@@ -6295,17 +6301,35 @@ namespace DOL.GS
 		{
 			lock ((m_disabledSkills as ICollection).SyncRoot)
 			{
+				KeyValuePair<ushort, Type> key = new KeyValuePair<ushort, Type>(skill.ID, skill.GetType());
 				if (duration > 0)
 				{
-					m_disabledSkills[skill] = CurrentRegion.Time + duration;
+					m_disabledSkills[key] = new KeyValuePair<long, Skill>(CurrentRegion.Time + duration, skill);
 				}
 				else
 				{
-					m_disabledSkills.Remove(skill);
+					m_disabledSkills.Remove(key);
 					duration = 0;
 				}
 			}
 		}
+		
+
+		/// <summary>
+		/// Removes Greyed out skills
+		/// </summary>
+		/// <param name="skill">the skill to remove</param>
+		public virtual void RemoveDisabledSkill(Skill skill)
+		{
+			lock ((m_disabledSkills as ICollection).SyncRoot)
+			{
+				KeyValuePair<ushort, Type> key = new KeyValuePair<ushort, Type>(skill.ID, skill.GetType());
+				if(m_disabledSkills.ContainsKey(key))
+					m_disabledSkills.Remove(key);
+			}
+		}
+		
+		
 		#region Region
 
 		/// <summary>
@@ -6609,7 +6633,7 @@ namespace DOL.GS
 			{
 				return false;
 			}
-			return brain.GetPlayerOwner() == this;
+			return brain.GetLivingOwner() == this;
 		}
 
 		/// <summary>
