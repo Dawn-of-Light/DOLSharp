@@ -16,9 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
+using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.Housing;
@@ -453,6 +454,7 @@ namespace DOL.GS.PacketHandler
 	public delegate void CustomDialogResponse(GamePlayer player, byte response);
 
 	public delegate void CheckLOSResponse(GamePlayer player, ushort response, ushort targetOID);
+	public delegate void CheckLOSMgrResponse(GamePlayer player, ushort response, ushort sourceOID, ushort targetOID);
 
 	public enum eSoundType : ushort
 	{
@@ -616,6 +618,7 @@ namespace DOL.GS.PacketHandler
 
 		void SendCustomDialog(string msg, CustomDialogResponse callback);
 		void SendCheckLOS(GameObject Checker, GameObject Target, CheckLOSResponse callback);
+		void SendCheckLOS(GameObject source, GameObject target, CheckLOSMgrResponse callback);
 		void SendGuildLeaveCommand(GamePlayer invitingPlayer, string inviteMessage);
 		void SendGuildInviteCommand(GamePlayer invitingPlayer, string inviteMessage);
 		void SendQuestOfferWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest);
