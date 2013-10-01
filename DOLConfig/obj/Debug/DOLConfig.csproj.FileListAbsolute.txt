@@ -1,0 +1,11 @@
+E:\sources\svn\dolserver\DOLSharp\trunk\debug\DOLConfig.exe.config
+E:\sources\svn\dolserver\DOLSharp\trunk\debug\DOLConfig.exe
+E:\sources\svn\dolserver\DOLSharp\trunk\debug\DOLConfig.pdb
+E:\sources\svn\dolserver\DOLSharp\trunk\DOLConfig\obj\Debug\ResolveAssemblyReference.cache
+E:\sources\svn\dolserver\DOLSharp\trunk\DOLConfig\obj\Debug\DOLConfig.DolConfig.resources
+E:\sources\svn\dolserver\DOLSharp\trunk\DOLConfig\obj\Debug\DOLConfig.ExtraPropertiesEditor.resources
+E:\sources\svn\dolserver\DOLSharp\trunk\DOLConfig\obj\Debug\DOLConfig.Resources.resources
+E:\sources\svn\dolserver\DOLSharp\trunk\DOLConfig\obj\Debug\GenerateResource.read.1.tlog
+E:\sources\svn\dolserver\DOLSharp\trunk\DOLConfig\obj\Debug\GenerateResource.write.1.tlog
+E:\sources\svn\dolserver\DOLSharp\trunk\DOLConfig\obj\Debug\DOLConfig.exe
+E:\sources\svn\dolserver\DOLSharp\trunk\DOLConfig\obj\Debug\DOLConfig.pdb

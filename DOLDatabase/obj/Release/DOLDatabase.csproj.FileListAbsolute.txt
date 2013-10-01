@@ -1,0 +1,4 @@
+E:\sources\svn\dolserver\DOLSharp\trunk\release\lib\DOLDatabase.dll
+E:\sources\svn\dolserver\DOLSharp\trunk\DOLDatabase\obj\Release\ResolveAssemblyReference.cache
+E:\sources\svn\dolserver\DOLSharp\trunk\DOLDatabase\obj\Release\DOLDatabase.dll
+E:\sources\svn\dolserver\DOLSharp\trunk\release\lib\DOLDatabase.tlb

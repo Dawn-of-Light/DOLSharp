@@ -1,0 +1,10 @@
+E:\sources\svn\dolserver\DOLSharp\trunk\debug\lib\DOLBase.dll
+E:\sources\svn\dolserver\DOLSharp\trunk\debug\lib\DOLBase.pdb
+E:\sources\svn\dolserver\DOLSharp\trunk\DOLBase\obj\Debug\ResolveAssemblyReference.cache
+E:\sources\svn\dolserver\DOLSharp\trunk\DOLBase\obj\Debug\DOLBase.dll
+E:\sources\svn\dolserver\DOLSharp\trunk\DOLBase\obj\Debug\DOLBase.pdb
+E:\sources\svn\dolserver\DOLSharp\branch\Freyad\debug\lib\DOLBase.dll
+E:\sources\svn\dolserver\DOLSharp\branch\Freyad\debug\lib\DOLBase.pdb
+E:\sources\svn\dolserver\DOLSharp\branch\Freyad\DOLBase\obj\Debug\ResolveAssemblyReference.cache
+E:\sources\svn\dolserver\DOLSharp\branch\Freyad\DOLBase\obj\Debug\DOLBase.dll
+E:\sources\svn\dolserver\DOLSharp\branch\Freyad\DOLBase\obj\Debug\DOLBase.pdb
