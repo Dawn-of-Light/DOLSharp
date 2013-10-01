@@ -1,3 +1,0 @@
-E:\sources\svn\dolserver\DOLSharp\trunk\release\lib\DOLBase.dll
-E:\sources\svn\dolserver\DOLSharp\trunk\DOLBase\obj\Release\ResolveAssemblyReference.cache
-E:\sources\svn\dolserver\DOLSharp\trunk\DOLBase\obj\Release\DOLBase.dll
