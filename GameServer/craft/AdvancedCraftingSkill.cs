@@ -1,0 +1,184 @@
+/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
+using System.Collections.Specialized;
+using System.Collections.Generic;
+using System.Collections;
+using System.Reflection;
+using DOL.Database;
+using DOL.Language;
+using DOL.GS.PacketHandler;
+using log4net;
+using System;
+
+namespace DOL.GS
+{
+	/// <summary>
+	/// AdvancedCraftingSkill is the skill for alchemy and spellcrafting whitch add all combine system
+	/// </summary>
+	public abstract class AdvancedCraftingSkill : AbstractProfession
+    {
+        #region Classic craft function
+
+		/// <summary>
+		/// Check if the player is near the needed tools (forge, lathe, etc)
+		/// </summary>
+		/// <param name="player">the crafting player</param>
+		/// <param name="recipe">the recipe being used</param>
+		/// <param name="itemToCraft">the item to make</param>
+		/// <param name="rawMaterials">a list of raw materials needed to create this item</param>
+		/// <returns>true if required tools are found</returns>
+		protected override bool CheckForTools(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
+		{
+			foreach (GameStaticItem item in player.GetItemsInRadius(CRAFT_DISTANCE))
+			{
+                if (item.Name.ToLower() == "alchemy table" || item.Model == 820) // Alchemy Table
+                {
+					return true;
+				}
+			}
+
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Crafting.CheckTool.NotHaveTools", itemToCraft.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Crafting.CheckTool.FindAlchemyTable"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+			if (player.Client.Account.PrivLevel > 1)
+				return true;
+
+			return false;
+		}
+
+		#endregion
+
+		#region Advanced craft function
+
+		#region First call function
+		
+		/// <summary>
+		/// Called when player accept to combine items
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		public virtual bool CombineItems(GamePlayer player)
+		{
+			if(player.TradeWindow.PartnerTradeItems == null || player.TradeWindow.PartnerItemsCount != 1)
+			{
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "AdvancedCraftingSkill.CombineItems.OnlyCombine"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+
+			InventoryItem itemToCombine = (InventoryItem)player.TradeWindow.PartnerTradeItems[0];
+			if(!IsAllowedToCombine(player, itemToCombine)) return false;
+
+			ApplyMagicalEffect(player, itemToCombine);
+
+			return true;
+		}
+
+		#endregion
+
+		#region Requirement check
+
+		/// <summary>
+        /// Check if the player can enchant the item
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public virtual bool IsAllowedToCombine(GamePlayer player, InventoryItem item)
+		{
+			if(item == null) return false;
+			
+			if(player.TradeWindow.ItemsCount <= 0)
+			{
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "AdvancedCraftingSkill.IsAllowedToCombine.Imbue", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;	
+			}
+
+			if(!item.IsCrafted)
+			{
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "AdvancedCraftingSkill.IsAllowedToCombine.CraftedItems"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+
+
+            InventoryItem itemToCombine = (InventoryItem)player.TradeWindow.TradeItems[0];
+
+            if (itemToCombine.Object_Type == (int)eObjectType.AlchemyTincture)
+            {
+                if (item.Object_Type != (int)eObjectType.Instrument) // Only check for non instruments
+                {
+                    switch (itemToCombine.Type_Damage)
+                    {
+                        case 0: //Type damage 0 = armors
+                            if (!GlobalConstants.IsArmor(item.Object_Type))
+                            {
+                                if (item.Object_Type == (int)eObjectType.Shield) // think shield can do armor and weapon ? not verified.
+                                    return true;
+
+                                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "AdvancedCraftingSkill.IsAllowedToCombine.NoGoodCombine"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                return false;
+                            }
+                            break;
+                        case 1: //Type damage 1 = weapons
+                            if (!GlobalConstants.IsWeapon(item.Object_Type))
+                            {
+                                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "AdvancedCraftingSkill.IsAllowedToCombine.NoGoodCombine"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                return false;
+                            }
+                            break;
+                        default:
+                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "AdvancedCraftingSkill.IsAllowedToCombine.ProblemCombine"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return false;
+                    }
+                }
+                else // Instrument
+                {
+                    if (itemToCombine.Type_Damage != 0) //think instrument can do only armorproc ? not verified.
+                    {
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "AdvancedCraftingSkill.IsAllowedToCombine.NoGoodCombine"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        return false;
+                    }
+                }
+            }
+
+            if (!GlobalConstants.IsArmor(item.Object_Type) && !GlobalConstants.IsWeapon(item.Object_Type) && item.Object_Type != (int)eObjectType.Instrument)
+			{
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "AdvancedCraftingSkill.IsAllowedToCombine.NoEnchanted"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;	
+			}
+
+			return true;
+		}
+		
+		#endregion
+		
+		#region Apply magical effect
+
+		/// <summary>
+        /// Apply the magical bonus to the item
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="item"></param>
+		protected abstract void ApplyMagicalEffect(GamePlayer player, InventoryItem item);
+		
+		#endregion
+
+		#endregion
+
+	}
+}

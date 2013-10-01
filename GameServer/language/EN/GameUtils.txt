@@ -1,0 +1,9 @@
+﻿# Startup guilds
+Guild.StartupGuild.Hibernia:		Tir na Nog Adventurers
+Guild.StartupGuild.Albion:		Clan Cotswold
+Guild.StartupGuild.Midgard:		Mularn Protectors
+
+Guild.StartupGuild.Motd: 			Use /gu <text> to talk in this starter guild.
+Guild.StartupGuild.Omotd:			Type /gc quit to leave this starter guild.
+Guild.StartupGuild.Title:			Initiate
+

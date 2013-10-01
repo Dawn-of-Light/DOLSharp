@@ -1,0 +1,49 @@
+﻿Hib.ImportantDelivery.CheckPlayerAbortQuest.Abort:	Aborting Quest {0}. You can start over again if you want.
+Hib.ImportantDelivery.CheckPlayerAbortQuest.NoAbort:	Good, no go out there and finish your work!
+Hib.ImportantDelivery.CheckPlayerAcceptQuest.Accept:	Congratulations! You are now one step closer to understanding the world of Camelot! During this phase of your training, I will be sending you to different parts of the realm to deliver much needed supplies to various citizens. You will need to check your QUEST JOURNAL from time to time to see what you need to accomplish next on your quest. You can access the quest journal from the COMMAND button on your [character sheet].
+Hib.ImportantDelivery.CheckPlayerAcceptQuest.NoAccept:	Oh well, if you change your mind, please come back!
+Hib.ImportantDelivery.DefineItems.CrateOfVegetables:	Crate of Vegetables
+Hib.ImportantDelivery.DefineItems.RecruitsCloak:	Recruit's Cloak
+Hib.ImportantDelivery.DefineItems.RecruitsDiary:	Recruits Diary
+Hib.ImportantDelivery.DefineItems.SackOfSupplies:	Sack of Supplies
+Hib.ImportantDelivery.Description.Step1:		[Step #1] Listen to Addrir as he describes the mission to you. If he stops speaking with you, ask him what he can give you to [expedite] your training.
+Hib.ImportantDelivery.Description.Step2:		[Step #2] Listen to Addrir as he expalins your journal. If he stops speaking with you, ask him how the journal will help to [expedite] the tasks you will be doing.
+Hib.ImportantDelivery.Description.Step3:		[Step #3] Make your way southeast from Addrir. Find Stable Master Rumdor and hand him your ticket.
+Hib.ImportantDelivery.Description.Step4:		[Step #4] Give you Sack of Supplies to Aethic in Tir na mBeo. You can do this the same way you handed Rumdor your ticket.
+Hib.ImportantDelivery.Description.Step5:		[Step #5] Listen to what Aethic has to say.
+Hib.ImportantDelivery.Description.Step6:		[Step #6] Take the ticket Aethic gave you to Stable Master Truichon north-northwest of the building with the red-door. Hand him the ticket the same way you handed Aethic the supplies.
+Hib.ImportantDelivery.Description.Step7:		[Step #7] Hand Stable Master Freagus the Crate of Vegetables.
+Hib.ImportantDelivery.Description.Step8:		[Step #8] Listen to Stable Master Freagus some more. If he stops speaking with you, ask him if he has a [reward] for your hard work and service to Hibernia.
+Hib.ImportantDelivery.FinishQuest.RecieveReward:	You recieve {0} as a reward.
+Hib.ImportantDelivery.Notify.RentingHorse:		Good day, {0}. If you are interested in renting a horse, purchase a ticket, then hand it to me. Have a safe trip!
+Hib.ImportantDelivery.Notify.Supplies:			Ah! The supplies I have been waiting for. Thank you {0}. These will help us tremendously in the coming weeks. I have another [errand] if you are up for it.
+Hib.ImportantDelivery.Notify.Vegetables:		Ah, the vegetables I've been waiting for from Aethic. Thank you for delivering them to me. I couldn't find anyone to look after my stable so I could go and get them. Let me see, I think a [reward] is in order for your hard work.
+Hib.ImportantDelivery.QuestTitle:			Important Delivery (Hib)
+Hib.ImportantDelivery.TalkToAddrir.Abort:		Do you really want to abort this quest, all items gained during quest will be lost?
+Hib.ImportantDelivery.TalkToAddrir.CaseCharSheet:	character sheet
+Hib.ImportantDelivery.TalkToAddrir.CaseExpedite:	expedite
+Hib.ImportantDelivery.TalkToAddrir.CaseHorseTicket:	horse ticket
+Hib.ImportantDelivery.TalkToAddrir.CaseInformation:	information
+Hib.ImportantDelivery.TalkToAddrir.CaseJournal:		journal
+Hib.ImportantDelivery.TalkToAddrir.CaseQuestion:	question
+Hib.ImportantDelivery.TalkToAddrir.CaseTraining:	continue your training
+Hib.ImportantDelivery.TalkToAddrir.CharSheet:		Your character sheet houses all of your character's information, such as attributes, weapon skill, base class and profession. If at any time you want to see your character's statistics, press the far left icon on the menu bar (it looks like a person with circle around them) for more [information].
+Hib.ImportantDelivery.TalkToAddrir.Expedite:		Now that I've given you a small introduction to the world of Hibernia, let's get started with your first task. I need for you to deliver this package of supplies to Aethic in Tir na mBeo. Don't worry, I have a special [horse ticket] for you.
+Hib.ImportantDelivery.TalkToAddrir.Greetings:		Greetings my young recruit. I am Addrir and I am here to help you find your way around this vast realm. In the process, you will be able to earn weapons, armor, coin and even some levels. I will start your training by asking you a simple [question].
+Hib.ImportantDelivery.TalkToAddrir.HorseTicket:		All you need to do is take this horse ticket to Rumdor here in Mag Mell, by the horse cart. Hand him the ticket and you'll be on your way to Tir na mBeo. Be swift my young recruit. Time is of the essence.
+Hib.ImportantDelivery.TalkToAddrir.Information:		I know this all seems a little overwhelming, but I have a special item here that will make this transition a smooth one. Please, take this [journal].
+Hib.ImportantDelivery.TalkToAddrir.Journal:		This journal will help you from time to time while you are doing various tasks for me. I like to call it a smart journal. It was made by one of the eldritches for new recruits like you. It will help to [expedite] your training.
+Hib.ImportantDelivery.TalkToAddrir.OneStepCloser:	Congratulations! You are now one step closer to understanding the world of Camelot! During this phase of your training, I will be sending you to different parts of the realm to deliver much needed supplies to various citizens. You will need to check your QUEST JOURNAL from time to time to see what you need to accomplish next on your quest. You can access the quest journal from the COMMAND button on your [character sheet].
+Hib.ImportantDelivery.TalkToAddrir.Question:		I will ask you whether or not you want to continue with your training. A dialog box will pop-up. All you need to do is either press Accept or Decline. Are you ready to [continue your training]?
+Hib.ImportantDelivery.TalkToAddrir.Training:		Are you ready to begin your training?
+Hib.ImportantDelivery.TalkToAethic.CaseErrand:		errand
+Hib.ImportantDelivery.TalkToAethic.Errand:		I need for you to deliver this crate of vegetables to Freagus in Ardee. I'm sure you can do the job. Take this horse ticket and give it to Stable Master Truichon. Hurry now, before the vegetables rot.
+Hib.ImportantDelivery.TalkToAethic.Greetings:		Greetings traveler. I've not seen you around here before. You must be a new recruit. Well then, is there something I can help you with?
+Hib.ImportantDelivery.TalkToAethic.Supplies:		Ah! The supplies I have been waiting for. Thank you {0}. These will help us tremendously in the coming weeks. I have another [errand] if you are up for it.
+Hib.ImportantDelivery.TalkToAethic.Vegetables:		I need for you to deliver this crate of vegetables to Freagus in Ardee. I'm sure you can do the job. Take this horse ticket and give it to Stable Master Truichon. Hurry now, before the vegetables rot.
+Hib.ImportantDelivery.TalkToFreagus.CaseReward:		reward
+Hib.ImportantDelivery.TalkToFreagus.Errand:		Dont' go far friend. I have yet another errand that needs tending to.
+Hib.ImportantDelivery.TalkToFreagus.GoodCrop:		Ah! These must be from Aethic in Tir na mBeo. I have been waiting a while for a good crop to come in. My family, horses and I will be eating well for a while. My thanks to you {0}. Here, let me see if I have a [reward] for your hard work.
+Hib.ImportantDelivery.TalkToFreagus.Reward:		It's a little tattered, but it will keep you warm in the cold months. Thank you again {0}.
+Hib.ImportantDelivery.TalkToFreagus.Welcome:		Welcome to my stable friend. What can I do for you today?
+

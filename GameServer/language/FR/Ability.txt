@@ -1,0 +1,92 @@
+﻿Skill.Ability.CannotUseMezzed:	Vous ne pouvez pas utiliser cette compétence en étant hypnotisé(e)!
+Skill.Ability.CannotUseStunned:	Vous ne pouvez pas utiliser cette compétence en étant étourdi(e)!
+Skill.Ability.CannotUseStanding:	Vous ne pouvez pas utiliser cette compétence en étant assis(e)!
+Skill.Ability.CannotUseSnared:	Vous ne pouvez pas utiliser cette compétence sous l'emprise d'un sort de ralentissement(e)!
+Skill.Ability.CannotUseDead:	Vous ne pouvez pas utiliser cette compétence en étant mort(e)!
+Skill.Ability.CannotUseNoTarget:	Vous ne pouvez pas utiliser cette compétence sans avoir de cible.
+Skill.Ability.CannotAttackTarget:	Vous ne pouvez pas attaquer {0}!
+Skill.Ability.CannotSeeTarget:	Vous ne voyez pas {0}!
+Skill.Ability.TargetIsWithinRadius:	Votre cible est trop loin pour utiliser cette compétence!
+Skill.Ability.TargetIsPhaseshifted:	{0} est sous 'Transfert de Plan' et ne peut pas être attaqué!
+Skill.Ability.TargetIsUnderSputinLegacy:	{0} est sous 'Héritage d'Eir' et ne peut pas être attaqué!
+Skill.Ability.CannotUseAlreadyActive:	Cette compétence est déjà active, vous devez attendre qu'elle expire.
+Skill.Ability.CannotUseInCombat:	Vous étiez en combat récemment et ne pouvez pas utiliser cette compétence!
+Skill.Ability.CannotUseTargetNull:	Vous devez avoir une cible pour utiliser cette compétence!
+Skill.Ability.CannotUseMustBeInGroup:	Vous devez faire partie d'un groupe pour utiliser cette compétence.
+Skill.Ability.CannotUseWhileStealthed:	Vous ne pouvez pas utiliser cette compétence en étant dissimulé(e).
+Skill.Ability.MinRemaining:	 minutes restantes.
+Skill.Ability.SecRemaining:	 secondes restantes.
+
+Skill.Ability.CannotUse.AlreadyHaveSameEffectType:	Vous avez déjà un effet de ce type!
+
+Skill.Ability.CannotUse.Camouflage.Mezzed:	Vous ne pouvez pas utiliser 'Camouflage' en étant hypnotisé(e)!
+Skill.Ability.CannotUse.Camouflage.Stunned:	Vous ne pouvez pas utiliser 'Camouflage' en étant étourdi(e)!
+Skill.Ability.CannotUse.Camouflage.NotStealthed:	Vous ne pouvez pas utiliser 'Camouflage' sans être dissimulé(e)!
+Skill.Ability.CannotUse.Camouflage.Dead:	Vous ne pouvez pas utiliser 'Camouflage' en étant mort(e)!
+Skill.Ability.CannotUse.Camouflage.DisableDuration:	Vous devez attendre {0} secondes supplémentaires pour pouvoir vous camoufler!
+
+Skill.Ability.CannotUse.Bodyguard.Dead:	Vous êtes mort et ne pouvez pas utiliser cette compétence!
+Skill.Ability.CannotUse.Bodyguard.CancelTargetNull:	Vous n'êtes plus le garde du corps de qui que ce soit.
+Skill.Ability.CannotUse.Bodyguard.GuardTargetIsGuardSource:	Vous ne pouvez pas utiliser cette compétence sur vous-même!
+Skill.Ability.CannotUse.Bodyguard.NotInGroup:	Vous ne pouvez être le garde de corps que d'un membre de votre groupe!
+Skill.Ability.CannotUse.Bodyguard.GuardTargetAlreadyBodyGuarded:	{0} est déjà en train de garder {1}!
+Skill.Ability.CannotUse.Bodyguard.GuardSourceBodyGuarded:	Vous ne pouvez pas être le garde du corps de quelqu'un si vous avez vous-même un garde du corps!
+
+Skill.Ability.CannotUse.CriticalShot.InCombat:	Vous ne pouvez pas utiliser 'Tir Critique' en étant en combat.
+Skill.Ability.CannotUse.CriticalShot.NoRangedWeapons:	Vous devez vous équiper d'un arc pour utiliser cette compétence!
+Skill.Ability.CannotUse.CriticalShot.MustBeStanding:	Vous devez être debout pour utiliser cette compétence!
+Skill.Ability.CriticalShot.SwitchToRegular:	Vous changez votre tir en 'Tir Normal'.
+Skill.Ability.CriticalShot.AlreadyFiring:	Vous utilisez déjà cette arme.
+
+Skill.Ability.DirtyTricks.EffectCancel:	Vos attaques retournent à la normale.
+Skill.Ability.DirtyTricks.EffectStart:	Vous recevez un jet de poussière dans les yeux!
+Skill.Ability.DirtyTricks.Name:	Coups Bas
+Skill.Ability.DirtyTricks.Description:	Active un effet à déclenchement offensif de 30 secondes sur le Mercenaire, ce qui lance à chaque touché un sort d'affaiblissement de 10 secondes sur sa cible. Ce sort d'affaiblissement augmente de 50 % la probabilité que l'adversaire du Mercenaire rate lamentablement toutes ses attaques de mêlée.
+Skill.Ability.DirtyTricks.DelveString:	Cette compétence augmente de 50 % la probabilité de rater lamentablement toutes les attaques de mêlée de la cible.
+
+Skill.Ability.Engage.CannotUseDead:	Vous ne pouvez pas entrer en mode combat en étant mort(e)!
+Skill.Ability.Engage.CannotUseStanding:	Vous ne pouvez pas entrer en mode combat en étant assis(e)!
+Skill.Ability.Engage.CannotUseNoCaCWeapons:	Vous ne pouvez pas vous engager au corps-à-corps avec une arme de distance.
+Skill.Ability.Engage.NoTarget:	Vous ne pouvez engager qu'une cible hostile envers vous.
+Skill.Ability.Engage.TargetAttackedRecently:	{0} a été attaqué récemment et ne peut pas être engagé.
+Skill.Ability.Engage.NotAllowedToEngageTarget:	Vous ne pouvez pas engager {0}.
+
+Skill.Ability.Flurry.TargetNotPlayerOrGuards:	Vous ne pouvez utiliser cette compétence que sur des gardes de royaume ou des joueurs d'un royaume ennemi!
+Skill.Ability.Flurry.YouHit:	Vous touchez {0} pour {1} points de dommage!
+Skill.Ability.Flurry.HitYou:	{0} vous touche pour {1} points de dommage!
+
+Skill.Ability.SureShot.CannotUseDead:	Vous ne pouvez pas utiliser 'Tir Assuré' lorsque vous êtes mort!
+Skill.Ability.RapidFire.CannotUseDead:	Vous ne pouvez pas utiliser 'Tir Rapide' lorsque vous êtes mort!
+
+Skill.Ability.Stealth.CannotUseToCloseAnEnemy:	Vous êtes trop proche d'un ennemi pour vous dissimuler!
+Skill.Ability.Stealth.CannotUseStunned:	Vous ne pouvez pas vous dissimuler en étant étourdi(e)!
+Skill.Ability.Stealth.CannotUseMezzed:	Vous ne pouvez pas vous dissimuler en étant hypnotisé(e)!
+Skill.Ability.Stealth.CannotUseActivePulsingSpell:	Vous ne pouvez pas vous dissimuler en étant sous l'effet d'un sort pulsant actif!
+Skill.Ability.Stealth.CannotUseCombatState:	Vous devez terminer votre action en cours pour vous dissimuler!
+Skill.Ability.Stealth.CannotUseDead:	Vous ne pouvez pas vous dissimuler, puisque vous êtes mort!
+Skill.Ability.Stealth.CannotUseInCombat: Vous étiez en combat récemment et ne pouvez pas vous dissimuler pour le moment!
+Skill.Ability.Stealth.CannotUseStealthChangeTick:	Vous devez attendre {0} secondes supplémentaires avant de pouvoir vous dissimuler!
+Skill.Ability.Stealth.CannotUse.CarryingRelic:	Vous ne pouvez pas vous dissimuler en portant une Relique!
+
+Skill.Ability.QuickCast.CannotUseIsCasting:	Vous ne pouvez pas préparer une 'Incantation Rapide' en lançant un sort!
+Skill.Ability.QuickCast.CannotUseDead:	Vous ne pouvez pas lancer une 'Incantation Rapide', puisque vous êtes mort(e)!
+Skill.Ability.QuickCast.CannotUseInMeleeCombat:	Vous ne pouvez pas lancer une 'Incantation Rapide' en étant en combat.
+Skill.Ability.QuickCast.CannotUseChangeTick:	Vous devez attendre {0} secondes supplémentaires pour utiliser votre 'Incantation Rapide'!
+
+Skill.Ability.Guard.CancelTargetNull:	Vous ne gardez plus personne.
+Skill.Ability.Guard.CannotUse.GuardTargetIsGuardSource:	Vous ne pouvez pas vous garder vous-même!
+Skill.Ability.Guard.CannotUse.NotInGroup:	Vous ne pouvez pas garder quelqu'un ne faisant pas partie de votre groupe!
+Skill.Ability.Guard.CannotUse.GuardTargetAlreadyGuarded:	{0} garde déjà {1}!
+
+Skill.Ability.Intercept.CannotUse.InterceptTargetAlreadyInterceptedEffect:	{0} intercepte déjà les attaques pour {1}.
+Skill.Ability.Intercept.CannotUse.NotInGroup:	Vous ne pouvez pas intercepter des attaques pour un joueur hors de votre groupe!
+Skill.Ability.Intercept.CancelTargetNull:	Vous n'interceptez plus les attaques pour personne.
+
+Skill.Ability.Protect.CannotUse.ProtectTargetAlreadyProtectEffect:	{0} protège déjà {1}!
+Skill.Ability.Protect.CannotUse.NotInGroup:	Vous ne pouvez pas protéger quelqu'un ne faisant pas partie de votre groupe!
+Skill.Ability.Protect.CannotUse.CantProtectYourself:	Vous ne pouvez pas vous protéger vous-même!
+Skill.Ability.Protect.CancelTargetNull:	Vous ne protégez plus personne.
+
+Skill.Ability.Distraction.CannotUse.NeedGroundTarget:	Vous devez positionner une cible au sol pour utiliser cette compétence.
+Skill.Ability.Distraction.YouLaunch:	Vous lancez votre compétence 'Distraction'!
+

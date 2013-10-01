@@ -1,0 +1,14 @@
+﻿Alb.DredgeUpAPledge.CheckPlayerAbortQuest.Text1:	Gut, macht also weiter und beendet Eure Aufgabe!	
+Alb.DredgeUpAPledge.CheckPlayerAbortQuest.Text2:	Quest "{0}" abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
+Alb.DredgeUpAPledge.Conclusion.Text1:			Gute Arbeit, {0}! 
+Alb.DredgeUpAPledge.Conclusion.Text2:			Vielleicht denken diese Schurken das nächste Mal zweimal nach, wem sie sich verpflichten. Hier ist eine kleine Entschädigung für Eure Mühen.
+Alb.DredgeUpAPledge.Init.Text1:				Abzeichen-Ring
+Alb.DredgeUpAPledge.Init.Text2:				Besiegt zwei Banditen-Verpflichter
+Alb.DredgeUpAPledge.Notify:				Banditen-Verpflichter
+Alb.DredgeUpAPledge.QuestTitle:				Einen Verpflichter festnageln
+Alb.DredgeUpAPledge.Story:				Dies sind wahrlich schwere Zeiten. Denjenigen unter uns, die sich an die Zeiten unter König Artus erinnern, fällt es schwer zu glauben, was seit dem alles verloren ging. Es waren goldene Jahre.\n\nOh, König Constantine gibt sein Bestes, versteht mich nicht falsch! Wir können glücklich sein, einen solch rechtschaffenen König an der Spitze unseres Reiches zu haben. Es ist aber nicht das Gleiche und es muss unerträglich sein, wenn man bedenkt, dass viel mehr auf Constantine lastet und er keinen Merlin an seiner Seite hat. Zudem soll Morgana noch immer da draußen sein und ihre Fäden aus den Schatten ziehen. Es verwundert nicht, in welchem Zustand unsere Dörfer sind.\n\nWo wir gerade über den Zustand unseres bescheidenen Dorfes sprechen...\nVersuche, den Banditen eine Nachricht zu überbringen, zeigten keine große Wirkung. Daher habe ich ein Kopfgeld für alle ausgeschrieben, die diesen Aufwieglern eine Lehre erteilen und dies auch beweisen können. Interessiert?
+Alb.DredgeUpAPledge.Summary:				Mehrere Gruppen von Banditen haben ihre Lager in der Nähe von Cotswold aufgeschlagen. Findet und besiegt zwei Banditen-Verpflichter. Sammelt zwei ihrer Abzeichen-Ringe und kehrt danach zu Sir Dorian für Eure Belohnung zurück.
+
+
+
+

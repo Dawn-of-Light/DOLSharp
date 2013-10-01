@@ -1,0 +1,8 @@
+﻿# /ArtifactQuest
+ArtifactQuest.GiveItem.BackpackFull:			Your backpack is full, please make room and try again.
+
+# /ArtifactTurnInQuest
+ArtifactTurnInQuest.Init.ArtifactScholarMale:		Artifact Scholar
+ArtifactTurnInQuest.Init.ArtifactScholarFemale:		Artifact Scholar
+ArtifactTurnInQuest.FinishQuest.Completed:		You have completed the {0} quest!
+

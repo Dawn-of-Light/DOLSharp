@@ -1,0 +1,107 @@
+﻿# REALMABILITIES
+# /RAPropertyEnhancer
+RAPropertyEnhancer.DelveInfo.Info1:		Niveau {0}: Montant: {1}{2}
+
+# /Handlers
+# /DashingDefenseAbility
+DashingDefenseAbility.AddEffectsInfo.Info1:		
+DashingDefenseAbility.AddEffectsInfo.Info2:		Cible: Vous
+DashingDefenseAbility.AddEffectsInfo.Info3:		Temps d'invocation: Instantané
+DashingDefenseAbility.Execute.AlreadyEffect:		Vous êtes déjà sous l'effet d'un tel sort
+DashingDefenseAbility.Execute.MustInGroup:		Vous devez être en groupe pour utiliser cette capacité!
+
+# /FirstAidAbility
+FirstAidAbility.AddEffectsInfo.Info1:			Niveau 1: Valeur: 25%
+FirstAidAbility.AddEffectsInfo.Info2:			Niveau 2: Valeur: 60%
+FirstAidAbility.AddEffectsInfo.Info3:			Niveau 3: Valeur: 100%
+FirstAidAbility.AddEffectsInfo.Info4:			Cible: Incantateur
+FirstAidAbility.AddEffectsInfo.Info5:			Temps d'Incantation: Instantané			
+FirstAidAbility.Execute.FullyHealed:			Vous êtes entièrement soigné.
+FirstAidAbility.Execute.HealYourself:			Vous vous soignez pour {0} points de vie.
+
+# /PurgeAbility
+PurgeAbility.AddEffectsInfo.Info2:			Cible: Incantateur
+PurgeAbility.AddEffectsInfo.Info3:			Temps d'invocation: Instantané
+PurgeAbility.OnTick.PurgeActivate:			Purge activé dans {0} secondes!
+PurgeAbility.RemoveNegativeEffects.FallFromYou:		Tous les effets negatifs s'estompent.
+
+# /RealmAbility
+RealmAbility.AddReUseDelayInfo.Every:			Niveau {0}: peut s'utiliser tout les: {1}
+RealmAbility..CheckPreconditions.BeInCombat:	Pour utiliser cette capacité, vous devez avoir combattu récemment!
+RealmAbility..CheckPreconditions.BeInGroup:		Vous devez être en groupe pour utiliser cette capacité!
+RealmAbility..CheckPreconditions.Combat:		Vous avez été en combat recemment et ne pouvez utiliser cette capacité!
+RealmAbility..CheckPreconditions.Dead:			Vous ne pouvez pas utiliser cette capacité en étant mort!
+RealmAbility..CheckPreconditions.Mesmerized:		Vous ne pouvez pas utiliser cette capacité quand Vous êtes hypnotisé(e)!
+RealmAbility..CheckPreconditions.Sitting:		Vous ne pouvez pas utiliser cette capacité en étant assis!
+RealmAbility..CheckPreconditions.Stealthed:		Vous ne pouvez pas utiliser cette capacité en étant furtif!
+RealmAbility..CheckPreconditions.Stunned:		Vous ne pouvez pas utiliser cette capacité en étant étourdi(e)!
+RealmAbility.SendCasterSpellEffectAndCastMessage.Caster:	{0} lance un sort!
+RealmAbility.SendCasterSpellEffectAndCastMessage.You:	Vous lancez le sort: {0}!
+RealmAbility.SendCastMessage.PlayerCasts:		{0} lance un sort!
+RealmAbility.SendCastMessage.YouCast:			Vous lancez votre {0}!
+
+# /AdrenalineRushAbility
+AdrenalineRushAbility.AddEffectsInfo.Info1:		
+AdrenalineRushAbility.AddEffectsInfo.Info2:		
+AdrenalineRushAbility.AddEffectsInfo.Info3:		
+AdrenalineRushAbility.AddEffectsInfo.Info4:		
+AdrenalineRushAbility.AddEffectsInfo.Info5:		
+
+# /BedazzlingAuraAbility
+BedazzlingAuraAbility.AddEffectsInfo.Info1:
+BedazzlingAuraAbility.AddEffectsInfo.Info2:
+BedazzlingAuraAbility.AddEffectsInfo.Info3:
+BedazzlingAuraAbility.AddEffectsInfo.Info4:
+BedazzlingAuraAbility.AddEffectsInfo.Info5:
+
+# /ConcentrationAbility
+ConcentrationAbility.AddEffectsInfo.Info1:	Niveau 1: Valeur: 25%
+ConcentrationAbility.AddEffectsInfo.Info2:	Niveau 2: Valeur: 60%
+ConcentrationAbility.AddEffectsInfo.Info3:	Niveau 3: Valeur: 100%
+ConcentrationAbility.AddEffectsInfo.Info4:	Cible: Incantateur
+ConcentrationAbility.AddEffectsInfo.Info5:	Temps d'Incantation: Instantané
+
+# /JuggernautAbility
+JuggernautAbility.AddEffectsInfo.Info1:
+JuggernautAbility.AddEffectsInfo.Info2:
+JuggernautAbility.AddEffectsInfo.Info3:
+JuggernautAbility.AddEffectsInfo.Info4:
+JuggernautAbility.AddEffectsInfo.Info5:
+
+# /MasteryofConcentrationAbility
+MasteryofConcentrationAbility.AddEffectsInfo.Info1:
+MasteryofConcentrationAbility.AddEffectsInfo.Info2:
+MasteryofConcentrationAbility.AddEffectsInfo.Info3:
+MasteryofConcentrationAbility.AddEffectsInfo.Info4:
+MasteryofConcentrationAbility.AddEffectsInfo.Info5:
+
+# /MysticCrystalLoreAbility
+MysticCrystalLoreAbility.AddEffectsInfo.Info1:	Niveau 1: Valeur: 30%
+MysticCrystalLoreAbility.AddEffectsInfo.Info2:	Niveau 2: Valeur: 60%
+MysticCrystalLoreAbility.AddEffectsInfo.Info3:	Niveau 3: Valeur: 90%
+MysticCrystalLoreAbility.AddEffectsInfo.Info4:	Cible: Incantateur
+MysticCrystalLoreAbility.AddEffectsInfo.Info5:	Temps d'Incantation: Instantané
+
+# /NegativeMaelstromAbility
+NegativeMaelstromAbility.AddEffectsInfo.Info1:
+NegativeMaelstromAbility.AddEffectsInfo.Info2:
+NegativeMaelstromAbility.AddEffectsInfo.Info3:
+NegativeMaelstromAbility.AddEffectsInfo.Info4:
+NegativeMaelstromAbility.AddEffectsInfo.Info5:
+NegativeMaelstromAbility.AddEffectsInfo.Info6:
+NegativeMaelstromAbility.AddEffectsInfo.Info7:
+NegativeMaelstromAbility.AddEffectsInfo.Info8:
+NegativeMaelstromAbility.AddEffectsInfo.Info9:
+
+# /RAPropertyEnhancer
+RAPropertyEnhancer.DelveInfo.Info1:		Niveau {0}: Valeur: {1}{2}
+
+# /RAStatEnhancer
+RAStatEnhancer.DelveInfo.Info1:			Niveau {0}: Valeur: {1}
+
+# /SecondWindAbility
+SecondWindAbility.AddEffectsInfo.Info1:			
+SecondWindAbility.AddEffectsInfo.Info4:			
+SecondWindAbility.AddEffectsInfo.Info5:			
+
+

@@ -1,0 +1,11 @@
+﻿Alb.TombWithAView.CheckPlayerAbortQuest.Text1:	Gut, macht also weiter und beendet Eure Aufgabe!
+Alb.TombWithAView.CheckPlayerAbortQuest.Text2:	Quest "{0}" abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
+Alb.TombWithAView.Conclusion.Text1:		Ah, Ihr habt also zum Bestattungsgrab gefunden, oder? Es ist ein Angst einflößender Ort, um genau zu sein! Jetzt wisst Ihr, wo das Grab zu finden ist, sollte Euch Auftragsteller Traint um Hilfe bitten, es zu säubern.
+Alb.TombWithAView.Init.Text1:			Rekruten-Steppstiefel
+Alb.TombWithAView.Init.Text2:			Rekruten-Lederstifel
+Alb.TombWithAView.Init.Text3:			Rekruten-Nietenstiefel
+Alb.TombWithAView.Init.Text4:			Findet das Bestattungsgrab
+Alb.TombWithAView.QuestTitle:			Grab mit Aussicht
+Alb.TombWithAView.Story:			Ein mühsamer Tag! Die Akademie hat mich als Berater für magische Belange nach Cotswold geschickt. Es freut mich, dienlich zu sein, aber es gibt Tage, an denen meine Nachforschungen mir viel abverlangen. Ich scheine in letzter Zeit etwas beschäftigter zu sein, da Cotswold ein Knotenpunkt für viele Geschehnisse geworden ist. Einige davon sind irdisch, andere dämonischer Natur.\n\nNehmt das nahegelegene Bestattungsgrab als Beispiel. Die Römer, die einst in diesem Teil Britanniens lebten, hatten eine Vorliebe für Krypten, Gräber, Mausoleen und dergleichen. Abgeschieden vom Tageslicht und den Menschen wurde das Grab im Laufe der Jahrhunderte die Heimat hunderter unheimlicher Kreaturen. Einige dieser einst "gewöhnlichen" Wesen wurden zu verdorbenen Abbildern ihrer selbst. Über die dahintersteckende Magie kann man nur Vermutungen anstellen. Auftragsteller Traint sucht Freiwillige, die dort etwas für Ordnung sorgen. Ihr werdet Euch damit vertraut machen wollen, wo es zu finden ist.
+Alb.TombWithAView.Summary:			Findet den Eingang zum Bestattungsgrab. Kehrt danach zu Lady Grynoch zurück.
+

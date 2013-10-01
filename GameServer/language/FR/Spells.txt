@@ -1,0 +1,112 @@
+﻿GamePlayer.CastSpell.MustWaitBeforeCast:	Vous devez attendre {0} secondes pour lancer un sort!
+SpellHandler.DelveInfo.Sec:	sec
+SpellHandler.CasterMove:	Vous bougez et intérromper votre sort!
+
+# DelveInfo
+DelveInfo.CastingTime:					Temps d'Incantation: {0}
+DelveInfo.ConcentrationCost:				Coûts en Concentration: {0}
+DelveInfo.Damage:					Dommages: {0}
+DelveInfo.Duration:					Durée: 
+DelveInfo.Focus:					Sort de type Focus. S'annule a la première action.
+DelveInfo.Frequency:					Frequence: {0}
+DelveInfo.HealthReturned:				Vie retourné: {0}% des dommages
+DelveInfo.InstrumentRequire:				Instrument requis: {0}
+DelveInfo.PowerCost:					Coût en mana: {0}
+DelveInfo.HealthCost:				Coût en vie: {0}
+DelveInfo.Radius:					Rayon d'Effet: {0}
+DelveInfo.Range:					Portée: {0}
+DelveInfo.RecastTime:					Délai de réutilisation: 
+DelveInfo.Target:					Cible: {0}
+DelveInfo.Value:					Valeur: {0}
+DelveInfo.ValueNegative:					Valeur: -{0}
+DelveInfo.DamageType:					Type de Dégats: {0}
+# DamageSpeedDecrease
+DamageSpeedDecrease.DelveInfo.Decrease:			Ralentissement de vitesse: {0}%
+DamageSpeedDecrease.DelveInfo.Function:			Fonction: Ralentissement de Vitesse + Dommage
+
+# ResistDebuff
+ResistDebuff.DelveInfo.Decrease:			Abaisse la résistance {0}: {1}
+ResistDebuff.DelveInfo.Function:			Fonction: Diminution de résistance
+
+#CharmSpellHandler
+CharmSpellHandler.DelveInfo.Function:			Fonction: {0}
+
+# DamageAddAndShield
+DamageAddAndShield.EventHandlerDA.DamageToYou:		{0} vous touche pour {1} points de dommage additionels!
+DamageAddAndShield.EventHandlerDA.YouHitExtra:		Vous touchez {0} pour {1} points de dommage additionels!
+DamageAddAndShield.EventHandlerDA.YouHitFor:		Vous touchez {0} pour {1} points de dommage additionels!
+DamageAddAndShield.EventHandlerDA.YourHitFor:		Votre {0} touche {1} pour {2} points de dommage additionels!
+DamageAddAndShield.EventHandlerDS.DamageToYou:		{0} vous touche pour {1} points de dommage additionels!
+DamageAddAndShield.EventHandlerDS.YouHitFor:		Vous touchez {0} pour {1} points de dommage additionels!
+DamageAddAndShield.EventHandlerDS.YourHitFor:		Votre {0} touche {1} pour {2} points de dommage additionels!
+
+# DirectDamageDebuffSpellHandler
+DirectDamageDebuffSpellHandler.DelveInfo.Decrease:	Diminution de résistance ({0}): {1}%
+DirectDamageDebuffSpellHandler.DelveInfo.Function:	Fonction: dommages/Diminution de résistance
+
+# DoTSpellHandler
+DoTSpellHandler.SendDamageMessages.YouHitFor:		Vous touchez {0} pour {1} points de dommages!
+DoTSpellHandler.SendDamageMessages.YourCriticallyHits:	Votre {0} touche critiquement {1} pour {2} points de dégats supplémentaires!
+DoTSpellHandler.SendDamageMessages.YourHitsFor:		Votre {0} touche {1} pour {2} points de dommages!
+
+# NearsightSpellHandler
+NearsightSpellHandler.DelveInfo.Function:		Fonction: Réduction de Portée {0}
+
+# ProcSpellHandler
+ProcSpellHandler.DelveInfo.Function:			Fonction: {0}
+
+Summon.CheckBeginCast.AlreadyHaveaPet:	Vous avez déjà une créature sous votre contrôle.
+
+# SummonCommanderPet
+SummonCommanderPet.CheckBeginCast.Text:			Vous avez déjà un commmandant sous votre contrôle!
+SummonCommanderPet.DelveInfo.Text1:			Fonction: Invocation
+SummonCommanderPet.DelveInfo.Text2:			Invoque un familier Commandant.
+SummonCommanderPet.DelveInfo.Text3:			Cible: {0}
+SummonCommanderPet.DelveInfo.Text4:			Coût en mana: {0}%
+SummonCommanderPet.DelveInfo.Text5:			Temps d'Incantation: {0}
+
+#SummonMinionHandler
+SummonMinionHandler.CheckBeginCast.Text1:		Vous devez déjà posséder un commmandant sous votre contrôle pour invoquer un suivant!
+SummonMinionHandler.CheckBeginCast.Text2:		Votre Commandant dispose déjà du maximum de nombre de suivant qu'il peut contrôler!
+SummonMinionHandler.DelveInfo.Text1:			Cible: {0}
+SummonMinionHandler.DelveInfo.Text2:			Coût en mana: {0}%
+SummonMinionHandler.DelveInfo.Text3:			Temps d'Incantation: {0}
+
+#PetPBAOE
+PetPBAOE.CheckBeginCast.NoPet:		Vous ne pouvez pas lancer ce sort sur une créature que vous ne contrôlez pas.
+
+#SummonAnimistFnF
+SummonAnimistFnF.CheckBeginCast.NoGroundTarget:		Vous devez positionner une cible au sol pour ce sort!
+SummonAnimistFnF.CheckBeginCast.TurretAreaCap:	Vous ne pouvez pas contrôler d'avantage de tourelles dans cette zone!
+SummonAnimistFnF.CheckBeginCast.TurretPlayerCap:	Vous ne pouvez pas contrôler d'avantage de tourelles!
+
+#SummonAnimistPet
+SummonAnimistPet.CheckBeginCast.AlreadyHaveaPet:	Vous avez déjà une créature sous votre contrôle!
+SummonAnimistPet.CheckBeginCast.GroundTargetNull:	Vous devez positionner une cible au sol pour ce sort!
+SummonAnimistPet.CheckBeginCast.GroundTargetNotInView:	Votre cible au sol n'est pas en vue.
+SummonAnimistPet.CheckBeginCast.GroundTargetNotInSpellRange:	Vous devez sélectionner une cible au sol moins éloignée.
+
+#TurretsRelease
+TurretsRelease.CheckBeginCast.NoSelectedTarget:	Vous ne pouvez lancer ce sort que sur une créature que vous contrôlez.
+TurretsRelease.CheckBeginCast.TargetTooFarAway:	Votre cible est trop éloignée.
+
+#PetSpellHandler
+PetSpellHandler.CheckBeginCast.NoControlledBrainForCast:	Vous devez posséder un familier pour lancer ce sort!
+
+#SummonNecromancerPet
+SummonNecromancerPet.CheckBeginCast.ShadeEffectIsNotNull:	Vous êtes déjà sous forme d'ombre!
+SummonNecromancerPet.DelveInfo.Function:	Fonction: Invocation de Familier
+SummonNecromancerPet.DelveInfo.Description:	Invoque un familier mort-vivant pour servir le lanceur de sort. Le lanceur de sort est transformé en ombre, et agit à travers son familier.
+SummonNecromancerPet.DelveInfo.Target:	Cible: {0}
+SummonNecromancerPet.DelveInfo.Power:	Coût en mana: {0}%
+SummonNecromancerPet.DelveInfo.CastingTime:	Temp d'Incantation: {0}
+
+#SavageEnduranceHeal
+SavageEnduranceHeal.CheckBeginCast.InsuffiscientHealth:	Vous n'avez pas assez de vie pour lancer ce sort!
+
+#AblativeArmorSpellHandler
+AblativeArmor.Target:	Votre bouclier absorbe {0} points de dégats!
+AblativeArmor.Attacker:	Un bouclier absorbe {0} points de dégats de votre attaque!
+
+#Amnesia
+Amnesia.MessageToTarget:	Votre esprit s'emmêle et vous oubliez ce que vous étiez en train de faire!
