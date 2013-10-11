@@ -261,7 +261,7 @@ namespace DOL.GS.Commands
 												slot = (eMerchantWindowSlot)Convert.ToInt32(args[5]);
 											}
 
-											slot = targetMerchant.TradeItems.GetValidSlot(page, slot);
+											slot = targetMerchant.TradeItems.GetValidSlot((byte)page, slot);
 											if (slot == eMerchantWindowSlot.Invalid)
 											{
 												DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Articles.Add.PageAndSlotInvalid", page, (MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS - 1), slot, (MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS - 1)));
@@ -274,8 +274,8 @@ namespace DOL.GS.Commands
 												item = new MerchantItem();
 												item.ItemListID = targetMerchant.TradeItems.ItemsListID;
 												item.ItemTemplateID = templateID;
-												item.SlotPosition = (int)slot;
-												item.PageNumber = page;
+												item.SlotPosition = (ushort)slot;
+												item.PageNumber = (byte)page;
 
 												GameServer.Database.AddObject(item);
 											}

@@ -1828,11 +1828,11 @@ namespace DOL.GS.PacketHandler
 
 			if (tradeItemsList != null)
 			{
-				for (int page = 0; page < MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS; page++)
+				for (byte page = 0; page < MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS; page++)
 				{
 					IDictionary itemsInPage = tradeItemsList.GetItemsInPage(page);
 					if (itemsInPage == null || itemsInPage.Count == 0)
-						continue;
+						continue;					
 
 					using (pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
 					{
@@ -1841,7 +1841,7 @@ namespace DOL.GS.PacketHandler
 						pak.WriteByte((byte) page); //Page number
 						pak.WriteByte(0x00); //Unused
 
-						for (int i = 0; i < MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS; i++)
+						foreach(ushort i in itemsInPage.Keys)
 						{
 							if (!itemsInPage.Contains(i))
 								continue;
@@ -1912,7 +1912,7 @@ namespace DOL.GS.PacketHandler
 							{
 								if (log.IsErrorEnabled)
 									log.Error("Merchant item template '" +
-									          ((MerchantItem) itemsInPage[page*MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS + i]).ItemTemplateID +
+									          ((MerchantItem) itemsInPage[i]).ItemTemplateID +
 									          "' not found, abort!!!");
 								return;
 							}

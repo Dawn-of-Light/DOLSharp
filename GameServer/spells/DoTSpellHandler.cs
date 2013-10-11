@@ -255,7 +255,7 @@ namespace DOL.GS.Spells
 			GamePlayer player = null;
 			if (m_caster is GamePlayer)
 				player = m_caster as GamePlayer;
-			if (player != null && player.CharacterClass.ManaStat != eStat.UNDEFINED)
+			if (player != null && player.CharacterClass.ManaStat != eStat.UNDEFINED && SpellLine.KeyName != GlobalSpellsLines.Mundane_Poisons)
 			{
 				int manaStatValue = player.GetModified((eProperty)player.CharacterClass.ManaStat);
 				spellDamage *= (manaStatValue + 200) / 275.0;

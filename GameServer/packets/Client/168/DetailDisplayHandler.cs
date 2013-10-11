@@ -369,7 +369,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							if (merchant == null)
 								return;
 
-							int pagenumber = objectID / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+							byte pagenumber = (byte)(objectID / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS);
 							int slotnumber = objectID % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
 							item = merchant.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);

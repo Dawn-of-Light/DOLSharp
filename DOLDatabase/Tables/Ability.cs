@@ -40,7 +40,7 @@ namespace DOL.Database
 		public DBAbility()
 		{
 		}
-/*
+
 		/// <summary>
 		/// Primary Key
 		/// </summary>
@@ -50,7 +50,7 @@ namespace DOL.Database
 			get { return m_id; }
 			set { m_id = value; }
 		}
-*/
+
 		/// <summary>
 		/// The key of this ability
 		/// </summary>

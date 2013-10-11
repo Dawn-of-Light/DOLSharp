@@ -288,6 +288,8 @@ namespace DOL.GS.Spells
             dbs.Power = 0;
             dbs.CastTime = 0;
             dbs.Range = WorldMgr.VISIBILITY_DISTANCE;
+            //debuff cap
+            dbs.AmnesiaChance = spell.AmnesiaChance;
             sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
@@ -306,7 +308,13 @@ namespace DOL.GS.Spells
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
             GameSpellEffect neweffect = CreateSpellEffect(target, effectiveness);
+                        
             if (target == null) return;
+            
+            
+            if(FindEffectsOnTarget(target, Spell.SpellType).Count >= Spell.AmnesiaChance)
+            	return;
+            
             if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
             neweffect.Start(target);
 
@@ -525,6 +533,8 @@ namespace DOL.GS.Spells
             dbs.Power = 0;
             dbs.CastTime = 0;
             dbs.Range = WorldMgr.VISIBILITY_DISTANCE;
+            // debuff cap
+            dbs.AmnesiaChance = spell.AmnesiaChance;
             sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
@@ -543,7 +553,13 @@ namespace DOL.GS.Spells
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
             GameSpellEffect neweffect = CreateSpellEffect(target, effectiveness);
+            
             if (target == null) return;
+            
+            if(FindEffectsOnTarget(target, Spell.SpellType).Count >= Spell.AmnesiaChance)
+            	return;
+
+            
             if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
             neweffect.Start(target);
 
@@ -608,6 +624,8 @@ namespace DOL.GS.Spells
             dbs.Power = 0;
             dbs.CastTime = 0;
             dbs.Range = WorldMgr.VISIBILITY_DISTANCE;
+            //debuff cap
+            dbs.AmnesiaChance = spell.AmnesiaChance;
             sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
@@ -636,8 +654,13 @@ namespace DOL.GS.Spells
 
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
-            GameSpellEffect neweffect = CreateSpellEffect(target, effectiveness);
+            GameSpellEffect neweffect = CreateSpellEffect(target, effectiveness);          
+            
             if (target == null) return;
+            
+            if(FindEffectsOnTarget(target, Spell.SpellType).Count >= Spell.AmnesiaChance)
+            	return;
+           
             if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
             neweffect.Start(target);
 

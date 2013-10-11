@@ -123,7 +123,7 @@ namespace DOL.GS
 		public virtual void OnPlayerBuy(GamePlayer player, int item_slot, int number)
 		{
 			//Get the template
-			int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+			byte pagenumber = (byte)(item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS);
 			int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
 			ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
@@ -182,7 +182,7 @@ namespace DOL.GS
 		public static void OnPlayerBuy(GamePlayer player, int item_slot, int number, MerchantTradeItems TradeItems)
 		{
 			//Get the template
-			int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+			byte pagenumber = (byte)(item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS);
 			int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
 			ItemTemplate template = TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
@@ -428,7 +428,7 @@ namespace DOL.GS
 		public override void OnPlayerBuy(GamePlayer player, int item_slot, int number)
 		{
 			//Get the template
-			int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+			byte pagenumber = (byte)(item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS);
 			int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
 			ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
@@ -554,7 +554,7 @@ namespace DOL.GS
 			if (m_moneyItem == null || m_moneyItem.Item == null)
 				return;
 			//Get the template
-			int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+			byte pagenumber = (byte)(item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS);
 			int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
 			ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);

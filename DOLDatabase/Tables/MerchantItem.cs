@@ -30,15 +30,26 @@ namespace DOL
 		{
 			private string		m_item_list_ID;
 			private string		m_id_nb;
-			private int			m_page_number;
-			private int			m_slot_pos;
+			private byte		m_page_number;
+			private ushort		m_slot_pos;
+			private uint		m_id;
 
 
 			public MerchantItem()
 			{
 			}
 
-			[DataElement(AllowDbNull=false, Index=true)]
+			/// <summary>
+			/// Primary Key
+			/// </summary>
+			[PrimaryKey(AutoIncrement=true)]
+			public uint ID
+			{
+				get { return m_id; }
+				set { m_id = value; }
+			}
+			
+			[DataElement(AllowDbNull=false, Index=true, IndexColumns="PageNumber,SlotPosition")]
 			public string ItemListID
 			{
 				get
@@ -52,7 +63,7 @@ namespace DOL
 				}
 			}
 
-			[DataElement(AllowDbNull=false)]
+			[DataElement(AllowDbNull=false, Index=true)]
 			public string ItemTemplateID
 			{
 				get
@@ -66,8 +77,8 @@ namespace DOL
 				}
 			}
 
-			[DataElement(AllowDbNull=false, Index=true)]
-			public int PageNumber
+			[DataElement(AllowDbNull=false)]
+			public byte PageNumber
 			{
 				get
 				{
@@ -80,8 +91,8 @@ namespace DOL
 				}
 			}
 
-			[DataElement(AllowDbNull=false, Index=true)]
-			public int SlotPosition
+			[DataElement(AllowDbNull=false)]
+			public ushort SlotPosition
 			{
 				get
 				{

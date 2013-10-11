@@ -17,7 +17,7 @@ namespace DOL.Database
 		{
 			AllowAdd = false;
 		}
-		/*
+		
 		/// <summary>
 		/// Primary Key
 		/// </summary>
@@ -27,7 +27,7 @@ namespace DOL.Database
 			get { return m_id; }
 			set { m_id = value; }
 		}
-*/
+
 		/// <summary>
 		/// Char class that can get this ability
 		/// </summary>

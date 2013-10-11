@@ -970,7 +970,7 @@ namespace DOL.GS.Housing
 			// tally up the price for all the requested changes
 			foreach (int slot in changes)
 			{
-				int page = slot/30;
+				byte page = (byte)(slot/30);
 				int pslot = slot%30;
 
 				ItemTemplate item = items.GetItem(page, (eMerchantWindowSlot) pslot);
@@ -993,7 +993,7 @@ namespace DOL.GS.Housing
 			// make all the changes
 			foreach (int slot in changes)
 			{
-				int page = slot/30;
+				byte page = (byte)(slot/30);
 				int pslot = slot%30;
 
 				ItemTemplate item = items.GetItem(page, (eMerchantWindowSlot) pslot);

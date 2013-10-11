@@ -1146,8 +1146,6 @@ namespace DOL.GS.Spells
             {
                 return;
             }
-            int ranged = storm.GetDistanceTo(new Point3D((int)effect.Owner.X, (int)effect.Owner.Y, (int)effect.Owner.Z));
-            if (ranged > 3000) return;
 
             if (s.Name == "Dazzling Array")
             {

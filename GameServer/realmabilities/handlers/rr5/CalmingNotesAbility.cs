@@ -68,11 +68,11 @@ namespace DOL.GS.RealmAbilities
         }
         public override void AddEffectsInfo(IList<string> list)
         {
-        	list.Add("Insta-cast spell that mesmerizes all enemies within "+m_spell.Radius+" radius for "+Math.Round((double)m_spell.Duration/1000, 1)+" seconds.");
+        	list.Add("Insta-cast spell that mesmerizes all enemies within "+m_spell.Radius+" radius for "+Math.Floor((double)m_spell.Duration/1000)+" seconds.");
             list.Add("");
             list.Add("Radius: "+m_spell.Radius);
             list.Add("Target: "+m_spell.Target);
-            list.Add("Duration: "+Math.Round((double)m_spell.Duration/1000, 1)+" sec");
+            list.Add("Duration: "+Math.Floor((double)m_spell.Duration/1000)+" sec");
             list.Add("Casting time: "+(m_spell.CastTime > 0 ? m_spell.CastTime+" sec" : "instant"));
         }
 

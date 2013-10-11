@@ -3163,7 +3163,7 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 		// warlock add
 		public static GameSpellEffect FindEffectOnTarget(GameLiving target, string spellType, string spellName)
 		{
-			lock (target.EffectList)
+			lock (target.EffectList.SyncRoot)
 			{
 				foreach (IGameEffect fx in target.EffectList)
 				{
@@ -3218,7 +3218,7 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 		/// <returns>first occurance of effect in target's effect list or null</returns>
 		public static GameSpellEffect FindEffectOnTarget(GameLiving target, ISpellHandler spellHandler)
 		{
-			lock (target.EffectList)
+			lock (target.EffectList.SyncRoot)
 			{
 				foreach (IGameEffect effect in target.EffectList)
 				{
@@ -3235,6 +3235,33 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 			return null;
 		}
 
+		public static List<GameSpellEffect> FindEffectsOnTarget(GameLiving target, string spellType)
+		{
+			List<GameSpellEffect> result = new List<GameSpellEffect>();
+			
+			if (target == null)
+				return result;
+			
+			lock (target.EffectList.SyncRoot)
+			{
+				foreach (IGameEffect effect in target.EffectList)
+				{
+					GameSpellEffect gsp = effect as GameSpellEffect;
+					
+					if (gsp == null)
+						continue;
+					
+					if (gsp is GameSpellAndImmunityEffect && ((GameSpellAndImmunityEffect)gsp).ImmunityState)
+						continue; // ignore immunity effects
+					
+					if (gsp.SpellHandler.Spell != null && (gsp.SpellHandler.Spell.SpellType == spellType))
+						result.Add(gsp);
+				}
+			}
+			
+			return result;			
+		}
+		
 		/// <summary>
 		/// Find effect by spell handler
 		/// </summary>
@@ -3246,7 +3273,7 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 			if (spellHandler.IsInstanceOfType(typeof(SpellHandler)) == false)
 				return null;
 
-			lock (target.EffectList)
+			lock (target.EffectList.SyncRoot)
 			{
 				foreach (IGameEffect effect in target.EffectList)
 				{
@@ -3275,7 +3302,7 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 			if (target == null)
 				return null;
 
-			lock (target.EffectList)
+			lock (target.EffectList.SyncRoot)
 			{
 				foreach (IGameEffect effect in target.EffectList)
 					if (effect.GetType() == effectType)

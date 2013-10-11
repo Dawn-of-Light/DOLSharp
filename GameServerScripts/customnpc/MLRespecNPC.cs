@@ -262,7 +262,7 @@ namespace DOL.GS.Scripts
                 else if (t.CharacterClass.ID == 49)//Nightshade
                 {
                     mlchoicea = (byte)eMLLine.Spymaster;
-                    mlchoiceb = (byte)eMLLine.Stormlord;
+                    mlchoiceb = (byte)eMLLine.BattleMaster;
                 }
                 else if (t.CharacterClass.ID == 50)//Ranger
                 {

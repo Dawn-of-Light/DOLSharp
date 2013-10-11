@@ -1124,7 +1124,7 @@ namespace DOL.AI.Brain
 						if (Body.ControlledBrain == null)
 						{
 							if (spell.SpellType.ToLower() == "pet") continue;
-							if (spell.SpellType.ToLower().Contains("summon"))
+							if (spell.SpellType.ToLower().Contains("summon") && spell.SpellType.ToLower() != "summontheurgistpet")
 							{
 								spell_rec.Add(spell);
 								needpet = true;
@@ -1132,7 +1132,7 @@ namespace DOL.AI.Brain
 						}
 						if (Body.ControlledBrain != null && Body.ControlledBrain.Body != null)
 						{
-							if (Util.Chance(30) && Body.ControlledBrain != null && spell.SpellType.ToLower() == "heal" &&
+							if (Util.Chance(30) && Body.ControlledBrain != null && (spell.SpellType.ToLower() == "heal" || spell.SpellType.ToLower() == "healovertime") &&
 							    Body.GetDistanceTo(Body.ControlledBrain.Body) <= spell.Range &&
 							    Body.ControlledBrain.Body.HealthPercent < 60 && spell.Target.ToLower() != "self")
 							{
@@ -1305,6 +1305,7 @@ namespace DOL.AI.Brain
 
 					#region Heals
 				case "Heal":
+				case "HealOverTime":
 					if (spell.Target.ToLower() == "self")
 					{
 						// if we have a self heal and health is less than 75% then heal, otherwise return false to try another spell or do nothing

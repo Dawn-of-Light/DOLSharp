@@ -161,7 +161,7 @@ namespace DOL.GS
 				else
 					item = new GeneratedUniqueItem(this.Realm, (byte)curlevel, this.m_types[curitem]);
 				
-				inventory.AddTradeItem((int)(i/MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS), (eMerchantWindowSlot)(i%MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS), item);
+				inventory.AddTradeItem((byte)(i/MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS), (eMerchantWindowSlot)(i%MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS), item);
 			
 			}
 			
@@ -186,7 +186,7 @@ namespace DOL.GS
 			}
 			
 			
-			int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+			byte pagenumber = (byte)(item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS);
 			int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
 			ItemUnique template = (ItemUnique)this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);

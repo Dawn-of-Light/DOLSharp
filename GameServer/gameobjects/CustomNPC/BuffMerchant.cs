@@ -882,7 +882,7 @@ namespace DOL.GS
 		{
 			if (isBounty == true) //...pay with Bounty Points.
 			{
-				int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+				byte pagenumber = (byte)(item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS);
 				int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
 				ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
@@ -922,7 +922,7 @@ namespace DOL.GS
 			}
 			if (isBounty == false) //...pay with Money.
 			{
-				int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+				byte pagenumber = (byte)(item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS);
 				int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
 				ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
@@ -1979,8 +1979,8 @@ public class BuffTokensList
 				m_item = new MerchantItem();
 				m_item.ItemListID = "BuffTokens";
 				m_item.ItemTemplateID = item.Id_nb;
-				m_item.PageNumber = pagenumber;
-				m_item.SlotPosition = slotposition;
+				m_item.PageNumber = (byte)pagenumber;
+				m_item.SlotPosition = (ushort)slotposition;
 				m_item.AllowAdd = true;
 				GameServer.Database.AddObject(m_item);
 				if (slotposition == 29)
@@ -2014,8 +2014,8 @@ public class BPBuffTokensList
 				m_item = new MerchantItem();
 				m_item.ItemListID = "BPBuffTokens";
 				m_item.ItemTemplateID = item.Id_nb;
-				m_item.PageNumber = pagenumber;
-				m_item.SlotPosition = slotposition;
+				m_item.PageNumber = (byte)pagenumber;
+				m_item.SlotPosition = (ushort)slotposition;
 				m_item.AllowAdd = true;
 				GameServer.Database.AddObject(m_item);
 				if (slotposition == 29)

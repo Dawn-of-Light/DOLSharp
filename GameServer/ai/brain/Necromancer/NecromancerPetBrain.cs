@@ -289,9 +289,11 @@ namespace DOL.AI.Brain
 			{
 				lock (shadeEffect)
 					shadeEffect.SetTetherTimer(seconds);
-				ArrayList effectList = new ArrayList(1);
-				effectList.Add(shadeEffect);
-				int effectsCount = 1;
+				
+				List<ShadeEffect> effectList = new List<ShadeEffect>();
+                effectList.Add(shadeEffect);
+                
+                int effectsCount = 1;
 				if (Owner is GamePlayer)
 				{
 					(Owner as GamePlayer).Out.SendUpdateIcons(effectList, ref effectsCount);

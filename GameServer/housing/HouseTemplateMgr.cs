@@ -234,8 +234,8 @@ namespace DOL.GS.Housing
 					              	{
 					              		ItemListID = merchantid,
 					              		ItemTemplateID = itemid,
-					              		SlotPosition = (slot%30),
-					              		PageNumber = (slot/30)
+					              		SlotPosition = (ushort)(slot%30),
+					              		PageNumber = (byte)(slot/30)
 					              	};
 
 					GameServer.Database.AddObject(newitem);

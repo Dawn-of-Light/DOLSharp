@@ -51,13 +51,16 @@ namespace DOL.GS
 		/// <summary>
 		/// The maximum number of items on one page
 		/// </summary>
-		public const byte MAX_ITEM_IN_TRADEWINDOWS = 30;
+		public const ushort MAX_ITEM_IN_TRADEWINDOWS = 30;
 
 		/// <summary>
 		/// The maximum number of pages supported by clients
 		/// </summary>
 		public const byte MAX_PAGES_IN_TRADEWINDOWS = 5;
 		
+		/// <summary>
+		/// Cached Database content
+		/// </summary>
 		protected static Dictionary<string, Dictionary<ushort, ItemTemplate>> m_cachedItemList = new Dictionary<string, Dictionary<ushort, ItemTemplate>>();
 
 		/// <summary>
@@ -97,13 +100,14 @@ namespace DOL.GS
 		/// <param name="itemsListId"></param>
 		public MerchantTradeItems(string itemsListId)
 		{
-			m_itemsListID = itemsListId;
+			if(itemsListId != null)
+				m_itemsListID = itemsListId.ToLower();
 			
 			if(!Util.IsEmpty(itemsListId))
 			{
 				lock(((ICollection)m_cachedItemList).SyncRoot)
 				{
-					if(m_cachedItemList.ContainsKey(ItemsListID)) 
+					if(m_cachedItemList.ContainsKey(ItemsListID))
 					{
 						m_usedItemsTemplates = m_cachedItemList[ItemsListID];
 					}
@@ -126,16 +130,10 @@ namespace DOL.GS
 		/// </summary>
 		public void LoadFromDatabase()
 		{
-			/// <summary>
-			/// FIXME put debug where needed !!
-			/// </summary>
-			/// 				if (log.IsErrorEnabled)
-			///		log.Error("Loading merchant items list (" + m_itemsListID + "):", e);
-			/// 
 			if(!Util.IsEmpty(ItemsListID))
 			{
 
-				IList<MerchantItem> itemList = GameServer.Database.SelectObjects<MerchantItem>("ItemListID = '" + GameServer.Database.Escape(m_itemsListID) + "'");
+				IList<MerchantItem> itemList = GameServer.Database.SelectObjects<MerchantItem>("ItemListID = '" + GameServer.Database.Escape(ItemsListID) + "'");
 
 				System.Text.StringBuilder itemtemplateString = new System.Text.StringBuilder();
 				
@@ -156,22 +154,8 @@ namespace DOL.GS
 					// Populate dict with Id_nb key
 					foreach(ItemTemplate item in GameServer.Database.SelectObjects<ItemTemplate>("Id_nb IN("+itemtemplateString+")"))
 					{
-						if(!itemtemplateDict.ContainsKey(item.Id_nb))
-							itemtemplateDict[item.Id_nb] = item;
-					}
-					
-					// prepare object member
-					
-					m_usedItemsTemplates = new Dictionary<ushort, ItemTemplate>();
-					
-					lock(((ICollection)m_usedItemsTemplates).SyncRoot)
-					{
-						foreach(MerchantItem merc in itemList)
-						{
-							// add item template to object member
-							if(!m_usedItemsTemplates.ContainsKey((ushort)(merc.PageNumber*MAX_ITEM_IN_TRADEWINDOWS+merc.SlotPosition)) && itemtemplateDict.ContainsKey(merc.ItemTemplateID))
-								m_usedItemsTemplates[(ushort)(merc.PageNumber*MAX_ITEM_IN_TRADEWINDOWS+merc.SlotPosition)] = itemtemplateDict[merc.ItemTemplateID];
-						}
+						if(!itemtemplateDict.ContainsKey(item.Id_nb.ToLower()) && item != null)
+							itemtemplateDict[item.Id_nb.ToLower()] = item;
 					}
 					
 					// Update cache with current item list.
@@ -179,10 +163,35 @@ namespace DOL.GS
 					{
 						if(m_cachedItemList.ContainsKey(ItemsListID))
 							m_cachedItemList.Remove(ItemsListID);
-							
-						m_cachedItemList[ItemsListID] = m_usedItemsTemplates;
-					}					
+						
+						m_cachedItemList[ItemsListID] = new Dictionary<ushort, ItemTemplate>();
 					
+						foreach(MerchantItem merc in itemList)
+						{
+							if (log.IsErrorEnabled && !itemtemplateDict.ContainsKey(merc.ItemTemplateID.ToLower()))
+							{
+								log.Error("Loading merchant items list (" + ItemsListID + "): itemtemplate "+merc.ItemTemplateID+" not found.");
+							}
+							
+							if(log.IsErrorEnabled && m_cachedItemList[ItemsListID].ContainsKey((ushort)(merc.PageNumber*MAX_ITEM_IN_TRADEWINDOWS+merc.SlotPosition)))
+							{
+								log.Error("Loading merchant items list (" + ItemsListID + "): duplicate item at page "+merc.PageNumber+" slot : "+merc.SlotPosition+".");
+							}
+							
+							// add item template to object member
+							if(!m_cachedItemList[ItemsListID].ContainsKey((ushort)(merc.PageNumber*MAX_ITEM_IN_TRADEWINDOWS+merc.SlotPosition)) && itemtemplateDict.ContainsKey(merc.ItemTemplateID.ToLower()))
+								m_cachedItemList[ItemsListID][(ushort)(merc.PageNumber*MAX_ITEM_IN_TRADEWINDOWS+merc.SlotPosition)] = itemtemplateDict[merc.ItemTemplateID.ToLower()];
+						}
+					}
+					
+					// prepare object member
+					m_usedItemsTemplates = m_cachedItemList[ItemsListID];				
+					
+				}
+				else
+				{
+					if (log.IsErrorEnabled)
+						log.Error("Loading merchant items list (" + ItemsListID + "): no records found.");
 				}
 				
 			}
@@ -198,7 +207,7 @@ namespace DOL.GS
 		/// <param name="page">Zero-based page number</param>
 		/// <param name="slot">Zero-based slot number</param>
 		/// <param name="item">The item template to add</param>
-		public virtual bool AddTradeItem(int page, eMerchantWindowSlot slot, ItemTemplate item)
+		public virtual bool AddTradeItem(byte page, eMerchantWindowSlot slot, ItemTemplate item)
 		{
 			lock (((ICollection)m_usedItemsTemplates).SyncRoot)
 			{
@@ -227,7 +236,7 @@ namespace DOL.GS
 		/// <param name="page">Zero-based page number</param>
 		/// <param name="slot">Zero-based slot number</param>
 		/// <returns>true if removed</returns>
-		public virtual bool RemoveTradeItem(int page, eMerchantWindowSlot slot)
+		public virtual bool RemoveTradeItem(byte page, eMerchantWindowSlot slot)
 		{
 			lock (((ICollection)m_usedItemsTemplates).SyncRoot)
 			{
@@ -251,16 +260,17 @@ namespace DOL.GS
 		/// <summary>
 		/// Get the list of all items in the specified page
 		/// </summary>
-		public virtual IDictionary GetItemsInPage(int page)
+		public virtual IDictionary GetItemsInPage(byte page)
 		{
 			Dictionary<ushort, ItemTemplate> result = new Dictionary<ushort, ItemTemplate>();
 			
 			lock(((ICollection)m_usedItemsTemplates).SyncRoot)
 			{
+
 				foreach(ushort key in m_usedItemsTemplates.Keys)
 				{
-					if(key >= (MAX_ITEM_IN_TRADEWINDOWS*page) && key < (MAX_ITEM_IN_TRADEWINDOWS*(page+1)))
-					   result.Add(key, m_usedItemsTemplates[key]);
+					if(key >= (MAX_ITEM_IN_TRADEWINDOWS*page) && key < (MAX_ITEM_IN_TRADEWINDOWS*(page+1)) && m_usedItemsTemplates.ContainsKey(key) && m_usedItemsTemplates[key] != null)
+						result.Add((ushort)(key%MAX_ITEM_IN_TRADEWINDOWS), m_usedItemsTemplates[key]);
 				}
 			}
 			
@@ -273,7 +283,7 @@ namespace DOL.GS
 		/// <param name="page">The item page</param>
 		/// <param name="slot">The item slot</param>
 		/// <returns>Item template or null</returns>
-		public virtual ItemTemplate GetItem(int page, eMerchantWindowSlot slot)
+		public virtual ItemTemplate GetItem(byte page, eMerchantWindowSlot slot)
 		{
 			slot = GetValidSlot(page, slot);
 			
@@ -304,7 +314,7 @@ namespace DOL.GS
 		/// <param name="page">Zero-based page number</param>
 		/// <param name="slot">SlotPosition to check</param>
 		/// <returns>the slot if it's valid or eMerchantWindowSlot.Invalid if not</returns>
-		public virtual eMerchantWindowSlot GetValidSlot(int page, eMerchantWindowSlot slot)
+		public virtual eMerchantWindowSlot GetValidSlot(byte page, eMerchantWindowSlot slot)
 		{
 			if (page < 0 || page >= MAX_PAGES_IN_TRADEWINDOWS) 
 				return eMerchantWindowSlot.Invalid;
@@ -313,7 +323,7 @@ namespace DOL.GS
 			{
 				IDictionary itemsInPage = GetItemsInPage(page);
 				
-				for (int i = (int)eMerchantWindowSlot.FirstInPage; i < (int)eMerchantWindowSlot.LastInPage; i++)
+				for (ushort i = (ushort)eMerchantWindowSlot.FirstInPage; i < (ushort)eMerchantWindowSlot.LastInPage; i++)
 				{
 					if (!itemsInPage.Contains(i))
 						return ((eMerchantWindowSlot)i);
