@@ -114,6 +114,12 @@ namespace DOL.GS
 		public static bool CanLivingAttack(GameLiving attacker, GameLiving defender)
 		{
 			// someone who cares about factions should write this
+			if(attacker == null || defender == null)
+				return false;
+			
+			if(attacker is GameNPC && defender is GameNPC)
+				return !(((GameNPC)attacker).IsFriend((GameNPC)defender));
+			
 			return true;//false;
 		}
 	}

@@ -1086,6 +1086,12 @@ namespace DOL.GS.ServerProperties
 		public static string RVR_LINK_DEATH_RELOG_GRACE_PERIOD;
 
 		/// <summary>
+		/// Adjustment to base missrate for PvP
+		/// </summary>
+		[ServerProperty("pvp", "missrate_default_base_pvp", "Adjustment to default missrate base for PvP", 10)]
+		public static int MISSRATE_DEFAULT_BASE_PVP;
+		
+		/// <summary>
 		/// PvP Immunity Timer - Killed by Mobs
 		/// </summary>
 		[ServerProperty("pvp", "Timer_Killed_By_Mob", "Immunity Timer When player killed in PvP, in seconds", 30)] //30 seconds default
@@ -1402,6 +1408,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("pve", "missrate_reduction_per_attackers", "Adjustment to missrate per number of attackers", 0)]
 		public static int MISSRATE_REDUCTION_PER_ATTACKERS;
+
+		/// <summary>
+		/// Adjustment to base missrate for PvE
+		/// </summary>
+		[ServerProperty("pve", "missrate_default_base_pve", "Adjustment to default missrate base for PvE", 15)]
+		public static int MISSRATE_DEFAULT_BASE_PVE;
 
 		/// <summary>
 		/// Spell damage reduction multiplier based on hitchance below 55%.

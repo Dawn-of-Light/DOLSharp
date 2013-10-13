@@ -39,7 +39,7 @@ namespace DOL.GS
 		/// Map holding a list of ItemTemplateIDs for each TemplateName
 		/// 1:n mapping between loottemplateName and loottemplate entries
 		/// </summary>
-		protected static Dictionary<string, Dictionary<string, DropTemplateXItemTemplate>> m_lootTemplates;
+		protected static Dictionary<string, List<Tuple<DropTemplateXItemTemplate, ItemTemplate>>> m_lootTemplates;
 
 		/// <summary>
 		/// Map holding the corresponding LootTemplateName for each MobName
@@ -70,7 +70,7 @@ namespace DOL.GS
 		{
 			if (m_lootTemplates == null)
 			{
-				m_lootTemplates = new Dictionary<string, Dictionary<string, DropTemplateXItemTemplate>>();
+				m_lootTemplates = new Dictionary<string, List<Tuple<DropTemplateXItemTemplate, ItemTemplate>>>();
 
 				lock (m_lootTemplates)
 				{
@@ -92,14 +92,12 @@ namespace DOL.GS
 
 					if (dbLootTemplates != null)
 					{
-						Dictionary<string, DropTemplateXItemTemplate> loot;
 
 						foreach (DropTemplateXItemTemplate dbTemplate in dbLootTemplates)
 						{
-							if (!m_lootTemplates.TryGetValue(dbTemplate.TemplateName.ToLower(), out loot))
+							if(!m_lootTemplates.ContainsKey(dbTemplate.TemplateName.ToLower()))
 							{
-								loot = new Dictionary<string, DropTemplateXItemTemplate>();
-								m_lootTemplates[dbTemplate.TemplateName.ToLower()] = loot;
+								m_lootTemplates[dbTemplate.TemplateName.ToLower()] = new List<Tuple<DropTemplateXItemTemplate, ItemTemplate>>();
 							}
 
 							ItemTemplate drop = GameServer.Database.FindObjectByKey<ItemTemplate>(dbTemplate.ItemTemplateID);
@@ -107,12 +105,11 @@ namespace DOL.GS
 							if (drop == null)
 							{
 								if (log.IsErrorEnabled)
-									log.Error("ItemTemplate: " + dbTemplate.ItemTemplateID + " is not found, it is referenced from DropTemplateXItemTemplate: " + dbTemplate.TemplateName);
+									log.Error("ItemTemplate: " + dbTemplate.ItemTemplateID + " is not found, it is referenced from DropTemplateXItemTemplate(Preload): " + dbTemplate.TemplateName);
 							}
 							else
 							{
-								if (!loot.ContainsKey(dbTemplate.ItemTemplateID.ToLower()))
-									loot.Add(dbTemplate.ItemTemplateID.ToLower(), dbTemplate);
+								m_lootTemplates[dbTemplate.TemplateName.ToLower()].Add(new Tuple<DropTemplateXItemTemplate, ItemTemplate>(dbTemplate, drop));
 							}
 						}
 					}
@@ -148,13 +145,13 @@ namespace DOL.GS
 						foreach (MobDropTemplate dbMobXTemplate in dbMobXLootTemplates)
 						{
 							// There can be multiple MobDropTemplate for a mob, each pointing to a different loot template
-							List<MobDropTemplate> mobxLootTemplates;
-							if (!m_mobXLootTemplates.TryGetValue(dbMobXTemplate.MobName.ToLower(), out mobxLootTemplates))
+							
+							if (!m_mobXLootTemplates.ContainsKey(dbMobXTemplate.MobName.ToLower()))
 							{
-								mobxLootTemplates = new List<MobDropTemplate>();
-								m_mobXLootTemplates[dbMobXTemplate.MobName.ToLower()] = mobxLootTemplates;
+								m_mobXLootTemplates[dbMobXTemplate.MobName.ToLower()] = new List<MobDropTemplate>();
 							}
-							mobxLootTemplates.Add(dbMobXTemplate);
+							
+							m_mobXLootTemplates[dbMobXTemplate.MobName.ToLower()].Add(dbMobXTemplate);
 						}
 					}
 				}
@@ -177,7 +174,12 @@ namespace DOL.GS
 			bool isDefaultLootTemplateRefreshed = false;
 
 			// First see if there are any MobXLootTemplates associated with this mob
-			IList<MobDropTemplate> mxlts = GameServer.Database.SelectObjects<MobDropTemplate>("MobName = '" + GameServer.Database.Escape(mob.Name) + "'");
+			IList<MobDropTemplate> mxlts;
+
+			if(mob.NPCTemplate != null && mob.NPCTemplate.TemplateId > 0)
+				mxlts = GameServer.Database.SelectObjects<MobDropTemplate>("MobName = '" + GameServer.Database.Escape(mob.Name) + "' OR MobName = '" + GameServer.Database.Escape(mob.NPCTemplate.TemplateId.ToString()) + "'");
+			else
+				mxlts = GameServer.Database.SelectObjects<MobDropTemplate>("MobName = '" + GameServer.Database.Escape(mob.Name) + "'");
 
 			if (mxlts != null)
 			{
@@ -185,6 +187,7 @@ namespace DOL.GS
 				{
 					foreach (MobDropTemplate mxlt in mxlts)
 						m_mobXLootTemplates.Remove(mxlt.MobName.ToLower());
+					
 					foreach (MobDropTemplate mxlt in mxlts)
 					{
 						List<MobDropTemplate> mobxLootTemplates;
@@ -217,18 +220,25 @@ namespace DOL.GS
 			{
 				lock (m_lootTemplates)
 				{
-					m_lootTemplates.Remove(templateName.ToLower());
-
-					var lootList = new Dictionary<string, DropTemplateXItemTemplate>();
+					if(m_lootTemplates.ContainsKey(templateName.ToLower()))
+						m_lootTemplates.Remove(templateName.ToLower());
+						
+					m_lootTemplates[templateName.ToLower()] = new List<Tuple<DropTemplateXItemTemplate, ItemTemplate>>();
+					
 					foreach (DropTemplateXItemTemplate lt in lootTemplates)
 					{
-						if (lootList.ContainsKey(lt.ItemTemplateID.ToLower()) == false)
+						ItemTemplate drop = GameServer.Database.FindObjectByKey<ItemTemplate>(lt.ItemTemplateID);
+
+						if (drop == null)
 						{
-							lootList.Add(lt.ItemTemplateID.ToLower(), lt);
+							if (log.IsErrorEnabled)
+								log.Error("ItemTemplate: " + lt.ItemTemplateID + " is not found, it is referenced from DropTemplateXItemTemplate(Refresh): " + templateName);
+						}
+						else
+						{
+							m_lootTemplates[templateName.ToLower()].Add(new Tuple<DropTemplateXItemTemplate, ItemTemplate>(lt, drop));
 						}
 					}
-
-					m_lootTemplates.Add(templateName.ToLower(), lootList);
 				}
 			}
 		}
@@ -240,8 +250,10 @@ namespace DOL.GS
 			try
 			{
 				GamePlayer player = killer as GamePlayer;
-				if (killer is GameNPC && ((GameNPC)killer).Brain is IControlledBrain)
+				
+				if (killer is GameNPC && ((GameNPC)killer).Brain != null && ((GameNPC)killer).Brain is IControlledBrain)
 					player = ((ControlledNpcBrain)((GameNPC)killer).Brain).GetPlayerOwner();
+				
 				if (player == null)
 					return loot;
 
@@ -249,52 +261,87 @@ namespace DOL.GS
 				if (player.Group != null)
 					player = player.Group.Leader;
 
-				List<MobDropTemplate> killedMobXLootTemplates;
+				List<MobDropTemplate> killedMobXLootTemplates = new List<MobDropTemplate>();
 				// MobDropTemplate contains a loot template name and the max number of drops allowed for that template.
 				// We don't need an entry in MobDropTemplate in order to drop loot, only to control the max number of drops.
-
-				// DropTemplateXItemTemplate contains a template name and an itemtemplateid (id_nb).
-				// TemplateName usually equals Mob name, so if you want to know what drops for a mob:
-				// select * from DropTemplateXItemTemplate where templatename = 'mob name';
-				// It is possible to have TemplateName != MobName but this works only if there is an entry in MobDropTemplate for the MobName.
-				if (!m_mobXLootTemplates.TryGetValue(mob.Name.ToLower(), out killedMobXLootTemplates))
-				{
-					Dictionary<string, DropTemplateXItemTemplate> lootTemplatesToDrop;
-					// We can use DropTemplateXItemTemplate.Count to determine how many of a item can drop
-					if (m_lootTemplates.TryGetValue(mob.Name.ToLower(), out lootTemplatesToDrop))
-					{
-						foreach (DropTemplateXItemTemplate lootTemplate in lootTemplatesToDrop.Values)
-						{
-							ItemTemplate drop = GameServer.Database.FindObjectByKey<ItemTemplate>(lootTemplate.ItemTemplateID);
-
-							if (drop.Realm == (int)player.Realm || drop.Realm == 0 || player.CanUseCrossRealmItems)
-							{
-								if (lootTemplate.Chance == 100)
-									loot.AddFixed(drop, lootTemplate.Count);
-								else
-									loot.AddRandom(lootTemplate.Chance, drop, lootTemplate.Count);
-							}
-						}
-					}
-				}
-				else
+				if(m_mobXLootTemplates.ContainsKey(mob.Name.ToLower()))
+					foreach(MobDropTemplate tpl in m_mobXLootTemplates[mob.Name.ToLower()])
+						killedMobXLootTemplates.Add(tpl);
+				
+				if(mob.NPCTemplate != null && mob.NPCTemplate.TemplateId > 0 && m_mobXLootTemplates.ContainsKey(mob.NPCTemplate.TemplateId.ToString()))
+					foreach(MobDropTemplate tpl in m_mobXLootTemplates[mob.NPCTemplate.TemplateId.ToString()])
+						killedMobXLootTemplates.Add(tpl);
+										
+				if (killedMobXLootTemplates.Count > 0)
 				{
 					// MobDropTemplate exists and tells us the max number of items that can drop.
 					// Because we are restricting the max number of items to drop we need to traverse the list
 					// and add every 100% chance items to the loots Fixed list and add the rest to the Random list
 					// due to the fact that 100% items always drop regardless of the drop limit
-					List<DropTemplateXItemTemplate> lootTemplatesToDrop = new List<DropTemplateXItemTemplate>();
-					foreach (MobDropTemplate mobXLootTemplate in killedMobXLootTemplates)
+					foreach(MobDropTemplate tpl in killedMobXLootTemplates) 
 					{
-						loot = GenerateLootFromMobXLootTemplates(mobXLootTemplate, lootTemplatesToDrop, loot, player);
-						loot.DropCount = Math.Max(mobXLootTemplate.DropCount, loot.DropCount);
-						foreach (DropTemplateXItemTemplate lootTemplate in lootTemplatesToDrop)
+						if(m_lootTemplates.ContainsKey(tpl.LootTemplateName.ToLower()) && m_lootTemplates[tpl.LootTemplateName.ToLower()].Count > 0)
 						{
-							ItemTemplate drop = GameServer.Database.FindObjectByKey<ItemTemplate>(lootTemplate.ItemTemplateID);
-
-							if (drop.Realm == (int)player.Realm || drop.Realm == 0 || player.CanUseCrossRealmItems)
-								loot.AddRandom(lootTemplate.Chance, drop, lootTemplate.Count);
+							// Update total dropcount
+							loot.DropCount += tpl.DropCount;
+							
+							foreach (Tuple<DropTemplateXItemTemplate, ItemTemplate> lootlist in m_lootTemplates[tpl.LootTemplateName.ToLower()])
+							{
+								if (lootlist.Item2.Realm == (int)player.Realm || lootlist.Item2.Realm == 0 || player.CanUseCrossRealmItems)
+								{
+									if (lootlist.Item1.Chance == 100)
+										loot.AddFixed(lootlist.Item2, Math.Max(1, lootlist.Item1.Count));
+									else
+										loot.AddRandom(lootlist.Item1.Chance, lootlist.Item2, Math.Max(1, lootlist.Item1.Count));
+								}
+							}
 						}
+						
+					}
+				}
+				else
+				{
+					// DropTemplateXItemTemplate contains a template name and an itemtemplateid (id_nb).
+					// TemplateName usually equals Mob name, so if you want to know what drops for a mob:
+					// select * from DropTemplateXItemTemplate where templatename = 'mob name';
+					// It is possible to have TemplateName != MobName but this works only if there is an entry in MobDropTemplate for the MobName.
+
+					if(m_lootTemplates.ContainsKey(mob.Name.ToLower()) && m_lootTemplates[mob.Name.ToLower()].Count > 0)
+				  	{
+				   		foreach (Tuple<DropTemplateXItemTemplate, ItemTemplate> lootlist in m_lootTemplates[mob.Name.ToLower()])
+				   		{
+				   			if (lootlist.Item2.Realm == (int)player.Realm || lootlist.Item2.Realm == 0 || player.CanUseCrossRealmItems)
+							{
+								if (lootlist.Item1.Chance == 100)
+								{
+									loot.AddFixed(lootlist.Item2, lootlist.Item1.Count);
+								}
+								else
+								{
+									loot.DropCount += lootlist.Item1.Count;
+									loot.AddRandom(lootlist.Item1.Chance, lootlist.Item2, lootlist.Item1.Count);
+								}
+							}
+				   		}
+					}
+					
+					if(mob.NPCTemplate != null && mob.NPCTemplate.TemplateId > 0 && m_lootTemplates.ContainsKey(mob.NPCTemplate.TemplateId.ToString()) && m_lootTemplates[mob.NPCTemplate.TemplateId.ToString()].Count > 0)
+				  	{
+				   		foreach (Tuple<DropTemplateXItemTemplate, ItemTemplate> lootlist in m_lootTemplates[mob.NPCTemplate.TemplateId.ToString()])
+				   		{
+				   			if (lootlist.Item2.Realm == (int)player.Realm || lootlist.Item2.Realm == 0 || player.CanUseCrossRealmItems)
+							{
+								if (lootlist.Item1.Chance == 100)
+								{
+									loot.AddFixed(lootlist.Item2, lootlist.Item1.Count);
+								}
+								else
+								{
+									loot.DropCount += lootlist.Item1.Count;
+									loot.AddRandom(lootlist.Item1.Chance, lootlist.Item2, lootlist.Item1.Count);
+								}
+							}
+				   		}
 					}
 				}
 			}
@@ -302,46 +349,12 @@ namespace DOL.GS
 			{
 				log.ErrorFormat("Error in LootGeneratorTemplate for mob {0}.  Exception: {1}", mob.Name, ex.Message);
 			}
-
+			
+			string debugdroplist = "";
+			foreach(ItemTemplate le in loot.GetLoot())
+				debugdroplist+="drop Id_nb : "+le.Id_nb+" -- ";
+			log.Debug("loot drop list for "+mob.Name+" ; count "+loot.DropCount+" : "+debugdroplist);
 			return loot;
 		}
-
-		/// <summary>
-		/// Add all loot templates specified in MobDropTemplate for an entry in DropTemplateXItemTemplate
-		/// If the item has a 100% drop chance add it as a fixed drop to the loot list.  
-		/// </summary>
-		/// <param name="mobXLootTemplate">Entry in MobDropTemplate.</param>
-		/// <param name="lootTemplates">List of all itemtemplates this mob can drop and the chance to drop</param>
-		/// <param name="lootList">List to hold loot.</param>
-		/// <param name="player">Player used to determine realm</param>
-		/// <returns>lootList (for readability)</returns>
-		private static LootList GenerateLootFromMobXLootTemplates(MobDropTemplate mobXLootTemplates, List<DropTemplateXItemTemplate> lootTemplates, LootList lootList, GamePlayer player)
-		{
-			if (mobXLootTemplates == null || lootTemplates == null || player == null)
-				return lootList;
-
-			Dictionary<string, DropTemplateXItemTemplate> templateList = null;
-			if (m_lootTemplates.ContainsKey(mobXLootTemplates.LootTemplateName.ToLower()))
-				templateList = m_lootTemplates[mobXLootTemplates.LootTemplateName.ToLower()];
-
-			if (templateList != null)
-			{
-				foreach (DropTemplateXItemTemplate lootTemplate in templateList.Values)
-				{
-					ItemTemplate drop = GameServer.Database.FindObjectByKey<ItemTemplate>(lootTemplate.ItemTemplateID);
-
-					if (drop.Realm == (int)player.Realm || drop.Realm == 0 || player.CanUseCrossRealmItems)
-					{
-						if (lootTemplate.Chance == 100)
-							lootList.AddFixed(drop, lootTemplate.Count);
-						else
-							lootTemplates.Add(lootTemplate);
-					}
-				}
-			}
-
-			return lootList;
-		}
-
 	}
 }

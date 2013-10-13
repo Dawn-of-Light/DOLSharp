@@ -56,7 +56,7 @@ namespace DOL.GS
 		}
 
 		private Queue m_buffs = new Queue();
-		private const int BUFFS_SPELL_DURATION = 7200;
+		private const int BUFFS_SPELL_DURATION = int.MaxValue;
 		private const bool BUFFS_PLAYER_PET = true;
 
 		public override bool AddToWorld()
@@ -146,22 +146,14 @@ namespace DOL.GS
 		private static Spell m_dexqui;
 		private static Spell m_acuity;
 		private static Spell m_specaf;
-		private static Spell m_casterbaseaf;
-		private static Spell m_casterbasestr;
-		private static Spell m_casterbasecon;
-		private static Spell m_casterbasedex;
-		private static Spell m_casterstrcon;
-		private static Spell m_casterdexqui;
-		private static Spell m_casteracuity;
-		private static Spell m_casterspecaf;
 		private static Spell m_haste;
 		#region Non-live (commented out)
-		//private static Spell m_powereg;
-		//private static Spell m_dmgadd;
-		//private static Spell m_hpRegen;
-		//private static Spell m_heal;
+		private static Spell m_powereg;
+		private static Spell m_dmgadd;
+		private static Spell m_hpRegen;
 		#endregion None-live (commented out)
-
+		private static Spell m_speed;
+		
 		#region Spells
 
 		/// <summary>
@@ -195,36 +187,6 @@ namespace DOL.GS
 			}
 		}
 		/// <summary>
-		/// Merch Caster Base AF buff (VERIFIED)
-		/// </summary>
-		public static Spell casterMerchBaseAFBuff
-		{
-			get
-			{
-				if (m_casterbaseaf == null)
-				{
-					DBSpell spell = new DBSpell();
-					spell.AllowAdd = false;
-					spell.CastTime = 0;
-					spell.Concentration = 1;
-					spell.ClientEffect = 1467;
-					spell.Icon = 1467;
-					spell.Duration = BUFFS_SPELL_DURATION;
-					spell.Value = 58; //Effective buff 58
-					spell.Name = "Armor of the Realm";
-					spell.Description = "Adds to the recipient's Armor Factor (AF) resulting in better protection againts some forms of attack. It acts in addition to any armor the target is wearing.";
-					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
-					spell.SpellID = 89001;
-					spell.Target = "Realm";
-					spell.Type = "ArmorFactorBuff";
-					spell.EffectGroup = 1;
-
-					m_casterbaseaf = new Spell(spell, 50);
-				}
-				return m_casterbaseaf;
-			}
-		}
-		/// <summary>
 		/// Merch Base Str buff (VERIFIED)
 		/// </summary>
 		public static Spell MerchStrBuff
@@ -254,36 +216,7 @@ namespace DOL.GS
 				return m_basestr;
 			}
 		}
-		/// <summary>
-		/// Merch Caster Base Str buff (VERIFIED)
-		/// </summary>
-		public static Spell casterMerchStrBuff
-		{
-			get
-			{
-				if (m_casterbasestr == null)
-				{
-					DBSpell spell = new DBSpell();
-					spell.AllowAdd = false;
-					spell.CastTime = 0;
-					spell.Concentration = 1;
-					spell.ClientEffect = 1457;
-					spell.Icon = 1457;
-					spell.Duration = BUFFS_SPELL_DURATION;
-					spell.Value = 55; //effective buff 55
-					spell.Name = "Strength of the Realm";
-					spell.Description = "Increases target's Strength.";
-					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
-					spell.SpellID = 89002;
-					spell.Target = "Realm";
-					spell.Type = "StrengthBuff";
-					spell.EffectGroup = 4;
 
-					m_casterbasestr = new Spell(spell, 50);
-				}
-				return m_casterbasestr;
-			}
-		}
 		/// <summary>
 		/// Merch Base Con buff (VERIFIED)
 		/// </summary>
@@ -314,36 +247,7 @@ namespace DOL.GS
 				return m_basecon;
 			}
 		}
-		/// <summary>
-		/// Merch Caster Base Con buff (VERIFIED)
-		/// </summary>
-		public static Spell casterMerchConBuff
-		{
-			get
-			{
-				if (m_casterbasecon == null)
-				{
-					DBSpell spell = new DBSpell();
-					spell.AllowAdd = false;
-					spell.CastTime = 0;
-					spell.Concentration = 1;
-					spell.ClientEffect = 1486;
-					spell.Icon = 1486;
-					spell.Duration = BUFFS_SPELL_DURATION;
-					spell.Value = 55; //effective buff 55
-					spell.Name = "Fortitude of the Realm";
-					spell.Description = "Increases target's Constitution.";
-					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
-					spell.SpellID = 89003;
-					spell.Target = "Realm";
-					spell.Type = "ConstitutionBuff";
-					spell.EffectGroup = 201;
 
-					m_casterbasecon = new Spell(spell, 50);
-				}
-				return m_casterbasecon;
-			}
-		}
 		/// <summary>
 		/// Merch Base Dex buff (VERIFIED)
 		/// </summary>
@@ -374,36 +278,7 @@ namespace DOL.GS
 				return m_basedex;
 			}
 		}
-		/// <summary>
-		/// Merch Caster Base Dex buff (VERIFIED)
-		/// </summary>
-		public static Spell casterMerchDexBuff
-		{
-			get
-			{
-				if (m_casterbasedex == null)
-				{
-					DBSpell spell = new DBSpell();
-					spell.AllowAdd = false;
-					spell.CastTime = 0;
-					spell.Concentration = 1;
-					spell.ClientEffect = 1476;
-					spell.Icon = 1476;
-					spell.Duration = BUFFS_SPELL_DURATION;
-					spell.Value = 55; //effective buff 55
-					spell.Name = "Dexterity of the Realm";
-					spell.Description = "Increases Dexterity for a character.";
-					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
-					spell.SpellID = 89004;
-					spell.Target = "Realm";
-					spell.Type = "DexterityBuff";
-					spell.EffectGroup = 202;
 
-					m_casterbasedex = new Spell(spell, 50);
-				}
-				return m_casterbasedex;
-			}
-		}
 		/// <summary>
 		/// Merch Spec Str/Con buff (VERIFIED)
 		/// </summary>
@@ -434,36 +309,7 @@ namespace DOL.GS
 				return m_strcon;
 			}
 		}
-		/// <summary>
-		/// Merch Caster Spec Str/Con buff (VERIFIED)
-		/// </summary>
-		public static Spell casterMerchStrConBuff
-		{
-			get
-			{
-				if (m_casterstrcon == null)
-				{
-					DBSpell spell = new DBSpell();
-					spell.AllowAdd = false;
-					spell.CastTime = 0;
-					spell.Concentration = 1;
-					spell.ClientEffect = 1517;
-					spell.Icon = 1517;
-					spell.Duration = BUFFS_SPELL_DURATION;
-					spell.Value = 85; //effective buff 85
-					spell.Name = "Might of the Realm";
-					spell.Description = "Increases Str/Con for a character";
-					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
-					spell.SpellID = 89005;
-					spell.Target = "Realm";
-					spell.Type = "StrengthConstitutionBuff";
-					spell.EffectGroup = 204;
 
-					m_casterstrcon = new Spell(spell, 50);
-				}
-				return m_casterstrcon;
-			}
-		}
 		/// <summary>
 		/// Merch Spec Dex/Qui buff (VERIFIED)
 		/// </summary>
@@ -494,36 +340,7 @@ namespace DOL.GS
 				return m_dexqui;
 			}
 		}
-		/// <summary>
-		/// Merch Caster Spec Dex/Qui buff (VERIFIED)
-		/// </summary>
-		public static Spell casterMerchDexQuiBuff
-		{
-			get
-			{
-				if (m_casterdexqui == null)
-				{
-					DBSpell spell = new DBSpell();
-					spell.AllowAdd = false;
-					spell.CastTime = 0;
-					spell.Concentration = 1;
-					spell.ClientEffect = 1526;
-					spell.Icon = 1526;
-					spell.Duration = BUFFS_SPELL_DURATION;
-					spell.Value = 85; //effective buff 85
-					spell.Name = "Deftness of the Realm";
-					spell.Description = "Increases Dexterity and Quickness for a character.";
-					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
-					spell.SpellID = 89006;
-					spell.Target = "Realm";
-					spell.Type = "DexterityQuicknessBuff";
-					spell.EffectGroup = 203;
 
-					m_casterdexqui = new Spell(spell, 50);
-				}
-				return m_casterdexqui;
-			}
-		}
 		/// <summary>
 		/// Merch Spec Acuity buff (VERIFIED)
 		/// </summary>
@@ -554,36 +371,7 @@ namespace DOL.GS
 				return m_acuity;
 			}
 		}
-		/// <summary>
-		/// Merch Caster Spec Acuity buff (VERIFIED)
-		/// </summary>
-		public static Spell casterMerchAcuityBuff
-		{
-			get
-			{
-				if (m_casteracuity == null)
-				{
-					DBSpell spell = new DBSpell();
-					spell.AllowAdd = false;
-					spell.CastTime = 0;
-					spell.Concentration = 1;
-					spell.ClientEffect = 1538;
-					spell.Icon = 1538;
-					spell.Duration = BUFFS_SPELL_DURATION;
-					spell.Value = 72; //effective buff 72;
-					spell.Name = "Acuity of the Realm";
-					spell.Description = "Increases Acuity (casting attribute) for a character.";
-					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
-					spell.SpellID = 89007;
-					spell.Target = "Realm";
-					spell.Type = "AcuityBuff";
-					spell.EffectGroup = 200;
 
-					m_casteracuity = new Spell(spell, 50);
-				}
-				return m_casteracuity;
-			}
-		}
 		/// <summary>
 		/// Merch Spec Af buff (VERIFIED)
 		/// </summary>
@@ -614,36 +402,7 @@ namespace DOL.GS
 				return m_specaf;
 			}
 		}
-		/// <summary>
-		/// Merch Caster Spec Af buff (VERIFIED)
-		/// </summary>
-		public static Spell casterMerchSpecAFBuff
-		{
-			get
-			{
-				if (m_casterspecaf == null)
-				{
-					DBSpell spell = new DBSpell();
-					spell.AllowAdd = false;
-					spell.CastTime = 0;
-					spell.Concentration = 1;
-					spell.ClientEffect = 1506;
-					spell.Icon = 1506;
-					spell.Duration = BUFFS_SPELL_DURATION;
-					spell.Value = 67; //effective buff 67
-					spell.Name = "Armor of the Realm";
-					spell.Description = "Adds to the recipient's Armor Factor (AF), resulting in better protection against some forms of attack. It acts in addition to any armor the target is wearing.";
-					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
-					spell.SpellID = 89014;
-					spell.Target = "Realm";
-					spell.Type = "ArmorFactorBuff";
-					spell.EffectGroup = 2;
 
-					m_casterspecaf = new Spell(spell, 50);
-				}
-				return m_casterspecaf;
-			}
-		}
 		/// <summary>
 		/// Merch Haste buff (VERIFIED)
 		/// </summary>
@@ -675,7 +434,7 @@ namespace DOL.GS
 			}
 		}
 		#region Non-live (commented out)
-		/*
+		
 		/// <summary>
 		/// Merch Power Reg buff
 		/// </summary>
@@ -764,35 +523,23 @@ namespace DOL.GS
 			}
 		}
 		
+		#endregion Non-live (commented out)
+
 		/// <summary>
-		/// Merch Heal buff
+		/// Merch Speed of the Realm
 		/// </summary>
-		public static Spell MerchHealBuff
+		public static Spell MerchSpeedBuff
 		{
 			get
 			{
-				if (m_heal == null)
+				if (m_speed == null)
 				{
-					DBSpell spell = new DBSpell();
-					spell.AllowAdd = false;
-					spell.CastTime = 0;
-					spell.Concentration = 1;
-					spell.ClientEffect = 1424;
-					spell.Value = 3000;
-					spell.Name = "Blessed Health of the Realm";
-					spell.Description = "Heals the target.";
-					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
-					spell.SpellID = 88013;
-					spell.Target = "Realm";
-					spell.Type = "Heal";
-					m_heal = new Spell(spell, 50);
+					m_speed = SkillBase.GetSpellByID(GameHastener.SPEEDOFTHEREALMID);
 				}
-				return m_heal;
+				return m_speed;
 			}
 		}
-		 */
-		#endregion Non-live (commented out)
-
+		
 		#endregion Spells
 
 		#endregion SpellCasting
@@ -888,6 +635,13 @@ namespace DOL.GS
 				ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
 				if (template == null) return;
 
+				// TODO : Translation
+				if (template.PackageID.Contains("BuffTokens") && number > 1)
+				{
+					player.Out.SendMessage("You can buy only one buff at a time !", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return;
+				}
+				
 				int amountToBuy = number;
 				if (template.PackSize > 0)
 					amountToBuy *= template.PackSize;
@@ -903,18 +657,30 @@ namespace DOL.GS
 						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeedBP", totalValue), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
 					}
-					if (!player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+					
+					
+					if (!template.PackageID.Contains("BuffTokens") && !player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 					{
 						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
 					}
-					InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, template, amountToBuy);
+					else
+					{
+						InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, template, amountToBuy);
+					}
 
 					string message;
 					if (number > 1)
 						message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtPiecesBP", totalValue, template.GetName(1, false));
 					else
 						message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.BoughtBP", template.GetName(1, false), totalValue);
+
+					// Start buffs right away !
+					if(template.PackageID.Contains("BuffTokens")) 
+					{
+						CastDirectBuffs(player, template);
+					}
+
 					player.BountyPoints -= totalValue;
 					player.Out.SendUpdatePoints();
 					player.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
@@ -927,7 +693,14 @@ namespace DOL.GS
 
 				ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
 				if (template == null) return;
-
+				
+				// TODO : Translation
+				if (template.PackageID.Contains("BuffTokens") && number > 1)
+				{
+					player.Out.SendMessage("You can buy only one buff at a time !", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return;
+				}
+				
 				int amountToBuy = number;
 				if (template.PackSize > 0)
 					amountToBuy *= template.PackSize;
@@ -945,12 +718,15 @@ namespace DOL.GS
 						return;
 					}
 
-					if (!player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+					if (!template.PackageID.Contains("BuffTokens") && !player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 					{
 						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.NotInventorySpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
 					}
-					InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, template, amountToBuy);
+					else
+					{
+						InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, template, amountToBuy);
+					}
 
 					string message;
 					if (amountToBuy > 1)
@@ -958,15 +734,158 @@ namespace DOL.GS
 					else
 						message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.Bought", template.GetName(1, false), Money.GetString(totalValue));
 
+					if(template.PackageID.Contains("BuffTokens")) 
+					{
+						CastDirectBuffs(player, template);
+					}
+					
 					if (!player.RemoveMoney(totalValue, message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
 					{
 						throw new Exception("Money amount changed while adding items.");
 					}
+					
 					InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, totalValue);
 				}
 			}
 			return;
 		}
+		
+		#region Throw Buffs
+		private bool CastDirectBuffs(GamePlayer t, ItemTemplate item)
+		{
+			BuffPlayer(t, MerchSpeedBuff, MerchSpecSpellLine);
+			switch(item.Id_nb)
+			{
+				case "Full_Buffs_Token" :
+				case "BPFull_Buffs_Token" :
+				{
+					BuffPlayer(t, MerchBaseAFBuff, MerchBaseSpellLine);
+					BuffPlayer(t, MerchStrBuff, MerchBaseSpellLine);
+					BuffPlayer(t, MerchDexBuff, MerchBaseSpellLine);
+					BuffPlayer(t, MerchConBuff, MerchBaseSpellLine);
+					BuffPlayer(t, MerchSpecAFBuff, MerchSpecSpellLine);
+					BuffPlayer(t, MerchStrConBuff, MerchSpecSpellLine);
+					BuffPlayer(t, MerchDexQuiBuff, MerchSpecSpellLine);
+					BuffPlayer(t, MerchAcuityBuff, MerchSpecSpellLine);
+					BuffPlayer(t, MerchHasteBuff, MerchSpecSpellLine);
+					#region Non-live (commented out)
+					//BuffPlayer(t, MerchPoweregBuff, MerchSpecSpellLine);
+					//BuffPlayer(t, MerchDmgaddBuff, MerchSpecSpellLine);
+					//BuffPlayer(t, MerchHPRegenBuff, MerchSpecSpellLine);
+					//BuffPlayer(t, MerchEndRegenBuff, MerchSpecSpellLine);
+					//BuffPlayer(t, MerchHealBuff, MerchSpecSpellLine);
+					#endregion Non-live (commented out)
+					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					return true;
+				}
+				case "Specialization_Buffs_Token" :
+				case "BPSpecialization_Buffs_Token":
+				{
+					BuffPlayer(t, MerchSpecAFBuff, MerchSpecSpellLine);
+					BuffPlayer(t, MerchStrConBuff, MerchSpecSpellLine);
+					BuffPlayer(t, MerchDexQuiBuff, MerchSpecSpellLine);
+					BuffPlayer(t, MerchAcuityBuff, MerchSpecSpellLine);				
+					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					return true;
+				}
+				case "Baseline_Buffs_Token":
+				case "BPBaseline_Buffs_Token":
+				{
+					BuffPlayer(t, MerchBaseAFBuff, MerchBaseSpellLine);
+					BuffPlayer(t, MerchStrBuff, MerchBaseSpellLine);
+					BuffPlayer(t, MerchDexBuff, MerchBaseSpellLine);
+					BuffPlayer(t, MerchConBuff, MerchBaseSpellLine);
+					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					return true;
+				}
+				case "Strength_Buff_Token": 
+				case"BPStrength_Buff_Token":
+				{
+					BuffPlayer(t, MerchStrBuff, MerchBaseSpellLine);
+					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					return true;
+				}
+				case "Fortification_Buff_Token":
+				case "BPFortification_Buff_Token":
+				{
+					BuffPlayer(t, MerchConBuff, MerchBaseSpellLine);
+					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					return true;
+				}
+				case "Dexterity_Buff_Token": 
+				case "BPDexterity_Buff_Token":
+				{
+					BuffPlayer(t, MerchDexBuff, MerchBaseSpellLine);
+					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					return true;
+				}
+				case "Armor_Buff_Token":
+				case "BPArmor_Buff_Token":
+				{
+					BuffPlayer(t, MerchBaseAFBuff, MerchBaseSpellLine);
+					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					return true;
+				}
+				case "StrCon_Buff_Token":
+				case "BPStrCon_Buff_Token":
+				{
+					BuffPlayer(t, MerchStrConBuff, MerchSpecSpellLine);
+					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					return true;
+				}
+				case "DexQui_Buff_Token":
+				case "BPDexQui_Buff_Token":
+				{
+					BuffPlayer(t, MerchDexQuiBuff, MerchSpecSpellLine);
+					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					return true;
+				}
+				case "Acu_Buff_Token":
+				case "BPAcu_Buff_Token":
+				{
+					BuffPlayer(t, MerchAcuityBuff, MerchSpecSpellLine);
+					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					return true;
+				}
+				case "SpecAF_Buff_Token":
+				case "BPSpecAF_Buff_Token":
+				{
+					BuffPlayer(t, MerchSpecAFBuff, MerchSpecSpellLine);
+					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					return true;
+				}
+				case "Haste_Buff_Token":
+				case "BPHaste_Buff_Token":
+				{
+					BuffPlayer(t, MerchHasteBuff, MerchSpecSpellLine);
+					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					return true;
+				}
+				#region Non-live (commented out)
+				case "PowerReg_Buff_Token":
+				{
+					BuffPlayer(t, MerchPoweregBuff, MerchSpecSpellLine);
+					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					return true;
+				}
+				case "DmgAdd_Buff_Token":
+				{
+					BuffPlayer(t, MerchDmgaddBuff, MerchSpecSpellLine);
+					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					return true;
+				}
+				case "HPReg_Buff_Token":
+				{
+					BuffPlayer(t, MerchHPRegenBuff, MerchSpecSpellLine);
+					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					return true;
+				}
+				#endregion Non-live (commented out)
+			}
+			return false;
+		}
+		
+		#endregion
 
 		#region GiveTokens
 		public override bool ReceiveItem(GameLiving source, InventoryItem item)
@@ -978,260 +897,16 @@ namespace DOL.GS
 				((GamePlayer)source).Out.SendMessage("You are too far away to give anything to " + GetName(0, false) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
+			
 			if (t != null && item != null)
 			{
-				if (item.Id_nb == "Full_Buffs_Token" || item.Id_nb == "BPFull_Buffs_Token")
+				if(CastDirectBuffs(t, item.Template)) 
 				{
-					if (t.CharacterClass.ClassType == eClassType.ListCaster)
-					{
-						BuffPlayer(t, casterMerchBaseAFBuff, MerchBaseSpellLine);
-						BuffPlayer(t, casterMerchStrBuff, MerchBaseSpellLine);
-						BuffPlayer(t, casterMerchDexBuff, MerchBaseSpellLine);
-						BuffPlayer(t, casterMerchConBuff, MerchBaseSpellLine);
-						BuffPlayer(t, casterMerchSpecAFBuff, MerchSpecSpellLine);
-						BuffPlayer(t, casterMerchStrConBuff, MerchSpecSpellLine);
-						BuffPlayer(t, casterMerchDexQuiBuff, MerchSpecSpellLine);
-						BuffPlayer(t, casterMerchAcuityBuff, MerchSpecSpellLine);
-						BuffPlayer(t, MerchHasteBuff, MerchSpecSpellLine);
-					}
-					else
-					{
-						BuffPlayer(t, MerchBaseAFBuff, MerchBaseSpellLine);
-						BuffPlayer(t, MerchStrBuff, MerchBaseSpellLine);
-						BuffPlayer(t, MerchDexBuff, MerchBaseSpellLine);
-						BuffPlayer(t, MerchConBuff, MerchBaseSpellLine);
-						BuffPlayer(t, MerchSpecAFBuff, MerchSpecSpellLine);
-						BuffPlayer(t, MerchStrConBuff, MerchSpecSpellLine);
-						BuffPlayer(t, MerchDexQuiBuff, MerchSpecSpellLine);
-						BuffPlayer(t, MerchAcuityBuff, MerchSpecSpellLine);
-						BuffPlayer(t, MerchHasteBuff, MerchSpecSpellLine);
-					}
-					#region Non-live (commented out)
-					//BuffPlayer(t, MerchPoweregBuff, MerchSpecSpellLine);
-					//BuffPlayer(t, MerchDmgaddBuff, MerchSpecSpellLine);
-					//BuffPlayer(t, MerchHPRegenBuff, MerchSpecSpellLine);
-					//BuffPlayer(t, MerchEndRegenBuff, MerchSpecSpellLine);
-					//BuffPlayer(t, MerchHealBuff, MerchSpecSpellLine);
-					#endregion Non-live (commented out)
-					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 					t.Inventory.RemoveItem(item);
 					return true;
 				}
-				if (item.Id_nb == "Specialization_Buffs_Token" || item.Id_nb == "BPSpecialization_Buffs_Token")
-				{
-					if (t.CharacterClass.ClassType == eClassType.ListCaster)
-					{
-						BuffPlayer(t, casterMerchSpecAFBuff, MerchSpecSpellLine);
-						BuffPlayer(t, casterMerchStrConBuff, MerchSpecSpellLine);
-						BuffPlayer(t, casterMerchDexQuiBuff, MerchSpecSpellLine);
-						BuffPlayer(t, casterMerchAcuityBuff, MerchSpecSpellLine);
-					}
-					else
-					{
-						BuffPlayer(t, MerchSpecAFBuff, MerchSpecSpellLine);
-						BuffPlayer(t, MerchStrConBuff, MerchSpecSpellLine);
-						BuffPlayer(t, MerchDexQuiBuff, MerchSpecSpellLine);
-						BuffPlayer(t, MerchAcuityBuff, MerchSpecSpellLine);
-					}
-					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					t.Inventory.RemoveItem(item);
-					return true;
-
-				}
-				if (item.Id_nb == "Baseline_Buffs_Token" || item.Id_nb == "BPBaseline_Buffs_Token")
-				{
-					if (t.CharacterClass.ClassType == eClassType.ListCaster)
-					{
-						BuffPlayer(t, casterMerchBaseAFBuff, MerchBaseSpellLine);
-						BuffPlayer(t, casterMerchStrBuff, MerchBaseSpellLine);
-						BuffPlayer(t, casterMerchDexBuff, MerchBaseSpellLine);
-						BuffPlayer(t, casterMerchConBuff, MerchBaseSpellLine);
-					}
-					else
-					{
-						BuffPlayer(t, MerchBaseAFBuff, MerchBaseSpellLine);
-						BuffPlayer(t, MerchStrBuff, MerchBaseSpellLine);
-						BuffPlayer(t, MerchDexBuff, MerchBaseSpellLine);
-						BuffPlayer(t, MerchConBuff, MerchBaseSpellLine);
-					}
-					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					t.Inventory.RemoveItem(item);
-					return true;
-				}
-				if (item.Id_nb == "Strength_Buff_Token" || item.Id_nb == "BPStrength_Buff_Token")
-				{
-					if (t.CharacterClass.ClassType == eClassType.ListCaster)
-					{
-						BuffPlayer(t, casterMerchStrBuff, MerchBaseSpellLine);
-					}
-					else
-					{
-						BuffPlayer(t, MerchStrBuff, MerchBaseSpellLine);
-					}
-					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					t.Inventory.RemoveItem(item);
-					return true;
-				}
-				if (item.Id_nb == "Fortification_Buff_Token" || item.Id_nb == "BPFortification_Buff_Token")
-				{
-					if (t.CharacterClass.ClassType == eClassType.ListCaster)
-					{
-						BuffPlayer(t, casterMerchConBuff, MerchBaseSpellLine);
-					}
-					else
-					{
-						BuffPlayer(t, MerchConBuff, MerchBaseSpellLine);
-					}
-					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					t.Inventory.RemoveItem(item);
-					return true;
-				}
-				if (item.Id_nb == "Dexterity_Buff_Token" || item.Id_nb == "BPDexterity_Buff_Token")
-				{
-					if (t.CharacterClass.ClassType == eClassType.ListCaster)
-					{
-						BuffPlayer(t, casterMerchDexBuff, MerchBaseSpellLine);
-					}
-					else
-					{
-						BuffPlayer(t, MerchDexBuff, MerchBaseSpellLine);
-					}
-					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					t.Inventory.RemoveItem(item);
-					return true;
-				}
-				if (item.Id_nb == "Armor_Buff_Token" || item.Id_nb == "BPArmor_Buff_Token")
-				{
-					if (t.CharacterClass.ClassType == eClassType.ListCaster)
-					{
-						BuffPlayer(t, casterMerchBaseAFBuff, MerchBaseSpellLine);
-					}
-					else
-					{
-						BuffPlayer(t, MerchBaseAFBuff, MerchBaseSpellLine);
-					}
-					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					t.Inventory.RemoveItem(item);
-					return true;
-				}
-				if (item.Id_nb == "StrCon_Buff_Token" || item.Id_nb == "BPStrCon_Buff_Token")
-				{
-					if (t.CharacterClass.ClassType == eClassType.ListCaster)
-					{
-						BuffPlayer(t, casterMerchStrConBuff, MerchSpecSpellLine);
-					}
-					else
-					{
-						BuffPlayer(t, MerchStrConBuff, MerchSpecSpellLine);
-					}
-					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					t.Inventory.RemoveItem(item);
-					return true;
-				}
-				if (item.Id_nb == "DexQui_Buff_Token" || item.Id_nb == "BPDexQui_Buff_Token")
-				{
-					if (t.CharacterClass.ClassType == eClassType.ListCaster)
-					{
-						BuffPlayer(t, casterMerchDexQuiBuff, MerchSpecSpellLine);
-					}
-					else
-					{
-						BuffPlayer(t, MerchDexQuiBuff, MerchSpecSpellLine);
-					}
-					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					t.Inventory.RemoveItem(item);
-					return true;
-				}
-				if (item.Id_nb == "Acu_Buff_Token" || item.Id_nb == "BPAcu_Buff_Token")
-				{
-					if (t.CharacterClass.ClassType == eClassType.ListCaster)
-					{
-						BuffPlayer(t, casterMerchAcuityBuff, MerchSpecSpellLine);
-					}
-					else
-					{
-						BuffPlayer(t, MerchAcuityBuff, MerchSpecSpellLine);
-					}
-					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					t.Inventory.RemoveItem(item);
-					return true;
-				}
-				if (item.Id_nb == "SpecAF_Buff_Token" || item.Id_nb == "BPSpecAF_Buff_Token")
-				{
-					if (t.CharacterClass.ClassType == eClassType.ListCaster)
-					{
-						BuffPlayer(t, casterMerchSpecAFBuff, MerchSpecSpellLine);
-					}
-					else
-					{
-						BuffPlayer(t, MerchSpecAFBuff, MerchSpecSpellLine);
-					}
-					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					t.Inventory.RemoveItem(item);
-					return true;
-				}
-				if (item.Id_nb == "Haste_Buff_Token" || item.Id_nb == "BPHaste_Buff_Token")
-				{
-					BuffPlayer(t, MerchHasteBuff, MerchSpecSpellLine);
-					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					t.Inventory.RemoveItem(item);
-					return true;
-				}
-				#region Non-live (commented out)
-				/*
-				if (item.Id_nb == "PowerReg_Buff_Token")
-				{
-					BuffPlayer(t, MerchPoweregBuff, MerchSpecSpellLine);
-					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					t.Inventory.RemoveItem(item);
-					return true;
-				}
-				if (item.Id_nb == "DmgAdd_Buff_Token")
-				{
-					BuffPlayer(t, MerchDmgaddBuff, MerchSpecSpellLine);
-					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					t.Inventory.RemoveItem(item);
-					return true;
-				}
-				if (item.Id_nb == "HPReg_Buff_Token")
-				{
-					BuffPlayer(t, MerchHPRegenBuff, MerchSpecSpellLine);
-					t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					t.Inventory.RemoveItem(item);
-					return true;
-				}
-				 */
-				#endregion Non-live (commented out)
 			}
-			#region Non-live (commented out)
-			/*if (item.Id_nb == "EnduReg_Buff_Token")
-			{
-				BuffPlayer(t, MerchEndRegenBuff, MerchSpecSpellLine);
-				t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				t.Inventory.RemoveItem(item);
-				return true;
-			}
-			if (item.Id_nb == "Heal_Buff_Token")
-			{
-				BuffPlayer(t, MerchHealBuff, MerchSpecSpellLine);
-				t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				t.Inventory.RemoveItem(item);
-				return true;
-			}
-			if (item.Id_nb == "Otherline_Buffs_Token")
-			{
-				BuffPlayer(t, MerchPoweregBuff, MerchSpecSpellLine);
-				BuffPlayer(t, MerchDmgaddBuff, MerchSpecSpellLine);
-				BuffPlayer(t, MerchHasteBuff, MerchSpecSpellLine);
-				BuffPlayer(t, MerchHPRegenBuff, MerchSpecSpellLine);
-				//BuffPlayer(t, MerchEndRegenBuff, MerchSpecSpellLine);
-				BuffPlayer(t, MerchHealBuff, MerchSpecSpellLine);
-				t.Out.SendMessage("Fight well, " + t.RaceName + ".", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				t.Inventory.RemoveItem(item);
-				return true;
-			}
-			 */
-			#endregion Non-live (commented out)
+			
 			return base.ReceiveItem(source, item);
 		}
 	}

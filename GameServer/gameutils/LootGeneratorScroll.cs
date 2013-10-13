@@ -43,7 +43,7 @@ namespace DOL.GS
 
         public override LootList GenerateLoot(GameNPC mob, GameObject killer)
         {
-			LootList lootList = new LootList();
+        	LootList lootList = base.GenerateLoot(mob, killer);
 
 			// check to see if we are in ToA
 			if (mob.CurrentRegion.Expansion == (int)eClientExpansion.TrialsOfAtlantis && killer.CurrentRegion.Expansion == (int)eClientExpansion.TrialsOfAtlantis)

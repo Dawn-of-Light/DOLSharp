@@ -1874,6 +1874,59 @@ namespace DOL.GS.Scripts
 				GameServer.ServerRules.OnPlayerTeleport(player, currentLocation, destination);
 			}
 		}
-		
 	}
+	
+	    #region Sojourner-5
+    [SpellHandlerAttribute("PortableFreyadHelper")]
+    public class PortableFreyadHelperSpellHandler : SpellHandler
+    {
+        private GameMerchant merchant;
+        /// <summary>
+        /// Execute Portable Helper summon spell
+        /// </summary>
+        /// <param name="target"></param>
+        public override void FinishSpellCast(GameLiving target)
+        {
+            m_caster.Mana -= PowerCost(target);
+            base.FinishSpellCast(target);
+        }
+        public override void OnEffectStart(GameSpellEffect effect)
+        {
+            base.OnEffectStart(effect);
+            if (effect.Owner == null || !effect.Owner.IsAlive || effect.Owner.CurrentRegionID == 163)
+                return;
+
+            merchant.AddToWorld();
+        }
+        public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
+        {
+            if (merchant != null) merchant.Delete();
+            return base.OnEffectExpires(effect, noMessages);
+        }
+        public PortableFreyadHelperSpellHandler(GameLiving caster, Spell spell, SpellLine line)
+            : base(caster, spell, line)
+        {
+            if (caster is GamePlayer)
+            {
+                GamePlayer casterPlayer = caster as GamePlayer;
+                merchant = new FreyadHelperNPC();
+                //Fill the object variables
+                merchant.X = casterPlayer.X + Util.Random(20, 40) - Util.Random(20, 40);
+                merchant.Y = casterPlayer.Y + Util.Random(20, 40) - Util.Random(20, 40);
+                merchant.Z = casterPlayer.Z;
+                merchant.CurrentRegion = casterPlayer.CurrentRegion;
+                merchant.Heading = (ushort)((casterPlayer.Heading + 2048) % 4096);
+                merchant.Level = 50;
+                merchant.Realm = casterPlayer.Realm;
+                merchant.Name = caster.Name+"'s Helper";
+                merchant.GuildName = "Portable Helper";
+                merchant.Model = 1647;
+                merchant.CurrentSpeed = 0;
+                merchant.MaxSpeedBase = 0;
+                merchant.Size = 50;
+                merchant.Flags |= GameNPC.eFlags.PEACE;
+            }
+        }
+    }
+    #endregion
 }

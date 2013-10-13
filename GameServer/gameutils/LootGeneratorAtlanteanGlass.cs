@@ -57,6 +57,9 @@ namespace DOL.GS
 
 				int killedcon = (int)player.GetConLevel(mob)+3;
 				
+				if(killedcon <= 0)
+					return loot;
+								
 				int lvl = mob.Level + 1;
 				if (lvl < 1) lvl = 1;
 				int maxcount = 1;
@@ -105,7 +108,7 @@ namespace DOL.GS
 					maxcount = (int)Math.Round(maxcount*ServerProperties.Properties.LOOTGENERATOR_ATLANTEANGLASS_NAMED_COUNT);
 				}
 				
-				if(maxcount > 0 && Util.Chance(ServerProperties.Properties.LOOTGENERATOR_ATLANTEANGLASS_BASE_CHANCE*killedcon))
+				if(maxcount > 0 && Util.Chance(ServerProperties.Properties.LOOTGENERATOR_ATLANTEANGLASS_BASE_CHANCE+Math.Max(10, killedcon)))
 				{
 					loot.AddFixed(atlanteanGlass, maxcount);
 				}

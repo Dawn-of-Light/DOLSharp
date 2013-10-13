@@ -143,7 +143,9 @@ namespace DOL.GS
 					for (int i = 0; (i < DropCount && lootCandidates.Count != 0); i++)
 					{
 						int tmpidx = Util.Random(lootCandidates.Count - 1);
+						
 						loot.Add(lootCandidates[tmpidx].ItemTemplate);
+						
 						if (--(lootCandidates[tmpidx].Count) <= 0)
 							lootCandidates.RemoveAt(tmpidx);
 					}
@@ -162,6 +164,7 @@ namespace DOL.GS
 	{
 		public readonly int Chance;
 		public readonly ItemTemplate ItemTemplate;
+		
 		public int Count;
 
 		public LootEntry(int chance, ItemTemplate item, int count)

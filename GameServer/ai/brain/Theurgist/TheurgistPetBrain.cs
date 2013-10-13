@@ -51,7 +51,7 @@ namespace DOL.AI.Brain
 
         public virtual GameNPC GetNPCOwner()
         {
-            return null;
+            return m_owner as GameNPC;
         }
         public virtual GameLiving GetLivingOwner()
         {

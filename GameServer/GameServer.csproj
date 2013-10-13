@@ -2124,6 +2124,7 @@
     </Compile>
     <Compile Include="spells\Animist\BomberSpellHandler.cs" />
     <Compile Include="spells\Bonedancer\SummonCommanderPet.cs" />
+    <Compile Include="spells\BuffPotionSpellHandler.cs" />
     <Compile Include="spells\BuffShear.cs">
       <SubType>Code</SubType>
     </Compile>

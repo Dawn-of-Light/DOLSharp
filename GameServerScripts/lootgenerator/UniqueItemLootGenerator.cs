@@ -129,7 +129,7 @@ namespace DOL.GS
 		public static ushort BASE_ROG_CHANCE = 15;
 		
 		//Named loot chance (added to base chance)
-		public static ushort NAMED_ROG_CHANCE = 10;
+		public static ushort NAMED_ROG_CHANCE = 5;
 		
 		//base TOA chance in % (0 to disable TOA in other region than TOA)
 		public static ushort BASE_TOA_CHANCE = 25;
@@ -183,6 +183,8 @@ namespace DOL.GS
 				else if (mob.Name.ToLower() != mob.Name) 
 				{
 					chance += NAMED_ROG_CHANCE;
+					// Classic Named earn this
+					toachance = true;
 				}
 			
 				GeneratedUniqueItem item = new GeneratedUniqueItem(toachance, player.Realm, (byte)Math.Min(mob.Level+1, 51));

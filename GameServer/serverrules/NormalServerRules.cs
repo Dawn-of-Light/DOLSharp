@@ -92,7 +92,7 @@ namespace DOL.GS.ServerRules
 				if(quiet == false) MessageToLiving(attacker, "You can't attack a member of your realm!");
 				return false;
 			}
-
+			
 			return true;
 		}
 
@@ -139,7 +139,8 @@ namespace DOL.GS.ServerRules
 			{
 				if(quiet == false) MessageToLiving(source, target.GetName(0, true) + " is not a member of your realm!");
 				return false;
-			}
+			}				
+			
 			return true;
 		}
 
