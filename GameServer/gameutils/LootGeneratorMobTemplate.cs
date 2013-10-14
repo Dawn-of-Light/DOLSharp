@@ -350,10 +350,6 @@ namespace DOL.GS
 				log.ErrorFormat("Error in LootGeneratorTemplate for mob {0}.  Exception: {1}", mob.Name, ex.Message);
 			}
 			
-			string debugdroplist = "";
-			foreach(ItemTemplate le in loot.GetLoot())
-				debugdroplist+="drop Id_nb : "+le.Id_nb+" -- ";
-			log.Debug("loot drop list for "+mob.Name+" ; count "+loot.DropCount+" : "+debugdroplist);
 			return loot;
 		}
 	}
