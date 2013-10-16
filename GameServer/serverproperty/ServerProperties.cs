@@ -1920,6 +1920,16 @@ namespace DOL.GS.ServerProperties
 
 
 		#endregion
+		
+		#region Freyad
+		/// <summary>
+		/// Regions allowed for Freyad Helper Summon
+		/// </summary>
+		[ServerProperty("freyad", "portable_helper_forbidden_regions", "Regions forbidden to summon Freyad Helper, seperated by semicolon", "163;249")]
+		public static string PORTABLE_HELPER_FORBIDDEN_REGIONS;
+		
+		
+		#endregion
 
 		/// <summary>
 		/// This method loads the property from the database and returns

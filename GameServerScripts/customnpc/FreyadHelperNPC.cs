@@ -1880,6 +1880,9 @@ namespace DOL.GS.Scripts
     [SpellHandlerAttribute("PortableFreyadHelper")]
     public class PortableFreyadHelperSpellHandler : SpellHandler
     {
+    	private static string m_forbiddenString;
+    	private static List<ushort> m_forbiddenRegions;
+    	
         private GameMerchant merchant;
         /// <summary>
         /// Execute Portable Helper summon spell
@@ -1893,9 +1896,9 @@ namespace DOL.GS.Scripts
         public override void OnEffectStart(GameSpellEffect effect)
         {
             base.OnEffectStart(effect);
-            if (effect.Owner == null || !effect.Owner.IsAlive || effect.Owner.CurrentRegionID == 163)
+            if (effect.Owner == null || !effect.Owner.IsAlive)
                 return;
-
+            
             merchant.AddToWorld();
         }
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
@@ -1903,9 +1906,33 @@ namespace DOL.GS.Scripts
             if (merchant != null) merchant.Delete();
             return base.OnEffectExpires(effect, noMessages);
         }
+        
+		public override bool StartSpell(GameLiving target, InventoryItem item)
+		{
+			if(m_forbiddenRegions.Contains(Caster.CurrentRegionID))
+            {
+            	MessageToCaster("You can't summon Helper in this Region !", eChatType.CT_SpellResisted);
+            	return false;
+            }
+			return base.StartSpell(target, item);
+		}
+        
         public PortableFreyadHelperSpellHandler(GameLiving caster, Spell spell, SpellLine line)
             : base(caster, spell, line)
         {
+        	
+        	if(m_forbiddenString == null || m_forbiddenString != ServerProperties.Properties.PORTABLE_HELPER_FORBIDDEN_REGIONS) {
+        		m_forbiddenRegions = new List<ushort>();
+        		m_forbiddenString = ServerProperties.Properties.PORTABLE_HELPER_FORBIDDEN_REGIONS;
+        		foreach(string region in Util.SplitCSV(ServerProperties.Properties.PORTABLE_HELPER_FORBIDDEN_REGIONS))
+		        {
+        			ushort regid;
+        			if(ushort.TryParse(region, out regid))
+        				m_forbiddenRegions.Add(regid);
+        			
+		        }
+        	}
+        	
             if (caster is GamePlayer)
             {
                 GamePlayer casterPlayer = caster as GamePlayer;
