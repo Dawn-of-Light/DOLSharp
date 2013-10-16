@@ -26,7 +26,7 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		 "&addhookpoint",
-		 ePrivLevel.GM,
+		 ePrivLevel.Admin,
 		 "GMCommands.HookPoint.Description",
 		 "GMCommands.HookPoint.Usage")]
 	public class HookPointCommandHandler : AbstractCommandHandler, ICommandHandler

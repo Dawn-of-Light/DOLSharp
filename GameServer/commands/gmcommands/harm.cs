@@ -25,7 +25,7 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&harm",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"GMCommands.Harm.Description",
 		"GMCommands.Harm.Usage")]
 	public class HarmCommandHandler : AbstractCommandHandler, ICommandHandler

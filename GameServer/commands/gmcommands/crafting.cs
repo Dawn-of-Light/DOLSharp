@@ -26,7 +26,7 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&crafting",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"GMCommands.Crafting.Description",
 		"GMCommands.Crafting.Usage.Add",
 		"GMCommands.Crafting.Usage.Change",

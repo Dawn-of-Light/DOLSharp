@@ -26,7 +26,7 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&area",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"GMCommands.Area.Description",
 		"GMCommands.Area.Usage.Create")]
 	public class AreaCommandHandler : AbstractCommandHandler, ICommandHandler

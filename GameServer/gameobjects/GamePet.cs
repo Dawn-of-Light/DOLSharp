@@ -394,7 +394,7 @@ namespace DOL.GS
 			base.BuildAmbientTexts();
 			
 			// also add the pet specific ambient texts if none found
-			if (ambientTexts.Count == 0)
+			if (ambientTexts == null || ambientTexts.Count == 0)
 				ambientTexts = GameServer.Database.SelectObjects<MobXAmbientBehaviour>("`Source` ='pet';");
 		}
 

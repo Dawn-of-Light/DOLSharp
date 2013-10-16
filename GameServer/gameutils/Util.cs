@@ -185,7 +185,7 @@ namespace DOL.GS
 			
 			// various common db troubles
 			string currentStr = str.ToLower();
-			if (currentStr == "null" ||currentStr == "\r\n")
+			if (currentStr == "null" || currentStr == "\r\n" || currentStr == "\n")
 				return true;
 			
 			if (zeroMeansEmpty && currentStr.Trim() == "0")

@@ -85,12 +85,12 @@ namespace DOL.GS
 		#region Constructor/Declaration
 
 		// for client one page is 30 items, just need to use scrollbar to see them all
-		// item30 will be on page 0
-		// item31 will be on page 1
+		// item29 will be on page 0
+		// item30 will be on page 1
 
 		public MerchantTradeItems()
 		{
-			m_itemsListID = null;
+			m_itemsListID = "";
 			m_usedItemsTemplates = new Dictionary<ushort, ItemTemplate>();
 		}
 		
@@ -101,9 +101,15 @@ namespace DOL.GS
 		public MerchantTradeItems(string itemsListId)
 		{
 			if(itemsListId != null)
+			{
 				m_itemsListID = itemsListId.ToLower();
+			}
+			else
+			{
+				m_itemsListID = "";
+			}
 			
-			if(!Util.IsEmpty(itemsListId))
+			if(!Util.IsEmpty(ItemsListID))
 			{
 				lock(((ICollection)m_cachedItemList).SyncRoot)
 				{
@@ -264,12 +270,15 @@ namespace DOL.GS
 		{
 			Dictionary<ushort, ItemTemplate> result = new Dictionary<ushort, ItemTemplate>();
 			
+			if(m_usedItemsTemplates == null)
+				return result;
+			
 			lock(((ICollection)m_usedItemsTemplates).SyncRoot)
 			{
 
 				foreach(ushort key in m_usedItemsTemplates.Keys)
 				{
-					if(key >= (MAX_ITEM_IN_TRADEWINDOWS*page) && key < (MAX_ITEM_IN_TRADEWINDOWS*(page+1)) && m_usedItemsTemplates.ContainsKey(key) && m_usedItemsTemplates[key] != null)
+					if(key >= (MAX_ITEM_IN_TRADEWINDOWS*page) && key < (MAX_ITEM_IN_TRADEWINDOWS*(page+1)) && m_usedItemsTemplates[key] != null)
 						result.Add((ushort)(key%MAX_ITEM_IN_TRADEWINDOWS), m_usedItemsTemplates[key]);
 				}
 			}

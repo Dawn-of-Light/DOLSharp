@@ -25,7 +25,7 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&gmrelic",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"GMCommands.GMRelic.Description",
 		"GMCommands.GMRelic.Usage")]
 	public class GMRelicCommandHandler : AbstractCommandHandler, ICommandHandler

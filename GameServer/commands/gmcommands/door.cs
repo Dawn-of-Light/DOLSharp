@@ -31,7 +31,7 @@ namespace DOL.GS.Commands
 {
 	[Cmd(
 		"&door",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"GMCommands.door.Description",
 		"'/door show' toggle enable/disable add dialog when targeting doors",
 		"GMCommands.door.Add",

@@ -26,7 +26,7 @@ using DOL.GS.PacketHandler;
 namespace DOL.GS.Commands
 {
 	[CmdAttribute("&object", //command to handle
-	              ePrivLevel.GM, //minimum privelege level
+	              ePrivLevel.Admin, //minimum privelege level
 	              "Various Object commands!", //command description
 	              //usage
 	              "'/object info' to get information about the object",

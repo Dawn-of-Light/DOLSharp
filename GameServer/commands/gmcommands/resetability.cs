@@ -25,7 +25,7 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&resetability",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"/resetability - <self|target|group|cg|bg>")]
 	
 	public class ResetAbilityCommandHandler : AbstractCommandHandler, ICommandHandler

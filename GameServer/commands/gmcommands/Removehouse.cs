@@ -25,7 +25,7 @@ namespace DOL.GS.Commands
 	/// </summary>
 	[CmdAttribute(
 		"&removehouse",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"Remove House or you are", "/removehouse")]
 	public class RemoveHouseCommandHandler : AbstractCommandHandler, ICommandHandler
 	{

@@ -28,7 +28,7 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&cast",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"GMCommands.Cast.Description",
 		"/cast loadspell <spellid> Load a spell from the DB into the global spell cache",
 		"GMCommands.Cast.Usage")]

@@ -25,7 +25,7 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&gmrelicpad",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"GMCommands.GMRelicPad.Description",
 		"GMCommands.GMRelicPad.Usage")]
 	public class GMRelicPadCommandHandler : AbstractCommandHandler, ICommandHandler

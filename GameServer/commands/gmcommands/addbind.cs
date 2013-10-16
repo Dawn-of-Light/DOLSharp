@@ -25,7 +25,7 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&addbind",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"GMCommands.AddBind.Description",
 		"GMCommands.AddBind.Usage")]
 	public class AddBindCommandHandler : AbstractCommandHandler, ICommandHandler

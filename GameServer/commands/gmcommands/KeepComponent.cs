@@ -26,7 +26,7 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		 "&keepcomponent",
-		 ePrivLevel.GM,
+		 ePrivLevel.Admin,
 		 "GMCommands.KeepComponents.Description",
 		 "GMCommands.KeepComponents.Usage.Create.TID",
 		 "GMCommands.KeepComponents.Usage.Create.T",

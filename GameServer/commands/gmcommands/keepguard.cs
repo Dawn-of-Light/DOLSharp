@@ -34,7 +34,7 @@ namespace DOL.GS.Commands
 	/// </summary>
 	[CmdAttribute(
 		"&keepguard",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"GMCommands.KeepGuard.Description",
 		"GMCommands.KeepGuard.Information",
 		"GMCommands.KeepGuard.Usage.Create",

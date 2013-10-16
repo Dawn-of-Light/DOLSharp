@@ -36,7 +36,7 @@ namespace DOL.GS.Commands
     /// <author>Aredhel</author>
 	[CmdAttribute(
 		"&teleport",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
         "Manage teleport destinations",
         "'/teleport add <ID> <type>' add a teleport destination",
 		"'/teleport reload' reload all teleport locations from the db")]

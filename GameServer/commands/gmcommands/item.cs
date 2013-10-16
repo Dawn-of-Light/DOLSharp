@@ -25,7 +25,7 @@ using DOL.Language;
 namespace DOL.GS.Commands
 {
 	[Cmd("&item",
-	     ePrivLevel.GM,
+	     ePrivLevel.Admin,
 	     "GMCommands.Item.Description",
 	     "GMCommands.Item.Information",
 	     "GMCommands.Item.Usage.Blank",

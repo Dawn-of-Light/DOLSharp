@@ -2930,7 +2930,7 @@ namespace DOL.GS
 		protected virtual void BuildAmbientTexts()
 		{
 			// list of ambient texts
-			if (!string.IsNullOrEmpty(Name))
+			if (!string.IsNullOrEmpty(Name) && !m_ambientTextsCache.ContainsKey(Name))
 				ambientTexts = GameServer.Database.SelectObjects<MobXAmbientBehaviour>("`Source` ='" + GameServer.Database.Escape(Name) + "';");
 		}
 
@@ -3459,9 +3459,29 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// The ambient texts
+		/// The ambient texts of this mob
 		/// </summary>
-		public IList<MobXAmbientBehaviour> ambientTexts;
+		public IList<MobXAmbientBehaviour> ambientTexts
+		{
+			get
+			{
+				return m_ambientTextsCache.ContainsKey(Name) ? m_ambientTextsCache[Name] : null;
+			}
+			
+			set
+			{
+				if(!Util.IsEmpty(Name))
+				{
+					if(m_ambientTextsCache.ContainsKey(Name))
+						m_ambientTextsCache.Remove(Name);
+							
+					m_ambientTextsCache[Name] = value;
+				}
+						
+			}
+		}
+		
+		private static Dictionary<string, IList<MobXAmbientBehaviour>> m_ambientTextsCache = new Dictionary<string, IList<MobXAmbientBehaviour>>();		
 		
 		/// <summary>
 		/// This function is called from the ObjectInteractRequestHandler

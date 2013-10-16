@@ -33,7 +33,7 @@ namespace DOL.GS.Commands
 {
     [CmdAttribute(
         "&zone",
-        ePrivLevel.GM,
+        ePrivLevel.Admin,
 		"/zone info",
 		"/zone divingflag <0 = use region, 1 = on, 2 = off>",
 		"/zone waterlevel <#>",

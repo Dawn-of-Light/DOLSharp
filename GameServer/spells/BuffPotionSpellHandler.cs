@@ -45,7 +45,7 @@ namespace DOL.GS.Spells
 			if(!base.StartSpell(target))
 				return false;
 			
-			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(target, SkillBase.GetSpellByID(POTION_STR_BUFF), SkillBase.GetSpellLine("Potions"));
+			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(Caster, SkillBase.GetSpellByID(POTION_STR_BUFF), SkillBase.GetSpellLine("Potions"));
 			spellhandler.StartSpell(target);
 			
 			spellhandler = ScriptMgr.CreateSpellHandler(Caster, SkillBase.GetSpellByID(POTION_CON_BUFF), SkillBase.GetSpellLine("Potions"));

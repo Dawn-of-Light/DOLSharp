@@ -23,7 +23,7 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&speed",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"Change base speed of target (no parameter to see current speed)",
 		"/speed [newSpeed]")]
 	public class SpeedCommandHandler : AbstractCommandHandler, ICommandHandler

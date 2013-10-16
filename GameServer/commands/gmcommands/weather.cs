@@ -23,7 +23,7 @@ namespace DOL.GS.Commands
 {
 	[Cmd(
 		"&weather",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"Sets the weather for the current region",
 		"'/weather info' for information about the current weather in this region",
 		"'/weather start <line> <duration> <speed> <diffusion> <intensity>' to start a storm in this region",

@@ -47,7 +47,7 @@ namespace DOL.GS.Commands
         private static bool showByZone = true;
         //add the ID´s of the zones(!) you want the command to display here
         //get the ID´s from your Zone Table, keep in mind Zones != Regions.
-        private static ushort[] zoneIDs = { 335, 26 };
+        private static ushort[] zoneIDs = { 26, 120, 209 };
 
         // set this to true or false to display a displayed list of currently loged in classes.
         private static bool showDetailedClass = true;

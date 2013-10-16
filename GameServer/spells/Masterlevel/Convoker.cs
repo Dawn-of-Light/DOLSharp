@@ -581,18 +581,18 @@ namespace DOL.GS.Spells
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			m_living = m_player.ControlledBrain.Body;
-			m_living.Level += 20;
-			m_living.BaseBuffBonusCategory[(int)eProperty.MeleeDamage] += 275;
-			m_living.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorption] += 75;
+			m_living.Level += (byte)Spell.LifeDrainReturn;
+			m_living.BaseBuffBonusCategory[(int)eProperty.MeleeDamage] += (int)Spell.Value;
+			m_living.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorption] += Spell.AmnesiaChance;
 			m_living.Size += 40;
 			base.OnEffectStart(effect);
 		}
 
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
-			m_living.Level -= 20;
-			m_living.BaseBuffBonusCategory[(int)eProperty.MeleeDamage] -= 275;
-			m_living.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorption] -= 75;
+			m_living.Level -= (byte)Spell.LifeDrainReturn;
+			m_living.BaseBuffBonusCategory[(int)eProperty.MeleeDamage] -= (int)Spell.Value;
+			m_living.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorption] -= Spell.AmnesiaChance;
 			m_living.Size -= 40;
 			return base.OnEffectExpires(effect, noMessages);
 		}

@@ -23,7 +23,7 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&heal",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"GMCommands.Heal.Description",
 		"GMCommands.Heal.Usage",
 		"/heal me - heals self")]

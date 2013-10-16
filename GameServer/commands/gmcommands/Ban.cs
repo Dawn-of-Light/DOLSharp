@@ -27,7 +27,7 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&ban",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"GMCommands.Ban.Description",
 		"GMCommands.Ban.Usage.IP",
 		"GMCommands.Ban.Usage.Account",

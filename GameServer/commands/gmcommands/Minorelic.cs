@@ -29,7 +29,7 @@ namespace DOL.GS.Commands
 {
     [Cmd(
      "&minorelic",
-     ePrivLevel.GM,
+     ePrivLevel.Admin,
      "GMCommands.MinoRelic.Description",
      "GMCommands.MinoRelic.Usage.Create",
      "GMCommands.MinoRelic.Usage.MoveHere",

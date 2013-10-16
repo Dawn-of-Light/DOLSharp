@@ -25,7 +25,7 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&keep",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"GMCommands.Keep.Description",
 		"GMCommands.Keep.Usage.FastCreate",
 		"GMCommands.Keep.Usage.FastCreate.Info",

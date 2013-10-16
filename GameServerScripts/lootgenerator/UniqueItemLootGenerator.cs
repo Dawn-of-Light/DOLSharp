@@ -149,6 +149,10 @@ namespace DOL.GS
 			
 			try
 			{
+				// Specific condition to prevent RvR fight from looting useless RoG
+				if(mob is DOL.GS.Keeps.GameKeepGuard && mob.CurrentRegionID == 163)
+					return loot;
+					
 				GamePlayer player = killer as GamePlayer;
 				if (killer is GameNPC && ((GameNPC)killer).Brain is IControlledBrain)
 					player = ((ControlledNpcBrain)((GameNPC)killer).Brain).GetPlayerOwner();

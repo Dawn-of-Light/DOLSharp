@@ -27,7 +27,7 @@ namespace DOL.GS.Commands
 {
     [Cmd(
         "&instance",
-        ePrivLevel.GM,
+        ePrivLevel.Admin,
         "This command assists in the creation of instances.",
         "/instance key <instancekey> (this sets the id of the instance you want to work with)",
         "/instance entry <ClassType> [<NpcTemplateID>] (add elements to the instance)",

@@ -28,7 +28,7 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 	   "&faction",
-	   ePrivLevel.GM,
+	   ePrivLevel.Admin,
 	   "GMCommands.Faction.Description",
 	   "GMCommands.Faction.Usage.Create",
 	   "GMCommands.Faction.Usage.Assign",

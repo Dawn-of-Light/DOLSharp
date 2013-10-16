@@ -26,7 +26,7 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 	   "&path",
-	   ePrivLevel.GM,
+	   ePrivLevel.Admin,
 		"There are several path functions",
 		"/path create - creates a new temporary path, deleting any existing temporary path",
 		"/path load <pathname> - loads a path from db",

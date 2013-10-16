@@ -30,7 +30,7 @@ namespace DOL.GS.Commands
 {
 	[Cmd(
 		"&player",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"Various Admin/GM commands to edit characters.",
 		"/player name <newName>",
 		"/player lastname <change|reset> <newLastName>",

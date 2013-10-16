@@ -35,7 +35,7 @@ using DOL.GS.Utils;
 namespace DOL.GS.Commands
 {
 	[Cmd("&mob", //command to handle
-	     ePrivLevel.GM, //minimum privelege level
+	     ePrivLevel.Admin, //minimum privelege level
 	     "Mob creation and modification commands", //command description
 	     // usage
 	     "'/mob create [ClassName(DOL.GS.GameNPC)] [eRealm(0)]' to create a new mob",
