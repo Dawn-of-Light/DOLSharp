@@ -25,6 +25,8 @@
  */
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
@@ -41,9 +43,9 @@ namespace DOL.GS.GameEvents
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private static HybridDictionary[] ClassicLocations = null;
-		private static HybridDictionary[] ShroudedIslesLocations = null;
-		public static HybridDictionary MainTownStartingLocations = null;
+		private static Dictionary<int, Dictionary<int, StartLocation>> ClassicLocations = null;
+		private static Dictionary<int, Dictionary<int, StartLocation>> ShroudedIslesLocations = null;
+		public static Dictionary<eCharacterClass, StartLocation> MainTownStartingLocations = null;
 
 		[ScriptLoadedEvent]
 		public static void OnScriptLoaded(DOLEvent e, object sender, EventArgs args)
@@ -161,15 +163,17 @@ namespace DOL.GS.GameEvents
 					}
 					else if ((int)client.Version >= (int)GameClient.eClientVersion.Version180)
 					{
-						startLocation = (StartLocation)MainTownStartingLocations[ch.Class];
+						startLocation = (StartLocation)MainTownStartingLocations[(eCharacterClass)ch.Class];
 					}
 					else if (ch.Region == 1 || ch.Region == 100 || ch.Region == 200) // all classic regions
 					{
-						startLocation = (StartLocation) ClassicLocations[ch.Race][ch.Class];
+						if(ClassicLocations.ContainsKey(ch.Race) && ClassicLocations[ch.Race].ContainsKey(ch.Class))
+							startLocation = (StartLocation) ClassicLocations[ch.Race][ch.Class];
 					}
 					else if (ch.Region == 51 || ch.Region == 151 || ch.Region == 181) // all ShroudedIsles regions
 					{
-						startLocation = (StartLocation) ShroudedIslesLocations[ch.Race][ch.Class];
+						if(ShroudedIslesLocations.ContainsKey(ch.Race) && ShroudedIslesLocations[ch.Race].ContainsKey(ch.Class))
+							startLocation = (StartLocation) ShroudedIslesLocations[ch.Race][ch.Class];
 					}
 					else
 					{
@@ -249,13 +253,13 @@ namespace DOL.GS.GameEvents
 			{
 				int size = (int)(Enum.GetValues(typeof(eRace)).Cast<eRace>().Max()) + 1;
 
-				ClassicLocations = new HybridDictionary[size];
-				ShroudedIslesLocations = new HybridDictionary[size];
+				ClassicLocations = new Dictionary<int, Dictionary<int, StartLocation>>(size);
+				ShroudedIslesLocations = new Dictionary<int, Dictionary<int, StartLocation>>(size);
 
 				for (int i = 0; i < size; i++)
 				{
-					ClassicLocations[i] = new HybridDictionary();
-					ShroudedIslesLocations[i] = new HybridDictionary();
+					ClassicLocations[i] = new Dictionary<int, StartLocation>();
+					ShroudedIslesLocations[i] = new Dictionary<int, StartLocation>();
 				}
 
 				#region base to 1.81, related to race x classe x expansion
@@ -393,22 +397,22 @@ namespace DOL.GS.GameEvents
 				#endregion
 				
 				#region 1.82 to 1.92 per class, roughly at the same place
-				MainTownStartingLocations = new HybridDictionary();
-				MainTownStartingLocations[(int)eCharacterClass.Acolyte] =  new StartLocation(562418, 512268, 2500, 2980);
-				MainTownStartingLocations[(int)eCharacterClass.AlbionRogue] =  new StartLocation(561956, 512226, 2516, 2116);
-				MainTownStartingLocations[(int)eCharacterClass.Disciple] =  new StartLocation(562334, 512160, 2500, 2252);
-				MainTownStartingLocations[(int)eCharacterClass.Elementalist] =  new StartLocation(561952, 512651, 2500, 3936);
-				MainTownStartingLocations[(int)eCharacterClass.Fighter] =  new StartLocation(562099, 512472, 2500, 3606);
-				MainTownStartingLocations[(int)eCharacterClass.Forester] =  new StartLocation(348494, 492021, 5176, 3572);
-				MainTownStartingLocations[(int)eCharacterClass.Guardian] =  new StartLocation(347279, 489681, 5200, 2332);
-				MainTownStartingLocations[(int)eCharacterClass.Mage] =  new StartLocation(561750, 512694, 2500, 1058);
-				MainTownStartingLocations[(int)eCharacterClass.Magician] =  new StartLocation(348457, 491103, 5270, 3174);
-				MainTownStartingLocations[(int)eCharacterClass.MidgardRogue] =  new StartLocation(802825, 726238, 4703, 1194);
-				MainTownStartingLocations[(int)eCharacterClass.Mystic] =  new StartLocation(802726, 726512, 4694, 1103);
-				MainTownStartingLocations[(int)eCharacterClass.Naturalist] =  new StartLocation(348877, 490997, 5414, 2863);
-				MainTownStartingLocations[(int)eCharacterClass.Seer] =  new StartLocation(802671, 726752, 4690, 944);
-				MainTownStartingLocations[(int)eCharacterClass.Stalker] =  new StartLocation(349404, 489469, 5282, 3003);
-				MainTownStartingLocations[(int)eCharacterClass.Viking] = new StartLocation(802869, 726016, 4699, 1399);
+				MainTownStartingLocations = new Dictionary<eCharacterClass, StartLocation>();
+				MainTownStartingLocations[eCharacterClass.Acolyte] =  new StartLocation(562418, 512268, 2500, 2980);
+				MainTownStartingLocations[eCharacterClass.AlbionRogue] =  new StartLocation(561956, 512226, 2516, 2116);
+				MainTownStartingLocations[eCharacterClass.Disciple] =  new StartLocation(562334, 512160, 2500, 2252);
+				MainTownStartingLocations[eCharacterClass.Elementalist] =  new StartLocation(561952, 512651, 2500, 3936);
+				MainTownStartingLocations[eCharacterClass.Fighter] =  new StartLocation(562099, 512472, 2500, 3606);
+				MainTownStartingLocations[eCharacterClass.Forester] =  new StartLocation(348494, 492021, 5176, 3572);
+				MainTownStartingLocations[eCharacterClass.Guardian] =  new StartLocation(347279, 489681, 5200, 2332);
+				MainTownStartingLocations[eCharacterClass.Mage] =  new StartLocation(561750, 512694, 2500, 1058);
+				MainTownStartingLocations[eCharacterClass.Magician] =  new StartLocation(348457, 491103, 5270, 3174);
+				MainTownStartingLocations[eCharacterClass.MidgardRogue] =  new StartLocation(802825, 726238, 4703, 1194);
+				MainTownStartingLocations[eCharacterClass.Mystic] =  new StartLocation(802726, 726512, 4694, 1103);
+				MainTownStartingLocations[eCharacterClass.Naturalist] =  new StartLocation(348877, 490997, 5414, 2863);
+				MainTownStartingLocations[eCharacterClass.Seer] =  new StartLocation(802671, 726752, 4690, 944);
+				MainTownStartingLocations[eCharacterClass.Stalker] =  new StartLocation(349404, 489469, 5282, 3003);
+				MainTownStartingLocations[eCharacterClass.Viking] = new StartLocation(802869, 726016, 4699, 1399);
 				#endregion
 			}
 			catch (Exception e)

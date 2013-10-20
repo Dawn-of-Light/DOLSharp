@@ -559,7 +559,8 @@ namespace DOL.GS.Keeps
 			{
 				if (Component.Keep != null)
 				{
-					Component.Keep.Doors.Remove(this.ObjectID);
+					if(Component.Keep.Doors.ContainsKey(this.ObjectID.ToString()))
+						Component.Keep.Doors.Remove(this.ObjectID.ToString());
 				}
 
 				Component.Delete();
@@ -622,11 +623,11 @@ namespace DOL.GS.Keeps
 				if (area is KeepArea)
 				{
 					AbstractGameKeep keep = (area as KeepArea).Keep;
-					if (!keep.Doors.Contains(door.InternalID))
+					if (!keep.Doors.ContainsKey(door.InternalID.ToString()))
 					{
 						Component = new GameKeepComponent();
 						Component.Keep = keep;
-						keep.Doors.Add(door.InternalID, this);
+						keep.Doors.Add(door.InternalID.ToString(), this);
 					}
 					break;
 				}

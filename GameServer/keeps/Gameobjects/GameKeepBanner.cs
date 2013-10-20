@@ -89,7 +89,8 @@ namespace DOL.GS.Keeps
 			{
 				if (Component.Keep != null)
 				{
-					Component.Keep.Banners.Remove(this.ObjectID);
+					if(Component.Keep.Banners.ContainsKey(this.ObjectID.ToString()))
+						Component.Keep.Banners.Remove(this.ObjectID.ToString());
 				}
 
 				Component.Delete();
@@ -130,7 +131,8 @@ namespace DOL.GS.Keeps
 			{
 				if (area is KeepArea)
 				{
-					Component.Keep.Banners.Remove(this.InternalID);
+					if(Component.Keep.Banners.ContainsKey(this.InternalID))
+						Component.Keep.Banners.Remove(this.InternalID);
 					break;
 				}
 			}

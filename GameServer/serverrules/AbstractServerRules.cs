@@ -900,7 +900,7 @@ namespace DOL.GS.ServerRules
 		/// <param name="killer">killer</param>
 		public virtual void OnNPCKilled(GameNPC killedNPC, GameObject killer)
 		{
-			lock (killedNPC.XPGainers.SyncRoot)
+			lock (((System.Collections.ICollection)killedNPC.XPGainers).SyncRoot)
 			{
 				#region Worth no experience
 				//"This monster has been charmed recently and is worth no experience."
@@ -912,7 +912,7 @@ namespace DOL.GS.ServerRules
 
 				if (!killedNPC.IsWorthReward)
 				{
-					foreach (DictionaryEntry de in killedNPC.XPGainers)
+					foreach (KeyValuePair<GameObject, float> de in killedNPC.XPGainers)
 					{
 						GamePlayer player = de.Key as GamePlayer;
 						if (player != null)
@@ -928,7 +928,7 @@ namespace DOL.GS.ServerRules
 				GamePlayer highestPlayer = null;
 				bool isGroupInRange = false;
 				//Collect the total damage
-				foreach (DictionaryEntry de in killedNPC.XPGainers)
+				foreach (KeyValuePair<GameObject, float> de in killedNPC.XPGainers)
 				{
 					totalDamage += (float)de.Value;
 					GamePlayer player = de.Key as GamePlayer;
@@ -967,7 +967,7 @@ namespace DOL.GS.ServerRules
 					highestConValue = highestPlayer.GetConLevel(killedNPC);
 
 				//Now deal the XP to all livings
-				foreach (DictionaryEntry de in killedNPC.XPGainers)
+				foreach (KeyValuePair<GameObject, float> de in killedNPC.XPGainers)
 				{
 					GameLiving living = de.Key as GameLiving;
 					GamePlayer player = living as GamePlayer;
@@ -1196,12 +1196,12 @@ namespace DOL.GS.ServerRules
 		/// <param name="killer">The killer object</param>
 		public virtual void OnLivingKilled(GameLiving killedLiving, GameObject killer)
 		{
-			lock (killedLiving.XPGainers.SyncRoot)
+			lock (((System.Collections.ICollection)killedLiving.XPGainers).SyncRoot)
 			{
 				bool dealNoXP = false;
 				float totalDamage = 0;
 				//Collect the total damage
-				foreach (DictionaryEntry de in killedLiving.XPGainers)
+				foreach (KeyValuePair<GameObject, float> de in killedLiving.XPGainers)
 				{
 					GameObject obj = (GameObject)de.Key;
 					if (obj is GamePlayer)
@@ -1228,7 +1228,7 @@ namespace DOL.GS.ServerRules
 				int BPValue = killedLiving.BountyPointsValue;
 
 				//Now deal the XP and RPs to all livings
-				foreach (DictionaryEntry de in killedLiving.XPGainers)
+				foreach (KeyValuePair<GameObject, float> de in killedLiving.XPGainers)
 				{
 					GameLiving living = de.Key as GameLiving;
 					GamePlayer expGainPlayer = living as GamePlayer;
@@ -1335,9 +1335,9 @@ namespace DOL.GS.ServerRules
 			long noExpSeconds = ServerProperties.Properties.RP_WORTH_SECONDS;
 			if (killedPlayer.DBCharacter.DeathTime + noExpSeconds > killedPlayer.PlayedTime)
 			{
-				lock (killedPlayer.XPGainers.SyncRoot)
+				lock (((System.Collections.ICollection)killedPlayer.XPGainers).SyncRoot)
 				{
-					foreach (DictionaryEntry de in killedPlayer.XPGainers)
+					foreach (KeyValuePair<GameObject, float> de in killedPlayer.XPGainers)
 					{
 						if (de.Key is GamePlayer)
 						{
@@ -1349,12 +1349,12 @@ namespace DOL.GS.ServerRules
 				return;
 			}
 
-			lock (killedPlayer.XPGainers.SyncRoot)
+			lock (((System.Collections.ICollection)killedPlayer.XPGainers).SyncRoot)
 			{
 				bool dealNoXP = false;
 				float totalDamage = 0;
 				//Collect the total damage
-				foreach (DictionaryEntry de in killedPlayer.XPGainers)
+				foreach (KeyValuePair<GameObject, float> de in killedPlayer.XPGainers)
 				{
 					GameObject obj = (GameObject)de.Key;
 					if (obj is GamePlayer)
@@ -1372,7 +1372,7 @@ namespace DOL.GS.ServerRules
 
 				if (dealNoXP)
 				{
-					foreach (DictionaryEntry de in killedPlayer.XPGainers)
+					foreach (KeyValuePair<GameObject, float> de in killedPlayer.XPGainers)
 					{
 						GamePlayer player = de.Key as GamePlayer;
 						if (player != null)
@@ -1406,7 +1406,7 @@ namespace DOL.GS.ServerRules
 				List<KeyValuePair<GamePlayer, int>> playerKillers = new List<KeyValuePair<GamePlayer,int>>();
 
 				//Now deal the XP and RPs to all livings
-				foreach (DictionaryEntry de in killedPlayer.XPGainers)
+				foreach (KeyValuePair<GameObject, float> de in killedPlayer.XPGainers)
 				{
 					GameLiving living = de.Key as GameLiving;
 					GamePlayer expGainPlayer = living as GamePlayer;

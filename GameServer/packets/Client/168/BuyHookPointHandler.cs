@@ -52,7 +52,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (inventory != null)
 			{
 				HookPointItem item = inventory.GetItem(itemslot);
-				if (item != null)
+				if (item != null && component.HookPoints.ContainsKey(hookpointID))
 					item.Invoke(client.Player, payType, component.HookPoints[hookpointID] as GameKeepHookPoint, component);
 			}
 		}

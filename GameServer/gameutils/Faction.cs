@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 
@@ -36,10 +37,10 @@ namespace DOL.GS
 		public Faction()
 		{
 			m_name = String.Empty;
-			m_friendFactions = new ArrayList(1);
-			m_enemyFactions = new ArrayList(1);
-			m_playerxFaction = new Hashtable(1);
-			m_updatePlayer = new ArrayList(1);
+			m_friendFactions = new List<Faction>();
+			m_enemyFactions = new List<Faction>(1);
+			m_playerxFaction = new Dictionary<string, int>();
+			m_updatePlayer = new List<string>();
 		}
 
 		#region DB
@@ -57,7 +58,7 @@ namespace DOL.GS
 
 		public void SaveAggroToFaction()
 		{
-			lock ( m_updatePlayer.SyncRoot )
+			lock ( ((ICollection)m_updatePlayer).SyncRoot )
 			{
 				foreach ( string charID in m_updatePlayer )
 				{
@@ -75,14 +76,22 @@ namespace DOL.GS
 			if (dbfactionAggroLevel == null)
 			{
 				dbfactionAggroLevel = new DBFactionAggroLevel();
-				dbfactionAggroLevel.AggroLevel = (int)m_playerxFaction[charID];
+				
+				if(m_playerxFaction.ContainsKey(charID))
+					dbfactionAggroLevel.AggroLevel = (int)m_playerxFaction[charID];
+				else
+					return;
+				
 				dbfactionAggroLevel.CharacterID = charID;
 				dbfactionAggroLevel.FactionID = this.ID;
 				GameServer.Database.AddObject(dbfactionAggroLevel);
 			}
 			else
 			{
-				dbfactionAggroLevel.AggroLevel = (int)m_playerxFaction[charID];
+				if(m_playerxFaction.ContainsKey(charID))
+					dbfactionAggroLevel.AggroLevel = (int)m_playerxFaction[charID];
+				else
+					return;
 				GameServer.Database.SaveObject(dbfactionAggroLevel);
 			}
 		}
@@ -106,11 +115,11 @@ namespace DOL.GS
 		/// <summary>
 		/// hold friend factions
 		/// </summary>
-		private ArrayList m_friendFactions;
+		private List<Faction> m_friendFactions;
 		/// <summary>
 		/// friend factions
 		/// </summary>
-		public ArrayList FriendFactions
+		public List<Faction> FriendFactions
 		{
 			get { return m_friendFactions; }
 		}
@@ -118,11 +127,11 @@ namespace DOL.GS
 		/// <summary>
 		/// hold enemy factions
 		/// </summary>
-		private ArrayList m_enemyFactions;
+		private List<Faction> m_enemyFactions;
 		/// <summary>
 		/// enemy factions
 		/// </summary>
-		public ArrayList EnemyFactions
+		public List<Faction> EnemyFactions
 		{
 			get { return m_enemyFactions; }
 		}
@@ -154,14 +163,14 @@ namespace DOL.GS
 		/// <summary>
 		/// this is the table of player aggrolevel
 		/// </summary>
-		private Hashtable m_playerxFaction;
+		private Dictionary<string, int> m_playerxFaction;
 
-		private ArrayList m_updatePlayer;
+		private List<string> m_updatePlayer;
 
 		/// <summary>
 		/// table of player and aggrolevel (characterid/aggrolevel)
 		/// </summary>
-		public Hashtable PlayerxFaction
+		public Dictionary<string, int> PlayerxFaction
 		{
 			get { return m_playerxFaction; }
 		}

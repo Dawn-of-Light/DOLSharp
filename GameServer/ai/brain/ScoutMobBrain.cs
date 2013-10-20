@@ -61,7 +61,7 @@ namespace DOL.AI.Brain
 			set { m_scouting = value; }
 		}
 
-		private ArrayList m_targetList = new ArrayList();
+		private List<GameLiving> m_targetList = new List<GameLiving>();
 
 		/// <summary>
 		/// Check if there are any players around.
@@ -141,7 +141,7 @@ namespace DOL.AI.Brain
 
 			// Find all mobs in scout range.
 
-			ArrayList addList = new ArrayList();
+			List<GameLiving> addList = new List<GameLiving>();
 			foreach (GameNPC npc in Body.GetNPCsInRadius(ScoutRange))
 				if (npc.IsFriend(Body) && npc.IsAggressive && npc.IsAvailable)
 					addList.Add(npc);

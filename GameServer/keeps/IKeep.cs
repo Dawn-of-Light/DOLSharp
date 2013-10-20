@@ -27,8 +27,8 @@ namespace DOL.GS.Keeps
 	public interface IKeep
 	{
 		List<GameKeepComponent> KeepComponents { get;}
-		Hashtable Guards { get;}
-		Hashtable Banners { get;}
+		Dictionary<string, GameKeepGuard> Guards { get;}
+		Dictionary<string, GameKeepBanner> Banners { get;}
 		void Load(DBKeep keep);
 		void LoadFromDatabase(DataObject keep);
 		void SaveIntoDatabase();

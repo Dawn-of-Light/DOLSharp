@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.GS;
 using DOL.Database;
@@ -42,9 +43,9 @@ namespace DOL.GS
 				throw new ArgumentNullException("owner");
 			
 			m_owner = owner;
-			m_tradeItems = new ArrayList(10);
+			m_tradeItems = new List<InventoryItem>(10);
 
-			m_itemToCombine = new ArrayList(1);
+			m_itemToCombine = new List<InventoryItem>(1);
 			m_itemToCombine.Add(item);
 		}
 
@@ -53,7 +54,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds a list of items used to combine with
 		/// </summary>
-		protected ArrayList m_tradeItems;
+		protected List<InventoryItem> m_tradeItems;
 		/// <summary>
 		/// Holds the owner of this window and items in it
 		/// </summary>
@@ -61,7 +62,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the item used to combine on
 		/// </summary>
-		protected ArrayList m_itemToCombine;
+		protected List<InventoryItem> m_itemToCombine;
 		/// <summary>
 		/// Holds if we have accepted the trade or not
 		/// </summary>
@@ -78,16 +79,16 @@ namespace DOL.GS
 		/// <summary>
 		/// Returns the array of items used to combine with
 		/// </summary>
-		public ArrayList TradeItems
+		public IList<InventoryItem> TradeItems
 		{
 			get { return m_tradeItems; }
-			set { m_tradeItems = value; }
+			set { m_tradeItems = (List<InventoryItem>)value; }
 		}
 
 		/// <summary>
 		/// Returns the array of items the partner offer for trade
 		/// </summary>
-		public ArrayList PartnerTradeItems
+		public IList<InventoryItem> PartnerTradeItems
 		{
 			get { return m_itemToCombine; }
 		}
@@ -255,7 +256,7 @@ namespace DOL.GS
                 AbstractCraftingSkill skill = null;
                 lock (m_owner.TradeWindow.Sync)
                 {
-                    foreach (InventoryItem i in (ArrayList)m_owner.TradeWindow.TradeItems.Clone())
+                	foreach (InventoryItem i in new List<InventoryItem>(m_owner.TradeWindow.TradeItems))
                     {
                         if (i.Object_Type == (int)eObjectType.AlchemyTincture)
                         {
@@ -313,7 +314,7 @@ namespace DOL.GS
                 AbstractCraftingSkill skill = null;
                 lock (m_owner.TradeWindow.Sync)
                 {
-                    foreach (InventoryItem i in (ArrayList)m_owner.TradeWindow.TradeItems.Clone())
+                	foreach (InventoryItem i in new List<InventoryItem>(m_owner.TradeWindow.TradeItems))
                     {
                         if (i.Object_Type == (int)eObjectType.AlchemyTincture)
                         {

@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database;
 using log4net;
@@ -54,13 +55,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds all NPC templates
 		/// </summary>
-		private static readonly Hashtable m_mobTemplates = new Hashtable(1024);
-		private static readonly Hashtable m_mobTemplatesByName = new Hashtable(1024);
-
-		public Hashtable MobTemplates
-		{
-			get { return m_mobTemplatesByName; }
-		}
+		private static readonly Dictionary<int, List<INpcTemplate>> m_mobTemplates = new Dictionary<int, List<INpcTemplate>>();
 
 		/// <summary>
 		/// Initializes NPC templates manager
@@ -70,10 +65,10 @@ namespace DOL.GS
 		{
 			try
 			{
-				lock (m_mobTemplates.SyncRoot)
+				lock (((ICollection)m_mobTemplates).SyncRoot)
 				{
 					m_mobTemplates.Clear();
-					var objs = GameServer.Database.SelectAllObjects<DBNpcTemplate>();
+					IList<DBNpcTemplate> objs = GameServer.Database.SelectAllObjects<DBNpcTemplate>();
 					foreach (DBNpcTemplate dbTemplate in objs)
 					{
 						try
@@ -104,9 +99,9 @@ namespace DOL.GS
 		{
 			try
 			{
-				lock (m_mobTemplates.SyncRoot)
+				lock (((ICollection)m_mobTemplates).SyncRoot)
 				{
-					var objs = GameServer.Database.SelectAllObjects<DBNpcTemplate>();
+					IList<DBNpcTemplate> objs = GameServer.Database.SelectAllObjects<DBNpcTemplate>();
 
 					// remove all the db templates
 					foreach (DBNpcTemplate dbTemplate in objs)
@@ -136,11 +131,14 @@ namespace DOL.GS
 		/// <param name="template">mob template</param>
 		public static void RemoveTemplate(INpcTemplate template)
 		{
-			lock (m_mobTemplates.SyncRoot)
+			lock (((ICollection)m_mobTemplates).SyncRoot)
 			{
-				if (m_mobTemplates[template.TemplateId] != null)
+				if (m_mobTemplates.ContainsKey(template.TemplateId) && m_mobTemplates[template.TemplateId] != null && m_mobTemplates[template.TemplateId].Contains(template))
 				{
-					m_mobTemplates[template.TemplateId] = null;
+					if(m_mobTemplates[template.TemplateId].Count == 1)
+						m_mobTemplates[template.TemplateId].Clear();
+					else
+						m_mobTemplates[template.TemplateId].Remove(template);
 				}
 			}
 		}
@@ -151,25 +149,17 @@ namespace DOL.GS
 		/// <param name="template">New mob template</param>
 		public static void AddTemplate(INpcTemplate template)
 		{
-			lock (m_mobTemplates.SyncRoot)
+			lock (((ICollection)m_mobTemplates).SyncRoot)
 			{
-				object entry = m_mobTemplates[template.TemplateId];
 
-				if (entry == null)
+				if (!m_mobTemplates.ContainsKey(template.TemplateId) || m_mobTemplates[template.TemplateId] == null)
 				{
-					m_mobTemplates[template.TemplateId] = template;
-				}
-				else if (entry is ArrayList)
-				{
-					ArrayList array = (ArrayList)entry;
-					array.Add(template);
+					m_mobTemplates[template.TemplateId] = new List<INpcTemplate>();
+					m_mobTemplates[template.TemplateId].Add(template);
 				}
 				else
 				{
-					ArrayList arr = new ArrayList(2);
-					arr.Add(entry);
-					arr.Add(template);
-					m_mobTemplates[template.TemplateId] = arr;
+					m_mobTemplates[template.TemplateId].Add(template);
 				}
 			}
 		}
@@ -183,21 +173,13 @@ namespace DOL.GS
 		{
 			if (templateId == -1)
 				return null;
-			lock (m_mobTemplates.SyncRoot)
+			
+			lock (((ICollection)m_mobTemplates).SyncRoot)
 			{
-				object entry = m_mobTemplates[templateId];
-				if (entry is ArrayList)
-				{
-					ArrayList array = (ArrayList)entry;
-					return (NpcTemplate)array[Util.Random(array.Count - 1)];
-				}
-				else if (entry == null)
-				{
-					//if (log.IsWarnEnabled)
-						//log.Warn("No npctemplate with ID " + templateId + " found.");
-					return null;
-				}
-				return (NpcTemplate)entry;
+				if(!m_mobTemplates.ContainsKey(templateId) || m_mobTemplates[templateId] == null || m_mobTemplates[templateId].Count == 0)
+				   return null;	
+				
+				return (NpcTemplate)m_mobTemplates[templateId][Util.Random(m_mobTemplates[templateId].Count - 1)];
 			}
 		}
 	}

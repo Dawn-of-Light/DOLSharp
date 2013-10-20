@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Events;
@@ -852,7 +853,7 @@ namespace DOL.AI.Brain
 
 		private IList FindTarget()
 		{
-			ArrayList list = new ArrayList();
+			List<GameLiving> list = new List<GameLiving>();
 
 			foreach (GamePlayer o in Body.GetPlayersInRadius((ushort)Body.AttackRange))
 			{
@@ -872,7 +873,7 @@ namespace DOL.AI.Brain
 			if (Body.AttackState)
 				return;
 
-			IList enemies = new ArrayList();
+			IList enemies = new List<GameLiving>();
 			if (Target == null)
 				enemies = FindTarget();
 			else if (!Body.IsWithinRadius(Target, Body.AttackRange))

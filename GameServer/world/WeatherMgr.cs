@@ -18,6 +18,8 @@
  */
 using System;
 using System.Collections.Specialized;
+using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using DOL.GS.PacketHandler;
@@ -78,7 +80,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds all weather managers currently active
 		/// </summary>
-		private static readonly HybridDictionary m_weathers = new HybridDictionary();
+		private static readonly Dictionary<ushort, WeatherMgr> m_weathers = new Dictionary<ushort, WeatherMgr>();
 		#endregion
 
 		#region Constructor
@@ -176,7 +178,10 @@ namespace DOL.GS
 		/// <returns>The retrieved weather manager or null if none for this region</returns>
 		public static WeatherMgr GetWeatherForRegion(ushort regionID)
 		{
-			return (WeatherMgr)m_weathers[regionID];
+			if(m_weathers.ContainsKey(regionID))
+				return (WeatherMgr)m_weathers[regionID];
+			
+			return null;
 		}
 
 		/// <summary>
@@ -301,7 +306,7 @@ namespace DOL.GS
 		public static bool Load()
 		{
 			//FIXME: [WARN] ideally we'd want this read from the region table instead of hardcoding which regions should produce storms
-			lock (m_weathers)
+			lock (((ICollection)m_weathers).SyncRoot)
 			{
 				foreach (RegionEntry region in DOL.GS.WorldMgr.GetRegionList())
 				{
@@ -352,9 +357,9 @@ namespace DOL.GS
 		/// <param name="regionID"></param>
 		public static void AddRegion(ushort regionID)
 		{
-			lock (m_weathers)
+			lock (((ICollection)m_weathers).SyncRoot)
 			{
-				if (m_weathers.Contains(regionID) == false)
+				if (m_weathers.ContainsKey(regionID) == false)
 				{
 					m_weathers.Add(regionID, new WeatherMgr(regionID));
 					(m_weathers[regionID] as WeatherMgr).m_weatherTimer.Change(120000, ServerProperties.Properties.WEATHER_CHECK_INTERVAL);
@@ -368,9 +373,9 @@ namespace DOL.GS
 		/// </summary>
 		public static void RemoveRegion(ushort regionID)
 		{
-			lock (m_weathers)
+			lock (((ICollection)m_weathers).SyncRoot)
 			{
-				if (m_weathers.Contains(regionID))
+				if (m_weathers.ContainsKey(regionID))
 				{
  					(m_weathers[regionID] as WeatherMgr).m_weatherTimer.Change(Timeout.Infinite, Timeout.Infinite);
 					m_weathers.Remove(regionID);
@@ -384,7 +389,7 @@ namespace DOL.GS
 		/// </summary>
 		public static void Unload()
 		{
-			lock (m_weathers)
+			lock (((ICollection)m_weathers).SyncRoot)
 			{
 				foreach (WeatherMgr weather in m_weathers.Values)
 					weather.m_weatherTimer.Change(Timeout.Infinite, Timeout.Infinite);

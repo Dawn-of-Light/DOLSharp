@@ -835,7 +835,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.HandlePacket.MustBeInChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
-						if (mychatgroup.Listen == true && (((bool)mychatgroup.Members[client.Player]) == false))
+						if (mychatgroup.Listen == true && mychatgroup.Members.ContainsKey(client.Player) && (((bool)mychatgroup.Members[client.Player]) == false))
 						{
 							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.HandlePacket.OnlyModerator"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
@@ -928,7 +928,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.HandlePacket.MustBeInBattleGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
-						if (mybattlegroup.Listen == true && (((bool)mybattlegroup.Members[client.Player]) == false))
+						if (mybattlegroup.Listen == true && mybattlegroup.Members.ContainsKey(client.Player) && (((bool)mybattlegroup.Members[client.Player]) == false))
 						{
 							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.HandlePacket.OnlyModerator"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;

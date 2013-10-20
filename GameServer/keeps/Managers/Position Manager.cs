@@ -234,7 +234,10 @@ namespace DOL.GS.Keeps
 			{
 				foreach (GameKeepComponent component in keep.KeepComponents)
 				{
-					DBKeepPosition[] list = component.Positions[position.TemplateID] as DBKeepPosition[];
+					DBKeepPosition[] list = null;
+					if(component.Positions.ContainsKey(position.TemplateID))
+						list = component.Positions[position.TemplateID] as DBKeepPosition[];
+					
 					if (list == null)
 					{
 						list = new DBKeepPosition[4];
@@ -252,7 +255,10 @@ namespace DOL.GS.Keeps
 			{
 				foreach (GameKeepComponent component in keep.KeepComponents)
 				{
-					DBKeepPosition[] list = component.Positions[position.TemplateID] as DBKeepPosition[];
+					DBKeepPosition[] list = null;
+					if(component.Positions.ContainsKey(position.TemplateID))
+						list = component.Positions[position.TemplateID] as DBKeepPosition[];
+					
 					if (list == null)
 					{
 						list = new DBKeepPosition[4];

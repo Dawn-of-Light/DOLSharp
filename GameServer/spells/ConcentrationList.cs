@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.GS.Effects;
 using log4net;
@@ -53,7 +54,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Holds the list effects
 		/// </summary>
-		private ArrayList m_concSpells;
+		private List<IConcentrationEffect> m_concSpells;
 
 		/// <summary>
 		/// Constructs a new ConcentrationList
@@ -75,7 +76,7 @@ namespace DOL.GS.Spells
 			BeginChanges();
 
 			if (m_concSpells == null)
-				m_concSpells = new ArrayList(20);
+				m_concSpells = new List<IConcentrationEffect>(20);
 
 			lock (m_concSpells) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
@@ -152,9 +153,9 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public void CancelAll(bool leaveself)
 		{
-			ArrayList spells = null;
+			List<IConcentrationEffect> spells = null;
 			if (m_concSpells == null) return;
-			spells = (ArrayList)m_concSpells.Clone();
+			spells = new List<IConcentrationEffect>(m_concSpells);
 			BeginChanges();
 			if (spells != null)
 			{
@@ -221,7 +222,7 @@ namespace DOL.GS.Spells
 		/// <returns>resulting effectlist</returns>
 		public IList GetAllOfType(Type effectType)
 		{
-			ArrayList list = new ArrayList();
+			List<IConcentrationEffect> list = new List<IConcentrationEffect>();
 
 			if (m_concSpells == null) return list;
 			lock (m_concSpells) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
@@ -280,7 +281,7 @@ namespace DOL.GS.Spells
 		public IEnumerator GetEnumerator()
 		{
 			if (m_concSpells == null)
-				return new ArrayList(0).GetEnumerator();
+				return new List<IConcentrationEffect>(0).GetEnumerator();
 			return m_concSpells.GetEnumerator();
 		}
 

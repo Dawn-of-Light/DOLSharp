@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
@@ -37,7 +38,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Container of properties
 		/// </summary>
-		private readonly HybridDictionary _props = new HybridDictionary();
+		private readonly Dictionary<object, object> _props = new Dictionary<object, object>();
 
 		/// <summary>
 		/// Retrieve a property
@@ -56,10 +57,13 @@ namespace DOL.GS
 		}
 		public T getProperty<T>(object key, T def, bool loggued)
 		{
-			object val;
+			object val = null;
 
-			lock (_props)
-				val = _props[key];
+			lock (((ICollection)_props).SyncRoot) 
+			{
+				if(_props.ContainsKey(key))
+					val = _props[key];
+			}
 
 			if (loggued)
 			{
@@ -85,11 +89,12 @@ namespace DOL.GS
 		/// <param name="val">value</param>
 		public void setProperty(object key, object val)
 		{
-			lock (_props)
+			lock (((ICollection)_props).SyncRoot)
 			{
 				if (val == null)
 				{
-					_props.Remove(key);
+					if(_props.ContainsKey(key))
+						_props.Remove(key);
 				}
 				else
 				{
@@ -104,9 +109,10 @@ namespace DOL.GS
 		/// <param name="key">key</param>
 		public void removeProperty(object key)
 		{
-			lock (_props)
+			lock (((ICollection)_props).SyncRoot)
 			{
-				_props.Remove(key);
+				if(_props.ContainsKey(key))
+					_props.Remove(key);
 			}
 		}
 
@@ -118,7 +124,7 @@ namespace DOL.GS
 		{
 			var temp = new List<string>();
 
-			lock (_props)
+			lock (((ICollection)_props).SyncRoot)
 			{
 				foreach (string key in _props.Keys)
 					temp.Add(key);
@@ -132,7 +138,7 @@ namespace DOL.GS
 		/// </summary>
 		public void removeAllProperties()
 		{
-			lock (_props)
+			lock (((ICollection)_props).SyncRoot)
 			{
 				_props.Clear();
 			}

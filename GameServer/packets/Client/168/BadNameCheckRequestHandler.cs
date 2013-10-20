@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
@@ -33,7 +34,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			//bad names, this is just a temp testthing here
 			bool bad = false;
 
-			ArrayList names = GameServer.Instance.InvalidNames;
+			List<string> names = GameServer.Instance.InvalidNames;
 
 			foreach(string s in names)
 			{

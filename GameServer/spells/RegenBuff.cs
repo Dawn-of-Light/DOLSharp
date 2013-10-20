@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using DOL.GS.Effects;
 using DOL.GS.PropertyCalc;
@@ -80,7 +81,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Holds all owners of conc buffs
 		/// </summary>
-		private ListDictionary m_concEffects;
+		private Dictionary<GameSpellEffect, GameSpellEffect> m_concEffects;
 
 		/// <summary>
 		/// Execute property changing spell
@@ -90,7 +91,7 @@ namespace DOL.GS.Spells
 		{
 			if (Spell.Concentration > 0)
 			{
-				m_concEffects = new ListDictionary();
+				m_concEffects = new Dictionary<GameSpellEffect, GameSpellEffect>();
 				RangeCheckAction rangeCheck = new RangeCheckAction(Caster, this);
 				rangeCheck.Interval = RANGE_CHECK_INTERVAL;
 				rangeCheck.Start(RANGE_CHECK_INTERVAL);
@@ -119,7 +120,7 @@ namespace DOL.GS.Spells
 		{
 			base.OnEffectStart(effect);
 			if (Spell.Concentration > 0) {
-				lock (m_concEffects) {
+				lock (((ICollection)m_concEffects).SyncRoot) {
 					m_concEffects.Add(effect, effect); // effects are enabled at start
 				}
 			}
@@ -135,9 +136,10 @@ namespace DOL.GS.Spells
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			if (Spell.Concentration > 0) {
-				lock (m_concEffects) {
+				lock (((ICollection)m_concEffects).SyncRoot) {
 					EnableEffect(effect); // restore disabled effect before it is completely canceled
-					m_concEffects.Remove(effect);
+					if(m_concEffects.ContainsKey(effect))
+						m_concEffects.Remove(effect);
 				}
 			}
 			return base.OnEffectExpires(effect, noMessages);
@@ -149,7 +151,7 @@ namespace DOL.GS.Spells
 		/// <param name="effect"></param>
 		private void EnableEffect(GameSpellEffect effect)
 		{
-			if (m_concEffects[effect] != null) return; // already enabled
+			if (m_concEffects.ContainsKey(effect) && m_concEffects[effect] != null) return; // already enabled
 			m_concEffects[effect] = effect;
 			IPropertyIndexer bonuscat = GetBonusCategory(effect.Owner, BonusCategory1);
 			bonuscat[(int)Property1] += (int)(Spell.Value * effect.Effectiveness);
@@ -161,7 +163,7 @@ namespace DOL.GS.Spells
 		/// <param name="effect"></param>
 		private void DisableEffect(GameSpellEffect effect)
 		{
-			if (m_concEffects[effect] == null) return; // already disabled
+			if (!m_concEffects.ContainsKey(effect) || m_concEffects[effect] == null) return; // already disabled
 			m_concEffects[effect] = null;
 			IPropertyIndexer bonuscat = GetBonusCategory(effect.Owner, BonusCategory1);
 			bonuscat[(int)Property1] -= (int)(Spell.Value * effect.Effectiveness);
@@ -202,9 +204,9 @@ namespace DOL.GS.Spells
 						return;
 					}
 
-					ArrayList disableEffects = null;
-					ArrayList enableEffects = null;
-					foreach (DictionaryEntry de in effects)
+					List<GameSpellEffect> disableEffects = null;
+					List<GameSpellEffect> enableEffects = null;
+					foreach (KeyValuePair<GameSpellEffect, GameSpellEffect> de in effects)
 					{
 						GameSpellEffect effect = (GameSpellEffect)de.Key;
 						GameLiving effectOwner = effect.Owner;
@@ -217,7 +219,7 @@ namespace DOL.GS.Spells
 							{
 								// owner is out of range and effect is still active, disable it
 								if (disableEffects == null)
-									disableEffects = new ArrayList(1);
+									disableEffects = new List<GameSpellEffect>(1);
 								disableEffects.Add(effect);
 							}
 						}
@@ -225,7 +227,7 @@ namespace DOL.GS.Spells
 						{
 							// owner entered the range and effect was disabled, enable it now
 							if (enableEffects == null)
-								enableEffects = new ArrayList(1);
+								enableEffects = new List<GameSpellEffect>(1);
 							enableEffects.Add(effect);
 						}
 					}

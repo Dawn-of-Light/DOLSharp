@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.GS.PacketHandler;
 using log4net;
@@ -42,7 +43,7 @@ namespace DOL.GS.Spells
 		/// <returns>true if heal was done</returns>
 		public override bool HealTarget (GameLiving target, int amount)
 		{
-			Hashtable injuredTargets = new Hashtable();
+			Dictionary<GameLiving, double> injuredTargets = new Dictionary<GameLiving, double>();
 			GameLiving mostInjuredLiving = target;
 			double mostInjuredPercent = mostInjuredLiving.Health / (float)mostInjuredLiving.MaxHealth;
 
@@ -106,7 +107,7 @@ namespace DOL.GS.Spells
 
 			double bestHealPercent = targetHealCap / (double)mostInjuredLiving.MaxHealth;
 			double totalHealed = 0;
-			Hashtable healAmount = new Hashtable();
+			Dictionary<GameLiving, int> healAmount = new Dictionary<GameLiving, int>();
 
 
 			IDictionaryEnumerator iter = injuredTargets.GetEnumerator();

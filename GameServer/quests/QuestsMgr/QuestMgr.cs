@@ -49,18 +49,18 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// Holds all the quests descriptors used in the world (unique id => descriptor)
 		/// </summary>
-		private static readonly IDictionary m_questDescriptors = new HybridDictionary(1);
+		//private static readonly IDictionary m_questDescriptors = new HybridDictionary(1);
 
 		/// <summary>
 		/// Holds all the npc quests descriptors used in the world (npc => list of descriptors)
 		/// </summary>
-		private static readonly IDictionary  m_questDescriptorsByNPC = new HybridDictionary();
+		//private static readonly IDictionary  m_questDescriptorsByNPC = new HybridDictionary();
 
-        private static readonly IDictionary m_questTypeMap = new HybridDictionary();
+        private static readonly Dictionary<ushort, Type> m_questTypeMap = new Dictionary<ushort, Type>();
 
-        private static readonly IDictionary m_questActionMap = new HybridDictionary();
-        private static readonly IDictionary m_questTriggerMap = new HybridDictionary();
-        private static readonly IDictionary m_questRequirementMap = new HybridDictionary();
+        //private static readonly IDictionary m_questActionMap = new HybridDictionary();
+        //private static readonly IDictionary m_questTriggerMap = new HybridDictionary();
+        //private static readonly IDictionary m_questRequirementMap = new HybridDictionary();
 
 		#endregion
 
@@ -252,7 +252,7 @@ namespace DOL.GS.Quests
         {
 //            ushort typeId =(ushort) type.GetHashCode();
 			ushort typeId = (ushort)(m_questTypeMap.Count + 1);
-            if (m_questTypeMap.Contains(typeId))
+            if (m_questTypeMap.ContainsKey(typeId))
             {
                 if (log.IsErrorEnabled)
                     log.Error(type.FullName+ ": Quest with computed id of="+typeId+" already found.");
@@ -290,7 +290,10 @@ namespace DOL.GS.Quests
         /// <returns></returns>
         public static Type GetQuestTypeForID(ushort typeId)
         {
-            return (Type)m_questTypeMap[typeId];
+        	if(m_questTypeMap.ContainsKey(typeId))
+            	return (Type)m_questTypeMap[typeId];
+        	
+        	return null;
         }
 
 		/// <summary>

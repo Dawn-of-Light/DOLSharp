@@ -93,12 +93,12 @@ namespace DOL.GS
         /// This holds the gravestones in this region for fast access
         /// Player unique id(string) -> GameGraveStone
         /// </summary>
-        protected readonly Hashtable m_graveStones;
+        protected readonly Dictionary<string, GameObject> m_graveStones;
 
         /// <summary>
         /// Holds all the Zones inside this Region
         /// </summary>
-        protected readonly ArrayList m_Zones;
+        protected readonly List<Zone> m_Zones;
 
         protected object m_lockAreas = new object();
 
@@ -234,9 +234,9 @@ namespace DOL.GS
             m_nextObjectSlot = 0;
             m_objectsAllocatedSlots = new uint[0];
 
-            m_graveStones = new Hashtable();
+            m_graveStones = new Dictionary<string, GameObject>();
 
-            m_Zones = new ArrayList(1);
+            m_Zones = new List<Zone>(1);
             m_ZoneAreas = new ushort[64][];
             m_ZoneAreasCount = new ushort[64];
             for (int i = 0; i < 64; i++)
@@ -470,7 +470,7 @@ namespace DOL.GS
         /// <summary>
         /// An ArrayList of all Zones within this Region
         /// </summary>
-        public ArrayList Zones
+        public List<Zone> Zones
         {
             get { return m_Zones; }
         }
@@ -1130,7 +1130,7 @@ namespace DOL.GS
                     {
                         if (obj is GameGravestone)
                         {
-                            lock (m_graveStones.SyncRoot)
+                        	lock (((ICollection)m_graveStones).SyncRoot)
                             {
                                 m_graveStones[obj.InternalID] = obj;
                             }
@@ -1171,9 +1171,10 @@ namespace DOL.GS
                 {
                     if (obj is GameGravestone)
                     {
-                        lock (m_graveStones.SyncRoot)
+                    	lock (((ICollection)m_graveStones).SyncRoot)
                         {
-                            m_graveStones.Remove(obj.InternalID);
+                        	if(m_graveStones.ContainsKey(obj.InternalID))
+                            	m_graveStones.Remove(obj.InternalID);
                         }
                     }
                 }
@@ -1214,9 +1215,12 @@ namespace DOL.GS
         /// <returns>the found gravestone or null</returns>
         public GameGravestone FindGraveStone(GamePlayer player)
         {
-            lock (m_graveStones.SyncRoot)
+        	lock (((ICollection)m_graveStones).SyncRoot)
             {
-                return (GameGravestone)m_graveStones[player.InternalID];
+            	if(m_graveStones.ContainsKey(player.InternalID))
+                	return (GameGravestone)m_graveStones[player.InternalID];
+                	
+                return null;
             }
         }
 
@@ -1444,7 +1448,7 @@ namespace DOL.GS
             lock (m_lockAreas)
             {
                 int zoneIndex = Zones.IndexOf(zone);
-                IList areas = new ArrayList();
+                List<IArea> areas = new List<IArea>();
 
                 if (zoneIndex >= 0)
                 {
@@ -1474,7 +1478,7 @@ namespace DOL.GS
             lock (m_lockAreas)
             {
                 int zoneIndex = Zones.IndexOf(zone);
-                IList areas = new ArrayList();
+                IList areas = new List<IArea>();
 
                 if (zoneIndex >= 0)
                 {
@@ -1543,7 +1547,7 @@ namespace DOL.GS
 
             if (startingZone != null)
             {
-                ArrayList res = startingZone.GetObjectsInRadius(type, x, y, z, radius, new ArrayList(), ignoreZ);
+                List<GameObject> res = startingZone.GetObjectsInRadius(type, x, y, z, radius, new List<GameObject>(), ignoreZ);
 
                 uint sqRadius = (uint)radius * radius;
 
@@ -1773,7 +1777,7 @@ namespace DOL.GS
                 return this;
             }
 
-            public ObjectEnumerator(ArrayList objectSet)
+            public ObjectEnumerator(List<GameObject> objectSet)
             {
                 //objectSet.DumpInfo();
                 elements = new GameObject[objectSet.Count];
@@ -1838,7 +1842,7 @@ namespace DOL.GS
             protected int m_Y;
             protected int m_Z;
 
-            public DistanceEnumerator(int x, int y, int z, ArrayList elements)
+            public DistanceEnumerator(int x, int y, int z, List<GameObject> elements)
                 : base(elements)
             {
                 m_X = x;
@@ -1852,7 +1856,7 @@ namespace DOL.GS
         /// </summary>
         public class PlayerDistanceEnumerator : DistanceEnumerator
         {
-            public PlayerDistanceEnumerator(int x, int y, int z, ArrayList elements)
+            public PlayerDistanceEnumerator(int x, int y, int z, List<GameObject> elements)
                 : base(x, y, z, elements)
             {
             }
@@ -1872,7 +1876,7 @@ namespace DOL.GS
         /// </summary>
         public class NPCDistanceEnumerator : DistanceEnumerator
         {
-            public NPCDistanceEnumerator(int x, int y, int z, ArrayList elements)
+            public NPCDistanceEnumerator(int x, int y, int z, List<GameObject> elements)
                 : base(x, y, z, elements)
             {
             }
@@ -1892,7 +1896,7 @@ namespace DOL.GS
         /// </summary>
         public class ItemDistanceEnumerator : DistanceEnumerator
         {
-            public ItemDistanceEnumerator(int x, int y, int z, ArrayList elements)
+            public ItemDistanceEnumerator(int x, int y, int z, List<GameObject> elements)
                 : base(x, y, z, elements)
             {
             }
@@ -1912,7 +1916,7 @@ namespace DOL.GS
         /// </summary>
         public class DoorDistanceEnumerator : DistanceEnumerator
         {
-            public DoorDistanceEnumerator(int x, int y, int z, ArrayList elements)
+            public DoorDistanceEnumerator(int x, int y, int z, List<GameObject> elements)
                 : base(x, y, z, elements)
             {
             }
@@ -1935,7 +1939,7 @@ namespace DOL.GS
 
         public void Relocate()
         {
-            lock (m_Zones.SyncRoot)
+        	lock (((ICollection)m_Zones).SyncRoot)
             {
                 for (int i = 0; i < m_Zones.Count; i++)
                 {

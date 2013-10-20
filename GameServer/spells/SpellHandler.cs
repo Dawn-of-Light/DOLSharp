@@ -1995,7 +1995,7 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public virtual IList SelectTargets(GameObject castTarget)
 		{
-			ArrayList list = new ArrayList(8);
+			List<GameLiving> list = new List<GameLiving>(8);
 			GameLiving target = castTarget as GameLiving;
 			bool targetchanged = false;
 			string modifiedTarget = Spell.Target.ToLower();

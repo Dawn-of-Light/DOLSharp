@@ -159,7 +159,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				if (checkInstanceLogin)
 				{
-					if (WorldMgr.Regions[player.CurrentRegionID] == null || player.CurrentRegion == null || player.CurrentRegion.IsInstance)
+					if (!WorldMgr.Regions.ContainsKey(player.CurrentRegionID) || WorldMgr.Regions[player.CurrentRegionID] == null || player.CurrentRegion == null || player.CurrentRegion.IsInstance)
 					{
 						Log.WarnFormat("{0}:{1} logging into instance or CurrentRegion is null, moving to bind!", player.Name, player.Client.Account.Name);
 						player.MoveToBind();

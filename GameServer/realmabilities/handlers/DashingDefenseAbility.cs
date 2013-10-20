@@ -55,7 +55,7 @@ namespace DOL.GS.RealmAbilities
 
             DisableSkill(living);
 
-            ArrayList targets = new ArrayList();
+            List<GameLiving> targets = new List<GameLiving>();
             if (player.Group == null)
                 {
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "DashingDefenseAbility.Execute.MustInGroup"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);

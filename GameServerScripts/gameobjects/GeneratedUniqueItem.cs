@@ -446,7 +446,7 @@ namespace DOL.GS
 				case eBonusType.Skill:
 					{
 						// fill valid skills
-						ArrayList validSkills = new ArrayList();
+						List<eProperty> validSkills = new List<eProperty>();
 
 						bool fIndividualSkill = false;
 
@@ -555,7 +555,7 @@ namespace DOL.GS
 				case eBonusType.Stat:
 					{
 						// ToDo: this does not check for duplicates like INT and Acuity
-						ArrayList validStats = new ArrayList();
+						List<eProperty> validStats = new List<eProperty>();
 						foreach (eProperty property in StatBonus)
 						{
 							if (!BonusExists(property) && StatIsValidForObjectType(property) && StatIsValidForRealm(property))
@@ -568,7 +568,7 @@ namespace DOL.GS
 				case eBonusType.AdvancedStat:
 					{
 						// ToDo: this does not check for duplicates like INT and Acuity
-						ArrayList validStats = new ArrayList();
+						List<eProperty> validStats = new List<eProperty>();
 						foreach (eProperty property in AdvancedStats)
 						{
 							if (!BonusExists(property) && StatIsValidForObjectType(property) && StatIsValidForRealm(property))

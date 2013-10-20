@@ -178,7 +178,7 @@ namespace DOL.GS.Quests.Albion
 			else
 				nob = npcs[0];
 
-			npcs = (GameNPC[]) WorldMgr.GetObjectsByName("Dragonfly Handler Colm", eRealm.Albion, typeof (GameStableMaster));
+			npcs = (GameNPC[]) WorldMgr.GetNPCsByName("Dragonfly Handler Colm", eRealm.Albion, typeof (GameStableMaster));
 			if (npcs.Length == 0)
 			{
 				colm = new GameStableMaster();

@@ -118,7 +118,7 @@ namespace DOL.GS
 					break;
 			}
 
-			IList list = new ArrayList();
+			List<string> list = new List<string>();
             list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.GetExamineMessages.YouTarget", 
                                                 GetName(0, false, player.Client.Account.Language, this)));
             list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.GetExamineMessages.YouExamine",

@@ -426,7 +426,7 @@ namespace DOL.Database.Connection
 		{
 			if (connType == ConnectionType.DATABASE_MYSQL)
 			{
-				var currentTableColumns = new ArrayList();
+				List<string> currentTableColumns = new List<string>();
 				try
 				{
 					ExecuteSelect("DESCRIBE `" + table.TableName + "`", delegate(MySqlDataReader reader)

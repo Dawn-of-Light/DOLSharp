@@ -574,7 +574,7 @@ namespace DOL.GS
 		/// consists of GameObject -> damage(float)
 		/// Damage in float because it might contain small amounts
 		/// </summary>
-		protected readonly HybridDictionary m_xpGainers;
+		protected readonly Dictionary<GameObject, float> m_xpGainers;
 		/// <summary>
 		/// Holds the weaponslot to be used
 		/// </summary>
@@ -603,7 +603,7 @@ namespace DOL.GS
 		/// key-value pairs that will define how much
 		/// XP these objects get when this n
 		/// </summary>
-		public virtual HybridDictionary XPGainers
+		public virtual Dictionary<GameObject, float> XPGainers
 		{
 			get
 			{
@@ -1886,7 +1886,7 @@ namespace DOL.GS
 
 			string message = "";
 			bool broadcast = true;
-			ArrayList excludes = new ArrayList();
+			List<GameObject> excludes = new List<GameObject>();
 			excludes.Add(ad.Attacker);
 			excludes.Add(ad.Target);
 
@@ -2081,7 +2081,7 @@ namespace DOL.GS
 			// broadcast messages
 			if (broadcast)
 			{
-				Message.SystemToArea(ad.Attacker, message, eChatType.CT_OthersCombat, (GameObject[])excludes.ToArray(typeof(GameObject)));
+				Message.SystemToArea(ad.Attacker, message, eChatType.CT_OthersCombat, (GameObject[])excludes.ToArray());
 			}
 
 			ad.Target.StartInterruptTimer(ad, interruptDuration);
@@ -4034,7 +4034,7 @@ namespace DOL.GS
 				if (wasAlive)
 					Die(source);
 
-				lock (m_xpGainers.SyncRoot)
+				lock (((ICollection)m_xpGainers).SyncRoot)
 					m_xpGainers.Clear();
 			}
 			else
@@ -4168,9 +4168,9 @@ namespace DOL.GS
 		/// <param name="damageAmount">the amount of damage, float because for groups it can be split</param>
 		public virtual void AddXPGainer(GameObject xpGainer, float damageAmount)
 		{
-			lock (m_xpGainers.SyncRoot)
+			lock (((ICollection)m_xpGainers).SyncRoot)
 			{
-				if( m_xpGainers.Contains( xpGainer ) == false )
+				if( m_xpGainers.ContainsKey( xpGainer ) == false )
 				{
 					m_xpGainers.Add( xpGainer, 0.0f );
 				}
@@ -5184,7 +5184,7 @@ namespace DOL.GS
 
 				//We clean all damagedealers if we are fully healed,
 				//no special XP calculations need to be done
-				lock (m_xpGainers.SyncRoot)
+				lock (((ICollection)m_xpGainers).SyncRoot)
 				{
 					m_xpGainers.Clear();
 				}
@@ -5306,7 +5306,7 @@ namespace DOL.GS
 
 					//We clean all damagedealers if we are fully healed,
 					//no special XP calculations need to be done
-					lock (m_xpGainers.SyncRoot)
+					lock (((ICollection)m_xpGainers).SyncRoot)
 					{
 						//DOLConsole.WriteLine(this.Name+": Health=100% -> clear xpgainers");
 						m_xpGainers.Clear();
@@ -5462,7 +5462,7 @@ namespace DOL.GS
 			ConcentrationEffects.CancelAll(leaveSelf);
 
 			// cancel all active conc spell effects from other casters
-			ArrayList concEffects = new ArrayList();
+			List<IGameEffect> concEffects = new List<IGameEffect>();
 			lock (EffectList)
 			{
 				foreach (IGameEffect effect in EffectList)
@@ -6087,7 +6087,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds a list of skills for this living (used by GamePlayer)
 		/// </summary>
-		protected readonly ArrayList m_skillList = new ArrayList();
+		protected readonly List<Skill> m_skillList = new List<Skill>();
 
 		protected Object m_lockAbilities = new Object();
 
@@ -6122,7 +6122,7 @@ namespace DOL.GS
 			{
 				Ability oldAbility = null;
 				m_abilities.TryGetValue(ability.KeyName, out oldAbility);
-				lock (m_skillList.SyncRoot)
+				lock (((ICollection)m_skillList).SyncRoot)
 				{
 					if (oldAbility == null)
 					{
@@ -6155,7 +6155,7 @@ namespace DOL.GS
 			Ability ability = null;
 			lock (m_lockAbilities)
 			{
-				lock (m_skillList.SyncRoot)
+				lock (((ICollection)m_skillList).SyncRoot)
 				{
 					m_abilities.TryGetValue(abilityKeyName, out ability);
 					if (ability == null)
@@ -6235,7 +6235,7 @@ namespace DOL.GS
 		{
 			lock (m_lockAbilities)
 			{
-				ArrayList list = new ArrayList();
+				List<Ability> list = new List<Ability>();
 				list.AddRange(m_abilities.Values);
 				return list;
 			}
@@ -6542,7 +6542,7 @@ namespace DOL.GS
 		{
 			try
 			{
-				ArrayList asms = new ArrayList();
+				List<Assembly> asms = new List<Assembly>();
 				asms.Add(typeof(GameServer).Assembly);
 				asms.AddRange(ScriptMgr.Scripts);
 				foreach (Assembly asm in asms)
@@ -6717,7 +6717,7 @@ namespace DOL.GS
 			m_activeQuiverSlot = eActiveQuiverSlot.None;
 			m_rangedAttackState = eRangedAttackState.None;
 			m_rangedAttackType = eRangedAttackType.Normal;
-			m_xpGainers = new HybridDictionary();
+			m_xpGainers = new Dictionary<GameObject, float>();
 			m_effects = CreateEffectsList();
 			m_concEffects = new ConcentrationList(this);
 			m_attackers = new List<GameObject>();

@@ -1963,7 +1963,7 @@ namespace DOL.GS.PacketHandler
 					pak.WriteShort((ushort) Money.GetCopper(m_gameClient.Player.TradeWindow.PartnerTradeMoney));
 
 					pak.WriteShort(0x0000);
-					ArrayList items = m_gameClient.Player.TradeWindow.PartnerTradeItems;
+					IList<InventoryItem> items = m_gameClient.Player.TradeWindow.PartnerTradeItems;
 					if (items != null)
 					{
 						pak.WriteByte((byte) items.Count);
@@ -2112,7 +2112,7 @@ namespace DOL.GS.PacketHandler
 			IList skills = m_gameClient.Player.GetNonTrainableSkillList();
 			IList styles = m_gameClient.Player.GetStyleList();
 			List<SpellLine> spelllines = m_gameClient.Player.GetSpellLines();
-			var m_styleId = new Hashtable();
+			Dictionary<int, int> m_styleId = new Dictionary<int, int>();
 			int maxSkills = 0;
 			int firstSkills = 0;
 
@@ -2193,7 +2193,7 @@ namespace DOL.GS.PacketHandler
 										case Style.eOpening.Offensive:
 											pre = 0 + (int) style.AttackResultRequirement; // last result of our attack against enemy
 											// hit, miss, target blocked, target parried, ...
-											if (style.AttackResultRequirement == Style.eAttackResult.Style)
+											if (style.AttackResultRequirement == Style.eAttackResult.Style && m_styleId.ContainsKey(style.OpeningRequirementValue))
 												pre |= ((100 + (int) m_styleId[style.OpeningRequirementValue]) << 8);
 											break;
 										case Style.eOpening.Defensive:
@@ -2499,7 +2499,7 @@ namespace DOL.GS.PacketHandler
 
 				for (int skillIndex = 1; skillIndex < 7; skillIndex++)
 				{
-					IList specs = ChampSpecMgr.GetAbilityForIndex(type, skillIndex);
+					IList<ChampSpec> specs = ChampSpecMgr.GetAbilityForIndex(type, skillIndex);
 					pak.WriteByte((byte) skillIndex);
 					pak.WriteByte((byte) specs.Count);
 

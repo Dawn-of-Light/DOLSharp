@@ -90,7 +90,7 @@ namespace DOL.GS.Spells
 
 			var backpack = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 
-            ArrayList removeItems = new ArrayList();
+            List<InventoryItem> removeItems = new List<InventoryItem>();
 			removeItems.Add(useItem);
 			bool combinesToBook = false;
             foreach (InventoryItem item in backpack)

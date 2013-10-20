@@ -505,12 +505,12 @@ namespace DOL.GS.GameEvents
 				return 0;
 
 			float totaldmg = 0f;
-			foreach (DictionaryEntry de in killedPlayer.XPGainers)
+			foreach (KeyValuePair<GameObject, float> de in killedPlayer.XPGainers)
 			{
 				totaldmg += (float)de.Value;
 			}
 
-			foreach (DictionaryEntry de in killedPlayer.XPGainers)
+			foreach (KeyValuePair<GameObject, float> de in killedPlayer.XPGainers)
 			{
 				GamePlayer key = de.Key as GamePlayer;
 				if (killer == key)

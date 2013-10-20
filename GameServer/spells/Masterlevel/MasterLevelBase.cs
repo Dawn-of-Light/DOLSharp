@@ -52,7 +52,7 @@ namespace DOL.GS.Spells
         /// <returns></returns>
         public override IList SelectTargets(GameObject castTarget)
         {
-            ArrayList list = new ArrayList(8);
+            List<GameLiving> list = new List<GameLiving>(8);
             GameLiving target = castTarget as GameLiving;
 
             switch (Spell.Target.ToLower())
@@ -247,7 +247,7 @@ namespace DOL.GS.Spells
         /// <returns></returns>
         public override IList SelectTargets(GameObject castTarget)
         {
-            ArrayList list = new ArrayList(8);
+            List<GameLiving> list = new List<GameLiving>(8);
             GameLiving target = castTarget as GameLiving;
 
             switch (Spell.Target.ToLower())
@@ -436,7 +436,7 @@ namespace DOL.GS.Spells
         /// <returns></returns>
         public override IList SelectTargets(GameObject castTarget)
         {
-            ArrayList list = new ArrayList(8);
+            List<GameLiving> list = new List<GameLiving>(8);
             GameLiving target = castTarget as GameLiving;
 
             switch (Spell.Target.ToLower())
@@ -625,7 +625,7 @@ namespace DOL.GS.Spells
         /// <returns></returns>
         public override IList SelectTargets(GameObject castTarget)
         {
-            ArrayList list = new ArrayList(8);
+            List<GameLiving> list = new List<GameLiving>(8);
             GameLiving target = castTarget as GameLiving;
 
             switch (Spell.Target.ToLower())
@@ -835,7 +835,7 @@ namespace DOL.GS.Spells
         /// <returns></returns>
         public override IList SelectTargets(GameObject castTarget)
         {
-            ArrayList list = new ArrayList(8);
+            List<GameLiving> list = new List<GameLiving>(8);
             GameLiving target = castTarget as GameLiving;
 
             switch (Spell.Target.ToLower())

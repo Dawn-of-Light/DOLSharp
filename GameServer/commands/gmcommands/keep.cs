@@ -2166,7 +2166,7 @@ namespace DOL.GS.Commands
 
 							d.Component = new GameKeepComponent();
 							d.Component.Keep = k;
-							d.Component.Keep.Doors[d.DoorID] = this;
+							d.Component.Keep.Doors[d.DoorID.ToString()] = d;
 
 							d.Health = d.MaxHealth;
 							d.StartHealthRegeneration();

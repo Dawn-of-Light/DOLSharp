@@ -20,7 +20,7 @@ namespace DOL.GS.Quests
 			else if (owner is GamePlayer)
 				realm = (owner as GamePlayer).Realm;
 
-			ArrayList list = new ArrayList();
+			List<AbstractGameKeep> list = new List<AbstractGameKeep>();
 
 			ICollection<AbstractGameKeep> keeps;
 			if (owner is Group)

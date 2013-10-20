@@ -19,6 +19,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
@@ -42,7 +43,7 @@ namespace DOL.GS.RealmAbilities
 			if (player.ControlledBrain == null) return;
 			if (player.ControlledBrain.Body == null) return;
 			
-			ArrayList targets = new ArrayList();
+			List<GameLiving> targets = new List<GameLiving>();
 			//select targets
             if (player.Group == null)
             {

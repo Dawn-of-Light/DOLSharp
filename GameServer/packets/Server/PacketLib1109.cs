@@ -73,7 +73,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShort((ushort)Money.GetCopper(m_gameClient.Player.TradeWindow.PartnerTradeMoney));
 
 				pak.WriteShort(0x0000);
-				ArrayList items = m_gameClient.Player.TradeWindow.PartnerTradeItems;
+				IList<InventoryItem> items = m_gameClient.Player.TradeWindow.PartnerTradeItems;
 				if (items != null)
 				{
 					pak.WriteByte((byte)items.Count);

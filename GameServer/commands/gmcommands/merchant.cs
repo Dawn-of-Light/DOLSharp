@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.GS;
 using DOL.Database;
@@ -77,7 +78,7 @@ namespace DOL.GS.Commands
 
 						//Create a new merchant
 						GameMerchant merchant = null;
-						ArrayList asms = new ArrayList(ScriptMgr.Scripts);
+						List<Assembly> asms = new List<Assembly>(ScriptMgr.Scripts);
 						asms.Add(typeof(GameServer).Assembly);
 						foreach (Assembly script in asms)
 						{
@@ -403,7 +404,7 @@ namespace DOL.GS.Commands
 
 						//Create a new merchant
 						GameMerchant merchant = null;
-						ArrayList asms = new ArrayList(ScriptMgr.Scripts);
+						List<Assembly> asms = new List<Assembly>(ScriptMgr.Scripts);
 						asms.Add(typeof(GameServer).Assembly);
 						foreach (Assembly script in asms)
 						{

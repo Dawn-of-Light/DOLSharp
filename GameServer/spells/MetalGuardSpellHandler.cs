@@ -21,6 +21,7 @@ using DOL.GS.PacketHandler;
 using System;
 using System.Reflection;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
@@ -30,7 +31,7 @@ namespace DOL.GS.Spells
     {
         public override System.Collections.IList SelectTargets(GameObject castTarget)
         {
-            ArrayList list = new ArrayList();
+            List<GameLiving> list = new List<GameLiving>();
             GameLiving target = castTarget as GameLiving;
 
             if (Caster is GamePlayer)

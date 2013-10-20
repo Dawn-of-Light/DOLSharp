@@ -1691,8 +1691,8 @@ namespace DOL.GS
 			//Search for ability handlers in the gameserver first
 			if (log.IsInfoEnabled)
 				log.Info("Searching ability handlers in GameServer");
-			Hashtable ht = ScriptMgr.FindAllAbilityActionHandler(Assembly.GetExecutingAssembly());
-			foreach (DictionaryEntry entry in ht)
+			Dictionary<string, Type> ht = ScriptMgr.FindAllAbilityActionHandler(Assembly.GetExecutingAssembly());
+			foreach (KeyValuePair<string, Type> entry in ht)
 			{
 				string key = (string)entry.Key;
 
@@ -1712,7 +1712,7 @@ namespace DOL.GS
 			foreach (Assembly asm in ScriptMgr.Scripts)
 			{
 				ht = ScriptMgr.FindAllAbilityActionHandler(asm);
-				foreach (DictionaryEntry entry in ht)
+				foreach (KeyValuePair<string, Type> entry in ht)
 				{
 					string message;
 					string key = (string)entry.Key;
@@ -1741,8 +1741,8 @@ namespace DOL.GS
 			//Search for skill handlers in gameserver first
 			if (log.IsInfoEnabled)
 				log.Info("Searching skill handlers in GameServer.");
-			Hashtable ht = ScriptMgr.FindAllSpecActionHandler(Assembly.GetExecutingAssembly());
-			foreach (DictionaryEntry entry in ht)
+			Dictionary<string, Type> ht = ScriptMgr.FindAllSpecActionHandler(Assembly.GetExecutingAssembly());
+			foreach (KeyValuePair<string, Type> entry in ht)
 			{
 				string key = (string)entry.Key;
 
@@ -1761,7 +1761,7 @@ namespace DOL.GS
 			foreach (Assembly asm in ScriptMgr.Scripts)
 			{
 				ht = ScriptMgr.FindAllSpecActionHandler(asm);
-				foreach (DictionaryEntry entry in ht)
+				foreach (KeyValuePair<string, Type> entry in ht)
 				{
 					string message;
 					string key = (string)entry.Key;

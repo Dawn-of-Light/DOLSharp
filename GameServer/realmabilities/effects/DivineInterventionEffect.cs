@@ -22,7 +22,7 @@ namespace DOL.GS.RealmAbilities
 
 		private Group m_group = null;
 		public int PoolValue = 0;
-		private ArrayList m_affected = new ArrayList();
+		private List<GameLiving> m_affected = new List<GameLiving>();
         private GamePlayer m_playerOwner = null;
 
 		/// <summary>

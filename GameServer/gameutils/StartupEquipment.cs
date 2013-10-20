@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.Database;
 
 namespace DOL.GS
@@ -33,10 +34,10 @@ namespace DOL.GS
 		/// <param name="c">The character</param>
 		public static void AddEquipment(DOLCharacters c)
 		{
-			Hashtable usedSlots = new Hashtable();
+			Dictionary<eInventorySlot, bool> usedSlots = new Dictionary<eInventorySlot, bool>();
 
 			// 0 = for all classes, then quickcheck if it contains the classid
-			var items = GameServer.Database.SelectObjects<StarterEquipment>("`Class` = '0' OR `Class` LIKE '%" + c.Class + "%'");
+			IList<StarterEquipment> items = GameServer.Database.SelectObjects<StarterEquipment>("`Class` = '0' OR `Class` LIKE '%" + c.Class + "%'");
 
 			foreach (StarterEquipment item in items)
 			{
@@ -114,10 +115,10 @@ namespace DOL.GS
 					//otherwise stick the item in the backpack
 					for (int i = (int)eInventorySlot.FirstBackpack; i < (int)eInventorySlot.LastBackpack; i++)
 					{
-						if (usedSlots[i] == null)
+						if (!usedSlots.ContainsKey((eInventorySlot)i))
 						{
 							inventoryItem.SlotPosition = i;
-							usedSlots[i] = true;
+							usedSlots[(eInventorySlot)i] = true;
 							break;
 						}
 					}

@@ -1,6 +1,7 @@
 using DOL.AI.Brain;
 using DOL.Language;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
@@ -21,7 +22,7 @@ namespace DOL.GS
 
         public override IList GetExamineMessages(GamePlayer player)
         {
-            IList list = new ArrayList(4);
+            List<string> list = new List<string>();
             list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameGuard.GetExamineMessages.Examine", 
                                                 GetName(0, true, player.Client.Account.Language, this), GetPronoun(0, true, player.Client.Account.Language),
                                                 GetAggroLevelString(player, false)));

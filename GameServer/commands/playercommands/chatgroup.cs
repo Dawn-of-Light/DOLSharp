@@ -42,7 +42,7 @@ namespace DOL.GS.Commands
 				client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			if (mychatgroup.Listen == true && (((bool)mychatgroup.Members[client.Player]) == false))
+			if (mychatgroup.Listen == true && mychatgroup.Members.ContainsKey(client.Player) && (((bool)mychatgroup.Members[client.Player]) == false))
 			{
 				client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.OnlyModerator"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
@@ -127,7 +127,7 @@ namespace DOL.GS.Commands
 							mychatgroup = new ChatGroup();
 							mychatgroup.AddPlayer(client.Player, true);
 						}
-						else if (((bool)mychatgroup.Members[client.Player]) == false)
+						else if (mychatgroup.Members.ContainsKey(client.Player) && ((bool)mychatgroup.Members[client.Player]) == false)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.LeaderInvite"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
@@ -207,7 +207,7 @@ namespace DOL.GS.Commands
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
-						if ((bool)mychatgroup.Members[client.Player] == false)
+						if (mychatgroup.Members.ContainsKey(client.Player) && (bool)mychatgroup.Members[client.Player] == false)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.LeaderCommand"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
@@ -228,7 +228,7 @@ namespace DOL.GS.Commands
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
-						if ((bool)mychatgroup.Members[client.Player] == false)
+						if (mychatgroup.Members.ContainsKey(client.Player) && (bool)mychatgroup.Members[client.Player] == false)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.LeaderCommand"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
@@ -260,7 +260,7 @@ namespace DOL.GS.Commands
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
-						if ((bool)mychatgroup.Members[client.Player] == false)
+						if (mychatgroup.Members.ContainsKey(client.Player) && (bool)mychatgroup.Members[client.Player] == false)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.LeaderCommand"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
@@ -289,7 +289,7 @@ namespace DOL.GS.Commands
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
-						if ((bool)mychatgroup.Members[client.Player] == false)
+						if (mychatgroup.Members.ContainsKey(client.Player) && (bool)mychatgroup.Members[client.Player] == false)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.LeaderCommand"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
@@ -335,7 +335,7 @@ namespace DOL.GS.Commands
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.NotChatGroupMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
-						if ((bool)mychatgroup.Members[inviteeclient.Player] == false)
+						if (mychatgroup.Members.ContainsKey(inviteeclient.Player) && (bool)mychatgroup.Members[inviteeclient.Player] == false)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.NotChatGroupLeader"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
@@ -363,7 +363,7 @@ namespace DOL.GS.Commands
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.InChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
-						if ((bool)mychatgroup.Members[client.Player] == false)
+						if (mychatgroup.Members.ContainsKey(client.Player) && (bool)mychatgroup.Members[client.Player] == false)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Chatgroup.LeaderCommand"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;

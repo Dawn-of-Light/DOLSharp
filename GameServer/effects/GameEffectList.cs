@@ -378,7 +378,7 @@ namespace DOL.GS.Effects
 		/// <returns>resulting effectlist</returns>
 		public virtual IList GetAllOfType(Type effectType)
 		{
-			ArrayList list = new ArrayList();
+			List<IGameEffect> list = new List<IGameEffect>();
 
 			if (m_effects == null) return list;
 

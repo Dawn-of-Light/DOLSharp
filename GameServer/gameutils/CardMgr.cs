@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
@@ -155,12 +156,12 @@ namespace DOL.GS
         private class PlayerHand
         {    
             private GameClient m_owner;
-            private ArrayList m_hand;
+            private List<Card> m_hand;
 
             public PlayerHand(GameClient Player)
             {
                 m_owner = Player;
-                m_hand = new ArrayList();
+                m_hand = new List<Card>();
             }
 
             public void AddCard(Card c, bool up)
@@ -220,9 +221,9 @@ namespace DOL.GS
                 return null;
             }
 
-            public ArrayList DiscardAll()
+            public List<Card> DiscardAll()
             {
-                ArrayList cards = (ArrayList)m_hand.Clone();
+            	List<Card> cards = new List<Card>(m_hand);
                 m_hand.Clear();
                 if(m_owner.Player.Group == null)
                     m_owner.Out.SendMessage("You discard all your cards.", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
@@ -233,8 +234,8 @@ namespace DOL.GS
             }
         };
 
-        private static Hashtable m_dealerDecks = new Hashtable();
-        private static Hashtable m_playerHands = new Hashtable();
+        private static Dictionary<string, DealerDeck> m_dealerDecks = new Dictionary<string, DealerDeck>();
+        private static Dictionary<string, PlayerHand> m_playerHands = new Dictionary<string, PlayerHand>();
 
         /* Returns the GameClient which is the designated dealer for Player's group */
         private static GameClient GroupDealer(GameClient player)
@@ -261,7 +262,7 @@ namespace DOL.GS
         /* Removes dealer rights from the player */
         public static void QuitDealing(GameClient player)
         {
-            if(IsDealer(player))
+        	if(IsDealer(player) && m_dealerDecks.ContainsKey(player.Player.DBCharacter.ObjectId))
             {
                 m_dealerDecks.Remove(player.Player.DBCharacter.ObjectId);
             }
@@ -331,6 +332,10 @@ namespace DOL.GS
             {
                 hand = (PlayerHand)m_playerHands[player.Player.DBCharacter.ObjectId];
             }
+            
+            if(!m_dealerDecks.ContainsKey(dealer.Player.DBCharacter.ObjectId))
+               return;
+               
             deck = (DealerDeck)m_dealerDecks[dealer.Player.DBCharacter.ObjectId];
             if(!deck.HasCard()) { return; }
             c = deck.GetCard();
@@ -388,7 +393,7 @@ namespace DOL.GS
             c = (m_playerHands[player.Player.DBCharacter.ObjectId] as PlayerHand).Discard(selection);
             if (c != null)
             {
-                if(IsDealer(c.Dealer)) (m_dealerDecks[c.Dealer.Player.DBCharacter.ObjectId] as DealerDeck).ReturnCard(c);
+            	if(IsDealer(c.Dealer) && m_dealerDecks.ContainsKey(c.Dealer.Player.DBCharacter.ObjectId)) (m_dealerDecks[c.Dealer.Player.DBCharacter.ObjectId] as DealerDeck).ReturnCard(c);
             }
         }
 
@@ -398,7 +403,7 @@ namespace DOL.GS
             GameClient Dealer = null;
             DealerDeck deck = null;
             if (!IsPlayer(player)) return;
-            if ((Dealer = GroupDealer(player)) != null) deck = (DealerDeck)m_dealerDecks[Dealer.Player.DBCharacter.ObjectId];
+            if ((Dealer = GroupDealer(player)) != null && m_dealerDecks.ContainsKey(Dealer.Player.DBCharacter.ObjectId)) deck = (DealerDeck)m_dealerDecks[Dealer.Player.DBCharacter.ObjectId];
             foreach (Card c in (m_playerHands[player.Player.DBCharacter.ObjectId] as PlayerHand).DiscardAll())
                 if(deck != null && c.Dealer == Dealer) deck.ReturnCard(c);
             return;

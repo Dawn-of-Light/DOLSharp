@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using log4net;
 
@@ -36,7 +37,7 @@ namespace DOL.GS.PlayerTitles
 		/// <summary>
 		/// Holds all player titles.
 		/// </summary>
-		private static readonly ArrayList m_titles = new ArrayList();
+		private static readonly List<IPlayerTitle> m_titles = new List<IPlayerTitle>();
 		
 		/// <summary>
 		/// Holds special "empty" title instance.
@@ -79,9 +80,9 @@ namespace DOL.GS.PlayerTitles
 		/// </summary>
 		/// <param name="player">The player for title checks.</param>
 		/// <returns>All title suitable for given player or an empty list if none.</returns>
-		public static ICollection GetPlayerTitles(GamePlayer player)
+		public static ICollection<IPlayerTitle> GetPlayerTitles(GamePlayer player)
 		{
-			ArrayList titles = new ArrayList();
+			List<IPlayerTitle> titles = new List<IPlayerTitle>();
 			titles.Add(ClearTitle);
 			foreach (IPlayerTitle title in m_titles)
 				if (title.IsSuitable(player))

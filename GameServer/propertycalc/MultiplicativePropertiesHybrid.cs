@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 
 namespace DOL.GS.PropertyCalc
@@ -33,7 +34,7 @@ namespace DOL.GS.PropertyCalc
 		private sealed class PropertyEntry
 		{
 			public double cachedValue = 1.0;
-			public HybridDictionary values;
+			public Dictionary<object, double> values;
 			public void CalculateCachedValue()
 			{
 				if (values == null)
@@ -52,7 +53,7 @@ namespace DOL.GS.PropertyCalc
 			}
 		}
 
-		private HybridDictionary m_properties = new HybridDictionary();
+		private Dictionary<int, PropertyEntry> m_properties = new Dictionary<int, PropertyEntry>();
 
 		/// <summary>
 		/// Adds new value, if key exists value will be overwriten
@@ -64,7 +65,10 @@ namespace DOL.GS.PropertyCalc
 		{
 			lock (m_LockObject)
 			{
-				PropertyEntry entry = (PropertyEntry)m_properties[index];
+				PropertyEntry entry = null;
+				if(m_properties.ContainsKey(index))
+					entry = m_properties[index];
+				
 				if (entry == null)
 				{
 					entry = new PropertyEntry();
@@ -72,7 +76,7 @@ namespace DOL.GS.PropertyCalc
 				}
 
 				if (entry.values == null)
-					entry.values = new HybridDictionary();
+					entry.values = new Dictionary<object, double>();
 
 				entry.values[key] = value;
 				entry.CalculateCachedValue();
@@ -91,13 +95,15 @@ namespace DOL.GS.PropertyCalc
 				PropertyEntry entry = (PropertyEntry)m_properties[index];
 				if (entry == null) return;
 				if (entry.values == null) return;
-
-				entry.values.Remove(key);
+				
+				if(entry.values.ContainsKey(key))
+					entry.values.Remove(key);
 
 				// remove entry if it's empty
 				if (entry.values.Count < 1)
 				{
-					m_properties.Remove(index);
+					if(m_properties.ContainsKey(index))
+						m_properties.Remove(index);
 					return;
 				}
 
@@ -112,7 +118,10 @@ namespace DOL.GS.PropertyCalc
 		/// <returns>The property value (1.0 = 100%)</returns>
 		public double Get(int index)
 		{
-			PropertyEntry entry = (PropertyEntry)m_properties[index];
+			PropertyEntry entry = null;
+			if(m_properties.ContainsKey(index))
+				entry = m_properties[index];
+			
 			if (entry == null) return 1.0;
 			return entry.cachedValue;
 		}

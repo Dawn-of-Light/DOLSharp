@@ -295,7 +295,7 @@ namespace DOL.GS.Commands
 
 			//Create a new mob
 			GameNPC mob = null;
-			ArrayList asms = new ArrayList(ScriptMgr.Scripts);
+			List<Assembly> asms = new List<Assembly>(ScriptMgr.Scripts);
 			asms.Add(typeof(GameServer).Assembly);
 
 			foreach (Assembly script in asms)
@@ -2454,7 +2454,7 @@ namespace DOL.GS.Commands
 					}
 					else
 					{
-						ArrayList asms = new ArrayList(ScriptMgr.Scripts);
+						List<Assembly> asms = new List<Assembly>(ScriptMgr.Scripts);
 						asms.Add(typeof(GameServer).Assembly);
 
 						foreach (Assembly script in asms)
@@ -2944,7 +2944,7 @@ namespace DOL.GS.Commands
 
 		private void reload(GameClient client, GameNPC targetMob, string[] args)
 		{
-			ArrayList mobs = new ArrayList();
+			List<GameNPC[]> mobs = new List<GameNPC[]>();
 			// Find the mob(s) to reload.
 			if (args.Length > 2)
 			{

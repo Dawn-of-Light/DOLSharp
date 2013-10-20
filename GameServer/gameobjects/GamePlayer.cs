@@ -157,7 +157,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Array that stores ML step completition
 		/// </summary>
-		private ArrayList m_mlSteps = new ArrayList();
+		private List<DBCharacterXMasterLevel> m_mlSteps = new List<DBCharacterXMasterLevel>();
 
 
 		/// <summary>
@@ -2219,7 +2219,7 @@ namespace DOL.GS
 
 				//We clean all damagedealers if we are fully healed,
 				//no special XP calculations need to be done
-				lock (m_xpGainers.SyncRoot)
+				lock (((ICollection)m_xpGainers).SyncRoot)
 				{
 					m_xpGainers.Clear();
 				}
@@ -3280,8 +3280,8 @@ namespace DOL.GS
 
 		public virtual void RemoveAllSkills()
 		{
-			ArrayList skills = new ArrayList();
-			lock (m_skillList.SyncRoot)
+			List<Skill> skills = new List<Skill>();
+			lock (((ICollection)m_skillList).SyncRoot)
 			{
 				foreach (Skill skill in m_skillList)
 					skills.Add(skill);
@@ -3295,7 +3295,7 @@ namespace DOL.GS
 
 		public virtual void RemoveAllSpecs()
 		{
-			ArrayList specs = new ArrayList();
+			List<Specialization> specs = new List<Specialization>();
 			lock ((m_specList as ICollection).SyncRoot)
 			{
 				foreach (Specialization spec in m_specList)
@@ -3813,7 +3813,7 @@ namespace DOL.GS
 		/// <param name="sendMessages">sends "you learn" messages if true</param>
 		public virtual void RefreshSpecDependantSkills(bool sendMessages)
 		{
-			IList newStyles = new ArrayList();
+			List<Style> newStyles = new List<Style>();
 			lock (lockStyleList)
 			{
 				lock ((m_specList as ICollection).SyncRoot)
@@ -6736,8 +6736,8 @@ namespace DOL.GS
 					{
 						byte numTargetsCanHit = 0;
 						int random;
-						IList extraTargets = new ArrayList();
-						IList listAvailableTargets = new ArrayList();
+						List<GameObject> extraTargets = new List<GameObject>();
+						List<GameObject> listAvailableTargets = new List<GameObject>();
 						InventoryItem attackWeapon = AttackWeapon;
 						InventoryItem leftWeapon = (Inventory == null) ? null : Inventory.GetItem(eInventorySlot.LeftHandWeapon);
 						switch (style.ID)
@@ -7940,7 +7940,7 @@ namespace DOL.GS
 				((GamePlayer)killer).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)killer).Client, "GamePlayer.Die.YouKilled", GetName(0, false)), eChatType.CT_PlayerDied, eChatLoc.CL_SystemWindow);
 			}
 
-			ArrayList players = new ArrayList();
+			List<GamePlayer> players = new List<GamePlayer>();
 			if (messageDistance == 0)
 			{
 				foreach (GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegionID))
@@ -8212,7 +8212,7 @@ namespace DOL.GS
 			GameEventMgr.RemoveHandler(this, GamePlayerEvent.Quit, new DOLEventHandler(DuelOnPlayerQuit));
 			GameEventMgr.RemoveHandler(this, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(DuelOnAttack));
 			GameEventMgr.RemoveHandler(this, GameLivingEvent.AttackFinished, new DOLEventHandler(DuelOnAttack));
-			lock (m_xpGainers.SyncRoot)
+			lock (((ICollection)m_xpGainers).SyncRoot)
 			{
 				m_xpGainers.Clear();
 			}
@@ -10817,13 +10817,13 @@ namespace DOL.GS
 		/// Gets or sets the IgnoreList of a Player
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public ArrayList IgnoreList
+		public List<string> IgnoreList
 		{
 			get
 			{
 				if (DBCharacter != null && DBCharacter.SerializedIgnoreList != null)
-					return new ArrayList(DBCharacter.SerializedIgnoreList.Split(','));
-				return new ArrayList(0);
+					return new List<string>(DBCharacter.SerializedIgnoreList.Split(','));
+				return new List<string>(0);
 			}
 			set
 			{
@@ -10831,7 +10831,7 @@ namespace DOL.GS
 				if (value == null)
 					DBCharacter.SerializedIgnoreList = "";
 				else
-					DBCharacter.SerializedIgnoreList = String.Join(",", (string[])value.ToArray(typeof(string)));
+					DBCharacter.SerializedIgnoreList = String.Join(",", (string[])value.ToArray());
 				GameServer.Database.SaveObject(DBCharacter);
 			}
 		}
@@ -10870,7 +10870,7 @@ namespace DOL.GS
 		/// <param name="remove">true to remove this friend, false to add it</param>
 		public void ModifyIgnoreList(string Name, bool remove)
 		{
-			ArrayList currentIgnores = IgnoreList;
+			List<string> currentIgnores = IgnoreList;
 			if (remove && currentIgnores != null)
 			{
 				if (currentIgnores.Contains(Name))
@@ -14948,7 +14948,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds all players titles.
 		/// </summary>
-		protected readonly ArrayList m_titles = new ArrayList();
+		protected readonly List<IPlayerTitle> m_titles = new List<IPlayerTitle>();
 
 		/// <summary>
 		/// Holds current selected title.
@@ -16343,7 +16343,7 @@ namespace DOL.GS
 			m_isWireframe = false;
 			m_characterClass = new DefaultCharacterClass();
 			m_groupIndex = 0xFF;
-			m_currentAreas = new ArrayList();
+			m_currentAreas = new List<IArea>();
 
 			m_saveInDB = true;
 			LoadFromDatabase(dbChar);

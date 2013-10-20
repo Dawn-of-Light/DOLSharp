@@ -180,7 +180,7 @@ namespace DOL.GS.Quests.Midgard
 			else
 				hyndla = npcs[0];
 
-            npcs = (GameNPC[])WorldMgr.GetObjectsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.NPCGriffinHandlerNjiedi"), eRealm.Midgard, typeof(GameStableMaster));
+            npcs = (GameNPC[])WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.NPCGriffinHandlerNjiedi"), eRealm.Midgard, typeof(GameStableMaster));
 
 			if (npcs.Length == 0)
 			{

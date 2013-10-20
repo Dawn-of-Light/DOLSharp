@@ -175,7 +175,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				ArrayList bonusToApply = new ArrayList(4);
+				List<int> bonusToApply = new List<int>();
 				if (item.Bonus1Type != 0)
 				{
 					bonusToApply.Add(item.Bonus1Type);
@@ -362,7 +362,7 @@ namespace DOL.GS
 				lock (player.TradeWindow.Sync)
 				{
 					player.Inventory.BeginChanges();
-					foreach (InventoryItem gem in (ArrayList)player.TradeWindow.TradeItems.Clone())
+					foreach (InventoryItem gem in new List<InventoryItem>(player.TradeWindow.TradeItems))
 					{
 						if (item.Bonus1Type == 0)
 						{
@@ -405,7 +405,7 @@ namespace DOL.GS
 					player.Inventory.BeginChanges();
                     // Luhz Crafting Update:
                     // The base item is no longer lost when spellcrafting explodes - only gems are destroyed.
-                    foreach (InventoryItem gem in (ArrayList)player.TradeWindow.TradeItems.Clone())
+                    foreach (InventoryItem gem in new List<InventoryItem>(player.TradeWindow.TradeItems))
                     {
                         if (gem.Object_Type == (int)eObjectType.SpellcraftGem)
 						{
@@ -455,7 +455,7 @@ namespace DOL.GS
 		{
 			if (((InventoryItem)player.TradeWindow.TradeItems[0]).Model == 525) return; // check if applying dust
 
-			ArrayList spellcraftInfos = new ArrayList(10);
+			List<string> spellcraftInfos = new List<string>(10);
 
 			int totalItemCharges = GetItemMaxImbuePoints(item);
 			int totalGemmesCharges = GetTotalImbuePoints(player, item);

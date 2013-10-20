@@ -163,13 +163,13 @@ namespace DOL.GS.Keeps
 		/// This hold list of all keep doors
 		/// </summary>
 		//protected ArrayList m_doors;
-		protected Hashtable m_doors;
+		protected Dictionary<string, GameKeepDoor> m_doors;
 
 		/// <summary>
 		/// keep doors
 		/// </summary>
 		//public ArrayList Doors
-		public Hashtable Doors
+		public Dictionary<string, GameKeepDoor> Doors
 		{
 			get	{ return m_doors; }
 			set { m_doors = value; }
@@ -192,12 +192,12 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// This hold list of all guards of keep
 		/// </summary>
-		protected Hashtable m_guards;
+		protected Dictionary<string, GameKeepGuard> m_guards;
 
 		/// <summary>
 		/// List of all guards of keep
 		/// </summary>
-		public Hashtable Guards
+		public Dictionary<string, GameKeepGuard> Guards
 		{
 			get	{ return m_guards; }
 		}
@@ -205,22 +205,22 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// List of all banners
 		/// </summary>
-		protected Hashtable m_banners;
+		protected Dictionary<string, GameKeepBanner> m_banners;
 
 		/// <summary>
 		/// List of all banners
 		/// </summary>
-		public Hashtable Banners
+		public Dictionary<string, GameKeepBanner> Banners
 		{
 			get	{ return m_banners; }
 			set	{ m_banners = value; }
 		}
 
-		protected Hashtable m_patrols;
+		protected Dictionary<string, Patrol> m_patrols;
 		/// <summary>
 		/// List of all patrols
 		/// </summary>
-		public Hashtable Patrols
+		public Dictionary<string, Patrol> Patrols
 		{
 			get { return m_patrols; }
 			set { m_patrols = value; }
@@ -488,11 +488,11 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public AbstractGameKeep()
 		{
-			m_guards = new Hashtable();
+			m_guards = new Dictionary<string, GameKeepGuard>();
 			m_keepComponents = new List<GameKeepComponent>();
-			m_banners = new Hashtable();
-			m_doors = new Hashtable();
-			m_patrols = new Hashtable();
+			m_banners = new Dictionary<string, GameKeepBanner>();
+			m_doors = new Dictionary<string, GameKeepDoor>();
+			m_patrols = new Dictionary<string, Patrol>();
 		}
 
 		~AbstractGameKeep()
@@ -543,19 +543,19 @@ namespace DOL.GS.Keeps
 		/// <param name="area"></param>
 		public virtual void Remove(KeepArea area)
 		{
-			foreach (GameKeepGuard guard in (m_guards.Clone() as Hashtable).Values)
+			foreach (GameKeepGuard guard in new Dictionary<string, GameKeepGuard>(m_guards).Values)
 			{
 				guard.Delete();
 				guard.DeleteFromDatabase();
 			}
 
-			foreach (GameKeepBanner banner in (m_banners.Clone() as Hashtable).Values)
+			foreach (GameKeepBanner banner in new Dictionary<string, GameKeepBanner>(m_banners).Values)
 			{
 				banner.Delete();
 				banner.DeleteFromDatabase();
 			}
 
-			foreach (GameKeepDoor door in (m_doors.Clone() as Hashtable).Values)
+			foreach (GameKeepDoor door in new Dictionary<string, GameKeepDoor>(m_doors).Values)
 			{
 				door.Delete();
 				GameDoor d = new GameDoor();
@@ -1214,7 +1214,9 @@ namespace DOL.GS.Keeps
 			if (component == null)
 				return;
 
-			GameKeepHookPoint hookpoint = component.HookPoints[97] as GameKeepHookPoint;
+			GameKeepHookPoint hookpoint = null;
+			if(component.HookPoints.ContainsKey(97))
+				hookpoint = component.HookPoints[97] as GameKeepHookPoint;
 
 			if (hookpoint == null)
 				return;

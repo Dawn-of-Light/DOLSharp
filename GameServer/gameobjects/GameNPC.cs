@@ -407,11 +407,11 @@ namespace DOL.GS
 			}
 		}
 
-		private ArrayList m_linkedFactions;
+		private List<Faction> m_linkedFactions;
 		/// <summary>
 		/// The linked factions for this NPC
 		/// </summary>
-		public ArrayList LinkedFactions
+		public List<Faction> LinkedFactions
 		{
 			get { return m_linkedFactions; }
 			set { m_linkedFactions = value; }
@@ -1986,7 +1986,7 @@ namespace DOL.GS
 			{
 				try
 				{
-					ArrayList asms = new ArrayList();
+					List<Assembly> asms = new List<Assembly>();
 					asms.Add(typeof(GameServer).Assembly);
 					asms.AddRange(ScriptMgr.Scripts);
 					ABrain brain = null;
@@ -2204,7 +2204,7 @@ namespace DOL.GS
 			if (template == null)
 				return;
 
-			IList m_templatedInventory = new ArrayList();
+			List<string> m_templatedInventory = new List<string>();
 			this.TranslationId = template.TranslationId;
 			this.Name = template.Name;
 			this.Suffix = template.Suffix;
@@ -2433,12 +2433,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds all the quests this npc can give to players
 		/// </summary>
-		protected readonly ArrayList m_questListToGive = new ArrayList();
+		protected readonly List<AbstractQuest> m_questListToGive = new List<AbstractQuest>();
 
 		/// <summary>
 		/// Gets the questlist of this player
 		/// </summary>
-		public IList QuestListToGive
+		public List<AbstractQuest> QuestListToGive
 		{
 			get { return m_questListToGive; }
 		}
@@ -2450,7 +2450,7 @@ namespace DOL.GS
 		/// <returns>true if added, false if the npc has already the quest!</returns>
 		public void AddQuestToGive(Type questType)
 		{
-			lock (m_questListToGive.SyncRoot)
+			lock (((ICollection)m_questListToGive).SyncRoot)
 			{
 				if (HasQuest(questType) == null)
 				{
@@ -2467,7 +2467,7 @@ namespace DOL.GS
 		/// <returns>true if added, false if the npc has already the quest!</returns>
 		public bool RemoveQuestToGive(Type questType)
 		{
-			lock (m_questListToGive.SyncRoot)
+			lock (((ICollection)m_questListToGive).SyncRoot)
 			{
 				foreach (AbstractQuest q in m_questListToGive)
 				{
@@ -2490,7 +2490,7 @@ namespace DOL.GS
 		/// <returns>the number of time the quest can be done again</returns>
 		public int CanGiveQuest(Type questType, GamePlayer player)
 		{
-			lock (m_questListToGive.SyncRoot)
+			lock (((ICollection)m_questListToGive).SyncRoot)
 			{
 				foreach (AbstractQuest q in m_questListToGive)
 				{
@@ -2552,7 +2552,7 @@ namespace DOL.GS
 		public bool CanGiveOneQuest(GamePlayer player)
 		{
 			// Scripted quests
-			lock (m_questListToGive.SyncRoot)
+			lock (((ICollection)m_questListToGive).SyncRoot)
 			{
 				foreach (AbstractQuest q in m_questListToGive)
 				{
@@ -2614,7 +2614,7 @@ namespace DOL.GS
 		/// <returns>the quest if the npc have the quest or null if not</returns>
 		protected AbstractQuest HasQuest(Type questType)
 		{
-			lock (m_questListToGive.SyncRoot)
+			lock (((ICollection)m_questListToGive).SyncRoot)
 			{
 				foreach (AbstractQuest q in m_questListToGive)
 				{
@@ -3098,7 +3098,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the all added to this npc brains
 		/// </summary>
-		private ArrayList m_brains = new ArrayList(1);
+		private List<ABrain> m_brains = new List<ABrain>(1);
 
 		/// <summary>
 		/// The sync object for brain changes
@@ -3120,7 +3120,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				ArrayList brains = m_brains;
+				List<ABrain> brains = m_brains;
 				if (brains.Count > 0)
 					return (ABrain)brains[brains.Count - 1];
 				return m_ownBrain;
@@ -3168,7 +3168,7 @@ namespace DOL.GS
 			lock (BrainSync)
 			{
 				Brain.Stop();
-				ArrayList brains = new ArrayList(m_brains);
+				List<ABrain> brains = new List<ABrain>(m_brains);
 				brains.Add(newBrain);
 				m_brains = brains; // make new array list to avoid locks in the Brain property
 				newBrain.Body = this;
@@ -3187,7 +3187,7 @@ namespace DOL.GS
 
 			lock (BrainSync)
 			{
-				ArrayList brains = new ArrayList(m_brains);
+				List<ABrain> brains = new List<ABrain>(m_brains);
 				int index = brains.IndexOf(removeBrain);
 				if (index < 0) return false;
 				bool active = brains[index] == Brain;
@@ -3383,7 +3383,7 @@ namespace DOL.GS
                     }
                 default:
                     {
-                        IList list = new ArrayList(4);
+                        List<string> list = new List<string>();
                         list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObject.GetExamineMessages.YouTarget",
                                                             GetName(0, false, player.Client.Account.Language, this)));
                         list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.GetExamineMessages.YouExamine",
@@ -3997,10 +3997,10 @@ namespace DOL.GS
 					return false;
 				if (this.Brain is IControlledBrain)
 					return false;
-				lock (m_xpGainers.SyncRoot)
+				lock (((ICollection)m_xpGainers).SyncRoot)
 				{
 					if (m_xpGainers.Keys.Count == 0) return false;
-					foreach (DictionaryEntry de in m_xpGainers)
+					foreach (KeyValuePair<GameObject, float> de in m_xpGainers)
 					{
 						GameObject obj = (GameObject)de.Key;
 						if (obj is GamePlayer)
@@ -4079,7 +4079,7 @@ namespace DOL.GS
 			{
 				// Tyriada(Carmélide) : il faut donner la faction à tous les membres attaquants ainsi que leur groupe
 
-				foreach (DictionaryEntry de in this.XPGainers)
+				foreach (KeyValuePair<GameObject, float> de in this.XPGainers)
 				{
 					GameLiving living = de.Key as GameLiving;
 					GamePlayer player = living as GamePlayer;
@@ -4496,11 +4496,11 @@ namespace DOL.GS
 		public virtual void DropLoot(GameObject killer)
 		{
 			// TODO: mobs drop "a small chest" sometimes
-			ArrayList droplist = new ArrayList();
-			ArrayList autolootlist = new ArrayList();
-			ArrayList aplayer = new ArrayList();
+			List<string> droplist = new List<string>();
+			List<GameObject> autolootlist = new List<GameObject>();
+			List<GamePlayer> aplayer = new List<GamePlayer>();
 
-			lock (m_xpGainers.SyncRoot)
+			lock (((ICollection)m_xpGainers).SyncRoot)
 			{
 				if (m_xpGainers.Keys.Count == 0) return;
 
@@ -4692,7 +4692,7 @@ namespace DOL.GS
 			Group attackerGroup = attackerPlayer.Group;
 			if (attackerGroup != null)
 			{
-				ArrayList xpGainers = new ArrayList(8);
+				List<GameLiving> xpGainers = new List<GameLiving>();
 				// collect "helping" group players in range
 				foreach (GameLiving living in attackerGroup.GetMembersInTheGroup())
 				{
@@ -4751,21 +4751,21 @@ namespace DOL.GS
 			}
 		}
 
-		private IList m_spells = new ArrayList(1);
+		private IList<Spell> m_spells = new List<Spell>();
 		/// <summary>
 		/// property of spell array of NPC
 		/// </summary>
-		public IList Spells
+		public IList<Spell> Spells
 		{
 			get { return m_spells; }
 			set { m_spells = value; }
 		}
 
-		private IList m_styles = new ArrayList(1);
+		private IList<Style> m_styles = new List<Style>();
 		/// <summary>
 		/// The Styles for this NPC
 		/// </summary>
-		public IList Styles
+		public IList<Style> Styles
 		{
 			get { return m_styles; }
 			set { m_styles = value; }
@@ -5251,7 +5251,7 @@ namespace DOL.GS
 		/// Broadcast loot to the raid.
 		/// </summary>
 		/// <param name="dropMessages">List of drop messages to broadcast.</param>
-		protected virtual void BroadcastLoot(ArrayList droplist)
+		protected virtual void BroadcastLoot(IList<string> droplist)
 		{
 			if (droplist.Count > 0)
 			{
@@ -5389,10 +5389,10 @@ namespace DOL.GS
 			}
 
 			if ( Spells != null && Spells.Count > 0 )
-				copyTarget.Spells = new ArrayList( Spells );
+				copyTarget.Spells = new List<Spell>( Spells );
 
 			if ( Styles != null && Styles.Count > 0 )
-				copyTarget.Styles = new ArrayList( Styles );
+				copyTarget.Styles = new List<Style>( Styles );
 
 			if ( copyTarget.Inventory != null )
 				copyTarget.SwitchWeapon( ActiveWeaponSlot );
@@ -5415,7 +5415,7 @@ namespace DOL.GS
 			MaxSpeedBase = 200;
 			GuildName = "";
 
-			m_brainSync = m_brains.SyncRoot;
+			m_brainSync = ((ICollection)m_brains).SyncRoot;
 			m_followTarget = new WeakRef(null);
 
 			m_size = 50; //Default size
@@ -5431,7 +5431,7 @@ namespace DOL.GS
 				m_spawnPoint = new Point3D();
 
 			//m_factionName = "";
-			LinkedFactions = new ArrayList(1);
+			LinkedFactions = new List<Faction>(1);
 			if (m_ownBrain == null)
 			{
 				m_ownBrain = new StandardMobBrain();

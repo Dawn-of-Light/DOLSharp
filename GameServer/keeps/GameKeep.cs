@@ -18,6 +18,7 @@
  */
 
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Keeps
@@ -48,11 +49,11 @@ namespace DOL.GS.Keeps
 			480*60*1000, // 9 480min 8h
 			960*60*1000, // 10 960min 16h
 		};
-		private ArrayList m_towers = new ArrayList(4);
+		private List<GameKeepTower> m_towers = new List<GameKeepTower>(4);
 		/// <summary>
 		/// The Keep Towers
 		/// </summary>
-		public ArrayList Towers
+		public List<GameKeepTower> Towers
 		{
 			get { return m_towers; }
 			set { m_towers = value; }

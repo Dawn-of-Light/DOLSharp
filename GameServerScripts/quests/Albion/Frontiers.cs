@@ -256,7 +256,7 @@ namespace DOL.GS.Quests.Albion
 			dragonflyTicket = CreateTicketTo("Castle Sauvage", "hs_src_castlesauvage");
 			horseTicket = CreateTicketTo("Camelot Hills", "hs_src_camelothills");
 
-			npcs = (GameNPC[]) WorldMgr.GetObjectsByName("Dragonfly Handler Colm", eRealm.Albion, typeof (GameStableMaster));
+			npcs = (GameNPC[]) WorldMgr.GetNPCsByName("Dragonfly Handler Colm", eRealm.Albion, typeof (GameStableMaster));
 			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
@@ -354,7 +354,7 @@ namespace DOL.GS.Quests.Albion
 				dragonfly.AddToWorld();
 			}
 
-			npcs = (GameNPC[]) WorldMgr.GetObjectsByName("Uliam", eRealm.Albion, typeof (GameStableMaster));
+			npcs = (GameNPC[]) WorldMgr.GetNPCsByName("Uliam", eRealm.Albion, typeof (GameStableMaster));
 			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)

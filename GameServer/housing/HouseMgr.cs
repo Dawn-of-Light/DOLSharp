@@ -854,7 +854,7 @@ namespace DOL.GS.Housing
 		/// <returns>array of house</returns>
 		public static IEnumerable GetHousesCloseToSpot(ushort regionid, int x, int y, int radius)
 		{
-			var myhouses = new ArrayList();
+			List<House> myhouses = new List<House>();
 			int radiussqrt = radius * radius;
 			foreach (House house in GetHouses(regionid).Values)
 			{

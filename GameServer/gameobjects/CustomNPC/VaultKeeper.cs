@@ -18,6 +18,7 @@
  */
 //							Written by Doulbousiouf (01/11/2004)					//
 using System.Collections;
+using System.Collections.Generic;
 using DOL.Language;
 using DOL.GS.PacketHandler;
 
@@ -45,7 +46,7 @@ namespace DOL.GS
 		/// <returns>list with string messages</returns>
 		public override IList GetExamineMessages(GamePlayer player)
 		{
-			IList list = new ArrayList();
+			List<string> list = new List<string>();
             list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "VaultKeeper.YouExamine", GetName(0, false, player.Client.Account.Language, this),
                                                        GetPronoun(0, true, player.Client.Account.Language), GetAggroLevelString(player, false)));
             list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "VaultKeeper.RightClick"));

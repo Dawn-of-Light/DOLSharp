@@ -75,7 +75,7 @@ namespace DOL.GS.RealmAbilities
         protected static bool RemoveNegativeEffects(GameLiving living, PurgeAbility purge)
         {
             bool removed = false;
-            ArrayList effects = new ArrayList();
+            List<GameSpellEffect> effects = new List<GameSpellEffect>();
 
 
             GamePlayer player = (GamePlayer)living;

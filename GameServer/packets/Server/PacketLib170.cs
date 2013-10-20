@@ -186,7 +186,7 @@ namespace DOL.GS.PacketHandler
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.KeepComponentHookpointUpdate));
 			pak.WriteShort((ushort)component.Keep.KeepID);
 			pak.WriteShort((ushort)component.ID);
-			ArrayList freeHookpoints = new ArrayList();
+			List<GameKeepHookPoint> freeHookpoints = new List<GameKeepHookPoint>();
 			foreach (GameKeepHookPoint hookPt in component.HookPoints.Values)
 			{
 				if (hookPt.IsFree) freeHookpoints.Add(hookPt);

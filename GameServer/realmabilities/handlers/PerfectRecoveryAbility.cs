@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using DOL.GS;
@@ -16,7 +17,7 @@ namespace DOL.GS.RealmAbilities
 		public PerfectRecoveryAbility(DBAbility dba, int level) : base(dba, level) { }
 		private Int32 m_resurrectValue = 5;
 		private const String RESURRECT_CASTER_PROPERTY = "RESURRECT_CASTER";
-        protected readonly ListDictionary m_resTimersByLiving = new ListDictionary();
+        protected readonly Dictionary<GameObject, RegionTimer> m_resTimersByLiving = new Dictionary<GameObject, RegionTimer>();
 
 		public override void Execute(GameLiving living)
 		{
@@ -98,7 +99,7 @@ namespace DOL.GS.RealmAbilities
 				resurrectExpiredTimer.Callback = new RegionTimerCallback(ResurrectExpiredCallback);
 				resurrectExpiredTimer.Properties.setProperty("targetPlayer", targetPlayer);
 				resurrectExpiredTimer.Start(15000);
-				lock (m_resTimersByLiving.SyncRoot)
+				lock (((ICollection)m_resTimersByLiving).SyncRoot)
 				{
                     m_resTimersByLiving.Add(player.TargetObject, resurrectExpiredTimer);
 				}
@@ -119,10 +120,13 @@ namespace DOL.GS.RealmAbilities
         {
             //DOLConsole.WriteLine("resurrect responce: " + response);
             GameTimer resurrectExpiredTimer = null;
-            lock (m_resTimersByLiving.SyncRoot)
+            lock (((ICollection)m_resTimersByLiving).SyncRoot)
             {
-                resurrectExpiredTimer = (GameTimer)m_resTimersByLiving[player];
-                m_resTimersByLiving.Remove(player);
+            	if(m_resTimersByLiving.ContainsKey(player))
+                	resurrectExpiredTimer = (GameTimer)m_resTimersByLiving[player];
+                
+                if(m_resTimersByLiving.ContainsKey(player))
+                	m_resTimersByLiving.Remove(player);
             }
             if (resurrectExpiredTimer != null)
             {
@@ -187,10 +191,13 @@ namespace DOL.GS.RealmAbilities
 
             GameLiving living = resurrectedPlayer as GameLiving;
             GameTimer resurrectExpiredTimer = null;
-            lock (m_resTimersByLiving.SyncRoot)
+            lock (((ICollection)m_resTimersByLiving).SyncRoot)
             {
-                resurrectExpiredTimer = (GameTimer)m_resTimersByLiving[living];
-                m_resTimersByLiving.Remove(living);
+            	if(m_resTimersByLiving.ContainsKey(living))
+                	resurrectExpiredTimer = (GameTimer)m_resTimersByLiving[living];
+            	
+            	if(m_resTimersByLiving.ContainsKey(living))
+                	m_resTimersByLiving.Remove(living);
             }
             if (resurrectExpiredTimer != null)
             {

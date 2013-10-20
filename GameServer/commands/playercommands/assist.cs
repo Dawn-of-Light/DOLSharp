@@ -137,7 +137,7 @@ namespace DOL.GS.Commands
                                 BattleGroup clientBattleGroup = client.Player.TempProperties.getProperty<BattleGroup>(BattleGroup.BATTLEGROUP_PROPERTY, null);
                                 if(clientBattleGroup != null)
                                 {
-                                    if(clientBattleGroup.Members.Contains(assistPlayer))
+                                    if(clientBattleGroup.Members.ContainsKey(assistPlayer))
                                     {
                                         //We cannot assist our target when it has no target.
                                         if (!HasTarget(client, assistPlayer))
@@ -152,7 +152,7 @@ namespace DOL.GS.Commands
 								ChatGroup clientChatGroup = client.Player.TempProperties.getProperty<ChatGroup>(ChatGroup.CHATGROUP_PROPERTY, null);
                                 if(clientChatGroup != null)
                                 {
-                                    if(clientChatGroup.Members.Contains(assistPlayer))
+                                    if(clientChatGroup.Members.ContainsKey(assistPlayer))
                                     {
                                         //We cannot assist our target when it has no target.
                                         if (!HasTarget(client, assistPlayer))
@@ -289,7 +289,7 @@ namespace DOL.GS.Commands
                                     BattleGroup clientBattleGroup = (BattleGroup)client.Player.TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
                                     if(clientBattleGroup != null)
                                     {
-                                        if(clientBattleGroup.Members.Contains(targetPlayer))
+                                        if(clientBattleGroup.Members.ContainsKey(targetPlayer))
                                         {
                                             //We cannot assist our target when it has no target
                                             if (!HasTarget(client, targetPlayer))
@@ -304,7 +304,7 @@ namespace DOL.GS.Commands
                                     ChatGroup clientChatGroup = client.Player.TempProperties.getProperty<ChatGroup>(ChatGroup.CHATGROUP_PROPERTY, null);
                                     if(clientChatGroup != null)
                                     {
-                                        if(clientChatGroup.Members.Contains(targetPlayer))
+                                        if(clientChatGroup.Members.ContainsKey(targetPlayer))
                                         {
                                             //We cannot assist our target when it has no target
                                             if (!HasTarget(client, targetPlayer))
@@ -367,7 +367,7 @@ namespace DOL.GS.Commands
                                             BattleGroup clientBattleGroup = client.Player.TempProperties.getProperty<BattleGroup>(BattleGroup.BATTLEGROUP_PROPERTY, null);
                                             if(clientBattleGroup != null)
                                             {
-                                                if(clientBattleGroup.Members.Contains(targetPlayer))
+                                                if(clientBattleGroup.Members.ContainsKey(targetPlayer))
                                                 {
                                                     //We cannot assist our target when it has no target
                                                     if (!HasTarget(client, targetPet))
@@ -382,7 +382,7 @@ namespace DOL.GS.Commands
 											ChatGroup clientChatGroup = client.Player.TempProperties.getProperty<ChatGroup>(ChatGroup.CHATGROUP_PROPERTY, null);
                                             if(clientChatGroup != null)
                                             {
-                                                if(clientChatGroup.Members.Contains(targetPlayer))
+                                                if(clientChatGroup.Members.ContainsKey(targetPlayer))
                                                 {
                                                     //We cannot assist our target when it has no target
                                                     if (!HasTarget(client, targetPet))

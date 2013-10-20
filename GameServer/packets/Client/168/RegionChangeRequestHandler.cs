@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database;
 using DOL.GS.Keeps;
@@ -38,7 +39,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <summary>
 		/// Holds jump point types
 		/// </summary>
-		protected readonly Hashtable m_customJumpPointHandlers = new Hashtable();
+		protected readonly Dictionary<string, IJumpPointHandler> m_customJumpPointHandlers = new Dictionary<string, IJumpPointHandler>();
 
 		#region IPacketHandler Members
 
@@ -134,7 +135,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			IJumpPointHandler customHandler = null;
 			if (string.IsNullOrEmpty(zonePoint.ClassType) == false)
 			{
-				customHandler = (IJumpPointHandler)m_customJumpPointHandlers[zonePoint.ClassType];
+				if(m_customJumpPointHandlers.ContainsKey(zonePoint.ClassType))
+					customHandler = m_customJumpPointHandlers[zonePoint.ClassType];
 
 				// check for db change to update cached handler
 				if (customHandler != null && customHandler.GetType().FullName != zonePoint.ClassType)

@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
@@ -55,7 +56,7 @@ namespace DOL.GS
 		/// <returns>list with string messages</returns>
 		public override IList GetExamineMessages(GamePlayer player)
         {
-			IList list = new ArrayList();
+			List<string> list = new List<string>();
             list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.GetExamineMessages.Text1",
                 GetName(0, false, player.Client.Account.Language, this), GetPronoun(0, true, player.Client.Account.Language), GetAggroLevelString(player, false)));
             return list;

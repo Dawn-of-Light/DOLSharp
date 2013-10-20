@@ -202,7 +202,10 @@ namespace DOL.GS.Commands
 							DBKeepPosition pos = PositionMgr.CreatePosition(guard.GetType(), height, client.Player, Guid.NewGuid().ToString(), component);
 							//PositionMgr.AddPosition(pos);
 							//PositionMgr.FillPositions();
-							DBKeepPosition[] list = component.Positions[pos.TemplateID] as DBKeepPosition[];
+							DBKeepPosition[] list = null;
+							if(component.Positions.ContainsKey(pos.TemplateID))
+								list = component.Positions[pos.TemplateID] as DBKeepPosition[];
+							
 							if (list == null)
 							{
 								list = new DBKeepPosition[4];
@@ -461,16 +464,16 @@ namespace DOL.GS.Commands
 			obj.Model = 488;
 			obj.Emblem = 0;
 			obj.AddToWorld();
-			ArrayList objs = (ArrayList)client.Player.TempProperties.getProperty<object>(TEMP_PATH_OBJS, null);
+			List<GameObject> objs = (List<GameObject>)client.Player.TempProperties.getProperty<object>(TEMP_PATH_OBJS, null);
 			if (objs == null)
-				objs = new ArrayList();
+				objs = new List<GameObject>();
 			objs.Add(obj);
 			client.Player.TempProperties.setProperty(TEMP_PATH_OBJS, objs);
 		}
 
 		private void RemoveAllTempPathObjects(GameClient client)
 		{
-			ArrayList objs = (ArrayList)client.Player.TempProperties.getProperty<object>(TEMP_PATH_OBJS, null);
+			List<GameObject> objs = (List<GameObject>)client.Player.TempProperties.getProperty<object>(TEMP_PATH_OBJS, null);
 			if (objs == null)
 				return;
 			foreach (GameStaticItem obj in objs)

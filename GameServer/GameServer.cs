@@ -100,7 +100,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Contains a list of invalid names
 		/// </summary>
-		protected ArrayList m_invalidNames = new ArrayList();
+		protected List<string> m_invalidNames = new List<string>();
 
 		/// <summary>
 		/// Holds instance of current server rules
@@ -247,7 +247,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets an array of invalid player names
 		/// </summary>
-		public ArrayList InvalidNames
+		public List<string> InvalidNames
 		{
 			get { return m_invalidNames; }
 		}
@@ -873,7 +873,7 @@ namespace DOL.GS
 
 				//---------------------------------------------------------------
 				//Register all event handlers
-				var scripts = new ArrayList(ScriptMgr.Scripts);
+				List<Assembly> scripts = new List<Assembly>(ScriptMgr.Scripts);
 				scripts.Insert(0, typeof (GameServer).Assembly);
 				foreach (Assembly asm in scripts)
 				{

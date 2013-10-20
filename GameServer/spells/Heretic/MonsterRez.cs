@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
@@ -181,7 +182,7 @@ namespace DOL.GS.Spells
 	{
 		public override IList SelectTargets(GameObject castTarget)
 		{
-			ArrayList list = new ArrayList(8);
+			List<GameLiving> list = new List<GameLiving>(8);
 			GameLiving target = castTarget as GameLiving;
 
 			//if (target == null || Spell.Range == 0)
@@ -218,7 +219,7 @@ namespace DOL.GS.Spells
 	{
 		public override IList SelectTargets(GameObject castTarget)
 		{
-			ArrayList list = new ArrayList(8);
+			List<GameLiving> list = new List<GameLiving>(8);
 			GameLiving target = castTarget as GameLiving;
 
 			if (target == null || Spell.Range == 0)

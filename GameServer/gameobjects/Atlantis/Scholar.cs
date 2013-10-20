@@ -131,7 +131,7 @@ namespace DOL.GS
 			if (player == null)
 				return false;
 
-			lock (QuestListToGive.SyncRoot)
+			lock (((ICollection)QuestListToGive).SyncRoot)
 			{
 				// Start new quest...
 
@@ -247,7 +247,7 @@ namespace DOL.GS
 
 			if (player != null)
 			{
-				lock (QuestListToGive.SyncRoot)
+				lock (((ICollection)QuestListToGive).SyncRoot)
 				{
 					try
 					{

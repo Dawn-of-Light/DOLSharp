@@ -775,7 +775,7 @@ namespace DOL.GS.PacketHandler
 		/// Holds a list of all currently active handler threads!
 		/// This list is updated in the HandlePacket method
 		/// </summary>
-		public static Hashtable m_activePacketThreads = Hashtable.Synchronized(new Hashtable());
+		public static Dictionary<Thread, GameClient> m_activePacketThreads = new Dictionary<Thread, GameClient>();
 #endif
 
 		/// <summary>
@@ -789,9 +789,9 @@ namespace DOL.GS.PacketHandler
 			//When enumerating over a synchronized hashtable, we need to
 			//lock it's syncroot! Only for reading, not for writing locking
 			//is needed!
-			lock (m_activePacketThreads.SyncRoot)
+			lock (((ICollection)m_activePacketThreads).SyncRoot)
 			{
-				foreach (DictionaryEntry entry in m_activePacketThreads)
+				foreach (KeyValuePair<Thread, GameClient> entry in m_activePacketThreads)
 				{
 					try
 					{
@@ -917,7 +917,10 @@ namespace DOL.GS.PacketHandler
 				//Put the current thread into the active thread list!
 				//No need to lock the hashtable since we created it
 				//synchronized! One reader, multiple writers supported!
-				m_activePacketThreads.Add(Thread.CurrentThread, m_client);
+				lock(((ICollection)m_activePacketThreads).SyncRoot)
+				{
+					m_activePacketThreads.Add(Thread.CurrentThread, m_client);
+				}
 #endif
 				long start = Environment.TickCount;
 				try
@@ -939,7 +942,10 @@ namespace DOL.GS.PacketHandler
 					//Remove the thread from the active list after execution
 					//No need to lock the hashtable since we created it
 					//synchronized! One reader, multiple writers supported!
-					m_activePacketThreads.Remove(Thread.CurrentThread);
+					lock(((ICollection)m_activePacketThreads).SyncRoot)
+					{
+						m_activePacketThreads.Remove(Thread.CurrentThread);
+					}
 				}
 #endif
 				long timeUsed = Environment.TickCount - start;

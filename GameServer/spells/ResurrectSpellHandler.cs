@@ -33,7 +33,7 @@ namespace DOL.GS.Spells
 	public class ResurrectSpellHandler : SpellHandler
 	{
 		private const string RESURRECT_CASTER_PROPERTY = "RESURRECT_CASTER";
-		protected readonly ListDictionary m_resTimersByLiving = new ListDictionary();
+		protected readonly Dictionary<GameObject, RegionTimer> m_resTimersByLiving = new Dictionary<GameObject, RegionTimer>();
 
 		// constructor
 		public ResurrectSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
@@ -68,7 +68,7 @@ namespace DOL.GS.Spells
 				resurrectExpiredTimer.Callback = new RegionTimerCallback(ResurrectExpiredCallback);
 				resurrectExpiredTimer.Properties.setProperty("targetPlayer", targetPlayer);
 				resurrectExpiredTimer.Start(15000);
-				lock (m_resTimersByLiving.SyncRoot)
+				lock (((ICollection)m_resTimersByLiving).SyncRoot)
 				{
 					m_resTimersByLiving.Add(target, resurrectExpiredTimer);
 				}
@@ -100,10 +100,13 @@ namespace DOL.GS.Spells
 		{
 			//DOLConsole.WriteLine("resurrect responce: " + response);
 			GameTimer resurrectExpiredTimer = null;
-			lock (m_resTimersByLiving.SyncRoot)
+			lock (((ICollection)m_resTimersByLiving).SyncRoot)
 			{
-				resurrectExpiredTimer = (GameTimer)m_resTimersByLiving[player];
-				m_resTimersByLiving.Remove(player);
+				if(m_resTimersByLiving.ContainsKey(player))
+				{
+					resurrectExpiredTimer = (GameTimer)m_resTimersByLiving[player];
+					m_resTimersByLiving.Remove(player);
+				}
 			}
 			if (resurrectExpiredTimer != null)
 			{
@@ -170,10 +173,13 @@ namespace DOL.GS.Spells
 			living.MoveTo(m_caster.CurrentRegionID, m_caster.X, m_caster.Y, m_caster.Z, m_caster.Heading);
 
 			GameTimer resurrectExpiredTimer = null;
-			lock (m_resTimersByLiving.SyncRoot)
+			lock (((ICollection)m_resTimersByLiving).SyncRoot)
 			{
-				resurrectExpiredTimer = (GameTimer)m_resTimersByLiving[living];
-				m_resTimersByLiving.Remove(living);
+				if(m_resTimersByLiving.ContainsKey(living))
+				{
+					resurrectExpiredTimer = (GameTimer)m_resTimersByLiving[living];
+					m_resTimersByLiving.Remove(living);
+				}
 			}
 			if (resurrectExpiredTimer != null)
 			{

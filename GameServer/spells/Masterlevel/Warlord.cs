@@ -133,7 +133,7 @@ namespace DOL.GS.Spells
         }
         public override IList SelectTargets(GameObject castTarget)
         {
-            ArrayList list = new ArrayList();
+            List<GameLiving> list = new List<GameLiving>();
             GameLiving target = Caster;
             foreach (GameNPC npc in target.GetNPCsInRadius((ushort)Spell.Radius))
             {

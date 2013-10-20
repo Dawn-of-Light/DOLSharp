@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Text;
@@ -275,7 +276,7 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// This HybridDictionary holds all the custom properties of this quest
 		/// </summary>
-		protected HybridDictionary m_customProperties = new HybridDictionary();
+		protected Dictionary<string, string> m_customProperties = new Dictionary<string, string>();
 
 		/// <summary>
 		/// This method parses the custom properties string of the m_dbQuest
@@ -286,7 +287,7 @@ namespace DOL.GS.Quests
 			if(m_dbTask.CustomPropertiesString == null)
 				return;
 
-			lock(m_customProperties)
+			lock(((ICollection)m_customProperties).SyncRoot)
 			{
 				m_customProperties.Clear();
 				foreach(string property in  m_dbTask.CustomPropertiesString.SplitCSV())
@@ -315,7 +316,7 @@ namespace DOL.GS.Quests
 			key = key.Replace('=','-');
 			value = value.Replace(';',',');
 			value = value.Replace('=','-');
-			lock(m_customProperties)
+			lock(((ICollection)m_customProperties).SyncRoot)
 			{
 				m_customProperties[key]=value;
 			}
@@ -328,7 +329,7 @@ namespace DOL.GS.Quests
 		protected void SaveCustomProperties()
 		{
 			StringBuilder builder = new StringBuilder();
-			lock(m_customProperties)
+			lock(((ICollection)m_customProperties).SyncRoot)
 			{
 				foreach(string hKey in m_customProperties.Keys)
 				{
@@ -351,9 +352,10 @@ namespace DOL.GS.Quests
 			if(key==null)
 				throw new ArgumentNullException("key");
 
-			lock(m_customProperties)
+			lock(((ICollection)m_customProperties).SyncRoot)
 			{
-				m_customProperties.Remove(key);
+				if(m_customProperties.ContainsKey(key))
+					m_customProperties.Remove(key);
 			}
 			SaveCustomProperties();
 		}
@@ -367,8 +369,10 @@ namespace DOL.GS.Quests
 		{
 			if(key==null)
 				throw new ArgumentNullException("key");
-
-			return (string)m_customProperties[key];
+			if(m_customProperties.ContainsKey(key))
+				return (string)m_customProperties[key];
+			
+			return null;
 		}
 
 

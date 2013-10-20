@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
@@ -173,7 +174,7 @@ namespace DOL.GS.Keeps
 				case eActiveWeaponSlot.TwoHanded: speed = 40; break;
 				default: speed = 24; break;
 			}
-			speed = speed + Util.Random(11);
+			speed = speed + Util.Random(10)+1;
 			return speed * 100;
 		}
 
@@ -755,7 +756,7 @@ namespace DOL.GS.Keeps
 			//You target [Armwoman]
 			//You examine the Armswoman. She is friendly and is a realm guard.
 			//She has upgraded equipment (5).
-			IList list = new ArrayList(4);
+			List<string> list = new List<string>(4);
 			list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.YouTarget", GetName(0, false)));
 			if (Realm != eRealm.None)
 			{
@@ -900,7 +901,8 @@ namespace DOL.GS.Keeps
 		{
 			if (HookPoint != null && Component != null)
 			{
-				Component.Keep.Guards.Remove(this.ObjectID);
+				if(Component.Keep.Guards.ContainsKey(this.ObjectID.ToString()))
+					Component.Keep.Guards.Remove(this.ObjectID.ToString());
 			}
 
 			TempProperties.removeAllProperties();
@@ -914,7 +916,8 @@ namespace DOL.GS.Keeps
 			{
 				if (area is KeepArea && Component != null)
 				{
-					Component.Keep.Guards.Remove(this.InternalID);
+					if(Component.Keep.Guards.ContainsKey(this.InternalID))
+						Component.Keep.Guards.Remove(this.InternalID);
 					break;
 				}
 			}

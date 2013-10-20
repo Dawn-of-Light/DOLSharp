@@ -590,7 +590,7 @@ namespace DOL.GS
 		/// <param name="radius">the radius to check against</param>
 		/// <param name="partialList">an initial (eventually empty but initialized, i.e. never null !!) list of objects</param>
 		/// <returns>partialList augmented with the new objects verigying both type and radius in the current Zone</returns>
-		internal ArrayList GetObjectsInRadius(eGameObjectType type, int x, int y, int z, ushort radius, ArrayList partialList, bool ignoreZ)
+		internal List<GameObject> GetObjectsInRadius(eGameObjectType type, int x, int y, int z, ushort radius, List<GameObject> partialList, bool ignoreZ)
 		{
 			if (!m_initialized) InitializeZone();
 			// initialise parameters
@@ -629,8 +629,8 @@ namespace DOL.GS
 				maxLine = SUBZONE_NBR_ON_ZONE_SIDE - 1;
 			}
 
-			DOL.GS.Collections.Hashtable inZoneElements = new DOL.GS.Collections.Hashtable();
-			DOL.GS.Collections.Hashtable outOfZoneElements = new DOL.GS.Collections.Hashtable();
+			Dictionary<SubNodeElement, List<SubNodeElement>> inZoneElements = new Dictionary<SubNodeElement, List<SubNodeElement>>();
+			Dictionary<int, List<SubNodeElement>> outOfZoneElements = new Dictionary<int, List<SubNodeElement>>();
 
 			for (int currentLine = minLine; currentLine <= maxLine; ++currentLine)
 			{
@@ -726,7 +726,7 @@ namespace DOL.GS
 		}
 
 
-		private void UnsafeAddToListWithoutDistanceCheck(SubNodeElement startElement, int typeIndex, int subZoneIndex, ArrayList partialList, DOL.GS.Collections.Hashtable inZoneElements, DOL.GS.Collections.Hashtable outOfZoneElements)
+		private void UnsafeAddToListWithoutDistanceCheck(SubNodeElement startElement, int typeIndex, int subZoneIndex, List<GameObject> partialList, Dictionary<SubNodeElement, List<SubNodeElement>> inZoneElements, Dictionary<int, List<SubNodeElement>> outOfZoneElements)
 		{
 			SubNodeElement currentElement = startElement.next;
 			SubNodeElement elementToRemove = null;
@@ -770,9 +770,9 @@ namespace DOL.GS
 			uint sqRadius,
 			int typeIndex,
 			int subZoneIndex,
-			ArrayList partialList,
-			DOL.GS.Collections.Hashtable inZoneElements,
-			DOL.GS.Collections.Hashtable outOfZoneElements,
+			List<GameObject> partialList,
+			Dictionary<SubNodeElement, List<SubNodeElement>> inZoneElements,
+			Dictionary<int, List<SubNodeElement>> outOfZoneElements,
 			bool ignoreZ)
 		{
 
@@ -826,8 +826,8 @@ namespace DOL.GS
 
 				SubNodeElement elementToRemove = null;
 
-				DOL.GS.Collections.Hashtable outOfZoneElements = new DOL.GS.Collections.Hashtable();
-				DOL.GS.Collections.Hashtable inZoneElements = new DOL.GS.Collections.Hashtable();
+				Dictionary<int, List<SubNodeElement>> outOfZoneElements = new Dictionary<int, List<SubNodeElement>>();
+				Dictionary<SubNodeElement, List<SubNodeElement>> inZoneElements = new Dictionary<SubNodeElement, List<SubNodeElement>>();
 
 				for (int subZoneIndex = 0; subZoneIndex < m_subZoneElements.Length; subZoneIndex++)
 				{
@@ -912,10 +912,12 @@ namespace DOL.GS
 		}
 
 
-		private bool ShouldElementMove(SubNodeElement currentElement, int typeIndex, int subZoneIndex, DOL.GS.Collections.Hashtable inZoneElements, DOL.GS.Collections.Hashtable outOfZoneElements)
+		private bool ShouldElementMove(SubNodeElement currentElement, int typeIndex, int subZoneIndex, Dictionary<SubNodeElement, List<SubNodeElement>> inZoneElements, Dictionary<int, List<SubNodeElement>> outOfZoneElements)
 		{
 
-			if (!m_initialized) InitializeZone();
+			if (!m_initialized) 
+				InitializeZone();
+			
 			bool removeElement = true;
 			GameObject currentObject = currentElement.data;
 
@@ -931,11 +933,13 @@ namespace DOL.GS
 				{
 					// the object has moved in another Zone in the same Region
 
-					ArrayList movedElements = (ArrayList)outOfZoneElements[typeIndex];
+					List<SubNodeElement> movedElements = null;
+					if(outOfZoneElements.ContainsKey(typeIndex))
+						movedElements = outOfZoneElements[typeIndex];
 
 					if (movedElements == null)
 					{
-						movedElements = new ArrayList();
+						movedElements = new List<SubNodeElement>();
 						outOfZoneElements[typeIndex] = movedElements;
 					}
 
@@ -951,11 +955,14 @@ namespace DOL.GS
 					{
 						// it has changed of subzone
 						SubNodeElement newSubZoneStartElement = m_subZoneElements[currentElementSubzoneIndex][typeIndex];
-						ArrayList movedElements = (ArrayList)inZoneElements[newSubZoneStartElement];
+						
+						List<SubNodeElement> movedElements = null;
+						if(inZoneElements.ContainsKey(newSubZoneStartElement))
+							movedElements = inZoneElements[newSubZoneStartElement];
 
 						if (movedElements == null)
 						{
-							movedElements = new ArrayList();
+							movedElements = new List<SubNodeElement>();
 							inZoneElements[newSubZoneStartElement] = movedElements;
 						}
 
@@ -976,21 +983,17 @@ namespace DOL.GS
 		}
 
 
-		private void PlaceElementsInZone(DOL.GS.Collections.Hashtable elements)
+		private void PlaceElementsInZone(Dictionary<SubNodeElement, List<SubNodeElement>> elements)
 		{
-			DOL.GS.Collections.DictionaryEntry currentEntry = null;
-			ArrayList currentList = null;
+			List<SubNodeElement> currentList = null;
 			SubNodeElement currentStartElement = null;
 			SubNodeElement currentElement = null;
 
-			IEnumerator entryEnumerator = elements.GetEntryEnumerator();
-
-			while (entryEnumerator.MoveNext())
+			foreach(KeyValuePair<SubNodeElement, List<SubNodeElement>> currentEntry in elements)
 			{
-				currentEntry = (DOL.GS.Collections.DictionaryEntry)entryEnumerator.Current;
-				currentStartElement = (SubNodeElement)currentEntry.key;
+				currentStartElement = (SubNodeElement)currentEntry.Key;
 
-				currentList = (ArrayList)currentEntry.value;
+				currentList = currentEntry.Value;
 
 				lock (currentStartElement)
 				{
@@ -1004,24 +1007,21 @@ namespace DOL.GS
 		}
 
 
-		private void PlaceElementsInOtherZones(DOL.GS.Collections.Hashtable elements)
+		private void PlaceElementsInOtherZones(Dictionary<int, List<SubNodeElement>> elements)
 		{
-			DOL.GS.Collections.DictionaryEntry currentEntry = null;
 
 			int currentType = 0;
-			ArrayList currentList = null;
+			List<SubNodeElement> currentList = null;
 
 			Zone currentZone = null;
 			SubNodeElement currentElement = null;
 
-			IEnumerator entryEnumerator = elements.GetEntryEnumerator();
 
-			while (entryEnumerator.MoveNext())
+			foreach(KeyValuePair<int, List<SubNodeElement>> currentEntry in elements)
 			{
-				currentEntry = (DOL.GS.Collections.DictionaryEntry)entryEnumerator.Current;
-				currentType = (int)currentEntry.key;
+				currentType = (int)currentEntry.Key;
 
-				currentList = (ArrayList)currentEntry.value;
+				currentList = currentEntry.Value;
 
 				for (int i = 0; i < currentList.Count; i++)
 				{

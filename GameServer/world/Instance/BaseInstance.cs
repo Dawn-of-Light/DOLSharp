@@ -422,7 +422,7 @@ namespace DOL.GS
 		public override IList GetAreasOfZone(Zone zone, IPoint3D p, bool checkZ)
 		{
 			Zone checkZone = zone;
-			IList areas = new ArrayList();
+			List<IArea> areas = new List<IArea>();
 
 			if (checkZone == null)
 			{
@@ -472,7 +472,7 @@ namespace DOL.GS
 		public override IList GetAreasOfZone(Zone zone, int x, int y, int z)
 		{
 			Zone checkZone = zone;
-			IList areas = new ArrayList();
+			List<IArea> areas = new List<IArea>();
 
 			if (checkZone == null)
 			{

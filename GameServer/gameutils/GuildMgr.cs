@@ -43,12 +43,12 @@ namespace DOL.GS
 		/// <summary>
 		/// ArrayList of all guilds in the game
 		/// </summary>
-		static private readonly HybridDictionary m_guilds = new HybridDictionary();
+		static private readonly Dictionary<string, Guild> m_guilds = new Dictionary<string, Guild>();
 		
 		/// <summary>
 		/// ArrayList of all GuildIDs to GuildNames
 		/// </summary>
-		static private readonly HybridDictionary m_guildids = new HybridDictionary();
+		static private readonly Dictionary<string, string> m_guildids = new Dictionary<string, string>();
 
 		/// <summary>
 		/// Holds all the players combined with their guilds for the social window.
@@ -127,9 +127,9 @@ namespace DOL.GS
 			if (guild == null)
 				return false;
 
-			lock (m_guilds.SyncRoot)
+			lock (((ICollection)m_guilds).SyncRoot)
 			{
-				if (!m_guilds.Contains(guild.Name))
+				if (!m_guilds.ContainsKey(guild.Name))
 				{
 					m_guilds.Add(guild.Name, guild);
 					m_guildids.Add(guild.GuildID, guild.Name);
@@ -152,10 +152,13 @@ namespace DOL.GS
 				return false;
 
 			guild.ClearOnlineMemberList();
-			lock (m_guilds.SyncRoot)
+			
+			lock (((ICollection)m_guilds).SyncRoot)
 			{
-				m_guilds.Remove(guild.Name);
-				m_guildids.Remove(guild.GuildID);
+				if(m_guilds.ContainsKey(guild.Name))
+					m_guilds.Remove(guild.Name);
+				if(m_guildids.ContainsKey(guild.GuildID))
+					m_guildids.Remove(guild.GuildID);
 			}
 			return true;
 		}
@@ -167,9 +170,9 @@ namespace DOL.GS
 		/// <returns>true or false</returns>
 		public static bool DoesGuildExist(string guildName)
 		{
-			lock (m_guilds.SyncRoot)
+			lock (((ICollection)m_guilds).SyncRoot)
 			{
-                return m_guilds.Contains(guildName);
+                return m_guilds.ContainsKey(guildName);
 			}
 		}
 
@@ -400,9 +403,12 @@ namespace DOL.GS
 		public static Guild GetGuildByName(string guildName)
 		{
 			if (guildName == null) return null;
-			lock (m_guilds.SyncRoot)
+			lock (((ICollection)m_guilds).SyncRoot)
 			{
-				return (Guild)m_guilds[guildName];
+				if(m_guilds.ContainsKey(guildName))
+					return (Guild)m_guilds[guildName];
+				
+				return null;
 			}
 		}
 
@@ -414,13 +420,16 @@ namespace DOL.GS
 		{
 			if(guildid == null) return null;
 			
-			lock (m_guildids.SyncRoot)
+			lock (((ICollection)m_guildids).SyncRoot)
 			{
-				if(m_guildids[guildid] == null) return null;
+				if(!m_guildids.ContainsKey(guildid) || m_guildids[guildid] == null) return null;
 				
-				lock(m_guilds.SyncRoot)
+				lock(((ICollection)m_guilds).SyncRoot)
 				{
-					return (Guild)m_guilds[m_guildids[guildid]];
+					if(m_guilds.ContainsKey(m_guildids[guildid]))
+						return (Guild)m_guilds[m_guildids[guildid]];
+					
+					return null;
 				}
 			}
 		}
@@ -442,7 +451,7 @@ namespace DOL.GS
 		/// </summary>
 		public static bool LoadAllGuilds()
 		{
-			lock (m_guilds.SyncRoot)
+			lock (((ICollection)m_guilds).SyncRoot)
 			{
 				m_guilds.Clear(); //clear guild list before loading!
 			}
@@ -526,7 +535,7 @@ namespace DOL.GS
 				log.Debug("Saving all guilds...");
 			try
 			{
-				lock (m_guilds.SyncRoot)
+				lock (((ICollection)m_guilds).SyncRoot)
 				{
 					foreach (Guild g in m_guilds.Values)
 					{
@@ -548,7 +557,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static bool IsEmblemUsed(int emblem)
 		{
-			lock (m_guilds.SyncRoot)
+			lock (((ICollection)m_guilds).SyncRoot)
 			{
 				foreach (Guild guild in m_guilds.Values)
 				{
@@ -602,9 +611,9 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static List<Guild> GetAllGuilds()
 		{
-			var guilds = new List<Guild>(m_guilds.Count);
+			List<Guild> guilds = new List<Guild>(m_guilds.Count);
 
-			lock (m_guilds.SyncRoot)
+			lock (((ICollection)m_guilds).SyncRoot)
 			{
 				foreach (Guild guild in m_guilds.Values)
 				{

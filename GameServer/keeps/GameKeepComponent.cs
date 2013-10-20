@@ -19,6 +19,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using DOL.Database;
 using DOL.Events;
@@ -185,19 +186,19 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		private Hashtable m_hookPoints;
+		private Dictionary<int, GameKeepHookPoint> m_hookPoints;
 		protected byte m_oldHealthPercent;
 		protected bool m_isRaized;
 
-		public Hashtable HookPoints
+		public Dictionary<int, GameKeepHookPoint> HookPoints
 		{
 			get { return m_hookPoints; }
 			set { m_hookPoints = value; }
 		}
 
 
-		private Hashtable m_positions;
-		public Hashtable Positions
+		private Dictionary<string, DBKeepPosition[]> m_positions;
+		public Dictionary<string, DBKeepPosition[]> Positions
 		{
 			get { return m_positions; }
 		}
@@ -294,8 +295,8 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public GameKeepComponent()
 		{
-			m_hookPoints = new Hashtable(41);
-			m_positions = new Hashtable();
+			m_hookPoints = new Dictionary<int, GameKeepHookPoint>(41);
+			m_positions = new Dictionary<string, DBKeepPosition[]>();
 		}
 
 		/// <summary>
@@ -368,7 +369,10 @@ namespace DOL.GS.Keeps
 
 			foreach (DBKeepPosition position in DBPositions)
 			{
-				DBKeepPosition[] list = this.Positions[position.TemplateID] as DBKeepPosition[];
+				DBKeepPosition[] list = null;
+				if(this.Positions.ContainsKey(position.TemplateID))
+					list = this.Positions[position.TemplateID] as DBKeepPosition[];
+				
 				if (list == null)
 				{
 					list = new DBKeepPosition[4];
@@ -391,12 +395,12 @@ namespace DOL.GS.Keeps
 						bool create = false;
 						if (position.ClassType == "DOL.GS.Keeps.GameKeepBanner")
 						{
-							if (this.Keep.Banners[position.TemplateID] == null)
+							if (!this.Keep.Banners.ContainsKey(position.TemplateID) || this.Keep.Banners[position.TemplateID] == null)
 								create = true;
 						}
 						else if (position.ClassType == "DOL.GS.Keeps.GameKeepDoor")
 						{
-							if (this.Keep.Doors[position.TemplateID] == null)
+							if (!this.Keep.Doors.ContainsKey(position.TemplateID) || this.Keep.Doors[position.TemplateID] == null)
 								create = true;
 						}
 						else if (position.ClassType == "DOL.GS.Keeps.FrontierTeleportStone")
@@ -408,7 +412,7 @@ namespace DOL.GS.Keeps
 						{
 							if (position.KeepType == (int)AbstractGameKeep.eKeepType.Any || position.KeepType == (int)Keep.KeepType)
 							{
-								if (this.Keep.Patrols[position.TemplateID] == null)
+								if (!this.Keep.Patrols.ContainsKey(position.TemplateID) || this.Keep.Patrols[position.TemplateID] == null)
 								{
 									Patrol p = new Patrol(this);
 									p.SpawnPosition = position;
@@ -420,7 +424,7 @@ namespace DOL.GS.Keeps
 						}
 						else
 						{
-							if (this.Keep.Guards[position.TemplateID] == null)
+							if (!this.Keep.Guards.ContainsKey(position.TemplateID) || this.Keep.Guards[position.TemplateID] == null)
 								create = true;
 						}
 						if (create)
@@ -450,7 +454,7 @@ namespace DOL.GS.Keeps
 						else
 						{
 							//move the object
-							if (position.ClassType == "DOL.GS.Keeps.GameKeepBanner")
+							if (position.ClassType == "DOL.GS.Keeps.GameKeepBanner" && this.Keep.Banners.ContainsKey(position.TemplateID))
 							{
 								IKeepItem banner = this.Keep.Banners[position.TemplateID] as IKeepItem;
 								if (banner.Position != position)
@@ -466,7 +470,7 @@ namespace DOL.GS.Keeps
 							{ 
 								//these dont move
 							}
-							else
+							else if(this.Keep.Guards.ContainsKey(position.TemplateID))
 							{
 								IKeepItem guard = this.Keep.Guards[position.TemplateID] as IKeepItem;
 								guard.MoveToPosition(position);

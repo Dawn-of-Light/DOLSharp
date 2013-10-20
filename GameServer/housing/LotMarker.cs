@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 
@@ -43,7 +44,7 @@ namespace DOL.GS.Housing
 
 		public override IList GetExamineMessages(GamePlayer player)
 		{
-			IList list = new ArrayList();
+			List<string> list = new List<string>();
 			list.Add("You target lot number " + DatabaseItem.HouseNumber + ".");
 
 			if (string.IsNullOrEmpty(DatabaseItem.OwnerID))

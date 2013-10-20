@@ -5,6 +5,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.GS.SkillHandler;
 using System.Collections;
+using System.Collections.Generic;
 using log4net;
 using System.Reflection;
 namespace DOL.GS.Spells
@@ -20,7 +21,7 @@ namespace DOL.GS.Spells
 
 		public override IList SelectTargets(GameObject castTarget)
 		{
-			ArrayList list = new ArrayList();
+			List<GameLiving> list = new List<GameLiving>();
 			GameLiving target;
 			
 			target=Caster;
@@ -35,7 +36,7 @@ namespace DOL.GS.Spells
 
 		public virtual IList SelectRealmTargets(GameObject castTarget)
 		{
-			ArrayList list = new ArrayList();
+			List<GameLiving> list = new List<GameLiving>();
 			
 			foreach (GamePlayer player in castTarget.GetPlayersInRadius((ushort)1000)) 
 			{

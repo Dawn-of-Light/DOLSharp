@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
@@ -28,10 +29,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			byte grouped = (byte)packet.ReadByte();
-			ArrayList list = new ArrayList();
+			List<GamePlayer> list = new List<GamePlayer>();
 			if (grouped != 0x00)
 			{
-				ArrayList groups = GroupMgr.ListGroupByStatus(0x00);
+				List<Group> groups = GroupMgr.ListGroupByStatus(0x00);
 				if (groups != null)
 				{
 					foreach (Group group in groups)
@@ -42,7 +43,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 			}
 
-			ArrayList Lfg = GroupMgr.LookingForGroupPlayers();
+			List<GamePlayer> Lfg = GroupMgr.LookingForGroupPlayers();
 
 			if (Lfg != null)
 			{
@@ -55,7 +56,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 			}
 
-			client.Out.SendFindGroupWindowUpdate((GamePlayer[])list.ToArray(typeof(GamePlayer)));
+			client.Out.SendFindGroupWindowUpdate((GamePlayer[])list.ToArray());
 		}
 	}
 }

@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -58,7 +59,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool LoadFromDatabase(string inventoryID)
 		{
-			lock (m_items)
+			lock (((ICollection)m_items).SyncRoot)
 			{
 				try
 				{
@@ -194,11 +195,11 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool SaveIntoDatabase(string inventoryID)
 		{
-			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (((ICollection)m_items).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				try
 				{
-					foreach (var item in m_items)
+					foreach (KeyValuePair<eInventorySlot, InventoryItem> item in m_items)
 					{
 						try
 						{
@@ -334,7 +335,9 @@ namespace DOL.GS
 					{
 						m_player.Out.SendMessage("Error adding item to the database, item may be lost!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						Log.ErrorFormat("Error adding item {0}:{1} for player {2} into the database during AddItem!", item.Id_nb, item.Name, m_player.Name);
-						m_items.Remove(slot);
+						if(m_items.ContainsKey(slot))
+							m_items.Remove(slot);
+						
 						item.SlotPosition = savePosition;
 						item.OwnerID = saveOwnerID;
 						return false;
@@ -346,7 +349,10 @@ namespace DOL.GS
 					{
 						m_player.Out.SendMessage("Error saving item to the database, this item may be lost!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						Log.ErrorFormat("Error saving item {0}:{1} for player {2} into the database during AddItem!", item.Id_nb, item.Name, m_player.Name);
-						m_items.Remove(slot);
+						
+						if(m_items.ContainsKey(slot))
+							m_items.Remove(slot);
+						
 						item.SlotPosition = savePosition;
 						item.OwnerID = saveOwnerID;
 						return false;
@@ -589,7 +595,7 @@ namespace DOL.GS
 			InventoryItem fromItem, toItem;
 			eInventorySlot[] updatedSlots;
 
-			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (((ICollection)m_items).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				fromSlot = GetValidInventorySlot(fromSlot);
 				toSlot = GetValidInventorySlot(toSlot);
@@ -1404,7 +1410,7 @@ namespace DOL.GS
 			{
 				int weight = 0;
 
-				lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+				lock (((ICollection)m_items).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 				{
 					InventoryItem item;
 

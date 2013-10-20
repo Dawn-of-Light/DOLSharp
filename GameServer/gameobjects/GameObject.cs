@@ -384,7 +384,7 @@ namespace DOL.GS
 			{
 				if (CurrentZone != null)
 					return CurrentZone.GetAreasOfSpot(this);
-				return new ArrayList();
+				return new List<IArea>();
 			}
 			set { }
 		}
@@ -709,7 +709,7 @@ namespace DOL.GS
 		/// <returns>list with string messages</returns>
 		public virtual IList GetExamineMessages(GamePlayer player)
 		{
-			IList list = new ArrayList(4);
+			List<string> list = new List<string>();
 			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObject.GetExamineMessages.YouTarget", GetName(0, false)));
 			return list;
 		}

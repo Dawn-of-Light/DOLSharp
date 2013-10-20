@@ -20,6 +20,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -386,35 +387,37 @@ namespace DOL.GS
 			/// <summary>
 			/// Holds callback statistics
 			/// </summary>
-			private readonly Hashtable m_timerCallbackStatistic = new Hashtable();
+			private readonly Dictionary<string, int> m_timerCallbackStatistic = new Dictionary<string, int>();
 			/// <summary>
 			/// Get a list of active counts of different callbacks
 			/// </summary>
 			/// <returns></returns>
 			public IList GetUsedCallbacks()
 			{
-				Hashtable table;
+				Dictionary<string, int> table;
 				lock (m_timerCallbackStatistic) {
-					table = (Hashtable)m_timerCallbackStatistic.Clone();
+					table = new Dictionary<string, int>(m_timerCallbackStatistic);
 				}
 
 				// sort it
-				ArrayList sorted = new ArrayList();
-				foreach (DictionaryEntry entry in table) {						
+				List<KeyValuePair<string, int>> sorted = new List<KeyValuePair<string, int>>();
+				foreach (KeyValuePair<string, int> entry in table) {						
 					int count = (int)entry.Value;
 					int i;
 					for (i=0; i<sorted.Count; i++) {
-						if ( ((int)((DictionaryEntry)sorted[i]).Value) < count ) break;
+						if ( ((int)(sorted[i]).Value) < count ) break;
 					}
 					sorted.Insert(i, entry);
 				}
 
 				// make strings
+				sortedStr = new List<string>();
+				
 				for (int i=0; i<sorted.Count; i++) {
-					DictionaryEntry entry = (DictionaryEntry)sorted[i];
-					sorted[i] = entry.Value+": "+entry.Key;
+					KeyValuePair<string, int> entry = sorted[i];
+					sortedStr[i] = entry.Value+": "+entry.Key;
 				}
-				return sorted;
+				return sortedStr;
 			}
 #endif
 
@@ -891,9 +894,12 @@ namespace DOL.GS
 									{
 										callback = current.GetType().FullName;
 									}
-									lock (m_timerCallbackStatistic) 
+									lock (((ICollection)m_timerCallbackStatistic).SyncRoot)
 									{
-										object obj = m_timerCallbackStatistic[callback];
+										int obj = null;
+										if(m_timerCallbackStatistic.ContainsKey(callback)
+											obj = m_timerCallbackStatistic[callback];
+											
 										if (obj == null) 
 										{
 											m_timerCallbackStatistic[callback] = 1;	

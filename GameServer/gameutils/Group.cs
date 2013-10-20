@@ -429,7 +429,7 @@ namespace DOL.GS
 				{
 					if (mybattlegroup.IsInTheBattleGroup(plr))
 					{
-						if ((bool)mybattlegroup.Members[plr] == true)
+						if (mybattlegroup.Members.ContainsKey(plr) && (bool)mybattlegroup.Members[plr] == true)
 						{
 							text.Append("<Leader> ");
 						}
@@ -459,7 +459,7 @@ namespace DOL.GS
 				{
 					if (mybattlegroup.IsInTheBattleGroup(plr))
 					{
-						if ((bool)mybattlegroup.Members[plr] == true)
+						if (mybattlegroup.Members.ContainsKey(plr) && (bool)mybattlegroup.Members[plr] == true)
 						{
 							text.Append("<Leader> ");
 						}

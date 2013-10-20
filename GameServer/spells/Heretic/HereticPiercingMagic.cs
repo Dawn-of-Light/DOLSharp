@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.Events;
@@ -10,7 +11,7 @@ namespace DOL.GS.Spells
 	public class HereticPiercingMagic : SpellHandler
 	{
         protected GameLiving focustarget = null;
-        protected ArrayList m_focusTargets = null;
+        protected List<GameLiving> m_focusTargets = null;
         public override void FinishSpellCast(GameLiving target)
         {
             base.FinishSpellCast(target);
@@ -20,9 +21,9 @@ namespace DOL.GS.Spells
         {
             base.OnEffectStart(effect);
             if (m_focusTargets == null)
-                m_focusTargets = new ArrayList();
+                m_focusTargets = new List<GameLiving>();
             GameLiving living = effect.Owner as GameLiving;
-            lock (m_focusTargets.SyncRoot)
+            lock (((ICollection)m_focusTargets).SyncRoot)
             {
                 if (!m_focusTargets.Contains(effect.Owner))
                     m_focusTargets.Add(effect.Owner);
@@ -50,7 +51,7 @@ namespace DOL.GS.Spells
         {
             if (m_focusTargets != null)
             {
-                lock (m_focusTargets.SyncRoot)
+            	lock (((ICollection)m_focusTargets).SyncRoot)
                 {
                     foreach (GameLiving living in m_focusTargets)
                     {

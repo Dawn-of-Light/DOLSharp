@@ -126,7 +126,7 @@ namespace DOL.GS.Spells
         public override IList SelectTargets(GameObject CasterTarget)
         {
             
-            ArrayList list = new ArrayList(8);
+            List<GameLiving> list = new  List<GameLiving>(8);
             foreach (GameNPC storms in Caster.GetNPCsInRadius(350))
             {
                 if ((storms is GameStorm) && (GameServer.ServerRules.IsSameRealm(storms, Caster, true))) list.Add(storms);

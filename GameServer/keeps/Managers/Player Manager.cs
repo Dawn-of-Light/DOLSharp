@@ -204,9 +204,9 @@ namespace DOL.GS.Keeps
 		/// <param name="lord">The lord object</param>
 		public static void UpdateStats(GuardLord lord)
 		{
-			lock (lord.XPGainers.SyncRoot)
+			lock (((System.Collections.ICollection)lord.XPGainers).SyncRoot)
 			{
-				foreach (System.Collections.DictionaryEntry de in lord.XPGainers)
+				foreach (System.Collections.Generic.KeyValuePair<GameObject, float> de in lord.XPGainers)
 				{
 					GameObject obj = (GameObject)de.Key;
 					if (obj is GamePlayer)

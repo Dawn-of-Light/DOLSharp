@@ -184,7 +184,7 @@ namespace DOL.GS.Quests
 						return;
 
 					int lowestCon = int.MaxValue;
-					lock (target.XPGainers.SyncRoot)
+					lock (((System.Collections.ICollection)target.XPGainers).SyncRoot)
 					{
 						if (target.XPGainers.Keys.Count == 0)
 						{
@@ -220,7 +220,7 @@ namespace DOL.GS.Quests
 					//Only add task Loot if not killing grays
 					if (lowestCon >= -2)
 					{
-						ArrayList Owners = new ArrayList();
+						List<GamePlayer> Owners = new List<GamePlayer>();
 						if (player.Group == null)
 						{
 							Owners.Add(m_taskPlayer);
@@ -240,7 +240,7 @@ namespace DOL.GS.Quests
 
 						if (Owners.Count > 0)
 						{
-							ArrayList dropMessages = new ArrayList();
+							List<string> dropMessages = new List<string>();
 							InventoryItem itemdrop = GenerateItem(ItemName, 1, ObjectModels[ItemIndex]);
 							WorldInventoryItem droppeditem = new WorldInventoryItem(itemdrop);
 							for (int a = 0; a < Owners.Count; a++)

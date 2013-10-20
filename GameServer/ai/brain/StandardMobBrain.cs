@@ -1074,7 +1074,7 @@ namespace DOL.AI.Brain
 			// Make a list of all players in the attacker's group within
 			// a certain range around the puller.
 
-			ArrayList attackersInRange = new ArrayList();
+			List<GameLiving> attackersInRange = new List<GameLiving>();
 
 			foreach (GamePlayer player in attackerGroup.GetPlayersInTheGroup())
 				if (attacker.IsWithinRadius(player, BAFTargetPlayerRange))
@@ -1109,7 +1109,7 @@ namespace DOL.AI.Brain
 
 			if (Body != null && Body.Spells != null && Body.Spells.Count > 0)
 			{
-				ArrayList spell_rec = new ArrayList();
+				List<Spell> spell_rec = new List<Spell>();
 				Spell spellToCast = null;
 				bool needpet = false;
 				bool needheal = false;

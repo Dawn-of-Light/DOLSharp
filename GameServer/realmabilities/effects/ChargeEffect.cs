@@ -47,7 +47,7 @@ namespace DOL.GS.Effects
 
 			//sets player into combat mode
 			living.LastAttackTickPvP = m_startTick;
-			ArrayList speedSpells = new ArrayList();
+			List<IGameEffect> speedSpells = new List<IGameEffect>();
 			lock(living.EffectList)
 			{
 				foreach (IGameEffect effect in living.EffectList)

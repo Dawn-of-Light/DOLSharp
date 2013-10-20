@@ -242,7 +242,7 @@ namespace DOL.GS.PacketHandler
 			IList skills = m_gameClient.Player.GetNonTrainableSkillList();
 			IList styleList = m_gameClient.Player.GetStyleList();
 			List<SpellLine> spellLines = m_gameClient.Player.GetSpellLines();
-			Hashtable styleTable = new Hashtable();
+			Dictionary<int, int> styleTable = new Dictionary<int, int>();
 			int maxSkills = 0;
 			int firstSkills = 0;
 

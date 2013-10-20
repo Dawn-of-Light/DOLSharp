@@ -37,9 +37,9 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// list of all keeps
 		/// </summary>
-		protected Hashtable m_keepList = new Hashtable();
+		protected Dictionary<int, AbstractGameKeep> m_keepList = new Dictionary<int, AbstractGameKeep>();
 
-		public virtual Hashtable Keeps
+		public virtual Dictionary<int, AbstractGameKeep> Keeps
 		{
 			get { return m_keepList; }
 		}
@@ -91,7 +91,7 @@ namespace DOL.GS.Keeps
 			if (!ServerProperties.Properties.LOAD_KEEPS)
 				return true;
 
-			lock (m_keepList.SyncRoot)
+			lock (((ICollection)m_keepList).SyncRoot)
 			{
 				m_keepList.Clear();
 
@@ -321,7 +321,7 @@ namespace DOL.GS.Keeps
 					{
 						var item = items.FirstOrDefault(
 							it => it.KeepID == component.Keep.KeepID && it.ComponentID == component.ID && it.HookPointID == hp.ID);
-						if (item != null)
+						if (item != null && component.HookPoints.ContainsKey(hp.ID))
 							HookPointItem.Invoke(component.HookPoints[hp.ID] as GameKeepHookPoint, item.ClassType);
 					}
 				}
@@ -341,7 +341,10 @@ namespace DOL.GS.Keeps
 		/// <returns> Game keep object with keepid = id</returns>
 		public virtual AbstractGameKeep GetKeepByID(int id)
 		{
-			return m_keepList[id] as AbstractGameKeep;
+			if(m_keepList.ContainsKey(id))
+				return m_keepList[id];
+				
+			return null;
 		}
 
 		/// <summary>
@@ -467,7 +470,7 @@ namespace DOL.GS.Keeps
 			List<AbstractGameKeep> closeKeeps = new List<AbstractGameKeep>();
 			long radiussqrt = radius * radius;
 
-			lock (m_keepList.SyncRoot)
+			lock (((ICollection)m_keepList).SyncRoot)
 			{
 				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{
@@ -500,7 +503,7 @@ namespace DOL.GS.Keeps
 		{
 			AbstractGameKeep closestKeep = null;
 
-			lock (m_keepList.SyncRoot)
+			lock (((ICollection)m_keepList).SyncRoot)
 			{
 				long radiussqrt = radius * radius;
 				long lastKeepDistance = radiussqrt;
@@ -536,7 +539,7 @@ namespace DOL.GS.Keeps
 		public virtual int GetTowerCountByRealm(eRealm realm)
 		{
 			int index = 0;
-			lock (m_keepList.SyncRoot)
+			lock (((ICollection)m_keepList).SyncRoot)
 			{
 				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{
@@ -559,7 +562,7 @@ namespace DOL.GS.Keeps
 			realmXTower.Add(eRealm.Hibernia, 0);
 			realmXTower.Add(eRealm.Midgard, 0);
 
-			lock (m_keepList.SyncRoot)
+			lock (((ICollection)m_keepList).SyncRoot)
 			{
 				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{
@@ -585,7 +588,7 @@ namespace DOL.GS.Keeps
 			realmXTower.Add(eRealm.Midgard, 0);
 			realmXTower.Add(eRealm.None, 0);
 
-			lock (m_keepList.SyncRoot)
+			lock (((ICollection)m_keepList).SyncRoot)
 			{
 				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{
@@ -607,7 +610,7 @@ namespace DOL.GS.Keeps
 		public virtual int GetKeepCountByRealm(eRealm realm)
 		{
 			int index = 0;
-			lock (m_keepList.SyncRoot)
+			lock (((ICollection)m_keepList).SyncRoot)
 			{
 				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{
@@ -829,7 +832,7 @@ namespace DOL.GS.Keeps
 
 		public virtual void UpdateBaseLevels()
 		{
-			lock (m_keepList.SyncRoot)
+			lock (((ICollection)m_keepList).SyncRoot)
 			{
 				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{

@@ -150,7 +150,7 @@ namespace DOL.GS.PacketHandler
 			{
 				lock (pet.EffectList)
 				{
-					ArrayList icons = new ArrayList();
+					List<ushort> icons = new List<ushort>();
 					foreach (IGameEffect effect in pet.EffectList)
 					{
 						if (icons.Count >= 8)

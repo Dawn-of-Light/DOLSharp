@@ -48,7 +48,7 @@ namespace DOL.GS
 
 			if (player != null)
 			{
-				lock (QuestListToGive.SyncRoot)
+				lock (((ICollection)QuestListToGive).SyncRoot)
 				{
 					foreach (AbstractQuest quest in player.QuestList)
 					{
@@ -79,7 +79,7 @@ namespace DOL.GS
 			GamePlayer player = source as GamePlayer;
 			if (player != null)
 			{
-				lock (QuestListToGive.SyncRoot)
+				lock (((ICollection)QuestListToGive).SyncRoot)
 				{
 					// Start new quest...
 
@@ -118,7 +118,7 @@ namespace DOL.GS
 		{
 			if (player != null)
 			{
-				lock (QuestListToGive.SyncRoot)
+				lock (((ICollection)QuestListToGive).SyncRoot)
 				{
 					// See if they player has the quest first
 					foreach (AbstractQuest quest in player.QuestList)

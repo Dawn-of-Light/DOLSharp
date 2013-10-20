@@ -31,7 +31,7 @@ namespace DOL.GS.Spells
     {
         public override System.Collections.IList SelectTargets(GameObject castTarget)
         {
-            ArrayList list = new ArrayList();
+            List<GameLiving> list = new List<GameLiving>();
             GameLiving target = castTarget as GameLiving;
 
             if (Caster is GamePlayer)

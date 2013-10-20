@@ -20,6 +20,7 @@
 using System;
 using System.Reflection;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.Database;
 using log4net;
 
@@ -37,9 +38,9 @@ namespace DOL.GS
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private static Hashtable m_factions;
+		private static Dictionary<int, Faction> m_factions;
 
-		public static Hashtable Factions
+		public static Dictionary<int, Faction> Factions
 		{
 			get	{ return m_factions;}
 		}
@@ -48,9 +49,9 @@ namespace DOL.GS
 		/// </summary>	
 		public static bool Init()
 		{
-			m_factions = new Hashtable(1);
+			m_factions = new Dictionary<int, Faction>(1);
 
-			var dbfactions =	GameServer.Database.SelectAllObjects<DBFaction>();
+			IList<DBFaction> dbfactions =	GameServer.Database.SelectAllObjects<DBFaction>();
 			foreach(DBFaction dbfaction in dbfactions)
 			{
 				Faction myfaction = new Faction();

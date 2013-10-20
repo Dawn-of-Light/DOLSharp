@@ -104,7 +104,7 @@ namespace DOL.GS
 				}
 
 				//Now we have the classtype to create, create it thus!
-				ArrayList asms = new ArrayList();
+				List<Assembly> asms = new List<Assembly>();
 				asms.Add(typeof(GameServer).Assembly);
 				asms.AddRange(ScriptMgr.Scripts);
 

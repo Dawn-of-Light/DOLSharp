@@ -296,7 +296,7 @@ namespace DOL.AI.Brain
 			GameDragon dragon = Body as GameDragon;
 			if (dragon == null) return false;
 
-			ArrayList inRangeLiving = new ArrayList();
+			List<GameLiving> inRangeLiving = new List<GameLiving>();
 
 			lock ((m_aggroTable as ICollection).SyncRoot)
             {
@@ -335,7 +335,7 @@ namespace DOL.AI.Brain
 			GameDragon dragon = Body as GameDragon;
 			if (dragon == null) return false;
 
-			ArrayList inRangeLiving = new ArrayList();
+			List<GameLiving> inRangeLiving = new List<GameLiving>();
 			foreach (GamePlayer player in dragon.GetPlayersInRadius((ushort)dragon.AttackRange))
 			{
 				if (player.IsAlive && player.EffectList.GetOfType<NecromancerShadeEffect>() == null)

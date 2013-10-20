@@ -129,7 +129,7 @@ namespace DOL.GS
 		{
 			IDictionaryEnumerator iter = m_gameCommands.GetEnumerator();
 
-			ArrayList list = new ArrayList();
+			List<string> list = new List<string>();
 
 			while (iter.MoveNext())
 			{
@@ -156,7 +156,7 @@ namespace DOL.GS
 				}
 			}
 
-			return (string[])list.ToArray(typeof(string));
+			return (string[])list.ToArray();
 		}
 
 		/// <summary>
@@ -166,9 +166,9 @@ namespace DOL.GS
 		/// <param name="filter">A filter representing the types of files to search for</param>
 		/// <param name="deep">True if subdirectories should be included</param>
 		/// <returns>An ArrayList containing FileInfo's for all files in the path</returns>
-		private static ArrayList ParseDirectory(DirectoryInfo path, string filter, bool deep)
+		private static List<FileInfo> ParseDirectory(DirectoryInfo path, string filter, bool deep)
 		{
-			ArrayList files = new ArrayList();
+			List<FileInfo> files = new List<FileInfo>();
 
 			if (!path.Exists)
 				return files;
@@ -192,7 +192,7 @@ namespace DOL.GS
 		{
 			m_gameCommands.Clear();
 
-			ArrayList asms = new ArrayList(Scripts);
+			List<Assembly> asms = new List<Assembly>(Scripts);
 			asms.Add(typeof(GameServer).Assembly);
 
 			//build array of disabled commands
@@ -445,7 +445,7 @@ namespace DOL.GS
 			m_compiledScripts.Clear();
 
 			//Check if there are any scripts, if no scripts exist, that is fine as well
-			ArrayList files = ParseDirectory(new DirectoryInfo(path), compileVB ? "*.vb" : "*.cs", true);
+			List<FileInfo> files = ParseDirectory(new DirectoryInfo(path), compileVB ? "*.vb" : "*.cs", true);
 			if (files.Count == 0)
 			{
 				return true;
@@ -480,7 +480,7 @@ namespace DOL.GS
 						//Assume no scripts changed
 						recompileRequired = false;
 
-						ArrayList precompiledScripts = new ArrayList(config.Children.Keys);
+						List<string> precompiledScripts = new List<string>(config.Children.Keys);
 
 						//Now test the files
 						foreach (FileInfo finfo in files)
@@ -677,9 +677,9 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="asm">The assembly to search through</param>
 		/// <returns>Hashmap consisting of keyName => AbilityActionHandler Type</returns>
-		public static Hashtable FindAllAbilityActionHandler(Assembly asm)
+		public static Dictionary<string, Type> FindAllAbilityActionHandler(Assembly asm)
 		{
-			Hashtable abHandler = new Hashtable();
+			Dictionary<string, Type> abHandler = new Dictionary<string, Type>();
 			if (asm != null)
 			{
 				foreach (Type type in asm.GetTypes())
@@ -708,9 +708,9 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="asm">The assembly to search through</param>
 		/// <returns>Hashmap consisting of keyName => SpecActionHandler Type</returns>
-		public static Hashtable FindAllSpecActionHandler(Assembly asm)
+		public static Dictionary<string, Type> FindAllSpecActionHandler(Assembly asm)
 		{
-			Hashtable specHandler = new Hashtable();
+			Dictionary<string, Type> specHandler = new Dictionary<string, Type>();
 			if (asm != null)
 			{
 				foreach (Type type in asm.GetTypes())
@@ -743,7 +743,7 @@ namespace DOL.GS
 		/// <returns>ClassSpec that was found or null if not found</returns>
 		public static ICharacterClass FindCharacterClass(int id)
 		{
-			ArrayList asms = new ArrayList(Scripts);
+			List<Assembly> asms = new List<Assembly>(Scripts);
 			asms.Add(typeof(GameServer).Assembly);
 			foreach (Assembly asm in asms)
 			{
@@ -783,9 +783,9 @@ namespace DOL.GS
 		/// <returns>
 		/// all handlers that were found, guildname(string) => classtype(Type)
 		/// </returns>
-		protected static Hashtable FindAllNPCGuildScriptClasses(eRealm realm, Assembly asm)
+		protected static Dictionary<string, Type> FindAllNPCGuildScriptClasses(eRealm realm, Assembly asm)
 		{
-			Hashtable ht = new Hashtable();
+			Dictionary<string, Type> ht = new Dictionary<string, Type>();
 			if (asm != null)
 			{
 				foreach (Type type in asm.GetTypes())
@@ -818,8 +818,8 @@ namespace DOL.GS
 			return ht;
 		}
 
-		protected static Hashtable[] m_gs_guilds = new Hashtable[(int)eRealm._Last + 1];
-		protected static Hashtable[] m_script_guilds = new Hashtable[(int)eRealm._Last + 1];
+		protected static Dictionary<int, Dictionary<string, Type>> m_gs_guilds = new Dictionary<int, Dictionary<string, Type>>();
+		protected static Dictionary<int, Dictionary<string, Type>> m_script_guilds = new Dictionary<int, Dictionary<string, Type>>();
 
 		/// <summary>
 		/// searches for a npc guild script
@@ -832,16 +832,16 @@ namespace DOL.GS
 			if (string.IsNullOrEmpty(guild)) return null;
 
 			Type type = null;
-			if (m_script_guilds[(int)realm] == null)
+			if (!m_script_guilds.ContainsKey((int)realm) || m_script_guilds[(int)realm] == null)
 			{
-				Hashtable allScriptGuilds = new Hashtable();
-				ArrayList asms = new ArrayList(Scripts);
+				Dictionary<string, Type> allScriptGuilds = new Dictionary<string, Type>();
+				List<Assembly> asms = new List<Assembly>(Scripts);
 				asms.Add(typeof(GameServer).Assembly);
 				foreach (Assembly asm in asms)
 				{
-					Hashtable scriptGuilds = FindAllNPCGuildScriptClasses(realm, asm);
+					Dictionary<string, Type> scriptGuilds = FindAllNPCGuildScriptClasses(realm, asm);
 					if (scriptGuilds == null) continue;
-					foreach (DictionaryEntry entry in scriptGuilds)
+					foreach (KeyValuePair<string, Type> entry in scriptGuilds)
 					{
 						if (allScriptGuilds.ContainsKey(entry.Key)) continue; // guild is already found
 						allScriptGuilds.Add(entry.Key, entry.Value);
@@ -853,12 +853,12 @@ namespace DOL.GS
 			//SmallHorse: First test if no realm-guild hashmap is null, then test further
 			//Also ... you can not use "nullobject as anytype" ... this crashes!
 			//You have to test against NULL result before casting it... read msdn doku
-			if (m_script_guilds[(int)realm] != null && m_script_guilds[(int)realm][guild] != null)
+			if (m_script_guilds.ContainsKey((int)realm) && m_script_guilds[(int)realm] != null && m_script_guilds[(int)realm].ContainsKey(guild) && m_script_guilds[(int)realm][guild] != null)
 				type = m_script_guilds[(int)realm][guild] as Type;
 
 			if (type == null)
 			{
-				if (m_gs_guilds[(int)realm] == null)
+				if (!m_gs_guilds.ContainsKey((int)realm) || m_gs_guilds[(int)realm] == null)
 				{
 					Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
 					m_gs_guilds[(int)realm] = FindAllNPCGuildScriptClasses(realm, gasm);
@@ -868,7 +868,7 @@ namespace DOL.GS
 			//SmallHorse: First test if no realm-guild hashmap is null, then test further
 			//Also ... you can not use "nullobject as anytype" ... this crashes!
 			//You have to test against NULL result before casting it... read msdn doku
-			if (m_gs_guilds[(int)realm] != null && m_gs_guilds[(int)realm][guild] != null)
+			if (m_gs_guilds.ContainsKey((int)realm) && m_gs_guilds[(int)realm] != null && m_gs_guilds[(int)realm].ContainsKey(guild) && m_gs_guilds[(int)realm][guild] != null)
 				type = m_gs_guilds[(int)realm][guild] as Type;
 
 			return type;
@@ -915,7 +915,7 @@ namespace DOL.GS
 			if (handlerConstructor == null)
 			{
 				Type[] constructorParams = new Type[] { typeof(GameLiving), typeof(Spell), typeof(SpellLine) };
-				ArrayList asms = new ArrayList(Scripts);
+				List<Assembly> asms = new List<Assembly>(Scripts);
 				asms.Add(typeof(GameServer).Assembly);
 				foreach (Assembly script in asms)
 				{
@@ -1115,8 +1115,8 @@ namespace DOL.GS
 			if (baseType == null)
 				return new Type[0];
 
-			ArrayList types = new ArrayList();
-			ArrayList asms = new ArrayList(Scripts);
+			List<Type> types = new List<Type>();
+			List<Assembly> asms = new List<Assembly>(Scripts);
 			asms.Add(typeof(GameServer).Assembly);
 
 			foreach (Assembly asm in asms)
@@ -1126,7 +1126,7 @@ namespace DOL.GS
 					types.Add(t);
 			}
 
-			return (Type[])types.ToArray(typeof(Type));
+			return (Type[])types.ToArray();
 		}
 	}
 }

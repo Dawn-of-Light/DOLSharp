@@ -164,7 +164,7 @@ namespace DOL.GS
 
 		public override IList GetExamineMessages(GamePlayer player)
 		{
-			IList list = new ArrayList();
+			List<string> list = new List<string>();
 			list.Add("[Right click to display the contents of house vault " + (m_vaultIndex + 1) + "]");
 			return list;
 		}

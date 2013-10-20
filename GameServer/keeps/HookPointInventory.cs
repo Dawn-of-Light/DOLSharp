@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DOL.GS.PacketHandler;
 using DOL.Events;
@@ -66,14 +67,14 @@ namespace DOL.GS.Keeps
 
 		public HookPointInventory()
 		{
-			hookpointItemList = new ArrayList(MAX_ITEM);
+			hookpointItemList = new List<HookPointItem>(MAX_ITEM);
 		}
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private ArrayList hookpointItemList;
+		private List<HookPointItem> hookpointItemList;
 		private const int MAX_ITEM = 10;
 		public static HookPointInventory BlueHPInventory = new HookPointInventory();
 		public static HookPointInventory RedHPInventory = new HookPointInventory();
@@ -151,7 +152,7 @@ namespace DOL.GS.Keeps
 		/// Gets a copy of all intems
 		/// </summary>
 		/// <returns>A list where key is the slot position and value is the ItemTemplate</returns>
-		public virtual ArrayList GetAllItems()
+		public virtual List<HookPointItem> GetAllItems()
 		{
 			return hookpointItemList;
 		}
@@ -295,7 +296,7 @@ namespace DOL.GS.Keeps
 			hookPointObj.AddToWorld();
 			if (hookPointObj is GameKeepGuard)
 			{
-				(hookPointObj as GameKeepGuard).Component.Keep.Guards.Add(hookPointObj.ObjectID, hookPointObj);
+				(hookPointObj as GameKeepGuard).Component.Keep.Guards.Add(hookPointObj.ObjectID.ToString(), (GameKeepGuard)hookPointObj);
 				((GameNPC)hookPointObj).RespawnInterval = Util.Random(10, 30) * 60 * 1000;
 			}
 			hookpoint.Object = hookPointObj;
@@ -348,7 +349,7 @@ namespace DOL.GS.Keeps
 			hookPointObj.AddToWorld();
 			if (hookPointObj is GameKeepGuard)
 			{
-				(hookPointObj as GameKeepGuard).Component.Keep.Guards.Add(hookPointObj.ObjectID, hookPointObj);
+				(hookPointObj as GameKeepGuard).Component.Keep.Guards.Add(hookPointObj.ObjectID.ToString(), (GameKeepGuard)hookPointObj);
 				((GameNPC)hookPointObj).RespawnInterval = Util.Random(10, 30) * 60 * 1000;
 			}
 			hookpoint.Object = hookPointObj;

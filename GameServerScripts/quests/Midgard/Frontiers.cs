@@ -250,7 +250,7 @@ namespace DOL.GS.Quests.Midgard
 			ticketToSvasudFaste = CreateTicketTo("Svasud Faste", "hs_mularn_svasudfaste");
 			ticketToMularn = CreateTicketTo("Mularn", "hs_svasudfaste_mularn");
 
-            npcs = (GameNPC[])WorldMgr.GetObjectsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.NPCGriffinHandlerNjiedi"), eRealm.Midgard, typeof(GameStableMaster));
+            npcs = (GameNPC[])WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.Frontiers.NPCGriffinHandlerNjiedi"), eRealm.Midgard, typeof(GameStableMaster));
 			if (npcs.Length == 0)
 			{
 				njiedi = new GameStableMaster();
@@ -349,7 +349,7 @@ namespace DOL.GS.Quests.Midgard
 				griffin.AddToWorld();
 			}
 
-			npcs = (GameNPC[]) WorldMgr.GetObjectsByName("Vorgar", eRealm.Midgard, typeof (GameStableMaster));
+			npcs = (GameNPC[]) WorldMgr.GetNPCsByName("Vorgar", eRealm.Midgard, typeof (GameStableMaster));
 			if (npcs.Length == 0)
 			{
 				vorgar = new GameStableMaster();

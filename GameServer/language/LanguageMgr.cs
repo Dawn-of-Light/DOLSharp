@@ -123,7 +123,7 @@ namespace DOL.Language
             if (log.IsDebugEnabled)
                 log.Info("[Language-Manager] Loading system sentences...");
 
-            ArrayList fileSentences = new ArrayList();
+            List<string[]> fileSentences = new List<string[]>();
             bool defaultLanguageDirectoryFound = false;
             bool defaultLanguageFilesFound = false;
             foreach (string langDir in Directory.GetDirectories(LangPath, "*", SearchOption.TopDirectoryOnly))
@@ -137,7 +137,7 @@ namespace DOL.Language
                 else
                 {
                     defaultLanguageDirectoryFound = true;
-                    ArrayList sentences = ReadLanguageDirectory(Path.Combine(LangPath, language), language);
+                    List<string[]> sentences = ReadLanguageDirectory(Path.Combine(LangPath, language), language);
 
                     if (sentences.Count < 1)
                         break;
@@ -329,16 +329,16 @@ namespace DOL.Language
         #endregion CountLanguageFiles
 
         #region ReadLanguageDirectory
-        private static ArrayList ReadLanguageDirectory(string path, string language)
+        private static List<string[]> ReadLanguageDirectory(string path, string language)
         {
-		    ArrayList sentences = new ArrayList();
+		    List<string[]> sentences = new List<string[]>();
             foreach (string languageFile in Directory.GetFiles(path, "*", SearchOption.AllDirectories))
             {
                 if (!languageFile.EndsWith(".txt"))
                     continue;
 
                 string[] lines = File.ReadAllLines(languageFile, Encoding.GetEncoding("utf-8"));
-                IList textList = new ArrayList(lines);
+                List<string> textList = new List<string>(lines);
 
                 foreach (string line in textList)
                 {

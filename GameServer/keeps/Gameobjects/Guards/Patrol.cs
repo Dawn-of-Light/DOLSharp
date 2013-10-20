@@ -147,7 +147,7 @@ namespace DOL.GS.Keeps
 		{
 			if (Component != null && Component.Keep != null)
 			{
-				Component.Keep.Patrols.Remove(this);
+				Component.Keep.Patrols.Remove(this.PatrolID);
 			}
 
 			foreach (GameKeepGuard guard in PatrolGuards)

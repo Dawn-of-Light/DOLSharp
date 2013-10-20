@@ -173,9 +173,9 @@ namespace DOL.GS
 		/// <summary>
 		/// This hashtable holds all regions in the world
 		/// </summary>
-		private static readonly Hashtable m_regions = new Hashtable();
+		private static readonly Dictionary<ushort, Region> m_regions = new Dictionary<ushort, Region>();
 
-		public static Hashtable Regions
+		public static Dictionary<ushort, Region> Regions
 		{
 			get { return m_regions; }
 		}
@@ -183,9 +183,9 @@ namespace DOL.GS
 		/// <summary>
 		/// This hashtable holds all zones in the world, for easy access
 		/// </summary>
-		private static readonly Hashtable m_zones = new Hashtable();
+		private static readonly Dictionary<int, Zone> m_zones = new Dictionary<int, Zone>();
 
-		public static Hashtable Zones
+		public static Dictionary<int, Zone> Zones
 		{
 			get { return m_zones; }
 		}
@@ -316,9 +316,9 @@ namespace DOL.GS
 		{
 			log.Debug(GC.GetTotalMemory(true) / 1024 / 1024 + "MB - World Manager: EarlyInit");
 
-			lock (m_regions.SyncRoot)
+			lock (((ICollection)m_regions).SyncRoot)
 				m_regions.Clear();
-			lock (m_zones.SyncRoot)
+			lock (((ICollection)m_zones).SyncRoot)
 				m_zones.Clear();
 
 			//If the files are missing this method
@@ -339,7 +339,7 @@ namespace DOL.GS
 			//Dinberg: We now need to save regionData, indexed by regionID, for instances.
 			//The information generated here is oddly ordered by number of mbos in the region,
 			//so I'm contriving to generate this list myself.
-			m_regionData = new Hashtable();
+			m_regionData = new Dictionary<ushort, RegionData>();
 
 			//We also will need to store zones, because we need at least one zone per region - hence
 			//we will create zones inside our instances or the player gets banned by anti-telehack scripts.
@@ -726,7 +726,7 @@ namespace DOL.GS
 					Thread.Sleep(200); // check every 200ms for needed relocs
 					int start = Environment.TickCount;
 
-					Hashtable regionsClone = (Hashtable)m_regions.Clone();
+					Dictionary<ushort, Region> regionsClone = new Dictionary<ushort, Region>(m_regions);
 
 					foreach (Region region in regionsClone.Values)
 					{
@@ -1078,7 +1078,7 @@ namespace DOL.GS
 		public static Region RegisterRegion(GameTimer.TimeManager time, RegionData data)
 		{
 			Region region =  Region.Create(time, data);
-			lock (m_regions.SyncRoot)
+			lock (((ICollection)m_regions).SyncRoot)
 			{
 				m_regions.Add(data.Id, region);
 			}
@@ -1093,7 +1093,7 @@ namespace DOL.GS
 		{
 			RegionEntry[] regs = null;
 
-			lock (m_regions.SyncRoot)
+			lock (((ICollection)m_regions).SyncRoot)
 			{
 				regs = new RegionEntry[m_regions.Count];
 
@@ -1188,11 +1188,11 @@ namespace DOL.GS
                     width * 8192,
                     height * 8192);*/
 
-			lock (region.Zones.SyncRoot)
+			lock (((ICollection)region.Zones).SyncRoot)
 			{
 				region.Zones.Add(zone);
 			}
-			lock (m_zones.SyncRoot)
+			lock (((ICollection)m_zones).SyncRoot)
 			{
 				m_zones.Add(zoneID, zone);
 			}
@@ -1206,7 +1206,7 @@ namespace DOL.GS
 		/// <returns>true</returns>
 		public static bool StartRegionMgrs()
 		{
-			lock (m_regions.SyncRoot)
+			lock (((ICollection)m_regions).SyncRoot)
 			{
 				foreach (Region reg in m_regions.Values)
 					reg.StartRegionMgr();
@@ -1221,7 +1221,7 @@ namespace DOL.GS
 		{
 			if (log.IsDebugEnabled)
 				log.Debug("Stopping region managers...");
-			lock (m_regions.SyncRoot)
+			lock (((ICollection)m_regions).SyncRoot)
 			{
 				foreach (Region reg in m_regions.Values)
 				{
@@ -1240,7 +1240,10 @@ namespace DOL.GS
 		/// <returns>Region or null if not found</returns>
 		public static Region GetRegion(ushort regionID)
 		{
-			return (Region)m_regions[regionID];
+			if(m_regions.ContainsKey(regionID))
+				return (Region)m_regions[regionID];
+			
+			return null;
 		}
 
 		public static ushort m_lastZoneError = 0;
@@ -1252,7 +1255,7 @@ namespace DOL.GS
 		/// <returns>the zone object or null</returns>
 		public static Zone GetZone(ushort zoneID)
 		{
-			if (!m_zones.Contains(zoneID))
+			if (!m_zones.ContainsKey(zoneID))
 			{
 				if (m_lastZoneError != zoneID)
 				{
@@ -1295,18 +1298,21 @@ namespace DOL.GS
 		/// <returns>All objects with the specified parameters</returns>
 		public static GameObject[] GetobjectsFromRegion( ushort regionID, Type objectType)
 		{
-			Region reg = (Region)m_regions[regionID];
+			Region reg = null;
+			if(m_regions.ContainsKey(regionID))
+				reg = (Region)m_regions[regionID];
+			
 			if (reg == null)
 				return new GameObject[0];
 			GameObject[] objs = reg.Objects;
-			ArrayList returnObjs = new ArrayList();
+			List<GameObject> returnObjs = new List<GameObject>();
 			for (int i = 0; i < objs.Length; i++)
 			{
 				GameObject obj = objs[i];
 				if (obj != null && objectType.IsInstanceOfType(obj))
 					returnObjs.Add(obj);
 			}
-			return (GameObject[])returnObjs.ToArray(objectType);
+			return returnObjs.ToArray();
 		}
 		
 		/// <summary>
@@ -1314,9 +1320,9 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="regionID">The region to search</param>
 		/// <returns>All NPCs with the specified parameters</returns>
-		public static GameStaticItem[] GetStaticItemFromRegion(ushort regionID)
+		public static GameObject[] GetStaticItemFromRegion(ushort regionID)
 		{
-			return (GameStaticItem[])GetobjectsFromRegion(regionID, typeof(GameStaticItem));
+			return GetobjectsFromRegion(regionID, typeof(GameStaticItem));
 		}
 
 		/// <summary>
@@ -1329,18 +1335,21 @@ namespace DOL.GS
 		/// <returns>All objects with the specified parameters</returns>
 		public static GameObject[] GetObjectsByNameFromRegion(string name, ushort regionID, eRealm realm, Type objectType)
 		{
-			Region reg = (Region)m_regions[regionID];
+			Region reg = null;
+			if(m_regions.ContainsKey(regionID))
+				reg = (Region)m_regions[regionID];
+			
 			if (reg == null)
 				return new GameObject[0];
 			GameObject[] objs = reg.Objects;
-			ArrayList returnObjs = new ArrayList();
+			List<GameObject> returnObjs = new List<GameObject>();
 			for (int i = 0; i < objs.Length; i++)
 			{
 				GameObject obj = objs[i];
 				if (obj != null && objectType.IsInstanceOfType(obj) && obj.Realm == realm && obj.Name == name)
 					returnObjs.Add(obj);
 			}
-			return (GameObject[])returnObjs.ToArray(objectType);
+			return returnObjs.ToArray();
 		}
 
 		//Added by Dinberg, i want to know if we should so freely enumerate reg.Objects?
@@ -1350,18 +1359,21 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static GameNPC[] GetNPCsFromRegion(ushort regionID)
 		{
-			Region reg = (Region)m_regions[regionID];
+			Region reg = null;
+			if(m_regions.ContainsKey(regionID))
+				reg = (Region)m_regions[regionID];
+			
 			if (reg == null)
 				return new GameNPC[0];
 			GameObject[] objs = reg.Objects;
-			ArrayList returnObjs = new ArrayList();
+			List<GameNPC> returnObjs = new List<GameNPC>();
 			for (int i = 0; i < objs.Length; i++)
 			{
 				GameNPC obj = objs[i] as GameNPC;
 				if (obj != null)
 					returnObjs.Add(obj);
 			}
-			return (GameNPC[])returnObjs.ToArray(typeof(GameNPC));
+			return returnObjs.ToArray();
 		}
 
 		/// <summary>
@@ -1373,10 +1385,10 @@ namespace DOL.GS
 		/// <returns>All objects with the specified parameters</returns>b
 		public static GameObject[] GetObjectsByName(string name, eRealm realm, Type objectType)
 		{
-			ArrayList returnObjs = new ArrayList();
+			List<GameObject> returnObjs = new List<GameObject>();
 			foreach (Region reg in m_regions.Values)
 				returnObjs.AddRange(GetObjectsByNameFromRegion(name, reg.ID, realm, objectType));
-			return (GameObject[])returnObjs.ToArray(objectType);
+			return returnObjs.ToArray();
 		}
 
 		/// <summary>
@@ -1388,7 +1400,11 @@ namespace DOL.GS
 		/// <returns>All NPCs with the specified parameters</returns>
 		public static GameNPC[] GetNPCsByNameFromRegion(string name, ushort regionID, eRealm realm)
 		{
-			return (GameNPC[])GetObjectsByNameFromRegion(name, regionID, realm, typeof(GameNPC));
+			List<GameNPC> res = new List<GameNPC>();
+			foreach(GameObject obj in GetObjectsByNameFromRegion(name, regionID, realm, typeof(GameNPC)))
+				res.Add((GameNPC)obj);
+					
+			return res.ToArray();
 		}
 
 		/// <summary>
@@ -1399,9 +1415,23 @@ namespace DOL.GS
 		/// <returns>All NPCs with the specified parameters</returns>b
 		public static GameNPC[] GetNPCsByName(string name, eRealm realm)
 		{
-			return (GameNPC[])GetObjectsByName(name, realm, typeof(GameNPC));
+			List<GameNPC> res = new List<GameNPC>();
+			foreach(GameObject obj in GetObjectsByName(name, realm, typeof(GameNPC)))
+				res.Add((GameNPC)obj);
+			
+			return res.ToArray();
 		}
 
+		public static GameNPC[] GetNPCsByName(string name, eRealm realm, Type objectType)
+		{
+			List<GameNPC> res = new List<GameNPC>();
+			foreach(GameObject obj in GetObjectsByName(name, realm, typeof(GameNPC)))
+				if(objectType.IsInstanceOfType(obj))
+					res.Add((GameNPC)obj);
+			
+			return res.ToArray();
+		}
+		
 		/// <summary>
 		/// Searches for all NPCs with the given guild and realm in ALL regions!
 		/// </summary>
@@ -2237,9 +2267,9 @@ namespace DOL.GS
 		/// <summary>
 		/// Stores the region Data parsed from the regions xml file.
 		/// </summary>
-		private static Hashtable m_regionData;
+		private static Dictionary<ushort, RegionData> m_regionData;
 
-		public static Hashtable RegionData
+		public static Dictionary<ushort, RegionData> RegionData
 		{
 			get { return m_regionData; }
 		}
@@ -2290,7 +2320,9 @@ namespace DOL.GS
 			BaseInstance instance = null;
 
 			//To create the instance, we need to select the region relevant to the SkinID.
-			RegionData data = (RegionData)m_regionData[skinID];
+			RegionData data = null;
+			if(m_regionData.ContainsKey(skinID))
+				data = (RegionData)m_regionData[skinID];
 
 			if (data == null)
 			{
@@ -2334,7 +2366,7 @@ namespace DOL.GS
 
 			//I'm welcome to suggestions on how to improve this
 			//              -Dinberg.
-			lock (m_regions.SyncRoot)
+			lock (((ICollection)m_regions).SyncRoot)
 			{
 				if (!RequestedAnID)
 				{
@@ -2395,7 +2427,7 @@ namespace DOL.GS
 			foreach (ZoneData dat in list)
 			{
 				//we need to get an id for each one.
-				lock (m_zones.SyncRoot)
+				lock (((ICollection)m_zones).SyncRoot)
 				{
 					while (m_zones.ContainsKey(zoneID))
 						zoneID++;
@@ -2421,17 +2453,19 @@ namespace DOL.GS
 		public static void RemoveInstance(BaseInstance instance)
 		{
 			//Remove the region
-			lock (m_regions.SyncRoot)
+			lock (((ICollection)m_regions).SyncRoot)
 			{
-				m_regions.Remove(instance.ID);
+				if(m_regions.ContainsKey(instance.ID))
+					m_regions.Remove(instance.ID);
 			}
 
 			//Remove zones
-			lock (m_zones.SyncRoot)
+			lock (((ICollection)m_zones).SyncRoot)
 			{
 				foreach (Zone zn in instance.Zones)
 				{
-					m_zones.Remove(zn.ID);
+					if(m_zones.ContainsKey(zn.ID))
+						m_zones.Remove(zn.ID);
 				}
 			}
 

@@ -49,7 +49,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				GameKeepComponent hp = keep.KeepComponents[wallId] as GameKeepComponent;
 				client.Out.SendClearKeepComponentHookPoint(hp, HPindex);
-				client.Out.SendHookPointStore(hp.HookPoints[HPindex] as GameKeepHookPoint);
+				if(hp.HookPoints.ContainsKey(HPindex))
+					client.Out.SendHookPointStore(hp.HookPoints[HPindex] as GameKeepHookPoint);
 			}
 		}
 	}
