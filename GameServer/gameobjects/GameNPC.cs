@@ -3120,9 +3120,13 @@ namespace DOL.GS
 		{
 			get
 			{
-				List<ABrain> brains = m_brains;
+				List<ABrain> brains;
+				lock(((ICollection)m_brains).SyncRoot)
+					brains = new List<ABrain>(m_brains);
+				
 				if (brains.Count > 0)
 					return (ABrain)brains[brains.Count - 1];
+				
 				return m_ownBrain;
 			}
 		}
@@ -3136,6 +3140,7 @@ namespace DOL.GS
 		{
 			if (brain == null)
 				return null;
+			
 			if (brain.IsActive)
 				throw new ArgumentException("The new brain is already active.", "brain");
 
@@ -3147,8 +3152,7 @@ namespace DOL.GS
 					oldBrain.Stop();
 				m_ownBrain = brain;
 				m_ownBrain.Body = this;
-				if (activate)
-					m_ownBrain.Start();
+				m_ownBrain.Start();
 
 				return oldBrain;
 			}
@@ -3185,18 +3189,14 @@ namespace DOL.GS
 		{
 			if (removeBrain == null) return false;
 
-			lock (BrainSync)
+			lock (((ICollection)m_brains).SyncRoot)
 			{
-				List<ABrain> brains = new List<ABrain>(m_brains);
-				int index = brains.IndexOf(removeBrain);
+				int index = m_brains.IndexOf(removeBrain);
 				if (index < 0) return false;
-				bool active = brains[index] == Brain;
+				bool active = m_brains[index] == Brain;
 				if (active)
 					removeBrain.Stop();
-				brains.RemoveAt(index);
-				m_brains = brains;
-				if (active)
-					Brain.Start();
+				m_brains.RemoveAt(index);
 
 				return true;
 			}
@@ -3643,7 +3643,7 @@ namespace DOL.GS
 		/// <param name="target">The object to attack</param>
 		public override void StartAttack(GameObject target)
 		{
-			if (target == null)
+			if (target == null || this.CurrentRegion == null)
 				return;
 
 			TargetObject = target;

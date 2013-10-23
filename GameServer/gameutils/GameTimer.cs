@@ -387,21 +387,21 @@ namespace DOL.GS
 			/// <summary>
 			/// Holds callback statistics
 			/// </summary>
-			private readonly Dictionary<string, int> m_timerCallbackStatistic = new Dictionary<string, int>();
+			private readonly Dictionary<int, int> m_timerCallbackStatistic = new Dictionary<int, int>();
 			/// <summary>
 			/// Get a list of active counts of different callbacks
 			/// </summary>
 			/// <returns></returns>
 			public IList GetUsedCallbacks()
 			{
-				Dictionary<string, int> table;
-				lock (m_timerCallbackStatistic) {
-					table = new Dictionary<string, int>(m_timerCallbackStatistic);
+				Dictionary<int, int> table;
+				lock (((ICollection)m_timerCallbackStatistic).SyncRoot) {
+					table = new Dictionary<int, int>(m_timerCallbackStatistic);
 				}
 
 				// sort it
-				List<KeyValuePair<string, int>> sorted = new List<KeyValuePair<string, int>>();
-				foreach (KeyValuePair<string, int> entry in table) {						
+				List<KeyValuePair<int, int>> sorted = new List<KeyValuePair<int, int>>();
+				foreach (KeyValuePair<int, int> entry in table) {						
 					int count = (int)entry.Value;
 					int i;
 					for (i=0; i<sorted.Count; i++) {
@@ -414,7 +414,7 @@ namespace DOL.GS
 				sortedStr = new List<string>();
 				
 				for (int i=0; i<sorted.Count; i++) {
-					KeyValuePair<string, int> entry = sorted[i];
+					KeyValuePair<int, int> entry = sorted[i];
 					sortedStr[i] = entry.Value+": "+entry.Key;
 				}
 				return sortedStr;
@@ -540,15 +540,23 @@ namespace DOL.GS
 			/// <returns>success</returns>
 			public bool Start()
 			{
-				if (m_timeThread != null)
+				Thread exists;
+				lock(m_lockObject)
+					exists = m_timeThread;
+				
+				if (exists != null)
 					return false;
-
-				m_running = true;
-				m_timeThread = new Thread(new ThreadStart(TimeThread));
-				m_timeThread.Name = m_name;
-				m_timeThread.Priority = ThreadPriority.AboveNormal;
-				m_timeThread.IsBackground = true;
-				m_timeThread.Start();
+				
+				lock (m_lockObject)
+				{
+					m_running = true;
+					m_timeThread = new Thread(new ThreadStart(TimeThread));
+					m_timeThread.Name = m_name;
+					m_timeThread.Priority = ThreadPriority.AboveNormal;
+					m_timeThread.IsBackground = true;
+					m_timeThread.Start();
+				}
+				
 				return true;
 			}
 
@@ -558,6 +566,10 @@ namespace DOL.GS
 			/// <returns>success</returns>
 			public bool Stop()
 			{
+				Thread exists;
+				lock(m_lockObject)
+					exists = m_timeThread;
+				
 				if (m_timeThread == null)
 					return false;
 
@@ -575,7 +587,15 @@ namespace DOL.GS
 							log.ErrorFormat(Util.FormatStackTrace(trace));
 							log.ErrorFormat("aborting the thread.\n");
 						}
-						m_timeThread.Abort();
+						
+						try 
+						{
+							m_timeThread.Abort();
+						}
+						catch
+						{
+							log.ErrorFormat("Couldn't abort thread {0}.\n", m_name);
+						}
 					}
 					
 					m_timeThread = null;
@@ -594,8 +614,10 @@ namespace DOL.GS
 						log.Error("Closing delays log while stop() "+m_name, e);
 					}
 #endif
-					return true;
 				}
+				
+				return true;
+
 			}
 
 			/// <summary>
@@ -886,6 +908,7 @@ namespace DOL.GS
 									// statistic
 									int start = GetTickCount();
 									string callback;
+									
 									if (current is RegionTimer)
 									{
 										callback = ((RegionTimer)current).Callback.Method.ToString();
@@ -894,10 +917,11 @@ namespace DOL.GS
 									{
 										callback = current.GetType().FullName;
 									}
+									
 									lock (((ICollection)m_timerCallbackStatistic).SyncRoot)
 									{
 										int obj = null;
-										if(m_timerCallbackStatistic.ContainsKey(callback)
+										if(m_timerCallbackStatistic.ContainsKey(callback))
 											obj = m_timerCallbackStatistic[callback];
 											
 										if (obj == null) 
@@ -909,6 +933,7 @@ namespace DOL.GS
 											m_timerCallbackStatistic[callback] = ((int)obj) + 1;
 										}
 									}
+									
 									if (GetTickCount()-start > 500) 
 									{
 										if (log.IsWarnEnabled)

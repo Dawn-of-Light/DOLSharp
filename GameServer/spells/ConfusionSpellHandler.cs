@@ -89,11 +89,10 @@ namespace DOL.GS.Spells
 				if (log.IsDebugEnabled)
 					log.Debug("CONFUSION: " + npc.Name + " was confused(true," + doAttackFriend.ToString() +")");
 
-                if (npc is GamePet && npc.Brain != null && (npc.Brain as IControlledBrain) != null)
+                if (npc is GamePet && npc.Brain != null && npc.Brain is IControlledBrain)
 				{
 					//it's a pet.
-					GamePlayer playerowner = (npc.Brain as IControlledBrain).GetPlayerOwner();
-					if (playerowner != null && playerowner.CharacterClass.ID == (int)eCharacterClass.Theurgist)
+					if (npc is TheurgistPet)
 					{
 						//Theurgist pets die.
 						npc.Die(Caster);
@@ -147,7 +146,7 @@ namespace DOL.GS.Spells
 		{
 			base.OnEffectPulse(effect);
 
-			if (targetList.Count > 0)
+			if (targetList.Count > 0 &&  effect.Owner.IsAlive && effect.Owner.ObjectState == GameLiving.eObjectState.Active)
 			{
 				GameNPC npc = effect.Owner as GameNPC;
 				npc.StopAttack();

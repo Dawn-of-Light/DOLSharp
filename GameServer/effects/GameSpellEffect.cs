@@ -135,7 +135,12 @@ namespace DOL.GS.Effects
 		/// <param name="target">the target</param>
 		public virtual void Start(GameLiving target)
 		{
-			lock (m_LockObject)
+			if(target == null)
+				return;
+			
+			m_owner = target;
+			
+			lock (m_owner.EffectList.SyncRoot)
 			{
 				if (!m_expired)
 				{
@@ -144,15 +149,20 @@ namespace DOL.GS.Effects
 					return; // already started?
 				}
 
-				m_owner = target;
 				try
 				{
+					
 					m_owner.EffectList.BeginChanges();
-
+					
+					if(!m_owner.IsAlive || m_owner.ObjectState != GameObject.eObjectState.Active)
+						return;
+					
 					if (!m_owner.EffectList.Add(this))
 					{
 						if (log.IsWarnEnabled)
 							log.WarnFormat("{0}: effect was not added to the effects list, not starting it either. (effect class:{1} spell type:{2} spell name:'{3}')", target.Name, GetType().FullName, Spell.SpellType, Name);
+						
+						m_owner.EffectList.CommitChanges();
 						return;
 					}
 
@@ -163,10 +173,12 @@ namespace DOL.GS.Effects
 					{
 						SpellHandler.Caster.ConcentrationEffects.Add(this);
 					}
+					
 					if (RestoredEffect)
 						m_handler.OnEffectRestored(this, RestoreVars);
 					else
 						m_handler.OnEffectStart(this);
+					
 					m_handler.OnEffectPulse(this);
 				}
 				finally
@@ -192,7 +204,7 @@ namespace DOL.GS.Effects
 				return;
 			}
 
-			lock (m_LockObject)
+			lock (m_owner.EffectList.SyncRoot)
 			{
 				StopTimers();
 
@@ -236,7 +248,7 @@ namespace DOL.GS.Effects
 				return;
 			}
 
-			lock (m_LockObject)
+			lock (m_owner.EffectList.SyncRoot)
 			{
 				// immunity effects in immunity state are already expired
 				if (!m_expired)
@@ -292,14 +304,15 @@ namespace DOL.GS.Effects
 		/// </summary>
 		protected virtual void ExpiredCallback()
 		{
-			lock (m_LockObject)
+			lock (m_owner.EffectList.SyncRoot)
 			{
 				if (m_expired)
 					return;
 				m_expired = true;
 				StopTimers();
+			
+				m_owner.EffectList.Remove(this);
 			}
-			m_owner.EffectList.Remove(this);
 			m_handler.OnEffectExpires(this, false);
 		}
 

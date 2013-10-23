@@ -2942,9 +2942,9 @@ namespace DOL.GS
 			if (!m_specialization.TryGetValue(skill.KeyName, out oldskill))
 			{
 				//DOLConsole.WriteLine("Spec "+skill.Name+" added");
-				lock ((m_specialization as ICollection).SyncRoot)
+				lock (((ICollection)m_specialization).SyncRoot)
 				{
-					lock ((m_specList as ICollection).SyncRoot)
+					lock (((ICollection)m_specList).SyncRoot)
 					{
 						m_specialization[skill.KeyName] = skill;
 						m_specList.Add(skill);
@@ -2969,13 +2969,15 @@ namespace DOL.GS
 		public virtual bool RemoveSpecialization(string specKeyName)
 		{
 			Specialization playerSpec = null;
-			lock ((m_specialization as ICollection).SyncRoot)
+			lock (((ICollection)m_specialization).SyncRoot)
 			{
-				lock ((m_specList as ICollection).SyncRoot)
+				lock (((ICollection)m_specList).SyncRoot)
 				{
 					if (!m_specialization.TryGetValue(specKeyName, out playerSpec))
 						return false;
-					m_specList.Remove(playerSpec);
+					if (m_specList.Contains(playerSpec))
+						m_specList.Remove(playerSpec);
+					
 					m_specialization.Remove(specKeyName);
 				}
 			}
@@ -2995,7 +2997,7 @@ namespace DOL.GS
 				return false;
 			}
 
-			lock (lockSpellLinesList)
+			lock (((ICollection)m_spellLines).SyncRoot)
 			{
 				m_spellLines.Remove(line);
 			}
@@ -3103,10 +3105,9 @@ namespace DOL.GS
 		protected virtual int RespecAllLines()
 		{
 			int specPoints = 0;
-			IList specList = GetSpecList();
-			lock (specList.SyncRoot)
+			lock(((ICollection)m_specList).SyncRoot)
 			{
-				foreach (Specialization cspec in specList)
+				foreach (Specialization cspec in m_specList)
 				{
 					if (cspec.Level < 2)
 						continue;
@@ -3206,7 +3207,7 @@ namespace DOL.GS
 		/// <returns>found specialization or null</returns>
 		public virtual Specialization GetSpecializationByName(string name, bool caseSensitive)
 		{
-			lock ((m_specList as ICollection).SyncRoot)
+			lock (((ICollection)m_specList).SyncRoot)
 			{
 				if (caseSensitive)
 				{
@@ -3280,37 +3281,35 @@ namespace DOL.GS
 
 		public virtual void RemoveAllSkills()
 		{
-			List<Skill> skills = new List<Skill>();
 			lock (((ICollection)m_skillList).SyncRoot)
 			{
-				foreach (Skill skill in m_skillList)
-					skills.Add(skill);
-			}
-			foreach (NamedSkill skill in skills)
-			{
-				m_skillList.Remove(skill);
-				m_abilities.Remove(skill.KeyName);
+				foreach (NamedSkill skill in m_skillList)
+				{
+					if(m_abilities.ContainsKey(skill.KeyName))
+						m_abilities.Remove(skill.KeyName);
+				}
+				
+				m_skillList.Clear();
 			}
 		}
 
 		public virtual void RemoveAllSpecs()
 		{
-			List<Specialization> specs = new List<Specialization>();
-			lock ((m_specList as ICollection).SyncRoot)
+			lock (((ICollection)m_specList).SyncRoot)
 			{
+
 				foreach (Specialization spec in m_specList)
-					specs.Add(spec);
-			}
-			foreach (Specialization spec in specs)
-			{
-				m_specList.Remove(spec);
-				m_specialization.Remove(spec.KeyName);
+				{
+					if(m_specialization.ContainsKey(spec.KeyName))
+						m_specialization.Remove(spec.KeyName);
+				}
+				m_specList.Clear();
 			}
 		}
 
 		public virtual void RemoveAllSpellLines()
 		{
-			lock (lockSpellLinesList)
+			lock (((ICollection)m_spellLines).SyncRoot)
 			{
 				m_spellLines.Clear();
 			}
@@ -3318,7 +3317,7 @@ namespace DOL.GS
 
 		public virtual void RemoveAllStyles()
 		{
-			lock (lockStyleList)
+			lock (((ICollection)m_styles).SyncRoot)
 			{
 				m_styles.Clear();
 			}
@@ -3497,7 +3496,7 @@ namespace DOL.GS
 			SpellLine oldline = GetSpellLine(line.KeyName);
 			if (oldline == null)
 			{
-				lock (lockSpellLinesList)
+				lock (((ICollection)m_spellLines).SyncRoot)
 				{
 					m_spellLines.Add(line);
 				}
@@ -3529,7 +3528,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual SpellLine GetSpellLine(string keyname)
 		{
-			lock (lockSpellLinesList)
+			lock (((ICollection)m_spellLines).SyncRoot)
 			{
 				foreach (SpellLine line in m_spellLines)
 				{
@@ -3586,7 +3585,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual int GetSpellCount()
 		{
-			lock (lockSpellLinesList)
+			lock (((ICollection)m_spellLines).SyncRoot)
 			{
 				return GetUsableSpells(m_spellLines, true).Count;
 			}
@@ -3814,9 +3813,9 @@ namespace DOL.GS
 		public virtual void RefreshSpecDependantSkills(bool sendMessages)
 		{
 			List<Style> newStyles = new List<Style>();
-			lock (lockStyleList)
+			lock (((ICollection)m_styles).SyncRoot)
 			{
-				lock ((m_specList as ICollection).SyncRoot)
+				lock (((ICollection)m_specList).SyncRoot)
 				{
 					foreach (Specialization spec in m_specList)
 					{
@@ -3916,9 +3915,9 @@ namespace DOL.GS
 		/// <param name="sendMessages">sends "You gain power" messages if true</param>
 		public virtual void UpdateSpellLineLevels(bool sendMessages)
 		{
-			lock (lockSpellLinesList)
+			lock (((ICollection)m_spellLines).SyncRoot)
 			{
-				foreach (SpellLine line in GetSpellLines())
+				foreach (SpellLine line in m_spellLines)
 				{
 					if (line.IsBaseLine)
 					{
@@ -6108,7 +6107,7 @@ namespace DOL.GS
 					return;
 				}
 
-				lock (EffectList)
+				lock (EffectList.SyncRoot)
 				{
 					foreach (IGameEffect effect in EffectList) // switch to the correct range attack type
 					{
@@ -7985,7 +7984,7 @@ namespace DOL.GS
 			// then buffs drop messages
 			base.Die(killer);
 
-			lock (m_LockObject)
+			lock (((ICollection)m_xpGainers).SyncRoot)
 			{
 				if (m_releaseTimer != null)
 				{
@@ -8019,14 +8018,10 @@ namespace DOL.GS
 				}
 
 				// first penalty is 5% of expforlevel, second penalty comes from release
-				int xpLossPercent;
-				if (Level < 40)
+				int xpLossPercent = 5;
+				if (Level > 40)
 				{
-					xpLossPercent = MaxLevel - Level;
-				}
-				else
-				{
-					xpLossPercent = MaxLevel - 40;
+					xpLossPercent = 1;
 				}
 
 				if (realmDeath)
@@ -8052,7 +8047,7 @@ namespace DOL.GS
 
 					DBCharacter.DeathCount++;
 
-					long xpLoss = (ExperienceForNextLevel - ExperienceForCurrentLevel) * xpLossPercent / 1000;
+					long xpLoss = (ExperienceForNextLevel - ExperienceForCurrentLevel) * xpLossPercent / 100;
 					GainExperience(eXPSource.Other, -xpLoss, 0, 0, 0, false, true);
 					TempProperties.setProperty(DEATH_EXP_LOSS_PROPERTY, xpLoss);
 
@@ -8860,9 +8855,9 @@ namespace DOL.GS
 			if (source == null || item == null || source == this)
 				return false;
 
-			lock (m_LockObject)
+			lock (Inventory)
 			{
-				lock (source)
+				lock (source.Inventory)
 				{
 					if ((TradeWindow != null && source != TradeWindow.Partner) || (TradeWindow == null && !OpenTrade(source)))
 					{
@@ -8918,9 +8913,9 @@ namespace DOL.GS
 			if (source == null || source == this || money == 0)
 				return false;
 
-			lock (m_LockObject)
+			lock (Inventory)
 			{
-				lock (source)
+				lock (source.Inventory)
 				{
 					if ((TradeWindow != null && source != TradeWindow.Partner) || (TradeWindow == null && !OpenTrade(source)))
 					{
@@ -12599,7 +12594,7 @@ namespace DOL.GS
 			string ab = "";
 			string sp = "";
 			string styleList = "";
-			lock (m_skillList)
+			lock (((ICollection)m_skillList).SyncRoot)
 			{
 				foreach (Skill skill in m_skillList)
 				{
@@ -12625,7 +12620,7 @@ namespace DOL.GS
 					sp += spec.KeyName + "|" + spec.Level;
 				}
 			}
-			lock (lockStyleList)
+			lock (((ICollection)m_styles).SyncRoot)
 			{
 				foreach (Style style in m_styles.Values)
 				{
@@ -12664,7 +12659,7 @@ namespace DOL.GS
 				}
 			}
 			StringBuilder spellLines = new StringBuilder();
-			lock (lockSpellLinesList)
+			lock (((ICollection)m_spellLines).SyncRoot)
 			{
 				foreach (SpellLine line in m_spellLines)
 				{
@@ -12696,7 +12691,7 @@ namespace DOL.GS
 			//Load up the player skills
 			//1. Load all abilities
 			//2. Disable appropriate abilities
-			lock (m_skillList)
+			lock (((ICollection)m_skillList).SyncRoot)
 			{
 				tmpStr = character.SerializedAbilities;
 				if (tmpStr != null && tmpStr.Length > 0)
@@ -12737,7 +12732,7 @@ namespace DOL.GS
 			#endregion
 
 			#region Load Specs
-			lock ((m_specList as ICollection).SyncRoot)
+			lock (((ICollection)m_specList).SyncRoot)
 			{
 				tmpStr = character.SerializedSpecs;
 				if (tmpStr != null && tmpStr.Length > 0)
@@ -12811,7 +12806,7 @@ namespace DOL.GS
 				}
 			}
 
-			lock (lockSpellLinesList)
+			lock (((ICollection)m_spellLines).SyncRoot)
 			{
 				tmpStr = character.SerializedSpellLines;
 				if (tmpStr != null && tmpStr.Length > 0)
@@ -13869,7 +13864,7 @@ namespace DOL.GS
 		/// <param name="quest"></param>
 		public void AddFinishedQuest(AbstractQuest quest)
 		{
-			lock (m_questListFinished)
+			lock (((ICollection)QuestListFinished).SyncRoot)
 			{
 				m_questListFinished.Add(quest);
 			}
@@ -13883,7 +13878,7 @@ namespace DOL.GS
 		/// <returns>true if added, false if player is already doing the quest!</returns>
 		public bool AddQuest(AbstractQuest quest)
 		{
-			lock (QuestList)
+			lock (((ICollection)m_questList).SyncRoot)
 			{
 				if (IsDoingQuest(quest) != null)
 					return false;
@@ -13906,7 +13901,7 @@ namespace DOL.GS
 			if (questType == null)
 				return false;
 
-			lock (QuestListFinished)
+			lock (((ICollection)QuestListFinished).SyncRoot)
 			{
 				foreach (AbstractQuest q in m_questListFinished)
 				{
@@ -13935,7 +13930,7 @@ namespace DOL.GS
 		public int HasFinishedQuest(Type questType)
 		{
 			int counter = 0;
-			lock (QuestListFinished)
+			lock (((ICollection)QuestListFinished).SyncRoot)
 			{
 				foreach (AbstractQuest q in m_questListFinished)
 				{
@@ -13957,7 +13952,7 @@ namespace DOL.GS
 		/// <returns>the quest if player is doing the quest or null if not</returns>
 		public AbstractQuest IsDoingQuest(AbstractQuest quest)
 		{
-			lock (QuestList)
+			lock (((ICollection)m_questList).SyncRoot)
 			{
 				foreach (AbstractQuest q in m_questList)
 				{
@@ -13977,7 +13972,7 @@ namespace DOL.GS
 		/// <returns>the quest if player is doing the quest or null if not</returns>
 		public AbstractQuest IsDoingQuest(Type questType)
 		{
-			lock (QuestList)
+			lock (((ICollection)QuestList).SyncRoot)
 			{
 				foreach (AbstractQuest q in m_questList)
 				{
@@ -14000,10 +13995,9 @@ namespace DOL.GS
 			base.Notify(e, sender, args);
 
 			// events will only fire for currently active quests.
-			lock (QuestList)
+			lock (((ICollection)m_questList).SyncRoot)
 			{
-				List<AbstractQuest> cloneList = new List<AbstractQuest>(m_questList);
-				foreach (AbstractQuest q in cloneList)
+				foreach (AbstractQuest q in new List<AbstractQuest>(m_questList))
 				{
 					// player forwards every single notify message to all active quests
 					q.Notify(e, sender, args);
@@ -14076,7 +14070,7 @@ namespace DOL.GS
 		/// <returns>the level in the specified crafting if valid and -1 if not</returns>
 		public virtual int GetCraftingSkillValue(eCraftingSkill skill)
 		{
-			lock (CraftingLock)
+			lock (((ICollection)m_craftingSkills).SyncRoot)
 			{
 				if (!m_craftingSkills.ContainsKey(skill)) return -1;
 				return m_craftingSkills[skill];
@@ -14093,7 +14087,7 @@ namespace DOL.GS
 		{
 			if (skill == eCraftingSkill.NoCrafting) return false;
 
-			lock (CraftingLock)
+			lock (((ICollection)m_craftingSkills).SyncRoot)
 			{
 				AbstractCraftingSkill craftingSkill = CraftingMgr.getSkillbyEnum(skill);
 				if (craftingSkill != null && count >0)
@@ -14217,14 +14211,14 @@ namespace DOL.GS
 			if (CraftingPrimarySkill == eCraftingSkill.NoCrafting)
 				CraftingPrimarySkill = eCraftingSkill.BasicCrafting;
 
-			lock (CraftingLock)
+			lock (((ICollection)m_craftingSkills).SyncRoot)
 			{
 				if (m_craftingSkills.ContainsKey(skill))
 				{
 					AbstractCraftingSkill craftingSkill = CraftingMgr.getSkillbyEnum(skill);
-					if (craftingSkill != null)
+					if (craftingSkill != null && !m_craftingSkills.ContainsKey(skill))
 					{
-						m_craftingSkills.Add(skill, startValue);
+						m_craftingSkills[skill] = startValue;
 						Out.SendMessage("You gain skill in " + craftingSkill.Name + "! (" + startValue + ").", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						return true;
 					}
@@ -14286,7 +14280,7 @@ namespace DOL.GS
 
 			if (CraftingPrimarySkill != eCraftingSkill.NoCrafting)
 			{
-				lock (CraftingLock)
+				lock (((ICollection)m_craftingSkills).SyncRoot)
 				{
 					foreach (KeyValuePair<eCraftingSkill, int> de in m_craftingSkills)
 					{
@@ -14316,7 +14310,7 @@ namespace DOL.GS
 			{
 				CraftingPrimarySkill = (eCraftingSkill)DBCharacter.CraftingPrimarySkill;
 
-				lock (CraftingLock)
+				lock (((ICollection)m_craftingSkills).SyncRoot)
 				{
 					foreach (string skill in DBCharacter.SerializedCraftingSkills.SplitCSV())
 					{
@@ -14502,9 +14496,9 @@ namespace DOL.GS
 		/// <returns>true if trade has started</returns>
 		public bool OpenTrade(GamePlayer tradePartner)
 		{
-			lock (m_LockObject)
+			lock (Inventory)
 			{
-				lock (tradePartner)
+				lock (tradePartner.Inventory)
 				{
 					if (tradePartner.TradeWindow != null)
 						return false;
@@ -14533,7 +14527,7 @@ namespace DOL.GS
 		{
 			if (item == null) return false;
 
-			lock (m_LockObject)
+			lock (Inventory)
 			{
 				if (TradeWindow != null)
 				{

@@ -366,7 +366,7 @@ namespace DOL.GS
 				mobList.AddRange(GameServer.Database.SelectAllObjects<Mob>());
 			}
 
-			var mobsByRegionId = new Dictionary<ushort, List<Mob>>(512);
+			var mobsByRegionId = new Dictionary<ushort, List<Mob>>(10);
 			foreach (Mob mob in mobList)
 			{
 				List<Mob> list;

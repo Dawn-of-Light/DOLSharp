@@ -345,7 +345,7 @@ namespace DOL.GS
 		{
 			lock (((ICollection)m_relics).SyncRoot)
 			{
-				return new Dictionary<int, GameRelic>(m_relics);
+				return m_relics;
 			}
 		}
 		#endregion

@@ -108,7 +108,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Use this object to lock the guild member list
 		/// </summary>
-		public Object m_memberListLock = new Object();
+		//public Object m_memberListLock = new Object();
 
 		/// <summary>
 		/// This holds all players inside the guild
@@ -505,7 +505,7 @@ namespace DOL.GS
 		public bool AddOnlineMember(GamePlayer player)
 		{
 			if(player==null) return false;
-			lock (m_memberListLock)
+			lock (((ICollection)m_onlineGuildPlayers).SyncRoot)
 			{
 				if (!m_onlineGuildPlayers.ContainsKey(player.InternalID))
 				{
@@ -537,7 +537,7 @@ namespace DOL.GS
 		/// <returns>true if removed, false if not</returns>
 		public bool RemoveOnlineMember(GamePlayer player)
 		{
-			lock (m_memberListLock)
+			lock (((ICollection)m_onlineGuildPlayers).SyncRoot)
 			{
 				if (m_onlineGuildPlayers.ContainsKey(player.InternalID))
 				{
@@ -562,7 +562,7 @@ namespace DOL.GS
 		/// </summary>
 		public void ClearOnlineMemberList()
 		{
-			lock (m_memberListLock)
+			lock (((ICollection)m_onlineGuildPlayers).SyncRoot)
 			{
 				m_onlineGuildPlayers.Clear();
 			}
@@ -574,7 +574,7 @@ namespace DOL.GS
 		/// <returns>GuildMemberEntry</returns>
 		public GamePlayer GetOnlineMemberByID(string memberID)
 		{
-			lock (m_memberListLock)
+			lock (((ICollection)m_onlineGuildPlayers).SyncRoot)
 			{
 				if (m_onlineGuildPlayers.ContainsKey(memberID))
 					return m_onlineGuildPlayers[memberID];
@@ -836,7 +836,7 @@ namespace DOL.GS
 		/// <param name="loc">message location</param>
 		public void SendMessageToGuildMembers(string msg, PacketHandler.eChatType type, PacketHandler.eChatLoc loc)
 		{
-			lock (m_onlineGuildPlayers)
+			lock (((ICollection)m_onlineGuildPlayers).SyncRoot)
 			{
 				foreach (GamePlayer pl in m_onlineGuildPlayers.Values)
 				{
@@ -1034,12 +1034,11 @@ namespace DOL.GS
 			mes += ",\"" + player.Guild.Motd + '\"'; // Guild Motd
 			mes += ",\"" + player.Guild.Omotd + '\"'; // Guild oMotd
 			player.Out.SendMessage(mes, eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
-			player.Guild.SaveIntoDatabase();
 		}
 
 		public void UpdateGuildWindow()
 		{
-			lock (m_onlineGuildPlayers)
+			lock (((ICollection)m_onlineGuildPlayers).SyncRoot)
 			{
 				foreach (GamePlayer player in m_onlineGuildPlayers.Values)
 				{

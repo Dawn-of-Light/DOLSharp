@@ -207,8 +207,6 @@ namespace DOL.GS
 		/// <returns>The thread's stacktrace</returns>
 		public static StackTrace GetThreadStack(Thread thread)
 		{
-			#pragma warning disable 0618
-			thread.Suspend();
 			StackTrace trace;
 
 			try
@@ -220,11 +218,6 @@ namespace DOL.GS
 				//FIXME
 				trace = new StackTrace();
 			}
-			finally
-			{
-				thread.Resume();
-			}
-			#pragma warning restore 0618
 			
 			return trace;
 		}

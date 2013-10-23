@@ -120,13 +120,15 @@ namespace DOL.GS.Effects
 
 			lock (SyncRoot)
 			{
-				int index = m_effects.IndexOf(effect);
-				if (index < 0)
+				
+				if(m_effects.Contains(effect))
+					m_effects.Remove(effect);
+				else
 					return false;
-				m_effects.RemoveAt(index);
-				for (int i = index; i < m_effects.Count; i++)
+				
+				foreach (IGameEffect ig in m_effects)
 				{
-					changedEffects.Add(m_effects[i]);
+					changedEffects.Add(ig);
 				}
 			}
 

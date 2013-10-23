@@ -754,10 +754,12 @@ namespace DOL.GS
 				if(RegisteredLosEvents.ContainsKey(cachekey))
 				{
 					NotifyObjects(RegisteredLosEvents[cachekey], player, new LosCheckData(source, target, sent, losOK));
+					RegisteredLosEvents[cachekey].Clear();
 				}
 				if(RegisteredLosEvents.ContainsKey(rcachekey))
 				{
 					NotifyObjects(RegisteredLosEvents[rcachekey], player, new LosCheckData(target, source, sent, losOK));
+					RegisteredLosEvents[rcachekey].Clear();
 				}
 			}		
 		}
@@ -770,16 +772,9 @@ namespace DOL.GS
 		/// <param name="data">Check data for Args</param>
 		private static void NotifyObjects(IList<IDOLEventHandler> notifiers, GamePlayer player, LosCheckData data) 
 		{
-			// Lock notifiers list.
-			lock(((ICollection)notifiers).SyncRoot)
+			foreach(IDOLEventHandler notifier in notifiers)
 			{
-				foreach(IDOLEventHandler notifier in notifiers)
-				{
-					new HandleNotifyAction(notifier, GameObjectEvent.FinishedLosCheck, player, data).Start(1);					
-				}
-				
-				// Clear at end, so a new list can be made for next call
-				notifiers.Clear();
+				new HandleNotifyAction(notifier, GameObjectEvent.FinishedLosCheck, player, data).Start(1);					
 			}
 		}
 		
@@ -1275,12 +1270,15 @@ namespace DOL.GS
 			
 			lock(((ICollection)ClientChecks).SyncRoot)
 			{
+				
 				foreach(GamePlayer toClean in (from clients in ClientChecks where clients.Value < obsoleteTime select clients.Key).Take(MAX_CLEANUP_ENTRIES))
 				{
 					ClientChecks.Remove(toClean);
-					
-					if(ClientStats.ContainsKey(toClean))
-						ClientStats.Remove(toClean);
+					lock(((ICollection)ClientStats).SyncRoot)
+					{
+						if(ClientStats.ContainsKey(toClean))
+							ClientStats.Remove(toClean);
+					}
 				}
 			}
 		}

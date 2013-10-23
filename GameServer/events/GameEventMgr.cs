@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
@@ -84,11 +85,11 @@ namespace DOL.Events
 		/// <summary>
 		/// A lock used to access the event collections of livings
 		/// </summary>
-		private static readonly ReaderWriterLockSlim Lock;
+		//private static readonly ReaderWriterLockSlim Lock;
 
 		static GameEventMgr()
 		{
-			Lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+			//Lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
 			m_gameObjectEventCollections = new Dictionary<object, DOLEventHandlerCollection>();
 			m_globalHandlerCollection = new DOLEventHandlerCollection();
 		}
@@ -242,7 +243,7 @@ namespace DOL.Events
 			if(!e.IsValidFor(obj))
 				throw new ArgumentException("Object is not valid for this event type", "obj");
 
-			if(Lock.TryEnterUpgradeableReadLock(LOCK_TIMEOUT))
+			lock(((ICollection)m_gameObjectEventCollections).SyncRoot)
 			{
 				try
 				{
@@ -252,21 +253,15 @@ namespace DOL.Events
 					{
 						col = new DOLEventHandlerCollection();
 
-						if (Lock.TryEnterWriteLock(LOCK_TIMEOUT))
+						try
 						{
-							try
-							{
-								m_gameObjectEventCollections.Add(obj, col);
-							}
-							finally
-							{
-								Lock.ExitWriteLock();
-							}
+							m_gameObjectEventCollections.Add(obj, col);
 						}
-						else
+						catch
 						{
 							log.ErrorFormat("Timeout exceeded on attempt to AddHandler for object: {0}, event: {1}", obj.ToString(), e.Name);
 						}
+						
 					}
 
 					if(unique)
@@ -278,9 +273,9 @@ namespace DOL.Events
 						col.AddHandler(e, del);
 					}
 				}
-				finally
+				catch
 				{
-					Lock.ExitUpgradeableReadLock();
+					log.ErrorFormat("Timeout exceeded on attempt to AddHandler for object: {0}, event: {1}", obj.ToString(), e.Name);
 				}
 			}
 		}
@@ -325,20 +320,16 @@ namespace DOL.Events
 
 			DOLEventHandlerCollection col = null;
 
-			if (Lock.TryEnterReadLock(LOCK_TIMEOUT))
+			lock (((ICollection)m_gameObjectEventCollections).SyncRoot)
 			{
 				try
 				{
 					m_gameObjectEventCollections.TryGetValue(obj, out col);
 				}
-				finally
+				catch
 				{
-					Lock.ExitReadLock();
+					log.ErrorFormat("Timeout exceeded on attempt to RemoveHandler for object: {0}, event: {1}", obj.ToString(), e.Name);
 				}
-			}
-			else
-			{
-				log.ErrorFormat("Timeout exceeded on attempt to RemoveHandler for object: {0}, event: {1}", obj.ToString(), e.Name);
 			}
 
 			if (col != null)
@@ -356,41 +347,34 @@ namespace DOL.Events
 
 			DOLEventHandlerCollection col = null;
 
-			if (Lock.TryEnterReadLock(LOCK_TIMEOUT))
+			lock (((ICollection)m_gameObjectEventCollections).SyncRoot)
 			{
 				try
 				{
 					m_gameObjectEventCollections.TryGetValue(obj, out col);
 				}
-				finally
+				catch
 				{
-					Lock.ExitReadLock();
+					log.ErrorFormat("Timeout exceeded (Read) on attempt to RemoveAllHandlersForObject: {0}", obj.ToString());
 				}
-			}
-			else
-			{
-				log.ErrorFormat("Timeout exceeded (Read) on attempt to RemoveAllHandlersForObject: {0}", obj.ToString());
 			}
 
 			if (col != null)
 			{
 				col.RemoveAllHandlers();
 
-				if (Lock.TryEnterWriteLock(LOCK_TIMEOUT))
+				lock (((ICollection)m_gameObjectEventCollections).SyncRoot)
 				{
 					try
 					{
 						m_gameObjectEventCollections.Remove(obj);
 					}
-					finally
+					catch
 					{
-						Lock.ExitWriteLock();
+						log.ErrorFormat("Timeout exceeded (Write) on attempt to RemoveAllHandlersForObject: {0}", obj.ToString());
 					}
 				}
-				else
-				{
-					log.ErrorFormat("Timeout exceeded (Write) on attempt to RemoveAllHandlersForObject: {0}", obj.ToString());
-				}
+
 			}
 		}
 
@@ -403,20 +387,16 @@ namespace DOL.Events
 		{
 			if(deep)
 			{
-				if(Lock.TryEnterWriteLock(LOCK_TIMEOUT))
+				lock(((ICollection)m_gameObjectEventCollections).SyncRoot)
 				{
 					try
 					{
 						m_gameObjectEventCollections.Clear();
 					}
-					finally
+					catch
 					{
-						Lock.ExitWriteLock();
+						log.ErrorFormat("Timeout exceeded on attempt to RemoveAllHandlers.");
 					}
-				}
-				else
-				{
-					log.ErrorFormat("Timeout exceeded on attempt to RemoveAllHandlers.");
 				}
 			}
 
@@ -477,23 +457,19 @@ namespace DOL.Events
 			{
 				DOLEventHandlerCollection col;
 
-				if(Lock.TryEnterReadLock(LOCK_TIMEOUT))
+				lock(((ICollection)m_gameObjectEventCollections).SyncRoot)
 				{
 					try
 					{
 						m_gameObjectEventCollections.TryGetValue(sender, out col);
+						
+						if(col != null)
+							col.Notify(e, sender, eArgs);
 					}
-					finally
+					catch
 					{
-						Lock.ExitReadLock();
+						log.ErrorFormat("Timeout exceeded on attempt to Notify event: {0} for object: {1}", e.Name, sender.ToString());
 					}
-
-					if(col != null)
-						col.Notify(e, sender, eArgs);
-				}
-				else
-				{
-					log.ErrorFormat("Timeout exceeded on attempt to Notify event: {0} for object: {1}", e.Name, sender.ToString());
 				}
 			}
 

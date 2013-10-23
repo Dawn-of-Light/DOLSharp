@@ -266,7 +266,7 @@ namespace DOL.GS
 		protected static readonly Dictionary<int, List<RealmAbility>> m_classRealmAbilities = new Dictionary<int, List<RealmAbility>>();
 
 		// all spells by id
-		protected static Dictionary<int, Spell> m_spells = new Dictionary<int, Spell>(5000);
+		protected static Dictionary<int, Spell> m_spells = new Dictionary<int, Spell>();
 
 		// all DB Spells by id
 		protected static Dictionary<int, DBSpell> m_dbSpells = new Dictionary<int, DBSpell>();
@@ -302,8 +302,8 @@ namespace DOL.GS
 		/// <summary>
 		/// Table to hold the race resists
 		/// </summary>
-		protected static Dictionary<int, int[]> m_raceResists;
-		private static ReaderWriterLockSlim m_raceResistLock = new ReaderWriterLockSlim();
+		protected static Dictionary<int, int[]> m_raceResists = new Dictionary<int, int[]>();
+		//private static ReaderWriterLockSlim m_raceResistLock = new ReaderWriterLockSlim();
 
 		/// <summary>
 		/// Initialize the object type hashtable
@@ -746,53 +746,39 @@ namespace DOL.GS
 			}
 			catch( Exception e )
 			{
-				m_raceResistLock.EnterWriteLock();
-
-				try
-				{
-					m_raceResists = new Dictionary<int, int[]>( 1 );
-				}
-				finally
-				{
-					m_raceResistLock.ExitWriteLock();
-				}
 
 				log.Error( e.StackTrace, e );
 				return;
 			}
 
-			m_raceResistLock.EnterWriteLock();
-
-			try
+			lock(((ICollection)m_raceResists).SyncRoot)
 			{
-				if( m_raceResists == null )
-				{
-					m_raceResists = new Dictionary<int, int[]>(races.Count);
-				}
-				else
+				try
 				{
 					m_raceResists.Clear();
+	
+					foreach( Race race in races )
+					{
+						m_raceResists.Add( race.ID, new int[10] );
+						m_raceResists[race.ID][0] = race.ResistBody;
+						m_raceResists[race.ID][1] = race.ResistCold;
+						m_raceResists[race.ID][2] = race.ResistCrush;
+						m_raceResists[race.ID][3] = race.ResistEnergy;
+						m_raceResists[race.ID][4] = race.ResistHeat;
+						m_raceResists[race.ID][5] = race.ResistMatter;
+						m_raceResists[race.ID][6] = race.ResistSlash;
+						m_raceResists[race.ID][7] = race.ResistSpirit;
+						m_raceResists[race.ID][8] = race.ResistThrust;
+						m_raceResists[race.ID][9] = race.ResistNatural;
+					}
 				}
-
-				foreach( Race race in races )
+				catch(Exception e)
 				{
-					m_raceResists.Add( race.ID, new int[10] );
-					m_raceResists[race.ID][0] = race.ResistBody;
-					m_raceResists[race.ID][1] = race.ResistCold;
-					m_raceResists[race.ID][2] = race.ResistCrush;
-					m_raceResists[race.ID][3] = race.ResistEnergy;
-					m_raceResists[race.ID][4] = race.ResistHeat;
-					m_raceResists[race.ID][5] = race.ResistMatter;
-					m_raceResists[race.ID][6] = race.ResistSlash;
-					m_raceResists[race.ID][7] = race.ResistSpirit;
-					m_raceResists[race.ID][8] = race.ResistThrust;
-					m_raceResists[race.ID][9] = race.ResistNatural;
+					log.Error( e.StackTrace, e );
+					return;
 				}
 			}
-			finally
-			{
-				m_raceResistLock.ExitWriteLock();
-			}
+		
 		}
 
 		private static void RegisterPropertyNames()
@@ -1312,8 +1298,8 @@ namespace DOL.GS
 
 			var spelldb = GameServer.Database.SelectAllObjects<DBSpell>();
 
-			m_dbSpells = new Dictionary<int, DBSpell>(spelldb.Count);
-			m_spells = new Dictionary<int, Spell>();
+			m_dbSpells.Clear();
+			m_spells.Clear();
 
 			foreach (DBSpell spell in spelldb)
 			{
@@ -1336,7 +1322,7 @@ namespace DOL.GS
 		{
 			// load all spell lines
 			var dbo = GameServer.Database.SelectAllObjects<DBSpellLine>();
-			m_spellLists = new Dictionary<string, List<Spell>>();
+			m_spellLists.Clear();
 			foreach (DBSpellLine line in dbo)
 			{
 				List<Spell> spell_list = new List<Spell>();
@@ -1379,7 +1365,7 @@ namespace DOL.GS
 
 			var spelldb = GameServer.Database.SelectAllObjects<DBSpell>();
 
-			m_dbSpells = new Dictionary<int, DBSpell>(spelldb.Count);
+			m_dbSpells.Clear();
 
 			int count = 0;
 
@@ -2350,7 +2336,7 @@ namespace DOL.GS
 			{
 				Spell spell = new Spell(dbSpell, 1);
 
-				lock (m_spells)
+				lock (((ICollection)m_spells).SyncRoot)
 				{
 					if (m_spells.ContainsKey(spellID))
 					{
@@ -2440,36 +2426,37 @@ namespace DOL.GS
 
 			int resistValue = 0;
 
-			m_raceResistLock.EnterReadLock();
-
-			try
+			lock(((ICollection)m_raceResists).SyncRoot)
 			{
-				if( m_raceResists.ContainsKey( race ) )
+				try
 				{
-					int resistIndex;
-
-					if( type == eResist.Natural )
-						resistIndex = 9;
-					else
-						resistIndex = (int)type - (int)eProperty.Resist_First;
-
-					if( resistIndex < m_raceResists[race].Length )
+					if( m_raceResists.ContainsKey( race ) )
 					{
-						resistValue = m_raceResists[race][resistIndex];
+						int resistIndex;
+	
+						if( type == eResist.Natural )
+							resistIndex = 9;
+						else
+							resistIndex = (int)type - (int)eProperty.Resist_First;
+	
+						if( resistIndex < m_raceResists[race].Length )
+						{
+							resistValue = m_raceResists[race][resistIndex];
+						}
+						else
+						{
+							log.Warn( "No resists defined for type:  " + type.ToString() );
+						}
 					}
 					else
 					{
-						log.Warn( "No resists defined for type:  " + type.ToString() );
+						log.Warn( "No resists defined for race:  " + race );
 					}
 				}
-				else
+				catch
 				{
-					log.Warn( "No resists defined for race:  " + race );
+					return 0;
 				}
-			}
-			finally
-			{
-				m_raceResistLock.ExitReadLock();
 			}
 
 			return resistValue;

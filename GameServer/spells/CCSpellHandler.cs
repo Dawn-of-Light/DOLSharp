@@ -126,7 +126,7 @@ namespace DOL.GS.Spells
 			{
 				MasteryofConcentrationAbility ra = Caster.GetAbility<MasteryofConcentrationAbility>();
 				if (ra != null)
-					mocFactor = System.Math.Round((double)ra.GetAmountForLevel(ra.Level) * 25 / 100, 2);
+					mocFactor = System.Math.Round((double)ra.GetAmountForLevel(ra.Level) / 100, 2);
 				duration = (double)Math.Round(duration * mocFactor);
 			}
 

@@ -194,9 +194,9 @@ namespace DOL.GS.Spells
 			/// </summary>
 			protected override void OnTick()
 			{
-				IDictionary effects = m_handler.m_concEffects;
+				Dictionary<GameSpellEffect, GameSpellEffect> effects = m_handler.m_concEffects;
 				GameLiving caster = (GameLiving)m_actionSource;
-				lock (effects)
+				lock (((ICollection)effects).SyncRoot)
 				{
 					if (effects.Count <= 0)
 					{

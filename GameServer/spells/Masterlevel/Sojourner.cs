@@ -198,9 +198,11 @@ namespace DOL.GS.Spells
 
         private void Zephyr(GamePlayer target)
         {
-            if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
-            GameNPC npc = new GameNPC();
-
+        	GameNPC npc = new GameNPC();
+        	
+            if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) 
+            	return;
+            
             m_npc = npc;
 
             npc.Realm = Caster.Realm;
@@ -337,7 +339,7 @@ namespace DOL.GS.Spells
 
 		public void ZephyrCheckLOS(GamePlayer checker, GameObject source, GameObject target, bool losOK, EventArgs args, PropertyCollection tempProperties)
         {
-            if (losOK)
+            if (losOK && m_npc != null && m_loc != null)
 				m_npc.WalkTo(m_loc.X, m_loc.Y, m_loc.Z, 100);
         }
 		

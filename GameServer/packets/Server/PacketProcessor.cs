@@ -802,18 +802,16 @@ namespace DOL.GS.PacketHandler
 						// Suspend/Resume are not being used for thread synchronization (very bad).
 						// It may be possible to get the StackTrace some other way, but this works for now
 						// So, the related warning is disabled
-						#pragma warning disable 0618
-						thread.Suspend();
+
 						StackTrace trace;
 						try
 						{
-							trace = new StackTrace(thread, true);
+							trace = Util.GetThreadStack(thread);
 						}
-						finally
+						catch
 						{
-							thread.Resume();
+							trace = new StackTrace();
 						}
-						#pragma warning restore 0618
 						
 						builder.Append("Stack for thread from account: ");
 						if (client != null && client.Account != null)

@@ -310,7 +310,7 @@ namespace DOL.GS.ServerRules
 		/// <returns>true if attack is allowed</returns>
 		public virtual bool IsAllowedToAttack(GameLiving attacker, GameLiving defender, bool quiet)
 		{
-			if (attacker == null || defender == null)
+			if (attacker == null || defender == null || attacker.ObjectState != GameLiving.eObjectState.Active || defender.ObjectState != GameLiving.eObjectState.Active)
 				return false;
 
 			//dead things can't attack
@@ -364,7 +364,7 @@ namespace DOL.GS.ServerRules
 			// Your pet can only attack stealthed players you have selected
 			if (defender.IsStealthed && attacker is GameNPC)
 				if (((attacker as GameNPC).Brain is IControlledBrain) &&
-				    defender is GamePlayer &&
+				    defender is GamePlayer && playerAttacker != null &&
 				    playerAttacker.TargetObject != defender)
 					return false;
 			

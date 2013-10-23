@@ -231,6 +231,7 @@ namespace DOL.Mail
 							}
 						}
 					}
+					configFileReader.Close();
 					return archiveList;
 				}
 				else

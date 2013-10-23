@@ -78,7 +78,7 @@ namespace DOL.GS.Spells
 			if (m_concSpells == null)
 				m_concSpells = new List<IConcentrationEffect>(20);
 
-			lock (m_concSpells) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (((ICollection)m_concSpells).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				if (m_concSpells.Contains(effect))
 				{
@@ -124,7 +124,7 @@ namespace DOL.GS.Spells
 			if (m_concSpells == null)
 				return;
 
-			lock (m_concSpells) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (((ICollection)m_concSpells).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				if (m_concSpells.Contains(effect))
 				{
@@ -204,7 +204,7 @@ namespace DOL.GS.Spells
 		{
 			if (m_concSpells == null)
 				return null;
-			lock (m_concSpells) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (((ICollection)m_concSpells).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				foreach (IConcentrationEffect effect in m_concSpells)
 				{
@@ -225,7 +225,7 @@ namespace DOL.GS.Spells
 			List<IConcentrationEffect> list = new List<IConcentrationEffect>();
 
 			if (m_concSpells == null) return list;
-			lock (m_concSpells) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (((ICollection)m_concSpells).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				foreach (IConcentrationEffect effect in m_concSpells)
 				{
@@ -244,7 +244,11 @@ namespace DOL.GS.Spells
 			get
 			{
 				if (m_concSpells == null) return null;
-				return (IConcentrationEffect)m_concSpells[index];
+				
+				if(index < m_concSpells.Count && index >= 0)
+					return (IConcentrationEffect)m_concSpells[index];
+				
+				return null;
 			}
 		}
 

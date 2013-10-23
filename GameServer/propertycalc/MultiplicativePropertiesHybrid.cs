@@ -90,9 +90,12 @@ namespace DOL.GS.PropertyCalc
 		/// <param name="key">The key use to add the value</param>
 		public void Remove(int index, object key)
 		{
-			lock (m_LockObject)
+			lock (((ICollection)m_properties).SyncRoot)
 			{
-				PropertyEntry entry = (PropertyEntry)m_properties[index];
+				PropertyEntry entry = null;
+				if(m_properties.ContainsKey(index))
+					entry = m_properties[index];
+				
 				if (entry == null) return;
 				if (entry.values == null) return;
 				
@@ -119,8 +122,11 @@ namespace DOL.GS.PropertyCalc
 		public double Get(int index)
 		{
 			PropertyEntry entry = null;
-			if(m_properties.ContainsKey(index))
-				entry = m_properties[index];
+			lock(((ICollection)m_properties).SyncRoot)
+			{
+				if(m_properties.ContainsKey(index))
+					entry = m_properties[index];
+			}
 			
 			if (entry == null) return 1.0;
 			return entry.cachedValue;
