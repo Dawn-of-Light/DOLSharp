@@ -273,7 +273,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("system", "enable_audit_log", "Whether or not to enable the audit log", false)]
 		public static bool ENABLE_AUDIT_LOG;
-
+		
+		/// <summary>
+		/// Enable a periodic server shutdown. If you run your server into a batch loop, this performs a restart.
+		/// </summary>
+		[ServerProperty("system", "hours_uptime_between_shutdown", "Hours between a scheduled server shutdown (-1 = no scheduled restart)", -1)]
+		public static int HOURS_UPTIME_BETWEEN_SHUTDOWN;
 		#endregion
 
 		#region LOGGING
