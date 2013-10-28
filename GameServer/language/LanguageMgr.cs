@@ -528,7 +528,7 @@ namespace DOL.Language
 
 
 		/// <summary>
-		/// This returns the last part of the translation text id id actual translation fails
+		/// This returns the last part of the translation text id if actual translation fails
 		/// This helps to avoid returning strings that are too long and overflow the client
 		/// When the name overflows players my not be targetable or even visible!
 		/// PLEASE DO NOT REMOVE THIS FUNCTIONALITY  - tolakram
