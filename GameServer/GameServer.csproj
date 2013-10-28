@@ -1316,6 +1316,7 @@
     <Compile Include="realmabilities\effects\rr5\BadgeOfValorEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\BladeBarrierEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\BlindingDustEffect.cs" />
+    <Compile Include="realmabilities\effects\rr5\BlooddrinkingEffects.cs" />
     <Compile Include="realmabilities\effects\rr5\BoilingCauldronEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\CallOfDarknessEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\CombatAwarenessEffect.cs" />
@@ -1330,6 +1331,7 @@
     <Compile Include="realmabilities\effects\rr5\MarkofPreyEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\MinionRescueEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\NaturesWombEffect.cs" />
+    <Compile Include="realmabilities\effects\rr5\OverwhelmEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\RemedyEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\RestorativeMindEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\RetributionOfTheFaithfulEffect.cs" />
@@ -1337,6 +1339,7 @@
     <Compile Include="realmabilities\effects\rr5\SearingPetEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\SelectiveBlindnessEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\SelflessDevotionEffect.cs" />
+    <Compile Include="realmabilities\effects\rr5\ShadowShroudEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\ShieldOfImmunityEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\ShieldTripEffect.cs" />
     <Compile Include="realmabilities\effects\rr5\SoldiersCitadelEffect.cs" />
@@ -1365,6 +1368,7 @@
     <Compile Include="realmabilities\handlers\rr5\BladeBarrierAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\BlindingDustAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\BlissfulIgnoranceAbility.cs" />
+    <Compile Include="realmabilities\handlers\rr5\BlooddrinkingAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\BoilingCauldronAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\CallOfDarknessAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\CalmingNotesAbility.cs" />
@@ -1383,6 +1387,7 @@
     <Compile Include="realmabilities\handlers\rr5\MarkofPreyAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\MinionRescueAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\NaturesWombAbility.cs" />
+    <Compile Include="realmabilities\handlers\rr5\OverwhelmAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\RemedyAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\ResoluteMinion.cs" />
     <Compile Include="realmabilities\handlers\rr5\RestorativeMindAbility.cs" />
@@ -1391,6 +1396,7 @@
     <Compile Include="realmabilities\handlers\rr5\SearingPetAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\SelectiveBlindnessAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\SelflessDevotionAbility.cs" />
+    <Compile Include="realmabilities\handlers\rr5\ShadowShroudAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\ShieldOfImmunityAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\ShieldTripAbility.cs" />
     <Compile Include="realmabilities\handlers\rr5\SoldiersCitadelAbility.cs" />
