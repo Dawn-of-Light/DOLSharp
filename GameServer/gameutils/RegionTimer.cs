@@ -33,6 +33,11 @@ namespace DOL.GS
 	public sealed class RegionTimer : GameTimer
 	{
 		/// <summary>
+		/// The Locking Object
+		/// </summary>
+		private object LockObject = new object();
+		
+		/// <summary>
 		/// The timer callback
 		/// </summary>
 		private RegionTimerCallback m_callback;
@@ -70,7 +75,7 @@ namespace DOL.GS
 			{
 				if (m_properties == null)
 				{
-					lock (this)
+					lock (LockObject)
 					{
 						if (m_properties == null)
 						{
@@ -123,7 +128,7 @@ namespace DOL.GS
 		/// Constructs a new region timer
 		/// </summary>
 		/// <param name="time"></param>
-		public RegionTimer(TimeManager time)
+		public RegionTimer(GameScheduler time)
 			: base(time)
 		{
 		}

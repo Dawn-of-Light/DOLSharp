@@ -454,7 +454,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public bool CheckTaskExpired()
 		{
-			if(TaskActive && DateTime.Compare(TimeOut, DateTime.Now) < 0)
+			if(TaskActive && DateTime.Compare(TimeOut, DateTime.UtcNow) < 0)
 			{
 				//DOLConsole.WriteError("TimeOut: "+m_Tasks[i].TimeOut+" - Now: "+DateTime.Now);
 				ExpireTask();
@@ -542,7 +542,7 @@ namespace DOL.GS.Quests
 				player.Out.SendMessage("You cannot do more than "+MaxTasksDone(player.Level).ToString()+" tasks at your level!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			else if (player.TempProperties.getProperty<int>(CHECK_TASK_TICK) > Environment.TickCount)
+			else if (player.TempProperties.getProperty<int>(CHECK_TASK_TICK) > GameTimer.GetTickCount())
 			{
 				player.Out.SendMessage("I have no tasks for you at the moment. Come back sometime later, perhaps then you can help we with something.",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 				return false;
@@ -555,7 +555,7 @@ namespace DOL.GS.Quests
 			{
 				player.Out.SendMessage("I have no tasks for you at the moment. Come back sometime later, perhaps then you can help we with something.",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 				// stored time of try to disable task for defined time.
-				player.TempProperties.setProperty(CHECK_TASK_TICK, Environment.TickCount + CHECK_TASK_DELAY);
+				player.TempProperties.setProperty(CHECK_TASK_TICK, GameTimer.GetTickCount() + CHECK_TASK_DELAY);
 				return false;
 			}
 		}

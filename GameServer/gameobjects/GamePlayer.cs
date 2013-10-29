@@ -55,7 +55,6 @@ namespace DOL.GS
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		private readonly object m_LockObject = new object();
-
 		#region Client/Character/VariousFlags
 
 
@@ -83,6 +82,19 @@ namespace DOL.GS
 		/// the world
 		/// </summary>
 		protected bool m_enteredGame;
+		
+		/// <summary>
+		/// Holds the objects around us
+		/// </summary>
+		public readonly Dictionary<GameLiving, bool> m_livingInVisibility = new Dictionary<GameLiving, bool>();
+		
+		public Dictionary<GameLiving, bool> LivingInVisibility
+		{
+			get
+			{
+				return m_livingInVisibility;
+			}
+		}
 		/// <summary>
 		/// Holds the objects that need update
 		/// </summary>
@@ -90,13 +102,13 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the index into the last update array
 		/// </summary>
-		protected byte m_lastUpdateArray;
+		protected bool m_lastUpdateArray;
 		/// <summary>
 		/// Holds the tickcount when the objects around this player
 		/// were checked the last time for new npcs. Will be done
 		/// every 250ms in WorldMgr.
 		/// </summary>
-		protected int m_lastWorldUpdate;
+		protected long m_lastWorldUpdate;
 
 		/// <summary>
 		/// Is this player being 'jumped' to a new location?
@@ -225,7 +237,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				if (m_lastUpdateArray == 0)
+				if (m_lastUpdateArray == false)
 					return m_objectUpdates[0];
 				return m_objectUpdates[1];
 			}
@@ -238,7 +250,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				if (m_lastUpdateArray == 0)
+				if (m_lastUpdateArray == false)
 					return m_objectUpdates[1];
 				return m_objectUpdates[0];
 			}
@@ -249,10 +261,7 @@ namespace DOL.GS
 		/// </summary>
 		public void SwitchUpdateArrays()
 		{
-			if (m_lastUpdateArray == 0)
-				m_lastUpdateArray = 1;
-			else
-				m_lastUpdateArray = 0;
+			m_lastUpdateArray = !m_lastUpdateArray;
 		}
 
 		/// <summary>
@@ -268,7 +277,10 @@ namespace DOL.GS
 		/// </summary>
 		public IPacketLib Out
 		{
-			get { return Client.Out; }
+			get 
+			{
+				return Client.Out; 
+			}
 		}
 
 		/// <summary>
@@ -697,7 +709,7 @@ namespace DOL.GS
 				{
 					WorldMgr.RvRLinkDeadPlayers.Remove(this.m_InternalID);
 				}
-				WorldMgr.RvRLinkDeadPlayers.Add(this.m_InternalID, DateTime.Now);
+				WorldMgr.RvRLinkDeadPlayers.Add(this.m_InternalID, DateTime.UtcNow);
 			}
 		}
 
@@ -877,7 +889,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The last time we did update the world around us
 		/// </summary>
-		public int LastWorldUpdate
+		public long LastWorldUpdate
 		{
 			get { return m_lastWorldUpdate; }
 			set { m_lastWorldUpdate = value; }
@@ -1060,7 +1072,7 @@ namespace DOL.GS
 		/// <summary>
 		/// tick when player is died
 		/// </summary>
-		protected int m_deathTick;
+		protected long m_deathTick;
 
 		/// <summary>
 		/// choosed the player to release as soon as possible?
@@ -1184,7 +1196,7 @@ namespace DOL.GS
 				}
 				m_releaseType = releaseCommand;
 				// we use realtime, because timer window is realtime
-				int diff = m_deathTick - Environment.TickCount + RELEASE_MINIMUM_WAIT * 1000;
+				long diff = m_deathTick - GameTimer.GetTickCount() + RELEASE_MINIMUM_WAIT * 1000;
 				if (diff >= 1000)
 				{
 					if (m_automaticRelease)
@@ -1556,7 +1568,7 @@ namespace DOL.GS
 		{
 			if (IsAlive)
 				return 0;
-			int diffToRelease = Environment.TickCount - m_deathTick;
+			long diffToRelease = GameTimer.GetTickCount() - m_deathTick;
 			if (m_automaticRelease && diffToRelease > RELEASE_MINIMUM_WAIT * 1000)
 			{
 				Release(m_releaseType, true);
@@ -1970,7 +1982,7 @@ namespace DOL.GS
 				if (Level >= 48)
 					return 1;
 				
-				TimeSpan t = new TimeSpan((long)(DateTime.Now.Ticks - DBCharacter.LastFreeLeveled.Ticks));
+				TimeSpan t = new TimeSpan((long)(DateTime.UtcNow.Ticks - DBCharacter.LastFreeLeveled.Ticks));
 				if (t.Days >= freelevel_days)
 				{
 					if (Level >= DBCharacter.LastFreeLevel + 2)
@@ -7999,7 +8011,7 @@ namespace DOL.GS
 				}
 				m_automaticRelease = m_releaseType == eReleaseType.Duel;
 				m_releasePhase = 0;
-				m_deathTick = Environment.TickCount; // we use realtime, because timer window is realtime
+				m_deathTick = GameTimer.GetTickCount(); // we use realtime, because timer window is realtime
 
 				Out.SendTimerWindow(LanguageMgr.GetTranslation(Client.Account.Language, "System.ReleaseTimer"), (m_automaticRelease ? RELEASE_MINIMUM_WAIT : RELEASE_TIME));
 				m_releaseTimer = new RegionTimer(this);
@@ -10520,7 +10532,7 @@ namespace DOL.GS
 			//Set the new destination
 			//Current Speed = 0 when moved ... else X,Y,Z continue to be modified
 			CurrentSpeed = 0;
-			MovementStartTick = Environment.TickCount;
+			MovementStartTick = GameTimer.GetTickCount();
 			Point3D originalPoint = new Point3D(X, Y, Z);
 			X = x;
 			Y = y;
@@ -10529,13 +10541,14 @@ namespace DOL.GS
 
 			//Remove the last update tick property, to prevent speedhack messages during zoning and teleporting!
 			TempProperties.removeProperty(PlayerPositionUpdateHandler.LASTMOVEMENTTICK);
+			TempProperties.removeProperty(PlayerPositionUpdateHandler.LASTCPSTICK);
 			//If the destination is in another region
 			if (regionID != CurrentRegionID)
 			{
 				//Set our new region
 				CurrentRegionID = regionID;
 
-				LastWorldUpdate = Environment.TickCount;
+				LastWorldUpdate = GameTimer.GetTickCount();
 				CurrentUpdateArray.SetAll(false);
 				HousingUpdateArray = null;
 
@@ -10606,7 +10619,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void RefreshWorld()
 		{
-			LastWorldUpdate = Environment.TickCount;
+			LastWorldUpdate = GameTimer.GetTickCount();
 			CurrentUpdateArray.SetAll(false);
 			HousingUpdateArray = null;
 
@@ -10658,7 +10671,7 @@ namespace DOL.GS
 					b.Author = "SERVER";
 					b.Ip = Client.TcpEndpointAddress;
 					b.Account = Client.Account.Name;
-					b.DateBan = DateTime.Now;
+					b.DateBan = DateTime.UtcNow;
 					b.Type = "B";
 					b.Reason = "X/Y/Zone : " + X + "/" + Y + "/" + CurrentRegion.ID;
 					GameServer.Database.AddObject(b);
@@ -11002,12 +11015,12 @@ namespace DOL.GS
 		}
 
 
-		private int m_lastPositionUpdateTick = 0;
+		private long m_lastPositionUpdateTick = 0;
 
 		/// <summary>
 		/// The environment tick count when this players position was last updated
 		/// </summary>
-		public int LastPositionUpdateTick
+		public long LastPositionUpdateTick
 		{
 			get { return m_lastPositionUpdateTick; }
 			set { m_lastPositionUpdateTick = value; }
@@ -12576,7 +12589,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				DateTime rightNow = DateTime.Now;
+				DateTime rightNow = DateTime.UtcNow;
 				DateTime oldLast = DBCharacter.LastPlayed;
 				// Get the total amount of time played between now and lastplayed
 				// This is safe as lastPlayed is updated on char load.
@@ -13043,7 +13056,7 @@ namespace DOL.GS
 			m_previousLoginDate = m_dbCharacter.LastPlayed;
 
 			// Has to be updated on load to ensure time offline isn't added to character /played.
-			m_dbCharacter.LastPlayed = DateTime.Now;
+			m_dbCharacter.LastPlayed = DateTime.UtcNow;
 
 			m_titles.Clear();
 			m_titles.AddRange(PlayerTitleMgr.GetPlayerTitles(this));
@@ -13087,7 +13100,7 @@ namespace DOL.GS
 				SaveSkillsToCharacter();
 				SaveCraftingSkills();
 				m_dbCharacter.PlayedTime = PlayedTime;  //We have to set the PlayedTime on the character before setting the LastPlayed
-				m_dbCharacter.LastPlayed = DateTime.Now;
+				m_dbCharacter.LastPlayed = DateTime.UtcNow;
 
 				m_dbCharacter.ActiveWeaponSlot = (byte)((byte)ActiveWeaponSlot | (byte)ActiveQuiverSlot);
 				if (m_stuckFlag)
@@ -16188,7 +16201,7 @@ namespace DOL.GS
 				newStep.MLLevel = mlLevel;
 				newStep.MLStep = step;
 				newStep.StepCompleted = true;
-				newStep.ValidationDate = DateTime.Now;
+				newStep.ValidationDate = DateTime.UtcNow;
 				m_mlSteps.Add(newStep);
 
 				// Add it in DB
@@ -16322,9 +16335,9 @@ namespace DOL.GS
 			m_objectUpdates[0] = new BitArray(Properties.REGION_MAX_OBJECTS);
 			m_objectUpdates[1] = new BitArray(Properties.REGION_MAX_OBJECTS);
 			m_housingUpdateArray = null;
-			m_lastUpdateArray = 0;
+			m_lastUpdateArray = false;
 			m_canFly = false;
-			m_lastWorldUpdate = Environment.TickCount;
+			m_lastWorldUpdate = GameTimer.GetTickCount();
 
 			CreateInventory();
 			GameEventMgr.AddHandler(m_inventory, PlayerInventoryEvent.ItemEquipped, new DOLEventHandler(OnItemEquipped));

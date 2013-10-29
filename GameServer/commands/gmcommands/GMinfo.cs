@@ -591,7 +591,7 @@ namespace DOL.GS.Commands
 					name = house.Name;
 		
 					int level = house.Model - ((house.Model - 1)/4)*4;
-					TimeSpan due = (house.LastPaid.AddDays(ServerProperties.Properties.RENT_DUE_DAYS).AddHours(1) - DateTime.Now);
+					TimeSpan due = (house.LastPaid.AddDays(ServerProperties.Properties.RENT_DUE_DAYS).AddHours(1) - DateTime.UtcNow);
 					
 					info.Add("  ------- HOUSE ------\n");
 					info.Add(LanguageMgr.GetTranslation(client.Account.Language, "House.SendHouseInfo.Owner", name));

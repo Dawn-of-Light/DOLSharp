@@ -26,7 +26,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int flag = packet.ReadByte();
-			client.UdpPingTime = DateTime.Now.Ticks;
+			client.UdpPingTime = DateTime.UtcNow.Ticks;
 			client.UdpConfirm = flag == 1;
 			client.Out.SendGameOpenReply();
 			client.Out.SendStatusUpdate(); // based on 1.74 logs

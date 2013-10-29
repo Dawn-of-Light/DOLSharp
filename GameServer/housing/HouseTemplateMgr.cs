@@ -53,7 +53,7 @@ namespace DOL.GS.Housing
 
 		public static long GetLotPrice(DBHouse house)
 		{
-			TimeSpan diff = (DateTime.Now - house.CreationTime);
+			TimeSpan diff = (DateTime.UtcNow - house.CreationTime);
 
 			long price = Properties.HOUSING_LOT_PRICE_START - (long) (diff.TotalHours*Properties.HOUSING_LOT_PRICE_PER_HOUR);
 			if (price < Properties.HOUSING_LOT_PRICE_MINIMUM)

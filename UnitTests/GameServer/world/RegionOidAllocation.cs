@@ -32,7 +32,7 @@ namespace DOL.Server
 		public int id;
 		public object sync;
 		public volatile bool finished;
-		public int started;
+		public long started;
 
 		[TestFixtureSetUp] public override void Init()
 		{
@@ -42,7 +42,7 @@ namespace DOL.Server
 			data.Name = "reg data1";
 			data.Description = "reg test1";
 			data.Mobs = new Mob[0];
-			m_reg = WorldMgr.RegisterRegion(new GameTimer.TimeManager("RegTest1"), data);
+			m_reg = WorldMgr.RegisterRegion(new GameTimer.GameScheduler("RegTest1"), data);
 			//WorldMgr.RegisterZone(5555, 5555, "test zone1", 0, 0, 16, 16);
 			m_reg.StartRegionMgr();
 		}
@@ -144,7 +144,7 @@ namespace DOL.Server
 		{
 			try
 			{
-				started = Environment.TickCount;
+				started = GameTimer.GetTickCount();
 				Console.Out.WriteLine("[{0}] started", id);
 				AddRemoveObjects();
 			}
@@ -155,7 +155,7 @@ namespace DOL.Server
 			finally
 			{
 				finished = true;
-				Console.Out.WriteLine("[{0}] finished in {1}ms", id, Environment.TickCount - started);
+				Console.Out.WriteLine("[{0}] finished in {1}ms", id, GameTimer.GetTickCount() - started);
 			}
 		}
 	}

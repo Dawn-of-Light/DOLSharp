@@ -322,7 +322,7 @@ namespace DOL.GS.Quests
 			else
 			{
 				player.Task = new KillTask(player);
-				player.Task.TimeOut = DateTime.Now.AddHours(2);
+				player.Task.TimeOut = DateTime.UtcNow.AddHours(2);
 				((KillTask)player.Task).MobKilled = false;
 				((KillTask)player.Task).ItemIndex = Util.Random(0, TaskObjects.Length - 1);
 				((KillTask)player.Task).MobName = Mob.Name;

@@ -2859,10 +2859,16 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendObjectDelete(GameObject obj)
 		{
+			int oType = 0;
+			if (obj is GamePlayer)
+				oType = 2;
+			else if (obj is GameNPC)
+				oType = (((GameLiving) obj).IsAlive ? 1 : 0);
+			
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ObjectDelete)))
 			{
 				pak.WriteShort((ushort) obj.ObjectID);
-				pak.WriteShort(1); //TODO: unknown
+				pak.WriteShort((ushort) oType); //TODO: unknown
 				SendTCP(pak);
 			}
 		}

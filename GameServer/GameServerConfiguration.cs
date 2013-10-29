@@ -367,12 +367,18 @@ namespace DOL.GS
 				try
 				{
 					m_cpuCount = int.Parse(Environment.GetEnvironmentVariable("NUMBER_OF_PROCESSORS"));
+					m_cpuUse = m_cpuCount;
 				}
-				catch { m_cpuCount = -1; }
+				catch 
+				{ 
+					m_cpuCount = -1; 
+				}
 			}
-			if (m_cpuCount < 1)
+			if (m_cpuCount < 1) 
+			{
 				m_cpuCount = 1;
 				m_cpuUse = 1;
+			}
 		}
 
 		#endregion

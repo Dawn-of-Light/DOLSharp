@@ -160,7 +160,7 @@ namespace DOL.GS
 					long xp = player.GetExperienceNeededForLevel(player.DBCharacter.LastFreeLevel + 1) - player.GetExperienceNeededForLevel(player.DBCharacter.LastFreeLevel);
 					//player.PlayerCharacter.LastFreeLevel = player.Level;
 					player.GainExperience(GameLiving.eXPSource.Other, xp);
-					player.DBCharacter.LastFreeLeveled = DateTime.Now;
+					player.DBCharacter.LastFreeLeveled = DateTime.UtcNow;
 					player.Out.SendPlayerFreeLevelUpdate();
 				}
 			}

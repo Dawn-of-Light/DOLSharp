@@ -76,7 +76,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The tickcount when this weather started
 		/// </summary>
-		private int m_weatherStartTick;
+		private long m_weatherStartTick;
 		/// <summary>
 		/// Holds all weather managers currently active
 		/// </summary>
@@ -117,7 +117,7 @@ namespace DOL.GS
 			{
 				if (m_weatherStartTick == 0)
 					return 0;
-				return (uint)(m_startX + (Environment.TickCount - m_weatherStartTick) * m_speed / 1000);
+				return (uint)(m_startX + (GameTimer.GetTickCount() - m_weatherStartTick) * m_speed / 1000);
 			}
 		}
 
@@ -245,7 +245,7 @@ namespace DOL.GS
 			m_speed = speed;
 			m_fogDiffusion = fog;
 			m_intensity = intensity;
-			m_weatherStartTick = Environment.TickCount;
+			m_weatherStartTick = GameTimer.GetTickCount();
 
 			foreach (GameClient cl in WorldMgr.GetClientsOfRegion(m_regionID))
 				cl.Out.SendWeather(m_startX, m_width, m_speed, m_fogDiffusion, m_intensity);

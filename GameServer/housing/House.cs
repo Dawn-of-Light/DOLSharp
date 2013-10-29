@@ -452,7 +452,7 @@ namespace DOL.GS.Housing
 		public void SendHouseInfo(GamePlayer player)
 		{
 			int level = Model - ((Model - 1) / 4) * 4;
-			TimeSpan due = (LastPaid.AddDays(ServerProperties.Properties.RENT_DUE_DAYS).AddHours(1) - DateTime.Now);
+			TimeSpan due = (LastPaid.AddDays(ServerProperties.Properties.RENT_DUE_DAYS).AddHours(1) - DateTime.UtcNow);
 			var text = new List<string>();
 
 			text.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "House.SendHouseInfo.Owner", Name));

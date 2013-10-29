@@ -73,7 +73,7 @@ namespace DOL.GS
 		/// <summary>
 		/// AdventureWingInstance Constructor
 		/// </summary>
-		public AdventureWingInstance(ushort ID, GameTimer.TimeManager time, RegionData dat)
+		public AdventureWingInstance(ushort ID, GameTimer.GameScheduler time, RegionData dat)
 			: base(ID, time, dat)
 		{
 		}

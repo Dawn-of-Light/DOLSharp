@@ -843,6 +843,7 @@ namespace DOL.Database.Handlers
 
 													obj.IsPersisted = true;
 												}
+												reader.Close();
 											}
 				, isolation);
 

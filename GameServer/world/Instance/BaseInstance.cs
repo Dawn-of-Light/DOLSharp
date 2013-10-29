@@ -48,7 +48,7 @@ namespace DOL.GS
         /// Creates an instance object. This shouldn't be used directly - Please use WorldMgr.CreateInstance
         /// to create an instance.
         /// </summary>
-        public BaseInstance(ushort ID, GameTimer.TimeManager time, RegionData data) :base(time, data)
+        public BaseInstance(ushort ID, GameTimer.GameScheduler time, RegionData data) :base(time, data)
         {
             m_regionID = ID;
             m_skinID = data.Id;
@@ -334,7 +334,7 @@ namespace DOL.GS
 		/// </summary>
 		protected class AutoCloseRegionTimer : GameTimer
         {
-            public AutoCloseRegionTimer(TimeManager time, BaseInstance i)
+            public AutoCloseRegionTimer(GameScheduler time, BaseInstance i)
                 : base(time)
             {
                 m_instance = i;
@@ -377,7 +377,7 @@ namespace DOL.GS
 		/// </summary>
 		protected class DelayCloseRegionTimer : GameTimer
 		{
-			public DelayCloseRegionTimer(TimeManager time, BaseInstance i)
+			public DelayCloseRegionTimer(GameScheduler time, BaseInstance i)
 				: base(time)
 			{
 				m_instance = i;

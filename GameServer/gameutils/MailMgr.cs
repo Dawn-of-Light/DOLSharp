@@ -285,7 +285,7 @@ namespace DOL.Mail
 
 					foreach (string str in to.SplitCSV())
 						if (!String.IsNullOrEmpty(str.Trim())) mail.To.Add(str);
-					mail.Subject = "[ Logs ] " + DateTime.Now.ToString();
+					mail.Subject = "[ Logs ] " + DateTime.UtcNow.ToString();
 					mail.From = new MailAddress(m_emailAddress, GameServer.Instance.Configuration.ServerName);
 					mail.IsBodyHtml = true;
 					mail.Body = ""; // Add the mail core here if needed

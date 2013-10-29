@@ -95,7 +95,7 @@ namespace DOL.GS
 		/// RegionInstance Constructor
 		/// </summary>
 		/// <param name="player"></param>
-		public RegionInstance(ushort ID, GameTimer.TimeManager time, RegionData dat)
+		public RegionInstance(ushort ID, GameTimer.GameScheduler time, RegionData dat)
 			: base(ID, time, dat)
 		{	
 			this.m_players_in = new List<GamePlayer>();

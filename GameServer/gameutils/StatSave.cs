@@ -42,7 +42,7 @@ namespace DOL.GS.GameEvents
 		
 		private static long m_lastBytesIn = 0;
 		private static long m_lastBytesOut = 0;
-		private static long m_lastMeasureTick = DateTime.Now.Ticks;
+		private static long m_lastMeasureTick = DateTime.UtcNow.Ticks;
 		private static int m_statFrequency = 60 * 1000; // 1 minute
 		private static PerformanceCounter m_systemCpuUsedCounter = null;
 		private static PerformanceCounter m_processCpuUsedCounter = null;
@@ -122,7 +122,7 @@ namespace DOL.GS.GameEvents
 		{
 			try
 			{
-				long ticks = DateTime.Now.Ticks;
+				long ticks = DateTime.UtcNow.Ticks;
 				long time = ticks - m_lastMeasureTick;
 				m_lastMeasureTick = ticks;
 				time /= 10000000L;

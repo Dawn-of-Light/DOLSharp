@@ -242,7 +242,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						playerAccount = GameServer.Database.FindObjectByKey<Account>(userName);
 
-						client.PingTime = DateTime.Now.Ticks;
+						client.PingTime = DateTime.UtcNow.Ticks;
 
 						if (playerAccount == null)
 						{
@@ -269,7 +269,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								int totalacc = 0;
 								foreach (Account ac in allAccByIp)
 								{
-									ts = DateTime.Now - ac.CreationDate;
+									ts = DateTime.UtcNow - ac.CreationDate;
 									if (ts.TotalMinutes < Properties.TIME_BETWEEN_ACCOUNT_CREATION_SAMEIP && totalacc > 1)
 									{
 										Log.Warn("Account creation: too many from same IP within set minutes - " + userName + " : " + ipAddress);
@@ -297,7 +297,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								// per timeslice - for preventing account bombing via different ip
 								if (Properties.TIME_BETWEEN_ACCOUNT_CREATION > 0)
 								{
-									ts = DateTime.Now - m_lastAccountCreateTime;
+									ts = DateTime.UtcNow - m_lastAccountCreateTime;
 									if (ts.TotalMinutes < Properties.TIME_BETWEEN_ACCOUNT_CREATION)
 									{
 										Log.Warn("Account creation: time between account creation too small - " + userName + " : " + ipAddress);
@@ -310,14 +310,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 									}
 								}
 
-								m_lastAccountCreateTime = DateTime.Now;
+								m_lastAccountCreateTime = DateTime.UtcNow;
 
 								playerAccount = new Account();
 								playerAccount.Name = userName;
 								playerAccount.Password = CryptPassword(password);
 								playerAccount.Realm = 0;
-								playerAccount.CreationDate = DateTime.Now;
-								playerAccount.LastLogin = DateTime.Now;
+								playerAccount.CreationDate = DateTime.UtcNow;
+								playerAccount.LastLogin = DateTime.UtcNow;
 								playerAccount.LastLoginIP = ipAddress;
 								playerAccount.LastClientVersion = ((int)client.Version).ToString();
 								playerAccount.Language = Properties.SERV_LANGUAGE;
@@ -368,7 +368,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 
 							// save player infos
-							playerAccount.LastLogin = DateTime.Now;
+							playerAccount.LastLogin = DateTime.UtcNow;
 							playerAccount.LastLoginIP = ipAddress;
 							playerAccount.LastClientVersion = ((int)client.Version).ToString();
 							if (string.IsNullOrEmpty(playerAccount.Language))

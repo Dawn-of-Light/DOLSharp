@@ -325,7 +325,7 @@ namespace DOL.GS
 				player.Out.SendObjectUpdate(this);
 				player.CurrentUpdateArray[ObjectID - 1] = true;
 			}
-			m_lastUpdateTickCount = (uint)Environment.TickCount;
+			m_lastUpdateTickCount = (uint)(GameTimer.GetTickCount() / 10000);
 		}
 		
 		

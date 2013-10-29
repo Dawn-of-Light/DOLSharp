@@ -51,12 +51,12 @@ namespace DOL
 		/// <summary>
 		/// A weak reference to the target for this delegate
 		/// </summary>
-		private readonly WeakReference _weakRef;
+		private readonly WeakRef _weakRef;
 
 		/// <summary>
 		/// A weak reference to the target for this delegate
 		/// </summary>
-		public WeakReference WeakRef
+		public WeakRef WeakRef
 		{
 			get { return _weakRef; }
 		}
@@ -265,7 +265,7 @@ namespace DOL
 
 			while (current != null)
 			{
-				int start = Environment.TickCount;
+				long start = (DateTime.UtcNow.Ticks / 10000);
 
 				if (current._weakRef == null)
 				{
@@ -276,10 +276,10 @@ namespace DOL
 					current._method.Invoke(current._weakRef.Target, args);
 				}
 
-				if (Environment.TickCount - start > 500)
+				if ((DateTime.UtcNow.Ticks / 10000) - start > 500)
 				{
 					if (Log.IsWarnEnabled)
-						Log.Warn("Invoke took " + (Environment.TickCount - start) + "ms! " + current);
+						Log.Warn("Invoke took " + ((DateTime.UtcNow.Ticks / 10000) - start) + "ms! " + current);
 				}
 
 				current = current._prev;
@@ -298,7 +298,7 @@ namespace DOL
 
 			while (current != null)
 			{
-				int start = Environment.TickCount;
+				long start = (DateTime.UtcNow.Ticks / 10000);
 
 				try
 				{
@@ -317,10 +317,10 @@ namespace DOL
 						Log.Error("InvokeSafe", ex);
 				}
 
-				if (Environment.TickCount - start > 500)
+				if ((DateTime.UtcNow.Ticks / 10000) - start > 500)
 				{
 					if (Log.IsWarnEnabled)
-						Log.Warn("InvokeSafe took " + (Environment.TickCount - start) + "ms! " + current);
+						Log.Warn("InvokeSafe took " + ((DateTime.UtcNow.Ticks / 10000) - start) + "ms! " + current);
 				}
 
 				current = current._prev;

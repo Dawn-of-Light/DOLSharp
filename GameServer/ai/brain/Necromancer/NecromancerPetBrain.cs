@@ -550,9 +550,9 @@ namespace DOL.AI.Brain
         {
 			if (DOL.GS.ServerProperties.Properties.ENABLE_DEBUG)
 			{
-				int tick = Environment.TickCount;
-				int seconds = tick / 1000;
-				int minutes = seconds / 60;
+				long tick = GameServer.Instance.TickCount;
+				long seconds = tick / 1000;
+				long minutes = seconds / 60;
 
 				MessageToOwner(String.Format("[{0:00}:{1:00}.{2:000}] {3}",	minutes % 60, seconds % 60, tick % 1000, message), eChatType.CT_Staff);
 			}

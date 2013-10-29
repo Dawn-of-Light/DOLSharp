@@ -661,7 +661,7 @@ namespace DOL.GS.Commands
 								return;
 							}
 
-							TimeSpan lostTime = DateTime.Now.Subtract(client.Player.Guild.GuildBannerLostTime);
+							TimeSpan lostTime = DateTime.UtcNow.Subtract(client.Player.Guild.GuildBannerLostTime);
 
 							if (lostTime.TotalMinutes < Properties.GUILD_BANNER_LOST_TIME)
 							{
@@ -2392,7 +2392,7 @@ namespace DOL.GS.Commands
 
 			player.Guild.BonusType = buffType;
 			player.Guild.RemoveMeritPoints(1000);
-			player.Guild.BonusStartTime = DateTime.Now;
+			player.Guild.BonusStartTime = DateTime.UtcNow;
 
 			string buffName = Guild.BonusTypeToName(buffType);
 

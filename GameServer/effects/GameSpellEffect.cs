@@ -337,14 +337,14 @@ namespace DOL.GS.Effects
 			/// <summary>
 			/// The time in milliseconds since timer start
 			/// </summary>
-			private int m_timeSinceStart;
+			private long m_timeSinceStart;
 
 			/// <summary>
 			/// Gets the effect remaining time, decreased every interval
 			/// </summary>
 			public int TimeSinceStart
 			{
-				get { return IsAlive ? m_timeSinceStart - TimeUntilElapsed : 0; }
+				get { return IsAlive ? (int)(m_timeSinceStart - TimeUntilElapsed) : 0; }
 			}
 
 			/// <summary>
@@ -362,7 +362,7 @@ namespace DOL.GS.Effects
 			/// Starts the timer with defined initial delay
 			/// </summary>
 			/// <param name="initialDelay">The initial timer delay. Must be more than 0 and less than MaxInterval</param>
-			public override void Start(int initialDelay)
+			public override void Start(long initialDelay)
 			{
 				base.Start(initialDelay);
 				m_timeSinceStart = initialDelay;

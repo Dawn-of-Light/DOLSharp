@@ -58,7 +58,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			    (client.ClientState != GameClient.eClientState.Playing))
 				return;
 
-			int environmentTick = Environment.TickCount;
+			long environmentTick = GameTimer.GetTickCount();
 			int packetVersion;
 			if (client.Version > GameClient.eClientVersion.Version171)
 			{
@@ -138,7 +138,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 					player.TempProperties.setProperty("isbeingbanned", true);
 					player.MoveToBind();
 				}
-
 				return; // TODO: what should we do? player lost in space
 			}
 
@@ -196,9 +195,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Player.LastPositionUpdateZone = newZone;
 			}
 
-			int coordsPerSec = 0;
+			long coordsPerSec = 0;
 			int jumpDetect = 0;
-			int timediff = Environment.TickCount - client.Player.LastPositionUpdateTick;
+			long timediff = GameTimer.GetTickCount() - client.Player.LastPositionUpdateTick;
 			int distance = 0;
 
 			if (timediff > 0)
@@ -225,7 +224,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			#endif
 			#endregion DEBUG
 
-			client.Player.LastPositionUpdateTick = Environment.TickCount;
+			client.Player.LastPositionUpdateTick = GameTimer.GetTickCount();
 			client.Player.LastPositionUpdatePoint.X = realX;
 			client.Player.LastPositionUpdatePoint.Y = realY;
 			client.Player.LastPositionUpdatePoint.Z = realZ;
@@ -291,7 +290,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								b.Author = "SERVER";
 								b.Ip = client.TcpEndpointAddress;
 								b.Account = client.Account.Name;
-								b.DateBan = DateTime.Now;
+								b.DateBan = DateTime.UtcNow;
 								b.Type = "B";
 								b.Reason = string.Format("Autoban MOVEHACK:(CPS:{0}, JT:{1}) on player:{2}", coordsPerSec, jumpDetect, client.Player.Name);
 								GameServer.Database.AddObject(b);
@@ -355,7 +354,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			// used to predict current position, should be before
 			// any calculation (like fall damage)
-			client.Player.MovementStartTick = Environment.TickCount;
+			client.Player.MovementStartTick = GameTimer.GetTickCount();
 
 			// Begin ---------- New Area System -----------
 			if (client.Player.CurrentRegion.Time > client.Player.AreaUpdateTick) // check if update is needed
@@ -402,7 +401,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			const string SHLASTUPDATETICK = "SHPLAYERPOSITION_LASTUPDATETICK";
 			const string SHLASTFLY = "SHLASTFLY_STRING";
 			const string SHLASTSTATUS = "SHLASTSTATUS_STRING";
-			int SHlastTick = client.Player.TempProperties.getProperty<int>(SHLASTUPDATETICK);
+			long SHlastTick = client.Player.TempProperties.getProperty<int>(SHLASTUPDATETICK);
 			int SHlastFly = client.Player.TempProperties.getProperty<int>(SHLASTFLY);
 			int SHlastStatus = client.Player.TempProperties.getProperty<int>(SHLASTSTATUS);
 			int SHcount = client.Player.TempProperties.getProperty<int>(SHSPEEDCOUNTER);
@@ -459,7 +458,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									b.Author = "SERVER";
 									b.Ip = client.TcpEndpointAddress;
 									b.Account = client.Account.Name;
-									b.DateBan = DateTime.Now;
+									b.DateBan = DateTime.UtcNow;
 									b.Type = "B";
 									b.Reason = string.Format("Autoban SH:({0},{1}) on player:{2}", SHcount, environmentTick - SHlastTick, client.Player.Name);
 									GameServer.Database.AddObject(b);
@@ -532,7 +531,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						b.Author = "SERVER";
 						b.Ip = client.TcpEndpointAddress;
 						b.Account = client.Account.Name;
-						b.DateBan = DateTime.Now;
+						b.DateBan = DateTime.UtcNow;
 						b.Type = "B";
 						b.Reason = string.Format("Autoban flying hack: on player:{0}", client.Player.Name);
 						GameServer.Database.AddObject(b);

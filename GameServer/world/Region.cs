@@ -145,12 +145,12 @@ namespace DOL.GS
         /// <summary>
         /// The region time manager
         /// </summary>
-        protected readonly GameTimer.TimeManager m_timeManager;
+        protected readonly GameTimer.GameScheduler m_timeManager;
 
         /// <summary>
         /// The Los Checker Manager of this Region
         /// </summary>
-        private readonly LosCheckMgr m_losCheckMgr = new LosCheckMgr();
+        private readonly LosCheckMgr m_losCheckMgr;
         
         public LosCheckMgr LosCheckManager {
         	get
@@ -176,7 +176,7 @@ namespace DOL.GS
         /// <param name="time"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static Region Create(GameTimer.TimeManager time, RegionData data)
+        public static Region Create(GameTimer.GameScheduler time, RegionData data)
         {
             try
             {
@@ -193,7 +193,7 @@ namespace DOL.GS
 
                     if (t != null)
                     {
-                        ConstructorInfo info = t.GetConstructor(new Type[] { typeof(GameTimer.TimeManager), typeof(RegionData) });
+                        ConstructorInfo info = t.GetConstructor(new Type[] { typeof(GameTimer.GameScheduler), typeof(RegionData) });
 
                         Region r = (Region)info.Invoke(new object[] { time, data });
 
@@ -226,7 +226,7 @@ namespace DOL.GS
         /// </summary>
         /// <param name="time">The time manager for this region</param>
         /// <param name="data">The region data</param>
-        public Region(GameTimer.TimeManager time, RegionData data)
+        public Region(GameTimer.GameScheduler time, RegionData data)
         {
             m_regionData = data;
             m_objects = new GameObject[0];
@@ -235,7 +235,7 @@ namespace DOL.GS
             m_objectsAllocatedSlots = new uint[0];
 
             m_graveStones = new Dictionary<string, GameObject>();
-
+            
             m_Zones = new List<Zone>(1);
             m_ZoneAreas = new ushort[64][];
             m_ZoneAreasCount = new ushort[64];
@@ -248,6 +248,8 @@ namespace DOL.GS
 
             m_timeManager = time;
 
+            m_losCheckMgr = new LosCheckMgr(this);
+            
             List<string> list = null;
 
             if (ServerProperties.Properties.DEBUG_LOAD_REGIONS != string.Empty)
@@ -536,7 +538,7 @@ namespace DOL.GS
         /// <summary>
         /// Gets the region time manager
         /// </summary>
-        public virtual GameTimer.TimeManager TimeManager
+        public virtual GameTimer.GameScheduler TimeManager
         {
             get { return m_timeManager; }
         }
@@ -546,7 +548,7 @@ namespace DOL.GS
         /// </summary>
         public virtual long Time
         {
-            get { return m_timeManager.CurrentTime; }
+            get { return GameServer.Instance.TickCount; }
         }
 
         protected bool m_isDisabled = false;
@@ -1945,7 +1947,7 @@ namespace DOL.GS
                 {
                     ((Zone)m_Zones[i]).Relocate(null);
                 }
-                m_lastRelocationTime = DateTime.Now.Ticks / (10 * 1000);
+                m_lastRelocationTime = DateTime.UtcNow.Ticks / (10 * 1000);
             }
         }
 

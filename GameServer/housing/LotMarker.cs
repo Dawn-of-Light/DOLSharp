@@ -116,7 +116,7 @@ namespace DOL.GS.Housing
 				                       eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
 				{
                     InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, totalCost);
-					DatabaseItem.LastPaid = DateTime.Now;
+					DatabaseItem.LastPaid = DateTime.UtcNow;
 					DatabaseItem.OwnerID = player.DBCharacter.ObjectId;
 					CreateHouse(player, 0);
 				}

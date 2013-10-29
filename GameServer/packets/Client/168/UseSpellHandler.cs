@@ -60,7 +60,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					client.Player.X = newZone.XOffset + xOffsetInZone;
 					client.Player.Y = newZone.YOffset + yOffsetInZone;
 					client.Player.Z = realZ;
-					client.Player.MovementStartTick = Environment.TickCount;
+					client.Player.MovementStartTick = GameTimer.GetTickCount();
 				}
 			}
 

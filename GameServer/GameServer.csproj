@@ -65,6 +65,10 @@
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SmartThreadPool\SmartThreadPoolMono.csproj">
+      <Project>{3462F30B-0156-409C-B256-6046D6F1764B}</Project>
+      <Name>SmartThreadPoolMono</Name>
+    </ProjectReference>
     <Reference Include="log4net">
       <HintPath>..\sharedModules\log4net\log4net.dll</HintPath>
     </Reference>
@@ -2808,6 +2812,7 @@
     <Folder Include="ai\brain\ImprovedBrain" />
     <Folder Include="language\DE\Quests\Midgard\" />
     <Folder Include="language\EN\Quests\Midgard\" />
+    <Folder Include="New Folder" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

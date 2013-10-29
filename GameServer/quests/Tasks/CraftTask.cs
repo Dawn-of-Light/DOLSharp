@@ -192,7 +192,7 @@ namespace DOL.GS.Quests
 
 			var craftTask = new CraftTask(player)
 								{
-									TimeOut = DateTime.Now.AddHours(2),
+									TimeOut = DateTime.UtcNow.AddHours(2),
 									ItemName = taskItem.Name,
 									RecieverName = NPC.Name,
 									RecieverZone = NPC.CurrentZone.Description

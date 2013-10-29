@@ -119,12 +119,17 @@ namespace DOL.AI
 			if (!m_body.IsAlive || m_body.ObjectState != GameObject.eObjectState.Active)
 				return false;
 			
+			if (IsActive) return false;
+			
 			lock (m_LockObject)
 			{
-				if (IsActive) return false;
-
-				m_brainTimer = new RegionTimer(m_body);
-				m_brainTimer.Callback = new RegionTimerCallback(BrainTimerCallback);
+				
+				if(m_brainTimer == null) 
+				{
+					m_brainTimer = new RegionTimer(m_body);
+					m_brainTimer.Callback = new RegionTimerCallback(BrainTimerCallback);
+				}
+					
 				m_brainTimer.Start(ThinkInterval);
 			}
 			return true;
@@ -136,12 +141,13 @@ namespace DOL.AI
 		/// <returns>true if stopped</returns>
 		public virtual bool Stop()
 		{
+			if(!IsActive) return false;
+			
 			lock (m_LockObject)
 			{
-				if(!IsActive) return false;
 				m_brainTimer.Stop();
-				m_brainTimer = null;
 			}
+			
 			return true;
 		}
 

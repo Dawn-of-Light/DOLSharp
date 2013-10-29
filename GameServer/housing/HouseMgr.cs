@@ -462,7 +462,7 @@ namespace DOL.GS.Housing
 			house.OwnerID = "";
 			house.KeptMoney = 0;
 			house.Name = ""; // not null !
-			house.DatabaseItem.CreationTime = DateTime.Now;
+			house.DatabaseItem.CreationTime = DateTime.UtcNow;
 			house.DatabaseItem.LastPaid = DateTime.MinValue;
 
 			// saved the cleared house in the database
@@ -784,7 +784,7 @@ namespace DOL.GS.Housing
 						continue;
 
 					// get the time that rent was last paid for the house
-					diff = DateTime.Now - house.LastPaid;
+					diff = DateTime.UtcNow - house.LastPaid;
 
 					// get the amount of rent for the given house
 					long rent = GetRentByModel(house.Model);
@@ -805,7 +805,7 @@ namespace DOL.GS.Housing
 						if (lockboxAmount >= rent)
 						{
 							house.KeptMoney -= rent;
-							house.LastPaid = DateTime.Now;
+							house.LastPaid = DateTime.UtcNow;
 							house.SaveIntoDatabase();
 						}
 						else

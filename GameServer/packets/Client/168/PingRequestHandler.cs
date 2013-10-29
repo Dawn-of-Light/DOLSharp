@@ -36,8 +36,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			packet.Skip(4); //Skip the first 4 bytes
-			long pingDiff = (DateTime.Now.Ticks - client.PingTime)/1000;
-			client.PingTime = DateTime.Now.Ticks;
+			long pingDiff = (DateTime.UtcNow.Ticks - client.PingTime)/1000;
+			client.PingTime = DateTime.UtcNow.Ticks;
 			ulong timestamp = packet.ReadInt();
 
 			client.Out.SendPingReply(timestamp,packet.Sequence);

@@ -649,7 +649,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Line of Sight Manager Query Timeout
 		/// </summary>
-		[ServerProperty("world", "losmgr_query_timeout", "Timeout (in milliseconds) until Line of Sight (LoS) Manager tries to resend a LoS check, -1 to disable (don't get under 100ms except for Local Network).", 300)]
+		[ServerProperty("world", "losmgr_query_timeout", "Timeout (in milliseconds) until Line of Sight (LoS) Manager tries to resend a LoS check, 0 to disable (don't get under 100ms except for Local Network).", 300)]
 		public static int LOSMGR_QUERY_TIMEOUT;
 
 		/// <summary>

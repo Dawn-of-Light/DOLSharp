@@ -208,16 +208,8 @@ namespace DOL.GS
 		public static StackTrace GetThreadStack(Thread thread)
 		{
 			StackTrace trace;
-
-			try
-			{
-				trace = new StackTrace(thread, true);
-			}
-			catch
-			{
-				//FIXME
-				trace = new StackTrace();
-			}
+			
+			trace = new StackTrace();
 			
 			return trace;
 		}

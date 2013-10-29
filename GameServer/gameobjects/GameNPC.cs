@@ -625,14 +625,16 @@ namespace DOL.GS
 			set { m_packageID = value; }
 		}
 
+		protected object m_lockTicks = new object();
+		protected object m_lockVisible = new object();
 		/// <summary>
 		/// The last time this NPC sent the 0x09 update packet
 		/// </summary>
-		protected volatile uint m_lastUpdateTickCount = uint.MinValue;
+		protected long m_lastUpdateTickCount = long.MinValue;
 		/// <summary>
 		/// The last time this NPC was actually updated to at least one player
 		/// </summary>
-		protected volatile uint m_lastVisibleToPlayerTick = uint.MinValue;
+		protected long m_lastVisibleToPlayerTick = long.MinValue;
 
 		/// <summary>
 		/// Gets or Sets the flags of this npc
@@ -674,7 +676,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual bool IsVisibleToPlayers
 		{
-			get { return (uint)Environment.TickCount - m_lastVisibleToPlayerTick < 60000; }
+			get { return (GameTimer.GetTickCount() - m_lastVisibleToPlayerTick) < 60; }
 		}
 
 		/// <summary>
@@ -1211,17 +1213,25 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the last time this mob was updated
 		/// </summary>
-		public uint LastUpdateTickCount
+		public long LastUpdateTickCount
 		{
-			get { return m_lastUpdateTickCount; }
+			get 
+			{
+				lock(m_lockTicks)
+					return m_lastUpdateTickCount; 
+			}
 		}
 
 		/// <summary>
 		/// Gets the last this this NPC was actually update to at least one player.
 		/// </summary>
-		public uint LastVisibleToPlayersTickCount
+		public long LastVisibleToPlayersTickCount
 		{
-			get { return m_lastVisibleToPlayerTick; }
+			get 
+			{ 
+				lock(m_lockVisible)
+					return m_lastVisibleToPlayerTick; 
+			}
 		}
 
 		/// <summary>
@@ -1294,7 +1304,7 @@ namespace DOL.GS
 			Y = target.Y;
 			Z = target.Z;
 
-			MovementStartTick = Environment.TickCount;
+			MovementStartTick = GameTimer.GetTickCount();
 		}
 
 		/// <summary>
@@ -1417,7 +1427,7 @@ namespace DOL.GS
 
 			m_currentSpeed = speed;
 
-			MovementStartTick = Environment.TickCount;
+			MovementStartTick = GameTimer.GetTickCount();
 			UpdateTickSpeed();
 			BroadcastUpdate();
 		}
@@ -2813,7 +2823,9 @@ namespace DOL.GS
 				player.Out.SendObjectUpdate(this);
 				player.CurrentUpdateArray[ObjectID - 1] = true;
 			}
-			m_lastUpdateTickCount = (uint)Environment.TickCount;
+			
+			lock(m_lockTicks)
+				m_lastUpdateTickCount = GameTimer.GetTickCount();
 		}
 
 		/// <summary>
@@ -2822,13 +2834,12 @@ namespace DOL.GS
 		/// </summary>
 		public void NPCUpdatedCallback()
 		{
-			m_lastVisibleToPlayerTick = (uint)Environment.TickCount;
-			lock (BrainSync)
-			{
-				ABrain brain = Brain;
-				if (brain != null)
-					brain.Start();
-			}
+			lock(m_lockVisible)
+				m_lastVisibleToPlayerTick = GameTimer.GetTickCount();
+			
+			if(Brain != null)
+				Brain.Start();
+			
 		}
 		/// <summary>
 		/// Adds the npc to the world
@@ -3120,14 +3131,17 @@ namespace DOL.GS
 		{
 			get
 			{
-				List<ABrain> brains;
-				lock(((ICollection)m_brains).SyncRoot)
-					brains = new List<ABrain>(m_brains);
+				ABrain brain = null;
 				
-				if (brains.Count > 0)
-					return (ABrain)brains[brains.Count - 1];
+				lock(BrainSync)
+				{
+					if(m_brains.Count > 0)
+						brain = m_brains[m_brains.Count - 1];
+					else
+						brain = m_ownBrain;
+				}
 				
-				return m_ownBrain;
+				return brain;
 			}
 		}
 
@@ -3171,13 +3185,13 @@ namespace DOL.GS
 
 			lock (BrainSync)
 			{
-				Brain.Stop();
-				List<ABrain> brains = new List<ABrain>(m_brains);
-				brains.Add(newBrain);
-				m_brains = brains; // make new array list to avoid locks in the Brain property
+				if(Brain != null)
+					Brain.Stop();
+				
+				m_brains.Add(newBrain);
 				newBrain.Body = this;
 				newBrain.Start();
-			}
+			}			
 		}
 
 		/// <summary>
@@ -3189,17 +3203,22 @@ namespace DOL.GS
 		{
 			if (removeBrain == null) return false;
 
-			lock (((ICollection)m_brains).SyncRoot)
+			lock (BrainSync)
 			{
 				int index = m_brains.IndexOf(removeBrain);
-				if (index < 0) return false;
-				bool active = m_brains[index] == Brain;
+				
+				if (index < 0)
+					return false;
+				
+				bool active = index == m_brains.Count-1;
+				
 				if (active)
 					removeBrain.Stop();
+				
 				m_brains.RemoveAt(index);
-
-				return true;
 			}
+			
+			return true;
 		}
 		#endregion
 		
@@ -4412,8 +4431,6 @@ namespace DOL.GS
 			Endurance = MaxEndurance;
 			int origSpawnX = m_spawnPoint.X;
 			int origSpawnY = m_spawnPoint.Y;
-			//X=(m_spawnX+Random(750)-350); //new SpawnX = oldSpawn +- 350 coords
-			//Y=(m_spawnY+Random(750)-350);	//new SpawnX = oldSpawn +- 350 coords
 			X = m_spawnPoint.X;
 			Y = m_spawnPoint.Y;
 			Z = m_spawnPoint.Z;
@@ -5415,7 +5432,6 @@ namespace DOL.GS
 			MaxSpeedBase = 200;
 			GuildName = "";
 
-			m_brainSync = ((ICollection)m_brains).SyncRoot;
 			m_followTarget = new WeakRef(null);
 
 			m_size = 50; //Default size

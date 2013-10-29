@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Timers;
 using DOL;
 using DOL.GS;
 using DOL.GS.GameEvents;

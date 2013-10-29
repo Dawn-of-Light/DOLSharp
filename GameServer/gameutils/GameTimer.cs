@@ -28,6 +28,7 @@ using System.Text;
 using System.Threading;
 using log4net;
 using ThreadState = System.Threading.ThreadState;
+using Amib.Threading;
 
 namespace DOL.GS
 {
@@ -37,51 +38,67 @@ namespace DOL.GS
 	/// </summary>
 	public abstract class GameTimer
 	{
+		#region static field	
+		/// <summary>
+		/// Get the tick count, this is needed because Environment.TickCount resets to 0
+		/// when server has been up 48 days because it returned an int,
+		/// this is a long
+		/// This value is Synchronizing all Server Events !
+		/// </summary>
+		/// <returns></returns>
+		public static long GetTickCount()
+		{
+			return DateTime.UtcNow.Ticks / 10000;
+		}
+
+		/// <summary>
+		/// Gets the maximal allowed interval
+		/// </summary>
+		public static long MaxInterval
+		{
+			get { return long.MaxValue / 10000;; }
+		}
+		
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
+	
+		#endregion
+	
+		#region locks
 		/// <summary>
-		/// Stores the reference to the next timer in the chain
+		/// Wether this timer is firing or not
 		/// </summary>
-		private GameTimer m_nextTimer;
+		private volatile bool m_firing = false;
+		
 		/// <summary>
-		/// Stores the next execution tick and flags
+		/// Wether this timer is started or not
 		/// </summary>
-		private long m_tick = TIMER_DISABLED;
+		private bool m_started = false;
+		
+		/// <summary>
+		/// Locking Object
+		/// </summary>
+		private readonly object m_timerLock = new object();
+		
+		#endregion
+		
+		#region Timer Members		
 		/// <summary>
 		/// Stores the timer intervals
 		/// </summary>
-		private int m_interval;
+		private long m_interval = 0;
+		
 		/// <summary>
-		/// Stores the time where the timer was inserted
+		/// Stores the time where the timer should run
 		/// </summary>
-		private long m_targetTime = -1;
+		private long m_targetTime = MaxInterval;
+		
 		/// <summary>
 		/// Stores the time manager used for this timer
 		/// </summary>
-		private readonly TimeManager m_time;
-
-		/// <summary>
-		/// Flags the timer as disabled
-		/// </summary>
-		public static readonly long TIMER_DISABLED = long.MinValue;
-		/// <summary>
-		/// Flags the current tick timers as rescheduled
-		/// </summary>
-		public static readonly long TIMER_RESCHEDULED = 0x40000000;
-
-		/// <summary>
-		/// Constructs a new GameTimer
-		/// </summary>
-		/// <param name="time">The time manager for this timer</param>
-		public GameTimer(TimeManager time)
-		{
-			if (time == null)
-				throw new ArgumentNullException("time");
-			m_time = time;
-		}
+		private readonly GameScheduler m_scheduler;
 
 		/// <summary>
 		/// Gets the time left until this timer fires, in milliseconds.
@@ -90,33 +107,41 @@ namespace DOL.GS
 		{
 			get
 			{
-				long ins = m_targetTime;
-				if (ins < 0)
+				
+				if(m_firing)
+					return 0;
+
+				lock(m_timerLock)
+				{
+					if(!m_started)
 					return -1;
-				return (int)((ulong)ins - (ulong)m_time.CurrentTime);
+					
+					if (m_targetTime < GetTickCount())
+						return -1;
+				
+					return (int)(m_targetTime - GetTickCount());
+				}
 			}
 		}
 
 		/// <summary>
 		/// Gets or sets the timer intervals in milliseconds
 		/// </summary>
-		public virtual int Interval
+		public virtual long Interval
 		{
-			get { return m_interval; }
+			get 
+			{
+				lock(m_timerLock)
+					return m_interval;
+			}
 			set
 			{
 				if (value < 0 || value > MaxInterval)
 					throw new ArgumentOutOfRangeException("value", value, "Interval value must be in 1 .. "+MaxInterval.ToString()+" range.");
-				m_interval = value;
+				
+				lock(m_timerLock)
+					m_interval = value;
 			}
-		}
-
-		/// <summary>
-		/// Gets the maximal allowed interval
-		/// </summary>
-		public long MaxInterval
-		{
-			get { return m_time.MaxInterval; }
 		}
 
 		/// <summary>
@@ -124,59 +149,79 @@ namespace DOL.GS
 		/// </summary>
 		public bool IsAlive
 		{
-			get { return (m_tick & TIMER_DISABLED) == 0; }
+			get 
+			{
+				lock(m_timerLock)
+					return m_started;
+			}
 		}
 
+		#endregion
+
+		/// <summary>
+		/// Constructs a new GameTimer
+		/// </summary>
+		/// <param name="time">The time manager for this timer</param>
+		public GameTimer(GameScheduler sched)
+		{
+				if (sched == null)
+					throw new ArgumentNullException("GameScheduler");
+				m_scheduler = sched;
+		}
+		
+		#region methods		
 		/// <summary>
 		/// Returns short information about the timer
 		/// </summary>
 		/// <returns>Short info about the timer</returns>
 		public override string ToString()
 		{
-			return string.Format("{0} tick:0x{1:X8} interval:{2} manager:'{3}'", GetType().FullName, m_tick, m_interval, m_time.Name);
+			return string.Format("{0} targetTime:0x{1:X8} interval:{2} manager:'{3}'", GetType().FullName, m_targetTime, m_interval, m_scheduler.Name);
 		}
-
+		
 		/// <summary>
 		/// Starts the timer with defined initial delay
 		/// </summary>
 		/// <param name="initialDelay">The initial timer delay. Must be more than 0 and less than MaxInterval</param>
-		public virtual void Start(int initialDelay)
+		public virtual void Start(long initialDelay)
 		{
-			m_time.InsertTimer(this, initialDelay);
+			if (initialDelay > MaxInterval || initialDelay < 1)
+				throw new ArgumentOutOfRangeException("offsetTick", initialDelay.ToString(), "Offset must be in range from 1 to "+MaxInterval);
+			
+			if(!IsAlive) 
+			{
+				m_started = true;
+				
+				m_targetTime = GetTickCount()+initialDelay;
+				m_scheduler.InsertTimer(this, m_targetTime);
+			}
 		}
-
-//		/// <summary>
-//		/// Starts the timer using current interval
-//		/// </summary>
-//		public virtual void Start()
-//		{ not clear what it does, imo
-//			m_time.InsertTimer(this, Interval);
-//		}
 
 		/// <summary>
 		/// Stops the timer
 		/// </summary>
 		public virtual void Stop()
 		{
-			m_time.RemoveTimer(this);
+			if(IsAlive)
+			{
+				m_started = false;
+				
+				lock(m_timerLock) 
+				{
+					// Make sure it finished
+
+					m_scheduler.RemoveTimer(this);
+					m_targetTime = MaxInterval;
+				}
+			}
 		}
 
 		/// <summary>
 		/// Called on every timer tick
 		/// </summary>
 		protected abstract void OnTick();
-
-		private static long StopwatchFrequencyMilliseconds = Stopwatch.Frequency / 1000;
-		/// <summary>
-		/// Get the tick count, this is needed because Environment.TickCount resets to 0
-		/// when server has been up 48 days because it returned an int,
-		/// this is a long
-		/// </summary>
-		/// <returns></returns>
-		public static long GetTickCount()
-		{
-			return Stopwatch.GetTimestamp() / StopwatchFrequencyMilliseconds;
-		}
+		
+		#endregion
 
 		#region TimeManager
 
@@ -187,165 +232,105 @@ namespace DOL.GS
 		/// when it is started, that cylces through all GameTimers and
 		/// executes them at the right moment.
 		/// </summary>
-		public sealed class TimeManager
+		public sealed class GameScheduler
 		{
-			private readonly object m_lockObject = new object();
+			#region static members
 			/// <summary>
 			/// Defines a logger for this class.
 			/// </summary>
 			private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+			
+			private const int MAX_SCHEDULER_SLEEP = 4500;
+			#endregion
+			
+			#region lock
+			/// <summary>
+			/// Lock Object to prevent concurrent access
+			/// </summary>
+			private readonly object m_lockObject = new object();
 
-			/// <summary>
-			/// The size of cache array with 1ms granularity, in bits
-			/// Must be more than or equal to one bucket size
-			/// </summary>
-			public static readonly int CACHE_BITS = 14;
-			/// <summary>
-			/// The bucket size in bits. All timers with same high bits get into same bucket.
-			/// </summary>
-			public static readonly int BUCKET_BITS = 4;
-			/// <summary>
-			/// The table arrays size in bits.
-			/// Table size in milliseconds is (1 less than less than BUCKET_BITS + TABLE_BITS).
-			/// </summary>
-			public static readonly int TABLE_BITS = 17;
-			/// <summary>
-			/// Defines amount of bits that don't fit the fixed time table.
-			/// Two highest bits are reserved for flags.
-			/// </summary>
-			public static readonly int LONGTERM_BITS = 30 - BUCKET_BITS - TABLE_BITS;
-
-			/// <summary>
-			/// Defines the bitmask used to get timer cache bucket index
-			/// </summary>
-			public static readonly int CACHE_MASK = (1 << CACHE_BITS) - 1;
-			/// <summary>
-			/// Defines the bitmask used for a check if new bucket should be sorted
-			/// </summary>
-			public static readonly int BUCKET_MASK = (1 << BUCKET_BITS) - 1;
-			/// <summary>
-			/// Defines the bitmask used to get timer bucket index
-			/// (after shifting it by BUCKET_BITS!)
-			/// </summary>
-			public static readonly int TABLE_MASK = (1 << TABLE_BITS) - 1;
-			/// <summary>
-			/// Defines the bitmask used to check if timer should be delayed for another table loop
-			/// </summary>
-			public static readonly int LONGTERM_MASK = ((1 << LONGTERM_BITS) - 1) << BUCKET_BITS + TABLE_BITS;
-			/// <summary>
-			/// Defines the bitmask used to "overflow" the current millisecond
-			/// so that time table starts from 0 again.
-			/// </summary>
-			public static readonly int TICK_MASK = (1 << TABLE_BITS + BUCKET_BITS) - 1;
-
-
-			/// <summary>
-			/// The time thread
-			/// </summary>
-			private Thread m_timeThread;
-			/// <summary>
-			/// The time thread name
-			/// </summary>
-			private readonly string m_name;
 			/// <summary>
 			/// The timer is running while this flag is true
 			/// </summary>
-			private volatile bool m_running;
-			/// <summary>
-			/// The current virtual millisecond, overflows when it reach the time table end
-			/// </summary>
-			private int m_tick;
-			/// <summary>
-			/// The current manager time in milliseconds
-			/// </summary>
-			private long m_time;
-			/// <summary>
-			/// The cached bucket with 1ms granularity.
-			/// All intervals that fit this array don't need sorting.
-			/// </summary>
-			private readonly CacheBucket[] m_cachedBucket = new CacheBucket[1 << CACHE_BITS];
-			/// <summary>
-            /// Stores all timers. Array index = (TimerTick>>BUCKET_BITS)&TABLE_MASK
-			/// </summary>
-			private readonly GameTimer[] m_buckets = new GameTimer[1 << TABLE_BITS];
-			/// <summary>
-			/// The count of active timers in the manager
-			/// </summary>
-			private int m_activeTimers;
-			/// <summary>
-			/// The count of invoked timers
-			/// </summary>
-			private long m_invokedCount;
-
-			/// <summary>
-			/// Holds the first and the last timers in the chain
-			/// </summary>
-			private struct CacheBucket
-			{
-				/// <summary>
-				/// The first timer in the chain
-				/// </summary>
-				public GameTimer FirstTimer;
-				/// <summary>
-				/// The last timer in the chain
-				/// </summary>
-				public GameTimer LastTimer;
-				/// <summary>
-				/// The empty bucket
-				/// </summary>
-				public static readonly CacheBucket EmptyBucket = new CacheBucket();
-			}
-
-			/// <summary>
-			/// Constructs a new time manager
-			/// </summary>
-			/// <param name="name">Thread name</param>
-			public TimeManager(string name)
-			{
-				if (name == null)
-					throw new ArgumentNullException("name");
-				m_name = name;
-#if MonitorCallbacks
-				FileStream stream = new FileStream("logs\\delays-" + m_name + ".log", FileMode.Append, FileAccess.Write, FileShare.Read);
-				m_delayLog = new StreamWriter(stream);
-				m_delayLog.WriteLine("\n\n\n\n\n===============================");
-				m_delayLog.WriteLine("=== new log "+DateTime.Now.ToString());
-				m_delayLog.WriteLine("===============================\n\n\n");
-#endif
-			}
-
-			/// <summary>
-			/// Gets the maximal allowed interval
-			/// </summary>
-			public int MaxInterval
-			{
-				get { return (1 << LONGTERM_BITS + TABLE_BITS + BUCKET_BITS) - (1 << TABLE_BITS + BUCKET_BITS); }
-			}
-
-			/// <summary>
-			/// Gets the current virtual millisecond which is reset after TICK_MASK ticks
-			/// </summary>
-			internal int CurrentTick
-			{
-				get { return m_tick; }
-				set { m_tick = value; }
-			}
-
-			/// <summary>
-			/// Gets the current manager time in milliseconds
-			/// </summary>
-			public long CurrentTime
-			{
-				get { return m_time; }
-				set { m_time = value; }
-			}
-
+			private volatile bool m_running = false;
+			
 			/// <summary>
 			/// True if manager is active
 			/// </summary>
 			public bool Running
 			{
 				get { return m_running; }
+			}
+			
+			#endregion
+
+			#region member
+			/// <summary>
+			/// Thread Pool Handling this Time Manager
+			/// </summary>
+			//private SmartThreadPool m_threadPool;
+			
+			/// <summary>
+			/// Defines a sorted dict containing timer to fire.
+			/// </summary>
+			private readonly SortedList<long, List<GameTimer>> m_scheduleQueue = new SortedList<long, List<GameTimer>>();
+			
+			/// <summary>
+			/// Pulse Monitor to notify scheduler of a timer.
+			/// </summary>
+			private readonly EventWaitHandle m_pulseMonitor = new EventWaitHandle(false, EventResetMode.AutoReset);
+			
+			/// <summary>
+			/// The scheduler thread
+			/// </summary>
+			private Thread m_timeThread;
+			
+			/// <summary>
+			/// The time thread name
+			/// </summary>
+			private readonly string m_name;
+			
+			/// <summary>
+			/// The Next event time.
+			/// </summary>			
+			public long NextTick 
+			{
+				get
+				{
+					lock(m_lockObject)
+					{
+						if(m_scheduleQueue.Count > 0)
+							return m_scheduleQueue.Keys[0];
+						
+						return MaxInterval;
+					}
+				}
+			}
+			
+			/// <summary>
+			/// The current manager time in milliseconds
+			/// </summary>
+			private long m_time;
+
+			/// <summary>
+			/// Gets the current manager time in milliseconds
+			/// </summary>
+			public long CurrentTime
+			{
+				get 
+				{
+					long num;
+					lock(m_lockObject)
+						num = m_time;
+					
+					return num;
+				}
+				
+				set 
+				{
+					lock(m_lockObject)
+						m_time = value; 
+				}
 			}
 
 			/// <summary>
@@ -355,22 +340,21 @@ namespace DOL.GS
 			{
 				get { return m_name; }
 			}
-
+			
+			#endregion
+			
 			/// <summary>
-			/// Gets the current count of active timers
+			/// Constructs a new time manager
 			/// </summary>
-			public int ActiveTimers
+			/// <param name="name">Thread name</param>
+			public GameScheduler(string name)
 			{
-				get { return m_activeTimers; }
+				if (name == null)
+					throw new ArgumentNullException("name");
+				m_name = name;
 			}
-
-			/// <summary>
-			/// Gets the invoked timers count
-			/// </summary>
-			public long InvokedCount
-			{
-				get { return m_invokedCount; }
-			}
+			
+			#region statistics and debug
 
 			/// <summary>
 			/// Returns short description of the time manager
@@ -380,142 +364,65 @@ namespace DOL.GS
 			{
 				return string.Format("time manager:'{0}' running:{1} currentTime:{2}", m_name, m_running, m_time);
 			}
-
-			#region debug
-
-#if CollectStatistic
+			
 			/// <summary>
-			/// Holds callback statistics
+			/// Sync Message frequency
 			/// </summary>
-			private readonly Dictionary<int, int> m_timerCallbackStatistic = new Dictionary<int, int>();
+			private const long DELAY_WARNING_SYNC = 10000;
+			
 			/// <summary>
-			/// Get a list of active counts of different callbacks
+			/// Sync Message Delay
 			/// </summary>
-			/// <returns></returns>
-			public IList GetUsedCallbacks()
+			private long OutOfSyncWarn = long.MinValue / 10000;
+			private long OutOfTimeWarn = long.MinValue / 10000;
+
+			private int m_activeTimer = 0;
+			/// <summary>
+			/// Gets the current count of active timers
+			/// </summary>
+			public int ActiveTimers
 			{
-				Dictionary<int, int> table;
-				lock (((ICollection)m_timerCallbackStatistic).SyncRoot) {
-					table = new Dictionary<int, int>(m_timerCallbackStatistic);
-				}
-
-				// sort it
-				List<KeyValuePair<int, int>> sorted = new List<KeyValuePair<int, int>>();
-				foreach (KeyValuePair<int, int> entry in table) {						
-					int count = (int)entry.Value;
-					int i;
-					for (i=0; i<sorted.Count; i++) {
-						if ( ((int)(sorted[i]).Value) < count ) break;
-					}
-					sorted.Insert(i, entry);
-				}
-
-				// make strings
-				sortedStr = new List<string>();
-				
-				for (int i=0; i<sorted.Count; i++) {
-					KeyValuePair<int, int> entry = sorted[i];
-					sortedStr[i] = entry.Value+": "+entry.Key;
-				}
-				return sortedStr;
-			}
-#endif
-
-			/// <summary>
-			/// Counts all timers in the table
-			/// </summary>
-			/// <returns></returns>
-			public int CountTimers()
-			{
-				lock (m_buckets)
+				get 
 				{
-					int res = 0;
-					GameTimer t;
-					for (int i = 0; i < m_cachedBucket.Length; i++)
-					{
-						t = m_cachedBucket[i].FirstTimer;
-						res += CheckChain(t, "cached bucket");
-					}
-					for (int i = 0; i < m_buckets.Length; i++)
-					{
-						t = m_buckets[i];
-						res += CheckChain(t, "big buckets");
-					}
-					return res;
+					int num;
+					lock(m_lockObject)
+						num = m_activeTimer;
+					
+					return num;
 				}
 			}
 
+			private long m_invokedCount = 0;
 			/// <summary>
-			/// Checks one timers chain
+			/// Gets the invoked timers count
 			/// </summary>
-			/// <param name="t"></param>
-			/// <param name="tableName"></param>
-			/// <returns></returns>
-			private static int CheckChain(GameTimer t, string tableName)
+			public long InvokedCount
 			{
-				int res = 0;
-				while (t != null)
+				get 
 				{
-					if (res++ > 500000)
-					{
-						log.WarnFormat("possible circular chain (500000 timers in one bucket)");
-						break;
-					}
-					t = t.m_nextTimer;
-				}
-				return res;
-			}
-			
-#if MonitorCallbacks
-			
-			private StreamWriter m_delayLog;
-			private volatile GameTimer m_currentTimer;
-			private volatile int m_timerTickStart;
-			
-			private void SlowTimerCallback(object state)
-			{
-				try
-				{
-					int start = m_timerTickStart;
-					GameTimer timer = m_currentTimer;
-					if (timer == null) return;
-
-					StringBuilder str = new StringBuilder("=== Timer already took ", 1024);
-					str.Append(GetTickCount() - start).Append("ms\n");
-					str.Append(timer.ToString());
-					str.Append("\n\n");
-					str.Append("Timer thread:\n");
-					str.Append(Util.FormatStackTrace(Util.GetThreadStack(m_timeThread)));
-
-					string packetStacks = PacketHandler.PacketProcessor.GetConnectionThreadpoolStacks();
-					if (packetStacks.Length > 0)
-					{
-						str.Append("\n\nPackethandler threads:\n");
-						str.Append(packetStacks);
-					}
-
-					str.Append("\n\nNPC update thread:\n");
-					str.Append(Util.FormatStackTrace(WorldMgr.GetNpcUpdateStacktrace()));
-
-					str.Append("\n\nRelocation thread:\n");
-					str.Append(Util.FormatStackTrace(WorldMgr.GetRelocateRegionsStacktrace()));
-
-					str.Append("\n\n");
-
-					lock (m_delayLog)
-					{
-						m_delayLog.Write(str.ToString());
-						m_delayLog.Flush();
-					}
-				}
-				catch (Exception e)
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("collecting/writing timer delays", e);
+					long num;
+					lock(m_lockObject)
+						num = m_invokedCount;
+					
+					return num;
 				}
 			}
-			
-#endif
+
+			private long m_threadLoop = 0;
+			/// <summary>
+			/// Gets the invoked timers count
+			/// </summary>
+			public long ThreadLoop
+			{
+				get 
+				{
+					long num;
+					lock(m_lockObject)
+						num = m_threadLoop;
+					
+					return num;
+				}
+			}
 
 			/// <summary>
 			/// Gets the time thread stacktrace
@@ -526,38 +433,45 @@ namespace DOL.GS
 				if (m_timeThread == null)
 					return null;
 				
+				StackTrace result;
 				lock (m_lockObject)
 				{
-					return Util.GetThreadStack(m_timeThread);
+					result = Util.GetThreadStack(m_timeThread);
 				}
+				
+				return result;
 			}
-			
-			#endregion
 
+			#endregion 
+			
+			#region Start/Stop
 			/// <summary>
 			/// Starts the time manager if not started already
 			/// </summary>
 			/// <returns>success</returns>
 			public bool Start()
 			{
-				Thread exists;
-				lock(m_lockObject)
-					exists = m_timeThread;
-				
-				if (exists != null)
+				if(m_running)
 					return false;
 				
-				lock (m_lockObject)
+				m_running = true;
+				
+				// if it's first start it shouldn't lock
+				lock(m_lockObject)
 				{
-					m_running = true;
+					m_time = GetTickCount();
+					
+					// Init Scheduler Thread
 					m_timeThread = new Thread(new ThreadStart(TimeThread));
 					m_timeThread.Name = m_name;
 					m_timeThread.Priority = ThreadPriority.AboveNormal;
 					m_timeThread.IsBackground = true;
+									
 					m_timeThread.Start();
+					//m_threadPool.Start();
+					
+					return true;
 				}
-				
-				return true;
 			}
 
 			/// <summary>
@@ -566,24 +480,33 @@ namespace DOL.GS
 			/// <returns>success</returns>
 			public bool Stop()
 			{
-				Thread exists;
-				lock(m_lockObject)
-					exists = m_timeThread;
-				
-				if (m_timeThread == null)
+
+				if(!m_running)
 					return false;
-
-				lock (m_lockObject)
+				
+				// Tell the thread loop to stop, this is volatile
+				m_running = false;
+				
+				// Force Thread to finish Loop
+				m_pulseMonitor.Set();
+				
+				// this should lock during shutdown, 
+				// if lock cannot be acquired, there is something wrong going in scheduler
+				lock(m_lockObject)
 				{
-					m_running = false;
-
-					if (!m_timeThread.Join(10000))
+					// make sure it stops
+					m_pulseMonitor.Set();
+				}
+				
+				lock(m_lockObject)
+				{
+					if (!m_timeThread.Join(3000))
 					{
 						if (log.IsErrorEnabled)
 						{
 							ThreadState state = m_timeThread.ThreadState;
 							StackTrace trace = Util.GetThreadStack(m_timeThread);
-							log.ErrorFormat("failed to stop the time thread \"{0}\" in 10 seconds (thread state={1}); thread stacktrace:\n", m_name, state);
+							log.ErrorFormat("failed to stop the time thread \"{0}\" in 3 seconds (thread state={1}); thread stacktrace:\n", m_name, state);
 							log.ErrorFormat(Util.FormatStackTrace(trace));
 							log.ErrorFormat("aborting the thread.\n");
 						}
@@ -591,100 +514,64 @@ namespace DOL.GS
 						try 
 						{
 							m_timeThread.Abort();
+							
+							if (m_timeThread.Join(3000))
+							{
+								m_scheduleQueue.Clear();
+								return true;
+							}
+							else
+							{
+								log.ErrorFormat("Couldn't gracefully abort thread {0}.\n", m_name);
+								return false;
+							}
+							
 						}
 						catch
 						{
 							log.ErrorFormat("Couldn't abort thread {0}.\n", m_name);
 						}
+						finally
+						{
+							m_scheduleQueue.Clear();
+							m_timeThread = null;
+						}
 					}
-					
-					m_timeThread = null;
 
-					Array.Clear(m_buckets, 0, m_buckets.Length);
-					Array.Clear(m_cachedBucket, 0, m_cachedBucket.Length);
-					
-#if MonitorCallbacks
-					try
-					{
-						m_delayLog.Flush();
-						m_delayLog.Close();
-					}
-					catch (Exception e)
-					{
-						log.Error("Closing delays log while stop() "+m_name, e);
-					}
-#endif
 				}
 				
 				return true;
-
 			}
+			#endregion
 
-			/// <summary>
-			/// Inserts the timer into the table.
-			/// </summary>
-			/// <param name="t">The timer to insert</param>
-			/// <param name="offsetTick">The offset from current tick. min value=1, max value&lt;MaxInterval</param>
-			internal void InsertTimer(GameTimer t, int offsetTick)
+			#region Scheduling
+			internal void InsertTimer(GameTimer t, long adujstTick)
 			{
-				if (offsetTick > MaxInterval || offsetTick < 1)
-					throw new ArgumentOutOfRangeException("offsetTick", offsetTick.ToString(), "Offset must be in range from 1 to "+MaxInterval);
-
-				GameTimer timer = t;
-
-				lock (m_buckets)
+				
+				bool pulse = false;
+				
+				// inserting need the Scheduler to be available
+				lock(m_lockObject)
 				{
-					long timerTick = timer.m_tick;
-					long targetTick = m_tick + offsetTick;
+					if(adujstTick < NextTick)
+					{
+						pulse = true;
+					}
 					
-					if (timerTick == m_tick || (timerTick & TIMER_RESCHEDULED) != 0)
+					if(!m_scheduleQueue.ContainsKey(adujstTick))
 					{
-						timer.m_targetTime = (int) (CurrentTime + offsetTick);
-						timer.m_tick = targetTick | TIMER_RESCHEDULED;
-						return;
+						m_scheduleQueue.Add(adujstTick, new List<GameTimer>());
 					}
-
-					if ((timerTick & TIMER_DISABLED) == 0)
-					{
-						RemoveTimerUnsafe(timer);
-					}
-
-					timer.m_targetTime = (int) (CurrentTime + offsetTick);
-					m_activeTimers++;
-
-					if (offsetTick <= CACHE_MASK + 1)
-					{
-						timer.m_tick = targetTick & TICK_MASK;
-						targetTick &= CACHE_MASK;
-						CacheBucket bucket = m_cachedBucket[targetTick];
-						GameTimer prev = bucket.LastTimer;
-						if (prev != null)
-						{
-							prev.m_nextTimer = timer;
-							m_cachedBucket[targetTick].LastTimer = timer;
-						}
-						else
-						{
-							bucket.FirstTimer = timer;
-							bucket.LastTimer = timer;
-							m_cachedBucket[targetTick] = bucket;
-						}
-					}
-					else
-					{
-						if ((targetTick & TICK_MASK) > (m_tick & ~BUCKET_MASK) + BUCKET_MASK)
-							targetTick += TICK_MASK + 1; // extra pass if the timer is ahead of current tick
-						timer.m_tick = targetTick;
-                        targetTick = (targetTick >> BUCKET_BITS) & TABLE_MASK;
-						GameTimer next = m_buckets[targetTick];
-						m_buckets[targetTick] = timer;
-						if (next != null)
-						{
-							timer.m_nextTimer = next;
-						}
-					}
+					
+					m_scheduleQueue[adujstTick].Add(t);
+					m_activeTimer++;
 				}
+				
+				if(pulse)
+					m_pulseMonitor.Set();
+					
 			}
+			
 
 			/// <summary>
 			/// Removes the timer from the table.
@@ -692,93 +579,20 @@ namespace DOL.GS
 			/// <param name="timer">The timer to remove</param>
 			internal void RemoveTimer(GameTimer timer)
 			{
-				lock (m_buckets)
+				// removing need the Scheduler to be available				
+				lock(m_lockObject)
 				{
-					RemoveTimerUnsafe(timer);
-				}
-			}
-
-			/// <summary>
-			/// Removes the timer from the table without locking the table
-			/// </summary>
-			/// <param name="timer">The timer to remove</param>
-			private void RemoveTimerUnsafe(GameTimer timer)
-			{
-				GameTimer t = timer;
-				long tick = t.m_tick;
-				if ((tick & TIMER_DISABLED) != 0)
-					return;
-
-				timer.m_targetTime = -1;
-				// never change the active chain
-				if (tick == m_tick || (tick & TIMER_RESCHEDULED) != 0)
-				{
-					t.m_tick = TIMER_DISABLED | TIMER_RESCHEDULED;
-					return;
-				}
-
-				m_activeTimers--;
-
-				// check the cache first
-				long cachedIndex = tick & CACHE_MASK;
-				CacheBucket bucket = m_cachedBucket[cachedIndex];
-				if (bucket.FirstTimer == t)
-				{
-					t.m_tick = TIMER_DISABLED;
-					bucket.FirstTimer = t.m_nextTimer;
-					if (bucket.LastTimer == t)
-						bucket.LastTimer = t.m_nextTimer;
-					t.m_nextTimer = null;
-					m_cachedBucket[cachedIndex] = bucket;
-					return;
-				}
-
-				GameTimer timerChain = bucket.FirstTimer;
-				GameTimer prev;
-				while (timerChain != null)
-				{
-					prev = timerChain;
-					timerChain = timerChain.m_nextTimer;
-					if (timerChain == t)
+					while(m_scheduleQueue.ContainsKey(timer.m_targetTime) && m_scheduleQueue[timer.m_targetTime].Contains(timer)) 
 					{
-						prev.m_nextTimer = t.m_nextTimer;
-						t.m_nextTimer = null;
-						t.m_tick = TIMER_DISABLED;
-						if (bucket.LastTimer == t)
-						{
-							bucket.LastTimer = prev;
-							m_cachedBucket[cachedIndex] = bucket;
-						}
-						return;
+						m_scheduleQueue[timer.m_targetTime].Remove(timer);
+						m_activeTimer--;
 					}
 				}
-
-				// check the buckets
-				tick = (tick >> BUCKET_BITS) & TABLE_MASK;
-				timerChain = m_buckets[tick];
-				if (timerChain == t)
-				{
-					timerChain = timerChain.m_nextTimer;
-					m_buckets[tick] = timerChain;
-					t.m_nextTimer = null;
-					t.m_tick = TIMER_DISABLED;
-					return;
-				}
-
-				while (timerChain != null)
-				{
-					prev = timerChain;
-					timerChain = timerChain.m_nextTimer;
-					if (timerChain == t)
-					{
-						prev.m_nextTimer = t.m_nextTimer;
-						break;
-					}
-				}
-				t.m_nextTimer = null;
-				t.m_tick = TIMER_DISABLED;
 			}
+			
+			#endregion
 
+			#region scheduler Loop
 			/// <summary>
 			/// The time thread loop
 			/// </summary>
@@ -786,292 +600,135 @@ namespace DOL.GS
 			{
 				log.InfoFormat("started timer thread {0} (ID:{1})", m_name, Thread.CurrentThread.ManagedThreadId);
 
-				int timeBalance = 0;
-				uint workStart, workEnd;
-				GameTimer chain, next, bucketTimer;
-
-				workStart = workEnd = (uint)GetTickCount();
+				long workEnd, previousTime;
+				m_time = workEnd = previousTime = GetTickCount();
+				int count,listcount,index,wait;
+				Queue<GameTimer> firingQueue = new Queue<GameTimer>();
 				
-#if MonitorCallbacks
-				Timer t = new Timer(new TimerCallback(SlowTimerCallback), null, Timeout.Infinite, Timeout.Infinite);
-#endif
-
+				ushort trim = 0;
+				
 				while (m_running)
 				{
+					
 					try
 					{
-						// fire timers
-						lock (m_buckets)
+						// Set Current Time
+						m_time = GetTickCount();
+						
+						// Lock the Scheduler
+						lock(m_lockObject)
 						{
-							if(DOL.GS.GameEvents.RegionTimersResynch.watch!=null)
-								m_time = DOL.GS.GameEvents.RegionTimersResynch.watch.ElapsedMilliseconds;
-							else m_time++;
-							
-							int newTick = m_tick = (m_tick + 1) & TICK_MASK;
-							if ((newTick & BUCKET_MASK) == 0)
+							if(trim > 1000) 
 							{
-								// cache next bucket
-								int index = newTick >> BUCKET_BITS;
-								next = m_buckets[index];
-								if (next != null)
-								{
-									m_buckets[index] = null;
-									// sort the new cached bucket
-									do
-									{
-										GameTimer timer = next;
-										next = next.m_nextTimer;
-										long index2 = timer.m_tick;
-										if ((index2 & LONGTERM_MASK) != 0
-											&& ((index2 -= (1 << TABLE_BITS + BUCKET_BITS)) & LONGTERM_MASK) != 0)
-										{
-											// reinsert longterm timers back
-											timer.m_tick = index2;
-											bucketTimer = m_buckets[index];
-											m_buckets[index] = timer;
-										}
-										else
-										{
-											timer.m_tick = index2;
-											index2 &= CACHE_MASK;
-											bucketTimer = m_cachedBucket[index2].FirstTimer;
-											m_cachedBucket[index2].FirstTimer = timer;
-											if (m_cachedBucket[index2].LastTimer == null)
-												m_cachedBucket[index2].LastTimer = timer;
-										}
+								//Trim lists for performances
+								m_scheduleQueue.TrimExcess();
+								trim = 0;
+							}
+							else 
+							{
+								trim++;
+							}
 
-										if (bucketTimer == null)
-										{
-											timer.m_nextTimer = null;
-										}
-										else
-										{
-											timer.m_nextTimer = bucketTimer;
-										}
+							
+							// Get all event needing firing
+							
+							// Try Index
+							if(m_scheduleQueue.ContainsKey(m_time)) 
+							{
+								index = m_scheduleQueue.IndexOfKey(m_time)+1;
+							}
+							else
+							{
+								// Lookup index
+								index = 0;
+								for(count = 0 ; count < m_scheduleQueue.Count ; count++) 
+								{
+									index = count;
+									if(m_scheduleQueue.Keys[count] > m_time)
+									{
+										break;
 									}
-									while (next != null);
 								}
 							}
-
-							int cacheIndex = m_tick & CACHE_MASK;
-							chain = m_cachedBucket[cacheIndex].FirstTimer;
-							if (chain != null)
+							
+							// Fire them
+							for(count = 0 ; count < index ; count++) 
 							{
-								m_cachedBucket[cacheIndex] = CacheBucket.EmptyBucket;
-							}
-						}
-
-						GameTimer current = chain;
-						int curTick = m_tick;
-						int currentBucketMax = (curTick & ~BUCKET_MASK) + BUCKET_MASK;
-						while (current != null)
-						{
-							if (current.m_tick == curTick)
-							{
-								try
+								for(listcount = 0 ; listcount < m_scheduleQueue.Values[count].Count ; listcount++)
 								{
-									long callbackStart = GetTickCount();
-									
-#if MonitorCallbacks
-									m_currentTimer = current;
-									m_timerTickStart = callbackStart;
-									t.Change(200, 100);
-#endif
-
-									current.OnTick();
-
-#if MonitorCallbacks
-									m_currentTimer = null;
-									t.Change(Timeout.Infinite, Timeout.Infinite);
-									if (GetTickCount() - callbackStart > 200)
+									if(!m_scheduleQueue.Values[count][listcount].m_firing) 
 									{
-										lock (m_delayLog)
-										{
-											m_delayLog.Write("\n========================================================\n\n");
-										}
-									}
-#endif
-
-									if (GetTickCount() - callbackStart > 250) 
-									{
-										if (log.IsWarnEnabled)
-										{
-											string curStr;
-											try { curStr = current.ToString(); }
-											catch(Exception ee) { curStr = "error in timer.ToString(): " + current.GetType().FullName + "; " + ee.ToString(); }
-											string warning = "callback took "+(GetTickCount() - callbackStart)+"ms! "+curStr;
-											log.Warn(warning);
-										}
-									}
-
-#if CollectStatistic
-									// statistic
-									int start = GetTickCount();
-									string callback;
-									
-									if (current is RegionTimer)
-									{
-										callback = ((RegionTimer)current).Callback.Method.ToString();
+										m_scheduleQueue.Values[count][listcount].m_firing = true;
+										firingQueue.Enqueue(m_scheduleQueue.Values[count][listcount]);										
+										m_invokedCount++;
+										m_activeTimer--;
 									}
 									else
 									{
-										callback = current.GetType().FullName;
+										log.Warn("Duplicate Job in "+m_name+" - "+m_scheduleQueue.Values[count][listcount].ToString());
 									}
-									
-									lock (((ICollection)m_timerCallbackStatistic).SyncRoot)
-									{
-										int obj = null;
-										if(m_timerCallbackStatistic.ContainsKey(callback))
-											obj = m_timerCallbackStatistic[callback];
-											
-										if (obj == null) 
-										{
-											m_timerCallbackStatistic[callback] = 1;	
-										} 
-										else 
-										{
-											m_timerCallbackStatistic[callback] = ((int)obj) + 1;
-										}
-									}
-									
-									if (GetTickCount()-start > 500) 
-									{
-										if (log.IsWarnEnabled)
-											log.Warn("Ticker statistic "+callback+" took more than 500ms!");
-									}
-#endif
 								}
-								catch (Exception e)
+							}
+							
+							// Unschedule all runned ticks
+							for(count = 0 ; count < index ; count++) 
+							{
+								m_scheduleQueue.RemoveAt(0);
+							}
+						}
+						
+						while(firingQueue.Count > 0) 
+						{
+							// inline Timer
+							FireTimer(firingQueue.Dequeue());
+						}
+						
+						lock(m_lockObject)
+						{
+							// Loop again If needed and listen for signal !
+							wait = (int)Math.Max(0, Math.Min(MAX_SCHEDULER_SLEEP, NextTick - GetTickCount()));
+						}
+						
+						//Check for Desync
+						workEnd = GetTickCount();
+					
+						if(OutOfSyncWarn < workEnd && (workEnd - m_time) > 150)
+						{
+							// we're out of Sync !
+							log.Warn("Game Scheduler "+m_name+" Out of Sync !! - "+(workEnd - m_time)+"ms");
+							OutOfSyncWarn = workEnd + DELAY_WARNING_SYNC;
+						}
+						
+						while(m_running) 
+						{
+							if(m_pulseMonitor.WaitOne(wait)) 
+							{
+								// make sure it stops !
+								if(!m_running)
+									break;
+								
+								// got a reinsert signal !
+								lock(m_lockObject) 
 								{
-									string curStr;
-									try { curStr = current.ToString(); }
-									catch(Exception ee) { curStr = "error in timer.ToString(): " + current.GetType().FullName + "; " + ee.ToString(); }
-									if (log.IsErrorEnabled)
-										log.Error("Timer callback (" + curStr + ")", e);
-									current.m_tick = TIMER_DISABLED | TIMER_RESCHEDULED;
+									wait = (int)Math.Max(0, Math.Min(MAX_SCHEDULER_SLEEP, NextTick - GetTickCount()));
 								}
 								
-								m_invokedCount++;
+								// exit if we're needed immediatly
+								if(wait == 0)
+									break;
 							}
-							else if ((current.m_tick & TIMER_RESCHEDULED) == 0)
+							else
 							{
-								//log.ErrorFormat("timer tick != current tick (0x{0:X4}), fired anyway: {1}", curTick, current);
-								try
-								{
-									current.OnTick();
-								}
-								catch (Exception e)
-								{
-									log.Error("timer error", e);
-									current.m_tick = TIMER_DISABLED | TIMER_RESCHEDULED;
-								}
+								break;
 							}
-
-							lock (m_buckets)
-							{
-								next = current.m_nextTimer;
-								long tick = current.m_tick;
-								long interval = current.m_interval;
-
-								if ((tick & TIMER_DISABLED) != 0 || (interval == 0 && (tick & TIMER_RESCHEDULED) == 0))
-								{
-									m_activeTimers--;
-									current.m_nextTimer = null;
-									current.m_tick = TIMER_DISABLED;
-									current.m_targetTime = -1;
-								}
-								else
-								{
-									///// REINSERT all including rescheduled timers
-									if ((tick & TIMER_RESCHEDULED) != 0)
-									{
-										current.m_tick = tick &= ~TIMER_RESCHEDULED;
-									}
-									else
-									{
-										current.m_targetTime = (int) (CurrentTime + interval);
-										current.m_tick = tick = curTick + interval;
-									}
-
-									if (tick - curTick <= CACHE_MASK + 1)
-									{
-										tick &= CACHE_MASK;
-										current.m_tick &= TICK_MASK;
-										CacheBucket bucket = m_cachedBucket[tick];
-										GameTimer prev = bucket.LastTimer;
-										current.m_nextTimer = null;
-										if (prev != null)
-										{
-											prev.m_nextTimer = current;
-											bucket.LastTimer = current;
-										}
-										else
-										{
-											bucket.FirstTimer = current;
-											bucket.LastTimer = current;
-										}
-										m_cachedBucket[tick] = bucket;
-									}
-									else
-									{
-										if ((tick & TICK_MASK) > currentBucketMax)
-											current.m_tick = tick += TICK_MASK + 1; // extra pass if the timer is ahead of current tick
-										tick = (tick >> BUCKET_BITS) & TABLE_MASK;
-										bucketTimer = m_buckets[tick];
-										if (bucketTimer == null)
-										{
-											current.m_nextTimer = null;
-										}
-										else
-										{
-											current.m_nextTimer = bucketTimer;
-										}
-										m_buckets[tick] = current;
-									}
-
-									/////
-								}
-							}
-
-							current = next;
 						}
 
-						bucketTimer = null;
-
-
-
-
-						workEnd = (uint)GetTickCount();
-						timeBalance += 1 - (int)(workEnd - workStart);
-
-						if (timeBalance > 0)
-						{
-							Thread.Sleep(timeBalance);
-							workStart = (uint)GetTickCount();
-							timeBalance -= (int)(workStart - workEnd);
-						}
-						else
-						{
-							if (timeBalance < -1000)
-							{
-								//We can not increase forever if we get out of
-								//sync. At some point we have to print out a warning
-								//and catch up some time!
-								if (log.IsWarnEnabled && timeBalance < -2000)
-								{
-									// Again, too much warning spam is meaningless.  Will warn if time sync is more than the typical 1 to 2 seconds
-									// -tolakram
-									log.Warn(Name + " out of sync, over 2000ms lost! " + timeBalance.ToString());
-								}
-								timeBalance += 1000;
-							}
-							workStart = workEnd;
-						}
 					}
 					catch (ThreadAbortException e)
 					{
 						if (log.IsWarnEnabled)
-							log.Warn("Time manager thread \"" + m_name + "\" was aborted", e);
+							log.Warn("Time manager thread \"" + m_name + "\" was aborted (Time : "+GetTickCount()+") (Next : "+NextTick+")", e);
+						
 						m_running = false;
 						break;
 					}
@@ -1080,9 +737,78 @@ namespace DOL.GS
 						if (log.IsErrorEnabled)
 							log.Error("Exception in time manager \"" + m_name + "\"!", e);
 					}
+					
+					m_threadLoop++;
 				}
-
+				
 				log.InfoFormat("stopped timer thread {0} (ID:{1})", m_name, Thread.CurrentThread.ManagedThreadId);
+			}
+			
+			#endregion
+			
+			/// <summary>
+			/// Fire Timer Callback used in Thread Pool
+			/// </summary>
+			/// <param name="gt"></param>
+			/// <returns></returns>
+			private void FireTimer(Object obj)
+			{
+				
+				GameTimer gt = (GameTimer)obj;
+				
+				// Time the Callback
+				long start = GetTickCount();
+				
+				lock(gt.m_timerLock)
+				{
+					if(!gt.m_firing)
+						log.Warn("Timer isn't scheduled - "+gt.ToString());
+					
+					if(gt.m_started)
+						gt.OnTick();
+					
+					gt.m_firing = false;
+					
+					if(gt.m_interval > 0 && gt.m_started)
+					{
+						// if interval, reschedule
+						gt.m_targetTime += gt.m_interval;
+						
+						if(OutOfTimeWarn > GetTickCount() && gt.m_targetTime < GetTickCount()) 
+						{
+							log.Warn("Timer is reinserting in Past (Current Time : "+GetTickCount()+" ) (TargetTime : "+gt.m_targetTime+") - "+gt.ToString());
+							OutOfTimeWarn=GetTickCount()+(DELAY_WARNING_SYNC >> 1);
+						}
+						
+						gt.m_scheduler.InsertTimer(gt, gt.m_targetTime);
+					}
+					else
+					{
+						// unschedule
+						gt.m_started = false;
+						gt.m_targetTime = MaxInterval;
+					}
+				}
+				
+				long elapsed = start - GetTickCount();
+
+				if(elapsed > 250) 
+				{
+					if (log.IsWarnEnabled)
+					{
+						string curStr;
+						try 
+						{
+							curStr = gt.ToString(); 
+						}
+						catch(Exception ee) 
+						{ 
+							curStr = "error in timer.ToString(): " + gt.GetType().FullName + "; " + ee.ToString(); 
+						}
+						
+						log.Warn("callback took "+(elapsed)+" ms! "+curStr);
+					}
+				}
 			}
 		}
 

@@ -241,7 +241,7 @@ namespace DOL.GS.Appeal
 				return;
 			}
 			string eText = GameServer.Database.Escape(Text); //prevent SQL injection
-			string TimeStamp = DateTime.Now.ToLongTimeString() + " " + DateTime.Now.ToLongDateString();
+			string TimeStamp = DateTime.UtcNow.ToLongTimeString() + " " + DateTime.UtcNow.ToLongDateString();
 			DBAppeal appeal = new DBAppeal(Player.Name, Player.Client.Account.Name, Severity, Status, TimeStamp, eText);
 			GameServer.Database.AddObject(appeal);
 			Player.TempProperties.setProperty("HasPendingAppeal", true);

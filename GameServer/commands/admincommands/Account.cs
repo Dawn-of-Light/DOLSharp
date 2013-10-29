@@ -87,7 +87,7 @@ namespace DOL.GS.Commands
                         account.Password = PacketHandler.Client.v168.LoginRequestHandler.CryptPassword(Password);
                         account.PrivLevel = (uint)ePrivLevel.Player;
                         account.Realm = (int)eRealm.None;
-                        account.CreationDate = DateTime.Now;
+                        account.CreationDate = DateTime.UtcNow;
                         account.Language = ServerProperties.Properties.SERV_LANGUAGE;
                         GameServer.Database.AddObject(account);
 

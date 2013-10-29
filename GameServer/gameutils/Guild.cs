@@ -548,7 +548,7 @@ namespace DOL.GS
 
 					if (memberList != null && memberList.ContainsKey(player.InternalID))
 					{
-						memberList[player.InternalID].ZoneOrOnline = DateTime.Now.ToShortDateString();
+						memberList[player.InternalID].ZoneOrOnline = DateTime.UtcNow.ToShortDateString();
 					}
 
 					return true;

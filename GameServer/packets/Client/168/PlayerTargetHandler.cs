@@ -46,7 +46,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			 * 0x2000 = LOS2 bit; is 0 if no LOS
 			 * 0x0001 = players attack mode bit (not targets!)
 			 */
-
 			new ChangeTargetAction(client.Player, targetID, (flags & (0x4000 | 0x2000)) != 0, (flags & 0x8000) != 0).Start(1);
 		}
 
@@ -95,7 +94,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			protected override void OnTick()
 			{
 				var player = (GamePlayer) m_actionSource;
-
 				GameObject myTarget = player.CurrentRegion.GetObject((ushort) m_newTargetId);
 				player.TargetObject = myTarget;
 				player.TargetInView = m_targetInView;
@@ -112,6 +110,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 					// Then no LOS message; not sure which bit to use so use both :)
 					// should be sent if targeted is using group panel to change the target
+					if(ServerProperties.Properties.LOSMGR_ENABLE) 
+					{
+						player.CurrentRegion.LosCheckManager.UpdateCacheFromTargeting(player, myTarget, m_targetInView);
+						
+					}
+					
 					if (!m_targetInView)
 					{
 						player.Out.SendMessage("Target is not in view.", eChatType.CT_System, eChatLoc.CL_SystemWindow);

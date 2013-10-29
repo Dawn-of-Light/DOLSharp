@@ -214,7 +214,7 @@ namespace DOL.GS
 		/// <summary>
 		/// This holds the tick when the day started
 		/// </summary>
-		private static int m_dayStartTick;
+		private static long m_dayStartTick;
 
 		/// <summary>
 		/// This holds the speed of our days
@@ -306,7 +306,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds all region timers
 		/// </summary>
-		private static GameTimer.TimeManager[] m_regionTimeManagers;
+		private static GameTimer.GameScheduler[] m_regionTimeManagers;
 
 		/// <summary>
 		/// Initializes the most important things that is needed for some code
@@ -409,7 +409,7 @@ namespace DOL.GS
 
 			bool hasFrontierRegion = false;
 
-			var regions = new List<RegionData>(512);
+			var regions = new List<RegionData>(256);
 			foreach (DBRegions dbRegion in GameServer.Database.SelectAllObjects<DBRegions>())
 			{
 				RegionData data = new RegionData();
@@ -451,14 +451,14 @@ namespace DOL.GS
 
 			log.Debug(GC.GetTotalMemory(true) / 1024 / 1024 + "MB - Region Data Loaded");
 
-			int cpuCount = GameServer.Instance.Configuration.CpuCount;
+			int cpuCount = GameServer.Instance.Configuration.CPUUse;
 			if (cpuCount < 1)
 				cpuCount = 1;
 
-			GameTimer.TimeManager[] timers = new GameTimer.TimeManager[cpuCount];
+			GameTimer.GameScheduler[] timers = new GameTimer.GameScheduler[cpuCount];
 			for (int i = 0; i < cpuCount; i++)
 			{
-				timers[i] = new GameTimer.TimeManager("RegionTime" + (i + 1).ToString());
+				timers[i] = new GameTimer.GameScheduler("RegionTime" + (i + 1).ToString());
 			}
 
 			m_regionTimeManagers = timers;
@@ -625,7 +625,7 @@ namespace DOL.GS
 				m_WorldUpdateThread.Start();
 
 				m_dayIncrement = Math.Max(0, Math.Min(1000, ServerProperties.Properties.WORLD_DAY_INCREMENT)); // increments > 1000 do not render smoothly on clients
-				m_dayStartTick = Environment.TickCount - (int)(DAY / Math.Max(1, m_dayIncrement) / 2); // set start time to 12pm
+				m_dayStartTick = GameTimer.GetTickCount() - (int)(DAY / Math.Max(1, m_dayIncrement) / 2); // set start time to 12pm
 				m_dayResetTimer = new Timer(new TimerCallback(DayReset), null, DAY / Math.Max(1, m_dayIncrement) / 2, DAY / Math.Max(1, m_dayIncrement));
 
 				m_pingCheckTimer = new Timer(new TimerCallback(PingCheck), null, 10 * 1000, 0); // every 10s a check
@@ -648,11 +648,11 @@ namespace DOL.GS
 		/// Gets all region time managers
 		/// </summary>
 		/// <returns>A copy of region time managers array</returns>
-		public static GameTimer.TimeManager[] GetRegionTimeManagers()
+		public static GameTimer.GameScheduler[] GetRegionTimeManagers()
 		{
-			GameTimer.TimeManager[] timers = m_regionTimeManagers;
-			if (timers == null) return new GameTimer.TimeManager[0];
-			return (GameTimer.TimeManager[])timers.Clone();
+			GameTimer.GameScheduler[] timers = m_regionTimeManagers;
+			if (timers == null) return new GameTimer.GameScheduler[0];
+			return (GameTimer.GameScheduler[])timers.Clone();
 		}
 
 		/// <summary>
@@ -671,7 +671,7 @@ namespace DOL.GS
 						if (client.ClientState == GameClient.eClientState.CharScreen ||
 						    client.ClientState == GameClient.eClientState.Playing)
 						{
-							if (client.PingTime + PING_TIMEOUT * 1000 * 1000 * 10 < DateTime.Now.Ticks)
+							if (client.PingTime + PING_TIMEOUT * 1000 * 1000 * 10 < DateTime.UtcNow.Ticks)
 							{
 								if (log.IsWarnEnabled)
 									log.Warn("Ping timeout for client " + client.Account.Name);
@@ -681,7 +681,7 @@ namespace DOL.GS
 						else
 						{
 							// in all other cases client gets 10min to get wether in charscreen or playing state
-							if (client.PingTime + 10 * 60 * 10000000L < DateTime.Now.Ticks)
+							if (client.PingTime + 10 * 60 * 10000000L < DateTime.UtcNow.Ticks)
 							{
 								if (log.IsWarnEnabled)
 									log.Warn("Hard timeout for client " + client.Account.Name + " (" + client.ClientState + ")");
@@ -724,18 +724,18 @@ namespace DOL.GS
 				try
 				{
 					Thread.Sleep(200); // check every 200ms for needed relocs
-					int start = Environment.TickCount;
+					long start = GameTimer.GetTickCount();
 
 					Dictionary<ushort, Region> regionsClone = new Dictionary<ushort, Region>(m_regions);
 
 					foreach (Region region in regionsClone.Values)
 					{
-						if (region.NumPlayers > 0 && (region.LastRelocationTime + Zone.MAX_REFRESH_INTERVAL) * 10 * 1000 < DateTime.Now.Ticks)
+						if (region.NumPlayers > 0 && (region.LastRelocationTime + Zone.MAX_REFRESH_INTERVAL) * 10 * 1000 < DateTime.UtcNow.Ticks)
 						{
 							region.Relocate();
 						}
 					}
-					int took = Environment.TickCount - start;
+					long took = GameTimer.GetTickCount() - start;
 					if (took > 500)
 					{
 						if (log.IsWarnEnabled)
@@ -765,7 +765,7 @@ namespace DOL.GS
 		/// <param name="sender"></param>
 		private static void DayReset(object sender)
 		{
-			m_dayStartTick = Environment.TickCount;
+			m_dayStartTick = GameTimer.GetTickCount();
 			foreach (GameClient client in GetAllPlayingClients())
 			{
 				if (client.Player != null && client.Player.CurrentRegion != null && client.Player.CurrentRegion.UseTimeManager)
@@ -792,7 +792,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				m_dayStartTick = Environment.TickCount - (int)(dayStart / m_dayIncrement); // set start time to ...
+				m_dayStartTick = GameTimer.GetTickCount() - (int)(dayStart / m_dayIncrement); // set start time to ...
 				m_dayResetTimer.Change((DAY - dayStart) / m_dayIncrement, Timeout.Infinite);
 			}
 
@@ -831,7 +831,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				long diff = Environment.TickCount - m_dayStartTick;
+				long diff = GameTimer.GetTickCount() - m_dayStartTick;
 				long curTime = diff * m_dayIncrement;
 				return (uint)(curTime % DAY);
 			}
@@ -864,7 +864,7 @@ namespace DOL.GS
 			return Util.GetThreadStack(m_WorldUpdateThread);
 		}
 
-		private static uint m_lastWorldObjectUpdateTick = 0;
+		private static long m_lastWorldObjectUpdateTick = 0;
 
 		/// <summary>
 		/// This thread updates the NPCs and objects around the player at very short
@@ -873,23 +873,40 @@ namespace DOL.GS
 		/// </summary>
 		private static void WorldUpdateThreadStart()
 		{
+			
+			// Initialize
 			bool running = true;
+			
+			int i = 0;
+			
+			long start = long.MinValue / 10000;
+			
+			GameClient client;
+			GamePlayer player;
+			
+
+			int npcsUpdated = 0, objectsUpdated = 0, doorsUpdated = 0, housesUpdated = 0;
+			
 			if (log.IsDebugEnabled)
 			{
 				log.Debug("NPCUpdateThread ThreadId=" + Thread.CurrentThread.ManagedThreadId);
 			}
+			
+			// Start Loop
 			while (running)
 			{
 				try
 				{
-					int start = Environment.TickCount;
-					for (int i = 0; i < m_clients.Length; i++)
+					start = GameTimer.GetTickCount();
+					for (i = 0; i < m_clients.Length; i++)
 					{
-						GameClient client = m_clients[i];
+						client = m_clients[i];
+						// check if Client / Player is valid
+						
 						if (client == null)
 							continue;
 
-						GamePlayer player = client.Player;
+						player = client.Player;
 						if (client.ClientState == GameClient.eClientState.Playing && player == null)
 						{
 							if (log.IsErrorEnabled)
@@ -898,28 +915,35 @@ namespace DOL.GS
 							continue;
 						}
 
-						if (client.ClientState != GameClient.eClientState.Playing)
-							continue;
-						if (player.ObjectState != GameObject.eObjectState.Active)
+						if (client.ClientState != GameClient.eClientState.Playing || player.ObjectState != GameObject.eObjectState.Active)
 							continue;
 
-						if (Environment.TickCount - player.LastWorldUpdate > (int)(ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL >= 100 ? ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL : 100))
+						// if not updated in the last Interval begin updating world
+						
+						if (start - player.LastWorldUpdate > Math.Max(100, ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL))
 						{
-							BitArray carray = player.CurrentUpdateArray;
-							BitArray narray = player.NewUpdateArray;
-							narray.SetAll(false);
-
-							int npcsUpdated = 0, objectsUpdated = 0, doorsUpdated = 0, housesUpdated = 0;
-
-							lock (player.CurrentRegion.ObjectsSyncLock)
+							npcsUpdated = 0;
+							objectsUpdated = 0;
+							doorsUpdated = 0;
+							housesUpdated = 0;
+							
+							lock(player.CurrentRegion.ObjectsSyncLock)
 							{
+								
+								BitArray carray = player.CurrentUpdateArray;
+								BitArray narray = player.NewUpdateArray;
+								narray.SetAll(false);
+								
+								// Update what is needed
+								
 								foreach (GameNPC npc in player.GetNPCsInRadius(VISIBILITY_DISTANCE))
-								{
+								{									
 									try
 									{
-										if (npc == null) continue;
+										if (npc == null) continue;										
+										
 										narray[npc.ObjectID - 1] = true;
-										if ((uint)Environment.TickCount - npc.LastUpdateTickCount > 15000) // 1.10+ change, always 15 seconds
+										if ((start - npc.LastUpdateTickCount) > Math.Max(15000, ServerProperties.Properties.WORLD_NPC_UPDATE_INTERVAL)) // 1.10+ change, always 15 seconds
 										{
 											npc.BroadcastUpdate();
 											npcsUpdated++;
@@ -936,22 +960,27 @@ namespace DOL.GS
 											log.Error("NPC update: " + e.GetType().FullName + " (" + npc.ToString() + ")", e);
 									}
 								}
-
+								
+							}									
+							
+							lock(player.CurrentRegion.ObjectsSyncLock)
+							{
+	
 								// Broadcast updates of all non-npc objects around this player
-								if (ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL > 0 && (uint)Environment.TickCount - m_lastWorldObjectUpdateTick > (ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL >= 10000 ? ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL : 10000))
+								if (ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL > 0 && (start - m_lastWorldObjectUpdateTick) > Math.Max(10000, ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL))
 								{
 									foreach (GameStaticItem item in client.Player.GetItemsInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
 									{
 										client.Out.SendObjectCreate(item);
 										objectsUpdated++;
 									}
-
+	
 									foreach (IDoor door in client.Player.GetDoorsInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
 									{
 										client.Player.SendDoorUpdate(door);
 										doorsUpdated++;
 									}
-
+	
 									//housing
 									if (client.Player.CurrentRegion.HousingEnabled)
 									{
@@ -959,7 +988,7 @@ namespace DOL.GS
 										{
 											client.Player.HousingUpdateArray = new BitArray(ServerProperties.Properties.MAX_NUM_HOUSES, false);
 										}
-
+	
 										var houses = HouseMgr.GetHouses(client.Player.CurrentRegionID);
 										if (houses != null)
 										{
@@ -973,12 +1002,12 @@ namespace DOL.GS
 														{
 															client.Out.SendHouse(house);
 															client.Out.SendGarden(house);
-
+	
 															if (house.IsOccupied)
 															{
 																client.Out.SendHouseOccupied(house, true);
 															}
-
+	
 															client.Player.HousingUpdateArray[house.UniqueID] = true;
 															housesUpdated++;
 														}
@@ -995,19 +1024,20 @@ namespace DOL.GS
 									{
 										client.Player.HousingUpdateArray = null;
 									}
-
-									m_lastWorldObjectUpdateTick = (uint)Environment.TickCount;
+	
+									m_lastWorldObjectUpdateTick = start;
 								}
+								
 							}
-
+							
 							player.SwitchUpdateArrays();
-							player.LastWorldUpdate = Environment.TickCount;
+							player.LastWorldUpdate = start;
 
-							// log.DebugFormat("Player {0} world update: {1} npcs, {2} objects, {3} doors, and {4} houses in {5}ms", player.Name, npcsUpdated, objectsUpdated, doorsUpdated, housesUpdated, Environment.TickCount - start);
+							//log.DebugFormat("Player {0} world update: {1} npcs, {2} objects, {3} doors, and {4} houses in {5}ms", player.Name, npcsUpdated, objectsUpdated, doorsUpdated, housesUpdated, Environment.TickCount - start);
 						}
 					}
 
-					int took = Environment.TickCount - start;
+					long took = GameTimer.GetTickCount() - start;
 					if (took > 500)
 					{
 						if (log.IsWarnEnabled)
@@ -1026,6 +1056,8 @@ namespace DOL.GS
 				{
 					if (log.IsErrorEnabled)
 						log.Error("Error in NPC Update Thread!", e);
+					
+					Thread.Sleep(50);
 				}
 			}
 		}
@@ -1075,7 +1107,7 @@ namespace DOL.GS
 		/// <param name="time">Time manager for the region</param>
 		/// <param name="data">The region data</param>
 		/// <returns>Registered region</returns>
-		public static Region RegisterRegion(GameTimer.TimeManager time, RegionData data)
+		public static Region RegisterRegion(GameTimer.GameScheduler time, RegionData data)
 		{
 			Region region =  Region.Create(time, data);
 			lock (((ICollection)m_regions).SyncRoot)
@@ -2336,8 +2368,7 @@ namespace DOL.GS
 			//like the TimeManager until I get some good testing and ensure work thus far is clean.
 
 			//Later, we will share the resources over the different threads.
-
-			GameTimer.TimeManager time = m_regionTimeManagers[0];
+			GameTimer.GameScheduler time = m_regionTimeManagers[FastMath.Abs(requestedID % (GameServer.Instance.Configuration.CPUUse * 2) - GameServer.Instance.Configuration.CPUUse) % GameServer.Instance.Configuration.CPUUse];
 
 			if (time == null)
 			{
@@ -2346,7 +2377,7 @@ namespace DOL.GS
 			}
 
 			//I've placed constructor info outside of the lock, to prevent a time delay on parallel threads.
-			ConstructorInfo info = instanceType.GetConstructor(new Type[] { typeof(ushort), typeof(GameTimer.TimeManager), typeof(RegionData)});
+			ConstructorInfo info = instanceType.GetConstructor(new Type[] { typeof(ushort), typeof(GameTimer.GameScheduler), typeof(RegionData)});
 
 			if (info == null)
 			{

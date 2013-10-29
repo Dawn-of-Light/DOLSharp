@@ -117,7 +117,6 @@ namespace DOL.GS.Keeps
 						return;
 					if(!target.IsAlive) return;
 					guard.TargetObject = target;
-					// TODO change los check
 					LOSChecker.Out.SendCheckLOS(guard, target, new CheckLOSResponse(guard.GuardStartSpellHealCheckLOS));					
 				}
 

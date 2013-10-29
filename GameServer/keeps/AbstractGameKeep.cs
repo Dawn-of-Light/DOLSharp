@@ -808,7 +808,7 @@ namespace DOL.GS.Keeps
 			int amount = CalculRP();
 			this.Guild.RealmPoints+=amount;
 
-			return timer.Interval;
+			return (int)timer.Interval;
 		}
 
 		public virtual int CalculRP()
@@ -998,11 +998,11 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public void StartChangeLevelTimer()
 		{
-			int newinterval = CalculateTimeToUpgrade();
+			long newinterval = CalculateTimeToUpgrade();
 
 			if (m_changeLevelTimer.IsAlive)
 			{
-				int timeelapsed = m_changeLevelTimer.Interval - m_changeLevelTimer.TimeUntilElapsed;
+				long timeelapsed = m_changeLevelTimer.Interval - m_changeLevelTimer.TimeUntilElapsed;
 				//if timer has run for more then we need, run event instantly
 				if (timeelapsed > m_changeLevelTimer.Interval)
 					newinterval = 1;

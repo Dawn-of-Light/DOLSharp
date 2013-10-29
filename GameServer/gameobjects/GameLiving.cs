@@ -5706,14 +5706,14 @@ namespace DOL.GS
 		/// <summary>
 		/// The tick at which the movement started.
 		/// </summary>
-		public int MovementStartTick { get; set; }
+		public long MovementStartTick { get; set; }
 
 		/// <summary>
 		/// Elapsed ticks since movement started.
 		/// </summary>
-		protected int MovementElapsedTicks
+		protected long MovementElapsedTicks
 		{
-			get { return Environment.TickCount - MovementStartTick; }
+			get { return GameTimer.GetTickCount() - MovementStartTick; }
 		}
 
 		/// <summary>

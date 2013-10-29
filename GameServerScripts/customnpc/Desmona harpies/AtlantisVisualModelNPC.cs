@@ -38,7 +38,9 @@ namespace DOL.GS.Scripts
                 player.Out.SendModelChange(this, GetClientVisualModel(player.Client));
                 player.CurrentUpdateArray[ObjectID - 1] = true;
             }
-            m_lastUpdateTickCount = (uint)Environment.TickCount;
+            
+            lock(m_lockTicks)
+            	m_lastUpdateTickCount = GameTimer.GetTickCount();
         }
     }
 }

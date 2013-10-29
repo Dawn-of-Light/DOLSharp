@@ -45,7 +45,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort localPort = packet.ReadShort();
 			// TODO check changed localIP
 			client.LocalIP = localIP;
-			client.UdpPingTime = DateTime.Now.Ticks;
+			client.UdpPingTime = DateTime.UtcNow.Ticks;
 		}
 	}
 }
