@@ -1489,7 +1489,8 @@ namespace DOL.GS
 			m_followMaxDist = maxDistance;
 			m_followMinDist = minDistance;
 			m_followTarget.Target = target;
-			m_followTimer.Start(100);
+			int timing = Brain != null ? Brain.ThinkInterval : 100;
+			m_followTimer.Start(timing);
 		}
 
 		/// <summary>

@@ -45,6 +45,9 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		protected readonly object m_lockPackProc = new object();
+		protected readonly object m_lockLastPackProc = new object();
+		
 		/// <summary>
 		/// Holds the current client for this processor
 		/// </summary>
@@ -105,7 +108,7 @@ namespace DOL.GS.PacketHandler
 		/// <param name="pak">The sent packet</param>
 		protected void SavePacket(IPacket pak)
 		{
-			lock (m_lastPackets)
+			lock (m_lockLastPackProc)
 			{
 				while (m_lastPackets.Count >= MAX_LAST_PACKETS)
 					m_lastPackets.Dequeue();
@@ -120,7 +123,7 @@ namespace DOL.GS.PacketHandler
 		/// <returns></returns>
 		public IPacket[] GetLastPackets()
 		{
-			lock (m_lastPackets)
+			lock (m_lockLastPackProc)
 			{
 				return m_lastPackets.ToArray();
 			}
@@ -223,12 +226,13 @@ namespace DOL.GS.PacketHandler
 		/// <summary>
 		/// The client TCP packet send queue
 		/// </summary>
-		protected readonly Queue<byte[]> m_tcpQueue = new Queue<byte[]>(256);
+		protected readonly Queue<byte[]> m_tcpQueue = new Queue<byte[]>();
+		protected readonly object m_lockTcpQueue = new object();
 
 		/// <summary>
 		/// Indicates whether data is currently being sent to the client
 		/// </summary>
-		protected bool m_sendingTcp;
+		protected volatile bool m_sendingTcp;
 
 		/// <summary>
 		/// Sends a packet via TCP
@@ -296,7 +300,7 @@ namespace DOL.GS.PacketHandler
 					Statistics.BytesOut += buf.Length;
 					Statistics.PacketsOut++;
 
-					lock (m_tcpQueue)
+					lock (m_lockTcpQueue)
 					{
 						if (m_sendingTcp)
 						{
@@ -352,7 +356,6 @@ namespace DOL.GS.PacketHandler
 			try
 			{
 				PacketProcessor pakProc = client.PacketProcessor;
-				Queue<byte[]> q = pakProc.m_tcpQueue;
 
                 int sent = 0;
                 if (client.IsConnected)
@@ -364,13 +367,14 @@ namespace DOL.GS.PacketHandler
 				if (data == null)
 					return;
 
-				lock (q)
+				lock (pakProc.m_lockTcpQueue)
 				{
-					if (q.Count > 0)
+					if (pakProc.m_tcpQueue.Count > 0)
 					{
 //						Log.WarnFormat("async sent {0} bytes, sending queued packets count: {1}", sent, q.Count);
-						count = CombinePackets(data, q, data.Length, client);
+						count = CombinePackets(data, pakProc.m_tcpQueue, data.Length, client);
 					}
+					
 					if (count <= 0)
 					{
 //						Log.WarnFormat("async sent {0} bytes", sent);
@@ -462,8 +466,9 @@ namespace DOL.GS.PacketHandler
 		/// <summary>
 		/// The client UDP packet send queue
 		/// </summary>
-		protected readonly Queue<byte[]> m_udpQueue = new Queue<byte[]>(256);
-
+		protected readonly Queue<byte[]> m_udpQueue = new Queue<byte[]>();
+		protected readonly object m_lockUdpQueue = new object();
+		
 		/// <summary>
 		/// This variable holds the current UDP counter for this sender
 		/// </summary>
@@ -477,7 +482,7 @@ namespace DOL.GS.PacketHandler
 		/// <summary>
 		/// Indicates whether UDP data is currently being sent
 		/// </summary>
-		private bool m_sendingUdp;
+		private volatile bool m_sendingUdp;
 
 		/// <summary>
 		/// Send the packet via UDP
@@ -543,7 +548,7 @@ namespace DOL.GS.PacketHandler
 			Statistics.BytesOut += buf.Length;
 			Statistics.PacketsOut++;
 
-			lock (m_udpQueue)
+			lock (m_lockUdpQueue)
 			{
 				if (m_sendingUdp)
 				{
@@ -564,7 +569,7 @@ namespace DOL.GS.PacketHandler
 			{
 				int count = m_udpQueue.Count;
 
-				lock (m_udpQueue)
+				lock (m_lockUdpQueue)
 				{
 					m_udpQueue.Clear();
 
@@ -592,7 +597,7 @@ namespace DOL.GS.PacketHandler
 				if (data == null)
 					return;
 
-				lock (m_udpQueue)
+				lock (m_lockUdpQueue)
 				{
 					if (m_udpQueue.Count > 0)
 					{
@@ -619,7 +624,7 @@ namespace DOL.GS.PacketHandler
 			{
 				int count = m_udpQueue.Count;
 
-				lock (m_udpQueue)
+				lock (m_lockUdpQueue)
 				{
 					m_udpQueue.Clear();
 
@@ -648,7 +653,7 @@ namespace DOL.GS.PacketHandler
 		/// <param name="numBytes">The number of bytes received</param>
 		public void ReceiveBytes(int numBytes)
 		{
-			lock (this)
+			lock (m_lockPackProc)
 			{
 				byte[] buffer = m_client.ReceiveBuffer;
 
@@ -776,6 +781,7 @@ namespace DOL.GS.PacketHandler
 		/// This list is updated in the HandlePacket method
 		/// </summary>
 		public static Dictionary<Thread, GameClient> m_activePacketThreads = new Dictionary<Thread, GameClient>();
+		private static object m_lockPackThread = new object();
 #endif
 
 		/// <summary>
@@ -789,7 +795,7 @@ namespace DOL.GS.PacketHandler
 			//When enumerating over a synchronized hashtable, we need to
 			//lock it's syncroot! Only for reading, not for writing locking
 			//is needed!
-			lock (((ICollection)m_activePacketThreads).SyncRoot)
+			lock (m_lockPackThread)
 			{
 				foreach (KeyValuePair<Thread, GameClient> entry in m_activePacketThreads)
 				{
@@ -910,7 +916,7 @@ namespace DOL.GS.PacketHandler
 				//Put the current thread into the active thread list!
 				//No need to lock the hashtable since we created it
 				//synchronized! One reader, multiple writers supported!
-				lock(((ICollection)m_activePacketThreads).SyncRoot)
+				lock(m_lockPackThread)
 				{
 					m_activePacketThreads.Add(Thread.CurrentThread, m_client);
 				}
@@ -935,7 +941,7 @@ namespace DOL.GS.PacketHandler
 					//Remove the thread from the active list after execution
 					//No need to lock the hashtable since we created it
 					//synchronized! One reader, multiple writers supported!
-					lock(((ICollection)m_activePacketThreads).SyncRoot)
+					lock(m_lockPackThread)
 					{
 						m_activePacketThreads.Remove(Thread.CurrentThread);
 					}

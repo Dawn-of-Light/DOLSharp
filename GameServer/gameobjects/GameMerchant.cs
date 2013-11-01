@@ -80,16 +80,19 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public virtual void SendMerchantWindow(GamePlayer player)
 		{
-			ThreadPool.QueueUserWorkItem(new WaitCallback(SendMerchantWindowCallback), player);
+			RegionTimer timer = new RegionTimer(player, new RegionTimerCallback(SendMerchantWindowCallback), 1);
 		}
 
 		/// <summary>
 		/// Sends merchant window from threadpool thread
 		/// </summary>
 		/// <param name="state">The game player to send to</param>
-		protected virtual void SendMerchantWindowCallback(object state)
+		protected virtual int SendMerchantWindowCallback(RegionTimer state)
 		{
-			((GamePlayer)state).Out.SendMerchantWindow(m_tradeItems, eMerchantWindowType.Normal);
+			if(state.Owner != null && state.Owner is GamePlayer)
+				((GamePlayer)state.Owner).Out.SendMerchantWindow(m_tradeItems, eMerchantWindowType.Normal);
+			
+			return 0;
 		}
 		#endregion
 
@@ -420,9 +423,12 @@ namespace DOL.GS
 
 	public class GameBountyMerchant : GameMerchant
 	{
-		protected override void SendMerchantWindowCallback(object state)
+		protected override int SendMerchantWindowCallback(RegionTimer state)
 		{
-			((GamePlayer)state).Out.SendMerchantWindow(m_tradeItems, eMerchantWindowType.Bp);
+			if(state.Owner != null && state.Owner is GamePlayer)
+				((GamePlayer)state.Owner).Out.SendMerchantWindow(m_tradeItems, eMerchantWindowType.Bp);
+			
+			return 0;
 		}
 
 		public override void OnPlayerBuy(GamePlayer player, int item_slot, int number)
@@ -544,9 +550,12 @@ namespace DOL.GS
 			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.GetExamineMessages.BuyItemsFor", this.Name, text), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 		}
 
-		protected override void SendMerchantWindowCallback(object state)
+		protected override int SendMerchantWindowCallback(RegionTimer state)
 		{
-			((GamePlayer)state).Out.SendMerchantWindow(m_tradeItems, eMerchantWindowType.Count);
+			if(state.Owner != null && state.Owner is GamePlayer)
+				((GamePlayer)state.Owner).Out.SendMerchantWindow(m_tradeItems, eMerchantWindowType.Count);
+			
+			return 0;
 		}
 
 		public override void OnPlayerBuy(GamePlayer player, int item_slot, int number)

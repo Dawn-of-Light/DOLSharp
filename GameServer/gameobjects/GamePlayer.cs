@@ -149,7 +149,7 @@ namespace DOL.GS
 		/// <summary>
 		/// true if the targetObject is visible
 		/// </summary>
-		protected bool m_targetInView;
+		protected volatile bool m_targetInView;
 
 		/// <summary>
 		/// Property for the optional away from keyboard message.

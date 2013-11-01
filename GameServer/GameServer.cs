@@ -610,6 +610,8 @@ namespace DOL.GS
 		{
 			try
 			{
+				ThreadPool.SetMaxThreads(800, 80);
+				ThreadPool.SetMinThreads(200, 20);
 				//	Process pro = Process.GetCurrentProcess();
 				//	pro.ProcessorAffinity = new IntPtr(GameServer.Instance.Configuration.CPUUse);
 				if (debugMemory)

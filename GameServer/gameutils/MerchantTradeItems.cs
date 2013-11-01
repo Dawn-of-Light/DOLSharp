@@ -100,6 +100,7 @@ namespace DOL.GS
 		/// <param name="itemsListId"></param>
 		public MerchantTradeItems(string itemsListId)
 		{
+			bool load = false;
 			if(itemsListId != null)
 			{
 				m_itemsListID = itemsListId.ToLower();
@@ -120,9 +121,12 @@ namespace DOL.GS
 					else 
 					{
 						// Load it from DB !
-						LoadFromDatabase();
+						load = true;
 					}
 				}
+				
+				if(load)
+					LoadFromDatabase();
 			   	
 			}
 			else 
@@ -244,12 +248,13 @@ namespace DOL.GS
 		/// <returns>true if removed</returns>
 		public virtual bool RemoveTradeItem(byte page, eMerchantWindowSlot slot)
 		{
+			slot = GetValidSlot(page, slot);
+			
+			if (slot == eMerchantWindowSlot.Invalid)
+				return false;
+			
 			lock (((ICollection)m_usedItemsTemplates).SyncRoot)
 			{
-				slot = GetValidSlot(page, slot);
-				
-				if (slot == eMerchantWindowSlot.Invalid)
-					return false;
 				
 				if (!m_usedItemsTemplates.ContainsKey((ushort)((page*MAX_ITEM_IN_TRADEWINDOWS)+(short)slot))) 
 					return false;

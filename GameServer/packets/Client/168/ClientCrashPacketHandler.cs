@@ -30,10 +30,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		
+		private object m_crashLock = new object();
 
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			lock (this)
+			lock (m_crashLock)
 			{
 				string dllName = packet.ReadString(16);
 				packet.Position = 0x50;

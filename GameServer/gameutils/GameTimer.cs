@@ -21,6 +21,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -56,7 +57,7 @@ namespace DOL.GS
 		/// </summary>
 		public static long MaxInterval
 		{
-			get { return long.MaxValue / 10000;; }
+			get { return long.MaxValue / 10000; }
 		}
 		
 		/// <summary>
@@ -75,7 +76,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Wether this timer is started or not
 		/// </summary>
-		private bool m_started = false;
+		private volatile bool m_started = false;
 		
 		/// <summary>
 		/// Locking Object
@@ -111,11 +112,11 @@ namespace DOL.GS
 				if(m_firing)
 					return 0;
 
-				lock(m_timerLock)
-				{
-					if(!m_started)
+				if(!m_started)
 					return -1;
-					
+				
+				lock(m_timerLock)
+				{					
 					if (m_targetTime < GetTickCount())
 						return -1;
 				
@@ -151,8 +152,7 @@ namespace DOL.GS
 		{
 			get 
 			{
-				lock(m_timerLock)
-					return m_started;
+				return m_started;
 			}
 		}
 
@@ -183,6 +183,15 @@ namespace DOL.GS
 		/// Starts the timer with defined initial delay
 		/// </summary>
 		/// <param name="initialDelay">The initial timer delay. Must be more than 0 and less than MaxInterval</param>
+		public virtual void Start(int initialDelay)
+		{
+			Start((long)initialDelay);
+		}
+		
+		/// <summary>
+		/// Starts the timer with defined initial delay
+		/// </summary>
+		/// <param name="initialDelay">The initial timer delay. Must be more than 0 and less than MaxInterval</param>
 		public virtual void Start(long initialDelay)
 		{
 			if (initialDelay > MaxInterval || initialDelay < 1)
@@ -191,9 +200,11 @@ namespace DOL.GS
 			if(!IsAlive) 
 			{
 				m_started = true;
-				
-				m_targetTime = GetTickCount()+initialDelay;
-				m_scheduler.InsertTimer(this, m_targetTime);
+				lock(m_timerLock)
+				{
+					m_targetTime = GetTickCount()+initialDelay;
+					m_scheduler.InsertTimer(this, m_targetTime);
+				}
 			}
 		}
 
@@ -254,6 +265,7 @@ namespace DOL.GS
 			/// </summary>
 			private volatile bool m_running = false;
 			
+			
 			/// <summary>
 			/// True if manager is active
 			/// </summary>
@@ -269,6 +281,16 @@ namespace DOL.GS
 			/// Thread Pool Handling this Time Manager
 			/// </summary>
 			//private SmartThreadPool m_threadPool;
+			
+			/// <summary>
+			/// Concurrent Timer inserting Queue
+			/// </summary>
+			private ConcurrentStack<Tuple<long, GameTimer, bool>> m_insertQueue = new ConcurrentStack<Tuple<long, GameTimer, bool>>();
+
+			/// <summary>
+			/// Wait time for next loop
+			/// </summary>
+			private volatile int m_wait = int.MinValue;
 			
 			/// <summary>
 			/// Defines a sorted dict containing timer to fire.
@@ -297,13 +319,7 @@ namespace DOL.GS
 			{
 				get
 				{
-					lock(m_lockObject)
-					{
-						if(m_scheduleQueue.Count > 0)
-							return m_scheduleQueue.Keys[0];
-						
-						return MaxInterval;
-					}
+					return GetTickCount() + m_wait;
 				}
 			}
 			
@@ -376,7 +392,7 @@ namespace DOL.GS
 			private long OutOfSyncWarn = long.MinValue / 10000;
 			private long OutOfTimeWarn = long.MinValue / 10000;
 
-			private int m_activeTimer = 0;
+			private volatile int m_activeTimer = 0;
 			/// <summary>
 			/// Gets the current count of active timers
 			/// </summary>
@@ -384,43 +400,31 @@ namespace DOL.GS
 			{
 				get 
 				{
-					int num;
-					lock(m_lockObject)
-						num = m_activeTimer;
-					
-					return num;
+					return m_activeTimer;
 				}
 			}
 
-			private long m_invokedCount = 0;
+			private volatile uint m_invokedCount = 0;
 			/// <summary>
 			/// Gets the invoked timers count
 			/// </summary>
-			public long InvokedCount
+			public uint InvokedCount
 			{
 				get 
 				{
-					long num;
-					lock(m_lockObject)
-						num = m_invokedCount;
-					
-					return num;
+					return m_invokedCount;
 				}
 			}
 
-			private long m_threadLoop = 0;
+			private volatile uint m_threadLoop = 0;
 			/// <summary>
 			/// Gets the invoked timers count
 			/// </summary>
-			public long ThreadLoop
+			public uint ThreadLoop
 			{
 				get 
 				{
-					long num;
-					lock(m_lockObject)
-						num = m_threadLoop;
-					
-					return num;
+					return m_threadLoop;
 				}
 			}
 
@@ -455,18 +459,18 @@ namespace DOL.GS
 					return false;
 				
 				m_running = true;
-				
+
 				// if it's first start it shouldn't lock
 				lock(m_lockObject)
 				{
 					m_time = GetTickCount();
-					
 					// Init Scheduler Thread
 					m_timeThread = new Thread(new ThreadStart(TimeThread));
 					m_timeThread.Name = m_name;
 					m_timeThread.Priority = ThreadPriority.AboveNormal;
 					m_timeThread.IsBackground = true;
-									
+					m_scheduleQueue.Clear();
+					m_activeTimer = 0;
 					m_timeThread.Start();
 					//m_threadPool.Start();
 					
@@ -487,6 +491,7 @@ namespace DOL.GS
 				// Tell the thread loop to stop, this is volatile
 				m_running = false;
 				
+				m_wait = 0;				
 				// Force Thread to finish Loop
 				m_pulseMonitor.Set();
 				
@@ -498,78 +503,62 @@ namespace DOL.GS
 					m_pulseMonitor.Set();
 				}
 				
-				lock(m_lockObject)
+				if (!m_timeThread.Join(5000))
 				{
-					if (!m_timeThread.Join(3000))
+					if (log.IsErrorEnabled)
 					{
-						if (log.IsErrorEnabled)
+						ThreadState state = m_timeThread.ThreadState;
+						StackTrace trace = Util.GetThreadStack(m_timeThread);
+						log.ErrorFormat("failed to stop the time thread \"{0}\" in 5 seconds (thread state={1}); thread stacktrace:\n", m_name, state);
+						log.ErrorFormat(Util.FormatStackTrace(trace));
+						log.ErrorFormat("aborting the thread.\n");
+					}
+					
+					try 
+					{
+						m_timeThread.Abort();
+						
+						if (m_timeThread.Join(15000))
 						{
-							ThreadState state = m_timeThread.ThreadState;
-							StackTrace trace = Util.GetThreadStack(m_timeThread);
-							log.ErrorFormat("failed to stop the time thread \"{0}\" in 3 seconds (thread state={1}); thread stacktrace:\n", m_name, state);
-							log.ErrorFormat(Util.FormatStackTrace(trace));
-							log.ErrorFormat("aborting the thread.\n");
+							return true;
+						}
+						else
+						{
+							log.ErrorFormat("Couldn't gracefully abort thread {0}.\n", m_name);
+							return false;
 						}
 						
-						try 
-						{
-							m_timeThread.Abort();
-							
-							if (m_timeThread.Join(3000))
-							{
-								m_scheduleQueue.Clear();
-								return true;
-							}
-							else
-							{
-								log.ErrorFormat("Couldn't gracefully abort thread {0}.\n", m_name);
-								return false;
-							}
-							
-						}
-						catch
-						{
-							log.ErrorFormat("Couldn't abort thread {0}.\n", m_name);
-						}
-						finally
-						{
-							m_scheduleQueue.Clear();
-							m_timeThread = null;
-						}
 					}
-
+					catch
+					{
+						log.ErrorFormat("Couldn't abort thread {0}.\n", m_name);
+					}
 				}
+				
+				lock(m_lockObject)
+				{
+					m_scheduleQueue.Clear();
+					m_timeThread = null;
+				}
+				
+				m_insertQueue.Clear();
 				
 				return true;
 			}
 			#endregion
 
 			#region Scheduling
-			internal void InsertTimer(GameTimer t, long adujstTick)
+			internal void InsertTimer(GameTimer t, long adjustTick)
 			{
 				
-				bool pulse = false;
+				m_insertQueue.Push(new Tuple<long, GameTimer, bool>(adjustTick, t, true));
 				
-				// inserting need the Scheduler to be available
-				lock(m_lockObject)
+				if(m_wait > Math.Max(0, Math.Min(MAX_SCHEDULER_SLEEP, GetTickCount() - adjustTick)))
 				{
-					if(adujstTick < NextTick)
-					{
-						pulse = true;
-					}
-					
-					if(!m_scheduleQueue.ContainsKey(adujstTick))
-					{
-						m_scheduleQueue.Add(adujstTick, new List<GameTimer>());
-					}
-					
-					m_scheduleQueue[adujstTick].Add(t);
-					m_activeTimer++;
+					m_wait = (int)Math.Max(0, Math.Min(MAX_SCHEDULER_SLEEP, GetTickCount() - adjustTick));
+					m_pulseMonitor.Set();
 				}
 				
-				if(pulse)
-					m_pulseMonitor.Set();
-					
 			}
 			
 
@@ -579,15 +568,8 @@ namespace DOL.GS
 			/// <param name="timer">The timer to remove</param>
 			internal void RemoveTimer(GameTimer timer)
 			{
-				// removing need the Scheduler to be available				
-				lock(m_lockObject)
-				{
-					while(m_scheduleQueue.ContainsKey(timer.m_targetTime) && m_scheduleQueue[timer.m_targetTime].Contains(timer)) 
-					{
-						m_scheduleQueue[timer.m_targetTime].Remove(timer);
-						m_activeTimer--;
-					}
-				}
+				// removing using the insert queue with false
+				m_insertQueue.Push(new Tuple<long, GameTimer, bool>(timer.m_targetTime, timer, false));
 			}
 			
 			#endregion
@@ -602,8 +584,10 @@ namespace DOL.GS
 
 				long workEnd, previousTime;
 				m_time = workEnd = previousTime = GetTickCount();
-				int count,listcount,index,wait;
+				int count,listcount,index;
+				
 				Queue<GameTimer> firingQueue = new Queue<GameTimer>();
+				Tuple<long, GameTimer, bool>[] InOutQueue = new Tuple<long, GameTimer, bool>[128];
 				
 				ushort trim = 0;
 				
@@ -618,6 +602,36 @@ namespace DOL.GS
 						// Lock the Scheduler
 						lock(m_lockObject)
 						{
+							// Read insert and remove Stacks
+							while(!m_insertQueue.IsEmpty)
+							{
+								count = m_insertQueue.TryPopRange(InOutQueue);
+								for(index = 0 ; index < count ; index++)
+								{
+									if(InOutQueue[index].Item3)
+									{
+										//Inserting
+										if(!m_scheduleQueue.ContainsKey(InOutQueue[index].Item1))
+										{
+											m_scheduleQueue.Add(InOutQueue[index].Item1, new List<GameTimer>());
+										}
+										
+										m_scheduleQueue[InOutQueue[index].Item1].Add(InOutQueue[index].Item2);
+										m_activeTimer++;
+									}
+									else
+									{
+										//Removing
+										while(m_scheduleQueue.ContainsKey(InOutQueue[index].Item1) && m_scheduleQueue[InOutQueue[index].Item1].Contains(InOutQueue[index].Item2)) 
+										{
+											m_scheduleQueue[InOutQueue[index].Item1].Remove(InOutQueue[index].Item2);
+											m_activeTimer--;
+										}
+									}
+								}
+							}
+							
+							// prepare the scheduling object
 							if(trim > 1000) 
 							{
 								//Trim lists for performances
@@ -656,17 +670,8 @@ namespace DOL.GS
 							{
 								for(listcount = 0 ; listcount < m_scheduleQueue.Values[count].Count ; listcount++)
 								{
-									if(!m_scheduleQueue.Values[count][listcount].m_firing) 
-									{
-										m_scheduleQueue.Values[count][listcount].m_firing = true;
 										firingQueue.Enqueue(m_scheduleQueue.Values[count][listcount]);										
-										m_invokedCount++;
 										m_activeTimer--;
-									}
-									else
-									{
-										log.Warn("Duplicate Job in "+m_name+" - "+m_scheduleQueue.Values[count][listcount].ToString());
-									}
 								}
 							}
 							
@@ -679,6 +684,20 @@ namespace DOL.GS
 						
 						while(firingQueue.Count > 0) 
 						{
+							if(firingQueue.Peek().m_firing)
+							{
+								try
+								{
+									log.Warn("Duplicate Job in "+m_name+" - "+firingQueue.Peek().ToString());
+								}
+								catch
+								{
+									log.Warn("Duplicate Job in "+m_name+" - failing to resolve name");
+								}
+							}
+							
+							firingQueue.Peek().m_firing = true;
+							m_invokedCount++;
 							// inline Timer
 							FireTimer(firingQueue.Dequeue());
 						}
@@ -686,7 +705,8 @@ namespace DOL.GS
 						lock(m_lockObject)
 						{
 							// Loop again If needed and listen for signal !
-							wait = (int)Math.Max(0, Math.Min(MAX_SCHEDULER_SLEEP, NextTick - GetTickCount()));
+							if(m_scheduleQueue.Count > 0)
+								m_wait = (int)Math.Max(0, Math.Min(MAX_SCHEDULER_SLEEP, m_scheduleQueue.Keys[0] - GetTickCount()));
 						}
 						
 						//Check for Desync
@@ -701,20 +721,14 @@ namespace DOL.GS
 						
 						while(m_running) 
 						{
-							if(m_pulseMonitor.WaitOne(wait)) 
+							if(m_pulseMonitor.WaitOne(m_wait))
 							{
-								// make sure it stops !
-								if(!m_running)
+								// exit if we're needed immediatly
+								if(m_wait == 0)
 									break;
 								
-								// got a reinsert signal !
-								lock(m_lockObject) 
-								{
-									wait = (int)Math.Max(0, Math.Min(MAX_SCHEDULER_SLEEP, NextTick - GetTickCount()));
-								}
-								
-								// exit if we're needed immediatly
-								if(wait == 0)
+								// make sure it stops !
+								if(!m_running)
 									break;
 							}
 							else
@@ -759,16 +773,17 @@ namespace DOL.GS
 				// Time the Callback
 				long start = GetTickCount();
 				
+
+				if(!gt.m_firing)
+					log.Warn("Timer isn't scheduled - "+gt.ToString());
+				
+				if(gt.m_started)
+					gt.OnTick();
+				
+				gt.m_firing = false;
+				
 				lock(gt.m_timerLock)
-				{
-					if(!gt.m_firing)
-						log.Warn("Timer isn't scheduled - "+gt.ToString());
-					
-					if(gt.m_started)
-						gt.OnTick();
-					
-					gt.m_firing = false;
-					
+				{					
 					if(gt.m_interval > 0 && gt.m_started)
 					{
 						// if interval, reschedule

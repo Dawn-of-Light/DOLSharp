@@ -199,7 +199,10 @@ namespace DOL.GS.GameEvents
 												
 		                                        try
 												{
-													npc.SetOwnBrain(brain);
+		                                        	if(brain.IsActive)
+		                                        		brain.Stop();
+													
+		                                        	npc.SetOwnBrain(brain);
 												}
 												catch(Exception e)
 												{

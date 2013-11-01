@@ -89,6 +89,7 @@ namespace DOL.GS
                 public static int GetStatOverCapBonuses(GameLiving living, eProperty property)
                 {
                 	int overCap = 0;
+                	return overCap;
                 	                	
                 	// Check for Mythirian               	
                 	if(living == null || !(living is GamePlayer) || living.Inventory == null || living.Inventory.GetItem(eInventorySlot.Mythical) == null || !(living.Inventory.GetItem(eInventorySlot.Mythical) is GameMythirian))
@@ -167,7 +168,7 @@ namespace DOL.GS
                 public static int GetMythicalOverCapBonuses(GameLiving living, eProperty property)
                 {
                 	int overCap = 0;
-                	
+                	return overCap;
                 	// Check for Mythirian
                		if(living == null || !(living is GamePlayer) || living.Inventory == null || living.Inventory.GetItem(eInventorySlot.Mythical) == null || !(living.Inventory.GetItem(eInventorySlot.Mythical) is GameMythirian))
 		            {

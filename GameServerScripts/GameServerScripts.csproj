@@ -179,7 +179,6 @@
     <Compile Include="quests\Albion\BreakingTheBandits.cs" />
     <Compile Include="quests\Albion\BuildingABetterBow.cs" />
     <Compile Include="quests\Albion\Cellar_Infestation.cs" />
-    <Compile Include="quests\Albion\CemmethsOrders.cs" />
     <Compile Include="quests\Albion\ChildsPlay.cs" />
     <Compile Include="quests\Albion\CityOfCamelot.cs" />
     <Compile Include="quests\Albion\ClericMulgrut.cs" />

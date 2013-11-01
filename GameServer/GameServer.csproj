@@ -2812,7 +2812,6 @@
     <Folder Include="ai\brain\ImprovedBrain" />
     <Folder Include="language\DE\Quests\Midgard\" />
     <Folder Include="language\EN\Quests\Midgard\" />
-    <Folder Include="New Folder" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

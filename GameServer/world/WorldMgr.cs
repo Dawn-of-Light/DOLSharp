@@ -892,12 +892,16 @@ namespace DOL.GS
 				log.Debug("NPCUpdateThread ThreadId=" + Thread.CurrentThread.ManagedThreadId);
 			}
 			
+			Dictionary<GameTimer.GameScheduler, Dictionary<Region, List<GameClient>>> sortedclient = new Dictionary<GameTimer.GameScheduler, Dictionary<Region, List<GameClient>>>();
+			
 			// Start Loop
 			while (running)
 			{
 				try
 				{
 					start = GameTimer.GetTickCount();
+
+					sortedclient.Clear();
 					for (i = 0; i < m_clients.Length; i++)
 					{
 						client = m_clients[i];
@@ -905,8 +909,43 @@ namespace DOL.GS
 						
 						if (client == null)
 							continue;
-
+						
 						player = client.Player;
+						if (client.ClientState == GameClient.eClientState.Playing && player == null)
+						{
+							if (log.IsErrorEnabled)
+								log.Error("account has no active player but is playing, disconnecting! => " + client.Account.Name);
+							GameServer.Instance.Disconnect(client);
+							continue;
+						}
+
+						if (client.ClientState != GameClient.eClientState.Playing || player.ObjectState != GameObject.eObjectState.Active)
+							continue;
+						
+						if(!sortedclient.ContainsKey(client.Player.CurrentRegion.TimeManager))
+							sortedclient.Add(client.Player.CurrentRegion.TimeManager, new Dictionary<Region, List<GameClient>>());
+						
+						if(!sortedclient[client.Player.CurrentRegion.TimeManager].ContainsKey(client.Player.CurrentRegion))
+							sortedclient[client.Player.CurrentRegion.TimeManager].Add(client.Player.CurrentRegion, new List<GameClient>());
+						
+						sortedclient[client.Player.CurrentRegion.TimeManager][client.Player.CurrentRegion].Add(client);
+					}
+					
+					foreach(Dictionary<Region, List<GameClient>> timers in sortedclient.Values)
+						foreach(List<GameClient> clients in timers.Values)
+							for(i = 0 ; i < clients.Count ; i++)
+					{
+						client = clients[i];
+					/*
+					for (i = 0; i < m_clients.Length; i++)
+					{
+						client = m_clients[i];
+						// check if Client / Player is valid
+						
+						if (client == null)
+							continue;
+*/
+						player = client.Player;/*
 						if (client.ClientState == GameClient.eClientState.Playing && player == null)
 						{
 							if (log.IsErrorEnabled)
@@ -919,7 +958,7 @@ namespace DOL.GS
 							continue;
 
 						// if not updated in the last Interval begin updating world
-						
+						*/
 						if (start - player.LastWorldUpdate > Math.Max(100, ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL))
 						{
 							npcsUpdated = 0;

@@ -39,6 +39,7 @@ namespace DOL.GS.GameEvents
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		private static object statPrintLock = new object();
 		private static volatile Timer m_timer = null;
 		private static long m_lastBytesIn = 0;
 		private static long m_lastBytesOut = 0;
@@ -56,7 +57,7 @@ namespace DOL.GS.GameEvents
 		[GameServerStartedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		{
-			lock (typeof(StatPrint))
+			lock (statPrintLock)
 			{
 				m_timerStatsByMgr = new Dictionary<GameTimer.GameScheduler, TimerStats>();
 				m_timer = new Timer(new TimerCallback(PrintStats), null, 10000, 0);
@@ -90,7 +91,7 @@ namespace DOL.GS.GameEvents
 		[ScriptUnloadedEvent]
 		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
-			lock (typeof(StatPrint))
+			lock (statPrintLock)
 			{
 				if (m_timer != null)
 				{
@@ -162,7 +163,7 @@ namespace DOL.GS.GameEvents
 						.AppendFormat("  IOCP={0}/{1}({2})", iocpCurrent, iocpMax, iocpMin)
 						.AppendFormat("  GH/OH={0}/{1}", globalHandlers, objectHandlers);
 
-					lock (((ICollection)m_timerStatsByMgr).SyncRoot)
+					lock (statPrintLock)
 					{
 						foreach (GameTimer.GameScheduler mgr in WorldMgr.GetRegionTimeManagers())
 						{
@@ -201,7 +202,7 @@ namespace DOL.GS.GameEvents
 
 				if (log.IsFatalEnabled)
 				{
-					lock (((ICollection)m_timerStatsByMgr).SyncRoot)
+					lock (statPrintLock)
 					{
 						foreach (GameTimer.GameScheduler mgr in WorldMgr.GetRegionTimeManagers())
 						{
@@ -228,7 +229,7 @@ namespace DOL.GS.GameEvents
 			}
 			finally
 			{
-				lock (typeof(StatPrint))
+				lock (statPrintLock)
 				{
 					if (m_timer != null)
 					{
