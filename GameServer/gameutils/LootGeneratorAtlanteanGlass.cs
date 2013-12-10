@@ -26,26 +26,23 @@ namespace DOL.GS
 {
 
 	/// <summary>
-	/// LootGeneratorAurulite
-	/// At the moment this generator only adds aurulite to the loot
+	/// LootGeneratorAtlanteanGlass
+	/// At the moment this generator only adds AtlanteanGlass to the loot
 	/// </summary>
-	public class LootGeneratorAurulite : LootGeneratorBase
+	public class LootGeneratorAtlanteanGlass : LootGeneratorBase
 	{
 		
-		public static ItemTemplate m_aurulite = GameServer.Database.FindObjectByKey<ItemTemplate>("aurulite");
+		private static ItemTemplate m_atlanteanglass = GameServer.Database.FindObjectByKey<ItemTemplate>("atlanteanglass");
 		
 		/// <summary>
         /// Generate loot for given mob
 		/// </summary>
 		/// <param name="mob"></param>
 		/// <param name="killer"></param>
-		/// <returns>Lootlist with Aurulite drops</returns>
+		/// <returns></returns>
 		public override LootList GenerateLoot(GameNPC mob, GameObject killer)
 		{
 			LootList loot = base.GenerateLoot(mob, killer);
-			
-			ItemTemplate aurulite = new ItemTemplate(m_aurulite);
-			
 			
 			try
 			{
@@ -55,11 +52,14 @@ namespace DOL.GS
 				if (player == null)
 					return loot;			
 			
+				
+				ItemTemplate atlanteanGlass = new ItemTemplate(m_atlanteanglass);
+
 				int killedcon = (int)player.GetConLevel(mob)+3;
 				
 				if(killedcon <= 0)
 					return loot;
-				
+								
 				int lvl = mob.Level + 1;
 				if (lvl < 1) lvl = 1;
 				int maxcount = 1;
@@ -67,57 +67,55 @@ namespace DOL.GS
 				//Switch pack size
 				if (lvl > 0 && lvl < 10) 
 				{
-					//Aurulite only
+					//Single AtlanteanGlass
 					maxcount = (int)Math.Floor((double)(lvl/2))+1;
 				}
 				else if (lvl >= 10 && lvl < 20)
 				{
-					//Aurulire Chip (x5)
-					aurulite.PackSize = 5;
+					//Double
+					atlanteanGlass.PackSize = 2;
 					maxcount = (int)Math.Floor((double)((lvl-10)/2))+1;
 				}
 				else if (lvl >= 20 && lvl < 30)
 				{
-					//Aurulite Fragment (x10)
-					aurulite.PackSize = 10;
+					//Triple
+					atlanteanGlass.PackSize = 3;
 					maxcount = (int)Math.Floor((double)((lvl-20)/2))+1;
 					
 				}
 				else if (lvl >=30 && lvl < 40) 
 				{
-					//Aurulite Shard (x20)
-					aurulite.PackSize = 20;
+					//Quad
+					atlanteanGlass.PackSize = 4;
 					maxcount = (int)Math.Floor((double)((lvl-30)/2))+1;
 				}
 				else if (lvl >= 40 && lvl < 50)
 				{
-					//Aurulite Cluster (x30)
-					aurulite.PackSize = 30;
+					//Quint
+					atlanteanGlass.PackSize = 5;
 					maxcount = (int)Math.Floor((double)((lvl-40)/2))+1;
 				}
 				else 
 				{
-					//Aurulite Cache (x40)
-					aurulite.PackSize = 40;
+					//Cache (x10)
+					atlanteanGlass.PackSize = 10;
 					maxcount = (int)Math.Round((double)(lvl/10));
 				}
 				
 				if (!mob.Name.ToLower().Equals(mob.Name))
 				{
 					//Named mob, more cash !
-					maxcount = (int)Math.Round(maxcount*ServerProperties.Properties.LOOTGENERATOR_AURULITE_NAMED_COUNT);
+					maxcount = (int)Math.Round(maxcount*ServerProperties.Properties.LOOTGENERATOR_ATLANTEANGLASS_NAMED_COUNT);
 				}
 				
-				// add to loot
-				if(maxcount > 0 && Util.Chance(ServerProperties.Properties.LOOTGENERATOR_AURULITE_BASE_CHANCE+Math.Max(10, killedcon))) {
-					// Add to fixed to prevent overrides with loottemplate
-					loot.AddFixed(aurulite, (int)Math.Ceiling(maxcount*ServerProperties.Properties.LOOTGENERATOR_AURULITE_AMOUNT_RATIO));
+				if(maxcount > 0 && Util.Chance(ServerProperties.Properties.LOOTGENERATOR_ATLANTEANGLASS_BASE_CHANCE+Math.Max(10, killedcon)))
+				{
+					loot.AddFixed(atlanteanGlass, maxcount);
 				}
-				
+					
 			}
 			catch
 			{
-				// Prevent displaying errors
 				return loot;
 			}
 			
