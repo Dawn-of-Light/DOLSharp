@@ -1446,6 +1446,47 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("pve", "adventurewing_time_to_destroy", "Set the time before Instanced Adventure Wings (Catacombs) are destroy when empty (in minutes).", 5)]
 		public static int ADVENTUREWING_TIME_TO_DESTROY;
 
+		/// <summary>
+		/// Aurulite Loot Generator Drop Base Chance
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_aurulite_base_chance", "Base chance for dropping Aurulite using Loot Generator.", 10)]
+		public static int LOOTGENERATOR_AURULITE_BASE_CHANCE;
+
+		/// <summary>
+		/// Aurulite Loot Generator Amount Ratio
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_aurulite_amount_ratio", "Modify the final count of Aurulite Loot Generator drop. (TotalCount * lootgenerator_aurulite_amount_ratio)", 0.5)]
+		public static double LOOTGENERATOR_AURULITE_AMOUNT_RATIO;
+		
+		/// <summary>
+		/// Aurulite Loot Generator Named Boost Count
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_aurulite_named_count", "Increase count of Aurulite Loot Generator drop for Named mobs. (count * lootgenerator_aurulite_named_count)", 1.5)]
+		public static double LOOTGENERATOR_AURULITE_NAMED_COUNT;
+				
+		/// <summary>
+		/// Atlantean Glass Loot Generator Drop Base Chance
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_atlanteanglass_base_chance", "Base chance for dropping Atlantean Glass using Loot Generator.", 20)]
+		public static int LOOTGENERATOR_ATLANTEANGLASS_BASE_CHANCE;
+		
+		/// <summary>
+		/// Atlantean Glass Loot Generator Named Boost Count
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_atlanteanglass_named_count", "Increase count of Atlantean Glass Loot Generator drop for Named mobs. (count * lootgenerator_atlanteanglass_named_count)", 1.5)]
+		public static double LOOTGENERATOR_ATLANTEANGLASS_NAMED_COUNT;
+		
+		/// <summary>
+		/// Dragon Scales Loot Generator Drop Base Chance
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_dragonscales_base_chance", "Base chance for dropping Dragon Scales using Loot Generator.", 15)]
+		public static int LOOTGENERATOR_DRAGONSCALES_BASE_CHANCE;
+		
+		/// <summary>
+		/// Dragon Scales Loot Generator Named Boost Count
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_dragonscales_named_count", "Increase count of Dragon Scales Loot Generator drop for Named mobs. (count * lootgenerator_dragonscales_named_count)", 1.5)]
+		public static double LOOTGENERATOR_DRAGONSCALES_NAMED_COUNT;		
 		#endregion
 
 		#region HOUSING
