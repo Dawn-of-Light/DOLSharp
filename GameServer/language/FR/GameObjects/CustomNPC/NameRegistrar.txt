@@ -1,3 +1,0 @@
-NameRegistrar.YouExamine:	You examine {0}. {1} is {2}.
-NameRegistrar.ReturnToMe:	Return to me when you are {0}th level to choose a last name.
-NameRegistrar.LastName:		I can make you known by a last name of your choice. Use the /lastname <name> command.

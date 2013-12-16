@@ -1,3 +1,0 @@
-NameRegistrar.YouExamine:	Es interessiert Euch {0}. {1} ist Euch {2} gesonnen.
-NameRegistrar.ReturnToMe:	Kommt wieder her, wenn Ihr die {0}. Stufe erreicht habt, dann helfe ich Euch bei der Auswahl eines Nachnamens.
-NameRegistrar.LastName:		Ich kann Euch bei der Auswahl Eures Nachnamens helfen. Verwendet den Befehl /lastname <name>.
