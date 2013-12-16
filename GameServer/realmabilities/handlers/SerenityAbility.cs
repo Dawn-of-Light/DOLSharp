@@ -23,5 +23,31 @@ namespace DOL.GS.RealmAbilities
 				default: return 7;
 			}
 		}
+
+		public override int CostForUpgrade(int level)
+		{
+			switch (level)
+			{
+				case 0: return 1;
+				case 1: return 3;
+				case 2: return 6;
+				case 3: return 10;
+				case 4: return 14;
+				default: return 1000;
+			}
+		}
+
+		public override bool CheckRequirement(GamePlayer player)
+		{
+			return Level <= 5;
+		}
+
+		public override int MaxLevel
+		{
+			get
+			{
+				return 5;
+			}
+		}
 	}
 }
