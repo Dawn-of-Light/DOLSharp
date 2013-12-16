@@ -26,6 +26,7 @@ using System.Threading;
 using DOL.Database;
 using DOL.GS.ServerProperties;
 using log4net;
+using DOL.Events;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
@@ -327,7 +328,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									Log.Info("New account created: " + userName);
 
 								GameServer.Database.AddObject(playerAccount);
-
+								GameEventMgr.Notify(DatabaseEvent.AccountCreated, playerAccount);
 								// Log account creation
 								AuditMgr.AddAuditEntry(client, AuditType.Account, AuditSubtype.AccountCreate, "", userName);
 							}

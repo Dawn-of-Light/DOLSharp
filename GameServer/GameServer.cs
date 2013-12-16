@@ -1227,7 +1227,42 @@ namespace DOL.GS
 		/// <returns>An instance of a new client</returns>
 		protected override BaseClient GetNewClient()
 		{
-			var client = new GameClient(this);
+			Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
+			GameClient client = null;
+			try
+			{
+				client = (GameClient)gasm.CreateInstance(Properties.CLIENT_CLASS, false, BindingFlags.CreateInstance, null, new object[] { this }, null, null);
+			}
+			catch (Exception e)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("GetNewClient", e);
+			}
+
+			if (client == null)
+			{
+				foreach (Assembly asm in ScriptMgr.Scripts)
+				{
+					try
+					{
+						client = (GameClient)asm.CreateInstance(Properties.CLIENT_CLASS, false, BindingFlags.CreateInstance, null, new object[] { this }, null, null);
+					}
+					catch (Exception e)
+					{
+						if (log.IsErrorEnabled)
+							log.Error("GetNewClient", e);
+					}
+					if (client != null)
+						break;
+				}
+			}
+
+			if (client == null)
+			{
+				log.ErrorFormat("Could not instantiate client class '{0}', using GameClient instead!", Properties.CLIENT_CLASS);
+				client = new GameClient(this);
+			}
+			
 			GameEventMgr.Notify(GameClientEvent.Created, client);
 			client.UdpConfirm = false;
 

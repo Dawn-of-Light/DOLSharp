@@ -105,8 +105,8 @@ namespace DOL.GS
 			set { m_ammoType = value; }
 		}
 
-		private GamePlayer m_owner;
-		public GamePlayer Owner
+		private GameLiving m_owner;
+		public GameLiving Owner
 		{
 			get { return m_owner; }
 			set { m_owner = value; }
@@ -205,7 +205,8 @@ namespace DOL.GS
 			}
 			Owner = player;
 			player.SiegeWeapon = this;
-			Owner.Out.SendSiegeWeaponInterface(this, SiegeWeaponTimer.TimeUntilElapsed / 100);
+			if (Owner is GamePlayer)
+				((GamePlayer)Owner).Out.SendSiegeWeaponInterface(this, SiegeWeaponTimer.TimeUntilElapsed / 100);
 			player.Out.SendMessage("You take control of " + GetName(0, false) + ".", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 			if ((CurrentState & GameSiegeWeapon.eState.Armed) != GameSiegeWeapon.eState.Armed)
 				Arm();
@@ -214,8 +215,11 @@ namespace DOL.GS
 		public virtual void ReleaseControl()
 		{
 			if (Owner == null) return;
-			Owner.Out.SendMessage("You are no longer controlling " + GetName(0, false) + ".", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-			Owner.Out.SendSiegeWeaponCloseInterface();
+			if (Owner is GamePlayer)
+			{
+				((GamePlayer)Owner).Out.SendMessage("You are no longer controlling " + GetName(0, false) + ".", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+				((GamePlayer)Owner).Out.SendSiegeWeaponCloseInterface();
+			}
 			Owner.SiegeWeapon = null;
 			Owner = null;
 			StopMove();
@@ -240,9 +244,9 @@ namespace DOL.GS
 			SiegeWeaponTimer.CurrentAction = SiegeTimer.eAction.Aiming;
             Heading = GetHeading( GroundTarget );
 			PreAction();
-			if (Owner != null)
+			if (Owner != null && Owner is GamePlayer)
 			{
-				Owner.Out.SendMessage(GetName(0, true) + " is turning to your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				((GamePlayer)Owner).Out.SendMessage(GetName(0, true) + " is turning to your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
 
@@ -252,9 +256,9 @@ namespace DOL.GS
 			CurrentState &= ~eState.Armed;
 			SiegeWeaponTimer.CurrentAction = SiegeTimer.eAction.Arming;
 			PreAction();
-			if (Owner != null)
+			if (Owner != null && Owner is GamePlayer)
 			{//You prepare the cauldron of boiling oil for firing. (15.0s until armed)
-				Owner.Out.SendMessage("You prepare " + GetName(0, false) + " for firing. (" + (GetActionDelay(SiegeTimer.eAction.Arming) / 1000).ToString("N") + "s until armed)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				((GamePlayer)Owner).Out.SendMessage("You prepare " + GetName(0, false) + " for firing. (" + (GetActionDelay(SiegeTimer.eAction.Arming) / 1000).ToString("N") + "s until armed)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 
 		}
@@ -265,13 +269,15 @@ namespace DOL.GS
 			if (Owner == null || Owner.GroundTarget == null) return;
             if ( !this.IsWithinRadius( Owner.GroundTarget, 1000 ) )
 			{
-				Owner.Out.SendMessage("Ground target is too far away to move to!", eChatType.CT_System,
-									  eChatLoc.CL_SystemWindow);
+				if (Owner is GamePlayer)
+					((GamePlayer)Owner).Out.SendMessage("Ground target is too far away to move to!", eChatType.CT_System,
+										  eChatLoc.CL_SystemWindow);
 				return;
 			}
 			if (!Owner.GroundTargetInView)
 			{
-				Owner.Out.SendMessage("Ground target is out of sight!", eChatType.CT_System,
+				if (Owner is GamePlayer)
+					((GamePlayer)Owner).Out.SendMessage("Ground target is out of sight!", eChatType.CT_System,
 									  eChatLoc.CL_SystemWindow);
 				return;
 			}
@@ -281,7 +287,8 @@ namespace DOL.GS
 			{
 				if (door is GameKeepDoor)
 				{
-					Owner.Out.SendMessage("You can't move a ram that close to a door!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					if (Owner is GamePlayer)
+						((GamePlayer)Owner).Out.SendMessage("You can't move a ram that close to a door!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 			}
@@ -306,7 +313,8 @@ namespace DOL.GS
 			CurrentState |= eState.Aimed;
 			if (Owner != null)
 			{
-				Owner.Out.SendMessage("Your " + Name + " is now aimed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if (Owner is GamePlayer)
+					((GamePlayer)Owner).Out.SendMessage("Your " + Name + " is now aimed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
 		public void Armed()
@@ -315,7 +323,8 @@ namespace DOL.GS
 			CurrentState |= eState.Armed;
 			if (Owner != null)
 			{
-				Owner.Out.SendMessage("Your " + Name + " is now armed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if (Owner is GamePlayer)
+					((GamePlayer)Owner).Out.SendMessage("Your " + Name + " is now armed!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
 		public void Fire()
@@ -325,7 +334,8 @@ namespace DOL.GS
 			{
 				if (Owner != null)
 				{
-					Owner.Out.SendMessage("The " + Name + " is not ready to fire yet!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					if (Owner is GamePlayer)
+						((GamePlayer)Owner).Out.SendMessage("The " + Name + " is not ready to fire yet!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				return;
 			}
@@ -336,7 +346,8 @@ namespace DOL.GS
 			new RegionTimer(this, new RegionTimerCallback(MakeDelayedDamage), GetActionDelay(SiegeTimer.eAction.Fire));
 			BroadcastFireAnimation(GetActionDelay(SiegeTimer.eAction.Fire));
 			if (Owner != null)
-				Owner.Out.SendMessage("You fire " + GetName(0, false) + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if (Owner is GamePlayer)
+					((GamePlayer)Owner).Out.SendMessage("You fire " + GetName(0, false) + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			Arm();
 		}
 
@@ -359,9 +370,9 @@ namespace DOL.GS
 		{
 			if (TimesRepaired <= 3)
 			{
-				if (Owner.GetCraftingSkillValue(eCraftingSkill.WoodWorking) < 301)
+				if (Owner is GamePlayer && ((GamePlayer)Owner).GetCraftingSkillValue(eCraftingSkill.WoodWorking) < 301)
 				{
-					Owner.Out.SendMessage("You must have woodworking skill to repair a siege weapon.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+					((GamePlayer)Owner).Out.SendMessage("You must have woodworking skill to repair a siege weapon.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 					return;
 				}
 				TimesRepaired = TimesRepaired + 1;
@@ -369,18 +380,20 @@ namespace DOL.GS
 			}
 			else
 			{
-				this.Owner.Out.SendMessage("The siegeweapon has decayed beyond repairs!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+				if (Owner is GamePlayer)
+					((GamePlayer)Owner).Out.SendMessage("The siegeweapon has decayed beyond repairs!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 			}
 		}
 
 		public void salvage()
 		{
-			if (Owner.GetCraftingSkillValue(eCraftingSkill.SiegeCrafting) == -1)
+			if (Owner is GamePlayer && ((GamePlayer)Owner).GetCraftingSkillValue(eCraftingSkill.SiegeCrafting) == -1)
 			{
-				Owner.Out.SendMessage("You must be a Siege weapon crafter to salvage it.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+				((GamePlayer)Owner).Out.SendMessage("You must be a Siege weapon crafter to salvage it.", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			Owner.SalvageSiegeWeapon(this);
+			if (Owner is GamePlayer)
+				((GamePlayer)Owner).SalvageSiegeWeapon(this);
 		}
 		#endregion
 		#region private methods
@@ -429,20 +442,24 @@ namespace DOL.GS
 		{
 			if (Owner == null)
 				return false;
-			Owner.Stealth(false);
+			if (Owner is GamePlayer)
+				((GamePlayer)Owner).Stealth(false);
 			if (!Owner.IsAlive || Owner.IsMezzed || Owner.IsStunned)
 			{
-				this.Owner.Out.SendMessage("You can't use this siegeweapon now!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+				if (Owner is GamePlayer)
+					((GamePlayer)Owner).Out.SendMessage("You can't use this siegeweapon now!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			if (Health <= DecayedHp)
 			{
-				this.Owner.Out.SendMessage("The siegeweapon needs to be repaired!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+				if (Owner is GamePlayer)
+					((GamePlayer)Owner).Out.SendMessage("The siegeweapon needs to be repaired!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			if (!this.IsWithinRadius(this.Owner, SIEGE_WEAPON_CONTROLE_DISTANCE))
 			{
-				Owner.Out.SendMessage("You are too far from your siege equipment to control it any longer!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if (Owner is GamePlayer)
+					((GamePlayer)Owner).Out.SendMessage("You are too far from your siege equipment to control it any longer!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			return true;
@@ -454,12 +471,14 @@ namespace DOL.GS
 			{
 				SiegeWeaponTimer.Stop();
 				if (Owner != null)
-					Owner.Out.SendSiegeWeaponCloseInterface();
+					if (Owner is GamePlayer)
+						((GamePlayer)Owner).Out.SendSiegeWeaponCloseInterface();
 			}
 			SiegeWeaponTimer.Start(GetActionDelay(SiegeWeaponTimer.CurrentAction));
 			if (Owner != null)
 			{
-				Owner.Out.SendSiegeWeaponInterface(this, GetActionDelay(SiegeWeaponTimer.CurrentAction) / 100);
+				if (Owner is GamePlayer)
+					((GamePlayer)Owner).Out.SendSiegeWeaponInterface(this, GetActionDelay(SiegeWeaponTimer.CurrentAction) / 100);
 			}
 			BroadcastAnimation();
 		}
@@ -618,7 +637,8 @@ namespace DOL.GS
 		protected override void OnTick()
 		{
 			if (SiegeWeapon.Owner != null)
-				SiegeWeapon.Owner.Out.SendMessage("Action = " + CurrentAction, eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+				if (SiegeWeapon.Owner is GamePlayer)
+					((GamePlayer)SiegeWeapon.Owner).Out.SendMessage("Action = " + CurrentAction, eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 			else return;
 			switch (CurrentAction)
 			{
@@ -647,7 +667,8 @@ namespace DOL.GS
 
 			if (SiegeWeapon.Owner != null)
 			{
-				SiegeWeapon.Owner.Out.SendSiegeWeaponInterface(this.SiegeWeapon, 0);
+				if (SiegeWeapon.Owner is GamePlayer)
+					((GamePlayer)SiegeWeapon.Owner).Out.SendSiegeWeaponInterface(this.SiegeWeapon, 0);
 			}
 			if ((SiegeWeapon.CurrentState & GameSiegeWeapon.eState.Armed) != GameSiegeWeapon.eState.Armed)
 				SiegeWeapon.Arm();

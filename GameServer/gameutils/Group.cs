@@ -22,6 +22,9 @@ using System.Collections.Generic;
 using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.Events;
+using System.Reflection;
+using DOL.GS.ServerProperties;
+using log4net;
 
 namespace DOL.GS
 {
@@ -31,6 +34,10 @@ namespace DOL.GS
 	public class Group
 	{
 		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		/// <summary>
 		/// This holds all players inside the group
 		/// </summary>
 		protected List<GameLiving> m_groupMembers = new List<GameLiving>(8);
@@ -38,6 +45,47 @@ namespace DOL.GS
 		public Group(GamePlayer leader)
 		{
 			m_leader = leader;
+		}
+
+		public static Group Create(GamePlayer leader)
+		{
+			Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
+			Group group = null;
+			try
+			{
+				group = (Group)gasm.CreateInstance(Properties.GROUP_CLASS, false, BindingFlags.CreateInstance, null, new object[] { leader }, null, null);
+			}
+			catch (Exception e)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("CreateGroup", e);
+			}
+
+			if (group == null)
+			{
+				foreach (Assembly asm in ScriptMgr.Scripts)
+				{
+					try
+					{
+						group = (Group)asm.CreateInstance(Properties.GROUP_CLASS, false, BindingFlags.CreateInstance, null, new object[] { leader }, null, null);
+					}
+					catch (Exception e)
+					{
+						if (log.IsErrorEnabled)
+							log.Error("CreateGroup", e);
+					}
+					if (group != null)
+						break;
+				}
+			}
+
+			if (group == null)
+			{
+				log.ErrorFormat("Could not instantiate group class '{0}', using Group instead!", Properties.GROUP_CLASS);
+				group = new Group(leader);
+			}
+
+			return group;
 		}
 
 		/// <summary>

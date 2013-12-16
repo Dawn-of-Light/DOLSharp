@@ -152,6 +152,18 @@ namespace DOL.GS.ServerProperties
 		public static string PLAYER_CLASS;
 
 		/// <summary>
+		/// What class should the server use for clients
+		/// </summary>
+		[ServerProperty("system", "client_class", "What class should the server use for clients", "DOL.GS.GameClient")]
+		public static string CLIENT_CLASS;
+
+		/// <summary>
+		/// What class should the server use for groups
+		/// </summary>
+		[ServerProperty("system", "group_class", "What class should the server use for groups", "DOL.GS.Group")]
+		public static string GROUP_CLASS;
+
+		/// <summary>
 		/// A serialised list of RegionIDs that will load objects
 		/// </summary>
 		[ServerProperty("system", "debug_load_regions", "Serialized list of region IDs that will load objects, separated by semi-colon (leave this blank to load all regions normally)", "")]
@@ -198,6 +210,9 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("system", "db_language", "What language is the DB", "EN")]
 		public static readonly string DB_LANGUAGE;
+
+		[ServerProperty("system", "statprint_enabled", "Statistics should be printed on the server console?", true)]
+		public static bool STATPRINT_ENABLED;
 
 		[ServerProperty("system", "statprint_frequency", "How often (milliseconds) should statistics be printed on the server console.", 30000)]
 		public static int STATPRINT_FREQUENCY;
@@ -279,6 +294,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("system", "hours_uptime_between_shutdown", "Hours between a scheduled server shutdown (-1 = no scheduled restart)", -1)]
 		public static int HOURS_UPTIME_BETWEEN_SHUTDOWN;
+
+		/// <summary>
+		/// Use the NPC Guild Scripts
+		/// </summary>
+		[ServerProperty("system", "use_npcguildscripts", "Use the NPC Guild Scripts", true)]
+		public static bool USE_NPCGUILDSCRIPTS;
 		#endregion
 
 		#region LOGGING

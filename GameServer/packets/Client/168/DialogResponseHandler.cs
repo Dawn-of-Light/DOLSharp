@@ -241,7 +241,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									return;
 								}
 
-								var group = new Group(groupLeader);
+								var group = Group.Create(groupLeader);
 								GroupMgr.AddGroup(group, group);
 
 								group.AddMember(groupLeader);

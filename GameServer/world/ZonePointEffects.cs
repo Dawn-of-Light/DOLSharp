@@ -41,7 +41,7 @@ namespace DOL.GS.GameEvents
 			try{
 				model = (ushort)ServerProperties.Properties.ZONEPOINT_NPCTEMPLATE;
 				zp = new NpcTemplate(GameServer.Database.SelectObject<DBNpcTemplate>("TemplateId =" + model.ToString()));
-				if (model <= 0 || zp == null) throw new ArgumentNullException();
+				if (model <= 0 || zp == null) return;
 			}
 			catch {
 				return;

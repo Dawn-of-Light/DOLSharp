@@ -48,7 +48,8 @@ namespace DOL.GS.Keeps
 		{
 			if (guard.Component != null)
 			{
-				guard.Realm = guard.Component.Keep.Realm;
+				if (guard.Component.Keep != null)
+					guard.Realm = guard.Component.Keep.Realm;
 
 				if (guard.Realm != eRealm.None)
 				{
@@ -72,7 +73,7 @@ namespace DOL.GS.Keeps
 			{
 				guard.GuildName = "";
 			}
-			else if (guard.Component.Keep.Guild == null)
+			else if (guard.Component.Keep == null || guard.Component.Keep.Guild == null)
 			{
 				guard.GuildName = "";
 			}
@@ -123,7 +124,7 @@ namespace DOL.GS.Keeps
 
 		public static void SetGuardLevel(GameKeepGuard guard)
 		{
-			if (guard.Component != null)
+			if (guard.Component != null && guard.Component.Keep != null)
 			{
 				guard.Component.Keep.SetGuardLevel(guard);
 			}

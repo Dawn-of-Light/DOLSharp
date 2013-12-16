@@ -198,7 +198,7 @@ namespace DOL.GS
 			if (!base.RiderDismount(forced, player))
 				return false;
 
-			if (CurrentRiders.Length == 0)
+			if (CurrentRiders.Count == 0)
 			{
 				if (m_removeTimer == null)
 					m_removeTimer = new RegionTimer(this, new RegionTimerCallback(RemoveCallback));

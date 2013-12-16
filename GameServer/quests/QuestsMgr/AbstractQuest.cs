@@ -688,22 +688,22 @@ namespace DOL.GS.Quests
 			return GiveItem(source, player, itemTemplate, false);
 		}
 
-		protected static bool GiveItem(GamePlayer player, ItemTemplate itemTemplate)
+		public static bool GiveItem(GamePlayer player, ItemTemplate itemTemplate)
 		{
 			return GiveItem(null, player, itemTemplate, true);
 		}
 
-		protected static bool GiveItem(GamePlayer player, ItemTemplate itemTemplate, bool canDrop)
+		public static bool GiveItem(GamePlayer player, ItemTemplate itemTemplate, bool canDrop)
 		{
 			return GiveItem(null, player, itemTemplate, canDrop);
 		}
 
-		protected static bool GiveItem(GameLiving source, GamePlayer player, ItemTemplate itemTemplate)
+		public static bool GiveItem(GameLiving source, GamePlayer player, ItemTemplate itemTemplate)
 		{
 			return GiveItem(source, player, itemTemplate, true);
 		}
 
-		protected static bool GiveItem(GameLiving source, GamePlayer player, ItemTemplate itemTemplate, bool canDrop)
+		public static bool GiveItem(GameLiving source, GamePlayer player, ItemTemplate itemTemplate, bool canDrop)
 		{
 			InventoryItem item = null;
 

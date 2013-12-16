@@ -152,6 +152,7 @@ namespace DOL.Database
 		protected int m_poisonSpellID;
 		protected int m_poisonMaxCharges;
 		protected int m_poisonCharges;
+		protected int m_passiveSpell;
 		
 		protected int m_realm;
 		protected string m_allowedClasses;
@@ -233,6 +234,7 @@ namespace DOL.Database
 			m_poisonCharges = 0;
 			m_poisonMaxCharges = 0;
 			m_poisonSpellID = 0;
+			m_passiveSpell = 0;
 			m_realm = 0;
 			m_allowedClasses = "0";
 			m_flags = 0;
@@ -313,6 +315,7 @@ namespace DOL.Database
 			PoisonSpellID = template.PoisonSpellID;
 			PoisonCharges = template.PoisonCharges;
 			PoisonMaxCharges = template.PoisonMaxCharges;
+			PassiveSpell = template.PassiveSpell;
 			Realm = template.Realm;
 			AllowedClasses = template.AllowedClasses;
 			CanUseEvery = template.CanUseEvery;
@@ -1048,6 +1051,17 @@ namespace DOL.Database
 			{
 				Dirty = true;
 				m_poisonMaxCharges = value;
+			}
+		}
+
+		[DataElement(AllowDbNull = true)]
+		public int PassiveSpell
+		{
+			get { return m_passiveSpell; }
+			set
+			{
+				Dirty = true;
+				m_passiveSpell = value;
 			}
 		}
 

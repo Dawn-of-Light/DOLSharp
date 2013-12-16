@@ -97,7 +97,7 @@ namespace DOL.GS.Commands
 
 				if (client.Player.Group == null)
 				{
-					Group group = new Group(client.Player);
+					Group group = Group.Create(client.Player);
 					GroupMgr.AddGroup(group, group);
 					group.AddMember(client.Player);
 					group.AddMember(target);

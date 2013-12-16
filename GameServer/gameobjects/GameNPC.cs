@@ -1272,7 +1272,7 @@ namespace DOL.GS
 		/// <param name="target"></param>
 		/// <param name="speed"></param>
 		/// <returns></returns>
-		private int GetTicksToArriveAt(IPoint3D target, int speed)
+		public virtual int GetTicksToArriveAt(IPoint3D target, int speed)
 		{
 			return GetDistanceTo(target) * 1000 / speed;
 		}
@@ -1454,13 +1454,19 @@ namespace DOL.GS
 		private const int STICKMINIMUMRANGE = 100;
 		private const int STICKMAXIMUMRANGE = 5000;
 
+		public virtual void Follow(GameObject target, int minDistance, int maxDistance)
+		{
+			Follow(target, minDistance, maxDistance, 100);
+		}
+
 		/// <summary>
 		/// Follow given object
 		/// </summary>
 		/// <param name="target">Target to follow</param>
 		/// <param name="minDistance">Min distance to keep to the target</param>
 		/// <param name="maxDistance">Max distance to keep following</param>
-		public virtual void Follow(GameObject target, int minDistance, int maxDistance)
+		/// <param name="delay">Delay to wait</param>
+		public virtual void Follow(GameObject target, int minDistance, int maxDistance, int delay)
 		{
 			if (m_followTimer.IsAlive)
 				m_followTimer.Stop();
@@ -1471,7 +1477,18 @@ namespace DOL.GS
 			m_followMaxDist = maxDistance;
 			m_followMinDist = minDistance;
 			m_followTarget.Target = target;
-			m_followTimer.Start(100);
+			m_followTimer.Start(delay);
+		}
+
+		public bool IsFollowing
+		{
+			get
+			{
+				return (m_followTimer != null
+					&& m_followTimer.IsAlive
+					&& m_followTarget != null
+					&& m_followTarget.Target != null);
+			}
 		}
 
 		/// <summary>
@@ -2624,7 +2641,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the rider of this NPC as weak reference
 		/// </summary>
-		public GamePlayer[] Riders;
+		public Dictionary<int, GamePlayer> Riders;
 
 		/// <summary>
 		/// This function is called when a rider mounts this npc
@@ -2645,7 +2662,8 @@ namespace DOL.GS
 
 			Notify(GameNPCEvent.RiderMount, this, new RiderMountEventArgs(rider, this));
 			int slot = GetFreeArrayLocation();
-			Riders[slot] = rider;
+			if (!Riders.ContainsKey(slot)) Riders.Add(slot, rider);
+			else Riders[slot] = rider;
 			rider.Steed = this;
 			return true;
 		}
@@ -2666,13 +2684,12 @@ namespace DOL.GS
 			if (exists != -1)
 				return false;
 
-			if (Riders[slot] != null)
-				return false;
+			if (Riders.ContainsKey(slot)) return false;
+			Riders.Add(slot, rider);
 
 			//rider.MoveTo(CurrentRegionID, X, Y, Z, Heading);
 
 			Notify(GameNPCEvent.RiderMount, this, new RiderMountEventArgs(rider, this));
-			Riders[slot] = rider;
 			rider.Steed = this;
 			return true;
 		}
@@ -2688,7 +2705,7 @@ namespace DOL.GS
 		/// <returns>true if dismounted successfully</returns>
 		public virtual bool RiderDismount(bool forced, GamePlayer player)
 		{
-			if (Riders.Length <= 0)
+			if (Riders.Count <= 0)
 				return false;
 
 			int slot = RiderArrayLocation(player);
@@ -2696,7 +2713,8 @@ namespace DOL.GS
 			{
 				return false;
 			}
-			Riders[slot] = null;
+			if (Riders.ContainsKey(slot))
+				Riders.Remove(slot);
 
 			Notify(GameNPCEvent.RiderDismount, this, new RiderDismountEventArgs(player, this));
 			player.Steed = null;
@@ -2710,9 +2728,10 @@ namespace DOL.GS
 		/// <returns></returns>
 		public int GetFreeArrayLocation()
 		{
+			if (Riders == null) Riders = new Dictionary<int, GamePlayer>();
 			for (int i = 0; i < MAX_PASSENGERS; i++)
 			{
-				if (Riders[i] == null)
+				if (!Riders.ContainsKey(i))
 					return i;
 			}
 			return -1;
@@ -2725,11 +2744,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		public int RiderArrayLocation(GamePlayer player)
 		{
-			for (int i = 0; i < MAX_PASSENGERS; i++)
-			{
-				if (Riders[i] == player)
-					return i;
-			}
+			if (Riders != null && Riders.ContainsValue(player))
+				return Riders.First(o => o.Value == player).Key;
 			return -1;
 		}
 
@@ -2773,21 +2789,16 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets a list of the current riders
 		/// </summary>
-		public GamePlayer[] CurrentRiders
+		public List<GamePlayer> CurrentRiders
 		{
 			get
 			{
-				List<GamePlayer> list = new List<GamePlayer>(MAX_PASSENGERS);
-				for (int i = 0; i < MAX_PASSENGERS; i++)
-				{
-					if (Riders == null || i >= Riders.Length)
-						break;
-
-					GamePlayer player = Riders[i];
+				List<GamePlayer> riders = new List<GamePlayer>();
+				if (Riders == null || Riders.Count <= 0) return riders;
+				foreach (GamePlayer player in Riders.Values)
 					if (player != null)
-						list.Add(player);
-				}
-				return list.ToArray();
+						riders.Add(player);
+				return riders;
 			}
 		}
 		#endregion
@@ -2831,7 +2842,7 @@ namespace DOL.GS
 			if (!base.AddToWorld()) return false;
 
 			if (MAX_PASSENGERS > 0)
-				Riders = new GamePlayer[MAX_PASSENGERS];
+				Riders = new Dictionary<int, GamePlayer>(MAX_PASSENGERS);
 
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
@@ -3819,7 +3830,7 @@ namespace DOL.GS
 		}
 
 
-		private void SetLastMeleeAttackTick()
+		public void SetLastMeleeAttackTick()
 		{
 			if (TargetObject.Realm == 0 || Realm == 0)
 				m_lastAttackTickPvE = m_CurrentRegion.Time;
@@ -4651,11 +4662,11 @@ namespace DOL.GS
 			}
 		}
 
-		private IList m_spells = new ArrayList(1);
+		private List<Spell> m_spells = new List<Spell>();
 		/// <summary>
 		/// property of spell array of NPC
 		/// </summary>
-		public IList Spells
+		public virtual List<Spell> Spells
 		{
 			get { return m_spells; }
 			set { m_spells = value; }
@@ -4823,14 +4834,24 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="spell"></param>
 		/// <param name="line"></param>
-		public override void CastSpell(Spell spell, SpellLine line)
+		public override bool CastSpell(Spell spell, SpellLine line)
 		{
 			if (IsIncapacitated)
-				return;
+				return false;
 
 			if (m_runningSpellHandler != null || TempProperties.getProperty<Spell>(LOSCURRENTSPELL, null) != null)
 			{
-				return;
+				return false;
+			}
+
+			if (spell.SpellType.ToLower().Contains("stylehandler") || spell.SpellType.ToLower().Contains("throwweapon"))
+			{
+				DOL.GS.Styles.Style style = SkillBase.GetStyleByID((int)spell.Value, 0);
+				if (style != null)
+				{
+					DOL.GS.Styles.StyleProcessor.TryToUseStyle(this, style);
+					return true;
+				}
 			}
 
 			Spell spellToCast = null;
@@ -4867,7 +4888,7 @@ namespace DOL.GS
 				if (LOSChecker == null)
 				{
 					TempProperties.setProperty(LOSTEMPCHECKER, 0);
-					base.CastSpell(spellToCast, line);
+					return base.CastSpell(spellToCast, line);
 				}
 				else
 				{
@@ -4883,8 +4904,7 @@ namespace DOL.GS
 				TempProperties.setProperty(LOSTEMPCHECKER, tempProp - 1);
 			}
 
-			return;
-
+			return false;
 		}
 
 		public void StartSpellAttackCheckLOS(GamePlayer player, ushort response, ushort targetOID)
@@ -5237,8 +5257,8 @@ namespace DOL.GS
 					copyTarget.Inventory = inventoryTemplate.CloneTemplate();
 			}
 
-			if ( Spells != null && Spells.Count > 0 )
-				copyTarget.Spells = new ArrayList( Spells );
+			if (Spells != null && Spells.Count > 0)
+				copyTarget.Spells = new List<Spell>(Spells);
 
 			if ( Styles != null && Styles.Count > 0 )
 				copyTarget.Styles = new ArrayList( Styles );

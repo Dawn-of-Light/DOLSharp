@@ -430,18 +430,18 @@ namespace DOL.GS
 		}
 
 
-		public override void CastSpell(Spell spell, SpellLine line)
+		public override bool CastSpell(Spell spell, SpellLine line)
 		{
 			if (IsStunned || IsMezzed)
 			{
 				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.CrowdControlled));
-				return;
+				return false;
 			}
 
 			if ((m_runningSpellHandler != null && spell.CastTime > 0))
 			{
 				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.AlreadyCasting));
-				return;
+				return false;
 			}
 
 			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(this, spell, line);
@@ -452,18 +452,18 @@ namespace DOL.GS
 				if (Owner.Mana < power)
 				{
 					Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.NotEnoughPower));
-					return;
+					return false;
 				}
 
 				m_runningSpellHandler = spellhandler;
 				spellhandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
-				spellhandler.CastSpell();
+				return spellhandler.CastSpell();
 			}
 			else
 			{
 				if (log.IsWarnEnabled)
 					log.Warn(Name + " wants to cast but spell " + spell.Name + " not implemented yet");
-				return;
+				return false;
 			}
 		}
 

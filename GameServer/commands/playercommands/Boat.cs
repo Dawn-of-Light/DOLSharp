@@ -3,6 +3,7 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS.Commands
 {
@@ -73,7 +74,7 @@ namespace DOL.GS.Commands
 									playerBoat.MaxSpeedBase = 500;
 									client.Player.Inventory.RemoveItem(item);
 									InventoryLogging.LogInventoryAction(client.Player, "(ground)", eInventoryActionType.Other, item.Template, item.Count);
-									playerBoat.Riders = new GamePlayer[8];
+									playerBoat.Riders = new Dictionary<int, GamePlayer>();
 									BlankBrain brain = new BlankBrain();
 									playerBoat.SetOwnBrain(brain);
 									playerBoat = BoatMgr.CreateBoat(client.Player, playerBoat);
@@ -105,7 +106,7 @@ namespace DOL.GS.Commands
 									playerBoat.MaxSpeedBase = 400;
 									client.Player.Inventory.RemoveItem(item);
 									InventoryLogging.LogInventoryAction(client.Player, "(ground)", eInventoryActionType.Other, item.Template, item.Count);
-									playerBoat.Riders = new GamePlayer[32];
+									playerBoat.Riders = new Dictionary<int, GamePlayer>(32);
 									BlankBrain brain = new BlankBrain();
 									playerBoat.SetOwnBrain(brain);
 									playerBoat = BoatMgr.CreateBoat(client.Player, playerBoat);
@@ -137,7 +138,7 @@ namespace DOL.GS.Commands
 									playerBoat.MaxSpeedBase = 300;
 									client.Player.Inventory.RemoveItem(item);
 									InventoryLogging.LogInventoryAction(client.Player, "(ground)", eInventoryActionType.Other, item.Template, item.Count);
-									playerBoat.Riders = new GamePlayer[16];
+									playerBoat.Riders = new Dictionary<int, GamePlayer>(16);
 									BlankBrain brain = new BlankBrain();
 									playerBoat.SetOwnBrain(brain);
 									playerBoat = BoatMgr.CreateBoat(client.Player, playerBoat);
@@ -169,7 +170,7 @@ namespace DOL.GS.Commands
 									playerBoat.MaxSpeedBase = 250;
 									client.Player.Inventory.RemoveItem(item);
 									InventoryLogging.LogInventoryAction(client.Player, "(ground)", eInventoryActionType.Other, item.Template, item.Count);
-									playerBoat.Riders = new GamePlayer[8];
+									playerBoat.Riders = new Dictionary<int, GamePlayer>(8);
 									BlankBrain brain = new BlankBrain();
 									playerBoat.SetOwnBrain(brain);
 									playerBoat = BoatMgr.CreateBoat(client.Player, playerBoat);
@@ -201,7 +202,7 @@ namespace DOL.GS.Commands
 									playerBoat.MaxSpeedBase = 500;
 									client.Player.Inventory.RemoveItem(item);
 									InventoryLogging.LogInventoryAction(client.Player, "(ground)", eInventoryActionType.Other, item.Template, item.Count);
-									playerBoat.Riders = new GamePlayer[32];
+									playerBoat.Riders = new Dictionary<int, GamePlayer>(32);
 									BlankBrain brain = new BlankBrain();
 									playerBoat.SetOwnBrain(brain);
 									playerBoat = BoatMgr.CreateBoat(client.Player, playerBoat);
@@ -233,7 +234,7 @@ namespace DOL.GS.Commands
 									playerBoat.MaxSpeedBase = 600;
 									client.Player.Inventory.RemoveItem(item);
 									InventoryLogging.LogInventoryAction(client.Player, "(ground)", eInventoryActionType.Other, item.Template, item.Count);
-									playerBoat.Riders = new GamePlayer[31];
+									playerBoat.Riders = new Dictionary<int, GamePlayer>(31);
 									BlankBrain brain = new BlankBrain();
 									playerBoat.SetOwnBrain(brain);
 									playerBoat = BoatMgr.CreateBoat(client.Player, playerBoat);
@@ -265,7 +266,7 @@ namespace DOL.GS.Commands
 									playerBoat.MaxSpeedBase = 500;
 									client.Player.Inventory.RemoveItem(item);
 									InventoryLogging.LogInventoryAction(client.Player, "(ground)", eInventoryActionType.Other, item.Template, item.Count);
-									playerBoat.Riders = new GamePlayer[24];
+									playerBoat.Riders = new Dictionary<int, GamePlayer>(24);
 									BlankBrain brain = new BlankBrain();
 									playerBoat.SetOwnBrain(brain);
 									playerBoat = BoatMgr.CreateBoat(client.Player, playerBoat);
@@ -297,7 +298,7 @@ namespace DOL.GS.Commands
 									playerBoat.MaxSpeedBase = 800;
 									client.Player.Inventory.RemoveItem(item);
 									InventoryLogging.LogInventoryAction(client.Player, "(ground)", eInventoryActionType.Other, item.Template, item.Count);
-									playerBoat.Riders = new GamePlayer[64];
+									playerBoat.Riders = new Dictionary<int, GamePlayer>(64);
 									BlankBrain brain = new BlankBrain();
 									playerBoat.SetOwnBrain(brain);
 									playerBoat = BoatMgr.CreateBoat(client.Player, playerBoat);
@@ -329,7 +330,7 @@ namespace DOL.GS.Commands
 									playerBoat.MaxSpeedBase = 700;
 									client.Player.Inventory.RemoveItem(item);
 									InventoryLogging.LogInventoryAction(client.Player, "(ground)", eInventoryActionType.Other, item.Template, item.Count);
-									playerBoat.Riders = new GamePlayer[33];
+									playerBoat.Riders = new Dictionary<int, GamePlayer>(33);
 									BlankBrain brain = new BlankBrain();
 									playerBoat.SetOwnBrain(brain);
 									playerBoat = BoatMgr.CreateBoat(client.Player, playerBoat);
@@ -367,7 +368,7 @@ namespace DOL.GS.Commands
 								curBoat.Heading = client.Player.Heading;
 								curBoat.Realm = client.Player.Realm;
 								curBoat.CurrentRegionID = client.Player.CurrentRegionID;
-								curBoat.Riders = new GamePlayer[32];
+								curBoat.Riders = new Dictionary<int, GamePlayer>(32);
 								BlankBrain brain = new BlankBrain();
 								curBoat.SetOwnBrain(brain);
 								curBoat.AddToWorld();

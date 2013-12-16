@@ -759,7 +759,7 @@ namespace DOL.GS.Keeps
 					Component.Keep = keep;
 					m_dataObjectID = mobobject.ObjectId;
 					// mob reload command might be reloading guard, so check to make sure it isn't already added
-					if (Component.Keep.Guards.ContainsKey(m_dataObjectID) == false)
+					if (Component.Keep != null && Component.Keep.Guards.ContainsKey(m_dataObjectID) == false)
 					{
 						Component.Keep.Guards.Add(m_dataObjectID, this);
 					}

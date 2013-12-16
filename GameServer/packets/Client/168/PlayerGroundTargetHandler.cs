@@ -107,7 +107,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 					}
 
-					if (player.Steed.MAX_PASSENGERS > 8 && player.Steed.CurrentRiders.Length < player.Steed.REQUIRED_PASSENGERS)
+					if (player.Steed.MAX_PASSENGERS > 8 && player.Steed.CurrentRiders.Count < player.Steed.REQUIRED_PASSENGERS)
 					{
 						player.Out.SendMessage("The " + player.Steed.Name + " does not yet have enough passengers to move!",
 						                       eChatType.CT_System, eChatLoc.CL_SystemWindow);

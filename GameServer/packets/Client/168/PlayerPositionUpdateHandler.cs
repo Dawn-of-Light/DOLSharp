@@ -514,41 +514,44 @@ namespace DOL.GS.PacketHandler.Client.v168
 			int state = ((data >> 10) & 7);
 			client.Player.IsClimbing = (state == 7);
 			client.Player.IsSwimming = (state == 1);
-			if (state == 3 && client.Player.TempProperties.getProperty<bool>(GamePlayer.DEBUG_MODE_PROPERTY, false) == false && client.Player.IsAllowedToFly == false) //debugFly on, but player not do /debug on (hack)
+			if (client.Account.PrivLevel == (int)ePrivLevel.Player)
 			{
-				StringBuilder builder = new StringBuilder();
-				builder.Append("HACK_FLY");
-				builder.Append(": CharName=");
-				builder.Append(client.Player.Name);
-				builder.Append(" Account=");
-				builder.Append(client.Account.Name);
-				builder.Append(" IP=");
-				builder.Append(client.TcpEndpointAddress);
-				GameServer.Instance.LogCheatAction(builder.ToString());
+				if (state == 3 && client.Player.TempProperties.getProperty<bool>(GamePlayer.DEBUG_MODE_PROPERTY, false) == false && client.Player.IsAllowedToFly == false) //debugFly on, but player not do /debug on (hack)
 				{
-					if (ServerProperties.Properties.BAN_HACKERS)
+					StringBuilder builder = new StringBuilder();
+					builder.Append("HACK_FLY");
+					builder.Append(": CharName=");
+					builder.Append(client.Player.Name);
+					builder.Append(" Account=");
+					builder.Append(client.Account.Name);
+					builder.Append(" IP=");
+					builder.Append(client.TcpEndpointAddress);
+					GameServer.Instance.LogCheatAction(builder.ToString());
 					{
-						DBBannedAccount b = new DBBannedAccount();
-						b.Author = "SERVER";
-						b.Ip = client.TcpEndpointAddress;
-						b.Account = client.Account.Name;
-						b.DateBan = DateTime.Now;
-						b.Type = "B";
-						b.Reason = string.Format("Autoban flying hack: on player:{0}", client.Player.Name);
-						GameServer.Database.AddObject(b);
-						GameServer.Database.SaveObject(b);
+						if (ServerProperties.Properties.BAN_HACKERS)
+						{
+							DBBannedAccount b = new DBBannedAccount();
+							b.Author = "SERVER";
+							b.Ip = client.TcpEndpointAddress;
+							b.Account = client.Account.Name;
+							b.DateBan = DateTime.Now;
+							b.Type = "B";
+							b.Reason = string.Format("Autoban flying hack: on player:{0}", client.Player.Name);
+							GameServer.Database.AddObject(b);
+							GameServer.Database.SaveObject(b);
+						}
+						string message = "";
+
+						message = "Client Hack Detected!";
+						for (int i = 0; i < 6; i++)
+						{
+							client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_ChatWindow);
+						}
+						client.Out.SendPlayerQuit(true);
+						client.Disconnect();
+						return;
 					}
-					string message = "";
-					
-					message = "Client Hack Detected!";
-					for (int i = 0; i < 6; i++)
-					{
-						client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						client.Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_ChatWindow);
-					}
-					client.Out.SendPlayerQuit(true);
-					client.Disconnect();
-					return;
 				}
 			}
 

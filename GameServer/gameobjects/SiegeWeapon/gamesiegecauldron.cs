@@ -167,7 +167,8 @@ namespace DOL.GS.Spells
 				GameSiegeWeapon siege = (Caster as GameSiegeWeapon);
 				if (siege.Owner != null)
 				{
-					siege.Owner.Out.SendMessage(string.Format("You hit {0} for {1}{2} damage!", ad.Target.GetName(0, false), ad.Damage, modmessage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					if (siege.Owner is GamePlayer)
+						((GamePlayer)siege.Owner).Out.SendMessage(string.Format("You hit {0} for {1}{2} damage!", ad.Target.GetName(0, false), ad.Damage, modmessage), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				}
 			}
 		}

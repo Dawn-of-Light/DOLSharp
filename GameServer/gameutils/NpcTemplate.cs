@@ -24,6 +24,7 @@ using DOL.GS.Spells;
 using log4net;
 using System.Collections;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace DOL.GS
 {
@@ -68,7 +69,7 @@ namespace DOL.GS
 		protected int m_empathy;
 		protected int m_charisma;
 		protected IList m_styles;
-		protected IList m_spells;
+		protected List<Spell> m_spells;
 		protected IList m_spelllines;
 		protected IList m_abilities;
 		protected byte m_aggroLevel;
@@ -124,7 +125,7 @@ namespace DOL.GS
 			//Time to add Spells/Styles and Abilties to the templates
 			m_abilities = new ArrayList();
 			m_spelllines = new ArrayList();
-			m_spells = new ArrayList();
+			m_spells = new List<Spell>();
 			//Adding the spells to an Arraylist here
 			if (data.Spells != null && data.Spells.Length > 0)
 			{
@@ -256,7 +257,7 @@ namespace DOL.GS
 				try
 				{
 					if (m_spells == null)
-						m_spells = new ArrayList(mob.Spells.Count);
+						m_spells = new List<Spell>(mob.Spells.Count);
 
 					foreach (Spell mobSpell in mob.Spells)
 					{
@@ -518,7 +519,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the template npc spells name array
 		/// </summary>
-		public IList Spells
+		public List<Spell> Spells
 		{
 			get { return m_spells; }
 			set { m_spells = value; }

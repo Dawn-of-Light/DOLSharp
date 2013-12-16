@@ -85,13 +85,15 @@ namespace DOL.GS
 			GameLiving target = (TargetObject as GameLiving);
 			if (target == null)
 			{
-				Owner.Out.SendMessage("Select a target first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if (Owner is GamePlayer)
+					((GamePlayer)Owner).Out.SendMessage("Select a target first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			//todo good  distance check
 			if (!this.IsWithinRadius(target, AttackRange))
 			{
-				Owner.Out.SendMessage("You are too far away to attack " + target.Name, eChatType.CT_System,
+				if (Owner is GamePlayer)
+					((GamePlayer)Owner).Out.SendMessage("You are too far away to attack " + target.Name, eChatType.CT_System,
 									  eChatLoc.CL_SystemWindow);
 				return;
 			}
@@ -99,7 +101,8 @@ namespace DOL.GS
 
 			//TODO: dps change by number
 			target.TakeDamage(this, eDamageType.Crush, damageAmount, 0);
-			Owner.Out.SendMessage("The Ram hits " + target.Name + " for " + damageAmount + " dmg!", eChatType.CT_YouHit,
+			if (Owner is GamePlayer)
+				((GamePlayer)Owner).Out.SendMessage("The Ram hits " + target.Name + " for " + damageAmount + " dmg!", eChatType.CT_YouHit,
 								  eChatLoc.CL_SystemWindow);
 			Message.SystemToArea(this, GetName(0, false) + " hits " + target.GetName(0, true), eChatType.CT_OthersCombat,
 								 Owner);
@@ -142,7 +145,7 @@ namespace DOL.GS
 			get
 			{
 				//custom formula
-				return 10000 + ((Level + 1) * 2000) - 10000 * (int)((double)CurrentRiders.Length / (double)MAX_PASSENGERS);
+				return 10000 + ((Level + 1) * 2000) - 10000 * (int)((double)CurrentRiders.Count / (double)MAX_PASSENGERS);
 			}
 		}
 
@@ -150,7 +153,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return BaseRamDamage + (int)(((double)BaseRamDamage / 2.0) * (double)((double)CurrentRiders.Length / (double)MAX_PASSENGERS));
+				return BaseRamDamage + (int)(((double)BaseRamDamage / 2.0) * (double)((double)CurrentRiders.Count / (double)MAX_PASSENGERS));
 			}
 		}
 
@@ -198,7 +201,7 @@ namespace DOL.GS
 			get
 			{
 				//custom formula
-				double speed = (10.0 + (5.0 * Level) + 100.0 * CurrentRiders.Length / MAX_PASSENGERS);
+				double speed = (10.0 + (5.0 * Level) + 100.0 * CurrentRiders.Count / MAX_PASSENGERS);
 				foreach (GamePlayer player in CurrentRiders)
 				{
 					RealmAbilities.RAPropertyEnhancer ab = player.GetAbility<RealmAbilities.LifterAbility>();

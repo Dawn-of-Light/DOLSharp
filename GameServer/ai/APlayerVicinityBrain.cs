@@ -92,7 +92,7 @@ namespace DOL.AI
 		/// <param name="callingTimer"></param>
 		protected override int BrainTimerCallback(RegionTimer callingTimer)
 		{
-			if (Interlocked.Decrement(ref noPlayersStopCountdown) <= 0)
+			if (NoPlayersStopDelay > 0 && Interlocked.Decrement(ref noPlayersStopCountdown) <= 0)
 			{
 				//Stop the brain timer
 				Stop();

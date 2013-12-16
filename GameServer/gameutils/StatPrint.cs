@@ -55,6 +55,8 @@ namespace DOL.GS.GameEvents
 		[GameServerStartedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		{
+			if (!DOL.GS.ServerProperties.Properties.STATPRINT_ENABLED) return;
+
 			lock (typeof(StatPrint))
 			{
 				m_timerStatsByMgr = new Hashtable();

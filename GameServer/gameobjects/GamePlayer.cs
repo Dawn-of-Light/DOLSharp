@@ -8433,7 +8433,7 @@ namespace DOL.GS
 			}
 		}
 
-		public override void CastSpell(Spell spell, SpellLine line)
+		public override bool CastSpell(Spell spell, SpellLine line)
 		{
 			if (IsCrafting)
 			{
@@ -8443,7 +8443,7 @@ namespace DOL.GS
 				Out.SendCloseTimerWindow();
 			}
 
-			if (spell.SpellType == "StyleHandler" || spell.SpellType == "MLStyleHandler")
+			if (spell.SpellType == "StyleHandler" || spell.SpellType == "MLStyleHandler" || spell.SpellType == "ThrowWeapon")
 			{
 				Style style = SkillBase.GetStyleByID((int)spell.Value, CharacterClass.ID);
 				//Andraste - Vico : try to use classID=0 (easy way to implement CL Styles)
@@ -8451,6 +8451,7 @@ namespace DOL.GS
 				if (style != null)
 				{
 					StyleProcessor.TryToUseStyle(this, style);
+					return true;
 				}
 				else { Out.SendMessage("That style is not implemented!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow); }
 			}
@@ -8461,7 +8462,7 @@ namespace DOL.GS
 				if (handler != null)
 				{
 					handler.Execute(ab, this);
-					return;
+					return true;
 				}
 			}
 			else
@@ -8469,18 +8470,18 @@ namespace DOL.GS
 				if (IsStunned)
 				{
 					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.CantCastStunned"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-					return;
+					return false;
 				}
 				if (IsMezzed)
 				{
 					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.CantCastMezzed"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-					return;
+					return false;
 				}
 
 				if (IsSilenced)
 				{
 					Out.SendMessage("You are fumbling for your words, and cannot cast!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-					return;
+					return false;
 				}
 
 				double fumbleChance = GetModified(eProperty.SpellFumbleChance);
@@ -8490,7 +8491,7 @@ namespace DOL.GS
 					if (Util.ChanceDouble(fumbleChance))
 					{
 						Out.SendMessage("You are fumbling for your words, and cannot cast!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-						return;
+						return false;
 					}
 				}
 
@@ -8501,7 +8502,7 @@ namespace DOL.GS
 						if (m_runningSpellHandler.CanQueue == false)
 						{
 							m_runningSpellHandler.CasterMoves();
-							return;
+							return false;
 						}
 
 						if (spell.CastTime > 0 && !(m_runningSpellHandler is ChamberSpellHandler) && spell.SpellType != "Chamber")
@@ -8509,7 +8510,7 @@ namespace DOL.GS
 							if (m_runningSpellHandler.Spell.InstrumentRequirement != 0)
 							{
 								Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.AlreadyPlaySong"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-								return;
+								return false;
 							}
 							if (SpellQueue)
 							{
@@ -8527,7 +8528,7 @@ namespace DOL.GS
 								m_nextSpellTarget = TargetObject as GameLiving;
 							}
 							else Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.AlreadyCastNoQueue"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-							return;
+							return true;
 						}
 						else if (m_runningSpellHandler is PrimerSpellHandler)
 						{
@@ -8564,7 +8565,7 @@ namespace DOL.GS
 									}
 									Out.SendMessage("You prepare a secondary spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 								}
-								return;
+								return true;
 							}
 						}
 						else if (m_runningSpellHandler is ChamberSpellHandler)
@@ -8573,14 +8574,14 @@ namespace DOL.GS
 							if (IsMoving || IsStrafing)
 							{
 								m_runningSpellHandler = null;
-								return;
+								return false;
 							}
 							if (spell.IsPrimary)
 							{
 								if (spell.SpellType == "Bolt" && !chamber.Spell.AllowBolt)
 								{
 									Out.SendMessage("This spell cannot be stored in this chamber.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-									return;
+									return false;
 								}
 								if (chamber.PrimarySpell == null)
 								{
@@ -8629,7 +8630,7 @@ namespace DOL.GS
 						else if (!(m_runningSpellHandler is ChamberSpellHandler) && spell.SpellType == "Chamber")
 						{
 							Out.SendMessage("You may not ready this spell as a followup!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-							return;
+							return false;
 						}
 					}
 				}
@@ -8642,7 +8643,7 @@ namespace DOL.GS
 
 						if (effect != null && spell.Name == effect.Spell.Name)
 						{
-							spellhandler.CastSpell();
+							return spellhandler.CastSpell();
 						}
 						else
 						{
@@ -8651,13 +8652,13 @@ namespace DOL.GS
 								((ChamberSpellHandler)spellhandler).EffectSlot = ChamberSpellHandler.GetEffectSlot(spellhandler.Spell.Name);
 								m_runningSpellHandler = spellhandler;
 								m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
-								spellhandler.CastSpell();
+								return spellhandler.CastSpell();
 							}
 							else if (m_runningSpellHandler == null)
 							{
 								m_runningSpellHandler = spellhandler;
 								m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
-								spellhandler.CastSpell();
+								return spellhandler.CastSpell();
 							}
 						}
 					}
@@ -8699,8 +8700,8 @@ namespace DOL.GS
 									cloneSpell = spell.Copy();
 									cloneSpell.CostPower = false;
 									spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
-									spellhandler.CastSpell();
 									effect.Cancel(false);
+									return spellhandler.CastSpell();
 								}
 								else if (effect.SpellHandler is RangeSpellHandler)
 								{
@@ -8708,30 +8709,30 @@ namespace DOL.GS
 									cloneSpell.CostPower = false;
 									cloneSpell.OverrideRange = effect.Spell.Range;
 									spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
-									spellhandler.CastSpell();
 									effect.Cancel(false);
+									return spellhandler.CastSpell();
 								}
 								else if (effect.SpellHandler is UninterruptableSpellHandler)
 								{
 									cloneSpell = spell.Copy();
 									cloneSpell.CostPower = false;
 									spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
-									spellhandler.CastSpell();
 									effect.Cancel(false);
+									return spellhandler.CastSpell();
 								}
 							}
 						}
 						else
-							spellhandler.CastSpell();
+							return spellhandler.CastSpell();
 					}
 				}
 				else
 				{
 					Out.SendMessage(spell.Name + " not implemented yet (" + spell.SpellType + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
+					return false;
 				}
 			}
-			return;
+			return false;
 		}
 
 		public void CastSpell(SpellCastingAbilityHandler ab)
@@ -10494,7 +10495,7 @@ namespace DOL.GS
 				if (!RemoveFromWorld())
 					return false;
 				//notify event
-				CurrentRegion.Notify(RegionEvent.PlayerLeave, CurrentRegion, new RegionPlayerEventArgs(this));
+				CurrentRegion.Notify(RegionEvent.PlayerLeave, CurrentRegion, new RegionPlayerEventArgs(this, CurrentRegionID, regionID));
 
 				CancelAllConcentrationEffects(true);
 				if (ControlledBrain != null)
@@ -14772,13 +14773,6 @@ namespace DOL.GS
 		#endregion
 
 		#region Siege Weapon
-		private GameSiegeWeapon m_siegeWeapon;
-
-		public GameSiegeWeapon SiegeWeapon
-		{
-			get { return m_siegeWeapon; }
-			set { m_siegeWeapon = value; }
-		}
 		public void SalvageSiegeWeapon(GameSiegeWeapon siegeWeapon)
 		{
 			Salvage.BeginWork(this, siegeWeapon);

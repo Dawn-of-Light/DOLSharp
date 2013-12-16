@@ -1030,7 +1030,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		/// <param name="attacker">The original attacker.</param>
 		/// <returns></returns>
-		protected virtual GamePlayer PickTarget(GamePlayer attacker)
+		public virtual GamePlayer PickTarget(GamePlayer attacker)
 		{
 			Group attackerGroup = attacker.Group;
 
@@ -1085,6 +1085,7 @@ namespace DOL.AI.Brain
 				{
 					foreach (Spell spell in Body.Spells)
 					{
+						if (spell == null) continue;
 						if (Body.GetSkillDisabledDuration(spell) > 0) continue;
 						if (spell.Target.ToLower() == "enemy" || spell.Target.ToLower() == "area" || spell.Target.ToLower() == "cone") continue;
 						// If we have no pets

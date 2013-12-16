@@ -657,7 +657,7 @@ namespace DOL.GS.Keeps
 			if (guard.Component == null)
 				return;
 			int emblem = 0;
-			if (guard.Component.Keep.Guild != null)
+			if (guard.Component.Keep != null && guard.Component.Keep.Guild != null)
 			{
 				emblem = guard.Component.Keep.Guild.Emblem;
 			}

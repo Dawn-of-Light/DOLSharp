@@ -583,19 +583,24 @@ namespace DOL.GS.Spells
 			return CheckBeginCast(selectedTarget, false);
 		}
 
+		public virtual bool CheckBeginCast(GameLiving selectedTarget, bool quiet)
+		{
+			return CheckBeginCast(selectedTarget, quiet, true);
+		}
+
 		/// <summary>
 		/// All checks before any casting begins
 		/// </summary>
 		/// <param name="selectedTarget"></param>
 		/// <returns></returns>
-		public virtual bool CheckBeginCast(GameLiving selectedTarget, bool quiet)
+		public virtual bool CheckBeginCast(GameLiving selectedTarget, bool quiet, bool stopAttack)
 		{
-			if (m_caster.ObjectState != GameLiving.eObjectState.Active)
+			if (m_caster.ObjectState != GameLiving.eObjectState.Active && !(Spell.Target == "Self" && Spell.CastTime == 0))
 			{
 				return false;
 			}
 
-			if (!m_caster.IsAlive)
+			if (!m_caster.IsAlive && !(Spell.Target == "Self" && Spell.CastTime == 0))
 			{
 				if(!quiet) MessageToCaster("You are dead and can't cast!", eChatType.CT_System);
 				return false;
@@ -673,7 +678,7 @@ namespace DOL.GS.Spells
 				return false;
 			}
 
-			if (m_caster.AttackState && m_spell.CastTime != 0)
+			if (stopAttack && m_caster.AttackState && m_spell.CastTime != 0)
 			{
 				if (m_caster.CanCastInCombat(Spell) == false)
 				{

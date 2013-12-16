@@ -17,6 +17,7 @@
  *
  */
 using System.Collections;
+using System.Collections.Generic;
 
 namespace DOL.GS
 {
@@ -81,7 +82,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the template npc abilities
 		/// </summary>
-		IList Spells { get; }
+		List<Spell> Spells { get; }
 		IList Styles { get; }
 		IList SpellLines { get; }
 		IList Abilities { get; }
