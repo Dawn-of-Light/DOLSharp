@@ -727,9 +727,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 								{
 									RealmAbility raabil = ra_list[i];
 									RealmAbility playerra = (RealmAbility)client.Player.GetAbility(raabil.KeyName);
-									if (playerra != null)
+									/*if (playerra != null)
 										if (playerra.Level >= playerra.MaxLevel)
-											sub--;
+											sub--;*/
 								}
 								ab = ra_list[objectID - sub];
 								if (ab != null)
