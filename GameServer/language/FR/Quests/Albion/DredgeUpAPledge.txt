@@ -1,0 +1,13 @@
+﻿Alb.DredgeUpAPledge.CheckPlayerAbortQuest.Text1:	Bon, allez maintenant allez là-bas et finissez votre travail!	
+Alb.DredgeUpAPledge.CheckPlayerAbortQuest.Text2:	Echec de la Quête {0}. Vous pouvez recommencer de nouveau si vous voulez.
+Alb.DredgeUpAPledge.Conclusion.Text1:			Bon travail, {0}!
+Alb.DredgeUpAPledge.Conclusion.Text2:			Peut-être ces gangsters réflechiront-ils a  deux fois quand ils sont sur le point de promettre leur fidélité. Voici un petit quelque chose pour votre problème.
+Alb.DredgeUpAPledge.Init.Text1:				Bandit Insignia Rings
+Alb.DredgeUpAPledge.Init.Text2:				Tuez 2 bandit pledges
+Alb.DredgeUpAPledge.Notify:				bandit pledge
+Alb.DredgeUpAPledge.Story:				Ces temps sont difficiles, effectivement.  Ceux d'entre nous qui sont assez vieux se souviennent des choses qui nous on rassemblé quand Arthur était vivant - bien, il est difficile de penser ce qui a été perdu depuis.C'étaient les années d'or.\n\nOh, le Roi Constantine fait tout le possible, ne me comprenais pas mal! Nous avons de la chance d'avoir un roi avec son intégrité pour guider notre royaume.  Mais, il est juste different.  Vous ne pouvez pas vous en empêcher ; il doit savoir que chacun le compare à Arthur.  Il faut comprendre, en estimant que Constantine a beaucoup plus de problème et aucun Merlin à son côté.  Et encore, ils disent que Morgane est toujours là-bas,conspirant des ténèbres.  C'est ce n'est pas étonnant que les villages locaux sont dans l'état dans ou ils sont.\n\nLe fait de parler de l'état de nos efforts au village, en envoyant un message aux bandits n'a pas eu une grande importance.Ils continuent à être une épine dans notre côté.  Je ferais un don généreux à quelqu'un qui enseigne une leçon à ces agitateurs, accordé si ils m'apportent la preuve de leur acte.  Intéressé?
+Alb.DredgeUpAPledge.Summary:				Plusieurs groupes de bandits ont monté des camps près de Cotswold. Trouvez et tuez deux bandit pledges.  Collectez deux de leur insignia rings, et retournez voir Sir Dorian pour votre récompense.
+
+
+
+

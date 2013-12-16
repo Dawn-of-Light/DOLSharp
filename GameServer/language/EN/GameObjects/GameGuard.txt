@@ -1,0 +1,4 @@
+# GAMEGUARD
+GameGuard.Albion.StartAttackSay:					Have at thee, fiend!
+GameGuard.Midgard.StartAttackSay:					Death to the intruders!
+GameGuard.Hibernia.StartAttackSay:					The wicked shall be scourned!

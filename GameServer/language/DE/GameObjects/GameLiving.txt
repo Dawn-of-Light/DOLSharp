@@ -1,0 +1,49 @@
+﻿# GAMELIVING
+
+GameLiving.AttackData.AttacksYou:		{0} greift Euch an aber Ihr blockt den Schlag ab!
+GameLiving.AttackData.Blocked:			{0} greift Euer {1} an aber wurde abgeblockt!
+GameLiving.AttackData.BlocksYou:		{0} blockt den Angriff auf Euch von {1} ab!
+GameLiving.AttackData.CriticallyHitsForDamage:	{0} trifft Euer {1} kritisch für zusätzlich {2} Schaden.
+GameLiving.AttackData.Evaded:			Euer {1} weicht dem Angriff von {0} aus!
+GameLiving.AttackData.Fumbled:			{0} stolpert, verhaspelt sich beim Angriff und braucht ein paar Augenblicke, um wieder in Kampfposition zu kommen!
+GameLiving.AttackData.GainEndurancePoints:	Ihr bekommt {0} Ausdauerpunkte dazu.
+GameLiving.AttackData.GainPowerPoints:		Ihr bekommt {0} Magiepunkte dazu.
+GameLiving.AttackData.HitsForDamage:		{0} trifft Euer {1} und macht {2}{3} Schaden.
+GameLiving.AttackData.InvisibleToYou:		{0} ist unsichtbar für Euch!
+GameLiving.AttackData.Misses:			{0} greift Euer {1} an trifft aber nicht!
+GameLiving.AttackData.Parried:			Der Angiff von {0} auf Euer {1} wurde pariert!
+GameLiving.AttackData.StepsInFront:		{0} stellt sich vor Euch und fängt den Schlag ab!
+GameLiving.AttackData.YouBlock:			Ihr blockt den Angriff von {0} auf {1} ab!
+GameLiving.AttackData.YourCriticallyHits:	Euer {0} trifft {1} kritisch und fügt {2} zusätzlichen Schaden zu!
+GameLiving.AttackData.YourHits:			Euer {0} {1} {2} und fügt {3}{4} Schaden zu!
+GameLiving.AttackData.YouStepInFront:		Ihr stellt Euch vor {0} und fangt den Schlag ab!
+
+GameLiving.CalculateEnemyAttackResult.BlowAbsorbed:		Der Schlag wurde durch eine magische Barriere absorbiert!
+GameLiving.CalculateEnemyAttackResult.BlowIntercepted:		Der Schlag wurde durch Zerbrechliche Wache abgefangen!
+GameLiving.CalculateEnemyAttackResult.BlowPenetrated:		Der Schlag hat die magische Barriere durchdrungen!
+GameLiving.CalculateEnemyAttackResult.StrikeAbsorbed:		Euer Streich wurde durch eine magische Barriere absorbiert!
+GameLiving.CalculateEnemyAttackResult.StrikeIntercepted:	Euer Streich wurde durch eine Zerbrechliche Wache abgefangen!
+GameLiving.CalculateEnemyAttackResult.YouAttempt:		Ihr versucht {0} anzugreifen, {1} wird beschützt von {2}!
+GameLiving.CalculateEnemyAttackResult.YouHaveProtected: 	Ihr habt {0} während des Angriffs von {1} beschützt!
+GameLiving.CalculateEnemyAttackResult.YourPetAttempts:		Euer Wesen versucht {0} anzugreifen, {1} wird beschützt von {2}!
+GameLiving.CalculateEnemyAttackResult.YouWereProtected:		Ihr wurdet durch {0} während des Angriffs von {1} beschützt!
+
+GameLiving.CheckWeaponMagicalEffect.Protected:		Euer Ziel ist durch eine magische Barriere gegen Euer Gift geschützt.
+
+GameLiving.Pronoun.Female.Objective:			ihr
+GameLiving.Pronoun.Female.Possessive:			ihr
+GameLiving.Pronoun.Female.Subjective:			sie
+GameLiving.Pronoun.Male.Objective:			ihm
+GameLiving.Pronoun.Male.Possessive:			sein
+GameLiving.Pronoun.Male.Subjective:			er
+GameLiving.Pronoun.Neutral.Objective:			ihm
+GameLiving.Pronoun.Neutral.Possessive:			sein
+GameLiving.Pronoun.Neutral.Subjective:			es
+
+GameLiving.ReceiveItem:					{0} will diesen Gegenstand nicht!
+GameLiving.ReceiveMoney:				{0} will Euer Geld nicht!
+
+GameLiving.StartWeaponMagicalEffect.NotPowerful:	Ihr seid nicht mächtig genug, um den Zauber dieses Gegenstandes zu nutzen.
+
+GameLiving.TryBlock.Blocking:				Ihr konzentriert Euch darauf, den Schlag abzublocken!
+GameLiving.TryBlock.Engage:				{0} wurde vor Kurzem angegriffen und Euch ist es deshalb unmöglich, ihn zu attakieren.

@@ -1,0 +1,23 @@
+﻿Alb.ANewHeroesWelcome.CheckPlayerAbortQuest.Text1:	Très bien, maintenant, allez accomplir votre travail!
+
+Alb.ANewHeroesWelcome.CheckPlayerAbortQuest.Text2:	Quête {0} abandonée. Vous pourrez la recommencer plus tard si vous le désirez.
+
+Alb.ANewHeroesWelcome.Conclusion.Text1:			Merci, {0}.
+
+Alb.ANewHeroesWelcome.Conclusion.Text2:			Je vais envoyer un héraut pour les clercs dans la Montagnes du Sud. Cette guerre nous appauvrit tant.. et nous avons beaucoup à faire, sur tous les fronts. Peut être pourriez vous nous aider aider?
+
+Alb.ANewHeroesWelcome.Init.Text1:			Cape de la Recrue
+
+Alb.ANewHeroesWelcome.Init.Text2:			Lettre pour Pompin
+
+Alb.ANewHeroesWelcome.Init.Text3:			Apporter le message à Pompin le Crieur
+
+Alb.ANewHeroesWelcome.ScriptLoaded.Text1:		Maître Claistan
+
+Alb.ANewHeroesWelcome.ScriptLoaded.Text2:		Pompin le Crieur
+
+Alb.ANewHeroesWelcome.Story:				Bienvenue a Cotswold! Je vois que vous êtes un des derniers arrivants des Jeunes Recrues du Royaume. Sachez que nous avons besoin de vous pour la défense du Royaume, . Je suis vraiment heureux de pouvoir contribuer a vous aider a acquérir un peu d'éxpèrience.\n\nLes mains du Roy Constantine sont bien trop occupés pour s'occuper de ceci. Les Temps sombres arrivent, et le peuplre désire un Roy qui les écoutent et qui les prends au sérieux. Nous sommes menacés actuelleent par différents dangers. Le Traité de non Invasion conclut avec Midgard et Hibernia ayant pris fin, il est maintenant temps de défendre correctement nos reliques, nos terres, car nos ennemis attendent la moindre opportunité pour attaqué.\n\nLa Bataille entres les Royaumes a même déjà commencée. Les chefs de Guildes m'ayant informé qu'ils cherchent a recruter autant de soigneurs que possible pour combattre dans les Frontieres. J'ai besoin de vous pour delivrer un message à Pompin le Crieur concernant cette nouvelle. Il pourra peut être vous donner quelques taches a ccomplir aussi.J'éspère que ce message est entre de bonnes mains.
+
+Alb.ANewHeroesWelcome.Summary:				Delivrer le message de Maître Claistan à Pompin le Crieur. Il pourra vous renseigner sur un bon nombres d'évènements du royaume. Il pourrat vous raconter les dérnières nouvelles locale et peut être vous donné quelques taches a accomplir.
+
+Alb.ANewHeroesWelcome.TalkToPompinTheCrier:		Salutations, bienvenue a Cotswold.

@@ -1,0 +1,14 @@
+﻿Alb.RecruitingNothingButTrouble.CheckPlayerAbortQuest.Text1:	Gut, macht also weiter und beendet Eure Aufgabe!
+Alb.RecruitingNothingButTrouble.CheckPlayerAbortQuest.Text2:	Quest "{0}" abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
+Alb.RecruitingNothingButTrouble.Conclusion.Text1:		Nun, das werde ich! Ihr habt es tatsächlich geschafft, mein Schwert zurückzubekommen! Ich muss zugeben, ich hätte nicht gedacht, es je wieder zu sehen. Bitte nehmt diese bescheidene Belohnung für Eure Dienste.
+Alb.RecruitingNothingButTrouble.Init.Text1:			Rekruten-Kurzschwert
+Alb.RecruitingNothingButTrouble.Init.Text2:			Rekruten-Katzbalger
+Alb.RecruitingNothingButTrouble.Init.Text3:			Rekruten-Streitkolben
+Alb.RecruitingNothingButTrouble.Init.Text4:			Rekruten-Stab
+Alb.RecruitingNothingButTrouble.Init.Text5:			Rhedas Schwert
+Alb.RecruitingNothingButTrouble.Init.Text6:			Tötet Banditen-Rekruten, um Rhedas Schwert zu bekommen
+Alb.RecruitingNothingButTrouble.Notify.Text1:			Banditen-Rekrut
+Alb.RecruitingNothingButTrouble.QuestTitle:			Nichts als Schwierigkeiten rekrutiert
+Alb.RecruitingNothingButTrouble.Story:				Ich erinnere mich, wie es als unbekümmerter Jugendlicher war. Ich versuche die Eskapaden der schelmischen Jugend so gut wie möglich zu tolerieren. Erwachsene, die ein solches Verhalten fördern, bestürzen mich wirklich. Jugendliche sind von Natur aus beeinflussbar und Erwachsenen, die daraus einen Vorteil ziehen, muss eine Lektion erteilt werden.\n\nNehmt die Banditen in den Wäldern als Beispiel. Die Meisten von ihnen sind junge Schläger, die nichts Besseres zu tun haben und die keine Anstellung besitzen, welche sie von dem Ärger fernhält. Einige sind jugendliche Erwachsene, die die Jugend unserer Stadt rekrutieren, nur um Ärger zu verursachen. Erst letzte Woche haben einige von ihnen die Rückwand von Elvars Schmiede mit Brownieblut beschmiert und einer von ihnen stahl eines meiner besten Schwerter!\n\nEs muss etwas geschehen. Ich weiß, dass Sir Dorian einige Anstrengungen koordiniert, um sie aus den Wäldern zu treiben. Vielleicht könnt Ihr helfen?
+Alb.RecruitingNothingButTrouble.Summary:			Einer der Banditen-Rekruten besitzt noch immer Rhedas Schwert. Bekämpft die Banditen-Rekruten, bis ihr das Schwert gefunden habt. Kehrt danach zu Rheda nach Cotswold zurück.
+

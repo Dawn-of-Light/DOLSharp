@@ -1,0 +1,119 @@
+﻿# DelveInfo
+DelveInfo.CastingTime:					Zauberzeit: {0}
+DelveInfo.ConcentrationCost:				Konzentrationsaufwand: {0} Punkte
+DelveInfo.Damage:					Schaden: {0}
+DelveInfo.DamageType:					Schadenstyp: {0}
+DelveInfo.Duration:					Dauer: 
+DelveInfo.Focus:					Dies ist ein fokusierter Zauberspruch und wird durch jede andere Aktion unterbrochen.
+DelveInfo.Frequency:					Frequenz: {0}
+DelveInfo.HealthReturned:				Trefferpunkte: {0}% des Schadens
+DelveInfo.InstrumentRequire:				Instrument benödigt: {0}
+DelveInfo.PowerCost:					Magiekraftkosten: {0}
+DelveInfo.HealthCost:                   		Gesundheitskosten: {0}
+DelveInfo.Radius:					Radius: {0}
+DelveInfo.Range:					Reichweite: {0}
+DelveInfo.RecastTime:					Wiederholungszeit:
+DelveInfo.Target:					Ziel: {0}
+DelveInfo.Value:					Wert: {0}
+DelveInfo.ValueNegative:				Wert: -{0}
+
+# AblativeArmor
+AblativeArmor.Attacker:					Ein Schutzfeld absorbiert {0} Schaden Eures Angriffs!
+AblativeArmor.DelveInfo.Function:			Wirkung: Nahkampf-Trefferpunktpuffer
+AblativeArmor.DelveInfo.Absorption1:			Absorption: {0}%
+AblativeArmor.DelveInfo.Absorption2:			Absorption: 100%
+AblativeArmor.DelveInfo.Absorption3:			Absorption: 25%
+AblativeArmor.DelveInfo.CastingTime:			Sofort
+AblativeArmor.Target:					Euer Ablativ absorbiert {0} Schaden!
+
+# Amnesia
+Amnesia.MessageToTarget:				Eure Gedanken verwirren sich und Ihr vergesst, was Ihr machen wolltet!
+
+# DamageSpeedDecrease
+DamageSpeedDecrease.DelveInfo.Decrease:			Geschwindigkeitsabzug: {0}%
+DamageSpeedDecrease.DelveInfo.Function:			Wirkung: Schaden/Verringert Geschwindigkeit
+
+# CharmSpellHandler
+CharmSpellHandler.DelveInfo.Function:			Wirkung: {0}
+
+# DamageAddAndShield
+DamageAddAndShield.EventHandlerDA.DamageToYou:		{0} fügt Euch {1} Punkte zusätzlichen Schaden zu!
+DamageAddAndShield.EventHandlerDA.YouHitExtra:		Ihr treff und {0} erleidet {1} Punkte zusätzlichen Schaden!
+DamageAddAndShield.EventHandlerDA.YouHitFor:		Ihr trefft und {0} erleidet {1} Punkte Schaden!
+DamageAddAndShield.EventHandlerDA.YourHitFor:		{0} trifft und {1} erleidet {2} Punkte Schaden!
+DamageAddAndShield.EventHandlerDS.DamageToYou:		{0} fügt Euch {1} Punkte zusätzlichen Schaden zu!
+DamageAddAndShield.EventHandlerDS.YouHitFor:		Ihr trefft und {0} erleidet {1} Punkte Schaden!
+DamageAddAndShield.EventHandlerDS.YourHitFor:		{0} trifft und {1} erleidet {2} Punkte Schaden!
+
+# DirectDamageDebuffSpellHandler
+DirectDamageDebuffSpellHandler.DelveInfo.Decrease:	Resistenz vermindert ({0}): {1}%
+DirectDamageDebuffSpellHandler.DelveInfo.Function:	Wirkung: dmg w/resist decrease
+
+# DoTSpellHandler
+DoTSpellHandler.SendDamageMessages.YouHitFor:		Ihr trefft und {0} erleidet {1} Punkte Schaden!
+DoTSpellHandler.SendDamageMessages.YourCriticallyHits:	{0} trifft kritisch und {1} erleidet {2} Punkte zusätzlichen Schaden!
+DoTSpellHandler.SendDamageMessages.YourHitsFor:		{0} trifft und {1} erleidet {2} Punkte zusätzlichen Schaden!
+
+# NearsightSpellHandler
+NearsightSpellHandler.DelveInfo.Function:		Wirkung: {0}
+
+# PetPBAOE
+PetPBAOE.CheckBeginCast.NoPet:				Dieser Zauberspruch kann nur auf ein kontrolliertes Wesen angewendet werden!
+
+# PetSpellHandler
+PetSpellHandler.CheckBeginCast.NoControlledBrainForCast:Ihr müsst ein Wesen kontrollieren, auf das Ihr den Zauberspruch anwenden könnt!
+
+# ProcSpellHandler
+ProcSpellHandler.DelveInfo.Function:			Wirkung: {0}
+
+# ResistDebuff
+ResistDebuff.DelveInfo.Decrease:			Resistenz herabgesetzt ({0}): {1}
+ResistDebuff.DelveInfo.Function:			Wirkung: Weniger Resistenz
+
+# SavageEnduranceHeal
+SavageEnduranceHeal.CheckBeginCast.InsuffiscientHealth:	Ihr seid nicht gesund genug umd dies zu machen!
+
+# SpellHandler
+SpellHandler.CancelEffect:				Ihr beendet Euren Effekt.
+SpellHandler.CancelPulsingSpell:			Ihr beendet Euer Lied.
+SpellHandler.CasterMove:				Ihr bewegt Euch und unterbrecht damit Euren Zauberspruch!
+SpellHandler.DelveInfo.Sec:				Sekunde(n)
+
+# Summon
+Summon.CheckBeginCast.AlreadyHaveaPet:			Ihr habt doch schon ein Wesen unter Eurer Kontrolle ... lasst das erst frei!
+
+# SummonAnimist
+SummonAnimistFnF.CheckBeginCast.NoGroundTarget:			Ihr könnt keinen Hauptpilz rufen ohne vorher ein Bodenziel gesetzt zu haben!
+SummonAnimistFnF.CheckBeginCast.TurretAreaCap:			Ihr könnt in diesem Bereich nicht noch mehr Pilze beschwören!
+SummonAnimistFnF.CheckBeginCast.TurretPlayerCap:		Ihr könnt keine weiteren Pilze kontrollieren!
+SummonAnimistPet.CheckBeginCast.AlreadyHaveaPet:		Ihr habt doch schon ein Wesen unter Eurer Kontrolle ... lasst das erst frei!
+SummonAnimistPet.CheckBeginCast.GroundTargetNull:		Ihr habt ein Bodenziel für diesen Zauberspruch gesetzt.
+SummonAnimistPet.CheckBeginCast.GroundTargetNotInView:		Ihr könnt Euer Bodenziel nicht sehen.
+SummonAnimistPet.CheckBeginCast.GroundTargetNotInSpellRange:	Ihr müsst ein näheres Bodenziel auswählen.
+
+# SummonCommanderPet
+SummonCommanderPet.CheckBeginCast.Text:			Ihr habt doch schon ein Wesen unter Eurer Kontrolle ... lasst das erst frei!
+SummonCommanderPet.DelveInfo.Text1:			Wirkung: Beschwören
+SummonCommanderPet.DelveInfo.Text2:			Ruft ein Wesen, um dem Zauberer zu dienen.
+SummonCommanderPet.DelveInfo.Text3:			Ziel: {0}
+SummonCommanderPet.DelveInfo.Text4:			Magiekraftkosten: {0}%
+SummonCommanderPet.DelveInfo.Text5:			Zauberzeit: {0}
+
+# SummonMinionHandler
+SummonMinionHandler.CheckBeginCast.Text1:		Ihr müsst eines der Anführer-Monster kontrollieren, um der Gruppe weitere Monster hinzuzufügen!
+SummonMinionHandler.CheckBeginCast.Text2:		Euer Anführer hat schon seine maximale Anzahl an Gefolgsleuten erreicht!
+SummonMinionHandler.DelveInfo.Text1:			Ziel: {0}
+SummonMinionHandler.DelveInfo.Text2:			Magiekraftkosten: {0}%
+SummonMinionHandler.DelveInfo.Text3:			Zauberzeit: {0}
+
+# SummonNecromancerPet
+SummonNecromancerPet.CheckBeginCast.ShadeEffectIsNotNull:	Ihr seid schon ein Schatten!
+SummonNecromancerPet.DelveInfo.Function:			Funktion: Schatten herbei rufen
+SummonNecromancerPet.DelveInfo.Description:			Ruft ein untotes Wesen herbei, um den Zauberer zu beschützen. Der Zauberer verwandelt sich in einen Schatten und agiert nur noch durch das Wesen.
+SummonNecromancerPet.DelveInfo.Target:				Ziel: {0}
+SummonNecromancerPet.DelveInfo.Power:				Manakosten: {0}%
+SummonNecromancerPet.DelveInfo.CastingTime:			Zauberzeit: {0}
+
+# TurretsRelease
+TurretsRelease.CheckBeginCast.NoSelectedTarget:		Ihr könnt diesen Zauberspruch nur auf ein von Euch kontrolliertes Wesen anwenden.
+TurretsRelease.CheckBeginCast.TargetTooFarAway:		Euer Ziel ist zu weit entfernt!

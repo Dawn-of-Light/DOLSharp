@@ -1,0 +1,3 @@
+﻿# AbstractArea
+AbstractArea.Entered:						(Region) Vous êtes entré(e) dans {0}!
+AbstractArea.Left:							(Region) Vous avez quitté {0}!

@@ -1,0 +1,9 @@
+﻿# /AbstractArea
+AbstractArea.Entered:		(Region) Ihr seid nun {0}!
+AbstractArea.Left:		(Region) Ihr seid nun nicht mehr {0}!
+
+# ZONE BONUSES
+ZoneBonus.AdditionalXP:		Ihr bekommt {0} zusätzliche Erfahrungspunkte für Eure Abenteuer in dieser Zone!
+ZoneBonus.AdditionalRP:		Ihr bekommt {0} zusätzliche Reichspunkte für Eure Abenteuer in dieser Zone!
+ZoneBonus.AdditionalBP:		Ihr bekommt {0} zusätzliche Kopfgeldpunkte für Eure Abenteuer in dieser Zone!
+ZoneBonus.AdditionalCoin:	Ihr bekommt zusätzliche Geldstücke für Eure Abenteuer in dieser Zone!

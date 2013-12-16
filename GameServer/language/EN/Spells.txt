@@ -1,0 +1,123 @@
+﻿SpellHandler.CancelEffect:	You cancel your effect.
+SpellHandler.CancelPulsingSpell:	You stop playing your song.
+SpellHandler.CasterMove:	You move and interrupt your spellcast!
+GamePlayer.CastSpell.MustWaitBeforeCast:	You need to wait {0} mores secondes for cast a spell!
+SpellHandler.DelveInfo.Sec:	sec
+
+# DelveInfo
+DelveInfo.CastingTime:					Casting time: {0}
+DelveInfo.ConcentrationCost:				Concentration cost: {0}
+DelveInfo.Damage:					Damage: {0}
+DelveInfo.DamageType:					Damage Type: {0}
+DelveInfo.Duration:					Duration: 
+DelveInfo.Focus:					This is a focus spell. Cancels if you do any action.
+DelveInfo.Frequency:					Frequency: {0}
+DelveInfo.HealthReturned:				Health returned: {0}% of damage dealt
+DelveInfo.InstrumentRequire:				Instrument require: {0}
+DelveInfo.PowerCost:					Power cost: {0}
+DelveInfo.HealthCost:					Health cost: {0}
+DelveInfo.Radius:					Radius: {0}
+DelveInfo.Range:					Range: {0}
+DelveInfo.RecastTime:					Recast time: 
+DelveInfo.Target:					Target: {0}
+DelveInfo.Value:					Value: {0}
+DelveInfo.ValueNegative:					Value: -{0}
+
+# AblativeArmor
+AblativeArmor.DelveInfo.Function:			Function: melee hitpoint buffer (?)
+AblativeArmor.DelveInfo.Absorption1:			Absorption: {0}%
+AblativeArmor.DelveInfo.Absorption2:			Absorption: 100%
+AblativeArmor.DelveInfo.Absorption3:			Absorption: 25%
+AblativeArmor.DelveInfo.CastingTime:			Instant
+
+# DamageSpeedDecrease
+DamageSpeedDecrease.DelveInfo.Decrease:			Speed decrease: {0}%
+DamageSpeedDecrease.DelveInfo.Function:			Function: damage/speed decrease
+
+# ResistDebuff
+ResistDebuff.DelveInfo.Decrease:			Resist decrease {0}: {1}
+ResistDebuff.DelveInfo.Function:			Function: resistance decrease
+
+#CharmSpellHandler
+CharmSpellHandler.DelveInfo.Function:			Function: {0}
+
+# DamageAddAndShield
+DamageAddAndShield.EventHandlerDA.DamageToYou:		{0} does {1} extra damage to you!
+DamageAddAndShield.EventHandlerDA.YouHitExtra:		You hit {0} for {1} extra damage!
+DamageAddAndShield.EventHandlerDA.YouHitFor:		You hit {0} for {1} damage!
+DamageAddAndShield.EventHandlerDA.YourHitFor:		Your {0} hit {1} for {2} damage!
+DamageAddAndShield.EventHandlerDS.DamageToYou:		{0} does {1} extra damage to you!
+DamageAddAndShield.EventHandlerDS.YouHitFor:		You hit {0} for {1} damage!
+DamageAddAndShield.EventHandlerDS.YourHitFor:		Your {0} hit {1} for {2} damage!
+
+# DirectDamageDebuffSpellHandler
+DirectDamageDebuffSpellHandler.DelveInfo.Decrease:	Resist decrease ({0}): {1}%
+DirectDamageDebuffSpellHandler.DelveInfo.Function:	Function: dmg w/resist decrease
+
+# DoTSpellHandler
+DoTSpellHandler.SendDamageMessages.YouHitFor:		You hit {0} for {1} damage!
+DoTSpellHandler.SendDamageMessages.YourCriticallyHits:	Your {0} critically hits {1} for an additional {2} damage!
+DoTSpellHandler.SendDamageMessages.YourHitsFor:		Your {0} hits {1} for {2} damage!
+
+# NearsightSpellHandler
+NearsightSpellHandler.DelveInfo.Function:		Function: {0}
+
+# ProcSpellHandler
+ProcSpellHandler.DelveInfo.Function:			Function: {0}
+
+Summon.CheckBeginCast.AlreadyHaveaPet:	You already have a charmed creature, release it first!
+
+# SummonCommanderPet
+SummonCommanderPet.CheckBeginCast.Text:			You already have a charmed creature, release it first!
+SummonCommanderPet.DelveInfo.Text1:			Function: summon
+SummonCommanderPet.DelveInfo.Text2:			Summons a pet to serve the caster.
+SummonCommanderPet.DelveInfo.Text3:			Target: {0}
+SummonCommanderPet.DelveInfo.Text4:			Power cost: {0}%
+SummonCommanderPet.DelveInfo.Text5:			Casting time: {0}
+
+#SummonMinionHandler
+SummonMinionHandler.CheckBeginCast.Text1:		You must have a controlled leader monster to summon into a group!
+SummonMinionHandler.CheckBeginCast.Text2:		Your general already has as many followers as he can command!
+SummonMinionHandler.DelveInfo.Text1:			Target: {0}
+SummonMinionHandler.DelveInfo.Text2:			Power cost: {0}%
+SummonMinionHandler.DelveInfo.Text3:			Casting time: {0}
+
+#PetPBAOE
+PetPBAOE.CheckBeginCast.NoPet:		You must cast this spell on a creature you are controlling.
+
+#SummonAnimistFnF
+SummonAnimistFnF.CheckBeginCast.NoGroundTarget:		You can't summon Turret without ground-target !
+SummonAnimistFnF.CheckBeginCast.TurretAreaCap:	You can't summon anymore Turrets in this Area!
+SummonAnimistFnF.CheckBeginCast.TurretPlayerCap:	You cannot control anymore Turrets!
+
+#SummonAnimistPet
+SummonAnimistPet.CheckBeginCast.AlreadyHaveaPet:	You already have a charmed creature, release it first!
+SummonAnimistPet.CheckBeginCast.GroundTargetNull:	You have to set a ground target for this Spell.
+SummonAnimistPet.CheckBeginCast.GroundTargetNotInView:	Your ground target is not in view.
+SummonAnimistPet.CheckBeginCast.GroundTargetNotInSpellRange:	You have to select a closer ground target.
+
+#TurretsRelease
+TurretsRelease.CheckBeginCast.NoSelectedTarget:	You must cast this spell on a creature you are controlling
+TurretsRelease.CheckBeginCast.TargetTooFarAway:	Your target is too far away
+
+#PetSpellHandler
+PetSpellHandler.CheckBeginCast.NoControlledBrainForCast:	You must have a pet summoned to cast this spell!
+
+#SummonNecromancerPet
+SummonNecromancerPet.CheckBeginCast.ShadeEffectIsNotNull:	You are already a shade!
+SummonNecromancerPet.DelveInfo.Function:	Function: shade summon
+SummonNecromancerPet.DelveInfo.Description:	Summons an undead pet to serve the caster. The caster is transformed into a shade, and acts through the pet.
+SummonNecromancerPet.DelveInfo.Target:	Target: {0}
+SummonNecromancerPet.DelveInfo.Power:	Power cost: {0}%
+SummonNecromancerPet.DelveInfo.CastingTime:	Casting time: {0}
+
+#SavageEnduranceHeal
+SavageEnduranceHeal.CheckBeginCast.InsuffiscientHealth:	You do not have enough health to cast that!
+
+#AblativeArmor
+AblativeArmor.Target:	Your ablative absorbs {0} damage!
+AblativeArmor.Attacker:	A barrier absorbs {0} damage of your attack!
+
+#Amnesia
+Amnesia.MessageToTarget:	Your mind goes blank and you forget what you were doing!
+

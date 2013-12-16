@@ -1,0 +1,113 @@
+﻿Effects.BannerOfBesiegingEffect.Name:		Banner der Belagerung
+Effects.BannerOfBesiegingEffect.Description:	Senkt die Feuerrate von Belagerungswaffen um 6%.
+
+Effects.BannerOfFreedomEffect.Name		Banner der Freiheit
+Effects.BannerOfFreedomEffect.Description:	Reduziert alle Crowd Controll-Effekte um 6%.
+
+Effects.BannerOfShieldingEffect.Name		Banner  der Abschirmung
+Effects.BannerOfShieldingEffect.Description:	Gewährt einen 6%-Bonus auf allen Nahkampf-Resistenzen.
+
+Effects.BannerOfWardingEffect.Name:		Banner der Abwehr
+Effects.BannerOfWardingEffect.Description:	Gewährt einen 10%-Bonus auf deine Magie-Resistenzen.
+
+Effects.BerserkEffect.GoBerserkerFrenzy:	Ihr verfallt dem Berserker-Wahn!
+Effects.BerserkEffect.BerserkerFrenzyEnds:	Euer Berserkerwahn verschwindet.
+Effects.BerserkEffect.Name:			Berserker
+Effects.BerserkEffect.InfoEffect:		Diese Fähigkeit macht aus einem Spieler eine Kampfmaschine und macht aus jedem Schlag einen kritischen Treffer, jedoch auf Kosten deiner Verteidigungsfähigkeiten. Sie kann alle 7 Minuten genutzt werden.
+
+Effects.BodyguardEffect.NowBGXButSC:		Ihr seid nun der Leibwächter von {0}, aber Ihr müsst näher heran.
+Effects.BodyguardEffect.XNowBGYouButSC:		{0} ist nun Euer Leibwächter, muss aber näher an Euch heran.
+Effects.BodyguardEffect.YouAreNowBGX:		Ihr seid nun der Leibwächter von {0}.
+Effects.BodyguardEffect.XIsBGYou:		{0} ist nun Euer Leibwächter .
+Effects.BodyguardEffect.YouAreNoLongerBGX:	Ihr seid nun kein Leibwächter mehr von {0}.
+Effects.BodyguardEffect.XIsNoLongerBGYou:	{0} ist nun nicht mehr Euer Leibwächter.
+Effects.BodyguardEffect.XIsBodyguardingY:	{0} beschützt {1}
+Effects.BodyguardEffect.Name:			Leibwächter
+Effects.BodyguardEffect.InfoEffect:		Wird diese Fähigkeit erfolgreich eingesetzt, zieht Ihr eine Attacke, die dem Beschützenden galt, auf Euch. Du blockst die Attacke an Stelle des Ziels.
+Effects.BodyguardEffect.BodyguardedByName:	{0} wird von {1} beschützt.
+
+Effects.CamouflageEffect.YouAreCamouflaged:	Ihr seid nun getarnt!
+Effects.CamouflageEffect.YourCFIsGone:		Eure Tarnung ist weg.
+Effects.CamouflageEffect.Name:			Tarnung
+Effects.CamouflageEffect.InfoEffect:		Fähigkeit der Bogenschützen. Diese Fähigkeit macht den Bogenschützen unentdeckbar für Meister der Schattenkunst. Durch das Ziehen einer Waffe oder das Eingreifen in einen Kampf wird dieser Effekt beendet und der Spieler wird dadurch wieder sichtbar. Diese Fähigkeit ändert nicht den Schleichen-Skill.
+
+Effects.DelveInfo.MinutesRemaining:		- es bleiben noch {0}: {1} Minuten übrig.
+Effects.DelveInfo.SecondsRemaining:		- es bleiben noch {0} Sekunden übrig.
+Effects.DelveInfo.Seconds:			{0} Sekunden.
+
+Effects.EngageEffect.ConcOnBlockingX:		Ihr konzentriert Euch darauf, die Hiebe von {0} zu blocken!
+Effects.EngageEffect.YouNoConcOnBlock:		Ihr konzentriert Euch nun nicht mehr darauf, Hiebe zu blocken!
+Effects.EngageEffect.YouNoAttemptToEngageT:	Ihr versucht nun nicht mehr einzugreifen.
+Effects.EngageEffect.XEngagesY:			{0} greift {1} an
+Effects.EngageEffect.EngageName:		Angriff: {0}
+Effects.EngageEffect.Name:			Angriff
+Effects.EngageEffect.InfoEffect:		Eure Ausdauer wird zu Gunsten einer höheren Blockrate aufgegeben. Angreifen kann nur beim Fernkampf eingesetzt werden. Sobald Ihr kämpft, hört es auf zu wirken.
+
+Effects.GameSpellEffect.CantRemoveEffect:	Ihr könnt diesen Effekt nicht entfernen!
+
+Effects.GuardEffect.YouAreNowGuardingYBut:	Ihr bewacht nun {0}, aber Ihr müsst näher heran.
+Effects.GuardEffect.XIsNowGuardingYouBut:	{0} bewacht Euch nun, aber Ihr müsst näher heran.
+Effects.GuardEffect.YouAreNowGuardingY:		Ihr bewacht nun {0}.
+Effects.GuardEffect.XIsNowGuardingYou:		{0} bewacht Euch nun.
+Effects.GuardEffect.YourNoLongerGuardingY:	Ihr bewacht {0} nun nicht mehr.
+Effects.GuardEffect.XNoLongerGuardingYoy:	{0} bewacht Euch nicht mehr
+Effects.GuardEffect.InfoEffect:			Diese Fähigkeit, falls sie erfolgreich ausgeübt wird, wacht über eine Attacke die dem Ziel zugedacht war. Du blockst nun für deinen Schützling.
+Effects.GuardEffect.GuardedByName:		{0} bewacht durch {1}
+Effects.GuardEffect.Name:			Wache
+Effects.GuardEffect.XIsGuardingY:		{0} bewacht {1}
+
+Effects.InterceptEffect.YouAttemtInterceptYBut:	Ihr versucht, einen Angriff auf {0} abzufangen, aber Ihr müsst näher heran.
+Effects.InterceptEffect.XAttemtInterceptYouBut:	{0} versucht nun, einen Angriff auf Euch abzufangen, doch dazu müsst Ihr näher an {0} heran.
+Effects.InterceptEffect.YouAttemtInterceptY:	Ihr versucht, einen Angriff auf {0} abzufangen.
+Effects.InterceptEffect.XAttemptInterceptYou:	{0} versucht, einen Angriff auf Euch abzufangen.
+Effects.InterceptEffect.YouNoAttemptInterceptY:	Ihr versucht nicht mehr, einen Angriff auf {0} abzufangen.
+Effects.InterceptEffect.XNoAttemptInterceptYou:	{0} versucht nicht mehr, einen Angriff auf Euch abzufangen.
+Effects.InterceptEffect.InterceptedByName:	{0} wird abgefangen durch {1}
+Effects.InterceptEffect.Name:			Abfangen
+Effects.InterceptEffect.InfoEffect:		Fähigkeit, die den Schlag eines zu Schützenden abfängt. Ihr erleidet den Schaden an Stelle des Ziels.
+Effects.InterceptEffect.XInterceptingY:		{0} fängt für {0} ab.
+
+Effects.Necro.TauntEffect.SeemsChange:		{0} scheint sein Verhalten zu ändern und zeigt sich wesentlich aggressiver als vorher.
+Effects.Necro.TauntEffect.SeemsLessAgg:		{0} zeigt sich weniger aggressiv als vorher.
+
+Effects.ProtectEffect.YouProtectingYBut:	Ihr beschützt nun {0}, aber musst dazu näher heran.
+Effects.ProtectEffect.XProtectingYouBut:	{0} beschützt Euch nun, aber dazu müsst Ihr näher an {0} heran.
+Effects.ProtectEffect.YouProtectingY:		Ihr beschützt nun {0}.
+Effects.ProtectEffect.XProtectingYou:		{0} beschützt Euch nun.
+Effects.ProtectEffect.YouNoProtectY:		Ihr beschützt {0} nicht mehr.
+Effects.ProtectEffect.XNoProtectYou:		{0} beschützt Euch nun nicht mehr.
+Effects.ProtectEffect.ProtectByName:		{0} beschützt durch {1}
+Effects.ProtectEffect.Name:			Beschützen
+Effects.ProtectEffect.InfoEffect:		Fähigkeit, die ein Ziel beschützt. Ihr reduziert die Aggressivität, die eine Aktion hervorrufen würde.
+Effects.ProtectEffect.XProtectingY:		{0} beschützt {1}
+
+Effects.Quickcast.DelveInfo:			Wird nicht unterbrochen durch einen weiteren Zauberspruch.
+
+Effects.QuickCastEffect.YouActivatedQC:		Ihr bereitet Euch auf das Schnellzaubern vor.
+Effects.QuickCastEffect.YourNextSpellNoQCed:	Euer nächster Zauberspruch wird nun nicht mehr schneller gezaubert.
+Effects.QuickCastEffect.Name:			Schnellzaubern
+Effects.QuickCastEffect.InfoEffect:		Hiermit könnt Ihr einen Zauberspruch schneller ausführen, doch kostet dieser die doppelte Energie. Er werdet aber nicht durch Angriffe oder feindliche Zauberer abgelenkt.
+
+Effects.RapidFireEffect.YouSwitchRFMode:	Ihr bereitet eine schneller Schussfolge vor!
+Effects.RapidFireEffect.Name:			Schnelle Schussfolge
+
+Effects.ShadeEffect.Name:			Verstecken
+
+Effects.SprintEffect.Name:			Sprinten
+
+Effects.StagEffect.HuntsSpiritChannel:		Ihr verbindet Euch mit dem Geist der Jagd!
+Effects.StagEffect.YourHuntsSpiritEnds:		Die Verbindung mit dem Geist der Jagd ist unterbrochen.
+Effects.StagEffect.Name:			Hirschkreatur
+Effects.StagEffect.InfoEffect:			Eine Fähigkeit, die Euch in einen Hirsch verwandelt. Dieser Effekt hält etwa 30 Sekunden an und erhöht Eure Trefferpunkte. Dieser Effekt kann nur alle 30 Minuten eingesetzt werden.
+
+Effects.StaticEffect.YouCantRemoveThisEffect:	Ihr könnt diesen Effekt nicht entfernen!
+
+Effects.StealthEffect.Name:			Verborgen
+
+Effects.SureShotEffect.YouSwitchToSSMode:	Ihr bereitet einen Sicheren Schuss vor!
+Effects.SureShotEffect.Name:			Sicherer Schuss
+
+Effects.TripleWieldEffect.MBHitsExtraDamage:	Eure magische Klinge trifft {0} mit {1} Extraschaden!
+Effects.TripleWieldEffect.XMBExtraDamageToYou:	{0}s magische Klinge verursacht bei {1} Extraschaden!
+Effects.TripleWieldEffect.Name:			Dritte Waffe
+Effects.TripleWieldEffect.InfoEffect:		Magische Klinge, die zusätzlichen Schaden verursacht.
