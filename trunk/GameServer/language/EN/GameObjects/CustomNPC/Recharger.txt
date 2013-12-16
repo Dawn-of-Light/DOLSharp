@@ -1,0 +1,15 @@
+﻿
+
+Scripts.Recharger.GetExamineMessages:			You examine {0}. {1} is {2} and can recharge your equipment.
+Scripts.Recharger.Interact:				I can recharge weapons or armor for you, Just hand me the item you want recharged and I'll see what I can do, for a small fee.
+Scripts.Recharger.ReceiveItem.CantThat:			I can't recharge that.
+Scripts.Recharger.ReceiveItem.Cost:			It will cost {0} to recharge that. Do you accept?
+Scripts.Recharger.ReceiveItem.FullyCharged:		Item is fully charged!
+Scripts.Recharger.ReceiveItem.StackedObjects:		{0} can't recharge stacked objects.
+Scripts.Recharger.RechargerDialogResponse.Decline:	You decline to have your {0} recharged.
+Scripts.Recharger.RechargerDialogResponse.FullyCharged:	There, it is now fully charged!
+Scripts.Recharger.RechargerDialogResponse.GiveMoney:	You give to {0} {1}.
+Scripts.Recharger.RechargerDialogResponse.InvalidItem:	Invalid item.
+Scripts.Recharger.RechargerDialogResponse.NotMoney:	You don't have enough money.
+
+

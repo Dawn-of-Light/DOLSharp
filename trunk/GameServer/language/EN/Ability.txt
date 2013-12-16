@@ -1,0 +1,84 @@
+﻿Skill.Ability.CannotUseDead:	You cannot use this while Dead!
+Skill.Ability.CannotUseMezzed:	You cannot use this while Mezzed!
+Skill.Ability.CannotUseStunned:	You cannot use this while Stunned!
+Skill.Ability.CannotUseStanding:	You must be standing to use this ability!
+Skill.Ability.CannotUseSnared:	You may not use this ability while snared!
+Skill.Ability.CannotUseNoTarget:	You need a target to use this ability!
+Skill.Ability.CannotAttackTarget:	You cannot attack {0}!
+Skill.Ability.CannotSeeTarget:	You cannot see {0}!
+Skill.Ability.TargetIsWithinRadius:	Your target is too far away to use this ability!
+Skill.Ability.TargetIsPhaseshifted:	{0} is Phaseshifted and can't be attacked!
+Skill.Ability.TargetIsUnderSputinLegacy:	{0} is under Sputin Legacy effect and can't be attacked!
+Skill.Ability.CannotUseAlreadyActive:	That ability is already active, wait until it expires.
+Skill.Ability.CannotUseInCombat:	You have been in combat recently and cannot use this ability!
+Skill.Ability.CannotUseTargetNull:	You need a target for this ability!
+Skill.Ability.CannotUseMustBeInGroup:	You must be in a group use this ability!
+Skill.Ability.CannotUseWhileStealthed:	You cannot use this ability while stealthed!
+Skill.Ability.MinRemaining:	  minutes remaining.
+Skill.Ability.SecRemaining:	  seconds remaining.
+
+Skill.Ability.CannotUse.Camouflage.Mezzed:	You can't use camouflage while mesmerized!
+Skill.Ability.CannotUse.Camouflage.Stunned:	You can't use camouflage while stunned!
+Skill.Ability.CannotUse.Camouflage.NotStealthed:	You can't use camouflage while not stealthed!
+Skill.Ability.CannotUse.Camouflage.Dead:	You can't use camouflage when dead!
+Skill.Ability.CannotUse.Camouflage.DisableDuration:	You must wait {0} more second to attempt to use camouflage!
+
+Skill.Ability.CannotUse.Bodyguard.Dead:	You're dead and can't Bodyguard!
+Skill.Ability.CannotUse.Bodyguard.CancelTargetNull:	You are no longer Bodyguarding anyone.
+Skill.Ability.CannotUse.Bodyguard.GuardTargetIsGuardSource:	You can't Bodyguard yourself!
+Skill.Ability.CannotUse.Bodyguard.NotInGroup:	You can only guard players in your group!
+Skill.Ability.CannotUse.Bodyguard.GuardTargetAlreadyBodyGuarded:	{0} is already guarding {1}!
+Skill.Ability.CannotUse.Bodyguard.GuardSourceBodyGuarded:	You cannot bodyguard someone if you are Bodyguarded!
+
+Skill.Ability.CannotUse.CriticalShot.NoRangedWeapons:	You must ready a ranged weapon in your hands!
+Skill.Ability.CannotUse.CriticalShot.MustBeStanding:	You must be standing to attempt a ranged attack!
+Skill.Ability.CriticalShot.SwitchToRegular:	You switch to a regular shot!
+Skill.Ability.CriticalShot.AlreadyFiring:	You are already firing this weapon!
+
+Skill.Ability.DirtyTricks.EffectCancel:	Your attacks return to normal.
+Skill.Ability.DirtyTricks.EffectStart:	You get dirt thrown in your face!
+Skill.Ability.DirtyTricks.Name:	Dirty Tricks
+Skill.Ability.DirtyTricks.Description:	The player will toss dirt into the face of the enemy and causes his fumble rate to increase temporarily.
+Skill.Ability.DirtyTricks.DelveString:	Causes target's fumble rate to increase.
+
+Skill.Ability.Engage.CannotUseDead:	You can't enter combat mode while lying down!
+Skill.Ability.Engage.CannotUseStanding:	You can't enter combat mode while sitting down!
+Skill.Ability.Engage.CannotUseNoCaCWeapons:	You can't enter melee combat mode with a fired weapon!
+Skill.Ability.Engage.NoTarget:	You can only engage mobs hostile to you.
+Skill.Ability.Engage.TargetAttackedRecently:	{0} has been attacked recently and you are unable to engage.
+Skill.Ability.Engage.NotAllowedToEngageTarget:	You are not allowed to engage {0}.
+
+Skill.Ability.Flurry.TargetNotPlayerOrGuards:	You can only attack players or guards of the enemy realms with this ability!
+Skill.Ability.Flurry.YouHit:	You hit {0} for {1} damage!
+Skill.Ability.Flurry.HitYou:	{0} flurry hits you for {1} damage!
+
+Skill.Ability.SureShot.CannotUseDead:	You can't switch to sure shot when dead!
+Skill.Ability.RapidFire.CannotUseDead:	You can't switch to rapid fire when dead!
+
+Skill.Ability.Stealth.CannotUseToCloseAnEnemy:	You are too close to an enemy to hide!
+Skill.Ability.Stealth.CannotUseStunned:	You can't hide while stunned!
+Skill.Ability.Stealth.CannotUseMezzed:	You can't hide while mesmerized!
+Skill.Ability.Stealth.CannotUseActivePulsingSpell:	You currently have an active, pulsing spell effect and cannot hide!
+Skill.Ability.Stealth.CannotUseCombatState:	You must end your current action before hiding!
+Skill.Ability.Stealth.CannotUseDead:	You can't hide when dead!
+Skill.Ability.Stealth.CannotUseInCombat: You've been in combat recently and can't hide yet!
+Skill.Ability.Stealth.CannotUseStealthChangeTick:	You must wait {0} more second to attempt to hide!
+
+Skill.Ability.QuickCast.CannotUseIsCasting:	You can't prepare a quickcast while casting a spell!
+Skill.Ability.QuickCast.CannotUseDead:	You can't quick cast when dead!
+Skill.Ability.QuickCast.CannotUseInMeleeCombat:	You can not cast when your are in melee combat.
+Skill.Ability.QuickCast.CannotUseChangeTick:	You must wait {0} more second to attempt to quick cast!
+
+Skill.Ability.Guard.CancelTargetNull:	You are no longer guarding anyone.
+Skill.Ability.Guard.CannotUse.GuardTargetIsGuardSource:	You can't guard yourself!
+Skill.Ability.Guard.CannotUse.NotInGroup:	You can only guard players in your group!
+Skill.Ability.Guard.CannotUse.GuardTargetAlreadyGuarded:	{0} is already guarding {1}!
+
+Skill.Ability.Intercept.CannotUse.InterceptTargetAlreadyInterceptedEffect:	{0} is already intercepting for {1}.
+Skill.Ability.Intercept.CannotUse.NotInGroup:	You can only take intercept attacks for players in your group!
+Skill.Ability.Intercept.CancelTargetNull:	You are no longer attempting to intercept attacks for anyone.
+
+Skill.Ability.Protect.CannotUse.ProtectTargetAlreadyProtectEffect:	{0} is already protecting {1}!
+Skill.Ability.Protect.CannotUse.NotInGroup:	You can only protect players in your group!
+Skill.Ability.Protect.CannotUse.CantProtectYourself:	You can't protect yourself!
+Skill.Ability.Protect.CancelTargetNull:	You are no longer protecting anyone.

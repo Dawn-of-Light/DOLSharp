@@ -1,0 +1,12 @@
+﻿
+
+Healer.GetExamineMessages.Text1:	Vous examinez {0}. {1} est {2} et est un Guérisseur.
+Healer.HealerDialogResponse.Text1:	Vous êtes trop loin pour parler avec {0}.
+Healer.HealerDialogResponse.Text2:	refusé
+Healer.HealerDialogResponse.Text3:	Vous donnez a {0} une donnation de {1}.
+Healer.HealerDialogResponse.Text4:	Vous avez besoin de {0} pour restorer {1} points de constitution.
+Healer.Interact.Text1:			{0} guérit vote mal de la résurection.
+Healer.Interact.Text2:			Cela vous coûtera {0} pour restaurez vos points de constitution. Acceptez vous?
+Healer.Interact.Text3:			Votre constitution est déjà a son maximum.
+
+

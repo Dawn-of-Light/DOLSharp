@@ -1,0 +1,20 @@
+﻿# Language file for DOL
+# Language used : FRENCH / FRANCAIS
+# Create by DOL
+#
+# #-Beginning and Empty lines are ignored
+# TABS are ignored at the left of ':' too.
+# {0} etc. are for args, don't remove them !
+#
+# Please try to keep ID's alphabetical order
+
+# LANGUAGEMGR
+System.LanguagesName.EN:					Anglais
+System.LanguagesName.FR:					Français
+System.LanguagesName.DE:					Allemand
+System.LanguagesName.ES:					Espagnol
+System.LanguagesName.CZ:						Tchèque
+System.LanguagesName.IT:					Italien 
+
+
+PlayerPickUpRequestHandler.HandlePacket.Target:		Vous devez avoir une cible valide a ramassé.

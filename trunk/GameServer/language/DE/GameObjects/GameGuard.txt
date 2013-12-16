@@ -1,0 +1,4 @@
+# GAMEGUARD
+GameGuard.Albion.StartAttackSay:	Nimm das, Unhold!
+GameGuard.Midgard.StartAttackSay:	Tod den Eindringlingen!
+GameGuard.Hibernia.StartAttackSay:	Verachtet die Ungläubigen!

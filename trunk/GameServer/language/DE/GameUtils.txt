@@ -1,0 +1,8 @@
+﻿# Startup guilds
+Guild.StartupGuild.Hibernia:	Tir na Nog-Abenteurer
+Guild.StartupGuild.Albion:	Klan Cotswold
+Guild.StartupGuild.Midgard:	Beschützer von Mularn
+
+Guild.StartupGuild.Motd: 	Gebt '/gu <text>' ein, um mit den Mitgliedern dieser Startgilde zu sprechen.
+Guild.StartupGuild.Omotd:	Gebt '/gc quit' ein, wenn Ihr die Startgilde zu verlassen wollt.
+Guild.StartupGuild.Title:	Abenteurer

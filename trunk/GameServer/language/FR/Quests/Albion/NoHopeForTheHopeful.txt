@@ -1,0 +1,16 @@
+﻿Alb.NoHopeForTheHopeful.CheckPlayerAbortQuest.Text1:	Bon, allez maintenant allez là-bas et finissez votre travail!
+Alb.NoHopeForTheHopeful.CheckPlayerAbortQuest.Text2:	Echec de la Quête {0}. Vous pouvez recommencer de nouveau si vous voulez.
+Alb.NoHopeForTheHopeful.Conclusion.Text1:		Excellent, {0}! Vous avez tres bien réussi.
+Alb.NoHopeForTheHopeful.Conclusion.Text2:		Peut-être le mot s'étendra parmi les bandits que les citoyens de Cotswold ne toléreront plus leur peur mongering.
+Alb.NoHopeForTheHopeful.Init.Text1:			Recruit's Intelligent Bracer
+Alb.NoHopeForTheHopeful.Init.Text2:			Recruit's Mighty Bracer
+Alb.NoHopeForTheHopeful.Init.Text3:			Recruit's Sly Bracer
+Alb.NoHopeForTheHopeful.Init.Text4:			Recruit's Pious Bracer
+Alb.NoHopeForTheHopeful.Init.Text5:			Bandit Cloak
+Alb.NoHopeForTheHopeful.Init.Text6:			Tuez deux bandit hopefuls
+Alb.NoHopeForTheHopeful.Notify:				bandit hopeful
+Alb.NoHopeForTheHopeful.Story:				Donc vous êtes une des nouvelles arrivé(e)s, eh ? Soyez bienvenus dans notre village! C'est toujours un plaisir de rencontrer les nouveaux venus.\n\nVous avez entendu des rumeurs au sujet d'un manque de gardes locales ici. Malheureusement, c'est vrai, j'ai bien peur. Le roi Constantine a étendu nos défenses les gens sont pas tres  malins, et sur ces fait ils deviennent nerveux pour  leur sécurité. Pas qu'il puissent être blâmé, nous avons juste trop d'ennemis pour nous inquiéter au sujet des ennuis locaux.\n\nSi vous êtes vraiment disposés à aider comme vous le ditent,je pourrais utiliser vos compétence. L' éternel  problème que nous endurons est provoqué par les brigands locaux qui semblent couvrir la campagne . Plus nous en arrêtons, plus nous en trouvons il y a de plus en plus chaques jours . Ils ressemblent a des  insectes ... quand vous en voyez un, il y a des centaines de plus que vous ne voyez pas.\n\nSeriez-vous disposés à nous tirer d'embarras ? Nos gens devraient se sentir libres de ce déplacer sans l'inquiétude constante d'être attaquer par les bandits. Tuez deux bandit hopefuls et apportez-moi deux Capes de Bandit comme  preuve de cet acte.
+Alb.NoHopeForTheHopeful.Summary:			Trouvez et vainquez deux bandit hopefuls,  revenez ensuite voir Sir Dorien pour votre récompense.
+
+
+

@@ -1,0 +1,14 @@
+﻿# Necromancer
+AI.Brain.Necromancer.CastSpellAfterAction:	{0} wird den Zauberspruch auslösen, wenn die aktuelle Aktion abgeschlossen ist.
+AI.Brain.Necromancer.ServantFarAwayToCast:	Euer Diener ist zu weit weg von Eurem Ziel für diesen Zauberspruch!
+AI.Brain.Necromancer.PetCantSeeTarget:		Euer kontrollierter {0} kann das Ziel nicht sehen!
+AI.Brain.Necromancer.PetCastingSpell:		{0} beginnt zu zaubern!
+AI.Brain.Necromancer.PetTooFarBeLostSecIm:	Euer Diener hat sich zu weit von Euch entfernt. Ihr werdet die Verbindung in {0} Sekunden verlieren oder geht näher an heran.
+AI.Brain.Necromancer.PetTooFarBeLostSec:	Euer Diener hat sich zu weit von Euch entfernt. Ihr werdet die Verbindung in {0} Sekunden verlieren.
+AI.Brain.Necromancer.HaveLostBondToPet:		Ihr habt die Verbindung zu Eurem Diener verloren.
+AI.Brain.Necromancer.SpellNoLongerInQueue:	Der {0} Zauberspruch steht nicht länger in der {1}-Warteschlange.
+AI.Brain.Necromancer.NoPower:			Ihr habt nicht genug Magiekraft für diesen Zauberspruch!
+
+# StandardMob
+AI.Brain.StandardMobBrain.YouProtDist:		Ihr beschützt {0} und lenkt {1} ab.
+

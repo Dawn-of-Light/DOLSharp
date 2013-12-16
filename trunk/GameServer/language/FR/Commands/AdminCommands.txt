@@ -1,0 +1,53 @@
+﻿
+# /serverproperties Command
+AdminCommands.ServerProperties.Description:			Recharger les propriétés du serveur depuis la base de données.
+AdminCommands.ServerProperties.Usage:				/serverproperties
+AdminCommands.ServerProperties.DataBaseXML:			Désolé! XML utilise un cache, vous ne pouvez pas recharger les propriétés du serveur à moins d'utiliser MySQL.
+AdminCommands.ServerProperties.PropertiesRefreshed:	Les propriétés du serveur ont été rechargées.
+
+
+# /plvl Command
+AdminCommands.plvl.Description:						Change le niveau de privilèges ou l'attribution de commande d'un joueur ou d'un compte de jeu.
+AdminCommands.plvl.Usage:							/plvl <NouveauRang> [NomDuJoueur]
+AdminCommands.plvl.Usage.Single:					/plvl single <commande> [NomDuJoueur]
+AdminCommands.plvl.Usage.SingleAccount:				/plvl singleaccount <commande> [NomDuCompte]
+AdminCommands.plvl.Usage.Remove:					/plvl remove <commande> [NomDuJoueur]
+AdminCommands.plvl.Usage.RemoveAccount:				/plvl removeaccount <commande> [NomDuCompte]
+AdminCommands.plvl.NoSelectPlayer:					Vous devez sélectionner un joueur.
+AdminCommands.plvl.AddedSinglePermission:			Vous autorisez le joueur {0} à utiliser la commande: {1}.
+AdminCommands.plvl.AddedSingleAccountPermission:	Vous autorisez le compte de jeu {0} à utiliser la commande: {1}.
+AdminCommands.plvl.RemoveSinglePermission:			Vous retirez au joueur {0} le droit d'utiliser la commande: {1}.
+AdminCommands.plvl.RemoveSingleAccountPermission:	Vous retirez au compte de jeu {0} le droit d'utiliser la commande: {1}.
+AdminCommands.plvl.NoPermissionForCommand:			Il n'existe aucune autorisation pour {0} d'utiliser la commande {1}.
+AdminCommands.plvl.YourPlvlHasBeenSetted:			Vos privilèges sont maintenant de niveau {0}
+AdminCommands.plvl.PlayerPlvlHasBeenSetted:			Le niveau de privilèges du joueur {0} est maintenant: {1}
+
+# /code Command
+AdminCommands.Code.Description:						Permet l'exécution de code à partir du jeu!
+AdminCommands.Code.Usage:							/code <code>
+AdminCommands.Code.ErrorCompiling:					Erreur de Compilation de l'Expression:
+AdminCommands.Code.CodeExecuted:					Code exécuté...
+
+
+# /account Command
+AdminCommands.Account.Description:					Commande de modification de compte
+AdminCommands.Account.Usage.Create:					/account create <NomDuCompte> <MotDePasse>
+AdminCommands.Account.Usage.ChangePassword:			/account changepassword <NomDuCompte> <MotdePasse>
+AdminCommands.Account.Usage.Delete:					/account delete <NomDuCompte>
+AdminCommands.Account.Usage.DeleteChar:				/account deletecharacter <NomDuPersonnage>
+AdminCommands.Account.Usage.MoveChar:				/account movecharacter <NomDuPersonnage> <NomDuCompteCible>
+AdminCommands.Account.Usage.Status:					/account status <NomDuCompte> <Niveau>
+AdminCommands.Account.Usage.UnBan:					/account unban <NomDuCompte>
+AdminCommands.Account.Usage.AccountName:			/account accountname <NomDuJoueur>
+AdminCommands.Account.AccountNotFound:				Le compte de jeu "{0}" est introuvable!
+AdminCommands.Account.AccountDeleted:				Le compte de jeu "{0}" a été supprimé!
+AdminCommands.Account.CharacterNotFound:			Le joueur "{0}" est introuvable!
+AdminCommands.Account.CharacterDeleted:				Le joueur "{0}" a été supprimé!
+AdminCommands.Account.CharNotFromValidRealm:		Le joueur n'est pas d'un royaume valide.
+AdminCommands.Account.AccountHasNoFreeSlots:		Le compte de jeu "{0}" n'a plus d'emplacement de personnage dsiponible pour ce royaume!
+AdminCommands.Account.CharacterMovedToAccount:		Le Personage "{0}" a été déplacé sur le compte de jeu "{1}".
+AdminCommands.Account.InvalidAccountName:			Le nom de compte de jeu est invalide.
+AdminCommands.Account.InvalidAccountNameOrPassword:	Le nom de compte de jeu et le mot de passe doivent avoir au moins 4 caractères.
+AdminCommands.Account.AccountNameAlreadyRegistered:	Ce nom de compte de jeu est déjà utilisé.
+AdminCommands.Account.AccountCreated:				Compte créé!
+AdminCommands.Account.AccNameForChar:				Le nom de compte de jeu pour le joueur "{0}" est: {1}

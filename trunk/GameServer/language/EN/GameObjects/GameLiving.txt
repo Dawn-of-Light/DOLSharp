@@ -1,0 +1,49 @@
+﻿# GAMELIVING
+
+GameLiving.AttackData.AttacksYou:		{0} attacks you and you block the blow!
+GameLiving.AttackData.Blocked:			{0} attacks your {1} and is blocked!
+GameLiving.AttackData.BlocksYou:		{0} blocks you from {1}'s attack!
+GameLiving.AttackData.CriticallyHitsForDamage:	{0} critically hits your {1} for an additional {2} damage.
+GameLiving.AttackData.Evaded:			{0} attacks your {1} and is evaded!
+GameLiving.AttackData.Fumbled:			{0} fumbled!
+GameLiving.AttackData.GainEndurancePoints:	You gain {0} endurance points.
+GameLiving.AttackData.GainPowerPoints:		You gain {0} power points.
+GameLiving.AttackData.HitsForDamage:		{0} hits your {1} for {2}{3} damage.
+GameLiving.AttackData.InvisibleToYou:		{0} is invisible to you!
+GameLiving.AttackData.Misses:			{0} attacks your {1} and misses!
+GameLiving.AttackData.Parried:			{0} attacks your {1} and is parried!
+GameLiving.AttackData.StepsInFront:		{0} steps in front of you and takes the blow!
+GameLiving.AttackData.YouBlock:			You block {0}'s attack against {1}!
+GameLiving.AttackData.YourCriticallyHits:	Your {0} critically hits {1} for an additional {2} damage!
+GameLiving.AttackData.YourHits:			Your {0} {1} {2} and hits for {3}{4} damage!
+GameLiving.AttackData.YouStepInFront:		You step in front of {0} and take the blow!
+
+GameLiving.CalculateEnemyAttackResult.BlowAbsorbed:		The blow was absorbed by a magical barrier!
+GameLiving.CalculateEnemyAttackResult.BlowIntercepted:		The blow was intercepted by Brittle Guard!
+GameLiving.CalculateEnemyAttackResult.BlowPenetrated:		The blow penetrated the magical barrier!
+GameLiving.CalculateEnemyAttackResult.StrikeAbsorbed:		Your strike was absorbed by a magical barrier!
+GameLiving.CalculateEnemyAttackResult.StrikeIntercepted:	Your strike was intercepted by a Brittle Guard!
+GameLiving.CalculateEnemyAttackResult.YouAttempt:		You attempt to attack {0}, {1} is bodyguarded by {2}!
+GameLiving.CalculateEnemyAttackResult.YouHaveProtected: 	You have protected {0} from the attack from {1}!
+GameLiving.CalculateEnemyAttackResult.YourPetAttempts:		Your pet attempts to attack {0}, {1} is bodyguarded by {2}!
+GameLiving.CalculateEnemyAttackResult.YouWereProtected:		You were protected by {0} from the attack from {1}!
+
+GameLiving.CheckWeaponMagicalEffect.Protected:		Your target is protected against your poison by a magical effect.
+
+GameLiving.Pronoun.Neutral.Objective:			it
+GameLiving.Pronoun.Neutral.Possessive:			its
+GameLiving.Pronoun.Neutral.Subjective:			it
+GameLiving.Pronoun.Male.Objective:			him
+GameLiving.Pronoun.Male.Possessive:			his
+GameLiving.Pronoun.Male.Subjective:			he
+GameLiving.Pronoun.Female.Objective:			her
+GameLiving.Pronoun.Female.Possessive:			her
+GameLiving.Pronoun.Female.Subjective:			she
+
+GameLiving.ReceiveItem:					{0} doesn't want this item!
+GameLiving.ReceiveMoney:				{0} doesn't want your money!
+
+GameLiving.StartWeaponMagicalEffect.NotPowerful:	You are not powerful enough to use this item's spell.
+
+GameLiving.TryBlock.Blocking:				You concentrate on blocking the blow!
+GameLiving.TryBlock.Engage:				{0} has been attacked recently and you are unable to engage.

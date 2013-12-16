@@ -1,0 +1,12 @@
+﻿Alb.AfterTheAccident.CheckPlayerAbortQuest.Text1:	Bien ! Maintenant, vous pouvez partir finir votre travail !
+Alb.AfterTheAccident.CheckPlayerAbortQuest.Text2:	Quête {0} abandonée. Vous pourrez la recommencer plus tard si vous le désirez.
+Alb.AfterTheAccident.Conclusion.Text1:			Vous avez bien fait. Voici votre récompense, et mon Merci pour servir Camelot!
+Alb.AfterTheAccident.Init.Text1:			Collier de Puissance de la Recrue
+Alb.AfterTheAccident.Init.Text2:			Collier de Sagacité de la Recrue
+Alb.AfterTheAccident.Init.Text3:			Collier de Foi de la Recrue
+Alb.AfterTheAccident.Init.Text4:			Os de squelette chétif
+Alb.AfterTheAccident.Init.Text5:			Os de squelette chétif
+Alb.AfterTheAccident.Notify.Text1:			squelette chétif
+Alb.AfterTheAccident.Story:				Au cours de mes patrouilles autour de Cotswold, j'ai vu beaucoup de choses qui me préoccupent gravement, mon ami. Les morts, sont agités alors qu'ils devraient se reposer paisiblement. Si ce n'est pas un phénomène relativement nouveau, il ya de plus en plus d'observations de squelettes, zombies, et autres depuis l'accident maudite. \N Vous avez probablement entendu à ces derniers jours de la déchirure dans le tissu de la réalité qui est arrivé par erreur à l'Académie. Ils ont ouvert une porte dans l'enfer, et je ne pense pas que quelqu'un sache ce que cela signifie. Ils pensent, mais je ne suis pas si sûr. \ N Je ne peux pas être certain de ce que la magie immonde apporte qoit bien pour notre monde, nous ne pouvons pas permettre a ces abominations de se baladé dans nos campagnes. Je suis autorisé à verser une prime à ceux qui les libérent et reviens me voir avec la preuve de son acte.
+Alb.AfterTheAccident.Summary:				Tuer deux squelette chétif. Puis, retourner voir Sirz Prescott avec les deux Os de squelette chétif comme preuve de votre acte.
+

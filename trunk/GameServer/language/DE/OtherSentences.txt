@@ -1,0 +1,36 @@
+﻿# LANGUAGEMGR
+System.LanguagesName.CZ:		Tschechisch
+System.LanguagesName.EN:		Englisch
+System.LanguagesName.FR:		Französisch
+System.LanguagesName.DE:		Deutsch
+System.LanguagesName.IT:		Italienisch
+System.LanguagesName.ES:		Spanisch
+
+# System
+System.NoSense:				Das würde keinen Sinn machen!
+System.MustSelectTarget:		Ihr müsst ein Ziel auswählen!
+System.ReleaseTimer:			Automatischer Release
+
+# PropertyCalculator
+PropertyCalc.MaxSpeed.YouAreEncumbered:	Ihr seid überlastet und könnt euch nicht bewegen.
+
+# GAMEGRAVESTONE
+GameGravestone.GameGravestone.Grave:	Grabstein von {0}
+
+# GAMEGUARD
+GameGuard.GetExamineMessages.Examine:	Es interessiert Euch {0}. {1} ist Euch {2} gesonnen und gehört der Reichswache an.
+
+# GAMESTAICITEM
+GameStaticItem.GetName.Article1:	{0}
+GameStaticItem.GetName.Article2:	{0}
+
+# /Playerenterexit
+Scripts.Events.PlayerEnterExit.Entered:	{0} betritt gerade diese Welt!
+Scripts.Events.PlayerEnterExit.Left:	{0} verlässt gerade diese Welt!
+Scripts.Events.PlayerEnterExit.Staff:	[Staff] {0}
+
+# /Emotes
+Scripts.Players.Emotes.Message1:	Sieht aus wie jemand der heute zu viel Koffein hatte.
+Scripts.Players.Emotes.Message2:	Hey! Langsam. Nehmt Euch ein paar Minuten, beruhigt Euch und sammelt Eure Gedanken.
+Scripts.Players.Emotes.Message3:	Seid vorsichtig oder Euer Gesicht wird so bleiben.
+Scripts.Players.Emotes.Message4:	Langsam, Ihr seid zu schnell! Genießt diesen Augenblick.

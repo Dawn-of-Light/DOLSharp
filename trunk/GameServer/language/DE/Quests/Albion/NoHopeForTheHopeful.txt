@@ -1,0 +1,18 @@
+﻿Alb.NoHopeForTheHopeful.CheckPlayerAbortQuest.Text1:	Gut, macht also weiter und beendet Eure Aufgabe!
+Alb.NoHopeForTheHopeful.CheckPlayerAbortQuest.Text2:	Quest "{0}" abgebrochen. Ihr könnt jeder Zeit wieder beginnen.
+Alb.NoHopeForTheHopeful.Conclusion.Text1:		Ausgezeichnet, {0}! Das habt Ihr gut gemacht.
+Alb.NoHopeForTheHopeful.Conclusion.Text2:		Vielleicht wird es sich unter den Banditen herumsprechen, dass die Einwohner von Cotswold es nicht länger hinnehmen, bedroht zu werden.
+Alb.NoHopeForTheHopeful.Init.Text1:			intelligente Rekruten-Armschiene
+Alb.NoHopeForTheHopeful.Init.Text2:			mächtige Rekruten-Armschiene
+Alb.NoHopeForTheHopeful.Init.Text3:			verschlagene Rekruten-Armschiene
+Alb.NoHopeForTheHopeful.Init.Text4:			Rekruten-Armschiene des Gläubigen
+Alb.NoHopeForTheHopeful.Init.Text5:			Banditenumhang
+Alb.NoHopeForTheHopeful.Init.Text6:			Besiegt zwei Banditen-Hoffnungsträger
+Alb.NoHopeForTheHopeful.Notify:				Banditen-Hoffnungsträger
+Alb.NoHopeForTheHopeful.QuestTitle:			Keine Hoffnung für die Hoffnungsträger
+Alb.NoHopeForTheHopeful.Story:				Ihr seid also einer der Neuankömmlinge, was? Willkommen in unserem Dorf! Es ist immer eine Freude, Neulinge zu treffen.\n\nVielleicht habt Ihr von einem Gerücht über einen Wachenmangel gehört. Leider ist es wahr, was mich bedrückt. König Constantine hat unsere Verteidigung recht dünn gestreut, was die hiesigen Bürger äußerst besorgt um ihre Sicherheit macht. Man kann ihm nichts vorwerfen, wir haben einfach zu viele Gegenspieler in diesen fordernden Zeiten.\n\nWenn Euer Hilfeangebot ernst gemeint ist, hätte ich da etwas für Euch. Wir haben ein nie endendes Problem mit Unruhen, die von Briganten angestichelt werden und die Landschaft wie die Pest überziehen. Sie sind wie Insekten... Wo Ihr einen seht, sind noch viele mehr, die Ihr nicht sehen könnt.\n\nSeid Ihr bereit, uns zu helfen? Die Bewohner sollten frei Ihrem Tagewerk nachgehen können, ohne dass sie sich darum sorgen müssen, hochgenommen zu werden. Tötet zwei Banditen-Hoffnungsträger und bringt mir ihre Banditenumhänge.
+Alb.NoHopeForTheHopeful.Summary:			Sucht und besiegt zwei Banditen-Hoffnungsträger und kehrt danach zu Sir Dorian für Eure Belohnung zurück.
+
+
+
+
