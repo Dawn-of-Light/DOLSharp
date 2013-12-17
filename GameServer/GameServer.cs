@@ -712,11 +712,6 @@ namespace DOL.GS
 					return false;
 
 				//---------------------------------------------------------------
-				//Load the area manager
-				if (!InitComponent(AreaMgr.LoadAllAreas(), "Areas"))
-					return false;
-
-				//---------------------------------------------------------------
 				//Enable Worldsave timer now
 				if (m_timer != null)
 				{
@@ -745,6 +740,11 @@ namespace DOL.GS
 				//---------------------------------------------------------------
 				//Load the door manager
 				if (!InitComponent(DoorMgr.Init(), "Door Manager"))
+					return false;
+
+				//---------------------------------------------------------------
+				//Load the area manager
+				if (!InitComponent(AreaMgr.LoadAllAreas(), "Areas"))
 					return false;
 
 				//---------------------------------------------------------------
