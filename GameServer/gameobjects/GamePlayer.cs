@@ -12997,12 +12997,34 @@ namespace DOL.GS
 			SwitchQuiver((eActiveQuiverSlot)(m_dbCharacter.ActiveWeaponSlot & 0xF0), false);
 			SwitchWeapon((eActiveWeaponSlot)(m_dbCharacter.ActiveWeaponSlot & 0x0F));
 
+			//Need to load the skills at the end, so the stored values modify the
+			//existing skill levels for this player
+			LoadSkillsFromCharacter();
+			
 			if (m_dbCharacter.PlayedTime == 0)
 			{
 				if (Properties.STARTING_LEVEL > 1 && m_dbCharacter.Experience < GetExperienceNeededForLevel(Properties.STARTING_LEVEL - 1))
 				{
 					m_dbCharacter.Experience = GetExperienceNeededForLevel(Properties.STARTING_LEVEL - 1);
 					m_dbCharacter.Level = Properties.STARTING_LEVEL;
+
+					int allpoints = -1;
+					for (int i = 1; i <= Level; i++)
+					{
+						if (i <= 5) allpoints += i; //start levels
+						if (i > 5) allpoints += CharacterClass.SpecPointsMultiplier * i / 10; //normal levels
+						if (i > 40) allpoints += CharacterClass.SpecPointsMultiplier * (i - 1) / 20; //half levels
+					}
+					if (m_dbCharacter.IsLevelSecondStage == true && m_dbCharacter.Level != 50)
+						allpoints += CharacterClass.SpecPointsMultiplier * m_dbCharacter.Level / 20;
+					m_dbCharacter.SkillSpecialtyPoints = allpoints;
+
+					foreach (string autotrainKey in CharacterClass.GetAutotrainableSkills())
+					{
+						Specialization autotrainSpec = GetSpecializationByName(autotrainKey, false);
+						if (autotrainSpec != null)
+							autotrainSpec.Level = Math.Max(1, (int)Math.Floor((double)m_dbCharacter.Level / 4));
+					}
 				}
 
 				Health = MaxHealth;
@@ -13024,9 +13046,6 @@ namespace DOL.GS
 			if (RealmLevel == 0)
 				RealmLevel = CalculateRealmLevelFromRPs(RealmPoints);
 
-			//Need to load the skills at the end, so the stored values modify the
-			//existing skill levels for this player
-			LoadSkillsFromCharacter();
 			LoadCraftingSkills();
 
 			VerifySpecPoints();
