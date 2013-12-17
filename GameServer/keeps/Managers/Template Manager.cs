@@ -91,7 +91,7 @@ namespace DOL.GS.Keeps
 			}
 			else if (guard is GuardLord)
 			{
-				if (guard.Component != null)
+				if (guard.Component != null && guard.Component.Keep != null)
 				{
 					guard.RespawnInterval = guard.Component.Keep.LordRespawnTime;
 				}
@@ -776,7 +776,7 @@ namespace DOL.GS.Keeps
 						{
                             guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Cleric");
                         }
-						else if (guard is GuardLord)
+						else if (guard is GuardLord && guard.Component != null && guard.Component.Keep != null)
 						{
                             if (guard.Gender == eGender.Male)
                                 guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Lord", GetKeepShortName(guard.Component.Keep.Name));
