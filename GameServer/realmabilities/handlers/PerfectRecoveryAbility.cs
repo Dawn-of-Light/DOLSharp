@@ -8,6 +8,7 @@ using DOL.GS.Effects;
 using DOL.GS.Spells;
 using DOL.Events;
 using DOL.Database;
+using DOL.Language;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -86,7 +87,25 @@ namespace DOL.GS.RealmAbilities
 			}
 			if (targetPlayer != null)
 			{
-				SendCasterSpellEffectAndCastMessage(living, 7019, true);
+				//the effect is on the resurrected target body, not the caster
+				//SendCasterSpellEffectAndCastMessage(living, 7019, true);
+				foreach (GamePlayer plr in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				{
+					plr.Out.SendSpellEffectAnimation(player, targetPlayer, 7019, 0, false, 1);
+
+					if (player.IsWithinRadius(plr, WorldMgr.INFO_DISTANCE))
+					{
+						if (plr == player)
+						{
+							plr.Out.SendMessage(LanguageMgr.GetTranslation(plr.Client.Account.Language, "RealmAbility.SendCasterSpellEffectAndCastMessage.You", m_name), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+						}
+						else
+						{
+							plr.Out.SendMessage(LanguageMgr.GetTranslation(plr.Client.Account.Language, "RealmAbility.SendCasterSpellEffectAndCastMessage.Caster", player.Name), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+						}
+					}
+				}
+
 				DisableSkill(living);
                 //Lifeflight:
                 //don't rez just yet

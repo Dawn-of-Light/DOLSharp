@@ -3251,7 +3251,7 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 					GameSpellAndImmunityEffect effect = (GameSpellAndImmunityEffect)fx;
 					if (!effect.ImmunityState)
 						continue; // ignore non-immunity effects
-					if (effect.GetType() == effectType)
+					if (effect.SpellHandler.GetType() == effectType)
 						return effect;
 				}
 			}
