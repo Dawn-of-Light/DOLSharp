@@ -104,7 +104,7 @@ namespace DOL.GS.RealmAbilities
             if (!castWasSuccess)
                 return 0;
 			Statics.NegativeMaelstromBase nm = new Statics.NegativeMaelstromBase(dmgValue);
-			nm.CreateStatic(player, player.GroundTarget, duration, 5, 350);
+			nm.CreateStatic(player, player.GroundTarget, duration, 5, 350, 1);
             DisableSkill(player); 
 			timer.Stop();
 			timer = null;
