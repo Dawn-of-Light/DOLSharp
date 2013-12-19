@@ -35,6 +35,7 @@ namespace DOL.Database
 		private string	m_account;
 		private DateTime m_dateban;
 		private string	m_reason;
+		private DateTime m_remain;
 
 		/// <summary>
 		/// Who have ban player
@@ -131,5 +132,22 @@ namespace DOL.Database
 				m_reason=value;
 			}
 		}
+
+		/// <summary>
+		/// Until when is the account/ip banned?
+		/// </summary>
+		[DataElement(AllowDbNull = false)]
+		public DateTime Remain
+		{
+			get
+			{
+				return m_remain;
+			}
+			set
+			{
+				m_remain = value;
+			}
+		}
+
 	}
 }
