@@ -184,6 +184,10 @@ namespace DOL.GS.RealmAbilities
 				
 				mob.TakeDamage(caster, eDamageType.Spirit, dmgValue, 0);
 
+				GameSpellAndImmunityEffect root = SpellHandler.FindImmunityEffectOnTarget(mob, typeof(SpeedDecreaseSpellHandler));
+				if (root != null)
+					root.Remove();
+
 				if (mob.EffectList.GetOfType<ChargeEffect>() == null && mob.EffectList.GetOfType<SpeedOfSoundEffect>() == null)
 				{
 					mob.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 99 * 0.01);
@@ -209,6 +213,11 @@ namespace DOL.GS.RealmAbilities
 				if (mez != null)
 					mez.Cancel(false);
 				aeplayer.TakeDamage(caster, eDamageType.Spirit, dmgValue, 0);
+
+				GameSpellAndImmunityEffect root = SpellHandler.FindImmunityEffectOnTarget(aeplayer, typeof(SpeedDecreaseSpellHandler));
+				if (root != null)
+					root.Remove();
+
 				aeplayer.StartInterruptTimer(3000, AttackData.eAttackType.Spell, caster);
 
 				if (aeplayer.EffectList.GetOfType<ChargeEffect>() == null && aeplayer.EffectList.GetOfType<SpeedOfSoundEffect>() == null)
