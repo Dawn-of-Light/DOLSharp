@@ -34,6 +34,7 @@ namespace DOL.GS.Commands
 		"GMCommands.Jump.Usage.ToXYZRegionID",
 		"/jump to <myhouse | house [#]>",
 		"/jump to region [#] - jump to same location in new region",
+		"/jump to zone [#] - jump in the middle of a new zone",
 		"GMCommands.Jump.Usage.PlayerNameToXYZ",
 		"GMCommands.Jump.Usage.PlayerNameToXYZRegID",
 		"GMCommands.Jump.Usage.PlayerNToPlayerN",
@@ -96,6 +97,19 @@ namespace DOL.GS.Commands
 					return;
 				}
 				#endregion Jump t region #
+				#region Jump t zone #
+				if (args.Length == 4 && args[1] == "to" && args[2] == "zone")
+				{
+					Zone zone = WorldMgr.GetZone(Convert.ToUInt16(args[3]));
+					if (zone != null)
+					{
+						int x = zone.XOffset + zone.Width/2;
+						int y = zone.YOffset + zone.Height/2;
+						client.Player.MoveTo(zone.ZoneRegion.ID, x, y, 15000, client.Player.Heading);
+					}
+					return;
+				}
+				#endregion Jump t zone #
 				#region Jump to PlayerName or ClientID
 				if (args.Length == 3 && args[1] == "to")
 				{
