@@ -4428,6 +4428,23 @@ namespace DOL.GS
 		{
 			// Albion
 			{
+				// Neutral
+				{
+					"Guardian",
+					"Warder",
+					"Myrmidon",
+					"Gryphon Knight",
+					"Eagle Knight",
+					"Phoenix Knight",
+					"Alerion Knight",
+					"Unicorn Knight",
+					"Lion Knight",
+					"Dragon Knight",
+					"Lord",
+					"Baronet",
+					"Baron"
+				}
+				,
 				// Male
 				{
 					"Guardian",
@@ -4465,6 +4482,23 @@ namespace DOL.GS
 			,
 			// Midgard
 			{
+				// Neutral
+				{
+					"Skiltvakten",
+					"Isen Vakten",
+					"Flammen Vakten",
+					"Elding Vakten",
+					"Stormur Vakten",
+					"Isen Herra",
+					"Flammen Herra",
+					"Elding Herra",
+					"Stormur Herra",
+					"Einherjar",
+					"Herra",
+					"Hersir",
+					"Vicomte"
+				}
+				,
 				// Male
 				{
 					"Skiltvakten",
@@ -4502,6 +4536,23 @@ namespace DOL.GS
 			,
 			// Hibernia
 			{
+				// Neutral
+				{
+					"Savant",
+					"Cosantoir",
+					"Brehon",
+					"Grove Protector",
+					"Raven Ardent",
+					"Silver Hand",
+					"Thunderer",
+					"Gilded Spear",
+					"Tiarna",
+					"Emerald Ridere",
+					"Barun",
+					"Ard Tiarna",
+					"Ciann Cath"
+				}
+				,
 				// Male
 				{
 					"Savant",
