@@ -4,6 +4,7 @@ using DOL.GS;
 using DOL.GS.Spells;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+using DOL.GS.Effects;
 
 namespace DOL.GS.RealmAbilities.Statics
 {
@@ -18,15 +19,17 @@ namespace DOL.GS.RealmAbilities.Statics
 		protected uint m_pulseFrequency;
 		int currentTick = 0;
 		int currentPulse = 0;
+		int m_delay = 0;
 		protected int getCurrentPulse ()
 		{return currentPulse;}
 		
-		public void CreateStatic(GamePlayer caster, Point3D gt, uint lifeTime, uint pulseFrequency, ushort radius) 
+		public void CreateStatic(GamePlayer caster, Point3D gt, uint lifeTime, uint pulseFrequency, ushort radius, int delay) 
         {
 			m_lifeTime = lifeTime;
 			m_caster = caster;
 			m_radius = radius;
 			m_pulseFrequency = pulseFrequency;
+			m_delay = delay;
 			this.Name = GetStaticName();
 			this.Model = GetStaticModel();
 			this.X = gt.X;
@@ -39,7 +42,7 @@ namespace DOL.GS.RealmAbilities.Statics
 		}
 		public override bool AddToWorld() 
         {
-			new RegionTimer(this, new RegionTimerCallback(PulseTimer),1000);
+			new RegionTimer(this, new RegionTimerCallback(PulseTimer), m_delay);
 			GameEventMgr.AddHandler(m_caster, GamePlayerEvent.RemoveFromWorld, new DOLEventHandler(PlayerLeftWorld));
 			return base.AddToWorld();
 		}
@@ -57,10 +60,22 @@ namespace DOL.GS.RealmAbilities.Statics
 				foreach(GamePlayer target in this.GetPlayersInRadius(m_radius)) 
                 {
 					CastSpell(target);
+					if (this is StaticTempestBase)
+					{
+						GameSpellAndImmunityEffect stun = SpellHandler.FindImmunityEffectOnTarget(target, typeof(StunSpellHandler));
+						if (stun != null)
+							stun.Remove();
+					}
 				}
 				foreach (GameNPC npc in this.GetNPCsInRadius(m_radius))	
                 {
 					CastSpell(npc);
+					if (this is StaticTempestBase)
+					{
+						GameSpellAndImmunityEffect stun = SpellHandler.FindImmunityEffectOnTarget(npc, typeof(StunSpellHandler));
+						if (stun != null)
+							stun.Remove();
+					}
 				}
 			}
 			

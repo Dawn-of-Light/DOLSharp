@@ -34,13 +34,19 @@ namespace DOL.GS
 	public class Specialization : NamedSkill {
 
 		public Specialization(string keyname, string displayname, ushort icon) : 
-			base(keyname, displayname, icon, 1) { }
+			base(keyname, displayname, icon, icon, 1) { }
+
+		public virtual ushort ID
+		{
+			get { return base.ID; }
+		}
 
 		/// <summary>
 		/// icon id (>=0x190) or 0 if spec is not clickable
 		/// </summary>
-		public virtual ushort Icon {
-			get { return base.ID; }
+		public virtual ushort Icon
+		{
+			get { return base.Icon; }
 		}
 
 		/// <summary>

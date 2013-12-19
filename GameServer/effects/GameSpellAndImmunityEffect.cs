@@ -130,6 +130,18 @@ namespace DOL.GS.Effects
 			}
 		}
 
+		public void Remove()
+		{
+			if (m_owner == null) return;
+
+			lock (m_owner.EffectList)
+			{
+				StopTimers();
+				m_expired = true;
+				m_owner.EffectList.Remove(this);
+			}
+		}
+
 		/// <summary>
 		/// Gets the amount of times this effect started
 		/// </summary>

@@ -3237,6 +3237,27 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 			return null;
 		}
 
+		public static GameSpellAndImmunityEffect FindImmunityEffectOnTarget(GameLiving target, Type effectType)
+		{
+			if (target == null)
+				return null;
+
+			lock (target.EffectList)
+			{
+				foreach (IGameEffect fx in target.EffectList)
+				{
+					if (!(fx is GameSpellAndImmunityEffect))
+						continue;
+					GameSpellAndImmunityEffect effect = (GameSpellAndImmunityEffect)fx;
+					if (!effect.ImmunityState)
+						continue; // ignore non-immunity effects
+					if (effect.GetType() == effectType)
+						return effect;
+				}
+			}
+			return null;
+		}
+
 		/// <summary>
 		/// Find pulsing spell by spell handler
 		/// </summary>

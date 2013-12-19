@@ -56,6 +56,7 @@ namespace DOL.GS
 	public abstract class Skill
 	{
 		protected ushort m_id;
+		protected ushort m_icon;
 		protected string m_name;
 		protected int m_level;
 
@@ -65,20 +66,22 @@ namespace DOL.GS
 		/// <param name="name"></param>
 		/// <param name="id"></param>
 		/// <param name="level"></param>
-		public Skill(string name, ushort id, int level)
+		public Skill(string name, ushort id, ushort icon, int level)
 		{
 			m_id = id;
+			m_icon = icon;
 			m_name = name;
 			m_level = level;
 		}
 
-		/// <summary>
-		/// in most cases it is icon id or other specifiing id for client
-		/// like spell id or style id in spells
-		/// </summary>
 		public virtual ushort ID
 		{
 			get { return m_id; }
+		}
+
+		public virtual ushort Icon
+		{
+			get { return m_icon; }
 		}
 
 		/// <summary>
@@ -133,8 +136,8 @@ namespace DOL.GS
 		/// <param name="name">The name</param>
 		/// <param name="id">The ID</param>
 		/// <param name="level">The level</param>
-		public NamedSkill(string keyName, string name, ushort id, int level)
-			: base(name, id, level)
+		public NamedSkill(string keyName, string name, ushort id, ushort icon, int level)
+			: base(name, id, icon, level)
 		{
 			m_keyName = keyName;
 		}
@@ -179,7 +182,7 @@ namespace DOL.GS
 		protected string m_spec;
 
 		public SpellLine(string keyname, string name, string spec, bool baseline)
-			: base(keyname, name, 0, 1)
+			: base(keyname, name, 0, 0, 1)
 		{
 			m_isBaseLine = baseline;
 			m_spec = spec;
@@ -237,6 +240,7 @@ namespace DOL.GS
 
 		protected static readonly Dictionary<string, Specialization> m_specsByName = new Dictionary<string, Specialization>();
 		protected static readonly Dictionary<string, DBAbility> m_abilitiesByName = new Dictionary<string, DBAbility>();
+		protected static readonly Dictionary<ushort, DBAbility> m_abilitiesByID = new Dictionary<ushort, DBAbility>();
 		protected static readonly Dictionary<string, SpellLine> m_spellLinesByName = new Dictionary<string, SpellLine>();
 
 		protected static readonly Dictionary<string, Type> m_abilityActionHandler = new Dictionary<string, Type>();
@@ -1430,10 +1434,105 @@ namespace DOL.GS
 			return spellsLoaded;
 		}
 
+		//TODO: remove this when you filled all your abilities ID
+		public static readonly Dictionary<string, ushort> AbilitiesClientHardcodedIDs = new Dictionary<string, ushort>()
+		{
+			// { "(nothing)", 0 },
+			// { "(nothing)", 1 },
+			// { "(nothing)", 2 },
+			{ Abilities.Quickcast, 3 },
+			//{Abilities.Sprint, 4},  looks like they have 2 different sprint abilities, the first with +30% speed -5endu/tick, the second +50%speed -10endu/tick
+			{ Abilities.Sprint, 5 },
+			{ Abilities.Evade, 6 },
+			{ Abilities.Protect, 7 },
+			{ Abilities.Guard, 8 },
+			{ Abilities.Intercept, 9 },
+			{ Abilities.Weapon_Crushing, 10 },
+			{ Abilities.Weapon_Slashing, 11 },
+			{ Abilities.Weapon_Thrusting, 12 },
+			{ Abilities.Weapon_Staves, 13 },
+			{ Abilities.Weapon_TwoHanded, 14 },
+			{ Abilities.Weapon_Polearms, 15 },
+			{ Abilities.Weapon_Longbows, 16 },
+			{ Abilities.Weapon_Shortbows, 17 },
+			{ Abilities.Weapon_Crossbow, 18 },
+			// { "(nothing)", 19 },
+			// { "(nothing)", 20 },
+			// { "(nothing)", 21 },
+			{ Abilities.Weapon_Swords, 22 },
+			{ Abilities.Weapon_Axes, 23 },
+			{ Abilities.Weapon_Hammers, 24 },
+			{ Abilities.Weapon_Spears, 25 },
+			{ Abilities.Weapon_CompositeBows, 26 },
+			{ Abilities.Weapon_Thrown, 27 },
+			{ Abilities.Weapon_LeftAxes, 28 },
+			{ Abilities.Berserk, 29 },
+			//{ Abilities.QuarterStaves, 30 }, // quarterstaves?
+			{ Abilities.Weapon_Blades, 31 },
+			{ Abilities.Weapon_Blunt, 32 },
+			{ Abilities.Weapon_Piercing, 33 },
+			{ Abilities.Weapon_LargeWeapons, 34 },
+			{ Abilities.Weapon_RecurvedBows, 35 },
+			//{ Abilities.Slings, 36 },  what is Slings?
+			{ Abilities.Weapon_CelticSpear, 37 },
+			{ Abilities.Engage, 38 },
+			// { "(nothing)", 39 },
+			{ Abilities.Distraction, 40 },
+			{ Abilities.DangerSense, 41 },
+			{ Abilities.DetectHidden, 42 },
+			{ Abilities.SafeFall, 43 },
+			// { "(nothing)", 44 },
+			{ Abilities.Climbing, 45 },
+			//{ Abilities.SpiritHunt, 46 }, missing
+			//{ Abilities.Concentration, 47 }, missing
+			{ Abilities.Camouflage, 48 },
+			{ Abilities.Advanced_Evade, 49 },
+			{ Abilities.Weapon_Flexible, 50 },
+			{ Abilities.Weapon_HandToHand, 51 },
+			{ Abilities.Weapon_Scythe, 52 },
+			{ Abilities.ChargeAbility, 53 },
+			// { "(nothing)", 54 },
+			// { "(nothing)", 55 },
+			//{ Abilities.PickPocket, 56 }, missing
+			//{ Abilities.SiegeMaster, 57 }, missing
+			//{ Abilities.UnburdenedWarrior, 58 }, missing
+			// { "(nothing)", 59 },
+			// { "(nothing)", 60 },
+			//{ Abilities.Sabotage, 61 }, missing
+			//{ Abilities.Greatness, 62 }, missing
+			//{ Abilities.UnduringPoison, 63 }, missing
+			{ Abilities.Bodyguard, 64 },
+			//{ Abilities.Lookout, 65 }, missing
+			{ Abilities.SureShot, 66 },
+			{ Abilities.Weapon_FistWraps, 67 },
+			{ Abilities.Weapon_MaulerStaff, 68 },
+			{ Abilities.DefensiveCombatPowerRegeneration, 69 },
+			//{ Abilities.OffensiveCombatPowerRegeneration, 70 }, missing
+		};
+
 		private static void LoadAbilities()
 		{
 			// load Abilities
 			log.Info("Loading Abilities...");
+
+
+
+			//TODO: remove this when you filled all your abilities ID
+			var test = GameServer.Database.SelectObjects<DBAbility>("`ID` IS NOT NULL AND `ID` > 0");
+			ushort id = 100;
+			if (test == null || test.Count < 1)
+			{
+				var all = GameServer.Database.SelectAllObjects<DBAbility>();
+				foreach (DBAbility ab in all)
+				{
+					if (AbilitiesClientHardcodedIDs.ContainsKey(ab.KeyName))
+						ab.ID = AbilitiesClientHardcodedIDs[ab.KeyName];
+					else ab.ID = id++;
+					GameServer.Database.SaveObject(ab);
+				}
+			}
+
+
 
 			var abilities = GameServer.Database.SelectAllObjects<DBAbility>();
 			if (abilities != null)
@@ -1443,6 +1542,10 @@ namespace DOL.GS
 					if (m_abilitiesByName.ContainsKey(dba.KeyName) == false)
 					{
 						m_abilitiesByName.Add(dba.KeyName, dba);
+					}
+					if (!m_abilitiesByID.ContainsKey(dba.ID))
+					{
+						m_abilitiesByID.Add(dba.ID, dba);
 					}
 
 					if (string.IsNullOrEmpty(dba.Implementation) == false && m_implementationTypeCache.ContainsKey(dba.Implementation) == false)
@@ -2053,6 +2156,11 @@ namespace DOL.GS
 			return GetAbility(keyname, 1);
 		}
 
+		public static Ability GetAbility(ushort id)
+		{
+			return GetAbility(id, 1);
+		}
+
 		/// <summary>
 		///
 		/// </summary>
@@ -2077,7 +2185,28 @@ namespace DOL.GS
 			if (log.IsWarnEnabled)
 				log.Warn("Ability '" + keyname + "' unknown");
 
-			return new Ability(keyname, "?" + keyname, "", 0, 0);
+			return new Ability(keyname, "?" + keyname, "", 0, 0, 0);
+		}
+
+		public static Ability GetAbility(ushort id, int level)
+		{
+			if (m_abilitiesByID.ContainsKey(id))
+			{
+				DBAbility dba = m_abilitiesByID[id];
+
+				Type type = null;
+				if (dba.Implementation != null && m_implementationTypeCache.ContainsKey(dba.Implementation))
+					type = m_implementationTypeCache[dba.Implementation];
+				else
+					return new Ability(dba, level);
+
+				return (Ability)Activator.CreateInstance(type, new object[] { dba, level });
+			}
+
+			if (log.IsWarnEnabled)
+				log.Warn("Ability '" + id + "' unknown");
+
+			return new Ability("Ability?" + id, "", "", id, 0, 0);
 		}
 
 		/// <summary>

@@ -28,6 +28,7 @@ namespace DOL.Database
 	public class DBAbility : DataObject
 	{
 		protected string m_keyName;
+		protected ushort m_ID;
 		protected int	m_iconID = 0;		// 0 if no icon, ability icons start at 0x190
 		protected string m_name = "unknown";
 		protected string m_description = "no description";
@@ -67,12 +68,26 @@ namespace DOL.Database
 		}
 
 		/// <summary>
+		/// Ability ID (new in 1.112)
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public ushort ID
+		{
+			get { return m_ID; }
+			set
+			{
+				Dirty = true;
+				m_ID = value;
+			}
+		}
+
+		/// <summary>
 		/// Small description of this ability
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull = false)]
 		public string Description
 		{
-			get {	return m_description;	}
+			get { return m_description; }
 			set
 			{
 				Dirty = true;
