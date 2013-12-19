@@ -13025,6 +13025,11 @@ namespace DOL.GS
 						if (autotrainSpec != null)
 							autotrainSpec.Level = Math.Max(1, (int)Math.Floor((double)m_dbCharacter.Level / 4));
 					}
+
+					CharacterClass.OnLevelUp(this, Level); // load all skills from DB first to keep the order
+					CharacterClass.OnRealmLevelUp(this);
+					RefreshSpecDependantSkills(false);
+					UpdateSpellLineLevels(false);
 				}
 
 				Health = MaxHealth;
