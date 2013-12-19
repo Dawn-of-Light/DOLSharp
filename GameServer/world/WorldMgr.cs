@@ -919,7 +919,7 @@ namespace DOL.GS
 									{
 										if (npc == null) continue;
 										narray[npc.ObjectID - 1] = true;
-										if ((uint)Environment.TickCount - npc.LastUpdateTickCount > 14000) // 1.10+ change, always 15 seconds
+										if ((uint)Environment.TickCount - npc.LastUpdateTickCount > ServerProperties.Properties.WORLD_NPC_UPDATE_INTERVAL) // 1.10+ change, always 15 seconds
 										{
 											npc.BroadcastUpdate();
 											npcsUpdated++;
