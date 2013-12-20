@@ -1401,6 +1401,12 @@ namespace DOL.GS.Commands
 			info.Add(" ");
 			info.Add(" + Mob_ID:  " + targetMob.InternalID);
 
+			info.Add(" + IsRuturningHome:  " + targetMob.IsReturningHome);
+			info.Add(" + IsReturningToSpawnPoint:  " + targetMob.IsReturningToSpawnPoint);
+			info.Add(" + IsOutOfTetherRange:  " + targetMob.IsOutOfTetherRange);
+			info.Add(" + IsMovingOnPath:  " + targetMob.IsMovingOnPath);
+			info.Add(" + IsFollowing:  " + targetMob.IsFollowing);
+
 			if (targetMob.ambientTexts != null)
 			{
 				info.Add (" ");
