@@ -235,7 +235,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					return;
 				}
 
-				try
+				/*try
 				{
 
 					//check if the zonepoint has source locations set  Check prior to any zonepoint modification by handlers
@@ -252,7 +252,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				catch (Exception ex)
 				{
 					Log.Error("Can't save updated ZonePoint with source info.", ex);
-				}
+				}*/
 
 			
 
