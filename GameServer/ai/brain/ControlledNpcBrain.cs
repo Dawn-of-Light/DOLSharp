@@ -995,7 +995,7 @@ namespace DOL.AI.Brain
 			// don't
 		}
 
-		public override bool CheckFormation(ref int x, ref int y, ref int z) { return false; }
+		public override bool CheckFormation(ref int x, ref int y, ref int z, ref short speed) { return false; }
 
 		#endregion
 	}

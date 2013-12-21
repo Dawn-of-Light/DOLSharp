@@ -101,8 +101,9 @@ namespace DOL.GS.Commands
 	     "'/mob removeloot2 <ItemTemplateID>' same as '/mob removeloot' but for the 'MobDrop' generator.",
 	     "'/mob removeotd <ItemTemplateID>' to remove a one time drop from the mob's unique drop table.",
 	     "'/mob refreshloot' to refresh all loot generators for this mob.",
-	     "'/mob copy [name]' copies a mob exactly and places it at your location.",
-	     "'/mob npctemplate <NPCTemplateID>' creates a mob with npc template, or modifies target.",
+		 "'/mob copy [name]' copies a mob exactly and places it at your location.",
+		 "'/mob copyto [name]' copies a mob exactly and places it at a player",
+		 "'/mob npctemplate <NPCTemplateID>' creates a mob with npc template, or modifies target.",
 	     "'/mob npctemplate create <NPCTemplateID>' creates a new template from selected mob.",
 	     "'/mob class <ClassName>' replaces mob with a clone of the specified class.",
 	     "'/mob path <PathID>' associate the mob to the specified path.",
@@ -153,8 +154,9 @@ namespace DOL.GS.Commands
 				    && args[1] != "model"
 				    && args[1] != "modelinc"
 				    && args[1] != "modeldec"
-				    && args[1] != "copy"
-				    && args[1] != "select"
+					&& args[1] != "copy"
+					&& args[1] != "copyto"
+					&& args[1] != "select"
 				    && args[1] != "reload"
 				    && args[1] != "findname"
 				    && targetMob == null)
@@ -238,6 +240,7 @@ namespace DOL.GS.Commands
 						case "removeotd": removeotd(client, targetMob, args); break;
 						case "refreshloot": refreshloot(client, targetMob, args); break;
 						case "copy": copy(client, targetMob, args); break;
+						case "copyto": copyto(client, targetMob, args); break;
 						case "npctemplate": npctemplate(client, targetMob, args); break;
 						case "class": setClass(client, targetMob, args); break;
 						case "path": path(client, targetMob, args); break;
@@ -2597,6 +2600,153 @@ namespace DOL.GS.Commands
 				// because copying 100 mobs with their peace flag set is not fun
 				client.Out.SendMessage("This mobs PEACE flag is set!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
+		}
+
+		private void copyto(GameClient client, GameNPC targetMob, string[] args)
+		{
+			GameNPC mob = null;
+
+			if (args.Length < 3)
+			{
+				client.Out.SendMessage("Unable to find target:  use /mob copyto <playername>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
+			GameClient clt = WorldMgr.GetClientByPlayerName(args[2], true, true);
+			if (clt == null || clt.Player == null)
+			{
+				client.Out.SendMessage("Unable to find target:  use /mob copyto <playername>", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
+			int x = clt.Player.X;
+			int y = clt.Player.Y;
+			int z = clt.Player.Z;
+			ushort h = clt.Player.Heading;
+			ushort r = clt.Player.CurrentRegionID;
+
+			if (args.Length > 3)
+			{
+				string mobName = string.Join(" ", args, 2, args.Length - 2);
+
+				Mob dbMob = GameServer.Database.SelectObject<Mob>("Name = '" + mobName + "'") as Mob;
+
+				if (dbMob != null)
+				{
+					if (dbMob.ClassType == typeof(GameNPC).FullName)
+					{
+						mob = new GameNPC();
+						targetMob = new GameNPC();
+					}
+					else
+					{
+						foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+						{
+							targetMob = (GameNPC)assembly.CreateInstance(dbMob.ClassType, true);
+							mob = (GameNPC)assembly.CreateInstance(dbMob.ClassType, true);
+
+							if (mob != null)
+								break;
+						}
+					}
+
+					targetMob.LoadFromDatabase(dbMob);
+				}
+
+				if (mob == null)
+				{
+					client.Out.SendMessage("Unable to find mob named:  " + mobName, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return;
+				}
+			}
+			else
+			{
+				if (targetMob == null)
+				{
+					client.Out.SendMessage("You must have a mob targeted to copy.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return;
+				}
+
+				foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+				{
+					mob = (GameNPC)assembly.CreateInstance(targetMob.GetType().FullName, true);
+					if (mob != null)
+						break;
+				}
+
+				if (mob == null)
+				{
+					client.Out.SendMessage("There was an error creating an instance of " + targetMob.GetType().FullName + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return;
+				}
+			}
+
+			//Fill the object variables
+			mob.X = x;
+			mob.Y = y;
+			mob.Z = z;
+			mob.CurrentRegionID = r;
+			mob.Heading = h;
+			mob.Level = targetMob.Level;
+			mob.Realm = targetMob.Realm;
+			mob.Name = targetMob.Name;
+			mob.Model = targetMob.Model;
+			mob.Flags = targetMob.Flags;
+			mob.MeleeDamageType = targetMob.MeleeDamageType;
+			mob.RespawnInterval = targetMob.RespawnInterval;
+			mob.RoamingRange = targetMob.RoamingRange;
+
+			// also copies the stats
+
+			mob.Strength = targetMob.Strength;
+			mob.Constitution = targetMob.Constitution;
+			mob.Dexterity = targetMob.Dexterity;
+			mob.Quickness = targetMob.Quickness;
+			mob.Intelligence = targetMob.Intelligence;
+			mob.Empathy = targetMob.Empathy;
+			mob.Piety = targetMob.Piety;
+			mob.Charisma = targetMob.Charisma;
+
+			//Fill the living variables
+			mob.CurrentSpeed = 0;
+			mob.MaxSpeedBase = targetMob.MaxSpeedBase;
+			mob.GuildName = targetMob.GuildName;
+			mob.Size = targetMob.Size;
+			mob.NPCTemplate = targetMob.NPCTemplate;
+			mob.Inventory = targetMob.Inventory;
+			mob.EquipmentTemplateID = targetMob.EquipmentTemplateID;
+			if (mob.Inventory != null)
+				mob.SwitchWeapon(targetMob.ActiveWeaponSlot);
+
+			ABrain brain = null;
+			if (targetMob.Brain.GetType().FullName != "DOL.AI.Brain.BlankBrain")
+			{
+				foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+				{
+					brain = (ABrain)assembly.CreateInstance(targetMob.Brain.GetType().FullName, true);
+					if (brain != null)
+						break;
+				}
+			}
+
+			if (brain == null)
+			{
+				client.Out.SendMessage("Cannot create brain, standard brain being applied", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				mob.SetOwnBrain(new StandardMobBrain());
+			}
+			else // Copies the Range, aggro etc...
+			{
+				StandardMobBrain sbrain = (StandardMobBrain)brain;
+				StandardMobBrain tsbrain = (StandardMobBrain)targetMob.Brain;
+				sbrain.AggroLevel = tsbrain.AggroLevel;
+				sbrain.AggroRange = tsbrain.AggroRange;
+				mob.SetOwnBrain(sbrain);
+			}
+
+			mob.AddToWorld();
+			mob.LoadedFromScript = false;
+			mob.SaveIntoDatabase();
+			client.Out.SendMessage("Mob created: OID=" + mob.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
 
 		private void npctemplate(GameClient client, GameNPC targetMob, string[] args)

@@ -54,6 +54,7 @@ namespace DOL.GS.Keeps
 		bool Load();
 		bool IsNewKeepComponent(int skin);
 		void RegisterKeep(int keepID, AbstractGameKeep keep);
+		ITemplateMgr GetTemplateMgr();
 		AbstractGameKeep GetKeepByID(int id);
 		IEnumerable GetKeepsCloseToSpot(ushort regionid, IPoint3D point3d, int radius);
 		AbstractGameKeep GetKeepCloseToSpot(ushort regionid, IPoint3D point3d, int radius);

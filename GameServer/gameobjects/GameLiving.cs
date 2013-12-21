@@ -59,6 +59,7 @@ namespace DOL.GS
 		/// Holds the AttackData object of last attack
 		/// </summary>
 		public const string LAST_ATTACK_DATA = "LastAttackData";
+		public const string LAST_ATTACK_TIME = "LastAttackTime";
 
 		protected string m_lastInterruptMessage;
 		public string LastInterruptMessage
@@ -2741,6 +2742,7 @@ namespace DOL.GS
 				}
 
 				owner.TempProperties.setProperty( LAST_ATTACK_DATA, mainHandAD );
+				owner.TempProperties.setProperty(LAST_ATTACK_TIME, owner.CurrentRegion.Time);
 
 				//Notify the target of our attack (sends damage messages, should be before damage)
 				// ...but certainly not if the attack never took place, like when the living

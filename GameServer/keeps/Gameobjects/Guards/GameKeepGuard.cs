@@ -656,11 +656,11 @@ namespace DOL.GS.Keeps
 			int temp = base.RespawnTimerCallback(respawnTimer);
 			if (Component != null && Component.Keep != null)
 			{
-				Component.Keep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
+				Component.Keep.TemplateManager.RefreshTemplate(this);
 			}
 			else
 			{
-				TemplateMgr.RefreshTemplate(this);
+				GameServer.KeepManager.GetTemplateMgr().RefreshTemplate(this);
 			}
 			return temp;
 		}
@@ -772,11 +772,11 @@ namespace DOL.GS.Keeps
 
 			if (Component != null && Component.Keep != null)
 			{
-				Component.Keep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
+				Component.Keep.TemplateManager.RefreshTemplate(this);
 			}
 			else
 			{
-				TemplateMgr.RefreshTemplate(this);
+				GameServer.KeepManager.GetTemplateMgr().RefreshTemplate(this);
 			}
 		}
 
@@ -857,11 +857,11 @@ namespace DOL.GS.Keeps
 			PositionMgr.LoadGuardPosition(pos, this);
 			if (Component != null && Component.Keep != null)
 			{
-				Component.Keep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
+				Component.Keep.TemplateManager.RefreshTemplate(this);
 			}
 			else
 			{
-				TemplateMgr.RefreshTemplate(this);
+				GameServer.KeepManager.GetTemplateMgr().RefreshTemplate(this);
 			}
 			this.AddToWorld();
 		}

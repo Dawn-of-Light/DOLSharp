@@ -23,9 +23,9 @@ using DOL.Language;
 
 namespace DOL.GS.Keeps
 {
-	public class TemplateMgr
+	public class DefaultTemplateMgr : ITemplateMgr
 	{
-		public static void RefreshTemplate(GameKeepGuard guard)
+		public void RefreshTemplate(GameKeepGuard guard)
 		{
 			SetGuardRealm(guard);
 			SetGuardGuild(guard);
@@ -122,7 +122,7 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		public static void SetGuardLevel(GameKeepGuard guard)
+		public void SetGuardLevel(GameKeepGuard guard)
 		{
 			if (guard.Component != null && guard.Component.Keep != null)
 			{
@@ -941,7 +941,7 @@ namespace DOL.GS.Keeps
 		/// Sets the guards brain
 		/// </summary>
 		/// <param name="guard">The guard object</param>
-		public static void SetGuardBrain(GameKeepGuard guard)
+		public void SetGuardBrain(GameKeepGuard guard)
 		{
 			if (guard.Brain is KeepGuardBrain == false)
 			{
@@ -967,7 +967,7 @@ namespace DOL.GS.Keeps
 		/// Sets the guards speed
 		/// </summary>
 		/// <param name="guard">The guard object</param>
-		public static void SetGuardSpeed(GameKeepGuard guard)
+		public void SetGuardSpeed(GameKeepGuard guard)
 		{
 			if (guard.IsPortalKeepGuard)
 			{

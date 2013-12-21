@@ -235,7 +235,7 @@ namespace DOL.GS.Commands
 								}
 							}
 
-							TemplateMgr.RefreshTemplate(guard);
+							GameServer.KeepManager.GetTemplateMgr().RefreshTemplate(guard);
 							guard.AddToWorld();
 
 							if (guard.Component != null && guard.Component.Keep != null)

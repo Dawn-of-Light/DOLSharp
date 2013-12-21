@@ -1616,7 +1616,8 @@ namespace DOL.GS
 				newX = followTarget.X;
 				newY = followTarget.Y;
 				newZ = followTarget.Z;
-				if (brain.CheckFormation(ref newX, ref newY, ref newZ))
+				short newspeed = MaxSpeed;
+				if (brain.CheckFormation(ref newX, ref newY, ref newZ, ref newspeed))
 				{
 					WalkTo(newX, newY, (ushort)newZ, MaxSpeed);
 					return ServerProperties.Properties.GAMENPC_FOLLOWCHECK_TIME;

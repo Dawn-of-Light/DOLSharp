@@ -41,9 +41,9 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// The manager responsible for updating all guards appearance, realm, levles, stats
 		/// </summary>
-		public virtual Type TemplateManager
+		public virtual ITemplateMgr TemplateManager
 		{
-			get { return typeof(TemplateMgr); }
+			get { return GameServer.KeepManager.GetTemplateMgr(); }
 		}
 
 		public FrontiersPortalStone TeleportStone;
@@ -1153,7 +1153,7 @@ namespace DOL.GS.Keeps
 			{
 				if (guard is GuardLord && guard.IsAlive )
 				{
-					this.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { guard });
+					this.TemplateManager.RefreshTemplate(guard);
 				}
 				else if (guard is GuardLord == false)
 				{

@@ -311,7 +311,7 @@ namespace DOL.AI.Brain
 		/// <param name="x">The x-coordinate to refer to and change</param>
 		/// <param name="y">The x-coordinate to refer to and change</param>
 		/// <param name="z">The x-coordinate to refer to and change</param>
-		public virtual bool CheckFormation(ref int x, ref int y, ref int z)
+		public virtual bool CheckFormation(ref int x, ref int y, ref int z, ref short speed)
 		{
 			return false;
 		}

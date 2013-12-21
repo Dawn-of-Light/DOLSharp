@@ -55,6 +55,76 @@ namespace DOL.GS.Keeps
 			get { return m_frontierRegionsList; }
 		}
 
+		protected ITemplateMgr m_templateMgr;
+
+		public ITemplateMgr GetTemplateMgr()
+		{
+			if (m_templateMgr == null)
+			{
+				Type templateMgr = null;
+
+				// first search in scripts
+				foreach (Assembly script in ScriptMgr.Scripts)
+				{
+					foreach (Type type in script.GetTypes())
+					{
+						if (type.IsClass == false) continue;
+						if (type.GetInterface("DOL.GS.Keeps.ITemplateMgr") == null) continue;
+						templateMgr = type;
+						if (templateMgr != null) break;
+					}
+				}
+
+				if (templateMgr == null)
+				{
+					// second search in gameserver
+					foreach (Type type in Assembly.GetAssembly(typeof(GameServer)).GetTypes())
+					{
+						if (type.IsClass == false) continue;
+						if (type.GetInterface("DOL.GS.Keeps.ITemplateMgr") == null) continue;
+						templateMgr = type;
+						if (templateMgr != null) break;
+					}
+
+				}
+
+				if (templateMgr != null)
+				{
+					try
+					{
+						ITemplateMgr manager = Activator.CreateInstance(templateMgr, null) as ITemplateMgr;
+
+						if (log.IsInfoEnabled)
+							log.Info("Found TemplateMgr " + manager.GetType().FullName);
+
+						m_templateMgr = manager;
+					}
+					catch (Exception e)
+					{
+						if (log.IsErrorEnabled)
+							log.Error("StartKeepManager, CreateInstance", e);
+					}
+				}
+
+				if (m_templateMgr == null)
+				{
+					m_templateMgr = new DefaultTemplateMgr();
+
+					if (m_templateMgr != null)
+					{
+						log.Warn("No TemplateMgr found, using " + m_templateMgr.GetType().FullName);
+					}
+					else
+					{
+						log.Error("Cannot create TemplateMgr!");
+					}
+				}
+			}
+
+			return m_templateMgr;
+		}
+
+
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public ILog Log
@@ -856,7 +926,7 @@ namespace DOL.GS.Keeps
 
 						foreach (GameKeepGuard guard in keep.Guards.Values)
 						{
-							keep.TemplateManager.GetMethod("SetGuardLevel").Invoke(null, new object[] { guard });
+							keep.TemplateManager.RefreshTemplate(guard);
 						}
 					}
 				}

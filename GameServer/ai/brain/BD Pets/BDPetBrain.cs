@@ -79,7 +79,7 @@ namespace DOL.AI.Brain
 		/// <param name="y"></param>
 		/// <param name="z"></param>
 		/// <returns></returns>
-		public override bool CheckFormation(ref int x, ref int y, ref int z)
+		public override bool CheckFormation(ref int x, ref int y, ref int z, ref short speed)
 		{
 			if (!Body.AttackState && Body.Attackers.Count == 0)
 			{

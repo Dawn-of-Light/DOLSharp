@@ -286,7 +286,7 @@ namespace DOL.GS.Keeps
 			if (hookPointObj is GameKeepGuard)
 			{
 				(hookPointObj as GameKeepGuard).HookPoint = hookpoint;
-				Keeps.TemplateMgr.RefreshTemplate(hookPointObj as GameKeepGuard);
+				GameServer.KeepManager.GetTemplateMgr().RefreshTemplate(hookPointObj as GameKeepGuard);
 			}
 			if (hookPointObj is GameNPC)
 			{
@@ -335,7 +335,7 @@ namespace DOL.GS.Keeps
 			if (hookPointObj is GameKeepGuard)
 			{
 				(hookPointObj as GameKeepGuard).HookPoint = hookpoint;
-				Keeps.TemplateMgr.RefreshTemplate(hookPointObj as GameKeepGuard);
+				GameServer.KeepManager.GetTemplateMgr().RefreshTemplate(hookPointObj as GameKeepGuard);
 			}
 
 			if (ServerProperties.Properties.ENABLE_DEBUG)

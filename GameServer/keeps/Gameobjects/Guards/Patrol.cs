@@ -127,11 +127,11 @@ namespace DOL.GS.Keeps
 			PositionMgr.LoadGuardPosition(SpawnPosition, guard);
 			if (Component != null && Component.Keep != null)
 			{
-				Component.Keep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { guard });
+				Component.Keep.TemplateManager.RefreshTemplate(guard);
 			}
 			else
 			{
-				TemplateMgr.RefreshTemplate(guard);
+				GameServer.KeepManager.GetTemplateMgr().RefreshTemplate(guard);
 			}
 			PatrolGuards.Add(guard);
 			Component.Keep.Guards.Add(DOL.Database.UniqueID.IDGenerator.GenerateID(), guard);
