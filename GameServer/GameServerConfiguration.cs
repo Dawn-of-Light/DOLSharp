@@ -59,6 +59,11 @@ namespace DOL.GS
 		protected string m_scriptCompilationTarget;
 
 		/// <summary>
+		/// Check for the scripts compilation
+		/// </summary>
+		protected bool m_scriptCompilationCheck = true;
+
+		/// <summary>
 		/// The assemblies to include when compiling the scripts
 		/// </summary>
 		protected string m_scriptAssemblies;
@@ -157,6 +162,7 @@ namespace DOL.GS
 			m_zoneConfigFile = root["Server"]["ZoneConfigFile"].GetString(m_zoneConfigFile);
 
 			m_scriptCompilationTarget = root["Server"]["ScriptCompilationTarget"].GetString(m_scriptCompilationTarget);
+			m_scriptCompilationCheck = root["Server"]["ScriptCompilationCheck"].GetBoolean(m_scriptCompilationCheck);
 			m_scriptAssemblies = root["Server"]["ScriptAssemblies"].GetString(m_scriptAssemblies);
 			m_autoAccountCreation = root["Server"]["AutoAccountCreation"].GetBoolean(m_autoAccountCreation);
 
@@ -255,6 +261,7 @@ namespace DOL.GS
 			root["Server"]["ZoneConfigFile"].Set(m_zoneConfigFile);
 
 			root["Server"]["ScriptCompilationTarget"].Set(m_scriptCompilationTarget);
+			root["Server"]["ScriptCompilationCheck"].Set(m_scriptCompilationCheck);
 			root["Server"]["ScriptAssemblies"].Set(m_scriptAssemblies);
 			root["Server"]["AutoAccountCreation"].Set(m_autoAccountCreation);
 
@@ -345,6 +352,7 @@ namespace DOL.GS
 			m_zoneConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "zones.xml";
 
 			m_scriptCompilationTarget = "."+Path.DirectorySeparatorChar+"lib"+Path.DirectorySeparatorChar+"GameServerScripts.dll";
+			m_scriptCompilationCheck = true;
 			m_scriptAssemblies = "DOLBase.dll,GameServer.dll,DOLDatabase.dll,System.dll,log4net.dll,System.Xml.dll";
 			m_autoAccountCreation = true;
 			m_serverType = eGameServerType.GST_Normal;
@@ -438,6 +446,14 @@ namespace DOL.GS
 		{
 			get { return m_scriptCompilationTarget; }
 			set { m_scriptCompilationTarget = value; }
+		}
+
+		/// Gets or sets the script compilation check
+		/// </summary>
+		public bool ScriptCompilationCheck
+		{
+			get { return m_scriptCompilationCheck; }
+			set { m_scriptCompilationCheck = value; }
 		}
 
 		/// <summary>

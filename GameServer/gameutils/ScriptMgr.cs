@@ -446,13 +446,13 @@ namespace DOL.GS
 
 			//Check if there are any scripts, if no scripts exist, that is fine as well
 			ArrayList files = ParseDirectory(new DirectoryInfo(path), compileVB ? "*.vb" : "*.cs", true);
-			if (files.Count == 0)
+			if (GameServer.Instance.Configuration.ScriptCompilationCheck && files.Count == 0)
 			{
 				return true;
 			}
 
 			//Recompile is required as standard
-			bool recompileRequired = true;
+			bool recompileRequired = GameServer.Instance.Configuration.ScriptCompilationCheck;
 
 			//This file should hold the script infos
 			FileInfo configFile = new FileInfo(dllName + ".xml");
@@ -460,6 +460,7 @@ namespace DOL.GS
 			//If the script assembly is missing, recompile is required
 			if (!File.Exists(dllName))
 			{
+				recompileRequired = true;
 				if (log.IsDebugEnabled)
 					log.Debug("Script assembly missing, recompile required!");
 			}
