@@ -44,6 +44,9 @@ namespace DOL.GS.Quests
 
 				if (player.Group.Leader != player)
 					return;
+				
+				if (player.DuelTarget == eargs.Target)
+					return;
 			}
 
 			//we don't want group events to trigger personal mission updates
@@ -52,6 +55,9 @@ namespace DOL.GS.Quests
 				GamePlayer player = sender as GamePlayer;
 
 				if (player.Group != null)
+					return;
+
+				if (player.DuelTarget == eargs.Target)
 					return;
 			}
 

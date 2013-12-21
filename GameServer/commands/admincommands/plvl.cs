@@ -42,6 +42,8 @@ namespace DOL.GS.Commands
 			}
 
 			GamePlayer target = client.Player;
+			if (client.Player.TargetObject != null && client.Player.TargetObject is GamePlayer)
+				target = client.Player.TargetObject as GamePlayer;
 
 			switch (args[1])
 			{
@@ -166,7 +168,7 @@ namespace DOL.GS.Commands
 
 						target.Client.Account.PrivLevel = plvl;
 						GameServer.Database.SaveObject(target.Client.Account);
-						client.Player.RefreshWorld();
+						target.Client.Player.RefreshWorld();
 
 						target.Client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.plvl.YourPlvlHasBeenSetted", plvl.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 

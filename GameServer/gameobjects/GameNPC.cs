@@ -2069,6 +2069,9 @@ namespace DOL.GS
 
 			if (npcTemplate != null && npcTemplate.ReplaceMobValues)
 				LoadTemplate(npcTemplate);
+
+			if (Inventory != null)
+				SwitchWeapon(ActiveWeaponSlot);
 		}
 
 		/// <summary>
