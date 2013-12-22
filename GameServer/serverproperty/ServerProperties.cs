@@ -1512,6 +1512,12 @@ namespace DOL.GS.ServerProperties
 
 		#region HOUSING
 		/// <summary>
+		/// House Vaults by account?
+		/// </summary>
+		[ServerProperty("housing", "housing_vaultbyaccount", "House Vaults by account", false)]
+		public static bool HOUSING_VAULTBYACCOUNT;
+
+		/// <summary>
 		/// Maximum number of houses supported on this server.  Limits the size of the housing array used for updates
 		/// </summary>
 		[ServerProperty("housing", "max_num_houses", "Max number of houses supported on this server.", 5000)]

@@ -46,8 +46,14 @@ namespace DOL.GS
 				throw new ArgumentNullException();
 
 			Name = itemTemplate.Name;
-			Model = (ushort) (itemTemplate.Model);
+			Model = (ushort)(itemTemplate.Model);
 			_templateID = itemTemplate.Id_nb;
+			Index = vaultIndex;
+		}
+
+		public GameHouseVault(int vaultIndex)
+		{
+			Name = "House Vault";
 			Index = vaultIndex;
 		}
 

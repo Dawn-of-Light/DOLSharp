@@ -487,7 +487,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					rpamount = (long)(25.0 / 3.0 * (realmLevel * realmLevel * realmLevel) - 25.0 / 2.0 * (realmLevel * realmLevel) + 25.0 / 6.0 * realmLevel);
 
 				ch.RealmPoints = rpamount;
-				ch.RealmLevel = realmLevel;
+				//ch.RealmLevel = realmLevel;
 				ch.RealmSpecialtyPoints = realmLevel;
 			}
 

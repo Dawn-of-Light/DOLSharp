@@ -62,7 +62,7 @@ namespace DOL
 			private long m_realmPts;
 			private int m_skillSpecPts;
 			private int m_realmSpecPts;
-			private int m_realmLevel;
+			//private int m_realmLevel;
 			//0x00					//01 byte
 			//int mUnk2;			//04 byte
 			//int mStr;				//01 byte
@@ -132,7 +132,7 @@ namespace DOL
 			private string m_abilities = "";	// comma separated string of ability keynames and levels eg "sprint,0,evade,1"
 			private string m_specs = "";			// comma separated string of spec keynames and levels like "earth_magic,5,slash,10"
 			private string m_spellLines = "";		// serialized string of spell lines and levels like "Spirit Animation|5;Vivification|7"
-			private string m_realmAbilities = ""; // for later use
+			//private string m_realmAbilities = ""; // for later use
 			private string m_craftingSkills = "";// crafting skills
 			private string m_disabledSpells = "";
 			private string m_disabledAbilities = "";
@@ -477,22 +477,22 @@ namespace DOL
 				}
 			}
 
-			/// <summary>
+			/*/// <summary>
 			/// Gets/sets realm rank
 			/// </summary>
-			[DataElement(AllowDbNull = true)]
+			//[DataElement(AllowDbNull = true)]
 			public int RealmLevel
 			{
 				get
 				{
-					return m_realmLevel;
+					return Util.realm;
 				}
 				set
 				{
 					m_realmLevel = value;
 					Dirty = true;
 				}
-			}
+			}*/
 
 			/// <summary>
 			/// Gets/sets experience
@@ -1298,7 +1298,7 @@ namespace DOL
 				}
 			}
 
-			/// <summary>
+			/*/// <summary>
 			/// the realm abilities of character
 			/// </summary>
 			[DataElement(AllowDbNull = true)]
@@ -1310,7 +1310,7 @@ namespace DOL
 					Dirty = true;
 					m_realmAbilities = value;
 				}
-			}
+			}*/
 
 			/// <summary>
 			/// The spells unallowed to character

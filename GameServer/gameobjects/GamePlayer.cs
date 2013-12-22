@@ -4038,13 +4038,13 @@ namespace DOL.GS
 		/// </summary>
 		public virtual int RealmLevel
 		{
-			get { return DBCharacter != null ? DBCharacter.RealmLevel : 0; }
-			set
+			get { return DBCharacter != null ? Util.RealmPointsToRealmLevel(DBCharacter.RealmPoints) : 0; }
+			/*set
 			{
 				if (DBCharacter != null)
 					DBCharacter.RealmLevel = value;
 				CharacterClass.OnRealmLevelUp(this);
-			}
+			}*/
 		}
 
 		/// <summary>
@@ -4059,13 +4059,14 @@ namespace DOL.GS
 
 			if (Realm != eRealm.None)
 			{
-				int m_RR = DBCharacter.RealmLevel / 10;
+				int realmLevel = Util.RealmPointsToRealmLevel(DBCharacter.RealmPoints);
+				int m_RR = realmLevel / 10;
 				switch (m_RR)
 				{
 						//Because realm levels are only start to count at realm rank 1 (and so we need 120 levels to get realm rank 13), our first case
 						//will be start with 0 (realm rank 1) and our last case will be end with 12 (realm rank 13)
 					case 0:
-						if (DBCharacter.RealmLevel < 1)
+						if (realmLevel < 1)
 						{
 							/*******************************************************************************************************************/
 							/* This titles are only used by characters where realm level == 0. If players realm points are higher ( > ) then 0 */
@@ -4602,7 +4603,8 @@ namespace DOL.GS
 
 				try
 				{
-					return REALM_RANK_NAMES[(int)Realm - 1, (int)Gender, (DBCharacter.RealmLevel / 10)];
+					int realmLevel = Util.RealmPointsToRealmLevel(DBCharacter.RealmPoints);
+					return REALM_RANK_NAMES[(int)Realm - 1, (int)Gender, (realmLevel / 10)];
 				}
 				catch
 				{
@@ -4692,7 +4694,7 @@ namespace DOL.GS
 			
 			while (RealmPoints >= CalculateRPsFromRealmLevel(RealmLevel + 1) && RealmLevel < ( REALMPOINTS_FOR_LEVEL.Length - 1 ) )
 			{
-				RealmLevel++;
+				//RealmLevel++;
 				RealmSpecialtyPoints++;
 				Out.SendUpdatePlayer();
 				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.GainRealmPoints.GainedLevel"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -4981,27 +4983,6 @@ namespace DOL.GS
 
 			// thanks to Linulo from http://daoc.foren.4players.de/viewtopic.php?t=40839&postdays=0&postorder=asc&start=0
 			return (long)(25.0 / 3.0 * (realmLevel * realmLevel * realmLevel) - 25.0 / 2.0 * (realmLevel * realmLevel) + 25.0 / 6.0 * realmLevel);
-		}
-
-		/// <summary>
-		/// Calculates realm level from realm points. SLOW.
-		/// </summary>
-		/// <param name="realmPoints">amount of realm points</param>
-		/// <returns>realm level: RR5L3 = 43, RR1L2 = 2</returns>
-		protected virtual int CalculateRealmLevelFromRPs(long realmPoints)
-		{
-			if (realmPoints == 0)
-				return 0;
-
-			int i;
-
-			for (i = REALMPOINTS_FOR_LEVEL.Length - 1; i > 0; i--)
-			{
-				if (REALMPOINTS_FOR_LEVEL[i] <= realmPoints)
-					break;
-			}
-
-			return i;
 		}
 
 		/// <summary>
@@ -13099,8 +13080,8 @@ namespace DOL.GS
 				Health = 1;
 			}
 
-			if (RealmLevel == 0)
-				RealmLevel = CalculateRealmLevelFromRPs(RealmPoints);
+			/*if (RealmLevel == 0)
+				RealmLevel = Util.RealmPointsToRealmLevel(RealmPoints);*/
 
 			LoadCraftingSkills();
 

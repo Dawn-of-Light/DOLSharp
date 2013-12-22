@@ -364,5 +364,26 @@ namespace DOL.GS
 
 			return int.Parse(t);
 		}
+
+		/// <summary>
+		/// Calculates realm level from realm points. SLOW.
+		/// </summary>
+		/// <param name="realmPoints">amount of realm points</param>
+		/// <returns>realm level: RR5L3 = 43, RR1L2 = 2</returns>
+		public static int RealmPointsToRealmLevel(long realmPoints)
+		{
+			if (realmPoints == 0)
+				return 0;
+
+			int i;
+
+			for (i = GamePlayer.REALMPOINTS_FOR_LEVEL.Length - 1; i > 0; i--)
+			{
+				if (GamePlayer.REALMPOINTS_FOR_LEVEL[i] <= realmPoints)
+					break;
+			}
+
+			return i;
+		}
 	}
 }

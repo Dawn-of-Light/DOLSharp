@@ -114,7 +114,9 @@ namespace DOL.GS
 				return "PlayerIsNullError";
 			}
 
-			return player.InternalID;
+			if (!ServerProperties.Properties.HOUSING_VAULTBYACCOUNT)
+				return player.InternalID;
+			else return "ACC-" + player.Client.Account.Name;
 		}
 
 		/// <summary>

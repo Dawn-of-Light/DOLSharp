@@ -196,7 +196,8 @@ namespace DOL.GS
 
                     if (account != null && account.PrivLevel == 1)
                     {
-                        toplist.Add("\n" + count.ToString() + " - [ " + chr.Name + " ] with " + String.Format("{0:0,0}", chr.RealmPoints) + " RP - [ " + (((chr.RealmLevel + 10) / 10) + "L" + ((chr.RealmLevel + 10) % 10)) + " ]");
+						int realmLevel = Util.RealmPointsToRealmLevel(chr.RealmPoints);
+                        toplist.Add("\n" + count.ToString() + " - [ " + chr.Name + " ] with " + String.Format("{0:0,0}", chr.RealmPoints) + " RP - [ " + (((realmLevel + 10) / 10) + "L" + ((realmLevel + 10) % 10)) + " ]");
                         if (++count > 20)
                             break;
                     }

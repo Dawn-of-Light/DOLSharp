@@ -151,7 +151,7 @@ namespace DOL
 				this.Quickness = character.Quickness;
 				this.Race = character.Race;
 				this.Realm = character.Realm;
-				this.RealmLevel = character.RealmLevel;
+				//this.RealmLevel = character.RealmLevel;
 				this.RealmPoints = character.RealmPoints;
 				this.RealmSpecialtyPoints = character.RealmSpecialtyPoints;
 				this.Region = character.Region;
@@ -167,7 +167,7 @@ namespace DOL
 				this.SerializedCraftingSkills = character.SerializedCraftingSkills;
 				this.SerializedFriendsList = character.SerializedFriendsList;
 				this.SerializedIgnoreList = character.SerializedIgnoreList;
-				this.SerializedRealmAbilities = character.SerializedRealmAbilities;
+				//this.SerializedRealmAbilities = character.SerializedRealmAbilities;
 				this.SerializedSpecs = character.SerializedSpecs;
 				this.SerializedSpellLines = character.SerializedSpellLines;
 				this.ShowGuildLogins = character.ShowGuildLogins;
