@@ -500,7 +500,7 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0x00);
 			pak.WritePascalString(m_gameClient.Account.Name);
 			pak.WritePascalString(GameServer.Instance.Configuration.ServerNameShort); //server name
-			pak.WriteByte(0x0C); //Server ID
+			pak.WriteByte(ServerProperties.Properties.SERVER_ID); //Server ID
 			pak.WriteByte(color);
 			pak.WriteByte(0x00);
 			pak.WriteByte(0x00); // new in 1.75

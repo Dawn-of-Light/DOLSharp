@@ -50,6 +50,12 @@ namespace DOL.GS.ServerProperties
 
 		#region SYSTEM / DEBUG
 		/// <summary>
+		/// The Server ID
+		/// </summary>
+		[ServerProperty("system", "server_id", "the Server ID", 0x0C)]
+		public static byte SERVER_ID;
+
+		/// <summary>
 		/// Enable Debug mode - used to alter some features during server startup to make debugging easier
 		/// Can be changed while server is running but may require restart to enable all debug features
 		/// </summary>

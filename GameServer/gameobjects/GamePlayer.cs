@@ -3559,6 +3559,22 @@ namespace DOL.GS
 			return m_styles.Values.ToList();
 		}
 
+		protected Dictionary<byte, SpellLine> m_CachedSpellLines = new Dictionary<byte, SpellLine>();
+
+		public Dictionary<byte, SpellLine> CachedSpellLines
+		{
+			get { return m_CachedSpellLines; }
+			set { m_CachedSpellLines = value; }
+		}
+
+		protected Dictionary<byte, Dictionary<byte, Spell>> m_CachedSpells = new Dictionary<byte, Dictionary<byte, Spell>>();
+
+		public Dictionary<byte, Dictionary<byte, Spell>> CachedSpells
+		{
+			get { return m_CachedSpells; }
+			set { m_CachedSpells = value; }
+		}
+
 		/// <summary>
 		/// Get a list of Champion styles for this player
 		/// </summary>
