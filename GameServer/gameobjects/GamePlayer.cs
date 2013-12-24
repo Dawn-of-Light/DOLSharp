@@ -9019,7 +9019,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual long GetCurrentMoney()
 		{
-			return Money.GetMoney(DBCharacter.Mithril, DBCharacter.Platinum, DBCharacter.Gold, DBCharacter.Silver, DBCharacter.Copper);
+			return DBCharacter.Money;
 		}
 
 		/// <summary>
@@ -9052,11 +9052,7 @@ namespace DOL.GS
 		{
 			long newMoney = GetCurrentMoney() + money;
 
-			DBCharacter.Copper = Money.GetCopper(newMoney);
-			DBCharacter.Silver = Money.GetSilver(newMoney);
-			DBCharacter.Gold = Money.GetGold(newMoney);
-			DBCharacter.Platinum = Money.GetPlatinum(newMoney);
-			DBCharacter.Mithril = Money.GetMithril(newMoney);
+			DBCharacter.Money = newMoney;
 
 			Out.SendUpdateMoney();
 
@@ -9102,11 +9098,12 @@ namespace DOL.GS
 
 			long newMoney = GetCurrentMoney() - money;
 
-			DBCharacter.Mithril = Money.GetMithril(newMoney);
+			/*DBCharacter.Mithril = Money.GetMithril(newMoney);
 			DBCharacter.Platinum = Money.GetPlatinum(newMoney);
 			DBCharacter.Gold = Money.GetGold(newMoney);
 			DBCharacter.Silver = Money.GetSilver(newMoney);
-			DBCharacter.Copper = Money.GetCopper(newMoney);
+			DBCharacter.Copper = Money.GetCopper(newMoney);*/
+			DBCharacter.Money = newMoney;
 
 			Out.SendUpdateMoney();
 
@@ -10741,7 +10738,7 @@ namespace DOL.GS
 
 		#region Group/Friendlist/guild
 
-		private Guild m_guild;
+		protected Guild m_guild;
 		private DBRank m_guildRank;
 
 		/// <summary>

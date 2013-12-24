@@ -387,7 +387,7 @@ namespace DOL.AI.Brain
 		/// Add aggro table of this brain to that of another living.
 		/// </summary>
 		/// <param name="brain">The target brain.</param>
-		public void AddAggroListTo(StandardMobBrain brain)
+		public virtual void AddAggroListTo(StandardMobBrain brain)
 		{
 			// TODO: This should actually be the other way round, but access
 			// to m_aggroTable is restricted and needs to be threadsafe.

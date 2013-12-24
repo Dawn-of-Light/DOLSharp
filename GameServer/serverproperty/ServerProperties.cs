@@ -53,7 +53,13 @@ namespace DOL.GS.ServerProperties
 		/// The Server ID
 		/// </summary>
 		[ServerProperty("system", "server_id", "the Server ID", 0x0C)]
-		public static byte SERVER_ID;
+		public static int SERVER_ID;
+
+		/// <summary>
+		/// The Server Index
+		/// </summary>
+		[ServerProperty("system", "server_index", "the Server Index", 0x00)]
+		public static int SERVER_INDEX;
 
 		/// <summary>
 		/// Enable Debug mode - used to alter some features during server startup to make debugging easier

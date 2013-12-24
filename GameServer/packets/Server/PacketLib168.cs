@@ -143,7 +143,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte(0x00);
 				pak.WritePascalString(m_gameClient.Account.Name);
 				pak.WritePascalString(GameServer.Instance.Configuration.ServerNameShort); //server name
-				pak.WriteByte(ServerProperties.Properties.SERVER_ID); //Server ID
+				pak.WriteByte((byte)ServerProperties.Properties.SERVER_ID); //Server ID
 				pak.WriteByte(color);
 				pak.WriteByte(0x00);
 				SendTCP(pak);
@@ -1190,11 +1190,16 @@ namespace DOL.GS.PacketHandler
 				return;
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MoneyUpdate)))
 			{
-				pak.WriteByte((byte) m_gameClient.Player.DBCharacter.Copper);
-				pak.WriteByte((byte) m_gameClient.Player.DBCharacter.Silver);
-				pak.WriteShort((ushort) m_gameClient.Player.DBCharacter.Gold);
-				pak.WriteShort((ushort) m_gameClient.Player.DBCharacter.Mithril);
-				pak.WriteShort((ushort) m_gameClient.Player.DBCharacter.Platinum);
+				byte copper = (byte)Money.GetCopper(m_gameClient.Player.GetCurrentMoney());
+				byte silver = (byte)Money.GetSilver(m_gameClient.Player.GetCurrentMoney());
+				ushort gold = (ushort)Money.GetGold(m_gameClient.Player.GetCurrentMoney());
+				ushort mithril = (ushort)Money.GetMithril(m_gameClient.Player.GetCurrentMoney());
+				ushort platinum = (ushort)Money.GetPlatinum(m_gameClient.Player.GetCurrentMoney());
+				pak.WriteByte(copper);
+				pak.WriteByte(silver);
+				pak.WriteShort(gold);
+				pak.WriteShort(mithril);
+				pak.WriteShort(platinum);
 				SendTCP(pak);
 			}
 		}

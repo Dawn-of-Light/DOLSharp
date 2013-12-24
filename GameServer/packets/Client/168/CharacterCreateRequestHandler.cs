@@ -468,11 +468,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			
 			if (Properties.STARTING_MONEY > 0)
 			{
-				long value = Properties.STARTING_MONEY;
-				ch.Copper = Money.GetCopper(value);
-				ch.Silver = Money.GetSilver(value);
-				ch.Gold = Money.GetGold(value);
-				ch.Platinum = Money.GetPlatinum(value);
+				ch.Money = Properties.STARTING_MONEY;
 			}
 
 			if (Properties.STARTING_REALM_LEVEL > 0)

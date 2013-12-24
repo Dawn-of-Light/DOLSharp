@@ -62,7 +62,6 @@ namespace DOL
 			private long m_realmPts;
 			private int m_skillSpecPts;
 			private int m_realmSpecPts;
-			//private int m_realmLevel;
 			//0x00					//01 byte
 			//int mUnk2;			//04 byte
 			//int mStr;				//01 byte
@@ -80,11 +79,7 @@ namespace DOL
 			private bool m_isCloakInvisible;
 			private bool m_isHelmInvisible;
 			private bool m_spellQueue;
-			private int m_copper;
-			private int m_silver;
-			private int m_gold;
-			private int m_platinum;
-			private int m_mithril;
+			private long m_money;
 			private int m_currentModel;
 
 			private int m_constitution = 0;
@@ -132,7 +127,6 @@ namespace DOL
 			private string m_abilities = "";	// comma separated string of ability keynames and levels eg "sprint,0,evade,1"
 			private string m_specs = "";			// comma separated string of spec keynames and levels like "earth_magic,5,slash,10"
 			private string m_spellLines = "";		// serialized string of spell lines and levels like "Spirit Animation|5;Vivification|7"
-			//private string m_realmAbilities = ""; // for later use
 			private string m_craftingSkills = "";// crafting skills
 			private string m_disabledSpells = "";
 			private string m_disabledAbilities = "";
@@ -1158,87 +1152,19 @@ namespace DOL
 			}
 
 			/// <summary>
-			/// Money copper part player own
-			/// </summary>
-			[DataElement(AllowDbNull = true)]
-			public int Copper
-			{
-				get
-				{
-					return m_copper;
-				}
-				set
-				{
-					Dirty = true;
-					m_copper = value;
-				}
-			}
-
-			/// <summary>
-			/// Money silver part player own
-			/// </summary>
-			[DataElement(AllowDbNull = true)]
-			public int Silver
-			{
-				get
-				{
-					return m_silver;
-				}
-				set
-				{
-					Dirty = true;
-					m_silver = value;
-				}
-			}
-
-			/// <summary>
-			/// Money gold part player own
-			/// </summary>
-			[DataElement(AllowDbNull = true)]
-			public int Gold
-			{
-				get
-				{
-					return m_gold;
-				}
-				set
-				{
-					Dirty = true;
-					m_gold = value;
-				}
-			}
-
-			/// <summary>
-			/// Money platinum part player own
-			/// </summary>
-			[DataElement(AllowDbNull = true)]
-			public int Platinum
-			{
-				get
-				{
-					return m_platinum;
-				}
-				set
-				{
-					Dirty = true;
-					m_platinum = value;
-				}
-			}
-
-			/// <summary>
 			/// Money mithril part player own
 			/// </summary>
 			[DataElement(AllowDbNull = true)]
-			public int Mithril
+			public long Money
 			{
 				get
 				{
-					return m_mithril;
+					return m_money;
 				}
 				set
 				{
 					Dirty = true;
-					m_mithril = value;
+					m_money = value;
 				}
 			}
 
