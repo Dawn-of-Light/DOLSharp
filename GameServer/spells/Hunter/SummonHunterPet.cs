@@ -39,14 +39,17 @@ namespace DOL.GS.Spells
 		public SummonHunterPet(GameLiving caster, Spell spell, SpellLine line)
 			: base(caster, spell, line) { }
 
-		public override bool CheckBeginCast(GameLiving selectedTarget)
+		public override bool CheckEndCast(GameLiving target)
 		{
-			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledBrain != null)
+			if (!base.CheckEndCast(target))
+				return false;
+
+			if (Caster is GamePlayer && Caster.ControlledBrain != null)
 			{
-                MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "Summon.CheckBeginCast.AlreadyHaveaPet"), eChatType.CT_SpellResisted);
-                return false;
+				MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "Summon.CheckBeginCast.AlreadyHaveaPet"), eChatType.CT_SpellResisted);
+				return false;
 			}
-			return base.CheckBeginCast(selectedTarget);
+			return true;
 		}
 	}
 }

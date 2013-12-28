@@ -39,14 +39,18 @@ namespace DOL.GS.Spells
 		public SummonCommanderPet(GameLiving caster, Spell spell, SpellLine line)
 			: base(caster, spell, line) { }
 
-		public override bool CheckBeginCast(GameLiving selectedTarget)
+
+		public override bool CheckEndCast(GameLiving target)
 		{
-			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledBrain != null)
+			if (!base.CheckEndCast(target))
+				return false;
+
+			if (Caster is GamePlayer && Caster.ControlledBrain != null)
 			{
-                MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonCommanderPet.CheckBeginCast.Text"), eChatType.CT_SpellResisted);
-                return false;
-            }
-			return base.CheckBeginCast(selectedTarget);
+				MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonCommanderPet.CheckBeginCast.Text"), eChatType.CT_SpellResisted);
+				return false;
+			}
+			return true;
 		}
 
 		protected override void OnNpcReleaseCommand(DOLEvent e, object sender, EventArgs arguments)
@@ -91,7 +95,7 @@ namespace DOL.GS.Spells
                 delve.Add("");
                 delve.Add(String.Format(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonCommanderPet.DelveInfo.Text3", Spell.Target)));
                 delve.Add(String.Format(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonCommanderPet.DelveInfo.Text4", Math.Abs(Spell.Power))));
-                delve.Add(String.Format(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonCommanderPet.DelveInfo.Text5", (Spell.CastTime / 1000).ToString("0.0## " + (LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "Effects.DelveInfo.Seconds"))))));
+				delve.Add(String.Format(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonCommanderPet.DelveInfo.Text5", (Spell.CastTime / 1000).ToString("0.0## " + (LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "Effects.DelveInfo.Seconds").Replace("{0} ", ""))))));
                 return delve;
             }
 		}

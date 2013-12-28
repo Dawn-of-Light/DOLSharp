@@ -1030,6 +1030,8 @@ namespace DOL.GS.Commands
 		private void movehere(GameClient client, GameNPC targetMob, string[] args)
 		{
 			targetMob.MoveTo(client.Player.CurrentRegionID, client.Player.X, client.Player.Y, client.Player.Z, client.Player.Heading);
+			targetMob.SpawnHeading = client.Player.Heading;
+			targetMob.SpawnPoint = new Point3D(client.Player);
 			targetMob.SaveIntoDatabase();
 			client.Out.SendMessage("Target Mob '" + targetMob.Name + "' moved to your location!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
