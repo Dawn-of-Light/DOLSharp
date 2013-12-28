@@ -30,6 +30,7 @@ using DOL.GS.SkillHandler;
 using DOL.GS.Keeps;
 using DOL.Language;
 using log4net;
+using DOL.GS.Spells;
 
 namespace DOL.AI.Brain
 {
@@ -210,6 +211,28 @@ namespace DOL.AI.Brain
 				{
 					CheckPlayerAggro();
 					CheckNPCAggro();
+				}
+
+				if (Body.AttackState)
+				{
+					long delay = 10000 * (1 + ((100 - Body.HealthPercent) / 100));
+					long lastattack = Body.TempProperties.getProperty<long>(GameLiving.LAST_ATTACK_TIME, 0);
+
+					/*log.Error("delay      = " + delay);
+					log.Error("lastnat    = " + LastNaturalAggro + " " + (LastNaturalAggro + delay) + "<" + Body.CurrentRegion.Time + " - " + (LastNaturalAggro + delay < Body.CurrentRegion.Time));
+					log.Error("lastattack = " + lastattack + " " + (lastattack + delay) + "<" + Body.CurrentRegion.Time + " - " + (lastattack + delay < Body.CurrentRegion.Time));
+					log.Error("lastabe    = " + Body.LastAttackedByEnemyTick + " " + (Body.LastAttackedByEnemyTick + delay) + "<" + Body.CurrentRegion.Time + " - " + (Body.LastAttackedByEnemyTick + delay < Body.CurrentRegion.Time));
+					log.Error("----------------------------------------------------------------");*/
+
+					if ((LastNaturalAggro == 0 || LastNaturalAggro + delay < Body.CurrentRegion.Time)
+						&& (Body.LastAttackedByEnemyTick == 0 || Body.LastAttackedByEnemyTick + delay < Body.CurrentRegion.Time)
+						&& (lastattack == 0 || lastattack + delay < Body.CurrentRegion.Time))
+					{
+						Body.StopAttack();
+						Body.TargetObject = null;
+						Body.WalkToSpawn();
+						return;
+					}
 				}
 
 				if (HasAggro)
@@ -419,6 +442,14 @@ namespace DOL.AI.Brain
 			else
 				AggroLOS=false;
 		}
+
+		protected long m_lastNaturalAggro = 0;
+
+		public long LastNaturalAggro
+		{
+			get { return m_lastNaturalAggro; }
+			set { m_lastNaturalAggro = value; }
+		}
 		
 		/// <summary>
 		/// Add living to the aggrolist
@@ -439,6 +470,11 @@ namespace DOL.AI.Brain
 			if (!m_body.IsAlive) return;
 
 			if (living == null) return;
+
+			if (aggroamount > 0 && NaturalAggro)
+			{
+				LastNaturalAggro = Body.CurrentRegion.Time;
+			}
 
 			//Handle trigger to say sentance on first aggro.
 			if (m_aggroTable.Count < 1)
@@ -591,6 +627,7 @@ namespace DOL.AI.Brain
 			lock ((m_aggroTable as ICollection).SyncRoot)
 			{
 				m_aggroTable.Clear();
+				m_lastNaturalAggro = 0;
 				Body.TempProperties.removeProperty(Body.Attackers);
 			}
 		}
@@ -619,6 +656,9 @@ namespace DOL.AI.Brain
 
 			if (Body.TargetObject != null)
 			{
+				if (Body.ControlledBrain != null && Body.ControlledBrain.Body != null && Body.ControlledBrain.Body.IsAlive && !Body.ControlledBrain.Body.AttackState)
+					Body.ControlledBrain.Body.StartAttack(Body.TargetObject);
+
 				if (!CheckSpells(eCheckSpellType.Offensive))
 				{
 					Body.StartAttack(Body.TargetObject);
@@ -1341,16 +1381,107 @@ namespace DOL.AI.Brain
 			if (spell.Target.ToLower() != "enemy" && spell.Target.ToLower() != "area" && spell.Target.ToLower() != "cone")
 				return false;
 
-			if (Body.TargetObject != null)
+			long lastTick = Body.TempProperties.getProperty<long>(GameNPC.LAST_LOS_TICK_PROPERTY);
+			if (lastTick != 0 && Body.CurrentRegion.Time - lastTick < DOL.GS.ServerProperties.Properties.LOS_PLAYER_CHECK_FREQUENCY * 1000)
+				return false;
+
+			if (Body.TargetObject != null && spell.Range > 0)
 			{
-				if (Body.IsMoving && spell.CastTime > 0)
-					Body.StopFollowing();
+				bool casted = false;
+				SpellHandler handler = new SpellHandler(Body, spell, m_mobSpellLine);
 
-				if (Body.TargetObject != Body && spell.CastTime > 0)
-					Body.TurnTo(Body.TargetObject);
+				if (handler != null)
+				{
+					if (Body.TargetObject is GameLiving)
+					{
+						GameLiving living = Body.TargetObject as GameLiving;
+						switch (spell.SpellType)
+						{
+							case "Mesmerize":
+							case "Disease":
+							case "SpeedDecrease":
+							case "Stun":
+								{
+									if (spell.Radius <= 0)
+									{
+										if (LivingHasEffect(living, spell))
+											return false;
+									}
+									else
+									{
+										bool imun = true;
+										foreach (GamePlayer plr in living.GetPlayersInRadius((ushort)spell.Radius))
+										{
+											if (plr != null && !LivingHasEffect(plr, spell) && GameServer.ServerRules.IsAllowedToAttack(Body, plr, true))
+											{
+												imun = false;
+												break;
+											}
+										}
+										if (imun)
+										{
+											foreach (GameNPC npc in living.GetNPCsInRadius((ushort)spell.Radius))
+											{
+												if (npc != null && !LivingHasEffect(npc, spell) && GameServer.ServerRules.IsAllowedToAttack(Body, npc, true))
+												{
+													imun = false;
+													break;
+												}
+											}
+										}
+										if (imun) return false;
+									}
+									break;
+								}
+							default: break;
+						}
+					}
 
-				Body.CastSpell(spell, m_mobSpellLine);
-				return true;
+
+
+					casted = handler.CheckBeginCast(Body.TargetObject as GameLiving, true);/*handler.CastSpell();*/ //Body.CastSpell(spell, m_mobSpellLine);
+					if (casted)
+					{
+
+						casted = Body.CastSpell(spell, m_mobSpellLine);
+					}
+				}
+				return casted;
+			}
+			else if (spell.Range <= 0)
+			{
+				bool casted = false;
+				SpellHandler handler = new SpellHandler(Body, spell, m_mobSpellLine);
+
+				if (handler != null)
+				{
+					bool imun = true;
+					foreach (GamePlayer plr in Body.GetPlayersInRadius((ushort)spell.Radius))
+					{
+						if (plr != null && !LivingHasEffect(plr, spell) && GameServer.ServerRules.IsAllowedToAttack(Body, plr, true))
+						{
+							imun = false;
+							break;
+						}
+					}
+					if (imun)
+					{
+						foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)spell.Radius))
+						{
+							if (npc != null && !LivingHasEffect(npc, spell) && GameServer.ServerRules.IsAllowedToAttack(Body, npc, true))
+							{
+								imun = false;
+								break;
+							}
+						}
+					}
+					if (imun) return false;
+
+
+					casted = handler.CheckBeginCast(Body.TargetObject is GameLiving ? Body.TargetObject as GameLiving : null, true);
+					if (casted)
+						casted = Body.CastSpell(spell, m_mobSpellLine);
+				}
 			}
 			return false;
 		}

@@ -205,7 +205,7 @@ namespace DOL.GS.Quests
 					return;
 
 				for (int reward = 0; reward < rewardArgs.CountChosen; ++reward)
-					Rewards.Choose(rewardArgs.ItemsChosen[reward]);
+					Rewards.Choose(QuestPlayer.CharacterClass.ID, rewardArgs.ItemsChosen[reward]);
 
                 //k109: Handle the player not choosing a reward.
                 if (Rewards.ChoiceOf > 0 && rewardArgs.CountChosen <= 0)
@@ -213,6 +213,14 @@ namespace DOL.GS.Quests
                     QuestPlayer.Out.SendMessage(LanguageMgr.GetTranslation(QuestPlayer.Client, "RewardQuest.Notify"), eChatType.CT_System, eChatLoc.CL_ChatWindow);
                     return;
                 }
+
+				if ((Rewards.ChoiceMin > 0 && rewardArgs.CountChosen < Rewards.ChoiceMin) || (Rewards.ChoiceMax > 0 && rewardArgs.CountChosen > Rewards.ChoiceMax))
+				{
+					QuestPlayer.Out.SendMessage(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "RewardQuest.NotifyCount", Rewards.ChoiceMin), eChatType.CT_System, eChatLoc.CL_ChatWindow);
+					Rewards.Clear();
+					ChooseRewards(QuestPlayer);
+					return;
+				}
 
 				FinishQuest();
 			}
@@ -233,7 +241,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public override void FinishQuest()
 		{
-			int inventorySpaceRequired = Rewards.BasicItems.Count + Rewards.ChosenItems.Count;
+			int inventorySpaceRequired = Rewards.BasicItems(QuestPlayer).Count + Rewards.ChosenItems.Count;
 
 			if (QuestPlayer.Inventory.IsSlotsFree(inventorySpaceRequired, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
@@ -247,7 +255,7 @@ namespace DOL.GS.Quests
 				if (Rewards.GiveRealmPoints > 0)
 					QuestPlayer.GainRealmPoints(Rewards.GiveRealmPoints);
 
-				foreach (ItemTemplate basicReward in Rewards.BasicItems)
+				foreach (ItemTemplate basicReward in Rewards.BasicItems(QuestPlayer))
 				{
 					GiveItem(QuestPlayer, basicReward);
 				}
@@ -469,8 +477,10 @@ namespace DOL.GS.Quests
 			private RewardQuest m_quest;
 			private int m_moneyPercent;
 			private long m_experience;
-			private List<ItemTemplate> m_basicItems, m_optionalItems;
+			private Dictionary<int, List<ItemTemplate>> m_basicItems, m_optionalItems;
 			private int m_choiceOf;
+			private int m_choiceMin;
+			private int m_choiceMax;
 			private List<ItemTemplate> m_chosenItems;
 			private int m_bountypoints;
 			private int	m_realmpoints;
@@ -481,9 +491,11 @@ namespace DOL.GS.Quests
 				m_quest = quest;
 				m_moneyPercent = 0;
 				m_experience = 0;
-				m_basicItems = new List<ItemTemplate>();
-				m_optionalItems = new List<ItemTemplate>();
+				m_basicItems = new Dictionary<int, List<ItemTemplate>>();
+				m_optionalItems = new Dictionary<int, List<ItemTemplate>>();
 				m_choiceOf = 0;
+				m_choiceMin = 0;
+				m_choiceMax = 0;
 				m_chosenItems = new List<ItemTemplate>();
 				m_bountypoints = 0;
 				m_realmpoints = 0;
@@ -571,20 +583,44 @@ namespace DOL.GS.Quests
 			/// Add a basic reward (up to a maximum of 8).
 			/// </summary>
 			/// <param name="reward"></param>
-			public void AddBasicItem(ItemTemplate reward)
+			/*public void AddBasicItem(ItemTemplate reward)
 			{
-				if (m_basicItems.Count < 8)
-					m_basicItems.Add(reward);
+				AddBasicItem(0, reward);
+			}*/
+
+			public void AddBasicItem(int classID, ItemTemplate reward)
+			{
+				if (!m_basicItems.ContainsKey(classID))
+					m_basicItems.Add(classID, new List<ItemTemplate>());
+				
+				if (m_basicItems[classID].Count < 8)
+					m_basicItems[classID].Add(reward);
 			}
 
 			/// <summary>
 			/// Add an optional reward (up to a maximum of 8).
 			/// </summary>
 			/// <param name="reward"></param>
-			public void AddOptionalItem(ItemTemplate reward)
+			/*public void AddOptionalItem(ItemTemplate reward)
 			{
-				if (m_optionalItems.Count < 8)
-					m_optionalItems.Add(reward);
+				AddOptionalItem(0, reward);
+			}*/
+
+			public void AddOptionalItem(int classID, ItemTemplate reward)
+			{
+				if (!m_optionalItems.ContainsKey(classID))
+					m_optionalItems.Add(classID, new List<ItemTemplate>());
+				
+				if (m_optionalItems[classID].Count < 8)
+					m_optionalItems[classID].Add(reward);
+			}
+
+			public void SetOptionalItem(int classID, List<ItemTemplate> rewards)
+			{
+				if (!m_optionalItems.ContainsKey(classID))
+					m_optionalItems.Add(classID, new List<ItemTemplate>());
+
+				m_optionalItems[classID] = rewards;
 			}
 
 			/// <summary>
@@ -592,13 +628,26 @@ namespace DOL.GS.Quests
 			/// </summary>
 			/// <param name="reward"></param>
 			/// <returns></returns>
-			public bool Choose(int reward)
+			/*public bool Choose(int reward)
 			{
-				if (reward > m_optionalItems.Count)
+				return Choose(0, reward);
+			}*/
+
+			public bool Choose(int classID, int reward)
+			{
+				if (!m_optionalItems.ContainsKey(classID)) classID = 0;
+				if (!m_optionalItems.ContainsKey(classID)) return false;
+				
+				if (reward > m_optionalItems[classID].Count)
 					return false;
 
-				m_chosenItems.Add(m_optionalItems[reward]);
+				m_chosenItems.Add(m_optionalItems[classID][reward]);
 				return true;
+			}
+
+			public void Clear()
+			{
+				m_chosenItems.Clear();
 			}
 
 			/// <summary>
@@ -662,17 +711,21 @@ namespace DOL.GS.Quests
 			/// <summary>
 			/// List of basic item rewards.
 			/// </summary>
-			public List<ItemTemplate> BasicItems
+			public List<ItemTemplate> BasicItems(GamePlayer player)
 			{
-				get { return m_basicItems; }
+				if (!m_basicItems.ContainsKey(player.CharacterClass.ID) && m_basicItems.ContainsKey(0)) return m_basicItems[0];
+				if (m_basicItems.ContainsKey(player.CharacterClass.ID)) return m_basicItems[player.CharacterClass.ID];
+				return new List<ItemTemplate>();
 			}
 
 			/// <summary>
 			/// List of optional item rewards.
 			/// </summary>
-			public List<ItemTemplate> OptionalItems
+			public List<ItemTemplate> OptionalItems(GamePlayer player)
 			{
-				get { return m_optionalItems; }
+				if (!m_optionalItems.ContainsKey(player.CharacterClass.ID) && m_optionalItems.ContainsKey(0)) return m_optionalItems[0];
+				if (m_optionalItems.ContainsKey(player.CharacterClass.ID)) return m_optionalItems[player.CharacterClass.ID];
+				return new List<ItemTemplate>();
 			}
 
 			/// <summary>
@@ -695,6 +748,18 @@ namespace DOL.GS.Quests
 					if (m_optionalItems.Count > 0)
 						m_choiceOf = Math.Min(Math.Max(1, value), m_optionalItems.Count);
 				}
+			}
+
+			public int ChoiceMin
+			{
+				get { return m_choiceMin; }
+				set { m_choiceMin = value; }
+			}
+
+			public int ChoiceMax
+			{
+				get { return m_choiceMax; }
+				set { m_choiceMax = value; }
 			}
 		}
 	}

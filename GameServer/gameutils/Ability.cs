@@ -174,14 +174,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// icon id (>=0x190) or 0 if ability is not activatable
-		/// </summary>
-		public virtual ushort Icon
-		{
-			get { return base.ID; }
-		}
-
-		/// <summary>
 		/// Set the level of an ability
 		/// </summary>
 		public override int Level

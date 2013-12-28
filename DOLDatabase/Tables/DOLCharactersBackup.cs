@@ -149,7 +149,7 @@ namespace DOL
 				this.Race = character.Race;
 				this.Realm = character.Realm;
 				this.RealmPoints = character.RealmPoints;
-				this.RealmSpecialtyPoints = character.RealmSpecialtyPoints;
+				//this.RealmSpecialtyPoints = character.RealmSpecialtyPoints;
 				this.Region = character.Region;
 				this.RespecAmountAllSkill = character.RespecAmountAllSkill;
 				this.RespecAmountChampionSkill = character.RespecAmountChampionSkill;

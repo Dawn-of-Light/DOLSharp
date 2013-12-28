@@ -487,7 +487,8 @@ namespace DOL.AI.Brain
 			{
 				foreach (Spell spell in Body.Spells)
 				{
-					if (!Body.IsBeingInterrupted && Body.GetSkillDisabledDuration(spell) == 0 && CheckDefensiveSpells(spell))
+					if ((!Body.IsBeingInterrupted || spell.Uninterruptible || spell.IsInstantCast)
+						&& Body.GetSkillDisabledDuration(spell) == 0 && CheckDefensiveSpells(spell))
 					{
 						casted = true;
 						break;
@@ -502,7 +503,8 @@ namespace DOL.AI.Brain
 					{
 						if (spell.CastTime > 0)
 						{
-							if (!Body.IsBeingInterrupted && CheckOffensiveSpells(spell))
+							if ((!Body.IsBeingInterrupted || spell.Uninterruptible)
+								&& CheckOffensiveSpells(spell))
 							{
 								casted = true;
 								break;
@@ -514,8 +516,12 @@ namespace DOL.AI.Brain
 				}
 			}
 
-			if (!Body.AttackState && Owner != null)
+			if (!Body.AttackState && Owner != null && !casted && m_orderAttackTarget == null)
 			{
+				long lastTick = Body.TempProperties.getProperty<long>(GameNPC.LAST_LOS_TICK_PROPERTY);
+				if (lastTick != 0 && Body.CurrentRegion.Time - lastTick < DOL.GS.ServerProperties.Properties.LOS_PLAYER_CHECK_FREQUENCY * 1000)
+					return casted;
+
 				Follow(Owner);
 			}
 

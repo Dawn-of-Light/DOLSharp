@@ -1594,7 +1594,8 @@ namespace DOL.GS
 				StandardMobBrain brain = this.Brain as StandardMobBrain;
 
 				//if the npc hasn't hit or been hit in a while, stop following and return home
-				if (!(Brain is IControlledBrain))
+				//this has to be done by the Brain
+				/*if (!(Brain is IControlledBrain))
 				{
 					if (AttackState && brain != null && followLiving != null)
 					{
@@ -1610,7 +1611,7 @@ namespace DOL.GS
 							return 0;
 						}
 					}
-				}
+				}*/
 
 				//If we're part of a formation, we can get out early.
 				newX = followTarget.X;
@@ -2856,10 +2857,13 @@ namespace DOL.GS
 					player.Out.SendLivingEquipmentUpdate(this);
 			}
 			BroadcastUpdate();
-			m_spawnPoint.X = X;
-			m_spawnPoint.Y = Y;
-			m_spawnPoint.Z = Z;
-			m_spawnHeading = Heading;
+			if (m_spawnPoint.X <= 0 && m_spawnPoint.Y <= 0 && m_spawnPoint.Z <= 0 && m_spawnHeading <= 0)
+			{
+				m_spawnPoint.X = X;
+				m_spawnPoint.Y = Y;
+				m_spawnPoint.Z = Z;
+				m_spawnHeading = Heading;
+			}
 			lock (BrainSync)
 			{
 				ABrain brain = Brain;
@@ -3741,7 +3745,7 @@ namespace DOL.GS
 
 		public virtual void ContinueStartAttack(GameObject target)
 		{
-			StopMoving();
+			//StopMoving();
 			StopMovingOnPath();
 
 			if (Brain != null && Brain is IControlledBrain)
@@ -4892,6 +4896,15 @@ namespace DOL.GS
 				if (LOSChecker == null)
 				{
 					TempProperties.setProperty(LOSTEMPCHECKER, 0);
+					TempProperties.setProperty(LAST_LOS_TICK_PROPERTY, 0);
+
+					if (!spell.MoveCast && spell.CastTime > 0)
+					{
+						StopFollowing();
+						if (TargetObject != this)
+							TurnTo(TargetObject);
+					}
+
 					return base.CastSpell(spellToCast, line);
 				}
 				else
@@ -4900,6 +4913,7 @@ namespace DOL.GS
 					TempProperties.setProperty(LOSCURRENTSPELL, spellToCast);
 					TempProperties.setProperty(LOSCURRENTLINE, line);
 					TempProperties.setProperty(LOSSPELLTARGET, TargetObject);
+					TempProperties.setProperty(LAST_LOS_TICK_PROPERTY, CurrentRegion.Time);
 					LOSChecker.Out.SendCheckLOS(LOSChecker, this, new CheckLOSResponse(StartSpellAttackCheckLOS));
 				}
 			}
@@ -4918,6 +4932,7 @@ namespace DOL.GS
 			GameObject target = TempProperties.getProperty<GameObject>(LOSSPELLTARGET, null);
 			GameObject lasttarget = TargetObject;
 
+			TempProperties.removeProperty(LAST_LOS_TICK_PROPERTY);
 			TempProperties.removeProperty(LOSSPELLTARGET);
 			TempProperties.removeProperty(LOSTEMPCHECKER);
 			TempProperties.removeProperty(LOSCURRENTLINE);
@@ -4938,7 +4953,22 @@ namespace DOL.GS
 					}
 				}
 
-				base.CastSpell(spell, line);
+				SpellHandler handler = new SpellHandler(this, spell, line);
+				bool casted = handler.CheckBeginCast(TargetObject as GameLiving, true);
+				if (!casted)
+				{
+					StartAttack(target);
+				}
+				else
+				{
+					if (!spell.MoveCast && spell.CastTime > 0)
+					{
+						StopFollowing();
+						if (TargetObject != this)
+							TurnTo(TargetObject);
+					}
+					base.CastSpell(spell, line);
+				}
 				TargetObject = lasttarget;
 			}
 			else

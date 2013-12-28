@@ -29,7 +29,7 @@ namespace DOL.Events
 	/// quest dialog.
 	/// </summary>
 	/// <author>Aredhel</author>
-	class QuestRewardChosenEventArgs : EventArgs
+	public class QuestRewardChosenEventArgs : EventArgs
 	{
 		private int m_questGiverID;
 		private int m_questID;

@@ -196,6 +196,27 @@ namespace DOL.GS
 		/// </summary>
 		protected PacketProcessor m_packetProcessor;
 
+
+		protected long m_lastPositionUpdate;
+
+		public long LastPositionUpdate
+		{
+			get { return m_lastPositionUpdate; }
+			set { m_lastPositionUpdate = value; }
+		}
+		
+		protected GSUDPPacketOut m_positionUpdate1112;
+
+		public GSUDPPacketOut PositionUpdate1112
+		{
+			get { return m_positionUpdate1112; }
+			set
+			{
+				m_positionUpdate1112 = value;
+				m_lastPositionUpdate = Environment.TickCount;
+			}
+		}
+
 		/// <summary>
 		/// Holds the time of the last ping
 		/// </summary>

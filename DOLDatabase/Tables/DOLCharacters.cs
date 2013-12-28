@@ -61,7 +61,7 @@ namespace DOL
 			private long m_bntyPts;
 			private long m_realmPts;
 			private int m_skillSpecPts;
-			private int m_realmSpecPts;
+			//private int m_realmSpecPts;
 			//0x00					//01 byte
 			//int mUnk2;			//04 byte
 			//int mStr;				//01 byte
@@ -207,7 +207,7 @@ namespace DOL
 				m_bntyPts = 0;
 				m_realmPts = 0;
 				m_skillSpecPts = 0;
-				m_realmSpecPts = 0;
+				//m_realmSpecPts = 0;
 
 				m_lastPlayed = DateTime.Now; // Prevent /played crash.
 				m_playedTime = 0;  // /played startup
@@ -454,7 +454,7 @@ namespace DOL
 				}
 			}
 
-			/// <summary>
+			/*/// <summary>
 			/// Gets/sets realm specialty points
 			/// </summary>
 			[DataElement(AllowDbNull = true)]
@@ -469,7 +469,7 @@ namespace DOL
 					m_realmSpecPts = value;
 					Dirty = true;
 				}
-			}
+			}*/
 
 			/*/// <summary>
 			/// Gets/sets realm rank

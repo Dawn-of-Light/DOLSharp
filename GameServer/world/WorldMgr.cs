@@ -905,6 +905,15 @@ namespace DOL.GS
 
 						if (Environment.TickCount - player.LastWorldUpdate > (int)(ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL >= 100 ? ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL : 100))
 						{
+							if (client.Version >= GameClient.eClientVersion.Version1112 && client.PositionUpdate1112 != null && Environment.TickCount - client.LastPositionUpdate > ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL)
+							{
+								foreach (GamePlayer target in player.GetPlayersInRadius(VISIBILITY_DISTANCE))
+								{
+									target.Out.SendUDPRaw(client.PositionUpdate1112);
+								}
+							}
+							
+							
 							BitArray carray = player.CurrentUpdateArray;
 							BitArray narray = player.NewUpdateArray;
 							narray.SetAll(false);

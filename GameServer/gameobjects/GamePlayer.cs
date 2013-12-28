@@ -3559,8 +3559,14 @@ namespace DOL.GS
 			return m_styles.Values.ToList();
 		}
 
-		protected Dictionary<byte, SpellLine> m_CachedSpellLines = new Dictionary<byte, SpellLine>();
+		protected IList<Skill> m_CachedSkills = new List<Skill>();
+		public IList<Skill> CachedSkills
+		{
+			get { return m_CachedSkills; }
+			set { m_CachedSkills = value; }
+		}
 
+		protected Dictionary<byte, SpellLine> m_CachedSpellLines = new Dictionary<byte, SpellLine>();
 		public Dictionary<byte, SpellLine> CachedSpellLines
 		{
 			get { return m_CachedSpellLines; }
@@ -3573,6 +3579,13 @@ namespace DOL.GS
 		{
 			get { return m_CachedSpells; }
 			set { m_CachedSpells = value; }
+		}
+
+		protected Dictionary<Spell, ushort> m_CachedSpells2Index = new Dictionary<Spell, ushort>();
+		public Dictionary<Spell, ushort> CachedSpell2Index
+		{
+			get { return m_CachedSpells2Index; }
+			set { m_CachedSpells2Index = value; }
 		}
 
 		/// <summary>
@@ -4039,28 +4052,39 @@ namespace DOL.GS
 			set { if (DBCharacter != null) DBCharacter.SkillSpecialtyPoints = value; }
 		}
 
+		protected int m_realmSpecialtyPoints;
+
 		/// <summary>
 		/// Gets/sets player realm specialty points
 		/// (delegate to PlayerCharacter)
 		/// </summary>
 		public virtual int RealmSpecialtyPoints
 		{
-			get { return DBCharacter != null ? DBCharacter.RealmSpecialtyPoints : 0; }
-			set { if (DBCharacter != null) DBCharacter.RealmSpecialtyPoints = value; }
+			get { return m_realmSpecialtyPoints; }
+			set { m_realmSpecialtyPoints = value; }
 		}
+
+		private int m_realmLevel;
 
 		/// <summary>
 		/// Gets/sets player realm rank
 		/// </summary>
 		public virtual int RealmLevel
 		{
-			get { return DBCharacter != null ? Util.RealmPointsToRealmLevel(DBCharacter.RealmPoints) : 0; }
-			/*set
+			get
 			{
-				if (DBCharacter != null)
-					DBCharacter.RealmLevel = value;
+				if (m_realmLevel == 0)
+				{
+					if (Level >= 20 && RealmPoints < 25) m_realmLevel = 1;
+					else m_realmLevel = Util.RealmPointsToRealmLevel(RealmPoints);
+				}
+				return m_realmLevel;
+			}
+			set
+			{
+				m_realmLevel = value;
 				CharacterClass.OnRealmLevelUp(this);
-			}*/
+			}
 		}
 
 		/// <summary>
@@ -4710,7 +4734,7 @@ namespace DOL.GS
 			
 			while (RealmPoints >= CalculateRPsFromRealmLevel(RealmLevel + 1) && RealmLevel < ( REALMPOINTS_FOR_LEVEL.Length - 1 ) )
 			{
-				//RealmLevel++;
+				RealmLevel++;
 				RealmSpecialtyPoints++;
 				Out.SendUpdatePlayer();
 				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.GainRealmPoints.GainedLevel"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -10382,7 +10406,7 @@ namespace DOL.GS
 			m_enduRegenerationTimer.Callback = new RegionTimerCallback(EnduranceRegenerationTimerCallback);
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				if (player == null) continue;
+				if (player == null || (player.Client.Account.PrivLevel > (uint)ePrivLevel.Player && player.IsStealthed)) continue;
 				if (player != this)
 					player.Out.SendPlayerCreate(this);
 			}
@@ -12951,6 +12975,57 @@ namespace DOL.GS
 			return SpecPointsOk;
 		}
 
+		public virtual bool VerifyRealmSpecialtyPoints()
+		{
+			RealmSpecialtyPoints = RealmLevel;
+			List<RealmAbility> raList = SkillBase.GetClassRealmAbilities(CharacterClass.ID);
+			int raRP = 0;
+			if (raList != null && raList.Count > 0)
+			{
+				List<RealmAbility> offeredRA = new List<RealmAbility>();
+				foreach (RealmAbility ra in raList)
+				{
+					if (ra is RR5RealmAbility) continue;
+					RealmAbility playerRA = (RealmAbility)GetAbility(ra.KeyName);
+					if (playerRA != null)
+					{
+						if (playerRA is LongWindAbility || playerRA is SerenityAbility)
+						{
+							raRP += playerRA.Level == 1 ? 1 : playerRA.Level == 2 ? 4 : playerRA.Level == 3 ? 10 : playerRA.Level == 4 ? 20 : 34;
+						}
+						else if (playerRA.MaxLevel == 5)
+						{
+							raRP += playerRA.Level == 1 ? 5 : playerRA.Level == 2 ? 10 : playerRA.Level == 3 ? 15 : playerRA.Level == 4 ? 22 : 30;
+						}
+						else if (playerRA.MaxLevel == 9)
+						{
+							switch (playerRA.Level)
+							{
+								case 1: raRP += 1; break;
+								case 2: raRP += 2; break;
+								case 3: raRP += 4; break;
+								case 4: raRP += 7; break;
+								case 5: raRP += 10; break;
+								case 6: raRP += 15; break;
+								case 7: raRP += 20; break;
+								case 8: raRP += 27; break;
+								case 9: raRP += 34; break;
+							}
+						}
+					}
+				}
+			}
+			bool ok = true;
+			if (raRP > RealmSpecialtyPoints)
+			{
+				ok = false;
+				log.WarnFormat("RealmSpecialtyPoints for {0} is incorrect, should be {1} but is {2}", Name, RealmSpecialtyPoints, raRP);
+				raRP = 0;
+			}
+			RealmSpecialtyPoints = RealmLevel - raRP;
+			return ok;
+		}
+
 		/// <summary>
 		/// Loads this player from a character table slot
 		/// </summary>
@@ -13093,12 +13168,13 @@ namespace DOL.GS
 				Health = 1;
 			}
 
-			/*if (RealmLevel == 0)
-				RealmLevel = Util.RealmPointsToRealmLevel(RealmPoints);*/
+			RealmLevel = Util.RealmPointsToRealmLevel(RealmPoints);
 
 			LoadCraftingSkills();
 
 			VerifySpecPoints();
+
+			VerifyRealmSpecialtyPoints();
 
 			LoadQuests();
 
