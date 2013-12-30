@@ -3669,31 +3669,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Is this a Champion or ML SpellLine
-		/// </summary>
-		/// <param name="line"></param>
-		/// <returns></returns>
-		public virtual bool IsAdvancedSpellLine(SpellLine line)
-		{
-			// ML lines
-			switch (line.KeyName)
-			{
-				case Specs.Convoker:
-				case Specs.Banelord:
-				case Specs.Stormlord:
-				case Specs.Perfecter:
-				case Specs.Sojourner:
-				case Specs.Spymaster:
-				case Specs.Battlemaster:
-				case Specs.Warlord:
-				case GlobalSpellsLines.Character_Abilities:
-					return true;
-			}
-
-			return false;
-		}
-
-		/// <summary>
 		/// A list of all usable spells for this player.  This list is maintained as long as the player is active
 		/// with new spells always added to the end of the list.  This is used for all hybrid classes
 		/// Structure of this list: uniquekey-Spell-SpellLine
@@ -8855,7 +8830,7 @@ namespace DOL.GS
 			if (CharacterClass.CanChangeCastingSpeed(line, spell) == false)
 				return ticks;
 
-			if (EffectList.GetOfType<QuickCastEffect>() != null)
+			if (!IsAdvancedSpellLine(line) && EffectList.GetOfType<QuickCastEffect>() != null)
 			{
 				// Most casters have access to the Quickcast ability (or the Necromancer equivalent, Facilitate Painworking).
 				// This ability will allow you to cast a spell without interruption.

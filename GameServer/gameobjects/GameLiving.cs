@@ -1671,7 +1671,16 @@ namespace DOL.GS
 				return ad;
 			}
 			//We have no attacking distance!
-			if (!this.IsWithinRadius(ad.Target, ad.Target.ActiveWeaponSlot == eActiveWeaponSlot.Standard ? Math.Max(AttackRange, ad.Target.AttackRange) : AttackRange))
+			if (style != null && style.Name == "Throw Weapon")
+			{
+				int range = Math.Max(32, (int)(700 * this.GetModified(eProperty.SpellRange) * 0.01));
+				if (!IsWithinRadius(ad.Target, range))
+				{
+					ad.AttackResult = eAttackResult.OutOfRange;
+					return ad;
+				}
+			}
+			else if (!this.IsWithinRadius(ad.Target, ad.Target.ActiveWeaponSlot == eActiveWeaponSlot.Standard ? Math.Max(AttackRange, ad.Target.AttackRange) : AttackRange))
 			{
 				ad.AttackResult = eAttackResult.OutOfRange;
 				return ad;
@@ -1719,6 +1728,12 @@ namespace DOL.GS
 
 			//Calculate our attack result and attack damage
 			ad.AttackResult = ad.Target.CalculateEnemyAttackResult(ad, weapon);
+
+			if (style != null && ad.AttackResult != eAttackResult.Missed && style.Name == "Throw Weapon")
+			{
+				DisarmedTime = CurrentRegion.Time + 10000;
+				StopAttack();
+			}
 
 			// calculate damage only if we hit the target
 			if (ad.AttackResult == eAttackResult.HitUnstyled
@@ -2501,12 +2516,76 @@ namespace DOL.GS
 				}
 
 				//Genesis : check attack range here, effect: npc's and players will start attack faster instead of waiting another round if the previous failed
-				if (attackTarget != null
+				/*if (attackTarget != null
 				    && owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance
 				    && !owner.IsWithinRadius( attackTarget, owner.AttackRange ))
 				{
 					Interval = 100;
 					return;
+				}*/
+				if (attackTarget != null && owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance)
+				{
+					if (combatStyle != null && combatStyle.Name == "Throw Weapon")
+					{
+						int range = Math.Max(32, (int)(700 * owner.GetModified(eProperty.SpellRange) * 0.01));
+						GameSpellEffect effect = SpellHandler.FindEffectOnTarget(owner, "CloudsongAura");
+						if (effect != null && effect.Spell != null && effect.Spell.Value > 0)
+						{
+							range += (int)Math.Round((double)range * effect.Spell.Value / 100);
+						}
+						if (!(new Point2D(owner.X, owner.Y)).IsWithinRadius(new Point2D(attackTarget.X, attackTarget.Y), range))
+						{
+							Interval = 100;
+							return;
+						}
+					}
+					else
+					{
+						if (!(new Point2D(owner.X, owner.Y)).IsWithinRadius(new Point2D(attackTarget.X, attackTarget.Y), owner.AttackRange))
+						{
+							if (!(owner is GameNPC) || (owner as GameNPC).Brain == null || !((owner as GameNPC).Brain is StandardMobBrain))
+							{
+								Interval = 100;
+								return;
+							}
+
+							StandardMobBrain brain = (owner as GameNPC).Brain as StandardMobBrain;
+
+							foreach (GamePlayer plr in owner.GetPlayersInRadius((ushort)owner.AttackRange))
+							{
+								if (plr.ObjectState != GameObject.eObjectState.Active
+									|| plr.IsMezzed || !plr.IsAlive || plr.IsStealthed
+									|| !GameServer.ServerRules.IsAllowedToAttack(owner, plr, true)
+									|| brain.GetAggroAmountForLiving(plr) <= 0) continue;
+								GameSpellEffect root = SpellHandler.FindEffectOnTarget(plr, "SpeedDecrease");
+								if (root != null && root.Spell.Value == 99) continue;
+								new WeaponOnTargetAction(owner, plr, attackWeapon, leftWeapon, effectiveness, interruptDuration, combatStyle).Start(ticksToTarget);  // really start the attack
+								if (leftHandSwingCount > 0)
+									Interval = owner.AttackSpeed(attackWeapon, leftWeapon);
+								else
+									Interval = owner.AttackSpeed(attackWeapon);
+								return;
+							}
+							foreach (GameNPC npc in owner.GetNPCsInRadius((ushort)owner.AttackRange))
+							{
+								if (npc.ObjectState != GameObject.eObjectState.Active
+									|| npc.IsMezzed || !npc.IsAlive || npc.IsStealthed
+									|| !GameServer.ServerRules.IsAllowedToAttack(owner, npc, true)
+									|| brain.GetAggroAmountForLiving(npc) <= 0) continue;
+								GameSpellEffect root = SpellHandler.FindEffectOnTarget(npc, "SpeedDecrease");
+								if (root != null && root.Spell.Value == 99) continue;
+								new WeaponOnTargetAction(owner, npc, attackWeapon, leftWeapon, effectiveness, interruptDuration, combatStyle).Start(ticksToTarget);  // really start the attack
+								if (leftHandSwingCount > 0)
+									Interval = owner.AttackSpeed(attackWeapon, leftWeapon);
+								else
+									Interval = owner.AttackSpeed(attackWeapon);
+								return;
+							}
+
+							Interval = 100;
+							return;
+						}
+					}
 				}
 				
 				new WeaponOnTargetAction(owner, attackTarget, attackWeapon, leftWeapon, effectiveness, interruptDuration, combatStyle).Start(ticksToTarget);  // really start the attack
@@ -6553,6 +6632,31 @@ namespace DOL.GS
 			{
 				return (!IsIncapacitated);
 			}
+		}
+
+		/// <summary>
+		/// Is this a Champion or ML SpellLine
+		/// </summary>
+		/// <param name="line"></param>
+		/// <returns></returns>
+		public virtual bool IsAdvancedSpellLine(SpellLine line)
+		{
+			// ML lines
+			switch (line.KeyName)
+			{
+				case Specs.Convoker:
+				case Specs.Banelord:
+				case Specs.Stormlord:
+				case Specs.Perfecter:
+				case Specs.Sojourner:
+				case Specs.Spymaster:
+				case Specs.Battlemaster:
+				case Specs.Warlord:
+				case GlobalSpellsLines.Character_Abilities:
+					return true;
+			}
+
+			return false;
 		}
 
 		public virtual IList<Spell> HarmfulSpells

@@ -328,6 +328,12 @@ namespace DOL.GS.ServerProperties
 		public static bool LOG_ALL_GM_COMMANDS;
 
 		/// <summary>
+		/// Log All GM commands
+		/// </summary>
+		[ServerProperty("system", "use_advanced_privileges", "Use GM advanced privileges", false)]
+		public static bool USE_ADVANCED_PRIVILEGES;
+
+		/// <summary>
 		/// Should the server Log trades
 		/// </summary>
 		[ServerProperty("system", "log_trades", "Should the server Log all trades a player makes, values True,False", false)]
@@ -584,6 +590,9 @@ namespace DOL.GS.ServerProperties
 
 		[ServerProperty("world", "world_player_update_interval", "How often (milliseconds) will players be checked for updates. Minimum allowed = 100 (100 milliseconds).", (uint)300)]
 		public static uint WORLD_PLAYER_UPDATE_INTERVAL;
+
+		[ServerProperty("world", "world_player_update_interval for 1.112+", "How often (milliseconds) will players be updated. Minimum allowed = 100 (100 milliseconds).", (uint)1000)]
+		public static uint WORLD_PLAYER_UPDATE_1112;
 
 		[ServerProperty("world", "weather_check_interval", "How often (milliseconds) will weather be checked for a chance to start a storm.", 5 * 60 * 1000)]
 		public static int WEATHER_CHECK_INTERVAL;
@@ -1058,6 +1067,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("npc", "npc_min_respawn_interval", "Minimum respawn time, in minutes, for npc's without a set respawninterval", 5)]
 		public static int NPC_MIN_RESPAWN_INTERVAL;
+
+		/// <summary>
+		/// Minimum respawn time for npc's without a set respawninterval
+		/// </summary>
+		[ServerProperty("npc", "npc_min_thinkinterval", "Minimum think interval time", 1500)]
+		public static int NPC_MIN_THINKINTERVAL;
 
 		/// <summary>
 		/// Allow Roam

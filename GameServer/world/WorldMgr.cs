@@ -905,7 +905,7 @@ namespace DOL.GS
 
 						if (Environment.TickCount - player.LastWorldUpdate > (int)(ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL >= 100 ? ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL : 100))
 						{
-							if (client.Version >= GameClient.eClientVersion.Version1112 && client.PositionUpdate1112 != null && Environment.TickCount - client.LastPositionUpdate > ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL)
+							if (client.Version >= GameClient.eClientVersion.Version1112 && client.PositionUpdate1112 != null && Environment.TickCount - client.LastPositionUpdate > ServerProperties.Properties.WORLD_PLAYER_UPDATE_1112)
 							{
 								foreach (GamePlayer target in player.GetPlayersInRadius(VISIBILITY_DISTANCE))
 								{

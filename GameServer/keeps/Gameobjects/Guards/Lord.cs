@@ -211,7 +211,7 @@ namespace DOL.GS.Keeps
 			if (!base.Interact(player))
 				return false;
 
-			if (this.Component == null)
+			if (this.Component == null || this.Component.Keep == null)
 				return false;
 
 			if (InCombat || Component.Keep.InCombat)

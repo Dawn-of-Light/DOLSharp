@@ -111,7 +111,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="str">the string to parse</param>
 		/// <param name="rangeCheck">the ranges are burst and put into the list</param>
-		/// <returns>a List of strings with the values parsed</string></returns>a></returns>
+		/// <returns>a List of strings with the values parsed</returns>
 		public static List<string> SplitCSV (this string str, bool rangeCheck = false)
 		{
 			char primarySeparator = ';';

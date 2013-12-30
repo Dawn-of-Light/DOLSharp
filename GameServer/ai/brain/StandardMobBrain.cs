@@ -31,6 +31,7 @@ using DOL.GS.Keeps;
 using DOL.Language;
 using log4net;
 using DOL.GS.Spells;
+using DOL.GS.ServerProperties;
 
 namespace DOL.AI.Brain
 {
@@ -325,7 +326,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public override int ThinkInterval
 		{
-			get { return Math.Max(1500, 10000 - AggroLevel * 100); }
+			get { return Math.Max(Properties.NPC_MIN_THINKINTERVAL, 10000 - AggroLevel * 100); }
 		}
 
 		/// <summary>

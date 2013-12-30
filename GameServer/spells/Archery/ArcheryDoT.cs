@@ -36,6 +36,11 @@ namespace DOL.GS.Spells
             return Spell.Damage;
         }
 
+		public override bool IsOverwritable(GameSpellEffect compare)
+		{
+			return compare.Spell.SpellType == Spell.SpellType;
+		}
+
 		/// <summary>
 		/// Calculates min damage variance %
 		/// </summary>
