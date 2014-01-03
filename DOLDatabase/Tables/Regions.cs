@@ -49,6 +49,8 @@ namespace DOL.Database
         /// </summary>
         private ushort m_port;
 
+		private ushort m_cpu;
+
         /// <summary>
         /// The region expansion.
         /// </summary>
@@ -92,6 +94,7 @@ namespace DOL.Database
             m_waterLevel = 0;
 			m_classType = "";
 			m_isFrontier = false;
+			m_cpu = 0;
         }
 
         /// <summary>
@@ -153,18 +156,29 @@ namespace DOL.Database
         /// <summary>
         /// Gets or sets the region port.
         /// </summary>
-        [DataElement(AllowDbNull = false)]
-        public ushort Port
-        {
-            get { return m_port; }
-            set
-            {
-                Dirty = true;
-                m_port = value;
-            }
-        }
+		[DataElement(AllowDbNull = false)]
+		public ushort Port
+		{
+			get { return m_port; }
+			set
+			{
+				Dirty = true;
+				m_port = value;
+			}
+		}
 
-        /// <summary>
+		[DataElement(AllowDbNull = true)]
+		public ushort CPU
+		{
+			get { return m_cpu; }
+			set
+			{
+				Dirty = true;
+				m_cpu = value;
+			}
+		}
+
+		/// <summary>
         /// Gets or sets the region expansion.
         /// </summary>
         [DataElement(AllowDbNull = false)]
