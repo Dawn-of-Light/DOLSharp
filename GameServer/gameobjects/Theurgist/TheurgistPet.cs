@@ -9,6 +9,16 @@ namespace DOL.GS
 		public TheurgistPet(INpcTemplate npcTemplate) : base(npcTemplate) { }
 
 		public override void OnAttackedByEnemy(AttackData ad) { /* do nothing */ }
+
+		public static int HealthRatio = 8;
+
+		public override int MaxHealth
+		{
+			get
+			{
+				return Level * HealthRatio;
+			}
+		}
 		
 		/// <summary>
 		/// not each summoned pet 'll fire ambiant sentences

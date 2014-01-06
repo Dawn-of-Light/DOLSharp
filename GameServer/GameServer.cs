@@ -443,7 +443,7 @@ namespace DOL.GS
 						if (calcCheck != pakCheck)
 						{
 							if (log.IsWarnEnabled)
-								log.WarnFormat("Bad UDP packet checksum (packet:0x{0:X4} calculated:0x{1:X4}) -> ignored", pakCheck, calcCheck);
+								log.WarnFormat("Bad UDP packet checksum (packet:0x{0:X4} calculated:0x{1:X4}, ip:{2}) -> ignored", pakCheck, calcCheck, s.RemoteEndPoint.ToString());
 							if (log.IsDebugEnabled)
 								log.Debug(Marshal.ToHexDump("UDP buffer dump, received " + read + "bytes", server.UDPBuffer));
 						}

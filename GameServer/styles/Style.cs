@@ -176,14 +176,6 @@ namespace DOL.GS.Styles
 		}
 
 		/// <summary>
-		/// (readonly) The icon of this style
-		/// </summary>
-		public int Icon
-		{
-			get { return baseStyle.Icon; }
-		}
-
-		/// <summary>
 		/// (readonly) The fatique cost of this style in % of player's total fatique
 		/// This cost will be modified by weapon speed, realm abilities and magic effects
 		/// </summary>

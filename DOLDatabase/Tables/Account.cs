@@ -43,7 +43,8 @@ namespace DOL
 			private string m_language;
 			private string m_lastClientVersion;
 			private bool m_isMuted;
-			
+			private int m_hacks;
+			private string m_hackFlags;
 			/// <summary>
 			/// Create account row in DB
 			/// </summary>
@@ -215,6 +216,20 @@ namespace DOL
 			{
 				get { return m_isMuted; }
 				set { Dirty = true; m_isMuted = value; }
+			}
+
+			[DataElement(AllowDbNull = true)]
+			public int Hacks
+			{
+				get { return m_hacks; }
+				set { Dirty = true; m_hacks = value; }
+			}
+
+			[DataElement(AllowDbNull = true)]
+			public string HackFlags
+			{
+				get { return m_hackFlags; }
+				set { Dirty = true; m_hackFlags = value; }
 			}
 
 			/// <summary>

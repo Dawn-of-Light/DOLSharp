@@ -500,23 +500,24 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte(0x00);
 			pak.WritePascalString(m_gameClient.Account.Name);
 			pak.WritePascalString(GameServer.Instance.Configuration.ServerNameShort); //server name
-			pak.WriteByte(ServerProperties.Properties.SERVER_ID); //Server ID
+			pak.WriteByte((byte)ServerProperties.Properties.SERVER_ID); //Server ID
 			pak.WriteByte(color);
 			pak.WriteByte(0x00);
-			pak.WriteByte(0x00); // new in 1.75
+			pak.WriteByte((byte)ServerProperties.Properties.SERVER_INDEX); // new in 1.75
 			SendTCP(pak);
 		}
 		public override void SendLoginGranted()
 		{
 		    //[Freya] Nidel: Can use realm button in character selection screen
-		
+			// color 1 or 3 to enable realm button
+			byte color = GameServer.ServerRules.GetColorHandling(m_gameClient);
 		    if(ServerProperties.Properties.ALLOW_ALL_REALMS)
 		    {
-		        SendLoginGranted(1);
+		        SendLoginGranted((byte)(color == 3 ? 3 : 1));
 		    }
 		    else
 		    {
-		        SendLoginGranted(GameServer.ServerRules.GetColorHandling(m_gameClient));
+		        SendLoginGranted(color);
 		    }
         }
 	}

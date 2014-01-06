@@ -62,13 +62,13 @@ namespace DOL.GS.Spells
 
 			if (target.Realm == 0 || Caster.Realm == 0)
 			{
-				target.LastAttackedByEnemyTickPvE = target.CurrentRegion.Time;
-				Caster.LastAttackTickPvE = Caster.CurrentRegion.Time;
+				if (target.CurrentRegion != null) target.LastAttackedByEnemyTickPvE = target.CurrentRegion.Time;
+				if (Caster.CurrentRegion != null) Caster.LastAttackTickPvE = Caster.CurrentRegion.Time;
 			}
 			else
 			{
-				target.LastAttackedByEnemyTickPvP = target.CurrentRegion.Time;
-				Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
+				if (target.CurrentRegion != null) target.LastAttackedByEnemyTickPvP = target.CurrentRegion.Time;
+				if (Caster.CurrentRegion != null) Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
 			}
 
 			base.ApplyEffectOnTarget(target, effectiveness);

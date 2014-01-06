@@ -129,6 +129,9 @@
     </Compile>
     <Compile Include="LanguageDataObject.cs" />
     <Compile Include="Tables\CharacterXDataQuest.cs" />
+    <Compile Include="Tables\PrivilegesPermissions.cs" />
+    <Compile Include="Tables\PrivilegesAccount.cs" />
+    <Compile Include="Tables\PrivilegesRank.cs" />
     <Compile Include="Tables\HousingConsignmentMerchant.cs" />
     <Compile Include="Tables\LanguageDoor.cs" />
     <Compile Include="Tables\LanguageGameObject.cs" />

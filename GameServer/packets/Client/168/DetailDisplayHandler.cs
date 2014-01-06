@@ -77,7 +77,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			19		Reward Quest
 			 */
 
-			ChatUtil.SendDebugMessage(client, string.Format("Delve objectType={0}, objectID={1}, extraID={2}", objectType, objectID, extraID));
+			//ChatUtil.SendDebugMessage(client, string.Format("Delve objectType={0}, objectID={1}, extraID={2}", objectType, objectID, extraID));
 
 			ItemTemplate item = null;
 			InventoryItem invItem = null;
@@ -419,10 +419,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 								List<ItemTemplate> rewards = null;
 								if (index < 8)
-									rewards = (q as RewardQuest).Rewards.BasicItems;
+									rewards = (q as RewardQuest).Rewards.BasicItems(client.Player);
 								else
 								{
-									rewards = (q as RewardQuest).Rewards.OptionalItems;
+									rewards = (q as RewardQuest).Rewards.OptionalItems(client.Player);
 									index -= 8;
 								}
 								if (rewards != null && index >= 0 && index < rewards.Count)
@@ -922,19 +922,20 @@ namespace DOL.GS.PacketHandler.Client.v168
 						invItem = client.Player.Inventory.GetItem((eInventorySlot)objectID);
 						if (invItem == null) return;
 
-						BattleGroup mybattlegroup = (BattleGroup)client.Player.TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
+						BattleGroup mybattlegroup = client.Player.TempProperties.getProperty<BattleGroup>(BattleGroup.BATTLEGROUP_PROPERTY, null);
 						if (mybattlegroup == null)
 						{
 							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.HandlePacket.MustBeInBattleGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
-						if (mybattlegroup.Listen == true && (((bool)mybattlegroup.Members[client.Player]) == false))
+						if (mybattlegroup.Listen == true && mybattlegroup.Members.ContainsKey(client.Player) && !mybattlegroup.Members[client.Player])
 						{
 							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.HandlePacket.OnlyModerator"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
 						string str = LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.HandlePacket.ChatItem", client.Player.Name, GetShortItemInfo(invItem, client));
-						foreach (GamePlayer ply in mybattlegroup.Members.Keys)
+						List<GamePlayer> players = new List<GamePlayer>(mybattlegroup.Members.Keys);
+						foreach (GamePlayer ply in players)
 						{
 							ply.Out.SendMessage(str, eChatType.CT_Chat, eChatLoc.CL_ChatWindow);
 						}
@@ -992,7 +993,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			else
 			{
-				log.WarnFormat("DetailDisplayHandler no info for objectID {0} of type {1}. Item: {2}, client: {3}", objectID, objectType, (item == null ? (invItem == null ? "null" : invItem.Id_nb) : item.Id_nb), client);
+				/*Spell spell = null;
+				Skill skill = null;
+				if (objectType == 0x18)
+					spell = SkillBase.GetSpellByID(objectID);
+				else if (objectType == 0x1C)
+					skill = SkillBase.GetAbility(objectID);
+				if (spell != null)
+					log.WarnFormat("DetailDisplayHandler no info for spell {0}, type {1}", objectID, spell.SpellType);
+				else if (skill != null)
+					log.WarnFormat("DetailDisplayHandler no info for skill {0}, name {1}, type {1}", objectID, skill.Name, skill.SkillType.ToString());
+				else
+					log.WarnFormat("DetailDisplayHandler no info for objectID {0} of type {1}. Item: {2}, client: {3}", objectID, objectType, (item == null ? (invItem == null ? "null" : invItem.Id_nb) : item.Id_nb), client);*/
 			}
 		}
 
@@ -1339,7 +1351,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			double AF = 0;
 			if (item.DPS_AF != 0)
 			{
-				int afCap = client.Player.Level;
+				int afCap = client.Player.Level + (client.Player.RealmLevel > 39 ? 1 : 0);
 				if (item.Object_Type != (int)eObjectType.Cloth)
 				{
 					afCap *= 2;
@@ -2047,15 +2059,17 @@ namespace DOL.GS.PacketHandler.Client.v168
          *  - No idea what 'Fingerprint' does
          **/
 
-        static string DelveAbility(GameClient clt, int id) { /* or skill */
-            Skill s = clt.Player.GetNonTrainableSkillList().Cast<Skill>().Where(sk => sk.ID == id).FirstOrDefault();
-            var dw = new DelveWriter().Begin(s is Ability ? "Ability" : "Skill").Value("Index", id);
-            if (s != null) {
-                dw.Value("Name", s.Name);
-            }
-            else dw.Value("Name", "(not found)");
-            return dw.ToString();
-        }
+		static string DelveAbility(GameClient clt, int id)
+		{ /* or skill */
+			Skill s = SkillBase.GetAbility((ushort)id);
+			var dw = new DelveWriter().Begin(s is Ability ? "Ability" : "Skill").Value("Index", id);
+			if (s != null)
+			{
+				dw.Value("Name", s.Name);
+			}
+			else dw.Value("Name", "(not found)");
+			return dw.ToString();
+		}
 
 
 		/// <summary>
@@ -2077,10 +2091,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 					dw.Begin("Song")
 						.Value("Index", id)
 						.Value("Name", spell.Name)
-						.Value("effect", spell.ClientEffect)
-						.Value("description_string", spell.Description, !string.IsNullOrEmpty(spell.Description))
+						.Value("effect", spell.ID)
+						//.Value("description_string", spell.Description, !string.IsNullOrEmpty(spell.Description))
 						;
 					//log.Info(dw.ToString());
+					clt.Out.SendDelveInfo(DelveSpell(clt, spell.ID));
+
 					return dw.ToString();
 			}
 
@@ -2094,154 +2110,254 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <param name="clt">Client</param>
 		/// <param name="id">SpellID</param>
 		/// <returns></returns>
-        public static string DelveSpell(GameClient clt, int id) {
-            var dw = new DelveWriter();
-			
+		public static string DelveSpell(GameClient clt, int id)
+		{
+			var dw = new DelveWriter();
+
 			var spell = SkillBase.GetSpellByID(id);
 
-			//if (spell != null && spellLine != null)
+			if (spell == null)
+				return dw.Begin("Spell").Value("Name", "(not found)").Value("Index", id).ToString();
+
+
+			//Special hardcoded
+			if (spell.SpellType == "DoomHammer")
 			{
-				/*
-				var spellLine = clt.Player.GetSpellLines()[lineId] as SpellLine;
-				if (spellLine != null) {
-					Spell spell = null;
-					foreach (Spell spl in SkillBase.GetSpellList(spellLine.KeyName)) {
-						if (spl.Level == level) {
-							spell = spl;
-							break;
-						}
-					}*/
-				//if (spell != null) {
-				// NOT GOOD SOLUTION SPELLLINE IS BETTER INCLUDED IN SPELL
-				ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(clt.Player, spell,SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
-				if (spellHandler != null)
+				return string.Format("(Style (AttackMod \"20\")(Icon \"408\")(Index \"{0}\")(Level \"50\")(LevelBonus \"3\")(Name \"Doom Hammer\")(OpeningDamage \"20\")(Skill \"50\")(SpecialNumber \"14632\")(SpecialType \"3\")(SpecialValue \"1000\")(Speed \"400\"))", id);
+			}
+			/*else if (spell.InstrumentRequirement != 0) //song
+			{
+				return string.Format("(Song (Index \"{0}\")(Name \"{1}\")(effect \"{2}\"))", spell.ID, spell.Name, spell.ID);
+			}*/
+
+			int level = spell.Level;
+			/*if (clt.Player.CachedSpell2Level.ContainsKey((ushort)id))
+				level = clt.Player.CachedSpell2Level[(ushort)id];*/
+
+			foreach (SpellLine line in clt.Player.GetSpellLines())
+			{
+				Spell s = SkillBase.GetSpellList(line.KeyName).Where(o => o.ID == id).FirstOrDefault();
+				if (s != null)
 				{
-				dw.Begin("Spell")
-						.Value("Index", id)
-						.Value("Name", spell.Name)
-						//.Value("Function", spellHandler.FunctionName ?? "0")
-						.Value("cast_timer", spell.CastTime - 2000, spell.CastTime > 2000) //minus 2 seconds (why mythic?)
-						.Value("instant","1",spell.CastTime==0)
-						//.Value("damage", spellHandler.GetDelveValueDamage, spellHandler.GetDelveValueDamage != 0)
-						.Value("damage_type", (int) spell.DamageType + 1, (int) spell.DamageType > 0) // Damagetype not the same as dol
-						//.Value("type1", spellHandler.GetDelveValueType1, spellHandler.GetDelveValueType1 > 0)
-						.Value("level", spell.Level, spell.Level > 0)
-						.Value("power_cost", spell.Power, spell.Power != 0)
-						//.Value("round_cost",spellHandler.GetDelveValueRoundCost,spellHandler.GetDelveValueRoundCost!=0)
-						//.Value("power_level", spellHandler.GetDelveValuePowerLevel,spellHandler.GetDelveValuePowerLevel!=0)
-						.Value("range", spell.Range, spell.Range > 0)
-						.Value("duration", spell.Duration/1000, spell.Duration > 0) //seconds
-						.Value("dur_type", GetDurrationType(spell), GetDurrationType(spell) > 0)
-						//.Value("parm",spellHandler.GetDelveValueParm,spellHandler.GetDelveValueParm>0) 
-						.Value("timer_value", spell.RecastDelay/1000, spell.RecastDelay > 1000)
-						//.Value("bonus", spellHandler.GetDelveValueBonus, spellHandler.GetDelveValueBonus > 0)
-						//.Value("no_combat"," ",Util.Chance(50))//TODO
-						//.Value("link",14000)
-						//.Value("ability",4) // ??
-						//.Value("use_timer",4)
-						.Value("target", GetSpellTargetType(spell.Target), GetSpellTargetType(spell.Target) > 0)
-						//.Value("frequency", spellHandler.GetDelveValueFrequency, spellHandler.GetDelveValueFrequency != 0)
-						.Value("description_string", spell.Description, !string.IsNullOrEmpty(spell.Description))
-						.Value("radius", spell.Radius, spell.Radius > 0)
-						.Value("concentration_points", spell.Concentration, spell.Concentration > 0)
-						//.Value("num_targets", spellHandler.GetDelveValueNumTargets, spellHandler.GetDelveValueNumTargets>0)
-						//.Value("no_interrupt", spell.Interruptable ? (char)0 : (char)1) //Buggy?
-						;
-					//log.Info(dw.ToString());
-					return dw.ToString();
-					// }
+					level = s.Level;
+					break;
 				}
 			}
 
-        	// not found
-            return dw.Begin("Spell").Value("Name", "(not found)").Value("Index", id).ToString();
-        }
+			//return spell.DelveTooltip;
 
-		#region delvespell methods
+			string function = spell.GetDelveFunction();
+			int ability = spell.GetDelveAbility();
+			int bonus = spell.GetDelveBonus();
+			int cast_timer = spell.GetDelveCastTimer();
+			int cost_type = spell.GetDelveCostType();
+			int power_cost = spell.GetDelvePowerCost();
+			int damage = spell.GetDelveDamage();
+			int damage_type = spell.GetDelveDamageType();
+			int dur_type = spell.GetDelveDurationType();
+			int duration = spell.GetDelveDuration();
+			int instant = spell.GetDelveInstant();
+			int frequency = spell.GetDelveFrequency();// need it on Eden
+			int parm = spell.GetDelveParm();
+			int target = spell.GetDelveTargetType();
+			string no_combat = spell.GetDelveNoCombat();
+			int power_level = spell.GetDelvePowerLevel(level);
+			int type1 = spell.GetDelveType1();
+			int link_effect = spell.GetDelveLinkEffect();
+			int amount_increase = spell.GetDelveAmountIncrease();
+			int increase_cap = spell.GetDelveIncreaseCap();
 
-		/// <summary>
-		/// Returns delve code for target
-		/// </summary>
-		/// <param name="target"></param>
-		/// <returns></returns>
-		static int GetSpellTargetType(string target)
-		{
-			switch (target)
-			{
-				case "Realm":
-					return 7;
-				case "Self":
-					return 0;
-				case "Enemy":
-					return 1;
-				case "Pet":
-					return 6;
-				case "Group":
-					return 3;
-				case "Area":
-					return 0; // TODO
-				default:
-					return 0;
-			}
+			dw.Begin("Spell")
+
+				.Value("Function", function, function != null)
+				.Value("Index", id)
+				.Value("Name", spell.Name)
+
+				.Value("amount_increase", amount_increase, amount_increase != 0)
+				.Value("ability", ability, ability != 0)
+				.Value("bonus", bonus, bonus != 0)
+				.Value("cast_timer", cast_timer, cast_timer != 0)
+				.Value("cost_type", cost_type, cost_type != 0)
+				.Value("concentration_points", spell.Concentration, spell.Concentration > 0)
+				.Value("damage", damage, damage != 0)
+				.Value("damage_type", damage_type, damage_type != 0)
+				.Value("dur_type", dur_type, dur_type != 0)
+				.Value("duration", duration, duration > 0)
+				.Value("instant", instant, instant != 0)
+				.Value("frequency", frequency, frequency != 0)
+				.Value("level", level, level > 0)
+				.Value("link_effect", link_effect, link_effect != 0)
+				.Value("parm", parm, parm != 0)
+				.Value("power_cost", power_cost, power_cost != 0)
+				.Value("power_level", power_level, power_level != 0)
+				.Value("radius", spell.Radius, spell.Radius > 0)
+				.Value("range", spell.Range, spell.Range > 0)
+				.Value("recast_timer", spell.RecastDelay / 1000, spell.RecastDelay > 0)
+				.Value("target", target, target != 0)
+				.Value("no_combat", no_combat, no_combat != null)
+				.Value("no_interrupt", spell.Uninterruptible ? "\u0001" : "\u0000", spell.Uninterruptible)
+				.Value("type1", type1, type1 != 0)
+				
+				/*.Value("cast_timer", spell.CastTime - 2000, spell.CastTime > 2000) //minus 2 seconds (why mythic?)
+				.Value("instant", "1", spell.CastTime == 0)
+				.Value("damage", (int)spell.Damage, spell.Damage != 0)
+					.Value("damage_type", (int)spell.DamageType + 1, (int)spell.DamageType > 0) // Damagetype not the same as dol
+				//.Value("type1", spellHandler.GetDelveValueType1, spellHandler.GetDelveValueType1 > 0)
+					.Value("level", spell.Level, spell.Level > 0)
+					.Value("power_cost", spell.Power, spell.Power != 0)
+				//.Value("round_cost",spellHandler.GetDelveValueRoundCost,spellHandler.GetDelveValueRoundCost!=0)
+				//.Value("power_level", spellHandler.GetDelveValuePowerLevel,spellHandler.GetDelveValuePowerLevel!=0)
+					.Value("range", spell.Range, spell.Range > 0)
+					.Value("duration", spell.Duration / 1000, spell.Duration > 0) //seconds
+					.Value("dur_type", GetDurrationType(spell), GetDurrationType(spell) > 0)
+					.Value("parm", SkillBase.GetSpellParm(function), SkillBase.GetSpellParm(function) != '\0') 
+					.Value("timer_value", spell.RecastDelay / 1000, spell.RecastDelay > 1000)
+				//.Value("bonus", spellHandler.GetDelveValueBonus, spellHandler.GetDelveValueBonus > 0)
+				//.Value("no_combat"," ",Util.Chance(50))//TODO
+				//.Value("link",14000)
+				//.Value("ability",4) // ??
+				//.Value("use_timer",4)
+					.Value("target", GetSpellTargetType(spell.Target), GetSpellTargetType(spell.Target) > 0)
+				//.Value("frequency", spellHandler.GetDelveValueFrequency, spellHandler.GetDelveValueFrequency != 0)
+					.Value("description_string", spell.Description, !string.IsNullOrEmpty(spell.Description))
+					.Value("radius", spell.Radius, spell.Radius > 0)
+					.Value("concentration_points", spell.Concentration, spell.Concentration > 0)
+				//.Value("num_targets", spellHandler.GetDelveValueNumTargets, spellHandler.GetDelveValueNumTargets>0)
+				.Value("no_interrupt", spell.Uninterruptible ? (char)1 : (char)0, !spell.IsInstantCast) //Buggy?*/
+					;
+			string result = dw.ToString();
+
+			//log.DebugFormat("DelveSpell: {0}", result);
+
+			return result;
 		}
-
-		static int GetDurrationType(Spell spell)
-		{
-			//2-seconds,4-conc,5-focus
-			if (spell.Duration>0)
-			{
-				return 2;
-			}
-			if (spell.Concentration>0)
-			{
-				return 4;
-			}
-
-
-			return 0;
-		}
-
-		#endregion
 
 		static string DelveStyle(GameClient clt, int id)
-        {
-            var style = SkillBase.GetStyleByID(id, clt.Player.CharacterClass.ID);
+		{
+			Style style = SkillBase.GetStyleByID(id, clt.Player.CharacterClass.ID);
+	
+			var dw = new DelveWriter();
 
-            var dw = new DelveWriter()
-                .Begin("Style").Value("Index", id);
-            
-            if (style != null) {
-                // Not implemented:
-                // (Style (FollowupStyle "Sapphire Slash")(LevelBonus "2")(OpeningDamage "16")(Skill "1")(Expires "1343375647"))
-                // (Style (Fingerprint "1746652963")(FollowupStyle "Thigh Cut")(Hidden "1")OpeningDamage "55")(Skill "118")(SpecialNumber "1511")(SpecialType "1")(Expires "1342381240"))
+			if (style == null)
+				return dw.Begin("Style").Value("Index", id).Value("Name", "(not found)").End().ToString();
 
-            	dw
-            		.Value("Name", style.Name)
-            		.Value("Icon", style.Icon)
-            		.Value("Level", style.Level)
-            		.Value("Fatigue", style.EnduranceCost)
-            		//.Value("SpecialType", (int)style.SpecialType, style.SpecialType != 0)
-					//.Value("SpecialNumber", GetSpecialNumber(style), GetSpecialNumber(style)!=0)
-            		.Value("DefensiveMod", style.BonusToDefense, style.BonusToDefense != 0)
-            		.Value("AttackMod", style.BonusToHit, style.BonusToHit != 0)
-            		.Value("OpeningType", (int)style.OpeningRequirementType)
-					.Value("OpeningNumber", style.OpeningRequirementValue, style.OpeningRequirementType == Style.eOpening.Positional)
-					//.Value("OpeningResult",GetOpeningResult(style,clt),GetOpeningResult(style,clt)>0)
-					//.Value("OpeningStyle",GetOpeningStyle(style),(Style.eAttackResult)GetOpeningResult(style,clt) == Style.eAttackResult.Style)
-            		.Value("Weapon", style.GetRequiredWeaponName(), style.WeaponTypeRequirement > 0)
-            		.Value("Hidden", "1",style.StealthRequirement)
-            		//.Value("TwoHandedIcon", 10, style.TwoHandAnimation > 0)
-					//.Value("Skill",43)
-					.Value("OpeningDamage",style.GrowthRate*100,style.GrowthRate>0)
-					//.Value("SpecialValue", GetSpecialValue(style),GetSpecialValue(style)!=0)
-					//.Value("FollowupStyle",style.DelveFollowUpStyles,!string.IsNullOrEmpty(style.DelveFollowUpStyles))
-            		;
-            }
-            else {
-                dw.Value("Name", "(not found)");
-            }
-            return dw.End().ToString();
-        }
+			//OpeningResult:
+			int openingResult = 0;
+			int sameTarget = 0;
+			if (style.OpeningRequirementType == Style.eOpening.Defensive && style.AttackResultRequirement != Style.eAttackResult.Any)
+			{
+				openingResult = (int)style.AttackResultRequirement;
+				if (style.AttackResultRequirement == Style.eAttackResult.Parry)
+					sameTarget = 1;
+			}
+
+			//OpeningNumber:
+			int openingNumber = 0;
+			if(style.OpeningRequirementType == Style.eOpening.Positional && style.OpeningRequirementValue > 0)
+			{
+				openingNumber = style.OpeningRequirementValue;
+			}
+
+			//OpeningStyle:
+			Style reqStyle = null;
+			if (style.OpeningRequirementType == Style.eOpening.Offensive && style.AttackResultRequirement == Style.eAttackResult.Style && style.OpeningRequirementValue > 0)
+			{
+				reqStyle = SkillBase.GetStyleByID(style.OpeningRequirementValue, clt.Player.CharacterClass.ID);
+				if (reqStyle == null)
+					reqStyle = SkillBase.GetStyleByID(style.OpeningRequirementValue, 0);
+			}
+			string openingStyle = reqStyle != null ? reqStyle.Name : null;
+
+			//FollowupStyle:
+			string followupStyle = null;
+			foreach (Style st in SkillBase.GetStyleList(style.Spec, clt.Player.CharacterClass.ID))
+			{
+				if (st.AttackResultRequirement == Style.eAttackResult.Style && st.OpeningRequirementValue == style.ID)
+				{
+					followupStyle = st.Name;
+					break;
+				}
+			}
+
+			//SpecialNumber:
+			int specialNumber = 0;
+			int specialType = 0;
+			int specialValue = 0;
+			if (style.Procs.Count > 0)
+			{
+				foreach (DBStyleXSpell proc in style.Procs)
+				{
+					if (proc.ClassID != 0 && proc.ClassID != clt.Player.CharacterClass.ID) continue;
+					Spell spell = SkillBase.GetSpellByID(proc.SpellID);
+					if (spell != null)
+					{
+						if (spell.SpellType == "Taunt")
+						{
+							specialType = 2;
+							specialValue = (int)spell.Value;
+						}
+						else
+						{
+							specialType = 1;
+							specialNumber = spell.ID;
+						}
+						break;
+					}
+				}
+			}
+
+			//(Style (AttackMod "10")(Fatigue "3")(Fingerprint "2257251225")(Icon "288")(Index "273")(Level "2")(LevelBonus "1")(Name "Hornet")(OpeningDamage "10")(OpeningStyle "Dragonfly")(Skill "103")(SpecialNumber "10422")(SpecialType "1")(Weapon "Piercing")(Expires "1388047103"))
+			
+			
+			//(Style (AttackMod "10")(Fatigue "5")(FollowupStyle "Hornet's Sting")(Icon "419")(Index "331")(Level "4")(LevelBonus "2")(Name "Wasp's Sting")(OpeningDamage "12")(OpeningNumber "2")(OpeningType "2")(Skill "103")(SpecialNumber "10422")(SpecialType "1")(Weapon "Piercing")(Expires "1388049459"))
+			//(Style (AttackMod "10")(Fatigue "5")(FollowupStyle "Hornet's Sting")(Icon "276")(Index "276")(Level "4")(LevelBonus "2")(Name "Wasp's Sting")(OpeningDamage "61")(OpeningNumber "2")(OpeningType "2")(Skill "58")(SpecialNumber "35408")(SpecialType "1")(Weapon "Piercing")(Expires "1388052239"))
+
+
+			dw.Begin("Style").Value("Index", id)
+
+				.Value("AttackMod", style.BonusToHit, style.BonusToHit != 0)
+				.Value("DefensiveMod", style.BonusToDefense, style.BonusToDefense != 0)
+				.Value("Fatigue", style.EnduranceCost)
+				.Value("FollowupStyle", followupStyle, followupStyle != null)
+				//.Value("Fingerprint", "", "") //what is this?
+				.Value("Icon", style.Icon)
+				.Value("Index", style.ID)
+				.Value("Level", style.Level)
+				.Value("LevelBonus", style.Level / 2)
+				.Value("Name", style.Name)
+				.Value("OpeningResult", openingResult, openingResult != 0)
+				.Value("OpeningDamage", style.GrowthRate * 100, style.GrowthRate > 0)
+				.Value("OpeningNumber", openingNumber, openingNumber != 0)
+				.Value("OpeningType", (int)style.OpeningRequirementType, (int)style.OpeningRequirementType != 0)
+				.Value("OpeningStyle", openingStyle, openingStyle != null)
+				.Value("SameTarget", sameTarget, sameTarget != 0)
+				.Value("Skill", GlobalConstants.GetSpecToInternalIndex(style.Spec))
+				.Value("SpecialNumber", specialNumber, specialNumber != 0)
+				.Value("SpecialType", specialType, specialType != 0)
+				.Value("SpecialValue", specialValue, specialValue != 0)
+				.Value("Weapon", style.GetRequiredWeaponName(), style.WeaponTypeRequirement > 0)
+
+				/*//.Value("SpecialType", (int)style.SpecialType, style.SpecialType != 0)
+				//.Value("SpecialNumber", GetSpecialNumber(style), GetSpecialNumber(style)!=0)
+				.Value("DefensiveMod", style.BonusToDefense, style.BonusToDefense != 0)
+				.Value("OpeningType", (int)style.OpeningRequirementType)
+				.Value("OpeningNumber", style.OpeningRequirementValue, style.OpeningRequirementType == Style.eOpening.Positional)
+				//.Value("OpeningResult",GetOpeningResult(style,clt),GetOpeningResult(style,clt)>0)
+				//.Value("OpeningStyle",GetOpeningStyle(style),(Style.eAttackResult)GetOpeningResult(style,clt) == Style.eAttackResult.Style)
+				.Value("Weapon", style.GetRequiredWeaponName(), style.WeaponTypeRequirement > 0)
+				.Value("Hidden", "1", style.StealthRequirement)
+				//.Value("TwoHandedIcon", 10, style.TwoHandAnimation > 0)
+				//.Value("Skill",43)
+				//.Value("SpecialValue", GetSpecialValue(style),GetSpecialValue(style)!=0)
+				//.Value("FollowupStyle",style.DelveFollowUpStyles,!string.IsNullOrEmpty(style.DelveFollowUpStyles))*/
+
+				.End();
+
+			if (specialNumber != 0)
+				clt.Out.SendDelveInfo(DelveSpell(clt, specialNumber));
+
+			return dw.ToString();
+		}
 
 		#region style v1.110 methods
 		/*
@@ -2292,8 +2408,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			return 0;
 		}*/
-		/*
-		public static string GetOpeningStyle(Style style)
+		
+		/*public static string GetOpeningStyle(Style style)
 		{
 			if (style.OpeningRequirementValue > 0)
 			{

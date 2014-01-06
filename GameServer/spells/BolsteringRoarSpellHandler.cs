@@ -42,26 +42,27 @@ namespace DOL.GS.Spells
                 int spellRange = CalculateSpellRange();
                 if (group != null)
                 {
-                    lock (group)
-                    {
+                    //lock (group)
+					//Safe.TryLock(group, () =>
+					{
 
-                        foreach (GamePlayer groupPlayer in casterPlayer.GetPlayersInRadius((ushort)m_spell.Radius))
-                        {
-                            if (casterPlayer.Group.IsInTheGroup(groupPlayer))
-                            {
-                                if (groupPlayer != casterPlayer && groupPlayer.IsAlive)
-                                {
-                                    list.Add(groupPlayer);
-                                    IControlledBrain npc = groupPlayer.ControlledBrain;
-                                    if (npc != null)
-                                    {
-                                        if (casterPlayer.IsWithinRadius( npc.Body, spellRange ))
-                                            list.Add(npc.Body);
-                                    }
-                                }
-                            }
-                        }
-                    }
+						foreach (GamePlayer groupPlayer in casterPlayer.GetPlayersInRadius((ushort)m_spell.Radius))
+						{
+							if (casterPlayer.Group.IsInTheGroup(groupPlayer))
+							{
+								if (groupPlayer != casterPlayer && groupPlayer.IsAlive)
+								{
+									list.Add(groupPlayer);
+									IControlledBrain npc = groupPlayer.ControlledBrain;
+									if (npc != null)
+									{
+										if (casterPlayer.IsWithinRadius(npc.Body, spellRange))
+											list.Add(npc.Body);
+									}
+								}
+							}
+						}
+					}//);
                 }
             }
             return list;

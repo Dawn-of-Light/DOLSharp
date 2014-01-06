@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System.Collections.Generic;
 namespace DOL.GS.PacketHandler.Client.v168
 {
 	[PacketHandler(PacketHandlerType.TCP, 0xB8 ^ 168, "Handles setting SessionID and the active character")]
@@ -41,13 +42,58 @@ namespace DOL.GS.PacketHandler.Client.v168
 					break;
 			}
 
-			packet.Skip(4); //Skip the first 4 bytes
+			ushort sessionID = packet.ReadShort();
+			ushort type = packet.ReadShortLowEndian();
+
 			if (packetVersion == 174)
 			{
 				packet.Skip(1);
 			}
 
 			string charName = packet.ReadString(28);
+
+			if (packetVersion == 174)
+				packet.Skip(3); //unk
+
+			string loginName = packet.ReadString(20);
+			uint clientSignature = packet.ReadIntLowEndian();
+			packet.Skip(24);
+
+			if (client.Version >= GameClient.eClientVersion.Version1104)
+			{
+				packet.Skip(4);
+			}
+
+			uint flag = packet.ReadIntLowEndian();
+			//int socket = packet.ReadShort();
+
+
+			if (flag != 0)
+			{
+				switch (type) //type of check
+				{
+					case 0xFF: //cheat protection
+						{
+							if (client.Account != null)
+							{
+								if (string.IsNullOrEmpty(client.Account.HackFlags))
+									client.Account.HackFlags = "";
+								//string[] flagsarray = client.Account.HackFlags.Split(';');
+
+								List<string> flags = Util.SplitCSV(client.Account.HackFlags);
+								if (!flags.Contains(flag.ToString("X8") + ";"))
+									flags.Add(flag.ToString("X8"));
+								string datas = "";
+								foreach (string f in flags)
+									datas += ";" + f;
+								if (datas.StartsWith(";")) datas = datas.Substring(1);
+								client.Account.HackFlags = datas;
+							}
+						}
+						break;
+				}
+			}
+
 
 			//TODO Character handling 
 			if (charName.Equals("noname"))

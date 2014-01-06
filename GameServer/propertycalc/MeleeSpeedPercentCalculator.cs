@@ -37,6 +37,7 @@ namespace DOL.GS.PropertyCalc
 			return Math.Max(1, 100
 				-living.BaseBuffBonusCategory[(int)property] // less is faster = buff
 				+living.DebuffCategory[(int)property] // more is slower = debuff
+				- living.AbilityBonus[(int)property]
 				-Math.Min(10, living.ItemBonus[(int)property])); // http://www.camelotherald.com/more/1325.shtml
 		}
 	}

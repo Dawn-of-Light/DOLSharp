@@ -32,7 +32,7 @@ namespace DOL.GS.PlayerClass
 		{
 			m_specializationMultiplier = 10;
 			m_wsbase = 280;
-			m_baseHP = 560;
+			m_baseHP = 580;
 			m_manaStat = eStat.PIE;
 
 			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.HouseofBodgar");

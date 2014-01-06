@@ -311,7 +311,7 @@ namespace DOL.GS.Spells
 					warder.X = casterPlayer.GroundTarget.X;
 					warder.Y = casterPlayer.GroundTarget.Y;
 					warder.Z = casterPlayer.GroundTarget.Z;
-					warder.AddBrain(new MLBrain());
+					warder.AddBrain(new TitanBrain(casterPlayer));
 					warder.AddToWorld();
 				}
 				else

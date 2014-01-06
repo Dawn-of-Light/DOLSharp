@@ -113,12 +113,12 @@ namespace DOL.GS.PacketHandler
 			pak.WriteByte((byte)quest.Level);
 			pak.WriteByte((byte)quest.Rewards.MoneyPercent);
 			pak.WriteByte((byte)quest.Rewards.ExperiencePercent(player));
-			pak.WriteByte((byte)quest.Rewards.BasicItems.Count);
-			foreach (ItemTemplate reward in quest.Rewards.BasicItems)
+			pak.WriteByte((byte)quest.Rewards.BasicItems(player).Count);
+			foreach (ItemTemplate reward in quest.Rewards.BasicItems(player))
 				WriteTemplateData(pak, reward, 1);
 			pak.WriteByte((byte)quest.Rewards.ChoiceOf);
-			pak.WriteByte((byte)quest.Rewards.OptionalItems.Count);
-			foreach (ItemTemplate reward in quest.Rewards.OptionalItems)
+			pak.WriteByte((byte)quest.Rewards.OptionalItems(player).Count);
+			foreach (ItemTemplate reward in quest.Rewards.OptionalItems(player))
 				WriteTemplateData(pak, reward, 1);
 			SendTCP(pak);
 		}

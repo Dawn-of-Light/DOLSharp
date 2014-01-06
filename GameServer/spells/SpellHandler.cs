@@ -31,6 +31,7 @@ using DOL.GS.SkillHandler;
 using DOL.Language;
 
 using log4net;
+using DOL.GS.Keeps;
 
 namespace DOL.GS.Spells
 {
@@ -42,6 +43,7 @@ namespace DOL.GS.Spells
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+		public static List<int> Disabled = new List<int>();
 		/// <summary>
 		/// Maximum number of sub-spells to get delve info for.
 		/// </summary>
@@ -68,6 +70,8 @@ namespace DOL.GS.Spells
 		/// Has the spell been interrupted
 		/// </summary>
 		protected bool m_interrupted = false;
+
+		protected bool m_paused = false;
 		/// <summary>
 		/// Delayedcast Stage
 		/// </summary>
@@ -475,6 +479,7 @@ namespace DOL.GS.Spells
 			return success;
 		}
 
+		bool m_noDisable = false;
 
 		public virtual void StartCastTimer(GameLiving target)
 		{
@@ -561,7 +566,7 @@ namespace DOL.GS.Spells
 			}
 			if (Spell.Uninterruptible)
 				return false;
-			if (Caster.EffectList.CountOfType(typeof(QuickCastEffect), typeof(MasteryofConcentrationEffect), typeof(FacilitatePainworkingEffect)) > 0)
+			if (!Caster.IsAdvancedSpellLine(SpellLine) && Caster.EffectList.CountOfType(typeof(QuickCastEffect), typeof(MasteryofConcentrationEffect), typeof(FacilitatePainworkingEffect)) > 0)
 				return false;
 			if (IsCasting && Stage < 2)
 			{
@@ -595,6 +600,12 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public virtual bool CheckBeginCast(GameLiving selectedTarget, bool quiet, bool stopAttack)
 		{
+			if (Disabled.Contains(m_spell.ID))
+			{
+				if (!quiet) MessageToCaster("This spell has been disabled by the staff.", eChatType.CT_System);
+				return false;
+			}
+			
 			if (m_caster.ObjectState != GameLiving.eObjectState.Active && !(Spell.Target == "Self" && Spell.CastTime == 0))
 			{
 				return false;
@@ -692,7 +703,11 @@ namespace DOL.GS.Spells
 			{
 				if (Caster.InterruptAction > 0 && Caster.InterruptAction + Caster.SpellInterruptRecastTime > Caster.CurrentRegion.Time)
 				{
-					if (!quiet) MessageToCaster("You must wait " + (((Caster.InterruptAction + Caster.SpellInterruptRecastTime) - Caster.CurrentRegion.Time) / 1000 + 1).ToString() + " seconds to cast a spell!", eChatType.CT_SpellResisted);
+					if (!quiet)
+					{
+						int delay = (int)Math.Ceiling((((double)Caster.InterruptAction + (double)Caster.SpellInterruptRecastTime) - (double)Caster.CurrentRegion.Time) / 1000);
+						MessageToCaster("You must wait " + delay.ToString() + " seconds to cast a spell!", eChatType.CT_SpellResisted);
+					}
 					return false;
 				}
 			}
@@ -1132,7 +1147,8 @@ namespace DOL.GS.Spells
 					if (!quiet)
 					{
 						if (Caster.LastInterruptMessage != "") MessageToCaster(Caster.LastInterruptMessage, eChatType.CT_SpellResisted);
-						else MessageToCaster("You are interrupted and must wait " + ((Caster.InterruptTime - m_started) / 1000 + 1).ToString() + " seconds to cast a spell!", eChatType.CT_SpellResisted);
+						int delay = (int)Math.Ceiling(  ((double)Caster.InterruptTime - (double)m_started) / 1000  );
+						MessageToCaster("You are interrupted and must wait " + delay.ToString() + " seconds to cast a spell!", eChatType.CT_SpellResisted);
 					}
 					return false;
 				}
@@ -1335,8 +1351,12 @@ namespace DOL.GS.Spells
 				{
 					if (!quiet)
 					{
-						if(Caster.LastInterruptMessage != "") MessageToCaster(Caster.LastInterruptMessage, eChatType.CT_SpellResisted);
-						else MessageToCaster("You are interrupted and must wait " + ((Caster.InterruptTime - m_started) / 1000 + 1).ToString() + " seconds to cast a spell!", eChatType.CT_SpellResisted);
+						if (Caster.LastInterruptMessage != "") MessageToCaster(Caster.LastInterruptMessage, eChatType.CT_SpellResisted);
+						else
+						{
+							int delay = (int)Math.Ceiling(  ((double)Caster.InterruptTime - (double)m_started) / 1000);
+							MessageToCaster("You are interrupted and must wait " + delay.ToString() + " seconds to cast a spell!", eChatType.CT_SpellResisted);
+						}
 					}
 					Caster.InterruptAction = Caster.CurrentRegion.Time - Caster.SpellInterruptRecastAgain;
 					return false;
@@ -1348,7 +1368,7 @@ namespace DOL.GS.Spells
 				return false;
 			}
 
-			if (!m_caster.IsAlive)
+			if (!m_caster.IsAlive && !(Spell.Target == "Self" && Spell.CastTime == 0))
 			{
 				if (!quiet) MessageToCaster("You are dead and can't cast!", eChatType.CT_System);
 				return false;
@@ -1569,7 +1589,7 @@ namespace DOL.GS.Spells
 				power -= basepower * specBonus;
 			}
 			// doubled power usage if quickcasting
-			if (Caster.EffectList.GetOfType<QuickCastEffect>() != null && Spell.CastTime > 0)
+			if (Spell.CastTime > 0 && Caster.EffectList.GetOfType<QuickCastEffect>() != null && !Caster.IsAdvancedSpellLine(SpellLine))
 				power *= 2;
 			return (int)power;
 		}
@@ -1594,6 +1614,22 @@ namespace DOL.GS.Spells
 			//Dinberg: add for warlock range primer
 		}
 
+		public virtual void PauseCasting()
+		{
+			if (m_paused || !IsCasting)
+				return;
+
+			m_paused = true;
+
+			if (IsCasting)
+			{
+				foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				{
+					player.Out.SendInterruptAnimation(m_caster);
+				}
+			}
+		}
+
 		/// <summary>
 		/// Called whenever the casters casting sequence is to interrupt immediately
 		/// </summary>
@@ -1602,6 +1638,7 @@ namespace DOL.GS.Spells
 			if (m_interrupted || !IsCasting)
 				return;
 
+			m_paused = true;
 			m_interrupted = true;
 
 			if (IsCasting)
@@ -1675,6 +1712,33 @@ namespace DOL.GS.Spells
 			{
 				try
 				{
+					
+					//GameNPC spell paused:
+					if (m_handler.m_paused)
+					{
+						if (m_caster.IsIncapacitated)
+						{
+							Interval = 100;
+							return;
+						}
+						m_handler.m_paused = false;
+
+						ushort remain = 0;
+						if (m_stage < 2) remain += (ushort)m_delay2;
+						if (m_stage < 1) remain += (ushort)m_delay1;
+						if (remain > 0)
+						{
+							foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+							{
+								if (player == null)
+									continue;
+								player.Out.SendSpellCastAnimation(m_caster, m_handler.Spell.ClientEffect, remain);
+							}
+						}
+					}
+
+					
+
 					if (m_stage == 0)
 					{
 						if (!m_handler.CheckAfterCast(m_target))
@@ -1902,13 +1966,14 @@ namespace DOL.GS.Spells
 				if (target != null && spell != null && spell.SubSpellID == 0)
 				{
 					ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
-					spellhandler.StartSpell(target);
+					if (spellhandler != null)
+						spellhandler.StartSpell(target);
 				}
 			}
 
 			//the quick cast is unallowed whenever you miss the spell
 			//set the time when casting to can not quickcast during a minimum time
-			if (m_caster is GamePlayer)
+			if (m_caster is GamePlayer && !m_caster.IsAdvancedSpellLine(SpellLine))
 			{
 				QuickCastEffect quickcast = m_caster.EffectList.GetOfType<QuickCastEffect>();
 				if (quickcast != null && Spell.CastTime > 0)
@@ -1924,7 +1989,7 @@ namespace DOL.GS.Spells
 				m_caster.DisableSkill(m_ability.Ability, (m_spell.RecastDelay == 0 ? 3 : m_spell.RecastDelay));
 
 			// disable spells with recasttimer (Disables group of same type with same delay)
-			if (m_spell.RecastDelay > 0 && m_startReuseTimer)
+			if (m_spell.RecastDelay > 0 && m_startReuseTimer && !m_noDisable)
 			{
 				if (m_caster is GamePlayer)
 				{
@@ -2845,6 +2910,10 @@ namespace DOL.GS.Spells
 			// Deliver message to the target, if the target is a pet, to its
 			// owner instead.
 
+			//do not disableskill for resisted instant single root
+			if (Spell.SpellType == "SpeedDecrease" && Spell.Radius == 0 && Spell.CastTime == 0)
+				m_noDisable = true;
+
 			if (target is GameNPC)
 			{
 				IControlledBrain brain = ((GameNPC)target).Brain as IControlledBrain;
@@ -2887,19 +2956,19 @@ namespace DOL.GS.Spells
 if (target.IsCasting && (Spell.Damage > 0 || Spell.CastTime > 0))
 target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster);
 }*/
-			if(!(Spell.SpellType.ToLower().IndexOf("debuff")>=0 && Spell.CastTime==0))
+			if (!(Spell.SpellType.ToLower().IndexOf("debuff") >= 0 && Spell.CastTime == 0) && Spell.SpellType != "SpeedWrap" && Spell.SpellType != "Amnesia")
 				target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster);
 
 
 			if (target.Realm == 0 || Caster.Realm == 0)
 			{
-				target.LastAttackedByEnemyTickPvE = target.CurrentRegion.Time;
-				Caster.LastAttackTickPvE = Caster.CurrentRegion.Time;
+				if (target.CurrentRegion != null) target.LastAttackedByEnemyTickPvE = target.CurrentRegion.Time;
+				if (Caster.CurrentRegion != null) Caster.LastAttackTickPvE = Caster.CurrentRegion.Time;
 			}
 			else
 			{
-				target.LastAttackedByEnemyTickPvP = target.CurrentRegion.Time;
-				Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
+				if (target.CurrentRegion != null) target.LastAttackedByEnemyTickPvP = target.CurrentRegion.Time;
+				if (Caster.CurrentRegion != null) Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
 			}
 		}
 
@@ -3646,6 +3715,8 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 					finalDamage = (int)((double)finalDamage * ServerProperties.Properties.PVP_SPELL_DAMAGE);
 				else if (target is GameNPC)
 					finalDamage = (int)((double)finalDamage * ServerProperties.Properties.PVE_SPELL_DAMAGE);
+				else if (target is GameKeepDoor)
+					finalDamage = (int)((double)finalDamage * ServerProperties.Properties.DOOR_SPELL_DAMAGE);
 			}
 
 			// Well the PenetrateResistBuff is NOT ResistPierce

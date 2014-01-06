@@ -57,6 +57,10 @@ namespace DOL.GS.Commands
 			{
 				fclient = null;
 			}
+			if (fclient != null && fclient.Player.IsAnonymous)
+			{
+				fclient = null;
+			}
 
 			if (fclient == null)
 			{

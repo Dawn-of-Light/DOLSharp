@@ -85,6 +85,7 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public override int PowerCost(GameLiving target)
 		{
+			if (target == null || m_caster == null) return 0;
 			float factor = Math.Max (0.1f, 0.5f + (target.Level - m_caster.Level) / (float)m_caster.Level);
 
 			//DOLConsole.WriteLine("res power needed: " + (int) (m_caster.MaxMana * factor) + "; factor="+factor);
@@ -253,8 +254,8 @@ namespace DOL.GS.Spells
                 MessageToCaster("You don't have enough power to cast that!", eChatType.CT_SpellResisted);
 				return false;
             }
-
-			GameLiving resurrectionCaster = target.TempProperties.getProperty<object>(RESURRECT_CASTER_PROPERTY, null) as GameLiving;
+			if (target == null) return false;
+			GameLiving resurrectionCaster = target.TempProperties.getProperty<GameLiving>(RESURRECT_CASTER_PROPERTY, null);
 			if (resurrectionCaster != null)
 			{
 				//already considering resurrection - do nothing

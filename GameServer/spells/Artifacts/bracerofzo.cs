@@ -65,6 +65,9 @@ namespace DOL.GS.Spells
                 deamons[i].Heading = (ushort)((Caster.Heading + 2048) % 4096);
                 deamons[i].Realm = Caster.Realm;
                 deamons[i].CurrentSpeed = 0;
+				deamons[i].MaxSpeedBase = (short)(210 + (i * 2));
+				if (deamons[i].MaxSpeedBase < 190) deamons[i].MaxSpeedBase = 190;
+				if (deamons[i].MaxSpeedBase > 250) deamons[i].MaxSpeedBase = 250;
                 deamons[i].Level = 36;
                 deamons[i].Flags |= GameNPC.eFlags.FLYING;
                 deamons[i].AddToWorld();
@@ -112,7 +115,7 @@ namespace DOL.GS
 	{
 		public override int MaxHealth
         {
-            get { return Level*10; }
+            get { return 50; }
         }
 		public override void OnAttackedByEnemy(AttackData ad) { }
 		public ZoarkatPet(INpcTemplate npcTemplate) : base(npcTemplate) { }

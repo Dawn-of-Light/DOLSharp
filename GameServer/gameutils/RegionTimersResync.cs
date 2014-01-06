@@ -39,13 +39,14 @@ namespace DOL.GS.GameEvents
 {
 	public static class RegionTimersResynch
 	{
-		const int UPDATE_INTERVAL = 15 * 1000; // 15 seconds to check freeze
+		const int UPDATE_INTERVAL = 10 * 1000; // 15 seconds to check freeze
 
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		static Timer m_timer;
 		public static Stopwatch watch;
 		static Dictionary<GameTimer.TimeManager, long> old_time = new Dictionary<GameTimer.TimeManager, long>();
+        static bool Running = false;
 
 		#region Initialization/Teardown
 
@@ -68,7 +69,7 @@ namespace DOL.GS.GameEvents
 			watch.Start();
 			foreach (GameTimer.TimeManager mgr in WorldMgr.GetRegionTimeManagers())
 				old_time.Add(mgr, 0);
-
+            Running = false;
 			m_timer = new Timer(new TimerCallback(Resynch), null, 0, UPDATE_INTERVAL);
 		}
 
@@ -82,7 +83,15 @@ namespace DOL.GS.GameEvents
 
 		private static void Resynch(object nullValue)
 		{
-			long syncTime = watch.ElapsedMilliseconds;
+            if (Running)
+            {
+                if (log.IsErrorEnabled)
+                    log.Error("----- Region Timer Resynch --- Already running -----");
+                return;
+            }
+            Running = true;
+            
+            long syncTime = watch.ElapsedMilliseconds;
 
 			//Check alive
 			foreach (GameTimer.TimeManager mgr in WorldMgr.GetRegionTimeManagers())
@@ -156,6 +165,13 @@ namespace DOL.GS.GameEvents
                                                     (effect as GameSpellAndImmunityEffect).Cancel(false);
 												}
 											}
+                                            GameSpellEffect phaseshift = SpellHandler.FindEffectOnTarget(plr, "Phaseshift");
+                                            if (phaseshift != null)
+                                                phaseshift.Cancel(false);
+                                            plr.TempProperties.setProperty("Charging", false);
+                                            ChargeEffect charge = (ChargeEffect)plr.EffectList.GetOfType(typeof(ChargeEffect));
+                                            if (charge != null)
+                                                charge.Cancel(false);
 										}
 										catch(Exception e)
 										{
@@ -183,7 +199,7 @@ namespace DOL.GS.GameEvents
                                         //npc.Brain.Stop();
 										if (npc.MaxSpeedBase > 0 && npc.PathID != null && npc.PathID != "" && npc.PathID != "NULL")
 										{
-											npc.StopMovingOnPath();
+											//npc.StopMovingOnPath();
 											PathPoint path = MovementMgr.LoadPath(npc.PathID);
 											if (path != null)
 											{
@@ -219,6 +235,7 @@ namespace DOL.GS.GameEvents
 				if (old_time.ContainsKey(mgr))
 					old_time[mgr] = mgr.CurrentTime;
 			}
+            Running = false;
 		}
 
 		public delegate void RegionTimerHandler(GameTimer.TimeManager RestartedTimer, long SyncTime);

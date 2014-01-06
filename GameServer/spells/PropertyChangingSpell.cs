@@ -551,6 +551,7 @@ namespace DOL.GS.Spells
 			if (Property != eProperty.Undefined)
 			{
 				tblBonusCat = GetBonusCategory(owner, BonusCat);
+				if (tblBonusCat[(int)Property] == null) return;
 				if (IsSubstracted)
 					tblBonusCat[(int)Property] -= Value;
 				else

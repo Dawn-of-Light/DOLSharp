@@ -31,6 +31,11 @@ namespace DOL.GS.Spells
 	{
 		public StyleHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
+		public override bool IsOverwritable(GameSpellEffect compare)
+		{
+			return true;
+		}
+
 		public override IList<string> DelveInfo
 		{
 			get

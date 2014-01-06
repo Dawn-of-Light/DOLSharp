@@ -53,7 +53,6 @@ namespace DOL.GS
 		protected readonly string m_message3 = "";
 		protected readonly string m_message4 = "";
 		protected readonly ushort m_effectID = 0;
-		protected readonly ushort m_icon = 0;
 		protected readonly int m_instrumentRequirement = 0;
 		protected readonly int m_spellGroup = 0;
 		protected readonly int m_effectGroup = 0;
@@ -110,11 +109,6 @@ namespace DOL.GS
 		public ushort ClientEffect
 		{
 			get { return m_effectID; }
-		}
-
-		public ushort Icon
-		{
-			get { return m_icon; }
 		}
 
 		public string Description
@@ -482,7 +476,615 @@ namespace DOL.GS
 			delve.Add(String.Format("Target: {0}", target));
 		}
 
-        /// <summary>
+
+
+		#region delvespell methods
+
+		public string GetDelveFunction()
+		{
+			switch (SpellType)
+			{
+				case "Charm": return "charm";
+				case "CureMezz": return "remove_eff";
+				case "Lifedrain": return "lifedrain";
+				case "ArmorFactorBuff": return "shield";
+				case "ArmorAbsorptionBuff": return "absorb";
+
+				case "DamageSpeedDecrease":
+				case "SpeedDecrease": return "snare";
+
+				case "Amnesia": return "amnesia";
+
+				case "QuicknessDebuff":
+				case "ConstitutionDebuff":
+				case "StrengthDebuff":
+				case "DexterityDebuff": return "nstat";
+
+				case "QuicknessBuff":
+				case "ConstitutionBuff":
+				case "StrengthBuff":
+				case "DexterityBuff": return "stat";
+
+				case "DamageOverTime": return "dot";
+
+				case "Confusion":
+				case "Mesmerize":
+				case "SpeedEnhancement":
+				case "SpeedOfTheRealm":
+				case "CombatSpeedBuff":
+				case "Bladeturn": return "combat";
+
+				case "DirectDamage": return "direct";
+
+				case "AcuityDebuff":
+				case "StrengthConstitutionDebuff":
+				case "DexterityConstitutionDebuff":
+				case "WeaponSkillConstitutionDebuff":
+				case "DexterityQuicknessDebuff": return "ntwostat";
+
+				case "AcuityBuff":
+				case "StrengthConstitutionBuff":
+				case "DexterityConstitutionBuff":
+				case "WeaponSkillConstitutionBuff":
+				case "DexterityQuicknessBuff": return "twostat";
+
+				case "BodyResistDebuff":
+				case "ColdResistDebuff":
+				case "EnergyResistDebuff":
+				case "HeatResistDebuff":
+				case "MatterResistDebuff":
+				case "SpiritResistDebuff":
+				case "SlashResistDebuff":
+				case "ThrustResistDebuff":
+				case "CrushResistDebuff":
+				case "EssenceSear": return "nresistance";
+
+				case "BodyResistBuff":
+				case "ColdResistBuff":
+				case "EnergyResistBuff":
+				case "HeatResistBuff":
+				case "MatterResistBuff":
+				case "SpiritResistBuff":
+				case "SlashResistBuff":
+				case "ThrustResistBuff":
+				case "CrushResistBuff": return "resistance";
+
+				case "EnduranceRegenBuff":
+				case "PowerRegenBuff": return "enhancement";
+
+				case "MezDampening": return "mez_dampen";
+				case "Heal": return "heal";
+				case "Resurrect": return "raise_dead";
+				case "DamageAdd": return "dmg_add";
+
+				case "CurePoison":
+				case "CureDisease": return "rem_eff_ty";
+				case "SpreadHeal": return "spreadheal";
+
+				case "SummonAnimistFnF":
+				case "SummonAnimistPet":
+				case "SummonCommander":
+				case "SummonMinion":
+				case "SummonSimulacrum":
+				case "SummonDruidPet":
+				case "SummonHunterPet":
+				case "SummonNecroPet":
+				case "SummonUnderhill":
+				case "SummonTheurgistPet": return "summon";
+
+				case "StrengthShear":
+				case "DexterityShear":
+				case "ConstitutionShear":
+				case "AcuityShear":
+				case "StrengthConstitutionShear":
+				case "DexterityQuicknessShear": return "buff_shear";
+
+				case "StyleStun":
+				case "StyleBleeding":
+				case "StyleSpeedDecrease":
+				case "StyleCombatSpeedDebuff": return "add_effect";
+
+				case "SiegeArrow":
+				case "ArrowDamageTypes":
+				case "Archery": return "archery";
+
+				case "HereticDoTLostOnPulse": return "direct_inc";
+
+				case "DefensiveProc": return "def_proc";
+				case "OffensiveProc": return "off_proc";
+
+				case "Stun": return "paralyze";
+				case "HealOverTime": return "regen";
+				case "DamageShield": return "dmg_shield";
+			}
+			return "0";
+		}
+
+		public int GetDelveAmountIncrease()
+		{
+			switch (SpellType)
+			{
+				case "HereticDoTLostOnPulse": return 50;
+			}
+			return 0;
+		}
+
+		public int GetDelveAbility()
+		{
+			switch (SpellType)
+			{
+				case "MezDampening": return Target == "Self" ? 4 : 0;
+				case "DamageAdd":
+				case "PowerRegenBuff":
+				case "ArmorAbsorptionBuff":
+				case "BodyResistBuff":
+				case "ColdResistBuff":
+				case "EnergyResistBuff":
+				case "HeatResistBuff":
+				case "MatterResistBuff":
+				case "SpiritResistBuff":
+				case "SlashResistBuff":
+				case "ThrustResistBuff":
+				case "CrushResistBuff":
+				case "ArmorFactorBuff": return 4;
+				case "SiegeArrow": return 1024;
+				case "Archery":
+					if (Name.StartsWith("Power Shot")) return 1088;
+					return 1024;
+				case "ArcheryDoT": return 1;
+			}
+			return 0;
+		}
+
+		public int GetDelvePowerLevel(int level)
+		{
+			switch (SpellType)
+			{
+				case "Confusion": return (int)Value;
+
+				case "SummonAnimistFnF":
+				case "SummonAnimistPet":
+				case "SummonCommander":
+				case "SummonMinion":
+				case "SummonSimulacrum":
+				case "SummonDruidPet":
+				case "SummonHunterPet":
+				case "SummonNecroPet":
+				case "SummonTheurgistPet":
+				case "DamageOverTime":
+				case "Charm": return -(int)Damage;
+
+				case "CombatSpeedBuff": return -(int)(Value * 2);
+
+				case "StyleBleeding": return (int)Damage;
+				case "StyleSpeedDecrease": return (int)(100 - Value);
+				case "StyleCombatSpeedDebuff": return -(int)Value;
+			}
+			return level;
+		}
+
+		public int GetDelveTargetType()
+		{
+			switch (Target)
+			{
+				case "Realm": return 7;
+				case "Self": return 0;
+				case "Enemy": return 1;
+				case "Pet": return 6;
+				case "Group": return 3;
+				case "Area": return 9;
+
+				case "StrengthShear":
+				case "DexterityShear":
+				case "ConstitutionShear":
+				case "AcuityShear":
+				case "StrengthConstitutionShear":
+				case "DexterityQuicknessShear": return 10;
+
+				default: return 0;
+			}
+		}
+
+		public int GetDelvePowerCost()
+		{
+			switch(SpellType)
+			{
+				case "SiegeArrow":
+				case "ArrowDamageTypes":
+				case "Archery": return -Power;
+			}
+			return Power;
+		}
+
+		public int GetDelveLinkEffect()
+		{
+			switch (SpellType)
+			{
+				case "StrengthShear":
+				case "DexterityShear":
+				case "ConstitutionShear":
+				case "AcuityShear":
+				case "StrengthConstitutionShear":
+				case "DexterityQuicknessShear": return 7312;
+			}
+			return 0;
+		}
+
+		public int GetDelveDurationType()
+		{
+			//2-seconds,4-conc,5-focus
+			switch (SpellType)
+			{
+				case "HereticDoTLostOnPulse": return 5;
+			}
+			if (Duration > 0) return 2;
+			if (Concentration > 0) return 4;
+			return 0;
+		}
+
+		public int GetDelveDuration()
+		{
+			return Duration / 1000;
+		}
+
+		public int GetDelveDamageType()
+		{
+			switch (SpellType)
+			{
+				case "StyleSpeedDecrease":
+				case "StyleCombatSpeedDebuff": return 0;
+			}
+			switch (DamageType)
+			{
+				case eDamageType.Slash: return 2;
+				case eDamageType.Heat: return 10;
+				case eDamageType.Cold: return 12;
+				case eDamageType.Matter: return 15;
+				case eDamageType.Body: return 16;
+				case eDamageType.Energy: return 22;
+			}
+			return 0;
+		}
+
+		public int GetDelveBonus()
+		{
+			switch (SpellType)
+			{
+				case "SummonAnimistFnF":
+				case "SummonAnimistPet":
+				case "SummonCommander":
+				case "SummonMinion":
+				case "SummonSimulacrum":
+				case "SummonDruidPet":
+				case "SummonHunterPet":
+				case "SummonNecroPet":
+				case "SummonUnderhill":
+				case "SummonTheurgistPet": return 1;
+
+				case "Lifedrain": return LifeDrainReturn / 10;
+				case "DamageSpeedDecrease":
+				case "SpeedDecrease": return (int)(100 - Value);
+				case "Amnesia": return AmnesiaChance;
+				case "QuicknessDebuff":
+				case "QuicknessBuff":
+				case "ConstitutionDebuff":
+				case "ConstitutionBuff":
+				case "StrengthDebuff":
+				case "StrengthBuff":
+				case "DexterityDebuff":
+				case "DexterityBuff":
+				case "AcuityDebuff":
+				case "AcuityBuff":
+				case "SpeedOfTheRealm":
+				case "SpeedEnhancement":
+				case "ArmorAbsorptionDebuff":
+				case "ArmorAbsorptionBuff":
+				case "DexterityQuicknessDebuff":
+				case "DexterityQuicknessBuff":
+				case "StrengthConstitutionDebuff":
+				case "StrengthConstitutionBuff":
+
+				case "BodyResistDebuff":
+				case "ColdResistDebuff":
+				case "EnergyResistDebuff":
+				case "HeatResistDebuff":
+				case "MatterResistDebuff":
+				case "SpiritResistDebuff":
+				case "SlashResistDebuff":
+				case "ThrustResistDebuff":
+				case "CrushResistDebuff":
+
+				case "BodyResistBuff":
+				case "ColdResistBuff":
+				case "EnergyResistBuff":
+				case "HeatResistBuff":
+				case "MatterResistBuff":
+				case "SpiritResistBuff":
+				case "SlashResistBuff":
+				case "ThrustResistBuff":
+				case "CrushResistBuff":
+
+				case "StrengthShear":
+				case "DexterityShear":
+				case "ConstitutionShear":
+				case "AcuityShear":
+				case "StrengthConstitutionShear":
+				case "DexterityQuicknessShear":
+
+				case "EssenceSear":
+
+				case "MezDampening":
+				case "ArmorFactorBuff": return (int)Value;
+
+				case "StyleSpeedDecrease": return (int)(100 - Value);
+
+				case "SiegeArrow":
+				case "ArrowDamageTypes":
+				case "Archery": return 20;
+			}
+			return 0;
+		}
+
+		public int GetDelveDamage()
+		{
+			switch (SpellType)
+			{
+				case "Bladeturn": return 51;
+				case "DamageAdd":
+				case "DamageSpeedDecrease":
+				case "DirectDamage":
+				case "DamageShield":
+				case "Lifedrain": return (int)(Damage * 10);
+
+				case "SummonAnimistFnF":
+				case "SummonAnimistPet":
+				case "SummonCommander":
+				case "SummonMinion":
+				case "SummonSimulacrum":
+				case "SummonDruidPet":
+				case "SummonHunterPet":
+				case "SummonNecroPet":
+				case "SummonTheurgistPet":
+				case "SummonUnderhill":
+				case "DamageOverTime": return (int)Damage;
+
+				case "StrengthShear":
+				case "DexterityShear":
+				case "ConstitutionShear":
+				case "AcuityShear":
+				case "StrengthConstitutionShear":
+				case "DexterityQuicknessShear": return 2;
+
+				case "SpreadHeal":
+				case "Heal":
+				case "Charm":
+				case "EnduranceRegenBuff":
+				case "HealOverTime":
+				case "PowerRegenBuff": return (int)Value;
+				case "Resurrect": return ResurrectHealth;
+
+				case "StyleBleeding": return (int)Damage;
+
+				case "SiegeArrow":
+				case "Archery":
+					return (int)(Damage * 10);
+			}
+			return 0;
+		}
+
+		public int GetDelveParm()
+		{
+			switch (SpellType)
+			{
+				case "DamageAdd":
+				case "ArmorAbsorptionDebuff":
+				case "ArmorAbsorptionBuff":
+
+				case "StrengthShear":
+				case "StrengthDebuff":
+				case "StrengthBuff":
+				case "StrengthConstitutionShear":
+				case "StrengthConstitutionDebuff":
+				case "StrengthConstitutionBuff":
+
+				case "Stun":
+				case "DamageOverTime":
+				case "SpeedDecrease":
+				case "DamageSpeedDecrease":
+				case "DirectDamage":
+				case "HealOverTime":
+				case "DamageShield":
+				case "Lifedrain": return 1;
+
+				case "PowerRegenBuff":
+				case "DexterityShear":
+				case "DexterityDebuff":
+				case "DexterityBuff":
+				case "DexterityQuicknessShear":
+				case "DexterityQuicknessDebuff":
+				case "DexterityQuicknessBuff":
+				case "ArmorFactorDebuff":
+				case "ArmorFactorBuff": return 2;
+
+				case "EnduranceRegenBuff":
+				case "ConstitutionShear":
+				case "ConstitutionBuff":
+				case "ConstitutionDebuff":
+				case "AcuityShear":
+				case "AcuityDebuff":
+				case "AcuityBuff": return 3;
+
+				case "Confusion": return 5;
+
+				case "CureMezz":
+				case "Mesmerize": return 6;
+
+				case "Bladeturn": return 9;
+
+				case "HeatResistDebuff":
+				case "SpeedOfTheRealm":
+				case "SpeedEnhancement": return 10;
+
+				case "CombatSpeedBuff": return 11;
+
+				case "ColdResistDebuff": return 12;
+				case "MatterResistDebuff": return 15;
+
+				case "SummonAnimistFnF":
+				case "SummonAnimistPet":
+				case "SummonCommander":
+				case "SummonMinion":
+				case "SummonSimulacrum":
+				case "SummonDruidPet":
+				case "SummonHunterPet":
+				case "SummonNecroPet":
+				case "SummonUnderhill":
+				case "SummonTheurgistPet": return 9915;
+
+				case "StyleStun": return 1;
+				case "StyleBleeding": return 20;
+				case "StyleSpeedDecrease": return 1;
+				case "StyleCombatSpeedDebuff": return 2;
+
+				case "ArcheryDoT": return 8;
+				case "ArrowDamageTypes": return 2;
+			}
+			return 0;
+		}
+
+		public int GetDelveCastTimer()
+		{
+			switch (SpellType)
+			{
+				case "HereticDoTLostOnPulse":
+				case "OffensiveProc": return 1;
+			}
+			if (CastTime == 2000) return 1;
+			return CastTime - 2000;
+		}
+
+		public int GetDelveInstant()
+		{
+			switch (SpellType)
+			{
+				case "StyleBleeding":
+				case "StyleSpeedDecrease":
+				case "StyleCombatSpeedDebuff": return 0;
+			}
+			 return IsInstantCast ? 1 : 0;
+		}
+
+		public int GetDelveType1()
+		{
+			switch (SpellType)
+			{
+				case "DexterityDebuff": return 2;
+				case "CurePoison":
+				case "StrengthDebuff": return 1;
+				case "CureMezz": return 8;
+				case "CureDisease": return 18;
+				case "Resurrect": return 65;
+
+				case "StyleStun": return 22;
+				case "StyleBleeding": return 1;
+				case "StyleCombatSpeedDebuff": return 8;
+				case "StyleSpeedDecrease": return 39;
+
+				case "Archery":
+					if (Name.StartsWith("Critical Shot")) return 1752;
+					else if (Name.StartsWith("Power Shot")) return 1032;
+					else if (Name.StartsWith("Fire Shot") || Name.StartsWith("Cold Shot")) return 4;
+					return 0;
+			}
+			return 0;
+		}
+
+		//sorry i need this on Eden
+		public int GetDelveFrequency()
+		{
+			if (Frequency != 0 || SpellType != "DamageOverTime") return Frequency;
+			return 2490;
+		}
+
+		public string GetDelveNoCombat()
+		{
+			switch (SpellType)
+			{
+				case "SpeedOfTheRealm":
+				case "SpeedEnhancement": return "\u0005";
+				case "StyleStun": return " ";
+			}
+			return null;
+		}
+
+		public int GetDelveCostType()
+		{
+			switch (SpellType)
+			{
+				case "SiegeArrow":
+				case "Archery": return 3;
+			}
+			return 0;
+		}
+
+		public int GetDelveIncreaseCap()
+		{
+			switch (SpellType)
+			{
+				case "HereticDoTLostOnPulse": return 150;
+			}
+			return 0;
+		}
+
+		#endregion
+
+
+		/*public string DelveTooltip
+		{
+			get
+			{
+				switch (SpellType)
+				{
+					case "Lifedrain":
+						return string.Format("(Spell (Function \"{0}\")(Index \"{1}\")(Name \"{2}\")(bonus \"{3}\")(cast_timer \"{4}\")(damage \"{5}\")(damage_type \"{6}\")(level \"{7}\")(parm \"1\")(power_cost \"{8}\")(power_level \"{9}\")(range \"{10}\")(target \"{11}\"))",
+							"lifedrain", ID, Name, LifeDrainReturn / 10, CastTime - 2000, Damage * 10, GetDelveDamageType(), Level, Power, Level, Range, GetDelveTargetType());
+					case "ArmorFactorBuff":
+						return string.Format("(Spell (Function \"{0}\")(Index \"{1}\")(Name \"{2}\")(ability \"4\")(bonus \"{3}\")(cast_timer \"{4}\")(damage_type \"{5}\")(dur_type \"{6}\")(duration \"{7}\")(level \"{8}\")(no_interrupt \"{9}\")(parm \"2\")(power_cost \"{10}\")(power_level \"{11}\"))",
+							"shield", ID, Name, Value, CastTime - 2000, GetDelveDamageType(), GetDelveDurationType(), Duration / 1000, Level, "\u0001", Power, Level);
+					case "SpeedEnhancement":
+						return string.Format("(Spell (Function \"{0}\")(Index \"{1}\")(Name \"{2}\")(bonus \"{3}\")(cast_timer \"{4}\")(damage_type \"{5}\")(dur_type \"{6}\")(duration \"{7}\")(frequency \"{8}\")(level \"{9}\")(no_combat \"{10}\")(parm \"10\")(power_level \"{11}\")(range \"{12}\")(target \"{13}\"))",
+							"combat", ID, Name, Value, CastTime - 2000, GetDelveDamageType(), GetDelveDurationType(), Duration / 1000, Frequency, Level, "\u0005", Level, Range, GetDelveTargetType());
+					case "ArmorAbsorptionBuff":
+						return string.Format("(Spell (Function \"{0}\")(Index \"{1}\")(Name \"{2}\")(ability \"4\")(bonus \"{3}\")(cast_timer \"{4}\")(damage_type \"{5}\")(dur_type \"{6}\")(duration \"{7}\")(level \"{8}\")(no_interrupt \"{9}\")(parm \"1\")(power_cost \"{10}\")(power_level \"{11}\"))",
+							"absorb", ID, Name, Value, CastTime - 2000, GetDelveDamageType(), GetDelveDurationType(), Duration / 1000, Level, "\u0001", Power, Level);
+					case "Bladeturn":
+						return string.Format("(Spell (Function \"{0}\")(Index \"{1}\")(Name \"{2}\")(cast_timer \"{3}\")(damage \"{4}\")(damage_type \"{5}\")(dur_type \"{6}\")(duration \"{7}\")(level \"{8}\")(parm \"9\")(power_cost \"{9}\")(power_level \"{10}\"))",
+							"combat", ID, Name, CastTime - 2000, "51", GetDelveDamageType(), GetDelveDurationType(), Duration / 1000, Level, Power, Level);
+					case "DamageOverTime":
+						return string.Format("(Spell (Function \"{0}\")(Index \"{1}\")(Name \"{2}\")(cast_timer \"{3}\")(damage \"{4}\")(damage_type \"{5}\")(dur_type \"{6}\")(duration \"{7}\")(frequency \"{8}\")(level \"{9}\")(parm \"1\")(power_cost \"{10}\")(power_level \"{11}\")(range \"{12}\")(target \"{13}\"))",
+							"dot", ID, Name, CastTime - 2000, Damage, GetDelveDamageType(), GetDelveDurationType(), Duration / 1000, Frequency, Level, Power, Level, Range, GetDelveTargetType());
+					case "Mesmerize":
+						return string.Format("(Spell (Function \"{0}\")(Index \"{1}\")(Name \"{2}\")(cast_timer \"{3}\")(damage_type \"{4}\")(dur_type \"{5}\")(duration \"{6}\")(level \"{7}\")(parm \"6\")(power_cost \"{8}\")(power_level \"{9}\")(range \"{10}\")(target \"{11}\"))",
+							"combat", ID, Name, CastTime - 2000, GetDelveDamageType(), GetDelveDurationType(), Duration / 1000, Level, Power, Level, Range, GetDelveTargetType());
+					case "SpeedDecrease":
+						return string.Format("(Spell (Function \"{0}\")(Index \"{1}\")(Name \"{2}\")(bonus \"{3}\")(cast_timer \"{4}\")(damage_type \"{5}\")(dur_type \"{6}\")(duration \"{7}\")(level \"{8}\")(parm \"1\")(power_cost \"{9}\")(power_level \"{10}\")(range \"{11}\")(target \"{12}\"))",
+							"snare", ID, Name, Value - 1, CastTime - 2000, GetDelveDamageType(), GetDelveDurationType(), Duration / 1000, Level, Power, Level, Range, GetDelveTargetType());
+					case "Amnesia":
+						return string.Format("(Spell (Function \"{0}\")(Index \"{1}\")(Name \"{2}\")(bonus \"{3}\")(cast_timer \"{4}\")(damage_type \"{5}\")(level \"{6}\")(power_cost \"{7}\")(power_level \"{8}\")(range \"{9}\")(target \"{10}\"))",
+							"amnesia", ID, Name, AmnesiaChance, CastTime - 2000, GetDelveDamageType(), Level, Power, Level, Range, GetDelveTargetType());
+					case "Confusion":
+						return string.Format("(Spell (Function \"{0}\")(Index \"{1}\")(Name \"{2}\")(damage_type \"{3}\")(dur_type \"{4}\")(duration \"{5}\")(level \"{6}\")(parm \"5\")(power_cost \"{7}\")(power_level \"{8}\")(range \"{9}\")(target \"{10}\"))",
+							"combat", ID, Name, GetDelveDamageType(), GetDelveDurationType(), Duration / 1000, Level, Power, Level, Range, GetDelveTargetType());
+					case "StrengthDebuff":
+					case "DexterityDebuff":
+						return string.Format("(Spell (Function \"{0}\")(Index \"{1}\")(Name \"{2}\")(bonus \"{3}\")(damage_type \"{4}\")(dur_type \"{5}\")(duration \"{6}\")(instant \"{7}\")(level \"8\")(parm \"2\")(power_cost \"5\")(power_level \"8\")(range \"1500\")(target \"1\")(timer_value \"5\")(type1 \"2\")(use_timer \"1\"))",
+							"nstat", ID, Name, GetDelveDamageType(), GetDelveDurationType(), Duration / 1000, Level, Power, Level, Range, GetDelveTargetType());
+				}
+				return string.Format("(Spell (Name \"(not found)\")(Index \"{0}\"))", ID);
+			}
+		}*/
+
+		/// <summary>
         /// Whether or not the spell is instant cast.
         /// </summary>
         public bool IsInstantCast

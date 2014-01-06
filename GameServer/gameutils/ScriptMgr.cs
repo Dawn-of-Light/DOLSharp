@@ -291,6 +291,14 @@ namespace DOL.GS
 						client.Out.SendMessage("No such command ("+pars[0]+")",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 						return true;
 					}
+					else if (ServerProperties.Properties.USE_ADVANCED_PRIVILEGES)
+					{
+						if (!Privileges.IsAllowed(client, pars))
+						{
+							client.Out.SendMessage("No such command (" + pars[0] + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							return true;
+						}
+					}
 					//else execute the command
 				}
 

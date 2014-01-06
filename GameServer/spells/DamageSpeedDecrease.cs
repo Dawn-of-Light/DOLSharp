@@ -60,6 +60,10 @@ namespace DOL.GS.Spells
 			AttackData ad = CalculateDamageToTarget(target, effectiveness);
 			SendDamageMessages(ad);
 			DamageTarget(ad, true);
+
+			if (m_caster is GameNPC)
+				m_caster.TempProperties.setProperty(GameLiving.LAST_ATTACK_TIME, m_caster.CurrentRegion != null ? m_caster.CurrentRegion.Time : 0);
+
 			if (Spell.LifeDrainReturn != 0)
 				StealLife(ad);
 		}

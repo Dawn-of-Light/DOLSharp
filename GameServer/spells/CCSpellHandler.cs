@@ -150,6 +150,13 @@ namespace DOL.GS.Spells
 				}
 			}
 
+			if (target is GameNPC && target.Level > Caster.Level)
+			{
+				double levelfactor = 1.00;
+				levelfactor -= 0.03 * (target.Level - Caster.Level);
+				if (levelfactor < 0.10) levelfactor = 0.10;
+				duration *= levelfactor;
+			}
 
 			return (int)duration;
 		}
@@ -169,7 +176,10 @@ namespace DOL.GS.Spells
             {
                 return AllureofDeathEffect.ccchance;
             }
-
+			if (target.EffectList.GetOfType<FerociousWillEffect>() != null)
+			{
+				resist += 25;
+			}
 			if (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
 				return 0;
 			if (HasPositiveEffect)
@@ -210,10 +220,49 @@ namespace DOL.GS.Spells
 			base.OnEffectPulse(effect);
 		}
 
+		public override bool CheckDuringCast(GameLiving target)
+		{
+			bool valid = base.CheckDuringCast(target);
+
+			if (Spell.Pulse != 0 //less checks for pulsing mez
+				&& target != null
+				&& GameServer.ServerRules.IsAllowedToAttack(Caster, target, true)
+				&& Caster.IsWithinRadius(target, CalculateSpellRange() * 2))
+				return true;
+
+			else return valid;
+		}
+
+		public override bool CheckEndCast(GameLiving target)
+		{
+			bool valid = base.CheckEndCast(target);
+
+			if (Spell.Pulse != 0 //less checks for pulsing mez
+				&& target != null
+				&& GameServer.ServerRules.IsAllowedToAttack(Caster, target, true)
+				&& Caster.IsWithinRadius(target, CalculateSpellRange() * 2))
+				return true;
+
+			else return valid;
+		}
+
+		public override bool CheckAfterCast(GameLiving target)
+		{
+			bool valid = base.CheckAfterCast(target);
+
+			if (Spell.Pulse != 0 //less checks for pulsing mez
+				&& target != null
+				&& GameServer.ServerRules.IsAllowedToAttack(Caster, target, true)
+				&& Caster.IsWithinRadius(target, CalculateSpellRange() * 2))
+				return true;
+
+			else return valid;
+		}
+
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			effect.Owner.IsMezzed = true;
-			effect.Owner.StopAttack();
+			//effect.Owner.StopAttack();
 			effect.Owner.StopCurrentSpellcast();
 			effect.Owner.DisableTurning(true);
 			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
@@ -265,6 +314,9 @@ namespace DOL.GS.Spells
 		
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
+			if (Spell.Pulse != 0 && !base.CheckDuringCast(target, false))
+					return;
+			
 			if (target.HasAbility(Abilities.MezzImmunity))
 			{
 				MessageToCaster(target.Name + " is immune to this effect!", eChatType.CT_SpellResisted);
@@ -406,8 +458,10 @@ namespace DOL.GS.Spells
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			effect.Owner.IsStunned=true;
-			effect.Owner.StopAttack();
-			effect.Owner.StopCurrentSpellcast();
+			//effect.Owner.StopAttack();
+			if (effect.Owner is GameNPC)
+				((GameNPC)effect.Owner).PauseCurrentSpellCast(m_caster);
+			else effect.Owner.StopCurrentSpellcast();
 			effect.Owner.DisableTurning(true);
 			base.OnEffectStart(effect);
 		}
@@ -423,8 +477,13 @@ namespace DOL.GS.Spells
 		{
 			effect.Owner.IsStunned=false;
 			effect.Owner.DisableTurning(false);
-			//use ResurrectHealth>0 to calculate stun immunity timer (such pet stun spells), actually (1.90) pet stun immunity is 5x the stun duration
-			if(Spell.ResurrectHealth>0)
+			//use ResurrectHealth>0 to calculate stun immunity timer (such pet stun spells), actually (1.90) pet stun immunity is 5x the stun duration, 99 means no imun
+			if (Spell.ResurrectHealth == 99)
+			{
+				base.OnEffectExpires(effect, noMessages);
+				return 0;
+			}
+			else if (Spell.ResurrectHealth > 0)
 			{
 				base.OnEffectExpires(effect, noMessages);
 				return Spell.Duration * Spell.ResurrectHealth;
@@ -453,6 +512,11 @@ namespace DOL.GS.Spells
 					return;
 				}
 			}
+
+			GameSpellEffect mezz = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+			if (mezz != null)
+				mezz.Cancel(false);
+
 			base.ApplyEffectOnTarget(target, effectiveness);
 		}
 		

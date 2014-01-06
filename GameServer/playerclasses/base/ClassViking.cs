@@ -31,7 +31,7 @@ namespace DOL.GS.PlayerClass
 		public ClassViking() : base() {
 			m_specializationMultiplier = 10;
 			m_wsbase = 440;
-			m_baseHP = 880;
+			m_baseHP = 900;
 		}
 
 		public override string GetTitle(GamePlayer player, int level)

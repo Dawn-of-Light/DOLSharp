@@ -836,7 +836,7 @@ namespace DOL.GS
 		/// <param name="loc">message location</param>
 		public void SendMessageToGuildMembers(string msg, PacketHandler.eChatType type, PacketHandler.eChatLoc loc)
 		{
-			lock (m_onlineGuildPlayers)
+			lock (m_memberListLock)
 			{
 				foreach (GamePlayer pl in m_onlineGuildPlayers.Values)
 				{
@@ -1039,12 +1039,11 @@ namespace DOL.GS
 
 		public void UpdateGuildWindow()
 		{
-			lock (m_onlineGuildPlayers)
+			List<GamePlayer> players = new List<GamePlayer>(m_onlineGuildPlayers.Values);
+			foreach (GamePlayer player in players)
 			{
-				foreach (GamePlayer player in m_onlineGuildPlayers.Values)
-				{
+				if (player != null && player.Guild != null)
 					player.Guild.UpdateMember(player);
-				}
 			}
 		}
 	}

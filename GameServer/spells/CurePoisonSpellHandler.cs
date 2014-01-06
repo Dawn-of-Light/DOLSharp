@@ -37,6 +37,7 @@ namespace DOL.GS.Spells
 			// RR4: now it's a list
 			m_spellTypesToRemove = new List<string>();
 			m_spellTypesToRemove.Add("DamageOverTime");
+			m_spellTypesToRemove.Add("PoisonspikeDot");
             m_spellTypesToRemove.Add("StyleBleeding");
 		} 
 	}

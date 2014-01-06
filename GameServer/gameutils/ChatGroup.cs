@@ -16,8 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 namespace DOL.GS
 {
@@ -30,7 +29,7 @@ namespace DOL.GS
 		/// <summary>
 		/// This holds all players inside the chatgroup
 		/// </summary>
-		protected HybridDictionary m_chatgroupMembers = new HybridDictionary();
+		protected Dictionary<GamePlayer, bool> m_chatgroupMembers = new Dictionary<GamePlayer, bool>();
 
 		/// <summary>
 		/// constructor of chat group
@@ -38,7 +37,7 @@ namespace DOL.GS
 		public ChatGroup()
 		{
 		}
-		public HybridDictionary Members
+		public Dictionary<GamePlayer, bool> Members
 		{
 			get{return m_chatgroupMembers;}
 			set{m_chatgroupMembers=value;}
@@ -68,21 +67,24 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		/// <param name="leader"></param>
 		/// <returns></returns>
-		public virtual bool AddPlayer(GamePlayer player,bool leader) 
+		public virtual bool AddPlayer(GamePlayer player, bool leader)
 		{
 			if (player == null) return false;
+			List<GamePlayer> players = new List<GamePlayer>(m_chatgroupMembers.Keys);
 			lock (m_chatgroupMembers)
 			{
-				if (m_chatgroupMembers.Contains(player))
+				if (m_chatgroupMembers.ContainsKey(player))
 					return false;
-				player.TempProperties.setProperty(CHATGROUP_PROPERTY, this);
-				player.Out.SendMessage("You join the chat group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				foreach(GamePlayer member in Members.Keys)
-				{
-					member.Out.SendMessage(player.Name+" has joined the chat group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-				m_chatgroupMembers.Add(player,leader);
+				m_chatgroupMembers.Add(player, leader);
 			}
+			player.TempProperties.setProperty(CHATGROUP_PROPERTY, this);
+			player.Out.SendMessage("You join the chat group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+			foreach (GamePlayer member in players)
+			{
+				member.Out.SendMessage(player.Name + " has joined the chat group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+
 			return true;
 		}
 
@@ -96,23 +98,22 @@ namespace DOL.GS
 			if (player == null) return false;
 			lock (m_chatgroupMembers)
 			{
-				if (!m_chatgroupMembers.Contains(player))
+				if (!m_chatgroupMembers.ContainsKey(player))
 					return false;
 				m_chatgroupMembers.Remove(player);
-				player.TempProperties.removeProperty(CHATGROUP_PROPERTY);
-				player.Out.SendMessage("You leave the chat group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				foreach(GamePlayer member in Members.Keys)
+			}
+			List<GamePlayer> players = players = new List<GamePlayer>(m_chatgroupMembers.Keys);
+			player.TempProperties.removeProperty(CHATGROUP_PROPERTY);
+			player.Out.SendMessage("You leave the chat group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			foreach (GamePlayer member in players)
+			{
+				member.Out.SendMessage(player.Name + " has left the chat group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+			if (players.Count == 1)
+			{
+				foreach (GamePlayer plr in players)
 				{
-					member.Out.SendMessage(player.Name+" has left the chat group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-				if (m_chatgroupMembers.Count == 1)
-				{
-					ArrayList lastPlayers = new ArrayList(m_chatgroupMembers.Count);
-					lastPlayers.AddRange(m_chatgroupMembers.Keys);
-					foreach (GamePlayer plr in lastPlayers)
-					{
-						RemovePlayer(plr);
-					}
+					RemovePlayer(plr);
 				}
 			}
 			return true;

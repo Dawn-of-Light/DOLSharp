@@ -67,14 +67,33 @@ namespace DOL.GS.PacketHandler.Client.v168
 				var player = (GamePlayer) m_actionSource;
 
 				IGameEffect found = null;
-				lock (player.EffectList)
+
+				if (player.Client.Version <= GameClient.eClientVersion.Version1109)
 				{
-					foreach (IGameEffect effect in player.EffectList)
+					lock (player.EffectList)
 					{
-						if (effect.InternalID == m_effectId)
+						foreach (IGameEffect effect in player.EffectList)
 						{
-							found = effect;
-							break;
+							if (effect.InternalID == m_effectId)
+							{
+								found = effect;
+								break;
+							}
+						}
+					}
+				}
+				else
+				{
+					lock (player.EffectList)
+					{
+						foreach (IGameEffect effect in player.EffectList)
+						{
+							if(!(effect is GameSpellEffect)) continue;
+							if (((GameSpellEffect)effect).Spell.ID == m_effectId)
+							{
+								found = effect;
+								break;
+							}
 						}
 					}
 				}

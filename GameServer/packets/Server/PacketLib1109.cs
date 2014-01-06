@@ -190,13 +190,15 @@ namespace DOL.GS.PacketHandler
 			pak.WriteShort((ushort)item.Model);
 			pak.WriteByte((byte)item.Extension);
 			int flag = 0;
-			if (item.Emblem != 0)
+			int emblem = GameServer.ServerRules.OverrideItemEmblem(m_gameClient, item);
+			int color = GameServer.ServerRules.OverrideItemColor(m_gameClient, item);
+			if (emblem != 0)
 			{
-				pak.WriteShort((ushort)item.Emblem);
-				flag |= (item.Emblem & 0x010000) >> 16; // = 1 for newGuildEmblem
+				pak.WriteShort((ushort)emblem);
+				flag |= (emblem & 0x010000) >> 16; // = 1 for newGuildEmblem
 			}
 			else
-				pak.WriteShort((ushort)item.Color);
+				pak.WriteShort((ushort)color);
 			//						flag |= 0x01; // newGuildEmblem
 			flag |= 0x02; // enable salvage button
 			AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(m_gameClient.Player.CraftingPrimarySkill);

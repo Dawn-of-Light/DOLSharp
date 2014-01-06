@@ -1651,6 +1651,11 @@ namespace DOL.GS.ServerRules
 			return string.Empty;
 		}
 
+		public virtual string GetExamineMessages(GamePlayer source, GamePlayer target)
+		{
+			return LanguageMgr.GetTranslation(target.Client.Account.Language, "GamePlayer.GetExamineMessages.YouExamine", target.GetName(source));
+		}
+
 		/// <summary>
 		/// Gets the player last name based on server type
 		/// </summary>
@@ -2182,5 +2187,23 @@ namespace DOL.GS.ServerRules
 				((GamePlayer)living).Out.SendMessage(message, type, loc);
 		}
 		#endregion
+
+		public virtual int OverrideItemEmblem(GameClient client, InventoryItem item)
+		{
+			if (item == null) return 0;
+			return item.Emblem;
+		}
+
+		public virtual int OverrideItemColor(GameClient client, InventoryItem item)
+		{
+			if (item == null) return 0;
+			return item.Color;
+		}
+
+		public virtual void HandlePlayerPosition(GamePlayer player)
+		{
+
+		}
+
 	}
 }

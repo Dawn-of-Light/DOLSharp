@@ -21,6 +21,7 @@ using System.Collections;
 using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.Language;
+using System.Collections.Generic;
 
 namespace DOL.GS.Commands
 {
@@ -585,7 +586,7 @@ namespace DOL.GS.Commands
                             client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Battlegroup.InBattleGroup"), eChatType.CT_BattleGroup, eChatLoc.CL_SystemWindow);
 							return;
                         }
-                        if (mybattlegroup.Listen == true && (((bool)mybattlegroup.Members[client.Player]) == false))
+                        if (mybattlegroup.Listen == true && mybattlegroup.Members.ContainsKey(client.Player) && !mybattlegroup.Members[client.Player])
                         {
                             client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Battlegroup.LeaderCommand"), eChatType.CT_BattleGroup, eChatLoc.CL_SystemWindow);
 							return;
@@ -610,11 +611,16 @@ namespace DOL.GS.Commands
                             client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Battlegroup.InBattleGroup"), eChatType.CT_BattleGroup, eChatLoc.CL_SystemWindow);
 							return;
                         }
-                        if (mybattlegroup.Listen == true && (((bool)mybattlegroup.Members[client.Player]) == false))
+                        if (mybattlegroup.Listen == true && mybattlegroup.Members.ContainsKey(client.Player) && !mybattlegroup.Members[client.Player])
                         {
                             client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Battlegroup.LeaderCommand"), eChatType.CT_BattleGroup, eChatLoc.CL_SystemWindow);
 							return;
                         }
+						if (args.Length < 3)
+						{
+							PrintHelp(client);
+							return;
+						}
                         if (Convert.ToInt32(args[2]) == 0)
                         {
                             client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Battlegroup.BattlegroupLootThresholdOff"), eChatType.CT_BattleGroup, eChatLoc.CL_SystemWindow);
@@ -633,7 +639,7 @@ namespace DOL.GS.Commands
                             client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Battlegroup.InBattleGroup"), eChatType.CT_BattleGroup, eChatLoc.CL_SystemWindow);
 							return;
                         }
-                        if ((bool)mybattlegroup.Members[client.Player] == false)
+                        if (mybattlegroup.Members.ContainsKey(client.Player) && !mybattlegroup.Members[client.Player])
                         {
                             client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Battlegroup.LeaderCommand"), eChatType.CT_BattleGroup, eChatLoc.CL_SystemWindow);
 							return;
@@ -652,13 +658,14 @@ namespace DOL.GS.Commands
                         mybattlegroup.SetBGTreasurer(treasclient.Player);
                         client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Battlegroup.BattlegroupTreasurerOn", treasclient.Player.Name), eChatType.CT_BattleGroupLeader, eChatLoc.CL_SystemWindow);
                         treasclient.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Battlegroup.BattlegroupTreasurerIsYou"), eChatType.CT_BattleGroup, eChatLoc.CL_SystemWindow);
-                        foreach (GamePlayer ply in mybattlegroup.Members.Keys)
+						List<GamePlayer> players = new List<GamePlayer>(mybattlegroup.Members.Keys);
+						foreach (GamePlayer ply in players)
                         {
                             ply.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Battlegroup.BattlegroupTreasurerIs", treasclient.Player.Name), eChatType.CT_Chat, eChatLoc.CL_SystemWindow);
                         }
                         if (mybattlegroup.GetBGTreasurer() == null)
                         {
-                            foreach (GamePlayer ply in mybattlegroup.Members.Keys)
+							foreach (GamePlayer ply in players)
                             {
                                 ply.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Battlegroup.BattlegroupTreasurerOff"), eChatType.CT_BattleGroup, eChatLoc.CL_SystemWindow);
                             }

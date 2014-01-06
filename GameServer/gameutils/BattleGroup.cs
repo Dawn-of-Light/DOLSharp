@@ -16,9 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
-using System.Collections.Specialized;
 using DOL.GS.PacketHandler;
+using System.Collections.Generic;
 namespace DOL.GS
 {
 	/// <summary>
@@ -30,7 +29,8 @@ namespace DOL.GS
 		/// <summary>
 		/// This holds all players inside the battlegroup
 		/// </summary>
-		protected HybridDictionary m_battlegroupMembers = new HybridDictionary();
+		//protected HybridDictionary m_battlegroupMembers = new HybridDictionary();
+		protected Dictionary<GamePlayer, bool> m_battlegroupMembers = new Dictionary<GamePlayer, bool>();
 
         bool battlegroupLootType = false;
         GamePlayer battlegroupTreasurer = null;
@@ -44,11 +44,12 @@ namespace DOL.GS
             battlegroupLootType = false;
             battlegroupTreasurer = null;
 		}
-		public HybridDictionary Members
+		public Dictionary<GamePlayer, bool> Members
 		{
 			get{return m_battlegroupMembers;}
 			set{m_battlegroupMembers=value;}
 		}
+
 		private bool listen=false;
 		public bool Listen
 		{
@@ -74,31 +75,33 @@ namespace DOL.GS
 		/// <param name="player">GamePlayer to be added to the group</param>
 		/// <param name="leader"></param>
 		/// <returns>true if added successfully</returns>
-		public virtual bool AddBattlePlayer(GamePlayer player,bool leader) 
+		public virtual bool AddBattlePlayer(GamePlayer player, bool leader)
 		{
 			if (player == null) return false;
 			lock (m_battlegroupMembers)
 			{
-				if (m_battlegroupMembers.Contains(player))
+				if (m_battlegroupMembers.ContainsKey(player))
 					return false;
-				player.TempProperties.setProperty(BATTLEGROUP_PROPERTY, this);
-				player.Out.SendMessage("You join the battle group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				foreach(GamePlayer member in Members.Keys)
-				{
-					member.Out.SendMessage(player.Name+" has joined the battle group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-				m_battlegroupMembers.Add(player,leader);
-
-                player.isInBG = true; //Xarik: Player is in BG
+				m_battlegroupMembers.Add(player, leader);
 			}
+			List<GamePlayer> players = new List<GamePlayer>(m_battlegroupMembers.Keys);
+			player.TempProperties.setProperty(BATTLEGROUP_PROPERTY, this);
+			player.Out.SendMessage("You join the battle group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			foreach (GamePlayer member in players)
+			{
+				member.Out.SendMessage(player.Name + " has joined the battle group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+
+			player.isInBG = true; //Xarik: Player is in BG
+
 			return true;
 		}
 
         public virtual bool IsInTheBattleGroup(GamePlayer player)
         {
-            lock (m_battlegroupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+            //lock (m_battlegroupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
             {
-                return m_battlegroupMembers.Contains(player);
+                return m_battlegroupMembers.ContainsKey(player);
             }
         }
 
@@ -172,26 +175,20 @@ namespace DOL.GS
             }
         }
         
-        public GamePlayer[] GetPlayersInTheBattleGroup()
+        public List<GamePlayer> GetPlayersInTheBattleGroup()
         {
-            ArrayList players = new ArrayList(ServerProperties.Properties.BATTLEGROUP_MAX_MEMBER);
-            lock (m_battlegroupMembers.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
-            {
-                for (int i = 0; i < m_battlegroupMembers.Count; i++)
-                {
-                    players.Add((GamePlayer)m_battlegroupMembers[i]);
-                }
-            }
-            return (GamePlayer[])players.ToArray(typeof(GamePlayer));
+			return new List<GamePlayer>(m_battlegroupMembers.Keys);
         }
 
         public virtual void SendMessageToBattleGroupMembers(string msg, eChatType type, eChatLoc loc)
         {
-            lock (m_battlegroupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+            //lock (m_battlegroupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			List<GamePlayer> players = new List<GamePlayer>(m_battlegroupMembers.Keys);
             {
-                foreach (GamePlayer player in m_battlegroupMembers.Keys)
+				foreach (GamePlayer player in players)
                 {
-                    player.Out.SendMessage(msg, type, loc);
+					if (player == null) continue;
+					player.Out.SendMessage(msg, type, loc);
                 }
             }
         }
@@ -210,19 +207,20 @@ namespace DOL.GS
 			if (player == null) return false;
 			lock (m_battlegroupMembers)
 			{
-				if (!m_battlegroupMembers.Contains(player))
+				if (!m_battlegroupMembers.ContainsKey(player))
 					return false;
 				m_battlegroupMembers.Remove(player);
 				player.TempProperties.removeProperty(BATTLEGROUP_PROPERTY);
 				player.Out.SendMessage("You leave the battle group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				foreach(GamePlayer member in Members.Keys)
+				List<GamePlayer> lastPlayers = new List<GamePlayer>(m_battlegroupMembers.Keys);
+				foreach (GamePlayer member in lastPlayers)
 				{
 					member.Out.SendMessage(player.Name+" has left the battle group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
-				if (m_battlegroupMembers.Count == 1)
+				if (lastPlayers.Count == 1)
 				{
-					ArrayList lastPlayers = new ArrayList(m_battlegroupMembers.Count);
-					lastPlayers.AddRange(m_battlegroupMembers.Keys);
+					//ArrayList lastPlayers = new ArrayList(m_battlegroupMembers.Count);
+					//lastPlayers.AddRange(m_battlegroupMembers.Keys);
 					foreach (GamePlayer plr in lastPlayers)
 					{
 						RemoveBattlePlayer(plr);

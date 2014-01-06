@@ -300,6 +300,8 @@ namespace DOL.GS.ServerRules
 		/// <returns>The Realmranktitle of the target</returns>
 		string GetPlayerPrefixName(GamePlayer source, GamePlayer target);
 
+		string GetExamineMessages(GamePlayer source, GamePlayer target);
+
 		/// <summary>
 		/// Gets the server type color handling scheme
 		/// 
@@ -450,5 +452,8 @@ namespace DOL.GS.ServerRules
 		/// <returns></returns>
 		GameConsignmentMerchant CreateHousingConsignmentMerchant(GS.Housing.House house);
 
+		int OverrideItemEmblem(GameClient client, InventoryItem item);
+		int OverrideItemColor(GameClient client, InventoryItem item);
+		void HandlePlayerPosition(GamePlayer player);
 	}
 }

@@ -1451,7 +1451,12 @@ namespace DOL.GS
 			BroadcastUpdate();
 		}
 
-		private const int STICKMINIMUMRANGE = 100;
+		private int m_StickMinimumRange = 100;
+		public virtual int StickMinimumRange
+		{
+			get { return m_StickMinimumRange; }
+			set { m_StickMinimumRange = value; }
+		}
 		private const int STICKMAXIMUMRANGE = 5000;
 
 		public virtual void Follow(GameObject target, int minDistance, int maxDistance)
@@ -3776,7 +3781,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					Follow(target, STICKMINIMUMRANGE, STICKMAXIMUMRANGE);
+					Follow(target, StickMinimumRange, STICKMAXIMUMRANGE);
 				}
 			}
 
@@ -4390,7 +4395,7 @@ namespace DOL.GS
 		{
 			if (m_attackAction != null && target != null)
 			{
-				Follow(target, STICKMINIMUMRANGE, MaxDistance);
+				Follow(target, StickMinimumRange, MaxDistance);
 				m_attackAction.Start(1);
 			}
 		}
@@ -4782,8 +4787,8 @@ namespace DOL.GS
 				else
 				{
 					//If we aren't a distance NPC, lets make sure we are in range to attack the target!
-					if (owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance && !owner.IsWithinRadius( owner.TargetObject, STICKMINIMUMRANGE ) )
-						((GameNPC)owner).Follow(owner.TargetObject, STICKMINIMUMRANGE, STICKMAXIMUMRANGE);
+					if (owner.ActiveWeaponSlot != eActiveWeaponSlot.Distance && !owner.IsWithinRadius( owner.TargetObject, owner.StickMinimumRange ) )
+						((GameNPC)owner).Follow(owner.TargetObject, owner.StickMinimumRange, STICKMAXIMUMRANGE);
 				}
 
 				if (owner.Brain != null)
@@ -4977,6 +4982,39 @@ namespace DOL.GS
 			}
 		}
 
+		public virtual void PauseCurrentSpellCast(GameLiving attacker)
+		{
+			if (m_runningSpellHandler != null)
+				m_runningSpellHandler.PauseCasting();
+		}
+
+		public override void StartInterruptTimer(int duration, AttackData.eAttackType attackType, GameLiving attacker)
+		{
+			if (!IsAlive || ObjectState != eObjectState.Active)
+			{
+				InterruptTime = 0;
+				InterruptAction = 0;
+				return;
+			}
+
+			int chances = 100;
+			if (attacker != null && Level > attacker.Level)
+			{
+				chances = 100 - (Level - attacker.Level) * 10;
+			}
+
+			if (Util.Chance(chances))
+			{
+				if (InterruptTime < CurrentRegion.Time + duration)
+					InterruptTime = CurrentRegion.Time + duration;
+				//new InterruptAction(this, attacker, duration, attackType).Start(1);
+
+				if (CurrentSpellHandler != null)
+					CurrentSpellHandler.CasterIsAttacked(attacker);
+				if (AttackState && ActiveWeaponSlot == eActiveWeaponSlot.Distance)
+					OnInterruptTick(attacker, attackType);
+			}
+		}
 		#endregion
 		
 		#region Notify

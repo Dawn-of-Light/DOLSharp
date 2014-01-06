@@ -54,6 +54,7 @@ namespace DOL.GS.Styles
 		/// <returns>true if the player can execute the style right now, false if not</returns>
 		public static bool CanUseStyle(GameLiving living, Style style, InventoryItem weapon)
 		{
+			if (style == null) return false;
 			//First thing in processors, lock the objects you modify
 			//This way it makes sure the objects are not modified by
 			//several different threads at the same time!

@@ -46,6 +46,8 @@ namespace DOL.GS
 		/// The region port
 		/// </summary>
 		public ushort Port;
+
+		public ushort CPU;
 		/// <summary>
 		/// The region water level
 		/// </summary>

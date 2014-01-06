@@ -85,8 +85,11 @@ namespace DOL.GS.Spells
 			if (target.IsAlive == false) return;
 
 			base.OnDirectEffect(target, effectiveness);
-			double heal = Spell.Value * effectiveness;
-			
+
+			double val = Spell.Value;
+			if (val < 0) val = (-val / 100) * target.Health;
+			double heal = val * effectiveness;
+			if (target.IsDiseased) heal /= 2;
 			target.Health += (int)heal;
 
             #region PVP DAMAGE

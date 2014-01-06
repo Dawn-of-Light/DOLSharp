@@ -39,7 +39,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			var command = (byte) packet.ReadByte(); // 1-Attack, 2-Release
 
 			//[Ganrod] Nidel: Animist can removed his TurretFnF without MainPet.
-			if (client.Player.TargetObject != null && command == 2 && client.Player.ControlledBrain == null &&
+			/*if (client.Player.TargetObject != null && command == 2 && client.Player.ControlledBrain == null &&
 			    client.Player.CharacterClass.ID == (int) eCharacterClass.Animist)
 			{
 				var turret = client.Player.TargetObject as TurretPet;
@@ -53,10 +53,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			//[Ganrod] Nidel: Call only if player has controllednpc
 			if (client.Player.ControlledBrain != null)
-			{
+			{*/
 				new HandlePetCommandAction(client.Player, aggroState, walkState, command).Start(1);
-				return;
-			}
+				/*return;
+			}*/
 		}
 
 		#endregion
@@ -154,6 +154,21 @@ namespace DOL.GS.PacketHandler.Client.v168
 						player.CommandNpcAttack();
 						break;
 					case 2:
+						if (player.TargetObject != null && player.TargetObject is GameNPC)
+						{
+							GameNPC target = player.TargetObject as GameNPC;
+							if ((player.ControlledBrain != null && player.ControlledBrain.Body != null && player.ControlledBrain.Body != target)
+								|| player.ControlledBrain == null || player.ControlledBrain.Body == null)
+							{
+								if (target.Brain != null && target.Brain is IControlledBrain && ((IControlledBrain)target.Brain).GetPlayerOwner() == player)
+								{
+									target.Health = 0;
+									target.Delete();
+									player.Out.SendMessage("You release " + target.Name, eChatType.CT_SpellExpires, eChatLoc.CL_SystemWindow);
+									return;
+								}
+							}
+						}
 						player.CommandNpcRelease();
 						break;
 					default:

@@ -151,6 +151,9 @@ namespace DOL.GS.Spells
 			SendDamageMessages(ad);
 			DamageTarget(ad, true);
 			target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster);
+
+			if (m_caster is GameNPC)
+				m_caster.TempProperties.setProperty(GameLiving.LAST_ATTACK_TIME, m_caster.CurrentRegion != null ? m_caster.CurrentRegion.Time : 0);
 			/*
 			if (target.IsAlive)
 				base.ApplyEffectOnTarget(target, effectiveness);*/

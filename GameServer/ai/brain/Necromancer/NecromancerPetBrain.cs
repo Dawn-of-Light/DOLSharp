@@ -170,7 +170,7 @@ namespace DOL.AI.Brain
 
                 Owner.Notify(GamePlayerEvent.CastFinished, Owner, args);
 
-				if (SpellsQueued && Body.CurrentRegion.Time - Body.LastAttackedByEnemyTick > 5 * 1000)
+				if (SpellsQueued && Body != null && Body.CurrentRegion != null && Body.CurrentRegion.Time - Body.LastAttackedByEnemyTick > 5 * 1000)
 				{
 					CheckSpellQueue();
 				}

@@ -61,6 +61,8 @@ namespace DOL.GS.Spells
 		/// </summary>
 		void InterruptCasting();
 
+		void PauseCasting();
+
 		/// <summary>
 		/// Has to be called when the caster moves
 		/// </summary>

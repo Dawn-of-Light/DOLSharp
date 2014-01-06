@@ -177,7 +177,10 @@ namespace DOL.GS.Spells
 			
 			//Check for buffs
 			if (brain is ControlledNpcBrain)
+			{
 				(brain as ControlledNpcBrain).CheckSpells(StandardMobBrain.eCheckSpellType.Defensive);
+				(brain as ControlledNpcBrain).CheckAbilities();
+			}
 
 			AddHandlers();
 

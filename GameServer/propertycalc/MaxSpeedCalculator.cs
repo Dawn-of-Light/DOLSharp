@@ -88,7 +88,7 @@ namespace DOL.GS.PropertyCalc
 						player.IsOverencumbered = false;
 					}
 				}
-				if (player.IsStealthed)
+				if (player.IsStealthed && player.Client.Account.PrivLevel == (uint)ePrivLevel.Player)
 				{
 					MasteryOfStealthAbility mos = player.GetAbility<MasteryOfStealthAbility>();
 					GameSpellEffect bloodrage = SpellHandler.FindEffectOnTarget(player, "BloodRage");

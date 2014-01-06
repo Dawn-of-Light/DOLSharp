@@ -57,17 +57,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 				else
 				{
-					client.Player.X = newZone.XOffset + xOffsetInZone;
-					client.Player.Y = newZone.YOffset + yOffsetInZone;
-					client.Player.Z = realZ;
-					client.Player.MovementStartTick = Environment.TickCount;
+					client.Player.SetCoords(newZone.XOffset + xOffsetInZone, newZone.YOffset + yOffsetInZone, realZ, (ushort)(heading & 0xfff)); 
 				}
 			}
 
 			int spellLevel = packet.ReadByte();
 			int spellLineIndex = packet.ReadByte();
-
-			client.Player.Heading = (ushort) (heading & 0xfff);
 
 			new UseSpellAction(client.Player, flagSpeedData, spellLevel, spellLineIndex).Start(1);
 		}
@@ -135,41 +130,33 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.TargetInView = (m_flagSpeedData & 0xa000) != 0; // why 2 bits? that has to be figured out
 				player.GroundTargetInView = ((m_flagSpeedData & 0x1000) != 0);
 
-				IList spelllines = player.GetSpellLines();
-				Spell castSpell = null;
-				SpellLine castLine = null;
-				lock (spelllines.SyncRoot)
-				{
-					if (m_spellLineIndex < spelllines.Count)
-					{
-						castLine = (SpellLine) spelllines[m_spellLineIndex];
-						List<Spell> spells = SkillBase.GetSpellList(castLine.KeyName);
-						foreach (Spell spell in spells)
-						{
-							if (spell.Level == m_spellLevel)
-							{
-								castSpell = spell;
-								break;
-							}
-						}
-					}
-				}
-				if (castSpell != null)
-				{
-					player.CastSpell(castSpell, castLine);
-					return;
-				}
-				else
-				{
-					if (Log.IsWarnEnabled)
-						Log.Warn("Client <" + player.Client.Account.Name + "> requested incorrect spell at level " + m_spellLevel +
-							" in spell-line " + ((castLine == null || castLine.Name == null) ? "unkown" : castLine.Name));
-				}
-				if (castLine == null)
-				{
-					if (Log.IsWarnEnabled)
-						Log.Warn("Client <" + player.Client.Account.Name + "> requested incorrect spell-line index");
-				}
+				Dictionary<byte, Dictionary<byte, Spell>> cachedSpells = player.CachedSpells;
+                Dictionary<byte, SpellLine> cachedSpellLines = player.CachedSpellLines;
+
+                Spell castSpell = null;
+                SpellLine castLine = null;
+
+                if (cachedSpellLines.ContainsKey((byte)m_spellLineIndex))
+                    castLine = cachedSpellLines[(byte)m_spellLineIndex];
+
+                if (cachedSpells.ContainsKey((byte)m_spellLineIndex) && cachedSpells[(byte)m_spellLineIndex].ContainsKey((byte)m_spellLevel))
+                    castSpell = cachedSpells[(byte)m_spellLineIndex][(byte)m_spellLevel];
+                
+                if (castSpell != null && castLine != null)
+                {
+                    player.CastSpell(castSpell, castLine);
+                    return;
+                }
+                else
+                {
+                    if (log.IsWarnEnabled)
+                        log.Warn("Client <" + player.Client.Account.Name + "> requested incorrect spell at level " + m_spellLevel + " in spell-line " + (castLine != null ? castLine.Name : m_spellLineIndex.ToString()));
+                }
+                if (castLine == null)
+                {
+                    if (log.IsWarnEnabled)
+                        log.Warn("Client <" + player.Client.Account.Name + "> requested incorrect spell-line index");
+                }
 			}
 		}
 

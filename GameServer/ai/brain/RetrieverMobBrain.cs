@@ -35,7 +35,7 @@ namespace DOL.AI.Brain
 	/// because bad things may happen should it succeed.
 	/// </summary>
 	/// <author>Aredhel</author>
-    class RetrieverMobBrain : StandardMobBrain
+    public class RetrieverMobBrain : StandardMobBrain
     {
 		/// <summary>
 		/// Defines a logger for this class.

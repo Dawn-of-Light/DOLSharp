@@ -31,7 +31,7 @@ namespace DOL.GS.PlayerClass
 		public ClassSeer() : base() {
 			m_specializationMultiplier = 10;
 			m_wsbase = 360;
-			m_baseHP = 720;
+			m_baseHP = 740;
 			m_manaStat = eStat.PIE;
 		}
 

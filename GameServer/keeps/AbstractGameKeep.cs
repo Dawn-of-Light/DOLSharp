@@ -283,6 +283,7 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
+				if (Realm == eRealm.None) return 1;
 				return m_difficultyLevel[(int)Realm - 1];
 			}
 		}

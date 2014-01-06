@@ -22,6 +22,7 @@ using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
 using DOL.GS.Keeps;
 using DOL.Events;
+using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
 {
@@ -190,6 +191,9 @@ namespace DOL.GS.Spells
 			DamageTarget(ad, true);
 			SendDamageMessages(ad);
 			target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster);
+
+			if (m_caster is GameNPC)
+				m_caster.TempProperties.setProperty(GameLiving.LAST_ATTACK_TIME, m_caster.CurrentRegion != null ? m_caster.CurrentRegion.Time : 0);
 		}
 
 
@@ -230,6 +234,11 @@ namespace DOL.GS.Spells
 
 		private void SpellResisted(GameLiving target)
 		{
+			target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
+
+			GameSpellEffect mezz = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+			if (mezz != null) mezz.Cancel(false);
+
 			base.OnSpellResisted(target);
 		}
 

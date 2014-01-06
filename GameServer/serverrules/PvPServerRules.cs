@@ -432,6 +432,20 @@ namespace DOL.GS.ServerRules
 			return true;
 		}
 
+		public override string GetExamineMessages(GamePlayer source, GamePlayer target)
+		{
+			string message = "";
+			if (source.Client.Account.PrivLevel > 1 || target.Client.Account.PrivLevel > 1)
+				message = LanguageMgr.GetTranslation(target.Client.Account.Language, "GamePlayer.GetExamineMessages.YourGuildMember", target.GetName(source), source.GetPronoun(source.Client, 0, true), source.CharacterClass.Name);
+			else if (source.Guild == null)
+				message = LanguageMgr.GetTranslation(target.Client.Account.Language, "GamePlayer.GetExamineMessages.NeutralMember", target.GetName(source), source.GetPronoun(source.Client, 0, true));
+			else if (source.Guild == target.Guild || source.Client.Account.PrivLevel > 1 || target.Client.Account.PrivLevel > 1)
+				message = LanguageMgr.GetTranslation(target.Client.Account.Language, "GamePlayer.GetExamineMessages.YourGuildMember", target.GetName(source), source.GetPronoun(source.Client, 0, true), source.CharacterClass.Name);
+			else
+				message = LanguageMgr.GetTranslation(target.Client.Account.Language, "GamePlayer.GetExamineMessages.OtherGuildMember", target.GetName(source), source.GetPronoun(source.Client, 0, true), source.GuildName);
+			return message;
+		}
+
 		/// <summary>
 		/// Gets the server type color handling scheme
 		/// 

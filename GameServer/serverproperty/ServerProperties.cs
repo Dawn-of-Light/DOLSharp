@@ -265,6 +265,35 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("system", "speedhack_tolerance", "Number of times speed hack detected before banning.  Multiples of 5 (20, 25, 30, etc)", 20)]
 		public static int SPEEDHACK_TOLERANCE;
 
+		[ServerProperty("system", "sh_distancemin", "", 15)]
+		public static int SH_DISTANCEMIN;
+		[ServerProperty("system", "sh_distancemax", "", 115)]
+		public static int SH_DISTANCEMAX;
+		[ServerProperty("system", "sh_tolerancemin", "", 10.0)]
+		public static double SH_TOLERANCEMIN;
+		[ServerProperty("system", "sh_tolerancemax", "", 30.0)]
+		public static double SH_TOLERANCEMAX;
+		[ServerProperty("system", "sh_remain", "", 3000)]
+		public static int SH_REMAIN;
+		[ServerProperty("system", "sh_count", "", 5)]
+		public static int SH_COUNT;
+		[ServerProperty("system", "sh_enabled", "", true)]
+		public static bool SH_ENABLED;
+		[ServerProperty("system", "sh_maxdistance", "", 1000)]
+		public static int SH_MAXDISTANCE;
+		[ServerProperty("system", "sh_detectfly", "", false)]
+		public static bool SH_DETECTFLY;
+		[ServerProperty("system", "sh_ban", "", true)]
+		public static bool SH_BAN;
+		[ServerProperty("system", "sh_kick", "", true)]
+		public static bool SH_KICK;
+		[ServerProperty("system", "sh_portkick", "", true)]
+		public static bool SH_PORTKICK;
+		[ServerProperty("system", "sh_jumptime", "", 1500)]
+		public static int SH_JUMPTIME;
+		[ServerProperty("system", "sh_detectport", "", false)]
+		public static bool SH_DETECTPORT;
+
 		/// <summary>
 		/// Turn on move detect
 		/// </summary>
@@ -560,6 +589,9 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("world", "set_difficulty_on_epic_encounters", "Tune encounters taggued <Epic Encounter>. 0 means auto adaptative, others values are % of the initial difficulty (100%=initial difficulty)", 100)]
 		public static int SET_DIFFICULTY_ON_EPIC_ENCOUNTERS;
+
+		[ServerProperty("world", "visibility_distance", "maxmimum visibilty distance", 3600)]
+		public static int VISIBILITY_DISTANCE;
 
 		/// <summary>
 		/// A serialised list of disabled RegionIDs
@@ -1295,6 +1327,9 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("keeps", "set_keep_door_toughness", "This value is % of total damages inflicted to level 1 door. (100=full damages)", 100)]
 		public static int SET_KEEP_DOOR_TOUGHNESS;
+
+		[ServerProperty("keeps", "door_spell_damage", "This value is % of total damages inflicted to a keep door. (100=full damages)", 20)]
+		public static int DOOR_SPELL_DAMAGE;
 
 		/// <summary>
 		/// Define toughness for tower doors: 100 is 100% player's damages inflicted.

@@ -2543,7 +2543,8 @@ namespace DOL.GS
 					{
 						if (!(new Point2D(owner.X, owner.Y)).IsWithinRadius(new Point2D(attackTarget.X, attackTarget.Y), owner.AttackRange))
 						{
-							if (!(owner is GameNPC) || (owner as GameNPC).Brain == null || !((owner as GameNPC).Brain is StandardMobBrain))
+							if (!(owner is GameNPC) || (owner as GameNPC).Brain == null || !((owner as GameNPC).Brain is StandardMobBrain)
+								|| (owner as GameNPC).Brain is ProcPetBrain || (owner as GameNPC).Brain is TheurgistPetBrain)
 							{
 								Interval = 100;
 								return;
@@ -2821,7 +2822,7 @@ namespace DOL.GS
 				}
 
 				owner.TempProperties.setProperty( LAST_ATTACK_DATA, mainHandAD );
-				owner.TempProperties.setProperty(LAST_ATTACK_TIME, owner.CurrentRegion.Time);
+				owner.TempProperties.setProperty(LAST_ATTACK_TIME, owner != null && owner.CurrentRegion != null ? owner.CurrentRegion.Time : 0);
 
 				//Notify the target of our attack (sends damage messages, should be before damage)
 				// ...but certainly not if the attack never took place, like when the living
@@ -6341,14 +6342,9 @@ namespace DOL.GS
 		/// returns all abilities in a copied list
 		/// </summary>
 		/// <returns></returns>
-		public IList GetAllAbilities()
+		public List<Ability> GetAllAbilities()
 		{
-			lock (m_lockAbilities)
-			{
-				ArrayList list = new ArrayList();
-				list.AddRange(m_abilities.Values);
-				return list;
-			}
+			return new List<Ability>(m_abilities.Values);
 		}
 
 		#endregion Abilities

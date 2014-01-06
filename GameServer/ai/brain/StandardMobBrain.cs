@@ -137,7 +137,7 @@ namespace DOL.AI.Brain
 				{
 					if (Util.IsNearDistance(target.X, target.Y, target.Z, Body.X, Body.Y, Body.Z, GameNPC.CONST_WALKTOTOLERANCE))
 					{
-						Body.TurnTo(Body.GetHeading(target));
+						//Body.TurnTo(Body.GetHeading(target));
 					}
 					else
 					{

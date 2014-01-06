@@ -38,8 +38,8 @@ namespace DOL.GS.PlayerClass
 			m_secondaryStat = eStat.STR;
 			m_tertiaryStat = eStat.DEX;
 			m_manaStat = eStat.PIE;
-			m_wsbase = 360;
-			m_baseHP = 720;
+			m_wsbase = 380;
+			m_baseHP = 740;
 		}
 
 		public override string GetTitle(GamePlayer player, int level)

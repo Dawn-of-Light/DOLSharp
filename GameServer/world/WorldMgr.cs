@@ -84,7 +84,10 @@ namespace DOL.GS
 		/// <summary>
 		/// Is the distance an player can see
 		/// </summary>
-		public const int VISIBILITY_DISTANCE = 3600;
+		public static ushort VISIBILITY_DISTANCE
+		{
+			get { return (ushort)ServerProperties.Properties.VISIBILITY_DISTANCE; }	
+		}
 		/// <summary>
 		/// Moving greater than this distance requires the player to do a full world refresh
 		/// </summary>
@@ -425,6 +428,7 @@ namespace DOL.GS
 				data.WaterLevel = dbRegion.WaterLevel;
 				data.ClassType = dbRegion.ClassType;
 				data.IsFrontier = dbRegion.IsFrontier;
+				data.CPU = dbRegion.CPU;
 
 				if (data.IsFrontier)
 				{
@@ -466,7 +470,9 @@ namespace DOL.GS
 			for (int i = 0; i < regions.Count; i++)
 			{
 				RegionData region = (RegionData)regions[i];
-				RegisterRegion(timers[FastMath.Abs(i % (cpuCount * 2) - cpuCount) % cpuCount], region);
+				if (region.CPU > 0 && timers.Length >= region.CPU)
+					RegisterRegion(timers[region.CPU - 1], region);
+				else RegisterRegion(timers[FastMath.Abs(i % (cpuCount * 2) - cpuCount) % cpuCount], region);
 			}
 
 			log.Debug(GC.GetTotalMemory(true) / 1024 / 1024 + "MB - " + m_regions.Count + " Regions Loaded");

@@ -42,25 +42,36 @@ namespace DOL.GS.PacketHandler
 
         }
 
+		public override void SendVersionAndCryptKey()
+		{
+			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CryptKey));
+
+			pak.WriteByte(ParseVersion((int)m_gameClient.Version, true));
+			pak.WriteByte(ParseVersion((int)m_gameClient.Version, false));
+			pak.WriteByte(0x00);
+			SendTCP(pak);
+		}
+
 		public override void SendLoginGranted(byte color)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.LoginGranted));
 			pak.WritePascalString(m_gameClient.Account.Name);
 			pak.WritePascalString(GameServer.Instance.Configuration.ServerNameShort); //server name
-			pak.WriteByte(0x0C); //Server ID
+			pak.WriteByte((byte)ServerProperties.Properties.SERVER_ID); //Server ID
 			pak.WriteByte(color);
 			pak.WriteByte(0x00);
-			pak.WriteByte(0x00);
+			pak.WriteByte((byte)ServerProperties.Properties.SERVER_INDEX); // new in 1.75
 			SendTCP(pak);
 		}
 
 		public override void SendLoginGranted()
 		{
 			//[Freya] Nidel: Can use realm button in character selection screen
-
+			// color 1 or 3 to enable realm button
+			byte color = GameServer.ServerRules.GetColorHandling(m_gameClient);
 			if (ServerProperties.Properties.ALLOW_ALL_REALMS)
 			{
-				SendLoginGranted(1);
+				SendLoginGranted((byte)(color == 3 ? 3 : 1));
 			}
 			else
 			{

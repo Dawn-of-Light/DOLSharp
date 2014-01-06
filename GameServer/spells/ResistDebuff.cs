@@ -66,23 +66,29 @@ namespace DOL.GS.Spells
 
 			base.ApplyEffectOnTarget(target, effectiveness);
 
-			if (target.Realm == 0 || Caster.Realm == 0)
+			if (Spell.CastTime > 0)
 			{
-				target.LastAttackedByEnemyTickPvE = target.CurrentRegion.Time;
-				Caster.LastAttackTickPvE = Caster.CurrentRegion.Time;
+				if (target.Realm == 0 || Caster.Realm == 0)
+				{
+					target.LastAttackedByEnemyTickPvE = target.CurrentRegion.Time;
+					Caster.LastAttackTickPvE = Caster.CurrentRegion.Time;
+				}
+				else
+				{
+					target.LastAttackedByEnemyTickPvP = target.CurrentRegion.Time;
+					Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
+				}
+				if (target is GameNPC)
+				{
+					IOldAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IOldAggressiveBrain;
+					if (aggroBrain != null)
+						aggroBrain.AddToAggroList(Caster, 1);
+				}
+				target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
+
+				GameSpellEffect mezz = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+				if (mezz != null) mezz.Cancel(false);
 			}
-			else
-			{
-				target.LastAttackedByEnemyTickPvP = target.CurrentRegion.Time;
-				Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
-			}
-			if(target is GameNPC)
-			{
-				IOldAggressiveBrain aggroBrain = ((GameNPC)target).Brain as IOldAggressiveBrain;
-				if (aggroBrain != null)
-					aggroBrain.AddToAggroList(Caster, 1);
-			}
-			if(Spell.CastTime>0) target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
 		}
 
 		/// <summary>

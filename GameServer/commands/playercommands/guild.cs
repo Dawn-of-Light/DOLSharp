@@ -1091,16 +1091,16 @@ namespace DOL.GS.Commands
 											return;
 										}
 
-										lock (group)
+										List<GamePlayer> players = group.GetPlayersInTheGroup();
 										{
-											if (group.MemberCount < Properties.GUILD_NUM)
+											if (players.Count < Properties.GUILD_NUM)
 											{
 												client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.FormNoMembers" + Properties.GUILD_NUM), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 												return;
 											}
 
 											// a member of group have a guild already, so quit!
-											foreach (GamePlayer ply in group.GetPlayersInTheGroup())
+											foreach (GamePlayer ply in players)
 											{
 												if (ply.Guild != null)
 												{
@@ -1121,7 +1121,7 @@ namespace DOL.GS.Commands
 											}
 											else
 											{
-												foreach (GamePlayer ply in group.GetPlayersInTheGroup())
+												foreach (GamePlayer ply in players)
 												{
 													if (ply == client.Player)
 													{

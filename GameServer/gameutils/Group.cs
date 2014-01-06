@@ -106,9 +106,10 @@ namespace DOL.GS
 			set
 			{
 				m_mission = value;
-				lock (m_groupMembers)
+				List<GameLiving> all = new List<GameLiving>(m_groupMembers);
+				//lock (m_groupMembers)
 				{
-					foreach (GameLiving living in this.m_groupMembers)
+					foreach (GameLiving living in all)
 					{
 						if (living is GamePlayer == false) continue;
 						GamePlayer player = living as GamePlayer;
@@ -192,14 +193,14 @@ namespace DOL.GS
 		/// <returns>Array of GamePlayers in this group</returns>
 		public ICollection<GameLiving> GetMembersInTheGroup()
 		{
-			List<GameLiving> livings = new List<GameLiving>();
-			lock (m_groupMembers)
+			List<GameLiving> livings = new List<GameLiving>(m_groupMembers);
+			/*lock (m_groupMembers)
 			{
 				foreach (GameLiving living in m_groupMembers)
 				{
 					livings.Add(living);
 				}
-			}
+			}*/
 			return livings;
 		}
 
@@ -207,12 +208,13 @@ namespace DOL.GS
 		/// Gets all players of the group
 		/// </summary>
 		/// <returns>Array of GamePlayers in this group</returns>
-		public ICollection<GamePlayer> GetPlayersInTheGroup()
+		public List<GamePlayer> GetPlayersInTheGroup()
 		{
+			List<GameLiving> all = new List<GameLiving>(m_groupMembers);
 			List<GamePlayer> players = new List<GamePlayer>();
-			lock (m_groupMembers)
+			//lock (m_groupMembers)
 			{
-				foreach (GameLiving living in m_groupMembers)
+				foreach (GameLiving living in all)
 				{
 					if (living is GamePlayer == false) continue;
 					players.Add(living as GamePlayer);
@@ -366,12 +368,13 @@ namespace DOL.GS
 		/// <param name="updateOtherRegions">Should updates be sent to players in other regions</param>
 		public void UpdateMember(GameLiving living, bool updateIcons, bool updateOtherRegions)
 		{
-			lock (m_groupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			List<GameLiving> players = new List<GameLiving>(m_groupMembers);
+			//lock (m_groupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				if (living.Group != this)
 					return;
 
-				foreach (GameLiving grpLiving in m_groupMembers)
+				foreach (GameLiving grpLiving in players)
 				{
 					if (grpLiving is GamePlayer == false) continue;
 					GamePlayer member = grpLiving as GamePlayer;
@@ -443,12 +446,13 @@ namespace DOL.GS
 		/// <param name="updateOtherRegions">Should updates be sent to players in other regions</param>
 		public void UpdateAllToMember(GamePlayer player, bool updateIcons, bool updateOtherRegions)
 		{
-			lock (m_groupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			List<GameLiving> all = new List<GameLiving>(m_groupMembers);
+			//lock (m_groupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				if (player.Group != this)
 					return;
 
-				foreach (GameLiving living in m_groupMembers)
+				foreach (GameLiving living in all)
 				{
 					if (updateOtherRegions || living.CurrentRegion == player.CurrentRegion)
 					{
@@ -468,16 +472,19 @@ namespace DOL.GS
 		/// <returns>A string of group members</returns>
 		public string GroupMemberString(GamePlayer player)
 		{
-			lock (m_groupMembers)
+			List<GameLiving> all = new List<GameLiving>(m_groupMembers);
+			//lock (m_groupMembers)
 			{
 				StringBuilder text = new StringBuilder(64); //create the string builder
 				text.Length = 0;
-				BattleGroup mybattlegroup = (BattleGroup)player.TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
-				foreach (GamePlayer plr in m_groupMembers)
+				BattleGroup mybattlegroup = player.TempProperties.getProperty<BattleGroup>(BattleGroup.BATTLEGROUP_PROPERTY, null);
+				foreach (GameLiving liv in all)
 				{
+					if (liv == null || !(liv is GamePlayer)) continue;
+					GamePlayer plr = liv as GamePlayer;
 					if (mybattlegroup.IsInTheBattleGroup(plr))
 					{
-						if ((bool)mybattlegroup.Members[plr] == true)
+						if (mybattlegroup.Members.ContainsKey(plr) && mybattlegroup.Members[plr] == true)
 						{
 							text.Append("<Leader> ");
 						}
@@ -498,13 +505,16 @@ namespace DOL.GS
 		/// <returns>A string of group members</returns>
 		public string GroupMemberClassString(GamePlayer player)
 		{
-			lock (m_groupMembers)
+			List<GameLiving> all = new List<GameLiving>(m_groupMembers);
+			//lock (m_groupMembers)
 			{
 				StringBuilder text = new StringBuilder(64); //create the string builder
 				text.Length = 0;
-				BattleGroup mybattlegroup = (BattleGroup)player.TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
-				foreach (GamePlayer plr in m_groupMembers)
+				BattleGroup mybattlegroup = player.TempProperties.getProperty<BattleGroup>(BattleGroup.BATTLEGROUP_PROPERTY, null);
+				foreach (GameLiving liv in all)
 				{
+					if (liv == null || !(liv is GamePlayer)) continue;
+					GamePlayer plr = liv as GamePlayer;
 					if (mybattlegroup.IsInTheBattleGroup(plr))
 					{
 						if ((bool)mybattlegroup.Members[plr] == true)

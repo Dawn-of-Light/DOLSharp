@@ -9491,6 +9491,10 @@ namespace DOL.GS
 							{
 								Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.CantUseFromBackpack"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							}
+							else if (Level < useItem.LevelRequirement)
+							{
+								Out.SendMessage("You do not meet the level requirement to use this item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
 							else
 							{
 								long lastChargedItemUseTick = TempProperties.getProperty<long>(LAST_CHARGED_ITEM_USE_TICK);
@@ -10381,7 +10385,8 @@ namespace DOL.GS
 			m_enduRegenerationTimer.Callback = new RegionTimerCallback(EnduranceRegenerationTimerCallback);
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				if (player == null || (player.Client.Account.PrivLevel > (uint)ePrivLevel.Player && player.IsStealthed)) continue;
+				if (player == null
+					|| (player.Client.Account.PrivLevel > (uint)ePrivLevel.Player && player.IsStealthed && this.Client.Account.PrivLevel == (int)ePrivLevel.Player)) continue;
 				if (player != this)
 					player.Out.SendPlayerCreate(this);
 			}
@@ -10667,7 +10672,7 @@ namespace DOL.GS
 			CurrentUpdateArray.SetAll(false);
 			HousingUpdateArray = null;
 
-			foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE * 2))
+			foreach (GameNPC npc in GetNPCsInRadius((ushort)(WorldMgr.VISIBILITY_DISTANCE * 2)))
 			{
 				Out.SendNPCCreate(npc);
 				if (npc.Inventory != null)
@@ -10979,6 +10984,211 @@ namespace DOL.GS
 		{
 			get { return m_areaUpdateTick; }
 			set { m_areaUpdateTick = value; }
+		}
+		public static bool DEBUG_SPEEDHACK = false;
+		public int LastX = 0;
+		public int LastY = 0;
+		public int LastZ = 0;
+		public List<long> SpeedHacks = new List<long>();
+		public static Dictionary<string, int> HackAccounts = new Dictionary<string, int>();
+
+		protected int m_lastmaxspeed = 0;
+		public int LastMaxSpeed
+		{
+			get { return m_lastmaxspeed; }
+			set { m_lastmaxspeed = value; }
+		}
+
+		public virtual void SetCoords(int x, int y, int z, ushort heading)
+		{
+			int oldTick = MovementStartTick;
+			bool moved = false;
+			bool hacker = false;
+
+			X = x;
+			Y = y;
+			Z = z;
+			Heading = heading;
+			MovementStartTick = Environment.TickCount;
+
+			if ((x != LastX || y != LastY || z != LastZ)
+				&& (LastX != 0 && LastY != 0 && LastZ != 0)) moved = true;
+
+			if ((Client.Account.PrivLevel == 1 || DEBUG_SPEEDHACK) && ServerProperties.Properties.SH_ENABLED && Steed == null)
+			{
+				if (moved /*&& !IsJumping*/)
+				{
+					int timediff = MovementStartTick - oldTick;
+					if (timediff > 0)
+					{
+						int distance = (new Point2D(x, y)).GetDistance(new Point2D(LastX, LastY));// To(new Point3D(oldX, oldY, oldZ));
+						double speed = (double)distance * 1000 / (double)timediff;
+
+						#region FlyHack
+						if (!hacker && ServerProperties.Properties.SH_DETECTFLY)
+						{
+							if (z - LastZ > ServerProperties.Properties.JUMP_TOLERANCE)
+							{
+								foreach (GameClient client in WorldMgr.GetAllPlayingClients())
+								{
+									if (client.Account.PrivLevel < 2) continue;
+									client.Out.SendMessage("[Hack] FlyHack detected [" + this.Name + "] Z+" + (z - LastZ) + ", Total=" + this.Client.Account.Hacks, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
+								}
+								SetHack(this.Client, "SH");
+								hacker = true;
+							}
+						}
+						#endregion FlyHack
+
+						#region PortHack
+						if (!hacker && ServerProperties.Properties.SH_DETECTPORT)
+						{
+							if (distance > ServerProperties.Properties.SH_MAXDISTANCE)
+							{
+								if (IsJumping)
+								{
+									IsJumping = false;
+									LastX = x;
+									LastY = y;
+									LastZ = z;
+									return;
+								}
+								else
+								{
+									foreach (GameClient client in WorldMgr.GetAllPlayingClients())
+									{
+										if (client.Account.PrivLevel < 2) continue;
+										client.Out.SendMessage("[Hack] PortHack detected [" + this.Name + "] distance=" + distance + ", Total=" + this.Client.Account.Hacks, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
+									}
+									SetHack(this.Client, "PORT");
+									hacker = true;
+								}
+							}
+						}
+						#endregion PortHack
+
+						#region SpeedHack
+						if (!hacker/* && !IsJumping*/)
+						{
+							int maxspeed = LastMaxSpeed;
+
+							if (speed > maxspeed && distance > ServerProperties.Properties.SH_DISTANCEMIN)
+							{
+								double tolered = (double)maxspeed;
+								double tolerance = 0;
+								if (distance >= ServerProperties.Properties.SH_DISTANCEMAX) //115
+								{
+									tolered += (double)maxspeed * ServerProperties.Properties.SH_TOLERANCEMIN / 100; //5%
+								}
+								else if (distance <= ServerProperties.Properties.SH_DISTANCEMIN) //15
+								{
+									tolered += (double)maxspeed * ServerProperties.Properties.SH_TOLERANCEMAX / 100; //20%
+								}
+								else
+								{
+									double ecartdist = ServerProperties.Properties.SH_DISTANCEMAX - ServerProperties.Properties.SH_DISTANCEMIN; //115-15=100
+									double ecarttolerance = ServerProperties.Properties.SH_TOLERANCEMAX - ServerProperties.Properties.SH_TOLERANCEMIN; //20%-5%=15%
+									double dist = distance - ServerProperties.Properties.SH_DISTANCEMIN;
+									tolerance = ServerProperties.Properties.SH_TOLERANCEMAX - (dist * ecarttolerance / ecartdist);
+									tolered += (double)maxspeed * tolerance / 100; //x%
+								}
+
+								if (speed > tolered)
+								{
+									long tick = Environment.TickCount;
+									lock (SpeedHacks)
+									{
+										List<long> remove = new List<long>();
+										foreach (long t in SpeedHacks)
+										{
+											if (t + ServerProperties.Properties.SH_REMAIN < Environment.TickCount
+												&& !remove.Contains(t))
+												remove.Add(t);
+										}
+										foreach (long r in remove)
+										{
+											if (SpeedHacks.Contains(r))
+												SpeedHacks.Remove(r);
+										}
+
+										while (SpeedHacks.Contains(tick))
+										{
+											tick++;
+										}
+										SpeedHacks.Add(tick);
+
+										if (SpeedHacks.Count >= ServerProperties.Properties.SH_COUNT)
+										{
+											SpeedHacks.Clear();
+											foreach (GameClient client in WorldMgr.GetAllPlayingClients())
+											{
+												if (client.Account.PrivLevel < 2) continue;
+												client.Out.SendMessage("[Hack] SpeedHack detected [" + this.Name + "] " + (int)speed + "/" + maxspeed + " (D=" + distance + "), Total=" + this.Client.Account.Hacks, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
+											}
+											SetHack(this.Client, "SH");
+											hacker = true;
+										}
+									}
+								}
+							}
+						}
+						#endregion SpeedHack
+					}
+				}
+			}
+			LastX = x;
+			LastY = y;
+			LastZ = z;
+		}
+
+		public static void SetHack(GameClient client, string type)
+		{
+			client.Account.Hacks++;
+			if (type == "SH")
+			{
+				if (ServerProperties.Properties.SH_BAN)
+				{
+					lock (HackAccounts)
+					{
+						if (!HackAccounts.ContainsKey(client.Account.Name))
+							HackAccounts.Add(client.Account.Name, 0);
+						HackAccounts[client.Account.Name]++;
+
+						if (HackAccounts[client.Account.Name] >= 10)
+						{
+							HackAccounts.Remove(client.Account.Name);
+							//BOT.Ban(client.Account, "B", "Hack Detected");
+
+
+						}
+					}
+				}
+				if (ServerProperties.Properties.SH_KICK)
+				{
+					client.Out.SendPlayerQuit(false);
+					if (client.Player != null)
+					{
+						client.Player.X = client.Player.LastX;
+						client.Player.Y = client.Player.LastY;
+						client.Player.Z = client.Player.LastZ;
+						client.Player.Quit(true);
+					}
+				}
+			}
+			else if (type == "PORT")
+			{
+				if (ServerProperties.Properties.SH_PORTKICK)
+				{
+					client.Out.SendPlayerQuit(false);
+					if (client.Player != null)
+					{
+						client.Player.X = client.Player.LastX;
+						client.Player.Y = client.Player.LastY;
+						client.Player.Z = client.Player.LastZ;
+						client.Player.Quit(true);
+					}
+				}
+			}
 		}
 
 		/// <summary>
@@ -12134,7 +12344,7 @@ namespace DOL.GS
 					(item as IGameInventoryItem).CheckValid(this);
 				}
 
-				if (item.IsMagical)
+				if (item.IsMagical && Level >= item.LevelRequirement)
 				{
 					if (item.Bonus1 != 0)
 					{
@@ -13390,37 +13600,7 @@ namespace DOL.GS
 			// TODO: PvP & PvE messages
 			IList list = base.GetExamineMessages(player);
 
-			string message = "";
-			switch (GameServer.Instance.Configuration.ServerType)
-			{//FIXME: Better extract this to a new function in ServerRules !!! (VaNaTiC)
-				case eGameServerType.GST_Normal:
-					{
-						if (Realm == player.Realm || Client.Account.PrivLevel > 1 || player.Client.Account.PrivLevel > 1)
-							message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.GetExamineMessages.RealmMember", player.GetName(this), GetPronoun(Client, 0, true), CharacterClass.Name);
-						else
-							message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.GetExamineMessages.EnemyRealmMember", player.GetName(this), GetPronoun(Client, 0, true));
-						break;
-					}
-
-				case eGameServerType.GST_PvP:
-					{
-						if (Client.Account.PrivLevel > 1 || player.Client.Account.PrivLevel > 1)
-							message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.GetExamineMessages.YourGuildMember", player.GetName(this), GetPronoun(Client, 0, true), CharacterClass.Name);
-						else if (Guild == null)
-							message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.GetExamineMessages.NeutralMember", player.GetName(this), GetPronoun(Client, 0, true));
-						else if (Guild == player.Guild || Client.Account.PrivLevel > 1 || player.Client.Account.PrivLevel > 1)
-							message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.GetExamineMessages.YourGuildMember", player.GetName(this), GetPronoun(Client, 0, true), CharacterClass.Name);
-						else
-							message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.GetExamineMessages.OtherGuildMember", player.GetName(this), GetPronoun(Client, 0, true), GuildName);
-						break;
-					}
-
-				default:
-					{
-						message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.GetExamineMessages.YouExamine", player.GetName(this));
-						break;
-					}
-			}
+			string message = GameServer.ServerRules.GetExamineMessages(this, player);
 
 			list.Add(message);
 			return list;
@@ -13752,9 +13932,10 @@ namespace DOL.GS
 
 			//Buff (Stealth Detection)
 			//Increases the target's ability to detect stealthed players and monsters.
-			GameSpellEffect iVampiirEffect = SpellHandler.FindEffectOnTarget((GameLiving)this, "VampiirStealthDetection");
+			// this is already done by eProperty.Skill_Stealth:
+			/*GameSpellEffect iVampiirEffect = SpellHandler.FindEffectOnTarget((GameLiving)this, "VampiirStealthDetection");
 			if (iVampiirEffect != null)
-				range += (int)iVampiirEffect.Spell.Value;
+				range += (int)iVampiirEffect.Spell.Value;*/
 			
 			//Infill Only - Greater Chance to Detect Stealthed Enemies for 1 minute
 			//after executing a klling blow on a realm opponent.

@@ -191,14 +191,14 @@ namespace DOL.GS.PacketHandler
 			}
 			pak.WriteInt((uint)(quest.Rewards.Money)); // unknown, new in 1.94
 			pak.WriteByte((byte)quest.Rewards.ExperiencePercent(player));
-			pak.WriteByte((byte)quest.Rewards.BasicItems.Count);
-			foreach (ItemTemplate reward in quest.Rewards.BasicItems)
+			pak.WriteByte((byte)quest.Rewards.BasicItems(player).Count);
+			foreach (ItemTemplate reward in quest.Rewards.BasicItems(player))
 			{
 				WriteItemData(pak, GameInventoryItem.Create<ItemTemplate>(reward));
 			}
 			pak.WriteByte((byte)quest.Rewards.ChoiceOf);
-			pak.WriteByte((byte)quest.Rewards.OptionalItems.Count);
-			foreach (ItemTemplate reward in quest.Rewards.OptionalItems)
+			pak.WriteByte((byte)quest.Rewards.OptionalItems(player).Count);
+			foreach (ItemTemplate reward in quest.Rewards.OptionalItems(player))
 			{
 				WriteItemData(pak, GameInventoryItem.Create<ItemTemplate>(reward));
 			}

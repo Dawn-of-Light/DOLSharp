@@ -1211,6 +1211,7 @@ namespace DOL.GS.PacketHandler
 				return;
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MaxSpeed)))
 			{
+				m_gameClient.Player.LastMaxSpeed = m_gameClient.Player.MaxSpeed;
 				pak.WriteShort((ushort) (m_gameClient.Player.MaxSpeed*100/GamePlayer.PLAYER_BASE_SPEED));
 				pak.WriteByte((byte) (m_gameClient.Player.IsTurningDisabled ? 0x01 : 0x00));
 				// water speed in % of land speed if its over 0 i think
@@ -1700,7 +1701,8 @@ namespace DOL.GS.PacketHandler
 
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.GroupMemberUpdate)))
 			{
-				lock (group)
+				//lock (group)
+				//Safe.TryLock(group, () =>
 				{
 					// make sure group is not modified before update is sent else player index could change _before_ update
 					if (living.Group != group)
@@ -1708,7 +1710,7 @@ namespace DOL.GS.PacketHandler
 					WriteGroupMemberUpdate(pak, updateIcons, living);
 					pak.WriteByte(0x00);
 					SendTCP(pak);
-				}
+				}//);
 			}
 		}
 
@@ -2652,103 +2654,51 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null)
 				return;
 
-			if (skill.SkillType == eSkillPage.Abilities || skill.SkillType == eSkillPage.RealmAbilities)
+			int id = -1;
+			lock (m_gameClient.Player.CachedSkills)
 			{
-				using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DisableSkills)))
+				id = m_gameClient.Player.CachedSkills.IndexOf(skill);
+				if (id < 0)
 				{
-					pak.WriteShort((ushort) duration);
-					int id = -1;
-					IList skillList = m_gameClient.Player.GetNonTrainableSkillList();
-					lock (skillList.SyncRoot)
+					int i = 0;
+					foreach (Skill skl in m_gameClient.Player.CachedSkills)
 					{
-						foreach (Skill skl in skillList)
+						if (skl != null && skl.Name == skill.Name)
 						{
-							if (skl.SkillType == eSkillPage.Abilities || skl.SkillType == eSkillPage.RealmAbilities)
-								id++;
-							if (skl == skill)
-								break;
+							id = i;
+							break;
 						}
+						i++;
 					}
-					if (id < 0)
-						return;
-					pak.WriteByte((byte) id);
-					pak.WriteByte(0); // not used?
-
+				}
+			}
+			if (id > 0)
+			{
+				using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DisableSkills)))
+				{
+					pak.WriteShort(0);
+					pak.WriteByte(1); // count of skills
+					pak.WriteByte(1); // code
+					pak.WriteShort((ushort)id);
+					pak.WriteShort((ushort)duration);
 					SendTCP(pak);
 				}
 			}
-			if (skill.SkillType == eSkillPage.Spells)
+			else if (skill is Spell)
 			{
-				using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DisableSkills)))
+				lock (m_gameClient.Player.CachedSpell2Index)
 				{
-					if (m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster)
+					if (m_gameClient.Player.CachedSpell2Index.ContainsKey(skill as Spell))
 					{
-						pak.WriteShort((ushort) duration);
+						GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DisableSkills));
+						pak.WriteShort((ushort)duration);
 						pak.WriteByte(1); // count of spells
 						pak.WriteByte(2); // code
-
-						IList lines = m_gameClient.Player.GetSpellLines();
-						lock (lines.SyncRoot)
-						{
-							int lineIndex = -1;
-							int spellIndex = -1;
-							bool found = false;
-							foreach (SpellLine line in lines)
-							{
-								List<Spell> spells = SkillBase.GetSpellList(line.KeyName);
-								spellIndex = 0;
-								foreach (Spell spell in spells)
-								{
-									if (spell == skill)
-									{
-										found = true;
-										//DOLConsole.LogLine("disable spell "+skill.Name+" in line "+line.Name);
-										break;
-									}
-									spellIndex++;
-								}
-								lineIndex++;
-								if (found)
-									break;
-							}
-							if (!found)
-								return;
-
-							pak.WriteByte((byte) lineIndex);
-							pak.WriteByte((byte) spellIndex);
-						}
-
-						SendTCP(pak);
-					}
-					else
-					{
-						int skillsCount = m_gameClient.Player.GetNonTrainableSkillList().Count + m_gameClient.Player.GetStyleList().Count;
-						List<SpellLine> lines = m_gameClient.Player.GetSpellLines();
-						int index = -1;
-
-						lock (m_gameClient.Player.lockSpellLinesList)
-						{
-							Dictionary<string, KeyValuePair<Spell, SpellLine>> spelllist = m_gameClient.Player.GetUsableSpells(lines, false);
-
-							int searchIndex = 0;
-							foreach (var spell in spelllist.Values)
-							{
-								if (spell.Key == skill)
-								{
-									index = searchIndex;
-									break;
-								}
-								searchIndex++;
-							}
-						}
-
-						if (index < 0)
-							return;
-						pak.WriteShort(0);
-						pak.WriteByte(1); // count of skills
-						pak.WriteByte(1); // code
-						pak.WriteShort((ushort) (index + skillsCount));
-						pak.WriteShort((ushort) duration);
+						int ids = m_gameClient.Player.CachedSpell2Index[skill as Spell];
+						byte spellid = (byte)((ids >> 8) & 0xFF);
+						byte lineid = (byte)(ids & 0xFF);
+						pak.WriteByte(lineid);
+						pak.WriteByte(spellid);
 						SendTCP(pak);
 					}
 				}
