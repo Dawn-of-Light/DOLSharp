@@ -583,10 +583,10 @@ namespace DOL.GS.Quests
 			/// Add a basic reward (up to a maximum of 8).
 			/// </summary>
 			/// <param name="reward"></param>
-			/*public void AddBasicItem(ItemTemplate reward)
+			public void AddBasicItem(ItemTemplate reward)
 			{
 				AddBasicItem(0, reward);
-			}*/
+			}
 
 			public void AddBasicItem(int classID, ItemTemplate reward)
 			{
@@ -601,10 +601,10 @@ namespace DOL.GS.Quests
 			/// Add an optional reward (up to a maximum of 8).
 			/// </summary>
 			/// <param name="reward"></param>
-			/*public void AddOptionalItem(ItemTemplate reward)
+			public void AddOptionalItem(ItemTemplate reward)
 			{
 				AddOptionalItem(0, reward);
-			}*/
+			}
 
 			public void AddOptionalItem(int classID, ItemTemplate reward)
 			{

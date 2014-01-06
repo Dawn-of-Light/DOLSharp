@@ -149,13 +149,13 @@ namespace DOL.GS.PacketHandler.Client.v168
                 }
                 else
                 {
-                    if (log.IsWarnEnabled)
-                        log.Warn("Client <" + player.Client.Account.Name + "> requested incorrect spell at level " + m_spellLevel + " in spell-line " + (castLine != null ? castLine.Name : m_spellLineIndex.ToString()));
+                    if (Log.IsWarnEnabled)
+                        Log.Warn("Client <" + player.Client.Account.Name + "> requested incorrect spell at level " + m_spellLevel + " in spell-line " + (castLine != null ? castLine.Name : m_spellLineIndex.ToString()));
                 }
                 if (castLine == null)
                 {
-                    if (log.IsWarnEnabled)
-                        log.Warn("Client <" + player.Client.Account.Name + "> requested incorrect spell-line index");
+                    if (Log.IsWarnEnabled)
+                        Log.Warn("Client <" + player.Client.Account.Name + "> requested incorrect spell-line index");
                 }
 			}
 		}
