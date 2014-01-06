@@ -17,11 +17,15 @@
  *
  */
 using System.Collections.Generic;
+using log4net;
+using System;
 namespace DOL.GS.PacketHandler.Client.v168
 {
 	[PacketHandler(PacketHandlerType.TCP, 0xB8 ^ 168, "Handles setting SessionID and the active character")]
 	public class CharacterSelectRequestHandler : IPacketHandler
 	{
+		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		
 		#region IPacketHandler Members
 
 		public void HandlePacket(GameClient client, GSPacketIn packet)
@@ -74,20 +78,26 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					case 0xFF: //cheat protection
 						{
-							if (client.Account != null)
+							try
 							{
-								if (string.IsNullOrEmpty(client.Account.HackFlags))
-									client.Account.HackFlags = "";
-								//string[] flagsarray = client.Account.HackFlags.Split(';');
-
 								List<string> flags = Util.SplitCSV(client.Account.HackFlags);
-								if (!flags.Contains(flag.ToString("X8") + ";"))
+								if (!flags.Contains(flag.ToString("X8")))
 									flags.Add(flag.ToString("X8"));
 								string datas = "";
 								foreach (string f in flags)
 									datas += ";" + f;
 								if (datas.StartsWith(";")) datas = datas.Substring(1);
 								client.Account.HackFlags = datas;
+
+								foreach (GameClient c in WorldMgr.GetAllPlayingClients())
+								{
+									if (c.Account.PrivLevel < 2) continue;
+									c.Out.SendMessage("[Hack] Hook detected account [" + client.Account.Name + "]" + (client.Player != null ? " player [" + client.Player.Name + "]" : "") + " flag=" + flag.ToString("X8"), eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
+								}
+							}
+							catch (Exception ex)
+							{
+								log.Error("HackFlag", ex);
 							}
 						}
 						break;
