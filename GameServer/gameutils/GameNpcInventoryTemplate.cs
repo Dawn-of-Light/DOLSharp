@@ -316,7 +316,7 @@ namespace DOL.GS
 					if (!AddNPCEquipment((eInventorySlot)npcItem.Slot, npcItem.Model, npcItem.Color, npcItem.Effect, npcItem.Extension, npcItem.Emblem))
 					{
 						if (log.IsWarnEnabled)
-							log.Warn("Error adding NPC equipment, ObjectId=" + npcItem.ObjectId);
+							log.Warn("Error adding NPC equipment for templateID " + templateID + ", ModelID=" + npcItem.Model + ", slot=" + npcItem.Slot);
 					}
 				}
 			}
