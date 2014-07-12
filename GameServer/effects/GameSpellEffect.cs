@@ -419,8 +419,8 @@ namespace DOL.GS.Effects
 			{
 				if (m_handler != null && m_handler.Spell != null)
 				{
-					if (m_handler.Spell.Icon != null) return m_handler.Spell.Icon;
-					if (m_handler.Spell.ClientEffect != null) return m_handler.Spell.ClientEffect;
+					if (m_handler.Spell.Icon != 0) return m_handler.Spell.Icon;
+					if (m_handler.Spell.ClientEffect != 0) return m_handler.Spell.ClientEffect;
 				}			
 				return 0;
 			}
