@@ -413,14 +413,16 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Icon to show on players Effects bar
 		/// </summary>
-		public ushort Icon
+		public virtual ushort Icon
 		{
 			get
 			{
 				if (m_handler != null && m_handler.Spell != null)
-					return m_handler.Spell.ClientEffect;
-				else
-					return 0;
+				{
+					if (m_handler.Spell.Icon != null) return m_handler.Spell.Icon;
+					if (m_handler.Spell.ClientEffect != null) return m_handler.Spell.ClientEffect;
+				}			
+				return 0;
 			}
 		}
 
