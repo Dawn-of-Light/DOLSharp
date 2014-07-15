@@ -226,7 +226,7 @@ namespace DOL.GS.Effects
 		/// concentration based effects should never be overwritten
 		/// </summary>
 		/// <param name="effect">the new effect</param>
-		public void Overwrite(GameSpellEffect effect)
+		public virtual void Overwrite(GameSpellEffect effect)
 		{
 			if (Spell.Concentration > 0) 
 			{
@@ -502,7 +502,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Delve information
 		/// </summary>
-		public IList<string> DelveInfo
+		public virtual IList<string> DelveInfo
 		{
 			get
 			{
