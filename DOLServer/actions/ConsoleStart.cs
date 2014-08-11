@@ -97,9 +97,13 @@ namespace DOL.DOLServer.Actions
 				config.SaveToXMLFile(configFile);
 				if (File.Exists(currentAssembly.DirectoryName + Path.DirectorySeparatorChar + "DOLConfig.exe"))
 				{
+					Console.WriteLine("No config file found, launching with default config and embedded database... (SQLite)");
+					/*
+					// Removed to allow the auto config on embedded SQLite
 					Console.WriteLine("No config file found, launching DOLConfig.exe...");
 					System.Diagnostics.Process.Start(currentAssembly.DirectoryName + Path.DirectorySeparatorChar + "DOLConfig.exe");
 					return;
+					*/
 				}
 			}
 
