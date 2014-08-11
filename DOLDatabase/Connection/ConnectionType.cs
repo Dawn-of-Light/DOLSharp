@@ -32,6 +32,10 @@ namespace DOL.Database.Connection
 		/// </summary>
 		DATABASE_MYSQL,
 		/// <summary>
+		/// Use the internal SQLite-Driver for Database
+		/// </summary>
+		DATABASE_SQLITE,
+		/// <summary>
 		/// Use Microsoft SQL-Server
 		/// </summary>
 		DATABASE_MSSQL,

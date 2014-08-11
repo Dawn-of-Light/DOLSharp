@@ -19,24 +19,24 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Reflection;
 using System.Text;
 using System.Data;
 using DOL.Database.Attributes;
 using DOL.Database.Connection;
 using DOL.Database.UniqueID;
-using MySql.Data.MySqlClient;
-using MySql.Data.Types;
+using System.Data.SQLite;
 
 namespace DOL.Database.Handlers
 {
-	public class MySQLObjectDatabase : ObjectDatabase
-	{
-		public MySQLObjectDatabase(DataConnection connection)
+	public class SQLiteObjectDatabase : ObjectDatabase
+	{				
+		public SQLiteObjectDatabase(DataConnection connection)
 			: base(connection)
 		{
 		}
-
+		
 		#region SQL implementation
 
 		/// <summary>
@@ -123,14 +123,21 @@ namespace DOL.Database.Handlers
 						{
 							val = Escape(val.ToString());
 						}
-
-						values.Append('\'');
-						values.Append(val);
-						values.Append('\'');
+						
+						if (isPrimary && ((val is int && (int)val == 0) || (val is long && (long)val == 0)))
+						{
+							values.Append("null");
+						}
+						else
+						{
+							values.Append('\'');
+							values.Append(val);
+							values.Append('\'');
+						}
 
 						if (isPrimary)
 						{
-							if (val is int || val is long)
+							if (val is int)
 							{
 								primaryKey = Convert.ToInt32(val);
 							}
@@ -168,10 +175,26 @@ namespace DOL.Database.Handlers
 
 				if (usePrimary)
 				{
-					object objID = Connection.ExecuteScalar(sql + "; SELECT LAST_INSERT_ID();");
-					long newID = Convert.ToInt64(objID);
+					object objID = Connection.ExecuteScalar(sql + "; SELECT LAST_INSERT_ROWID();");
 					
-					if (primaryKey == null || (Convert.ToInt64(primaryKey) == 0 && newID == 0))
+					object newID;
+					bool newIDzero = false;
+					bool error = false;
+					
+					if(primaryKey is int)
+					{
+						newID = Convert.ToInt32(objID);
+						newIDzero = (int)newID == 0;
+						error = newIDzero && (int)primaryKey == 0;
+					}
+					else
+					{
+						newID = Convert.ToInt64(objID);
+						newIDzero = (long)newID == 0;
+						error = newIDzero && (long)primaryKey == 0;
+					}
+					
+					if (primaryKey == null || error)
 					{
 						if (Log.IsErrorEnabled)
 							Log.Error("Error adding object into " + dataObject.TableName + " ID=" + objID + ", UsePrimary, Query = " + sql);
@@ -179,7 +202,7 @@ namespace DOL.Database.Handlers
 					}
 					else
 					{
-						if (newID == 0)
+						if (newIDzero)
 						{
 							newID = Convert.ToInt64(primaryKey);
 						}
@@ -192,7 +215,7 @@ namespace DOL.Database.Handlers
 								{
 									if (primaryKey is long)
 									{
-										((PropertyInfo)objMembers[i]).SetValue(dataObject, newID, null);
+										((PropertyInfo)objMembers[i]).SetValue(dataObject, (long)newID, null);
 									}
 									else
 									{
@@ -203,7 +226,7 @@ namespace DOL.Database.Handlers
 								{
 									if (primaryKey is long)
 									{
-										((FieldInfo)objMembers[i]).SetValue(dataObject, newID);
+										((FieldInfo)objMembers[i]).SetValue(dataObject, (long)newID);
 									}
 									else
 									{
@@ -658,21 +681,33 @@ namespace DOL.Database.Handlers
 																				  (val.ToString() == "0") ? false : true,
 																				  null);
 										}
-										else if (type == typeof(DateTime))
+										else if (type == typeof(System.UInt64))
 										{
-											// special handling for datetime
-											if (val is MySqlDateTime)
-											{
-												((PropertyInfo)bind.Member).SetValue(obj,
-																					  ((MySqlDateTime)val).GetDateTime(),
-																					  null);
-											}
-											else
-											{
-												((PropertyInfo)bind.Member).SetValue(obj,
-																					  ((IConvertible)val).ToDateTime(null),
-																					  null);
-											}
+											((PropertyInfo)bind.Member).SetValue(obj, Convert.ToUInt64(val), null);
+										}
+										else if (type == typeof(System.UInt32))
+										{
+											((PropertyInfo)bind.Member).SetValue(obj, Convert.ToUInt32(val), null);
+										}
+										else if (type == typeof(System.Int32))
+										{
+											((PropertyInfo)bind.Member).SetValue(obj, Convert.ToInt32(val), null);
+										}
+										else if (type == typeof(System.UInt16))
+										{
+											((PropertyInfo)bind.Member).SetValue(obj, Convert.ToUInt16(val), null);
+										}
+										else if (type == typeof(System.Int16))
+										{
+											((PropertyInfo)bind.Member).SetValue(obj, Convert.ToInt16(val), null);
+										}
+										else if (type == typeof(System.SByte))
+										{
+											((PropertyInfo)bind.Member).SetValue(obj, Convert.ToSByte(val), null);
+										}
+										else if (type == typeof(System.Byte))
+										{
+											((PropertyInfo)bind.Member).SetValue(obj, Convert.ToByte(val), null);
 										}
 										else
 										{
@@ -815,21 +850,33 @@ namespace DOL.Database.Handlers
 																												  (val.ToString() == "0") ? false : true,
 																												  null);
 																		}
-																		else if (type == typeof(DateTime))
+																		else if (type == typeof(System.UInt64))
 																		{
-																			// special handling for datetime
-																			if (val is MySqlDateTime)
-																			{
-																				((PropertyInfo)bind.Member).SetValue(obj,
-																													  ((MySqlDateTime)val).GetDateTime(),
-																													  null);
-																			}
-																			else
-																			{
-																				((PropertyInfo)bind.Member).SetValue(obj,
-																													  ((IConvertible)val).ToDateTime(null),
-																													  null);
-																			}
+																			((PropertyInfo)bind.Member).SetValue(obj, Convert.ToUInt64(val), null);
+																		}
+																		else if (type == typeof(System.UInt32))
+																		{
+																			((PropertyInfo)bind.Member).SetValue(obj, Convert.ToUInt32(val), null);
+																		}
+																		else if (type == typeof(System.Int32))
+																		{
+																			((PropertyInfo)bind.Member).SetValue(obj, Convert.ToInt32(val), null);
+																		}
+																		else if (type == typeof(System.UInt16))
+																		{
+																			((PropertyInfo)bind.Member).SetValue(obj, Convert.ToUInt16(val), null);
+																		}
+																		else if (type == typeof(System.Int16))
+																		{
+																			((PropertyInfo)bind.Member).SetValue(obj, Convert.ToInt16(val), null);
+																		}
+																		else if (type == typeof(System.SByte))
+																		{
+																			((PropertyInfo)bind.Member).SetValue(obj, Convert.ToSByte(val), null);
+																		}
+																		else if (type == typeof(System.Byte))
+																		{
+																			((PropertyInfo)bind.Member).SetValue(obj, Convert.ToByte(val), null);
 																		}
 																		else
 																		{
@@ -938,5 +985,10 @@ namespace DOL.Database.Handlers
 		}
 
 		#endregion
+		
+		public override string Escape(string toEscape)
+		{
+			return toEscape.Replace("'", "''");
+		}
 	}
 }
