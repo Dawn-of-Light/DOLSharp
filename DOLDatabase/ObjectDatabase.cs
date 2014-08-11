@@ -520,7 +520,7 @@ namespace DOL.Database
 			return list.ToArray();
 		}
 
-		public string Escape(string toEscape)
+		public virtual string Escape(string toEscape)
 		{
 			return Connection.Escape(toEscape);
 		}
@@ -1084,6 +1084,8 @@ namespace DOL.Database
 
 			if (connectionType == ConnectionType.DATABASE_MYSQL)
 				return new MySQLObjectDatabase(connection);
+			if (connectionType == ConnectionType.DATABASE_SQLITE)
+				return new SQLiteObjectDatabase(connection);
 
 			return null;
 		}
