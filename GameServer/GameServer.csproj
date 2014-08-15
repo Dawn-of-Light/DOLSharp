@@ -997,6 +997,8 @@
     <Compile Include="packets\Server\PacketLib1111.cs" />
     <Compile Include="packets\Server\PacketLib1112.cs" />
     <Compile Include="packets\Server\PacketLib1113.cs" />
+    <Compile Include="packets\Server\PacketLib1114.cs" />
+    <Compile Include="packets\Server\PacketLib1115.cs" />
     <Compile Include="packets\Server\PacketLib197.cs" />
     <Compile Include="packets\Server\PacketLib196.cs" />
     <Compile Include="packets\Server\PacketLib188.cs" />
