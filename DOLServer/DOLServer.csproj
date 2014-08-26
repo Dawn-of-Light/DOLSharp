@@ -23,7 +23,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <SourceAnalysisOverrideSettingsFile>C:\Documents and Settings\RedFish\Application Data\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <NoStdLib>false</NoStdLib>
@@ -31,6 +31,7 @@
     <NoWarn>1570%3b1572%3b1573%3b1587%3b1591%3b1592</NoWarn>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <SignAssembly>False</SignAssembly>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>..\debug\</OutputPath>
@@ -155,6 +156,7 @@
       <DependentUpon>GameServerServiceInstaller.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="DOLServer.exe.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
