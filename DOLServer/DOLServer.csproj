@@ -156,7 +156,6 @@
       <DependentUpon>GameServerServiceInstaller.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="app.config" />
     <None Include="DOLServer.exe.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
