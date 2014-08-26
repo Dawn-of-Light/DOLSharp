@@ -256,10 +256,11 @@ namespace DOL.GS
 			return GameTrainer.eChampionTrainerType.None;
 		}
 
-		/// <summary>
-		/// Add all skills and other things that are required for current level
-		/// </summary>
-		/// <param name="player">player to modify</param>
+        /// <summary>
+        /// Add all skills and other things that are required for current level
+        /// </summary>
+        /// <param name="player">player to modify</param>
+        /// <param name="previousLevel">the previous level of the player</param>
 		public virtual void OnLevelUp(GamePlayer player, int previousLevel)
 		{
 			// Grav: autotrain in player.OnLevelUp()
@@ -269,12 +270,13 @@ namespace DOL.GS
 			{
 				// Somewhere in the code, regardless of server type, one RA point
 				// is being assigned at lvl 20 already (I don't know where that's
-				// coming from).  That's why the following is <= 20 and not just < 20.
-				if (player.Level <= 20) return;
-
-				int newPoints = player.Level - previousLevel;
-				player.RealmSpecialtyPoints += newPoints;
-				player.SaveIntoDatabase();
+				// coming from).  That's why the following is > 20 and not >= 20.
+                if (player.Level > 20 && Player.Level != previousLevel)
+                {
+                    int newPoints = player.Level - previousLevel;
+                    player.RealmSpecialtyPoints += newPoints;
+                    player.SaveIntoDatabase();
+                }
 			}
 		}
 
