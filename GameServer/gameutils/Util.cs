@@ -341,11 +341,11 @@ namespace DOL.GS
 			return (IsNumber(t));
 		}
 
-		public static string RealmRankToString(int realmpoints)
+		public static string RealmRankToString(int realmrank)
 		{
-			string result = realmpoints.ToString();
+			string result = realmrank.ToString();
 
-			if (realmpoints >= 100) result = result[0] + result[1] + "L" + result[2];
+			if (realmrank >= 100) result = result[0] + result[1] + "L" + result[2];
 			else result = result[0] + "L" + result[1];
 
 			return result;

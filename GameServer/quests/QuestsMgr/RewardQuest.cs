@@ -628,10 +628,10 @@ namespace DOL.GS.Quests
 			/// </summary>
 			/// <param name="reward"></param>
 			/// <returns></returns>
-			/*public bool Choose(int reward)
+			public bool Choose(int reward)
 			{
 				return Choose(0, reward);
-			}*/
+			}
 
 			public bool Choose(int classID, int reward)
 			{
