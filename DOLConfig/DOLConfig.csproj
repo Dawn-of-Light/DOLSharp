@@ -137,7 +137,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="serverconfig_extraproperties.xml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
