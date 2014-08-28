@@ -115,6 +115,18 @@ namespace DOL.Database
 		[Browsable(false)]
 		public virtual bool IsDeleted { get; set; }
 
+		/// <summary>
+		/// Default field added to all DataObject.
+		/// Last time this record was updated.
+		/// Return UTC Now to update table's "LastTimeRowUpdated"
+		/// for Maintenance purpose.
+		/// </summary>
+		[DataElement(AllowDbNull = false, Index = false)]
+		public DateTime LastTimeRowUpdated 
+		{
+			get { return DateTime.UtcNow; }
+			set { Dirty = true; }
+		}
 
 		#region ICloneable Member
 
