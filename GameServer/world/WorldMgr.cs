@@ -618,7 +618,7 @@ namespace DOL.GS
 					log.Info("Total Bind Points: " + bindpoints);
 				}
 
-				m_WorldUpdateThread = new Thread(new ThreadStart(WorldUpdateThreadStart));
+				m_WorldUpdateThread = new Thread(new ThreadStart(WorldUpdateThread.WorldUpdateThreadStart));
 				m_WorldUpdateThread.Priority = ThreadPriority.AboveNormal;
 				m_WorldUpdateThread.Name = "NpcUpdate";
 				m_WorldUpdateThread.IsBackground = true;
@@ -865,169 +865,10 @@ namespace DOL.GS
 		}
 
 		private static uint m_lastWorldObjectUpdateTick = 0;
-
-		/// <summary>
-		/// This thread updates the NPCs and objects around the player at very short
-		/// intervalls! But since the update is very quick the thread will
-		/// sleep most of the time!
-		/// </summary>
-		private static void WorldUpdateThreadStart()
-		{
-			bool running = true;
-			if (log.IsDebugEnabled)
-			{
-				log.Debug("NPCUpdateThread ThreadId=" + Thread.CurrentThread.ManagedThreadId);
-			}
-			while (running)
-			{
-				try
-				{
-					int start = Environment.TickCount;
-					for (int i = 0; i < m_clients.Length; i++)
-					{
-						GameClient client = m_clients[i];
-						if (client == null)
-							continue;
-
-						GamePlayer player = client.Player;
-						if (client.ClientState == GameClient.eClientState.Playing && player == null)
-						{
-							if (log.IsErrorEnabled)
-								log.Error("account has no active player but is playing, disconnecting! => " + client.Account.Name);
-							GameServer.Instance.Disconnect(client);
-							continue;
-						}
-
-						if (client.ClientState != GameClient.eClientState.Playing)
-							continue;
-						if (player.ObjectState != GameObject.eObjectState.Active)
-							continue;
-
-						if (Environment.TickCount - player.LastWorldUpdate > (int)(ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL >= 100 ? ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL : 100))
-						{
-							BitArray carray = player.CurrentUpdateArray;
-							BitArray narray = player.NewUpdateArray;
-							narray.SetAll(false);
-
-							int npcsUpdated = 0, objectsUpdated = 0, doorsUpdated = 0, housesUpdated = 0;
-
-							lock (player.CurrentRegion.ObjectsSyncLock)
-							{
-								foreach (GameNPC npc in player.GetNPCsInRadius(VISIBILITY_DISTANCE))
-								{
-									try
-									{
-										if (npc == null) continue;
-										narray[npc.ObjectID - 1] = true;
-										if ((uint)Environment.TickCount - npc.LastUpdateTickCount > 15000) // 1.10+ change, always 15 seconds
-										{
-											npc.BroadcastUpdate();
-											npcsUpdated++;
-										}
-										else if (carray[npc.ObjectID - 1] == false)
-										{
-											client.Out.SendObjectUpdate(npc);
-											npcsUpdated++;
-										}
-									}
-									catch (Exception e)
-									{
-										if (log.IsErrorEnabled)
-											log.Error("NPC update: " + e.GetType().FullName + " (" + npc.ToString() + ")", e);
-									}
-								}
-
-								// Broadcast updates of all non-npc objects around this player
-								if (ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL > 0 && (uint)Environment.TickCount - m_lastWorldObjectUpdateTick > (ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL >= 10000 ? ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL : 10000))
-								{
-									foreach (GameStaticItem item in client.Player.GetItemsInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
-									{
-										client.Out.SendObjectCreate(item);
-										objectsUpdated++;
-									}
-
-									foreach (IDoor door in client.Player.GetDoorsInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
-									{
-										client.Player.SendDoorUpdate(door);
-										doorsUpdated++;
-									}
-
-									//housing
-									if (client.Player.CurrentRegion.HousingEnabled)
-									{
-										if (client.Player.HousingUpdateArray == null)
-										{
-											client.Player.HousingUpdateArray = new BitArray(ServerProperties.Properties.MAX_NUM_HOUSES, false);
-										}
-
-										var houses = HouseMgr.GetHouses(client.Player.CurrentRegionID);
-										if (houses != null)
-										{
-											foreach (House house in houses.Values)
-											{
-												if (house.UniqueID < client.Player.HousingUpdateArray.Length)
-												{
-													if (client.Player.IsWithinRadius(house, HousingConstants.HouseViewingDistance))
-													{
-														if (!client.Player.HousingUpdateArray[house.UniqueID])
-														{
-															client.Out.SendHouse(house);
-															client.Out.SendGarden(house);
-
-															if (house.IsOccupied)
-															{
-																client.Out.SendHouseOccupied(house, true);
-															}
-
-															client.Player.HousingUpdateArray[house.UniqueID] = true;
-															housesUpdated++;
-														}
-													}
-													else
-													{
-														client.Player.HousingUpdateArray[house.UniqueID] = false;
-													}
-												}
-											}
-										}
-									}
-									else if (client.Player.HousingUpdateArray != null)
-									{
-										client.Player.HousingUpdateArray = null;
-									}
-
-									m_lastWorldObjectUpdateTick = (uint)Environment.TickCount;
-								}
-							}
-
-							player.SwitchUpdateArrays();
-							player.LastWorldUpdate = Environment.TickCount;
-
-							// log.DebugFormat("Player {0} world update: {1} npcs, {2} objects, {3} doors, and {4} houses in {5}ms", player.Name, npcsUpdated, objectsUpdated, doorsUpdated, housesUpdated, Environment.TickCount - start);
-						}
-					}
-
-					int took = Environment.TickCount - start;
-					if (took > 500)
-					{
-						if (log.IsWarnEnabled)
-							log.WarnFormat("NPC update took {0}ms", took);
-					}
-
-					Thread.Sleep(50);
-				}
-				catch (ThreadAbortException)
-				{
-					if (log.IsDebugEnabled)
-						log.Debug("NPC Update Thread stopping...");
-					running = false;
-				}
-				catch (Exception e)
-				{
-					if (log.IsErrorEnabled)
-						log.Error("Error in NPC Update Thread!", e);
-				}
-			}
+		
+		public static uint LastWorldObjectUpdateTick {
+			get { return m_lastWorldObjectUpdateTick; }
+			set { m_lastWorldObjectUpdateTick = value; }
 		}
 
 		/// <summary>
@@ -2019,7 +1860,7 @@ namespace DOL.GS
 		/// <returns>ArrayList of GameClients</returns>
 		public static IList<GameClient> GetAllClients()
 		{
-			var targetClients = new List<GameClient>();
+			List<GameClient> targetClients = new List<GameClient>();
 
 			lock (m_clients.SyncRoot)
 			{

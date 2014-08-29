@@ -618,9 +618,10 @@ namespace DOL.GS
 								if ((begin - lastUpdate) > GetPlayerWorldUpdateInterval())
 								{
 									if (log.IsWarnEnabled && (GameTimer.GetTickCount() - player.TempProperties.getProperty<long>("LAST_WORLD_UPDATE_THREAD_WARNING", 0) >= 1000))
+									{
 										log.WarnFormat("Player Update Task ({0}) Taking more than world update refresh rate : {1} ms (real {2} ms) - Task Status : {3}!", player.Name, GetPlayerWorldUpdateInterval(), begin - lastUpdate, taskEntry.Status);
-									
-									player.TempProperties.setProperty("LAST_WORLD_UPDATE_THREAD_WARNING", GameTimer.GetTickCount());
+										player.TempProperties.setProperty("LAST_WORLD_UPDATE_THREAD_WARNING", GameTimer.GetTickCount());
+									}
 								}
 								// Continue loop
 								continue;
