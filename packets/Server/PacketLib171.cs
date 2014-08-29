@@ -274,7 +274,7 @@ namespace DOL.GS.PacketHandler
 			}
 			
 			// Update Cache
-			m_gameClient.GameObjectUpdateArray[new Tuple<ushort, ushort>(npc.CurrentRegionID, (ushort)npc.ObjectID)] = long.MaxValue;
+			m_gameClient.GameObjectUpdateArray[new Tuple<ushort, ushort>(npc.CurrentRegionID, (ushort)npc.ObjectID)] = GameTimer.GetTickCount();
 		}
 
 		public override void SendFindGroupWindowUpdate(GamePlayer[] list)
