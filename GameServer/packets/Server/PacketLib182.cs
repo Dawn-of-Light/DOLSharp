@@ -45,165 +45,167 @@ namespace DOL.GS.PacketHandler
 
 		protected override void SendInventorySlotsUpdateRange(ICollection<int> slots, eInventoryWindowType windowType)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate));
-			pak.WriteByte((byte)(slots == null ? 0 : slots.Count));
-			pak.WriteByte((byte)((m_gameClient.Player.IsCloakHoodUp ? 0x01 : 0x00) | (int)m_gameClient.Player.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver
-			pak.WriteByte((byte)m_gameClient.Player.VisibleActiveWeaponSlots);
-			pak.WriteByte((byte)windowType);
-			if (slots != null)
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate)))
 			{
-				foreach (int updatedSlot in slots)
+				pak.WriteByte((byte)(slots == null ? 0 : slots.Count));
+				pak.WriteByte((byte)((m_gameClient.Player.IsCloakHoodUp ? 0x01 : 0x00) | (int)m_gameClient.Player.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver
+				pak.WriteByte((byte)m_gameClient.Player.VisibleActiveWeaponSlots);
+				pak.WriteByte((byte)windowType);
+				if (slots != null)
 				{
-					if (updatedSlot >= (int)eInventorySlot.Consignment_First && updatedSlot <= (int)eInventorySlot.Consignment_Last)
-						pak.WriteByte((byte)(updatedSlot - (int)eInventorySlot.Consignment_First + (int)eInventorySlot.HousingInventory_First));
-					else
-						pak.WriteByte((byte)(updatedSlot));
-
-					InventoryItem item = null;
-					item = m_gameClient.Player.Inventory.GetItem((eInventorySlot)updatedSlot);
-
-					if (item == null)
+					foreach (int updatedSlot in slots)
 					{
-						pak.Fill(0x00, 19);
-						continue;
-					}
-					pak.WriteByte((byte)item.Level);
-
-					int value1; // some object types use this field to display count
-					int value2; // some object types use this field to display count
-					switch (item.Object_Type)
-					{
-						case (int)eObjectType.Arrow:
-						case (int)eObjectType.Bolt:
-						case (int)eObjectType.Poison:
-						case (int)eObjectType.GenericItem:
-							value1 = item.Count;
-							value2 = item.SPD_ABS;
-							break;
-						case (int)eObjectType.Thrown:
-							value1 = item.DPS_AF;
-							value2 = item.Count;
-							break;
-						case (int)eObjectType.Instrument:
-							value1 = (item.DPS_AF == 2 ? 0 : item.DPS_AF);
-							value2 = 0;
-							break; // unused
-						case (int)eObjectType.Shield:
-							value1 = item.Type_Damage;
-							value2 = item.DPS_AF;
-							break;
-						case (int)eObjectType.AlchemyTincture:
-						case (int)eObjectType.SpellcraftGem:
-							value1 = 0;
-							value2 = 0;
-							/*
-							must contain the quality of gem for spell craft and think same for tincture
-							*/
-							break;
-						case (int)eObjectType.HouseWallObject:
-						case (int)eObjectType.HouseFloorObject:
-						case (int)eObjectType.GardenObject:
-							value1 = 0;
-							value2 = item.SPD_ABS;
-							/*
-							Value2 byte sets the width, only lower 4 bits 'seem' to be used (so 1-15 only)
-
-							The byte used for "Hand" (IE: Mini-delve showing a weapon as Left-Hand
-							usabe/TwoHanded), the lower 4 bits store the height (1-15 only)
-							*/
-							break;
-
-						default:
-							value1 = item.DPS_AF;
-							value2 = item.SPD_ABS;
-							break;
-					}
-					pak.WriteByte((byte)value1);
-					pak.WriteByte((byte)value2);
-
-					if (item.Object_Type == (int)eObjectType.GardenObject)
-						pak.WriteByte((byte)(item.DPS_AF));
-					else
-						pak.WriteByte((byte)(item.Hand << 6));
-					pak.WriteByte((byte)((item.Type_Damage > 3 ? 0 : item.Type_Damage << 6) | item.Object_Type));
-					pak.WriteShort((ushort)item.Weight);
-					pak.WriteByte(item.ConditionPercent); // % of con
-					pak.WriteByte(item.DurabilityPercent); // % of dur
-					pak.WriteByte((byte)item.Quality); // % of qua
-					pak.WriteByte((byte)item.Bonus); // % bonus
-					pak.WriteShort((ushort)item.Model);
-					pak.WriteByte((byte)item.Extension);
-					int flag = 0;
-					if (item.Emblem != 0)
-					{
-						pak.WriteShort((ushort)item.Emblem);
-						flag |= (item.Emblem & 0x010000) >> 16; // = 1 for newGuildEmblem
-					}
-					else
-						pak.WriteShort((ushort)item.Color);
-//						flag |= 0x01; // newGuildEmblem
-						flag |= 0x02; // enable salvage button
-					AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(m_gameClient.Player.CraftingPrimarySkill);
-					if (skill != null && skill is AdvancedCraftingSkill/* && ((AdvancedCraftingSkill)skill).IsAllowedToCombine(m_gameClient.Player, item)*/)
-						flag |= 0x04; // enable craft button
-					ushort icon1 = 0;
-					ushort icon2 = 0;
-					string spell_name1 = "";
-					string spell_name2 = "";
-					if (item.Object_Type != (int)eObjectType.AlchemyTincture)
-					{
-						SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-
-						if (chargeEffectsLine != null)
+						if (updatedSlot >= (int)eInventorySlot.Consignment_First && updatedSlot <= (int)eInventorySlot.Consignment_Last)
+							pak.WriteByte((byte)(updatedSlot - (int)eInventorySlot.Consignment_First + (int)eInventorySlot.HousingInventory_First));
+						else
+							pak.WriteByte((byte)(updatedSlot));
+	
+						InventoryItem item = null;
+						item = m_gameClient.Player.Inventory.GetItem((eInventorySlot)updatedSlot);
+	
+						if (item == null)
 						{
-							if (item.SpellID > 0/* && item.Charges > 0*/)
+							pak.Fill(0x00, 19);
+							continue;
+						}
+						pak.WriteByte((byte)item.Level);
+	
+						int value1; // some object types use this field to display count
+						int value2; // some object types use this field to display count
+						switch (item.Object_Type)
+						{
+							case (int)eObjectType.Arrow:
+							case (int)eObjectType.Bolt:
+							case (int)eObjectType.Poison:
+							case (int)eObjectType.GenericItem:
+								value1 = item.Count;
+								value2 = item.SPD_ABS;
+								break;
+							case (int)eObjectType.Thrown:
+								value1 = item.DPS_AF;
+								value2 = item.Count;
+								break;
+							case (int)eObjectType.Instrument:
+								value1 = (item.DPS_AF == 2 ? 0 : item.DPS_AF);
+								value2 = 0;
+								break; // unused
+							case (int)eObjectType.Shield:
+								value1 = item.Type_Damage;
+								value2 = item.DPS_AF;
+								break;
+							case (int)eObjectType.AlchemyTincture:
+							case (int)eObjectType.SpellcraftGem:
+								value1 = 0;
+								value2 = 0;
+								/*
+								must contain the quality of gem for spell craft and think same for tincture
+								*/
+								break;
+							case (int)eObjectType.HouseWallObject:
+							case (int)eObjectType.HouseFloorObject:
+							case (int)eObjectType.GardenObject:
+								value1 = 0;
+								value2 = item.SPD_ABS;
+								/*
+								Value2 byte sets the width, only lower 4 bits 'seem' to be used (so 1-15 only)
+	
+								The byte used for "Hand" (IE: Mini-delve showing a weapon as Left-Hand
+								usabe/TwoHanded), the lower 4 bits store the height (1-15 only)
+								*/
+								break;
+	
+							default:
+								value1 = item.DPS_AF;
+								value2 = item.SPD_ABS;
+								break;
+						}
+						pak.WriteByte((byte)value1);
+						pak.WriteByte((byte)value2);
+	
+						if (item.Object_Type == (int)eObjectType.GardenObject)
+							pak.WriteByte((byte)(item.DPS_AF));
+						else
+							pak.WriteByte((byte)(item.Hand << 6));
+						pak.WriteByte((byte)((item.Type_Damage > 3 ? 0 : item.Type_Damage << 6) | item.Object_Type));
+						pak.WriteShort((ushort)item.Weight);
+						pak.WriteByte(item.ConditionPercent); // % of con
+						pak.WriteByte(item.DurabilityPercent); // % of dur
+						pak.WriteByte((byte)item.Quality); // % of qua
+						pak.WriteByte((byte)item.Bonus); // % bonus
+						pak.WriteShort((ushort)item.Model);
+						pak.WriteByte((byte)item.Extension);
+						int flag = 0;
+						if (item.Emblem != 0)
+						{
+							pak.WriteShort((ushort)item.Emblem);
+							flag |= (item.Emblem & 0x010000) >> 16; // = 1 for newGuildEmblem
+						}
+						else
+							pak.WriteShort((ushort)item.Color);
+	//						flag |= 0x01; // newGuildEmblem
+							flag |= 0x02; // enable salvage button
+						AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(m_gameClient.Player.CraftingPrimarySkill);
+						if (skill != null && skill is AdvancedCraftingSkill/* && ((AdvancedCraftingSkill)skill).IsAllowedToCombine(m_gameClient.Player, item)*/)
+							flag |= 0x04; // enable craft button
+						ushort icon1 = 0;
+						ushort icon2 = 0;
+						string spell_name1 = "";
+						string spell_name2 = "";
+						if (item.Object_Type != (int)eObjectType.AlchemyTincture)
+						{
+							SpellLine chargeEffectsLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+	
+							if (chargeEffectsLine != null)
 							{
-								Spell spell = SkillBase.FindSpell(item.SpellID, chargeEffectsLine);
-								if (spell != null)
+								if (item.SpellID > 0/* && item.Charges > 0*/)
 								{
-									flag |= 0x08;
-									icon1 = spell.Icon;
-									spell_name1 = spell.Name; // or best spl.Name ?
+									Spell spell = SkillBase.FindSpell(item.SpellID, chargeEffectsLine);
+									if (spell != null)
+									{
+										flag |= 0x08;
+										icon1 = spell.Icon;
+										spell_name1 = spell.Name; // or best spl.Name ?
+									}
 								}
-							}
-							if (item.SpellID1 > 0/* && item.Charges > 0*/)
-							{
-								Spell spell = SkillBase.FindSpell(item.SpellID1, chargeEffectsLine);
-								if (spell != null)
+								if (item.SpellID1 > 0/* && item.Charges > 0*/)
 								{
-									flag |= 0x10;
-									icon2 = spell.Icon;
-									spell_name2 = spell.Name; // or best spl.Name ?
+									Spell spell = SkillBase.FindSpell(item.SpellID1, chargeEffectsLine);
+									if (spell != null)
+									{
+										flag |= 0x10;
+										icon2 = spell.Icon;
+										spell_name2 = spell.Name; // or best spl.Name ?
+									}
 								}
 							}
 						}
+						pak.WriteByte((byte)flag);
+						if ((flag & 0x08) == 0x08)
+						{
+							pak.WriteShort((ushort)icon1);
+							pak.WritePascalString(spell_name1);
+						}
+						if ((flag & 0x10) == 0x10)
+						{
+							pak.WriteShort((ushort)icon2);
+							pak.WritePascalString(spell_name2);
+						}
+						pak.WriteByte((byte)item.Effect);
+						string name = item.Name;
+						if (item.Count > 1)
+							name = item.Count + " " + name;
+	                    if (item.SellPrice > 0)
+	                    {
+							if (ServerProperties.Properties.CONSIGNMENT_USE_BP)
+	                            name += "[" + item.SellPrice.ToString() + " BP]";
+	                        else
+	                            name += "[" + Money.GetString(item.SellPrice) + "]";
+	                    }
+						pak.WritePascalString(name);
 					}
-					pak.WriteByte((byte)flag);
-					if ((flag & 0x08) == 0x08)
-					{
-						pak.WriteShort((ushort)icon1);
-						pak.WritePascalString(spell_name1);
-					}
-					if ((flag & 0x10) == 0x10)
-					{
-						pak.WriteShort((ushort)icon2);
-						pak.WritePascalString(spell_name2);
-					}
-					pak.WriteByte((byte)item.Effect);
-					string name = item.Name;
-					if (item.Count > 1)
-						name = item.Count + " " + name;
-                    if (item.SellPrice > 0)
-                    {
-						if (ServerProperties.Properties.CONSIGNMENT_USE_BP)
-                            name += "[" + item.SellPrice.ToString() + " BP]";
-                        else
-                            name += "[" + Money.GetString(item.SellPrice) + "]";
-                    }
-					pak.WritePascalString(name);
 				}
+				SendTCP(pak);
 			}
-			SendTCP(pak);
 		}
 	}
 }

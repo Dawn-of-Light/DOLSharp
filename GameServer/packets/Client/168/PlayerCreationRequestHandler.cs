@@ -22,7 +22,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x7D^168,"Handles requests for players(0x7C) in game")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.CreatePlayerRequest, "Handles requests for players(0x7C) in game", eClientStatus.PlayerInGame)]
 	public class PlayerCreationRequestHandler : IPacketHandler
 	{
 		/// <summary>

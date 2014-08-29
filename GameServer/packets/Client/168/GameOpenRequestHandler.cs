@@ -20,7 +20,7 @@ using System;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x17^168,"Checks if UDP is working for the client")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.GameOpenRequest, "Checks if UDP is working for the client", eClientStatus.None)]
 	public class GameOpenRequestHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)

@@ -833,6 +833,9 @@ namespace DOL.GS
 		AlbionMinotaur = 19,
 		MidgardMinotaur = 20,
 		HiberniaMinotaur = 21,
+		Korazh = 19,
+		Deifrang = 20,
+		Graoch = 21,
 	}
 
 	/// <summary>
@@ -1113,7 +1116,7 @@ namespace DOL.GS
 		/// </summary>
 		public static string StyleAttackResultToName(int attackResult)
 		{
-			return Enum.GetName(typeof(Styles.Style.eAttackResult), attackResult);
+			return Enum.GetName(typeof(Styles.Style.eAttackResultRequirement), attackResult);
 		}
 
 		public static string InstrumentTypeToName(int instrumentTypeID)

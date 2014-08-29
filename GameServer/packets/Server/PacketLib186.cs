@@ -75,83 +75,98 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendCombatAnimation(GameObject attacker, GameObject defender, ushort weaponID, ushort shieldID, int style, byte stance, byte result, byte targetHealthPercent)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CombatAnimation));
-			if (attacker != null)
-				pak.WriteShort((ushort)attacker.ObjectID);
-			else
-				pak.WriteShort(0x00);
-			if (defender != null)
-				pak.WriteShort((ushort)defender.ObjectID);
-			else
-				pak.WriteShort(0x00);
-			pak.WriteShort(weaponID);
-			pak.WriteShort(shieldID);
-			pak.WriteShortLowEndian((ushort)style);
-			pak.WriteByte(stance);
-			pak.WriteByte(result);
-			if (defender is GameLiving)
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CombatAnimation)))
 			{
-				targetHealthPercent = (defender as GameLiving).HealthPercent;
+				if (attacker != null)
+					pak.WriteShort((ushort)attacker.ObjectID);
+				else
+					pak.WriteShort(0x00);
+				
+				if (defender != null)
+					pak.WriteShort((ushort)defender.ObjectID);
+				else
+					pak.WriteShort(0x00);
+				
+				pak.WriteShort(weaponID);
+				pak.WriteShort(shieldID);
+				pak.WriteShortLowEndian((ushort)style);
+				pak.WriteByte(stance);
+				pak.WriteByte(result);
+				
+				// If Health Percent is invalid get the living Health.
+				if (defender is GameLiving && targetHealthPercent > 100)
+				{
+					targetHealthPercent = (defender as GameLiving).HealthPercent;
+				}
+				
+				pak.WriteByte(targetHealthPercent);
+				pak.WriteByte(0);//unk
+				SendTCP(pak);
 			}
-			pak.WriteByte(targetHealthPercent);
-			pak.WriteByte(0);//unk
-			SendTCP(pak);
 		}
 
 		public override void SendMinotaurRelicMapRemove(byte id)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MinotaurRelicMapRemove));
-            pak.WriteIntLowEndian((uint)id);
-			SendTCP(pak);
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MinotaurRelicMapRemove)))
+			{
+            	pak.WriteIntLowEndian((uint)id);
+				SendTCP(pak);
+			}
 		}
 		
 		public override void SendMinotaurRelicMapUpdate(byte id, ushort region, int x, int y, int z)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MinotaurRelicMapUpdate));
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MinotaurRelicMapUpdate)))
+			{
 
-			pak.WriteIntLowEndian((uint)id);
-            pak.WriteIntLowEndian((uint)region);
-            pak.WriteIntLowEndian((uint)x);
-            pak.WriteIntLowEndian((uint)y);
-            pak.WriteIntLowEndian((uint)z);
-
-			SendTCP(pak);
+				pak.WriteIntLowEndian((uint)id);
+	            pak.WriteIntLowEndian((uint)region);
+	            pak.WriteIntLowEndian((uint)x);
+	            pak.WriteIntLowEndian((uint)y);
+	            pak.WriteIntLowEndian((uint)z);
+	
+				SendTCP(pak);
+			}
 		}
 		
 		public override void SendMinotaurRelicWindow(GamePlayer player, int effect, bool flag)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VisualEffect));
-
-			pak.WriteShort((ushort)player.ObjectID);
-			pak.WriteByte((byte)13);
-			if (flag)
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VisualEffect)))
 			{
-				pak.WriteByte(0);
-				pak.WriteInt((uint)effect);
-			}
-			else
-			{
-				pak.WriteByte(1);
-				pak.WriteInt((uint)effect);
-			}
 
-			SendTCP(pak);
+				pak.WriteShort((ushort)player.ObjectID);
+				pak.WriteByte((byte)13);
+				if (flag)
+				{
+					pak.WriteByte(0);
+					pak.WriteInt((uint)effect);
+				}
+				else
+				{
+					pak.WriteByte(1);
+					pak.WriteInt((uint)effect);
+				}
+	
+				SendTCP(pak);
+			}
 		}
 
 		public override void SendMinotaurRelicBarUpdate(GamePlayer player, int xp)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VisualEffect));
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VisualEffect)))
+			{
 
-			pak.WriteShort((ushort)player.ObjectID);
-			pak.WriteByte((byte)14);
-			pak.WriteByte(0);
-			//4k maximum
-			if (xp > 4000) xp = 4000;
-			if (xp < 0) xp = 0;
-
-			pak.WriteInt((uint)xp);
-
-			SendTCP(pak);
+				pak.WriteShort((ushort)player.ObjectID);
+				pak.WriteByte((byte)14);
+				pak.WriteByte(0);
+				//4k maximum
+				if (xp > 4000) xp = 4000;
+				if (xp < 0) xp = 0;
+	
+				pak.WriteInt((uint)xp);
+	
+				SendTCP(pak);
+			}
 		}
 	}
 }

@@ -66,14 +66,14 @@ namespace DOL.GS.Styles
 				GameLiving.eAttackResult requiredAttackResult = GameLiving.eAttackResult.Any;
 				switch (style.AttackResultRequirement)
 				{
-					case Style.eAttackResult.Any: requiredAttackResult = GameLiving.eAttackResult.Any; break;
-					case Style.eAttackResult.Block: requiredAttackResult = GameLiving.eAttackResult.Blocked; break;
-					case Style.eAttackResult.Evade: requiredAttackResult = GameLiving.eAttackResult.Evaded; break;
-					case Style.eAttackResult.Fumble: requiredAttackResult = GameLiving.eAttackResult.Fumbled; break;
-					case Style.eAttackResult.Hit: requiredAttackResult = GameLiving.eAttackResult.HitUnstyled; break;
-					case Style.eAttackResult.Style: requiredAttackResult = GameLiving.eAttackResult.HitStyle; break;
-					case Style.eAttackResult.Miss: requiredAttackResult = GameLiving.eAttackResult.Missed; break;
-					case Style.eAttackResult.Parry: requiredAttackResult = GameLiving.eAttackResult.Parried; break;
+					case Style.eAttackResultRequirement.Any: requiredAttackResult = GameLiving.eAttackResult.Any; break;
+					case Style.eAttackResultRequirement.Block: requiredAttackResult = GameLiving.eAttackResult.Blocked; break;
+					case Style.eAttackResultRequirement.Evade: requiredAttackResult = GameLiving.eAttackResult.Evaded; break;
+					case Style.eAttackResultRequirement.Fumble: requiredAttackResult = GameLiving.eAttackResult.Fumbled; break;
+					case Style.eAttackResultRequirement.Hit: requiredAttackResult = GameLiving.eAttackResult.HitUnstyled; break;
+					case Style.eAttackResultRequirement.Style: requiredAttackResult = GameLiving.eAttackResult.HitStyle; break;
+					case Style.eAttackResultRequirement.Miss: requiredAttackResult = GameLiving.eAttackResult.Missed; break;
+					case Style.eAttackResultRequirement.Parry: requiredAttackResult = GameLiving.eAttackResult.Parried; break;
 				}
 
 				AttackData lastAD = (AttackData)living.TempProperties.getProperty<object>(GameLiving.LAST_ATTACK_DATA, null);
@@ -253,7 +253,7 @@ namespace DOL.GS.Styles
 				if (player != null)
 				{
 					Style preRequireStyle = null;
-					if (style.OpeningRequirementType == Style.eOpening.Offensive && style.AttackResultRequirement == Style.eAttackResult.Style)
+					if (style.OpeningRequirementType == Style.eOpening.Offensive && style.AttackResultRequirement == Style.eAttackResultRequirement.Style)
 						preRequireStyle = SkillBase.GetStyleByID(style.OpeningRequirementValue, player.CharacterClass.ID);
 
 					//We have not set any primary style yet?
@@ -703,25 +703,25 @@ namespace DOL.GS.Styles
 				//attacker action result is opening
 				switch (style.AttackResultRequirement)
 				{
-					case Style.eAttackResult.Hit:
+					case Style.eAttackResultRequirement.Hit:
 						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.YouHit");
 						break;
-					case Style.eAttackResult.Miss:
+					case Style.eAttackResultRequirement.Miss:
 						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.YouMiss");
 						break;
-					case Style.eAttackResult.Parry:
+					case Style.eAttackResultRequirement.Parry:
 						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.TargetParrys");
 						break;
-					case Style.eAttackResult.Block:
+					case Style.eAttackResultRequirement.Block:
 						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.TargetBlocks");
 						break;
-					case Style.eAttackResult.Evade:
+					case Style.eAttackResultRequirement.Evade:
 						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.TargetEvades");
 						break;
-					case Style.eAttackResult.Fumble:
+					case Style.eAttackResultRequirement.Fumble:
 						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.YouFumble");
 						break;
-					case Style.eAttackResult.Style:
+					case Style.eAttackResultRequirement.Style:
 						Style reqStyle = SkillBase.GetStyleByID(style.OpeningRequirementValue, player.CharacterClass.ID);
 						if (reqStyle == null)
 						{
@@ -747,25 +747,25 @@ namespace DOL.GS.Styles
 				//defender action result is opening
 				switch (style.AttackResultRequirement)
 				{
-					case Style.eAttackResult.Miss:
+					case Style.eAttackResultRequirement.Miss:
 						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.TargetMisses");
 						break;
-					case Style.eAttackResult.Hit:
+					case Style.eAttackResultRequirement.Hit:
 						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.TargetHits");
 						break;
-					case Style.eAttackResult.Parry:
+					case Style.eAttackResultRequirement.Parry:
 						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.YouParry");
 						break;
-					case Style.eAttackResult.Block:
+					case Style.eAttackResultRequirement.Block:
 						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.YouBlock");
 						break;
-					case Style.eAttackResult.Evade:
+					case Style.eAttackResultRequirement.Evade:
 						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.YouEvade");
 						break;
-					case Style.eAttackResult.Fumble:
+					case Style.eAttackResultRequirement.Fumble:
 						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.TargetFumbles");
 						break;
-					case Style.eAttackResult.Style:
+					case Style.eAttackResultRequirement.Style:
 						temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.TargetStyle");
 						break;
 					default:
@@ -803,7 +803,7 @@ namespace DOL.GS.Styles
 
 			foreach (Style st in SkillBase.GetStyleList(style.Spec, player.CharacterClass.ID))
 			{
-				if (st.AttackResultRequirement == Style.eAttackResult.Style && st.OpeningRequirementValue == style.ID)
+				if (st.AttackResultRequirement == Style.eAttackResultRequirement.Style && st.OpeningRequirementValue == style.ID)
 				{
 					temp = (temp == "" ? st.Name : temp + LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Or", st.Name));
 				}
@@ -813,7 +813,7 @@ namespace DOL.GS.Styles
 			{
 				foreach (Style st in player.GetChampionStyleList())
 				{
-					if (st.AttackResultRequirement == Style.eAttackResult.Style && st.OpeningRequirementValue == style.ID)
+					if (st.AttackResultRequirement == Style.eAttackResultRequirement.Style && st.OpeningRequirementValue == style.ID)
 					{
 						temp = (temp == "" ? st.Name : temp + LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Or", st.Name));
 					}

@@ -529,9 +529,9 @@ namespace DOL.GS.Commands
 						
 					info.Add( "  ------- KEEP ------\n");
 					info.Add( " + Name : " + target.Name);
-					info.Add( " + KeepID : " + target.Keep.KeepID);
+					info.Add( " + KeepID : " + target.AbstractKeep.KeepID);
 					info.Add( " + Level : " + target.Level);
-					info.Add( " + BaseLevel : " + target.Keep.BaseLevel);
+					info.Add( " + BaseLevel : " + target.AbstractKeep.BaseLevel);
 					info.Add( " + Realm : " + realm);
 					info.Add( " ");
 					info.Add( " + Model : " + target.Model);
@@ -556,7 +556,7 @@ namespace DOL.GS.Commands
 					info.Add( " + ExperienceValue : " + target.ExperienceValue);
 					info.Add( " + AttackRange : " + target.AttackRange);
 					info.Add(" ");
-					if (GameServer.KeepManager.GetFrontierKeeps().Contains(target.Keep))
+					if (GameServer.KeepManager.GetFrontierKeeps().Contains(target.AbstractKeep))
 					{
 						info.Add(" + Keep Manager : " + GameServer.KeepManager.GetType().FullName);
 						info.Add(" + Frontiers");

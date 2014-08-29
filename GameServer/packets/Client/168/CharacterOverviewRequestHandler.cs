@@ -21,7 +21,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x54^168,"Handles account realm info and sending char overview")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.CharacterOverviewRequest, "Handles account realm info and sending char overview", eClientStatus.LoggedIn)]
 	public class CharacterOverviewRequestHandler : IPacketHandler
 	{
 		/// <summary>

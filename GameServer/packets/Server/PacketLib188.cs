@@ -19,7 +19,6 @@
 #define NOENCRYPTION
 using System;
 using log4net;
-using DOL.GS.Quests;
 using System.Reflection;
 
 namespace DOL.GS.PacketHandler
@@ -45,11 +44,13 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient == null || m_gameClient.Player == null)
 				return;
-			GSTCPPacketOut pak = new GSTCPPacketOut((byte)eServerPackets.XFire);
-			pak.WriteShort((ushort)m_gameClient.Player.ObjectID);
-			pak.WriteByte(flag);
-			pak.WriteByte(0x00);
-			SendTCP(pak);
+			using (GSTCPPacketOut pak = new GSTCPPacketOut((byte)eServerPackets.XFire))
+			{
+				pak.WriteShort((ushort)m_gameClient.Player.ObjectID);
+				pak.WriteByte(flag);
+				pak.WriteByte(0x00);
+				SendTCP(pak);
+			}
 		}
 	}
 }

@@ -83,9 +83,9 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (this.Component != null && this.Component.Keep != null)
+				if (this.Component != null && this.Component.AbstractKeep != null)
 				{
-					return this.Component.Keep is GameKeepTower;
+					return this.Component.AbstractKeep is GameKeepTower;
 				}
 				return false;
 			}
@@ -95,9 +95,9 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (this.Component == null || this.Component.Keep == null)
+				if (this.Component == null || this.Component.AbstractKeep == null)
 					return false;
-				return this.Component.Keep.IsPortalKeep;
+				return this.Component.AbstractKeep.IsPortalKeep;
 			}
 		}
 
@@ -529,12 +529,12 @@ namespace DOL.GS.Keeps
 		public static void GuardSpam(GameKeepGuard guard)
 		{
 			if (guard.Component == null) return;
-			if (guard.Component.Keep == null) return;
-			if (guard.Component.Keep.Guild == null) return;
+			if (guard.Component.AbstractKeep == null) return;
+			if (guard.Component.AbstractKeep.Guild == null) return;
 
 			int inArea = guard.GetEnemyCountInArea();
-            string message = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GuardSpam.Killed", guard.Name, guard.Component.Keep.Name, inArea);
-            KeepGuildMgr.SendMessageToGuild(message, guard.Component.Keep.Guild);
+            string message = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GuardSpam.Killed", guard.Name, guard.Component.AbstractKeep.Name, inArea);
+            KeepGuildMgr.SendMessageToGuild(message, guard.Component.AbstractKeep.Guild);
 		}
 
 		/// <summary>
@@ -548,7 +548,7 @@ namespace DOL.GS.Keeps
 			{
 				if (this.Component != null)
 				{
-					if (GameServer.KeepManager.IsEnemy(this.Component.Keep, NearbyPlayers))
+					if (GameServer.KeepManager.IsEnemy(this.Component.AbstractKeep, NearbyPlayers))
 						inArea++;
 				}
 				else
@@ -654,9 +654,9 @@ namespace DOL.GS.Keeps
 		protected override int RespawnTimerCallback(RegionTimer respawnTimer)
 		{
 			int temp = base.RespawnTimerCallback(respawnTimer);
-			if (Component != null && Component.Keep != null)
+			if (Component != null && Component.AbstractKeep != null)
 			{
-				Component.Keep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
+				Component.AbstractKeep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
 			}
 			else
 			{
@@ -683,10 +683,10 @@ namespace DOL.GS.Keeps
 				if (this.Component != null)
 				{
 					string text = "";
-					if (this.Component.Keep.Level > 1 && this.Component.Keep.Level < 250 && GameServer.ServerRules.IsSameRealm(player, this, true))
-						text = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.Upgraded", GetPronoun(0, true), this.Component.Keep.Level);
-					if (ServerProperties.Properties.USE_KEEP_BALANCING && this.Component.Keep.Region == 163 && !(this.Component.Keep is GameKeepTower))
-						text += LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.Balancing", GetPronoun(0, true), (Component.Keep.BaseLevel - 50).ToString());
+					if (this.Component.AbstractKeep.Level > 1 && this.Component.AbstractKeep.Level < 250 && GameServer.ServerRules.IsSameRealm(player, this, true))
+						text = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.Upgraded", GetPronoun(0, true), this.Component.AbstractKeep.Level);
+					if (ServerProperties.Properties.USE_KEEP_BALANCING && this.Component.AbstractKeep.Region == 163 && !(this.Component.AbstractKeep is GameKeepTower))
+						text += LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.Balancing", GetPronoun(0, true), (Component.AbstractKeep.BaseLevel - 50).ToString());
 					if (text != "")
 						list.Add(text);
 				}
@@ -756,20 +756,20 @@ namespace DOL.GS.Keeps
 				{
 					AbstractGameKeep keep = (area as KeepArea).Keep;
 					Component = new GameKeepComponent();
-					Component.Keep = keep;
+					Component.AbstractKeep = keep;
 					m_dataObjectID = mobobject.ObjectId;
 					// mob reload command might be reloading guard, so check to make sure it isn't already added
-					if (Component.Keep.Guards.ContainsKey(m_dataObjectID) == false)
+					if (Component.AbstractKeep.Guards.ContainsKey(m_dataObjectID) == false)
 					{
-						Component.Keep.Guards.Add(m_dataObjectID, this);
+						Component.AbstractKeep.Guards.Add(m_dataObjectID, this);
 					}
 					break;
 				}
 			}
 
-			if (Component != null && Component.Keep != null)
+			if (Component != null && Component.AbstractKeep != null)
 			{
-				Component.Keep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
+				Component.AbstractKeep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
 			}
 			else
 			{
@@ -781,11 +781,11 @@ namespace DOL.GS.Keeps
 		{
 			if (Component != null)
 			{
-				if (Component.Keep != null)
+				if (Component.AbstractKeep != null)
 				{
-					if (Component.Keep.Guards.ContainsKey(m_dataObjectID))
+					if (Component.AbstractKeep.Guards.ContainsKey(m_dataObjectID))
 					{
-						Component.Keep.Guards.Remove(m_dataObjectID);
+						Component.AbstractKeep.Guards.Remove(m_dataObjectID);
 					}
 					else
 					{
@@ -820,7 +820,7 @@ namespace DOL.GS.Keeps
 		{
 			if (HookPoint != null && Component != null)
 			{
-				Component.Keep.Guards.Remove(this.ObjectID);
+				Component.AbstractKeep.Guards.Remove(this.ObjectID);
 			}
 
 			TempProperties.removeAllProperties();
@@ -834,7 +834,7 @@ namespace DOL.GS.Keeps
 			{
 				if (area is KeepArea && Component != null)
 				{
-					Component.Keep.Guards.Remove(this.InternalID);
+					Component.AbstractKeep.Guards.Remove(this.InternalID);
 					break;
 				}
 			}
@@ -850,11 +850,11 @@ namespace DOL.GS.Keeps
 		{
 			m_templateID = pos.TemplateID;
 			m_component = component;
-			component.Keep.Guards[m_templateID] = this;
+			component.AbstractKeep.Guards[m_templateID] = this;
 			PositionMgr.LoadGuardPosition(pos, this);
-			if (Component != null && Component.Keep != null)
+			if (Component != null && Component.AbstractKeep != null)
 			{
-				Component.Keep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
+				Component.AbstractKeep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
 			}
 			else
 			{
@@ -882,7 +882,7 @@ namespace DOL.GS.Keeps
 		{
 			ClothingMgr.EquipGuard(this);
 
-			Guild guild = this.Component.Keep.Guild;
+			Guild guild = this.Component.AbstractKeep.Guild;
 			string guildname = "";
 			if (guild != null)
 				guildname = guild.Name;
@@ -910,7 +910,7 @@ namespace DOL.GS.Keeps
 			}
 			if (IsAlive)
 			{
-				UpdateNPCEquipmentAppearance();
+				BroadcastLivingEquipmentUpdate();
 			}
 		}
 

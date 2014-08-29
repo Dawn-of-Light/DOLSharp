@@ -23,7 +23,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	/// Called when player removes concentration spell in conc window
 	/// </summary>
-	[PacketHandler(PacketHandlerType.TCP, eClientPackets.RemoveConcentrationEffect, ClientStatus.PlayerInGame)]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.RemoveConcentrationEffect, "Handles Concentration Effect Remove Request", eClientStatus.PlayerInGame)]
 	public class RemoveConcentrationEffectHandler : IPacketHandler
 	{
 		#region IPacketHandler Members
@@ -78,7 +78,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				if (effect != null)
 				{
-					effect.Cancel(false);
+					effect.Cancel(true);
 				}
 			}
 		}

@@ -1674,6 +1674,19 @@ namespace DOL.GS.ServerRules
 		}
 
 		/// <summary>
+		/// Gets the player's custom title based on server type
+		/// </summary>
+		/// <param name="source">The "looking" player</param>
+		/// <param name="target">The considered player</param>
+		/// <returns>The custom title of the target</returns>
+		public virtual string GetPlayerTitle(GamePlayer source, GamePlayer target)
+		{
+			return target.CurrentTitle.GetValue(target);
+		}
+
+
+		
+		/// <summary>
 		/// Gets the server type color handling scheme
 		///
 		/// ColorHandling: this byte tells the client how to handle color for PC and NPC names (over the head)

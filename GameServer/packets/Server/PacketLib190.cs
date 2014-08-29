@@ -57,116 +57,126 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null)
 				return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterPointsUpdate));
-			pak.WriteInt((uint)m_gameClient.Player.RealmPoints);
-			pak.WriteShort(m_gameClient.Player.LevelPermill);
-			pak.WriteShort((ushort)m_gameClient.Player.SkillSpecialtyPoints);
-			pak.WriteInt((uint)m_gameClient.Player.BountyPoints);
-			pak.WriteShort((ushort)m_gameClient.Player.RealmSpecialtyPoints);
-			pak.WriteShort(m_gameClient.Player.ChampionLevelPermill);
-			pak.WriteLongLowEndian((ulong)m_gameClient.Player.Experience);
-			pak.WriteLongLowEndian((ulong)m_gameClient.Player.ExperienceForNextLevel);
-			pak.WriteLongLowEndian(0);//champExp
-			pak.WriteLongLowEndian(0);//champExpNextLevel
-			SendTCP(pak);
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterPointsUpdate)))
+			{
+				pak.WriteInt((uint)m_gameClient.Player.RealmPoints);
+				pak.WriteShort(m_gameClient.Player.LevelPermill);
+				pak.WriteShort((ushort)m_gameClient.Player.SkillSpecialtyPoints);
+				pak.WriteInt((uint)m_gameClient.Player.BountyPoints);
+				pak.WriteShort((ushort)m_gameClient.Player.RealmSpecialtyPoints);
+				pak.WriteShort(m_gameClient.Player.ChampionLevelPermill);
+				pak.WriteLongLowEndian((ulong)m_gameClient.Player.Experience);
+				pak.WriteLongLowEndian((ulong)m_gameClient.Player.ExperienceForNextLevel);
+				pak.WriteLongLowEndian(0);//champExp
+				pak.WriteLongLowEndian(0);//champExpNextLevel
+				SendTCP(pak);
+			}
 		}
 
 		public override void SendStatusUpdate(byte sittingFlag)
 		{
 			if (m_gameClient.Player == null)
 				return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterStatusUpdate));
-			pak.WriteByte(m_gameClient.Player.HealthPercent);
-			pak.WriteByte(m_gameClient.Player.ManaPercent);
-			pak.WriteByte(sittingFlag);
-			pak.WriteByte(m_gameClient.Player.EndurancePercent);
-			pak.WriteByte(m_gameClient.Player.ConcentrationPercent);
-			//			pak.WriteShort((byte) (m_gameClient.Player.IsAlive ? 0x00 : 0x0f)); // 0x0F if dead ??? where it now ?
-			pak.WriteByte(0);// unk
-			pak.WriteShort((ushort)m_gameClient.Player.MaxMana);
-			pak.WriteShort((ushort)m_gameClient.Player.MaxEndurance);
-			pak.WriteShort((ushort)m_gameClient.Player.MaxConcentration);
-			pak.WriteShort((ushort)m_gameClient.Player.MaxHealth);
-			pak.WriteShort((ushort)m_gameClient.Player.Health);
-			pak.WriteShort((ushort)m_gameClient.Player.Endurance);
-			pak.WriteShort((ushort)m_gameClient.Player.Mana);
-			pak.WriteShort((ushort)m_gameClient.Player.Concentration);
-			SendTCP(pak);
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterStatusUpdate)))
+			{
+				pak.WriteByte(m_gameClient.Player.HealthPercent);
+				pak.WriteByte(m_gameClient.Player.ManaPercent);
+				pak.WriteByte(sittingFlag);
+				pak.WriteByte(m_gameClient.Player.EndurancePercent);
+				pak.WriteByte(m_gameClient.Player.ConcentrationPercent);
+				//			pak.WriteShort((byte) (m_gameClient.Player.IsAlive ? 0x00 : 0x0f)); // 0x0F if dead ??? where it now ?
+				pak.WriteByte(0);// unk
+				pak.WriteShort((ushort)m_gameClient.Player.MaxMana);
+				pak.WriteShort((ushort)m_gameClient.Player.MaxEndurance);
+				pak.WriteShort((ushort)m_gameClient.Player.MaxConcentration);
+				pak.WriteShort((ushort)m_gameClient.Player.MaxHealth);
+				pak.WriteShort((ushort)m_gameClient.Player.Health);
+				pak.WriteShort((ushort)m_gameClient.Player.Endurance);
+				pak.WriteShort((ushort)m_gameClient.Player.Mana);
+				pak.WriteShort((ushort)m_gameClient.Player.Concentration);
+				SendTCP(pak);
+			}
 		}
 		// 190c+ SendUpdateIcons
 		public override void SendUpdateIcons(IList changedEffects, ref int lastUpdateEffectsCount)
 		{
-			if (m_gameClient.Player == null) return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.UpdateIcons));
-			long initPos = pak.Position;
-
-			int fxcount = 0;
-			int entriesCount = 0;
-			lock (m_gameClient.Player.EffectList)
+			if (m_gameClient.Player == null)
+				return;
+			
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.UpdateIcons)))
 			{
-				pak.WriteByte(0);	// effects count set in the end
-				pak.WriteByte(0);	// unknown
-				pak.WriteByte(Icons);	// unknown
-				pak.WriteByte(0);	// unknown
-				foreach (IGameEffect effect in m_gameClient.Player.EffectList)
+				long initPos = pak.Position;
+	
+				int fxcount = 0;
+				int entriesCount = 0;
+				lock (m_gameClient.Player.EffectList)
 				{
-					if (effect.Icon != 0)
+					pak.WriteByte(0);	// effects count set in the end
+					pak.WriteByte(0);	// unknown
+					pak.WriteByte(Icons);	// unknown
+					pak.WriteByte(0);	// unknown
+					foreach (IGameEffect effect in m_gameClient.Player.EffectList)
 					{
-						fxcount++;
-						if (changedEffects != null && !changedEffects.Contains(effect))
-							continue;
-						//						Log.DebugFormat("adding [{0}] '{1}'", fxcount-1, effect.Name);
-						pak.WriteByte((byte)(fxcount - 1)); // icon index
-						pak.WriteByte((effect is GameSpellEffect) ? (byte)(fxcount - 1) : (byte)0xff);
-						byte ImmunByte = 0;
-						if (effect is GameSpellAndImmunityEffect)
+						if (effect.Icon != 0)
 						{
-							GameSpellAndImmunityEffect immunity = (GameSpellAndImmunityEffect)effect;
-							if (immunity.ImmunityState) ImmunByte = 1;
+							fxcount++;
+							if (changedEffects != null && !changedEffects.Contains(effect))
+								continue;
+							//						Log.DebugFormat("adding [{0}] '{1}'", fxcount-1, effect.Name);
+							pak.WriteByte((byte)(fxcount - 1)); // icon index
+							pak.WriteByte((effect is GameSpellEffect) ? (byte)(fxcount - 1) : (byte)0xff);
+							byte ImmunByte = 0;
+							if (effect is GameSpellEffect)
+							{
+								//if (((GameSpellEffect)effect).ImmunityState)
+								if (effect is GameSpellAndImmunityEffect && ((GameSpellAndImmunityEffect)effect).ImmunityState)
+									ImmunByte = 1;
+							}
+							pak.WriteByte(ImmunByte); // new in 1.73; if non zero says "protected by" on right click
+							// bit 0x08 adds "more..." to right click info
+							pak.WriteShort(effect.Icon);
+							//pak.WriteShort(effect.IsFading ? (ushort)1 : (ushort)(effect.RemainingTime / 1000));
+							pak.WriteShort((ushort)(effect.RemainingTime / 1000));
+							pak.WriteShort(effect.InternalID);      // reference for shift+i or cancel spell
+							byte flagNegativeEffect = 0;
+							if (effect is StaticEffect)
+							{
+								if (((StaticEffect)effect).HasNegativeEffect)
+									flagNegativeEffect = 1;
+							}
+							else if (effect is GameSpellEffect)
+							{
+								if (!((GameSpellEffect)effect).SpellHandler.HasPositiveEffect)
+									flagNegativeEffect = 1;
+							}
+							pak.WriteByte(flagNegativeEffect);
+							pak.WritePascalString(effect.Name);
+							entriesCount++;
 						}
-						pak.WriteByte(ImmunByte); // new in 1.73; if non zero says "protected by" on right click
-						// bit 0x08 adds "more..." to right click info
-						pak.WriteShort(effect.Icon);
-						pak.WriteShort((ushort)(effect.RemainingTime / 1000));
-						pak.WriteShort(effect.InternalID);      // reference for shift+i or cancel spell
-						byte flagNegativeEffect = 0;
-						if (effect is StaticEffect)
-						{
-							if (((StaticEffect)effect).HasNegativeEffect)
-								flagNegativeEffect = 1;
-						}
-						else if (effect is GameSpellEffect)
-						{
-							if (!((GameSpellEffect)effect).SpellHandler.HasPositiveEffect)
-								flagNegativeEffect = 1;
-						}
-						pak.WriteByte(flagNegativeEffect);
-						pak.WritePascalString(effect.Name);
-						entriesCount++;
 					}
+	
+					int oldCount = lastUpdateEffectsCount;
+					lastUpdateEffectsCount = fxcount;
+					while (oldCount > fxcount)
+					{
+						pak.WriteByte((byte)(fxcount++));
+						pak.Fill(0, 10);
+						entriesCount++;
+						//					Log.DebugFormat("adding [{0}] (empty)", fxcount-1);
+					}
+	
+					if (changedEffects != null)
+						changedEffects.Clear();
+	
+					if (entriesCount == 0)
+						return; // nothing changed - no update is needed
+	
+					pak.Position = initPos;
+					pak.WriteByte((byte)entriesCount);
+					pak.Seek(0, SeekOrigin.End);
+	
+					SendTCP(pak);
 				}
-
-				int oldCount = lastUpdateEffectsCount;
-				lastUpdateEffectsCount = fxcount;
-				while (oldCount > fxcount)
-				{
-					pak.WriteByte((byte)(fxcount++));
-					pak.Fill(0, 10);
-					entriesCount++;
-					//					Log.DebugFormat("adding [{0}] (empty)", fxcount-1);
-				}
-
-				if (changedEffects != null)
-					changedEffects.Clear();
-
-				if (entriesCount == 0)
-					return; // nothing changed - no update is needed
-
-				pak.Position = initPos;
-				pak.WriteByte((byte)entriesCount);
-				pak.Seek(0, SeekOrigin.End);
-
-				SendTCP(pak);
 			}
 			return;
 		}
@@ -198,24 +208,26 @@ namespace DOL.GS.PacketHandler
 				mlXPPercent = 100.0; // ML10 has no MLXP, so always 100%
 			}
 
-			GSTCPPacketOut pak = new GSTCPPacketOut((byte)eServerPackets.MasterLevelWindow);
-			pak.WriteByte((byte)mlXPPercent); // MLXP (blue bar)
-			pak.WriteByte((byte)Math.Min(mlStepPercent, 100)); // Step percent (red bar)
-			pak.WriteByte((byte)(m_gameClient.Player.MLLevel + 1)); // ML level + 1
-			pak.WriteByte(0);
-			pak.WriteShort((ushort)0); // exp1 ? new in 1.90
-			pak.WriteShort((ushort)0); // exp2 ? new in 1.90
-			pak.WriteByte(ml); 
-
-			// ML level completion is displayed client side for Step 11
-			for (int i = 1; i < 11; i++)
+			using (GSTCPPacketOut pak = new GSTCPPacketOut((byte)eServerPackets.MasterLevelWindow))
 			{
-				string description = m_gameClient.Player.GetMLStepDescription(mlToSend, i);
-				pak.WritePascalString(description);
+				pak.WriteByte((byte)mlXPPercent); // MLXP (blue bar)
+				pak.WriteByte((byte)Math.Min(mlStepPercent, 100)); // Step percent (red bar)
+				pak.WriteByte((byte)(m_gameClient.Player.MLLevel + 1)); // ML level + 1
+				pak.WriteByte(0);
+				pak.WriteShort((ushort)0); // exp1 ? new in 1.90
+				pak.WriteShort((ushort)0); // exp2 ? new in 1.90
+				pak.WriteByte(ml); 
+	
+				// ML level completion is displayed client side for Step 11
+				for (int i = 1; i < 11; i++)
+				{
+					string description = m_gameClient.Player.GetMLStepDescription(mlToSend, i);
+					pak.WritePascalString(description);
+				}
+	
+				pak.WriteByte(0);
+				SendTCP(pak);
 			}
-
-			pak.WriteByte(0);
-			SendTCP(pak);
 		}
 		
 		/// <summary>
@@ -347,5 +359,6 @@ namespace DOL.GS.PacketHandler
 			// Update Cache
 			m_gameClient.GameObjectUpdateArray[new Tuple<ushort, ushort>(player.CurrentRegionID, (ushort)player.ObjectID)] = GameTimer.GetTickCount();
 		}
+
 	}
 }

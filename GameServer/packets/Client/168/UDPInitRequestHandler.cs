@@ -22,7 +22,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.UDP,0xBC^168,"Handles UDP init")]
+	[PacketHandlerAttribute(PacketHandlerType.UDP, eClientPackets.UDPInitRequest, "Handles UDP init", eClientStatus.None)]
 	public class UDPInitRequestHandler : IPacketHandler
 	{
 		/// <summary>

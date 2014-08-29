@@ -342,6 +342,20 @@ namespace DOL.GS.ServerRules
 				return target.GuildName;
 			return string.Empty;
 		}
+	
+		/// <summary>
+		/// Gets the player's custom title based on server type
+		/// </summary>
+		/// <param name="source">The "looking" player</param>
+		/// <param name="target">The considered player</param>
+		/// <returns>The custom title of the target</returns>
+		public override string GetPlayerTitle(GamePlayer source, GamePlayer target)
+		{
+			if (IsSameRealm(source, target, true))
+				return target.CurrentTitle.GetValue(target);
+			
+			return string.Empty;
+		}
 
 		/// <summary>
 		/// Reset the keep with special server rules handling
@@ -351,7 +365,7 @@ namespace DOL.GS.ServerRules
 		public override void ResetKeep(GuardLord lord, GameObject killer)
 		{
 			base.ResetKeep(lord, killer);
-			lord.Component.Keep.Reset((eRealm)killer.Realm);
+			lord.Component.AbstractKeep.Reset((eRealm)killer.Realm);
 		}
 	}
 }

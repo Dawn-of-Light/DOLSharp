@@ -21,7 +21,7 @@ using DOL.GS.Keeps;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, 0xE4, "ship hookpoint interact")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.ShipHookPoint, "Handles Ship hookpoint interact", eClientStatus.PlayerInGame)]
 	public class ShipHookpointInteractHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)
