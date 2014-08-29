@@ -266,8 +266,10 @@ namespace DOL.GS.Scripts
 			{
 				var db = ObjectDatabase.GetObjectDatabase(ConnectionType.DATABASE_XML, "."+Path.DirectorySeparatorChar+"webui"+Path.DirectorySeparatorChar+"generated");
 
-				db.RegisterDataObject(typeof (ServerInfo));
-				db.RegisterDataObject(typeof (PlayerInfo));
+				//Obsolete with GSS Table Registering in SVN : 3337
+				//db.RegisterDataObject(typeof (ServerInfo));
+				//Obsolete with GSS Table Registering in SVN : 3337
+				//db.RegisterDataObject(typeof (PlayerInfo));
 
 				ServerInfo si = new ServerInfo();
 
