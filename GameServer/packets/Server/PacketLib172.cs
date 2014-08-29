@@ -18,11 +18,14 @@
  */
 #define  NOENCRYPTION
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+
 using DOL.Database;
 using DOL.GS.Quests;
+
 using log4net;
 
 namespace DOL.GS.PacketHandler
@@ -105,6 +108,129 @@ namespace DOL.GS.PacketHandler
 			SendObjectGuildID(playerToCreate, playerToCreate.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
 		}
 
+		/// <summary>
+		/// This is used to build a server side "Position Object"
+		/// Usually Position Packet Should only be relayed
+		/// The only purpose of this method is refreshing postion when there is Lag
+		/// </summary>
+		/// <param name="player"></param>
+		public override void SendPlayerForgedPosition(GamePlayer player)
+		{
+			using (GSUDPPacketOut pak = new GSUDPPacketOut(GetPacketCode(eServerPackets.PlayerPosition)))
+			{
+				// PID
+				pak.WriteShort((ushort)player.ObjectID);
+				
+				// Write Speed
+				if (player.Steed != null && player.Steed.ObjectState == GameObject.eObjectState.Active)
+				{
+					player.Heading = player.Steed.Heading;
+					pak.WriteShort(0x1800);
+				}
+				else
+				{
+					short rSpeed = player.CurrentSpeed;
+					if (player.IsIncapacitated)
+						rSpeed = 0;
+					
+					ushort content;
+					if (rSpeed < 0)
+					{
+						content = (ushort)((Math.Abs(rSpeed) > 511 ? 511 : Math.Abs(rSpeed)) + 0x200);
+					}
+					else
+					{
+						content = (ushort)(rSpeed > 511 ? 511 : rSpeed);
+					}
+					
+					if (!player.IsAlive)
+					{
+						content += 5 << 10;
+					}
+					else
+					{
+						ushort state = 0;
+						
+						if (player.IsSwimming)
+							state = 1;
+						
+						if (player.IsClimbing)
+							state = 7;
+						
+						if (player.IsSitting)
+							state = 4;
+						
+						content += (ushort)(state << 10);
+					}
+					
+					content += (ushort)(player.IsStrafing ? 1 << 13 : 0 << 13);
+					
+					pak.WriteShort(content);
+				}
+
+				// Get Off Corrd
+				int offX = player.X - player.CurrentZone.XOffset;
+				int offY = player.Y - player.CurrentZone.YOffset;
+
+				pak.WriteShort((ushort)player.Z);
+				pak.WriteShort((ushort)offX);
+				pak.WriteShort((ushort)offY);
+				
+				// Write Zone
+				pak.WriteShort(player.CurrentZone.ZoneSkinID);
+
+				// Copy Heading && Falling or Write Steed
+				if (player.Steed != null && player.Steed.ObjectState == GameObject.eObjectState.Active)
+				{
+					pak.WriteShort((ushort)player.Steed.ObjectID);
+					pak.WriteShort((ushort)player.Steed.RiderSlot(player));
+				}
+				else
+				{
+					// Set Player always on ground, this is an "anti lag" packet
+					ushort contenthead = (ushort)(player.Heading + (true ? 0x1000 : 0));
+					pak.WriteShort(contenthead);
+					// No Fall Speed.
+					pak.WriteShort(0);
+				}
+				
+				// Write Flags
+				byte flagcontent = 0;
+			
+				if (player.IsDiving)
+				{
+					flagcontent += 0x04;
+				}
+				
+				if (player.IsWireframe)
+				{
+					flagcontent += 0x01;
+				}
+				
+				if (player.IsStealthed)
+				{
+					flagcontent += 0x02;
+				}
+				
+				if (player.IsTorchLighted)
+				{
+					flagcontent += 0x80;
+				}
+				
+				pak.WriteByte(flagcontent);
+
+				// Write health + Attack
+				byte healthcontent = (byte)(player.HealthPercent + (player.AttackState ? 0x80 : 0));
+			
+				pak.WriteByte(healthcontent);
+
+				SendUDP(pak);
+			}
+			
+			// Update Cache
+			m_gameClient.GameObjectUpdateArray[new Tuple<ushort, ushort>(player.CurrentRegionID, (ushort)player.ObjectID)] = GameTimer.GetTickCount();
+		}
+		
 		protected override void SendInventorySlotsUpdateRange(ICollection<int> slots, eInventoryWindowType windowType)
 		{
 			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate));
