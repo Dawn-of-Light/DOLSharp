@@ -2588,6 +2588,7 @@
     <Compile Include="world\WorldMgr.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="world\WorldUpdateThread.cs" />
     <Compile Include="world\Zone.cs">
       <SubType>Code</SubType>
     </Compile>

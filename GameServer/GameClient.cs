@@ -21,11 +21,14 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Collections.Concurrent;
+
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
 using DOL.Network;
+
 using log4net;
 
 namespace DOL.GS
@@ -228,6 +231,16 @@ namespace DOL.GS
 		protected long m_udpPingTime = DateTime.Now.Ticks;
 
 		/// <summary>
+		/// Holds the Player Collection of Updated Object with last update time.
+		/// </summary>
+		protected ConcurrentDictionary<Tuple<ushort, ushort>, long> m_GameObjectUpdateArray;
+
+		/// <summary>
+		/// Holds the Player Collection of Updated House with last update time.
+		/// </summary>
+		protected ConcurrentDictionary<Tuple<ushort, ushort>, long> m_HouseUpdateArray;
+		
+		/// <summary>
 		/// Constructor for a game client
 		/// </summary>
 		/// <param name="srvr">The server that's communicating with this client</param>
@@ -417,6 +430,22 @@ namespace DOL.GS
 		{
 			get { return m_clientAddons; }
 			set { m_clientAddons = value; }
+		}
+
+		/// <summary>
+		/// Get the Game Object Update Array (Read/Write)
+		/// </summary>
+		public ConcurrentDictionary<Tuple<ushort, ushort>, long> GameObjectUpdateArray
+		{
+			get { return m_GameObjectUpdateArray; }
+		}
+		
+		/// <summary>
+		/// Get the House Update Array (Read/Write)
+		/// </summary>
+		public ConcurrentDictionary<Tuple<ushort, ushort>, long> HouseUpdateArray
+		{
+			get { return m_HouseUpdateArray; }
 		}
 
 		/// <summary>
