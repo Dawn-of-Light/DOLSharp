@@ -395,6 +395,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			client.Player.TargetInView = ((flags & 0x10) != 0);
 			client.Player.GroundTargetInView = ((flags & 0x08) != 0);
+			client.Player.IsTorchLighted = ((flags & 0x80) != 0);
 			//7  6  5  4  3  2  1 0
 			//15 14 13 12 11 10 9 8
 			//                1 1
@@ -695,7 +696,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 					continue;
 				//No position updates for ourselves
 				if (player == client.Player)
+				{
+					// Update Player Cache (Client sending Packet is admitting he's already having it)
+					player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(client.Player.CurrentRegionID, (ushort)client.Player.ObjectID)] = GameTimer.GetTickCount();
 					continue;
+				}
 				//no position updates in different houses
 				if ((client.Player.InHouse || player.InHouse) && player.CurrentHouse != client.Player.CurrentHouse)
 					continue;
@@ -712,6 +717,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				if (!client.Player.IsStealthed || player.CanDetect(client.Player))
 				{
+					// Update Player Cache
+					player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(client.Player.CurrentRegionID, (ushort)client.Player.ObjectID)] = GameTimer.GetTickCount();
+					
 					//forward the position packet like normal!
 					if (player.Client.Version >= GameClient.eClientVersion.Version190)
 					{

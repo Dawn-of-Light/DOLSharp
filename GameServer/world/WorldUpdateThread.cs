@@ -135,13 +135,7 @@ namespace DOL.GS
 		}
 
 		private static void UpdatePlayerOtherPlayers(GamePlayer player, long nowTicks)
-		{
-			// only for 1.112+ Client
-			if (player.Client == null || player.Client.Version < GameClient.eClientVersion.Version1112)
-			{
-				return;
-			}
-			    			
+		{			    			
 			// Get All Player in Range
 			List<GamePlayer> players = new List<GamePlayer>();
 			foreach (GamePlayer p in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
@@ -158,7 +152,7 @@ namespace DOL.GS
 					GameObject obj = WorldMgr.GetRegion(objKey.Item1).GetObject(objKey.Item2);
 					// We have a Player in cache that is not in vincinity
 					// For updating "out of view" we allow a halved refresh time. 
-					if (obj is GamePlayer && !players.Contains((GamePlayer)obj) && (nowTicks - player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)]) > (GetPlayertoPlayerUpdateInterval() >> 1))
+					if (obj is GamePlayer && !players.Contains((GamePlayer)obj) && (nowTicks - player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)]) >= (GetPlayertoPlayerUpdateInterval() >> 1))
 					{
 						long dummy;
 						
@@ -183,7 +177,7 @@ namespace DOL.GS
 				{
 					GamePlayer otherply = lplayer;
 					
-					if (otherply != null && otherply != player)
+					if (otherply != null)
 					{						
 						// Get last update time
 						long lastUpdate;
@@ -231,7 +225,7 @@ namespace DOL.GS
 				{
 					GameObject obj = WorldMgr.GetRegion(objKey.Item1).GetObject(objKey.Item2);
 					// We have a NPC in cache that is not in vincinity
-					if (obj is GameNPC && !npcs.Contains((GameNPC)obj) && (nowTicks - player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)]) > (GetPlayerNPCUpdateInterval() >> 1))
+					if (obj is GameNPC && !npcs.Contains((GameNPC)obj) && (nowTicks - player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)]) >= (GetPlayerNPCUpdateInterval() >> 1))
 					{
 						long dummy;
 						
@@ -303,7 +297,7 @@ namespace DOL.GS
 				{
 					GameObject obj = WorldMgr.GetRegion(objKey.Item1).GetObject(objKey.Item2);
 					// We have a Static Item in cache that is not in vincinity
-					if (obj is GameStaticItem && !objs.Contains((GameStaticItem)obj) && (nowTicks - player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)]) > (GetPlayerItemUpdateInterval() >> 1))
+					if (obj is GameStaticItem && !objs.Contains((GameStaticItem)obj) && (nowTicks - player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)]) >= (GetPlayerItemUpdateInterval() >> 1))
 					{
 						long dummy;
 						player.Client.GameObjectUpdateArray.TryRemove(new Tuple<ushort,ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID), out dummy);
@@ -368,7 +362,7 @@ namespace DOL.GS
 				{
 					GameObject obj = WorldMgr.GetRegion(objKey.Item1).GetObject(objKey.Item2);
 					// We have a Door in cache that is not in vincinity
-					if (obj is IDoor && !doors.Contains((IDoor)obj) && (nowTicks - player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)]) > (GetPlayerItemUpdateInterval() >> 1))
+					if (obj is IDoor && !doors.Contains((IDoor)obj) && (nowTicks - player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)]) >= (GetPlayerItemUpdateInterval() >> 1))
 					{
 						long dummy;
 						player.Client.GameObjectUpdateArray.TryRemove(new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID), out dummy);
@@ -451,7 +445,7 @@ namespace DOL.GS
 					House house = HouseMgr.GetHouse(houseKey.Item1, houseKey.Item2);
 					
 					// We have a House in cache that is not in vincinity
-					if (!houses.Contains(house) && (nowTicks - player.Client.HouseUpdateArray[new Tuple<ushort, ushort>(house.RegionID, (ushort)house.HouseNumber)]) > (GetPlayerItemUpdateInterval() >> 1))
+					if (!houses.Contains(house) && (nowTicks - player.Client.HouseUpdateArray[new Tuple<ushort, ushort>(house.RegionID, (ushort)house.HouseNumber)]) >= (GetPlayerItemUpdateInterval() >> 1))
 					{
 						long dummy;
 						player.Client.HouseUpdateArray.TryRemove(new Tuple<ushort, ushort>(house.RegionID, (ushort)house.HouseNumber), out dummy);
