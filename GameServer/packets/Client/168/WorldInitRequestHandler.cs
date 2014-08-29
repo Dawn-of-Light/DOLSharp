@@ -25,7 +25,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, 0x7C ^ 168, "Handles world init replies")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.WorldInitRequest, "Handles world init replies", eClientStatus.PlayerInGame)]
 	public class WorldInitRequestHandler : IPacketHandler
 	{
 		/// <summary>

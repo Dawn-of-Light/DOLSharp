@@ -43,8 +43,13 @@ namespace DOL.GS.PacketHandler
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+		/// <summary>
+		/// Sync Lock Object
+		/// </summary>
+		private readonly object m_SyncLock = new object();
+		
 		/// <summary>
 		/// Holds the current client for this processor
 		/// </summary>
@@ -105,7 +110,7 @@ namespace DOL.GS.PacketHandler
 		/// <param name="pak">The sent packet</param>
 		protected void SavePacket(IPacket pak)
 		{
-			lock (m_lastPackets)
+			lock (((ICollection)m_lastPackets).SyncRoot)
 			{
 				while (m_lastPackets.Count >= MAX_LAST_PACKETS)
 					m_lastPackets.Dequeue();
@@ -120,7 +125,7 @@ namespace DOL.GS.PacketHandler
 		/// <returns></returns>
 		public IPacket[] GetLastPackets()
 		{
-			lock (m_lastPackets)
+			lock (((ICollection)m_lastPackets).SyncRoot)
 			{
 				return m_lastPackets.ToArray();
 			}
@@ -163,6 +168,11 @@ namespace DOL.GS.PacketHandler
 		/// <param name="packetCode">The packet ID to register it with</param>
 		public static void RegisterPacketHandler(int packetCode, IPacketHandler handler)
 		{
+			if (m_packetHandlers[packetCode] != null)
+			{
+				log.InfoFormat("Overwriting Client Packet Code {0}, with handler {1}", packetCode, handler.GetType().FullName);
+			}
+			
 			m_packetHandlers[packetCode] = handler;
 		}
 
@@ -296,7 +306,7 @@ namespace DOL.GS.PacketHandler
 					Statistics.BytesOut += buf.Length;
 					Statistics.PacketsOut++;
 
-					lock (m_tcpQueue)
+					lock (((ICollection)m_tcpQueue).SyncRoot)
 					{
 						if (m_sendingTcp)
 						{
@@ -364,7 +374,7 @@ namespace DOL.GS.PacketHandler
 				if (data == null)
 					return;
 
-				lock (q)
+				lock (((ICollection)q).SyncRoot)
 				{
 					if (q.Count > 0)
 					{
@@ -515,7 +525,6 @@ namespace DOL.GS.PacketHandler
 
 				Buffer.BlockCopy(buf, 4, newbuf, 2, buf.Length - 4);
 				SendTCP(newbuf);
-
 				return;
 			}
 			
@@ -543,7 +552,7 @@ namespace DOL.GS.PacketHandler
 			Statistics.BytesOut += buf.Length;
 			Statistics.PacketsOut++;
 
-			lock (m_udpQueue)
+			lock (((ICollection)m_udpQueue).SyncRoot)
 			{
 				if (m_sendingUdp)
 				{
@@ -592,7 +601,7 @@ namespace DOL.GS.PacketHandler
 				if (data == null)
 					return;
 
-				lock (m_udpQueue)
+				lock (((ICollection)m_udpQueue).SyncRoot)
 				{
 					if (m_udpQueue.Count > 0)
 					{
@@ -619,7 +628,7 @@ namespace DOL.GS.PacketHandler
 			{
 				int count = m_udpQueue.Count;
 
-				lock (m_udpQueue)
+				lock (((ICollection)m_udpQueue).SyncRoot)
 				{
 					m_udpQueue.Clear();
 
@@ -648,7 +657,7 @@ namespace DOL.GS.PacketHandler
 		/// <param name="numBytes">The number of bytes received</param>
 		public void ReceiveBytes(int numBytes)
 		{
-			lock (this)
+			lock (m_SyncLock)
 			{
 				byte[] buffer = m_client.ReceiveBuffer;
 

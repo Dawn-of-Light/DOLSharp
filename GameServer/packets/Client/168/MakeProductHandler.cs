@@ -24,7 +24,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	/// makeproducthandler handle the crafted product start
 	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x45^168,"Handles the crafted product answer")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.CraftRequest, "Handles the crafted product answer", eClientStatus.PlayerInGame)]
 	public class MakeProductHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)

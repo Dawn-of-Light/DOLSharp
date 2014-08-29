@@ -46,34 +46,40 @@ namespace DOL.GS.PacketHandler
 		public override void SendPlayerTitles()
 		{
 			IList titles = m_gameClient.Player.Titles;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DetailWindow));
-
-			pak.WriteByte(1); // new in 1.75
-			pak.WriteByte(0); // new in 1.81
-			pak.WritePascalString("Player Statistics"); //window caption
-
-			byte line = 1;
-			foreach (string str in m_gameClient.Player.FormatStatistics())
+			
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DetailWindow)))
 			{
-				pak.WriteByte(line++);
-				pak.WritePascalString(str);
-			}
 
-			pak.WriteByte(200);
-			long titlesCountPos = pak.Position;
-			pak.WriteByte((byte)titles.Count);
-			line = 0;
-			foreach (IPlayerTitle title in titles)
-			{
-				pak.WriteByte(line++);
-				pak.WritePascalString(title.GetDescription(m_gameClient.Player));
+				pak.WriteByte(1); // new in 1.75
+				pak.WriteByte(0); // new in 1.81
+				pak.WritePascalString("Player Statistics"); //window caption
+	
+				byte line = 1;
+				foreach (string str in m_gameClient.Player.FormatStatistics())
+				{
+					pak.WriteByte(line++);
+					pak.WritePascalString(str);
+				}
+	
+				pak.WriteByte(200);
+				long titlesCountPos = pak.Position;
+				pak.WriteByte((byte)titles.Count);
+				line = 0;
+				
+				foreach (IPlayerTitle title in titles)
+				{
+					pak.WriteByte(line++);
+					pak.WritePascalString(title.GetDescription(m_gameClient.Player));
+				}
+				
+				long titlesLen = (pak.Position - titlesCountPos - 1); // include titles count
+				if (titlesLen > byte.MaxValue)
+					log.WarnFormat("Titles block is too long! {0} (player: {1})", titlesLen, m_gameClient.Player);
+				
+				//Trailing Zero!
+				pak.WriteByte(0);
+				SendTCP(pak);
 			}
-			long titlesLen = (pak.Position - titlesCountPos - 1); // include titles count
-			if (titlesLen > byte.MaxValue)
-				log.WarnFormat("Titles block is too long! {0} (player: {1})", titlesLen, m_gameClient.Player);
-			//Trailing Zero!
-			pak.WriteByte(0);
-			SendTCP(pak);
 		}
     }
 }

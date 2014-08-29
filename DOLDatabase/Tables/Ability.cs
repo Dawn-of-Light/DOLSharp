@@ -29,6 +29,7 @@ namespace DOL.Database
 	{
 		protected string m_keyName;
 		protected int	m_iconID = 0;		// 0 if no icon, ability icons start at 0x190
+		protected ushort m_internalID;
 		protected string m_name = "unknown";
 		protected string m_description = "no description";
 		protected string m_implementation = null;
@@ -66,6 +67,20 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Ability ID (new in 1.112)
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public ushort InternalID
+		{
+			get { return m_internalID; }
+			set
+			{
+				Dirty = true;
+				m_internalID = value;
+			}
+		}
+		
 		/// <summary>
 		/// Small description of this ability
 		/// </summary>

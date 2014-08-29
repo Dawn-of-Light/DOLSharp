@@ -35,7 +35,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// Character Create and Customization handler.  Please maintain all commented debug statements
 	/// in order to support future debugging. - Tolakram
 	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP, 0x57 ^ 168, "Handles character creation requests")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.CharacterCreateRequest, "Handles character creation requests", eClientStatus.LoggedIn)]
 	public class CharacterCreateRequestHandler : IPacketHandler
 	{
 		/// <summary>
@@ -958,7 +958,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						valid = false;
 					}
 
-					if (ch.Gender > 0 && (ch.Race == (byte)eRace.AlbionMinotaur || ch.Race == (byte)eRace.MidgardMinotaur || ch.Race == (byte)eRace.HiberniaMinotaur))
+					if (ch.Gender > 0 && (ch.Race == (byte)eRace.Korazh || ch.Race == (byte)eRace.Deifrang || ch.Race == (byte)eRace.Graoch))
 					{
 						log.Warn("Wrong minotaur gender: " + ch.Gender + ", race: " + ch.Race);
 						valid = false;

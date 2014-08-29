@@ -22,7 +22,7 @@ using System.Collections;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x43^168,"Player Accepts Trade")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.ModifyTrade, "Player Accepts Trade", eClientStatus.PlayerInGame)]
 	public class PlayerModifyTradeHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)

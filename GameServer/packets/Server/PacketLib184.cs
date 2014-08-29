@@ -63,54 +63,58 @@ namespace DOL.GS.PacketHandler
 
 		protected override void SendQuestPacket(AbstractQuest quest, int index)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.QuestEntry));
-
-			pak.WriteByte((byte) index);
-			if (quest == null)
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.QuestEntry)))
 			{
-				pak.WriteByte(0);
-				pak.WriteByte(0);
-				pak.WriteByte(0);
-				pak.WriteByte(0);
-				pak.WriteByte(0);
-			}
-			else
-			{
-				string name = string.Format("{0} (Level {1})", quest.Name, quest.Level);
-				string desc = string.Format("[Step #{0}]: {1}", quest.Step,	quest.Description);
-				if (name.Length > byte.MaxValue)
+				pak.WriteByte((byte) index);
+				if (quest == null)
 				{
-					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": name is too long for 1.68+ clients (" + name.Length + ") '" + name + "'");
-					name = name.Substring(0, byte.MaxValue);
+					pak.WriteByte(0);
+					pak.WriteByte(0);
+					pak.WriteByte(0);
+					pak.WriteByte(0);
+					pak.WriteByte(0);
 				}
-				if (desc.Length > byte.MaxValue)
+				else
 				{
-					if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": description is too long for 1.68+ clients (" + desc.Length + ") '" + desc + "'");
-					desc = desc.Substring(0, byte.MaxValue);
+					string name = string.Format("{0} (Level {1})", quest.Name, quest.Level);
+					string desc = string.Format("[Step #{0}]: {1}", quest.Step,	quest.Description);
+					if (name.Length > byte.MaxValue)
+					{
+						if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": name is too long for 1.68+ clients (" + name.Length + ") '" + name + "'");
+						name = name.Substring(0, byte.MaxValue);
+					}
+					if (desc.Length > byte.MaxValue)
+					{
+						if (log.IsWarnEnabled) log.Warn(quest.GetType().ToString() + ": description is too long for 1.68+ clients (" + desc.Length + ") '" + desc + "'");
+						desc = desc.Substring(0, byte.MaxValue);
+					}
+					pak.WriteByte((byte)name.Length);
+					pak.WriteShortLowEndian((ushort)desc.Length);
+					pak.WriteByte(0); // Quest Zone ID ?
+					pak.WriteByte(0);
+					pak.WriteStringBytes(name); //Write Quest Name without trailing 0
+					pak.WriteStringBytes(desc); //Write Quest Description without trailing 0
 				}
-				pak.WriteByte((byte)name.Length);
-				pak.WriteShortLowEndian((ushort)desc.Length);
-				pak.WriteByte(0); // Quest Zone ID ?
-				pak.WriteByte(0);
-				pak.WriteStringBytes(name); //Write Quest Name without trailing 0
-				pak.WriteStringBytes(desc); //Write Quest Description without trailing 0
+				
+				SendTCP(pak);
 			}
-			SendTCP(pak);
 		}
 
 		protected override void SendTaskInfo()
 		{
 			string name = BuildTaskString();
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.QuestEntry));
-			pak.WriteByte(0); //index
-			pak.WriteShortLowEndian((ushort)name.Length);
-			pak.WriteByte((byte)0);
-			pak.WriteByte((byte)0);
-			pak.WriteByte((byte)0);
-			pak.WriteStringBytes(name); //Write Quest Name without trailing 0
-			pak.WriteStringBytes(""); //Write Quest Description without trailing 0
-			SendTCP(pak);
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.QuestEntry)))
+			{
+				pak.WriteByte(0); //index
+				pak.WriteShortLowEndian((ushort)name.Length);
+				pak.WriteByte((byte)0);
+				pak.WriteByte((byte)0);
+				pak.WriteByte((byte)0);
+				pak.WriteStringBytes(name); //Write Quest Name without trailing 0
+				pak.WriteStringBytes(""); //Write Quest Description without trailing 0
+				SendTCP(pak);
+			}
 		}
 	}
 }

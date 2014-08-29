@@ -25,7 +25,7 @@ using DOL.Language;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-    [PacketHandler(PacketHandlerType.TCP, 0x1C, "Withdraw GameConsignmentMerchant Merchant Money")]
+    [PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.WithDrawMerchantMoney, "Withdraw GameConsignmentMerchant Merchant Money", eClientStatus.PlayerInGame)]
     public class PlayerWithdrawMerchantMoney : IPacketHandler
     {
         /// <summary>

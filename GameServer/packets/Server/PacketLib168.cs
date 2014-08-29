@@ -605,24 +605,26 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendUDPInitReply()
 		{
-			var pak = new GSUDPPacketOut(GetPacketCode(eServerPackets.UDPInitReply));
-			Region playerRegion = null;
-			if (!m_gameClient.Socket.Connected)
-				return;
-			if (m_gameClient.Player != null && m_gameClient.Player.CurrentRegion != null)
-				playerRegion = m_gameClient.Player.CurrentRegion;
-			if (playerRegion == null)
-				pak.Fill(0x0, 0x18);
-			else
+			using (var pak = new GSUDPPacketOut(GetPacketCode(eServerPackets.UDPInitReply)))
 			{
-				//Try to fix the region ip so UDP is enabled!
-				string ip = playerRegion.ServerIP;
-				if (ip == "any" || ip == "0.0.0.0" || ip == "127.0.0.1" || ip.StartsWith("10.13.") || ip.StartsWith("192.168."))
-					ip = ((IPEndPoint) m_gameClient.Socket.LocalEndPoint).Address.ToString();
-				pak.FillString(ip, 22);
-				pak.WriteShort(playerRegion.ServerPort);
+				Region playerRegion = null;
+				if (!m_gameClient.Socket.Connected)
+					return;
+				if (m_gameClient.Player != null && m_gameClient.Player.CurrentRegion != null)
+					playerRegion = m_gameClient.Player.CurrentRegion;
+				if (playerRegion == null)
+					pak.Fill(0x0, 0x18);
+				else
+				{
+					//Try to fix the region ip so UDP is enabled!
+					string ip = playerRegion.ServerIP;
+					if (ip == "any" || ip == "0.0.0.0" || ip == "127.0.0.1" || ip.StartsWith("10.13.") || ip.StartsWith("192.168."))
+						ip = ((IPEndPoint) m_gameClient.Socket.LocalEndPoint).Address.ToString();
+					pak.FillString(ip, 22);
+					pak.WriteShort(playerRegion.ServerPort);
+				}
+				SendUDP(pak, true);
 			}
-			SendUDP(pak, true);
 		}
 
 		public virtual void SendTime()
@@ -730,6 +732,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte(0x00); //Trialing 0 ... needed!
 				SendTCP(pak);
 			}
+						
 			if (playerToCreate.CharacterClass.ID == (int) eCharacterClass.Warlock)
 			{
 				/*
@@ -740,6 +743,10 @@ namespace DOL.GS.PacketHandler
 				}
 				 */
 			}
+			
+			// Update Cache
+			m_gameClient.GameObjectUpdateArray[new Tuple<ushort, ushort>(playerToCreate.CurrentRegionID, (ushort)playerToCreate.ObjectID)] = long.MaxValue;
+
 			//if (GameServer.ServerRules.GetColorHandling(m_gameClient) == 1) // PvP
 			SendObjectGuildID(playerToCreate, playerToCreate.Guild);
 			//used for nearest friendly/enemy object buttons and name colors on PvP server
@@ -761,7 +768,7 @@ namespace DOL.GS.PacketHandler
 				SendTCP(pak);
 			}
 		}
-
+		
 		public virtual void SendObjectUpdate(GameObject obj)
 		{
 			Zone z = obj.CurrentZone;
@@ -840,41 +847,47 @@ namespace DOL.GS.PacketHandler
 					targetOID = (ushort) target.ObjectID;
 			}
 
-			var pak = new GSUDPPacketOut(GetPacketCode(eServerPackets.ObjectUpdate));
-			pak.WriteShort((ushort) speed);
-			if (obj is GameNPC)
+			using (GSUDPPacketOut pak = new GSUDPPacketOut(GetPacketCode(eServerPackets.ObjectUpdate)))
 			{
-				pak.WriteShort((ushort)(obj.Heading & 0xFFF));
+				pak.WriteShort((ushort) speed);
+				
+				if (obj is GameNPC)
+				{
+					pak.WriteShort((ushort)(obj.Heading & 0xFFF));
+				}
+				else
+				{
+					pak.WriteShort(obj.Heading);
+				}
+				pak.WriteShort(xOffsetInZone);
+				pak.WriteShort(xOffsetInTargetZone);
+				pak.WriteShort(yOffsetInZone);
+				pak.WriteShort(yOffsetInTargetZone);
+				pak.WriteShort((ushort) obj.Z);
+				pak.WriteShort(zOffsetInTargetZone);
+				pak.WriteShort((ushort) obj.ObjectID);
+				pak.WriteShort((ushort) targetOID);
+				//health
+				if (obj is GameLiving)
+				{
+					pak.WriteByte((obj as GameLiving).HealthPercent);
+				}
+				else
+				{
+					pak.WriteByte(0);
+				}
+				//Dinberg:Instances - zoneskinID for positioning of objects clientside.
+				flags |= (byte) (((z.ZoneSkinID & 0x100) >> 6) | ((targetZone & 0x100) >> 5));
+				pak.WriteByte(flags);
+				pak.WriteByte((byte) z.ZoneSkinID);
+				//Dinberg:Instances - targetZone already accomodates for this feat.
+				pak.WriteByte((byte) targetZone);
+				SendUDP(pak);
 			}
-			else
-			{
-				pak.WriteShort(obj.Heading);
-			}
-			pak.WriteShort(xOffsetInZone);
-			pak.WriteShort(xOffsetInTargetZone);
-			pak.WriteShort(yOffsetInZone);
-			pak.WriteShort(yOffsetInTargetZone);
-			pak.WriteShort((ushort) obj.Z);
-			pak.WriteShort(zOffsetInTargetZone);
-			pak.WriteShort((ushort) obj.ObjectID);
-			pak.WriteShort((ushort) targetOID);
-			//health
-			if (obj is GameLiving)
-			{
-				pak.WriteByte((obj as GameLiving).HealthPercent);
-			}
-			else
-			{
-				pak.WriteByte(0);
-			}
-			//Dinberg:Instances - zoneskinID for positioning of objects clientside.
-			flags |= (byte) (((z.ZoneSkinID & 0x100) >> 6) | ((targetZone & 0x100) >> 5));
-			pak.WriteByte(flags);
-			pak.WriteByte((byte) z.ZoneSkinID);
-			//Dinberg:Instances - targetZone already accomodates for this feat.
-			pak.WriteByte((byte) targetZone);
-			SendUDP(pak);
-
+			
+			// Update Cache
+			m_gameClient.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)] = GameTimer.GetTickCount();
+			
 			if (obj is GameNPC)
 			{
 				(obj as GameNPC).NPCUpdatedCallback();
@@ -896,6 +909,13 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendObjectRemove(GameObject obj)
 		{
+			// Remove from cache
+			if (m_gameClient.GameObjectUpdateArray.ContainsKey(new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)))
+			{
+				long dummy;
+				m_gameClient.GameObjectUpdateArray.TryRemove(new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID), out dummy);
+			}
+
 			int oType = 0;
 			if (obj is GamePlayer)
 				oType = 2;
@@ -908,6 +928,7 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShort((ushort) oType);
 				SendTCP(pak);
 			}
+			
 		}
 
 		public virtual void SendObjectCreate(GameObject obj)
@@ -918,7 +939,7 @@ namespace DOL.GS.PacketHandler
 			if (obj.IsVisibleTo(m_gameClient.Player) == false)
 				return;
 
-			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ObjectCreate)))
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ObjectCreate)))
 			{
 				pak.WriteShort((ushort) obj.ObjectID);
 				if (obj is GameStaticItem)
@@ -974,6 +995,9 @@ namespace DOL.GS.PacketHandler
 				else pak.WriteByte(0x00);
 				SendTCP(pak);
 			}
+			
+			// Update Object Cache
+			m_gameClient.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)] = GameTimer.GetTickCount();
 		}
 
 		public virtual void SendDebugMode(bool on)
@@ -1106,6 +1130,10 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte(0x00);
 				SendTCP(pak);
 			}
+			
+			// Update Cache
+			m_gameClient.GameObjectUpdateArray[new Tuple<ushort, ushort>(npc.CurrentRegionID, (ushort)npc.ObjectID)] = long.MaxValue;
+			
 		}
 
 		public virtual void SendLivingEquipmentUpdate(GameLiving living)
@@ -1218,8 +1246,7 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public virtual void SendCombatAnimation(GameObject attacker, GameObject defender, ushort weaponID, ushort shieldID,
-		                                        int style, byte stance, byte result, byte targetHealthPercent)
+		public virtual void SendCombatAnimation(GameObject attacker, GameObject defender, ushort weaponID, ushort shieldID, int style, byte stance, byte result, byte targetHealthPercent)
 		{
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CombatAnimation)))
 			{
@@ -1227,22 +1254,28 @@ namespace DOL.GS.PacketHandler
 					pak.WriteShort((ushort) attacker.ObjectID);
 				else
 					pak.WriteShort(0x00);
+				
 				if (defender != null)
 					pak.WriteShort((ushort) defender.ObjectID);
 				else
 					pak.WriteShort(0x00);
+				
 				pak.WriteShort(weaponID);
 				pak.WriteShort(shieldID);
 				pak.WriteByte((byte) style);
 				pak.WriteByte(stance);
+				
 				if (style > 0xFF)
 					pak.WriteByte((byte) (result | 0x80));
 				else
 					pak.WriteByte(result);
-				if (defender is GameLiving)
+				
+				// If Health Percent is invalid get the living Health.
+				if (defender is GameLiving && targetHealthPercent > 100)
 				{
 					targetHealthPercent = (defender as GameLiving).HealthPercent;
 				}
+				
 				pak.WriteByte(targetHealthPercent);
 				SendTCP(pak);
 			}
@@ -1541,7 +1574,7 @@ namespace DOL.GS.PacketHandler
 			if (old_callback != null)
 				old_callback(m_gameClient.Player, 0, 0); // not sure for this,  i want targetOID there
 
-			using (var pak = new GSTCPPacketOut(0xD0))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CheckLOSRequest)))
 			{
 				pak.WriteShort((ushort) Checker.ObjectID);
 				pak.WriteShort((ushort) TargetOID);
@@ -1657,7 +1690,7 @@ namespace DOL.GS.PacketHandler
 								playerStatus |= 0x02;
 							if (updateLiving.IsDiseased)
 								playerStatus |= 0x04;
-							if (SpellHandler.FindEffectOnTarget(updateLiving, "DamageOverTime") != null)
+							if (SpellHelper.FindEffectOnTarget(updateLiving, "DamageOverTime") != null)
 								playerStatus |= 0x08;
 							if (updateLiving is GamePlayer &&
 							    (updateLiving as GamePlayer).Client.ClientState == GameClient.eClientState.Linkdead)
@@ -1824,24 +1857,23 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendMerchantWindow(MerchantTradeItems tradeItemsList, eMerchantWindowType windowType)
 		{
-			GSTCPPacketOut pak;
 
 			if (tradeItemsList != null)
 			{
-				for (int page = 0; page < MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS; page++)
+				for (byte page = 0; page < MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS; page++)
 				{
 					IDictionary itemsInPage = tradeItemsList.GetItemsInPage(page);
 					if (itemsInPage == null || itemsInPage.Count == 0)
 						continue;
 
-					using (pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
+					using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
 					{
 						pak.WriteByte((byte) itemsInPage.Count); //Item count on this page
 						pak.WriteByte((byte) windowType);
 						pak.WriteByte((byte) page); //Page number
 						pak.WriteByte(0x00); //Unused
 
-						for (int i = 0; i < MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS; i++)
+						for (ushort i = 0; i < MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS; i++)
 						{
 							if (!itemsInPage.Contains(i))
 								continue;
@@ -1923,7 +1955,7 @@ namespace DOL.GS.PacketHandler
 			}
 			else
 			{
-				using (pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
+				using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MerchantWindow)))
 				{
 					pak.WriteByte(0); //Item count on this page
 					pak.WriteByte((byte) windowType); //Unknown 0x00
@@ -2164,7 +2196,7 @@ namespace DOL.GS.PacketHandler
 			// Update Cache
 			m_gameClient.GameObjectUpdateArray[new Tuple<ushort, ushort>(player.CurrentRegionID, (ushort)player.ObjectID)] = GameTimer.GetTickCount();
 		}
-
+		
 		public virtual void SendUpdatePlayer()
 		{
 			GamePlayer player = m_gameClient.Player;
@@ -2317,7 +2349,7 @@ namespace DOL.GS.PacketHandler
 										case Style.eOpening.Offensive:
 											pre = 0 + (int) style.AttackResultRequirement; // last result of our attack against enemy
 											// hit, miss, target blocked, target parried, ...
-											if (style.AttackResultRequirement == Style.eAttackResult.Style)
+											if (style.AttackResultRequirement == Style.eAttackResultRequirement.Style)
 												pre |= ((100 + (int) m_styleId[style.OpeningRequirementValue]) << 8);
 											break;
 										case Style.eOpening.Defensive:
@@ -2766,6 +2798,7 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
+		// TODO update this to be able to handle a list !
 		public virtual void SendDisableSkill(Skill skill, int duration)
 		{
 			if (m_gameClient.Player == null)
@@ -2794,6 +2827,8 @@ namespace DOL.GS.PacketHandler
 					pak.WriteByte(0); // not used?
 
 					SendTCP(pak);
+					// FIXME debug
+					//log.InfoFormat("Disabling non Trainable Skill duration : {0}, id : {1}", duration, id);
 				}
 			}
 			if (skill.SkillType == eSkillPage.Spells)
@@ -2835,6 +2870,8 @@ namespace DOL.GS.PacketHandler
 
 							pak.WriteByte((byte) lineIndex);
 							pak.WriteByte((byte) spellIndex);
+							// FIXME debug
+							log.InfoFormat("Caster Disabling Skill duration : {0}, lineIndex : {1}, SpellIndex {2}", duration, lineIndex, spellIndex);
 						}
 
 						SendTCP(pak);
@@ -2868,6 +2905,8 @@ namespace DOL.GS.PacketHandler
 						pak.WriteByte(1); // code
 						pak.WriteShort((ushort) (index + skillsCount));
 						pak.WriteShort((ushort) duration);
+						// FIXME debug
+						log.InfoFormat("Hybrid Disabling Skill duration : {0}, Index : {1}", duration, index + skillsCount);
 						SendTCP(pak);
 					}
 				}
@@ -2901,6 +2940,7 @@ namespace DOL.GS.PacketHandler
 							pak.WriteByte((effect is GameSpellEffect || effect.Icon > 5000) ? i++ : (byte) 0xff);
 							pak.WriteByte(0);
 							pak.WriteShort(effect.Icon);
+							//pak.WriteShort(effect.IsFading ? (ushort)1 : (ushort) (effect.RemainingTime/1000));
 							pak.WriteShort((ushort) (effect.RemainingTime/1000));
 							pak.WriteShort(effect.InternalID); // reference for shift+i or cancel spell
 							pak.WritePascalString(effect.Name);
@@ -2983,6 +3023,13 @@ namespace DOL.GS.PacketHandler
 
 		public virtual void SendObjectDelete(GameObject obj)
 		{
+			// Remove from Cache
+			if (m_gameClient.GameObjectUpdateArray.ContainsKey(new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)))
+			{
+				long dummy;
+				m_gameClient.GameObjectUpdateArray.TryRemove(new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID), out dummy);
+			}
+
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ObjectDelete)))
 			{
 				pak.WriteShort((ushort) obj.ObjectID);
@@ -3012,7 +3059,13 @@ namespace DOL.GS.PacketHandler
 						pak.WriteByte(0); // unknown
 						pak.WriteByte(effect.Concentration);
 						pak.WriteShort(effect.Icon);
+					if (effect.Name.Length > 14)
+						pak.WritePascalString(effect.Name.Substring(0, 12) + "..");
+					else
 						pak.WritePascalString(effect.Name);
+					if (effect.OwnerName.Length > 14)
+						pak.WritePascalString(effect.OwnerName.Substring(0, 12) + "..");
+					else
 						pak.WritePascalString(effect.OwnerName);
 					}
 				}
@@ -3117,27 +3170,27 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public virtual void SendKeepInfo(AbstractGameKeep keep)
+		public virtual void SendKeepInfo(IGameKeep keep)
 		{
 		}
 
-		public virtual void SendKeepRealmUpdate(AbstractGameKeep keep)
+		public virtual void SendKeepRealmUpdate(IGameKeep keep)
 		{
 		}
 
-		public virtual void SendKeepRemove(AbstractGameKeep keep)
+		public virtual void SendKeepRemove(IGameKeep keep)
 		{
 		}
 
-		public virtual void SendKeepComponentInfo(GameKeepComponent keepComponent)
+		public virtual void SendKeepComponentInfo(IGameKeepComponent keepComponent)
 		{
 		}
 
-		public virtual void SendKeepComponentDetailUpdate(GameKeepComponent keepComponent)
+		public virtual void SendKeepComponentDetailUpdate(IGameKeepComponent keepComponent)
 		{
 		}
 
-		public virtual void SendWarmapUpdate(ICollection<AbstractGameKeep> list)
+		public virtual void SendWarmapUpdate(ICollection<IGameKeep> list)
 		{
 		}
 
@@ -3152,7 +3205,7 @@ namespace DOL.GS.PacketHandler
 		//housing
 		public virtual void SendHouse(House house)
 		{
-			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseCreate)))
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseCreate)))
 			{
 				pak.WriteShort((ushort) house.HouseNumber);
 				pak.WriteShort((ushort) house.Z);
@@ -3174,10 +3227,20 @@ namespace DOL.GS.PacketHandler
 
 				SendTCP(pak);
 			}
+			
+			// Update cache
+			m_gameClient.HouseUpdateArray[new Tuple<ushort, ushort>(house.RegionID, (ushort)house.HouseNumber)] = GameTimer.GetTickCount();
 		}
 
 		public virtual void SendRemoveHouse(House house)
 		{
+			// Remove from cache
+			if (m_gameClient.HouseUpdateArray.ContainsKey(new Tuple<ushort, ushort>(house.RegionID, (ushort)house.HouseNumber)))
+			{
+				long dummy;
+				m_gameClient.HouseUpdateArray.TryRemove(new Tuple<ushort, ushort>(house.RegionID, (ushort)house.HouseNumber), out dummy);
+			}
+			
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseCreate)))
 			{
 				pak.WriteShort((ushort) house.HouseNumber);
@@ -3403,23 +3466,23 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public virtual void SendKeepClaim(AbstractGameKeep keep, byte flag)
+		public virtual void SendKeepClaim(IGameKeep keep, byte flag)
 		{
 		}
 
-		public virtual void SendKeepComponentUpdate(AbstractGameKeep keep, bool LevelUp)
+		public virtual void SendKeepComponentUpdate(IGameKeep keep, bool LevelUp)
 		{
 		}
 
-		public virtual void SendKeepComponentInteract(GameKeepComponent component)
+		public virtual void SendKeepComponentInteract(IGameKeepComponent component)
 		{
 		}
 
-		public virtual void SendKeepComponentHookPoint(GameKeepComponent component, int selectedHookPointIndex)
+		public virtual void SendKeepComponentHookPoint(IGameKeepComponent component, int selectedHookPointIndex)
 		{
 		}
 
-		public virtual void SendClearKeepComponentHookPoint(GameKeepComponent component, int selectedHookPointIndex)
+		public virtual void SendClearKeepComponentHookPoint(IGameKeepComponent component, int selectedHookPointIndex)
 		{
 		}
 
@@ -3457,6 +3520,10 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte(0); // trailing ?
 				SendTCP(pak);
 			}
+			
+			// Update Cache
+			m_gameClient.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)] = long.MaxValue;
+			
 		}
 
 		public virtual void SendSiegeWeaponInterface(GameSiegeWeapon siegeWeapon, int time)
@@ -4001,7 +4068,7 @@ namespace DOL.GS.PacketHandler
 					playerStatus |= 0x02;
 				if (living.IsDiseased)
 					playerStatus |= 0x04;
-				if (SpellHandler.FindEffectOnTarget(living, "DamageOverTime") != null)
+				if (SpellHelper.FindEffectOnTarget(living, "DamageOverTime") != null)
 					playerStatus |= 0x08;
 				if (living is GamePlayer && ((GamePlayer) living).Client.ClientState == GameClient.eClientState.Linkdead)
 					playerStatus |= 0x10;

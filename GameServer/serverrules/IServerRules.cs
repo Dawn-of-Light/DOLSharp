@@ -301,6 +301,14 @@ namespace DOL.GS.ServerRules
 		string GetPlayerPrefixName(GamePlayer source, GamePlayer target);
 
 		/// <summary>
+		/// Gets the player's custom title based on server type
+		/// </summary>
+		/// <param name="source">The "looking" player</param>
+		/// <param name="target">The considered player</param>
+		/// <returns>The custom title of the target</returns>
+		string GetPlayerTitle(GamePlayer source, GamePlayer target);
+		
+		/// <summary>
 		/// Gets the server type color handling scheme
 		/// 
 		/// ColorHandling: this byte tells the client how to handle color for PC and NPC names (over the head)

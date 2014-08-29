@@ -24,7 +24,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	/// Handles player target changes
 	/// </summary>
-	[PacketHandler(PacketHandlerType.TCP, eClientPackets.PlayerTarget, ClientStatus.PlayerInGame)]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.PlayerTarget, "Handle Player Target Change.", eClientStatus.PlayerInGame)]
 	public class PlayerTargetHandler : IPacketHandler
 	{
 		#region IPacketHandler Members

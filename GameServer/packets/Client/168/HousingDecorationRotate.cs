@@ -20,7 +20,7 @@ using DOL.GS.Housing;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, 0x0E, "Handles housing decoration rotation")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.HouseDecorationRotate, "Handles housing decoration rotation", eClientStatus.PlayerInGame)]
 	public class HousingDecorationRotateHandler : IPacketHandler
 	{
 		#region IPacketHandler Members

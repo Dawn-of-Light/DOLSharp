@@ -25,12 +25,22 @@ namespace DOL.GS.PacketHandler
 	/// </summary>
 	public class GSUDPPacketOut : PacketOut
 	{
+		private byte m_packetCode;
+		
+		/// <summary>
+		/// This Packet Byte Handling Code
+		/// </summary>
+		public byte PacketCode {
+			get { return m_packetCode; }
+		}
+
 		/// <summary>
 		/// Constructor
 		/// </summary>
 		/// <param name="packetCode">ID of the packet</param>
 		public GSUDPPacketOut(byte packetCode) : base()
 		{
+			m_packetCode = packetCode;
 			base.WriteShort(0x00); //reserved for size
 			base.WriteShort(0x00); //reserved for UDP counter
 			base.WriteByte(packetCode);

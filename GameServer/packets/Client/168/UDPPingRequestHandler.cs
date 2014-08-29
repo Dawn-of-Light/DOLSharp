@@ -25,7 +25,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	/// Handles the ping packet
 	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.UDP, 0xF2,"Sends the UDP Init reply")]
+	[PacketHandlerAttribute(PacketHandlerType.UDP, eClientPackets.UDPPingRequest, "Sends the UDP Init reply", eClientStatus.None)]
 	public class UDPPingRequestHandler : IPacketHandler
 	{
 		/// <summary>

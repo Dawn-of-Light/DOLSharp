@@ -31,7 +31,7 @@ namespace DOL.GS.Keeps
 	/// <summary>
 	/// AbstractGameKeep is the keep or a tower in game in RVR
 	/// </summary>
-	public abstract class AbstractGameKeep : IKeep
+	public abstract class AbstractGameKeep : IGameKeep
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -150,13 +150,32 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		protected List<GameKeepComponent> m_keepComponents;
 
+		public List<GameKeepComponent> KeepComponents
+		{
+			get { return m_keepComponents; }
+			set { m_keepComponents = value; }
+		}
+		
 		/// <summary>
 		/// Keep components ( wall, tower, gate,...)
 		/// </summary>
-		public List<GameKeepComponent> KeepComponents
+		public List<IGameKeepComponent> SentKeepComponents
 		{
-			get	{ return m_keepComponents; }
-			set { m_keepComponents = value;}
+			get	
+			{
+				List<IGameKeepComponent> ret = new List<IGameKeepComponent>();
+				foreach(GameKeepComponent comp in m_keepComponents)
+					ret.Add(comp);
+				
+				return ret; 
+			}
+			set 
+			{
+				List<GameKeepComponent> newList = new List<GameKeepComponent>();
+				foreach(IGameKeepComponent comp in value)
+					newList.Add((GameKeepComponent)comp);
+				m_keepComponents = newList;
+			}
 		}
 
 		/// <summary>
@@ -326,10 +345,10 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// The Keep ID linked to the DBKeep
 		/// </summary>
-		public int KeepID
+		public ushort KeepID
 		{
-			get	{ return DBKeep.KeepID; }
-			set	{ DBKeep.KeepID = value; }
+			get	{ return (ushort)DBKeep.KeepID; }
+			set	{ DBKeep.KeepID = (ushort)value; }
 		}
 
 		/// <summary>
@@ -912,16 +931,16 @@ namespace DOL.GS.Keeps
 
 			if (guard is GuardLord)
 			{
-				if (guard.Component.Keep is GameKeep)
-					return (byte)(guard.Component.Keep.BaseLevel + ((guard.Component.Keep.BaseLevel / 10) + 1) * 2);
+				if (guard.Component.AbstractKeep is GameKeep)
+					return (byte)(guard.Component.AbstractKeep.BaseLevel + ((guard.Component.AbstractKeep.BaseLevel / 10) + 1) * 2);
 				else
-					return (byte)(guard.Component.Keep.BaseLevel + 2); // flat increase for tower captains
+					return (byte)(guard.Component.AbstractKeep.BaseLevel + 2); // flat increase for tower captains
 			}
 
-			if (guard.Component.Keep is GameKeep)
-				return (byte)(guard.Component.Keep.BaseLevel + 1);
+			if (guard.Component.AbstractKeep is GameKeep)
+				return (byte)(guard.Component.AbstractKeep.BaseLevel + 1);
 
-			return guard.Component.Keep.BaseLevel;
+			return guard.Component.AbstractKeep.BaseLevel;
 		}
 
 
@@ -939,9 +958,9 @@ namespace DOL.GS.Keeps
 				if (guard.Component != null)
 				{
 					// level is usually 4 unless upgraded, BaseLevel is usually 50
-					bonusLevel = guard.Component.Keep.Level;
+					bonusLevel = guard.Component.AbstractKeep.Level;
 
-					if (guard.Component.Keep is GameKeepTower)
+					if (guard.Component.AbstractKeep is GameKeepTower)
 						multiplier = ServerProperties.Properties.TOWER_GUARD_LEVEL_MULTIPLIER;
 				}
 
@@ -1128,7 +1147,7 @@ namespace DOL.GS.Keeps
 			{
 				if (!component.IsRaized)
 					component.Repair(component.MaxHealth - component.Health);
-				foreach (GameKeepHookPoint hp in component.HookPoints.Values)
+				foreach (GameKeepHookPoint hp in component.KeepHookPoints.Values)
 				{
 					if (hp.Object != null)
 						hp.Object.Die(null);
@@ -1214,7 +1233,7 @@ namespace DOL.GS.Keeps
 			if (component == null)
 				return;
 
-			GameKeepHookPoint hookpoint = component.HookPoints[97] as GameKeepHookPoint;
+			GameKeepHookPoint hookpoint = component.KeepHookPoints[97] as GameKeepHookPoint;
 
 			if (hookpoint == null)
 				return;

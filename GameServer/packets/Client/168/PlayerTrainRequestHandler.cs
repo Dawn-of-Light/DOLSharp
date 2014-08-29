@@ -29,7 +29,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// handles Train clicks from Trainer Window
 	/// D4 is up to 1.104
 	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP, 0xD4 ^ 168, "Handles Player Train Requests")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.TrainRequest, "Handles Player Train Requests", eClientStatus.PlayerInGame)]
 	public class PlayerTrainRequestHandler : IPacketHandler
 	{
 		/// <summary>

@@ -21,7 +21,7 @@ using System.Collections;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, 0x2D ^ 168, "handle Looking for a group")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.LookingForGroup, "handle Looking for a group", eClientStatus.PlayerInGame)]
 	public class LookingForAGroupHandler : IPacketHandler
 	{
 		//rewritten by Corillian so if it doesn't work you know who to yell at ;)

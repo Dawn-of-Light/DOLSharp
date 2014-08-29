@@ -53,7 +53,6 @@ namespace DOL.GS
 		protected readonly string m_message3 = "";
 		protected readonly string m_message4 = "";
 		protected readonly ushort m_effectID = 0;
-		protected readonly ushort m_icon = 0;
 		protected readonly int m_instrumentRequirement = 0;
 		protected readonly int m_spellGroup = 0;
 		protected readonly int m_effectGroup = 0;
@@ -111,12 +110,7 @@ namespace DOL.GS
 		{
 			get { return m_effectID; }
 		}
-
-		public ushort Icon
-		{
-			get { return m_icon; }
-		}
-
+		
 		public string Description
 		{
 			get { return m_description; }
@@ -328,7 +322,7 @@ namespace DOL.GS
         }
 
         public Spell(DBSpell dbspell, int requiredLevel, bool minotaur)
-			: base(dbspell.Name, (ushort)dbspell.SpellID, requiredLevel)
+			: base(dbspell.Name, (ushort)dbspell.SpellID, (ushort)dbspell.Icon, requiredLevel)
 		{
 			m_description = dbspell.Description;
 			m_target = dbspell.Target;
@@ -378,7 +372,7 @@ namespace DOL.GS
 		/// <param name="spell"></param>
 		/// <param name="spellType"></param>
 		public Spell(Spell spell, string spellType) :
-			base(spell.Name, (ushort)spell.ID, spell.Level)
+			base(spell.Name, (ushort)spell.ID, (ushort)spell.Icon, spell.Level)
 		{
 			m_description = spell.Description;
 			m_target = spell.Target;

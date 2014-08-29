@@ -21,7 +21,7 @@ using System;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP,0x07^168,"Handles the players commands")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.CommandHandler, "Handles the players commands", eClientStatus.PlayerInGame)]
 	public class PlayerCommandHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)

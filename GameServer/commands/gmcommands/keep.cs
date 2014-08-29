@@ -140,7 +140,7 @@ namespace DOL.GS.Commands
 						GameKeep keep = new GameKeep();
 						keep.DBKeep = new DBKeep(createInfo);
 						keep.Name = keepName;
-						keep.KeepID = keepID;
+						keep.KeepID = (ushort)keepID;
 						keep.Level = (byte)ServerProperties.Properties.STARTING_KEEP_LEVEL;
 						keep.BaseLevel = 50;
 						keep.Realm = client.Player.Realm;
@@ -2165,8 +2165,8 @@ namespace DOL.GS.Commands
 							d.AddToWorld();
 
 							d.Component = new GameKeepComponent();
-							d.Component.Keep = k;
-							d.Component.Keep.Doors[d.DoorID] = this;
+							d.Component.AbstractKeep = k;
+							d.Component.AbstractKeep.Doors[d.DoorID] = this;
 
 							d.Health = d.MaxHealth;
 							d.StartHealthRegeneration();
@@ -2256,7 +2256,7 @@ namespace DOL.GS.Commands
 							DisplaySyntax(client);
 							return;
 						}
-						myKeep.KeepID = keepid;
+						myKeep.KeepID = (ushort)keepid;
 						DisplayMessage(client, "You change the id of the current keep to " + keepid);
 						break;
 					}
