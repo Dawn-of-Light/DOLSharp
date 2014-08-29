@@ -13330,6 +13330,17 @@ namespace DOL.GS
 			}
 		}
 
+		private bool m_isTorchLighted = false;
+		
+		/// <summary>
+		/// Is player Torch lighted ?
+		/// </summary>
+		public bool IsTorchLighted 
+		{
+			get { return m_isTorchLighted; }
+			set { m_isTorchLighted = value; }
+		}
+		
 		/// <summary>
 		/// Property that holds tick when stealth state was changed last time
 		/// </summary>
