@@ -55,7 +55,8 @@ namespace DOL.GS.Appeal
 			{
 
 				//Register and load the DB.
-				GameServer.Database.RegisterDataObject(typeof(DBAppeal));
+				//Obsolete with GSS Table Registering in SVN : 3337
+				//GameServer.Database.RegisterDataObject(typeof(DBAppeal));
 				GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnter));
 				GameEventMgr.AddHandler(GamePlayerEvent.Quit, new DOLEventHandler(PlayerQuit));
 				GameEventMgr.AddHandler(GamePlayerEvent.Linkdeath, new DOLEventHandler(PlayerQuit));
