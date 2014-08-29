@@ -164,7 +164,7 @@ namespace DOL.GS.Quests.Albion
 				quarterfulltenebrousflask.Weight = 250;
 				quarterfulltenebrousflask.Model = 1610;
 				quarterfulltenebrousflask.Object_Type = (int)eObjectType.GenericItem;
-                quarterfulltenebrousflask.Id_nb = "fullflaskoftenebrousessence";
+                quarterfulltenebrousflask.Id_nb = "quarterfulltenebrousflask";
 				quarterfulltenebrousflask.Price = 0;
 				quarterfulltenebrousflask.IsPickable = false;
 				quarterfulltenebrousflask.IsDropable = false;

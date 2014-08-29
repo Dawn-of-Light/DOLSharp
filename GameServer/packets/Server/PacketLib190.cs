@@ -241,7 +241,7 @@ namespace DOL.GS.PacketHandler
 			using (GSUDPPacketOut pak = new GSUDPPacketOut(GetPacketCode(eServerPackets.PlayerPosition)))
 			{
 				// PID
-				pak.WriteShort((ushort)player.ObjectID);
+				pak.WriteShort((ushort)player.Client.SessionID);
 				
 				// Write Speed
 				if (player.Steed != null && player.Steed.ObjectState == GameObject.eObjectState.Active)
