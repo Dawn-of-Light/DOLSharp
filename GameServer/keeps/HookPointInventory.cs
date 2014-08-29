@@ -268,7 +268,7 @@ namespace DOL.GS.Keeps
 			//use default value so no need to load
 			//hookPointObj.LoadFromDatabase(this.ObjectTemplate);
 			hookPointObj.CurrentRegion = player.CurrentRegion;
-			hookPointObj.Realm = hookpoint.Component.Keep.Realm;
+			hookPointObj.Realm = hookpoint.Component.AbstractKeep.Realm;
 
 			if (hookPointObj is GameSiegeWeapon)
 				((GameSiegeWeapon)hookPointObj).EnableToMove = false;
@@ -295,13 +295,13 @@ namespace DOL.GS.Keeps
 			hookPointObj.AddToWorld();
 			if (hookPointObj is GameKeepGuard)
 			{
-				(hookPointObj as GameKeepGuard).Component.Keep.Guards.Add(hookPointObj.ObjectID, hookPointObj);
+				(hookPointObj as GameKeepGuard).Component.AbstractKeep.Guards.Add(hookPointObj.ObjectID, hookPointObj);
 				((GameNPC)hookPointObj).RespawnInterval = Util.Random(10, 30) * 60 * 1000;
 			}
 			hookpoint.Object = hookPointObj;
 
 			//create the db entry
-			Database.DBKeepHookPointItem item = new DOL.Database.DBKeepHookPointItem(component.Keep.KeepID, component.ID, hookpoint.ID, GameObjectType);
+			Database.DBKeepHookPointItem item = new DOL.Database.DBKeepHookPointItem(component.AbstractKeep.KeepID, component.ID, hookpoint.ID, GameObjectType);
 			GameServer.Database.AddObject(item);
 		}
 
@@ -316,7 +316,7 @@ namespace DOL.GS.Keeps
 			//use default value so no need to load
 			//hookPointObj.LoadFromDatabase(this.ObjectTemplate);
 			hookPointObj.CurrentRegion = hookpoint.Component.CurrentRegion;
-			hookPointObj.Realm = hookpoint.Component.Keep.Realm;
+			hookPointObj.Realm = hookpoint.Component.AbstractKeep.Realm;
 
 			if (hookPointObj is GameSiegeWeapon)
 				((GameSiegeWeapon)hookPointObj).EnableToMove = false;
@@ -348,7 +348,7 @@ namespace DOL.GS.Keeps
 			hookPointObj.AddToWorld();
 			if (hookPointObj is GameKeepGuard)
 			{
-				(hookPointObj as GameKeepGuard).Component.Keep.Guards.Add(hookPointObj.ObjectID, hookPointObj);
+				(hookPointObj as GameKeepGuard).Component.AbstractKeep.Guards.Add(hookPointObj.ObjectID, hookPointObj);
 				((GameNPC)hookPointObj).RespawnInterval = Util.Random(10, 30) * 60 * 1000;
 			}
 			hookpoint.Object = hookPointObj;

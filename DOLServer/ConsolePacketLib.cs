@@ -177,17 +177,17 @@ namespace DOLGameServerConsole
 		public void SendChangeTarget(GameObject newTarget) { }
 		public void SendChangeGroundTarget(Point3D newTarget) { }
 		public void SendPetWindow(GameLiving pet, ePetWindowAction windowAction, eAggressionState aggroState, eWalkState walkState) { }
-		public void SendKeepInfo(AbstractGameKeep keep) { }
-		public void SendKeepRealmUpdate(AbstractGameKeep keep) { }
-		public void SendKeepRemove(AbstractGameKeep keep) { }
-		public void SendKeepComponentInfo(GameKeepComponent keepComponent) { }
-		public void SendKeepComponentDetailUpdate(GameKeepComponent keepComponent) { }
-		public void SendKeepComponentUpdate(AbstractGameKeep keep, bool levelup) { }
-		public void SendKeepClaim(AbstractGameKeep keep, byte flag) { }
-		public void SendKeepComponentInteract(GameKeepComponent component) { }
-		public void SendKeepComponentHookPoint(GameKeepComponent component, int selectedHookPointIndex) { }
+		public void SendKeepInfo(IGameKeep keep) { }
+		public void SendKeepRealmUpdate(IGameKeep keep) { }
+		public void SendKeepRemove(IGameKeep keep) { }
+		public void SendKeepComponentInfo(IGameKeepComponent keepComponent) { }
+		public void SendKeepComponentDetailUpdate(IGameKeepComponent keepComponent) { }
+		public void SendKeepComponentUpdate(IGameKeep keep, bool levelup) { }
+		public void SendKeepClaim(IGameKeep keep, byte flag) { }
+		public void SendKeepComponentInteract(IGameKeepComponent component) { }
+		public void SendKeepComponentHookPoint(IGameKeepComponent component, int selectedHookPointIndex) { }
 		public void SendKeepDoorUpdate(GameKeepDoor door) { }
-		public void SendClearKeepComponentHookPoint(GameKeepComponent component, int selectedHookPointIndex) { }
+		public void SendClearKeepComponentHookPoint(IGameKeepComponent component, int selectedHookPointIndex) { }
 		public void SendHookPointStore(GameKeepHookPoint hookPoint) { }
 		public void SendPlaySound(eSoundType soundType, ushort soundID) { }
         public void SendNPCsQuestEffect(GameNPC npc, eQuestIndicator indicator) { }
@@ -213,7 +213,7 @@ namespace DOLGameServerConsole
 		public void SendToggleHousePoints(House house) { }
 		public void SendRentReminder(House house) { }
 		public void SendMovingObjectCreate(GameMovingObject obj) { }
-		public void SendWarmapUpdate(ICollection<AbstractGameKeep> list) { }
+		public void SendWarmapUpdate(ICollection<IGameKeep> list) { }
 		public void SendWarmapDetailUpdate(List<List<byte>> fights, List<List<byte>> groups) { }
 		public void SendWarmapBonuses() { }
 		public void SendCheckLOS(GameObject Checker, GameObject Target, DOL.GS.PacketHandler.CheckLOSResponse callback) { }

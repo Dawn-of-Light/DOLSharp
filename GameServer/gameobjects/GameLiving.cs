@@ -6359,6 +6359,26 @@ namespace DOL.GS
 			}
 		}
 		
+		#region Broadcasting utils
+
+		/// <summary>
+		/// Broadcasts the living equipment to all players around
+		/// </summary>
+		public virtual void BroadcastLivingEquipmentUpdate()
+		{
+			if (ObjectState != eObjectState.Active)
+				return;
+			
+			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			{
+				if (player == null)
+					continue;
+				
+				player.Out.SendLivingEquipmentUpdate(this);
+			}
+		}
+		
+		#endregion
 		
 		#region Region
 

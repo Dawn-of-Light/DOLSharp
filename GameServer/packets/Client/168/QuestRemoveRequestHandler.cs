@@ -23,7 +23,7 @@ using DOL.GS.Quests;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, 0x4F, "Quest remove request")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.RemoveQuestRequest, "Quest Remove request Handler.", eClientStatus.PlayerInGame)]
 	public class QuestRemoveRequestHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)

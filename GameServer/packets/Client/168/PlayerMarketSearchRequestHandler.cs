@@ -27,7 +27,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-    [PacketHandler(PacketHandlerType.TCP, 0x11, "Handles player market search")]
+    [PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.MarketSearchRequest, "Handles player market search", eClientStatus.PlayerInGame)]
     public class PlayerMarketSearchRequestHandler : IPacketHandler
     {
         /// <summary>

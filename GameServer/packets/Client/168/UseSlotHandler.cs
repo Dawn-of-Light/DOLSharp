@@ -22,7 +22,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	/// Handles spell cast requests from client
 	/// </summary>
-	[PacketHandler(PacketHandlerType.TCP, eClientPackets.UseSlot, ClientStatus.PlayerInGame)]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.UseSlot, "Handle Player Use Slot Request.", eClientStatus.PlayerInGame)]
 	public class UseSlotHandler : IPacketHandler
 	{
 		#region IPacketHandler Members

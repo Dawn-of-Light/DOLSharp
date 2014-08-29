@@ -24,7 +24,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-    [PacketHandler(PacketHandlerType.TCP, 0x1A, "Set market price")]
+    [PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.SetMarketPrice, "Set Market/Consignment Merchant Price.", eClientStatus.PlayerInGame)]
     public class PlayerSetMarketPriceHandler : IPacketHandler
     {
         /// <summary>

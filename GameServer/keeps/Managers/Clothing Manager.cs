@@ -657,9 +657,9 @@ namespace DOL.GS.Keeps
 			if (guard.Component == null)
 				return;
 			int emblem = 0;
-			if (guard.Component.Keep.Guild != null)
+			if (guard.Component.AbstractKeep.Guild != null)
 			{
-				emblem = guard.Component.Keep.Guild.Emblem;
+				emblem = guard.Component.AbstractKeep.Guild.Emblem;
 			}
 			InventoryItem cloak = guard.Inventory.GetItem(eInventorySlot.Cloak);
 			if (cloak != null)
@@ -674,7 +674,7 @@ namespace DOL.GS.Keeps
 			{
 				shield.Emblem = emblem;
 			}
-			guard.UpdateNPCEquipmentAppearance();
+			guard.BroadcastLivingEquipmentUpdate();
 		}
 	}
 }

@@ -81,18 +81,18 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public void InitialiseGuards()
 		{
-			Component.Keep.Patrols[PatrolID] = this;
+			Component.AbstractKeep.Patrols[PatrolID] = this;
 
 			//need this here becuase it's checked in add to world
 			PatrolPath = PositionMgr.LoadPatrolPath(PatrolID, Component);
 
 			int guardsOnPatrol = 1;
 
-			if (Component != null && Component.Keep != null && Component.Keep is GameKeep)
+			if (Component != null && Component.AbstractKeep != null && Component.AbstractKeep is GameKeep)
 			{
 				guardsOnPatrol++;
 
-				if (Component.Keep.Level > 4)
+				if (Component.AbstractKeep.Level > 4)
 					guardsOnPatrol++;
 			}
 
@@ -125,16 +125,16 @@ namespace DOL.GS.Keeps
 			guard.Component = Component;
 			guard.PatrolGroup = this;
 			PositionMgr.LoadGuardPosition(SpawnPosition, guard);
-			if (Component != null && Component.Keep != null)
+			if (Component != null && Component.AbstractKeep != null)
 			{
-				Component.Keep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { guard });
+				Component.AbstractKeep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { guard });
 			}
 			else
 			{
 				TemplateMgr.RefreshTemplate(guard);
 			}
 			PatrolGuards.Add(guard);
-			Component.Keep.Guards.Add(DOL.Database.UniqueID.IDGenerator.GenerateID(), guard);
+			Component.AbstractKeep.Guards.Add(DOL.Database.UniqueID.IDGenerator.GenerateID(), guard);
 			guard.AddToWorld();
 
 			if (ServerProperties.Properties.ENABLE_DEBUG)
@@ -145,9 +145,9 @@ namespace DOL.GS.Keeps
 
 		public void DeletePatrol()
 		{
-			if (Component != null && Component.Keep != null)
+			if (Component != null && Component.AbstractKeep != null)
 			{
-				Component.Keep.Patrols.Remove(this);
+				Component.AbstractKeep.Patrols.Remove(this);
 			}
 
 			foreach (GameKeepGuard guard in PatrolGuards)
@@ -169,11 +169,11 @@ namespace DOL.GS.Keeps
 		{
 			int guardsToPatrol = 1;
 
-			if (Component != null && Component.Keep != null && Component.Keep is GameKeep)
+			if (Component != null && Component.AbstractKeep != null && Component.AbstractKeep is GameKeep)
 			{
 				guardsToPatrol++;
 
-				if (Component.Keep.Level > 4)
+				if (Component.AbstractKeep.Level > 4)
 					guardsToPatrol++;
 			}
 

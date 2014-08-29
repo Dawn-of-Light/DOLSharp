@@ -306,14 +306,26 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static double GetRelicBonusModifier(eRealm realm, eRelicType type)
 		{
-			double value = 0.0;
+			double bonus = 0.0;
+			bool owningSelf = false;
 			//only playerrealms can get bonus
 			foreach (GameRelic rel in getRelics(realm, type))
 			{
-				if (rel.Realm != rel.OriginalRealm)
-					value += 0.1;
+				if (rel.Realm == rel.OriginalRealm)
+				{
+					owningSelf = true;
+				}
+				else
+				{
+					bonus += ServerProperties.Properties.RELIC_OWNING_BONUS*0.01;
+				}
 			}
-			return value;
+			
+			// Bonus apply only if owning original relic
+			if (owningSelf)
+				return bonus;
+			
+			return 0.0;
 		}
 
 		/// <summary>

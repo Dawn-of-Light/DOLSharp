@@ -37,6 +37,7 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public static int[] UpgradeTime =
 		{
+			12*60*1000, // 0 12min
 			12*60*1000, // 1 12min
 			12*60*1000, // 2 12min
 			12*60*1000, // 3 12min
@@ -48,6 +49,7 @@ namespace DOL.GS.Keeps
 			480*60*1000, // 9 480min 8h
 			960*60*1000, // 10 960min 16h
 		};
+		
 		private ArrayList m_towers = new ArrayList(4);
 		/// <summary>
 		/// The Keep Towers
@@ -77,9 +79,10 @@ namespace DOL.GS.Keeps
 		/// <returns></returns>
 		public override int CalculateTimeToUpgrade()
 		{
-			if (10 > Level)
+			if (Level < 10)
 				return UpgradeTime[this.Level + 1];
-			else return UpgradeTime[this.Level - 1];
+			else 
+				return UpgradeTime[this.Level - 1];
 		}
 
 		/// <summary>

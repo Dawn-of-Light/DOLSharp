@@ -17,8 +17,8 @@ namespace DOL.GS.Keeps
 		/// <param name="door">The door object</param>
 		public static void SendDoorDestroyedMessage(GameKeepDoor door)
 		{
-			string message = door.Name + " in your area " + door.Component.Keep.Name + " has been destroyed";
-			SendMessageToGuild(message, door.Component.Keep.Guild);
+			string message = door.Name + " in your area " + door.Component.AbstractKeep.Name + " has been destroyed";
+			SendMessageToGuild(message, door.Component.AbstractKeep.Guild);
 		}
 
 		/// <summary>

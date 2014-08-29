@@ -29,7 +29,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, eClientPackets.PlayerInitRequest, ClientStatus.PlayerInGame)]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.PlayerInitRequest, "Region Entering Init Request", eClientStatus.PlayerInGame)]
 	public class PlayerInitRequestHandler : IPacketHandler
 	{
 		/// <summary>

@@ -39,13 +39,13 @@ namespace DOL.GS.Keeps
 					return 0;
 				}
 
-				if (this.Component == null || this.Component.Keep == null)
+				if (this.Component == null || this.Component.AbstractKeep == null)
 				{
 					return 5000;
 				}
 				else
 				{
-					return this.Component.Keep.RealmPointsValue();
+					return this.Component.AbstractKeep.RealmPointsValue();
 				}
 			}
 		}
@@ -60,9 +60,9 @@ namespace DOL.GS.Keeps
 					return 0;
 				}
 
-				if (this.Component != null && this.Component.Keep != null)
+				if (this.Component != null && this.Component.AbstractKeep != null)
 				{
-					return this.Component.Keep.BountyPointsValue();
+					return this.Component.AbstractKeep.BountyPointsValue();
 				}
 
 				return base.BountyPointsValue;
@@ -79,9 +79,9 @@ namespace DOL.GS.Keeps
 					return 0;
 				}
 
-				if (this.Component != null && this.Component.Keep != null)
+				if (this.Component != null && this.Component.AbstractKeep != null)
 				{
-					return this.Component.Keep.ExperiencePointsValue();
+					return this.Component.AbstractKeep.ExperiencePointsValue();
 				}
 
 				return base.ExperienceValue;
@@ -92,9 +92,9 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (this.Component != null && this.Component.Keep != null)
+				if (this.Component != null && this.Component.AbstractKeep != null)
 				{
-					return this.Component.Keep.ExceedXPCapAmount();
+					return this.Component.AbstractKeep.ExceedXPCapAmount();
 				}
 
 				return base.ExceedXPCapAmount;
@@ -111,9 +111,9 @@ namespace DOL.GS.Keeps
 					return 0;
 				}
 
-				if (this.Component != null && this.Component.Keep != null)
+				if (this.Component != null && this.Component.AbstractKeep != null)
 				{
-					return this.Component.Keep.MoneyValue();
+					return this.Component.AbstractKeep.MoneyValue();
 				}
 
 				return base.MoneyValue;
@@ -145,9 +145,9 @@ namespace DOL.GS.Keeps
 					if (this.Component != null)
 					{
 						DOL.Database.KeepCaptureLog keeplog = new DOL.Database.KeepCaptureLog();
-						keeplog.KeepName = Component.Keep.Name;
+						keeplog.KeepName = Component.AbstractKeep.Name;
 
-						if (Component.Keep is GameKeep)
+						if (Component.AbstractKeep is GameKeep)
 							keeplog.KeepType = "Keep";
 						else
 							keeplog.KeepType = "Tower";
@@ -158,9 +158,9 @@ namespace DOL.GS.Keeps
 						keeplog.XPReward = ExperienceValue;
 						keeplog.MoneyReward = MoneyValue;
 
-						if (Component.Keep.StartCombatTick > 0)
+						if (Component.AbstractKeep.StartCombatTick > 0)
 						{
-							keeplog.CombatTime = (int)((Component.Keep.CurrentRegion.Time - Component.Keep.StartCombatTick) / 1000 / 60);
+							keeplog.CombatTime = (int)((Component.AbstractKeep.CurrentRegion.Time - Component.AbstractKeep.StartCombatTick) / 1000 / 60);
 						}
 
 						keeplog.CapturedBy = GlobalConstants.RealmToName(killer.Realm);
@@ -214,10 +214,10 @@ namespace DOL.GS.Keeps
 			if (this.Component == null)
 				return false;
 
-			if (InCombat || Component.Keep.InCombat)
+			if (InCombat || Component.AbstractKeep.InCombat)
 			{
 				player.Out.SendMessage("You can't talk to the lord while under siege.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				log.DebugFormat("KEEPWARNING: {0} attempted to interact with {1} of {2} while keep or lord in combat.", player.Name, Name, Component.Keep.Name);
+				log.DebugFormat("KEEPWARNING: {0} attempted to interact with {1} of {2} while keep or lord in combat.", player.Name, Name, Component.AbstractKeep.Name);
 				return false;
 			}
 
@@ -251,7 +251,7 @@ namespace DOL.GS.Keeps
 		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
 			int distance = 0;
-			if (this.Component != null && this.Component.Keep != null && this.Component.Keep is GameKeep)
+			if (this.Component != null && this.Component.AbstractKeep != null && this.Component.AbstractKeep is GameKeep)
 				distance = 400;
 			else 
 				distance = 300;
@@ -274,10 +274,10 @@ namespace DOL.GS.Keeps
 				return;
 			}
 
-			if (attacker != null && this.Component != null && this.Component.Keep != null && IsAlive && !GameServer.ServerRules.IsSameRealm(this, attacker, true))
+			if (attacker != null && this.Component != null && this.Component.AbstractKeep != null && IsAlive && !GameServer.ServerRules.IsSameRealm(this, attacker, true))
 			{
 				if (Realm == m_lastRealm && m_lastRealm != eRealm.None)
-					this.Component.Keep.LastAttackedByEnemyTick = CurrentRegion.Time; // light up the keep/tower
+					this.Component.AbstractKeep.LastAttackedByEnemyTick = CurrentRegion.Time; // light up the keep/tower
 			}
 
 			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
@@ -301,16 +301,16 @@ namespace DOL.GS.Keeps
             {
                 case "Claim Keep":
                     {
-                        if (PlayerMgr.IsAllowedToInteract(player, this.Component.Keep, eInteractType.Claim))
+                        if (PlayerMgr.IsAllowedToInteract(player, this.Component.AbstractKeep, eInteractType.Claim))
                         {
-                            player.Out.SendDialogBox(eDialogCode.KeepClaim, (ushort)player.ObjectID, 0, 0, 0, eDialogType.YesNo, false, "Do you wish to claim\n" + this.Component.Keep.Name + "?");
+                            player.Out.SendDialogBox(eDialogCode.KeepClaim, (ushort)player.ObjectID, 0, 0, 0, eDialogType.YesNo, false, "Do you wish to claim\n" + this.Component.AbstractKeep.Name + "?");
                             return true;
                         }
                         break;
                     }
                 case "Release Keep":
                     {
-                        if (PlayerMgr.IsAllowedToInteract(player, this.Component.Keep, eInteractType.Release))
+                        if (PlayerMgr.IsAllowedToInteract(player, this.Component.AbstractKeep, eInteractType.Release))
                         {
                             flag += 4;
                         }
@@ -318,7 +318,7 @@ namespace DOL.GS.Keeps
                     }
             }
             if (flag > 0)
-                player.Out.SendKeepClaim(this.Component.Keep, flag);
+                player.Out.SendKeepClaim(this.Component.AbstractKeep, flag);
 
             return true;
         }

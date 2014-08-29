@@ -909,6 +909,12 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("rates", "mount_over_level_35_speed", "What is the speed of player controlled mounts over level 35?", (short)145)]
 		public static short MOUNT_OVER_LEVEL_35_SPEED;
 
+		/// <summary>
+		/// Relic Bonus Modifier
+		/// </summary>
+		[ServerProperty("rates", "relic_owning_bonus", "Relic Owning Bonus in percent per relic (default 10%) in effect when owning enemy relic", (short)10)]
+		public static short RELIC_OWNING_BONUS;		
+
 		#endregion
 
 		#region NPCs

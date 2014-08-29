@@ -64,7 +64,7 @@ namespace DOL.GS.PacketHandler
 			m_type = type;
 			m_code = code;
 			m_desc = desc;
-			m_preprocessorId = (int)ClientStatus.None;
+			m_preprocessorId = (int)eClientStatus.None;
 		}
 
 		/// <summary>
@@ -89,7 +89,7 @@ namespace DOL.GS.PacketHandler
 		/// <param name="code">ID of the packet to handle</param>
 		/// <param name="desc">Description of the packet handler</param>
 		/// <param name="preprocessorId">ID of the preprocessor to use for this packet</param>
-		public PacketHandlerAttribute(PacketHandlerType type, int code, string desc, ClientStatus preprocessorId)
+		public PacketHandlerAttribute(PacketHandlerType type, int code, string desc, eClientStatus preprocessorId)
 		{
 			m_type = type;
 			m_code = code;
@@ -104,11 +104,26 @@ namespace DOL.GS.PacketHandler
 		/// <param name="code">ID of the packet to handle</param>
 		/// <param name="desc">Description of the packet handler</param>
 		/// <param name="preprocessorId">ID of the preprocessor to use for this packet</param>
-		public PacketHandlerAttribute(PacketHandlerType type, eClientPackets code, ClientStatus preprocessorId)
+		public PacketHandlerAttribute(PacketHandlerType type, eClientPackets code, eClientStatus preprocessorId)
 		{
 			m_type = type;
 			m_code = (int)code;
 			m_desc = "";
+			m_preprocessorId = (int)preprocessorId;
+		}
+		
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="type">Type of packet to handle</param>
+		/// <param name="code">ID of the packet to handle</param>
+		/// <param name="desc">Description of the packet handler</param>
+		/// <param name="preprocessorId">ID of the preprocessor to use for this packet</param>
+		public PacketHandlerAttribute(PacketHandlerType type, eClientPackets code, string desc, eClientStatus preprocessorId)
+		{
+			m_type = type;
+			m_code = (int)code;
+			m_desc = desc;
 			m_preprocessorId = (int)preprocessorId;
 		}
 

@@ -23,7 +23,7 @@ using DOL.GS.Keeps;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, 0xE0 ^ 168, "Show warmap")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.ShowWarmapRequest, "Show Warmap", eClientStatus.PlayerInGame)]
 	public class WarmapShowRequestHandler : IPacketHandler
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -38,7 +38,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return;
 
 			//hack fix new keep ids
-			if ((int)client.Version >= (int)GameClient.eClientVersion.Version190)
+			else if ((int)client.Version >= (int)GameClient.eClientVersion.Version190 && (int)client.Version < (int)GameClient.eClientVersion.Version1115)
 			{
 				if (keepId >= 82)
 					keepId -= 7;
@@ -155,9 +155,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 									if (keep != null && keep is GameKeep)
 									{
 										FrontiersPortalStone stone = keep.TeleportStone;
-										heading = stone.Heading;
-										z = stone.Z;
-										stone.GetTeleportLocation(out x, out y);
+										if (stone != null) 
+										{
+											heading = stone.Heading;
+											z = stone.Z;
+											stone.GetTeleportLocation(out x, out y);
+										}
+										else
+										{
+											x = keep.X;
+											y = keep.Y;
+											z = keep.Z+150;
+											heading = keep.Heading;
+										}
 									}
 									break;
 								}
