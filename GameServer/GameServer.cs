@@ -858,6 +858,45 @@ namespace DOL.GS
 			try
 			{
 				//---------------------------------------------------------------
+				//Register Script Tables
+				if (log.IsInfoEnabled)
+					log.Info("GameServerScripts Tables Initializing...");
+				
+				try
+				{
+					// Walk through each assembly in scripts
+					foreach (Assembly asm in ScriptMgr.Scripts)
+					{
+						// Walk through each type in the assembly
+						foreach (Type type in asm.GetTypes())
+						{
+							if (type.IsClass != true || !typeof(DataObject).IsAssignableFrom(type))
+								continue;
+							
+							object[] attrib = type.GetCustomAttributes(typeof(DataTable), false);
+							if (attrib.Length > 0)
+							{
+								if (log.IsInfoEnabled)
+									log.Info("Registering Scripts table: " + type.FullName);
+								
+								GameServer.Database.RegisterDataObject(type);
+							}
+						}
+					}
+				}
+				catch (DatabaseException dbex)
+				{
+					if (log.IsErrorEnabled)
+						log.Error("Error while registering Script Tables", dbex);
+					
+					return false;
+				}
+				
+	        	if (log.IsInfoEnabled)
+					log.Info("GameServerScripts Database Tables Initialization: true");
+
+	        	
+				//---------------------------------------------------------------
 				//Create the server rules
 				m_serverRules = ScriptMgr.CreateServerRules(Configuration.ServerType);
 				m_serverRules.Initialize();
