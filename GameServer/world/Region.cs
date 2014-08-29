@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
@@ -146,6 +147,11 @@ namespace DOL.GS
         /// The region time manager
         /// </summary>
         protected readonly GameTimer.TimeManager m_timeManager;
+        
+        /// <summary>
+        /// The Region Mob's Respawn Timer Collection
+        /// </summary>
+        protected readonly ConcurrentDictionary<GameNPC, int> m_mobsRespawning = new ConcurrentDictionary<GameNPC, int>();
 
         #endregion
 
@@ -727,6 +733,14 @@ namespace DOL.GS
             set { m_isNightTime = value; }
         }
 
+        public virtual ConcurrentDictionary<GameNPC, int> MobsRespawning
+        {
+        	get
+        	{
+        		return m_mobsRespawning;
+        	}
+        }
+        
         #endregion
 
         #region Methods
@@ -814,7 +828,7 @@ namespace DOL.GS
                     }
                     
 
-                    if (mob.Guild.Length > 0 && mob.Realm >= 0 && mob.Realm <= (int)eRealm._Last)
+                    if (Properties.USE_NPCGUILDSCRIPTS && mob.Guild.Length > 0 && mob.Realm >= 0 && mob.Realm <= (int)eRealm._Last)
                     {
                         Type type = ScriptMgr.FindNPCGuildScriptClass(mob.Guild, (eRealm)mob.Realm);
                         if (type != null)
