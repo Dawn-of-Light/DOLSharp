@@ -690,6 +690,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 			//			outpak172 = null;
 			GSUDPPacketOut outpak190 = null;
 
+
+			GSUDPPacketOut outpak1112 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerPosition));
+			outpak1112.Write(con172, 0, 18/*con172.Length*/);
+			outpak1112.WriteByte(client.Player.ManaPercent);
+			outpak1112.WriteByte(client.Player.EndurancePercent);
+			outpak1112.WriteByte((byte)(client.Player.RPFlag ? 1 : 0));
+			outpak1112.WriteByte(0); //outpak1112.WriteByte((con168.Length == 22) ? con168[21] : (byte)0);
+			outpak1112.WritePacketLength();
+
+
 			foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				if (player == null)
@@ -721,7 +731,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 					player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(client.Player.CurrentRegionID, (ushort)client.Player.ObjectID)] = GameTimer.GetTickCount();
 					
 					//forward the position packet like normal!
-					if (player.Client.Version >= GameClient.eClientVersion.Version190)
+					if (player.Client.Version >= GameClient.eClientVersion.Version1112)
+					{
+						player.Out.SendUDPRaw(outpak1112);
+					}
+					else if (player.Client.Version >= GameClient.eClientVersion.Version190)
 					{
 						if (outpak190 == null)
 						{
