@@ -24,7 +24,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	/// Handles the ping packet
 	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x0B^168,"Sends the ping reply")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.PingRequest, "Sends the ping reply", eClientStatus.None)]
 	public class PingRequestHandler : IPacketHandler
 	{
 		/// <summary>

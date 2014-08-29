@@ -49,55 +49,57 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendLivingEquipmentUpdate(GameLiving living)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.EquipmentUpdate));
-
-			ICollection<InventoryItem> items = null;
-			if (living.Inventory != null)
-				items = living.Inventory.VisibleItems;
-
-			pak.WriteShort((ushort)living.ObjectID);
-			pak.WriteByte((byte)living.VisibleActiveWeaponSlots);
-			pak.WriteByte((byte)living.CurrentSpeed); // new in 189b+, speed
-			pak.WriteByte((byte)((living.IsCloakInvisible ? 0x01 : 0x00) | (living.IsHelmInvisible ? 0x02 : 0x00))); // new in 189b+, cloack/helm visibility
-			pak.WriteByte((byte)((living.IsCloakHoodUp ? 0x01 : 0x00) | (int)living.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver
-
-			if (items != null)
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.EquipmentUpdate)))
 			{
-				pak.WriteByte((byte)items.Count);
-				foreach (InventoryItem item in items)
+
+				ICollection<InventoryItem> items = null;
+				if (living.Inventory != null)
+					items = living.Inventory.VisibleItems;
+	
+				pak.WriteShort((ushort)living.ObjectID);
+				pak.WriteByte((byte)living.VisibleActiveWeaponSlots);
+				pak.WriteByte((byte)living.CurrentSpeed); // new in 189b+, speed
+				pak.WriteByte((byte)((living.IsCloakInvisible ? 0x01 : 0x00) | (living.IsHelmInvisible ? 0x02 : 0x00))); // new in 189b+, cloack/helm visibility
+				pak.WriteByte((byte)((living.IsCloakHoodUp ? 0x01 : 0x00) | (int)living.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver
+	
+				if (items != null)
 				{
-					ushort model = (ushort)(item.Model & 0x1FFF);
-					int slot = item.SlotPosition;
-					//model = GetModifiedModel(model);
-					int texture = item.Emblem != 0 ? item.Emblem : item.Color;
-					if (item.SlotPosition == Slot.LEFTHAND || item.SlotPosition == Slot.CLOAK) // for test only cloack and shield
-						slot = slot | ((texture & 0x010000) >> 9); // slot & 0x80 if new emblem
-					pak.WriteByte((byte)slot);
-					if ((texture & ~0xFF) != 0)
-						model |= 0x8000;
-					else if ((texture & 0xFF) != 0)
-						model |= 0x4000;
-					if (item.Effect != 0)
-						model |= 0x2000;
-
-					pak.WriteShort(model);
-
-					if (item.SlotPosition > Slot.RANGED || item.SlotPosition < Slot.RIGHTHAND)
-						pak.WriteByte((byte)item.Extension);
-
-					if ((texture & ~0xFF) != 0)
-						pak.WriteShort((ushort)texture);
-					else if ((texture & 0xFF) != 0)
-						pak.WriteByte((byte)texture);
-					if (item.Effect != 0)
-						pak.WriteByte((byte)item.Effect);
+					pak.WriteByte((byte)items.Count);
+					foreach (InventoryItem item in items)
+					{
+						ushort model = (ushort)(item.Model & 0x1FFF);
+						int slot = item.SlotPosition;
+						//model = GetModifiedModel(model);
+						int texture = item.Emblem != 0 ? item.Emblem : item.Color;
+						if (item.SlotPosition == Slot.LEFTHAND || item.SlotPosition == Slot.CLOAK) // for test only cloack and shield
+							slot = slot | ((texture & 0x010000) >> 9); // slot & 0x80 if new emblem
+						pak.WriteByte((byte)slot);
+						if ((texture & ~0xFF) != 0)
+							model |= 0x8000;
+						else if ((texture & 0xFF) != 0)
+							model |= 0x4000;
+						if (item.Effect != 0)
+							model |= 0x2000;
+	
+						pak.WriteShort(model);
+	
+						if (item.SlotPosition > Slot.RANGED || item.SlotPosition < Slot.RIGHTHAND)
+							pak.WriteByte((byte)item.Extension);
+	
+						if ((texture & ~0xFF) != 0)
+							pak.WriteShort((ushort)texture);
+						else if ((texture & 0xFF) != 0)
+							pak.WriteByte((byte)texture);
+						if (item.Effect != 0)
+							pak.WriteByte((byte)item.Effect);
+					}
 				}
+				else
+				{
+					pak.WriteByte(0x00);
+				}
+				SendTCP(pak);
 			}
-			else
-			{
-				pak.WriteByte(0x00);
-			}
-			SendTCP(pak);
 		}
 
 		/// <summary>
@@ -146,24 +148,26 @@ namespace DOL.GS.PacketHandler
 		{
 			//ChatUtil.SendDebugMessage(m_gameClient, string.Format("SendItemsPartialUpdate: windowType: {0}, {1}", windowType, items == null ? "nothing" : items[0].Name));
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate));
-			GameVault houseVault = m_gameClient.Player.ActiveInventoryObject as GameVault;
-			pak.WriteByte((byte)(items.Count));
-			pak.WriteByte(0x00); // new in 189b+, show shield in left hand
-			pak.WriteByte((byte)((m_gameClient.Player.IsCloakInvisible ? 0x01 : 0x00) | (m_gameClient.Player.IsHelmInvisible ? 0x02 : 0x00))); // new in 189b+, cloack/helm visibility
-			if (windowType == eInventoryWindowType.HouseVault && houseVault != null)
-				pak.WriteByte((byte)(houseVault.Index + 1));	// Add the vault number to the window caption
-			else
-				pak.WriteByte((byte)((m_gameClient.Player.IsCloakHoodUp ? 0x01 : 0x00) | (int)m_gameClient.Player.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver
-			// ^ in 1.89b+, 0 bit - showing hooded cloack, if not hooded not show cloack at all ?
-			pak.WriteByte(m_gameClient.Player.VisibleActiveWeaponSlots);
-			pak.WriteByte((byte)windowType);
-			foreach (var entry in items)
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate)))
 			{
-				pak.WriteByte((byte)(entry.Key));
-				WriteItemData(pak, entry.Value);
+				GameVault houseVault = m_gameClient.Player.ActiveInventoryObject as GameVault;
+				pak.WriteByte((byte)(items.Count));
+				pak.WriteByte(0x00); // new in 189b+, show shield in left hand
+				pak.WriteByte((byte)((m_gameClient.Player.IsCloakInvisible ? 0x01 : 0x00) | (m_gameClient.Player.IsHelmInvisible ? 0x02 : 0x00))); // new in 189b+, cloack/helm visibility
+				if (windowType == eInventoryWindowType.HouseVault && houseVault != null)
+					pak.WriteByte((byte)(houseVault.Index + 1));	// Add the vault number to the window caption
+				else
+					pak.WriteByte((byte)((m_gameClient.Player.IsCloakHoodUp ? 0x01 : 0x00) | (int)m_gameClient.Player.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver
+				// ^ in 1.89b+, 0 bit - showing hooded cloack, if not hooded not show cloack at all ?
+				pak.WriteByte(m_gameClient.Player.VisibleActiveWeaponSlots);
+				pak.WriteByte((byte)windowType);
+				foreach (var entry in items)
+				{
+					pak.WriteByte((byte)(entry.Key));
+					WriteItemData(pak, entry.Value);
+				}
+				SendTCP(pak);
 			}
-			SendTCP(pak);
 		}
 
 		/// <summary>
@@ -174,44 +178,46 @@ namespace DOL.GS.PacketHandler
 		/// <param name="preAction"></param>
 		protected override void SendInventorySlotsUpdateRange(ICollection<int> slots, eInventoryWindowType windowType)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate));
-			GameVault houseVault = m_gameClient.Player.ActiveInventoryObject as GameVault;
-
-			pak.WriteByte((byte)(slots == null ? 0 : slots.Count));
-			pak.WriteByte(0); // CurrentSpeed & 0xFF (not used for player, only for NPC)
-			pak.WriteByte((byte)((m_gameClient.Player.IsCloakInvisible ? 0x01 : 0x00) | (m_gameClient.Player.IsHelmInvisible ? 0x02 : 0x00))); // new in 189b+, cloack/helm visibility
-
-			if (windowType == eInventoryWindowType.HouseVault && houseVault != null)
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.InventoryUpdate)))
 			{
-				pak.WriteByte((byte)(houseVault.Index + 1));	// Add the vault number to the window caption
-			}
-			else
-			{
-				pak.WriteByte((byte)((m_gameClient.Player.IsCloakHoodUp ? 0x01 : 0x00) | (int)m_gameClient.Player.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver
-			}
-
-			pak.WriteByte((byte)m_gameClient.Player.VisibleActiveWeaponSlots);
-			pak.WriteByte((byte)windowType);
-
-			if (slots != null)
-			{
-				foreach (int updatedSlot in slots)
+				GameVault houseVault = m_gameClient.Player.ActiveInventoryObject as GameVault;
+	
+				pak.WriteByte((byte)(slots == null ? 0 : slots.Count));
+				pak.WriteByte(0); // CurrentSpeed & 0xFF (not used for player, only for NPC)
+				pak.WriteByte((byte)((m_gameClient.Player.IsCloakInvisible ? 0x01 : 0x00) | (m_gameClient.Player.IsHelmInvisible ? 0x02 : 0x00))); // new in 189b+, cloack/helm visibility
+	
+				if (windowType == eInventoryWindowType.HouseVault && houseVault != null)
 				{
-					if (updatedSlot >= (int)eInventorySlot.Consignment_First && updatedSlot <= (int)eInventorySlot.Consignment_Last)
-					{
-						log.Error("PacketLib198:SendInventorySlotsUpdateBase - GameConsignmentMerchant inventory is no longer cached with player.  Use a Dictionary<int, InventoryItem> instead.");
-						pak.WriteByte((byte)(updatedSlot - (int)eInventorySlot.Consignment_First + (int)eInventorySlot.HousingInventory_First));
-					}
-					else
-					{
-						pak.WriteByte((byte)(updatedSlot));
-					}
-
-					WriteItemData(pak, m_gameClient.Player.Inventory.GetItem((eInventorySlot)(updatedSlot)));
+					pak.WriteByte((byte)(houseVault.Index + 1));	// Add the vault number to the window caption
 				}
+				else
+				{
+					pak.WriteByte((byte)((m_gameClient.Player.IsCloakHoodUp ? 0x01 : 0x00) | (int)m_gameClient.Player.ActiveQuiverSlot)); //bit0 is hood up bit4 to 7 is active quiver
+				}
+	
+				pak.WriteByte((byte)m_gameClient.Player.VisibleActiveWeaponSlots);
+				pak.WriteByte((byte)windowType);
+	
+				if (slots != null)
+				{
+					foreach (int updatedSlot in slots)
+					{
+						if (updatedSlot >= (int)eInventorySlot.Consignment_First && updatedSlot <= (int)eInventorySlot.Consignment_Last)
+						{
+							log.Error("PacketLib198:SendInventorySlotsUpdateBase - GameConsignmentMerchant inventory is no longer cached with player.  Use a Dictionary<int, InventoryItem> instead.");
+							pak.WriteByte((byte)(updatedSlot - (int)eInventorySlot.Consignment_First + (int)eInventorySlot.HousingInventory_First));
+						}
+						else
+						{
+							pak.WriteByte((byte)(updatedSlot));
+						}
+	
+						WriteItemData(pak, m_gameClient.Player.Inventory.GetItem((eInventorySlot)(updatedSlot)));
+					}
+				}
+	
+				SendTCP(pak);
 			}
-
-			SendTCP(pak);
 		}
 
 		protected static int MAX_NAME_LENGTH = 55;
@@ -399,112 +405,124 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendHouse(House house)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseCreate));
-			pak.WriteShort((ushort)house.HouseNumber);
-			pak.WriteShort((ushort)house.Z);
-			pak.WriteInt((uint)house.X);
-			pak.WriteInt((uint)house.Y);
-			pak.WriteShort((ushort)house.Heading);
-			pak.WriteShort((ushort)house.PorchRoofColor);
-			int flagPorchAndGuildEmblem = (house.Emblem & 0x010000) >> 13;//new Guild Emblem
-			if (house.Porch)
-				flagPorchAndGuildEmblem |= 1;
-			if (house.OutdoorGuildBanner)
-				flagPorchAndGuildEmblem |= 2;
-			if (house.OutdoorGuildShield)
-				flagPorchAndGuildEmblem |= 4;
-			pak.WriteShort((ushort)flagPorchAndGuildEmblem);
-			pak.WriteShort((ushort)house.Emblem);
-			pak.WriteShort(0); // new in 1.89b+ (scheduled for resposession XXX hourses ago)
-			pak.WriteByte((byte)house.Model);
-			pak.WriteByte((byte)house.RoofMaterial);
-			pak.WriteByte((byte)house.WallMaterial);
-			pak.WriteByte((byte)house.DoorMaterial);
-			pak.WriteByte((byte)house.TrussMaterial);
-			pak.WriteByte((byte)house.PorchMaterial);
-			pak.WriteByte((byte)house.WindowMaterial);
-			pak.WriteByte(0);
-			pak.WriteShort(0); // new in 1.89b+
-			pak.WritePascalString(house.Name);
-
-			SendTCP(pak);
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseCreate)))
+			{
+				pak.WriteShort((ushort)house.HouseNumber);
+				pak.WriteShort((ushort)house.Z);
+				pak.WriteInt((uint)house.X);
+				pak.WriteInt((uint)house.Y);
+				pak.WriteShort((ushort)house.Heading);
+				pak.WriteShort((ushort)house.PorchRoofColor);
+				int flagPorchAndGuildEmblem = (house.Emblem & 0x010000) >> 13;//new Guild Emblem
+				if (house.Porch)
+					flagPorchAndGuildEmblem |= 1;
+				if (house.OutdoorGuildBanner)
+					flagPorchAndGuildEmblem |= 2;
+				if (house.OutdoorGuildShield)
+					flagPorchAndGuildEmblem |= 4;
+				pak.WriteShort((ushort)flagPorchAndGuildEmblem);
+				pak.WriteShort((ushort)house.Emblem);
+				pak.WriteShort(0); // new in 1.89b+ (scheduled for resposession XXX hourses ago)
+				pak.WriteByte((byte)house.Model);
+				pak.WriteByte((byte)house.RoofMaterial);
+				pak.WriteByte((byte)house.WallMaterial);
+				pak.WriteByte((byte)house.DoorMaterial);
+				pak.WriteByte((byte)house.TrussMaterial);
+				pak.WriteByte((byte)house.PorchMaterial);
+				pak.WriteByte((byte)house.WindowMaterial);
+				pak.WriteByte(0);
+				pak.WriteShort(0); // new in 1.89b+
+				pak.WritePascalString(house.Name);
+	
+				SendTCP(pak);
+			}
+			
+			// Update cache
+			m_gameClient.HouseUpdateArray[new Tuple<ushort, ushort>(house.RegionID, (ushort)house.HouseNumber)] = GameTimer.GetTickCount();
 		}
 
 		public override void SendGarden(House house)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseChangeGarden));
-			pak.WriteShort((ushort)house.HouseNumber);
-			pak.WriteShort(0); // sheduled for repossession (in hours) new in 1.89b+
-			pak.WriteByte((byte)house.OutdoorItems.Count);
-			pak.WriteByte(0x80);
-
-			foreach (var entry in house.OutdoorItems.OrderBy(entry => entry.Key))
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseChangeGarden)))
 			{
-				OutdoorItem item = entry.Value;
-				pak.WriteByte((byte)entry.Key);
-				pak.WriteShort((ushort)item.Model);
-				pak.WriteByte((byte)item.Position);
-				pak.WriteByte((byte)item.Rotation);
+				pak.WriteShort((ushort)house.HouseNumber);
+				pak.WriteShort(0); // sheduled for repossession (in hours) new in 1.89b+
+				pak.WriteByte((byte)house.OutdoorItems.Count);
+				pak.WriteByte(0x80);
+	
+				foreach (var entry in house.OutdoorItems.OrderBy(entry => entry.Key))
+				{
+					OutdoorItem item = entry.Value;
+					pak.WriteByte((byte)entry.Key);
+					pak.WriteShort((ushort)item.Model);
+					pak.WriteByte((byte)item.Position);
+					pak.WriteByte((byte)item.Rotation);
+				}
+	
+				SendTCP(pak);
 			}
-
-			SendTCP(pak);
 		}
 
 		public override void SendGarden(House house, int i)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseChangeGarden));
-			pak.WriteShort((ushort)house.HouseNumber);
-			pak.WriteShort(0); // sheduled for repossession (in hours) new in 1.89b+
-			pak.WriteByte(0x01);
-			pak.WriteByte(0x00); // update
-			OutdoorItem item = (OutdoorItem)house.OutdoorItems[i];
-			pak.WriteByte((byte)i);
-			pak.WriteShort((ushort)item.Model);
-			pak.WriteByte((byte)item.Position);
-			pak.WriteByte((byte)item.Rotation);
-			SendTCP(pak);
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseChangeGarden)))
+			{
+				pak.WriteShort((ushort)house.HouseNumber);
+				pak.WriteShort(0); // sheduled for repossession (in hours) new in 1.89b+
+				pak.WriteByte(0x01);
+				pak.WriteByte(0x00); // update
+				OutdoorItem item = (OutdoorItem)house.OutdoorItems[i];
+				pak.WriteByte((byte)i);
+				pak.WriteShort((ushort)item.Model);
+				pak.WriteByte((byte)item.Position);
+				pak.WriteByte((byte)item.Rotation);
+				SendTCP(pak);
+			}
 		}
               
 
 		public override void SendHouseOccupied(House house, bool flagHouseOccuped)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseChangeGarden));
-			pak.WriteShort((ushort)house.HouseNumber);
-			pak.WriteShort(0); // sheduled for repossession (in hours) new in 1.89b+
-			pak.WriteByte(0x00);
-			pak.WriteByte((byte)(flagHouseOccuped ? 1 : 0));
-
-			SendTCP(pak);
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseChangeGarden)))
+			{
+				pak.WriteShort((ushort)house.HouseNumber);
+				pak.WriteShort(0); // sheduled for repossession (in hours) new in 1.89b+
+				pak.WriteByte(0x00);
+				pak.WriteByte((byte)(flagHouseOccuped ? 1 : 0));
+	
+				SendTCP(pak);
+			}
 		}
 
 		public override void SendEnterHouse(House house)
 		{
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseEnter));
-
-			pak.WriteShort((ushort)house.HouseNumber);
-			pak.WriteShort((ushort)25000);         //constant!
-			pak.WriteInt((uint)house.X);
-			pak.WriteInt((uint)house.Y);
-			pak.WriteShort((ushort)house.Heading); //useless/ignored by client.
-			pak.WriteByte(0x00);
-			pak.WriteByte((byte)(house.GetGuildEmblemFlags() | (house.Emblem & 0x010000) >> 14));//new Guild Emblem
-			pak.WriteShort((ushort)house.Emblem);	//emblem
-			pak.WriteByte(0x00);
-			pak.WriteByte(0x00);
-			pak.WriteByte((byte)house.Model);
-			pak.WriteByte(0x00);
-			pak.WriteByte(0x00);
-			pak.WriteByte(0x00);
-			pak.WriteByte((byte)house.Rug1Color);
-			pak.WriteByte((byte)house.Rug2Color);
-			pak.WriteByte((byte)house.Rug3Color);
-			pak.WriteByte((byte)house.Rug4Color);
-			pak.WriteByte(0x00);
-			pak.WriteByte(0x00); // houses codemned ?
-			pak.WriteShort(0); // 0xFFBF = condemned door model
-			pak.WriteByte(0x00);
-
-			SendTCP(pak);
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HouseEnter)))
+			{
+				pak.WriteShort((ushort)house.HouseNumber);
+				pak.WriteShort((ushort)25000);         //constant!
+				pak.WriteInt((uint)house.X);
+				pak.WriteInt((uint)house.Y);
+				pak.WriteShort((ushort)house.Heading); //useless/ignored by client.
+				pak.WriteByte(0x00);
+				pak.WriteByte((byte)(house.GetGuildEmblemFlags() | (house.Emblem & 0x010000) >> 14));//new Guild Emblem
+				pak.WriteShort((ushort)house.Emblem);	//emblem
+				pak.WriteByte(0x00);
+				pak.WriteByte(0x00);
+				pak.WriteByte((byte)house.Model);
+				pak.WriteByte(0x00);
+				pak.WriteByte(0x00);
+				pak.WriteByte(0x00);
+				pak.WriteByte((byte)house.Rug1Color);
+				pak.WriteByte((byte)house.Rug2Color);
+				pak.WriteByte((byte)house.Rug3Color);
+				pak.WriteByte((byte)house.Rug4Color);
+				pak.WriteByte(0x00);
+				pak.WriteByte(0x00); // houses codemned ?
+				pak.WriteShort(0); // 0xFFBF = condemned door model
+				pak.WriteByte(0x00);
+	
+				SendTCP(pak);
+			}
 		}
 	}
 }

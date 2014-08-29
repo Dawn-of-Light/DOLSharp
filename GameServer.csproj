@@ -382,6 +382,8 @@
     <Compile Include="gameutils\InventoryLogging.cs" />
     <Compile Include="gameutils\MarketCache.cs" />
     <Compile Include="gameutils\ServerListUpdate.cs" />
+    <Compile Include="keeps\IGameKeep.cs" />
+    <Compile Include="keeps\IGameKeepComponent.cs" />
     <Compile Include="keeps\IKeepManager.cs" />
     <Compile Include="keeps\Relics\GameInventoryRelic.cs" />
     <Compile Include="gameobjects\CustomNPC\RoyalTreasuryClerk.cs" />
@@ -1043,6 +1045,7 @@
     <Compile Include="packets\Server\PacketLibAttribute.cs" />
     <Compile Include="packets\Server\PacketPreprocessing.cs" />
     <Compile Include="packets\Server\PacketProcessor.cs" />
+    <Compile Include="packets\Utils\MiniDelveWriter.cs" />
     <Compile Include="playerclasses\albion\ClassMaulerAlb.cs" />
     <Compile Include="playerclasses\hibernia\ClassMaulerHib.cs" />
     <Compile Include="playerclasses\midgard\ClassMaulerMid.cs" />
@@ -1642,9 +1645,6 @@
     <Compile Include="keeps\HookPointInventory.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="keeps\IKeep.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="keeps\KeepHookPoint.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -2164,6 +2164,7 @@
     <Compile Include="spells\Necromancer\PowerTransfer.cs" />
     <Compile Include="spells\Necromancer\PowerDrain.cs" />
     <Compile Include="spells\NightShade\NightshadeNukeSpellhandler.cs" />
+    <Compile Include="spells\SpellHelpers\SpellHelper.cs" />
     <Compile Include="spells\StyleHandler.cs" />
     <Compile Include="spells\SummonNoveltyPet.cs" />
     <Compile Include="spells\PetLifedrainSpellHandler.cs" />
@@ -2811,6 +2812,8 @@
   <ItemGroup>
     <Folder Include="language\DE\Quests\Midgard\" />
     <Folder Include="language\EN\Quests\Midgard\" />
+    <Folder Include="packets\Utils" />
+    <Folder Include="spells\SpellHelpers" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

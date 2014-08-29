@@ -51,66 +51,70 @@ namespace DOL.GS.PacketHandler
 			if (player == null || player.ObjectState != GameObject.eObjectState.Active)
 				return;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ControlledHorse));
-
-			if (player.HasHorse)
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ControlledHorse)))
 			{
-				pak.WriteShort(0); // for set self horse OID must be zero
-				pak.WriteByte(player.ActiveHorse.ID);
-				if (player.ActiveHorse.BardingColor == 0 && player.ActiveHorse.Barding != 0 && player.Guild != null)
+
+				if (player.HasHorse)
 				{
-					int newGuildBitMask = (player.Guild.Emblem & 0x010000) >> 9;
-					pak.WriteByte((byte)(player.ActiveHorse.Barding | newGuildBitMask));
-					pak.WriteShort((ushort)player.Guild.Emblem);
+					pak.WriteShort(0); // for set self horse OID must be zero
+					pak.WriteByte(player.ActiveHorse.ID);
+					if (player.ActiveHorse.BardingColor == 0 && player.ActiveHorse.Barding != 0 && player.Guild != null)
+					{
+						int newGuildBitMask = (player.Guild.Emblem & 0x010000) >> 9;
+						pak.WriteByte((byte)(player.ActiveHorse.Barding | newGuildBitMask));
+						pak.WriteShort((ushort)player.Guild.Emblem);
+					}
+					else
+					{
+						pak.WriteByte(player.ActiveHorse.Barding);
+						pak.WriteShort(player.ActiveHorse.BardingColor);
+					}
+					pak.WriteByte(player.ActiveHorse.Saddle);
+					pak.WriteByte(player.ActiveHorse.SaddleColor);
+					pak.WriteByte(player.ActiveHorse.Slots);
+					pak.WriteByte(player.ActiveHorse.Armor);
+					pak.WritePascalString(player.ActiveHorse.Name == null ? "" : player.ActiveHorse.Name);
 				}
 				else
 				{
-					pak.WriteByte(player.ActiveHorse.Barding);
-					pak.WriteShort(player.ActiveHorse.BardingColor);
+					pak.Fill(0x00, 8);
 				}
-				pak.WriteByte(player.ActiveHorse.Saddle);
-				pak.WriteByte(player.ActiveHorse.SaddleColor);
-				pak.WriteByte(player.ActiveHorse.Slots);
-				pak.WriteByte(player.ActiveHorse.Armor);
-				pak.WritePascalString(player.ActiveHorse.Name == null ? "" : player.ActiveHorse.Name);
+				SendTCP(pak);
 			}
-			else
-			{
-				pak.Fill(0x00, 8);
-			}
-			SendTCP(pak);
 		}
 
 		public override void SendControlledHorse(GamePlayer player, bool flag)
 		{
 			if (player == null || player.ObjectState != GameObject.eObjectState.Active)
 				return;
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ControlledHorse));
-			if (!flag || !player.HasHorse)
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ControlledHorse)))
 			{
-				pak.WriteShort((ushort)player.ObjectID);
-				pak.Fill(0x00, 6);
-			}
-			else
-			{
-				pak.WriteShort((ushort)player.ObjectID);
-				pak.WriteByte(player.ActiveHorse.ID);
-				if (player.ActiveHorse.BardingColor == 0 && player.ActiveHorse.Barding != 0 && player.Guild != null)
+				if (!flag || !player.HasHorse)
 				{
-					int newGuildBitMask = (player.Guild.Emblem & 0x010000) >> 9;
-					pak.WriteByte((byte)(player.ActiveHorse.Barding | newGuildBitMask));
-					pak.WriteShort((ushort)player.Guild.Emblem);
+					pak.WriteShort((ushort)player.ObjectID);
+					pak.Fill(0x00, 6);
 				}
 				else
 				{
-					pak.WriteByte(player.ActiveHorse.Barding);
-					pak.WriteShort(player.ActiveHorse.BardingColor);
+					pak.WriteShort((ushort)player.ObjectID);
+					pak.WriteByte(player.ActiveHorse.ID);
+					if (player.ActiveHorse.BardingColor == 0 && player.ActiveHorse.Barding != 0 && player.Guild != null)
+					{
+						int newGuildBitMask = (player.Guild.Emblem & 0x010000) >> 9;
+						pak.WriteByte((byte)(player.ActiveHorse.Barding | newGuildBitMask));
+						pak.WriteShort((ushort)player.Guild.Emblem);
+					}
+					else
+					{
+						pak.WriteByte(player.ActiveHorse.Barding);
+						pak.WriteShort(player.ActiveHorse.BardingColor);
+					}
+	
+					pak.WriteByte(player.ActiveHorse.Saddle);
+					pak.WriteByte(player.ActiveHorse.SaddleColor);
 				}
-
-				pak.WriteByte(player.ActiveHorse.Saddle);
-				pak.WriteByte(player.ActiveHorse.SaddleColor);
+				SendTCP(pak);
 			}
-			SendTCP(pak);
 		}
 
 		public override void SendPlayerCreate(GamePlayer playerToCreate)
@@ -148,65 +152,71 @@ namespace DOL.GS.PacketHandler
 			if (playerToCreate.IsVisibleTo(m_gameClient.Player) == false)
 				return;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PlayerCreate172));
-
-			pak.WriteShort((ushort)playerToCreate.Client.SessionID);
-			pak.WriteShort((ushort)playerToCreate.ObjectID);
-			pak.WriteShort(playerToCreate.Model);
-			pak.WriteShort((ushort)playerToCreate.Z);
-			//Dinberg:Instances - send out the 'fake' zone ID to the client for positioning purposes.
-			pak.WriteShort(playerZone.ZoneSkinID);
-			pak.WriteShort((ushort)playerRegion.GetXOffInZone(playerToCreate.X, playerToCreate.Y));
-			pak.WriteShort((ushort)playerRegion.GetYOffInZone(playerToCreate.X, playerToCreate.Y));
-			pak.WriteShort(playerToCreate.Heading);
-
-			pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.EyeSize)); //1-4 = Eye Size / 5-8 = Nose Size
-			pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.LipSize)); //1-4 = Ear size / 5-8 = Kin size
-			pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.MoodType)); //1-4 = Ear size / 5-8 = Kin size
-			pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.EyeColor)); //1-4 = Skin Color / 5-8 = Eye Color
-			pak.WriteByte(playerToCreate.GetDisplayLevel(m_gameClient.Player));
-			pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.HairColor)); //Hair: 1-4 = Color / 5-8 = unknown
-			pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.FaceType)); //1-4 = Unknown / 5-8 = Face type
-			pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.HairStyle)); //1-4 = Unknown / 5-8 = Hair Style
-
-			int flags = (GameServer.ServerRules.GetLivingRealm(m_gameClient.Player, playerToCreate) & 0x03) << 2;
-			if (playerToCreate.IsAlive == false) flags |= 0x01;
-			if (playerToCreate.IsUnderwater) flags |= 0x02; //swimming
-			if (playerToCreate.IsStealthed) flags |= 0x10;
-			if (playerToCreate.IsWireframe) flags |= 0x20;
-			if (playerToCreate.CharacterClass.ID == (int)eCharacterClass.Vampiir) flags |= 0x40; //Vamp fly
-			pak.WriteByte((byte)flags);
-			pak.WriteByte(0x00); // new in 1.74
-
-			pak.WritePascalString(GameServer.ServerRules.GetPlayerName(m_gameClient.Player, playerToCreate));
-			pak.WritePascalString(GameServer.ServerRules.GetPlayerGuildName(m_gameClient.Player, playerToCreate));
-			pak.WritePascalString(GameServer.ServerRules.GetPlayerLastName(m_gameClient.Player, playerToCreate));
-			//RR 12 / 13
-			pak.WritePascalString(GameServer.ServerRules.GetPlayerPrefixName(m_gameClient.Player, playerToCreate));
-			pak.WritePascalString(playerToCreate.CurrentTitle.GetValue(playerToCreate)); // new in 1.74, NewTitle
-			if (playerToCreate.IsOnHorse)
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.PlayerCreate172)))
 			{
-				pak.WriteByte(playerToCreate.ActiveHorse.ID);
-				if (playerToCreate.ActiveHorse.BardingColor == 0 && playerToCreate.ActiveHorse.Barding != 0 && playerToCreate.Guild != null)
+
+				pak.WriteShort((ushort)playerToCreate.Client.SessionID);
+				pak.WriteShort((ushort)playerToCreate.ObjectID);
+				pak.WriteShort(playerToCreate.Model);
+				pak.WriteShort((ushort)playerToCreate.Z);
+				//Dinberg:Instances - send out the 'fake' zone ID to the client for positioning purposes.
+				pak.WriteShort(playerZone.ZoneSkinID);
+				pak.WriteShort((ushort)playerRegion.GetXOffInZone(playerToCreate.X, playerToCreate.Y));
+				pak.WriteShort((ushort)playerRegion.GetYOffInZone(playerToCreate.X, playerToCreate.Y));
+				pak.WriteShort(playerToCreate.Heading);
+	
+				pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.EyeSize)); //1-4 = Eye Size / 5-8 = Nose Size
+				pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.LipSize)); //1-4 = Ear size / 5-8 = Kin size
+				pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.MoodType)); //1-4 = Ear size / 5-8 = Kin size
+				pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.EyeColor)); //1-4 = Skin Color / 5-8 = Eye Color
+				pak.WriteByte(playerToCreate.GetDisplayLevel(m_gameClient.Player));
+				pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.HairColor)); //Hair: 1-4 = Color / 5-8 = unknown
+				pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.FaceType)); //1-4 = Unknown / 5-8 = Face type
+				pak.WriteByte(playerToCreate.GetFaceAttribute(eCharFacePart.HairStyle)); //1-4 = Unknown / 5-8 = Hair Style
+	
+				int flags = (GameServer.ServerRules.GetLivingRealm(m_gameClient.Player, playerToCreate) & 0x03) << 2;
+				if (playerToCreate.IsAlive == false) flags |= 0x01;
+				if (playerToCreate.IsUnderwater) flags |= 0x02; //swimming
+				if (playerToCreate.IsStealthed) flags |= 0x10;
+				if (playerToCreate.IsWireframe) flags |= 0x20;
+				if (playerToCreate.CharacterClass.ID == (int)eCharacterClass.Vampiir) flags |= 0x40; //Vamp fly
+				pak.WriteByte((byte)flags);
+				pak.WriteByte(0x00); // new in 1.74
+	
+				pak.WritePascalString(GameServer.ServerRules.GetPlayerName(m_gameClient.Player, playerToCreate));
+				pak.WritePascalString(GameServer.ServerRules.GetPlayerGuildName(m_gameClient.Player, playerToCreate));
+				pak.WritePascalString(GameServer.ServerRules.GetPlayerLastName(m_gameClient.Player, playerToCreate));
+				//RR 12 / 13
+				pak.WritePascalString(GameServer.ServerRules.GetPlayerPrefixName(m_gameClient.Player, playerToCreate));
+				pak.WritePascalString(GameServer.ServerRules.GetPlayerTitle(m_gameClient.Player, playerToCreate)); // new in 1.74, NewTitle
+				if (playerToCreate.IsOnHorse)
 				{
-					int newGuildBitMask = (playerToCreate.Guild.Emblem & 0x010000) >> 9;
-					pak.WriteByte((byte)(playerToCreate.ActiveHorse.Barding | newGuildBitMask));
-					pak.WriteShortLowEndian((ushort)playerToCreate.Guild.Emblem);
+					pak.WriteByte(playerToCreate.ActiveHorse.ID);
+					if (playerToCreate.ActiveHorse.BardingColor == 0 && playerToCreate.ActiveHorse.Barding != 0 && playerToCreate.Guild != null)
+					{
+						int newGuildBitMask = (playerToCreate.Guild.Emblem & 0x010000) >> 9;
+						pak.WriteByte((byte)(playerToCreate.ActiveHorse.Barding | newGuildBitMask));
+						pak.WriteShortLowEndian((ushort)playerToCreate.Guild.Emblem);
+					}
+					else
+					{
+						pak.WriteByte(playerToCreate.ActiveHorse.Barding);
+						pak.WriteShort(playerToCreate.ActiveHorse.BardingColor);
+					}
+					pak.WriteByte(playerToCreate.ActiveHorse.Saddle);
+					pak.WriteByte(playerToCreate.ActiveHorse.SaddleColor);
 				}
 				else
 				{
-					pak.WriteByte(playerToCreate.ActiveHorse.Barding);
-					pak.WriteShort(playerToCreate.ActiveHorse.BardingColor);
+					pak.WriteByte(0); // trailing zero
 				}
-				pak.WriteByte(playerToCreate.ActiveHorse.Saddle);
-				pak.WriteByte(playerToCreate.ActiveHorse.SaddleColor);
-			}
-			else
-			{
-				pak.WriteByte(0); // trailing zero
+	
+				SendTCP(pak);
 			}
 
-			SendTCP(pak);
+			// Update Cache
+			m_gameClient.GameObjectUpdateArray[new Tuple<ushort, ushort>(playerToCreate.CurrentRegionID, (ushort)playerToCreate.ObjectID)] = long.MaxValue;
+			
 			SendObjectGuildID(playerToCreate, playerToCreate.Guild); //used for nearest friendly/enemy object buttons and name colors on PvP server
 
 			if (playerToCreate.GuildBanner != null)
@@ -320,7 +330,7 @@ namespace DOL.GS.PacketHandler
 										case Style.eOpening.Offensive:
 											pre = 0 + (int)style.AttackResultRequirement; // last result of our attack against enemy
 											// hit, miss, target blocked, target parried, ...
-											if (style.AttackResultRequirement == Style.eAttackResult.Style)
+											if (style.AttackResultRequirement == Style.eAttackResultRequirement.Style)
 												pre |= ((100 + (int)styleTable[style.OpeningRequirementValue]) << 8);
 											break;
 										case Style.eOpening.Defensive:

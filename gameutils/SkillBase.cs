@@ -58,6 +58,7 @@ namespace DOL.GS
 		protected ushort m_id;
 		protected string m_name;
 		protected int m_level;
+		protected ushort m_icon;
 
 		/// <summary>
 		/// Construct a Skill from the name, an id, and a level
@@ -65,11 +66,12 @@ namespace DOL.GS
 		/// <param name="name"></param>
 		/// <param name="id"></param>
 		/// <param name="level"></param>
-		public Skill(string name, ushort id, int level)
+		public Skill(string name, ushort id, ushort icon, int level)
 		{
 			m_id = id;
 			m_name = name;
 			m_level = level;
+			m_icon = icon;
 		}
 
 		/// <summary>
@@ -99,6 +101,14 @@ namespace DOL.GS
 			set { m_level = value; }
 		}
 
+		/// <summary>
+		/// The Skill Icon
+		/// </summary>
+		public virtual ushort Icon 
+		{
+			get { return m_icon; }
+		}
+		
 		/// <summary>
 		/// the type of the skill
 		/// </summary>
@@ -133,8 +143,8 @@ namespace DOL.GS
 		/// <param name="name">The name</param>
 		/// <param name="id">The ID</param>
 		/// <param name="level">The level</param>
-		public NamedSkill(string keyName, string name, ushort id, int level)
-			: base(name, id, level)
+		public NamedSkill(string keyName, string name, ushort id, ushort icon, int level)
+			: base(name, id, icon, level)
 		{
 			m_keyName = keyName;
 		}
@@ -179,7 +189,7 @@ namespace DOL.GS
 		protected string m_spec;
 
 		public SpellLine(string keyname, string name, string spec, bool baseline)
-			: base(keyname, name, 0, 1)
+			: base(keyname, name, 0, 0, 1)
 		{
 			m_isBaseLine = baseline;
 			m_spec = spec;
@@ -2077,7 +2087,7 @@ namespace DOL.GS
 			if (log.IsWarnEnabled)
 				log.Warn("Ability '" + keyname + "' unknown");
 
-			return new Ability(keyname, "?" + keyname, "", 0, 0);
+			return new Ability(keyname, "?" + keyname, "", 0, 0, 0);
 		}
 
 		/// <summary>

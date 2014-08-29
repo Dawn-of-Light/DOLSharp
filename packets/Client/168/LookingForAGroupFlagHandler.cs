@@ -20,7 +20,7 @@ using System;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x2C^168,"handle Change LFG flag")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.LookingForGroupFlag, "handle Change LFG flag", eClientStatus.PlayerInGame)]
 	public class LookingForAGroupFlagHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)

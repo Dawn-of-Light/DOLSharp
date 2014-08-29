@@ -72,7 +72,7 @@ namespace DOL.GS.Styles
 		/// <summary>
 		/// The required attack result of the style 
 		/// </summary>
-		public enum eAttackResult : int
+		public enum eAttackResultRequirement : int
 		{
 			/// <summary>
 			/// Any attack result is fine
@@ -140,7 +140,7 @@ namespace DOL.GS.Styles
 		/// </summary>
 		/// <param name="style">The database style object this object is based on</param>
 		public Style(DBStyle style)
-			: base(style.Name, (ushort)style.ID, style.SpecLevelRequirement)
+			: base(style.Name, (ushort)style.ID, (ushort)style.Icon, style.SpecLevelRequirement)
 		{
 			baseStyle = style;
 			m_Procs = new List<DBStyleXSpell>();
@@ -173,14 +173,6 @@ namespace DOL.GS.Styles
 		public int SpecLevelRequirement
 		{
 			get { return baseStyle.SpecLevelRequirement; }
-		}
-
-		/// <summary>
-		/// (readonly) The icon of this style
-		/// </summary>
-		public int Icon
-		{
-			get { return baseStyle.Icon; }
 		}
 
 		/// <summary>
@@ -229,9 +221,9 @@ namespace DOL.GS.Styles
 		/// (readonly) The attack result required from 
 		/// attacker(offensive style) or defender(defensive style)
 		/// </summary>
-		public eAttackResult AttackResultRequirement
+		public eAttackResultRequirement AttackResultRequirement
 		{
-			get { return (eAttackResult)baseStyle.AttackResultRequirement; }
+			get { return (eAttackResultRequirement)baseStyle.AttackResultRequirement; }
 		}
 
 		/// <summary>

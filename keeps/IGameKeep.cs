@@ -24,13 +24,29 @@ using DOL.Database;
 
 namespace DOL.GS.Keeps
 {
-	public interface IKeep
+	public interface IGameKeep
 	{
-		List<GameKeepComponent> KeepComponents { get;}
-		Hashtable Guards { get;}
-		Hashtable Banners { get;}
-		void Load(DBKeep keep);
+		List<IGameKeepComponent> SentKeepComponents { get; }
+		
+		Hashtable Guards { get; }
+		Hashtable Banners { get; }
+
 		void LoadFromDatabase(DataObject keep);
 		void SaveIntoDatabase();
+		
+		
+		ushort KeepID { get; }
+		
+		int X { get; }
+		int Y { get; }
+		int Z { get; }
+		ushort Heading { get; }
+		Region CurrentRegion { get; }
+		
+		Guild Guild { get; }
+		eRealm Realm { get; }
+		byte Level { get; }
+		
+		byte EffectiveLevel(byte level);		
 	}
 }

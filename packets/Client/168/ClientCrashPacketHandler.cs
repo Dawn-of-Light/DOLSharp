@@ -23,7 +23,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, 0x9F ^ 168, "Handles client crash packets")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.ClientCrash, "Handles client crash packets", eClientStatus.None)]
 	public class ClientCrashPacketHandler : IPacketHandler
 	{
 		/// <summary>

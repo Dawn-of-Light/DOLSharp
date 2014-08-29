@@ -23,7 +23,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	///SiegeWeaponActionHandler handler the command of player to control siege weapon
 	/// </summary>
-	[PacketHandler(PacketHandlerType.TCP, 0xf5, "Handles Siege command Request")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, 0xf5, "Handles Siege command Request")]
 	public class SiegeWeaponActionHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)

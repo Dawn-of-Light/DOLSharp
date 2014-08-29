@@ -24,7 +24,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, 0xD0 ^ 168, "Handles player buy")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.BuyRequest, "Handles player buy", eClientStatus.PlayerInGame)]
 	public class PlayerBuyRequestHandler : IPacketHandler
 	{
 		/// <summary>

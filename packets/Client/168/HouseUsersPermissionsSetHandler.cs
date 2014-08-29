@@ -22,7 +22,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, 0x06, "Handles housing Users permissions requests")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.HouseUserPermissionSet, "Handles housing Users permissions requests", eClientStatus.PlayerInGame)]
 	public class HouseUsersPermissionsSetHandler : IPacketHandler
 	{
 		#region IPacketHandler Members

@@ -25,12 +25,22 @@ namespace DOL.GS.PacketHandler
 	/// </summary>
 	public class GSTCPPacketOut : PacketOut
 	{
+		private byte m_packetCode;
+		
+		/// <summary>
+		/// This Packet Byte Handling Code
+		/// </summary>
+		public byte PacketCode {
+			get { return m_packetCode; }
+		}
+		
 		/// <summary>
 		/// Constructor
 		/// </summary>
 		/// <param name="packetCode">ID of the packet</param>
 		public GSTCPPacketOut(byte packetCode)
 		{
+			m_packetCode = packetCode;
 			base.WriteShort(0x00); //reserved for size
 			base.WriteByte(packetCode);
 		}
@@ -41,6 +51,7 @@ namespace DOL.GS.PacketHandler
 		/// <param name="packetCode">ID of the packet</param>
 		public GSTCPPacketOut(byte packetCode, int startingSize) : base(startingSize + 3)
 		{
+			m_packetCode = packetCode;
 			base.WriteShort(0x00); //reserved for size
 			base.WriteByte(packetCode);
 		}

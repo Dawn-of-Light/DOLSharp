@@ -27,7 +27,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	/// No longer used after version 1.104
 	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP, 0x68 ^ 168, "Handles character delete requests")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.CharacterDeleteRequest, "Handles character delete requests", eClientStatus.LoggedIn)]
 	public class CharacterDeleteRequestHandler : IPacketHandler
 	{
 		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

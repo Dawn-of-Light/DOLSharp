@@ -23,7 +23,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	/// Handles effect cancel requests
 	/// </summary>
-	[PacketHandler(PacketHandlerType.TCP, eClientPackets.PlayerCancelsEffect, ClientStatus.PlayerInGame)]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.PlayerCancelsEffect, "Handle Player Effect Cancel Request.", eClientStatus.PlayerInGame)]
 	public class PlayerCancelsEffectHandler : IPacketHandler
 	{
 		#region IPacketHandler Members

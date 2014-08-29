@@ -20,7 +20,7 @@ using System.Collections.Generic;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, 0x01, "Change handler for outside/inside look (houses).")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.HouseEdit, "Change handler for outside/inside look (houses).", eClientStatus.PlayerInGame)]
 	public class HouseEditHandler : IPacketHandler
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
