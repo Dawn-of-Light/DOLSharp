@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 using DOL.GS;
 using DOL.Database;
@@ -45,7 +44,7 @@ namespace DOL.GS
 			
 			m_owner = owner;
 			m_tradeAccept = false;
-			m_tradeItems = new List<InventoryItem>(10);
+			m_tradeItems = new ArrayList(10);
 			m_tradeMoney = 0;
 			m_combine = false;
 			m_repair = false;
@@ -58,7 +57,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds a list of tradeitems we offer to the other player
 		/// </summary>
-		protected List<InventoryItem> m_tradeItems;
+		protected ArrayList m_tradeItems;
 		/// <summary>
 		/// Holds money we offer to the other player
 		/// </summary>
@@ -103,16 +102,16 @@ namespace DOL.GS
 		/// <summary>
 		/// Returns the array of items we offer for trade
 		/// </summary>
-		public IList<InventoryItem> TradeItems
+		public ArrayList TradeItems
 		{
 			get { return m_tradeItems; }
-			set { m_tradeItems = (List<InventoryItem>)value; }
+			set { m_tradeItems = value; }
 		}
 
 		/// <summary>
 		/// Returns the array of items the partner offer for trade
 		/// </summary>
-		public IList<InventoryItem> PartnerTradeItems
+		public ArrayList PartnerTradeItems
 		{
 			get { return m_partnerWindow.TradeItems; }
 		}
@@ -289,7 +288,7 @@ namespace DOL.GS
                 AbstractCraftingSkill skill = null;
                 lock (m_owner.TradeWindow.Sync)
                 {
-                	foreach (InventoryItem i in new List<InventoryItem>(m_owner.TradeWindow.TradeItems))
+                    foreach (InventoryItem i in (ArrayList)m_owner.TradeWindow.TradeItems.Clone())
                     {
                         if (i.Object_Type == (int)eObjectType.AlchemyTincture)
                         {
@@ -496,7 +495,7 @@ namespace DOL.GS
                     AbstractCraftingSkill skill = null;
                     lock (crafter.TradeWindow.Sync)
                     {
-                    	foreach (InventoryItem i in new List<InventoryItem>(crafter.TradeWindow.TradeItems))
+                        foreach (InventoryItem i in (ArrayList)crafter.TradeWindow.TradeItems.Clone())
                         {
                             if (i.Object_Type == (int)eObjectType.AlchemyTincture)
                             {
@@ -574,8 +573,8 @@ namespace DOL.GS
 					m_partnerWindow.m_changesCount++;
 
 					// must be cloned because Inventory.RemoveItem removes it from trade window
-					List<InventoryItem> ownerTradeItems = new List<InventoryItem>(TradeItems);
-					List<InventoryItem> partnerTradeItems = new List<InventoryItem>(m_partnerWindow.TradeItems);
+					ArrayList ownerTradeItems = (ArrayList) TradeItems.Clone();
+					ArrayList partnerTradeItems = (ArrayList) m_partnerWindow.TradeItems.Clone();
 
 					// remove all items first to make sure there is enough space
 					// if inventory is full but removed items count >= received count

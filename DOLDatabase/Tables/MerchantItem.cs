@@ -32,7 +32,7 @@ namespace DOL
 			private string		m_id_nb;
 			private byte		m_page_number;
 			private ushort		m_slot_pos;
-			private uint		m_id;
+			private int			m_id;
 
 
 			public MerchantItem()
@@ -43,13 +43,13 @@ namespace DOL
 			/// Primary Key
 			/// </summary>
 			[PrimaryKey(AutoIncrement=true)]
-			public uint ID
+			public int ID
 			{
 				get { return m_id; }
 				set { m_id = value; }
 			}
 			
-			[DataElement(AllowDbNull=false, Index=true, IndexColumns="PageNumber,SlotPosition")]
+			[DataElement(AllowDbNull=false, Index=true, IndexColumns="PageNumber,SlotPosition", Varchar = 150)]
 			public string ItemListID
 			{
 				get

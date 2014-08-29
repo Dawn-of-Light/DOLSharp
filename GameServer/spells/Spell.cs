@@ -53,7 +53,6 @@ namespace DOL.GS
 		protected readonly string m_message3 = "";
 		protected readonly string m_message4 = "";
 		protected readonly ushort m_effectID = 0;
-		protected readonly ushort m_icon = 0;
 		protected readonly int m_instrumentRequirement = 0;
 		protected readonly int m_spellGroup = 0;
 		protected readonly int m_effectGroup = 0;
@@ -71,6 +70,9 @@ namespace DOL.GS
 		protected readonly bool m_allowbolt = false;
 		protected int m_overriderange = 0;
 		protected bool m_isShearable = false;
+		// Composite Params
+		protected string m_params = string.Empty;
+		
 		
 		#region member access properties
 		#region warlocks
@@ -110,11 +112,6 @@ namespace DOL.GS
 		public ushort ClientEffect
 		{
 			get { return m_effectID; }
-		}
-
-		public ushort Icon
-		{
-			get { return m_icon; }
 		}
 
 		public string Description
@@ -294,6 +291,17 @@ namespace DOL.GS
 			get { return m_isShearable; }
 			set { m_isShearable = value; }
 		}
+		
+		/// <summary>
+		/// Composite Spell Params
+		/// </summary>
+		public string Params
+		{
+			get
+			{
+				return m_params;
+			}
+		}
 
         /// <summary>
         /// Whether or not this spell is harmful.
@@ -328,7 +336,7 @@ namespace DOL.GS
         }
 
         public Spell(DBSpell dbspell, int requiredLevel, bool minotaur)
-			: base(dbspell.Name, (ushort)dbspell.SpellID, requiredLevel)
+        	: base(dbspell.Name, (ushort)dbspell.SpellID, (ushort)dbspell.Icon, requiredLevel)
 		{
 			m_description = dbspell.Description;
 			m_target = dbspell.Target;
@@ -355,7 +363,6 @@ namespace DOL.GS
 			m_message3 = dbspell.Message3;
 			m_message4 = dbspell.Message4;
 			m_effectID = (ushort)dbspell.ClientEffect;
-			m_icon = (ushort)dbspell.Icon;
 			m_instrumentRequirement = dbspell.InstrumentRequirement;
 			m_spellGroup = dbspell.SpellGroup;
 			m_effectGroup = dbspell.EffectGroup;
@@ -369,6 +376,7 @@ namespace DOL.GS
 			m_allowbolt = dbspell.AllowBolt;
             m_sharedtimergroup = dbspell.SharedTimerGroup;
             m_minotaurspell = minotaur;
+            m_params = dbspell.Params;
 		}
 
 		/// <summary>
@@ -378,7 +386,7 @@ namespace DOL.GS
 		/// <param name="spell"></param>
 		/// <param name="spellType"></param>
 		public Spell(Spell spell, string spellType) :
-			base(spell.Name, (ushort)spell.ID, spell.Level)
+			base(spell.Name, spell.ID, spell.Icon, spell.Level)
 		{
 			m_description = spell.Description;
 			m_target = spell.Target;
@@ -418,8 +426,60 @@ namespace DOL.GS
 			m_allowbolt = spell.AllowBolt;
 			m_sharedtimergroup = spell.SharedTimerGroup;
 			m_minotaurspell = spell.m_minotaurspell;
+            m_params = spell.m_params;
+			
 		}
 
+		/// <summary>
+		/// Make a copy of a spell but change the spell value
+		/// Usefull for customization of spells by providing custom spell handlers
+		/// </summary>
+		/// <param name="spell"></param>
+		/// <param name="spellValue"></param>
+		public Spell(Spell spell, double spellValue) :
+			base(spell.Name, spell.ID, spell.Icon, spell.Level)
+		{
+			m_description = spell.Description;
+			m_target = spell.Target;
+			m_spelltype = spell.SpellType;
+			m_range = spell.Range;
+			m_radius = spell.Radius;
+			m_value = spellValue;  // replace spell value
+			m_damage = spell.Damage;
+			m_damageType = spell.DamageType;
+			m_concentration = spell.Concentration;
+			m_duration = spell.Duration;
+			m_frequency = spell.Frequency;
+			m_pulse = spell.Pulse;
+			m_pulse_power = spell.PulsePower;
+			m_power = spell.Power;
+			m_casttime = spell.CastTime;
+			m_recastdelay = spell.RecastDelay;
+			m_reshealth = spell.ResurrectHealth;
+			m_resmana = spell.ResurrectMana;
+			m_lifedrain_return = spell.LifeDrainReturn;
+			m_amnesia_chance = spell.AmnesiaChance;
+			m_message1 = spell.Message1;
+			m_message2 = spell.Message2;
+			m_message3 = spell.Message3;
+			m_message4 = spell.Message4;
+			m_effectID = spell.ClientEffect;
+			m_icon = spell.Icon;
+			m_instrumentRequirement = spell.InstrumentRequirement;
+			m_spellGroup = spell.Group;
+			m_effectGroup = spell.EffectGroup;
+			m_subSpellID = spell.SubSpellID;
+			m_moveCast = spell.MoveCast;
+			m_uninterruptible = spell.Uninterruptible;
+			m_isfocus = spell.IsFocus;
+			m_isprimary = spell.IsPrimary;
+			m_issecondary = spell.IsSecondary;
+			m_allowbolt = spell.AllowBolt;
+			m_sharedtimergroup = spell.SharedTimerGroup;
+			m_minotaurspell = spell.m_minotaurspell;
+			m_params = spell.m_params;
+		}
+		
 		/// <summary>
 		/// Make a shallow copy of this spell
 		/// Always make a copy before attempting to modify any of the spell values
@@ -482,6 +542,8 @@ namespace DOL.GS
 			delve.Add(String.Format("Target: {0}", target));
 		}
 
+		#region Spell Helpers
+		
         /// <summary>
         /// Whether or not the spell is instant cast.
         /// </summary>
@@ -492,5 +554,127 @@ namespace DOL.GS
                 return (CastTime <= 0);
             }
         }
+        
+        /// <summary>
+        /// Wether or not the spell is Point Blank Area of Effect
+        /// </summary>
+        public bool IsPBAoE
+        {
+        	get
+        	{
+        		return (Range == 0 && IsAoE);
+        	}
+        }
+        
+        /// <summary>
+        /// Wether or not this spell need Instrument (and is a Song)
+        /// </summary>
+        public bool NeedInstrument
+        {
+        	get
+        	{
+        		return InstrumentRequirement != 0;
+        	}
+        }
+        
+        /// <summary>
+        /// Wether or not this spell is an Area of Effect Spell
+        /// </summary>
+        public bool IsAoE
+        {
+        	get
+        	{
+        		return Radius > 0;
+        	}
+        }
+        
+        /// <summary>
+        /// Wether this spell Has valid SubSpell 
+        /// </summary>
+        public bool HasSubSpell
+        {
+        	get
+        	{
+        		return SubSpellID > 0;
+        	}
+        }
+        
+        /// <summary>
+        /// Wether this spell has a recast delay (cooldown)
+        /// </summary>
+        public bool HasRecastDelay
+        {
+        	get
+        	{
+        		return RecastDelay > 0;
+        	}
+        }
+        
+        /// <summary>
+        /// Wether this spell is concentration based
+        /// </summary>
+        public bool IsConcentration
+        {
+        	get
+        	{
+        		return Concentration > 0;
+        	}
+        }
+        
+        /// <summary>
+        /// Wether this spell has power usage.
+        /// </summary>
+        public bool UsePower
+        {
+        	get
+        	{
+        		return Power != 0;
+        	}
+        }
+
+        /// <summary>
+        /// Wether this spell has pulse power usage.
+        /// </summary>
+        public bool UsePulsePower
+        {
+        	get
+        	{
+        		return PulsePower != 0;
+        	}
+        }
+        
+        /// <summary>
+        /// Wether this Spell is a pulsing spell (Song/Chant)
+        /// </summary>
+        public bool IsPulsing
+        {
+        	get
+        	{
+        		return Pulse != 0;
+        	}
+        }
+        
+        /// <summary>
+        /// Wether this Spell is a Song/Chant
+        /// </summary>
+        public bool IsChant
+        {
+        	get
+        	{
+        		return Pulse != 0 && !IsFocus;
+        	}
+        }
+        
+        /// <summary>
+        /// Wether this Spell is a Pulsing Effect (Dot/Hot...)
+        /// </summary>
+        public bool IsPulsingEffect
+        {
+        	get
+        	{
+        		return Frequency > 0 && !IsPulsing;
+        	}
+        }
+        #endregion
 	}
 }

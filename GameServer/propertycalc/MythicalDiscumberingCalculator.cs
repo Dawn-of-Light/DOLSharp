@@ -32,7 +32,7 @@ namespace DOL.GS.PropertyCalc
         {
             if (living is GamePlayer)
             {
-                return living.ItemBonus[(int)property];
+                return living.ItemBonus[property];
             }
             return 0;
         }

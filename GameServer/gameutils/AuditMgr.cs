@@ -166,7 +166,7 @@ namespace DOL.GS
 			// create the transaction
 			var transactionHistory = new AuditEntry
 			                         	{
-			                         		AuditTime = DateTime.UtcNow,
+			                         		AuditTime = DateTime.Now,
 			                         		AuditType = type,
 			                         		AuditSubtype = subType,
 			                         		OldValue = oldValue,
@@ -199,7 +199,7 @@ namespace DOL.GS
 			// create the transaction
 			var transactionHistory = new AuditEntry
 			                         	{
-			                         		AuditTime = DateTime.UtcNow,
+			                         		AuditTime = DateTime.Now,
 			                         		AuditType = type,
 			                         		AuditSubtype = subType,
 			                         		OldValue = oldValue,

@@ -28,7 +28,9 @@ namespace DOL.GS.RealmAbilities
 			GamePlayer player = living as GamePlayer;
 			if (player != null)
 			{
-				player.RemoveDisabledSkill(SkillBase.GetAbility(Abilities.Quickcast));
+				Skill skl = SkillBase.GetAbility(Abilities.Quickcast);
+				player.RemoveDisabledSkill(skl);
+				player.Out.SendDisableSkill(skl, 1);
 			}
 			DisableSkill(living);
 		}

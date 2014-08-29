@@ -45,6 +45,10 @@ namespace DOL.GS.PlayerTitles
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Deathblows.BattleMaster");
 		}
 
+		public override string GetValue(GamePlayer source, GamePlayer target)
+		{
+			return LanguageMgr.GetTranslation(source.Client.Account.Language, "Titles.Deathblows.BattleMaster");
+		}
 
 		/// <summary>
 		/// The event to hook.

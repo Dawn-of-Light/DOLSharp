@@ -46,7 +46,7 @@ namespace DOL.GS.RealmAbilities
 			GamePlayer player = living as GamePlayer;
 			if (player != null)
 			{
-				List<GameLiving> targets = new List<GameLiving>();
+				ArrayList targets = new ArrayList();
 				if (player.Group == null)
 					targets.Add(player);
 				else

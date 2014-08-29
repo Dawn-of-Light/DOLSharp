@@ -45,7 +45,7 @@ namespace DOL.GS.Spells
 			base.ApplyEffectOnTarget(target, effectiveness);
 		}
 
-		protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
+		public override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
 		{
 			return new GameSpellEffect(this, Spell.Duration, Spell.Frequency, effectiveness);
 		}

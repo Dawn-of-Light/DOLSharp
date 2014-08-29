@@ -57,6 +57,18 @@ namespace DOL.GS.ServerProperties
 		public static bool ENABLE_DEBUG;
 
 		/// <summary>
+		/// Log all Incoming Client Packets.
+		/// </summary>
+		[ServerProperty("system", "enable_debug_incoming_packets", "Enable Incoming Packet Debug mode? Used to trace all incoming client packets.", false)]
+		public static bool ENABLE_DEBUG_INCOMING_PACKETS;		
+
+		/// <summary>
+		/// Log all Outgoing Server Packets.
+		/// </summary>
+		[ServerProperty("system", "enable_debug_outgoing_packets", "Enable Incoming Packet Debug mode? Used to trace all outgoing client packets.", false)]
+		public static bool ENABLE_DEBUG_OUTGOING_PACKETS;
+		
+		/// <summary>
 		/// Whether to use the sync timer utility or not
 		/// </summary>
 		[ServerProperty("system", "use_sync_timer", "Shall we use the sync timers utility?", true)]
@@ -199,6 +211,9 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("system", "db_language", "What language is the DB", "EN")]
 		public static readonly string DB_LANGUAGE;
 
+		[ServerProperty("system", "statprint_enabled", "Statistics should be printed on the server console?", true)]
+		public static bool STATPRINT_ENABLED;
+
 		[ServerProperty("system", "statprint_frequency", "How often (milliseconds) should statistics be printed on the server console.", 30000)]
 		public static int STATPRINT_FREQUENCY;
 
@@ -273,7 +288,18 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("system", "enable_audit_log", "Whether or not to enable the audit log", false)]
 		public static bool ENABLE_AUDIT_LOG;
+		
+		/// <summary>
+		/// Enable a periodic server shutdown. If you run your server into a batch loop, this performs a restart.
+		/// </summary>
+		[ServerProperty("system", "hours_uptime_between_shutdown", "Hours between a scheduled server shutdown (-1 = no scheduled restart)", -1)]
+		public static int HOURS_UPTIME_BETWEEN_SHUTDOWN;
 
+		/// <summary>
+		/// Use the NPC Guild Scripts
+		/// </summary>
+		[ServerProperty("system", "use_npcguildscripts", "Use the NPC Guild Scripts", true)]
+		public static bool USE_NPCGUILDSCRIPTS;
 		#endregion
 
 		#region LOGGING
@@ -538,11 +564,14 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("world", "world_day_increment", "Day Increment (0 to 512, default is 24).  Larger increments make shorter days.", (uint)24)]
 		public static uint WORLD_DAY_INCREMENT;
 
-		[ServerProperty("world", "world_npc_update_interval", "How often (milliseconds) will npc's broadcast updates to the clients. Minimum allowed = 1000 (1 second).", (uint)30000)]
+		[ServerProperty("world", "world_npc_update_interval", "How often (milliseconds) will npc's broadcast updates to the clients. Minimum allowed = 1000 (1 second). 0 will disable this update.", (uint)10000)]
 		public static uint WORLD_NPC_UPDATE_INTERVAL;
 
 		[ServerProperty("world", "world_object_update_interval", "How often (milliseconds) will objects (static, housing, doors, broadcast updates to the clients. Minimum allowed = 10000 (10 seconds). 0 will disable this update.", (uint)30000)]
 		public static uint WORLD_OBJECT_UPDATE_INTERVAL;
+
+		[ServerProperty("world", "world_playertoplayer_update_interval", "How often (milliseconds) will other players packet be broadcasted again to the clients. Minimum allowed = 1000 (1 seconds). 0 will disable this update.", (uint)1000)]
+		public static uint WORLD_PLAYERTOPLAYER_UPDATE_INTERVAL;
 
 		[ServerProperty("world", "world_player_update_interval", "How often (milliseconds) will players be checked for updates. Minimum allowed = 100 (100 milliseconds).", (uint)300)]
 		public static uint WORLD_PLAYER_UPDATE_INTERVAL;
@@ -649,7 +678,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Line of Sight Manager Query Timeout
 		/// </summary>
-		[ServerProperty("world", "losmgr_query_timeout", "Timeout (in milliseconds) until Line of Sight (LoS) Manager tries to resend a LoS check, 0 to disable (don't get under 100ms except for Local Network).", 300)]
+		[ServerProperty("world", "losmgr_query_timeout", "Timeout (in milliseconds) until Line of Sight (LoS) Manager tries to resend a LoS check, -1 to disable (don't get under 100ms except for Local Network).", 300)]
 		public static int LOSMGR_QUERY_TIMEOUT;
 
 		/// <summary>
@@ -901,6 +930,12 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("rates", "mount_over_level_35_speed", "What is the speed of player controlled mounts over level 35?", (short)145)]
 		public static short MOUNT_OVER_LEVEL_35_SPEED;
 
+		/// <summary>
+		/// Relic Bonus Modifier
+		/// </summary>
+		[ServerProperty("rates", "relic_owning_bonus", "Relic Owning Bonus in percent per relic (default 10%) in effect when owning enemy relic", (short)10)]
+		public static short RELIC_OWNING_BONUS;		
+		
 		#endregion
 
 		#region NPCs
@@ -1086,12 +1121,6 @@ namespace DOL.GS.ServerProperties
 		public static string RVR_LINK_DEATH_RELOG_GRACE_PERIOD;
 
 		/// <summary>
-		/// Adjustment to base missrate for PvP
-		/// </summary>
-		[ServerProperty("pvp", "missrate_default_base_pvp", "Adjustment to default missrate base for PvP", 10)]
-		public static int MISSRATE_DEFAULT_BASE_PVP;
-		
-		/// <summary>
 		/// PvP Immunity Timer - Killed by Mobs
 		/// </summary>
 		[ServerProperty("pvp", "Timer_Killed_By_Mob", "Immunity Timer When player killed in PvP, in seconds", 30)] //30 seconds default
@@ -1168,6 +1197,18 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("pvp", "enable_warmapmgr", "Shall we enable the WarMap manager ?", false)]
 		public static bool ENABLE_WARMAPMGR;
+		
+		/// <summary>
+		/// Adjustment to base missrate for PvP
+		/// </summary>
+		[ServerProperty("pvp", "missrate_default_base_pvp", "Adjustment to default missrate base for PvP", 10)]
+		public static int MISSRATE_DEFAULT_BASE_PVP;
+
+		/// <summary>
+		/// Adjustment to spell resist chance for Player Target
+		/// </summary>
+		[ServerProperty("pvp", "spell_resistchance_player_bonus", "Adjustment to spell resist chance on Player targetted spells.(ratio ResistChance * x)", 1.0)]
+		public static double SPELL_RESISTCHANCE_PLAYER_BONUS;
 		#endregion
 
 		#region KEEPS
@@ -1404,25 +1445,50 @@ namespace DOL.GS.ServerProperties
 
 		#region PVE / TOA
 		/// <summary>
+		/// Adjustment to base missrate for PvE
+		/// </summary>
+		[ServerProperty("pve", "missrate_default_base_pve", "Adjustment to default missrate base for PvE", 15)]
+		public static int MISSRATE_DEFAULT_BASE_PVE;
+		
+		
+		/// <summary>
 		/// Adjustment to missrate per number of attackers
 		/// </summary>
 		[ServerProperty("pve", "missrate_reduction_per_attackers", "Adjustment to missrate per number of attackers", 0)]
 		public static int MISSRATE_REDUCTION_PER_ATTACKERS;
 
 		/// <summary>
-		/// Adjustment to base missrate for PvE
-		/// </summary>
-		[ServerProperty("pve", "missrate_default_base_pve", "Adjustment to default missrate base for PvE", 15)]
-		public static int MISSRATE_DEFAULT_BASE_PVE;
-
-		/// <summary>
 		/// Spell damage reduction multiplier based on hitchance below 55%.
 		/// Default is 4.3, which will produce the minimum 1 damage at a 33% chance to hit
 		/// Lower numbers reduce damage reduction
 		/// </summary>
-		[ServerProperty("pve", "spell_hitchance_damage_reduction_multiplier", "Spell damage reduction multiplier based on hitchance if < 55%. Lower numbers reduce damage reduction.", 4.3)]
+		[ServerProperty("pve", "spell_hitchance_damage_reduction_multiplier", "Spell damage reduction multiplier based on hitchance if < 55%. Lower numbers reduce damage reduction. (in %)", 2.2)]
 		public static double SPELL_HITCHANCE_DAMAGE_REDUCTION_MULTIPLIER;
+		
+		/// <summary>
+		/// Spell damage raise multiplier based on hitchance above 100%.
+		/// Max overhit is 10 in PvP (level 50 vs 20--) Max overhit is 110 in PvM (level 50 vs 1)
+		/// higher numbers raise damage
+		/// </summary>
+		[ServerProperty("pve", "spell_hitchance_damage_raise_multiplier", "Spell damage raise multiplier based on hitchance if > 100%. higher numbers raise damage. (in %)", 1.25)]
+		public static double SPELL_HITCHANCE_DAMAGE_RAISE_MULTIPLIER;
 
+		/// <summary>
+		/// Archery damage reduction multiplier based on hitchance below 85%.
+		/// Default is 1.5, which will produce the minimum 1 damage at a 20% chance to hit
+		/// Lower numbers reduce damage reduction
+		/// </summary>
+		[ServerProperty("pve", "archery_hitchance_damage_reduction_multiplier", "Archery damage reduction multiplier based on hitchance if < 85%. Lower numbers reduce damage reduction.", 1.5)]
+		public static double ARCHERY_HITCHANCE_DAMAGE_REDUCTION_MULTIPLIER;
+
+		/// <summary>
+		/// Archery damage raise multiplier based on hitchance above 100%.
+		/// Max overhit is 10 in PvP (level 50 vs 20--) Max overhit is 110 in PvM (level 50 vs 1)
+		/// higher numbers raise damage
+		/// </summary>
+		[ServerProperty("pve", "archery_hitchance_damage_raise_multiplier", "Archery damage raise multiplier based on hitchance if > 100%. higher numbers raise damage. (in %)", 0.5)]
+		public static double ARCHERY_HITCHANCE_DAMAGE_RAISE_MULTIPLIER;
+		
 		/// <summary>
 		/// TOA Artifact XP rate
 		/// </summary>
@@ -1474,26 +1540,98 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Atlantean Glass Loot Generator Drop Base Chance
 		/// </summary>
-		[ServerProperty("pve", "lootgenerator_atlanteanglass_base_chance", "Base chance for dropping Atlantean Glass using Loot Generator.", 10)]
+		[ServerProperty("pve", "lootgenerator_atlanteanglass_base_chance", "Base chance for dropping Atlantean Glass using Loot Generator.", 20)]
 		public static int LOOTGENERATOR_ATLANTEANGLASS_BASE_CHANCE;
 		
 		/// <summary>
 		/// Atlantean Glass Loot Generator Named Boost Count
 		/// </summary>
-		[ServerProperty("pve", "lootgenerator_atlanteanglass_named_count", "Increase count of Atlantean Glass Loot Generator drop for Named mobs. (count * lootgenerator_aurulite_named_count)", 1.5)]
+		[ServerProperty("pve", "lootgenerator_atlanteanglass_named_count", "Increase count of Atlantean Glass Loot Generator drop for Named mobs. (count * lootgenerator_atlanteanglass_named_count)", 1.5)]
 		public static double LOOTGENERATOR_ATLANTEANGLASS_NAMED_COUNT;
 		
 		/// <summary>
 		/// Dragon Scales Loot Generator Drop Base Chance
 		/// </summary>
-		[ServerProperty("pve", "lootgenerator_dragonscales_base_chance", "Base chance for dropping Dragon Scales using Loot Generator.", 10)]
+		[ServerProperty("pve", "lootgenerator_dragonscales_base_chance", "Base chance for dropping Dragon Scales using Loot Generator.", 20)]
 		public static int LOOTGENERATOR_DRAGONSCALES_BASE_CHANCE;
 		
 		/// <summary>
 		/// Dragon Scales Loot Generator Named Boost Count
 		/// </summary>
-		[ServerProperty("pve", "lootgenerator_dragonscales_named_count", "Increase count of Dragon Sclaes Loot Generator drop for Named mobs. (count * lootgenerator_aurulite_named_count)", 1.5)]
+		[ServerProperty("pve", "lootgenerator_dragonscales_named_count", "Increase count of Dragon Scales Loot Generator drop for Named mobs. (count * lootgenerator_dragonscales_named_count)", 1.5)]
 		public static double LOOTGENERATOR_DRAGONSCALES_NAMED_COUNT;
+
+		/// <summary>
+		/// Dragon Scales Loot Generator Named Boost Count
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_droptemplate_untemplated_count", "For Lootgenerator Drop Template, this rise the default dropcount from 1 to 1 + property (untemplated mob only)", 2)]
+		public static int LOOTGENERATOR_DROPTEMPLATE_UNTEMPLATED_COUNT;
+
+		/// <summary>
+		/// Seal Loot Generator Drop Base Chance
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_seals_base_chance", "Base chance for dropping Seals using Loot Generator.", 70)]
+		public static int LOOTGENERATOR_SEALS_BASE_CHANCE;
+		
+		/// <summary>
+		/// Seal Loot Generator Named Boost Count
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_seals_named_count", "Increase count of Seals Loot Generator drop for Named mobs. (count * lootgenerator_Seals_named_count)", 1.5)]
+		public static double LOOTGENERATOR_SEALS_NAMED_COUNT;
+		
+		/// <summary>
+		/// Seal Loot Generator Minimum drop level for Emerald
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_seals_min_droplvl_emerald", "Minimum drop level for Emerald Seals using lootgenerator.", 10)]
+		public static int LOOTGENERATOR_SEALS_MIN_DROPLVL_EMERALD;
+		
+		/// <summary>
+		/// Seal Loot Generator Minimum drop level for Saphir
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_seals_min_droplvl_saphir", "Minimum drop level for Saphir Seals using lootgenerator.", 35)]
+		public static int LOOTGENERATOR_SEALS_MIN_DROPLVL_SAPHIR;
+		
+		/// <summary>
+		/// Seal Loot Generator Minimum drop level for Diamond
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_seals_min_droplvl_diamond", "Minimum drop level for Diamond Seals using lootgenerator.", 50)]
+		public static int LOOTGENERATOR_SEALS_MIN_DROPLVL_DIAMOND;
+
+		/// <summary>
+		/// Mythirian Loot Generator Drop Base Chance
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_mythirian_base_chance", "Base chance for dropping Mythirian using Loot Generator.", 10)]
+		public static int LOOTGENERATOR_MYTHIRIAN_BASE_CHANCE;
+		
+		/// <summary>
+		/// Mythirian Loot Generator Drop Base Chance
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_mythirian_named_chance", "Named Mobs chance for dropping Mythirian using Loot Generator.", 80)]
+		public static int LOOTGENERATOR_MYTHIRIAN_NAMED_CHANCE;
+		
+		/// <summary>
+		/// Mythirian Loot Generator Minimum drop level for CL6
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_mythirian_min_droplvl_cl6", "Minimum drop level for CL6 Mythirian using Loot Generator.", 45)]
+		public static int LOOTGENERATOR_MYTHIRIAN_MIN_DROPLVL_CL6;
+		
+		/// <summary>
+		/// Mythirian Loot Generator Minimum drop level for CL8
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_mythirian_min_droplvl_cl8", "Minimum drop level for CL8 Mythirian using Loot Generator.", 54)]
+		public static int LOOTGENERATOR_MYTHIRIAN_MIN_DROPLVL_CL8;
+		
+		/// <summary>
+		/// Mythirian Loot Generator Minimum drop level for CL10
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_mythirian_min_droplvl_cl10", "Minimum drop level for CL10 Mythirian using Loot Generator.", 64)]
+		public static int LOOTGENERATOR_MYTHIRIAN_MIN_DROPLVL_CL10;
+		
+		/// <summary>
+		/// Adjustment to spell resist chance for Living Target
+		/// </summary>
+		[ServerProperty("pve", "spell_resistchance_living_bonus", "Adjustment to spell resist chance on NPC targetted spells.(ratio ResistChance * x)", 1.0)]
+		public static double SPELL_RESISTCHANCE_LIVING_BONUS;		
 		#endregion
 
 		#region HOUSING
@@ -1753,10 +1891,9 @@ namespace DOL.GS.ServerProperties
 		
 		[ServerProperty("spells", "spell_charm_named_check", "Prevents charm spell to work on Named Mobs, 0 = disable, 1 = enable", 1)]
 		public static int SPELL_CHARM_NAMED_CHECK;
-		
+
 		[ServerProperty("spells", "spell_gtae_need_los", "Does GTAE spells Need LoS to be Casted ?", true)]
 		public static bool SPELL_GTAE_NEED_LOS;
-
 		#endregion
 
 		#region GUILDS / ALLIANCES
@@ -1920,17 +2057,16 @@ namespace DOL.GS.ServerProperties
 
 
 		#endregion
-		
+
 		#region Freyad
 		/// <summary>
 		/// Regions allowed for Freyad Helper Summon
 		/// </summary>
 		[ServerProperty("freyad", "portable_helper_forbidden_regions", "Regions forbidden to summon Freyad Helper, seperated by semicolon", "163;249")]
 		public static string PORTABLE_HELPER_FORBIDDEN_REGIONS;
-		
-		
+				
 		#endregion
-
+		
 		/// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
@@ -1959,7 +2095,9 @@ namespace DOL.GS.ServerProperties
 			{
 				//we do this because we need "1.0" to be considered double sometimes its "1,0" in other countries
 				CultureInfo myCIintl = new CultureInfo("en-US", false);
+				myCIintl.NumberFormat.NumberDecimalSeparator = ".";
 				IFormatProvider provider = myCIintl.NumberFormat;
+				
 				return Convert.ChangeType(property.Value, attrib.DefaultValue.GetType(), provider);
 			}
 			catch (Exception e)

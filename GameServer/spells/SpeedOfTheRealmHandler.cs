@@ -43,7 +43,7 @@ namespace DOL.GS.Spells
 				player.Out.SendSpellCastAnimation(Caster, SECONDEFFECT, 20);
 		}
 
-		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
+		public override int CalculateEffectDuration(GameLiving target, double effectiveness)
 		{
 			return Spell.Duration;
 		}

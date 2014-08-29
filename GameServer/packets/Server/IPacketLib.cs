@@ -141,36 +141,87 @@ namespace DOL.GS.PacketHandler
 		CharacterOverview = 0xFD,
 		Realm = 0xFE,
 		MasterLevelWindow = 0x13,
+		CheckLOSRequest = 0xD0,
 	}
 
 	public enum eClientPackets : byte
 	{
-		PlayerCancelsEffect = 0xF8,			// 0x50 ^ 168
+		PlayerCancelsEffect = 0xF8,			// 0x50 ^ 168 (168 = 0xA8)
 		PlayerAttackRequest = 0x74,			// 0xDC ^ 168
 		PlayerAppraiseItemRequest = 0xE0,	// 0x48 ^ 168
-		PetWindow = 0x8A,
+		PetWindow = 0x8A,					// 0x22 ^ 168
 		ObjectInteractRequest = 0x7A,		// 0xD2 ^ 168
 		InviteToGroup = 0x87,				// 0x2F ^ 168
-		HouseEnterLeave = 0x0B,
+		HouseEnterLeave = 0x0B,				// 0xA3 ^ 168
 		DoorRequest = 0x99,					// 0x31 ^ 168
 		DisbandFromGroup = 0xA8,			// 0x37 ^ 168
 		DialogResponse = 0x82,				// 0x2A ^ 168
-		CheckLOSRequest = 0xD0,
-		WorldInit = 0xD4,					// 0x7C ^ 168
+		CheckLOSRequest = 0xD0,				// 0x78 ^ 168
 		UseSpell = 0x7D,					// 0xD5 ^ 168
 		UseSlot = 0x71,						// 0xD9 ^ 168
 		UseSkill = 0xBB,					// 0x13 ^ 168
 		RemoveConcentrationEffect = 0x76,	// 0xDE ^ 168
 		PlayerRegionChangeRequest = 0x90,	// 0x38 ^ 168
-		QuestRewardChosen = 0x40,
+		QuestRewardChosen = 0x40,			// 0xE8 ^ 168
 		PlayerTarget = 0xB0,				// 0x18 ^ 168
 		PlayerSitRequest = 0xC7,			// 0x6F ^ 168
 		PlayerInitRequest = 0xE8,			// 0x40 ^ 168
 		PlayerGroundTarget = 0xEC,			// 0x44 ^ 168
 		PlayerDismountRequest = 0xC8,		// 0x60 ^ 168
 		PlayerHeadingUpdate = 0xBA,			// 0x12 ^ 168  also known as Short State
-		PlayerPickupHouseItem = 0x0D,
-		PlayerMoveItem = 0x75 ^ 168,
+		PlayerPickupHouseItem = 0x0D,		// 0xA5 ^ 168
+		PlayerMoveItem = 0xDD,				// 0x75 ^ 168
+		DetailRequest = 0xD8,				// 0x70 ^ 168
+		BuyHookPoint = 0x64,				// 0xCC ^ 168
+		CharacterCreateRequest = 0xFF,		// 0x57 ^ 168
+		CharacterDeleteRequest = 0xC0, 		// 0x68 ^ 168
+		CharacterOverviewRequest = 0xFC, 	// 0x54 ^ 168
+		CharacterSelectRequest = 0x10, 		// 0xB8 ^ 168
+		ClientCrash = 0x37, 				// 0x9F ^ 168
+		CryptKeyRequest = 0xF4, 			// 0x5C ^ 168
+		DestroyItemRequest = 0x80, 			// 0x28 ^ 168
+		DuplicateNameCheck = 0xCB, 			// 0x63 ^ 168
+		EmblemDialogResponse = 0xE2, 		// 0x4A ^ 168
+		GameOpenRequest = 0xBF, 			// 0x17 ^ 168
+		HouseEdit = 0x01,					// 0xA9 ^ 168
+		HousePermissionRequest = 0x05,		// 0xAD ^ 168
+		HousePermissionSet = 0x07,			// 0xAF ^ 168
+		HouseUserPermissionRequest = 0x03,	// 0xAB ^ 168
+		HouseUserPermissionSet = 0x06,		// 0xAE ^ 168
+		HouseDecorationRotate = 0x0E,		// 0xA6 ^ 168
+		HouseDecorationRequest = 0x18,		// 0xB0 ^ 168
+		HouseMenuRequest = 0x00,			// 0xA8 ^ 168
+		HousePlaceItem = 0x0C,				// 0xA4 ^ 168
+		KeepComponentInteract = 0x6F,		// 0xC7 ^ 168
+		LoginRequest = 0xA7,				// 0x0F ^ 168
+		LookingForGroupFlag = 0x84, 		// 0x2C ^ 168
+		LookingForGroup = 0x85, 			// 0x2D ^ 168
+		CraftRequest = 0xED,				// 0x45 ^ 168
+		MinotaurRelicWindow = 0x4C,			// 0xE4 ^ 168
+		CreateNPCRequest = 0xBE,			// 0x16 ^ 168
+		ObjectUpdateRequest = 0xA5,			// 0x0D ^ 168
+		PingRequest = 0xA3,					// 0x0B ^ 168
+		BonusesListRequest = 0xCA,			// 0x62 ^ 168
+		BuyRequest = 0x78,					// 0xD0 ^ 168
+		CommandHandler = 0xAF,				// 0x07 ^ 168
+		CreatePlayerRequest = 0xD5,			// 0x7D ^ 168
+		MarketSearchRequest = 0x11,			// 0xB9 ^ 168
+		ModifyTrade = 0xEB,					// 0x43 ^ 168
+		PickUpRequest = 0xB5, 				// 0x1D ^ 168
+		PositionUpdate = 0xA9,				// 0x01 ^ 168
+		SellRequest = 0x79,					// 0xD1 ^ 168
+		SetMarketPrice = 0x1A,				// 0xB2 ^ 168
+		TrainRequest = 0x7C,				// 0xD4 ^ 168
+		WithDrawMerchantMoney = 0x1C,		// 0xB4 ^ 168
+		RemoveQuestRequest = 0x4F,			// 0xE7 ^ 168
+		RegionListRequest = 0x9D,			// 0x35 ^ 168
+		ShipHookPoint = 0xE4,				// 0x4C ^ 168
+		SiegeCommandRequest = 0xF5,			// 0x5D ^ 168
+		UDPInitRequest = 0x14,				// 0xBC ^ 168
+		UDPPingRequest = 0xF2,				// 0x5A ^ 168
+		WarmapBonusRequest = 0x66,			// 0xCE ^ 168
+		ShowWarmapRequest = 0x48,			// 0xE0 ^ 168
+		WorldInitRequest = 0xD4,			// 0x7C ^ 168
 	}
 
 	/// <summary>
@@ -413,6 +464,10 @@ namespace DOL.GS.PacketHandler
 		/// 0x06: Send Consignment window in viewer / buy mode
 		/// </summary>
 		ConsignmentViewer = 0x06,
+		/// <summary>
+		/// 0x07: HorseBags
+		/// </summary>
+		HorseBags = 0x07,
 	}
 
 	/// <summary>
@@ -617,7 +672,6 @@ namespace DOL.GS.PacketHandler
 		                   bool autoWrapText, string message);
 
 		void SendCustomDialog(string msg, CustomDialogResponse callback);
-		//[Obsolete("Shouldn't be used in favor of LoSCheckMgr Handler")]
 		void SendCheckLOS(GameObject Checker, GameObject Target, CheckLOSResponse callback);
 		void SendCheckLOS(GameObject source, GameObject target, CheckLOSMgrResponse callback);
 		void SendGuildLeaveCommand(GamePlayer invitingPlayer, string inviteMessage);
@@ -641,6 +695,7 @@ namespace DOL.GS.PacketHandler
 		void SendCloseTradeWindow();
 		void SendPlayerDied(GamePlayer killedPlayer, GameObject killer);
 		void SendPlayerRevive(GamePlayer revivedPlayer);
+		void SendPlayerForgedPosition(GamePlayer player);
 		void SendUpdatePlayer();
 		void SendUpdatePlayerSkills();
 		void SendUpdateWeaponAndArmorStats();
@@ -685,18 +740,18 @@ namespace DOL.GS.PacketHandler
 		void SendLivingDataUpdate(GameLiving living, bool updateStrings);
 		void SendSoundEffect(ushort soundId, ushort zoneId, ushort x, ushort y, ushort z, ushort radius);
 		//keep
-		void SendKeepInfo(AbstractGameKeep keep);
-		void SendKeepRealmUpdate(AbstractGameKeep keep);
-		void SendKeepRemove(AbstractGameKeep keep);
-		void SendKeepComponentInfo(GameKeepComponent keepComponent);
-		void SendKeepComponentDetailUpdate(GameKeepComponent keepComponent);
-		void SendKeepClaim(AbstractGameKeep keep, byte flag);
-		void SendKeepComponentUpdate(AbstractGameKeep keep, bool LevelUp);
-		void SendKeepComponentInteract(GameKeepComponent component);
-		void SendKeepComponentHookPoint(GameKeepComponent component, int selectedHookPointIndex);
-		void SendClearKeepComponentHookPoint(GameKeepComponent component, int selectedHookPointIndex);
+		void SendKeepInfo(IGameKeep keep);
+		void SendKeepRealmUpdate(IGameKeep keep);
+		void SendKeepRemove(IGameKeep keep);
+		void SendKeepComponentInfo(IGameKeepComponent keepComponent);
+		void SendKeepComponentDetailUpdate(IGameKeepComponent keepComponent);
+		void SendKeepClaim(IGameKeep keep, byte flag);
+		void SendKeepComponentUpdate(IGameKeep keep, bool LevelUp);
+		void SendKeepComponentInteract(IGameKeepComponent component);
+		void SendKeepComponentHookPoint(IGameKeepComponent component, int selectedHookPointIndex);
+		void SendClearKeepComponentHookPoint(IGameKeepComponent component, int selectedHookPointIndex);
 		void SendHookPointStore(GameKeepHookPoint hookPoint);
-		void SendWarmapUpdate(ICollection<AbstractGameKeep> list);
+		void SendWarmapUpdate(ICollection<IGameKeep> list);
 		void SendWarmapDetailUpdate(List<List<byte>> fights, List<List<byte>> groups);
 		void SendWarmapBonuses();
 

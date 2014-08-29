@@ -47,7 +47,7 @@ namespace DOL.GS.PropertyCalc
 		{
 			if (living.IsMezzed || living.IsStunned) return 0;
 
-			double speed = living.BuffBonusMultCategory1.Get((int)property);
+			double speed = living.BuffBonusMultCategory1.Get(property);
 
 			if (living is GamePlayer)
 			{
@@ -67,7 +67,7 @@ namespace DOL.GS.PropertyCalc
 
 				if (ServerProperties.Properties.ENABLE_PVE_SPEED)
 				{
-					if (speed == 1 && !player.InCombat && !player.IsStealthed && !player.CurrentRegion.IsRvR)
+					if (speed == 1 && !player.InCombat && !(player.IsStealthed && (ePrivLevel)player.Client.Account.PrivLevel == ePrivLevel.Player) && !player.CurrentRegion.IsRvR)
 						speed *= 1.25; // new run speed is 125% when no buff
 				}
 
@@ -88,10 +88,10 @@ namespace DOL.GS.PropertyCalc
 						player.IsOverencumbered = false;
 					}
 				}
-				if (player.IsStealthed)
+				if (player.IsStealthed && (ePrivLevel)player.Client.Account.PrivLevel == ePrivLevel.Player)
 				{
 					MasteryOfStealthAbility mos = player.GetAbility<MasteryOfStealthAbility>();
-					GameSpellEffect bloodrage = SpellHandler.FindEffectOnTarget(player, "BloodRage");
+					GameSpellEffect bloodrage = SpellHelper.FindEffectOnTarget(player, "BloodRage");
 					VanishEffect vanish = player.EffectList.GetOfType<VanishEffect>();
 
 					double stealthSpec = player.GetModifiedSpecLevel(Specs.Stealth);
@@ -163,7 +163,7 @@ namespace DOL.GS.PropertyCalc
 
 			speed = living.MaxSpeedBase * speed + 0.5; // 0.5 is to fix the rounding error when converting to int so root results in speed 2 (191*0.01=1.91+0.5=2.41)
 
-			GameSpellEffect iConvokerEffect = SpellHandler.FindEffectOnTarget(living, "SpeedWrap");
+			GameSpellEffect iConvokerEffect = SpellHelper.FindEffectOnTarget(living, "SpeedWrap");
 			if (iConvokerEffect != null && living.EffectList.GetOfType<ChargeEffect>() == null)
 			{
 				if (living.EffectList.GetOfType<SprintEffect>() != null && speed > 248)

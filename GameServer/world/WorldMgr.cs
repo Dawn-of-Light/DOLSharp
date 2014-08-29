@@ -173,9 +173,9 @@ namespace DOL.GS
 		/// <summary>
 		/// This hashtable holds all regions in the world
 		/// </summary>
-		private static readonly Dictionary<ushort, Region> m_regions = new Dictionary<ushort, Region>();
+		private static readonly Hashtable m_regions = new Hashtable();
 
-		public static Dictionary<ushort, Region> Regions
+		public static Hashtable Regions
 		{
 			get { return m_regions; }
 		}
@@ -183,9 +183,9 @@ namespace DOL.GS
 		/// <summary>
 		/// This hashtable holds all zones in the world, for easy access
 		/// </summary>
-		private static readonly Dictionary<int, Zone> m_zones = new Dictionary<int, Zone>();
+		private static readonly Hashtable m_zones = new Hashtable();
 
-		public static Dictionary<int, Zone> Zones
+		public static Hashtable Zones
 		{
 			get { return m_zones; }
 		}
@@ -214,7 +214,7 @@ namespace DOL.GS
 		/// <summary>
 		/// This holds the tick when the day started
 		/// </summary>
-		private static long m_dayStartTick;
+		private static int m_dayStartTick;
 
 		/// <summary>
 		/// This holds the speed of our days
@@ -306,7 +306,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds all region timers
 		/// </summary>
-		private static GameTimer.GameScheduler[] m_regionTimeManagers;
+		private static GameTimer.TimeManager[] m_regionTimeManagers;
 
 		/// <summary>
 		/// Initializes the most important things that is needed for some code
@@ -316,9 +316,9 @@ namespace DOL.GS
 		{
 			log.Debug(GC.GetTotalMemory(true) / 1024 / 1024 + "MB - World Manager: EarlyInit");
 
-			lock (((ICollection)m_regions).SyncRoot)
+			lock (m_regions.SyncRoot)
 				m_regions.Clear();
-			lock (((ICollection)m_zones).SyncRoot)
+			lock (m_zones.SyncRoot)
 				m_zones.Clear();
 
 			//If the files are missing this method
@@ -339,7 +339,7 @@ namespace DOL.GS
 			//Dinberg: We now need to save regionData, indexed by regionID, for instances.
 			//The information generated here is oddly ordered by number of mbos in the region,
 			//so I'm contriving to generate this list myself.
-			m_regionData = new Dictionary<ushort, RegionData>();
+			m_regionData = new Hashtable();
 
 			//We also will need to store zones, because we need at least one zone per region - hence
 			//we will create zones inside our instances or the player gets banned by anti-telehack scripts.
@@ -366,7 +366,7 @@ namespace DOL.GS
 				mobList.AddRange(GameServer.Database.SelectAllObjects<Mob>());
 			}
 
-			var mobsByRegionId = new Dictionary<ushort, List<Mob>>(10);
+			var mobsByRegionId = new Dictionary<ushort, List<Mob>>(512);
 			foreach (Mob mob in mobList)
 			{
 				List<Mob> list;
@@ -409,7 +409,7 @@ namespace DOL.GS
 
 			bool hasFrontierRegion = false;
 
-			var regions = new List<RegionData>(256);
+			var regions = new List<RegionData>(512);
 			foreach (DBRegions dbRegion in GameServer.Database.SelectAllObjects<DBRegions>())
 			{
 				RegionData data = new RegionData();
@@ -451,14 +451,14 @@ namespace DOL.GS
 
 			log.Debug(GC.GetTotalMemory(true) / 1024 / 1024 + "MB - Region Data Loaded");
 
-			int cpuCount = GameServer.Instance.Configuration.CPUUse;
+			int cpuCount = GameServer.Instance.Configuration.CpuCount;
 			if (cpuCount < 1)
 				cpuCount = 1;
 
-			GameTimer.GameScheduler[] timers = new GameTimer.GameScheduler[cpuCount];
+			GameTimer.TimeManager[] timers = new GameTimer.TimeManager[cpuCount];
 			for (int i = 0; i < cpuCount; i++)
 			{
-				timers[i] = new GameTimer.GameScheduler("RegionTime" + (i + 1).ToString());
+				timers[i] = new GameTimer.TimeManager("RegionTime" + (i + 1).ToString());
 			}
 
 			m_regionTimeManagers = timers;
@@ -618,14 +618,14 @@ namespace DOL.GS
 					log.Info("Total Bind Points: " + bindpoints);
 				}
 
-				m_WorldUpdateThread = new Thread(new ThreadStart(WorldUpdateThreadStart));
+				m_WorldUpdateThread = new Thread(new ThreadStart(WorldUpdateThread.WorldUpdateThreadStart));
 				m_WorldUpdateThread.Priority = ThreadPriority.AboveNormal;
 				m_WorldUpdateThread.Name = "NpcUpdate";
 				m_WorldUpdateThread.IsBackground = true;
 				m_WorldUpdateThread.Start();
 
 				m_dayIncrement = Math.Max(0, Math.Min(1000, ServerProperties.Properties.WORLD_DAY_INCREMENT)); // increments > 1000 do not render smoothly on clients
-				m_dayStartTick = GameTimer.GetTickCount() - (int)(DAY / Math.Max(1, m_dayIncrement) / 2); // set start time to 12pm
+				m_dayStartTick = Environment.TickCount - (int)(DAY / Math.Max(1, m_dayIncrement) / 2); // set start time to 12pm
 				m_dayResetTimer = new Timer(new TimerCallback(DayReset), null, DAY / Math.Max(1, m_dayIncrement) / 2, DAY / Math.Max(1, m_dayIncrement));
 
 				m_pingCheckTimer = new Timer(new TimerCallback(PingCheck), null, 10 * 1000, 0); // every 10s a check
@@ -648,11 +648,11 @@ namespace DOL.GS
 		/// Gets all region time managers
 		/// </summary>
 		/// <returns>A copy of region time managers array</returns>
-		public static GameTimer.GameScheduler[] GetRegionTimeManagers()
+		public static GameTimer.TimeManager[] GetRegionTimeManagers()
 		{
-			GameTimer.GameScheduler[] timers = m_regionTimeManagers;
-			if (timers == null) return new GameTimer.GameScheduler[0];
-			return (GameTimer.GameScheduler[])timers.Clone();
+			GameTimer.TimeManager[] timers = m_regionTimeManagers;
+			if (timers == null) return new GameTimer.TimeManager[0];
+			return (GameTimer.TimeManager[])timers.Clone();
 		}
 
 		/// <summary>
@@ -671,7 +671,7 @@ namespace DOL.GS
 						if (client.ClientState == GameClient.eClientState.CharScreen ||
 						    client.ClientState == GameClient.eClientState.Playing)
 						{
-							if (client.PingTime + PING_TIMEOUT * 1000 * 1000 * 10 < DateTime.UtcNow.Ticks)
+							if (client.PingTime + PING_TIMEOUT * 1000 * 1000 * 10 < DateTime.Now.Ticks)
 							{
 								if (log.IsWarnEnabled)
 									log.Warn("Ping timeout for client " + client.Account.Name);
@@ -681,7 +681,7 @@ namespace DOL.GS
 						else
 						{
 							// in all other cases client gets 10min to get wether in charscreen or playing state
-							if (client.PingTime + 10 * 60 * 10000000L < DateTime.UtcNow.Ticks)
+							if (client.PingTime + 10 * 60 * 10000000L < DateTime.Now.Ticks)
 							{
 								if (log.IsWarnEnabled)
 									log.Warn("Hard timeout for client " + client.Account.Name + " (" + client.ClientState + ")");
@@ -724,18 +724,18 @@ namespace DOL.GS
 				try
 				{
 					Thread.Sleep(200); // check every 200ms for needed relocs
-					long start = GameTimer.GetTickCount();
+					int start = Environment.TickCount;
 
-					Dictionary<ushort, Region> regionsClone = new Dictionary<ushort, Region>(m_regions);
+					Hashtable regionsClone = (Hashtable)m_regions.Clone();
 
 					foreach (Region region in regionsClone.Values)
 					{
-						if (region.NumPlayers > 0 && (region.LastRelocationTime + Zone.MAX_REFRESH_INTERVAL) * 10 * 1000 < DateTime.UtcNow.Ticks)
+						if (region.NumPlayers > 0 && (region.LastRelocationTime + Zone.MAX_REFRESH_INTERVAL) * 10 * 1000 < DateTime.Now.Ticks)
 						{
 							region.Relocate();
 						}
 					}
-					long took = GameTimer.GetTickCount() - start;
+					int took = Environment.TickCount - start;
 					if (took > 500)
 					{
 						if (log.IsWarnEnabled)
@@ -765,7 +765,7 @@ namespace DOL.GS
 		/// <param name="sender"></param>
 		private static void DayReset(object sender)
 		{
-			m_dayStartTick = GameTimer.GetTickCount();
+			m_dayStartTick = Environment.TickCount;
 			foreach (GameClient client in GetAllPlayingClients())
 			{
 				if (client.Player != null && client.Player.CurrentRegion != null && client.Player.CurrentRegion.UseTimeManager)
@@ -792,7 +792,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				m_dayStartTick = GameTimer.GetTickCount() - (int)(dayStart / m_dayIncrement); // set start time to ...
+				m_dayStartTick = Environment.TickCount - (int)(dayStart / m_dayIncrement); // set start time to ...
 				m_dayResetTimer.Change((DAY - dayStart) / m_dayIncrement, Timeout.Infinite);
 			}
 
@@ -831,7 +831,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				long diff = GameTimer.GetTickCount() - m_dayStartTick;
+				long diff = Environment.TickCount - m_dayStartTick;
 				long curTime = diff * m_dayIncrement;
 				return (uint)(curTime % DAY);
 			}
@@ -864,241 +864,11 @@ namespace DOL.GS
 			return Util.GetThreadStack(m_WorldUpdateThread);
 		}
 
-		private static long m_lastWorldObjectUpdateTick = 0;
-
-		/// <summary>
-		/// This thread updates the NPCs and objects around the player at very short
-		/// intervalls! But since the update is very quick the thread will
-		/// sleep most of the time!
-		/// </summary>
-		private static void WorldUpdateThreadStart()
-		{
-			
-			// Initialize
-			bool running = true;
-			
-			int i = 0;
-			
-			long start = long.MinValue / 10000;
-			
-			GameClient client;
-			GamePlayer player;
-			
-
-			int npcsUpdated = 0, objectsUpdated = 0, doorsUpdated = 0, housesUpdated = 0;
-			
-			if (log.IsDebugEnabled)
-			{
-				log.Debug("NPCUpdateThread ThreadId=" + Thread.CurrentThread.ManagedThreadId);
-			}
-			
-			Dictionary<GameTimer.GameScheduler, Dictionary<Region, List<GameClient>>> sortedclient = new Dictionary<GameTimer.GameScheduler, Dictionary<Region, List<GameClient>>>();
-			
-			// Start Loop
-			while (running)
-			{
-				try
-				{
-					start = GameTimer.GetTickCount();
-
-					sortedclient.Clear();
-					for (i = 0; i < m_clients.Length; i++)
-					{
-						client = m_clients[i];
-						// check if Client / Player is valid
-						
-						if (client == null)
-							continue;
-						
-						player = client.Player;
-						if (client.ClientState == GameClient.eClientState.Playing && player == null)
-						{
-							if (log.IsErrorEnabled)
-								log.Error("account has no active player but is playing, disconnecting! => " + client.Account.Name);
-							GameServer.Instance.Disconnect(client);
-							continue;
-						}
-
-						if (client.ClientState != GameClient.eClientState.Playing || player.ObjectState != GameObject.eObjectState.Active)
-							continue;
-						
-						if(!sortedclient.ContainsKey(client.Player.CurrentRegion.TimeManager))
-							sortedclient.Add(client.Player.CurrentRegion.TimeManager, new Dictionary<Region, List<GameClient>>());
-						
-						if(!sortedclient[client.Player.CurrentRegion.TimeManager].ContainsKey(client.Player.CurrentRegion))
-							sortedclient[client.Player.CurrentRegion.TimeManager].Add(client.Player.CurrentRegion, new List<GameClient>());
-						
-						sortedclient[client.Player.CurrentRegion.TimeManager][client.Player.CurrentRegion].Add(client);
-					}
-					
-					foreach(Dictionary<Region, List<GameClient>> timers in sortedclient.Values)
-						foreach(List<GameClient> clients in timers.Values)
-							for(i = 0 ; i < clients.Count ; i++)
-					{
-						client = clients[i];
-					/*
-					for (i = 0; i < m_clients.Length; i++)
-					{
-						client = m_clients[i];
-						// check if Client / Player is valid
-						
-						if (client == null)
-							continue;
-*/
-						player = client.Player;/*
-						if (client.ClientState == GameClient.eClientState.Playing && player == null)
-						{
-							if (log.IsErrorEnabled)
-								log.Error("account has no active player but is playing, disconnecting! => " + client.Account.Name);
-							GameServer.Instance.Disconnect(client);
-							continue;
-						}
-
-						if (client.ClientState != GameClient.eClientState.Playing || player.ObjectState != GameObject.eObjectState.Active)
-							continue;
-
-						// if not updated in the last Interval begin updating world
-						*/
-						if (start - player.LastWorldUpdate > Math.Max(100, ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL))
-						{
-							npcsUpdated = 0;
-							objectsUpdated = 0;
-							doorsUpdated = 0;
-							housesUpdated = 0;
-							
-							lock(player.CurrentRegion.ObjectsSyncLock)
-							{
-								
-								BitArray carray = player.CurrentUpdateArray;
-								BitArray narray = player.NewUpdateArray;
-								narray.SetAll(false);
-								
-								// Update what is needed
-								
-								foreach (GameNPC npc in player.GetNPCsInRadius(VISIBILITY_DISTANCE))
-								{									
-									try
-									{
-										if (npc == null) continue;										
-										
-										narray[npc.ObjectID - 1] = true;
-										if ((start - npc.LastUpdateTickCount) > Math.Max(15000, ServerProperties.Properties.WORLD_NPC_UPDATE_INTERVAL)) // 1.10+ change, always 15 seconds
-										{
-											npc.BroadcastUpdate();
-											npcsUpdated++;
-										}
-										else if (carray[npc.ObjectID - 1] == false)
-										{
-											client.Out.SendObjectUpdate(npc);
-											npcsUpdated++;
-										}
-									}
-									catch (Exception e)
-									{
-										if (log.IsErrorEnabled)
-											log.Error("NPC update: " + e.GetType().FullName + " (" + npc.ToString() + ")", e);
-									}
-								}
-								
-							}									
-							
-							lock(player.CurrentRegion.ObjectsSyncLock)
-							{
-	
-								// Broadcast updates of all non-npc objects around this player
-								if (ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL > 0 && (start - m_lastWorldObjectUpdateTick) > Math.Max(10000, ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL))
-								{
-									foreach (GameStaticItem item in client.Player.GetItemsInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
-									{
-										client.Out.SendObjectCreate(item);
-										objectsUpdated++;
-									}
-	
-									foreach (IDoor door in client.Player.GetDoorsInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
-									{
-										client.Player.SendDoorUpdate(door);
-										doorsUpdated++;
-									}
-	
-									//housing
-									if (client.Player.CurrentRegion.HousingEnabled)
-									{
-										if (client.Player.HousingUpdateArray == null)
-										{
-											client.Player.HousingUpdateArray = new BitArray(ServerProperties.Properties.MAX_NUM_HOUSES, false);
-										}
-	
-										var houses = HouseMgr.GetHouses(client.Player.CurrentRegionID);
-										if (houses != null)
-										{
-											foreach (House house in houses.Values)
-											{
-												if (house.UniqueID < client.Player.HousingUpdateArray.Length)
-												{
-													if (client.Player.IsWithinRadius(house, HousingConstants.HouseViewingDistance))
-													{
-														if (!client.Player.HousingUpdateArray[house.UniqueID])
-														{
-															client.Out.SendHouse(house);
-															client.Out.SendGarden(house);
-	
-															if (house.IsOccupied)
-															{
-																client.Out.SendHouseOccupied(house, true);
-															}
-	
-															client.Player.HousingUpdateArray[house.UniqueID] = true;
-															housesUpdated++;
-														}
-													}
-													else
-													{
-														client.Player.HousingUpdateArray[house.UniqueID] = false;
-													}
-												}
-											}
-										}
-									}
-									else if (client.Player.HousingUpdateArray != null)
-									{
-										client.Player.HousingUpdateArray = null;
-									}
-	
-									m_lastWorldObjectUpdateTick = start;
-								}
-								
-							}
-							
-							player.SwitchUpdateArrays();
-							player.LastWorldUpdate = start;
-
-							//log.DebugFormat("Player {0} world update: {1} npcs, {2} objects, {3} doors, and {4} houses in {5}ms", player.Name, npcsUpdated, objectsUpdated, doorsUpdated, housesUpdated, Environment.TickCount - start);
-						}
-					}
-
-					long took = GameTimer.GetTickCount() - start;
-					if (took > 500)
-					{
-						if (log.IsWarnEnabled)
-							log.WarnFormat("NPC update took {0}ms", took);
-					}
-
-					Thread.Sleep(50);
-				}
-				catch (ThreadAbortException)
-				{
-					if (log.IsDebugEnabled)
-						log.Debug("NPC Update Thread stopping...");
-					running = false;
-				}
-				catch (Exception e)
-				{
-					if (log.IsErrorEnabled)
-						log.Error("Error in NPC Update Thread!", e);
-					
-					Thread.Sleep(50);
-				}
-			}
+		private static uint m_lastWorldObjectUpdateTick = 0;
+		
+		public static uint LastWorldObjectUpdateTick {
+			get { return m_lastWorldObjectUpdateTick; }
+			set { m_lastWorldObjectUpdateTick = value; }
 		}
 
 		/// <summary>
@@ -1146,10 +916,10 @@ namespace DOL.GS
 		/// <param name="time">Time manager for the region</param>
 		/// <param name="data">The region data</param>
 		/// <returns>Registered region</returns>
-		public static Region RegisterRegion(GameTimer.GameScheduler time, RegionData data)
+		public static Region RegisterRegion(GameTimer.TimeManager time, RegionData data)
 		{
 			Region region =  Region.Create(time, data);
-			lock (((ICollection)m_regions).SyncRoot)
+			lock (m_regions.SyncRoot)
 			{
 				m_regions.Add(data.Id, region);
 			}
@@ -1164,7 +934,7 @@ namespace DOL.GS
 		{
 			RegionEntry[] regs = null;
 
-			lock (((ICollection)m_regions).SyncRoot)
+			lock (m_regions.SyncRoot)
 			{
 				regs = new RegionEntry[m_regions.Count];
 
@@ -1259,11 +1029,11 @@ namespace DOL.GS
                     width * 8192,
                     height * 8192);*/
 
-			lock (((ICollection)region.Zones).SyncRoot)
+			lock (region.Zones.SyncRoot)
 			{
 				region.Zones.Add(zone);
 			}
-			lock (((ICollection)m_zones).SyncRoot)
+			lock (m_zones.SyncRoot)
 			{
 				m_zones.Add(zoneID, zone);
 			}
@@ -1277,7 +1047,7 @@ namespace DOL.GS
 		/// <returns>true</returns>
 		public static bool StartRegionMgrs()
 		{
-			lock (((ICollection)m_regions).SyncRoot)
+			lock (m_regions.SyncRoot)
 			{
 				foreach (Region reg in m_regions.Values)
 					reg.StartRegionMgr();
@@ -1292,7 +1062,7 @@ namespace DOL.GS
 		{
 			if (log.IsDebugEnabled)
 				log.Debug("Stopping region managers...");
-			lock (((ICollection)m_regions).SyncRoot)
+			lock (m_regions.SyncRoot)
 			{
 				foreach (Region reg in m_regions.Values)
 				{
@@ -1311,10 +1081,7 @@ namespace DOL.GS
 		/// <returns>Region or null if not found</returns>
 		public static Region GetRegion(ushort regionID)
 		{
-			if(m_regions.ContainsKey(regionID))
-				return (Region)m_regions[regionID];
-			
-			return null;
+			return (Region)m_regions[regionID];
 		}
 
 		public static ushort m_lastZoneError = 0;
@@ -1326,7 +1093,7 @@ namespace DOL.GS
 		/// <returns>the zone object or null</returns>
 		public static Zone GetZone(ushort zoneID)
 		{
-			if (!m_zones.ContainsKey(zoneID))
+			if (!m_zones.Contains(zoneID))
 			{
 				if (m_lastZoneError != zoneID)
 				{
@@ -1369,21 +1136,18 @@ namespace DOL.GS
 		/// <returns>All objects with the specified parameters</returns>
 		public static GameObject[] GetobjectsFromRegion( ushort regionID, Type objectType)
 		{
-			Region reg = null;
-			if(m_regions.ContainsKey(regionID))
-				reg = (Region)m_regions[regionID];
-			
+			Region reg = (Region)m_regions[regionID];
 			if (reg == null)
 				return new GameObject[0];
 			GameObject[] objs = reg.Objects;
-			List<GameObject> returnObjs = new List<GameObject>();
+			ArrayList returnObjs = new ArrayList();
 			for (int i = 0; i < objs.Length; i++)
 			{
 				GameObject obj = objs[i];
 				if (obj != null && objectType.IsInstanceOfType(obj))
 					returnObjs.Add(obj);
 			}
-			return returnObjs.ToArray();
+			return (GameObject[])returnObjs.ToArray(objectType);
 		}
 		
 		/// <summary>
@@ -1391,9 +1155,9 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="regionID">The region to search</param>
 		/// <returns>All NPCs with the specified parameters</returns>
-		public static GameObject[] GetStaticItemFromRegion(ushort regionID)
+		public static GameStaticItem[] GetStaticItemFromRegion(ushort regionID)
 		{
-			return GetobjectsFromRegion(regionID, typeof(GameStaticItem));
+			return (GameStaticItem[])GetobjectsFromRegion(regionID, typeof(GameStaticItem));
 		}
 
 		/// <summary>
@@ -1406,21 +1170,18 @@ namespace DOL.GS
 		/// <returns>All objects with the specified parameters</returns>
 		public static GameObject[] GetObjectsByNameFromRegion(string name, ushort regionID, eRealm realm, Type objectType)
 		{
-			Region reg = null;
-			if(m_regions.ContainsKey(regionID))
-				reg = (Region)m_regions[regionID];
-			
+			Region reg = (Region)m_regions[regionID];
 			if (reg == null)
 				return new GameObject[0];
 			GameObject[] objs = reg.Objects;
-			List<GameObject> returnObjs = new List<GameObject>();
+			ArrayList returnObjs = new ArrayList();
 			for (int i = 0; i < objs.Length; i++)
 			{
 				GameObject obj = objs[i];
 				if (obj != null && objectType.IsInstanceOfType(obj) && obj.Realm == realm && obj.Name == name)
 					returnObjs.Add(obj);
 			}
-			return returnObjs.ToArray();
+			return (GameObject[])returnObjs.ToArray(objectType);
 		}
 
 		//Added by Dinberg, i want to know if we should so freely enumerate reg.Objects?
@@ -1430,21 +1191,18 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static GameNPC[] GetNPCsFromRegion(ushort regionID)
 		{
-			Region reg = null;
-			if(m_regions.ContainsKey(regionID))
-				reg = (Region)m_regions[regionID];
-			
+			Region reg = (Region)m_regions[regionID];
 			if (reg == null)
 				return new GameNPC[0];
 			GameObject[] objs = reg.Objects;
-			List<GameNPC> returnObjs = new List<GameNPC>();
+			ArrayList returnObjs = new ArrayList();
 			for (int i = 0; i < objs.Length; i++)
 			{
 				GameNPC obj = objs[i] as GameNPC;
 				if (obj != null)
 					returnObjs.Add(obj);
 			}
-			return returnObjs.ToArray();
+			return (GameNPC[])returnObjs.ToArray(typeof(GameNPC));
 		}
 
 		/// <summary>
@@ -1456,10 +1214,10 @@ namespace DOL.GS
 		/// <returns>All objects with the specified parameters</returns>b
 		public static GameObject[] GetObjectsByName(string name, eRealm realm, Type objectType)
 		{
-			List<GameObject> returnObjs = new List<GameObject>();
+			ArrayList returnObjs = new ArrayList();
 			foreach (Region reg in m_regions.Values)
 				returnObjs.AddRange(GetObjectsByNameFromRegion(name, reg.ID, realm, objectType));
-			return returnObjs.ToArray();
+			return (GameObject[])returnObjs.ToArray(objectType);
 		}
 
 		/// <summary>
@@ -1471,11 +1229,7 @@ namespace DOL.GS
 		/// <returns>All NPCs with the specified parameters</returns>
 		public static GameNPC[] GetNPCsByNameFromRegion(string name, ushort regionID, eRealm realm)
 		{
-			List<GameNPC> res = new List<GameNPC>();
-			foreach(GameObject obj in GetObjectsByNameFromRegion(name, regionID, realm, typeof(GameNPC)))
-				res.Add((GameNPC)obj);
-					
-			return res.ToArray();
+			return (GameNPC[])GetObjectsByNameFromRegion(name, regionID, realm, typeof(GameNPC));
 		}
 
 		/// <summary>
@@ -1486,23 +1240,9 @@ namespace DOL.GS
 		/// <returns>All NPCs with the specified parameters</returns>b
 		public static GameNPC[] GetNPCsByName(string name, eRealm realm)
 		{
-			List<GameNPC> res = new List<GameNPC>();
-			foreach(GameObject obj in GetObjectsByName(name, realm, typeof(GameNPC)))
-				res.Add((GameNPC)obj);
-			
-			return res.ToArray();
+			return (GameNPC[])GetObjectsByName(name, realm, typeof(GameNPC));
 		}
 
-		public static GameNPC[] GetNPCsByName(string name, eRealm realm, Type objectType)
-		{
-			List<GameNPC> res = new List<GameNPC>();
-			foreach(GameObject obj in GetObjectsByName(name, realm, typeof(GameNPC)))
-				if(objectType.IsInstanceOfType(obj))
-					res.Add((GameNPC)obj);
-			
-			return res.ToArray();
-		}
-		
 		/// <summary>
 		/// Searches for all NPCs with the given guild and realm in ALL regions!
 		/// </summary>
@@ -2120,7 +1860,7 @@ namespace DOL.GS
 		/// <returns>ArrayList of GameClients</returns>
 		public static IList<GameClient> GetAllClients()
 		{
-			var targetClients = new List<GameClient>();
+			List<GameClient> targetClients = new List<GameClient>();
 
 			lock (m_clients.SyncRoot)
 			{
@@ -2338,9 +2078,9 @@ namespace DOL.GS
 		/// <summary>
 		/// Stores the region Data parsed from the regions xml file.
 		/// </summary>
-		private static Dictionary<ushort, RegionData> m_regionData;
+		private static Hashtable m_regionData;
 
-		public static Dictionary<ushort, RegionData> RegionData
+		public static Hashtable RegionData
 		{
 			get { return m_regionData; }
 		}
@@ -2391,9 +2131,7 @@ namespace DOL.GS
 			BaseInstance instance = null;
 
 			//To create the instance, we need to select the region relevant to the SkinID.
-			RegionData data = null;
-			if(m_regionData.ContainsKey(skinID))
-				data = (RegionData)m_regionData[skinID];
+			RegionData data = (RegionData)m_regionData[skinID];
 
 			if (data == null)
 			{
@@ -2407,7 +2145,8 @@ namespace DOL.GS
 			//like the TimeManager until I get some good testing and ensure work thus far is clean.
 
 			//Later, we will share the resources over the different threads.
-			GameTimer.GameScheduler time = m_regionTimeManagers[FastMath.Abs(requestedID % (GameServer.Instance.Configuration.CPUUse * 2) - GameServer.Instance.Configuration.CPUUse) % GameServer.Instance.Configuration.CPUUse];
+
+			GameTimer.TimeManager time = m_regionTimeManagers[0];
 
 			if (time == null)
 			{
@@ -2416,7 +2155,7 @@ namespace DOL.GS
 			}
 
 			//I've placed constructor info outside of the lock, to prevent a time delay on parallel threads.
-			ConstructorInfo info = instanceType.GetConstructor(new Type[] { typeof(ushort), typeof(GameTimer.GameScheduler), typeof(RegionData)});
+			ConstructorInfo info = instanceType.GetConstructor(new Type[] { typeof(ushort), typeof(GameTimer.TimeManager), typeof(RegionData)});
 
 			if (info == null)
 			{
@@ -2436,7 +2175,7 @@ namespace DOL.GS
 
 			//I'm welcome to suggestions on how to improve this
 			//              -Dinberg.
-			lock (((ICollection)m_regions).SyncRoot)
+			lock (m_regions.SyncRoot)
 			{
 				if (!RequestedAnID)
 				{
@@ -2497,7 +2236,7 @@ namespace DOL.GS
 			foreach (ZoneData dat in list)
 			{
 				//we need to get an id for each one.
-				lock (((ICollection)m_zones).SyncRoot)
+				lock (m_zones.SyncRoot)
 				{
 					while (m_zones.ContainsKey(zoneID))
 						zoneID++;
@@ -2523,19 +2262,17 @@ namespace DOL.GS
 		public static void RemoveInstance(BaseInstance instance)
 		{
 			//Remove the region
-			lock (((ICollection)m_regions).SyncRoot)
+			lock (m_regions.SyncRoot)
 			{
-				if(m_regions.ContainsKey(instance.ID))
-					m_regions.Remove(instance.ID);
+				m_regions.Remove(instance.ID);
 			}
 
 			//Remove zones
-			lock (((ICollection)m_zones).SyncRoot)
+			lock (m_zones.SyncRoot)
 			{
 				foreach (Zone zn in instance.Zones)
 				{
-					if(m_zones.ContainsKey(zn.ID))
-						m_zones.Remove(zn.ID);
+					m_zones.Remove(zn.ID);
 				}
 			}
 

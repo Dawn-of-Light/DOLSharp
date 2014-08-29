@@ -4,7 +4,7 @@ using DOL.GS.PropertyCalc;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class VeilRecoveryAbility : RAPropertyEnhancer
+	public class VeilRecoveryAbility : L5RealmAbility
 	{
 		public VeilRecoveryAbility(DBAbility dba, int level)
 			: base(dba, level, eProperty.Undefined)
@@ -29,7 +29,7 @@ namespace DOL.GS.RealmAbilities
                     case 7: return 60;
                     case 8: return 70;
                     case 9: return 80;
-                    default: return 80;
+                    default: return 0;
                 }
             }
             else

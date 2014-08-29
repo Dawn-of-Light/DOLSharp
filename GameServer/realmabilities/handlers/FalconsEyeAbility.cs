@@ -8,7 +8,7 @@ namespace DOL.GS.RealmAbilities
 	/// <summary>
 	/// Falcon's Eye RA
 	/// </summary>
-	public class FalconsEyeAbility : RAPropertyEnhancer
+	public class FalconsEyeAbility : L5RealmAbility
 	{
 		public FalconsEyeAbility(DBAbility dba, int level)
 			: base(dba, level, eProperty.CriticalSpellHitChance)

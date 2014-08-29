@@ -7,7 +7,7 @@ namespace DOL.GS.RealmAbilities
 	/// <summary>
 	/// Avoidance of Magic RA, reduces magical damage
 	/// </summary>
-	public class AvoidanceOfMagicAbility : RAPropertyEnhancer
+	public class AvoidanceOfMagicAbility : L5RealmAbility
 	{
 		/// <summary>
 		/// The list of properties this RA affects
@@ -66,7 +66,7 @@ namespace DOL.GS.RealmAbilities
 	/// <summary>
 	/// Physical Defence RA, reduces melee damage
 	/// </summary>
-	public class PhysicalDefenceAbility : RAPropertyEnhancer
+	public class PhysicalDefenceAbility : L5RealmAbility
 	{
 		/// <summary>
 		/// The list of properties this RA affects

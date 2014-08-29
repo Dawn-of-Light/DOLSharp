@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using DOL.Database;
@@ -42,12 +41,12 @@ namespace DOL.GS
         /// <summary>
         /// ArrayList of all player boats in the game
         /// </summary>
-        static private readonly Dictionary<string, GameBoat> m_boats = new Dictionary<string, GameBoat>();
+        static private readonly HybridDictionary m_boats = new HybridDictionary();
 
         /// <summary>
         /// ArrayList of all boatid's to BoatNames
         /// </summary>
-        static private readonly Dictionary<string, string> m_boatids = new Dictionary<string, string>();
+        static private readonly HybridDictionary m_boatids = new HybridDictionary();
 
         /// <summary>
         /// Adds a player boat to the list of boats
@@ -59,9 +58,9 @@ namespace DOL.GS
             if (boat == null)
                 return false;
 
-            lock (((ICollection)m_boats).SyncRoot)
+            lock (m_boats.SyncRoot)
             {
-                if (!m_boats.ContainsKey(boat.Name))
+                if (!m_boats.Contains(boat.Name))
                 {
                     m_boats.Add(boat.Name, boat);
                     m_boatids.Add(boat.BoatID, boat.Name);
@@ -82,12 +81,10 @@ namespace DOL.GS
             if (boat == null)
                 return false;
 
-            lock (((ICollection)m_boats).SyncRoot)
+            lock (m_boats.SyncRoot)
             {
-            	if(m_boats.ContainsKey(boat.Name))
-                	m_boats.Remove(boat.Name);
-            	if(m_boatids.ContainsKey(boat.InternalID))
-                	m_boatids.Remove(boat.InternalID);
+                m_boats.Remove(boat.Name);
+                m_boatids.Remove(boat.InternalID);
             }
             return true;
         }
@@ -99,9 +96,9 @@ namespace DOL.GS
         /// <returns>true or false</returns>
         public static bool DoesBoatExist(string boatName)
         {
-        	lock (((ICollection)m_boats).SyncRoot)
+            lock (m_boats.SyncRoot)
             {
-                if (m_boats.ContainsKey(boatName))
+                if (m_boats.Contains(boatName))
                     return true;
                 return false;
             }
@@ -192,12 +189,9 @@ namespace DOL.GS
         public static GameBoat GetBoatByName(string boatName)
         {
             if (boatName == null) return null;
-            lock (((ICollection)m_boats).SyncRoot)
+            lock (m_boats.SyncRoot)
             {
-            	if(m_boats.ContainsKey(boatName))
-                	return (GameBoat)m_boats[boatName];
-            	
-            	return null;
+                return (GameBoat)m_boats[boatName];
             }
         }
 
@@ -209,16 +203,13 @@ namespace DOL.GS
         {
             if (boatid == null) return null;
 
-            lock (((ICollection)m_boatids).SyncRoot)
+            lock (m_boatids.SyncRoot)
             {
-            	if (!m_boatids.ContainsKey(boatid) || m_boatids[boatid] == null) return null;
+                if (m_boatids[boatid] == null) return null;
 
-                lock (((ICollection)m_boats).SyncRoot)
+                lock (m_boats.SyncRoot)
                 {
-                	if(m_boats.ContainsKey(m_boatids[boatid]))
-                    	return (GameBoat)m_boats[m_boatids[boatid]];
-                	
-                	return null;
+                    return (GameBoat)m_boats[m_boatids[boatid]];
                 }
             }
         }
@@ -243,7 +234,7 @@ namespace DOL.GS
         {
             if (owner == null) return null;
 
-            lock (((ICollection)m_boatids).SyncRoot)
+            lock (m_boatids.SyncRoot)
             {
                 foreach (GameBoat boat in m_boats.Values)
                 {
@@ -268,7 +259,7 @@ namespace DOL.GS
         /// </summary>
         public static bool LoadAllBoats()
         {
-        	lock (((ICollection)m_boats).SyncRoot)
+            lock (m_boats.SyncRoot)
             {
                 m_boats.Clear();
             }
@@ -294,7 +285,7 @@ namespace DOL.GS
                 log.Debug("Saving all boats...");
             try
             {
-            	lock (((ICollection)m_boats).SyncRoot)
+                lock (m_boats.SyncRoot)
                 {
                     foreach (GameBoat b in m_boats.Values)
                     {
@@ -309,10 +300,10 @@ namespace DOL.GS
             }
         }
 
-        public static List<GameBoat> GetAllBoats()
+        public static ArrayList GetAllBoats()
         {
-            List<GameBoat> boats = new List<GameBoat>();
-            lock (((ICollection)m_boats).SyncRoot)
+            ArrayList boats = new ArrayList();
+            lock (m_boats.SyncRoot)
             {
                 foreach (GameBoat boat in m_boats.Values)
                 {

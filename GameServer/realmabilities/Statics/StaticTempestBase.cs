@@ -26,7 +26,9 @@ namespace DOL.GS.RealmAbilities.Statics
 			dbs.DamageType = (int)eDamageType.Energy;
 			dbs.Target = "Enemy";
 			dbs.Radius = 0;
-			dbs.Type = "UnresistableStun";
+			dbs.Type = "Stun";
+			dbs.AmnesiaChance = -1;
+			dbs.ResurrectHealth = 1;
 			dbs.Value = 0;
 			dbs.Duration = stunDuration;
 			dbs.Pulse = 0;

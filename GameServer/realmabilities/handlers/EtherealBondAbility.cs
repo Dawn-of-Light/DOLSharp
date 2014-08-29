@@ -9,7 +9,7 @@ namespace DOL.GS.RealmAbilities
 	/// <summary>
 	/// Ethereal Bond
 	/// </summary>
-	public class EtherealBondAbility : RAPropertyEnhancer
+	public class EtherealBondAbility : L5RealmAbility
 	{
 		public EtherealBondAbility(DBAbility dba, int level) : base(dba, level, eProperty.MaxMana) { }
 

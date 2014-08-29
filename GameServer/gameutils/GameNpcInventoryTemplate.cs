@@ -37,12 +37,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds inventory item instances already used in inventory templates
 		/// </summary>
-		protected static readonly Dictionary<string, InventoryItem> m_usedInventoryItems = new Dictionary<string, InventoryItem>();
+		protected static readonly Hashtable m_usedInventoryItems = new Hashtable(1024);
 
 		/// <summary>
 		/// Holds already used inventory template instances
 		/// </summary>
-		protected static readonly Dictionary<string, GameNpcInventoryTemplate> m_usedInventoryTemplates = new Dictionary<string, GameNpcInventoryTemplate>();
+		protected static readonly Hashtable m_usedInventoryTemplates = new Hashtable(256);
 
 		/// <summary>
 		/// Holds an empty invenotory template instance
@@ -134,33 +134,29 @@ namespace DOL.GS
 		/// <returns>true if added</returns>
 		public bool AddNPCEquipment(eInventorySlot slot, int model, int color, int effect, int extension, int emblem = 0)
 		{
-			lock (((ICollection)m_items).SyncRoot)
+			lock (m_items)
 			{
-				lock (((ICollection)m_usedInventoryItems).SyncRoot)
+				lock (m_usedInventoryItems.SyncRoot)
 				{
 					if (m_isClosed)
 						return false;
-					
 					slot = GetValidInventorySlot(slot);
 					if (slot == eInventorySlot.Invalid)
 						return false;
-					
 					//Changed to support randomization of slots - if we try to load a weapon in the same spot with a different model,
 					//let's make it random 50% chance to either overwrite the item or leave it be
 					if (m_items.ContainsKey(slot))
 					{
 						//50% chance to keep the item we have
 						if (Util.Chance(50))
-							return true;
-						
+							return false;
 						//Let's remove the old item!
 						m_items.Remove(slot);
 					}
-					
 					string itemID = string.Format("{0}:{1},{2},{3}", slot, model, color, effect, extension);
 					InventoryItem item = null;
 
-					if (!m_usedInventoryItems.ContainsKey(itemID) || m_usedInventoryItems[itemID] == null)
+					if (!m_usedInventoryItems.ContainsKey(itemID))
 					{
 						item = new GameInventoryItem();
 						item.Template = new ItemTemplate();
@@ -171,10 +167,12 @@ namespace DOL.GS
 						item.Extension = (byte)extension;
 						item.Emblem = emblem;
 						item.SlotPosition = (int)slot;
-						m_usedInventoryItems[itemID] = item;
+						item.Item_Type = slot < eInventorySlot.MinEquipable || slot > eInventorySlot.MaxEquipable ? 0 : (int)slot;
 					}
-					
-					m_items.Add(slot, m_usedInventoryItems[itemID]);
+					else
+						return false;
+
+					m_items.Add(slot, item);
 				}
 			}
 			return true;
@@ -187,7 +185,7 @@ namespace DOL.GS
 		/// <returns>true if removed</returns>
 		public bool RemoveNPCEquipment(eInventorySlot slot)
 		{
-			lock (((ICollection)m_items).SyncRoot)
+			lock (m_items)
 			{
 				slot = GetValidInventorySlot(slot);
 
@@ -213,34 +211,34 @@ namespace DOL.GS
 		/// <returns>Invetory template instance that should be used</returns>
 		public GameNpcInventoryTemplate CloseTemplate()
 		{
-			lock (((ICollection)m_items).SyncRoot)
+			lock (m_items)
 			{
-				lock (((ICollection)m_usedInventoryTemplates).SyncRoot)
+				lock (m_usedInventoryTemplates.SyncRoot)
 				{
-					lock (((ICollection)m_usedInventoryItems).SyncRoot)
+					lock (m_usedInventoryItems.SyncRoot)
 					{
 						m_isClosed = true;
-						
 						StringBuilder templateID = new StringBuilder(m_items.Count * 16);
-						
-						foreach (InventoryItem item in new SortedList<eInventorySlot, InventoryItem>(m_items).Values)
+						foreach (InventoryItem item in new SortedList(m_items).Values)
 						{
 							if (templateID.Length > 0)
 								templateID.Append(";");
-							templateID.Append(item.Template.Id_nb);
+							templateID.Append(item.Id_nb);
 						}
 
-						if (!m_usedInventoryTemplates.ContainsKey(templateID.ToString()) || m_usedInventoryTemplates[templateID.ToString()] == null)
+						GameNpcInventoryTemplate finalTemplate = m_usedInventoryTemplates[templateID.ToString()] as GameNpcInventoryTemplate;
+						if (finalTemplate == null)
 						{
+							finalTemplate = this;
 							m_usedInventoryTemplates[templateID.ToString()] = this;
-							foreach (KeyValuePair<eInventorySlot, InventoryItem> de in m_items)
+							foreach (var de in m_items)
 							{
-								if (!m_usedInventoryItems.ContainsKey(de.Value.Template.Id_nb))
-									m_usedInventoryItems.Add(de.Value.Template.Id_nb, de.Value);
+								if (!m_usedInventoryItems.Contains(de.Key))
+									m_usedInventoryItems.Add(de.Key, de.Value);
 							}
 						}
 
-						return this;
+						return finalTemplate;
 					}
 				}
 			}
@@ -252,24 +250,25 @@ namespace DOL.GS
 		/// <returns>Open copy of this template</returns>
 		public GameNpcInventoryTemplate CloneTemplate()
 		{
-			lock (((ICollection)m_items).SyncRoot)
+			lock (m_items)
 			{
-				GameNpcInventoryTemplate clone = new GameNpcInventoryTemplate();
+				var clone = new GameNpcInventoryTemplate();
 				clone.m_changedSlots = new List<eInventorySlot>(m_changedSlots);
 				clone.m_changesCounter = m_changesCounter;
 
-				foreach (KeyValuePair<eInventorySlot, InventoryItem> de in m_items)
+				foreach (var de in m_items)
 				{
+					InventoryItem oldItem = de.Value;
 
 					InventoryItem item = new GameInventoryItem();
 					item.Template = new ItemTemplate();
-					item.Template.Id_nb = de.Value.Id_nb;
-					item.Model = de.Value.Model;
-					item.Color = de.Value.Color;
-					item.Effect = de.Value.Effect;
-					item.Extension = de.Value.Extension;
-					item.Emblem = de.Value.Emblem;
-					item.SlotPosition = de.Value.SlotPosition;
+					item.Template.Id_nb = oldItem.Id_nb;
+					item.Model = oldItem.Model;
+					item.Color = oldItem.Color;
+					item.Effect = oldItem.Effect;
+					item.Extension = oldItem.Extension;
+					item.Emblem = oldItem.Emblem;
+					item.SlotPosition = oldItem.SlotPosition;
 					clone.m_items.Add(de.Key, item);
 				}
 
@@ -281,9 +280,12 @@ namespace DOL.GS
 
 		#endregion
 
-		private Dictionary<string, string> m_dbtemplateidxtemplateid = new Dictionary<string, string>();
-		
 		#region LoadFromDatabase/SaveIntoDatabase
+
+		/// <summary>
+		/// Cache for fast loading of npc equipment
+		/// </summary>
+		protected static Dictionary<string, List<NPCEquipment>> m_npcEquipmentCache = null;
 
 		/// <summary>
 		/// Loads the inventory template from the Database
@@ -294,40 +296,31 @@ namespace DOL.GS
 			if (Util.IsEmpty(templateID, true))
 				return false;
 
-			lock (((ICollection)m_dbtemplateidxtemplateid).SyncRoot)
-			{				
-				// If it's in static cache use it
-				if (m_dbtemplateidxtemplateid.ContainsKey(templateID) && m_usedInventoryTemplates.ContainsKey(m_dbtemplateidxtemplateid[templateID]))
+			lock (m_items)
+			{
+				IList<NPCEquipment> npcEquip;
+				
+				if (m_npcEquipmentCache.ContainsKey(templateID))
+					npcEquip = m_npcEquipmentCache[templateID];
+				else
+					npcEquip = GameServer.Database.SelectObjects<NPCEquipment>("`templateID`= '" + templateID +"'");
+
+				if (npcEquip == null || npcEquip.Count == 0)
 				{
-					foreach(KeyValuePair<eInventorySlot, InventoryItem> itemslot in m_usedInventoryTemplates[m_dbtemplateidxtemplateid[templateID]].m_items)
-						this.m_items[itemslot.Key] = itemslot.Value;
+					if (log.IsWarnEnabled)
+						log.Warn(string.Format("Failed loading NPC inventory template: {0}", templateID));
+					return false;
 				}
-				else 
+				
+				foreach (NPCEquipment npcItem in npcEquip)
 				{
-					// Load it from database
-					IList<NPCEquipment> npcEquip = GameServer.Database.SelectObjects<NPCEquipment>("`templateID`= '" + templateID +"'");
-					
-					if (npcEquip == null || npcEquip.Count == 0)
+					if (!AddNPCEquipment((eInventorySlot)npcItem.Slot, npcItem.Model, npcItem.Color, npcItem.Effect, npcItem.Extension, npcItem.Emblem))
 					{
 						if (log.IsWarnEnabled)
-							log.Warn(string.Format("Failed loading NPC inventory template: {0}", templateID));
-						return false;
+							log.Warn("Error adding NPC equipment, ObjectId=" + npcItem.ObjectId);
 					}
-					
-					foreach (NPCEquipment npcItem in npcEquip)
-					{
-						if (!AddNPCEquipment((eInventorySlot)npcItem.Slot, npcItem.Model, npcItem.Color, npcItem.Effect, npcItem.Extension, npcItem.Emblem))
-						{
-							if (log.IsWarnEnabled)
-								log.Warn("Error adding NPC equipment, ObjectId=" + npcItem.ObjectId);
-						}
-					}
-					
-					CloseTemplate();
-										
 				}
 			}
-
 			return true;
 		}
 
@@ -336,7 +329,6 @@ namespace DOL.GS
 		/// </summary>
 		public static bool Init()
 		{
-			/*
 			try
 			{
 				m_npcEquipmentCache = new Dictionary<string, List<NPCEquipment>>(1000);
@@ -362,8 +354,6 @@ namespace DOL.GS
 				log.Error(e);
 			}
 			return false;
-			*/
-			return true;
 		}
 
 		/// <summary>
@@ -372,7 +362,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool SaveIntoDatabase(string templateID)
 		{
-			lock (((ICollection)m_items).SyncRoot)
+			lock (m_items)
 			{
 				try
 				{

@@ -1,3 +1,22 @@
+/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
+
 using System;
 using System.Collections;
 using DOL.GS.PacketHandler;
@@ -9,7 +28,7 @@ using System.Collections.Generic;
 namespace DOL.GS.Effects
 {
 	/// <summary>
-	/// Effect handler for Barrier Of Fortitude
+	/// Effect handler for Speed of Sound
 	/// </summary> 
 	public class SpeedOfSoundEffect : TimedEffect, IGameEffect
 	{
@@ -30,7 +49,7 @@ namespace DOL.GS.Effects
 			living.TempProperties.setProperty("Charging", true);
 			GameEventMgr.AddHandler(living, GameLivingEvent.AttackFinished, m_attackFinished);
 			GameEventMgr.AddHandler(living, GameLivingEvent.CastFinished, m_attackFinished);
-			living.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, PropertyCalc.MaxSpeedCalculator.SPEED4);		
+			living.BuffBonusMultCategory1.Set(eProperty.MaxSpeed, this, PropertyCalc.MaxSpeedCalculator.SPEED4);		
 			if (living is GamePlayer)
 				(living as GamePlayer).Out.SendUpdateMaxSpeed();
 		}
@@ -48,7 +67,7 @@ namespace DOL.GS.Effects
 			{
 				CastingEventArgs cfea = args as CastingEventArgs;
 
-				if (cfea.SpellHandler.Caster != player)
+				if (cfea == null || cfea.SpellHandler.Caster != player)
 					return;
 
 				//cancel if the effectowner casts a non-positive spell
@@ -70,13 +89,13 @@ namespace DOL.GS.Effects
 
 				switch (afargs.AttackData.AttackResult)
 				{
-					case GameLiving.eAttackResult.HitStyle:
-					case GameLiving.eAttackResult.HitUnstyled:
-					case GameLiving.eAttackResult.Blocked:
-					case GameLiving.eAttackResult.Evaded:
-					case GameLiving.eAttackResult.Fumbled:
-					case GameLiving.eAttackResult.Missed:
-					case GameLiving.eAttackResult.Parried:
+					case eAttackResult.HitStyle:
+					case eAttackResult.HitUnstyled:
+					case eAttackResult.Blocked:
+					case eAttackResult.Evaded:
+					case eAttackResult.Fumbled:
+					case eAttackResult.Missed:
+					case eAttackResult.Parried:
 						SpeedOfSoundEffect effect = player.EffectList.GetOfType<SpeedOfSoundEffect>();
 						if (effect != null)
 							effect.Cancel(false);
@@ -89,7 +108,7 @@ namespace DOL.GS.Effects
 		{
 			base.Stop();
 			m_owner.TempProperties.removeProperty("Charging");
-			m_owner.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
+			m_owner.BuffBonusMultCategory1.Remove(eProperty.MaxSpeed, this);
 			if (m_owner is GamePlayer)
 				(m_owner as GamePlayer).Out.SendUpdateMaxSpeed();
 			GameEventMgr.RemoveHandler(m_owner, GameLivingEvent.AttackFinished, m_attackFinished);

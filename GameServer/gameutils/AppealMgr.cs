@@ -53,9 +53,6 @@ namespace DOL.GS.Appeal
 		{
 			if (!ServerProperties.Properties.DISABLE_APPEALSYSTEM)
 			{
-
-				//Register and load the DB.
-				GameServer.Database.RegisterDataObject(typeof(DBAppeal));
 				GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(PlayerEnter));
 				GameEventMgr.AddHandler(GamePlayerEvent.Quit, new DOLEventHandler(PlayerQuit));
 				GameEventMgr.AddHandler(GamePlayerEvent.Linkdeath, new DOLEventHandler(PlayerQuit));
@@ -81,7 +78,8 @@ namespace DOL.GS.Appeal
 		private static void RunTask(object state)
 		{
 			NotifyStaff();
-			m_timer.Change(m_CallbackFrequency, Timeout.Infinite);
+			if (m_timer != null)
+				m_timer.Change(m_CallbackFrequency, Timeout.Infinite);
 			return;
 		}
 
@@ -241,7 +239,7 @@ namespace DOL.GS.Appeal
 				return;
 			}
 			string eText = GameServer.Database.Escape(Text); //prevent SQL injection
-			string TimeStamp = DateTime.UtcNow.ToLongTimeString() + " " + DateTime.UtcNow.ToLongDateString();
+			string TimeStamp = DateTime.Now.ToLongTimeString() + " " + DateTime.Now.ToLongDateString();
 			DBAppeal appeal = new DBAppeal(Player.Name, Player.Client.Account.Name, Severity, Status, TimeStamp, eText);
 			GameServer.Database.AddObject(appeal);
 			Player.TempProperties.setProperty("HasPendingAppeal", true);

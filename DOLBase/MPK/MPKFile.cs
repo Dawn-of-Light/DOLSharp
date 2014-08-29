@@ -153,7 +153,6 @@ namespace DOL.MPK
 			using (var writer = new BinaryWriter(File.Create(dir + _hdr.Name), Encoding.UTF8))
 			{
 				writer.Write(_buf);
-				writer.Close();
 			}
 		}
 	}

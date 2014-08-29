@@ -29,7 +29,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, eClientPackets.PlayerInitRequest, ClientStatus.PlayerInGame)]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.PlayerInitRequest, "Region Entering Init Request", eClientStatus.PlayerInGame)]
 	public class PlayerInitRequestHandler : IPacketHandler
 	{
 		/// <summary>
@@ -70,7 +70,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				player.Out.SendUpdatePoints();
 				player.TargetObject = null;
-				player.LastWorldUpdate = GameTimer.GetTickCount();
+				player.LastWorldUpdate = Environment.TickCount;
 				player.CurrentUpdateArray.SetAll(false);
 				// update the region color scheme which may be wrong due to ALLOW_ALL_REALMS support
 				player.Out.SendRegionColorScheme();
@@ -159,7 +159,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				if (checkInstanceLogin)
 				{
-					if (!WorldMgr.Regions.ContainsKey(player.CurrentRegionID) || WorldMgr.Regions[player.CurrentRegionID] == null || player.CurrentRegion == null || player.CurrentRegion.IsInstance)
+					if (WorldMgr.Regions[player.CurrentRegionID] == null || player.CurrentRegion == null || player.CurrentRegion.IsInstance)
 					{
 						Log.WarnFormat("{0}:{1} logging into instance or CurrentRegion is null, moving to bind!", player.Name, player.Client.Account.Name);
 						player.MoveToBind();
@@ -229,7 +229,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					if (WorldMgr.RvRLinkDeadPlayers.ContainsKey(player.InternalID))
 					{
-						if (DateTime.UtcNow.Subtract(new TimeSpan(0, gracePeriodInMinutes, 0)) <= WorldMgr.RvRLinkDeadPlayers[player.InternalID])
+						if (DateTime.Now.Subtract(new TimeSpan(0, gracePeriodInMinutes, 0)) <= WorldMgr.RvRLinkDeadPlayers[player.InternalID])
 						{
 							SendMessageAndMoveToSafeLocation(player);
 						}
@@ -244,7 +244,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				foreach (string playerId in linkDeadPlayerIds)
 				{
 					if (playerId != null &&
-					    DateTime.UtcNow.Subtract(new TimeSpan(0, gracePeriodInMinutes, 0)) > WorldMgr.RvRLinkDeadPlayers[playerId])
+					    DateTime.Now.Subtract(new TimeSpan(0, gracePeriodInMinutes, 0)) > WorldMgr.RvRLinkDeadPlayers[playerId])
 					{
 						WorldMgr.RvRLinkDeadPlayers.Remove(playerId);
 					}
@@ -266,7 +266,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				if (house != null)
 				{
-					TimeSpan due = (house.LastPaid.AddDays(Properties.RENT_DUE_DAYS).AddHours(1) - DateTime.UtcNow);
+					TimeSpan due = (house.LastPaid.AddDays(Properties.RENT_DUE_DAYS).AddHours(1) - DateTime.Now);
 					if ((due.Days <= 0 || due.Days < Properties.RENT_DUE_DAYS) && house.KeptMoney < HouseMgr.GetRentByModel(house.Model))
 						player.Out.SendRentReminder(house);
 				}
@@ -276,7 +276,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					House ghouse = HouseMgr.GetGuildHouseByPlayer(player);
 					if (ghouse != null)
 					{
-						TimeSpan due = (ghouse.LastPaid.AddDays(Properties.RENT_DUE_DAYS).AddHours(1) - DateTime.UtcNow);
+						TimeSpan due = (ghouse.LastPaid.AddDays(Properties.RENT_DUE_DAYS).AddHours(1) - DateTime.Now);
 						if ((due.Days <= 0 || due.Days < Properties.RENT_DUE_DAYS) && ghouse.KeptMoney < HouseMgr.GetRentByModel(ghouse.Model))
 							player.Out.SendRentReminder(ghouse);
 					}

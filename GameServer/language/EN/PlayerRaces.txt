@@ -19,8 +19,9 @@ GamePlayer.PlayerRace.Male.HalfOgre:			Half Ogre
 GamePlayer.PlayerRace.Male.Frostalf:			Frostalf
 GamePlayer.PlayerRace.Male.Shar:				Shar
 GamePlayer.PlayerRace.Male.Korazh:				Korazh
-GamePlayer.PlayerRace.Male.Deifang:				Deifang
+GamePlayer.PlayerRace.Male.Deifrang:			Deifrang
 GamePlayer.PlayerRace.Male.Graoch:				Graoch
+
 # Race names female
 GamePlayer.PlayerRace.Female.Briton:			Briton
 GamePlayer.PlayerRace.Female.Avalonian:			Avalonian
@@ -41,5 +42,5 @@ GamePlayer.PlayerRace.Female.HalfOgre:			Half Ogre
 GamePlayer.PlayerRace.Female.Frostalf:			Frostalf
 GamePlayer.PlayerRace.Female.Shar:				Shar
 GamePlayer.PlayerRace.Female.Korazh:			Korazh
-GamePlayer.PlayerRace.Female.Deifang:			Deifang
+GamePlayer.PlayerRace.Female.Deifrang:			Deifrang
 GamePlayer.PlayerRace.Female.Graoch:			Graoch

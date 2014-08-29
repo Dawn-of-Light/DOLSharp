@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Text;
@@ -44,9 +43,9 @@ namespace DOL.GS.Behaviour
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 		
-        private static readonly Dictionary<eActionType, Type> m_behaviourActionMap = new Dictionary<eActionType, Type>();
-        private static readonly Dictionary<eTriggerType, Type> m_behaviourTriggerMap = new Dictionary<eTriggerType, Type>();
-        private static readonly Dictionary<eRequirementType, Type> m_behaviourRequirementMap = new Dictionary<eRequirementType, Type>();
+        private static readonly IDictionary m_behaviourActionMap = new HybridDictionary();
+        private static readonly IDictionary m_behaviourTriggerMap = new HybridDictionary();
+        private static readonly IDictionary m_behaviourRequirementMap = new HybridDictionary();
 
 		#endregion
 
@@ -141,7 +140,7 @@ namespace DOL.GS.Behaviour
 
         public static void RegisterBehaviourAction(eActionType actionType, Type type)
         {
-            if (m_behaviourActionMap.ContainsKey(actionType))
+            if (m_behaviourActionMap.Contains(actionType))
             {
                 if (log.IsErrorEnabled)
                     log.Error(actionType + " is already registered, only one Type can be declared for each ActionType. Duplicate declaration found in :" + m_behaviourActionMap[actionType] + " and " + type);
@@ -152,15 +151,12 @@ namespace DOL.GS.Behaviour
 
         public static Type GetTypeForActionType(eActionType actionType)
         {
-        	if(m_behaviourActionMap.ContainsKey(actionType))
-            	return (Type) m_behaviourActionMap[actionType];
-        	
-        	return null;
+            return (Type) m_behaviourActionMap[actionType];
         }
 
         public static void RegisterBehaviourTrigger(eTriggerType triggerType, Type type)
         {
-            if (m_behaviourTriggerMap.ContainsKey(triggerType))
+            if (m_behaviourTriggerMap.Contains(triggerType))
             {
                 if (log.IsErrorEnabled)
                     log.Error(triggerType + " is already registered, only one Type can be declared for each TriggerType. Duplicate declaration found in :" + m_behaviourTriggerMap[triggerType] + " and " + type);
@@ -171,15 +167,12 @@ namespace DOL.GS.Behaviour
 
         public static Type GetTypeForTriggerType(eTriggerType triggerType)
         {
-        	if(m_behaviourTriggerMap.ContainsKey(triggerType))
-            	return (Type)m_behaviourTriggerMap[triggerType];
-        	
-        	return null;
+            return (Type)m_behaviourTriggerMap[triggerType];
         }
 
         public static void RegisterBehaviourRequirement(eRequirementType requirementType, Type type)
         {
-            if (m_behaviourRequirementMap.ContainsKey(requirementType))
+            if (m_behaviourRequirementMap.Contains(requirementType))
             {
                 if (log.IsErrorEnabled)
                     log.Error(requirementType + " is already registered, only one Type can be declared for each Requirement. Duplicate declaration found in :" + m_behaviourRequirementMap[requirementType] + " and " + type);
@@ -190,10 +183,7 @@ namespace DOL.GS.Behaviour
 
         public static Type GetTypeForRequirementType(eRequirementType requirementType)
         {
-        	if(m_behaviourRequirementMap.ContainsKey(requirementType))
-            	return (Type)m_behaviourRequirementMap[requirementType];
-        	
-        	return null;
+            return (Type)m_behaviourRequirementMap[requirementType];
         }
 		
     }

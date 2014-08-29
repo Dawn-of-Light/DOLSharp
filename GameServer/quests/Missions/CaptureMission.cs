@@ -26,7 +26,7 @@ namespace DOL.GS.Quests
 			else if (owner is GamePlayer)
 				realm = (owner as GamePlayer).Realm;
 
-			List<AbstractGameKeep> list = new List<AbstractGameKeep>();
+			ArrayList list = new ArrayList();
 
 			switch (type)
 			{

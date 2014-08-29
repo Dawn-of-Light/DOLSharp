@@ -38,13 +38,13 @@ namespace DOL.GS
 		/// <summary>
 		/// table of all relics, id as key
 		/// </summary>
-		private static readonly Dictionary<int, GameRelic> m_relics = new Dictionary<int, GameRelic>();
+		private static readonly Hashtable m_relics = new Hashtable();
 
 
 		/// <summary>
 		/// list of all relicPads
 		/// </summary>
-		private static readonly List<GameRelicPad> m_relicPads = new List<GameRelicPad>();
+		private static readonly ArrayList m_relicPads = new ArrayList();
 
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static bool Init()
 		{
-			lock (((ICollection)m_relics).SyncRoot)
+			lock (m_relics.SyncRoot)
 			{
 				//at first remove all relics
 				foreach (GameRelic rel in m_relics.Values)
@@ -79,7 +79,7 @@ namespace DOL.GS
 				// if relics are on the ground during init we will return them to their owners
 				List<GameRelic> lostRelics = new List<GameRelic>();
 
-				IList<DBRelic> relics = GameServer.Database.SelectAllObjects<DBRelic>();
+				var relics = GameServer.Database.SelectAllObjects<DBRelic>();
 				foreach (DBRelic datarelic in relics)
 				{
 					if (datarelic.relicType < 0 || datarelic.relicType > 1
@@ -164,7 +164,7 @@ namespace DOL.GS
 		/// <param name="pad"></param>
 		public static void AddRelicPad(GameRelicPad pad)
 		{
-			lock (((ICollection)m_relicPads).SyncRoot)
+			lock (m_relicPads.SyncRoot)
 			{
 				if (!m_relicPads.Contains(pad))
 					m_relicPads.Add(pad);
@@ -178,7 +178,7 @@ namespace DOL.GS
 		private static GameRelicPad GetPadAtRelicLocation(GameRelic relic)
 		{
 
-			lock (((ICollection)m_relicPads).SyncRoot)
+			lock (m_relicPads.SyncRoot)
 			{
 				foreach (GameRelicPad pad in m_relicPads)
 				{
@@ -199,10 +199,7 @@ namespace DOL.GS
 		/// <returns> Relic object with relicid = id</returns>
 		public static GameRelic getRelic(int id)
 		{
-			if(m_relics.ContainsKey(id))
-				return m_relics[id] as GameRelic;
-			
-			return null;
+			return m_relics[id] as GameRelic;
 		}
 
 
@@ -213,7 +210,12 @@ namespace DOL.GS
 
 		public static IList getNFRelics()
 		{
-			return new List<GameRelic>(m_relics.Values);
+			ArrayList myRelics = new ArrayList();
+			foreach (GameRelic relic in m_relics.Values)
+			{
+				myRelics.Add(relic);
+			}
+			return myRelics;
 		}
 
 		/// <summary>
@@ -223,8 +225,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static IEnumerable getRelics(eRealm Realm)
 		{
-			List<GameRelic> realmRelics = new List<GameRelic>();
-			lock (((ICollection)m_relics).SyncRoot)
+			ArrayList realmRelics = new ArrayList();
+			lock (m_relics)
 			{
 				foreach (GameRelic relic in m_relics.Values)
 				{
@@ -244,7 +246,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static IEnumerable getRelics(eRealm Realm, eRelicType RelicType)
 		{
-			List<GameRelic> realmTypeRelics = new List<GameRelic>();
+			ArrayList realmTypeRelics = new ArrayList();
 			foreach (GameRelic relic in getRelics(Realm))
 			{
 				if (relic.RelicType == RelicType)
@@ -263,7 +265,7 @@ namespace DOL.GS
 		public static int GetRelicCount(eRealm realm)
 		{
 			int index = 0;
-			lock (((ICollection)m_relics).SyncRoot)
+			lock (m_relics.SyncRoot)
 			{
 				foreach (GameRelic relic in m_relics.Values)
 				{
@@ -283,7 +285,7 @@ namespace DOL.GS
 		public static int GetRelicCount(eRealm realm, eRelicType type)
 		{
 			int index = 0;
-			lock (((ICollection)m_relics).SyncRoot)
+			lock (m_relics.SyncRoot)
 			{
 				foreach (GameRelic relic in m_relics.Values)
 				{
@@ -304,14 +306,26 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static double GetRelicBonusModifier(eRealm realm, eRelicType type)
 		{
-			double value = 0.0;
+			double bonus = 0.0;
+			bool owningSelf = false;
 			//only playerrealms can get bonus
 			foreach (GameRelic rel in getRelics(realm, type))
 			{
-				if (rel.Realm != rel.OriginalRealm)
-					value += 0.1;
+				if (rel.Realm == rel.OriginalRealm)
+				{
+					owningSelf = true;
+				}
+				else
+				{
+					bonus += ServerProperties.Properties.RELIC_OWNING_BONUS*0.01;
+				}
 			}
-			return value;
+			
+			// Bonus apply only if owning original relic
+			if (owningSelf)
+				return bonus;
+			
+			return 0.0;
 		}
 
 		/// <summary>
@@ -341,11 +355,11 @@ namespace DOL.GS
 		/// Gets a copy of the current relics table, keyvalue is the relicId
 		/// </summary>
 		/// <returns></returns>
-		public static Dictionary<int, GameRelic> GetAllRelics()
+		public static Hashtable GetAllRelics()
 		{
-			lock (((ICollection)m_relics).SyncRoot)
+			lock (m_relics.SyncRoot)
 			{
-				return m_relics;
+				return (Hashtable)m_relics.Clone();
 			}
 		}
 		#endregion

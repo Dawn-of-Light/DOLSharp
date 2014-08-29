@@ -24,7 +24,7 @@ using DOL.Language;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, eClientPackets.DoorRequest, ClientStatus.PlayerInGame)]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.DoorRequest, "Door Interact Request Handler", eClientStatus.PlayerInGame)]
 	public class DoorRequestHandler : IPacketHandler
 	{
 		public static int m_handlerDoorID;
@@ -267,7 +267,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							var door = mydoor as GameKeepDoor;
 							//portal keeps left click = right click
-							if (door.Component.Keep is GameKeepTower && door.Component.Keep.KeepComponents.Count > 1)
+							if (door.Component.AbstractKeep is GameKeepTower && door.Component.AbstractKeep.KeepComponents.Count > 1)
 								door.Interact(player);
 							success = true;
 						}

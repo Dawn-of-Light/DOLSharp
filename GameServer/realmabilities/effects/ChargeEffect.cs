@@ -47,7 +47,7 @@ namespace DOL.GS.Effects
 
 			//sets player into combat mode
 			living.LastAttackTickPvP = m_startTick;
-			List<IGameEffect> speedSpells = new List<IGameEffect>();
+			ArrayList speedSpells = new ArrayList();
 			lock(living.EffectList)
 			{
 				foreach (IGameEffect effect in living.EffectList)
@@ -59,7 +59,7 @@ namespace DOL.GS.Effects
 			}
 			foreach (GameSpellEffect spell in speedSpells)
 				spell.Cancel(false);
-			m_living.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, PropertyCalc.MaxSpeedCalculator.SPEED3);
+			m_living.BuffBonusMultCategory1.Set(eProperty.MaxSpeed, this, PropertyCalc.MaxSpeedCalculator.SPEED3);
 			m_living.TempProperties.setProperty("Charging", true);
 			if (m_living is GamePlayer)
 				((GamePlayer)m_living).Out.SendUpdateMaxSpeed();
@@ -71,7 +71,7 @@ namespace DOL.GS.Effects
 		{
 			m_living.TempProperties.removeProperty("Charging");
 			m_living.EffectList.Remove(this);
-			m_living.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
+			m_living.BuffBonusMultCategory1.Remove(eProperty.MaxSpeed, this);
 			//Send messages
 			if (m_living is GamePlayer)
 			{

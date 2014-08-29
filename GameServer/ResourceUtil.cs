@@ -68,9 +68,7 @@ namespace DOL.Config
 				using(StreamWriter writer = new StreamWriter(File.Create(fileName)))
 				{
 					writer.Write(reader.ReadToEnd());
-					writer.Close();
 				}
-				reader.Close();
 			}
 		}
 	}

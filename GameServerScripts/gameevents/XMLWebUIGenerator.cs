@@ -266,9 +266,6 @@ namespace DOL.GS.Scripts
 			{
 				var db = ObjectDatabase.GetObjectDatabase(ConnectionType.DATABASE_XML, "."+Path.DirectorySeparatorChar+"webui"+Path.DirectorySeparatorChar+"generated");
 
-				db.RegisterDataObject(typeof (ServerInfo));
-				db.RegisterDataObject(typeof (PlayerInfo));
-
 				ServerInfo si = new ServerInfo();
 
 				si.Time = DateTime.Now.ToString();

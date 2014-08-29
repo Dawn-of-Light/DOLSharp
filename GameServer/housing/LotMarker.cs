@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 
@@ -44,7 +43,7 @@ namespace DOL.GS.Housing
 
 		public override IList GetExamineMessages(GamePlayer player)
 		{
-			List<string> list = new List<string>();
+			IList list = new ArrayList();
 			list.Add("You target lot number " + DatabaseItem.HouseNumber + ".");
 
 			if (string.IsNullOrEmpty(DatabaseItem.OwnerID))
@@ -116,7 +115,7 @@ namespace DOL.GS.Housing
 				                       eChatType.CT_Merchant, eChatLoc.CL_SystemWindow))
 				{
                     InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, totalCost);
-					DatabaseItem.LastPaid = DateTime.UtcNow;
+					DatabaseItem.LastPaid = DateTime.Now;
 					DatabaseItem.OwnerID = player.DBCharacter.ObjectId;
 					CreateHouse(player, 0);
 				}

@@ -18,7 +18,6 @@
  */
 
 using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 using DOL.Language;
 using DOL.GS;
@@ -89,9 +88,9 @@ namespace DOL.GS.Commands
 
 		}
 
-		private List<GameLiving> GetTargets(GamePlayer player)
+		private ArrayList GetTargets(GamePlayer player)
 		{
-			List<GameLiving> list = new List<GameLiving>();
+			ArrayList list = new ArrayList();
 			eBroadcastType type = (eBroadcastType)ServerProperties.Properties.BROADCAST_TYPE;
 			switch (type)
 			{

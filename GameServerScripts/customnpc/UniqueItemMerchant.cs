@@ -28,10 +28,7 @@ namespace DOL.GS
 		
 		public const uint CYCLE_FOR_RENEW_MS = 3600000;
 		
-		private static Timer m_renewinventory;
-		
-		private static ulong m_cycle_iteration = 0;
-		private ulong m_inventory_iteration;
+		private long m_cycle_time = 0;
 
 		private List<eObjectType> m_types;
 		
@@ -40,43 +37,35 @@ namespace DOL.GS
 			:base()
 		{
 			//launch first gen
-			changeInventory();
-			m_inventory_iteration = m_cycle_iteration;
+			//changeInventory();
 		}
 		
 		public override bool Interact(GamePlayer player)
 		{
-			if(this.m_inventory_iteration != m_cycle_iteration) {
+			if(m_cycle_time+CYCLE_FOR_RENEW_MS < GameTimer.GetTickCount()) 
+			{
 				changeInventory();		
 			}
 			
 			return base.Interact(player);
 		}
 		
-		protected static void GenerateUniqueInventory(object sender, ElapsedEventArgs args)
-		{
-			m_cycle_iteration++;
-			
-			foreach (GameClient clients in WorldMgr.GetAllPlayingClients())
-            	if (clients != null)
-					clients.Out.SendMessage("RoG Merchants have new Inventories !", eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
-			
-		}
-		
 		public void changeInventory()
 		{
+			// Update timestamp
+			m_cycle_time = GameTimer.GetTickCount();
+			
 			// Empty current trade list.
 			MerchantTradeItems inventory = new MerchantTradeItems("");
-			GeneratedUniqueItem item = null;
 			int maxitem = (MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS*MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS);
 			
 			//try to get specific object type and level from mob
-			this.m_types = new  List<eObjectType>();
+			m_types = new List<eObjectType>();
 			
 			
 			// arbitrarly set a level range around Merchant Level.
-			int minlevel = this.Level - 15;
-			int maxlevel = this.Level + 15;
+			int minlevel = Level - 15;
+			int maxlevel = Level + 15;
 			
 			if(minlevel < 1)
 			{
@@ -104,22 +93,22 @@ namespace DOL.GS
 
 			// try to parse PackageID for a list of ObjectTypes			
 			int typerange = 0;			
-			if(this.PackageID != null && this.PackageID.Length > 0) 
+			if(PackageID != null && PackageID.Length > 0) 
 			{
 				try 
 				{
-					foreach(string type in Util.SplitCSV(this.PackageID)) 
+					foreach(string type in Util.SplitCSV(PackageID)) 
 					{
 						eObjectType objtype = (eObjectType)Convert.ToInt32(type);
 						
 						if((objtype >= eObjectType._FirstArmor && objtype <= eObjectType._LastArmor) || (objtype >= eObjectType._FirstWeapon && objtype <= eObjectType._LastWeapon) || objtype == eObjectType.Magical) 
 						{
-							this.m_types.Add((eObjectType)objtype);
+							m_types.Add((eObjectType)objtype);
 						}
 					}
 					
-					if(this.m_types.Count > 0)
-						typerange = (int)(maxitem/this.m_types.Count);
+					if(m_types.Count > 0)
+						typerange = (int)(maxitem/m_types.Count);
 					
 					if((maxlevel-minlevel) > 0)
 						levelrange = (int)(typerange/(maxlevel-minlevel));
@@ -129,7 +118,7 @@ namespace DOL.GS
 				}
 				catch 
 				{
-					this.m_types = null;
+					m_types = null;
 					typerange = 0;
 				}
 			}
@@ -138,15 +127,15 @@ namespace DOL.GS
 			//initialize counters
 			int curitem = 0;
 			int curlevel = minlevel;
-			int i = 0;
 			
 			// create randomized inventory
-			for(i = 0 ; i < maxitem ; i++) 
+			for(int j = 0 ; j < maxitem ; j++) 
 			{
+				GeneratedUniqueItem item = null;
 				
+				int i = j;
 				
-				
-				if(i > 0 && typerange > 0 && i%typerange == 0 && this.m_types != null && curitem < (this.m_types.Count - 1)) 
+				if(i > 0 && typerange > 0 && i%typerange == 0 && m_types != null && curitem < (m_types.Count - 1)) 
 				{
 					curitem++;
 					curlevel = minlevel;
@@ -159,22 +148,19 @@ namespace DOL.GS
 				if(typerange < 1)
 					item = new GeneratedUniqueItem(this.Realm, (byte)curlevel);
 				else
-					item = new GeneratedUniqueItem(this.Realm, (byte)curlevel, this.m_types[curitem]);
+					item = new GeneratedUniqueItem(this.Realm, (byte)curlevel, m_types[curitem]);
 				
 				inventory.AddTradeItem((byte)(i/MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS), (eMerchantWindowSlot)(i%MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS), item);
 			
 			}
 			
 			//assigne inventory to NPC
-			this.TradeItems = inventory;
-			
-			//sync iteration
-			this.m_inventory_iteration = m_cycle_iteration;
+			TradeItems = inventory;
 		}
 		
 		public override eQuestIndicator GetQuestIndicator(GamePlayer player)
 		{
-			return eQuestIndicator.Lesson ;
+			return eQuestIndicator.Lesson;
 		}
 		
 		public override void OnPlayerBuy(GamePlayer player, int item_slot, int number)
@@ -189,11 +175,12 @@ namespace DOL.GS
 			byte pagenumber = (byte)(item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS);
 			int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
-			ItemUnique template = (ItemUnique)this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
+			ItemUnique template = (ItemUnique)TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
 			if (template == null) return;
 
 			//Calculate the amout of items
 			int amountToBuy = number;
+			
 			if (template.PackSize > 0)
 				amountToBuy *= template.PackSize;
 
@@ -221,7 +208,7 @@ namespace DOL.GS
 				template.AllowAdd = true;
 				GameServer.Database.AddObject(template);
 				player.Inventory.AddTemplate(GameInventoryItem.Create<ItemUnique>(template), amountToBuy, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
-				this.TradeItems.RemoveTradeItem(pagenumber, (eMerchantWindowSlot)slotnumber);
+				TradeItems.RemoveTradeItem(pagenumber, (eMerchantWindowSlot)slotnumber);
 				
 				InventoryLogging.LogInventoryAction(this, player, eInventoryActionType.Merchant, template, amountToBuy);
 				//Generate the buy message
@@ -239,32 +226,6 @@ namespace DOL.GS
 				
 				InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, totalValue);
 			}
-		}
-
-		[ScriptLoadedEvent]
-		public static void OnScriptLoaded(DOLEvent e, object sender, EventArgs args)
-		{
-			//launch timer
-			if (m_renewinventory == null) {
-				m_renewinventory = new Timer(CYCLE_FOR_RENEW_MS);
-				m_renewinventory.AutoReset = true;
-				m_renewinventory.Elapsed += new ElapsedEventHandler(GenerateUniqueInventory);
-				m_renewinventory.Start();
-			}
-			
-			m_cycle_iteration++;
-		}
-		
-		//This function is called whenever the event is stopped
-		[ScriptUnloadedEvent]
-		public static void OnScriptUnload(DOLEvent e, object sender, EventArgs args)
-		{
-			//We stop our timer ...
-			if (m_renewinventory != null) {
-				m_renewinventory.Stop();
-				m_renewinventory.Close();	
-			}				
-
 		}
 		
 	}

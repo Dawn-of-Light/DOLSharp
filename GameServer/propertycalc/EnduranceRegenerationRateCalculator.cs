@@ -42,14 +42,14 @@ namespace DOL.GS.PropertyCalc
 		/// <returns></returns>
 		public override int CalcValue(GameLiving living, eProperty property)
 		{
-			int debuff = living.SpecBuffBonusCategory[(int)property];
+			int debuff = living.SpecBuffBonusCategory[property];
 			if (debuff < 0)
 				debuff = -debuff;
 
 			// buffs allow to regenerate endurance even in combat and while moving
 			double regen =
-				 living.BaseBuffBonusCategory[(int)property]
-				+living.ItemBonus[(int)property];
+				 living.BaseBuffBonusCategory[property]
+				+living.ItemBonus[property];
 
 			if (regen == 0 && living is GamePlayer) //&& ((GamePlayer)living).HasAbility(Abilities.Tireless))
 				regen++;

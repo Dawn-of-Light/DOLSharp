@@ -55,6 +55,11 @@ namespace DOL.GS.Effects
 		ushort InternalID { get; set; }
 
 		/// <summary>
+		/// Effect Fading regardless of Remaining Time. 
+		/// </summary>
+		bool IsFading { get; }
+		
+		/// <summary>
 		/// Delve Info
 		/// </summary>
 		IList<string> DelveInfo { get; }

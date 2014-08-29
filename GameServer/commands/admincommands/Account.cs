@@ -87,7 +87,7 @@ namespace DOL.GS.Commands
                         account.Password = PacketHandler.Client.v168.LoginRequestHandler.CryptPassword(Password);
                         account.PrivLevel = (uint)ePrivLevel.Player;
                         account.Realm = (int)eRealm.None;
-                        account.CreationDate = DateTime.UtcNow;
+                        account.CreationDate = DateTime.Now;
                         account.Language = ServerProperties.Properties.SERV_LANGUAGE;
                         GameServer.Database.AddObject(account);
 
@@ -316,8 +316,12 @@ namespace DOL.GS.Commands
 						
 						try
                         {
-                            foreach(DBBannedAccount banned in banacc)
-                                GameServer.Database.DeleteObject(banned);
+							foreach(DBBannedAccount banned in banacc)
+							{
+								GameServer.Database.DeleteObject(banned);
+								banned.Unbanned = true;
+								GameServer.Database.AddObject(banned);
+							}
                         }
                         catch(Exception) { DisplaySyntax(client); return; }
 						DisplayMessage(client, "Account "+accountname+" unbanned!");

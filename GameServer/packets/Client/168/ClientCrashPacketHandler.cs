@@ -23,19 +23,17 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, 0x9F ^ 168, "Handles client crash packets")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.ClientCrash, "Handles client crash packets", eClientStatus.None)]
 	public class ClientCrashPacketHandler : IPacketHandler
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-		
-		private object m_crashLock = new object();
 
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			lock (m_crashLock)
+			lock (this)
 			{
 				string dllName = packet.ReadString(16);
 				packet.Position = 0x50;

@@ -21,59 +21,43 @@ using System.Collections.Generic;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.Spells;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Calming Notes (RR5 Minstrel) Realm Ability.
-	/// </summary>
     public class CalmingNotesAbility : RR5RealmAbility
     {
-    	// Spell and Spell Line used
-    	private SpellLine m_spellLine;
-    	private Spell m_spell;
-    	
-    	private const int THIS_SPELL_ID = 7045;
-    	private const int THIS_LEVEL = 50;
-    	
-        public CalmingNotesAbility(DBAbility dba, int level) : base(dba, level) 
-        {
-        	m_spellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Character_Abilities);
-        	m_spell = SkillBase.GetSpellByID(THIS_SPELL_ID);
-        	m_spell.Level = THIS_LEVEL;
-        }
+        public CalmingNotesAbility(DBAbility dba, int level) : base(dba, level) { }
  
         public override void Execute(GameLiving living)
         {
             if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
             
-			SpellLine spline = m_spellLine;
- 			Spell abSpell = m_spell;
+			SpellLine spline = SkillBase.GetSpellLine(GlobalSpellsLines.Character_Abilities);
+ 			Spell abSpell = SkillBase.GetSpellByID(7045);
 					 
- 			if (spline != null && abSpell != null && living.GetSkillDisabledDuration(this) <= 0)
-			{
- 				living.CastSpell(abSpell, spline);
- 				SendCasterSpellEffectAndCastMessage(living, m_spell.ClientEffect, true);
- 				DisableSkill(living);
+ 			if (spline != null && abSpell != null)
+			{        
+	            foreach (GameNPC enemy in living.GetNPCsInRadius(750))
+	            {
+	            	if (enemy.IsAlive && enemy.Brain!=null)
+	            		if(enemy.Brain is IControlledBrain)
+							living.CastSpell(abSpell, spline);
+	            }
  			}
- 			else if(living is GamePlayer) {
- 				((GamePlayer)living).Out.SendMessage("The ability "+m_spell.Name+" is not ready yet !", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
- 			}
+            DisableSkill(living);
         }
-        
         public override int GetReUseDelay(int level)
         {
-        	return (int)m_spell.RecastDelay/1000;
+            return 300;
         }
         public override void AddEffectsInfo(IList<string> list)
         {
-        	list.Add("Insta-cast spell that mesmerizes all enemies within "+m_spell.Radius+" radius for "+Math.Floor((double)m_spell.Duration/1000)+" seconds.");
+            list.Add("Insta-cast spell that mesmerizes all enemy pets within 750 radius for 30 seconds.");
             list.Add("");
-            list.Add("Radius: "+m_spell.Radius);
-            list.Add("Target: "+m_spell.Target);
-            list.Add("Duration: "+Math.Floor((double)m_spell.Duration/1000)+" sec");
-            list.Add("Casting time: "+(m_spell.CastTime > 0 ? m_spell.CastTime+" sec" : "instant"));
+            list.Add("Radius: 700");
+            list.Add("Target: Pet");
+            list.Add("Duration: 30 sec");
+            list.Add("Casting time: instant");
         }
 
 

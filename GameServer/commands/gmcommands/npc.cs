@@ -28,7 +28,7 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&npc",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"Various npc commands",
 		"/npc say <text>",
 		"/npc yell <text>",

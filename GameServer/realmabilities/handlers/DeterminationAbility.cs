@@ -9,7 +9,7 @@ namespace DOL.GS.RealmAbilities
 	/// <summary>
 	/// Determination
 	/// </summary>
-	public class DeterminationAbility : RAPropertyEnhancer
+	public class DeterminationAbility : L5RealmAbility
 	{
 		public static eProperty[] properties = new eProperty[]
 		{

@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
@@ -44,7 +43,7 @@ namespace DOL.GS.Keeps
 		/// <returns>list with string messages</returns>
 		public override IList GetExamineMessages(GamePlayer player)
 		{
-			List<string> list = new List<string>();
+			IList list = new ArrayList();
 			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a hastener.");
 			return list;
 		}

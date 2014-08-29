@@ -69,7 +69,8 @@ namespace DOL.GS.Effects
             tSpell.Duration = spellDuration;
             tSpell.Uninterruptible = true;
             tSpell.Type = "Stun";
-			tSpell.ResurrectMana=1;
+			tSpell.ResurrectMana=0;
+			tSpell.AmnesiaChance=5;
 			tSpell.ResurrectHealth=1;
             tSpell.Damage = 0;
             tSpell.DamageType = 0;

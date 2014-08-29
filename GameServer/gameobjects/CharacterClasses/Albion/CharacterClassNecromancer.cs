@@ -209,30 +209,5 @@ namespace DOL.GS
 
             base.Die(killer);
         }
-
-        public override void Notify(DOLEvent e, object sender, EventArgs args)
-        {
-            if (Player.ControlledBrain != null)
-            {
-				GameNPC pet = Player.ControlledBrain.Body;
-
-                if (pet != null && sender == pet && e == GameLivingEvent.CastStarting && args is CastingEventArgs)
-                {
-                    ISpellHandler spellHandler = (args as CastingEventArgs).SpellHandler;
-
-                    if (spellHandler != null)
-                    {
-                        int powerCost = spellHandler.PowerCost(Player);
-
-                        if (powerCost > 0)
-							Player.ChangeMana(Player, GameLiving.eManaChangeType.Spell, -powerCost);
-                    }
-
-                    return;
-                }
-            }
-
-            base.Notify(e, sender, args);
-        }
 	}
 }

@@ -31,7 +31,7 @@ namespace DOL.GS.Keeps
 	/// <summary>
 	/// AbstractGameKeep is the keep or a tower in game in RVR
 	/// </summary>
-	public abstract class AbstractGameKeep : IKeep
+	public abstract class AbstractGameKeep : IGameKeep
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -150,26 +150,45 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		protected List<GameKeepComponent> m_keepComponents;
 
+		public List<GameKeepComponent> KeepComponents
+		{
+			get { return m_keepComponents; }
+			set { m_keepComponents = value; }
+		}
+		
 		/// <summary>
 		/// Keep components ( wall, tower, gate,...)
 		/// </summary>
-		public List<GameKeepComponent> KeepComponents
+		public List<IGameKeepComponent> SentKeepComponents
 		{
-			get	{ return m_keepComponents; }
-			set { m_keepComponents = value;}
+			get	
+			{
+				List<IGameKeepComponent> ret = new List<IGameKeepComponent>();
+				foreach(GameKeepComponent comp in m_keepComponents)
+					ret.Add(comp);
+				
+				return ret; 
+			}
+			set 
+			{
+				List<GameKeepComponent> newList = new List<GameKeepComponent>();
+				foreach(IGameKeepComponent comp in value)
+					newList.Add((GameKeepComponent)comp);
+				m_keepComponents = newList;
+			}
 		}
 
 		/// <summary>
 		/// This hold list of all keep doors
 		/// </summary>
 		//protected ArrayList m_doors;
-		protected Dictionary<string, GameKeepDoor> m_doors;
+		protected Hashtable m_doors;
 
 		/// <summary>
 		/// keep doors
 		/// </summary>
 		//public ArrayList Doors
-		public Dictionary<string, GameKeepDoor> Doors
+		public Hashtable Doors
 		{
 			get	{ return m_doors; }
 			set { m_doors = value; }
@@ -192,12 +211,12 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// This hold list of all guards of keep
 		/// </summary>
-		protected Dictionary<string, GameKeepGuard> m_guards;
+		protected Hashtable m_guards;
 
 		/// <summary>
 		/// List of all guards of keep
 		/// </summary>
-		public Dictionary<string, GameKeepGuard> Guards
+		public Hashtable Guards
 		{
 			get	{ return m_guards; }
 		}
@@ -205,22 +224,22 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// List of all banners
 		/// </summary>
-		protected Dictionary<string, GameKeepBanner> m_banners;
+		protected Hashtable m_banners;
 
 		/// <summary>
 		/// List of all banners
 		/// </summary>
-		public Dictionary<string, GameKeepBanner> Banners
+		public Hashtable Banners
 		{
 			get	{ return m_banners; }
 			set	{ m_banners = value; }
 		}
 
-		protected Dictionary<string, Patrol> m_patrols;
+		protected Hashtable m_patrols;
 		/// <summary>
 		/// List of all patrols
 		/// </summary>
-		public Dictionary<string, Patrol> Patrols
+		public Hashtable Patrols
 		{
 			get { return m_patrols; }
 			set { m_patrols = value; }
@@ -326,10 +345,10 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// The Keep ID linked to the DBKeep
 		/// </summary>
-		public int KeepID
+		public ushort KeepID
 		{
-			get	{ return DBKeep.KeepID; }
-			set	{ DBKeep.KeepID = value; }
+			get	{ return (ushort)DBKeep.KeepID; }
+			set	{ DBKeep.KeepID = (ushort)value; }
 		}
 
 		/// <summary>
@@ -488,11 +507,11 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public AbstractGameKeep()
 		{
-			m_guards = new Dictionary<string, GameKeepGuard>();
+			m_guards = new Hashtable();
 			m_keepComponents = new List<GameKeepComponent>();
-			m_banners = new Dictionary<string, GameKeepBanner>();
-			m_doors = new Dictionary<string, GameKeepDoor>();
-			m_patrols = new Dictionary<string, Patrol>();
+			m_banners = new Hashtable();
+			m_doors = new Hashtable();
+			m_patrols = new Hashtable();
 		}
 
 		~AbstractGameKeep()
@@ -543,19 +562,19 @@ namespace DOL.GS.Keeps
 		/// <param name="area"></param>
 		public virtual void Remove(KeepArea area)
 		{
-			foreach (GameKeepGuard guard in new Dictionary<string, GameKeepGuard>(m_guards).Values)
+			foreach (GameKeepGuard guard in (m_guards.Clone() as Hashtable).Values)
 			{
 				guard.Delete();
 				guard.DeleteFromDatabase();
 			}
 
-			foreach (GameKeepBanner banner in new Dictionary<string, GameKeepBanner>(m_banners).Values)
+			foreach (GameKeepBanner banner in (m_banners.Clone() as Hashtable).Values)
 			{
 				banner.Delete();
 				banner.DeleteFromDatabase();
 			}
 
-			foreach (GameKeepDoor door in new Dictionary<string, GameKeepDoor>(m_doors).Values)
+			foreach (GameKeepDoor door in (m_doors.Clone() as Hashtable).Values)
 			{
 				door.Delete();
 				GameDoor d = new GameDoor();
@@ -808,7 +827,7 @@ namespace DOL.GS.Keeps
 			int amount = CalculRP();
 			this.Guild.RealmPoints+=amount;
 
-			return (int)timer.Interval;
+			return timer.Interval;
 		}
 
 		public virtual int CalculRP()
@@ -912,16 +931,16 @@ namespace DOL.GS.Keeps
 
 			if (guard is GuardLord)
 			{
-				if (guard.Component.Keep is GameKeep)
-					return (byte)(guard.Component.Keep.BaseLevel + ((guard.Component.Keep.BaseLevel / 10) + 1) * 2);
+				if (guard.Component.AbstractKeep is GameKeep)
+					return (byte)(guard.Component.AbstractKeep.BaseLevel + ((guard.Component.AbstractKeep.BaseLevel / 10) + 1) * 2);
 				else
-					return (byte)(guard.Component.Keep.BaseLevel + 2); // flat increase for tower captains
+					return (byte)(guard.Component.AbstractKeep.BaseLevel + 2); // flat increase for tower captains
 			}
 
-			if (guard.Component.Keep is GameKeep)
-				return (byte)(guard.Component.Keep.BaseLevel + 1);
+			if (guard.Component.AbstractKeep is GameKeep)
+				return (byte)(guard.Component.AbstractKeep.BaseLevel + 1);
 
-			return guard.Component.Keep.BaseLevel;
+			return guard.Component.AbstractKeep.BaseLevel;
 		}
 
 
@@ -939,9 +958,9 @@ namespace DOL.GS.Keeps
 				if (guard.Component != null)
 				{
 					// level is usually 4 unless upgraded, BaseLevel is usually 50
-					bonusLevel = guard.Component.Keep.Level;
+					bonusLevel = guard.Component.AbstractKeep.Level;
 
-					if (guard.Component.Keep is GameKeepTower)
+					if (guard.Component.AbstractKeep is GameKeepTower)
 						multiplier = ServerProperties.Properties.TOWER_GUARD_LEVEL_MULTIPLIER;
 				}
 
@@ -998,11 +1017,11 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public void StartChangeLevelTimer()
 		{
-			long newinterval = CalculateTimeToUpgrade();
+			int newinterval = CalculateTimeToUpgrade();
 
 			if (m_changeLevelTimer.IsAlive)
 			{
-				long timeelapsed = m_changeLevelTimer.Interval - m_changeLevelTimer.TimeUntilElapsed;
+				int timeelapsed = m_changeLevelTimer.Interval - m_changeLevelTimer.TimeUntilElapsed;
 				//if timer has run for more then we need, run event instantly
 				if (timeelapsed > m_changeLevelTimer.Interval)
 					newinterval = 1;
@@ -1128,7 +1147,7 @@ namespace DOL.GS.Keeps
 			{
 				if (!component.IsRaized)
 					component.Repair(component.MaxHealth - component.Health);
-				foreach (GameKeepHookPoint hp in component.HookPoints.Values)
+				foreach (GameKeepHookPoint hp in component.KeepHookPoints.Values)
 				{
 					if (hp.Object != null)
 						hp.Object.Die(null);
@@ -1214,9 +1233,7 @@ namespace DOL.GS.Keeps
 			if (component == null)
 				return;
 
-			GameKeepHookPoint hookpoint = null;
-			if(component.HookPoints.ContainsKey(97))
-				hookpoint = component.HookPoints[97] as GameKeepHookPoint;
+			GameKeepHookPoint hookpoint = component.KeepHookPoints[97] as GameKeepHookPoint;
 
 			if (hookpoint == null)
 				return;

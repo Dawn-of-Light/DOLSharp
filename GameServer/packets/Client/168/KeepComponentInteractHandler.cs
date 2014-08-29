@@ -23,7 +23,7 @@ using DOL.GS.Keeps;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, 0xC7 ^ 168, "Keep component interact")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.KeepComponentInteract, "Keep component interact", eClientStatus.PlayerInGame)]
 	public class KeepComponentInteractHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)
@@ -49,8 +49,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				GameKeepComponent hp = keep.KeepComponents[wallId] as GameKeepComponent;
 				client.Out.SendClearKeepComponentHookPoint(hp, HPindex);
-				if(hp.HookPoints.ContainsKey(HPindex))
-					client.Out.SendHookPointStore(hp.HookPoints[HPindex] as GameKeepHookPoint);
+				client.Out.SendHookPointStore(hp.KeepHookPoints[HPindex] as GameKeepHookPoint);
 			}
 		}
 	}

@@ -18,7 +18,6 @@
  */
 
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using DOL.Database.Cache;
 
@@ -31,7 +30,7 @@ namespace DOL.Database
 	{
 		private readonly ICache _cache;
 		private readonly DataSet _dset;
-		private readonly Dictionary<object, DataObject> _precache;
+		private readonly Hashtable _precache;
 		private bool _hasRelations;
 
 		/// <summary>
@@ -41,7 +40,7 @@ namespace DOL.Database
 		public DataTableHandler(DataSet dataSet)
 		{
 			_cache = new SimpleCache();
-			_precache = new Dictionary<object, DataObject>();
+			_precache = new Hashtable();
 			_dset = dataSet;
 			_hasRelations = false;
 		}
@@ -113,10 +112,7 @@ namespace DOL.Database
 		/// <returns>The value DataObject</returns>
 		public DataObject GetPreCachedObject(object key)
 		{
-			if(_precache.ContainsKey(key))
-				return _precache[key] as DataObject;
-			
-			return null;
+			return _precache[key] as DataObject;
 		}
 	}
 }

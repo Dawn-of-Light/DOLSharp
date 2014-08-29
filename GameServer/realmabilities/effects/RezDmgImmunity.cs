@@ -26,33 +26,38 @@ namespace DOL.GS.Effects
 {
     public class RezDmgImmunityEffect : TimedEffect
     {
-        private GamePlayer m_player = null;
+        private GameLiving m_living;
 
-        public RezDmgImmunityEffect() : base(6000) { }
+        public RezDmgImmunityEffect() :
+        	base(4000)
+        {
+        }
 
         public override void Start(GameLiving target)
         {
             base.Start(target);
-            m_player = target as GamePlayer;
-            GameEventMgr.AddHandler(m_player, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
-            GameEventMgr.AddHandler(m_player, GameLivingEvent.Dying, new DOLEventHandler(OnRemove));
-            GameEventMgr.AddHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(OnRemove));
-            GameEventMgr.AddHandler(m_player, GamePlayerEvent.Linkdeath, new DOLEventHandler(OnRemove));
-            GameEventMgr.AddHandler(m_player, GamePlayerEvent.RegionChanged, new DOLEventHandler(OnRemove));
+            m_living = target;
+            GameEventMgr.AddHandler(m_living, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
+            GameEventMgr.AddHandler(m_living, GameLivingEvent.Dying, new DOLEventHandler(OnRemove));
+            GameEventMgr.AddHandler(m_living, GamePlayerEvent.Quit, new DOLEventHandler(OnRemove));
+            GameEventMgr.AddHandler(m_living, GamePlayerEvent.Linkdeath, new DOLEventHandler(OnRemove));
+            GameEventMgr.AddHandler(m_living, GamePlayerEvent.RegionChanged, new DOLEventHandler(OnRemove));
         }
 
         private void OnAttacked(DOLEvent e, object sender, EventArgs args)
         {
             AttackedByEnemyEventArgs attackArgs = args as AttackedByEnemyEventArgs;
-            if (attackArgs == null) return;
-            AttackData ad = null;
-            ad = attackArgs.AttackData;
+            if (attackArgs == null)
+            	return;
+            
+            AttackData ad = attackArgs.AttackData;
 
             int damageAbsorbed = (int)(ad.Damage + ad.CriticalDamage);
 
+            // TODO change this to an update of attack data and send message to the attacker !
             //They shouldn't take any damamge at all
             //if (m_player.Health < (damageAbsorbed + (int)Math.Round((double)m_player.MaxHealth / 20))) m_player.Health += damageAbsorbed;
-            m_player.Health += damageAbsorbed;
+            m_living.Health += damageAbsorbed;
         }
 
         private void OnRemove(DOLEvent e, object sender, EventArgs args)
@@ -64,12 +69,12 @@ namespace DOL.GS.Effects
 
         public override void Stop()
         {
-			if (m_player.EffectList.GetOfType<SputinsLegacyEffect>() != null) m_player.EffectList.Remove(this);
-            GameEventMgr.RemoveHandler(m_player, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
-            GameEventMgr.RemoveHandler(m_player, GameLivingEvent.Dying, new DOLEventHandler(OnRemove));
-            GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(OnRemove));
-            GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.Linkdeath, new DOLEventHandler(OnRemove));
-            GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.RegionChanged, new DOLEventHandler(OnRemove));
+			if (m_living.EffectList.GetOfType<SputinsLegacyEffect>() != null) m_living.EffectList.Remove(this);
+            GameEventMgr.RemoveHandler(m_living, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
+            GameEventMgr.RemoveHandler(m_living, GameLivingEvent.Dying, new DOLEventHandler(OnRemove));
+            GameEventMgr.RemoveHandler(m_living, GamePlayerEvent.Quit, new DOLEventHandler(OnRemove));
+            GameEventMgr.RemoveHandler(m_living, GamePlayerEvent.Linkdeath, new DOLEventHandler(OnRemove));
+            GameEventMgr.RemoveHandler(m_living, GamePlayerEvent.RegionChanged, new DOLEventHandler(OnRemove));
             base.Stop();
         }
 

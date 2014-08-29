@@ -17,7 +17,10 @@
  *
  */
 using System;
+
 using DOL.GS;
+using DOL.GS.Spells;
+
 namespace DOL.Events
 {
     /// <summary>
@@ -29,30 +32,50 @@ namespace DOL.Events
         /// <summary>
         /// The source of revive (rezzer) or null
         /// </summary>
-        private GameObject m_source = null;
+        private GameObject m_source;
 
         /// <summary>
         /// The spell if one used, else null
         /// </summary>
-        private Spell m_spell = null;
+        private ISpellHandler m_spellHandler;
 
+        /// <summary>
+        /// Reduction of Illness in percent
+        /// </summary>
+        private byte m_illnessReduction;
+        
         /// <summary>
         /// Constructs a new Revived event args
         /// </summary>
-        public RevivedEventArgs(GameObject source, Spell spell)
+        public RevivedEventArgs(GameObject source, ISpellHandler spellHandler, byte illnessReduction)
         {
             m_source = source;
-            m_spell = spell;
+            m_spellHandler = spellHandler;
+            m_illnessReduction = illnessReduction;
         }
 
+        /// <summary>
+        /// The source of revive (rezzer) or null
+        /// </summary>
         public GameObject Source
         {
             get { return m_source; }
         }
 
-        public Spell Spell
+        /// <summary>
+        /// The spell if one used, else null
+        /// </summary>
+        public ISpellHandler SpellHandler
         {
-            get { return m_spell; }
+            get { return m_spellHandler; }
+        }
+        
+        /// <summary>
+        /// Reduction of Illness in percent
+        /// </summary>
+        public byte IllnessReduction
+        {
+        	get { return m_illnessReduction; }
         }
 
     }

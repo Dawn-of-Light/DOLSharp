@@ -81,7 +81,7 @@ namespace DOL.GS.Commands
 				targetLevel = 20;
 
 			long newXP;
-			newXP = client.Player.GetExperienceNeededForLevel(targetLevel - 1) - client.Player.Experience;
+			newXP = client.Player.GetExperienceNeededForLevel(targetLevel) - client.Player.Experience + 1;
 
 			if (newXP < 0)
 				newXP = 0;

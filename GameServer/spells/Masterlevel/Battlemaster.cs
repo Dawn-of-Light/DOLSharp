@@ -20,7 +20,7 @@ namespace DOL.GS.Spells
 
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            m_caster.Mana -= PowerCost(target, true);
             base.FinishSpellCast(target);
         }
 
@@ -60,7 +60,7 @@ namespace DOL.GS.Spells
 
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            m_caster.Mana -= PowerCost(target, true);
             base.FinishSpellCast(target);
         }
 
@@ -100,7 +100,7 @@ namespace DOL.GS.Spells
                 GamePlayer player = effect.Owner as GamePlayer;
 				if (player.EffectList.GetOfType<ChargeEffect>() == null && player != null)
                 {
-                    effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, effect, 0);
+                    effect.Owner.BuffBonusMultCategory1.Set(eProperty.MaxSpeed, effect, 0);
                     player.Client.Out.SendUpdateMaxSpeed();
                     check = 1;
                 }
@@ -111,7 +111,7 @@ namespace DOL.GS.Spells
             base.OnEffectStart(effect);
         }
 
-        protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
+        public override int CalculateEffectDuration(GameLiving target, double effectiveness)
         {
             return Spell.Duration;
         }
@@ -150,7 +150,7 @@ namespace DOL.GS.Spells
 
             if (check > 0 && player != null)
             {
-                effect.Owner.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, effect);
+                effect.Owner.BuffBonusMultCategory1.Remove(eProperty.MaxSpeed, effect);
                 player.Client.Out.SendUpdateMaxSpeed();
             }
 
@@ -158,7 +158,21 @@ namespace DOL.GS.Spells
             return 0;
         }
 
-        public Grapple(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+        /// <summary>
+        /// Disable Sub Spell for Grapple
+        /// </summary>
+		public override void FinishCastSubSpell(GameLiving target)
+		{
+		}
+		
+        /// <summary>
+        /// Disable Sub Spell for Grapple
+        /// </summary>
+		public override void SpellPulseSubSpell(GameLiving target)
+		{
+		}
+
+		public Grapple(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
     #endregion
 
@@ -183,7 +197,7 @@ namespace DOL.GS.Spells
                 return;
             }
             AttackData ad = args.AttackData;
-            if (ad.AttackResult != GameLiving.eAttackResult.HitUnstyled && ad.AttackResult != GameLiving.eAttackResult.HitStyle)
+            if (ad.AttackResult != eAttackResult.HitUnstyled && ad.AttackResult != eAttackResult.HitStyle)
                 return;
 
             int baseChance = Spell.Frequency / 100;
@@ -333,12 +347,11 @@ namespace DOL.GS.Spells
             // calc damage
             AttackData ad = CalculateDamageToTarget(target, effectiveness);
             DamageTarget(ad, true);
-            SendDamageMessages(ad);
             target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster);
         }
         
         
-        public override void DamageTarget(AttackData ad, bool showEffectAnimation)
+        public override void DamageTarget(AttackData ad, bool showEffectAnimation, int attackResult)
         {
             InventoryItem weapon = null;
             weapon = ad.Weapon;
@@ -351,19 +364,19 @@ namespace DOL.GS.Spells
 
                 switch (ad.AttackResult)
                 {
-                    case GameLiving.eAttackResult.Missed: resultByte = 0; break;
-                    case GameLiving.eAttackResult.Evaded: resultByte = 3; break;
-                    case GameLiving.eAttackResult.Fumbled: resultByte = 4; break;
-                    case GameLiving.eAttackResult.HitUnstyled: resultByte = 10; break;
-                    case GameLiving.eAttackResult.HitStyle: resultByte = 11; break;
-                    case GameLiving.eAttackResult.Parried:
+                    case eAttackResult.Missed: resultByte = 0; break;
+                    case eAttackResult.Evaded: resultByte = 3; break;
+                    case eAttackResult.Fumbled: resultByte = 4; break;
+                    case eAttackResult.HitUnstyled: resultByte = 10; break;
+                    case eAttackResult.HitStyle: resultByte = 11; break;
+                    case eAttackResult.Parried:
                         resultByte = 1;
                         if (ad.Target != null && ad.Target.AttackWeapon != null)
                         {
                             defendersWeapon = ad.Target.AttackWeapon.Model;
                         }
                         break;
-                    case GameLiving.eAttackResult.Blocked:
+                    case eAttackResult.Blocked:
                         resultByte = 2;
                         if (ad.Target != null && ad.Target.Inventory != null)
                         {
@@ -420,18 +433,18 @@ namespace DOL.GS.Spells
 
 			switch (ad.AttackResult)
 			{
-				case GameLiving.eAttackResult.TargetNotVisible: player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.NotInView", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-                case GameLiving.eAttackResult.OutOfRange: player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.TooFarAway", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-                case GameLiving.eAttackResult.TargetDead: player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.AlreadyDead", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-                case GameLiving.eAttackResult.Blocked: player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.Blocked", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-                case GameLiving.eAttackResult.Parried: player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.Parried", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-                case GameLiving.eAttackResult.Evaded: player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.Evaded", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-                case GameLiving.eAttackResult.NoTarget: player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.NeedTarget"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-                case GameLiving.eAttackResult.NoValidTarget: player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.CantBeAttacked"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-                case GameLiving.eAttackResult.Missed: player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.Miss"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-                case GameLiving.eAttackResult.Fumbled: player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.Fumble"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
-                case GameLiving.eAttackResult.HitStyle:
-                case GameLiving.eAttackResult.HitUnstyled:
+				case eAttackResult.TargetNotVisible: player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.NotInView", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+                case eAttackResult.OutOfRange: player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.TooFarAway", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+                case eAttackResult.TargetDead: player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.AlreadyDead", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+                case eAttackResult.Blocked: player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.Blocked", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+                case eAttackResult.Parried: player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.Parried", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+                case eAttackResult.Evaded: player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.Evaded", ad.Target.GetName(0, true)), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+                case eAttackResult.NoTarget: player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.NeedTarget"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+                case eAttackResult.NoValidTarget: player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.CantBeAttacked"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+                case eAttackResult.Missed: player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.Miss"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+                case eAttackResult.Fumbled: player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Attack.Fumble"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow); break;
+                case eAttackResult.HitStyle:
+                case eAttackResult.HitUnstyled:
 					string modmessage = "";
 					if (ad.Modifier > 0) modmessage = " (+" + ad.Modifier + ")";
 					if (ad.Modifier < 0) modmessage = " (" + ad.Modifier + ")";
@@ -554,7 +567,7 @@ namespace DOL.GS.Spells
             //Throw Weapon is subject to all the conventional attack results, parry, evade, block, etc.
             ad.AttackResult = ad.Target.CalculateEnemyAttackResult(ad, weapon);
 
-            if (ad.AttackResult == GameLiving.eAttackResult.HitUnstyled || ad.AttackResult == GameLiving.eAttackResult.HitStyle)
+            if (ad.AttackResult == eAttackResult.HitUnstyled || ad.AttackResult == eAttackResult.HitStyle)
             {
                 //we only need to calculate the damage if the attack was a success.
                 double damage = player.AttackDamage(weapon) * effectiveness;
@@ -585,9 +598,9 @@ namespace DOL.GS.Spells
 
                 damage += ad.Modifier;
 
-                int resist = (int)(damage * ad.Target.GetDamageResist(target.GetResistTypeForDamage(ad.DamageType)) * -0.01);
+                int resist = (int)(damage * ad.Target.GetResist(ad.DamageType) * -0.01);
                 eProperty property = ad.Target.GetResistTypeForDamage(ad.DamageType);
-                int secondaryResistModifier = ad.Target.SpecBuffBonusCategory[(int)property];
+                int secondaryResistModifier = ad.Target.SpecBuffBonusCategory[property];
                 int resistModifier = 0;
                 resistModifier += (int)((ad.Damage + (double)resistModifier) * (double)secondaryResistModifier * -0.01);
                 damage += resist;
@@ -597,7 +610,7 @@ namespace DOL.GS.Spells
                 ad.UncappedDamage = ad.Damage;
                 ad.Damage = Math.Min(ad.Damage, (int)(player.UnstyledDamageCap(weapon) * effectiveness));
                 ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVP_MELEE_DAMAGE);
-                if (ad.Damage == 0) ad.AttackResult = DOL.GS.GameLiving.eAttackResult.Missed;
+                if (ad.Damage == 0) ad.AttackResult = eAttackResult.Missed;
                 ad.CriticalDamage = player.GetMeleeCriticalDamage(ad, weapon);
             }
             else
@@ -625,7 +638,7 @@ namespace DOL.GS.Spells
             base.OnEffectStart(effect);
             GameLiving living = effect.Owner as GameLiving;
             //value should be 15 to reduce Essence resist
-            living.DebuffCategory[(int)eProperty.Resist_Natural] += (int)m_spell.Value;
+            living.DebuffCategory[eProperty.Resist_Natural] += (int)m_spell.Value;
 
             if (effect.Owner is GamePlayer)
             {
@@ -639,7 +652,7 @@ namespace DOL.GS.Spells
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
             GameLiving living = effect.Owner as GameLiving;
-            living.DebuffCategory[(int)eProperty.Resist_Natural] -= (int)m_spell.Value;
+            living.DebuffCategory[eProperty.Resist_Natural] -= (int)m_spell.Value;
 
             if (effect.Owner is GamePlayer)
             {
@@ -718,8 +731,8 @@ namespace DOL.GS.Spells
             DexDebuff = (int)((double)effect.Owner.GetModified(eProperty.Dexterity) * percentValue);
             QuiDebuff = (int)((double)effect.Owner.GetModified(eProperty.Quickness) * percentValue);
             GameLiving living = effect.Owner as GameLiving;
-            living.DebuffCategory[(int)eProperty.Dexterity] += DexDebuff;
-            living.DebuffCategory[(int)eProperty.Quickness] += QuiDebuff;
+            living.DebuffCategory[eProperty.Dexterity] += DexDebuff;
+            living.DebuffCategory[eProperty.Quickness] += QuiDebuff;
 
             if (effect.Owner is GamePlayer)
             {
@@ -732,8 +745,8 @@ namespace DOL.GS.Spells
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
             GameLiving living = effect.Owner as GameLiving;
-            living.DebuffCategory[(int)eProperty.Dexterity] -= DexDebuff;
-            living.DebuffCategory[(int)eProperty.Quickness] -= QuiDebuff;
+            living.DebuffCategory[eProperty.Dexterity] -= DexDebuff;
+            living.DebuffCategory[eProperty.Quickness] -= QuiDebuff;
 
             if (effect.Owner is GamePlayer)
             {
@@ -791,7 +804,7 @@ namespace DOL.GS.PropertyCalc
         public override int CalcValue(GameLiving living, eProperty property)
         {
             int percent = 100
-                +living.BaseBuffBonusCategory[(int)property];
+                +living.BaseBuffBonusCategory[property];
 
             return percent;
         }

@@ -29,6 +29,7 @@ using System.Reflection;
 using System.Text;
 using log4net;
 using MySql.Data.MySqlClient;
+using System.Data.SQLite;
 
 namespace DOL.Database.Connection
 {
@@ -36,7 +37,7 @@ namespace DOL.Database.Connection
 	/// Called after mysql query.
 	/// </summary>
 	/// <param name="reader">The reader.</param>
-	public delegate void QueryCallback(MySqlDataReader reader);
+	public delegate void QueryCallback(IDataReader reader);
 
 	/// <summary>
 	/// Class for Handling the Connection to the ADO.Net Layer of the Databases.
@@ -48,8 +49,6 @@ namespace DOL.Database.Connection
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		private readonly Queue<MySqlConnection> m_connectionPool = new Queue<MySqlConnection>();
 
 		private string connString;
 		private ConnectionType connType;
@@ -103,7 +102,7 @@ namespace DOL.Database.Connection
 		/// </summary>
 		public bool IsSQLConnection
 		{
-			get { return connType == ConnectionType.DATABASE_MYSQL; }
+			get { return connType == ConnectionType.DATABASE_MYSQL || connType == ConnectionType.DATABASE_SQLITE; }
 		}
 
 		/// <summary>
@@ -137,58 +136,6 @@ namespace DOL.Database.Connection
 		}
 
 		/// <summary>
-		/// Gets connection from connection pool.
-		/// </summary>
-		/// <param name="isNewConnection">Set to <code>true</code> if new connection is created.</param>
-		/// <returns>Connection.</returns>
-		private MySqlConnection GetMySqlConnection(out bool isNewConnection)
-		{
-			// Get connection from pool
-			MySqlConnection conn = null;
-			lock (((ICollection)m_connectionPool).SyncRoot)
-			{
-				if (m_connectionPool.Count > 0)
-				{
-					conn = m_connectionPool.Dequeue();
-				}
-			}
-
-			if (conn != null)
-			{
-				isNewConnection = false;
-			}
-			else
-			{
-				isNewConnection = true;
-				long start1 = (DateTime.UtcNow.Ticks / 10000);
-				conn = new MySqlConnection(connString);
-				conn.Open();
-				if ((DateTime.UtcNow.Ticks / 10000) - start1 > 1000)
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Gaining SQL connection took " + ((DateTime.UtcNow.Ticks / 10000) - start1) + "ms");
-				}
-
-				log.Info("New DB connection created");
-			}
-
-			return conn;
-		}
-
-
-		/// <summary>
-		/// Releases the connection to connection pool.
-		/// </summary>
-		/// <param name="conn">The connection to relase.</param>
-		private void ReleaseConnection(MySqlConnection conn)
-		{
-			lock (((ICollection)m_connectionPool).SyncRoot)
-			{
-				m_connectionPool.Enqueue(conn);
-			}
-		}
-
-		/// <summary>
 		/// Execute a non query like update or delete
 		/// </summary>
 		/// <param name="sqlcommand"></param>
@@ -206,15 +153,17 @@ namespace DOL.Database.Connection
 				bool repeat = false;
 				do
 				{
-					try
+					repeat = false;
+
+					using (var conn = new MySqlConnection(connString))
 					{
-						
-						using (var conn = new MySqlConnection(connString))
+						using (var cmd = conn.CreateCommand())
 						{
-							using (var cmd = conn.CreateCommand())
+							try
 							{
-							    conn.Open();
+					
 							    cmd.CommandText = sqlcommand;
+							    conn.Open();
 							    long start = (DateTime.UtcNow.Ticks / 10000);
 							    affected = cmd.ExecuteNonQuery();
 							    
@@ -223,18 +172,67 @@ namespace DOL.Database.Connection
 								else if ((DateTime.UtcNow.Ticks / 10000) - start > 500 && log.IsWarnEnabled)
 									log.Warn("SQL NonQuery took " + ((DateTime.UtcNow.Ticks / 10000) - start) + "ms!\n" + sqlcommand);
 							}
+							catch (Exception e)
+							{
+								if (!HandleException(e))
+								{
+									throw;
+								}
+								repeat = true;
+							}
 						}
+					}
 
-						repeat = false;
-					}
-					catch (Exception e)
+				} 
+				while (repeat);
+
+				return affected;
+			}
+			else if (connType == ConnectionType.DATABASE_SQLITE)
+			{
+				if (log.IsDebugEnabled)
+				{
+					log.Debug("SQL: " + sqlcommand);
+				}
+
+				int affected = 0;
+				bool repeat = false;
+				do
+				{
+					repeat = false;
+
+					using (var conn = new SQLiteConnection(connString))
 					{
-						if (!HandleException(e))
+						using (var cmd = new SQLiteCommand(sqlcommand, conn))
 						{
-							throw;
+							try
+							{
+						    	conn.Open();
+							    long start = (DateTime.UtcNow.Ticks / 10000);
+							    affected = cmd.ExecuteNonQuery();
+							    
+							    if (log.IsDebugEnabled)
+									log.Debug("SQL NonQuery exec time " + ((DateTime.UtcNow.Ticks / 10000) - start) + "ms");
+								else if ((DateTime.UtcNow.Ticks / 10000) - start > 500 && log.IsWarnEnabled)
+									log.Warn("SQL NonQuery took " + ((DateTime.UtcNow.Ticks / 10000) - start) + "ms!\n" + sqlcommand);
+							}
+							catch (Exception e)
+							{
+								if (!HandleException(e))
+								{
+									if(log.IsErrorEnabled)
+										log.ErrorFormat("Error while NonQuery: {0}", sqlcommand);
+									throw;
+								}
+								repeat = true;
+							}
+							finally
+							{
+								conn.Close();
+							}
 						}
-						repeat = true;
 					}
+
 				} 
 				while (repeat);
 
@@ -309,42 +307,118 @@ namespace DOL.Database.Connection
 				bool repeat = false;
 				do
 				{
-					try
+					repeat = false;
+
+					using (var conn = new MySqlConnection(connString))
 					{
-						
-						using (var conn = new MySqlConnection(connString))
+						using (var cmd = conn.CreateCommand())
 						{
-							using (var cmd = conn.CreateCommand())
+							try
 							{
-							    conn.Open();
 							    cmd.CommandText = sqlcommand;
+								conn.Open();
 							    long start = (DateTime.UtcNow.Ticks / 10000);
 							    using (var reader = cmd.ExecuteReader())
 							    {
-							        callback(reader);
+							    	try
+							    	{
+							        	callback(reader);
+							    	}
+							    	catch (Exception es)
+							    	{
+							    		if(log.IsWarnEnabled)
+							    			log.Warn("Exception in Select Callback : ", es);
+							    	}
 							    }
-							    
+						    
 							    if (log.IsDebugEnabled)
 									log.Debug("SQL Select (" + isolation + ") exec time " + ((DateTime.UtcNow.Ticks / 10000) - start) + "ms");
 								else if ((DateTime.UtcNow.Ticks / 10000) - start > 500 && log.IsWarnEnabled)
 									log.Warn("SQL Select (" + isolation + ") took " + ((DateTime.UtcNow.Ticks / 10000) - start) + "ms!\n" + sqlcommand);
+							
+							}
+							catch (Exception e)
+							{
+								if (!HandleException(e))
+								{
+									if (log.IsErrorEnabled)
+										log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
+									throw;
+								}
+		
+								repeat = true;
 							}
 						}
-
-						repeat = false;
 					}
-					catch (Exception e)
+					
+				}
+				while (repeat);
+
+				return;
+			}
+			else if (connType == ConnectionType.DATABASE_SQLITE)
+			{
+				if (log.IsDebugEnabled)
+				{
+					log.Debug("SQL: " + sqlcommand);
+				}
+
+				bool repeat = false;
+				do
+				{
+					repeat = false;
+
+					using (var conn = new SQLiteConnection(connString))
 					{
-						if (!HandleException(e))
+					    using (var cmd = new SQLiteCommand(sqlcommand, conn))
 						{
-							if (log.IsErrorEnabled)
-								log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
-							throw;
-						}
-
-						repeat = true;
+							try
+							{
+						    	conn.Open();
+							    
+							    long start = (DateTime.UtcNow.Ticks / 10000);
+							    using (var reader = cmd.ExecuteReader())
+							    {
+							    	try
+							    	{
+							        	callback(reader);
+							    	}
+							    	catch (Exception es)
+							    	{
+							    		if(log.IsWarnEnabled)
+							    			log.Warn("Exception in Select Callback : ", es);
+							    	}
+							    	finally
+							    	{
+							    		reader.Close();
+							    	}
+							    }
+						    
+							    if (log.IsDebugEnabled)
+									log.Debug("SQL Select (" + isolation + ") exec time " + ((DateTime.UtcNow.Ticks / 10000) - start) + "ms");
+								else if ((DateTime.UtcNow.Ticks / 10000) - start > 500 && log.IsWarnEnabled)
+									log.Warn("SQL Select (" + isolation + ") took " + ((DateTime.UtcNow.Ticks / 10000) - start) + "ms!\n" + sqlcommand);
+							
+							}
+							catch (Exception e)
+							{
+								if (!HandleException(e))
+								{
+									if (log.IsErrorEnabled)
+										log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
+									throw;
+								}
+		
+								repeat = true;
+							}
+							finally
+							{
+								conn.Close();
+							}
+					    }
 					}
-				} 
+					
+				}
 				while (repeat);
 
 				return;
@@ -372,14 +446,16 @@ namespace DOL.Database.Connection
 				bool repeat = false;
 				do
 				{
-					try
+					repeat = false;
+					
+					using (var conn = new MySqlConnection(connString))
 					{
-						
-						using (var conn = new MySqlConnection(connString))
+						using (var cmd = conn.CreateCommand())
 						{
-							using (var cmd = conn.CreateCommand())
+							try
 							{
-							    conn.Open();
+					
+								conn.Open();
 							    cmd.CommandText = sqlcommand;
 							    long start = (DateTime.UtcNow.Ticks / 10000);
 							    obj = cmd.ExecuteScalar();
@@ -389,22 +465,71 @@ namespace DOL.Database.Connection
 								else if ((DateTime.UtcNow.Ticks / 10000) - start > 500 && log.IsWarnEnabled)
 									log.Warn("SQL Select took " + ((DateTime.UtcNow.Ticks / 10000) - start) + "ms!\n" + sqlcommand);
 							}
+							catch (Exception e)
+							{
+		
+								if (!HandleException(e))
+								{
+									if (log.IsErrorEnabled)
+										log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
+									throw;
+								}
+		
+								repeat = true;
+							}
 						}
-
-
-						repeat = false;
 					}
-					catch (Exception e)
-					{
+				} 
+				while (repeat);
 
-						if (!HandleException(e))
+				return obj;
+			}
+			else if (ConnectionType == ConnectionType.DATABASE_SQLITE)
+			{
+				if (log.IsDebugEnabled)
+				{
+					log.Debug("SQL: " + sqlcommand);
+				}
+
+				object obj = null;
+				bool repeat = false;
+				do
+				{
+					repeat = false;
+					
+					using (var conn = new SQLiteConnection(connString))
+					{					    
+						using (var cmd = new SQLiteCommand(sqlcommand, conn))
 						{
-							if (log.IsErrorEnabled)
-								log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
-							throw;
+							try
+							{
+							    conn.Open();
+							
+							    long start = (DateTime.UtcNow.Ticks / 10000);
+							    obj = cmd.ExecuteScalar();
+							    
+								if (log.IsDebugEnabled)
+									log.Debug("SQL Select exec time " + ((DateTime.UtcNow.Ticks / 10000) - start) + "ms");
+								else if ((DateTime.UtcNow.Ticks / 10000) - start > 500 && log.IsWarnEnabled)
+									log.Warn("SQL Select took " + ((DateTime.UtcNow.Ticks / 10000) - start) + "ms!\n" + sqlcommand);
+							}
+							catch (Exception e)
+							{
+		
+								if (!HandleException(e))
+								{
+									if (log.IsErrorEnabled)
+										log.Error("ExecuteSelect: \"" + sqlcommand + "\"\n", e);
+									throw;
+								}
+		
+								repeat = true;
+							}
+							finally
+							{
+								conn.Close();
+							}
 						}
-
-						repeat = true;
 					}
 				} 
 				while (repeat);
@@ -424,12 +549,15 @@ namespace DOL.Database.Connection
 		/// <param name="table">the table to create</param>
 		public void CheckOrCreateTable(DataTable table)
 		{
-			if (connType == ConnectionType.DATABASE_MYSQL)
+			if (connType == ConnectionType.DATABASE_MYSQL || connType == ConnectionType.DATABASE_SQLITE)
 			{
-				List<string> currentTableColumns = new List<string>();
+				var currentTableColumns = new ArrayList();
 				try
 				{
-					ExecuteSelect("DESCRIBE `" + table.TableName + "`", delegate(MySqlDataReader reader)
+					if (connType == ConnectionType.DATABASE_MYSQL)
+					{
+					
+						ExecuteSelect("DESCRIBE `" + table.TableName + "`", delegate(IDataReader reader)
 					                                                    	{
 					                                                    		while (reader.Read())
 					                                                    		{
@@ -439,6 +567,20 @@ namespace DOL.Database.Connection
 					                                                    		if (log.IsDebugEnabled)
 					                                                    			log.Debug(currentTableColumns.Count + " in table");
 					                                                    	}, Transaction.IsolationLevel.DEFAULT);
+					}
+					else if (connType == ConnectionType.DATABASE_SQLITE)	
+					{
+						ExecuteSelect("PRAGMA TABLE_INFO(\"" + table.TableName + "\")", delegate(IDataReader reader)
+					                                                    	{
+					                                                    		while (reader.Read())
+					                                                    		{
+					                                                    			currentTableColumns.Add(reader.GetString(1).ToLower());
+					                                                    			log.Debug(reader.GetString(1).ToLower());
+					                                                    		}
+					                                                    		if (log.IsDebugEnabled)
+					                                                    			log.Debug(currentTableColumns.Count + " in table");
+					                                                    	}, Transaction.IsolationLevel.DEFAULT);
+					}
 				}
 				catch (Exception e)
 				{
@@ -466,7 +608,13 @@ namespace DOL.Database.Connection
 
 					column += "`" + table.Columns[i].ColumnName + "` ";
 
-					if (systype == typeof (char))
+					if (connType == ConnectionType.DATABASE_SQLITE && (table.Columns[i].AutoIncrement || systype == typeof (sbyte) || systype == typeof (byte)
+					                                                   || systype == typeof (short) || systype == typeof (ushort) || systype == typeof (int)
+					                                                   || systype == typeof (uint) || systype == typeof (long) || systype == typeof (ulong)))
+					{
+						column += "INTEGER";
+					}
+					else if (systype == typeof (char))
 					{
 						column += "SMALLINT UNSIGNED";
 					}
@@ -543,13 +691,23 @@ namespace DOL.Database.Connection
 					{
 						column += "BLOB";
 					}
+					
 					if (!table.Columns[i].AllowDBNull)
 					{
-						column += " NOT NULL";
+						if(!(connType == ConnectionType.DATABASE_SQLITE && table.Columns[i].AutoIncrement))
+							column += " NOT NULL";
 					}
+					
 					if (table.Columns[i].AutoIncrement)
 					{
-						column += " AUTO_INCREMENT";
+						if (connType == ConnectionType.DATABASE_SQLITE)
+						{
+							column += " PRIMARY KEY AUTOINCREMENT";
+						}
+						else
+						{
+							column += " AUTO_INCREMENT";
+						}
 					}
 
 					columnDefs.Add(column);
@@ -563,11 +721,31 @@ namespace DOL.Database.Connection
 				}
 
 				string columndef = string.Join(", ", columnDefs.ToArray());
+				List<string> followingQueries = new List<string>();
 
 				// create primary keys
 				if (table.PrimaryKey.Length > 0)
 				{
-					columndef += ", PRIMARY KEY (";
+					bool hasAutoInc = false;
+					
+					foreach (DataColumn col in table.PrimaryKey)
+					{
+						if (col.AutoIncrement)
+						{
+							hasAutoInc = true;
+							break;
+						}
+					}
+					
+					if (connType == ConnectionType.DATABASE_SQLITE && hasAutoInc)
+					{
+						columndef += ", UNIQUE (";
+					}
+					else
+					{
+						columndef += ", PRIMARY KEY (";
+					}
+					
 					bool first = true;
 					for (int i = 0; i < table.PrimaryKey.Length; i++)
 					{
@@ -582,6 +760,7 @@ namespace DOL.Database.Connection
 						columndef += "`" + table.PrimaryKey[i].ColumnName + "`";
 					}
 					columndef += ")";
+					
 				}
 
 				// unique indexes				
@@ -589,7 +768,14 @@ namespace DOL.Database.Connection
 				{
 					if (table.Columns[i].Unique && !primaryKeys.ContainsKey(table.Columns[i].ColumnName))
 					{
-						columndef += ", UNIQUE INDEX (`" + table.Columns[i].ColumnName + "`)";
+						if (connType == ConnectionType.DATABASE_SQLITE)
+						{
+							followingQueries.Add("CREATE UNIQUE INDEX IF NOT EXISTS \"" + table.TableName + "." + table.Columns[i].ColumnName + "\" ON \"" + table.TableName + "\"(\"" + table.Columns[i].ColumnName + "\")");
+						}
+						else
+						{
+							columndef += ", UNIQUE INDEX (`" + table.Columns[i].ColumnName + "`)";
+						}
 					}
 				}
 
@@ -600,14 +786,31 @@ namespace DOL.Database.Connection
 						&& !primaryKeys.ContainsKey(table.Columns[i].ColumnName)
 					    && !table.Columns[i].Unique)
 					{
-						columndef += ", INDEX (`" + table.Columns[i].ColumnName + "`";
-
-						if (table.Columns[i].ExtendedProperties.ContainsKey("INDEXCOLUMNS"))
+						if (connType == ConnectionType.DATABASE_SQLITE)
 						{
-							columndef += ", " + table.Columns[i].ExtendedProperties["INDEXCOLUMNS"];
+							string indexQuery = "CREATE INDEX IF NOT EXISTS \"" + table.TableName + "." + table.Columns[i].ColumnName + "\" ON \"" + table.TableName + "\"(\"" + table.Columns[i].ColumnName + "\"";
+							
+							if (table.Columns[i].ExtendedProperties.ContainsKey("INDEXCOLUMNS"))
+							{
+								indexQuery += ", " + table.Columns[i].ExtendedProperties["INDEXCOLUMNS"];
+							}
+							
+							indexQuery += ")";
+							
+							followingQueries.Add(indexQuery);
 						}
-
-						columndef += ")";
+						else
+						{
+							columndef += ", INDEX (`" + table.Columns[i].ColumnName + "`";
+	
+							if (table.Columns[i].ExtendedProperties.ContainsKey("INDEXCOLUMNS"))
+							{
+								columndef += ", " + table.Columns[i].ExtendedProperties["INDEXCOLUMNS"];
+							}
+	
+							columndef += ")";
+						}
+						
 					}
 				}
 
@@ -619,6 +822,10 @@ namespace DOL.Database.Connection
 						log.Debug(sb.ToString());
 
 					ExecuteNonQuery(sb.ToString());
+
+					if (followingQueries.Count > 0)
+						foreach (string folqr in followingQueries)
+							ExecuteNonQuery(folqr);
 				}
 				catch (Exception e)
 				{
@@ -659,6 +866,7 @@ namespace DOL.Database.Connection
 			switch (connType)
 			{
 				case ConnectionType.DATABASE_MYSQL:
+				case ConnectionType.DATABASE_SQLITE:
 					return "yyyy-MM-dd HH:mm:ss";
 			}
 
@@ -830,6 +1038,10 @@ namespace DOL.Database.Connection
 						break;
 					}
 				case ConnectionType.DATABASE_MYSQL:
+					{
+						return; // not needed anymore
+					}
+				case ConnectionType.DATABASE_SQLITE:
 					{
 						return; // not needed anymore
 					}

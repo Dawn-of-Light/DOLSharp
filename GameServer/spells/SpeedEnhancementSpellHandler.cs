@@ -37,7 +37,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			Caster.Mana -= PowerCost(target);
+			Caster.Mana -= PowerCost(target, true);
 			base.FinishSpellCast(target);
 		}
 
@@ -67,7 +67,7 @@ namespace DOL.GS.Spells
 				return;
 
 			// Graveen: archery speed shot
-			if ((Spell.Pulse != 0 || Spell.CastTime != 0) && target.InCombat)
+			if ((Spell.IsPulsing || Spell.CastTime != 0) && target.InCombat)
 			{
 				MessageToLiving(target, "You've been in combat recently, the spell has no effect on you!", eChatType.CT_SpellResisted);
 				return;
@@ -86,9 +86,9 @@ namespace DOL.GS.Spells
 
 			GamePlayer player = effect.Owner as GamePlayer;
 
-			if (player == null || !player.IsStealthed)
+			if (player == null || !(player.IsStealthed && (ePrivLevel)player.Client.Account.PrivLevel == ePrivLevel.Player))
 			{
-				effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, Spell.Value / 100.0);
+				effect.Owner.BuffBonusMultCategory1.Set(eProperty.MaxSpeed, this, Spell.Value / 100.0);
 				SendUpdates(effect.Owner);
 			}
 
@@ -114,7 +114,7 @@ namespace DOL.GS.Spells
 			if (player != null)
 				GameEventMgr.RemoveHandler(player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(OnStealthStateChanged));
 
-			effect.Owner.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
+			effect.Owner.BuffBonusMultCategory1.Remove(eProperty.MaxSpeed, this);
 
 			if (!noMessages)
 			{
@@ -182,7 +182,7 @@ namespace DOL.GS.Spells
 			{
 				return;
 			}
-			else if (sp == null && (ad.AttackResult != GameLiving.eAttackResult.HitStyle && ad.AttackResult != GameLiving.eAttackResult.HitUnstyled))
+			else if (sp == null && (ad.AttackResult != eAttackResult.HitStyle && ad.AttackResult != eAttackResult.HitUnstyled))
 			{
 				return;
 			}
@@ -191,7 +191,7 @@ namespace DOL.GS.Spells
 				return;
 			}
 
-			GameSpellEffect speed = SpellHandler.FindEffectOnTarget(living, this);
+			GameSpellEffect speed = SpellHelper.FindEffectOnTarget(living, this);
 			if (speed != null)
 				speed.Cancel(false);
 		}
@@ -205,9 +205,9 @@ namespace DOL.GS.Spells
 		private void OnStealthStateChanged(DOLEvent e, object sender, EventArgs arguments)
 		{
 			GamePlayer player = (GamePlayer)sender;
-			if (player.IsStealthed)
-				player.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
-			else player.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, Spell.Value / 100.0);
+			if (player.IsStealthed && (ePrivLevel)player.Client.Account.PrivLevel == ePrivLevel.Player)
+				player.BuffBonusMultCategory1.Remove(eProperty.MaxSpeed, this);
+			else player.BuffBonusMultCategory1.Set(eProperty.MaxSpeed, this, Spell.Value / 100.0);
 			// max speed update is sent in setalth method
 		}
 

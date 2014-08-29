@@ -20,7 +20,7 @@ using DOL.GS.Housing;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, 0x05, "Handles housing permissions requests from menu")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.HousePermissionRequest, "Handles housing permissions requests from menu", eClientStatus.PlayerInGame)]
 	public class HousePermissionsRequestHandler : IPacketHandler
 	{
 		#region IPacketHandler Members

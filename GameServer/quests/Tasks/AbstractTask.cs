@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Text;
@@ -276,7 +275,7 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// This HybridDictionary holds all the custom properties of this quest
 		/// </summary>
-		protected Dictionary<string, string> m_customProperties = new Dictionary<string, string>();
+		protected HybridDictionary m_customProperties = new HybridDictionary();
 
 		/// <summary>
 		/// This method parses the custom properties string of the m_dbQuest
@@ -287,7 +286,7 @@ namespace DOL.GS.Quests
 			if(m_dbTask.CustomPropertiesString == null)
 				return;
 
-			lock(((ICollection)m_customProperties).SyncRoot)
+			lock(m_customProperties)
 			{
 				m_customProperties.Clear();
 				foreach(string property in  m_dbTask.CustomPropertiesString.SplitCSV())
@@ -316,7 +315,7 @@ namespace DOL.GS.Quests
 			key = key.Replace('=','-');
 			value = value.Replace(';',',');
 			value = value.Replace('=','-');
-			lock(((ICollection)m_customProperties).SyncRoot)
+			lock(m_customProperties)
 			{
 				m_customProperties[key]=value;
 			}
@@ -329,7 +328,7 @@ namespace DOL.GS.Quests
 		protected void SaveCustomProperties()
 		{
 			StringBuilder builder = new StringBuilder();
-			lock(((ICollection)m_customProperties).SyncRoot)
+			lock(m_customProperties)
 			{
 				foreach(string hKey in m_customProperties.Keys)
 				{
@@ -352,10 +351,9 @@ namespace DOL.GS.Quests
 			if(key==null)
 				throw new ArgumentNullException("key");
 
-			lock(((ICollection)m_customProperties).SyncRoot)
+			lock(m_customProperties)
 			{
-				if(m_customProperties.ContainsKey(key))
-					m_customProperties.Remove(key);
+				m_customProperties.Remove(key);
 			}
 			SaveCustomProperties();
 		}
@@ -369,10 +367,8 @@ namespace DOL.GS.Quests
 		{
 			if(key==null)
 				throw new ArgumentNullException("key");
-			if(m_customProperties.ContainsKey(key))
-				return (string)m_customProperties[key];
-			
-			return null;
+
+			return (string)m_customProperties[key];
 		}
 
 
@@ -454,7 +450,7 @@ namespace DOL.GS.Quests
 		/// </summary>
 		public bool CheckTaskExpired()
 		{
-			if(TaskActive && DateTime.Compare(TimeOut, DateTime.UtcNow) < 0)
+			if(TaskActive && DateTime.Compare(TimeOut, DateTime.Now) < 0)
 			{
 				//DOLConsole.WriteError("TimeOut: "+m_Tasks[i].TimeOut+" - Now: "+DateTime.Now);
 				ExpireTask();
@@ -542,7 +538,7 @@ namespace DOL.GS.Quests
 				player.Out.SendMessage("You cannot do more than "+MaxTasksDone(player.Level).ToString()+" tasks at your level!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			else if (player.TempProperties.getProperty<int>(CHECK_TASK_TICK) > GameTimer.GetTickCount())
+			else if (player.TempProperties.getProperty<int>(CHECK_TASK_TICK) > Environment.TickCount)
 			{
 				player.Out.SendMessage("I have no tasks for you at the moment. Come back sometime later, perhaps then you can help we with something.",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 				return false;
@@ -555,7 +551,7 @@ namespace DOL.GS.Quests
 			{
 				player.Out.SendMessage("I have no tasks for you at the moment. Come back sometime later, perhaps then you can help we with something.",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 				// stored time of try to disable task for defined time.
-				player.TempProperties.setProperty(CHECK_TASK_TICK, GameTimer.GetTickCount() + CHECK_TASK_DELAY);
+				player.TempProperties.setProperty(CHECK_TASK_TICK, Environment.TickCount + CHECK_TASK_DELAY);
 				return false;
 			}
 		}

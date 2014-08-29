@@ -48,7 +48,7 @@ namespace DOL.GS.Keeps
 		{
 			if (guard.Component != null)
 			{
-				guard.Realm = guard.Component.Keep.Realm;
+				guard.Realm = guard.Component.AbstractKeep.Realm;
 
 				if (guard.Realm != eRealm.None)
 				{
@@ -72,13 +72,13 @@ namespace DOL.GS.Keeps
 			{
 				guard.GuildName = "";
 			}
-			else if (guard.Component.Keep.Guild == null)
+			else if (guard.Component.AbstractKeep.Guild == null)
 			{
 				guard.GuildName = "";
 			}
 			else
 			{
-				guard.GuildName = guard.Component.Keep.Guild.Name;
+				guard.GuildName = guard.Component.AbstractKeep.Guild.Name;
 			}
 		}
 
@@ -92,7 +92,7 @@ namespace DOL.GS.Keeps
 			{
 				if (guard.Component != null)
 				{
-					guard.RespawnInterval = guard.Component.Keep.LordRespawnTime;
+					guard.RespawnInterval = guard.Component.AbstractKeep.LordRespawnTime;
 				}
 				else
 				{
@@ -125,7 +125,7 @@ namespace DOL.GS.Keeps
 		{
 			if (guard.Component != null)
 			{
-				guard.Component.Keep.SetGuardLevel(guard);
+				guard.Component.AbstractKeep.SetGuardLevel(guard);
 			}
 		}
 
@@ -778,8 +778,8 @@ namespace DOL.GS.Keeps
 						else if (guard is GuardLord)
 						{
                             if (guard.Gender == eGender.Male)
-                                guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Lord", GetKeepShortName(guard.Component.Keep.Name));
-                            else guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Lady", GetKeepShortName(guard.Component.Keep.Name));
+                                guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Lord", GetKeepShortName(guard.Component.AbstractKeep.Name));
+                            else guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Lady", GetKeepShortName(guard.Component.AbstractKeep.Name));
 						}
 						else if (guard is GuardStealther)
 						{
@@ -819,7 +819,7 @@ namespace DOL.GS.Keeps
                         }
 						else if (guard is GuardLord)
 						{
-                            guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Jarl", GetKeepShortName(guard.Component.Keep.Name));
+                            guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Jarl", GetKeepShortName(guard.Component.AbstractKeep.Name));
                         }
 						else if (guard is GuardStealther)
 						{
@@ -860,8 +860,8 @@ namespace DOL.GS.Keeps
 						else if (guard is GuardLord)
 						{
                             if (guard.Gender == eGender.Male)
-                               guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Chieftain", GetKeepShortName(guard.Component.Keep.Name));
-                            else guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Chieftess", GetKeepShortName(guard.Component.Keep.Name));
+                               guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Chieftain", GetKeepShortName(guard.Component.AbstractKeep.Name));
+                            else guard.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "SetGuardName.Chieftess", GetKeepShortName(guard.Component.AbstractKeep.Name));
                         }
 						else if (guard is GuardStealther)
 						{
@@ -1007,15 +1007,15 @@ namespace DOL.GS.Keeps
 			{
 				if (guard is GuardLord)
 				{
-					guard.BaseBuffBonusCategory[i] = 40;
+					guard.BaseBuffBonusCategory[(eProperty)i] = 40;
 				}
 				else if (guard.Level < 50)
 				{
-					guard.BaseBuffBonusCategory[i] = guard.Level / 2 + 1;
+					guard.BaseBuffBonusCategory[(eProperty)i] = guard.Level / 2 + 1;
 				}
 				else
 				{
-					guard.BaseBuffBonusCategory[i] = 26;
+					guard.BaseBuffBonusCategory[(eProperty)i] = 26;
 				}
 			}
 		}

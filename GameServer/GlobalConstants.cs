@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.Database;
 using DOL.Language;
@@ -354,7 +355,8 @@ namespace DOL.GS
 		INT = eProperty.Intelligence,
 		PIE = eProperty.Piety,
 		EMP = eProperty.Empathy,
-		CHR = eProperty.Charisma
+		CHR = eProperty.Charisma,
+		_Last = eProperty.Stat_Last,
 	}
 
 	/// <summary>
@@ -802,7 +804,7 @@ namespace DOL.GS
 		StyleAbsorb = 252,
 		RealmPoints = 253,
 		ArcaneSyphon = 254,
-		// 255 Available
+		LivingEffectiveness = 255,
 		MaxProperty = 255
 	}
 
@@ -830,13 +832,13 @@ namespace DOL.GS
 		HalfOgre = 16,
 		Frostalf = 17,
 		Shar = 18,
-		AlbionMinotaur = 19,
-		MidgardMinotaur = 20,
-		HiberniaMinotaur = 21,
+		Korazh = 19,
+		Deifrang = 20,
+		Graoch = 21,
 	}
 
 	/// <summary>
-	/// What buff caterogy a spell belongs too
+	/// What buff category a spell belongs too
 	/// </summary>
 	public enum eBuffBonusCategory : int
 	{
@@ -844,6 +846,7 @@ namespace DOL.GS
 		SpecBuff = 2,
 		Debuff = 3,
 		Other = 4,
+		SpecDebuff = 5,
 	}
 
 	/// <summary>
@@ -1002,6 +1005,81 @@ namespace DOL.GS
     }
 
 	/// <summary>
+	/// The result of an attack
+	/// </summary>
+	public enum eAttackResult : int
+	{
+		/// <summary>
+		/// No specific attack
+		/// </summary>
+		Any = 0,
+		/// <summary>
+		/// The attack was a hit
+		/// </summary>
+		HitUnstyled = 1,
+		/// <summary>
+		/// The attack was a hit
+		/// </summary>
+		HitStyle = 2,
+		/// <summary>
+		/// Attack was denied by server rules
+		/// </summary>
+		NotAllowed_ServerRules = 3,
+		/// <summary>
+		/// No target for the attack
+		/// </summary>
+		NoTarget = 5,
+		/// <summary>
+		/// Target is already dead
+		/// </summary>
+		TargetDead = 6,
+		/// <summary>
+		/// Target is out of range
+		/// </summary>
+		OutOfRange = 7,
+		/// <summary>
+		/// Attack missed
+		/// </summary>
+		Missed = 8,
+		/// <summary>
+		/// The attack was evaded
+		/// </summary>
+		Evaded = 9,
+		/// <summary>
+		/// The attack was blocked
+		/// </summary>
+		Blocked = 10,
+		/// <summary>
+		/// The attack was parried
+		/// </summary>
+		Parried = 11,
+		/// <summary>
+		/// The target is invalid
+		/// </summary>
+		NoValidTarget = 12,
+		/// <summary>
+		/// The target is not visible
+		/// </summary>
+		TargetNotVisible = 14,
+		/// <summary>
+		/// The attack was fumbled
+		/// </summary>
+		Fumbled = 15,
+		/// <summary>
+		/// The attack was Bodyguarded
+		/// </summary>
+		Bodyguarded = 16,
+		/// <summary>
+		/// The attack was Phaseshiftet
+		/// </summary>
+		Phaseshift = 17,
+		/// <summary>
+		/// The attack was Grappled
+		/// </summary>
+		Grappled = 18
+	}
+    
+	/// <summary>
 	/// strong name constants of spell line used in the world (poison, proc ect ...)
 	/// </summary>
 	public abstract class GlobalSpellsLines
@@ -1020,6 +1098,28 @@ namespace DOL.GS
 
 	public class GlobalConstants
 	{
+		private static readonly Dictionary<eAttackResult, byte> AttackResultByte = new Dictionary<eAttackResult, byte>()
+	    {
+			{eAttackResult.Missed, 0},
+			{eAttackResult.Parried, 1},
+			{eAttackResult.Blocked, 2},
+			{eAttackResult.Evaded, 3},
+			{eAttackResult.Fumbled, 4},
+			{eAttackResult.HitUnstyled, 10},
+			{eAttackResult.HitStyle, 11},
+			{eAttackResult.Any, 20},
+	    };
+		
+		public static byte GetAttackResultByte(eAttackResult attResult)
+		{
+			if (AttackResultByte.ContainsKey(attResult))
+			{
+				return AttackResultByte[attResult];
+			}
+			
+			return 0;
+		}
+		
 		public static bool IsExpansionEnabled(int expansion)
 		{
 			bool enabled = true;
@@ -1113,7 +1213,7 @@ namespace DOL.GS
 		/// </summary>
 		public static string StyleAttackResultToName(int attackResult)
 		{
-			return Enum.GetName(typeof(Styles.Style.eAttackResult), attackResult);
+			return Enum.GetName(typeof(Styles.Style.eAttackResultRequirement), attackResult);
 		}
 
 		public static string InstrumentTypeToName(int instrumentTypeID)
@@ -1817,9 +1917,38 @@ namespace DOL.GS
 					spell.Target = "Self";
 					spell.Type = PvERessurectionIllnessSpellType;
 					spell.Description = "The player's effectiveness is greatly reduced due to being recently resurrected.";
-					m_PvERezIllness = new Spell(spell, 50);
+					spell.Duration = 300;
+					spell.Value = 50;
+					m_PvERezIllness = new Spell(spell, 5);
 				}
 				return m_PvERezIllness;
+			}
+		}
+		
+		public const string RvRRessurectionIllnessSpellType = "RvRResurrectionIllness";
+		private static Spell m_RvRRezIllness = null;
+		public static Spell RvRRezIllness
+		{
+			get
+			{
+				if (m_RvRRezIllness == null)
+				{
+					DBSpell spell = new DBSpell();
+					spell.AllowAdd = false;
+					spell.CastTime = 0;
+					spell.ClientEffect = 2435;
+					spell.Icon = 2435;
+					spell.SpellID = 2435;
+					spell.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GamePlayer.Spell.ResurrectionIllness");
+					spell.Range = 0;
+					spell.Target = "Self";
+					spell.Type = RvRRessurectionIllnessSpellType;
+					spell.Description = "The player's effectiveness is greatly reduced due to being recently resurrected in RvR.";
+					spell.Duration = 180;
+					spell.Value = 30;
+					m_RvRRezIllness = new Spell(spell, 5);
+				}
+				return m_RvRRezIllness;
 			}
 		}
 	}

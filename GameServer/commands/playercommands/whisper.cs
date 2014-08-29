@@ -57,7 +57,7 @@ namespace DOL.GS.Commands
 
 			if (obj == client.Player)
 			{
-				DisplayMessage(client, "Hmmmm...you shouldn't talk to yourself!");
+				DisplayMessage(client, "Hmmmm... you shouldn't talk to yourself!");
 				return;
 			}
 			client.Player.Whisper(obj, string.Join(" ", args, 1, args.Length - 1));

@@ -20,7 +20,7 @@ using DOL.GS.Housing;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, 0x00, "Handles housing menu requests")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.HouseMenuRequest, "Handles housing menu requests", eClientStatus.PlayerInGame)]
 	public class HousingMenuRequestHandler : IPacketHandler
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

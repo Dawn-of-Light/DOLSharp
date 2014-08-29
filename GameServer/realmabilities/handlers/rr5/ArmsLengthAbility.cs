@@ -31,7 +31,7 @@ namespace DOL.GS.RealmAbilities
 					return;
 				}
 
-				GameSpellEffect speed = Spells.SpellHandler.FindEffectOnTarget(player, "SpeedEnhancement");
+				GameSpellEffect speed = Spells.SpellHelper.FindEffectOnTarget(player, "SpeedEnhancement");
 				if (speed != null)
 					speed.Cancel(false);
 				new ArmsLengthEffect().Start(player);

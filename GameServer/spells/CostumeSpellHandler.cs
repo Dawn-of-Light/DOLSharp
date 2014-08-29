@@ -83,7 +83,7 @@ namespace DOL.GS.Spells
 					case 102: //Midgard Housing
 					case 202: //Hibernia Housing                        
 					default:
-						GameSpellEffect costume = FindEffectOnTarget(sender as GamePlayer, this);
+						GameSpellEffect costume = SpellHelper.FindEffectOnTarget(sender as GamePlayer, this);
 						if (costume != null)
 							costume.Cancel(true);
 						return;

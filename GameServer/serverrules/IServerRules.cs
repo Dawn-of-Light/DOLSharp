@@ -301,6 +301,14 @@ namespace DOL.GS.ServerRules
 		string GetPlayerPrefixName(GamePlayer source, GamePlayer target);
 
 		/// <summary>
+		/// Gets the player's custom title based on server type
+		/// </summary>
+		/// <param name="source">The "looking" player</param>
+		/// <param name="target">The considered player</param>
+		/// <returns>The custom title of the target</returns>
+		string GetPlayerTitle(GamePlayer source, GamePlayer target);
+
+		/// <summary>
 		/// Gets the server type color handling scheme
 		/// 
 		/// ColorHandling: this byte tells the client how to handle color for PC and NPC names (over the head)
@@ -405,7 +413,7 @@ namespace DOL.GS.ServerRules
 		string GetLotMarkerListName(ushort regionID);
 
 		/// <summary>
-		/// Send merchant window containing housing items that can be purchased by a player.  If this list is customized 
+		/// Send merchant window containing housing items that can be purchased by a player.  If this list is customized
 		/// then the customized list must also be handled in BuyHousingItem
 		/// </summary>
 		/// <param name="player"></param>
@@ -414,7 +422,7 @@ namespace DOL.GS.ServerRules
 
 
 		/// <summary>
-		/// Buys an item off a housing merchant.  If the list has been customized then this must be modified to 
+		/// Buys an item off a housing merchant.  If the list has been customized then this must be modified to
 		/// match that customized list.
 		/// </summary>
 		/// <param name="player"></param>

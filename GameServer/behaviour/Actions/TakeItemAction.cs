@@ -50,7 +50,7 @@ namespace DOL.GS.Behaviour.Actions
             int count = Q;
             ItemTemplate itemToRemove = P;
 
-			Dictionary<InventoryItem, int?> dataSlots = new Dictionary<InventoryItem, int?>();
+			Dictionary<InventoryItem, int?> dataSlots = new Dictionary<InventoryItem, int?>(10);
             lock (player.Inventory)
             {
                 var allBackpackItems = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
@@ -103,21 +103,22 @@ namespace DOL.GS.Behaviour.Actions
                 }
 
                 GamePlayerInventory playerInventory = player.Inventory as GamePlayerInventory;
-               
                 playerInventory.BeginChanges();
-				
-                foreach(KeyValuePair<InventoryItem, int?> de in dataSlots)
+				Dictionary<InventoryItem, int?>.Enumerator enumerator = dataSlots.GetEnumerator();
+                while (enumerator.MoveNext())
                 {
+		
+		KeyValuePair<InventoryItem, int?> de = enumerator.Current;
                     
-					if (de.Value == null || !de.Value.HasValue)
+		if (de.Value.HasValue)
                     {
                         playerInventory.RemoveItem(de.Key);
                         InventoryLogging.LogInventoryAction(player, NPC, eInventoryActionType.Quest, de.Key.Template, de.Key.Count);
                     }
                     else
                     {
-                    	playerInventory.RemoveCountFromStack(de.Key, de.Value.Value);
-                    	InventoryLogging.LogInventoryAction(player, NPC, eInventoryActionType.Quest, de.Key.Template, de.Value.Value);
+                        playerInventory.RemoveCountFromStack(de.Key, de.Value.Value);
+                        InventoryLogging.LogInventoryAction(player, NPC, eInventoryActionType.Quest, de.Key.Template, de.Value.Value);
                     }
                 }
                 playerInventory.CommitChanges();

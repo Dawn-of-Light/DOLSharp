@@ -15,17 +15,14 @@ namespace DOL.GS.RealmAbilities
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		eProperty m_property = eProperty.Undefined;
-
 		public eProperty Property
 		{
-			get { return m_property; }
+			get { return m_property.Length > 0 ? m_property[0] : eProperty.Undefined; }
 		}
 
 		public RAStatEnhancer(DBAbility dba, int level, eProperty property)
-			: base(dba, level)
+			: base(dba, level, property)
 		{
-			m_property = property;
 		}
 
 		public override IList<string> DelveInfo
@@ -43,7 +40,7 @@ namespace DOL.GS.RealmAbilities
 			}
 		}
 
-		public virtual int GetAmountForLevel(int level)
+		public override int GetAmountForLevel(int level)
 		{
 			if (level < 1) return 0;
 			if (ServerProperties.Properties.USE_NEW_PASSIVES_RAS_SCALING)
@@ -80,7 +77,7 @@ namespace DOL.GS.RealmAbilities
 		/// send updates about the changes
 		/// </summary>
 		/// <param name="target"></param>
-		public virtual void SendUpdates(GameLiving target)
+		protected override void SendUpdates(GameLiving target)
 		{
 			GamePlayer player = target as GamePlayer;	// need new prop system to not worry about updates
 			if (player != null)
@@ -102,43 +99,6 @@ namespace DOL.GS.RealmAbilities
 				if (target.Endurance < target.MaxEndurance) target.StartEnduranceRegeneration();
 				else if (target.Endurance > target.MaxEndurance) target.Endurance = target.MaxEndurance;
 			}
-		}
-
-		public override void Activate(GameLiving living, bool sendUpdates)
-		{
-			if (m_activeLiving == null)
-			{
-				living.AbilityBonus[(int)m_property] += GetAmountForLevel(Level);
-				m_activeLiving = living;
-				if (sendUpdates) SendUpdates(living);
-			}
-			else
-			{
-				log.Warn("ability " + Name + " already activated on " + living.Name);
-			}
-		}
-
-		public override void Deactivate(GameLiving living, bool sendUpdates)
-		{
-			if (m_activeLiving != null)
-			{
-				living.AbilityBonus[(int)m_property] -= GetAmountForLevel(Level);
-				if (sendUpdates) SendUpdates(living);
-				m_activeLiving = null;
-			}
-			else
-			{
-				log.Warn("ability " + Name + " already deactivated on " + living.Name);
-			}
-		}
-
-		public override void OnLevelChange(int oldLevel, int newLevel = 0)
-		{
-			if (newLevel == 0)
-				newLevel = Level;
-
-			m_activeLiving.AbilityBonus[(int)m_property] += GetAmountForLevel(newLevel) - GetAmountForLevel(oldLevel);
-			SendUpdates(m_activeLiving);
 		}
 	}
 
@@ -178,7 +138,7 @@ namespace DOL.GS.RealmAbilities
 
 		public override bool CheckRequirement(GamePlayer player)
 		{
-			return player.Level >= 40;
+			return base.CheckRequirement(player) && player.Level >= 40;
 		}
 	}
 }

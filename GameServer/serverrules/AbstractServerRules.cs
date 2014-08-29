@@ -72,10 +72,18 @@ namespace DOL.GS.ServerRules
 
 			// Ban account
 			IList<DBBannedAccount> objs;
-			objs = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(username) + "')");
+			if (GameServer.Database is Database.Handlers.SQLiteObjectDatabase)
+			{
+				objs = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(username) + "' AND (BanDuration < 0 OR datetime(DateBan, '+' || BanDuration || ' days') > datetime('now','localhost')) AND Unbanned = 0)");
+			}
+			else
+			{
+				objs = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(username) + "' AND ((DateBan + INTERVAL BanDuration DAY) > NOW() OR BanDuration < 0) AND Unbanned = 0)");
+			}
+			
 			if (objs.Count > 0)
 			{
-                client.IsConnected = false;
+				client.IsConnected = false;
 				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
 				log.Debug("IsAllowedToConnect deny access to username " + username);
 				return false;
@@ -83,10 +91,18 @@ namespace DOL.GS.ServerRules
 
 			// Ban IP Address or range (example: 5.5.5.%)
 			string accip = GameServer.Database.Escape(client.TcpEndpointAddress);
-			objs = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='I' OR Type='B') AND '" + GameServer.Database.Escape(accip) + "' LIKE Ip)");
+			if (GameServer.Database is Database.Handlers.SQLiteObjectDatabase)
+			{
+				objs = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='A' OR Type='B') AND '" + accip + "' LIKE Ip AND (BanDuration < 0 OR datetime(DateBan, '+' || BanDuration || ' days') > datetime('now','localhost')) AND Unbanned = 0)");
+			}
+			else
+			{
+				objs = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='I' OR Type='B') AND '" + accip + "' LIKE Ip AND ((DateBan + INTERVAL BanDuration DAY) > NOW() OR BanDuration < 0) AND Unbanned = 0)");
+			}
+
 			if (objs.Count > 0)
-            {
-                client.IsConnected = false;
+			{
+				client.IsConnected = false;
 				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
 				log.Debug("IsAllowedToConnect deny access to IP " + accip);
 				return false;
@@ -94,8 +110,8 @@ namespace DOL.GS.ServerRules
 
 			GameClient.eClientVersion min = (GameClient.eClientVersion)Properties.CLIENT_VERSION_MIN;
 			if (min != GameClient.eClientVersion.VersionNotChecked && client.Version < min)
-            {
-                client.IsConnected = false;
+			{
+				client.IsConnected = false;
 				client.Out.SendLoginDenied(eLoginError.ClientVersionTooLow);
 				log.Debug("IsAllowedToConnect deny access to client version (too low) " + client.Version);
 				return false;
@@ -103,8 +119,8 @@ namespace DOL.GS.ServerRules
 
 			GameClient.eClientVersion max = (GameClient.eClientVersion)Properties.CLIENT_VERSION_MAX;
 			if (max != GameClient.eClientVersion.VersionNotChecked && client.Version > max)
-            {
-                client.IsConnected = false;
+			{
+				client.IsConnected = false;
 				client.Out.SendLoginDenied(eLoginError.NotAuthorizedToUseExpansionVersion);
 				log.Debug("IsAllowedToConnect deny access to client version (too high) " + client.Version);
 				return false;
@@ -114,8 +130,8 @@ namespace DOL.GS.ServerRules
 			{
 				GameClient.eClientType type = (GameClient.eClientType)Properties.CLIENT_TYPE_MAX;
 				if ((int)client.ClientType > (int)type )
-                {
-                    client.IsConnected = false;
+				{
+					client.IsConnected = false;
 					client.Out.SendLoginDenied(eLoginError.ExpansionPacketNotAllowed);
 					log.Debug("IsAllowedToConnect deny access to expansion pack.");
 					return false;
@@ -156,8 +172,8 @@ namespace DOL.GS.ServerRules
 					// GMs are still allowed to enter server
 					if (account == null || (account.PrivLevel == 1 && account.Status <= 0))
 					{
-                        // Normal Players will not be allowed over the max
-                        client.IsConnected = false;
+						// Normal Players will not be allowed over the max
+						client.IsConnected = false;
 						client.Out.SendLoginDenied(eLoginError.TooManyPlayersLoggedIn);
 						log.Debug("IsAllowedToConnect deny access due to too many players.");
 						return false;
@@ -171,8 +187,8 @@ namespace DOL.GS.ServerRules
 				if (account == null || account.PrivLevel == 1)
 				{
 					// GMs are still allowed to enter server
-                    // Normal Players will not be allowed to Log in
-                    client.IsConnected = false;
+					// Normal Players will not be allowed to Log in
+					client.IsConnected = false;
 					client.Out.SendLoginDenied(eLoginError.GameCurrentlyClosed);
 					log.Debug("IsAllowedToConnect deny access; staff only login");
 					return false;
@@ -191,8 +207,8 @@ namespace DOL.GS.ServerRules
 							if (cln.Account != null && cln.Account.PrivLevel > 1)
 							{
 								break;
-                            }
-                            client.IsConnected = false;
+							}
+							client.IsConnected = false;
 							client.Out.SendLoginDenied(eLoginError.AccountAlreadyLoggedIntoOtherServer);
 							log.Debug("IsAllowedToConnect deny access; dual login not allowed");
 							return false;
@@ -310,43 +326,43 @@ namespace DOL.GS.ServerRules
 		/// <returns>true if attack is allowed</returns>
 		public virtual bool IsAllowedToAttack(GameLiving attacker, GameLiving defender, bool quiet)
 		{
-			if (attacker == null || defender == null || attacker.ObjectState != GameLiving.eObjectState.Active || defender.ObjectState != GameLiving.eObjectState.Active)
+			if (attacker == null || defender == null)
 				return false;
 
 			//dead things can't attack
 			if (!defender.IsAlive || !attacker.IsAlive )
 				return false;
 
-			GamePlayer playerAttacker = attacker as GamePlayer;
-			GamePlayer playerDefender = defender as GamePlayer;
+			GameLiving realAttacker = attacker;
+			GameLiving realDefender = defender;
 
 			// if Pet, let's define the controller once
 			if (defender is GameNPC)
 				if ((defender as GameNPC).Brain is IControlledBrain)
-					playerDefender = ((defender as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+					realDefender = ((defender as GameNPC).Brain as IControlledBrain).GetLivingOwner();
 			
 			if (attacker is GameNPC)
 				if ((attacker as GameNPC).Brain is IControlledBrain)
-					playerAttacker = ((attacker as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+					realAttacker = ((attacker as GameNPC).Brain as IControlledBrain).GetLivingOwner();
 			
-			if (playerDefender != null && (playerDefender.Client.ClientState == GameClient.eClientState.WorldEnter || playerDefender.IsInvulnerableToAttack))
+			if (realDefender is GamePlayer && (((GamePlayer)realDefender).Client.ClientState == GameClient.eClientState.WorldEnter || ((GamePlayer)realDefender).IsInvulnerableToAttack))
 			{
 				if (!quiet)
 					MessageToLiving(attacker, defender.Name + " is entering the game and is temporarily immune to PvP attacks!");
 				return false;
 			}
 
-			if (playerAttacker != null && playerDefender != null)
+			if (realAttacker is GamePlayer && realDefender is GamePlayer)
 			{
 				// Attacker immunity
-				if (playerAttacker.IsInvulnerableToAttack)
+				if (((GamePlayer)realAttacker).IsInvulnerableToAttack)
 				{
 					if (quiet == false) MessageToLiving(attacker, "You can't attack players until your PvP invulnerability timer wears off!");
 					return false;
 				}
 
 				// Defender immunity
-				if (playerDefender.IsInvulnerableToAttack)
+				if (((GamePlayer)realDefender).IsInvulnerableToAttack)
 				{
 					if (quiet == false) MessageToLiving(attacker, defender.Name + " is temporarily immune to PvP attacks!");
 					return false;
@@ -364,12 +380,12 @@ namespace DOL.GS.ServerRules
 			// Your pet can only attack stealthed players you have selected
 			if (defender.IsStealthed && attacker is GameNPC)
 				if (((attacker as GameNPC).Brain is IControlledBrain) &&
-				    defender is GamePlayer && playerAttacker != null &&
-				    playerAttacker.TargetObject != defender)
+				    defender is GamePlayer &&
+				    realAttacker.TargetObject != defender)
 					return false;
 			
 			// GMs can't be attacked
-			if (playerDefender != null && playerDefender.Client.Account.PrivLevel > 1)
+			if (realDefender is GamePlayer && ((GamePlayer)realDefender).Client.Account.PrivLevel > 1)
 				return false;
 
 			// Safe area support for defender
@@ -378,7 +394,7 @@ namespace DOL.GS.ServerRules
 				if (!area.IsSafeArea)
 					continue;
 
-				if (defender is GamePlayer)
+				if (realDefender is GamePlayer)
 				{
 					if (quiet == false) MessageToLiving(attacker, "You can't attack someone in a safe area!");
 					return false;
@@ -388,7 +404,7 @@ namespace DOL.GS.ServerRules
 			//safe area support for attacker
 			foreach (AbstractArea area in attacker.CurrentAreas)
 			{
-				if ((area.IsSafeArea) && (defender is GamePlayer) && (attacker is GamePlayer))
+				if ((area.IsSafeArea) && (realDefender is GamePlayer) && (realAttacker is GamePlayer))
 				{
 					if (quiet == false) MessageToLiving(attacker, "You can't attack someone in a safe area!");
 					return false;
@@ -482,7 +498,7 @@ namespace DOL.GS.ServerRules
 		{
 			if (source.IsAlive == false)
 			{
-				MessageToLiving(source, "Hmmmm...you can't " + communicationType + " while dead!");
+				MessageToLiving(source, "Hmmmm... you can't " + communicationType + " while dead!");
 				return false;
 			}
 			return true;
@@ -900,7 +916,7 @@ namespace DOL.GS.ServerRules
 		/// <param name="killer">killer</param>
 		public virtual void OnNPCKilled(GameNPC killedNPC, GameObject killer)
 		{
-			lock (((System.Collections.ICollection)killedNPC.XPGainers).SyncRoot)
+			lock (killedNPC.XPGainers.SyncRoot)
 			{
 				#region Worth no experience
 				//"This monster has been charmed recently and is worth no experience."
@@ -912,7 +928,7 @@ namespace DOL.GS.ServerRules
 
 				if (!killedNPC.IsWorthReward)
 				{
-					foreach (KeyValuePair<GameObject, float> de in killedNPC.XPGainers)
+					foreach (DictionaryEntry de in killedNPC.XPGainers)
 					{
 						GamePlayer player = de.Key as GamePlayer;
 						if (player != null)
@@ -928,7 +944,7 @@ namespace DOL.GS.ServerRules
 				GamePlayer highestPlayer = null;
 				bool isGroupInRange = false;
 				//Collect the total damage
-				foreach (KeyValuePair<GameObject, float> de in killedNPC.XPGainers)
+				foreach (DictionaryEntry de in killedNPC.XPGainers)
 				{
 					totalDamage += (float)de.Value;
 					GamePlayer player = de.Key as GamePlayer;
@@ -967,7 +983,7 @@ namespace DOL.GS.ServerRules
 					highestConValue = highestPlayer.GetConLevel(killedNPC);
 
 				//Now deal the XP to all livings
-				foreach (KeyValuePair<GameObject, float> de in killedNPC.XPGainers)
+				foreach (DictionaryEntry de in killedNPC.XPGainers)
 				{
 					GameLiving living = de.Key as GameLiving;
 					GamePlayer player = living as GamePlayer;
@@ -1196,12 +1212,12 @@ namespace DOL.GS.ServerRules
 		/// <param name="killer">The killer object</param>
 		public virtual void OnLivingKilled(GameLiving killedLiving, GameObject killer)
 		{
-			lock (((System.Collections.ICollection)killedLiving.XPGainers).SyncRoot)
+			lock (killedLiving.XPGainers.SyncRoot)
 			{
 				bool dealNoXP = false;
 				float totalDamage = 0;
 				//Collect the total damage
-				foreach (KeyValuePair<GameObject, float> de in killedLiving.XPGainers)
+				foreach (DictionaryEntry de in killedLiving.XPGainers)
 				{
 					GameObject obj = (GameObject)de.Key;
 					if (obj is GamePlayer)
@@ -1228,7 +1244,7 @@ namespace DOL.GS.ServerRules
 				int BPValue = killedLiving.BountyPointsValue;
 
 				//Now deal the XP and RPs to all livings
-				foreach (KeyValuePair<GameObject, float> de in killedLiving.XPGainers)
+				foreach (DictionaryEntry de in killedLiving.XPGainers)
 				{
 					GameLiving living = de.Key as GameLiving;
 					GamePlayer expGainPlayer = living as GamePlayer;
@@ -1335,9 +1351,9 @@ namespace DOL.GS.ServerRules
 			long noExpSeconds = ServerProperties.Properties.RP_WORTH_SECONDS;
 			if (killedPlayer.DBCharacter.DeathTime + noExpSeconds > killedPlayer.PlayedTime)
 			{
-				lock (((System.Collections.ICollection)killedPlayer.XPGainers).SyncRoot)
+				lock (killedPlayer.XPGainers.SyncRoot)
 				{
-					foreach (KeyValuePair<GameObject, float> de in killedPlayer.XPGainers)
+					foreach (DictionaryEntry de in killedPlayer.XPGainers)
 					{
 						if (de.Key is GamePlayer)
 						{
@@ -1349,12 +1365,12 @@ namespace DOL.GS.ServerRules
 				return;
 			}
 
-			lock (((System.Collections.ICollection)killedPlayer.XPGainers).SyncRoot)
+			lock (killedPlayer.XPGainers.SyncRoot)
 			{
 				bool dealNoXP = false;
 				float totalDamage = 0;
 				//Collect the total damage
-				foreach (KeyValuePair<GameObject, float> de in killedPlayer.XPGainers)
+				foreach (DictionaryEntry de in killedPlayer.XPGainers)
 				{
 					GameObject obj = (GameObject)de.Key;
 					if (obj is GamePlayer)
@@ -1372,7 +1388,7 @@ namespace DOL.GS.ServerRules
 
 				if (dealNoXP)
 				{
-					foreach (KeyValuePair<GameObject, float> de in killedPlayer.XPGainers)
+					foreach (DictionaryEntry de in killedPlayer.XPGainers)
 					{
 						GamePlayer player = de.Key as GamePlayer;
 						if (player != null)
@@ -1406,7 +1422,7 @@ namespace DOL.GS.ServerRules
 				List<KeyValuePair<GamePlayer, int>> playerKillers = new List<KeyValuePair<GamePlayer,int>>();
 
 				//Now deal the XP and RPs to all livings
-				foreach (KeyValuePair<GameObject, float> de in killedPlayer.XPGainers)
+				foreach (DictionaryEntry de in killedPlayer.XPGainers)
 				{
 					GameLiving living = de.Key as GameLiving;
 					GamePlayer expGainPlayer = living as GamePlayer;
@@ -1671,6 +1687,17 @@ namespace DOL.GS.ServerRules
 		public virtual string GetPlayerGuildName(GamePlayer source, GamePlayer target)
 		{
 			return target.GuildName;
+		}
+
+		/// <summary>
+		/// Gets the player's custom title based on server type
+		/// </summary>
+		/// <param name="source">The "looking" player</param>
+		/// <param name="target">The considered player</param>
+		/// <returns>The custom title of the target</returns>
+		public virtual string GetPlayerTitle(GamePlayer source, GamePlayer target)
+		{
+			return target.CurrentTitle.GetValue(source, target);
 		}
 
 		/// <summary>

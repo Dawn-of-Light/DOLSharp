@@ -9,30 +9,19 @@ namespace DOL.Database
 	[DataTable(TableName = "ClassXRealmAbility")]
 	public class ClassXRealmAbility : DataObject
 	{
-		protected uint m_id;
 		protected string m_abilityKey;
-		protected byte m_charClass;
+		protected int m_charClass;
 
 		public ClassXRealmAbility()
 		{
 			AllowAdd = false;
-		}
-		
-		/// <summary>
-		/// Primary Key
-		/// </summary>
-		[PrimaryKey(AutoIncrement=true)]
-		public uint ID
-		{
-			get { return m_id; }
-			set { m_id = value; }
 		}
 
 		/// <summary>
 		/// Char class that can get this ability
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public byte CharClass
+		public int CharClass
 		{
 			get { return m_charClass; }
 			set

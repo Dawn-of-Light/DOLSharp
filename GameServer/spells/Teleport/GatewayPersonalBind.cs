@@ -110,21 +110,6 @@ namespace DOL.GS.Spells
 			player.MoveTo((ushort)character.BindRegion,	character.BindXpos, character.BindYpos, character.BindZpos, (ushort)character.BindHeading);
 		}
 
-
-		public override void CasterMoves()
-		{
-			InterruptCasting();
-			if (Caster is GamePlayer)
-                (Caster as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SpellHandler.CasterMove"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-		}
-
-
-		public override void InterruptCasting()
-		{
-			m_startReuseTimer = false;
-			base.InterruptCasting();
-		}
-
 		public override IList<string> DelveInfo
 		{
 			get

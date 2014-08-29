@@ -23,7 +23,7 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&blink",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"Makes the specified UI Part of your target or yourself blinking.",
 		"/blink <id>: type /blink for a list of possible IDs")]
 	public class BlinkCommandHandler : ICommandHandler

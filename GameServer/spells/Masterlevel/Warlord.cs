@@ -53,7 +53,7 @@ namespace DOL.GS.Spells
                     }
                     break;
             }
-            m_caster.Mana -= PowerCost(target);
+            m_caster.Mana -= PowerCost(target, true);
             base.FinishSpellCast(target);
         }
 
@@ -131,7 +131,7 @@ namespace DOL.GS.Spells
         {
             return 0;
         }
-        public override IList SelectTargets(GameObject castTarget)
+        public override IList<GameLiving> SelectTargets(GameObject castTarget)
         {
             List<GameLiving> list = new List<GameLiving>();
             GameLiving target = Caster;
@@ -179,6 +179,7 @@ namespace DOL.GS.Spells
 
     //shared timer 5
     #region Warlord-9
+    /*
     [SpellHandlerAttribute("EffectivenessBuff")]
     public class EffectivenessBuff : MasterlevelHandling
     {
@@ -187,7 +188,7 @@ namespace DOL.GS.Spells
         /// </summary>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            m_caster.Mana -= PowerCost(target, true);
             base.FinishSpellCast(target);
         }
 
@@ -233,6 +234,7 @@ namespace DOL.GS.Spells
 
         public EffectivenessBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
+    */
     #endregion
 
     //shared timer 5

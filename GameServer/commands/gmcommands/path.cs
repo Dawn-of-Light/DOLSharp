@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
@@ -61,16 +60,16 @@ namespace DOL.GS.Commands
 			obj.Emblem = 0;
 			obj.AddToWorld();
 
-			List<GameObject> objs = (List<GameObject>)client.Player.TempProperties.getProperty<object>(TEMP_PATH_OBJS, null);
+			ArrayList objs = (ArrayList)client.Player.TempProperties.getProperty<object>(TEMP_PATH_OBJS, null);
 			if (objs == null)
-				objs = new List<GameObject>();
+				objs = new ArrayList();
 			objs.Add(obj);
 			client.Player.TempProperties.setProperty(TEMP_PATH_OBJS, objs);
 		}
 
 		private void RemoveAllTempPathObjects(GameClient client)
 		{
-			List<GameObject> objs = (List<GameObject>)client.Player.TempProperties.getProperty<object>(TEMP_PATH_OBJS, null);
+			ArrayList objs = (ArrayList)client.Player.TempProperties.getProperty<object>(TEMP_PATH_OBJS, null);
 			if (objs == null)
 				return;
 
@@ -89,7 +88,7 @@ namespace DOL.GS.Commands
 
 		private void PathHide(GameClient client)
 		{
-			List<GameObject> objs = (List<GameObject>)client.Player.TempProperties.getProperty<object>(TEMP_PATH_OBJS, null);
+			ArrayList objs = (ArrayList)client.Player.TempProperties.getProperty<object>(TEMP_PATH_OBJS, null);
 			if (objs == null)
 				return;
 

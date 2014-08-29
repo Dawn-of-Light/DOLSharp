@@ -338,7 +338,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual bool CheckRawMaterials(GamePlayer player, DBCraftedItem recipe, ItemTemplate itemToCraft, IList<DBCraftedXItem> rawMaterials)
 		{
-			List<string> missingMaterials = null;
+			ArrayList missingMaterials = null;
 
 			lock (player.Inventory)
 			{
@@ -376,7 +376,7 @@ namespace DOL.GS
 					{
 						if (missingMaterials == null)
 						{
-							missingMaterials = new List<string>();
+							missingMaterials = new ArrayList(5);
 						}
 
 						missingMaterials.Add("(" + count + ") " + template.Name);

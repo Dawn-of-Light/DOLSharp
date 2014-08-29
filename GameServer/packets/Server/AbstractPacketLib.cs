@@ -59,6 +59,20 @@ namespace DOL.GS.PacketHandler
 		/// <param name="packet">The packet to be sent</param>
 		public void SendTCP(GSTCPPacketOut packet)
 		{
+			if (ServerProperties.Properties.ENABLE_DEBUG_OUTGOING_PACKETS)
+			{
+				try
+				{
+					ILog packetLog = LogManager.GetLogger("OutPacketDebug");
+					log4net.ThreadContext.Properties["clientendpoint"] = m_gameClient.TcpEndpoint;
+					packetLog.DebugFormat("TCP Outgoing Packet To Client {0}\nPacket Code : {2:X}\n{1}", m_gameClient, packet.ToHumanReadable(), packet.PacketCode);
+				}
+				catch (Exception e)
+				{
+					log.ErrorFormat("Error While Logging Out Packet To Client {0}\n{1}", m_gameClient == null ? "null" : m_gameClient.ToString(), e);
+				}
+			}
+			
 			m_gameClient.PacketProcessor.SendTCP(packet);
 		}
 
@@ -96,6 +110,20 @@ namespace DOL.GS.PacketHandler
 		/// <param name="isForced">Force UDP packet if <code>true</code>, else packet can be sent over TCP</param>
 		public virtual void SendUDP(GSUDPPacketOut packet, bool isForced)
 		{
+			if (ServerProperties.Properties.ENABLE_DEBUG_OUTGOING_PACKETS)
+			{
+				try
+				{
+					ILog packetLog = LogManager.GetLogger("OutPacketDebug");
+					log4net.ThreadContext.Properties["clientendpoint"] = m_gameClient.TcpEndpoint;
+					packetLog.DebugFormat("UDP ({2}) Outgoing Packet To Client {0}\nPacket Code : {3:X}\n{1}", m_gameClient, packet.ToHumanReadable(), isForced, packet.PacketCode);
+				}
+				catch (Exception e)
+				{
+					log.ErrorFormat("Error While Logging Out Packet To Client {0}\n{1}", m_gameClient == null ? "null" : m_gameClient.ToString(), e);
+				}
+			}
+			
 			m_gameClient.PacketProcessor.SendUDP(packet, isForced);
 		}
 
@@ -114,6 +142,20 @@ namespace DOL.GS.PacketHandler
 		/// <param name="packet">Packet to be sent</param>
 		public void SendUDPRaw(GSUDPPacketOut packet)
 		{
+			if (ServerProperties.Properties.ENABLE_DEBUG_OUTGOING_PACKETS)
+			{
+				try
+				{
+					ILog packetLog = LogManager.GetLogger("OutPacketDebug");
+					log4net.ThreadContext.Properties["clientendpoint"] = m_gameClient.TcpEndpoint;
+					packetLog.DebugFormat("UDP (Raw) Outgoing Packet To Client {0}\nPacket Code : {2:X}\n{1}", m_gameClient, packet.ToHumanReadable(), packet.PacketCode);
+				}
+				catch (Exception e)
+				{
+					log.ErrorFormat("Error While Logging Out Packet To Client {0}\n{1}", m_gameClient == null ? "null" : m_gameClient.ToString(), e);
+				}
+			}
+			
 			m_gameClient.PacketProcessor.SendUDPRaw(packet);
 		}
 		

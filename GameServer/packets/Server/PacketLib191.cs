@@ -59,7 +59,7 @@ namespace DOL.GS.PacketHandler
 					playerStatus |= 0x02;
 				if (living.IsDiseased)
 					playerStatus |= 0x04;
-				if (SpellHandler.FindEffectOnTarget(living, "DamageOverTime") != null)
+				if (SpellHelper.FindEffectOnTarget(living, "DamageOverTime") != null)
 					playerStatus |= 0x08;
 				if (living is GamePlayer)
 				{
@@ -68,7 +68,7 @@ namespace DOL.GS.PacketHandler
 				}
 				if (!sameRegion)
 					playerStatus |= 0x20;
-				if (living.DebuffCategory[(int)eProperty.SpellRange] != 0 || living.DebuffCategory[(int)eProperty.ArcheryRange] != 0)
+				if (living.DebuffCategory[eProperty.SpellRange] != 0 || living.DebuffCategory[eProperty.ArcheryRange] != 0)
 					playerStatus |= 0x40;
 
 				pak.WriteByte(playerStatus);
@@ -111,32 +111,35 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null)
 				return;
 
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ConcentrationList));
-			lock (m_gameClient.Player.ConcentrationEffects)
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ConcentrationList)))
 			{
-				pak.WriteByte((byte)(m_gameClient.Player.ConcentrationEffects.Count));
-				pak.WriteByte(0); // unknown
-				pak.WriteByte(0); // unknown
-				pak.WriteByte(0); // unknown
-
-				for (int i = 0; i < m_gameClient.Player.ConcentrationEffects.Count; i++)
+				lock (m_gameClient.Player.ConcentrationEffects)
 				{
-					IConcentrationEffect effect = m_gameClient.Player.ConcentrationEffects[i];
-					pak.WriteByte((byte)i);
+					pak.WriteByte((byte)(m_gameClient.Player.ConcentrationEffects.Count));
 					pak.WriteByte(0); // unknown
-					pak.WriteByte(effect.Concentration);
-					pak.WriteShort(effect.Icon);
-					if (effect.Name.Length > 14)
-						pak.WritePascalString(effect.Name.Substring(1, 11) + "...");
-					else
-						pak.WritePascalString(effect.Name);
-					if (/*effect.Concentration > 0 && */effect.OwnerName.Length > 14)
-						pak.WritePascalString(effect.OwnerName.Substring(1, 11) + "...");
-					else
-						pak.WritePascalString(effect.OwnerName);
+					pak.WriteByte(0); // unknown
+					pak.WriteByte(0); // unknown
+	
+					for (int i = 0; i < m_gameClient.Player.ConcentrationEffects.Count; i++)
+					{
+						IConcentrationEffect effect = m_gameClient.Player.ConcentrationEffects[i];
+						pak.WriteByte((byte)i);
+						pak.WriteByte(0); // unknown
+						pak.WriteByte(effect.Concentration);
+						pak.WriteShort(effect.Icon);
+						if (effect.Name.Length > 14)
+							pak.WritePascalString(effect.Name.Substring(0, 12) + "..");
+						else
+							pak.WritePascalString(effect.Name);
+						if (effect.OwnerName.Length > 14)
+							pak.WritePascalString(effect.OwnerName.Substring(0, 12) + "..");
+						else
+							pak.WritePascalString(effect.OwnerName);
+					}
 				}
+				SendTCP(pak);
 			}
-			SendTCP(pak);
+			
 			SendStatusUpdate(); // send status update for convinience, mostly the conc has changed
 		}
 

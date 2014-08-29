@@ -30,21 +30,59 @@ namespace DOL.GS.PropertyCalc
 	/// BuffBonusMultCategory1 unused
 	/// </summary>
 	[PropertyCalculator(eProperty.MeleeDamage)]
-	public class MeleeDamagePercentCalculator : PropertyCalculator
+	public class MeleeDamagePercentCalculator : GenericPercentCalculator
 	{
-		public const int PROPERTY_MELEEDAMAGE_CAP = 10;
-		
-		public override int CalcValue(GameLiving living, eProperty property)
+		/// <summary>
+		/// Melee Item Bonus Capped to 10%
+		/// </summary>
+		/// <param name="living"></param>
+		/// <returns></returns>
+		public override int ItemCap(GameLiving living)
 		{
-			//hardcap at 10%
-			int itemPercent = Math.Min(PROPERTY_MELEEDAMAGE_CAP+GameMythirian.GetMythicalOverCapBonuses(living, property), living.ItemBonus[(int)property]);
-			int debuffPercent = Math.Min(PROPERTY_MELEEDAMAGE_CAP, living.DebuffCategory[(int)property]);
-			int percent = living.BaseBuffBonusCategory[(int)property] + living.SpecBuffBonusCategory[(int)property] + itemPercent - debuffPercent;
+			return 10;
+		}
+		
+		/// <summary>
+		/// Melee Ability Cap 50%
+		/// </summary>
+		/// <param name="living"></param>
+		/// <returns></returns>
+		public override int AbilityCap(GameLiving living)
+		{
+			return 50;
+		}
 
-			// Apply RA bonus
-			percent += living.AbilityBonus[(int)property];
+		/// <summary>
+		/// Melee buff cap 35%
+		/// </summary>
+		/// <param name="living"></param>
+		/// <returns></returns>
+		public override int BuffCap(GameLiving living)
+		{
+			return 35;
+		}
+		
+		/// <summary>
+		/// Melee debuff cap -50%
+		/// </summary>
+		/// <param name="living"></param>
+		/// <returns></returns>
+		public override int DebuffCap(GameLiving living)
+		{
+			return -50;
+		}
+		
+		public override int CalcValueBase(GameLiving living, eProperty property)
+		{
+			if(living is GameNPC)
+			{
+				GameNPC npc = ((GameNPC)living);
+				// For NPC Absorb is based on some stats buffs, debuff would also reduce absorb !! (modSTR / STR - 1 ) buffed or debuffed, halved and raised to base 100
+				return Math.Max(DebuffCap(living), Math.Min(BaseCap(living), base.CalcValueBase(living, property)+((int)((((double)living.GetModified(eProperty.Strength)/(double)(npc.Strength))-1.0)*100) >> 1)));
+			}
 
-			return percent;
+
+			return base.CalcValueBase(living, property);
 		}
 	}
 }

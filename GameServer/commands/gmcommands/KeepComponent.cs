@@ -116,7 +116,7 @@ namespace DOL.GS.Commands
 						component.Z = client.Player.Z;
 						component.ComponentHeading = (client.Player.Heading - myKeep.Heading) / 1024;
 						component.Heading = (ushort)(component.ComponentHeading * 1024 + myKeep.Heading);
-						component.Keep = myKeep;
+						component.AbstractKeep = myKeep;
 						//todo good formula
 						//component.ComponentX = (component.X - myKeep.X) / 148;
 						//component.ComponentY = (component.Y - myKeep.Y) / 148;
@@ -148,7 +148,7 @@ namespace DOL.GS.Commands
 						component.CurrentRegion = client.Player.CurrentRegion;
 						component.Health = component.MaxHealth;
 						component.ID = myKeep.KeepComponents.Count;
-						component.Keep.KeepComponents.Add(component);
+						component.AbstractKeep.KeepComponents.Add(component);
 						component.SaveInDB = true;
 						component.AddToWorld();
 						component.SaveIntoDatabase();
@@ -167,7 +167,7 @@ namespace DOL.GS.Commands
                         component.Z = client.Player.Z;
                         component.ComponentHeading = (client.Player.Heading - myKeep.Heading) / 1024;
                         component.Heading = (ushort)(component.ComponentHeading * 1024 + myKeep.Heading);
-                        component.Keep = myKeep;
+                        component.AbstractKeep = myKeep;
                         //todo good formula
                         //component.ComponentX = (component.X - myKeep.X) / 148;
                         //component.ComponentY = (myKeep.Y - component.Y) / 148;
@@ -281,7 +281,7 @@ namespace DOL.GS.Commands
 						component.SaveIntoDatabase();
 						client.Out.SendMessage(string.Format("Saved ComponentID: {0}, KeepID: {1}, Skin: {2}, Health: {3}%", 
 															component.ID, 
-															(component.Keep == null ? "0" : component.Keep.KeepID.ToString()), 
+															(component.AbstractKeep == null ? "0" : component.AbstractKeep.KeepID.ToString()), 
 															component.Skin, 
 															component.HealthPercent), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
@@ -298,7 +298,7 @@ namespace DOL.GS.Commands
                             return;
                         }
 
-                        DBKeepComponent dbcomponent = GameServer.Database.SelectObject<DBKeepComponent>("`KeepID` = '" + component.Keep.KeepID + "' AND `ID` = '" + component.ID + "'");
+                        DBKeepComponent dbcomponent = GameServer.Database.SelectObject<DBKeepComponent>("`KeepID` = '" + component.AbstractKeep.KeepID + "' AND `ID` = '" + component.ID + "'");
                         component.ComponentX = dbcomponent.X;
                         component.ComponentY = dbcomponent.Y;
                         component.ComponentHeading = dbcomponent.Heading;

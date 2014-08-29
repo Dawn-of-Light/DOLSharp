@@ -37,7 +37,7 @@ namespace DOL.GS
 	{
 		#region Add Spawns
 
-		private List<GameNPC> m_retrieverList = new List<GameNPC>();
+		private ArrayList m_retrieverList = new ArrayList();
 
 		/// <summary>
 		/// Spawn dogs that will despawn again after 60 seconds; there is

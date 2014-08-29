@@ -1,0 +1,131 @@
+#This file contains invalid name segments.
+#If a player's name contains any portion of a segment it is rejected.
+#Example: if a segment is "bob" then the name PlayerBobIsCool would be rejected
+#The # symbol at the beginning of a line means a comment and will not be read
+
+#___General___
+
+#disallow 3 identical subsequent consonants (Cccat, Klickkk, etc.) (Sauerstoffflasche will be forbidden *cry*)
+/([b-df-hk-np-tvwxz])\1{2}/
+
+#disallow 4 consonants at beginning of name (Blblob, Kbzdiff, etc.)
+/^([b-df-hk-np-tvwxz]){4}/
+
+#disallow 5 consonants in a row
+/([b-df-hk-np-tvwxz]){5}/
+
+#disallow 3 identical subsequent vowels in the middle of the name
+/([aeiouy])\1{2}[^aeiouy]+/
+
+#disallow 6 vowels in a row
+/([aeiouy]){6}/
+
+#disallow 5 identical subsequent vowels at the end of the name
+/([aeiouy])\1{4}/
+
+#disallow names without vowels
+/^[b-df-hk-np-tvwxz]+$/
+
+#disallow xxx
+/(x){3}/
+
+#disallow all variations of freyad
+/^[f]+[r]+[e]+[y]+[a]+[d]+/
+
+#disallow all variations of albion
+/^[a]+[l]+[b]+[i]+[o]+[n]+$/
+
+#disallow all variations of midgard
+/^[m]+[i]+[d]+[g]+[a]+[r]+[d]+$/
+
+#disallow all variations of hibernia
+/^[h]+[i]+[b]+[e]+[r]+[n]+[i]+[a]+$/
+
+#disallow client censored insults
+shit
+fuck
+
+
+#___English___
+
+/^anal$/
+
+#disallow ass and asshole
+/^a[s]+(h[o]+le)?$/
+
+#disallow "bitch" in all variations (bittch, biitchh, fubitch)
+/[b]+[i]+[t]+[c]+[h]+/
+
+cocaine
+/^cock$/
+/^cum$/
+/^cunt$/
+/^dick$/
+diethylamid
+lysergic
+mes(c|k)alin(e)?
+
+#disallow all variations of "nigger" and "neger"
+/^n+(e|i)+[g]+e[r]+$/
+
+/^slut$/
+/^wanker$/
+/whore$/
+
+
+#___German___
+
+/^arsch(loch)?$/
+/fick(en)?$/
+fotze
+/^(joseph)?[g]+(o|oe)+[b]+[e]+[l]+[s]+$/
+/^(herma[n]+)?[g]+(o|oe)+[r]+[i]+[n]+[g]+$/
+/^(adolf)?[h]+[i]+[t]+[l]+[e]+[r]+$/
+/^(heinrich)?[h]+[i]+[m]+[l]+[e]+[r]+$/
+/^hure/
+/hure$/
+nazi
+nsdap
+/^nutte$/
+/^schlampe/
+/schlampe$/
+/^scheisse$/
+/waffen[s]+$/
+
+
+#___French___
+
+#wanker
+branleur
+
+#motherfucker
+connard
+
+#motherfucker
+connasse
+
+#fuck
+encule
+
+/^merde$/
+
+#whore (french+italian)
+/^pu[t]+a(in)?$/
+
+#whore
+/^pute$/
+
+#asshole
+trouduc
+
+
+#___Italian___
+
+#ass
+/^culo$/
+
+#fuck (off)
+(vaf)?fanculo
+
+#schlampe
+sciattona

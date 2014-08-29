@@ -18,42 +18,17 @@
  */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.Collections.Concurrent;
 
 namespace DOL.GS.PropertyCalc
 {
 	/// <summary>
-	/// Implements multiplicative properties using HybridDictionary
+	/// Implements multiplicative properties using Concurrent Collections
 	/// </summary>
 	public sealed class MultiplicativePropertiesHybrid : IMultiplicativeProperties
 	{
-		private readonly object m_LockObject = new object();
-
-		private sealed class PropertyEntry
-		{
-			public double cachedValue = 1.0;
-			public Dictionary<object, double> values;
-			public void CalculateCachedValue()
-			{
-				if (values == null)
-				{
-					cachedValue = 1.0;
-					return;
-				}
-
-				IDictionaryEnumerator de = values.GetEnumerator();
-				double res = 1.0;
-				while(de.MoveNext())
-				{
-					res *= (double)de.Value;
-				}
-				cachedValue = res;
-			}
-		}
-
-		private Dictionary<int, PropertyEntry> m_properties = new Dictionary<int, PropertyEntry>();
+		// Dictionary for Properties and linked value.
+		private ConcurrentDictionary<eProperty, ConcurrentDictionary<object, double>> m_propertiesDict = new ConcurrentDictionary<eProperty, ConcurrentDictionary<object, double>>();
 
 		/// <summary>
 		/// Adds new value, if key exists value will be overwriten
@@ -61,25 +36,20 @@ namespace DOL.GS.PropertyCalc
 		/// <param name="index">The property index</param>
 		/// <param name="key">The key used to remove value later</param>
 		/// <param name="value">The value added</param>
-		public void Set(int index, object key, double value)
+		public void Set(eProperty index, object key, double ratio)
 		{
-			lock (m_LockObject)
+			if (!m_propertiesDict.ContainsKey(index))
 			{
-				PropertyEntry entry = null;
-				if(m_properties.ContainsKey(index))
-					entry = m_properties[index];
-				
-				if (entry == null)
-				{
-					entry = new PropertyEntry();
-					m_properties[index] = entry;
-				}
-
-				if (entry.values == null)
-					entry.values = new Dictionary<object, double>();
-
-				entry.values[key] = value;
-				entry.CalculateCachedValue();
+				m_propertiesDict.TryAdd(index, new ConcurrentDictionary<object, double>());
+			}
+			
+			if (!m_propertiesDict[index].ContainsKey(key))
+			{
+				m_propertiesDict[index].TryAdd(key, ratio);
+			}
+			else
+			{
+				m_propertiesDict[index][key] = ratio;
 			}
 		}
 
@@ -88,29 +58,20 @@ namespace DOL.GS.PropertyCalc
 		/// </summary>
 		/// <param name="index">The property index</param>
 		/// <param name="key">The key use to add the value</param>
-		public void Remove(int index, object key)
+		public void Remove(eProperty index, object key)
 		{
-			lock (((ICollection)m_properties).SyncRoot)
+			// Check if index and key exists
+			if (m_propertiesDict.ContainsKey(index) && m_propertiesDict[index].ContainsKey(key))
 			{
-				PropertyEntry entry = null;
-				if(m_properties.ContainsKey(index))
-					entry = m_properties[index];
+				double dummy;
+				m_propertiesDict[index].TryRemove(key, out dummy);
 				
-				if (entry == null) return;
-				if (entry.values == null) return;
-				
-				if(entry.values.ContainsKey(key))
-					entry.values.Remove(key);
-
-				// remove entry if it's empty
-				if (entry.values.Count < 1)
+				// empty the dictionary
+				if (m_propertiesDict[index].Count < 1)
 				{
-					if(m_properties.ContainsKey(index))
-						m_properties.Remove(index);
-					return;
+					ConcurrentDictionary<object, double> rem;
+					m_propertiesDict.TryRemove(index, out rem);
 				}
-
-				entry.CalculateCachedValue();
 			}
 		}
 
@@ -119,17 +80,24 @@ namespace DOL.GS.PropertyCalc
 		/// </summary>
 		/// <param name="index">The property index</param>
 		/// <returns>The property value (1.0 = 100%)</returns>
-		public double Get(int index)
+		public double Get(eProperty index)
 		{
-			PropertyEntry entry = null;
-			lock(((ICollection)m_properties).SyncRoot)
+			// if property exist calc ratio.
+			if (m_propertiesDict.ContainsKey(index))
 			{
-				if(m_properties.ContainsKey(index))
-					entry = m_properties[index];
+				double result = 1.0;
+				
+				foreach (double val in m_propertiesDict[index].Values)
+				{
+					double ratio = val;
+					result *= ratio;
+				}
+				
+				return result;
 			}
 			
-			if (entry == null) return 1.0;
-			return entry.cachedValue;
+			// default return 1.0
+			return 1.0;
 		}
 	}
 }

@@ -1113,7 +1113,7 @@ namespace DOL.GS
 
 			delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language,
 			                                     "DetailDisplayHandler.WriteClassicWeaponInfos.DamageType",
-			                                     (Type_Damage == 0 ? "None" : GlobalConstants.WeaponDamageTypeToName((int)Type_Damage))));
+			                                     (Type_Damage == 0 ? "None" : GlobalConstants.WeaponDamageTypeToName(Type_Damage))));
 
 			delve.Add(" ");
 
@@ -1130,7 +1130,7 @@ namespace DOL.GS
 			delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.WriteClassicArmorInfos.ArmorMod"));
 
 			double af = 0;
-			int afCap = player.Level;
+			int afCap = player.Level + (player.RealmLevel > 39 ? 1 : 0);
 			double effectiveAF = 0;
 
 			if (DPS_AF != 0)
@@ -1227,7 +1227,7 @@ namespace DOL.GS
 				delve.Add("         Hand: " + GlobalConstants.ItemHandToName(Hand) + " (" + Hand + ")");
 				delve.Add("Damage/Second: " + (DPS_AF / 10.0f));
 				delve.Add("        Speed: " + (SPD_ABS / 10.0f));
-				delve.Add("  Damage type: " + GlobalConstants.WeaponDamageTypeToName((int)Type_Damage) + " (" + Type_Damage + ")");
+				delve.Add("  Damage type: " + GlobalConstants.WeaponDamageTypeToName(Type_Damage) + " (" + Type_Damage + ")");
 				delve.Add("        Bonus: " + Bonus);
 			}
 			else if (GlobalConstants.IsArmor(Object_Type))
@@ -1242,7 +1242,7 @@ namespace DOL.GS
 				delve.Add("");
 				delve.Add("Damage/Second: " + (DPS_AF / 10.0f));
 				delve.Add("        Speed: " + (SPD_ABS / 10.0f));
-				delve.Add("  Shield type: " + GlobalConstants.ShieldTypeToName((int)Type_Damage) + " (" + Type_Damage + ")");
+				delve.Add("  Shield type: " + GlobalConstants.ShieldTypeToName(Type_Damage) + " (" + Type_Damage + ")");
 				delve.Add("        Bonus: " + Bonus);
 			}
 			else if (Object_Type == (int)eObjectType.Arrow || Object_Type == (int)eObjectType.Bolt)

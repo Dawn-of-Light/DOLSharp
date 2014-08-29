@@ -39,6 +39,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title value.</returns>
 		public abstract string GetValue(GamePlayer player);
 
+		public abstract string GetValue(GamePlayer source, GamePlayer target);
 		/// <summary>
 		/// Checks whether this title can be changed by the player.
 		/// </summary>

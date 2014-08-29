@@ -119,11 +119,11 @@ namespace DOL.GS.Spells
         /// <param name="target"></param>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            m_caster.Mana -= PowerCost(target, true);
             base.FinishSpellCast(target);
         }
 
-        public override IList SelectTargets(GameObject CasterTarget)
+        public override IList<GameLiving> SelectTargets(GameObject CasterTarget)
         {
             
             List<GameLiving> list = new  List<GameLiving>(8);
@@ -145,7 +145,7 @@ namespace DOL.GS.Spells
         public override void OnDirectEffect(GameLiving target, double effectiveness)
         {
             //base.OnDirectEffect(target, effectiveness);
-            IList targets = SelectTargets(Caster);
+            IList<GameLiving> targets = SelectTargets(Caster);
 
             if (targets == null) return;
 
@@ -312,7 +312,7 @@ namespace DOL.GS.Spells
             if (target == null) return;
             
             
-            if(FindEffectsOnTarget(target, Spell.SpellType).Count >= Spell.AmnesiaChance)
+            if(SpellHelper.FindEffectsOnTarget(target, Spell.SpellType).Count >= Spell.AmnesiaChance)
             	return;
             
             if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
@@ -556,7 +556,7 @@ namespace DOL.GS.Spells
             
             if (target == null) return;
             
-            if(FindEffectsOnTarget(target, Spell.SpellType).Count >= Spell.AmnesiaChance)
+            if(SpellHelper.FindEffectsOnTarget(target, Spell.SpellType).Count >= Spell.AmnesiaChance)
             	return;
 
             
@@ -644,9 +644,9 @@ namespace DOL.GS.Spells
             get
             {
                 eProperty temp = eProperty.Acuity;
-                if (m_spellTarget.Realm == eRealm.Albion) temp = eProperty.Intelligence;
-                if (m_spellTarget.Realm == eRealm.Midgard) temp = eProperty.Piety;
-                if (m_spellTarget.Realm == eRealm.Hibernia) temp = eProperty.Intelligence;
+                if (SpellCastTarget.Realm == eRealm.Albion) temp = eProperty.Intelligence;
+                if (SpellCastTarget.Realm == eRealm.Midgard) temp = eProperty.Piety;
+                if (SpellCastTarget.Realm == eRealm.Hibernia) temp = eProperty.Intelligence;
 
                 return temp;
             }
@@ -658,7 +658,7 @@ namespace DOL.GS.Spells
             
             if (target == null) return;
             
-            if(FindEffectsOnTarget(target, Spell.SpellType).Count >= Spell.AmnesiaChance)
+            if(SpellHelper.FindEffectsOnTarget(target, Spell.SpellType).Count >= Spell.AmnesiaChance)
             	return;
            
             if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
@@ -762,14 +762,14 @@ namespace DOL.GS.Spells
             return base.CalculateDamageBase(target);
         }
 
-        public override double DamageCap(double effectiveness)
+        public override double DamageCap(GameLiving target, double effectiveness)
         {
             if (Spell.Damage < 0)
             {
-                return (m_spellTarget.MaxHealth * -Spell.Damage * .01) * 3.0 * effectiveness;
+                return (target.MaxHealth * Spell.Damage * -0.01) * effectiveness;
             }
 
-            return base.DamageCap(effectiveness);
+            return base.DamageCap(target, effectiveness);
         }
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
@@ -782,7 +782,6 @@ namespace DOL.GS.Spells
             // calc damage
             AttackData ad = CalculateDamageToTarget(target, effectiveness);
             DamageTarget(ad, true);
-            SendDamageMessages(ad);
             target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster);
         }
 

@@ -28,7 +28,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-    [Cmd("&translate", ePrivLevel.GM,
+    [Cmd("&translate", ePrivLevel.Admin,
          "Use '/translate add [Language] [TranslationId] [Text]' to add a new translation.",
          "Use '/translate debug' to activate / deactivate the LanguageMgr debug mode for you and to receive extended messages or not.",
          "Use '/translate memadd [Language] [TranslationId]' to add a language object to your temporary properties. Use this sub command if the combination of a translation id and text is longer than the DAoC chat allows for one \"line\".",

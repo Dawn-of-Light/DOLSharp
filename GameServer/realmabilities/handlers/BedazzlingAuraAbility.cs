@@ -1,6 +1,5 @@
 using System.Reflection;
 using System.Collections;
-using System.Collections.Generic;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
@@ -53,7 +52,7 @@ namespace DOL.GS.RealmAbilities
 
 			DisableSkill(living);
 
-			List<GameLiving> targets = new List<GameLiving>();
+			ArrayList targets = new ArrayList();
 			if (player.Group == null)
 				targets.Add(player);
 			else
@@ -69,7 +68,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				//send spelleffect
 				if (!target.IsAlive) continue;
-				if (target.CharacterClass.Name=="Vampiir" && SpellHandler.FindEffectOnTarget(target, "VampiirMagicResistance") != null ) continue;
+				if (target.CharacterClass.Name=="Vampiir" && SpellHelper.FindEffectOnTarget(target, "VampiirMagicResistance") != null ) continue;
 				success = !target.TempProperties.getProperty(BofBaSb, false);
 				foreach (GamePlayer visPlayer in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					visPlayer.Out.SendSpellEffectAnimation(player, target, 7030, 0, false, CastSuccess(success));

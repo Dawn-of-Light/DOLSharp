@@ -42,7 +42,7 @@ namespace DOL.GS.Spells
         /// <param name="target"></param>
         /// <param name="effectiveness"></param>
         /// <returns></returns>
-        protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
+        public override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
         {
 			m_originalTarget = target;
 

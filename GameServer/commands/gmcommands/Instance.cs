@@ -20,7 +20,6 @@ using System;
 using DOL.GS.PacketHandler;
 using System.Reflection;
 using System.Collections;
-using System.Collections.Generic;
 using DOL.Database;
 
 //By dinberg - so its him who you blame ;)
@@ -126,7 +125,7 @@ namespace DOL.GS.Commands
 								GameObject obj = null;
 
 								//Now we have the classtype to create, create it thus!
-								List<Assembly> asms = new List<Assembly>();
+								ArrayList asms = new ArrayList();
 								asms.Add(typeof(GameServer).Assembly);
 								asms.AddRange(ScriptMgr.Scripts);
 

@@ -18,6 +18,7 @@
  */
 using System;
 using System.Reflection;
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Language;
@@ -32,7 +33,8 @@ namespace DOL.GS.Commands
 		"GMCommands.Ban.Usage.IP",
 		"GMCommands.Ban.Usage.Account",
 		"GMCommands.Ban.Usage.Both",
-		"#<ClientID> can be used in place of player name.  Use /clientlist to see playing clients."
+		"GMCommands.Ban.Usage.Sharp",
+		"GMCommands.Ban.Usage.Duration"
 	)]
 	public class BanCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
@@ -88,22 +90,55 @@ namespace DOL.GS.Commands
 			{
 				DBBannedAccount b = new DBBannedAccount
 				                    {
-				                    	DateBan = DateTime.UtcNow,
+				                    	DateBan = DateTime.Now,
 				                    	Author = client.Player.DBCharacter.Name,
 				                    	Ip = acc.LastLoginIP,
-				                    	Account = acc.Name
+				                    	Account = acc.Name,
+				                    	Unbanned = false
 				                    };
-
-				if (args.Length >= 4)
-					b.Reason = String.Join(" ", args, 3, args.Length - 3);
-				else
+				
+				if (args.Length >= 4) {
+					int b_dur = 0;
+					if (args[3].StartsWith("-d")) {
+						try {
+							b.BanDuration = Convert.ToUInt16(args[3].Replace("-d", ""));
+							b_dur = 1/b.BanDuration;
+						}
+						catch
+						{
+							DisplayMessage(client, "Invalid ban duration");
+							return;
+						}
+						b_dur = 1;
+					} else {
+						b.BanDuration = -1;
+					}
+					
+					b.Reason = String.Join(" ", args, 3 + b_dur, args.Length - (3 + b_dur));
+					
+					if (b_dur > 0 && args.Length == 4)
+					{
+						b.Reason = "No Reason.";
+					}
+				} else {
 					b.Reason = "No Reason.";
-
+					b.BanDuration = -1;
+				}
+				
 				switch (args[1].ToLower())
 				{
 						#region Account
 					case "account":
-						var acctBans = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(acc.Name) + "')");
+						IList<DBBannedAccount> acctBans;
+						if (GameServer.Database is Database.Handlers.SQLiteObjectDatabase)
+						{
+							acctBans = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(acc.Name) + "' AND (datetime(DateBan, '+' || BanDuration || ' days') > datetime('now','localhost') OR BanDuration < 0) AND Unbanned = 0)");
+						}
+						else
+						{
+							acctBans = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(acc.Name) + "' AND ((DateBan + INTERVAL BanDuration DAY) > NOW() OR BanDuration < 0) AND Unbanned = 0)");
+						}
+						
 						if (acctBans.Count > 0)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.AAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -111,12 +146,23 @@ namespace DOL.GS.Commands
 						}
 
 						b.Type = "A";
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.ABanned", acc.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						if (b.BanDuration > 0)
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.ABannedTemp", acc.Name, b.BanDuration), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						else
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.ABannedPerma", acc.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						break;
 						#endregion Account
 						#region IP
 					case "ip":
-						var ipBans = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='I' OR Type='B') AND Ip ='" + GameServer.Database.Escape(acc.LastLoginIP) + "')");
+						IList<DBBannedAccount> ipBans;
+						if (GameServer.Database is Database.Handlers.SQLiteObjectDatabase)
+						{
+							ipBans = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='I' OR Type='B') AND Ip ='" + GameServer.Database.Escape(acc.LastLoginIP) + "' AND (datetime(DateBan, '+' || BanDuration || ' days') > datetime('now','localhost') OR BanDuration < 0)  AND Unbanned = 0)");
+						}
+						else
+						{
+							ipBans = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='I' OR Type='B') AND Ip ='" + GameServer.Database.Escape(acc.LastLoginIP) + "' AND ((DateBan + INTERVAL BanDuration DAY) > NOW() OR BanDuration < 0)  AND Unbanned = 0)");
+						}
 						if (ipBans.Count > 0)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.IAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -124,12 +170,23 @@ namespace DOL.GS.Commands
 						}
 
 						b.Type = "I";
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.IBanned", acc.LastLoginIP), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						if (b.BanDuration > 0)
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.IBannedTemp", acc.LastLoginIP, b.BanDuration), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						else
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.IBannedPerma", acc.LastLoginIP), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						break;
 						#endregion IP
 						#region Both
 					case "both":
-						var acctIpBans = GameServer.Database.SelectObjects<DBBannedAccount>("Type='B' AND Account ='" + GameServer.Database.Escape(acc.Name) + "' AND Ip ='" + GameServer.Database.Escape(acc.LastLoginIP) + "'");
+						IList<DBBannedAccount> acctIpBans;
+						if (GameServer.Database is Database.Handlers.SQLiteObjectDatabase)
+						{
+							acctIpBans = GameServer.Database.SelectObjects<DBBannedAccount>("Type='B' AND Account ='" + GameServer.Database.Escape(acc.Name) + "' AND Ip ='" + GameServer.Database.Escape(acc.LastLoginIP) + "' AND (datetime(DateBan, '+' || BanDuration || ' days') > datetime('now','localhost') OR BanDuration < 0) AND Unbanned = 0");
+						}
+						else
+						{
+							acctIpBans = GameServer.Database.SelectObjects<DBBannedAccount>("Type='B' AND Account ='" + GameServer.Database.Escape(acc.Name) + "' AND Ip ='" + GameServer.Database.Escape(acc.LastLoginIP) + "' AND ((DateBan + INTERVAL BanDuration DAY) > NOW() OR BanDuration < 0) AND Unbanned = 0");
+						}
 						if (acctIpBans.Count > 0)
 						{
 							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.BAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -137,7 +194,10 @@ namespace DOL.GS.Commands
 						}
 
 						b.Type = "B";
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.BBanned", acc.Name, acc.LastLoginIP), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						if (b.BanDuration > 0)
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.BBannedTemp", acc.Name, acc.LastLoginIP, b.BanDuration), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						else
+							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.BBannedPerma", acc.Name, acc.LastLoginIP), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						break;
 						#endregion Both
 						#region Default
@@ -151,7 +211,12 @@ namespace DOL.GS.Commands
 				GameServer.Database.AddObject(b);
 
 				if (log.IsInfoEnabled)
-					log.Info("Ban added [" + args[1].ToLower() + "]: " + acc.Name + "(" + acc.LastLoginIP + ")");
+				{
+					if (b.BanDuration > 0)
+						log.Info("Temporary Ban added [" + args[1].ToLower() + "]: " + acc.Name + "(" + acc.LastLoginIP + ") for " + b.BanDuration + "days");
+					else
+						log.Info("Permanent Ban added [" + args[1].ToLower() + "]: " + acc.Name + "(" + acc.LastLoginIP + ")");
+				}
 				return;
 			}
 			catch (Exception e)

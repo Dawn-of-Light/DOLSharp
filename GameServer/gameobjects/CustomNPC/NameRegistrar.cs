@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using DOL;
 using DOL.Database;
 using DOL.GS;
@@ -18,7 +17,7 @@ namespace DOL.GS
 	{
 		public override IList GetExamineMessages(GamePlayer player)
 		{
-			List<string> list = new List<string>();
+			IList list = new ArrayList(2);
             list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "NameRegistrar.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
             return list;
 		}

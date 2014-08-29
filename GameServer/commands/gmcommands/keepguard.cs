@@ -202,10 +202,7 @@ namespace DOL.GS.Commands
 							DBKeepPosition pos = PositionMgr.CreatePosition(guard.GetType(), height, client.Player, Guid.NewGuid().ToString(), component);
 							//PositionMgr.AddPosition(pos);
 							//PositionMgr.FillPositions();
-							DBKeepPosition[] list = null;
-							if(component.Positions.ContainsKey(pos.TemplateID))
-								list = component.Positions[pos.TemplateID] as DBKeepPosition[];
-							
+							DBKeepPosition[] list = component.Positions[pos.TemplateID] as DBKeepPosition[];
 							if (list == null)
 							{
 								list = new DBKeepPosition[4];
@@ -233,7 +230,7 @@ namespace DOL.GS.Commands
 								{
 									AbstractGameKeep keep = (area as KeepArea).Keep;
 									guard.Component = new GameKeepComponent();
-									guard.Component.Keep = keep;
+									guard.Component.AbstractKeep = keep;
 									break;
 								}
 							}
@@ -241,8 +238,8 @@ namespace DOL.GS.Commands
 							TemplateMgr.RefreshTemplate(guard);
 							guard.AddToWorld();
 
-							if (guard.Component != null && guard.Component.Keep != null)
-								guard.Component.Keep.Guards.Add(DOL.Database.UniqueID.IDGenerator.GenerateID(), guard);
+							if (guard.Component != null && guard.Component.AbstractKeep != null)
+								guard.Component.AbstractKeep.Guards.Add(DOL.Database.UniqueID.IDGenerator.GenerateID(), guard);
 						}
 
 						PositionMgr.FillPositions();
@@ -464,16 +461,16 @@ namespace DOL.GS.Commands
 			obj.Model = 488;
 			obj.Emblem = 0;
 			obj.AddToWorld();
-			List<GameObject> objs = (List<GameObject>)client.Player.TempProperties.getProperty<object>(TEMP_PATH_OBJS, null);
+			ArrayList objs = (ArrayList)client.Player.TempProperties.getProperty<object>(TEMP_PATH_OBJS, null);
 			if (objs == null)
-				objs = new List<GameObject>();
+				objs = new ArrayList();
 			objs.Add(obj);
 			client.Player.TempProperties.setProperty(TEMP_PATH_OBJS, objs);
 		}
 
 		private void RemoveAllTempPathObjects(GameClient client)
 		{
-			List<GameObject> objs = (List<GameObject>)client.Player.TempProperties.getProperty<object>(TEMP_PATH_OBJS, null);
+			ArrayList objs = (ArrayList)client.Player.TempProperties.getProperty<object>(TEMP_PATH_OBJS, null);
 			if (objs == null)
 				return;
 			foreach (GameStaticItem obj in objs)

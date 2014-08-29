@@ -32,6 +32,23 @@ namespace DOL.GS.Effects
 		private readonly object m_LockObject = new object();
 
 		/// <summary>
+		/// time this Pulsing Effect Started.
+		/// </summary>
+		private long m_startTime = 0;
+		
+		/// <summary>
+		/// time this Pulsing Effect Started.
+		/// </summary>
+		public long StartTime
+		{
+			get
+			{
+				return m_startTime;
+			}
+		}
+		
+		
+		/// <summary>
 		/// The spell handler of this pulsing effect
 		/// </summary>
 		private readonly ISpellHandler m_spellHandler = null;
@@ -79,6 +96,7 @@ namespace DOL.GS.Effects
 				m_spellPulseAction.Interval = m_spellHandler.Spell.Frequency;
 				m_spellPulseAction.Start(m_spellHandler.Spell.Frequency);
 				m_spellHandler.Caster.ConcentrationEffects.Add(this);
+				m_startTime = m_spellHandler.Caster.CurrentRegion.Time;
 			}
 		}
 
@@ -93,9 +111,15 @@ namespace DOL.GS.Effects
 				if (m_spellPulseAction != null)
 				{
 					m_spellPulseAction.Stop();
-					m_spellPulseAction = null;
 				}
+				
+				m_spellHandler.OnSpellPulseCancel(this, playerCanceled);
+					
+				m_spellPulseAction = null;
+				
 				m_spellHandler.Caster.ConcentrationEffects.Remove(this);
+				
+				m_startTime = 0;
 			}
 		}
 
@@ -112,7 +136,22 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public string OwnerName
 		{
-			get { return "Pulse: " + m_spellHandler.Spell.Target; }
+			get 
+			{
+				if((m_spellHandler.Spell.Target.ToLower().Equals("enemy") && !m_spellHandler.Spell.IsPBAoE) ||
+				   m_spellHandler.Spell.Target.ToLower().Equals("pet") || 
+				   m_spellHandler.Spell.Target.ToLower().Equals("controlled") || 
+				   (m_spellHandler.Spell.Target.ToLower().Equals("realm") && !m_spellHandler.Spell.IsPBAoE)
+				   && (m_spellHandler is SpellHandler) && ((SpellHandler)m_spellHandler).SpellCastTarget != null
+				   && ! string.IsNullOrEmpty(((SpellHandler)m_spellHandler).SpellCastTarget.Name))
+				{
+					return "Pls: " + ((SpellHandler)m_spellHandler).SpellCastTarget.Name;
+				}
+				else
+				{
+					return "Pulse: " + m_spellHandler.Spell.Target;
+				}
+			}
 		}
 
 		/// <summary>

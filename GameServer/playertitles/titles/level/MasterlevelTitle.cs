@@ -23,7 +23,7 @@ using DOL.Events;
 
 namespace DOL.GS.PlayerTitles
 {
-  	/// <summary>
+	/// <summary>
 	/// Example...
 	/// </summary>
 	public class MasterlevelTitle : EventPlayerTitle
@@ -36,6 +36,7 @@ namespace DOL.GS.PlayerTitles
 		public override string GetDescription(GamePlayer player)
 		{
 			return player.MLTitle;
+			//HACK ML Titles
 		}
 
 		/// <summary>
@@ -48,6 +49,11 @@ namespace DOL.GS.PlayerTitles
 			return player.MLTitle;
 		}
 		
+		public override string GetValue(GamePlayer source, GamePlayer target)
+		{
+			return source.MLTitle;
+		}
+
 		/// <summary>
 		/// The event to hook.
 		/// </summary>

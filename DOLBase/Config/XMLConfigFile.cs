@@ -196,9 +196,8 @@ namespace DOL.Config
 						}
 					}
 				}
-				
-				reader.Close();
 			}
+
 			return root;
 		}
 	}

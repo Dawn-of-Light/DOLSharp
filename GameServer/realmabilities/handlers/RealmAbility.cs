@@ -27,7 +27,7 @@ namespace DOL.GS.RealmAbilities
 		/// <returns></returns>
 		public virtual bool CheckRequirement(GamePlayer player)
 		{
-			return true;
+			return Level <= MaxLevel;
 		}
 
 		/// <summary>
@@ -100,11 +100,6 @@ namespace DOL.GS.RealmAbilities
 			{
 				return (level + 1) * 5;
 			}
-		}
-
-		public override bool CheckRequirement(GamePlayer player)
-		{
-			return true;
 		}
 
 		public virtual int GetReUseDelay(int level)
@@ -342,10 +337,11 @@ namespace DOL.GS.RealmAbilities
 	}
 
 
-	public class L5RealmAbility : RealmAbility
+	public class L5RealmAbility : RAPropertyEnhancer
 	{
 
-		public L5RealmAbility(DBAbility ability, int level) : base(ability, level) { }
+		public L5RealmAbility(DBAbility ability, int level, eProperty[] properties) : base(ability, level, properties) { }
+		public L5RealmAbility(DBAbility ability, int level, eProperty property) : base(ability, level, property) { }
 
 		public override int CostForUpgrade(int level)
 		{
@@ -378,19 +374,7 @@ namespace DOL.GS.RealmAbilities
 				}
 			}
 		}
-
-		public override bool CheckRequirement(GamePlayer player)
-		{
-			if (ServerProperties.Properties.USE_NEW_PASSIVES_RAS_SCALING)
-			{
-				return Level <= 9;
-			}
-			else
-			{
-				return Level <= 5;
-			}
-		}
-
+		
 		public override int MaxLevel
 		{
 			get
@@ -403,6 +387,35 @@ namespace DOL.GS.RealmAbilities
 				{
 					return 5;
 				}
+			}
+		}
+	}
+	
+	
+	public class L5FixedRealmAbility : RAPropertyEnhancer
+	{
+
+		public L5FixedRealmAbility(DBAbility ability, int level, eProperty[] properties) : base(ability, level, properties) { }
+		public L5FixedRealmAbility(DBAbility ability, int level, eProperty property) : base(ability, level, property) { }
+
+		public override int CostForUpgrade(int level)
+		{
+			switch (level)
+			{
+				case 0: return 1;
+				case 1: return 3;
+				case 2: return 6;
+				case 3: return 10;
+				case 4: return 14;
+				default: return 1000;
+			}
+		}
+		
+		public override int MaxLevel
+		{
+			get
+			{
+				return 5;
 			}
 		}
 	}

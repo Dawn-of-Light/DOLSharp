@@ -34,6 +34,8 @@ namespace DOL.Database
 		private string	m_ip;
 		private string	m_account;
 		private DateTime m_dateban;
+		private int m_banduration;
+		private bool m_unbanned;
 		private string	m_reason;
 
 		/// <summary>
@@ -115,6 +117,22 @@ namespace DOL.Database
 				m_dateban = value;
 			}
 		}
+		
+		/// <summary>
+		/// Ban duration in days
+		/// </summary>
+		[DataElement(AllowDbNull=false, Index=true)]
+		public int BanDuration
+		{
+			get
+			{
+				return m_banduration;
+			}
+			set
+			{
+				m_banduration = value;
+			}
+		}
 
 		/// <summary>
 		/// reason of ban
@@ -131,5 +149,22 @@ namespace DOL.Database
 				m_reason=value;
 			}
 		}
+		
+		/// <summary>
+		/// unbanned flag
+		/// </summary>
+		[DataElement(AllowDbNull=false, Index=true)]
+		public bool Unbanned
+		{
+			get
+			{
+				return m_unbanned;
+			}
+			set
+			{
+				m_unbanned = value;
+			}
+		}
+		
 	}
 }

@@ -16,13 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
 using System;
 using DOL.Language;
 using DOL.Events;
 
 namespace DOL.GS.PlayerTitles
 {
+	/// <summary>
+	/// "Slayer of Hibernia" title granted to everyone who killed 25000+ hib players.
+	/// </summary>
 	public class SlayerOfHiberniaTitle : EventPlayerTitle
 	{
 		/// <summary>
@@ -32,7 +34,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title description.</returns>
 		public override string GetDescription(GamePlayer player)
 		{
-			return "Slayer of Hibernia";
+			return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Kills.Hibernia.SlayerOfHibernia");
 		}
 
 		/// <summary>
@@ -42,9 +44,13 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title value.</returns>
 		public override string GetValue(GamePlayer player)
 		{
-			return this.GetDescription(player);
+			return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Kills.Hibernia.SlayerOfHibernia");
 		}
 
+		public override string GetValue(GamePlayer source, GamePlayer target)
+		{
+			return LanguageMgr.GetTranslation(source.Client.Account.Language, "Titles.Kills.Hibernia.SlayerOfHibernia");
+		}
 
 		/// <summary>
 		/// The event to hook.
@@ -61,6 +67,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>true if the player is suitable for this title.</returns>
 		public override bool IsSuitable(GamePlayer player)
 		{
+			//100000+
 			return player.KillsHiberniaPlayers >= 100000;
 		}
 	}

@@ -18,8 +18,6 @@
  */
 using System;
 using System.Collections.Specialized;
-using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using DOL.GS.PacketHandler;
@@ -76,11 +74,11 @@ namespace DOL.GS
 		/// <summary>
 		/// The tickcount when this weather started
 		/// </summary>
-		private long m_weatherStartTick;
+		private int m_weatherStartTick;
 		/// <summary>
 		/// Holds all weather managers currently active
 		/// </summary>
-		private static readonly Dictionary<ushort, WeatherMgr> m_weathers = new Dictionary<ushort, WeatherMgr>();
+		private static readonly HybridDictionary m_weathers = new HybridDictionary();
 		#endregion
 
 		#region Constructor
@@ -117,7 +115,7 @@ namespace DOL.GS
 			{
 				if (m_weatherStartTick == 0)
 					return 0;
-				return (uint)(m_startX + (GameTimer.GetTickCount() - m_weatherStartTick) * m_speed / 1000);
+				return (uint)(m_startX + (Environment.TickCount - m_weatherStartTick) * m_speed / 1000);
 			}
 		}
 
@@ -178,10 +176,7 @@ namespace DOL.GS
 		/// <returns>The retrieved weather manager or null if none for this region</returns>
 		public static WeatherMgr GetWeatherForRegion(ushort regionID)
 		{
-			if(m_weathers.ContainsKey(regionID))
-				return (WeatherMgr)m_weathers[regionID];
-			
-			return null;
+			return (WeatherMgr)m_weathers[regionID];
 		}
 
 		/// <summary>
@@ -245,7 +240,7 @@ namespace DOL.GS
 			m_speed = speed;
 			m_fogDiffusion = fog;
 			m_intensity = intensity;
-			m_weatherStartTick = GameTimer.GetTickCount();
+			m_weatherStartTick = Environment.TickCount;
 
 			foreach (GameClient cl in WorldMgr.GetClientsOfRegion(m_regionID))
 				cl.Out.SendWeather(m_startX, m_width, m_speed, m_fogDiffusion, m_intensity);
@@ -306,7 +301,7 @@ namespace DOL.GS
 		public static bool Load()
 		{
 			//FIXME: [WARN] ideally we'd want this read from the region table instead of hardcoding which regions should produce storms
-			lock (((ICollection)m_weathers).SyncRoot)
+			lock (m_weathers)
 			{
 				foreach (RegionEntry region in DOL.GS.WorldMgr.GetRegionList())
 				{
@@ -357,9 +352,9 @@ namespace DOL.GS
 		/// <param name="regionID"></param>
 		public static void AddRegion(ushort regionID)
 		{
-			lock (((ICollection)m_weathers).SyncRoot)
+			lock (m_weathers)
 			{
-				if (m_weathers.ContainsKey(regionID) == false)
+				if (m_weathers.Contains(regionID) == false)
 				{
 					m_weathers.Add(regionID, new WeatherMgr(regionID));
 					(m_weathers[regionID] as WeatherMgr).m_weatherTimer.Change(120000, ServerProperties.Properties.WEATHER_CHECK_INTERVAL);
@@ -373,9 +368,9 @@ namespace DOL.GS
 		/// </summary>
 		public static void RemoveRegion(ushort regionID)
 		{
-			lock (((ICollection)m_weathers).SyncRoot)
+			lock (m_weathers)
 			{
-				if (m_weathers.ContainsKey(regionID))
+				if (m_weathers.Contains(regionID))
 				{
  					(m_weathers[regionID] as WeatherMgr).m_weatherTimer.Change(Timeout.Infinite, Timeout.Infinite);
 					m_weathers.Remove(regionID);
@@ -389,7 +384,7 @@ namespace DOL.GS
 		/// </summary>
 		public static void Unload()
 		{
-			lock (((ICollection)m_weathers).SyncRoot)
+			lock (m_weathers)
 			{
 				foreach (WeatherMgr weather in m_weathers.Values)
 					weather.m_weatherTimer.Change(Timeout.Infinite, Timeout.Infinite);

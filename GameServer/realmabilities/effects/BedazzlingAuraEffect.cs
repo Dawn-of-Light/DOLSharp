@@ -35,12 +35,12 @@ namespace DOL.GS.RealmAbilities
 
 			base.Start(living);
 
-			living.AbilityBonus[(int)eProperty.Resist_Body] += m_value;
-			living.AbilityBonus[(int)eProperty.Resist_Cold] += m_value;
-			living.AbilityBonus[(int)eProperty.Resist_Energy] += m_value;
-			living.AbilityBonus[(int)eProperty.Resist_Heat] += m_value;
-			living.AbilityBonus[(int)eProperty.Resist_Matter] += m_value;
-			living.AbilityBonus[(int)eProperty.Resist_Spirit] += m_value;
+			living.AbilityBonus[eProperty.Resist_Body] += m_value;
+			living.AbilityBonus[eProperty.Resist_Cold] += m_value;
+			living.AbilityBonus[eProperty.Resist_Energy] += m_value;
+			living.AbilityBonus[eProperty.Resist_Heat] += m_value;
+			living.AbilityBonus[eProperty.Resist_Matter] += m_value;
+			living.AbilityBonus[eProperty.Resist_Spirit] += m_value;
 
 			if (living is GamePlayer)
 			{
@@ -71,12 +71,12 @@ namespace DOL.GS.RealmAbilities
 		{
 			base.Stop();
 
-			m_owner.AbilityBonus[(int)eProperty.Resist_Body] -= m_value;
-			m_owner.AbilityBonus[(int)eProperty.Resist_Cold] -= m_value;
-			m_owner.AbilityBonus[(int)eProperty.Resist_Energy] -= m_value;
-			m_owner.AbilityBonus[(int)eProperty.Resist_Heat] -= m_value;
-			m_owner.AbilityBonus[(int)eProperty.Resist_Matter] -= m_value;
-			m_owner.AbilityBonus[(int)eProperty.Resist_Spirit] -= m_value;
+			m_owner.AbilityBonus[eProperty.Resist_Body] -= m_value;
+			m_owner.AbilityBonus[eProperty.Resist_Cold] -= m_value;
+			m_owner.AbilityBonus[eProperty.Resist_Energy] -= m_value;
+			m_owner.AbilityBonus[eProperty.Resist_Heat] -= m_value;
+			m_owner.AbilityBonus[eProperty.Resist_Matter] -= m_value;
+			m_owner.AbilityBonus[eProperty.Resist_Spirit] -= m_value;
 			if (m_owner is GamePlayer)
 			{
 				(m_owner as GamePlayer).Out.SendCharResistsUpdate();

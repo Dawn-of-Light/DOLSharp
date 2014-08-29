@@ -16,13 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
 using System;
 using DOL.Language;
 using DOL.Events;
 
 namespace DOL.GS.PlayerTitles
 {
+	/// <summary>
+	/// "Dragon Bane" title granted to everyone who kills the dragon 500+ times.
+	/// </summary>
 	public class DragonBaneTitle : EventPlayerTitle
 	{
 		/// <summary>
@@ -32,7 +34,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title description.</returns>
 		public override string GetDescription(GamePlayer player)
 		{
-			return "Dragon Bane";
+			return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Kills.Dragon.DragonBane");
 		}
 
 		/// <summary>
@@ -42,9 +44,13 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title value.</returns>
 		public override string GetValue(GamePlayer player)
 		{
-			return this.GetDescription(player);
+			return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Kills.Dragon.DragonBane");
 		}
 
+		public override string GetValue(GamePlayer source, GamePlayer target)
+		{
+			return LanguageMgr.GetTranslation(source.Client.Account.Language, "Titles.Kills.Dragon.DragonBane");
+		}
 
 		/// <summary>
 		/// The event to hook.
@@ -61,6 +67,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>true if the player is suitable for this title.</returns>
 		public override bool IsSuitable(GamePlayer player)
 		{
+			//500+
 			return player.KillsDragon >= 500;
 		}
 	}

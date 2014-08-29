@@ -277,7 +277,7 @@ namespace DOL.GS
 				{
 					m_health = maxhealth;
 
-					lock( ((ICollection)m_xpGainers).SyncRoot )
+					lock( m_xpGainers.SyncRoot )
 					{
 						m_xpGainers.Clear( );
 					}
@@ -314,20 +314,17 @@ namespace DOL.GS
 		{
 			base.Die(killer);
 			StartHealthRegeneration();
-		}
-		
-		public virtual void BroadcastUpdate()
+		}		
+
+        /// <summary>
+		/// Broadcasts the Door Update to all players around
+		/// </summary>
+		public override void BroadcastUpdate()
 		{
-			if( ObjectState != eObjectState.Active ) return;
-			foreach( GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE) )
-			{
-				if( player == null ) continue;
-				player.Out.SendObjectUpdate(this);
-				player.CurrentUpdateArray[ObjectID - 1] = true;
-			}
-			m_lastUpdateTickCount = (uint)(GameTimer.GetTickCount() / 10000);
+			base.BroadcastUpdate();
+			
+			m_lastUpdateTickCount = (uint)Environment.TickCount;
 		}
-		
 		
 		private static long m_healthregentimer = 0;
 		

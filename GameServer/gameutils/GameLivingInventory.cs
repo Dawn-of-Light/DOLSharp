@@ -17,7 +17,6 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
@@ -149,7 +148,7 @@ namespace DOL.GS
 
 			int result = 0;
 
-			lock (((ICollection)m_items).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				for (eInventorySlot i = minSlot; i <= maxSlot; i++)
 				{
@@ -178,7 +177,7 @@ namespace DOL.GS
 		/// <returns>number of matched items found</returns>
 		public int CountItemTemplate(string itemtemplateID, eInventorySlot minSlot, eInventorySlot maxSlot)
 		{
-			lock (((ICollection)m_items).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				int count = 0;
 
@@ -224,7 +223,7 @@ namespace DOL.GS
 				maxSlot = tmp;
 			}
 
-			lock (((ICollection)m_items).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				for (eInventorySlot i = minSlot; i <= maxSlot; i++)
 				{
@@ -314,7 +313,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected virtual eInventorySlot FindSlot(eInventorySlot first, eInventorySlot last, bool searchFirst, bool searchNull)
 		{
-			lock (((ICollection)m_items).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				first = GetValidInventorySlot(first);
 				last = GetValidInventorySlot(last);
@@ -378,7 +377,7 @@ namespace DOL.GS
 
 			var items = new List<InventoryItem>();
 
-			lock (((ICollection)m_items).SyncRoot)
+			lock (m_items)
 			{
 				InventoryItem item;
 
@@ -417,7 +416,7 @@ namespace DOL.GS
 				maxSlot = tmp;
 			}
 
-			lock (((ICollection)m_items).SyncRoot)
+			lock (m_items)
 			{
 				InventoryItem item;
 
@@ -457,7 +456,7 @@ namespace DOL.GS
 				maxSlot = tmp;
 			}
 
-			lock (((ICollection)m_items).SyncRoot)
+			lock (m_items)
 			{
 				InventoryItem item;
 
@@ -497,7 +496,7 @@ namespace DOL.GS
 				maxSlot = tmp;
 			}
 
-			lock (((ICollection)m_items).SyncRoot)
+			lock (m_items)
 			{
 				InventoryItem item;
 
@@ -529,7 +528,7 @@ namespace DOL.GS
 			if (item == null)
 				return false;
 
-			lock (((ICollection)m_items).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				slot = GetValidInventorySlot(slot);
 				if (slot == eInventorySlot.Invalid) return false;
@@ -572,8 +571,8 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void ClearInventory()
 		{
-			List<InventoryItem> tempList = new List<InventoryItem>(m_items.Count);
-			foreach (KeyValuePair<eInventorySlot, InventoryItem> entry in m_items)
+			var tempList = new List<InventoryItem>(m_items.Count);
+			foreach (var entry in m_items)
 			{
 				tempList.Add(entry.Value);
 			}
@@ -591,7 +590,7 @@ namespace DOL.GS
 		/// <returns>true if successfull</returns>
 		public virtual bool RemoveItem(InventoryItem item)
 		{
-			lock (((ICollection)m_items).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				if (item == null)
 					return false;
@@ -638,7 +637,7 @@ namespace DOL.GS
 			if (count <= 0)
 				return false;
 
-			lock (((ICollection)m_items).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				var slot = (eInventorySlot) item.SlotPosition;
 
@@ -675,7 +674,7 @@ namespace DOL.GS
 			if (count <= 0)
 				return false;
 
-			lock (((ICollection)m_items).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				var slot = (eInventorySlot) item.SlotPosition;
 
@@ -716,7 +715,7 @@ namespace DOL.GS
 			if (slot == eInventorySlot.Invalid)
 				return null;
 
-			lock (((ICollection)m_items).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				InventoryItem item;
 				m_items.TryGetValue(slot, out item);
@@ -735,7 +734,7 @@ namespace DOL.GS
 		/// <returns>true if successfull false if not</returns>
 		public virtual bool MoveItem(eInventorySlot fromSlot, eInventorySlot toSlot, int itemCount)
 		{
-			lock (((ICollection)m_items).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				fromSlot = GetValidInventorySlot(fromSlot);
 				toSlot = GetValidInventorySlot(toSlot);
@@ -775,7 +774,7 @@ namespace DOL.GS
 			{
 				var items = new List<InventoryItem>(VISIBLE_SLOTS.Length);
 
-				lock (((ICollection)m_items).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+				lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 				{
 					foreach (eInventorySlot slot in VISIBLE_SLOTS)
 					{
@@ -801,7 +800,7 @@ namespace DOL.GS
 			{
 				var items = new List<InventoryItem>(EQUIP_SLOTS.Length);
 
-				lock (((ICollection)m_items).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+				lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 				{
 					foreach (eInventorySlot slot in EQUIP_SLOTS)
 					{
@@ -865,7 +864,7 @@ namespace DOL.GS
 			if (maxSlot > eInventorySlot.Max_Inv)
 				return false;
 
-			lock (((ICollection)m_items).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				var changedSlots = new Dictionary<eInventorySlot, int>(); // value: <0 = new item count; >0 = add to old
 				bool fits = false;
@@ -1042,7 +1041,7 @@ namespace DOL.GS
 			if (minSlot < eInventorySlot.Min_Inv) return false;
 			if (maxSlot > eInventorySlot.Max_Inv) return false;
 
-			lock (((ICollection)m_items).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				var changedSlots = new Dictionary<InventoryItem, int>();
 				// value: null = remove item completely; >0 = remove count from stack
@@ -1172,8 +1171,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				if(m_items.ContainsKey(fromSlot))
-					m_items.Remove(fromSlot);
+				m_items.Remove(fromSlot);
 			}
 
 			// If 'fromSlot' wasn't empty, adjust the slot position for the item now in 'toSlot', otherwise clear the new slot.
@@ -1183,8 +1181,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				if(m_items.ContainsKey(toSlot))
-					m_items.Remove(toSlot);
+				m_items.Remove(toSlot);
 			}
 
 			return true;
@@ -1204,7 +1201,7 @@ namespace DOL.GS
 				InventoryItem item;
 				int weight = 0;
 
-				lock (((ICollection)m_items).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+				lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 				{
 					foreach (eInventorySlot slot in EQUIP_SLOTS)
 					{

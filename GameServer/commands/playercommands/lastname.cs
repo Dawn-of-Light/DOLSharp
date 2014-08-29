@@ -2,6 +2,7 @@
    Written by Gavinius */
 
 using System;
+using System.Text.RegularExpressions;
 using DOL.GS;
 using DOL.Database;
 using DOL.GS.PacketHandler;
@@ -10,9 +11,9 @@ using DOL.GS.PacketHandler;
 namespace DOL.GS.Commands
 {
 	[CmdAttribute(
-		 "&lastname",
-		 ePrivLevel.Player,
-		 "Set/change your lastname.", "/lastname <name>")]
+		"&lastname",
+		ePrivLevel.Player,
+		"Set/change your lastname.", "/lastname <name>")]
 
 	public class LastnameCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
@@ -95,13 +96,35 @@ namespace DOL.GS.Commands
 			}
 
 			/* Check if lastname is legal and is not contained in invalidnames.txt */
-			foreach (string invalid in GameServer.Instance.InvalidNames)
+			bool nameInvalid = false;
+			foreach (string invalidName in GameServer.Instance.InvalidNames)
 			{
-				if (NewLastname.ToLower().IndexOf(invalid) != -1)
+				if(invalidName.StartsWith("/") && invalidName.EndsWith("/"))
 				{
-					client.Out.SendMessage(NewLastname + " is not a legal last name! Choose another.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
+					// Regex matching
+					string re = invalidName.Replace("/", "");
+					Match match = Regex.Match(NewLastname.ToLower(), re, RegexOptions.IgnoreCase);
+					if (match.Success)
+					{
+						nameInvalid = true;
+						break;
+					}
 				}
+				else
+				{
+					// "Normal" complete partial match
+					if(NewLastname.ToLower().Contains(invalidName.ToLower()))
+					{
+						nameInvalid = true;
+						break;
+					}
+				}
+			}
+			
+			if (nameInvalid)
+			{
+				client.Out.SendMessage(NewLastname + " is not a legal last name! Choose another.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
 			}
 
 			client.Player.TempProperties.setProperty(LASTNAME_WEAK, NewLastname);
@@ -157,13 +180,13 @@ namespace DOL.GS.Commands
 			}
 
 			/* Remove money only if your lastname is not blank and is different from the previous one */
-            if (player.LastName != "" && player.LastName != NewLastName)
-            {
-                player.RemoveMoney(Money.GetMoney(0, 0, LASTNAME_FEE, 0, 0), null);
-                InventoryLogging.LogInventoryAction(player, player.TargetObject, eInventoryActionType.Merchant, LASTNAME_FEE * 10000);
-            }
+			if (player.LastName != "" && player.LastName != NewLastName)
+			{
+				player.RemoveMoney(Money.GetMoney(0, 0, LASTNAME_FEE, 0, 0), null);
+				InventoryLogging.LogInventoryAction(player, player.TargetObject, eInventoryActionType.Merchant, LASTNAME_FEE * 10000);
+			}
 
-		    /* Set the new lastname */
+			/* Set the new lastname */
 			player.LastName = NewLastName;
 			player.Out.SendMessage("Your last name has been " + (NewLastName != "" ? ("set to " + NewLastName) : "cleared") + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}

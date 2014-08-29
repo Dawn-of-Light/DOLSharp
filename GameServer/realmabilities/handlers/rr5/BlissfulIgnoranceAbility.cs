@@ -54,7 +54,7 @@ namespace DOL.GS.RealmAbilities
 
                 new BlissfulIgnoranceEffect().Start(player);*/
 
-                Dictionary<int, Spell> table_spells = new Dictionary<int, Spell>();
+                Hashtable table_spells = new Hashtable();
 				foreach (Spell spell in SkillBase.GetSpellList("Savagery"))
 				{
                     if(spell.Group==0 || spell.Target.ToLower()!="self") continue;
@@ -71,10 +71,10 @@ namespace DOL.GS.RealmAbilities
 						}
 					}
 				}
-				foreach (Spell spell in table_spells.Values)
+				foreach (object obj in table_spells.Values)
 				{
-                    if (spell == null) continue;
-                    
+                    if (obj == null || !(obj is Spell)) continue;
+                    Spell spell = obj as Spell;
                     try
 					{
 						DBSpell db = new DBSpell();

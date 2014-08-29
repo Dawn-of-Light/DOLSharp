@@ -4,7 +4,7 @@ using DOL.GS.PropertyCalc;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class LifterAbility : RAPropertyEnhancer
+	public class LifterAbility : L5RealmAbility
 	{
 		public LifterAbility(DBAbility dba, int level)
 			: base(dba, level, eProperty.Undefined)

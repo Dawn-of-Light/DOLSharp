@@ -46,22 +46,6 @@ namespace DOL.GS
 		#region members
 		
 		/// <summary>
-		/// Current Region holding this manager
-		/// </summary>
-		private readonly Region m_region;
-		
-		/// <summary>
-		/// Current Region holding this manager
-		/// </summary>
-		public Region CurrentRegion
-		{
-			get
-			{
-				return m_region;
-			}
-		}
-		
-		/// <summary>
 		/// Dictionary to keep players and last CheckLos Ticks.
 		/// </summary>
 		private readonly Dictionary<GamePlayer, long> m_clientChecks = new Dictionary<GamePlayer, long>();
@@ -144,12 +128,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Timer for cleanup routines
 		/// </summary>
-		private LosMgrCleanupTimer m_timerCleanup;
+		private System.Timers.Timer m_timerCleanup;
 		
 		/// <summary>
 		/// Timer for pendings routines
 		/// </summary>
-		private LosMgrTimeoutTimer m_timerPending;
+		private System.Timers.Timer m_timerPending;
 		
 		#endregion
 		
@@ -359,20 +343,20 @@ namespace DOL.GS
 		
 		#region constructor
 		
-		public LosCheckMgr(Region reg)
+		public LosCheckMgr()
 		{
-			m_region = reg;
-			
 			int rndRange = LOSMGR_CLEANUP_FREQUENCY >> 3;
-			m_timerCleanup = new LosMgrCleanupTimer(this);
-			m_timerCleanup.Interval = Util.Random(LOSMGR_CLEANUP_FREQUENCY-rndRange, LOSMGR_CLEANUP_FREQUENCY+rndRange);
-			m_timerCleanup.Start(60000+1);
+			m_timerCleanup = new System.Timers.Timer(Util.Random(LOSMGR_CLEANUP_FREQUENCY-rndRange, LOSMGR_CLEANUP_FREQUENCY+rndRange));
+			m_timerCleanup.AutoReset = true;
+			m_timerCleanup.Elapsed += new System.Timers.ElapsedEventHandler(CleanUp);
+			m_timerCleanup.Start();
 
 			if(LOSMGR_QUERY_TIMEOUT > 0)
 			{
-				m_timerPending = new LosMgrTimeoutTimer(this);
-				m_timerPending.Interval = LOSMGR_QUERY_TIMEOUT;
-				m_timerPending.Start(60000+1);
+				m_timerPending = new System.Timers.Timer(LOSMGR_QUERY_TIMEOUT);
+				m_timerPending.AutoReset = true;
+				m_timerPending.Elapsed += new System.Timers.ElapsedEventHandler(PendingLosCheck);
+				m_timerPending.Start();
 			}
 		}
 		
@@ -384,11 +368,13 @@ namespace DOL.GS
 			if(m_timerCleanup != null) 
 			{
 				m_timerCleanup.Stop();
+				m_timerCleanup.Close();
 			}
 			
 			if(m_timerPending != null) 
 			{
 				m_timerPending.Stop();
+				m_timerPending.Close();
 			}
 		}
 		
@@ -433,13 +419,13 @@ namespace DOL.GS
 				timeout = GetDefaultTimeouts(source, target);
 			
 			// check Threshold first
-			if(source.IsWithinRadius(target, GetDefaultThreshold(source, target), false) || source == target)
+			if(source.IsWithinRadius(target, GetDefaultThreshold(source, target), false))
 			{
 				// FIXME debug
 				if(LOSMGR_DEBUG_LEVEL >= LOSMGR_DEBUG_DEBUG)
 					log.Warn("LOSMGR_D : Threshold hitted ("+GetDefaultThreshold(source, target)+") with - Player : "+player.Name+" Source : "+source.Name+" Target : "+target.Name+".");
-				
-				new HandleNotifyAction(notifier, GameObjectEvent.FinishedLosCheck, player, new LosCheckData(source, target, GameTimer.GetTickCount(), true)).Start(1);
+
+				notifier.Notify(GameObjectEvent.FinishedLosCheck, player, new LosCheckData(source, target, GameTimer.GetTickCount(), true));
 				return;
 			}
 			
@@ -449,7 +435,7 @@ namespace DOL.GS
 				try
 				{
 					bool los = GetLosCheckFromCache(source, target, timeout);
-					new HandleNotifyAction(notifier, GameObjectEvent.FinishedLosCheck, player, new LosCheckData(source, target, GameTimer.GetTickCount(), los)).Start(1);
+					notifier.Notify(GameObjectEvent.FinishedLosCheck, player, new LosCheckData(source, target, GameTimer.GetTickCount(), los));
 					return;
 					
 				}
@@ -465,7 +451,7 @@ namespace DOL.GS
 			// We need to lock the Pending list during the checks
 			lock(((ICollection)PendingChecks).SyncRoot)
 			{
-				IEnumerable<Tuple<GamePlayer, ushort, ushort>> pendings = (from pending in PendingChecks where (pending.Key.Item2 == source.ObjectID && pending.Key.Item3 == target.ObjectID) || (pending.Key.Item2 == target.ObjectID && pending.Key.Item3 == source.ObjectID) && pending.Key.Item1.CurrentRegion == player.CurrentRegion select pending.Key).Take(1);
+				IEnumerable<Tuple<GamePlayer, ushort, ushort>> pendings = (from pending in PendingChecks where (pending.Key.Item2 == source.ObjectID && pending.Key.Item3 == target.ObjectID) || (pending.Key.Item2 == target.ObjectID && pending.Key.Item3 == source.ObjectID) select pending.Key).Take(1);
 
 				// We have pending data not too old, Register this event handler
 				foreach(Tuple<GamePlayer, ushort, ushort> pend in pendings)
@@ -494,7 +480,7 @@ namespace DOL.GS
 				{
 					// FIXME Debug
 					if(LOSMGR_DEBUG_LEVEL >= LOSMGR_DEBUG_WARN)
-						log.Warn("LOSMGR_D : Deferred LoSCheck to "+checker.Name+" From - Player : "+player.Name+", Source : "+source.Name+", Target : "+target.Name+".");
+						log.Warn("LOSMGR_D : Deferred LoSCheck to "+checker.Name+" From - Player : "+player.Name+" Source : "+source.Name+" Target : "+target.Name+".");
 
 					AddRegisteredEvent(cacheKey, notifier);
 					EventNotifierLosCheck(checker, source, target);
@@ -534,25 +520,22 @@ namespace DOL.GS
 			if(LOSMGR_DEBUG_LEVEL >= LOSMGR_DEBUG_WARN)
 				log.Warn("LOSMGR_W : Starting Vincinity Los Check Between - Source : "+source.Name+" Target : "+target.Name+".");
 			
-			if(source == null || target == null)
-				throw new LosUnavailableException();
-			
 			if(timeout == 0)
 				timeout = GetDefaultTimeouts(source, target);
 			
 			// check Threshold first
-			if(source.IsWithinRadius(target, GetDefaultThreshold(source, target), false) || source == target)
+			if(source.IsWithinRadius(target, GetDefaultThreshold(source, target), false))
 			{
 				//we need an arbitrary player
 				foreach(GamePlayer player in source.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					if(player.ObjectState == GamePlayer.eObjectState.Active) 
+					if(player.ObjectState == GameNPC.eObjectState.Active) 
 					{
 						// FIXME debug
 						if(LOSMGR_DEBUG_LEVEL >= LOSMGR_DEBUG_DEBUG)
 							log.Warn("LOSMGR_D : Vincinity Hitted Treshold ("+GetDefaultThreshold(source, target)+") - Source : "+source.Name+" Target : "+target.Name+".");
 						
-						new HandleNotifyAction(notifier, GameObjectEvent.FinishedLosCheck, player, new LosCheckData(source, target, GameTimer.GetTickCount(), true)).Start(1);						
+						notifier.Notify(GameObjectEvent.FinishedLosCheck, player, new LosCheckData(source, target, GameTimer.GetTickCount(), true));
 						return;
 					}
 				}
@@ -567,9 +550,9 @@ namespace DOL.GS
 					//we need an arbitrary player
 					foreach(GamePlayer player in source.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
-						if(player.ObjectState == GamePlayer.eObjectState.Active) 
+						if(player.ObjectState == GameNPC.eObjectState.Active) 
 						{
-							new HandleNotifyAction(notifier, GameObjectEvent.FinishedLosCheck, player, new LosCheckData(source, target, GameTimer.GetTickCount(), los)).Start(1);
+							notifier.Notify(GameObjectEvent.FinishedLosCheck, player, new LosCheckData(source, target, GameTimer.GetTickCount(), los));
 							return;
 						}
 						
@@ -584,7 +567,7 @@ namespace DOL.GS
 			// check pending
 			lock(((ICollection)PendingChecks).SyncRoot)
 			{
-				IEnumerable<Tuple<GamePlayer, ushort, ushort>> pendings = (from pending in PendingChecks where (pending.Key.Item2 == source.ObjectID && pending.Key.Item3 == target.ObjectID) || (pending.Key.Item2 == target.ObjectID && pending.Key.Item3 == source.ObjectID) && pending.Key.Item1.CurrentRegion == source.CurrentRegion select pending.Key).Take(1);
+				IEnumerable<Tuple<GamePlayer, ushort, ushort>> pendings = (from pending in PendingChecks where (pending.Key.Item2 == source.ObjectID && pending.Key.Item3 == target.ObjectID) || (pending.Key.Item2 == target.ObjectID && pending.Key.Item3 == source.ObjectID) select pending.Key).Take(1);
 				foreach(Tuple<GamePlayer, ushort, ushort> pend in pendings)
 				{
 					// FIXME debug
@@ -692,8 +675,8 @@ namespace DOL.GS
 				return;
 			
 			// get time
-			long time = GameTimer.GetTickCount();
-			long sent = time;
+			long sent = GameTimer.GetTickCount();
+			long time = sent;
 			
 			// Check result
 			bool losOK = (response & 0x100) == 0x100;
@@ -767,35 +750,13 @@ namespace DOL.GS
 				LosCheckData losData = new LosCheckData(source, target, sent, losOK);
 				if(RegisteredLosEvents.ContainsKey(cachekey))
 				{
-					NotifyObjects(RegisteredLosEvents[cachekey], player, new LosCheckData(source, target, sent, losOK));
-					RegisteredLosEvents[cachekey].Clear();
+					NotifyObjects(RegisteredLosEvents[cachekey], player, losData);
 				}
 				if(RegisteredLosEvents.ContainsKey(rcachekey))
 				{
-					NotifyObjects(RegisteredLosEvents[rcachekey], player, new LosCheckData(target, source, sent, losOK));
-					RegisteredLosEvents[rcachekey].Clear();
+					NotifyObjects(RegisteredLosEvents[rcachekey], player, losData);
 				}
 			}		
-		}
-		
-		/// <summary>
-		/// Use this method to inject LoS response from other sources than LoS Check.
-		/// </summary>
-		/// <param name="source"></param>
-		/// <param name="target"></param>
-		/// <param name="losOK"></param>
-		public void UpdateCacheFromTargeting(GameObject source, GameObject target, bool losOK)
-		{
-			int timeout = GetDefaultTimeouts(source, target);
-			long time = GameTimer.GetTickCount();
-			//Update cache
-			lock(((ICollection)m_responsesCache).SyncRoot)
-			{
-				UpdateVincinityLosCache(source, target, losOK, time);
-				UpdateVincinityLosCache(target, source, losOK, time);
-				UpdateLosCacheItem(source, target, losOK, timeout, time);
-			}
-			
 		}
 		
 		/// <summary>
@@ -806,9 +767,16 @@ namespace DOL.GS
 		/// <param name="data">Check data for Args</param>
 		private static void NotifyObjects(IList<IDOLEventHandler> notifiers, GamePlayer player, LosCheckData data) 
 		{
-			foreach(IDOLEventHandler notifier in notifiers)
+			// Lock notifiers list.
+			lock(((ICollection)notifiers).SyncRoot)
 			{
-				new HandleNotifyAction(notifier, GameObjectEvent.FinishedLosCheck, player, data).Start(1);					
+				foreach(IDOLEventHandler notifier in notifiers)
+				{
+					notifier.Notify(GameObjectEvent.FinishedLosCheck, player, data);
+				}
+				
+				// Clear at end, so a new list can be made for next call
+				notifiers.Clear();
 			}
 		}
 		
@@ -910,56 +878,53 @@ namespace DOL.GS
 				}
 			}
 			
-			// Contaminate players only for Los OK, LoS KO could be annoying.
-			if(losOK)
+			// Take Player in the largest Radius, should be PvE for players
+			foreach(GamePlayer contamined in source.GetPlayersInRadius((ushort)LOSMGR_NPC_CONTAMINATION_RADIUS))
 			{
-				// Take Player in the largest Radius, should be PvE for players
-				foreach(GamePlayer contamined in source.GetPlayersInRadius((ushort)LOSMGR_NPC_CONTAMINATION_RADIUS))
+				if(contamined == source || contamined == target)
+					continue;
+				
+				// P v P
+				if(target is GamePlayer || source is GamePlayer)
 				{
-					if(contamined == source || contamined == target)
-						continue;
-					
-					// P v P
-					if(target is GamePlayer || source is GamePlayer)
-					{
-						if(LOSMGR_PLAYER_CONTAMINATION_RADIUS > 0 && source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR) <= LOSMGR_PLAYER_CONTAMINATION_RADIUS)
-						{
-							// FIXME debug
-							if(LOSMGR_DEBUG_LEVEL >= LOSMGR_DEBUG_DEBUG)
-								log.Warn("LOSMGR_D : Contamination Los Check (Pl PvP) of "+source.Name+" and "+target.Name+" Contaminated "+contamined.Name+", range : "+source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR));
-	
-							UpdateLosCacheItem(source, target, losOK, LOSMGR_PLAYER_VS_PLAYER_CACHE_TIMEOUT, time);
-						}
-						
-						continue;
-					}
-					
-					// Pet to Player
-					if(isObjectFromPlayer(target) || isObjectFromPlayer(source)) 
-					{
-						if(LOSMGR_PET_CONTAMINATION_RADIUS > 0 && source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR) <= LOSMGR_PET_CONTAMINATION_RADIUS)
-						{
-							// FIXME debug
-							if(LOSMGR_DEBUG_LEVEL >= LOSMGR_DEBUG_DEBUG)
-								log.Warn("LOSMGR_D : Contamination Los Check (Pl PvPets) of "+source.Name+" and "+target.Name+" Contaminated "+contamined.Name+", range : "+source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR));
-	
-							UpdateLosCacheItem(source, target, losOK, LOSMGR_PLAYER_VS_PLAYER_CACHE_TIMEOUT, time);
-						}
-						
-						continue;
-					}
-					
-					if(source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR) <= LOSMGR_NPC_CONTAMINATION_RADIUS)
+					if(LOSMGR_PLAYER_CONTAMINATION_RADIUS > 0 && source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR) <= LOSMGR_PLAYER_CONTAMINATION_RADIUS)
 					{
 						// FIXME debug
 						if(LOSMGR_DEBUG_LEVEL >= LOSMGR_DEBUG_DEBUG)
-							log.Warn("LOSMGR_D : Contamination Los Check (Pl PvE) of "+source.Name+" and "+target.Name+" Contaminated "+contamined.Name+", range : "+source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR));
-		
-						// else we're in PvE, a player can't be in EvE
-						UpdateLosCacheItem(source, target, losOK, LOSMGR_PLAYER_VS_ENVIRONMENT_CACHE_TIMEOUT, time);
+							log.Warn("LOSMGR_D : Contamination Los Check (Pl PvP) of "+source.Name+" and "+target.Name+" Contaminated "+contamined.Name+", range : "+source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR));
+
+						UpdateLosCacheItem(source, target, losOK, LOSMGR_PLAYER_VS_PLAYER_CACHE_TIMEOUT, time);
 					}
+					
+					continue;
+				}
+				
+				// Player to Pet
+				if(isObjectFromPlayer(target) || isObjectFromPlayer(source)) 
+				{
+					if(LOSMGR_PET_CONTAMINATION_RADIUS > 0 && source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR) <= LOSMGR_PET_CONTAMINATION_RADIUS)
+					{
+						// FIXME debug
+						if(LOSMGR_DEBUG_LEVEL >= LOSMGR_DEBUG_DEBUG)
+							log.Warn("LOSMGR_D : Contamination Los Check (Pl PvPets) of "+source.Name+" and "+target.Name+" Contaminated "+contamined.Name+", range : "+source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR));
+
+						UpdateLosCacheItem(source, target, losOK, LOSMGR_PLAYER_VS_PLAYER_CACHE_TIMEOUT, time);
+					}
+					
+					continue;
+				}
+				
+				if(source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR) <= LOSMGR_NPC_CONTAMINATION_RADIUS)
+				{
+					// FIXME debug
+					if(LOSMGR_DEBUG_LEVEL >= LOSMGR_DEBUG_DEBUG)
+						log.Warn("LOSMGR_D : Contamination Los Check (Pl PvE) of "+source.Name+" and "+target.Name+" Contaminated "+contamined.Name+", range : "+source.GetDistanceTo(contamined, LOSMGR_CONTAMINATION_ZFACTOR));
+	
+					// else we're in PvE, a player can't be in EvE
+					UpdateLosCacheItem(source, target, losOK, LOSMGR_PLAYER_VS_ENVIRONMENT_CACHE_TIMEOUT, time);
 				}
 			}
+			
 		}
 		
 		/// <summary>
@@ -1175,12 +1140,9 @@ namespace DOL.GS
 			// FIXME Debug
 			if(LOSMGR_DEBUG_LEVEL >= LOSMGR_DEBUG_DEBUG) 
 			{
-				System.Text.StringBuilder concat = new System.Text.StringBuilder();
+				string concat = "";
 				foreach(GamePlayer choosed in players)
-				{
-					concat.Append(", ");
-					concat.Append(choosed.Name);
-				}
+					concat += ", "+choosed.Name;
 				
 				log.Warn("LOSMGR_D : Vincinity Player could not be choosen amoung"+concat);
 			}
@@ -1244,6 +1206,15 @@ namespace DOL.GS
 		#region Cleanups
 
 		/// <summary>
+		/// Cleanup Routine called by timer.
+		/// </summary>
+		/// <param name="sender">Object sending Event</param>
+		/// <param name="args">Event Args Object</param>
+		private static void CleanUp(object sender, System.Timers.ElapsedEventArgs args) {
+			if(sender != null && sender is LosCheckMgr)
+				((LosCheckMgr)sender).CleanUp();
+		}
+		/// <summary>
 		/// Clean up Dictionary, must be called from time to time
 		/// </summary>
 		public void CleanUp()
@@ -1263,8 +1234,7 @@ namespace DOL.GS
 			
 			lock(((ICollection)ResponsesCache).SyncRoot)
 			{
-				Dictionary<Tuple<GameObject, GameObject>, Tuple<long, bool>> cleanDict = new Dictionary<Tuple<GameObject, GameObject>, Tuple<long, bool>>(ResponsesCache);
-				foreach(Tuple<GameObject, GameObject> toClean in (from responses in cleanDict where responses.Value.Item1 < obsoleteTime select responses.Key).Take(MAX_CLEANUP_ENTRIES))
+				foreach(Tuple<GameObject, GameObject> toClean in (from responses in ResponsesCache where responses.Value.Item1 < obsoleteTime select responses.Key).Take(MAX_CLEANUP_ENTRIES))
 				{
 					ResponsesCache.Remove(toClean);
 				}
@@ -1280,8 +1250,7 @@ namespace DOL.GS
 			
 			lock(((ICollection)PendingChecks).SyncRoot)
 			{
-				Dictionary<Tuple<GamePlayer, ushort, ushort>, long> cleanDict = new Dictionary<Tuple<GamePlayer, ushort, ushort>, long>(PendingChecks);
-				foreach(Tuple<GamePlayer, ushort, ushort> toClean in (from pendings in cleanDict where pendings.Value < obsoleteTime select pendings.Key).Take(MAX_CLEANUP_ENTRIES))
+				foreach(Tuple<GamePlayer, ushort, ushort> toClean in (from pendings in PendingChecks where pendings.Value < obsoleteTime select pendings.Key).Take(MAX_CLEANUP_ENTRIES))
 				{
 					PendingChecks.Remove(toClean);
 				}
@@ -1297,15 +1266,12 @@ namespace DOL.GS
 			
 			lock(((ICollection)ClientChecks).SyncRoot)
 			{
-				Dictionary<GamePlayer, long> cleanDict = new Dictionary<GamePlayer, long>(ClientChecks);
-				foreach(GamePlayer toClean in (from clients in cleanDict where clients.Value < obsoleteTime select clients.Key).Take(MAX_CLEANUP_ENTRIES))
+				foreach(GamePlayer toClean in (from clients in ClientChecks where clients.Value < obsoleteTime select clients.Key).Take(MAX_CLEANUP_ENTRIES))
 				{
 					ClientChecks.Remove(toClean);
-					lock(((ICollection)ClientStats).SyncRoot)
-					{
-						if(ClientStats.ContainsKey(toClean))
-							ClientStats.Remove(toClean);
-					}
+					
+					if(ClientStats.ContainsKey(toClean))
+						ClientStats.Remove(toClean);
 				}
 			}
 		}
@@ -1317,8 +1283,7 @@ namespace DOL.GS
 		{
 			lock(((ICollection)RegisteredLosEvents).SyncRoot)
 			{
-				Dictionary<Tuple<GameObject, GameObject>, List<IDOLEventHandler>> cleanDict = new Dictionary<Tuple<GameObject, GameObject>, List<IDOLEventHandler>>(RegisteredLosEvents);
-				foreach(Tuple<GameObject, GameObject> toClean in (from notifiers in cleanDict where (notifiers.Value != null && notifiers.Value.Count < 1) || (notifiers.Key.Item1 == null || notifiers.Key.Item1.ObjectState != GameObject.eObjectState.Active) select notifiers.Key).Take(MAX_CLEANUP_ENTRIES))
+				foreach(Tuple<GameObject, GameObject> toClean in (from notifiers in RegisteredLosEvents where (notifiers.Value != null && notifiers.Value.Count < 1) || (notifiers.Key.Item1 == null || notifiers.Key.Item1.ObjectState != GameObject.eObjectState.Active) select notifiers.Key).Take(MAX_CLEANUP_ENTRIES))
 				{
 					RegisteredLosEvents.Remove(toClean);
 				}
@@ -1334,51 +1299,37 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="sender">Object sending Event</param>
 		/// <param name="args">Event Args Object</param>
-		public void PendingLosCheck()
+		private static void PendingLosCheck(object sender, System.Timers.ElapsedEventArgs args)
 		{
+			if(!(sender is LosCheckMgr))
+			   return;
+			
+			LosCheckMgr chk = sender as LosCheckMgr;
 			
 			long currenTime = GameTimer.GetTickCount();
 			// Get Timing out Pending Los Check
 			IEnumerable<Tuple<GamePlayer, ushort, ushort>> pendingTimeout;
-			lock(((ICollection)PendingChecks).SyncRoot)
+			lock(((ICollection)chk.PendingChecks).SyncRoot)
 			{
-				Dictionary<Tuple<GamePlayer, ushort, ushort>, long> cleanDict = new Dictionary<Tuple<GamePlayer, ushort, ushort>, long>(PendingChecks);
-				pendingTimeout = (from pending in cleanDict where currenTime-pending.Value >= LOSMGR_QUERY_TIMEOUT select pending.Key);
+				pendingTimeout = (from pending in chk.PendingChecks where currenTime-pending.Value >= LOSMGR_QUERY_TIMEOUT select pending.Key);
 			}
-			
 			// Launch them to vincinity
 			foreach(Tuple<GamePlayer, ushort, ushort> toRetry in pendingTimeout) 
 			{
 				GameObject source = toRetry.Item1.CurrentRegion.GetObject(toRetry.Item2);
 				GameObject target = toRetry.Item1.CurrentRegion.GetObject(toRetry.Item3);
 				
-				if(source != null && target != null && source.ObjectState == GameObject.eObjectState.Active && target.ObjectState == GameObject.eObjectState.Active)
+				if(source != null && target != null)
 				{
-					GamePlayer checker = GetBestLosChecker(source, target);
+					GamePlayer checker = chk.GetBestLosChecker(source, target);
 					
 					if(checker != null) 
 					{
 						if(LOSMGR_DEBUG_LEVEL >= LOSMGR_DEBUG_INFO)
 							log.Warn("LOSMGR_I : Packet Resent, Player : "+checker.Name+", Source : "+source.Name+", Target : "+target.Name);
 							
-						EventNotifierLosCheck(checker, source, target);
+						chk.EventNotifierLosCheck(checker, source, target);
 					}
-					else
-					{
-						// Can't Get a player checker.
-						lock(((ICollection)PendingChecks).SyncRoot)
-						{
-							PendingChecks.Remove(toRetry);
-						}
-					}
-				}
-				else
-				{
-					// Remove invalid pending
-					lock(((ICollection)PendingChecks).SyncRoot)
-					{
-						PendingChecks.Remove(toRetry);
-					}					
 				}
 			}
 			
@@ -1454,86 +1405,6 @@ namespace DOL.GS
 			m_targetObject = target;
 			m_sent = sent;
 			m_losOK = losOK;
-		}
-	}
-	
-	#endregion
-	
-	#region LosMgrCleanupTimer
-	public class LosMgrCleanupTimer : GameTimer
-	{
-		private LosCheckMgr m_losMgr;
-		
-		public LosMgrCleanupTimer(LosCheckMgr mgr)
-			: base(mgr.CurrentRegion.TimeManager)
-		{
-			this.m_losMgr = mgr;
-		}
-		
-		protected override void OnTick()
-		{
-			m_losMgr.CleanUp();
-		}
-	}	
-	
-	#endregion
-	
-	#region LosMgrTimeoutTimer
-	public class LosMgrTimeoutTimer : GameTimer
-	{
-		private LosCheckMgr m_losMgr;
-		
-		public LosMgrTimeoutTimer(LosCheckMgr mgr)
-			: base(mgr.CurrentRegion.TimeManager)
-		{
-			this.m_losMgr = mgr;
-		}
-		
-		protected override void OnTick()
-		{
-			m_losMgr.CleanUp();
-		}
-	}	
-	
-	#endregion
-	
-	#region NotifyAction
-	/// <summary>
-	/// Handles the LOS check response threaded notification
-	/// </summary>
-	public class HandleNotifyAction : RegionAction
-	{
-		/// <summary>
-		/// The LoS response Handler
-		/// </summary>
-		protected readonly IDOLEventHandler m_responseHandle;
-		
-		/// <summary>
-		/// The LoS Event object
-		/// </summary>
-		protected readonly DOLEvent m_event;
-		
-		/// <summary>
-		/// The LoS check data object.
-		/// </summary>
-		protected readonly LosCheckData m_data;
-
-		/// <summary>
-		/// Constructs a new HandleCheckAction
-		/// </summary>
-		public HandleNotifyAction(IDOLEventHandler responseHandle, DOLEvent e, GameObject sender, LosCheckData data) : base(sender)
-		{
-			m_responseHandle = responseHandle;
-			m_event = e;
-			m_data = data;
-		}
-
-		/// <summary>
-		/// Called on every timer tick
-		/// </summary>
-		protected override void OnTick()
-		{
-			m_responseHandle.Notify(m_event, m_actionSource, m_data);
 		}
 	}
 	

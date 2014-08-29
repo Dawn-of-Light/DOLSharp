@@ -20,9 +20,9 @@ using System;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x16^168,"Handles requests for npcs(0x72) in game")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.CreateNPCRequest, "Handles requests for npcs(0x72) in game", eClientStatus.PlayerInGame)]
 	public class NPCCreationRequestHandler : IPacketHandler
-	{
+	{		
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort id = packet.ReadShort();

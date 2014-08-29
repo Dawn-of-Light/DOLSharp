@@ -13,7 +13,7 @@ using DOL.GS.Spells;
 namespace DOL.GS.RealmAbilities
 {
 	/// <summary>
-	/// Vale Defense Realm Ability
+	/// Arms Length Realm Ability
 	/// </summary>
 	public class ValeDefenseAbility : RR5RealmAbility
 	{
@@ -27,7 +27,7 @@ namespace DOL.GS.RealmAbilities
 		{
 			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
 
-			GameLiving player = living;
+			GamePlayer player = living as GamePlayer;
 
 			if (player == null)
 				return;
@@ -36,24 +36,23 @@ namespace DOL.GS.RealmAbilities
 			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(player, subspell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
 			if(player.Group==null)
 			{
-				spellhandler.CastSpell(player);
+				spellhandler.StartSpell(player);
 			}
 			else foreach (GamePlayer member in player.Group.GetPlayersInTheGroup())
 			{
-				if(member!=null) spellhandler.CastSpell(member);
+				if(member!=null) spellhandler.StartSpell(member);
 			}
 			DisableSkill(living);
 		}
 
 		public override int GetReUseDelay(int level)
 		{
-			return 600;
+			return 420;
 		}
 
 		public override void AddEffectsInfo(IList<string> list)
 		{
 			list.Add("Vale Defense.");
-			list.Add("Ablative buffer 50% with 1000 hits points buffer pool.");
 			list.Add("");
 			list.Add("Target: Group");
 			list.Add("Duration: 10 min");

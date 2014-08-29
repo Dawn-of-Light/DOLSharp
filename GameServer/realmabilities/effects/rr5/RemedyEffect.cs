@@ -7,14 +7,13 @@ using DOL.GS.RealmAbilities;
 namespace DOL.GS.Effects
 {
 	/// <summary>
-	/// Adrenaline Rush
+	/// Remedy Effect
 	/// </summary>
 	public class RemedyEffect : TimedEffect
 	{
 		public RemedyEffect()
 			: base(60000)
 		{
-			;
 		}
 
 		private GameLiving owner;

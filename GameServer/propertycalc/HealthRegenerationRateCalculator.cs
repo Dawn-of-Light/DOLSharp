@@ -44,8 +44,10 @@ namespace DOL.GS.PropertyCalc
 		/// <returns></returns>
 		public override int CalcValue(GameLiving living, eProperty property)
 		{
+			// no HP regen if diseased
 			if (living.IsDiseased)
-				return 0; // no HP regen if diseased
+				return 0;
+			
 			if (living is GameKeepDoor)
 				return (int)(living.MaxHealth * 0.05); //5% each time for keep door
 
@@ -84,13 +86,13 @@ namespace DOL.GS.PropertyCalc
 				regen += 1;	// compensate int rounding error
 			}
 
-			regen += living.ItemBonus[(int)property];
+			regen += living.ItemBonus[property];
 
-			int debuff = living.SpecBuffBonusCategory[(int)property];
+			int debuff = living.SpecBuffBonusCategory[property];
 			if (debuff < 0)
 				debuff = -debuff;
 
-			regen += living.BaseBuffBonusCategory[(int)property] - debuff;
+			regen += living.BaseBuffBonusCategory[property] - debuff;
 
 			if (regen < 1)
 				regen = 1;

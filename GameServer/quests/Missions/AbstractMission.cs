@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
@@ -142,7 +141,7 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// This HybridDictionary holds all the custom properties of this quest
 		/// </summary>
-		protected Dictionary<string, string> m_customProperties = new Dictionary<string, string>();
+		protected HybridDictionary m_customProperties = new HybridDictionary();
 
 		/// <summary>
 		/// This method sets a custom Property to a specific value
@@ -161,7 +160,7 @@ namespace DOL.GS.Quests
 			key = key.Replace('=', '-');
 			value = value.Replace(';', ',');
 			value = value.Replace('=', '-');
-			lock (((ICollection)m_customProperties).SyncRoot)
+			lock (m_customProperties)
 			{
 				m_customProperties[key] = value;
 			}
@@ -176,10 +175,9 @@ namespace DOL.GS.Quests
 			if (key == null)
 				throw new ArgumentNullException("key");
 
-			lock (((ICollection)m_customProperties).SyncRoot)
+			lock (m_customProperties)
 			{
-				if(m_customProperties.ContainsKey(key))
-					m_customProperties.Remove(key);
+				m_customProperties.Remove(key);
 			}
 		}
 
@@ -193,10 +191,7 @@ namespace DOL.GS.Quests
 			if (key == null)
 				throw new ArgumentNullException("key");
 
-			if(m_customProperties.ContainsKey(key))
-				return (string)m_customProperties[key];
-			
-			return null;
+			return (string)m_customProperties[key];
 		}
 
 		/// <summary>

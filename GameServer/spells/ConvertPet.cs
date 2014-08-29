@@ -31,35 +31,28 @@ namespace DOL.GS.Spells
 	public class PetConversionSpellHandler : SpellHandler
 	{
 		// constructor
-		public PetConversionSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-		/// <summary>
-		/// Execute pet conversion spell
-		/// </summary>
-		public override bool StartSpell(GameLiving target)
+		public PetConversionSpellHandler(GameLiving caster, Spell spell, SpellLine line)
+			: base(caster, spell, line)
 		{
-			IList targets = SelectTargets(target);
-			if (targets.Count <= 0) return false;
-			int mana = 0;
+		}
 
-			foreach (GameLiving living in targets)
-			{
-				ApplyEffectOnTarget(living, 1.0);
-				mana += (int)(living.Health * Spell.Value / 100);
-			}
-
-			int absorb = m_caster.ChangeMana(m_caster, GameLiving.eManaChangeType.Spell, mana);
-
-			if (m_caster is GamePlayer)
-			{
-				if (absorb > 0)
-					MessageToCaster("You absorb " + absorb + " power points.", eChatType.CT_Spell);
-				else
-					MessageToCaster("Your mana is already full!", eChatType.CT_SpellResisted);
-				((GamePlayer)m_caster).CommandNpcRelease();
-			}
-
-			return true;
+		public override void FinishSpellCast(GameLiving target)
+		{
+			Caster.ChangeMana(Caster, GameLiving.eManaChangeType.Spell, -1 * PowerCost(target, true));
+			base.FinishSpellCast(target);
+		}
+		
+		public override void OnDirectEffect(GameLiving target, double effectiveness)
+		{
+			int mana = (int)(Spell.Value < 0 ? target.Health * Spell.Value * -0.01 : Spell.Value);
+			int absorb = Caster.ChangeMana(Caster, GameLiving.eManaChangeType.Spell, mana);
+			
+			if (absorb > 0)
+				MessageToCaster("You absorb " + absorb + " power points.", eChatType.CT_Spell);
+			else
+				MessageToCaster("Your mana is already full!", eChatType.CT_SpellResisted);
+			
+			target.Die(null);
 		}
 	}
 }

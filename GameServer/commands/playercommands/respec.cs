@@ -210,9 +210,10 @@ namespace DOL.GS.Commands
 			if (player.TempProperties.getProperty(RA_RESPEC, false))
 			{
 				realmSpecPoints = player.RespecRealm();
+				// FIXME: this is needed when the RA costs are updated.
 				if(GameServer.ServerRules is ServerRules.NormalServerRules)
 					realmSpecPoints = player.RealmLevel - player.RealmSpecialtyPoints;
-				DisplayMessage(player, "You regain " + realmSpecPoints + " realm specialization points!");
+				player.TempProperties.removeProperty(RA_RESPEC);
 			}
 			if (player.TempProperties.getProperty<object>(LINE_RESPEC, null) != null)
 			{

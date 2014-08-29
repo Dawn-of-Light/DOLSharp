@@ -53,9 +53,11 @@ namespace DOL.AI.Brain
 		}
 
 		/// <summary>
-    /// Updates the pet window
-    /// </summary>
-    public override void UpdatePetWindow() { }
+		/// Updates the pet window
+		/// </summary>
+		public override void UpdatePetWindow() 
+		{
+		}
 		#endregion
 	}
 }

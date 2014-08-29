@@ -17,7 +17,6 @@
  *
  */
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System;
 
@@ -34,11 +33,11 @@ namespace DOL.GS
 		/// <summary>
 		/// ArrayList of all groups in the game
 		/// </summary>
-		static readonly Dictionary<object, Group> m_groups = new Dictionary<object, Group>();
+		static readonly HybridDictionary m_groups = new HybridDictionary();
 		/// <summary>
 		/// ArrayList of all players looking for a group
 		/// </summary>
-		static readonly List<GamePlayer> m_lfgPlayers = new List<GamePlayer>();
+		static readonly HybridDictionary m_lfgPlayers = new HybridDictionary();
 
 		/// <summary>
 		/// Adds a group to the list of groups
@@ -48,9 +47,9 @@ namespace DOL.GS
 		/// <returns>True if the function succeeded, otherwise false</returns>
 		public static bool AddGroup(object key, Group group)
 		{
-			lock(((ICollection)m_groups).SyncRoot)
+			lock(m_groups)
 			{
-				if(!m_groups.ContainsKey(key))
+				if(!m_groups.Contains(key))
 				{
 					m_groups.Add(key, group);
 					return true;
@@ -68,9 +67,10 @@ namespace DOL.GS
 		public static bool RemoveGroup(object key)
 		{
 			Group group = null;
-			lock (((ICollection)m_groups).SyncRoot)
+			lock (m_groups)
 			{
-				if (!m_groups.ContainsKey(key) || group == null)
+				group = (Group)m_groups[key];
+				if (group == null)
 				{
 					return false;
 				}
@@ -91,12 +91,12 @@ namespace DOL.GS
 		/// <param name="member">player to add to the list</param>
 		public static void SetPlayerLooking(GamePlayer member)
 		{
-			lock(((ICollection)m_lfgPlayers).SyncRoot)
+			lock(m_lfgPlayers)
 			{
 				if(!m_lfgPlayers.Contains(member) && member.LookingForGroup==false)
 				{
 					member.LookingForGroup=true;
-					m_lfgPlayers.Add(member);
+					m_lfgPlayers.Add(member, null);
 				}
 			}
 		}
@@ -107,11 +107,10 @@ namespace DOL.GS
 		/// <param name="member">player to remove from the list</param>
 		public static void RemovePlayerLooking(GamePlayer member)
 		{
-			lock(((ICollection)m_lfgPlayers).SyncRoot)
+			lock(m_lfgPlayers)
 			{
 				member.LookingForGroup=false;
-				if(m_lfgPlayers.Contains(member))
-					m_lfgPlayers.Remove(member);
+				m_lfgPlayers.Remove(member);
 			}
 		}
 
@@ -120,11 +119,11 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="status">statusbyte</param>
 		/// <returns>ArrayList of groups</returns>
-		public static List<Group> ListGroupByStatus(byte status)
+		public static ArrayList ListGroupByStatus(byte status)
 		{
-			List<Group> groupList = new List<Group>();
+			ArrayList groupList = new ArrayList();
 
-			lock(((ICollection)m_groups).SyncRoot)
+			lock(m_groups)
 			{
 				foreach (Group group in m_groups.Values)
 				{
@@ -142,12 +141,12 @@ namespace DOL.GS
 		/// Returns an Arraylist of all players looking for a group
 		/// </summary>
 		/// <returns>ArrayList of all players looking for a group</returns>
-		public static List<GamePlayer> LookingForGroupPlayers()
+		public static ArrayList LookingForGroupPlayers()
 		{
-			List<GamePlayer> lookingPlayers = new List<GamePlayer>();
-			lock(((ICollection)m_lfgPlayers).SyncRoot)
+			ArrayList lookingPlayers = new ArrayList();
+			lock(m_lfgPlayers)
 			{
-				foreach (GamePlayer player in m_lfgPlayers)
+				foreach (GamePlayer player in m_lfgPlayers.Keys)
 				{
 					if(player.Group==null)
 					{

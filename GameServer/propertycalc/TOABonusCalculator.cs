@@ -17,7 +17,6 @@
  *
  */
 using System;
-using DOL.Database;
 
 namespace DOL.GS.PropertyCalc
 {
@@ -38,8 +37,8 @@ namespace DOL.GS.PropertyCalc
         public override int CalcValue(GameLiving living, eProperty property)
         {
             //hardcap at 25%
-            return Math.Min(25, living.ItemBonus[(int)property]
-                - living.DebuffCategory[(int)property]);
+            return Math.Min(25, living.ItemBonus[property]
+                - living.DebuffCategory[property]);
         }
     }
 
@@ -50,8 +49,8 @@ namespace DOL.GS.PropertyCalc
         public override int CalcValue(GameLiving living, eProperty property)
         {
             //hardcap at 25%
-            return Math.Min(25, living.ItemBonus[(int)property]
-                - living.DebuffCategory[(int)property]);
+            return Math.Min(25, living.ItemBonus[property]
+                - living.DebuffCategory[property]);
         }
     }
 
@@ -59,17 +58,14 @@ namespace DOL.GS.PropertyCalc
     [PropertyCalculator(eProperty.HealingEffectiveness)]
     public class HealingEffectivenessPercentCalculator : PropertyCalculator
     {
-    	public const int PROPERTY_HEALINGEFFECTIVENESS_HARDCAP = 25;
-    	
         public override int CalcValue(GameLiving living, eProperty property)
         {
-            
             //hardcap at 25%
-            int percent = Math.Min(PROPERTY_HEALINGEFFECTIVENESS_HARDCAP+GameMythirian.GetMythicalOverCapBonuses(living, property), living.BaseBuffBonusCategory[(int)property]
-                - living.DebuffCategory[(int)property]
-                + living.ItemBonus[(int)property]);
+            int percent = Math.Min(25, living.BaseBuffBonusCategory[property]
+                - living.DebuffCategory[property]
+                + living.ItemBonus[property]);
             // Add RA bonus
-            percent += living.AbilityBonus[(int)property];
+            percent += living.AbilityBonus[property];
 
             // Relic bonus calculated before RA bonuses
 			if (living is GamePlayer || living is GamePet)
@@ -93,7 +89,7 @@ namespace DOL.GS.PropertyCalc
 
         public override int CalcValue(GameLiving living, eProperty property)
         {
-            int percent = living.AbilityBonus[(int)property];
+            int percent = living.AbilityBonus[property];
 
             // hardcap at 50%
             return Math.Min(50, percent);
@@ -107,8 +103,8 @@ namespace DOL.GS.PropertyCalc
         public override int CalcValue(GameLiving living, eProperty property)
         {
             //hardcap at 10%
-            return Math.Min(10, living.ItemBonus[(int)property]
-                - living.DebuffCategory[(int)property]);
+            return Math.Min(10, living.ItemBonus[property]
+                - living.DebuffCategory[property]);
         }
     }
 
@@ -116,35 +112,33 @@ namespace DOL.GS.PropertyCalc
     [PropertyCalculator(eProperty.SpellDuration)]
     public class SpellDurationPercentCalculator : PropertyCalculator
     {
-    	public const int PROPERTY_SPELLDURATION_HARDCAP = 25;
-    	
         public override int CalcValue(GameLiving living, eProperty property)
         {
-            
             //hardcap at 25%
-            return Math.Min(PROPERTY_SPELLDURATION_HARDCAP+GameMythirian.GetMythicalOverCapBonuses(living, property), living.ItemBonus[(int)property]
-                - living.DebuffCategory[(int)property]);
+            return Math.Min(25, living.ItemBonus[property]
+                - living.DebuffCategory[property]);
         }
     }
 
-    //Spell Damage
+    /// <summary>
+    /// Spell Damage, used for TOA Bonus and Ability Bonus (and some base buffs)
+    /// base is 1000, this need to be multiplied by 0.001 before use.
+    /// TODO Review THIS
+    /// </summary>
     [PropertyCalculator(eProperty.SpellDamage)]
     public class SpellDamagePercentCalculator : PropertyCalculator
     {
-    	public const int PROPERTY_SPELLDAMAGE_HARDCAP = 10;
-    	
         public override int CalcValue(GameLiving living, eProperty property)
         {
-
             //hardcap at 10%
-            int percent = Math.Min(PROPERTY_SPELLDAMAGE_HARDCAP+GameMythirian.GetMythicalOverCapBonuses(living, property), living.BaseBuffBonusCategory[(int)property]
-                + living.ItemBonus[(int)property]
-                - living.DebuffCategory[(int)property]);
+            double permil = 1000 + Math.Min(100, living.BaseBuffBonusCategory[property] * 10
+                + living.ItemBonus[property] * 10
+                - living.DebuffCategory[property] * 10);
 
             // Add RA bonus
-            percent += living.AbilityBonus[(int)property];
+            permil *= (1.0 + living.AbilityBonus[property]*10);
 
-            return percent;
+            return (int)permil;
         }
     }
 }

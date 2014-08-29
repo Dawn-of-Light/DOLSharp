@@ -287,9 +287,9 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public virtual void ComeHere()
 		{
-			m_tempX = Body.X;
-			m_tempY = Body.Y;
-			m_tempZ = Body.Z;
+			m_tempX = Owner.X;
+			m_tempY = Owner.Y;
+			m_tempZ = Owner.Z;
 			WalkState = eWalkState.ComeHere;
 			Body.StopFollowing();
 			Body.WalkTo(Owner, Body.MaxSpeed);
@@ -301,9 +301,9 @@ namespace DOL.AI.Brain
 		/// <param name="target"></param>
 		public virtual void Goto(GameObject target)
 		{
-			m_tempX = Body.X;
-			m_tempY = Body.Y;
-			m_tempZ = Body.Z;
+			m_tempX = target.X;
+			m_tempY = target.Y;
+			m_tempZ = target.Z;
 			WalkState = eWalkState.GoTarget;
 			Body.StopFollowing();
 			Body.WalkTo(target, Body.MaxSpeed);
@@ -487,7 +487,8 @@ namespace DOL.AI.Brain
 			{
 				foreach (Spell spell in Body.Spells)
 				{
-					if (!Body.IsBeingInterrupted && Body.GetSkillDisabledDuration(spell) == 0 && CheckDefensiveSpells(spell))
+					if ((!Body.IsBeingInterrupted || spell.Uninterruptible || spell.IsInstantCast)
+						&& Body.GetSkillDisabledDuration(spell) == 0 && CheckDefensiveSpells(spell))
 					{
 						casted = true;
 						break;
@@ -502,7 +503,8 @@ namespace DOL.AI.Brain
 					{
 						if (spell.CastTime > 0)
 						{
-							if (!Body.IsBeingInterrupted && CheckOffensiveSpells(spell))
+							if ((!Body.IsBeingInterrupted || spell.Uninterruptible)
+								&& CheckOffensiveSpells(spell))
 							{
 								casted = true;
 								break;
@@ -514,7 +516,7 @@ namespace DOL.AI.Brain
 				}
 			}
 
-			if (!Body.AttackState && WalkState == eWalkState.Follow && Owner != null)
+			if (!Body.AttackState && Owner != null && !casted && m_orderAttackTarget == null)
 			{
 				Follow(Owner);
 			}
@@ -530,7 +532,6 @@ namespace DOL.AI.Brain
 			GameObject lastTarget = Body.TargetObject;
 			Body.TargetObject = null;
 			GamePlayer player = null;
-			GameLiving owner = null;
 
 			// clear current target, set target based on spell type, cast spell, return target to original target
 
@@ -576,19 +577,17 @@ namespace DOL.AI.Brain
 
 						if (spell.Target == "Realm" || spell.Target == "Group")
 						{
-							owner = (this as IControlledBrain).Owner;
-							player = null;
 							//Buff owner
-							if (!LivingHasEffect(owner, spell))
+							if (!LivingHasEffect(Owner, spell))
 							{
-								Body.TargetObject = owner;
+								Body.TargetObject = Owner;
 								break;
 							}
 
-							if (owner is GameNPC)
+							if (Owner is GameNPC)
 							{
 								//Buff other minions
-								foreach (IControlledBrain icb in ((GameNPC)owner).ControlledNpcList)
+								foreach (IControlledBrain icb in ((GameNPC)Owner).ControlledNpcList)
 								{
 									if (icb == null)
 										continue;
@@ -638,10 +637,9 @@ namespace DOL.AI.Brain
 					}
 
 					//Cure owner
-					owner = (this as IControlledBrain).Owner;
-					if (owner.IsDiseased)
+					if (Owner!= null && Owner.IsDiseased)
 					{
-						Body.TargetObject = owner;
+						Body.TargetObject = Owner;
 						break;
 					}
 
@@ -649,7 +647,7 @@ namespace DOL.AI.Brain
 
 					player = GetPlayerOwner();
 
-					if (player.Group != null)
+					if (player != null && player.Group != null)
 					{
 						foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 						{
@@ -670,10 +668,9 @@ namespace DOL.AI.Brain
 					}
 
 					//Cure owner
-					owner = (this as IControlledBrain).Owner;
-					if (LivingIsPoisoned(owner))
+					if (LivingIsPoisoned(Owner))
 					{
-						Body.TargetObject = owner;
+						Body.TargetObject = Owner;
 						break;
 					}
 
@@ -681,7 +678,7 @@ namespace DOL.AI.Brain
 
 					player = GetPlayerOwner();
 
-					if (player.Group != null)
+					if (player != null && player.Group != null)
 					{
 						foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 						{
@@ -718,16 +715,15 @@ namespace DOL.AI.Brain
 					}
 
 					//Heal owner
-					owner = (this as IControlledBrain).Owner;
-					if (owner.HealthPercent < 75)
+					if (Owner != null && Owner.HealthPercent < 75)
 					{
-						Body.TargetObject = owner;
+						Body.TargetObject = Owner;
 						break;
 					}
 
 					player = GetPlayerOwner();
 
-					if (player.Group != null && (spell.Target.ToLower() == "realm" || spell.Target.ToLower() == "group"))
+					if (player != null && player.Group != null && (spell.Target.ToLower() == "realm" || spell.Target.ToLower() == "group"))
 					{
 						foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 						{
@@ -744,7 +740,7 @@ namespace DOL.AI.Brain
 
 			if (Body.TargetObject != null)
 			{
-				if (Body.IsMoving)
+				if (Body.IsMoving && !spell.MoveCast && spell.CastTime > 0)
 					Body.StopFollowing();
 
 				if (Body.TargetObject != Body && spell.CastTime > 0)
@@ -840,7 +836,7 @@ namespace DOL.AI.Brain
 					}
 					else
 					{
-						GameSpellEffect root = SpellHandler.FindEffectOnTarget(living, "SpeedDecrease");
+						GameSpellEffect root = SpellHelper.FindEffectOnTarget(living, "SpeedDecrease");
 						if (root != null && root.Spell.Value == 99)
 						{
 							removable.Add(living);
@@ -863,7 +859,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected override void AttackMostWanted()
 		{
-			if (!IsActive || m_aggressionState == eAggressionState.Passive) return;
+			if (!IsActive) return;
 
             GameNPC owner_npc = GetNPCOwner();
             if (owner_npc != null && owner_npc.Brain is StandardMobBrain)
@@ -977,13 +973,13 @@ namespace DOL.AI.Brain
 			// react only on these attack results
 			switch (args.AttackData.AttackResult)
 			{
-				case GameLiving.eAttackResult.Blocked:
-				case GameLiving.eAttackResult.Evaded:
-				case GameLiving.eAttackResult.Fumbled:
-				case GameLiving.eAttackResult.HitStyle:
-				case GameLiving.eAttackResult.HitUnstyled:
-				case GameLiving.eAttackResult.Missed:
-				case GameLiving.eAttackResult.Parried:
+				case eAttackResult.Blocked:
+				case eAttackResult.Evaded:
+				case eAttackResult.Fumbled:
+				case eAttackResult.HitStyle:
+				case eAttackResult.HitUnstyled:
+				case eAttackResult.Missed:
+				case eAttackResult.Parried:
 					AddToAggroList(args.AttackData.Attacker, args.AttackData.Attacker.EffectiveLevel + args.AttackData.Damage + args.AttackData.CriticalDamage);
 					break;
 			}

@@ -43,8 +43,8 @@ namespace DOL.GS.Spells
             
             GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
 
-            eChatType toLiving = (Spell.Pulse == 0) ? eChatType.CT_Spell : eChatType.CT_SpellPulse;
-            eChatType toOther = (Spell.Pulse == 0) ? eChatType.CT_System : eChatType.CT_SpellPulse;
+            eChatType toLiving = (!Spell.IsPulsing) ? eChatType.CT_Spell : eChatType.CT_SpellPulse;
+            eChatType toOther = (!Spell.IsPulsing) ? eChatType.CT_System : eChatType.CT_SpellPulse;
             MessageToLiving(effect.Owner, Spell.Message1, toLiving);
             Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, false)), toOther, effect.Owner);
         }
@@ -60,7 +60,7 @@ namespace DOL.GS.Spells
         {
             GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
             
-            if (!noMessages && Spell.Pulse == 0)
+            if (!noMessages && !Spell.IsPulsing)
             {
                 MessageToLiving(effect.Owner, Spell.Message3, eChatType.CT_SpellExpires);
                 Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message4, effect.Owner.GetName(0, false)), eChatType.CT_SpellExpires, effect.Owner);
@@ -70,7 +70,7 @@ namespace DOL.GS.Spells
 
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            m_caster.Mana -= PowerCost(target, true);
             base.FinishSpellCast(target);
         }
 
@@ -85,7 +85,7 @@ namespace DOL.GS.Spells
 
             //			Log.DebugFormat("sender:{0} res:{1} IsMelee:{2} Type:{3}", living.Name, ad.AttackResult, ad.IsMeleeAttack, ad.AttackType);
 
-            if (ad == null || (ad.AttackResult != GameLiving.eAttackResult.HitStyle && ad.AttackResult != GameLiving.eAttackResult.HitUnstyled))
+            if (ad == null || (ad.AttackResult != eAttackResult.HitStyle && ad.AttackResult != eAttackResult.HitUnstyled))
                 return;
             if (!ad.IsMeleeAttack && ad.AttackType != AttackData.eAttackType.Ranged)
                 return;
@@ -120,7 +120,7 @@ namespace DOL.GS.Spells
             if ( //VaNaTiC-> this cannot work, cause PulsingSpellEffect is derived from object and only implements IConcEffect
                 //e is PulsingSpellEffect ||
                 //VaNaTiC<-
-                Spell.Pulse != 0 || Spell.Concentration != 0 || e.RemainingTime < 1)
+                Spell.IsPulsing || Spell.IsConcentration || e.RemainingTime < 1)
                 return null;
             PlayerXEffect eff = new PlayerXEffect();
             eff.Var1 = Spell.ID;
@@ -139,7 +139,7 @@ namespace DOL.GS.Spells
         public override int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
         {
             GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
-            if (!noMessages && Spell.Pulse == 0)
+            if (!noMessages && !Spell.IsPulsing)
             {
                 MessageToLiving(effect.Owner, Spell.Message3, eChatType.CT_SpellExpires);
                 Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message4, effect.Owner.GetName(0, false)), eChatType.CT_SpellExpires, effect.Owner);

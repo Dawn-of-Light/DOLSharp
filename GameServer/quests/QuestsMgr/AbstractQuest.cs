@@ -772,7 +772,7 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// This HybridDictionary holds all the custom properties of this quest
 		/// </summary>
-		protected readonly Dictionary<string, string> m_customProperties = new Dictionary<string, string>();
+		protected readonly HybridDictionary m_customProperties = new HybridDictionary();
 
 
 		/// <summary>
@@ -784,7 +784,7 @@ namespace DOL.GS.Quests
 			if(m_dbQuest.CustomPropertiesString == null)
 				return;
 
-			lock(((ICollection)m_customProperties).SyncRoot)
+			lock(m_customProperties)
 			{
 				m_customProperties.Clear();
 				foreach(string property in m_dbQuest.CustomPropertiesString.SplitCSV())
@@ -813,7 +813,7 @@ namespace DOL.GS.Quests
 			key = key.Replace('=','-');
 			value = value.Replace(';',',');
 			value = value.Replace('=','-');
-			lock(((ICollection)m_customProperties).SyncRoot)
+			lock(m_customProperties)
 			{
 				m_customProperties[key]=value;
 			}
@@ -826,7 +826,7 @@ namespace DOL.GS.Quests
 		protected void SaveCustomProperties()
 		{
 			StringBuilder builder = new StringBuilder();
-			lock(((ICollection)m_customProperties).SyncRoot)
+			lock(m_customProperties)
 			{
 				foreach(string hKey in m_customProperties.Keys)
 				{
@@ -849,10 +849,9 @@ namespace DOL.GS.Quests
 			if(key==null)
 				throw new ArgumentNullException("key");
 
-			lock(((ICollection)m_customProperties).SyncRoot)
+			lock(m_customProperties)
 			{
-				if(m_customProperties.ContainsKey(key))
-					m_customProperties.Remove(key);
+				m_customProperties.Remove(key);
 			}
 			SaveCustomProperties();
 		}
@@ -867,10 +866,7 @@ namespace DOL.GS.Quests
 			if(key==null)
 				throw new ArgumentNullException("key");
 
-			if(m_customProperties.ContainsKey(key))
-				return (string)m_customProperties[key];
-			
-			return null;
+			return (string)m_customProperties[key];
 		}
 
 		#endregion

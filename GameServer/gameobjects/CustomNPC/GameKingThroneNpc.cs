@@ -17,9 +17,6 @@
  *
  */
 using System;
-using System.Collections;
-using System.Collections.Generic;
-
 using DOL.GS.PacketHandler;
 using DOL.Database;
 using DOL.Language;
@@ -110,39 +107,10 @@ namespace DOL.GS
 	// This class has to be completed and may be inherited for scripting purpose
 	public class CLWeaponNPC : GameNPC
 	{
-		private static IList<ItemTemplate> m_champ_weapons = GameServer.Database.SelectObjects<ItemTemplate>("PackageID LIKE 'Champion_Weapons'");
-		
 		public CLWeaponNPC()
 			: base()
 		{
 		}
-		
-		public override bool Interact(GamePlayer player)
-		{
-			if(!base.Interact(player))
-				return false;
-			
-			//check if player if champ level 5 or higher...
-			if(player.Champion && player.ChampionLevel >= 5)
-			{
-				//Offer Champion Weapons
-				player.Out.SendMessage("Here are the weapons offered by our King for your achievements in the Realm :\n", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-				
-				string proposed = "";
-				foreach(ItemTemplate chwep in m_champ_weapons)
-					if(chwep.AllowedClasses.SplitCSV().Contains(player.CharacterClass.ID.ToString()))
-						proposed += proposed.Length < 1 ? "["+chwep.Name+"]" : ", ["+chwep.Name+"]";
-				
-				player.Out.SendMessage(proposed, eChatType.CT_System, eChatLoc.CL_PopupWindow);
-			}
-			else
-			{
-				//Not worthy enough
-				player.Out.SendMessage("You need to reach Champion Level 5 before I can entrust you with King's Weapons !", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-			}
-			return true;
-		}
-		
 		/// <summary>
 		/// Talk to trainer
 		/// </summary>
@@ -152,25 +120,21 @@ namespace DOL.GS
 		public override bool WhisperReceive(GameLiving source, string text)
 		{
 			if (!base.WhisperReceive(source, text)) return false;
-
 			GamePlayer player = source as GamePlayer;
-			
-			if (player == null)
-				return false;
+			if (player == null) return false;
 
-			if(text == null || text.Length < 1)
-				return false;
+			switch (text)
+			{
+				//level respec for players
+				case "respecialize":
+					if (player.Champion && player.ChampionLevel >= 5)
+					{
+						player.RespecChampionSkills();
+						player.Out.SendMessage("I have reset your Champion skills!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
-			
-			//check if he can reiceive weapon
-			if(player.Champion && player.ChampionLevel >= 5)
-				foreach(ItemTemplate chwep in m_champ_weapons)
-					if(chwep.Name.ToLower().Equals(text.ToLower()) && chwep.AllowedClasses.SplitCSV().Contains(player.CharacterClass.ID.ToString()))
-						//can use it, have correct level, and asked it... maybe we should give him !
-						if(player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, GameInventoryItem.Create<ItemTemplate>(chwep)))
-							player.Out.SendMessage("Here's the weapon you asked. Fight Well !", eChatType.CT_System, eChatLoc.CL_PopupWindow);
-						else
-							player.Out.SendMessage("Your inventory is full, I can't give you this weapon !", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					}
+					break;
+			}
 
 			//Now we turn the npc into the direction of the person
 			TurnTo(player, 10000);

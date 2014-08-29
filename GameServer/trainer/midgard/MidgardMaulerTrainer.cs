@@ -75,7 +75,7 @@ namespace DOL.GS.Trainer
 		public static bool CanPromotePlayer(GamePlayer player)
 		{
 			return (player.Level >= 5 && player.CharacterClass.ID == (int)eCharacterClass.Viking && (player.Race == (int)eRace.Norseman
-			                                                                                         || player.Race == (int)eRace.MidgardMinotaur || player.Race == (int)eRace.Kobold));
+			                                                                                         || player.Race == (int)eRace.Deifrang || player.Race == (int)eRace.Kobold));
 		}
 
 		/// <summary>

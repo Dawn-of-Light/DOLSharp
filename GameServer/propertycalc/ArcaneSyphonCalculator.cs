@@ -16,11 +16,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-    
-
 namespace DOL.GS.PropertyCalc
 {
+    using System;
 
     /// <summary>
     /// [Freya] Nidel. 
@@ -35,8 +33,6 @@ namespace DOL.GS.PropertyCalc
     [PropertyCalculator(eProperty.ArcaneSyphon)]
     public class ArcaneSyphonCalculator : PropertyCalculator
     {
-    	public const int PROPERTY_ARCANESYPHON_HARDCAP = 25;
-    	
         public override int CalcValue(GameLiving living, eProperty property)
         {
             GamePlayer player = living as GamePlayer;
@@ -44,8 +40,8 @@ namespace DOL.GS.PropertyCalc
             {
                 return 0;
             }
-            
-            return Math.Min(living.ItemBonus[(int)property], PROPERTY_ARCANESYPHON_HARDCAP+GameMythirian.GetMythicalOverCapBonuses(living, property));
+
+            return Math.Min(living.ItemBonus[property], 25);
         }
     }
 }

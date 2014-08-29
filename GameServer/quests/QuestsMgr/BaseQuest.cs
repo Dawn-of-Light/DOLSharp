@@ -161,7 +161,7 @@ namespace DOL.GS.Quests
 		public static void AddBehaviour(QuestBehaviour questPart)
 		{
 			if (questParts == null)
-				questParts = new List<QuestBehaviour>();
+				questParts = new ArrayList();
 
 			if (!questParts.Contains(questPart))
 				questParts.Add(questPart);

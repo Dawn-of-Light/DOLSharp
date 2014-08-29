@@ -21,33 +21,18 @@ namespace DOL.GS.Keeps
 			if(!target.IsAlive) return;
 			if(target is GamePlayer && !GameServer.KeepManager.IsEnemy(guard, target as GamePlayer, true)) return;
             if ( !guard.IsWithinRadius( target, WorldMgr.VISIBILITY_DISTANCE ) ) { guard.TargetObject = null; return; }
-			
-            if(ServerProperties.Properties.LOSMGR_ENABLE)
-            {
-            	try
-            	{
-            		guard.CurrentRegion.LosCheckManager.LosCheckVincinity(guard, target, new LosMgrResponseHandler(guard.GuardStartSpellNukeCheckLOS));
-            	}
-            	catch (LosUnavailableException)
-            	{
-            		return;
-            	}
-            }
-            else
-            {
-	            GamePlayer LOSChecker = null;
-				if (target is GamePlayer) LOSChecker = target as GamePlayer;
-				else
+			GamePlayer LOSChecker = null;
+			if (target is GamePlayer) LOSChecker = target as GamePlayer;
+			else
+			{
+				foreach (GamePlayer player in guard.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					foreach (GamePlayer player in guard.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-					{
-						LOSChecker = player;
-						break;
-					}
+					LOSChecker = player;
+					break;
 				}
-				if (LOSChecker == null)	return;
-				LOSChecker.Out.SendCheckLOS(guard, target, new CheckLOSResponse(guard.GuardStartSpellNukeCheckLOS));
-            }
+			}
+			if (LOSChecker == null)	return;
+			LOSChecker.Out.SendCheckLOS(guard, target, new CheckLOSResponse(guard.GuardStartSpellNukeCheckLOS));
 		}
 		/// <summary>
 		/// Method to check the area for heals
@@ -87,39 +72,24 @@ namespace DOL.GS.Keeps
 
 			if (target != null)
 			{
-				if(ServerProperties.Properties.LOSMGR_ENABLE)
+				GamePlayer LOSChecker = null;
+				if (target is GamePlayer)
 				{
-					try
-					{
-						guard.CurrentRegion.LosCheckManager.LosCheckVincinity(guard, target, new LosMgrResponseHandler(guard.GuardStartSpellHealCheckLOS));
-					}
-					catch (LosUnavailableException)
-					{
-						return;
-					}
+					LOSChecker = target as GamePlayer;
 				}
 				else
 				{
-					GamePlayer LOSChecker = null;
-					if (target is GamePlayer)
+					foreach (GamePlayer player in guard.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
-						LOSChecker = target as GamePlayer;
+						LOSChecker = player;
+						break;
 					}
-					else
-					{
-						foreach (GamePlayer player in guard.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-						{
-							LOSChecker = player;
-							break;
-						}
-					}
-					if (LOSChecker == null)
-						return;
-					if(!target.IsAlive) return;
-					guard.TargetObject = target;
-					LOSChecker.Out.SendCheckLOS(guard, target, new CheckLOSResponse(guard.GuardStartSpellHealCheckLOS));					
 				}
-
+				if (LOSChecker == null)
+					return;
+				if(!target.IsAlive) return;
+				guard.TargetObject = target;
+				LOSChecker.Out.SendCheckLOS(guard, target, new CheckLOSResponse(guard.GuardStartSpellHealCheckLOS));
 			}
 		}
 

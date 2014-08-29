@@ -38,7 +38,7 @@ namespace DOL.GS.Spells
 
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            m_caster.Mana -= PowerCost(target, true);
             //For Banelord ML 8, it drains Life from the Caster
             if (Spell.Damage > 0)
             {
@@ -85,7 +85,7 @@ namespace DOL.GS.Spells
                 else
                     player.Endurance -= end;
 
-                GameSpellEffect effect2 = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+                GameSpellEffect effect2 = SpellHelper.FindEffectOnTarget(target, "Mesmerize");
                 if (effect2 != null)
                 {
                     effect2.Cancel(true);
@@ -117,7 +117,7 @@ namespace DOL.GS.Spells
         }
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            m_caster.Mana -= PowerCost(target, true);
             base.FinishSpellCast(target);
         }
         public override int CalculateSpellResistChance(GameLiving target)
@@ -134,7 +134,7 @@ namespace DOL.GS.Spells
 
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
-            GameSpellEffect mezz = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+            GameSpellEffect mezz = SpellHelper.FindEffectOnTarget(target, "Mesmerize");
             if (mezz != null)
                 mezz.Cancel(false);
             base.ApplyEffectOnTarget(target, effectiveness);
@@ -159,7 +159,7 @@ namespace DOL.GS.Spells
 
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
-            GameSpellEffect effect2 = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+            GameSpellEffect effect2 = SpellHelper.FindEffectOnTarget(target, "Mesmerize");
             if (effect2 != null)
             {
                 effect2.Cancel(false);
@@ -202,7 +202,7 @@ namespace DOL.GS.Spells
     [SpellHandler("MLUnbreakableSnare")]
     public class MLUnbreakableSnare : BanelordSnare
     {
-        protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
+        public override int CalculateEffectDuration(GameLiving target, double effectiveness)
         {
             int duration = Spell.Duration;
             if (duration < 1)
@@ -229,7 +229,7 @@ namespace DOL.GS.Spells
     {
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            m_caster.Mana -= PowerCost(target, true);
             base.FinishSpellCast(target);
         }
 
@@ -300,7 +300,7 @@ namespace DOL.GS.Spells
             return 0;
         }
 
-        protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
+        public override int CalculateEffectDuration(GameLiving target, double effectiveness)
         {
             return Spell.Duration;
         }
@@ -348,6 +348,7 @@ namespace DOL.GS.Spells
 
     //shared timer 5
     #region Banelord-9
+    /*
     [SpellHandlerAttribute("EffectivenessDebuff")]
     public class EffectivenessDeBuff : MasterlevelHandling
     {
@@ -356,7 +357,7 @@ namespace DOL.GS.Spells
         /// </summary>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            m_caster.Mana -= PowerCost(target, true);
             base.FinishSpellCast(target);
         }
 
@@ -398,6 +399,7 @@ namespace DOL.GS.Spells
 
         public EffectivenessDeBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
+    */
     #endregion
 
     //no shared timer
@@ -411,32 +413,3 @@ namespace DOL.GS.Spells
     }
     #endregion
 }
-
-#region MisshitCalc
-
-namespace DOL.GS.PropertyCalc
-{
-    /// <summary>
-    /// The melee damage bonus percent calculator
-    ///
-    /// BuffBonusCategory1 is used for buffs
-    /// BuffBonusCategory2 unused
-    /// BuffBonusCategory3 is used for debuff
-    /// BuffBonusCategory4 unused
-    /// BuffBonusMultCategory1 unused
-    /// </summary>
-    [PropertyCalculator(eProperty.MissHit)]
-    public class MissHitPercentCalculator : PropertyCalculator
-    {
-        public override int CalcValue(GameLiving living, eProperty property)
-        {
-            return (int)(
-                +living.BaseBuffBonusCategory[(int)property]
-                + living.SpecBuffBonusCategory[(int)property]
-                - living.DebuffCategory[(int)property]
-                + living.BuffBonusCategory4[(int)property]);
-        }
-    }
-}
-
-#endregion

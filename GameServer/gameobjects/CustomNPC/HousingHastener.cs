@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using DOL.Database;
 using DOL.Language;
 using DOL.GS.Effects;
@@ -58,7 +57,7 @@ namespace DOL.GS
 		/// <returns>list with string messages</returns>
 		public override IList GetExamineMessages(GamePlayer player)
 		{
-			List<string> list = new List<string>();
+			IList list = new ArrayList();
 			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameHousingHastener.GetExamineMessages.Examine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
 			return list;
 		}

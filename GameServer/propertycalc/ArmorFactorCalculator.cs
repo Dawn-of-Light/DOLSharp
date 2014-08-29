@@ -41,14 +41,14 @@ namespace DOL.GS.PropertyCalc
 			{
 				int af;
 
-				// 1.5*1.25 spec line buff cap
-				af = Math.Min((int)(living.Level * 1.875), living.SpecBuffBonusCategory[(int)property]);
+				// no spec AF buff cap (capped at *12 to prevent bugs, max heretic AF spec buff)
+				af = Math.Min((int)(living.Level * 12), living.SpecBuffBonusCategory[property]);
 				// debuff
-				af -= living.DebuffCategory[(int)property];
+				af -= living.DebuffCategory[property];
 				// TrialsOfAtlantis af bonus
-				af += Math.Min(living.Level, living.ItemBonus[(int)property]);
+				af += Math.Min(living.Level, living.ItemBonus[property]);
 				// uncapped category
-				af += living.BuffBonusCategory4[(int)property];
+				af += living.BuffBonusCategory4[property];
 
 				return af;
 			}
@@ -60,17 +60,18 @@ namespace DOL.GS.PropertyCalc
 				if (living is GameKeepComponent)
 					component = living as GameKeepComponent;
 
-				int amount = component.Keep.BaseLevel;
-				if (component.Keep is GameKeep)
+				int amount = component.AbstractKeep.BaseLevel;
+				if (component.AbstractKeep is GameKeep)
 					return amount;
 				else return amount / 2;
 			}
 			else
 			{
 				return (int)((1 + (living.Level / 170.0)) * (living.Level << 1) * 4.67)
-				+ living.SpecBuffBonusCategory[(int)property]
-				- living.DebuffCategory[(int)property]
-				+ living.BuffBonusCategory4[(int)property];
+				+ living.BaseBuffBonusCategory[property]
+				+ living.SpecBuffBonusCategory[property]
+				- living.DebuffCategory[property]
+				+ living.BuffBonusCategory4[property];
 			}
 		}
 	}

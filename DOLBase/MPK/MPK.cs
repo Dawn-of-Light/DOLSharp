@@ -227,7 +227,6 @@ namespace DOL.MPK
 					using (var wrtr = new BinaryWriter(dirmem, Encoding.UTF8))
 					{
 						file.Header.Write(wrtr);
-						wrtr.Close();
 					}
 
 					offset += file.Header.UncompressedSize;
@@ -274,7 +273,6 @@ namespace DOL.MPK
 					{
 						buf[i] ^= i;
 					}
-					wrtr.Close();
 				}
 			}
 
@@ -345,7 +343,6 @@ namespace DOL.MPK
 				rdr.ReadByte(); //always 2
 
 				ReadArchive(rdr);
-				rdr.Close();
 			}
 		}
 

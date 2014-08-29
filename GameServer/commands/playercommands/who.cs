@@ -41,7 +41,6 @@ please note that /who CSR will not show hidden CSRs
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 
 namespace DOL.GS.Commands
@@ -81,9 +80,9 @@ namespace DOL.GS.Commands
 				return;
 
 			int listStart = 1;
-			List<IWhoFilter> filters = null;
-			List<GameClient> clientsList = new List<GameClient>();
-			List<string> resultMessages = new List<string>();
+			ArrayList filters = null;
+			ArrayList clientsList = new ArrayList();
+			ArrayList resultMessages = new ArrayList();
 
 			// get list of clients depending on server type
 			foreach (GameClient serverClient in WorldMgr.GetAllPlayingClients())
@@ -133,7 +132,7 @@ namespace DOL.GS.Commands
 				case "gm":
 				case "admin":
 					{
-						filters = new List<IWhoFilter>(1);
+						filters = new ArrayList(1);
 						filters.Add(new GMFilter());
 						break;
 					}
@@ -144,31 +143,31 @@ namespace DOL.GS.Commands
 				case "fr":
 				case "it":
 					{
-						filters = new List<IWhoFilter>(1);
+						filters = new ArrayList(1);
 						filters.Add(new LanguageFilter(args[1].ToLower()));
 						break;
 					}
 				case "cg":
 					{
-						filters = new List<IWhoFilter>(1);
+						filters = new ArrayList(1);
 						filters.Add(new ChatGroupFilter());
 						break;
 					}
 				case "nf":
 					{
-						filters = new List<IWhoFilter>(1);
+						filters = new ArrayList(1);
 						filters.Add(new NewFrontiersFilter());
 						break;
 					}
 				case "rp":
 					{
-						filters = new List<IWhoFilter>(1);
+						filters = new ArrayList(1);
 						filters.Add(new RPFilter());
 						break;
 					}
 				default:
 					{
-						filters = new List<IWhoFilter>();
+						filters = new ArrayList();
 						AddFilters(filters, args, 1);
 						break;
 					}
@@ -265,12 +264,12 @@ namespace DOL.GS.Commands
 					log.Error("no currentzone in who commandhandler for player " + player.Name);
 			}
 			ChatGroup mychatgroup = (ChatGroup) player.TempProperties.getProperty<object>(ChatGroup.CHATGROUP_PROPERTY, null);
-			if (mychatgroup != null && (mychatgroup.Members.ContainsKey(player) || mychatgroup.IsPublic && (bool)mychatgroup.Members[player] == true))
+			if (mychatgroup != null && (mychatgroup.Members.Contains(player) || mychatgroup.IsPublic && (bool)mychatgroup.Members[player] == true))
 			{
 				result.Append(" [CG]");
 			}
 			BattleGroup mybattlegroup = (BattleGroup)player.TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
-			if (mybattlegroup != null && (mybattlegroup.Members.ContainsKey(player) || mybattlegroup.IsPublic && (bool)mybattlegroup.Members[player] == true))
+			if (mybattlegroup != null && (mybattlegroup.Members.Contains(player) || mybattlegroup.IsPublic && (bool)mybattlegroup.Members[player] == true))
 			{
 				result.Append(" [BG]");
 			}
@@ -302,7 +301,7 @@ namespace DOL.GS.Commands
 			return result.ToString();
 		}
 
-		private void AddFilters(IList<IWhoFilter> filters, string[] args, int skip)
+		private void AddFilters(ArrayList filters, string[] args, int skip)
 		{
 			for (int i = skip; i < args.Length; i++)
 			{
@@ -341,7 +340,7 @@ namespace DOL.GS.Commands
 		}
 
 
-		private bool ApplyFilter(IList<IWhoFilter> filters, GamePlayer player)
+		private bool ApplyFilter(ArrayList filters, GamePlayer player)
 		{
 			if (filters == null)
 				return true;
@@ -454,7 +453,7 @@ namespace DOL.GS.Commands
 				//TODO
 
 				//player is a cg leader, and the cg is public
-				if (cg.Members.ContainsKey(player) && (bool)cg.Members[player] == true && cg.IsPublic)
+				if ((bool)cg.Members[player] == true && cg.IsPublic)
 					return true;
 
 				return false;

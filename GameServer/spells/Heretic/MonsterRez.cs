@@ -18,232 +18,157 @@
  */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
+
 using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
-using DOL.AI.Brain;
-using DOL.GS;
 using DOL.Events;
 
 namespace DOL.GS.Spells
 {
 	/// <summary>
-	/// Summary description for ReanimateCorpe.
+	/// Reanimate a fallen realm mate into a monster that procs DoT
 	/// </summary>
 	[SpellHandlerAttribute("ReanimateCorpse")]
-	public class MonsterRez : ResurrectSpellHandler
+	public class MonsterResurrectHandler : ResurrectSpellHandler
 	{
 		// Constructor
-		public MonsterRez(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line)
+		public MonsterResurrectHandler(GameLiving caster, Spell spell, SpellLine line)
+			: base(caster, spell, line)
         {
         }
 
-		protected override void ResurrectResponceHandler(GamePlayer player, byte response)
-		{
-			base.ResurrectResponceHandler(player, response);
-			if (response == 1)
-				ResurrectLiving (player);
+		public override byte IllnessReduction {
+			get { return 100; }
 		}
 		
+		/// <summary>
+		/// Prevent from launching SubSpell on finish cast.
+		/// </summary>
+		/// <param name="target"></param>
+		public override void FinishCastSubSpell(GameLiving target)
+		{
+		}
+		
+		/// <summary>
+		/// Start Subspell Monster Summon on Revive
+		/// </summary>
+		/// <param name="living"></param>
 		protected override void ResurrectLiving(GameLiving living)
 		{
 			base.ResurrectLiving(living);
-
-			SpellLine line = SkillBase.GetSpellLine("Summon Monster");
-			Spell castSpell = SkillBase.GetSpellByID(14078);
-
-			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, castSpell, line);
-			spellhandler.StartSpell(living);
+			base.FinishCastSubSpell(living);
+		}
+		
+		/// <summary>
+		/// No Resurrect Immunity for Monster Rez
+		/// </summary>
+		/// <param name="target"></param>
+		protected override void StartResurrectImmunity(GameLiving target)
+		{
 		}
 	}
 
 	/// <summary>
-	/// Summary description for ReanimateCorpe.
+	/// Transform a realm mate into an horrible beast.
 	/// </summary>
 	[SpellHandlerAttribute("SummonMonster")]
-	public class SummonMonster : SpellHandler
+	public class SummonMonsterHandler : AllAbsorbtionBuffHandler
 	{
-		private ushort m_model = 0;
-		private SpellLine m_monsterspellline = null;
-		private GamePlayer m_owner = null;
-
-		public SpellLine MonsterSpellLine
-		{
-			get
-			{
-				if (m_monsterspellline == null)
-					m_monsterspellline = SkillBase.GetSpellLine("Summon Monster");
-
-				return m_monsterspellline;
-			}
-		}
-
-		public Spell MonsterSpellDoT
-		{
-			get
-			{
-                return (SkillBase.GetSpellByID (14077));
-			}
-		}
-
-		public Spell MonsterSpellDisease
-		{
-			get
-			{
-                return (SkillBase.GetSpellByID (14079));
-			}
-		}
-
-		protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
-		{
-			return new GameSpellEffect(this, Spell.Duration, Spell.Frequency, effectiveness);
-		}
-
+		private ConcurrentDictionary<GameLiving, ushort> m_ownerModel = new ConcurrentDictionary<GameLiving, ushort>();
+		
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
-			if (!(effect.Owner is GamePlayer))
-				return;
 
-			GamePlayer player = effect.Owner as GamePlayer;
-			m_owner = player;
-			m_model = player.Model;
-			player.Model = (ushort)Spell.Value;
-
-            player.BuffBonusCategory4[(int)eProperty.MagicAbsorption] += (int)Spell.LifeDrainReturn;
-            player.BuffBonusCategory4[(int)eProperty.ArmorAbsorption] += (int)Spell.LifeDrainReturn;
-			player.Out.SendCharStatsUpdate();
-			player.Health = player.MaxHealth;
-			GameEventMgr.AddHandler(player, GameLivingEvent.Dying, new DOLEventHandler(EventRaised));
-			GameEventMgr.AddHandler(player, GamePlayerEvent.Linkdeath, new DOLEventHandler(EventRaised));
-			GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(EventRaised));
-			GameEventMgr.AddHandler(player, GamePlayerEvent.RegionChanged, new DOLEventHandler(EventRaised));
+			GameLiving target = effect.Owner;
+			if(!m_ownerModel.ContainsKey(target))
+			{
+				if (m_ownerModel.TryAdd(target, target.Model))
+				{
+					target.Model = (ushort)Spell.LifeDrainReturn;
+				}
+			}
+			
+			// Prevent the target from attacking
+			target.DisarmedTime = Caster.CurrentRegion.Time + effect.RemainingTime;
+			target.SilencedTime = Caster.CurrentRegion.Time + effect.RemainingTime;
+			
+			GameEventMgr.AddHandler(target, GamePlayerEvent.Linkdeath, new DOLEventHandler(EventRaised));
+			GameEventMgr.AddHandler(target, GamePlayerEvent.Quit, new DOLEventHandler(EventRaised));
+			GameEventMgr.AddHandler(target, GamePlayerEvent.RegionChanged, new DOLEventHandler(EventRaised));
 
 			base.OnEffectStart(effect);
 		}
 
 		public override void OnEffectPulse(GameSpellEffect effect)
 		{
-
-			if (effect.Owner is GamePlayer)
-			{
-				GamePlayer player = effect.Owner as GamePlayer;
-				player.CastSpell(this.MonsterSpellDoT, this.MonsterSpellLine);
-				player.CastSpell(this.MonsterSpellDisease, this.MonsterSpellLine);
-			}
-
 			base.OnEffectPulse(effect);
+			
+			// Trigger subspell set on amnesia chance to prevent the chaining subspell security and allow to change caster
+			if (Spell.AmnesiaChance > 0)
+			{
+				Spell spell = SkillBase.GetSpellByID(Spell.AmnesiaChance);
+				//we need subspell ID to be 0, we don't want spells linking off the subspell
+				if (effect.Owner != null && spell != null && !spell.HasSubSpell)
+				{
+					ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(effect.Owner, spell, SpellLine);
+					spellhandler.StartSpell(effect.Owner);
+				}
+			}
 		}
 
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
-			if (!(effect.Owner is GamePlayer))
-				return 0;
+			GameLiving target = effect.Owner;
 
-			GamePlayer player = effect.Owner as GamePlayer;
+			if (m_ownerModel.ContainsKey(target))
+			{
+				ushort model;
+				if (m_ownerModel.TryGetValue(target, out model))
+				{
+					target.Model = model;
+				}
+			}
 
-			player.Model = m_model;
+			target.Health = 1;
+			// Allow Attacking Again
+			target.DisarmedTime = 0;
+			target.SilencedTime = 0;
 
-            player.BuffBonusCategory4[(int)eProperty.MagicAbsorption] -= (int)Spell.LifeDrainReturn ;
-            player.BuffBonusCategory4[(int)eProperty.ArmorAbsorption] -= (int)Spell.LifeDrainReturn ;
-			player.Out.SendCharStatsUpdate();
+			GameEventMgr.RemoveHandler(target, GamePlayerEvent.Linkdeath, new DOLEventHandler(EventRaised));
+			GameEventMgr.RemoveHandler(target, GamePlayerEvent.Quit, new DOLEventHandler(EventRaised));
+			GameEventMgr.RemoveHandler(target, GamePlayerEvent.RegionChanged, new DOLEventHandler(EventRaised));
 
-			int leftHealth = Convert.ToInt32(player.MaxHealth * 0.10);
-			player.Health = leftHealth;
-
-			GameEventMgr.RemoveHandler(player, GameLivingEvent.Dying, new DOLEventHandler(EventRaised));
-			GameEventMgr.RemoveHandler(player, GamePlayerEvent.Linkdeath, new DOLEventHandler(EventRaised));
-			GameEventMgr.RemoveHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(EventRaised));
-			GameEventMgr.RemoveHandler(player, GamePlayerEvent.RegionChanged, new DOLEventHandler(EventRaised));
-
+			if(effect.Owner.IsAlive && effect.Owner.ObjectState == GameObject.eObjectState.Active)
+			{
+				RezDmgImmunityEffect immunityEffect = new RezDmgImmunityEffect();
+				immunityEffect.Start(effect.Owner);
+			}
+			
 			return base.OnEffectExpires(effect, noMessages);
 		}
 
+		/// <summary>
+		/// Cancel Effect if player change region or quit.
+		/// </summary>
+		/// <param name="e"></param>
+		/// <param name="sender"></param>
+		/// <param name="arguments"></param>
 		public void EventRaised(DOLEvent e, object sender, EventArgs arguments)
 		{
-			GamePlayer player = sender as GamePlayer; //attacker
-			if (player == null) return;
-			player.Model = m_model;
-			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(player, "SummonMonster");
+			GameLiving target = sender as GameLiving;
+			if (target == null) 
+				return;
+
+			GameSpellEffect effect = SpellHelper.FindEffectOnTarget(target, this);
 			if (effect != null)
 				effect.Cancel(false);
 		}
 
 		// Constructor
-		public SummonMonster(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-	}
-
-	/// <summary>
-	/// Summary description for MonsterDoT.
-	/// </summary>
-	[SpellHandlerAttribute("MonsterDoT")]
-	public class MonsterDoT : DirectDamageSpellHandler
-	{
-		public override IList SelectTargets(GameObject castTarget)
+		public SummonMonsterHandler(GameLiving caster, Spell spell, SpellLine line)
+			: base(caster, spell, line)
 		{
-			List<GameLiving> list = new List<GameLiving>(8);
-			GameLiving target = castTarget as GameLiving;
-
-			//if (target == null || Spell.Range == 0)
-			//	target = Caster;
-
-			foreach (GamePlayer player in target.GetPlayersInRadius(false, (ushort)Spell.Radius))
-			{
-				if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
-				{
-					list.Add(player);
-				}
-			}
-			foreach (GameNPC npc in target.GetNPCsInRadius(false, (ushort)Spell.Radius))
-			{
-				if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
-				{
-					list.Add(npc);
-				}
-			}
-
-			return list;
 		}
 
-
-		// Constructor
-		public MonsterDoT(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-	}
-
-	/// <summary>
-	/// Summary description for MonsterDoT.
-	/// </summary>
-	[SpellHandlerAttribute("MonsterDisease")]
-	public class MonsterDisease : DiseaseSpellHandler
-	{
-		public override IList SelectTargets(GameObject castTarget)
-		{
-			List<GameLiving> list = new List<GameLiving>(8);
-			GameLiving target = castTarget as GameLiving;
-
-			if (target == null || Spell.Range == 0)
-				target = Caster;
-
-			foreach (GamePlayer player in target.GetPlayersInRadius(false, (ushort)Spell.Radius))
-			{
-				if (GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
-				{
-					list.Add(player);
-				}
-			}
-			foreach (GameNPC npc in target.GetNPCsInRadius(false, (ushort)Spell.Radius))
-			{
-				if (GameServer.ServerRules.IsAllowedToAttack(Caster, npc, true))
-				{
-					list.Add(npc);
-				}
-			}
-
-			return list;
-		}
-
-		// Constructor
-		public MonsterDisease(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
 }

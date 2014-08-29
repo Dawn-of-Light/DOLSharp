@@ -18,7 +18,6 @@
  */
 using System.Collections;
 using System.Collections.Specialized;
-using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 namespace DOL.GS
 {
@@ -31,7 +30,7 @@ namespace DOL.GS
 		/// <summary>
 		/// This holds all players inside the battlegroup
 		/// </summary>
-		protected Dictionary<GamePlayer, bool> m_battlegroupMembers = new Dictionary<GamePlayer, bool>();
+		protected HybridDictionary m_battlegroupMembers = new HybridDictionary();
 
         bool battlegroupLootType = false;
         GamePlayer battlegroupTreasurer = null;
@@ -45,7 +44,7 @@ namespace DOL.GS
             battlegroupLootType = false;
             battlegroupTreasurer = null;
 		}
-		public Dictionary<GamePlayer, bool> Members
+		public HybridDictionary Members
 		{
 			get{return m_battlegroupMembers;}
 			set{m_battlegroupMembers=value;}
@@ -78,9 +77,9 @@ namespace DOL.GS
 		public virtual bool AddBattlePlayer(GamePlayer player,bool leader) 
 		{
 			if (player == null) return false;
-			lock (((ICollection)m_battlegroupMembers).SyncRoot)
+			lock (m_battlegroupMembers)
 			{
-				if (m_battlegroupMembers.ContainsKey(player))
+				if (m_battlegroupMembers.Contains(player))
 					return false;
 				player.TempProperties.setProperty(BATTLEGROUP_PROPERTY, this);
 				player.Out.SendMessage("You join the battle group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -97,9 +96,9 @@ namespace DOL.GS
 
         public virtual bool IsInTheBattleGroup(GamePlayer player)
         {
-        	lock (((ICollection)m_battlegroupMembers).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+            lock (m_battlegroupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
             {
-                return m_battlegroupMembers.ContainsKey(player);
+                return m_battlegroupMembers.Contains(player);
             }
         }
 
@@ -175,20 +174,20 @@ namespace DOL.GS
         
         public GamePlayer[] GetPlayersInTheBattleGroup()
         {
-            List<GamePlayer> players = new List<GamePlayer>(ServerProperties.Properties.BATTLEGROUP_MAX_MEMBER);
-            lock (((ICollection)m_battlegroupMembers).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+            ArrayList players = new ArrayList(ServerProperties.Properties.BATTLEGROUP_MAX_MEMBER);
+            lock (m_battlegroupMembers.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
             {
-                foreach (GamePlayer p in m_battlegroupMembers.Keys)
+                for (int i = 0; i < m_battlegroupMembers.Count; i++)
                 {
-                    players.Add(p);
+                    players.Add((GamePlayer)m_battlegroupMembers[i]);
                 }
             }
-            return (GamePlayer[])players.ToArray();
+            return (GamePlayer[])players.ToArray(typeof(GamePlayer));
         }
 
         public virtual void SendMessageToBattleGroupMembers(string msg, eChatType type, eChatLoc loc)
         {
-        	lock (((ICollection)m_battlegroupMembers).SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+            lock (m_battlegroupMembers) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
             {
                 foreach (GamePlayer player in m_battlegroupMembers.Keys)
                 {
@@ -209,9 +208,9 @@ namespace DOL.GS
 		public virtual bool RemoveBattlePlayer(GamePlayer player)
 		{
 			if (player == null) return false;
-			lock (((ICollection)m_battlegroupMembers).SyncRoot)
+			lock (m_battlegroupMembers)
 			{
-				if (!m_battlegroupMembers.ContainsKey(player))
+				if (!m_battlegroupMembers.Contains(player))
 					return false;
 				m_battlegroupMembers.Remove(player);
 				player.TempProperties.removeProperty(BATTLEGROUP_PROPERTY);
@@ -222,7 +221,7 @@ namespace DOL.GS
 				}
 				if (m_battlegroupMembers.Count == 1)
 				{
-					List<GamePlayer> lastPlayers = new List<GamePlayer>(m_battlegroupMembers.Count);
+					ArrayList lastPlayers = new ArrayList(m_battlegroupMembers.Count);
 					lastPlayers.AddRange(m_battlegroupMembers.Keys);
 					foreach (GamePlayer plr in lastPlayers)
 					{

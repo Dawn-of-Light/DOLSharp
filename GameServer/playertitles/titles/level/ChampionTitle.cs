@@ -23,8 +23,8 @@ using DOL.Events;
 
 namespace DOL.GS.PlayerTitles
 {
-  	/// <summary>
-	/// Example...
+	/// <summary>
+	/// Champion title granted to everyone who mastered Champion level 1+
 	/// </summary>
 	public class ChampionlevelTitle : EventPlayerTitle
 	{
@@ -36,6 +36,7 @@ namespace DOL.GS.PlayerTitles
 		public override string GetDescription(GamePlayer player)
 		{
 			return player.CLTitle;
+			//HACK Champion Titles
 		}
 
 		/// <summary>
@@ -48,6 +49,11 @@ namespace DOL.GS.PlayerTitles
 			return player.CLTitle;
 		}
 		
+		public override string GetValue(GamePlayer source, GamePlayer target)
+		{
+			return source.CLTitle;
+		}
+
 		/// <summary>
 		/// The event to hook.
 		/// </summary>

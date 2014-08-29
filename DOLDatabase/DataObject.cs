@@ -115,6 +115,14 @@ namespace DOL.Database
 		[Browsable(false)]
 		public virtual bool IsDeleted { get; set; }
 
+		/// <summary>
+		/// Last time this record was updated.
+		/// </summary>
+		[DataElement(AllowDbNull = false, Index = true)]
+		public DateTime Updated {
+			get { return DateTime.UtcNow; }
+			set { Dirty = true; }
+		}
 
 		#region ICloneable Member
 

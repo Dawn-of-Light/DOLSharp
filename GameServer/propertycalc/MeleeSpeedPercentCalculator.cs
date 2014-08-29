@@ -25,7 +25,7 @@ namespace DOL.GS.PropertyCalc
 	///
 	/// BuffBonusCategory1 is used for buffs
 	/// BuffBonusCategory2 unused
-	/// BuffBonusCategory3 is used for debuff
+	/// BuffBonusCategory3 is used for debuffs
 	/// BuffBonusCategory4 unused
 	/// BuffBonusMultCategory1 unused
 	/// </summary>
@@ -35,9 +35,9 @@ namespace DOL.GS.PropertyCalc
 		public override int CalcValue(GameLiving living, eProperty property)
 		{
 			return Math.Max(1, 100
-				-living.BaseBuffBonusCategory[(int)property] // less is faster = buff
-				+living.DebuffCategory[(int)property] // more is slower = debuff
-				-Math.Min(10, living.ItemBonus[(int)property])); // http://www.camelotherald.com/more/1325.shtml
+				-living.BaseBuffBonusCategory[property] // less is faster = buff
+				+living.DebuffCategory[property] // more is slower = debuff
+				-Math.Min(10, living.ItemBonus[property])); // http://www.camelotherald.com/more/1325.shtml
 		}
 	}
 }

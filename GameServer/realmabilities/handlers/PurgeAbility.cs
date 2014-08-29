@@ -75,7 +75,7 @@ namespace DOL.GS.RealmAbilities
         protected static bool RemoveNegativeEffects(GameLiving living, PurgeAbility purge)
         {
             bool removed = false;
-            List<GameSpellEffect> effects = new List<GameSpellEffect>();
+            ArrayList effects = new ArrayList();
 
 
             GamePlayer player = (GamePlayer)living;
@@ -91,7 +91,7 @@ namespace DOL.GS.RealmAbilities
 
                         if (gsp == null)
                             continue;
-                        if (gsp is GameSpellAndImmunityEffect && ((GameSpellAndImmunityEffect)gsp).ImmunityState)
+                        if (gsp.ImmunityState)
                             continue;
                         if (gsp.SpellHandler.HasPositiveEffect)
                             continue;
@@ -109,7 +109,7 @@ namespace DOL.GS.RealmAbilities
                     GameSpellEffect gsp = effect as GameSpellEffect;
                     if (gsp == null)
                         continue;
-                    if (gsp is GameSpellAndImmunityEffect && ((GameSpellAndImmunityEffect)gsp).ImmunityState)
+                    if (gsp.ImmunityState)
                         continue; // ignore immunity effects
                     if (gsp.SpellHandler.HasPositiveEffect)//only enemy spells are affected
                         continue;

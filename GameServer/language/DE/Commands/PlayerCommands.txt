@@ -441,7 +441,7 @@ Scripts.Player.Guild.InfoMotd:				Nachricht:  {0}
 Scripts.Player.Guild.InfoOMotd:				Offiziersnachricht: {0}	
 Scripts.Player.Guild.InfoRPBPMP:			Reichspunkte: {0} Kopfgeldpunkte: {1} Erfolgspunkte: {2}	
 Scripts.Player.Guild.InfoWebpage:			Webseite: {0}	
-Scripts.Player.Guild.InvalidLetters:			Einige dieser Zeichen können nicht verwendet werden.	
+Scripts.Player.Guild.InvalidLetters:		Der eingegebene Gildenname ist ungültig!
 Scripts.Player.Guild.InvalidRank:			Das ist kein zugelassener Rang.
 Scripts.Player.Guild.InviteDead:			Ihr könnt keinen toten Spieler in Eure Gilde einladen.
 Scripts.Player.Guild.InviteNoSelected:			Ihr müsst erst einen Spieler auswählen.

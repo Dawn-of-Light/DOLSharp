@@ -458,8 +458,6 @@ namespace DOL.GS.Scripts
 
 			m_js.Append("</script>");
 			m_js.Append(nl.NewLine);
-			
-			nl.Close();
 		}
 
 		/// <summary>

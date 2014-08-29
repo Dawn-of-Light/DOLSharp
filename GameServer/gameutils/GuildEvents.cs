@@ -295,7 +295,7 @@ namespace DOL.GS
 			{
 				if (checkGuild.BonusType != Guild.eBonusType.None)
 				{
-					TimeSpan bonusTime = DateTime.UtcNow.Subtract(checkGuild.BonusStartTime);
+					TimeSpan bonusTime = DateTime.Now.Subtract(checkGuild.BonusStartTime);
 
 					if (bonusTime.Days > 0)
 					{

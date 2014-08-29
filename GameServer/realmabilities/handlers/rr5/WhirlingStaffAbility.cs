@@ -69,7 +69,7 @@ namespace DOL.GS.RealmAbilities
 
 			//target.TakeDamage(caster, eDamageType.Spirit, damage, 0);
 			AttackData ad = new AttackData();
-			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
+			ad.AttackResult = eAttackResult.HitUnstyled;
 			ad.Attacker = caster;
 			ad.Target = target;
 			ad.DamageType = eDamageType.Crush;

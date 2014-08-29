@@ -16,7 +16,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			m_caster.Mana -= PowerCost(target, true);
 			base.FinishSpellCast(target);
 		}
 
@@ -97,7 +97,7 @@ namespace DOL.GS.Spells
 //			return duration;
 //		}
 
-		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
+		public override int CalculateEffectDuration(GameLiving target, double effectiveness)
 		{
 			double duration = base.CalculateEffectDuration(target, effectiveness);
 			duration *= target.GetModified(eProperty.SpeedDecreaseDurationReduction) * 0.01;
@@ -112,19 +112,11 @@ namespace DOL.GS.Spells
 			return (int)duration;
 		}
 
-		/// <summary>
-		/// Creates the corresponding spell effect for the spell
-		/// </summary>
-		/// <param name="target"></param>
-		/// <param name="effectiveness"></param>
-		/// <returns></returns>
-		protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
-		{
-			return new GameSpellAndImmunityEffect(this, (int)CalculateEffectDuration(target, effectiveness), 0, effectiveness);
-		}
-
 		// constructor
-		public HereticImmunityEffectSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
+		public HereticImmunityEffectSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine)
+			: base(caster, spell, spellLine)
+		{
+		}
 	}
 
 	[SpellHandler("HereticSpeedDecrease")]
@@ -136,7 +128,7 @@ namespace DOL.GS.Spells
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			base.OnEffectStart(effect);
-			effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, effect, 1.0-Spell.Value*0.01);
+			effect.Owner.BuffBonusMultCategory1.Set(eProperty.MaxSpeed, effect, 1.0-Spell.Value*0.01);
 
 			SendUpdates(effect.Owner);
 
@@ -162,7 +154,7 @@ namespace DOL.GS.Spells
 			effect.Owner.TempProperties.removeProperty(effect);
 			timer.Stop();
 
-			effect.Owner.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, effect);
+			effect.Owner.BuffBonusMultCategory1.Remove(eProperty.MaxSpeed, effect);
 
 			SendUpdates(effect.Owner);
 
@@ -179,15 +171,15 @@ namespace DOL.GS.Spells
 			GameLiving living = sender as GameLiving;
 			if (attackArgs == null) return;
 			if (living == null) return;
-			GameSpellEffect effect = FindEffectOnTarget(living, this);
+			GameSpellEffect effect = SpellHelper.FindEffectOnTarget(living, this);
 			if (attackArgs.AttackData.Damage > 0)
 			{
 							if (effect != null)
 								effect.Cancel(false);
 			}
-            if (attackArgs.AttackData.SpellHandler is StyleBleeding || attackArgs.AttackData.SpellHandler is DoTSpellHandler || attackArgs.AttackData.SpellHandler is HereticDoTSpellHandler)
+            if (attackArgs.AttackData.SpellHandler is StyleBleeding || attackArgs.AttackData.SpellHandler is DoTSpellHandler)
             {
-                GameSpellEffect affect = FindEffectOnTarget(living, this);
+                GameSpellEffect affect = SpellHelper.FindEffectOnTarget(living, this);
                 if (affect != null)
                     affect.Cancel(false);
             }
@@ -252,7 +244,7 @@ namespace DOL.GS.Spells
 				if (factor < 0) factor = 0;
 				else if (factor > 1) factor = 1;
 
-				effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, effect, 1.0 - effect.Spell.Value*factor*0.01);
+				effect.Owner.BuffBonusMultCategory1.Set(eProperty.MaxSpeed, effect, 1.0 - effect.Spell.Value*factor*0.01);
 
 				SendUpdates(effect.Owner);
 

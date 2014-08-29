@@ -19,7 +19,6 @@
 using System;
 using DOL.GS.Spells;
 using DOL.GS.Effects;
-using DOL.Database;
 
 namespace DOL.GS.PropertyCalc
 {
@@ -40,10 +39,10 @@ namespace DOL.GS.PropertyCalc
 	{
 		public override int CalcValue(GameLiving living, eProperty property) 
 		{
-			int debuff = living.DebuffCategory[(int)property];
+			int debuff = living.DebuffCategory[property];
 			if(debuff > 0)
 			{
-				GameSpellEffect nsreduction = SpellHandler.FindEffectOnTarget(living, "NearsightReduction");
+				GameSpellEffect nsreduction = SpellHelper.FindEffectOnTarget(living, "NearsightReduction");
 				if(nsreduction!=null) debuff *= (int)(1.00 - nsreduction.Spell.Value * 0.01);
 			}
 			int buff = CalcValueFromBuffs(living, property);
@@ -53,15 +52,12 @@ namespace DOL.GS.PropertyCalc
 
         public override int CalcValueFromBuffs(GameLiving living, eProperty property)
         {
-            return Math.Min(5, living.SpecBuffBonusCategory[(int) property]);
+            return Math.Min(5, living.SpecBuffBonusCategory[property]);
         }
 
-        public const int PROPERTY_SPELLRANGE_ITEMCAP = 10;
-        
         public override int CalcValueFromItems(GameLiving living, eProperty property)
         {
-        	
-            return Math.Min(PROPERTY_SPELLRANGE_ITEMCAP+GameMythirian.GetMythicalOverCapBonuses(living, property), living.ItemBonus[(int)property]);
+            return Math.Min(10, living.ItemBonus[property]);
         }
 	}
 }

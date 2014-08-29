@@ -39,7 +39,6 @@ namespace DOL.GS.PacketHandler
 
         /// <summary>
         /// Constructs a new PacketLib for Client Version 1.110
-		/// --- Untested ---
         /// </summary>
         /// <param name="client">the gameclient this lib is associated with</param>
         public PacketLib1110(GameClient client)
@@ -54,10 +53,12 @@ namespace DOL.GS.PacketHandler
 		/// <param name="info"></param>
 		public override void SendDelveInfo(string info)
 		{
-			var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DelveInfo));
-			pak.WriteString(info, 2048);
-			pak.WriteByte(0); // 0-terminated
-			SendTCP(pak);
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DelveInfo)))
+			{
+				pak.WriteString(info, 2048);
+				pak.WriteByte(0); // 0-terminated
+				SendTCP(pak);
+			}
 		}
 
 		public override void SendUpdateIcons(IList changedEffects, ref int lastUpdateEffectsCount)
@@ -66,98 +67,97 @@ namespace DOL.GS.PacketHandler
 			{
 				return;
 			}
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.UpdateIcons));
-			long initPos = pak.Position;
-
-			int fxcount = 0;
-			int entriesCount = 0;
-
-			pak.WriteByte(0); // effects count set in the end
-			pak.WriteByte(0); // unknown
-			pak.WriteByte(Icons); // unknown
-			pak.WriteByte(0); // unknown
-
-			foreach (IGameEffect effect in m_gameClient.Player.EffectList)
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.UpdateIcons)))
 			{
-				if (effect.Icon != 0)
+				long initPos = pak.Position;
+	
+				int fxcount = 0;
+				int entriesCount = 0;
+	
+				pak.WriteByte(0); // effects count set in the end
+				pak.WriteByte(0); // unknown
+				pak.WriteByte(Icons); // unknown
+				pak.WriteByte(0); // unknown
+	
+				foreach (IGameEffect effect in m_gameClient.Player.EffectList)
 				{
-					fxcount++;
-					if (changedEffects != null && !changedEffects.Contains(effect))
+					if (effect.Icon != 0)
 					{
-						continue;
-					}
-
-					//						log.DebugFormat("adding [{0}] '{1}'", fxcount-1, effect.Name);
-					pak.WriteByte((byte)(fxcount - 1)); // icon index
-					pak.WriteByte((effect is GameSpellEffect || effect.Icon > 5000) ? (byte)(fxcount - 1) : (byte)0xff);
-					byte ImmunByte = 0;
-					if (effect is GameSpellAndImmunityEffect)
-					{
-						GameSpellAndImmunityEffect immunity = (GameSpellAndImmunityEffect)effect;
-						if (immunity.ImmunityState)
+						fxcount++;
+						if (changedEffects != null && !changedEffects.Contains(effect))
 						{
-							ImmunByte = 1;
+							continue;
 						}
-					}
-					pak.WriteByte(ImmunByte);
-					// bit 0x08 adds "more..." to right click info
-					pak.WriteShort(effect.Icon);
-					pak.WriteShort((ushort)(effect.RemainingTime / 1000));
-					if (effect is GameSpellEffect)
-						pak.WriteShort(((GameSpellEffect)effect).Spell.ID); //v1.110+ send the spell ID for delve info in active icon
-					else
-						pak.WriteShort(effect.InternalID);//old method
-
-					byte flagNegativeEffect = 0;
-					if (effect is StaticEffect)
-					{
-						if (((StaticEffect)effect).HasNegativeEffect)
+	
+						//						log.DebugFormat("adding [{0}] '{1}'", fxcount-1, effect.Name);
+						pak.WriteByte((byte)(fxcount - 1)); // icon index
+						pak.WriteByte((effect is GameSpellEffect || effect.Icon > 5000) ? (byte)(fxcount - 1) : (byte)0xff);
+						byte ImmunByte = 0;
+						if (effect is GameSpellEffect)
 						{
-							flagNegativeEffect = 1;
+							if (((GameSpellEffect)effect).ImmunityState)
+							{
+								ImmunByte = 1;
+							}
 						}
-					}
-					else if (effect is GameSpellEffect)
-					{
-						if (!((GameSpellEffect)effect).SpellHandler.HasPositiveEffect)
+						pak.WriteByte(ImmunByte);
+						// bit 0x08 adds "more..." to right click info
+						pak.WriteShort(effect.Icon);
+						pak.WriteShort(effect.IsFading ? (ushort)1 : (ushort)(effect.RemainingTime / 1000));
+						if (effect is GameSpellEffect)
+							pak.WriteShort(((GameSpellEffect)effect).Spell.ID); //v1.110+ send the spell ID for delve info in active icon
+						else
+							pak.WriteShort(effect.InternalID);//old method
+	
+						byte flagNegativeEffect = 0;
+						if (effect is StaticEffect)
 						{
-							flagNegativeEffect = 1;
+							if (((StaticEffect)effect).HasNegativeEffect)
+							{
+								flagNegativeEffect = 1;
+							}
 						}
+						else if (effect is GameSpellEffect)
+						{
+							if (!((GameSpellEffect)effect).SpellHandler.HasPositiveEffect)
+							{
+								flagNegativeEffect = 1;
+							}
+						}
+						pak.WriteByte(flagNegativeEffect);
+	
+						pak.WritePascalString(effect.Name);
+						entriesCount++;
 					}
-					pak.WriteByte(flagNegativeEffect);
-
-					pak.WritePascalString(effect.Name);
-					entriesCount++;
 				}
+	
+				int oldCount = lastUpdateEffectsCount;
+				lastUpdateEffectsCount = fxcount;
+	
+				while (oldCount > fxcount)
+				{
+					pak.WriteByte((byte)(fxcount++));
+					pak.Fill(0, 10);
+					entriesCount++;
+					//					log.DebugFormat("adding [{0}] (empty)", fxcount-1);
+				}
+	
+				if (changedEffects != null)
+				{
+					changedEffects.Clear();
+				}
+	
+				if (entriesCount == 0)
+				{
+					return; // nothing changed - no update is needed
+				}
+	
+				pak.Position = initPos;
+				pak.WriteByte((byte)entriesCount);
+				pak.Seek(0, SeekOrigin.End);
+	
+				SendTCP(pak);
 			}
-
-			int oldCount = lastUpdateEffectsCount;
-			lastUpdateEffectsCount = fxcount;
-
-			while (oldCount > fxcount)
-			{
-				pak.WriteByte((byte)(fxcount++));
-				pak.Fill(0, 10);
-				entriesCount++;
-				//					log.DebugFormat("adding [{0}] (empty)", fxcount-1);
-			}
-
-			if (changedEffects != null)
-			{
-				changedEffects.Clear();
-			}
-
-			if (entriesCount == 0)
-			{
-				return; // nothing changed - no update is needed
-			}
-
-			pak.Position = initPos;
-			pak.WriteByte((byte)entriesCount);
-			pak.Seek(0, SeekOrigin.End);
-
-			SendTCP(pak);
-			//				log.Debug("packet sent.");
-			return;
 		}
 
 		/**

@@ -35,7 +35,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// Character Create and Customization handler.  Please maintain all commented debug statements
 	/// in order to support future debugging. - Tolakram
 	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP, 0x57 ^ 168, "Handles character creation requests")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.CharacterCreateRequest, "Handles character creation requests", eClientStatus.LoggedIn)]
 	public class CharacterCreateRequestHandler : IPacketHandler
 	{
 		/// <summary>
@@ -57,7 +57,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					b.Author = "SERVER";
 					b.Ip = client.TcpEndpointAddress;
 					b.Account = client.Account.Name;
-					b.DateBan = DateTime.UtcNow;
+					b.DateBan = DateTime.Now;
 					b.Type = "B";
 					b.Reason = String.Format("Autoban wrong Account '{0}'", GameServer.Database.Escape(accountName));
 					GameServer.Database.AddObject(b);
@@ -111,7 +111,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								b.Author = "SERVER";
 								b.Ip = client.TcpEndpointAddress;
 								b.Account = client.Account.Name;
-								b.DateBan = DateTime.UtcNow;
+								b.DateBan = DateTime.Now;
 								b.Type = "B";
 								b.Reason = String.Format("Autoban bad CharName '{0}'", GameServer.Database.Escape(charName));
 								GameServer.Database.AddObject(b);
@@ -136,7 +136,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								b.Author = "SERVER";
 								b.Ip = client.TcpEndpointAddress;
 								b.Account = client.Account.Name;
-								b.DateBan = DateTime.UtcNow;
+								b.DateBan = DateTime.Now;
 								b.Type = "B";
 								b.Reason = String.Format("Autoban CharName '{0}' on wrong Account '{1}'", GameServer.Database.Escape(charName), GameServer.Database.Escape(client.Account.Name));
 								GameServer.Database.AddObject(b);
@@ -242,7 +242,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					b.Author = "SERVER";
 					b.Ip = client.TcpEndpointAddress;
 					b.Account = client.Account.Name;
-					b.DateBan = DateTime.UtcNow;
+					b.DateBan = DateTime.Now;
 					b.Type = "B";
 					b.Reason = string.Format("Autoban character create class: id:{0} realm:{1} name:{2} account:{3}", ch.Class, ch.Realm, ch.Name, account.Name);
 					GameServer.Database.AddObject(b);
@@ -320,7 +320,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			    return;
 			}
 
-			ch.CreationDate = DateTime.UtcNow;
+			ch.CreationDate = DateTime.Now;
 
 			ch.Endurance = 100;
 			ch.MaxEndurance = 100;
@@ -653,7 +653,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 											b.Author = "SERVER";
 											b.Ip = client.TcpEndpointAddress;
 											b.Account = client.Account.Name;
-											b.DateBan = DateTime.UtcNow;
+											b.DateBan = DateTime.Now;
 											b.Type = "B";
 											b.Reason = String.Format("Autoban Hack char update : Wrong {0} point:{1}", (stat == eStat.STR) ? "STR" : stat.ToString(), result);
 											GameServer.Database.AddObject(b);
@@ -737,7 +737,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						b.Author = "SERVER";
 						b.Ip = client.TcpEndpointAddress;
 						b.Account = client.Account.Name;
-						b.DateBan = DateTime.UtcNow;
+						b.DateBan = DateTime.Now;
 						b.Type = "B";
 						b.Reason = String.Format("Autoban Hack char update : zero character size in model:{0}", newModel);
 						GameServer.Database.AddObject(b);
@@ -958,7 +958,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						valid = false;
 					}
 
-					if (ch.Gender > 0 && (ch.Race == (byte)eRace.AlbionMinotaur || ch.Race == (byte)eRace.MidgardMinotaur || ch.Race == (byte)eRace.HiberniaMinotaur))
+					if (ch.Gender > 0 && (ch.Race == (byte)eRace.Korazh || ch.Race == (byte)eRace.Deifrang || ch.Race == (byte)eRace.Graoch))
 					{
 						log.Warn("Wrong minotaur gender: " + ch.Gender + ", race: " + ch.Race);
 						valid = false;

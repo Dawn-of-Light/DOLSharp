@@ -17,7 +17,6 @@
  *
  */
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 
 namespace DOL.GS.Scripts
@@ -49,7 +48,7 @@ namespace DOL.GS.Scripts
 	/// </summary>
 	public class CSVFileTableReader
 	{
-		private Dictionary<string, string[]> table = null;
+		private Hashtable table = null;
 
 		/// <summary>
 		/// Creates an instance of the CSVFileTableReader from a csvfile
@@ -60,16 +59,13 @@ namespace DOL.GS.Scripts
 			StreamReader reader = null;
 			try
 			{
-				table = new Dictionary<string, string[]>();
-				
+				table = new Hashtable();
 				reader = File.OpenText(csvFile);
-				
 				while (reader.Peek() != -1)
 				{
 					//read a line from the stream
 					string line = reader.ReadLine();
 					int firstsep = line.IndexOf(",");
-					
 					if (firstsep != -1)
 					{
 						string key = line.Substring(0, firstsep);
@@ -101,9 +97,8 @@ namespace DOL.GS.Scripts
 		/// <returns></returns>
 		public string[] FindCSVEntry(string firstvalue)
 		{
-			if (table == null || !table.ContainsKey(firstvalue))
+			if (table == null)
 				return null;
-			
 			return (string[]) table[firstvalue];
 		}
 	}

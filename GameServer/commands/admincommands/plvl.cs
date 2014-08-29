@@ -166,7 +166,7 @@ namespace DOL.GS.Commands
 
 						target.Client.Account.PrivLevel = plvl;
 						GameServer.Database.SaveObject(target.Client.Account);
-						client.Player.RefreshWorld();
+						target.Client.Player.RefreshWorld();
 
 						target.Client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.plvl.YourPlvlHasBeenSetted", plvl.ToString()), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 

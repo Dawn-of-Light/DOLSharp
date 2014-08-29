@@ -42,6 +42,9 @@ namespace DOL.GS.SkillHandler
             if (!player.IsAlive || player.IsSitting || player.IsMezzed || player.IsStunned)
                 return;
 
+            if (player.Health <= player.MaxHealth * 0.1)
+            	return;
+
 			if (player != null)
 			{
                 player.Out.SendSpellEffectAnimation(player, player, 7060, 0, false, 1);
@@ -49,7 +52,7 @@ namespace DOL.GS.SkillHandler
 				RemedyEffect effect = new RemedyEffect();
 				effect.Start(player);
 
-                player.Out.SendDisableSkill(ab, 300);
+                player.DisableSkill(ab, 1000 * 60 * 5);
 			}
 		}
 

@@ -32,6 +32,7 @@
     <NoWarn>1591</NoWarn>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <OutputPath>obj\</OutputPath>
+    <NoWin32Manifest>False</NoWin32Manifest>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -113,6 +114,7 @@
     <Compile Include="commands\serverinfo.cs" />
     <Compile Include="commands\SwitchCommandHandler.cs" />
     <Compile Include="commands\version.cs" />
+    <Compile Include="customnpc\BefuddledGolem.cs" />
     <Compile Include="customnpc\BreachTeleporter.cs" />
     <Compile Include="customnpc\CelestiusTeleporter.cs" />
     <Compile Include="customnpc\Desmona harpies\AtlantisVisualModelNPC.cs" />
@@ -123,8 +125,11 @@
     <Compile Include="customnpc\HafheimTeleporter.cs" />
     <Compile Include="customnpc\HolthamTeleporter.cs" />
     <Compile Include="customnpc\MLNPC.cs" />
-    <Compile Include="customnpc\MLRespecNPC.CS" />
+    <Compile Include="customnpc\MLRespecNPC.cs" />
+    <Compile Include="customnpc\PortalCeremonyBaseNPC.cs" />
+    <Compile Include="customnpc\PortalCeremonyExampleNPC.cs" />
     <Compile Include="customnpc\RegionTestNpc.cs" />
+    <Compile Include="customnpc\RockyGolem.cs" />
     <Compile Include="customnpc\TownCrier.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -152,6 +157,9 @@
     </Compile>
     <Compile Include="gameevents\TutorialJumpPointHandler.cs" />
     <Compile Include="gameobjects\GeneratedUniqueItem.cs" />
+    <Compile Include="gameobjects\NoveltyPetSummon.cs" />
+    <Compile Include="gameobjects\StormWorldDataQuestItem.cs" />
+    <Compile Include="gameobjects\UniqueItemLootGenerator.cs" />
     <Compile Include="globals.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -161,7 +169,20 @@
     <Compile Include="gameevents\XMLWebUIGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="lootgenerator\UniqueItemLootGenerator.cs" />
+    <Compile Include="net\freyad\keep\GameKeepAbstract.cs" />
+    <Compile Include="net\freyad\keep\GameKeepDataComponent.cs" />
+    <Compile Include="net\freyad\keep\GameKeepDataDoor.cs" />
+    <Compile Include="net\freyad\keep\GameKeepDataPosition.cs" />
+    <Compile Include="net\freyad\keep\IGameKeepData.cs" />
+    <Compile Include="net\freyad\keep\IGameKeepObject.cs" />
+    <Compile Include="net\freyad\keep\KeepDataManager.cs" />
+    <Compile Include="net\freyad\keep\RvRGameKeep.cs" />
+    <Compile Include="net\freyad\keep\RvRGameTower.cs" />
+    <Compile Include="net\freyad\keep\Tables\KeepData.cs" />
+    <Compile Include="net\freyad\keep\Tables\KeepDataComponent.cs" />
+    <Compile Include="net\freyad\keep\Tables\KeepDataPosition.cs" />
+    <Compile Include="net\freyad\keep\Tables\KeepDataXKeepDataComponent.cs" />
+    <Compile Include="net\freyad\keep\TowerRealmGameKeepDoor.cs" />
     <Compile Include="quests\Albion\AFewRepairs.cs" />
     <Compile Include="quests\Albion\AfterTheAccident.cs" />
     <Compile Include="quests\Albion\AgainstTheGrain.cs" />
@@ -261,18 +282,20 @@
     <Compile Include="quests\Midgard\Trial_of_Strength.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="lootgenerator" />
-    <Folder Include="gameobjects" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="quests\Albion\BaseFrederickPathPoints.xml" />
     <None Include="quests\Hibernia\BaseAddrirPathPoints.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="gameobjects" />
+    <Folder Include="net" />
+    <Folder Include="net\freyad" />
+    <Folder Include="net\freyad\keep\Tables" />
+    <Folder Include="net\freyad\keep" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-    <PostBuildEvent>xcopy "$(ProjectDir)*.cs" "$(ProjectDir)..\$(ConfigurationName)\scripts" /y /s /q /i
+    <PostBuildEvent>del /s /q "$(ProjectDir)..\$(ConfigurationName)\scripts"
+xcopy "$(ProjectDir)*.cs" "$(ProjectDir)..\$(ConfigurationName)\scripts" /y /s /q /i
 </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

@@ -37,9 +37,9 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// list of all keeps
 		/// </summary>
-		protected Dictionary<int, AbstractGameKeep> m_keepList = new Dictionary<int, AbstractGameKeep>();
+		protected Hashtable m_keepList = new Hashtable();
 
-		public virtual Dictionary<int, AbstractGameKeep> Keeps
+		public virtual Hashtable Keeps
 		{
 			get { return m_keepList; }
 		}
@@ -91,7 +91,7 @@ namespace DOL.GS.Keeps
 			if (!ServerProperties.Properties.LOAD_KEEPS)
 				return true;
 
-			lock (((ICollection)m_keepList).SyncRoot)
+			lock (m_keepList.SyncRoot)
 			{
 				m_keepList.Clear();
 
@@ -142,17 +142,17 @@ namespace DOL.GS.Keeps
 						// Use server properties to determine correct keep to load
 						//"use_new_keeps", "Keeps to load. 0 for Old Keeps, 1 for new keeps, 2 for both.", 2
 
-						if (ServerProperties.Properties.USE_NEW_KEEPS == 0 && hasNewComponents)
+						if (ServerProperties.Properties.USE_NEW_KEEPS == 0 && !hasOldComponents)
 							continue;
 
-						if (ServerProperties.Properties.USE_NEW_KEEPS == 1 && hasOldComponents)
+						if (ServerProperties.Properties.USE_NEW_KEEPS == 1 && !hasNewComponents)
 							continue;
 					}
 
                     //If we've got this far, we are permitted to load as per normal!
 
 					AbstractGameKeep keep;
-					if ((datakeep.KeepID >> 8) != 0)
+					if ((datakeep.KeepID >> 8) != 0 || ((datakeep.KeepID & 0xFF) > 150))
 					{
 						keep = keepRegion.CreateGameKeepTower();
 					}
@@ -294,18 +294,18 @@ namespace DOL.GS.Keeps
 							foreach (DBKeepHookPoint dbhookPoint in hookPointList[key])
 							{
 								GameKeepHookPoint myhookPoint = new GameKeepHookPoint(dbhookPoint, component);
-								component.HookPoints.Add(dbhookPoint.HookPointID, myhookPoint);
+								component.KeepHookPoints.Add(dbhookPoint.HookPointID, myhookPoint);
 							}
 							continue;
 						}
 					}
 					//add this to keep hookpoint system until DB is not full
 					for (int i = 0; i < 38; i++)
-						component.HookPoints.Add(i, new GameKeepHookPoint(i, component));
+						component.KeepHookPoints.Add(i, new GameKeepHookPoint(i, component));
 
-					component.HookPoints.Add(65, new GameKeepHookPoint(0x41, component));
-					component.HookPoints.Add(97, new GameKeepHookPoint(0x61, component));
-					component.HookPoints.Add(129, new GameKeepHookPoint(0x81, component));
+					component.KeepHookPoints.Add(65, new GameKeepHookPoint(0x41, component));
+					component.KeepHookPoints.Add(97, new GameKeepHookPoint(0x61, component));
+					component.KeepHookPoints.Add(129, new GameKeepHookPoint(0x81, component));
 				}
 			}
 
@@ -317,12 +317,12 @@ namespace DOL.GS.Keeps
 			{
 				foreach (GameKeepComponent component in keep.KeepComponents)
 				{
-					foreach (GameKeepHookPoint hp in component.HookPoints.Values)
+					foreach (GameKeepHookPoint hp in component.KeepHookPoints.Values)
 					{
 						var item = items.FirstOrDefault(
-							it => it.KeepID == component.Keep.KeepID && it.ComponentID == component.ID && it.HookPointID == hp.ID);
-						if (item != null && component.HookPoints.ContainsKey(hp.ID))
-							HookPointItem.Invoke(component.HookPoints[hp.ID] as GameKeepHookPoint, item.ClassType);
+							it => it.KeepID == component.AbstractKeep.KeepID && it.ComponentID == component.ID && it.HookPointID == hp.ID);
+						if (item != null)
+							HookPointItem.Invoke(component.KeepHookPoints[hp.ID] as GameKeepHookPoint, item.ClassType);
 					}
 				}
 			}
@@ -341,10 +341,7 @@ namespace DOL.GS.Keeps
 		/// <returns> Game keep object with keepid = id</returns>
 		public virtual AbstractGameKeep GetKeepByID(int id)
 		{
-			if(m_keepList.ContainsKey(id))
-				return m_keepList[id];
-				
-			return null;
+			return m_keepList[id] as AbstractGameKeep;
 		}
 
 		/// <summary>
@@ -376,19 +373,28 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		/// <param name="map"></param>
 		/// <returns></returns>
-		public virtual ICollection<AbstractGameKeep> GetKeepsByRealmMap(int map)
+		public virtual ICollection<IGameKeep> GetKeepsByRealmMap(int map)
 		{
-			List<AbstractGameKeep> myKeeps = new List<AbstractGameKeep>();
+			List<IGameKeep> myKeeps = new List<IGameKeep>();
 			SortedList keepsByID = new SortedList();
-			foreach (AbstractGameKeep keep in m_keepList.Values)
+			foreach (IGameKeep keep in m_keepList.Values)
 			{
 				if (m_frontierRegionsList.Contains(keep.CurrentRegion.ID) == false)
 					continue;
+				
 				if (((keep.KeepID & 0xFF) / 25 - 1) == map)
+				{
 					keepsByID.Add(keep.KeepID, keep);
+				}
+				else if (((keep.KeepID & 0xFF) > 150) && ((keep.KeepID & 0xFF) / 25 - 2) == map)
+				{
+					keepsByID.Add(keep.KeepID, keep);
+				}
 			}
-			foreach (AbstractGameKeep keep in keepsByID.Values)
+			
+			foreach (IGameKeep keep in keepsByID.Values)
 				myKeeps.Add(keep);
+			
 			return myKeeps;
 		}
 
@@ -470,7 +476,7 @@ namespace DOL.GS.Keeps
 			List<AbstractGameKeep> closeKeeps = new List<AbstractGameKeep>();
 			long radiussqrt = radius * radius;
 
-			lock (((ICollection)m_keepList).SyncRoot)
+			lock (m_keepList.SyncRoot)
 			{
 				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{
@@ -503,7 +509,7 @@ namespace DOL.GS.Keeps
 		{
 			AbstractGameKeep closestKeep = null;
 
-			lock (((ICollection)m_keepList).SyncRoot)
+			lock (m_keepList.SyncRoot)
 			{
 				long radiussqrt = radius * radius;
 				long lastKeepDistance = radiussqrt;
@@ -539,7 +545,7 @@ namespace DOL.GS.Keeps
 		public virtual int GetTowerCountByRealm(eRealm realm)
 		{
 			int index = 0;
-			lock (((ICollection)m_keepList).SyncRoot)
+			lock (m_keepList.SyncRoot)
 			{
 				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{
@@ -562,7 +568,7 @@ namespace DOL.GS.Keeps
 			realmXTower.Add(eRealm.Hibernia, 0);
 			realmXTower.Add(eRealm.Midgard, 0);
 
-			lock (((ICollection)m_keepList).SyncRoot)
+			lock (m_keepList.SyncRoot)
 			{
 				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{
@@ -588,7 +594,7 @@ namespace DOL.GS.Keeps
 			realmXTower.Add(eRealm.Midgard, 0);
 			realmXTower.Add(eRealm.None, 0);
 
-			lock (((ICollection)m_keepList).SyncRoot)
+			lock (m_keepList.SyncRoot)
 			{
 				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{
@@ -610,7 +616,7 @@ namespace DOL.GS.Keeps
 		public virtual int GetKeepCountByRealm(eRealm realm)
 		{
 			int index = 0;
-			lock (((ICollection)m_keepList).SyncRoot)
+			lock (m_keepList.SyncRoot)
 			{
 				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{
@@ -702,16 +708,16 @@ namespace DOL.GS.Keeps
 		/// <returns>true if the player is an enemy of the guard</returns>
 		public virtual bool IsEnemy(GameKeepGuard checker, GamePlayer target)
 		{
-			if (checker.Component == null || checker.Component.Keep == null)
+			if (checker.Component == null || checker.Component.AbstractKeep == null)
 				return GameServer.ServerRules.IsAllowedToAttack(checker, target, true);
-			return IsEnemy(checker.Component.Keep, target);
+			return IsEnemy(checker.Component.AbstractKeep, target);
 		}
 
 		public virtual bool IsEnemy(GameKeepGuard checker, GamePlayer target, bool checkGroup)
 		{
-			if (checker.Component == null || checker.Component.Keep == null)
+			if (checker.Component == null || checker.Component.AbstractKeep == null)
 				return GameServer.ServerRules.IsAllowedToAttack(checker, target, true);
-			return IsEnemy(checker.Component.Keep, target, checkGroup);
+			return IsEnemy(checker.Component.AbstractKeep, target, checkGroup);
 		}
 
 		/// <summary>
@@ -722,7 +728,7 @@ namespace DOL.GS.Keeps
 		/// <returns>true if the player is an enemy of the door</returns>
 		public virtual bool IsEnemy(GameKeepDoor checker, GamePlayer target)
 		{
-			return IsEnemy(checker.Component.Keep, target);
+			return IsEnemy(checker.Component.AbstractKeep, target);
 		}
 
 		/// <summary>
@@ -733,7 +739,7 @@ namespace DOL.GS.Keeps
 		/// <returns>true if the player is an enemy of the component</returns>
 		public virtual bool IsEnemy(GameKeepComponent checker, GamePlayer target)
 		{
-			return IsEnemy(checker.Keep, target);
+			return IsEnemy(checker.AbstractKeep, target);
 		}
 
 		/// <summary>
@@ -743,14 +749,18 @@ namespace DOL.GS.Keeps
 		/// <returns>The height</returns>
 		public virtual byte GetHeightFromLevel(byte level)
 		{
+			if (level > 15)
+				return 5;
+			if (level > 10)
+				return 4;
 			if (level > 7)
 				return 3;
-			else if (level > 4)
+			if (level > 4)
 				return 2;
-			else if (level > 1)
+			if (level > 1)
 				return 1;
-			else
-				return 0;
+			
+			return 0;
 		}
 
 		public virtual void GetBorderKeepLocation(int keepid, out int x, out int y, out int z, out ushort heading)
@@ -832,7 +842,7 @@ namespace DOL.GS.Keeps
 
 		public virtual void UpdateBaseLevels()
 		{
-			lock (((ICollection)m_keepList).SyncRoot)
+			lock (m_keepList.SyncRoot)
 			{
 				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{

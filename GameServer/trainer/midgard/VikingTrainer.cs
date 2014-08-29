@@ -88,7 +88,7 @@ namespace DOL.GS.Trainer
 
 			switch (text) {
 				case "Warrior":
-					if(player.Race == (int) eRace.Dwarf || player.Race == (int) eRace.Kobold || player.Race == (int) eRace.Norseman || player.Race == (int) eRace.Troll || player.Race == (int) eRace.Valkyn || player.Race == (int)eRace.MidgardMinotaur){
+					if(player.Race == (int) eRace.Dwarf || player.Race == (int) eRace.Kobold || player.Race == (int) eRace.Norseman || player.Race == (int) eRace.Troll || player.Race == (int) eRace.Valkyn || player.Race == (int)eRace.Deifrang){
 						player.Out.SendMessage(this.Name + " says, \"I can't tell you something about this class.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 					}
 					else{
@@ -96,7 +96,7 @@ namespace DOL.GS.Trainer
 					}
 					return true;
 				case "Berserker":
-					if(player.Race == (int)eRace.Dwarf || player.Race == (int)eRace.Troll || player.Race == (int)eRace.Norseman || player.Race == (int)eRace.Valkyn || player.Race == (int)eRace.MidgardMinotaur)
+					if(player.Race == (int)eRace.Dwarf || player.Race == (int)eRace.Troll || player.Race == (int)eRace.Norseman || player.Race == (int)eRace.Valkyn || player.Race == (int)eRace.Deifrang)
 					{
 						player.Out.SendMessage(this.Name + " says, \"I can't tell you something about this class.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 					}

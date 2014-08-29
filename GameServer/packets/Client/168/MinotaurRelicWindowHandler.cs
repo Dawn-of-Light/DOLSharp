@@ -23,7 +23,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-    [PacketHandlerAttribute(PacketHandlerType.TCP, 0x4C, "Handles Relic window commands")]
+    [PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.MinotaurRelicWindow, "Handles Relic window commands", eClientStatus.PlayerInGame)]
     public class MinotaurRelicWindowHandler : IPacketHandler
     {
         /// <summary>

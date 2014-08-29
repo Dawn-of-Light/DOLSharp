@@ -22,18 +22,18 @@ namespace DOL.GS.PropertyCalc
 			{
 				GamePlayer player = living as GamePlayer;
 				int hpBase = player.CalculateMaxHealth(player.Level, player.GetModified(eProperty.Constitution));
-				int buffBonus = living.BaseBuffBonusCategory[(int)property];
+				int buffBonus = living.BaseBuffBonusCategory[property];
 				if (buffBonus < 0) buffBonus = (int)((1 + (buffBonus / -100.0)) * hpBase)-hpBase;
-				int itemBonus = living.ItemBonus[(int)property];
+				int itemBonus = living.ItemBonus[property];
 				int cap = Math.Max(player.Level * 4, 20) + // at least 20
-						  Math.Min(living.ItemBonus[(int)eProperty.MaxHealthCapBonus], player.Level * 4);	
+						  Math.Min(living.ItemBonus[eProperty.MaxHealthCapBonus], player.Level * 4);	
 				itemBonus = Math.Min(itemBonus, cap);
                 if (player.HasAbility(Abilities.ScarsOfBattle) && player.Level >= 40)
                 {
                     int levelbonus = Math.Min(player.Level - 40, 10);
                     hpBase = (int)(hpBase * (100 + levelbonus) * 0.01);
                 }
-				int abilityBonus = living.AbilityBonus[(int)property];
+				int abilityBonus = living.AbilityBonus[property];
 
 				return Math.Max(hpBase + itemBonus + buffBonus + abilityBonus, 1); // at least 1
 			}
@@ -41,8 +41,8 @@ namespace DOL.GS.PropertyCalc
 			{
 				GameKeepComponent keepComp = living as GameKeepComponent;
 
-				if (keepComp.Keep != null)
-					return (keepComp.Keep.EffectiveLevel(keepComp.Keep.Level) + 1) * keepComp.Keep.BaseLevel * 200;
+				if (keepComp.AbstractKeep != null)
+					return (keepComp.AbstractKeep.EffectiveLevel(keepComp.AbstractKeep.Level) + 1) * keepComp.AbstractKeep.BaseLevel * 200;
 
 				return 0;
 			}
@@ -50,9 +50,9 @@ namespace DOL.GS.PropertyCalc
 			{
 				GameKeepDoor keepdoor = living as GameKeepDoor;
 
-				if (keepdoor.Component != null && keepdoor.Component.Keep != null)
+				if (keepdoor.Component != null && keepdoor.Component.AbstractKeep != null)
 				{
-					return (keepdoor.Component.Keep.EffectiveLevel(keepdoor.Component.Keep.Level) + 1) * keepdoor.Component.Keep.BaseLevel * 200;
+					return (keepdoor.Component.AbstractKeep.EffectiveLevel(keepdoor.Component.AbstractKeep.Level) + 1) * keepdoor.Component.AbstractKeep.BaseLevel * 200;
 				}
 
 				return 0;
@@ -65,12 +65,12 @@ namespace DOL.GS.PropertyCalc
 
 				if (living.Level<10)
 				{
-					hp = living.Level * 20 + 20 + living.BaseBuffBonusCategory[(int)property];	// default
+					hp = living.Level * 20 + 20 + living.BaseBuffBonusCategory[property];	// default
 				}
 				else
 				{
 					// approx to original formula, thx to mathematica :)
-					hp = (int)(50 + 11*living.Level + 0.548331 * living.Level * living.Level) + living.BaseBuffBonusCategory[(int)property];
+					hp = (int)(50 + 11*living.Level + 0.548331 * living.Level * living.Level) + living.BaseBuffBonusCategory[property];
 					if (living.Level < 25)
 						hp += 20;
 				}
@@ -103,12 +103,12 @@ namespace DOL.GS.PropertyCalc
             {
                 if (living.Level < 10)
                 {
-                    return living.Level * 20 + 20 + living.BaseBuffBonusCategory[(int)property];	// default
+                    return living.Level * 20 + 20 + living.BaseBuffBonusCategory[property];	// default
                 }
                 else
                 {
                     // approx to original formula, thx to mathematica :)
-                    int hp = (int)(50 + 11 * living.Level + 0.548331 * living.Level * living.Level) + living.BaseBuffBonusCategory[(int)property];
+                    int hp = (int)(50 + 11 * living.Level + 0.548331 * living.Level * living.Level) + living.BaseBuffBonusCategory[property];
                     if (living.Level < 25)
                     {
                         hp += 20;
@@ -138,7 +138,7 @@ namespace DOL.GS.PropertyCalc
         {
             if (living == null) return 0;
             int itemBonusCapIncreaseCap = GetItemBonusCapIncreaseCap(living);
-            int itemBonusCapIncrease = living.ItemBonus[(int)(eProperty.MaxHealthCapBonus)];
+            int itemBonusCapIncrease = living.ItemBonus[eProperty.MaxHealthCapBonus];
             return Math.Min(itemBonusCapIncrease, itemBonusCapIncreaseCap);
         }
 

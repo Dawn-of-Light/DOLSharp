@@ -48,7 +48,7 @@ namespace DOL.GS
         /// Creates an instance object. This shouldn't be used directly - Please use WorldMgr.CreateInstance
         /// to create an instance.
         /// </summary>
-        public BaseInstance(ushort ID, GameTimer.GameScheduler time, RegionData data) :base(time, data)
+        public BaseInstance(ushort ID, GameTimer.TimeManager time, RegionData data) :base(time, data)
         {
             m_regionID = ID;
             m_skinID = data.Id;
@@ -334,7 +334,7 @@ namespace DOL.GS
 		/// </summary>
 		protected class AutoCloseRegionTimer : GameTimer
         {
-            public AutoCloseRegionTimer(GameScheduler time, BaseInstance i)
+            public AutoCloseRegionTimer(TimeManager time, BaseInstance i)
                 : base(time)
             {
                 m_instance = i;
@@ -377,7 +377,7 @@ namespace DOL.GS
 		/// </summary>
 		protected class DelayCloseRegionTimer : GameTimer
 		{
-			public DelayCloseRegionTimer(GameScheduler time, BaseInstance i)
+			public DelayCloseRegionTimer(TimeManager time, BaseInstance i)
 				: base(time)
 			{
 				m_instance = i;
@@ -422,7 +422,7 @@ namespace DOL.GS
 		public override IList GetAreasOfZone(Zone zone, IPoint3D p, bool checkZ)
 		{
 			Zone checkZone = zone;
-			List<IArea> areas = new List<IArea>();
+			IList areas = new ArrayList();
 
 			if (checkZone == null)
 			{
@@ -472,7 +472,7 @@ namespace DOL.GS
 		public override IList GetAreasOfZone(Zone zone, int x, int y, int z)
 		{
 			Zone checkZone = zone;
-			List<IArea> areas = new List<IArea>();
+			IList areas = new ArrayList();
 
 			if (checkZone == null)
 			{
@@ -522,13 +522,16 @@ namespace DOL.GS
 		/// <returns>List of Mobs</returns>
 		public IEnumerable<GameNPC> GetMobsInsideInstance(bool alive)
 		{
-			if(alive)
+			lock(ObjectsSyncLock)
 			{
-				return (from regionObjects in this.Objects where (regionObjects is GameNPC) && ((((GameNPC)regionObjects).Flags & GameNPC.eFlags.PEACE) != GameNPC.eFlags.PEACE) && ((GameNPC)regionObjects).IsAlive select (GameNPC)regionObjects);
-			}
-			else
-			{
-				return (from regionObjects in this.Objects where (regionObjects is GameNPC) && ((((GameNPC)regionObjects).Flags & GameNPC.eFlags.PEACE) != GameNPC.eFlags.PEACE) select (GameNPC)regionObjects);
+				if(alive)
+				{
+					return new List<GameNPC>(from regionObjects in this.Objects where (regionObjects is GameNPC) && ((((GameNPC)regionObjects).Flags & GameNPC.eFlags.PEACE) != GameNPC.eFlags.PEACE) && ((GameNPC)regionObjects).IsAlive select (GameNPC)regionObjects);
+				}
+				else
+				{
+					return new List<GameNPC>(from regionObjects in this.Objects where (regionObjects is GameNPC) && ((((GameNPC)regionObjects).Flags & GameNPC.eFlags.PEACE) != GameNPC.eFlags.PEACE) select (GameNPC)regionObjects);
+				}
 			}
 		}
 		

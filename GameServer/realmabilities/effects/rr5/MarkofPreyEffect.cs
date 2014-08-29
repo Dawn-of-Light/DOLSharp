@@ -87,8 +87,8 @@ namespace DOL.GS.Effects
 		{
 			AttackFinishedEventArgs atkArgs = args as AttackFinishedEventArgs;
 			if (atkArgs == null) return;
-			if (atkArgs.AttackData.AttackResult != GameLiving.eAttackResult.HitUnstyled
-				&& atkArgs.AttackData.AttackResult != GameLiving.eAttackResult.HitStyle) return;
+			if (atkArgs.AttackData.AttackResult != eAttackResult.HitUnstyled
+				&& atkArgs.AttackData.AttackResult != eAttackResult.HitStyle) return;
 			if (atkArgs.AttackData.Target == null) return;
 			GameLiving target = atkArgs.AttackData.Target;
 			if (target == null) return;
@@ -112,7 +112,7 @@ namespace DOL.GS.Effects
 			ad.Modifier = (int)damageResisted;
 			ad.DamageType = eDamageType.Heat;
 			ad.AttackType = AttackData.eAttackType.Spell;
-			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
+			ad.AttackResult = eAttackResult.HitUnstyled;
 			target.OnAttackedByEnemy(ad);
 			EffectCaster.ChangeMana(EffectOwner, GameLiving.eManaChangeType.Spell, (int)ad.Damage);
 			if (attacker is GamePlayer)

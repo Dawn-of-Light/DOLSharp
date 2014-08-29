@@ -36,7 +36,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	/// delve button shift+i = detail of spell object...
 	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP, 0x70 ^ 168, "Handles detail display")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.DetailRequest, "Handles detail display", eClientStatus.PlayerInGame)]
 	public class DetailDisplayHandler : IPacketHandler
 	{
 		/// <summary>
@@ -161,7 +161,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						if (invItem is InventoryArtifact)
 						{
-							List<string> delve = new List<string>();
+							List<String> delve = new List<String>();
 							(invItem as InventoryArtifact).Delve(delve, client.Player);
 
 							foreach (string line in delve)
@@ -370,7 +370,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								return;
 
 							byte pagenumber = (byte)(objectID / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS);
-							int slotnumber = objectID % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
+							short slotnumber = (short)(objectID % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS);
 
 							item = merchant.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
 						}
@@ -835,7 +835,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.HandlePacket.MustBeInChatGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
-						if (mychatgroup.Listen == true && mychatgroup.Members.ContainsKey(client.Player) && (((bool)mychatgroup.Members[client.Player]) == false))
+						if (mychatgroup.Listen == true && (((bool)mychatgroup.Members[client.Player]) == false))
 						{
 							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.HandlePacket.OnlyModerator"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
@@ -928,7 +928,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.HandlePacket.MustBeInBattleGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
-						if (mybattlegroup.Listen == true && mybattlegroup.Members.ContainsKey(client.Player) && (((bool)mybattlegroup.Members[client.Player]) == false))
+						if (mybattlegroup.Listen == true && (((bool)mybattlegroup.Members[client.Player]) == false))
 						{
 							client.Player.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.HandlePacket.OnlyModerator"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
@@ -942,19 +942,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 					#endregion
 				#region v1.110+
-				case 0x18://SpellsNew
+				case 24://SpellsNew
 			        client.Out.SendDelveInfo(DelveSpell(client, objectID));
 					break;
-				case 0x19://StylesNew
+				case 25://StylesNew
                     client.Out.SendDelveInfo(DelveStyle(client, objectID));
                     break;
-				case 0x1A://SongsNew
+				case 26://SongsNew
 					client.Out.SendDelveInfo(DelveSong(client, objectID));
 					break;
-				case 0x1B://RANew
+				case 27://RANew
                     client.Out.SendDelveInfo(DelveRealmAbility(client, objectID));
                     break;
-				case 0x1C://AbilityNew
+				case 28://AbilityNew
 			        client.Out.SendDelveInfo(DelveAbility(client, objectID));
 			        break;
 				#endregion
@@ -2047,13 +2047,23 @@ namespace DOL.GS.PacketHandler.Client.v168
          *  - No idea what 'Fingerprint' does
          **/
 
-        static string DelveAbility(GameClient clt, int id) { /* or skill */
-            Skill s = clt.Player.GetNonTrainableSkillList().Cast<Skill>().Where(sk => sk.ID == id).FirstOrDefault();
-            var dw = new DelveWriter().Begin(s is Ability ? "Ability" : "Skill").Value("Index", id);
-            if (s != null) {
-                dw.Value("Name", s.Name);
+        protected static string DelveAbility(GameClient clt, int id) { /* or skill */
+
+        	Skill s = clt.Player.GetNonTrainableSkillList().Cast<Skill>().Where(sk => sk.ID == id).FirstOrDefault();
+
+        	MiniDelveWriter dw = new MiniDelveWriter(s is Ability ? "Ability" : "Skill");
+
+            dw.AddKeyValuePair("Index", id);
+
+            if (s != null) 
+            {
+                dw.AddKeyValuePair("Name", s.Name);
             }
-            else dw.Value("Name", "(not found)");
+            else
+            {
+            	dw.AddKeyValuePair("Name", "(not found)");
+            }
+            
             return dw.ToString();
         }
 

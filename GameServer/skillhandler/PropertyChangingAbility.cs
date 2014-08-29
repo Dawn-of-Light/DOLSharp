@@ -68,7 +68,7 @@ namespace DOL.GS.SkillHandler
 			{
 				foreach (eProperty property in m_property)
 				{
-					living.AbilityBonus[(int)property] += GetAmountForLevel(living.CalculateSkillLevel(this));
+					living.AbilityBonus[property] += GetAmountForLevel(living.CalculateSkillLevel(this));
 				}
 				m_activeLiving = living;
 				if (sendUpdates) SendUpdates(living);
@@ -85,7 +85,7 @@ namespace DOL.GS.SkillHandler
 			{
 				foreach (eProperty property in m_property)
 				{
-					living.AbilityBonus[(int)property] -= GetAmountForLevel(living.CalculateSkillLevel(this));
+					living.AbilityBonus[property] -= GetAmountForLevel(living.CalculateSkillLevel(this));
 				}
 				if (sendUpdates) SendUpdates(living);
 				m_activeLiving = null;
@@ -103,7 +103,7 @@ namespace DOL.GS.SkillHandler
 
 			foreach (eProperty property in m_property)
 			{
-				m_activeLiving.AbilityBonus[(int)property] += GetAmountForLevel(newLevel) - GetAmountForLevel(oldLevel);
+				m_activeLiving.AbilityBonus[property] += GetAmountForLevel(newLevel) - GetAmountForLevel(oldLevel);
 			}
 
 			SendUpdates(m_activeLiving);

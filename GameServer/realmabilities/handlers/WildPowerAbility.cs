@@ -24,7 +24,7 @@ namespace DOL.GS.RealmAbilities
 	/// <summary>
 	/// Wild power ability, critical hit chance bonus to damage spells (SpellHandler checks for it)
 	/// </summary>
-	public class WildPowerAbility : RAPropertyEnhancer
+	public class WildPowerAbility : L5RealmAbility
 	{
 
 		public WildPowerAbility(DBAbility dba, int level)
@@ -72,7 +72,7 @@ namespace DOL.GS.RealmAbilities
 	/// <summary>
 	/// Mastery of Magery ability, adds to effectivenes of damage spells
 	/// </summary>
-	public class MasteryOfMageryAbility : RAPropertyEnhancer
+	public class MasteryOfMageryAbility : L5RealmAbility
 	{
 		public MasteryOfMageryAbility(DBAbility dba, int level)
 			: base(dba, level, eProperty.SpellDamage)
@@ -119,7 +119,7 @@ namespace DOL.GS.RealmAbilities
 	/// <summary>
 	/// Wild healing ability, critical heal chance bonus to heal spells (SpellHandler checks for it)
 	/// </summary>
-	public class WildHealingAbility : RAPropertyEnhancer
+	public class WildHealingAbility : L5RealmAbility
 	{
 		public WildHealingAbility(DBAbility dba, int level)
 			: base(dba, level, eProperty.CriticalHealHitChance)
@@ -165,7 +165,7 @@ namespace DOL.GS.RealmAbilities
 	/// <summary>
 	/// Mastery of healing ability, adds to heal spells (SpellHandler checks for it)
 	/// </summary>
-	public class MasteryOfHealingAbility : RAPropertyEnhancer
+	public class MasteryOfHealingAbility : L5RealmAbility
 	{
 		public MasteryOfHealingAbility(DBAbility dba, int level)
 			: base(dba, level, eProperty.HealingEffectiveness)
@@ -211,7 +211,7 @@ namespace DOL.GS.RealmAbilities
 	/// <summary>
 	/// Mastery of focus ability, adds to spell-level for resist bonus (SpellHandler checks for it)
 	/// </summary>
-	public class MasteryOfFocusAbility : RAPropertyEnhancer
+	public class MasteryOfFocusAbility : L5RealmAbility
 	{
 		public MasteryOfFocusAbility(DBAbility dba, int level) : base(dba, level, eProperty.SpellLevel) { }
 
@@ -246,11 +246,6 @@ namespace DOL.GS.RealmAbilities
 						default: return 39;
 				}
 			}
-		}
-
-		public override bool CheckRequirement(GamePlayer player)
-		{
-			return player.Level >= 40;
 		}
 	}
 }

@@ -33,6 +33,7 @@ PlayerStatistic.PvE.KillsLegion:			Legion getötet
 # /Claim
 Titles.Claim.Frontier.FrontierChallenger:		Aufstrebender Burgherr
 Titles.Claim.Frontier.FrontierVindicator:		Burgherr
+Titles.Claim.Frontier.FrontierProtector:		Frontier Protector
 Titles.Claim.Stronghold.StrongholdChief:		Turmherr
 Titles.Claim.Stronghold.StrongholdSoldier:		Aufstrebender Turmherr
 
@@ -43,6 +44,7 @@ Titles.Deathblows.BattleMaster:				Todbringer
 # /Kills
 Titles.Kills.Albion.BaneOfAlbion:			Aufstrebender Fluch Albions
 Titles.Kills.Albion.ScourgeOfAlbion:			Fluch Albions
+Titles.Kills.Albion.SlayerOfAlbion:			Schlächter Albions
 Titles.Kills.All.MasterAssassine:			Verdienter Reichskämpfer
 Titles.Kills.All.MasterEnforcer:			Reichskämpfer
 Titles.Kills.All.MasterSoldier:				Aufstrebender Reichskämpfer
@@ -53,12 +55,15 @@ Titles.Kills.Demon.DreadVanquisher:			Angstbringer der Legion
 Titles.Kills.Dragon.DragonFoe:				Aufstrebender Drachentöter
 Titles.Kills.Dragon.DragonScourge:			Drachentöter
 Titles.Kills.Dragon.DragonSlayer:			Verdienter Drachentöter
+Titles.Kills.Dragon.DragonBane:				Dragon Bane DE
 Titles.Kills.Epic.EpicChallenger:			Aufstrebende Wache der Inseln
 Titles.Kills.Epic.EpicVictor:				Wache der Inseln
 Titles.Kills.Hibernia.BaneOfHibernia:			Aufstrebender Fluch Hibernias
 Titles.Kills.Hibernia.ScourgeOfHibernia:		Fluch Hibernias
+Titles.Kills.Hibernia.SlayerOfHibernia:		Schlächter Hibernias
 Titles.Kills.Midgard.BaneOfMidgard:			Aufstrebender Fluch Midgards
 Titles.Kills.Midgard.ScourgeOfMidgard:			Fluch Midgards
+Titles.Kills.Midgard.SlayerOfMidgard:			Schlächter Midgards
 
 # /Level
 Titles.Level.Level20Info:				Stufe 20+

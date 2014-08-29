@@ -17,7 +17,6 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -64,14 +63,14 @@ namespace DOL.Events
 		/// <summary>
 		/// Reader/writer lock for synchronizing access to the event handler map
 		/// </summary>
-		//private readonly ReaderWriterLockSlim _lock;
+		private readonly ReaderWriterLockSlim _lock;
 
 		/// <summary>
 		/// Constructs a new DOLEventHandler collection
 		/// </summary>
 		public DOLEventHandlerCollection()
 		{
-			//_lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+			_lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
 			_events = new Dictionary<DOLEvent, WeakMulticastDelegate>();
 		}
 
@@ -82,7 +81,7 @@ namespace DOL.Events
 		/// <param name="del">The callback method</param>
 		public void AddHandler(DOLEvent e, DOLEventHandler del)
 		{
-			lock(((ICollection)_events).SyncRoot)
+			if(_lock.TryEnterWriteLock(LOCK_TIMEOUT))
 			{
 				try
 				{
@@ -97,9 +96,9 @@ namespace DOL.Events
 						_events[e] = WeakMulticastDelegate.Combine(deleg, del);
 					}
 				}
-				catch
+				finally
 				{
-					return;
+					_lock.ExitWriteLock();
 				}
 			}
 		}
@@ -111,7 +110,7 @@ namespace DOL.Events
 		/// <param name="del">The callback method</param>
 		public void AddHandlerUnique(DOLEvent e, DOLEventHandler del)
 		{
-			lock(((ICollection)_events).SyncRoot)
+			if(_lock.TryEnterWriteLock(LOCK_TIMEOUT))
 			{
 				try
 				{
@@ -126,9 +125,9 @@ namespace DOL.Events
 						_events[e] = WeakMulticastDelegate.CombineUnique(deleg, del);
 					}
 				}
-				catch
+				finally
 				{
-					return;
+					_lock.ExitWriteLock();
 				}
 			}
 		}
@@ -140,7 +139,7 @@ namespace DOL.Events
 		/// <param name="del">The callback method to remove</param>
 		public void RemoveHandler(DOLEvent e, DOLEventHandler del)
 		{
-			lock(((ICollection)_events).SyncRoot)
+			if(_lock.TryEnterWriteLock(LOCK_TIMEOUT))
 			{
 				try
 				{
@@ -160,9 +159,9 @@ namespace DOL.Events
 						}
 					}
 				}
-				catch
+				finally
 				{
-					return;
+					_lock.ExitWriteLock();
 				}
 			}
 		}
@@ -173,16 +172,15 @@ namespace DOL.Events
 		/// <param name="e">The event from which to remove all handlers</param>
 		public void RemoveAllHandlers(DOLEvent e)
 		{
-			lock(((ICollection)_events).SyncRoot)
+			if(_lock.TryEnterWriteLock(LOCK_TIMEOUT))
 			{
 				try
 				{
-					if(_events.ContainsKey(e))
-						_events.Remove(e);
+					_events.Remove(e);
 				}
-				catch
+				finally
 				{
-					return;
+					_lock.ExitWriteLock();
 				}
 			}
 		}
@@ -192,15 +190,15 @@ namespace DOL.Events
 		/// </summary>
 		public void RemoveAllHandlers()
 		{
-			lock(((ICollection)_events).SyncRoot)
+			if(_lock.TryEnterWriteLock(LOCK_TIMEOUT))
 			{
 				try
 				{
 					_events.Clear();
 				}
-				catch
+				finally
 				{
-					return;
+					_lock.ExitWriteLock();
 				}
 			}
 		}
@@ -246,16 +244,16 @@ namespace DOL.Events
 		{
 			WeakMulticastDelegate eventDelegate = null;
 
-			lock(((ICollection)_events).SyncRoot)
+			if(_lock.TryEnterReadLock(LOCK_TIMEOUT))
 			{
 				try
 				{
 					if(!_events.TryGetValue(e, out eventDelegate))
 						return;
 				}
-				catch
+				finally
 				{
-					return;
+					_lock.ExitReadLock();
 				}
 			}
 

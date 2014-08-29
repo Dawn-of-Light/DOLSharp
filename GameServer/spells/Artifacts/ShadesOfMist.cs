@@ -79,8 +79,8 @@ namespace DOL.GS.Spells
             
             if (args.AttackData == null) return;
             if (args.AttackData.SpellHandler != null) return;
-            if (args.AttackData.AttackResult != GameLiving.eAttackResult.HitUnstyled
-                && args.AttackData.AttackResult != GameLiving.eAttackResult.HitStyle)
+            if (args.AttackData.AttackResult != eAttackResult.HitUnstyled
+                && args.AttackData.AttackResult != eAttackResult.HitStyle)
                 return;
 
             int baseChance = Spell.Frequency / 100;
@@ -126,7 +126,7 @@ namespace DOL.GS.Spells
         protected virtual bool MatchingDamageType(ref AttackData ad)
         {
 
-            if (ad == null || (ad.AttackResult != GameLiving.eAttackResult.HitStyle && ad.AttackResult != GameLiving.eAttackResult.HitUnstyled))
+            if (ad == null || (ad.AttackResult != eAttackResult.HitStyle && ad.AttackResult != eAttackResult.HitUnstyled))
                 return false;
             if (!ad.IsMeleeAttack && ad.AttackType != AttackData.eAttackType.Ranged)
                 return false;

@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
@@ -84,9 +83,9 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (this.Component != null && this.Component.Keep != null)
+				if (this.Component != null && this.Component.AbstractKeep != null)
 				{
-					return this.Component.Keep is GameKeepTower;
+					return this.Component.AbstractKeep is GameKeepTower;
 				}
 				return false;
 			}
@@ -96,9 +95,9 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (this.Component == null || this.Component.Keep == null)
+				if (this.Component == null || this.Component.AbstractKeep == null)
 					return false;
-				return this.Component.Keep.IsPortalKeep;
+				return this.Component.AbstractKeep.IsPortalKeep;
 			}
 		}
 
@@ -174,7 +173,7 @@ namespace DOL.GS.Keeps
 				case eActiveWeaponSlot.TwoHanded: speed = 40; break;
 				default: speed = 24; break;
 			}
-			speed = speed + Util.Random(10)+1;
+			speed = speed + Util.Random(11);
 			return speed * 100;
 		}
 
@@ -266,39 +265,25 @@ namespace DOL.GS.Keeps
 				}
 			}
 
-			if(ServerProperties.Properties.LOSMGR_ENABLE)
+			GamePlayer player = null;
+
+			if (guard.TargetObject is GamePlayer)
 			{
-				try
+				player = guard.TargetObject as GamePlayer;
+			}
+			else if (guard.TargetObject is GameNPC)
+			{
+				GameNPC npc = (guard.TargetObject as GameNPC);
+
+				if (npc.Brain != null && ((npc is GameKeepGuard) == false) && npc.Brain is IControlledBrain)
 				{
-					guard.CurrentRegion.LosCheckManager.LosCheckVincinity(guard, guard.TargetObject, new LosMgrResponseHandler(guard.GuardStopAttackCheckLOS));
-				}
-				catch
-				{
-					return;
+					player = (npc.Brain as IControlledBrain).GetPlayerOwner();
 				}
 			}
-			else
+
+			if (player != null)
 			{
-				GamePlayer player = null;
-	
-				if (guard.TargetObject is GamePlayer)
-				{
-					player = guard.TargetObject as GamePlayer;
-				}
-				else if (guard.TargetObject is GameNPC)
-				{
-					GameNPC npc = (guard.TargetObject as GameNPC);
-	
-					if (npc.Brain != null && ((npc is GameKeepGuard) == false) && npc.Brain is IControlledBrain)
-					{
-						player = (npc.Brain as IControlledBrain).GetPlayerOwner();
-					}
-				}
-	
-				if (player != null)
-				{
-					player.Out.SendCheckLOS(guard, guard.TargetObject, new CheckLOSResponse(guard.GuardStopAttackCheckLOS));
-				}				
+				player.Out.SendCheckLOS(guard, guard.TargetObject, new CheckLOSResponse(guard.GuardStopAttackCheckLOS));
 			}
 		}
 
@@ -327,81 +312,68 @@ namespace DOL.GS.Keeps
 			if (!GameServer.ServerRules.IsAllowedToAttack(this, target, true))
 				return;
 
-			if(ServerProperties.Properties.LOSMGR_ENABLE)
+			//Prevent spam for LOS to same target multiple times
+
+			GameObject lastTarget = (GameObject)this.TempProperties.getProperty<object>(LAST_LOS_TARGET_PROPERTY, null);
+			long lastTick = this.TempProperties.getProperty<long>(LAST_LOS_TICK_PROPERTY);
+
+			if (lastTarget != null && lastTarget == attackTarget)
 			{
-				try
-				{
-					this.CurrentRegion.LosCheckManager.LosCheckVincinity(this, attackTarget, new LosMgrResponseHandler(this.GuardStartAttackCheckLOS));
-				}
-				catch (LosUnavailableException)
-				{
+				if (lastTick != 0 && CurrentRegion.Time - lastTick < ServerProperties.Properties.KEEP_GUARD_LOS_CHECK_TIME * 1000)
 					return;
-				}
+			}
+
+			GamePlayer LOSChecker = null;
+			if (attackTarget is GamePlayer)
+			{
+				LOSChecker = attackTarget as GamePlayer;
+			}
+			else if (attackTarget is GameNPC && (attackTarget as GameNPC).Brain is IControlledBrain)
+			{
+				LOSChecker = ((attackTarget as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
 			}
 			else
 			{
-				//Prevent spam for LOS to same target multiple times
-	
-				GameObject lastTarget = (GameObject)this.TempProperties.getProperty<object>(LAST_LOS_TARGET_PROPERTY, null);
-				long lastTick = this.TempProperties.getProperty<long>(LAST_LOS_TICK_PROPERTY);
-	
-				if (lastTarget != null && lastTarget == attackTarget)
+				// try to find another player to use for checking line of site
+				foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
-					if (lastTick != 0 && CurrentRegion.Time - lastTick < ServerProperties.Properties.KEEP_GUARD_LOS_CHECK_TIME * 1000)
-						return;
+					LOSChecker = player;
+					break;
 				}
-	
-				GamePlayer LOSChecker = null;
-				if (attackTarget is GamePlayer)
+			}
+
+			if (LOSChecker == null)
+			{
+				return;
+			}
+
+			lock (LOS_LOCK)
+			{
+				int count = TempProperties.getProperty<int>(NUM_LOS_CHECKS_INPROGRESS, 0);
+
+				if (count > 10)
 				{
-					LOSChecker = attackTarget as GamePlayer;
-				}
-				else if (attackTarget is GameNPC && (attackTarget as GameNPC).Brain is IControlledBrain)
-				{
-					LOSChecker = ((attackTarget as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
-				}
-				else
-				{
-					// try to find another player to use for checking line of site
-					foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					log.DebugFormat("{0} LOS count check exceeds 10, aborting LOS check!", Name);
+
+					// Now do a safety check.  If it's been a while since we sent any check we should clear count
+					if (lastTick == 0 || CurrentRegion.Time - lastTick > ServerProperties.Properties.LOS_PLAYER_CHECK_FREQUENCY * 1000)
 					{
-						LOSChecker = player;
-						break;
+						log.Debug("LOS count reset!");
+						TempProperties.setProperty(NUM_LOS_CHECKS_INPROGRESS, 0);
 					}
-				}
-	
-				if (LOSChecker == null)
-				{
+
 					return;
 				}
-	
-				lock (LOS_LOCK)
-				{
-					int count = TempProperties.getProperty<int>(NUM_LOS_CHECKS_INPROGRESS, 0);
-	
-					if (count > 10)
-					{
-						log.DebugFormat("{0} LOS count check exceeds 10, aborting LOS check!", Name);
-	
-						// Now do a safety check.  If it's been a while since we sent any check we should clear count
-						if (lastTick == 0 || CurrentRegion.Time - lastTick > ServerProperties.Properties.LOS_PLAYER_CHECK_FREQUENCY * 1000)
-						{
-							log.Debug("LOS count reset!");
-							TempProperties.setProperty(NUM_LOS_CHECKS_INPROGRESS, 0);
-						}
-	
-						return;
-					}
-	
-					count++;
-					TempProperties.setProperty(NUM_LOS_CHECKS_INPROGRESS, count);
-	
-					TempProperties.setProperty(LAST_LOS_TARGET_PROPERTY, attackTarget);
-					TempProperties.setProperty(LAST_LOS_TICK_PROPERTY, CurrentRegion.Time);
-					TargetObject = attackTarget;
-				}
-				LOSChecker.Out.SendCheckLOS(this, attackTarget, new CheckLOSResponse(this.GuardStartAttackCheckLOS));				
+
+				count++;
+				TempProperties.setProperty(NUM_LOS_CHECKS_INPROGRESS, count);
+
+				TempProperties.setProperty(LAST_LOS_TARGET_PROPERTY, attackTarget);
+				TempProperties.setProperty(LAST_LOS_TICK_PROPERTY, CurrentRegion.Time);
+				TargetObject = attackTarget;
 			}
+
+			LOSChecker.Out.SendCheckLOS(this, attackTarget, new CheckLOSResponse(this.GuardStartAttackCheckLOS));
 		}
 
 		/// <summary>
@@ -439,30 +411,6 @@ namespace DOL.GS.Keeps
 		}
 
 		/// <summary>
-		/// We only attack if we have LOS
-		/// </summary>
-		public void GuardStartAttackCheckLOS(GamePlayer checker, GameObject source, GameObject target, bool losOK, EventArgs args, PropertyCollection tempProperties)
-		{
-			if (losOK)
-			{
-				if (this is GuardArcher || this is GuardLord)
-				{
-					if (ActiveWeaponSlot != eActiveWeaponSlot.Distance)
-					{
-						if (CanUseRanged)
-							SwitchToRanged(TargetObject);
-					}
-				}
-
-				base.StartAttack(TargetObject);
-			}
-			else if (TargetObject != null && TargetObject is GameLiving)
-			{
-				(this.Brain as KeepGuardBrain).RemoveFromAggroList(TargetObject as GameLiving);
-			}			
-		}
-		
-		/// <summary>
 		/// If we don't have LOS we stop attack
 		/// </summary>
 		/// <param name="player"></param>
@@ -481,19 +429,6 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		public void GuardStopAttackCheckLOS(GamePlayer checker, GameObject source, GameObject target, bool losOK, EventArgs args, PropertyCollection tempProperties)
-		{
-			if (!losOK)
-			{
-				StopAttack();
-
-				if (TargetObject != null && TargetPosition is GameLiving)
-				{
-					(this.Brain as KeepGuardBrain).RemoveFromAggroList(TargetObject as GameLiving);
-				}
-			}			
-		}
-		
 		public void GuardStartSpellHealCheckLOS(GamePlayer player, ushort response, ushort targetOID)
 		{
 			if ((response & 0x100) == 0x100)
@@ -501,15 +436,6 @@ namespace DOL.GS.Keeps
 				SpellMgr.CastHealSpell(this, TargetObject as GameLiving);
 			}
 		}
-		
-		public void GuardStartSpellHealCheckLOS(GamePlayer checker, GameObject source, GameObject target, bool losOK, EventArgs args, PropertyCollection tempProperties)
-		{
-			if(losOK)
-			{
-				SpellMgr.CastHealSpell(this, TargetObject as GameLiving);
-			}
-		}
-		
 		public void GuardStartSpellNukeCheckLOS(GamePlayer player, ushort response, ushort targetOID)
 		{
 			if ((response & 0x100) == 0x100)
@@ -518,13 +444,6 @@ namespace DOL.GS.Keeps
 			}
 		}
 
-		public void GuardStartSpellNukeCheckLOS(GamePlayer checker, GameObject source, GameObject target, bool losOK, EventArgs args, PropertyCollection tempProperties)
-		{
-			if(losOK)
-			{
-				SpellMgr.CastNukeSpell(this, TargetObject as GameLiving);
-			}
-		}
 		/// <summary>
 		/// Method to see if the Guard has been left alone long enough to use Ranged attacks
 		/// </summary>
@@ -610,12 +529,12 @@ namespace DOL.GS.Keeps
 		public static void GuardSpam(GameKeepGuard guard)
 		{
 			if (guard.Component == null) return;
-			if (guard.Component.Keep == null) return;
-			if (guard.Component.Keep.Guild == null) return;
+			if (guard.Component.AbstractKeep == null) return;
+			if (guard.Component.AbstractKeep.Guild == null) return;
 
 			int inArea = guard.GetEnemyCountInArea();
-            string message = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GuardSpam.Killed", guard.Name, guard.Component.Keep.Name, inArea);
-            KeepGuildMgr.SendMessageToGuild(message, guard.Component.Keep.Guild);
+            string message = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GuardSpam.Killed", guard.Name, guard.Component.AbstractKeep.Name, inArea);
+            KeepGuildMgr.SendMessageToGuild(message, guard.Component.AbstractKeep.Guild);
 		}
 
 		/// <summary>
@@ -629,7 +548,7 @@ namespace DOL.GS.Keeps
 			{
 				if (this.Component != null)
 				{
-					if (GameServer.KeepManager.IsEnemy(this.Component.Keep, NearbyPlayers))
+					if (GameServer.KeepManager.IsEnemy(this.Component.AbstractKeep, NearbyPlayers))
 						inArea++;
 				}
 				else
@@ -735,9 +654,9 @@ namespace DOL.GS.Keeps
 		protected override int RespawnTimerCallback(RegionTimer respawnTimer)
 		{
 			int temp = base.RespawnTimerCallback(respawnTimer);
-			if (Component != null && Component.Keep != null)
+			if (Component != null && Component.AbstractKeep != null)
 			{
-				Component.Keep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
+				Component.AbstractKeep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
 			}
 			else
 			{
@@ -756,7 +675,7 @@ namespace DOL.GS.Keeps
 			//You target [Armwoman]
 			//You examine the Armswoman. She is friendly and is a realm guard.
 			//She has upgraded equipment (5).
-			List<string> list = new List<string>(4);
+			IList list = new ArrayList(4);
 			list.Add(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.YouTarget", GetName(0, false)));
 			if (Realm != eRealm.None)
 			{
@@ -764,10 +683,10 @@ namespace DOL.GS.Keeps
 				if (this.Component != null)
 				{
 					string text = "";
-					if (this.Component.Keep.Level > 1 && this.Component.Keep.Level < 250 && GameServer.ServerRules.IsSameRealm(player, this, true))
-						text = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.Upgraded", GetPronoun(0, true), this.Component.Keep.Level);
-					if (ServerProperties.Properties.USE_KEEP_BALANCING && this.Component.Keep.Region == 163 && !(this.Component.Keep is GameKeepTower))
-						text += LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.Balancing", GetPronoun(0, true), (Component.Keep.BaseLevel - 50).ToString());
+					if (this.Component.AbstractKeep.Level > 1 && this.Component.AbstractKeep.Level < 250 && GameServer.ServerRules.IsSameRealm(player, this, true))
+						text = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.Upgraded", GetPronoun(0, true), this.Component.AbstractKeep.Level);
+					if (ServerProperties.Properties.USE_KEEP_BALANCING && this.Component.AbstractKeep.Region == 163 && !(this.Component.AbstractKeep is GameKeepTower))
+						text += LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameKeepGuard.GetExamineMessages.Balancing", GetPronoun(0, true), (Component.AbstractKeep.BaseLevel - 50).ToString());
 					if (text != "")
 						list.Add(text);
 				}
@@ -837,20 +756,20 @@ namespace DOL.GS.Keeps
 				{
 					AbstractGameKeep keep = (area as KeepArea).Keep;
 					Component = new GameKeepComponent();
-					Component.Keep = keep;
+					Component.AbstractKeep = keep;
 					m_dataObjectID = mobobject.ObjectId;
 					// mob reload command might be reloading guard, so check to make sure it isn't already added
-					if (Component.Keep.Guards.ContainsKey(m_dataObjectID) == false)
+					if (Component.AbstractKeep.Guards.ContainsKey(m_dataObjectID) == false)
 					{
-						Component.Keep.Guards.Add(m_dataObjectID, this);
+						Component.AbstractKeep.Guards.Add(m_dataObjectID, this);
 					}
 					break;
 				}
 			}
 
-			if (Component != null && Component.Keep != null)
+			if (Component != null && Component.AbstractKeep != null)
 			{
-				Component.Keep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
+				Component.AbstractKeep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
 			}
 			else
 			{
@@ -862,11 +781,11 @@ namespace DOL.GS.Keeps
 		{
 			if (Component != null)
 			{
-				if (Component.Keep != null)
+				if (Component.AbstractKeep != null)
 				{
-					if (Component.Keep.Guards.ContainsKey(m_dataObjectID))
+					if (Component.AbstractKeep.Guards.ContainsKey(m_dataObjectID))
 					{
-						Component.Keep.Guards.Remove(m_dataObjectID);
+						Component.AbstractKeep.Guards.Remove(m_dataObjectID);
 					}
 					else
 					{
@@ -901,8 +820,7 @@ namespace DOL.GS.Keeps
 		{
 			if (HookPoint != null && Component != null)
 			{
-				if(Component.Keep.Guards.ContainsKey(this.ObjectID.ToString()))
-					Component.Keep.Guards.Remove(this.ObjectID.ToString());
+				Component.AbstractKeep.Guards.Remove(this.ObjectID);
 			}
 
 			TempProperties.removeAllProperties();
@@ -916,8 +834,7 @@ namespace DOL.GS.Keeps
 			{
 				if (area is KeepArea && Component != null)
 				{
-					if(Component.Keep.Guards.ContainsKey(this.InternalID))
-						Component.Keep.Guards.Remove(this.InternalID);
+					Component.AbstractKeep.Guards.Remove(this.InternalID);
 					break;
 				}
 			}
@@ -933,11 +850,11 @@ namespace DOL.GS.Keeps
 		{
 			m_templateID = pos.TemplateID;
 			m_component = component;
-			component.Keep.Guards[m_templateID] = this;
+			component.AbstractKeep.Guards[m_templateID] = this;
 			PositionMgr.LoadGuardPosition(pos, this);
-			if (Component != null && Component.Keep != null)
+			if (Component != null && Component.AbstractKeep != null)
 			{
-				Component.Keep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
+				Component.AbstractKeep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
 			}
 			else
 			{
@@ -965,7 +882,7 @@ namespace DOL.GS.Keeps
 		{
 			ClothingMgr.EquipGuard(this);
 
-			Guild guild = this.Component.Keep.Guild;
+			Guild guild = this.Component.AbstractKeep.Guild;
 			string guildname = "";
 			if (guild != null)
 				guildname = guild.Name;
@@ -993,7 +910,7 @@ namespace DOL.GS.Keeps
 			}
 			if (IsAlive)
 			{
-				UpdateNPCEquipmentAppearance();
+				BroadcastLivingEquipmentUpdate();
 			}
 		}
 

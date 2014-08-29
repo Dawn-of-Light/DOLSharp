@@ -56,7 +56,7 @@ namespace DOL.GS.Effects
 				return;
 			if (extra > 0)
 				player.Out.SendMessage("Your Fury enables you to strike " + args.AttackData.Target.Name + " for " + extra + " additional points of damage", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-			Dictionary<GamePlayer, double> injuredTargets = new Dictionary<GamePlayer, double>();
+			Hashtable injuredTargets = new Hashtable();
 			GamePlayer mostInjuredLiving = null;
 
 			foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
@@ -110,7 +110,7 @@ namespace DOL.GS.Effects
 
 			double bestHealPercent = targetHealCap / (double)mostInjuredLiving.MaxHealth;
 			double totalHealed = 0;
-			Dictionary<GameLiving, int> healAmount = new Dictionary<GameLiving, int>();
+			Hashtable healAmount = new Hashtable();
 
 			IDictionaryEnumerator iter = injuredTargets.GetEnumerator();
 			//calculate heal for all targets

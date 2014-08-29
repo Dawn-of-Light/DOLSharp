@@ -100,7 +100,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Contains a list of invalid names
 		/// </summary>
-		protected List<string> m_invalidNames = new List<string>();
+		protected ArrayList m_invalidNames = new ArrayList();
 
 		/// <summary>
 		/// Holds instance of current server rules
@@ -115,7 +115,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the startSystemTick when server is up.
 		/// </summary>
-		protected long m_startTick;
+		protected int m_startTick;
 
 		/// <summary>
 		/// Game server status variable
@@ -247,7 +247,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets an array of invalid player names
 		/// </summary>
-		public List<string> InvalidNames
+		public ArrayList InvalidNames
 		{
 			get { return m_invalidNames; }
 		}
@@ -263,9 +263,9 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the number of millisecounds elapsed since the GameServer started.
 		/// </summary>
-		public long TickCount
+		public int TickCount
 		{
-			get { return GameTimer.GetTickCount() - m_startTick; }
+			get { return Environment.TickCount - m_startTick; }
 		}
 
 		#endregion
@@ -313,7 +313,7 @@ namespace DOL.GS
 						string line = null;
 						while ((line = file.ReadLine()) != null)
 						{
-							if (line[0] == '#')
+							if (line.Length == 0 || line[0] == '#')
 							{
 								continue;
 							}
@@ -451,7 +451,7 @@ namespace DOL.GS
 						{
 							var sender = (IPEndPoint) (tempRemoteEP);
 
-							var pakin = new GSPacketIn(read - GSPacketIn.HDR_SIZE);
+							var pakin = new GSPacketIn(read - GSPacketIn.HDR_SIZE, true);
 							pakin.Load(server.UDPBuffer, 0, read);
 
 							//Get the next message
@@ -562,11 +562,11 @@ namespace DOL.GS
 		/// <param name="callback"></param>
 		public void SendUDP(byte[] bytes, int count, EndPoint clientEndpoint, AsyncCallback callback)
 		{
-			long start = GameTimer.GetTickCount();
+			int start = Environment.TickCount;
 
 			m_udpOutSocket.BeginSendTo(bytes, 0, count, SocketFlags.None, clientEndpoint, callback, m_udpOutSocket);
 
-			long took = GameTimer.GetTickCount() - start;
+			int took = Environment.TickCount - start;
 			if (took > 100 && log.IsWarnEnabled)
 				log.WarnFormat("m_udpListen.BeginSendTo took {0}ms! (UDP to {1})", took, clientEndpoint.ToString());
 		}
@@ -610,8 +610,6 @@ namespace DOL.GS
 		{
 			try
 			{
-				ThreadPool.SetMaxThreads(800, 80);
-				ThreadPool.SetMinThreads(200, 20);
 				//	Process pro = Process.GetCurrentProcess();
 				//	pro.ProcessorAffinity = new IntPtr(GameServer.Instance.Configuration.CPUUse);
 				if (debugMemory)
@@ -650,6 +648,12 @@ namespace DOL.GS
 						return false;
 				 */
 
+				//---------------------------------------------------------------
+				//Try to start the NPC Manager
+				if (!InitComponent(NPCManager.Init(), "NPC Manager Initialization"))
+					return false;
+				
+				
 				//---------------------------------------------------------------
 				//Try to start the Language Manager
 				if (!InitComponent(LanguageMgr.Init(), "Multi Language Initialization"))
@@ -793,7 +797,7 @@ namespace DOL.GS
 
 				//---------------------------------------------------------------
 				//Set the GameServer StartTick
-				m_startTick = GameTimer.GetTickCount();
+				m_startTick = Environment.TickCount;
 
 				//---------------------------------------------------------------
 				//Notify everyone that the server is now started!
@@ -859,6 +863,46 @@ namespace DOL.GS
 		{
 			try
 			{
+				
+				//---------------------------------------------------------------
+				//Register Script Tables
+				if (log.IsInfoEnabled)
+					log.Info("GameServerScripts Tables Initializing...");
+				
+				try
+				{
+					// Walk through each assembly in scripts
+					foreach (Assembly asm in ScriptMgr.Scripts)
+					{
+						// Walk through each type in the assembly
+						foreach (Type type in asm.GetTypes())
+						{
+							if (type.IsClass != true || !typeof(DataObject).IsAssignableFrom(type))
+								continue;
+							
+							object[] attrib = type.GetCustomAttributes(typeof(DataTable), false);
+							if (attrib.Length > 0)
+							{
+								if (log.IsInfoEnabled)
+									log.Info("Registering Scripts table: " + type.FullName);
+								
+								GameServer.Database.RegisterDataObject(type);
+							}
+						}
+					}
+				}
+				catch (DatabaseException dbex)
+				{
+					if (log.IsErrorEnabled)
+						log.Error("Error while registering Script Tables", dbex);
+					
+					return false;
+				}
+				
+	        	if (log.IsInfoEnabled)
+					log.Info("GameServerScripts Database Tables Initialization: true");
+
+				
 				//---------------------------------------------------------------
 				//Create the server rules
 				m_serverRules = ScriptMgr.CreateServerRules(Configuration.ServerType);
@@ -875,7 +919,7 @@ namespace DOL.GS
 
 				//---------------------------------------------------------------
 				//Register all event handlers
-				List<Assembly> scripts = new List<Assembly>(ScriptMgr.Scripts);
+				var scripts = new ArrayList(ScriptMgr.Scripts);
 				scripts.Insert(0, typeof (GameServer).Assembly);
 				foreach (Assembly asm in scripts)
 				{
@@ -1327,7 +1371,7 @@ namespace DOL.GS
 		{
 			try
 			{
-				long startTick = GameTimer.GetTickCount();
+				int startTick = Environment.TickCount;
 				if (log.IsInfoEnabled)
 					log.Info("Saving database...");
 				if (log.IsDebugEnabled)
@@ -1341,16 +1385,22 @@ namespace DOL.GS
 					//Only save the players, NOT any other object!
 					saveCount = WorldMgr.SavePlayers();
 
+					//The following line goes through EACH region and EACH object
+					//is tested for savability. A real waste of time, so it is commented out
+					//WorldMgr.SaveToDatabase();
+
 					GuildMgr.SaveAllGuilds();
 					BoatMgr.SaveAllBoats();
 
 					FactionMgr.SaveAllAggroToFaction();
 
+					// 2008-01-29 Kakuri - Obsolete
+					//m_database.WriteDatabaseTables();
 					Thread.CurrentThread.Priority = oldprio;
 				}
 				if (log.IsInfoEnabled)
 					log.Info("Saving database complete!");
-				startTick = GameTimer.GetTickCount() - startTick;
+				startTick = Environment.TickCount - startTick;
 				if (log.IsInfoEnabled)
 					log.Info("Saved all databases and " + saveCount + " players in " + startTick + "ms");
 			}

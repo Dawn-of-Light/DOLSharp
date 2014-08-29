@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.Events;
@@ -11,7 +10,7 @@ namespace DOL.GS.Spells
 	public class HereticPiercingMagic : SpellHandler
 	{
         protected GameLiving focustarget = null;
-        protected List<GameLiving> m_focusTargets = null;
+        protected ArrayList m_focusTargets = null;
         public override void FinishSpellCast(GameLiving target)
         {
             base.FinishSpellCast(target);
@@ -21,9 +20,9 @@ namespace DOL.GS.Spells
         {
             base.OnEffectStart(effect);
             if (m_focusTargets == null)
-                m_focusTargets = new List<GameLiving>();
+                m_focusTargets = new ArrayList();
             GameLiving living = effect.Owner as GameLiving;
-            lock (((ICollection)m_focusTargets).SyncRoot)
+            lock (m_focusTargets.SyncRoot)
             {
                 if (!m_focusTargets.Contains(effect.Owner))
                     m_focusTargets.Add(effect.Owner);
@@ -51,18 +50,18 @@ namespace DOL.GS.Spells
         {
             if (m_focusTargets != null)
             {
-            	lock (((ICollection)m_focusTargets).SyncRoot)
+                lock (m_focusTargets.SyncRoot)
                 {
                     foreach (GameLiving living in m_focusTargets)
                     {
-                        GameSpellEffect effect = FindEffectOnTarget(living, this);
+                        GameSpellEffect effect = SpellHelper.FindEffectOnTarget(living, this);
                         if (effect != null)
                             effect.Cancel(false);
                     }
                 }
             }
             MessageToCaster("You lose your concentration!", eChatType.CT_Spell);
-            if (Spell.Pulse != 0 && Spell.Frequency > 0)
+            if (Spell.IsPulsing && Spell.Frequency > 0)
                 CancelPulsingSpell(Caster, Spell.SpellType);
 
             GameEventMgr.RemoveHandler(m_caster, GamePlayerEvent.AttackFinished, new DOLEventHandler(EventAction));

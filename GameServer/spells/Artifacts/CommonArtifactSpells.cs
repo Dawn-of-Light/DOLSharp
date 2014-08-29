@@ -37,17 +37,15 @@ namespace DOL.GS.Spells
         public override void OnEffectStart(GameSpellEffect effect)
         {    
      		base.OnEffectStart(effect);            
-            effect.Owner.DebuffCategory[(int)eProperty.Dexterity] += (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Strength] += (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Constitution] += (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Acuity] += (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Piety] += (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Empathy] += (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Quickness] += (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Intelligence] += (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Charisma] += (int)m_spell.Value;   
-            effect.Owner.DebuffCategory[(int)eProperty.ArmorAbsorption] += (int)m_spell.Value; 
-            effect.Owner.DebuffCategory[(int)eProperty.MagicAbsorption] += (int)m_spell.Value; 
+            effect.Owner.DebuffCategory[eProperty.Dexterity] += (int)m_spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Strength] += (int)m_spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Constitution] += (int)m_spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Acuity] += (int)m_spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Piety] += (int)m_spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Empathy] += (int)m_spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Quickness] += (int)m_spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Intelligence] += (int)m_spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Charisma] += (int)m_spell.Value;   
             
             if(effect.Owner is GamePlayer)
             {
@@ -60,17 +58,15 @@ namespace DOL.GS.Spells
         }
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {  
-            effect.Owner.DebuffCategory[(int)eProperty.Dexterity] -= (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Strength] -= (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Constitution] -= (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Acuity] -= (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Piety] -= (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Empathy] -= (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Quickness] -= (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Intelligence] -= (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Charisma] -= (int)m_spell.Value;        
-            effect.Owner.DebuffCategory[(int)eProperty.ArmorAbsorption] -= (int)m_spell.Value; 
-            effect.Owner.DebuffCategory[(int)eProperty.MagicAbsorption] -= (int)m_spell.Value; 
+            effect.Owner.DebuffCategory[eProperty.Dexterity] -= (int)m_spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Strength] -= (int)m_spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Constitution] -= (int)m_spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Acuity] -= (int)m_spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Piety] -= (int)m_spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Empathy] -= (int)m_spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Quickness] -= (int)m_spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Intelligence] -= (int)m_spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Charisma] -= (int)m_spell.Value;        
  
             if(effect.Owner is GamePlayer)
             {
@@ -124,12 +120,12 @@ namespace DOL.GS.Spells
         public override void OnEffectStart(GameSpellEffect effect)
         {
         	base.OnEffectStart(effect);      
-        	effect.Owner.DebuffCategory[(int)eProperty.SpellDamage] += (int)Spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Resist_Heat] += (int)Spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Resist_Cold] += (int)Spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Resist_Matter] += (int)Spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Resist_Spirit] += (int)Spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Resist_Energy] += (int)Spell.Value;
+        	effect.Owner.DebuffCategory[eProperty.SpellDamage] += (int)Spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Resist_Heat] += (int)Spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Resist_Cold] += (int)Spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Resist_Matter] += (int)Spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Resist_Spirit] += (int)Spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Resist_Energy] += (int)Spell.Value;
             
             if(effect.Owner is GamePlayer)
             {
@@ -140,12 +136,12 @@ namespace DOL.GS.Spells
         }
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-            effect.Owner.DebuffCategory[(int)eProperty.SpellDamage] -= (int)Spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Resist_Heat] -= (int)Spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Resist_Cold] -= (int)Spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Resist_Matter] -= (int)Spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Resist_Spirit] -= (int)Spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Resist_Energy] -= (int)Spell.Value;
+            effect.Owner.DebuffCategory[eProperty.SpellDamage] -= (int)Spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Resist_Heat] -= (int)Spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Resist_Cold] -= (int)Spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Resist_Matter] -= (int)Spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Resist_Spirit] -= (int)Spell.Value;
+            effect.Owner.DebuffCategory[eProperty.Resist_Energy] -= (int)Spell.Value;
             
             if(effect.Owner is GamePlayer)
             {
@@ -197,8 +193,8 @@ namespace DOL.GS.Spells
         public override void OnEffectStart(GameSpellEffect effect)
         {
         	base.OnEffectStart(effect);         
-            Caster.BaseBuffBonusCategory[(int)eProperty.Strength] += (int)m_spell.Value;
-            Caster.BaseBuffBonusCategory[(int)eProperty.Constitution] += (int)m_spell.Value;
+            Caster.BaseBuffBonusCategory[eProperty.Strength] += (int)m_spell.Value;
+            Caster.BaseBuffBonusCategory[eProperty.Constitution] += (int)m_spell.Value;
  
             if(Caster is GamePlayer)
             {
@@ -211,8 +207,8 @@ namespace DOL.GS.Spells
 
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {           
-            Caster.BaseBuffBonusCategory[(int)eProperty.Strength] -= (int)m_spell.Value;
-            Caster.BaseBuffBonusCategory[(int)eProperty.Constitution] -= (int)m_spell.Value;          
+            Caster.BaseBuffBonusCategory[eProperty.Strength] -= (int)m_spell.Value;
+            Caster.BaseBuffBonusCategory[eProperty.Constitution] -= (int)m_spell.Value;          
  
             if(Caster is GamePlayer)
             {
@@ -241,7 +237,7 @@ namespace DOL.GS.Spells
             newad.Damage = DamageAmount;
             newad.DamageType = Spell.DamageType;
             newad.AttackType = AttackData.eAttackType.Spell;
-            newad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
+            newad.AttackResult = eAttackResult.HitUnstyled;
             newad.SpellHandler = this;
             newad.Target.OnAttackedByEnemy(newad);
             newad.Attacker.DealDamage(newad);

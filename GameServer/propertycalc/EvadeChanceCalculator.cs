@@ -40,18 +40,18 @@ namespace DOL.GS.PropertyCalc
 				int evadechance = 0;
 				if (player.HasAbility(Abilities.Evade))
 					evadechance += (1000 + player.Quickness + player.Dexterity - 100) * player.GetAbilityLevel(Abilities.Evade) * 5 / 100;
-				evadechance += player.BaseBuffBonusCategory[(int)property] * 10
-								+ player.SpecBuffBonusCategory[(int)property] * 10
-								- player.DebuffCategory[(int)property] * 10
-								+ player.BuffBonusCategory4[(int)property] * 10
-								+ player.AbilityBonus[(int)property] * 10;
+				evadechance += player.BaseBuffBonusCategory[property] * 10
+								+ player.SpecBuffBonusCategory[property] * 10
+								- player.DebuffCategory[property] * 10
+								+ player.BuffBonusCategory4[property] * 10
+								+ player.AbilityBonus[property] * 10;
 				return evadechance;
 			}
 
 			GameNPC npc = living as GameNPC;
 			if (npc != null)
 			{
-				return living.AbilityBonus[(int)property] * 10 + npc.EvadeChance * 10;
+				return living.AbilityBonus[property] * 10 + npc.EvadeChance * 10;
 			}
 
 			return 0;

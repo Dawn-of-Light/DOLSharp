@@ -737,7 +737,7 @@ Scripts.Player.Guild.InfoMotd:				Message:  {0}
 Scripts.Player.Guild.InfoOMotd:				OfficerMessage: {0}	
 Scripts.Player.Guild.InfoRPBPMP:			Realm Points: {0} Bounty Points: {1} Merit Points: {2}	
 Scripts.Player.Guild.InfoWebpage:			Webpage: {0}	
-Scripts.Player.Guild.InvalidLetters:			Some of the characters entered are invalid.	
+Scripts.Player.Guild.InvalidLetters:		The guildname you have entered is invalid.
 Scripts.Player.Guild.InvalidRank:			That is not a valid rank.	
 Scripts.Player.Guild.InviteDead:			You cannot invite a dead player to your guild.	
 Scripts.Player.Guild.InviteNoSelected:			You must select a player.	
@@ -855,6 +855,7 @@ PlayerStatistic.PvE.KillsLegion:			Legion Kills
 # /Claim
 Titles.Claim.Frontier.FrontierChallenger:		Frontier Challenger
 Titles.Claim.Frontier.FrontierVindicator:		Frontier Vindicator
+Titles.Claim.Frontier.FrontierProtector:		Frontier Protector
 Titles.Claim.Stronghold.StrongholdChief:		Stronghold Chief
 Titles.Claim.Stronghold.StrongholdSoldier:		Stronghold Soldier
 
@@ -865,6 +866,7 @@ Titles.Deathblows.BattleMaster:				Battle Master
 # /Kills
 Titles.Kills.Albion.BaneOfAlbion:			Bane of Albion
 Titles.Kills.Albion.ScourgeOfAlbion:			Scourge of Albion
+Titles.Kills.Albion.SlayerOfAlbion:			Slayer of Albion
 Titles.Kills.All.MasterAssassine:			Master Assassine
 Titles.Kills.All.MasterEnforcer:			Master Enforcer
 Titles.Kills.All.MasterSoldier:				Master Soldier
@@ -875,12 +877,15 @@ Titles.Kills.Demon.DreadVanquisher:			Dread Vanquisher
 Titles.Kills.Dragon.DragonFoe:				Dragon Foe
 Titles.Kills.Dragon.DragonScourge:			Dragon Scourge
 Titles.Kills.Dragon.DragonSlayer:			Dragon Slayer
+Titles.Kills.Dragon.DragonBane:				Dragon Bane
 Titles.Kills.Epic.EpicChallenger:			Epic Challenger
 Titles.Kills.Epic.EpicVictor:				Epic Victor
 Titles.Kills.Hibernia.BaneOfHibernia:			Bane of Hibernia
 Titles.Kills.Hibernia.ScourgeOfHibernia:		Scourge of Hibernia
+Titles.Kills.Hibernia.SlayerOfHibernia:		Slayer of Hibernia
 Titles.Kills.Midgard.BaneOfMidgard:			Bane of Midgard
 Titles.Kills.Midgard.ScourgeOfMidgard:			Scourge of Midgard
+Titles.Kills.Midgard.SlayerOfMidgard:			Slayer of Midgard
 
 # /Level
 Titles.Level.Level20Info:				Level 20+

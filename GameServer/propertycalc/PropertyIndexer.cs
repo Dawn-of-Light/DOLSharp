@@ -17,27 +17,17 @@
  *
  */
 using System;
+using System.Collections.Concurrent;
 
 namespace DOL.GS.PropertyCalc
 {
 	/// <summary>
 	/// helper class for memory efficient usage of property fields
-	/// it keeps integer values indexed by integer keys
+	/// it keeps integer values indexed by eProperty keys
 	/// </summary>
 	public sealed class PropertyIndexer : IPropertyIndexer
 	{
-		private struct PropEntry
-		{
-			public int key;
-			public int value;
-		}
-
-		private int count = 0;
-
-		private PropEntry[] m_entries;
-		private readonly int[] m_staticArray;
-
-		private const int REALLOCATE_COUNT = 5;
+		private ConcurrentDictionary<eProperty, int> m_propertyDict;
 
 		public PropertyIndexer()
 		{
@@ -46,110 +36,45 @@ namespace DOL.GS.PropertyCalc
 
 		public PropertyIndexer(int fixSize)
 		{
-			m_staticArray = new int[fixSize];
+			m_propertyDict = new ConcurrentDictionary<eProperty, int>();
 		}
 
-		public int this[int index]
+		public int this[eProperty index]
 		{
 			get
 			{
-				if (m_staticArray != null)
+				// Dict is available
+				if (m_propertyDict != null)
 				{
-					if (index < m_staticArray.Length)
+					if (m_propertyDict.ContainsKey(index))
 					{
-						return m_staticArray[index];
-					}
-					else
-					{
-						return 0;
+						// property is set return value
+						return m_propertyDict[index];
 					}
 				}
-				if (count == 0) return 0;
-				lock (m_entries)
-				{
-					for (int i = 0; i < m_entries.Length; i++)
-					{
-						if (m_entries[i].key == index)
-						{
-							return m_entries[i].value;
-						}
-					}
-				}
+				
 				return 0;
 			}
 			set
 			{
-				if (m_staticArray != null)
+				if (m_propertyDict == null)
 				{
-					if (index < m_staticArray.Length)
-					{
-						m_staticArray[index] = value;
-					}
-					return;
+					m_propertyDict = new ConcurrentDictionary<eProperty, int>();
 				}
-
-				lock (this)
+				
+				if (m_propertyDict != null)
 				{
-
-					// find entry
-					int arrayIndex = -1;
-					if (m_entries != null)
+					if (m_propertyDict.ContainsKey(index))
 					{
-						for (int i = 0; i < m_entries.Length; i++)
-						{
-							if (m_entries[i].key == index)
-							{
-								arrayIndex = i;
-								break;
-							}
-						}
-					}
-
-					if (value == 0 && arrayIndex >= 0)
-					{
-						m_entries[arrayIndex].key = 0;
-						m_entries[arrayIndex].value = 0;
-						count--;
+						m_propertyDict[index] = value;
 					}
 					else
 					{
-						if (arrayIndex >= 0)
-						{
-							m_entries[arrayIndex].value = value;
-						}
-						else
-						{
-							if (m_entries == null)
-							{
-								m_entries = new PropEntry[REALLOCATE_COUNT];
-								m_entries[0].key = index;
-								m_entries[0].value = value;
-								count++;
-								return;
-							}
-
-							for (int i = 0; i < m_entries.Length; i++)
-							{
-								if (m_entries[i].key == 0)
-								{
-									m_entries[i].key = index;
-									m_entries[i].value = value;
-									count++;
-									return;
-								}
-							}
-
-							// reallocate
-							PropEntry[] newdata = new PropEntry[m_entries.Length + REALLOCATE_COUNT];
-							Array.Copy(m_entries, newdata, m_entries.Length);
-							newdata[m_entries.Length].key = index;
-							newdata[m_entries.Length].value = value;
-							m_entries = newdata;
-							count++;
-						}
+						m_propertyDict.TryAdd(index, value);
 					}
 				}
 			}
 		}
+		
 	}
 }

@@ -384,7 +384,7 @@ namespace DOL.GS
 			{
 				if (CurrentZone != null)
 					return CurrentZone.GetAreasOfSpot(this);
-				return new List<IArea>();
+				return new ArrayList();
 			}
 			set { }
 		}
@@ -634,7 +634,9 @@ namespace DOL.GS
 			{
 				return Name;
 			}
-			else // common noun
+			else
+			{
+				// common noun
 				if (article == 0)
 				{
 					if (firstLetterUppercase)
@@ -660,6 +662,7 @@ namespace DOL.GS
 							return LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameObject.GetName.Article6", Name);
 					}
 				}
+			}
 		}
 
         public String Capitalize(bool capitalize, String text)
@@ -709,7 +712,7 @@ namespace DOL.GS
 		/// <returns>list with string messages</returns>
 		public virtual IList GetExamineMessages(GamePlayer player)
 		{
-			List<string> list = new List<string>();
+			IList list = new ArrayList(4);
 			list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObject.GetExamineMessages.YouTarget", GetName(0, false)));
 			return list;
 		}
@@ -915,6 +918,7 @@ namespace DOL.GS
 			Notify(GameObjectEvent.Delete, this);
 			RemoveFromWorld();
 			ObjectState = eObjectState.Deleted;
+			GameEventMgr.RemoveAllHandlersForObject(this);
 		}
 
 		/// <summary>
@@ -1499,6 +1503,29 @@ namespace DOL.GS
             set { }
         }
 
+        #region Broadcast Utils
+
+        /// <summary>
+		/// Broadcasts the Object Update to all players around
+		/// </summary>
+		public virtual void BroadcastUpdate()
+		{
+			if (ObjectState != eObjectState.Active)
+				return;
+			
+			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			{
+				if (player == null)
+					continue;
+				
+				player.Out.SendObjectUpdate(this);
+				player.CurrentUpdateArray[ObjectID - 1] = true;
+			}
+		}
+        
+        #endregion
+        
+        
 		/// <summary>
 		/// Constructs a new empty GameObject
 		/// </summary>

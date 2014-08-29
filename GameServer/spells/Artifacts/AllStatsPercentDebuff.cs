@@ -58,14 +58,14 @@ namespace DOL.GS.Spells
             PieDebuff = (int)((double)effect.Owner.GetModified(eProperty.Piety) * percentValue);
             
 
-            effect.Owner.DebuffCategory[(int)eProperty.Dexterity] += DexDebuff;
-            effect.Owner.DebuffCategory[(int)eProperty.Strength] += StrDebuff;
-            effect.Owner.DebuffCategory[(int)eProperty.Constitution] += ConDebuff;
-            effect.Owner.DebuffCategory[(int)eProperty.Piety] += PieDebuff;
-            effect.Owner.DebuffCategory[(int)eProperty.Empathy] += EmpDebuff;
-            effect.Owner.DebuffCategory[(int)eProperty.Quickness] += QuiDebuff;
-            effect.Owner.DebuffCategory[(int)eProperty.Intelligence] += IntDebuff;
-            effect.Owner.DebuffCategory[(int)eProperty.Charisma] += ChaDebuff;
+            effect.Owner.DebuffCategory[eProperty.Dexterity] += DexDebuff;
+            effect.Owner.DebuffCategory[eProperty.Strength] += StrDebuff;
+            effect.Owner.DebuffCategory[eProperty.Constitution] += ConDebuff;
+            effect.Owner.DebuffCategory[eProperty.Piety] += PieDebuff;
+            effect.Owner.DebuffCategory[eProperty.Empathy] += EmpDebuff;
+            effect.Owner.DebuffCategory[eProperty.Quickness] += QuiDebuff;
+            effect.Owner.DebuffCategory[eProperty.Intelligence] += IntDebuff;
+            effect.Owner.DebuffCategory[eProperty.Charisma] += ChaDebuff;
 
 			if (effect.Owner is GamePlayer)
 			{
@@ -80,14 +80,14 @@ namespace DOL.GS.Spells
 		{
             double percentValue = (m_spell.Value) / 100;
 
-            effect.Owner.DebuffCategory[(int)eProperty.Dexterity] -= DexDebuff;
-            effect.Owner.DebuffCategory[(int)eProperty.Strength] -= StrDebuff;
-            effect.Owner.DebuffCategory[(int)eProperty.Constitution] -= ConDebuff;
-            effect.Owner.DebuffCategory[(int)eProperty.Piety] -= PieDebuff;
-            effect.Owner.DebuffCategory[(int)eProperty.Empathy] -= EmpDebuff;
-            effect.Owner.DebuffCategory[(int)eProperty.Quickness] -= QuiDebuff;
-            effect.Owner.DebuffCategory[(int)eProperty.Intelligence] -= IntDebuff;
-            effect.Owner.DebuffCategory[(int)eProperty.Charisma] -= ChaDebuff;
+            effect.Owner.DebuffCategory[eProperty.Dexterity] -= DexDebuff;
+            effect.Owner.DebuffCategory[eProperty.Strength] -= StrDebuff;
+            effect.Owner.DebuffCategory[eProperty.Constitution] -= ConDebuff;
+            effect.Owner.DebuffCategory[eProperty.Piety] -= PieDebuff;
+            effect.Owner.DebuffCategory[eProperty.Empathy] -= EmpDebuff;
+            effect.Owner.DebuffCategory[eProperty.Quickness] -= QuiDebuff;
+            effect.Owner.DebuffCategory[eProperty.Intelligence] -= IntDebuff;
+            effect.Owner.DebuffCategory[eProperty.Charisma] -= ChaDebuff;
 
 			if (effect.Owner is GamePlayer)
 			{

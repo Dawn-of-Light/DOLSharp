@@ -118,7 +118,7 @@ namespace DOL.GS
 					break;
 			}
 
-			List<string> list = new List<string>();
+			IList list = new ArrayList();
             list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.GetExamineMessages.YouTarget", 
                                                 GetName(0, false, player.Client.Account.Language, this)));
             list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.GetExamineMessages.YouExamine",
@@ -160,7 +160,7 @@ namespace DOL.GS
 					long xp = player.GetExperienceNeededForLevel(player.DBCharacter.LastFreeLevel + 1) - player.GetExperienceNeededForLevel(player.DBCharacter.LastFreeLevel);
 					//player.PlayerCharacter.LastFreeLevel = player.Level;
 					player.GainExperience(GameLiving.eXPSource.Other, xp);
-					player.DBCharacter.LastFreeLeveled = DateTime.UtcNow;
+					player.DBCharacter.LastFreeLeveled = DateTime.Now;
 					player.Out.SendPlayerFreeLevelUpdate();
 				}
 			}
@@ -178,7 +178,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public bool CanTrainChampionLevels(GamePlayer player)
+		public virtual bool CanTrainChampionLevels(GamePlayer player)
 		{
 			return player.Level >= 50 && player.Champion && m_championTrainerType != eChampionTrainerType.None && m_championTrainerType != player.CharacterClass.ChampionTrainerType();
 

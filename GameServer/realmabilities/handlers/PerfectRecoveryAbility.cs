@@ -1,14 +1,34 @@
+/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
+
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.GS.Spells;
 using DOL.Events;
 using DOL.Database;
+using DOL.Language;
 
 namespace DOL.GS.RealmAbilities
 {
@@ -17,7 +37,7 @@ namespace DOL.GS.RealmAbilities
 		public PerfectRecoveryAbility(DBAbility dba, int level) : base(dba, level) { }
 		private Int32 m_resurrectValue = 5;
 		private const String RESURRECT_CASTER_PROPERTY = "RESURRECT_CASTER";
-        protected readonly Dictionary<GameObject, RegionTimer> m_resTimersByLiving = new Dictionary<GameObject, RegionTimer>();
+        protected readonly ListDictionary m_resTimersByLiving = new ListDictionary();
 
 		public override void Execute(GameLiving living)
 		{
@@ -87,7 +107,25 @@ namespace DOL.GS.RealmAbilities
 			}
 			if (targetPlayer != null)
 			{
-				SendCasterSpellEffectAndCastMessage(living, 7019, true);
+				//the effect is on the resurrected target body, not the caster
+				//SendCasterSpellEffectAndCastMessage(living, 7019, true);
+				foreach (GamePlayer plr in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				{
+					plr.Out.SendSpellEffectAnimation(player, targetPlayer, 7019, 0, false, 1);
+
+					if (player.IsWithinRadius(plr, WorldMgr.INFO_DISTANCE))
+					{
+						if (plr == player)
+						{
+							plr.Out.SendMessage(LanguageMgr.GetTranslation(plr.Client.Account.Language, "RealmAbility.SendCasterSpellEffectAndCastMessage.You", m_name), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+						}
+						else
+						{
+							plr.Out.SendMessage(LanguageMgr.GetTranslation(plr.Client.Account.Language, "RealmAbility.SendCasterSpellEffectAndCastMessage.Caster", player.Name), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+						}
+					}
+				}
+
 				DisableSkill(living);
                 //Lifeflight:
                 //don't rez just yet
@@ -99,7 +137,7 @@ namespace DOL.GS.RealmAbilities
 				resurrectExpiredTimer.Callback = new RegionTimerCallback(ResurrectExpiredCallback);
 				resurrectExpiredTimer.Properties.setProperty("targetPlayer", targetPlayer);
 				resurrectExpiredTimer.Start(15000);
-				lock (((ICollection)m_resTimersByLiving).SyncRoot)
+				lock (m_resTimersByLiving.SyncRoot)
 				{
                     m_resTimersByLiving.Add(player.TargetObject, resurrectExpiredTimer);
 				}
@@ -120,13 +158,10 @@ namespace DOL.GS.RealmAbilities
         {
             //DOLConsole.WriteLine("resurrect responce: " + response);
             GameTimer resurrectExpiredTimer = null;
-            lock (((ICollection)m_resTimersByLiving).SyncRoot)
+            lock (m_resTimersByLiving.SyncRoot)
             {
-            	if(m_resTimersByLiving.ContainsKey(player))
-                	resurrectExpiredTimer = (GameTimer)m_resTimersByLiving[player];
-                
-                if(m_resTimersByLiving.ContainsKey(player))
-                	m_resTimersByLiving.Remove(player);
+                resurrectExpiredTimer = (GameTimer)m_resTimersByLiving[player];
+                m_resTimersByLiving.Remove(player);
             }
             if (resurrectExpiredTimer != null)
             {
@@ -191,13 +226,10 @@ namespace DOL.GS.RealmAbilities
 
             GameLiving living = resurrectedPlayer as GameLiving;
             GameTimer resurrectExpiredTimer = null;
-            lock (((ICollection)m_resTimersByLiving).SyncRoot)
+            lock (m_resTimersByLiving.SyncRoot)
             {
-            	if(m_resTimersByLiving.ContainsKey(living))
-                	resurrectExpiredTimer = (GameTimer)m_resTimersByLiving[living];
-            	
-            	if(m_resTimersByLiving.ContainsKey(living))
-                	m_resTimersByLiving.Remove(living);
+                resurrectExpiredTimer = (GameTimer)m_resTimersByLiving[living];
+                m_resTimersByLiving.Remove(living);
             }
             if (resurrectExpiredTimer != null)
             {
@@ -207,10 +239,8 @@ namespace DOL.GS.RealmAbilities
             resurrectedPlayer.StopReleaseTimer();
 			resurrectedPlayer.Out.SendPlayerRevive(resurrectedPlayer);
 			resurrectedPlayer.UpdatePlayerStatus();
-
-			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(resurrectedPlayer, GlobalSpells.PvERessurectionIllnessSpellType);
-			if (effect != null)
-				effect.Cancel(false);
+			resurrectedPlayer.Notify(GamePlayerEvent.Revive, resurrectedPlayer, new RevivedEventArgs(rezzer, null, 100));
+			
 			resurrectedPlayer.Out.SendMessage("You have been resurrected by " + rezzer.GetName(0, false) + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
             //Lifeflight: this should make it so players who have been ressurected don't take damage for 5 seconds
             RezDmgImmunityEffect rezImmune = new RezDmgImmunityEffect();

@@ -19,6 +19,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
@@ -93,12 +94,12 @@ namespace DOL.GS
         /// This holds the gravestones in this region for fast access
         /// Player unique id(string) -> GameGraveStone
         /// </summary>
-        protected readonly Dictionary<string, GameObject> m_graveStones;
+        protected readonly Hashtable m_graveStones;
 
         /// <summary>
         /// Holds all the Zones inside this Region
         /// </summary>
-        protected readonly List<Zone> m_Zones;
+        protected readonly ArrayList m_Zones;
 
         protected object m_lockAreas = new object();
 
@@ -145,19 +146,13 @@ namespace DOL.GS
         /// <summary>
         /// The region time manager
         /// </summary>
-        protected readonly GameTimer.GameScheduler m_timeManager;
-
-        /// <summary>
-        /// The Los Checker Manager of this Region
-        /// </summary>
-        private readonly LosCheckMgr m_losCheckMgr;
+        protected readonly GameTimer.TimeManager m_timeManager;
         
-        public LosCheckMgr LosCheckManager {
-        	get
-        	{
-        		return m_losCheckMgr;
-        	}
-        }
+        /// <summary>
+        /// The Region Mob's Respawn Timer Collection
+        /// </summary>
+        protected readonly ConcurrentDictionary<GameNPC, int> m_mobsRespawning = new ConcurrentDictionary<GameNPC, int>();
+
         #endregion
 
         #region Constructor
@@ -176,7 +171,7 @@ namespace DOL.GS
         /// <param name="time"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static Region Create(GameTimer.GameScheduler time, RegionData data)
+        public static Region Create(GameTimer.TimeManager time, RegionData data)
         {
             try
             {
@@ -193,7 +188,7 @@ namespace DOL.GS
 
                     if (t != null)
                     {
-                        ConstructorInfo info = t.GetConstructor(new Type[] { typeof(GameTimer.GameScheduler), typeof(RegionData) });
+                        ConstructorInfo info = t.GetConstructor(new Type[] { typeof(GameTimer.TimeManager), typeof(RegionData) });
 
                         Region r = (Region)info.Invoke(new object[] { time, data });
 
@@ -226,7 +221,7 @@ namespace DOL.GS
         /// </summary>
         /// <param name="time">The time manager for this region</param>
         /// <param name="data">The region data</param>
-        public Region(GameTimer.GameScheduler time, RegionData data)
+        public Region(GameTimer.TimeManager time, RegionData data)
         {
             m_regionData = data;
             m_objects = new GameObject[0];
@@ -234,9 +229,9 @@ namespace DOL.GS
             m_nextObjectSlot = 0;
             m_objectsAllocatedSlots = new uint[0];
 
-            m_graveStones = new Dictionary<string, GameObject>();
-            
-            m_Zones = new List<Zone>(1);
+            m_graveStones = new Hashtable();
+
+            m_Zones = new ArrayList(1);
             m_ZoneAreas = new ushort[64][];
             m_ZoneAreasCount = new ushort[64];
             for (int i = 0; i < 64; i++)
@@ -248,8 +243,6 @@ namespace DOL.GS
 
             m_timeManager = time;
 
-            m_losCheckMgr = new LosCheckMgr(this);
-            
             List<string> list = null;
 
             if (ServerProperties.Properties.DEBUG_LOAD_REGIONS != string.Empty)
@@ -472,7 +465,7 @@ namespace DOL.GS
         /// <summary>
         /// An ArrayList of all Zones within this Region
         /// </summary>
-        public List<Zone> Zones
+        public ArrayList Zones
         {
             get { return m_Zones; }
         }
@@ -538,7 +531,7 @@ namespace DOL.GS
         /// <summary>
         /// Gets the region time manager
         /// </summary>
-        public virtual GameTimer.GameScheduler TimeManager
+        public virtual GameTimer.TimeManager TimeManager
         {
             get { return m_timeManager; }
         }
@@ -548,7 +541,7 @@ namespace DOL.GS
         /// </summary>
         public virtual long Time
         {
-            get { return GameServer.Instance.TickCount; }
+            get { return m_timeManager.CurrentTime; }
         }
 
         protected bool m_isDisabled = false;
@@ -740,6 +733,14 @@ namespace DOL.GS
             set { m_isNightTime = value; }
         }
 
+        public virtual ConcurrentDictionary<GameNPC, int> MobsRespawning
+        {
+        	get
+        	{
+        		return m_mobsRespawning;
+        	}
+        }
+        
         #endregion
 
         #region Methods
@@ -827,7 +828,7 @@ namespace DOL.GS
                     }
                     
 
-                    if (mob.Guild.Length > 0 && mob.Realm >= 0 && mob.Realm <= (int)eRealm._Last)
+                    if (Properties.USE_NPCGUILDSCRIPTS && mob.Guild.Length > 0 && mob.Realm >= 0 && mob.Realm <= (int)eRealm._Last)
                     {
                         Type type = ScriptMgr.FindNPCGuildScriptClass(mob.Guild, (eRealm)mob.Realm);
                         if (type != null)
@@ -1132,7 +1133,7 @@ namespace DOL.GS
                     {
                         if (obj is GameGravestone)
                         {
-                        	lock (((ICollection)m_graveStones).SyncRoot)
+                            lock (m_graveStones.SyncRoot)
                             {
                                 m_graveStones[obj.InternalID] = obj;
                             }
@@ -1173,10 +1174,9 @@ namespace DOL.GS
                 {
                     if (obj is GameGravestone)
                     {
-                    	lock (((ICollection)m_graveStones).SyncRoot)
+                        lock (m_graveStones.SyncRoot)
                         {
-                        	if(m_graveStones.ContainsKey(obj.InternalID))
-                            	m_graveStones.Remove(obj.InternalID);
+                            m_graveStones.Remove(obj.InternalID);
                         }
                     }
                 }
@@ -1217,12 +1217,9 @@ namespace DOL.GS
         /// <returns>the found gravestone or null</returns>
         public GameGravestone FindGraveStone(GamePlayer player)
         {
-        	lock (((ICollection)m_graveStones).SyncRoot)
+            lock (m_graveStones.SyncRoot)
             {
-            	if(m_graveStones.ContainsKey(player.InternalID))
-                	return (GameGravestone)m_graveStones[player.InternalID];
-                	
-                return null;
+                return (GameGravestone)m_graveStones[player.InternalID];
             }
         }
 
@@ -1450,7 +1447,7 @@ namespace DOL.GS
             lock (m_lockAreas)
             {
                 int zoneIndex = Zones.IndexOf(zone);
-                List<IArea> areas = new List<IArea>();
+                IList areas = new ArrayList();
 
                 if (zoneIndex >= 0)
                 {
@@ -1480,7 +1477,7 @@ namespace DOL.GS
             lock (m_lockAreas)
             {
                 int zoneIndex = Zones.IndexOf(zone);
-                IList areas = new List<IArea>();
+                IList areas = new ArrayList();
 
                 if (zoneIndex >= 0)
                 {
@@ -1549,7 +1546,7 @@ namespace DOL.GS
 
             if (startingZone != null)
             {
-                List<GameObject> res = startingZone.GetObjectsInRadius(type, x, y, z, radius, new List<GameObject>(), ignoreZ);
+                ArrayList res = startingZone.GetObjectsInRadius(type, x, y, z, radius, new ArrayList(), ignoreZ);
 
                 uint sqRadius = (uint)radius * radius;
 
@@ -1779,7 +1776,7 @@ namespace DOL.GS
                 return this;
             }
 
-            public ObjectEnumerator(List<GameObject> objectSet)
+            public ObjectEnumerator(ArrayList objectSet)
             {
                 //objectSet.DumpInfo();
                 elements = new GameObject[objectSet.Count];
@@ -1844,7 +1841,7 @@ namespace DOL.GS
             protected int m_Y;
             protected int m_Z;
 
-            public DistanceEnumerator(int x, int y, int z, List<GameObject> elements)
+            public DistanceEnumerator(int x, int y, int z, ArrayList elements)
                 : base(elements)
             {
                 m_X = x;
@@ -1858,7 +1855,7 @@ namespace DOL.GS
         /// </summary>
         public class PlayerDistanceEnumerator : DistanceEnumerator
         {
-            public PlayerDistanceEnumerator(int x, int y, int z, List<GameObject> elements)
+            public PlayerDistanceEnumerator(int x, int y, int z, ArrayList elements)
                 : base(x, y, z, elements)
             {
             }
@@ -1878,7 +1875,7 @@ namespace DOL.GS
         /// </summary>
         public class NPCDistanceEnumerator : DistanceEnumerator
         {
-            public NPCDistanceEnumerator(int x, int y, int z, List<GameObject> elements)
+            public NPCDistanceEnumerator(int x, int y, int z, ArrayList elements)
                 : base(x, y, z, elements)
             {
             }
@@ -1898,7 +1895,7 @@ namespace DOL.GS
         /// </summary>
         public class ItemDistanceEnumerator : DistanceEnumerator
         {
-            public ItemDistanceEnumerator(int x, int y, int z, List<GameObject> elements)
+            public ItemDistanceEnumerator(int x, int y, int z, ArrayList elements)
                 : base(x, y, z, elements)
             {
             }
@@ -1918,7 +1915,7 @@ namespace DOL.GS
         /// </summary>
         public class DoorDistanceEnumerator : DistanceEnumerator
         {
-            public DoorDistanceEnumerator(int x, int y, int z, List<GameObject> elements)
+            public DoorDistanceEnumerator(int x, int y, int z, ArrayList elements)
                 : base(x, y, z, elements)
             {
             }
@@ -1941,13 +1938,13 @@ namespace DOL.GS
 
         public void Relocate()
         {
-        	lock (((ICollection)m_Zones).SyncRoot)
+            lock (m_Zones.SyncRoot)
             {
                 for (int i = 0; i < m_Zones.Count; i++)
                 {
                     ((Zone)m_Zones[i]).Relocate(null);
                 }
-                m_lastRelocationTime = DateTime.UtcNow.Ticks / (10 * 1000);
+                m_lastRelocationTime = DateTime.Now.Ticks / (10 * 1000);
             }
         }
 

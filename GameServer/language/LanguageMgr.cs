@@ -123,7 +123,7 @@ namespace DOL.Language
             if (log.IsDebugEnabled)
                 log.Info("[Language-Manager] Loading system sentences...");
 
-            List<string[]> fileSentences = new List<string[]>();
+            ArrayList fileSentences = new ArrayList();
             bool defaultLanguageDirectoryFound = false;
             bool defaultLanguageFilesFound = false;
             foreach (string langDir in Directory.GetDirectories(LangPath, "*", SearchOption.TopDirectoryOnly))
@@ -137,7 +137,7 @@ namespace DOL.Language
                 else
                 {
                     defaultLanguageDirectoryFound = true;
-                    List<string[]> sentences = ReadLanguageDirectory(Path.Combine(LangPath, language), language);
+                    ArrayList sentences = ReadLanguageDirectory(Path.Combine(LangPath, language), language);
 
                     if (sentences.Count < 1)
                         break;
@@ -329,16 +329,16 @@ namespace DOL.Language
         #endregion CountLanguageFiles
 
         #region ReadLanguageDirectory
-        private static List<string[]> ReadLanguageDirectory(string path, string language)
+        private static ArrayList ReadLanguageDirectory(string path, string language)
         {
-		    List<string[]> sentences = new List<string[]>();
+		    ArrayList sentences = new ArrayList();
             foreach (string languageFile in Directory.GetFiles(path, "*", SearchOption.AllDirectories))
             {
                 if (!languageFile.EndsWith(".txt"))
                     continue;
 
                 string[] lines = File.ReadAllLines(languageFile, Encoding.GetEncoding("utf-8"));
-                List<string> textList = new List<string>(lines);
+                IList textList = new ArrayList(lines);
 
                 foreach (string line in textList)
                 {
@@ -528,7 +528,7 @@ namespace DOL.Language
 
 
 		/// <summary>
-		/// This returns the last part of the translation text id id actual translation fails
+		/// This returns the last part of the translation text id if actual translation fails
 		/// This helps to avoid returning strings that are too long and overflow the client
 		/// When the name overflows players my not be targetable or even visible!
 		/// PLEASE DO NOT REMOVE THIS FUNCTIONALITY  - tolakram

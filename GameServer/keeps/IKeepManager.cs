@@ -48,7 +48,7 @@ namespace DOL.GS.Keeps
 	public interface IKeepManager
 	{
 		log4net.ILog Log { get; }
-		Dictionary<int, AbstractGameKeep> Keeps { get; }
+		Hashtable Keeps { get; }
 		List<uint> FrontierRegionsList { get; }
 
 		bool Load();
@@ -57,7 +57,7 @@ namespace DOL.GS.Keeps
 		AbstractGameKeep GetKeepByID(int id);
 		IEnumerable GetKeepsCloseToSpot(ushort regionid, IPoint3D point3d, int radius);
 		AbstractGameKeep GetKeepCloseToSpot(ushort regionid, IPoint3D point3d, int radius);
-		ICollection<AbstractGameKeep> GetKeepsByRealmMap(int map);
+		ICollection<IGameKeep> GetKeepsByRealmMap(int map);
 		AbstractGameKeep GetBGPK(GamePlayer player);
 		ICollection<AbstractGameKeep> GetFrontierKeeps();
 		ICollection<AbstractGameKeep> GetKeepsOfRegion(ushort region);

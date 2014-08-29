@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 using DOL.AI.Brain;
 using log4net;
@@ -39,7 +38,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Holds the list of changed effects
 		/// </summary>
-		protected readonly List<IGameEffect> m_changedEffects = new List<IGameEffect>();
+		protected readonly ArrayList m_changedEffects = new ArrayList();
 		/// <summary>
 		/// The count of effects on last update
 		/// </summary>

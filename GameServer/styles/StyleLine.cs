@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using DOL.GS;
 
 namespace DOL.GS.Styles
@@ -52,7 +51,7 @@ namespace DOL.GS.Styles
 		/// <returns>List of styles available at the current level of this styleline</returns>
 		public IList GetStylesForLevel()
 		{
-			List<Style> list = new List<Style>();
+			ArrayList list = new ArrayList();
 			for (int i = 0; i < m_styles.Length; i++)
 			{
 				if (m_styles[i].Level <= Level)

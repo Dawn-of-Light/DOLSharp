@@ -42,8 +42,6 @@ namespace DOL.GS.Spells
         public FOHSpellHandler(GameLiving caster, Spell spell, SpellLine line)
             : base(caster, spell, line)
         {
-            ApplyOnNPC = true;
-
             //Construct a new font.
             font = new GameFont();
             font.Model = 2585;
@@ -64,7 +62,8 @@ namespace DOL.GS.Spells
             dbs.Damage = spell.Damage;
             dbs.DamageType = (int)spell.DamageType;
             dbs.Target = "Realm";
-            dbs.Radius = 0;
+            dbs.Range = 0;
+            dbs.Radius = 350;
             dbs.Type = "HealOverTime";
             dbs.Value = spell.Value;
             dbs.Duration = spell.ResurrectHealth;
@@ -98,8 +97,6 @@ namespace DOL.GS.Spells
         public FOPSpellHandler(GameLiving caster, Spell spell, SpellLine line)
             : base(caster, spell, line)
         {
-            ApplyOnNPC = false;
-
             //Construct a new font.
             font = new GameFont();
             font.Model = 2583;
@@ -120,7 +117,8 @@ namespace DOL.GS.Spells
             dbs.Damage = spell.Damage;
             dbs.DamageType = (int)spell.DamageType;
             dbs.Target = "Realm";
-            dbs.Radius = 0;
+            dbs.Range = 0;
+            dbs.Radius = 350;
             dbs.Type = "PowerOverTime";
             dbs.Value = spell.Value;
             dbs.Duration = spell.ResurrectHealth;
@@ -271,12 +269,12 @@ namespace DOL.GS.Spells
     public class PoTSpellHandler : SpellHandler
     {
         /// <summary>
-        /// Execute heal over time spell
+        /// Execute power over time spell
         /// </summary>
         /// <param name="target"></param>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            m_caster.Mana -= PowerCost(target, true);
             base.FinishSpellCast(target);
         }
 
@@ -300,7 +298,7 @@ namespace DOL.GS.Spells
             base.ApplyEffectOnTarget(target, eff);
         }
 
-        protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
+        public override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
         {
             return new GameSpellEffect(this, Spell.Duration, Spell.Frequency, effectiveness);
         }
@@ -374,9 +372,9 @@ namespace DOL.GS.Spells
         public override void OnEffectStart(GameSpellEffect effect)
         {
         	base.OnEffectStart(effect);
-            effect.Owner.BaseBuffBonusCategory[(int)eProperty.MesmerizeDurationReduction] += (int)m_spell.Value;
-            effect.Owner.BaseBuffBonusCategory[(int)eProperty.StunDurationReduction] += (int)m_spell.Value;
-            effect.Owner.BaseBuffBonusCategory[(int)eProperty.SpeedDecreaseDurationReduction] += (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[eProperty.MesmerizeDurationReduction] += (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[eProperty.StunDurationReduction] += (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[eProperty.SpeedDecreaseDurationReduction] += (int)m_spell.Value;
              
             if (effect.Owner is GamePlayer)
             {
@@ -388,9 +386,9 @@ namespace DOL.GS.Spells
 
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-            effect.Owner.BaseBuffBonusCategory[(int)eProperty.MesmerizeDurationReduction] -= (int)m_spell.Value;
-            effect.Owner.BaseBuffBonusCategory[(int)eProperty.StunDurationReduction] -= (int)m_spell.Value;
-            effect.Owner.BaseBuffBonusCategory[(int)eProperty.SpeedDecreaseDurationReduction] -= (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[eProperty.MesmerizeDurationReduction] -= (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[eProperty.StunDurationReduction] -= (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[eProperty.SpeedDecreaseDurationReduction] -= (int)m_spell.Value;
             
             if (effect.Owner is GamePlayer)
             {

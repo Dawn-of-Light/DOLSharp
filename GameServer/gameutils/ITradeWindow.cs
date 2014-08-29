@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 using DOL.GS;
 using DOL.Database;
@@ -32,8 +31,8 @@ namespace DOL.GS
 	/// </summary>
 	public interface ITradeWindow
 	{
-		IList<InventoryItem> TradeItems { get; set;}
-		IList<InventoryItem> PartnerTradeItems { get; }
+		ArrayList TradeItems { get; set;}
+		ArrayList PartnerTradeItems { get; }
 
 		long TradeMoney { get; set; }
 		long PartnerTradeMoney { get; }

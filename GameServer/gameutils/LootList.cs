@@ -97,60 +97,34 @@ namespace DOL.GS
 
 			if (DropCount > 0)
 			{
-				// Big logic change. The intended flow of the original code was to iterate over the drop list
-				// DropCount times, each iteration doing the following:
-				// 1.) clear lootCandidates array
-				// 2.) for each loot item in m_randomItemDrops roll D100 against frequency
-				// 3.) each winner gts into lootCandidates array
-				// 4.) pick one random winner out of lootCandidates, add to the returned loot list
-				// The bug reported was caused by the loot.Add being outside the main loop. only
-				// the last winner made it into the loot array that is returned.
-				// There is a secondary defect that surfaces once the loop issue is fixed. There is
-				// a high chance of duplicate items dropping. This is counter to live game server
-				// behavior.
-				//
-				// New logic iterates once accross m_randomItemDrops, rolling D100 against frequency.
-				// Winner items are placed into lootCandidates. Once that loop is complete, we enter
-				// into a second loop. In each iteration, we select one random winner from lootCandidates,
-				// add it the to returned loot array, then remove it from lootCandidates. This avoids
-				// code-induced duplicates. I imagine that ArrayList.RemoveAt() is a little expensive on cpu
-				// cycles as it has to collapse the array each time an item is removed. A second option is
-				// to build a matching array of booleans, set all to false, and each time a winner is copied
-				// to loot, set the value in the matching array at the same index value to true. This introduces
-				// the need for a nested loop to avoid true values in the matching array, and if not coded properly,
-				// will hang the server as it loops an infinite number of times. The third option is to ignore
-				// all of this, say that dupes are o.k., pull loot.Add inside the main loop of the old code
-				// and move on.
 
 				// new logic
-				var lootCandidates = new List<LootEntry>();
+				List<LootEntry> lootCandidates = new List<LootEntry>();
 				foreach (LootEntry lootEntry in m_randomItemDrops)
 				{
-					if (lootEntry.Chance >= Util.Random(1, 100))
+					if (lootEntry.Chance >= Util.Random(0, 100))
 						lootCandidates.Add(lootEntry);
 				}
-				// At this point, the candidate list is filled with items that passed
-				// the %chance to drop, so we need to put DropCount of them into the return loot object.
-				//
-				// Initial control thought is to use the ArrayList.RemoveAt method and change the loop control
-				// to include a check on lootCandidates.Count. This assumes that the removeAt function re-builds
-				// the array and updates ArrayList.Count. If not, we'll be throwing exceptions like mad.
-
-				// copy random winners to returned loot list
-
-				if (lootCandidates.Count > 0)
+				
+				if(lootCandidates.Count < 1)
+					return loot.ToArray();
+				
+				// Pick up random item
+				int n = 0;
+				do
 				{
-					for (int i = 0; (i < DropCount && lootCandidates.Count != 0); i++)
-					{
-						int tmpidx = Util.Random(lootCandidates.Count - 1);
-						
-						loot.Add(lootCandidates[tmpidx].ItemTemplate);
-						
-						if (--(lootCandidates[tmpidx].Count) <= 0)
-							lootCandidates.RemoveAt(tmpidx);
-					}
-
+					int rnd = Util.Random(0, lootCandidates.Count-1);
+					
+					loot.Add(lootCandidates[rnd].ItemTemplate);
+					
+					(lootCandidates[rnd].Count)--;
+					
+					if(lootCandidates[rnd].Count < 1)
+						lootCandidates.RemoveAt(rnd);
+					
+					n++;
 				}
+				while(lootCandidates.Count > 0 && n < DropCount);
 			}
 
 			return loot.ToArray();
@@ -164,7 +138,6 @@ namespace DOL.GS
 	{
 		public readonly int Chance;
 		public readonly ItemTemplate ItemTemplate;
-		
 		public int Count;
 
 		public LootEntry(int chance, ItemTemplate item, int count)

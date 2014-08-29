@@ -82,7 +82,7 @@ namespace DOL.AI.Brain
 				}
             }
 
-			foreach (GamePlayer living in Body.GetPlayersInRadius((ushort)((TurretPet)Body).TurretSpell.Range, Body.CurrentRegion.IsDungeon ? false : true))
+			foreach (GamePlayer living in Body.GetPlayersInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
 			{
 				if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
 					continue;
@@ -106,7 +106,7 @@ namespace DOL.AI.Brain
 				}
 			}
 
-			foreach (GameNPC living in Body.GetNPCsInRadius((ushort)((TurretPet)Body).TurretSpell.Range, Body.CurrentRegion.IsDungeon ? false : true))
+			foreach (GameNPC living in Body.GetNPCsInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
 			{
 				if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
 					continue;

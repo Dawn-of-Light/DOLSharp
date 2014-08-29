@@ -37,6 +37,8 @@ namespace DOL.GS.PlayerTitles
 		/// <param name="player">The title owner.</param>
 		/// <returns>The title value.</returns>
 		string GetValue(GamePlayer player);
+		
+		string GetValue(GamePlayer source, GamePlayer target);
 		/// <summary>
 		/// Checks whether this title can be changed by the player.
 		/// </summary>

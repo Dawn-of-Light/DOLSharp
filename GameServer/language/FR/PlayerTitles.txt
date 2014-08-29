@@ -508,6 +508,7 @@ Titles.Reliques.ProtecteurReliques: Protecteur de Reliques
 # /Claim
 Titles.Claim.Frontier.FrontierChallenger: Défenseur des Frontières
 Titles.Claim.Frontier.FrontierVindicator: Gardien des Frontières
+Titles.Claim.Frontier.FrontierProtector: Frontier Protector FR
 Titles.Claim.Stronghold.StrongholdChief: Meneur de Siège
 Titles.Claim.Stronghold.StrongholdSoldier: Assiégeant de Forts
 
@@ -518,6 +519,7 @@ Titles.Deathblows.BattleMaster: Maître des batailles
 # /Kills
 Titles.Kills.Albion.BaneOfAlbion: Fléau d’Albion
 Titles.Kills.Albion.ScourgeOfAlbion: Calamité d'Albion
+Titles.Kills.Albion.SlayerOfAlbion:			Slayer of Albion FR
 Titles.Kills.All.MasterAssassine: Maître Assassin
 Titles.Kills.All.MasterEnforcer: Maître Commandant
 Titles.Kills.All.MasterSoldier: Maître Assaillant
@@ -528,12 +530,15 @@ Titles.Kills.Demon.DreadVanquisher: Terreur des Démons
 Titles.Kills.Dragon.DragonFoe: Chasseur de Dragons
 Titles.Kills.Dragon.DragonScourge: Menace des Dragons
 Titles.Kills.Dragon.DragonSlayer: Tueur de Dragons
+Titles.Kills.Dragon.DragonBane:				Dragon Bane FR
 Titles.Kills.Epic.EpicChallenger: Chasseur de Légendes
 Titles.Kills.Epic.EpicVictor: Donjons épiques
 Titles.Kills.Hibernia.BaneOfHibernia: Fléau d'Hibernia
 Titles.Kills.Hibernia.ScourgeOfHibernia: Calamité d'Hibernia
+Titles.Kills.Hibernia.SlayerOfHibernia:		Slayer of Hibernia FR
 Titles.Kills.Midgard.BaneOfMidgard: Fléau de Midgard
 Titles.Kills.Midgard.ScourgeOfMidgard: Calamité de Midgard
+Titles.Kills.Midgard.SlayerOfMidgard:			Slayer of Midgard FR
 
 # /Level
 Titles.Level.Level20Info: Level 20+

@@ -32,7 +32,7 @@ namespace DOL.GS.Spells
         /// <param name="target"></param>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            m_caster.Mana -= PowerCost(target, true);
             base.FinishSpellCast(target);
         }
 
@@ -72,7 +72,7 @@ namespace DOL.GS.Spells
         /// <param name="target"></param>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            m_caster.Mana -= PowerCost(target, true);
             base.FinishSpellCast(target);
         }
         public override void OnEffectStart(GameSpellEffect effect)
@@ -143,6 +143,10 @@ namespace DOL.GS.Spells
                     SendEffectAnimation(player, 0, false, 1);
 					player.MoveToBind();
                 }
+                else
+                {
+                	MessageToCaster("You can't teleport while in combat or carying relic !", eChatType.CT_SpellResisted);
+                }
             }
         }
     }
@@ -198,11 +202,11 @@ namespace DOL.GS.Spells
 
         private void Zephyr(GamePlayer target)
         {
-        	GameNPC npc = new GameNPC();
-        	
-            if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) 
+	        if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) 
             	return;
             
+	        GameNPC npc = new GameNPC();
+	        
             m_npc = npc;
 
             npc.Realm = Caster.Realm;
@@ -241,7 +245,7 @@ namespace DOL.GS.Spells
         {
             m_target.IsStunned = false;
 			m_target.DismountSteed(true);
-            m_target.DebuffCategory[(int)eProperty.SpellFumbleChance]-=100;
+            m_target.DebuffCategory[eProperty.SpellFumbleChance]-=100;
             GameEventMgr.RemoveHandler(m_target, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
             m_npc.StopMoving();
             m_npc.RemoveFromWorld();
@@ -298,7 +302,7 @@ namespace DOL.GS.Spells
 
             player.IsStunned = true;
             //player.IsSilenced = true;
-            player.DebuffCategory[(int)eProperty.SpellFumbleChance]+=100;
+            player.DebuffCategory[eProperty.SpellFumbleChance]+=100;
             player.StopAttack();
             player.StopCurrentSpellcast();
             player.MountSteed(npc, true);
@@ -306,29 +310,12 @@ namespace DOL.GS.Spells
 
             player.Out.SendMessage("You are picked up by a forceful zephyr!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
             npc.StopFollowing();
-			
-            if(ServerProperties.Properties.LOSMGR_ENABLE)
+
+            if (Caster is GamePlayer)
             {
-	            if (Caster is GamePlayer || MustCheckLOS(Caster))
-	            {
-	                try
-	                {
-	                	Caster.CurrentRegion.LosCheckManager.LosCheckVincinity(Caster, m_npc, new LosMgrResponse(ZephyrCheckLOS));
-	                }
-	                catch (LosUnavailableException)
-	                {
-	                	return;
-	                }	            	
-	            }
-            }
-            else
-            {
-	            if (Caster is GamePlayer)
-	            {
-	                //Calculate random target
-	                m_loc = GetTargetLoc();
-					(Caster as GamePlayer).Out.SendCheckLOS((Caster as GamePlayer), m_npc, new CheckLOSResponse(ZephyrCheckLOS));
-	            }
+                //Calculate random target
+                m_loc = GetTargetLoc();
+				(Caster as GamePlayer).Out.SendCheckLOS((Caster as GamePlayer), m_npc, new CheckLOSResponse(ZephyrCheckLOS));
             }
         }
 		public void ZephyrCheckLOS(GamePlayer player, ushort response, ushort targetOID)
@@ -337,12 +324,6 @@ namespace DOL.GS.Spells
 				m_npc.WalkTo(m_loc.X, m_loc.Y, m_loc.Z, 100);
         }
 
-		public void ZephyrCheckLOS(GamePlayer checker, GameObject source, GameObject target, bool losOK, EventArgs args, PropertyCollection tempProperties)
-        {
-            if (losOK && m_npc != null && m_loc != null)
-				m_npc.WalkTo(m_loc.X, m_loc.Y, m_loc.Z, 100);
-        }
-		
         public virtual IPoint3D GetTargetLoc()
         {
             double targetX = m_npc.X + Util.Random(-1500, 1500);
@@ -436,57 +417,79 @@ namespace DOL.GS.Spells
     {
         public Groupport(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-        public override bool CheckBeginCast(GameLiving selectedTarget)
+        public override bool CheckBeginCast(GameLiving selectedTarget, bool quiet)
         {
             if (Caster is GamePlayer && Caster.CurrentRegionID == 51 && ((GamePlayer)Caster).DBCharacter.BindRegion == 51)
             {
                 if (Caster.CurrentRegionID == 51)
                 {
-                    MessageToCaster("You can't use this Ability here", eChatType.CT_SpellResisted);
+                	if(!quiet)
+                    	MessageToCaster("You can't use this Ability here !", eChatType.CT_SpellResisted);
                     return false;
                 }
                 else
                 {
-                    MessageToCaster("Bind in another Region to use this Ability", eChatType.CT_SpellResisted);
+                	if(!quiet)
+                    	MessageToCaster("Bind in another Region to use this Ability.", eChatType.CT_SpellResisted);
                     return false;
                 }
             }
-            return base.CheckBeginCast(selectedTarget);
+            
+            if(Caster.Group == null)
+            {
+            	if(!quiet)
+                	MessageToCaster("You are not a part of a group !", eChatType.CT_SpellResisted);
+            	return false;
+            }
+            
+            
+            return base.CheckBeginCast(selectedTarget, quiet);
         }
 
-        public override void FinishSpellCast(GameLiving target)
+        public override bool CheckAfterCast(GameLiving target, bool quiet)
         {
-            base.FinishSpellCast(target);
+			GamePlayer player = Caster as GamePlayer;
+            if ((player != null) && (player.Group != null))
+            {
+            	// do not port group in combat
+                if (player.Group.IsGroupInCombat())
+                {
+                	if(!quiet)
+                		MessageToCaster("You can't teleport a group that is in combat !", eChatType.CT_SpellResisted);
+                    return false;
+                }
+                
+                // do not port group carying a relic
+                foreach(GamePlayer pl in player.Group.GetPlayersInTheGroup())
+                {
+                	GamePlayer ply = pl;
+                	if(ply != null)
+                	{
+                		if(GameRelic.IsPlayerCarryingRelic(ply))
+						{
+                			if(!quiet)
+								MessageToCaster("You can't teleport a group carying a relic !", eChatType.CT_SpellResisted);
+							return false;
+						}
+                	}
+                }
+                
+            }
+
+            return base.CheckAfterCast(target, quiet);
         }
 
         public override void OnDirectEffect(GameLiving target, double effectiveness)
         {
-            if (target == null) return;
-            if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
+        	if (target == null || !(target is GamePlayer)) return;
+            if (target.ObjectState != GameLiving.eObjectState.Active) return;
 
             GamePlayer player = Caster as GamePlayer;
-            if ((player != null) && (player.Group != null))
+            
+            if (player != null)
             {
-                if (player.Group.IsGroupInCombat())
-                {
-                    player.Out.SendMessage("You can't teleport a group that is in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                    return;
-                }
-                else
-                {
-                    foreach (GamePlayer pl in player.Group.GetPlayersInTheGroup())
-                    {
-                        if (pl != null)
-                        {
-                            SendEffectAnimation(pl, 0, false, 1);
-                            pl.MoveTo((ushort)player.DBCharacter.BindRegion, player.DBCharacter.BindXpos, player.DBCharacter.BindYpos, player.DBCharacter.BindZpos, (ushort)player.DBCharacter.BindHeading);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                player.Out.SendMessage("You are not a part of a group!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            	SendEffectAnimation(target, 0, false, 1);
+            	target.MoveTo((ushort)player.DBCharacter.BindRegion, player.DBCharacter.BindXpos, player.DBCharacter.BindYpos, player.DBCharacter.BindZpos, (ushort)player.DBCharacter.BindHeading);
             }
         }
     }

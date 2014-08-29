@@ -60,7 +60,7 @@ namespace DOL.GS
 		public const ushort ROG_CAP_QUAL = 99;
 		
 		// Item chance to get a TOA advanced stat in a TOA Item
-		public const ushort ROG_TOA_STAT_CHANCE = 10;
+		public const ushort ROG_TOA_STAT_CHANCE = 20;
 		
 		// Item chance to get stat bonus
 		public const ushort ROG_ITEM_STAT_CHANCE = 50;
@@ -321,35 +321,35 @@ namespace DOL.GS
 		{
 			// unique objects have more bonuses as level rises
 
-			int number = 0;
-
+			int number = 1;
+			
 			if (Util.Chance(ROG_100_MAGICAL_OFFSET + this.Level * 2)) // 100% magical starting at level 40
 			{
-				//1
+				//2
 				number++;
 
 				if (Util.Chance(this.Level * 8 - 40)) // level 6 - 17 (100%)
 				{
-					//2
+					//3
 					number++;
 
 					if (Util.Chance(this.Level * 6 - 60)) // level 11 - 27 (100%)
 					{
-						//3
+						//4
 						number++;
 
 						if (Util.Chance(this.Level * 4 - 80)) // level 21 - 45 (100%)
 						{
-							//4
+							//5
 							number++;
-
-							if (toa)
-								number++; // 5
 						}
 					}
 				}
 
 			}
+			
+			if (toa)
+				number++; // up to 6
 
 			// Magical items have at least 1 bonus
 			if (this.Object_Type == (int)eObjectType.Magical && number < 1)
@@ -2054,6 +2054,16 @@ namespace DOL.GS
 			{
 				this.Bonus5 = amount;
 				this.Bonus5Type = (int)property;
+			}
+			else if (this.Bonus6 == 0)
+			{
+				this.Bonus6 = amount;
+				this.Bonus6Type = (int)property;
+			}
+			else if (this.Bonus7 == 0)
+			{
+				this.Bonus7 = amount;
+				this.Bonus7Type = (int)property;
 			}
 		}
 

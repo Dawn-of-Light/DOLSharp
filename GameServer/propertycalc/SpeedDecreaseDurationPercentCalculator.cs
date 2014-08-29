@@ -36,10 +36,10 @@ namespace DOL.GS.PropertyCalc
 		public override int CalcValue(GameLiving living, eProperty property) 
 		{
 			int percent = 100
-				-living.BaseBuffBonusCategory[(int)property] // buff reduce the duration
-				+living.DebuffCategory[(int)property]
-				-living.ItemBonus[(int)property]
-				-living.AbilityBonus[(int)property];
+				-living.BaseBuffBonusCategory[property] // buff reduce the duration
+				+living.DebuffCategory[property]
+				-living.ItemBonus[property]
+				-living.AbilityBonus[property];
 
 			if (living.HasAbility(Abilities.Stoicism))
 				percent -= 25;

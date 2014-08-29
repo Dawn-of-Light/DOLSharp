@@ -103,7 +103,7 @@ namespace DOL.GS.SkillHandler
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.TargetIsWithinRadius"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
 			}
-			if (player.TargetObject is GamePlayer && SpellHandler.FindEffectOnTarget((GamePlayer)player.TargetObject, "Phaseshift") != null)
+			if (player.TargetObject is GamePlayer && SpellHelper.FindEffectOnTarget((GamePlayer)player.TargetObject, "Phaseshift") != null)
 			{
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.TargetIsPhaseshifted", player.TargetObject.Name), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
                 return;
@@ -136,7 +136,7 @@ namespace DOL.GS.SkillHandler
 			int primaryResistModifier = target.GetResist(eDamageType.Slash);
 
 			//Using the resist BuffBonusCategory2 - its unused in ResistCalculator
-			int secondaryResistModifier = target.SpecBuffBonusCategory[(int)eProperty.Resist_Slash];
+			int secondaryResistModifier = target.SpecBuffBonusCategory[eProperty.Resist_Slash];
 
 			int resistModifier = 0;
 			//primary resists
@@ -151,7 +151,7 @@ namespace DOL.GS.SkillHandler
 			//flurry is slash damage
 			target.TakeDamage(player, eDamageType.Slash, damage, 0);
 			
-			GameSpellEffect mez = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+			GameSpellEffect mez = SpellHelper.FindEffectOnTarget(target, "Mesmerize");
             if (mez != null)
                 mez.Cancel(false);
 

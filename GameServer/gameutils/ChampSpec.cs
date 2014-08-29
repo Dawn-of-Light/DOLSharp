@@ -18,14 +18,13 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using DOL.Database;
 using DOL.Events;
 namespace DOL.GS
 {
     public class ChampSpecMgr
     {
-        public static List<ChampSpec> m_championSpecs = new List<ChampSpec>();
+        public static ArrayList m_championSpecs = new ArrayList();
 
 		[ScriptLoadedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
@@ -39,7 +38,7 @@ namespace DOL.GS
 		public static void LoadChampionSpecs()
 		{
 			m_championSpecs.Clear();
-			IList<DBChampSpecs> specs = GameServer.Database.SelectAllObjects<DBChampSpecs>();
+			var specs = GameServer.Database.SelectAllObjects<DBChampSpecs>();
 			foreach (DBChampSpecs spec in specs)
 			{
 				ChampSpec newspec = new ChampSpec(spec.IdLine, spec.SkillIndex, spec.Index, spec.Cost, spec.SpellID);
@@ -49,7 +48,7 @@ namespace DOL.GS
 
 		public static ChampSpec GetAbilityFromIndex(int idline, int row, int index)
 		{
-			IList<ChampSpec> specs = ChampSpecMgr.GetAbilityForIndex(idline, row);
+			IList specs = ChampSpecMgr.GetAbilityForIndex(idline, row);
 			foreach (ChampSpec spec in specs)
 			{
 				if (spec.IdLine == idline && spec.SkillIndex == row && spec.Index == index)
@@ -60,9 +59,9 @@ namespace DOL.GS
 			return null;
 		}
 
-		public static IList<ChampSpec> GetAbilityForIndex(int idline, int skillindex)
+		public static IList GetAbilityForIndex(int idline, int skillindex)
 		{
-			List<ChampSpec> list = new List<ChampSpec>();
+			ArrayList list = new ArrayList();
 
 			foreach (ChampSpec spec in m_championSpecs)
 			{
@@ -76,10 +75,10 @@ namespace DOL.GS
 		}
 
 
-		public class Sorter : IComparer<ChampSpec>
+		public class Sorter : IComparer
         {
             //Lohx add - for sorting arraylist ascending
-            public int Compare(ChampSpec x, ChampSpec y)
+            int IComparer.Compare(object x, object y)
             {
                 ChampSpec spec1 = (ChampSpec)x;
                 ChampSpec spec2 = (ChampSpec)y;

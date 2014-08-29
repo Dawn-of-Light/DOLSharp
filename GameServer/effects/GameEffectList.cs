@@ -31,7 +31,7 @@ using log4net;
 namespace DOL.GS.Effects
 {
 	/// <summary>
-	/// Holds &amp; manages multiple effects on livings
+	/// Holds and manages multiple effects on livings
 	/// when iterating over this effect list lock the list!
 	/// </summary>
 	public class GameEffectList : IEnumerable<IGameEffect>
@@ -44,16 +44,8 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// Stores all effects
 		/// </summary>
-		protected List<IGameEffect> m_effects = new List<IGameEffect>();
+		protected List<IGameEffect> m_effects;
 
-		public object SyncRoot
-		{
-			get
-			{
-				return ((ICollection)m_effects).SyncRoot;
-			}
-		}
-		
 		/// <summary>
 		/// The owner of this list
 		/// </summary>
@@ -90,10 +82,12 @@ namespace DOL.GS.Effects
 			if (!m_owner.IsAlive || m_owner.ObjectState != GameObject.eObjectState.Active)
 				return false;	// dead owners don't get effects
 
-			if (m_effects == null)
-				m_effects = new List<IGameEffect>(5);
-			
-			lock (SyncRoot)
+			//lock (this)
+			{
+				if (m_effects == null)
+					m_effects = new List<IGameEffect>(5);
+			}
+			lock (m_effects)
 			{
 				effect.InternalID = m_runningID++;
 				if (m_runningID == 0)
@@ -118,17 +112,15 @@ namespace DOL.GS.Effects
 			if (m_effects == null)
 				return false;
 
-			lock (SyncRoot)
+			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this')
 			{
-				
-				if(m_effects.Contains(effect))
-					m_effects.Remove(effect);
-				else
+				int index = m_effects.IndexOf(effect);
+				if (index < 0)
 					return false;
-				
-				foreach (IGameEffect ig in m_effects)
+				m_effects.RemoveAt(index);
+				for (int i = index; i < m_effects.Count; i++)
 				{
-					changedEffects.Add(ig);
+					changedEffects.Add(m_effects[i]);
 				}
 			}
 
@@ -147,7 +139,7 @@ namespace DOL.GS.Effects
 
 			if (m_effects == null)
 				return;
-			lock (SyncRoot)
+			lock (m_effects)
 			{
 				fx = new List<IGameEffect>(m_effects);
 				m_effects.Clear();
@@ -215,7 +207,7 @@ namespace DOL.GS.Effects
 				return;
 			if (m_effects == null)
 				return;
-			lock (SyncRoot)
+			lock (m_effects)
 			{
 				if (m_effects.Count < 1)
 					return;
@@ -300,7 +292,7 @@ namespace DOL.GS.Effects
 			if (m_effects == null)
 				return default(T);
 
-			lock (SyncRoot)
+			lock (m_effects)
 			{
 				foreach (IGameEffect effect in m_effects)
 					if (effect.GetType().Equals(typeof(T)))
@@ -319,7 +311,7 @@ namespace DOL.GS.Effects
 			if (m_effects == null)
 				return new List<T>();
 
-			lock (SyncRoot)
+			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this')
 			{
 				return m_effects.Where(effect => effect.GetType().Equals(typeof (T))).Cast<T>().ToList();
 			}
@@ -335,7 +327,7 @@ namespace DOL.GS.Effects
 			if (m_effects == null)
 				return 0;
 
-			lock (SyncRoot)
+			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this')
 			{
 				return m_effects.Count(effect => effect.GetType().Equals(typeof(T)));
 			}
@@ -351,7 +343,7 @@ namespace DOL.GS.Effects
 			if (m_effects == null)
 				return 0;
 
-			lock (SyncRoot)
+			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this')
 			{
 				return m_effects.Join(types, e => e.GetType(), t => t, (e, t) => e).Count();
 			}
@@ -365,7 +357,7 @@ namespace DOL.GS.Effects
 		public virtual IGameEffect GetOfType(Type effectType)
 		{
 			if (m_effects == null) return null;
-			lock (SyncRoot)
+			lock (m_effects)
 			{
 				foreach (IGameEffect effect in m_effects)
 					if (effect.GetType().Equals(effectType)) return effect;
@@ -380,11 +372,11 @@ namespace DOL.GS.Effects
 		/// <returns>resulting effectlist</returns>
 		public virtual IList GetAllOfType(Type effectType)
 		{
-			List<IGameEffect> list = new List<IGameEffect>();
+			ArrayList list = new ArrayList();
 
 			if (m_effects == null) return list;
 
-			lock (SyncRoot)
+			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this')
 			{
 				foreach (IGameEffect effect in m_effects)
 					if (effect.GetType().Equals(effectType)) list.Add(effect);

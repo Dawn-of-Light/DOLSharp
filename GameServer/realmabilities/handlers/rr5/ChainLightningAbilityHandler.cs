@@ -79,7 +79,7 @@ namespace DOL.GS.RealmAbilities
                     if (p != m_oldtarget && p != living && GameServer.ServerRules.IsAllowedToAttack(living, p, true))
                     {
                         DamageTarget(p, living, x);
-						p.StartInterruptTimer(3000, AttackData.eAttackType.Spell, living);
+						p.StartInterruptTimer(p.SpellInterruptDuration, AttackData.eAttackType.Spell, living);
                         m_newtarget = p;
                         break;
                     }
@@ -117,7 +117,7 @@ namespace DOL.GS.RealmAbilities
 
             //target.TakeDamage(caster, eDamageType.Spirit, damage, 0);
             AttackData ad = new AttackData();
-            ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
+            ad.AttackResult = eAttackResult.HitUnstyled;
             ad.Attacker = caster;
             ad.Target = target;
             ad.DamageType = eDamageType.Energy;

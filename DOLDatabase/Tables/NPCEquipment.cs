@@ -17,7 +17,7 @@
  *
  */
 using System;
-using DOL.Database;
+
 using DOL.Database.Attributes;
 
 namespace DOL.Database
@@ -32,31 +32,33 @@ namespace DOL.Database
 		/// <summary>
 		/// The Equipment Template ID
 		/// </summary>
-		protected string	m_templateID;
+		private string m_templateID;
 		/// <summary>
 		/// The Item Slot
 		/// </summary>
-		protected int		m_slot;
+		private int m_slot;
 		/// <summary>
 		/// The Item Model
 		/// </summary>
-		protected int		m_model;
+		private int m_model;
 		/// <summary>
 		/// The Item Color
 		/// </summary>
-		protected int		m_color;
+		private int m_color;
 		/// <summary>
 		/// The Item Effect
 		/// </summary>
-		protected int		m_effect;
+		private int m_effect;
 		/// <summary>
 		/// The Item Extension
 		/// </summary>
-		protected int		m_extension;
+		private int m_extension;
 		/// <summary>
 		/// The Item Emblem
 		/// </summary>
-		protected int		m_emblem;
+		private int m_emblem;
+		
+		private string m_packageID;
 
 		/// <summary>
 		/// The Constructor
@@ -68,7 +70,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Template ID
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull=false, Varchar = 150, Index = true)]
 		public string TemplateID
 		{
 			get
@@ -182,6 +184,15 @@ namespace DOL.Database
 				Dirty = true;
 				m_emblem = value;
 			}
+		}
+		
+		/// <summary>
+		/// Package ID for export/import
+		/// </summary>
+		[DataElement(AllowDbNull = true, Varchar = 255)]
+		public string PackageID {
+			get { return m_packageID; }
+			set { m_packageID = value; Dirty = true; }
 		}
 	}
 }

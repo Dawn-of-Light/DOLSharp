@@ -25,7 +25,7 @@ namespace DOL.GS.PropertyCalc
 				if ((living as GamePlayer).CharacterClass.ClassType == eClassType.ListCaster)
 					chance += 10;
 			}
-			chance += living.AbilityBonus[(int)property];
+			chance += living.AbilityBonus[property];
 			return Math.Min(chance, 50);
 		}
 	}

@@ -72,6 +72,9 @@ namespace DOL.Database
 		protected bool m_issecondary;
 		protected bool m_allowbolt;
 		
+		// Composite spell needing more params
+		protected string m_params = string.Empty;
+		
 		public DBSpell()
 		{
 			AllowAdd = false;
@@ -544,6 +547,7 @@ namespace DOL.Database
 				m_isfocus = value;
 			}
 		}
+		
 		[DataElement(AllowDbNull = true)]
 		public int SharedTimerGroup
 		{
@@ -572,6 +576,7 @@ namespace DOL.Database
 				m_isprimary = (bool)value;
 			}
 		}
+		
 		[DataElement(AllowDbNull = true)]
 		public bool IsSecondary
 		{
@@ -585,6 +590,7 @@ namespace DOL.Database
 				m_issecondary = (bool)value;
 			}
 		}
+		
 		[DataElement(AllowDbNull = true)]
 		public bool AllowBolt
 		{
@@ -598,6 +604,7 @@ namespace DOL.Database
 				m_allowbolt = (bool)value;
 			}
 		}
+		
 		[DataElement(AllowDbNull = true)]
 		public string PackageID
 		{
@@ -612,5 +619,16 @@ namespace DOL.Database
 			}
 		}
 		#endregion
+		
+		[DataElement(AllowDbNull = true, Varchar=255)]
+		public string Params
+		{
+			get { return m_params; }
+			set
+			{
+				Dirty = true;
+				m_params = value;
+			}
+		}
 	}
 }

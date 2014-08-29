@@ -1,6 +1,5 @@
 using System.Reflection;
 using System.Collections;
-using System.Collections.Generic;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
@@ -57,7 +56,7 @@ namespace DOL.GS.RealmAbilities
 
 			DisableSkill(living);
 
-			List<GameLiving> targets = new List<GameLiving>();
+			ArrayList targets = new ArrayList();
 
 			if (player.Group == null)
 				targets.Add(player);
@@ -79,7 +78,7 @@ namespace DOL.GS.RealmAbilities
 					visPlayer.Out.SendSpellEffectAnimation(player, target, 7021, 0, false, CastSuccess(success));
 				if (success)
 				{
-					GameSpellEffect speed = Spells.SpellHandler.FindEffectOnTarget(target, "SpeedEnhancement");
+					GameSpellEffect speed = Spells.SpellHelper.FindEffectOnTarget(target, "SpeedEnhancement");
 					if (speed != null)
 						speed.Cancel(false);
 					new SpeedOfSoundEffect(m_duration).Start(target);

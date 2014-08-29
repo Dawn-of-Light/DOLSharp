@@ -361,7 +361,7 @@ namespace DOL.GS.Commands
 		GameStaticItem CreateItemInstance(GameClient client, string itemClassName)
 		{
 			GameStaticItem obj = null;
-			List<Assembly> asms = new List<Assembly>(ScriptMgr.Scripts);
+			ArrayList asms = new ArrayList(ScriptMgr.Scripts);
 			asms.Add(typeof(GameServer).Assembly);
 
 			foreach (Assembly script in asms)

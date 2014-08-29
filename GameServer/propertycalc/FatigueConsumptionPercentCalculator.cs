@@ -35,9 +35,9 @@ namespace DOL.GS.PropertyCalc
 		public override int CalcValue(GameLiving living, eProperty property)
 		{
 			return Math.Max(1, 100
-				- living.BaseBuffBonusCategory[(int)property] // less is faster = buff
-				+ living.DebuffCategory[(int)property] // more is slower = debuff
-				- Math.Min(10, living.ItemBonus[(int)property])); // ?
+				- living.BaseBuffBonusCategory[property] // less is faster = buff
+				+ living.DebuffCategory[property] // more is slower = debuff
+				- Math.Min(10, living.ItemBonus[property])); // ?
 		}
 	}
 }

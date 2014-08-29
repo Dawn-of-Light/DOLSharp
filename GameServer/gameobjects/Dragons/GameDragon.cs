@@ -127,15 +127,16 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="damageType"></param>
 		/// <returns></returns>
-		public override int GetResist(eDamageType damageType)
+		public override int GetResist(eProperty propertyType)
 		{
 			// 35% vulnerable to melee, 1% to everything else.
 
-			switch (damageType)
+			switch (propertyType)
 			{
-				case eDamageType.Slash : 
-				case eDamageType.Crush :
-				case eDamageType.Thrust: return 65 * DragonDifficulty / 100;
+				case eProperty.Resist_Crush :
+				case eProperty.Resist_Slash :
+				case eProperty.Resist_Thrust:
+					return 65 * DragonDifficulty / 100;
 				default: return 99 * DragonDifficulty / 100;
 			}
 		}

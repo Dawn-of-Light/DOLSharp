@@ -79,7 +79,7 @@ namespace DOL.GS.RealmAbilities
 					
                 //Check to see if the player is phaseshifted
                 GameSpellEffect phaseshift;
-                phaseshift = SpellHandler.FindEffectOnTarget(t_player, "Phaseshift");
+                phaseshift = SpellHelper.FindEffectOnTarget(t_player, "Phaseshift");
                 if (phaseshift != null)
                 {
                     caster.Out.SendMessage(t_player.Name + " is Phaseshifted and can't be effected by this Spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);

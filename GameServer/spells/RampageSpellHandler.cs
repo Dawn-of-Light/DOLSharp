@@ -17,14 +17,62 @@
  *
  */
 using System;
-using DOL.GS;
+using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
+using DOL.Events;
+
+using log4net;
 
 namespace DOL.GS.Spells
 {
     [SpellHandlerAttribute("Rampage")]
     public class RampageBuffHandler : SpellHandler
     {
-        public RampageBuffHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+    	
+    	private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    	
+		public override void OnEffectStart(DOL.GS.Effects.GameSpellEffect effect)
+		{
+			base.OnEffectStart(effect);
+			
+			if(effect.Owner != null)
+				GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
+		}
+		
+		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
+		{
+			if(effect.Owner != null)
+				GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
+					
+			return base.OnEffectExpires(effect, noMessages);
+		}
+    	
+		protected virtual void OnAttacked(DOLEvent e, object sender, EventArgs args)
+		{
+			MessageToCaster("Rampage debug : receive attack", eChatType.CT_Spell);				
+			if(sender == null || !(args is AttackedByEnemyEventArgs))
+				return;
+			
+			AttackedByEnemyEventArgs attackArgs = (AttackedByEnemyEventArgs)args;
+			
+			if(attackArgs.AttackData != null)
+				log.InfoFormat("Received Attack : {0}", attackArgs.AttackData);
+			
+			MessageToCaster("Rampage debug : test if it's a not resisted spell", eChatType.CT_Spell);				
+			if(attackArgs.AttackData == null || attackArgs.AttackData.AttackType != AttackData.eAttackType.Spell || attackArgs.AttackData.IsSpellResisted)
+				return;
+			
+			MessageToCaster("Rampage debug : test if it's a debuff", eChatType.CT_Spell);				
+			if(attackArgs.AttackData.SpellHandler != null && attackArgs.AttackData.SpellHandler is SingleStatDebuff)
+			{
+				attackArgs.AttackData.IsSpellResisted = true;
+				MessageToCaster("The debuff was deflected by your Rampage Ability !", eChatType.CT_Spell);
+			}
+		}
+		
+        public RampageBuffHandler(GameLiving caster, Spell spell, SpellLine line)
+        	: base(caster, spell, line)
+        {
+        }
     }
 }

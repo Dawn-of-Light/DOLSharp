@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database;
 using DOL.GS.Keeps;
@@ -28,7 +27,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, eClientPackets.PlayerRegionChangeRequest, ClientStatus.PlayerInGame)]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.PlayerRegionChangeRequest, "Player Region Change Request handler.", eClientStatus.PlayerInGame)]
 	public class PlayerRegionChangeRequestHandler : IPacketHandler
 	{
 		/// <summary>
@@ -39,7 +38,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <summary>
 		/// Holds jump point types
 		/// </summary>
-		protected readonly Dictionary<string, IJumpPointHandler> m_customJumpPointHandlers = new Dictionary<string, IJumpPointHandler>();
+		protected readonly Hashtable m_customJumpPointHandlers = new Hashtable();
 
 		#region IPacketHandler Members
 
@@ -135,8 +134,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			IJumpPointHandler customHandler = null;
 			if (string.IsNullOrEmpty(zonePoint.ClassType) == false)
 			{
-				if(m_customJumpPointHandlers.ContainsKey(zonePoint.ClassType))
-					customHandler = m_customJumpPointHandlers[zonePoint.ClassType];
+				customHandler = (IJumpPointHandler)m_customJumpPointHandlers[zonePoint.ClassType];
 
 				// check for db change to update cached handler
 				if (customHandler != null && customHandler.GetType().FullName != zonePoint.ClassType)

@@ -168,7 +168,7 @@ namespace DOL.GS
 				}
 
 				// Check if the house at the player's house bind location still exists
-				List<House> houses = (List<House>)HouseMgr.GetHousesCloseToSpot((ushort)player.
+				ArrayList houses = (ArrayList)HouseMgr.GetHousesCloseToSpot((ushort)player.
 					DBCharacter.BindHouseRegion, player.DBCharacter.BindHouseXpos, player.
 					DBCharacter.BindHouseYpos, 700);
 				if (houses.Count == 0)

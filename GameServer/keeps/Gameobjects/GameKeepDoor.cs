@@ -104,12 +104,12 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (this.Component == null || this.Component.Keep == null)
+				if (this.Component == null || this.Component.AbstractKeep == null)
 				{
 					return eRealm.None;
 				}
 
-				return this.Component.Keep.Realm;
+				return this.Component.AbstractKeep.Realm;
 			}
 		}
 
@@ -142,12 +142,12 @@ namespace DOL.GS.Keeps
 		{
 			get 
 			{
-				if (this.Component == null || this.Component.Keep == null)
+				if (this.Component == null || this.Component.AbstractKeep == null)
 				{
 					return 0;
 				}
 
-				return (byte)this.Component.Keep.Level;
+				return (byte)this.Component.AbstractKeep.Level;
 			}
 		}
 
@@ -172,15 +172,15 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (this.Component == null || this.Component.Keep == null)
+				if (this.Component == null || this.Component.AbstractKeep == null)
 					return false;
 
-				if (this.Component.Keep is GameKeepTower)
+				if (this.Component.AbstractKeep is GameKeepTower)
 				{
 					if (this.DoorIndex == 1)
 						return true;
 				}
-				else if (this.Component.Keep is GameKeep)
+				else if (this.Component.AbstractKeep is GameKeep)
 				{
 					if (this.Component.Skin == 10 || this.Component.Skin == 30) //old and new inner keep
 					{
@@ -300,7 +300,7 @@ namespace DOL.GS.Keeps
 		{
 			if (damageAmount > 0)
 			{
-				this.Component.Keep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
+				this.Component.AbstractKeep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
 				base.TakeDamage(source, damageType, damageAmount, criticalAmount);
 
 				//only on hp change
@@ -329,15 +329,15 @@ namespace DOL.GS.Keeps
 
 			GameLiving source = attackData.Attacker;
 
-			if (this.Component.Keep is GameKeepTower)
+			if (this.Component.AbstractKeep is GameKeepTower)
 			{
 				toughness = ServerProperties.Properties.SET_TOWER_DOOR_TOUGHNESS;
 			}
 
 			if (source is GamePlayer)
 			{
-				baseDamage = (baseDamage - (baseDamage * 5 * this.Component.Keep.Level / 100)) * toughness / 100;
-				styleDamage = (styleDamage - (styleDamage * 5 * this.Component.Keep.Level / 100)) * toughness / 100;
+				baseDamage = (baseDamage - (baseDamage * 5 * this.Component.AbstractKeep.Level / 100)) * toughness / 100;
+				styleDamage = (styleDamage - (styleDamage * 5 * this.Component.AbstractKeep.Level / 100)) * toughness / 100;
 			}
 			else if (source is GameNPC)
 			{
@@ -349,8 +349,8 @@ namespace DOL.GS.Keeps
 				}
 				else
 				{
-					baseDamage = (baseDamage - (baseDamage * 5 * this.Component.Keep.Level / 100)) * toughness / 100;
-					styleDamage = (styleDamage - (styleDamage * 5 * this.Component.Keep.Level / 100)) * toughness / 100;
+					baseDamage = (baseDamage - (baseDamage * 5 * this.Component.AbstractKeep.Level / 100)) * toughness / 100;
+					styleDamage = (styleDamage - (styleDamage * 5 * this.Component.AbstractKeep.Level / 100)) * toughness / 100;
 
 					if (((GameNPC)source).Brain is DOL.AI.Brain.IControlledBrain)
 					{
@@ -416,13 +416,20 @@ namespace DOL.GS.Keeps
 					distance = 100;
 
 				//calculate Z
-				if (this.Component.Keep is GameKeepTower && !this.Component.Keep.IsPortalKeep)
+				if (this.Component.AbstractKeep is GameKeepTower && !this.Component.AbstractKeep.IsPortalKeep)
 				{
 					//when entering a tower, we need to raise Z
 					//portal keeps are considered towers too, so we check component count
-					if (IsObjectInFront(player, 180, false) && DoorIndex == 1)
+					if (IsObjectInFront(player, 180, false))
 					{
-						keepz = Z + 83;
+						if (DoorID == 1)
+						{
+							keepz = Z + 83;
+						}
+						else
+						{
+							distance = 150;
+						}
 					}
 				}
 				else
@@ -434,7 +441,7 @@ namespace DOL.GS.Keeps
 						//the component for the keep and the component for the gate
 						int keepdistance = int.MaxValue;
 						int gatedistance = int.MaxValue;
-						foreach (GameKeepComponent c in this.Component.Keep.KeepComponents)
+						foreach (GameKeepComponent c in this.Component.AbstractKeep.KeepComponents)
 						{
 							if ((GameKeepComponent.eComponentSkin)c.Skin == GameKeepComponent.eComponentSkin.Keep)
 							{
@@ -557,10 +564,9 @@ namespace DOL.GS.Keeps
 
 			if (Component != null)
 			{
-				if (Component.Keep != null)
+				if (Component.AbstractKeep != null)
 				{
-					if(Component.Keep.Doors.ContainsKey(this.ObjectID.ToString()))
-						Component.Keep.Doors.Remove(this.ObjectID.ToString());
+					Component.AbstractKeep.Doors.Remove(this.ObjectID);
 				}
 
 				Component.Delete();
@@ -623,11 +629,11 @@ namespace DOL.GS.Keeps
 				if (area is KeepArea)
 				{
 					AbstractGameKeep keep = (area as KeepArea).Keep;
-					if (!keep.Doors.ContainsKey(door.InternalID.ToString()))
+					if (!keep.Doors.Contains(door.InternalID))
 					{
 						Component = new GameKeepComponent();
-						Component.Keep = keep;
-						keep.Doors.Add(door.InternalID.ToString(), this);
+						Component.AbstractKeep = keep;
+						keep.Doors.Add(door.InternalID, this);
 					}
 					break;
 				}
@@ -644,7 +650,7 @@ namespace DOL.GS.Keeps
 			m_component = component;
 
 			PositionMgr.LoadKeepItemPosition(pos, this);
-			component.Keep.Doors[m_templateID] = this;
+			component.AbstractKeep.Doors[m_templateID] = this;
 
 			m_oldMaxHealth = MaxHealth;
 			m_health = MaxHealth;
@@ -661,7 +667,7 @@ namespace DOL.GS.Keeps
 			}
 			else
 			{
-				log.Error("Failed to load keep door from position! DoorID=" + m_doorID + ". Component SkinID=" + component.Skin + ". KeepID=" + component.Keep.KeepID);
+				log.Error("Failed to load keep door from position! DoorID=" + m_doorID + ". Component SkinID=" + component.Skin + ". KeepID=" + component.AbstractKeep.KeepID);
 			}
 
 		}
@@ -675,9 +681,9 @@ namespace DOL.GS.Keeps
 			int ownerKeepID = 0;
 			int towerIndex = 0;
 
-			if (m_component.Keep is GameKeepTower)
+			if (m_component.AbstractKeep is GameKeepTower)
 			{
-				GameKeepTower tower = m_component.Keep as GameKeepTower;
+				GameKeepTower tower = m_component.AbstractKeep as GameKeepTower;
 
 				if (tower.Keep != null)
 				{
@@ -692,7 +698,7 @@ namespace DOL.GS.Keeps
 			}
 			else
 			{
-				ownerKeepID = m_component.Keep.KeepID;
+				ownerKeepID = m_component.AbstractKeep.KeepID;
 			}
 
 			int componentID = m_component.ID;
@@ -765,10 +771,10 @@ namespace DOL.GS.Keeps
 
 		public int RepairTimerCallback(RegionTimer timer)
 		{
-			if (Component == null || Component.Keep == null)
+			if (Component == null || Component.AbstractKeep == null)
 				return 0;
 
-			if (HealthPercent == 100 || Component.Keep.InCombat)
+			if (HealthPercent == 100 || Component.AbstractKeep.InCombat)
 				return repairInterval;
 
 			Repair((MaxHealth / 100) * 5);

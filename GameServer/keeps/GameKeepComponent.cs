@@ -33,7 +33,7 @@ namespace DOL.GS.Keeps
 	/// <summary>
 	/// A keepComponent
 	/// </summary>
-	public class GameKeepComponent : GameLiving, IComparable
+	public class GameKeepComponent : GameLiving, IComparable, IGameKeepComponent
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -69,16 +69,22 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// keep owner of component
 		/// </summary>
-		private AbstractGameKeep m_keep;
+		private AbstractGameKeep m_abstractKeep;
 		/// <summary>
 		/// keep owner of component
 		/// </summary>
-		public AbstractGameKeep Keep
+		public AbstractGameKeep AbstractKeep
 		{
-			get { return m_keep; }
-			set { m_keep = value; }
+			get { return m_abstractKeep; }
+			set { m_abstractKeep = value; }
 		}
 
+		public IGameKeep Keep
+		{
+			get { return (IGameKeep)m_abstractKeep; }
+			set { m_abstractKeep = (AbstractGameKeep)value; }
+		}
+		
 		/// <summary>
 		/// id of keep component id keep
 		/// </summary>
@@ -97,7 +103,7 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public int Height
 		{
-			get { return GameServer.KeepManager.GetHeightFromLevel(this.Keep.Level); }
+			get { return GameServer.KeepManager.GetHeightFromLevel(this.AbstractKeep.Level); }
 		}
 
 		/// <summary>
@@ -114,7 +120,7 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-                if (m_skin == (int)eComponentSkin.Wall && !this.Keep.IsPortalKeep)
+                if (m_skin == (int)eComponentSkin.Wall && !this.AbstractKeep.IsPortalKeep)
 					return true;
 				return false;
 			}
@@ -169,7 +175,7 @@ namespace DOL.GS.Keeps
 			get
 			{
 				//return (byte)(40 + Keep.Level);
-				return (byte)(Keep.BaseLevel-10 + (Keep.Level * 3));
+				return (byte)(AbstractKeep.BaseLevel-10 + (AbstractKeep.Level * 3));
 			}
 		}
 
@@ -177,28 +183,50 @@ namespace DOL.GS.Keeps
 		{
 			get 
 			{
-				if (Keep != null)
+				if (AbstractKeep != null)
 				{
-					return Keep.Realm; 
+					return AbstractKeep.Realm; 
 				}
 
 				return eRealm.None;
 			}
 		}
 
-		private Dictionary<int, GameKeepHookPoint> m_hookPoints;
+		private Hashtable m_keepHookPoints;
 		protected byte m_oldHealthPercent;
 		protected bool m_isRaized;
 
-		public Dictionary<int, GameKeepHookPoint> HookPoints
+		public Hashtable KeepHookPoints
 		{
-			get { return m_hookPoints; }
-			set { m_hookPoints = value; }
+			get { return m_keepHookPoints; }
+			set { m_keepHookPoints = value; }
 		}
 
+		public IDictionary<int, GameKeepHookPoint> HookPoints
+		{
+			get
+			{
+				Dictionary<int, GameKeepHookPoint> dict = new Dictionary<int, GameKeepHookPoint>();
+				foreach (DictionaryEntry item in m_keepHookPoints)
+				{
+					dict.Add((int)item.Key, (GameKeepHookPoint)item.Value);
+				}
+				
+				return dict;
+			}
+			set
+			{
+				Hashtable newHashTable = new Hashtable();
+				foreach (KeyValuePair<int, GameKeepHookPoint> item in value)
+				{
+					newHashTable.Add(item.Key, item.Value);
+				}
+				KeepHookPoints = newHashTable;
+			}
+		}
 
-		private Dictionary<string, DBKeepPosition[]> m_positions;
-		public Dictionary<string, DBKeepPosition[]> Positions
+		private Hashtable m_positions;
+		public Hashtable Positions
 		{
 			get { return m_positions; }
 		}
@@ -295,8 +323,8 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public GameKeepComponent()
 		{
-			m_hookPoints = new Dictionary<int, GameKeepHookPoint>(41);
-			m_positions = new Dictionary<string, DBKeepPosition[]>();
+			m_keepHookPoints = new Hashtable(41);
+			m_positions = new Hashtable();
 		}
 
 		/// <summary>
@@ -307,7 +335,7 @@ namespace DOL.GS.Keeps
 			Region myregion = WorldMgr.GetRegion((ushort)keep.Region);
 			if (myregion == null)
 				return;
-			this.Keep = keep;
+			this.AbstractKeep = keep;
 			//this.DBKeepComponent = component;
 			base.LoadFromDatabase(component);
 			//this x and y is for get object in radius
@@ -369,10 +397,7 @@ namespace DOL.GS.Keeps
 
 			foreach (DBKeepPosition position in DBPositions)
 			{
-				DBKeepPosition[] list = null;
-				if(this.Positions.ContainsKey(position.TemplateID))
-					list = this.Positions[position.TemplateID] as DBKeepPosition[];
-				
+				DBKeepPosition[] list = this.Positions[position.TemplateID] as DBKeepPosition[];
 				if (list == null)
 				{
 					list = new DBKeepPosition[4];
@@ -395,24 +420,24 @@ namespace DOL.GS.Keeps
 						bool create = false;
 						if (position.ClassType == "DOL.GS.Keeps.GameKeepBanner")
 						{
-							if (!this.Keep.Banners.ContainsKey(position.TemplateID) || this.Keep.Banners[position.TemplateID] == null)
+							if (this.AbstractKeep.Banners[position.TemplateID] == null)
 								create = true;
 						}
 						else if (position.ClassType == "DOL.GS.Keeps.GameKeepDoor")
 						{
-							if (!this.Keep.Doors.ContainsKey(position.TemplateID) || this.Keep.Doors[position.TemplateID] == null)
+							if (this.AbstractKeep.Doors[position.TemplateID] == null)
 								create = true;
 						}
 						else if (position.ClassType == "DOL.GS.Keeps.FrontierTeleportStone")
 						{
-							if (this.Keep.TeleportStone == null)
+							if (this.AbstractKeep.TeleportStone == null)
 								create = true;
 						}
 						else if (position.ClassType == "DOL.GS.Keeps.Patrol")
 						{
-							if (position.KeepType == (int)AbstractGameKeep.eKeepType.Any || position.KeepType == (int)Keep.KeepType)
+							if (position.KeepType == (int)AbstractGameKeep.eKeepType.Any || position.KeepType == (int)AbstractKeep.KeepType)
 							{
-								if (!this.Keep.Patrols.ContainsKey(position.TemplateID) || this.Keep.Patrols[position.TemplateID] == null)
+								if (this.AbstractKeep.Patrols[position.TemplateID] == null)
 								{
 									Patrol p = new Patrol(this);
 									p.SpawnPosition = position;
@@ -424,7 +449,7 @@ namespace DOL.GS.Keeps
 						}
 						else
 						{
-							if (!this.Keep.Guards.ContainsKey(position.TemplateID) || this.Keep.Guards[position.TemplateID] == null)
+							if (this.AbstractKeep.Guards[position.TemplateID] == null)
 								create = true;
 						}
 						if (create)
@@ -454,9 +479,9 @@ namespace DOL.GS.Keeps
 						else
 						{
 							//move the object
-							if (position.ClassType == "DOL.GS.Keeps.GameKeepBanner" && this.Keep.Banners.ContainsKey(position.TemplateID))
+							if (position.ClassType == "DOL.GS.Keeps.GameKeepBanner")
 							{
-								IKeepItem banner = this.Keep.Banners[position.TemplateID] as IKeepItem;
+								IKeepItem banner = this.AbstractKeep.Banners[position.TemplateID] as IKeepItem;
 								if (banner.Position != position)
 								{
 									banner.MoveToPosition(position);
@@ -470,9 +495,9 @@ namespace DOL.GS.Keeps
 							{ 
 								//these dont move
 							}
-							else if(this.Keep.Guards.ContainsKey(position.TemplateID))
+							else
 							{
-								IKeepItem guard = this.Keep.Guards[position.TemplateID] as IKeepItem;
+								IKeepItem guard = this.AbstractKeep.Guards[position.TemplateID] as IKeepItem;
 								guard.MoveToPosition(position);
 							}
 						}
@@ -481,7 +506,7 @@ namespace DOL.GS.Keeps
 				}
 			}
 
-			foreach (GameKeepGuard guard in this.Keep.Guards.Values)
+			foreach (GameKeepGuard guard in this.AbstractKeep.Guards.Values)
 			{
 				if (guard.PatrolGroup != null)
 					continue;
@@ -497,7 +522,7 @@ namespace DOL.GS.Keeps
 				}
 			}
 
-			foreach (GameKeepBanner banner in this.Keep.Banners.Values)
+			foreach (GameKeepBanner banner in this.AbstractKeep.Banners.Values)
 			{
 				if (banner.Position == null) continue;
 				if (banner.Position.Height > banner.Component.Height)
@@ -525,7 +550,7 @@ namespace DOL.GS.Keeps
 				obj = new DBKeepComponent();
 				New = true;
 			}
-			obj.KeepID = Keep.KeepID;
+			obj.KeepID = AbstractKeep.KeepID;
 			obj.Heading = ComponentHeading;
 			obj.Health = Health;
 			obj.X = this.ComponentX;
@@ -538,7 +563,7 @@ namespace DOL.GS.Keeps
 			{
 				GameServer.Database.AddObject(obj);
 				InternalID = obj.ObjectId;
-				log.DebugFormat("Added new component {0} for keep ID {1}, skin {2}, health {3}", ID, Keep.KeepID, Skin, Health);
+				log.DebugFormat("Added new component {0} for keep ID {1}, skin {2}, health {3}", ID, AbstractKeep.KeepID, Skin, Health);
 			}
 			else
 			{
@@ -551,7 +576,7 @@ namespace DOL.GS.Keeps
 		{
 			if (damageAmount > 0)
 			{
-				this.Keep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
+				this.AbstractKeep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
 				base.TakeDamage(source, damageType, damageAmount, criticalAmount);
 
 				//only on hp change
@@ -583,8 +608,8 @@ namespace DOL.GS.Keeps
 
 			if (source is GamePlayer)
 			{
-				baseDamage = (baseDamage - (baseDamage * 5 * this.Keep.Level / 100)) * toughness / 100;
-				styleDamage = (styleDamage - (styleDamage * 5 * this.Keep.Level / 100)) * toughness / 100;
+				baseDamage = (baseDamage - (baseDamage * 5 * this.AbstractKeep.Level / 100)) * toughness / 100;
+				styleDamage = (styleDamage - (styleDamage * 5 * this.AbstractKeep.Level / 100)) * toughness / 100;
 			}
 			else if (source is GameNPC)
 			{
@@ -596,8 +621,8 @@ namespace DOL.GS.Keeps
 				}
 				else
 				{
-					baseDamage = (baseDamage - (baseDamage * 5 * this.Keep.Level / 100)) * toughness / 100;
-					styleDamage = (styleDamage - (styleDamage * 5 * this.Keep.Level / 100)) * toughness / 100;
+					baseDamage = (baseDamage - (baseDamage * 5 * this.AbstractKeep.Level / 100)) * toughness / 100;
+					styleDamage = (styleDamage - (styleDamage * 5 * this.AbstractKeep.Level / 100)) * toughness / 100;
 
 					if (((GameNPC)source).Brain is DOL.AI.Brain.IControlledBrain)
 					{
@@ -629,18 +654,18 @@ namespace DOL.GS.Keeps
 		public override void Die(GameObject killer)
 		{
 			base.Die(killer);
-			if (this.Keep is GameKeepTower && ServerProperties.Properties.CLIENT_VERSION_MIN >= (int)GameClient.eClientVersion.Version175)
+			if (this.AbstractKeep is GameKeepTower && ServerProperties.Properties.CLIENT_VERSION_MIN >= (int)GameClient.eClientVersion.Version175)
 			{
 				if (IsRaized == false)
 				{
-					Notify(KeepEvent.TowerRaized, this.Keep, new KeepEventArgs(this.Keep, killer.Realm));
-					PlayerMgr.BroadcastRaize(this.Keep, killer.Realm);
+					Notify(KeepEvent.TowerRaized, this.AbstractKeep, new KeepEventArgs(this.AbstractKeep, killer.Realm));
+					PlayerMgr.BroadcastRaize(this.AbstractKeep, killer.Realm);
 					IsRaized = true;
 
-					foreach (GameKeepGuard guard in this.Keep.Guards.Values)
+					foreach (GameKeepGuard guard in this.AbstractKeep.Guards.Values)
 					{
-						guard.MoveTo(guard.CurrentRegionID, guard.X, guard.Y, this.Keep.Z, guard.Heading);
-						guard.SpawnPoint.Z = this.Keep.Z;
+						guard.MoveTo(guard.CurrentRegionID, guard.X, guard.Y, this.AbstractKeep.Z, guard.Heading);
+						guard.SpawnPoint.Z = this.AbstractKeep.Z;
 					}
 				}
 			}
@@ -653,9 +678,9 @@ namespace DOL.GS.Keeps
 		{
 			StopHealthRegeneration();
 			RemoveTimers();
-			HookPoints.Clear();
+			KeepHookPoints.Clear();
 			Positions.Clear();
-			Keep = null;
+			AbstractKeep = null;
 			base.Delete();
 			CurrentRegion = null;
 		}
@@ -691,7 +716,7 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (this.Keep is GameKeepTower)
+				if (this.AbstractKeep is GameKeepTower)
 				{
 					if (this.m_isRaized)
 					{
@@ -703,7 +728,7 @@ namespace DOL.GS.Keeps
 					}
 					if (this.HealthPercent < 35) return 0x01;//broken
 				}
-				if (this.Keep is GameKeep)
+				if (this.AbstractKeep is GameKeep)
 					if (!IsAlive) return 0x01;//broken
 
 				return 0x00;
@@ -736,8 +761,8 @@ namespace DOL.GS.Keeps
 				m_isRaized = value;
 				if (value == true)
 				{
-					if (this.Keep.Level > 1)
-						Keep.ChangeLevel(1);
+					if (this.AbstractKeep.Level > 1)
+						AbstractKeep.ChangeLevel(1);
 				}
 				else
 				{
@@ -753,7 +778,7 @@ namespace DOL.GS.Keeps
 
 		public virtual int RepairTimerCallback(RegionTimer timer)
 		{
-			if (HealthPercent == 100 || Keep.InCombat)
+			if (HealthPercent == 100 || AbstractKeep.InCombat)
 				return repairInterval;
 
 			Repair((MaxHealth / 100) * 5);
@@ -776,9 +801,9 @@ namespace DOL.GS.Keeps
 				}
 
 				//if a tower is repaired reload the guards so they arent on the floor
-				if (Keep is GameKeepTower && oldStatus == 0x02 && oldStatus != Status)
+				if (AbstractKeep is GameKeepTower && oldStatus == 0x02 && oldStatus != Status)
 				{
-					foreach (GameKeepComponent component in Keep.KeepComponents)
+					foreach (GameKeepComponent component in AbstractKeep.KeepComponents)
 						component.FillPositions();
 				}
 
@@ -788,7 +813,7 @@ namespace DOL.GS.Keeps
 
 		public override string ToString()
 		{
-			if (Keep == null)
+			if (AbstractKeep == null)
 			{
 				return "Keep is null!";
 			}

@@ -36,11 +36,8 @@ namespace DOL.GS.PropertyCalc
 	{
 		public MaxConcentrationCalculator() {}
 
-		public const int PROPERTY_MAXCONCENTRATION_HARDCAP = 10;
-
-		public override int CalcValue(GameLiving living, eProperty property)
+		public override int CalcValue(GameLiving living, eProperty property) 
 		{
-			
 			if (living is GamePlayer) 
 			{
 				GamePlayer player = living as GamePlayer;
@@ -59,10 +56,6 @@ namespace DOL.GS.PropertyCalc
 						log.WarnFormat(living.Name+": concentration is less than zerro (conc:{0} eff:{1:R} concBase:{2} stat:{3} factor:{4})", conc, player.Effectiveness, concBase, stat, factor);
 					conc = 0;
 				}
-				
-				
-				if(player.ItemBonus[(int)eProperty.MaxConcentration] > 0)
-					conc += (Math.Max(PROPERTY_MAXCONCENTRATION_HARDCAP, player.ItemBonus[(int)eProperty.MaxConcentration]) * conc / 100);
 
                 if (player.GetSpellLine("Perfecter") != null
 				   && player.MLLevel >= 4)

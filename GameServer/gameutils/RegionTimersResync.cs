@@ -27,7 +27,6 @@ using DOL.GS.Scripts;
 using DOL.GS.PacketHandler;
 using log4net;
 using System.Reflection;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using DOL.AI.Brain;
@@ -40,12 +39,13 @@ namespace DOL.GS.GameEvents
 {
 	public static class RegionTimersResynch
 	{
-		public const int UPDATE_INTERVAL = 15 * 1000; // 15 seconds to check freeze
+		const int UPDATE_INTERVAL = 15 * 1000; // 15 seconds to check freeze
 
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		static Timer m_timer;
-		static Dictionary<GameTimer.GameScheduler, long> old_time = new Dictionary<GameTimer.GameScheduler, long>();
+		public static Stopwatch watch;
+		static Dictionary<GameTimer.TimeManager, long> old_time = new Dictionary<GameTimer.TimeManager, long>();
 
 		#region Initialization/Teardown
 
@@ -64,7 +64,9 @@ namespace DOL.GS.GameEvents
 
 		public static void Init()
 		{
-			foreach (GameTimer.GameScheduler mgr in WorldMgr.GetRegionTimeManagers())
+			watch = new Stopwatch();
+			watch.Start();
+			foreach (GameTimer.TimeManager mgr in WorldMgr.GetRegionTimeManagers())
 				old_time.Add(mgr, 0);
 
 			m_timer = new Timer(new TimerCallback(Resynch), null, 0, UPDATE_INTERVAL);
@@ -80,161 +82,161 @@ namespace DOL.GS.GameEvents
 
 		private static void Resynch(object nullValue)
 		{
-			lock(((ICollection)old_time).SyncRoot)
+			long syncTime = watch.ElapsedMilliseconds;
+
+			//Check alive
+			foreach (GameTimer.TimeManager mgr in WorldMgr.GetRegionTimeManagers())
 			{
-				bool frozen;
-				//Check alive
-				foreach (GameTimer.GameScheduler mgr in WorldMgr.GetRegionTimeManagers())
+				if (old_time.ContainsKey(mgr) && old_time[mgr] > 0 && old_time[mgr] == mgr.CurrentTime)
 				{
-					frozen = false;
-					if (old_time.ContainsKey(mgr) && old_time[mgr] > 0 && old_time[mgr] == mgr.CurrentTime)
+					if (log.IsErrorEnabled)
 					{
-						frozen = true;
+						// Tolakram: Can't do StackTrace call here.  If thread is stopping will result in UAE app stop
+						log.Error(string.Format("----- Found Frozen Region Timer -----\nName: {0} - Current Time: {1}", mgr.Name, mgr.CurrentTime));
 					}
-					
-					if (frozen)
+
+					//if(mgr.Running)
+					try
 					{
-						if (log.IsErrorEnabled)
+                        mgr.Stop();
+					}
+					catch(Exception)
+					{
+						log.Error(string.Format("----- Failed to stop the TimeManager: {0}", mgr.Name));
+					}
+
+					foreach (GameClient clients in WorldMgr.GetAllClients())
+					{
+						if (clients.Player == null || clients.ClientState == GameClient.eClientState.Linkdead)
 						{
-							// Tolakram: Can't do StackTrace call here.  If thread is stopping will result in UAE app stop
-							log.Error(string.Format("----- Found Frozen Region Timer -----\nName: {0} - Current Time: {1}", mgr.Name, mgr.CurrentTime));
-						}
-	
-						try
-						{
-	                        mgr.Stop();
-						}
-						catch(Exception ex)
-						{
-							log.Error(string.Format("----- Failed to stop the TimeManager: {0}\n{1}", mgr.Name, ex.StackTrace));
-						}
-	
-						foreach (GameClient clients in WorldMgr.GetAllClients())
-						{
-							if (clients.Player == null || clients.ClientState == GameClient.eClientState.Linkdead)
+							if(log.IsErrorEnabled)
+								log.Error(string.Format("----- Disconnected Client: {0}", clients.Account.Name));
+							if (clients.Player != null)
 							{
-								if(log.IsErrorEnabled)
-									log.Error(string.Format("----- Disconnected Client: {0}", clients.Account.Name));
-								if (clients.Player != null)
-								{
-									clients.Player.SaveIntoDatabase();
-									clients.Player.Quit(true);
-								}
-								clients.Out.SendPlayerQuit(true);
-								clients.Disconnect();
-								GameServer.Instance.Disconnect(clients);
-								WorldMgr.RemoveClient(clients);
+								clients.Player.SaveIntoDatabase();
+								clients.Player.Quit(true);
 							}
+							clients.Out.SendPlayerQuit(true);
+							clients.Disconnect();
+							GameServer.Instance.Disconnect(clients);
+							WorldMgr.RemoveClient(clients);
 						}
-	
-						mgr.Start();
-						
-	                    foreach (Region reg in WorldMgr.GetAllRegions())
+					}
+
+					mgr.Start();
+					
+                    foreach (Region reg in WorldMgr.GetAllRegions())
+					{
+						if (reg.TimeManager == mgr)
 						{
-							if (reg.TimeManager == mgr)
-							{							
-								foreach (GameObject obj in reg.Objects)
+							foreach (GameObject obj in reg.Objects)
+							{
+								//Restart Player regen & remove PvP immunity
+								if (obj is GamePlayer)
 								{
-									//Restart Player regen & remove PvP immunity
-									if (obj is GamePlayer)
+									GamePlayer plr = obj as GamePlayer;
+									if (plr.IsAlive)
 									{
-										GamePlayer plr = obj as GamePlayer;
-										if (plr.IsAlive)
+										plr.StopHealthRegeneration();
+										plr.StopPowerRegeneration();
+										plr.StopEnduranceRegeneration();
+										plr.StopCurrentSpellcast();
+										plr.StartHealthRegeneration();
+										plr.StartPowerRegeneration();
+										plr.StartEnduranceRegeneration();
+										plr.StartInvulnerabilityTimer(1000, null);
+
+                                        
+										try
 										{
-											plr.StopHealthRegeneration();
-											plr.StopPowerRegeneration();
-											plr.StopEnduranceRegeneration();
-											plr.StartHealthRegeneration();
-											plr.StartPowerRegeneration();
-											plr.StartEnduranceRegeneration();
-											plr.StartInvulnerabilityTimer(1000, null);
-	
-	                                        
-											try
+											foreach (IGameEffect effect in plr.EffectList)
 											{
-												foreach (IGameEffect effect in plr.EffectList)
+												if(effect is GameSpellEffect)
 												{
-													if(effect is GameSpellAndImmunityEffect)
-													{
-														(effect as GameSpellAndImmunityEffect).ImmunityState=false;
-	                                                    (effect as GameSpellAndImmunityEffect).Cancel(false);
-													}
+                                                    (effect as GameSpellEffect).Cancel(false, true);
+												}
+												else
+												{
+													effect.Cancel(false);
 												}
 											}
-											catch(Exception e)
-											{
-												log.Error("Can't cancel immunty effect : "+e);
-											}
-	
-											
 										}
-										plr.Client.Out.SendMessage("["+reg.Description+"] detected as frozen, restarting the zone.", eChatType.CT_Broadcast, eChatLoc.CL_ChatWindow);
-									}
-									else if (obj is GameNPC && (obj as GameNPC).Brain != null)
-	                                {
-										lock(((GameNPC)obj).BrainSync)
+										catch(Exception e)
 										{
-											//Restart Brains & Paths
-											GameNPC npc = obj as GameNPC;
-											
-											if(npc.Brain is IControlledBrain)
+											log.Error("Can't cancel immunty effect : "+e);
+										}
+
+										
+									}
+									// Warn Player
+									plr.Client.Out.SendMessage("["+reg.Description+"] detected as frozen, restarting the zone.", eChatType.CT_Broadcast, eChatLoc.CL_ChatWindow);
+								}
+								
+								//Restart Brains & Paths
+								if (obj is GameNPC && (obj as GameNPC).Brain != null)
+                                {
+									GameNPC npc = obj as GameNPC;
+									
+									if(npc.Brain is IControlledBrain)
+									{
+										npc.Die(null);
+									}
+									else if(!(npc.Brain is BlankBrain))
+									{
+                                        npc.Brain.Stop();
+										DOL.AI.ABrain brain = npc.Brain;
+                                        npc.RemoveBrain(npc.Brain);
+                                        //npc.Brain.Stop();
+										if (npc.MaxSpeedBase > 0 && npc.PathID != null && npc.PathID != "" && npc.PathID != "NULL")
+										{
+											npc.StopMovingOnPath();
+											PathPoint path = MovementMgr.LoadPath(npc.PathID);
+											if (path != null)
+											{
+												npc.CurrentWayPoint = path;
+												npc.MoveOnPath((short)path.MaxSpeed);
+											}
+										}
+                                        try
+										{
+											npc.SetOwnBrain(brain);
+											npc.Brain.Start();
+										}
+										catch(Exception e)
+										{
+											log.Error("Can't restart Brain in RegionTimerResynch, NPC Name = "+npc.Name+" X="+npc.X+"/Y="+npc.Y+"/Z="+npc.Z+"/R="+npc.CurrentRegion.ID+" "+e);
+											try
 											{
 												npc.Die(null);
 											}
-											else if(!(npc.Brain is BlankBrain))
+											catch(Exception ee)
 											{
-												DOL.AI.ABrain brain = npc.Brain;
-		                                        npc.RemoveBrain(npc.Brain);
-		                                        
-												if (npc.MaxSpeedBase > 0 && npc.PathID != null && npc.PathID != "" && npc.PathID != "NULL")
-												{
-													npc.StopMovingOnPath();
-													PathPoint path = MovementMgr.LoadPath(npc.PathID);
-													if (path != null)
-													{
-														npc.CurrentWayPoint = path;
-														npc.MoveOnPath((short)path.MaxSpeed);
-													}
-												}
-												
-		                                        try
-												{
-		                                        	if(brain.IsActive)
-		                                        		brain.Stop();
-													
-		                                        	npc.SetOwnBrain(brain);
-												}
-												catch(Exception e)
-												{
-													log.Error("Can't restart Brain in RegionTimerResynch, NPC Name = "+npc.Name+" X="+npc.X+"/Y="+npc.Y+"/Z="+npc.Z+"/R="+npc.CurrentRegion.ID+" "+e);
-													try
-													{
-														npc.Die(null);
-													}
-													catch(Exception ee)
-													{
-														log.Error("Can't restart Brain and Kill NPC in RegionTimerResynch, NPC Name = "+npc.Name+" X="+npc.X+"/Y="+npc.Y+"/Z="+npc.Z+"/R="+npc.CurrentRegion.ID+" "+ee);
-													}
-												}
+												log.Error("Can't restart Brain and Kill NPC in RegionTimerResynch, NPC Name = "+npc.Name+" X="+npc.X+"/Y="+npc.Y+"/Z="+npc.Z+"/R="+npc.CurrentRegion.ID+" "+ee);
 											}
 										}
 									}
 								}
 							}
-						}
-						
+							
+							//Restart Respawn Timers
+							List<GameNPC> respawnings = new List<GameNPC>(reg.MobsRespawning.Keys);
+							foreach(GameNPC deadMob in respawnings)
+							{
+								GameNPC mob = deadMob;
+								if(mob != null)
+									mob.StartRespawn();
+							}
+						}					
 					}
-					
-					// Update times.
-					if (old_time.ContainsKey(mgr))
-						old_time[mgr] = mgr.CurrentTime;
-					else
-						old_time.Add(mgr, mgr.CurrentTime);
+					//RegionTimerUnfrozen(mgr, syncTime);
 				}
+
+				if (old_time.ContainsKey(mgr))
+					old_time[mgr] = mgr.CurrentTime;
 			}
 		}
 
-		public delegate void RegionTimerHandler(GameTimer.GameScheduler RestartedTimer, long SyncTime);
+		public delegate void RegionTimerHandler(GameTimer.TimeManager RestartedTimer, long SyncTime);
 		//public static event RegionTimerHandler RegionTimerUnfrozen;
 	}
 }

@@ -161,7 +161,7 @@ namespace DOL.GS
 		{
             DOL.GS.GameEvents.PlayerStatisticsEvent.CheckHandlers();
 			m_player = player;
-			m_LoginTime = DateTime.UtcNow;
+			m_LoginTime = DateTime.Now;
 		}
 
 
@@ -229,7 +229,7 @@ namespace DOL.GS
                     if (c.Player.RealmLevel > 31)
                     {
                         allstatsrp.Add(new StatToCount(c.Player.Name, stats.TotalRP));
-                        TimeSpan onlineTime = DateTime.UtcNow.Subtract(stats.LoginTime);
+                        TimeSpan onlineTime = DateTime.Now.Subtract(stats.LoginTime);
                         allstatslrp.Add(new StatToCount(c.Player.Name, (uint)Math.Round(stats.RPsPerHour(stats.TotalRP, onlineTime))));
                         uint deaths = stats.Deaths; if (deaths < 1) deaths = 1;
                         allstatsirs.Add(new StatToCount(c.Player.Name, (uint)Math.Round((double)stats.TotalRP / (double)deaths)));
@@ -269,7 +269,7 @@ namespace DOL.GS
         /// <returns></returns>
         public virtual string GetStatisticsMessage()
         {
-            TimeSpan onlineTime = DateTime.UtcNow.Subtract(LoginTime);
+            TimeSpan onlineTime = DateTime.Now.Subtract(LoginTime);
 
             string stringOnlineTime = "Online time: " + onlineTime.Days + " days, " + onlineTime.Hours + " hours, " + onlineTime.Minutes + " minutes, " + onlineTime.Seconds + " seconds\n";
             if (onlineTime.Days < 1)
@@ -505,12 +505,12 @@ namespace DOL.GS.GameEvents
 				return 0;
 
 			float totaldmg = 0f;
-			foreach (KeyValuePair<GameObject, float> de in killedPlayer.XPGainers)
+			foreach (DictionaryEntry de in killedPlayer.XPGainers)
 			{
 				totaldmg += (float)de.Value;
 			}
 
-			foreach (KeyValuePair<GameObject, float> de in killedPlayer.XPGainers)
+			foreach (DictionaryEntry de in killedPlayer.XPGainers)
 			{
 				GamePlayer key = de.Key as GamePlayer;
 				if (killer == key)

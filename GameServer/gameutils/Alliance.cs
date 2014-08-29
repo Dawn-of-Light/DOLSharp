@@ -18,7 +18,6 @@
  */
 using System.Collections;
 using System.Collections.Specialized;
-using System.Collections.Generic;
 using System;
 using DOL.Database;
 
@@ -29,14 +28,14 @@ namespace DOL.GS
 	/// </summary>
 	public class Alliance
 	{
-		protected List<Guild> m_guilds;
+		protected ArrayList m_guilds;
 		protected DBAlliance m_dballiance;
 		public Alliance()
 		{
 			m_dballiance = null;
-			m_guilds = new List<Guild>(2);
+			m_guilds = new ArrayList(2);
 		}
-		public List<Guild> Guilds
+		public ArrayList Guilds
 		{
 			get
 			{
@@ -62,7 +61,7 @@ namespace DOL.GS
 		#region IList
 		public void AddGuild(Guild myguild)
 		{
-			lock (((ICollection)Guilds).SyncRoot)
+			lock (Guilds.SyncRoot)
 			{
 				myguild.alliance = this;
 				Guilds.Add(myguild);
@@ -78,7 +77,7 @@ namespace DOL.GS
 		}
 		public void RemoveGuild(Guild myguild)
 		{
-			lock (((ICollection)Guilds).SyncRoot)
+			lock (Guilds.SyncRoot)
 			{
 				myguild.alliance = null;
 				myguild.AllianceId = "";
@@ -86,7 +85,7 @@ namespace DOL.GS
                 if (myguild.GuildID == m_dballiance.DBguildleader.GuildID)
                 {
                     SendMessageToAllianceMembers(myguild.Name + " has disbanded the alliance of " + m_dballiance.AllianceName, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
-                    List<Guild> mgl = new List<Guild>(Guilds);
+                    ArrayList mgl = new ArrayList(Guilds);
                     foreach (Guild mg in mgl)
                     {
                         try
@@ -113,7 +112,7 @@ namespace DOL.GS
 		}
 		public void Clear()
 		{
-			lock (((ICollection)Guilds).SyncRoot)
+			lock (Guilds.SyncRoot)
 			{
 				foreach (Guild guild in Guilds)
 				{
@@ -127,7 +126,7 @@ namespace DOL.GS
 		}
 		public bool Contains(Guild myguild)
 		{
-			lock (((ICollection)Guilds).SyncRoot)
+			lock (Guilds.SyncRoot)
 			{
 				return Guilds.Contains(myguild);
 			}
@@ -140,7 +139,7 @@ namespace DOL.GS
 		/// </summary>
 		public void SendMessageToAllianceMembers(string msg, PacketHandler.eChatType type, PacketHandler.eChatLoc loc)
 		{
-			lock (((ICollection)Guilds).SyncRoot)
+			lock (Guilds.SyncRoot)
 			{
 				foreach (Guild guild in Guilds)
 				{
@@ -167,7 +166,7 @@ namespace DOL.GS
 		public void SaveIntoDatabase()
 		{
 			GameServer.Database.SaveObject(m_dballiance);
-			lock (((ICollection)Guilds).SyncRoot)
+			lock (Guilds.SyncRoot)
 			{
 				foreach (Guild guild in Guilds)
 				{

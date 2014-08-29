@@ -6,7 +6,7 @@ namespace DOL.GS.RealmAbilities
 	/// <summary>
 	/// Serenity realm ability
 	/// </summary>
-	public class SerenityAbility : RAPropertyEnhancer
+	public class SerenityAbility : L5FixedRealmAbility
 	{
 		public SerenityAbility(DBAbility dba, int level) : base(dba, level, eProperty.PowerRegenerationRate) { }
 

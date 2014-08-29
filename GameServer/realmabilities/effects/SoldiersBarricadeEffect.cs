@@ -46,15 +46,15 @@ namespace DOL.GS.Effects
 
 			GameEventMgr.AddHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 
-			m_player.AbilityBonus[(int)eProperty.Resist_Body] += m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Cold] += m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Energy] += m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Heat] += m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Matter] += m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Spirit] += m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Crush] += m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Slash] += m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Thrust] += m_value;
+			m_player.AbilityBonus[eProperty.Resist_Body] += m_value;
+			m_player.AbilityBonus[eProperty.Resist_Cold] += m_value;
+			m_player.AbilityBonus[eProperty.Resist_Energy] += m_value;
+			m_player.AbilityBonus[eProperty.Resist_Heat] += m_value;
+			m_player.AbilityBonus[eProperty.Resist_Matter] += m_value;
+			m_player.AbilityBonus[eProperty.Resist_Spirit] += m_value;
+			m_player.AbilityBonus[eProperty.Resist_Crush] += m_value;
+			m_player.AbilityBonus[eProperty.Resist_Slash] += m_value;
+			m_player.AbilityBonus[eProperty.Resist_Thrust] += m_value;
 			m_player.Out.SendCharResistsUpdate();
 			m_player.EffectList.Add(this);
 			player.TempProperties.setProperty(RealmAbilities.BarrierOfFortitudeAbility.BofBaSb, true);
@@ -85,15 +85,15 @@ namespace DOL.GS.Effects
 		{
 
 			StopTimers();
-			m_player.AbilityBonus[(int)eProperty.Resist_Body] -= m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Cold] -= m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Energy] -= m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Heat] -= m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Matter] -= m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Spirit] -= m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Crush] -= m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Slash] -= m_value;
-			m_player.AbilityBonus[(int)eProperty.Resist_Thrust] -= m_value;
+			m_player.AbilityBonus[eProperty.Resist_Body] -= m_value;
+			m_player.AbilityBonus[eProperty.Resist_Cold] -= m_value;
+			m_player.AbilityBonus[eProperty.Resist_Energy] -= m_value;
+			m_player.AbilityBonus[eProperty.Resist_Heat] -= m_value;
+			m_player.AbilityBonus[eProperty.Resist_Matter] -= m_value;
+			m_player.AbilityBonus[eProperty.Resist_Spirit] -= m_value;
+			m_player.AbilityBonus[eProperty.Resist_Crush] -= m_value;
+			m_player.AbilityBonus[eProperty.Resist_Slash] -= m_value;
+			m_player.AbilityBonus[eProperty.Resist_Thrust] -= m_value;
 			m_player.Out.SendCharResistsUpdate();
 			m_player.EffectList.Remove(this);
 			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));

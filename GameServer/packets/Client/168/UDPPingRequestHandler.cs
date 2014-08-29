@@ -25,7 +25,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	/// Handles the ping packet
 	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.UDP, 0xF2,"Sends the UDP Init reply")]
+	[PacketHandlerAttribute(PacketHandlerType.UDP, eClientPackets.UDPPingRequest, "Sends the UDP Init reply", eClientStatus.None)]
 	public class UDPPingRequestHandler : IPacketHandler
 	{
 		/// <summary>
@@ -45,7 +45,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort localPort = packet.ReadShort();
 			// TODO check changed localIP
 			client.LocalIP = localIP;
-			client.UdpPingTime = DateTime.UtcNow.Ticks;
+			client.UdpPingTime = DateTime.Now.Ticks;
 		}
 	}
 }

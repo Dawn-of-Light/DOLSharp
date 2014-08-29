@@ -41,7 +41,7 @@ namespace DOL.GS
 		private eDamageType m_damageType = 0;
 		private Style m_style = null;
 		private eAttackType m_attackType = eAttackType.Unknown;
-		private GameLiving.eAttackResult m_attackResult = GameLiving.eAttackResult.Any;
+		private eAttackResult m_attackResult = eAttackResult.Any;
 		private ISpellHandler m_spellHandler;
 		private List<ISpellHandler> m_styleEffects;
 		private int m_animationId;
@@ -166,7 +166,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Sets or gets the attack result
 		/// </summary>
-		public GameLiving.eAttackResult AttackResult
+		public eAttackResult AttackResult
 		{
 			get { return m_attackResult; }
 			set { m_attackResult = value; }
@@ -282,14 +282,16 @@ namespace DOL.GS
 			{
 				switch (m_attackResult)
 				{
-					case GameLiving.eAttackResult.HitUnstyled:
-					case GameLiving.eAttackResult.HitStyle:
-					case GameLiving.eAttackResult.Missed:
-					case GameLiving.eAttackResult.Blocked:
-					case GameLiving.eAttackResult.Evaded:
-					case GameLiving.eAttackResult.Fumbled:
-					case GameLiving.eAttackResult.Parried: return true;
-					default: return false;
+					case eAttackResult.HitUnstyled:
+					case eAttackResult.HitStyle:
+					case eAttackResult.Missed:
+					case eAttackResult.Blocked:
+					case eAttackResult.Evaded:
+					case eAttackResult.Fumbled:
+					case eAttackResult.Parried: 
+						return true;
+					default: 
+						return false;
 				}
 			}
 		}
@@ -322,5 +324,12 @@ namespace DOL.GS
 			get { return m_causesCombat; }
 			set { m_causesCombat = value; }
 		}
+		
+		public override string ToString()
+		{
+			return String.Format("AttackData From {0} to {1}, Armor hit location : {2}, Damage : {3}, Critical : {4}, Uncapped : {5}, StyleDmg : {6}, ModifierDmg : {7}, DamageType : {8}, Style : {9}, AttackType : {10}, AttackResult : {11}, SpellHandler : {12}, StyleEffects : {13}, AnimationID : {14}, WeaponSpeed : {15}, IsOffHand : {16}, Weapon : {17}, IsSpellResisted : {18}, CausesCombat : {19}",
+			                    m_attacker, m_target, m_hitArmorSlot, m_damage, m_critdamage, m_uncappeddamage, m_styledamage, m_modifier, m_damageType, m_style, m_attackType, m_attackResult, m_spellHandler, m_styleEffects, m_animationId, m_weaponSpeed, m_isOffHand, m_weapon, m_isSpellResisted, m_causesCombat);
+		}
+		
 	}
 }

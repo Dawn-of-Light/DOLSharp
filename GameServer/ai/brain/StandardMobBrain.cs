@@ -23,7 +23,6 @@ using System.Reflection;
 
 using DOL.Events;
 using DOL.GS;
-using DOL.GS.Spells;
 using DOL.GS.Effects;
 using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
@@ -31,6 +30,7 @@ using DOL.GS.SkillHandler;
 using DOL.GS.Keeps;
 using DOL.Language;
 using log4net;
+using DOL.GS.Spells;
 
 namespace DOL.AI.Brain
 {
@@ -189,8 +189,9 @@ namespace DOL.AI.Brain
 				if (!Body.AttackState && AggroRange > 0)
 				{
 					var currentPlayersSeen = new List<GamePlayer>();
-					foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange, true))
+					foreach (GamePlayer seenplyer in Body.GetPlayersInRadius((ushort)AggroRange))
 					{
+						GamePlayer player = seenplyer;
 						if (!PlayersSeen.Contains(player))
 						{
 							Body.FireAmbientSentence(GameNPC.eAmbientTrigger.seeing, player as GameLiving);
@@ -198,8 +199,8 @@ namespace DOL.AI.Brain
 						}
 						currentPlayersSeen.Add(player);
 					}
-					
-					for (int i=0; i<PlayersSeen.Count; i++)
+					// TODO get this better.
+					for (int i=0; i < PlayersSeen.Count; i++)
 					{
 						if (!currentPlayersSeen.Contains(PlayersSeen[i])) PlayersSeen.RemoveAt(i);
 					}
@@ -211,6 +212,22 @@ namespace DOL.AI.Brain
 				{
 					CheckPlayerAggro();
 					CheckNPCAggro();
+				}
+
+				if (Body.AttackState)
+				{
+					long delay = 10000 * (1 + ((100 - Body.HealthPercent) / 100));
+					long lastattack = Body.TempProperties.getProperty<long>(GameLiving.LAST_ATTACK_TIME, 0);
+
+					if ((LastNaturalAggro == 0 || LastNaturalAggro + delay < Body.CurrentRegion.Time)
+						&& (Body.LastAttackedByEnemyTick == 0 || Body.LastAttackedByEnemyTick + delay < Body.CurrentRegion.Time)
+						&& (lastattack == 0 || lastattack + delay < Body.CurrentRegion.Time))
+					{
+						Body.StopAttack();
+						Body.TargetObject = null;
+						Body.WalkToSpawn();
+						return;
+					}
 				}
 
 				if (HasAggro)
@@ -237,7 +254,7 @@ namespace DOL.AI.Brain
 			if (Body.AttackState)
 				return;
 
-			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)AggroRange, Body.CurrentRegion.IsDungeon ? false : true))
+			foreach (GameNPC npc in Body.GetNPCsInRadius((ushort)AggroRange))
 			{
 				if (!GameServer.ServerRules.IsAllowedToAttack(Body, npc, true)) continue;
 				if (m_aggroTable.ContainsKey(npc))
@@ -263,7 +280,7 @@ namespace DOL.AI.Brain
 			if (Body.AttackState)
 				return;
 
-			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange, true))
+			foreach (GamePlayer player in Body.GetPlayersInRadius((ushort)AggroRange))
 			{
 				if (!GameServer.ServerRules.IsAllowedToAttack(Body, player, true)) continue;
 				// Don't aggro on immune players.
@@ -388,7 +405,7 @@ namespace DOL.AI.Brain
 		/// Add aggro table of this brain to that of another living.
 		/// </summary>
 		/// <param name="brain">The target brain.</param>
-		public void AddAggroListTo(StandardMobBrain brain)
+		public virtual void AddAggroListTo(StandardMobBrain brain)
 		{
 			// TODO: This should actually be the other way round, but access
 			// to m_aggroTable is restricted and needs to be threadsafe.
@@ -421,13 +438,14 @@ namespace DOL.AI.Brain
 				AggroLOS=false;
 		}
 
-		private void CheckAggroLOS(GamePlayer checker, GameObject source, GameObject target, bool losOK, EventArgs args, PropertyCollection tempProperties)
+		protected long m_lastNaturalAggro = 0;
+
+		public long LastNaturalAggro
 		{
-			if (losOK)
-				AggroLOS=true;
-			else
-				AggroLOS=false;
-		}		
+			get { return m_lastNaturalAggro; }
+			set { m_lastNaturalAggro = value; }
+		}
+		
 		/// <summary>
 		/// Add living to the aggrolist
 		/// aggroamount can be negative to lower amount of aggro
@@ -448,6 +466,11 @@ namespace DOL.AI.Brain
 
 			if (living == null) return;
 
+			if (aggroamount > 0 && NaturalAggro)
+			{
+				LastNaturalAggro = Body.CurrentRegion.Time;
+			}
+
 			//Handle trigger to say sentance on first aggro.
 			if (m_aggroTable.Count < 1)
 				Body.FireAmbientSentence(GameNPC.eAmbientTrigger.aggroing, living);
@@ -456,45 +479,20 @@ namespace DOL.AI.Brain
 			// Be sure the aggrocheck is triggered by the brain on Think() method
 			if (DOL.GS.ServerProperties.Properties.ALWAYS_CHECK_LOS && NaturalAggro)
 			{
-				if(DOL.GS.ServerProperties.Properties.LOSMGR_ENABLE)
+				GamePlayer thisLiving = null;
+				if (living is GamePlayer)
+					thisLiving = (GamePlayer)living;
+				
+				if (living is GamePet)
 				{
-					try
-					{
-						Body.CurrentRegion.LosCheckManager.LosCheckVincinity(Body, living, new LosMgrResponseHandler(CheckAggroLOS));
-						if (!AggroLOS) return;
-					}
-					catch (LosUnavailableException)
-					{
-						return;
-					}
+					IControlledBrain brain = ((GamePet)living).Brain as IControlledBrain;
+					thisLiving = brain.GetPlayerOwner();
 				}
-				else
+				
+				if (thisLiving != null)
 				{
-					GamePlayer thisLiving = null;
-					if (living is GamePlayer)
-						thisLiving = (GamePlayer)living;
-					
-					if (living is GamePet)
-					{
-						IControlledBrain brain = ((GamePet)living).Brain as IControlledBrain;
-						thisLiving = brain.GetPlayerOwner();
-					}
-					
-					if (thisLiving != null)
-					{
-						thisLiving.Out.SendCheckLOS (Body, living, new CheckLOSResponse(CheckAggroLOS));
-						if (!AggroLOS) return;
-					}					
-				}
-
-			}
-			
-			if (living.ControlledBrain != null && living.ControlledBrain.Body != null)
-			{
-				lock ((m_aggroTable as ICollection).SyncRoot)
-				{
-					if(!m_aggroTable.ContainsKey(living))
-						m_aggroTable[living] = 1L;
+					thisLiving.Out.SendCheckLOS (Body, living, new CheckLOSResponse(CheckAggroLOS));
+					if (!AggroLOS) return;
 				}
 			}
 			
@@ -624,6 +622,7 @@ namespace DOL.AI.Brain
 			lock ((m_aggroTable as ICollection).SyncRoot)
 			{
 				m_aggroTable.Clear();
+				m_lastNaturalAggro = 0;
 				Body.TempProperties.removeProperty(Body.Attackers);
 			}
 		}
@@ -652,6 +651,9 @@ namespace DOL.AI.Brain
 
 			if (Body.TargetObject != null)
 			{
+				if (Body.ControlledBrain != null && Body.ControlledBrain.Body != null && Body.ControlledBrain.Body.IsAlive && !Body.ControlledBrain.Body.AttackState)
+					Body.ControlledBrain.Body.StartAttack(Body.TargetObject);
+
 				if (!CheckSpells(eCheckSpellType.Offensive))
 				{
 					Body.StartAttack(Body.TargetObject);
@@ -842,7 +844,7 @@ namespace DOL.AI.Brain
 				else if (e == GameLivingEvent.CastFailed)
 				{
 					CastFailedEventArgs realArgs = args as CastFailedEventArgs;
-					if (realArgs == null || realArgs.Reason == CastFailedEventArgs.Reasons.AlreadyCasting || realArgs.Reason == CastFailedEventArgs.Reasons.CrowdControlled)
+					if (realArgs != null && (realArgs.Reason == CastFailedEventArgs.Reasons.AlreadyCasting || realArgs.Reason == CastFailedEventArgs.Reasons.CrowdControlled))
 						return;
 					Body.StartAttack(Body.TargetObject);
 				}
@@ -909,7 +911,7 @@ namespace DOL.AI.Brain
 			    && Body.IsAlive
 			    && Body.ObjectState == GameObject.eObjectState.Active)
 			{
-				if (ad.AttackResult == GameLiving.eAttackResult.Missed)
+				if (ad.AttackResult == eAttackResult.Missed)
 				{
 					AddToAggroList(ad.Attacker, 1);
 				}
@@ -1063,7 +1065,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		/// <param name="attacker">The original attacker.</param>
 		/// <returns></returns>
-		protected virtual GamePlayer PickTarget(GamePlayer attacker)
+		public virtual GamePlayer PickTarget(GamePlayer attacker)
 		{
 			Group attackerGroup = attacker.Group;
 
@@ -1074,7 +1076,7 @@ namespace DOL.AI.Brain
 			// Make a list of all players in the attacker's group within
 			// a certain range around the puller.
 
-			List<GameLiving> attackersInRange = new List<GameLiving>();
+			ArrayList attackersInRange = new ArrayList();
 
 			foreach (GamePlayer player in attackerGroup.GetPlayersInTheGroup())
 				if (attacker.IsWithinRadius(player, BAFTargetPlayerRange))
@@ -1109,7 +1111,7 @@ namespace DOL.AI.Brain
 
 			if (Body != null && Body.Spells != null && Body.Spells.Count > 0)
 			{
-				List<Spell> spell_rec = new List<Spell>();
+				ArrayList spell_rec = new ArrayList();
 				Spell spellToCast = null;
 				bool needpet = false;
 				bool needheal = false;
@@ -1118,13 +1120,14 @@ namespace DOL.AI.Brain
 				{
 					foreach (Spell spell in Body.Spells)
 					{
+						if (spell == null) continue;
 						if (Body.GetSkillDisabledDuration(spell) > 0) continue;
 						if (spell.Target.ToLower() == "enemy" || spell.Target.ToLower() == "area" || spell.Target.ToLower() == "cone") continue;
 						// If we have no pets
 						if (Body.ControlledBrain == null)
 						{
 							if (spell.SpellType.ToLower() == "pet") continue;
-							if (spell.SpellType.ToLower().Contains("summon") && spell.SpellType.ToLower() != "summontheurgistpet")
+							if (spell.SpellType.ToLower().Contains("summon"))
 							{
 								spell_rec.Add(spell);
 								needpet = true;
@@ -1149,7 +1152,7 @@ namespace DOL.AI.Brain
 						spellToCast = (Spell)spell_rec[Util.Random((spell_rec.Count - 1))];
 						if (!Body.IsReturningToSpawnPoint)
 						{
-							if (spellToCast.Uninterruptible && CheckDefensiveSpells(spellToCast))
+							if ((spellToCast.Uninterruptible || spellToCast.IsInstantCast) && CheckDefensiveSpells(spellToCast))
 								casted = true;
 							else
 								if (!Body.IsBeingInterrupted && CheckDefensiveSpells(spellToCast))
@@ -1164,12 +1167,11 @@ namespace DOL.AI.Brain
 
 						if (Body.GetSkillDisabledDuration(spell) == 0)
 						{
-							//if (spell.CastTime > 0)
+							if (spell.CastTime >= 0)
 							{
 								if (spell.Target.ToLower() == "enemy" || spell.Target.ToLower() == "area" || spell.Target.ToLower() == "cone")
 									spell_rec.Add(spell);
 							}
-							
 						}
 					}
 					if (spell_rec.Count > 0)
@@ -1304,8 +1306,8 @@ namespace DOL.AI.Brain
 					#endregion Disease Cure/Poison Cure/Summon
 
 					#region Heals
-				case "Heal":
 				case "HealOverTime":
+				case "Heal":
 					if (spell.Target.ToLower() == "self")
 					{
 						// if we have a self heal and health is less than 75% then heal, otherwise return false to try another spell or do nothing
@@ -1350,7 +1352,7 @@ namespace DOL.AI.Brain
 
 			if (Body.TargetObject != null)
 			{
-				if (Body.IsMoving && spell.CastTime > 0)
+				if (Body.IsMoving && !spell.MoveCast && spell.CastTime > 0)
 					Body.StopFollowing();
 
 				if (Body.TargetObject != Body && spell.CastTime > 0)
@@ -1377,7 +1379,7 @@ namespace DOL.AI.Brain
 
 			if (Body.TargetObject != null)
 			{
-				if (Body.IsMoving && spell.CastTime > 0)
+				if (Body.IsMoving && !spell.MoveCast && spell.CastTime > 0)
 					Body.StopFollowing();
 
 				if (Body.TargetObject != Body && spell.CastTime > 0)
@@ -1412,7 +1414,7 @@ namespace DOL.AI.Brain
 				case "EffectivenessDebuff":
 				case "Disease":
 				case "Stun":
-				case "Mesmerize":
+				case "Mez":
 				case "Taunt":
 					if (!LivingHasEffect(lastTarget as GameLiving, spell))
 					{
@@ -1490,7 +1492,7 @@ namespace DOL.AI.Brain
 					GameSpellEffect speffect = effect as GameSpellEffect;
 
 					//if the effect effectgroup is the same as the checking spells effectgroup then these are considered the same
-					if (speffect.Spell.EffectGroup !=0 && spell.EffectGroup != 0 && speffect.Spell.EffectGroup == spell.EffectGroup)
+					if (speffect.Spell.EffectGroup == spell.EffectGroup)
 						return true;
 
 					//otherwise continue unless the SpellType is the same
@@ -1515,7 +1517,7 @@ namespace DOL.AI.Brain
 				GameSpellEffect speffect = effect as GameSpellEffect;
 
 				// if this is a DOT then target is poisoned
-				if (speffect.Spell.SpellType == "DamageOverTime")
+				if (speffect != null && speffect.SpellHandler is DoTSpellHandler)
 					return true;
 			}
 

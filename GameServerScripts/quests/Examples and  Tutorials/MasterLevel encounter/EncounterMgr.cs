@@ -70,7 +70,7 @@ namespace DOL.GS.Atlantis
             {
 
                 BattleGroup bg = (BattleGroup)player.TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
-                Dictionary<GamePlayer, bool> bgplayers = bg.Members;
+                HybridDictionary bgplayers = bg.Members;
                 foreach (GamePlayer eachplayer in bgplayers.Keys)
                 {
                     if (!creditPlayerList.Contains(eachplayer))

@@ -891,6 +891,7 @@ Hib.ImportantDelivery.TalkToFreagus.Welcome:		Benvenuto nella mia stalla, amico.
 # /Claim
 Titles.Claim.Frontier.FrontierChallenger:		Frontier Challenger
 Titles.Claim.Frontier.FrontierVindicator:		Frontier Vindicator
+Titles.Claim.Frontier.FrontierProtector:		Frontier Protector
 Titles.Claim.Stronghold.StrongholdChief:		Stronghold Chief
 Titles.Claim.Stronghold.StrongholdSoldier:		Stronghold Soldier
 # /Deathblows
@@ -899,6 +900,7 @@ Titles.Deathblows.BattleMaster:				Battle Master
 # /Kills
 Titles.Kills.Albion.BaneOfAlbion:			Bane of Albion
 Titles.Kills.Albion.ScourgeOfAlbion:			Scourge of Albion
+Titles.Kills.Albion.SlayerOfAlbion:			Slayer of Albion
 Titles.Kills.All.MasterAssassine:			Master Assassine
 Titles.Kills.All.MasterEnforcer:			Master Enforcer
 Titles.Kills.All.MasterSoldier:				Master Soldier
@@ -909,12 +911,16 @@ Titles.Kills.Demon.DreadVanquisher:			Dread Vanquisher
 Titles.Kills.Dragon.DragonFoe:				Dragen Foe
 Titles.Kills.Dragon.DragonScourge:			Dragon Scourge
 Titles.Kills.Dragon.DragonSlayer:			Dragon Slayer
+Titles.Kills.Dragon.DragonBane:				Dragon Bane
 Titles.Kills.Epic.EpicChallenger:			Epic Challenger
 Titles.Kills.Epic.EpicVictor:				Epic Victor
 Titles.Kills.Hibernia.BaneOfHibernia:			Bane of Hibernia
 Titles.Kills.Hibernia.ScourgeOfHibernia:		Scourge of Hibernia
+Titles.Kills.Hibernia.SlayerOfHibernia:		Slayer of Hibernia
 Titles.Kills.Midgard.BaneOfMidgard:			Bane of Midgard
 Titles.Kills.Midgard.ScourgeOfMidgard:			Scourge of Midgard
+Titles.Kills.Midgard.SlayerOfMidgard:			Slayer of Midgard
+
 # /Level
 Titles.Level.Level20Info:				Livello 20+
 Titles.Level.Level20:					Livello {0}

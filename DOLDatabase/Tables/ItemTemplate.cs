@@ -68,6 +68,7 @@ namespace DOL.Database
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 		public static string m_blankItem = "Item_Template";
 		
+		protected long m_itemId = 0;
 		protected string m_id_nb;
         protected string m_translationId;
 		protected string m_name;
@@ -170,6 +171,7 @@ namespace DOL.Database
 		{
 			AllowUpdate = false;
 
+			m_itemId = 0;
 			m_id_nb = m_blankItem;
             m_translationId = string.Empty;
 			m_name = "(blank item)";
@@ -248,6 +250,7 @@ namespace DOL.Database
 		{
 			AllowUpdate = false;
 
+			m_itemId = template.ItemID;
 			m_id_nb = template.Id_nb;
             TranslationId = template.TranslationId;
 			Name = template.Name;
@@ -327,6 +330,12 @@ namespace DOL.Database
 			SalvageYieldID = template.SalvageYieldID;
 		}
 
+		public long ItemID
+		{
+			get	{return m_itemId;}
+			set	{m_itemId = value;}
+		}
+		
 		[PrimaryKey]
 		public virtual string Id_nb
 		{

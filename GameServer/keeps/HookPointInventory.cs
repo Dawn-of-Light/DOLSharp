@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 using DOL.GS.PacketHandler;
 using DOL.Events;
@@ -67,14 +66,14 @@ namespace DOL.GS.Keeps
 
 		public HookPointInventory()
 		{
-			hookpointItemList = new List<HookPointItem>(MAX_ITEM);
+			hookpointItemList = new ArrayList(MAX_ITEM);
 		}
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private List<HookPointItem> hookpointItemList;
+		private ArrayList hookpointItemList;
 		private const int MAX_ITEM = 10;
 		public static HookPointInventory BlueHPInventory = new HookPointInventory();
 		public static HookPointInventory RedHPInventory = new HookPointInventory();
@@ -152,7 +151,7 @@ namespace DOL.GS.Keeps
 		/// Gets a copy of all intems
 		/// </summary>
 		/// <returns>A list where key is the slot position and value is the ItemTemplate</returns>
-		public virtual List<HookPointItem> GetAllItems()
+		public virtual ArrayList GetAllItems()
 		{
 			return hookpointItemList;
 		}
@@ -269,7 +268,7 @@ namespace DOL.GS.Keeps
 			//use default value so no need to load
 			//hookPointObj.LoadFromDatabase(this.ObjectTemplate);
 			hookPointObj.CurrentRegion = player.CurrentRegion;
-			hookPointObj.Realm = hookpoint.Component.Keep.Realm;
+			hookPointObj.Realm = hookpoint.Component.AbstractKeep.Realm;
 
 			if (hookPointObj is GameSiegeWeapon)
 				((GameSiegeWeapon)hookPointObj).EnableToMove = false;
@@ -296,13 +295,13 @@ namespace DOL.GS.Keeps
 			hookPointObj.AddToWorld();
 			if (hookPointObj is GameKeepGuard)
 			{
-				(hookPointObj as GameKeepGuard).Component.Keep.Guards.Add(hookPointObj.ObjectID.ToString(), (GameKeepGuard)hookPointObj);
+				(hookPointObj as GameKeepGuard).Component.AbstractKeep.Guards.Add(hookPointObj.ObjectID, hookPointObj);
 				((GameNPC)hookPointObj).RespawnInterval = Util.Random(10, 30) * 60 * 1000;
 			}
 			hookpoint.Object = hookPointObj;
 
 			//create the db entry
-			Database.DBKeepHookPointItem item = new DOL.Database.DBKeepHookPointItem(component.Keep.KeepID, component.ID, hookpoint.ID, GameObjectType);
+			Database.DBKeepHookPointItem item = new DOL.Database.DBKeepHookPointItem(component.AbstractKeep.KeepID, component.ID, hookpoint.ID, GameObjectType);
 			GameServer.Database.AddObject(item);
 		}
 
@@ -317,7 +316,7 @@ namespace DOL.GS.Keeps
 			//use default value so no need to load
 			//hookPointObj.LoadFromDatabase(this.ObjectTemplate);
 			hookPointObj.CurrentRegion = hookpoint.Component.CurrentRegion;
-			hookPointObj.Realm = hookpoint.Component.Keep.Realm;
+			hookPointObj.Realm = hookpoint.Component.AbstractKeep.Realm;
 
 			if (hookPointObj is GameSiegeWeapon)
 				((GameSiegeWeapon)hookPointObj).EnableToMove = false;
@@ -349,7 +348,7 @@ namespace DOL.GS.Keeps
 			hookPointObj.AddToWorld();
 			if (hookPointObj is GameKeepGuard)
 			{
-				(hookPointObj as GameKeepGuard).Component.Keep.Guards.Add(hookPointObj.ObjectID.ToString(), (GameKeepGuard)hookPointObj);
+				(hookPointObj as GameKeepGuard).Component.AbstractKeep.Guards.Add(hookPointObj.ObjectID, hookPointObj);
 				((GameNPC)hookPointObj).RespawnInterval = Util.Random(10, 30) * 60 * 1000;
 			}
 			hookpoint.Object = hookPointObj;

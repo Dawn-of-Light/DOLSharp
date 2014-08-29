@@ -79,7 +79,7 @@ namespace DOL.GS.RealmAbilities
 			GameLiving m_target = caster.TargetObject as GameLiving;
 
 			int primaryResistModifier = m_target.GetResist(eDamageType.Spirit);
-			int secondaryResistModifier = m_target.SpecBuffBonusCategory[(int)eProperty.Resist_Spirit];
+			int secondaryResistModifier = m_target.SpecBuffBonusCategory[eProperty.Resist_Spirit];
 			int rootdet = ((m_target.GetModified(eProperty.SpeedDecreaseDurationReduction) - 100) * -1);
 
 			int ResistModifier = 0;
@@ -159,7 +159,7 @@ namespace DOL.GS.RealmAbilities
 
 			if (living.EffectList.GetOfType<ChargeEffect>() == null && living.EffectList.GetOfType<SpeedOfSoundEffect>() != null)
 			{
-				living.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 99 * 0.01);
+				living.BuffBonusMultCategory1.Set(eProperty.MaxSpeed, this, 1.0 - 99 * 0.01);
 				m_rootExpire = new RegionTimer(living, new RegionTimerCallback(RootExpires), duration);
 				GameEventMgr.AddHandler(living, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
 				SendUpdates(living);
@@ -178,7 +178,7 @@ namespace DOL.GS.RealmAbilities
 				if (mob.HasAbility(Abilities.CCImmunity) || mob.HasAbility(Abilities.RootImmunity) || mob.HasAbility(Abilities.DamageImmunity))
 					continue;
 				
-				GameSpellEffect mez = SpellHandler.FindEffectOnTarget(mob, "Mesmerize");
+				GameSpellEffect mez = SpellHelper.FindEffectOnTarget(mob, "Mesmerize");
 				if (mez != null)
 					mez.Cancel(false);
 				
@@ -186,7 +186,7 @@ namespace DOL.GS.RealmAbilities
 
 				if (mob.EffectList.GetOfType<ChargeEffect>() == null && mob.EffectList.GetOfType<SpeedOfSoundEffect>() == null)
 				{
-					mob.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 99 * 0.01);
+					mob.BuffBonusMultCategory1.Set(eProperty.MaxSpeed, this, 1.0 - 99 * 0.01);
 					m_rootExpire = new RegionTimer(mob, new RegionTimerCallback(RootExpires), duration);
 					GameEventMgr.AddHandler(mob, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
 					SendUpdates(mob);
@@ -205,15 +205,15 @@ namespace DOL.GS.RealmAbilities
 				if (!GameServer.ServerRules.IsAllowedToAttack(caster, aeplayer, true))
 					continue;
 
-				GameSpellEffect mez = SpellHandler.FindEffectOnTarget(aeplayer, "Mesmerize");
+				GameSpellEffect mez = SpellHelper.FindEffectOnTarget(aeplayer, "Mesmerize");
 				if (mez != null)
 					mez.Cancel(false);
 				aeplayer.TakeDamage(caster, eDamageType.Spirit, dmgValue, 0);
-				aeplayer.StartInterruptTimer(3000, AttackData.eAttackType.Spell, caster);
+				aeplayer.StartInterruptTimer(aeplayer.SpellInterruptDuration, AttackData.eAttackType.Spell, caster);
 
 				if (aeplayer.EffectList.GetOfType<ChargeEffect>() == null && aeplayer.EffectList.GetOfType<SpeedOfSoundEffect>() == null)
 				{
-					(aeplayer as GameLiving).BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 99 * 0.01);
+					(aeplayer as GameLiving).BuffBonusMultCategory1.Set(eProperty.MaxSpeed, this, 1.0 - 99 * 0.01);
 					m_rootExpire = new RegionTimer(aeplayer, new RegionTimerCallback(RootExpires), duration);
 					GameEventMgr.AddHandler(aeplayer, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
 					SendUpdates(aeplayer);
@@ -238,7 +238,7 @@ namespace DOL.GS.RealmAbilities
 			GameLiving living = timer.Owner as GameLiving;
 			if (living != null)
 			{
-				living.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
+				living.BuffBonusMultCategory1.Remove(eProperty.MaxSpeed, this);
 				SendUpdates(living);
 			}
 			timer.Stop();
@@ -281,9 +281,9 @@ namespace DOL.GS.RealmAbilities
 
 			switch (attackArgs.AttackData.AttackResult)
 			{
-				case GameLiving.eAttackResult.HitStyle:
-				case GameLiving.eAttackResult.HitUnstyled:
-					living.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
+				case eAttackResult.HitStyle:
+				case eAttackResult.HitUnstyled:
+					living.BuffBonusMultCategory1.Remove(eProperty.MaxSpeed, this);
 					SendUpdates(living);
 					break;
 			}

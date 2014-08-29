@@ -29,158 +29,160 @@ using System.Reflection;
 
 namespace DOL.GS.Spells
 {
+	/// <summary>
+	/// Archery Class, based on Bolt, handle all arrow type and subspells.
+	/// </summary>
 	[SpellHandler("Archery")]
-	public class Archery : ArrowSpellHandler
+	public class ArcheryHandler : BoltSpellHandler
 	{
+		/// <summary>
+		/// Define Shot type (from LifeDrainReturn)
+		/// </summary>
 		public enum eShotType
 		{
+			_First = 0,
 			Other = 0,
 			Critical = 1,
 			Power = 2,
 			PointBlank = 3,
-			Rapid = 4
+			Rapid = 4,
+			Volley = 5,
+			Magical = 6,
+			_Last = 6,
 		}
 
 		/// <summary>
-		/// Does this spell break stealth on start?
+		/// Archery Shot doesn't break stealth on cast.
 		/// </summary>
 		public override bool UnstealthCasterOnStart
 		{
 			get { return false; }
 		}
-
-		public override bool CheckBeginCast(GameLiving selectedTarget)
-		{
-			if (m_caster.ObjectState != GameLiving.eObjectState.Active)	return false;
-			if (!m_caster.IsAlive)
-			{
-				MessageToCaster("You are dead and can't cast!", eChatType.CT_System);
-				return false;
-			}
-			
-			// Is PS ?
-			GameSpellEffect Phaseshift = SpellHandler.FindEffectOnTarget(Caster, "Phaseshift");
-			if (Phaseshift != null && (Spell.InstrumentRequirement == 0 || Spell.SpellType == "Mesmerize"))
-			{
-				MessageToCaster("You're phaseshifted and can't cast a spell", eChatType.CT_System);
-				return false;
-			}
-
-			// Is Shield Disarm ?
-			ShieldTripDisarmEffect shieldDisarm = Caster.EffectList.GetOfType<ShieldTripDisarmEffect>();
-			if (shieldDisarm != null)
-			{
-				MessageToCaster("You're disarmed and can't cast a spell", eChatType.CT_System);
-				return false;
-			}
-
-			// Is Mentalist RA5L ?
-			SelectiveBlindnessEffect SelectiveBlindness = Caster.EffectList.GetOfType<SelectiveBlindnessEffect>();
-			if (SelectiveBlindness != null)
-			{
-				GameLiving EffectOwner = SelectiveBlindness.EffectSource;
-				if(EffectOwner==selectedTarget)
-				{
-					if (m_caster is GamePlayer)
-						((GamePlayer)m_caster).Out.SendMessage(string.Format("{0} is invisible to you!", selectedTarget.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-					
-					return false;
-				}
-			}
-			
-			// Is immune ?
-			if (selectedTarget!=null&&selectedTarget.HasAbility("DamageImmunity"))
-			{
-				MessageToCaster(selectedTarget.Name + " is immune to this effect!", eChatType.CT_SpellResisted);
-				return false;
-			}
-			
-			if (m_caster.IsSitting)
-			{
-				MessageToCaster("You can't cast while sitting!", eChatType.CT_SpellResisted);
-				return false;
-			}
-			if (m_spell.RecastDelay > 0)
-			{
-				int left = m_caster.GetSkillDisabledDuration(m_spell);
-				if (left > 0)
-				{
-					MessageToCaster("You must wait " + (left / 1000 + 1).ToString() + " seconds to use this spell!", eChatType.CT_System);
-					return false;
-				}
-			}
-			String targetType = m_spell.Target.ToLower();
-			if (targetType == "area")
-			{
-				if (!m_caster.IsWithinRadius(m_caster.GroundTarget, CalculateSpellRange()))
-				{
-					MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
-					return false;
-				}
-			}
-
-			if (targetType == "enemy")
-			{
-				if (m_caster.IsObjectInFront(selectedTarget, 180) == false)
-				{
-					MessageToCaster("Your target is not in view!", eChatType.CT_SpellResisted);
-					Caster.Notify(GameLivingEvent.CastFailed, new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetNotInView));
-					return false;
-				}
-
-				if (m_caster.TargetInView == false)
-				{
-					MessageToCaster("Your target is not visible!", eChatType.CT_SpellResisted);
-					Caster.Notify(GameLivingEvent.CastFailed, new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetNotInView));
-					return false;
-				}
-			}
-			
-			if (Caster != null && Caster is GamePlayer && Caster.AttackWeapon != null && GlobalConstants.IsBowWeapon((eObjectType)Caster.AttackWeapon.Object_Type))
-			{
-				if (Spell.LifeDrainReturn == (int)eShotType.Critical && (!(Caster.IsStealthed)))
-				{
-					MessageToCaster("You must be stealthed and wielding a bow to use this ability!", eChatType.CT_SpellResisted);
-					return false;
-				}
-
-				return true;
-			}
-			else
-			{
-				if (Spell.LifeDrainReturn == (int)eShotType.Critical)
-				{
-					MessageToCaster("You must be stealthed and wielding a bow to use this ability!", eChatType.CT_SpellResisted);
-					return false;
-				}
-
-				MessageToCaster("You must be wielding a bow to use this ability!", eChatType.CT_SpellResisted);
-				return false;
+		
+		/// <summary>
+		/// Only Critical shot are unblockable
+		/// </summary>
+		protected override bool IsBlockable {
+			get { return ShotType != eShotType.Critical; }
+		}
+		
+		/// <summary>
+		/// Archery doesn't use Partial Damage like Bolts.
+		/// </summary>
+		protected override bool BlockPartialDamage {
+			get { return false; }
+		}
+		
+		public virtual eShotType ShotType {
+			get {
+				if (Spell.LifeDrainReturn >= (int)eShotType._First && Spell.LifeDrainReturn <= (int)eShotType._Last)
+					return (eShotType)Spell.LifeDrainReturn;
+				
+				return eShotType.Other;
 			}
 		}
 		
+		/// <summary>
+		/// Send message about shot and not spell
+		/// </summary>
 		public override void SendSpellMessages()
 		{
 			MessageToCaster("You prepare a " + Spell.Name, eChatType.CT_YouHit);
 		}
 
-
-		public override int CalculateToHitChance(GameLiving target)
+		/// <summary>
+		/// Send Interrupt Message about Shot not Spell
+		/// </summary>
+		/// <param name="attacker"></param>
+		/// <returns></returns>
+		public override string GetInterruptMessage(GameLiving attacker)
 		{
-			int bonustohit = Caster.GetModified(eProperty.ToHitBonus);
-
-			// miss rate is 0 on same level opponent
-			int hitchance = 100 + bonustohit;
-
-			if ((Caster is GamePlayer && target is GamePlayer) == false)
+			return attacker.GetName(0, true) + " attacks you and your shot is interrupted!";
+		}
+		
+		/// <summary>
+		/// Calculates the effective casting time (Power Shot has no Dex modifier)
+		/// </summary>
+		/// <returns>effective casting time in milliseconds</returns>
+		public override int CalculateCastingTime()
+		{
+			if (ShotType == eShotType.Power)
 			{
-				hitchance -= (int)(Caster.GetConLevel(target) * ServerProperties.Properties.PVE_SPELL_CONHITPERCENT);
-				hitchance += Math.Max(0, target.Attackers.Count - 1) * ServerProperties.Properties.MISSRATE_REDUCTION_PER_ATTACKERS;
+				return (int)Math.Max(Caster.MinimumCastingSpeed, Spell.CastTime * (1.0 - Math.Min(Caster.CastingSpeedReductionCap, Caster.GetModified(eProperty.CastingSpeed) * 0.01)));
 			}
 
-			return hitchance;
+			return base.CalculateCastingTime();
 		}
 
+		/// <summary>
+		/// Determines what damage type to use. For archery the player can choose if not a Magical Shot.
+		/// </summary>
+		/// <returns></returns>
+		public override eDamageType DetermineSpellDamageType()
+		{
+			if (ShotType != eShotType.Magical)
+			{
+				GameSpellEffect ef = SpellHelper.FindEffectOnTarget(Caster, typeof(ArrowDamageTypes));
+				if (ef != null)
+				{
+					return ef.SpellHandler.Spell.DamageType;
+				}
+				else
+				{
+					return eDamageType.Slash;
+				}
+			}
+			
+			return base.DetermineSpellDamageType();
+		}
+
+		/// <summary>
+		/// Archery checks for Disarm and Bow Wielding...
+		/// </summary>
+		/// <param name="selectedTarget"></param>
+		/// <param name="quiet"></param>
+		/// <returns></returns>
+		public override bool CheckBeginCast(GameLiving selectedTarget, bool quiet)
+		{
+			if (!base.CheckBeginCast(selectedTarget, quiet))
+			{
+				return false;
+			}
+			
+			// Check For Disarm
+			if (Caster.IsDisarmed)
+			{
+				MessageToCaster("You're disarmed and can't prepare a shot!", eChatType.CT_System);
+				return false;
+			}
+			
+			// Check For Stealth if Critical
+			if(ShotType == eShotType.Critical && !Caster.IsStealthed)
+			{
+				MessageToCaster("You must be stealthed and wielding a bow to use this ability!", eChatType.CT_SpellResisted);
+				return false;
+			}
+
+			// Check For Bow
+			if (Caster is GamePlayer && Caster.AttackWeapon != null && !GlobalConstants.IsBowWeapon((eObjectType)Caster.AttackWeapon.Object_Type))
+			{
+				MessageToCaster("You must be wielding a bow to use this ability!", eChatType.CT_SpellResisted);
+				return false;
+			}
+			
+			return true;
+		}
+		
+		/// <summary>
+		/// Archery doesn't use Power but Endurance
+		/// </summary>
+		/// <param name="target"></param>
+		/// <param name="consume"></param>
+		/// <returns></returns>
+		public override int PowerCost(GameLiving target, bool consume)
+		{
+			return 0;
+		}
 
 		/// <summary>
 		/// Adjust damage based on chance to hit.
@@ -192,257 +194,173 @@ namespace DOL.GS.Spells
 		{
 			int adjustedDamage = damage;
 
-			if (hitChance < 85)
+			if (hitChance < 55)
 			{
-				adjustedDamage += (int)(adjustedDamage * (hitChance - 85) * 0.038);
+				adjustedDamage += (int)(adjustedDamage * (hitChance - 55) * ServerProperties.Properties.ARCHERY_HITCHANCE_DAMAGE_REDUCTION_MULTIPLIER * 0.01);
 			}
-
-			return adjustedDamage;
+			else if (hitChance > 100)
+			{
+				// (0.25% damage bonus for point over hitChance, cap 25% bonuses, then capped by spell capdamage...)
+				adjustedDamage += (int)(adjustedDamage * Math.Min(100, hitChance - 100) * ServerProperties.Properties.ARCHERY_HITCHANCE_DAMAGE_RAISE_MULTIPLIER * 0.01);
+			}
+			
+			if (log.IsDebugEnabled)
+				log.DebugFormat("Archery AdjDmgToHitChc - Projectile Adjusted Damage for Hit Chance : {0}", adjustedDamage);
+			
+			return Math.Max(1, adjustedDamage);
 		}
-
 
 		/// <summary>
-		/// Level mod for effect between target and caster if there is any
+		/// Archery need Endurance Check instead of Power Check
 		/// </summary>
+		/// <param name="target"></param>
+		/// <param name="quiet"></param>
 		/// <returns></returns>
-		public override double GetLevelModFactor()
+		protected override bool CheckPower(GameLiving target, bool quiet)
 		{
-			return 0.025;
-		}
-
-
-		public override AttackData CalculateDamageToTarget(GameLiving target, double effectiveness)
-		{
-			AttackData ad = base.CalculateDamageToTarget(target, effectiveness);
-			GamePlayer player;
-			GameSpellEffect bladeturn = FindEffectOnTarget(target, "Bladeturn");
-			if (bladeturn != null)
+			if (Spell.UsePower && (Caster.Endurance <= 0 || Caster.Endurance < CalculateEnduranceCost(false)))
 			{
-				switch (Spell.LifeDrainReturn)
-				{
-					case (int)eShotType.Critical:
-						{
-							if (target is GamePlayer)
-							{
-								player = target as GamePlayer;
-								player.Out.SendMessage("A shot penetrated your magic barrier!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-							}
-							ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
-						}
-						break;
-
-					case (int)eShotType.Power:
-						{
-							player = target as GamePlayer;
-							player.Out.SendMessage("A shot penetrated your magic barrier!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-							ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
-							bladeturn.Cancel(false);
-						}
-						break;
-
-					case (int)eShotType.Other:
-					default:
-						{
-							if (Caster is GamePlayer)
-							{
-								player = Caster as GamePlayer;
-								player.Out.SendMessage("Your strike was absorbed by a magical barrier!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-							}
-							if (target is GamePlayer)
-							{
-								player = target as GamePlayer;
-								player.Out.SendMessage("The blow was absorbed by a magical barrier!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-								ad.AttackResult = GameLiving.eAttackResult.Missed;
-								bladeturn.Cancel(false);
-							}
-						}
-						break;
-				}
+				if (!quiet)
+					MessageToCaster("You don't have enough endurance to use this!", eChatType.CT_SpellResisted);
+				return false;
 			}
-
-			if (ad.AttackResult != GameLiving.eAttackResult.Missed)
+			
+			return true;
+		}
+		
+		/// <summary>
+		/// Archery Endurance Cost is %age based, use ArcaneSyphon Bonus.
+		/// </summary>
+		/// <param name="consume"></param>
+		/// <returns></returns>
+		public override int CalculateEnduranceCost(bool consume)
+		{
+			if(consume)
 			{
-				GameNPC npc = target as GameNPC;
-				if (npc != null)
+				int syphon = Caster.GetModified(eProperty.ArcaneSyphon);
+				if (syphon > 0)
 				{
-					if (npc.Brain != null && (npc.Brain is IControlledBrain) == false)
+					if(Util.Chance(syphon))
 					{
-						// boost for npc damage until we find exactly where calculation is going wrong -tolakram
-						ad.Damage = (int)(ad.Damage * 1.57);
+						return 0;
 					}
 				}
-
-				// Volley damage reduction based on live testing - tolakram
-				if (Spell.Target.ToLower() == "area")
+			}
+			return (int)(Caster.MaxEndurance * (Spell.Power * -0.01));
+		}
+		
+		/// <summary>
+		/// Volley Targets is capped by Spell.Value
+		/// </summary>
+		/// <param name="castTarget"></param>
+		/// <returns></returns>
+		public override IList<GameLiving> SelectTargets(GameObject castTarget)
+		{
+			IList<GameLiving> targets = base.SelectTargets(castTarget);
+			
+			if(ShotType == eShotType.Volley && Spell.Value > 0)
+			{
+				// Remove target until count is ok
+				while(targets.Count > Spell.Value)
 				{
-					ad.Damage = (int)(ad.Damage * 0.815);
+					targets.RemoveAt(Util.Random(targets.Count-1));
 				}
 			}
-
-			return ad;
+			
+			return targets;
 		}
 
 		/// <summary>
-		/// Determines what damage type to use.  For archery the player can choose.
+		/// Unstealth Archer on Arrow shoot and consume Endurance
 		/// </summary>
-		/// <returns></returns>
-		public override eDamageType DetermineSpellDamageType()
-		{
-			GameSpellEffect ef = FindEffectOnTarget(Caster, "ArrowDamageTypes");
-			if (ef != null)
-			{
-				return ef.SpellHandler.Spell.DamageType;
-			}
-			else
-			{
-				return eDamageType.Slash;
-			}
-		}
-
-		/// <summary>
-		/// Calculates the base 100% spell damage which is then modified by damage variance factors
-		/// </summary>
-		/// <returns></returns>
-		public override double CalculateDamageBase(GameLiving target)
-		{
-			double spellDamage = Spell.Damage;
-			GamePlayer player = Caster as GamePlayer;
-
-			if (player != null)
-			{
-				int manaStatValue = player.GetModified((eProperty)player.CharacterClass.ManaStat);
-				spellDamage *= (manaStatValue + 300) / 275.0;
-			}
-
-			if (spellDamage < 0)
-				spellDamage = 0;
-
-			return spellDamage;
-		}
-
-
-
+		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			if (target == null && Spell.Target.ToLower() != "area") return;
-			if (Caster == null) return;
-
+			// Unstealth on Arrow shot
 			if (Caster is GamePlayer && Caster.IsStealthed)
 			{
 				(Caster as GamePlayer).Stealth(false);
 			}
 
-			if (Spell.Target.ToLower() == "area")
+			if (ShotType == eShotType.Volley)
 			{
-				// always put archer into combat when using area (volley)
+				// always put archer into combat when using volley
 				Caster.LastAttackTickPvE = Caster.CurrentRegion.Time;
 				Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
 
-				foreach (GameLiving npc in WorldMgr.GetNPCsCloseToSpot(Caster.CurrentRegionID, Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Spell.Radius))
-				{
-					if (npc.Realm == 0 || Caster.Realm == 0)
-					{
-						npc.LastAttackedByEnemyTickPvE = npc.CurrentRegion.Time;
-					}
-				}
 			}
-			else
-			{
-				if (target.Realm == 0 || Caster.Realm == 0)
-				{
-					target.LastAttackedByEnemyTickPvE = target.CurrentRegion.Time;
-					Caster.LastAttackTickPvE = Caster.CurrentRegion.Time;
-				}
-				else
-				{
-					target.LastAttackedByEnemyTickPvP = target.CurrentRegion.Time;
-					Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
-				}
-			}
+			
+			// Consume Endurance.
+			Caster.ChangeEndurance(Caster, GameLiving.eEnduranceChangeType.Spell, -1 * CalculateEnduranceCost(true));
 
 			base.FinishSpellCast(target);
 		}
-
+	
 		/// <summary>
-		/// Calculates the effective casting time
+		/// Archery doesn't Resist but Miss
 		/// </summary>
-		/// <returns>effective casting time in milliseconds</returns>
-		public override int CalculateCastingTime()
+		/// <param name="target"></param>
+		/// <param name="effectiveness"></param>
+		public override void OnBoltArrival(GameLiving target, double effectiveness)
 		{
-			if (Spell.LifeDrainReturn == (int)eShotType.Power) return 6000;
-
-			int ticks = m_spell.CastTime;
-
-			double percent = 1.0;
-			int dex = Caster.GetModified(eProperty.Dexterity);
-
-			if (dex < 60)
+			int hitChance = CalculateToHitChance(target);
+			
+			if(!Util.Chance(hitChance))
 			{
-				//do nothing.
+				OnSpellMissed(target);
+				return;
 			}
-			else if (dex < 250)
-			{
-				percent = 1.0 - (dex - 60) * 0.15 * 0.01;
-			}
-			else
-			{
-				percent = 1.0 - ((dex - 60) * 0.15 + (dex - 250) * 0.05) * 0.01;
-			}
-
-			GamePlayer player = m_caster as GamePlayer;
-
-			if (player != null)
-			{
-				percent *= 1.0 - m_caster.GetModified(eProperty.CastingSpeed) * 0.01;
-			}
-
-			ticks = (int)(ticks * Math.Max(m_caster.CastingSpeedReductionCap, percent));
-
-			if (ticks < m_caster.MinimumCastingSpeed)
-				ticks = m_caster.MinimumCastingSpeed;
-
-			return ticks;
-		}
-
-		public override int PowerCost(GameLiving target) { return 0; }
-
-		public override int CalculateEnduranceCost()
-		{
-			#region [Freya] Nidel: Arcane Syphon chance
-			int syphon = Caster.GetModified(eProperty.ArcaneSyphon);
-			if (syphon > 0)
-			{
-				if(Util.Chance(syphon))
-				{
-					return 0;
-				}
-			}
-			#endregion
-			return (int)(Caster.MaxEndurance * (Spell.Power * .01));
+			
+			// Subspell should be triggered when Arrow is a sure hit !
+			OnBoltDirectEffect(target, effectiveness);
 		}
 		
-		public override bool CasterIsAttacked(GameLiving attacker)
+		/// <summary>
+		/// Change Damage Type to Ranged
+		/// Apply DPS Modifier and Volley Modifier
+		/// </summary>
+		/// <param name="target"></param>
+		/// <param name="effectiveness"></param>
+		/// <returns></returns>
+		public override AttackData CalculateDamageToTarget(GameLiving target, double effectiveness)
 		{
-			if (Spell.Uninterruptible)
-				return false;
+			AttackData ad = base.CalculateDamageToTarget(target, effectiveness);
+			
+			// Archery is Ranged type
+			ad.AttackType = AttackData.eAttackType.Ranged;
 
-			if (IsCasting && Stage < 2)
+			// Modifier
+			if (ad.AttackResult == eAttackResult.HitUnstyled)
 			{
-				double mod = Caster.GetConLevel(attacker);
-				double chance = 65;
-				chance += mod * 10;
-				chance = Math.Max(1, chance);
-				chance = Math.Min(99, chance);
-				if (attacker is GamePlayer) chance = 100;
-				if (Util.Chance((int)chance))
+				// Damage Reduction from DPS
+				int spellRequiredDPS = 12 + 3 * Spell.Level;
+
+				if (Caster.AttackWeapon != null && Caster.AttackWeapon.DPS_AF < spellRequiredDPS)
 				{
-					Caster.TempProperties.setProperty(INTERRUPT_TIMEOUT_PROPERTY, Caster.CurrentRegion.Time + Caster.SpellInterruptDuration);
-					MessageToLiving(Caster, attacker.GetName(0, true) + " attacks you and your shot is interrupted!", eChatType.CT_SpellResisted);
-					InterruptCasting();
-					return true;
+					double percentReduction = (double)Caster.AttackWeapon.DPS_AF / (double)spellRequiredDPS;
+					ad.Modifier = (int)(ad.Modifier * percentReduction);
+					ad.Damage = (int)(ad.Damage * percentReduction);
+					ad.CriticalDamage = (int)(ad.CriticalDamage * percentReduction);
+				}
+
+				// Volley damage reduction based on live testing - tolakram
+				if (ShotType == eShotType.Volley)
+				{
+					ad.Modifier = (int)(ad.Modifier * 0.815);
+					ad.Damage = (int)(ad.Damage * 0.815);
+					ad.CriticalDamage = (int)(ad.CriticalDamage * 0.815);
 				}
 			}
-			return true;
+
+			return ad;
+		}
+		
+		public override void OnHitSubSpell(GameLiving target)
+		{
+			base.OnHitSubSpell(target);
+			// Launch Proc !
+			if (ShotType != eShotType.Volley)
+				Caster.CheckWeaponMagicalEffect(GetLastAttackData(target), Caster.AttackWeapon);
 		}
 		
 		public override IList<string> DelveInfo
@@ -485,7 +403,10 @@ namespace DOL.GS.Spells
 				return list;
 			}
 		}
-
-		public Archery(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+		
+		public ArcheryHandler(GameLiving caster, Spell spell, SpellLine line)
+			: base(caster, spell, line) 
+		{
+		}
 	}
 }

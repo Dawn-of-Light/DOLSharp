@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using DOL.Database;
 using DOL.Events;
 using DOL.Language;
@@ -51,7 +50,7 @@ namespace DOL.GS
 		/// </summary>
 		public GameStaticItem() : base()
 		{
-			m_owners = new List<WeakRef>(1);
+			m_owners = new ArrayList(1);
 		}
 
 		#region Name/Model/GetName/GetExamineMessages
@@ -423,7 +422,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the owners of this item, can be more than 1 person
 		/// </summary>
-		private readonly List<WeakRef> m_owners;
+		private readonly ArrayList	  m_owners;
 		/// <summary>
 		/// Adds an owner to this item
 		/// </summary>
@@ -462,11 +461,11 @@ namespace DOL.GS
 		{
 			get
 			{
-				List<GameObject> activeOwners = new List<GameObject>();
+				ArrayList activeOwners = new ArrayList();
 				foreach(WeakReference weak in m_owners)
 					if(weak.Target!=null)
-						activeOwners.Add((GameObject)weak.Target);
-				return (GameObject[])activeOwners.ToArray();
+						activeOwners.Add(weak.Target);
+				return (GameObject[])activeOwners.ToArray(typeof(GameObject));
 			}
 		}
 	}

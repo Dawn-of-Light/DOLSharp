@@ -99,7 +99,7 @@ namespace DOL.GS.Trainer
 
 			switch (text) {
 				case "Shaman":
-					if(player.Race == (int)eRace.Frostalf || player.Race == (int)eRace.Kobold || player.Race == (int)eRace.Troll || player.Race == (int)eRace.MidgardMinotaur)
+					if(player.Race == (int)eRace.Frostalf || player.Race == (int)eRace.Kobold || player.Race == (int)eRace.Troll || player.Race == (int)eRace.Deifrang)
 					{
 						player.Out.SendMessage(this.Name + " says, \"I can't tell you something about this class.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 					}

@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
@@ -40,7 +39,7 @@ namespace DOL.GS
 			this.Realm = 0;
 			Level = 1;
 			CurrentState = eState.Inactive;
-			m_ammo = new List<InventoryItem>();
+			m_ammo = new ArrayList();
 
 			m_ammoSlot = 0x14;
 			ActionDelay	= new int[]
@@ -124,8 +123,8 @@ namespace DOL.GS
 			get { return m_effect; }
 			set { m_effect = value; }
 		}
-		protected IList<InventoryItem> m_ammo;
-		public virtual IList<InventoryItem> Ammo
+		protected ArrayList m_ammo;
+		public virtual ArrayList Ammo
 		{
 			get { return m_ammo; }
 			set { m_ammo = value; }

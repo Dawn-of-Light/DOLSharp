@@ -70,6 +70,24 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.Configuration.Install">
+      <Name>System.Configuration.Install</Name>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.ServiceProcess">
+      <Name>System.ServiceProcess</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
     <ProjectReference Include="..\DOLBase\DOLBase.csproj">
       <Name>DOLBase</Name>
       <Project>{A4A0FB22-124C-45CA-A653-2887DE0CC3E0}</Project>
@@ -88,9 +106,27 @@
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
       <Private>False</Private>
     </ProjectReference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="actions\ConsoleStart.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="actions\ServiceInstall.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="actions\ServiceRun.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="actions\ServiceStart.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="actions\ServiceStop.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="actions\ServiceUninstall.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AssemblyInfo.cs">
@@ -99,12 +135,26 @@
     <Compile Include="ConsolePacketLib.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GameServerService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GameServerServiceInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="IAction.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MainClass.cs">
       <SubType>Code</SubType>
     </Compile>
+    <EmbeddedResource Include="GameServerService.resx">
+      <DependentUpon>GameServerService.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GameServerServiceInstaller.resx">
+      <DependentUpon>GameServerServiceInstaller.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="DOLServer.exe.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

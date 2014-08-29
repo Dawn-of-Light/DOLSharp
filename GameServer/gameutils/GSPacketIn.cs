@@ -63,6 +63,11 @@ namespace DOL.GS
 		private ushort m_sessionID;
 
 		/// <summary>
+		/// UDP Flag
+		/// </summary>
+		private bool m_isUDP = false;
+		
+		/// <summary>
 		/// Constructor
 		/// </summary>
 		/// <param name="size">Size of the internal buffer</param>
@@ -71,6 +76,12 @@ namespace DOL.GS
 		{
 		}
 
+		public GSPacketIn(int size, bool isUdp)
+			: this(size)
+		{
+			m_isUDP = isUdp;
+		}
+		
 		/// <summary>
 		/// Gets the session id
 		/// </summary>
@@ -101,6 +112,12 @@ namespace DOL.GS
 		/// </summary>
 		public ushort Parameter { get { return m_parameter; } }
 
+		/// <summary>
+		/// Gets the UDP Flag
+		/// </summary>
+		public bool IsUDP {	get { return m_isUDP; }	}
+		
+		
 		/// <summary>
 		/// Dumps the packet data into the log
 		/// </summary>

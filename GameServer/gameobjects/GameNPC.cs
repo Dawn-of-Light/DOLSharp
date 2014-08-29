@@ -43,7 +43,7 @@ namespace DOL.GS
 	/// This class is the baseclass for all Non Player Characters like
 	/// Monsters, Merchants, Guards, Steeds ...
 	/// </summary>
-	public class GameNPC : GameLiving, ITranslatableObject, IDOLEventHandler
+	public class GameNPC : GameLiving, ITranslatableObject
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -245,8 +245,8 @@ namespace DOL.GS
 			{
 				IControlledBrain brain = Brain as IControlledBrain;
 				if (brain != null)
-					return brain.Owner.Level;
-				return base.Level;
+					return brain.Owner.EffectiveLevel;
+				return base.EffectiveLevel;
 			}
 		}
 
@@ -407,11 +407,11 @@ namespace DOL.GS
 			}
 		}
 
-		private List<Faction> m_linkedFactions;
+		private ArrayList m_linkedFactions;
 		/// <summary>
 		/// The linked factions for this NPC
 		/// </summary>
-		public List<Faction> LinkedFactions
+		public ArrayList LinkedFactions
 		{
 			get { return m_linkedFactions; }
 			set { m_linkedFactions = value; }
@@ -553,6 +553,13 @@ namespace DOL.GS
 			get { return m_charStat[eStat.CHR - eStat._First]; }
 			set { m_charStat[eStat.CHR - eStat._First] = value; }
 		}
+		
+		public override double GetArmorAbsorb(eArmorSlot slot)
+		{
+			// TODO Cap it with property calc
+			
+			return Math.Min(0.9, ((double)(Constitution+Dexterity)/(double)1200)+base.GetArmorAbsorb(slot));
+		}
 		#endregion
 		
 		#region Flags/Position/SpawnPosition/UpdateTick/Tether
@@ -625,16 +632,14 @@ namespace DOL.GS
 			set { m_packageID = value; }
 		}
 
-		protected object m_lockTicks = new object();
-		protected object m_lockVisible = new object();
 		/// <summary>
 		/// The last time this NPC sent the 0x09 update packet
 		/// </summary>
-		protected long m_lastUpdateTickCount = long.MinValue;
+		protected volatile uint m_lastUpdateTickCount = uint.MinValue;
 		/// <summary>
 		/// The last time this NPC was actually updated to at least one player
 		/// </summary>
-		protected long m_lastVisibleToPlayerTick = long.MinValue;
+		protected volatile uint m_lastVisibleToPlayerTick = uint.MinValue;
 
 		/// <summary>
 		/// Gets or Sets the flags of this npc
@@ -676,7 +681,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual bool IsVisibleToPlayers
 		{
-			get { return (GameTimer.GetTickCount() - m_lastVisibleToPlayerTick) < 60; }
+			get { return (uint)Environment.TickCount - m_lastVisibleToPlayerTick < 60000; }
 		}
 
 		/// <summary>
@@ -1213,25 +1218,17 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the last time this mob was updated
 		/// </summary>
-		public long LastUpdateTickCount
+		public uint LastUpdateTickCount
 		{
-			get 
-			{
-				lock(m_lockTicks)
-					return m_lastUpdateTickCount; 
-			}
+			get { return m_lastUpdateTickCount; }
 		}
 
 		/// <summary>
 		/// Gets the last this this NPC was actually update to at least one player.
 		/// </summary>
-		public long LastVisibleToPlayersTickCount
+		public uint LastVisibleToPlayersTickCount
 		{
-			get 
-			{ 
-				lock(m_lockVisible)
-					return m_lastVisibleToPlayerTick; 
-			}
+			get { return m_lastVisibleToPlayerTick; }
 		}
 
 		/// <summary>
@@ -1282,7 +1279,7 @@ namespace DOL.GS
 		/// <param name="target"></param>
 		/// <param name="speed"></param>
 		/// <returns></returns>
-		public int GetTicksToArriveAt(IPoint3D target, int speed)
+		public virtual int GetTicksToArriveAt(IPoint3D target, int speed)
 		{
 			return GetDistanceTo(target) * 1000 / speed;
 		}
@@ -1329,16 +1326,8 @@ namespace DOL.GS
 			if (IsTurningDisabled)
 				return;
 
-			if(!IsVisibleToPlayers)
-			{
-				if(speed > MaxSpeedBase)
-					speed = MaxSpeedBase;
-			}
-			else 
-			{
-				if (speed > MaxSpeed)
-					speed = MaxSpeed;
-			}
+			if (speed > MaxSpeed)
+				speed = MaxSpeed;
 
 			if (speed <= 0)
 				return;
@@ -1489,8 +1478,7 @@ namespace DOL.GS
 			m_followMaxDist = maxDistance;
 			m_followMinDist = minDistance;
 			m_followTarget.Target = target;
-			int timing = Brain != null ? Brain.ThinkInterval : 100;
-			m_followTimer.Start(timing);
+			m_followTimer.Start(100);
 		}
 
 		/// <summary>
@@ -1788,7 +1776,7 @@ namespace DOL.GS
 			if (CurrentWayPoint != null)
 			{
 				WaypointDelayAction waitTimer = new WaypointDelayAction(this);
-				waitTimer.Start(1+(CurrentWayPoint.WaitTime * 100));
+				waitTimer.Start(Math.Max(1, CurrentWayPoint.WaitTime * 100));
 			}
 			else
 				StopMovingOnPath();
@@ -1997,7 +1985,7 @@ namespace DOL.GS
 			{
 				try
 				{
-					List<Assembly> asms = new List<Assembly>();
+					ArrayList asms = new ArrayList();
 					asms.Add(typeof(GameServer).Assembly);
 					asms.AddRange(ScriptMgr.Scripts);
 					ABrain brain = null;
@@ -2071,6 +2059,9 @@ namespace DOL.GS
 
 			if (npcTemplate != null && npcTemplate.ReplaceMobValues)
 				LoadTemplate(npcTemplate);
+
+			if (Inventory != null)
+				SwitchWeapon(ActiveWeaponSlot);
 		}
 
 		/// <summary>
@@ -2215,7 +2206,7 @@ namespace DOL.GS
 			if (template == null)
 				return;
 
-			List<string> m_templatedInventory = new List<string>();
+			IList m_templatedInventory = new ArrayList();
 			this.TranslationId = template.TranslationId;
 			this.Name = template.Name;
 			this.Suffix = template.Suffix;
@@ -2383,14 +2374,14 @@ namespace DOL.GS
 				foreach (Ability ab in template.Abilities)
 					m_abilities[ab.KeyName] = ab;
 			}
-			BuffBonusCategory4[(int)eStat.STR] += template.Strength;
-			BuffBonusCategory4[(int)eStat.DEX] += template.Dexterity;
-			BuffBonusCategory4[(int)eStat.CON] += template.Constitution;
-			BuffBonusCategory4[(int)eStat.QUI] += template.Quickness;
-			BuffBonusCategory4[(int)eStat.INT] += template.Intelligence;
-			BuffBonusCategory4[(int)eStat.PIE] += template.Piety;
-			BuffBonusCategory4[(int)eStat.EMP] += template.Empathy;
-			BuffBonusCategory4[(int)eStat.CHR] += template.Charisma;
+			BuffBonusCategory4[(eProperty)eStat.STR] += template.Strength;
+			BuffBonusCategory4[(eProperty)eStat.DEX] += template.Dexterity;
+			BuffBonusCategory4[(eProperty)eStat.CON] += template.Constitution;
+			BuffBonusCategory4[(eProperty)eStat.QUI] += template.Quickness;
+			BuffBonusCategory4[(eProperty)eStat.INT] += template.Intelligence;
+			BuffBonusCategory4[(eProperty)eStat.PIE] += template.Piety;
+			BuffBonusCategory4[(eProperty)eStat.EMP] += template.Empathy;
+			BuffBonusCategory4[(eProperty)eStat.CHR] += template.Charisma;
 
 			m_ownBrain = new StandardMobBrain
 			{
@@ -2411,7 +2402,7 @@ namespace DOL.GS
 			if (ObjectState == eObjectState.Active)
 			{
 				// Update active weapon appearence
-				UpdateNPCEquipmentAppearance();
+				BroadcastLivingEquipmentUpdate();
 			}
 		}
 		/// <summary>
@@ -2426,17 +2417,6 @@ namespace DOL.GS
 			get { return m_equipmentTemplateID; }
 			set { m_equipmentTemplateID = value; }
 		}
-		/// <summary>
-		/// Updates the items on a character
-		/// </summary>
-		public void UpdateNPCEquipmentAppearance()
-		{
-			if (ObjectState == eObjectState.Active)
-			{
-				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-					player.Out.SendLivingEquipmentUpdate(this);
-			}
-		}
 
 		#endregion
 		
@@ -2444,12 +2424,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds all the quests this npc can give to players
 		/// </summary>
-		protected readonly List<AbstractQuest> m_questListToGive = new List<AbstractQuest>();
+		protected readonly ArrayList m_questListToGive = new ArrayList();
 
 		/// <summary>
 		/// Gets the questlist of this player
 		/// </summary>
-		public List<AbstractQuest> QuestListToGive
+		public IList QuestListToGive
 		{
 			get { return m_questListToGive; }
 		}
@@ -2461,7 +2441,7 @@ namespace DOL.GS
 		/// <returns>true if added, false if the npc has already the quest!</returns>
 		public void AddQuestToGive(Type questType)
 		{
-			lock (((ICollection)m_questListToGive).SyncRoot)
+			lock (m_questListToGive.SyncRoot)
 			{
 				if (HasQuest(questType) == null)
 				{
@@ -2478,7 +2458,7 @@ namespace DOL.GS
 		/// <returns>true if added, false if the npc has already the quest!</returns>
 		public bool RemoveQuestToGive(Type questType)
 		{
-			lock (((ICollection)m_questListToGive).SyncRoot)
+			lock (m_questListToGive.SyncRoot)
 			{
 				foreach (AbstractQuest q in m_questListToGive)
 				{
@@ -2501,7 +2481,7 @@ namespace DOL.GS
 		/// <returns>the number of time the quest can be done again</returns>
 		public int CanGiveQuest(Type questType, GamePlayer player)
 		{
-			lock (((ICollection)m_questListToGive).SyncRoot)
+			lock (m_questListToGive.SyncRoot)
 			{
 				foreach (AbstractQuest q in m_questListToGive)
 				{
@@ -2563,7 +2543,7 @@ namespace DOL.GS
 		public bool CanGiveOneQuest(GamePlayer player)
 		{
 			// Scripted quests
-			lock (((ICollection)m_questListToGive).SyncRoot)
+			lock (m_questListToGive.SyncRoot)
 			{
 				foreach (AbstractQuest q in m_questListToGive)
 				{
@@ -2625,7 +2605,7 @@ namespace DOL.GS
 		/// <returns>the quest if the npc have the quest or null if not</returns>
 		protected AbstractQuest HasQuest(Type questType)
 		{
-			lock (((ICollection)m_questListToGive).SyncRoot)
+			lock (m_questListToGive.SyncRoot)
 			{
 				foreach (AbstractQuest q in m_questListToGive)
 				{
@@ -2812,35 +2792,30 @@ namespace DOL.GS
 		#endregion
 		
 		#region Add/Remove/Create/Remove/Update
-		/// <summary>
-		/// Broadcasts the npc to all players around
-		/// </summary>
-		public virtual void BroadcastUpdate()
-		{
-			if (ObjectState != eObjectState.Active) return;
-			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-			{
-				if (player == null) continue;
-				player.Out.SendObjectUpdate(this);
-				player.CurrentUpdateArray[ObjectID - 1] = true;
-			}
-			
-			lock(m_lockTicks)
-				m_lastUpdateTickCount = GameTimer.GetTickCount();
-		}
 
+        /// <summary>
+		/// Broadcasts the NPC Update to all players around
+		/// </summary>
+		public override void BroadcastUpdate()
+		{
+			base.BroadcastUpdate();
+			
+			m_lastUpdateTickCount = (uint)Environment.TickCount;
+		}
+		
 		/// <summary>
 		/// callback that npc was updated to the world
 		/// so it must be visible to at least one player
 		/// </summary>
 		public void NPCUpdatedCallback()
 		{
-			lock(m_lockVisible)
-				m_lastVisibleToPlayerTick = GameTimer.GetTickCount();
-			
-			if(Brain != null)
-				Brain.Start();
-			
+			m_lastVisibleToPlayerTick = (uint)Environment.TickCount;
+			lock (BrainSync)
+			{
+				ABrain brain = Brain;
+				if (brain != null)
+					brain.Start();
+			}
 		}
 		/// <summary>
 		/// Adds the npc to the world
@@ -2942,7 +2917,7 @@ namespace DOL.GS
 		protected virtual void BuildAmbientTexts()
 		{
 			// list of ambient texts
-			if (!string.IsNullOrEmpty(Name) && !m_ambientTextsCache.ContainsKey(Name))
+			if (!string.IsNullOrEmpty(Name))
 				ambientTexts = GameServer.Database.SelectObjects<MobXAmbientBehaviour>("`Source` ='" + GameServer.Database.Escape(Name) + "';");
 		}
 
@@ -3110,7 +3085,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the all added to this npc brains
 		/// </summary>
-		private List<ABrain> m_brains = new List<ABrain>(1);
+		private ArrayList m_brains = new ArrayList(1);
 
 		/// <summary>
 		/// The sync object for brain changes
@@ -3132,17 +3107,10 @@ namespace DOL.GS
 		{
 			get
 			{
-				ABrain brain = null;
-				
-				lock(BrainSync)
-				{
-					if(m_brains.Count > 0)
-						brain = m_brains[m_brains.Count - 1];
-					else
-						brain = m_ownBrain;
-				}
-				
-				return brain;
+				ArrayList brains = m_brains;
+				if (brains.Count > 0)
+					return (ABrain)brains[brains.Count - 1];
+				return m_ownBrain;
 			}
 		}
 
@@ -3155,7 +3123,6 @@ namespace DOL.GS
 		{
 			if (brain == null)
 				return null;
-			
 			if (brain.IsActive)
 				throw new ArgumentException("The new brain is already active.", "brain");
 
@@ -3167,7 +3134,8 @@ namespace DOL.GS
 					oldBrain.Stop();
 				m_ownBrain = brain;
 				m_ownBrain.Body = this;
-				m_ownBrain.Start();
+				if (activate)
+					m_ownBrain.Start();
 
 				return oldBrain;
 			}
@@ -3186,13 +3154,13 @@ namespace DOL.GS
 
 			lock (BrainSync)
 			{
-				if(Brain != null)
-					Brain.Stop();
-				
-				m_brains.Add(newBrain);
+				Brain.Stop();
+				ArrayList brains = new ArrayList(m_brains);
+				brains.Add(newBrain);
+				m_brains = brains; // make new array list to avoid locks in the Brain property
 				newBrain.Body = this;
 				newBrain.Start();
-			}			
+			}
 		}
 
 		/// <summary>
@@ -3206,20 +3174,19 @@ namespace DOL.GS
 
 			lock (BrainSync)
 			{
-				int index = m_brains.IndexOf(removeBrain);
-				
-				if (index < 0)
-					return false;
-				
-				bool active = index == m_brains.Count-1;
-				
+				ArrayList brains = new ArrayList(m_brains);
+				int index = brains.IndexOf(removeBrain);
+				if (index < 0) return false;
+				bool active = brains[index] == Brain;
 				if (active)
 					removeBrain.Stop();
-				
-				m_brains.RemoveAt(index);
+				brains.RemoveAt(index);
+				m_brains = brains;
+				if (active)
+					Brain.Start();
+
+				return true;
 			}
-			
-			return true;
 		}
 		#endregion
 		
@@ -3370,21 +3337,51 @@ namespace DOL.GS
 					}
 			}
 		}
+		
+		protected byte ChanceToStyle
+		{
+			get
+			{
+				return (byte)Properties.GAMENPC_CHANCES_TO_STYLE;
+			}
+			set
+			{
+			}
+		}
+		
 		/// <summary>
 		/// Pick a random style for now.
 		/// </summary>
 		/// <returns></returns>
 		protected override Style GetStyleToUse()
 		{
-			if (Styles != null && Styles.Count > 0 && Util.Chance(Properties.GAMENPC_CHANCES_TO_STYLE + Styles.Count))
+			// Randomize Styles List, only if Styles exist, and there is a chance to style
+			if(Styles != null && Styles.Count > 1 && Util.Chance(ChanceToStyle))
 			{
-				Style style = (Style)Styles[Util.Random(Styles.Count - 1)];
-				if (StyleProcessor.CanUseStyle(this, style, AttackWeapon))
-					return style;
+				List<Style> randStyles = new List<Style>();
+				foreach(Style style in Styles)
+				{
+					Style sty = style;
+					
+					if(sty != null)
+						randStyles.Add(sty);
+				}
+				
+				// Shuffle Style
+				randStyles.Shuffle();
+				
+				// Use the first working style, allow to use style with orther pre-requisite
+				for(int i = 0 ; i < randStyles.Count ; i++)
+				{
+					Style style = randStyles[i];
+					if(StyleProcessor.CanUseStyle(this, style, AttackWeapon))
+						return style;
+				}
 			}
 
 			return base.GetStyleToUse();
 		}
+		
 		/// <summary>
 		/// Adds messages to ArrayList which are sent when object is targeted
 		/// </summary>
@@ -3403,7 +3400,7 @@ namespace DOL.GS
                     }
                 default:
                     {
-                        List<string> list = new List<string>();
+                        IList list = new ArrayList(4);
                         list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObject.GetExamineMessages.YouTarget",
                                                             GetName(0, false, player.Client.Account.Language, this)));
                         list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.GetExamineMessages.YouExamine",
@@ -3479,29 +3476,9 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// The ambient texts of this mob
+		/// The ambient texts
 		/// </summary>
-		public IList<MobXAmbientBehaviour> ambientTexts
-		{
-			get
-			{
-				return m_ambientTextsCache.ContainsKey(Name) ? m_ambientTextsCache[Name] : null;
-			}
-			
-			set
-			{
-				if(!Util.IsEmpty(Name))
-				{
-					if(m_ambientTextsCache.ContainsKey(Name))
-						m_ambientTextsCache.Remove(Name);
-							
-					m_ambientTextsCache[Name] = value;
-				}
-						
-			}
-		}
-		
-		private static Dictionary<string, IList<MobXAmbientBehaviour>> m_ambientTextsCache = new Dictionary<string, IList<MobXAmbientBehaviour>>();		
+		public IList<MobXAmbientBehaviour> ambientTexts;
 		
 		/// <summary>
 		/// This function is called from the ObjectInteractRequestHandler
@@ -3594,7 +3571,7 @@ namespace DOL.GS
 			}
 			return true;
 		}
-
+		
 		/// <summary>
 		/// Format "say" message and send it to target in popup window
 		/// </summary>
@@ -3635,6 +3612,20 @@ namespace DOL.GS
 					break;
 			}
 		}
+		
+		public override void MessageToSelf(string message, eChatType chatType)
+		{
+			// If we are a controlled NPC
+			if(Brain is IControlledBrain)
+			{
+				GameLiving living = ((IControlledBrain)Brain).GetLivingOwner();
+				living.MessageFromControlled(message, chatType);
+			}
+			else
+			{
+				base.MessageToSelf(message, chatType);
+			}
+		}
 		#endregion
 		
 		#region Combat
@@ -3663,97 +3654,78 @@ namespace DOL.GS
 		/// <param name="target">The object to attack</param>
 		public override void StartAttack(GameObject target)
 		{
-			if (target == null || this.CurrentRegion == null)
+			if (target == null)
 				return;
 
 			TargetObject = target;
 
-			if(ServerProperties.Properties.LOSMGR_ENABLE)
+			long lastTick = this.TempProperties.getProperty<long>(LAST_LOS_TICK_PROPERTY);
+
+			if (ServerProperties.Properties.ALWAYS_CHECK_PET_LOS &&
+			    Brain != null &&
+			    Brain is IControlledBrain &&
+			    (target is GamePlayer || (target is GameNPC && (target as GameNPC).Brain != null && (target as GameNPC).Brain is IControlledBrain)))
 			{
-				//always check Los
-				if(ServerProperties.Properties.ALWAYS_CHECK_LOS)
+				GameObject lastTarget = (GameObject)this.TempProperties.getProperty<object>(LAST_LOS_TARGET_PROPERTY, null);
+				if (lastTarget != null && lastTarget == target)
 				{
-					try
-					{
-						this.CurrentRegion.LosCheckManager.LosCheckVincinity(this, target, new LosMgrResponseHandler(NPCStartAttackCheckLOS));
+					if (lastTick != 0 && CurrentRegion.Time - lastTick < ServerProperties.Properties.LOS_PLAYER_CHECK_FREQUENCY * 1000)
 						return;
-					}
-					catch (LosUnavailableException)
-					{
-						return;
-					}
-				}				
-			}
-			else
-			{
-				long lastTick = this.TempProperties.getProperty<long>(LAST_LOS_TICK_PROPERTY);
-	
-				if (ServerProperties.Properties.ALWAYS_CHECK_PET_LOS &&
-				    Brain != null &&
-				    Brain is IControlledBrain &&
-				    (target is GamePlayer || (target is GameNPC && (target as GameNPC).Brain != null && (target as GameNPC).Brain is IControlledBrain)))
+				}
+
+				GamePlayer losChecker = null;
+				if (target is GamePlayer)
 				{
-					GameObject lastTarget = (GameObject)this.TempProperties.getProperty<object>(LAST_LOS_TARGET_PROPERTY, null);
-					if (lastTarget != null && lastTarget == target)
+					losChecker = target as GamePlayer;
+				}
+				else if (target is GameNPC && (target as GameNPC).Brain is IControlledBrain)
+				{
+					losChecker = ((target as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+				}
+				else
+				{
+					// try to find another player to use for checking line of site
+					foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
-						if (lastTick != 0 && CurrentRegion.Time - lastTick < ServerProperties.Properties.LOS_PLAYER_CHECK_FREQUENCY * 1000)
-							return;
+						losChecker = player;
+						break;
 					}
-	
-					GamePlayer losChecker = null;
-					if (target is GamePlayer)
-					{
-						losChecker = target as GamePlayer;
-					}
-					else if (target is GameNPC && (target as GameNPC).Brain is IControlledBrain)
-					{
-						losChecker = ((target as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
-					}
-					else
-					{
-						// try to find another player to use for checking line of site
-						foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-						{
-							losChecker = player;
-							break;
-						}
-					}
-	
-					if (losChecker == null)
-					{
-						return;
-					}
-	
-					lock (LOS_LOCK)
-					{
-						int count = TempProperties.getProperty<int>(NUM_LOS_CHECKS_INPROGRESS, 0);
-	
-						if (count > 10)
-						{
-							log.DebugFormat("{0} LOS count check exceeds 10, aborting LOS check!", Name);
-	
-							// Now do a safety check.  If it's been a while since we sent any check we should clear count
-							if (lastTick == 0 || CurrentRegion.Time - lastTick > ServerProperties.Properties.LOS_PLAYER_CHECK_FREQUENCY * 1000)
-							{
-								log.Debug("LOS count reset!");
-								TempProperties.setProperty(NUM_LOS_CHECKS_INPROGRESS, 0);
-							}
-	
-							return;
-						}
-	
-						count++;
-						TempProperties.setProperty(NUM_LOS_CHECKS_INPROGRESS, count);
-	
-						TempProperties.setProperty(LAST_LOS_TARGET_PROPERTY, target);
-						TempProperties.setProperty(LAST_LOS_TICK_PROPERTY, CurrentRegion.Time);
-						m_targetLOSObject = target;
-	
-					}
-	
-					losChecker.Out.SendCheckLOS(this, target, new CheckLOSResponse(this.NPCStartAttackCheckLOS));
+				}
+
+				if (losChecker == null)
+				{
 					return;
 				}
+
+				lock (LOS_LOCK)
+				{
+					int count = TempProperties.getProperty<int>(NUM_LOS_CHECKS_INPROGRESS, 0);
+
+					if (count > 10)
+					{
+						log.DebugFormat("{0} LOS count check exceeds 10, aborting LOS check!", Name);
+
+						// Now do a safety check.  If it's been a while since we sent any check we should clear count
+						if (lastTick == 0 || CurrentRegion.Time - lastTick > ServerProperties.Properties.LOS_PLAYER_CHECK_FREQUENCY * 1000)
+						{
+							log.Debug("LOS count reset!");
+							TempProperties.setProperty(NUM_LOS_CHECKS_INPROGRESS, 0);
+						}
+
+						return;
+					}
+
+					count++;
+					TempProperties.setProperty(NUM_LOS_CHECKS_INPROGRESS, count);
+
+					TempProperties.setProperty(LAST_LOS_TARGET_PROPERTY, target);
+					TempProperties.setProperty(LAST_LOS_TICK_PROPERTY, CurrentRegion.Time);
+					m_targetLOSObject = target;
+
+				}
+
+				losChecker.Out.SendCheckLOS(this, target, new CheckLOSResponse(this.NPCStartAttackCheckLOS));
+				return;
 			}
 
 			ContinueStartAttack(target);
@@ -3789,29 +3761,11 @@ namespace DOL.GS
 				}
 			}
 		}
-		
-		public void NPCStartAttackCheckLOS(GamePlayer checker, GameObject source, GameObject target, bool losOK, EventArgs args, PropertyCollection tempProperties)
-		{
-			if(losOK)
-			{
-				// make sure we didn't switch targets
-				if (TargetObject != null && target != null && TargetObject == target)
-					ContinueStartAttack(TargetObject);
-			}
-			else
-			{
-				if (TargetObject != null && TargetObject is GameLiving && Brain != null && Brain is IOldAggressiveBrain)
-				{
-					// there will be a think delay before mob attempts to attack next target
-					(Brain as IOldAggressiveBrain).RemoveFromAggroList(TargetObject as GameLiving);
-				}
-			}
-		}
 
 
 		public virtual void ContinueStartAttack(GameObject target)
 		{
-			StopMoving();
+			//StopMoving();
 			StopMovingOnPath();
 
 			if (Brain != null && Brain is IControlledBrain)
@@ -3852,58 +3806,35 @@ namespace DOL.GS
 		public override void RangedAttackFinished()
 		{
 			base.RangedAttackFinished();
-			
-			if(ServerProperties.Properties.LOSMGR_ENABLE)
-			{
 
-				if(ServerProperties.Properties.ALWAYS_CHECK_LOS)
+			if (ServerProperties.Properties.ALWAYS_CHECK_PET_LOS &&
+			    Brain != null &&
+			    Brain is IControlledBrain &&
+			    (TargetObject is GamePlayer || (TargetObject is GameNPC && (TargetObject as GameNPC).Brain != null && (TargetObject as GameNPC).Brain is IControlledBrain)))
+			{
+				GamePlayer player = null;
+
+				if (TargetObject is GamePlayer)
 				{
-					try
+					player = TargetObject as GamePlayer;
+				}
+				else if (TargetObject is GameNPC && (TargetObject as GameNPC).Brain != null && (TargetObject as GameNPC).Brain is IControlledBrain)
+				{
+					if (((TargetObject as GameNPC).Brain as IControlledBrain).Owner is GamePlayer)
 					{
-						this.CurrentRegion.LosCheckManager.LosCheckVincinity(this, TargetObject, new LosMgrResponseHandler(NPCStopRangedAttackCheckLOS));
+						player = ((TargetObject as GameNPC).Brain as IControlledBrain).Owner as GamePlayer;
 					}
-					catch (LosUnavailableException)
-					{
-						return;
-					}
+				}
+
+				if (player != null)
+				{
+					player.Out.SendCheckLOS(this, TargetObject, new CheckLOSResponse(NPCStopRangedAttackCheckLOS));
 					if (ServerProperties.Properties.ENABLE_DEBUG)
 					{
-						log.Debug(Name + " sent LOS check to object " + TargetObject.Name);
+						log.Debug(Name + " sent LOS check to player " + player.Name);
 					}
-				}				
+				}
 			}
-			else
-			{
-				if (ServerProperties.Properties.ALWAYS_CHECK_PET_LOS &&
-				    Brain != null &&
-				    Brain is IControlledBrain &&
-				    (TargetObject is GamePlayer || (TargetObject is GameNPC && (TargetObject as GameNPC).Brain != null && (TargetObject as GameNPC).Brain is IControlledBrain)))
-				{
-					GamePlayer player = null;
-	
-					if (TargetObject is GamePlayer)
-					{
-						player = TargetObject as GamePlayer;
-					}
-					else if (TargetObject is GameNPC && (TargetObject as GameNPC).Brain != null && (TargetObject as GameNPC).Brain is IControlledBrain)
-					{
-						if (((TargetObject as GameNPC).Brain as IControlledBrain).Owner is GamePlayer)
-						{
-							player = ((TargetObject as GameNPC).Brain as IControlledBrain).Owner as GamePlayer;
-						}
-					}
-	
-					if (player != null)
-					{
-						player.Out.SendCheckLOS(this, TargetObject, new CheckLOSResponse(NPCStopRangedAttackCheckLOS));
-						if (ServerProperties.Properties.ENABLE_DEBUG)
-						{
-							log.Debug(Name + " sent LOS check to player " + player.Name);
-						}
-					}
-				}				
-			}
-		
 		}
 
 
@@ -3926,20 +3857,8 @@ namespace DOL.GS
 			}
 		}
 
-		public void NPCStopRangedAttackCheckLOS(GamePlayer checker, GameObject source, GameObject target, bool losOK, EventArgs args, PropertyCollection tempProperties)
-		{
-			if(!losOK)
-			{
-				if (ServerProperties.Properties.ENABLE_DEBUG)
-				{
-					log.Debug(Name + " FAILED stop ranged attack LOS check to entity " + target.Name);
-				}
 
-				StopAttack();				
-			}
-		}
-
-		private void SetLastMeleeAttackTick()
+		public void SetLastMeleeAttackTick()
 		{
 			if (TargetObject.Realm == 0 || Realm == 0)
 				m_lastAttackTickPvE = m_CurrentRegion.Time;
@@ -4017,10 +3936,10 @@ namespace DOL.GS
 					return false;
 				if (this.Brain is IControlledBrain)
 					return false;
-				lock (((ICollection)m_xpGainers).SyncRoot)
+				lock (m_xpGainers.SyncRoot)
 				{
 					if (m_xpGainers.Keys.Count == 0) return false;
-					foreach (KeyValuePair<GameObject, float> de in m_xpGainers)
+					foreach (DictionaryEntry de in m_xpGainers)
 					{
 						GameObject obj = (GameObject)de.Key;
 						if (obj is GamePlayer)
@@ -4086,33 +4005,34 @@ namespace DOL.GS
 			if (Group != null)
 				Group.RemoveMember(this);
 
-			if(killer!=null)
+			if(killer != null)
 			{
-				base.Die(killer);
+				// Handle faction alignement changes // TODO Review
+				if ((Faction != null) && (killer is GamePlayer))
+				{	
+					// Get All Attackers. // TODO check if this shouldn't be set to Attackers instead of XPGainers ?
+					foreach (DictionaryEntry de in this.XPGainers)
+					{
+						GameLiving living = de.Key as GameLiving;
+						GamePlayer player = living as GamePlayer;
+	
+						// Get Pets Owner (// TODO check if they are not already treated as attackers ?)
+						if (living is GameNPC && (living as GameNPC).Brain is IControlledBrain)
+							player = ((living as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+	
+						if (player != null && player.ObjectState == GameObject.eObjectState.Active && player.IsAlive && player.IsWithinRadius(this, WorldMgr.MAX_EXPFORKILL_DISTANCE))
+						{
+							Faction.KillMember(player);
+						}
+					}
+				}
+				
 				// deal out exp and realm points based on server rules
 				GameServer.ServerRules.OnNPCKilled(this, killer);
+				base.Die(killer);
 			}
 
 			Delete();
-
-			if ((Faction != null) && (killer is GamePlayer))
-			{
-				// Tyriada(Carmélide) : il faut donner la faction à tous les membres attaquants ainsi que leur groupe
-
-				foreach (KeyValuePair<GameObject, float> de in this.XPGainers)
-				{
-					GameLiving living = de.Key as GameLiving;
-					GamePlayer player = living as GamePlayer;
-
-					if (living is GameNPC && (living as GameNPC).Brain is IControlledBrain) // Tout les pets renvoient sur leurs owners.
-						player = ((living as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
-
-					if (player != null && player.ObjectState == GameObject.eObjectState.Active && player.IsAlive && player.IsWithinRadius(this, WorldMgr.MAX_EXPFORKILL_DISTANCE))
-					{
-						Faction.KillMember(player);
-					}
-				}
-			}
 
 			// remove temp properties
 			TempProperties.removeAllProperties();
@@ -4180,6 +4100,7 @@ namespace DOL.GS
 				//When npcs have two handed weapons, we don't want them to block
 				if (ActiveWeaponSlot != eActiveWeaponSlot.Standard)
 					return 0;
+				
 				return m_blockChance;
 			}
 			set
@@ -4262,6 +4183,20 @@ namespace DOL.GS
 			StopAttack();
 			SwitchWeapon(eActiveWeaponSlot.Distance);
 			StartAttack(target);
+		}
+		/// <summary>
+		/// Draw the weapon, but don't actually start a melee attack.
+		/// </summary>		
+		public virtual void DrawWeapon()
+		{
+			if (!AttackState)
+			{
+				AttackState = true;
+				
+				BroadcastUpdate();
+
+				AttackState = false;
+			}
 		}
 
 		/// <summary>
@@ -4401,6 +4336,9 @@ namespace DOL.GS
 					{
 						m_respawnTimer.Stop();
 					}
+					// register Mob as "respawning"
+					CurrentRegion.MobsRespawning.TryAdd(this, respawnInt);
+					
 					m_respawnTimer.Start(respawnInt);
 				}
 			}
@@ -4412,6 +4350,10 @@ namespace DOL.GS
 		/// <returns>the new interval</returns>
 		protected virtual int RespawnTimerCallback(RegionTimer respawnTimer)
 		{
+			int dummy;
+			// remove Mob from "respawning"
+			CurrentRegion.MobsRespawning.TryRemove(this, out dummy);
+			
 			lock (m_respawnTimerLock)
 			{
 				if (m_respawnTimer != null)
@@ -4432,6 +4374,8 @@ namespace DOL.GS
 			Endurance = MaxEndurance;
 			int origSpawnX = m_spawnPoint.X;
 			int origSpawnY = m_spawnPoint.Y;
+			//X=(m_spawnX+Random(750)-350); //new SpawnX = oldSpawn +- 350 coords
+			//Y=(m_spawnY+Random(750)-350);	//new SpawnX = oldSpawn +- 350 coords
 			X = m_spawnPoint.X;
 			Y = m_spawnPoint.Y;
 			Z = m_spawnPoint.Z;
@@ -4479,7 +4423,6 @@ namespace DOL.GS
 		{
 			if (m_attackAction != null)
 				m_attackAction.Stop();
-			StopFollowing();
 		}
 
 		/// <summary>
@@ -4514,11 +4457,11 @@ namespace DOL.GS
 		public virtual void DropLoot(GameObject killer)
 		{
 			// TODO: mobs drop "a small chest" sometimes
-			List<string> droplist = new List<string>();
-			List<GameObject> autolootlist = new List<GameObject>();
-			List<GamePlayer> aplayer = new List<GamePlayer>();
+			ArrayList droplist = new ArrayList();
+			ArrayList autolootlist = new ArrayList();
+			ArrayList aplayer = new ArrayList();
 
-			lock (((ICollection)m_xpGainers).SyncRoot)
+			lock (m_xpGainers.SyncRoot)
 			{
 				if (m_xpGainers.Keys.Count == 0) return;
 
@@ -4710,7 +4653,7 @@ namespace DOL.GS
 			Group attackerGroup = attackerPlayer.Group;
 			if (attackerGroup != null)
 			{
-				List<GameLiving> xpGainers = new List<GameLiving>();
+				ArrayList xpGainers = new ArrayList(8);
 				// collect "helping" group players in range
 				foreach (GameLiving living in attackerGroup.GetMembersInTheGroup())
 				{
@@ -4769,21 +4712,21 @@ namespace DOL.GS
 			}
 		}
 
-		private IList<Spell> m_spells = new List<Spell>();
+		private List<Spell> m_spells = new List<Spell>();
 		/// <summary>
 		/// property of spell array of NPC
 		/// </summary>
-		public IList<Spell> Spells
+		public virtual List<Spell> Spells
 		{
 			get { return m_spells; }
 			set { m_spells = value; }
 		}
 
-		private IList<Style> m_styles = new List<Style>();
+		private IList m_styles = new ArrayList(1);
 		/// <summary>
 		/// The Styles for this NPC
 		/// </summary>
-		public IList<Style> Styles
+		public IList Styles
 		{
 			get { return m_styles; }
 			set { m_styles = value; }
@@ -4832,9 +4775,12 @@ namespace DOL.GS
 			if (m_runningSpellHandler != null)
 			{
 				//prevent from relaunch
-				m_runningSpellHandler.CastingCompleteEvent -= new CastingCompleteCallback(OnAfterSpellCastSequence);
-				m_runningSpellHandler = null;
+				base.OnAfterSpellCastSequence(handler);
 			}
+			
+			// Notify Brain of Cast Finishing.
+			if(Brain != null)
+				Brain.Notify(GameNPCEvent.CastFinished, this, new CastingEventArgs(handler));
 		}
 
 		/// <summary>
@@ -4941,14 +4887,29 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="spell"></param>
 		/// <param name="line"></param>
-		public override void CastSpell(Spell spell, SpellLine line)
+		public override bool CastSpell(Spell spell, SpellLine line)
 		{
 			if (IsIncapacitated)
-				return;
-
-			if (m_runningSpellHandler != null || TempProperties.getProperty<Spell>(LOSCURRENTSPELL, null) != null)
 			{
-				return;
+				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.CrowdControlled));
+				return false;
+			}
+
+			if (m_runningSpellHandler != null)
+			{
+				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.AlreadyCasting));
+				return false;
+			}
+
+			if (spell.SpellType.ToLower().Contains("stylehandler") || spell.SpellType.ToLower().Contains("throwweapon"))
+			{
+				DOL.GS.Styles.Style style = SkillBase.GetStyleByID((int)spell.Value, 0);
+				if (style != null)
+				{
+					DOL.GS.Styles.StyleProcessor.TryToUseStyle(this, style);
+					Notify(GameLivingEvent.CastFinished, this, null);
+					return true;
+				}
 			}
 
 			Spell spellToCast = null;
@@ -4964,67 +4925,74 @@ namespace DOL.GS
 				spellToCast = spell;
 			}
 
-			if(ServerProperties.Properties.LOSMGR_ENABLE)
+			// we are checking ourself or nothing...
+			if(TargetObject == this || TargetObject == null)
 			{
-				//always check Los
-				if(ServerProperties.Properties.ALWAYS_CHECK_LOS)
+				return base.CastSpell(spellToCast, line);
+			}
+			
+			// Let's do a few checks to make sure it doesn't just wait on the LOS check
+			int tempProp = TempProperties.getProperty<int>(LOSTEMPCHECKER);
+
+			if (tempProp <= 0)
+			{
+				GamePlayer LOSChecker = null;
+				// Get a Checker !
+				if (TargetObject is GamePlayer)
 				{
-					try
+					LOSChecker = (GamePlayer)TargetObject;
+				}
+				else if (TargetObject != null && TargetObject is GameNPC && ((GameNPC)TargetObject).Brain != null && ((GameNPC)TargetObject).Brain is IControlledBrain)
+				{
+					LOSChecker = ((IControlledBrain)((GameNPC)TargetObject).Brain).GetPlayerOwner();
+				}
+				else if (Brain != null && Brain is IControlledBrain)
+				{
+					LOSChecker = ((IControlledBrain)Brain).GetPlayerOwner();
+				}
+				
+				if (LOSChecker == null)
+				{
+					foreach (GamePlayer ply in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
-						LosMgrResponseHandler loshandler = new LosMgrResponseHandler(StartSpellAttackCheckLOS);
-						loshandler.TempProperties.setProperty(LOSCURRENTSPELL, spellToCast);
-						loshandler.TempProperties.setProperty(LOSCURRENTLINE, line);
-						this.CurrentRegion.LosCheckManager.LosCheckVincinity(this, TargetObject, loshandler);
+						GamePlayer player = ply;
+						if (player != null && TargetObject != null && TargetObject.IsWithinRadius(player, WorldMgr.VISIBILITY_DISTANCE))
+						{
+							LOSChecker = player;
+							break;
+						}
 					}
-					catch (LosUnavailableException)
+				}
+
+				if (LOSChecker == null)
+				{
+					TempProperties.setProperty(LOSTEMPCHECKER, 0);
+
+					if (!spell.MoveCast && spell.CastTime > 0)
 					{
-						return;
-					}				
+						StopFollowing();
+						if (TargetObject != this)
+							TurnTo(TargetObject);
+					}
+					log.InfoFormat("Tried LoS Check From {0} to {1} but no checker found", Name, TargetObject);
+					return base.CastSpell(spellToCast, line);
 				}
 				else
 				{
-					base.CastSpell(spellToCast, line);					
+					TempProperties.setProperty(LOSTEMPCHECKER, 5);
+					TempProperties.setProperty(LOSCURRENTSPELL, spellToCast);
+					TempProperties.setProperty(LOSCURRENTLINE, line);
+					TempProperties.setProperty(LOSSPELLTARGET, TargetObject);
+					LOSChecker.Out.SendCheckLOS(TargetObject, this, new CheckLOSResponse(StartSpellAttackCheckLOS));
 				}
 			}
 			else
 			{
-				// Let's do a few checks to make sure it doesn't just wait on the LOS check
-				int tempProp = TempProperties.getProperty<int>(LOSTEMPCHECKER);
-	
-				if (tempProp <= 0)
-				{
-					GamePlayer LOSChecker = TargetObject as GamePlayer;
-					if (LOSChecker == null)
-					{
-						foreach (GamePlayer ply in GetPlayersInRadius(350))
-						{
-							if (ply != null)
-							{
-								LOSChecker = ply;
-								break;
-							}
-						}
-					}
-	
-					if (LOSChecker == null)
-					{
-						TempProperties.setProperty(LOSTEMPCHECKER, 0);
-						base.CastSpell(spellToCast, line);
-					}
-					else
-					{
-						TempProperties.setProperty(LOSTEMPCHECKER, 10);
-						TempProperties.setProperty(LOSCURRENTSPELL, spellToCast);
-						TempProperties.setProperty(LOSCURRENTLINE, line);
-						TempProperties.setProperty(LOSSPELLTARGET, TargetObject);
-						LOSChecker.Out.SendCheckLOS(LOSChecker, this, new CheckLOSResponse(StartSpellAttackCheckLOS));
-					}
-				}
-				else
-				{
-					TempProperties.setProperty(LOSTEMPCHECKER, tempProp - 1);
-				}			
+				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.AlreadyCasting));
+				TempProperties.setProperty(LOSTEMPCHECKER, tempProp - 1);
 			}
+
+			return false;
 		}
 
 		public void StartSpellAttackCheckLOS(GamePlayer player, ushort response, ushort targetOID)
@@ -5054,44 +5022,31 @@ namespace DOL.GS
 					}
 				}
 
-				base.CastSpell(spell, line);
-				TargetObject = lasttarget;
-			}
-			else
-			{
-				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.TargetNotInView));
-			}
-		}
-
-		public void StartSpellAttackCheckLOS(GamePlayer checker, GameObject source, GameObject target, bool losOK, EventArgs args, PropertyCollection tempProperties)
-		{
-			SpellLine line = tempProperties.getProperty<SpellLine>(LOSCURRENTLINE, null);
-			Spell spell = tempProperties.getProperty<Spell>(LOSCURRENTSPELL, null);
-			GameObject lasttarget = TargetObject;
-			
-			if (losOK && line != null && spell != null)
-			{
-				TargetObject = target;
-
-				GameLiving living = TargetObject as GameLiving;
-
-				if (living != null && living.EffectList.GetOfType<NecromancerShadeEffect>() != null)
+				if (!spell.MoveCast && spell.CastTime > 0)
 				{
-					if (living is GamePlayer && (living as GamePlayer).ControlledBrain != null)
-					{
-						TargetObject = (living as GamePlayer).ControlledBrain.Body;
-					}
+					StopFollowing();
+					if (TargetObject != this)
+						TurnTo(TargetObject);
 				}
-
-				base.CastSpell(spell, line);
-				TargetObject = lasttarget;
+				
+				bool casted = base.CastSpell(spell, line);
+				
+				if(lasttarget != null)
+					TargetObject = lasttarget;
+				
+				if(!casted)
+				{
+					Notify(GameLivingEvent.CastFailed, this, null);
+					StartAttack(TargetObject);
+				}
+				
 			}
 			else
 			{
 				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.TargetNotInView));
-			}						
+			}
 		}
-		
+
 		#endregion
 		
 		#region Notify
@@ -5269,7 +5224,7 @@ namespace DOL.GS
 		/// Broadcast loot to the raid.
 		/// </summary>
 		/// <param name="dropMessages">List of drop messages to broadcast.</param>
-		protected virtual void BroadcastLoot(IList<string> droplist)
+		protected virtual void BroadcastLoot(ArrayList droplist)
 		{
 			if (droplist.Count > 0)
 			{
@@ -5406,11 +5361,11 @@ namespace DOL.GS
 					copyTarget.Inventory = inventoryTemplate.CloneTemplate();
 			}
 
-			if ( Spells != null && Spells.Count > 0 )
-				copyTarget.Spells = new List<Spell>( Spells );
+			if (Spells != null && Spells.Count > 0)
+				copyTarget.Spells = new List<Spell>(Spells);
 
 			if ( Styles != null && Styles.Count > 0 )
-				copyTarget.Styles = new List<Style>( Styles );
+				copyTarget.Styles = new ArrayList( Styles );
 
 			if ( copyTarget.Inventory != null )
 				copyTarget.SwitchWeapon( ActiveWeaponSlot );
@@ -5433,6 +5388,7 @@ namespace DOL.GS
 			MaxSpeedBase = 200;
 			GuildName = "";
 
+			m_brainSync = m_brains.SyncRoot;
 			m_followTarget = new WeakRef(null);
 
 			m_size = 50; //Default size
@@ -5448,7 +5404,7 @@ namespace DOL.GS
 				m_spawnPoint = new Point3D();
 
 			//m_factionName = "";
-			LinkedFactions = new List<Faction>(1);
+			LinkedFactions = new ArrayList(1);
 			if (m_ownBrain == null)
 			{
 				m_ownBrain = new StandardMobBrain();

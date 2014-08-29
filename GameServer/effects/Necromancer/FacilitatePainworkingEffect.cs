@@ -17,9 +17,7 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS.Effects;
+
 using DOL.GS.Spells;
 
 namespace DOL.GS.Effects
@@ -28,10 +26,9 @@ namespace DOL.GS.Effects
 	/// The Facilitate Painworking effect.
 	/// </summary>
 	/// <author>Aredhel</author>
-    class FacilitatePainworkingEffect : GameSpellEffect
+    public class FacilitatePainworkingEffect : GameSpellEffect
     {
-        public FacilitatePainworkingEffect(ISpellHandler handler, int duration, int pulseFreq,
-            double effectiveness)
+        public FacilitatePainworkingEffect(ISpellHandler handler, int duration, int pulseFreq, double effectiveness)
             : base(handler, duration, pulseFreq, effectiveness)
         {
         }

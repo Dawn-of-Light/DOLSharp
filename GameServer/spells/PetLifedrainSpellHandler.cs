@@ -16,12 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-namespace DOL.spells
+
+using System;
+
+using DOL.AI.Brain;
+using DOL.GS.PacketHandler;
+
+namespace DOL.GS.Spells
 {
-    using AI.Brain;
-    using GS;
-    using GS.PacketHandler;
-    using GS.Spells;
+
 
     /// <summary>
     /// Return life to Player Owner
@@ -54,10 +57,10 @@ namespace DOL.spells
             heal = player.ChangeHealth(player, GameLiving.eHealthChangeType.Spell, heal);
             if(heal > 0)
             {
-                MessageToLiving(player, "You steal " + heal + " hit point" + (heal == 1 ? "." :"s."), eChatType.CT_Spell);
+                MessageToLiving(player, "Your summon returns " + heal + " stealed hit point" + (heal == 1 ? "." :"s."), eChatType.CT_Spell);
             } else
             {
-                MessageToLiving(player, "You cannot absorb any more life.", eChatType.CT_SpellResisted);
+                MessageToLiving(player, "Your summon cannot return you any more life.", eChatType.CT_SpellResisted);
             }
         }
     }

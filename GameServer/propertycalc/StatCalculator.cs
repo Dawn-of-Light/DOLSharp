@@ -35,17 +35,18 @@ namespace DOL.GS.PropertyCalc
 	[PropertyCalculator(eProperty.Stat_First, eProperty.Stat_Last)]
 	public class StatCalculator : PropertyCalculator
     {
+		// TODO Add calcvalue base, Add SpecDebuff
+		// SpecDebuff should be Value + Math.Min(Value, buff value/2)
         public StatCalculator() { }
 
         public override int CalcValue(GameLiving living, eProperty property)
         {
-            int propertyIndex = (int)property;
-
             // Base stats/abilities/debuffs/death.
 
             int baseStat = living.GetBaseStat((eStat)property);
-            int abilityBonus = living.AbilityBonus[propertyIndex];
-            int debuff = living.DebuffCategory[propertyIndex];
+            int abilityBonus = living.AbilityBonus[property];
+            int debuff = living.DebuffCategory[property];
+            int specDebuff = living.SpecDebuffCategory[property];
 			int deathConDebuff = 0;
 
             int itemBonus = CalcValueFromItems(living, property);
@@ -65,39 +66,46 @@ namespace DOL.GS.PropertyCalc
 				{
 					if (player.CharacterClass.ID != (int)eCharacterClass.Scout && player.CharacterClass.ID != (int)eCharacterClass.Hunter && player.CharacterClass.ID != (int)eCharacterClass.Ranger)
 					{
-						abilityBonus += player.AbilityBonus[(int)eProperty.Acuity];
+						abilityBonus += player.AbilityBonus[eProperty.Acuity];
 					}
 				}
 
 				deathConDebuff = player.TotalConstitutionLostAtDeath;
 			}
 
-			// Apply debuffs, 100% effectiveness for player buffs, 50% effectiveness
 			// for item and base stats
 
 			int unbuffedBonus = baseStat + itemBonus;
+			
+			// Apply Spec Debuff (add half buff effect to debuff effect)
+			
+			buffBonus -= Math.Abs(specDebuff + Math.Min(specDebuff, buffBonus >> 1));
+
+			// Apply debuffs, 100% effectiveness for player buffs, 50% effectiveness
+			
 			buffBonus -= Math.Abs(debuff);
 
 			if (buffBonus < 0)
 			{
-				unbuffedBonus += buffBonus / 2;
+				unbuffedBonus += buffBonus >> 1;
 				buffBonus = 0;
+				// Keep 1 to prevent errors
 				if (unbuffedBonus < 0)
-					unbuffedBonus = 0;
+					unbuffedBonus = 1;
 			}
 
 			// Add up and apply any multiplicators.
 
 			int stat = unbuffedBonus + buffBonus + abilityBonus;
-			stat = (int)(stat * living.BuffBonusMultCategory1.Get((int)property));
+			stat = (int)(stat * living.BuffBonusMultCategory1.Get(property));
 
 			// Possibly apply constitution loss at death.
 
-			stat -= (property == eProperty.Constitution)? deathConDebuff : 0;
+			stat -= (property == eProperty.Constitution) ? deathConDebuff : 0;
 
 			return Math.Max(1, stat);
         }
-
+        
         /// <summary>
         /// Calculate modified bonuses from buffs only.
         /// </summary>
@@ -109,16 +117,17 @@ namespace DOL.GS.PropertyCalc
             if (living == null)
                 return 0;
 
-            int propertyIndex = (int)property;
-            int baseBuffBonus = living.BaseBuffBonusCategory[propertyIndex];
-            int specBuffBonus = living.SpecBuffBonusCategory[propertyIndex];
+            int baseBuffBonus = living.BaseBuffBonusCategory[property];
+            int specBuffBonus = living.SpecBuffBonusCategory[property];
 
             if (living is GamePlayer)
             {
                 GamePlayer player = living as GamePlayer;
-                if (property == (eProperty)(player.CharacterClass.ManaStat))
-                    if (player.CharacterClass.ClassType == eClassType.ListCaster)
-                        specBuffBonus += player.BaseBuffBonusCategory[(int)eProperty.Acuity];
+                if (property == (eProperty)(player.CharacterClass.ManaStat) && player.CharacterClass.ClassType == eClassType.ListCaster)
+                {
+                	specBuffBonus += player.SpecBuffBonusCategory[eProperty.Acuity];
+					baseBuffBonus += player.BaseBuffBonusCategory[eProperty.Acuity];
+                }
             }
 
             // Caps and cap increases. Only players actually have a buff bonus cap, 
@@ -146,7 +155,7 @@ namespace DOL.GS.PropertyCalc
             if (living == null)
                 return 0;
 
-            int itemBonus = living.ItemBonus[(int)property];
+            int itemBonus = living.ItemBonus[property];
             int itemBonusCap = GetItemBonusCap(living, property);
 
             if (living is GamePlayer)
@@ -157,7 +166,7 @@ namespace DOL.GS.PropertyCalc
 				{
 					if (player.CharacterClass.ID != (int)eCharacterClass.Scout && player.CharacterClass.ID != (int)eCharacterClass.Hunter && player.CharacterClass.ID != (int)eCharacterClass.Ranger)
 					{
-						itemBonus += living.ItemBonus[(int)eProperty.Acuity];
+						itemBonus += living.ItemBonus[eProperty.Acuity];
 					}
 				}
             }
@@ -174,8 +183,10 @@ namespace DOL.GS.PropertyCalc
         /// <returns></returns>
         public static int GetItemBonusCap(GameLiving living, eProperty property)
         {
-            if (living == null) return 0;
-            return (int) (living.Level * 1.5);
+            if (living == null) 
+            	return 0;
+            
+            return (int)(living.Level * 1.5);
         }
 
         /// <summary>
@@ -186,9 +197,12 @@ namespace DOL.GS.PropertyCalc
         /// <returns></returns>
         public static int GetItemBonusCapIncrease(GameLiving living, eProperty property)
         {
-            if (living == null) return 0;
+            if (living == null)
+            	return 0;
+            
             int itemBonusCapIncreaseCap = GetItemBonusCapIncreaseCap(living);
-            int itemBonusCapIncrease = living.ItemBonus[(int)(eProperty.StatCapBonus_First - eProperty.Stat_First + property)];
+            int itemBonusCapIncrease = living.ItemBonus[(eProperty.StatCapBonus_First - eProperty.Stat_First + property)];
+            
             if (living is GamePlayer)
             {
 				GamePlayer player = living as GamePlayer;
@@ -197,12 +211,12 @@ namespace DOL.GS.PropertyCalc
 				{
 					if (player.CharacterClass.ID != (int)eCharacterClass.Scout && player.CharacterClass.ID != (int)eCharacterClass.Hunter && player.CharacterClass.ID != (int)eCharacterClass.Ranger)
 					{
-						itemBonusCapIncrease += living.ItemBonus[(int)eProperty.AcuCapBonus];
+						itemBonusCapIncrease += living.ItemBonus[eProperty.AcuCapBonus];
 					}
 				}
             }
 
-            return Math.Min(itemBonusCapIncrease, itemBonusCapIncreaseCap+GameMythirian.GetStatOverCapBonuses(living, property));
+            return Math.Min(itemBonusCapIncrease, itemBonusCapIncreaseCap);
         }
 
         /// <summary>
@@ -212,7 +226,8 @@ namespace DOL.GS.PropertyCalc
         /// <returns>The cap increase cap for this living.</returns>
         public static int GetItemBonusCapIncreaseCap(GameLiving living)
         {
-            if (living == null) return 0;
+            if (living == null)
+            	return 0;
             
             return living.Level / 2 + 1;
         }

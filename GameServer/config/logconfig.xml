@@ -11,7 +11,7 @@
 	</root>
 
 	<!-- Define our console output -->
-	<appender name="ColoredConsoleAppender" type="log4net.Appender.ColoredConsoleAppender">
+	<appender name="ColoredConsoleAppender" type="log4net.Appender.ConsoleAppender">
 		<mapping>
 			<level value="ERROR" />
 			<foreColor value="Red, HighIntensity" />

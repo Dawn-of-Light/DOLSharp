@@ -202,6 +202,9 @@ namespace DOL.GS
 				case "mysql":
 					m_dbType = ConnectionType.DATABASE_MYSQL;
 					break;
+				case "sqlite":
+					m_dbType = ConnectionType.DATABASE_SQLITE;
+					break;
 				case "mssql":
 					m_dbType = ConnectionType.DATABASE_MSSQL;
 					break;
@@ -300,6 +303,9 @@ namespace DOL.GS
 			case ConnectionType.DATABASE_MYSQL:
 				db = "MYSQL";
 					break;
+			case ConnectionType.DATABASE_SQLITE:
+				db = "SQLITE";
+					break;
 			case ConnectionType.DATABASE_MSSQL:
 				db = "MSSQL";
 					break;
@@ -354,8 +360,8 @@ namespace DOL.GS
 		    InventoryLoggerName = "inventories";
 			m_invalidNamesFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "invalidnames.txt";
 
-			m_dbType = ConnectionType.DATABASE_XML;
-			m_dbConnectionString = m_rootDirectory+Path.DirectorySeparatorChar+"xml_db";
+			m_dbType = ConnectionType.DATABASE_SQLITE;
+			m_dbConnectionString = "Data Source="+m_rootDirectory+Path.DirectorySeparatorChar+"dol.sqlite3.db"+";Version=3;Pooling=False;Cache Size=1073741824;Journal Mode=WAL;Foreign Keys=True;Default Timeout=60";
 			m_autoSave = true;
 			m_saveInterval = 10;
 			m_maxClientCount = 500;
@@ -367,18 +373,12 @@ namespace DOL.GS
 				try
 				{
 					m_cpuCount = int.Parse(Environment.GetEnvironmentVariable("NUMBER_OF_PROCESSORS"));
-					m_cpuUse = m_cpuCount;
 				}
-				catch 
-				{ 
-					m_cpuCount = -1; 
-				}
+				catch { m_cpuCount = -1; }
 			}
-			if (m_cpuCount < 1) 
-			{
+			if (m_cpuCount < 1)
 				m_cpuCount = 1;
-				m_cpuUse = 1;
-			}
+			m_cpuUse = 1;
 		}
 
 		#endregion

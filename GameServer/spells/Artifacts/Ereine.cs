@@ -94,7 +94,7 @@ namespace DOL.GS.Spells
 				if(ad.Attacker is GamePlayer) (ad.Attacker as GamePlayer).Out.SendMessage("Your target' Ereine Proc absorb "+(ad.Damage+ad.CriticalDamage)+" damages", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				if(ad.Target is GamePlayer) (ad.Target as GamePlayer).Out.SendMessage("Your Ereine Proc absorb "+(ad.Damage+ad.CriticalDamage)+" damages", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				ad.Damage=0; ad.CriticalDamage=0;
-				GameSpellEffect effect = SpellHandler.FindEffectOnTarget(living, this);
+				GameSpellEffect effect = SpellHelper.FindEffectOnTarget(living, this);
 				if(effect != null) effect.Cancel(false);
 			}
         }		

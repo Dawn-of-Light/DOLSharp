@@ -124,9 +124,9 @@ namespace DOL.GS
 								mount.Size=62;
 								break;
 							case eRace.HalfOgre:
-							case eRace.AlbionMinotaur:
-							case eRace.MidgardMinotaur:
-							case eRace.HiberniaMinotaur:
+							case eRace.Korazh:
+							case eRace.Deifrang:
+							case eRace.Graoch:
 								mount.Size = 65;
 								break;
 							case eRace.Troll:

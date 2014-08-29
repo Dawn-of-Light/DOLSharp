@@ -16,13 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
-/*
- * Suncheck: [19.06.2007]
- *   - Corrected
- *   - Sorted
- *   - Added missing (+language support)
- */
 using System;
 using DOL.Language;
 
@@ -31,6 +24,7 @@ namespace DOL.GS.PlayerTitles
 	/// <summary>
 	/// "Veteran" title granted to all chars that play for at least 180 days.
 	/// </summary>
+	//HACK Conver to EventPlayerTitle!
 	public class VeteranTitle : SimplePlayerTitle
 	{
 		/// <summary>
@@ -53,6 +47,11 @@ namespace DOL.GS.PlayerTitles
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Time.Character.Veteran");
 		}
 
+		public override string GetValue(GamePlayer source, GamePlayer target)
+		{
+			return LanguageMgr.GetTranslation(source.Client.Account.Language, "Titles.Time.Character.Veteran");
+		}
+
 		/// <summary>
 		/// Verify whether the player is suitable for this title.
 		/// </summary>
@@ -60,7 +59,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>true if the player is suitable for this title.</returns>
 		public override bool IsSuitable(GamePlayer player)
 		{
-			TimeSpan t = DateTime.UtcNow.Subtract(player.DBCharacter.CreationDate);
+			TimeSpan t = DateTime.Now.Subtract(player.DBCharacter.CreationDate);
 			return t.TotalDays >= 178; // ~half year
 		}
 	}

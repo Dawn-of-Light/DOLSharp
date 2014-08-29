@@ -47,7 +47,7 @@ namespace DOL.GS.Spells
         /// <param name="target"></param>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            m_caster.Mana -= PowerCost(target, true);
             base.FinishSpellCast(target);
         }
         public override bool IsOverwritable(GameSpellEffect compare)
@@ -128,7 +128,7 @@ namespace DOL.GS.Spells
             {
                 decoy.EquipmentTemplateID = TemplateId;
                 decoy.Inventory = load;
-                decoy.UpdateNPCEquipmentAppearance();
+                decoy.BroadcastLivingEquipmentUpdate();
             }
             decoy.CurrentSpeed = 0;
             decoy.GuildName = "";
@@ -264,7 +264,7 @@ namespace DOL.GS.Spells
         // constructor
         public Spymaster6DotHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
         public override int CalculateSpellResistChance(GameLiving target) { return 0; }
-        protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
+        public override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
         {
             return new GameSpellEffect(this, m_spell.Duration, m_spellLine.IsBaseLine ? 5000 : 4000, effectiveness);
         }
@@ -290,7 +290,7 @@ namespace DOL.GS.Spells
             m_target = effect.Owner as GamePlayer;
             if (m_target == null) return;
             if (!m_target.IsAlive || m_target.ObjectState != GameLiving.eObjectState.Active || !m_target.IsSitting) return;
-            Caster.BaseBuffBonusCategory[(int)eProperty.Skill_Stealth] += 100;
+            Caster.BaseBuffBonusCategory[eProperty.Skill_Stealth] += 100;
             GameEventMgr.AddHandler(m_target, GamePlayerEvent.Moving, new DOLEventHandler(PlayerAction));
             GameEventMgr.AddHandler(Caster, GamePlayerEvent.Moving, new DOLEventHandler(PlayerAction));
             new LoockoutOwner().Start(Caster);
@@ -299,7 +299,7 @@ namespace DOL.GS.Spells
 
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-            Caster.BaseBuffBonusCategory[(int)eProperty.Skill_Stealth] -= 100;
+            Caster.BaseBuffBonusCategory[eProperty.Skill_Stealth] -= 100;
             GameEventMgr.RemoveHandler(Caster, GamePlayerEvent.Moving, new DOLEventHandler(PlayerAction));
             GameEventMgr.RemoveHandler(m_target, GamePlayerEvent.Moving, new DOLEventHandler(PlayerAction));
             return base.OnEffectExpires(effect, noMessages);
@@ -310,9 +310,9 @@ namespace DOL.GS.Spells
             GamePlayer player = (GamePlayer)sender;
             if (player == null) return;
             MessageToLiving((GameLiving)player, "You are moving. Your concentration fades!", eChatType.CT_SpellResisted);
-            GameSpellEffect effect = SpellHandler.FindEffectOnTarget(m_target, "Loockout");
+            GameSpellEffect effect = SpellHelper.FindEffectOnTarget(m_target, "Loockout");
             if (effect != null) effect.Cancel(false);
-            IGameEffect effect2 = SpellHandler.FindStaticEffectOnTarget(Caster, typeof(LoockoutOwner));
+            IGameEffect effect2 = SpellHelper.FindStaticEffectOnTarget(Caster, typeof(LoockoutOwner));
             if (effect2 != null) effect2.Cancel(false);
             OnEffectExpires(effect, true);
         }
@@ -398,7 +398,7 @@ namespace DOL.GS.Spells
         public EssenceFlareSpellHandler(GameLiving caster, Spell spell, SpellLine line)
             : base(caster, spell, line)
         {
-            ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>("Meschgift");
+            ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>("EssenceFlarePoison");
             if (template != null)
             {
                 items.Add(GameInventoryItem.Create<ItemTemplate>(template));
@@ -411,8 +411,8 @@ namespace DOL.GS.Spells
                     }
                 }
             }
-            }
         }
+    }
     #endregion
 
         #region Spymaster-10

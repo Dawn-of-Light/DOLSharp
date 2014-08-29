@@ -129,9 +129,19 @@ namespace DOL.DOLServer
 		private static void RegisterActions()
 		{
 			//Important action, used on service start internally
+			//!!!DO NOT REMOVE!!!
+			RegisterAction(new ServiceRun());
 			
 			//Start server in console mode
 			RegisterAction(new ConsoleStart());
+			//Install service action
+			RegisterAction(new ServiceInstall());
+			//Uninstall service action
+			RegisterAction(new ServiceUninstall());
+			//Start service action
+			RegisterAction(new ServiceStart());
+			//Stop service action
+			RegisterAction(new ServiceStop());
 		}
 
 		/// <summary>

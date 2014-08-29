@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Events;
@@ -286,7 +285,7 @@ namespace DOL.GS.Spells
 		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			m_caster.Mana -= PowerCost(target, true);
 			base.FinishSpellCast(target);
 		}
 		public override bool IsOverwritable(GameSpellEffect compare)
@@ -465,7 +464,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			m_caster.Mana -= PowerCost(target, true);
 			base.FinishSpellCast(target);
 		}
 
@@ -582,18 +581,18 @@ namespace DOL.GS.Spells
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
 			m_living = m_player.ControlledBrain.Body;
-			m_living.Level += (byte)Spell.LifeDrainReturn;
-			m_living.BaseBuffBonusCategory[(int)eProperty.MeleeDamage] += (int)Spell.Value;
-			m_living.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorption] += Spell.AmnesiaChance;
+			m_living.Level += 20;
+			m_living.BaseBuffBonusCategory[eProperty.MeleeDamage] += 275;
+			m_living.BaseBuffBonusCategory[eProperty.ArmorAbsorption] += 75;
 			m_living.Size += 40;
 			base.OnEffectStart(effect);
 		}
 
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
-			m_living.Level -= (byte)Spell.LifeDrainReturn;
-			m_living.BaseBuffBonusCategory[(int)eProperty.MeleeDamage] -= (int)Spell.Value;
-			m_living.BaseBuffBonusCategory[(int)eProperty.ArmorAbsorption] -= Spell.AmnesiaChance;
+			m_living.Level -= 20;
+			m_living.BaseBuffBonusCategory[eProperty.MeleeDamage] -= 275;
+			m_living.BaseBuffBonusCategory[eProperty.ArmorAbsorption] -= 75;
 			m_living.Size -= 40;
 			return base.OnEffectExpires(effect, noMessages);
 		}
@@ -632,7 +631,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			m_caster.Mana -= PowerCost(target, true);
 			base.FinishSpellCast(target);
 		}
 
@@ -761,7 +760,7 @@ namespace DOL.GS.Spells
 
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			m_caster.Mana -= PowerCost(target, true);
 			base.FinishSpellCast(target);
 		}
 
@@ -853,7 +852,7 @@ namespace DOL.AI.Brain
 
 		private IList FindTarget()
 		{
-			List<GameLiving> list = new List<GameLiving>();
+			ArrayList list = new ArrayList();
 
 			foreach (GamePlayer o in Body.GetPlayersInRadius((ushort)Body.AttackRange))
 			{
@@ -873,7 +872,7 @@ namespace DOL.AI.Brain
 			if (Body.AttackState)
 				return;
 
-			IList enemies = new List<GameLiving>();
+			IList enemies = new ArrayList();
 			if (Target == null)
 				enemies = FindTarget();
 			else if (!Body.IsWithinRadius(Target, Body.AttackRange))

@@ -61,7 +61,7 @@ namespace DOL.GS.Commands
 								break;
 							}
 							report.ClosedBy = client.Player.Name;
-							report.DateClosed = DateTime.UtcNow;
+							report.DateClosed = DateTime.Now;
 							GameServer.Database.SaveObject(report);
 							break;
 						}

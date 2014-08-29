@@ -17,7 +17,6 @@
  *
  */
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using DOL.GS.PacketHandler;
 namespace DOL.GS
@@ -31,7 +30,7 @@ namespace DOL.GS
 		/// <summary>
 		/// This holds all players inside the chatgroup
 		/// </summary>
-		protected Dictionary<GamePlayer, bool> m_chatgroupMembers = new Dictionary<GamePlayer, bool>();
+		protected HybridDictionary m_chatgroupMembers = new HybridDictionary();
 
 		/// <summary>
 		/// constructor of chat group
@@ -39,7 +38,7 @@ namespace DOL.GS
 		public ChatGroup()
 		{
 		}
-		public Dictionary<GamePlayer, bool> Members
+		public HybridDictionary Members
 		{
 			get{return m_chatgroupMembers;}
 			set{m_chatgroupMembers=value;}
@@ -72,9 +71,9 @@ namespace DOL.GS
 		public virtual bool AddPlayer(GamePlayer player,bool leader) 
 		{
 			if (player == null) return false;
-			lock (((ICollection)m_chatgroupMembers).SyncRoot)
+			lock (m_chatgroupMembers)
 			{
-				if (m_chatgroupMembers.ContainsKey(player))
+				if (m_chatgroupMembers.Contains(player))
 					return false;
 				player.TempProperties.setProperty(CHATGROUP_PROPERTY, this);
 				player.Out.SendMessage("You join the chat group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -95,9 +94,9 @@ namespace DOL.GS
 		public virtual bool RemovePlayer(GamePlayer player)
 		{
 			if (player == null) return false;
-			lock (((ICollection)m_chatgroupMembers).SyncRoot)
+			lock (m_chatgroupMembers)
 			{
-				if (!m_chatgroupMembers.ContainsKey(player))
+				if (!m_chatgroupMembers.Contains(player))
 					return false;
 				m_chatgroupMembers.Remove(player);
 				player.TempProperties.removeProperty(CHATGROUP_PROPERTY);
@@ -108,7 +107,7 @@ namespace DOL.GS
 				}
 				if (m_chatgroupMembers.Count == 1)
 				{
-					List<GamePlayer> lastPlayers = new List<GamePlayer>(m_chatgroupMembers.Count);
+					ArrayList lastPlayers = new ArrayList(m_chatgroupMembers.Count);
 					lastPlayers.AddRange(m_chatgroupMembers.Keys);
 					foreach (GamePlayer plr in lastPlayers)
 					{

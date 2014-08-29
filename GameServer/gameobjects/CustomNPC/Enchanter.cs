@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Language;
@@ -43,7 +42,7 @@ namespace DOL.GS
         /// <returns>list with string messages</returns>
 		public override IList GetExamineMessages(GamePlayer player)
 		{
-            List<string> list = new List<string>();
+            IList list = new ArrayList();
             list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.GetExamineMessages.Text1", 
                                                 GetName(0, false, player.Client.Account.Language, this)));
             list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "Enchanter.GetExamineMessages.Text2",

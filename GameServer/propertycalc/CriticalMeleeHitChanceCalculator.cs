@@ -47,7 +47,7 @@ namespace DOL.GS.PropertyCalc
 			}
 
 			// base 10% chance of critical for all with melee weapons plus ra bonus
-			int chance = 10 + living.BuffBonusCategory4[(int)property] + living.AbilityBonus[(int)property];
+			int chance = 10 + living.BuffBonusCategory4[property] + living.AbilityBonus[property];
 
 			if (living is GameNPC && (living as GameNPC).Brain is AI.Brain.IControlledBrain)
 			{

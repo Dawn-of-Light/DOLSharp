@@ -64,7 +64,7 @@ namespace DOL.GS.RealmAbilities
 					player.Out.SendMessage("Your pet is too far away!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-            GameSpellEffect ml9=SpellHandler.FindEffectOnTarget(living.ControlledBrain.Body,"SummonMastery");
+            GameSpellEffect ml9=SpellHelper.FindEffectOnTarget(living.ControlledBrain.Body,"SummonMastery");
             if (ml9 != null)
             {
 				if(player != null)

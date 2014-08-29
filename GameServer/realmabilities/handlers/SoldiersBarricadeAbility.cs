@@ -1,6 +1,5 @@
 using System.Reflection;
 using System.Collections;
-using System.Collections.Generic;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
@@ -51,7 +50,7 @@ namespace DOL.GS.RealmAbilities
 				}
 			}
 			DisableSkill(living);
-			List<GameLiving> targets = new List<GameLiving>();
+			ArrayList targets = new ArrayList();
 			if (player.Group == null)
 				targets.Add(player);
 			else

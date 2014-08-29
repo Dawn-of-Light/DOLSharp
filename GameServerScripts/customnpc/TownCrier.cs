@@ -81,7 +81,6 @@ namespace DOL.GS.Scripts
 		{
 			if (!m_init && GameServer.Database != null)
 			{
-				GameServer.Database.RegisterDataObject(typeof(TownCrierMessage));
 				// 2008-01-29 Kakuri - Obsolete
 				//GameServer.Database.LoadDatabaseTable( typeof( TownCrierMessage ) );
 				m_init = true;

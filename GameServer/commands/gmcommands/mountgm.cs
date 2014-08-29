@@ -22,7 +22,7 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&mountgm",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"Mount a steed",
 		"/mountgm")]
 	public class RideMountGmCommandHandler : AbstractCommandHandler, ICommandHandler

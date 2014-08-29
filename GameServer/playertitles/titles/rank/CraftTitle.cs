@@ -10,10 +10,15 @@ namespace DOL.GS.Scripts
 		public override string GetDescription(GamePlayer player)
 		{
 			return player.CraftTitle;
+			//HACK Craft Titles
 		}
 		public override string GetValue(GamePlayer player)
 		{
 			return player.CraftTitle;
+		}
+		public override string GetValue(GamePlayer source, GamePlayer target)
+		{
+			return source.CraftTitle;
 		}
 		public override bool IsSuitable(GamePlayer player)
 		{

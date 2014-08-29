@@ -1,3 +1,21 @@
+/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
 using System;
 using System.Collections;
 using DOL.GS.PacketHandler;
@@ -7,43 +25,25 @@ using DOL.Events;
 namespace DOL.GS.Spells
 {
 	/// <summary>
-	/// Summary description for RangeShield.
+	/// Range Shield is a Pulsing BT for Ranged Attack only
 	/// </summary>
 	[SpellHandlerAttribute("RangeShield")]
-	public class RangeShield : BladeturnSpellHandler 
+	public class RangeShieldHandler : PulsingBladeturnSpellHandler 
 	{
-        public override void OnEffectStart(GameSpellEffect effect)
-        {
-            base.OnEffectStart(effect);
-            GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
-        }
-        public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
-        {
-            GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
-            return base.OnEffectExpires(effect, noMessages);
-        }
-        protected virtual void OnAttacked(DOLEvent e, object sender, EventArgs arguments)
-        {
-            AttackedByEnemyEventArgs attackArgs = arguments as AttackedByEnemyEventArgs;
-            GameLiving living = sender as GameLiving;
-            if (attackArgs == null) return;
-            if (living == null) return;
-            double value = 0;
-            switch (attackArgs.AttackData.AttackType)
-            {
-                case AttackData.eAttackType.Ranged:
-                    value = Spell.Value * .01;
-                    attackArgs.AttackData.Damage *= (int)value;
-                    break;
-                case AttackData.eAttackType.Spell:
-                    if (attackArgs.AttackData.SpellHandler.Spell.SpellType == "Archery")
-                    {
-                        value = Spell.Value * .01;
-                        attackArgs.AttackData.Damage *= (int)value;
-                    }
-                    break;
-            }
-        }
-		public RangeShield(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+		/// <summary>
+		/// No base Type for RangeShield...
+		/// </summary>
+		protected override Type OverWriteBaseType {
+			get { return null; }
+		}
+        
+		protected override bool RangeOnly {
+			get { return true; }
+		}
+        
+		public RangeShieldHandler(GameLiving caster, Spell spell, SpellLine line)
+			: base(caster, spell, line)
+		{
+		}
 	}
 }

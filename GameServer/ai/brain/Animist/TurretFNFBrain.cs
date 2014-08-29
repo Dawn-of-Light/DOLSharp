@@ -56,7 +56,7 @@ namespace DOL.AI.Brain
 					if (!Body.IsWithinRadius(living, ((TurretPet)Body).TurretSpell.Range, true))
 						continue;
 
-					if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHandler.FindEffectOnTarget(living, "SpeedDecrease") != null)
+					if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHelper.FindEffectOnTarget(living, "SpeedDecrease") != null)
 						continue;
 
 					if (((TurretPet)Body).TurretSpell.SpellType == "SpeedDecrease" && living.HasAbility(Abilities.RootImmunity))
@@ -66,7 +66,7 @@ namespace DOL.AI.Brain
 				}
 			}
 
-			foreach (GamePlayer living in Body.GetPlayersInRadius((ushort)((TurretPet)Body).TurretSpell.Range, Body.CurrentRegion.IsDungeon ? false : true))
+			foreach (GamePlayer living in Body.GetPlayersInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
             {
                 if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
                     continue;
@@ -80,7 +80,7 @@ namespace DOL.AI.Brain
                 if (living.IsMezzed || living.IsStealthed)
                     continue;
 
-                if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHandler.FindEffectOnTarget(living, "SpeedDecrease") != null)
+                if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHelper.FindEffectOnTarget(living, "SpeedDecrease") != null)
                     continue;
 
 				if (LivingHasEffect(living, ((TurretPet)Body).TurretSpell))
@@ -93,7 +93,7 @@ namespace DOL.AI.Brain
 				}
             }
 
-			foreach (GameNPC living in Body.GetNPCsInRadius((ushort)((TurretPet)Body).TurretSpell.Range, Body.CurrentRegion.IsDungeon ? false : true))
+			foreach (GameNPC living in Body.GetNPCsInRadius((ushort)((TurretPet)Body).TurretSpell.Range))
             {
                 if (!GameServer.ServerRules.IsAllowedToAttack(Body, living, true))
                     continue;
@@ -104,7 +104,7 @@ namespace DOL.AI.Brain
                 if (living.IsMezzed || living.IsStealthed)
                     continue;
 
-                if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHandler.FindEffectOnTarget(living, "SpeedDecrease") != null)
+                if (((TurretPet)Body).TurretSpell.SpellType != "SpeedDecrease" && SpellHelper.FindEffectOnTarget(living, "SpeedDecrease") != null)
                     continue;
 
                 if (((TurretPet)Body).TurretSpell.SpellType == "SpeedDecrease" && (living.HasAbility(Abilities.RootImmunity) || living.HasAbility(Abilities.DamageImmunity)))

@@ -47,7 +47,7 @@ namespace DOL.GS.Spells
 		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Endurance -= CalculateEnduranceCost();
+			m_caster.Endurance -= CalculateEnduranceCost(true);
 			//if ((target is Keeps.GameKeepDoor || target is Keeps.GameKeepComponent) && Spell.SpellType != "SiegeArrow")
 			//{
 			//    MessageToCaster(String.Format("Your spell has no effect on the {0}!", target.Name), eChatType.CT_SpellResisted);
@@ -164,7 +164,7 @@ namespace DOL.GS.Spells
 				// add defence bonus from last executed style if any
 				AttackData targetAD = (AttackData)target.TempProperties.getProperty<object>(GameLiving.LAST_ATTACK_DATA, null);
 				if (targetAD != null
-				    && targetAD.AttackResult == GameLiving.eAttackResult.HitStyle
+				    && targetAD.AttackResult == eAttackResult.HitStyle
 				    && targetAD.Style != null)
 				{
 					missrate += targetAD.Style.BonusToDefense;
@@ -172,17 +172,17 @@ namespace DOL.GS.Spells
 
 				// half of the damage is magical
 				// subtract any spelldamage bonus and re-calculate after half damage is calculated
-				AttackData ad = m_handler.CalculateDamageToTarget(target, 0.5 - (caster.GetModified(eProperty.SpellDamage) * 0.01));
+				AttackData ad = m_handler.CalculateDamageToTarget(target, 0.5 - (caster.GetModified(eProperty.SpellDamage) * 0.001 - 1.0));
 
 				// check for bladeturn miss
-				if (ad.AttackResult == GameLiving.eAttackResult.Missed)
+				if (ad.AttackResult == eAttackResult.Missed)
 				{
 					return;
 				}
 
 				if (Util.Chance(missrate))
 				{
-					ad.AttackResult = GameLiving.eAttackResult.Missed;
+					ad.AttackResult = eAttackResult.Missed;
 					m_handler.MessageToCaster("You miss!", eChatType.CT_YouHit);
 					m_handler.MessageToLiving(target, caster.GetName(0, false) + " missed!", eChatType.CT_Missed);
 					target.OnAttackedByEnemy(ad);
@@ -196,11 +196,11 @@ namespace DOL.GS.Spells
 					return;
 				}
 
-				ad.Damage = (int)((double)ad.Damage * (1.0 + caster.GetModified(eProperty.SpellDamage) * 0.01));
+				ad.Damage = (int)((double)ad.Damage * (caster.GetModified(eProperty.SpellDamage) * 0.001));
 
 				bool arrowBlock = false;
 
-				if (target is GamePlayer && !target.IsStunned && !target.IsMezzed && !target.IsSitting && m_handler.Spell.LifeDrainReturn != (int)Archery.eShotType.Critical)
+				if (target is GamePlayer && !target.IsStunned && !target.IsMezzed && !target.IsSitting && m_handler.Spell.LifeDrainReturn != (int)ArcheryHandler.eShotType.Critical)
 				{
 					GamePlayer player = (GamePlayer)target;
 					InventoryItem lefthand = player.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
@@ -278,7 +278,7 @@ namespace DOL.GS.Spells
 					damage += ad.Modifier;
 
 					double effectiveness = caster.Effectiveness;
-					effectiveness += (caster.GetModified(eProperty.SpellDamage) * 0.01);
+					effectiveness *= (caster.GetModified(eProperty.SpellDamage) * 0.001);
 					damage = damage * effectiveness;
 
 					damage *= (1.0 + RelicMgr.GetRelicBonusModifier(caster.Realm, eRelicType.Magic));
@@ -312,7 +312,7 @@ namespace DOL.GS.Spells
 					if (ad.Damage < 0) ad.Damage = 0;
 
 					ad.UncappedDamage = ad.Damage;
-					ad.Damage = (int)Math.Min(ad.Damage, m_handler.DamageCap(effectiveness));
+					ad.Damage = (int)Math.Min(ad.Damage, m_handler.DamageCap(target, effectiveness));
 
 					if (ad.CriticalDamage > 0)
 					{
@@ -351,7 +351,7 @@ namespace DOL.GS.Spells
 
 				if (arrowBlock == false && m_handler.Caster.AttackWeapon != null && GlobalConstants.IsBowWeapon((eObjectType)m_handler.Caster.AttackWeapon.Object_Type))
 				{
-					if (ad.AttackResult == GameLiving.eAttackResult.HitUnstyled || ad.AttackResult == GameLiving.eAttackResult.HitStyle)
+					if (ad.AttackResult == eAttackResult.HitUnstyled || ad.AttackResult == eAttackResult.HitStyle)
 					{
 						caster.CheckWeaponMagicalEffect(ad, m_handler.Caster.AttackWeapon);
 					}

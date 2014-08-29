@@ -9,7 +9,7 @@ namespace DOL.GS.RealmAbilities
 	/// <summary>
 	/// Toughness
 	/// </summary>
-	public class ToughnessAbility : RAPropertyEnhancer
+	public class ToughnessAbility : L5RealmAbility
 	{
 		public ToughnessAbility(DBAbility dba, int level) : base(dba, level, eProperty.MaxHealth) { }
 
@@ -46,9 +46,5 @@ namespace DOL.GS.RealmAbilities
             }
 		}
 
-		public override bool CheckRequirement(GamePlayer player)
-		{
-			return player.Level >= 40;
-		}
 	}
 }

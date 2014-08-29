@@ -16,13 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
-/*
- * Suncheck: [19.06.2007]
- *   - Corrected
- *   - Sorted
- *   - Added missing (+language support)
- */
 using System;
 using DOL.Language;
 using DOL.Events;
@@ -41,7 +34,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title description.</returns>
 		public override string GetDescription(GamePlayer player)
 		{
-            return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Kills.Albion.ScourgeOfAlbion");
+			return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Kills.Albion.ScourgeOfAlbion");
 		}
 
 		/// <summary>
@@ -51,9 +44,13 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title value.</returns>
 		public override string GetValue(GamePlayer player)
 		{
-            return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Kills.Albion.ScourgeOfAlbion");
+			return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Kills.Albion.ScourgeOfAlbion");
 		}
 
+		public override string GetValue(GamePlayer source, GamePlayer target)
+		{
+			return LanguageMgr.GetTranslation(source.Client.Account.Language, "Titles.Kills.Albion.ScourgeOfAlbion");
+		}
 
 		/// <summary>
 		/// The event to hook.
@@ -70,8 +67,8 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>true if the player is suitable for this title.</returns>
 		public override bool IsSuitable(GamePlayer player)
 		{
-			//25000+
-			return player.KillsAlbionPlayers >= 25000;
+			//25000 - 99999
+			return ((player.KillsAlbionPlayers >= 25000) && (player.KillsAlbionPlayers < 100000));
 		}
 	}
 }

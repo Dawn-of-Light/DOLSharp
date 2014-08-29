@@ -29,20 +29,20 @@ namespace DOL.GS.PropertyCalc
 		/// <param name="index">The property index</param>
 		/// <param name="key">The key used to remove value later</param>
 		/// <param name="value">The value added</param>
-		void Set(int index, object key, double value);
+		void Set(eProperty index, object key, double value);
 
 		/// <summary>
 		/// Removes stored value
 		/// </summary>
 		/// <param name="index">The property index</param>
 		/// <param name="key">The key use to add the value</param>
-		void Remove(int index, object key);
+		void Remove(eProperty index, object key);
 
 		/// <summary>
 		/// Gets the property value
 		/// </summary>
 		/// <param name="index">The property index</param>
 		/// <returns>The property value (1.0 = 100%)</returns>
-		double Get(int index);
+		double Get(eProperty index);
 	}
 }

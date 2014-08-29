@@ -36,37 +36,53 @@ namespace DOL.GS.PropertyCalc
 
 		public override int CalcValue(GameLiving living, eProperty property) 
 		{
-//			DOLConsole.WriteSystem("calc skill prop "+property+":");
 			if (living is GamePlayer) 
 			{
 				GamePlayer player = (GamePlayer)living;
 
 				int itemCap = player.Level/5+1;
 
-				int itemBonus = player.ItemBonus[(int)property];
+				int itemBonus = player.ItemBonus[property];
+				
+				int buffs = player.BaseBuffBonusCategory[property]; // one buff category just in case...
+												
+				int debuffs = player.DebuffCategory[property]; // one debuff category just in case...
 
 				if (SkillBase.CheckPropertyType(property, ePropertyType.SkillMeleeWeapon))
-					itemBonus += player.ItemBonus[(int)eProperty.AllMeleeWeaponSkills];
+				{
+					itemBonus += player.ItemBonus[eProperty.AllMeleeWeaponSkills];
+					buffs += player.BaseBuffBonusCategory[eProperty.AllMeleeWeaponSkills];
+					debuffs += player.DebuffCategory[eProperty.AllMeleeWeaponSkills];
+				}
 				if (SkillBase.CheckPropertyType(property, ePropertyType.SkillMagical))
-					itemBonus += player.ItemBonus[(int)eProperty.AllMagicSkills];
+				{
+					itemBonus += player.ItemBonus[eProperty.AllMagicSkills];
+					buffs += player.BaseBuffBonusCategory[eProperty.AllMagicSkills];
+					debuffs += player.DebuffCategory[eProperty.AllMagicSkills];
+				}
 				if (SkillBase.CheckPropertyType(property, ePropertyType.SkillDualWield))
-					itemBonus += player.ItemBonus[(int)eProperty.AllDualWieldingSkills];
+				{
+					itemBonus += player.ItemBonus[eProperty.AllDualWieldingSkills];
+					buffs += player.BaseBuffBonusCategory[eProperty.AllDualWieldingSkills];
+					debuffs += player.DebuffCategory[eProperty.AllDualWieldingSkills];
+				}
 				if (SkillBase.CheckPropertyType(property, ePropertyType.SkillArchery))
-					itemBonus += player.ItemBonus[(int)eProperty.AllArcherySkills];
+				{
+					itemBonus += player.ItemBonus[eProperty.AllArcherySkills];
+					buffs += player.BaseBuffBonusCategory[eProperty.AllArcherySkills];
+					debuffs += player.DebuffCategory[eProperty.AllArcherySkills];
+				}
 
-				itemBonus += player.ItemBonus[(int)eProperty.AllSkills];
+				itemBonus += player.ItemBonus[eProperty.AllSkills];
+				buffs += player.BaseBuffBonusCategory[eProperty.AllSkills];
+				debuffs += player.DebuffCategory[eProperty.AllSkills];
 
 				if (itemBonus > itemCap)
 					itemBonus = itemCap;
-				int buffs = player.BaseBuffBonusCategory[(int)property]; // one buff category just in case..
 
-//				DOLConsole.WriteLine("item bonus="+itemBonus+"; buffs="+buffs+"; realm="+player.RealmLevel/10);
-				return itemBonus + buffs + player.RealmLevel/10;
+				return itemBonus + buffs + player.RealmLevel/10 - Math.Min(debuffs, itemBonus + buffs + player.RealmLevel/10);
 			} 
-			else 
-			{
-				// TODO other living types
-			}
+
 			return 0;
 		}
 	}

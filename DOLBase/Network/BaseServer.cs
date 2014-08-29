@@ -17,7 +17,6 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -237,7 +236,7 @@ namespace DOL.Network
 					baseClient = GetNewClient();
 					baseClient.Socket = sock;
 
-					lock (((ICollection)_clients).SyncRoot)
+					lock (_clients)
 						_clients.Add(baseClient, baseClient);
 
 					baseClient.OnConnect();
@@ -289,6 +288,25 @@ namespace DOL.Network
 			if (Log.IsDebugEnabled)
 				Log.Debug("Stopping server! - Entering method");
 
+			/*if(Configuration.EnableUPNP)
+			{
+				try
+				{
+					if(Log.IsDebugEnabled)
+						Log.Debug("Removing UPnP Mappings");
+					UPnPNat nat = new UPnPNat();
+					PortMappingInfo pmiUDP = new PortMappingInfo("UDP", Configuration.UDPPort);
+					PortMappingInfo pmiTCP = new PortMappingInfo("TCP", Configuration.Port);
+					nat.RemovePortMapping(pmiUDP);
+					nat.RemovePortMapping(pmiTCP);
+				}
+				catch(Exception ex)
+				{
+					if(Log.IsDebugEnabled)
+						Log.Debug("Failed to rmeove UPnP Mappings", ex);
+				}
+			}*/
+
 			try
 			{
 				if (_listen != null)
@@ -309,7 +327,7 @@ namespace DOL.Network
 
 			if (_clients != null)
 			{
-				lock (((ICollection)_clients).SyncRoot)
+				lock (_clients)
 				{
 					try
 					{
@@ -341,7 +359,7 @@ namespace DOL.Network
 		/// <returns>True if the client was disconnected, false if it doesn't exist</returns>
 		public virtual bool Disconnect(BaseClient baseClient)
 		{
-			lock (((ICollection)_clients).SyncRoot)
+			lock (_clients)
 			{
 				if (!_clients.ContainsKey(baseClient))
 					return false;

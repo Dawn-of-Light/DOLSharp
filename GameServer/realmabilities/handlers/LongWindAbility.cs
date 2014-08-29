@@ -9,7 +9,7 @@ namespace DOL.GS.RealmAbilities
 	/// <summary>
 	/// Long Wind
 	/// </summary>
-	public class LongWindAbility : RAPropertyEnhancer
+	public class LongWindAbility : L5FixedRealmAbility
 	{
 		public LongWindAbility(DBAbility dba, int level) : base(dba, level, eProperty.Undefined) { }
 

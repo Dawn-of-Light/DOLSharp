@@ -66,6 +66,11 @@ namespace DOL.GS.Effects
 			}
 		}
 
+		public virtual bool IsFading
+		{
+			get { return false; }
+		}
+		
 		public GameLiving Owner
 		{
 			get { return m_owner; }

@@ -26,16 +26,21 @@ GMCommands.Area.AreaCreated:				Area created - Description: {0}, X={1}, Y={2}, Z
 
 # /ban Command
 GMCommands.Ban.Description:					Usage of /ban command: 
-GMCommands.Ban.Usage.IP:					'/ban ip <account or player name> <reason>' Ban selected IP adress
-GMCommands.Ban.Usage.Account:				'/ban account <player name> <reason>' Ban selected account
-GMCommands.Ban.Usage.Both:					'/ban both <player name> <reason>' Ban selected account and its related IP adress
+GMCommands.Ban.Usage.IP:					'/ban ip <account or player name> -d<number of days> <reason>' Ban selected IP adress
+GMCommands.Ban.Usage.Account:				'/ban account <player name> -d<number of days> <reason>' Ban selected account
+GMCommands.Ban.Usage.Both:					'/ban both <player name> -d<number of days> <reason>' Ban selected account and its related IP adress
+GMCommands.Ban.Usage.Sharp:					#<ClientID> can be used in place of player name.  Use /clientlist to see playing clients.
+GMCommands.Ban.Usage.Duration:				Use -d to specify Ban Duration in Days. Example: -d3
 GMCommands.Ban.UnableToFindPlayer:			Unable to find player!
 GMCommands.Ban.AAlreadyBanned:				This account has already been banned.
-GMCommands.Ban.ABanned:						Account {0} has been banned.
+GMCommands.Ban.ABannedTemp:					Account {0} has been temporarily banned for {1} days.
+GMCommands.Ban.ABannedPerma:				Account {0} has been permanently banned.
 GMCommands.Ban.IAlreadyBanned:				This IP has already been banned.
-GMCommands.Ban.IBanned:						IP {0} has been banned.
+GMCommands.Ban.IBannedTemp:					IP {0} has been temporarily banned for {1} days.
+GMCommands.Ban.IBannedPerma:				IP {0} has been permanently banned.
 GMCommands.Ban.BAlreadyBanned:				These account and IP have already been banned.
-GMCommands.Ban.BBanned:						Account {0} and IP {1} have been banned.
+GMCommands.Ban.BBannedTemp:					Account {0} and IP {1} have been temporarily banned for {2} days.
+GMCommands.Ban.BBannedPerma:				Account {0} and IP {1} have been permanently banned.
 
 # /cast Command
 GMCommands.Cast.Description:            Cast a spell/effect/sound

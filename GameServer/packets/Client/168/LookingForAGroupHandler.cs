@@ -18,21 +18,20 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, 0x2D ^ 168, "handle Looking for a group")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.LookingForGroup, "handle Looking for a group", eClientStatus.PlayerInGame)]
 	public class LookingForAGroupHandler : IPacketHandler
 	{
 		//rewritten by Corillian so if it doesn't work you know who to yell at ;)
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			byte grouped = (byte)packet.ReadByte();
-			List<GamePlayer> list = new List<GamePlayer>();
+			ArrayList list = new ArrayList();
 			if (grouped != 0x00)
 			{
-				List<Group> groups = GroupMgr.ListGroupByStatus(0x00);
+				ArrayList groups = GroupMgr.ListGroupByStatus(0x00);
 				if (groups != null)
 				{
 					foreach (Group group in groups)
@@ -43,7 +42,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 			}
 
-			List<GamePlayer> Lfg = GroupMgr.LookingForGroupPlayers();
+			ArrayList Lfg = GroupMgr.LookingForGroupPlayers();
 
 			if (Lfg != null)
 			{
@@ -56,7 +55,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 			}
 
-			client.Out.SendFindGroupWindowUpdate((GamePlayer[])list.ToArray());
+			client.Out.SendFindGroupWindowUpdate((GamePlayer[])list.ToArray(typeof(GamePlayer)));
 		}
 	}
 }

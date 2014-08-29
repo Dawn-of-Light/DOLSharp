@@ -83,7 +83,7 @@ namespace DOL.GS.RealmAbilities
 
 		public override bool CheckRequirement(GamePlayer player)
 		{
-			return player.Level >= 40;
+			return base.CheckRequirement(player) && player.Level >= 40;
 		}
 
 		private int startSpell(RegionTimer timer)
@@ -193,7 +193,7 @@ namespace DOL.GS.RealmAbilities
 
 			//target.TakeDamage(owner, eDamageType.Energy, damage, 0);
 			AttackData ad = new AttackData();
-			ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
+			ad.AttackResult = eAttackResult.HitUnstyled;
 			ad.Attacker = owner;
 			ad.Target = target;
 			ad.DamageType = eDamageType.Energy;

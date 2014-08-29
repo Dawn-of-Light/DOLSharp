@@ -69,7 +69,7 @@ namespace DOL.GS
 
 		private static string RetElapsedTime(DateTime dt)
 		{
-			TimeSpan playerEnterGame = DateTime.UtcNow.Subtract(dt);
+			TimeSpan playerEnterGame = DateTime.Now.Subtract(dt);
 			string newsTime;
 			if (playerEnterGame.Days > 0)
 				newsTime = playerEnterGame.Days.ToString() + " day" + ((playerEnterGame.Days > 1) ? "s" : "");

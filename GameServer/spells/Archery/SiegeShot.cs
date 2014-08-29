@@ -65,9 +65,9 @@ namespace DOL.GS.Spells
 			return 0;
 		}
 
-		public override int PowerCost(GameLiving target) { return 0; }
+		public override int PowerCost(GameLiving target, bool consume) { return 0; }
 
-		public override int CalculateEnduranceCost() { return (int)(Caster.MaxEndurance * (Spell.Power * .01)); }
+		public override int CalculateEnduranceCost(bool consume) { return (int)(Caster.MaxEndurance * (Spell.Power * .01)); }
 
 		public SiegeArrow(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}

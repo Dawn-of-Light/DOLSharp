@@ -297,7 +297,7 @@ namespace DOL.Database
 		/// or from an Artifact will never be saved too.
 		/// </summary>
 		/// <param name="itemTemplate"></param>
-		protected InventoryItem(ItemTemplate template):base()
+		public InventoryItem(ItemTemplate template):base()
 		{
 			m_ownerID = null;
 			Template = template;

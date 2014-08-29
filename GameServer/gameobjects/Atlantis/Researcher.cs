@@ -111,7 +111,7 @@ namespace DOL.GS
         /// <returns></returns>
         public override IList GetExamineMessages(GamePlayer player)
         {
-            List<string> list = new List<string>();
+            IList list = new ArrayList(4);
 			list.Add(String.Format(LanguageMgr.GetTranslation(player.Client.Account.Language, "Researcher.GetExamineMessages.YouExamine",
 									Name, (Name.EndsWith("a") || Name.EndsWith("le")) ?
 									LanguageMgr.GetTranslation(player.Client.Account.Language, "Researcher.GetExamineMessages.She") :

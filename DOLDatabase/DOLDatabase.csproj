@@ -26,33 +26,32 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <SourceAnalysisOverrideSettingsFile>C:\Documents and Settings\RedFish\Application Data\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
-    <NoStdLib>False</NoStdLib>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <NoStdLib>false</NoStdLib>
     <WarningLevel>4</WarningLevel>
     <NoWarn>1570%3b1572%3b1573%3b1587%3b1591%3b1592</NoWarn>
-    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>..\debug\lib\</OutputPath>
-    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugSymbols>true</DebugSymbols>
-    <Optimize>False</Optimize>
+    <Optimize>false</Optimize>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <DebugType>Full</DebugType>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>..\release\lib\</OutputPath>
-    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DefineConstants>TRACE</DefineConstants>
     <DebugSymbols>false</DebugSymbols>
-    <Optimize>True</Optimize>
+    <Optimize>true</Optimize>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <DebugType>None</DebugType>
     <ErrorReport>prompt</ErrorReport>
@@ -60,15 +59,9 @@
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <PlatformTarget>x86</PlatformTarget>
-    <RegisterForComInterop>True</RegisterForComInterop>
+    <RegisterForComInterop>false</RegisterForComInterop>
     <BaseAddress>285212672</BaseAddress>
     <FileAlignment>4096</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
@@ -88,6 +81,12 @@
     </Reference>
     <Reference Include="System.Data.DataSetExtensions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\sharedModules\SQLite\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
     </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
@@ -128,17 +127,36 @@
     <Compile Include="Connection\DataConnection.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Handlers\SQLiteObjectDatabase.cs" />
     <Compile Include="Handlers\XMLObjectDatabase.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="LanguageDataObject.cs" />
     <Compile Include="Tables\CharacterXDataQuest.cs" />
+    <Compile Include="Tables\Npc.cs" />
     <Compile Include="Tables\HousingConsignmentMerchant.cs" />
     <Compile Include="Tables\LanguageDoor.cs" />
     <Compile Include="Tables\LanguageGameObject.cs" />
     <Compile Include="Tables\LanguageItem.cs" />
     <Compile Include="Tables\LanguageNPC.cs" />
     <Compile Include="Tables\LanguageSystem.cs" />
+    <Compile Include="Tables\NpcAbility.cs" />
+    <Compile Include="Tables\NpcAggro.cs" />
+    <Compile Include="Tables\NpcBaseTemplate.cs" />
+    <Compile Include="Tables\NpcFightingTemplate.cs" />
+    <Compile Include="Tables\NpcSpell.cs" />
+    <Compile Include="Tables\NpcStat.cs" />
+    <Compile Include="Tables\NpcStyle.cs" />
+    <Compile Include="Tables\NpcType.cs" />
+    <Compile Include="Tables\NpcXAbility.cs" />
+    <Compile Include="Tables\NpcXAggro.cs" />
+    <Compile Include="Tables\NpcXBaseTemplate.cs" />
+    <Compile Include="Tables\NpcXEquipment.cs" />
+    <Compile Include="Tables\NpcXMerchantItem.cs" />
+    <Compile Include="Tables\NpcXSpell.cs" />
+    <Compile Include="Tables\NpcXStat.cs" />
+    <Compile Include="Tables\NpcXStyle.cs" />
+    <Compile Include="Tables\NpcXType.cs" />
     <Compile Include="Tables\Regions.cs" />
     <Compile Include="Tables\SalvageYield.cs" />
     <Compile Include="Tables\DropTemplateXItemTemplate.cs" />

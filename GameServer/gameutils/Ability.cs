@@ -60,22 +60,22 @@ namespace DOL.GS
 		}
 
 		public Ability(DBAbility dba, int level)
-			: this(dba.KeyName, dba.Name, dba.Description, (ushort)dba.IconID, level)
+			: this(dba.KeyName, dba.Name, dba.Description, dba.InternalID, (ushort)dba.IconID, level)
 		{
 		}
 
 		public Ability(DBAbility dba, int level, string spec, int speclevel)
-			: this(dba.KeyName, dba.Name, dba.Description, (ushort)dba.IconID, level, spec, speclevel)
+			: this(dba.KeyName, dba.Name, dba.Description, dba.InternalID, (ushort)dba.IconID, level, spec, speclevel)
 		{
 		}
 
-		public Ability(string keyname, string displayname, string description, ushort icon, int level)
-			: this(keyname, displayname, description, icon, level, "", 0)
+		public Ability(string keyname, string displayname, string description, ushort id, ushort icon, int level)
+			: this(keyname, displayname, description, id, icon, level, "", 0)
 		{
 		}
 
-		public Ability(string keyname, string displayname, string description, ushort icon, int level, string spec, int speclevel)
-			: base(keyname, displayname, icon, level)
+		public Ability(string keyname, string displayname, string description, ushort id, ushort icon, int level, string spec, int speclevel)
+			: base(keyname, displayname, id, icon, level)
 		{
 			m_spec = spec;
 			m_speclevel = speclevel;
@@ -171,14 +171,6 @@ namespace DOL.GS
 		public int SpecLevelRequirement
 		{
 			get { return m_speclevel; }
-		}
-
-		/// <summary>
-		/// icon id (>=0x190) or 0 if ability is not activatable
-		/// </summary>
-		public virtual ushort Icon
-		{
-			get { return base.ID; }
 		}
 
 		/// <summary>

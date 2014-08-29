@@ -23,6 +23,7 @@ namespace DOL.GS.PlayerTitles
 	/// <summary>
 	/// Special "empty" player title, always first in the list.
 	/// </summary>
+	//HACK Convert to EventTitle aswell? Not really...?!
 	public class ClearTitle : SimplePlayerTitle
 	{
 		/// <summary>
@@ -42,7 +43,12 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title value.</returns>
 		public override string GetValue(GamePlayer player)
 		{
-			return "";
+			return string.Empty;
+		}
+
+		public override string GetValue(GamePlayer source, GamePlayer target)
+		{
+			return string.Empty;
 		}
 
 		/// <summary>

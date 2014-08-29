@@ -40,13 +40,13 @@ namespace DOL.GS.PropertyCalc
 		{
 			if (living is GamePlayer)
 			{
-				int itemBonus = living.ItemBonus[(int)property];
-				int focusLevel = living.BaseBuffBonusCategory[(int)property];
+				int itemBonus = living.ItemBonus[property];
+				int focusLevel = living.BaseBuffBonusCategory[property];
 				if (SkillBase.CheckPropertyType(property, ePropertyType.Focus)
 				 && ((GamePlayer)living).CharacterClass.ClassType == eClassType.ListCaster)
 				{
-					focusLevel += living.BaseBuffBonusCategory[(int)eProperty.AllFocusLevels];
-					itemBonus = Math.Max(itemBonus, living.ItemBonus[(int)eProperty.AllFocusLevels]);
+					focusLevel += living.BaseBuffBonusCategory[eProperty.AllFocusLevels];
+					itemBonus = Math.Max(itemBonus, living.ItemBonus[eProperty.AllFocusLevels]);
 				}
 				return focusLevel + Math.Min(50, itemBonus);
 			}

@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace DOL.Database.Cache
 {
@@ -27,7 +26,7 @@ namespace DOL.Database.Cache
 	/// </summary>
 	public class SimpleCache : ICache
 	{
-		private readonly Dictionary<object, WeakReference> _cache = new Dictionary<object, WeakReference>();
+		private readonly Hashtable _cache = Hashtable.Synchronized(new Hashtable());
 
 		#region ICache Members
 
@@ -48,35 +47,24 @@ namespace DOL.Database.Cache
 		{
 			get
 			{
-				WeakReference wr = null;
-				lock(((ICollection)_cache).SyncRoot)
+				var wr = _cache[key] as WeakReference;
+				if (wr == null || !wr.IsAlive)
 				{
-					
-					if(_cache.ContainsKey(key))
-						wr = _cache[key] as WeakReference;
-					
-					if (wr == null || !wr.IsAlive)
-					{
-						if(_cache.ContainsKey(key))
-							_cache.Remove(key);
-						return null;
-					}
+					_cache.Remove(key);
+					return null;
 				}
+
 				return wr.Target;
 			}
 			set
 			{
-				lock(((ICollection)_cache).SyncRoot)
+				if (value == null)
 				{
-					if (value == null)
-					{
-						if(_cache.ContainsKey(key))
-							_cache.Remove(key);
-					}
-					else
-					{
-						_cache[key] = new WeakReference(value);
-					}
+					_cache.Remove(key);
+				}
+				else
+				{
+					_cache[key] = new WeakReference(value);
 				}
 			}
 		}

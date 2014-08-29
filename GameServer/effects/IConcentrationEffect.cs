@@ -17,6 +17,7 @@
  *
  */
 using System;
+using DOL.GS.Spells;
 
 namespace DOL.GS.Effects
 {
@@ -45,6 +46,11 @@ namespace DOL.GS.Effects
 		/// </summary>
 		byte Concentration { get; }
 
+		/// <summary>
+		/// Spell Handler that started this effect. 
+		/// </summary>
+		ISpellHandler SpellHandler { get; }
+		
 		/// <summary>
 		/// Effect must be canceled
 		/// </summary>

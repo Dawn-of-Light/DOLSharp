@@ -19,11 +19,10 @@
 using System;
 using DOL.Database;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP,0x43^168,"Player Accepts Trade")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.ModifyTrade, "Player Accepts Trade", eClientStatus.PlayerInGame)]
 	public class PlayerModifyTradeHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)
@@ -45,7 +44,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				if(trade.Repairing != (repair == 1)) trade.Repairing = (repair == 1);
 				if(trade.Combine != (combine == 1)) trade.Combine = (combine == 1);
 				
-				List<InventoryItem> tradeSlots = new List<InventoryItem>(10);
+				ArrayList tradeSlots = new ArrayList(10);
 				for (int i=0;i<10;i++)
 				{
 					int slotPosition = packet.ReadByte();

@@ -21,7 +21,7 @@ using DOL.GS.Keeps;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP,0xCC^168,"buy hookpoint siege weapon/mob")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP,eClientPackets.BuyHookPoint, "buy hookpoint siege weapon/mob", eClientStatus.PlayerInGame)]
 	public class BuyHookPointHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)
@@ -52,8 +52,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (inventory != null)
 			{
 				HookPointItem item = inventory.GetItem(itemslot);
-				if (item != null && component.HookPoints.ContainsKey(hookpointID))
-					item.Invoke(client.Player, payType, component.HookPoints[hookpointID] as GameKeepHookPoint, component);
+				if (item != null)
+					item.Invoke(client.Player, payType, component.KeepHookPoints[hookpointID] as GameKeepHookPoint, component);
 			}
 		}
 	}

@@ -23,12 +23,12 @@ namespace DOL.GS.Commands
 {
 	[CmdAttribute(
 		"&walk",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"Commands a npc to walk!",
 		"'/walk <xoff> <yoff> <zoff> <speed>' to make the npc walk to x+xoff, y+yoff, z+zoff")]
 	[CmdAttribute(
 		"&stop",
-		ePrivLevel.GM,
+		ePrivLevel.Admin,
 		"Stops the npc's movement!",
 		"'/stop' to stop the target mob")]
 	public class WalkCommandHandler : AbstractCommandHandler, ICommandHandler

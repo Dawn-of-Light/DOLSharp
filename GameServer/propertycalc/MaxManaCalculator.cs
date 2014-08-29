@@ -68,15 +68,14 @@ namespace DOL.GS.PropertyCalc
 				}
 
 				int manaBase = player.CalculateMaxMana(player.Level, player.GetModified((eProperty)manaStat));
-				int itemBonus = living.ItemBonus[(int)property];
-				int poolBonus = living.ItemBonus[(int)eProperty.PowerPool];
-				int abilityBonus = living.AbilityBonus[(int)property]; 
+				int itemBonus = living.ItemBonus[property];
+				int poolBonus = living.ItemBonus[eProperty.PowerPool];
+				int abilityBonus = living.AbilityBonus[property]; 
 
 				int itemCap = player.Level / 2 + 1;
 				int poolCap = player.Level / 2;
-				itemCap = itemCap + Math.Min(player.ItemBonus[(int)eProperty.PowerPoolCapBonus], itemCap);
-				
-				poolCap = poolCap + Math.Min(player.ItemBonus[(int)eProperty.PowerPoolCapBonus], player.Level+GameMythirian.GetMythicalOverCapBonuses(living, eProperty.PowerPoolCapBonus));
+				itemCap = itemCap + Math.Min(player.ItemBonus[eProperty.PowerPoolCapBonus], itemCap);
+				poolCap = poolCap + Math.Min(player.ItemBonus[eProperty.PowerPoolCapBonus], player.Level);
 
 
 				if (itemBonus > itemCap) {

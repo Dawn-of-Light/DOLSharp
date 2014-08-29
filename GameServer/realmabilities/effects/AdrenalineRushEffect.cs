@@ -31,7 +31,7 @@ namespace DOL.GS.RealmAbilities
 
 			if (living is GamePlayer)
 				GameEventMgr.AddHandler(living, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
-			living.AbilityBonus[(int)eProperty.MeleeDamage] += m_value;
+			living.AbilityBonus[eProperty.MeleeDamage] += m_value;
 		}
 
 		/// <summary>
@@ -54,7 +54,7 @@ namespace DOL.GS.RealmAbilities
 		public override void Stop()
 		{
 			base.Stop();
-			m_owner.AbilityBonus[(int)eProperty.MeleeDamage] -= m_value;
+			m_owner.AbilityBonus[eProperty.MeleeDamage] -= m_value;
 			if (m_owner is GamePlayer)
 				GameEventMgr.RemoveHandler(m_owner, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 		}

@@ -128,7 +128,7 @@ namespace DOL.GS.Spells
 				ad.Target = target;
 				ad.DamageType = eDamageType.Heat;
 				ad.AttackType = AttackData.eAttackType.Spell;
-				ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
+				ad.AttackResult = eAttackResult.HitUnstyled;
 				ad.SpellHandler = m_handler;
 				target.OnAttackedByEnemy(ad);
 				

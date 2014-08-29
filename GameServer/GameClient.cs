@@ -21,11 +21,15 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Collections.Concurrent;
+
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
+using DOL.GS.Housing;
 using DOL.Network;
+
 using log4net;
 
 namespace DOL.GS
@@ -141,9 +145,11 @@ namespace DOL.GS
 			Version1109 = 1109,
 			Version1110 = 1110,
 			Version1111 = 1111,
-			Version1112 = 1112, 
+			Version1112 = 1112,
 			Version1113 = 1113,
-			_LastVersion = 1113,
+			Version1114 = 1114,
+			Version1115 = 1115,
+			_LastVersion = 1115,
 		}
 
 		#endregion
@@ -198,7 +204,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the time of the last ping
 		/// </summary>
-		protected long m_pingTime = DateTime.UtcNow.Ticks; // give ping time on creation
+		protected long m_pingTime = DateTime.Now.Ticks; // give ping time on creation
 
 		/// <summary>
 		/// This variable holds all info about the active player
@@ -223,8 +229,75 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the time of the last UDP ping
 		/// </summary>
-		protected long m_udpPingTime = DateTime.UtcNow.Ticks;
+		protected long m_udpPingTime = DateTime.Now.Ticks;
+		
+		/// <summary>
+		/// Holds the Player Collection of Updated Object with last update time.
+		/// </summary>
+		protected ConcurrentDictionary<Tuple<ushort, ushort>, long> m_GameObjectUpdateArray;
 
+		/// <summary>
+		/// Holds the Player Collection of Updated House with last update time.
+		/// </summary>
+		protected ConcurrentDictionary<Tuple<ushort, ushort>, long> m_HouseUpdateArray;
+		
+		/// <summary>
+		/// The environment tick count when this players position was last updated
+		/// </summary>
+		protected long m_lastPositionUpdateTick = 0;
+
+		/// <summary>
+		/// The environment tick count when this players position was last updated
+		/// </summary>
+		public long LastPositionUpdateTick
+		{
+			get { return m_lastPositionUpdateTick; }
+			set { m_lastPositionUpdateTick = value; }
+		}
+		
+		/// <summary>
+		/// The last recorded position of this client's player
+		/// </summary>
+		protected Point3D m_lastPositionUpdatePoint = new Point3D(0, 0, 0);
+
+		/// <summary>
+		/// The last recorded position of this client's player
+		/// </summary>
+		public Point3D LastPositionUpdatePoint
+		{
+			get { return m_lastPositionUpdatePoint; }
+			set { m_lastPositionUpdatePoint = value; }
+		}
+		
+		/// <summary>
+		/// The last recorded real speed of this client's player
+		/// </summary>
+		protected int m_lastCoordsPerSec = 0;
+		
+		/// <summary>
+		/// The last recorded real speed of this client's player
+		/// </summary>
+		public int LastCoordsPerSec 
+		{
+			get { return m_lastCoordsPerSec; }
+			set { m_lastCoordsPerSec = value; }
+		}
+		
+		/// <summary>
+		/// Holds the players max Z for fall damage
+		/// </summary>
+		private int m_lastMaxHeight;
+
+		/// <summary>
+		/// Gets or sets the players max Z for fall damage
+		/// </summary>
+		public int LastMaxHeight
+		{
+			get { return m_lastMaxHeight; }
+			set { m_lastMaxHeight = value; }
+		}
+		
+		
 		/// <summary>
 		/// Constructor for a game client
 		/// </summary>
@@ -235,6 +308,8 @@ namespace DOL.GS
 			m_clientVersion = eClientVersion.VersionNotChecked;
 			m_player = null;
 			m_activeCharIndex = -1; //No character loaded yet!
+			m_GameObjectUpdateArray = new ConcurrentDictionary<Tuple<ushort, ushort>, long>();
+			m_HouseUpdateArray = new ConcurrentDictionary<Tuple<ushort, ushort>, long>();
 		}
 
 		/// <summary>
@@ -260,7 +335,7 @@ namespace DOL.GS
 				if ((oldState != eClientState.Playing && value == eClientState.Playing) ||
 				    (oldState != eClientState.CharScreen && value == eClientState.CharScreen))
 				{
-					PingTime = DateTime.UtcNow.Ticks;
+					PingTime = DateTime.Now.Ticks;
 				}
 
 				m_clientState = value;
@@ -418,6 +493,22 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Get the Game Object Update Array (Read/Write)
+		/// </summary>
+		public ConcurrentDictionary<Tuple<ushort, ushort>, long> GameObjectUpdateArray
+		{
+			get { return m_GameObjectUpdateArray; }
+		}
+		
+		/// <summary>
+		/// Get the House Update Array (Read/Write)
+		/// </summary>
+		public ConcurrentDictionary<Tuple<ushort, ushort>, long> HouseUpdateArray
+		{
+			get { return m_HouseUpdateArray; }
+		}
+
+		/// <summary>
 		/// Called when a packet has been received.
 		/// </summary>
 		/// <param name="numBytes">The number of bytes received</param>
@@ -500,9 +591,11 @@ namespace DOL.GS
 				if (log.IsErrorEnabled)
 					log.Error("OnDisconnect", e);
 			}
-
-			// Make sure the client is diconnected even on errors
-			Quit();
+			finally
+			{
+				// Make sure the client is diconnected even on errors
+				Quit();
+			}
 		}
 
 		/// <summary>

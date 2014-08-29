@@ -1,10 +1,20 @@
 ﻿/*
- * Created by SharpDevelop.
- * User: Administrateur
- * Date: 09/08/2013
- * Time: 10:02
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
  * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
  */
 using System;
 using System.Reflection;
@@ -13,7 +23,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 using DOL.GS;
-using DOL.GS.Items;
 using DOL.Database;
 using DOL.GS.Spells;
 using DOL.GS.Quests.Catacombs.Obelisks;
@@ -1876,7 +1885,7 @@ namespace DOL.GS.Scripts
 		}
 	}
 	
-	    #region Sojourner-5
+	#region Portable Helper
     [SpellHandlerAttribute("PortableFreyadHelper")]
     public class PortableFreyadHelperSpellHandler : SpellHandler
     {
@@ -1890,7 +1899,7 @@ namespace DOL.GS.Scripts
         /// <param name="target"></param>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            m_caster.Mana -= PowerCost(target, true);
             base.FinishSpellCast(target);
         }
         public override void OnEffectStart(GameSpellEffect effect)

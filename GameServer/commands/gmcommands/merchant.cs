@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 using DOL.GS;
 using DOL.Database;
@@ -78,7 +77,7 @@ namespace DOL.GS.Commands
 
 						//Create a new merchant
 						GameMerchant merchant = null;
-						List<Assembly> asms = new List<Assembly>(ScriptMgr.Scripts);
+						ArrayList asms = new ArrayList(ScriptMgr.Scripts);
 						asms.Add(typeof(GameServer).Assembly);
 						foreach (Assembly script in asms)
 						{
@@ -241,7 +240,7 @@ namespace DOL.GS.Commands
 										try
 										{
 											string templateID = args[3];
-											int page = Convert.ToInt32(args[4]);
+											byte page = Convert.ToByte(args[4]);
 											eMerchantWindowSlot slot = eMerchantWindowSlot.FirstEmptyInPage;
 
 											if (targetMerchant.TradeItems == null)
@@ -262,7 +261,7 @@ namespace DOL.GS.Commands
 												slot = (eMerchantWindowSlot)Convert.ToInt32(args[5]);
 											}
 
-											slot = targetMerchant.TradeItems.GetValidSlot((byte)page, slot);
+											slot = targetMerchant.TradeItems.GetValidSlot(page, slot);
 											if (slot == eMerchantWindowSlot.Invalid)
 											{
 												DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Articles.Add.PageAndSlotInvalid", page, (MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS - 1), slot, (MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS - 1)));
@@ -276,7 +275,7 @@ namespace DOL.GS.Commands
 												item.ItemListID = targetMerchant.TradeItems.ItemsListID;
 												item.ItemTemplateID = templateID;
 												item.SlotPosition = (ushort)slot;
-												item.PageNumber = (byte)page;
+												item.PageNumber = page;
 
 												GameServer.Database.AddObject(item);
 											}
@@ -404,7 +403,7 @@ namespace DOL.GS.Commands
 
 						//Create a new merchant
 						GameMerchant merchant = null;
-						List<Assembly> asms = new List<Assembly>(ScriptMgr.Scripts);
+						ArrayList asms = new ArrayList(ScriptMgr.Scripts);
 						asms.Add(typeof(GameServer).Assembly);
 						foreach (Assembly script in asms)
 						{

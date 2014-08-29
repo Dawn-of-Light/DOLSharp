@@ -525,7 +525,7 @@ namespace DOL.GS.Quests
     //system I've developed, and this script was partly finished so I adopted it ^^. 
     public class TaskDungeonInstance : Instance
     {
-        public TaskDungeonInstance(ushort ID, GameTimer.GameScheduler time, RegionData dat)
+        public TaskDungeonInstance(ushort ID, GameTimer.TimeManager time, RegionData dat)
             : base(ID, time, dat)
         {
         }

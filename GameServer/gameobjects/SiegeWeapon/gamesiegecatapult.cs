@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
@@ -64,7 +63,7 @@ namespace DOL.GS
 
 		protected IList SelectTargets()
 		{
-			List<GameObject> list = new List<GameObject>();
+			ArrayList list = new ArrayList(20);
 
 			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(this.CurrentRegionID, GroundTarget.X, GroundTarget.Y, GroundTarget.Z, (ushort)150))
 			{

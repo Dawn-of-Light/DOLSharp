@@ -55,7 +55,7 @@ namespace DOL.GS
 
 		public override bool AddToWorld()
 		{
-			SetGroundTarget(X, Y, Component.Keep.Z);
+			SetGroundTarget(X, Y, Component.AbstractKeep.Z);
 			return base.AddToWorld();
 		}
 

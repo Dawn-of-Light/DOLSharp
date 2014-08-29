@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
@@ -39,27 +38,28 @@ namespace DOL.GS.GameEvents
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private static object statPrintLock = new object();
 		private static volatile Timer m_timer = null;
 		private static long m_lastBytesIn = 0;
 		private static long m_lastBytesOut = 0;
 		private static long m_lastPacketsIn = 0;
 		private static long m_lastPacketsOut = 0;
-		private static long m_lastMeasureTick = DateTime.UtcNow.Ticks;
+		private static long m_lastMeasureTick = DateTime.Now.Ticks;
 
 		private static PerformanceCounter m_systemCpuUsedCounter;
 		private static PerformanceCounter m_processCpuUsedCounter;
 		private static PerformanceCounter m_memoryPages;
 		private static PerformanceCounter m_physycalDisk;
 
-		private static Dictionary<GameTimer.GameScheduler, TimerStats> m_timerStatsByMgr;
+		private static Hashtable m_timerStatsByMgr;
 
 		[GameServerStartedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		{
-			lock (statPrintLock)
+			if (!DOL.GS.ServerProperties.Properties.STATPRINT_ENABLED) return;
+
+			lock (typeof(StatPrint))
 			{
-				m_timerStatsByMgr = new Dictionary<GameTimer.GameScheduler, TimerStats>();
+				m_timerStatsByMgr = new Hashtable();
 				m_timer = new Timer(new TimerCallback(PrintStats), null, 10000, 0);
 
 				// Create performance counters
@@ -91,7 +91,7 @@ namespace DOL.GS.GameEvents
 		[ScriptUnloadedEvent]
 		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
-			lock (statPrintLock)
+			lock (typeof(StatPrint))
 			{
 				if (m_timer != null)
 				{
@@ -119,13 +119,11 @@ namespace DOL.GS.GameEvents
 				//Don't enable this line unless you have memory issues and
 				//need more details in memory usage
 				//GC.Collect();
-				TimerStats ts;
-				long newTick = DateTime.UtcNow.Ticks;
+
+				long newTick = DateTime.Now.Ticks;
 				long time = newTick - m_lastMeasureTick;
 				m_lastMeasureTick = newTick;
 				time /= 10000000L;
-				
-				
 				if (time < 1)
 				{
 					log.Warn("Time has not changed since last call of PrintStats");
@@ -163,28 +161,21 @@ namespace DOL.GS.GameEvents
 						.AppendFormat("  IOCP={0}/{1}({2})", iocpCurrent, iocpMax, iocpMin)
 						.AppendFormat("  GH/OH={0}/{1}", globalHandlers, objectHandlers);
 
-					lock (statPrintLock)
+					lock (m_timerStatsByMgr.SyncRoot)
 					{
-						foreach (GameTimer.GameScheduler mgr in WorldMgr.GetRegionTimeManagers())
+						foreach (GameTimer.TimeManager mgr in WorldMgr.GetRegionTimeManagers())
 						{
-							if (!m_timerStatsByMgr.ContainsKey(mgr))
+							TimerStats ts = (TimerStats) m_timerStatsByMgr[mgr];
+							if (ts == null)
 							{
 								ts = new TimerStats();
 								m_timerStatsByMgr.Add(mgr, ts);
 							}
-							
-							ts = m_timerStatsByMgr[mgr];
-							
 							long curInvoked = mgr.InvokedCount;
 							long invoked = curInvoked - ts.InvokedCount;
-							
-							long curLoop = mgr.ThreadLoop;
-							long looped = curLoop - ts.ThreadLoop;
-							stats.Append("  ").Append(mgr.Name).Append('=').Append(Math.Round((double)invoked/time, 2)).Append("t/s (")
-								.Append(Math.Round((double)looped/time, 2)).Append("L/s ")
+							stats.Append("  ").Append(mgr.Name).Append('=').Append(invoked/time).Append("t/s (")
 								.Append(mgr.ActiveTimers).Append(')');
 							ts.InvokedCount = curInvoked;
-							ts.ThreadLoop = curLoop;
 						}
 					}
 
@@ -202,12 +193,12 @@ namespace DOL.GS.GameEvents
 
 				if (log.IsFatalEnabled)
 				{
-					lock (statPrintLock)
+					lock (m_timerStatsByMgr.SyncRoot)
 					{
-						foreach (GameTimer.GameScheduler mgr in WorldMgr.GetRegionTimeManagers())
+						foreach (GameTimer.TimeManager mgr in WorldMgr.GetRegionTimeManagers())
 						{
-							if (!m_timerStatsByMgr.ContainsKey(mgr)) continue;
-								ts = m_timerStatsByMgr[mgr];
+							TimerStats ts = (TimerStats) m_timerStatsByMgr[mgr];
+							if (ts == null) continue;
 
 							long curTick = mgr.CurrentTime;
 							if (ts.Time == curTick)
@@ -229,7 +220,7 @@ namespace DOL.GS.GameEvents
 			}
 			finally
 			{
-				lock (statPrintLock)
+				lock (typeof(StatPrint))
 				{
 					if (m_timer != null)
 					{
@@ -242,7 +233,6 @@ namespace DOL.GS.GameEvents
 		public class TimerStats
 		{
 			public long InvokedCount;
-			public long ThreadLoop;
 			public long Time = -1;
 		}
 

@@ -8,7 +8,7 @@ namespace DOL.GS.RealmAbilities
 	/// <summary>
 	/// Mastery of Stealth RA
 	/// </summary>
-	public class MasteryOfStealthAbility : RAPropertyEnhancer
+	public class MasteryOfStealthAbility : L5RealmAbility
 	{
 		public MasteryOfStealthAbility(DBAbility dba, int level)
 			: base(dba, level, eProperty.Undefined)

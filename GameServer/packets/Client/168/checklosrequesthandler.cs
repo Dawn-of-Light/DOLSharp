@@ -16,12 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
+using System.Reflection;
+
+using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP, eClientPackets.CheckLOSRequest, ClientStatus.PlayerInGame)]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.CheckLOSRequest, "Handles a LoS Check Response", eClientStatus.PlayerInGame)]
 	public class CheckLOSResponseHandler : IPacketHandler
-	{
+	{		
 		#region IPacketHandler Members
 
 		public void HandlePacket(GameClient client, GSPacketIn packet)
@@ -30,7 +34,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort targetOID = packet.ReadShort();
 			ushort response = packet.ReadShort();
 			ushort unknow = packet.ReadShort();
-
+			
 			new HandleCheckAction(client.Player, checkerOID, targetOID, response).Start(1);
 		}
 

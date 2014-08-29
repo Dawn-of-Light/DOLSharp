@@ -42,7 +42,7 @@ namespace DOL.GS
 		/// Creates an instance object. This shouldn't be used directly - Please use WorldMgr.CreateInstance
 		/// to create an instance.
 		/// </summary>
-		public Instance(ushort ID, GameTimer.GameScheduler time, RegionData data) :base(ID, time, data)
+		public Instance(ushort ID, GameTimer.TimeManager time, RegionData data) :base(ID, time, data)
 		{
 		}
 
@@ -104,7 +104,7 @@ namespace DOL.GS
 				}
 
 				//Now we have the classtype to create, create it thus!
-				List<Assembly> asms = new List<Assembly>();
+				ArrayList asms = new ArrayList();
 				asms.Add(typeof(GameServer).Assembly);
 				asms.AddRange(ScriptMgr.Scripts);
 

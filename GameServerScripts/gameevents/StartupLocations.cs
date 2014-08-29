@@ -25,8 +25,6 @@
  */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
@@ -43,9 +41,9 @@ namespace DOL.GS.GameEvents
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private static Dictionary<int, Dictionary<int, StartLocation>> ClassicLocations = null;
-		private static Dictionary<int, Dictionary<int, StartLocation>> ShroudedIslesLocations = null;
-		public static Dictionary<eCharacterClass, StartLocation> MainTownStartingLocations = null;
+		private static HybridDictionary[] ClassicLocations = null;
+		private static HybridDictionary[] ShroudedIslesLocations = null;
+		public static HybridDictionary MainTownStartingLocations = null;
 
 		[ScriptLoadedEvent]
 		public static void OnScriptLoaded(DOLEvent e, object sender, EventArgs args)
@@ -163,17 +161,15 @@ namespace DOL.GS.GameEvents
 					}
 					else if ((int)client.Version >= (int)GameClient.eClientVersion.Version180)
 					{
-						startLocation = (StartLocation)MainTownStartingLocations[(eCharacterClass)ch.Class];
+						startLocation = (StartLocation)MainTownStartingLocations[ch.Class];
 					}
 					else if (ch.Region == 1 || ch.Region == 100 || ch.Region == 200) // all classic regions
 					{
-						if(ClassicLocations.ContainsKey(ch.Race) && ClassicLocations[ch.Race].ContainsKey(ch.Class))
-							startLocation = (StartLocation) ClassicLocations[ch.Race][ch.Class];
+						startLocation = (StartLocation) ClassicLocations[ch.Race][ch.Class];
 					}
 					else if (ch.Region == 51 || ch.Region == 151 || ch.Region == 181) // all ShroudedIsles regions
 					{
-						if(ShroudedIslesLocations.ContainsKey(ch.Race) && ShroudedIslesLocations[ch.Race].ContainsKey(ch.Class))
-							startLocation = (StartLocation) ShroudedIslesLocations[ch.Race][ch.Class];
+						startLocation = (StartLocation) ShroudedIslesLocations[ch.Race][ch.Class];
 					}
 					else
 					{
@@ -253,13 +249,13 @@ namespace DOL.GS.GameEvents
 			{
 				int size = (int)(Enum.GetValues(typeof(eRace)).Cast<eRace>().Max()) + 1;
 
-				ClassicLocations = new Dictionary<int, Dictionary<int, StartLocation>>(size);
-				ShroudedIslesLocations = new Dictionary<int, Dictionary<int, StartLocation>>(size);
+				ClassicLocations = new HybridDictionary[size];
+				ShroudedIslesLocations = new HybridDictionary[size];
 
 				for (int i = 0; i < size; i++)
 				{
-					ClassicLocations[i] = new Dictionary<int, StartLocation>();
-					ShroudedIslesLocations[i] = new Dictionary<int, StartLocation>();
+					ClassicLocations[i] = new HybridDictionary();
+					ShroudedIslesLocations[i] = new HybridDictionary();
 				}
 
 				#region base to 1.81, related to race x classe x expansion
@@ -285,8 +281,8 @@ namespace DOL.GS.GameEvents
 				ClassicLocations[(int) eRace.Elf][(int) eCharacterClass.Stalker] = new StartLocation(ZoneToRegion(28167, 39), ZoneToRegion(7923, 59), 5239, LocDirectionToHeading(139));
 				ClassicLocations[(int) eRace.Firbolg][(int) eCharacterClass.Guardian] = new StartLocation(ZoneToRegion(54813, 35), ZoneToRegion(49963, 51), 5200, LocDirectionToHeading(352));
 				ClassicLocations[(int) eRace.Firbolg][(int) eCharacterClass.Naturalist] = new StartLocation(ZoneToRegion(54154, 35), ZoneToRegion(49302, 51), 5200, LocDirectionToHeading(355));
-				ClassicLocations[(int) eRace.HiberniaMinotaur][(int)eCharacterClass.Naturalist] = new StartLocation(ZoneToRegion(54154, 35), ZoneToRegion(49302, 51), 5200, LocDirectionToHeading(335));
-				ClassicLocations[(int) eRace.HiberniaMinotaur][(int)eCharacterClass.Guardian] = new StartLocation(ZoneToRegion(54154, 35), ZoneToRegion(49302, 51), 5200, LocDirectionToHeading(335));
+				ClassicLocations[(int) eRace.Graoch][(int)eCharacterClass.Naturalist] = new StartLocation(ZoneToRegion(54154, 35), ZoneToRegion(49302, 51), 5200, LocDirectionToHeading(335));
+				ClassicLocations[(int) eRace.Graoch][(int)eCharacterClass.Guardian] = new StartLocation(ZoneToRegion(54154, 35), ZoneToRegion(49302, 51), 5200, LocDirectionToHeading(335));
 				ClassicLocations[(int) eRace.Frostalf][(int) eCharacterClass.MidgardRogue] = new StartLocation(ZoneToRegion(53306, 88), ZoneToRegion(19878, 90), 4600, LocDirectionToHeading(281));
 				ClassicLocations[(int) eRace.Frostalf][(int) eCharacterClass.Mystic] = new StartLocation(ZoneToRegion(54582, 88), ZoneToRegion(16626, 90), 4600, LocDirectionToHeading(69));
 				ClassicLocations[(int) eRace.Frostalf][(int) eCharacterClass.Seer] = new StartLocation(ZoneToRegion(27540, 88), ZoneToRegion(13100, 98), 4408, LocDirectionToHeading(238));
@@ -308,13 +304,13 @@ namespace DOL.GS.GameEvents
 				ClassicLocations[(int) eRace.Norseman][(int) eCharacterClass.Mystic] = new StartLocation(ZoneToRegion(54582, 88), ZoneToRegion(16626, 90), 4600, LocDirectionToHeading(69));
 				ClassicLocations[(int) eRace.Norseman][(int) eCharacterClass.Seer] = new StartLocation(ZoneToRegion(27540, 88), ZoneToRegion(13100, 98), 4408, LocDirectionToHeading(238));
 				ClassicLocations[(int) eRace.Norseman][(int) eCharacterClass.Viking] = new StartLocation(ZoneToRegion(53803, 88), ZoneToRegion(16475, 90), 4600, LocDirectionToHeading(25));
-				ClassicLocations[(int)eRace.MidgardMinotaur][(int)eCharacterClass.Viking] = new StartLocation(ZoneToRegion(53803, 88), ZoneToRegion(16475, 90), 4600, LocDirectionToHeading(25));
-				ClassicLocations[(int)eRace.MidgardMinotaur][(int)eCharacterClass.Seer] = new StartLocation(ZoneToRegion(53803, 88), ZoneToRegion(16475, 90), 4600, LocDirectionToHeading(25));
+				ClassicLocations[(int)eRace.Deifrang][(int)eCharacterClass.Viking] = new StartLocation(ZoneToRegion(53803, 88), ZoneToRegion(16475, 90), 4600, LocDirectionToHeading(25));
+				ClassicLocations[(int)eRace.Deifrang][(int)eCharacterClass.Seer] = new StartLocation(ZoneToRegion(53803, 88), ZoneToRegion(16475, 90), 4600, LocDirectionToHeading(25));
 				ClassicLocations[(int) eRace.Saracen][(int) eCharacterClass.AlbionRogue] = new StartLocation(ZoneToRegion(10096, 59), ZoneToRegion(11066, 71), 1948, LocDirectionToHeading(269));
 				ClassicLocations[(int) eRace.Saracen][(int) eCharacterClass.Fighter] = new StartLocation(ZoneToRegion(10177, 59), ZoneToRegion(11146, 71), 1948, LocDirectionToHeading(211));
 				ClassicLocations[(int) eRace.Saracen][(int) eCharacterClass.Mage] = new StartLocation(ZoneToRegion(47648, 59), ZoneToRegion(46053, 53), 2200, LocDirectionToHeading(278));
-				ClassicLocations[(int) eRace.AlbionMinotaur][(int) eCharacterClass.Acolyte] = new StartLocation(ZoneToRegion(47648, 59), ZoneToRegion(46043, 53), 2200, LocDirectionToHeading(278));
-				ClassicLocations[(int) eRace.AlbionMinotaur][(int) eCharacterClass.Fighter] = new StartLocation(ZoneToRegion(47648, 59), ZoneToRegion(46043, 53), 2200, LocDirectionToHeading(278));
+				ClassicLocations[(int) eRace.Korazh][(int) eCharacterClass.Acolyte] = new StartLocation(ZoneToRegion(47648, 59), ZoneToRegion(46043, 53), 2200, LocDirectionToHeading(278));
+				ClassicLocations[(int) eRace.Korazh][(int) eCharacterClass.Fighter] = new StartLocation(ZoneToRegion(47648, 59), ZoneToRegion(46043, 53), 2200, LocDirectionToHeading(278));
 				ClassicLocations[(int) eRace.Shar][(int) eCharacterClass.Guardian] = new StartLocation(ZoneToRegion(9821, 35), ZoneToRegion(26996, 75), 4848, LocDirectionToHeading(34));
 				ClassicLocations[(int) eRace.Shar][(int) eCharacterClass.Magician] = new StartLocation(ZoneToRegion(22085, 39), ZoneToRegion(43343, 67), 5456, LocDirectionToHeading(67));
 				ClassicLocations[(int) eRace.Shar][(int) eCharacterClass.Stalker] = new StartLocation(ZoneToRegion(22964, 39), ZoneToRegion(43842, 67), 5456, LocDirectionToHeading(169));
@@ -388,31 +384,31 @@ namespace DOL.GS.GameEvents
 				ShroudedIslesLocations[(int) eRace.Valkyn][(int) eCharacterClass.MidgardRogue] = new StartLocation(ZoneToRegion(43183, 30), ZoneToRegion(44381, 38), 3866, LocDirectionToHeading(232));
 				ShroudedIslesLocations[(int) eRace.Valkyn][(int) eCharacterClass.Mystic] = new StartLocation(ZoneToRegion(44075, 30), ZoneToRegion(44629, 38), 3866, LocDirectionToHeading(144));
 				ShroudedIslesLocations[(int) eRace.Valkyn][(int) eCharacterClass.Viking] = new StartLocation(ZoneToRegion(41922, 30), ZoneToRegion(44001, 38), 3488, LocDirectionToHeading(315));
-				ShroudedIslesLocations[(int) eRace.MidgardMinotaur][(int) eCharacterClass.Viking] = new StartLocation(ZoneToRegion(41922, 30), ZoneToRegion(44001, 38), 3488, LocDirectionToHeading(315));
-				ShroudedIslesLocations[(int)eRace.MidgardMinotaur][(int)eCharacterClass.Seer] = new StartLocation(ZoneToRegion(41922, 30), ZoneToRegion(44001, 38), 3488, LocDirectionToHeading(315));
-				ShroudedIslesLocations[(int)eRace.AlbionMinotaur][(int)eCharacterClass.Fighter] = new StartLocation(ZoneToRegion(43786, 60), ZoneToRegion(57553, 60), 4800, LocDirectionToHeading(95));
-				ShroudedIslesLocations[(int)eRace.AlbionMinotaur][(int)eCharacterClass.Acolyte] = new StartLocation(ZoneToRegion(43786, 60), ZoneToRegion(57553, 60), 4800, LocDirectionToHeading(95));
-				ShroudedIslesLocations[(int)eRace.HiberniaMinotaur][(int)eCharacterClass.Naturalist] = new StartLocation(ZoneToRegion(29769, 48), ZoneToRegion(52637, 48), 5952, LocDirectionToHeading(207));
-				ShroudedIslesLocations[(int)eRace.HiberniaMinotaur][(int)eCharacterClass.Guardian] = new StartLocation(ZoneToRegion(29769, 48), ZoneToRegion(52637, 48), 5952, LocDirectionToHeading(207));
+				ShroudedIslesLocations[(int) eRace.Deifrang][(int) eCharacterClass.Viking] = new StartLocation(ZoneToRegion(41922, 30), ZoneToRegion(44001, 38), 3488, LocDirectionToHeading(315));
+				ShroudedIslesLocations[(int)eRace.Deifrang][(int)eCharacterClass.Seer] = new StartLocation(ZoneToRegion(41922, 30), ZoneToRegion(44001, 38), 3488, LocDirectionToHeading(315));
+				ShroudedIslesLocations[(int)eRace.Korazh][(int)eCharacterClass.Fighter] = new StartLocation(ZoneToRegion(43786, 60), ZoneToRegion(57553, 60), 4800, LocDirectionToHeading(95));
+				ShroudedIslesLocations[(int)eRace.Korazh][(int)eCharacterClass.Acolyte] = new StartLocation(ZoneToRegion(43786, 60), ZoneToRegion(57553, 60), 4800, LocDirectionToHeading(95));
+				ShroudedIslesLocations[(int)eRace.Graoch][(int)eCharacterClass.Naturalist] = new StartLocation(ZoneToRegion(29769, 48), ZoneToRegion(52637, 48), 5952, LocDirectionToHeading(207));
+				ShroudedIslesLocations[(int)eRace.Graoch][(int)eCharacterClass.Guardian] = new StartLocation(ZoneToRegion(29769, 48), ZoneToRegion(52637, 48), 5952, LocDirectionToHeading(207));
 				#endregion
 				
 				#region 1.82 to 1.92 per class, roughly at the same place
-				MainTownStartingLocations = new Dictionary<eCharacterClass, StartLocation>();
-				MainTownStartingLocations[eCharacterClass.Acolyte] =  new StartLocation(562418, 512268, 2500, 2980);
-				MainTownStartingLocations[eCharacterClass.AlbionRogue] =  new StartLocation(561956, 512226, 2516, 2116);
-				MainTownStartingLocations[eCharacterClass.Disciple] =  new StartLocation(562334, 512160, 2500, 2252);
-				MainTownStartingLocations[eCharacterClass.Elementalist] =  new StartLocation(561952, 512651, 2500, 3936);
-				MainTownStartingLocations[eCharacterClass.Fighter] =  new StartLocation(562099, 512472, 2500, 3606);
-				MainTownStartingLocations[eCharacterClass.Forester] =  new StartLocation(348494, 492021, 5176, 3572);
-				MainTownStartingLocations[eCharacterClass.Guardian] =  new StartLocation(347279, 489681, 5200, 2332);
-				MainTownStartingLocations[eCharacterClass.Mage] =  new StartLocation(561750, 512694, 2500, 1058);
-				MainTownStartingLocations[eCharacterClass.Magician] =  new StartLocation(348457, 491103, 5270, 3174);
-				MainTownStartingLocations[eCharacterClass.MidgardRogue] =  new StartLocation(802825, 726238, 4703, 1194);
-				MainTownStartingLocations[eCharacterClass.Mystic] =  new StartLocation(802726, 726512, 4694, 1103);
-				MainTownStartingLocations[eCharacterClass.Naturalist] =  new StartLocation(348877, 490997, 5414, 2863);
-				MainTownStartingLocations[eCharacterClass.Seer] =  new StartLocation(802671, 726752, 4690, 944);
-				MainTownStartingLocations[eCharacterClass.Stalker] =  new StartLocation(349404, 489469, 5282, 3003);
-				MainTownStartingLocations[eCharacterClass.Viking] = new StartLocation(802869, 726016, 4699, 1399);
+				MainTownStartingLocations = new HybridDictionary();
+				MainTownStartingLocations[(int)eCharacterClass.Acolyte] =  new StartLocation(562418, 512268, 2500, 2980);
+				MainTownStartingLocations[(int)eCharacterClass.AlbionRogue] =  new StartLocation(561956, 512226, 2516, 2116);
+				MainTownStartingLocations[(int)eCharacterClass.Disciple] =  new StartLocation(562334, 512160, 2500, 2252);
+				MainTownStartingLocations[(int)eCharacterClass.Elementalist] =  new StartLocation(561952, 512651, 2500, 3936);
+				MainTownStartingLocations[(int)eCharacterClass.Fighter] =  new StartLocation(562099, 512472, 2500, 3606);
+				MainTownStartingLocations[(int)eCharacterClass.Forester] =  new StartLocation(348494, 492021, 5176, 3572);
+				MainTownStartingLocations[(int)eCharacterClass.Guardian] =  new StartLocation(347279, 489681, 5200, 2332);
+				MainTownStartingLocations[(int)eCharacterClass.Mage] =  new StartLocation(561750, 512694, 2500, 1058);
+				MainTownStartingLocations[(int)eCharacterClass.Magician] =  new StartLocation(348457, 491103, 5270, 3174);
+				MainTownStartingLocations[(int)eCharacterClass.MidgardRogue] =  new StartLocation(802825, 726238, 4703, 1194);
+				MainTownStartingLocations[(int)eCharacterClass.Mystic] =  new StartLocation(802726, 726512, 4694, 1103);
+				MainTownStartingLocations[(int)eCharacterClass.Naturalist] =  new StartLocation(348877, 490997, 5414, 2863);
+				MainTownStartingLocations[(int)eCharacterClass.Seer] =  new StartLocation(802671, 726752, 4690, 944);
+				MainTownStartingLocations[(int)eCharacterClass.Stalker] =  new StartLocation(349404, 489469, 5282, 3003);
+				MainTownStartingLocations[(int)eCharacterClass.Viking] = new StartLocation(802869, 726016, 4699, 1399);
 				#endregion
 			}
 			catch (Exception e)

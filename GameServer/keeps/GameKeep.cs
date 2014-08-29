@@ -18,7 +18,6 @@
  */
 
 using System.Collections;
-using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Keeps
@@ -38,6 +37,7 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public static int[] UpgradeTime =
 		{
+			12*60*1000, // 0 12min
 			12*60*1000, // 1 12min
 			12*60*1000, // 2 12min
 			12*60*1000, // 3 12min
@@ -49,11 +49,12 @@ namespace DOL.GS.Keeps
 			480*60*1000, // 9 480min 8h
 			960*60*1000, // 10 960min 16h
 		};
-		private List<GameKeepTower> m_towers = new List<GameKeepTower>(4);
+		
+		private ArrayList m_towers = new ArrayList(4);
 		/// <summary>
 		/// The Keep Towers
 		/// </summary>
-		public List<GameKeepTower> Towers
+		public ArrayList Towers
 		{
 			get { return m_towers; }
 			set { m_towers = value; }
@@ -78,9 +79,10 @@ namespace DOL.GS.Keeps
 		/// <returns></returns>
 		public override int CalculateTimeToUpgrade()
 		{
-			if (10 > Level)
+			if (Level < 10)
 				return UpgradeTime[this.Level + 1];
-			else return UpgradeTime[this.Level - 1];
+			else 
+				return UpgradeTime[this.Level - 1];
 		}
 
 		/// <summary>

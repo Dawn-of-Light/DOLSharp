@@ -16,13 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
-/*
- * Suncheck: [19.06.2007]
- *   - Corrected
- *   - Sorted
- *   - Added missing (+language support)
- */
 using System;
 using DOL.Language;
 using DOL.Events;
@@ -30,7 +23,7 @@ using DOL.Events;
 namespace DOL.GS.PlayerTitles
 {
 	/// <summary>
-	/// Example...
+	/// Title for Gamemasters
 	/// </summary>
 	public class GamemasterTitle : EventPlayerTitle
 	{
@@ -54,6 +47,11 @@ namespace DOL.GS.PlayerTitles
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.PrivLevel.Gamemaster");
 		}
 
+		public override string GetValue(GamePlayer source, GamePlayer target)
+		{
+			return LanguageMgr.GetTranslation(source.Client.Account.Language, "Titles.PrivLevel.Gamemaster");
+		}
+
 		/// <summary>
 		/// The event to hook.
 		/// </summary>
@@ -69,7 +67,7 @@ namespace DOL.GS.PlayerTitles
 		public override bool IsSuitable(GamePlayer player)
 		{
 			//2
-			return (player.Client.Account.PrivLevel == 2);
+			return ((ePrivLevel)player.Client.Account.PrivLevel == ePrivLevel.GM);
 		}
 		
 		/// <summary>

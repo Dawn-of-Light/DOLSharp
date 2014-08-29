@@ -452,7 +452,7 @@ namespace DOL.GS.Housing
 		public void SendHouseInfo(GamePlayer player)
 		{
 			int level = Model - ((Model - 1) / 4) * 4;
-			TimeSpan due = (LastPaid.AddDays(ServerProperties.Properties.RENT_DUE_DAYS).AddHours(1) - DateTime.UtcNow);
+			TimeSpan due = (LastPaid.AddDays(ServerProperties.Properties.RENT_DUE_DAYS).AddHours(1) - DateTime.Now);
 			var text = new List<string>();
 
 			text.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "House.SendHouseInfo.Owner", Name));
@@ -971,7 +971,7 @@ namespace DOL.GS.Housing
 			foreach (int slot in changes)
 			{
 				byte page = (byte)(slot/30);
-				int pslot = slot%30;
+				short pslot = (short)(slot%30);
 
 				ItemTemplate item = items.GetItem(page, (eMerchantWindowSlot) pslot);
 				if (item != null)
@@ -994,7 +994,7 @@ namespace DOL.GS.Housing
 			foreach (int slot in changes)
 			{
 				byte page = (byte)(slot/30);
-				int pslot = slot%30;
+				short pslot = (short)(slot%30);
 
 				ItemTemplate item = items.GetItem(page, (eMerchantWindowSlot) pslot);
 

@@ -223,9 +223,14 @@ namespace DOL.GS.Scripts
 									mlchoiceb = "[Perfecter]";
 								}
 								break;
+							case 49 : //Nightshade
+								{
+									mlchoicea = "[Spymaster]";
+									mlchoiceb = "[Stormlord]";
+								}
+								break;
 								
 							case 23 : //Shadowblade
-							case 49 : //Nightshade
 							case 9 : //Infiltrator
 								{
 									mlchoicea = "[Spymaster]";
@@ -980,9 +985,14 @@ namespace DOL.GS.Scripts
 									mlchoiceb = "[Perfecter]";
 								}
 								break;
+							case 49 : //Nightshade
+								{
+									mlchoicea = "[Spymaster]";
+									mlchoiceb = "[Stormlord]";
+								}
+								break;
 								
 							case 23 : //Shadowblade
-							case 49 : //Nightshade
 							case 9 : //Infiltrator
 								{
 									mlchoicea = "[Spymaster]";

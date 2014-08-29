@@ -36,93 +36,93 @@ namespace DOL.GS.Commands
 {
 	[Cmd("&mob", //command to handle
 	     ePrivLevel.Admin, //minimum privelege level
-	     "Mob creation and modification commands", //command description
+	     "Mob creation and modification commands.", //command description
 	     // usage
-	     "'/mob create [ClassName(DOL.GS.GameNPC)] [eRealm(0)]' to create a new mob",
-	     "'/mob fastcreate <ModelID> <level> [save(default = 0; use 1 to save)] <name>' to create mob with specified info",
-	     "'/mob nfastcreate <ModelID> <level> <number> [radius(10)] [name]' to create multiple mobs within radius",
-	     "'/mob nrandcreate <number> [radius(50)]' to create multiple random mobs within radius",
-	     "'/mob model <ModelID> [OID]' to set the mob's model, optionally using OID if mob isn't targeted",
-	     "'/mob modelinc <#> Increments the mob model by 1",
-	     "'/mob modeldec <#> Decrements the mob model by 1",
-	     "'/mob size <size>' to set the mob's size (1..255)",
-	     "'/mob translationid <translation id>' to set the mob's translation id",
-	     "'/mob name <name>' to set the mob's name",
-	     "'/mob suffix <suffix>' to set the mob's suffix",
-	     "'/mob guild <guild name>' to set the mob's guild name (blank to remove)",
-	     "'/mob examinearticle <examine article>' to set the mob's examine article",
-	     "'/mob messagearticle <message article>' to set the mob's message article",
-	     "'/mob peace' toggle whether the mob can be attacked",
-	     "'/mob aggro <level>' to set mob's aggro level (0..100)%",
-	     "'/mob range <distance>' to set mob's aggro range",
-	     "'/mob distance <maxdistance>' set mob max distance from its spawn (>0=real, 0=no check, <0=percent of aggro range)",
-	     "'/mob roaming <distance>' set mob random range radius (0=noroaming, -1=standard, >0=individual)",
-	     "'/mob damagetype <eDamageType>' set mob damage type",
-	     "'/mob movehere' move mob to player's location",
-	     "'/mob location' say location information in the chat window",
-	     "'/mob remove [true]' to remove this mob from the DB; specify true to also remove loot templates (if no other mobs of same name exist)",
-	     "'/mob ghost' makes this mob ghost-like",
-	     "'/mob stealth' makes the mob stealthed (invisible)",
-	     "'/mob torch' turns this mobs torch on and off",
-	     "'/mob statue' toggles statue effect",
-	     "'/mob fly [height]' makes this mob able to fly by changing the Z coordinate; moves mob up by height",
-	     "'/mob swimming' toggles mob's swimming flag (helpful for flying mobs)",
-	     "'/mob noname' still possible to target this mob, but removes the name from above mob",
-	     "'/mob notarget' makes it impossible to target this mob and removes the name from above it",
-	     "'/mob kill' kills the mob without removing it from the DB",
-	     "'/mob heal' restores the mob's health to maximum",
-	     "'/mob attack <PlayerName>' command mob to attack a player",
-	     "'/mob state' show mob state (attackers, effects)",
-	     "'/mob info' extended information about the mob",
-	     "'/mob realm <eRealm>' set the mob's realm",
-	     "'/mob speed <speed>' set the mob's max speed",
-	     "'/mob level <level>' set the mob's level",
-	     "'/mob levela <level>' set the mob's level and auto adjust stats",
-	     "'/mob brain <ClassName>' set the mob's brain",
-	     "'/mob respawn <duration>' set the mob's respawn time (in ms)",
-	     "'/mob questinfo' show mob's quest info",
-	     "'/mob refreshquests' Update this mobs list of data quests",
-	     "'/mob equipinfo' show mob's inventory info",
-	     "'/mob equiptemplate load <EquipmentTemplateID>' to load the inventory template from the database, it is open for modification after",
-	     "'/mob equiptemplate create' to create an empty inventory template",
-	     "'/mob equiptemplate add <slot> <model> [color] [effect] [extension]' to add an item to the inventory template",
-	     "'/mob equiptemplate remove <slot>' to remove item from the specified slot in the inventory template",
-	     "'/mob equiptemplate clear' to remove the inventory template from mob",
-	     "'/mob equiptemplate save <EquipmentTemplateID> [replace]' to save the inventory template with a new name",
-	     "'/mob equiptemplate close' to finish the inventory template you are creating",
-	     "'/mob visibleslot <slot>' to set the visible weapon slot.  use slot names (left, right, two, distance)",
-	     "'/mob dropcount [number]' to set the max number of drops for mob (omit number to view current value)",
-	     "'/mob dropcount2 [number]' same as '/mob dropcount' but for the 'MobDrop' generator",
-	     "'/mob addloot <ItemTemplateID> <chance> [count]' to add loot to the mob's unique drop table.  Optionally specify count of how many to drop if chance = 100%",
-	     "'/mob addloot2 <ItemTemplateID> <chance> [count]' to add loot to the mob's drop table. Optionally specify count of how many item to drop if chance < 100%",
-	     "'/mob addotd <ItemTemplateID> <min level>' add a one time drop to this mob.",
-	     "'/mob viewloot [random] [inv]' to view the selected mob's loot table.  Use random to simulate a kill drop, random inv to simulate and generate the loots",
-	     "'/mob removeloot <ItemTemplateID>' to remove loot from the mob's unique drop table",
-	     "'/mob removeloot2 <ItemTemplateID>' same as '/mob removeloot' but for the 'MobDrop' generator",
-	     "'/mob removeotd <ItemTemplateID>' to remove a one time drop from the mob's unique drop table",
-	     "'/mob refreshloot' to refresh all loot generators for this mob",
-	     "'/mob copy [name]' copies a mob exactly and places it at your location",
-	     "'/mob npctemplate <NPCTemplateID>' creates a mob with npc template, or modifies target",
-	     "'/mob npctemplate create <NPCTemplateID>' creates a new template from selected mob",
-	     "'/mob class <ClassName>' replaces mob with a clone of the specified class",
-	     "'/mob path <PathID>' associate the mob to the specified path",
-	     "'/mob house <HouseNumber>' set NPC's house number",
-	     "'/mob <stat> <amount>' Set the mob's stats (str, con, dex, qui, int, emp, pie, cha)",
-	     "'/mob tether <tether range>' set mob tether range (>0: check, <=0: no check)",
-	     "'/mob hood' toggle cloak hood visibility",
-	     "'/mob cloak' toggle cloak visibility",
-	     "'/mob race [ID]' view or set NPC's race (ID can be # or name)",
-	     "'/mob race reload' reload race resists from the database",
-	     "'/mob bodytype <ID>' changing the mob's bodytype",
-	     "'/mob gender <0 = neutral | 1 = male | 2 = female>' set gender for this mob",
-	     "'/mob packageid <string>' set the package ID for this mob",
-	     "'/mob select' select the mob within 100 radius (used for selection of non-targettable GameNPC)",
-	     "'/mob load <Mob_ID>' load the Mob_ID from the DB and update the Mob cache",
-	     "'/mob reload <name>' reload the targetted or named mob(s) from the database",
-	     "'/mob findname <name> <#>' search for a mob with a name like <name> with maximum <#> (def. 10) matches",
+	     "'/mob create [ClassName(DOL.GS.GameNPC)] [eRealm(0)]' to create a new mob.",
+	     "'/mob fastcreate <ModelID> <level> [save(default = 0; use 1 to save)] <name>' to create mob with specified info.",
+	     "'/mob nfastcreate <ModelID> <level> <number> [radius(10)] [name]' to create multiple mobs within radius.",
+	     "'/mob nrandcreate <number> [radius(50)]' to create multiple random mobs within radius.",
+	     "'/mob model <ModelID> [OID]' to set the mob's model, optionally using OID if mob isn't targeted.",
+	     "'/mob modelinc <#> Increments the mob model by 1.",
+	     "'/mob modeldec <#> Decrements the mob model by 1.",
+	     "'/mob size <size>' to set the mob's size (1..255).",
+	     "'/mob translationid <translation id>' to set the mob's translation id.",
+	     "'/mob name <name>' to set the mob's name.",
+	     "'/mob suffix <suffix>' to set the mob's suffix.",
+	     "'/mob guild <guild name>' to set the mob's guild name (blank to remove).",
+	     "'/mob examinearticle <examine article>' to set the mob's examine article.",
+	     "'/mob messagearticle <message article>' to set the mob's message article.",
+	     "'/mob peace' toggle whether the mob can be attacked.",
+	     "'/mob aggro <level>' to set mob's aggro level (0..100)%.",
+	     "'/mob range <distance>' to set mob's aggro range.",
+	     "'/mob distance <maxdistance>' set mob max distance from its spawn (>0=real, 0=no check, <0=percent of aggro range).",
+	     "'/mob roaming <distance>' set mob random range radius (0=noroaming, -1=standard, >0=individual).",
+	     "'/mob damagetype <eDamageType>' set mob damage type.",
+	     "'/mob movehere' move mob to player's location.",
+	     "'/mob location' say location information in the chat window.",
+	     "'/mob remove [true]' to remove this mob from the DB; specify true to also remove loot templates (if no other mobs of same name exist).",
+	     "'/mob ghost' makes this mob ghost-like.",
+	     "'/mob stealth' makes the mob stealthed (invisible).",
+	     "'/mob torch' turns this mobs torch on and off.",
+	     "'/mob statue' toggles statue effect.",
+	     "'/mob fly [height]' makes this mob able to fly by changing the Z coordinate; moves mob up by height.",
+	     "'/mob swimming' toggles mob's swimming flag (helpful for flying mobs).",
+	     "'/mob noname' still possible to target this mob, but removes the name from above mob.",
+	     "'/mob notarget' makes it impossible to target this mob and removes the name from above it.",
+	     "'/mob kill' kills the mob without removing it from the DB.",
+	     "'/mob heal' restores the mob's health to maximum.",
+	     "'/mob attack <PlayerName>' command mob to attack a player.",
+	     "'/mob state' show mob state (attackers, effects).",
+	     "'/mob info' extended information about the mob.",
+	     "'/mob realm <eRealm>' set the mob's realm.",
+	     "'/mob speed <speed>' set the mob's max speed.",
+	     "'/mob level <level>' set the mob's level.",
+	     "'/mob levela <level>' set the mob's level and auto adjust stats.",
+	     "'/mob brain <ClassName>' set the mob's brain.",
+	     "'/mob respawn <duration>' set the mob's respawn time (in ms).",
+	     "'/mob questinfo' show mob's quest info.",
+	     "'/mob refreshquests' Update this mobs list of data quests.",
+	     "'/mob equipinfo' show mob's inventory info.",
+	     "'/mob equiptemplate load <EquipmentTemplateID>' to load the inventory template from the database, it is open for modification after.",
+	     "'/mob equiptemplate create' to create an empty inventory template.",
+	     "'/mob equiptemplate add <slot> <model> [color] [effect] [extension]' to add an item to the inventory template.",
+	     "'/mob equiptemplate remove <slot>' to remove item from the specified slot in the inventory template.",
+	     "'/mob equiptemplate clear' to remove the inventory template from mob.",
+	     "'/mob equiptemplate save <EquipmentTemplateID> [replace]' to save the inventory template with a new name.",
+	     "'/mob equiptemplate close' to finish the inventory template you are creating.",
+	     "'/mob visibleslot <slot>' to set the visible weapon slot.  use slot names (left, right, two, distance).",
+	     "'/mob dropcount [number]' to set the max number of drops for mob (omit number to view current value).",
+	     "'/mob dropcount2 [number]' same as '/mob dropcount' but for the 'MobDrop' generator.",
+	     "'/mob addloot <ItemTemplateID> <chance> [count]' to add loot to the mob's unique drop table.  Optionally specify count of how many to drop if chance = 100%.",
+	     "'/mob addloot2 <ItemTemplateID> <chance> [count]' to add loot to the mob's drop table. Optionally specify count of how many item to drop if chance < 100%.",
+	     "'/mob addotd <ItemTemplateID> <min level>' add a one time drop to this mob..",
+	     "'/mob viewloot [random] [inv]' to view the selected mob's loot table.  Use random to simulate a kill drop, random inv to simulate and generate the loots.",
+	     "'/mob removeloot <ItemTemplateID>' to remove loot from the mob's unique drop table.",
+	     "'/mob removeloot2 <ItemTemplateID>' same as '/mob removeloot' but for the 'MobDrop' generator.",
+	     "'/mob removeotd <ItemTemplateID>' to remove a one time drop from the mob's unique drop table.",
+	     "'/mob refreshloot' to refresh all loot generators for this mob.",
+	     "'/mob copy [name]' copies a mob exactly and places it at your location.",
+	     "'/mob npctemplate <NPCTemplateID>' creates a mob with npc template, or modifies target.",
+	     "'/mob npctemplate create <NPCTemplateID>' creates a new template from selected mob.",
+	     "'/mob class <ClassName>' replaces mob with a clone of the specified class.",
+	     "'/mob path <PathID>' associate the mob to the specified path.",
+	     "'/mob house <HouseNumber>' set NPC's house number.",
+	     "'/mob <stat> <amount>' Set the mob's stats (str, con, dex, qui, int, emp, pie, cha).",
+	     "'/mob tether <tether range>' set mob tether range (>0: check, <=0: no check).",
+	     "'/mob hood' toggle cloak hood visibility.",
+	     "'/mob cloak' toggle cloak visibility.",
+	     "'/mob race [ID]' view or set NPC's race (ID can be # or name).",
+	     "'/mob race reload' reload race resists from the database.",
+	     "'/mob bodytype <ID>' changing the mob's bodytype.",
+	     "'/mob gender <0 = neutral | 1 = male | 2 = female>' set gender for this mob.",
+	     "'/mob packageid <string>' set the package ID for this mob.",
+	     "'/mob select' select the mob within 100 radius (used for selection of non-targettable GameNPC).",
+	     "'/mob load <Mob_ID>' load the Mob_ID from the DB and update the Mob cache.",
+	     "'/mob reload <name>' reload the targetted or named mob(s) from the database.",
+	     "'/mob findname <name> <#>' search for a mob with a name like <name> with maximum <#> (def. 10) matches.",
 	     "'/mob trigger <type> <chance> <emote> <text>' adds a trigger to targeted mob class.  Use '/mob trigger help' for more info.",
-	     "'/mob trigger info' Give trigger informations",
-	     "'/mob trigger remove <id>' Remove a trigger",
+	     "'/mob trigger info' Give trigger informations.",
+	     "'/mob trigger remove <id>' Remove a trigger.",
 	     "'/mob ownerid <id>' Sets and saves the OwnerID for this mob."
 	    )]
 	public class MobCommandHandler : AbstractCommandHandler, ICommandHandler
@@ -295,7 +295,7 @@ namespace DOL.GS.Commands
 
 			//Create a new mob
 			GameNPC mob = null;
-			List<Assembly> asms = new List<Assembly>(ScriptMgr.Scripts);
+			ArrayList asms = new ArrayList(ScriptMgr.Scripts);
 			asms.Add(typeof(GameServer).Assembly);
 
 			foreach (Assembly script in asms)
@@ -1251,9 +1251,9 @@ namespace DOL.GS.Commands
 			{
 				info.Add(" ");
 				Keeps.IKeepItem keepItem = targetMob as Keeps.IKeepItem;
-				if (keepItem.Component != null && keepItem.Component.Keep != null)
+				if (keepItem.Component != null && keepItem.Component.AbstractKeep != null)
 				{
-					info.Add(" + KeepItem: " + keepItem.Component.Keep.Name);
+					info.Add(" + KeepItem: " + keepItem.Component.AbstractKeep.Name);
 				}
 				else
 				{
@@ -1337,16 +1337,16 @@ namespace DOL.GS.Commands
 			info.Add(" ");
 
 			info.Add("Race Resists:");
-			info.Add(" +  -- Crush/Slash/Thrust:  " + targetMob.GetDamageResist(eProperty.Resist_Crush)
-			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Slash)
-			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Thrust));
-			info.Add(" +  -- Heat/Cold/Matter:  " + targetMob.GetDamageResist(eProperty.Resist_Heat)
-			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Cold)
-			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Matter));
-			info.Add(" +  -- Body/Spirit/Energy:  " + targetMob.GetDamageResist(eProperty.Resist_Body)
-			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Spirit)
-			         + " / " + targetMob.GetDamageResist(eProperty.Resist_Energy));
-			info.Add(" +  -- Natural:  " + targetMob.GetDamageResist(eProperty.Resist_Natural));
+			info.Add(" +  -- Crush/Slash/Thrust:  " + targetMob.GetResist(eProperty.Resist_Crush)
+			         + " / " + targetMob.GetResist(eProperty.Resist_Slash)
+			         + " / " + targetMob.GetResist(eProperty.Resist_Thrust));
+			info.Add(" +  -- Heat/Cold/Matter:  " + targetMob.GetResist(eProperty.Resist_Heat)
+			         + " / " + targetMob.GetResist(eProperty.Resist_Cold)
+			         + " / " + targetMob.GetResist(eProperty.Resist_Matter));
+			info.Add(" +  -- Body/Spirit/Energy:  " + targetMob.GetResist(eProperty.Resist_Body)
+			         + " / " + targetMob.GetResist(eProperty.Resist_Spirit)
+			         + " / " + targetMob.GetResist(eProperty.Resist_Energy));
+			info.Add(" +  -- Natural:  " + targetMob.GetResist(eProperty.Resist_Natural));
 
 			info.Add(" ");
 
@@ -1666,7 +1666,7 @@ namespace DOL.GS.Commands
 				targetMob.EquipmentTemplateID = null;
 				targetMob.SaveIntoDatabase();
 				client.Out.SendMessage("Mob equipment cleared.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				targetMob.UpdateNPCEquipmentAppearance();
+				targetMob.BroadcastLivingEquipmentUpdate();
 				return;
 			}
 			else if (args[2].ToLower() == "create")
@@ -1688,7 +1688,7 @@ namespace DOL.GS.Commands
 					DisplaySyntax(client, args[1], args[2]);
 				}
 
-				targetMob.UpdateNPCEquipmentAppearance();
+				targetMob.BroadcastLivingEquipmentUpdate();
 				return;
 			}
 			else if (args[2].ToLower() == "load")
@@ -1713,7 +1713,7 @@ namespace DOL.GS.Commands
 						targetMob.EquipmentTemplateID = args[3];
 						targetMob.Inventory = load;
 						targetMob.SaveIntoDatabase();
-						targetMob.UpdateNPCEquipmentAppearance();
+						targetMob.BroadcastLivingEquipmentUpdate();
 						client.Out.SendMessage("Mob equipment loaded!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					catch
@@ -1880,7 +1880,7 @@ namespace DOL.GS.Commands
 					break;
 			}
 
-			targetMob.UpdateNPCEquipmentAppearance();
+			targetMob.BroadcastLivingEquipmentUpdate();
 		}
 
 		private void visibleslot(GameClient client, GameNPC targetMob, string[] args)
@@ -2454,7 +2454,7 @@ namespace DOL.GS.Commands
 					}
 					else
 					{
-						List<Assembly> asms = new List<Assembly>(ScriptMgr.Scripts);
+						ArrayList asms = new ArrayList(ScriptMgr.Scripts);
 						asms.Add(typeof(GameServer).Assembly);
 
 						foreach (Assembly script in asms)
@@ -2612,7 +2612,7 @@ namespace DOL.GS.Commands
 				if (targetMob != null)
 				{
 					targetMob.NPCTemplate = null;
-					targetMob.UpdateNPCEquipmentAppearance();
+					targetMob.BroadcastLivingEquipmentUpdate();
 					targetMob.SaveIntoDatabase();
 				}
 			}
@@ -2652,7 +2652,7 @@ namespace DOL.GS.Commands
 			else
 			{
 				targetMob.LoadTemplate(template);
-				targetMob.UpdateNPCEquipmentAppearance();
+				targetMob.BroadcastLivingEquipmentUpdate();
 				targetMob.NPCTemplate = template as NpcTemplate;
 				targetMob.SaveIntoDatabase();
 				DisplayMessage(client, "Updated npc based on template " + id, new object[] { });
@@ -2809,7 +2809,7 @@ namespace DOL.GS.Commands
 		private void hood(GameClient client, GameNPC targetMob, string[] args)
 		{
 			targetMob.IsCloakHoodUp ^= true;
-			targetMob.UpdateNPCEquipmentAppearance();
+			targetMob.BroadcastLivingEquipmentUpdate();
 			targetMob.SaveIntoDatabase();
 			client.Out.SendMessage("Mob IsCloakHoodUp flag is set to " + targetMob.IsCloakHoodUp, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
@@ -2817,7 +2817,7 @@ namespace DOL.GS.Commands
 		private void cloak(GameClient client, GameNPC targetMob, string[] args)
 		{
 			targetMob.IsCloakInvisible ^= true;
-			targetMob.UpdateNPCEquipmentAppearance();
+			targetMob.BroadcastLivingEquipmentUpdate();
 			targetMob.SaveIntoDatabase();
 			client.Out.SendMessage("Mob IsCloakInvisible flag is set to " + targetMob.IsCloakHoodUp, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
@@ -2944,7 +2944,7 @@ namespace DOL.GS.Commands
 
 		private void reload(GameClient client, GameNPC targetMob, string[] args)
 		{
-			List<GameNPC[]> mobs = new List<GameNPC[]>();
+			ArrayList mobs = new ArrayList();
 			// Find the mob(s) to reload.
 			if (args.Length > 2)
 			{

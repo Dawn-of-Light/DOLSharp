@@ -140,7 +140,7 @@ namespace DOL.GS.Commands
 						GameKeep keep = new GameKeep();
 						keep.DBKeep = new DBKeep(createInfo);
 						keep.Name = keepName;
-						keep.KeepID = keepID;
+						keep.KeepID = (ushort)keepID;
 						keep.Level = (byte)ServerProperties.Properties.STARTING_KEEP_LEVEL;
 						keep.BaseLevel = 50;
 						keep.Realm = client.Player.Realm;
@@ -1968,7 +1968,7 @@ namespace DOL.GS.Commands
 						foreach (GameKeepComponent comp in keep.KeepComponents)
 						{
 							if (comp.InternalID != null)
-								DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.FastCreate.CompCreated", comp.InternalID, comp.Keep.KeepID));
+								DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.FastCreate.CompCreated", comp.InternalID, comp.AbstractKeep.KeepID));
 
 							comp.Health = comp.MaxHealth;
 						}
@@ -2165,8 +2165,8 @@ namespace DOL.GS.Commands
 							d.AddToWorld();
 
 							d.Component = new GameKeepComponent();
-							d.Component.Keep = k;
-							d.Component.Keep.Doors[d.DoorID.ToString()] = d;
+							d.Component.AbstractKeep = k;
+							d.Component.AbstractKeep.Doors[d.DoorID] = this;
 
 							d.Health = d.MaxHealth;
 							d.StartHealthRegeneration();
@@ -2256,7 +2256,7 @@ namespace DOL.GS.Commands
 							DisplaySyntax(client);
 							return;
 						}
-						myKeep.KeepID = keepid;
+						myKeep.KeepID = (ushort)keepid;
 						DisplayMessage(client, "You change the id of the current keep to " + keepid);
 						break;
 					}
@@ -2453,13 +2453,13 @@ namespace DOL.GS.Commands
 								{
 									AbstractGameKeep keep = (area as KeepArea).Keep;
 									banner.Component = new GameKeepComponent();
-									banner.Component.Keep = keep;
-									banner.Component.Keep.Banners.Add(banner.InternalID, banner);
+									banner.Component.AbstractKeep = keep;
+									banner.Component.AbstractKeep.Banners.Add(banner.InternalID, banner);
 									break;
 								}
 							}
 
-							if (banner.Component.Keep.Guild != null)
+							if (banner.Component.AbstractKeep.Guild != null)
 								banner.ChangeGuild();
 							else banner.ChangeRealm();
 							banner.AddToWorld();

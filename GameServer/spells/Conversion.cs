@@ -33,7 +33,7 @@ namespace DOL.GS.Spells
 
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			m_caster.Mana -= PowerCost(target, true);
 			base.FinishSpellCast(target);
 		}
 
@@ -42,8 +42,8 @@ namespace DOL.GS.Spells
 			effect.Owner.TempProperties.setProperty(ConvertDamage, 100000);
 			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
 
-			eChatType toLiving = (Spell.Pulse == 0) ? eChatType.CT_Spell : eChatType.CT_SpellPulse;
-			eChatType toOther = (Spell.Pulse == 0) ? eChatType.CT_System : eChatType.CT_Spell;
+			eChatType toLiving = (!Spell.IsPulsing) ? eChatType.CT_Spell : eChatType.CT_SpellPulse;
+			eChatType toOther = (!Spell.IsPulsing) ? eChatType.CT_System : eChatType.CT_Spell;
 			MessageToLiving(effect.Owner, Spell.Message1, toLiving);
 			Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, false)), toOther, effect.Owner);
 		}
@@ -129,7 +129,7 @@ namespace DOL.GS.Spells
 
 			if (reduceddmg <= 0)
 			{
-				GameSpellEffect effect = SpellHandler.FindEffectOnTarget(living, this);
+				GameSpellEffect effect = SpellHelper.FindEffectOnTarget(living, this);
 				if (effect != null)
 					effect.Cancel(false);
 			}
@@ -190,7 +190,7 @@ namespace DOL.GS.Spells
 							}
 							if (reduceddmg <= 0)
 							{
-								GameSpellEffect effect = SpellHandler.FindEffectOnTarget(living, this);
+								GameSpellEffect effect = SpellHelper.FindEffectOnTarget(living, this);
 								if (effect != null)
 									effect.Cancel(false);
 							}

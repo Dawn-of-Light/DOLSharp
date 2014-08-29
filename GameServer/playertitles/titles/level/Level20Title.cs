@@ -16,20 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
-/*
- * Suncheck: [19.06.2007]
- *   - Corrected
- *   - Sorted
- *   - Added missing (+language support)
- */
 using System;
 using DOL.Language;
 using DOL.Events;
 
 namespace DOL.GS.PlayerTitles
 {
-  	/// <summary>
+	/// <summary>
 	/// Example...
 	/// </summary>
 	public class Level20Title : EventPlayerTitle
@@ -54,6 +47,11 @@ namespace DOL.GS.PlayerTitles
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Level.Level20", player.Level);
 		}
 		
+		public override string GetValue(GamePlayer source, GamePlayer target)
+		{
+			return LanguageMgr.GetTranslation(source.Client.Account.Language, "Titles.Level.Level20", target.Level);
+		}
+
 		/// <summary>
 		/// The event to hook.
 		/// </summary>

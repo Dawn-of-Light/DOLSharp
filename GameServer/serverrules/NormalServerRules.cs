@@ -45,7 +45,7 @@ namespace DOL.GS.ServerRules
 		/// <param name="killer">killer</param>
 		public override void OnNPCKilled(GameNPC killedNPC, GameObject killer)
 		{
-			base.OnNPCKilled(killedNPC, killer); 	
+			base.OnNPCKilled(killedNPC, killer);
 		}
 
 		public override bool IsAllowedToAttack(GameLiving attacker, GameLiving defender, bool quiet)
@@ -59,15 +59,16 @@ namespace DOL.GS.ServerRules
 				IControlledBrain controlled = ((GameNPC)attacker).Brain as IControlledBrain;
 				if (controlled != null)
 				{
-                    attacker = controlled.GetLivingOwner();
+					attacker = controlled.GetLivingOwner();
 					quiet = true; // silence all attacks by controlled npc
 				}
 			}
+			
 			if (defender is GameNPC)
 			{
 				IControlledBrain controlled = ((GameNPC)defender).Brain as IControlledBrain;
 				if (controlled != null)
-                    defender = controlled.GetLivingOwner();
+					defender = controlled.GetLivingOwner();
 			}
 
 			//"You can't attack yourself!"
@@ -92,13 +93,13 @@ namespace DOL.GS.ServerRules
 				if(quiet == false) MessageToLiving(attacker, "You can't attack a member of your realm!");
 				return false;
 			}
-			
+
 			return true;
 		}
 
 		public override bool IsSameRealm(GameLiving source, GameLiving target, bool quiet)
 		{
-			if(source == null || target == null) 
+			if(source == null || target == null)
 				return false;
 
 			// if controlled NPC - do checks for owner instead
@@ -107,7 +108,7 @@ namespace DOL.GS.ServerRules
 				IControlledBrain controlled = ((GameNPC)source).Brain as IControlledBrain;
 				if (controlled != null)
 				{
-                    source = controlled.GetLivingOwner();
+					source = controlled.GetLivingOwner();
 					quiet = true; // silence all attacks by controlled npc
 				}
 			}
@@ -115,7 +116,7 @@ namespace DOL.GS.ServerRules
 			{
 				IControlledBrain controlled = ((GameNPC)target).Brain as IControlledBrain;
 				if (controlled != null)
-                    target = controlled.GetLivingOwner();
+					target = controlled.GetLivingOwner();
 			}
 
 			if (source == target)
@@ -139,8 +140,7 @@ namespace DOL.GS.ServerRules
 			{
 				if(quiet == false) MessageToLiving(source, target.GetName(0, true) + " is not a member of your realm!");
 				return false;
-			}				
-			
+			}
 			return true;
 		}
 
@@ -168,7 +168,7 @@ namespace DOL.GS.ServerRules
 
 		public override bool IsAllowedToJoinGuild(GamePlayer source, Guild guild)
 		{
-			if (source == null) 
+			if (source == null)
 				return false;
 
 			if (ServerProperties.Properties.ALLOW_CROSS_REALM_GUILDS == false && guild.Realm != eRealm.None && source.Realm != guild.Realm)
@@ -260,7 +260,7 @@ namespace DOL.GS.ServerRules
 				m_compatibleObjectTypes = new Hashtable();
 				m_compatibleObjectTypes[(int)eObjectType.Staff] = new eObjectType[] { eObjectType.Staff };
 				m_compatibleObjectTypes[(int)eObjectType.Fired] = new eObjectType[] { eObjectType.Fired };
-                m_compatibleObjectTypes[(int)eObjectType.MaulerStaff] = new eObjectType[] { eObjectType.MaulerStaff };
+				m_compatibleObjectTypes[(int)eObjectType.MaulerStaff] = new eObjectType[] { eObjectType.MaulerStaff };
 				m_compatibleObjectTypes[(int)eObjectType.FistWraps] = new eObjectType[] { eObjectType.FistWraps };
 
 				//alb
@@ -272,7 +272,7 @@ namespace DOL.GS.ServerRules
 				m_compatibleObjectTypes[(int)eObjectType.Flexible]        = new eObjectType[] { eObjectType.Flexible };
 				m_compatibleObjectTypes[(int)eObjectType.Longbow]         = new eObjectType[] { eObjectType.Longbow };
 				m_compatibleObjectTypes[(int)eObjectType.Crossbow]        = new eObjectType[] { eObjectType.Crossbow };
-				//TODO: case 5: abilityCheck = Abilities.Weapon_Thrown; break;                                         
+				//TODO: case 5: abilityCheck = Abilities.Weapon_Thrown; break;
 
 				//mid
 				m_compatibleObjectTypes[(int)eObjectType.Hammer]       = new eObjectType[] { eObjectType.Hammer };
@@ -303,6 +303,19 @@ namespace DOL.GS.ServerRules
 				return new eObjectType[0];
 			return res;
 		}
+		
+		/// <summary>
+		/// Gets the player Realmrank 12 or 13 title
+		/// </summary>
+		/// <param name="source">The "looking" player</param>
+		/// <param name="target">The considered player</param>
+		/// <returns>The Realmranktitle of the target</returns>
+		public override string GetPlayerPrefixName(GamePlayer source, GamePlayer target)
+		{
+			if (target.RealmLevel >= 110)
+				return target.RealmRankTitle(source.Client.Account.Language);
+			return string.Empty;
+		}
 
 		/// <summary>
 		/// Gets the player name based on server type
@@ -312,9 +325,9 @@ namespace DOL.GS.ServerRules
 		/// <returns>The name of the target</returns>
 		public override string GetPlayerName(GamePlayer source, GamePlayer target)
 		{
-			if (IsSameRealm(source, target, true))
+			if (IsSameRealm(source, target, true) || target.RealmLevel >= 110)
 				return target.Name;
-			return target.RaceName;
+			return target.GetRaceName(source);
 		}
 
 		/// <summary>
@@ -327,8 +340,12 @@ namespace DOL.GS.ServerRules
 		{
 			if (IsSameRealm(source, target, true))
 				return target.LastName;
-
-			return target.RealmRankTitle(source.Client.Account.Language);
+			else
+			{
+				if (target.RealmLevel < 110)
+					return target.RealmRankTitle(source.Client.Account.Language);
+			}
+			return string.Empty;
 		}
 
 		/// <summary>
@@ -345,6 +362,19 @@ namespace DOL.GS.ServerRules
 		}
 
 		/// <summary>
+		/// Gets the player's custom title based on server type
+		/// </summary>
+		/// <param name="source">The "looking" player</param>
+		/// <param name="target">The considered player</param>
+		/// <returns>The custom title of the target</returns>
+		public override string GetPlayerTitle(GamePlayer source, GamePlayer target)
+		{
+			if (IsSameRealm(source, target, true))
+				return target.CurrentTitle.GetValue(source, target);
+			return string.Empty;
+		}
+
+		/// <summary>
 		/// Reset the keep with special server rules handling
 		/// </summary>
 		/// <param name="lord">The lord that was killed</param>
@@ -352,7 +382,7 @@ namespace DOL.GS.ServerRules
 		public override void ResetKeep(GuardLord lord, GameObject killer)
 		{
 			base.ResetKeep(lord, killer);
-			lord.Component.Keep.Reset((eRealm)killer.Realm);
+			lord.Component.AbstractKeep.Reset((eRealm)killer.Realm);
 		}
 	}
 }
