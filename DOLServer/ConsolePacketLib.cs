@@ -143,6 +143,7 @@ namespace DOLGameServerConsole
 		public void SendCloseTradeWindow() { }
 		public void SendPlayerDied(GamePlayer killedPlayer, GameObject killer) { }
 		public void SendPlayerRevive(GamePlayer revivedPlayer) { }
+		public void SendPlayerForgedPosition(GamePlayer player) { }
 		public void SendUpdatePlayer() { }
 		public void SendUpdatePlayerSkills() { }
 		public void SendUpdateWeaponAndArmorStats() { }
