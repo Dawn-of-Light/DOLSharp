@@ -66,7 +66,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Can players be attacked by other players in this area
 		/// </summary>
-		public bool IsSafeArea
+		public virtual bool IsSafeArea
 		{
 			get { return m_safeArea; }
 			set { m_safeArea = value; }

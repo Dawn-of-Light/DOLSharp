@@ -279,6 +279,13 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("system", "hours_uptime_between_shutdown", "Hours between a scheduled server shutdown (-1 = no scheduled restart)", -1)]
 		public static int HOURS_UPTIME_BETWEEN_SHUTDOWN;
+		
+		/// <summary>
+		/// Use the NPC Guild Scripts
+		/// </summary>
+		[ServerProperty("system", "use_npcguildscripts", "Use the NPC Guild Scripts", true)]
+		public static bool USE_NPCGUILDSCRIPTS;
+
 		#endregion
 
 		#region LOGGING
