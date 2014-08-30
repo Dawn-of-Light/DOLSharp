@@ -1862,7 +1862,7 @@ namespace DOL.GS.PacketHandler
 			{
 				for (byte page = 0; page < MerchantTradeItems.MAX_PAGES_IN_TRADEWINDOWS; page++)
 				{
-					IDictionary itemsInPage = tradeItemsList.GetItemsInPage(page);
+					IDictionary itemsInPage = tradeItemsList.GetItemsInPage((int)page);
 					if (itemsInPage == null || itemsInPage.Count == 0)
 						continue;
 
@@ -1875,10 +1875,10 @@ namespace DOL.GS.PacketHandler
 
 						for (ushort i = 0; i < MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS; i++)
 						{
-							if (!itemsInPage.Contains(i))
+							if (!itemsInPage.Contains((int)i))
 								continue;
 
-							var item = (ItemTemplate) itemsInPage[i];
+							var item = (ItemTemplate) itemsInPage[(int)i];
 							if (item != null)
 							{
 								pak.WriteByte((byte) i); //Item index on page
