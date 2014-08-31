@@ -2110,7 +2110,11 @@ namespace DOL.GS
 		public static SpellLine GetSpellLine(string keyname, bool create)
 		{
 			if (keyname == GlobalSpellsLines.Mob_Spells)
-				return new SpellLine("Mob Spells", "Mob Spells", "", true);
+                return new SpellLine(GlobalSpellsLines.Mob_Spells, GlobalSpellsLines.Mob_Spells, "", true);
+
+            // Another lame temporary spell line intented for nothing more than Delving Spells - tolakram
+            if (keyname == GlobalSpellsLines.Delve_Spell)
+                return new SpellLine(GlobalSpellsLines.Delve_Spell, GlobalSpellsLines.Delve_Spell, "", true);
 
 			if (m_spellLinesByName.ContainsKey(keyname))
 				return m_spellLinesByName[keyname].Clone() as SpellLine;

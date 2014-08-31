@@ -26,6 +26,7 @@ namespace DOL.GS.Commands
 	[Cmd(
 		"&clientlist",
 		ePrivLevel.GM,
+        "Usage: /clientlist [full] - full option includes IP's and accounts",
 		"Show a list of currently playing clients and their ID's")]
 	public class ClientListCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
@@ -38,7 +39,14 @@ namespace DOL.GS.Commands
 			{
 				if (gc.Player != null)
 				{
-					message.Add("(" + gc.SessionID + ") " + gc.Player.Name);
+                    if (args.Length > 1 && args[1].ToLower() == "full")
+                    {
+                        message.Add("(" + gc.SessionID + ") " + gc.TcpEndpointAddress + ", " + gc.Account.Name + ", " + gc.Player.Name + " " + gc.Version);
+                    }
+                    else
+                    {
+                        message.Add("(" + gc.SessionID + ") " + gc.Player.Name);
+                    }
 				}
 			}
 
