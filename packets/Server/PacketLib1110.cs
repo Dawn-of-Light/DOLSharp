@@ -107,9 +107,9 @@ namespace DOL.GS.PacketHandler
 						//pak.WriteShort(effect.IsFading ? (ushort)1 : (ushort)(effect.RemainingTime / 1000));
 						pak.WriteShort((ushort)(effect.RemainingTime / 1000));
 						if (effect is GameSpellEffect)
-							pak.WriteShort(((GameSpellEffect)effect).Spell.ID); //v1.110+ send the spell ID for delve info in active icon
+							pak.WriteShort(((GameSpellEffect)effect).Spell.TooltipId); //v1.110+ send the spell ID for delve info in active icon
 						else
-							pak.WriteShort(effect.InternalID);//old method
+							pak.WriteShort(0);//don't override existing tooltip ids
 	
 						byte flagNegativeEffect = 0;
 						if (effect is StaticEffect)
