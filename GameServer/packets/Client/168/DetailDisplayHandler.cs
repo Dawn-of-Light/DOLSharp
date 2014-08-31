@@ -2151,7 +2151,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//.Value("power_level", spellHandler.GetDelveValuePowerLevel,spellHandler.GetDelveValuePowerLevel!=0)
 						.Value("range", spell.Range, spell.Range > 0)
 						.Value("duration", spell.Duration/1000, spell.Duration > 0) //seconds
-						.Value("dur_type", GetDurrationType(spell), GetDurrationType(spell) > 0)
+						.Value("dur_type", GetDurationType(spell), GetDurationType(spell) > 0)
 						//.Value("parm",spellHandler.GetDelveValueParm,spellHandler.GetDelveValueParm>0) 
 						.Value("timer_value", spell.RecastDelay/1000, spell.RecastDelay > 1000)
 						//.Value("bonus", spellHandler.GetDelveValueBonus, spellHandler.GetDelveValueBonus > 0)
@@ -2205,7 +2205,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 		}
 
-		public static int GetDurrationType(Spell spell)
+		public static int GetDurationType(Spell spell)
 		{
 			//2-seconds,4-conc,5-focus
 			if (spell.Duration>0)
