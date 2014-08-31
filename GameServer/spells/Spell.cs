@@ -70,6 +70,8 @@ namespace DOL.GS
 		protected readonly bool m_allowbolt = false;
 		protected int m_overriderange = 0;
 		protected bool m_isShearable = false;
+		// tooltip
+		protected ushort m_tooltipId = 0;
 		
 		#region member access properties
 		#region warlocks
@@ -301,6 +303,23 @@ namespace DOL.GS
             }
         }
 
+        public ushort TooltipId
+        {
+        	get
+        	{
+        		if (m_tooltipId == 0)
+        		{
+        			m_tooltipId = DBSpell.GetNextFreeTooltipId();
+        		}
+        		
+        		return m_tooltipId;
+        	}
+        	set
+        	{
+        		m_tooltipId = value;
+        	}
+        }
+        
 		#endregion
 
 		/// <summary>
@@ -363,6 +382,8 @@ namespace DOL.GS
 			m_allowbolt = dbspell.AllowBolt;
             m_sharedtimergroup = dbspell.SharedTimerGroup;
             m_minotaurspell = minotaur;
+            // tooltip
+            m_tooltipId = dbspell.TooltipId;
 		}
 
 		/// <summary>

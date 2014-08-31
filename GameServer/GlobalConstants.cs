@@ -1019,8 +1019,7 @@ namespace DOL.GS
 		public const string Character_Abilities = "Character Abilities"; // dirty tricks, flurry ect...
 		public const string Item_Spells = "Item Spells";	// Combine scroll etc.
 		public const string Champion_Spells = "Champion Abilities";
-        public const string Delve_Spell = "Delve Spell"; // A line created temporarily in order to delve a spell
-    }
+	}
 
 	public class GlobalConstants
 	{
