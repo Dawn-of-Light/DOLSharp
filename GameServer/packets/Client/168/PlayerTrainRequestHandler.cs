@@ -39,12 +39,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			GameTrainer trainer = client.Player.TargetObject as DOL.GS.GameTrainer;
-			if (trainer == null || (trainer.CanTrain(client.Player) == false && trainer.CanTrainChampionLevels(client.Player) == false))
-			{
-				client.Out.SendMessage("You must select a valid trainer for your class.", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
-				return;
-			}
+            if (client.Account.PrivLevel == (int)ePrivLevel.Player)
+            {
+                GameTrainer trainer = client.Player.TargetObject as DOL.GS.GameTrainer;
+                if (trainer == null || (trainer.CanTrain(client.Player) == false && trainer.CanTrainChampionLevels(client.Player) == false))
+                {
+                    client.Out.SendMessage("You must select a valid trainer for your class.", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+                    return;
+                }
+            }
 
 			uint x = packet.ReadInt();
 			uint y = packet.ReadInt();
@@ -189,13 +192,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			// A trainer of the appropriate class must be around (or global trainer, with TrainedClass = eCharacterClass.Unknow
-			GameTrainer trainer = client.Player.TargetObject as DOL.GS.GameTrainer;
-			if (trainer == null || (trainer.CanTrain(client.Player) == false && trainer.CanTrainChampionLevels(client.Player) == false))
-			{
-				client.Out.SendMessage("You must select a valid trainer for your class.", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
-				return;
-			}
+            if (client.Account.PrivLevel == (int)ePrivLevel.Player)
+            {
+                // A trainer of the appropriate class must be around (or global trainer, with TrainedClass = eCharacterClass.Unknow
+                GameTrainer trainer = client.Player.TargetObject as DOL.GS.GameTrainer;
+                if (trainer == null || (trainer.CanTrain(client.Player) == false && trainer.CanTrainChampionLevels(client.Player) == false))
+                {
+                    client.Out.SendMessage("You must select a valid trainer for your class.", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+                    return;
+                }
+            }
 			
 			//Specializations - 8 trainable specs max
 			uint size = 8;
@@ -342,12 +348,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			public void HandlePacket(GameClient client, GSPacketIn packet)
 			{
-				GameTrainer trainer = client.Player.TargetObject as DOL.GS.GameTrainer;
-				if (trainer == null || (trainer.CanTrain(client.Player) == false && trainer.CanTrainChampionLevels(client.Player) == false))
-				{
-					client.Out.SendMessage("You must select a valid trainer for your class.", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
-					return;
-				}
+                if (client.Account.PrivLevel == (int)ePrivLevel.Player)
+                {
+                    GameTrainer trainer = client.Player.TargetObject as DOL.GS.GameTrainer;
+                    if (trainer == null || (trainer.CanTrain(client.Player) == false && trainer.CanTrainChampionLevels(client.Player) == false))
+                    {
+                        client.Out.SendMessage("You must select a valid trainer for your class.", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+                        return;
+                    }
+                }
+
 				client.Out.SendTrainerWindow();
 			}
 		}
