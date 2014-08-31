@@ -2116,7 +2116,7 @@ namespace DOL.GS.PacketHandler.Client.v168
         {
             var dw = new DelveWriter();
 			
-			var spell = SkillBase.GetSpellByID(id);
+            var spell = SkillBase.GetSpellByTooltipID((ushort)id);
 
 			//if (spell != null && spellLine != null)
 			{

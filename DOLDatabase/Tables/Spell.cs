@@ -17,6 +17,9 @@
  *
  */
 using System;
+using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
@@ -72,6 +75,11 @@ namespace DOL.Database
 		protected bool m_issecondary;
 		protected bool m_allowbolt;
 		
+		// tooltip
+		protected ushort m_tooltipId;
+		
+		private static List<ushort> m_assignedTooltipID;
+				
 		public DBSpell()
 		{
 			AllowAdd = false;
@@ -612,5 +620,83 @@ namespace DOL.Database
 			}
 		}
 		#endregion
+		[DataElement(AllowDbNull = false, Unique = true)]		
+		public ushort TooltipId
+		{
+			get
+			{
+				if (m_tooltipId == 0)
+				{
+					m_tooltipId = GetNextFreeTooltipId();
+				}
+				
+				return m_tooltipId;
+			}
+			set
+			{
+				ushort newval = value;
+				if (value == 0)
+				{
+					m_tooltipId = GetNextFreeTooltipId();
+				}
+				else
+				{
+					lock (((ICollection)m_assignedTooltipID).SyncRoot)
+					{
+						// clean up
+						if (m_assignedTooltipID.Contains(m_tooltipId))
+							m_assignedTooltipID.Remove(m_tooltipId);
+
+						// add in unique list
+						m_assignedTooltipID.Add(value);
+					}
+				}
+				
+				m_tooltipId = value;
+				
+				this.Dirty = true;
+			}
+		}
+		
+		/// <summary>
+		/// Find a free usable ID in ushort list.
+		/// </summary>
+		/// <returns></returns>
+		public static ushort GetNextFreeTooltipId()
+		{
+			if (m_assignedTooltipID == null)
+				m_assignedTooltipID = new List<ushort>();
+
+			ushort free = 0;
+			bool found = false;
+
+			lock (((ICollection)m_assignedTooltipID).SyncRoot)
+			{
+				foreach (ushort currentid in m_assignedTooltipID.OrderBy(id => id))
+				{
+					if (currentid - 1 != free)
+					{
+						free++;
+						m_assignedTooltipID.Add(free);
+						found = true;
+						break;
+					}
+					else
+					{
+						free = currentid;
+					}
+				}
+				
+				if (!found && free < ushort.MaxValue)
+				{
+					free++;
+					m_assignedTooltipID.Add(free);
+					found = true;
+				}
+			}
+			
+			return found ? free : (ushort)0;
+		}
+
 	}
 }
