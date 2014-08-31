@@ -1779,6 +1779,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			WriteHorseInfo(list, item.Template, client, horseName);
 		}
+		
 		protected void WriteHorseInfo(IList<string> list, ItemTemplate item, GameClient client, string horseName)
 		{
 			list.Add(" ");
@@ -1971,20 +1972,21 @@ namespace DOL.GS.PacketHandler.Client.v168
         /// 
         /// @author mlinder
         /// </summary>
-        public sealed class DelveWriter 
+        public sealed class DelveWriter
         {
+
             private int _openTags = 0;
-            private readonly StringBuilder _strBuilder = new StringBuilder();
+            private readonly StringBuilder _str = new StringBuilder();
 
             /// <summary>
             /// Begins a new tag
             /// </summary>
             /// <param name="name">Name of the tag, e.g. Spell</param>
-            public DelveWriter Begin(string name) 
+            public DelveWriter Begin(string name)
             {
-                _strBuilder.Append('(');
-                _strBuilder.Append(name);
-                _strBuilder.Append(' ');
+                _str.Append('(');
+                _str.Append(name);
+                _str.Append(' ');
                 _openTags++;
                 return this;
             }
@@ -1994,7 +1996,7 @@ namespace DOL.GS.PacketHandler.Client.v168
             /// </summary>
             /// <param name="name">Name of the sub-tag, e.g. Index</param>
             /// <param name="value">Value of the sub-tag, e.g. 3</param>
-            public DelveWriter Value(string name, object value) 
+            public DelveWriter Value(string name, object value)
             {
                 Begin(name).Value(value).End();
                 return this;
@@ -2009,9 +2011,7 @@ namespace DOL.GS.PacketHandler.Client.v168
             public DelveWriter Value(string name, object value, bool condition)
             {
 				if (condition)
-				{
 					Begin(name).Value(value).End();
-				}
                 return this;
             }
 
@@ -2019,11 +2019,11 @@ namespace DOL.GS.PacketHandler.Client.v168
             /// Only writes the value of a tag
             /// </summary>
             /// <param name="value">e.g. 3</param>
-            public DelveWriter Value(object value) 
+            public DelveWriter Value(object value)
             {
-                _strBuilder.Append("\"");
-                _strBuilder.Append((value ?? "").ToString().Replace("\"", "\\\""));
-                _strBuilder.Append("\"");
+                _str.Append("\"");
+                _str.Append((value ?? "").ToString().Replace("\"", "\\\""));
+                _str.Append("\"");
                 return this;
             }
 
@@ -2031,22 +2031,20 @@ namespace DOL.GS.PacketHandler.Client.v168
             /// Closes an opened tag. Can only be called after a previous Begin()
             /// </summary>
             /// <returns></returns>
-            public DelveWriter End() 
+            public DelveWriter End()
             {
-                _strBuilder.Append(')');
+                _str.Append(')');
                 _openTags--;
                 if (_openTags < 0) 
                     throw new ArgumentException("More End() than Begin() calls");
                 return this;
             }
 
-            public override string ToString() 
+            public override string ToString()
             {
                 while (_openTags > 0)
-                {
                     End();
-                }
-                return _strBuilder.ToString();
+                return _str.ToString();
             }
         }
 
@@ -2056,13 +2054,14 @@ namespace DOL.GS.PacketHandler.Client.v168
          *  - No idea what 'Fingerprint' does
          **/
 
-        protected static string DelveAbility(GameClient clt, int id) { /* or skill */
+        protected static string DelveAbility(GameClient clt, int id)
+        { /* or skill */
 
         	Skill s = clt.Player.GetNonTrainableSkillList().Cast<Skill>().Where(sk => sk.ID == id).FirstOrDefault();
 
         	MiniDelveWriter dw = new MiniDelveWriter(s is Ability ? "Ability" : "Skill");
 
-            dw.AddKeyValuePair("Index", id);
+        	dw.AddKeyValuePair("Index", unchecked((short)id));
 
             if (s != null) 
             {
@@ -2094,7 +2093,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 	
 					dw.Begin("Song")
-						.Value("Index", id)
+						.Value("Index",  unchecked((short)id))
 						.Value("Name", spell.Name)
 						.Value("effect", spell.ClientEffect)
 						.Value("description_string", spell.Description, !string.IsNullOrEmpty(spell.Description))
@@ -2110,128 +2109,82 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <summary>
 		/// Delve Info for Spells (V1.110+)
 		/// </summary>
-		/// <param name="client">Client</param>
+		/// <param name="clt">Client</param>
 		/// <param name="id">SpellID</param>
 		/// <returns></returns>
-        public static string DelveSpell(GameClient client, int id)
+        public static string DelveSpell(GameClient clt, int id)
         {
-            Spell spell = null;
-
-            // need to do special handling for Hybrids who can have more than one spell per level
-            if (client.Player.CharacterClass.ClassType == eClassType.ListCaster)
-            {
-                int spellNumber = id / 100; // spell level is used for ListCasters
-                int lineNumber = id % 100;
-
-                SpellLine spellLine = client.Player.GetSpellLines()[lineNumber] as SpellLine;
-                if (spellLine == null)
-                {
-                    return CreateErrorSpell(id);
-                }
-
-                List<Spell> spellList = SkillBase.GetSpellList(spellLine.KeyName);
-
-                foreach (Spell spl in SkillBase.GetSpellList(spellLine.KeyName))
-                {
-                    if (spl.Level == spellNumber)
-                    {
-                        spell = spl;
-                        break;
-                    }
-                }
-            }
-            else // Hybrids
-            {
-                List<SpellLine> spellLines = client.Player.GetSpellLines();
-				Dictionary<string, KeyValuePair<Spell, SpellLine>> spells = client.Player.GetUsableSpells(spellLines, false);
-                ushort counter = 0;
-
-                foreach (KeyValuePair<string, KeyValuePair<Spell, SpellLine>> spl in spells)
-                {
-                    if (counter == id)
-                    {
-                        spell = spl.Value.Key;
-                        break;
-                    }
-
-                    counter++;
-                }
-            }
-
-            if (spell == null)
-            {
-                return CreateErrorSpell(id);
-            }
-
-            ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Delve_Spell));
-
             var dw = new DelveWriter();
+			
+			var spell = SkillBase.GetSpellByID(id);
 
-            if (spellHandler != null)
-            {
-                dw.Begin("Spell")
-                        .Value("Index", id)
-                        .Value("Name", spell.Name)
-                        .Value("Function", "Function: testing")
-                    //.Value("Function", spellHandler.FunctionName ?? "0")
-                        .Value("cast_timer", spell.CastTime - 2000, spell.CastTime > 2000) //minus 2 seconds (why mythic?)
-                        .Value("instant", "1", spell.CastTime == 0)
-                    //.Value("damage", spellHandler.GetDelveValueDamage, spellHandler.GetDelveValueDamage != 0)
-                        .Value("damage_type", (int)spell.DamageType + 1, (int)spell.DamageType > 0) // Damagetype not the same as dol
-                    //.Value("type1", spellHandler.GetDelveValueType1, spellHandler.GetDelveValueType1 > 0)
-                        .Value("level", spell.Level, spell.Level > 0)
-                        .Value("power_cost", spell.Power, spell.Power != 0)
-                    //.Value("round_cost",spellHandler.GetDelveValueRoundCost,spellHandler.GetDelveValueRoundCost!=0)
-                    //.Value("power_level", spellHandler.GetDelveValuePowerLevel,spellHandler.GetDelveValuePowerLevel!=0)
-                        .Value("range", spell.Range, spell.Range > 0)
-                        .Value("duration", spell.Duration / 1000, spell.Duration > 0) //seconds
-                        .Value("dur_type", GetDurationType(spell), GetDurationType(spell) > 0)
-                    //.Value("parm",spellHandler.GetDelveValueParm,spellHandler.GetDelveValueParm>0) 
-                        .Value("timer_value", spell.RecastDelay / 1000, spell.RecastDelay > 1000)
-                    //.Value("bonus", spellHandler.GetDelveValueBonus, spellHandler.GetDelveValueBonus > 0)
-                    //.Value("no_combat"," ",Util.Chance(50))//TODO
-                    //.Value("link",14000)
-                    //.Value("ability",4) // ??
-                    //.Value("use_timer",4)
-                        .Value("target", GetSpellTargetType(spell.Target), GetSpellTargetType(spell.Target) > 0)
-                    //.Value("frequency", spellHandler.GetDelveValueFrequency, spellHandler.GetDelveValueFrequency != 0)
-                        .Value("description_string", "Test test test" + spell.Description, !string.IsNullOrEmpty(spell.Description))
-                        .Value("radius", spell.Radius, spell.Radius > 0)
-                        .Value("concentration_points", spell.Concentration, spell.Concentration > 0)
-                    //.Value("num_targets", spellHandler.GetDelveValueNumTargets, spellHandler.GetDelveValueNumTargets>0)
-                    //.Value("no_interrupt", spell.Interruptable ? (char)0 : (char)1) //Buggy?
-                        ;
+			//if (spell != null && spellLine != null)
+			{
+				/*
+				var spellLine = clt.Player.GetSpellLines()[lineId] as SpellLine;
+				if (spellLine != null) {
+					Spell spell = null;
+					foreach (Spell spl in SkillBase.GetSpellList(spellLine.KeyName)) {
+						if (spl.Level == level) {
+							spell = spl;
+							break;
+						}
+					}*/
+				//if (spell != null) {
+				// NOT GOOD SOLUTION SPELLLINE IS BETTER INCLUDED IN SPELL
+				ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(clt.Player, spell,SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
+				
+				if (spellHandler != null)
+				{
+					dw.Begin("Spell")
+						.Value("Index",  unchecked((short)id))
+						.Value("Name", spell.Name)
+						//.Value("Function", spellHandler.FunctionName ?? "0")
+						.Value("cast_timer", spell.CastTime - 2000, spell.CastTime > 2000) //minus 2 seconds (why mythic?)
+						.Value("instant","1",spell.CastTime==0)
+						//.Value("damage", spellHandler.GetDelveValueDamage, spellHandler.GetDelveValueDamage != 0)
+						.Value("damage_type", (int) spell.DamageType + 1, (int) spell.DamageType > 0) // Damagetype not the same as dol
+						//.Value("type1", spellHandler.GetDelveValueType1, spellHandler.GetDelveValueType1 > 0)
+						.Value("level", spell.Level, spell.Level > 0)
+						.Value("power_cost", spell.Power, spell.Power != 0)
+						//.Value("round_cost",spellHandler.GetDelveValueRoundCost,spellHandler.GetDelveValueRoundCost!=0)
+						//.Value("power_level", spellHandler.GetDelveValuePowerLevel,spellHandler.GetDelveValuePowerLevel!=0)
+						.Value("range", spell.Range, spell.Range > 0)
+						.Value("duration", spell.Duration/1000, spell.Duration > 0) //seconds
+						.Value("dur_type", GetDurrationType(spell), GetDurrationType(spell) > 0)
+						//.Value("parm",spellHandler.GetDelveValueParm,spellHandler.GetDelveValueParm>0) 
+						.Value("timer_value", spell.RecastDelay/1000, spell.RecastDelay > 1000)
+						//.Value("bonus", spellHandler.GetDelveValueBonus, spellHandler.GetDelveValueBonus > 0)
+						//.Value("no_combat"," ",Util.Chance(50))//TODO
+						//.Value("link",14000)
+						//.Value("ability",4) // ??
+						//.Value("use_timer",4)
+						.Value("target", GetSpellTargetType(spell.Target), GetSpellTargetType(spell.Target) > 0)
+						//.Value("frequency", spellHandler.GetDelveValueFrequency, spellHandler.GetDelveValueFrequency != 0)
+						.Value("description_string", spell.Description, !string.IsNullOrEmpty(spell.Description))
+						.Value("radius", spell.Radius, spell.Radius > 0)
+						.Value("concentration_points", spell.Concentration, spell.Concentration > 0)
+						//.Value("num_targets", spellHandler.GetDelveValueNumTargets, spellHandler.GetDelveValueNumTargets>0)
+						//.Value("no_interrupt", spell.Interruptable ? (char)0 : (char)1) //Buggy?
+						;
+					//log.Info(dw.ToString());
+					return dw.ToString();
+					// }
+				}
+			}
 
-                //log.Debug(dw.ToString());
-
-                return dw.ToString();
-            }
-
-            ChatUtil.SendDebugMessage(client, string.Format("Spell not found: Player={0}, spell={1}", client.Player.Name, spell == null ? id.ToString() : spell.Name));
-            log.Error(string.Format("Spell not found: Player={0}, spell={1}", client.Player.Name, spell == null ? id.ToString() : spell.Name));
-
-            return CreateErrorSpell(id);
+        	// not found
+            return dw.Begin("Spell").Value("Name", "(not found)").Value("Index", id).ToString();
         }
 
 		#region delvespell methods
-
-        static string CreateErrorSpell(int id)
-        {
-            var dw = new DelveWriter();
-
-            dw.Begin("Spell")
-                .Value("Index", id)
-                .Value("Name", id.ToString() + " not found!");
-
-            return dw.ToString();
-        }
 
 		/// <summary>
 		/// Returns delve code for target
 		/// </summary>
 		/// <param name="target"></param>
 		/// <returns></returns>
-		static int GetSpellTargetType(string target)
+		public static int GetSpellTargetType(string target)
 		{
 			switch (target)
 			{
@@ -2252,7 +2205,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 		}
 
-		static int GetDurationType(Spell spell)
+		public static int GetDurrationType(Spell spell)
 		{
 			//2-seconds,4-conc,5-focus
 			if (spell.Duration>0)
@@ -2270,14 +2223,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		#endregion
 
-		static string DelveStyle(GameClient clt, int id)
+		public static string DelveStyle(GameClient clt, int id)
         {
             var style = SkillBase.GetStyleByID(id, clt.Player.CharacterClass.ID);
 
             var dw = new DelveWriter()
-                .Begin("Style").Value("Index", id);
+            	.Begin("Style").Value("Index",  unchecked((short)id));
             
-            if (style != null) {
+            if (style != null)
+            {
                 // Not implemented:
                 // (Style (FollowupStyle "Sapphire Slash")(LevelBonus "2")(OpeningDamage "16")(Skill "1")(Expires "1343375647"))
                 // (Style (Fingerprint "1746652963")(FollowupStyle "Thigh Cut")(Hidden "1")OpeningDamage "55")(Skill "118")(SpecialNumber "1511")(SpecialType "1")(Expires "1342381240"))
@@ -2304,9 +2258,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 					//.Value("FollowupStyle",style.DelveFollowUpStyles,!string.IsNullOrEmpty(style.DelveFollowUpStyles))
             		;
             }
-            else {
+            else
+            {
                 dw.Value("Name", "(not found)");
             }
+            
             return dw.End().ToString();
         }
 
@@ -2380,14 +2336,20 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <param name="clt"></param>
 		/// <param name="id"></param>
 		/// <returns></returns>
-        static string DelveRealmAbility(GameClient clt, int id) {
-            var dw = new DelveWriter().Begin("RealmAbility").Value("Index", id);
+        static string DelveRealmAbility(GameClient clt, int id)
+        {
+			var dw = new DelveWriter().Begin("RealmAbility").Value("Index",  unchecked((short)id));
             var ra = clt.Player.GetNonTrainableSkillList().Cast<Skill>().Where(sk => sk.ID == id).FirstOrDefault() as RealmAbility;
+            
             if (ra != null)
             {
                 ra.AddDelve(dw);
             }
-            else dw.Value("Name", "(not found)");
+            else
+            {
+            	dw.Value("Name", "(not found)").Value("Index", id);
+            }
+            
             return dw.ToString();
         }
         #endregion
