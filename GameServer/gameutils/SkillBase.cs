@@ -2112,10 +2112,6 @@ namespace DOL.GS
 			if (keyname == GlobalSpellsLines.Mob_Spells)
                 return new SpellLine(GlobalSpellsLines.Mob_Spells, GlobalSpellsLines.Mob_Spells, "", true);
 
-            // Another lame temporary spell line intented for nothing more than Delving Spells - tolakram
-            if (keyname == GlobalSpellsLines.Delve_Spell)
-                return new SpellLine(GlobalSpellsLines.Delve_Spell, GlobalSpellsLines.Delve_Spell, "", true);
-
 			if (m_spellLinesByName.ContainsKey(keyname))
 				return m_spellLinesByName[keyname].Clone() as SpellLine;
 
@@ -2387,6 +2383,23 @@ namespace DOL.GS
 			if (m_spells.TryGetValue(spellID, out spell))
 				return spell;
 			return null;
+		}
+		/// <summary>
+		/// Returns spell with id, level of spell is always 1
+		/// </summary>
+		/// <param name="spellID"></param>
+		/// <returns></returns>
+		public static Spell GetSpellByTooltipID(ushort tooltipID)
+		{
+			Spell spell = null;
+			
+			foreach (Spell item in m_spells.Values)
+			{
+				if (item.TooltipId == tooltipID)
+					spell = item;
+			}
+			
+			return spell;
 		}
 
 		/// <summary>
