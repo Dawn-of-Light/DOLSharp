@@ -187,6 +187,8 @@ namespace DOL.GS.PacketHandler
 								if (sendHybridList)
 								{
 									Dictionary<string, KeyValuePair<Spell, SpellLine>> spells = m_gameClient.Player.GetUsableSpells(spellLines, false);
+
+                                    ushort counter = 0;
 	
 									foreach (KeyValuePair<string, KeyValuePair<Spell, SpellLine>> spell in spells)
 									{
@@ -199,15 +201,19 @@ namespace DOL.GS.PacketHandler
 											CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
 	
 											int lineIndex = specs.IndexOf(m_gameClient.Player.GetSpecialization(spell.Value.Value.Spec));
-	
+
 											if (lineIndex == -1)
 											{
 												lineIndex = 0xFE; // Nightshade special value
 											}
 	
 											pak.WriteByte((byte)spell.Value.Key.Level);
-											pak.WriteShort(spell.Value.Key.ID); //new 1.112
-	
+
+                                            // For hybrids we use position in the spell list
+                                            // Needed for support of spells with spellid > 32767  -- tolakram
+
+                                            pak.WriteShort(counter); 
+
 											if (spell.Value.Key.InstrumentRequirement == 0)
 											{
 												pak.WriteByte((byte)eSkillPage.Spells);
@@ -225,6 +231,8 @@ namespace DOL.GS.PacketHandler
 											pak.WriteShort(spell.Value.Key.Icon);
 											pak.WritePascalString(spell.Value.Key.Name);
 											cachedSkills.Add(spell.Value.Key);
+
+                                            counter++;
 										}
 									}
 								}
@@ -298,7 +306,10 @@ namespace DOL.GS.PacketHandler
 									}
 
 									pakSL.WriteShortLowEndian((byte)spell.Level);
-									pakSL.WriteShort(spell.ID); //new 1.112
+
+									pakSL.WriteShort((ushort)(spell.Level * 100 + linenumber)); // Need to encode this using the spells level and line number
+                                                                                                // This is decoded in DetailDisplayHandler to find the correct spell
+                                                                                                // Needed for support of spells with spellid > 32767  -- tolakram
 									pakSL.WriteShort(spell.Icon);
 									pakSL.WritePascalString(spell.Name);
 									cachedSpells[linenumber].Add((byte)spell.Level, spell);
