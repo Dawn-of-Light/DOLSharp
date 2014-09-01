@@ -61,7 +61,8 @@ namespace DOL.GS.Quests
     ///                         TIME = amount of time search takes, in seconds
     ///                         Ex: SEARCH;2;Search here for the ring;12;5000;77665;500;20
     ///                         The Text entry can be blank for no popup display.  Ex:  SEARCH;2;;12;5000;77665;500;20
-    ///                         Multiple search entries can also be created: SEARCH;2;Search for ring here;12;5000;77665;500;20|SEARCH;3;Search for necklace here;12;8000;74665;500;20
+    ///                         Multiple search entries can also be created: 
+    ///                             SEARCH;2;Search for ring here;12;5000;77665;500;20|SEARCH;3;Search for necklace here;12;8000;74665;500;20
     ///                         You only need to make entries for each search area, not for every step. Search areas must start with SEARCH
     ///                         For Search steps, if Searching succeeds the Step is advanced as normal, using StepitemTemplate to give any item to the player.  
     ///                         You can make it so searching does not always succeed by adding a chance to the StepitemTemplate as described below.
