@@ -521,18 +521,19 @@ namespace DOL.GS.PacketHandler
 				SendTCP(pak);
 			}
 		}
-		public override void SendLoginGranted()
-		{
-		    //[Freya] Nidel: Can use realm button in character selection screen
-		
-		    if(ServerProperties.Properties.ALLOW_ALL_REALMS)
-		    {
-		        SendLoginGranted(1);
-		    }
-		    else
-		    {
-		        SendLoginGranted(GameServer.ServerRules.GetColorHandling(m_gameClient));
-		    }
+
+        public override void SendLoginGranted()
+        {
+            //[Freya] Nidel: Can use realm button in character selection screen
+
+            if (ServerProperties.Properties.ALLOW_ALL_REALMS || m_gameClient.Account.PrivLevel > (int)ePrivLevel.Player)
+            {
+                SendLoginGranted(1);
+            }
+            else
+            {
+                SendLoginGranted(GameServer.ServerRules.GetColorHandling(m_gameClient));
+            }
         }
-	}
+    }
 }
