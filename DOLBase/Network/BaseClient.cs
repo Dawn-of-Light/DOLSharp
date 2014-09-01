@@ -59,6 +59,11 @@ namespace DOL.Network
 		/// </summary>
 		protected BaseServer _srvr;
 
+        /// <summary>
+        /// Has this client received any bytes yet
+        /// </summary>
+        protected bool _hasReceivedBytes = false;
+
 		/// <summary>
 		/// Creates a new client.
 		/// </summary>
@@ -106,6 +111,15 @@ namespace DOL.Network
 			get { return _pBufOffset; }
 			set { _pBufOffset = value; }
 		}
+
+        /// <summary>
+        /// Has this client received bytes
+        /// </summary>
+        public bool HasReceivedBytes
+        {
+            get { return _hasReceivedBytes; }
+            set { _hasReceivedBytes = value; }
+        }
 
 		/// <summary>
 		/// Gets the client's TCP endpoint address, if connected.
@@ -204,13 +218,19 @@ namespace DOL.Network
 
 				if (numBytes > 0)
 				{
+                    baseClient.HasReceivedBytes = true;
 					baseClient.OnReceive(numBytes);
 					baseClient.BeginReceive();
 				}
 				else
 				{
-					if (Log.IsDebugEnabled)
-						Log.Debug("Disconnecting client (" + baseClient.TcpEndpoint + "), received bytes=" + numBytes);
+                    // Only show a message if this client has received bytes in the past
+                    // This helps avoid console spam for portal and other 0 byte pings - tolakram
+                    if (baseClient.HasReceivedBytes)
+                    {
+                        if (Log.IsDebugEnabled)
+                            Log.Debug("Disconnecting client (" + baseClient.TcpEndpointAddress + "), received bytes=" + numBytes);
+                    }
 
 					baseClient._srvr.Disconnect(baseClient);
 				}
