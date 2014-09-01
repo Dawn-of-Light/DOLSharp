@@ -83,8 +83,8 @@ namespace DOL.GS.Quests
 	/// StepItemTemplates - Any items that need to be given to the player for a step.  Every step can give an item to a player. All
 	/// steps give an item at the completion of the step except Delivery and DeliveryFinish.  If StepItemTemplates are defined for a 
 	/// Delivery step then the item is given at the beginning of the step and accepted by a target to end the step.
-    /// For Kill steps, StepItemTemplates can include a drop chance behind the template name.  Ex: |some_template_name;50|  If the item does
-    /// not drop then the step is not advanced.
+    /// For Kill and Search steps, StepItemTemplates can include a drop chance behind the template name.  Ex: |some_template_name;50|  
+    /// If the item does not drop then the step is not advanced.
 	/// If no items are given to a player at any of the steps then this can be null, otherwise it must have values for each step. 
 	/// Empty values || are ok. 
 	/// 
@@ -186,8 +186,8 @@ namespace DOL.GS.Quests
 			Whisper = 6,			// Whisper to the target to advance the quest
 			WhisperFinish = 7,		// Whisper to the target to finish the quest
 
-			Search = 8,				// Search in a specified location
-			SearchFinish = 9,		// Search in a specified location to finish the quest
+            Search = 8,				// Search in a specified location. Can set chance to drop on StepItemTemplate.
+            SearchFinish = 9,		// Search in a specified location to finish the quest. Can set chance to drop on StepItemTemplate.
 
 			Collect = 10,			// Player must give the target an item to advance the step
 			CollectFinish = 11,		// Player must give the target an item to finish the quest
@@ -1539,9 +1539,9 @@ namespace DOL.GS.Quests
 						stepTemplates.Add(StepItemTemplate);
 					}
 
-                    // If this is a kill step with a drop then check for chance to drop an item
+                    // If this is a kill or search step with a drop then check for chance to drop an item
 
-                    if (stepTemplates.Count == 1 && (StepType == eStepType.Kill || StepType == eStepType.KillFinish))
+                    if (stepTemplates.Count == 1 && (StepType == eStepType.Kill || StepType == eStepType.KillFinish || StepType == eStepType.Search || StepType == eStepType.SearchFinish))
                     {
                         string[] template = stepTemplates[0].Split(';');
 
