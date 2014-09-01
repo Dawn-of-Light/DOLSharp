@@ -78,11 +78,13 @@ namespace DOL.Database
 		// tooltip
 		protected ushort m_tooltipId;
 		
-		private static List<ushort> m_assignedTooltipID;
+		private static List<bool> m_assignedTooltipID;
 				
 		public DBSpell()
 		{
 			AllowAdd = false;
+			
+			InitFreeTooltipValues();
 		}
 
 		[DataElement(AllowDbNull = false, Unique = true)]
@@ -620,6 +622,7 @@ namespace DOL.Database
 			}
 		}
 		#endregion
+		
 		[DataElement(AllowDbNull = false, Unique = true)]		
 		public ushort TooltipId
 		{
@@ -634,28 +637,54 @@ namespace DOL.Database
 			}
 			set
 			{
-				ushort newval = value;
 				if (value == 0)
 				{
+					// 0 = auto-init
 					m_tooltipId = GetNextFreeTooltipId();
 				}
 				else
 				{
+					// other value is freeing the previous one
 					lock (((ICollection)m_assignedTooltipID).SyncRoot)
 					{
 						// clean up
-						if (m_assignedTooltipID.Contains(m_tooltipId))
-							m_assignedTooltipID.Remove(m_tooltipId);
+						if (m_assignedTooltipID[m_tooltipId])
+							m_assignedTooltipID[m_tooltipId] = false;
 
 						// add in unique list
-						m_assignedTooltipID.Add(value);
+						if (!m_assignedTooltipID[value])
+						{
+							m_assignedTooltipID[value] = true;
+						}
+						else
+						{
+							throw new ArgumentException("Tooltip id is not unique value");
+						}
+						
+						m_tooltipId = value;
 					}
 				}
-				
-				m_tooltipId = value;
-				
+
 				this.Dirty = true;
 			}
+		}
+		
+		/// <summary>
+		/// Init tooltip Array for unique values
+		/// </summary>
+		private static void InitFreeTooltipValues()
+		{
+			if (m_assignedTooltipID == null)
+			{
+				m_assignedTooltipID = new List<bool>(ushort.MaxValue+1);
+
+				lock (((ICollection)m_assignedTooltipID).SyncRoot)
+				{
+					for (int i = 0 ; i <= ushort.MaxValue ; i++)
+						m_assignedTooltipID.Add(false);
+				}
+			}
+
 		}
 		
 		/// <summary>
@@ -664,38 +693,25 @@ namespace DOL.Database
 		/// <returns></returns>
 		public static ushort GetNextFreeTooltipId()
 		{
-			if (m_assignedTooltipID == null)
-				m_assignedTooltipID = new List<ushort>();
-
-			ushort free = 0;
-			bool found = false;
-
+			// init values if needed
+			InitFreeTooltipValues();
+			
 			lock (((ICollection)m_assignedTooltipID).SyncRoot)
 			{
-				foreach (ushort currentid in m_assignedTooltipID.OrderBy(id => id))
+				for (int cnt = 0; cnt <= ushort.MaxValue; cnt++)
 				{
-					if (currentid - 1 != free)
+					if (!m_assignedTooltipID[cnt])
 					{
-						free++;
-						m_assignedTooltipID.Add(free);
-						found = true;
-						break;
+						m_assignedTooltipID[cnt] = true;
+						return (ushort)cnt;
 					}
-					else
-					{
-						free = currentid;
-					}
-				}
-				
-				if (!found && free < ushort.MaxValue)
-				{
-					free++;
-					m_assignedTooltipID.Add(free);
-					found = true;
+					
+					if (cnt == ushort.MaxValue)
+						throw new IndexOutOfRangeException("No more available ushort values for TooltipID");
 				}
 			}
 			
-			return found ? free : (ushort)0;
+			return 0;
 		}
 
 	}
