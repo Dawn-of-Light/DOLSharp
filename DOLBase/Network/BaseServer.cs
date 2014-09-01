@@ -230,8 +230,10 @@ namespace DOL.Network
 
 				try
 				{
-					string ip = sock.Connected ? sock.RemoteEndPoint.ToString() : "socket disconnected";
-					Log.Info("Incoming connection from " + ip);
+                    // Removing this message in favor of connection message in GameClient
+                    // This will also reduce spam when server is pinged with 0 bytes - Tolakram
+					//string ip = sock.Connected ? sock.RemoteEndPoint.ToString() : "socket disconnected";
+					//Log.Info("Incoming connection from " + ip);
 
 					baseClient = GetNewClient();
 					baseClient.Socket = sock;

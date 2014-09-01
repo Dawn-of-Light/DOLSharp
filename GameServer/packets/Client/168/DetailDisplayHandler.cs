@@ -2137,9 +2137,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 				if (spellHandler != null)
 				{
 					dw.Begin("Spell")
-						.Value("Index",  unchecked((short)id))
+                        .Value("Function", "light") // Function of type "light" allows custom description to show with no hardcoded text.  Temporary Fix - tolakram
+                        //.Value("Function", spellHandler.FunctionName ?? "0")
+                        .Value("Index", unchecked((short)id))
 						.Value("Name", spell.Name)
-						//.Value("Function", spellHandler.FunctionName ?? "0")
 						.Value("cast_timer", spell.CastTime - 2000, spell.CastTime > 2000) //minus 2 seconds (why mythic?)
 						.Value("instant","1",spell.CastTime==0)
 						//.Value("damage", spellHandler.GetDelveValueDamage, spellHandler.GetDelveValueDamage != 0)

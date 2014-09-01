@@ -487,12 +487,13 @@ namespace DOL.GS
 				if (lib == null)
 				{
 					Version = eClientVersion.VersionUnknown;
-					if (log.IsErrorEnabled)
-						log.Error(TcpEndpoint + " Client Version " + version + " not handled in this server!");
+					if (log.IsWarnEnabled)
+						log.Warn(TcpEndpointAddress + " client Version " + version + " not handled on this server!");
 					GameServer.Instance.Disconnect(this);
 				}
 				else
 				{
+                    log.Info("Incoming connection from " + TcpEndpointAddress + " using client version " + version);
 					Version = ver;
 					Out = lib;
 					PacketProcessor = new PacketProcessor(this);
