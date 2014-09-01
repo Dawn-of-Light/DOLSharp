@@ -31,8 +31,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int effectID = packet.ReadShort();
-
-			new CancelEffectHandler(client.Player, effectID).Start(1);
+			if (client.Version <= GameClient.eClientVersion.Version1109)
+			{
+				new CancelEffectHandler(client.Player, effectID).Start(1);
+			}
+			else
+			{
+				new CancelEffectHandler1110(client.Player, effectID).Start(1);
+			}
 		}
 
 		#endregion
@@ -72,6 +78,52 @@ namespace DOL.GS.PacketHandler.Client.v168
 					foreach (IGameEffect effect in player.EffectList)
 					{
 						if (effect.InternalID == m_effectId)
+						{
+							found = effect;
+							break;
+						}
+					}
+				}
+				if (found != null)
+				{
+					found.Cancel(true);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Handles players cancel effect actions
+		/// </summary>
+		protected class CancelEffectHandler1110 : RegionAction
+		{
+			/// <summary>
+			/// The effect Id
+			/// </summary>
+			protected readonly int m_effectId;
+
+			/// <summary>
+			/// Constructs a new CancelEffectHandler
+			/// </summary>
+			/// <param name="actionSource">The action source</param>
+			/// <param name="effectId">The effect Id</param>
+			public CancelEffectHandler1110(GamePlayer actionSource, int effectId) : base(actionSource)
+			{
+				m_effectId = effectId;
+			}
+
+			/// <summary>
+			/// Called on every timer tick
+			/// </summary>
+			protected override void OnTick()
+			{
+				var player = (GamePlayer) m_actionSource;
+
+				IGameEffect found = null;
+				lock (player.EffectList)
+				{
+					foreach (IGameEffect effect in player.EffectList)
+					{
+						if (effect is GameSpellEffect && ((GameSpellEffect)effect).Spell.TooltipId == m_effectId)
 						{
 							found = effect;
 							break;
