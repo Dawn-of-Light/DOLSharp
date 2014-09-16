@@ -130,7 +130,7 @@ namespace DOL.Database.Handlers
 
 						if (isPrimary)
 						{
-							if (val is int || val is long)
+							if (val is int)
 							{
 								primaryKey = Convert.ToInt32(val);
 							}
@@ -169,9 +169,25 @@ namespace DOL.Database.Handlers
 				if (usePrimary)
 				{
 					object objID = Connection.ExecuteScalar(sql + "; SELECT LAST_INSERT_ID();");
-					long newID = Convert.ToInt64(objID);
 					
-					if (primaryKey == null || (Convert.ToInt64(primaryKey) == 0 && newID == 0))
+					object newID;
+					bool newIDzero = false;
+					bool error = false;
+					
+					if(primaryKey is int)
+					{
+						newID = Convert.ToInt32(objID);
+						newIDzero = (int)newID == 0;
+						error = newIDzero && (int)primaryKey == 0;
+					}
+					else
+					{
+						newID = Convert.ToInt64(objID);
+						newIDzero = (long)newID == 0;
+						error = newIDzero && (long)primaryKey == 0;
+					}
+					
+					if (primaryKey == null || error)
 					{
 						if (Log.IsErrorEnabled)
 							Log.Error("Error adding object into " + dataObject.TableName + " ID=" + objID + ", UsePrimary, Query = " + sql);
@@ -179,7 +195,7 @@ namespace DOL.Database.Handlers
 					}
 					else
 					{
-						if (newID == 0)
+						if (newIDzero)
 						{
 							newID = Convert.ToInt64(primaryKey);
 						}
@@ -192,7 +208,7 @@ namespace DOL.Database.Handlers
 								{
 									if (primaryKey is long)
 									{
-										((PropertyInfo)objMembers[i]).SetValue(dataObject, newID, null);
+										((PropertyInfo)objMembers[i]).SetValue(dataObject, (long)newID, null);
 									}
 									else
 									{
@@ -203,7 +219,7 @@ namespace DOL.Database.Handlers
 								{
 									if (primaryKey is long)
 									{
-										((FieldInfo)objMembers[i]).SetValue(dataObject, newID);
+										((FieldInfo)objMembers[i]).SetValue(dataObject, (long)newID);
 									}
 									else
 									{
@@ -623,14 +639,19 @@ namespace DOL.Database.Handlers
 					objCount++;
 
 					reader.GetValues(data);
-					var id = (string)data[0];
 
 					// fill new data object
 					var obj = Activator.CreateInstance(objectType) as DataObject;
-					obj.ObjectId = id;
+					
+					int field = 0;
+					if (usePrimaryKey == false)
+					{
+						// fill the silly TableName_ID field
+						obj.ObjectId = (string)data[0];
+						field = 1;
+					}
 
 					bool hasRelations = false;
-					int field = 1;
 					// we can use hard index access because we iterate the same order here
 					for (int i = 0; i < bindingInfo.Length; i++)
 					{

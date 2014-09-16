@@ -71,15 +71,18 @@ namespace DOL.Database
 		protected bool m_isprimary;
 		protected bool m_issecondary;
 		protected bool m_allowbolt;
-		
+
 		// tooltip
 		protected ushort m_tooltipId;
-						
+
+		// Composite spell needing more params
+		protected string m_params = string.Empty;
+		
 		public DBSpell()
 		{
 			AllowAdd = false;
 		}
-		
+
 		[DataElement(AllowDbNull = false, Unique = true)]
 		public int SpellID
 		{
@@ -547,6 +550,7 @@ namespace DOL.Database
 				m_isfocus = value;
 			}
 		}
+		
 		[DataElement(AllowDbNull = true)]
 		public int SharedTimerGroup
 		{
@@ -575,6 +579,7 @@ namespace DOL.Database
 				m_isprimary = (bool)value;
 			}
 		}
+		
 		[DataElement(AllowDbNull = true)]
 		public bool IsSecondary
 		{
@@ -588,6 +593,7 @@ namespace DOL.Database
 				m_issecondary = (bool)value;
 			}
 		}
+		
 		[DataElement(AllowDbNull = true)]
 		public bool AllowBolt
 		{
@@ -601,6 +607,7 @@ namespace DOL.Database
 				m_allowbolt = (bool)value;
 			}
 		}
+		
 		[DataElement(AllowDbNull = true)]
 		public string PackageID
 		{
@@ -615,7 +622,7 @@ namespace DOL.Database
 			}
 		}
 		#endregion
-		
+
 		[DataElement(AllowDbNull = false)]
 		public ushort TooltipId
 		{
@@ -627,6 +634,17 @@ namespace DOL.Database
 			{
 				this.m_tooltipId = value;
 				this.Dirty = true;
+			}
+		}
+		
+		[DataElement(AllowDbNull = true, Varchar=255)]
+		public string Params
+		{
+			get { return m_params; }
+			set
+			{
+				Dirty = true;
+				m_params = value;
 			}
 		}
 	}
