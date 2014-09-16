@@ -6205,12 +6205,15 @@ namespace DOL.GS
 						m_skillList.Add(ability);
 						ability.Activate(this, sendUpdates);
 					}
-					else if (oldAbility.Level < ability.Level)
+					else
 					{
-						isNewAbility = true;
+						if (oldAbility.Level < ability.Level)
+							isNewAbility = true;
+
 						oldAbility.Level = ability.Level;
 						oldAbility.Name = ability.Name;
 					}
+					
 					if (isNewAbility && (this is GamePlayer))
 					{
 						(this as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((this as GamePlayer).Client.Account.Language, "GamePlayer.AddAbility.YouLearn", ability.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
