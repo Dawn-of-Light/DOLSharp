@@ -45,7 +45,49 @@ namespace DOL.GS.PacketHandler
         {
 
         }
-        
+
+        /// <summary>
+        /// Reply on Server Opening to Client Encryption Request
+        /// Actually forces Encryption Off to work with Portal.
+        /// </summary>
+        public override void SendVersionAndCryptKey()
+		{
+			//Construct the new packet
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CryptKey)))
+			{
+				pak.WriteByte((byte)m_gameClient.ClientType);
+				
+				//Disable encryption (1110+ always encrypt)
+				pak.WriteByte(0x00);
+
+				// Reply with current version
+				pak.WriteString((((int)m_gameClient.Version) / 1000) + "." + (((int)m_gameClient.Version) - 1000), 5);
+				
+				// revision, last seen (c) 0x63
+				pak.WriteByte(0x00);
+				
+				// Build number
+				pak.WriteByte(0x00); // last seen : 0x44 0x05
+				pak.WriteByte(0x00);
+				SendTCP(pak);
+			}
+		}
+
+		public override void SendLoginGranted(byte color)
+		{
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.LoginGranted)))
+			{
+				pak.WritePascalString(m_gameClient.Account.Name);
+				pak.WritePascalString(GameServer.Instance.Configuration.ServerNameShort); //server name
+				pak.WriteByte(0x29); //Server ID
+				pak.WriteByte(0x07); // test value...
+				pak.WriteByte(0x00);
+				pak.WriteByte(0x00);
+				SendTCP(pak);
+			}
+		}
+
+		
         /// <summary>
         /// New Item Packet Data in v1.115
         /// </summary>

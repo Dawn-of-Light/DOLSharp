@@ -25,26 +25,53 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			int rc4 = packet.ReadByte();
-			byte clientType = (byte)packet.ReadByte();
-			client.ClientType = (GameClient.eClientType)(clientType & 0x0F);
-			client.ClientAddons = (GameClient.eClientAddons)(clientType & 0xF0);
-			byte major = (byte)packet.ReadByte();
-			byte minor = (byte)packet.ReadByte();
-			byte build = (byte)packet.ReadByte();
-			if(rc4==1)
+			// for 1.115c+ The First client packet Changes.
+			if (client.Version < GameClient.eClientVersion.Version1115)
 			{
-				//DOLConsole.Log("SBox=\n");
-				//DOLConsole.LogDump(client.PacketProcessor.Encoding.SBox);
-				packet.Read(((PacketEncoding168)client.PacketProcessor.Encoding).SBox,0,256);
-				((PacketEncoding168)client.PacketProcessor.Encoding).EncryptionState=PacketEncoding168.eEncryptionState.PseudoRC4Encrypted;
-				//DOLConsole.WriteLine(client.Socket.RemoteEndPoint.ToString()+": SBox set!");
-				//DOLConsole.Log("SBox=\n");
-				//DOLConsole.LogDump(((PacketEncoding168)client.PacketProcessor.Encoding).SBox);
+				int rc4 = packet.ReadByte();
+				byte clientType = (byte)packet.ReadByte();
+				client.ClientType = (GameClient.eClientType)(clientType & 0x0F);
+				client.ClientAddons = (GameClient.eClientAddons)(clientType & 0xF0);
+				byte major = (byte)packet.ReadByte();
+				byte minor = (byte)packet.ReadByte();
+				byte build = (byte)packet.ReadByte();
+				if(rc4==1)
+				{
+					//DOLConsole.Log("SBox=\n");
+					//DOLConsole.LogDump(client.PacketProcessor.Encoding.SBox);
+					packet.Read(((PacketEncoding168)client.PacketProcessor.Encoding).SBox,0,256);
+					((PacketEncoding168)client.PacketProcessor.Encoding).EncryptionState=PacketEncoding168.eEncryptionState.PseudoRC4Encrypted;
+					//DOLConsole.WriteLine(client.Socket.RemoteEndPoint.ToString()+": SBox set!");
+					//DOLConsole.Log("SBox=\n");
+					//DOLConsole.LogDump(((PacketEncoding168)client.PacketProcessor.Encoding).SBox);
+				}
+				else
+				{
+				  //Send the crypt key to the client
+					client.Out.SendVersionAndCryptKey();
+				}
 			}
 			else
 			{
-			  //Send the crypt key to the client
+				// we don't handle Encryption for 1.115c
+				// the rc4 secret can't be unencrypted from RSA.
+				
+				// register client type
+				byte clientType = (byte)packet.ReadByte();
+				client.ClientType = (GameClient.eClientType)(clientType & 0x0F);
+				client.ClientAddons = (GameClient.eClientAddons)(clientType & 0xF0);
+				
+				// if the DataSize is above 7 then the RC4 key is bundled
+				// this is stored in case we find a way to handle encryption someday !
+				if (packet.DataSize > 7)
+				{
+					packet.Skip(6);
+					ushort length = packet.ReadShortLowEndian();
+					packet.Read(client.PacketProcessor.Encoding.SBox, 0, length);
+					// ((PacketEncoding168)client.PacketProcessor.Encoding).EncryptionState=PacketEncoding168.eEncryptionState.PseudoRC4Encrypted;
+				}
+				
+				//Send the crypt key to the client
 				client.Out.SendVersionAndCryptKey();
 			}
 		}
