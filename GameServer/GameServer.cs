@@ -313,7 +313,7 @@ namespace DOL.GS
 						string line = null;
 						while ((line = file.ReadLine()) != null)
 						{
-							if (line[0] == '#')
+							if (line.Length == 0 || line[0] == '#')
 							{
 								continue;
 							}

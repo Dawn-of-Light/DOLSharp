@@ -506,14 +506,14 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds disease counter
 		/// </summary>
-		protected sbyte m_diseasedCount;
+		protected volatile byte m_diseasedCount;
 		/// <summary>
 		/// Sets disease state
 		/// </summary>
 		/// <param name="add">true if disease counter should be increased</param>
-		public virtual void Disease(bool add)
+		public virtual void Disease(bool active)
 		{
-			if (add) m_diseasedCount++;
+			if (active) m_diseasedCount++;
 			else m_diseasedCount--;
 
 			if (m_diseasedCount < 0)
@@ -1700,7 +1700,7 @@ namespace DOL.GS
 			}
 
 			// DamageImmunity Ability
-			if ((GameLiving)target != null && ((GameLiving)target).HasAbility("DamageImmunity"))
+			if ((GameLiving)target != null && ((GameLiving)target).HasAbility(Abilities.DamageImmunity))
 			{
 				//if (ad.Attacker is GamePlayer) ((GamePlayer)ad.Attacker).Out.SendMessage(string.Format("{0} can't be attacked!", ad.Target.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 				ad.AttackResult = eAttackResult.NoValidTarget;
@@ -2091,24 +2091,8 @@ namespace DOL.GS
 		/// <param name="duration"></param>
 		public virtual void StartInterruptTimer(AttackData attack, int duration)
 		{
-			if (!IsAlive || ObjectState != eObjectState.Active)
-			{
-				InterruptTime = 0;
-				InterruptAction = 0;
-				return;
-			}
-			if (InterruptTime < CurrentRegion.Time + duration)
-				InterruptTime = CurrentRegion.Time + duration;
-
-			//new InterruptAction(this, attacker, duration, attackType).Start(1);
-
-			if (attack != null && attack.Attacker != null)
-			{
-				if (CurrentSpellHandler != null)
-					CurrentSpellHandler.CasterIsAttacked(attack.Attacker);
-				if (AttackState && ActiveWeaponSlot == eActiveWeaponSlot.Distance)
-					OnInterruptTick(attack.Attacker, attack.AttackType);
-			}
+			if(attack != null)
+				StartInterruptTimer(duration, attack.AttackType, attack.Attacker);
 		}
 
 		/// <summary>
@@ -2127,10 +2111,10 @@ namespace DOL.GS
 			}
 			if (InterruptTime < CurrentRegion.Time + duration)
 				InterruptTime = CurrentRegion.Time + duration;
-			//new InterruptAction(this, attacker, duration, attackType).Start(1);
 
 			if (CurrentSpellHandler != null)
 				CurrentSpellHandler.CasterIsAttacked(attacker);
+			
 			if (AttackState && ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 				OnInterruptTick(attacker, attackType);
 		}
@@ -2669,8 +2653,13 @@ namespace DOL.GS
 
 				mainHandEffectiveness *= owner.CalculateMainHandEffectiveness(mainWeapon, leftWeapon);
 				leftHandEffectiveness *= owner.CalculateLeftHandEffectiveness(mainWeapon, leftWeapon);
-
-				if (owner.CanUseLefthandedWeapon && leftWeapon != null && leftWeapon.Object_Type != (int)eObjectType.Shield
+					
+				// GameNPC can Dual Swing even with no weapon
+				if (owner is GameNPC && owner.CanUseLefthandedWeapon)
+				{
+					leftHandSwingCount = owner.CalculateLeftHandSwingCount();
+				}
+				else if (owner.CanUseLefthandedWeapon && leftWeapon != null && leftWeapon.Object_Type != (int)eObjectType.Shield
 				    && mainWeapon != null && (mainWeapon.Item_Type == Slot.RIGHTHAND || mainWeapon.Item_Type == Slot.LEFTHAND))
 				{
 					leftHandSwingCount = owner.CalculateLeftHandSwingCount();
@@ -2701,8 +2690,8 @@ namespace DOL.GS
 
 				if (!owner.CanUseLefthandedWeapon
 				    || (mainWeapon != null && mainWeapon.Item_Type != Slot.RIGHTHAND && mainWeapon.Item_Type != Slot.LEFTHAND)
-				    || leftWeapon == null
-				    || leftWeapon.Object_Type == (int)eObjectType.Shield)
+				    || (leftWeapon == null && !(owner is GameNPC))
+				    || (leftWeapon != null && leftWeapon.Object_Type == (int)eObjectType.Shield))
 				{
 					// no left hand used, all is simple here
 					mainHandAD = owner.MakeAttack(m_target, mainWeapon, style, mainHandEffectiveness, m_interruptDuration, false);
@@ -3013,7 +3002,7 @@ namespace DOL.GS
 						}
 
 						ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(ad.Attacker, procSpell, spellLine);
-						if (spellHandler != null)
+						if (spellHandler != null && ad.Attacker.IsWithinRadius(ad.Target, spellHandler.CalculateSpellRange()))
 						{
 							spellHandler.StartSpell(ad.Target, weapon);
 						}
@@ -3221,7 +3210,7 @@ namespace DOL.GS
 			GameSpellEffect grapple = null;
 			GameSpellEffect brittleguard = null;
 
-			AttackData lastAD = (AttackData)TempProperties.getProperty<object>(LAST_ATTACK_DATA, null);
+			AttackData lastAD = TempProperties.getProperty<AttackData>(LAST_ATTACK_DATA, null);
 			bool defenseDisabled = ad.Target.IsMezzed | ad.Target.IsStunned | ad.Target.IsSitting;
 
 			// If berserk is on, no defensive skills may be used: evade, parry, ...
@@ -4314,7 +4303,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void Die(GameObject killer)
 		{
-			if (this as GameNPC == null && this is GamePlayer == false)
+			if (this is GameNPC == false && this is GamePlayer == false)
 			{
 				// deal out exp and realm points based on server rules
 				GameServer.ServerRules.OnLivingKilled(this, killer);
@@ -4711,7 +4700,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Array for third buff boni
+		/// Array for third debuff boni
 		/// </summary>
 		protected IPropertyIndexer m_debuffBonus = new PropertyIndexer();
 		/// <summary>
@@ -4750,10 +4739,23 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Array for spec debuff boni
+		/// </summary>
+		protected IPropertyIndexer m_specDebuffBonus = new PropertyIndexer();
+		/// <summary>
+		/// Property Buff bonus category
+		/// what it means depends from the PropertyCalculator for a property element
+		/// </summary>
+		public IPropertyIndexer SpecDebuffCategory
+		{
+			get { return m_specDebuffBonus; }
+		}
+		
+		/// <summary>
 		/// property calculators for each property
 		/// look at PropertyCalculator class for more description
 		/// </summary>
-		internal static readonly IPropertyCalculator[] m_propertyCalc = new IPropertyCalculator[(int)eProperty.MaxProperty];
+		internal static readonly IPropertyCalculator[] m_propertyCalc = new IPropertyCalculator[(int)eProperty.MaxProperty+1];
 
 		/// <summary>
 		/// retrieve a property value of that living
@@ -5845,8 +5847,13 @@ namespace DOL.GS
 		/// <returns>true if the text should be processed further, false if it should be discarded</returns>
 		public virtual bool SayReceive(GameLiving source, string str)
 		{
-			if (source == null || str == null) return false;
+			if (source == null || str == null)
+			{
+				return false;
+			}
+			
 			Notify(GameLivingEvent.SayReceive, this, new SayReceiveEventArgs(source, this, str));
+			
 			return true;
 		}
 
@@ -5857,28 +5864,39 @@ namespace DOL.GS
 		/// <returns>true if text was said successfully</returns>
 		public virtual bool Say(string str)
 		{
-			if (str == null || IsSilent) return false;
+			if (str == null || IsSilent)
+			{
+				return false;
+			}
+			
 			Notify(GameLivingEvent.Say, this, new SayEventArgs(str));
+			
 			foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.SAY_DISTANCE))
 			{
-				if (npc != this)
-					npc.SayReceive(this, str);
+				GameNPC receiver = npc;
+				// don't send say to the target, it will be whispered...
+				if (receiver != this && receiver != TargetObject)
+				{
+					receiver.SayReceive(this, str);
+				}
 			}
+			
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.SAY_DISTANCE))
 			{
-				if (player != this)
-					player.SayReceive(this, str);
+				GamePlayer receiver = player;
+				if (receiver != this)
+				{
+					receiver.SayReceive(this, str);
+				}
 			}
+			
+			// whisper to Targeted NPC.
 			if (TargetObject != null && TargetObject is GameNPC)
 			{
 				GameNPC targetNPC = (GameNPC)TargetObject;
-				char[] separators = new char[] { ' ', ',', '.', '?', '!' };
-				foreach (string sstr in str.Split(separators))
-				{
-					if (sstr != "")
-						targetNPC.WhisperReceive(this, sstr);
-				}
+				targetNPC.WhisperReceive(this, str);
 			}
+			
 			return true;
 		}
 
@@ -5890,8 +5908,13 @@ namespace DOL.GS
 		/// <returns>true if the string should be processed further, false if it should be discarded</returns>
 		public virtual bool YellReceive(GameLiving source, string str)
 		{
-			if (source == null || str == null) return false;
+			if (source == null || str == null)
+			{
+				return false;
+			}
+			
 			Notify(GameLivingEvent.YellReceive, this, new YellReceiveEventArgs(source, this, str));
+			
 			return true;
 		}
 
@@ -5902,18 +5925,31 @@ namespace DOL.GS
 		/// <returns>true if text was yelled successfully</returns>
 		public virtual bool Yell(string str)
 		{
-			if (str == null || IsSilent) return false;
+			if (str == null || IsSilent)
+			{
+				return false;
+			}
+			
 			Notify(GameLivingEvent.Yell, this, new YellEventArgs(str));
+			
 			foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.YELL_DISTANCE))
 			{
-				if (npc != this)
-					npc.YellReceive(this, str);
+				GameNPC receiver = npc;
+				if (receiver != this)
+				{
+					receiver.YellReceive(this, str);
+				}
 			}
+			
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.YELL_DISTANCE))
 			{
-				if (player != this)
-					player.YellReceive(this, str);
+				GamePlayer receiver = player;
+				if (receiver != this)
+				{
+					receiver.YellReceive(this, str);
+				}
 			}
+			
 			return true;
 		}
 
@@ -5925,7 +5961,10 @@ namespace DOL.GS
 		/// <returns>true if the string should be processed further, false if it should be discarded</returns>
 		public virtual bool WhisperReceive(GameLiving source, string str)
 		{
-			if (source == null || str == null) return false;
+			if (source == null || str == null)
+			{
+				return false;
+			}
 
 			GamePlayer player = null;
 			if (source != null && source is GamePlayer)
@@ -5937,6 +5976,7 @@ namespace DOL.GS
 					//player.Out.SendMessage("Speak slower!", eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
 					return false;
 				}
+				
 				player.TempProperties.setProperty("WHISPERDELAY", CurrentRegion.Time);
 
 				foreach (DOL.GS.Quests.DataQuest q in DataQuestList)
@@ -5958,11 +5998,24 @@ namespace DOL.GS
 		/// <returns>true if text was whispered successfully</returns>
 		public virtual bool Whisper(GameObject target, string str)
 		{
-			if (target == null || str == null || IsSilent) return false;
-			if (!this.IsWithinRadius(target, WorldMgr.WHISPER_DISTANCE))
+			if (target == null || str == null || IsSilent)
+			{
 				return false;
+			}
+			
+			if (!this.IsWithinRadius(target, WorldMgr.WHISPER_DISTANCE))
+			{
+				return false;
+			}
+			
 			Notify(GameLivingEvent.Whisper, this, new WhisperEventArgs(target, str));
-			return (target is GameLiving) ? ((GameLiving)target).WhisperReceive(this, str) : false;
+			
+			if (target is GameLiving)
+			{
+				return ((GameLiving)target).WhisperReceive(this, str);
+			}
+			
+			return false;
 		}
 		/// <summary>
 		/// Makes this living do an emote-animation
@@ -6339,7 +6392,6 @@ namespace DOL.GS
 				else
 				{
 					m_disabledSkills.Remove(key);
-					duration = 0;
 				}
 			}
 		}
@@ -6358,7 +6410,7 @@ namespace DOL.GS
 					m_disabledSkills.Remove(key);
 			}
 		}
-		
+
 		#region Broadcasting utils
 
 		/// <summary>
@@ -6592,7 +6644,7 @@ namespace DOL.GS
 					{
 						try
 						{
-							if (!t.IsClass) continue;
+							if (!t.IsClass || t.IsAbstract) continue;
 							if (!typeof(IPropertyCalculator).IsAssignableFrom(t)) continue;
 							IPropertyCalculator calc = (IPropertyCalculator)Activator.CreateInstance(t);
 							foreach (PropertyCalculatorAttribute attr in t.GetCustomAttributes(typeof(PropertyCalculatorAttribute), false))

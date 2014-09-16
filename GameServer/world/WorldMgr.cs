@@ -451,7 +451,7 @@ namespace DOL.GS
 
 			log.Debug(GC.GetTotalMemory(true) / 1024 / 1024 + "MB - Region Data Loaded");
 
-			int cpuCount = GameServer.Instance.Configuration.CpuCount;
+			int cpuCount = GameServer.Instance.Configuration.CPUUse;
 			if (cpuCount < 1)
 				cpuCount = 1;
 

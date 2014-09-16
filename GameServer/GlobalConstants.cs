@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.Database;
 using DOL.Language;
@@ -354,7 +355,8 @@ namespace DOL.GS
 		INT = eProperty.Intelligence,
 		PIE = eProperty.Piety,
 		EMP = eProperty.Empathy,
-		CHR = eProperty.Charisma
+		CHR = eProperty.Charisma,
+		_Last = eProperty.Stat_Last,
 	}
 
 	/// <summary>
@@ -802,7 +804,7 @@ namespace DOL.GS
 		StyleAbsorb = 252,
 		RealmPoints = 253,
 		ArcaneSyphon = 254,
-		// 255 Available
+		LivingEffectiveness = 255,
 		MaxProperty = 255
 	}
 
@@ -839,7 +841,7 @@ namespace DOL.GS
 	}
 
 	/// <summary>
-	/// What buff caterogy a spell belongs too
+	/// What buff category a spell belongs too
 	/// </summary>
 	public enum eBuffBonusCategory : int
 	{
@@ -847,6 +849,7 @@ namespace DOL.GS
 		SpecBuff = 2,
 		Debuff = 3,
 		Other = 4,
+		SpecDebuff = 5,
 	}
 
 	/// <summary>
@@ -1023,6 +1026,28 @@ namespace DOL.GS
 
 	public class GlobalConstants
 	{
+		private static readonly Dictionary<GameLiving.eAttackResult, byte> AttackResultByte = new Dictionary<GameLiving.eAttackResult, byte>()
+	    {
+			{GameLiving.eAttackResult.Missed, 0},
+			{GameLiving.eAttackResult.Parried, 1},
+			{GameLiving.eAttackResult.Blocked, 2},
+			{GameLiving.eAttackResult.Evaded, 3},
+			{GameLiving.eAttackResult.Fumbled, 4},
+			{GameLiving.eAttackResult.HitUnstyled, 10},
+			{GameLiving.eAttackResult.HitStyle, 11},
+			{GameLiving.eAttackResult.Any, 20},
+	    };
+		
+		public static byte GetAttackResultByte(GameLiving.eAttackResult attResult)
+		{
+			if (AttackResultByte.ContainsKey(attResult))
+			{
+				return AttackResultByte[attResult];
+			}
+			
+			return 0;
+		}
+		
 		public static bool IsExpansionEnabled(int expansion)
 		{
 			bool enabled = true;
