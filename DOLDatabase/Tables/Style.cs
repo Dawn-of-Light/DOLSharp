@@ -22,7 +22,7 @@ using DOL.Database.Attributes;
 namespace DOL.Database
 {
 	/// <summary>
-	/// TODO: add neccessary fields for styles
+	/// Weapon Spec Style description
 	/// </summary>
 	[DataTable(TableName = "Style")]
 	public class DBStyle : DataObject
@@ -30,7 +30,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The ID of this style
 		/// </summary>
-		protected int m_ID;
+		private int m_ID;
 		/// <summary>
 		/// The class ID of the style
 		/// </summary>
@@ -38,36 +38,36 @@ namespace DOL.Database
 		/// <summary>
 		/// The name of this style
 		/// </summary>
-		protected string m_Name;
+		private string m_Name;
 		/// <summary>
 		/// The name of the spec needed for this style "None" for no requirement
 		/// </summary>
-		protected string m_SpecKeyName;
+		private string m_SpecKeyName;
 		/// <summary>
 		/// The level of specialisation required to gain this style
 		/// </summary>
-		protected int m_SpecLevelRequirement;
+		private int m_SpecLevelRequirement;
 		/// <summary>
 		/// The icon for this style
 		/// </summary>
-		protected int m_Icon;
+		private int m_Icon;
 		/// <summary>
 		/// The fatique cost for this style in % of total fatique
 		/// Will be modified by weapon speed and Realm Abilities
 		///		>=5(low), >=10(medium), >=15(high)
 		/// </summary>
-		protected int m_EnduranceCost;
+		private int m_EnduranceCost;
 		/// <summary>
 		/// Style requires stealth
 		/// </summary>
-		protected bool m_StealthRequirement;
+		private bool m_StealthRequirement;
 		/// <summary>
 		/// The opening requirement of this style
 		///		0 = offensive opening eg. style in reply to your previous action
 		///		1 = defensive opening eg. style in reply to enemy previous action
 		///		2 = positional opening eg. front, side, or back
 		/// </summary>
-		protected int m_openingRequirementType;
+		private int m_openingRequirementType;
 		/// <summary>
 		/// opening requirement value
 		/// for offensive openings the styleid of the required style before this
@@ -77,7 +77,7 @@ namespace DOL.Database
 		///		1 = side of enemy
 		///		2 = front of enemy
 		/// </summary>
-		protected int m_openingRequirementValue; //style required before this one
+		private int m_openingRequirementValue; //style required before this one
 		/// <summary>
 		/// The required result of the previous attack.
 		/// For offensive styles the attack result of your last attack
@@ -91,12 +91,12 @@ namespace DOL.Database
 		///		6 = fumble
 		///		7 = style
 		/// </summary>
-		protected int m_AttackResultRequirement;
+		private int m_AttackResultRequirement;
 		/// <summary>
 		/// This holds the type of weapon needed for this style
 		/// See "eObjectType" for values
 		/// </summary>
-		protected int m_WeaponTypeRequirement;
+		private int m_WeaponTypeRequirement;
 		//		/// <summary>
 		//		/// The damage addition factor of this style
 		//		/// </summary>
@@ -108,33 +108,33 @@ namespace DOL.Database
 		/// <summary>
 		/// GrowthRate as used in Wyrd's spreadsheet
 		/// </summary>
-		protected double m_growthRate;
+		private double m_growthRate;
 		/// <summary>
 		/// The bonus to hit value for this style
 		/// below 0 = penalty
 		/// above 0 = bonus
 		/// </summary>
-		protected int m_BonusToHit;
+		private int m_BonusToHit;
 		/// <summary>
 		/// The bonus to defense for this style
 		/// below 0 = penalty
 		/// above 0 = bonus
 		/// </summary>
-		protected int m_BonusToDefense;
+		private int m_BonusToDefense;
 		/// <summary>
 		/// The animation ID for 2h weapon styles
 		/// </summary>
-		protected int m_TwoHandAnimation;
+		private int m_TwoHandAnimation;
 
 		/// <summary>
 		/// Randomly cast a proc
 		/// </summary>
-		protected bool m_RandomProc;
+		private bool m_RandomProc;
 
 		/// <summary>
 		/// The armor location this style should hit, taken from eInventorySlot
 		/// </summary>
-		protected int m_armorHitLocation;
+		private int m_armorHitLocation;
 		
 		/// <summary>
 		/// The Constructor
@@ -260,20 +260,6 @@ namespace DOL.Database
 			get { return m_WeaponTypeRequirement; }
 			set { m_WeaponTypeRequirement = value; Dirty = true; }
 		}
-
-		//		[DataElement(AllowDbNull=true)]
-		//	  public int Damage
-		//	  {
-		//	    get { return m_Damage; }
-		//	    set { m_Damage = value; Dirty = true; }
-		//	  }
-		//
-		//	[DataElement(AllowDbNull=true)]
-		//	  public int DamageAddPerLevel
-		//	  {
-		//	    get { return m_DamageAddPerLevel; }
-		//	    set { m_DamageAddPerLevel = value; Dirty = true; }
-		//	  }
 
 		/// <summary>
 		/// The Style Growth Rate

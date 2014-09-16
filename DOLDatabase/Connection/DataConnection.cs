@@ -50,8 +50,6 @@ namespace DOL.Database.Connection
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private readonly Queue<MySqlConnection> m_connectionPool = new Queue<MySqlConnection>();
-
 		private string connString;
 		private ConnectionType connType;
 
@@ -135,58 +133,6 @@ namespace DOL.Database.Connection
 				//s = s.Replace("’", "\\’");//have it now in the mysqlstring object
 			}
 			return s;
-		}
-
-		/// <summary>
-		/// Gets connection from connection pool.
-		/// </summary>
-		/// <param name="isNewConnection">Set to <code>true</code> if new connection is created.</param>
-		/// <returns>Connection.</returns>
-		private MySqlConnection GetMySqlConnection(out bool isNewConnection)
-		{
-			// Get connection from pool
-			MySqlConnection conn = null;
-			lock (m_connectionPool)
-			{
-				if (m_connectionPool.Count > 0)
-				{
-					conn = m_connectionPool.Dequeue();
-				}
-			}
-
-			if (conn != null)
-			{
-				isNewConnection = false;
-			}
-			else
-			{
-				isNewConnection = true;
-				long start1 = Environment.TickCount;
-				conn = new MySqlConnection(connString);
-				conn.Open();
-				if (Environment.TickCount - start1 > 1000)
-				{
-					if (log.IsWarnEnabled)
-						log.Warn("Gaining SQL connection took " + (Environment.TickCount - start1) + "ms");
-				}
-
-				log.Info("New DB connection created");
-			}
-
-			return conn;
-		}
-
-
-		/// <summary>
-		/// Releases the connection to connection pool.
-		/// </summary>
-		/// <param name="conn">The connection to relase.</param>
-		private void ReleaseConnection(MySqlConnection conn)
-		{
-			lock (m_connectionPool)
-			{
-				m_connectionPool.Enqueue(conn);
-			}
 		}
 
 		/// <summary>
@@ -654,6 +600,7 @@ namespace DOL.Database.Connection
 
 				var columnDefs = new List<string>();
 				var alterAddColumnDefs = new List<string>();
+				bool alterPrimaryKey = false;
 				for (int i = 0; i < table.Columns.Count; i++)
 				{
 					Type systype = table.Columns[i].DataType;
@@ -769,6 +716,15 @@ namespace DOL.Database.Connection
 					if (currentTableColumns.Count > 0 && !currentTableColumns.Contains(table.Columns[i].ColumnName.ToLower()))
 					{
 						log.Debug("added for alteration " + table.Columns[i].ColumnName.ToLower());
+						
+						// if this column is added for alteration and is a primary key, we must switch key.
+						if (table.Columns[i].AutoIncrement)
+						{
+							alterPrimaryKey = true;
+							column += " PRIMARY KEY";
+						}
+
+						// Column def, without index or anything else.
 						alterAddColumnDefs.Add(column);
 					}
 				}
@@ -791,7 +747,7 @@ namespace DOL.Database.Connection
 					}
 
 					
-					if (connType == ConnectionType.DATABASE_SQLITE && hasAutoInc)
+					if ((connType == ConnectionType.DATABASE_SQLITE) && hasAutoInc)
 					{
 						columndef += ", UNIQUE (";
 					}
@@ -888,10 +844,12 @@ namespace DOL.Database.Connection
 
 
 				// alter table if needed
-				if (alterAddColumnDefs.Count > 0)
+				
+				// alter primary key, only work for migraiton to Auto Inc for now
+				if (alterPrimaryKey)
 				{
-					columndef = string.Join(", ", alterAddColumnDefs.ToArray());
-					string alterTable = "ALTER TABLE `" + table.TableName + "` ADD (" + columndef + ")";
+					string alterTable = "ALTER TABLE `" + table.TableName + "` DROP PRIMARY KEY";
+					
 					try
 					{
 						log.Warn("Altering table " + table.TableName);
@@ -904,7 +862,29 @@ namespace DOL.Database.Connection
 					catch (Exception e)
 					{
 						if (log.IsErrorEnabled)
-							log.Error("Error while altering table table " + table.TableName, e);
+							log.ErrorFormat("Error while altering table table {0} : {1}\n{2}", table.TableName, alterTable, e);
+					}
+				}
+
+				
+				if (alterAddColumnDefs.Count > 0)
+				{
+					columndef = string.Join(", ", alterAddColumnDefs.ToArray());
+					string alterTable = "ALTER TABLE `" + table.TableName + "` ADD (" + columndef + ")";
+					
+					try
+					{	
+						log.Warn("Altering table " + table.TableName);
+						if (log.IsDebugEnabled)
+						{
+							log.Debug(alterTable);
+						}
+						ExecuteNonQuery(alterTable);
+					}
+					catch (Exception e)
+					{
+						if (log.IsErrorEnabled)
+							log.ErrorFormat("Error while altering table table {0} : {1}\n{2}", table.TableName, alterTable, e);
 					}
 				}
 			}
