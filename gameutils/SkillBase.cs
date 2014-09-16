@@ -2384,23 +2384,6 @@ namespace DOL.GS
 				return spell;
 			return null;
 		}
-		/// <summary>
-		/// Returns spell with id, level of spell is always 1
-		/// </summary>
-		/// <param name="spellID"></param>
-		/// <returns></returns>
-		public static Spell GetSpellByTooltipID(ushort tooltipID)
-		{
-			Spell spell = null;
-			
-			foreach (Spell item in m_spells.Values)
-			{
-				if (item.TooltipId == tooltipID)
-					spell = item;
-			}
-			
-			return spell;
-		}
 
 		/// <summary>
 		/// Will attempt to find either in the spell line given or in the list of all spells
