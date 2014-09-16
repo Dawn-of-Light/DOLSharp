@@ -18,8 +18,11 @@
  */
 using System;
 using System.Text;
-using DOL.Database;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
+using DOL.Database;
 
 namespace DOL.GS
 {
@@ -309,14 +312,14 @@ namespace DOL.GS
         	{
         		if (m_tooltipId == 0)
         		{
-        			m_tooltipId = DBSpell.GetNextFreeTooltipId();
+        			TryGetNextFreeTooltipID(this);
         		}
         		
         		return m_tooltipId;
         	}
         	set
         	{
-        		m_tooltipId = value;
+        		TryRegisterTooltipID(this, value);
         	}
         }
         
@@ -383,7 +386,7 @@ namespace DOL.GS
             m_sharedtimergroup = dbspell.SharedTimerGroup;
             m_minotaurspell = minotaur;
             // tooltip
-            m_tooltipId = dbspell.TooltipId;
+            TooltipId = dbspell.TooltipId;
 		}
 
 		/// <summary>
@@ -507,5 +510,180 @@ namespace DOL.GS
                 return (CastTime <= 0);
             }
         }
+        
+        #region tooltip handling
+        
+        /// <summary>
+        /// Collection to handle existing tooltip !
+        /// </summary>
+        public static Dictionary<ushort, WeakReference<Spell>> m_assignedTooltipID = new Dictionary<ushort, WeakReference<Spell>>(ushort.MaxValue+1);
+        
+        /// <summary>
+		/// Destructor to free ID.
+		/// </summary>
+		~Spell()
+		{
+			TryFreeTooltipID(this);
+		}
+
+		public static void TryRegisterTooltipID(Spell sp, ushort tooltipID)
+		{
+			// 0 = Autoset !
+			if (tooltipID == 0)
+			{
+				TryGetNextFreeTooltipID(sp);
+				return;
+			}
+			
+			lock (((ICollection)m_assignedTooltipID).SyncRoot)
+			{
+				if (m_assignedTooltipID.ContainsKey(tooltipID))
+				{
+					WeakReference<Spell> spref = m_assignedTooltipID[tooltipID];
+					Spell outsp;
+					if (spref != null && spref.TryGetTarget(out outsp))
+					{
+						// Raise an Exception, this Spell can't go in there !
+						throw new ArgumentException("Tooltip ID (" + tooltipID + ") is incompatible for Spell : " + sp.ToString() + "\nAlreadyContaining Spell : " + outsp.ToString());
+					}
+					else
+					{
+						// Assign this spell.
+						m_assignedTooltipID[tooltipID] = new WeakReference<Spell>(sp);
+					}
+					
+					sp.m_tooltipId = tooltipID;
+				}
+				else
+				{
+					// Just create this ID.
+					m_assignedTooltipID.Add(tooltipID, new WeakReference<Spell>(sp));
+					sp.m_tooltipId = tooltipID;
+				}
+			}	
+		}
+		
+		/// <summary>
+		/// Find a free usable tooltipID in ushort list.
+		/// </summary>
+		/// <returns></returns>
+		public static ushort TryGetNextFreeTooltipID(Spell sp)
+		{
+			// counter.
+			int previous = 1;
+			
+			// lock collection
+			lock (((ICollection)m_assignedTooltipID).SyncRoot)
+			{
+				
+				foreach (KeyValuePair<ushort, WeakReference<Spell>> refsEntry in m_assignedTooltipID.OrderBy(ent => ent.Key))
+				{
+					// previous can feat there ?
+					if (previous < refsEntry.Key)
+					{
+						break;
+					}
+					
+					WeakReference<Spell> spref = refsEntry.Value;
+					Spell outsp;
+					// Try getting the value of this entry to be sure it's occupied
+					if (spref == null || (spref.TryGetTarget(out outsp) == false))
+					{
+						// This slot is free in fact...
+						previous = refsEntry.Key;
+						break;
+					}
+					
+					// inc
+					previous = refsEntry.Key + 1;	
+				}
+				
+				// Insert if we have a valid position.
+				if (previous <= ushort.MaxValue)
+				{
+					if (m_assignedTooltipID.ContainsKey((ushort)previous))
+					{
+						m_assignedTooltipID[(ushort)previous] = new WeakReference<Spell>(sp);
+					}
+					else
+					{
+						m_assignedTooltipID.Add((ushort)previous, new WeakReference<Spell>(sp));
+					}
+					
+					sp.m_tooltipId = (ushort)previous;
+				}
+				else
+				{
+					// Exception...
+					throw new IndexOutOfRangeException("No more available ushort values for Spell TooltipID");
+				}
+				
+			}
+			
+			// return id for property assignment
+			return (ushort)previous;
+		}
+		
+		/// <summary>
+		/// Try freeing an occupied ID slot
+		/// </summary>
+		/// <param name="id"></param>
+		public static void TryFreeTooltipID(Spell sp)
+		{
+			if (sp.m_tooltipId == 0)
+				return;
+			
+			// Lock collection
+			lock (((ICollection)m_assignedTooltipID).SyncRoot)
+			{
+				// Find the key
+				if (m_assignedTooltipID.ContainsKey(sp.m_tooltipId))
+				{
+					// Find the Object
+					WeakReference<Spell> spref = m_assignedTooltipID[sp.m_tooltipId];
+					Spell outsp;
+					if (spref != null && spref.TryGetTarget(out outsp))
+					{
+						if (sp == outsp)
+						{
+							// if it's the same object remove it from dictionary
+							m_assignedTooltipID.Remove(sp.m_tooltipId);
+						}
+					}
+					
+					// if object is not found at given position it will be treated as empty anyway...
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Returns spell with id, level of spell is always 1
+		/// </summary>
+		/// <param name="spellID"></param>
+		/// <returns></returns>
+		public static Spell GetSpellByTooltipID(ushort tooltipID)
+		{
+			Spell spell = null;
+			
+			if (tooltipID > 0)
+			{
+				lock (((ICollection)m_assignedTooltipID).SyncRoot)
+				{
+					if (m_assignedTooltipID.ContainsKey(tooltipID))
+					{
+						WeakReference<Spell> spref = m_assignedTooltipID[tooltipID];
+						Spell outspl;
+						if (spref != null && spref.TryGetTarget(out outspl))
+						{
+							spell = outspl;
+						}
+					}
+				}
+			}
+			
+			return spell;
+		}
+        #endregion
 	}
+	
 }
