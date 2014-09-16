@@ -69,12 +69,12 @@ namespace DOL.GS
 		{
 		}
 
-		public Ability(string keyname, string displayname, string description, ushort id, ushort icon, int level)
+		public Ability(string keyname, string displayname, string description, int id, ushort icon, int level)
 			: this(keyname, displayname, description, id, icon, level, "", 0)
 		{
 		}
 
-		public Ability(string keyname, string displayname, string description, ushort id, ushort icon, int level, string spec, int speclevel)
+		public Ability(string keyname, string displayname, string description, int id, ushort icon, int level, string spec, int speclevel)
 			: base(keyname, displayname, id, icon, level)
 		{
 			m_spec = spec;

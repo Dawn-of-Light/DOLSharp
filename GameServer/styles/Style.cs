@@ -140,7 +140,7 @@ namespace DOL.GS.Styles
 		/// </summary>
 		/// <param name="style">The database style object this object is based on</param>
 		public Style(DBStyle style)
-			: base(style.Name, (ushort)style.ID, (ushort)style.Icon, style.SpecLevelRequirement)
+			: base(style.Name, style.ID, (ushort)style.Icon, style.SpecLevelRequirement)
 		{
 			baseStyle = style;
 			m_Procs = new List<DBStyleXSpell>();
