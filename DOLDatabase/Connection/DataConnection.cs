@@ -845,7 +845,7 @@ namespace DOL.Database.Connection
 
 				// alter table if needed
 				
-				// alter primary key, only work for migraiton to Auto Inc for now
+				// alter primary key, only work for migration to Auto Inc for now
 				if (alterPrimaryKey)
 				{
 					string alterTable = "ALTER TABLE `" + table.TableName + "` DROP PRIMARY KEY";
@@ -873,7 +873,7 @@ namespace DOL.Database.Connection
 					string alterTable = "ALTER TABLE `" + table.TableName + "` ADD (" + columndef + ")";
 					
 					try
-					{	
+					{
 						log.Warn("Altering table " + table.TableName);
 						if (log.IsDebugEnabled)
 						{

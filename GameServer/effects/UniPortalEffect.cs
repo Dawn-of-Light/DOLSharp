@@ -17,8 +17,7 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
+
 using DOL.GS.Spells;
 
 namespace DOL.GS.Effects
@@ -33,6 +32,8 @@ namespace DOL.GS.Effects
 		/// Create a new portal effect.
 		/// </summary>
 		public UniPortalEffect(ISpellHandler handler, int duration)
-			: base(handler, duration, 0) { }
+			: base(handler, duration, 0)
+		{
+		}
 	}
 }

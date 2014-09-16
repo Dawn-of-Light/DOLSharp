@@ -31,7 +31,7 @@ using log4net;
 namespace DOL.GS.Effects
 {
 	/// <summary>
-	/// Holds &amp; manages multiple effects on livings
+	/// Holds and manages multiple effects on livings
 	/// when iterating over this effect list lock the list!
 	/// </summary>
 	public class GameEffectList : IEnumerable<IGameEffect>
