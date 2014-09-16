@@ -158,6 +158,8 @@ namespace DOL.GS
 			return new StringBuilder(32)
 				.Append("KeyName=").Append(KeyName)
 				.Append(", ID=").Append(ID)
+				.Append(", Icon=").Append(Icon)
+				.Append(", Level=").Append(Level)
 				.ToString();
 		}
 
