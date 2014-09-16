@@ -31,6 +31,7 @@ namespace DOL.GS.SkillHandler
 			if (player != null)
 			{
 				player.Out.SendCharStatsUpdate();
+				player.Out.SendCharResistsUpdate();
 				player.Out.SendUpdateWeaponAndArmorStats();
 				player.UpdateEncumberance();
 				player.UpdatePlayerStatus();
