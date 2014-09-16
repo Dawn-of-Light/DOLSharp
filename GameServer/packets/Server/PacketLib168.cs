@@ -2268,7 +2268,7 @@ namespace DOL.GS.PacketHandler
 			IList skills = m_gameClient.Player.GetNonTrainableSkillList();
 			IList styles = m_gameClient.Player.GetStyleList();
 			List<SpellLine> spelllines = m_gameClient.Player.GetSpellLines();
-			var m_styleId = new Hashtable();
+			Dictionary<int,int> m_styleId = new Dictionary<int,int>();
 			int maxSkills = 0;
 			int firstSkills = 0;
 
@@ -2303,7 +2303,7 @@ namespace DOL.GS.PacketHandler
 									pak.WriteByte((byte) eSkillPage.Specialization);
 									pak.WriteShort(0);
 									pak.WriteByte((byte) (m_gameClient.Player.GetModifiedSpecLevel(spec.KeyName) - spec.Level)); // bonus
-									pak.WriteShort(spec.ID);
+									pak.WriteShort((ushort)spec.ID);
 									pak.WritePascalString(spec.Name);
 								}
 
@@ -2321,7 +2321,7 @@ namespace DOL.GS.PacketHandler
 									pak.WriteByte(type);
 									pak.WriteShort(0);
 									pak.WriteByte(0);
-									pak.WriteShort(skill.ID);
+									pak.WriteShort((ushort)skill.ID);
 									string str = "";
 									if (m_gameClient.Player.CharacterClass.ID == (int) eCharacterClass.Vampiir)
 									{
@@ -2337,7 +2337,7 @@ namespace DOL.GS.PacketHandler
 
 								foreach (Style style in styles)
 								{
-									m_styleId[(int) style.ID] = i++;
+									m_styleId[(int)style.ID] = i++;
 									CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
 									//DOLConsole.WriteLine("style sended "+style.Name);
 									pak.WriteByte(0); // no level for style
