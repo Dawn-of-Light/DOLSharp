@@ -210,7 +210,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Current warmap page
 		/// </summary>
-		private byte m_warmapPage = 1;
+		private volatile byte m_warmapPage = 1;
 		public byte WarMapPage
 		{
 			get { return m_warmapPage; }
@@ -642,7 +642,8 @@ namespace DOL.GS
 			CurrentSpeed = 0;
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				if (player == null) continue;
+				if (player.ObjectState != eObjectState.Active || player == null || player == this) 
+					continue;
 				//Maybe there is a better solution?
 				player.Out.SendObjectRemove(this);
 				player.Out.SendPlayerCreate(this);
@@ -651,9 +652,7 @@ namespace DOL.GS
 			UpdateEquipmentAppearance();
 
 			LeaveHouse();
-
-			SaveIntoDatabase();
-
+			
 			if (m_quitTimer != null)
 			{
 				m_quitTimer.Stop();
@@ -1738,9 +1737,13 @@ namespace DOL.GS
 		public virtual void OnRevive(DOLEvent e, object sender, EventArgs args)
 		{
 			GamePlayer player = (GamePlayer)sender;
-			if (player.IsUnderwater && player.CanBreathUnderWater == false) player.Diving(waterBreath.Holding);
+			
+			if (player.IsUnderwater && player.CanBreathUnderWater == false)
+				player.Diving(waterBreath.Holding);
+			
 			if (player.Level > 5)
 			{
+				// get illness after level 5
 				SpellLine Line = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
 				if (Line == null) return;
 				ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(player, GlobalSpells.PvERezIllness, Line);
