@@ -3667,22 +3667,6 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 			//Using the resist BuffBonusCategory2 - its unused in ResistCalculator
 			int secondaryResistModifier = target.SpecBuffBonusCategory[(int)property];
 
-			/*Variance by Memories of War
-			 * - Memories of War: Upon reaching level 41, the Hero, Warrior and Armsman
-			 * will begin to gain more magic resistance (spell damage reduction only)
-			 * as they progress towards level 50. At each level beyond 41 they gain
-			 * 2%-3% extra resistance per level. At level 50, they will have the full 15% benefit.
-			 * from http://www.camelotherald.com/article.php?id=208
-			 *
-			 * - assume that "spell damage reduction only" indicates resistcategory 2
-			 */
-
-			if (ad.Target is GamePlayer && (ad.Target as GamePlayer).HasAbility(Abilities.MemoriesOfWar) && ad.Target.Level >= 40)
-			{
-				int levelbonus = Math.Min(target.Level - 40, 10);
-				secondaryResistModifier += (int)((levelbonus * 0.1 * 15));
-			}
-
 			if (secondaryResistModifier > 80)
 				secondaryResistModifier = 80;
 			#endregion
