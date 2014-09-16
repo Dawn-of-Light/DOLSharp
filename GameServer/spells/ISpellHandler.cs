@@ -216,6 +216,13 @@ namespace DOL.GS.Spells
 		void OnEffectRestored(GameSpellEffect effect, int[] RestoreVars);
 		int OnRestoredEffectExpires(GameSpellEffect effect, int[] RestoreVars, bool noMessages);
 		bool CheckBeginCast(GameLiving selectedTarget);
+		
+		/// <summary>
+		/// Calculates the range to target needed to cast the spell
+		/// </summary>
+		/// <returns>Modified Spell Range</returns>
+		int CalculateSpellRange();
+
 	}
 
 	/// <summary>

@@ -163,6 +163,21 @@ namespace DOL.Events
 		}
 
 		/// <summary>
+		/// Registers a single object event handler.
+		/// The global event handlers will be called for ALL events,
+		/// so use them wisely, they might incure a big performance
+		/// hit if used unwisely.
+		/// If an equal handler has already been added, nothing will be done
+		/// </summary>
+		/// <param name="e">The event type to register for</param>
+		/// <param name="del">The event handler to register for this event type</param>
+		/// <exception cref="ArgumentNullException">If one of the parameters is null</exception>
+		public static void AddHandlerUnique(object obj, DOLEvent e, DOLEventHandler del)
+		{
+			AddHandler(obj, e, del, true);
+		}
+		
+		/// <summary>
 		/// Registers a single global event handler.
 		/// The global event handlers will be called for ALL events,
 		/// so use them wisely, they might incure a big performance

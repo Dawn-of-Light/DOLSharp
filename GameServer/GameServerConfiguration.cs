@@ -226,7 +226,10 @@ namespace DOL.GS
 			
 			if (m_cpuCount < 1)
 				m_cpuCount = 1;
+			
 			m_cpuUse = root["Server"]["CpuUse"].GetInt(m_cpuUse);
+			if (m_cpuUse < 1)
+				m_cpuUse = 1; 
 			
 			// Parse UDP out endpoint
 			IPAddress	address = null;
@@ -376,9 +379,13 @@ namespace DOL.GS
 				}
 				catch { m_cpuCount = -1; }
 			}
+			
 			if (m_cpuCount < 1)
+			{
 				m_cpuCount = 1;
-				m_cpuUse = 1;
+			}
+			
+			m_cpuUse = m_cpuCount;
 		}
 
 		#endregion
