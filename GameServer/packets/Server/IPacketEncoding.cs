@@ -24,5 +24,6 @@ namespace DOL.GS.PacketHandler
 	{
 		byte[] DecryptPacket(byte[] content, bool udpPacket);
 		byte[] EncryptPacket(byte[] content, bool udpPacket);
+		byte[] SBox { get; set; }
 	}
 }

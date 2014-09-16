@@ -473,13 +473,29 @@ namespace DOL.GS
 					return;
 				}
 
-				//Currently, the version is sent with the first packet, no
-				//matter what packet code it is
-				int version = (_pBuf[12] * 100) + (_pBuf[13] * 10) + _pBuf[14];
+				int version;
+				
+				/// <summary>
+				/// The First Packet Format Change after 1.115c
+				/// If "numbytes" is below 19 we have a pre-1.115c packet !
+				/// </summary>
+				if (numBytes < 19)
+				{
+					//Currently, the version is sent with the first packet, no
+					//matter what packet code it is
+					version = (_pBuf[12] * 100) + (_pBuf[13] * 10) + _pBuf[14];
 
-				// we force the versionning: 200 correspond to 1.100 (1100)
-				// thus we could handle logically packets with version number based on the client version
-				if (version >= 200) version += 900;
+					// we force the versionning: 200 correspond to 1.100 (1100)
+					// thus we could handle logically packets with version number based on the client version
+					if (version >= 200) version += 900;
+				}
+				else
+				{
+					// post 1.115c
+					// first byte is major (1), second byte is minor (1), third byte is version (15)
+					// revision (c) is also coded in ascii after that, then a build number appear using two bytes (0x$$$$)
+					version = _pBuf[11] * 1000 + _pBuf[12] * 100 + _pBuf[13];
+				}
 
 				eClientVersion ver;
 				IPacketLib lib = AbstractPacketLib.CreatePacketLibForVersion(version, this, out ver);

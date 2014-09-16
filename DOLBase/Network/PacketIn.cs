@@ -125,6 +125,15 @@ namespace DOL.Network
 			return ReadString(ReadByte());
 		}
 
+		/// <summary>
+		/// Reads in a pascal style string, with header count formatted as a Low Endian Short.
+		/// </summary>
+		/// <returns>A string from the stream</returns>
+		public virtual string ReadLowEndianShortPascalString()
+		{
+			return ReadString(ReadShortLowEndian());
+		}
+		
 		public virtual uint ReadIntLowEndian()
 		{
 			var v1 = (byte) ReadByte();

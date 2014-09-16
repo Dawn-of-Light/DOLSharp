@@ -82,53 +82,94 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			string ipAddress = client.TcpEndpointAddress;
 
-			packet.Skip(2); //Skip the client_type byte
-			var major = (byte)packet.ReadByte();
-			var minor = (byte)packet.ReadByte();
-			var build = (byte)packet.ReadByte();
-			string password = packet.ReadString(20);
-
-			bool v174;
-			//the logger detection we had is no longer working
-			//bool loggerUsing = false;
-			switch (client.Version)
+			byte major;
+			byte minor;
+			byte build;
+			string password;
+			string userName;
+			
+			/// <summary>
+			/// Packet Format Change above 1.115
+			/// </summary>
+			
+			if (client.Version < GameClient.eClientVersion.Version1115)
 			{
-				case GameClient.eClientVersion.Version168:
-				case GameClient.eClientVersion.Version169:
-				case GameClient.eClientVersion.Version170:
-				case GameClient.eClientVersion.Version171:
-				case GameClient.eClientVersion.Version172:
-				case GameClient.eClientVersion.Version173:
-					v174 = false;
-					break;
-				default:
-					v174 = true;
-					break;
-			}
-
-			if (v174)
-			{
-				packet.Skip(11);
+				packet.Skip(2); //Skip the client_type byte
+				
+				major = (byte)packet.ReadByte();
+				minor = (byte)packet.ReadByte();
+				build = (byte)packet.ReadByte();
+				password = packet.ReadString(20);
+				
+				
+				bool v174;
+				//the logger detection we had is no longer working
+				//bool loggerUsing = false;
+				switch (client.Version)
+				{
+					case GameClient.eClientVersion.Version168:
+					case GameClient.eClientVersion.Version169:
+					case GameClient.eClientVersion.Version170:
+					case GameClient.eClientVersion.Version171:
+					case GameClient.eClientVersion.Version172:
+					case GameClient.eClientVersion.Version173:
+						v174 = false;
+						break;
+					default:
+						v174 = true;
+						break;
+				}
+	
+				if (v174)
+				{
+					packet.Skip(11);
+				}
+				else
+				{
+					packet.Skip(7);
+				}
+	
+				uint c2 = packet.ReadInt();
+				uint c3 = packet.ReadInt();
+				uint c4 = packet.ReadInt();
+	
+				if (v174)
+				{
+					packet.Skip(27);
+				}
+				else
+				{
+					packet.Skip(31);
+				}
+	
+				userName = packet.ReadString(20);
 			}
 			else
 			{
-				packet.Skip(7);
+				// 1.115c+
+				
+				// client type
+				packet.Skip(1);
+				
+				//version
+				major = (byte)packet.ReadByte();
+				minor = (byte)packet.ReadByte();
+				build = (byte)packet.ReadByte();
+				
+				// revision
+				packet.Skip(1);
+				// build
+				packet.Skip(2);
+				
+				// Read Login
+				userName = packet.ReadLowEndianShortPascalString();
+
+				// Read Password
+				password = packet.ReadLowEndianShortPascalString();
 			}
 
-			uint c2 = packet.ReadInt();
-			uint c3 = packet.ReadInt();
-			uint c4 = packet.ReadInt();
 
-			if (v174)
-			{
-				packet.Skip(27);
-			}
-			else
-			{
-				packet.Skip(31);
-			}
-
-			string userName = packet.ReadString(20);
+			
 			/*
 			if (c2 == 0 && c3 == 0x05000000 && c4 == 0xF4000000)
 			{
