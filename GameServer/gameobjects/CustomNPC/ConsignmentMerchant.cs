@@ -888,7 +888,7 @@ namespace DOL.GS
                 if (cloak != null)
                 {
                     cloak.Emblem = emblem;
-                    UpdateNPCEquipmentAppearance();
+                    BroadcastLivingEquipmentUpdate();
                 }
             }
         }

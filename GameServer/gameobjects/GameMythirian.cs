@@ -28,63 +28,62 @@ using log4net;
 
 namespace DOL.GS
 {
-        public class GameMythirian : GameInventoryItem
-        {
-                private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+	public class GameMythirian : GameInventoryItem
+	{
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-                private GameMythirian() { }
+		private GameMythirian() { }
 
-                public GameMythirian(ItemTemplate template)
-                        : base(template)
-                {
-                }
+		public GameMythirian(ItemTemplate template)
+			: base(template)
+		{
+		}
 
-                public GameMythirian(ItemUnique template)
-                        : base(template)
-                {
-                }
+		public GameMythirian(ItemUnique template)
+			: base(template)
+		{
+		}
 
-                public GameMythirian(InventoryItem item)
-                        : base(item)
-                {
-                }
+		public GameMythirian(InventoryItem item)
+			: base(item)
+		{
+		}
 
-                public override bool CanEquip(GamePlayer player)
-                {
-                        if (base.CanEquip(player))
-                        {
-                                if (Type_Damage <= player.ChampionLevel)
-                                {
-                                        return true;
-                                }
-                                player.Out.SendMessage("You do not meet the Champion Level requirement to equip this item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        }
-                        return false;
-                }
-                
-                #region Overrides
+		public override bool CanEquip(GamePlayer player)
+		{
+			if (base.CanEquip(player))
+			{
+				if (Type_Damage <= player.ChampionLevel)
+				{
+					return true;
+				}
+				player.Out.SendMessage("You do not meet the Champion Level requirement to equip this item.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+			return false;
+		}
 
-                public override void OnEquipped(GamePlayer player)
-                {
-                    if (this.Name.ToLower().Contains("ektaktos"))
-                    {
-                        player.CanBreathUnderWater = true;
-                        player.Out.SendMessage("You find yourself able to breathe water like air!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                    }
-                    base.OnEquipped(player);
-                }
+		#region Overrides
 
-                public override void OnUnEquipped(GamePlayer player)
-                {
-                    if (this.Name.ToLower().Contains("ektaktos") && SpellHandler.FindEffectOnTarget(player, "WaterBreathing") == null)
-                    {
-                        player.CanBreathUnderWater = false;
-                        player.Out.SendMessage("With a gulp and a gasp you realize that you are unable to breathe underwater any longer!", eChatType.CT_SpellExpires, eChatLoc.CL_SystemWindow);
-                    }
-                    base.OnUnEquipped(player);
-                }
-                #endregion
+		public override void OnEquipped(GamePlayer player)
+		{
+			if (this.Name.ToLower().Contains("ektaktos"))
+			{
+				player.CanBreathUnderWater = true;
+				player.Out.SendMessage("You find yourself able to breathe water like air!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+			base.OnEquipped(player);
+		}
 
-        }
+		public override void OnUnEquipped(GamePlayer player)
+		{
+			if (this.Name.ToLower().Contains("ektaktos") && SpellHelper.FindEffectOnTarget(player, typeof(WaterBreathingSpellHandler)) == null)
+			{
+				player.CanBreathUnderWater = false;
+				player.Out.SendMessage("With a gulp and a gasp you realize that you are unable to breathe underwater any longer!", eChatType.CT_SpellExpires, eChatLoc.CL_SystemWindow);
+			}
+			base.OnUnEquipped(player);
+		}
+		#endregion
+
+	}
 }
- 

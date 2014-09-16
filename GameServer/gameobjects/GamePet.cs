@@ -40,7 +40,7 @@ namespace DOL.GS
 					SwitchWeapon(GameLiving.eActiveWeaponSlot.TwoHanded);
 			}
 			AddStatsToWeapon();
-			UpdateNPCEquipmentAppearance();
+			BroadcastLivingEquipmentUpdate();
 		}
 
 		public GameLiving Owner
@@ -89,7 +89,7 @@ namespace DOL.GS
 					item.DPS_AF = (int)(Level * 3.3);
 					item.SPD_ABS = 50;
 					SwitchWeapon(eActiveWeaponSlot.Distance);
-					UpdateNPCEquipmentAppearance();
+					BroadcastLivingEquipmentUpdate();
 				}
 			}
 		}

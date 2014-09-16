@@ -123,7 +123,7 @@ namespace DOL.GS.Spells
 
 					m_pet.Inventory.AddItem(eInventorySlot.DistanceWeapon, GameInventoryItem.Create<ItemTemplate>(temp));
 				}
-				m_pet.UpdateNPCEquipmentAppearance();
+				m_pet.BroadcastLivingEquipmentUpdate();
 			}
 		}
 

@@ -1666,7 +1666,7 @@ namespace DOL.GS.Commands
 				targetMob.EquipmentTemplateID = null;
 				targetMob.SaveIntoDatabase();
 				client.Out.SendMessage("Mob equipment cleared.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				targetMob.UpdateNPCEquipmentAppearance();
+				targetMob.BroadcastLivingEquipmentUpdate();
 				return;
 			}
 			else if (args[2].ToLower() == "create")
@@ -1688,7 +1688,7 @@ namespace DOL.GS.Commands
 					DisplaySyntax(client, args[1], args[2]);
 				}
 
-				targetMob.UpdateNPCEquipmentAppearance();
+				targetMob.BroadcastLivingEquipmentUpdate();
 				return;
 			}
 			else if (args[2].ToLower() == "load")
@@ -1713,7 +1713,7 @@ namespace DOL.GS.Commands
 						targetMob.EquipmentTemplateID = args[3];
 						targetMob.Inventory = load;
 						targetMob.SaveIntoDatabase();
-						targetMob.UpdateNPCEquipmentAppearance();
+						targetMob.BroadcastLivingEquipmentUpdate();
 						client.Out.SendMessage("Mob equipment loaded!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					catch
@@ -1880,7 +1880,7 @@ namespace DOL.GS.Commands
 					break;
 			}
 
-			targetMob.UpdateNPCEquipmentAppearance();
+			targetMob.BroadcastLivingEquipmentUpdate();
 		}
 
 		private void visibleslot(GameClient client, GameNPC targetMob, string[] args)
@@ -2612,7 +2612,7 @@ namespace DOL.GS.Commands
 				if (targetMob != null)
 				{
 					targetMob.NPCTemplate = null;
-					targetMob.UpdateNPCEquipmentAppearance();
+					targetMob.BroadcastLivingEquipmentUpdate();
 					targetMob.SaveIntoDatabase();
 				}
 			}
@@ -2652,7 +2652,7 @@ namespace DOL.GS.Commands
 			else
 			{
 				targetMob.LoadTemplate(template);
-				targetMob.UpdateNPCEquipmentAppearance();
+				targetMob.BroadcastLivingEquipmentUpdate();
 				targetMob.NPCTemplate = template as NpcTemplate;
 				targetMob.SaveIntoDatabase();
 				DisplayMessage(client, "Updated npc based on template " + id, new object[] { });
@@ -2809,7 +2809,7 @@ namespace DOL.GS.Commands
 		private void hood(GameClient client, GameNPC targetMob, string[] args)
 		{
 			targetMob.IsCloakHoodUp ^= true;
-			targetMob.UpdateNPCEquipmentAppearance();
+			targetMob.BroadcastLivingEquipmentUpdate();
 			targetMob.SaveIntoDatabase();
 			client.Out.SendMessage("Mob IsCloakHoodUp flag is set to " + targetMob.IsCloakHoodUp, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
@@ -2817,7 +2817,7 @@ namespace DOL.GS.Commands
 		private void cloak(GameClient client, GameNPC targetMob, string[] args)
 		{
 			targetMob.IsCloakInvisible ^= true;
-			targetMob.UpdateNPCEquipmentAppearance();
+			targetMob.BroadcastLivingEquipmentUpdate();
 			targetMob.SaveIntoDatabase();
 			client.Out.SendMessage("Mob IsCloakInvisible flag is set to " + targetMob.IsCloakHoodUp, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 		}
