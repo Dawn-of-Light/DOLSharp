@@ -82,7 +82,8 @@ namespace DOL.GS.Appeal
 		private static void RunTask(object state)
 		{
 			NotifyStaff();
-			m_timer.Change(m_CallbackFrequency, Timeout.Infinite);
+			if (m_timer != null)
+				m_timer.Change(m_CallbackFrequency, Timeout.Infinite);
 			return;
 		}
 

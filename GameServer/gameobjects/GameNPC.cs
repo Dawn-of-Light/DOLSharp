@@ -245,8 +245,8 @@ namespace DOL.GS
 			{
 				IControlledBrain brain = Brain as IControlledBrain;
 				if (brain != null)
-					return brain.Owner.Level;
-				return base.Level;
+					return brain.Owner.EffectiveLevel;
+				return base.EffectiveLevel;
 			}
 		}
 
@@ -1272,7 +1272,7 @@ namespace DOL.GS
 		/// <param name="target"></param>
 		/// <param name="speed"></param>
 		/// <returns></returns>
-		private int GetTicksToArriveAt(IPoint3D target, int speed)
+		public virtual int GetTicksToArriveAt(IPoint3D target, int speed)
 		{
 			return GetDistanceTo(target) * 1000 / speed;
 		}
@@ -2052,6 +2052,9 @@ namespace DOL.GS
 
 			if (npcTemplate != null && npcTemplate.ReplaceMobValues)
 				LoadTemplate(npcTemplate);
+
+			if (Inventory != null)
+				SwitchWeapon(ActiveWeaponSlot);
 		}
 
 		/// <summary>
@@ -2392,7 +2395,7 @@ namespace DOL.GS
 			if (ObjectState == eObjectState.Active)
 			{
 				// Update active weapon appearence
-				UpdateNPCEquipmentAppearance();
+				BroadcastLivingEquipmentUpdate();
 			}
 		}
 		/// <summary>
@@ -2406,17 +2409,6 @@ namespace DOL.GS
 		{
 			get { return m_equipmentTemplateID; }
 			set { m_equipmentTemplateID = value; }
-		}
-		/// <summary>
-		/// Updates the items on a character
-		/// </summary>
-		public void UpdateNPCEquipmentAppearance()
-		{
-			if (ObjectState == eObjectState.Active)
-			{
-				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-					player.Out.SendLivingEquipmentUpdate(this);
-			}
 		}
 
 		#endregion
@@ -2793,18 +2785,14 @@ namespace DOL.GS
 		#endregion
 		
 		#region Add/Remove/Create/Remove/Update
-		/// <summary>
-		/// Broadcasts the npc to all players around
+
+        /// <summary>
+		/// Broadcasts the NPC Update to all players around
 		/// </summary>
-		public virtual void BroadcastUpdate()
+		public override void BroadcastUpdate()
 		{
-			if (ObjectState != eObjectState.Active) return;
-			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-			{
-				if (player == null) continue;
-				player.Out.SendObjectUpdate(this);
-				player.CurrentUpdateArray[ObjectID - 1] = true;
-			}
+			base.BroadcastUpdate();
+			
 			m_lastUpdateTickCount = (uint)Environment.TickCount;
 		}
 
@@ -3357,6 +3345,7 @@ namespace DOL.GS
 
 			return base.GetStyleToUse();
 		}
+		
 		/// <summary>
 		/// Adds messages to ArrayList which are sent when object is targeted
 		/// </summary>
@@ -3819,7 +3808,7 @@ namespace DOL.GS
 		}
 
 
-		private void SetLastMeleeAttackTick()
+		public void SetLastMeleeAttackTick()
 		{
 			if (TargetObject.Realm == 0 || Realm == 0)
 				m_lastAttackTickPvE = m_CurrentRegion.Time;
@@ -3966,33 +3955,34 @@ namespace DOL.GS
 			if (Group != null)
 				Group.RemoveMember(this);
 
-			if(killer!=null)
+			if(killer != null)
 			{
-				base.Die(killer);
+				// Handle faction alignement changes // TODO Review
+				if ((Faction != null) && (killer is GamePlayer))
+				{	
+					// Get All Attackers. // TODO check if this shouldn't be set to Attackers instead of XPGainers ?
+					foreach (DictionaryEntry de in this.XPGainers)
+					{
+						GameLiving living = de.Key as GameLiving;
+						GamePlayer player = living as GamePlayer;
+	
+						// Get Pets Owner (// TODO check if they are not already treated as attackers ?)
+						if (living is GameNPC && (living as GameNPC).Brain is IControlledBrain)
+							player = ((living as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+	
+						if (player != null && player.ObjectState == GameObject.eObjectState.Active && player.IsAlive && player.IsWithinRadius(this, WorldMgr.MAX_EXPFORKILL_DISTANCE))
+						{
+							Faction.KillMember(player);
+						}
+					}
+				}
+				
 				// deal out exp and realm points based on server rules
 				GameServer.ServerRules.OnNPCKilled(this, killer);
+				base.Die(killer);
 			}
 
 			Delete();
-
-			if ((Faction != null) && (killer is GamePlayer))
-			{
-				// Tyriada(Carmélide) : il faut donner la faction à tous les membres attaquants ainsi que leur groupe
-
-				foreach (DictionaryEntry de in this.XPGainers)
-				{
-					GameLiving living = de.Key as GameLiving;
-					GamePlayer player = living as GamePlayer;
-
-					if (living is GameNPC && (living as GameNPC).Brain is IControlledBrain) // Tout les pets renvoient sur leurs owners.
-						player = ((living as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
-
-					if (player != null && player.ObjectState == GameObject.eObjectState.Active && player.IsAlive && player.IsWithinRadius(this, WorldMgr.MAX_EXPFORKILL_DISTANCE))
-					{
-						Faction.KillMember(player);
-					}
-				}
-			}
 
 			// remove temp properties
 			TempProperties.removeAllProperties();
@@ -4060,6 +4050,7 @@ namespace DOL.GS
 				//When npcs have two handed weapons, we don't want them to block
 				if (ActiveWeaponSlot != eActiveWeaponSlot.Standard)
 					return 0;
+				
 				return m_blockChance;
 			}
 			set
@@ -4142,6 +4133,21 @@ namespace DOL.GS
 			StopAttack();
 			SwitchWeapon(eActiveWeaponSlot.Distance);
 			StartAttack(target);
+		}
+
+		/// <summary>
+		/// Draw the weapon, but don't actually start a melee attack.
+		/// </summary>		
+		public virtual void DrawWeapon()
+		{
+			if (!AttackState)
+			{
+				AttackState = true;
+				
+				BroadcastUpdate();
+
+				AttackState = false;
+			}
 		}
 
 		/// <summary>
@@ -4281,6 +4287,9 @@ namespace DOL.GS
 					{
 						m_respawnTimer.Stop();
 					}
+					// register Mob as "respawning"
+					CurrentRegion.MobsRespawning.TryAdd(this, respawnInt);
+					
 					m_respawnTimer.Start(respawnInt);
 				}
 			}
@@ -4292,6 +4301,10 @@ namespace DOL.GS
 		/// <returns>the new interval</returns>
 		protected virtual int RespawnTimerCallback(RegionTimer respawnTimer)
 		{
+			int dummy;
+			// remove Mob from "respawning"
+			CurrentRegion.MobsRespawning.TryRemove(this, out dummy);
+			
 			lock (m_respawnTimerLock)
 			{
 				if (m_respawnTimer != null)
@@ -4651,14 +4664,14 @@ namespace DOL.GS
 			}
 		}
 
-		private IList m_spells = new ArrayList(1);
+		private List<Spell> m_spells = new List<Spell>();
 		/// <summary>
 		/// property of spell array of NPC
 		/// </summary>
-		public IList Spells
+		public virtual IList Spells
 		{
 			get { return m_spells; }
-			set { m_spells = value; }
+			set { m_spells = value.Cast<Spell>().ToList(); }
 		}
 
 		private IList m_styles = new ArrayList(1);
@@ -4711,12 +4724,16 @@ namespace DOL.GS
 					SpellTimer.Start(interval);
 				}
 			}
+
 			if (m_runningSpellHandler != null)
 			{
 				//prevent from relaunch
-				m_runningSpellHandler.CastingCompleteEvent -= new CastingCompleteCallback(OnAfterSpellCastSequence);
-				m_runningSpellHandler = null;
+				base.OnAfterSpellCastSequence(handler);
 			}
+			
+			// Notify Brain of Cast Finishing.
+			if(Brain != null)
+				Brain.Notify(GameNPCEvent.CastFinished, this, new CastingEventArgs(handler));
 		}
 
 		/// <summary>
@@ -5237,8 +5254,8 @@ namespace DOL.GS
 					copyTarget.Inventory = inventoryTemplate.CloneTemplate();
 			}
 
-			if ( Spells != null && Spells.Count > 0 )
-				copyTarget.Spells = new ArrayList( Spells );
+			if (Spells != null && Spells.Count > 0)
+				copyTarget.Spells = new List<Spell>(Spells.Cast<Spell>());
 
 			if ( Styles != null && Styles.Count > 0 )
 				copyTarget.Styles = new ArrayList( Styles );

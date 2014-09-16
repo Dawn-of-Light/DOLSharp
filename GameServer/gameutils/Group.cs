@@ -43,7 +43,11 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets/sets the group leader
 		/// </summary>
-		GamePlayer m_leader = null;
+		protected GamePlayer m_leader = null;
+		
+		/// <summary>
+		/// Gets/sets the group leader
+		/// </summary>
 		public GamePlayer Leader
 		{
 			get { return m_leader; }
@@ -74,7 +78,11 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the group's autosplit loot flag
 		/// </summary>
-		bool m_autosplitLoot = true;
+		protected bool m_autosplitLoot = true;
+		
+		/// <summary>
+		/// Gets or sets the group's autosplit loot flag
+		/// </summary>
 		public bool AutosplitLoot
 		{
 			get { return m_autosplitLoot; }
@@ -84,7 +92,11 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the group's autosplit coins flag
 		/// </summary>
-		bool m_autosplitCoins = true;
+		protected bool m_autosplitCoins = true;
+
+		/// <summary>
+		/// Gets or sets the group's autosplit coins flag
+		/// </summary>
 		public bool AutosplitCoins
 		{
 			get { return m_autosplitCoins; }

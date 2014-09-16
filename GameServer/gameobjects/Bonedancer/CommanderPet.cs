@@ -260,7 +260,7 @@ namespace DOL.GS
 			Inventory.AddItem(slot, GameInventoryItem.Create<ItemTemplate>(temp));
 			SwitchWeapon(aSlot);
 			AddStatsToWeapon();
-			UpdateNPCEquipmentAppearance();
+			BroadcastLivingEquipmentUpdate();
 		}
 
 		/// <summary>

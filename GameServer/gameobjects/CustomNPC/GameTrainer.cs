@@ -178,7 +178,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public bool CanTrainChampionLevels(GamePlayer player)
+		public virtual bool CanTrainChampionLevels(GamePlayer player)
 		{
 			return player.Level >= 50 && player.Champion && m_championTrainerType != eChampionTrainerType.None && m_championTrainerType != player.CharacterClass.ChampionTrainerType();
 
