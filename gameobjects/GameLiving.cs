@@ -6278,7 +6278,7 @@ namespace DOL.GS
 		/// Table of skills currently disabled
 		/// skill => disabletimeout (ticks) or 0 when endless
 		/// </summary>
-		private readonly Dictionary<KeyValuePair<ushort, Type>, KeyValuePair<long, Skill>> m_disabledSkills = new Dictionary<KeyValuePair<ushort, Type>, KeyValuePair<long, Skill>>();
+		private readonly Dictionary<KeyValuePair<int, Type>, KeyValuePair<long, Skill>> m_disabledSkills = new Dictionary<KeyValuePair<int, Type>, KeyValuePair<long, Skill>>();
 
 		/// <summary>
 		/// Gets the time left for disabling this skill in milliseconds
@@ -6289,7 +6289,7 @@ namespace DOL.GS
 		{
 			lock ((m_disabledSkills as ICollection).SyncRoot)
 			{
-				KeyValuePair<ushort, Type> key = new KeyValuePair<ushort, Type>(skill.ID, skill.GetType());
+				KeyValuePair<int, Type> key = new KeyValuePair<int, Type>(skill.ID, skill.GetType());
 				if (m_disabledSkills.ContainsKey(key))
 				{
 					long timeout = m_disabledSkills[key].Key;
@@ -6309,7 +6309,7 @@ namespace DOL.GS
 		/// Gets a copy of all disabled skills
 		/// </summary>
 		/// <returns></returns>
-		public virtual ICollection GetAllDisabledSkills()
+		public virtual ICollection<Skill> GetAllDisabledSkills()
 		{
 			lock ((m_disabledSkills as ICollection).SyncRoot)
 			{
@@ -6331,7 +6331,7 @@ namespace DOL.GS
 		{
 			lock ((m_disabledSkills as ICollection).SyncRoot)
 			{
-				KeyValuePair<ushort, Type> key = new KeyValuePair<ushort, Type>(skill.ID, skill.GetType());
+				KeyValuePair<int, Type> key = new KeyValuePair<int, Type>(skill.ID, skill.GetType());
 				if (duration > 0)
 				{
 					m_disabledSkills[key] = new KeyValuePair<long, Skill>(CurrentRegion.Time + duration, skill);
@@ -6353,7 +6353,7 @@ namespace DOL.GS
 		{
 			lock ((m_disabledSkills as ICollection).SyncRoot)
 			{
-				KeyValuePair<ushort, Type> key = new KeyValuePair<ushort, Type>(skill.ID, skill.GetType());
+				KeyValuePair<int, Type> key = new KeyValuePair<int, Type>(skill.ID, skill.GetType());
 				if(m_disabledSkills.ContainsKey(key))
 					m_disabledSkills.Remove(key);
 			}

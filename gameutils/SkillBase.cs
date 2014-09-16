@@ -55,7 +55,7 @@ namespace DOL.GS
 	/// </summary>
 	public abstract class Skill
 	{
-		protected ushort m_id;
+		protected int m_id;
 		protected string m_name;
 		protected int m_level;
 		protected ushort m_icon;
@@ -66,7 +66,7 @@ namespace DOL.GS
 		/// <param name="name"></param>
 		/// <param name="id"></param>
 		/// <param name="level"></param>
-		public Skill(string name, ushort id, ushort icon, int level)
+		public Skill(string name, int id, ushort icon, int level)
 		{
 			m_id = id;
 			m_name = name;
@@ -78,7 +78,7 @@ namespace DOL.GS
 		/// in most cases it is icon id or other specifiing id for client
 		/// like spell id or style id in spells
 		/// </summary>
-		public virtual ushort ID
+		public virtual int ID
 		{
 			get { return m_id; }
 		}
@@ -143,7 +143,7 @@ namespace DOL.GS
 		/// <param name="name">The name</param>
 		/// <param name="id">The ID</param>
 		/// <param name="level">The level</param>
-		public NamedSkill(string keyName, string name, ushort id, ushort icon, int level)
+		public NamedSkill(string keyName, string name, int id, ushort icon, int level)
 			: base(name, id, icon, level)
 		{
 			m_keyName = keyName;

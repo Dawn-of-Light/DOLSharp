@@ -344,7 +344,7 @@ namespace DOL.GS
         }
 
         public Spell(DBSpell dbspell, int requiredLevel, bool minotaur)
-			: base(dbspell.Name, (ushort)dbspell.SpellID, (ushort)dbspell.Icon, requiredLevel)
+			: base(dbspell.Name, dbspell.SpellID, (ushort)dbspell.Icon, requiredLevel)
 		{
 			m_description = dbspell.Description;
 			m_target = dbspell.Target;
@@ -396,7 +396,7 @@ namespace DOL.GS
 		/// <param name="spell"></param>
 		/// <param name="spellType"></param>
 		public Spell(Spell spell, string spellType) :
-			base(spell.Name, (ushort)spell.ID, (ushort)spell.Icon, spell.Level)
+			base(spell.Name, spell.ID, (ushort)spell.Icon, spell.Level)
 		{
 			m_description = spell.Description;
 			m_target = spell.Target;
