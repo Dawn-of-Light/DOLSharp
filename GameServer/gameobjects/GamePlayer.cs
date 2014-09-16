@@ -12645,7 +12645,7 @@ namespace DOL.GS
 			}
 			string disabledSpells = "";
 			string disabledAbilities = "";
-			ICollection disabledSkills = GetAllDisabledSkills();
+			ICollection<Skill> disabledSkills = GetAllDisabledSkills();
 			foreach (Skill skill in disabledSkills)
 			{
 				int duration = GetSkillDisabledDuration(skill);
@@ -12796,7 +12796,7 @@ namespace DOL.GS
 
 			RemoveAllSpellLines();
 
-			Dictionary<ushort, int> disabledSpells = new Dictionary<ushort, int>();
+			Dictionary<int, int> disabledSpells = new Dictionary<int, int>();
 
 			//Load the disabled spells
 			string tmpStr = character.DisabledSpells;
@@ -12805,9 +12805,9 @@ namespace DOL.GS
 				foreach (string str in tmpStr.SplitCSV())
 				{
 					string[] values = str.Split('|');
-					ushort spellid;
+					int spellid;
 					int duration;
-					if (values.Length >= 2 && ushort.TryParse(values[0], out spellid) && int.TryParse(values[1], out duration))
+					if (values.Length >= 2 && int.TryParse(values[0], out spellid) && int.TryParse(values[1], out duration))
 					{
 						if (disabledSpells.ContainsKey(spellid))
 							continue;
@@ -15882,7 +15882,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Load champion spells of this player
 		/// </summary>
-		protected virtual void LoadChampionSpells(Dictionary<ushort, int> disabledSpells)
+		protected virtual void LoadChampionSpells(Dictionary<int, int> disabledSpells)
 		{
 			try
 			{
