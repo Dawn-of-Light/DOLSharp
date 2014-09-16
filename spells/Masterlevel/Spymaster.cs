@@ -128,7 +128,7 @@ namespace DOL.GS.Spells
             {
                 decoy.EquipmentTemplateID = TemplateId;
                 decoy.Inventory = load;
-                decoy.UpdateNPCEquipmentAppearance();
+                decoy.BroadcastLivingEquipmentUpdate();
             }
             decoy.CurrentSpeed = 0;
             decoy.GuildName = "";

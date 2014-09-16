@@ -1130,7 +1130,7 @@ namespace DOL.GS
 			delve.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.WriteClassicArmorInfos.ArmorMod"));
 
 			double af = 0;
-			int afCap = player.Level;
+			int afCap = player.Level + (player.RealmLevel > 39 ? 1 : 0);
 			double effectiveAF = 0;
 
 			if (DPS_AF != 0)
