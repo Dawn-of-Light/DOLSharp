@@ -256,10 +256,8 @@ namespace DOL.GS.Quests
 				{
 					GiveItem(QuestPlayer, optionalReward);
 				}
-                eQuestIndicator indicator = eQuestIndicator.None;
-                if (QuestGiver.CanGiveOneQuest(QuestPlayer))
-                    indicator = eQuestIndicator.Available;
-				QuestPlayer.Out.SendNPCsQuestEffect(QuestGiver, indicator);
+				
+				QuestPlayer.Out.SendNPCsQuestEffect(QuestGiver, QuestGiver.GetQuestIndicator(QuestPlayer));
 			}
 			else
 			{
@@ -422,6 +420,19 @@ namespace DOL.GS.Quests
 					m_quest.QuestPlayer.Out.SendMessage(Description, eChatType.CT_ScreenCenter, 
 						eChatLoc.CL_SystemWindow);
 					m_quest.QuestPlayer.Out.SendQuestUpdate(m_quest);
+					
+					// Check for updates
+					if (IsAchieved)
+					{
+						// check if all quest is achieved
+						bool done = true;
+						foreach (QuestGoal goal in m_quest.Goals)
+							done &= goal.IsAchieved;
+						
+						if (done && m_quest.QuestGiver.IsWithinRadius(m_quest.QuestPlayer, WorldMgr.VISIBILITY_DISTANCE))
+							m_quest.QuestPlayer.Out.SendNPCsQuestEffect(m_quest.QuestGiver, m_quest.QuestGiver.GetQuestIndicator(m_quest.QuestPlayer));
+					}
+					
 				}
 			}
 
