@@ -2521,8 +2521,13 @@ namespace DOL.GS
 		/// <returns>True if the NPC should show quest indicator, false otherwise</returns>
 		public virtual eQuestIndicator GetQuestIndicator(GamePlayer player)
 		{
+			// Available one ?
 			if (CanGiveOneQuest(player))
 				return eQuestIndicator.Available;
+			
+			// Finishing one ?
+			if (CanFinishOneQuest(player))
+				return eQuestIndicator.Finish;
 
 			return eQuestIndicator.None;
 		}
@@ -2567,6 +2572,64 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Check if the npc can finish one of DataQuest/RewardQuest Player is doing
+		/// This can't be check with AbstractQuest as they don't implement anyway of knowing who is the last target or last step !
+		/// </summary>
+		/// <param name="player">The player to check</param>
+		/// <returns>true if this npc is the last step of one quest, false otherwise</returns>
+		public bool CanFinishOneQuest(GamePlayer player)
+		{
+			// browse Quests.
+			List<AbstractQuest> dqs;
+			lock (((ICollection)player.QuestList).SyncRoot)
+			{
+				dqs = new List<AbstractQuest>(player.QuestList);
+			}
+			
+			foreach (AbstractQuest q in dqs)
+			{
+				// Handle Data Quest here.
+				
+				DataQuest quest = null;
+				if (q is DataQuest)
+					quest = (DataQuest)q;
+				
+				if (quest != null && (quest.TargetName == Name && (quest.TargetRegion == 0 || quest.TargetRegion == CurrentRegionID)))
+				{
+					switch(quest.StepType)
+					{
+						case DataQuest.eStepType.DeliverFinish:
+						case DataQuest.eStepType.InteractFinish:
+						case DataQuest.eStepType.KillFinish:
+						case DataQuest.eStepType.WhisperFinish:
+						case DataQuest.eStepType.CollectFinish:
+							return true;
+					}
+				}
+				
+				// Handle Reward Quest here.
+				
+				RewardQuest rwQuest = null;
+				
+				if (q is RewardQuest)
+					rwQuest = (RewardQuest)q;
+								
+				if (rwQuest != null && rwQuest.QuestGiver == this)
+				{
+					bool done = true;
+					foreach (RewardQuest.QuestGoal goal in rwQuest.Goals)
+						done &= goal.IsAchieved;
+					
+					if (done)
+						return true;
+				}
+			}
+			
+			return false;
+		}
+
+		
+		/// <summary>
 		/// Give a quest a to specific player
 		/// used for scripted quests
 		/// </summary>
@@ -2582,8 +2645,7 @@ namespace DOL.GS
 				AbstractQuest newQuest = (AbstractQuest)Activator.CreateInstance(questType, new object[] { player, startStep });
 				if (newQuest != null && player.AddQuest(newQuest))
 				{
-					if (!CanGiveOneQuest(player))
-						player.Out.SendNPCsQuestEffect(this, eQuestIndicator.None);
+					player.Out.SendNPCsQuestEffect(this, GetQuestIndicator(player));
 					return true;
 				}
 			}

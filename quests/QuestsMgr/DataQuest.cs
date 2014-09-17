@@ -1104,7 +1104,7 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// Target name for the current step
 		/// </summary>
-		protected string TargetName
+		public string TargetName
 		{
 			get
 			{
@@ -1127,7 +1127,7 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// Target region for the current step
 		/// </summary>
-		protected ushort TargetRegion
+		public ushort TargetRegion
 		{
 			get
 			{
@@ -1177,7 +1177,7 @@ namespace DOL.GS.Quests
 		/// <summary>
 		/// Current step type
 		/// </summary>
-		protected eStepType StepType
+		public eStepType StepType
 		{
 			get
 			{
@@ -1650,6 +1650,23 @@ namespace DOL.GS.Quests
 
 					Step++;
 					m_questPlayer.Out.SendQuestListUpdate();
+					
+					// Try to update Icon
+					switch (StepType)
+					{
+						case eStepType.DeliverFinish:
+						case eStepType.InteractFinish:
+						case eStepType.KillFinish:
+						case eStepType.WhisperFinish:
+						case eStepType.CollectFinish:
+							foreach (GameNPC n in m_questPlayer.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					        {
+					         	GameNPC npc = n;
+					         	if (npc != null && (TargetName == npc.Name && (TargetRegion == 0 || TargetRegion == npc.CurrentRegionID)))
+					         		UpdateQuestIndicator(npc, m_questPlayer);
+					        }
+						break;
+					}
 
 					// Then say any source text for the new step
 
