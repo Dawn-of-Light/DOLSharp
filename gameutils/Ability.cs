@@ -51,6 +51,7 @@ namespace DOL.GS
 		protected string m_serializedNames;
 		protected string m_description;
 		protected int m_speclevel;
+		
 		protected GameLiving m_activeLiving = null;
 
 
@@ -60,22 +61,22 @@ namespace DOL.GS
 		}
 
 		public Ability(DBAbility dba, int level)
-			: this(dba.KeyName, dba.Name, dba.Description, dba.InternalID, (ushort)dba.IconID, level)
+			: this(dba.KeyName, dba.Name, dba.Description, dba.AbilityID, (ushort)dba.IconID, level, dba.InternalID)
 		{
 		}
 
 		public Ability(DBAbility dba, int level, string spec, int speclevel)
-			: this(dba.KeyName, dba.Name, dba.Description, dba.InternalID, (ushort)dba.IconID, level, spec, speclevel)
+			: this(dba.KeyName, dba.Name, dba.Description, dba.AbilityID, (ushort)dba.IconID, level, spec, speclevel, dba.InternalID)
 		{
 		}
 
-		public Ability(string keyname, string displayname, string description, int id, ushort icon, int level)
-			: this(keyname, displayname, description, id, icon, level, "", 0)
+		public Ability(string keyname, string displayname, string description, int id, ushort icon, int level, int internalID)
+			: this(keyname, displayname, description, id, icon, level, "", 0, internalID)
 		{
 		}
 
-		public Ability(string keyname, string displayname, string description, int id, ushort icon, int level, string spec, int speclevel)
-			: base(keyname, displayname, id, icon, level)
+		public Ability(string keyname, string displayname, string description, int id, ushort icon, int level, string spec, int speclevel, int internalID)
+			: base(keyname, displayname, id, icon, level, internalID)
 		{
 			m_spec = spec;
 			m_speclevel = speclevel;
@@ -186,7 +187,7 @@ namespace DOL.GS
 				if (m_activeLiving != null) OnLevelChange(oldLevel);
 			}
 		}
-
+		
 		/// <summary>
 		/// get the level represented as roman numbers
 		/// </summary>
