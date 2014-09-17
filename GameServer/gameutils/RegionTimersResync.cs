@@ -128,7 +128,7 @@ namespace DOL.GS.GameEvents
                     foreach (Region reg in WorldMgr.GetAllRegions())
 					{
 						if (reg.TimeManager == mgr)
-						{							
+						{
 							foreach (GameObject obj in reg.Objects)
 							{
 								//Restart Player regen & remove PvP immunity
@@ -140,6 +140,7 @@ namespace DOL.GS.GameEvents
 										plr.StopHealthRegeneration();
 										plr.StopPowerRegeneration();
 										plr.StopEnduranceRegeneration();
+										plr.StopCurrentSpellcast();
 										plr.StartHealthRegeneration();
 										plr.StartPowerRegeneration();
 										plr.StartEnduranceRegeneration();
@@ -164,8 +165,10 @@ namespace DOL.GS.GameEvents
 
 										
 									}
+									// Warn Player
 									plr.Client.Out.SendMessage("["+reg.Description+"] detected as frozen, restarting the zone.", eChatType.CT_Broadcast, eChatLoc.CL_ChatWindow);
 								}
+								
 								//Restart Brains & Paths
 								if (obj is GameNPC && (obj as GameNPC).Brain != null)
                                 {
@@ -210,6 +213,15 @@ namespace DOL.GS.GameEvents
 										}
 									}
 								}
+							}
+							
+							//Restart Respawn Timers
+							List<GameNPC> respawnings = new List<GameNPC>(reg.MobsRespawning.Keys);
+							foreach(GameNPC deadMob in respawnings)
+							{
+								GameNPC mob = deadMob;
+								if(mob != null)
+									mob.StartRespawn();
 							}
 						}					
 					}
