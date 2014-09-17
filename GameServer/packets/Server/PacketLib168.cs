@@ -2303,7 +2303,7 @@ namespace DOL.GS.PacketHandler
 									pak.WriteByte((byte) eSkillPage.Specialization);
 									pak.WriteShort(0);
 									pak.WriteByte((byte) (m_gameClient.Player.GetModifiedSpecLevel(spec.KeyName) - spec.Level)); // bonus
-									pak.WriteShort((ushort)spec.ID);
+									pak.WriteShort((ushort)spec.Icon);
 									pak.WritePascalString(spec.Name);
 								}
 
@@ -2321,7 +2321,7 @@ namespace DOL.GS.PacketHandler
 									pak.WriteByte(type);
 									pak.WriteShort(0);
 									pak.WriteByte(0);
-									pak.WriteShort((ushort)skill.ID);
+									pak.WriteShort((ushort)skill.Icon);
 									string str = "";
 									if (m_gameClient.Player.CharacterClass.ID == (int) eCharacterClass.Vampiir)
 									{

@@ -34,7 +34,7 @@ namespace DOL.GS
 	public class Specialization : NamedSkill {
 
 		public Specialization(string keyname, string displayname, ushort icon) : 
-			base(keyname, displayname, icon, icon, 1) { }
+			base(keyname, displayname, icon, icon, 1, icon) { }
 
 		/// <summary>
 		/// type of skill
