@@ -87,7 +87,7 @@ namespace DOL.GS.PacketHandler
 								{
 									CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
 									pak.WriteByte((byte)spec.Level);
-									pak.WriteShort((ushort)spec.ID); //new 1.112
+									pak.WriteShort((ushort)spec.InternalID); //new 1.112
 									pak.WriteByte((byte)eSkillPage.Specialization);
 									pak.WriteShort(0);
 									pak.WriteByte((byte)(m_gameClient.Player.GetModifiedSpecLevel(spec.KeyName) - spec.Level)); // bonus
@@ -107,7 +107,7 @@ namespace DOL.GS.PacketHandler
 										count++;
 										CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
 										pak.WriteByte(0);
-										pak.WriteShort((ushort)skill.ID); //new 1.112
+										pak.WriteShort((ushort)skill.InternalID); //new 1.112
 										byte type = (byte)eSkillPage.Abilities;
 										if (skill is RealmAbility)
 										{
@@ -141,7 +141,7 @@ namespace DOL.GS.PacketHandler
 										{
 											pak.WriteByte((byte)style.SpecLevelRequirement);
 										}
-										pak.WriteShort((ushort)style.ID); //new 1.112
+										pak.WriteShort((ushort)style.InternalID); //new 1.112
 										pak.WriteByte((byte)eSkillPage.Styles);
 	
 										int pre = 0;
