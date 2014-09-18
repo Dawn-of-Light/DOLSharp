@@ -120,7 +120,7 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public ushort Icon
 		{
-			get { return m_spellHandler.Spell.ClientEffect; }
+			get { return m_spellHandler.Spell.Icon; }
 		}
 
 		/// <summary>

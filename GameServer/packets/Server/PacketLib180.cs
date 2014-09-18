@@ -390,9 +390,9 @@ namespace DOL.GS.PacketHandler
 										pak.WriteByte(0);
 										pak.WriteByte(0xFF);
 									}
-
+									
 									pak.WriteByte(0);
-									pak.WriteShort(spell.Value.Key.Icon);
+									pak.WriteShort(spell.Value.Key.InternalIconID > 0 ? spell.Value.Key.InternalIconID : spell.Value.Key.Icon);
 									pak.WritePascalString(spell.Value.Key.Name);
 								}
 							}
