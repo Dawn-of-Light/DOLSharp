@@ -117,7 +117,7 @@ namespace DOL.GS
 		{
 			get { return m_effectID; }
 		}
-		
+
 		public string Description
 		{
 			get { return m_description; }
@@ -379,7 +379,6 @@ namespace DOL.GS
 			m_message3 = dbspell.Message3;
 			m_message4 = dbspell.Message4;
 			m_effectID = (ushort)dbspell.ClientEffect;
-			m_icon = (ushort)dbspell.Icon;
 			m_instrumentRequirement = dbspell.InstrumentRequirement;
 			m_spellGroup = dbspell.SpellGroup;
 			m_effectGroup = dbspell.EffectGroup;
@@ -511,6 +510,8 @@ namespace DOL.GS
 			delve.Add(String.Format("Target: {0}", target));
 		}
 
+		#region Spell Helpers
+		
         /// <summary>
         /// Whether or not the spell is instant cast.
         /// </summary>
@@ -522,6 +523,127 @@ namespace DOL.GS
             }
         }
         
+        /// <summary>
+        /// Wether or not the spell is Point Blank Area of Effect
+        /// </summary>
+        public bool IsPBAoE
+        {
+        	get
+        	{
+        		return (Range == 0 && IsAoE);
+        	}
+        }
+        
+        /// <summary>
+        /// Wether or not this spell need Instrument (and is a Song)
+        /// </summary>
+        public bool NeedInstrument
+        {
+        	get
+        	{
+        		return InstrumentRequirement != 0;
+        	}
+        }
+        
+        /// <summary>
+        /// Wether or not this spell is an Area of Effect Spell
+        /// </summary>
+        public bool IsAoE
+        {
+        	get
+        	{
+        		return Radius > 0;
+        	}
+        }
+        
+        /// <summary>
+        /// Wether this spell Has valid SubSpell 
+        /// </summary>
+        public bool HasSubSpell
+        {
+        	get
+        	{
+        		return SubSpellID > 0;
+        	}
+        }
+        
+        /// <summary>
+        /// Wether this spell has a recast delay (cooldown)
+        /// </summary>
+        public bool HasRecastDelay
+        {
+        	get
+        	{
+        		return RecastDelay > 0;
+        	}
+        }
+        
+        /// <summary>
+        /// Wether this spell is concentration based
+        /// </summary>
+        public bool IsConcentration
+        {
+        	get
+        	{
+        		return Concentration > 0;
+        	}
+        }
+        
+        /// <summary>
+        /// Wether this spell has power usage.
+        /// </summary>
+        public bool UsePower
+        {
+        	get
+        	{
+        		return Power != 0;
+        	}
+        }
+
+        /// <summary>
+        /// Wether this spell has pulse power usage.
+        /// </summary>
+        public bool UsePulsePower
+        {
+        	get
+        	{
+        		return PulsePower != 0;
+        	}
+        }
+        
+        /// <summary>
+        /// Wether this Spell is a pulsing spell (Song/Chant)
+        /// </summary>
+        public bool IsPulsing
+        {
+        	get
+        	{
+        		return Pulse != 0;
+        	}
+        }
+        
+        /// <summary>
+        /// Wether this Spell is a Song/Chant
+        /// </summary>
+        public bool IsChant
+        {
+        	get
+        	{
+        		return Pulse != 0 && !IsFocus;
+        	}
+        }
+        
+        /// <summary>
+        /// Wether this Spell is a Pulsing Effect (Dot/Hot...)
+        /// </summary>
+        public bool IsPulsingEffect
+        {
+        	get
+        	{
+        		return Frequency > 0 && !IsPulsing;
+        	}
+        }
+        #endregion
         #region tooltip handling
         
         /// <summary>

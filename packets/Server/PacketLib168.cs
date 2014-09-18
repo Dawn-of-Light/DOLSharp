@@ -745,7 +745,7 @@ namespace DOL.GS.PacketHandler
 			}
 			
 			// Update Cache
-			m_gameClient.GameObjectUpdateArray[new Tuple<ushort, ushort>(playerToCreate.CurrentRegionID, (ushort)playerToCreate.ObjectID)] = GameTimer.GetTickCount();;
+			m_gameClient.GameObjectUpdateArray[new Tuple<ushort, ushort>(playerToCreate.CurrentRegionID, (ushort)playerToCreate.ObjectID)] = GameTimer.GetTickCount();
 
 			//if (GameServer.ServerRules.GetColorHandling(m_gameClient) == 1) // PvP
 			SendObjectGuildID(playerToCreate, playerToCreate.Guild);
