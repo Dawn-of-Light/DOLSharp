@@ -75,6 +75,8 @@ namespace DOL.GS
 		protected bool m_isShearable = false;
 		// tooltip
 		protected ushort m_tooltipId = 0;
+		// params
+		protected readonly string m_params = "";
 		
 		#region member access properties
 		#region warlocks
@@ -322,6 +324,12 @@ namespace DOL.GS
         		TryRegisterTooltipID(this, value);
         	}
         }
+
+		public string Params {
+			get { return m_params; }
+		}
+		
+
         
 		#endregion
 
@@ -387,6 +395,8 @@ namespace DOL.GS
             m_minotaurspell = minotaur;
             // tooltip
             TooltipId = dbspell.TooltipId;
+            // Params
+            m_params = dbspell.Params;
 		}
 
 		/// <summary>
@@ -436,6 +446,7 @@ namespace DOL.GS
 			m_allowbolt = spell.AllowBolt;
 			m_sharedtimergroup = spell.SharedTimerGroup;
 			m_minotaurspell = spell.m_minotaurspell;
+			m_params = spell.Params;
 		}
 
 		/// <summary>
@@ -684,6 +695,106 @@ namespace DOL.GS
 			return spell;
 		}
         #endregion
+        
+		#region utils
+
+		public ushort InternalIconID
+		{
+			get
+			{
+				return GetParamValue<ushort>("InternalIconID");
+			}
+		}
+        
+		/// <summary>
+		/// Parse Params String to Extract the Value identified by Key.
+		/// Expected Format : {"key":["value"#, "value", ...#]#, "key2":[...], ...#}
+		/// From Dictionary<stringKey, List<stringValue>> (List<stringValue>.First() Casted to T)
+		/// </summary>
+		/// <param name="key">Param Key</param>
+		/// <returns>Param Value</returns>
+		public T GetParamValue<T>(string key)
+		{
+			// is key valid ?
+			if (key != null && key.Length > 0)
+			{
+				try
+				{
+					System.Web.Script.Serialization.JavaScriptSerializer ser = new System.Web.Script.Serialization.JavaScriptSerializer();
+					Dictionary<string, List<string>> dict = ser.Deserialize<Dictionary<string, List<string>>>(m_params);
+					
+					// Is key existing ?
+					if (dict.ContainsKey(key) && dict[key].Count > 0)
+					{
+						try
+						{
+							return (T)Convert.ChangeType(dict[key].First(), typeof(T));
+						}
+						catch
+						{
+							return default(T);
+						}
+					}
+				}
+				catch
+				{
+				return default(T);
+				}
+			}
+			
+			return default(T);
+		}
+
+		/// <summary>
+		/// Parse Params String to Extract the Values identified by Key.
+		/// Expected Format : {"key":["value"#, "value", ...#]#, "key2":[...], ...#}
+		/// From Dictionary<stringKey, List<stringValue>> (List<stringValue> Casted to List<T>)
+		/// </summary>
+		/// <param name="key">Param Key</param>
+		/// <returns>List of Values object</returns>
+		public IList<T> GetParamValues<T>(string key)
+		{
+			// is key valid ?
+			if (key != null && key.Length > 0)
+			{
+				try
+				{
+					System.Web.Script.Serialization.JavaScriptSerializer ser = new System.Web.Script.Serialization.JavaScriptSerializer();
+					Dictionary<string, List<string>> dict = ser.Deserialize<Dictionary<string, List<string>>>(m_params);
+					
+					// Is key existing ?
+					if (dict.ContainsKey(key) && dict[key].Count > 0)
+					{
+						List<T> list = new List<T>();
+						foreach(string val in dict[key])
+						{
+							T content;
+							try
+							{
+								content = (T)Convert.ChangeType(val, typeof(T));
+							}
+							catch
+							{
+								content = default(T);
+							}
+							
+							if (content != null)
+								list.Add(content);
+						}
+						
+						return list;
+					}
+				}
+				catch
+				{
+					return new List<T>();
+				}
+			}
+			
+			return new List<T>();
+		}
+
+		#endregion
 	}
 	
 }
