@@ -706,6 +706,38 @@ namespace DOL.GS
 			}
 		}
         
+		private Dictionary<string, List<string>> m_paramCache = null;
+		
+		/// <summary>
+		/// Initialize the Parsed Params Dictionary Cache to prevent calling the Serializer every time !
+		/// </summary>
+		/// <returns></returns>
+		private bool TryInitializeParamCache()
+		{
+			// If not initialized and can be initialized !
+			if (m_paramCache == null && Params != null && !Util.IsEmpty(Params, true))
+			{
+				try
+				{
+					System.Web.Script.Serialization.JavaScriptSerializer ser = new System.Web.Script.Serialization.JavaScriptSerializer();
+					m_paramCache = ser.Deserialize<Dictionary<string, List<string>>>(Params);
+					return true;
+				}
+				catch
+				{
+					m_paramCache = new Dictionary<string, List<string>>();
+					return false;
+				}
+				
+			}
+			else if (m_paramCache != null && m_paramCache.Count > 0)
+			{
+				return true;
+			}
+			
+			return false;
+		}
+		
 		/// <summary>
 		/// Parse Params String to Extract the Value identified by Key.
 		/// Expected Format : {"key":["value"#, "value", ...#]#, "key2":[...], ...#}
@@ -715,30 +747,23 @@ namespace DOL.GS
 		/// <returns>Param Value</returns>
 		public T GetParamValue<T>(string key)
 		{
+			if (!TryInitializeParamCache())
+				return default(T);
+			
 			// is key valid ?
 			if (key != null && key.Length > 0)
-			{
-				try
+			{					
+				// Is key existing ?
+				if (m_paramCache.ContainsKey(key) && m_paramCache[key].Count > 0)
 				{
-					System.Web.Script.Serialization.JavaScriptSerializer ser = new System.Web.Script.Serialization.JavaScriptSerializer();
-					Dictionary<string, List<string>> dict = ser.Deserialize<Dictionary<string, List<string>>>(m_params);
-					
-					// Is key existing ?
-					if (dict.ContainsKey(key) && dict[key].Count > 0)
+					try
 					{
-						try
-						{
-							return (T)Convert.ChangeType(dict[key].First(), typeof(T));
-						}
-						catch
-						{
-							return default(T);
-						}
+						return (T)Convert.ChangeType(m_paramCache[key].First(), typeof(T));
 					}
-				}
-				catch
-				{
-				return default(T);
+					catch
+					{
+						return default(T);
+					}
 				}
 			}
 			
@@ -754,40 +779,33 @@ namespace DOL.GS
 		/// <returns>List of Values object</returns>
 		public IList<T> GetParamValues<T>(string key)
 		{
+			if (!TryInitializeParamCache())
+				return new List<T>();
+			
 			// is key valid ?
 			if (key != null && key.Length > 0)
-			{
-				try
+			{					
+				// Is key existing ?
+				if (m_paramCache.ContainsKey(key) && m_paramCache[key].Count > 0)
 				{
-					System.Web.Script.Serialization.JavaScriptSerializer ser = new System.Web.Script.Serialization.JavaScriptSerializer();
-					Dictionary<string, List<string>> dict = ser.Deserialize<Dictionary<string, List<string>>>(m_params);
-					
-					// Is key existing ?
-					if (dict.ContainsKey(key) && dict[key].Count > 0)
+					List<T> list = new List<T>();
+					foreach(string val in m_paramCache[key])
 					{
-						List<T> list = new List<T>();
-						foreach(string val in dict[key])
+						T content;
+						try
 						{
-							T content;
-							try
-							{
-								content = (T)Convert.ChangeType(val, typeof(T));
-							}
-							catch
-							{
-								content = default(T);
-							}
-							
-							if (content != null)
-								list.Add(content);
+							content = (T)Convert.ChangeType(val, typeof(T));
+						}
+						catch
+						{
+							content = default(T);
 						}
 						
-						return list;
+						if (content != null)
+							list.Add(content);
 					}
-				}
-				catch
-				{
-					return new List<T>();
+					
+					return list;
 				}
 			}
 			
