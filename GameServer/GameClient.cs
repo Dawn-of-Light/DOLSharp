@@ -144,7 +144,7 @@ namespace DOL.GS
 			Version1109 = 1109,
 			Version1110 = 1110,
 			Version1111 = 1111,
-			Version1112 = 1112, 
+			Version1112 = 1112,
 			Version1113 = 1113,
 			Version1114 = 1114,
 			Version1115 = 1115,
@@ -550,9 +550,11 @@ namespace DOL.GS
 				if (log.IsErrorEnabled)
 					log.Error("OnDisconnect", e);
 			}
-
-			// Make sure the client is diconnected even on errors
-			Quit();
+			finally
+			{
+				// Make sure the client is diconnected even on errors
+				Quit();
+			}
 		}
 
 		/// <summary>

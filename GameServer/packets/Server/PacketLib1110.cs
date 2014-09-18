@@ -569,7 +569,7 @@ namespace DOL.GS.PacketHandler
 	
 								pak.WritePascalString(sp.Name);
 								paksub.WriteByte((byte)Math.Min(50, sp.Level));
-								paksub.WriteShort((ushort)sp.Icon);
+								paksub.WriteShort(sp.InternalIconID > 0 ? sp.InternalIconID : sp.Icon);
 	                            if (sp.InstrumentRequirement == 0)
 	                            {
 	                                paksub.WriteByte((byte)eSkillPage.Spells);
