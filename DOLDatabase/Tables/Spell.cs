@@ -22,12 +22,11 @@ using DOL.Database.Attributes;
 namespace DOL.Database
 {
 	/// <summary>
-	/// 
+	/// Spell Table containing entry for each game SpellHandler behavior.
 	/// </summary>
 	[DataTable(TableName = "Spell")]
 	public class DBSpell : DataObject
 	{
-		protected string m_id_unique;
 		protected int m_spellid;
 		protected int m_effectid;
 		protected int m_icon;
@@ -74,9 +73,6 @@ namespace DOL.Database
 
 		// tooltip
 		protected ushort m_tooltipId;
-
-		// Composite spell needing more params
-		protected string m_params = string.Empty;
 		
 		public DBSpell()
 		{
@@ -637,15 +633,61 @@ namespace DOL.Database
 			}
 		}
 		
-		[DataElement(AllowDbNull = true, Varchar=255)]
-		public string Params
-		{
-			get { return m_params; }
-			set
-			{
-				Dirty = true;
-				m_params = value;
-			}
-		}
+		[Relation(LocalField = "SpellID", RemoteField = "SpellID", AutoLoad = true, AutoDelete=true)]
+		public DBSpellXCustomValues[] CustomValues;
 	}
+	
+	
+	/// <summary>
+	/// Spell Custom Values Table containing entries linked to spellID.
+	/// </summary>
+	[DataTable(TableName = "SpellXCustomValues")]
+	public class DBSpellXCustomValues : DataObject
+	{
+		private int m_spellXCustomValuesID;
+		
+		/// <summary>
+		/// Primary Key Auto Inc
+		/// </summary>
+		[PrimaryKey(AutoIncrement = true)]
+		public int SpellXCustomValuesID {
+			get { return m_spellXCustomValuesID; }
+			set { Dirty = true; m_spellXCustomValuesID = value; }
+		}
+		
+		private int m_spellID;
+		
+		/// <summary>
+		/// Spell Table SpellID Reference
+		/// </summary>
+		[DataElement(AllowDbNull = false, Index=true)]
+		public int SpellID {
+			get { return m_spellID; }
+			set { Dirty = true; m_spellID = value; }
+		}
+		
+		private string m_keyName;
+		
+		/// <summary>
+		/// KeyName for referencing this value.
+		/// </summary>
+		[DataElement(AllowDbNull = false, Varchar=100, Index=true)]
+		public string KeyName {
+			get { return m_keyName; }
+			set { Dirty = true; m_keyName = value; }
+		}
+		
+		private string m_value;
+		
+		/// <summary>
+		/// Value, can be converted to numeric from string value.
+		/// </summary>
+		[DataElement(AllowDbNull = true, Varchar=255)]
+		public string Value {
+			get { return m_value; }
+			set { Dirty = true; m_value = value; }
+		}
+			
+	}
+	
 }

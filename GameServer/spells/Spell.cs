@@ -76,7 +76,8 @@ namespace DOL.GS
 		// tooltip
 		protected ushort m_tooltipId = 0;
 		// params
-		protected readonly string m_params = "";
+		protected Dictionary<string, List<string>> m_paramCache = null;
+
 		
 		#region member access properties
 		#region warlocks
@@ -323,12 +324,7 @@ namespace DOL.GS
         	{
         		TryRegisterTooltipID(this, value);
         	}
-        }
-
-		public string Params {
-			get { return m_params; }
-		}
-		
+        }		
 
         
 		#endregion
@@ -395,7 +391,7 @@ namespace DOL.GS
             // tooltip
             TooltipId = dbspell.TooltipId;
             // Params
-            m_params = dbspell.Params;
+            InitParamCache(dbspell.CustomValues);
 		}
 
 		/// <summary>
@@ -445,7 +441,7 @@ namespace DOL.GS
 			m_allowbolt = spell.AllowBolt;
 			m_sharedtimergroup = spell.SharedTimerGroup;
 			m_minotaurspell = spell.m_minotaurspell;
-			m_params = spell.Params;
+			InitParamCache(spell.m_paramCache);
 		}
 
 		/// <summary>
@@ -828,36 +824,43 @@ namespace DOL.GS
 			}
 		}
         
-		private Dictionary<string, List<string>> m_paramCache = null;
+		/// <summary>
+		/// Initialize Param Cache from DB Relation Collection.
+		/// </summary>
+		/// <param name="customValues"></param>
+		protected virtual void InitParamCache(DBSpellXCustomValues[] customValues)
+		{
+			if (customValues != null && customValues.Length > 0)
+			{
+				// create dict
+				m_paramCache = new Dictionary<string, List<string>>();
+				
+				foreach (DBSpellXCustomValues val in customValues)
+				{
+					if (!m_paramCache.ContainsKey(val.KeyName))
+						m_paramCache.Add(val.KeyName, new List<string>());
+					
+					m_paramCache[val.KeyName].Add(val.Value);
+				}
+			}
+		}
 		
 		/// <summary>
-		/// Initialize the Parsed Params Dictionary Cache to prevent calling the Serializer every time !
+		/// Initialize Param Cache using an other Spell Cache.
 		/// </summary>
-		/// <returns></returns>
-		private bool TryInitializeParamCache()
+		/// <param name="paramsDict"></param>
+		protected virtual void InitParamCache(Dictionary<string, List<string>> paramsDict)
 		{
-			// If not initialized and can be initialized !
-			if (m_paramCache == null && Params != null && !Util.IsEmpty(Params, true))
+			if (paramsDict != null && paramsDict.Count > 0)
 			{
-				try
-				{
-					System.Web.Script.Serialization.JavaScriptSerializer ser = new System.Web.Script.Serialization.JavaScriptSerializer();
-					m_paramCache = ser.Deserialize<Dictionary<string, List<string>>>(Params);
-					return true;
-				}
-				catch
-				{
-					m_paramCache = new Dictionary<string, List<string>>();
-					return false;
-				}
+				// create dict
+				m_paramCache = new Dictionary<string, List<string>>();
 				
+				foreach (KeyValuePair<string, List<string>> vals in paramsDict)
+				{
+					m_paramCache.Add(vals.Key, new List<string>(vals.Value));
+				}
 			}
-			else if (m_paramCache != null && m_paramCache.Count > 0)
-			{
-				return true;
-			}
-			
-			return false;
 		}
 		
 		/// <summary>
@@ -869,7 +872,7 @@ namespace DOL.GS
 		/// <returns>Param Value</returns>
 		public T GetParamValue<T>(string key)
 		{
-			if (!TryInitializeParamCache())
+			if (m_paramCache == null || m_paramCache.Count == 0)
 				return default(T);
 			
 			// is key valid ?
@@ -901,7 +904,7 @@ namespace DOL.GS
 		/// <returns>List of Values object</returns>
 		public IList<T> GetParamValues<T>(string key)
 		{
-			if (!TryInitializeParamCache())
+			if (m_paramCache == null || m_paramCache.Count == 0)
 				return new List<T>();
 			
 			// is key valid ?
