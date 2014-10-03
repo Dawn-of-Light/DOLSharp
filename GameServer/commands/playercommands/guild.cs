@@ -2243,8 +2243,6 @@ namespace DOL.GS.Commands
 									client.Player.Guild.SetGuildDuesPercent(2);
 									client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.DuesOn", 2), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
 								}
-
-								client.Player.Guild.SetGuildDuesPercent(amount);
 							}
 							else
 							{
