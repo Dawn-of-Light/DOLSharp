@@ -29,7 +29,6 @@ namespace DOL.GS.Effects
 	/// </summary>
 	public class TheEmptyMindEffect : TimedEffect, IGameEffect
 	{
-		private int m_level = 0;
 		private int Value
 		{
 			get
