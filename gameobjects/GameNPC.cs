@@ -2359,9 +2359,9 @@ namespace DOL.GS
 					this.VisibleActiveWeaponSlots = template.VisibleActiveWeaponSlot;
 			}
 			#endregion
-
-			this.Spells = template.Spells;
-			this.Styles = template.Styles;
+			
+			if (template.Spells != null) this.Spells = template.Spells;
+			if (template.Styles != null) this.Styles = template.Styles;
 			if (template.Abilities != null)
 			{
 				foreach (Ability ab in template.Abilities)
