@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using DOL.Database;
 using DOL.AI.Brain;
 using DOL.GS.Utils;
@@ -78,6 +79,7 @@ namespace DOL.GS
 			if (m_lootTemplates == null)
 			{
 				m_lootTemplates = new Dictionary<string, Dictionary<string, LootTemplate>>();
+				Dictionary<string, ItemTemplate> itemtemplates = new Dictionary<string, ItemTemplate>();
 
 				lock (m_lootTemplates)
 				{
@@ -87,6 +89,7 @@ namespace DOL.GS
 					{
 						// TemplateName (typically the mob name), ItemTemplateID, Chance
 						dbLootTemplates = GameServer.Database.SelectAllObjects<LootTemplate>();
+						itemtemplates = GameServer.Database.SelectAllObjects<ItemTemplate>().ToDictionary(k => k.Id_nb.ToLower());
 					}
 					catch (Exception e)
 					{
@@ -109,7 +112,10 @@ namespace DOL.GS
 								m_lootTemplates[dbTemplate.TemplateName.ToLower()] = loot;
 							}
 
-							ItemTemplate drop = GameServer.Database.FindObjectByKey<ItemTemplate>(dbTemplate.ItemTemplateID);
+							ItemTemplate drop = null;
+							
+							if (itemtemplates.ContainsKey(dbTemplate.ItemTemplateID.ToLower()))
+								drop = itemtemplates[dbTemplate.ItemTemplateID.ToLower()];
 
 							if (drop == null)
 							{

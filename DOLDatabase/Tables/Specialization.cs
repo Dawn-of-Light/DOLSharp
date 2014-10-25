@@ -22,22 +22,40 @@ using DOL.Database.Attributes;
 namespace DOL.Database
 {
 	/// <summary>
-	/// 
+	/// Specialization Table
 	/// </summary>
 	[DataTable(TableName="Specialization")]
 	public class DBSpecialization : DataObject
 	{
+		protected int m_SpecializationID;
+		
 		protected string m_keyName;
 		protected string m_name = "unknown spec";
 		protected string m_description = "no description";
 		protected ushort m_icon = 0;
-
+		protected string m_implementation;
+		
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public DBSpecialization()
 		{
 			AllowAdd = false;
 		}
 
-		[DataElement(AllowDbNull=false,Unique=true)]
+		/// <summary>
+		/// Primary Key Auto Increment.
+		/// </summary>
+		[PrimaryKey(AutoIncrement=true)]
+		public int SpecializationID {
+			get { return m_SpecializationID; }
+			set { Dirty = true; m_SpecializationID = value; }
+		}
+		
+		/// <summary>
+		/// Specialization Unique Key Name (Primary Key)
+		/// </summary>
+		[DataElement(AllowDbNull=false, Unique=true, Varchar=100)]
 		public string KeyName {
 			get {	return m_keyName;	}
 			set	{
@@ -46,7 +64,10 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=false)]
+		/// <summary>
+		/// Specizalization Display Name
+		/// </summary>
+		[DataElement(AllowDbNull=false, Varchar=255)]
 		public string Name
 		{
 			get {	return m_name;	}
@@ -56,6 +77,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Specialization Icon ID (0 = disabled)
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public ushort Icon
 		{
@@ -66,6 +90,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Specialization Description
+		/// </summary>
 		[DataElement(AllowDbNull=true)]
 		public string Description
 		{
@@ -76,7 +103,31 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Implementation of this Specialization.
+		/// </summary>
+		[DataElement(AllowDbNull=true, Varchar=255)]
+		public string Implementation {
+			get { return m_implementation; }
+			set { Dirty = true; m_implementation = value; }
+		}
+		
+		/// <summary>
+		/// Styles attached to this Specizalization
+		/// </summary>
 		[Relation(LocalField = "KeyName", RemoteField = "SpecKeyName", AutoLoad = true, AutoDelete=true)]
 		public DBStyle[] Styles;
+		
+		/// <summary>
+		/// Spell Lines attached to this Specialization
+		/// </summary>
+		[Relation(LocalField = "KeyName", RemoteField = "Spec", AutoLoad = true, AutoDelete=false)]
+		public DBSpellLine[] SpellLines;
+		
+		/// <summary>
+		/// Ability Lines Constraints attached to this Specialization
+		/// </summary>
+		[Relation(LocalField = "KeyName", RemoteField = "Spec", AutoLoad = true, AutoDelete=true)]
+		public DBSpecXAbility[] AbilityConstraints;
 	}
 }

@@ -28,6 +28,10 @@ namespace DOL.Database
 	public class DBStyle : DataObject
 	{
 		/// <summary>
+		/// Table PK.
+		/// </summary>
+		private int m_styleID;
+		/// <summary>
 		/// The ID of this style
 		/// </summary>
 		private int m_ID;
@@ -143,11 +147,20 @@ namespace DOL.Database
 		{
 			AllowAdd = false;
 		}
+		
+		/// <summary>
+		/// Style Table Primary Key Auto Increment.
+		/// </summary>
+		[PrimaryKey(AutoIncrement=true)]
+		public int StyleID {
+			get { return m_styleID; }
+			set { m_styleID = value; }
+		}
 
 		/// <summary>
 		/// The Style ID
 		/// </summary>
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull=false)]
 		public virtual int ID
 		{
 			get { return m_ID; }
@@ -157,7 +170,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The ClassID
 		/// </summary>
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull=false)]
 		public int ClassId
 		{
 			get { return m_classId; }
@@ -167,7 +180,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Name
 		/// </summary>
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull=false, Varchar=255)]
 		public string Name
 		{
 			get { return m_Name; }
@@ -177,7 +190,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style SpecKeyName
 		/// </summary>
-		[DataElement(AllowDbNull = false, Index = true)]
+		[DataElement(AllowDbNull=false, Index=true, Varchar=100)]
 		public string SpecKeyName
 		{
 			get { return m_SpecKeyName; }
@@ -187,14 +200,14 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Spec Level Requirement
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull=true)]
 		public int SpecLevelRequirement
 		{
 			get { return m_SpecLevelRequirement; }
 			set { m_SpecLevelRequirement = value; Dirty = true; }
 		}
 
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull=false)]
 		public int Icon
 		{
 			get { return m_Icon; }
@@ -204,7 +217,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Endurance Cost
 		/// </summary>
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull=false)]
 		public int EnduranceCost
 		{
 			get { return m_EnduranceCost; }
@@ -214,7 +227,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Stealth Requirement
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull=true)]
 		public bool StealthRequirement
 		{
 			get { return m_StealthRequirement; }
@@ -224,7 +237,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Opening Requirement Type
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull=true)]
 		public int OpeningRequirementType
 		{
 			get { return m_openingRequirementType; }
@@ -234,7 +247,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Opening Requirement Value
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull=true)]
 		public int OpeningRequirementValue
 		{
 			get { return m_openingRequirementValue; }
@@ -244,7 +257,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Attack Result Requirement
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull=true)]
 		public int AttackResultRequirement
 		{
 			get { return m_AttackResultRequirement; }
@@ -254,7 +267,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Weapon Type Requirement
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull=true)]
 		public int WeaponTypeRequirement
 		{
 			get { return m_WeaponTypeRequirement; }
@@ -264,7 +277,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Growth Rate
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull=true)]
 		public double GrowthRate
 		{
 			get { return m_growthRate; }
@@ -274,7 +287,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Bonus To Hit
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull=true)]
 		public int BonusToHit
 		{
 			get { return m_BonusToHit; }
@@ -284,7 +297,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Bonus to Defense
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull=true)]
 		public int BonusToDefense
 		{
 			get { return m_BonusToDefense; }
@@ -294,7 +307,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Two Hand Animation
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull=true)]
 		public int TwoHandAnimation
 		{
 			get { return m_TwoHandAnimation; }
@@ -304,7 +317,7 @@ namespace DOL.Database
 		/// <summary>
 		///(procs) The Style should Randomly cast a proc
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull=true)]
 		public bool RandomProc
 		{
 			get { return m_RandomProc; }
@@ -314,11 +327,17 @@ namespace DOL.Database
 		/// <summary>
 		/// What armor location should this style hit, take from eInventorySlot
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull=true)]
 		public int ArmorHitLocation
 		{
 			get { return m_armorHitLocation; }
 			set { m_armorHitLocation = value; Dirty = true; }
 		}
+		
+		/// <summary>
+		/// Link to StyleXSpell to assign Proc.
+		/// </summary>
+		[Relation(LocalField = "ID", RemoteField = "StyleID", AutoLoad = true, AutoDelete=false)]
+		public DBStyleXSpell[] AttachedProcs;
 	}
 }
