@@ -392,10 +392,6 @@ namespace DOL.GS
 			{
 				return new StackTrace(e);
 			}
-			finally
-			{
-				thread.Resume();
-			}
 			
 			StackTrace trace;
 

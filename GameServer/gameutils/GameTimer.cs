@@ -537,16 +537,19 @@ namespace DOL.GS
 			/// <returns>success</returns>
 			public bool Start()
 			{
-				if (m_timeThread != null)
-					return false;
-
-				m_running = true;
-				m_timeThread = new Thread(new ThreadStart(TimeThread));
-				m_timeThread.Name = m_name;
-				m_timeThread.Priority = ThreadPriority.AboveNormal;
-				m_timeThread.IsBackground = true;
-				m_timeThread.Start();
-				return true;
+				lock (m_lockObject)
+				{
+					if (m_timeThread != null)
+						return false;
+	
+					m_running = true;
+					m_timeThread = new Thread(new ThreadStart(TimeThread));
+					m_timeThread.Name = m_name;
+					m_timeThread.Priority = ThreadPriority.AboveNormal;
+					m_timeThread.IsBackground = true;
+					m_timeThread.Start();
+					return true;
+				}
 			}
 
 			/// <summary>
@@ -564,15 +567,39 @@ namespace DOL.GS
 
 					if (!m_timeThread.Join(10000))
 					{
-						if (log.IsErrorEnabled)
+						try
 						{
-							ThreadState state = m_timeThread.ThreadState;
-							StackTrace trace = Util.GetThreadStack(m_timeThread);
-							log.ErrorFormat("failed to stop the time thread \"{0}\" in 10 seconds (thread state={1}); thread stacktrace:\n", m_name, state);
-							log.ErrorFormat(Util.FormatStackTrace(trace));
-							log.ErrorFormat("aborting the thread.\n");
+							if (log.IsErrorEnabled)
+							{
+								ThreadState state = m_timeThread.ThreadState;
+								StackTrace trace = Util.GetThreadStack(m_timeThread);
+								log.ErrorFormat("failed to stop the time thread \"{0}\" in 10 seconds (thread state={1}); thread stacktrace:\n", m_name, state);
+								log.ErrorFormat(Util.FormatStackTrace(trace));
+								log.ErrorFormat("aborting the thread.\n");
+							}
 						}
-						m_timeThread.Abort();
+						finally
+						{
+							m_timeThread.Abort();
+							try
+							{
+								while(!m_timeThread.Join(2000))
+								{
+									log.ErrorFormat("Timer Thread ({0}) can't stop after abort... maybe remaining threads going... trying again !");
+								
+									try
+									{
+										m_timeThread.Abort();
+									}
+									catch
+									{
+									}
+								}
+							}
+							catch
+							{
+							}
+						}
 					}
 					
 					m_timeThread = null;
