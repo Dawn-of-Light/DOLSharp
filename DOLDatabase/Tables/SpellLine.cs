@@ -22,22 +22,36 @@ using DOL.Database.Attributes;
 namespace DOL.Database
 {
 	/// <summary>
-	/// 
+	/// Spell Lines Tables Referencing Spell from Base or Spec Lines, Attach to Specialization using Spec KeyName
 	/// </summary>
 	[DataTable(TableName="SpellLine")]
 	public class DBSpellLine : DataObject
 	{
+		protected int m_spellLineID;
 		protected string m_name="unknown";
 		protected string m_keyname;
 		protected string m_spec="unknown";
 		protected bool m_isBaseLine=true;
-
+		protected int m_classIDHint;
+		
 		public DBSpellLine()
 		{
 			AllowAdd = false;
 		}
 
-		[DataElement(AllowDbNull=false,Unique=true)]
+		/// <summary>
+		/// Primary Key Auto Inc
+		/// </summary>
+		[PrimaryKey(AutoIncrement=true)]
+		public int SpellLineID {
+			get { return m_spellLineID; }
+			set { Dirty = true; m_spellLineID = value; }
+		}
+		
+		/// <summary>
+		/// Spell Line Key Name
+		/// </summary>
+		[DataElement(AllowDbNull=false, Unique=true)]
 		public string KeyName
 		{
 			get
@@ -51,7 +65,10 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		/// <summary>
+		/// Spell Line Display Name
+		/// </summary>
+		[DataElement(AllowDbNull=true, Varchar=255)]
 		public string Name
 		{
 			get
@@ -65,7 +82,10 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		/// <summary>
+		/// Specialization Key Name for Reference. (FK)
+		/// </summary>
+		[DataElement(AllowDbNull=true, Varchar=100, Index=true)]
 		public string Spec
 		{
 			get
@@ -79,6 +99,9 @@ namespace DOL.Database
 			}
 		}
 
+		/// <summary>
+		/// Baseline or Specline ?
+		/// </summary>
 		[DataElement(AllowDbNull=true)]
 		public bool IsBaseLine
 		{
@@ -92,5 +115,16 @@ namespace DOL.Database
 				m_isBaseLine = value;
 			}
 		}
+		
+		/// <summary>
+		/// Class ID hint or other values used by Specialization Handler
+		/// </summary>
+		[DataElement(AllowDbNull=true)]
+		public int ClassIDHint {
+			get { return m_classIDHint; }
+			set { m_classIDHint = value; }
+		}
+
+
 	}
 }

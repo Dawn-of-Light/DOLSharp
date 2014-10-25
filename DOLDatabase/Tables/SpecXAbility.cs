@@ -22,11 +22,12 @@ using DOL.Database.Attributes;
 namespace DOL.Database
 {
 	/// <summary>
-	/// defines what abilities are available at what speclevels
+	/// Defines what abilities are available at what speclevels for a given Specialization
 	/// </summary>
 	[DataTable(TableName="SpecXAbility")]
 	public class DBSpecXAbility : DataObject
 	{
+		protected int m_specXabilityID;
 		protected string m_spec;
 		protected string m_abilitykey;
 		protected int m_abilitylevel;
@@ -37,13 +38,28 @@ namespace DOL.Database
 			AllowAdd = false;
 		}
 
-		[DataElement(AllowDbNull=false)]
+		/// <summary>
+		/// Primary Key Auto Increment
+		/// </summary>
+		[PrimaryKey(AutoIncrement=true)]
+		public int SpecXabilityID {
+			get { return m_specXabilityID; }
+			set { Dirty = true; m_specXabilityID = value; }
+		}
+
+		/// <summary>
+		/// Spec KeyName
+		/// </summary>
+		[DataElement(AllowDbNull=false, Index=true, Varchar=100)]
 		public string Spec
 		{
 			get { return m_spec; }
 			set { m_spec = value; Dirty = true; }
 		}
 
+		/// <summary>
+		/// Spec Level at which ability is acquired.
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public int SpecLevel
 		{
@@ -54,13 +70,19 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=false)]
+		/// <summary>
+		/// Ability Key Name
+		/// </summary>
+		[DataElement(AllowDbNull=false, Index=true, Varchar=100)]
 		public string AbilityKey
 		{
 			get { return m_abilitykey; }
 			set { m_abilitykey = value; Dirty = true; }
 		}
 
+		/// <summary>
+		/// Ability Spec Level earned.
+		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public int AbilityLevel
 		{

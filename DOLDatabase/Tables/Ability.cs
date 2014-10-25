@@ -122,7 +122,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Ability Primary Key Auto Increment
 		/// </summary>
-		[PrimaryKey(AutoIncrement = true)]
+		[PrimaryKey(AutoIncrement=true)]
 		public int AbilityID {
 			get { return m_abilityID; }
 			set { m_abilityID = value; }
@@ -132,7 +132,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The key of this ability
 		/// </summary>
-		[DataElement(AllowDbNull=false,Unique=true,Varchar=100)]
+		[DataElement(AllowDbNull=false, Unique=true, Varchar=100)]
 		public string KeyName
 		{
 			get {	return m_keyName;	}
@@ -145,7 +145,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Name of this ability
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull=false, Varchar=255)]
 		public string Name
 		{
 			get {	return m_name;	}
@@ -158,7 +158,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Ability ID (new in 1.112)
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull=true)]
 		public int InternalID
 		{
 			get { return m_internalID; }
@@ -184,7 +184,7 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// icon of ability
+		/// Icon of ability
 		/// </summary>
 		[DataElement(AllowDbNull=false)]
 		public int IconID
@@ -198,9 +198,9 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// Implementierungsklasse
+		/// Ability Implementation Class
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull=true, Varchar=255)]
 		public string Implementation
 		{
 			get {	return m_implementation;	}
