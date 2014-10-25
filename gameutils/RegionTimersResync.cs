@@ -98,11 +98,14 @@ namespace DOL.GS.GameEvents
 					//if(mgr.Running)
 					try
 					{
-                        mgr.Stop();
+						if (!mgr.Stop())
+						{
+							log.ErrorFormat("----- Failed to Stop the TimeManager: {0}", mgr.Name);
+						}
 					}
-					catch(Exception)
+					catch(Exception mex)
 					{
-						log.Error(string.Format("----- Failed to stop the TimeManager: {0}", mgr.Name));
+						log.ErrorFormat("----- Errors while trying to stop the TimeManager: {0}\n{1}", mgr.Name, mex);
 					}
 
 					foreach (GameClient clients in WorldMgr.GetAllClients())
@@ -123,7 +126,10 @@ namespace DOL.GS.GameEvents
 						}
 					}
 
-					mgr.Start();
+					if (!mgr.Start())
+					{
+						log.ErrorFormat("----- Failed to (re)Start the TimeManager: {0}", mgr.Name);
+					}
 					
                     foreach (Region reg in WorldMgr.GetAllRegions())
 					{
