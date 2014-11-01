@@ -32,7 +32,8 @@ namespace DOL.Database
 		protected string m_abilitykey;
 		protected int m_abilitylevel;
 		protected int m_speclevel;
-
+		private int m_classId;
+		
 		public DBSpecXAbility()
 		{
 			AllowAdd = false;
@@ -92,5 +93,15 @@ namespace DOL.Database
 				m_abilitylevel = value;
 			}
 		}
+		
+		/// <summary>
+		/// Class Hint, 0 = Every class
+		/// </summary>
+		[DataElement(AllowDbNull=false)]
+		public int ClassId {
+			get { return m_classId; }
+			set { m_classId = value; }
+		}
+
 	}
 }
