@@ -241,8 +241,6 @@ namespace DOL.GS.Commands
                                         // we skip the first add if was in level 2nd stage
                                         if (curSecondStage)
                                             curSecondStage = false;
-                                        else
-                                            player.SkillSpecialtyPoints += player.CharacterClass.SpecPointsMultiplier * i / 20;
                                     }
                                 }
                             }
@@ -404,6 +402,34 @@ namespace DOL.GS.Commands
 						player.Out.SendMasterLevelWindow((byte)player.MLLevel);
 						client.Out.SendMessage(player.Name + " Master Level is set to " + level + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 						player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has set your Master Level to " + level + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+					}
+					catch (Exception)
+					{
+						DisplaySyntax(client);
+						return;
+					}
+					break;
+
+				case "setmlline":
+
+					try
+					{
+						var player = client.Player.TargetObject as GamePlayer;
+						if (player == null)
+							player = client.Player;
+
+						byte line = Convert.ToByte(args[2]);
+
+						if (line > 1) line = 1;
+
+						player.MLLine = line;
+						player.SaveIntoDatabase();
+						player.RefreshSpecDependantSkills(true);
+						player.Out.SendUpdatePlayerSkills();
+						player.Out.SendUpdatePlayer();
+						player.Out.SendMasterLevelWindow((byte)player.MLLevel);
+						client.Out.SendMessage(player.Name + " Master Line is set to " + line + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has set your Master Line to " + line + "!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					}
 					catch (Exception)
 					{
@@ -2441,7 +2467,6 @@ namespace DOL.GS.Commands
         public void SetClass(GamePlayer target, int classID)
         {
             //remove all their tricks and abilities!
-            target.RemoveAllSkills();
             target.RemoveAllSpecs();
             target.RemoveAllSpellLines();
             target.RemoveAllStyles();

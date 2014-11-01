@@ -49,22 +49,6 @@ namespace DOL.GS.PlayerClass
 			return GameTrainer.eChampionTrainerType.AlbionRogue;
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel) 
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Stealth));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Slash));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Thrust));
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
-			player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Leather));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Slashing));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrusting));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return false;

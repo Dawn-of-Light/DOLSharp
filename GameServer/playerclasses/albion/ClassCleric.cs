@@ -53,31 +53,6 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
-		/// <summary>
-		/// Update all skills and add new for current level
-		/// </summary>
-		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Smite));
-			player.AddSpellLine(SkillBase.GetSpellLine("Smiting"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Rebirth (Cleric)"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Guardian Angel"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Terrible Hammer"));
-
-			if (player.Level >= 10) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Studded));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Medium));
-			}
-			if (player.Level >= 20) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Chain));
-			}		
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;

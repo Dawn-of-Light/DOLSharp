@@ -62,49 +62,6 @@ namespace DOL.GS.PlayerClass
 			get { return eClassType.Hybrid; }
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.RemoveSpecialization(Specs.Axe);
-			player.RemoveSpecialization(Specs.Hammer);
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Spear));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Sword));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Mending));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Swords));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Spears));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Guard, 1));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.OdinsWill));
-			player.AddSpellLine(SkillBase.GetSpellLine("Odin's Will"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Mending"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Valkyrie Mending Spec"));
-
-			if (player.Level >= 7)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Engage));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 1));
-			}
-			if (player.Level >= 10)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Large));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Guard, 2));
-			}
-			if (player.Level >= 12)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Chain));
-			}
-			if (player.Level >= 15)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Guard, 3));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
-			}
-			if (player.Level >= 20)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 2));
-			}
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;

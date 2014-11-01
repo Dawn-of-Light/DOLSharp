@@ -43,47 +43,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				client.Player.SendDoorUpdate(door);
 			}
+			
 
 			//housing
 			if (client.Player.CurrentRegion.HousingEnabled)
 			{
-				if (client.Player.HousingUpdateArray == null)
-					client.Player.HousingUpdateArray = new BitArray(ServerProperties.Properties.MAX_NUM_HOUSES, false);
-
-				var houses = HouseMgr.GetHouses(client.Player.CurrentRegionID);
-				if (houses != null)
-				{
-					foreach (House house in houses.Values)
-					{
-						if (house.UniqueID < client.Player.HousingUpdateArray.Length)
-						{
-							if (client.Player.IsWithinRadius(house, HousingConstants.HouseViewingDistance))
-							{
-								if (!client.Player.HousingUpdateArray[house.UniqueID])
-								{
-									client.Out.SendHouse(house);
-									client.Out.SendGarden(house);
-
-									var list = house.GetAllPlayersInHouse();
-									if (list.Count > 0)
-									{
-										client.Out.SendHouseOccupied(house, true);
-									}
-
-									client.Player.HousingUpdateArray[house.UniqueID] = true;
-								}
-							}
-							else
-							{
-								client.Player.HousingUpdateArray[house.UniqueID] = false;
-							}
-						}
-					}
-				}
-			}
-			else if (client.Player.HousingUpdateArray != null)
-			{
-				client.Player.HousingUpdateArray = null;
+				WorldUpdateThread.UpdatePlayerHousing(client.Player, GameTimer.GetTickCount()+60000);
 			}
 		}
 	}

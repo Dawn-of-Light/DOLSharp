@@ -275,7 +275,7 @@ namespace DOL.GS.Spells
                     spell.Target = "Self";
                     spell.Type = "Disarm";
                     Disarm_Weapon = new Spell(spell, 50);
-                    SkillBase.GetSpellList(GlobalSpellsLines.Combat_Styles_Effect).Add(Disarm_Weapon);
+                    SkillBase.AddScriptedSpell(GlobalSpellsLines.Combat_Styles_Effect, Disarm_Weapon);
                 }
                 return Disarm_Weapon;
             }

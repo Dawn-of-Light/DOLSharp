@@ -60,8 +60,6 @@ namespace DOL
 			private long m_exp;
 			private long m_bntyPts;
 			private long m_realmPts;
-			private int m_skillSpecPts;
-			private int m_realmSpecPts;
 			private int m_realmLevel;
 			//0x00					//01 byte
 			//int mUnk2;			//04 byte
@@ -129,10 +127,9 @@ namespace DOL
 			// here are skills stored. loading and saving skills of player is done automatically and
 			// these fields should NOT manipulated or used otherwise
 			// instead use the skill access methods on GamePlayer
-			private string m_abilities = "";	// comma separated string of ability keynames and levels eg "sprint,0,evade,1"
-			private string m_specs = "";			// comma separated string of spec keynames and levels like "earth_magic,5,slash,10"
-			private string m_spellLines = "";		// serialized string of spell lines and levels like "Spirit Animation|5;Vivification|7"
-			private string m_realmAbilities = ""; // for later use
+			private string m_abilities = "";	// comma separated string of ability keynames and pipe'd levels eg "sprint|0,evade|1"
+			private string m_specs = "";			// comma separated string of spec keynames and pipe'd levels like "earth_magic|5,slash|10"
+			private string m_realmAbilities = ""; // comma separated string of realm ability keynames and pipe'd levels eg "purge|1,ignore pain|2"
 			private string m_craftingSkills = "";// crafting skills
 			private string m_disabledSpells = "";
 			private string m_disabledAbilities = "";
@@ -185,8 +182,6 @@ namespace DOL
 			private bool m_cl;
 			private long m_clExperience;
 			private int m_clLevel;
-			private int m_clSpecPoints;
-			private string m_clSpells;
 			
 			// MLs
 			private byte m_ml;
@@ -212,8 +207,6 @@ namespace DOL
 				m_exp = 0;
 				m_bntyPts = 0;
 				m_realmPts = 0;
-				m_skillSpecPts = 0;
-				m_realmSpecPts = 0;
 
 				m_lastPlayed = DateTime.Now; // Prevent /played crash.
 				m_playedTime = 0;  // /played startup
@@ -439,40 +432,6 @@ namespace DOL
 				set
 				{
 					m_realmPts = value;
-					Dirty = true;
-				}
-			}
-
-			/// <summary>
-			/// Gets/sets character skill specialty points
-			/// </summary>
-			[DataElement(AllowDbNull = true)]
-			public int SkillSpecialtyPoints
-			{
-				get
-				{
-					return m_skillSpecPts;
-				}
-				set
-				{
-					m_skillSpecPts = value;
-					Dirty = true;
-				}
-			}
-
-			/// <summary>
-			/// Gets/sets realm specialty points
-			/// </summary>
-			[DataElement(AllowDbNull = true)]
-			public int RealmSpecialtyPoints
-			{
-				get
-				{
-					return m_realmSpecPts;
-				}
-				set
-				{
-					m_realmSpecPts = value;
 					Dirty = true;
 				}
 			}
@@ -1281,20 +1240,6 @@ namespace DOL
 				{
 					Dirty = true;
 					m_specs = value;
-				}
-			}
-
-			/// <summary>
-			/// the spell lines of character
-			/// </summary>
-			[DataElement(AllowDbNull = true)]
-			public string SerializedSpellLines
-			{
-				get { return m_spellLines; }
-				set
-				{
-					m_spellLines = value;
-					Dirty = true;
 				}
 			}
 
@@ -2169,22 +2114,7 @@ namespace DOL
 					Dirty = true;
 				}
 			}
-			/// <summary>
-			/// Champion Available speciality points
-			/// </summary>
-			[DataElement(AllowDbNull = true)]
-			public int ChampionSpecialtyPoints
-			{
-				get
-				{
-					return m_clSpecPoints;
-				}
-				set
-				{
-					m_clSpecPoints = value;
-					Dirty = true;
-				}
-			}
+
 			/// <summary>
 			/// Champion Experience
 			/// </summary>
@@ -2198,22 +2128,6 @@ namespace DOL
 				set
 				{
 					m_clExperience = value;
-					Dirty = true;
-				}
-			}
-			/// <summary>
-			/// Champion Spells
-			/// </summary>
-			[DataElement(AllowDbNull = true)]
-			public string ChampionSpells
-			{
-				get
-				{
-					return m_clSpells;
-				}
-				set
-				{
-					m_clSpells = value;
 					Dirty = true;
 				}
 			}

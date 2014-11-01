@@ -1684,8 +1684,17 @@ namespace DOL.GS.ServerRules
 			return target.CurrentTitle.GetValue(target);
 		}
 
-
-		
+		/// <summary>
+		/// Gets the player's Total Amount of Realm Points Based on Level, Realm Level of other constraints.
+		/// </summary>
+		/// <param name="source">The player</param>
+		/// <param name="target"></param>
+		/// <returns>The total pool of realm points !</returns>
+		public virtual int GetPlayerRealmPointsTotal(GamePlayer source)
+		{
+			return source.Level > 19 ? Math.Max(1, source.RealmLevel) : source.RealmLevel;
+		}
+				
 		/// <summary>
 		/// Gets the server type color handling scheme
 		///
@@ -2161,7 +2170,14 @@ namespace DOL.GS.ServerRules
 			return m;
 		}
 
-		
+		/// <summary>
+		/// Standard Rules For Player Level UP
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="previousLevel"></param>
+		public virtual void OnPlayerLevelUp(GamePlayer player, int previousLevel)
+		{
+		}
 		#region MessageToLiving
 		/// <summary>
 		/// Send system text message to system window

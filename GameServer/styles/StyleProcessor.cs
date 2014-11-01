@@ -496,30 +496,30 @@ namespace DOL.GS.Styles
 						// the class-specific proc instead of the ClassID=0 proc
 						if (!attackData.Style.RandomProc)
 						{
-							List<DBStyleXSpell> procsToExecute = new List<DBStyleXSpell>();
+							List<Tuple<Spell, int, int>> procsToExecute = new List<Tuple<Spell, int, int>>();
 							bool onlyExecuteClassSpecific = false;
 
-							foreach (DBStyleXSpell proc in attackData.Style.Procs)
+							foreach (Tuple<Spell, int, int> proc in attackData.Style.Procs)
 							{
-								if (player != null && proc.ClassID == player.CharacterClass.ID)
+								if (player != null && proc.Item2 == player.CharacterClass.ID)
 								{
 									procsToExecute.Add(proc);
 									onlyExecuteClassSpecific = true;
 								}
-								else if (proc.ClassID == attackData.Style.ClassID || proc.ClassID == 0)
+								else if (proc.Item2 == attackData.Style.ClassID || proc.Item2 == 0)
 								{
 									procsToExecute.Add(proc);
 								}
 							}
 
-							foreach (DBStyleXSpell procToExecute in procsToExecute)
+							foreach (Tuple<Spell, int, int> procToExecute in procsToExecute)
 							{
-								if (onlyExecuteClassSpecific && procToExecute.ClassID == 0)
+								if (onlyExecuteClassSpecific && procToExecute.Item2 == 0)
 									continue;
 
-								if (Util.Chance(procToExecute.Chance))
+								if (Util.Chance(procToExecute.Item3))
 								{
-									effect = CreateMagicEffect(living, attackData.Target, procToExecute.SpellID);
+									effect = CreateMagicEffect(living, attackData.Target, procToExecute.Item1.ID);
 									//effect could be null if the SpellID is bigger than ushort
 									if (effect != null)
 									{
@@ -537,7 +537,7 @@ namespace DOL.GS.Styles
 							//Add one proc randomly
 							int random = Util.Random(attackData.Style.Procs.Count - 1);
 							//effect could be null if the SpellID is bigger than ushort
-							effect = CreateMagicEffect(living, attackData.Target, attackData.Style.Procs[random].SpellID);
+							effect = CreateMagicEffect(living, attackData.Target, attackData.Style.Procs[random].Item1.ID);
 							if (effect != null)
 							{
 								attackData.StyleEffects.Add(effect);
@@ -809,17 +809,6 @@ namespace DOL.GS.Styles
 				}
 			}
 
-			if (temp == "")
-			{
-				foreach (Style st in player.GetChampionStyleList())
-				{
-					if (st.AttackResultRequirement == Style.eAttackResultRequirement.Style && st.OpeningRequirementValue == style.ID)
-					{
-						temp = (temp == "" ? st.Name : temp + LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Or", st.Name));
-					}
-				}
-			}
-
 			if (temp != "")
 			{
 				delveInfo.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.FollowupStyle", temp));
@@ -921,12 +910,12 @@ namespace DOL.GS.Styles
 				SpellLine styleLine = SkillBase.GetSpellLine(GlobalSpellsLines.Combat_Styles_Effect);
 				if (styleLine != null)
 				{
-					foreach (DBStyleXSpell proc in style.Procs)
+					foreach (Tuple<Spell, int, int> proc in style.Procs)
 					{
 						// RR4: we added all the procs to the style, now it's time to check for class ID
-						if (proc.ClassID != 0 && proc.ClassID != player.CharacterClass.ID) continue;
+						if (proc.Item2 != 0 && proc.Item2 != player.CharacterClass.ID) continue;
 
-						Spell spell = SkillBase.GetSpellByID(proc.SpellID);
+						Spell spell = proc.Item1;
 						if (spell != null)
 						{
 							ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(player.Client.Player, spell, styleLine);
@@ -980,12 +969,12 @@ namespace DOL.GS.Styles
 					delveInfo.Add(" ");
 
 					string procs = "";
-					foreach (DBStyleXSpell spell in style.Procs)
+					foreach (Tuple<Spell, int, int> spell in style.Procs)
 					{
 						if (procs != "")
 							procs += ", ";
 
-						procs += spell.SpellID;
+						procs += spell.Item1.ID;
 					}
 
 					delveInfo.Add(string.Format("Procs: {0}", procs));

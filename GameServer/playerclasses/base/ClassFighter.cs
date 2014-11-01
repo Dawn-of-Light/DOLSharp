@@ -50,23 +50,6 @@ namespace DOL.GS.PlayerClass
 			return GameTrainer.eChampionTrainerType.Fighter;
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Slash));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Thrust));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Crush));
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Studded));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Medium));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Slashing));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrusting));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Crushing));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return false;

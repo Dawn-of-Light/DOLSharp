@@ -21,6 +21,7 @@ using System;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using DOL.Database;
 using DOL.GS.RealmAbilities;
@@ -43,283 +44,235 @@ namespace DOL.GS.PacketHandler
         public PacketLib1112(GameClient client)
             : base(client)
         {
-
         }
         
 		public override void SendUpdatePlayerSkills()
 		{
 			if (m_gameClient.Player == null)
 				return;
-			IList specs = m_gameClient.Player.GetSpecList();
-			IList skills = m_gameClient.Player.GetNonTrainableSkillList();
-			IList styleList = m_gameClient.Player.GetStyleList();
-			List<SpellLine> spellLines = m_gameClient.Player.GetSpellLines();
-			Dictionary<int, int> styleTable = new Dictionary<int, int>();
-			int maxSkills = 0;
-			int firstSkills = 0;
-
-			GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate));
+			
+			// Get Skills as "Usable Skills" which are in network order ! (with forced update)
+			List<Tuple<Skill, Skill>> usableSkills = m_gameClient.Player.GetAllUsableSkills(true);
+			
+			bool sent = false; // set to true once we can't send packet anymore !
+			int index = 0; // index of our position in the list !
+			int total = usableSkills.Count; // cache List count.
+			int packetCount = 0; // Number of packet sent for the entire list
+			while (!sent)
 			{
-
-				bool sendHybridList = m_gameClient.Player.CharacterClass.ClassType != eClassType.ListCaster;
-	
-				List<Skill> cachedSkills = new List<Skill>();
-	
-				lock (skills.SyncRoot)
+				int packetEntry = 0; // needed to tell client how much skill we send
+				// using pak
+				using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate)))
 				{
-					lock (styleList.SyncRoot)
+					// Write header
+					pak.WriteByte(0x01); //subcode for skill
+					pak.WriteByte((byte)0); //packet entries, can't know it for now...
+					pak.WriteByte((byte)0x03); //subtype for following pages
+					pak.WriteByte((byte)index); // packet first entry
+
+					// getting pak filled
+					while(index < total)
 					{
-						lock (specs.SyncRoot)
+						// this item will break the limit, send the packet before, keep index as is to continue !
+						if ((index >= byte.MaxValue) || ((pak.Length + 8 + usableSkills[index].Item1.Name.Length) > 1400))
 						{
-							lock (m_gameClient.Player.lockSpellLinesList)
+							break;
+						}
+						
+						// Enter Packet Values !! Format Level - Type - SpecialField - Bonus - Icon - Name
+						Skill skill = usableSkills[index].Item1;
+						Skill skillrelated = usableSkills[index].Item2;
+
+						if (skill is Specialization)
+						{
+							Specialization spec = (Specialization)skill;
+							pak.WriteByte((byte)spec.Level);
+							pak.WriteShort((ushort)spec.InternalID); //new 1.112
+							pak.WriteByte((byte)spec.SkillType);
+							pak.WriteShort(0);
+							pak.WriteByte((byte)(m_gameClient.Player.GetModifiedSpecLevel(spec.KeyName) - spec.Level)); // bonus
+							pak.WriteShort((ushort)spec.Icon);
+							pak.WritePascalString(spec.Name);
+						}
+						else if (skill is Ability)
+						{
+							Ability ab = (Ability)skill;
+							pak.WriteByte((byte)ab.Level);
+							pak.WriteShort((ushort)ab.InternalID); //new 1.112
+							pak.WriteByte((byte)ab.SkillType);
+							pak.WriteShort(0);
+							pak.WriteByte((byte)0);
+							pak.WriteShort((ushort)ab.Icon);
+							pak.WritePascalString(ab.Name);
+							
+						}
+						else if (skill is Spell)
+						{
+							Spell spell = (Spell)skill;
+							pak.WriteByte((byte)spell.Level);
+							pak.WriteShort((ushort)spell.InternalID); //new 1.112
+							pak.WriteByte((byte)spell.SkillType);
+							
+							// spec index for this Spell - Special for Song and Unknown Indexes...
+							int spin = 0;							
+							if (spell.SkillType == eSkillPage.Songs)
 							{
-								int skillCount = specs.Count + skills.Count + styleList.Count;
-	
-								if (sendHybridList)
-									skillCount += m_gameClient.Player.GetSpellCount();
-	
-								pak.WriteByte(0x01); //subcode
-								pak.WriteByte((byte)skillCount); //number of entry
-								pak.WriteByte(0x03); //subtype
-								pak.WriteByte((byte)firstSkills);
-	
-								foreach (Specialization spec in specs)
+								spin = 0xFF;
+							}
+							else
+							{
+								// find this line Specialization index !
+								if (skillrelated is SpellLine && !Util.IsEmpty(((SpellLine)skillrelated).Spec))
 								{
-									CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
-									pak.WriteByte((byte)spec.Level);
-									pak.WriteShort((ushort)spec.InternalID); //new 1.112
-									pak.WriteByte((byte)eSkillPage.Specialization);
-									pak.WriteShort(0);
-									pak.WriteByte((byte)(m_gameClient.Player.GetModifiedSpecLevel(spec.KeyName) - spec.Level)); // bonus
-									pak.WriteShort(spec.Icon);
-									pak.WritePascalString(spec.Name);
+									spin = usableSkills.FindIndex(sk => (sk.Item1 is Specialization) && ((Specialization)sk.Item1).KeyName == ((SpellLine)skillrelated).Spec);
+									
+									if (spin == -1)
+										spin = 0xFE;
 								}
-	
-								int count = 0;
-								foreach (Skill skill in skills)
+								else
 								{
-									if (cachedSkills.Contains(skill))
-									{
-										log.Error("SendUpdatePlayerSkills : duplicate Skill : " + skill.Name + " / ID=" + skill.ID);
-									}
-									else
-									{
-										count++;
-										CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
-										pak.WriteByte(0);
-										pak.WriteShort((ushort)skill.InternalID); //new 1.112
-										byte type = (byte)eSkillPage.Abilities;
-										if (skill is RealmAbility)
-										{
-											type = (byte)eSkillPage.RealmAbilities;
-										}
-										pak.WriteByte(type);
-										pak.WriteShort(0);
-										pak.WriteByte(0);
-										pak.WriteShort(skill.Icon);
-										pak.WritePascalString(m_gameClient.Player.GetSkillName(skill));
-										cachedSkills.Add(skill);
-									}
-								}
-	
-								foreach (Style style in styleList)
-								{
-									if (cachedSkills.Contains(style))
-									{
-										log.Error("SendUpdatePlayerSkills : duplicate Style : " + style.Name + " / ID=" + style.ID);
-									}
-									else
-									{
-										CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
-	
-										styleTable[(int)style.ID] = count++;
-										if (style.Spec == GlobalSpellsLines.Champion_Spells)
-										{
-											pak.WriteByte((byte)style.Level);
-										}
-										else
-										{
-											pak.WriteByte((byte)style.SpecLevelRequirement);
-										}
-										pak.WriteShort((ushort)style.InternalID); //new 1.112
-										pak.WriteByte((byte)eSkillPage.Styles);
-	
-										int pre = 0;
-	
-										try
-										{
-											switch (style.OpeningRequirementType)
-											{
-												case Style.eOpening.Offensive:
-													pre = 0 + (int)style.AttackResultRequirement; // last result of our attack against enemy
-													// hit, miss, target blocked, target parried, ...
-													if (style.AttackResultRequirement == Style.eAttackResultRequirement.Style)
-														pre |= ((100 + (int)styleTable[style.OpeningRequirementValue]) << 8);
-													break;
-												case Style.eOpening.Defensive:
-													pre = 100 + (int)style.AttackResultRequirement; // last result of enemies attack against us
-													// hit, miss, you block, you parry, ...
-													break;
-												case Style.eOpening.Positional:
-													pre = 200 + style.OpeningRequirementValue;
-													break;
-											}
-										}
-										catch (Exception ex)
-										{
-											log.Error("Error loading style " + style.ID + " for player " + m_gameClient.Player.Name + ", openingrequirementvalue = " + style.OpeningRequirementValue, ex);
-										}
-	
-										// style required?
-										if (pre == 0)
-										{
-											pre = 0x100;
-										}
-	
-										pak.WriteShort((ushort)pre);
-										pak.WriteByte(GlobalConstants.GetSpecToInternalIndex(style.Spec)); // index specialization
-										pak.WriteShort((ushort)style.Icon);
-										pak.WritePascalString(style.Name);
-										cachedSkills.Add(style);
-									}
-								}
-	
-								if (sendHybridList)
-								{
-									Dictionary<string, KeyValuePair<Spell, SpellLine>> spells = m_gameClient.Player.GetUsableSpells(spellLines, false);
-	
-									foreach (KeyValuePair<string, KeyValuePair<Spell, SpellLine>> spell in spells)
-									{
-										if (cachedSkills.Contains(spell.Value.Key))
-										{
-											log.Error("SendUpdatePlayerSkills : duplicate hybrid allspell : " + spell.Value.Key.Name + " / ID=" + spell.Value.Key.ID);
-										}
-										else
-										{
-											CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
-	
-											int lineIndex = specs.IndexOf(m_gameClient.Player.GetSpecialization(spell.Value.Value.Spec));
-	
-											if (lineIndex == -1)
-											{
-												lineIndex = 0xFE; // Nightshade special value
-											}
-	
-											pak.WriteByte((byte)spell.Value.Key.Level);
-											pak.WriteShort(spell.Value.Key.TooltipId); //new 1.112
-	
-											if (spell.Value.Key.InstrumentRequirement == 0)
-											{
-												pak.WriteByte((byte)eSkillPage.Spells);
-												pak.WriteByte(0);
-												pak.WriteByte((byte)lineIndex);
-											}
-											else
-											{
-												pak.WriteByte((byte)eSkillPage.Songs);
-												pak.WriteByte(0);
-												pak.WriteByte(0xFF);
-											}
-	
-											pak.WriteByte(0);
-											pak.WriteShort(spell.Value.Key.InternalIconID > 0 ? spell.Value.Key.InternalIconID : spell.Value.Key.Icon);
-											pak.WritePascalString(spell.Value.Key.Name);
-											cachedSkills.Add(spell.Value.Key);
-										}
-									}
+									spin = 0xFE;
 								}
 							}
+							
+							pak.WriteShort((ushort)spin); // special index for spellline
+							pak.WriteByte(0); // bonus
+							pak.WriteShort(spell.InternalIconID > 0 ? spell.InternalIconID : spell.Icon); // icon
+							pak.WritePascalString(spell.Name);
 						}
+						else if (skill is Style)
+						{
+							Style style = (Style)skill;
+							pak.WriteByte((byte)style.SpecLevelRequirement);
+							pak.WriteShort((ushort)style.InternalID); //new 1.112
+							pak.WriteByte((byte)style.SkillType);
+							
+							// Special pre-requisite (First byte is Pre-requisite Icon / second Byte is prerequisite code...)
+							int pre = 0;
+				
+							switch (style.OpeningRequirementType)
+							{
+								case Style.eOpening.Offensive:
+									pre = (int)style.AttackResultRequirement; // last result of our attack against enemy hit, miss, target blocked, target parried, ...
+									if (style.AttackResultRequirement == Style.eAttackResultRequirement.Style)
+									{
+										// get style requirement value... find prerequisite style index from specs beginning...
+										int styleindex = Math.Max(0, usableSkills.FindIndex(it => (it.Item1 is Style) && it.Item1.ID == style.OpeningRequirementValue));										
+										int speccount = Math.Max(0, usableSkills.FindIndex(it => (it.Item1 is Specialization) == false));										
+										pre |= ((byte)(100 + styleindex - speccount)) << 8;
+									}
+									break;
+								case Style.eOpening.Defensive:
+									pre = 100 + (int)style.AttackResultRequirement; // last result of enemies attack against us hit, miss, you block, you parry, ...
+									break;
+								case Style.eOpening.Positional:
+									pre = 200 + style.OpeningRequirementValue;
+									break;
+							}
+							
+							// style required?
+							if (pre == 0)
+								pre = 0x100;
+	
+							pak.WriteShort((ushort)pre);
+							pak.WriteByte(GlobalConstants.GetSpecToInternalIndex(style.Spec)); // index specialization in bonus...
+							pak.WriteShort((ushort)style.Icon);
+							pak.WritePascalString(style.Name);
+						}
+						
+						packetEntry++;
+						index++;
 					}
-				}
-	
-				//m_gameClient.Player.CachedSkills = cachedSkills;
-	
-				if (pak.Length > 7)
-				{
+
+					// test if we finished sending packets
+					if (index >= total || index >= byte.MaxValue)
+						sent = true;
+					
+					// rewrite header for count.
 					pak.Position = 4;
-					pak.WriteByte((byte)(maxSkills - firstSkills)); //number of entry
-					pak.WriteByte(0x03); //subtype
-					pak.WriteByte((byte)firstSkills);
+					pak.WriteByte((byte)packetEntry);
+					
+					if (!sent)
+						pak.WriteByte((byte)99);
+					
 					SendTCP(pak);
+					
 				}
+				
+				packetCount++;
 			}
 			
-			Dictionary<byte, Dictionary<byte, Spell>> cachedSpells = new Dictionary<byte, Dictionary<byte, Spell>>();
-			Dictionary<byte, SpellLine> cachedSpellLines = new Dictionary<byte, SpellLine>();
-			Dictionary<Spell, ushort> cachedSpell2Index = new Dictionary<Spell, ushort>();
-			//Dictionary<ushort, byte> cachedSpell2Level = new Dictionary<ushort, byte>();
-			byte linenumber = 0;
+			// Send List Cast Spells...
+			SendNonHybridSpellLines();
+			// clear trainer cache
+			m_gameClient.TrainerSkillCache = null;
+			
+			if (ForceTooltipUpdate)
+				SendForceTooltipUpdate(usableSkills.Select(t => t.Item1));
+		}
 
-			lock(spellLines)
+		/// <summary>
+		/// Send non hybrid and advanced spell lines
+		/// </summary>
+		public override void SendNonHybridSpellLines()
+		{
+			GamePlayer player = m_gameClient.Player;
+			if (player == null)
+				return;
+
+			List<Tuple<SpellLine, List<Skill>>> spellsXLines = player.GetAllUsableListSpells(true);
+			
+			int lineIndex = 0;
+			foreach (var spXsl in spellsXLines)
 			{
-				foreach (SpellLine line in spellLines)
+				// Prepare packet
+				using(var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate)))
 				{
-					int sp = 0;
-					int linelevel = m_gameClient.Player.IsAdvancedSpellLine(line) ? m_gameClient.Player.MLLevel : line.Level;
-					// We only handle list caster spells or advanced lines
-					if (m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster || m_gameClient.Player.IsAdvancedSpellLine(line))
+					// Add Line Header
+					pak.WriteByte(0x02); //subcode
+					pak.WriteByte((byte)(spXsl.Item2.Count + 1)); //number of entry
+					pak.WriteByte(0x02); //subtype
+					pak.WriteByte((byte)lineIndex); //number of line
+					
+					pak.WriteShortLowEndian(0); // level, not used when spell line
+					pak.WriteShort((ushort)spXsl.Item1.InternalID); //new 1.112
+					pak.WriteShort(0); // icon, not used when spell line
+					pak.WritePascalString(spXsl.Item1.Name);
+					
+					// Add All Spells...
+					foreach (Skill sk in spXsl.Item2)
 					{
-						// make a copy
-						var spells = new List<Spell>(SkillBase.GetSpellList(line.KeyName)); // copy
-						int spellCount = 0;
-						for (int i = 0; i < spells.Count; i++)
+						if (sk is Spell)
 						{
-							if ((spells[i]).Level <= linelevel/* && spells[i].SpellType != "StyleHandler"*/)
-							{
-								spellCount++;
-							}
+							Spell sp = (Spell)sk;
+							pak.WriteShortLowEndian((byte)sp.Level);
+							pak.WriteShort((ushort)sp.InternalID); //new 1.112
+							pak.WriteShort(sp.Icon);
+							pak.WritePascalString(sp.Name);
 						}
-
-						using (var pakSL = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate)))
+						else
 						{
-							pakSL.WriteByte(0x02); //subcode
-							pakSL.WriteByte((byte)(spellCount + 1)); //number of entry
-							pakSL.WriteByte(0x02); //subtype
-							pakSL.WriteByte(linenumber); //number of line
-							pakSL.WriteShortLowEndian(0); // level, not used when spell line
-							pakSL.WriteShort(0); //new 1.112
-							pakSL.WriteShort(0); // icon, not used when spell line
-							pakSL.WritePascalString(line.Name);
-							cachedSpellLines.Add(linenumber, line);
-
-							foreach (Spell spell in spells)
-							{
-								if (spell.Level <= linelevel/* && spell.SpellType != "StyleHandler"*/)
-								{
-									if (!cachedSpells.ContainsKey(linenumber))
-										cachedSpells.Add(linenumber, new Dictionary<byte, Spell>());
-
-									if (cachedSpells[linenumber].ContainsKey((byte)spell.Level))
-									{
-										log.Error("SendListCaster : duplicate level : " + spell.Level + " / name=" + spell.Name + " / class=" + m_gameClient.Player.CharacterClass.Name);
-										log.Error("name=" + cachedSpells[linenumber][(byte)spell.Level].Name);
-										continue;
-									}
-
-									pakSL.WriteShortLowEndian((byte)spell.Level);
-									pakSL.WriteShort(spell.TooltipId); //new 1.112
-									pakSL.WriteShort(spell.Icon);
-									pakSL.WritePascalString(spell.Name);
-									cachedSpells[linenumber].Add((byte)spell.Level, spell);
-									cachedSpell2Index.Add(spell, (ushort)((sp << 8) + linenumber));
-									//cachedSpell2Level.Add(spell.ID, (byte)spell.Level);
-									sp++;
-								}
-							}
-
-							SendTCP(pakSL);
-							linenumber++;
+							int reqLevel = 1;
+							if (sk is Style)
+								reqLevel = ((Style)sk).SpecLevelRequirement;
+							else if (sk is Ability)
+								reqLevel = ((Ability)sk).SpecLevelRequirement;
+							
+							pak.WriteShortLowEndian((ushort)((byte)reqLevel + (sk is Style ? 512 : 256)));
+							pak.WriteShort((ushort)sk.InternalID); //new 1.112
+							pak.WriteShort(sk.Icon);
+							pak.WritePascalString(sk.Name);
 						}
 					}
+					
+					// Send
+					SendTCP(pak);
 				}
+				
+				lineIndex++;
 			}
-
-			//m_gameClient.Player.CachedSpellLines = cachedSpellLines;
-			//m_gameClient.Player.CachedSpells = cachedSpells;
-			//m_gameClient.Player.CachedSpell2Index = cachedSpell2Index;
-			//m_gameClient.Player.CachedSpell2Level = cachedSpell2Level;
-
+			
+			// Footer packet
 			using (GSTCPPacketOut pak3 = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate)))
 			{
 				pak3.WriteByte(0x02); //subcode
@@ -328,9 +281,11 @@ namespace DOL.GS.PacketHandler
 				pak3.WriteByte(0x00);
 				SendTCP(pak3);
 			}
+			
+			if (ForceTooltipUpdate)
+				SendForceTooltipUpdate(spellsXLines.SelectMany(e => e.Item2));
 		}
-
-
+		
 		protected override void WriteTemplateData(GSTCPPacketOut pak, ItemTemplate template, int count)
 		{
 			if (template == null)

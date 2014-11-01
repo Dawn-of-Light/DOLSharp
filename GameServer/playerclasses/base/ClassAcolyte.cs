@@ -50,24 +50,6 @@ namespace DOL.GS.PlayerClass
 			return GameTrainer.eChampionTrainerType.Acolyte;
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Rejuvenation));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Enhancement));
-			
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Rejuvenation"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Enhancement"));
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Leather));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Crushing));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return false;

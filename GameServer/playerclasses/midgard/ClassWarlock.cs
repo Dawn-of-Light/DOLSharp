@@ -53,39 +53,17 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			//Remove
-			player.RemoveSpellLine("Darkness");
-			player.RemoveSpellLine("Suppression");
-			player.RemoveSpecialization(Specs.Darkness);
-			player.RemoveSpecialization(Specs.Suppression);
-		
-			// Specializations
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Cursing));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Hexing));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Witchcraft));
-						
-
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Cursing"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Cursing Spec"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Hexing"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Witchcraft"));
-
-			if (player.Level >= 6)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
-			}
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;
 		}
 
+		/// <summary>
+		/// FIXME this has nothing to do here !
+		/// </summary>
+		/// <param name="line"></param>
+		/// <param name="spell"></param>
+		/// <returns></returns>
 		public override bool CanChangeCastingSpeed(SpellLine line, Spell spell)
 		{
 			if (spell.SpellType == "Chamber")

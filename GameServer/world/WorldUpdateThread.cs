@@ -414,7 +414,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="nowTicks"></param>
-		private static void UpdatePlayerHousing(GamePlayer player, long nowTicks)
+		public static void UpdatePlayerHousing(GamePlayer player, long nowTicks)
 		{
 			// If no house update needed exit.
 			if (player.CurrentRegion == null || !player.CurrentRegion.HousingEnabled)

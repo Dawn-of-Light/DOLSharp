@@ -52,52 +52,9 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
-		public override bool CanUseLefthandedWeapon(GamePlayer player)
+		public override bool CanUseLefthandedWeapon
 		{
-			return true;
-		}
-
-		/// <summary>
-		/// Update all skills and add new for current level
-		/// </summary>
-		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_LeftAxes));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Left_Axe));
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrown));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Berserk, 1));
-
-			if (player.Level >= 10) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 1));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Berserk, 2));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
-
-			}
-			if (player.Level >= 15) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Berserk, 3));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
-			}		
-			if (player.Level >= 20) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 3));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Berserk, 4));
-			}
-			if (player.Level >= 24)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.PreventFlight));
-			}
-			if (player.Level >= 35)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Advanced_Evade));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Stoicism));
-			}
+			get { return true; }
 		}
 
 		public override bool HasAdvancedFromBaseClass()

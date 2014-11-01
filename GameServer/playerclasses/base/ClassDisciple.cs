@@ -51,24 +51,6 @@ namespace DOL.GS.PlayerClass
 			return GameTrainer.eChampionTrainerType.Disciple;
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			// Specialization
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Deathsight));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Painworking));
-
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Deathsight"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Death Servant"));
-
-			// Abilities
-			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Cloth));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return false;

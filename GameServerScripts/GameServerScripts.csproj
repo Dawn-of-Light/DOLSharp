@@ -115,6 +115,7 @@
     <Compile Include="customnpc\Desmona harpies\AtlantisVisualModelNPC.cs" />
     <Compile Include="customnpc\Desmona harpies\DesmonaHarpy.cs" />
     <Compile Include="customnpc\Desmona harpies\DesmonaCoin.cs" />
+    <Compile Include="customnpc\MasterLevelsMerchant.cs" />
     <Compile Include="customnpc\PortalCeremonyBaseNPC.cs" />
     <Compile Include="customnpc\PortalCeremonyExampleNPC.cs" />
     <Compile Include="customnpc\RegionTestNpc.cs" />

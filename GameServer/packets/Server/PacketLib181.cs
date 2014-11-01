@@ -46,10 +46,8 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendNonHybridSpellLines()
 		{
-			if (m_gameClient.Player == null)
-				return;
-
 			base.SendNonHybridSpellLines();
+			
 			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate)))
 			{
 				pak.WriteByte(0x02); //subcode

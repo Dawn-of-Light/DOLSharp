@@ -53,24 +53,6 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-		
-			// Specializations
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Runecarving));			
-
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Runecarving"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Runes of Darkness"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Runes of Suppression"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Runes of Destruction"));
-
-			// Abilities
-			player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;

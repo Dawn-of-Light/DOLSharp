@@ -49,29 +49,6 @@ namespace DOL.GS.PlayerClass
 			return GameTrainer.eChampionTrainerType.Viking;
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel) 
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Axe));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Hammer));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Sword));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Parry));
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
-			player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Studded));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Axes));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Hammers));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Swords));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
-			
-			if (player.Level >= 2)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
-			}
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return false;

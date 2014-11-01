@@ -56,72 +56,14 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
-		public override bool CanUseLefthandedWeapon(GamePlayer player)
+		public override bool CanUseLefthandedWeapon
 		{
-			return true;
+			get { return true; }
 		}
 
 		public override IList<string> GetAutotrainableSkills()
 		{
 			return AutotrainableSkills;
-		}
-
-		/// <summary>
-		/// Update all skills and add new for current level
-		/// </summary>
-		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Dual_Wield));
-
-			if (player.Level >= 10)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Chain));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Shortbows));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
-
-			}
-			if (player.Level >= 15)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 1));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
-			}
-			if (player.Level >= 17)
-			{
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Parry));
-			}
-			if (player.Level >= 19)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Intercept));
-			}
-			if (player.Level >= 20)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.DirtyTricks));
-			}
-			if (player.Level >= 23)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 2));
-			}
-			if (player.Level >= 24)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.PreventFlight));
-			}
-			if (player.Level >= 30)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Flurry));
-			}
-			if (player.Level >= 32)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 3));
-			}
-			if (player.Level >= 35)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Advanced_Evade));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Stoicism));
-			}
 		}
 
 		public override bool HasAdvancedFromBaseClass()

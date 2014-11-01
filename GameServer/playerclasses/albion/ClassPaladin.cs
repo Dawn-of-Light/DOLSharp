@@ -68,48 +68,6 @@ namespace DOL.GS.PlayerClass
 			return AutotrainableSkills;
 		}
 
-		/// <summary>
-		/// Update all skills and add new for current level
-		/// </summary>
-		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Chants));
-			player.AddSpellLine(SkillBase.GetSpellLine("Chants"));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Two_Handed));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_TwoHanded));
-
-			if (player.Level >=9)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 1));
-			}
-			if (player.Level >= 10)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Chain));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Large));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Intercept));
-			}
-			if (player.Level >= 14)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 2));
-			}
-			if (player.Level >= 15)
-			{
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Parry));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
-			}
-			if (player.Level >= 19)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 3));
-			}
-			if (player.Level >= 20)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Plate));
-			}
-		}
 
 		public override bool HasAdvancedFromBaseClass()
 		{
