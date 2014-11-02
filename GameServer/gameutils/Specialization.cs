@@ -281,7 +281,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual List<Ability> PretendAbilitiesForLiving(GameLiving living, int step)
 		{
-			return SkillBase.GetSpecAbilityList(KeyName)
+			return SkillBase.GetSpecAbilityList(KeyName, living is GamePlayer ? ((GamePlayer)living).CharacterClass.ID : 0)
 				.Where(k => k.SpecLevelRequirement <= step)
 				.OrderBy(k => k.SpecLevelRequirement).ToList();
 		}
@@ -297,7 +297,7 @@ namespace DOL.GS
 		protected virtual List<Ability> GetAbilitiesForLiving(GameLiving living, int level)
 		{
 			// Select only Enabled and Max Level Abilities
-			List<Ability> abs = SkillBase.GetSpecAbilityList(KeyName);
+			List<Ability> abs = SkillBase.GetSpecAbilityList(KeyName, living is GamePlayer ? ((GamePlayer)living).CharacterClass.ID : 0);
 			
 			// Get order of first appearing skills
 			IOrderedEnumerable<Ability> order = abs.GroupBy(item => item.KeyName)

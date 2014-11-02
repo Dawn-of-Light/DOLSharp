@@ -1132,7 +1132,7 @@ namespace DOL.GS.PacketHandler
 			}
 			
 			// Update Cache
-			m_gameClient.GameObjectUpdateArray[new Tuple<ushort, ushort>(npc.CurrentRegionID, (ushort)npc.ObjectID)] = GameTimer.GetTickCount();
+			m_gameClient.GameObjectUpdateArray[new Tuple<ushort, ushort>(npc.CurrentRegionID, (ushort)npc.ObjectID)] = 0;
 			
 		}
 

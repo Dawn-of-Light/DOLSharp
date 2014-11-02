@@ -107,7 +107,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					player.Group.UpdateAllToMember(player, true, false);
 					player.Group.UpdateMember(player, true, true);
 				}
-				player.Out.SendPlayerInitFinished((byte) mobs);
+				player.Out.SendPlayerInitFinished(0);
 				player.TargetObject = null;
 				player.StartHealthRegeneration();
 				player.StartPowerRegeneration();

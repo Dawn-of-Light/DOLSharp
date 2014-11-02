@@ -10505,9 +10505,6 @@ namespace DOL.GS
 				Out.SendNPCCreate(npc);
 				if (npc.Inventory != null)
 					Out.SendLivingEquipmentUpdate(npc);
-				//Send health update only if mob-health is not 100%
-				if (npc.HealthPercent != 100)
-					Out.SendObjectUpdate(npc);
 			}
 
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))

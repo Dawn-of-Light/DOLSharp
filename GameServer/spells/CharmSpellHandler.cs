@@ -383,10 +383,6 @@ namespace DOL.GS.Spells
 	                   ply.Out.SendObjectGuildID(npc, player.Guild);
 	                }
                 }
-                
-                npc.BroadcastUpdate();
-
-
             }
             else
             {
@@ -514,9 +510,6 @@ namespace DOL.GS.Spells
                     	}
 
                     }
-                    
-                    npc.BroadcastUpdate();
-
                 }
                 
             }

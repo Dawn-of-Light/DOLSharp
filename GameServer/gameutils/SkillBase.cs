@@ -66,8 +66,8 @@ namespace DOL.GS
 		// global table for spec => List of styles, Dict <"string spec keyname", "Dict <"int classid", "List<"Tuple<"Style style", "byte requiredLevel"> Style Constraint" StyleByClass">
 		protected static readonly Dictionary<string, IDictionary<int, List<Tuple<Style, byte>>>> m_specsStyles = new Dictionary<string, IDictionary<int, List<Tuple<Style, byte>>>>();
 		
-		// Specialization X Ability Cache Dict<"string spec keyname", "List<"Tuple<"string abilitykey", "byte speclevel", "int ab Level"> ab constraint"> list ab's>">
-		protected static readonly Dictionary<string, List<Tuple<string, byte, int>>> m_specsAbilities = new Dictionary<string, List<Tuple<string, byte, int>>>();
+		// Specialization X Ability Cache Dict<"string spec keyname", "List<"Tuple<"string abilitykey", "byte speclevel", "int ab Level", "int class hint"> ab constraint"> list ab's>">
+		protected static readonly Dictionary<string, List<Tuple<string, byte, int, int>>> m_specsAbilities = new Dictionary<string, List<Tuple<string, byte, int, int>>>();
 
 		
 		// Ability Cache Dict KeyName => DBAbility Object (to instanciate)
@@ -590,14 +590,14 @@ namespace DOL.GS
 						if (spec.AbilityConstraints != null)
 						{
 							if (!m_specsAbilities.ContainsKey(spec.KeyName))
-								m_specsAbilities.Add(spec.KeyName, new List<Tuple<string, byte, int>>());
+								m_specsAbilities.Add(spec.KeyName, new List<Tuple<string, byte, int, int>>());
 
 							foreach (DBSpecXAbility specx in spec.AbilityConstraints)
 							{
 								
 								try
 								{
-									m_specsAbilities[spec.KeyName].Add(new Tuple<string, byte, int>(m_abilityIndex[specx.AbilityKey].KeyName, (byte)specx.SpecLevel, specx.AbilityLevel));
+									m_specsAbilities[spec.KeyName].Add(new Tuple<string, byte, int, int>(m_abilityIndex[specx.AbilityKey].KeyName, (byte)specx.SpecLevel, specx.AbilityLevel, specx.ClassId));
 									count++;
 								}
 								catch (Exception e)
@@ -2286,7 +2286,7 @@ namespace DOL.GS
 				m_syncLockUpdates.ExitReadLock();
 			}
 						
-			return ras.Select(e => (RealmAbility)GetNewAbilityInstance(e)).OrderBy(el => el.ID).ToList();
+			return ras.Select(e => GetNewAbilityInstance(e)).Where(ab => ab is RealmAbility).Cast<RealmAbility>().OrderByDescending(el => el.MaxLevel).ThenBy(el => el.KeyName).ToList();
 		}
 
 		/// <summary>
@@ -2864,15 +2864,15 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="specID">KeyName of spec</param>
 		/// <returns>list of abilities or empty list</returns>
-		public static List<Ability> GetSpecAbilityList(string specID)
+		public static List<Ability> GetSpecAbilityList(string specID, int classID)
 		{
 			m_syncLockUpdates.EnterReadLock();
-			List<Tuple<string, byte, int>> entries = new List<Tuple<string, byte, int>>();
+			List<Tuple<string, byte, int, int>> entries = new List<Tuple<string, byte, int, int>>();
 			try
 			{
 				if (m_specsAbilities.ContainsKey(specID))
 				{
-					entries = new List<Tuple<string, byte, int>>(m_specsAbilities[specID]);
+					entries = new List<Tuple<string, byte, int, int>>(m_specsAbilities[specID]);
 				}
 			}
 			finally
@@ -2881,8 +2881,11 @@ namespace DOL.GS
 			}
 			
 			List<Ability> abRes = new List<Ability>();
-			foreach (Tuple<string, byte, int> constraint in entries)
+			foreach (Tuple<string, byte, int, int> constraint in entries)
 			{
+				if (constraint.Item4 != 0 && constraint.Item4 != classID)
+					continue;
+				
 				Ability ab = GetNewAbilityInstance(constraint.Item1, constraint.Item3);
 				ab.Spec = specID;
 				ab.SpecLevelRequirement = constraint.Item2;

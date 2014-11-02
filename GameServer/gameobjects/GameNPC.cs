@@ -215,7 +215,6 @@ namespace DOL.GS
 						if (m_inventory != null)
 							player.Out.SendLivingEquipmentUpdate(this);
 					}
-					BroadcastUpdate();
 				}
 			}
 		}
@@ -273,7 +272,6 @@ namespace DOL.GS
 						if (m_inventory != null)
 							player.Out.SendLivingEquipmentUpdate(this);
 					}
-					BroadcastUpdate();
 				}
 			}
 		}
@@ -295,7 +293,6 @@ namespace DOL.GS
 						if (m_inventory != null)
 							player.Out.SendLivingEquipmentUpdate(this);
 					}
-					BroadcastUpdate();
 				}
 			}
 		}
@@ -341,7 +338,6 @@ namespace DOL.GS
 						if (m_inventory != null)
 							player.Out.SendLivingEquipmentUpdate(this);
 					}
-					BroadcastUpdate();
 				}
 			}
 		}
@@ -655,7 +651,6 @@ namespace DOL.GS
 								player.Out.SendLivingEquipmentUpdate(this);
 						}
 					}
-					BroadcastUpdate();
 				}
 			}
 		}
@@ -2893,7 +2888,6 @@ namespace DOL.GS
 				if (m_inventory != null)
 					player.Out.SendLivingEquipmentUpdate(this);
 			}
-			BroadcastUpdate();
 			m_spawnPoint.X = X;
 			m_spawnPoint.Y = Y;
 			m_spawnPoint.Z = Z;
@@ -3084,7 +3078,6 @@ namespace DOL.GS
 				}
 			}
 
-			BroadcastUpdate();
 			return true;
 		}
 
