@@ -539,7 +539,7 @@ namespace DOL.GS
 					IList<GameClient> clients = WorldMgr.GetAllClients();
 					
 					// Clean Tasks Dict on Client Exiting.
-					foreach(GameClient cli in clientsUpdateTasks.Keys)
+					foreach(GameClient cli in new List<GameClient>(clientsUpdateTasks.Keys))
 					{
 						if (cli == null)
 							continue;
