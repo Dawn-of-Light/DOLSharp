@@ -50,24 +50,6 @@ namespace DOL.GS.PlayerClass
 			return GameTrainer.eChampionTrainerType.Seer;
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Mending));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Augmentation));
-			
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Mending"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Augmentation"));
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Leather));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Hammers));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return false;

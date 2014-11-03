@@ -307,6 +307,14 @@ namespace DOL.GS.ServerRules
 		/// <param name="target">The considered player</param>
 		/// <returns>The custom title of the target</returns>
 		string GetPlayerTitle(GamePlayer source, GamePlayer target);
+
+		/// <summary>
+		/// Gets the player's Total Amount of Realm Points Based on Level, Realm Level of other constraints.
+		/// </summary>
+		/// <param name="source">The player</param>
+		/// <param name="target"></param>
+		/// <returns>The total pool of realm points !</returns>
+		int GetPlayerRealmPointsTotal(GamePlayer source);
 		
 		/// <summary>
 		/// Gets the server type color handling scheme
@@ -457,6 +465,11 @@ namespace DOL.GS.ServerRules
 		/// <param name="house"></param>
 		/// <returns></returns>
 		GameConsignmentMerchant CreateHousingConsignmentMerchant(GS.Housing.House house);
+		
+		/// <summary>
+		/// Enable Handling Custom Player Level Up
+		/// </summary>
+		void OnPlayerLevelUp(GamePlayer player, int previousLevel);
 
 	}
 }

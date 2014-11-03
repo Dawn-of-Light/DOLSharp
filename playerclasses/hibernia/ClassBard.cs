@@ -54,42 +54,6 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
-		/// <summary>
-		/// Update all skills and add new for current level
-		/// </summary>
-		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			// Specializations
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Blades));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Blunt));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Music));
-
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Bard Music"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Bard Nurture Spec"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Regrowth Bard Spec"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Bard Music Spec"));
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Instruments));
-
-			if (player.Level >= 10) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
-			}
-			if (player.Level >= 15) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Reinforced));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
-			}
-			if (player.Level >= 25) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
-			}
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;

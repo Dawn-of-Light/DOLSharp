@@ -707,6 +707,7 @@ namespace DOL.GS.PacketHandler
 		void SendRemoveFriends(string[] friendNames);
 		void SendTimerWindow(string title, int seconds);
 		void SendCloseTimerWindow();
+		void SendCustomTrainerWindow(int type, List<Tuple<Specialization, List<Tuple<Skill, byte>>>> tree);
 		void SendChampionTrainerWindow(int type);
 		void SendTrainerWindow();
 		void SendInterruptAnimation(GameLiving living);

@@ -83,7 +83,7 @@ namespace DOL.GS
                     spell.Target = "Enemy";
                     spell.Type = "DirectDamage";
                     m_glareSpell = new Spell(spell, 70);
-                    SkillBase.GetSpellList(GlobalSpellsLines.Mob_Spells).Add(m_glareSpell);
+                    SkillBase.AddScriptedSpell(GlobalSpellsLines.Mob_Spells, m_glareSpell);
                 }
                 return m_glareSpell;
             }
@@ -117,7 +117,7 @@ namespace DOL.GS
                     spell.Target = "Enemy";
                     spell.Type = "DirectDamage";
                     m_breathSpell = new Spell(spell, 70);
-                    SkillBase.GetSpellList(GlobalSpellsLines.Mob_Spells).Add(m_breathSpell);
+                    SkillBase.AddScriptedSpell(GlobalSpellsLines.Mob_Spells, m_breathSpell);
                 }
                 return m_breathSpell;
             }
@@ -152,7 +152,7 @@ namespace DOL.GS
                     spell.Message1 = "You feel more vulnerable to heat!";
                     spell.Message2 = "{0} seems vulnerable to heat!";
 					m_resistDebuffSpell = new Spell(spell, 70);
-					SkillBase.GetSpellList(GlobalSpellsLines.Mob_Spells).Add(m_resistDebuffSpell);
+					SkillBase.AddScriptedSpell(GlobalSpellsLines.Mob_Spells, m_resistDebuffSpell);
                 }
 				return m_resistDebuffSpell;
             }
@@ -189,7 +189,7 @@ namespace DOL.GS
 					spell.Target = "Enemy";
 					spell.Type = "FumbleChanceDebuff";
 					m_meleeDebuffSpell = new Spell(spell, 70);
-					SkillBase.GetSpellList(GlobalSpellsLines.Mob_Spells).Add(m_meleeDebuffSpell);
+					SkillBase.AddScriptedSpell(GlobalSpellsLines.Mob_Spells, m_meleeDebuffSpell);
 				}
 				return m_meleeDebuffSpell;
 			}
@@ -228,7 +228,7 @@ namespace DOL.GS
 					spell.Message1 = "You are blinded!";
 					spell.Message2 = "{0} is blinded!";
 					m_rangedDebuffSpell = new Spell(spell, 70);
-					SkillBase.GetSpellList(GlobalSpellsLines.Mob_Spells).Add(m_rangedDebuffSpell);
+					SkillBase.AddScriptedSpell(GlobalSpellsLines.Mob_Spells, m_rangedDebuffSpell);
 				}
 				return m_rangedDebuffSpell;
 			}

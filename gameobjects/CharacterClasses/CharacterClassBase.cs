@@ -257,27 +257,13 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Add all skills and other things that are required for current level
+		/// Add things that are required for current level
+		/// Skills and other things are handled through player specs... (on Refresh Specs)
 		/// </summary>
 		/// <param name="player">player to modify</param>
 		/// <param name="previousLevel">the previous level of the player</param>
 		public virtual void OnLevelUp(GamePlayer player, int previousLevel)
 		{
-			// Grav: autotrain in player.OnLevelUp()
-			// If this is a PvE server, issue one realm specialty point
-			// for each level starting at level 20.
-			if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE)
-			{
-				// Somewhere in the code, regardless of server type, one RA point
-				// is being assigned at lvl 20 already (I don't know where that's
-				// coming from).  That's why the following is <= 20 and not just < 20.
-				if (player.Level <= 20)
-					return;
-
-				int newPoints = player.Level - previousLevel;
-				player.RealmSpecialtyPoints += newPoints;
-				player.SaveIntoDatabase();
-			}
 		}
 
 		/// <summary>
@@ -289,14 +275,6 @@ namespace DOL.GS
 			//we dont want to add things when players arent using their advanced class
 			if (player.CharacterClass.BaseName == player.CharacterClass.Name)
 				return;
-
-			//add rr5 realm abilities
-			if (player.RealmLevel >= 40)
-			{
-				Ability ab = SkillBase.getClassRealmAbility(player.CharacterClass.ID);
-				if (ab != null)
-					player.AddAbility(ab, true);
-			}
 		}
 
 		/// <summary>
@@ -311,9 +289,9 @@ namespace DOL.GS
 		/// <summary>
 		/// Checks whether player has ability to use lefthanded weapons
 		/// </summary>
-		public virtual bool CanUseLefthandedWeapon(GamePlayer player)
+		public virtual bool CanUseLefthandedWeapon
 		{
-			return false;
+			get { return false; }
 		}
 
 		public virtual bool HasAdvancedFromBaseClass()

@@ -53,26 +53,6 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
-		/// <summary>
-		/// Update all skills and add new for current level
-		/// </summary>
-		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			// Specializations
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Enchantments));
-			
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Enchantment"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Empowering"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Bedazzling"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Enchantment Mastery"));
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;

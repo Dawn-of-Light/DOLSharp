@@ -61,33 +61,6 @@ namespace DOL.GS.PlayerClass
 			get { return eClassType.Hybrid; }
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Battlesongs));
-			player.AddSpellLine(SkillBase.GetSpellLine("Battlesongs"));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Medium));
-
-			if (player.Level >= 12)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 1));
-			}
-			if (player.Level >= 15)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
-			}
-			if (player.Level >= 19)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 2));
-			}
-			if (player.Level >= 20)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Chain));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
-			}
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;

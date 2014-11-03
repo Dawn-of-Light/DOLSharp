@@ -488,7 +488,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				ch.RealmPoints = rpamount;
 				ch.RealmLevel = realmLevel;
-				ch.RealmSpecialtyPoints = realmLevel;
 			}
 
 			ch.RespecAmountRealmSkill += 2;

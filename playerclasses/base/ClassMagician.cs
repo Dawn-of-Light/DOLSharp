@@ -51,28 +51,6 @@ namespace DOL.GS.PlayerClass
 			return GameTrainer.eChampionTrainerType.Magician;
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			if (this is ClassBainshee == false)
-			{
-				// Specializations
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Light));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Mana));
-
-
-				// Spell lines
-				player.AddSpellLine(SkillBase.GetSpellLine("Way of the Sun"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Way of the Moon"));
-			}
-
-			// Abilities
-			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
-			player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Cloth));
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return false;

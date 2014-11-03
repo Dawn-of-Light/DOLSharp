@@ -192,5 +192,26 @@ namespace DOL.GS.ServerRules
 		{
 			return 3;
 		}
+
+		/// <summary>
+		/// Rules For Player Level UP
+		/// Gives some realm points above level 20
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="previousLevel"></param>
+		public override void OnPlayerLevelUp(GamePlayer player, int previousLevel)
+		{
+		}
+		
+		/// <summary>
+		/// Gets the player's Total Amount of Realm Points Based on Level, Realm Level of other constraints.
+		/// </summary>
+		/// <param name="source">The player</param>
+		/// <param name="target"></param>
+		/// <returns>The total pool of realm points !</returns>
+		public override int GetPlayerRealmPointsTotal(GamePlayer source)
+		{
+			return source.Level > 19 ? source.RealmLevel + (source.Level-19) : source.RealmLevel;
+		}
 	}
 }

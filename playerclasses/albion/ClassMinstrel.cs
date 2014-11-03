@@ -69,54 +69,6 @@ namespace DOL.GS.PlayerClass
 			return AutotrainableSkills;
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Instruments));
-			player.AddSpellLine(SkillBase.GetSpellLine("Instruments"));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Instruments));
-
-			if (player.Level >= 10)
-			{				
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Studded));
-			}
-			if (player.Level >= 15)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
-			}
-			if (player.Level >= 20)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Chain));
-			}
-		}
-
-		/// <summary>
-		/// Add all spell-lines and other things that are new when this skill is trained
-		/// </summary>
-		/// <param name="player">player to modify</param>
-		/// <param name="skill">The skill to train</param>
-		public override void OnSkillTrained(GamePlayer player, Specialization skill)
-		{
-			base.OnSkillTrained(player, skill);
-
-			switch(skill.KeyName)
-			{
-				case Specs.Stealth:
-                    if (skill.Level >= 5) player.AddAbility(SkillBase.GetAbility(Abilities.Distraction));
-                    if (skill.Level >= 8) player.AddAbility(SkillBase.GetAbility(Abilities.DangerSense));
-                    if (skill.Level >= 10) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 1));
-                    if (skill.Level >= 20) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 2));
-					if (skill.Level >= 25) player.AddAbility(SkillBase.GetAbility(Abilities.Climbing));
-                    if (skill.Level >= 30) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 3));
-                    if (skill.Level >= 40) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 4));
-                    if (skill.Level >= 50) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 5));
-                    break;
-			}
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;

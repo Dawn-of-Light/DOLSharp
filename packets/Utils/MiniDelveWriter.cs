@@ -110,6 +110,19 @@ namespace DOL.GS.PacketHandler
 		{
 			m_values[name] = val;
 		}
+
+		/// <summary>
+		/// Add a Key / Value pair
+		/// </summary>
+		/// <param name="name"></param>
+		/// <param name="val"></param>
+		public void AppendKeyValuePair(string name, string val, string sep = ", ")
+		{
+			if (m_values.ContainsKey(name))
+				m_values[name] += sep + val;
+			else
+				m_values[name] = val;
+		}
 		
 		/// <summary>
 		/// Build the Formatted String object and return it as a String.

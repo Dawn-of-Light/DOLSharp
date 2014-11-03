@@ -42,11 +42,11 @@ namespace DOL.GS.PlayerClass
             m_manaStat = eStat.STR;
 		}
 
-		public override bool CanUseLefthandedWeapon(GamePlayer player)
+		public override bool CanUseLefthandedWeapon
 		{
-			return true;
+			get { return true; }
 		}
-
+		
 		public override eClassType ClassType
 		{
 			get { return eClassType.Hybrid; }
@@ -70,61 +70,6 @@ namespace DOL.GS.PlayerClass
 			if (level >= 10) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Mauler.GetTitle.10");
 			if (level >= 5) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Mauler.GetTitle.5");
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
-		}
-
-		/// <summary>
-		/// Update all skills and add new for current level
-		/// </summary>
-		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_MaulerStaff));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_FistWraps));
-
-            player.RemoveSpecialization(Specs.Sword);
-            player.RemoveSpecialization(Specs.Hammer);
-            player.RemoveSpecialization(Specs.Axe);
-            player.RemoveSpecialization(Specs.Parry);
-            player.RemoveAllStyles();
-            player.RemoveAbility(Abilities.MidArmor);
-			player.RemoveAbility(Abilities.Weapon_Axes);
-			player.RemoveAbility(Abilities.Weapon_Hammers);
-			player.RemoveAbility(Abilities.Weapon_Swords);
-            player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Leather));
-			player.AddAbility(SkillBase.GetAbility(Abilities.DefensiveCombatPowerRegeneration, 1));
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
-
-			player.AddSpellLine(SkillBase.GetSpellLine("Aura Manipulation"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Magnetism"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Power Strikes"));
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Aura_Manipulation));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Magnetism));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Power_Strikes));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Mauler_Staff));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Fist_Wraps));
-
-			if (player.Level >= 7)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 1));
-			}
-			if (player.Level >= 13)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 2));
-			}
-			if (player.Level >= 15)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
-			}
-			if (player.Level >= 18)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 3));
-			}
 		}
 
 		public override bool HasAdvancedFromBaseClass()

@@ -55,7 +55,7 @@ namespace DOL.GS.Spells
 			text.Add("Qui: "+player.Quickness+" Emp: "+player.Empathy+" Cha: "+player.Charisma);
 			text.Add("Pie: "+player.Piety+" Int: "+player.Intelligence+" HP: "+player.MaxHealth);
 			text.Add("----------------------------------------------------");
-			IList specs = player.GetSpecList();
+			IList<Specialization> specs = player.GetSpecList();
 			foreach (object obj in specs)
 				if (obj is Specialization)
 					text.Add(((Specialization)obj).Name + ": " + ((Specialization)obj).Level.ToString());

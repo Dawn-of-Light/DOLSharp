@@ -34,7 +34,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			if(npc != null)
 			{
+				Tuple<ushort, ushort> key = new Tuple<ushort, ushort>(npc.CurrentRegionID, (ushort)npc.ObjectID);
+				
+				long updatetime;
+				if (!client.GameObjectUpdateArray.TryGetValue(key, out updatetime))
+				{
+					updatetime = 0;
+				}
+				
 				client.Out.SendNPCCreate(npc);
+				// override update from npc create as this is a client request !
+				if (updatetime > 0)
+					client.GameObjectUpdateArray[key] = updatetime;
+				
 				if(npc.Inventory != null)
 					client.Out.SendLivingEquipmentUpdate(npc);
 				

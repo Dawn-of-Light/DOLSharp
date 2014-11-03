@@ -75,7 +75,7 @@ namespace DOL.GS
 					spell.Target = "Self";
 					spell.Type = "BloodRage";
 					Blood_Rage = new Spell(spell, 50);
-					SkillBase.GetSpellList(GlobalSpellsLines.Reserved_Spells).Add(Blood_Rage);
+					SkillBase.AddScriptedSpell(GlobalSpellsLines.Reserved_Spells, Blood_Rage);
 				}
 				return Blood_Rage;
 			}
@@ -105,7 +105,7 @@ namespace DOL.GS
 					spell.Target = "Self";
 					spell.Type = "HeightenedAwareness";
 					Heightened_Awareness = new Spell(spell, 50);
-					SkillBase.GetSpellList(GlobalSpellsLines.Reserved_Spells).Add(Heightened_Awareness);
+					SkillBase.AddScriptedSpell(GlobalSpellsLines.Reserved_Spells, Heightened_Awareness);
 				}
 				return Heightened_Awareness;
 			}
@@ -135,7 +135,7 @@ namespace DOL.GS
 					spell.Target = "Self";
 					spell.Type = "SubtleKills";
 					Subtle_Kills = new Spell(spell, 50);
-					SkillBase.GetSpellList(GlobalSpellsLines.Reserved_Spells).Add(Subtle_Kills);
+					SkillBase.AddScriptedSpell(GlobalSpellsLines.Reserved_Spells, Subtle_Kills);
 				}
 				return Subtle_Kills;
 			}

@@ -28,7 +28,7 @@ namespace DOL.GS.Commands
 	[Cmd("&Reload",
 		ePrivLevel.Admin,
 		"Reload various elements",
-		"/reload mob|object|CL|specs|spells"
+		"/reload mob|object|specs|spells"
 		)]
 	public class ReloadCommandHandler : ICommandHandler
 	{
@@ -100,24 +100,14 @@ namespace DOL.GS.Commands
 					SendSystemMessageBase(client);
 					SendSystemMessageMob(client);
 					SendSystemMessageObject(client);
-					client.Out.SendMessage(" /reload CL - reload all champion levels.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					client.Out.SendMessage(" /reload specs - reload all specializations.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					client.Out.SendMessage(" /reload spellline 'linename' - reload a spellline, checking db for changed and new spells.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage(" /reload spells - reload a spells and spelllines, checking db for changed and new spells.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				log.Info("/reload command failed, review parameters.");
 				return;
 			}
 			else if (argLength > 1)
 			{
-				if (args[1].ToLower() == "spellline")
-				{
-					SkillBase.ReloadDBSpells();
-					int loaded = SkillBase.ReloadSpellLine(args[2]);
-					if (client != null) ChatUtil.SendSystemMessage(client, "Reloaded db spells and " + loaded + " spells for line " + args[2]);
-					log.Info("Reloaded spell line " + args[2]);
-					return;
-				}
-
 				if (args[2] == "realm" || args[2] == "Realm")
 				{
 					if (argLength == 2)
@@ -188,40 +178,26 @@ namespace DOL.GS.Commands
 					ReloadStaticItem(region, args[2], arg);
 				}
 			}
-
-			if (args[1].ToLower() == "cl")
+			
+			if (args[1].ToLower() == "spells")
 			{
-				ReloadChampionLevels(client, args);
+				SkillBase.ReloadDBSpells();
+				int loaded = SkillBase.ReloadSpellLines();
+				if (client != null) ChatUtil.SendSystemMessage(client, string.Format("Reloaded db spells and {0} spells for all lines !", loaded));
+				log.Info(string.Format("Reloaded db spells and {0} spells for all spell lines !", loaded));
 				return;
 			}
 
 			if (args[1].ToLower() == "specs")
 			{
-				SkillBase.LoadProcs();
 				int count = SkillBase.LoadSpecializations();
-				if (client != null) client.Out.SendMessage(count + " specializations loaded.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-				log.Info(count + " specializations loaded.");
+				if (client != null) client.Out.SendMessage(string.Format("{0} specializations loaded.", count), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				log.Info(string.Format("{0} specializations loaded.", count));
 				return;
 			}
 
 			return;
 		}
-
-
-		/// <summary>
-		/// Reload the champion level lines
-		/// </summary>
-		/// <param name="client"></param>
-		/// <param name="args"></param>
-		private void ReloadChampionLevels(GameClient client, string[] args)
-		{
-			int numSpells = SkillBase.ReloadSpellLine(GlobalSpellsLines.Champion_Spells);
-			DOL.GS.ChampSpecMgr.LoadChampionSpecs();
-
-			if (client.Player != null) client.Out.SendMessage(numSpells + " loaded in " + GlobalSpellsLines.Champion_Spells, eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-			log.Info(numSpells + " loaded in " + GlobalSpellsLines.Champion_Spells);
-		}
-
 
 		private void ReloadMobs(GamePlayer player, ushort region, string arg1, string arg2)
 		{

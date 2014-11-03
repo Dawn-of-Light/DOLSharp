@@ -717,6 +717,8 @@ namespace DOL.GS.PacketHandler
 							{
 								log.Info(prevPak.ToHumanReadable());
 							}
+							
+							log.Info(Marshal.ToHexDump("Last Received Bytes : ", buffer));
 						}
 
 						m_client.Disconnect();

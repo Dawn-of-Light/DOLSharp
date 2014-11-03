@@ -54,57 +54,9 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
-		public override bool CanUseLefthandedWeapon(GamePlayer player)
+		public override bool CanUseLefthandedWeapon
 		{
-			return true;
-		}
-
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_HandToHand));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.HandToHand));
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Savagery));
-			player.AddSpellLine(SkillBase.GetSpellLine("Savagery"));
-
-			if (player.Level >= 10)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
-			}
-			if (player.Level >= 15)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 1));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
-			}
-			if (player.Level >= 20)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 3));
-			}
-			if (player.Level >= 23)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 2));
-			}
-			if (player.Level >= 24)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.PreventFlight));
-			}
-			if (player.Level >= 30)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 4));
-			}
-			if (player.Level >= 32)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 3));
-			}
-			if (player.Level >= 35)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Advanced_Evade));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Stoicism));
-			}
+			get { return true; }
 		}
 
 		public override bool HasAdvancedFromBaseClass()

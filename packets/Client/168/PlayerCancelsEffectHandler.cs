@@ -70,7 +70,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				var player = (GamePlayer) m_actionSource;
+				GamePlayer player = (GamePlayer) m_actionSource;
 
 				IGameEffect found = null;
 				lock (player.EffectList)
@@ -116,14 +116,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				var player = (GamePlayer) m_actionSource;
+				GamePlayer player = (GamePlayer) m_actionSource;
 
 				IGameEffect found = null;
 				lock (player.EffectList)
 				{
 					foreach (IGameEffect effect in player.EffectList)
 					{
-						if (effect is GameSpellEffect && ((GameSpellEffect)effect).Spell.TooltipId == m_effectId)
+						if (effect is GameSpellEffect && ((GameSpellEffect)effect).Spell.InternalID == m_effectId)
 						{
 							found = effect;
 							break;

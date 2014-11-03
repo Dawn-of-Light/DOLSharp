@@ -96,12 +96,12 @@ namespace DOL.GS.Commands
 
 			if (dbSpec != null)
 			{
-				spec = client.Player.GetSpecialization(dbSpec.KeyName);
+				spec = client.Player.GetSpecializationByName(dbSpec.KeyName);
 			}
 			else
 			{
 				// if this is a custom line it might not be in the db so search for exact match on player
-				spec = client.Player.GetSpecialization(line);
+				spec = client.Player.GetSpecializationByName(line);
 			}
 
 			if (spec == null)
@@ -175,7 +175,6 @@ namespace DOL.GS.Commands
 				// tolakram - add some additional error checking to avoid overflow error
 				if (client.Player.SkillSpecialtyPoints >= skillSpecialtyPoints)
 				{
-					client.Player.SkillSpecialtyPoints -= skillSpecialtyPoints;
 					spec.Level += specLevel;
 
 					client.Player.OnSkillTrained(spec);

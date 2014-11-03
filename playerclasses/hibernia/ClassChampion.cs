@@ -60,43 +60,6 @@ namespace DOL.GS.PlayerClass
 			get { return eClassType.Hybrid; }
 		}
 
-		/// <summary>
-		/// Update all skills and add new for current level
-		/// </summary>
-		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Large));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
-
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_LargeWeapons));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Large_Weapons));
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Valor));
-			player.AddSpellLine(SkillBase.GetSpellLine("Valor"));
-
-			if (player.Level >= 15) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 1));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
-			}
-			if (player.Level >= 18) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Intercept));
-			}
-			if (player.Level >= 20) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Scale));
-			}
-			if (player.Level >= 25) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 2));
-			}
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;
