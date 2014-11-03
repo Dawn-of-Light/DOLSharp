@@ -36,7 +36,6 @@ namespace DOL.GS.Scripts
                 if (player == null) continue;
                 player.Out.SendObjectUpdate(this);
                 player.Out.SendModelChange(this, GetClientVisualModel(player.Client));
-                player.CurrentUpdateArray[ObjectID - 1] = true;
             }
             m_lastUpdateTickCount = (uint)Environment.TickCount;
         }

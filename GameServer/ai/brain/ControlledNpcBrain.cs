@@ -384,10 +384,9 @@ namespace DOL.AI.Brain
 		{
 			GamePlayer playerowner = GetPlayerOwner();
 			
-			if (playerowner != null && !playerowner.CurrentUpdateArray[Body.ObjectID - 1])
+			if (playerowner != null && (GameTimer.GetTickCount() - playerowner.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(Body.CurrentRegionID, (ushort)Body.ObjectID)]) > ThinkInterval)
 			{
 				playerowner.Out.SendObjectUpdate(Body);
-				playerowner.CurrentUpdateArray[Body.ObjectID - 1] = true;
 			}
 
 			//See if the pet is too far away, if so release it!

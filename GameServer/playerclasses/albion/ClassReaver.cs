@@ -69,46 +69,6 @@ namespace DOL.GS.PlayerClass
 			return AutotrainableSkills;
 		}
 
-		/// <summary>
-		/// Update all skills and add new for current level
-		/// </summary>
-		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Flexible));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Flexible));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Parry));
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Soulrending));
-			player.AddSpellLine(SkillBase.GetSpellLine("Soulrending"));
-
-			if (player.Level >= 9)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 1));
-			}
-			if (player.Level >= 10)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Chain));
-			}
-			if (player.Level >= 15)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
-			}
-			if (player.Level >= 17)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 2));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Large));
-			}
-			if (player.Level >= 30)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 3));
-			}
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;

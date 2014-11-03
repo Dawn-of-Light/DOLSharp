@@ -49,25 +49,6 @@ namespace DOL.GS.PlayerClass
 			return GameTrainer.eChampionTrainerType.Stalker;
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Piercing));
-			if (this is ClassVampiir == false)
-			{
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Blades));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Stealth));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blades));
-			}
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Leather));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Piercing));
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return false;

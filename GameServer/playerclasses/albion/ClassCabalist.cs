@@ -53,23 +53,6 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");			
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			// Specializations
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Spirit_Magic));
-
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Spirit Animation"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Matter Manipulation"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Essence Manipulation"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Vivification"));
-			
-			// Abilities
-			player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;

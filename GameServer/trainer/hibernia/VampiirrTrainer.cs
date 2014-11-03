@@ -104,11 +104,9 @@ namespace DOL.GS.Trainer
 					if (CanPromotePlayer(player))
 					{
 						player.RemoveAllSpellLines();
-						player.RemoveAllSkills();
 						player.RemoveAllSpecs();
 						player.RemoveAllStyles();
 						player.Out.SendUpdatePlayerSkills();
-						player.SkillSpecialtyPoints = 14;//lvl 5 skill points full
 
 						PromotePlayer(player, (int)eCharacterClass.Vampiir, "Very well, " + source.GetName(0, false) + ". I gladly take your training into my hands. Congratulations, from this day forth, you are a Vampiir. Here, take this gift to aid you.", null);
 						foreach (GamePlayer plr in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE)) // inform nearest clients about this player now is vampire (can fly)

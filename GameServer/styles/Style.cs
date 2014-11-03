@@ -131,19 +131,13 @@ namespace DOL.GS.Styles
 		protected DBStyle baseStyle = null;
 
 		/// <summary>
-		/// (readonly) The list of procs available for this style
-		/// </summary>
-		protected List<DBStyleXSpell> m_Procs;
-
-		/// <summary>
 		/// Constructs a new Style object based on a database Style object
 		/// </summary>
 		/// <param name="style">The database style object this object is based on</param>
 		public Style(DBStyle style)
-			: base(style.Name, style.ID, (ushort)style.Icon, style.SpecLevelRequirement, style.ID)
+			: base(style.Name, style.ID, (ushort)style.Icon, style.SpecLevelRequirement, style.StyleID)
 		{
 			baseStyle = style;
-			m_Procs = new List<DBStyleXSpell>();
 		}
 
         public int ClassID
@@ -154,11 +148,11 @@ namespace DOL.GS.Styles
 		/// <summary>
 		/// (readonly)(procs) The list of procs available for this style
 		/// </summary>
-		public List<DBStyleXSpell> Procs
+		public IList<Tuple<Spell, int, int>> Procs
 		{
-			get { return m_Procs; }
+			get { return SkillBase.GetStyleProcsByID(this); }
 		}
-
+		
 		/// <summary>
 		/// (readonly) The Specialization's name required to execute this style
 		/// </summary>

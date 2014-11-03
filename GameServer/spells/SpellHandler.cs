@@ -3815,6 +3815,110 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 			return 0;
 		}
 		#endregion
+		
+		#region tooltip handling
+		/// <summary>
+		/// Return the given Delve Writer with added keyvalue pairs.
+		/// </summary>
+		/// <param name="dw"></param>
+		/// <param name="id"></param>
+		public virtual void TooltipDelve(ref MiniDelveWriter dw, int id)
+		{
+			if (dw == null)
+				return;
+			
+            dw.AddKeyValuePair("Function", "light"); // Function of type "light" allows custom description to show with no hardcoded text.  Temporary Fix - tolakram
+            //.Value("Function", spellHandler.FunctionName ?? "0")
+            dw.AddKeyValuePair("Index", unchecked((short)id));
+			dw.AddKeyValuePair("Name", Spell.Name);
+			
+			if (Spell.CastTime > 2000)
+				dw.AddKeyValuePair("cast_timer", Spell.CastTime - 2000); //minus 2 seconds (why mythic?)
+			else if (!Spell.IsInstantCast)
+				dw.AddKeyValuePair("cast_timer", 0); //minus 2 seconds (why mythic?)
+			
+			if (Spell.IsInstantCast)
+				dw.AddKeyValuePair("instant","1");
+			//.Value("damage", spellHandler.GetDelveValueDamage, spellHandler.GetDelveValueDamage != 0)
+			if ((int)Spell.DamageType > 0)
+				dw.AddKeyValuePair("damage_type", (int) Spell.DamageType + 1); // Damagetype not the same as dol
+			//.Value("type1", spellHandler.GetDelveValueType1, spellHandler.GetDelveValueType1 > 0)
+			if (Spell.Level > 0)
+				dw.AddKeyValuePair("level", Spell.Level);
+			if (Spell.CostPower)
+				dw.AddKeyValuePair("power_cost", Spell.Power);
+			//.Value("round_cost",spellHandler.GetDelveValueRoundCost,spellHandler.GetDelveValueRoundCost!=0)
+			//.Value("power_level", spellHandler.GetDelveValuePowerLevel,spellHandler.GetDelveValuePowerLevel!=0)
+			if (Spell.Range > 0)
+				dw.AddKeyValuePair("range", Spell.Range);
+			if (Spell.Duration > 0)
+				dw.AddKeyValuePair("duration", Spell.Duration/1000); //seconds
+			if (GetDurationType() > 0)
+				dw.AddKeyValuePair("dur_type", GetDurationType());
+			//.Value("parm",spellHandler.GetDelveValueParm,spellHandler.GetDelveValueParm>0)
+			if (Spell.HasRecastDelay)
+				dw.AddKeyValuePair("timer_value", Spell.RecastDelay/1000);
+			//.Value("bonus", spellHandler.GetDelveValueBonus, spellHandler.GetDelveValueBonus > 0)
+			//.Value("no_combat"," ",Util.Chance(50))//TODO
+			//.Value("link",14000)
+			//.Value("ability",4) // ??
+			//.Value("use_timer",4)
+			if (GetSpellTargetType() > 0)
+				dw.AddKeyValuePair("target", GetSpellTargetType());
+			//.Value("frequency", spellHandler.GetDelveValueFrequency, spellHandler.GetDelveValueFrequency != 0)
+			if (!string.IsNullOrEmpty(Spell.Description))
+				dw.AddKeyValuePair("description_string", Spell.Description);
+			if (Spell.IsAoE)
+				dw.AddKeyValuePair("radius", Spell.Radius);
+			if (Spell.IsConcentration)
+				dw.AddKeyValuePair("concentration_points", Spell.Concentration);
+			//.Value("num_targets", spellHandler.GetDelveValueNumTargets, spellHandler.GetDelveValueNumTargets>0)
+			//.Value("no_interrupt", spell.Interruptable ? (char)0 : (char)1) //Buggy?
+			//log.Info(dw.ToString());
+		}
+		
+		/// <summary>
+		/// Returns delve code for target
+		/// </summary>
+		/// <param name="target"></param>
+		/// <returns></returns>
+		protected virtual int GetSpellTargetType()
+		{
+			switch (Spell.Target)
+			{
+				case "Realm":
+					return 7;
+				case "Self":
+					return 0;
+				case "Enemy":
+					return 1;
+				case "Pet":
+					return 6;
+				case "Group":
+					return 3;
+				case "Area":
+					return 0; // TODO
+				default:
+					return 0;
+			}
+		}
+
+		protected virtual int GetDurationType()
+		{
+			//2-seconds,4-conc,5-focus
+			if (Spell.Duration>0)
+			{
+				return 2;
+			}
+			if (Spell.IsConcentration)
+			{
+				return 4;
+			}
+
+
+			return 0;
+		}
+		#endregion
 
 	}
 }

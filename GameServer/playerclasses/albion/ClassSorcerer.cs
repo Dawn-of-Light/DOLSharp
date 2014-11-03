@@ -53,22 +53,6 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			// Specializations
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Mind_Magic));			
-
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Mind Twisting"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Telekinesis"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Disorientation"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Domination"));
-
-			// Abilities
-			player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
-		}
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;

@@ -121,7 +121,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				var player = (GamePlayer) m_actionSource;
+				GamePlayer player = (GamePlayer)m_actionSource;
 
 				if ((m_flagSpeedData & 0x200) != 0)
 				{
@@ -135,41 +135,52 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.TargetInView = (m_flagSpeedData & 0xa000) != 0; // why 2 bits? that has to be figured out
 				player.GroundTargetInView = ((m_flagSpeedData & 0x1000) != 0);
 
-				IList spelllines = player.GetSpellLines();
-				Spell castSpell = null;
-				SpellLine castLine = null;
-				lock (spelllines.SyncRoot)
+				List<Tuple<SpellLine, List<Skill>>> snap = player.GetAllUsableListSpells();
+				Skill sk = null;
+				SpellLine sl = null;
+				
+				// is spelline in index ?
+				if (m_spellLineIndex < snap.Count)
 				{
-					if (m_spellLineIndex < spelllines.Count)
+					int index = snap[m_spellLineIndex].Item2.FindIndex(s => s is Spell ? 
+					                                                   s.Level == m_spellLevel 
+					                                                   : (s is Styles.Style ? ((Styles.Style)s).SpecLevelRequirement == m_spellLevel
+					                                                      : (s is Ability ? ((Ability)s).SpecLevelRequirement == m_spellLevel : false)));
+					
+					if (index > -1)
 					{
-						castLine = (SpellLine) spelllines[m_spellLineIndex];
-						List<Spell> spells = SkillBase.GetSpellList(castLine.KeyName);
-						foreach (Spell spell in spells)
-						{
-							if (spell.Level == m_spellLevel)
-							{
-								castSpell = spell;
-								break;
-							}
-						}
+						sk = snap[m_spellLineIndex].Item2[index];
 					}
+					
+					sl = snap[m_spellLineIndex].Item1;
 				}
-				if (castSpell != null)
+				
+				if (sk is Spell && sl != null)
 				{
-					player.CastSpell(castSpell, castLine);
-					return;
+					player.CastSpell((Spell)sk, sl);
+				}
+				else if (sk is Styles.Style)
+				{
+					player.ExecuteWeaponStyle((Styles.Style)sk);
+				}
+				else if (sk is Ability)
+				{
+					Ability ab = (Ability)sk;
+					IAbilityActionHandler handler = SkillBase.GetAbilityActionHandler(ab.KeyName);
+					if (handler != null)
+					{
+						handler.Execute(ab, player);
+					}
 				}
 				else
 				{
 					if (Log.IsWarnEnabled)
 						Log.Warn("Client <" + player.Client.Account.Name + "> requested incorrect spell at level " + m_spellLevel +
-							" in spell-line " + ((castLine == null || castLine.Name == null) ? "unkown" : castLine.Name));
+							" in spell-line " + ((sl == null || sl.Name == null) ? "unkown" : sl.Name));
+					
+					player.Out.SendMessage(string.Format("Error : Spell (Line {0}, Level {1}) can't be resolved...", m_spellLineIndex, m_spellLevel), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				}
-				if (castLine == null)
-				{
-					if (Log.IsWarnEnabled)
-						Log.Warn("Client <" + player.Client.Account.Name + "> requested incorrect spell-line index");
-				}
+				
 			}
 		}
 

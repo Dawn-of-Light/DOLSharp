@@ -6158,12 +6158,7 @@ namespace DOL.GS
 		/// </summary>
 		protected readonly Dictionary<string, Ability> m_abilities = new Dictionary<string, Ability>();
 
-		/// <summary>
-		/// Holds a list of skills for this living (used by GamePlayer)
-		/// </summary>
-		protected readonly ArrayList m_skillList = new ArrayList();
-
-		protected Object m_lockAbilities = new Object();
+		protected readonly Object m_lockAbilities = new Object();
 
 		/// <summary>
 		/// Asks for existence of specific ability
@@ -6172,7 +6167,14 @@ namespace DOL.GS
 		/// <returns>Does living have this ability</returns>
 		public virtual bool HasAbility(string keyName)
 		{
-			return m_abilities.ContainsKey(keyName);
+			bool hasit = false;
+			
+			lock (m_lockAbilities)
+			{
+				hasit = m_abilities.ContainsKey(keyName);
+			}
+			
+			return hasit;
 		}
 
 		/// <summary>
@@ -6196,28 +6198,24 @@ namespace DOL.GS
 			{
 				Ability oldAbility = null;
 				m_abilities.TryGetValue(ability.KeyName, out oldAbility);
-				lock (m_skillList.SyncRoot)
+				
+				if (oldAbility == null)
 				{
-					if (oldAbility == null)
-					{
-						isNewAbility = true;
-						m_abilities.Add(ability.KeyName, ability);
-						m_skillList.Add(ability);
-						ability.Activate(this, sendUpdates);
-					}
-					else
-					{
-						if (oldAbility.Level < ability.Level)
+					isNewAbility = true;
+					m_abilities.Add(ability.KeyName, ability);
+					ability.Activate(this, sendUpdates);
+				}
+				else
+				{
+					if (oldAbility.Level < ability.Level)
 							isNewAbility = true;
 
 						oldAbility.Level = ability.Level;
-						oldAbility.Name = ability.Name;
-					}
-					
-					if (isNewAbility && (this is GamePlayer))
-					{
-						(this as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((this as GamePlayer).Client.Account.Language, "GamePlayer.AddAbility.YouLearn", ability.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
+				}
+				
+				if (sendUpdates && (isNewAbility && (this is GamePlayer)))
+				{
+					(this as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((this as GamePlayer).Client.Account.Language, "GamePlayer.AddAbility.YouLearn", ability.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 			}
 		}
@@ -6232,17 +6230,17 @@ namespace DOL.GS
 			Ability ability = null;
 			lock (m_lockAbilities)
 			{
-				lock (m_skillList.SyncRoot)
-				{
-					m_abilities.TryGetValue(abilityKeyName, out ability);
-					if (ability == null)
-						return false;
-					ability.Deactivate(this, true);
-					m_abilities.Remove(ability.KeyName);
-					m_skillList.Remove(ability);
-				}
+				m_abilities.TryGetValue(abilityKeyName, out ability);
+				
+				if (ability == null)
+					return false;
+				
+				ability.Deactivate(this, true);
+				m_abilities.Remove(ability.KeyName);
 			}
-			if (this is GamePlayer) (this as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((this as GamePlayer).Client.Account.Language, "GamePlayer.RemoveAbility.YouLose", ability.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			
+			if (this is GamePlayer)
+				(this as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((this as GamePlayer).Client.Account.Language, "GamePlayer.RemoveAbility.YouLose", ability.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			return true;
 		}
 
@@ -6253,8 +6251,13 @@ namespace DOL.GS
 		/// <returns></returns>
 		public Ability GetAbility(string abilityKey)
 		{
-			Ability ab;
-			return m_abilities.TryGetValue(abilityKey, out ab) ? ab : null;
+			Ability ab = null;
+			lock (m_lockAbilities)
+			{
+				m_abilities.TryGetValue(abilityKey, out ab);
+			}
+			
+			return ab;
 		}
 
 		/// <summary>
@@ -6263,10 +6266,13 @@ namespace DOL.GS
 		/// <returns></returns>
 		public T GetAbility<T>() where T : Ability
 		{
+			T tmp;
 			lock (m_lockAbilities)
 			{
-				return (T) m_abilities.Values.Where(a => a.GetType().Equals(typeof (T))).FirstOrDefault();
+				tmp = (T) m_abilities.Values.Where(a => a.GetType().Equals(typeof (T))).FirstOrDefault();
 			}
+			
+			return tmp;
 		}
 
 		/// <summary>
@@ -6297,7 +6303,12 @@ namespace DOL.GS
 		public int GetAbilityLevel(string keyName)
 		{
 			Ability ab = null;
-			m_abilities.TryGetValue(keyName, out ab);
+			
+			lock (m_lockAbilities)
+			{
+				m_abilities.TryGetValue(keyName, out ab);
+			}
+			
 			if (ab == null)
 				return 0;
 
@@ -6310,12 +6321,13 @@ namespace DOL.GS
 		/// <returns></returns>
 		public IList GetAllAbilities()
 		{
+			List<Ability> list = new List<Ability>();
 			lock (m_lockAbilities)
 			{
-				ArrayList list = new ArrayList();
-				list.AddRange(m_abilities.Values);
-				return list;
+				list = new List<Ability>(m_abilities.Values);
 			}
+			
+			return list;
 		}
 
 		#endregion Abilities

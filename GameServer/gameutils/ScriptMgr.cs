@@ -677,15 +677,19 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="asm">The assembly to search through</param>
 		/// <returns>Hashmap consisting of keyName => AbilityActionHandler Type</returns>
-		public static Hashtable FindAllAbilityActionHandler(Assembly asm)
+		public static IList<KeyValuePair<string, Type>> FindAllAbilityActionHandler(Assembly asm)
 		{
-			Hashtable abHandler = new Hashtable();
+			List<KeyValuePair<string, Type>> abHandler = new List<KeyValuePair<string, Type>>();
 			if (asm != null)
 			{
 				foreach (Type type in asm.GetTypes())
 				{
-					if (!type.IsClass) continue;
-					if (type.GetInterface("DOL.GS.IAbilityActionHandler") == null) continue;
+					if (!type.IsClass)
+						continue;
+					if (type.GetInterface("DOL.GS.IAbilityActionHandler") == null)
+						continue;
+					if (type.IsAbstract)
+						continue;
 
 					object[] objs = type.GetCustomAttributes(typeof(SkillHandlerAttribute), false);
 					for (int i = 0; i < objs.Length; i++)
@@ -693,7 +697,7 @@ namespace DOL.GS
 						if (objs[i] is SkillHandlerAttribute)
 						{
 							SkillHandlerAttribute attr = objs[i] as SkillHandlerAttribute;
-							abHandler[attr.KeyName] = type;
+							abHandler.Add(new KeyValuePair<string, Type>(attr.KeyName, type));
 							//DOLConsole.LogLine("Found ability action handler "+attr.KeyName+": "+type);
 							//									break;
 						}
@@ -708,15 +712,19 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="asm">The assembly to search through</param>
 		/// <returns>Hashmap consisting of keyName => SpecActionHandler Type</returns>
-		public static Hashtable FindAllSpecActionHandler(Assembly asm)
+		public static IList<KeyValuePair<string, Type>> FindAllSpecActionHandler(Assembly asm)
 		{
-			Hashtable specHandler = new Hashtable();
+			List<KeyValuePair<string, Type>> specHandler = new List<KeyValuePair<string, Type>>();
 			if (asm != null)
 			{
 				foreach (Type type in asm.GetTypes())
 				{
-					if (!type.IsClass) continue;
-					if (type.GetInterface("DOL.GS.ISpecActionHandler") == null) continue;
+					if (!type.IsClass)
+						continue;
+					if (type.GetInterface("DOL.GS.ISpecActionHandler") == null)
+						continue;
+					if (type.IsAbstract)
+						continue;
 
 					object[] objs = type.GetCustomAttributes(typeof(SkillHandlerAttribute), false);
 					for (int i = 0; i < objs.Length; i++)
@@ -724,7 +732,7 @@ namespace DOL.GS
 						if (objs[i] is SkillHandlerAttribute)
 						{
 							SkillHandlerAttribute attr = objs[0] as SkillHandlerAttribute;
-							specHandler[attr.KeyName] = type;
+							specHandler.Add(new KeyValuePair<string, Type>(attr.KeyName, type));
 							//DOLConsole.LogLine("Found spec action handler "+attr.KeyName+": "+type);
 							break;
 						}

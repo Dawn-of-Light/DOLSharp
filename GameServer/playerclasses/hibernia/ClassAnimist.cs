@@ -65,38 +65,6 @@ namespace DOL.GS.PlayerClass
 		/// Update all skills and add new for current level
 		/// </summary>
 		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			// Forester
-
-			// Specializations
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Arboreal_Path));
-
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Arboreal Path"));
-
-			// Abilities
-			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Cloth));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
-
-			// Animist
-
-			// Specializations
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Creeping_Path));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Verdant_Path));
-
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Creeping Path")); //base
-			player.AddSpellLine(SkillBase.GetSpellLine("Verdant Path")); //base
-			player.AddSpellLine(SkillBase.GetSpellLine("Arboreal Mastery")); //spec
-			player.AddSpellLine(SkillBase.GetSpellLine("Creeping Path Spec")); //spec
-			player.AddSpellLine(SkillBase.GetSpellLine("Verdant Path Spec")); //spec
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
-		}
 
 		public override bool HasAdvancedFromBaseClass()
 		{

@@ -54,33 +54,6 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
-		/// <summary>
-		/// Update all skills and add new for current level
-		/// </summary>
-		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			// Specializations
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Nature));
-			
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Druid Nature Magic"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Druid Nurture Spec"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Regrowth Druid Spec"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Druid Nature Spec"));
-
-			if (player.Level >= 10) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Reinforced));
-			}
-			if (player.Level >= 20) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Scale));
-			}
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;

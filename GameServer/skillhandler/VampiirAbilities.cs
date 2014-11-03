@@ -9,6 +9,11 @@ namespace DOL.GS.SkillHandler
 			: base(dba, level, property)
 		{
 		}
+		
+		public override string Name {
+			get { return string.Format("{0} +{1}", base.Name, GetAmountForLevel(Level)); }
+			set { base.Name = value; }
+		}
 	}
 
 	public class VampiirStrength : VampiirAbility

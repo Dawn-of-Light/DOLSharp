@@ -42,15 +42,16 @@ namespace DOL.GS.RealmAbilities
 		/// Delve for this RA
 		/// </summary>
 		/// <param name="w"></param>
-		public virtual void AddDelve(DetailDisplayHandler.DelveWriter w)
+		public virtual void AddDelve(ref MiniDelveWriter w)
 		{
-			w.Value("Name", Name);
-			w.Value("icon", Icon, Icon > 0);
+			w.AddKeyValuePair("Name", Name);
+			if (Icon > 0)
+				w.AddKeyValuePair("icon", Icon);
 
 			for (int i = 0; i <= MaxLevel - 1; i++)
 			{
 				if (CostForUpgrade(i) > 0)
-					w.Value("TrainingCost_" + (i + 1), CostForUpgrade(i));
+					w.AddKeyValuePair(string.Format("TrainingCost_{0}", (i + 1)), CostForUpgrade(i));
 			}
 		}
 
@@ -152,13 +153,13 @@ namespace DOL.GS.RealmAbilities
 			}
 		}
 
-		public override void AddDelve(DetailDisplayHandler.DelveWriter w)
+		public override void AddDelve(ref MiniDelveWriter w)
 		{
-			base.AddDelve(w);
+			base.AddDelve(ref w);
 
 			for (int i = 1; i <= MaxLevel; i++)
 			{
-				w.Value("ReuseTimer_" + i, GetReUseDelay(i));
+				w.AddKeyValuePair(string.Format("ReuseTimer_{0}", i), GetReUseDelay(i));
 			}
 		}
 

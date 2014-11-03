@@ -51,24 +51,6 @@ namespace DOL.GS.PlayerClass
 			return GameTrainer.eChampionTrainerType.Elementalist;
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			// Specializations
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Earth_Magic));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Cold_Magic));
-
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Path of Earth"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Path of Ice"));
-
-			// Abilities
-			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
-			player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Cloth));
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return false;

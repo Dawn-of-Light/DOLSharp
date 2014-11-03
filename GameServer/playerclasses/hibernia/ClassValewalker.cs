@@ -56,61 +56,6 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
-		/// <summary>
-		/// Update all skills and add new for current level
-		/// </summary>
-		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			// Specializations
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Scythe));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Scythe));
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Parry));
-
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Valewalker Arb Path Spec"));
-			// Forester class adds "Arboreal Path" so we need to remove it here
-			player.RemoveSpellLine( "Arboreal Path" );
-			player.AddSpellLine(SkillBase.GetSpellLine("Valewalker Arboreal Path Base")); //immolation spells
-			
-			if (player.Level >= 5)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
-			}
-			if (player.Level >= 10)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
-			}
-			if (player.Level >= 15)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 1));
-			}
-			if(player.Level >= 19)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Intercept));
-			}
-			if (player.Level >= 20)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 3));
-			}
-			if(player.Level >= 23)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 2));
-			}
-			if (player.Level >= 30)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 4));
-			}
-			if(player.Level >= 32)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 3));
-			}
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;

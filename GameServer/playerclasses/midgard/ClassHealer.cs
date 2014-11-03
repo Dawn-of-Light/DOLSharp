@@ -52,31 +52,6 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
-		/// <summary>
-		/// Update all skills and add new for current level
-		/// </summary>
-		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Pacification));
-			
-			player.AddSpellLine(SkillBase.GetSpellLine("Pacification"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Healer Mending Spec"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Healer Augmentation Spec"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Pacification Spec"));
-
-			if (player.Level >= 10) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Studded));
-			}
-			if (player.Level >= 20) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Chain));
-			}		
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;
