@@ -154,6 +154,7 @@ namespace DOLGameServerConsole
 		public void SendTimerWindow(string title, int seconds) { }
 		public void SendCloseTimerWindow() { }
 		public void SendTrainerWindow() { }
+        public void SendCustomTrainerWindow(int type, List<Tuple<Specialization, List<Tuple<Skill, byte>>>> tree) { }
         public void SendChampionTrainerWindow(int type) { }
 		public void SendInterruptAnimation(GameLiving living) { }
 		public void SendDisableSkill(Skill skill, int duration) { }

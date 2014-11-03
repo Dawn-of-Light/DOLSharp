@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -938,7 +939,7 @@ namespace DOL.GS
 		/// <summary>
 		/// A cache of every DBDataQuest object
 		/// </summary>
-		protected static IList<DBDataQuest> m_dataQuestCache = null;
+		protected static ILookup<ushort, DBDataQuest> m_dataQuestCache = null;
 
 		/// <summary>
 		/// List of DataQuests available for this object
@@ -960,7 +961,8 @@ namespace DOL.GS
 				m_dataQuestCache = null;
 			}
 
-			m_dataQuestCache = GameServer.Database.SelectAllObjects<DBDataQuest>();
+			m_dataQuestCache = GameServer.Database.SelectAllObjects<DBDataQuest>()
+				.ToLookup(k => k.StartRegionID);
 		}
 
 		/// <summary>
@@ -968,7 +970,7 @@ namespace DOL.GS
 		/// </summary>
 		public static IList<DBDataQuest> DataQuestCache
 		{
-			get { return m_dataQuestCache; }
+			get { return m_dataQuestCache.SelectMany(k => k).ToList(); }
 		}
 
 		/// <summary>
@@ -982,20 +984,47 @@ namespace DOL.GS
 			}
 
 			m_dataQuests.Clear();
-
-			foreach (DBDataQuest quest in m_dataQuestCache)
+			
+			try
 			{
-				if ((quest.StartRegionID == CurrentRegionID || quest.StartRegionID == 0) && quest.StartName == Name)
+				foreach (DBDataQuest quest in m_dataQuestCache[CurrentRegionID])
 				{
-					DataQuest dq = new DataQuest(quest, this);
-					AddDataQuest(dq);
-
-                    // if a player forced the reload report any errors
-                    if (player != null && dq.LastErrorText != "")
-                    {
-                        ChatUtil.SendErrorMessage(player, dq.LastErrorText);
-                    }
+					if (quest.StartName == Name)
+					{
+						DataQuest dq = new DataQuest(quest, this);
+						AddDataQuest(dq);
+	
+	                    // if a player forced the reload report any errors
+	                    if (player != null && dq.LastErrorText != "")
+	                    {
+	                        ChatUtil.SendErrorMessage(player, dq.LastErrorText);
+	                    }
+					}
 				}
+			}
+			catch
+			{
+			}
+
+			try
+			{
+				foreach (DBDataQuest quest in m_dataQuestCache[0])
+				{
+					if (quest.StartName == Name)
+					{
+						DataQuest dq = new DataQuest(quest, this);
+						AddDataQuest(dq);
+	
+	                    // if a player forced the reload report any errors
+	                    if (player != null && dq.LastErrorText != "")
+	                    {
+	                        ChatUtil.SendErrorMessage(player, dq.LastErrorText);
+	                    }
+					}
+				}
+			}
+			catch
+			{
 			}
 		}
 
@@ -1516,7 +1545,6 @@ namespace DOL.GS
 					continue;
 				
 				player.Out.SendObjectUpdate(this);
-				player.CurrentUpdateArray[ObjectID - 1] = true;
 			}
 		}
         

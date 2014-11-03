@@ -39,7 +39,7 @@ namespace DOL.GS.PlayerClass
 			m_primaryStat = eStat.DEX;
 			m_secondaryStat = eStat.QUI;
 			m_tertiaryStat = eStat.STR;
-			m_manaStat = eStat.INT; //TODO: not sure
+			m_manaStat = eStat.DEX;
 		}
 
 		public override string GetTitle(GamePlayer player, int level)
@@ -57,9 +57,9 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
-		public override bool CanUseLefthandedWeapon(GamePlayer player)
+		public override bool CanUseLefthandedWeapon
 		{
-			return true;
+			get { return true; }
 		}
 
 		public override eClassType ClassType
@@ -70,80 +70,6 @@ namespace DOL.GS.PlayerClass
 		public override IList<string> GetAutotrainableSkills()
 		{
 			return AutotrainableSkills;
-		}
-
-		/// <summary>
-		/// Update all skills and add new for current level
-		/// </summary>
-		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Celtic_Dual));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Critical_Strike));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Envenom));
-			player.AddSpellLine(SkillBase.GetSpellLine("Nightshade"));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
-			
-			if (player.Level >= 5)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
-			}
-			if (player.Level >= 10)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 3));
-			}
-			if (player.Level >= 15)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
-			}
-			if (player.Level >= 20)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 4));
-			}
-			if (player.Level >= 30)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 5));
-			}
-			if (player.Level >= 40)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 6));
-			}
-			if (player.Level >= 45)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.SubtleKills));
-			}
-			if (player.Level >= 50)
-			{
-                player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 7));
-                player.AddAbility(SkillBase.GetAbility(Abilities.Remedy));
-			}
-		}
-
-		/// <summary>
-		/// Add all spell-lines and other things that are new when this skill is trained
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="skill"></param>
-		public override void OnSkillTrained(GamePlayer player, Specialization skill)
-		{
-			base.OnSkillTrained(player, skill);
-
-			switch(skill.KeyName)
-			{
-				case Specs.Stealth:
-					if(skill.Level >= 5) player.AddAbility(SkillBase.GetAbility(Abilities.Distraction));
-					if (skill.Level >= 8) player.AddAbility(SkillBase.GetAbility(Abilities.DangerSense));
-					if (skill.Level >= 10) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 1));
-					if(skill.Level >= 16) player.AddAbility(SkillBase.GetAbility(Abilities.DetectHidden));
-					if (skill.Level >= 20) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 2));
-					if (skill.Level >= 25) player.AddAbility(SkillBase.GetAbility(Abilities.Climbing));
-					if (skill.Level >= 30) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 3));
-					if (skill.Level >= 40) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 4));
-					if (skill.Level >= 50) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 5));
-					break;
-			}
 		}
 
 		public override bool HasAdvancedFromBaseClass()

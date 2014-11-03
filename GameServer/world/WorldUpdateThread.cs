@@ -152,7 +152,7 @@ namespace DOL.GS
 					GameObject obj = WorldMgr.GetRegion(objKey.Item1).GetObject(objKey.Item2);
 					// We have a Player in cache that is not in vincinity
 					// For updating "out of view" we allow a halved refresh time. 
-					if (obj is GamePlayer && !players.Contains((GamePlayer)obj) && (nowTicks - player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)]) >= (GetPlayertoPlayerUpdateInterval() >> 1))
+					if (obj is GamePlayer && !players.Contains((GamePlayer)obj) && (nowTicks - player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)]) >= GetPlayertoPlayerUpdateInterval())
 					{
 						long dummy;
 						
@@ -225,7 +225,7 @@ namespace DOL.GS
 				{
 					GameObject obj = WorldMgr.GetRegion(objKey.Item1).GetObject(objKey.Item2);
 					// We have a NPC in cache that is not in vincinity
-					if (obj is GameNPC && !npcs.Contains((GameNPC)obj) && (nowTicks - player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)]) >= (GetPlayerNPCUpdateInterval() >> 1))
+					if (obj is GameNPC && !npcs.Contains((GameNPC)obj) && (nowTicks - player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)]) >= GetPlayerNPCUpdateInterval())
 					{
 						long dummy;
 						
@@ -297,7 +297,7 @@ namespace DOL.GS
 				{
 					GameObject obj = WorldMgr.GetRegion(objKey.Item1).GetObject(objKey.Item2);
 					// We have a Static Item in cache that is not in vincinity
-					if (obj is GameStaticItem && !objs.Contains((GameStaticItem)obj) && (nowTicks - player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)]) >= (GetPlayerItemUpdateInterval() >> 1))
+					if (obj is GameStaticItem && !objs.Contains((GameStaticItem)obj) && (nowTicks - player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)]) >= GetPlayerItemUpdateInterval())
 					{
 						long dummy;
 						player.Client.GameObjectUpdateArray.TryRemove(new Tuple<ushort,ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID), out dummy);
@@ -362,7 +362,7 @@ namespace DOL.GS
 				{
 					GameObject obj = WorldMgr.GetRegion(objKey.Item1).GetObject(objKey.Item2);
 					// We have a Door in cache that is not in vincinity
-					if (obj is IDoor && !doors.Contains((IDoor)obj) && (nowTicks - player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)]) >= (GetPlayerItemUpdateInterval() >> 1))
+					if (obj is IDoor && !doors.Contains((IDoor)obj) && (nowTicks - player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)]) >= GetPlayerItemUpdateInterval())
 					{
 						long dummy;
 						player.Client.GameObjectUpdateArray.TryRemove(new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID), out dummy);
@@ -414,7 +414,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="nowTicks"></param>
-		private static void UpdatePlayerHousing(GamePlayer player, long nowTicks)
+		public static void UpdatePlayerHousing(GamePlayer player, long nowTicks)
 		{
 			// If no house update needed exit.
 			if (player.CurrentRegion == null || !player.CurrentRegion.HousingEnabled)
@@ -445,7 +445,7 @@ namespace DOL.GS
 					House house = HouseMgr.GetHouse(houseKey.Item1, houseKey.Item2);
 					
 					// We have a House in cache that is not in vincinity
-					if (!houses.Contains(house) && (nowTicks - player.Client.HouseUpdateArray[new Tuple<ushort, ushort>(house.RegionID, (ushort)house.HouseNumber)]) >= (GetPlayerItemUpdateInterval() >> 1))
+					if (!houses.Contains(house) && (nowTicks - player.Client.HouseUpdateArray[new Tuple<ushort, ushort>(house.RegionID, (ushort)house.HouseNumber)]) >= GetPlayerItemUpdateInterval())
 					{
 						long dummy;
 						player.Client.HouseUpdateArray.TryRemove(new Tuple<ushort, ushort>(house.RegionID, (ushort)house.HouseNumber), out dummy);
@@ -539,8 +539,7 @@ namespace DOL.GS
 					IList<GameClient> clients = WorldMgr.GetAllClients();
 					
 					// Clean Tasks Dict on Client Exiting.
-					List<GameClient> cachedClients = new List<GameClient>(clientsUpdateTasks.Keys);
-					foreach(GameClient cli in cachedClients)
+					foreach(GameClient cli in new List<GameClient>(clientsUpdateTasks.Keys))
 					{
 						if (cli == null)
 							continue;
@@ -590,13 +589,10 @@ namespace DOL.GS
 						if(!clientsUpdateTasks.TryGetValue(client, out clientEntry))
 						{
 							// Client not in tasks, create it and run it !
-							clientEntry = new Tuple<long, Task, Region>(begin, new Task( () => UpdatePlayerWorld(player) ), player.CurrentRegion);
+							clientEntry = new Tuple<long, Task, Region>(begin, Task.Factory.StartNew(() => UpdatePlayerWorld(player)), player.CurrentRegion);
 							
 							// Register.
 							clientsUpdateTasks.Add(client, clientEntry);
-							
-							// Start and continue loop
-							clientEntry.Item2.Start();
 						}
 						else
 						{
@@ -645,11 +641,9 @@ namespace DOL.GS
 							if (PlayerNeedUpdate(lastUpdate))
 							{
 								// Update Time, Region and Create Task
-								Tuple<long, Task, Region> newClientEntry = new Tuple<long, Task, Region>(begin, new Task( () => UpdatePlayerWorld(player) ), lastRegion);
+								Tuple<long, Task, Region> newClientEntry = new Tuple<long, Task, Region>(begin, Task.Factory.StartNew(() => UpdatePlayerWorld(player)), lastRegion);
 								// Register Tuple
 								clientsUpdateTasks[client] = newClientEntry;
-								// Start Task
-								newClientEntry.Item2.Start();
 							}
 						}
 					}
@@ -662,8 +656,8 @@ namespace DOL.GS
 							log.WarnFormat("World Update Thread (NPC/Object update) took {0} ms", took);
 					}
 
-					// relaunch update thread every 50 ms to check if any player need updates.
-					Thread.Sleep((int)Math.Max(1, 50 - took));
+					// relaunch update thread every 100 ms to check if any player need updates.
+					Thread.Sleep((int)Math.Max(1, 100 - took));
 				}
 				catch (ThreadAbortException)
 				{

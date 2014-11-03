@@ -51,27 +51,6 @@ namespace DOL.GS.PlayerClass
 			return GameTrainer.eChampionTrainerType.Naturalist;
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			// Specializations
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Nurture));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Regrowth));
-
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Nurture"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Regrowth"));
-
-			// Abilities
-			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Leather));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blades));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blunt));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return false;

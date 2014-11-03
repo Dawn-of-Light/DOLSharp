@@ -51,27 +51,6 @@ namespace DOL.GS.PlayerClass
 			return GameTrainer.eChampionTrainerType.Mystic;
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			if (this is ClassWarlock == false)
-			{
-				// Specializations
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Darkness));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Suppression));
-
-				// Spell lines
-				player.AddSpellLine(SkillBase.GetSpellLine("Darkness"));
-				player.AddSpellLine(SkillBase.GetSpellLine("Suppression"));
-			}
-
-			// Abilities
-			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Cloth));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return false;

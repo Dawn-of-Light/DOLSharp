@@ -70,8 +70,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				player.Out.SendUpdatePoints();
 				player.TargetObject = null;
-				player.LastWorldUpdate = Environment.TickCount;
-				player.CurrentUpdateArray.SetAll(false);
 				// update the region color scheme which may be wrong due to ALLOW_ALL_REALMS support
 				player.Out.SendRegionColorScheme();
 				if (player.CurrentRegion != null)
@@ -109,7 +107,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					player.Group.UpdateAllToMember(player, true, false);
 					player.Group.UpdateMember(player, true, true);
 				}
-				player.Out.SendPlayerInitFinished((byte) mobs);
+				player.Out.SendPlayerInitFinished(0);
 				player.TargetObject = null;
 				player.StartHealthRegeneration();
 				player.StartPowerRegeneration();
@@ -330,7 +328,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 						mobs++;
 						if (npc.Inventory != null)
 							player.Out.SendLivingEquipmentUpdate(npc);
-						player.CurrentUpdateArray[npc.ObjectID - 1] = true;
 
 						//The following line can cause a racing condition
 						//between client and server! Not neccessary

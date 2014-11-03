@@ -54,46 +54,6 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
-		/// <summary>
-		/// Update all skills and add new for current level
-		/// </summary>
-		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Staff));
-			player.AddSpellLine(SkillBase.GetSpellLine("Rebirth"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Friar Enhancement Spec"));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 1));
-
-			if (player.Level >=10)
-			{
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Parry));
-			}
-			if (player.Level >= 15)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
-			}
-			// EVADE
-			if (player.Level >= 33)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 5));
-			}
-			else if (player.Level >= 22)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 4));
-			}
-			else if (player.Level >= 15)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 3));
-			}
-			else if (player.Level >= 10)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
-			}
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;

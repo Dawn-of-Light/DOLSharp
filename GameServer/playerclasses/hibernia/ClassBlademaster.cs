@@ -53,67 +53,9 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
-		public override bool CanUseLefthandedWeapon(GamePlayer player)
+		public override bool CanUseLefthandedWeapon
 		{
-			return true;
-		}
-
-		/// <summary>
-		/// Update all skills and add new for current level
-		/// </summary>
-		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Celtic_Dual));
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Medium));
-
-			if (player.Level >= 10) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Shortbows));
-			}
-			if (player.Level >= 15) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 1));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
-			}
-			if (player.Level >= 19) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Intercept));
-			}
-			if (player.Level >= 20) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Triple_Wield));
-			}
-			if (player.Level >= 23) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 2));
-			}
-			if (player.Level >= 24)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.PreventFlight));
-			}
-			if (player.Level >= 25) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 3));
-			}			
-			if (player.Level >= 30) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Flurry));
-			}
-			if (player.Level >= 32) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Protect, 3));
-			}
-			if (player.Level >= 35) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Advanced_Evade));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Stoicism));
-			}
+			get { return true; }
 		}
 
 		public override bool HasAdvancedFromBaseClass()

@@ -1132,7 +1132,7 @@ namespace DOL.GS.PacketHandler
 			}
 			
 			// Update Cache
-			m_gameClient.GameObjectUpdateArray[new Tuple<ushort, ushort>(npc.CurrentRegionID, (ushort)npc.ObjectID)] = GameTimer.GetTickCount();
+			m_gameClient.GameObjectUpdateArray[new Tuple<ushort, ushort>(npc.CurrentRegionID, (ushort)npc.ObjectID)] = 0;
 			
 		}
 
@@ -2264,167 +2264,159 @@ namespace DOL.GS.PacketHandler
 		{
 			if (m_gameClient.Player == null)
 				return;
-			IList specs = m_gameClient.Player.GetSpecList();
-			IList skills = m_gameClient.Player.GetNonTrainableSkillList();
-			IList styles = m_gameClient.Player.GetStyleList();
-			List<SpellLine> spelllines = m_gameClient.Player.GetSpellLines();
-			Dictionary<int,int> m_styleId = new Dictionary<int,int>();
-			int maxSkills = 0;
-			int firstSkills = 0;
-
-			var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate));
-
-			try
+			
+			// Get Skills as "Usable Skills" which are in network order ! (with forced update)
+			List<Tuple<Skill, Skill>> usableSkills = m_gameClient.Player.GetAllUsableSkills(true);
+			
+			bool sent = false; // set to true once we can't send packet anymore !
+			int index = 0; // index of our position in the list !
+			int total = usableSkills.Count; // cache List count.
+			int packetCount = 0; // Number of packet sent for the entire list
+			while (!sent)
 			{
-				bool sendHybridList = m_gameClient.Player.CharacterClass.ClassType != eClassType.ListCaster;
-
-				lock (skills.SyncRoot)
+				int packetEntry = 0; // needed to tell client how much skill we send
+				// using pak
+				using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate)))
 				{
-					lock (styles.SyncRoot)
+					// Write header
+					pak.WriteByte(0x01); //subcode for skill
+					pak.WriteByte((byte)0); //packet entries, can't know it for now...
+					pak.WriteByte((byte)0x03); //subtype for following pages
+					pak.WriteByte((byte)index); // packet first entry
+
+					// getting pak filled
+					while(index < total)
 					{
-						lock (specs.SyncRoot)
+						// this item will break the limit, send the packet before, keep index as is to continue !
+						if ((index >= byte.MaxValue) || ((pak.Length + 8 + usableSkills[index].Item1.Name.Length) > 1000))
 						{
-							lock (m_gameClient.Player.lockSpellLinesList)
+							break;
+						}
+						
+						// Enter Packet Values !! Format Level - Type - SpecialField - Bonus - Icon - Name
+						Skill skill = usableSkills[index].Item1;
+						Skill skillrelated = usableSkills[index].Item2;
+
+						if (skill is Specialization)
+						{
+							Specialization spec = (Specialization)skill;
+							pak.WriteByte((byte)spec.Level);
+							pak.WriteByte((byte)spec.SkillType);
+							pak.WriteShort(0);
+							pak.WriteByte((byte)(m_gameClient.Player.GetModifiedSpecLevel(spec.KeyName) - spec.Level)); // bonus
+							pak.WriteShort((ushort)spec.Icon);
+							pak.WritePascalString(spec.Name);
+						}
+						else if (skill is Ability)
+						{
+							Ability ab = (Ability)skill;
+							pak.WriteByte((byte)0);
+							pak.WriteByte((byte)ab.SkillType);
+							pak.WriteShort(0);
+							pak.WriteByte((byte)0);
+							pak.WriteShort((ushort)ab.Icon);
+							pak.WritePascalString(ab.Name);
+							
+						}
+						else if (skill is Spell)
+						{
+							Spell spell = (Spell)skill;
+							pak.WriteByte((byte)spell.Level);
+							pak.WriteByte((byte)spell.SkillType);
+							
+							// spec index for this Spell - Special for Song and Unknown Indexes...
+							int spin = 0;							
+							if (spell.SkillType == eSkillPage.Songs)
 							{
-								int skillCount = specs.Count + skills.Count + styles.Count;
-
-								if (sendHybridList)
-									skillCount += m_gameClient.Player.GetSpellCount();
-
-								pak.WriteByte(0x01); //subcode
-								pak.WriteByte((byte) skillCount); //number of entry
-								pak.WriteByte(0x03); //subtype
-								pak.WriteByte((byte) firstSkills);
-
-								foreach (Specialization spec in specs)
+								spin = 0xFF;
+							}
+							else
+							{
+								// find this line Specialization index !
+								if (skillrelated is SpellLine && !Util.IsEmpty(((SpellLine)skillrelated).Spec))
 								{
-									CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
-									pak.WriteByte((byte) spec.Level);
-									pak.WriteByte((byte) eSkillPage.Specialization);
-									pak.WriteShort(0);
-									pak.WriteByte((byte) (m_gameClient.Player.GetModifiedSpecLevel(spec.KeyName) - spec.Level)); // bonus
-									pak.WriteShort((ushort)spec.Icon);
-									pak.WritePascalString(spec.Name);
+									spin = usableSkills.FindIndex(sk => (sk.Item1 is Specialization) && ((Specialization)sk.Item1).KeyName == ((SpellLine)skillrelated).Spec);
+									
+									if (spin == -1)
+										spin = 0xFE;
 								}
-
-								int i = 0;
-								foreach (Skill skill in skills)
+								else
 								{
-									i++;
-									CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
-									pak.WriteByte(0);
-									var type = (byte) eSkillPage.Abilities;
-									if (skill is RealmAbility)
-									{
-										type = (byte) eSkillPage.RealmAbilities;
-									}
-									pak.WriteByte(type);
-									pak.WriteShort(0);
-									pak.WriteByte(0);
-									pak.WriteShort((ushort)skill.Icon);
-									string str = "";
-									if (m_gameClient.Player.CharacterClass.ID == (int) eCharacterClass.Vampiir)
-									{
-										if (skill.Name == Abilities.VampiirConstitution ||
-										    skill.Name == Abilities.VampiirDexterity ||
-										    skill.Name == Abilities.VampiirStrength)
-											str = " +" + ((m_gameClient.Player.Level - 5)*3);
-										else if (skill.Name == Abilities.VampiirQuickness)
-											str = " +" + ((m_gameClient.Player.Level - 5)*2);
-									}
-									pak.WritePascalString(skill.Name + str);
-								}
-
-								foreach (Style style in styles)
-								{
-									m_styleId[(int)style.ID] = i++;
-									CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
-									//DOLConsole.WriteLine("style sended "+style.Name);
-									pak.WriteByte(0); // no level for style
-									pak.WriteByte((byte) eSkillPage.Styles);
-
-									int pre = 0;
-									switch (style.OpeningRequirementType)
-									{
-										case Style.eOpening.Offensive:
-											pre = 0 + (int) style.AttackResultRequirement; // last result of our attack against enemy
-											// hit, miss, target blocked, target parried, ...
-											if (style.AttackResultRequirement == Style.eAttackResultRequirement.Style)
-												pre |= ((100 + (int) m_styleId[style.OpeningRequirementValue]) << 8);
-											break;
-										case Style.eOpening.Defensive:
-											pre = 100 + (int) style.AttackResultRequirement; // last result of enemies attack against us
-											// hit, miss, you block, you parry, ...
-											break;
-										case Style.eOpening.Positional:
-											pre = 200 + style.OpeningRequirementValue;
-											break;
-									}
-
-									// style required?
-									if (pre == 0)
-									{
-										pre = 0x100;
-									}
-
-									pak.WriteShort((ushort) pre);
-									pak.WriteByte(0); // bonus
-									pak.WriteShort((ushort) style.Icon);
-									pak.WritePascalString(style.Name);
-								}
-								if (sendHybridList)
-								{
-									Dictionary<string, KeyValuePair<Spell, SpellLine>> spells = m_gameClient.Player.GetUsableSpells(spelllines, false);
-
-									foreach (var spell in spells)
-									{
-										CheckLengthHybridSkillsPacket(ref pak, ref maxSkills, ref firstSkills);
-
-										int spec_index = specs.IndexOf(m_gameClient.Player.GetSpecialization(spell.Value.Value.Spec));
-										if (spec_index == -1)
-											spec_index = 0xFE; // Nightshade special value
-
-										pak.WriteByte((byte) spell.Value.Key.Level);
-										if (spell.Value.Key.InstrumentRequirement == 0)
-										{
-											pak.WriteByte((byte) eSkillPage.Spells);
-											pak.WriteByte(0);
-											pak.WriteByte((byte) spec_index);
-										}
-										else
-										{
-											pak.WriteByte((byte) eSkillPage.Songs);
-											pak.WriteByte(0);
-											pak.WriteByte(0xFF);
-										}
-										
-										pak.WriteByte(0);
-										pak.WriteShort(spell.Value.Key.InternalIconID > 0 ? spell.Value.Key.InternalIconID : spell.Value.Key.Icon);
-										pak.WritePascalString(spell.Value.Key.Name);
-									}
+									spin = 0xFE;
 								}
 							}
+							
+							pak.WriteShort((ushort)spin); // special index for spellline
+							pak.WriteByte(0); // bonus
+							pak.WriteShort(spell.InternalIconID > 0 ? spell.InternalIconID : spell.Icon); // icon
+							pak.WritePascalString(spell.Name);
 						}
+						else if (skill is Style)
+						{
+							Style style = (Style)skill;
+							pak.WriteByte((byte)style.SpecLevelRequirement);
+							pak.WriteByte((byte)style.SkillType);
+							
+							// Special pre-requisite (First byte is Pre-requisite Icon / second Byte is prerequisite code...)
+							int pre = 0;
+				
+							switch (style.OpeningRequirementType)
+							{
+								case Style.eOpening.Offensive:
+									pre = (int)style.AttackResultRequirement; // last result of our attack against enemy hit, miss, target blocked, target parried, ...
+									if (style.AttackResultRequirement == Style.eAttackResultRequirement.Style)
+									{
+										// get style requirement value... find prerequisite style index from specs beginning...
+										int styleindex = Math.Max(0, usableSkills.FindIndex(it => (it.Item1 is Style) && it.Item1.ID == style.OpeningRequirementValue));										
+										int speccount = Math.Max(0, usableSkills.FindIndex(it => (it.Item1 is Specialization) == false));										
+										pre |= ((byte)(100 + styleindex - speccount)) << 8;
+									}
+									break;
+								case Style.eOpening.Defensive:
+									pre = 100 + (int)style.AttackResultRequirement; // last result of enemies attack against us hit, miss, you block, you parry, ...
+									break;
+								case Style.eOpening.Positional:
+									pre = 200 + style.OpeningRequirementValue;
+									break;
+							}
+							
+							// style required?
+							if (pre == 0)
+								pre = 0x100;
+	
+							pak.WriteShort((ushort)pre);
+							pak.WriteByte(GlobalConstants.GetSpecToInternalIndex(style.Spec)); // index specialization in bonus...
+							pak.WriteShort((ushort)style.Icon);
+							pak.WritePascalString(style.Name);
+						}						
+						
+						packetEntry++;
+						index++;
 					}
 
-					if (pak.Length > 7)
-					{
-						pak.Position = 4;
-						pak.WriteByte((byte) (maxSkills - firstSkills)); //number of entry
-						pak.WriteByte(0x03); //subtype
-						pak.WriteByte((byte) firstSkills);
-
-						SendTCP(pak);
-					}
-
-					SendNonHybridSpellLines();
+					// test if we finished sending packets
+					if (index >= total || index >= byte.MaxValue)
+						sent = true;
+					
+					// rewrite header for count.
+					pak.Position = 4;
+					pak.WriteByte((byte)packetEntry);
+					
+					if (!sent)
+						pak.WriteByte((byte)99);
+					
+					SendTCP(pak);
+					
 				}
+				
+				packetCount++;
 			}
-
-			finally
-			{
-				pak.Close();
-			}
+			
+			// Send List Cast Spells...
+			SendNonHybridSpellLines();
+			// clear trainer cache
+			m_gameClient.TrainerSkillCache = null;
+			
 		}
 
 		/// <summary>
@@ -2436,53 +2428,45 @@ namespace DOL.GS.PacketHandler
 			if (player == null)
 				return;
 
-			IList spellLines = m_gameClient.Player.GetSpellLines();
-
-			lock (spellLines.SyncRoot)
+			List<Tuple<SpellLine, List<Skill>>> spellsXLines = player.GetAllUsableListSpells(true);
+			
+			int lineIndex = 0;
+			foreach (var spXsl in spellsXLines)
 			{
-				foreach (SpellLine line in spellLines)
+				// Prepare packet
+				using(var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate)))
 				{
-					int lineIndex = player.GetSpellLines().IndexOf(line);
-
-					// We only handle list caster spells or advanced lines
-					if (player.CharacterClass.ClassType == eClassType.ListCaster || player.IsAdvancedSpellLine(line))
+					// Add Line Header
+					pak.WriteByte(0x02); //subcode
+					pak.WriteByte((byte)(spXsl.Item2.Count + 1)); //number of entry
+					pak.WriteByte(0x02); //subtype
+					pak.WriteByte((byte)lineIndex); //number of line
+					
+					pak.WriteByte(0); // level, not used when spell line
+					pak.WriteShort(0); // icon, not used when spell line
+					pak.WritePascalString(spXsl.Item1.Name);
+					
+					// Add All Spells...
+					foreach (Skill sp in spXsl.Item2)
 					{
-						// make a copy
-						var spells = new List<Spell>(SkillBase.GetSpellList(line.KeyName)); // copy
-						int spellCount = 0;
-						for (int i = 0; i < spells.Count; i++)
-						{
-							if ((spells[i]).Level <= line.Level && spells[i].SpellType != "StyleHandler")
-							{
-								spellCount++;
-							}
-						}
-
-						using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate)))
-						{
-							pak.WriteByte(0x02); //subcode
-							pak.WriteByte((byte)(spellCount + 1)); //number of entry
-							pak.WriteByte(0x02); //subtype
-							pak.WriteByte((byte)lineIndex); //number of line
-							pak.WriteByte(0); // level, not used when spell line
-							pak.WriteShort(0); // icon, not used when spell line
-							pak.WritePascalString(line.Name);
-
-							foreach (Spell spell in spells)
-							{
-								if (spell.Level <= line.Level && spell.SpellType != "StyleHandler")
-								{
-									// log.DebugFormat("{0} - icon {1}, {2}, level {3}", lineIndex, spell.Icon, spell.Name, spell.Level);
-									pak.WriteByte((byte)spell.Level);
-									pak.WriteShort(spell.Icon);
-									pak.WritePascalString(spell.Name);
-								}
-							}
-
-							SendTCP(pak);
-						}
+						int reqLevel = 1;
+						if (sp is Style)
+							reqLevel = ((Style)sp).SpecLevelRequirement;
+						else if (sp is Ability)
+							reqLevel = ((Ability)sp).SpecLevelRequirement;
+						else
+							reqLevel = sp.Level;
+						
+						pak.WriteByte((byte)reqLevel);
+						pak.WriteShort(sp.Icon);
+						pak.WritePascalString(sp.Name);
 					}
+					
+					// Send
+					SendTCP(pak);
 				}
+				
+				lineIndex++;
 			}
 		}
 
@@ -2644,72 +2628,168 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public virtual void SendChampionTrainerWindow(int type)
+		public virtual void SendCustomTrainerWindow(int type, List<Tuple<Specialization, List<Tuple<Skill, byte>>>> tree)
 		{
+			if (m_gameClient.Player == null)
+				return;
+			
+			GamePlayer player = m_gameClient.Player;
+			
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.TrainerWindow)))
 			{
-				pak.WriteByte((byte) type);
-				pak.WriteByte((byte) m_gameClient.Player.ChampionSpecialtyPoints);
-				pak.WriteByte(2);
-				pak.WriteByte(0);
-				pak.WriteByte(6);
-
-				for (int skillIndex = 1; skillIndex < 7; skillIndex++)
+				if (tree != null && tree.Count > 0)
 				{
-					IList specs = ChampSpecMgr.GetAbilityForIndex(type, skillIndex);
-					pak.WriteByte((byte) skillIndex);
-					pak.WriteByte((byte) specs.Count);
-
-					foreach (ChampSpec spec in specs)
+					pak.WriteByte((byte) type); // index for Champion Line ID (returned for training request)
+					pak.WriteByte((byte) 0); // Spec points available for this player.
+					pak.WriteByte(2); // Champion Window Type
+					pak.WriteByte(0);
+					pak.WriteByte((byte)tree.Count); // Count of sublines
+	
+					for (int skillIndex = 0; skillIndex < tree.Count; skillIndex++)
 					{
-						Spell spell = SkillBase.GetSpellByID(spec.SpellID);
-
-						pak.WriteByte((byte)spec.Index);
-
-						if (spell != null)
+						pak.WriteByte((byte) (skillIndex + 1));
+						pak.WriteByte((byte) tree[skillIndex].Item2.Where(t => t.Item1 != null).Count()); // Count of item for this line
+	
+						for (int itemIndex = 0; itemIndex < tree[skillIndex].Item2.Count; itemIndex++)
 						{
-							if (spell.SpellType == "StyleHandler")
+							Skill sk = tree[skillIndex].Item2[itemIndex].Item1;
+								
+							if (sk != null)
 							{
-								pak.WriteByte(1);
+								pak.WriteByte((byte)(itemIndex + 1));
+								
+								if (sk is Style)
+								{
+									pak.WriteByte(2);
+								}
+								else if (sk is Spell)
+								{
+									pak.WriteByte(3);
+								}
+								else
+								{
+									pak.WriteByte(4);
+								}
+	
+								pak.WriteShortLowEndian(sk.Icon); // Icon should be style icon + 3352 ???
+								pak.WritePascalString(sk.Name);
+								
+								// Skill Status
+								pak.WriteByte(1); // 0 = disable, 1 = trained, 2 = can train
+	
+								// Attached Skill
+								if (tree[skillIndex].Item2[itemIndex].Item2 == 2)
+								{
+									pak.WriteByte(2); // count of attached skills
+									pak.WriteByte((byte)(skillIndex << 8 + itemIndex));
+									pak.WriteByte((byte)((skillIndex + 2) << 8 + itemIndex));
+								}
+								else if(tree[skillIndex].Item2[itemIndex].Item2 == 3)
+								{
+									pak.WriteByte(3); // count of attached skills
+									pak.WriteByte((byte)(skillIndex << 8 + itemIndex));
+									pak.WriteByte((byte)((skillIndex + 1) << 8 + itemIndex));
+									pak.WriteByte((byte)((skillIndex + 2) << 8 + itemIndex));
+								}
+								else
+								{
+									// doesn't support other count
+									pak.WriteByte(0);
+								}
 							}
-							else
-							{
-								pak.WriteByte(3);
-							}
-
-							pak.WriteShortLowEndian(spell.Icon); // Icon should be style icon + 3352
-							pak.WritePascalString(spell.Name);
-
-							if (m_gameClient.Player.HasChampionSpell(spec.SpellID))
-							{
-								pak.WriteByte(1);
-							}
-							else if (m_gameClient.Player.CanTrainChampionSpell(type, skillIndex, spec.Index))
-							{
-								pak.WriteByte(2);
-							}
-							else
-							{
-								pak.WriteByte(0);
-							}
-
-							pak.WriteByte(0);
-						}
-						else
-						{
-							log.ErrorFormat("Missing champion spell ID: {0} for ID line: {1}, SpecIndex {2}, SkillIndex {3}", spec.SpellID, spec.IdLine, spec.Index, skillIndex);
-							ChatUtil.SendDebugMessage(m_gameClient, string.Format("Missing champion spell ID: {0} for ID line: {1}, SpecIndex {2}, SkillIndex {3}", spec.SpellID, spec.IdLine, spec.Index, skillIndex));
-
-							pak.WriteByte(3);
-							pak.WriteShortLowEndian(0);
-							pak.WritePascalString("Missing Spell " + spec.SpellID);
-							pak.WriteByte(0);
-							pak.WriteByte(0);
 						}
 					}
+	
+					SendTCP(pak);
 				}
+			}
+		}
 
-				SendTCP(pak);
+		
+		public virtual void SendChampionTrainerWindow(int type)
+		{
+			if (m_gameClient.Player == null)
+				return;
+			
+			GamePlayer player = m_gameClient.Player;
+			
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.TrainerWindow)))
+			{
+				// Get Player CL Spec
+				var clspec = player.GetSpecList().Where(sp => sp is LiveChampionsSpecialization).Cast<LiveChampionsSpecialization>().FirstOrDefault();
+				
+				// check if the tree can be used
+				List<Tuple<MiniLineSpecialization, List<Tuple<Skill, byte>>>> tree = null;
+				if (clspec != null)
+				{
+					tree = clspec.GetTrainerTreeDisplay(player, clspec.RetrieveTypeForIndex(type));
+				}
+								
+				if (tree != null && tree.Count > 0)
+				{
+					pak.WriteByte((byte) type); // index for Champion Line ID (returned for training request)
+					pak.WriteByte((byte) player.ChampionSpecialtyPoints); // Spec points available for this player.
+					pak.WriteByte(2); // Champion Window Type
+					pak.WriteByte(0);
+					pak.WriteByte((byte)tree.Count); // Count of sublines
+	
+					for (int skillIndex = 0; skillIndex < tree.Count; skillIndex++)
+					{
+						pak.WriteByte((byte) (skillIndex + 1));
+						pak.WriteByte((byte) tree[skillIndex].Item2.Where(t => t.Item1 != null).Count()); // Count of item for this line
+	
+						for (int itemIndex = 0; itemIndex < tree[skillIndex].Item2.Count; itemIndex++)
+						{
+							Skill sk = tree[skillIndex].Item2[itemIndex].Item1;
+								
+							if (sk != null)
+							{
+								pak.WriteByte((byte)(itemIndex + 1));
+								
+								if (sk is Style)
+								{
+									pak.WriteByte(2);
+								}
+								else if (sk is Spell)
+								{
+									pak.WriteByte(3);
+								}
+								else
+								{
+									pak.WriteByte(1);
+								}
+	
+								pak.WriteShortLowEndian(sk.Icon); // Icon should be style icon + 3352 ???
+								pak.WritePascalString(sk.Name);
+								
+								// Skill Status
+								pak.WriteByte(clspec.GetSkillStatus(tree, skillIndex, itemIndex).Item1); // 0 = disable, 1 = trained, 2 = can train
+	
+								// Attached Skill
+								if (tree[skillIndex].Item2[itemIndex].Item2 == 2)
+								{
+									pak.WriteByte(2); // count of attached skills
+									pak.WriteByte((byte)(skillIndex << 8 + itemIndex));
+									pak.WriteByte((byte)((skillIndex + 2) << 8 + itemIndex));
+								}
+								else if(tree[skillIndex].Item2[itemIndex].Item2 == 3)
+								{
+									pak.WriteByte(3); // count of attached skills
+									pak.WriteByte((byte)(skillIndex << 8 + itemIndex));
+									pak.WriteByte((byte)((skillIndex + 1) << 8 + itemIndex));
+									pak.WriteByte((byte)((skillIndex + 2) << 8 + itemIndex));
+								}
+								else
+								{
+									// doesn't support other count
+									pak.WriteByte(0);
+								}
+							}
+						}
+					}
+	
+					SendTCP(pak);
+				}
 			}
 		}
 
@@ -2717,7 +2797,7 @@ namespace DOL.GS.PacketHandler
 		{
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.TrainerWindow)))
 			{
-				IList specs = m_gameClient.Player.GetSpecList();
+				IList<Specialization> specs = m_gameClient.Player.GetSpecList().Where(it => it.Trainable).ToList();
 				pak.WriteByte((byte) specs.Count);
 				pak.WriteByte((byte) m_gameClient.Player.SkillSpecialtyPoints);
 				pak.WriteByte(0);
@@ -2734,58 +2814,28 @@ namespace DOL.GS.PacketHandler
 				SendTCP(pak);
 			}
 
-			// realm abilities
-			List<RealmAbility> raList = SkillBase.GetClassRealmAbilities(m_gameClient.Player.CharacterClass.ID);
-			if (raList != null && raList.Count > 0)
+
+			// send RA usable by this class
+			var raList = SkillBase.GetClassRealmAbilities(m_gameClient.Player.CharacterClass.ID).Where(ra => !(ra is RR5RealmAbility));
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.TrainerWindow)))
 			{
-				var offeredRA = new List<RealmAbility>();
+				pak.WriteByte((byte) raList.Count());
+				pak.WriteByte((byte) m_gameClient.Player.RealmSpecialtyPoints);
+				pak.WriteByte(1);
+				pak.WriteByte(0);
+
+				int i = 0;
 				foreach (RealmAbility ra in raList)
 				{
-					var playerRA = (RealmAbility) m_gameClient.Player.GetAbility(ra.KeyName);
-					if (playerRA != null)
-					{
-						if (playerRA.Level < playerRA.MaxLevel)
-						{
-							var ab = SkillBase.GetAbility(playerRA.KeyName, playerRA.Level + 1) as RealmAbility;
-							if (ab != null)
-							{
-								offeredRA.Add(ab);
-							}
-							else
-							{
-								log.Error("Ability " + ab.Name + " not found unexpectly");
-							}
-						}
-					}
-					else
-					{
-						if (ra.Level < ra.MaxLevel)
-						{
-							offeredRA.Add(ra);
-						}
-					}
+					int level = m_gameClient.Player.GetAbilityLevel(ra.KeyName);
+					pak.WriteByte((byte) i++);
+					pak.WriteByte((byte) level);
+					pak.WriteByte((byte) ra.CostForUpgrade(level));
+					bool canBeUsed = ra.CheckRequirement(m_gameClient.Player);
+					pak.WritePascalString(canBeUsed ? ra.Name : string.Format("[{0}]", ra.Name));
 				}
 
-				using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.TrainerWindow)))
-				{
-					pak.WriteByte((byte) offeredRA.Count);
-					pak.WriteByte((byte) m_gameClient.Player.RealmSpecialtyPoints);
-					pak.WriteByte(1);
-					pak.WriteByte(0);
-
-					int i = 0;
-					foreach (RealmAbility ra in offeredRA)
-					{
-						pak.WriteByte((byte) i++);
-						pak.WriteByte((byte) ra.Level);
-						pak.WriteByte((byte) ra.CostForUpgrade(ra.Level - 1));
-						bool canBeUsed = ra.CheckRequirement(m_gameClient.Player);
-						pak.WritePascalString((canBeUsed ? "" : "[") + ra.Name + (canBeUsed ? "" : "]"));
-					}
-
-					m_gameClient.Player.TempProperties.setProperty("OFFERED_RA", offeredRA);
-					SendTCP(pak);
-				}
+				SendTCP(pak);
 			}
 		}
 
@@ -2805,112 +2855,129 @@ namespace DOL.GS.PacketHandler
 			if (m_gameClient.Player == null)
 				return;
 
-			if (skill.SkillType == eSkillPage.Abilities || skill.SkillType == eSkillPage.RealmAbilities)
+			long pos = 0;
+			if (skill is Spell)
 			{
+				Spell spell = (Spell)skill;
+				
+				// Send matching list spell match
 				using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DisableSkills)))
 				{
+					int countspell = 0;
+					int countlineindex = 0;
+					int countspellindex = 0;
 					pak.WriteShort((ushort) duration);
-					int id = -1;
-					IList skillList = m_gameClient.Player.GetNonTrainableSkillList();
-					lock (skillList.SyncRoot)
-					{
-						foreach (Skill skl in skillList)
-						{
-							if (skl.SkillType == eSkillPage.Abilities || skl.SkillType == eSkillPage.RealmAbilities)
-								id++;
-							if (skl == skill)
-								break;
-						}
-					}
-					if (id < 0)
-						return;
-					pak.WriteByte((byte) id);
-					pak.WriteByte(0); // not used?
+					pos = pak.Position;
+					pak.WriteByte(0); // set at the end...
+					pak.WriteByte(2); // code for list spells
 
-					SendTCP(pak);
-					// FIXME debug
-					//log.InfoFormat("Disabling non Trainable Skill duration : {0}, id : {1}", duration, id);
+					var listspells = m_gameClient.Player.GetAllUsableListSpells();
+					
+					foreach (Tuple<SpellLine, List<Skill>> ls in listspells)
+					{
+						if (countspell >= 255)
+							break;
+						
+						// reset spellindex in each line
+						countspellindex = 0;
+						foreach(Skill sk in ls.Item2)
+						{
+							if (countspell >= 255)
+								break;
+							if (sk is Spell)
+							{
+								Spell sp = (Spell)sk;
+								if (sp.ID == spell.ID || (spell.SharedTimerGroup > 0 && (sp.SharedTimerGroup == spell.SharedTimerGroup)))
+								{
+									// Send disable skill code
+									pak.WriteByte((byte) countlineindex);
+									pak.WriteByte((byte) countspellindex);
+									countspell++;
+								}
+							}
+							countspellindex++;
+						}
+						countlineindex++;
+					}
+					
+					pak.Position = pos;
+					pak.WriteByte((byte)countspell);
+					// don't send if empty...
+					if (countspell > 0)
+						SendTCP(pak);
+				}
+				
+				// Send matching hybrid spell match
+				using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DisableSkills)))
+				{
+					int countskill = 0;
+					int countskillindex = 0;
+					pak.WriteShort((ushort)0);
+					pos = pak.Position;
+					pak.WriteByte(0); // set at the end...
+					pak.WriteByte(1); // code for hybrid skill
+
+					var listskills = m_gameClient.Player.GetAllUsableSkills();
+					
+					foreach (Tuple<Skill, Skill> sk in listskills)
+					{
+						if (countskill >= 255)
+							break;
+						
+						if (sk.Item1 is Specialization)
+							continue;
+						
+						Spell cmp = (Spell)sk.Item1;
+						if (cmp.ID == spell.ID || (spell.SharedTimerGroup > 0 && (cmp.SharedTimerGroup == spell.SharedTimerGroup)))
+						{
+							// disable
+							pak.WriteShort((ushort) countskillindex);
+							pak.WriteShort((ushort) duration);
+							
+							countskill++;
+						}
+						
+						countskillindex++;
+					}
+					
+					pak.Position = pos;
+					pak.WriteByte((byte)countskill);
+					// don't send if empty...
+					if (countskill > 0)
+						SendTCP(pak);
 				}
 			}
-			if (skill.SkillType == eSkillPage.Spells)
+			else
 			{
+				// Style / Ability / Anything ?
 				using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DisableSkills)))
 				{
-					if (m_gameClient.Player.CharacterClass.ClassType == eClassType.ListCaster)
+					// Send matching skill match
+					// duration
+					pak.WriteShort((ushort) duration);
+					int id = 0;
+
+					var listskills = m_gameClient.Player.GetAllUsableSkills();
+
+					foreach (Tuple<Skill, Skill> sk in listskills)
 					{
-						pak.WriteShort((ushort) duration);
-						pak.WriteByte(1); // count of spells
-						pak.WriteByte(2); // code
-
-						IList lines = m_gameClient.Player.GetSpellLines();
-						lock (lines.SyncRoot)
-						{
-							int lineIndex = -1;
-							int spellIndex = -1;
-							bool found = false;
-							foreach (SpellLine line in lines)
-							{
-								List<Spell> spells = SkillBase.GetSpellList(line.KeyName);
-								spellIndex = 0;
-								foreach (Spell spell in spells)
-								{
-									if (spell == skill)
-									{
-										found = true;
-										//DOLConsole.LogLine("disable spell "+skill.Name+" in line "+line.Name);
-										break;
-									}
-									spellIndex++;
-								}
-								lineIndex++;
-								if (found)
-									break;
-							}
-							if (!found)
-								return;
-
-							pak.WriteByte((byte) lineIndex);
-							pak.WriteByte((byte) spellIndex);
-							// FIXME debug
-							log.InfoFormat("Caster Disabling Skill duration : {0}, lineIndex : {1}, SpellIndex {2}", duration, lineIndex, spellIndex);
-						}
-
-						SendTCP(pak);
+						if (sk.Item1 is Specialization)
+							continue;
+						
+						if (skill.SkillType == sk.Item1.SkillType && skill.ID == sk.Item1.ID)
+							break;
+						
+						id++;
 					}
-					else
-					{
-						int skillsCount = m_gameClient.Player.GetNonTrainableSkillList().Count + m_gameClient.Player.GetStyleList().Count;
-						List<SpellLine> lines = m_gameClient.Player.GetSpellLines();
-						int index = -1;
-
-						lock (m_gameClient.Player.lockSpellLinesList)
-						{
-							Dictionary<string, KeyValuePair<Spell, SpellLine>> spelllist = m_gameClient.Player.GetUsableSpells(lines, false);
-
-							int searchIndex = 0;
-							foreach (var spell in spelllist.Values)
-							{
-								if (spell.Key == skill)
-								{
-									index = searchIndex;
-									break;
-								}
-								searchIndex++;
-							}
-						}
-
-						if (index < 0)
-							return;
-						pak.WriteShort(0);
-						pak.WriteByte(1); // count of skills
-						pak.WriteByte(1); // code
-						pak.WriteShort((ushort) (index + skillsCount));
-						pak.WriteShort((ushort) duration);
-						// FIXME debug
-						log.InfoFormat("Hybrid Disabling Skill duration : {0}, Index : {1}", duration, index + skillsCount);
+					
+					pak.WriteByte((byte) id); // position
+					pak.WriteByte(0); // code
+					
+					// not found don't send !
+					if (id < listskills.Count)
 						SendTCP(pak);
-					}
 				}
+					
 			}
 		}
 

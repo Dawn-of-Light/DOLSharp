@@ -51,24 +51,6 @@ namespace DOL.GS.PlayerClass
 			return GameTrainer.eChampionTrainerType.Mage;
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			// Specializations
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Matter_Magic));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Body_Magic));			
-
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Matter"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Body Destruction"));
-
-			// Abilities
-			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.AlbArmor, ArmorLevel.Cloth));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return false;

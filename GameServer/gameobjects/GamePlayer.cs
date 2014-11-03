@@ -83,20 +83,6 @@ namespace DOL.GS
 		/// the world
 		/// </summary>
 		protected bool m_enteredGame;
-		/// <summary>
-		/// Holds the objects that need update
-		/// </summary>
-		protected readonly BitArray[] m_objectUpdates;
-		/// <summary>
-		/// Holds the index into the last update array
-		/// </summary>
-		protected byte m_lastUpdateArray;
-		/// <summary>
-		/// Holds the tickcount when the objects around this player
-		/// were checked the last time for new npcs. Will be done
-		/// every 250ms in WorldMgr.
-		/// </summary>
-		protected int m_lastWorldUpdate;
 
 		/// <summary>
 		/// Is this player being 'jumped' to a new location?
@@ -215,44 +201,6 @@ namespace DOL.GS
 		{
 			get { return m_warmapPage; }
 			set { m_warmapPage = value; }
-		}
-
-
-		/// <summary>
-		/// Returns the Object update array that was used the last time
-		/// </summary>
-		public BitArray CurrentUpdateArray
-		{
-			get
-			{
-				if (m_lastUpdateArray == 0)
-					return m_objectUpdates[0];
-				return m_objectUpdates[1];
-			}
-		}
-
-		/// <summary>
-		/// Returns the Object update array that will be used next time
-		/// </summary>
-		public BitArray NewUpdateArray
-		{
-			get
-			{
-				if (m_lastUpdateArray == 0)
-					return m_objectUpdates[1];
-				return m_objectUpdates[0];
-			}
-		}
-
-		/// <summary>
-		/// Switches the update arrays
-		/// </summary>
-		public void SwitchUpdateArrays()
-		{
-			if (m_lastUpdateArray == 0)
-				m_lastUpdateArray = 1;
-			else
-				m_lastUpdateArray = 0;
 		}
 
 		/// <summary>
@@ -882,15 +830,6 @@ namespace DOL.GS
 		public void UpdatePlayerStatus()
 		{
 			Out.SendStatusUpdate();
-		}
-
-		/// <summary>
-		/// The last time we did update the world around us
-		/// </summary>
-		public int LastWorldUpdate
-		{
-			get { return m_lastWorldUpdate; }
-			set { m_lastWorldUpdate = value; }
 		}
 
 		private bool m_statsAnon = false;
@@ -2703,15 +2642,15 @@ namespace DOL.GS
 		#region Spells/Skills/Abilities/Effects
 
 		/// <summary>
+		/// Holds the player choosen list of Realm Abilities.
+		/// </summary>
+		protected readonly ReaderWriterList<RealmAbility> m_realmAbilities = new ReaderWriterList<RealmAbility>();
+		
+		/// <summary>
 		/// Holds the player specializable skills and style lines
 		/// (KeyName -> Specialization)
 		/// </summary>
 		protected readonly Dictionary<string, Specialization> m_specialization = new Dictionary<string, Specialization>();
-
-		/// <summary>
-		/// Holds the players specs again but ordered
-		/// </summary>
-		protected readonly List<Specialization> m_specList = new List<Specialization>();
 
 		/// <summary>
 		/// Holds the Spell lines the player can use
@@ -2721,7 +2660,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Object to use when locking the SpellLines list
 		/// </summary>
-		public Object lockSpellLinesList = new Object();
+		protected readonly Object lockSpellLinesList = new Object();
 
 		/// <summary>
 		/// Holds all styles of the player
@@ -2731,7 +2670,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Used to lock the style list
 		/// </summary>
-		public Object lockStyleList = new Object();
+		protected readonly Object lockStyleList = new Object();
 
 		/// <summary>
 		/// Temporary Stats Boni
@@ -2742,48 +2681,6 @@ namespace DOL.GS
 		/// Temporary Stats Boni in percent
 		/// </summary>
 		protected readonly int[] m_statBonusPercent = new int[8];
-
-
-		/// <summary>
-		/// Get the name associated with a skill.  Some skills, like vampiir abilities, add text to the skill name when displayed
-		/// </summary>
-		/// <param name="skill"></param>
-		/// <returns></returns>
-		public virtual string GetSkillName(Skill skill)
-		{
-			string name = skill.Name;
-
-			if (skill.Name == Abilities.VampiirConstitution ||
-			    skill.Name == Abilities.VampiirDexterity ||
-			    skill.Name == Abilities.VampiirStrength)
-			{
-				name += " +" + ((CalculateSkillLevel(skill) - 5) * 3).ToString();
-			}
-			else if (skill.Name == Abilities.VampiirQuickness)
-			{
-				name += " +" + ((CalculateSkillLevel(skill) - 5) * 2).ToString();
-			}
-
-			return name;
-		}
-
-		/// <summary>
-		/// Calculate the level of a skill.  Generally the skill.Level except for Vampiir skills
-		/// </summary>
-		/// <param name="skill"></param>
-		/// <returns></returns>
-		public override int CalculateSkillLevel(Skill skill)
-		{
-			if (skill.Name == Abilities.VampiirConstitution ||
-			    skill.Name == Abilities.VampiirDexterity ||
-			    skill.Name == Abilities.VampiirStrength ||
-			    skill.Name == Abilities.VampiirQuickness)
-			{
-				return Level;
-			}
-
-			return base.CalculateSkillLevel(skill);
-		}
 
 		/// <summary>
 		/// Gets/Sets amount of full skill respecs
@@ -2941,35 +2838,41 @@ namespace DOL.GS
 			}
 		}
 
-
 		/// <summary>
-		/// give player a new Specialization
+		/// give player a new Specialization or improve existing one
 		/// </summary>
 		/// <param name="skill"></param>
-		public virtual void AddSpecialization(Specialization skill)
+		public void AddSpecialization(Specialization skill)
+		{
+			AddSpecialization(skill, true);
+		}
+		
+
+		/// <summary>
+		/// give player a new Specialization or improve existing one
+		/// </summary>
+		/// <param name="skill"></param>
+		protected virtual void AddSpecialization(Specialization skill, bool notify)
 		{
 			if (skill == null)
 				return;
 
-			Specialization oldskill = null;
-			if (!m_specialization.TryGetValue(skill.KeyName, out oldskill))
+			lock (((ICollection)m_specialization).SyncRoot)
 			{
-				//DOLConsole.WriteLine("Spec "+skill.Name+" added");
-				lock ((m_specialization as ICollection).SyncRoot)
+				// search for existing key
+				if (!m_specialization.ContainsKey(skill.KeyName))
 				{
-					lock ((m_specList as ICollection).SyncRoot)
-					{
-						m_specialization[skill.KeyName] = skill;
-						m_specList.Add(skill);
-					}
+					// Adding
+					m_specialization.Add(skill.KeyName, skill);
+					
+					if (notify)
+						Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.AddSpecialisation.YouLearn", skill.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
 				}
-				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.AddSpecialisation.YouLearn", skill.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
-			else
-			{
-				if (oldskill.Level < skill.Level)
+				else
 				{
-					oldskill.Level = skill.Level;
+					// Updating
+					m_specialization[skill.KeyName].Level = skill.Level;
 				}
 			}
 		}
@@ -2982,17 +2885,17 @@ namespace DOL.GS
 		public virtual bool RemoveSpecialization(string specKeyName)
 		{
 			Specialization playerSpec = null;
-			lock ((m_specialization as ICollection).SyncRoot)
+			
+			lock (((ICollection)m_specialization).SyncRoot)
 			{
-				lock ((m_specList as ICollection).SyncRoot)
-				{
-					if (!m_specialization.TryGetValue(specKeyName, out playerSpec))
+				if (!m_specialization.TryGetValue(specKeyName, out playerSpec))
 						return false;
-					m_specList.Remove(playerSpec);
-					m_specialization.Remove(specKeyName);
-				}
+				
+				m_specialization.Remove(specKeyName);
 			}
-			Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RemoveSpecialization.YouLose", playerSpec), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			
+			Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RemoveSpecialization.YouLose", playerSpec.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
 			return true;
 		}
 
@@ -3003,17 +2906,18 @@ namespace DOL.GS
 		/// <returns>true if removed</returns>
 		protected virtual bool RemoveSpellLine(SpellLine line)
 		{
-			if (!m_spellLines.Contains(line))
-			{
-				return false;
-			}
-
 			lock (lockSpellLinesList)
 			{
+				if (!m_spellLines.Contains(line))
+				{
+					return false;
+				}
+
 				m_spellLines.Remove(line);
 			}
 
 			Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RemoveSpellLine.YouLose", line.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			
 			return true;
 		}
 
@@ -3040,7 +2944,6 @@ namespace DOL.GS
 			Level = 1;
 			Experience = 0;
 			RespecAllLines();
-			SkillSpecialtyPoints = 0;
 
 			if (Level < originalLevel && originalLevel > 5)
 			{
@@ -3064,24 +2967,30 @@ namespace DOL.GS
 			CharacterClass.OnLevelUp(this, originalLevel);
 		}
 
-		public virtual int RespecAll()
+		public virtual bool RespecAll()
 		{
-			int specPoints = RespecAllLines(); // Wipe skills and styles.
+			if(RespecAllLines())
+			{
+				// Wipe skills and styles.
+				RespecAmountAllSkill--; // Decriment players respecs available.
+				if (Level == 5)
+					IsLevelRespecUsed = true;
+				
+				return true;
+			}
 
-			RespecAmountAllSkill--; // Decriment players respecs available.
-
-			if (Level == 5)
-				IsLevelRespecUsed = true;
-			return specPoints;
+			return false;
 		}
 
-		public virtual int RespecDOL()
+		public virtual bool RespecDOL()
 		{
-			int specPoints = RespecAllLines(); // Wipe skills and styles.
+			if(RespecAllLines()) // Wipe skills and styles.
+			{
+				RespecAmountDOL--; // Decriment players respecs available.
+				return true;
+			}
 
-			RespecAmountDOL--; // Decriment players respecs available.
-
-			return specPoints;
+			return false;
 		}
 
 		public virtual int RespecSingle(Specialization specLine)
@@ -3095,38 +3004,31 @@ namespace DOL.GS
 			return specPoints;
 		}
 
-		public virtual int RespecRealm()
+		public virtual bool RespecRealm()
 		{
-			int respecPoints = 0;
-			foreach (Ability ab in GetAllAbilities())
-			{
-				if (ab is RealmAbility && ab is RR5RealmAbility == false)
-				{
-					for (int i = 0; i < ab.Level; i++)
-					{
-						respecPoints += ((RealmAbility)ab).CostForUpgrade(i);
-					}
-					RemoveAbility(ab.KeyName);
-				}
-			}
+			bool any = m_realmAbilities.Count > 0;
+			
+			foreach (Ability ab in m_realmAbilities)
+				RemoveAbility(ab.KeyName);
+			
+			m_realmAbilities.Clear();
+			
 			RespecAmountRealmSkill--;
-			return respecPoints;
+			return any;
 		}
 
-		protected virtual int RespecAllLines()
+		protected virtual bool RespecAllLines()
 		{
-			int specPoints = 0;
-			IList specList = GetSpecList();
-			lock (specList.SyncRoot)
+			bool ok = false;
+			IList<Specialization> specList = GetSpecList().Where(e => e.Trainable).ToList();
+			foreach (Specialization cspec in specList)
 			{
-				foreach (Specialization cspec in specList)
-				{
-					if (cspec.Level < 2)
-						continue;
-					specPoints += RespecSingleLine(cspec);
-				}
+				if (cspec.Level < 2)
+					continue;
+				RespecSingleLine(cspec);
+				ok = true;
 			}
-			return specPoints;
+			return ok;
 		}
 
 		/// <summary>
@@ -3161,54 +3063,29 @@ namespace DOL.GS
 		/// <summary>
 		/// returns a list with all specializations
 		/// in the order they were added
-		/// be careful when iterating this list, it has to be
-		/// synced via SyncRoot before any foreach loop
-		/// because its a reference to the player internal list of specs
-		/// that can change at any time
 		/// </summary>
 		/// <returns>list of Spec's</returns>
-		public virtual IList GetSpecList()
+		public virtual IList<Specialization> GetSpecList()
 		{
-			return m_specList;
+			List<Specialization> list;
+
+			lock (((ICollection)m_specialization).SyncRoot)
+			{
+				// sort by Level and ID to simulate "addition" order... (try to sort your DB if you want to change this !)
+				list = m_specialization.Select(item => item.Value).OrderBy(it => it.LevelRequired).ThenBy(it => it.ID).ToList();
+			}
+			
+			return list;
 		}
 
 		/// <summary>
 		/// returns a list with all non trainable skills without styles
-		/// in the order they were added
-		/// be careful when iterating this list, it has to be
-		/// synced via SyncRoot before any foreach loop
-		/// because its a reference to the player internal list of skills
-		/// that can change at any time
+		/// This is a copy of Ability until any unhandled Skill subclass needs to go in there...
 		/// </summary>
 		/// <returns>list of Skill's</returns>
 		public virtual IList GetNonTrainableSkillList()
 		{
-			return m_skillList;
-		}
-
-		/// <summary>
-		/// Retrieves a specific specialization by key name
-		/// </summary>
-		/// <param name="keyName">the key name</param>
-		/// <returns>the found specialization or null</returns>
-		public virtual Specialization GetSpecialization(string keyName)
-		{
-			Specialization spec = null;
-
-			if (!m_specialization.TryGetValue(keyName, out spec ))
-			{
-				// try case insensitive search
-				foreach (Specialization sp in m_specialization.Values)
-				{
-					if (sp.KeyName.ToLower() == keyName.ToLower())
-					{
-						spec = sp;
-						break;
-					}
-				}
-			}
-
-			return spec;
+			return GetAllAbilities();
 		}
 
 		/// <summary>
@@ -3217,25 +3094,27 @@ namespace DOL.GS
 		/// <param name="name">the name of the specialization line</param>
 		/// <param name="caseSensitive">false for case-insensitive compare</param>
 		/// <returns>found specialization or null</returns>
-		public virtual Specialization GetSpecializationByName(string name, bool caseSensitive)
+		public virtual Specialization GetSpecializationByName(string name, bool caseSensitive = false)
 		{
-			lock ((m_specList as ICollection).SyncRoot)
+			Specialization spec = null;
+
+			lock (((ICollection)m_specialization).SyncRoot)
 			{
-				if (caseSensitive)
+				
+				if (caseSensitive && m_specialization.ContainsKey(name))
+					spec = m_specialization[name];
+				
+				foreach (KeyValuePair<string, Specialization> entry in m_specialization)
 				{
-					foreach (Specialization spec in m_specList)
-						if (spec.Name == name)
-							return spec;
-				}
-				else
-				{
-					name = name.ToLower();
-					foreach (Specialization spec in m_specList)
-						if (spec.Name.ToLower() == name)
-							return spec;
+					if (entry.Key.ToLower().Equals(name.ToLower()))
+					{
+					    spec = entry.Value;
+					    break;
+					}
 				}
 			}
-			return null;
+
+			return spec;
 		}
 
 		/// <summary>
@@ -3264,60 +3143,50 @@ namespace DOL.GS
 		{
 			if (ability == null)
 				return;
-
-			if (CharacterClass.ID 	 != (int)eCharacterClass.Nightshade
-			    && CharacterClass.ID != (int)eCharacterClass.Infiltrator
-			    && CharacterClass.ID != (int)eCharacterClass.Shadowblade
-			    && ability.KeyName == Abilities.DetectHidden)
-				return;
-
-			if (CharacterClass.ID 	 != (int)eCharacterClass.Nightshade
-			    && CharacterClass.ID != (int)eCharacterClass.Infiltrator
-			    && CharacterClass.ID != (int)eCharacterClass.Minstrel
-			    && CharacterClass.ID != (int)eCharacterClass.Shadowblade
-			    && CharacterClass.ID != (int)eCharacterClass.Vampiir
-			    && CharacterClass.ID != (int)eCharacterClass.Hero
-			    && CharacterClass.ID != (int)eCharacterClass.Armsman
-			    && CharacterClass.ID != (int)eCharacterClass.Warrior
-			    && ability.KeyName == Abilities.Climbing)
-				return;
-			
-			if (CharacterClass.ID == (int)eCharacterClass.Infiltrator
-			    && ability.KeyName == Abilities.Snapshot)
-				return;
 			
 			base.AddAbility(ability, sendUpdates);
 		}
 
-		#endregion Abilities
-
-		public virtual void RemoveAllSkills()
+		/// <summary>
+		/// Adds a Realm Ability to the player
+		/// </summary>
+		/// <param name="ability"></param>
+		/// <param name="sendUpdates"></param>
+		public virtual void AddRealmAbility(RealmAbility ability, bool sendUpdates)
 		{
-			ArrayList skills = new ArrayList();
-			lock (m_skillList.SyncRoot)
-			{
-				foreach (Skill skill in m_skillList)
-					skills.Add(skill);
-			}
-			foreach (NamedSkill skill in skills)
-			{
-				m_skillList.Remove(skill);
-				m_abilities.Remove(skill.KeyName);
-			}
+			if (ability == null)
+				return;
+			
+			m_realmAbilities.FreezeWhile(list => {
+			                             	int index = list.FindIndex(ab => ab.KeyName == ability.KeyName);
+			                             	if (index > -1)
+			                             	{
+			                             		list[index].Level = ability.Level;
+			                             	}
+			                             	else
+			                             	{
+			                             		list.Add(ability);
+			                             	}
+			                             });
+			
+			RefreshSpecDependantSkills(true);
 		}
 
+		#endregion Abilities
+
+		public virtual void RemoveAllAbilities()
+		{
+			lock (m_lockAbilities)
+			{
+				m_abilities.Clear();
+			}
+		}
+		
 		public virtual void RemoveAllSpecs()
 		{
-			ArrayList specs = new ArrayList();
-			lock ((m_specList as ICollection).SyncRoot)
+			lock (((ICollection)m_specialization).SyncRoot)
 			{
-				foreach (Specialization spec in m_specList)
-					specs.Add(spec);
-			}
-			foreach (Specialization spec in specs)
-			{
-				m_specList.Remove(spec);
-				m_specialization.Remove(spec.KeyName);
+				m_specialization.Clear();
 			}
 		}
 
@@ -3337,6 +3206,90 @@ namespace DOL.GS
 			}
 		}
 
+		public virtual void AddStyle(Style st, bool notify)
+		{
+			lock (lockStyleList)
+			{
+				if (m_styles.ContainsKey(st.ID))
+				{
+					m_styles[st.ID].Level = st.Level;
+				}
+				else
+				{
+					m_styles.Add(st.ID, st);
+					
+					// Verbose
+					if (notify)
+					{
+						Style style = st;
+						Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.YouLearn", style.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+	
+						string message = null;
+						
+						if (Style.eOpening.Offensive == style.OpeningRequirementType)
+						{
+							switch (style.AttackResultRequirement)
+							{
+								case Style.eAttackResultRequirement.Style:
+								case Style.eAttackResultRequirement.Hit: // TODO: make own message for hit after styles DB is updated
+	
+									Style reqStyle = SkillBase.GetStyleByID(style.OpeningRequirementValue, CharacterClass.ID);
+									
+									if (reqStyle == null)
+										message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.AfterStyle", "(style " + style.OpeningRequirementValue + " not found)");
+									
+									else message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.AfterStyle", reqStyle.Name);
+	
+								break;
+								case Style.eAttackResultRequirement.Miss: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.AfterMissed");
+								break;
+								case Style.eAttackResultRequirement.Parry: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.AfterParried");
+								break;
+								case Style.eAttackResultRequirement.Block: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.AfterBlocked");
+								break;
+								case Style.eAttackResultRequirement.Evade: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.AfterEvaded");
+								break;
+								case Style.eAttackResultRequirement.Fumble: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.AfterFumbles");
+								break;
+							}
+						}
+						else if (Style.eOpening.Defensive == style.OpeningRequirementType)
+						{
+							switch (style.AttackResultRequirement)
+							{
+								case Style.eAttackResultRequirement.Miss: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.TargetMisses");
+								break;
+								case Style.eAttackResultRequirement.Hit: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.TargetHits");
+								break;
+								case Style.eAttackResultRequirement.Parry: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.TargetParried");
+								break;
+								case Style.eAttackResultRequirement.Block: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.TargetBlocked");
+								break;
+								case Style.eAttackResultRequirement.Evade: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.TargetEvaded");
+								break;
+								case Style.eAttackResultRequirement.Fumble: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.TargetFumbles");
+								break;
+								case Style.eAttackResultRequirement.Style: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.TargetStyle");
+								break;
+							}
+						}
+	
+						if (!Util.IsEmpty(message))
+							Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Retrieve this player Realm Abilities.
+		/// </summary>
+		/// <returns></returns>
+		public virtual List<RealmAbility> GetRealmAbilities()
+		{
+			return m_realmAbilities.ToList();
+		}
+		
 		/// <summary>
 		/// Asks for existance of specific specialization
 		/// </summary>
@@ -3344,7 +3297,14 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual bool HasSpecialization(string keyName)
 		{
-			return m_specialization.ContainsKey(keyName);
+			bool hasit = false;
+			
+			lock (((ICollection)m_specialization).SyncRoot)
+			{
+				hasit = m_specialization.ContainsKey(keyName);
+			}
+			
+			return hasit;
 		}
 
 		/// <summary>
@@ -3354,7 +3314,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return CharacterClass.CanUseLefthandedWeapon(this);
+				return CharacterClass.CanUseLefthandedWeapon;
 			}
 		}
 
@@ -3457,9 +3417,15 @@ namespace DOL.GS
 		public override int GetBaseSpecLevel(string keyName)
 		{
 			Specialization spec = null;
-			if (m_specialization.TryGetValue(keyName, out spec))
-				return m_specialization[keyName].Level;
-			return 0;
+			int level = 0;
+			
+			lock (((ICollection)m_specialization).SyncRoot)
+			{
+				if (m_specialization.TryGetValue(keyName, out spec))
+					level = m_specialization[keyName].Level;
+			}
+			
+			return level;
 		}
 
 		/// <summary>
@@ -3474,28 +3440,37 @@ namespace DOL.GS
 				return 50;
 
 			Specialization spec = null;
-			if (!m_specialization.TryGetValue(keyName, out spec))
+			int level = 0;
+			lock (((ICollection)m_specialization).SyncRoot)
 			{
-				if (keyName == GlobalSpellsLines.Combat_Styles_Effect)
+				if (!m_specialization.TryGetValue(keyName, out spec))
 				{
-					if (CharacterClass.ID == (int)eCharacterClass.Reaver || CharacterClass.ID == (int)eCharacterClass.Heretic)
-						return GetModifiedSpecLevel(Specs.Flexible);
-					if (CharacterClass.ID == (int)eCharacterClass.Valewalker)
-						return GetModifiedSpecLevel(Specs.Scythe);
-					if (CharacterClass.ID == (int)eCharacterClass.Savage)
-						return GetModifiedSpecLevel(Specs.Savagery);
+					if (keyName == GlobalSpellsLines.Combat_Styles_Effect)
+					{
+						if (CharacterClass.ID == (int)eCharacterClass.Reaver || CharacterClass.ID == (int)eCharacterClass.Heretic)
+							level = GetModifiedSpecLevel(Specs.Flexible);
+						if (CharacterClass.ID == (int)eCharacterClass.Valewalker)
+							level = GetModifiedSpecLevel(Specs.Scythe);
+						if (CharacterClass.ID == (int)eCharacterClass.Savage)
+							level = GetModifiedSpecLevel(Specs.Savagery);
+					}
+	
+					level = 0;
 				}
-
-				return 0;
 			}
-			int res = spec.Level;
-			// TODO: should be all in calculator later, right now
-			// needs specKey -> eProperty conversion to find calculator and then
-			// needs eProperty -> specKey conversion to find how much points player has spent
-			eProperty skillProp = SkillBase.SpecToSkill(keyName);
-			if (skillProp != eProperty.Undefined)
-				res += GetModified(skillProp);
-			return res;
+			
+			if (spec != null)
+			{
+				level = spec.Level;
+				// TODO: should be all in calculator later, right now
+				// needs specKey -> eProperty conversion to find calculator and then
+				// needs eProperty -> specKey conversion to find how much points player has spent
+				eProperty skillProp = SkillBase.SpecToSkill(keyName);
+				if (skillProp != eProperty.Undefined)
+					level += GetModified(skillProp);
+			}
+				
+			return level;
 		}
 
 		/// <summary>
@@ -3503,6 +3478,15 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="line"></param>
 		public virtual void AddSpellLine(SpellLine line)
+		{
+			AddSpellLine(line, true);
+		}
+		
+		/// <summary>
+		/// Adds a spell line to the player
+		/// </summary>
+		/// <param name="line"></param>
+		public virtual void AddSpellLine(SpellLine line, bool notify)
 		{
 			if (line == null)
 				return;
@@ -3514,25 +3498,33 @@ namespace DOL.GS
 				{
 					m_spellLines.Add(line);
 				}
-				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.AddSpellLine.YouLearn", line.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				
+				if (notify)
+					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.AddSpellLine.YouLearn", line.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
 			{
-				if (oldline.Level < line.Level)
-				{
-					oldline.Level = line.Level;
-				}
+				// message to player
+				if (notify && oldline.Level < line.Level)
+					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UpdateSpellLine.GainPower", line.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				oldline.Level = line.Level;
 			}
 		}
 
 		/// <summary>
 		/// return a list of spell lines in the order they were added
-		/// iterate only with locking SyncRoot on the list!
+		/// this is a copy only.
 		/// </summary>
 		/// <returns></returns>
 		public virtual List<SpellLine> GetSpellLines()
 		{
-			return m_spellLines;
+			List<SpellLine> list = new List<SpellLine>();
+			lock (lockSpellLinesList)
+			{
+				list = new List<SpellLine>(m_spellLines);
+			}
+			
+			return list;
 		}
 
 		/// <summary>
@@ -3559,394 +3551,292 @@ namespace DOL.GS
 		/// </summary>
 		public virtual IList GetStyleList()
 		{
-			return m_styles.Values.ToList();
-		}
-
-		/// <summary>
-		/// Get a list of Champion styles for this player
-		/// </summary>
-		/// <returns></returns>
-		public virtual List<Style> GetChampionStyleList()
-		{
-			List<Spell> champSpells = SkillBase.GetSpellList(ChampionSpellLineName);
-			List<Style> champStyles = new List<Style>();
-
-			foreach (Spell champSpell in champSpells)
+			List<Style> list = new List<Style>();
+			lock (lockStyleList)
 			{
-				if (champSpell.SpellType == "StyleHandler")
+				list = m_styles.Values.OrderBy(x => x.SpecLevelRequirement).ThenBy(y => y.ID).ToList();
+			}
+			return list;
+		}
+		
+		/// <summary>
+		/// Skill cache, maintained for network order on "skill use" request...
+		/// Second item is for "Parent" Skill if applicable
+		/// </summary>
+		protected ReaderWriterList<Tuple<Skill, Skill>> m_usableSkills = new ReaderWriterList<Tuple<Skill, Skill>>();
+		
+		/// <summary>
+		/// List Cast cache, maintained for network order on "spell use" request...
+		/// Second item is for "Parent" SpellLine if applicable
+		/// </summary>
+		protected ReaderWriterList<Tuple<SpellLine, List<Skill>>> m_usableListSpells = new ReaderWriterList<Tuple<SpellLine, List<Skill>>>();
+		
+		/// <summary>
+		/// Get All Usable Spell for a list Caster.
+		/// </summary>
+		/// <param name="update"></param>
+		/// <returns></returns>
+		public virtual List<Tuple<SpellLine, List<Skill>>> GetAllUsableListSpells(bool update = false)
+		{
+			List<Tuple<SpellLine, List<Skill>>> results = new List<Tuple<SpellLine, List<Skill>>>();
+			
+			if (!update)
+			{
+				if (m_usableListSpells.Count > 0)
+					results = new List<Tuple<SpellLine, List<Skill>>>(m_usableListSpells);
+				
+				// return results if cache is valid.
+				if (results.Count > 0)
+					return results;
+				
+			}
+
+			// lock during all update, even if replace only take place at end...
+			m_usableListSpells.FreezeWhile(innerList => {
+
+				List<Tuple<SpellLine, List<Skill>>> finalbase = new List<Tuple<SpellLine, List<Skill>>>();
+				List<Tuple<SpellLine, List<Skill>>> finalspec = new List<Tuple<SpellLine, List<Skill>>>();
+							
+				// Add Lists spells ordered.
+				foreach (Specialization spec in GetSpecList().Where(item => !item.HybridSpellList))
 				{
-					Style champStyle = SkillBase.GetStyleByID((int)champSpell.Value, CharacterClass.ID);
-					if (champStyle == null)
+					var spells = spec.GetLinesSpellsForLiving(this);
+
+					foreach (SpellLine sl in spec.GetSpellLinesForLiving(this))
 					{
-						champStyle = SkillBase.GetStyleByID((int)champSpell.Value, 0);
-					}
-
-					if (champStyle != null)
-					{
-						champStyle.Level = champSpell.Level;
-						champStyles.Add(champStyle);
-					}
-				}
-			}
-
-			return champStyles;
-		}
-
-		/// <summary>
-		/// Return the count of all spells the player can use
-		/// This is for hybrid classes only
-		/// </summary>
-		/// <returns></returns>
-		public virtual int GetSpellCount()
-		{
-			lock (lockSpellLinesList)
-			{
-				return GetUsableSpells(m_spellLines, true).Count;
-			}
-		}
-
-
-		/// <summary>
-		/// Should we allow multiple versions of each spell type in this spell line
-		/// Used for hybrid classes
-		/// </summary>
-		/// <param name="line"></param>
-		/// <returns></returns>
-		protected virtual bool AllowMultipleSpellVersions(SpellLine line)
-		{
-			bool allow = false;
-
-			switch (line.Spec)
-			{
-				case Specs.Augmentation:
-					allow = true;
-					break;
-
-				case Specs.Enhancement:
-					if ((line.IsBaseLine || CharacterClass.ID == (int)eCharacterClass.Cleric) && CharacterClass.ID != (int)eCharacterClass.Heretic)
-						allow = true;
-
-					break;
-
-				case Specs.Nurture:
-					if (line.IsBaseLine || CharacterClass.ID == (int)eCharacterClass.Druid)
-						allow = true;
-
-					break;
-
-				case Specs.Soulrending:
-					allow = true;
-					break;
-			}
-
-			return allow;
-		}
-
-		/// <summary>
-		/// Is this a Champion or ML SpellLine
-		/// </summary>
-		/// <param name="line"></param>
-		/// <returns></returns>
-		public virtual bool IsAdvancedSpellLine(SpellLine line)
-		{
-			// ML lines
-			switch (line.KeyName)
-			{
-				case Specs.Convoker:
-				case Specs.Banelord:
-				case Specs.Stormlord:
-				case Specs.Perfecter:
-				case Specs.Sojourner:
-				case Specs.Spymaster:
-				case Specs.Battlemaster:
-				case Specs.Warlord:
-				case GlobalSpellsLines.Character_Abilities:
-					return true;
-			}
-
-			return false;
-		}
-
-		/// <summary>
-		/// A list of all usable spells for this player.  This list is maintained as long as the player is active
-		/// with new spells always added to the end of the list.  This is used for all hybrid classes
-		/// Structure of this list: uniquekey-Spell-SpellLine
-		/// </summary>
-		protected Dictionary<string, KeyValuePair<Spell, SpellLine>> m_usableSpells = null;
-
-
-		/// <summary>
-		/// Return a list of spells usable for all spell lines provided.  This is used for hybrid classes.
-		/// This list should return the highest level spell of each spell type (or spell group, if provided)
-		/// </summary>
-		/// <param name="spelllines">list of spellLines</param>
-		/// <returns>list of Spells</returns>
-		public virtual Dictionary<string, KeyValuePair<Spell, SpellLine>> GetUsableSpells(List<SpellLine> spellLines, bool update)
-		{
-			if (m_usableSpells == null)
-			{
-				m_usableSpells = new Dictionary<string, KeyValuePair<Spell, SpellLine>>();
-			}
-
-			foreach (KeyValuePair<Spell, SpellLine> spell in m_usableSpells.Values)
-			{
-				if (spell.Key.Level > spell.Value.Level)
-				{
-					// this is probably due to a respec, wipe list and rebuild
-					// this will cause the quick bars to jumble, no idea how to avoid it
-					m_usableSpells = new Dictionary<string, KeyValuePair<Spell, SpellLine>>();
-					update = true;
-					break;
-				}
-			}
-
-			if (update)
-			{
-				Dictionary<string, KeyValuePair<Spell, SpellLine>> usableSpells1 = new Dictionary<string, KeyValuePair<Spell, SpellLine>>(); // highest level of spell type or group
-				Dictionary<string, KeyValuePair<Spell, SpellLine>> usableSpells2 = new Dictionary<string, KeyValuePair<Spell, SpellLine>>(); // second highest level of spell type or group
-				List<KeyValuePair<Spell, SpellLine>> spellList = new List<KeyValuePair<Spell, SpellLine>>();
-
-				foreach (SpellLine line in spellLines)
-				{
-					if (IsAdvancedSpellLine(line) == false) // don't add advanced spell lines to this list
-					{
-						foreach (Spell spell in SkillBase.GetSpellList(line.KeyName))
+						List<Tuple<SpellLine, List<Skill>>> working;
+						if (sl.IsBaseLine)
 						{
-							if (spell.Level <= line.Level && spell.SpellType != "StyleHandler")
+							working = finalbase;
+						}
+						else
+						{
+							working = finalspec;
+						}
+						
+						List<Skill> sps = new List<Skill>();
+						SpellLine key = spells.Keys.Where(el => el.KeyName == sl.KeyName).FirstOrDefault();
+						
+						if (key != null && spells.ContainsKey(key))
+						{
+							foreach (Skill sp in spells[key])
 							{
-								spellList.Add(new KeyValuePair<Spell, SpellLine>(spell, line));
+								sps.Add(sp);
+							}
+						}
+						
+						working.Add(new Tuple<SpellLine, List<Skill>>(sl, sps));
+					}
+				}
+				
+				// Linq isn't used, we need to keep order ! (SelectMany, GroupBy, ToDictionary can't be used !)
+				innerList.Clear();
+				foreach (var tp in finalbase)
+				{
+					innerList.Add(tp);
+					results.Add(tp);
+				}
+	
+				foreach (var tp in finalspec)
+				{
+					innerList.Add(tp);
+					results.Add(tp);
+				}
+			                               });
+			
+			return results;
+		}
+		
+		/// <summary>
+		/// Get All Player Usable Skill Ordered in Network Order (usefull to check for useskill)
+		/// This doesn't get player's List Cast Specs...
+		/// </summary>
+		/// <param name="update"></param>
+		/// <returns></returns>
+		public virtual List<Tuple<Skill, Skill>> GetAllUsableSkills(bool update = false)
+		{
+			List<Tuple<Skill, Skill>> results = new List<Tuple<Skill, Skill>>();
+			
+			if (!update)
+			{
+
+				if (m_usableSkills.Count > 0)
+					results = new List<Tuple<Skill, Skill>>(m_usableSkills);
+				
+				// return results if cache is valid.
+				if (results.Count > 0)
+					return results;
+			}
+			
+			// need to lock for all update.
+			m_usableSkills.FreezeWhile(innerList => {
+
+				IList<Specialization> specs = GetSpecList();
+				List<Tuple<Skill, Skill>> copylist = new List<Tuple<Skill, Skill>>(innerList);
+								
+				// Add Spec
+				foreach (Specialization spec in specs.Where(item => item.Trainable))
+				{
+					int index = innerList.FindIndex(e => (e.Item1 is Specialization) && ((Specialization)e.Item1).KeyName == spec.KeyName);
+					
+					if (index < 0)
+					{
+						// Specs must be appended to spec list
+						innerList.Insert(innerList.Where(e => e.Item1 is Specialization).Count(), new Tuple<Skill, Skill>(spec, spec));
+					}
+					else
+					{
+						copylist.Remove(innerList[index]);
+						// Replace...
+						innerList[index] = new Tuple<Skill, Skill>(spec, spec);
+					}
+				}
+								
+				// Add Abilities (Realm ability should be a custom spec)
+				// Abilities order should be saved to db and loaded each time
+								
+				foreach (Specialization spec in specs)
+				{
+					foreach (Ability ab in spec.GetAbilitiesForLiving(this))
+					{
+						int index = innerList.FindIndex(k => (k.Item1 is Ability) && ((Ability)k.Item1).KeyName == ab.KeyName);
+						
+						if (index < 0)
+						{
+							// add
+							innerList.Add(new Tuple<Skill, Skill>(ab, spec));
+						}
+						else
+						{
+							copylist.Remove(innerList[index]);
+							// replace
+							innerList[index] = new Tuple<Skill, Skill>(ab, spec);
+						}
+					}
+				}
+
+				// Add Hybrid spell
+				foreach (Specialization spec in specs.Where(item => item.HybridSpellList))
+				{
+					int index = -1;
+					foreach(KeyValuePair<SpellLine, List<Skill>> sl in spec.GetLinesSpellsForLiving(this))
+					{
+						foreach (Spell sp in sl.Value.Where(it => (it is Spell) && !((Spell)it).NeedInstrument).Cast<Spell>())
+						{
+							if (index < innerList.Count)
+								index = innerList.FindIndex(index + 1, e => ((e.Item2 is SpellLine) && ((SpellLine)e.Item2).Spec == sl.Key.Spec) && (e.Item1 is Spell) && !((Spell)e.Item1).NeedInstrument);
+							
+							if (index < 0 || index >= innerList.Count)
+							{
+								// add
+								innerList.Add(new Tuple<Skill, Skill>(sp, sl.Key));
+								// disable replace
+								index = innerList.Count;
+							}
+							else
+							{
+								copylist.Remove(innerList[index]);
+								// replace
+								innerList[index] = new Tuple<Skill, Skill>(sp, sl.Key);
 							}
 						}
 					}
 				}
-
-				int counter = 0;
-
-				foreach (KeyValuePair<Spell, SpellLine> spell in spellList)
+				
+				// Add Songs
+				foreach (Specialization spec in specs.Where(item => item.HybridSpellList))
 				{
-					string key;
-
-					if (spell.Key.Group == 0)
+					int index = -1;
+					foreach(KeyValuePair<SpellLine, List<Skill>> sl in spec.GetLinesSpellsForLiving(this))
 					{
-						// Tolakram:
-						// This is an attempt to make sure all the correct spells are provided.
-						// If there is a special rule for a spelltype then spells of that spelltype should be provided with
-						// a unique spellgroup number to ensure they get included in the list.
-
-						key = spell.Value.KeyName + "+" + spell.Key.SpellType + "+" + spell.Key.Target;
-
-						if (spell.Key.CastTime == 0)
+						foreach (Spell sp in sl.Value.Where(it => (it is Spell) && ((Spell)it).NeedInstrument).Cast<Spell>())
 						{
-							key += "+INSTANT";
-						}
-
-						if (spell.Key.Radius > 0)
-						{
-							key += "+AOE";
-						}
-
-						if (spell.Key.SubSpellID > 0)
-						{
-							key += "+SUB";
-						}
-
-						if (spell.Value.Spec == GlobalSpellsLines.Champion_Spells)
-						{
-							key += counter++;
-						}
-					}
-					else
-					{
-						key = spell.Key.Group.ToString();
-					}
-
-					string key1 = "1:" + key;
-					string key2 = "2:" + key;
-
-					if (usableSpells1.ContainsKey(key1))
-					{
-						if (spell.Key.Level > usableSpells1[key1].Key.Level)
-						{
-							if (AllowMultipleSpellVersions(spell.Value))
+							if (index < innerList.Count)
+								index = innerList.FindIndex(index + 1, e => (e.Item1 is Spell) && ((Spell)e.Item1).NeedInstrument);
+							
+							if (index < 0 || index >= innerList.Count)
 							{
-								// add or replace in the secondary list
-								if (usableSpells2.ContainsKey(key2))
-								{
-									usableSpells2[key2] = usableSpells1[key1];
-								}
-								else
-								{
-									usableSpells2.Add(key2, usableSpells1[key1]);
-								}
+								// add
+								innerList.Add(new Tuple<Skill, Skill>(sp, sl.Key));
+								// disable replace
+								index = innerList.Count;
 							}
-
-							usableSpells1[key1] = spell;
+							else
+							{
+								copylist.Remove(innerList[index]);
+								// replace
+								innerList[index] = new Tuple<Skill, Skill>(sp, sl.Key);
+							}
 						}
 					}
-					else
-					{
-						usableSpells1.Add(key1, spell);
-					}
 				}
-
-				// Replace any existing spells or adding new ones to the end of the list
-
-				foreach (KeyValuePair<string, KeyValuePair<Spell, SpellLine>> spell in usableSpells1)
+				
+				// Add Styles
+				foreach (Specialization spec in specs)
 				{
-					if (m_usableSpells.ContainsKey(spell.Key))
+					foreach(Style st in spec.GetStylesForLiving(this))
 					{
-						m_usableSpells[spell.Key] = spell.Value;
-					}
-					else
-					{
-						m_usableSpells.Add(spell.Key, spell.Value);
+						int index = innerList.FindIndex(e => (e.Item1 is Style) && e.Item1.ID == st.ID);
+						if (index < 0)
+						{
+							// add
+							innerList.Add(new Tuple<Skill, Skill>(st, spec));
+						}
+						else
+						{
+							copylist.Remove(innerList[index]);
+							// replace
+							innerList[index] = new Tuple<Skill, Skill>(st, spec);
+						}
 					}
 				}
 
-				foreach (KeyValuePair<string, KeyValuePair<Spell, SpellLine>> spell in usableSpells2)
+				// clean all not re-enabled skills
+				foreach (Tuple<Skill, Skill> item in copylist)
 				{
-					if (m_usableSpells.ContainsKey(spell.Key))
-					{
-						m_usableSpells[spell.Key] = spell.Value;
-					}
-					else
-					{
-						m_usableSpells.Add(spell.Key, spell.Value);
-					}
+					innerList.Remove(item);
 				}
-			}
-
-			return m_usableSpells;
+				
+				foreach (Tuple<Skill, Skill> el in innerList)
+					results.Add(el);
+			                           });
+			
+			return results;
 		}
-
-
+		
 		/// <summary>
-		/// updates the list of available styles
+		/// updates the list of available skills (dependent on caracter specs)
 		/// </summary>
 		/// <param name="sendMessages">sends "you learn" messages if true</param>
 		public virtual void RefreshSpecDependantSkills(bool sendMessages)
 		{
-			IList newStyles = new ArrayList();
-			lock (lockStyleList)
+			// refresh specs
+			LoadClassSpecializations(sendMessages);
+			
+			// lock specialization while refreshing...
+			lock (((ICollection)m_specialization).SyncRoot)
 			{
-				lock ((m_specList as ICollection).SyncRoot)
+				foreach (Specialization spec in m_specialization.Values)
 				{
-					foreach (Specialization spec in m_specList)
+					// check for new Abilities
+					foreach (Ability ab in spec.GetAbilitiesForLiving(this))
 					{
-						// check styles
-						List<Style> styles = SkillBase.GetStyleList(spec.KeyName, CharacterClass.ID);
-						foreach (Style style in styles)
-						{
-							if (style == null)
-								continue;
-							if (style.SpecLevelRequirement <= spec.Level)
-							{
-								if (!m_styles.ContainsKey(style.ID))
-								{
-									newStyles.Add(style);
-									m_styles.Add(style.ID, style);
-								}
-							}
-						}
-
-						// check abilities
-						List<Ability> abilities = SkillBase.GetSpecAbilityList(spec.KeyName);
-						foreach (Ability ability in abilities)
-						{
-							if (ability.SpecLevelRequirement <= spec.Level)
-							{
-								AddAbility(ability);	// add ability cares about all
-							}
-						}
+						if (!HasAbility(ab.KeyName) || GetAbility(ab.KeyName).Level < ab.Level)
+							AddAbility(ab, sendMessages);
 					}
-				}
-
-				foreach (Style style in GetChampionStyleList())
-				{
-					if (style == null)
-						continue;
-
-					if (!m_styles.ContainsKey(style.ID))
+					
+					// check for new Styles
+					foreach (Style st in spec.GetStylesForLiving(this))
 					{
-						newStyles.Add(style);
-						m_styles.Add(style.ID, style);
+						AddStyle(st, sendMessages);
 					}
-				}
-			}
-
-			if (sendMessages)
-			{
-				foreach (Style style in newStyles)
-				{
-					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.YouLearn", style.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-					string message = null;
-					if (Style.eOpening.Offensive == style.OpeningRequirementType)
+					
+					// check for new SpellLine
+					foreach (SpellLine sl in spec.GetSpellLinesForLiving(this))
 					{
-						switch (style.AttackResultRequirement)
-						{
-							case Style.eAttackResultRequirement.Style:
-							case Style.eAttackResultRequirement.Hit: // TODO: make own message for hit after styles DB is updated
-
-								Style reqStyle = SkillBase.GetStyleByID(style.OpeningRequirementValue, CharacterClass.ID);
-								if (reqStyle == null)
-									message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.AfterStyle", "(style " + style.OpeningRequirementValue + " not found)");
-								else message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.AfterStyle", reqStyle.Name);
-
-								break;
-								case Style.eAttackResultRequirement.Miss: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.AfterMissed"); break;
-								case Style.eAttackResultRequirement.Parry: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.AfterParried"); break;
-								case Style.eAttackResultRequirement.Block: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.AfterBlocked"); break;
-								case Style.eAttackResultRequirement.Evade: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.AfterEvaded"); break;
-								case Style.eAttackResultRequirement.Fumble: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.AfterFumbles"); break;
-						}
+						AddSpellLine(sl, sendMessages);
 					}
-					else if (Style.eOpening.Defensive == style.OpeningRequirementType)
-					{
-						switch (style.AttackResultRequirement)
-						{
-								case Style.eAttackResultRequirement.Miss: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.TargetMisses"); break;
-								case Style.eAttackResultRequirement.Hit: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.TargetHits"); break;
-								case Style.eAttackResultRequirement.Parry: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.TargetParried"); break;
-								case Style.eAttackResultRequirement.Block: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.TargetBlocked"); break;
-								case Style.eAttackResultRequirement.Evade: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.TargetEvaded"); break;
-								case Style.eAttackResultRequirement.Fumble: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.TargetFumbles"); break;
-								case Style.eAttackResultRequirement.Style: message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.RefreshSpec.TargetStyle"); break;
-						}
-					}
-
-					if (message != null)
-						Out.SendMessage(message, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-			}
-		}
-
-		/// <summary>
-		/// updates the levels of all spell lines
-		/// specialized spell lines depend from spec levels
-		/// base lines depend from player level
-		/// </summary>
-		/// <param name="sendMessages">sends "You gain power" messages if true</param>
-		public virtual void UpdateSpellLineLevels(bool sendMessages)
-		{
-			lock (lockSpellLinesList)
-			{
-				foreach (SpellLine line in GetSpellLines())
-				{
-					if (line.IsBaseLine)
-					{
-						line.Level = Level;
-					}
-					else
-					{
-						int newSpec = GetBaseSpecLevel(line.Spec);
-						if (newSpec > 0)
-						{
-							if (sendMessages && line.Level < newSpec)
-								Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UpdateSpellLine.GainPower", line.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							line.Level = newSpec;
-						}
-					}
+					
 				}
 			}
 		}
@@ -3962,7 +3852,6 @@ namespace DOL.GS
 			Message.SystemToOthers(this, LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnSkillTrained.TrainsInVarious", GetName(0, true)), eChatType.CT_System);
 			CharacterClass.OnSkillTrained(this, skill);
 			RefreshSpecDependantSkills(true);
-			UpdateSpellLineLevels(true);
 
 			Out.SendUpdatePlayerSkills();
 		}
@@ -4018,22 +3907,20 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Gets/sets player skill specialty points
-		/// (delegate to PlayerCharacter)
 		/// </summary>
 		public virtual int SkillSpecialtyPoints
 		{
-			get { return DBCharacter != null ? DBCharacter.SkillSpecialtyPoints : 0; }
-			set { if (DBCharacter != null) DBCharacter.SkillSpecialtyPoints = value; }
+			get { return VerifySpecPoints(); }
 		}
 
 		/// <summary>
 		/// Gets/sets player realm specialty points
-		/// (delegate to PlayerCharacter)
 		/// </summary>
 		public virtual int RealmSpecialtyPoints
 		{
-			get { return DBCharacter != null ? DBCharacter.RealmSpecialtyPoints : 0; }
-			set { if (DBCharacter != null) DBCharacter.RealmSpecialtyPoints = value; }
+			get { return GameServer.ServerRules.GetPlayerRealmPointsTotal(this) 
+					- GetRealmAbilities().Where(ab => !(ab is RR5RealmAbility))
+					.Sum(ab => Enumerable.Range(0, ab.Level).Sum(i => ab.CostForUpgrade(i))); }
 		}
 
 		/// <summary>
@@ -4645,7 +4532,6 @@ namespace DOL.GS
 			while (RealmPoints >= CalculateRPsFromRealmLevel(RealmLevel + 1) && RealmLevel < ( REALMPOINTS_FOR_LEVEL.Length - 1 ) )
 			{
 				RealmLevel++;
-				RealmSpecialtyPoints++;
 				Out.SendUpdatePlayer();
 				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.GainRealmPoints.GainedLevel"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				if (RealmLevel % 10 == 0)
@@ -5375,12 +5261,10 @@ namespace DOL.GS
 				{
 					OnLevelSecondStage();
 					Notify(GamePlayerEvent.LevelSecondStage, this);
-					SaveIntoDatabase(); // save char on levelup
 				}
 				else if (Level < MaxLevel && Experience >= ExperienceForNextLevel)
 				{
 					Level++;
-					SaveIntoDatabase(); // save char on levelup
 				}
 			}
 			Out.SendUpdatePoints();
@@ -5551,7 +5435,7 @@ namespace DOL.GS
 			}
 
 			CharacterClass.OnLevelUp(this, previouslevel);
-			UpdateSpellLineLevels(true);
+			GameServer.ServerRules.OnPlayerLevelUp(this, previouslevel);
 			RefreshSpecDependantSkills(true);
 
 			// Echostorm - Code for display of new title on level up
@@ -5576,11 +5460,6 @@ namespace DOL.GS
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnLevelUp.YouGetSpec", specpoints), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
-			SkillSpecialtyPoints += specpoints;
-
-			// graveen 1.87 Autotrain
-			foreach (Specialization spec in GetSpecList())
-				if (Level > 5) SkillSpecialtyPoints += GetAutoTrainPoints(spec, 1);
 
 			// old hp
 			int oldhp = CalculateMaxHealth(previouslevel, GetBaseStat(eStat.CON));
@@ -5649,6 +5528,9 @@ namespace DOL.GS
 				Task.TasksDone = 0;
 				Task.SaveIntoDatabase();
 			}
+			
+			// save player to database
+			SaveIntoDatabase();
 		}
 
 		/// <summary>
@@ -5667,7 +5549,6 @@ namespace DOL.GS
 				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnLevelUp.YouGetSpec", specpoints), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 
-			SkillSpecialtyPoints += specpoints;
 			//death penalty reset on mini-ding
 			if (DBCharacter != null)
 				DBCharacter.DeathCount = 0;
@@ -5681,6 +5562,8 @@ namespace DOL.GS
 			Out.SendUpdatePlayerSkills();
 			Out.SendUpdatePoints();
 			UpdatePlayerStatus();
+			// save player to database
+			SaveIntoDatabase();
 		}
 
 		/// <summary>
@@ -10550,10 +10433,6 @@ namespace DOL.GS
 				//Set our new region
 				CurrentRegionID = regionID;
 
-				LastWorldUpdate = Environment.TickCount;
-				CurrentUpdateArray.SetAll(false);
-				HousingUpdateArray = null;
-
 				//Send the region update packet, the rest will be handled
 				//by the packethandlers
 				Out.SendRegionChanged();
@@ -10621,19 +10500,11 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void RefreshWorld()
 		{
-			LastWorldUpdate = Environment.TickCount;
-			CurrentUpdateArray.SetAll(false);
-			HousingUpdateArray = null;
-
 			foreach (GameNPC npc in GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE * 2))
 			{
 				Out.SendNPCCreate(npc);
 				if (npc.Inventory != null)
 					Out.SendLivingEquipmentUpdate(npc);
-				//Send health update only if mob-health is not 100%
-				if (npc.HealthPercent != 100)
-					Out.SendObjectUpdate(npc);
-				CurrentUpdateArray[npc.ObjectID - 1] = true;
 			}
 
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
@@ -12606,88 +12477,90 @@ namespace DOL.GS
 		/// </summary>
 		protected virtual void SaveSkillsToCharacter()
 		{
-			string ab = "";
-			string sp = "";
-			string styleList = "";
-			lock (m_skillList)
+			StringBuilder ab = new StringBuilder();
+			StringBuilder sp = new StringBuilder();
+			
+			// Build Serialized Spec list
+			List<Specialization> specs = null;
+			lock (((ICollection)m_specialization).SyncRoot)
 			{
-				foreach (Skill skill in m_skillList)
-				{
-					Ability ability = skill as Ability;
-					if (ability != null)
-					{
-						if (ab.Length > 0)
-						{
-							ab += ";";
-						}
-						ab += ability.KeyName + "|" + ability.Level;
-					}
-				}
-			}
-			lock ((m_specList as ICollection).SyncRoot)
-			{
-				foreach (Specialization spec in m_specList)
+				specs = m_specialization.Values.Where(s => s.AllowSave).ToList();
+				foreach (Specialization spec in specs)
 				{
 					if (sp.Length > 0)
 					{
-						sp += ";";
+						sp.Append(";");
 					}
-					sp += spec.KeyName + "|" + spec.Level;
+					sp.AppendFormat("{0}|{1}", spec.KeyName, spec.GetSpecLevelForLiving(this));
 				}
 			}
-			lock (lockStyleList)
-			{
-				foreach (Style style in m_styles.Values)
+			
+			// Build Serialized Ability List to save Order
+			foreach (Ability ability in m_usableSkills.Where(e => e.Item1 is Ability).Select(e => e.Item1).Cast<Ability>())
+			{					
+				if (ability != null)
 				{
-					if (styleList.Length > 0)
+					if (ab.Length > 0)
 					{
-						styleList += ";";
+						ab.Append(";");
 					}
-					styleList += style.ID;
+					ab.AppendFormat("{0}|{1}", ability.KeyName, ability.Level);
 				}
 			}
-			string disabledSpells = "";
-			string disabledAbilities = "";
+
+			// Build Serialized disabled Spell/Ability
+			StringBuilder disabledSpells = new StringBuilder();
+			StringBuilder disabledAbilities = new StringBuilder();
+			
 			ICollection<Skill> disabledSkills = GetAllDisabledSkills();
+			
 			foreach (Skill skill in disabledSkills)
 			{
 				int duration = GetSkillDisabledDuration(skill);
-				if (duration <= 0) continue;
+				
+				if (duration <= 0)
+					continue;
+				
 				if (skill is Spell)
 				{
 					Spell spl = (Spell)skill;
+					
 					if (disabledSpells.Length > 0)
-						disabledSpells += ";";
-					disabledSpells += spl.ID + "|" + duration;
+						disabledSpells.Append(";");
+					
+					disabledSpells.AppendFormat("{0}|{1}", spl.ID, duration);
 				}
 				else if (skill is Ability)
 				{
 					Ability ability = (Ability)skill;
+					
 					if (disabledAbilities.Length > 0)
-						disabledAbilities += ";";
-					disabledAbilities += ability.KeyName + "|" + duration;
+						disabledAbilities.Append(";");
+					
+					disabledAbilities.AppendFormat("{0}|{1}", ability.KeyName, duration);
 				}
 				else
 				{
 					if (log.IsWarnEnabled)
-						log.Warn(Name + ": Can't save disabled skill " + skill.GetType().ToString());
+						log.WarnFormat("{0}: Can't save disabled skill {1}", Name, skill.GetType().ToString());
 				}
 			}
-			StringBuilder spellLines = new StringBuilder();
-			lock (lockSpellLinesList)
+			
+			StringBuilder sra = new StringBuilder();
+			
+			foreach (RealmAbility rab in m_realmAbilities)
 			{
-				foreach (SpellLine line in m_spellLines)
-				{
-					if (spellLines.Length > 0)
-						spellLines.Append(';');
-					spellLines.AppendFormat("{0}|{1}", line.KeyName, line.Level);
-				}
+				if (sra.Length > 0)
+					sra.Append(";");
+				
+				sra.AppendFormat("{0}|{1}", rab.KeyName, rab.Level);
 			}
-			DBCharacter.SerializedAbilities = ab;
-			DBCharacter.SerializedSpecs = sp;
-			DBCharacter.SerializedSpellLines = spellLines.ToString();
-			DBCharacter.DisabledSpells = disabledSpells;
-			DBCharacter.DisabledAbilities = disabledAbilities;
+						
+			DBCharacter.SerializedAbilities = ab.ToString();
+			DBCharacter.SerializedSpecs = sp.ToString();
+			DBCharacter.SerializedRealmAbilities = sra.ToString();
+			DBCharacter.DisabledSpells = disabledSpells.ToString();
+			DBCharacter.DisabledAbilities = disabledAbilities.ToString();
 
 		}
 
@@ -12700,109 +12573,133 @@ namespace DOL.GS
 			DOLCharacters character = DBCharacter; // if its derived and filled with some code
 			if (character == null) return; // no character => exit
 
-			string tmpStr;
-
-			#region Load Abilities
-			//Load up the player skills
-			//1. Load all abilities
-			//2. Disable appropriate abilities
-			lock (m_skillList)
+			#region load class spec
+			
+			// first load spec's career
+			LoadClassSpecializations(false);
+			
+			//Load Remaining spec and levels from Database (custom spec can still be added here...)
+			string tmpStr = character.SerializedSpecs;
+			if (tmpStr != null && tmpStr.Length > 0)
 			{
-				tmpStr = character.SerializedAbilities;
-				if (tmpStr != null && tmpStr.Length > 0)
+				foreach (string spec in tmpStr.SplitCSV())
 				{
-					//Add the abilities to our skill list!
-					foreach (string ability in tmpStr.SplitCSV())
+					string[] values = spec.Split('|');
+					if (values.Length >= 2)
 					{
-						string[] values = ability.Split('|');
-						if (values.Length >= 2 && !HasAbility(values[0]))
-						{
-							string keyname = values[0];
-							int level;
-							if (int.TryParse(values[1], out level))
-								AddAbility(SkillBase.GetAbility(keyname, level), true);
-						}
-					}
+						Specialization tempSpec = SkillBase.GetSpecialization(values[0], false);
 
-					//Since we added all the abilities that this character has, let's now disable the disabled ones!
-					tmpStr = character.DisabledAbilities;
-					if (tmpStr != null && tmpStr.Length > 0)
-					{
-						foreach (string str in tmpStr.SplitCSV())
+						if (tempSpec != null)
 						{
-							string[] values = str.Split('|');
-							if (values.Length >= 2)
-							{
-								string keyname = values[0];
-								int duration;
-								if (HasAbility(keyname) && int.TryParse(values[1], out duration))
-									DisableSkill(GetAbility(keyname), duration);
-								else if (log.IsErrorEnabled)
-									log.Error(Name + ": error in loading disabled abilities => '" + tmpStr + "'");
-							}
-						}
-					}
-				}
-			}
-			#endregion
-
-			#region Load Specs
-			lock ((m_specList as ICollection).SyncRoot)
-			{
-				tmpStr = character.SerializedSpecs;
-				if (tmpStr != null && tmpStr.Length > 0)
-				{
-					foreach (string spec in tmpStr.SplitCSV())
-					{
-						string[] values = spec.Split('|');
-						if (values.Length >= 2)
-						{
-							Specialization tempSpec = SkillBase.GetSpecialization(values[0], false);
-
-							if (tempSpec != null)
+							if (tempSpec.AllowSave)
 							{
 								int level;
 								if (int.TryParse(values[1], out level))
 								{
-									tempSpec.Level = level;
-									if (!HasSpecialization(values[0]))
-										AddSpecialization(tempSpec);
-									CharacterClass.OnSkillTrained(this, tempSpec);
+									if (HasSpecialization(tempSpec.KeyName))
+									{
+										GetSpecializationByName(tempSpec.KeyName).Level = level;
+									}
+									else
+									{
+										tempSpec.Level = level;
+										AddSpecialization(tempSpec, false);
+									}
 								}
 								else if (log.IsErrorEnabled)
 								{
-									log.Error(Name + ": error in loading specs => '" + tmpStr + "'");
+									log.ErrorFormat("{0} : error in loading specs => '{1}'", Name, tmpStr);
 								}
 							}
-							else if (log.IsErrorEnabled)
+						}
+						else if (log.IsErrorEnabled)
+						{
+							log.ErrorFormat("{0}: can't find spec '{1}'", Name, values[0]);
+						}
+					}
+				}
+			}
+			
+			// Add Serialized Abilities to keep Database Order
+			// Custom Ability will be disabled as soon as they are not in any specs...
+			tmpStr = character.SerializedAbilities;
+			if (tmpStr != null && tmpStr.Length > 0 && m_usableSkills.Count == 0)
+			{
+				foreach (string abilities in tmpStr.SplitCSV())
+				{
+					string[] values = abilities.Split('|');
+					if (values.Length >= 2)
+					{
+						int level;
+						if (int.TryParse(values[1], out level))
+						{
+							Ability ability = SkillBase.GetAbility(values[0], level);
+							if (ability != null)
 							{
-								log.Error(Name + ": can't find spec '" + values[0] + "'");
+								// this is for display order only
+								m_usableSkills.Add(new Tuple<Skill, Skill>(ability, ability));
 							}
 						}
 					}
 				}
 			}
+			
+			// Retrieve Realm Abilities From Database to be handled by Career Spec
+			tmpStr = character.SerializedRealmAbilities;
+			if (tmpStr != null && tmpStr.Length > 0)
+			{
+				foreach (string abilities in tmpStr.SplitCSV())
+				{
+					string[] values = abilities.Split('|');
+					if (values.Length >= 2)
+					{
+						int level;
+						if (int.TryParse(values[1], out level))
+						{
+							Ability ability = SkillBase.GetAbility(values[0], level);
+							if (ability != null && ability is RealmAbility)
+							{
+								// this enable realm abilities for Career Computing.
+								m_realmAbilities.Add((RealmAbility)ability);
+							}
+						}
+					}
+				}
+			}
+
+			// Load dependent skills
+			RefreshSpecDependantSkills(false);
+			
 			#endregion
 
-			LoadSpellLines();
+			#region disable ability
+			//Since we added all the abilities that this character has, let's now disable the disabled ones!
+			tmpStr = character.DisabledAbilities;
+			if (tmpStr != null && tmpStr.Length > 0)
+			{
+				foreach (string str in tmpStr.SplitCSV())
+				{
+					string[] values = str.Split('|');
+					if (values.Length >= 2)
+					{
+						string keyname = values[0];
+						int duration;
+						if (HasAbility(keyname) && int.TryParse(values[1], out duration))
+						{
+							DisableSkill(GetAbility(keyname), duration);
+						}
+						else if (log.IsErrorEnabled)
+						{
+							log.ErrorFormat("{0}: error in loading disabled abilities => '{1}'", Name, tmpStr);
+						}
+					}
+				}
+			}
 
-			CharacterClass.OnLevelUp(this, Level); // load all skills from DB first to keep the order
-			CharacterClass.OnRealmLevelUp(this);
-			RefreshSpecDependantSkills(false);
-			UpdateSpellLineLevels(false);
-		}
-
-		public virtual void LoadSpellLines()
-		{
-			DOLCharacters character = DBCharacter; // if its derived and filled with some code
-			if (character == null) return; // no character => exit
-
-			RemoveAllSpellLines();
-
-			Dictionary<int, int> disabledSpells = new Dictionary<int, int>();
-
+			#endregion
+			
 			//Load the disabled spells
-			string tmpStr = character.DisabledSpells;
+			tmpStr = character.DisabledSpells;
 			if (tmpStr != null && tmpStr.Length > 0)
 			{
 				foreach (string str in tmpStr.SplitCSV())
@@ -12812,66 +12709,71 @@ namespace DOL.GS
 					int duration;
 					if (values.Length >= 2 && int.TryParse(values[0], out spellid) && int.TryParse(values[1], out duration))
 					{
-						if (disabledSpells.ContainsKey(spellid))
-							continue;
-						disabledSpells.Add(spellid, duration);
+						Spell sp = SkillBase.GetSpellByID(spellid);
+						// disable
+						if (sp != null)
+							DisableSkill(sp, duration);
 					}
 					else if (log.IsErrorEnabled)
-						log.Error(Name + ": error in loading disabled spells => '" + tmpStr + "'");
-				}
-			}
-
-			lock (lockSpellLinesList)
-			{
-				tmpStr = character.SerializedSpellLines;
-				if (tmpStr != null && tmpStr.Length > 0)
-				{
-					foreach (string serializedSpellLine in tmpStr.SplitCSV())
 					{
-						string[] values = serializedSpellLine.Split('|');
-						if (values.Length >= 2)
-						{
-							if (values[0] == ChampionSpellLineName)
-								continue; // LoadChampionSpells takes care of adding the spell line
-
-							SpellLine splLine = SkillBase.GetSpellLine(values[0], false);
-
-							if (splLine != null)
-							{
-								int level;
-								if (int.TryParse(values[1], out level))
-								{
-									splLine.Level = level;
-									AddSpellLine(splLine);
-
-									foreach (Spell spell in SkillBase.GetSpellList(splLine.KeyName))
-									{
-										if (disabledSpells.ContainsKey(spell.ID))
-											DisableSkill(spell, disabledSpells[spell.ID]);
-									}
-								}
-								else if (log.IsErrorEnabled)
-								{
-									log.Error("Error loading SpellLine '" + serializedSpellLine + "' from character '" + character.Name + "'");
-								}
-							}
-							else if (log.IsErrorEnabled)
-							{
-								log.Error("Can't find SpellLine '" + values[0] + "' for character '" + character.Name + "'");
-							}
-						}
+						log.ErrorFormat("{0}: error in loading disabled spells => '{1}'", Name, tmpStr);
 					}
 				}
-
-				LoadChampionSpells(disabledSpells);
 			}
+						
+			CharacterClass.OnLevelUp(this, Level); // load all skills from DB first to keep the order
+			CharacterClass.OnRealmLevelUp(this);
 		}
 
+		/// <summary>
+		/// Load this player Classes Specialization.
+		/// </summary>
+		public virtual void LoadClassSpecializations(bool sendMessages)
+		{
+			// Get this Attached Class Specialization from SkillBase.
+			IDictionary<Specialization, int> careers = SkillBase.GetSpecializationCareer(CharacterClass.ID);
+			
+			// sort ML Spec depending on ML Line
+			byte mlindex = 0;
+			foreach (KeyValuePair<Specialization, int> constraint in careers)
+			{
+				if (constraint.Key is IMasterLevelsSpecialization)
+				{
+					if (mlindex != MLLine)
+					{
+						if (HasSpecialization(constraint.Key.KeyName))
+							RemoveSpecialization(constraint.Key.KeyName);
+						
+						mlindex++;
+						continue;
+					}
+					
+					mlindex++;
+					
+					if (!MLGranted || MLLevel < 1)
+					{
+						continue;
+					}
+				}
+				
+				// load if the spec doesn't exists
+				if (Level >= constraint.Value)
+				{
+					if (!HasSpecialization(constraint.Key.KeyName))
+						AddSpecialization(constraint.Key, sendMessages);
+				}
+				else
+				{
+					if (HasSpecialization(constraint.Key.KeyName))
+						RemoveSpecialization(constraint.Key.KeyName);
+				}
+			}
+		}
 
 		/// <summary>
 		/// Verify this player has the correct number of spec points for the players level
 		/// </summary>
-		public virtual bool VerifySpecPoints()
+		public virtual int VerifySpecPoints()
 		{
 			// calc normal spec points for the level & classe
 			int allpoints = -1;
@@ -12885,27 +12787,27 @@ namespace DOL.GS
 				allpoints += CharacterClass.SpecPointsMultiplier * Level / 20; // add current half level
 
 			// calc spec points player have (autotrain is not anymore processed here - 1.87 livelike)
-			int mypoints = SkillSpecialtyPoints;
-			foreach (Specialization spec in GetSpecList())
+			int usedpoints = 0;
+			foreach (Specialization spec in GetSpecList().Where(e => e.Trainable))
 			{
-				mypoints += (spec.Level * (spec.Level + 1) - 2) / 2;
-				mypoints -= GetAutoTrainPoints(spec, 0);
+				usedpoints += (spec.Level * (spec.Level + 1) - 2) / 2;
+				usedpoints -= GetAutoTrainPoints(spec, 0);
 			}
+			
+			allpoints -= usedpoints;
 
 			// check if correct, if not respec. Not applicable to GMs
-			SpecPointsOk = true;
-			if (allpoints != mypoints)
+			if (allpoints < 0)
 			{
-				log.WarnFormat("Spec points total for player {0} incorrect: {1} instead of {2}.", Name, mypoints, allpoints);
 				if (Client.Account.PrivLevel == 1)
 				{
-					mypoints = RespecAllLines();
-					SkillSpecialtyPoints = allpoints;
-					SpecPointsOk = false;
+					log.WarnFormat("Spec points total for player {0} incorrect: {1} instead of {2}.", Name, usedpoints, allpoints+usedpoints);
+					RespecAllLines();
+					return allpoints+usedpoints;
 				}
 			}
 
-			return SpecPointsOk;
+			return allpoints;
 		}
 
 		/// <summary>
@@ -14405,20 +14307,6 @@ namespace DOL.GS
 		#region Housing
 
 		/// <summary>
-		/// Holds the houses that need a update
-		/// </summary>
-		private BitArray m_housingUpdateArray;
-
-		/// <summary>
-		/// Returns the Housing Update Array
-		/// </summary>
-		public BitArray HousingUpdateArray
-		{
-			get { return m_housingUpdateArray; }
-			set { m_housingUpdateArray = value; }
-		}
-
-		/// <summary>
 		/// Jumps the player out of the house he is in
 		/// </summary>
 		public void LeaveHouse()
@@ -15665,17 +15553,7 @@ namespace DOL.GS
 		/// </summary>
 		public virtual int ChampionSpecialtyPoints
 		{
-			get { return DBCharacter != null ? DBCharacter.ChampionSpecialtyPoints : 0; }
-			set { if (DBCharacter != null) DBCharacter.ChampionSpecialtyPoints = value; }
-		}
-
-		/// <summary>
-		/// Serialised Champion spells
-		/// </summary>
-		public virtual string ChampionSpells
-		{
-			get { return DBCharacter != null ? DBCharacter.ChampionSpells : null; }
-			set { if (DBCharacter != null) DBCharacter.ChampionSpells = value; }
+			get { return ChampionLevel - GetSpecList().Where(sp => sp is LiveChampionsLineSpec).Sum(sp => sp.Level); }
 		}
 
 		/// <summary>
@@ -15790,22 +15668,16 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void RespecChampionSkills()
 		{
-			SpellLine championSpellLine = GetChampionSpellLine();
-
-			if (championSpellLine != null)
+			foreach (var spec in GetSpecList().Where(sp => sp is LiveChampionsLineSpec))
 			{
-				SkillBase.ClearSpellLine(ChampionSpellLineName);
-				if (m_usableSpells != null) m_usableSpells.Clear(); // clear the hybrids spell list
-				ChampionSpells = "";
-				ChampionSpecialtyPoints = ChampionLevel;
-				UpdateSpellLineLevels(false);
-				RemoveAllStyles();
-				RefreshSpecDependantSkills(false);
-				Out.SendUpdatePlayer();
-				Out.SendUpdatePoints();
-				Out.SendUpdatePlayerSkills();
-				UpdatePlayerStatus();
+				RemoveSpecialization(spec.KeyName);
 			}
+
+			RefreshSpecDependantSkills(false);
+			Out.SendUpdatePlayer();
+			Out.SendUpdatePoints();
+			Out.SendUpdatePlayerSkills();
+			UpdatePlayerStatus();
 		}
 
 
@@ -15816,26 +15688,8 @@ namespace DOL.GS
 		{
 			ChampionExperience = 0;
 			ChampionLevel = 0;
-			ChampionSpecialtyPoints = 0;
-			ChampionSpells = "";
 
-			SpellLine championSpellLine = GetChampionSpellLine();
-
-			if (championSpellLine != null)
-			{
-				RemoveSpellLine(ChampionSpellLineName);
-				if (m_usableSpells != null) m_usableSpells.Clear(); // clear the hybrids spell list
-				SkillBase.ClearSpellLine(ChampionSpellLineName);
-				SkillBase.UnRegisterSpellLine(ChampionSpellLineName);
-				UpdateSpellLineLevels(false);
-				GetChampionSpellLine();
-				RemoveAllStyles();
-				RefreshSpecDependantSkills(false);
-				Out.SendUpdatePlayer();
-				Out.SendUpdatePoints();
-				UpdatePlayerStatus();
-				Out.SendUpdatePlayerSkills();
-			}
+			RespecChampionSkills();
 		}
 
 		/// <summary>
@@ -15844,7 +15698,6 @@ namespace DOL.GS
 		public virtual void ChampionLevelUp()
 		{
 			ChampionLevel++;
-			ChampionSpecialtyPoints++;
 
 			// If this is a pure tank then give them full power when reaching champ level 1
 			if (ChampionLevel == 1 && CharacterClass.ClassType == eClassType.PureTank)
@@ -15880,96 +15733,6 @@ namespace DOL.GS
 			Out.SendUpdatePlayer();
 			Out.SendUpdatePoints();
 			UpdatePlayerStatus();
-		}
-
-		/// <summary>
-		/// Load champion spells of this player
-		/// </summary>
-		protected virtual void LoadChampionSpells(Dictionary<int, int> disabledSpells)
-		{
-			try
-			{
-				if (string.IsNullOrEmpty(ChampionSpells))
-					return;
-
-				SpellLine championPlayerSpellLine = GetChampionSpellLine();
-
-				if (championPlayerSpellLine == null)
-					return;
-
-				List<int> championSpellList = new List<int>();
-				SkillBase.ClearSpellLine(ChampionSpellLineName);
-
-				foreach (string cSpell in ChampionSpells.SplitCSV())
-				{
-					string[] cSpellProp = cSpell.Split('|');
-					if (cSpellProp.Length < 2) continue;
-					championSpellList.Add(int.Parse(cSpellProp[0]));
-				}
-
-				if (championSpellList != null)
-				{
-					foreach (int spellID in championSpellList)
-					{
-						SkillBase.AddSpellToSpellLine(ChampionSpellLineName, spellID);
-					}
-					AddSpellLine(championPlayerSpellLine);
-				}
-
-				if (disabledSpells != null)
-				{
-					foreach (Spell spell in SkillBase.GetSpellList(ChampionSpellLineName))
-					{
-						if (disabledSpells.ContainsKey(spell.ID))
-							DisableSkill(spell, disabledSpells[spell.ID]);
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				log.ErrorFormat("Error loading champion spell line for player {0} ID {1}. ", Name, ChampionSpellLineName);
-				log.Error("LoadChampionSpells", ex);
-			}
-		}
-
-		/// <summary>
-		/// Checks if player has this champion spell
-		/// </summary>
-		public virtual bool HasChampionSpell(int spellid)
-		{
-			string championSpells = ChampionSpells;
-			foreach (string cSpell in championSpells.SplitCSV())
-			{
-				string[] cSpellProp = cSpell.Split('|');
-				if (cSpellProp.Length < 2) continue;
-				if (int.Parse(cSpellProp[0]) == spellid) return true;
-			}
-			return false;
-		}
-
-		/// <summary>
-		/// Can this player train this a champion spell (meets the prerequisites)
-		/// </summary>
-		public virtual bool CanTrainChampionSpell(int idline, int skillindex, int index)
-		{
-			// players can always train the first spell in the sequence
-			if (index == 1)
-				return true;
-
-			ChampSpec spec = null;
-			ChampSpec specA = null;
-			ChampSpec specB = null;
-
-			spec = ChampSpecMgr.GetAbilityFromIndex(idline, skillindex, index - 1);
-
-			if (spec == null)
-			{
-				specA = ChampSpecMgr.GetAbilityFromIndex(idline, skillindex - 1, index - 1);
-				specB = ChampSpecMgr.GetAbilityFromIndex(idline, skillindex + 1, index - 1);
-				return ((specA != null && HasChampionSpell(specA.SpellID)) || (specB != null && HasChampionSpell(specB.SpellID)));
-			}
-
-			return HasChampionSpell(spec.SpellID);
 		}
 
 		#endregion
@@ -16079,7 +15842,7 @@ namespace DOL.GS
 			get { return DBCharacter != null ? DBCharacter.MLExperience : 0; }
 			set { if (DBCharacter != null) DBCharacter.MLExperience = value; }
 		}
-
+		
 		/// <summary>
 		/// Get the number of steps completed for a ML
 		/// </summary>
@@ -16284,13 +16047,7 @@ namespace DOL.GS
 			m_buff4Bonus = new PropertyIndexer((int)eProperty.MaxProperty);
 			m_itemBonus = new PropertyIndexer((int)eProperty.MaxProperty);
 			m_lastUniqueLocations = new GameLocation[4];
-			m_objectUpdates = new BitArray[2];
-			m_objectUpdates[0] = new BitArray(Properties.REGION_MAX_OBJECTS);
-			m_objectUpdates[1] = new BitArray(Properties.REGION_MAX_OBJECTS);
-			m_housingUpdateArray = null;
-			m_lastUpdateArray = 0;
 			m_canFly = false;
-			m_lastWorldUpdate = Environment.TickCount;
 
 			CreateInventory();
 			GameEventMgr.AddHandler(m_inventory, PlayerInventoryEvent.ItemEquipped, new DOLEventHandler(OnItemEquipped));

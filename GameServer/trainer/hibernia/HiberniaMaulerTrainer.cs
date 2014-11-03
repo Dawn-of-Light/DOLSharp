@@ -101,7 +101,6 @@ namespace DOL.GS.Trainer
 				if (CanPromotePlayer(player))
 				{
 					// loose all spec lines
-					player.RemoveAllSkills();
 					player.RemoveAllStyles();
 
 					// Mauler_Hib = 62

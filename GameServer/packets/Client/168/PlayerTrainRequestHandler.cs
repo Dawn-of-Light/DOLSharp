@@ -16,9 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 using DOL.GS.Commands;
 using DOL.GS.RealmAbilities;
 using log4net;
@@ -61,43 +63,45 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				if (row > 0 && skillIndex > 0)
 				{
-					ChampSpec spec = ChampSpecMgr.GetAbilityFromIndex(idLine, row, skillIndex);
-					if (spec != null)
+					// Get Player CL Spec
+					var clspec = client.Player.GetSpecList().Where(sp => sp is LiveChampionsSpecialization).Cast<LiveChampionsSpecialization>().FirstOrDefault();
+					
+					// check if the tree can be used
+					List<Tuple<MiniLineSpecialization, List<Tuple<Skill, byte>>>> tree = null;
+					if (clspec != null)
 					{
-						if (client.Player.HasChampionSpell(spec.SpellID))
+						tree = clspec.GetTrainerTreeDisplay(client.Player, clspec.RetrieveTypeForIndex(idLine));
+					}
+					
+					if (tree != null)
+					{
+						Tuple<byte, MiniLineSpecialization> skillstatus = clspec.GetSkillStatus(tree, row-1, skillIndex-1);
+
+						if (skillstatus.Item1 == 1)
 						{
 							client.Out.SendMessage("You already have that ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
-						if (!client.Player.CanTrainChampionSpell(idLine, row, skillIndex))
+						if (!(skillstatus.Item1 == 2))
 						{
 							client.Out.SendMessage("You do not meet the requirements for that ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
-						if ((client.Player.ChampionSpecialtyPoints - spec.Cost) < 0)
+						if (client.Player.ChampionSpecialtyPoints < 1)
 						{
 							client.Out.SendMessage("You do not have enough champion specialty points for that ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
+						
+						skillstatus.Item2.Level++;
+						client.Player.AddSpecialization(skillstatus.Item2);
+						client.Player.RefreshSpecDependantSkills(false);
+						client.Player.Out.SendUpdatePlayer();
+						client.Player.Out.SendUpdatePoints();
+						client.Player.Out.SendUpdatePlayerSkills();
+						client.Player.UpdatePlayerStatus();
+						client.Player.Out.SendChampionTrainerWindow(idLine);
 
-						client.Player.ChampionSpecialtyPoints -= spec.Cost;
-						SpellLine championPlayerSpellLine = client.Player.GetChampionSpellLine();
-
-						if (championPlayerSpellLine != null)
-						{
-							SkillBase.AddSpellToSpellLine(client.Player.ChampionSpellLineName, spec.SpellID);
-							client.Player.ChampionSpells += spec.SpellID.ToString() + "|1;";
-							client.Player.UpdateSpellLineLevels(false);
-							client.Player.RefreshSpecDependantSkills(true);
-							client.Out.SendMessage("You gain a Champion ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							client.Out.SendChampionTrainerWindow(idLine);
-							client.Out.SendUpdatePlayerSkills();
-						}
-						else
-						{
-							client.Out.SendMessage("Could not find Champion Spell Line!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							log.ErrorFormat("Could not find Champion Spell Line for player {0}", client.Player.Name);
-						}
 						return;
 					}
 					else
@@ -109,7 +113,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			else
 			{
-				IList speclist = client.Player.GetSpecList();
+				// Trainable Specs or RA's
+				IList<Specialization> speclist = client.Player.GetSpecList().Where(e => e.Trainable).ToList();
 
 				if (skillIndex < speclist.Count)
 				{
@@ -121,11 +126,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 
 					// Graveen - autotrain 1.87 - allow players to train their AT specs even if no pts left
-					client.Player.SkillSpecialtyPoints += client.Player.GetAutoTrainPoints(spec, 2);
+					int temp = client.Player.SkillSpecialtyPoints + client.Player.GetAutoTrainPoints(spec, 2);
 
-					if (client.Player.SkillSpecialtyPoints >= spec.Level + 1)
+					if (temp >= spec.Level + 1)
 					{
-						client.Player.SkillSpecialtyPoints -= (ushort)(spec.Level + 1);
 						spec.Level++;
 						client.Player.OnSkillTrained(spec);
 
@@ -142,28 +146,30 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 				else if (skillIndex >= 100)
 				{
-					IList offeredRA = (IList)client.Player.TempProperties.getProperty<object>("OFFERED_RA", null);
-					if (offeredRA != null && skillIndex < offeredRA.Count + 100)
+					// Realm Abilities
+					var raList = SkillBase.GetClassRealmAbilities(client.Player.CharacterClass.ID).Where(ra => !(ra is RR5RealmAbility));
+					if (skillIndex < raList.Count() + 100)
 					{
-						RealmAbility ra = (RealmAbility)offeredRA[skillIndex - 100];
-						int cost = ra.CostForUpgrade(ra.Level - 1);
-						if (client.Player.RealmSpecialtyPoints < cost)
+						RealmAbility ra = raList.ElementAtOrDefault(skillIndex - 100);
+						if (ra != null)
 						{
-							client.Out.SendMessage(ra.Name + " costs " + (cost) + " realm ability points!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							client.Out.SendMessage("You don't have that many realm ability points left to get this.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return;
-						}
-						if (!ra.CheckRequirement(client.Player))
-						{
-							client.Out.SendMessage("You are not experienced enough to get " + ra.Name + " now. Come back later.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return;
-						}
-						// get a copy of the ability since we use prototypes
-						RealmAbility ability = SkillBase.GetAbility(ra.KeyName, ra.Level) as RealmAbility;
-						if (ability != null)
-						{
-							client.Player.RealmSpecialtyPoints -= cost;
-							client.Player.AddAbility(ability);
+							ra.Level = client.Player.GetAbilityLevel(ra.KeyName);
+							int cost = ra.CostForUpgrade(ra.Level);
+							ra.Level++;
+							
+							if (client.Player.RealmSpecialtyPoints < cost)
+							{
+								client.Out.SendMessage(ra.Name + " costs " + (cost) + " realm ability points!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage("You don't have that many realm ability points left to get this.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							if (!ra.CheckRequirement(client.Player))
+							{
+								client.Out.SendMessage("You are not experienced enough to get " + ra.Name + " now. Come back later.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							
+							client.Player.AddRealmAbility(ra, true);
 							client.Out.SendUpdatePoints();
 							client.Out.SendUpdatePlayer();
 							client.Out.SendUpdatePlayerSkills();
@@ -174,7 +180,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 							client.Out.SendMessage("Unfortunately your training failed. Please report that to admins or game master. Thank you.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							log.Error("Realm Ability " + ra.Name + "(" + ra.KeyName + ") unexpected not found");
 						}
-						return;
 					}
 				}
 
@@ -231,7 +236,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					amounts.Add(code, val);
 			}
 
-			IList specs = client.Player.GetSpecList();
+			IList<Specialization> specs = client.Player.GetSpecList().Where(e => e.Trainable).ToList();
 			uint skillcount = 0;
 			IList<string> done = new List<string>();
 			bool trained = false;
@@ -264,60 +269,53 @@ namespace DOL.GS.PacketHandler.Client.v168
 					amounts.Add(i, val);
 				}
 			}
-			uint index = 0;
+
 			if (amounts != null && amounts.Count > 0)
 			{
-				List<RealmAbility> ras = SkillBase.GetClassRealmAbilities(client.Player.CharacterClass.ID);
-				foreach (RealmAbility ra in ras)
+				// Realm Abilities
+				var raList = SkillBase.GetClassRealmAbilities(client.Player.CharacterClass.ID).Where(ra => !(ra is RR5RealmAbility));
+				foreach (var kv in amounts)
 				{
-					if (ra is RR5RealmAbility)
-						continue;
-
-					if (amounts.ContainsKey(index))
+					RealmAbility ra = raList.ElementAtOrDefault((int)kv.Key);
+					if (ra != null)
 					{
 						RealmAbility playerRA = (RealmAbility)client.Player.GetAbility(ra.KeyName);
-						if (playerRA != null
-						    && (playerRA.Level >= ra.MaxLevel || playerRA.Level >= amounts[index]))
-						{
-							index++;
+						
+						if (playerRA != null && (playerRA.Level >= ra.MaxLevel || playerRA.Level >= kv.Value))
 							continue;
-						}
-
+						
 						int cost = 0;
-						for (int i = playerRA != null ? playerRA.Level : 0; i < amounts[index]; i++)
+						for (int i = playerRA != null ? playerRA.Level : 0; i < kv.Value; i++)
 							cost += ra.CostForUpgrade(i);
+						
 						if (client.Player.RealmSpecialtyPoints < cost)
 						{
 							client.Out.SendMessage(ra.Name + " costs " + (cost) + " realm ability points!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							client.Out.SendMessage("You don't have that many realm ability points left to get this.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							index++;
 							continue;
 						}
+						
 						if (!ra.CheckRequirement(client.Player))
 						{
 							client.Out.SendMessage("You are not experienced enough to get " + ra.Name + " now. Come back later.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							index++;
 							continue;
 						}
-
+						
 						bool valid = false;
 						if (playerRA != null)
 						{
-							playerRA.Level = (int)amounts[index];
+							playerRA.Level = (int)kv.Value;
 							valid = true;
 						}
 						else
 						{
-							RealmAbility ability = SkillBase.GetAbility(ra.KeyName, (int)amounts[index]) as RealmAbility;
-							if (ability != null)
-							{
-								valid = true;
-								client.Player.AddAbility(ability, false);
-							}
+							ra.Level = (int)kv.Value;
+							valid = true;
+							client.Player.AddRealmAbility(ra, false);
 						}
+						
 						if (valid)
 						{
-							client.Player.RealmSpecialtyPoints -= cost;
 							client.Out.SendUpdatePoints();
 							client.Out.SendUpdatePlayer();
 							client.Out.SendCharResistsUpdate();
@@ -331,11 +329,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 							client.Out.SendMessage("Unfortunately your training failed. Please report that to admins or game master. Thank you.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						}
 					}
-
-					index++;
+					else
+					{
+						client.Out.SendMessage("Unfortunately your training failed. Please report that to admins or game master. Thank you.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
 				}
 			}
-			
 			if (trained)
 				client.Player.SaveIntoDatabase();
 		}

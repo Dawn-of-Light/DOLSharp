@@ -61,40 +61,6 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			// Mystic
-
-			// Specializations
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Darkness));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Suppression));
-
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Darkness"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Suppression"));
-
-			// Abilities
-			player.AddAbility(SkillBase.GetAbility(Abilities.Sprint));
-			player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Cloth));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Staves));
-
-			// Bonedancer
-		
-			// Specializations
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.BoneArmy));			
-
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Bone Army"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Bone Mystics"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Bone Guardians"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Bone Warriors"));
-
-			// Abilities
-			player.AddAbility(SkillBase.GetAbility(Abilities.Quickcast));
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;

@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
 using System.Collections.Generic;
 using DOL.GS;
 
@@ -49,10 +50,9 @@ namespace DOL.AI.Brain
 		public override void Think()
 		{
 		  GamePlayer playerowner = GetPlayerOwner();
-          if (playerowner != null && !playerowner.CurrentUpdateArray[Body.ObjectID - 1])
+			if (playerowner != null && (GameTimer.GetTickCount() - playerowner.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(Body.CurrentRegionID, (ushort)Body.ObjectID)]) > ThinkInterval)
 		  {
 			playerowner.Out.SendObjectUpdate(Body);
-			playerowner.CurrentUpdateArray[Body.ObjectID - 1] = true;
 		  }
 
 		  if(!CheckSpells(eCheckSpellType.Defensive))

@@ -57,89 +57,14 @@ namespace DOL.GS.PlayerClass
 		/// <summary>
 		/// Checks whether player has ability to use lefthanded weapons
 		/// </summary>
-		public override bool CanUseLefthandedWeapon(GamePlayer player)
+		public override bool CanUseLefthandedWeapon
 		{
-			return true;
+			get { return true; }
 		}
 
 		public override IList<string> GetAutotrainableSkills()
 		{
 			return AutotrainableSkills;
-		}
-
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Critical_Strike));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Axe));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Left_Axe));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Envenom));
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Axes));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrown));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_LeftAxes));
-
-			if (player.Level >= 5)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
-			}
-			if (player.Level >= 10)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 3));
-			}
-			if (player.Level >= 15)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
-			}
-			if (player.Level >= 20)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 4));
-			}
-			if (player.Level >= 30)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 5));
-			}
-			if (player.Level >= 40)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 6));
-			}
-			if (player.Level >= 45)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.BloodRage));
-			}
-			if (player.Level >= 50)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 7));
-                player.AddAbility(SkillBase.GetAbility(Abilities.BloodRage));
-                player.AddAbility(SkillBase.GetAbility(Abilities.Remedy));
-			}
-		}
-
-		/// <summary>
-		/// Add all spell-lines and other things that are new when this skill is trained
-		/// </summary>
-		/// <param name="player">player to modify</param>
-		/// <param name="skill">The skill to train</param>
-		public override void OnSkillTrained(GamePlayer player, Specialization skill)
-		{
-			base.OnSkillTrained(player, skill);
-
-			switch(skill.KeyName)
-			{
-				case Specs.Stealth:
-					if(skill.Level >= 5) player.AddAbility(SkillBase.GetAbility(Abilities.Distraction));
-					if (skill.Level >= 8) player.AddAbility(SkillBase.GetAbility(Abilities.DangerSense));
-					if (skill.Level >= 10) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 1));
-					if(skill.Level >= 16) player.AddAbility(SkillBase.GetAbility(Abilities.DetectHidden));
-					if (skill.Level >= 20) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 2));
-					if (skill.Level >= 25) player.AddAbility(SkillBase.GetAbility(Abilities.Climbing));
-					if (skill.Level >= 30) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 3));
-					if (skill.Level >= 40) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 4));
-					if (skill.Level >= 50) player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 5));
-					break;
-			}
 		}
 
 		public override bool HasAdvancedFromBaseClass()

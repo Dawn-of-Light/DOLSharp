@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -87,8 +88,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				var player = (GamePlayer) m_actionSource;
-				int index = m_index;
+				GamePlayer player = (GamePlayer) m_actionSource;
+				if (player == null)
+					return;
 
 				if ((m_flagSpeedData & 0x200) != 0)
 				{
@@ -103,93 +105,49 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.TargetInView = (m_flagSpeedData & 0xa000) != 0; // why 2 bits? that has to be figured out
 				player.GroundTargetInView = ((m_flagSpeedData & 0x1000) != 0);
 
-				//DOLConsole.LogDump
+				List<Tuple<Skill, Skill>> snap = player.GetAllUsableSkills();
+				
 				Skill sk = null;
+				Skill sksib = null;
+				
+				// we're not using a spec !
 				if (m_type > 0)
 				{
-					IList skillList = player.GetNonTrainableSkillList();
-					if (index < skillList.Count)
+					
+					// find the first non-specialization index.
+					int begin = Math.Max(0, snap.FindIndex(it => (it.Item1 is Specialization) == false));
+					
+					// are we in list ?
+					if (m_index + begin < snap.Count)
 					{
-						sk = skillList[index] as Skill;
+						sk = snap[m_index + begin].Item1;
+						sksib = snap[m_index + begin].Item2;
 					}
-					else
-					{
-						IList styles = player.GetStyleList();
-						if (index < skillList.Count + styles.Count)
-						{
-							index -= skillList.Count;
-							sk = styles[index] as Skill;
-						}
-						else
-						{
-							List<SpellLine> spelllines = player.GetSpellLines();
-							if (index < skillList.Count + styles.Count + player.GetSpellCount())
-							{
-								index -= (skillList.Count + styles.Count);
-								Spell spell = null;
-								SpellLine spellline = null;
-
-								lock (player.lockSpellLinesList)
-								{
-									var spelllist = player.GetUsableSpells(spelllines, false);
-
-									if (index >= spelllist.Count)
-									{
-										index -= spelllist.Count;
-									}
-									else
-									{
-										var spellenum = spelllist.Values.GetEnumerator();
-										int i = 0;
-										while (spellenum.MoveNext())
-										{
-											if (i == index)
-											{
-												spell = spellenum.Current.Key;
-												spellline = spellenum.Current.Value;
-												break;
-											}
-
-											i++;
-										}
-									}
-								}
-
-								if (spell != null)
-								{
-									player.CastSpell(spell, spellline);
-									return;
-								}
-							}
-							// TODO   Song and RA
-						}
-					}
+					
 				}
 				else
 				{
-					IList specs = player.GetSpecList();
-					if (index < specs.Count)
+					// mostly a spec !
+					if (m_index < snap.Count)
 					{
-						sk = specs[index] as Skill;
+						sk = snap[m_index].Item1;
+						sksib = snap[m_index].Item2;
 					}
 				}
 
+				// we really got a skill !
 				if (sk != null)
 				{
-					if (sk is Style)
-					{
-						player.ExecuteWeaponStyle((Style)sk);
-						return;
-					}
-					//player.Out.SendMessage("you triggered skill "+sk.Name, eChatType.CT_Advise, eChatLoc.CL_SystemWindow);
-
+					// Test if we can use it !
 					int reuseTime = player.GetSkillDisabledDuration(sk);
 					if (reuseTime > 60000)
 					{
 						player.Out.SendMessage(
 							string.Format("You must wait {0} minutes {1} seconds to use this ability!", reuseTime/60000, reuseTime%60000/1000),
 							eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						if (player.Client.Account.PrivLevel < 2) return;
+						
+						if (player.Client.Account.PrivLevel < 2)
+							return;
 					}
 					else if (reuseTime > 0)
 					{
@@ -200,9 +158,21 @@ namespace DOL.GS.PacketHandler.Client.v168
 							return;
 					}
 
-					if (sk is Ability)
+					// See what we should do depending on skill type !
+
+					
+					if (sk is Specialization)
 					{
-						var ab = sk as Ability;
+						Specialization spec = (Specialization)sk;
+						ISpecActionHandler handler = SkillBase.GetSpecActionHandler(spec.KeyName);
+						if (handler != null)
+						{
+							handler.Execute(spec, player);
+						}
+					}
+					else if (sk is Ability)
+					{
+						Ability ab = (Ability)sk;
 						IAbilityActionHandler handler = SkillBase.GetAbilityActionHandler(ab.KeyName);
 						if (handler != null)
 						{
@@ -212,21 +182,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 						
 						ab.Execute(player);
 					}
-					if (sk is Specialization)
+					else if (sk is Spell)
 					{
-						var spec = sk as Specialization;
-						ISpecActionHandler handler = SkillBase.GetSpecActionHandler(spec.KeyName);
-						if (handler != null)
-						{
-							handler.Execute(spec, player);
-							return;
-						}
+						if(sksib != null && sksib is SpellLine)
+							player.CastSpell((Spell)sk, (SpellLine)sksib);
 					}
-				}
-				else
-				{
-					if (Log.IsWarnEnabled)
-						Log.Warn("skill not handled because it was not found on player, shouldn't happen");
+					else if (sk is Style)
+					{
+						player.ExecuteWeaponStyle((Style)sk);
+					}
+						
 				}
 
 				if (sk == null)

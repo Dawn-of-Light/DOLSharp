@@ -67,8 +67,6 @@ namespace DOL
 				this.Champion = character.Champion;
 				this.ChampionExperience = character.ChampionExperience;
 				this.ChampionLevel = character.ChampionLevel;
-				this.ChampionSpecialtyPoints = character.ChampionSpecialtyPoints;
-				this.ChampionSpells = character.ChampionSpells;
 				this.Charisma = character.Charisma;
 				this.Class = character.Class;
 				this.Concentration = character.Concentration;
@@ -153,7 +151,6 @@ namespace DOL
 				this.Realm = character.Realm;
 				this.RealmLevel = character.RealmLevel;
 				this.RealmPoints = character.RealmPoints;
-				this.RealmSpecialtyPoints = character.RealmSpecialtyPoints;
 				this.Region = character.Region;
 				this.RespecAmountAllSkill = character.RespecAmountAllSkill;
 				this.RespecAmountChampionSkill = character.RespecAmountChampionSkill;
@@ -169,11 +166,9 @@ namespace DOL
 				this.SerializedIgnoreList = character.SerializedIgnoreList;
 				this.SerializedRealmAbilities = character.SerializedRealmAbilities;
 				this.SerializedSpecs = character.SerializedSpecs;
-				this.SerializedSpellLines = character.SerializedSpellLines;
 				this.ShowGuildLogins = character.ShowGuildLogins;
 				this.ShowXFireInfo = character.ShowXFireInfo;
 				this.Silver = character.Silver;
-				this.SkillSpecialtyPoints = character.SkillSpecialtyPoints;
 				this.SpellQueue = character.SpellQueue;
 				this.Strength = character.Strength;
 				this.UsedLevelCommand = character.UsedLevelCommand;

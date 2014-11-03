@@ -93,19 +93,26 @@ namespace DOL.GS
 			try
 			{
 				string name = m_serializedNames;
-				SortedList nameByLevel = new SortedList();
+				SortedDictionary<int, string> nameByLevel = new SortedDictionary<int, string>();
 				foreach (string levelNamePair in name.Trim().SplitCSV())
 				{
-					if (levelNamePair.Trim().Length <= 0) continue;
+					if (levelNamePair.Trim().Length <= 0)
+						continue;
+					
 					string[] levelAndName = levelNamePair.Trim().Split('|');
-					if (levelAndName.Length < 2) continue;
+					
+					if (levelAndName.Length < 2)
+						continue;
+					
 					nameByLevel.Add(int.Parse(levelAndName[0]), levelAndName[1]);
 				}
 
-				foreach (DictionaryEntry entry in nameByLevel)
+				foreach (KeyValuePair<int, string> entry in nameByLevel)
 				{
-					if ((int)entry.Key > Level) break;
-					name = (string)entry.Value;
+					if (entry.Key > Level)
+						break;
+					
+					name = entry.Value;
 				}
 
 				string roman = getRomanLevel();
@@ -159,19 +166,21 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// (readonly) The Specialization thats need to be trained to get that ability
+		/// The Specialization thats need to be trained to get that ability
 		/// </summary>
 		public string Spec
 		{
 			get { return m_spec; }
+			set { m_spec = value; }
 		}
 
 		/// <summary>
-		/// (readonly) The Specialization's level required to get that ability
+		/// The Specialization's level required to get that ability
 		/// </summary>
 		public int SpecLevelRequirement
 		{
 			get { return m_speclevel; }
+			set { m_speclevel = value; }
 		}
 
 		/// <summary>
@@ -183,8 +192,10 @@ namespace DOL.GS
 			set
 			{
 				int oldLevel = m_level;
-				m_level = value;
-				if (m_activeLiving != null) OnLevelChange(oldLevel);
+				base.Level = value;
+				UpdateCurrentName();
+				if (m_activeLiving != null)
+					OnLevelChange(oldLevel);
 			}
 		}
 		

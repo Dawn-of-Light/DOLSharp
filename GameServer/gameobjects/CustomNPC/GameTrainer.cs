@@ -180,8 +180,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual bool CanTrainChampionLevels(GamePlayer player)
 		{
-			return player.Level >= 50 && player.Champion && m_championTrainerType != eChampionTrainerType.None && m_championTrainerType != player.CharacterClass.ChampionTrainerType();
-
+			return player.Level >= player.MaxLevel && player.Champion && m_championTrainerType != eChampionTrainerType.None && m_championTrainerType != player.CharacterClass.ChampionTrainerType();
 		}
 
 		/// <summary>
@@ -201,18 +200,15 @@ namespace DOL.GS
 			{
 				if (player.Level == 5 && !player.IsLevelRespecUsed)
 				{
-					int specPoints = 0;
+					int specPoints = player.SkillSpecialtyPoints;
 
-					specPoints = player.RespecAll();
-					player.RespecAmountAllSkill++;
+					player.RespecAll();
 
 					// Assign full points returned
-					if (specPoints > 0)
+					if (player.SkillSpecialtyPoints > specPoints)
 					{
-						player.SkillSpecialtyPoints += specPoints;
 						player.RemoveAllStyles(); // Kill styles
-						player.UpdateSpellLineLevels(false);
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.Interact.RegainPoints", specPoints), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.Interact.RegainPoints", (player.SkillSpecialtyPoints - specPoints)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 					player.RefreshSpecDependantSkills(false);
 					// Notify Player of points
@@ -343,7 +339,6 @@ namespace DOL.GS
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.PromotePlayer.Upgraded", player.CharacterClass.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 				player.CharacterClass.OnLevelUp(player, player.Level);
-				player.UpdateSpellLineLevels(true);
 				player.RefreshSpecDependantSkills(true);
 				player.StartPowerRegeneration();
 				//player.Out.SendUpdatePlayerSpells();

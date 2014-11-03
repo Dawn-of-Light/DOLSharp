@@ -69,52 +69,9 @@ namespace DOL.GS.PlayerClass
 			get { return eClassType.Hybrid; }
 		}
 
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			// RDSandersJR: Check to see if we are using old archery if so, 
-			//              use Specs.CompositeBow
-			if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == true)
-			{
-            	player.AddSpecialization(SkillBase.GetSpecialization(Specs.CompositeBow));
-			}
-			// RDSandersJR: If we are NOT using old archery load Specs.Archery,
-			//              Spellline("Archery") and Abilites.Weapon_Archery
-			else if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == false)
-			{
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Archery));
-            	player.AddSpellLine(SkillBase.GetSpellLine("Archery"));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Archery));
-			}
-			
-			
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Beastcraft));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Spear));
-            player.AddSpellLine(SkillBase.GetSpellLine("Beastcraft"));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_CompositeBows));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Spears));
-
-			if (player.Level >= 10)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.MidArmor, ArmorLevel.Studded));
-			}
-			if (player.Level >= 15)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
-			}
-			if (player.Level >= 20)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
-			}
-			if (player.Level >= 30)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Camouflage));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 3));
-			}
-		}
-/// <summary>
+		/// <summary>
         /// Add all spell-lines and other things that are new when this skill is trained
+        /// FIXME : this should be in database
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="skill"></param>
@@ -194,13 +151,6 @@ namespace DOL.GS.PlayerClass
 						{
 							player.AddAbility(SkillBase.GetAbility(Abilities.PenetratingArrow, 1));
 						}
-					}
-					break;
-										
-				case Specs.Stealth:
-					if (skill.Level >= 10)
-					{
-						player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 1));
 					}
 					break;
 			}
