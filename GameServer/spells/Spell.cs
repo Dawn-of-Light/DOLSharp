@@ -250,7 +250,7 @@ namespace DOL.GS
 
 		public override eSkillPage SkillType
 		{
-			get { return eSkillPage.Spells; }
+			get { return NeedInstrument ? eSkillPage.Songs : eSkillPage.Spells; }
 		}
 
 		public int InstrumentRequirement
@@ -308,24 +308,6 @@ namespace DOL.GS
                     Target.ToLower() == "cone");
             }
         }
-
-        public ushort TooltipId
-        {
-        	get
-        	{
-        		if (m_tooltipId == 0)
-        		{
-        			TryGetNextFreeTooltipID(this);
-        		}
-        		
-        		return m_tooltipId;
-        	}
-        	set
-        	{
-        		TryRegisterTooltipID(this, value);
-        	}
-        }		
-
         
 		#endregion
 
@@ -388,10 +370,8 @@ namespace DOL.GS
 			m_allowbolt = dbspell.AllowBolt;
             m_sharedtimergroup = dbspell.SharedTimerGroup;
             m_minotaurspell = minotaur;
-            // tooltip
-            TooltipId = dbspell.TooltipId;
             // Params
-            InitParamCache(dbspell.CustomValues);
+            m_paramCache = InitParamCache(dbspell.CustomValues);
 		}
 
 		/// <summary>
@@ -401,7 +381,7 @@ namespace DOL.GS
 		/// <param name="spell"></param>
 		/// <param name="spellType"></param>
 		public Spell(Spell spell, string spellType) :
-			base(spell.Name, spell.ID, (ushort)spell.Icon, spell.Level, spell.TooltipId)
+			base(spell.Name, spell.ID, (ushort)spell.Icon, spell.Level, spell.InternalID)
 		{
 			m_description = spell.Description;
 			m_target = spell.Target;
@@ -441,7 +421,8 @@ namespace DOL.GS
 			m_allowbolt = spell.AllowBolt;
 			m_sharedtimergroup = spell.SharedTimerGroup;
 			m_minotaurspell = spell.m_minotaurspell;
-			InitParamCache(spell.m_paramCache);
+            // Params
+			m_paramCache = new Dictionary<string, List<string>>(spell.m_paramCache);
 		}
 
 		/// <summary>
@@ -454,6 +435,11 @@ namespace DOL.GS
 			return (Spell)MemberwiseClone();
 		}
 
+		public override Skill Clone()
+		{
+			return (Spell)MemberwiseClone();
+		}
+		
 		/// <summary>
 		/// Fill in spell delve information.
 		/// </summary>
@@ -640,180 +626,6 @@ namespace DOL.GS
         	}
         }
         #endregion
-        #region tooltip handling
-        
-        /// <summary>
-        /// Collection to handle existing tooltip !
-        /// </summary>
-        public static Dictionary<ushort, WeakReference<Spell>> m_assignedTooltipID = new Dictionary<ushort, WeakReference<Spell>>(ushort.MaxValue+1);
-        
-        /// <summary>
-		/// Destructor to free ID.
-		/// </summary>
-		~Spell()
-		{
-			TryFreeTooltipID(this);
-		}
-
-		public static void TryRegisterTooltipID(Spell sp, ushort tooltipID)
-		{
-			// 0 = Autoset !
-			if (tooltipID == 0)
-			{
-				TryGetNextFreeTooltipID(sp);
-				return;
-			}
-			
-			lock (((ICollection)m_assignedTooltipID).SyncRoot)
-			{
-				if (m_assignedTooltipID.ContainsKey(tooltipID))
-				{
-					WeakReference<Spell> spref = m_assignedTooltipID[tooltipID];
-					Spell outsp;
-					if (spref != null && spref.TryGetTarget(out outsp))
-					{
-						// Raise an Exception, this Spell can't go in there !
-						throw new ArgumentException("Tooltip ID (" + tooltipID + ") is incompatible for Spell : " + sp.ToString() + "\nAlreadyContaining Spell : " + outsp.ToString());
-					}
-					else
-					{
-						// Assign this spell.
-						m_assignedTooltipID[tooltipID] = new WeakReference<Spell>(sp);
-					}
-					
-					sp.m_tooltipId = tooltipID;
-				}
-				else
-				{
-					// Just create this ID.
-					m_assignedTooltipID.Add(tooltipID, new WeakReference<Spell>(sp));
-					sp.m_tooltipId = tooltipID;
-				}
-			}	
-		}
-		
-		/// <summary>
-		/// Find a free usable tooltipID in ushort list.
-		/// </summary>
-		/// <returns></returns>
-		public static ushort TryGetNextFreeTooltipID(Spell sp)
-		{
-			// counter.
-			int previous = 1;
-			
-			// lock collection
-			lock (((ICollection)m_assignedTooltipID).SyncRoot)
-			{
-				
-				foreach (KeyValuePair<ushort, WeakReference<Spell>> refsEntry in m_assignedTooltipID.OrderBy(ent => ent.Key))
-				{
-					// previous can feat there ?
-					if (previous < refsEntry.Key)
-					{
-						break;
-					}
-					
-					WeakReference<Spell> spref = refsEntry.Value;
-					Spell outsp;
-					// Try getting the value of this entry to be sure it's occupied
-					if (spref == null || (spref.TryGetTarget(out outsp) == false))
-					{
-						// This slot is free in fact...
-						previous = refsEntry.Key;
-						break;
-					}
-					
-					// inc
-					previous = refsEntry.Key + 1;	
-				}
-				
-				// Insert if we have a valid position.
-				if (previous <= ushort.MaxValue)
-				{
-					if (m_assignedTooltipID.ContainsKey((ushort)previous))
-					{
-						m_assignedTooltipID[(ushort)previous] = new WeakReference<Spell>(sp);
-					}
-					else
-					{
-						m_assignedTooltipID.Add((ushort)previous, new WeakReference<Spell>(sp));
-					}
-					
-					sp.m_tooltipId = (ushort)previous;
-				}
-				else
-				{
-					// Exception...
-					throw new IndexOutOfRangeException("No more available ushort values for Spell TooltipID");
-				}
-				
-			}
-			
-			// return id for property assignment
-			return (ushort)previous;
-		}
-		
-		/// <summary>
-		/// Try freeing an occupied ID slot
-		/// </summary>
-		/// <param name="id"></param>
-		public static void TryFreeTooltipID(Spell sp)
-		{
-			if (sp.m_tooltipId == 0)
-				return;
-			
-			// Lock collection
-			lock (((ICollection)m_assignedTooltipID).SyncRoot)
-			{
-				// Find the key
-				if (m_assignedTooltipID.ContainsKey(sp.m_tooltipId))
-				{
-					// Find the Object
-					WeakReference<Spell> spref = m_assignedTooltipID[sp.m_tooltipId];
-					Spell outsp;
-					if (spref != null && spref.TryGetTarget(out outsp))
-					{
-						if (sp == outsp)
-						{
-							// if it's the same object remove it from dictionary
-							m_assignedTooltipID.Remove(sp.m_tooltipId);
-						}
-					}
-					
-					// if object is not found at given position it will be treated as empty anyway...
-				}
-			}
-		}
-		
-		/// <summary>
-		/// Returns spell with id, level of spell is always 1
-		/// </summary>
-		/// <param name="spellID"></param>
-		/// <returns></returns>
-		public static Spell GetSpellByTooltipID(ushort tooltipID)
-		{
-			Spell spell = null;
-			
-			if (tooltipID > 0)
-			{
-				lock (((ICollection)m_assignedTooltipID).SyncRoot)
-				{
-					if (m_assignedTooltipID.ContainsKey(tooltipID))
-					{
-						WeakReference<Spell> spref = m_assignedTooltipID[tooltipID];
-						Spell outspl;
-						if (spref != null && spref.TryGetTarget(out outspl))
-						{
-							spell = outspl;
-						}
-					}
-				}
-			}
-			
-			return spell;
-		}
-        #endregion
-        
 		#region utils
 
 		public ushort InternalIconID
@@ -828,41 +640,27 @@ namespace DOL.GS
 		/// Initialize Param Cache from DB Relation Collection.
 		/// </summary>
 		/// <param name="customValues"></param>
-		protected virtual void InitParamCache(DBSpellXCustomValues[] customValues)
+		protected static Dictionary<string, List<string>> InitParamCache(DBSpellXCustomValues[] customValues)
 		{
+			Dictionary<string, List<string>> paramCache = null;
+			
 			if (customValues != null && customValues.Length > 0)
 			{
 				// create dict
-				m_paramCache = new Dictionary<string, List<string>>();
+				paramCache = new Dictionary<string, List<string>>();
 				
 				foreach (DBSpellXCustomValues val in customValues)
 				{
-					if (!m_paramCache.ContainsKey(val.KeyName))
-						m_paramCache.Add(val.KeyName, new List<string>());
+					if (!paramCache.ContainsKey(val.KeyName))
+						paramCache.Add(val.KeyName, new List<string>());
 					
-					m_paramCache[val.KeyName].Add(val.Value);
+					paramCache[val.KeyName].Add(val.Value);
 				}
 			}
+			
+			return paramCache;
 		}
-		
-		/// <summary>
-		/// Initialize Param Cache using an other Spell Cache.
-		/// </summary>
-		/// <param name="paramsDict"></param>
-		protected virtual void InitParamCache(Dictionary<string, List<string>> paramsDict)
-		{
-			if (paramsDict != null && paramsDict.Count > 0)
-			{
-				// create dict
-				m_paramCache = new Dictionary<string, List<string>>();
 				
-				foreach (KeyValuePair<string, List<string>> vals in paramsDict)
-				{
-					m_paramCache.Add(vals.Key, new List<string>(vals.Value));
-				}
-			}
-		}
-		
 		/// <summary>
 		/// Parse Params String to Extract the Value identified by Key.
 		/// Expected Format : {"key":["value"#, "value", ...#]#, "key2":[...], ...#}
@@ -876,7 +674,7 @@ namespace DOL.GS
 				return default(T);
 			
 			// is key valid ?
-			if (key != null && key.Length > 0)
+			if (!Util.IsEmpty(key))
 			{					
 				// Is key existing ?
 				if (m_paramCache.ContainsKey(key) && m_paramCache[key].Count > 0)

@@ -53,22 +53,6 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
-		/// <summary>
-		/// Update all skills and add new for current level
-		/// </summary>
-		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Death_Servant));
-
-			player.AddSpellLine(SkillBase.GetSpellLine("Painworking"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Deathsight Spec"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Painworking Spec"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Death Servant Spec"));
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;

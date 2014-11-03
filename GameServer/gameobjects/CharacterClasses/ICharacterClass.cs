@@ -121,7 +121,7 @@ namespace DOL.GS
 		void OnLevelUp(GamePlayer player, int previousLevel);
 		void OnRealmLevelUp(GamePlayer player);
 		void OnSkillTrained(GamePlayer player, Specialization skill);
-		bool CanUseLefthandedWeapon(GamePlayer player);
+		bool CanUseLefthandedWeapon { get; }
 		IList<string> GetAutotrainableSkills();
 		string FemaleName
 		{

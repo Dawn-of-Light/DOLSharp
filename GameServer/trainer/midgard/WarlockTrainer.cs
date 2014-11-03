@@ -97,11 +97,9 @@ namespace DOL.GS.Trainer
 					if (CanPromotePlayer(player))
 					{
 						player.RemoveAllSpellLines();
-						player.RemoveAllSkills();
 						player.RemoveAllSpecs();
 						player.RemoveAllStyles();
 						player.Out.SendUpdatePlayerSkills();
-						player.SkillSpecialtyPoints = 14;//lvl 5 skill points full
 						PromotePlayer(player, (int)eCharacterClass.Warlock, "Welcome young Warlock! May your time in Midgard army be rewarding!", null);
 						player.ReceiveItem(this, WEAPON_ID);
 					}

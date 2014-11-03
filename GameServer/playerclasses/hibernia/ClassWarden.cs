@@ -54,46 +54,6 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
-		/// <summary>
-		/// Update all skills and add new for current level
-		/// </summary>
-		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			// Specializations
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Blades));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Blunt));
-			player.AddSpecialization(SkillBase.GetSpecialization(Specs.Shields));
-
-			// Spell lines
-			player.AddSpellLine(SkillBase.GetSpellLine("Nurture Warden Spec"));
-			player.AddSpellLine(SkillBase.GetSpellLine("Regrowth Warden Spec"));
-
-			if (player.Level >= 5) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Large));
-			}
-			if (player.Level >= 7) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Shortbows));
-			}
-			if (player.Level >= 10) 
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Reinforced));
-			}
-			if (player.Level >= 15)
-			{
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Parry));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
-			}
-			if (player.Level >= 20)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Scale));
-			}
-		}
-
 		public override bool HasAdvancedFromBaseClass()
 		{
 			return true;

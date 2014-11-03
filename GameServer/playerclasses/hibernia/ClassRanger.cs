@@ -58,9 +58,9 @@ namespace DOL.GS.PlayerClass
 			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
-		public override bool CanUseLefthandedWeapon(GamePlayer player)
+		public override bool CanUseLefthandedWeapon
 		{
-			return player.Level >= 10;
+			get { return true; }
 		}
 
 		public override eClassType ClassType
@@ -74,56 +74,8 @@ namespace DOL.GS.PlayerClass
 		}
 
 		/// <summary>
-		/// Update all skills and add new for current level
-		/// </summary>
-		/// <param name="player"></param>
-		public override void OnLevelUp(GamePlayer player, int previousLevel)
-		{
-			base.OnLevelUp(player, previousLevel);
-
-			// RDSandersJR: Check to see if we are using old archery if so, 
-			//              use Specs.RecurveBow and Specs.PathFinding
-			if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == true)
-			{
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Pathfinding));
-            	player.AddSpecialization(SkillBase.GetSpecialization(Specs.RecurveBow));
-			}
-			// RDSandersJR: If we are NOT using old archery load Specs.Archery,
-			//              Spellline("Archery") and Abilites.Weapon_Archery
-			else if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == false)
-			{
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Archery));
-            	player.AddSpellLine(SkillBase.GetSpellLine("Archery"));
-				player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_Archery));
-			}
-
-			player.AddAbility(SkillBase.GetAbility(Abilities.Weapon_RecurvedBows));
-			player.AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
-			
-			if (player.Level >= 10)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.HibArmor, ArmorLevel.Reinforced));
-				player.AddSpecialization(SkillBase.GetSpecialization(Specs.Celtic_Dual));
-			}
-			if (player.Level >= 12)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 2));
-			}
-			if (player.Level >= 15)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Tireless));
-			}
-			if (player.Level >= 25)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Evade, 3));
-			}
-			if (player.Level >= 30)
-			{
-				player.AddAbility(SkillBase.GetAbility(Abilities.Camouflage));
-			}
-		}
-		/// <summary>
         /// Add all spell-lines and other things that are new when this skill is trained
+        /// FIXME : this should be in database.
 		/// </summary>
 		/// <param name="player"></param>
 		/// <param name="skill"></param>
@@ -203,13 +155,6 @@ namespace DOL.GS.PlayerClass
 						{
 							player.AddAbility(SkillBase.GetAbility(Abilities.PenetratingArrow, 1));
 						}
-					}
-					break;
-										
-				case Specs.Stealth:
-					if (skill.Level >= 10)
-					{
-						player.AddAbility(SkillBase.GetAbility(Abilities.SafeFall, 1));
 					}
 					break;
 			}

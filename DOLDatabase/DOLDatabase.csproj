@@ -194,7 +194,6 @@
     <Compile Include="Tables\ServerProperty_Category.cs" />
     <Compile Include="Tables\StarterEquipment.cs" />
     <Compile Include="Tables\PlayerBoats.cs" />
-    <Compile Include="Tables\ChampSpec.cs" />
     <Compile Include="Tables\CharacterXMasterLevel.cs" />
     <Compile Include="Tables\HousepointItem.cs" />
     <Compile Include="Tables\DBHouseCharsXPerms.cs" />

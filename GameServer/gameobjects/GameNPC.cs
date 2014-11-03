@@ -215,7 +215,6 @@ namespace DOL.GS
 						if (m_inventory != null)
 							player.Out.SendLivingEquipmentUpdate(this);
 					}
-					BroadcastUpdate();
 				}
 			}
 		}
@@ -273,7 +272,6 @@ namespace DOL.GS
 						if (m_inventory != null)
 							player.Out.SendLivingEquipmentUpdate(this);
 					}
-					BroadcastUpdate();
 				}
 			}
 		}
@@ -295,7 +293,6 @@ namespace DOL.GS
 						if (m_inventory != null)
 							player.Out.SendLivingEquipmentUpdate(this);
 					}
-					BroadcastUpdate();
 				}
 			}
 		}
@@ -341,7 +338,6 @@ namespace DOL.GS
 						if (m_inventory != null)
 							player.Out.SendLivingEquipmentUpdate(this);
 					}
-					BroadcastUpdate();
 				}
 			}
 		}
@@ -655,7 +651,6 @@ namespace DOL.GS
 								player.Out.SendLivingEquipmentUpdate(this);
 						}
 					}
-					BroadcastUpdate();
 				}
 			}
 		}
@@ -2052,10 +2047,10 @@ namespace DOL.GS
 
 			if (npcTemplate != null && npcTemplate.ReplaceMobValues)
 				LoadTemplate(npcTemplate);
-
+/*
 			if (Inventory != null)
 				SwitchWeapon(ActiveWeaponSlot);
-		}
+*/		}
 
 		/// <summary>
 		/// Deletes the mob from the database
@@ -2364,8 +2359,11 @@ namespace DOL.GS
 			if (template.Styles != null) this.Styles = template.Styles;
 			if (template.Abilities != null)
 			{
-				foreach (Ability ab in template.Abilities)
-					m_abilities[ab.KeyName] = ab;
+				lock (m_lockAbilities)
+				{
+					foreach (Ability ab in template.Abilities)
+						m_abilities[ab.KeyName] = ab;
+				}
 			}
 			BuffBonusCategory4[(int)eStat.STR] += template.Strength;
 			BuffBonusCategory4[(int)eStat.DEX] += template.Dexterity;
@@ -2890,7 +2888,6 @@ namespace DOL.GS
 				if (m_inventory != null)
 					player.Out.SendLivingEquipmentUpdate(this);
 			}
-			BroadcastUpdate();
 			m_spawnPoint.X = X;
 			m_spawnPoint.Y = Y;
 			m_spawnPoint.Z = Z;
@@ -3081,7 +3078,6 @@ namespace DOL.GS
 				}
 			}
 
-			BroadcastUpdate();
 			return true;
 		}
 
@@ -4733,7 +4729,7 @@ namespace DOL.GS
 		public virtual IList Spells
 		{
 			get { return m_spells; }
-			set { m_spells = value.Cast<Spell>().ToList(); }
+			set { m_spells = value != null ? value.Cast<Spell>().ToList() : null; }
 		}
 
 		private IList m_styles = new ArrayList(1);
@@ -4751,7 +4747,17 @@ namespace DOL.GS
 		/// </summary>
 		public Dictionary<string, Ability> Abilities
 		{
-			get { return m_abilities; }
+			get
+			{
+				Dictionary<string, Ability> tmp = new Dictionary<string, Ability>();
+				
+				lock (m_lockAbilities)
+				{
+					tmp = new Dictionary<string, Ability>(m_abilities);
+				}
+				
+				return tmp;
+			}
 		}
 
 		private SpellAction m_spellaction = null;

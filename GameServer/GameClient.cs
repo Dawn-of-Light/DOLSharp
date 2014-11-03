@@ -22,6 +22,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 
 using DOL.Database;
 using DOL.Events;
@@ -239,6 +241,40 @@ namespace DOL.GS
 		/// Holds the Player Collection of Updated House with last update time.
 		/// </summary>
 		protected ConcurrentDictionary<Tuple<ushort, ushort>, long> m_HouseUpdateArray;
+
+		// Trainer window Cache, (Object Type, Object ID) => Skill
+		public List<Tuple<Specialization, List<Tuple<int, int, Skill>>>> TrainerSkillCache = null;
+		
+		// Tooltip Request Time Cache, (Object Type => (Object ID => expires))
+		private ConcurrentDictionary<int, ConcurrentDictionary<int, long>> m_tooltipRequestTimes = new ConcurrentDictionary<int, ConcurrentDictionary<int, long>>();
+		
+		/// <summary>
+		/// Try to Send Tooltip to Client, return false if cache hit.
+		/// Return true and register cache before you can send tooltip !
+		/// </summary>
+		/// <param name="type"></param>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public bool CanSendTooltip(int type, int id)
+		{
+	        m_tooltipRequestTimes.TryAdd(type, new ConcurrentDictionary<int, long>());
+
+			// Queries cleanup
+			foreach (Tuple<int, int> keys in m_tooltipRequestTimes.SelectMany(e => e.Value.Where(it => it.Value < GameTimer.GetTickCount()).Select(el => new Tuple<int, int>(e.Key, el.Key))))
+			{
+				long dummy;
+				m_tooltipRequestTimes[keys.Item1].TryRemove(keys.Item2, out dummy);
+			}
+			
+			// Query hit ?
+			if (m_tooltipRequestTimes[type].ContainsKey(id))
+				return false;
+		
+			// Query register
+	        m_tooltipRequestTimes[type].TryAdd(id, GameTimer.GetTickCount()+3600000);
+	        return true;
+		}
+
 		
 		/// <summary>
 		/// Constructor for a game client

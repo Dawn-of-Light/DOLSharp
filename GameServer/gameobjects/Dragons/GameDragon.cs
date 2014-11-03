@@ -832,7 +832,7 @@ namespace DOL.GS
 					spell.Message1 = "You cannot move!";
 					spell.Message2 = "{0} cannot seem to move!";
 					m_stun = new Spell(spell, 70);
-					SkillBase.GetSpellList(GlobalSpellsLines.Mob_Spells).Add(m_stun);
+					SkillBase.AddScriptedSpell(GlobalSpellsLines.Mob_Spells, m_stun);
 				}
 				return m_stun;
 			}

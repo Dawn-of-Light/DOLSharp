@@ -102,11 +102,9 @@ namespace DOL.GS.Trainer
 				if (CanPromotePlayer(player))
 				{
 					player.RemoveAllSpellLines();
-					player.RemoveAllSkills();
 					player.RemoveAllSpecs();
 					player.RemoveAllStyles();
 					player.Out.SendUpdatePlayerSkills();
-					player.SkillSpecialtyPoints = 14;//lvl 5 skill points full
 					PromotePlayer(player, (int)eCharacterClass.Bainshee, LanguageMgr.GetTranslation(player.Client.Account.Language, "BainsheeTrainer.WhisperReceive.Text1", player.GetName(0, false)), null);
 					player.ReceiveItem(this, WEAPON_ID1);
 				}

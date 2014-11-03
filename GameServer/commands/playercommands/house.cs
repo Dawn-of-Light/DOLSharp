@@ -84,15 +84,6 @@ namespace DOL.GS.Commands
 						{
 							client.Out.SendHouseOccupied(house, true);
 						}
-
-						try
-						{
-							client.Player.HousingUpdateArray[house.UniqueID] = true;
-						}
-						catch (Exception ex)
-						{
-							log.Error("Error in /house trying to update player housing array.", ex);
-						}
 					}
 
 					// Send the house info dialog

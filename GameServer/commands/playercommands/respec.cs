@@ -194,28 +194,28 @@ namespace DOL.GS.Commands
 
 			if (response != 0x01) return; //declined
 
-			int specPoints = 0;
-			int realmSpecPoints = 0;
+			int specPoints = player.SkillSpecialtyPoints;
+			int realmSpecPoints = player.RealmSpecialtyPoints;
 
 			if (player.TempProperties.getProperty(ALL_RESPEC, false))
 			{
-				specPoints = player.RespecAll();
+				player.RespecAll();
 				player.TempProperties.removeProperty(ALL_RESPEC);
 			}
 			if (player.TempProperties.getProperty(DOL_RESPEC, false))
 			{
-				specPoints = player.RespecDOL();
+				player.RespecDOL();
 				player.TempProperties.removeProperty(DOL_RESPEC);
 			}
 			if (player.TempProperties.getProperty(RA_RESPEC, false))
 			{
-				realmSpecPoints = player.RespecRealm();
+				player.RespecRealm();
 				player.TempProperties.removeProperty(RA_RESPEC);
 			}
 			if (player.TempProperties.getProperty<object>(LINE_RESPEC, null) != null)
 			{
 				Specialization specLine = (Specialization)player.TempProperties.getProperty<object>(LINE_RESPEC, null);
-				specPoints = player.RespecSingle(specLine);
+				player.RespecSingle(specLine);
 				player.TempProperties.removeProperty(LINE_RESPEC);
 			}
 			if (player.TempProperties.getProperty(BUY_RESPEC, false))
@@ -231,17 +231,14 @@ namespace DOL.GS.Commands
 				player.Out.SendUpdateMoney();
 			}			
 			// Assign full points returned
-			if (specPoints > 0)
+			if (player.SkillSpecialtyPoints > specPoints)
 			{
-				player.SkillSpecialtyPoints += specPoints;
 				player.RemoveAllStyles(); // Kill styles
-				player.UpdateSpellLineLevels(false);
-				DisplayMessage(player, "You regain " + specPoints + " specialization points!");
+				DisplayMessage(player, "You regain " + (player.SkillSpecialtyPoints - specPoints) + " specialization points!");
 			}
-			if (realmSpecPoints > 0)
+			if (player.RealmSpecialtyPoints > realmSpecPoints)
 			{
-				player.RealmSpecialtyPoints += realmSpecPoints;
-				DisplayMessage(player, "You regain " + realmSpecPoints + " realm specialization points!");
+				 DisplayMessage(player, "You regain " + (player.RealmSpecialtyPoints - realmSpecPoints) + " realm specialization points!");
 			}
 			player.RefreshSpecDependantSkills(false);
 			// Notify Player of points
