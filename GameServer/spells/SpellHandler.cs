@@ -38,7 +38,7 @@ namespace DOL.GS.Spells
 	/// Default class for spell handler
 	/// should be used as a base class for spell handler
 	/// </summary>
-	public class SpellHandler : ISpellHandler
+	public class SpellHandler : SpellHandlerBase, ISpellHandler
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
