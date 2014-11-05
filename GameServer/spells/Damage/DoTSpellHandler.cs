@@ -38,7 +38,7 @@ namespace DOL.GS.Spells
 		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -110,11 +110,11 @@ namespace DOL.GS.Spells
 			min = 1.13;
 			max = 1.13;
 
-			if (m_caster is GamePlayer)
+			if (Caster is GamePlayer)
 			{
-				if (m_spellLine.KeyName == GlobalSpellsLines.Mundane_Poisons)
+				if (SpellLine.KeyName == GlobalSpellsLines.Mundane_Poisons)
 				{
-					speclevel = ((GamePlayer)m_caster).GetModifiedSpecLevel(Specs.Envenom);
+					speclevel = ((GamePlayer)Caster).GetModifiedSpecLevel(Specs.Envenom);
 					min = 1.25;
 					max = 1.25;
 
@@ -125,7 +125,7 @@ namespace DOL.GS.Spells
 				}
 				else
 				{
-					speclevel = ((GamePlayer)m_caster).GetModifiedSpecLevel(m_spellLine.Spec);
+					speclevel = ((GamePlayer)Caster).GetModifiedSpecLevel(SpellLine.Spec);
 
 					if (target.Level > 0)
 					{
@@ -148,11 +148,11 @@ namespace DOL.GS.Spells
 		{
 			// Graveen: only GamePlayer should receive messages :p
 			GamePlayer PlayerReceivingMessages = null;
-			if (m_caster is GamePlayer)
-				PlayerReceivingMessages = m_caster as GamePlayer;
-            if ( m_caster is GamePet)
-                if ((m_caster as GamePet).Brain is IControlledBrain)
-                    PlayerReceivingMessages = ((m_caster as GamePet).Brain as IControlledBrain).GetPlayerOwner();
+			if (Caster is GamePlayer)
+				PlayerReceivingMessages = Caster as GamePlayer;
+            if ( Caster is GamePet)
+                if ((Caster as GamePet).Brain is IControlledBrain)
+                    PlayerReceivingMessages = ((Caster as GamePet).Brain as IControlledBrain).GetPlayerOwner();
             if (PlayerReceivingMessages == null) 
                 return;
 				
@@ -195,7 +195,7 @@ namespace DOL.GS.Spells
 		protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
 		{
 			// damage is not reduced with distance
-            return new GameSpellEffect(this, m_spell.Duration, m_spell.Frequency, effectiveness);
+            return new GameSpellEffect(this, Spell.Duration, Spell.Frequency, effectiveness);
 		}
 
 		public override void OnEffectStart(GameSpellEffect effect)
@@ -253,8 +253,8 @@ namespace DOL.GS.Spells
 		{
 			double spellDamage = Spell.Damage;
 			GamePlayer player = null;
-			if (m_caster is GamePlayer)
-				player = m_caster as GamePlayer;
+			if (Caster is GamePlayer)
+				player = Caster as GamePlayer;
 			if (player != null && player.CharacterClass.ManaStat != eStat.UNDEFINED)
 			{
 				int manaStatValue = player.GetModified((eProperty)player.CharacterClass.ManaStat);
@@ -262,9 +262,9 @@ namespace DOL.GS.Spells
 				if (spellDamage < 0)
 					spellDamage = 0;
 			}
-			else if (m_caster is GameNPC)
+			else if (Caster is GameNPC)
 			{
-				int manaStatValue = m_caster.GetModified(eProperty.Intelligence);
+				int manaStatValue = Caster.GetModified(eProperty.Intelligence);
 				spellDamage *= (manaStatValue + 200) / 275.0;
 				if (spellDamage < 0)
 					spellDamage = 0;

@@ -59,9 +59,9 @@ namespace DOL.GS.Spells
 
 			// group heals seem to use full power even if no heals
 			if (!healed && Spell.Target == "Realm")
-				m_caster.Mana -= PowerCost(target) >> 1; // only 1/2 power if no heal
+				Caster.Mana -= PowerCost(target) >> 1; // only 1/2 power if no heal
 			else
-				m_caster.Mana -= PowerCost(target);
+				Caster.Mana -= PowerCost(target);
 
 			// send animation for non pulsing spells only
 			if (Spell.Pulse == 0)
@@ -79,7 +79,7 @@ namespace DOL.GS.Spells
 				}
 			}
 
-			if (!healed && Spell.CastTime == 0) m_startReuseTimer = false;
+			if (!healed && Spell.CastTime == 0) StartReuseTimer = false;
 
 			return true;
 		}
@@ -111,13 +111,13 @@ namespace DOL.GS.Spells
 			{
 				if (Spell.Pulse == 0)
 				{
-					if (target == m_caster) MessageToCaster("Your power is full.", eChatType.CT_SpellResisted);
+					if (target == Caster) MessageToCaster("Your power is full.", eChatType.CT_SpellResisted);
 					else MessageToCaster(target.GetName(0, true) + " power is full.", eChatType.CT_SpellResisted);
 				}
 				return false;
 			}
 
-			if (m_caster == target)
+			if (Caster == target)
 			{
 				MessageToCaster("You restore " + heal + " power points.", eChatType.CT_Spell);
 				if (heal < amount)
@@ -126,7 +126,7 @@ namespace DOL.GS.Spells
 			else
 			{
 				MessageToCaster("You restore " + target.GetName(0, false) + " for " + heal + " power points!", eChatType.CT_Spell);
-				MessageToLiving(target, "Your power was restored by " + m_caster.GetName(0, false) + " for " + heal + " points.", eChatType.CT_Spell);
+				MessageToLiving(target, "Your power was restored by " + Caster.GetName(0, false) + " for " + heal + " points.", eChatType.CT_Spell);
 				if (heal < amount)
 					MessageToCaster(target.GetName(0, true) + " mana is full.", eChatType.CT_Spell);
 			}
@@ -140,13 +140,13 @@ namespace DOL.GS.Spells
 		/// <param name="max">store max variance here</param>
 		public virtual void CalculateHealVariance(out int min, out int max)
 		{
-			double spellValue = m_spell.Value;
-			GamePlayer casterPlayer = m_caster as GamePlayer;
+			double spellValue = Spell.Value;
+			GamePlayer casterPlayer = Caster as GamePlayer;
 
 			// percents if less than zero
 			if (spellValue < 0)
 			{
-				spellValue = (spellValue * -0.01) * m_caster.MaxMana;
+				spellValue = (spellValue * -0.01) * Caster.MaxMana;
 			}
 			min = max = (int)(spellValue);
 			return;

@@ -32,7 +32,7 @@ namespace DOL.GS.Spells
         /// <param name="target"></param>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            Caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
 
@@ -47,7 +47,7 @@ namespace DOL.GS.Spells
             if (target == null || !target.IsAlive)
                 return;
 
-            foreach (GameNPC item in target.GetNPCsInRadius((ushort)m_spell.Radius))
+            foreach (GameNPC item in target.GetNPCsInRadius((ushort)Spell.Radius))
             {
                 if (item != null && item is GameMine)
                 {
@@ -72,7 +72,7 @@ namespace DOL.GS.Spells
         /// <param name="target"></param>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            Caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
         public override void OnEffectStart(GameSpellEffect effect)

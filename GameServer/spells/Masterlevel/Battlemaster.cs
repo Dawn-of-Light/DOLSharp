@@ -20,7 +20,7 @@ namespace DOL.GS.Spells
 
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            Caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
 
@@ -35,7 +35,7 @@ namespace DOL.GS.Spells
 
             if (target is GamePlayer)
                 ((GamePlayer)target).Out.SendMessage(" You lose " + end + " endurance!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
-            (m_caster as GamePlayer).Out.SendMessage("" + target.Name + " loses " + end + " endurance!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+            (Caster as GamePlayer).Out.SendMessage("" + target.Name + " loses " + end + " endurance!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
 
             target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
         }
@@ -60,7 +60,7 @@ namespace DOL.GS.Spells
 
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            Caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
 
@@ -128,12 +128,12 @@ namespace DOL.GS.Spells
 
         public override void FinishSpellCast(GameLiving target)
         {
-            if (m_spell.SubSpellID > 0)
+            if (Spell.SubSpellID > 0)
             {
-                Spell spell = SkillBase.GetSpellByID(m_spell.SubSpellID);
+                Spell spell = SkillBase.GetSpellByID(Spell.SubSpellID);
                 if (spell != null && spell.SubSpellID == 0)
                 {
-                    ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+                    ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(Caster, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
                     spellhandler.StartSpell(Caster);
                 }
             }
@@ -625,7 +625,7 @@ namespace DOL.GS.Spells
             base.OnEffectStart(effect);
             GameLiving living = effect.Owner as GameLiving;
             //value should be 15 to reduce Essence resist
-            living.DebuffCategory[(int)eProperty.Resist_Natural] += (int)m_spell.Value;
+            living.DebuffCategory[(int)eProperty.Resist_Natural] += (int)Spell.Value;
 
             if (effect.Owner is GamePlayer)
             {
@@ -639,7 +639,7 @@ namespace DOL.GS.Spells
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
             GameLiving living = effect.Owner as GameLiving;
-            living.DebuffCategory[(int)eProperty.Resist_Natural] -= (int)m_spell.Value;
+            living.DebuffCategory[(int)eProperty.Resist_Natural] -= (int)Spell.Value;
 
             if (effect.Owner is GamePlayer)
             {
@@ -714,7 +714,7 @@ namespace DOL.GS.Spells
         public override void OnEffectStart(GameSpellEffect effect)
         {
             base.OnEffectStart(effect);
-            double percentValue = (m_spell.Value) / 100;//15 / 100 = 0.15 a.k (15%) 100dex * 0.15 = 15dex debuff 
+            double percentValue = (Spell.Value) / 100;//15 / 100 = 0.15 a.k (15%) 100dex * 0.15 = 15dex debuff 
             DexDebuff = (int)((double)effect.Owner.GetModified(eProperty.Dexterity) * percentValue);
             QuiDebuff = (int)((double)effect.Owner.GetModified(eProperty.Quickness) * percentValue);
             GameLiving living = effect.Owner as GameLiving;

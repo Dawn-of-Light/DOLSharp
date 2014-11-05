@@ -47,7 +47,7 @@ namespace DOL.GS.Spells
         /// <param name="target"></param>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            Caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
         public override bool IsOverwritable(GameSpellEffect compare)
@@ -204,7 +204,7 @@ namespace DOL.GS.Spells
             sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-            trap = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+            trap = ScriptMgr.CreateSpellHandler(Caster, s, sl);
         }
     }
     #endregion
@@ -254,7 +254,7 @@ namespace DOL.GS.Spells
             sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-            trap = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+            trap = ScriptMgr.CreateSpellHandler(Caster, s, sl);
         }
     }
     #region Subspell
@@ -266,7 +266,7 @@ namespace DOL.GS.Spells
         public override int CalculateSpellResistChance(GameLiving target) { return 0; }
         protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
         {
-            return new GameSpellEffect(this, m_spell.Duration, m_spellLine.IsBaseLine ? 5000 : 4000, effectiveness);
+            return new GameSpellEffect(this, Spell.Duration, SpellLine.IsBaseLine ? 5000 : 4000, effectiveness);
         }
     }
     #endregion
@@ -386,7 +386,7 @@ namespace DOL.GS.Spells
             sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-            trap = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+            trap = ScriptMgr.CreateSpellHandler(Caster, s, sl);
         }
     }
     #endregion

@@ -45,7 +45,7 @@ namespace DOL.GS.Spells
                 GameEventMgr.AddHandler(Caster, GamePlayerEvent.Moving, new DOLEventHandler(EventAction));
                 GameEventMgr.AddHandler(Caster, GamePlayerEvent.Dying, new DOLEventHandler(EventAction));
             }
-			m_caster.Mana -= PowerCost(target);
+			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
         public override bool CancelPulsingSpell(GameLiving living, string spellType)

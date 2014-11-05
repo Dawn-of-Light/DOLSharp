@@ -85,7 +85,7 @@ namespace DOL.GS.Spells
 			sRadius = 2000;
 			s = new Spell(dbs, 50);
 			sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-			heal = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+			heal = ScriptMgr.CreateSpellHandler(Caster, s, sl);
 		}
 	}
 	[SpellHandlerAttribute("Prescience")]
@@ -158,7 +158,7 @@ namespace DOL.GS.Spells
 			sRadius = 350;
 			s = new Spell(dbs, 1);
 			sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-			trap = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+			trap = ScriptMgr.CreateSpellHandler(Caster, s, sl);
 		}
 	}
 	#endregion
@@ -210,7 +210,7 @@ namespace DOL.GS.Spells
 			dbs.SpellGroup = 9;
 			s = new Spell(dbs, 50);
 			sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-			heal = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+			heal = ScriptMgr.CreateSpellHandler(Caster, s, sl);
 		}
 	}
 	[SpellHandlerAttribute("SpeedWrap")]
@@ -285,7 +285,7 @@ namespace DOL.GS.Spells
 		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 		public override bool IsOverwritable(GameSpellEffect compare)
@@ -369,7 +369,7 @@ namespace DOL.GS.Spells
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
 			if (!base.CheckBeginCast(selectedTarget)) return false;
-			if (!(m_caster.GroundTarget != null && m_caster.GroundTargetInView))
+			if (!(Caster.GroundTarget != null && Caster.GroundTargetInView))
 			{
 				MessageToCaster("Your area target is out of range.  Set a closer ground position.", eChatType.CT_SpellResisted);
 				return false;
@@ -439,7 +439,7 @@ namespace DOL.GS.Spells
 			sRadius = 350;
 			s = new Spell(dbs, 1);
 			sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-			trap = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+			trap = ScriptMgr.CreateSpellHandler(Caster, s, sl);
 		}
 	}
 	#endregion
@@ -464,7 +464,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -631,7 +631,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -679,7 +679,7 @@ namespace DOL.GS.Spells
 			summoned.AddToWorld();
 			controlledBrain.AggressionState = eAggressionState.Aggressive;
 			effect.Start(summoned);
-			m_growTimer = new RegionTimer((GameObject)m_caster, new RegionTimerCallback(TitanGrows), C_GROWTIMER);
+			m_growTimer = new RegionTimer((GameObject)Caster, new RegionTimerCallback(TitanGrows), C_GROWTIMER);
 		}
 		
 		// Make titan growing, and activate it on completition
@@ -760,7 +760,7 @@ namespace DOL.GS.Spells
 
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 

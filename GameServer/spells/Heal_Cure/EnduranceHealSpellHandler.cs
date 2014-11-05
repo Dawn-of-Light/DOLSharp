@@ -73,14 +73,14 @@ namespace DOL.GS.Spells
 				}
 			}
 
-			if (!healed && Spell.CastTime == 0) m_startReuseTimer = false;
+			if (!healed && Spell.CastTime == 0) StartReuseTimer = false;
 
 			return true;
 		}
 
 		protected virtual void RemoveFromStat(int value)
 		{
-			m_caster.Mana -= value;
+			Caster.Mana -= value;
 		}
 
 		/// <summary>
@@ -110,13 +110,13 @@ namespace DOL.GS.Spells
 			{
 				if (Spell.Pulse == 0)
 				{
-					if (target == m_caster) MessageToCaster("Your endurance is full.", eChatType.CT_SpellResisted);
+					if (target == Caster) MessageToCaster("Your endurance is full.", eChatType.CT_SpellResisted);
 					else MessageToCaster(target.GetName(0, true) + " endurance is full.", eChatType.CT_SpellResisted);
 				}
 				return false;
 			}
 
-			if (m_caster == target)
+			if (Caster == target)
 			{
 				MessageToCaster("You restore " + heal + " endurance points.", eChatType.CT_Spell);
 				if (heal < amount)
@@ -125,7 +125,7 @@ namespace DOL.GS.Spells
 			else
 			{
 				MessageToCaster("You restore " + target.GetName(0, false) + " for " + heal + " ednurance points!", eChatType.CT_Spell);
-				MessageToLiving(target, "Your endurance was restored by " + m_caster.GetName(0, false) + " for " + heal + " points.", eChatType.CT_Spell);
+				MessageToLiving(target, "Your endurance was restored by " + Caster.GetName(0, false) + " for " + heal + " points.", eChatType.CT_Spell);
 				if (heal < amount)
 					MessageToCaster(target.GetName(0, true) + " endurance is full.", eChatType.CT_Spell);
 			}
@@ -139,13 +139,13 @@ namespace DOL.GS.Spells
 		/// <param name="max">store max variance here</param>
 		public virtual void CalculateHealVariance(out int min, out int max)
 		{
-			double spellValue = m_spell.Value;
-			GamePlayer casterPlayer = m_caster as GamePlayer;
+			double spellValue = Spell.Value;
+			GamePlayer casterPlayer = Caster as GamePlayer;
 
 			// percents if less than zero
 			if (spellValue < 0)
 			{
-				spellValue = (spellValue * -0.01) * m_caster.MaxEndurance;
+				spellValue = (spellValue * -0.01) * Caster.MaxEndurance;
 			}
 			min = max = (int)(spellValue);
 			return;

@@ -33,7 +33,7 @@ namespace DOL.GS.Spells
 		/// <param name="target"></param>
 		public override bool StartSpell(GameLiving target)
 		{
-			m_startReuseTimer = true;
+			StartReuseTimer = true;
 			// do not start spell if not in combat
 			GamePlayer player = Caster as GamePlayer;
 			if (!Caster.InCombat && (player==null || player.Group==null || !player.Group.IsGroupInCombat()))

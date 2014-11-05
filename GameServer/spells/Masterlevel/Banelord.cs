@@ -38,17 +38,17 @@ namespace DOL.GS.Spells
 
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            Caster.Mana -= PowerCost(target);
             //For Banelord ML 8, it drains Life from the Caster
             if (Spell.Damage > 0)
             {
                 int chealth;
-                chealth = (m_caster.Health * (int)Spell.Damage) / 100;
+                chealth = (Caster.Health * (int)Spell.Damage) / 100;
 
-                if (m_caster.Health < chealth)
+                if (Caster.Health < chealth)
                     chealth = 0;
 
-                m_caster.Health -= chealth;
+                Caster.Health -= chealth;
             }
             base.FinishSpellCast(target);
         }
@@ -117,7 +117,7 @@ namespace DOL.GS.Spells
         }
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            Caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
         public override int CalculateSpellResistChance(GameLiving target)
@@ -229,7 +229,7 @@ namespace DOL.GS.Spells
     {
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            Caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
 
@@ -255,7 +255,7 @@ namespace DOL.GS.Spells
 
             MessageToLiving(effect.Owner, Spell.Message1, eChatType.CT_Spell);
             MessageToCaster(Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, true)), eChatType.CT_Spell);
-            Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, true)), eChatType.CT_Spell, effect.Owner, m_caster);
+            Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, true)), eChatType.CT_Spell, effect.Owner, Caster);
 
             GamePlayer player = effect.Owner as GamePlayer;
             if (player != null)
@@ -356,7 +356,7 @@ namespace DOL.GS.Spells
         /// </summary>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            Caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
 

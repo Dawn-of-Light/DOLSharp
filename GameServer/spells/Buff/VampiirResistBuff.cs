@@ -29,7 +29,7 @@ namespace DOL.GS.Spells
 	{
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -76,7 +76,7 @@ namespace DOL.GS.Spells
 		{
 			int specLevel = 0;
 			if (Caster is GamePlayer)
-				specLevel = ((GamePlayer)Caster).GetModifiedSpecLevel(m_spellLine.Spec);
+				specLevel = ((GamePlayer)Caster).GetModifiedSpecLevel(SpellLine.Spec);
 			effectiveness = 0.75 + (specLevel-1) * 0.5 / Spell.Level;
 			effectiveness = Math.Max(0.75, effectiveness);
 			effectiveness = Math.Min(1.25, effectiveness);
@@ -120,7 +120,7 @@ namespace DOL.GS.Spells
 	{
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -177,7 +177,7 @@ namespace DOL.GS.Spells
 		{
 			int specLevel = 0;
 			if (Caster is GamePlayer)
-				specLevel = ((GamePlayer)Caster).GetModifiedSpecLevel(m_spellLine.Spec);
+				specLevel = ((GamePlayer)Caster).GetModifiedSpecLevel(SpellLine.Spec);
 			effectiveness = 0.75 + (specLevel-1) * 0.5 / Spell.Level;
 			effectiveness = Math.Max(0.75, effectiveness);
 			effectiveness = Math.Min(1.25, effectiveness);

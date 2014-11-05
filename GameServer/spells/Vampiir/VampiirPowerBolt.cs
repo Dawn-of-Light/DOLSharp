@@ -45,11 +45,11 @@ namespace DOL.GS.Spells
 
 		private void DealDamage(GameLiving target)
 		{
-			int ticksToTarget = m_caster.GetDistanceTo(target) * 100 / 85; // 85 units per 1/10s
+			int ticksToTarget = Caster.GetDistanceTo(target) * 100 / 85; // 85 units per 1/10s
 			int delay = 1 + ticksToTarget / 100;
 			foreach (GamePlayer player in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				player.Out.SendSpellEffectAnimation(m_caster, target, m_spell.ClientEffect, (ushort)(delay), false, 1);
+				player.Out.SendSpellEffectAnimation(Caster, target, Spell.ClientEffect, (ushort)(delay), false, 1);
 			}
 			BoltOnTargetAction bolt = new BoltOnTargetAction(Caster, target, this);
 			bolt.Start(1 + ticksToTarget);

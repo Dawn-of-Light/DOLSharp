@@ -49,11 +49,11 @@ namespace DOL.GS.Spells
 		
 		private void DealDamage(GameLiving target)
 		{
-			int ticksToTarget = m_caster.GetDistanceTo(target) * 100 / 85; // 85 units per 1/10s
+			int ticksToTarget = Caster.GetDistanceTo(target) * 100 / 85; // 85 units per 1/10s
 			int delay = 1 + ticksToTarget / 100;
 			foreach (GamePlayer player in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				player.Out.SendSpellEffectAnimation(m_caster, target, m_spell.ClientEffect, (ushort)(delay), false, 1);
+				player.Out.SendSpellEffectAnimation(Caster, target, Spell.ClientEffect, (ushort)(delay), false, 1);
 			}
 			BoltOnTargetAction bolt = new BoltOnTargetAction(Caster, target, this);
 			bolt.Start(1 + ticksToTarget);
@@ -124,22 +124,22 @@ namespace DOL.GS.Spells
         public override void OnEffectStart(GameSpellEffect effect)
         {    
      		base.OnEffectStart(effect);            
-            effect.Owner.DebuffCategory[(int)eProperty.Dexterity] += (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Strength] += (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Constitution] += (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Acuity] += (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Piety] += (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Empathy] += (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Quickness] += (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Intelligence] += (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Charisma] += (int)m_spell.Value;   
-            effect.Owner.DebuffCategory[(int)eProperty.ArmorAbsorption] += (int)m_spell.Value; 
-            effect.Owner.DebuffCategory[(int)eProperty.MagicAbsorption] += (int)m_spell.Value; 
+            effect.Owner.DebuffCategory[(int)eProperty.Dexterity] += (int)Spell.Value;
+            effect.Owner.DebuffCategory[(int)eProperty.Strength] += (int)Spell.Value;
+            effect.Owner.DebuffCategory[(int)eProperty.Constitution] += (int)Spell.Value;
+            effect.Owner.DebuffCategory[(int)eProperty.Acuity] += (int)Spell.Value;
+            effect.Owner.DebuffCategory[(int)eProperty.Piety] += (int)Spell.Value;
+            effect.Owner.DebuffCategory[(int)eProperty.Empathy] += (int)Spell.Value;
+            effect.Owner.DebuffCategory[(int)eProperty.Quickness] += (int)Spell.Value;
+            effect.Owner.DebuffCategory[(int)eProperty.Intelligence] += (int)Spell.Value;
+            effect.Owner.DebuffCategory[(int)eProperty.Charisma] += (int)Spell.Value;   
+            effect.Owner.DebuffCategory[(int)eProperty.ArmorAbsorption] += (int)Spell.Value; 
+            effect.Owner.DebuffCategory[(int)eProperty.MagicAbsorption] += (int)Spell.Value; 
             
             if(effect.Owner is GamePlayer)
             {
             	GamePlayer player = effect.Owner as GamePlayer;  
-				if(m_spell.LifeDrainReturn>0) if(player.CharacterClass.ID!=(byte)eCharacterClass.Necromancer) player.Model=(ushort)m_spell.LifeDrainReturn;
+				if(Spell.LifeDrainReturn>0) if(player.CharacterClass.ID!=(byte)eCharacterClass.Necromancer) player.Model=(ushort)Spell.LifeDrainReturn;
                 player.Out.SendCharStatsUpdate();
                 player.UpdateEncumberance();
                 player.UpdatePlayerStatus();
@@ -148,17 +148,17 @@ namespace DOL.GS.Spells
         }
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {  
-            effect.Owner.DebuffCategory[(int)eProperty.Dexterity] -= (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Strength] -= (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Constitution] -= (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Acuity] -= (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Piety] -= (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Empathy] -= (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Quickness] -= (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Intelligence] -= (int)m_spell.Value;
-            effect.Owner.DebuffCategory[(int)eProperty.Charisma] -= (int)m_spell.Value;        
-            effect.Owner.DebuffCategory[(int)eProperty.ArmorAbsorption] -= (int)m_spell.Value; 
-            effect.Owner.DebuffCategory[(int)eProperty.MagicAbsorption] -= (int)m_spell.Value; 
+            effect.Owner.DebuffCategory[(int)eProperty.Dexterity] -= (int)Spell.Value;
+            effect.Owner.DebuffCategory[(int)eProperty.Strength] -= (int)Spell.Value;
+            effect.Owner.DebuffCategory[(int)eProperty.Constitution] -= (int)Spell.Value;
+            effect.Owner.DebuffCategory[(int)eProperty.Acuity] -= (int)Spell.Value;
+            effect.Owner.DebuffCategory[(int)eProperty.Piety] -= (int)Spell.Value;
+            effect.Owner.DebuffCategory[(int)eProperty.Empathy] -= (int)Spell.Value;
+            effect.Owner.DebuffCategory[(int)eProperty.Quickness] -= (int)Spell.Value;
+            effect.Owner.DebuffCategory[(int)eProperty.Intelligence] -= (int)Spell.Value;
+            effect.Owner.DebuffCategory[(int)eProperty.Charisma] -= (int)Spell.Value;        
+            effect.Owner.DebuffCategory[(int)eProperty.ArmorAbsorption] -= (int)Spell.Value; 
+            effect.Owner.DebuffCategory[(int)eProperty.MagicAbsorption] -= (int)Spell.Value; 
  
             if(effect.Owner is GamePlayer)
             {

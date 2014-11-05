@@ -269,7 +269,7 @@ namespace DOL.GS.Spells
 		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -281,7 +281,7 @@ namespace DOL.GS.Spells
 			// set min spread based on spec
 			if (Caster is GamePlayer)
 			{
-				int lineSpec = Caster.GetModifiedSpecLevel(m_spellLine.Spec);
+				int lineSpec = Caster.GetModifiedSpecLevel(SpellLine.Spec);
 				m_minDamageSpread = 50;
 				if (Spell.Level > 0)
 				{

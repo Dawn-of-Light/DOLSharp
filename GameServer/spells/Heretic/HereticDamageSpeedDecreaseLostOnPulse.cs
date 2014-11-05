@@ -46,9 +46,9 @@ namespace DOL.GS.Spells
         public override void CalculateDamageVariance(GameLiving target, out double min, out double max)
         {
             int speclevel = 1;
-            if (m_caster is GamePlayer)
+            if (Caster is GamePlayer)
             {
-                speclevel = ((GamePlayer)m_caster).GetModifiedSpecLevel(m_spellLine.Spec);
+                speclevel = ((GamePlayer)Caster).GetModifiedSpecLevel(SpellLine.Spec);
             }
             min = 1;
             max = 1;
@@ -74,7 +74,7 @@ namespace DOL.GS.Spells
         {
             base.CreateSpellEffect(target, effectiveness);
             // damage is not reduced with distance
-            return new GameSpellEffect(this, m_spell.Duration, m_spellLine.IsBaseLine ? 3000 : 2000, 1);
+            return new GameSpellEffect(this, Spell.Duration, SpellLine.IsBaseLine ? 3000 : 2000, 1);
         }
 
         /*    public override void OnSpellPulse(PulsingSpellEffect effect)
@@ -107,21 +107,21 @@ namespace DOL.GS.Spells
         {
             GameLiving t = effect.Owner;
 
-            if (m_caster.Mana < Spell.PulsePower)
+            if (Caster.Mana < Spell.PulsePower)
             {
                 RemoveEffect();
             }
-            if (!m_caster.TargetInView)
+            if (!Caster.TargetInView)
             {
                 RemoveEffect();
                 return;
             }
-            if (!m_caster.IsAlive)
+            if (!Caster.IsAlive)
             {
                 RemoveEffect();
             }
 
-            if ( !m_caster.IsWithinRadius( effect.Owner, Spell.Range ) )
+            if ( !Caster.IsWithinRadius( effect.Owner, Spell.Range ) )
             {
                 RemoveEffect();
             }
@@ -146,11 +146,11 @@ namespace DOL.GS.Spells
 					powerUsed += 1;
 
 				if (powerUsed > 0)
-					m_caster.Mana -= powerUsed;
+					Caster.Mana -= powerUsed;
 			}
 			else
 			{
-				m_caster.Mana -= effect.Spell.PulsePower;
+				Caster.Mana -= effect.Spell.PulsePower;
 			}
 		}
 

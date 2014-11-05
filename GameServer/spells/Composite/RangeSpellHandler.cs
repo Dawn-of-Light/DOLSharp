@@ -54,7 +54,7 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public override int PowerCost(GameLiving target)
 		{
-            double basepower = m_spell.Power; //<== defined a basevar first then modified this base-var to tell %-costs from absolut-costs
+            double basepower = Spell.Power; //<== defined a basevar first then modified this base-var to tell %-costs from absolut-costs
 
             // percent of maxPower if less than zero
 			if (basepower < 0)

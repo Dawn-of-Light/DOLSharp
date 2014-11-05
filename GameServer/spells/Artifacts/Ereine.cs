@@ -24,10 +24,10 @@ namespace DOL.GS.Spells
             if(effect.Owner is GamePlayer)
             {
             	GamePlayer player = effect.Owner as GamePlayer;
-				Spell subspell = SkillBase.GetSpellByID(m_spell.ResurrectMana);
+				Spell subspell = SkillBase.GetSpellByID(Spell.ResurrectMana);
 				if (subspell != null)
 				{
-					subspell.Level=m_spell.Level;
+					subspell.Level=Spell.Level;
 					ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(Caster, subspell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
 					if(spellhandler!=null )spellhandler.StartSpell(Caster);
                 }

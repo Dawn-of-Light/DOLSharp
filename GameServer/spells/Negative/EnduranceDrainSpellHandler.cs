@@ -12,7 +12,7 @@ namespace DOL.GS.Spells
 		
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -27,7 +27,7 @@ namespace DOL.GS.Spells
 
 			if (target is GamePlayer)
 			{
-				((GamePlayer)target).Out.SendMessage(m_caster.Name + " steal you for " + end + " endurance!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+				((GamePlayer)target).Out.SendMessage(Caster.Name + " steal you for " + end + " endurance!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
 			}
 
 			StealEndurance(target,end);
@@ -37,8 +37,8 @@ namespace DOL.GS.Spells
 		
 		public virtual void StealEndurance(GameLiving target,int end)
 		{
-			if(!m_caster.IsAlive) return;
-			m_caster.ChangeEndurance(target, GameLiving.eEnduranceChangeType.Spell, end);
+			if(!Caster.IsAlive) return;
+			Caster.ChangeEndurance(target, GameLiving.eEnduranceChangeType.Spell, end);
 			SendCasterMessage(target,end);
 			
 		}

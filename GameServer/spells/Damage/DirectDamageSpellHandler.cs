@@ -43,7 +43,7 @@ namespace DOL.GS.Spells
 		{
 			if (!m_castFailed)
 			{
-				m_caster.Mana -= PowerCost(target);
+				Caster.Mana -= PowerCost(target);
 			}
 
 			base.FinishSpellCast(target);
@@ -86,7 +86,7 @@ namespace DOL.GS.Spells
 		{
 			if (Spell.Damage < 0)
 			{
-				return (m_spellTarget.MaxHealth * -Spell.Damage * .01) * 3.0 * effectiveness;
+				return (SpellTarget.MaxHealth * -Spell.Damage * .01) * 3.0 * effectiveness;
 			}
 
 			return base.DamageCap(effectiveness);
@@ -160,7 +160,7 @@ namespace DOL.GS.Spells
 						DealDamage(target, effectiveness);
                         player.TempProperties.removeProperty(LOSEFFECTIVENESS + target.ObjectID);
 						// Due to LOS check delay the actual cast happens after FinishSpellCast does a notify, so we notify again
-						GameEventMgr.Notify(GameLivingEvent.CastFinished, m_caster, new CastingEventArgs(this, target, m_lastAttackData));
+						GameEventMgr.Notify(GameLivingEvent.CastFinished, Caster, new CastingEventArgs(this, target, m_lastAttackData));
 					}
 				}
 				catch (Exception e)

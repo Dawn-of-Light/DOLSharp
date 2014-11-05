@@ -14,7 +14,7 @@ namespace DOL.GS.Spells
 	{
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast (target);
 		}
 
@@ -39,11 +39,11 @@ namespace DOL.GS.Spells
 			
 			foreach (GamePlayer player in castTarget.GetPlayersInRadius((ushort)1000)) 
 			{
-				if(player.Realm == m_caster.Realm && player!=m_caster)
+				if(player.Realm == Caster.Realm && player!=Caster)
 					list.Add(player);
 			}
 
-			list.Add(m_caster);
+			list.Add(Caster);
 
 			return list;
 		}
@@ -60,7 +60,7 @@ namespace DOL.GS.Spells
 
 			foreach (GameLiving t in targets)
 			{
-				if(t.Level <= m_spell.Value)
+				if(t.Level <= Spell.Value)
 				{
 					GameNPC mob = (GameNPC)t;
 					if(mob.Brain is StandardMobBrain)

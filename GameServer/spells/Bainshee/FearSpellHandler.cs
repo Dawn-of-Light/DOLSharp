@@ -23,7 +23,7 @@ namespace DOL.GS.Spells
 
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast (target);
 			
 			GameNPC t = target as GameNPC;
@@ -57,7 +57,7 @@ namespace DOL.GS.Spells
 
 			foreach (GameLiving t in targets)
 			{
-				if(t is GameNPC && t.Level <= m_spell.Value)
+				if(t is GameNPC && t.Level <= Spell.Value)
 				{
 					((GameNPC)t).AddBrain(new FearBrain());
 				}

@@ -48,12 +48,12 @@ namespace DOL.GS.Spells
                     {
                         int value = (int)Spell.Value;
                         int life;
-                        life = (m_caster.Health * value) / 100;
-                        m_caster.Health -= life;
+                        life = (Caster.Health * value) / 100;
+                        Caster.Health -= life;
                     }
                     break;
             }
-            m_caster.Mana -= PowerCost(target);
+            Caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
 
@@ -100,14 +100,14 @@ namespace DOL.GS.Spells
                     //warlord ML8
                     case (eDamageType)((byte)1):
                         {
-                            int healvalue = (int)m_spell.Value;
+                            int healvalue = (int)Spell.Value;
                             int heal;
                                 if (target.IsAlive && !GameServer.ServerRules.IsAllowedToAttack(Caster, player, true))
                                 {
                                     heal = target.ChangeHealth(target, GameLiving.eHealthChangeType.Spell, healvalue);
-                                    if (heal != 0) player.Out.SendMessage(m_caster.Name + " heal you for " + heal + " hit point!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+                                    if (heal != 0) player.Out.SendMessage(Caster.Name + " heal you for " + heal + " hit point!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
                                 }
-                            heal = m_caster.ChangeHealth(Caster, GameLiving.eHealthChangeType.Spell, (int)(-m_caster.Health * 90 / 100));
+                            heal = Caster.ChangeHealth(Caster, GameLiving.eHealthChangeType.Spell, (int)(-Caster.Health * 90 / 100));
                             if (heal != 0) MessageToCaster("You lose " + heal + " hit point" + (heal == 1 ? "." : "s."), eChatType.CT_Spell);
 
                             SendEffectAnimation(target, 0, false, 1);
@@ -187,7 +187,7 @@ namespace DOL.GS.Spells
         /// </summary>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            Caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
 

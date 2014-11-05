@@ -83,7 +83,7 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public override int CalculateCastingTime()
 		{
-			return m_spell.CastTime;
+			return Spell.CastTime;
 		}
 
 
@@ -121,7 +121,7 @@ namespace DOL.GS.Spells
 
 		public override void InterruptCasting()
 		{
-			m_startReuseTimer = false;
+			StartReuseTimer = false;
 			base.InterruptCasting();
 		}
 

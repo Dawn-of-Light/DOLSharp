@@ -34,7 +34,7 @@ namespace DOL.GS.Spells
 
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
-			if (m_caster.Endurance == m_caster.MaxEndurance)
+			if (Caster.Endurance == Caster.MaxEndurance)
 			{
 				MessageToCaster("You already have full endurance!", eChatType.CT_Spell);
 				return false;
@@ -51,7 +51,7 @@ namespace DOL.GS.Spells
 		{
 			base.FinishSpellCast(target);
 
-			GiveEndurance(m_caster, (int)m_spell.Value);
+			GiveEndurance(Caster, (int)Spell.Value);
 			OnEffectExpires(null, true);
 		}
 

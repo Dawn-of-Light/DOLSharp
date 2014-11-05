@@ -89,7 +89,7 @@ namespace DOL.GS.Spells
         /// </summary>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            Caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
 
@@ -217,7 +217,7 @@ namespace DOL.GS.Spells
                 if (nextDelveDepth > MAX_DELVE_RECURSION)
                 {
                     list.Add("(recursion - see server logs)");
-                    log.ErrorFormat("Spell delve info recursion limit reached. Source spell ID: {0}, Sub-spell ID: {1}", m_spell.ID, m_procSpell.ID);
+                    log.ErrorFormat("Spell delve info recursion limit reached. Source spell ID: {0}, Sub-spell ID: {1}", Spell.ID, m_procSpell.ID);
                 }
                 else
                 {
@@ -228,7 +228,7 @@ namespace DOL.GS.Spells
                     ISpellHandler subSpellHandler = ScriptMgr.CreateSpellHandler(Caster, m_procSpell, m_procSpellLine);
                     if (subSpellHandler == null)
                     {
-                        list.Add("unable to create subspell handler: '" + SubSpellLineName + "', " + m_spell.Value);
+                        list.Add("unable to create subspell handler: '" + SubSpellLineName + "', " + Spell.Value);
                         return list;
                     }
                     subSpellHandler.DelveInfoDepth = nextDelveDepth;

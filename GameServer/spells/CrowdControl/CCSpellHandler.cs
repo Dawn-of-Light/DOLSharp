@@ -63,7 +63,7 @@ namespace DOL.GS.Spells
 
 			MessageToLiving(effect.Owner, Spell.Message1, eChatType.CT_Spell);
 			MessageToCaster(Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, true)), eChatType.CT_Spell);
-			Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, true)), eChatType.CT_Spell, effect.Owner, m_caster);
+			Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, true)), eChatType.CT_Spell, effect.Owner, Caster);
 
 			GamePlayer player = effect.Owner as GamePlayer;
 			if(player != null)
@@ -170,7 +170,7 @@ namespace DOL.GS.Spells
                 return AllureofDeathEffect.ccchance;
             }
 
-			if (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
+			if (SpellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
 				return 0;
 			if (HasPositiveEffect)
 				return 0;

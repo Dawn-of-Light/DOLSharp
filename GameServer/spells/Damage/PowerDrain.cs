@@ -28,7 +28,7 @@ namespace DOL.GS.Spells
 	{
 		public override void DrainPower(AttackData ad)
 		{
-			if ( !(m_caster is NecromancerPet))
+			if ( !(Caster is NecromancerPet))
 				return;
 			
 			base.DrainPower(ad);

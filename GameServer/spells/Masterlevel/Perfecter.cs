@@ -82,7 +82,7 @@ namespace DOL.GS.Spells
             sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-            heal = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+            heal = ScriptMgr.CreateSpellHandler(Caster, s, sl);
         }
     }
     #endregion
@@ -138,7 +138,7 @@ namespace DOL.GS.Spells
             sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-            heal = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+            heal = ScriptMgr.CreateSpellHandler(Caster, s, sl);
         }
     }
     #endregion
@@ -189,7 +189,7 @@ namespace DOL.GS.Spells
             sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-            heal = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+            heal = ScriptMgr.CreateSpellHandler(Caster, s, sl);
         }
     }
     #endregion
@@ -258,7 +258,7 @@ namespace DOL.GS.Spells
             sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-            heal = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+            heal = ScriptMgr.CreateSpellHandler(Caster, s, sl);
         }
     }	
     #endregion
@@ -276,7 +276,7 @@ namespace DOL.GS.Spells
         /// <param name="target"></param>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            Caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
 
@@ -286,7 +286,7 @@ namespace DOL.GS.Spells
             double eff = 1.25;
             if (Caster is GamePlayer)
             {
-                double lineSpec = Caster.GetModifiedSpecLevel(m_spellLine.Spec);
+                double lineSpec = Caster.GetModifiedSpecLevel(SpellLine.Spec);
                 if (lineSpec < 1)
                     lineSpec = 1;
                 eff = 0.75;
@@ -374,9 +374,9 @@ namespace DOL.GS.Spells
         public override void OnEffectStart(GameSpellEffect effect)
         {
         	base.OnEffectStart(effect);
-            effect.Owner.BaseBuffBonusCategory[(int)eProperty.MesmerizeDurationReduction] += (int)m_spell.Value;
-            effect.Owner.BaseBuffBonusCategory[(int)eProperty.StunDurationReduction] += (int)m_spell.Value;
-            effect.Owner.BaseBuffBonusCategory[(int)eProperty.SpeedDecreaseDurationReduction] += (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.MesmerizeDurationReduction] += (int)Spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.StunDurationReduction] += (int)Spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.SpeedDecreaseDurationReduction] += (int)Spell.Value;
              
             if (effect.Owner is GamePlayer)
             {
@@ -388,9 +388,9 @@ namespace DOL.GS.Spells
 
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-            effect.Owner.BaseBuffBonusCategory[(int)eProperty.MesmerizeDurationReduction] -= (int)m_spell.Value;
-            effect.Owner.BaseBuffBonusCategory[(int)eProperty.StunDurationReduction] -= (int)m_spell.Value;
-            effect.Owner.BaseBuffBonusCategory[(int)eProperty.SpeedDecreaseDurationReduction] -= (int)m_spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.MesmerizeDurationReduction] -= (int)Spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.StunDurationReduction] -= (int)Spell.Value;
+            effect.Owner.BaseBuffBonusCategory[(int)eProperty.SpeedDecreaseDurationReduction] -= (int)Spell.Value;
             
             if (effect.Owner is GamePlayer)
             {

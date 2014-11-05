@@ -76,9 +76,9 @@ namespace DOL.GS.Spells
 
             // group heals seem to use full power even if no heals
             if (!healed && Spell.Target.ToLower() == "realm")
-                m_caster.Mana -= PowerCost(target) >> 1; // only 1/2 power if no heal
+                Caster.Mana -= PowerCost(target) >> 1; // only 1/2 power if no heal
             else
-                m_caster.Mana -= PowerCost(target);
+                Caster.Mana -= PowerCost(target);
 
             // send animation for non pulsing spells only
             if (Spell.Pulse == 0)
@@ -89,7 +89,7 @@ namespace DOL.GS.Spells
 						SendEffectAnimation(healTarget, 0, false, healed ? (byte)1 : (byte)0);
             }
 
-            if (!healed && Spell.CastTime == 0) m_startReuseTimer = false;
+            if (!healed && Spell.CastTime == 0) StartReuseTimer = false;
 
 			return true;
 		}
@@ -206,7 +206,7 @@ namespace DOL.GS.Spells
             {
                 if (Spell.Pulse == 0)
                 {
-                    if (target == m_caster) 
+                    if (target == Caster) 
                         MessageToCaster("You are fully healed.", eChatType.CT_SpellResisted);
                     else 
                         MessageToCaster(target.GetName(0, true) + " is fully healed.", eChatType.CT_SpellResisted);
@@ -214,20 +214,20 @@ namespace DOL.GS.Spells
                 return false;
             }
 
-            if (m_caster is GamePlayer && target is NecromancerPet &&
+            if (Caster is GamePlayer && target is NecromancerPet &&
                 ((target as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null
                 || target is GamePlayer && healedrp > 0)
             {
                 int POURCENTAGE_SOIN_RP = ServerProperties.Properties.HEAL_PVP_DAMAGE_VALUE_RP; // ...% de bonus RP pour les soins effectués
 
-                if (m_spell.Pulse == 0 && m_caster.CurrentRegionID != 242 && // On Exclu zone COOP
-                    m_spell.SpellType.ToLower() != "spreadheal" && target != m_caster &&
-                    m_spellLine.KeyName != GlobalSpellsLines.Item_Spells &&
-                    m_spellLine.KeyName != GlobalSpellsLines.Potions_Effects &&
-                    m_spellLine.KeyName != GlobalSpellsLines.Combat_Styles_Effect &&
-                    m_spellLine.KeyName != GlobalSpellsLines.Reserved_Spells)
+                if (Spell.Pulse == 0 && Caster.CurrentRegionID != 242 && // On Exclu zone COOP
+                    Spell.SpellType.ToLower() != "spreadheal" && target != Caster &&
+                    SpellLine.KeyName != GlobalSpellsLines.Item_Spells &&
+                    SpellLine.KeyName != GlobalSpellsLines.Potions_Effects &&
+                    SpellLine.KeyName != GlobalSpellsLines.Combat_Styles_Effect &&
+                    SpellLine.KeyName != GlobalSpellsLines.Reserved_Spells)
                 {
-                    GamePlayer player = m_caster as GamePlayer;
+                    GamePlayer player = Caster as GamePlayer;
 
                     if (player != null)
                     {
@@ -252,7 +252,7 @@ namespace DOL.GS.Spells
 
             #endregion PVP DAMAGE
 
-            if (m_caster == target)
+            if (Caster == target)
             {
                 MessageToCaster("You heal yourself for " + heal + " hit points.", eChatType.CT_Spell);
                 if (heal < amount)
@@ -274,7 +274,7 @@ namespace DOL.GS.Spells
             else
             {
                 MessageToCaster("You heal " + target.GetName(0, false) + " for " + heal + " hit points!", eChatType.CT_Spell);
-                MessageToLiving(target, "You are healed by " + m_caster.GetName(0, false) + " for " + heal + " hit points.", eChatType.CT_Spell);
+                MessageToLiving(target, "You are healed by " + Caster.GetName(0, false) + " for " + heal + " hit points.", eChatType.CT_Spell);
                 if (heal < amount)
                 {
 
@@ -321,7 +321,7 @@ namespace DOL.GS.Spells
 
 			int heal = target.ChangeHealth(Caster, GameLiving.eHealthChangeType.Spell, amount);
 
-			if (m_caster == target && heal > 0)
+			if (Caster == target && heal > 0)
 			{
 				MessageToCaster("You heal yourself for " + heal + " hit points.", eChatType.CT_Spell);
 
@@ -343,7 +343,7 @@ namespace DOL.GS.Spells
 			else if (heal > 0)
 			{
 				MessageToCaster("You heal " + target.GetName(0, false) + " for " + heal + " hit points!", eChatType.CT_Spell);
-				MessageToLiving(target, "You are healed by " + m_caster.GetName(0, false) + " for " + heal + " hit points.", eChatType.CT_Spell);
+				MessageToLiving(target, "You are healed by " + Caster.GetName(0, false) + " for " + heal + " hit points.", eChatType.CT_Spell);
                 
                 #region PVP DAMAGE
 
@@ -380,12 +380,12 @@ namespace DOL.GS.Spells
         /// <param name="max">store max variance here</param>
         public virtual void CalculateHealVariance(out int min, out int max)
         {
-			double spellValue = m_spell.Value;
-			GamePlayer casterPlayer = m_caster as GamePlayer;
+			double spellValue = Spell.Value;
+			GamePlayer casterPlayer = Caster as GamePlayer;
 
-            if (m_spellLine.KeyName == GlobalSpellsLines.Item_Effects)
+            if (SpellLine.KeyName == GlobalSpellsLines.Item_Effects)
 			{
-				if (m_spell.Value > 0)
+				if (Spell.Value > 0)
 				{
 					min = (int)(spellValue * 0.75);
 					max = (int)(spellValue * 1.25);
@@ -393,9 +393,9 @@ namespace DOL.GS.Spells
 				}
 			}
 
-            if (m_spellLine.KeyName == GlobalSpellsLines.Potions_Effects)
+            if (SpellLine.KeyName == GlobalSpellsLines.Potions_Effects)
             {
-                if (m_spell.Value > 0)
+                if (Spell.Value > 0)
                 {
                     min = (int)(spellValue * 1.00);
                     max = (int)(spellValue * 1.25);
@@ -403,9 +403,9 @@ namespace DOL.GS.Spells
                 }
             }
 
-            if (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
+            if (SpellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
 			{
-				if (m_spell.Value > 0)
+				if (Spell.Value > 0)
 				{
 					if (UseMinVariance)
 					{
@@ -421,7 +421,7 @@ namespace DOL.GS.Spells
 				}
 			}
 
-			if (m_spellLine.KeyName == GlobalSpellsLines.Reserved_Spells)
+			if (SpellLine.KeyName == GlobalSpellsLines.Reserved_Spells)
 			{
 				min = max = (int)spellValue;
 				return;
@@ -430,7 +430,7 @@ namespace DOL.GS.Spells
             // percents if less than zero
             if (spellValue < 0)
             {
-                spellValue = (spellValue / -100.0) * m_caster.MaxHealth;
+                spellValue = (spellValue / -100.0) * Caster.MaxHealth;
 
                 min = max = (int)spellValue;
                 return;
@@ -445,7 +445,7 @@ namespace DOL.GS.Spells
             double eff = 1.25;
             if (Caster is GamePlayer)
             {
-                double lineSpec = Caster.GetModifiedSpecLevel(m_spellLine.Spec);
+                double lineSpec = Caster.GetModifiedSpecLevel(SpellLine.Spec);
                 if (lineSpec < 1)
                     lineSpec = 1;
                 eff = 0.25;

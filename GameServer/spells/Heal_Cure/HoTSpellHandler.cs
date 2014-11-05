@@ -37,7 +37,7 @@ namespace DOL.GS.Spells
 		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -47,7 +47,7 @@ namespace DOL.GS.Spells
 			double eff = 1.25;
 			if(Caster is GamePlayer)
 			{
-				double lineSpec = Caster.GetModifiedSpecLevel(m_spellLine.Spec);
+				double lineSpec = Caster.GetModifiedSpecLevel(SpellLine.Spec);
 				if (lineSpec < 1)
 					lineSpec = 1;
 				eff = 0.75;

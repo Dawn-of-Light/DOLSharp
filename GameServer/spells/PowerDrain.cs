@@ -56,15 +56,15 @@ namespace DOL.GS.Spells
 		/// <param name="ad">Attack data.</param>
 		public virtual void DrainPower(AttackData ad)
 		{
-			if (ad == null || !m_caster.IsAlive)
+			if (ad == null || !Caster.IsAlive)
 				return;
 
 			GameLiving owner = Owner();
 			if (owner == null)
 				return;
 
-			int powerGain = (ad.Damage + ad.CriticalDamage) * m_spell.LifeDrainReturn / 100;
-			powerGain = owner.ChangeMana(m_caster, GameLiving.eManaChangeType.Spell, powerGain);
+			int powerGain = (ad.Damage + ad.CriticalDamage) * Spell.LifeDrainReturn / 100;
+			powerGain = owner.ChangeMana(Caster, GameLiving.eManaChangeType.Spell, powerGain);
 
 			if (powerGain > 0)
 				MessageToOwner(String.Format("Your summon channels {0} power to you!", powerGain), eChatType.CT_Spell);

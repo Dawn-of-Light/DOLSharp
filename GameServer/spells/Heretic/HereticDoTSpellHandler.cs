@@ -13,7 +13,7 @@ namespace DOL.GS.Spells
 
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -45,9 +45,9 @@ namespace DOL.GS.Spells
 		public override void CalculateDamageVariance(GameLiving target, out double min, out double max)
 		{
 			int speclevel = 1;
-			if (m_caster is GamePlayer) 
+			if (Caster is GamePlayer) 
 			{
-				speclevel = ((GamePlayer)m_caster).GetModifiedSpecLevel(m_spellLine.Spec);
+				speclevel = ((GamePlayer)Caster).GetModifiedSpecLevel(SpellLine.Spec);
 			}
 			min = 1;
 			max = 1;
@@ -77,7 +77,7 @@ namespace DOL.GS.Spells
 		{
 			// damage is not reduced with distance
 			//return new GameSpellEffect(this, m_spell.Duration*10-1, m_spellLine.IsBaseLine ? 3000 : 2000, 1);
-			return new GameSpellEffect(this, m_spell.Duration, m_spellLine.IsBaseLine ? 3000 : 2000, 1);
+			return new GameSpellEffect(this, Spell.Duration, SpellLine.IsBaseLine ? 3000 : 2000, 1);
 		}
 
 		
@@ -89,7 +89,7 @@ namespace DOL.GS.Spells
 		
 		public override void OnEffectPulse(GameSpellEffect effect)
 		{
-            if ( !m_caster.IsAlive || !effect.Owner.IsAlive || m_caster.Mana < Spell.PulsePower || !m_caster.IsWithinRadius( effect.Owner, (int)( Spell.Range * m_caster.GetModified( eProperty.SpellRange ) * 0.01 ) ) || m_caster.IsMezzed || m_caster.IsStunned || ( m_caster.TargetObject is GameLiving ? effect.Owner != m_caster.TargetObject as GameLiving : true ) )
+            if ( !Caster.IsAlive || !effect.Owner.IsAlive || Caster.Mana < Spell.PulsePower || !Caster.IsWithinRadius( effect.Owner, (int)( Spell.Range * Caster.GetModified( eProperty.SpellRange ) * 0.01 ) ) || Caster.IsMezzed || Caster.IsStunned || ( Caster.TargetObject is GameLiving ? effect.Owner != Caster.TargetObject as GameLiving : true ) )
 			{
 				effect.Cancel(false);
 				return;

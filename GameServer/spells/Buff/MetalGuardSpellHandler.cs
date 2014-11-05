@@ -43,7 +43,7 @@ namespace DOL.GS.Spells
                 {
                     lock (group)
                     {
-                        foreach (GamePlayer groupPlayer in casterPlayer.GetPlayersInRadius((ushort)m_spell.Radius))
+                        foreach (GamePlayer groupPlayer in casterPlayer.GetPlayersInRadius((ushort)Spell.Radius))
                         {
                             if (casterPlayer.Group.IsInTheGroup(groupPlayer))
                             {

@@ -56,13 +56,13 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+			foreach (GamePlayer player in Caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 			{
-				if (player != m_caster)
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObject.Casting.CastsASpell", m_caster.GetName(0, true)), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+				if (player != Caster)
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObject.Casting.CastsASpell", Caster.GetName(0, true)), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 			}
 
-			m_caster.Mana -= PowerCost(target);
+			Caster.Mana -= PowerCost(target);
 
 			base.FinishSpellCast(target);
 

@@ -100,20 +100,20 @@ namespace DOL.GS.Spells
                 return;
 
             //[Ganrod] Nidel: Abort and delete bomber if Spell or Target is NULL
-            Spell subspell = SkillBase.GetSpellByID(m_spell.SubSpellID);
+            Spell subspell = SkillBase.GetSpellByID(Spell.SubSpellID);
             GameLiving living = m_pet.TempProperties.getProperty<object>(BOMBERTARGET, null) as GameLiving;
 
             if (subspell == null || living == null)
             {
                 if (log.IsErrorEnabled && subspell == null)
-                    log.Error("Bomber SubspellID for Bomber SpellID: " + m_spell.ID + " is not implemented yet");
+                    log.Error("Bomber SubspellID for Bomber SpellID: " + Spell.ID + " is not implemented yet");
                 bomber.Health = 0;
                 bomber.Delete();
                 return;
             }
 
             //Andraste
-            subspell.Level = m_spell.Level;
+            subspell.Level = Spell.Level;
             if (living.IsWithinRadius(bomber, 350))
             {
 				ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(Caster, subspell, SkillBase.GetSpellLine(SpellLine.KeyName));

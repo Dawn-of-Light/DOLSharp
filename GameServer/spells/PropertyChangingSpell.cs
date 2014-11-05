@@ -44,7 +44,7 @@ namespace DOL.GS.Spells
 		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
@@ -53,7 +53,7 @@ namespace DOL.GS.Spells
 			GamePlayer player = target as GamePlayer;
 			if (player != null)
 			{
-				if (HasPositiveEffect && player.CharacterClass.ID == (int)eCharacterClass.Vampiir && m_caster != player)
+				if (HasPositiveEffect && player.CharacterClass.ID == (int)eCharacterClass.Vampiir && Caster != player)
 				{
 					//restrictions
 					//if (this is PropertyChangingSpell
@@ -66,7 +66,7 @@ namespace DOL.GS.Spells
 					//{
 					if (this is StrengthBuff || this is DexterityBuff || this is ConstitutionBuff || this is QuicknessBuff || this is StrengthConBuff || this is DexterityQuiBuff || this is AcuityBuff)
 					{
-						GamePlayer caster = m_caster as GamePlayer;
+						GamePlayer caster = Caster as GamePlayer;
 						if (caster != null)
 						{
 							caster.Out.SendMessage("Your buff has no effect on the Vampiir!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -76,7 +76,7 @@ namespace DOL.GS.Spells
 					}
 					if (this is ArmorFactorBuff)
 					{
-						if (SpellHandler.FindEffectOnTarget(target, "ArmorFactorBuff") != null && m_spellLine.IsBaseLine != true)
+						if (SpellHandler.FindEffectOnTarget(target, "ArmorFactorBuff") != null && SpellLine.IsBaseLine != true)
 						{
 							MessageToLiving(target, "You already have this effect!", eChatType.CT_SpellResisted);
 							return;

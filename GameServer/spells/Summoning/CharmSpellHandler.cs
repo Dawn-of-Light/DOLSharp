@@ -211,13 +211,13 @@ namespace DOL.GS.Spells
                             		
             	
                 // Check if Body type applies
-                if (m_spell.AmnesiaChance != (ushort)eCharmType.All)
+                if (Spell.AmnesiaChance != (ushort)eCharmType.All)
                 {
                 	
                 	bool charmable = false;
                 	
                 	// gets true only for charm-able mobs for this spell type
-                	switch((eCharmType)m_spell.AmnesiaChance) {
+                	switch((eCharmType)Spell.AmnesiaChance) {
                  		
                 		case eCharmType.HumanoidAnimalInsectMagicalUndead :
                 			if(((GameNPC)target).BodyType == (ushort)NpcTemplateMgr.eBodyType.Undead)
@@ -311,7 +311,7 @@ namespace DOL.GS.Spells
                      * The higher your spec level, the greater your chance of controlling.
                      */
                     
-                    int diffLevel = (int)(Caster.Level / 1.5 + Caster.GetModifiedSpecLevel(m_spellLine.Spec) / 3) - target.Level;
+                    int diffLevel = (int)(Caster.Level / 1.5 + Caster.GetModifiedSpecLevel(SpellLine.Spec) / 3) - target.Level;
                     
                     if (diffLevel >= 0)
                     {

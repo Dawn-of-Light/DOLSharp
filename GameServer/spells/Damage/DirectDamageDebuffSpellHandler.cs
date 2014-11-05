@@ -112,7 +112,7 @@ namespace DOL.GS.Spells
 						DealDamage(target, effectiveness);
 
 						// Due to LOS check delay the actual cast happens after FinishSpellCast does a notify, so we notify again
-						GameEventMgr.Notify(GameLivingEvent.CastFinished, m_caster, new CastingEventArgs(this, target, m_lastAttackData));
+						GameEventMgr.Notify(GameLivingEvent.CastFinished, Caster, new CastingEventArgs(this, target, m_lastAttackData));
 					}
 				}
 				catch (Exception e)

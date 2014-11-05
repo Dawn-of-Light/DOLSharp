@@ -56,16 +56,16 @@ namespace DOL.GS.Spells
 		public virtual void StealLife(AttackData ad)
 		{
 			if (ad == null) return;
-			if (!m_caster.IsAlive) return;
+			if (!Caster.IsAlive) return;
 
 			int heal = (ad.Damage + ad.CriticalDamage)* Spell.LifeDrainReturn / 100; // % factor on all drains
-			if (m_caster.IsDiseased)
+			if (Caster.IsDiseased)
 			{
 				MessageToCaster("You are diseased!", eChatType.CT_SpellResisted);
 				heal >>= 1;
 			}
 
-            heal = m_caster.ChangeHealth(m_caster, GameLiving.eHealthChangeType.Spell, heal);
+            heal = Caster.ChangeHealth(Caster, GameLiving.eHealthChangeType.Spell, heal);
 
 			if (heal > 0)
 			{
@@ -74,10 +74,10 @@ namespace DOL.GS.Spells
 
                 #region PVP DAMAGE
 
-                if (m_caster is NecromancerPet && ((m_caster as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || m_caster is GamePlayer)
+                if (Caster is NecromancerPet && ((Caster as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || Caster is GamePlayer)
                 {
-                    if (m_caster.DamageRvRMemory > 0)
-                        m_caster.DamageRvRMemory -= (long)Math.Max(heal, 0);
+                    if (Caster.DamageRvRMemory > 0)
+                        Caster.DamageRvRMemory -= (long)Math.Max(heal, 0);
                 }
 
                 #endregion PVP DAMAGE
@@ -89,10 +89,10 @@ namespace DOL.GS.Spells
 
                 #region PVP DAMAGE
 
-                if (m_caster is NecromancerPet && ((m_caster as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || m_caster is GamePlayer)
+                if (Caster is NecromancerPet && ((Caster as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || Caster is GamePlayer)
                 {
-                    if (m_caster.DamageRvRMemory > 0)
-                        m_caster.DamageRvRMemory = 0; //Remise a zéro compteur dommages/heal rps
+                    if (Caster.DamageRvRMemory > 0)
+                        Caster.DamageRvRMemory = 0; //Remise a zéro compteur dommages/heal rps
                 }
                 #endregion PVP DAMAGE
 			}
@@ -103,10 +103,10 @@ namespace DOL.GS.Spells
 		public virtual void StealEndo(AttackData ad)
 		{
 			if (ad == null) return;
-			if (!m_caster.IsAlive) return;
+			if (!Caster.IsAlive) return;
 
 			int renew = ((ad.Damage + ad.CriticalDamage) * Spell.ResurrectHealth / 100) * Spell.LifeDrainReturn / 100; // %endo returned
-            renew = m_caster.ChangeEndurance(m_caster, GameLiving.eEnduranceChangeType.Spell, renew);
+            renew = Caster.ChangeEndurance(Caster, GameLiving.eEnduranceChangeType.Spell, renew);
 			if (renew > 0)
 			{
 				MessageToCaster("You steal " + renew + " endurance.", eChatType.CT_Spell);
@@ -122,10 +122,10 @@ namespace DOL.GS.Spells
 		public virtual void StealPower(AttackData ad)
 		{
 			if (ad == null) return;
-			if (!m_caster.IsAlive) return;
+			if (!Caster.IsAlive) return;
 
 			int replenish = ((ad.Damage + ad.CriticalDamage) * Spell.ResurrectMana  / 100) * Spell.LifeDrainReturn / 100; // %mana returned
-            replenish = m_caster.ChangeMana(m_caster, GameLiving.eManaChangeType.Spell, replenish);
+            replenish = Caster.ChangeMana(Caster, GameLiving.eManaChangeType.Spell, replenish);
 			if (replenish > 0)
 			{
 				MessageToCaster("You steal " + replenish + " power.", eChatType.CT_Spell);

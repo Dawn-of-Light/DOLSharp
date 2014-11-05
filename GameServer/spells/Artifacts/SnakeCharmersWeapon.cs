@@ -40,19 +40,19 @@ namespace DOL.GS.Spells
         public override void StealLife(AttackData ad)
         {
             if (ad == null) return;
-            if (!m_caster.IsAlive) return;
+            if (!Caster.IsAlive) return;
 
             int heal = (ad.Damage + ad.CriticalDamage) * 50 / 100;
             int mana = (ad.Damage + ad.CriticalDamage) * 30 / 100;
             int endu = (ad.Damage + ad.CriticalDamage) * 20 / 100;
 
-            if (m_caster.IsDiseased)
+            if (Caster.IsDiseased)
             {
                 MessageToCaster("You are diseased!", eChatType.CT_SpellResisted);
                 heal >>= 1;
             }
             if (heal <= 0) return;            
-            heal = m_caster.ChangeHealth(m_caster, GameLiving.eHealthChangeType.Spell, heal);
+            heal = Caster.ChangeHealth(Caster, GameLiving.eHealthChangeType.Spell, heal);
             if (heal > 0)
             {
                 MessageToCaster("You steal " + heal + " hit point" + (heal == 1 ? "." : "s."), eChatType.CT_Spell);
@@ -63,7 +63,7 @@ namespace DOL.GS.Spells
             }
             
             if (mana <=0) return;
-            mana = m_caster.ChangeMana(m_caster,GameLiving.eManaChangeType.Spell,mana);
+            mana = Caster.ChangeMana(Caster,GameLiving.eManaChangeType.Spell,mana);
             if (mana > 0)
             {
                 MessageToCaster("You steal " + mana + " power point" + (mana == 1 ? "." : "s."), eChatType.CT_Spell);
@@ -74,7 +74,7 @@ namespace DOL.GS.Spells
             }     
             
             if (endu <=0) return;
-            endu = m_caster.ChangeEndurance(m_caster,GameLiving.eEnduranceChangeType.Spell,endu);            
+            endu = Caster.ChangeEndurance(Caster,GameLiving.eEnduranceChangeType.Spell,endu);            
             if (heal > 0)
             {
                 MessageToCaster("You steal " + endu + " endurance point" + (endu == 1 ? "." : "s."), eChatType.CT_Spell);

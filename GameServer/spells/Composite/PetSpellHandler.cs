@@ -40,18 +40,18 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public override bool CastSpell()
 		{
-			m_spellTarget = Caster.TargetObject as GameLiving;
+			SpellTarget = Caster.TargetObject as GameLiving;
 			bool casted = true;
 
-			if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, m_spellTarget, Spell, SpellLine) && CheckBeginCast(m_spellTarget))
+			if (GameServer.ServerRules.IsAllowedToCastSpell(Caster, SpellTarget, Spell, SpellLine) && CheckBeginCast(SpellTarget))
             {
                 if (Spell.CastTime > 0)
                 {
-					StartCastTimer(m_spellTarget);
+					StartCastTimer(SpellTarget);
                 }
                 else
                 {
-					FinishSpellCast(m_spellTarget);
+					FinishSpellCast(SpellTarget);
                 }
             }
             else 
@@ -70,10 +70,10 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public override int CalculateCastingTime()
 		{
-			int ticks = m_spell.CastTime;
-			ticks = (int)(ticks * Math.Max(m_caster.CastingSpeedReductionCap, m_caster.DexterityCastTimeReduction));
-            if (ticks < m_caster.MinimumCastingSpeed)
-                ticks = m_caster.MinimumCastingSpeed;
+			int ticks = Spell.CastTime;
+			ticks = (int)(ticks * Math.Max(Caster.CastingSpeedReductionCap, Caster.DexterityCastTimeReduction));
+            if (ticks < Caster.MinimumCastingSpeed)
+                ticks = Caster.MinimumCastingSpeed;
 			return ticks;
 		}
 
@@ -124,7 +124,7 @@ namespace DOL.GS.Spells
 
             // Facilitate Painworking.
 
-            if (Spell.RecastDelay > 0 && m_startReuseTimer)
+            if (Spell.RecastDelay > 0 && StartReuseTimer)
             {
                 foreach (Spell spell in SkillBase.GetSpellList(SpellLine.KeyName))
                 {

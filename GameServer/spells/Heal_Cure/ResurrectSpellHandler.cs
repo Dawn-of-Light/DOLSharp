@@ -40,7 +40,7 @@ namespace DOL.GS.Spells
 
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -63,7 +63,7 @@ namespace DOL.GS.Spells
 			}
 			else
 			{
-				targetPlayer.TempProperties.setProperty(RESURRECT_CASTER_PROPERTY, m_caster);
+				targetPlayer.TempProperties.setProperty(RESURRECT_CASTER_PROPERTY, Caster);
                 RegionTimer resurrectExpiredTimer = new RegionTimer(targetPlayer);
 				resurrectExpiredTimer.Callback = new RegionTimerCallback(ResurrectExpiredCallback);
 				resurrectExpiredTimer.Properties.setProperty("targetPlayer", targetPlayer);
@@ -74,7 +74,7 @@ namespace DOL.GS.Spells
 				}
 
 				//send resurrect dialog
-				targetPlayer.Out.SendCustomDialog("Do you allow " + m_caster.GetName(0, true) + " to resurrected you\nwith " + m_spell.ResurrectHealth + " percent hits?", new CustomDialogResponse(ResurrectResponceHandler));
+				targetPlayer.Out.SendCustomDialog("Do you allow " + Caster.GetName(0, true) + " to resurrected you\nwith " + Spell.ResurrectHealth + " percent hits?", new CustomDialogResponse(ResurrectResponceHandler));
 			}
 		}
 
@@ -85,10 +85,10 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public override int PowerCost(GameLiving target)
 		{
-			float factor = Math.Max (0.1f, 0.5f + (target.Level - m_caster.Level) / (float)m_caster.Level);
+			float factor = Math.Max (0.1f, 0.5f + (target.Level - Caster.Level) / (float)Caster.Level);
 
 			//DOLConsole.WriteLine("res power needed: " + (int) (m_caster.MaxMana * factor) + "; factor="+factor);
-			return (int) (m_caster.MaxMana * factor);
+			return (int) (Caster.MaxMana * factor);
 		}
 
 		/// <summary>
@@ -141,7 +141,7 @@ namespace DOL.GS.Spells
 					{
 						player.Out.SendMessage("You decline to be resurrected.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						//refund mana
-						m_caster.Mana += PowerCost(player);
+						Caster.Mana += PowerCost(player);
 					}
 				}
 			}
@@ -154,11 +154,11 @@ namespace DOL.GS.Spells
 		/// <param name="living"></param>
 		protected virtual void ResurrectLiving(GameLiving living)
 		{
-			if (m_caster.ObjectState != GameObject.eObjectState.Active) return;
-			if (m_caster.CurrentRegionID != living.CurrentRegionID) return;
+			if (Caster.ObjectState != GameObject.eObjectState.Active) return;
+			if (Caster.CurrentRegionID != living.CurrentRegionID) return;
 
-			living.Health = living.MaxHealth * m_spell.ResurrectHealth / 100;
-			int tempManaEnd = m_spell.ResurrectMana / 100;
+			living.Health = living.MaxHealth * Spell.ResurrectHealth / 100;
+			int tempManaEnd = Spell.ResurrectMana / 100;
 			living.Mana = living.MaxMana * tempManaEnd;
 
 			//The spec rez spells are the only ones that have endurance
@@ -167,7 +167,7 @@ namespace DOL.GS.Spells
 			else
 				living.Endurance = 0;
 
-			living.MoveTo(m_caster.CurrentRegionID, m_caster.X, m_caster.Y, m_caster.Z, m_caster.Heading);
+			living.MoveTo(Caster.CurrentRegionID, Caster.X, Caster.Y, Caster.Z, Caster.Heading);
 
 			GameTimer resurrectExpiredTimer = null;
 			lock (m_resTimersByLiving.SyncRoot)
@@ -186,7 +186,7 @@ namespace DOL.GS.Spells
 				player.StopReleaseTimer();
 				player.Out.SendPlayerRevive(player);
 				player.UpdatePlayerStatus();
-				player.Out.SendMessage("You have been resurrected by " + m_caster.GetName(0, false) + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage("You have been resurrected by " + Caster.GetName(0, false) + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				player.Notify(GamePlayerEvent.Revive, player, new RevivedEventArgs(Caster, Spell));
                 
                 //Lifeflight add this should make it so players who have been ressurected don't take damage for 5 seconds
@@ -202,7 +202,7 @@ namespace DOL.GS.Spells
 						attacker.Notify(
 							GameLivingEvent.EnemyHealed,
 							attacker,
-							new EnemyHealedEventArgs(living, m_caster, GameLiving.eHealthChangeType.Spell, living.Health));
+							new EnemyHealedEventArgs(living, Caster, GameLiving.eHealthChangeType.Spell, living.Health));
 				}
 
 				GamePlayer casterPlayer = Caster as GamePlayer;
@@ -248,7 +248,7 @@ namespace DOL.GS.Spells
 
             //Lifeflight, the base call to Checkbegincast uses its own power check, which is bad for rez spells
             //so I added another check here.
-            if (m_caster.Mana < PowerCost(target))
+            if (Caster.Mana < PowerCost(target))
             {
                 MessageToCaster("You don't have enough power to cast that!", eChatType.CT_SpellResisted);
 				return false;

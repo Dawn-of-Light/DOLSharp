@@ -47,7 +47,7 @@ namespace DOL.GS.Spells
 		{
 			base.OnEffectStart(effect); 
 			//effect.Owner.DebuffCategory[(int)eProperty.Dexterity] += (int)m_spell.Value;
-            double percentValue = (m_spell.Value) / 100;
+            double percentValue = (Spell.Value) / 100;
             StrDebuff = (int)((double)effect.Owner.GetModified(eProperty.Strength) * percentValue);
             DexDebuff = (int)((double)effect.Owner.GetModified(eProperty.Dexterity) * percentValue);
             ConDebuff = (int)((double)effect.Owner.GetModified(eProperty.Constitution) * percentValue);
@@ -78,7 +78,7 @@ namespace DOL.GS.Spells
 		}
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
-            double percentValue = (m_spell.Value) / 100;
+            double percentValue = (Spell.Value) / 100;
 
             effect.Owner.DebuffCategory[(int)eProperty.Dexterity] -= DexDebuff;
             effect.Owner.DebuffCategory[(int)eProperty.Strength] -= StrDebuff;

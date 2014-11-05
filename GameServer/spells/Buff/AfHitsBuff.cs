@@ -55,15 +55,15 @@ namespace DOL.GS.Spells
 
             playerAF += effect.Owner.GetModifiedFromItems(eProperty.ArmorFactor);
 
-            if (m_spell.Value < 0)
+            if (Spell.Value < 0)
             {
-                bonusAF = ((m_spell.Value * -1) * playerAF) / 100;
-                bonusHP = ((m_spell.Value * -1) * effect.Owner.MaxHealth) / 100;
+                bonusAF = ((Spell.Value * -1) * playerAF) / 100;
+                bonusHP = ((Spell.Value * -1) * effect.Owner.MaxHealth) / 100;
             }
             else
             {
-                bonusAF = m_spell.Value;
-                bonusHP = m_spell.Value;
+                bonusAF = Spell.Value;
+                bonusHP = Spell.Value;
             }
 
 

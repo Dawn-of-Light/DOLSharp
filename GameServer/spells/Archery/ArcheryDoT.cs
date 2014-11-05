@@ -45,9 +45,9 @@ namespace DOL.GS.Spells
 		public override void CalculateDamageVariance(GameLiving target, out double min, out double max)
 		{
 			int speclevel = 1;
-			if (m_caster is GamePlayer)
+			if (Caster is GamePlayer)
 			{
-				speclevel = ((GamePlayer)m_caster).GetModifiedSpecLevel(Specs.Archery);
+				speclevel = ((GamePlayer)Caster).GetModifiedSpecLevel(Specs.Archery);
 			}
 
 			min = 1.25;

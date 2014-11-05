@@ -57,7 +57,7 @@ namespace DOL.GS.Spells
 				int specLevel = 0;
 				if (Caster is GamePlayer)
 				{
-					specLevel = ((GamePlayer)Caster).GetModifiedSpecLevel(m_spellLine.Spec);
+					specLevel = ((GamePlayer)Caster).GetModifiedSpecLevel(SpellLine.Spec);
 				}
 				effectiveness = 0.75 + (specLevel-1) * 0.5 / Spell.Level;
 				effectiveness = Math.Max(0.75, effectiveness);
@@ -162,7 +162,7 @@ namespace DOL.GS.Spells
 				list.Add(" "); //empty line
 				list.Add(Spell.Description);
 				list.Add(" "); //empty line
-				list.Add(String.Format(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "ResistDebuff.DelveInfo.Decrease", DebuffTypeName, m_spell.Value)));
+				list.Add(String.Format(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "ResistDebuff.DelveInfo.Decrease", DebuffTypeName, Spell.Value)));
 				list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Target", Spell.Target));
 				if (Spell.Range != 0)
 					list.Add(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "DelveInfo.Range", Spell.Range));

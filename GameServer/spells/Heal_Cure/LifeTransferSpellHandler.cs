@@ -44,7 +44,7 @@ namespace DOL.GS.Spells
 
 			bool healed = false;
 			int transferHeal;
-			double spellValue = m_spell.Value;
+			double spellValue = Spell.Value;
 
 			transferHeal = (int)(Caster.MaxHealth / 100 * Math.Abs(spellValue));
 
@@ -73,12 +73,12 @@ namespace DOL.GS.Spells
 
 			if (!healed && Spell.Target == "Realm")
 			{
-				m_caster.Mana -= PowerCost(target) >> 1;	// only 1/2 power if no heal
+				Caster.Mana -= PowerCost(target) >> 1;	// only 1/2 power if no heal
 			}
 			else
 			{
-				m_caster.Mana -= PowerCost(target);
-				m_caster.Health -= transferHeal >> 1;
+				Caster.Mana -= PowerCost(target);
+				Caster.Health -= transferHeal >> 1;
 			}
 
 			// send animation for non pulsing spells only
@@ -120,7 +120,7 @@ namespace DOL.GS.Spells
 				return false;
 			}
 
-			if (m_caster == target)
+			if (Caster == target)
 			{
 				MessageToCaster("You cannot transfer life to yourself.", eChatType.CT_SpellResisted);
 				return false;
@@ -139,9 +139,9 @@ namespace DOL.GS.Spells
 
             long healedrp = 0;
 
-            if (m_caster is NecromancerPet &&
-                ((m_caster as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null
-                || m_caster is GamePlayer)
+            if (Caster is NecromancerPet &&
+                ((Caster as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null
+                || Caster is GamePlayer)
             {
 
                 if (target is NecromancerPet && ((target as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || target is GamePlayer)
@@ -154,10 +154,10 @@ namespace DOL.GS.Spells
                 }
             }
 
-            if (healedrp > 0 && m_caster != target && m_spellLine.KeyName != GlobalSpellsLines.Item_Spells &&
-                m_caster.CurrentRegionID != 242 && m_spell.Pulse == 0) // On Exclu zone COOP
+            if (healedrp > 0 && Caster != target && SpellLine.KeyName != GlobalSpellsLines.Item_Spells &&
+                Caster.CurrentRegionID != 242 && Spell.Pulse == 0) // On Exclu zone COOP
             {
-                GamePlayer joueur_a_considerer = (m_caster is NecromancerPet ? ((m_caster as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() : m_caster as GamePlayer);
+                GamePlayer joueur_a_considerer = (Caster is NecromancerPet ? ((Caster as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() : Caster as GamePlayer);
 
                 int POURCENTAGE_SOIN_RP = ServerProperties.Properties.HEAL_PVP_DAMAGE_VALUE_RP; // ...% de bonus RP pour les soins effectués
                 long Bonus_RP_Soin = Convert.ToInt64((double)healedrp * POURCENTAGE_SOIN_RP / 100);
@@ -191,7 +191,7 @@ namespace DOL.GS.Spells
 
 			
 			MessageToCaster("You heal " + target.GetName(0, false) + " for " + heal + " hit points!", eChatType.CT_Spell);
-			MessageToLiving(target, "You are healed by " + m_caster.GetName(0, false) + " for " + heal + " hit points.", eChatType.CT_Spell);
+			MessageToLiving(target, "You are healed by " + Caster.GetName(0, false) + " for " + heal + " hit points.", eChatType.CT_Spell);
 			if(heal < amount)
 					MessageToCaster(target.GetName(0, true)+" is fully healed.", eChatType.CT_Spell);
 

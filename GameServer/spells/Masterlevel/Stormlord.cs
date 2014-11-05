@@ -71,7 +71,7 @@ namespace DOL.GS.Spells
             sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-            tempest = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+            tempest = ScriptMgr.CreateSpellHandler(Caster, s, sl);
         }
     }
     [SpellHandlerAttribute("StormMissHit")]
@@ -119,7 +119,7 @@ namespace DOL.GS.Spells
         /// <param name="target"></param>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            Caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
 
@@ -209,7 +209,7 @@ namespace DOL.GS.Spells
             sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-            tempest = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+            tempest = ScriptMgr.CreateSpellHandler(Caster, s, sl);
         }
     }
     [SpellHandlerAttribute("StormEnduDrain")]
@@ -232,7 +232,7 @@ namespace DOL.GS.Spells
 
             if (target is GamePlayer)
                 ((GamePlayer)target).Out.SendMessage(" You lose " + end + " endurance!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
-            (m_caster as GamePlayer).Out.SendMessage("" + target.Name + " loses " + end + " endurance!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+            (Caster as GamePlayer).Out.SendMessage("" + target.Name + " loses " + end + " endurance!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
         }
 
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
@@ -291,7 +291,7 @@ namespace DOL.GS.Spells
             sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-            tempest = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+            tempest = ScriptMgr.CreateSpellHandler(Caster, s, sl);
         }
     }
     /// <summary>
@@ -374,7 +374,7 @@ namespace DOL.GS.Spells
             sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-            tempest = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+            tempest = ScriptMgr.CreateSpellHandler(Caster, s, sl);
         }
     }
 
@@ -399,7 +399,7 @@ namespace DOL.GS.Spells
 
             if (target is GamePlayer)
             {
-                ((GamePlayer)target).Out.SendMessage(m_caster.Name + " steals you " + mana + " points of power!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
+                ((GamePlayer)target).Out.SendMessage(Caster.Name + " steals you " + mana + " points of power!", eChatType.CT_YouWereHit, eChatLoc.CL_SystemWindow);
             }
 
             StealMana(target, mana);
@@ -409,8 +409,8 @@ namespace DOL.GS.Spells
 
         public virtual void StealMana(GameLiving target, int mana)
         {
-            if (!m_caster.IsAlive) return;
-            m_caster.ChangeMana(target, GameLiving.eManaChangeType.Spell, mana);
+            if (!Caster.IsAlive) return;
+            Caster.ChangeMana(target, GameLiving.eManaChangeType.Spell, mana);
             SendCasterMessage(target, mana);
 
         }
@@ -456,7 +456,7 @@ namespace DOL.GS.Spells
                 GameStorm targetStorm = effect.Owner as GameStorm;
                 targetStorm.Movable = false;
                 MessageToCaster("Now the vortex of this storm is locked!", eChatType.CT_YouWereHit);
-                GameEventMgr.AddHandler(m_caster, GameLivingEvent.Moving, new DOLEventHandler(LivingMoves));
+                GameEventMgr.AddHandler(Caster, GameLivingEvent.Moving, new DOLEventHandler(LivingMoves));
             }
         }
 
@@ -466,7 +466,7 @@ namespace DOL.GS.Spells
             {
                 GameStorm targetStorm = effect.Owner as GameStorm;
                 targetStorm.Movable = true;
-                GameEventMgr.RemoveHandler(m_caster, GameLivingEvent.Moving, new DOLEventHandler(LivingMoves));
+                GameEventMgr.RemoveHandler(Caster, GameLivingEvent.Moving, new DOLEventHandler(LivingMoves));
             }
             return base.OnEffectExpires(effect, noMessages);
         }
@@ -528,7 +528,7 @@ namespace DOL.GS.Spells
             sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-            tempest = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+            tempest = ScriptMgr.CreateSpellHandler(Caster, s, sl);
         }
     }
     /// <summary>
@@ -611,7 +611,7 @@ namespace DOL.GS.Spells
             sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-            tempest = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+            tempest = ScriptMgr.CreateSpellHandler(Caster, s, sl);
         }
     }
     /// <summary>
@@ -626,9 +626,9 @@ namespace DOL.GS.Spells
             get
             {
                 eProperty temp = eProperty.Acuity;
-                if (m_spellTarget.Realm == eRealm.Albion) temp = eProperty.Intelligence;
-                if (m_spellTarget.Realm == eRealm.Midgard) temp = eProperty.Piety;
-                if (m_spellTarget.Realm == eRealm.Hibernia) temp = eProperty.Intelligence;
+                if (SpellTarget.Realm == eRealm.Albion) temp = eProperty.Intelligence;
+                if (SpellTarget.Realm == eRealm.Midgard) temp = eProperty.Piety;
+                if (SpellTarget.Realm == eRealm.Hibernia) temp = eProperty.Intelligence;
 
                 return temp;
             }
@@ -705,7 +705,7 @@ namespace DOL.GS.Spells
             sRadius = 350;
             s = new Spell(dbs, 1);
             sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-            tempest = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+            tempest = ScriptMgr.CreateSpellHandler(Caster, s, sl);
         }
     }
     [SpellHandlerAttribute("StormEnergyTempest")]
@@ -743,7 +743,7 @@ namespace DOL.GS.Spells
         {
             if (Spell.Damage < 0)
             {
-                return (m_spellTarget.MaxHealth * -Spell.Damage * .01) * 3.0 * effectiveness;
+                return (SpellTarget.MaxHealth * -Spell.Damage * .01) * 3.0 * effectiveness;
             }
 
             return base.DamageCap(effectiveness);

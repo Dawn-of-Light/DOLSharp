@@ -37,7 +37,7 @@ namespace DOL.GS.Spells
 
 		public override void FinishSpellCast(GameLiving target)
 		{
-			m_caster.Mana -= PowerCost(target);
+			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
 
@@ -161,7 +161,7 @@ namespace DOL.GS.Spells
 		protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
 		{
 			//every 5 seconds?
-			return new GameSpellEffect(this, m_spell.Duration, 5000, 1);
+			return new GameSpellEffect(this, Spell.Duration, 5000, 1);
 		}
 
 		public override bool HasPositiveEffect

@@ -141,17 +141,17 @@ namespace DOL.GS.Spells
                     }
 				case "group":
 					{
-						Group group = m_caster.Group;
+						Group group = Caster.Group;
 						int spellRange = CalculateSpellRange();
 						if (spellRange == 0)
-							spellRange = m_spell.Radius;
+							spellRange = Spell.Radius;
 						if (group == null)
 						{
-							list.Add(m_caster);
-							IControlledBrain npc = m_caster.ControlledBrain;
+							list.Add(Caster);
+							IControlledBrain npc = Caster.ControlledBrain;
 							if (npc != null)
 							{
-								if (m_caster.IsWithinRadius(npc.Body, spellRange))
+								if (Caster.IsWithinRadius(npc.Body, spellRange))
 									list.Add(npc.Body);
 							}
 						}
@@ -160,7 +160,7 @@ namespace DOL.GS.Spells
 							foreach (GameLiving living in group.GetMembersInTheGroup())
 							{
 								// only players in range
-								if (m_caster.IsWithinRadius(living, spellRange))
+								if (Caster.IsWithinRadius(living, spellRange))
 									list.Add(living);
 
 								IControlledBrain npc = living.ControlledBrain;
@@ -348,17 +348,17 @@ namespace DOL.GS.Spells
                     }
 				case "group":
 					{
-						Group group = m_caster.Group;
+						Group group = Caster.Group;
 						int spellRange = CalculateSpellRange();
 						if (spellRange == 0)
-							spellRange = m_spell.Radius;
+							spellRange = Spell.Radius;
 						if (group == null)
 						{
-							list.Add(m_caster);
-							IControlledBrain npc = m_caster.ControlledBrain;
+							list.Add(Caster);
+							IControlledBrain npc = Caster.ControlledBrain;
 							if (npc != null)
 							{
-								if (m_caster.IsWithinRadius(npc.Body, spellRange))
+								if (Caster.IsWithinRadius(npc.Body, spellRange))
 									list.Add(npc.Body);
 							}
 						}
@@ -367,13 +367,13 @@ namespace DOL.GS.Spells
 							foreach (GameLiving living in group.GetMembersInTheGroup())
 							{
 								// only players in range
-								if (m_caster.IsWithinRadius(living, spellRange))
+								if (Caster.IsWithinRadius(living, spellRange))
 									list.Add(living);
 
 								IControlledBrain npc = living.ControlledBrain;
 								if (npc != null)
 								{
-									if (m_caster.IsWithinRadius(npc.Body, spellRange))
+									if (Caster.IsWithinRadius(npc.Body, spellRange))
 										list.Add(npc.Body);
 								}
 							}
@@ -537,17 +537,17 @@ namespace DOL.GS.Spells
                     }
                 case "group":
                     {
-						Group group = m_caster.Group;
+						Group group = Caster.Group;
 						int spellRange = CalculateSpellRange();
 						if (spellRange == 0)
-							spellRange = m_spell.Radius;
+							spellRange = Spell.Radius;
 						if (group == null)
 						{
-							list.Add(m_caster);
-							IControlledBrain npc = m_caster.ControlledBrain;
+							list.Add(Caster);
+							IControlledBrain npc = Caster.ControlledBrain;
 							if (npc != null)
 							{
-								if (m_caster.IsWithinRadius(npc.Body, spellRange))
+								if (Caster.IsWithinRadius(npc.Body, spellRange))
 									list.Add(npc.Body);
 							}
 						}
@@ -556,7 +556,7 @@ namespace DOL.GS.Spells
 							foreach (GameLiving living in group.GetMembersInTheGroup())
 							{
 								// only players in range
-								if (m_caster.IsWithinRadius(living, spellRange))
+								if (Caster.IsWithinRadius(living, spellRange))
 									list.Add(living);
 
 								IControlledBrain npc = living.ControlledBrain;
@@ -726,17 +726,17 @@ namespace DOL.GS.Spells
                     }
                 case "group":
                     {
-						Group group = m_caster.Group;
+						Group group = Caster.Group;
 						int spellRange = CalculateSpellRange();
 						if (spellRange == 0)
-							spellRange = m_spell.Radius;
+							spellRange = Spell.Radius;
 						if (group == null)
 						{
-							list.Add(m_caster);
-							IControlledBrain npc = m_caster.ControlledBrain;
+							list.Add(Caster);
+							IControlledBrain npc = Caster.ControlledBrain;
 							if (npc != null)
 							{
-								if (m_caster.IsWithinRadius(npc.Body, spellRange))
+								if (Caster.IsWithinRadius(npc.Body, spellRange))
 									list.Add(npc.Body);
 							}
 						}
@@ -745,7 +745,7 @@ namespace DOL.GS.Spells
 							foreach (GameLiving living in group.GetMembersInTheGroup())
 							{
 								// only players in range
-								if (m_caster.IsWithinRadius(living, spellRange))
+								if (Caster.IsWithinRadius(living, spellRange))
 									list.Add(living);
 
 								IControlledBrain npc = living.ControlledBrain;
@@ -936,17 +936,17 @@ namespace DOL.GS.Spells
                     }
                 case "group":
                     {
-						Group group = m_caster.Group;
+						Group group = Caster.Group;
 						int spellRange = CalculateSpellRange();
 						if (spellRange == 0)
-							spellRange = m_spell.Radius;
+							spellRange = Spell.Radius;
 						if (group == null)
 						{
-							list.Add(m_caster);
-							IControlledBrain npc = m_caster.ControlledBrain;
+							list.Add(Caster);
+							IControlledBrain npc = Caster.ControlledBrain;
 							if (npc != null)
 							{
-								if (m_caster.IsWithinRadius(npc.Body, spellRange))
+								if (Caster.IsWithinRadius(npc.Body, spellRange))
 									list.Add(npc.Body);
 							}
 						}
@@ -955,7 +955,7 @@ namespace DOL.GS.Spells
 							foreach (GameLiving living in group.GetMembersInTheGroup())
 							{
 								// only players in range
-								if (m_caster.IsWithinRadius(living, spellRange))
+								if (Caster.IsWithinRadius(living, spellRange))
 									list.Add(living);
 
 								IControlledBrain npc = living.ControlledBrain;
@@ -1153,7 +1153,7 @@ namespace DOL.GS.Spells
             {
                 foreach (GamePlayer player in storm.GetPlayersInRadius(sRadius))
                 {
-                    tempest = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+                    tempest = ScriptMgr.CreateSpellHandler(Caster, s, sl);
                     if ((player.IsAlive) && (GameServer.ServerRules.IsSameRealm(storm, player, true))) tempest.StartSpell((GameLiving)player);
                 }
             }
@@ -1161,7 +1161,7 @@ namespace DOL.GS.Spells
             {
                 foreach (GamePlayer player in storm.GetPlayersInRadius(sRadius))
                 {
-                    tempest = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
+                    tempest = ScriptMgr.CreateSpellHandler(Caster, s, sl);
                     if ((player.IsAlive) && (GameServer.ServerRules.IsAllowedToAttack(storm, player, true))) tempest.StartSpell((GameLiving)player);
                 }
             }
@@ -1198,7 +1198,7 @@ namespace DOL.GS.Spells
         /// 
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            Caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
 

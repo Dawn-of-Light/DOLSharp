@@ -52,7 +52,7 @@ namespace DOL.GS.Spells
 			SpellLine line = SkillBase.GetSpellLine("Summon Monster");
 			Spell castSpell = SkillBase.GetSpellByID(14078);
 
-			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, castSpell, line);
+			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(Caster, castSpell, line);
 			spellhandler.StartSpell(living);
 		}
 	}

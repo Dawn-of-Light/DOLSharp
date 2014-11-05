@@ -34,7 +34,7 @@ namespace DOL.GS.Spells
 			if(selectedTarget as GamePlayer==null) 
 				return false;
 
-			if(!m_caster.IsWithinRadius(selectedTarget, Spell.Range))
+			if(!Caster.IsWithinRadius(selectedTarget, Spell.Range))
 			{
 				MessageToCaster("Your target is too far away.", eChatType.CT_SpellResisted); return false;
 			}
@@ -65,8 +65,8 @@ namespace DOL.GS.Spells
 				if(ab is RealmAbility && ab is RR5RealmAbility == false)
 					text.Add(((RealmAbility)ab).Name);
 
-			(m_caster as GamePlayer).Out.SendCustomTextWindow("Realm Lore [ "+player.Name+" ]",text);
-			(m_caster as GamePlayer).Out.SendMessage("Realm Lore [ "+player.Name+" ]\n"+text,eChatType.CT_System,eChatLoc.CL_SystemWindow);
+			(Caster as GamePlayer).Out.SendCustomTextWindow("Realm Lore [ "+player.Name+" ]",text);
+			(Caster as GamePlayer).Out.SendMessage("Realm Lore [ "+player.Name+" ]\n"+text,eChatType.CT_System,eChatLoc.CL_SystemWindow);
 		}
 		public RealmLore(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
     }	

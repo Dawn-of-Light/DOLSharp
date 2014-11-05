@@ -51,8 +51,8 @@ namespace DOL.GS.Spells
 
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
-			if (m_caster.ObjectState != GameLiving.eObjectState.Active)	return false;
-			if (!m_caster.IsAlive)
+			if (Caster.ObjectState != GameLiving.eObjectState.Active)	return false;
+			if (!Caster.IsAlive)
 			{
 				MessageToCaster("You are dead and can't cast!", eChatType.CT_System);
 				return false;
@@ -81,8 +81,8 @@ namespace DOL.GS.Spells
 				GameLiving EffectOwner = SelectiveBlindness.EffectSource;
 				if(EffectOwner==selectedTarget)
 				{
-					if (m_caster is GamePlayer)
-						((GamePlayer)m_caster).Out.SendMessage(string.Format("{0} is invisible to you!", selectedTarget.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+					if (Caster is GamePlayer)
+						((GamePlayer)Caster).Out.SendMessage(string.Format("{0} is invisible to you!", selectedTarget.GetName(0, true)), eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 					
 					return false;
 				}
@@ -95,24 +95,24 @@ namespace DOL.GS.Spells
 				return false;
 			}
 			
-			if (m_caster.IsSitting)
+			if (Caster.IsSitting)
 			{
 				MessageToCaster("You can't cast while sitting!", eChatType.CT_SpellResisted);
 				return false;
 			}
-			if (m_spell.RecastDelay > 0)
+			if (Spell.RecastDelay > 0)
 			{
-				int left = m_caster.GetSkillDisabledDuration(m_spell);
+				int left = Caster.GetSkillDisabledDuration(Spell);
 				if (left > 0)
 				{
 					MessageToCaster("You must wait " + (left / 1000 + 1).ToString() + " seconds to use this spell!", eChatType.CT_System);
 					return false;
 				}
 			}
-			String targetType = m_spell.Target.ToLower();
+			String targetType = Spell.Target.ToLower();
 			if (targetType == "area")
 			{
-				if (!m_caster.IsWithinRadius(m_caster.GroundTarget, CalculateSpellRange()))
+				if (!Caster.IsWithinRadius(Caster.GroundTarget, CalculateSpellRange()))
 				{
 					MessageToCaster("Your area target is out of range.  Select a closer target.", eChatType.CT_SpellResisted);
 					return false;
@@ -121,14 +121,14 @@ namespace DOL.GS.Spells
 
 			if (targetType == "enemy")
 			{
-				if (m_caster.IsObjectInFront(selectedTarget, 180) == false)
+				if (Caster.IsObjectInFront(selectedTarget, 180) == false)
 				{
 					MessageToCaster("Your target is not in view!", eChatType.CT_SpellResisted);
 					Caster.Notify(GameLivingEvent.CastFailed, new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetNotInView));
 					return false;
 				}
 
-				if (m_caster.TargetInView == false)
+				if (Caster.TargetInView == false)
 				{
 					MessageToCaster("Your target is not visible!", eChatType.CT_SpellResisted);
 					Caster.Notify(GameLivingEvent.CastFailed, new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetNotInView));
@@ -371,7 +371,7 @@ namespace DOL.GS.Spells
 		{
 			if (Spell.LifeDrainReturn == (int)eShotType.Power) return 6000;
 
-			int ticks = m_spell.CastTime;
+			int ticks = Spell.CastTime;
 
 			double percent = 1.0;
 			int dex = Caster.GetModified(eProperty.Dexterity);
@@ -389,17 +389,17 @@ namespace DOL.GS.Spells
 				percent = 1.0 - ((dex - 60) * 0.15 + (dex - 250) * 0.05) * 0.01;
 			}
 
-			GamePlayer player = m_caster as GamePlayer;
+			GamePlayer player = Caster as GamePlayer;
 
 			if (player != null)
 			{
-				percent *= 1.0 - m_caster.GetModified(eProperty.CastingSpeed) * 0.01;
+				percent *= 1.0 - Caster.GetModified(eProperty.CastingSpeed) * 0.01;
 			}
 
-			ticks = (int)(ticks * Math.Max(m_caster.CastingSpeedReductionCap, percent));
+			ticks = (int)(ticks * Math.Max(Caster.CastingSpeedReductionCap, percent));
 
-			if (ticks < m_caster.MinimumCastingSpeed)
-				ticks = m_caster.MinimumCastingSpeed;
+			if (ticks < Caster.MinimumCastingSpeed)
+				ticks = Caster.MinimumCastingSpeed;
 
 			return ticks;
 		}

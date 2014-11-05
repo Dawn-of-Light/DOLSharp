@@ -101,13 +101,13 @@ namespace DOL.GS.Spells
 		{
 			base.OnEffectExpires(effect, noMessages);
 			
-			if (m_spell.Power != 0)
+			if (Spell.Power != 0)
 			{
 				int cost = 0;
-				if (m_spell.Power < 0)
-					cost = (int)(m_caster.MaxHealth * Math.Abs(m_spell.Power) * 0.01);
+				if (Spell.Power < 0)
+					cost = (int)(Caster.MaxHealth * Math.Abs(Spell.Power) * 0.01);
 				else
-					cost = m_spell.Power;
+					cost = Spell.Power;
 				if (effect.Owner.Health > cost)
 					effect.Owner.ChangeHealth(effect.Owner, GameLiving.eHealthChangeType.Spell, -cost);
 			}

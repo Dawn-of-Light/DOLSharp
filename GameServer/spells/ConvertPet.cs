@@ -48,15 +48,15 @@ namespace DOL.GS.Spells
 				mana += (int)(living.Health * Spell.Value / 100);
 			}
 
-			int absorb = m_caster.ChangeMana(m_caster, GameLiving.eManaChangeType.Spell, mana);
+			int absorb = Caster.ChangeMana(Caster, GameLiving.eManaChangeType.Spell, mana);
 
-			if (m_caster is GamePlayer)
+			if (Caster is GamePlayer)
 			{
 				if (absorb > 0)
 					MessageToCaster("You absorb " + absorb + " power points.", eChatType.CT_Spell);
 				else
 					MessageToCaster("Your mana is already full!", eChatType.CT_SpellResisted);
-				((GamePlayer)m_caster).CommandNpcRelease();
+				((GamePlayer)Caster).CommandNpcRelease();
 			}
 
 			return true;
