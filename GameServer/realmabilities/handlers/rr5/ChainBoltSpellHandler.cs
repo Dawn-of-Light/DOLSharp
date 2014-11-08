@@ -60,7 +60,7 @@ namespace DOL.GS.Spells
             int delay = 1 + ticksToTarget / 100;
             foreach (GamePlayer player in target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
             {
-                player.Out.SendSpellEffectAnimation(m_currentSource, target, m_spell.ClientEffect, (ushort)(delay), false, 1);
+                player.Out.SendSpellEffectAnimation(m_currentSource, target, Spell.ClientEffect, (ushort)(delay), false, 1);
             }
             BoltOnTargetAction bolt = new BoltOnTargetAction(Caster, target, this);
             bolt.Start(1 + ticksToTarget);

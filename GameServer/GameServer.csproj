@@ -2080,19 +2080,6 @@
     <Compile Include="realmabilities\handlers\VanishAbility.cs" />
     <Compile Include="skillhandler\TripleWieldAbilityHandler.cs" />
     <Compile Include="skillhandler\VampiirAbilities.cs" />
-    <Compile Include="spells\AblativeArmorSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\AfHitsBuff.cs" />
-    <Compile Include="spells\AllStatsBuff.cs" />
-    <Compile Include="spells\AmnesiaSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\Animist\PetPBAoE.cs" />
-    <Compile Include="spells\Animist\SummonAnimistFnF.cs" />
-    <Compile Include="spells\Animist\SummonAnimistMainPet.cs" />
-    <Compile Include="spells\Animist\SummonAnimistPet.cs" />
-    <Compile Include="spells\Animist\TurretSpellHandler.cs" />
     <Compile Include="spells\Archery\Archery.cs" />
     <Compile Include="spells\Archery\ArcheryDoT.cs" />
     <Compile Include="spells\Archery\Arrow.cs" />
@@ -2126,73 +2113,216 @@
     <Compile Include="spells\Artifacts\StyleDmgAbs.cs">
     </Compile>
     <Compile Include="spells\Artifacts\TartarosGift.cs" />
-    <Compile Include="spells\Artifacts\TraitorsDagger.cs" />
     <Compile Include="spells\Artifacts\Traldor.cs" />
-    <Compile Include="spells\AstralPetSummon.cs" />
-    <Compile Include="spells\Bainshee\BainsheePulseDmgSpellHandler.cs" />
     <Compile Include="spells\Bainshee\BeFriendSpellHandler.cs" />
     <Compile Include="spells\Bainshee\FearBrain.cs" />
     <Compile Include="spells\Bainshee\FearSpellHandler.cs" />
     <Compile Include="spells\Bainshee\FriendBrain.cs" />
     <Compile Include="spells\Bainshee\RangeShield.cs" />
-    <Compile Include="spells\BladeturnSpellHandler.cs">
+    <Compile Include="spells\Buff\AblativeArmorSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="spells\BolsteringRoarSpellHandler.cs" />
-    <Compile Include="spells\BoltSpellHandler.cs">
+    <Compile Include="spells\Buff\AfHitsBuff.cs" />
+    <Compile Include="spells\Buff\AllStatsBuff.cs" />
+    <Compile Include="spells\Buff\BladeturnSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="spells\Animist\BomberSpellHandler.cs" />
-    <Compile Include="spells\Bonedancer\SummonCommanderPet.cs" />
-    <Compile Include="spells\BuffShear.cs">
+    <Compile Include="spells\Buff\DamageAddAndShield.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="spells\Cabalist\SummonSimulacrum.cs" />
-    <Compile Include="spells\CCSpellHandler.cs">
+    <Compile Include="spells\Buff\DualStatBuff.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="spells\CharmSpellHandler.cs">
+    <Compile Include="spells\Buff\FocusShellHandler.cs" />
+    <Compile Include="spells\Buff\MetalGuardSpellHandler.cs" />
+    <Compile Include="spells\Buff\ProcSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="spells\Buff\RegenBuff.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Buff\ResistBuff.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Buff\SavageBuff.cs" />
+    <Compile Include="spells\Buff\SingleStatBuff.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Buff\VampiirResistBuff.cs" />
+    <Compile Include="spells\Buff\WaterBreathingSpellHandler.cs" />
     <Compile Include="spells\CommonAstralSpells.cs" />
-    <Compile Include="spells\Fury.cs" />
-    <Compile Include="spells\CombatHealSpellHandler.cs">
+    <Compile Include="spells\Composite\BomberSpellHandler.cs" />
+    <Compile Include="spells\Composite\ChamberSpellHandler.cs" />
+    <Compile Include="spells\Composite\FacilitatePainworking.cs" />
+    <Compile Include="spells\Composite\PetSpellHandler.cs" />
+    <Compile Include="spells\Composite\PowerlessSpellHandler.cs" />
+    <Compile Include="spells\Composite\PrimerSpellHandler.cs" />
+    <Compile Include="spells\Composite\RangeSpellHandler.cs" />
+    <Compile Include="spells\Composite\StealthersHandlers.cs" />
+    <Compile Include="spells\Composite\UninterruptableSpellHandler.cs" />
+    <Compile Include="spells\CrowdControl\CCSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="spells\CrowdControl\SpeedDecreaseSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\CrowdControl\StyleSpeedDecrease.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\CrowdControl\StyleStun.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\CrowdControl\UnbreakableSpeedDecreaseSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\CrowdControl\WarlockSpeedDecreaseSpellHandler.cs" />
+    <Compile Include="spells\Damage\BainsheePulseDmgSpellHandler.cs" />
+    <Compile Include="spells\Damage\BoltSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Damage\DamageSpeedDecrease.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Damage\DamageToPowerSpellHandler.cs" />
+    <Compile Include="spells\Damage\DirectDamageDebuffSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Damage\DirectDamageSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Damage\DoTSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Damage\FrontalAOEConeHandler.cs" />
+    <Compile Include="spells\Damage\LifedrainSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Damage\NightshadeNukeSpellhandler.cs" />
+    <Compile Include="spells\Damage\OmniLifedrainSpellHandler.cs" />
+    <Compile Include="spells\Damage\PetPBAoE.cs" />
+    <Compile Include="spells\Damage\PowerDrain.cs" />
+    <Compile Include="spells\Damage\StyleBleeding.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Debuff\DualStatDebuff.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Debuff\IllnessSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Debuff\NearsightSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Debuff\ResistDebuff.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Debuff\SingleStatDebuff.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Debuff\StyleCombatSpeedDebuff.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Debuff\VampArmorDebuff.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Debuff\VampiirEffectivenessDeBuff.cs" />
+    <Compile Include="spells\Fury.cs" />
     <Compile Include="spells\ConcentrationList.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="spells\ConfusionSpellHandler.cs" />
     <Compile Include="spells\Conversion.cs" />
     <Compile Include="spells\ConvertPet.cs" />
     <Compile Include="spells\CostumeSpellHandler.cs" />
-    <Compile Include="spells\CureAllSpellHandler.cs" />
     <Compile Include="spells\DamageReductionPowerReturn.cs" />
-    <Compile Include="spells\DamageToPowerSpellHandler.cs" />
-    <Compile Include="spells\DisarmSpellHandler.cs" />
     <Compile Include="spells\DoomHammer.cs" />
-    <Compile Include="spells\Druid\SummonDruidPet.cs" />
-    <Compile Include="spells\Enchanter\SummonUnderhill.cs" />
-    <Compile Include="spells\EnduranceHealSpellHandler.cs" />
     <Compile Include="spells\FacilisSpellHandler.cs" />
-    <Compile Include="spells\FocusShellHandler.cs" />
     <Compile Include="spells\Climbing.cs" />
-    <Compile Include="spells\Hunter\SummonHunterPet.cs" />
+    <Compile Include="spells\Heal_Cure\BolsteringRoarSpellHandler.cs" />
+    <Compile Include="spells\Heal_Cure\CombatHealSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Heal_Cure\CureAllSpellHandler.cs" />
+    <Compile Include="spells\Heal_Cure\CureDiseaseSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Heal_Cure\Curemezz.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Heal_Cure\CureNearsight.cs" />
+    <Compile Include="spells\Heal_Cure\CurePoisonSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Heal_Cure\EnduranceHealSpellHandler.cs" />
+    <Compile Include="spells\Heal_Cure\HealSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Heal_Cure\HoTSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Heal_Cure\LifeTransferSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Heal_Cure\PowerHealSpellHandler.cs" />
+    <Compile Include="spells\Heal_Cure\PowerTransfer.cs" />
+    <Compile Include="spells\Heal_Cure\RemoveSpellEffectHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Heal_Cure\ResurrectSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Heal_Cure\SavageEnduranceHeal.cs" />
+    <Compile Include="spells\Heal_Cure\SpreadhealSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="spells\Necromancer\PowerTransfer.cs" />
-    <Compile Include="spells\Necromancer\PowerDrain.cs" />
-    <Compile Include="spells\NightShade\NightshadeNukeSpellhandler.cs" />
+    <Compile Include="spells\Negative\AmnesiaSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Negative\BuffShear.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Negative\ConfusionSpellHandler.cs" />
+    <Compile Include="spells\Negative\DisarmSpellHandler.cs" />
+    <Compile Include="spells\Negative\DiseaseSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Negative\EnduranceDrainSpellHandler.cs" />
+    <Compile Include="spells\Negative\SilenceSpellHandler.cs" />
+    <Compile Include="spells\Negative\StyleTaunt.cs" />
+    <Compile Include="spells\Negative\TauntSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\SpellHandlerBase.cs" />
+    <Compile Include="spells\SpellHelpers\DelayedCastTimer.cs" />
     <Compile Include="spells\SpellHelpers\SpellHelper.cs" />
     <Compile Include="spells\StyleHandler.cs" />
-    <Compile Include="spells\SummonNoveltyPet.cs" />
+    <Compile Include="spells\Summoning\AstralPetSummon.cs" />
+    <Compile Include="spells\Summoning\CharmSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Summoning\SummonAnimistFnF.cs" />
+    <Compile Include="spells\Summoning\SummonAnimistMainPet.cs" />
+    <Compile Include="spells\Summoning\SummonAnimistPet.cs" />
+    <Compile Include="spells\Summoning\SummonCommanderPet.cs" />
+    <Compile Include="spells\Summoning\SummonDruidPet.cs" />
+    <Compile Include="spells\Summoning\SummonHunterPet.cs" />
+    <Compile Include="spells\Summoning\SummonIllusionBlade.cs" />
+    <Compile Include="spells\Summoning\SummonMinionHandler.cs" />
+    <Compile Include="spells\Summoning\SummonNecromancerPet.cs" />
+    <Compile Include="spells\Summoning\SummonNoveltyPet.cs" />
+    <Compile Include="spells\Summoning\SummonSimulacrum.cs" />
+    <Compile Include="spells\Summoning\SummonSpellHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="spells\Summoning\SummonSpiritFighter.cs" />
+    <Compile Include="spells\Summoning\SummonTheurgistPet.cs" />
+    <Compile Include="spells\Summoning\SummonUnderhill.cs" />
+    <Compile Include="spells\Summoning\TraitorsDagger.cs" />
+    <Compile Include="spells\Summoning\TurretSpellHandler.cs" />
     <Compile Include="spells\PetLifedrainSpellHandler.cs" />
     <Compile Include="spells\PowerDrain.cs" />
-    <Compile Include="spells\PowerTransfer.cs" />
-    <Compile Include="spells\Savage\SavageEnduranceHeal.cs" />
     <Compile Include="spells\SpeedOfTheRealmHandler.cs" />
-    <Compile Include="spells\Spirit Master\SummonSpiritFighter.cs" />
-    <Compile Include="spells\Stealthers\StealthersHandlers.cs" />
     <Compile Include="spells\StylePowerDrain.cs" />
-    <Compile Include="spells\SummonIllusionBlade.cs" />
     <Compile Include="spells\Teleport\GatewayPersonalBind.cs" />
     <Compile Include="spells\HealthToFatigue.cs" />
     <Compile Include="spells\Heretic\HereticDamageLostOnPulse.cs" />
@@ -2211,127 +2341,23 @@
     <Compile Include="spells\Masterlevel\Spymaster.cs" />
     <Compile Include="spells\Masterlevel\Stormlord.cs" />
     <Compile Include="spells\Masterlevel\Warlord.cs" />
-    <Compile Include="spells\MetalGuardSpellHandler.cs" />
-    <Compile Include="spells\Necromancer\FacilitatePainworking.cs" />
-    <Compile Include="spells\Necromancer\PetSpellHandler.cs" />
-    <Compile Include="spells\Necromancer\SummonNecromancerPet.cs" />
     <Compile Include="spells\NoVarianceSpells.cs" />
-    <Compile Include="spells\OmniLifedrainSpellHandler.cs" />
     <Compile Include="spells\PetMesmerizeSpellHandler.cs" />
-    <Compile Include="spells\PowerHealSpellHandler.cs" />
     <Compile Include="spells\RampageSpellHandler.cs" />
-    <Compile Include="spells\Savage\SavageBuff.cs" />
-    <Compile Include="spells\SilenceSpellHandler.cs" />
-    <Compile Include="spells\StyleTaunt.cs" />
-    <Compile Include="spells\Bonedancer\SummonMinionHandler.cs" />
-    <Compile Include="spells\Theurgist\SummonTheurgistPet.cs" />
     <Compile Include="spells\Teleport\UniPortal.cs" />
-    <Compile Include="spells\Valkyrie\FrontalAOEConeHandler.cs" />
     <Compile Include="spells\Valkyrie\ValkyrieProc.cs" />
-    <Compile Include="spells\Vampiir\VampArmorDebuff.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\Vampiir\VampiirEffectivenessDeBuff.cs" />
-    <Compile Include="spells\EnduranceDrainSpellHandler.cs" />
     <Compile Include="spells\Vampiir\VampiirPowerBolt.cs" />
-    <Compile Include="spells\Vampiir\VampiirResistBuff.cs" />
     <Compile Include="spells\Vampiir\VampiirSkillBonusDeBuff.cs" />
     <Compile Include="spells\Vampiir\VampiirStealthDetection.cs" />
     <Compile Include="spells\Vampiir\VampMagicalStrike.cs" />
     <Compile Include="spells\Vampiir\VampMaintainedSpeedDecrease.cs" />
-    <Compile Include="spells\Warlock\ChamberSpellHandler.cs" />
-    <Compile Include="spells\Warlock\PowerlessSpellHandler.cs" />
-    <Compile Include="spells\Warlock\PrimerSpellHandler.cs" />
-    <Compile Include="spells\Warlock\RangeSpellHandler.cs" />
-    <Compile Include="spells\Warlock\UninterruptableSpellHandler.cs" />
-    <Compile Include="spells\Warlock\WarlockSpeedDecreaseSpellHandler.cs" />
-    <Compile Include="spells\WaterBreathingSpellHandler.cs" />
-    <Compile Include="spells\CureDiseaseSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\Curemezz.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\CureNearsight.cs" />
-    <Compile Include="spells\CurePoisonSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\DamageAddAndShield.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\DamageSpeedDecrease.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\DirectDamageDebuffSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\DirectDamageSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\DiseaseSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\DoTSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\DualStatBuff.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\DualStatDebuff.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\HealSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\HoTSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\IllnessSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="spells\ImmunityEffectSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="spells\ISpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="spells\LifedrainSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\LifeTransferSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\NearsightSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\ProcSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="spells\PropertyChangingSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\RegenBuff.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\RemoveSpellEffectHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\ResistBuff.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\ResistDebuff.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\ResurrectSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\SingleStatBuff.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\SingleStatDebuff.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\SpeedDecreaseSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="spells\SpeedEnhancementSpellHandler.cs">
@@ -2344,30 +2370,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="spells\SpellHandlerAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\SpreadhealSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\StyleBleeding.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\StyleCombatSpeedDebuff.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\StyleSpeedDecrease.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\StyleStun.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\SummonSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\TauntSpellHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spells\UnbreakableSpeedDecreaseSpellHandler.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="styles\Style.cs">
@@ -2831,6 +2833,14 @@
     <Folder Include="language\DE\Quests\Midgard\" />
     <Folder Include="language\EN\Quests\Midgard\" />
     <Folder Include="packets\Utils" />
+    <Folder Include="spells\Buff" />
+    <Folder Include="spells\CrowdControl" />
+    <Folder Include="spells\Composite" />
+    <Folder Include="spells\Damage" />
+    <Folder Include="spells\Debuff" />
+    <Folder Include="spells\Heal_Cure" />
+    <Folder Include="spells\Negative" />
+    <Folder Include="spells\Summoning" />
     <Folder Include="spells\SpellHelpers" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

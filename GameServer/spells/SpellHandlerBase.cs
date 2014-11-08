@@ -27,10 +27,10 @@ using DOL.Database;
 namespace DOL.GS.Spells
 {
 	/// <summary>
-	/// Base Class for SpellHandler Default Class
-	/// Handles most of object properties for readability
+	/// Base Class for SpellHandler Behavior
+	/// Handles most of objects properties for readability
 	/// </summary>
-	public abstract class SpellHandlerBase : ISpellHandler
+	public class SpellHandlerBase
 	{
 		#region spell handler properties
 		/// <summary>
@@ -203,51 +203,15 @@ namespace DOL.GS.Spells
 		{
 			get { return true; }
 		}
-
-		/// <summary>
-		/// The CastingCompleteEvent
-		/// </summary>
-		public event CastingCompleteCallback CastingCompleteEvent;
-
-		/// <summary>
-		/// Called when cast sequence is complete
-		/// </summary>
-		public virtual void OnAfterSpellCastSequence()
-		{
-			if (CastingCompleteEvent != null)
-			{
-				CastingCompleteEvent(this);
-			}
-		}
 		#endregion
-
-		#region ISpellHandler Implementation
-		public abstract bool CastSpell();
-		public abstract bool CastSpell(InventoryItem item);
-		public abstract bool CastSpell(GameLiving target);
-		public abstract bool CastSpell(GameLiving target, InventoryItem item);
-		public abstract bool StartSpell(GameLiving target);
-		public abstract bool StartSpell(GameLiving target, InventoryItem item);
-		public abstract AttackData LastAttackData { get; }
-		public abstract void InterruptCasting();
-		public abstract void CasterMoves();
-		public abstract bool CasterIsAttacked(GameLiving attacker);
-		public abstract bool IsNewEffectBetter(GameSpellEffect oldeffect, GameSpellEffect neweffect);
-		public abstract bool IsOverwritable(GameSpellEffect compare);
-		public abstract bool IgnoreDamageCap { get; set; }
-		public abstract bool UseMinVariance { get; set; }
-		public abstract void OnEffectStart(GameSpellEffect effect);
-		public abstract void OnEffectPulse(GameSpellEffect effect);
-		public abstract int OnEffectExpires(GameSpellEffect effect, bool noMessages);
-		public abstract void OnSpellPulse(PulsingSpellEffect effect);
-		public abstract int PowerCost(GameLiving caster);
-		public abstract IList<string> DelveInfo { get; }
-		public abstract byte DelveInfoDepth { get; set; }
-		public abstract PlayerXEffect GetSavedEffect(GameSpellEffect e);
-		public abstract void OnEffectRestored(GameSpellEffect effect, int[] RestoreVars);
-		public abstract int OnRestoredEffectExpires(GameSpellEffect effect, int[] RestoreVars, bool noMessages);
-		public abstract bool CheckBeginCast(GameLiving selectedTarget);
-		public abstract int CalculateSpellRange();
+		
+		#region animation propertiers
+		
+		public virtual GameLiving AnimationSource
+		{
+			get { return Caster; }
+		}
+		
 		#endregion
 		
 		#region tooltip handling

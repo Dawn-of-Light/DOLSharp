@@ -47,9 +47,22 @@ namespace DOL.GS.Spells
 		/// </summary>
 		protected static readonly byte MAX_DELVE_RECURSION = 5;
 
-		
-		
+		/// <summary>
+		/// The CastingCompleteEvent
+		/// </summary>
+		public event CastingCompleteCallback CastingCompleteEvent;
 
+		/// <summary>
+		/// Called when cast sequence is complete
+		/// </summary>
+		public virtual void OnAfterSpellCastSequence()
+		{
+			if (CastingCompleteEvent != null)
+			{
+				CastingCompleteEvent(this);
+			}
+		}
+		
 		/// <summary>
 		/// Stores the current delve info depth
 		/// </summary>
@@ -62,7 +75,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// AttackData result for this spell, if any
 		/// </summary>
-		public override AttackData LastAttackData
+		public virtual AttackData LastAttackData
 		{
 			get { return m_lastAttackData; }
 		}
@@ -81,7 +94,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Does this spell ignore any damage cap?
 		/// </summary>
-		public override bool IgnoreDamageCap
+		public virtual bool IgnoreDamageCap
 		{
 			get { return m_ignoreDamageCap; }
 			set { m_ignoreDamageCap = value; }
@@ -93,7 +106,7 @@ namespace DOL.GS.Spells
 		/// Should this spell use the minimum variance for the type?
 		/// Followup style effects, for example, always use the minimum variance
 		/// </summary>
-		public override bool UseMinVariance
+		public virtual bool UseMinVariance
 		{
 			get { return m_useMinVariance; }
 			set { m_useMinVariance = value; }
@@ -132,7 +145,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// When spell pulses
 		/// </summary>
-		public override void OnSpellPulse(PulsingSpellEffect effect)
+		public virtual void OnSpellPulse(PulsingSpellEffect effect)
 		{
 			if (Caster.IsMoving && Spell.IsFocus)
 			{
@@ -275,7 +288,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="item"></param>
 		/// <returns></returns>
-		public override bool CastSpell(InventoryItem item)
+		public virtual bool CastSpell(InventoryItem item)
 		{
 			m_spellItem = item;
 			return CastSpell(Caster.TargetObject as GameLiving);
@@ -287,7 +300,7 @@ namespace DOL.GS.Spells
 		/// <param name="targetObject"></param>
 		/// <param name="item"></param>
 		/// <returns></returns>
-		public override bool CastSpell(GameLiving targetObject, InventoryItem item)
+		public virtual bool CastSpell(GameLiving targetObject, InventoryItem item)
 		{
 			m_spellItem = item;
 			return CastSpell(targetObject);
@@ -297,12 +310,12 @@ namespace DOL.GS.Spells
 		/// called whenever the player clicks on a spell icon
 		/// or a GameLiving wants to cast a spell
 		/// </summary>
-		public override bool CastSpell()
+		public virtual bool CastSpell()
 		{
 			return CastSpell(Caster.TargetObject as GameLiving);
 		}
 
-		public override bool CastSpell(GameLiving targetObject)
+		public virtual bool CastSpell(GameLiving targetObject)
 		{
 			bool success = true;
 
@@ -439,7 +452,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Is called when the caster moves
 		/// </summary>
-		public override void CasterMoves()
+		public virtual void CasterMoves()
 		{
 			if (Spell.InstrumentRequirement != 0)
 				return;
@@ -470,7 +483,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="attacker">attacker that interrupts the cast sequence</param>
 		/// <returns>true if casting was interrupted</returns>
-		public override bool CasterIsAttacked(GameLiving attacker)
+		public virtual bool CasterIsAttacked(GameLiving attacker)
 		{
 			//[StephenxPimentel] Check if the necro has MoC effect before interrupting.
 			if (Caster is NecromancerPet)
@@ -499,7 +512,7 @@ namespace DOL.GS.Spells
 
 		#region begin & end cast check
 
-		public override bool CheckBeginCast(GameLiving selectedTarget)
+		public virtual bool CheckBeginCast(GameLiving selectedTarget)
 		{
 			return CheckBeginCast(selectedTarget, false);
 		}
@@ -1414,7 +1427,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="target"></param>
 		/// <returns></returns>
-		public override int PowerCost(GameLiving target)
+		public virtual int PowerCost(GameLiving target)
 		{
 			// warlock
 			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(Caster, "Powerless");
@@ -1503,7 +1516,7 @@ namespace DOL.GS.Spells
 		/// Calculates the range to target needed to cast the spell
 		/// </summary>
 		/// <returns></returns>
-		public override int CalculateSpellRange()
+		public virtual int CalculateSpellRange()
 		{
 			int range = Math.Max(32, (int)(Spell.Range * Caster.GetModified(eProperty.SpellRange) * 0.01));
 			return range;
@@ -1513,7 +1526,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Called whenever the casters casting sequence is to interrupt immediately
 		/// </summary>
-		public override void InterruptCasting()
+		public virtual void InterruptCasting()
 		{
 			if (Interrupted || !IsCasting)
 				return;
@@ -2178,7 +2191,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="target"></param>
 		/// <param name="item"></param>
-		public override bool StartSpell(GameLiving target, InventoryItem item)
+		public virtual bool StartSpell(GameLiving target, InventoryItem item)
 		{
 			m_spellItem = item;
 			return StartSpell(target);
@@ -2190,7 +2203,7 @@ namespace DOL.GS.Spells
 		/// This is typically called after calling CheckBeginCast
 		/// </summary>
 		/// <param name="target">The current target object</param>
-		public override bool StartSpell(GameLiving target)
+		public virtual bool StartSpell(GameLiving target)
 		{
 			// For PBAOE spells always set the target to the caster
 			if (Spell.SpellType.ToLower() != "TurretPBAoE".ToLower() && (target == null || (Spell.Radius > 0 && Spell.Range == 0)))
@@ -2498,7 +2511,7 @@ namespace DOL.GS.Spells
 		/// <param name="oldeffect"></param>
 		/// <param name="neweffect"></param>
 		/// <returns>true if this spell is better version than compare spell</returns>
-		public override bool IsNewEffectBetter(GameSpellEffect oldeffect, GameSpellEffect neweffect)
+		public virtual bool IsNewEffectBetter(GameSpellEffect oldeffect, GameSpellEffect neweffect)
 		{
 			Spell oldspell = oldeffect.Spell;
 			Spell newspell = neweffect.Spell;
@@ -2530,7 +2543,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="compare"></param>
 		/// <returns></returns>
-		public override bool IsOverwritable(GameSpellEffect compare)
+		public virtual bool IsOverwritable(GameSpellEffect compare)
 		{
 			if (Spell.EffectGroup != 0)
 				return Spell.EffectGroup == compare.Spell.EffectGroup;
@@ -2553,7 +2566,7 @@ namespace DOL.GS.Spells
 		/// duration spells only
 		/// </summary>
 		/// <param name="effect"></param>
-		public override void OnEffectStart(GameSpellEffect effect)
+		public virtual void OnEffectStart(GameSpellEffect effect)
 		{
 			if (Spell.Pulse == 0)
 				SendEffectAnimation(effect.Owner, 0, false, 1);
@@ -2573,7 +2586,7 @@ namespace DOL.GS.Spells
 		/// duration spells only
 		/// </summary>
 		/// <param name="effect"></param>
-		public override void OnEffectPulse(GameSpellEffect effect)
+		public virtual void OnEffectPulse(GameSpellEffect effect)
 		{
 			if (effect.Owner.IsAlive == false)
 			{
@@ -2588,7 +2601,7 @@ namespace DOL.GS.Spells
 		/// <param name="effect">The expired effect</param>
 		/// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
 		/// <returns>immunity duration in milliseconds</returns>
-		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
+		public virtual int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
 			return 0;
 		}
@@ -2773,7 +2786,7 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 		/// <summary>
 		/// Current depth of delve info
 		/// </summary>
-		public override byte DelveInfoDepth
+		public virtual byte DelveInfoDepth
 		{
 			get { return m_delveInfoDepth; }
 			set { m_delveInfoDepth = value; }
@@ -2782,7 +2795,7 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 		/// <summary>
 		/// Delve Info
 		/// </summary>
-		public override IList<string> DelveInfo
+		public virtual IList<string> DelveInfo
 		{
 			get
 			{
@@ -3530,15 +3543,16 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 		#endregion
 
 		#region saved effects
-		public override PlayerXEffect GetSavedEffect(GameSpellEffect effect)
+		public virtual PlayerXEffect GetSavedEffect(GameSpellEffect effect)
 		{
 			return null;
 		}
 
-		public override void OnEffectRestored(GameSpellEffect effect, int[] vars)
-		{ }
+		public virtual void OnEffectRestored(GameSpellEffect effect, int[] vars)
+		{
+		}
 
-		public override int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
+		public virtual int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
 		{
 			return 0;
 		}
