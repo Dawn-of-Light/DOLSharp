@@ -8206,8 +8206,26 @@ namespace DOL.GS
 				return;
 
 			base.DisableSkill(skill, duration);
+			
+			var disables = new List<Tuple<Skill, int>>();
+			disables.Add(new Tuple<Skill, int>(skill, duration));
 
-			Out.SendDisableSkill(skill, duration / 1000 + 1);
+			Out.SendDisableSkill(disables);
+		}
+		
+		/// <summary>
+		/// Grey out collection of skills on client for specified duration
+		/// </summary>
+		/// <param name="skill">the skill to disable</param>
+		/// <param name="duration">duration of disable in milliseconds</param>
+		public override void DisableSkill(ICollection<Tuple<Skill, int>> skills)
+		{
+			if (this.Client.Account.PrivLevel > 1)
+				return;
+
+			base.DisableSkill(skills);
+			
+			Out.SendDisableSkill(skills);
 		}
 
 		/// <summary>
@@ -8215,10 +8233,15 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void UpdateDisabledSkills()
 		{
-			foreach (Skill skl in GetAllDisabledSkills())
+			var disables = new List<Tuple<Skill, int>>();
+			
+			foreach (Skill skl in GetAllUsableSkills().Select(skt => skt.Item1).Where(sk => !(sk is Specialization))
+			         .Union(GetAllUsableListSpells().SelectMany(sl => sl.Item2)))
 			{
-				Out.SendDisableSkill(skl, GetSkillDisabledDuration(skl) / 1000 + 1);
+				disables.Add(new Tuple<Skill, int>(skl, GetSkillDisabledDuration(skl)));
 			}
+			
+			Out.SendDisableSkill(disables);
 		}
 
 		/// <summary>
@@ -8228,9 +8251,10 @@ namespace DOL.GS
 		{
 			foreach (Skill skl in GetAllDisabledSkills())
 			{
-				Out.SendDisableSkill(skl, 1);
 				RemoveDisabledSkill(skl);
 			}
+			
+			UpdateDisabledSkills();
 		}
 		
 		/// <summary>

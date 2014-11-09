@@ -711,7 +711,7 @@ namespace DOL.GS.PacketHandler
 		void SendChampionTrainerWindow(int type);
 		void SendTrainerWindow();
 		void SendInterruptAnimation(GameLiving living);
-		void SendDisableSkill(Skill skill, int duration);
+		void SendDisableSkill(ICollection<Tuple<Skill, int>> skills);
 		void SendUpdateIcons(IList changedEffects, ref int lastUpdateEffectsCount);
 		void SendLevelUpSound();
 		void SendRegionEnterSound(byte soundId);
