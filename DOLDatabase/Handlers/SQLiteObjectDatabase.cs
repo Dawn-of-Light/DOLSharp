@@ -646,14 +646,19 @@ namespace DOL.Database.Handlers
 					objCount++;
 
 					reader.GetValues(data);
-					var id = (string)data[0];
 
 					// fill new data object
 					var obj = Activator.CreateInstance(objectType) as DataObject;
-					obj.ObjectId = id;
+					
+					int field = 0;
+					if (usePrimaryKey == false)
+					{
+						// fill the silly TableName_ID field
+						obj.ObjectId = (string)data[0];
+						field = 1;
+					}
 
 					bool hasRelations = false;
-					int field = 1;
 					// we can use hard index access because we iterate the same order here
 					for (int i = 0; i < bindingInfo.Length; i++)
 					{
