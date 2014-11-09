@@ -2837,7 +2837,8 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>xcopy "$(ProjectDir)\language\*.txt" "$(ProjectDir)..\$(ConfigurationName)\languages" /y /s /q /i</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)\language\*.txt" "$(ProjectDir)..\$(ConfigurationName)\languages" /y /s /q /i</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">cd "$(ProjectDir)/language/"; mkdir -p "$(ProjectDir)../`echo $(ConfigurationName) | tr '[:upper:]' '[:lower:]'`/languages/"; find ./ -name "*.txt" | xargs -i -t cp --parents -f {} "$(ProjectDir)../`echo $(ConfigurationName) | tr '[:upper:]' '[:lower:]'`/languages/"</PostBuildEvent>
   </PropertyGroup>
   <!-- Graveen: the following is replacing the rev number in the asembly.info file by the SVN rev number of the current project. -->
   <!-- You must work on project under SVN version control, have msbuild community tasks assemblies installed and subversion client -->
