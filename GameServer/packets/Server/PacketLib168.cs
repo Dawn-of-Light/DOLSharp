@@ -2849,135 +2849,91 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		// TODO update this to be able to handle a list !
-		public virtual void SendDisableSkill(Skill skill, int duration)
+		public virtual void SendDisableSkill(ICollection<Tuple<Skill, int>> skills)
 		{
 			if (m_gameClient.Player == null)
 				return;
-
-			long pos = 0;
-			if (skill is Spell)
+			
+			var disabledSpells = new List<Tuple<byte, byte, ushort>>();
+			var disabledSkills = new List<Tuple<ushort, ushort>>();
+			
+			var listspells = m_gameClient.Player.GetAllUsableListSpells();
+			var listskills = m_gameClient.Player.GetAllUsableSkills();
+			int specCount = listskills.Where(sk => sk.Item1 is Specialization).Count();
+			
+			// Get through all disabled skills
+			foreach (Tuple<Skill, int> disabled in skills)
 			{
-				Spell spell = (Spell)skill;
 				
-				// Send matching list spell match
-				using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DisableSkills)))
+				// Check if spell
+				byte lsIndex = 0;
+				foreach (var ls in listspells)
 				{
-					int countspell = 0;
-					int countlineindex = 0;
-					int countspellindex = 0;
-					pak.WriteShort((ushort) duration);
-					pos = pak.Position;
-					pak.WriteByte(0); // set at the end...
-					pak.WriteByte(2); // code for list spells
-
-					var listspells = m_gameClient.Player.GetAllUsableListSpells();
+					int index = ls.Item2.FindIndex(sk => sk.SkillType == disabled.Item1.SkillType && sk.ID == disabled.Item1.ID);
 					
-					foreach (Tuple<SpellLine, List<Skill>> ls in listspells)
+					if (index > -1)
 					{
-						if (countspell >= 255)
-							break;
-						
-						// reset spellindex in each line
-						countspellindex = 0;
-						foreach(Skill sk in ls.Item2)
-						{
-							if (countspell >= 255)
-								break;
-							if (sk is Spell)
-							{
-								Spell sp = (Spell)sk;
-								if (sp.ID == spell.ID || (spell.SharedTimerGroup > 0 && (sp.SharedTimerGroup == spell.SharedTimerGroup)))
-								{
-									// Send disable skill code
-									pak.WriteByte((byte) countlineindex);
-									pak.WriteByte((byte) countspellindex);
-									countspell++;
-								}
-							}
-							countspellindex++;
-						}
-						countlineindex++;
+						disabledSpells.Add(new Tuple<byte, byte, ushort>(lsIndex, (byte)index, (ushort)(disabled.Item2 > 0 ? disabled.Item2 / 1000 + 1 : 0) ));
+						break;
 					}
 					
-					pak.Position = pos;
-					pak.WriteByte((byte)countspell);
-					// don't send if empty...
-					if (countspell > 0)
-						SendTCP(pak);
+					lsIndex++;
 				}
 				
+				int skIndex = listskills.FindIndex(skt => disabled.Item1.SkillType == skt.Item1.SkillType && disabled.Item1.ID == skt.Item1.ID) - specCount;
+				
+				if (skIndex > -1)
+					disabledSkills.Add(new Tuple<ushort, ushort>((ushort)skIndex, (ushort)(disabled.Item2 > 0 ? disabled.Item2 / 1000 + 1 : 0) ));
+			}
+			
+			if (disabledSkills.Count > 0)
+			{
 				// Send matching hybrid spell match
 				using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DisableSkills)))
 				{
-					int countskill = 0;
-					int countskillindex = 0;
-					pak.WriteShort((ushort)0);
-					pos = pak.Position;
-					pak.WriteByte(0); // set at the end...
-					pak.WriteByte(1); // code for hybrid skill
-
-					var listskills = m_gameClient.Player.GetAllUsableSkills();
-					
-					foreach (Tuple<Skill, Skill> sk in listskills)
-					{
-						if (countskill >= 255)
-							break;
-						
-						if (sk.Item1 is Specialization)
-							continue;
-						
-						Spell cmp = (Spell)sk.Item1;
-						if (cmp.ID == spell.ID || (spell.SharedTimerGroup > 0 && (cmp.SharedTimerGroup == spell.SharedTimerGroup)))
-						{
-							// disable
-							pak.WriteShort((ushort) countskillindex);
-							pak.WriteShort((ushort) duration);
-							
-							countskill++;
-						}
-						
-						countskillindex++;
-					}
-					
-					pak.Position = pos;
-					pak.WriteByte((byte)countskill);
-					// don't send if empty...
+					byte countskill = (byte)Math.Min(disabledSkills.Count, 255);
 					if (countskill > 0)
+					{
+						pak.WriteShort(0); // duration unused
+						pak.WriteByte(countskill); // count...
+						pak.WriteByte(1); // code for hybrid skill
+						
+						for (int i = 0 ; i < countskill ; i++)
+						{
+							pak.WriteShort(disabledSkills[i].Item1); // index
+							pak.WriteShort(disabledSkills[i].Item2); // duration
+						}
+	
 						SendTCP(pak);
+					}
 				}
 			}
-			else
+			
+			if (disabledSpells.Count > 0)
 			{
-				// Style / Ability / Anything ?
-				using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DisableSkills)))
+				var groupedDuration = disabledSpells.GroupBy(sp => sp.Item3);
+				foreach (var groups in groupedDuration)
 				{
-					// Send matching skill match
-					// duration
-					pak.WriteShort((ushort) duration);
-					int id = 0;
-
-					var listskills = m_gameClient.Player.GetAllUsableSkills();
-
-					foreach (Tuple<Skill, Skill> sk in listskills)
+					// Send matching list spell match
+					using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DisableSkills)))
 					{
-						if (sk.Item1 is Specialization)
-							continue;
-						
-						if (skill.SkillType == sk.Item1.SkillType && skill.ID == sk.Item1.ID)
-							break;
-						
-						id++;
+						byte total = (byte)Math.Min(groups.Count(), 255);
+						if (total > 0)
+						{
+							pak.WriteShort(groups.Key); // duration
+							pak.WriteByte(total); // count...
+							pak.WriteByte(2); // code for list spells
+							
+							for (int i = 0 ; i < total ; i++)
+							{
+								pak.WriteByte(groups.ElementAt(i).Item1); // line index
+								pak.WriteByte(groups.ElementAt(i).Item2); // spell index
+							}
+	
+							SendTCP(pak);
+						}
 					}
-					
-					pak.WriteByte((byte) id); // position
-					pak.WriteByte(0); // code
-					
-					// not found don't send !
-					if (id < listskills.Count)
-						SendTCP(pak);
 				}
-					
 			}
 		}
 

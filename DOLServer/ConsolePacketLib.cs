@@ -157,7 +157,7 @@ namespace DOLGameServerConsole
         public void SendCustomTrainerWindow(int type, List<Tuple<Specialization, List<Tuple<Skill, byte>>>> tree) { }
         public void SendChampionTrainerWindow(int type) { }
 		public void SendInterruptAnimation(GameLiving living) { }
-		public void SendDisableSkill(Skill skill, int duration) { }
+		public void SendDisableSkill(ICollection<Tuple<Skill, int>> skills) { }
 		public void SendUpdateIcons(IList changedEffects, ref int lastUpdateEffectsCount) { }
 		public void SendLevelUpSound() { }
 		public void SendRegionEnterSound(byte soundId) { }

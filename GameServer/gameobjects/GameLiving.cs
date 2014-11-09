@@ -6411,6 +6411,33 @@ namespace DOL.GS
 			}
 		}
 		
+		/// <summary>
+		/// Grey out collection of skills on client for specified duration
+		/// </summary>
+		/// <param name="skill">the skill to disable</param>
+		/// <param name="duration">duration of disable in milliseconds</param>
+		public virtual void DisableSkill(ICollection<Tuple<Skill, int>> skills)
+		{
+			lock ((m_disabledSkills as ICollection).SyncRoot)
+			{
+				foreach (Tuple<Skill, int> tuple in skills)
+				{
+					Skill skill = tuple.Item1;
+					int duration = tuple.Item2;
+					
+					KeyValuePair<int, Type> key = new KeyValuePair<int, Type>(skill.ID, skill.GetType());
+					if (duration > 0)
+					{
+						m_disabledSkills[key] = new KeyValuePair<long, Skill>(CurrentRegion.Time + duration, skill);
+					}
+					else
+					{
+						m_disabledSkills.Remove(key);
+					}
+				}
+			}
+		}
+		
 
 		/// <summary>
 		/// Removes Greyed out skills
