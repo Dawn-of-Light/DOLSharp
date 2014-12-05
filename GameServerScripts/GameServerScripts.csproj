@@ -67,6 +67,12 @@
     <Reference Include="log4net">
       <HintPath>..\sharedModules\log4net\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Nancy">
+      <HintPath>..\sharedModules\Nancy\Nancy.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy.Hosting.Self">
+      <HintPath>..\sharedModules\Nancy\Nancy.Hosting.Self.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -144,6 +150,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="gameevents\TutorialJumpPointHandler.cs" />
+    <Compile Include="gameevents\WebServer.cs" />
     <Compile Include="globals.cs">
       <SubType>Code</SubType>
     </Compile>
