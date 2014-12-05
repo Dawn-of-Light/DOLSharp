@@ -49,7 +49,7 @@ namespace DOL.GS
 		public enum eClientAddons
 		{
 			bit4 = 0x10,
-			bit5 = 0x20,
+			NewNewFrontiers = 0x20,
 			Foundations = 0x40,
 			NewFrontiers = 0x80,
 		}
