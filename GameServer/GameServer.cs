@@ -841,12 +841,11 @@ namespace DOL.GS
 		/// <returns></returns>
 		public bool CompileScripts()
 		{
-			string scriptDirectory = Configuration.RootDirectory + Path.DirectorySeparatorChar + "scripts";
+			string scriptDirectory = string.Format("{0}{1}scripts", Configuration.RootDirectory, Path.DirectorySeparatorChar);
 			if (!Directory.Exists(scriptDirectory))
 				Directory.CreateDirectory(scriptDirectory);
 
-			string[] parameters = Configuration.ScriptAssemblies.Split(',');
-			return ScriptMgr.CompileScripts(false, scriptDirectory, Configuration.ScriptCompilationTarget, parameters);
+			return ScriptMgr.CompileScripts(false, scriptDirectory, Configuration.ScriptCompilationTarget, Configuration.ScriptAssemblies);
 		}
 
 		/// <summary>
