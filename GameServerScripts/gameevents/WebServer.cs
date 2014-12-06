@@ -49,7 +49,10 @@ namespace DOL.GS.Web
 			{
 				try
 				{
-					m_embeddedWebServer = new NancyHost(new Uri("http://localhost:10200"));
+					HostConfiguration hostConfigs = new HostConfiguration();
+					hostConfigs.UnhandledExceptionCallback = unhandledEx => { if (log.IsWarnEnabled) log.WarnFormat("Exception in Nancy Embedded WebServer : {0}", unhandledEx); };
+					hostConfigs.UrlReservations.CreateAutomatically = true;
+					m_embeddedWebServer = new NancyHost(new Uri("http://localhost:10200"), new DefaultNancyBootstrapper(), hostConfigs);
 					m_embeddedWebServer.Start();
 					
 				}
