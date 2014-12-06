@@ -166,20 +166,15 @@ namespace DOL.GS
 		/// <param name="filter">A filter representing the types of files to search for</param>
 		/// <param name="deep">True if subdirectories should be included</param>
 		/// <returns>An ArrayList containing FileInfo's for all files in the path</returns>
-		private static ArrayList ParseDirectory(DirectoryInfo path, string filter, bool deep)
+		private static IList<FileInfo> ParseDirectory(DirectoryInfo path, string filter, bool deep)
 		{
-			ArrayList files = new ArrayList();
+			List<FileInfo> files = new List<FileInfo>();
 
 			if (!path.Exists)
 				return files;
-
-			files.AddRange(path.GetFiles(filter));
-
-			if (deep)
-			{
-				foreach (DirectoryInfo subdir in path.GetDirectories())
-					files.AddRange(ParseDirectory(subdir, filter, deep));
-			}
+			
+			foreach (FileInfo fi in path.GetFiles(filter, deep ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly))
+				files.Add(fi);
 
 			return files;
 		}
@@ -445,7 +440,7 @@ namespace DOL.GS
 			m_compiledScripts.Clear();
 
 			//Check if there are any scripts, if no scripts exist, that is fine as well
-			ArrayList files = ParseDirectory(new DirectoryInfo(path), compileVB ? "*.vb" : "*.cs", true);
+			IList<FileInfo> files = ParseDirectory(new DirectoryInfo(path), compileVB ? "*.vb" : "*.cs", true);
 			if (files.Count == 0)
 			{
 				return true;
@@ -480,7 +475,7 @@ namespace DOL.GS
 						//Assume no scripts changed
 						recompileRequired = false;
 
-						ArrayList precompiledScripts = new ArrayList(config.Children.Keys);
+						Dictionary<string, ConfigElement> precompiledScripts = new Dictionary<string, ConfigElement>(config.Children);
 
 						//Now test the files
 						foreach (FileInfo finfo in files)
@@ -514,7 +509,7 @@ namespace DOL.GS
 						log.Debug("Script info file missing, recompile required!");
 				}
 			}
-
+			
 			//If we need no compiling, we load the existing assembly!
 			if (!recompileRequired)
 			{
@@ -567,7 +562,7 @@ namespace DOL.GS
 				param.GenerateExecutable = false;
 				param.GenerateInMemory = false;
 				param.WarningLevel = 2;
-				param.CompilerOptions = @"/lib:." + Path.DirectorySeparatorChar + "lib";
+				param.CompilerOptions = string.Format("/optimize /lib:.{0}lib", Path.DirectorySeparatorChar);
 				param.ReferencedAssemblies.Add("System.Core.dll");
 
 				string[] filepaths = new string[files.Count];
