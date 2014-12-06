@@ -21,6 +21,8 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
+using System.Linq;
+
 using DOL.Config;
 using DOL.Database.Connection;
 
@@ -460,20 +462,10 @@ namespace DOL.GS
 		{
 			get
 			{
-				string[] asm = m_scriptAssemblies.Split(',');
-				FileInfo[] dynamicAsm = new DirectoryInfo(string.Format("{0}{1}lib", RootDirectory, Path.DirectorySeparatorChar)).GetFiles("*.dll");
-				int start = asm.Length;
-				Array.Resize(ref asm, asm.Length+dynamicAsm.Length);
-				foreach(FileInfo dll in dynamicAsm)
-				{
-					if (dll.Name.Equals(new FileInfo(ScriptCompilationTarget).Name))
-						continue;
-					
-					asm[start] = dll.Name;
-					start++;
-				}
-				
-				return asm;
+				return m_scriptAssemblies.Split(',')
+					.Union(new DirectoryInfo(string.Format("{0}{1}lib", RootDirectory, Path.DirectorySeparatorChar))
+					       .GetFiles("*.dll").Select(f => f.Name).Where(f => f.ToLower().Equals(new FileInfo(ScriptCompilationTarget).Name.ToLower()) == false))
+					.ToArray();
 			}
 		}
 
