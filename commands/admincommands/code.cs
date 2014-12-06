@@ -71,7 +71,7 @@ namespace DOL.GS.Commands
 			text.Append(code);
 			text.Append("\n}\n}\n");
 
-			string[] parameters = GameServer.Instance.Configuration.ScriptAssemblies.Split(',');
+			string[] parameters = GameServer.Instance.Configuration.ScriptAssemblies;
 			foreach (string param in parameters)
 				cp.ReferencedAssemblies.Add(param); //includes
 			cp.ReferencedAssemblies.Add("System.Core.dll");

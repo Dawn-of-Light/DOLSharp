@@ -354,7 +354,7 @@ namespace DOL.GS
 			m_zoneConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "zones.xml";
 
 			m_scriptCompilationTarget = "."+Path.DirectorySeparatorChar+"lib"+Path.DirectorySeparatorChar+"GameServerScripts.dll";
-			m_scriptAssemblies = "DOLBase.dll,GameServer.dll,DOLDatabase.dll,System.dll,log4net.dll,System.Xml.dll";
+			m_scriptAssemblies = "System.dll,System.Xml.dll";
 			m_autoAccountCreation = true;
 			m_serverType = eGameServerType.GST_Normal;
 
@@ -456,10 +456,25 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets or sets the script assemblies to be included in the script compilation
 		/// </summary>
-		public string ScriptAssemblies
+		public string[] ScriptAssemblies
 		{
-			get { return m_scriptAssemblies; }
-			set { m_scriptAssemblies = value; }
+			get
+			{
+				string[] asm = m_scriptAssemblies.Split(',');
+				FileInfo[] dynamicAsm = new DirectoryInfo(string.Format("{0}{1}lib", RootDirectory, Path.DirectorySeparatorChar)).GetFiles("*.dll");
+				int start = asm.Length;
+				Array.Resize(ref asm, asm.Length+dynamicAsm.Length);
+				foreach(FileInfo dll in dynamicAsm)
+				{
+					if (dll.Name.Equals(new FileInfo(ScriptCompilationTarget).Name))
+						continue;
+					
+					asm[start] = dll.Name;
+					start++;
+				}
+				
+				return asm;
+			}
 		}
 
 		/// <summary>
