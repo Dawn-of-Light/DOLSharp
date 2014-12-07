@@ -620,6 +620,11 @@ namespace DOL.GS
 				AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
 				//---------------------------------------------------------------
+				//Try to compile the Scripts
+				if (!InitComponent(CompileScripts(), "Script compilation"))
+					return false;
+
+				//---------------------------------------------------------------
 				//Check and update the database if needed
 				if (!UpdateDatabase())
 					return false;
@@ -655,11 +660,6 @@ namespace DOL.GS
 
 				//Init the mail manager
 				InitComponent(MailMgr.Init(), "Mail Manager Initialization");
-
-				//---------------------------------------------------------------
-				//Try to compile the Scripts
-				if (!InitComponent(CompileScripts(), "Script compilation"))
-					return false;
 
 				//---------------------------------------------------------------
 				//Try to initialize the WorldMgr in early state
@@ -844,17 +844,8 @@ namespace DOL.GS
 			string scriptDirectory = string.Format("{0}{1}scripts", Configuration.RootDirectory, Path.DirectorySeparatorChar);
 			if (!Directory.Exists(scriptDirectory))
 				Directory.CreateDirectory(scriptDirectory);
-
-			return ScriptMgr.CompileScripts(false, scriptDirectory, Configuration.ScriptCompilationTarget, Configuration.ScriptAssemblies);
-		}
-
-		/// <summary>
-		/// Initialize all script components
-		/// </summary>
-		/// <returns>true if successfull, false if not</returns>
-		protected bool StartScriptComponents()
-		{
-			try
+			
+			if (ScriptMgr.CompileScripts(false, scriptDirectory, Configuration.ScriptCompilationTarget, Configuration.ScriptAssemblies))
 			{
 				//---------------------------------------------------------------
 				//Register Script Tables
@@ -893,8 +884,21 @@ namespace DOL.GS
 				
 	        	if (log.IsInfoEnabled)
 					log.Info("GameServerScripts Database Tables Initialization: true");
-
 	        	
+	        	return true;
+			}
+			
+			return false;
+		}
+
+		/// <summary>
+		/// Initialize all script components
+		/// </summary>
+		/// <returns>true if successfull, false if not</returns>
+		protected bool StartScriptComponents()
+		{
+			try
+			{	        	
 				//---------------------------------------------------------------
 				//Create the server rules
 				m_serverRules = ScriptMgr.CreateServerRules(Configuration.ServerType);
@@ -1039,22 +1043,44 @@ namespace DOL.GS
 		/// <returns>true if all went fine, false if errors</returns>
 		protected virtual bool UpdateDatabase()
 		{
+			bool result = true;
 			try
 			{
 				log.Info("Checking database for updates ...");
-
-				foreach (Type type in typeof (GameServer).Assembly.GetTypes())
+				
+				List<Assembly> asms = new List<Assembly>();
+				asms.Add(typeof(GameServer).Assembly);
+				asms.AddRange(ScriptMgr.Scripts);
+				
+				foreach (Assembly asm in asms)
 				{
-					if (!type.IsClass) continue;
-					if (!typeof (IDatabaseUpdater).IsAssignableFrom(type)) continue;
-					object[] attributes = type.GetCustomAttributes(typeof (DatabaseUpdateAttribute), false);
-					if (attributes.Length <= 0) continue;
 
-					var instance = Activator.CreateInstance(type) as IDatabaseUpdater;
-					instance.Update();
+					foreach (Type type in asm.GetTypes())
+					{
+						if (!type.IsClass)
+							continue;
+						if (!typeof(IDatabaseUpdater).IsAssignableFrom(type))
+							continue;
+						
+						object[] attributes = type.GetCustomAttributes(typeof (DatabaseUpdateAttribute), false);
+						if (attributes.Length <= 0)
+							continue;
+	
+						try
+						{
+							var instance = Activator.CreateInstance(type) as IDatabaseUpdater;
+							instance.Update();
+						}
+						catch (Exception uex)
+						{
+							if (log.IsErrorEnabled)
+								log.ErrorFormat("Error While Updating Database with Script {0} - {1}", type, uex);
+							
+							result = false;
+						}
+					}
 				}
 			}
-
 			catch (Exception e)
 			{
 				log.Error("Error checking/updating database: ", e);
@@ -1062,7 +1088,7 @@ namespace DOL.GS
 			}
 
 			log.Info("Database update complete.");
-			return true;
+			return result;
 		}
 
 		/// <summary>

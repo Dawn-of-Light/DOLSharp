@@ -122,6 +122,9 @@
     <Compile Include="customnpc\TownCrier.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="dbupdater\LanguageSystemUpdate.cs" />
+    <Compile Include="dbupdater\SalvageYieldsUpdate.cs" />
+    <Compile Include="dbupdater\ServerPropertiesUpdate.cs" />
     <Compile Include="examples\CustomInventoryLoggingExample.cs" />
     <Compile Include="gameevents\DOLTestServer.cs" />
     <Compile Include="gameevents\StartupGuilds.cs" />
@@ -253,7 +256,9 @@
     <Compile Include="quests\Midgard\TraitorInMularn.cs" />
     <Compile Include="quests\Midgard\Trial_of_Strength.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="dbupdater" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="quests\Albion\BaseFrederickPathPoints.xml" />
     <None Include="quests\Hibernia\BaseAddrirPathPoints.xml" />
