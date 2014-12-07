@@ -525,14 +525,22 @@ namespace DOL.GS
 				{
 					if (log.IsErrorEnabled)
 						log.Error("Error loading precompiled script assembly, recompile required!", e);
+					
+					recompileRequired = true;
 				}
-
-				//Try loading the commands
-				if (!LoadCommands())
-					throw new Exception("Could not load class CommandHandler");
-
-				//Return success!
-				return true;
+				
+				if (!recompileRequired)
+				{
+					// Try loading Server Properties
+					ServerProperties.Properties.RefreshScriptProperties();
+	
+					//Try loading the commands
+					if (!LoadCommands())
+						throw new Exception("Could not load class CommandHandler");
+	
+					//Return success!
+					return true;
+				}
 			}
 
 			//We need a recompile, if the dll exists, delete it firsthand
@@ -599,6 +607,9 @@ namespace DOL.GS
 				}
 
 				AddOrReplaceAssembly(res.CompiledAssembly);
+
+				// Try loading Server Properties
+				ServerProperties.Properties.RefreshScriptProperties();
 
 				if (!LoadCommands())
 				{
