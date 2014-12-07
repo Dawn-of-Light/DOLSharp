@@ -39,6 +39,11 @@
 			this.full_server_name_textbox = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.region_port_textbox = new RegExControls.RegExTextBox();
+			this.region_ip_textbox = new RegExControls.RegExTextBox();
+			this.udp_port_textbox = new RegExControls.RegExTextBox();
+			this.port_textbox = new RegExControls.RegExTextBox();
+			this.ip_textbox = new RegExControls.RegExTextBox();
 			this.label8 = new System.Windows.Forms.Label();
 			this.label7 = new System.Windows.Forms.Label();
 			this.label6 = new System.Windows.Forms.Label();
@@ -46,6 +51,11 @@
 			this.detect_region_ip_checkbox = new System.Windows.Forms.CheckBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
+			this.regExTextBox1 = new RegExControls.RegExTextBox();
+			this.regExTextBox2 = new RegExControls.RegExTextBox();
+			this.regExTextBox3 = new RegExControls.RegExTextBox();
+			this.regExTextBox4 = new RegExControls.RegExTextBox();
+			this.regExTextBox5 = new RegExControls.RegExTextBox();
 			this.label18 = new System.Windows.Forms.Label();
 			this.label19 = new System.Windows.Forms.Label();
 			this.label20 = new System.Windows.Forms.Label();
@@ -64,6 +74,7 @@
 			this.database_tab = new System.Windows.Forms.TabPage();
 			this.general_tab = new System.Windows.Forms.TabPage();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
+			this.database_autosave_interval_textbox = new RegExControls.RegExTextBox();
 			this.label17 = new System.Windows.Forms.Label();
 			this.label16 = new System.Windows.Forms.Label();
 			this.database_autosave_checkbox = new System.Windows.Forms.CheckBox();
@@ -77,6 +88,10 @@
 			this.mysql_test_progressbar = new System.Windows.Forms.ProgressBar();
 			this.mysql_says_label = new System.Windows.Forms.Label();
 			this.mysql_password_textbox = new System.Windows.Forms.TextBox();
+			this.mysql_database_name_textbox = new RegExControls.RegExTextBox();
+			this.mysql_username_textbox = new RegExControls.RegExTextBox();
+			this.mysql_port_textbox = new RegExControls.RegExTextBox();
+			this.mysql_host_textbox = new RegExControls.RegExTextBox();
 			this.mysql_test_label = new System.Windows.Forms.Label();
 			this.mysql_test_button = new System.Windows.Forms.Button();
 			this.label14 = new System.Windows.Forms.Label();
@@ -116,6 +131,7 @@
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.groupBox6 = new System.Windows.Forms.GroupBox();
+			this.regExTextBox6 = new RegExControls.RegExTextBox();
 			this.label26 = new System.Windows.Forms.Label();
 			this.label27 = new System.Windows.Forms.Label();
 			this.checkBox3 = new System.Windows.Forms.CheckBox();
@@ -129,6 +145,10 @@
 			this.progressBar1 = new System.Windows.Forms.ProgressBar();
 			this.label30 = new System.Windows.Forms.Label();
 			this.textBox4 = new System.Windows.Forms.TextBox();
+			this.regExTextBox7 = new RegExControls.RegExTextBox();
+			this.regExTextBox8 = new RegExControls.RegExTextBox();
+			this.regExTextBox9 = new RegExControls.RegExTextBox();
+			this.regExTextBox10 = new RegExControls.RegExTextBox();
 			this.label31 = new System.Windows.Forms.Label();
 			this.button2 = new System.Windows.Forms.Button();
 			this.label32 = new System.Windows.Forms.Label();
@@ -145,26 +165,6 @@
 			this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.region_port_textbox = new RegExControls.RegExTextBox();
-			this.region_ip_textbox = new RegExControls.RegExTextBox();
-			this.udp_port_textbox = new RegExControls.RegExTextBox();
-			this.port_textbox = new RegExControls.RegExTextBox();
-			this.ip_textbox = new RegExControls.RegExTextBox();
-			this.database_autosave_interval_textbox = new RegExControls.RegExTextBox();
-			this.mysql_database_name_textbox = new RegExControls.RegExTextBox();
-			this.mysql_username_textbox = new RegExControls.RegExTextBox();
-			this.mysql_port_textbox = new RegExControls.RegExTextBox();
-			this.mysql_host_textbox = new RegExControls.RegExTextBox();
-			this.regExTextBox1 = new RegExControls.RegExTextBox();
-			this.regExTextBox2 = new RegExControls.RegExTextBox();
-			this.regExTextBox3 = new RegExControls.RegExTextBox();
-			this.regExTextBox4 = new RegExControls.RegExTextBox();
-			this.regExTextBox5 = new RegExControls.RegExTextBox();
-			this.regExTextBox6 = new RegExControls.RegExTextBox();
-			this.regExTextBox7 = new RegExControls.RegExTextBox();
-			this.regExTextBox8 = new RegExControls.RegExTextBox();
-			this.regExTextBox9 = new RegExControls.RegExTextBox();
-			this.regExTextBox10 = new RegExControls.RegExTextBox();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			this.groupBox4.SuspendLayout();
@@ -192,8 +192,8 @@
 			// 
 			// groupBox1
 			// 
-			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                              | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox1.Controls.Add(this.auto_account_creation_checkbox);
 			this.groupBox1.Controls.Add(this.game_type_selectbox);
 			this.groupBox1.Controls.Add(this.short_server_name_textbox);
@@ -226,12 +226,12 @@
 			this.game_type_selectbox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.game_type_selectbox.FormattingEnabled = true;
 			this.game_type_selectbox.Items.AddRange(new object[] {
-			                                        	"Normal",
-			                                        	"PvP",
-			                                        	"PvE",
-			                                        	"Casual",
-			                                        	"Roleplay",
-			                                        	"Test"});
+			"Normal",
+			"PvP",
+			"PvE",
+			"Casual",
+			"Roleplay",
+			"Test"});
 			this.game_type_selectbox.Location = new System.Drawing.Point(112, 76);
 			this.game_type_selectbox.Name = "game_type_selectbox";
 			this.game_type_selectbox.Size = new System.Drawing.Size(196, 21);
@@ -241,8 +241,8 @@
 			// 
 			// short_server_name_textbox
 			// 
-			this.short_server_name_textbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                                              | System.Windows.Forms.AnchorStyles.Right)));
+			this.short_server_name_textbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.short_server_name_textbox.Location = new System.Drawing.Point(112, 50);
 			this.short_server_name_textbox.Name = "short_server_name_textbox";
 			this.short_server_name_textbox.Size = new System.Drawing.Size(251, 20);
@@ -270,8 +270,8 @@
 			// 
 			// full_server_name_textbox
 			// 
-			this.full_server_name_textbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                                             | System.Windows.Forms.AnchorStyles.Right)));
+			this.full_server_name_textbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.full_server_name_textbox.Location = new System.Drawing.Point(112, 24);
 			this.full_server_name_textbox.Name = "full_server_name_textbox";
 			this.full_server_name_textbox.Size = new System.Drawing.Size(251, 20);
@@ -290,8 +290,8 @@
 			// 
 			// groupBox2
 			// 
-			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                              | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox2.Controls.Add(this.region_port_textbox);
 			this.groupBox2.Controls.Add(this.region_ip_textbox);
 			this.groupBox2.Controls.Add(this.udp_port_textbox);
@@ -309,6 +309,50 @@
 			this.groupBox2.TabIndex = 1;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Server connection specific (optional)";
+			// 
+			// region_port_textbox
+			// 
+			this.region_port_textbox.Location = new System.Drawing.Point(112, 150);
+			this.region_port_textbox.Name = "region_port_textbox";
+			this.region_port_textbox.Regular_Expression = "^[0-9]+$";
+			this.region_port_textbox.Size = new System.Drawing.Size(61, 20);
+			this.region_port_textbox.TabIndex = 5;
+			// 
+			// region_ip_textbox
+			// 
+			this.region_ip_textbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.region_ip_textbox.Location = new System.Drawing.Point(112, 124);
+			this.region_ip_textbox.Name = "region_ip_textbox";
+			this.region_ip_textbox.Regular_Expression = "^[0-9\\.]+$";
+			this.region_ip_textbox.Size = new System.Drawing.Size(251, 20);
+			this.region_ip_textbox.TabIndex = 4;
+			// 
+			// udp_port_textbox
+			// 
+			this.udp_port_textbox.Location = new System.Drawing.Point(112, 75);
+			this.udp_port_textbox.Name = "udp_port_textbox";
+			this.udp_port_textbox.Regular_Expression = "^[0-9]+$";
+			this.udp_port_textbox.Size = new System.Drawing.Size(61, 20);
+			this.udp_port_textbox.TabIndex = 2;
+			// 
+			// port_textbox
+			// 
+			this.port_textbox.Location = new System.Drawing.Point(112, 49);
+			this.port_textbox.Name = "port_textbox";
+			this.port_textbox.Regular_Expression = "^[0-9]+$";
+			this.port_textbox.Size = new System.Drawing.Size(61, 20);
+			this.port_textbox.TabIndex = 1;
+			// 
+			// ip_textbox
+			// 
+			this.ip_textbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.ip_textbox.Location = new System.Drawing.Point(112, 23);
+			this.ip_textbox.Name = "ip_textbox";
+			this.ip_textbox.Regular_Expression = "^[0-9\\.]+$";
+			this.ip_textbox.Size = new System.Drawing.Size(251, 20);
+			this.ip_textbox.TabIndex = 0;
 			// 
 			// label8
 			// 
@@ -367,8 +411,8 @@
 			// 
 			// groupBox4
 			// 
-			this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                              | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox4.Controls.Add(this.regExTextBox1);
 			this.groupBox4.Controls.Add(this.regExTextBox2);
 			this.groupBox4.Controls.Add(this.regExTextBox3);
@@ -386,6 +430,50 @@
 			this.groupBox4.TabIndex = 1;
 			this.groupBox4.TabStop = false;
 			this.groupBox4.Text = "Server connection specific (optional)";
+			// 
+			// regExTextBox1
+			// 
+			this.regExTextBox1.Location = new System.Drawing.Point(112, 150);
+			this.regExTextBox1.Name = "regExTextBox1";
+			this.regExTextBox1.Regular_Expression = "^[0-9]+$";
+			this.regExTextBox1.Size = new System.Drawing.Size(61, 20);
+			this.regExTextBox1.TabIndex = 5;
+			// 
+			// regExTextBox2
+			// 
+			this.regExTextBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.regExTextBox2.Location = new System.Drawing.Point(112, 124);
+			this.regExTextBox2.Name = "regExTextBox2";
+			this.regExTextBox2.Regular_Expression = "^[0-9\\.]+$";
+			this.regExTextBox2.Size = new System.Drawing.Size(251, 20);
+			this.regExTextBox2.TabIndex = 4;
+			// 
+			// regExTextBox3
+			// 
+			this.regExTextBox3.Location = new System.Drawing.Point(112, 75);
+			this.regExTextBox3.Name = "regExTextBox3";
+			this.regExTextBox3.Regular_Expression = "^[0-9]+$";
+			this.regExTextBox3.Size = new System.Drawing.Size(61, 20);
+			this.regExTextBox3.TabIndex = 2;
+			// 
+			// regExTextBox4
+			// 
+			this.regExTextBox4.Location = new System.Drawing.Point(112, 49);
+			this.regExTextBox4.Name = "regExTextBox4";
+			this.regExTextBox4.Regular_Expression = "^[0-9]+$";
+			this.regExTextBox4.Size = new System.Drawing.Size(61, 20);
+			this.regExTextBox4.TabIndex = 1;
+			// 
+			// regExTextBox5
+			// 
+			this.regExTextBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.regExTextBox5.Location = new System.Drawing.Point(112, 23);
+			this.regExTextBox5.Name = "regExTextBox5";
+			this.regExTextBox5.Regular_Expression = "^[0-9\\.]+$";
+			this.regExTextBox5.Size = new System.Drawing.Size(251, 20);
+			this.regExTextBox5.TabIndex = 0;
 			// 
 			// label18
 			// 
@@ -444,8 +532,8 @@
 			// 
 			// groupBox5
 			// 
-			this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                              | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox5.Controls.Add(this.checkBox2);
 			this.groupBox5.Controls.Add(this.comboBox1);
 			this.groupBox5.Controls.Add(this.textBox1);
@@ -476,12 +564,12 @@
 			this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboBox1.FormattingEnabled = true;
 			this.comboBox1.Items.AddRange(new object[] {
-			                              	"Normal",
-			                              	"PvP",
-			                              	"PvE",
-			                              	"Casual",
-			                              	"Roleplay",
-			                              	"Test"});
+			"Normal",
+			"PvP",
+			"PvE",
+			"Casual",
+			"Roleplay",
+			"Test"});
 			this.comboBox1.Location = new System.Drawing.Point(112, 76);
 			this.comboBox1.Name = "comboBox1";
 			this.comboBox1.Size = new System.Drawing.Size(196, 21);
@@ -489,8 +577,8 @@
 			// 
 			// textBox1
 			// 
-			this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                             | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textBox1.Location = new System.Drawing.Point(112, 50);
 			this.textBox1.Name = "textBox1";
 			this.textBox1.Size = new System.Drawing.Size(251, 20);
@@ -516,8 +604,8 @@
 			// 
 			// textBox2
 			// 
-			this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                             | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textBox2.Location = new System.Drawing.Point(112, 24);
 			this.textBox2.Name = "textBox2";
 			this.textBox2.Size = new System.Drawing.Size(251, 20);
@@ -534,9 +622,9 @@
 			// 
 			// tabControl1
 			// 
-			this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-			                                                                 | System.Windows.Forms.AnchorStyles.Left)
-			                                                                | System.Windows.Forms.AnchorStyles.Right)));
+			this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			| System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.tabControl1.Controls.Add(this.database_tab);
 			this.tabControl1.Controls.Add(this.general_tab);
 			this.tabControl1.Controls.Add(this.tab_extra);
@@ -575,8 +663,8 @@
 			// 
 			// groupBox3
 			// 
-			this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                              | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox3.Controls.Add(this.database_autosave_interval_textbox);
 			this.groupBox3.Controls.Add(this.label17);
 			this.groupBox3.Controls.Add(this.label16);
@@ -589,6 +677,16 @@
 			this.groupBox3.TabIndex = 4;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Database Settings (required)";
+			// 
+			// database_autosave_interval_textbox
+			// 
+			this.database_autosave_interval_textbox.Location = new System.Drawing.Point(102, 76);
+			this.database_autosave_interval_textbox.Name = "database_autosave_interval_textbox";
+			this.database_autosave_interval_textbox.Regular_Expression = "^[0-9]+$";
+			this.database_autosave_interval_textbox.Size = new System.Drawing.Size(61, 20);
+			this.database_autosave_interval_textbox.TabIndex = 2;
+			this.database_autosave_interval_textbox.MouseEnter += new System.EventHandler(this.database_autosave_interval_textbox_MouseEnter);
+			this.database_autosave_interval_textbox.MouseLeave += new System.EventHandler(this.reset_mouse_enter_toolstrip_values);
 			// 
 			// label17
 			// 
@@ -634,8 +732,9 @@
 			this.database_type_selectbox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.database_type_selectbox.FormattingEnabled = true;
 			this.database_type_selectbox.Items.AddRange(new object[] {
-			                                            	"MySQL",
-			                                            	"XML"});
+			"MySQL",
+			"SQLite",
+			"XML"});
 			this.database_type_selectbox.Location = new System.Drawing.Point(102, 19);
 			this.database_type_selectbox.Name = "database_type_selectbox";
 			this.database_type_selectbox.Size = new System.Drawing.Size(121, 21);
@@ -646,8 +745,8 @@
 			// 
 			// xml_groupbox
 			// 
-			this.xml_groupbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                                 | System.Windows.Forms.AnchorStyles.Right)));
+			this.xml_groupbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.xml_groupbox.Controls.Add(this.xml_database_path_button);
 			this.xml_groupbox.Controls.Add(this.xml_path_textbox);
 			this.xml_groupbox.Controls.Add(this.label15);
@@ -676,8 +775,8 @@
 			// 
 			// xml_path_textbox
 			// 
-			this.xml_path_textbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                                     | System.Windows.Forms.AnchorStyles.Right)));
+			this.xml_path_textbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.xml_path_textbox.Location = new System.Drawing.Point(102, 27);
 			this.xml_path_textbox.Name = "xml_path_textbox";
 			this.xml_path_textbox.Size = new System.Drawing.Size(157, 20);
@@ -696,8 +795,8 @@
 			// 
 			// mysql_groupbox
 			// 
-			this.mysql_groupbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                                   | System.Windows.Forms.AnchorStyles.Right)));
+			this.mysql_groupbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.mysql_groupbox.Controls.Add(this.mysql_test_progressbar);
 			this.mysql_groupbox.Controls.Add(this.mysql_says_label);
 			this.mysql_groupbox.Controls.Add(this.mysql_password_textbox);
@@ -739,8 +838,8 @@
 			// 
 			// mysql_password_textbox
 			// 
-			this.mysql_password_textbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                                           | System.Windows.Forms.AnchorStyles.Right)));
+			this.mysql_password_textbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.mysql_password_textbox.Location = new System.Drawing.Point(102, 128);
 			this.mysql_password_textbox.Name = "mysql_password_textbox";
 			this.mysql_password_textbox.PasswordChar = '*';
@@ -750,10 +849,64 @@
 			this.mysql_password_textbox.MouseEnter += new System.EventHandler(this.mysql_password_textbox_MouseEnter);
 			this.mysql_password_textbox.MouseLeave += new System.EventHandler(this.reset_mouse_enter_toolstrip_values);
 			// 
+			// mysql_database_name_textbox
+			// 
+			this.mysql_database_name_textbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.mysql_database_name_textbox.Location = new System.Drawing.Point(102, 76);
+			this.mysql_database_name_textbox.Name = "mysql_database_name_textbox";
+			this.mysql_database_name_textbox.Regular_Expression = "^[0-9a-zA-Z_-]+$";
+			this.mysql_database_name_textbox.Size = new System.Drawing.Size(260, 20);
+			this.mysql_database_name_textbox.TabIndex = 2;
+			this.mysql_database_name_textbox.Text = "dol";
+			this.mysql_database_name_textbox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.mysql_textbox_KeyPress);
+			this.mysql_database_name_textbox.MouseEnter += new System.EventHandler(this.mysql_database_name_textbox_MouseEnter);
+			this.mysql_database_name_textbox.MouseLeave += new System.EventHandler(this.reset_mouse_enter_toolstrip_values);
+			// 
+			// mysql_username_textbox
+			// 
+			this.mysql_username_textbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.mysql_username_textbox.Location = new System.Drawing.Point(102, 102);
+			this.mysql_username_textbox.Name = "mysql_username_textbox";
+			this.mysql_username_textbox.Regular_Expression = "^[0-9a-zA-Z_-]+$";
+			this.mysql_username_textbox.Size = new System.Drawing.Size(260, 20);
+			this.mysql_username_textbox.TabIndex = 3;
+			this.mysql_username_textbox.Text = "dol";
+			this.mysql_username_textbox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.mysql_textbox_KeyPress);
+			this.mysql_username_textbox.MouseEnter += new System.EventHandler(this.mysql_username_textbox_MouseEnter);
+			this.mysql_username_textbox.MouseLeave += new System.EventHandler(this.reset_mouse_enter_toolstrip_values);
+			// 
+			// mysql_port_textbox
+			// 
+			this.mysql_port_textbox.Location = new System.Drawing.Point(102, 50);
+			this.mysql_port_textbox.Name = "mysql_port_textbox";
+			this.mysql_port_textbox.Regular_Expression = "^[0-9]+$";
+			this.mysql_port_textbox.Size = new System.Drawing.Size(61, 20);
+			this.mysql_port_textbox.TabIndex = 1;
+			this.mysql_port_textbox.Text = "3306";
+			this.mysql_port_textbox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.mysql_textbox_KeyPress);
+			this.mysql_port_textbox.MouseEnter += new System.EventHandler(this.mysql_port_textbox_MouseEnter);
+			this.mysql_port_textbox.MouseLeave += new System.EventHandler(this.reset_mouse_enter_toolstrip_values);
+			// 
+			// mysql_host_textbox
+			// 
+			this.mysql_host_textbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.mysql_host_textbox.Location = new System.Drawing.Point(102, 24);
+			this.mysql_host_textbox.Name = "mysql_host_textbox";
+			this.mysql_host_textbox.Regular_Expression = "^[\\S]+$";
+			this.mysql_host_textbox.Size = new System.Drawing.Size(260, 20);
+			this.mysql_host_textbox.TabIndex = 0;
+			this.mysql_host_textbox.Text = "localhost";
+			this.mysql_host_textbox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.mysql_textbox_KeyPress);
+			this.mysql_host_textbox.MouseEnter += new System.EventHandler(this.mysql_host_textbox_MouseEnter);
+			this.mysql_host_textbox.MouseLeave += new System.EventHandler(this.reset_mouse_enter_toolstrip_values);
+			// 
 			// mysql_test_label
 			// 
-			this.mysql_test_label.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                                     | System.Windows.Forms.AnchorStyles.Right)));
+			this.mysql_test_label.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.mysql_test_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.mysql_test_label.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.mysql_test_label.Location = new System.Drawing.Point(99, 185);
@@ -888,16 +1041,16 @@
 			this.extra_options_datagrid.AllowUserToAddRows = false;
 			this.extra_options_datagrid.AllowUserToDeleteRows = false;
 			this.extra_options_datagrid.AllowUserToResizeRows = false;
-			this.extra_options_datagrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-			                                                                            | System.Windows.Forms.AnchorStyles.Left)
-			                                                                           | System.Windows.Forms.AnchorStyles.Right)));
+			this.extra_options_datagrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			| System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.extra_options_datagrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
 			this.extra_options_datagrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.extra_options_datagrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-			                                             	this.property,
-			                                             	this.value,
-			                                             	this.description,
-			                                             	this.type});
+			this.property,
+			this.value,
+			this.description,
+			this.type});
 			this.extra_options_datagrid.DataMember = "Server";
 			this.extra_options_datagrid.Location = new System.Drawing.Point(3, 3);
 			this.extra_options_datagrid.MultiSelect = false;
@@ -991,8 +1144,8 @@
 			this.cb_spCurrentValue.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cb_spCurrentValue.FormattingEnabled = true;
 			this.cb_spCurrentValue.Items.AddRange(new object[] {
-			                                      	"True",
-			                                      	"False"});
+			"True",
+			"False"});
 			this.cb_spCurrentValue.Location = new System.Drawing.Point(80, 331);
 			this.cb_spCurrentValue.Name = "cb_spCurrentValue";
 			this.cb_spCurrentValue.Size = new System.Drawing.Size(121, 21);
@@ -1000,8 +1153,8 @@
 			// 
 			// tb_spDefaultValue
 			// 
-			this.tb_spDefaultValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-			                                                                      | System.Windows.Forms.AnchorStyles.Right)));
+			this.tb_spDefaultValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.tb_spDefaultValue.Enabled = false;
 			this.tb_spDefaultValue.Location = new System.Drawing.Point(80, 377);
 			this.tb_spDefaultValue.Multiline = true;
@@ -1021,8 +1174,8 @@
 			// 
 			// tb_spDesc
 			// 
-			this.tb_spDesc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-			                                                              | System.Windows.Forms.AnchorStyles.Right)));
+			this.tb_spDesc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.tb_spDesc.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.tb_spDesc.Location = new System.Drawing.Point(3, 278);
 			this.tb_spDesc.Multiline = true;
@@ -1046,8 +1199,8 @@
 			// 
 			// tb_spCurrentValue
 			// 
-			this.tb_spCurrentValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-			                                                                      | System.Windows.Forms.AnchorStyles.Right)));
+			this.tb_spCurrentValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.tb_spCurrentValue.Location = new System.Drawing.Point(80, 331);
 			this.tb_spCurrentValue.Multiline = true;
 			this.tb_spCurrentValue.Name = "tb_spCurrentValue";
@@ -1077,9 +1230,9 @@
 			// 
 			// tv_spShow
 			// 
-			this.tv_spShow.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-			                                                               | System.Windows.Forms.AnchorStyles.Left)
-			                                                              | System.Windows.Forms.AnchorStyles.Right)));
+			this.tv_spShow.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			| System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.tv_spShow.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tv_spShow.Location = new System.Drawing.Point(3, 3);
 			this.tv_spShow.Name = "tv_spShow";
@@ -1090,7 +1243,7 @@
 			// statusStrip1
 			// 
 			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			                                 	this.toolstrip_status_label});
+			this.toolstrip_status_label});
 			this.statusStrip1.Location = new System.Drawing.Point(0, 492);
 			this.statusStrip1.Name = "statusStrip1";
 			this.statusStrip1.Size = new System.Drawing.Size(434, 22);
@@ -1183,8 +1336,8 @@
 			// 
 			// groupBox6
 			// 
-			this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                              | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox6.Controls.Add(this.regExTextBox6);
 			this.groupBox6.Controls.Add(this.label26);
 			this.groupBox6.Controls.Add(this.label27);
@@ -1197,6 +1350,14 @@
 			this.groupBox6.TabIndex = 4;
 			this.groupBox6.TabStop = false;
 			this.groupBox6.Text = "Database Settings (required)";
+			// 
+			// regExTextBox6
+			// 
+			this.regExTextBox6.Location = new System.Drawing.Point(102, 76);
+			this.regExTextBox6.Name = "regExTextBox6";
+			this.regExTextBox6.Regular_Expression = "^[0-9]+$";
+			this.regExTextBox6.Size = new System.Drawing.Size(61, 20);
+			this.regExTextBox6.TabIndex = 2;
 			// 
 			// label26
 			// 
@@ -1240,8 +1401,8 @@
 			this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboBox2.FormattingEnabled = true;
 			this.comboBox2.Items.AddRange(new object[] {
-			                              	"MySQL",
-			                              	"XML"});
+			"MySQL",
+			"XML"});
 			this.comboBox2.Location = new System.Drawing.Point(102, 19);
 			this.comboBox2.Name = "comboBox2";
 			this.comboBox2.Size = new System.Drawing.Size(121, 21);
@@ -1249,8 +1410,8 @@
 			// 
 			// groupBox7
 			// 
-			this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                              | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox7.Controls.Add(this.button1);
 			this.groupBox7.Controls.Add(this.textBox3);
 			this.groupBox7.Controls.Add(this.label29);
@@ -1275,8 +1436,8 @@
 			// 
 			// textBox3
 			// 
-			this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                             | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textBox3.Location = new System.Drawing.Point(102, 27);
 			this.textBox3.Name = "textBox3";
 			this.textBox3.Size = new System.Drawing.Size(157, 20);
@@ -1293,8 +1454,8 @@
 			// 
 			// groupBox8
 			// 
-			this.groupBox8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                              | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox8.Controls.Add(this.progressBar1);
 			this.groupBox8.Controls.Add(this.label30);
 			this.groupBox8.Controls.Add(this.textBox4);
@@ -1336,18 +1497,60 @@
 			// 
 			// textBox4
 			// 
-			this.textBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                             | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.textBox4.Location = new System.Drawing.Point(102, 128);
 			this.textBox4.Name = "textBox4";
 			this.textBox4.PasswordChar = '*';
 			this.textBox4.Size = new System.Drawing.Size(260, 20);
 			this.textBox4.TabIndex = 4;
 			// 
+			// regExTextBox7
+			// 
+			this.regExTextBox7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.regExTextBox7.Location = new System.Drawing.Point(102, 76);
+			this.regExTextBox7.Name = "regExTextBox7";
+			this.regExTextBox7.Regular_Expression = "^[0-9a-zA-Z_-]+$";
+			this.regExTextBox7.Size = new System.Drawing.Size(260, 20);
+			this.regExTextBox7.TabIndex = 2;
+			this.regExTextBox7.Text = "dol";
+			// 
+			// regExTextBox8
+			// 
+			this.regExTextBox8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.regExTextBox8.Location = new System.Drawing.Point(102, 102);
+			this.regExTextBox8.Name = "regExTextBox8";
+			this.regExTextBox8.Regular_Expression = "^[0-9a-zA-Z_-]+$";
+			this.regExTextBox8.Size = new System.Drawing.Size(260, 20);
+			this.regExTextBox8.TabIndex = 3;
+			this.regExTextBox8.Text = "dol";
+			// 
+			// regExTextBox9
+			// 
+			this.regExTextBox9.Location = new System.Drawing.Point(102, 50);
+			this.regExTextBox9.Name = "regExTextBox9";
+			this.regExTextBox9.Regular_Expression = "^[0-9]+$";
+			this.regExTextBox9.Size = new System.Drawing.Size(61, 20);
+			this.regExTextBox9.TabIndex = 1;
+			this.regExTextBox9.Text = "3306";
+			// 
+			// regExTextBox10
+			// 
+			this.regExTextBox10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.regExTextBox10.Location = new System.Drawing.Point(102, 24);
+			this.regExTextBox10.Name = "regExTextBox10";
+			this.regExTextBox10.Regular_Expression = "^[\\S]+$";
+			this.regExTextBox10.Size = new System.Drawing.Size(260, 20);
+			this.regExTextBox10.TabIndex = 0;
+			this.regExTextBox10.Text = "localhost";
+			// 
 			// label31
 			// 
-			this.label31.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                            | System.Windows.Forms.AnchorStyles.Right)));
+			this.label31.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.label31.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label31.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.label31.Location = new System.Drawing.Point(99, 185);
@@ -1466,16 +1669,16 @@
 			this.dataGridView1.AllowUserToAddRows = false;
 			this.dataGridView1.AllowUserToDeleteRows = false;
 			this.dataGridView1.AllowUserToResizeRows = false;
-			this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-			                                                                   | System.Windows.Forms.AnchorStyles.Left)
-			                                                                  | System.Windows.Forms.AnchorStyles.Right)));
+			this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			| System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
 			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-			                                    	this.dataGridViewTextBoxColumn1,
-			                                    	this.dataGridViewTextBoxColumn2,
-			                                    	this.dataGridViewTextBoxColumn3,
-			                                    	this.dataGridViewTextBoxColumn4});
+			this.dataGridViewTextBoxColumn1,
+			this.dataGridViewTextBoxColumn2,
+			this.dataGridViewTextBoxColumn3,
+			this.dataGridViewTextBoxColumn4});
 			this.dataGridView1.DataMember = "Server";
 			this.dataGridView1.Location = new System.Drawing.Point(3, 3);
 			this.dataGridView1.MultiSelect = false;
@@ -1520,208 +1723,6 @@
 			this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
 			this.dataGridViewTextBoxColumn4.ReadOnly = true;
 			this.dataGridViewTextBoxColumn4.Visible = false;
-			// 
-			// region_port_textbox
-			// 
-			this.region_port_textbox.Location = new System.Drawing.Point(112, 150);
-			this.region_port_textbox.Name = "region_port_textbox";
-			this.region_port_textbox.Regular_Expression = "^[0-9]+$";
-			this.region_port_textbox.Size = new System.Drawing.Size(61, 20);
-			this.region_port_textbox.TabIndex = 5;
-			// 
-			// region_ip_textbox
-			// 
-			this.region_ip_textbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                                      | System.Windows.Forms.AnchorStyles.Right)));
-			this.region_ip_textbox.Location = new System.Drawing.Point(112, 124);
-			this.region_ip_textbox.Name = "region_ip_textbox";
-			this.region_ip_textbox.Regular_Expression = "^[0-9\\.]+$";
-			this.region_ip_textbox.Size = new System.Drawing.Size(251, 20);
-			this.region_ip_textbox.TabIndex = 4;
-			// 
-			// udp_port_textbox
-			// 
-			this.udp_port_textbox.Location = new System.Drawing.Point(112, 75);
-			this.udp_port_textbox.Name = "udp_port_textbox";
-			this.udp_port_textbox.Regular_Expression = "^[0-9]+$";
-			this.udp_port_textbox.Size = new System.Drawing.Size(61, 20);
-			this.udp_port_textbox.TabIndex = 2;
-			// 
-			// port_textbox
-			// 
-			this.port_textbox.Location = new System.Drawing.Point(112, 49);
-			this.port_textbox.Name = "port_textbox";
-			this.port_textbox.Regular_Expression = "^[0-9]+$";
-			this.port_textbox.Size = new System.Drawing.Size(61, 20);
-			this.port_textbox.TabIndex = 1;
-			// 
-			// ip_textbox
-			// 
-			this.ip_textbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                               | System.Windows.Forms.AnchorStyles.Right)));
-			this.ip_textbox.Location = new System.Drawing.Point(112, 23);
-			this.ip_textbox.Name = "ip_textbox";
-			this.ip_textbox.Regular_Expression = "^[0-9\\.]+$";
-			this.ip_textbox.Size = new System.Drawing.Size(251, 20);
-			this.ip_textbox.TabIndex = 0;
-			// 
-			// database_autosave_interval_textbox
-			// 
-			this.database_autosave_interval_textbox.Location = new System.Drawing.Point(102, 76);
-			this.database_autosave_interval_textbox.Name = "database_autosave_interval_textbox";
-			this.database_autosave_interval_textbox.Regular_Expression = "^[0-9]+$";
-			this.database_autosave_interval_textbox.Size = new System.Drawing.Size(61, 20);
-			this.database_autosave_interval_textbox.TabIndex = 2;
-			this.database_autosave_interval_textbox.MouseEnter += new System.EventHandler(this.database_autosave_interval_textbox_MouseEnter);
-			this.database_autosave_interval_textbox.MouseLeave += new System.EventHandler(this.reset_mouse_enter_toolstrip_values);
-			// 
-			// mysql_database_name_textbox
-			// 
-			this.mysql_database_name_textbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                                                | System.Windows.Forms.AnchorStyles.Right)));
-			this.mysql_database_name_textbox.Location = new System.Drawing.Point(102, 76);
-			this.mysql_database_name_textbox.Name = "mysql_database_name_textbox";
-			this.mysql_database_name_textbox.Regular_Expression = "^[0-9a-zA-Z_-]+$";
-			this.mysql_database_name_textbox.Size = new System.Drawing.Size(260, 20);
-			this.mysql_database_name_textbox.TabIndex = 2;
-			this.mysql_database_name_textbox.Text = "dol";
-			this.mysql_database_name_textbox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.mysql_textbox_KeyPress);
-			this.mysql_database_name_textbox.MouseEnter += new System.EventHandler(this.mysql_database_name_textbox_MouseEnter);
-			this.mysql_database_name_textbox.MouseLeave += new System.EventHandler(this.reset_mouse_enter_toolstrip_values);
-			// 
-			// mysql_username_textbox
-			// 
-			this.mysql_username_textbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                                           | System.Windows.Forms.AnchorStyles.Right)));
-			this.mysql_username_textbox.Location = new System.Drawing.Point(102, 102);
-			this.mysql_username_textbox.Name = "mysql_username_textbox";
-			this.mysql_username_textbox.Regular_Expression = "^[0-9a-zA-Z_-]+$";
-			this.mysql_username_textbox.Size = new System.Drawing.Size(260, 20);
-			this.mysql_username_textbox.TabIndex = 3;
-			this.mysql_username_textbox.Text = "dol";
-			this.mysql_username_textbox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.mysql_textbox_KeyPress);
-			this.mysql_username_textbox.MouseEnter += new System.EventHandler(this.mysql_username_textbox_MouseEnter);
-			this.mysql_username_textbox.MouseLeave += new System.EventHandler(this.reset_mouse_enter_toolstrip_values);
-			// 
-			// mysql_port_textbox
-			// 
-			this.mysql_port_textbox.Location = new System.Drawing.Point(102, 50);
-			this.mysql_port_textbox.Name = "mysql_port_textbox";
-			this.mysql_port_textbox.Regular_Expression = "^[0-9]+$";
-			this.mysql_port_textbox.Size = new System.Drawing.Size(61, 20);
-			this.mysql_port_textbox.TabIndex = 1;
-			this.mysql_port_textbox.Text = "3306";
-			this.mysql_port_textbox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.mysql_textbox_KeyPress);
-			this.mysql_port_textbox.MouseEnter += new System.EventHandler(this.mysql_port_textbox_MouseEnter);
-			this.mysql_port_textbox.MouseLeave += new System.EventHandler(this.reset_mouse_enter_toolstrip_values);
-			// 
-			// mysql_host_textbox
-			// 
-			this.mysql_host_textbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                                       | System.Windows.Forms.AnchorStyles.Right)));
-			this.mysql_host_textbox.Location = new System.Drawing.Point(102, 24);
-			this.mysql_host_textbox.Name = "mysql_host_textbox";
-			this.mysql_host_textbox.Regular_Expression = "^[\\S]+$";
-			this.mysql_host_textbox.Size = new System.Drawing.Size(260, 20);
-			this.mysql_host_textbox.TabIndex = 0;
-			this.mysql_host_textbox.Text = "localhost";
-			this.mysql_host_textbox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.mysql_textbox_KeyPress);
-			this.mysql_host_textbox.MouseEnter += new System.EventHandler(this.mysql_host_textbox_MouseEnter);
-			this.mysql_host_textbox.MouseLeave += new System.EventHandler(this.reset_mouse_enter_toolstrip_values);
-			// 
-			// regExTextBox1
-			// 
-			this.regExTextBox1.Location = new System.Drawing.Point(112, 150);
-			this.regExTextBox1.Name = "regExTextBox1";
-			this.regExTextBox1.Regular_Expression = "^[0-9]+$";
-			this.regExTextBox1.Size = new System.Drawing.Size(61, 20);
-			this.regExTextBox1.TabIndex = 5;
-			// 
-			// regExTextBox2
-			// 
-			this.regExTextBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                                  | System.Windows.Forms.AnchorStyles.Right)));
-			this.regExTextBox2.Location = new System.Drawing.Point(112, 124);
-			this.regExTextBox2.Name = "regExTextBox2";
-			this.regExTextBox2.Regular_Expression = "^[0-9\\.]+$";
-			this.regExTextBox2.Size = new System.Drawing.Size(251, 20);
-			this.regExTextBox2.TabIndex = 4;
-			// 
-			// regExTextBox3
-			// 
-			this.regExTextBox3.Location = new System.Drawing.Point(112, 75);
-			this.regExTextBox3.Name = "regExTextBox3";
-			this.regExTextBox3.Regular_Expression = "^[0-9]+$";
-			this.regExTextBox3.Size = new System.Drawing.Size(61, 20);
-			this.regExTextBox3.TabIndex = 2;
-			// 
-			// regExTextBox4
-			// 
-			this.regExTextBox4.Location = new System.Drawing.Point(112, 49);
-			this.regExTextBox4.Name = "regExTextBox4";
-			this.regExTextBox4.Regular_Expression = "^[0-9]+$";
-			this.regExTextBox4.Size = new System.Drawing.Size(61, 20);
-			this.regExTextBox4.TabIndex = 1;
-			// 
-			// regExTextBox5
-			// 
-			this.regExTextBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                                  | System.Windows.Forms.AnchorStyles.Right)));
-			this.regExTextBox5.Location = new System.Drawing.Point(112, 23);
-			this.regExTextBox5.Name = "regExTextBox5";
-			this.regExTextBox5.Regular_Expression = "^[0-9\\.]+$";
-			this.regExTextBox5.Size = new System.Drawing.Size(251, 20);
-			this.regExTextBox5.TabIndex = 0;
-			// 
-			// regExTextBox6
-			// 
-			this.regExTextBox6.Location = new System.Drawing.Point(102, 76);
-			this.regExTextBox6.Name = "regExTextBox6";
-			this.regExTextBox6.Regular_Expression = "^[0-9]+$";
-			this.regExTextBox6.Size = new System.Drawing.Size(61, 20);
-			this.regExTextBox6.TabIndex = 2;
-			// 
-			// regExTextBox7
-			// 
-			this.regExTextBox7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                                  | System.Windows.Forms.AnchorStyles.Right)));
-			this.regExTextBox7.Location = new System.Drawing.Point(102, 76);
-			this.regExTextBox7.Name = "regExTextBox7";
-			this.regExTextBox7.Regular_Expression = "^[0-9a-zA-Z_-]+$";
-			this.regExTextBox7.Size = new System.Drawing.Size(260, 20);
-			this.regExTextBox7.TabIndex = 2;
-			this.regExTextBox7.Text = "dol";
-			// 
-			// regExTextBox8
-			// 
-			this.regExTextBox8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                                  | System.Windows.Forms.AnchorStyles.Right)));
-			this.regExTextBox8.Location = new System.Drawing.Point(102, 102);
-			this.regExTextBox8.Name = "regExTextBox8";
-			this.regExTextBox8.Regular_Expression = "^[0-9a-zA-Z_-]+$";
-			this.regExTextBox8.Size = new System.Drawing.Size(260, 20);
-			this.regExTextBox8.TabIndex = 3;
-			this.regExTextBox8.Text = "dol";
-			// 
-			// regExTextBox9
-			// 
-			this.regExTextBox9.Location = new System.Drawing.Point(102, 50);
-			this.regExTextBox9.Name = "regExTextBox9";
-			this.regExTextBox9.Regular_Expression = "^[0-9]+$";
-			this.regExTextBox9.Size = new System.Drawing.Size(61, 20);
-			this.regExTextBox9.TabIndex = 1;
-			this.regExTextBox9.Text = "3306";
-			// 
-			// regExTextBox10
-			// 
-			this.regExTextBox10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			                                                                   | System.Windows.Forms.AnchorStyles.Right)));
-			this.regExTextBox10.Location = new System.Drawing.Point(102, 24);
-			this.regExTextBox10.Name = "regExTextBox10";
-			this.regExTextBox10.Regular_Expression = "^[\\S]+$";
-			this.regExTextBox10.Size = new System.Drawing.Size(260, 20);
-			this.regExTextBox10.TabIndex = 0;
-			this.regExTextBox10.Text = "localhost";
 			// 
 			// DolConfig
 			// 

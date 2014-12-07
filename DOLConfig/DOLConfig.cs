@@ -218,6 +218,10 @@ namespace DOLConfig
 					this.database_type_selectbox.SelectedItem = "XML";
 					this.xml_path_textbox.Text = currentConfig.DBConnectionString;
 					break;
+				case ConnectionType.DATABASE_SQLITE:
+					this.database_type_selectbox.SelectedItem = "SQLITE";
+					this.xml_path_textbox.Text = currentConfig.DBConnectionString;
+					break;
 				case ConnectionType.DATABASE_MYSQL:
 				default:
 					this.database_type_selectbox.SelectedItem = "MySQL";
@@ -393,6 +397,9 @@ namespace DOLConfig
 						return;
 					}
 					currentConfig.DBConnectionString = xml_path_textbox.Text;
+					break;
+				case "sqlite":
+					currentConfig.DBType = ConnectionType.DATABASE_SQLITE;
 					break;
 				case "mysql":
 					currentConfig.DBType = ConnectionType.DATABASE_MYSQL;
