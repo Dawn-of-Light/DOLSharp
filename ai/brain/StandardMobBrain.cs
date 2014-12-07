@@ -701,56 +701,44 @@ namespace DOL.AI.Brain
 		/// <returns></returns>
 		public virtual int CalculateAggroLevelToTarget(GameLiving target)
 		{
+			// Withdraw if can't attack.
 			if (GameServer.ServerRules.IsAllowedToAttack(Body, target, true) == false)
 				return 0;
-
-			// related to the pet owner if applicable
+			
+			// Get owner if target is pet
+			GameLiving realTarget = target;
 			if (target is GameNPC)
 			{
-				IControlledBrain brain = ((GameNPC)target).Brain as IControlledBrain;
-				if (brain != null)
+				if (((GameNPC)target).Brain is IControlledBrain)
 				{
-					GameLiving thisLiving = (((GameNPC)target).Brain as IControlledBrain).GetLivingOwner();
-					if (thisLiving != null)
-					{
-						if (thisLiving.IsObjectGreyCon(Body))
-							return 0;
-					}
+					GameLiving owner = (((GameNPC)target).Brain as IControlledBrain).GetLivingOwner();
+					if (owner != null)
+						realTarget = owner;
 				}
 			}
 			
-			if (target.IsObjectGreyCon(Body)) return 0;	// only attack if green+ to target
+			// only attack if green+ to target
+			if (realTarget.IsObjectGreyCon(Body))
+				return 0;	
 
-			if (Body.Faction != null && target is GamePlayer)
+			// If this npc have Faction return the AggroAmount to Player
+			if (Body.Faction != null)
 			{
-				GamePlayer player = (GamePlayer)target;
-				AggroLevel = Body.Faction.GetAggroToFaction(player);
-			}
-			else if(Body.Faction != null && target is GameNPC)
-			{
-				GameNPC npc = (GameNPC)target;
-				if (npc.Faction != null)
+				if (realTarget is GamePlayer)
 				{
-					if (npc.Brain is IControlledBrain && (npc.Brain as IControlledBrain).GetPlayerOwner() != null)
-					{
-						GamePlayer factionChecker = (npc.Brain as IControlledBrain).GetPlayerOwner();
-						AggroLevel = Body.Faction.GetAggroToFaction(factionChecker);
-					}
-					else
-					{
-						if (Body.Faction.EnemyFactions.Contains(npc.Faction))
-							AggroLevel = 100;
-					}
+					return Math.Min(100, Body.Faction.GetAggroToFaction((GamePlayer)realTarget));
+				}
+				else if (realTarget is GameNPC && Body.Faction.EnemyFactions.Contains(((GameNPC)realTarget).Faction))
+				{
+					return 100;
 				}
 			}
 			
 			//we put this here to prevent aggroing non-factions npcs
-			if(target.Realm == eRealm.None && target is GameNPC)
+			if(Body.Realm == eRealm.None && realTarget is GameNPC)
 				return 0;
-
-			if (AggroLevel >= 100) return 100;
 			
-			return AggroLevel;
+			return Math.Min(100, AggroLevel);
 		}
 
 		/// <summary>
