@@ -1971,6 +1971,23 @@ namespace DOL.GS.ServerProperties
 				return null;
 			}
 		}
+		
+		/// <summary>
+		/// Init All Types registered in GameServerScript
+		/// </summary>
+		/// <param name="includingSelf">Scan this Class Too.</param>
+		protected static void InitAllTypes(bool includingSelf)
+		{
+			foreach (Assembly asm in ScriptMgr.Scripts)
+			{
+				log.InfoFormat("Loading Server Properties From Assembly : {0}", asm);
+				foreach (Type type in asm.GetTypes())
+					Init(type);
+			}
+			
+			if (includingSelf)
+				Init(typeof(Properties));
+		}
 
 		/// <summary>
 		/// This method is the key. It checks all fields of a specific type and
@@ -2009,7 +2026,16 @@ namespace DOL.GS.ServerProperties
 		public static void Refresh()
 		{
 			log.Info("Refreshing server properties...");
-			Init(typeof(Properties));
+			InitAllTypes(true);
+		}
+		
+		/// <summary>
+		/// Refreshes the Scripted server properties from Assembly and DB
+		/// </summary>
+		public static void RefreshScriptProperties()
+		{
+			log.Info("Refreshing Scripts server properties...");
+			InitAllTypes(false);
 		}
 	}
 }
