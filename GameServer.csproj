@@ -353,9 +353,6 @@
     <Compile Include="database\converters\Version005.cs" />
     <Compile Include="database\updaters\DatabaseUpdateAttribute.cs" />
     <Compile Include="database\updaters\IDatabaseUpdater.cs" />
-    <Compile Include="database\updaters\LanguageSystemUpdate.cs" />
-    <Compile Include="database\updaters\SalvageYieldsUpdate.cs" />
-    <Compile Include="database\updaters\ServerPropertiesUpdate.cs" />
     <Compile Include="effects\DummyEffect.cs" />
     <Compile Include="events\gameobjects\ExecuteCommandEventArgs.cs" />
     <Compile Include="events\gameobjects\InterruptedEventArgs.cs" />
