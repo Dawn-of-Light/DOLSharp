@@ -173,9 +173,18 @@ namespace DOL.GS
 			if (!path.Exists)
 				return files;
 			
-			foreach (FileInfo fi in path.GetFiles(filter, deep ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly))
-				files.Add(fi);
-
+			foreach (DirectoryInfo di in path.GetDirectories())
+			{
+				if (di.Name.Equals("obj", StringComparison.OrdinalIgnoreCase))
+					continue;
+				
+				foreach (FileInfo fi in di.GetFiles(filter, deep ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly))
+				{
+					
+					files.Add(fi);
+				}
+			}
+			
 			return files;
 		}
 
