@@ -226,7 +226,7 @@ namespace DOL.Database
 			}
 			else
 			{
-				Log.Warn("AddObject called on DataObject when AllowSave is False: " + dataObject.TableName + " : " + dataObject.ObjectId);
+				Log.Warn("AddObject called on DataObject when AllowAdd is False: " + dataObject.TableName + " : " + dataObject.ObjectId);
 				return false;
 			}
 		}

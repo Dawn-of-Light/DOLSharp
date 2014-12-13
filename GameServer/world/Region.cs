@@ -975,10 +975,10 @@ namespace DOL.GS
 
                 Thread.Sleep(0);  // give up remaining thread time to other resources
             }
-            mobCount += myMobCount;
-            merchantCount += myMerchantCount;
-            itemCount += myItemCount;
-            bindCount += myBindCount;
+            Interlocked.Add(ref mobCount, myMobCount);
+            Interlocked.Add(ref merchantCount, myMerchantCount);
+            Interlocked.Add(ref itemCount, myItemCount);
+            Interlocked.Add(ref bindCount, myBindCount);
         }
 
         /// <summary>
