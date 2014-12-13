@@ -2608,13 +2608,6 @@
     <Compile Include="world\ZoneData.cs" />
     <Compile Include="world\ZonePointEffects.cs" />
     <EmbeddedResource Include="config\logconfig.xml" />
-    <EmbeddedResource Include="config\regions.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="config\zones.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <None Include="language\DE\AI.txt" />
     <None Include="language\DE\Atlantis.txt" />
     <None Include="language\DE\Behaviour.txt" />
