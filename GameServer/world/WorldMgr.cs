@@ -321,19 +321,6 @@ namespace DOL.GS
 			lock (m_zones.SyncRoot)
 				m_zones.Clear();
 
-			//If the files are missing this method
-			//creates the default values
-			CheckRegionAndZoneConfigs();
-			XMLConfigFile zoneCfg = XMLConfigFile.ParseXMLFile(new FileInfo(GameServer.Instance.Configuration.ZoneConfigFile)); ;
-			
-			XMLConfigFile regionCfg = XMLConfigFile.ParseXMLFile(new FileInfo(GameServer.Instance.Configuration.RegionConfigFile));
-
-			if (log.IsDebugEnabled)
-			{
-				log.Debug(string.Format("{0} blocks read from {1}", regionCfg.Children.Count, GameServer.Instance.Configuration.RegionConfigFile));
-				log.Debug(string.Format("{0} blocks read from {1}", zoneCfg.Children.Count, GameServer.Instance.Configuration.ZoneConfigFile));
-			}
-
 			#region Instances
 
 			//Dinberg: We now need to save regionData, indexed by regionID, for instances.
@@ -378,33 +365,6 @@ namespace DOL.GS
 				}
 
 				list.Add(mob);
-			}
-
-			if (GameServer.Database.GetObjectCount<DBRegions>() < regionCfg.Children.Count)
-			{
-				foreach (var entry in regionCfg.Children)
-				{
-					ConfigElement config = entry.Value;
-
-					DBRegions dbRegion = GameServer.Database.FindObjectByKey<DBRegions>(config[ENTRY_REG_ID].GetInt());
-					if (dbRegion == null)
-					{
-						dbRegion = new DBRegions();
-
-						dbRegion.RegionID = (ushort)config[ENTRY_REG_ID].GetInt();
-						dbRegion.Name = entry.Key;
-						dbRegion.Description = config[ENTRY_REG_DESC].GetString();
-						dbRegion.IP = config[ENTRY_REG_IP].GetString();
-						dbRegion.Port = (ushort)config[ENTRY_REG_PORT].GetInt();
-						dbRegion.Expansion = config[ENTRY_REG_EXPANSION].GetInt();
-						dbRegion.HousingEnabled = config[ENTRY_REG_HOUSING_ENABLE].GetBoolean(false);
-						dbRegion.DivingEnabled = config[ENTRY_REG_DIVING_ENABLE].GetBoolean(false);
-						dbRegion.WaterLevel = config[ENTRY_REG_WATER_LEVEL].GetInt();
-
-						log.Debug(string.Format("Region {0} was not found in the database. Added!", dbRegion.RegionID));
-						GameServer.Database.AddObject(dbRegion);
-					}
-				}
 			}
 
 			bool hasFrontierRegion = false;
@@ -481,44 +441,6 @@ namespace DOL.GS
 				else
 				{
 					log.ErrorFormat("Can't find default Frontier region {0}!", Keeps.DefaultKeepManager.DEFAULT_FRONTIERS_REGION);
-				}
-			}
-
-
-			//stephenxpimentel - changed to SQL.
-			if (GameServer.Database.GetObjectCount<Zones>() < zoneCfg.Children.Count)
-			{
-				foreach (var entry in zoneCfg.Children)
-				{
-					//string name = (string) entry.Key;
-					ConfigElement config = entry.Value;
-
-					Zones checkZone = GameServer.Database.FindObjectByKey<Zones>(config[ENTRY_ZONE_ZONEID].GetInt());
-					if (checkZone == null)
-					{
-						Zones dbZone = new Zones();
-						dbZone.Height = config[ENTRY_ZONE_HEIGHT].GetInt(0);
-						dbZone.Width = config[ENTRY_ZONE_WIDTH].GetInt(0);
-						dbZone.OffsetY = config[ENTRY_ZONE_OFFY].GetInt(0);
-						dbZone.OffsetX = config[ENTRY_ZONE_OFFX].GetInt(0);
-						dbZone.Name = config[ENTRY_ZONE_DESC].GetString("");
-						dbZone.RegionID = (ushort)config[ENTRY_ZONE_REGIONID].GetInt(0);
-						dbZone.ZoneID = config[ENTRY_ZONE_ZONEID].GetInt(0);
-						dbZone.WaterLevel = config[ENTRY_ZONE_WATER_LEVEL].GetInt(0);
-						dbZone.DivingFlag = 0;
-
-						if (config[ENTRY_ZONE_LAVA].GetInt(0) != 0)
-						{
-							dbZone.IsLava = true;
-						}
-						else
-						{
-							dbZone.IsLava = false;
-						}
-
-						log.Debug(string.Format("Zone {0} was not found in the database. Added!", dbZone.ZoneID));
-						GameServer.Database.AddObject(dbZone);
-					}
 				}
 			}
 
@@ -2032,16 +1954,6 @@ namespace DOL.GS
 				return new Region.EmptyEnumerator();
 
 			return reg.GetItemsInRadius(x, y, z, radiusToCheck, withDistance);
-		}
-
-		private static void CheckRegionAndZoneConfigs()
-		{
-			FileInfo regionConfigFile = new FileInfo(GameServer.Instance.Configuration.RegionConfigFile);
-			FileInfo zoneConfigFile = new FileInfo(GameServer.Instance.Configuration.ZoneConfigFile);
-			if (!regionConfigFile.Exists)
-				ResourceUtil.ExtractResource(regionConfigFile.Name, regionConfigFile.FullName);
-			if (!zoneConfigFile.Exists)
-				ResourceUtil.ExtractResource(zoneConfigFile.Name, zoneConfigFile.FullName);
 		}
 
 		/// <summary>
