@@ -193,9 +193,12 @@ namespace DOL.GS.DatabaseUpdate
 		/// <returns>True if success, False if any errors</returns>
 		private bool CheckXMLPackageAndApply(FileInfo xml, bool replace)
 		{
+			
+			string packageName = string.Format("{0}{1}{2}", xml.Directory.Name, Path.DirectorySeparatorChar, xml.Name);
+			
 			if (log.IsInfoEnabled)
 			{
-				log.InfoFormat("Auto Loading XML File {0} into Database (Mode:{1})", xml.FullName, replace ? "Replace" : "Insert");
+				log.InfoFormat("Auto Loading XML File {0} into Database (Mode:{1})", packageName, replace ? "Replace" : "Insert");
 			}
 			
 			bool result = true;
@@ -260,14 +263,14 @@ namespace DOL.GS.DatabaseUpdate
 				else
 				{
 					if (log.IsWarnEnabled)
-						log.WarnFormat("XML Package {0} Found Empty, may be a parsing Error...", xml.FullName);
+						log.WarnFormat("XML Package {0} Found Empty, may be a parsing Error...", packageName);
 					result = false;
 				}
 			}
 			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
-					log.ErrorFormat("Error While Loading XML Package {0} into Database (Mode:{1}) - {2}", xml.FullName, replace ? "Replace" : "Insert", e);
+					log.ErrorFormat("Error While Loading XML Package {0} into Database (Mode:{1}) - {2}", packageName, replace ? "Replace" : "Insert", e);
 				result = false;
 			}
 			
