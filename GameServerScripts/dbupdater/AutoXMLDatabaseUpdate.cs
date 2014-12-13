@@ -241,6 +241,9 @@ namespace DOL.GS.DatabaseUpdate
 							       	return exists;
 							       }).FirstOrDefault();
 						
+						// Store previous Add Flag
+						bool previousAllow = obj.AllowAdd;
+						obj.AllowAdd = true;
 						// Check if we have duplicate
 						if (copy != null)
 						{
@@ -258,6 +261,7 @@ namespace DOL.GS.DatabaseUpdate
 							// Insert
 							GameServer.Database.AddObject(obj);
 						}
+						obj.AllowAdd = previousAllow;
 					                             });
 				}
 				else

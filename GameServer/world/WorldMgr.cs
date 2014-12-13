@@ -18,18 +18,21 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading;
+using Timer=System.Threading.Timer;
+
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Utils;
-using log4net;
 using DOL.Config;
-using Timer=System.Threading.Timer;
-using System.Collections.Generic;
 using DOL.GS.Housing;
+
+using log4net;
 
 namespace DOL.GS
 {
@@ -526,11 +529,10 @@ namespace DOL.GS
 				long merchants = 0;
 				long items = 0;
 				long bindpoints = 0;
-				foreach (RegionData data in regionsData)
-				{
-					Region reg = (Region)m_regions[data.Id];
-					reg.LoadFromDatabase(data.Mobs, ref mobs, ref merchants, ref items, ref bindpoints);
-				}
+				regionsData.AsParallel().WithDegreeOfParallelism(GameServer.Instance.Configuration.CPUUse << 2).ForAll(data => {
+				                                	Region reg = (Region)m_regions[data.Id];
+				                                	reg.LoadFromDatabase(data.Mobs, ref mobs, ref merchants, ref items, ref bindpoints);
+				                                });
 
 				if (log.IsInfoEnabled)
 				{
