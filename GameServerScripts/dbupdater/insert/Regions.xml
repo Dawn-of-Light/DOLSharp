@@ -1,0 +1,4847 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfDBRegions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.796569Z</LastTimeRowUpdated>
+    <RegionID>1</RegionID>
+    <Name>Region001</Name>
+    <Description>Albion</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>2</RegionID>
+    <Name>Region002</Name>
+    <Description>Albion Housing</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>true</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>10</RegionID>
+    <Name>Region010</Name>
+    <Description>Camelot City</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>20</RegionID>
+    <Name>Region020</Name>
+    <Description>Stonehenge Barrows</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>21</RegionID>
+    <Name>Region021</Name>
+    <Description>Tomb of Mithra</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>22</RegionID>
+    <Name>Region022</Name>
+    <Description>Keltoi Fogou</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>23</RegionID>
+    <Name>Region023</Name>
+    <Description>Catacombs of Cardova</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>24</RegionID>
+    <Name>Region024</Name>
+    <Description>Tepok's Mine</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>27</RegionID>
+    <Name>Region027</Name>
+    <Description>Tutorial</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>30</RegionID>
+    <Name>Region030</Name>
+    <Description>Atlantis</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>7970</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>35</RegionID>
+    <Name>Region035</Name>
+    <Description>Cetus' Pit</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>18960</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>36</RegionID>
+    <Name>Region036</Name>
+    <Description>Sobekite Eternal</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>15314</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>37</RegionID>
+    <Name>Region037</Name>
+    <Description>Temple of Twilight</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>17669</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>40</RegionID>
+    <Name>Region040</Name>
+    <Description>Halls of Ma'ati</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>45</RegionID>
+    <Name>Region045</Name>
+    <Description>The Great Pyramid</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>46</RegionID>
+    <Name>Region046</Name>
+    <Description>Deep Volcanus</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>47</RegionID>
+    <Name>Region047</Name>
+    <Description>Aerus City</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>48</RegionID>
+    <Name>Region048</Name>
+    <Description>The Unused Mine</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>49</RegionID>
+    <Name>Region049</Name>
+    <Description>Rugnog's Haven</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>50</RegionID>
+    <Name>Region050</Name>
+    <Description>Avalon City</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>1</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>51</RegionID>
+    <Name>Region051</Name>
+    <Description>Avalon</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>1</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>58</RegionID>
+    <Name>Region058</Name>
+    <Description>Underground Forest</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>59</RegionID>
+    <Name>Region059</Name>
+    <Description>Glashtin Forge</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>60</RegionID>
+    <Name>Region060</Name>
+    <Description>Caer Sidi</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>1</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>61</RegionID>
+    <Name>Region061</Name>
+    <Description>Krondon</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>1</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>62</RegionID>
+    <Name>Region062</Name>
+    <Description>Crystal Cave</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>1</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>63</RegionID>
+    <Name>Region063</Name>
+    <Description>Roman Aqueducts</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>65</RegionID>
+    <Name>Region065</Name>
+    <Description>Inconnu Crypt</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>66</RegionID>
+    <Name>Region066</Name>
+    <Description>Underground Forest</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>67</RegionID>
+    <Name>Region067</Name>
+    <Description>Deadlands of Annwn</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>68</RegionID>
+    <Name>Region068</Name>
+    <Description>Lower Crypt</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>69</RegionID>
+    <Name>Region069</Name>
+    <Description>Darkspire</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>70</RegionID>
+    <Name>Region070</Name>
+    <Description>Ruins of Atlantis</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>5804</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>71</RegionID>
+    <Name>Region071</Name>
+    <Description>Ruinrar Atlantis</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>5804</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>72</RegionID>
+    <Name>Region072</Name>
+    <Description>Scrios de Atlantis</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>5804</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>73</RegionID>
+    <Name>Region073</Name>
+    <Description>Atlantis</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>7970</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>78</RegionID>
+    <Name>Region078</Name>
+    <Description>Cetus' Pit</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>18960</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>79</RegionID>
+    <Name>Region079</Name>
+    <Description>Sobekite Eternal</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>15314</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>80</RegionID>
+    <Name>Region080</Name>
+    <Description>Temple of Twilight</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>17669</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>83</RegionID>
+    <Name>Region083</Name>
+    <Description>Halls of Ma'ati</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>88</RegionID>
+    <Name>Region088</Name>
+    <Description>The Great Pyramid</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>89</RegionID>
+    <Name>Region089</Name>
+    <Description>Deep Volcanus</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7975691Z</LastTimeRowUpdated>
+    <RegionID>90</RegionID>
+    <Name>Region090</Name>
+    <Description>Aerus City</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>91</RegionID>
+    <Name>Region091</Name>
+    <Description>Celestius</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>92</RegionID>
+    <Name>Region092</Name>
+    <Description>Veil Rift</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>93</RegionID>
+    <Name>Region093</Name>
+    <Description>Shar Labyrinth</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>94</RegionID>
+    <Name>Region094</Name>
+    <Description>Queen's Labyrinth</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>95</RegionID>
+    <Name>Region095</Name>
+    <Description>The Frontlines</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>96</RegionID>
+    <Name>Region096</Name>
+    <Description>Underground Forest</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>97</RegionID>
+    <Name>Region097</Name>
+    <Description>Deadlands of Annwn</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>98</RegionID>
+    <Name>Region098</Name>
+    <Description>Darkspire</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>99</RegionID>
+    <Name>Region099</Name>
+    <Description>Glashtin Forge</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>100</RegionID>
+    <Name>Region100</Name>
+    <Description>Midgard</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>101</RegionID>
+    <Name>Region101</Name>
+    <Description>Jordheim</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>102</RegionID>
+    <Name>Region102</Name>
+    <Description>Midgard Housing</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>true</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>109</RegionID>
+    <Name>Region109</Name>
+    <Description>The Frontlines</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>123</RegionID>
+    <Name>Region123</Name>
+    <Description>Volcanus Instance 1</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>124</RegionID>
+    <Name>Region124</Name>
+    <Description>Volcanus Instance 2</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>125</RegionID>
+    <Name>Region125</Name>
+    <Description>Spindelhalla</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>126</RegionID>
+    <Name>Region126</Name>
+    <Description>Vendo Caverns</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>127</RegionID>
+    <Name>Region127</Name>
+    <Description>Varulvhamn</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>128</RegionID>
+    <Name>Region128</Name>
+    <Description>Cursed Tomb</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>129</RegionID>
+    <Name>Region129</Name>
+    <Description>Nisse's Lair</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>130</RegionID>
+    <Name>Region130</Name>
+    <Description>Atlantis</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>7970</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>135</RegionID>
+    <Name>Region135</Name>
+    <Description>Cetus' Pit</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>18960</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>136</RegionID>
+    <Name>Region136</Name>
+    <Description>Sobekite Eternal</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>15314</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>137</RegionID>
+    <Name>Region137</Name>
+    <Description>Temple of Twilight</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>17669</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>140</RegionID>
+    <Name>Region140</Name>
+    <Description>Halls of Ma'ati</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>145</RegionID>
+    <Name>Region145</Name>
+    <Description>The Great Pyramid</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>146</RegionID>
+    <Name>Region146</Name>
+    <Description>Deep Volcanus</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>147</RegionID>
+    <Name>Region147</Name>
+    <Description>Aerus City</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>148</RegionID>
+    <Name>Region148</Name>
+    <Description>The Frontlines</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>149</RegionID>
+    <Name>Region149</Name>
+    <Description>Nyttheim</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>150</RegionID>
+    <Name>Region150</Name>
+    <Description>Trollheim</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>1</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>151</RegionID>
+    <Name>Region151</Name>
+    <Description>Aegir</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>1</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>160</RegionID>
+    <Name>Region160</Name>
+    <Description>Tuscaran Glacier</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>1</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>161</RegionID>
+    <Name>Region161</Name>
+    <Description>Iarnvidiur's Lair</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>1</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>162</RegionID>
+    <Name>Region162</Name>
+    <Description>Deadlands of Annwn</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7985692Z</LastTimeRowUpdated>
+    <RegionID>163</RegionID>
+    <Name>Region163</Name>
+    <Description>New Frontiers</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>7879</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7995692Z</LastTimeRowUpdated>
+    <RegionID>165</RegionID>
+    <Name>Region165</Name>
+    <Description>Cathal Valley</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.7995692Z</LastTimeRowUpdated>
+    <RegionID>180</RegionID>
+    <Name>Region180</Name>
+    <Description>Fomor City</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>1</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>181</RegionID>
+    <Name>Region181</Name>
+    <Description>HyBrasil</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>1</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>188</RegionID>
+    <Name>Region188</Name>
+    <Description>Darkspire</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>189</RegionID>
+    <Name>Region189</Name>
+    <Description>Glashtin Forge</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>190</RegionID>
+    <Name>Region190</Name>
+    <Description>Tur Suil</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>1</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>191</RegionID>
+    <Name>Region191</Name>
+    <Description>Galladoria</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>1</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>192</RegionID>
+    <Name>Region192</Name>
+    <Description>Le Sanctuaire Du Haut Consule</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>1</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>193</RegionID>
+    <Name>Region193</Name>
+    <Description>Le Sanctuaire Du Haut Consule</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>1</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>194</RegionID>
+    <Name>Region194</Name>
+    <Description>Le Sanctuaire Du Haut Consule</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>1</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>195</RegionID>
+    <Name>Region195</Name>
+    <Description>The Otherworld</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>196</RegionID>
+    <Name>Region196</Name>
+    <Description>The Otherworld</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>197</RegionID>
+    <Name>Region197</Name>
+    <Description>The Otherworld</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>198</RegionID>
+    <Name>Region198</Name>
+    <Description>Volcanus Instance 3</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>199</RegionID>
+    <Name>Region199</Name>
+    <Description>Volcanus Instance 4</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>2</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>200</RegionID>
+    <Name>Region200</Name>
+    <Description>Hibernia</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>201</RegionID>
+    <Name>Region201</Name>
+    <Description>Tir na Nog</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>202</RegionID>
+    <Name>Region202</Name>
+    <Description>Hibernia Housing</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>true</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>220</RegionID>
+    <Name>Region220</Name>
+    <Description>Coruscating Mine</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>221</RegionID>
+    <Name>Region221</Name>
+    <Description>Muire Tomb</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>222</RegionID>
+    <Name>Region222</Name>
+    <Description>Spraggon Den</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>223</RegionID>
+    <Name>Region223</Name>
+    <Description>Koalinth Tribal Caverns</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>224</RegionID>
+    <Name>Region224</Name>
+    <Description>Treibh Caillte</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>226</RegionID>
+    <Name>Region226</Name>
+    <Description>Abandoned Mines</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>227</RegionID>
+    <Name>Region227</Name>
+    <Description>Abandoned Mines</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>228</RegionID>
+    <Name>Region228</Name>
+    <Description>Abandoned Mines</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>229</RegionID>
+    <Name>Region229</Name>
+    <Description>Burial Grounds</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>230</RegionID>
+    <Name>Region230</Name>
+    <Description />
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>231</RegionID>
+    <Name>Region231</Name>
+    <Description>Art Test Zone</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>232</RegionID>
+    <Name>Region232</Name>
+    <Description>- Art Test Dungeon</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>233</RegionID>
+    <Name>Region233</Name>
+    <Description>Summoner's Hall</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>234</RegionID>
+    <Name>Region234</Name>
+    <Description>The Proving Grounds</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>235</RegionID>
+    <Name>Region235</Name>
+    <Description>The Lion's Den</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>236</RegionID>
+    <Name>Region236</Name>
+    <Description>The Hills of Claret</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>237</RegionID>
+    <Name>Region237</Name>
+    <Description>Killaloe</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>238</RegionID>
+    <Name>Region238</Name>
+    <Description>Thidranki</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>3760</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>239</RegionID>
+    <Name>Region239</Name>
+    <Description>Braemar</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>240</RegionID>
+    <Name>Region240</Name>
+    <Description>Wilton</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>241</RegionID>
+    <Name>Region241</Name>
+    <Description>Molvik</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>242</RegionID>
+    <Name>Region242</Name>
+    <Description>Leirvik</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>243</RegionID>
+    <Name>Region243</Name>
+    <Description>Kobold Undercity</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>244</RegionID>
+    <Name>Region244</Name>
+    <Description>Passage of Conflict</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>245</RegionID>
+    <Name>Region245</Name>
+    <Description>Labyrinth</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>true</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>247</RegionID>
+    <Name>Region247</Name>
+    <Description />
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>249</RegionID>
+    <Name>Region249</Name>
+    <Description>Darkness Falls</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>256</RegionID>
+    <Name>Region256</Name>
+    <Description>Forgotten Mines</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>257</RegionID>
+    <Name>Region257</Name>
+    <Description>Forgotten Mines</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>258</RegionID>
+    <Name>Region258</Name>
+    <Description>Forgotten Mines</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>278</RegionID>
+    <Name>Region278</Name>
+    <Description>Damp Cavern</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>279</RegionID>
+    <Name>Region279</Name>
+    <Description>Damp Cavern</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>280</RegionID>
+    <Name>Region280</Name>
+    <Description>Damp Cavern</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>281</RegionID>
+    <Name>Region281</Name>
+    <Description>Forgotten Sepulchre</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>282</RegionID>
+    <Name>Region282</Name>
+    <Description>Forgotten Sepulchre</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>283</RegionID>
+    <Name>Region283</Name>
+    <Description>Forgotten Sepulchre</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>284</RegionID>
+    <Name>Region284</Name>
+    <Description>The Concealed Guardhouse</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>285</RegionID>
+    <Name>Region285</Name>
+    <Description>The Concealed Guardhouse</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>286</RegionID>
+    <Name>Region286</Name>
+    <Description>The Concealed Guardhouse</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>287</RegionID>
+    <Name>Region287</Name>
+    <Description>The Gossamer Grotto</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>288</RegionID>
+    <Name>Region288</Name>
+    <Description>The Gossamer Grotto</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>289</RegionID>
+    <Name>Region289</Name>
+    <Description>The Gossamer Grotto</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>290</RegionID>
+    <Name>Region290</Name>
+    <Description>Underground Tunnel</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>291</RegionID>
+    <Name>Region291</Name>
+    <Description>Underground Tunnel</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>292</RegionID>
+    <Name>Region292</Name>
+    <Description>Underground Tunnel</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>293</RegionID>
+    <Name>Region293</Name>
+    <Description>Burial Tomb</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>294</RegionID>
+    <Name>Region294</Name>
+    <Description>Burial Tomb</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>295</RegionID>
+    <Name>Region295</Name>
+    <Description>Burial Tomb</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>296</RegionID>
+    <Name>Region296</Name>
+    <Description>Desecrated Grounds</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>297</RegionID>
+    <Name>Region297</Name>
+    <Description>Desecrated Grounds</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>298</RegionID>
+    <Name>Region298</Name>
+    <Description>Desecrated Grounds</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>300</RegionID>
+    <Name>Region300</Name>
+    <Description>Damp Cavern</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>301</RegionID>
+    <Name>Region301</Name>
+    <Description>Damp Cavern</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>302</RegionID>
+    <Name>Region302</Name>
+    <Description>Damp Cavern</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>303</RegionID>
+    <Name>Region303</Name>
+    <Description>Damp Cavern</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>304</RegionID>
+    <Name>Region304</Name>
+    <Description>Damp Cavern</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8005693Z</LastTimeRowUpdated>
+    <RegionID>305</RegionID>
+    <Name>Region305</Name>
+    <Description>Forgotten Sepulchre</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>306</RegionID>
+    <Name>Region306</Name>
+    <Description>Forgotten Sepulchre</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>307</RegionID>
+    <Name>Region307</Name>
+    <Description>Forgotten Sepulchre</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>308</RegionID>
+    <Name>Region308</Name>
+    <Description>Forgotten Sepulchre</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>309</RegionID>
+    <Name>Region309</Name>
+    <Description>Forgotten Sepulchre</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>310</RegionID>
+    <Name>Region310</Name>
+    <Description>The Concealed Guardhouse</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>311</RegionID>
+    <Name>Region311</Name>
+    <Description>The Concealed Guardhouse</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>312</RegionID>
+    <Name>Region312</Name>
+    <Description>The Concealed Guardhouse</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>313</RegionID>
+    <Name>Region313</Name>
+    <Description>The Concealed Guardhouse</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>314</RegionID>
+    <Name>Region314</Name>
+    <Description>The Concealed Guardhouse</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>315</RegionID>
+    <Name>Region315</Name>
+    <Description>The Gossamer Grotto</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>316</RegionID>
+    <Name>Region316</Name>
+    <Description>The Gossamer Grotto</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>317</RegionID>
+    <Name>Region317</Name>
+    <Description>The Gossamer Grotto</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>318</RegionID>
+    <Name>Region318</Name>
+    <Description>The Gossamer Grotto</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>319</RegionID>
+    <Name>Region319</Name>
+    <Description>The Gossamer Grotto</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>320</RegionID>
+    <Name>Region320</Name>
+    <Description>Underground Tunnel</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>321</RegionID>
+    <Name>Region321</Name>
+    <Description>Underground Tunnel</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>322</RegionID>
+    <Name>Region322</Name>
+    <Description>Underground Tunnel</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>323</RegionID>
+    <Name>Region323</Name>
+    <Description>Underground Tunnel</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>324</RegionID>
+    <Name>Region324</Name>
+    <Description>Underground Tunnel</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>325</RegionID>
+    <Name>Region325</Name>
+    <Description>The Forgotten Tunnels</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>326</RegionID>
+    <Name>Region326</Name>
+    <Description>The Hidden Lair</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>327</RegionID>
+    <Name>Region327</Name>
+    <Description>Caverns of Madness</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>328</RegionID>
+    <Name>Region328</Name>
+    <Description>The Hidden Lair</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>329</RegionID>
+    <Name>Region329</Name>
+    <Description>Jarlsberg's Hideout</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>330</RegionID>
+    <Name>Region330</Name>
+    <Description>The Foothills of Albion</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>4</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>331</RegionID>
+    <Name>Region331</Name>
+    <Description>Burial AW4</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>332</RegionID>
+    <Name>Region332</Name>
+    <Description>Rebel Half Orc Lair</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>333</RegionID>
+    <Name>Region333</Name>
+    <Description>The Haunted Halls</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>334</RegionID>
+    <Name>Region334</Name>
+    <Description>The Foothills of Midgard</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>4</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>335</RegionID>
+    <Name>Region335</Name>
+    <Description>Doiri Ban</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>4</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>336</RegionID>
+    <Name>Region336</Name>
+    <Description>Demonic Prison</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>4</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>337</RegionID>
+    <Name>Region337</Name>
+    <Description>Demonic Prison</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>4</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>338</RegionID>
+    <Name>Region338</Name>
+    <Description>Demonic Prison</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>4</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>339</RegionID>
+    <Name>Region339</Name>
+    <Description>Brimstone Caverns</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>4</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>340</RegionID>
+    <Name>Region340</Name>
+    <Description>Halls of Helgardh</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>4</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>341</RegionID>
+    <Name>Region341</Name>
+    <Description>Cave of Cruachan</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>4</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>342</RegionID>
+    <Name>Region342</Name>
+    <Description>Mid Launch 2</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>343</RegionID>
+    <Name>Region343</Name>
+    <Description>Alb Launch 2</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>344</RegionID>
+    <Name>Region344</Name>
+    <Description>Hib Launch 2</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>345</RegionID>
+    <Name>Region345</Name>
+    <Description>Tomte Prison</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>346</RegionID>
+    <Name>Region346</Name>
+    <Description>Nisse's Retreat</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>347</RegionID>
+    <Name>Region347</Name>
+    <Description>Lair of the Demon Lord</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>4</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>348</RegionID>
+    <Name>Region348</Name>
+    <Description>The Baron's Gaol</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>4</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>349</RegionID>
+    <Name>Region349</Name>
+    <Description>Lios's Eternal Rest</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>350</RegionID>
+    <Name>Region350</Name>
+    <Description>Liche's Unrest</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>351</RegionID>
+    <Name>Region351</Name>
+    <Description>Nephraal's Gaol</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>4</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>352</RegionID>
+    <Name>Region352</Name>
+    <Description>Morfesa's Gaol</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>4</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>353</RegionID>
+    <Name>Region353</Name>
+    <Description>Den of Bones</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>354</RegionID>
+    <Name>Region354</Name>
+    <Description>The Lost Burrow</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>355</RegionID>
+    <Name>Region355</Name>
+    <Description>Tethra's Stronghold</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>356</RegionID>
+    <Name>Region356</Name>
+    <Description>Barrow of Restless Dead</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>357</RegionID>
+    <Name>Region357</Name>
+    <Description>The Cursed Lair</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>358</RegionID>
+    <Name>Region358</Name>
+    <Description>The Burrow</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>359</RegionID>
+    <Name>Region359</Name>
+    <Description>Red Dagger Hideout</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>0</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>360</RegionID>
+    <Name>Region360</Name>
+    <Description>King Eirik's Throne Room</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>4</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>361</RegionID>
+    <Name>Region361</Name>
+    <Description>Arachnid's Labyrinth</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>362</RegionID>
+    <Name>Region362</Name>
+    <Description>The Master's Lair</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>363</RegionID>
+    <Name>Region363</Name>
+    <Description>Anataeus' Sanctuary</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>4</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>364</RegionID>
+    <Name>Region364</Name>
+    <Description>Keeper Iraeda's Sanctuary</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>4</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>365</RegionID>
+    <Name>Region365</Name>
+    <Description>Bandit Lair</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>366</RegionID>
+    <Name>Region366</Name>
+    <Description>Gnoll Lair</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>367</RegionID>
+    <Name>Region367</Name>
+    <Description>Vandr's Bane</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>368</RegionID>
+    <Name>Region368</Name>
+    <Description>Past and Present</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>369</RegionID>
+    <Name>Region369</Name>
+    <Description>Half-Orc Camp</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>370</RegionID>
+    <Name>Region370</Name>
+    <Description>Brutal Realization</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>371</RegionID>
+    <Name>Region371</Name>
+    <Description>History Repeats Itself</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>372</RegionID>
+    <Name>Region372</Name>
+    <Description>Hounds of Arawn</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>373</RegionID>
+    <Name>Region373</Name>
+    <Description>Passage of Echoes</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>374</RegionID>
+    <Name>Region374</Name>
+    <Description>The Unrestful Tomb</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>375</RegionID>
+    <Name>Region375</Name>
+    <Description>The Lost Passages</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>376</RegionID>
+    <Name>Region376</Name>
+    <Description>Goblin's Cookery</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>377</RegionID>
+    <Name>Region377</Name>
+    <Description>The Beastmaster's Den</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>378</RegionID>
+    <Name>Region378</Name>
+    <Description>Keeper Garran's Sanctuary</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>4</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>379</RegionID>
+    <Name>Region379</Name>
+    <Description>The Funerary Hall</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>380</RegionID>
+    <Name>Region380</Name>
+    <Description>Lair of Doom</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>381</RegionID>
+    <Name>Region381</Name>
+    <Description>The Arena</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>382</RegionID>
+    <Name>Region382</Name>
+    <Description>The Funerary Hall</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>383</RegionID>
+    <Name>Region383</Name>
+    <Description>The Funerary Hall</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>384</RegionID>
+    <Name>Region384</Name>
+    <Description>The Ritual Hall</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>385</RegionID>
+    <Name>Region385</Name>
+    <Description>The Betrayer's Den</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8015693Z</LastTimeRowUpdated>
+    <RegionID>386</RegionID>
+    <Name>Region386</Name>
+    <Description>The Sundered Tombs</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>387</RegionID>
+    <Name>Region387</Name>
+    <Description>The Sundered Tombs</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>388</RegionID>
+    <Name>Region388</Name>
+    <Description>The Sundered Tombs</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>389</RegionID>
+    <Name>Region389</Name>
+    <Description>Shafts of the Tenebrae</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>390</RegionID>
+    <Name>Region390</Name>
+    <Description>Lair of the Exiled</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>391</RegionID>
+    <Name>Region391</Name>
+    <Description>La Tour Des Arcanes ALB</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>392</RegionID>
+    <Name>Region392</Name>
+    <Description>The Hall of Reawakening</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>393</RegionID>
+    <Name>Region393</Name>
+    <Description>The Hidden Crypt</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>394</RegionID>
+    <Name>Region394</Name>
+    <Description>King Constantine's Throne Room</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>4</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>395</RegionID>
+    <Name>Region395</Name>
+    <Description>King Lamfhotas' Throne Room</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>4</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>396</RegionID>
+    <Name>Region396</Name>
+    <Description>The Depths of Despair</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>397</RegionID>
+    <Name>Region397</Name>
+    <Description>Realm of the Damned</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>398</RegionID>
+    <Name>Region398</Name>
+    <Description>La Tour des Arcanes MID</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>399</RegionID>
+    <Name>Region399</Name>
+    <Description>La Tour des Arcanes HIB</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>400</RegionID>
+    <Name>Region400</Name>
+    <Description>Burial Tomb</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>401</RegionID>
+    <Name>Region401</Name>
+    <Description>Burial Tomb</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>402</RegionID>
+    <Name>Region402</Name>
+    <Description>Burial Tomb</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>403</RegionID>
+    <Name>Region403</Name>
+    <Description>Burial Tomb</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>404</RegionID>
+    <Name>Region404</Name>
+    <Description>Burial Tomb</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>405</RegionID>
+    <Name>Region405</Name>
+    <Description>Desecrated Grounds</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>406</RegionID>
+    <Name>Region406</Name>
+    <Description>Desecrated Grounds</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>407</RegionID>
+    <Name>Region407</Name>
+    <Description>Desecrated Grounds</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>408</RegionID>
+    <Name>Region408</Name>
+    <Description>Desecrated Grounds</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>409</RegionID>
+    <Name>Region409</Name>
+    <Description>Desecrated Grounds</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>410</RegionID>
+    <Name>Region410</Name>
+    <Description>Forgotten Mines</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>411</RegionID>
+    <Name>Region411</Name>
+    <Description>Forgotten Mines</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>412</RegionID>
+    <Name>Region412</Name>
+    <Description>Forgotten Mines</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>413</RegionID>
+    <Name>Region413</Name>
+    <Description>Forgotten Mines</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>414</RegionID>
+    <Name>Region414</Name>
+    <Description>Forgotten Mines</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>415</RegionID>
+    <Name>Region415</Name>
+    <Description>The Funerary Hall</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>416</RegionID>
+    <Name>Region416</Name>
+    <Description>The Funerary Hall</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>417</RegionID>
+    <Name>Region417</Name>
+    <Description>The Funerary Hall</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>418</RegionID>
+    <Name>Region418</Name>
+    <Description>The Funerary Hall</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>419</RegionID>
+    <Name>Region419</Name>
+    <Description>The Funerary Hall</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>420</RegionID>
+    <Name>Region420</Name>
+    <Description>The Sundered Tombs</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>421</RegionID>
+    <Name>Region421</Name>
+    <Description>The Sundered Tombs</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>422</RegionID>
+    <Name>Region422</Name>
+    <Description>The Sundered Tombs</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>423</RegionID>
+    <Name>Region423</Name>
+    <Description>The Sundered Tombs</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>424</RegionID>
+    <Name>Region424</Name>
+    <Description>The Sundered Tombs</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>425</RegionID>
+    <Name>Region425</Name>
+    <Description>The Lost Wing</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>426</RegionID>
+    <Name>Region426</Name>
+    <Description>Deliah's Sanctuary</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>427</RegionID>
+    <Name>Region427</Name>
+    <Description>The Cursed Barrow</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>428</RegionID>
+    <Name>Region428</Name>
+    <Description>The Cursed Barrow</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>429</RegionID>
+    <Name>Region429</Name>
+    <Description>Snyblem's Lair</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>430</RegionID>
+    <Name>Region430</Name>
+    <Description>The Plutonian Shore</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>431</RegionID>
+    <Name>Region431</Name>
+    <Description>The Cursed Barrow</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>432</RegionID>
+    <Name>Region432</Name>
+    <Description>Dismal Grotto</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>433</RegionID>
+    <Name>Region433</Name>
+    <Description>Snarg's Grotto</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>434</RegionID>
+    <Name>Region434</Name>
+    <Description>The Maze of Tribulation</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>435</RegionID>
+    <Name>Region435</Name>
+    <Description>The Smelting Pot</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>436</RegionID>
+    <Name>Region436</Name>
+    <Description>Forges of Flame</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>437</RegionID>
+    <Name>Region437</Name>
+    <Description>Hugak's Smithy</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>438</RegionID>
+    <Name>Region438</Name>
+    <Description>The Goblin Workshop</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>439</RegionID>
+    <Name>Region439</Name>
+    <Description>Wolak's Crucible</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>440</RegionID>
+    <Name>Region440</Name>
+    <Description>Marik's Workroom</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>441</RegionID>
+    <Name>Region441</Name>
+    <Description>Dismal Grotto</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>442</RegionID>
+    <Name>Region442</Name>
+    <Description>The Steward's Crypt</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>443</RegionID>
+    <Name>Region443</Name>
+    <Description>Serf's Folly</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>444</RegionID>
+    <Name>Region444</Name>
+    <Description>Dismal Grotto</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>445</RegionID>
+    <Name>Region445</Name>
+    <Description>The Dark Caverns</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>446</RegionID>
+    <Name>Region446</Name>
+    <Description>Blathnait's Refuge</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>447</RegionID>
+    <Name>Region447</Name>
+    <Description>Broken Mirrors</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>448</RegionID>
+    <Name>Region448</Name>
+    <Description>The Dark Caverns</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>449</RegionID>
+    <Name>Region449</Name>
+    <Description>The Dark Caverns</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>450</RegionID>
+    <Name>Region450</Name>
+    <Description>The Cursed Barrow</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>451</RegionID>
+    <Name>Region451</Name>
+    <Description>The Cursed Barrow</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>452</RegionID>
+    <Name>Region452</Name>
+    <Description>The Cursed Barrow</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>453</RegionID>
+    <Name>Region453</Name>
+    <Description>The Cursed Barrow</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>454</RegionID>
+    <Name>Region454</Name>
+    <Description>The Cursed Barrow</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>455</RegionID>
+    <Name>Region455</Name>
+    <Description>Dismal Grotto</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>456</RegionID>
+    <Name>Region456</Name>
+    <Description>Dismal Grotto</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>457</RegionID>
+    <Name>Region457</Name>
+    <Description>Dismal Grotto</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>458</RegionID>
+    <Name>Region458</Name>
+    <Description>Dismal Grotto</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>459</RegionID>
+    <Name>Region459</Name>
+    <Description>Dismal Grotto</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>460</RegionID>
+    <Name>Region460</Name>
+    <Description>The Accursed Caves</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>461</RegionID>
+    <Name>Region461</Name>
+    <Description>The Accursed Caves</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>462</RegionID>
+    <Name>Region462</Name>
+    <Description>The Accursed Caves</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>463</RegionID>
+    <Name>Region463</Name>
+    <Description>The Accursed Caves</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>464</RegionID>
+    <Name>Region464</Name>
+    <Description>The Accursed Caves</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8025694Z</LastTimeRowUpdated>
+    <RegionID>465</RegionID>
+    <Name>Region465</Name>
+    <Description>The Dark Caverns</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>466</RegionID>
+    <Name>Region466</Name>
+    <Description>The Dark Caverns</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>467</RegionID>
+    <Name>Region467</Name>
+    <Description>The Dark Caverns</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>468</RegionID>
+    <Name>Region468</Name>
+    <Description>The Dark Caverns</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>469</RegionID>
+    <Name>Region469</Name>
+    <Description>The Dark Caverns</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>470</RegionID>
+    <Name>Region470</Name>
+    <Description>Half Orc Command Post</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>471</RegionID>
+    <Name>Region471</Name>
+    <Description>The Unused Mine</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>472</RegionID>
+    <Name>Region472</Name>
+    <Description>The Unused Mine</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>473</RegionID>
+    <Name>Region473</Name>
+    <Description>The Unused Mine</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>474</RegionID>
+    <Name>Region474</Name>
+    <Description>The Unused Mine</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>475</RegionID>
+    <Name>Region475</Name>
+    <Description>Rise of the Spraggons</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>476</RegionID>
+    <Name>Region476</Name>
+    <Description>The Warrens</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>477</RegionID>
+    <Name>Region477</Name>
+    <Description>The Accursed Caves</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>478</RegionID>
+    <Name>Region478</Name>
+    <Description>The Accursed Caves</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>479</RegionID>
+    <Name>Region479</Name>
+    <Description>The Ancient's Retreat</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>480</RegionID>
+    <Name>Region480</Name>
+    <Description>The Shaman's Inner Sanctum</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>481</RegionID>
+    <Name>Region481</Name>
+    <Description>The Accursed Caves</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>482</RegionID>
+    <Name>Region482</Name>
+    <Description>The Unused Mine</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>483</RegionID>
+    <Name>Region483</Name>
+    <Description>The Brawler's Den</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>484</RegionID>
+    <Name>Region484</Name>
+    <Description>Felena's Sorrow</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>485</RegionID>
+    <Name>Region485</Name>
+    <Description>The Unused Mine</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>486</RegionID>
+    <Name>Region486</Name>
+    <Description>The Unused Mine</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>487</RegionID>
+    <Name>Region487</Name>
+    <Description>The Pit of Despair</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>488</RegionID>
+    <Name>Region488</Name>
+    <Description>The Forgotten Vein</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>489</RegionID>
+    <Name>Region489</Name>
+    <Description>Demon's Breach</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>491</RegionID>
+    <Name>Region491</Name>
+    <Description>Maze of Madness</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>492</RegionID>
+    <Name>Region492</Name>
+    <Description>Shattered Lands</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>494</RegionID>
+    <Name>Region494</Name>
+    <Description>The Gnoll's Den</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>495</RegionID>
+    <Name>Region495</Name>
+    <Description>The Inner Sanctum</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>496</RegionID>
+    <Name>Region496</Name>
+    <Description>The Deep</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>497</RegionID>
+    <Name>Region497</Name>
+    <Description>Mid Launch</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>498</RegionID>
+    <Name>Region498</Name>
+    <Description>Alb Launch</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+  <DBRegions>
+    <LastTimeRowUpdated>2014-12-09T17:40:23.8035694Z</LastTimeRowUpdated>
+    <RegionID>499</RegionID>
+    <Name>Region499</Name>
+    <Description>Hib Launch</Description>
+    <IP>127.0.0.1</IP>
+    <Port>10400</Port>
+    <Expansion>3</Expansion>
+    <HousingEnabled>false</HousingEnabled>
+    <DivingEnabled>false</DivingEnabled>
+    <WaterLevel>0</WaterLevel>
+    <ClassType />
+    <IsFrontier>false</IsFrontier>
+  </DBRegions>
+</ArrayOfDBRegions>

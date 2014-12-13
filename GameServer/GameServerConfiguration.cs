@@ -46,16 +46,6 @@ namespace DOL.GS
 		protected string m_logConfigFile;
 
 		/// <summary>
-		/// Holds the log configuration file path
-		/// </summary>
-		protected string m_regionConfigFile;
-		
-		/// <summary>
-		/// Holds the log configuration file path
-		/// </summary>
-		protected string m_zoneConfigFile;
-
-		/// <summary>
 		/// Name of the scripts compilation target
 		/// </summary>
 		protected string m_scriptCompilationTarget;
@@ -155,8 +145,6 @@ namespace DOL.GS
 //			m_rootDirectory = root["Server"]["RootDirectory"].GetString(m_rootDirectory);
 
 			m_logConfigFile = root["Server"]["LogConfigFile"].GetString(m_logConfigFile);
-			m_regionConfigFile = root["Server"]["RegionConfigFile"].GetString(m_regionConfigFile);
-			m_zoneConfigFile = root["Server"]["ZoneConfigFile"].GetString(m_zoneConfigFile);
 
 			m_scriptCompilationTarget = root["Server"]["ScriptCompilationTarget"].GetString(m_scriptCompilationTarget);
 			m_scriptAssemblies = root["Server"]["ScriptAssemblies"].GetString(m_scriptAssemblies);
@@ -259,8 +247,6 @@ namespace DOL.GS
 			// Removed to not confuse users
 //			root["Server"]["RootDirectory"].Set(m_rootDirectory);
 			root["Server"]["LogConfigFile"].Set(m_logConfigFile);
-			root["Server"]["RegionConfigFile"].Set(m_regionConfigFile);
-			root["Server"]["ZoneConfigFile"].Set(m_zoneConfigFile);
 
 			root["Server"]["ScriptCompilationTarget"].Set(m_scriptCompilationTarget);
 			root["Server"]["ScriptAssemblies"].Set(m_scriptAssemblies);
@@ -352,8 +338,6 @@ namespace DOL.GS
 				m_rootDirectory = new FileInfo(Assembly.GetAssembly(typeof(GameServer)).Location).DirectoryName;
 
 			m_logConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "logconfig.xml";
-			m_regionConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "regions.xml";
-			m_zoneConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "zones.xml";
 
 			m_scriptCompilationTarget = "."+Path.DirectorySeparatorChar+"lib"+Path.DirectorySeparatorChar+"GameServerScripts.dll";
 			m_scriptAssemblies = "System.dll,System.Xml.dll";
@@ -414,36 +398,6 @@ namespace DOL.GS
 					return Path.Combine(m_rootDirectory, m_logConfigFile);
 			}
 			set { m_logConfigFile = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the region configuration file of this server
-		/// </summary>
-		public string RegionConfigFile
-		{
-			get 
-			{ 
-				if(Path.IsPathRooted(m_regionConfigFile))
-					return m_regionConfigFile;
-				else
-					return Path.Combine(m_rootDirectory, m_regionConfigFile);
-			}
-			set { m_regionConfigFile = value; }
-		}
-
-		/// <summary>
-		/// Gets or sets the zone configuration file of this server
-		/// </summary>
-		public string ZoneConfigFile
-		{
-			get
-			{
-				if(Path.IsPathRooted(m_zoneConfigFile))
-					return m_zoneConfigFile;
-				else
-					return Path.Combine(m_rootDirectory, m_zoneConfigFile);
-			}
-			set { m_zoneConfigFile = value; }
 		}
 
 		/// <summary>

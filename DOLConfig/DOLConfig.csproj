@@ -70,6 +70,7 @@
   <ItemGroup>
     <Reference Include="MySql.Data">
       <HintPath>..\sharedModules\MySQL\MySql.Data.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -80,12 +81,14 @@
     </Reference>
     <Reference Include="System.Data.SQLite" Condition=" '$(OS)' != 'Unix' ">
       <HintPath>..\sharedModules\SQLite\System.Data.SQLite.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.Data.SQLite" Condition=" '$(OS)' == 'Unix' ">
       <HintPath>..\sharedModules\SQLite\managedOnly\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.SQLite.Linq">
       <HintPath>..\sharedModules\SQLite\System.Data.SQLite.Linq.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Data" />
