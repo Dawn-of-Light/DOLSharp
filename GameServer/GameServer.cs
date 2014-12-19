@@ -623,6 +623,16 @@ namespace DOL.GS
 				//Try to compile the Scripts
 				if (!InitComponent(CompileScripts(), "Script compilation"))
 					return false;
+				
+				//---------------------------------------------------------------
+				//Try to init Server Properties
+				if (!InitComponent(new Func<bool>(() => { try { Properties.InitProperties(); return true; } catch { return false; } })(), "Server Properties Lookup"))
+					return false;
+				
+				//---------------------------------------------------------------
+				//Try loading the commands
+				if (!InitComponent(ScriptMgr.LoadCommands(), "Loading Commands"))
+					return false;
 
 				//---------------------------------------------------------------
 				//Check and update the database if needed

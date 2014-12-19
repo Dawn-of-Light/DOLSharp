@@ -20,6 +20,8 @@
 using System;
 using System.Globalization;
 using System.Reflection;
+using System.Collections.Generic;
+using System.Linq;
 
 using DOL.Database;
 using log4net;
@@ -38,11 +40,18 @@ namespace DOL.GS.ServerProperties
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
-		/// Init the property
+		/// Init the properties
 		/// </summary>
-		static Properties()
+		public static void InitProperties()
 		{
-			Init(typeof(Properties));
+			var propDict = AllDomainProperties;
+			foreach (var prop in propDict)
+			{
+				Load(prop.Value.Item1, prop.Value.Item2, prop.Value.Item3);
+			}
+			
+			// Refresh static dict values for display
+			AllCurrentProperties = propDict.ToDictionary(k => k.Key, v => v.Value.Item2.GetValue(null));
 		}
 
 		// Properties: feel free to improve the SPs in the
@@ -1933,6 +1942,62 @@ namespace DOL.GS.ServerProperties
 
 		#endregion
 
+		public static IDictionary<string, object> AllCurrentProperties
+		{
+			get; private set;
+		}
+		
+		/// <summary>
+		/// Get a Dictionary that tracks all Properties by Key String
+		/// Returns the ServerPropertyAttribute, the Static Field with current Value, and the according DataObject
+		/// Create a default dataObject if value wasn't found in Database
+		/// </summary>
+		public static IDictionary<string, Tuple<ServerPropertyAttribute, FieldInfo, ServerProperty>> AllDomainProperties
+		{
+			get
+			{
+				var result = new Dictionary<string, Tuple<ServerPropertyAttribute, FieldInfo, ServerProperty>>();
+				var allProperties = GameServer.Database.SelectAllObjects<ServerProperty>();
+				
+				foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
+				{
+					foreach (Type type in asm.GetTypes())
+					{
+						foreach (FieldInfo field in type.GetFields())
+						{
+							// Properties are Static
+							if (!field.IsStatic)
+								continue;
+							
+							// Properties shoud contain a property attribute
+							object[] attribs = field.GetCustomAttributes(typeof(ServerPropertyAttribute), false);
+							if (attribs.Length == 0)
+								continue;
+							
+							ServerPropertyAttribute att = (ServerPropertyAttribute)attribs[0];
+							
+							ServerProperty serverProp = allProperties.Where(p => p.Key.Equals(att.Key, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
+							
+							if (serverProp == null)
+							{
+								// Init DB Object
+								serverProp = new ServerProperty();
+								serverProp.Category = att.Category;
+								serverProp.Key = att.Key;
+								serverProp.Description = att.Description;
+								serverProp.DefaultValue = att.DefaultValue.ToString();
+								serverProp.Value = att.DefaultValue.ToString();
+							}
+							
+							result[att.Key] = new Tuple<ServerPropertyAttribute, FieldInfo, ServerProperty>(att, field, serverProp);
+						}
+					}
+				}
+
+				return result;
+			}
+		}
+		
 		/// <summary>
 		/// This method loads the property from the database and returns
 		/// the value of the property as strongly typed object based on the
@@ -1940,102 +2005,40 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		/// <param name="attrib">The attribute</param>
 		/// <returns>The real property value</returns>
-		public static object Load(ServerPropertyAttribute attrib)
+		public static void Load(ServerPropertyAttribute attrib, FieldInfo field, ServerProperty prop)
 		{
 			string key = attrib.Key;
-			ServerProperty property = GameServer.Database.SelectObject<ServerProperty>("`Key` = '" + GameServer.Database.Escape(key) + "'") ;
-			if (property == null)
+			
+			// Not Added to database...
+			if (!prop.IsPersisted)
 			{
-				property = new ServerProperty();
-				property.Category = attrib.Category;
-				property.Key = attrib.Key;
-				property.Description = attrib.Description;
-				property.DefaultValue = attrib.DefaultValue.ToString();
-				property.Value = attrib.DefaultValue.ToString();
-				GameServer.Database.AddObject(property);
-				log.Debug("Cannot find server property " + key + " creating it");
+				GameServer.Database.AddObject(prop);
+				log.DebugFormat("Cannot find server property {0} creating it", key);
 			}
-			log.Debug("Loading " + key + " Value is " + property.Value);
+			
+			log.DebugFormat("Loading {0} Value is {1}", key, prop.Value);
 			
 			try
 			{
 				//we do this because we need "1.0" to be considered double sometimes its "1,0" in other countries
 				CultureInfo myCIintl = new CultureInfo("en-US", false);
 				IFormatProvider provider = myCIintl.NumberFormat;
-				return Convert.ChangeType(property.Value, attrib.DefaultValue.GetType(), provider);
+				field.SetValue(null, Convert.ChangeType(prop.Value, attrib.DefaultValue.GetType(), provider));
 			}
 			catch (Exception e)
 			{
-				log.Error("Exception in ServerProperties Load: ", e);
-				log.Error("Trying to load " + key + " value is " + property.Value);
-				return null;
+				log.ErrorFormat("Exception in ServerProperties Load: {0}", e);
+				log.ErrorFormat("Trying to load {0} value is {1}", key, prop.Value);
 			}
 		}
 		
-		/// <summary>
-		/// Init All Types registered in GameServerScript
-		/// </summary>
-		/// <param name="includingSelf">Scan this Class Too.</param>
-		protected static void InitAllTypes(bool includingSelf)
-		{
-			foreach (Assembly asm in ScriptMgr.Scripts)
-			{
-				log.InfoFormat("Loading Server Properties From Assembly : {0}", asm);
-				foreach (Type type in asm.GetTypes())
-					Init(type);
-			}
-			
-			if (includingSelf)
-				Init(typeof(Properties));
-		}
-
-		/// <summary>
-		/// This method is the key. It checks all fields of a specific type and
-		/// if the field is a ServerProperty it loads the value from the database.
-		/// </summary>
-		/// <param name="type">The type to analyze</param>
-		protected static void Init(Type type)
-		{
-			foreach (FieldInfo f in type.GetFields())
-			{
-				if (!f.IsStatic)
-					continue;
-				object[] attribs = f.GetCustomAttributes(typeof(ServerPropertyAttribute), false);
-				if (attribs.Length == 0)
-					continue;
-				ServerPropertyAttribute attrib = (ServerPropertyAttribute)attribs[0];
-				f.SetValue(null, Load(attrib));
-
-				#warning Graveen: some databases have bad default values, when culture sets decimal point to ','. Please update yours ! This piece of code will be removed in future releases
-				if (f.FieldType == typeof(System.Double))
-				{
-					if (attrib.DefaultValue.ToString().Contains(","))
-					{
-						ServerProperty property = GameServer.Database.SelectObject<ServerProperty>("`Key` = '" + GameServer.Database.Escape(attrib.Key) + "'");
-						property.DefaultValue = property.DefaultValue.Replace(',','.');
-						GameServer.Database.SaveObject(property);
-					}
-				}
-				
-			}
-		}
-
 		/// <summary>
 		/// Refreshes the server properties from the DB
 		/// </summary>
 		public static void Refresh()
 		{
 			log.Info("Refreshing server properties...");
-			InitAllTypes(true);
-		}
-		
-		/// <summary>
-		/// Refreshes the Scripted server properties from Assembly and DB
-		/// </summary>
-		public static void RefreshScriptProperties()
-		{
-			log.Info("Refreshing Scripts server properties...");
-			InitAllTypes(false);
+			InitProperties();
 		}
 	}
 }
