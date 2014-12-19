@@ -540,13 +540,6 @@ namespace DOL.GS
 				
 				if (!recompileRequired)
 				{
-					// Try loading Server Properties
-					ServerProperties.Properties.RefreshScriptProperties();
-	
-					//Try loading the commands
-					if (!LoadCommands())
-						throw new Exception("Could not load class CommandHandler");
-	
 					//Return success!
 					return true;
 				}
@@ -616,14 +609,6 @@ namespace DOL.GS
 				}
 
 				AddOrReplaceAssembly(res.CompiledAssembly);
-
-				// Try loading Server Properties
-				ServerProperties.Properties.RefreshScriptProperties();
-
-				if (!LoadCommands())
-				{
-					throw new Exception("Could not load class CommandHandler");
-				}
 			}
 			catch (Exception e)
 			{
