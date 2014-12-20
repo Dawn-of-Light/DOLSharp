@@ -1985,8 +1985,17 @@ namespace DOL.GS.ServerProperties
 								serverProp.Category = att.Category;
 								serverProp.Key = att.Key;
 								serverProp.Description = att.Description;
-								serverProp.DefaultValue = att.DefaultValue.ToString();
-								serverProp.Value = att.DefaultValue.ToString();
+								if (att.DefaultValue is double)
+								{
+									CultureInfo myCIintl = new CultureInfo("en-US", false);
+									IFormatProvider provider = myCIintl.NumberFormat;
+									serverProp.DefaultValue = ((double)att.DefaultValue).ToString(provider);
+								}
+								else
+								{
+									serverProp.DefaultValue = att.DefaultValue.ToString();
+								}
+								serverProp.Value = serverProp.DefaultValue;
 							}
 							
 							result[att.Key] = new Tuple<ServerPropertyAttribute, FieldInfo, ServerProperty>(att, field, serverProp);
