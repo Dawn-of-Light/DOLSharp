@@ -212,7 +212,7 @@ namespace DOL.GS
 							return false;
 						}
 
-						if (bonusToApply.Count >= 4)
+						if (bonusToApply.Count > 4)
 						{
 							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "SpellCrafting.IsAllowedToCombine.DifferentTypes", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return false;
