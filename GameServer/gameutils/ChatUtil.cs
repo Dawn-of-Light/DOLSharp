@@ -27,6 +27,9 @@ using DOL.Language;
 
 namespace DOL.GS
 {
+	/// <summary>
+	/// ChatUtil for Sending Message to Players
+	/// </summary>
 	public static class ChatUtil
 	{
 		public static void SendSystemMessage(GamePlayer target, string message)
