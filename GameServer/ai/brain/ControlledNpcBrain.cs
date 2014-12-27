@@ -384,7 +384,11 @@ namespace DOL.AI.Brain
 		{
 			GamePlayer playerowner = GetPlayerOwner();
 			
-			if (playerowner != null && (GameTimer.GetTickCount() - playerowner.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(Body.CurrentRegionID, (ushort)Body.ObjectID)]) > ThinkInterval)
+			long lastUpdate;
+			if (!playerowner.Client.GameObjectUpdateArray.TryGetValue(new Tuple<ushort, ushort>(Body.CurrentRegionID, (ushort)Body.ObjectID), out lastUpdate))
+				lastUpdate = 0;
+			
+			if (playerowner != null && (GameTimer.GetTickCount() - lastUpdate) > ThinkInterval)
 			{
 				playerowner.Out.SendObjectUpdate(Body);
 			}
