@@ -127,6 +127,7 @@
     <Compile Include="ai\brain\BD Pets\CommanderBrain.cs" />
     <Compile Include="ai\brain\BlankBrain.cs" />
     <Compile Include="ai\brain\ControlledNpcBrain.cs" />
+    <Compile Include="ai\brain\controlled\FollowOwnerBrain.cs" />
     <Compile Include="ai\brain\NoveltyPetBrain.cs" />
     <Compile Include="ai\brain\DragonBrain.cs" />
     <Compile Include="ai\brain\Npcs\AggressiveBrain.cs" />
@@ -398,6 +399,7 @@
     <Compile Include="gameutils\Specializations\LiveSpellHybridSpecialization.cs" />
     <Compile Include="gameutils\Specializations\LiveSpellLineSpecialization.cs" />
     <Compile Include="gameutils\Specializations\LiveWeaponSpecialization.cs" />
+    <Compile Include="gameutils\Timer\RegionTimerAction.cs" />
     <Compile Include="keeps\IGameKeep.cs" />
     <Compile Include="keeps\IGameKeepComponent.cs" />
     <Compile Include="keeps\IKeepManager.cs" />
@@ -2817,7 +2819,9 @@
     <Content Include="language\IT\GameObject\GameGuard.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="ai\brain\controlled" />
     <Folder Include="gameutils\KDTree" />
+    <Folder Include="gameutils\Timer" />
     <Folder Include="gameutils\ReaderWriterCollections" />
     <Folder Include="gameutils\Specializations" />
     <Folder Include="gameutils\Skill" />

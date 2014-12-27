@@ -28,6 +28,7 @@ using log4net;
 
 using DOL.GS.PacketHandler;
 using DOL.GS.Housing;
+using DOL.AI.Brain;
 
 namespace DOL.GS
 {
@@ -152,7 +153,7 @@ namespace DOL.GS
 					GameObject obj = WorldMgr.GetRegion(objKey.Item1).GetObject(objKey.Item2);
 					// We have a Player in cache that is not in vincinity
 					// For updating "out of view" we allow a halved refresh time. 
-					if (obj is GamePlayer && !players.Contains((GamePlayer)obj) && (nowTicks - player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)]) >= GetPlayertoPlayerUpdateInterval())
+					if (obj is GamePlayer && !players.Contains((GamePlayer)obj) && (nowTicks - player.Client.GameObjectUpdateArray[objKey]) >= GetPlayertoPlayerUpdateInterval())
 					{
 						long dummy;
 						
@@ -160,7 +161,7 @@ namespace DOL.GS
 						if (obj.IsVisibleTo(player) && (((GamePlayer)obj).IsStealthed == false || player.CanDetect((GamePlayer)obj)))
 							player.Client.Out.SendPlayerForgedPosition((GamePlayer)obj);
 						
-						player.Client.GameObjectUpdateArray.TryRemove(new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID), out dummy);
+						player.Client.GameObjectUpdateArray.TryRemove(objKey, out dummy);
 					}
 				}
 			}
@@ -224,8 +225,13 @@ namespace DOL.GS
 				foreach (Tuple<ushort, ushort> objKey in player.Client.GameObjectUpdateArray.Keys)
 				{
 					GameObject obj = WorldMgr.GetRegion(objKey.Item1).GetObject(objKey.Item2);
+					
+					// Brain is updating to its master, no need to handle it.
+					if (obj is GameNPC && ((GameNPC)obj).Brain is IControlledBrain && ((IControlledBrain)((GameNPC)obj).Brain).GetPlayerOwner() == player)
+						continue;
+					
 					// We have a NPC in cache that is not in vincinity
-					if (obj is GameNPC && !npcs.Contains((GameNPC)obj) && (nowTicks - player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)]) >= GetPlayerNPCUpdateInterval())
+					if (obj is GameNPC && !npcs.Contains((GameNPC)obj) && (nowTicks - player.Client.GameObjectUpdateArray[objKey]) >= GetPlayerNPCUpdateInterval())
 					{
 						long dummy;
 						
@@ -234,7 +240,7 @@ namespace DOL.GS
 							player.Client.Out.SendObjectUpdate(obj);
 						
 						// this will add the object to the cache again, remove it after sending...
-						player.Client.GameObjectUpdateArray.TryRemove(new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID), out dummy);
+						player.Client.GameObjectUpdateArray.TryRemove(objKey, out dummy);
 					}
 				}
 			}
@@ -297,10 +303,10 @@ namespace DOL.GS
 				{
 					GameObject obj = WorldMgr.GetRegion(objKey.Item1).GetObject(objKey.Item2);
 					// We have a Static Item in cache that is not in vincinity
-					if (obj is GameStaticItem && !objs.Contains((GameStaticItem)obj) && (nowTicks - player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)]) >= GetPlayerItemUpdateInterval())
+					if (obj is GameStaticItem && !objs.Contains((GameStaticItem)obj) && (nowTicks - player.Client.GameObjectUpdateArray[objKey]) >= GetPlayerItemUpdateInterval())
 					{
 						long dummy;
-						player.Client.GameObjectUpdateArray.TryRemove(new Tuple<ushort,ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID), out dummy);
+						player.Client.GameObjectUpdateArray.TryRemove(objKey, out dummy);
 					}
 				}
 			}
@@ -362,10 +368,10 @@ namespace DOL.GS
 				{
 					GameObject obj = WorldMgr.GetRegion(objKey.Item1).GetObject(objKey.Item2);
 					// We have a Door in cache that is not in vincinity
-					if (obj is IDoor && !doors.Contains((IDoor)obj) && (nowTicks - player.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID)]) >= GetPlayerItemUpdateInterval())
+					if (obj is IDoor && !doors.Contains((IDoor)obj) && (nowTicks - player.Client.GameObjectUpdateArray[objKey]) >= GetPlayerItemUpdateInterval())
 					{
 						long dummy;
-						player.Client.GameObjectUpdateArray.TryRemove(new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID), out dummy);
+						player.Client.GameObjectUpdateArray.TryRemove(objKey, out dummy);
 					}
 				}
 			}
@@ -445,10 +451,10 @@ namespace DOL.GS
 					House house = HouseMgr.GetHouse(houseKey.Item1, houseKey.Item2);
 					
 					// We have a House in cache that is not in vincinity
-					if (!houses.Contains(house) && (nowTicks - player.Client.HouseUpdateArray[new Tuple<ushort, ushort>(house.RegionID, (ushort)house.HouseNumber)]) >= GetPlayerItemUpdateInterval())
+					if (!houses.Contains(house) && (nowTicks - player.Client.HouseUpdateArray[houseKey]) >= GetPlayerItemUpdateInterval())
 					{
 						long dummy;
-						player.Client.HouseUpdateArray.TryRemove(new Tuple<ushort, ushort>(house.RegionID, (ushort)house.HouseNumber), out dummy);
+						player.Client.HouseUpdateArray.TryRemove(houseKey, out dummy);
 					}
 				}
 			}
