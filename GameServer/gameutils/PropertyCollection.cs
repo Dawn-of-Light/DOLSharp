@@ -19,6 +19,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
+using System.Linq;
 
 using log4net;
 
@@ -37,7 +38,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Container of properties
 		/// </summary>
-		private readonly HybridDictionary _props = new HybridDictionary();
+		private readonly ReaderWriterDictionary<object, object> _props = new ReaderWriterDictionary<object, object>();
 
 		/// <summary>
 		/// Retrieve a property
@@ -58,14 +59,13 @@ namespace DOL.GS
 		{
 			object val;
 
-			lock (_props)
-				val = _props[key];
+			bool exists = _props.TryGetValue(key, out val);
 
 			if (loggued)
 			{
-				if (val == null)
+				if (!exists)
 				{
-					if ( Log.IsWarnEnabled)
+					if (Log.IsWarnEnabled)
 						Log.Warn("Property '" + key + "' is required but not found, default value '" + def + "' is used.");
 					
 					return def;
@@ -85,16 +85,14 @@ namespace DOL.GS
 		/// <param name="val">value</param>
 		public void setProperty(object key, object val)
 		{
-			lock (_props)
+			if (val == null)
 			{
-				if (val == null)
-				{
-					_props.Remove(key);
-				}
-				else
-				{
-					_props[key] = val;
-				}
+				object dummy;
+				_props.TryRemove(key, out dummy);
+			}
+			else
+			{
+				_props[key] = val;
 			}
 		}
 
@@ -104,10 +102,8 @@ namespace DOL.GS
 		/// <param name="key">key</param>
 		public void removeProperty(object key)
 		{
-			lock (_props)
-			{
-				_props.Remove(key);
-			}
+			object dummy;
+			_props.TryRemove(key, out dummy);
 		}
 
 		/// <summary>
@@ -116,15 +112,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public List<string> getAllProperties()
 		{
-			var temp = new List<string>();
-
-			lock (_props)
-			{
-				foreach (string key in _props.Keys)
-					temp.Add(key);
-			}
-
-			return temp;
+			return _props.Keys.Cast<string>().ToList();
 		}
 
 		/// <summary>
@@ -132,10 +120,7 @@ namespace DOL.GS
 		/// </summary>
 		public void removeAllProperties()
 		{
-			lock (_props)
-			{
-				_props.Clear();
-			}
+			_props.Clear();
 		}
 	}
 }

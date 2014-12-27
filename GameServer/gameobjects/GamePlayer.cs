@@ -1464,7 +1464,7 @@ namespace DOL.GS
 			Out.SendUpdatePoints();
 
 			//Set property indicating that we are releasing to another region; used for Released event
-			if (oldRegion != character.BindRegion)
+			if (oldRegion != CurrentRegionID)
 				TempProperties.setProperty(RELEASING_PROPERTY, true);
 			else
 			{
