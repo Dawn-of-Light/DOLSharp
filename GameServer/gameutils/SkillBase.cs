@@ -686,10 +686,6 @@ namespace DOL.GS
 											{
 												m_stylesProcs.Add(specStyle.ID, new Dictionary<int, Tuple<Spell, int>>());
 											}
-											else
-											{
-												continue;
-											}
 											
 											if (!m_stylesProcs[specStyle.ID].ContainsKey(styleProc.ClassID))
 												m_stylesProcs[specStyle.ID].Add(styleProc.ClassID, new Tuple<Spell, int>(m_spellIndex[styleProc.SpellID], styleProc.Chance));
