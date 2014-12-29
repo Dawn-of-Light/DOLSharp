@@ -39,14 +39,15 @@ namespace DOL.GS.GameEvents
 		/// <returns>True if allowed</returns>
 		public bool IsAllowedToJump(ZonePoint targetPoint, GamePlayer player)
 		{
-			StartupLocations.StartLocation loc = StartupLocations.MainTownStartingLocations[player.CharacterClass.ID] as StartupLocations.StartLocation;
+			StartupLocation loc = StartupLocations.GetNonTutorialLocation(player);
 
 			if (loc != null)
 			{
-				targetPoint.TargetX = loc.X;
-				targetPoint.TargetY = loc.Y;
-				targetPoint.TargetZ = loc.Z;
+				targetPoint.TargetX = loc.XPos;
+				targetPoint.TargetY = loc.YPos;
+				targetPoint.TargetZ = loc.ZPos;
 				targetPoint.TargetHeading = (ushort)loc.Heading;
+				targetPoint.TargetRegion = (ushort)loc.Region;
 				return true;
 			}
 

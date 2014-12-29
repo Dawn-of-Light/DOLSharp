@@ -152,7 +152,6 @@
     <Compile Include="Tables\LanguageArea.cs" />
     <Compile Include="Tables\LanguageZone.cs" />
     <Compile Include="Tables\MobDropTemplate.cs" />
-    <Compile Include="Tables\StartupLocation.cs" />
     <Compile Include="Tables\DataQuest.cs" />
     <Compile Include="Tables\Zones.cs" />
     <Compile Include="Tables\DOLCharactersBackup.cs" />
