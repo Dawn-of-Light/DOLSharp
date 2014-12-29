@@ -4968,12 +4968,29 @@ namespace DOL.GS
 		public virtual long GetExperienceNeededForLevel(int level)
 		{
 			if (level > MaxLevel)
-				return XPForLevel[MaxLevel];
+				return GetExperienceAmountForLevel(MaxLevel);
 
 			if (level <= 0)
-				return XPForLevel[0];
+				return GetExperienceAmountForLevel(0);
 
-			return XPForLevel[level - 1];
+			return GetExperienceAmountForLevel(level - 1);
+		}
+		
+		/// <summary>
+		/// How Much Experience Needed For Level
+		/// </summary>
+		/// <param name="level"></param>
+		/// <returns></returns>
+		public static long GetExperienceAmountForLevel(int level)
+		{
+			try
+			{
+				return XPForLevel[level];
+			}
+			catch
+			{
+				return 0;
+			}
 		}
 
 		/// <summary>
@@ -5341,62 +5358,13 @@ namespace DOL.GS
 				Out.SendDialogBox(eDialogCode.SimpleWarning, 0, 0, 0, 0, eDialogType.Ok, true, LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnLevelUp.FreeLevelEligible"));
 			}
 
-			switch (Level)
+			if (Level == MaxLevel)
 			{
-					// full respec on level 5 since 1.70
-				case 5:
-					RespecAmountAllSkill++;
-					IsLevelRespecUsed = false;
-					break;
-				case 6:
-					if (IsLevelRespecUsed) break;
-					RespecAmountAllSkill--;
-					break;
-
-					// single line respec
-				case 20:
-				case 40:
-					{
-						RespecAmountSingleSkill++; // Give character their free respecs at 20 and 40
-						IsLevelRespecUsed = false;
-						break;
-					}
-				case 21:
-				case 41:
-					{
-						if (IsLevelRespecUsed) break;
-						RespecAmountSingleSkill--; // Remove free respecs if it wasn't used
-						break;
-					}
-				case 50:
-					{
-						if (CanGenerateNews)
-						{
-							string message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnLevelUp.Reached", Name, Level, LastPositionUpdateZone.Description);
-                            string newsmessage = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnLevelUp.Reached", Name, Level, LastPositionUpdateZone.Description);
-							NewsMgr.CreateNews(newsmessage, Realm, eNewsType.PvE, true);
-						}
-						break;
-					}
-			}
-
-			// Graveen: give a DOL respec on the GIVE_DOL_RESPEC_ON_LEVELS levels
-			byte level_respec = 0;
-
-			foreach (string str in ServerProperties.Properties.GIVE_DOL_RESPEC_AT_LEVEL.SplitCSV(true))
-			{
-				if( !byte.TryParse( str, out level_respec ) )
-					level_respec = 0;
-
-				if (Level == level_respec)
+				if (CanGenerateNews)
 				{
-					int oldAmount = RespecAmountDOL;
-					RespecAmountDOL++;
-
-					if (oldAmount != RespecAmountDOL)
-					{
-						Out.SendMessage("As you reached level " + Level + ", you are awarded a DOL (full) respec!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-					}
+					string message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnLevelUp.Reached", Name, Level, LastPositionUpdateZone.Description);
+                    string newsmessage = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnLevelUp.Reached", Name, Level, LastPositionUpdateZone.Description);
+					NewsMgr.CreateNews(newsmessage, Realm, eNewsType.PvE, true);
 				}
 			}
 
@@ -12724,7 +12692,7 @@ namespace DOL.GS
 			
 			//Load the disabled spells
 			tmpStr = character.DisabledSpells;
-			if (tmpStr != null && tmpStr.Length > 0)
+			if (!string.IsNullOrEmpty(tmpStr))
 			{
 				foreach (string str in tmpStr.SplitCSV())
 				{
@@ -12925,24 +12893,9 @@ namespace DOL.GS
 			SwitchQuiver((eActiveQuiverSlot)(m_dbCharacter.ActiveWeaponSlot & 0xF0), false);
 			SwitchWeapon((eActiveWeaponSlot)(m_dbCharacter.ActiveWeaponSlot & 0x0F));
 
-			if (m_dbCharacter.PlayedTime == 0)
-			{
-				if (Properties.STARTING_LEVEL > 1 && m_dbCharacter.Experience < GetExperienceNeededForLevel(Properties.STARTING_LEVEL - 1))
-				{
-					m_dbCharacter.Experience = GetExperienceNeededForLevel(Properties.STARTING_LEVEL - 1);
-					m_dbCharacter.Level = Properties.STARTING_LEVEL;
-				}
-
-				Health = MaxHealth;
-				Mana = MaxMana;
-				Endurance = MaxEndurance; // has to be set after max, same applies to other values with max properties
-			}
-			else
-			{
-				Health = m_dbCharacter.Health;
-				Mana = m_dbCharacter.Mana;
-				Endurance = m_dbCharacter.Endurance; // has to be set after max, same applies to other values with max properties
-			}
+			Health = m_dbCharacter.Health;
+			Mana = m_dbCharacter.Mana;
+			Endurance = m_dbCharacter.Endurance; // has to be set after max, same applies to other values with max properties
 
 			if (Health <= 0)
 			{

@@ -219,6 +219,8 @@ namespace DOL.GS
 		#endregion
 		
 		#region stringMethod
+		const char primarySeparator = ';';
+		const char secondarySeparator = '-';
 
 		/// <summary>
 		/// Parse a string in CSV mode with separator ';'
@@ -228,8 +230,6 @@ namespace DOL.GS
 		/// <returns>a List of strings with the values parsed</string></returns>a></returns>
 		public static List<string> SplitCSV (this string str, bool rangeCheck = false)
 		{
-			char primarySeparator = ';';
-			char secondarySeparator = '-';
 			
 			if (str==null) return null;
 			
