@@ -65,26 +65,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 				zonePoint.Id = jumpSpotID;
 			}
 
-			//tutorial zone
-			if (client.Player.CurrentRegionID == 27)
-			{
-				zonePoint = new ZonePoint();
-				switch (client.Player.Realm)
-				{
-					case eRealm.Albion:
-						zonePoint.TargetRegion = 1;
-						break;
-					case eRealm.Midgard:
-						zonePoint.TargetRegion = 100;
-						break;
-					case eRealm.Hibernia:
-						zonePoint.TargetRegion = 200;
-						break;
-				}
-
-				zonePoint.ClassType = "DOL.GS.GameEvents.TutorialJumpPointHandler";
-			}
-
 			if (client.Account.PrivLevel > 1)
 			{
 				client.Out.SendMessage("JumpSpotID = " + jumpSpotID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
