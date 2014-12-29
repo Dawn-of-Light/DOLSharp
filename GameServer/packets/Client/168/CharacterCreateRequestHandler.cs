@@ -327,85 +327,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ch.Concentration = 100;
 			ch.MaxSpeed = GamePlayer.PLAYER_BASE_SPEED;
 
-			#region Starting Locations
-
-			//if the server property for disable tutorial is set, we load in the classic starting locations
-			if (ch.Region == 27 && ServerProperties.Properties.DISABLE_TUTORIAL)
-			{
-				switch (ch.Realm)
-				{
-						case 1: ch.Region = 1; break;
-						case 2: ch.Region = 100; break;
-						case 3: ch.Region = 200; break;
-				}
-			}
-
-			ch.Xpos = 505603;
-			ch.Ypos = 494709;
-			ch.Zpos = 2463;
-			ch.Direction = 5947;
-
-			if (ch.Region == 51 && ch.Realm == 1)//Albion ShroudedIsles start point (I hope)
-			{
-				ch.Xpos = 526252;
-				ch.Ypos = 542415;
-				ch.Zpos = 3165;
-				ch.Direction = 5286;
-			}
-			if (ch.Region != 51 && ch.Realm == 1)//Albion start point (Church outside Camelot/humberton)
-			{
-				ch.Xpos = 505603;
-				ch.Ypos = 494709;
-				ch.Zpos = 2463;
-				ch.Direction = 5947;
-				//ch.Region = 1;
-				//DOLConsole.WriteLine(String.Format("Character ClassName:"+ch.ClassName+" created!"));
-				//DOLConsole.WriteLine(String.Format("Character RaceName:"+ch.RaceName+" created!"));
-			}
-			if (ch.Region == 151 && ch.Realm == 2)//Midgard ShroudedIsles start point
-			{
-				ch.Xpos = 293720;
-				ch.Ypos = 356408;
-				ch.Zpos = 3488;
-				ch.Direction = 6670;
-			}
-			if (ch.Region != 151 && ch.Realm == 2)//Midgard start point (Fort Atla)
-			{
-				ch.Xpos = 749103;
-				ch.Ypos = 815835;
-				ch.Zpos = 4408;
-				ch.Direction = 7915;
-				//ch.Region = 100;
-				//DOLConsole.WriteLine(String.Format("Character ClassName:"+ch.ClassName+" created!"));
-				//DOLConsole.WriteLine(String.Format("Character RaceName:"+ch.RaceName+" created!"));
-			}
-			if (ch.Region == 181 && ch.Realm == 3)//Hibernia ShroudedIsles start point
-			{
-				ch.Xpos = 426483;
-				ch.Ypos = 440626;
-				ch.Zpos = 5952;
-				ch.Direction = 2403;
-			}
-			if (ch.Region != 181 && ch.Realm == 3)//Hibernia start point (Mag Mel)
-			{
-				ch.Xpos = 345900;
-				ch.Ypos = 490867;
-				ch.Zpos = 5200;
-				ch.Direction = 4826;
-				//ch.Region = 200;
-				//DOLConsole.WriteLine(String.Format("Character ClassName:"+ch.ClassName+" created!"));
-				//DOLConsole.WriteLine(String.Format("Character RaceName:"+ch.RaceName+" created!"));
-			}
-
-			// chars are bound on creation
-			ch.BindRegion = ch.Region;
-			ch.BindHeading = ch.Direction;
-			ch.BindXpos = ch.Xpos;
-			ch.BindYpos = ch.Ypos;
-			ch.BindZpos = ch.Zpos;
-
-			#endregion Starting Locations
-
 			#region starting guilds
 
 			if (account.PrivLevel == 1 && Properties.STARTING_GUILD)
@@ -463,41 +384,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			#endregion Starting Guilds
 
-			if (Properties.STARTING_BPS > 0)
-				ch.BountyPoints = Properties.STARTING_BPS;
-			
-			if (Properties.STARTING_MONEY > 0)
-			{
-				long value = Properties.STARTING_MONEY;
-				ch.Copper = Money.GetCopper(value);
-				ch.Silver = Money.GetSilver(value);
-				ch.Gold = Money.GetGold(value);
-				ch.Platinum = Money.GetPlatinum(value);
-			}
-
-			if (Properties.STARTING_REALM_LEVEL > 0)
-			{
-				int realmLevel = Properties.STARTING_REALM_LEVEL;
-				long rpamount = 0;
-				if (realmLevel < GamePlayer.REALMPOINTS_FOR_LEVEL.Length)
-					rpamount = GamePlayer.REALMPOINTS_FOR_LEVEL[realmLevel];
-
-				// thanks to Linulo from http://daoc.foren.4players.de/viewtopic.php?t=40839&postdays=0&postorder=asc&start=0
-				if (rpamount == 0)
-					rpamount = (long)(25.0 / 3.0 * (realmLevel * realmLevel * realmLevel) - 25.0 / 2.0 * (realmLevel * realmLevel) + 25.0 / 6.0 * realmLevel);
-
-				ch.RealmPoints = rpamount;
-				ch.RealmLevel = realmLevel;
-			}
-
-			ch.RespecAmountRealmSkill += 2;
 
 			SetBasicCraftingForNewCharacter(ch);
 
 			//Save the character in the database
 			GameServer.Database.AddObject(ch);
-			//Fire the character creation event
+			
+			// Fire the character creation event
+			// This is Where Most Creation Script should take over to update any data they would like !
 			GameEventMgr.Notify(DatabaseEvent.CharacterCreated, null, new CharacterEventArgs(ch, client));
+			
 			//add equipment
 			StartupEquipment.AddEquipment(ch);
 			//write changes

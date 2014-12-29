@@ -260,12 +260,18 @@
     <Compile Include="quests\Midgard\The_Birthday_Gift.cs" />
     <Compile Include="quests\Midgard\TraitorInMularn.cs" />
     <Compile Include="quests\Midgard\Trial_of_Strength.cs" />
+    <Compile Include="startup\dataobject\StartupLocation.cs" />
+    <Compile Include="startup\script\CharacterCreationSettings.cs" />
+    <Compile Include="startup\script\LevelUpRespec.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="dbupdater" />
     <Folder Include="dbupdater\insert" />
     <Folder Include="dbupdater\replace" />
     <Folder Include="dbupdater\unload" />
+    <Folder Include="startup" />
+    <Folder Include="startup\dataobject" />
+    <Folder Include="startup\script" />
   </ItemGroup>
   <ItemGroup>
     <None Include="quests\Albion\BaseFrederickPathPoints.xml" />
