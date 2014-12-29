@@ -129,22 +129,24 @@ namespace DOL.GS.GameEvents
 		
 		public static IList<StartupLocation> GetAllStartupLocationForCharacter(DOLCharacters ch, GameClient.eClientVersion cli)
 		{
-			return m_cachedLocations.Where(sl => sl.MinVersion <= (int)cli)
-					.Where(sl => sl.ClassID == 0 || sl.ClassID == ch.Class)
-					.Where(sl => sl.RaceID == 0 || sl.RaceID == ch.Race)
-					.Where(sl => sl.RealmID == 0 || sl.RealmID == ch.Realm)
-					.Where(sl => sl.ClientRegionID == 0 || sl.ClientRegionID == ch.Region)
-				.OrderByDescending(sl => sl.MinVersion).ToList();
+			var tmp = m_cachedLocations.Where(sl => sl.MinVersion <= (int)cli)
+				.Where(sl => sl.ClassID == 0 || sl.ClassID == ch.Class)
+				.Where(sl => sl.RaceID == 0 || sl.RaceID == ch.Race)
+				.Where(sl => sl.RealmID == 0 || sl.RealmID == ch.Realm)
+				.Where(sl => sl.ClientRegionID == 0 || sl.ClientRegionID == ch.Region)
+				.OrderByDescending(sl => sl.MinVersion).ThenByDescending(sl => sl.ClientRegionID)
+				.ThenByDescending(sl => sl.RealmID).ThenByDescending(sl => sl.ClassID)
+				.ThenByDescending(sl => sl.RaceID).ToList();
+			
+			foreach(var it in tmp)
+				log.InfoFormat("Location for {0} - {1}", ch.Name, it.StartupLoc_ID);
+			
+			return tmp;
 		}
 		
 		public static StartupLocation GetNonTutorialLocation(GamePlayer player)
 		{
-			return m_cachedLocations.Where(sl => sl.MinVersion <= (int)player.Client.Version)
-				.Where(sl => sl.ClassID == 0 || sl.ClassID == player.DBCharacter.Class)
-				.Where(sl => sl.RaceID == 0 || sl.RaceID == player.DBCharacter.Race)
-				.Where(sl => sl.RealmID == 0 || sl.RealmID == player.DBCharacter.Realm)
-				.Where(sl => sl.ClientRegionID != TUTORIAL_REGIONID)
-				.OrderByDescending(sl => sl.MinVersion).First();
+			return GetAllStartupLocationForCharacter(player.DBCharacter, player.Client.Version).First(sl => sl.ClientRegionID != TUTORIAL_REGIONID);
 		}
 
 		/// <summary>
