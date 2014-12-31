@@ -61,8 +61,7 @@ namespace DOL.GS.GameEvents
 		{
 			GameEventMgr.AddHandler(DatabaseEvent.CharacterCreated, new DOLEventHandler(CharacterCreation));
 			
-			foreach (var obj in GameServer.Database.SelectAllObjects<StartupLocation>())
-				m_cachedLocations.Add(obj);
+			InitStartupLocation();
 			
 			if (log.IsInfoEnabled)
 				log.Info("StartupLocations initialized");
@@ -72,6 +71,18 @@ namespace DOL.GS.GameEvents
 		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
 			GameEventMgr.RemoveHandler(DatabaseEvent.CharacterCreated, new DOLEventHandler(CharacterCreation));
+		}
+		
+		/// <summary>
+		/// Init Startup Location Static Cache
+		/// </summary>
+		[RefreshCommand]
+		public static void InitStartupLocation()
+		{
+			m_cachedLocations.Clear();
+			
+			foreach (var obj in GameServer.Database.SelectAllObjects<StartupLocation>())
+				m_cachedLocations.Add(obj);
 		}
 
 		/// <summary>
