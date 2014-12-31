@@ -885,7 +885,6 @@
     <Compile Include="gameutils\NewsMgr.cs" />
     <Compile Include="gameutils\PlayerStatistics.cs" />
     <Compile Include="gameutils\RegionTimersResync.cs" />
-    <Compile Include="gameutils\StartupEquipment.cs" />
     <Compile Include="gameutils\StatPrint.cs" />
     <Compile Include="gameutils\StatSave.cs" />
     <Compile Include="gameutils\WarMapMgr.cs" />

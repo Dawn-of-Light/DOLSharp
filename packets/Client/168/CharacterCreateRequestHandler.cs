@@ -394,8 +394,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			// This is Where Most Creation Script should take over to update any data they would like !
 			GameEventMgr.Notify(DatabaseEvent.CharacterCreated, null, new CharacterEventArgs(ch, client));
 			
-			//add equipment
-			StartupEquipment.AddEquipment(ch);
 			//write changes
 			GameServer.Database.SaveObject(ch);
 
