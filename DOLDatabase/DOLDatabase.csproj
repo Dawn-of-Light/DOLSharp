@@ -195,7 +195,6 @@
     <Compile Include="Tables\KeepCaptureLog.cs" />
     <Compile Include="Tables\Race.cs" />
     <Compile Include="Tables\ServerProperty_Category.cs" />
-    <Compile Include="Tables\StarterEquipment.cs" />
     <Compile Include="Tables\PlayerBoats.cs" />
     <Compile Include="Tables\CharacterXMasterLevel.cs" />
     <Compile Include="Tables\HousepointItem.cs" />

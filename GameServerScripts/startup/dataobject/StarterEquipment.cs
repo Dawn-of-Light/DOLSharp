@@ -21,7 +21,7 @@ using System;
 using DOL.Database;
 using DOL.Database.Attributes;
 
-namespace DOL.Database
+namespace DOL.GS.GameEvents
 {
 	/// <summary>
 	/// Holds starter equipment
@@ -29,11 +29,30 @@ namespace DOL.Database
 	[DataTable(TableName = "StarterEquipment")]
 	public class StarterEquipment : DataObject
 	{
+		private int m_starterEquipmentID;
 		private string m_class;
 		private string m_templateID;
 
 		/// <summary>
-		/// Serialized classes this item should be given to (separator ':')
+		/// Primary Key Autoincrement
+		/// </summary>
+		[PrimaryKey(AutoIncrement = true)]
+		public int StarterEquipmentID
+		{
+			get
+			{
+				return m_starterEquipmentID;
+			}
+			set
+			{
+				Dirty = true;
+				m_starterEquipmentID = value;
+			}
+		}
+
+		
+		/// <summary>
+		/// Serialized classes this item should be given to (separator ';' and range '-')
 		/// 0 for all classes
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
@@ -53,7 +72,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The template ID of free item
 		/// </summary>
-		[DataElement(AllowDbNull = false)]
+		[DataElement(AllowDbNull = false, Varchar=255)]
 		public string TemplateID
 		{
 			get
