@@ -176,6 +176,7 @@
     <Compile Include="commands\admincommands\BenchmarkCommand.cs" />
     <Compile Include="commands\AdminCommands\code.cs" />
     <Compile Include="commands\admincommands\Freeze.cs" />
+    <Compile Include="commands\admincommands\RefreshCommand.cs" />
     <Compile Include="commands\AdminCommands\Reload.cs" />
     <Compile Include="commands\AdminCommands\ServerProperties.cs" />
     <Compile Include="commands\AdminCommands\plvl.cs" />
@@ -228,6 +229,7 @@
     <Compile Include="commands\GMCommands\titlegm.cs" />
     <Compile Include="commands\GMCommands\walk.cs" />
     <Compile Include="commands\GMCommands\weather.cs" />
+    <Compile Include="commands\RefreshCommandAttribute.cs" />
     <Compile Include="commands\PlayerCommands\advice.cs" />
     <Compile Include="commands\PlayerCommands\advisor.cs" />
     <Compile Include="commands\PlayerCommands\afk.cs" />
