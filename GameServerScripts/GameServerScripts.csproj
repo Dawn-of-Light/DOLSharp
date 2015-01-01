@@ -260,6 +260,7 @@
     <Compile Include="quests\Midgard\The_Birthday_Gift.cs" />
     <Compile Include="quests\Midgard\TraitorInMularn.cs" />
     <Compile Include="quests\Midgard\Trial_of_Strength.cs" />
+    <Compile Include="startup\command\StartupLocationTest.cs" />
     <Compile Include="startup\dataobject\StarterEquipment.cs" />
     <Compile Include="startup\dataobject\StartupLocation.cs" />
     <Compile Include="startup\script\CharacterCreationSettings.cs" />
@@ -272,6 +273,7 @@
     <Folder Include="dbupdater\replace" />
     <Folder Include="dbupdater\unload" />
     <Folder Include="startup" />
+    <Folder Include="startup\command" />
     <Folder Include="startup\dataobject" />
     <Folder Include="startup\command" />
     <Folder Include="startup\script" />

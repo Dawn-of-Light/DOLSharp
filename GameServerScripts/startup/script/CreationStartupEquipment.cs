@@ -69,6 +69,7 @@ namespace DOL.GS.GameEvents
 		/// <summary>
 		/// Init (Or Refresh) Starter Equipment Cache
 		/// </summary>
+		[RefreshCommand]
 		public static void InitStarterEquipment()
 		{
 			m_cachedClassEquipment.Clear();
