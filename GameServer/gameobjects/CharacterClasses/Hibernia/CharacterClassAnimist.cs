@@ -17,25 +17,18 @@
  *
  */
 using System;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Text;
+
 using DOL.GS;
-using DOL.GS.Spells;
-using DOL.GS.PacketHandler;
-using DOL.Database;
-using log4net;
 using DOL.Events;
-using DOL.GS.Effects;
-using System.Collections;
 using DOL.AI.Brain;
+using DOL.GS.PlayerClass;
 
 namespace DOL.GS
 {
 	/// <summary>
 	/// The Animist character class.
 	/// </summary>
-	public class CharacterClassAnimist : CharacterClassBase
+	public class CharacterClassAnimist : ClassForester
 	{
 		/// <summary>
 		/// Releases controlled object
