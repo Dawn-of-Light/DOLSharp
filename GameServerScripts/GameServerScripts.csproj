@@ -266,6 +266,7 @@
     <Compile Include="startup\script\CharacterCreationSettings.cs" />
     <Compile Include="startup\script\CreationStartupEquipment.cs" />
     <Compile Include="startup\script\LevelUpRespec.cs" />
+    <Compile Include="startup\script\StartAsBaseClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="dbupdater" />
