@@ -440,12 +440,6 @@ namespace DOL.GS.ServerProperties
 		public static readonly bool LOAD_EXAMPLES;
 
 		/// <summary>
-		/// Use Custom Start Locations
-		/// </summary>
-		[ServerProperty("server", "use_custom_start_locations", "Set to true if you will use another script to set your start locations", false)]
-		public static bool USE_CUSTOM_START_LOCATIONS;
-
-		/// <summary>
 		/// Death Messages All Realms
 		/// </summary>
 		[ServerProperty("server", "death_messages_all_realms", "Set to true if you want all realms to see other realms death and kill messages", false)]
@@ -1713,12 +1707,6 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("classes", "slash_level_requirement", "What level should you have on your account be able to use /level?", 50)]
 		public static int SLASH_LEVEL_REQUIREMENT;
-
-		/// <summary>
-		/// Should the server start characters as Base Class?
-		/// </summary>
-		[ServerProperty("classes", "start_as_base_class", "Should we start all players as their base class? true if yes (e.g. Armsmen become Fighters on Creation)", false)]
-		public static bool START_AS_BASE_CLASS;
 
 		/// <summary>
 		/// Should the server start characters as Base Class?
