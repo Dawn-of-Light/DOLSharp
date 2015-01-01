@@ -201,10 +201,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ch.Level = packet.ReadByte(); //not safe!
 			ch.Level = 1;
 			ch.Class = packet.ReadByte();
-			if (ServerProperties.Properties.START_AS_BASE_CLASS)
-			{
-				ch.Class = RevertClass(ch);
-			}
 			ch.Realm = packet.ReadByte();
 
 			if (log.IsDebugEnabled)
@@ -1473,67 +1469,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 
 		#region Utility
-
-		private static int RevertClass(DOLCharacters ch)
-		{
-			switch (ch.Class)
-			{
-					//Alb
-					case (int)eCharacterClass.Armsman: return (int)eCharacterClass.Fighter;
-					case (int)eCharacterClass.Mercenary: return (int)eCharacterClass.Fighter;
-					case (int)eCharacterClass.Paladin: return (int)eCharacterClass.Fighter;
-					case (int)eCharacterClass.MaulerAlb: return (int)eCharacterClass.Fighter;
-					case (int)eCharacterClass.Reaver: return (int)eCharacterClass.Fighter;
-					case (int)eCharacterClass.Cleric: return (int)eCharacterClass.Acolyte;
-					case (int)eCharacterClass.Friar: return (int)eCharacterClass.Acolyte;
-					case (int)eCharacterClass.Heretic: return (int)eCharacterClass.Acolyte;
-					case (int)eCharacterClass.Infiltrator: return (int)eCharacterClass.AlbionRogue;
-					case (int)eCharacterClass.Scout: return (int)eCharacterClass.AlbionRogue;
-					case (int)eCharacterClass.Minstrel: return (int)eCharacterClass.AlbionRogue;
-					case (int)eCharacterClass.Cabalist: return (int)eCharacterClass.Mage;
-					case (int)eCharacterClass.Sorcerer: return (int)eCharacterClass.Mage;
-					case (int)eCharacterClass.Theurgist: return (int)eCharacterClass.Elementalist;
-					case (int)eCharacterClass.Wizard: return (int)eCharacterClass.Elementalist;
-					case (int)eCharacterClass.Necromancer: return (int)eCharacterClass.Disciple;
-					//Hib
-					case (int)eCharacterClass.Hero: return (int)eCharacterClass.Guardian;
-					case (int)eCharacterClass.Champion: return (int)eCharacterClass.Guardian;
-					case (int)eCharacterClass.Blademaster: return (int)eCharacterClass.Guardian;
-					case (int)eCharacterClass.MaulerHib: return (int)eCharacterClass.Guardian;
-					case (int)eCharacterClass.Bard: return (int)eCharacterClass.Naturalist;
-					case (int)eCharacterClass.Druid: return (int)eCharacterClass.Naturalist;
-					case (int)eCharacterClass.Warden: return (int)eCharacterClass.Naturalist;
-					case (int)eCharacterClass.Ranger: return (int)eCharacterClass.Stalker;
-					case (int)eCharacterClass.Nightshade: return (int)eCharacterClass.Stalker;
-					case (int)eCharacterClass.Vampiir: return (int)eCharacterClass.Stalker;
-					case (int)eCharacterClass.Bainshee: return (int)eCharacterClass.Magician;
-					case (int)eCharacterClass.Eldritch: return (int)eCharacterClass.Magician;
-					case (int)eCharacterClass.Enchanter: return (int)eCharacterClass.Magician;
-					case (int)eCharacterClass.Mentalist: return (int)eCharacterClass.Magician;
-					case (int)eCharacterClass.Animist: return (int)eCharacterClass.Forester;
-					case (int)eCharacterClass.Valewalker: return (int)eCharacterClass.Forester;
-					//Mid
-					case (int)eCharacterClass.Berserker: return (int)eCharacterClass.Viking;
-					case (int)eCharacterClass.MaulerMid: return (int)eCharacterClass.Viking;
-					case (int)eCharacterClass.Savage: return (int)eCharacterClass.Viking;
-					case (int)eCharacterClass.Skald: return (int)eCharacterClass.Viking;
-					case (int)eCharacterClass.Thane: return (int)eCharacterClass.Viking;
-					case (int)eCharacterClass.Valkyrie: return (int)eCharacterClass.Viking;
-					case (int)eCharacterClass.Warrior: return (int)eCharacterClass.Viking;
-					case (int)eCharacterClass.Hunter: return (int)eCharacterClass.MidgardRogue;
-					case (int)eCharacterClass.Shadowblade: return (int)eCharacterClass.MidgardRogue;
-					case (int)eCharacterClass.Healer: return (int)eCharacterClass.Seer;
-					case (int)eCharacterClass.Shaman: return (int)eCharacterClass.Seer;
-					case (int)eCharacterClass.Bonedancer: return (int)eCharacterClass.Mystic;
-					case (int)eCharacterClass.Runemaster: return (int)eCharacterClass.Mystic;
-					case (int)eCharacterClass.Warlock: return (int)eCharacterClass.Mystic;
-					case (int)eCharacterClass.Spiritmaster: return (int)eCharacterClass.Mystic;
-					//older client support
-					default: return ch.Class;
-
-			}
-		}
-
 		private void SetBasicCraftingForNewCharacter(DOLCharacters ch)
 		{
 			string serializedAllCraftingSkills = "";

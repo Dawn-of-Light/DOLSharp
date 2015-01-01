@@ -746,7 +746,6 @@ namespace DOL.GS
 		/// <summary>
 		/// Searches for ClassSpec's by id in a given assembly
 		/// </summary>
-		/// <param name="asm">the assembly to search through</param>
 		/// <param name="id">the classid to search</param>
 		/// <returns>ClassSpec that was found or null if not found</returns>
 		public static ICharacterClass FindCharacterClass(int id)
@@ -759,6 +758,7 @@ namespace DOL.GS
 				{
 					// Pick up a class
 					if (type.IsClass != true) continue;
+					if (type.IsAbstract) continue;
 					if (type.GetInterface("DOL.GS.ICharacterClass") == null) continue;
 
 					try
@@ -782,6 +782,42 @@ namespace DOL.GS
 			return null;
 		}
 
+		/// <summary>
+		/// Return a CharacterClass "Base" Class (or current Class if already base)
+		/// </summary>
+		/// <param name="id">the classid to search</param>
+		/// <returns>Base ClassSpec that was found or null if not found</returns>
+		public static ICharacterClass FindCharacterBaseClass(int id)
+		{
+			var charClass = FindCharacterClass(id);
+			
+			if (charClass == null)
+				return null;
+			
+			if (!charClass.HasAdvancedFromBaseClass())
+				return charClass;
+			
+			try
+			{
+				object[] objs = charClass.GetType().BaseType.GetCustomAttributes(typeof(CharacterClassAttribute), true);
+				foreach (CharacterClassAttribute attrib in objs)
+				{
+					if (attrib.Name.Equals(charClass.BaseName, StringComparison.InvariantCultureIgnoreCase))
+					{
+						var baseClass = FindCharacterClass(attrib.ID);
+						if (baseClass != null && !baseClass.HasAdvancedFromBaseClass())
+							return baseClass;
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("FindCharacterBaseClass", e);
+			}
+			
+			return null;
+		}
 
 		/// <summary>
 		/// Searches for NPC guild scripts
