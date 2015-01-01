@@ -26,6 +26,7 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS;
 using DOL.GS.ServerProperties;
+
 using log4net;
 
 
@@ -47,34 +48,24 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			string accountName = packet.ReadString(24);
 
-			log.Debug("CharacterCreateRequestHandler for account " + accountName + " using version " + client.Version);
+			log.DebugFormat("CharacterCreateRequestHandler for account {0} using version {1}", accountName, client.Version);
 
 			if (!accountName.StartsWith(client.Account.Name))// TODO more correctly check, client send accountName as account-S, -N, -H (if it not fit in 20, then only account)
 			{
 				if (ServerProperties.Properties.BAN_HACKERS)
-				{
-					DBBannedAccount b = new DBBannedAccount();
-					b.Author = "SERVER";
-					b.Ip = client.TcpEndpointAddress;
-					b.Account = client.Account.Name;
-					b.DateBan = DateTime.Now;
-					b.Type = "B";
-					b.Reason = String.Format("Autoban wrong Account '{0}'", GameServer.Database.Escape(accountName));
-					GameServer.Database.AddObject(b);
-					GameServer.Database.SaveObject(b);
-					GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
-				}
+					client.BanAccount(string.Format("Autoban wrong Account '{0}'", accountName));
 
 				client.Disconnect();
 				return;
 			}
-
+			
+			//unk - probably indicates customize or create
 			if (client.Version >= GameClient.eClientVersion.Version1104)
-			{
-				packet.ReadIntLowEndian(); //unk - probably indicates customize or create
-			}
+				packet.ReadIntLowEndian();
 
+			// Client character count support
 			int charsCount = client.Version < GameClient.eClientVersion.Version173 ? 8 : 10;
+			
 			for (int i = 0; i < charsCount; i++)
 			{
 				string charName = packet.ReadString(24);
@@ -85,17 +76,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					// 1.104+  if character is not in list but is in DB then delete the character
 					if (client.Version >= GameClient.eClientVersion.Version1104)
-					{
 						CheckForDeletedCharacter(accountName, client, i);
-					}
 
 					//If the charname is empty, skip the other bytes
 					packet.Skip(160);
+
+					// skip 4 bytes added in 1.99
 					if (client.Version >= GameClient.eClientVersion.Version199)
-					{
-						// skip 4 bytes added in 1.99
 						packet.Skip(4);
-					}
 				}
 				else
 				{
@@ -106,18 +94,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (client.Account.PrivLevel == 1)
 						{
 							if (ServerProperties.Properties.BAN_HACKERS)
-							{
-								DBBannedAccount b = new DBBannedAccount();
-								b.Author = "SERVER";
-								b.Ip = client.TcpEndpointAddress;
-								b.Account = client.Account.Name;
-								b.DateBan = DateTime.Now;
-								b.Type = "B";
-								b.Reason = String.Format("Autoban bad CharName '{0}'", GameServer.Database.Escape(charName));
-								GameServer.Database.AddObject(b);
-								GameServer.Database.SaveObject(b);
-								GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
-							}
+								client.BanAccount(string.Format("Autoban bad CharName '{0}'", charName));
 
 							client.Disconnect();
 							return;
@@ -131,18 +108,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (character.AccountName != client.Account.Name)
 						{
 							if (Properties.BAN_HACKERS == true)
-							{
-								DBBannedAccount b = new DBBannedAccount();
-								b.Author = "SERVER";
-								b.Ip = client.TcpEndpointAddress;
-								b.Account = client.Account.Name;
-								b.DateBan = DateTime.Now;
-								b.Type = "B";
-								b.Reason = String.Format("Autoban CharName '{0}' on wrong Account '{1}'", GameServer.Database.Escape(charName), GameServer.Database.Escape(client.Account.Name));
-								GameServer.Database.AddObject(b);
-								GameServer.Database.SaveObject(b);
-								GameServer.Instance.LogCheatAction(string.Format(b.Reason + ". Client Account: {0}, DB Account: {1}", client.Account.Name, character.AccountName));
-							}
+								client.BanAccount(string.Format("Autoban CharName '{0}' (from {2}) on wrong Account '{1}'", charName, client.Account.Name, character.AccountName));
 
 							client.Disconnect();
 							return;
