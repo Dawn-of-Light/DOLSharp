@@ -351,6 +351,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="lineName"></param>
 		/// <returns></returns>
+		[RefreshCommandAttribute]
 		public static int ReloadSpellLines()
 		{
 			int count = 0;
@@ -533,6 +534,7 @@ namespace DOL.GS
 		/// Anything loaded in this from scripted behavior can be lost... (try to not use Scripted Career !!)
 		/// </summary>
 		/// <returns>number of specs loaded.</returns>
+		[RefreshCommandAttribute]
 		public static int LoadSpecializations()
 		{
 			m_syncLockUpdates.EnterWriteLock();

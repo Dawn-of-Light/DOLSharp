@@ -86,7 +86,9 @@ namespace DOL.GS.Commands
 					DisplayMessage(client, string.Format("--- Refreshing Module's static cache for: {0}", method.Key));
 					try
 					{
-						method.Value.Invoke(null, new object[] { });
+						object value = method.Value.Invoke(null, new object[] { });
+						if (value != null)
+							DisplayMessage(client, string.Format("--- Module returned value: {0}", value));
 					}
 					catch(Exception e)
 					{
