@@ -56,7 +56,7 @@ namespace DOL.GS.GameEvents
 		/// </summary>
 		private const int TUTORIAL_REGIONID = 27;
 		
-		[GameServerStartedEvent]
+		[ScriptLoadedEvent]
 		public static void OnScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
 			GameEventMgr.AddHandler(DatabaseEvent.CharacterCreated, new DOLEventHandler(CharacterCreation));
@@ -67,7 +67,7 @@ namespace DOL.GS.GameEvents
 				log.Info("StartupLocations initialized");
 		}
 
-		[GameServerStoppedEvent]
+		[ScriptUnloadedEvent]
 		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
 			GameEventMgr.RemoveHandler(DatabaseEvent.CharacterCreated, new DOLEventHandler(CharacterCreation));
