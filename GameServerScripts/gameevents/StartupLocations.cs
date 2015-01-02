@@ -60,6 +60,7 @@ namespace DOL.GS.GameEvents
 		public static void OnScriptLoaded(DOLEvent e, object sender, EventArgs args)
 		{
 			GameEventMgr.AddHandler(DatabaseEvent.CharacterCreated, new DOLEventHandler(CharacterCreation));
+			GameEventMgr.AddHandler(DatabaseEvent.CharacterSelected, new DOLEventHandler(CharacterSelection));
 			
 			InitStartupLocation();
 			
@@ -71,6 +72,7 @@ namespace DOL.GS.GameEvents
 		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
 			GameEventMgr.RemoveHandler(DatabaseEvent.CharacterCreated, new DOLEventHandler(CharacterCreation));
+			GameEventMgr.RemoveHandler(DatabaseEvent.CharacterSelected, new DOLEventHandler(CharacterSelection));
 		}
 		
 		/// <summary>
@@ -135,6 +137,37 @@ namespace DOL.GS.GameEvents
 				if (log.IsErrorEnabled)
 					log.ErrorFormat("StartupLocations script: error changing location. account={0}; char name={1}; region={2}; realm={3}; class={4} ({5}); race={6} ({7}); version={8}; {9}",
 					                ch.AccountName, ch.Name, ch.Region, ch.Realm, ch.Class, (eCharacterClass) ch.Class, ch.Race, (eRace)ch.Race, chArgs.GameClient.Version, e);
+			}
+		}
+
+		/// <summary>
+		/// Change location on character selection if it has any wrong values...
+		/// </summary>
+		public static void CharacterSelection(DOLEvent ev, object sender, EventArgs args)
+		{
+			// Check Args
+			var chArgs = args as CharacterEventArgs;
+			
+			if (chArgs == null)
+				return;
+			
+			DOLCharacters ch = chArgs.Character;
+			
+			// check if location looks ok.
+			if (ch.Xpos == 0 && ch.Ypos == 0 && ch.Zpos == 0)
+			{
+				// This character needs to be fixed !
+				CharacterCreation(ev, sender, args);
+				GameServer.Database.SaveObject(ch);
+				return;
+			}
+			
+			// check if bind looks ok.
+			if (ch.BindXpos == 0 && ch.BindYpos == 0 && ch.BindZpos == 0)
+			{
+				// This Bind needs to be fixed !
+				BindCharacter(ch);
+				GameServer.Database.SaveObject(ch);
 			}
 		}
 		
