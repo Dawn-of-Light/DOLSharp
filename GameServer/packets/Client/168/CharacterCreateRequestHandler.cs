@@ -325,8 +325,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				if (log.IsWarnEnabled)
 				{
-					log.WarnFormat("{0} tried to create invalid character:\nchar name={1}, gender={2}, race={2}, realm={3}, class={4}, region={5}" +
-					               "\nstr={6}, con={7}, dex={8}, qui={9}, int={10}, pie={11}, emp={12}, chr={13}", ch.AccountName, ch.Name, ch.Gender,
+					log.WarnFormat("{0} tried to create invalid character:\nchar name={1}, gender={2}, race={3}, realm={4}, class={5}, region={6}" +
+					               "\nstr={7}, con={8}, dex={9}, qui={10}, int={11}, pie={12}, emp={13}, chr={14}", ch.AccountName, ch.Name, ch.Gender,
 					              ch.Race, ch.Realm, ch.Class, ch.Region, ch.Strength, ch.Constitution, ch.Dexterity, ch.Quickness, ch.Intelligence, ch.Piety, ch.Empathy, ch.Charisma);
 				}
 				// This is not live like but unfortunately we are missing code / packet support to stay on character create screen if something is invalid
@@ -498,15 +498,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 			GameServer.Database.SaveObject(character);
 
 			// Reset to character view...
-			client.Out.SendCharacterOverview((eRealm)ch.Realm);
+			client.Out.SendCharacterOverview((eRealm)character.Realm);
 			return true;
 		}
 		#endregion Character Updates
 
 		#region Delete Character
-		private void CheckForDeletedCharacter(string accountName, GameClient client, int slot)
+		public static void CheckForDeletedCharacter(string accountName, GameClient client, int slot)
 		{
-			int charSlot = 9999;
+			int charSlot = slot;
 
 			if (accountName.EndsWith("-S")) charSlot = 100 + slot;
 			else if (accountName.EndsWith("-N")) charSlot = 200 + slot;
@@ -516,13 +516,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			if (allChars != null)
 			{
-				foreach (DOLCharacters character in allChars)
+				foreach (DOLCharacters character in allChars.ToArray())
 				{
 					if (character.AccountSlot == charSlot && client.ClientState == GameClient.eClientState.CharScreen)
 					{
 						if (log.IsWarnEnabled)
 							log.WarnFormat("DB Character Delete:  Account {0}, Character: {1}, slot position: {2}, client slot {3}", accountName, character.Name, character.AccountSlot, slot);
 
+						var characterRealm = (eRealm)character.Realm;
+						
+						if (allChars.Length < client.ActiveCharIndex && client.ActiveCharIndex > -1 && allChars[client.ActiveCharIndex] == character)
+							client.ActiveCharIndex = -1;
+
+						
 						GameEventMgr.Notify(DatabaseEvent.CharacterDeleted, null, new CharacterEventArgs(character, client));
 
 						if (Properties.BACKUP_DELETED_CHARACTERS)
@@ -604,7 +610,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						AuditMgr.AddAuditEntry(client, AuditType.Character, AuditSubtype.CharacterDelete, "", deletedChar);
 						
 						// Reset to character view...
-						client.Out.SendCharacterOverview((eRealm)ch.Realm);
+						client.Out.SendCharacterOverview((eRealm)characterRealm);
 					}
 				}
 			}
@@ -656,7 +662,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					points += Math.Max(0, above - 15); //three points used
 				}
 				
-				return points != MAX_STARTING_BONUS_POINTS;
+				return points == MAX_STARTING_BONUS_POINTS;
 			}
 			
 			points = -1;
