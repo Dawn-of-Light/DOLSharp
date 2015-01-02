@@ -85,10 +85,6 @@ namespace DOL.GS.Trainer
 					// promote player to other class
 					if (CanPromotePlayer(player))
 					{
-						player.RemoveAllSpellLines();
-						player.RemoveAllSpecs();
-						player.RemoveAllStyles();
-						player.Out.SendUpdatePlayerSkills();
 						PromotePlayer(player, (int)eCharacterClass.Warlock, "Welcome young Warlock! May your time in Midgard army be rewarding!", null);
 						player.ReceiveItem(this, WEAPON_ID);
 					}

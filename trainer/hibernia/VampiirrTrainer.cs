@@ -92,18 +92,10 @@ namespace DOL.GS.Trainer
 					// promote player to other class
 					if (CanPromotePlayer(player))
 					{
-						player.RemoveAllSpellLines();
-						player.RemoveAllSpecs();
-						player.RemoveAllStyles();
-						player.Out.SendUpdatePlayerSkills();
-
 						PromotePlayer(player, (int)eCharacterClass.Vampiir, "Very well, " + source.GetName(0, false) + ". I gladly take your training into my hands. Congratulations, from this day forth, you are a Vampiir. Here, take this gift to aid you.", null);
 						foreach (GamePlayer plr in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE)) // inform nearest clients about this player now is vampire (can fly)
 							if (plr != null)
 								plr.Out.SendVampireEffect(player, true);
-						
-						// drop any equiped-non usable item, in inventory or on the ground if full
-						CheckAbilityToUseItem(player);
 					}
 					break;
 			}

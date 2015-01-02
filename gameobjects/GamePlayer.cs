@@ -12725,6 +12725,15 @@ namespace DOL.GS
 			// Get this Attached Class Specialization from SkillBase.
 			IDictionary<Specialization, int> careers = SkillBase.GetSpecializationCareer(CharacterClass.ID);
 			
+			// Remove All Trainable Specialization or "Career Spec" that aren't managed by This Data Career anymore
+			var speclist = GetSpecList();
+			var careerslist = careers.Keys.Select(k => k.KeyName.ToLower());
+			foreach (var spec in speclist.Where(sp => sp.Trainable || !sp.AllowSave))
+			{
+				if (!careerslist.Contains(spec.KeyName.ToLower()))
+					RemoveSpecialization(spec.KeyName);
+			}
+						
 			// sort ML Spec depending on ML Line
 			byte mlindex = 0;
 			foreach (KeyValuePair<Specialization, int> constraint in careers)

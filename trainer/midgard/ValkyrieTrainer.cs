@@ -90,8 +90,6 @@ namespace DOL.GS.Trainer
 				if (CanPromotePlayer(player))
 				{
 					PromotePlayer(player, (int)eCharacterClass.Valkyrie, LanguageMgr.GetTranslation(player.Client.Account.Language, "ValkyrieTrainer.WhisperReceive.Text1"), null);
-
-					CheckAbilityToUseItem(player);
 				}
 			}
 			else if ((player.Inventory.GetFirstItemByID(WEAPON_ID1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) == null) &&
