@@ -90,10 +90,6 @@ namespace DOL.GS.Trainer
 				// promote player to other class
 				if (CanPromotePlayer(player))
 				{
-					player.RemoveAllSpellLines();
-					player.RemoveAllSpecs();
-					player.RemoveAllStyles();
-					player.Out.SendUpdatePlayerSkills();
 					PromotePlayer(player, (int)eCharacterClass.Bainshee, LanguageMgr.GetTranslation(player.Client.Account.Language, "BainsheeTrainer.WhisperReceive.Text1", player.GetName(0, false)), null);
 					player.ReceiveItem(this, WEAPON_ID1);
 				}

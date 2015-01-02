@@ -357,6 +357,8 @@ namespace DOL.GS
 			if (player.SetCharacterClass(classid))
 			{
 				player.RemoveAllStyles();
+				player.RemoveAllAbilities();
+				player.RemoveAllSpellLines();
 
 				if (messageToPlayer != "")
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.PromotePlayer.Says", this.Name, messageToPlayer), eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -365,9 +367,10 @@ namespace DOL.GS
 				player.CharacterClass.OnLevelUp(player, player.Level);
 				player.RefreshSpecDependantSkills(true);
 				player.StartPowerRegeneration();
-				//player.Out.SendUpdatePlayerSpells();
 				player.Out.SendUpdatePlayerSkills();
 				player.Out.SendUpdatePlayer();
+				// drop any non usable item
+				CheckAbilityToUseItem(player);
 
 				// Initiate equipment
 				if (gifts != null && gifts.Length > 0)
