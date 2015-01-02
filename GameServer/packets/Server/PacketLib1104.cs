@@ -347,7 +347,7 @@ namespace DOL.GS.PacketHandler
 					}
 				}
 				
-				pak.Fill(0x0, 90);
+				pak.Fill(0x0, 94);
 				SendTCP(pak);
 			}
 		}
