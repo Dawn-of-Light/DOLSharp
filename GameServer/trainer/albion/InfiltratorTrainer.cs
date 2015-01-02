@@ -67,17 +67,6 @@ namespace DOL.GS.Trainer
 		}
 
 		/// <summary>
-		/// checks wether a player can be promoted or not
-		/// </summary>
-		/// <param name="player"></param>
-		/// <returns></returns>
-		public static bool CanPromotePlayer(GamePlayer player)
-		{
-			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.AlbionRogue && (player.Race == (int) eRace.Briton
-			                                                                                             || player.Race == (int) eRace.Inconnu || player.Race == (int) eRace.Saracen));
-		}
-
-		/// <summary>
 		/// Talk to trainer
 		/// </summary>
 		/// <param name="source"></param>

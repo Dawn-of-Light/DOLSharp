@@ -313,6 +313,30 @@ namespace DOL.GS
 			if (TrainedClass != eCharacterClass.Unknown)
 				PromotePlayer(player, (int)TrainedClass, "", null);
 		}
+		
+		/// <summary>
+		/// Check if Player can be Promoted
+		/// </summary>
+		/// <param name="player"></param>
+		public virtual bool CanPromotePlayer(GamePlayer player)
+		{
+			var baseClass = ScriptMgr.FindCharacterBaseClass((int)TrainedClass);
+			
+			// Error or Base Trainer...
+			if (baseClass == null || baseClass.ID == (int)TrainedClass)
+				return false;
+			
+			if (player.Level < 5 || player.CharacterClass.ID != baseClass.ID)
+				return false;
+			
+			if (!GlobalConstants.RACES_CLASSES_DICT.ContainsKey((eRace)player.Race) || !GlobalConstants.RACES_CLASSES_DICT[(eRace)player.Race].Contains(TrainedClass))
+				return false;
+			
+			if (GlobalConstants.CLASS_GENDER_CONSTRAINTS_DICT.ContainsKey(TrainedClass) && GlobalConstants.CLASS_GENDER_CONSTRAINTS_DICT[TrainedClass] != player.Gender)
+				return false;
+			    
+			return true;
+		}
 
 		/// <summary>
 		/// Called to promote a player

@@ -263,6 +263,7 @@
     <Compile Include="startup\command\StartupLocationTest.cs" />
     <Compile Include="startup\dataobject\StarterEquipment.cs" />
     <Compile Include="startup\dataobject\StartupLocation.cs" />
+    <Compile Include="startup\script\CharacterCreationCraft.cs" />
     <Compile Include="startup\script\CharacterCreationSettings.cs" />
     <Compile Include="startup\script\CreationStartupEquipment.cs" />
     <Compile Include="startup\script\LevelUpRespec.cs" />
