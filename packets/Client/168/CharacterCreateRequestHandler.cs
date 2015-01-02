@@ -48,6 +48,18 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// Max Points to allow on player creation
 		/// </summary>
 		public const int MAX_STARTING_BONUS_POINTS = 30;
+
+		/// <summary>
+		/// Client Operation Value.
+		/// </summary>
+		public enum eOperation: uint
+		{
+			Delete = 0x12345678,
+			Create = 0x23456789,
+			Customize = 0x3456789A,
+			Unknown = 0x456789AB,
+		}
+
 		
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
@@ -67,7 +79,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			
 			// Client character count support
 			int charsCount = client.Version < GameClient.eClientVersion.Version173 ? 8 : 10;
-			eRealm guessedRealm = eRealm.None;
 			for (int i = 0; i < charsCount; i++)
 			{
 				//unk - probably indicates customize or create
@@ -125,6 +136,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			public int FaceType { get; set; }
 			public int HairStyle { get; set; }
 			public int MoodType { get; set; }
+			public uint Operation { get; set; }
 			public int Class { get; set; }
 			public int Realm { get; set; }
 			public int Race { get; set; }
@@ -161,7 +173,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 				HairStyle = packet.ReadByte();
 				packet.Skip(3);
 				MoodType = packet.ReadByte();
-				packet.Skip(13);
+				packet.Skip(8);
+				
+				Operation = packet.ReadInt();
+				var unk = packet.ReadByte();
 				
 				packet.Skip(24); //Location String
 				packet.Skip(24); //Skip class name
