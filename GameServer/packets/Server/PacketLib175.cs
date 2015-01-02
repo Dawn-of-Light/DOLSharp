@@ -269,6 +269,10 @@ namespace DOL.GS.PacketHandler
 				for (int i = 0; i < updateStats.Length; i++)
 				{
 					baseStats[i] = m_gameClient.Player.GetBaseStat(updateStats[i]);
+					
+					if (updateStats[i] == eStat.CON)
+						baseStats[i] -= m_gameClient.Player.TotalConstitutionLostAtDeath;
+					
 					pak.WriteShort((ushort)baseStats[i]);
 				}
 	
@@ -278,9 +282,6 @@ namespace DOL.GS.PacketHandler
 				for (int i = 0; i < updateStats.Length; i++)
 				{
 					modStats[i] = m_gameClient.Player.GetModified((eProperty)updateStats[i]);
-	
-					if (updateStats[i] == eStat.CON)
-						modStats[i] += m_gameClient.Player.TotalConstitutionLostAtDeath; // not included in debuffs
 	
 					int abilityBonus = m_gameClient.Player.AbilityBonus[(int)updateStats[i]];
 	

@@ -43,12 +43,47 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		
+		/// <summary>
+		/// Max Points to allow on player creation
+		/// </summary>
+		public const int MAX_STARTING_BONUS_POINTS = 30;
+		
+		/// <summary>
+		/// All possible player races
+		/// </summary>
+		public static readonly Dictionary<eRace, Dictionary<eStat, int>> STARTING_STATS_DICT = new Dictionary<eRace, Dictionary<eStat, int>>()
+		{ 
+			{ eRace.Unknown, new Dictionary<eStat, int>()			{{eStat.STR, 60}, {eStat.CON, 60}, {eStat.DEX, 60}, {eStat.QUI, 60}, {eStat.INT, 60}, {eStat.PIE, 60}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+			{ eRace.Briton, new Dictionary<eStat, int>()			{{eStat.STR, 60}, {eStat.CON, 60}, {eStat.DEX, 60}, {eStat.QUI, 60}, {eStat.INT, 60}, {eStat.PIE, 60}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+			{ eRace.Avalonian, new Dictionary<eStat, int>()			{{eStat.STR, 45}, {eStat.CON, 45}, {eStat.DEX, 60}, {eStat.QUI, 70}, {eStat.INT, 80}, {eStat.PIE, 60}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+			{ eRace.Highlander, new Dictionary<eStat, int>()		{{eStat.STR, 70}, {eStat.CON, 70}, {eStat.DEX, 50}, {eStat.QUI, 50}, {eStat.INT, 60}, {eStat.PIE, 60}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+			{ eRace.Saracen, new Dictionary<eStat, int>()			{{eStat.STR, 50}, {eStat.CON, 50}, {eStat.DEX, 80}, {eStat.QUI, 60}, {eStat.INT, 60}, {eStat.PIE, 60}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+			{ eRace.Norseman, new Dictionary<eStat, int>()			{{eStat.STR, 70}, {eStat.CON, 70}, {eStat.DEX, 50}, {eStat.QUI, 50}, {eStat.INT, 60}, {eStat.PIE, 60}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+			{ eRace.Troll, new Dictionary<eStat, int>()				{{eStat.STR, 100}, {eStat.CON, 70}, {eStat.DEX, 35}, {eStat.QUI, 35}, {eStat.INT, 60}, {eStat.PIE, 60}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+			{ eRace.Dwarf, new Dictionary<eStat, int>()				{{eStat.STR, 60}, {eStat.CON, 80}, {eStat.DEX, 50}, {eStat.QUI, 50}, {eStat.INT, 60}, {eStat.PIE, 60}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+			{ eRace.Kobold, new Dictionary<eStat, int>()			{{eStat.STR, 50}, {eStat.CON, 50}, {eStat.DEX, 70}, {eStat.QUI, 70}, {eStat.INT, 60}, {eStat.PIE, 60}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+			{ eRace.Celt, new Dictionary<eStat, int>()				{{eStat.STR, 60}, {eStat.CON, 60}, {eStat.DEX, 60}, {eStat.QUI, 60}, {eStat.INT, 60}, {eStat.PIE, 60}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+			{ eRace.Firbolg, new Dictionary<eStat, int>()			{{eStat.STR, 90}, {eStat.CON, 60}, {eStat.DEX, 40}, {eStat.QUI, 40}, {eStat.INT, 60}, {eStat.PIE, 60}, {eStat.EMP, 70}, {eStat.CHR, 60}, }},
+			{ eRace.Elf, new Dictionary<eStat, int>()				{{eStat.STR, 40}, {eStat.CON, 40}, {eStat.DEX, 75}, {eStat.QUI, 75}, {eStat.INT, 70}, {eStat.PIE, 60}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+			{ eRace.Lurikeen, new Dictionary<eStat, int>()			{{eStat.STR, 40}, {eStat.CON, 40}, {eStat.DEX, 80}, {eStat.QUI, 80}, {eStat.INT, 60}, {eStat.PIE, 60}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+			{ eRace.Inconnu, new Dictionary<eStat, int>()			{{eStat.STR, 50}, {eStat.CON, 60}, {eStat.DEX, 70}, {eStat.QUI, 50}, {eStat.INT, 70}, {eStat.PIE, 60}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+			{ eRace.Valkyn, new Dictionary<eStat, int>()			{{eStat.STR, 55}, {eStat.CON, 45}, {eStat.DEX, 65}, {eStat.QUI, 75}, {eStat.INT, 60}, {eStat.PIE, 60}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+			{ eRace.Sylvan, new Dictionary<eStat, int>()			{{eStat.STR, 70}, {eStat.CON, 60}, {eStat.DEX, 55}, {eStat.QUI, 45}, {eStat.INT, 70}, {eStat.PIE, 60}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+			{ eRace.HalfOgre, new Dictionary<eStat, int>()			{{eStat.STR, 90}, {eStat.CON, 70}, {eStat.DEX, 40}, {eStat.QUI, 40}, {eStat.INT, 60}, {eStat.PIE, 60}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+			{ eRace.Frostalf, new Dictionary<eStat, int>()			{{eStat.STR, 55}, {eStat.CON, 55}, {eStat.DEX, 55}, {eStat.QUI, 60}, {eStat.INT, 60}, {eStat.PIE, 75}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+			{ eRace.Shar, new Dictionary<eStat, int>()				{{eStat.STR, 60}, {eStat.CON, 80}, {eStat.DEX, 50}, {eStat.QUI, 50}, {eStat.INT, 60}, {eStat.PIE, 60}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+			{ eRace.AlbionMinotaur, new Dictionary<eStat, int>()	{{eStat.STR, 80}, {eStat.CON, 50}, {eStat.DEX, 40}, {eStat.QUI, 60}, {eStat.INT, 60}, {eStat.PIE, 60}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+			{ eRace.MidgardMinotaur, new Dictionary<eStat, int>()	{{eStat.STR, 80}, {eStat.CON, 50}, {eStat.DEX, 40}, {eStat.QUI, 60}, {eStat.INT, 60}, {eStat.PIE, 60}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+			{ eRace.HiberniaMinotaur, new Dictionary<eStat, int>()	{{eStat.STR, 80}, {eStat.CON, 50}, {eStat.DEX, 40}, {eStat.QUI, 60}, {eStat.INT, 60}, {eStat.PIE, 60}, {eStat.EMP, 60}, {eStat.CHR, 60}, }},
+		};
 
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			string accountName = packet.ReadString(24);
 
-			log.DebugFormat("CharacterCreateRequestHandler for account {0} using version {1}", accountName, client.Version);
+			if (log.IsDebugEnabled)
+				log.DebugFormat("CharacterCreateRequestHandler for account {0} using version {1}", accountName, client.Version);
 
 			if (!accountName.StartsWith(client.Account.Name))// TODO more correctly check, client send accountName as account-S, -N, -H (if it not fit in 20, then only account)
 			{
@@ -59,15 +94,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return;
 			}
 			
-			//unk - probably indicates customize or create
-			if (client.Version >= GameClient.eClientVersion.Version1104)
-				packet.ReadIntLowEndian();
-
 			// Client character count support
 			int charsCount = client.Version < GameClient.eClientVersion.Version173 ? 8 : 10;
 			
 			for (int i = 0; i < charsCount; i++)
 			{
+				//unk - probably indicates customize or create
+				if (client.Version >= GameClient.eClientVersion.Version1104)
+					packet.ReadIntLowEndian();
+
 				string charName = packet.ReadString(24);
 
 				//log.DebugFormat("Character[{0}] = {1}", i, charName);
@@ -77,13 +112,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					// 1.104+  if character is not in list but is in DB then delete the character
 					if (client.Version >= GameClient.eClientVersion.Version1104)
 						CheckForDeletedCharacter(accountName, client, i);
-
-					//If the charname is empty, skip the other bytes
-					packet.Skip(160);
-
-					// skip 4 bytes added in 1.99
-					if (client.Version >= GameClient.eClientVersion.Version199)
-						packet.Skip(4);
+					
+					var consume = new CreationCharacterData(packet, client);
 				}
 				else
 				{
@@ -101,77 +131,177 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 					}
 
-					String select = String.Format("Name = '{0}'", GameServer.Database.Escape(charName));
-					DOLCharacters character = GameServer.Database.SelectObject<DOLCharacters>(select);
+					var character = client.Account.Characters.FirstOrDefault(ch => ch.Name.Equals(charName));
+
+					// check for update to existing character
 					if (character != null)
-					{
-						if (character.AccountName != client.Account.Name)
-						{
-							if (Properties.BAN_HACKERS == true)
-								client.BanAccount(string.Format("Autoban CharName '{0}' (from {2}) on wrong Account '{1}'", charName, client.Account.Name, character.AccountName));
-
-							client.Disconnect();
-							return;
-						}
-
-						byte customizationMode = (byte)packet.ReadByte();
-
-						// log.DebugFormat("CustomizationMode = {0} for charName {1}", customizationMode, charName);
-
-						// check for update to existing character
-						CheckCharacterForUpdates(client, packet, character, charName, customizationMode);
-					}
+						CheckCharacterForUpdates(new CreationCharacterData(packet, client), client, character);
+					// create new character and return
 					else
-					{
-						// create new character and return
-						CreateCharacter(client, packet, charName, i);
-					}
+						CreateCharacter(new CreationCharacterData(packet, client), client, charName, i);
 				}
 			}
 		}
+		
+		#region caracter creation data
+		class CreationCharacterData
+		{
+			public int CustomMode { get; set; }
+			public int EyeSize { get; set; }
+			public int LipSize { get; set; }
+			public int EyeColor { get; set; }
+			public int HairColor { get; set; }
+			public int FaceType { get; set; }
+			public int HairStyle { get; set; }
+			public int MoodType { get; set; }
+			public int Class { get; set; }
+			public int Realm { get; set; }
+			public int Race { get; set; }
+			public int Gender { get; set; }
+			public bool SIStartLocation { get; set; }
+			public ushort CreationModel { get; set; }
+			public int Region { get; set; }
+			
+			public int Strength { get; set; }
+			public int Dexterity { get; set; }
+			public int Constitution { get; set; }
+			public int Quickness { get; set; }
+			public int Intelligence { get; set; }
+			public int Piety { get; set; }
+			public int Empathy { get; set; }
+			public int Charisma { get; set; }
+			public int NewConstitution { get; set; }
+			
+			public int ConstitutionDiff { get { return NewConstitution - Constitution; }}
+			
+			/// <summary>
+			/// Reads up ONE character iteration on the packet stream
+			/// </summary>
+			/// <param name="packet"></param>
+			/// <param name="client"></param>
+			public CreationCharacterData(GSPacketIn packet, GameClient client)
+			{
+				CustomMode = packet.ReadByte();
+				EyeSize = packet.ReadByte();
+				LipSize = packet.ReadByte();
+				EyeColor = packet.ReadByte();
+				HairColor = packet.ReadByte();
+				FaceType = packet.ReadByte();
+				HairStyle = packet.ReadByte();
+				packet.Skip(3);
+				MoodType = packet.ReadByte();
+				packet.Skip(13);
+				
+				packet.Skip(24); //Location String
+				packet.Skip(24); //Skip class name
+				packet.Skip(24); //Skip race name
+				
+				var level = packet.ReadByte(); //not safe!
+				Class = packet.ReadByte();
+				Realm = packet.ReadByte();
+				
+				//The following byte contains
+				//1bit=start location ... in ShroudedIsles you can choose ...
+				//1bit=first race bit
+				//1bit=unknown
+				//1bit=gender (0=male, 1=female)
+				//4bit=race
+				byte startRaceGender = (byte)packet.ReadByte();
+				Race = (startRaceGender & 0x0F) + ((startRaceGender & 0x40) >> 2);
+				Gender = ((startRaceGender >> 4) & 0x01);
+				SIStartLocation = ((startRaceGender >> 7) != 0);
 
+				CreationModel = packet.ReadShortLowEndian();
+				Region = packet.ReadByte();
+				packet.Skip(1); //TODO second byte of region unused currently
+				packet.Skip(4); //TODO Unknown Int / last used?
+
+				Strength = packet.ReadByte();
+				Dexterity = packet.ReadByte();
+				Constitution = packet.ReadByte();
+				Quickness = packet.ReadByte();
+				Intelligence = packet.ReadByte();
+				Piety = packet.ReadByte();
+				Empathy = packet.ReadByte();
+				Charisma = packet.ReadByte();
+
+				packet.Skip(40); //TODO equipment
+				
+				var activeRightSlot = packet.ReadByte(); // 0x9C
+				var activeLeftSlot = packet.ReadByte(); // 0x9D
+				var siZone = packet.ReadByte(); // 0x9E
+				
+				// skip 4 bytes added in 1.99
+				if (client.Version >= GameClient.eClientVersion.Version199 && client.Version < GameClient.eClientVersion.Version1104)
+					packet.Skip(4);
+				
+				// New constitution must be read before skipping 4 bytes
+				NewConstitution = packet.ReadByte(); // 0x9F
+
+
+			}
+		}
+		#endregion
 
 		#region Create Character
-
-		private void CreateCharacter(GameClient client, GSPacketIn packet, string charName, int accountSlot)
+		private void CreateCharacter(CreationCharacterData pdata, GameClient client, string charName, int accountSlot)
 		{
 			Account account = client.Account;
-			DOLCharacters ch = new DOLCharacters();
+			var ch = new DOLCharacters();
 			ch.AccountName = account.Name;
 			ch.Name = charName;
-
-			if (packet.ReadByte() == 0x01)
+			
+			if (pdata.CustomMode == 0x01)
 			{
-				ch.EyeSize = (byte)packet.ReadByte();
-				ch.LipSize = (byte)packet.ReadByte();
-				ch.EyeColor = (byte)packet.ReadByte();
-				ch.HairColor = (byte)packet.ReadByte();
-				ch.FaceType = (byte)packet.ReadByte();
-				ch.HairStyle = (byte)packet.ReadByte();
-				packet.Skip(3);
-				ch.MoodType = (byte)packet.ReadByte();
+				ch.EyeSize = (byte)pdata.EyeSize;
+				ch.LipSize = (byte)pdata.LipSize;
+				ch.EyeColor = (byte)pdata.EyeColor;
+				ch.HairColor = (byte)pdata.HairColor;
+				ch.FaceType = (byte)pdata.FaceType;
+				ch.HairStyle = (byte)pdata.HairStyle;
+				ch.MoodType = (byte)pdata.MoodType;
 				ch.CustomisationStep = 2; // disable config button
-				packet.Skip(13);
-				log.Debug("Disable Config Button");
+				
+				if (log.IsDebugEnabled)
+					log.Debug("Disable Config Button");
 			}
-			else
-			{
-				packet.Skip(23);
-			}
-
-			packet.Skip(24); //Location String
-			ch.LastName = "";
-			ch.GuildID = "";
-			packet.Skip(24); //Skip class name
-			packet.Skip(24); //Skip race name
-			ch.Level = packet.ReadByte(); //not safe!
+			
 			ch.Level = 1;
-			ch.Class = packet.ReadByte();
-			ch.Realm = packet.ReadByte();
+			// Set Realm and Class
+			ch.Realm = pdata.Realm;
+			ch.Class = pdata.Class;
+			
+			// Set Account Slot, Gender
+			ch.AccountSlot = accountSlot + ch.Realm * 100;
+			ch.Gender = pdata.Gender;
 
+			// Set Race
+			ch.Race = pdata.Race;
+			
+			ch.CreationModel = pdata.CreationModel;
+			ch.CurrentModel = ch.CreationModel;
+			ch.Region = pdata.Region;
+
+			ch.Strength = pdata.Strength;
+			ch.Dexterity = pdata.Dexterity;
+			ch.Constitution = pdata.Constitution;
+			ch.Quickness = pdata.Quickness;
+			ch.Intelligence = pdata.Intelligence;
+			ch.Piety = pdata.Piety;
+			ch.Empathy = pdata.Empathy;
+			ch.Charisma = pdata.Charisma;
+			
+			// defaults
+			ch.CreationDate = DateTime.Now;
+
+			ch.Endurance = 100;
+			ch.MaxEndurance = 100;
+			ch.Concentration = 100;
+			ch.MaxSpeed = GamePlayer.PLAYER_BASE_SPEED;
+			
 			if (log.IsDebugEnabled)
-				log.Debug("Creation " + client.Version + " character, class:" + ch.Class + ", realm:" + ch.Realm);
-
+				log.DebugFormat("Creation {0} character, class:{1}, realm:{2}", client.Version, ch.Class, ch.Realm);
+			
 			// Is class disabled ?
 			int occurences = 0;
 			List<string> disabled_classes = Properties.DISABLED_CLASSES.SplitCSV(true);
@@ -181,170 +311,57 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			if (occurences > 0 && (ePrivLevel)client.Account.PrivLevel == ePrivLevel.Player)
 			{
-				log.Debug("Client " + client.Account.Name + " tried to create a disabled classe: " + (eCharacterClass)ch.Class);
+				if (log.IsDebugEnabled)
+					log.DebugFormat("Client {0} tried to create a disabled classe: {1}", client.Account.Name, (eCharacterClass)ch.Class);
+				
+				// Reset to character view...
+				client.Out.SendCharacterOverview((eRealm)ch.Realm);
+			    return;
+			}
+			
+			// check if race disabled
+			List<string> disabled_races = Properties.DISABLED_RACES.SplitCSV(true);
+			occurences = (from j in disabled_races
+			              where j == ch.Race.ToString()
+			              select j).Count();
+			
+			if (occurences > 0 && (ePrivLevel)client.Account.PrivLevel == ePrivLevel.Player)
+			{
+				if (log.IsDebugEnabled)
+					log.DebugFormat("Client {0} tried to create a disabled race: {1}", client.Account.Name, (eRace)ch.Race);
+				// Reset to character view...
 				client.Out.SendCharacterOverview((eRealm)ch.Realm);
 			    return;
 			}
 
-			if (client.Version >= GameClient.eClientVersion.Version193)
-			{
-				ValidateCharacter.init_post193_tables();
-			}
-			else
-			{
-				ValidateCharacter.init_pre193_tables();
-			}
-
+			
+			// If sending invalid Class ID
 			if (!Enum.IsDefined(typeof(eCharacterClass), (eCharacterClass)ch.Class))
 			{
-				log.Error(client.Account.Name + " tried to create a character with wrong class ID: " + ch.Class + ", realm:" + ch.Realm);
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("{0} tried to create a character with wrong class ID: {1}, realm:{2}", client.Account.Name, ch.Class, ch.Realm);
+				
 				if (ServerProperties.Properties.BAN_HACKERS)
 				{
-					DBBannedAccount b = new DBBannedAccount();
-					b.Author = "SERVER";
-					b.Ip = client.TcpEndpointAddress;
-					b.Account = client.Account.Name;
-					b.DateBan = DateTime.Now;
-					b.Type = "B";
-					b.Reason = string.Format("Autoban character create class: id:{0} realm:{1} name:{2} account:{3}", ch.Class, ch.Realm, ch.Name, account.Name);
-					GameServer.Database.AddObject(b);
-					GameServer.Database.SaveObject(b);
-					GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
+					client.BanAccount(string.Format("Autoban character create class: id:{0} realm:{1} name:{2} account:{3}", ch.Class, ch.Realm, ch.Name, account.Name));
 					client.Disconnect();
 				}
 			    return;
 			}
-
-			ch.AccountSlot = accountSlot + ch.Realm * 100;
-
-			//The following byte contains
-			//1bit=start location ... in ShroudedIsles you can choose ...
-			//1bit=first race bit
-			//1bit=unknown
-			//1bit=gender (0=male, 1=female)
-			//4bit=race
-			byte startRaceGender = (byte)packet.ReadByte();
-
-			ch.Race = (startRaceGender & 0x0F) + ((startRaceGender & 0x40) >> 2);
-
-			List<string> disabled_races = new List<string>(Properties.DISABLED_RACES.SplitCSV(true));
-			occurences = (from j in disabled_races
-			              where j == ch.Race.ToString()
-			              select j).Count();
-			if (occurences > 0 && (ePrivLevel)client.Account.PrivLevel == ePrivLevel.Player)
-			{
-				log.Debug("Client " + client.Account.Name + " tried to create a disabled race: " + (eRace)ch.Race);
-				client.Out.SendCharacterOverview((eRealm)ch.Realm);
-			    return;
-			}
-
-			ch.Gender = ((startRaceGender >> 4) & 0x01);
-
-			bool siStartLocation = ((startRaceGender >> 7) != 0);
-
-			ch.CreationModel = packet.ReadShortLowEndian();
-			ch.CurrentModel = ch.CreationModel;
-			ch.Region = packet.ReadByte();
-			packet.Skip(1); //TODO second byte of region unused currently
-			packet.Skip(4); //TODO Unknown Int / last used?
-
-			ch.Strength = (byte)packet.ReadByte();
-			ch.Dexterity = (byte)packet.ReadByte();
-			ch.Constitution = (byte)packet.ReadByte();
-			ch.Quickness = (byte)packet.ReadByte();
-			ch.Intelligence = (byte)packet.ReadByte();
-			ch.Piety = (byte)packet.ReadByte();
-			ch.Empathy = (byte)packet.ReadByte();
-			ch.Charisma = (byte)packet.ReadByte();
-
-			packet.Skip(44); //TODO equipment
-
-			if (client.Version >= GameClient.eClientVersion.Version199)
-			{
-				// skip 4 bytes added in 1.99
-				packet.Skip(4);
-			}
-
-			// log.DebugFormat("STR {0}, CON {1}, DEX {2}, QUI {3}, INT {4}, PIE {5}, EMP {6}, CHA {7}", ch.Strength, ch.Constitution, ch.Dexterity, ch.Quickness, ch.Intelligence, ch.Piety, ch.Empathy, ch.Charisma);
 
 			// check if client tried to create invalid char
 			if (!ValidateCharacter.IsCharacterValid(ch))
 			{
 				if (log.IsWarnEnabled)
 				{
-					log.Warn(ch.AccountName + " tried to create invalid character:" +
-							 "\nchar name=" + ch.Name + ", gender=" + ch.Gender + ", race=" + ch.Race + ", realm=" + ch.Realm + ", class=" + ch.Class + ", region=" + ch.Region +
-							 "\nstr=" + ch.Strength + ", con=" + ch.Constitution + ", dex=" + ch.Dexterity + ", qui=" + ch.Quickness + ", int=" + ch.Intelligence + ", pie=" + ch.Piety + ", emp=" + ch.Empathy + ", chr=" + ch.Charisma);
+					log.WarnFormat("{0} tried to create invalid character:\nchar name={1}, gender={2}, race={2}, realm={3}, class={4}, region={5}" +
+					               "\nstr={6}, con={7}, dex={8}, qui={9}, int={10}, pie={11}, emp={12}, chr={13}", ch.AccountName, ch.Name, ch.Gender,
+					              ch.Race, ch.Realm, ch.Class, ch.Region, ch.Strength, ch.Constitution, ch.Dexterity, ch.Quickness, ch.Intelligence, ch.Piety, ch.Empathy, ch.Charisma);
 				}
-
 				// This is not live like but unfortunately we are missing code / packet support to stay on character create screen if something is invalid
 				client.Out.SendCharacterOverview((eRealm)ch.Realm);
 			    return;
 			}
-
-			ch.CreationDate = DateTime.Now;
-
-			ch.Endurance = 100;
-			ch.MaxEndurance = 100;
-			ch.Concentration = 100;
-			ch.MaxSpeed = GamePlayer.PLAYER_BASE_SPEED;
-
-			#region starting guilds
-
-			if (account.PrivLevel == 1 && Properties.STARTING_GUILD)
-			{
-				switch (ch.Realm)
-				{
-					case 1:
-						switch (ServerProperties.Properties.SERV_LANGUAGE)
-						{
-							case "EN":
-								ch.GuildID = GuildMgr.GuildNameToGuildID("Clan Cotswold");
-								break;
-							case "DE":
-								ch.GuildID = GuildMgr.GuildNameToGuildID("Klan Cotswold");
-								break;
-							default:
-								ch.GuildID = GuildMgr.GuildNameToGuildID("Clan Cotswold");
-								break;
-						}
-						break;
-					case 2:
-						switch (ServerProperties.Properties.SERV_LANGUAGE)
-						{
-							case "EN":
-								ch.GuildID = GuildMgr.GuildNameToGuildID("Mularn Protectors");
-								break;
-							case "DE":
-								ch.GuildID = GuildMgr.GuildNameToGuildID("Beschützer von Mularn");
-								break;
-							default:
-								ch.GuildID = GuildMgr.GuildNameToGuildID("Mularn Protectors");
-								break;
-						}
-						break;
-					case 3:
-						switch (ServerProperties.Properties.SERV_LANGUAGE)
-						{
-							case "EN":
-								ch.GuildID = GuildMgr.GuildNameToGuildID("Tir na Nog Adventurers");
-								break;
-							case "DE":
-								ch.GuildID = GuildMgr.GuildNameToGuildID("Tir na Nog-Abenteurer");
-								break;
-							default:
-								ch.GuildID = GuildMgr.GuildNameToGuildID("Tir na Nog Adventurers");
-								break;
-						}
-						break;
-						default: break;
-				}
-
-				if (ch.GuildID != "")
-					ch.GuildRank = 8;
-			}
-
-			#endregion Starting Guilds
 
 
 			SetBasicCraftingForNewCharacter(ch);
@@ -365,76 +382,62 @@ namespace DOL.GS.PacketHandler.Client.v168
 			client.Account.Characters = null;
 
 			if (log.IsInfoEnabled)
-				log.Info(String.Format("Character {0} created!", charName));
+				log.InfoFormat("Character {0} created!", charName);
 
+			// Reload Account Relations
 			GameServer.Database.FillObjectRelations(client.Account);
 			client.Out.SendCharacterOverview((eRealm)ch.Realm);
 
 		    return;
 		}
-
+		
 		#endregion Create Character
 
 
 		#region Character Updates
-
-		private int CheckCharacterForUpdates(GameClient client, GSPacketIn packet, DOLCharacters character, string charName, byte customizationMode)
+		/// <summary>
+		/// Check if a Character Needs update based to packet data
+		/// </summary>
+		/// <param name="pdata">packet data</param>
+		/// <param name="client">client</param>
+		/// <param name="character">db character</param>
+		/// <returns>went ok</returns>
+		private bool CheckCharacterForUpdates(CreationCharacterData pdata, GameClient client, DOLCharacters character)
 		{
 			int newModel = character.CurrentModel;
 
-			if (customizationMode == 1 || customizationMode == 2 || customizationMode == 3)
+			if (pdata.CustomMode == 1 || pdata.CustomMode == 2 || pdata.CustomMode == 3)
 			{
 				bool flagChangedStats = false;
-				character.EyeSize = (byte)packet.ReadByte();
-				character.LipSize = (byte)packet.ReadByte();
-				character.EyeColor = (byte)packet.ReadByte();
-				character.HairColor = (byte)packet.ReadByte();
-				character.FaceType = (byte)packet.ReadByte();
-				character.HairStyle = (byte)packet.ReadByte();
-				packet.Skip(3);
-				character.MoodType = (byte)packet.ReadByte();
-				packet.Skip(89); // Skip location string, race string, classe string, level ,class ,realm and startRaceGender
-				newModel = packet.ReadShortLowEndian(); //read new model
-
-				if (customizationMode != 3 && client.Version >= GameClient.eClientVersion.Version189)
+				character.EyeSize = (byte)pdata.EyeSize;
+				character.LipSize = (byte)pdata.LipSize;
+				character.EyeColor = (byte)pdata.EyeColor;
+				character.HairColor = (byte)pdata.HairColor;
+				character.FaceType = (byte)pdata.FaceType;
+				character.HairStyle = (byte)pdata.HairStyle;
+				character.MoodType = (byte)pdata.MoodType;
+				
+				if (pdata.CustomMode != 3 && client.Version >= GameClient.eClientVersion.Version189)
 				{
-					packet.Skip(6); // Region ID + character Internal ID
-					int[] stats = new int[8];
-					stats[0] = (byte)packet.ReadByte(); // Strength
-					stats[2] = (byte)packet.ReadByte(); // Dexterity
-					stats[1] = (byte)packet.ReadByte(); // Constitution
-					stats[3] = (byte)packet.ReadByte(); // Quickness
-					stats[4] = (byte)packet.ReadByte(); // Intelligence
-					stats[5] = (byte)packet.ReadByte(); // Piety
-					stats[6] = (byte)packet.ReadByte(); // Empathy
-					stats[7] = (byte)packet.ReadByte(); // Charisma
+					var stats = new Dictionary<eStat, int>();
+					stats[eStat.STR] = pdata.Strength; // Strength
+					stats[eStat.DEX] = pdata.Dexterity; // Dexterity
+					stats[eStat.CON] = pdata.NewConstitution; // New Constitution
+					stats[eStat.QUI] = pdata.Quickness; // Quickness
+					stats[eStat.INT] = pdata.Intelligence; // Intelligence
+					stats[eStat.PIE] = pdata.Piety; // Piety
+					stats[eStat.EMP] = pdata.Empathy; // Empathy
+					stats[eStat.CHR] = pdata.Charisma; // Charisma
 
-					packet.Skip(43);// armor models/armor color/weapon models/active weapon slots/siZone
-					if (client.Version >= GameClient.eClientVersion.Version199)
-					{
-						// skip 4 bytes added in 1.99
-						packet.Skip(4);
-					}
-
-					// what is this?
-					byte newConstitution = (byte)packet.ReadByte();
-					if (newConstitution > 0 && newConstitution < 255) // added 255 check, still not sure why this is here - tolakram
-						stats[1] = newConstitution;
-
-
-					flagChangedStats |= stats[0] != character.Strength;
-					flagChangedStats |= stats[1] != character.Constitution;
-					flagChangedStats |= stats[2] != character.Dexterity;
-					flagChangedStats |= stats[3] != character.Quickness;
-					flagChangedStats |= stats[4] != character.Intelligence;
-					flagChangedStats |= stats[5] != character.Piety;
-					flagChangedStats |= stats[6] != character.Empathy;
-					flagChangedStats |= stats[7] != character.Charisma;
-
-					//
-					// !! Stat changes disabled by Tolakram until someone figures out why this can create invalid stats !!
-					//
-					flagChangedStats = false;
+					// check for changed stats.
+					flagChangedStats |= stats[eStat.STR] != character.Strength;
+					flagChangedStats |= stats[eStat.CON] != character.Constitution;
+					flagChangedStats |= stats[eStat.DEX] != character.Dexterity;
+					flagChangedStats |= stats[eStat.QUI] != character.Quickness;
+					flagChangedStats |= stats[eStat.INT] != character.Intelligence;
+					flagChangedStats |= stats[eStat.PIE] != character.Piety;
+					flagChangedStats |= stats[eStat.EMP] != character.Empathy;
+					flagChangedStats |= stats[eStat.CHR] != character.Charisma;
 
 					if (flagChangedStats)
 					{
@@ -442,204 +445,95 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 						if (charClass != null)
 						{
-							int points = 0;
-							int[] leveledStats = new int[8];
-							int[] raceStats = new int[8];
-							bool valid = true;
-							for (int j = 0; j < 8; j++)
+							int points;							
+							bool valid = ValidateCharacter.IsCustomPointsDistributionValid(character, stats, out points);
+
+							// Hacking attemp ?
+							if (points > MAX_STARTING_BONUS_POINTS)
 							{
-								eStat stat = (eStat)ValidateCharacter.eStatIndex[j];
-								raceStats[j] = ValidateCharacter.STARTING_STATS[character.Race][j];
-								for (int level = character.Level; level > 5; level--)
+								if ((ePrivLevel)client.Account.PrivLevel == ePrivLevel.Player)
 								{
-									if (charClass.PrimaryStat != eStat.UNDEFINED && charClass.PrimaryStat == stat)
-									{
-										leveledStats[j]++;
-									}
-									if (charClass.SecondaryStat != eStat.UNDEFINED && charClass.SecondaryStat == stat)
-									{
-										if ((level - 6) % 2 == 0)
-											leveledStats[j]++;
-									}
-									if (charClass.TertiaryStat != eStat.UNDEFINED && charClass.TertiaryStat == stat)
-									{
-										if ((level - 6) % 3 == 0)
-											leveledStats[j]++;
-									}
-								}
+									if (ServerProperties.Properties.BAN_HACKERS)
+										client.BanAccount(string.Format("Autoban Hack char update : Wrong allowed points:{0}", points));
 
-								int result = stats[j] - leveledStats[j] - raceStats[j];
-
-								bool validBeginStat = result >= 0;
-								int pointsUsed = result;
-								string statCategory = "";
-
-								if (charClass.PrimaryStat != eStat.UNDEFINED && charClass.PrimaryStat == stat)
-									statCategory = "1)";
-								if (charClass.SecondaryStat != eStat.UNDEFINED && charClass.SecondaryStat == stat)
-									statCategory = "2)";
-								if (charClass.TertiaryStat != eStat.UNDEFINED && charClass.TertiaryStat == stat)
-									statCategory = "3)";
-
-								pointsUsed += Math.Max(0, result - 10); //two points used
-								pointsUsed += Math.Max(0, result - 15); //three points used
-
-								log.Info(string.Format("{0,-2} {1,-3}:{2, 3} {3,3} {4,3} {5,3} {6,2} {7} {8}",
-								                       statCategory,
-								                       (stat == eStat.STR) ? "STR" : stat.ToString(),
-								                       stats[j],
-								                       leveledStats[j],
-								                       stats[j] - leveledStats[j],
-								                       raceStats[j],
-								                       result,
-								                       pointsUsed,
-								                       (validBeginStat) ? "" : "Not Valid"));
-
-								points += pointsUsed;
-
-								if (!validBeginStat)
-								{
-									valid = false;
-									if (client.Account.PrivLevel == 1)
-									{
-										if (ServerProperties.Properties.BAN_HACKERS)
-										{
-											DBBannedAccount b = new DBBannedAccount();
-											b.Author = "SERVER";
-											b.Ip = client.TcpEndpointAddress;
-											b.Account = client.Account.Name;
-											b.DateBan = DateTime.Now;
-											b.Type = "B";
-											b.Reason = String.Format("Autoban Hack char update : Wrong {0} point:{1}", (stat == eStat.STR) ? "STR" : stat.ToString(), result);
-											GameServer.Database.AddObject(b);
-											GameServer.Database.SaveObject(b);
-											GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
-										}
-
-										client.Disconnect();
-										return 1;
-									}
+									client.Disconnect();
+									return false;
 								}
 							}
-
-							if (valid)
+							
+							// Error in setting points
+							if (!valid)
 							{
-								character.Strength = (byte)stats[0];
-								character.Constitution = (byte)stats[1];
-								character.Dexterity = (byte)stats[2];
-								character.Quickness = (byte)stats[3];
-								character.Intelligence = (byte)stats[4];
-								character.Piety = (byte)stats[5];
-								character.Empathy = (byte)stats[6];
-								character.Charisma = (byte)stats[7];
+								// This is not live like but unfortunately we are missing code / packet support to stay on character create screen if something is invalid
+								client.Out.SendCharacterOverview((eRealm)character.Realm);
+							    return false;
+							}
+							
+							// Set Stats, valid is ok.
+							character.Strength = (byte)stats[eStat.STR];
+							character.Constitution = (byte)stats[eStat.CON];
+							character.Dexterity = (byte)stats[eStat.DEX];
+							character.Quickness = (byte)stats[eStat.QUI];
+							character.Intelligence = (byte)stats[eStat.INT];
+							character.Piety = (byte)stats[eStat.PIE];
+							character.Empathy = (byte)stats[eStat.EMP];
+							character.Charisma = (byte)stats[eStat.CHR];
 
-								DOLCharacters[] chars = client.Account.Characters;
+							if (log.IsInfoEnabled)
+								log.InfoFormat("Character {0} updated in cache!\n", character.Name);
 
-								for (int z = 0; z < chars.Length; z++)
-								{
-									if (chars[z].Name != character.Name) continue;
-
-									//Log.Error(string.Format("found activePlayer:[{0}] {1} {2}", client.ActiveCharIndex, client.Player.Name, character.Name));
-
-									if (log.IsInfoEnabled)
-										log.Info(String.Format("Character {0} updated in cache!\n", charName));
-
-									if (client.Player != null)
-									{
-										client.Player.DBCharacter.Strength = (byte)stats[0];
-										client.Player.DBCharacter.Constitution = (byte)stats[1];
-										client.Player.DBCharacter.Dexterity = (byte)stats[2];
-										client.Player.DBCharacter.Quickness = (byte)stats[3];
-										client.Player.DBCharacter.Intelligence = (byte)stats[4];
-										client.Player.DBCharacter.Piety = (byte)stats[5];
-										client.Player.DBCharacter.Empathy = (byte)stats[6];
-										client.Player.DBCharacter.Charisma = (byte)stats[7];
-									}
-
-									client.Account.Characters[z].Strength = (byte)stats[0];
-									client.Account.Characters[z].Constitution = (byte)stats[1];
-									client.Account.Characters[z].Dexterity = (byte)stats[2];
-									client.Account.Characters[z].Quickness = (byte)stats[3];
-									client.Account.Characters[z].Intelligence = (byte)stats[4];
-									client.Account.Characters[z].Piety = (byte)stats[5];
-									client.Account.Characters[z].Empathy = (byte)stats[6];
-									client.Account.Characters[z].Charisma = (byte)stats[7];
-								}
+							if (client.Player != null)
+							{
+								client.Player.DBCharacter.Strength = (byte)stats[eStat.STR];
+								client.Player.DBCharacter.Constitution = (byte)stats[eStat.CON];
+								client.Player.DBCharacter.Dexterity = (byte)stats[eStat.DEX];
+								client.Player.DBCharacter.Quickness = (byte)stats[eStat.QUI];
+								client.Player.DBCharacter.Intelligence = (byte)stats[eStat.INT];
+								client.Player.DBCharacter.Piety = (byte)stats[eStat.PIE];
+								client.Player.DBCharacter.Empathy = (byte)stats[eStat.EMP];
+								client.Player.DBCharacter.Charisma = (byte)stats[eStat.CHR];
 							}
 						}
-						else
-						{
-							if (log.IsErrorEnabled)
-								log.Error("No CharacterClass with ID " + character.Class + " found");
-						}
-					}
-				}
-				else
-				{
-					packet.Skip(58); // skip all other things
-					if (client.Version >= GameClient.eClientVersion.Version199)
-					{
-						// skip 4 bytes added in 1.99
-						packet.Skip(4);
+						else if (log.IsErrorEnabled)
+							log.ErrorFormat("No CharacterClass with ID {0} found", character.Class);
 					}
 				}
 
-				if (customizationMode == 2) // change player customization
+
+				if (pdata.CustomMode == 2) // change player customization
 				{
-					if (client.Account.PrivLevel == 1 && ((newModel >> 11) & 3) == 0) // Player size must be > 0 (from 1 to 3)
+					if (ServerProperties.Properties.BAN_HACKERS && client.Account.PrivLevel == 1 && ((pdata.CreationModel >> 11) & 3) == 0) // Player size must be > 0 (from 1 to 3)
 					{
-						DBBannedAccount b = new DBBannedAccount();
-						b.Author = "SERVER";
-						b.Ip = client.TcpEndpointAddress;
-						b.Account = client.Account.Name;
-						b.DateBan = DateTime.Now;
-						b.Type = "B";
-						b.Reason = String.Format("Autoban Hack char update : zero character size in model:{0}", newModel);
-						GameServer.Database.AddObject(b);
-						GameServer.Database.SaveObject(b);
-						GameServer.Instance.LogCheatAction(b.Reason + ". Account: " + b.Account);
+						client.BanAccount(string.Format("Autoban Hack char update : zero character size in model:{0}", newModel));
 						client.Disconnect();
-						return 1;
+						return false;
 					}
 
-					if ((ushort)newModel != character.CreationModel)
-					{
+					if (pdata.CreationModel != character.CreationModel)
 						character.CurrentModel = newModel;
-					}
 
 					character.CustomisationStep = 2; // disable config button
 
-					GameServer.Database.SaveObject(character);
-
 					if (log.IsInfoEnabled)
-						log.Info(String.Format("Character {0} face proprieties configured by account {1}!\n", charName, client.Account.Name));
+						log.InfoFormat("Character {0} face proprieties configured by account {1}!\n", character.Name, client.Account.Name);
 				}
-				else if (customizationMode == 3) //auto config -- seems someone thinks this is not possible?
+				else if (pdata.CustomMode == 3) //auto config -- seems someone thinks this is not possible?
 				{
 					character.CustomisationStep = 3; // enable config button to player
-
-					GameServer.Database.SaveObject(character);
-
-					//if (log.IsInfoEnabled)
-					//	log.Info(String.Format("Character {0} face proprieties auto updated!\n", charName));
+					return true;
 				}
-				else if (customizationMode == 1 && flagChangedStats) //changed stat only for 1.89+
-				{
-					GameServer.Database.SaveObject(character);
-
-					if (log.IsInfoEnabled)
-						log.Info(String.Format("Character {0} stat updated!\n", charName));
-				}
+				else if (log.IsInfoEnabled && pdata.CustomMode == 1 && flagChangedStats) //changed stat only for 1.89+
+					log.InfoFormat("Character {0} stat updated!\n", character.Name);
 			}
+			
+			//Save the character in the database
+			GameServer.Database.SaveObject(character);
 
-			return 1;
+			return true;
 		}
-
 		#endregion Character Updates
 
-
 		#region Delete Character
-
 		private void CheckForDeletedCharacter(string accountName, GameClient client, int slot)
 		{
 			int charSlot = 9999;
@@ -750,15 +644,49 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// Provides methods to handle char creation checks
 		/// </summary>
 		protected class ValidateCharacter
-		{
-			protected const int STR = 0;
-			protected const int CON = 1;
-			protected const int DEX = 2;
-			protected const int QUI = 3;
-			protected const int INT = 4;
-			protected const int PIE = 5;
-			protected const int EMP = 6;
-			protected const int CHA = 7;
+		{			
+			public static bool IsCustomPointsDistributionValid(DOLCharacters character, IDictionary<eStat, int> stats, out int points)
+			{
+				ICharacterClass charClass = ScriptMgr.FindCharacterClass(character.Class);
+
+				if (charClass != null)
+				{
+					points = 0;							
+					
+					// check if each stat is valid.
+					foreach(var stat in stats.Keys)
+					{
+						int raceAmount = STARTING_STATS_DICT[(eRace)character.Race][stat];
+						
+						int classAmount = 0;
+						
+						for (int level = character.Level; level > 5; level--)
+						{
+							if (charClass.PrimaryStat != eStat.UNDEFINED && charClass.PrimaryStat == stat)
+								classAmount++;
+							if (charClass.SecondaryStat != eStat.UNDEFINED && charClass.SecondaryStat == stat && (level - 6) % 2 == 0)
+								classAmount++;
+							if (charClass.TertiaryStat != eStat.UNDEFINED && charClass.TertiaryStat == stat && (level - 6) % 3 == 0)
+								classAmount++;
+						}
+						
+						int above = stats[stat] - raceAmount - classAmount;
+						
+						// Miss Some points...
+						if (above < 0)
+							return false;
+						
+						points += above;
+						points += Math.Max(0, above - 10); //two points used
+						points += Math.Max(0, above - 15); //three points used
+					}
+					
+					return points != MAX_STARTING_BONUS_POINTS;
+				}
+				
+				points = -1;
+				return false;
+			}
 
 			/// <summary>
 			/// Verify whether created character is valid
@@ -782,28 +710,25 @@ namespace DOL.GS.PacketHandler.Client.v168
 							log.Warn("Wrong level: " + ch.Level);
 						valid = false;
 					}
-					if (Array.IndexOf(STARTING_CLASSES[ch.Realm], ch.Class) == -1)
+					if (!STARTING_CLASSES_DICT.ContainsKey((eRealm)ch.Realm) || !STARTING_CLASSES_DICT[(eRealm)ch.Realm].Contains((eCharacterClass)ch.Class))
 					{
 						if (log.IsWarnEnabled)
 							log.Warn("Wrong class: " + ch.Class + ", realm:" + ch.Realm);
 						valid = false;
 					}
-					if (Array.IndexOf(RACES_CLASSES[ch.Race], ch.Class) == -1)
+					if (!RACES_CLASSES_DICT.ContainsKey((eRace)ch.Race) || !RACES_CLASSES_DICT[(eRace)ch.Race].Contains((eCharacterClass)ch.Class))
 					{
 						if (log.IsWarnEnabled)
 							log.Warn("Wrong race: " + ch.Race + ", class:" + ch.Class);
 						valid = false;
 					}
-					int pointsUsed = 0;
-					pointsUsed += PointsUsed(ch.Race, STR, ch.Strength);
-					pointsUsed += PointsUsed(ch.Race, CON, ch.Constitution);
-					pointsUsed += PointsUsed(ch.Race, DEX, ch.Dexterity);
-					pointsUsed += PointsUsed(ch.Race, QUI, ch.Quickness);
-					pointsUsed += PointsUsed(ch.Race, INT, ch.Intelligence);
-					pointsUsed += PointsUsed(ch.Race, PIE, ch.Piety);
-					pointsUsed += PointsUsed(ch.Race, EMP, ch.Empathy);
-					pointsUsed += PointsUsed(ch.Race, CHA, ch.Charisma);
-					if (pointsUsed != 30)
+					int pointsUsed;
+					var stats = new Dictionary<eStat, int>{{eStat.STR, ch.Strength},{eStat.CON, ch.Constitution},{eStat.DEX, ch.Dexterity},{eStat.QUI, ch.Quickness},
+						{eStat.INT, ch.Intelligence},{eStat.PIE, ch.Piety},{eStat.EMP, ch.Empathy},{eStat.CHR, ch.Charisma},};
+					
+					valid = IsCustomPointsDistributionValid(ch, stats, out pointsUsed);
+					
+					if (pointsUsed != MAX_STARTING_BONUS_POINTS)
 					{
 						if (log.IsWarnEnabled)
 						{
@@ -839,596 +764,415 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return valid;
 			}
 
-			/// <summary>
-			/// Calculates amount of starting points spent on one stat
-			/// </summary>
-			/// <param name="race">race index in starting stats array</param>
-			/// <param name="statIndex">index of that stat in starting stats array</param>
-			/// <param name="statValue">base+spent points in stat</param>
-			/// <returns></returns>
-			protected static int PointsUsed(int race, int statIndex, int statValue)
-			{
-				statValue -= STARTING_STATS[race][statIndex];
-
-				// check to make sure stat is not less than racial starting stat
-				if (statValue < 0)
-				{
-					throw new Exception("Invalid starting stat, less than racial stat!");
-				}
-
-				int result = statValue; //one point used
-				result += Math.Max(0, statValue - 10); //two points used
-				result += Math.Max(0, statValue - 15); //three points used
-				return result;
-			}
-
-			public static readonly byte[] eStatIndex = new byte[8]
-			{
-				(byte)eProperty.Strength,
-				(byte)eProperty.Constitution,
-				(byte)eProperty.Dexterity,
-				(byte)eProperty.Quickness,
-				(byte)eProperty.Intelligence,
-				(byte)eProperty.Piety,
-				(byte)eProperty.Empathy,
-				(byte)eProperty.Charisma
-			};
-
-			/// <summary>
-			/// All possible player races
-			/// </summary>
-			public static readonly int[][] STARTING_STATS = new int[][]
-			{
-				null, // "Unknown",
-				//           STR CON DEX QUI INT PIE EMP CHA
-				new int[8] { 60, 60, 60, 60, 60, 60, 60, 60 }, // Briton
-				new int[8] { 45, 45, 60, 70, 80, 60, 60, 60 }, // Avalonian
-				new int[8] { 70, 70, 50, 50, 60, 60, 60, 60 }, // Highlander
-				new int[8] { 50, 50, 80, 60, 60, 60, 60, 60 }, // Saracen
-				new int[8] { 70, 70, 50, 50, 60, 60, 60, 60 }, // Norseman
-				new int[8] { 100, 70, 35, 35, 60, 60, 60, 60 }, // Troll
-				new int[8] { 60, 80, 50, 50, 60, 60, 60, 60 }, // Dwarf
-				new int[8] { 50, 50, 70, 70, 60, 60, 60, 60 }, // Kobold
-				new int[8] { 60, 60, 60, 60, 60, 60, 60, 60 }, // Celt
-				new int[8] { 90, 60, 40, 40, 60, 60, 70, 60 }, // Firbolg
-				new int[8] { 40, 40, 75, 75, 70, 60, 60, 60 }, // Elf
-				new int[8] { 40, 40, 80, 80, 60, 60, 60, 60 }, // Lurikeen
-				new int[8] { 50, 60, 70, 50, 70, 60, 60, 60 }, // Inconnu
-				new int[8] { 55, 45, 65, 75, 60, 60, 60, 60 }, // Valkyn
-				new int[8] { 70, 60, 55, 45, 70, 60, 60, 60 }, // Sylvan
-				new int[8] { 90, 70, 40, 40, 60, 60, 60, 60 }, // Half Ogre
-				new int[8] { 55, 55, 55, 60, 60, 75, 60, 60 }, // Frostalf
-				new int[8] { 60, 80, 50, 50, 60, 60, 60, 60 }, // Shar
-				new int[8] { 80, 70, 50, 40, 60, 60, 60, 60 }, // AlbionMenotaur
-				new int[8] { 80, 70, 50, 40, 60, 60, 60, 60 }, // MidgardMenotaur
-				new int[8] { 80, 70, 50, 40, 60, 60, 60, 60 }, // HiberniaMenotaur
-			};
 
 			/// <summary>
 			/// All possible player starting classes
 			/// </summary>
-			public static int[][] STARTING_CLASSES = null;
-			protected static int[][] RACES_CLASSES = null;
-			public static int[] ADVANCED_CLASS_TO_BASE_CLASS = null;
-
-			// static methods handling pre and post 1.93 characters creation tables
-			public static void init_pre193_tables()
+			public static Dictionary<eRealm, List<eCharacterClass>> STARTING_CLASSES_DICT = new Dictionary<eRealm, List<eCharacterClass>>()
 			{
-				STARTING_CLASSES = new int[][]
-				{
-					null, // "Unknown",
-					new int[] { (int)eCharacterClass.Fighter,
-						(int)eCharacterClass.Acolyte,
-						(int)eCharacterClass.Mage,
-						(int)eCharacterClass.Elementalist,
-						(int)eCharacterClass.AlbionRogue,
-						(int)eCharacterClass.Disciple }, // Albion
-					new int[] { (int)eCharacterClass.Viking,
-						(int)eCharacterClass.Mystic,
-						(int)eCharacterClass.Seer,
-						(int)eCharacterClass.MidgardRogue }, // Midgard
-					new int[] { (int)eCharacterClass.Guardian,
-						(int)eCharacterClass.Stalker,
-						(int)eCharacterClass.Naturalist,
-						(int)eCharacterClass.Magician,
-						(int)eCharacterClass.Forester }, // Hibernia
-				};
-
-				RACES_CLASSES = new int[][]
-				{
-					null, // "Unknown",
-					//
-					new int[] { (int)eCharacterClass.Fighter,
-						(int)eCharacterClass.Acolyte,
-						(int)eCharacterClass.Mage,
-						(int)eCharacterClass.Elementalist,
-						(int)eCharacterClass.AlbionRogue,
-						(int)eCharacterClass.Disciple }, // Briton
-					new int[] { (int)eCharacterClass.Fighter,
-						(int)eCharacterClass.Acolyte,
-						(int)eCharacterClass.Mage,
-						(int)eCharacterClass.Elementalist }, // Avalonian
-					new int[] { (int)eCharacterClass.Fighter,
-						(int)eCharacterClass.Acolyte,
-						(int)eCharacterClass.AlbionRogue }, // Highlander
-					new int[] { (int)eCharacterClass.Fighter,
-						(int)eCharacterClass.Mage,
-						(int)eCharacterClass.AlbionRogue,
-						(int)eCharacterClass.Disciple }, // Saracen
-					new int[] { (int)eCharacterClass.Viking,
-						(int)eCharacterClass.Mystic,
-						(int)eCharacterClass.Seer,
-						(int)eCharacterClass.MidgardRogue }, // Norseman
-					new int[] { (int)eCharacterClass.Viking,
-						(int)eCharacterClass.Mystic,
-						(int)eCharacterClass.Seer }, // Troll
-					new int[] { (int)eCharacterClass.Viking,
-						(int)eCharacterClass.Mystic,
-						(int)eCharacterClass.Seer,
-						(int)eCharacterClass.MidgardRogue }, // Dwarf
-					new int[] { (int)eCharacterClass.Viking,
-						(int)eCharacterClass.Mystic,
-						(int)eCharacterClass.Seer,
-						(int)eCharacterClass.MidgardRogue }, // Kobold
-					new int[] { (int)eCharacterClass.Guardian,
-						(int)eCharacterClass.Stalker,
-						(int)eCharacterClass.Naturalist,
-						(int)eCharacterClass.Magician,
-						(int)eCharacterClass.Forester }, // Celt
-					new int[] { (int)eCharacterClass.Guardian,
-						(int)eCharacterClass.Naturalist,
-						(int)eCharacterClass.Forester }, // Firbolg
-					new int[] { (int)eCharacterClass.Guardian,
-						(int)eCharacterClass.Stalker,
-						(int)eCharacterClass.Magician }, // Elf
-					new int[] { (int)eCharacterClass.Guardian,
-						(int)eCharacterClass.Stalker,
-						(int)eCharacterClass.Magician }, // Lurikeen
-					new int[] { (int)eCharacterClass.Fighter,
-						(int)eCharacterClass.Acolyte,
-						(int)eCharacterClass.Mage,
-						(int)eCharacterClass.AlbionRogue,
-						(int)eCharacterClass.Disciple }, // Inconnu
-					new int[] { (int)eCharacterClass.Viking,
-						(int)eCharacterClass.Mystic,
-						(int)eCharacterClass.MidgardRogue }, // Valkyn
-					new int[] { (int)eCharacterClass.Guardian,
-						(int)eCharacterClass.Naturalist,
-						(int)eCharacterClass.Forester }, // Sylvan
-					new int[] { (int)eCharacterClass.Fighter,
-						(int)eCharacterClass.Mage,
-						(int)eCharacterClass.Elementalist }, // Half Ogre
-					new int[] { (int)eCharacterClass.Viking,
-						(int)eCharacterClass.Mystic,
-						(int)eCharacterClass.Seer,
-						(int)eCharacterClass.MidgardRogue }, // Frostalf
-					new int[] { (int)eCharacterClass.Guardian,
-						(int)eCharacterClass.Stalker,
-						(int)eCharacterClass.Magician }, // Shar
-					new int[] { (int)eCharacterClass.Fighter,
-						(int)eCharacterClass.Acolyte },//AlbionMenotaur
-					new int[] {	(int)eCharacterClass.Viking,
-						(int)eCharacterClass.Seer }, //MidgardMenotaur
-					new int[] { (int)eCharacterClass.Guardian,
-						(int)eCharacterClass.Naturalist }, //HiberniaMenotaur
-				};
-
-				ADVANCED_CLASS_TO_BASE_CLASS = new int[]
-				{
-					0, // "Unknown",
-					(int)eCharacterClass.Fighter, 		// Paladin = 1,
-					(int)eCharacterClass.Fighter, 		// Armsman = 2,
-					(int)eCharacterClass.AlbionRogue, 	// Scout = 3,
-					(int)eCharacterClass.AlbionRogue, 	// Minstrel = 4,
-					(int)eCharacterClass.Elementalist, 	// Theurgist = 5,
-					(int)eCharacterClass.Acolyte, 		// Cleric = 6,
-					(int)eCharacterClass.Elementalist, 	// Wizard = 7,
-					(int)eCharacterClass.Mage, 			// Sorcerer = 8,
-					(int)eCharacterClass.AlbionRogue, 	// Infiltrator = 9,
-					(int)eCharacterClass.Acolyte, 		// Friar = 10,
-					(int)eCharacterClass.Fighter, 		// Mercenary = 11,
-					(int)eCharacterClass.Disciple, 		// Necromancer = 12,
-					(int)eCharacterClass.Mage, 			// Cabalist = 13,
-					(int)eCharacterClass.Fighter, 		// Fighter = 14,
-					(int)eCharacterClass.Elementalist, 	// Elementalist = 15,
-					(int)eCharacterClass.Acolyte, 		// Acolyte = 16,
-					(int)eCharacterClass.AlbionRogue, 	// AlbionRogue = 17,
-					(int)eCharacterClass.Mage, 			// Mage = 18,
-					(int)eCharacterClass.Fighter, 		// Reaver = 19,
-					(int)eCharacterClass.Disciple, 		// Disciple = 20,
-					(int)eCharacterClass.Viking, 		// Thane = 21,
-					(int)eCharacterClass.Viking, 		// Warrior = 22,
-					(int)eCharacterClass.MidgardRogue, 	// Shadowblade = 23,
-					(int)eCharacterClass.Viking, 		// Skald = 24,
-					(int)eCharacterClass.MidgardRogue, 	// Hunter = 25,
-					(int)eCharacterClass.Seer, 			// Healer = 26,
-					(int)eCharacterClass.Mystic, 		// Spiritmaster = 27,
-					(int)eCharacterClass.Seer, 			// Shaman = 28,
-					(int)eCharacterClass.Mystic, 		// Runemaster = 29,
-					(int)eCharacterClass.Mystic, 		// Bonedancer = 30,
-					(int)eCharacterClass.Viking, 		// Berserker = 31,
-					(int)eCharacterClass.Viking, 		// Savage = 32,
-					(int)eCharacterClass.Acolyte, 		// Heretic = 33,
-					(int)eCharacterClass.Viking, 		// Valkyrie = 34,
-					(int)eCharacterClass.Viking, 		// Viking = 35,
-					(int)eCharacterClass.Mystic, 		// Mystic = 36,
-					(int)eCharacterClass.Seer, 			// Seer = 37,
-					(int)eCharacterClass.MidgardRogue, 	// MidgardRogue = 38,
-					(int)eCharacterClass.Magician, 		// Bainshee = 39,
-					(int)eCharacterClass.Magician, 		// Eldritch = 40,
-					(int)eCharacterClass.Magician, 		// Enchanter = 41,
-					(int)eCharacterClass.Magician, 		// Mentalist = 42,
-					(int)eCharacterClass.Guardian, 		// Blademaster = 43,
-					(int)eCharacterClass.Guardian, 		// Hero = 44,
-					(int)eCharacterClass.Guardian, 		// Champion = 45,
-					(int)eCharacterClass.Naturalist, 	// Warden = 46,
-					(int)eCharacterClass.Naturalist, 	// Druid = 47,
-					(int)eCharacterClass.Naturalist, 	// Bard = 48,
-					(int)eCharacterClass.Stalker, 		// Nightshade = 49,
-					(int)eCharacterClass.Stalker, 		// Ranger = 50,
-					(int)eCharacterClass.Magician, 		// Magician = 51,
-					(int)eCharacterClass.Guardian, 		// Guardian = 52,
-					(int)eCharacterClass.Naturalist, 	// Naturalist = 53,
-					(int)eCharacterClass.Stalker, 		// Stalker = 54,
-					(int)eCharacterClass.Forester, 		// Animist = 55,
-					(int)eCharacterClass.Forester, 		// Valewalker = 56,
-					(int)eCharacterClass.Forester, 		// Forester = 57,
-					(int)eCharacterClass.Stalker, 		// Vampiir = 58,
-					(int)eCharacterClass.Mystic, 		// Warlock = 59,
-					(int)eCharacterClass.Fighter, 		// Mauler_Alb = 60,
-					(int)eCharacterClass.Viking, 		// Mauler_Mid = 61,
-					(int)eCharacterClass.Guardian, 		// Mauler_Hib = 62,
-				};
-			}
-
-			public static void init_post193_tables()
+				// pre 1.93
+				{eRealm.Albion, new List<eCharacterClass>() {eCharacterClass.Fighter, eCharacterClass.Acolyte, eCharacterClass.Mage, eCharacterClass.Elementalist, eCharacterClass.AlbionRogue, eCharacterClass.Disciple,
+					// post 1.93
+					eCharacterClass.Paladin, 		// Paladin = 1,
+					eCharacterClass.Armsman, 		// Armsman = 2,
+					eCharacterClass.Scout, 	    // Scout = 3,
+					eCharacterClass.Minstrel, 	    // Minstrel = 4,
+					eCharacterClass.Theurgist, 	// Theurgist = 5,
+					eCharacterClass.Cleric, 		// Cleric = 6,
+					eCharacterClass.Wizard, 	    // Wizard = 7,
+					eCharacterClass.Sorcerer, 		// Sorcerer = 8,
+					eCharacterClass.Infiltrator, 	// Infiltrator = 9,
+					eCharacterClass.Friar, 		// Friar = 10,
+					eCharacterClass.Mercenary, 	// Mercenary = 11,
+					eCharacterClass.Necromancer, 	// Necromancer = 12,
+					eCharacterClass.Cabalist, 		// Cabalist = 13,
+					eCharacterClass.Fighter, 		// Fighter = 14,
+					eCharacterClass.Elementalist, 	// Elementalist = 15,
+					eCharacterClass.Acolyte, 		// Acolyte = 16,
+					eCharacterClass.AlbionRogue, 	// AlbionRogue = 17,
+					eCharacterClass.Mage, 			// Mage = 18,
+					eCharacterClass.Reaver, 		// Reaver = 19,
+					eCharacterClass.Disciple,		// Disciple = 20,
+					eCharacterClass.Heretic, 		// Heretic = 33,
+					eCharacterClass.MaulerAlb		// Mauler_Alb = 60,
+				}},
+				{eRealm.Midgard, new List<eCharacterClass>() {eCharacterClass.Viking, eCharacterClass.Mystic, eCharacterClass.Seer, eCharacterClass.MidgardRogue,
+					// post 1.93
+					eCharacterClass.Thane, 		// Thane = 21,
+					eCharacterClass.Warrior, 		// Warrior = 22,
+					eCharacterClass.Shadowblade, 	// Shadowblade = 23,
+					eCharacterClass.Skald, 		// Skald = 24,
+					eCharacterClass.Hunter, 	    // Hunter = 25,
+					eCharacterClass.Healer, 		// Healer = 26,
+					eCharacterClass.Spiritmaster,  // Spiritmaster = 27,
+					eCharacterClass.Shaman, 		// Shaman = 28,
+					eCharacterClass.Runemaster, 	// Runemaster = 29,
+					eCharacterClass.Bonedancer, 	// Bonedancer = 30,
+					eCharacterClass.Berserker, 	// Berserker = 31,
+					eCharacterClass.Savage, 		// Savage = 32,
+					eCharacterClass.Valkyrie, 		// Valkyrie = 34,
+					eCharacterClass.Viking, 		// Viking = 35,
+					eCharacterClass.Mystic, 		// Mystic = 36,
+					eCharacterClass.Seer, 			// Seer = 37,
+					eCharacterClass.MidgardRogue,	// MidgardRogue = 38,
+					eCharacterClass.Warlock, 		// Warlock = 59,
+					eCharacterClass.MaulerMid		// Mauler_Mid = 61,
+				}},
+				{eRealm.Hibernia, new List<eCharacterClass>() {eCharacterClass.Guardian, eCharacterClass.Stalker, eCharacterClass.Naturalist, eCharacterClass.Magician, eCharacterClass.Forester,
+					// post 1.93
+					eCharacterClass.Bainshee, 		// Bainshee = 39,
+					eCharacterClass.Eldritch, 		// Eldritch = 40,
+					eCharacterClass.Enchanter, 	// Enchanter = 41,
+					eCharacterClass.Mentalist, 	// Mentalist = 42,
+					eCharacterClass.Blademaster, 	// Blademaster = 43,
+					eCharacterClass.Hero, 		    // Hero = 44,
+					eCharacterClass.Champion, 		// Champion = 45,
+					eCharacterClass.Warden, 	    // Warden = 46,
+					eCharacterClass.Druid, 	    // Druid = 47,
+					eCharacterClass.Bard, 	        // Bard = 48,
+					eCharacterClass.Nightshade, 	// Nightshade = 49,
+					eCharacterClass.Ranger, 		// Ranger = 50,
+					eCharacterClass.Magician, 		// Magician = 51,
+					eCharacterClass.Guardian, 		// Guardian = 52,
+					eCharacterClass.Naturalist, 	// Naturalist = 53,
+					eCharacterClass.Stalker, 		// Stalker = 54,
+					eCharacterClass.Animist, 		// Animist = 55,
+					eCharacterClass.Valewalker, 	// Valewalker = 56,
+					eCharacterClass.Forester, 		// Forester = 57,
+					eCharacterClass.Vampiir, 		// Vampiir = 58,
+					eCharacterClass.MaulerHib	 	// Mauler_Hib = 62,
+				}},
+			};
+			
+			protected static Dictionary<eRace, List<eCharacterClass>> RACES_CLASSES_DICT = new Dictionary<eRace, List<eCharacterClass>>()
 			{
-				STARTING_CLASSES = new int[][]
-				{
-					null, // "Unknown",
-					new int[]{
-						(int)eCharacterClass.Paladin, 		// Paladin = 1,
-						(int)eCharacterClass.Armsman, 		// Armsman = 2,
-						(int)eCharacterClass.Scout, 	    // Scout = 3,
-						(int)eCharacterClass.Minstrel, 	    // Minstrel = 4,
-						(int)eCharacterClass.Theurgist, 	// Theurgist = 5,
-						(int)eCharacterClass.Cleric, 		// Cleric = 6,
-						(int)eCharacterClass.Wizard, 	    // Wizard = 7,
-						(int)eCharacterClass.Sorcerer, 		// Sorcerer = 8,
-						(int)eCharacterClass.Infiltrator, 	// Infiltrator = 9,
-						(int)eCharacterClass.Friar, 		// Friar = 10,
-						(int)eCharacterClass.Mercenary, 	// Mercenary = 11,
-						(int)eCharacterClass.Necromancer, 	// Necromancer = 12,
-						(int)eCharacterClass.Cabalist, 		// Cabalist = 13,
-						(int)eCharacterClass.Fighter, 		// Fighter = 14,
-						(int)eCharacterClass.Elementalist, 	// Elementalist = 15,
-						(int)eCharacterClass.Acolyte, 		// Acolyte = 16,
-						(int)eCharacterClass.AlbionRogue, 	// AlbionRogue = 17,
-						(int)eCharacterClass.Mage, 			// Mage = 18,
-						(int)eCharacterClass.Reaver, 		// Reaver = 19,
-						(int)eCharacterClass.Disciple,	   // Disciple = 20,
-						(int)eCharacterClass.Heretic, 		// Heretic = 33,
-						(int)eCharacterClass.MaulerAlb },	// Mauler_Alb = 60,
-					new int[]{
-						(int)eCharacterClass.Thane, 		// Thane = 21,
-						(int)eCharacterClass.Warrior, 		// Warrior = 22,
-						(int)eCharacterClass.Shadowblade, 	// Shadowblade = 23,
-						(int)eCharacterClass.Skald, 		// Skald = 24,
-						(int)eCharacterClass.Hunter, 	    // Hunter = 25,
-						(int)eCharacterClass.Healer, 		// Healer = 26,
-						(int)eCharacterClass.Spiritmaster,  // Spiritmaster = 27,
-						(int)eCharacterClass.Shaman, 		// Shaman = 28,
-						(int)eCharacterClass.Runemaster, 	// Runemaster = 29,
-						(int)eCharacterClass.Bonedancer, 	// Bonedancer = 30,
-						(int)eCharacterClass.Berserker, 	// Berserker = 31,
-						(int)eCharacterClass.Savage, 		// Savage = 32,
-						(int)eCharacterClass.Valkyrie, 		// Valkyrie = 34,
-						(int)eCharacterClass.Viking, 		// Viking = 35,
-						(int)eCharacterClass.Mystic, 		// Mystic = 36,
-						(int)eCharacterClass.Seer, 			// Seer = 37,
-						(int)eCharacterClass.MidgardRogue,	// MidgardRogue = 38,
-						(int)eCharacterClass.Warlock, 		// Warlock = 59,
-						(int)eCharacterClass.MaulerMid }, 	// Mauler_Mid = 61,
-					new int[]{
-						(int)eCharacterClass.Bainshee, 		// Bainshee = 39,
-						(int)eCharacterClass.Eldritch, 		// Eldritch = 40,
-						(int)eCharacterClass.Enchanter, 	// Enchanter = 41,
-						(int)eCharacterClass.Mentalist, 	// Mentalist = 42,
-						(int)eCharacterClass.Blademaster, 	// Blademaster = 43,
-						(int)eCharacterClass.Hero, 		    // Hero = 44,
-						(int)eCharacterClass.Champion, 		// Champion = 45,
-						(int)eCharacterClass.Warden, 	    // Warden = 46,
-						(int)eCharacterClass.Druid, 	    // Druid = 47,
-						(int)eCharacterClass.Bard, 	        // Bard = 48,
-						(int)eCharacterClass.Nightshade, 	// Nightshade = 49,
-						(int)eCharacterClass.Ranger, 		// Ranger = 50,
-						(int)eCharacterClass.Magician, 		// Magician = 51,
-						(int)eCharacterClass.Guardian, 		// Guardian = 52,
-						(int)eCharacterClass.Naturalist, 	// Naturalist = 53,
-						(int)eCharacterClass.Stalker, 		// Stalker = 54,
-						(int)eCharacterClass.Animist, 		// Animist = 55,
-						(int)eCharacterClass.Valewalker, 	// Valewalker = 56,
-						(int)eCharacterClass.Forester, 		// Forester = 57,
-						(int)eCharacterClass.Vampiir, 		// Vampiir = 58,
-						(int)eCharacterClass.MaulerHib } 	// Mauler_Hib = 62,
-				};
+				{eRace.Unknown, new List<eCharacterClass>()},
+				// pre 1.93
+				{eRace.Briton, new List<eCharacterClass>() {eCharacterClass.Fighter, eCharacterClass.Acolyte, eCharacterClass.Mage, eCharacterClass.Elementalist, eCharacterClass.AlbionRogue, eCharacterClass.Disciple,
+					// post 1.93
+					eCharacterClass.Armsman,
+					eCharacterClass.Reaver,
+					eCharacterClass.Mercenary,
+					eCharacterClass.Paladin,
+					eCharacterClass.Cleric,
+					eCharacterClass.Heretic,
+					eCharacterClass.Friar,
+					eCharacterClass.Sorcerer,
+					eCharacterClass.Cabalist,
+					eCharacterClass.Theurgist,
+					eCharacterClass.Necromancer,
+					eCharacterClass.MaulerAlb,
+					eCharacterClass.Wizard,
+					eCharacterClass.Minstrel,
+					eCharacterClass.Infiltrator,
+					eCharacterClass.Scout,
+					eCharacterClass.Fighter,
+					eCharacterClass.Acolyte,
+					eCharacterClass.Mage,
+					eCharacterClass.Elementalist,
+					eCharacterClass.AlbionRogue,
+					eCharacterClass.Disciple
+					}},
+				{eRace.Avalonian, new List<eCharacterClass>() {eCharacterClass.Fighter, eCharacterClass.Acolyte, eCharacterClass.Mage, eCharacterClass.Elementalist,
+					// post 1.93
+					eCharacterClass.Paladin,
+					eCharacterClass.Cleric,
+					eCharacterClass.Wizard,
+					eCharacterClass.Theurgist,
+					eCharacterClass.Armsman,
+					eCharacterClass.Mercenary,
+					eCharacterClass.Sorcerer,
+					eCharacterClass.Cabalist,
+					eCharacterClass.Heretic,
+					eCharacterClass.Friar,
+					eCharacterClass.Fighter,
+					eCharacterClass.Acolyte,
+					eCharacterClass.Mage,
+					eCharacterClass.Elementalist
+					}},
+				{eRace.Highlander, new List<eCharacterClass>() {eCharacterClass.Fighter, eCharacterClass.Acolyte, eCharacterClass.AlbionRogue,
+					// post 1.93
+					eCharacterClass.Armsman,
+					eCharacterClass.Mercenary,
+					eCharacterClass.Paladin,
+					eCharacterClass.Cleric,
+					eCharacterClass.Minstrel,
+					eCharacterClass.Scout,
+					eCharacterClass.Friar,
+					eCharacterClass.Fighter,
+					eCharacterClass.Acolyte,
+					eCharacterClass.AlbionRogue
+					}},
+				{eRace.Saracen, new List<eCharacterClass>() {eCharacterClass.Fighter, eCharacterClass.Mage, eCharacterClass.AlbionRogue, eCharacterClass.Disciple,
+					// post 1.93
+					eCharacterClass.Sorcerer,
+					eCharacterClass.Cabalist,
+					eCharacterClass.Paladin,
+					eCharacterClass.Reaver,
+					eCharacterClass.Mercenary,
+					eCharacterClass.Armsman,
+					eCharacterClass.Infiltrator,
+					eCharacterClass.Minstrel,
+					eCharacterClass.Scout,
+					eCharacterClass.Necromancer,
+					eCharacterClass.Fighter,
+					eCharacterClass.Mage,
+					eCharacterClass.AlbionRogue,
+					eCharacterClass.Disciple
+					}},
+				
+				{eRace.Norseman, new List<eCharacterClass>() {eCharacterClass.Viking, eCharacterClass.Mystic, eCharacterClass.Seer, eCharacterClass.MidgardRogue,
+					// post 1.93
+					eCharacterClass.Healer,
+					eCharacterClass.Warrior,
+					eCharacterClass.Berserker,
+					eCharacterClass.Thane,
+					eCharacterClass.Warlock,
+					eCharacterClass.Skald,
+					eCharacterClass.Valkyrie,
+					eCharacterClass.Spiritmaster,
+					eCharacterClass.Runemaster,
+					eCharacterClass.Savage,
+					eCharacterClass.MaulerMid,
+					eCharacterClass.Shadowblade,
+					eCharacterClass.Hunter,
+					eCharacterClass.Viking,
+					eCharacterClass.Mystic,
+					eCharacterClass.Seer,
+					eCharacterClass.MidgardRogue
+					}},
+				{eRace.Troll, new List<eCharacterClass>() {eCharacterClass.Viking, eCharacterClass.Mystic, eCharacterClass.Seer,
+					// post 1.93
+					eCharacterClass.Berserker,
+					eCharacterClass.Warrior,
+					eCharacterClass.Savage,
+					eCharacterClass.Thane,
+					eCharacterClass.Skald,
+					eCharacterClass.Bonedancer,
+					eCharacterClass.Shaman,
+					eCharacterClass.Viking,
+					eCharacterClass.Mystic,
+					eCharacterClass.Seer
+					}},
+				{eRace.Dwarf, new List<eCharacterClass>() {eCharacterClass.Viking, eCharacterClass.Mystic, eCharacterClass.Seer, eCharacterClass.MidgardRogue,
+					// post 1.93
+					eCharacterClass.Healer,
+					eCharacterClass.Thane,
+					eCharacterClass.Berserker,
+					eCharacterClass.Warrior,
+					eCharacterClass.Savage,
+					eCharacterClass.Skald,
+					eCharacterClass.Valkyrie,
+					eCharacterClass.Runemaster,
+					eCharacterClass.Hunter,
+					eCharacterClass.Shaman,
+					eCharacterClass.Viking,
+					eCharacterClass.Mystic,
+					eCharacterClass.Seer,
+					eCharacterClass.MidgardRogue
+					}},
+				{eRace.Kobold, new List<eCharacterClass>() {eCharacterClass.Viking, eCharacterClass.Mystic, eCharacterClass.Seer, eCharacterClass.MidgardRogue,
+					// post 1.93
+					eCharacterClass.Shaman,
+					eCharacterClass.Warrior,
+					eCharacterClass.Skald,
+					eCharacterClass.Savage,
+					eCharacterClass.Runemaster,
+					eCharacterClass.Spiritmaster,
+					eCharacterClass.Bonedancer,
+					eCharacterClass.Warlock,
+					eCharacterClass.Hunter,
+					eCharacterClass.Shadowblade,
+					eCharacterClass.MaulerMid,
+					eCharacterClass.Viking,
+					eCharacterClass.Mystic,
+					eCharacterClass.Seer,
+					eCharacterClass.MidgardRogue
+					}},
+					
+				{eRace.Celt, new List<eCharacterClass>() {eCharacterClass.Guardian, eCharacterClass.Stalker, eCharacterClass.Naturalist, eCharacterClass.Magician, eCharacterClass.Forester,
+					// post 1.93
+					eCharacterClass.Bard,
+					eCharacterClass.Druid,
+					eCharacterClass.Warden,
+					eCharacterClass.Blademaster,
+					eCharacterClass.Hero,
+					eCharacterClass.Vampiir,
+					eCharacterClass.Champion,
+					eCharacterClass.MaulerHib,
+					eCharacterClass.Mentalist,
+					eCharacterClass.Bainshee,
+					eCharacterClass.Ranger,
+					eCharacterClass.Animist,
+					eCharacterClass.Valewalker,
+					eCharacterClass.Nightshade,
+					eCharacterClass.Guardian,
+					eCharacterClass.Stalker,
+					eCharacterClass.Naturalist,
+					eCharacterClass.Magician,
+					eCharacterClass.Forester
+					}},
+				{eRace.Firbolg, new List<eCharacterClass>() {eCharacterClass.Guardian, eCharacterClass.Naturalist, eCharacterClass.Forester,
+					// post 1.93
+					eCharacterClass.Bard,
+					eCharacterClass.Druid,
+					eCharacterClass.Warden,
+					eCharacterClass.Hero,
+					eCharacterClass.Blademaster,
+					eCharacterClass.Animist,
+					eCharacterClass.Valewalker,
+					eCharacterClass.Guardian,
+					eCharacterClass.Naturalist,
+					eCharacterClass.Forester
+					}},
+				{eRace.Elf, new List<eCharacterClass>() {eCharacterClass.Guardian, eCharacterClass.Stalker, eCharacterClass.Magician,
+					// post 1.93
+					eCharacterClass.Blademaster,
+					eCharacterClass.Champion,
+					eCharacterClass.Ranger,
+					eCharacterClass.Nightshade,
+					eCharacterClass.Bainshee,
+					eCharacterClass.Enchanter,
+					eCharacterClass.Eldritch,
+					eCharacterClass.Mentalist,
+					eCharacterClass.Guardian,
+					eCharacterClass.Stalker,
+					eCharacterClass.Magician
+					}},
+				{eRace.Lurikeen, new List<eCharacterClass>() {eCharacterClass.Guardian, eCharacterClass.Stalker, eCharacterClass.Magician,
+					// post 1.93
+					eCharacterClass.Hero,
+					eCharacterClass.Champion,
+					eCharacterClass.Vampiir,
+					eCharacterClass.Eldritch,
+					eCharacterClass.Enchanter,
+					eCharacterClass.Mentalist,
+					eCharacterClass.Bainshee,
+					eCharacterClass.Nightshade,
+					eCharacterClass.Ranger,
+					eCharacterClass.MaulerHib,
+					eCharacterClass.Guardian,
+					eCharacterClass.Stalker,
+					eCharacterClass.Magician
+					}},
+				
+				{eRace.Inconnu, new List<eCharacterClass>() {eCharacterClass.Fighter, eCharacterClass.Acolyte, eCharacterClass.Mage, eCharacterClass.AlbionRogue, eCharacterClass.Disciple,
+					// post 1.93
+					eCharacterClass.Reaver,
+					eCharacterClass.Sorcerer,
+					eCharacterClass.Cabalist,
+					eCharacterClass.Heretic,
+					eCharacterClass.Necromancer,
+					eCharacterClass.Armsman,
+					eCharacterClass.Mercenary,
+					eCharacterClass.Infiltrator,
+					eCharacterClass.Scout,
+					eCharacterClass.MaulerAlb,
+					eCharacterClass.Fighter,
+					eCharacterClass.Acolyte,
+					eCharacterClass.Mage,
+					eCharacterClass.AlbionRogue,
+					eCharacterClass.Disciple
+					}},
+				
+				{eRace.Valkyn, new List<eCharacterClass>() {eCharacterClass.Viking, eCharacterClass.Mystic, eCharacterClass.MidgardRogue,
+					// post 1.93
+					eCharacterClass.Savage,
+					eCharacterClass.Berserker,
+					eCharacterClass.Bonedancer,
+					eCharacterClass.Warrior,
+					eCharacterClass.Shadowblade,
+					eCharacterClass.Hunter,
+					eCharacterClass.Viking,
+					eCharacterClass.Mystic,
+					eCharacterClass.MidgardRogue
+					}},
+				
+				{eRace.Sylvan, new List<eCharacterClass>() {eCharacterClass.Guardian, eCharacterClass.Naturalist, eCharacterClass.Forester,
+					// post 1.93
+					eCharacterClass.Animist,
+					eCharacterClass.Druid,
+					eCharacterClass.Valewalker,
+					eCharacterClass.Hero,
+					eCharacterClass.Warden,
+					eCharacterClass.Guardian,
+					eCharacterClass.Naturalist,
+					eCharacterClass.Forester
+					}},
+				
+				{eRace.HalfOgre, new List<eCharacterClass>() {eCharacterClass.Fighter, eCharacterClass.Mage, eCharacterClass.Elementalist,
+					// post 1.93
+					eCharacterClass.Wizard,
+					eCharacterClass.Theurgist,
+					eCharacterClass.Cabalist,
+					eCharacterClass.Sorcerer,
+					eCharacterClass.Mercenary,
+					eCharacterClass.Armsman,
+					eCharacterClass.Fighter,
+					eCharacterClass.Mage,
+					eCharacterClass.Elementalist
+					}},
+				
+				{eRace.Frostalf, new List<eCharacterClass>() {eCharacterClass.Viking, eCharacterClass.Mystic, eCharacterClass.Seer, eCharacterClass.MidgardRogue,
+					// post 1.93
+					eCharacterClass.Healer,
+					eCharacterClass.Shaman,
+					eCharacterClass.Thane,
+					eCharacterClass.Spiritmaster,
+					eCharacterClass.Runemaster,
+					eCharacterClass.Warlock,
+					eCharacterClass.Valkyrie,
+					eCharacterClass.Hunter,
+					eCharacterClass.Shadowblade,
+					eCharacterClass.Viking,
+					eCharacterClass.Mystic,
+					eCharacterClass.Seer,
+					eCharacterClass.MidgardRogue
+					}},
+				
+				{eRace.Shar, new List<eCharacterClass>() {eCharacterClass.Guardian, eCharacterClass.Stalker, eCharacterClass.Magician,
+					// post 1.93
+					eCharacterClass.Champion,
+					eCharacterClass.Hero,
+					eCharacterClass.Blademaster,
+					eCharacterClass.Vampiir,
+					eCharacterClass.Ranger,
+					eCharacterClass.Mentalist,
+					eCharacterClass.Guardian,
+					eCharacterClass.Stalker,
+					eCharacterClass.Magician
+					}},
+				
+				{eRace.AlbionMinotaur, new List<eCharacterClass>() {eCharacterClass.Fighter, eCharacterClass.Acolyte, eCharacterClass.Mage, eCharacterClass.Elementalist, eCharacterClass.AlbionRogue, eCharacterClass.Disciple,
+					// post 1.93
+					eCharacterClass.Heretic,
+					eCharacterClass.MaulerAlb,
+					eCharacterClass.Armsman,
+					eCharacterClass.Mercenary,
+					eCharacterClass.Fighter,
+					eCharacterClass.Acolyte
+					}},
+				
+				{eRace.MidgardMinotaur, new List<eCharacterClass>() {eCharacterClass.Viking, eCharacterClass.Mystic, eCharacterClass.Seer, eCharacterClass.MidgardRogue,
+					// post 1.93
+					eCharacterClass.Berserker,
+					eCharacterClass.MaulerMid,
+					eCharacterClass.Thane,
+					eCharacterClass.Viking,
+					eCharacterClass.Warrior
+					}},
+				
+				{eRace.HiberniaMinotaur, new List<eCharacterClass>() {eCharacterClass.Guardian, eCharacterClass.Stalker, eCharacterClass.Naturalist, eCharacterClass.Magician, eCharacterClass.Forester,
+					// post 1.93
+					eCharacterClass.Hero,
+					eCharacterClass.Blademaster,
+					eCharacterClass.MaulerHib,
+					eCharacterClass.Warden,
+					eCharacterClass.Guardian,
+					eCharacterClass.Naturalist
+					}},
+			};
 
-				RACES_CLASSES = new int[][]
-				{
-					null, // "Unknown",
-					//
-					new int[] {
-						(int)eCharacterClass.Armsman,
-						(int)eCharacterClass.Reaver,
-						(int)eCharacterClass.Mercenary,
-						(int)eCharacterClass.Paladin,
-						(int)eCharacterClass.Cleric,
-						(int)eCharacterClass.Heretic,
-						(int)eCharacterClass.Friar,
-						(int)eCharacterClass.Sorcerer,
-						(int)eCharacterClass.Cabalist,
-						(int)eCharacterClass.Theurgist,
-						(int)eCharacterClass.Necromancer,
-						(int)eCharacterClass.MaulerAlb,
-						(int)eCharacterClass.Wizard,
-						(int)eCharacterClass.Minstrel,
-						(int)eCharacterClass.Infiltrator,
-						(int)eCharacterClass.Scout,
-						(int)eCharacterClass.Fighter,
-						(int)eCharacterClass.Acolyte,
-						(int)eCharacterClass.Mage,
-						(int)eCharacterClass.Elementalist,
-						(int)eCharacterClass.AlbionRogue,
-						(int)eCharacterClass.Disciple }, // Briton
-					new int[] {
-						(int)eCharacterClass.Paladin,
-						(int)eCharacterClass.Cleric,
-						(int)eCharacterClass.Wizard,
-						(int)eCharacterClass.Theurgist,
-						(int)eCharacterClass.Armsman,
-						(int)eCharacterClass.Mercenary,
-						(int)eCharacterClass.Sorcerer,
-						(int)eCharacterClass.Cabalist,
-						(int)eCharacterClass.Heretic,
-						(int)eCharacterClass.Friar,
-						(int)eCharacterClass.Fighter,
-						(int)eCharacterClass.Acolyte,
-						(int)eCharacterClass.Mage,
-						(int)eCharacterClass.Elementalist }, // Avalonian
-					new int[] {
-						(int)eCharacterClass.Armsman,
-						(int)eCharacterClass.Mercenary,
-						(int)eCharacterClass.Paladin,
-						(int)eCharacterClass.Cleric,
-						(int)eCharacterClass.Minstrel,
-						(int)eCharacterClass.Scout,
-						(int)eCharacterClass.Friar,
-						(int)eCharacterClass.Fighter,
-						(int)eCharacterClass.Acolyte,
-						(int)eCharacterClass.AlbionRogue }, // Highlander
-					new int[] {
-						(int)eCharacterClass.Sorcerer,
-						(int)eCharacterClass.Cabalist,
-						(int)eCharacterClass.Paladin,
-						(int)eCharacterClass.Reaver,
-						(int)eCharacterClass.Mercenary,
-						(int)eCharacterClass.Armsman,
-						(int)eCharacterClass.Infiltrator,
-						(int)eCharacterClass.Minstrel,
-						(int)eCharacterClass.Scout,
-						(int)eCharacterClass.Necromancer,
-						(int)eCharacterClass.Fighter,
-						(int)eCharacterClass.Mage,
-						(int)eCharacterClass.AlbionRogue,
-						(int)eCharacterClass.Disciple }, // Saracen
-					new int[] {
-						(int)eCharacterClass.Healer,
-						(int)eCharacterClass.Warrior,
-						(int)eCharacterClass.Berserker,
-						(int)eCharacterClass.Thane,
-						(int)eCharacterClass.Warlock,
-						(int)eCharacterClass.Skald,
-						(int)eCharacterClass.Valkyrie,
-						(int)eCharacterClass.Spiritmaster,
-						(int)eCharacterClass.Runemaster,
-						(int)eCharacterClass.Savage,
-						(int)eCharacterClass.MaulerMid,
-						(int)eCharacterClass.Shadowblade,
-						(int)eCharacterClass.Hunter,
-						(int)eCharacterClass.Viking,
-						(int)eCharacterClass.Mystic,
-						(int)eCharacterClass.Seer,
-						(int)eCharacterClass.MidgardRogue }, // Norseman
-					new int[] {
-						(int)eCharacterClass.Berserker,
-						(int)eCharacterClass.Warrior,
-						(int)eCharacterClass.Savage,
-						(int)eCharacterClass.Thane,
-						(int)eCharacterClass.Skald,
-						(int)eCharacterClass.Bonedancer,
-						(int)eCharacterClass.Shaman,
-						(int)eCharacterClass.Viking,
-						(int)eCharacterClass.Mystic,
-						(int)eCharacterClass.Seer }, // Troll
-					new int[] {
-						(int)eCharacterClass.Healer,
-						(int)eCharacterClass.Thane,
-						(int)eCharacterClass.Berserker,
-						(int)eCharacterClass.Warrior,
-						(int)eCharacterClass.Savage,
-						(int)eCharacterClass.Skald,
-						(int)eCharacterClass.Valkyrie,
-						(int)eCharacterClass.Runemaster,
-						(int)eCharacterClass.Hunter,
-						(int)eCharacterClass.Shaman,
-						(int)eCharacterClass.Viking,
-						(int)eCharacterClass.Mystic,
-						(int)eCharacterClass.Seer,
-						(int)eCharacterClass.MidgardRogue }, // Dwarf
-					new int[] {
-						(int)eCharacterClass.Shaman,
-						(int)eCharacterClass.Warrior,
-						(int)eCharacterClass.Skald,
-						(int)eCharacterClass.Savage,
-						(int)eCharacterClass.Runemaster,
-						(int)eCharacterClass.Spiritmaster,
-						(int)eCharacterClass.Bonedancer,
-						(int)eCharacterClass.Warlock,
-						(int)eCharacterClass.Hunter,
-						(int)eCharacterClass.Shadowblade,
-						(int)eCharacterClass.MaulerMid,
-						(int)eCharacterClass.Viking,
-						(int)eCharacterClass.Mystic,
-						(int)eCharacterClass.Seer,
-						(int)eCharacterClass.MidgardRogue }, // Kobold
-					new int[] {
-						(int)eCharacterClass.Bard,
-						(int)eCharacterClass.Druid,
-						(int)eCharacterClass.Warden,
-						(int)eCharacterClass.Blademaster,
-						(int)eCharacterClass.Hero,
-						(int)eCharacterClass.Vampiir,
-						(int)eCharacterClass.Champion,
-						(int)eCharacterClass.MaulerHib,
-						(int)eCharacterClass.Mentalist,
-						(int)eCharacterClass.Bainshee,
-						(int)eCharacterClass.Ranger,
-						(int)eCharacterClass.Animist,
-						(int)eCharacterClass.Valewalker,
-						(int)eCharacterClass.Nightshade,
-						(int)eCharacterClass.Guardian,
-						(int)eCharacterClass.Stalker,
-						(int)eCharacterClass.Naturalist,
-						(int)eCharacterClass.Magician,
-						(int)eCharacterClass.Forester }, // Celt
-					new int[] {
-						(int)eCharacterClass.Bard,
-						(int)eCharacterClass.Druid,
-						(int)eCharacterClass.Warden,
-						(int)eCharacterClass.Hero,
-						(int)eCharacterClass.Blademaster,
-						(int)eCharacterClass.Animist,
-						(int)eCharacterClass.Valewalker,
-						(int)eCharacterClass.Guardian,
-						(int)eCharacterClass.Naturalist,
-						(int)eCharacterClass.Forester }, // Firbolg
-					new int[] {
-						(int)eCharacterClass.Blademaster,
-						(int)eCharacterClass.Champion,
-						(int)eCharacterClass.Ranger,
-						(int)eCharacterClass.Nightshade,
-						(int)eCharacterClass.Bainshee,
-						(int)eCharacterClass.Enchanter,
-						(int)eCharacterClass.Eldritch,
-						(int)eCharacterClass.Mentalist,
-						(int)eCharacterClass.Guardian,
-						(int)eCharacterClass.Stalker,
-						(int)eCharacterClass.Magician }, // Elf
-					new int[] {
-						(int)eCharacterClass.Hero,
-						(int)eCharacterClass.Champion,
-						(int)eCharacterClass.Vampiir,
-						(int)eCharacterClass.Eldritch,
-						(int)eCharacterClass.Enchanter,
-						(int)eCharacterClass.Mentalist,
-						(int)eCharacterClass.Bainshee,
-						(int)eCharacterClass.Nightshade,
-						(int)eCharacterClass.Ranger,
-						(int)eCharacterClass.MaulerHib,
-						(int)eCharacterClass.Guardian,
-						(int)eCharacterClass.Stalker,
-						(int)eCharacterClass.Magician }, // Lurikeen
-					new int[] {
-						(int)eCharacterClass.Reaver,
-						(int)eCharacterClass.Sorcerer,
-						(int)eCharacterClass.Cabalist,
-						(int)eCharacterClass.Heretic,
-						(int)eCharacterClass.Necromancer,
-						(int)eCharacterClass.Armsman,
-						(int)eCharacterClass.Mercenary,
-						(int)eCharacterClass.Infiltrator,
-						(int)eCharacterClass.Scout,
-						(int)eCharacterClass.MaulerAlb,
-						(int)eCharacterClass.Fighter,
-						(int)eCharacterClass.Acolyte,
-						(int)eCharacterClass.Mage,
-						(int)eCharacterClass.AlbionRogue,
-						(int)eCharacterClass.Disciple }, // Inconnu
-					new int[] {
-						(int)eCharacterClass.Savage,
-						(int)eCharacterClass.Berserker,
-						(int)eCharacterClass.Bonedancer,
-						(int)eCharacterClass.Warrior,
-						(int)eCharacterClass.Shadowblade,
-						(int)eCharacterClass.Hunter,
-						(int)eCharacterClass.Viking,
-						(int)eCharacterClass.Mystic,
-						(int)eCharacterClass.MidgardRogue }, // Valkyn
-					new int[] {
-						(int)eCharacterClass.Animist,
-						(int)eCharacterClass.Druid,
-						(int)eCharacterClass.Valewalker,
-						(int)eCharacterClass.Hero,
-						(int)eCharacterClass.Warden,
-						(int)eCharacterClass.Guardian,
-						(int)eCharacterClass.Naturalist,
-						(int)eCharacterClass.Forester }, // Sylvan
-					new int[] {
-						(int)eCharacterClass.Wizard,
-						(int)eCharacterClass.Theurgist,
-						(int)eCharacterClass.Cabalist,
-						(int)eCharacterClass.Sorcerer,
-						(int)eCharacterClass.Mercenary,
-						(int)eCharacterClass.Armsman,
-						(int)eCharacterClass.Fighter,
-						(int)eCharacterClass.Mage,
-						(int)eCharacterClass.Elementalist }, // Half Ogre
-					new int[] {
-						(int)eCharacterClass.Healer,
-						(int)eCharacterClass.Shaman,
-						(int)eCharacterClass.Thane,
-						(int)eCharacterClass.Spiritmaster,
-						(int)eCharacterClass.Runemaster,
-						(int)eCharacterClass.Warlock,
-						(int)eCharacterClass.Valkyrie,
-						(int)eCharacterClass.Hunter,
-						(int)eCharacterClass.Shadowblade,
-						(int)eCharacterClass.Viking,
-						(int)eCharacterClass.Mystic,
-						(int)eCharacterClass.Seer,
-						(int)eCharacterClass.MidgardRogue }, // Frostalf
-					new int[] {
-						(int)eCharacterClass.Champion,
-						(int)eCharacterClass.Hero,
-						(int)eCharacterClass.Blademaster,
-						(int)eCharacterClass.Vampiir,
-						(int)eCharacterClass.Ranger,
-						(int)eCharacterClass.Mentalist,
-						(int)eCharacterClass.Guardian,
-						(int)eCharacterClass.Stalker,
-						(int)eCharacterClass.Magician }, // Shar
-					new int[] {
-						(int)eCharacterClass.Heretic,
-						(int)eCharacterClass.MaulerAlb,
-						(int)eCharacterClass.Armsman,
-						(int)eCharacterClass.Mercenary,
-						(int)eCharacterClass.Fighter,
-						(int)eCharacterClass.Acolyte },//AlbMinotaur
-					new int[] {
-						(int)eCharacterClass.Berserker,
-						(int)eCharacterClass.MaulerMid,
-						(int)eCharacterClass.Thane,
-						(int)eCharacterClass.Viking,
-						(int)eCharacterClass.Warrior }, //MidMinotaur
-					new int[] {
-						(int)eCharacterClass.Hero,
-						(int)eCharacterClass.Blademaster,
-						(int)eCharacterClass.MaulerHib,
-						(int)eCharacterClass.Warden,
-						(int)eCharacterClass.Guardian,
-						(int)eCharacterClass.Naturalist }, //HibMinotaur
-				};
-			}
 		}
 
 		#endregion Validate Character

@@ -1741,12 +1741,6 @@ namespace DOL.GS.ServerProperties
 
 		#region GUILDS / ALLIANCES
 		/// <summary>
-		/// The a starting guild should be used
-		/// </summary>
-		[ServerProperty("guild", "starting_guild", "Starter Guild - Edit this to change the starter guild options, values True,False", true)]
-		public static bool STARTING_GUILD;
-
-		/// <summary>
 		/// The max number of guilds in an alliance
 		/// </summary>
 		[ServerProperty("guild", "alliance_max", "Max Guilds In Alliance - Edit this to change the maximum number of guilds in an alliance -1 = unlimited, 0=disable alliances", -1)]
