@@ -77,57 +77,77 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return;
 			}
 			
+			// Realm
+			eRealm currentRealm = eRealm.None;
+			if (accountName.EndsWith("-S")) currentRealm = eRealm.Albion;
+			else if (accountName.EndsWith("-N")) currentRealm = eRealm.Midgard;
+			else if (accountName.EndsWith("-H")) currentRealm = eRealm.Hibernia;
+
+			
 			// Client character count support
 			int charsCount = client.Version < GameClient.eClientVersion.Version173 ? 8 : 10;
+			bool needRefresh = false;
+			
 			for (int i = 0; i < charsCount; i++)
 			{
-				//unk - probably indicates customize or create
-				if (client.Version >= GameClient.eClientVersion.Version1104)
-					packet.ReadIntLowEndian();
-
-				string charName = packet.ReadString(24);
-
-				//log.DebugFormat("Character[{0}] = {1}", i, charName);
-
-				if (charName.Length == 0)
+				var pakdata = new CreationCharacterData(packet, client);
+				
+				// Graveen: changed the following to allow GMs to have special chars in their names (_,-, etc..)
+				var nameCheck = new Regex("^[A-Z][a-zA-Z]");
+				if (!string.IsNullOrEmpty(pakdata.CharName) && (pakdata.CharName.Length < 3 || !nameCheck.IsMatch(pakdata.CharName)))
 				{
-					// 1.104+  if character is not in list but is in DB then delete the character
-					if (client.Version >= GameClient.eClientVersion.Version1104)
-						CheckForDeletedCharacter(accountName, client, i);
-					
-					var consume = new CreationCharacterData(packet, client);
-				}
-				else
-				{
-					// Graveen: changed the following to allow GMs to have special chars in their names (_,-, etc..)
-					Regex nameCheck = new Regex("^[A-Z][a-zA-Z]");
-					if (charName.Length < 3 || !nameCheck.IsMatch(charName))
+					if ((ePrivLevel)client.Account.PrivLevel == ePrivLevel.Player)
 					{
-						if (client.Account.PrivLevel == 1)
-						{
-							if (ServerProperties.Properties.BAN_HACKERS)
-								client.BanAccount(string.Format("Autoban bad CharName '{0}'", charName));
+						if (ServerProperties.Properties.BAN_HACKERS)
+							client.BanAccount(string.Format("Autoban bad CharName '{0}'", pakdata.CharName));
 
-							client.Disconnect();
-							return;
-						}
+						client.Disconnect();
+						return;
 					}
-
-					var character = client.Account.Characters.FirstOrDefault(ch => ch.Name.Equals(charName));
-
-					// check for update to existing character
-					if (character != null)
-						CheckCharacterForUpdates(new CreationCharacterData(packet, client), client, character);
-					// create new character and return
-					else
-						CreateCharacter(new CreationCharacterData(packet, client), client, charName, i);
 				}
+					
+				switch ((eOperation)pakdata.Operation)
+				{
+					case eOperation.Delete:
+						if (string.IsNullOrEmpty(pakdata.CharName))
+						{
+							// Deletion in 1.104+ check for removed character.
+							needRefresh |= CheckForDeletedCharacter(accountName, client, i);
+						}
+						break;
+					case eOperation.Customize:
+						if (!string.IsNullOrEmpty(pakdata.CharName))
+						{
+							// Candidate for Customizing ?
+							var character = client.Account.Characters.FirstOrDefault(ch => ch.Name.Equals(pakdata.CharName, StringComparison.OrdinalIgnoreCase));
+							if (character != null)
+								needRefresh |= CheckCharacterForUpdates(pakdata, client, character);
+						}
+						break;
+					case eOperation.Create:
+						if (!string.IsNullOrEmpty(pakdata.CharName))
+						{
+							// Candidate for Creation ?
+							var character = client.Account.Characters.FirstOrDefault(ch => ch.Name.Equals(pakdata.CharName, StringComparison.OrdinalIgnoreCase));
+							if (character == null)
+								needRefresh |= CreateCharacter(pakdata, client, i);
+						}
+						break;
+					default:
+						break;
+				}
+			}
+			
+			if(needRefresh)
+			{
+				client.Out.SendCharacterOverview(currentRealm);
 			}
 		}
 		
 		#region caracter creation data
 		class CreationCharacterData
 		{
+			public string CharName { get; set; }
 			public int CustomMode { get; set; }
 			public int EyeSize { get; set; }
 			public int LipSize { get; set; }
@@ -164,6 +184,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// <param name="client"></param>
 			public CreationCharacterData(GSPacketIn packet, GameClient client)
 			{
+				//unk - probably indicates customize or create (these are moved from 1.99 4 added bytes)
+				if (client.Version >= GameClient.eClientVersion.Version1104)
+					packet.ReadIntLowEndian();
+
+				CharName = packet.ReadString(24);
 				CustomMode = packet.ReadByte();
 				EyeSize = packet.ReadByte();
 				LipSize = packet.ReadByte();
@@ -230,12 +255,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 		#endregion
 
 		#region Create Character
-		private bool CreateCharacter(CreationCharacterData pdata, GameClient client, string charName, int accountSlot)
+		private bool CreateCharacter(CreationCharacterData pdata, GameClient client, int accountSlot)
 		{
 			Account account = client.Account;
 			var ch = new DOLCharacters();
 			ch.AccountName = account.Name;
-			ch.Name = charName;
+			ch.Name = pdata.CharName;
 			
 			if (pdata.CustomMode == 0x01)
 			{
@@ -300,9 +325,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				if (log.IsDebugEnabled)
 					log.DebugFormat("Client {0} tried to create a disabled classe: {1}", client.Account.Name, (eCharacterClass)ch.Class);
 				
-				// Reset to character view...
-				client.Out.SendCharacterOverview((eRealm)ch.Realm);
-			    return false;
+			    return true;
 			}
 			
 			// check if race disabled
@@ -315,9 +338,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				if (log.IsDebugEnabled)
 					log.DebugFormat("Client {0} tried to create a disabled race: {1}", client.Account.Name, (eRace)ch.Race);
-				// Reset to character view...
-				client.Out.SendCharacterOverview((eRealm)ch.Realm);
-			    return false;
+
+				return true;
 			}
 
 			
@@ -331,8 +353,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					client.BanAccount(string.Format("Autoban character create class: id:{0} realm:{1} name:{2} account:{3}", ch.Class, ch.Realm, ch.Name, account.Name));
 					client.Disconnect();
+					return false;
 				}
-			    return false;
+			    return true;
 			}
 
 			// check if client tried to create invalid char
@@ -344,9 +367,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					               "\nstr={7}, con={8}, dex={9}, qui={10}, int={11}, pie={12}, emp={13}, chr={14}", ch.AccountName, ch.Name, ch.Gender,
 					              ch.Race, ch.Realm, ch.Class, ch.Region, ch.Strength, ch.Constitution, ch.Dexterity, ch.Quickness, ch.Intelligence, ch.Piety, ch.Empathy, ch.Charisma);
 				}
-				// This is not live like but unfortunately we are missing code / packet support to stay on character create screen if something is invalid
-				client.Out.SendCharacterOverview((eRealm)ch.Realm);
-			    return false;
+			    return true;
 			}
 
 			//Save the character in the database
@@ -360,18 +381,16 @@ namespace DOL.GS.PacketHandler.Client.v168
 			GameServer.Database.SaveObject(ch);
 
 			// Log creation
-			AuditMgr.AddAuditEntry(client, AuditType.Account, AuditSubtype.CharacterCreate, "", charName);
+			AuditMgr.AddAuditEntry(client, AuditType.Account, AuditSubtype.CharacterCreate, "", pdata.CharName);
 
 			client.Account.Characters = null;
 
 			if (log.IsInfoEnabled)
-				log.InfoFormat("Character {0} created!", charName);
+				log.InfoFormat("Character {0} created on Account {1}!", pdata.CharName, account);
 
 			// Reload Account Relations
 			GameServer.Database.FillObjectRelations(client.Account);
 
-			// Reset to character view...
-			client.Out.SendCharacterOverview((eRealm)ch.Realm);
 		    return true;
 		}
 		
@@ -385,7 +404,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <param name="pdata">packet data</param>
 		/// <param name="client">client</param>
 		/// <param name="character">db character</param>
-		/// <returns>went ok</returns>
+		/// <returns>True if character need refreshment false if no refresh needed.</returns>
 		private bool CheckCharacterForUpdates(CreationCharacterData pdata, GameClient client, DOLCharacters character)
 		{
 			int newModel = character.CurrentModel;
@@ -448,9 +467,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							// Error in setting points
 							if (!valid)
 							{
-								// This is not live like but unfortunately we are missing code / packet support to stay on character create screen if something is invalid
-								client.Out.SendCharacterOverview((eRealm)character.Realm);
-							    return false;
+							    return true;
 							}
 							
 							// Set Stats, valid is ok.
@@ -464,7 +481,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							character.Charisma = (byte)stats[eStat.CHR];
 
 							if (log.IsInfoEnabled)
-								log.InfoFormat("Character {0} updated in cache!\n", character.Name);
+								log.InfoFormat("Character {0} updated in cache!", character.Name);
 
 							if (client.Player != null)
 							{
@@ -486,11 +503,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				if (pdata.CustomMode == 2) // change player customization
 				{
-					if (ServerProperties.Properties.BAN_HACKERS && client.Account.PrivLevel == 1 && ((pdata.CreationModel >> 11) & 3) == 0) // Player size must be > 0 (from 1 to 3)
+					if (client.Account.PrivLevel == 1 && ((pdata.CreationModel >> 11) & 3) == 0)
 					{
-						client.BanAccount(string.Format("Autoban Hack char update : zero character size in model:{0}", newModel));
-						client.Disconnect();
-						return false;
+						if (ServerProperties.Properties.BAN_HACKERS) // Player size must be > 0 (from 1 to 3)
+						{
+							client.BanAccount(string.Format("Autoban Hack char update : zero character size in model:{0}", newModel));
+							client.Disconnect();
+							return false;
+						}
+						return true;
 					}
 
 					if (pdata.CreationModel != character.CreationModel)
@@ -499,27 +520,25 @@ namespace DOL.GS.PacketHandler.Client.v168
 					character.CustomisationStep = 2; // disable config button
 
 					if (log.IsInfoEnabled)
-						log.InfoFormat("Character {0} face proprieties configured by account {1}!", character.Name, client.Account.Name);
+						log.InfoFormat("Character {0} face properties configured by account {1}!", character.Name, client.Account.Name);
 				}
 				else if (pdata.CustomMode == 3) //auto config -- seems someone thinks this is not possible?
 				{
 					character.CustomisationStep = 3; // enable config button to player
 				}
 				else if (log.IsInfoEnabled && pdata.CustomMode == 1 && flagChangedStats) //changed stat only for 1.89+
-					log.InfoFormat("Character {0} stat updated!", character.Name);
+					log.InfoFormat("Character {0} stats updated!", character.Name);
 			}
 			
 			//Save the character in the database
 			GameServer.Database.SaveObject(character);
 
-			// Reset to character view...
-			client.Out.SendCharacterOverview((eRealm)character.Realm);
-			return true;
+			return false;
 		}
 		#endregion Character Updates
 
 		#region Delete Character
-		public static void CheckForDeletedCharacter(string accountName, GameClient client, int slot)
+		public static bool CheckForDeletedCharacter(string accountName, GameClient client, int slot)
 		{
 			int charSlot = slot;
 
@@ -624,12 +643,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 						// Log deletion
 						AuditMgr.AddAuditEntry(client, AuditType.Character, AuditSubtype.CharacterDelete, "", deletedChar);
 						
-						// Reset to character view...
-						client.Out.SendCharacterOverview((eRealm)characterRealm);
+						return true;
 					}
 				}
 			}
-
+			return false;
 		}
 		#endregion Delete Character
 
