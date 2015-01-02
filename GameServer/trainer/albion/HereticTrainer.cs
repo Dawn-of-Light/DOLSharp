@@ -91,9 +91,6 @@ namespace DOL.GS.Trainer
 					if (CanPromotePlayer(player))
 					{
 						PromotePlayer(player, (int)eCharacterClass.Heretic, "Welcome to the Temple of Arawn, " + player.Name + ".", null);
-						
-						// drop any equiped-non usable item, in inventory or on the ground if full
-						CheckAbilityToUseItem(player);
 					}
 					break;
 			}

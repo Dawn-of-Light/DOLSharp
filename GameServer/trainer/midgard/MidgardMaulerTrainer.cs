@@ -84,14 +84,8 @@ namespace DOL.GS.Trainer
 					// promote player to other class
 					if (CanPromotePlayer(player))
 					{
-						// loose all spec lines
-						player.RemoveAllStyles();
-
 						// Mauler_mid = 61
 						PromotePlayer(player, (int)eCharacterClass.MaulerMid, "Welcome young Mauler. May your time in Midgard be rewarding.", null);
-
-						// drop any equiped-non usable item, in inventory or on the ground if full
-						CheckAbilityToUseItem(player);
 					}
 					break;
 			}
