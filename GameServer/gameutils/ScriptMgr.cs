@@ -802,7 +802,7 @@ namespace DOL.GS
 				object[] objs = charClass.GetType().BaseType.GetCustomAttributes(typeof(CharacterClassAttribute), true);
 				foreach (CharacterClassAttribute attrib in objs)
 				{
-					if (attrib.Name.Equals(charClass.BaseName, StringComparison.InvariantCultureIgnoreCase))
+					if (attrib.Name.Equals(charClass.BaseName, StringComparison.OrdinalIgnoreCase))
 					{
 						var baseClass = FindCharacterClass(attrib.ID);
 						if (baseClass != null && !baseClass.HasAdvancedFromBaseClass())
