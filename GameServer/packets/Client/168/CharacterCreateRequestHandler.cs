@@ -471,28 +471,25 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 							
 							// Set Stats, valid is ok.
-							character.Strength = (byte)stats[eStat.STR];
-							character.Constitution = (byte)stats[eStat.CON];
-							character.Dexterity = (byte)stats[eStat.DEX];
-							character.Quickness = (byte)stats[eStat.QUI];
-							character.Intelligence = (byte)stats[eStat.INT];
-							character.Piety = (byte)stats[eStat.PIE];
-							character.Empathy = (byte)stats[eStat.EMP];
-							character.Charisma = (byte)stats[eStat.CHR];
+							character.Strength = stats[eStat.STR];
+							character.Constitution = stats[eStat.CON];
+							character.Dexterity = stats[eStat.DEX];
+							character.Quickness = stats[eStat.QUI];
+							character.Intelligence = stats[eStat.INT];
+							character.Piety = stats[eStat.PIE];
+							character.Empathy = stats[eStat.EMP];
+							character.Charisma = stats[eStat.CHR];
 
 							if (log.IsInfoEnabled)
 								log.InfoFormat("Character {0} updated in cache!", character.Name);
 
 							if (client.Player != null)
 							{
-								client.Player.DBCharacter.Strength = (byte)stats[eStat.STR];
-								client.Player.DBCharacter.Constitution = (byte)stats[eStat.CON];
-								client.Player.DBCharacter.Dexterity = (byte)stats[eStat.DEX];
-								client.Player.DBCharacter.Quickness = (byte)stats[eStat.QUI];
-								client.Player.DBCharacter.Intelligence = (byte)stats[eStat.INT];
-								client.Player.DBCharacter.Piety = (byte)stats[eStat.PIE];
-								client.Player.DBCharacter.Empathy = (byte)stats[eStat.EMP];
-								client.Player.DBCharacter.Charisma = (byte)stats[eStat.CHR];
+								foreach(var stat in stats.Keys)
+									client.Player.ChangeBaseStat(stat, (short)(stats[stat] - client.Player.GetBaseStat(stat)));
+								
+								if (log.IsInfoEnabled)
+									log.InfoFormat("Character {0} Player updated in cache!", character.Name);
 							}
 						}
 						else if (log.IsErrorEnabled)
@@ -526,13 +523,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					character.CustomisationStep = 3; // enable config button to player
 				}
-				else if (log.IsInfoEnabled && pdata.CustomMode == 1 && flagChangedStats) //changed stat only for 1.89+
-					log.InfoFormat("Character {0} stats updated!", character.Name);
+				
+				//Save the character in the database
+				GameServer.Database.SaveObject(character);
 			}
 			
-			//Save the character in the database
-			GameServer.Database.SaveObject(character);
-
 			return false;
 		}
 		#endregion Character Updates

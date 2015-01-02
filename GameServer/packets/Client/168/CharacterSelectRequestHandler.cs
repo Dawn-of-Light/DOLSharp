@@ -94,12 +94,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 				}
 
-				if (client.Player == null)
-				{
-					// client keeps sending the name of the deleted char even if new one was created, correct name only after "play" button pressed
-					//client.Server.Error(new Exception("ERROR, active character not found!!! name="+charName));
-				}
-
 				client.Out.SendSessionID();
 			}
 		}
