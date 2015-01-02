@@ -16,6 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
+
+using DOL.Events;
+ 
 namespace DOL.GS.PacketHandler.Client.v168
 {
 	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.CharacterSelectRequest, "Handles setting SessionID and the active character", eClientStatus.LoggedIn)]
@@ -72,6 +76,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						    && client.Account.Characters[i].Name == charName)
 						{
 							charFound = true;
+							// Notify Character Selection Event, last hope to fix any bad data before Loading.
+							GameEventMgr.Notify(DatabaseEvent.CharacterSelected, new CharacterEventArgs(client.Account.Characters[i], client));
 							client.LoadPlayer(i);
 							break;
 						}
