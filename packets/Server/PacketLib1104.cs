@@ -45,7 +45,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendCharacterOverview(eRealm realm)
 		{
-			if (realm < eRealm.Albion || realm > eRealm.Hibernia)
+			if (realm < eRealm._FirstPlayerRealm || realm > eRealm._LastPlayerRealm)
 			{
 				throw new Exception("CharacterOverview requested for unknown realm " + realm);
 			}
@@ -54,7 +54,7 @@ namespace DOL.GS.PacketHandler
 
 			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CharacterOverview)))
 			{
-				pak.FillString(m_gameClient.Account.Name, 28); //extra 4 in 1.104
+				pak.FillString(m_gameClient.Account.Name, 24);
 	
 				if (m_gameClient.Account.Characters == null)
 				{
@@ -124,7 +124,8 @@ namespace DOL.GS.PacketHandler
 	
 							if (charItems.TryGetValue(eInventorySlot.FeetArmor, out item))
 								extensionBoots = item.Extension;
-	
+
+							pak.Fill(0x00, 4);//new heading bytes in from 1.99 relocated in 1.104
 							pak.FillString(c.Name, 24);
 							pak.WriteByte(0x01);
 							pak.WriteByte((byte)c.EyeSize);
@@ -341,11 +342,11 @@ namespace DOL.GS.PacketHandler
 								pak.WriteByte(0x01); //0x01=char in SI zone, classic client can't "play"
 	
 							pak.WriteByte((byte)c.Constitution);
-							pak.Fill(0x00, 4);//new trailing bytes in 1.99
 						}
 	
 					}
 				}
+				
 				pak.Fill(0x0, 90);
 				SendTCP(pak);
 			}
