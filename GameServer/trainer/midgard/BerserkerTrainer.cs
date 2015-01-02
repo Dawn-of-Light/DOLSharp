@@ -71,17 +71,6 @@ namespace DOL.GS.Trainer
  		}
 
 		/// <summary>
-		/// checks wether a player can be promoted or not
-		/// </summary>
-		/// <param name="player"></param>
-		/// <returns></returns>
-		public static bool CanPromotePlayer(GamePlayer player) 
-		{
-			return (player.Level>=5 && player.CharacterClass.ID == (int) eCharacterClass.Viking && (player.Race == (int) eRace.Norseman || player.Race == (int) eRace.Troll
-				|| player.Race==(int) eRace.Valkyn || player.Race == (int) eRace.Dwarf || player.Race == (int)eRace.MidgardMinotaur));
-		}
-
-		/// <summary>
 		/// Talk to trainer
 		/// </summary>
 		/// <param name="source"></param>
