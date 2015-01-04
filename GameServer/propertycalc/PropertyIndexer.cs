@@ -26,129 +26,54 @@ namespace DOL.GS.PropertyCalc
 	/// </summary>
 	public sealed class PropertyIndexer : IPropertyIndexer
 	{
-		private struct PropEntry
-		{
-			public int key;
-			public int value;
-		}
-
-		private int count = 0;
-
-		private PropEntry[] m_entries;
-		private readonly int[] m_staticArray;
-
-		private const int REALLOCATE_COUNT = 5;
-
+		private readonly ReaderWriterDictionary<int, int> m_propDict;
+		
 		public PropertyIndexer()
 		{
+			m_propDict = new ReaderWriterDictionary<int, int>();
 		}
-
-
+		
 		public PropertyIndexer(int fixSize)
 		{
-			m_staticArray = new int[fixSize];
+			m_propDict = new ReaderWriterDictionary<int, int>(fixSize);
 		}
-
+		
 		public int this[int index]
 		{
 			get
 			{
-				if (m_staticArray != null)
+				try
 				{
-					if (index < m_staticArray.Length)
-					{
-						return m_staticArray[index];
-					}
-					else
-					{
-						return 0;
-					}
+					return m_propDict[index];
 				}
-				if (count == 0) return 0;
-				lock (m_entries)
+				catch
 				{
-					for (int i = 0; i < m_entries.Length; i++)
-					{
-						if (m_entries[i].key == index)
-						{
-							return m_entries[i].value;
-						}
-					}
+					return 0;
 				}
-				return 0;
+				
 			}
 			set
 			{
-				if (m_staticArray != null)
+				try
 				{
-					if (index < m_staticArray.Length)
-					{
-						m_staticArray[index] = value;
-					}
-					return;
+					m_propDict[index] = value;
 				}
-
-				lock (this)
+				catch
 				{
-
-					// find entry
-					int arrayIndex = -1;
-					if (m_entries != null)
-					{
-						for (int i = 0; i < m_entries.Length; i++)
-						{
-							if (m_entries[i].key == index)
-							{
-								arrayIndex = i;
-								break;
-							}
-						}
-					}
-
-					if (value == 0 && arrayIndex >= 0)
-					{
-						m_entries[arrayIndex].key = 0;
-						m_entries[arrayIndex].value = 0;
-						count--;
-					}
-					else
-					{
-						if (arrayIndex >= 0)
-						{
-							m_entries[arrayIndex].value = value;
-						}
-						else
-						{
-							if (m_entries == null)
-							{
-								m_entries = new PropEntry[REALLOCATE_COUNT];
-								m_entries[0].key = index;
-								m_entries[0].value = value;
-								count++;
-								return;
-							}
-
-							for (int i = 0; i < m_entries.Length; i++)
-							{
-								if (m_entries[i].key == 0)
-								{
-									m_entries[i].key = index;
-									m_entries[i].value = value;
-									count++;
-									return;
-								}
-							}
-
-							// reallocate
-							PropEntry[] newdata = new PropEntry[m_entries.Length + REALLOCATE_COUNT];
-							Array.Copy(m_entries, newdata, m_entries.Length);
-							newdata[m_entries.Length].key = index;
-							newdata[m_entries.Length].value = value;
-							m_entries = newdata;
-							count++;
-						}
-					}
+					// Warn Property is wrong.
 				}
+			}
+		}
+		
+		public int this[eProperty index]
+		{
+			get
+			{
+				return this[(int)index];
+			}
+			set
+			{
+				this[(int)index] = value;
 			}
 		}
 	}
