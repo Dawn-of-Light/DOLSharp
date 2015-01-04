@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -56,10 +57,10 @@ namespace DOL.GS
 		public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
 		{
 			m_rwLock.EnterReadLock();
-			IDictionary<TKey, TValue> copy = null;
+			IEnumerable<KeyValuePair<TKey, TValue>> copy = null;
 			try
 			{
-				copy = new Dictionary<TKey, TValue>(m_dictionary);
+				copy = m_dictionary.ToArray();
 			}
 			finally
 			{
@@ -229,7 +230,7 @@ namespace DOL.GS
 				ICollection<TKey> result = default(ICollection<TKey>);
 				try
 				{
-					result = new List<TKey>(m_dictionary.Keys);
+					result = m_dictionary.Keys.ToArray();
 				}
 				finally
 				{
@@ -248,7 +249,7 @@ namespace DOL.GS
 				ICollection<TValue> result = default(ICollection<TValue>);
 				try
 				{
-					result = new List<TValue>(m_dictionary.Values);
+					result = m_dictionary.Values.ToArray();
 				}
 				finally
 				{
