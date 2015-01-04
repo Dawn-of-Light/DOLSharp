@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 using DOL.Events;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
@@ -322,16 +323,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				if (player.CurrentRegion != null)
 				{
-					foreach (GameNPC npc in player.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					var npcs = player.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE).Cast<GameNPC>().ToArray();
+					foreach (GameNPC npc in npcs)
 					{
 						player.Out.SendNPCCreate(npc);
 						mobs++;
 						if (npc.Inventory != null)
 							player.Out.SendLivingEquipmentUpdate(npc);
-
-						//The following line can cause a racing condition
-						//between client and server! Not neccessary
-						//player.Out.SendNPCUpdate(npc); <-- BIG NO NO!
 					}
 				}
 

@@ -117,7 +117,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 						player.Out.SendMessage("Target is not in view.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 
-					player.Out.SendObjectUpdate(myTarget);
+					if (!(myTarget is GamePlayer))
+						player.Out.SendObjectUpdate(myTarget);
 				}
 
 				if (player.IsPraying)

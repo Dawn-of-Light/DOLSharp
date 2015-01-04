@@ -31,7 +31,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ArrayList list = new ArrayList();
 			if (grouped != 0x00)
 			{
-				ArrayList groups = GroupMgr.ListGroupByStatus(0x00);
+				var groups = GroupMgr.ListGroupByStatus(0x00);
 				if (groups != null)
 				{
 					foreach (Group group in groups)
@@ -42,7 +42,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 			}
 
-			ArrayList Lfg = GroupMgr.LookingForGroupPlayers();
+			var Lfg = GroupMgr.LookingForGroupPlayers();
 
 			if (Lfg != null)
 			{

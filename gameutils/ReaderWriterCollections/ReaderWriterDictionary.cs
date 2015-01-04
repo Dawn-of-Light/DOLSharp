@@ -30,8 +30,8 @@ namespace DOL.GS
 	/// </summary>
 	public class ReaderWriterDictionary<TKey, TValue> : IDictionary<TKey, TValue>
 	{
-		private IDictionary<TKey, TValue> m_dictionary;
-		private ReaderWriterLockSlim m_rwLock = new ReaderWriterLockSlim();
+		private readonly IDictionary<TKey, TValue> m_dictionary;
+		private readonly ReaderWriterLockSlim m_rwLock = new ReaderWriterLockSlim();
 		
 		public ReaderWriterDictionary()
 		{
@@ -407,6 +407,19 @@ namespace DOL.GS
 			try
 			{
 				method(m_dictionary);
+			}
+			finally
+			{
+				m_rwLock.ExitWriteLock();
+			}
+		}
+		
+		public N FreezeWhile<N>(Func<IDictionary<TKey, TValue>, N> func)
+		{
+			m_rwLock.EnterWriteLock();
+			try
+			{
+				return func(m_dictionary);
 			}
 			finally
 			{

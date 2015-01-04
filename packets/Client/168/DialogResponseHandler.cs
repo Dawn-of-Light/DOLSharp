@@ -242,7 +242,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								}
 
 								var group = new Group(groupLeader);
-								GroupMgr.AddGroup(group, group);
+								GroupMgr.AddGroup(group);
 
 								group.AddMember(groupLeader);
 								group.AddMember(player);
