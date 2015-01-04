@@ -119,7 +119,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (!string.IsNullOrEmpty(pakdata.CharName))
 						{
 							// Candidate for Customizing ?
-							var character = client.Account.Characters.FirstOrDefault(ch => ch.Name.Equals(pakdata.CharName, StringComparison.OrdinalIgnoreCase));
+							var character = client.Account.Characters != null ? client.Account.Characters.FirstOrDefault(ch => ch.Name.Equals(pakdata.CharName, StringComparison.OrdinalIgnoreCase)) : null;
 							if (character != null)
 								needRefresh |= CheckCharacterForUpdates(pakdata, client, character);
 						}
@@ -128,7 +128,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (!string.IsNullOrEmpty(pakdata.CharName))
 						{
 							// Candidate for Creation ?
-							var character = client.Account.Characters.FirstOrDefault(ch => ch.Name.Equals(pakdata.CharName, StringComparison.OrdinalIgnoreCase));
+							var character = client.Account.Characters != null ? client.Account.Characters.FirstOrDefault(ch => ch.Name.Equals(pakdata.CharName, StringComparison.OrdinalIgnoreCase)) : null;
 							if (character == null)
 								needRefresh |= CreateCharacter(pakdata, client, i);
 						}
