@@ -237,12 +237,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds the Player Collection of Updated Object with last update time.
 		/// </summary>
-		protected ConcurrentDictionary<Tuple<ushort, ushort>, long> m_GameObjectUpdateArray;
+		protected ReaderWriterDictionary<Tuple<ushort, ushort>, long> m_GameObjectUpdateArray;
 
 		/// <summary>
 		/// Holds the Player Collection of Updated House with last update time.
 		/// </summary>
-		protected ConcurrentDictionary<Tuple<ushort, ushort>, long> m_HouseUpdateArray;
+		protected ReaderWriterDictionary<Tuple<ushort, ushort>, long> m_HouseUpdateArray;
 
 		// Trainer window Cache, (Object Type, Object ID) => Skill
 		public List<Tuple<Specialization, List<Tuple<int, int, Skill>>>> TrainerSkillCache = null;
@@ -288,8 +288,8 @@ namespace DOL.GS
 			m_clientVersion = eClientVersion.VersionNotChecked;
 			m_player = null;
 			m_activeCharIndex = -1; //No character loaded yet!
-			m_GameObjectUpdateArray = new ConcurrentDictionary<Tuple<ushort, ushort>, long>();
-			m_HouseUpdateArray = new ConcurrentDictionary<Tuple<ushort, ushort>, long>();
+			m_GameObjectUpdateArray = new ReaderWriterDictionary<Tuple<ushort, ushort>, long>();
+			m_HouseUpdateArray = new ReaderWriterDictionary<Tuple<ushort, ushort>, long>();
 		}
 
 		/// <summary>
@@ -475,7 +475,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Get the Game Object Update Array (Read/Write)
 		/// </summary>
-		public ConcurrentDictionary<Tuple<ushort, ushort>, long> GameObjectUpdateArray
+		public ReaderWriterDictionary<Tuple<ushort, ushort>, long> GameObjectUpdateArray
 		{
 			get { return m_GameObjectUpdateArray; }
 		}
@@ -483,7 +483,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Get the House Update Array (Read/Write)
 		/// </summary>
-		public ConcurrentDictionary<Tuple<ushort, ushort>, long> HouseUpdateArray
+		public ReaderWriterDictionary<Tuple<ushort, ushort>, long> HouseUpdateArray
 		{
 			get { return m_HouseUpdateArray; }
 		}

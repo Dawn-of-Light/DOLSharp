@@ -16,11 +16,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
-using System.Collections.Specialized;
 using System;
-
-using DOL.Database;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DOL.GS
 {
@@ -28,61 +26,36 @@ namespace DOL.GS
 	/// The GroupMgr holds pointers to all groups and to players
 	/// looking for a group
 	/// </summary>
-	public sealed class GroupMgr
+	public static class GroupMgr
 	{
 		/// <summary>
-		/// ArrayList of all groups in the game
+		/// Dictionary of all groups in the game
 		/// </summary>
-		static readonly HybridDictionary m_groups = new HybridDictionary();
+		static readonly ReaderWriterDictionary<Group, bool> m_groups = new ReaderWriterDictionary<Group, bool>();
 		/// <summary>
 		/// ArrayList of all players looking for a group
 		/// </summary>
-		static readonly HybridDictionary m_lfgPlayers = new HybridDictionary();
+		static readonly ReaderWriterDictionary<GamePlayer, bool> m_lfgPlayers = new ReaderWriterDictionary<GamePlayer, bool>();
 
 		/// <summary>
 		/// Adds a group to the list of groups
 		/// </summary>
-		/// <param name="key"></param>
 		/// <param name="group">The group to add</param>
 		/// <returns>True if the function succeeded, otherwise false</returns>
-		public static bool AddGroup(object key, Group group)
+		public static bool AddGroup(Group group)
 		{
-			lock(m_groups)
-			{
-				if(!m_groups.Contains(key))
-				{
-					m_groups.Add(key, group);
-					return true;
-				}
-			}
-
-			return false;
+			return m_groups.AddIfNotExists(group, true);
 		}
 
 		/// <summary>
 		/// Removes a group from the manager
 		/// </summary>
-		/// <param name="key"></param>
+		/// <param name="group"></param>
 		/// <returns></returns>
-		public static bool RemoveGroup(object key)
+		public static bool RemoveGroup(Group group)
 		{
-			Group group = null;
-			lock (m_groups)
-			{
-				group = (Group)m_groups[key];
-				if (group == null)
-				{
-					return false;
-				}
-				m_groups.Remove(key);
-			}
-
-			foreach (GameLiving living in group.GetMembersInTheGroup())
-			{
-				group.RemoveMember(living);
-			}
-
-			return true;
+			bool dummy;
+			return m_groups.TryRemove(group, out dummy);
 		}
 
 		/// <summary>
@@ -91,13 +64,9 @@ namespace DOL.GS
 		/// <param name="member">player to add to the list</param>
 		public static void SetPlayerLooking(GamePlayer member)
 		{
-			lock(m_lfgPlayers)
+			if (member.LookingForGroup == false && m_lfgPlayers.AddIfNotExists(member, true))
 			{
-				if(!m_lfgPlayers.Contains(member) && member.LookingForGroup==false)
-				{
-					member.LookingForGroup=true;
-					m_lfgPlayers.Add(member, null);
-				}
+				member.LookingForGroup = true;
 			}
 		}
 
@@ -107,11 +76,9 @@ namespace DOL.GS
 		/// <param name="member">player to remove from the list</param>
 		public static void RemovePlayerLooking(GamePlayer member)
 		{
-			lock(m_lfgPlayers)
-			{
-				member.LookingForGroup=false;
-				m_lfgPlayers.Remove(member);
-			}
+			member.LookingForGroup = false;
+			bool dummy;
+			m_lfgPlayers.TryRemove(member, out dummy);
 		}
 
 		/// <summary>
@@ -119,42 +86,18 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="status">statusbyte</param>
 		/// <returns>ArrayList of groups</returns>
-		public static ArrayList ListGroupByStatus(byte status)
+		public static ICollection<Group> ListGroupByStatus(byte status)
 		{
-			ArrayList groupList = new ArrayList();
-
-			lock(m_groups)
-			{
-				foreach (Group group in m_groups.Values)
-				{
-					if (group.Status == 10) continue; // not looking for members, ignore
-					if (group.Status == status || group.Status == 0x0B)
-					{
-						groupList.Add(group);
-					}
-				}
-			}
-			return groupList;
+			return m_groups.Keys.Where(g => g.Status == 0x0B || g.Status == status).ToArray();
 		}
 
 		/// <summary>
 		/// Returns an Arraylist of all players looking for a group
 		/// </summary>
 		/// <returns>ArrayList of all players looking for a group</returns>
-		public static ArrayList LookingForGroupPlayers()
+		public static ICollection<GamePlayer> LookingForGroupPlayers()
 		{
-			ArrayList lookingPlayers = new ArrayList();
-			lock(m_lfgPlayers)
-			{
-				foreach (GamePlayer player in m_lfgPlayers.Keys)
-				{
-					if(player.Group==null)
-					{
-						lookingPlayers.Add(player);
-					}
-				}
-			}
-			return lookingPlayers;
+			return m_lfgPlayers.Keys.Where(p => p.Group == null).ToArray();
 		}
 	}
 }

@@ -1784,18 +1784,10 @@ namespace DOL.GS
 		/// <returns>ArrayList of GameClients</returns>
 		public static IList<GameClient> GetAllClients()
 		{
-			List<GameClient> targetClients = new List<GameClient>();
-
 			lock (m_clients.SyncRoot)
 			{
-				foreach (GameClient client in m_clients)
-				{
-					if (client != null)
-						targetClients.Add(client);
-				}
+				return m_clients.Where(c => c != null).ToList();
 			}
-
-			return targetClients;
 		}
 
 		/// <summary>
