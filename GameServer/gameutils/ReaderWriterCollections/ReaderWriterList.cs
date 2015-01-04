@@ -56,10 +56,10 @@ namespace DOL.GS
 		public IEnumerator<T> GetEnumerator()
 		{
 			m_rwLock.EnterReadLock();
-			IList<T> newList = null;
+			IEnumerable<T> newList = null;
 			try
 			{
-				newList = new List<T>(m_list);
+				newList = m_list.ToArray();
 			}
 			finally
 			{

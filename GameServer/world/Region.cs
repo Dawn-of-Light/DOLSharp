@@ -99,7 +99,7 @@ namespace DOL.GS
         /// <summary>
         /// Holds all the Zones inside this Region
         /// </summary>
-        protected readonly ArrayList m_Zones;
+        protected readonly ReaderWriterList<Zone> m_zones;
 
         protected object m_lockAreas = new object();
 
@@ -231,7 +231,7 @@ namespace DOL.GS
 
             m_graveStones = new Hashtable();
 
-            m_Zones = new ArrayList(1);
+            m_zones = new ReaderWriterList<Zone>(1);
             m_ZoneAreas = new ushort[64][];
             m_ZoneAreasCount = new ushort[64];
             for (int i = 0; i < 64; i++)
@@ -304,12 +304,12 @@ namespace DOL.GS
 
             m_objects = null;
 
-            foreach (Zone z in m_Zones)
+            foreach (Zone z in m_zones)
             {
                 z.Delete();
             }
 
-            m_Zones.Clear();
+            m_zones.Clear();
 
             m_graveStones.Clear();
 
@@ -401,7 +401,7 @@ namespace DOL.GS
                 if (Zones.Count != zoneCount)
                     return false; //Dungeons only have 1 zone!
 
-                Zone zone = (Zone)Zones[0];
+                var zone = Zones[0];
 
                 if (zone.XOffset == dungeonOffset && zone.YOffset == dungeonOffset)
                     return true; //Only dungeons got this offset
@@ -465,9 +465,9 @@ namespace DOL.GS
         /// <summary>
         /// An ArrayList of all Zones within this Region
         /// </summary>
-        public ArrayList Zones
+        public IList<Zone> Zones
         {
-            get { return m_Zones; }
+            get { return m_zones; }
         }
 
         /// <summary>
@@ -1245,9 +1245,8 @@ namespace DOL.GS
         {
             int varX = x;
             int varY = y;
-            for (int i = 0; i < m_Zones.Count; i++)
+            foreach (Zone zone in m_zones)
             {
-                Zone zone = (Zone)m_Zones[i];
                 if (zone.XOffset <= varX && zone.YOffset <= varY && (zone.XOffset + zone.Width) > varX && (zone.YOffset + zone.Height) > varY)
                     return zone;
             }
@@ -1354,15 +1353,14 @@ namespace DOL.GS
                 area.ID = nextAreaID;
                 m_Areas.Add(area.ID, area);
 
-                for (ushort zonePos = 0; zonePos < Zones.Count; zonePos++)
+                int zonePos = 0;
+                foreach (Zone zone in Zones)
                 {
-                    Zone zone = (Zone)Zones[zonePos];
-                    if (!area.IsIntersectingZone(zone))
-                        continue;
-
-                    m_ZoneAreas[zonePos][m_ZoneAreasCount[zonePos]++] = area.ID;
+                    if (area.IsIntersectingZone(zone))
+                    	m_ZoneAreas[zonePos][m_ZoneAreasCount[zonePos]++] = area.ID;
+                    
+                    zonePos++;
                 }
-
                 return area;
             }
         }
@@ -1381,8 +1379,9 @@ namespace DOL.GS
                 }
 
                 m_Areas.Remove(area.ID);
+                int ZoneCount = Zones.Count;
 
-                for (int zonePos = 0; zonePos < Zones.Count; zonePos++)
+                for (int zonePos = 0; zonePos < ZoneCount; zonePos++)
                 {
                     for (int areaPos = 0; areaPos < m_ZoneAreasCount[zonePos]; areaPos++)
                     {
@@ -1550,13 +1549,8 @@ namespace DOL.GS
 
                 uint sqRadius = (uint)radius * radius;
 
-                // optimization (according to profiler)
-                int sz = m_Zones.Count;
-
-                Zone currentZone = null;
-                for (int i = 0; i < sz; ++i)
+                foreach (var currentZone in m_zones)
                 {
-                    currentZone = (Zone)m_Zones[i];
                     if ((currentZone != startingZone)
                         && (currentZone.TotalNumberOfObjects > 0)
                         && CheckShortestDistance(currentZone, x, y, sqRadius))
@@ -1564,6 +1558,7 @@ namespace DOL.GS
                         res = currentZone.GetObjectsInRadius(type, x, y, z, radius, res, ignoreZ);
                     }
                 }
+
                 //Return required enumerator
                 IEnumerable tmp = null;
                 if (withDistance)
@@ -1938,14 +1933,12 @@ namespace DOL.GS
 
         public void Relocate()
         {
-            lock (m_Zones.SyncRoot)
-            {
-                for (int i = 0; i < m_Zones.Count; i++)
-                {
-                    ((Zone)m_Zones[i]).Relocate(null);
-                }
-                m_lastRelocationTime = DateTime.Now.Ticks / (10 * 1000);
-            }
+        	foreach (var zone in m_zones)
+        	{
+        		zone.Relocate(null);
+        	}
+        	
+        	m_lastRelocationTime = DateTime.Now.Ticks / (10 * 1000);
         }
 
         #endregion

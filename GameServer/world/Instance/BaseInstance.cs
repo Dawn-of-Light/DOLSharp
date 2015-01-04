@@ -65,7 +65,7 @@ namespace DOL.GS
 			StartRegionMgr();
 			BeginAutoClosureCountdown(10);
 			
-			foreach (Zone z in m_Zones)
+			foreach (Zone z in m_zones)
 			{
 				m_zoneSkinMap.Add(z.ZoneSkinID, z);
 			}
