@@ -42,26 +42,14 @@ namespace DOL.GS.PropertyCalc
 		{
 			get
 			{
-				try
-				{
-					return m_propDict[index];
-				}
-				catch
-				{
-					return 0;
-				}
-				
+				int val;
+				if (m_propDict.TryGetValue(index, out val))
+					return val;
+				return 0;
 			}
 			set
 			{
-				try
-				{
-					m_propDict[index] = value;
-				}
-				catch
-				{
-					// Warn Property is wrong.
-				}
+				m_propDict[index] = value;
 			}
 		}
 		

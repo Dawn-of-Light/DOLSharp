@@ -30,8 +30,8 @@ namespace DOL.GS
 	/// </summary>
 	public class ReaderWriterList<T> : IList<T>
 	{
-		private List<T> m_list;
-		private ReaderWriterLockSlim m_rwLock = new ReaderWriterLockSlim();
+		private readonly List<T> m_list;
+		private readonly ReaderWriterLockSlim m_rwLock = new ReaderWriterLockSlim();
 		
 		public ReaderWriterList()
 		{
@@ -404,6 +404,19 @@ namespace DOL.GS
 			try
 			{
 				method(m_list);
+			}
+			finally
+			{
+				m_rwLock.ExitWriteLock();
+			}
+		}
+		
+		public N FreezeWhile<N>(Func<List<T>, N> func)
+		{
+			m_rwLock.EnterWriteLock();
+			try
+			{
+				return func(m_list);
 			}
 			finally
 			{

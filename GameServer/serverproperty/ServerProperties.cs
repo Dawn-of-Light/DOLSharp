@@ -185,6 +185,18 @@ namespace DOL.GS.ServerProperties
 		public static bool ALLOW_CHANGE_LANGUAGE;
 
 		/// <summary>
+		/// Allow player to change their character face after creation through customizing ?
+		/// </summary>
+		[ServerProperty("system", "allow_customize_face_after_creation", "Allow player to change their character face after creation through customizing ?", true)]
+		public static bool ALLOW_CUSTOMIZE_FACE_AFTER_CREATION;
+
+		/// <summary>
+		/// Allow player to change their character starting stats after creation through customizing ?
+		/// </summary>
+		[ServerProperty("system", "allow_customize_stats_after_creation", "Allow player to change their character starting stats after creation through customizing ?", true)]
+		public static bool ALLOW_CUSTOMIZE_STATS_AFTER_CREATION;
+
+		/// <summary>
 		/// StatSave Interval
 		/// </summary>
 		[ServerProperty("system", "statsave_interval", "Interval between each DB Stats store in minutes. -1 for deactivated.", -1)]

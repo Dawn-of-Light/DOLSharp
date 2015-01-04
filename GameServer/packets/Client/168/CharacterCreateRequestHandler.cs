@@ -412,13 +412,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (pdata.CustomMode == 1 || pdata.CustomMode == 2 || pdata.CustomMode == 3)
 			{
 				bool flagChangedStats = false;
-				character.EyeSize = (byte)pdata.EyeSize;
-				character.LipSize = (byte)pdata.LipSize;
-				character.EyeColor = (byte)pdata.EyeColor;
-				character.HairColor = (byte)pdata.HairColor;
-				character.FaceType = (byte)pdata.FaceType;
-				character.HairStyle = (byte)pdata.HairStyle;
-				character.MoodType = (byte)pdata.MoodType;
+				
+				if (Properties.ALLOW_CUSTOMIZE_FACE_AFTER_CREATION)
+				{
+					character.EyeSize = (byte)pdata.EyeSize;
+					character.LipSize = (byte)pdata.LipSize;
+					character.EyeColor = (byte)pdata.EyeColor;
+					character.HairColor = (byte)pdata.HairColor;
+					character.FaceType = (byte)pdata.FaceType;
+					character.HairStyle = (byte)pdata.HairStyle;
+					character.MoodType = (byte)pdata.MoodType;
+				}
 				
 				if (pdata.CustomMode != 3 && client.Version >= GameClient.eClientVersion.Version189)
 				{
@@ -470,26 +474,29 @@ namespace DOL.GS.PacketHandler.Client.v168
 							    return true;
 							}
 							
-							// Set Stats, valid is ok.
-							character.Strength = stats[eStat.STR];
-							character.Constitution = stats[eStat.CON];
-							character.Dexterity = stats[eStat.DEX];
-							character.Quickness = stats[eStat.QUI];
-							character.Intelligence = stats[eStat.INT];
-							character.Piety = stats[eStat.PIE];
-							character.Empathy = stats[eStat.EMP];
-							character.Charisma = stats[eStat.CHR];
-
-							if (log.IsInfoEnabled)
-								log.InfoFormat("Character {0} updated in cache!", character.Name);
-
-							if (client.Player != null)
+							if (Properties.ALLOW_CUSTOMIZE_STATS_AFTER_CREATION)
 							{
-								foreach(var stat in stats.Keys)
-									client.Player.ChangeBaseStat(stat, (short)(stats[stat] - client.Player.GetBaseStat(stat)));
-								
+								// Set Stats, valid is ok.
+								character.Strength = stats[eStat.STR];
+								character.Constitution = stats[eStat.CON];
+								character.Dexterity = stats[eStat.DEX];
+								character.Quickness = stats[eStat.QUI];
+								character.Intelligence = stats[eStat.INT];
+								character.Piety = stats[eStat.PIE];
+								character.Empathy = stats[eStat.EMP];
+								character.Charisma = stats[eStat.CHR];
+	
 								if (log.IsInfoEnabled)
-									log.InfoFormat("Character {0} Player updated in cache!", character.Name);
+									log.InfoFormat("Character {0} Stats updated in cache!", character.Name);
+	
+								if (client.Player != null)
+								{
+									foreach(var stat in stats.Keys)
+										client.Player.ChangeBaseStat(stat, (short)(stats[stat] - client.Player.GetBaseStat(stat)));
+									
+									if (log.IsInfoEnabled)
+										log.InfoFormat("Character {0} Player Stats updated in cache!", character.Name);
+								}
 							}
 						}
 						else if (log.IsErrorEnabled)
@@ -510,14 +517,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						return true;
 					}
-
-					if (pdata.CreationModel != character.CreationModel)
-						character.CurrentModel = newModel;
-
+					
 					character.CustomisationStep = 2; // disable config button
 
-					if (log.IsInfoEnabled)
-						log.InfoFormat("Character {0} face properties configured by account {1}!", character.Name, client.Account.Name);
+					if (Properties.ALLOW_CUSTOMIZE_FACE_AFTER_CREATION)
+					{
+						if (pdata.CreationModel != character.CreationModel)
+							character.CurrentModel = newModel;
+	
+						if (log.IsInfoEnabled)
+							log.InfoFormat("Character {0} face properties configured by account {1}!", character.Name, client.Account.Name);
+					}
 				}
 				else if (pdata.CustomMode == 3) //auto config -- seems someone thinks this is not possible?
 				{
