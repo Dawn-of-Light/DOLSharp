@@ -2141,7 +2141,7 @@ namespace DOL.GS.Quests
 			{
 				CharacterXDataQuest charQuest = GetCharacterQuest(player, ID, true);
 
-				if (charQuest.Count < MaxQuestCount)
+				if (charQuest.Count < MaxQuestCount && player.Level <= MaxLevel && player.Level >= Level)
 				{
 					TryTurnTo(obj, player);
 
@@ -2285,7 +2285,8 @@ namespace DOL.GS.Quests
 			if (item == null || item.OwnerID == null || m_collectItems.Count == 0)
 				return;
 
-			if (TargetName == obj.Name && (TargetRegion == obj.CurrentRegionID || TargetRegion == 0))
+			if (TargetName == obj.Name && (TargetRegion == obj.CurrentRegionID || TargetRegion == 0)
+			   && player.Level >= Level && player.Level <= MaxLevel)
 			{
 				if (m_collectItems.Count >= Step &&
 					string.IsNullOrEmpty(m_collectItems[Step - 1]) == false &&
