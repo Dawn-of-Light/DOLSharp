@@ -57,7 +57,7 @@ namespace DOL.GS.Quests
 	/// SourceName - Various uses as defined below:
     /// 
     ///         NO_INDICATOR - Placing the text NO_INDICATOR in the source name field will disable any quest indicator that would normally
-    ///                        display above the NPC's head.  This can be combined with the optiosn below, just make sure to include a | character
+    ///                        display above the NPC's head.  This can be combined with the options below, just make sure to include a | character
     ///                        to separate it from the other options.  Ex: NO_INDICATOR|SEARCH;2;Search for ring here;12;5000;77665;500;20|SEARCH;3;Search for necklace here;12;8000;74665;500;20
     ///         StartTypes:
     ///         Search
