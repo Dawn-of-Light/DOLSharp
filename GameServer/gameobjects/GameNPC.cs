@@ -2496,7 +2496,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public eQuestIndicator SetQuestIndicator(Type questType, GamePlayer player)
 		{
-			if (CanGiveOneQuest(player)) return eQuestIndicator.Available;
+			if (CanShowOneQuest(player)) return eQuestIndicator.Available;
 			if (player.HasFinishedQuest(questType)>0) return eQuestIndicator.Finish;
 			return eQuestIndicator.None;
 		}
@@ -2520,7 +2520,7 @@ namespace DOL.GS
 		public virtual eQuestIndicator GetQuestIndicator(GamePlayer player)
 		{
 			// Available one ?
-			if (CanGiveOneQuest(player))
+			if (CanShowOneQuest(player))
 				return eQuestIndicator.Available;
 			
 			// Finishing one ?
@@ -2531,12 +2531,12 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Check if the npc can give one quest to a player
+		/// Check if the npc can show a quest indicator to a player
 		/// Checks both scripted and data quests
 		/// </summary>
 		/// <param name="player">The player to check</param>
 		/// <returns>true if yes, false if the npc can give any quest</returns>
-		public bool CanGiveOneQuest(GamePlayer player)
+		public bool CanShowOneQuest(GamePlayer player)
 		{
 			// Scripted quests
 			lock (m_questListToGive.SyncRoot)
@@ -2555,10 +2555,7 @@ namespace DOL.GS
 			{
 				foreach (DataQuest quest in DataQuestList)
 				{
-					if (quest.StartType != DataQuest.eStartType.Collection &&
-					    quest.StartType != DataQuest.eStartType.KillComplete &&
-					    quest.StartType != DataQuest.eStartType.InteractComplete &&
-                        quest.StartType != DataQuest.eStartType.SearchStart &&
+					if (quest.ShowIndicator &&
                         quest.CheckQuestQualification(player))
 					{
 						return true;
@@ -2589,8 +2586,10 @@ namespace DOL.GS
 				// Handle Data Quest here.
 				
 				DataQuest quest = null;
-				if (q is DataQuest)
-					quest = (DataQuest)q;
+                if (q is DataQuest)
+                {
+                    quest = (DataQuest)q;
+                }
 				
 				if (quest != null && (quest.TargetName == Name && (quest.TargetRegion == 0 || quest.TargetRegion == CurrentRegionID)))
 				{
@@ -2608,18 +2607,24 @@ namespace DOL.GS
 				// Handle Reward Quest here.
 				
 				RewardQuest rwQuest = null;
-				
-				if (q is RewardQuest)
-					rwQuest = (RewardQuest)q;
+
+                if (q is RewardQuest)
+                {
+                    rwQuest = (RewardQuest)q;
+                }
 								
 				if (rwQuest != null && rwQuest.QuestGiver == this)
 				{
 					bool done = true;
-					foreach (RewardQuest.QuestGoal goal in rwQuest.Goals)
-						done &= goal.IsAchieved;
-					
-					if (done)
-						return true;
+                    foreach (RewardQuest.QuestGoal goal in rwQuest.Goals)
+                    {
+                        done &= goal.IsAchieved;
+                    }
+
+                    if (done)
+                    {
+                        return true;
+                    }
 				}
 			}
 			

@@ -56,6 +56,10 @@ namespace DOL.GS.Quests
 	/// 
 	/// SourceName - Various uses as defined below:
     /// 
+    ///         NO_INDICATOR - Placing the text NO_INDICATOR in the source name field will disable any quest indicator that would normally
+    ///                        display above the NPC's head.  This can be combined with the optiosn below, just make sure to include a | character
+    ///                        to separate it from the other options.  Ex: NO_INDICATOR|SEARCH;2;Search for ring here;12;5000;77665;500;20|SEARCH;3;Search for necklace here;12;8000;74665;500;20
+    ///         StartTypes:
     ///         Search
     ///         SearchFinish -  Defines a complete quest search area and any associated messages. Format: SEARCH;Step #;Popup Text;Region ID;X;Y;RADIUS;TIME
     ///                         TIME = amount of time search takes, in seconds
@@ -156,6 +160,29 @@ namespace DOL.GS.Quests
             get { return m_lastErrorText; }
             set { m_lastErrorText = value; }
         }
+
+        protected bool m_showIndicator = true;
+
+        /// <summary>
+        /// Should the available quest indicator be shown for this quest?  Use NO_INDICATOR in SourceName
+        /// </summary>
+        public bool ShowIndicator
+        {
+            get 
+            {
+                if (StartType != DataQuest.eStartType.Collection &&
+                    StartType != DataQuest.eStartType.KillComplete &&
+                    StartType != DataQuest.eStartType.InteractComplete &&
+                    StartType != DataQuest.eStartType.SearchStart)
+                {
+                    return m_showIndicator;
+                }
+
+                return false;
+            }
+            set { m_showIndicator = value; } // maybe someone wants to change this for some reason?
+        }
+
 
 		/// <summary>
 		/// How does this quest start
@@ -349,6 +376,16 @@ namespace DOL.GS.Quests
                 m_lastErrorText += " ::" + m_numSearchAreas + " search areas defined for data quest ID:" + ID;
 
 				string[] parse1;
+
+                // check for NO_INDICATOR option
+                lastParse = m_dataQuest.SourceName;
+                if (string.IsNullOrEmpty(lastParse) == false)
+                {
+                    if (lastParse.ToUpper().Contains("NO_INDICATOR"))
+                    {
+                        m_showIndicator = false;
+                    }
+                }
 
 				lastParse = m_dataQuest.SourceText;
 				if (string.IsNullOrEmpty(lastParse) == false)
