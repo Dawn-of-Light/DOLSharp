@@ -51,11 +51,16 @@ namespace DOL.AI.Brain
 				Body.Notify(GameNPCEvent.ArriveAtTarget, Body);
 			}
 		}
+		
+		/// <summary>
+		/// Don't follow owner
+		/// </summary>
+		public override void FollowOwner() { }
+		#endregion
 
 		/// <summary>
-    /// Updates the pet window
-    /// </summary>
-    public override void UpdatePetWindow() { }
-		#endregion
+		/// Updates the pet window
+		/// </summary>
+		public override void UpdatePetWindow() { }
 	}
 }
