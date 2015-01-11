@@ -310,23 +310,6 @@ namespace DOL.GS.Quests
             }
 		}
 
-		/// <summary>
-		/// Check if the npc can give a quest to the player
-		/// </summary>
-		/// <param name="source">The source to check</param>
-		/// <param name="target">The player to check</param>
-		/// <returns>true if yes</returns>
-		public static bool CanGiveOneNewQuest(GameNPC source, GamePlayer target)
-		{
-            if (source != null)
-            {
-                return source.CanGiveOneQuest(target);
-            }
-            else
-            {
-                return false;
-            }
-		}
 
 		/// <summary>
         /// Send the quest dialogue for a classic quest to the player
