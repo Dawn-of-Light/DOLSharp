@@ -18,7 +18,6 @@
  */
 using System;
 using System.Text;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -29,7 +28,7 @@ namespace DOL.GS
 	/// <summary>
 	/// 
 	/// </summary>
-	public class Spell : Skill
+	public class Spell : Skill, ICustomParamsValuable
 	{
 		protected readonly string m_description = "";
 		protected readonly string m_target = "";
@@ -78,6 +77,10 @@ namespace DOL.GS
 		// params
 		protected Dictionary<string, List<string>> m_paramCache = null;
 
+		public Dictionary<string, List<string>> CustomParamsDictionary
+		{
+			get { return m_paramCache; }
+		}
 		
 		#region member access properties
 		#region warlocks
@@ -632,7 +635,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return GetParamValue<ushort>("InternalIconID");
+				return this.GetParamValue<ushort>("InternalIconID");
 			}
 		}
         
@@ -661,80 +664,6 @@ namespace DOL.GS
 			return paramCache;
 		}
 				
-		/// <summary>
-		/// Parse Params String to Extract the Value identified by Key.
-		/// Expected Format : {"key":["value"#, "value", ...#]#, "key2":[...], ...#}
-		/// From Dictionary<stringKey, List<stringValue>> (List<stringValue>.First() Casted to T)
-		/// </summary>
-		/// <param name="key">Param Key</param>
-		/// <returns>Param Value</returns>
-		public T GetParamValue<T>(string key)
-		{
-			if (m_paramCache == null || m_paramCache.Count == 0)
-				return default(T);
-			
-			// is key valid ?
-			if (!Util.IsEmpty(key))
-			{					
-				// Is key existing ?
-				if (m_paramCache.ContainsKey(key) && m_paramCache[key].Count > 0)
-				{
-					try
-					{
-						return (T)Convert.ChangeType(m_paramCache[key].First(), typeof(T));
-					}
-					catch
-					{
-						return default(T);
-					}
-				}
-			}
-			
-			return default(T);
-		}
-
-		/// <summary>
-		/// Parse Params String to Extract the Values identified by Key.
-		/// Expected Format : {"key":["value"#, "value", ...#]#, "key2":[...], ...#}
-		/// From Dictionary<stringKey, List<stringValue>> (List<stringValue> Casted to List<T>)
-		/// </summary>
-		/// <param name="key">Param Key</param>
-		/// <returns>List of Values object</returns>
-		public IList<T> GetParamValues<T>(string key)
-		{
-			if (m_paramCache == null || m_paramCache.Count == 0)
-				return new List<T>();
-			
-			// is key valid ?
-			if (key != null && key.Length > 0)
-			{					
-				// Is key existing ?
-				if (m_paramCache.ContainsKey(key) && m_paramCache[key].Count > 0)
-				{
-					List<T> list = new List<T>();
-					foreach(string val in m_paramCache[key])
-					{
-						T content;
-						try
-						{
-							content = (T)Convert.ChangeType(val, typeof(T));
-						}
-						catch
-						{
-							content = default(T);
-						}
-						
-						if (content != null)
-							list.Add(content);
-					}
-					
-					return list;
-				}
-			}
-			
-			return new List<T>();
-		}
-
 		#endregion
 	}
 	

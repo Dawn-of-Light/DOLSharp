@@ -2881,13 +2881,21 @@ namespace DOL.GS
 			if (MAX_PASSENGERS > 0)
 				Riders = new GamePlayer[MAX_PASSENGERS];
 
+			bool anyPlayer = false;
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				if (player == null) continue;
 				player.Out.SendNPCCreate(this);
 				if (m_inventory != null)
 					player.Out.SendLivingEquipmentUpdate(this);
+				
+				// If any player was initialized, update last visible tick to enable brain
+				anyPlayer = true;
 			}
+			
+			if (anyPlayer)
+				m_lastVisibleToPlayerTick = (uint)Environment.TickCount;
+			
 			m_spawnPoint.X = X;
 			m_spawnPoint.Y = Y;
 			m_spawnPoint.Z = Z;
