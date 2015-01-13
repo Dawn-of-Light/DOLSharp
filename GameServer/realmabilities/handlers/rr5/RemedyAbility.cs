@@ -49,7 +49,7 @@ namespace DOL.GS.SkillHandler
 				RemedyEffect effect = new RemedyEffect();
 				effect.Start(player);
 
-                player.DisableSkill(ab, 300);
+                player.DisableSkill(ab, 300 * 1000);
 			}
 		}
 
