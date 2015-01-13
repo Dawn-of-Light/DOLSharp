@@ -50,9 +50,6 @@ namespace DOL.GS.Effects
 				base.Stop();
 				return;
 			}
-			int heal = owner.MaxHealth - owner.Health;
-			if (heal > healthdrain)
-				heal = healthdrain;
 			owner.Health += healthdrain;
 			base.Stop();
 		}
