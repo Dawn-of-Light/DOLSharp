@@ -6207,10 +6207,10 @@ namespace DOL.GS
 				}
 				else
 				{
-					if (oldAbility.Level < ability.Level)
-							isNewAbility = true;
-
-						oldAbility.Level = ability.Level;
+					int oldLevel = oldAbility.Level;
+					oldAbility.Level = ability.Level;
+					
+					isNewAbility |= oldAbility.Level > oldLevel;
 				}
 				
 				if (sendUpdates && (isNewAbility && (this is GamePlayer)))
