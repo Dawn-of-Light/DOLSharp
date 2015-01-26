@@ -3,11 +3,27 @@ using DOL.Database;
 
 namespace DOL.GS.SkillHandler
 {
-	public class VampiirAbility : StatChangingAbility
+	public class LevelBasedStatChangingAbility : StatChangingAbility
 	{
-		public VampiirAbility(DBAbility dba, int level, eProperty property)
+		public LevelBasedStatChangingAbility(DBAbility dba, int level, eProperty property)
 			: base(dba, level, property)
 		{
+		}
+
+		public override int Level
+		{
+			get
+			{
+				// Report Max Value if no living assigned to trigger the ability override
+				if (m_activeLiving != null)
+					return int.MaxValue;
+				
+				return m_activeLiving.Level;
+			}
+			set
+			{
+				base.Level = value;
+			}
 		}
 		
 		public override string Name {
@@ -15,60 +31,60 @@ namespace DOL.GS.SkillHandler
 			set { base.Name = value; }
 		}
 	}
+	
+	public abstract class VampiirAbility : LevelBasedStatChangingAbility
+	{
+		public abstract int RatioByLevel { get; }
+		
+		protected VampiirAbility(DBAbility dba, int level, eProperty property)
+			: base(dba, level, property)
+		{
+		}
+		
+		public override int GetAmountForLevel(int level)
+		{
+			//(+stats every level starting level 6),
+			return level < 6 ? 0 : (level - 5) * RatioByLevel;
+		}
+	}
 
 	public class VampiirStrength : VampiirAbility
 	{
+		public override int RatioByLevel { get { return 3; } }
+		
 		public VampiirStrength(DBAbility dba, int level)
 			: base(dba, level, eProperty.Strength)
 		{
-		}
-
-		public override int GetAmountForLevel(int level)
-		{
-			//(+3 strength every level starting level 6),
-			return level < 6 ? 0 : (level - 5) * 3;
 		}
 	}
 
 	public class VampiirDexterity : VampiirAbility
 	{
+		public override int RatioByLevel { get { return 3; } }
+
 		public VampiirDexterity(DBAbility dba, int level)
 			: base(dba, level, eProperty.Dexterity)
 		{
-		}
-
-		public override int GetAmountForLevel(int level)
-		{
-			//(+3 dexterity every level starting level 6),
-			return level < 6 ? 0 : (level - 5) * 3;
 		}
 	}
 
 	public class VampiirConstitution : VampiirAbility
 	{
+		public override int RatioByLevel { get { return 3; } }
+
 		public VampiirConstitution(DBAbility dba, int level)
 			: base(dba, level, eProperty.Constitution)
 		{
-		}
-
-		public override int GetAmountForLevel(int level)
-		{
-			//(+3 constitution every level starting level 6),
-			return level < 6 ? 0 : (level - 5) * 3;
 		}
 	}
 
 	public class VampiirQuickness : VampiirAbility
 	{
+		public override int RatioByLevel { get { return 2; } }
+
 		public VampiirQuickness(DBAbility dba, int level)
 			: base(dba, level, eProperty.Quickness)
 		{
-		}
-
-		public override int GetAmountForLevel(int level)
-		{
-			//(+2 quickness every level starting level 6),
-			return level < 6 ? 0 : (level - 5) * 2;
 		}
 	}
 }
