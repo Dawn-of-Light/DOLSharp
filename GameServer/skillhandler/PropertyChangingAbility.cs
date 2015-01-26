@@ -66,16 +66,18 @@ namespace DOL.GS.SkillHandler
 		{
 			if (m_activeLiving == null)
 			{
+				m_activeLiving = living;
 				foreach (eProperty property in m_property)
 				{
 					living.AbilityBonus[(int)property] += GetAmountForLevel(living.CalculateSkillLevel(this));
 				}
-				m_activeLiving = living;
-				if (sendUpdates) SendUpdates(living);
+				
+				if (sendUpdates)
+					SendUpdates(living);
 			}
 			else
 			{
-				log.Warn("ability " + Name + " already activated on " + living.Name);
+				log.WarnFormat("ability {0} already activated on {1}", Name, living.Name);
 			}
 		}
 
