@@ -229,7 +229,7 @@ namespace DOL.GS
 					return false;
 				}
 
-				if (bonusLevel - GetItemMaxImbuePoints(item) > 5)
+				if (bonusLevel - GetItemMaxImbuePoints(item) > 6)
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "SpellCrafting.IsAllowedToCombine.NoMoreLevels", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
