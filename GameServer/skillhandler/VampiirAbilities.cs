@@ -16,12 +16,16 @@ namespace DOL.GS.SkillHandler
 			{
 				// Report Max Value if no living assigned to trigger the ability override
 				if (m_activeLiving != null)
-					return int.MaxValue;
+					return m_activeLiving.Level;
 				
-				return m_activeLiving.Level;
+				return int.MaxValue;
 			}
 			set
 			{
+				// Override Setter to have Living Level Updated if available.
+				if (m_activeLiving != null)
+					base.Level = m_activeLiving.Level;
+				
 				base.Level = value;
 			}
 		}
@@ -29,6 +33,13 @@ namespace DOL.GS.SkillHandler
 		public override string Name {
 			get { return string.Format("{0} +{1}", base.Name, GetAmountForLevel(Level)); }
 			set { base.Name = value; }
+		}
+		
+		public override void Activate(GameLiving living, bool sendUpdates)
+		{
+			// Set Base level Before Living is set.
+			Level = living.Level;
+			base.Activate(living, sendUpdates);
 		}
 	}
 	
