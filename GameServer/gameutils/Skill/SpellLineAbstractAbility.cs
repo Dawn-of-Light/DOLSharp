@@ -64,7 +64,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		public Spell GetSpellForLevel(int level)
 		{
-			return CurrentSpellLine != null ? SkillBase.GetSpellList(CurrentSpellLine.KeyName).FirstOrDefault(spell => spell.Level == level) : null;
+			var line = CurrentSpellLine;
+			return line != null ? SkillBase.GetSpellList(line.KeyName).FirstOrDefault(spell => spell.Level == level) : null;
 		}
 		
 		/// <summary>
