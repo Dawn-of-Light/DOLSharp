@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using DOL.GS.Effects;
@@ -24,10 +25,106 @@ using DOL.GS.Effects;
 namespace DOL.GS.Spells
 {
 	/// <summary>
-	/// Spell Helper Class that handle most static method to help spell handlers/effects.
+	/// Spell Helper Class that handle most static method to help finding spell handlers/effects.
 	/// </summary>
 	public static class SpellHelper
 	{
+		#region extension
+		/// <summary>
+		/// Find Game Spell Effect by spell object
+		/// </summary>
+		/// <param name="target">Living to find effect on</param>
+		/// <param name="spell">Spell Object to Find (Spell.ID Match)</param>
+		/// <returns>First occurence GameSpellEffect build from spell in target's effect list or null</returns>
+		public static GameSpellEffect FindEffectOnTarget(this GameLiving target, Spell spell)
+		{
+			GameSpellEffect effect = null;
+			lock (target.EffectList)
+			{
+				effect = target.EffectsOnTarget(spell).FirstOrDefault();
+			}
+			
+			return effect;
+		}
+		
+		/// <summary>
+		/// Find Game Spell Effects by spell object
+		/// </summary>
+		/// <param name="target">Living to find effect on</param>
+		/// <param name="spell">Spell Object to Find (Spell.ID Match)</param>
+		/// <returns>All GameSpellEffect build from spell in target's effect list or null</returns>
+		public static List<GameSpellEffect> FindEffectsOnTarget(this GameLiving target, Spell spell)
+		{
+			List<GameSpellEffect> effects = null;
+			lock (target.EffectList)
+			{
+				effects = target.EffectsOnTarget(spell).ToList();
+			}
+			
+			return effects;
+		}
+
+		
+		/// <summary>
+		/// Find Game Spell Effects by spell object
+		/// Inner Method to get Enumerable For LINQ.
+		/// </summary>
+		/// <param name="target">Living to find effect on</param>
+		/// <param name="spell">Spell Object to Find (Spell.ID Match)</param>
+		/// <returns>All GameSpellEffect build from spell in target's effect list or null</returns>
+		private static IEnumerable<GameSpellEffect> EffectsOnTarget(this GameLiving target, Spell spell)
+		{
+			return target.EffectList.OfType<GameSpellEffect>().Where(fx => !(fx is GameSpellAndImmunityEffect && ((GameSpellAndImmunityEffect)fx).ImmunityState) && fx.Spell.ID == spell.ID);
+		}
+		
+		/// <summary>
+		/// Find Pulsing Spell Effect by spell object
+		/// </summary>
+		/// <param name="target">Living to find effect on</param>
+		/// <param name="spell">Spell Object to Find (Spell.ID Match)</param>
+		/// <returns>First occurence PulsingSpellEffect build from spell in target's concentration list or null</returns>
+		public static PulsingSpellEffect FindPulsingSpellOnTarget(this GameLiving target, Spell spell)
+		{
+			PulsingSpellEffect pulsingSpell = null;
+			lock (target.ConcentrationEffects)
+			{
+				pulsingSpell = target.PulsingSpellsOnTarget(spell).FirstOrDefault();
+			}
+			
+			return pulsingSpell;
+		}
+		/// <summary>
+		/// Find Pulsing Spell Effects by spell object
+		/// </summary>
+		/// <param name="target">Living to find effect on</param>
+		/// <param name="spell">Spell Object to Find (Spell.ID Match)</param>
+		/// <returns>All PulsingSpellEffect build from spell in target's concentration list or null</returns>
+		public static List<PulsingSpellEffect> FindPulsingSpellsOnTarget(this GameLiving target, Spell spell)
+		{
+			List<PulsingSpellEffect> effects = null;
+			lock (target.EffectList)
+			{
+				effects = target.PulsingSpellsOnTarget(spell).ToList();
+			}
+			
+			return effects;
+		}
+		
+		/// <summary>
+		/// Find Pulsing Spell Effects by spell object
+		/// Inner Method to get Enumerable For LINQ.
+		/// </summary>
+		/// <param name="target">Living to find effect on</param>
+		/// <param name="spell">Spell Object to Find (Spell.ID Match)</param>
+		/// <returns>All PulsingSpellEffect build from spell in target's concentration list or null</returns>
+		private static IEnumerable<PulsingSpellEffect> PulsingSpellsOnTarget(this GameLiving target, Spell spell)
+		{
+			return target.ConcentrationEffects.OfType<PulsingSpellEffect>().Where(pfx => pfx.SpellHandler != null && pfx.SpellHandler.Spell != null && pfx.SpellHandler.Spell.ID == spell.ID);
+		}
+		
+		#endregion
+		
+		
 		// warlock add
 		
 		/// <summary>
@@ -122,35 +219,6 @@ namespace DOL.GS.Spells
 			return null;
 		}
 		
-		/// <summary>
-		/// Find effect by spell description
-		/// </summary>
-		/// <param name="target">Living to find effect on</param>
-		/// <param name="spell">Spell Object to find (Exact Object Match)</param>
-		/// <returns>first occurance of effect in target's effect list or null</returns>
-		public static GameSpellEffect FindEffectOnTarget(GameLiving target, Spell spell)
-		{
-			lock (target.EffectList)
-			{
-				foreach (IGameEffect effect in target.EffectList)
-				{
-					GameSpellEffect gsp = effect as GameSpellEffect;
-					if (gsp == null)
-						continue;
-					
-					// ignore immunity effects
-					if (gsp is GameSpellAndImmunityEffect && ((GameSpellAndImmunityEffect)gsp).ImmunityState)
-						continue;
-					
-					if (gsp.Spell.ID != spell.ID)
-						continue;
-					
-					return gsp;
-				}
-			}
-			return null;
-		}
-
 		/// <summary>
 		/// Find effect by spell handler Object Type
 		/// </summary>
