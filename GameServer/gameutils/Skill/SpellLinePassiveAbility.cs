@@ -74,8 +74,6 @@ namespace DOL.GS
 		
 		public override void Deactivate(GameLiving living, bool sendUpdates)
 		{
-			base.Deactivate(living, sendUpdates);
-			
 			var spell = CurrentSpell;
 			var line = CurrentSpellLine;
 			
@@ -90,6 +88,8 @@ namespace DOL.GS
 					if (effect != null)
 						effect.Cancel(false);
 			}
+			
+			base.Deactivate(living, sendUpdates);
 		}
 		
 		public SpellLinePassiveAbility(DBAbility dba, int level)
