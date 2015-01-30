@@ -17,10 +17,13 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 
 using DOL.Database;
+
 using log4net;
 
 namespace DOL.GS
@@ -92,7 +95,7 @@ namespace DOL.GS
 			try
 			{
 				string name = m_serializedNames;
-				SortedDictionary<int, string> nameByLevel = new SortedDictionary<int, string>();
+				var nameByLevel = new Dictionary<int, string>();
 				foreach (string levelNamePair in name.Trim().SplitCSV())
 				{
 					if (levelNamePair.Trim().Length <= 0)
@@ -105,21 +108,24 @@ namespace DOL.GS
 					
 					nameByLevel.Add(int.Parse(levelAndName[0]), levelAndName[1]);
 				}
-
-				foreach (KeyValuePair<int, string> entry in nameByLevel)
+				
+				int level = Level;
+				if (nameByLevel.ContainsKey(level))
 				{
-					if (entry.Key > Level)
-						break;
-					
+					name = nameByLevel[level];
+				}
+				else
+				{
+					var entry = nameByLevel.OrderBy(k => k.Key).FirstOrDefault(k => k.Key <= level);
 					name = entry.Value;
 				}
-
+				
 				string roman = getRomanLevel();
 				m_name = name.Replace("%n", roman);
 			}
 			catch (Exception e)
 			{
-				log.Error("Parsing ability display name: keyname='" + KeyName + "' m_serializedNames='" + m_serializedNames + "'", e);
+				log.ErrorFormat("Parsing ability display name: keyname='{0}' m_serializedNames='{1}'\n{2}", KeyName, m_serializedNames, e);
 			}
 		}
 
@@ -139,7 +145,8 @@ namespace DOL.GS
 		/// <param name="living"></param>
 		/// <param name="sendUpdates"></param>
 		public virtual void Deactivate(GameLiving living, bool sendUpdates)
-		{ 
+		{
+			m_activeLiving = null;
 		}
 
 		/// <summary>
@@ -149,15 +156,8 @@ namespace DOL.GS
 		{
 		}
 
-		// /// <summary>
-		// /// called when all modifications should be taken back
-		// /// </summary>
-		// /// <param name="living"></param>
-		//public virtual void Deactivate(GameLiving living) {			
-		//}
-
 		/// <summary>
-		/// active abilities (clicked by icon) are called back here
+		/// Active Abilities (clicked by icon) are called back here
 		/// </summary>
 		/// <param name="living"></param>
 		public virtual void Execute(GameLiving living)
@@ -204,22 +204,31 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected string getRomanLevel()
 		{
-			switch (Level)
+			int remain = Level;
+			if (remain > 3999)
+				return string.Empty;
+			
+			StringBuilder sb = new StringBuilder();
+			
+			while (remain > 0)
 			{
-				case 1: return "I";
-				case 2: return "II";
-				case 3: return "III";
-				case 4: return "IV";
-				case 5: return "V";
-				case 6: return "VI";
-				case 7: return "VII";
-				case 8: return "VIII";
-				case 9: return "IX";
-				case 10: return "X";
-				case 11: return "XI";
-				case 12: return "XII";
+				if (remain >= 1000) { sb.Append("M"); remain -= 1000; }
+				else if (remain >= 900) { sb.Append("CM"); remain -= 900; }
+				else if (remain >= 500) { sb.Append("D"); remain -= 500; }
+				else if (remain >= 400) { sb.Append("CD"); remain -= 400; }
+				else if (remain >= 100) { sb.Append("C"); remain -= 100; }
+				else if (remain >= 90) { sb.Append("XC"); remain -= 90; }
+				else if (remain >= 50) { sb.Append("L"); remain -= 50; }
+				else if (remain >= 40) { sb.Append("XL"); remain -= 40; }
+				else if (remain >= 10) { sb.Append("X"); remain -= 10; }
+				else if (remain >= 9) { sb.Append("IX"); remain -= 9; }
+				else if (remain >= 5) { sb.Append("V"); remain -= 5; }
+				else if (remain >= 4) { sb.Append("IV"); remain -= 4; }
+				else if (remain >= 1) { sb.Append("I"); remain -= 1; }
+				else throw new Exception("Unexpected error.");
 			}
-			return "";
+			
+			return sb.ToString();
 		}
 
 		public virtual IList<string> DelveInfo
