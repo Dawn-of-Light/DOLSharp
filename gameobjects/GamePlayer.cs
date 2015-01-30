@@ -3615,7 +3615,7 @@ namespace DOL.GS
 						}
 						
 						List<Skill> sps = new List<Skill>();
-						SpellLine key = spells.Keys.Where(el => el.KeyName == sl.KeyName).FirstOrDefault();
+						SpellLine key = spells.Keys.FirstOrDefault(el => el.KeyName == sl.KeyName);
 						
 						if (key != null && spells.ContainsKey(key))
 						{
@@ -3682,7 +3682,7 @@ namespace DOL.GS
 					if (index < 0)
 					{
 						// Specs must be appended to spec list
-						innerList.Insert(innerList.Where(e => e.Item1 is Specialization).Count(), new Tuple<Skill, Skill>(spec, spec));
+						innerList.Insert(innerList.Count(e => e.Item1 is Specialization), new Tuple<Skill, Skill>(spec, spec));
 					}
 					else
 					{
@@ -3693,12 +3693,17 @@ namespace DOL.GS
 				}
 								
 				// Add Abilities (Realm ability should be a custom spec)
-				// Abilities order should be saved to db and loaded each time
-								
+				// Abilities order should be saved to db and loaded each time								
 				foreach (Specialization spec in specs)
 				{
-					foreach (Ability ab in spec.GetAbilitiesForLiving(this))
+					foreach (Ability abv in spec.GetAbilitiesForLiving(this))
 					{
+						// We need the Instantiated Ability Object for Displaying Correctly According to Player "Activation" Method (if Available)
+						Ability ab = GetAbility(abv.KeyName);
+						
+						if (ab == null)
+							ab = abv;
+						
 						int index = innerList.FindIndex(k => (k.Item1 is Ability) && ((Ability)k.Item1).KeyName == ab.KeyName);
 						
 						if (index < 0)

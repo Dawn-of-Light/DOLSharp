@@ -6269,7 +6269,7 @@ namespace DOL.GS
 			T tmp;
 			lock (m_lockAbilities)
 			{
-				tmp = (T) m_abilities.Values.Where(a => a.GetType().Equals(typeof (T))).FirstOrDefault();
+				tmp = (T)m_abilities.Values.FirstOrDefault(a => a.GetType().Equals(typeof(T)));
 			}
 			
 			return tmp;
