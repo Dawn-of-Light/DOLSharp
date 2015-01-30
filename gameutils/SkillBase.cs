@@ -2532,10 +2532,10 @@ namespace DOL.GS
 			{
 				if (log.IsWarnEnabled)
 				{
-					log.Warn("Spell-Line " + keyname + " unknown, creating temporary line.");
+					log.WarnFormat("Spell-Line {0} unknown, creating temporary line.", keyname);
 				}
 
-				return new SpellLine(keyname, "?" + keyname, "", true);
+				return new SpellLine(keyname, string.Format("{0}?", keyname), "", true);
 			}
 
 			return null;

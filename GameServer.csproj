@@ -395,6 +395,9 @@
     <Compile Include="gameutils\ServerListUpdate.cs" />
     <Compile Include="gameutils\Skill\Skill.cs" />
     <Compile Include="gameutils\Skill\SkillHandlerAttribute.cs" />
+    <Compile Include="gameutils\Skill\SpellLineAbstractAbility.cs" />
+    <Compile Include="gameutils\Skill\SpellLineActiveAbility.cs" />
+    <Compile Include="gameutils\Skill\SpellLinePassiveAbility.cs" />
     <Compile Include="gameutils\Specializations\LiveAbilitySpecialization.cs" />
     <Compile Include="gameutils\Specializations\LiveCareerSpecialization.cs" />
     <Compile Include="gameutils\Specializations\LiveChampionsLineSpec.cs" />

@@ -121,6 +121,35 @@ namespace DOL.GS.Spells
 			}
 			return null;
 		}
+		
+		/// <summary>
+		/// Find effect by spell description
+		/// </summary>
+		/// <param name="target">Living to find effect on</param>
+		/// <param name="spell">Spell Object to find (Exact Object Match)</param>
+		/// <returns>first occurance of effect in target's effect list or null</returns>
+		public static GameSpellEffect FindEffectOnTarget(GameLiving target, Spell spell)
+		{
+			lock (target.EffectList)
+			{
+				foreach (IGameEffect effect in target.EffectList)
+				{
+					GameSpellEffect gsp = effect as GameSpellEffect;
+					if (gsp == null)
+						continue;
+					
+					// ignore immunity effects
+					if (gsp is GameSpellAndImmunityEffect && ((GameSpellAndImmunityEffect)gsp).ImmunityState)
+						continue;
+					
+					if (gsp.Spell.ID != spell.ID)
+						continue;
+					
+					return gsp;
+				}
+			}
+			return null;
+		}
 
 		/// <summary>
 		/// Find effect by spell handler Object Type
