@@ -58,22 +58,17 @@ namespace DOL.GS
 		/// This shouldn't be used as we set Hybrid Spell List
 		/// </summary>
 		/// <param name="living"></param>
-		/// <param name="level"></param>
 		/// <returns></returns>
 		public override List<SpellLine> GetSpellLinesForLiving(GameLiving living)
 		{
-			if (living is GamePlayer)
-				return GetSpellLinesForLiving(living, ((GamePlayer)living).MLLevel);
-
-			return new List<SpellLine>();
+			var player = living as GamePlayer;
+			return player != null ? GetSpellLinesForLiving(living, player.MLLevel) : new List<SpellLine>();
 		}
 
 		public override IDictionary<SpellLine, List<Skill>> GetLinesSpellsForLiving(GameLiving living)
 		{
-			if (living is GamePlayer)
-				return GetLinesSpellsForLiving(living, ((GamePlayer)living).MLLevel);
-			
-			return new Dictionary<SpellLine, List<Skill>>();
+			var player = living as GamePlayer;
+			return player != null ? GetLinesSpellsForLiving(living, player.MLLevel) : new Dictionary<SpellLine, List<Skill>>();
 		}
 		
 		/// <summary>
@@ -84,10 +79,9 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected override IDictionary<SpellLine, List<Skill>> GetLinesSpellsForLiving(GameLiving living, int level)
 		{
-			if (living is GamePlayer)
+			var player = living as GamePlayer;
+			if (player != null)
 			{
-				GamePlayer player = (GamePlayer)living;
-				
 				if (level < 1)
 					return new Dictionary<SpellLine, List<Skill>>();
 				
@@ -131,10 +125,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override int GetSpecLevelForLiving(GameLiving living)
 		{
-			if (living is GamePlayer)
-				return ((GamePlayer)living).MLLevel;
-			
-			return 0;
+			var player = living as GamePlayer;
+			return player != null ? player.MLLevel : 0;
 		}
 	}
 }

@@ -31,7 +31,7 @@ namespace DOL.GS.SkillHandler
 		}
 		
 		public override string Name {
-			get { return string.Format("{0} +{1}", base.Name, GetAmountForLevel(Level)); }
+			get { return m_activeLiving != null ? string.Format("{0} +{1}", base.Name, GetAmountForLevel(Level)) : base.Name; }
 			set { base.Name = value; }
 		}
 		
