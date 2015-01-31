@@ -108,7 +108,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The GamePlayer for this character
 		/// </summary>
-		public GamePlayer Player { get; set; }
+		public GamePlayer Player { get; private set; }
 
 		private static readonly string[] AutotrainableSkills = new string[0];
 
@@ -137,6 +137,10 @@ namespace DOL.GS
 
 		public virtual void Init(GamePlayer player)
 		{
+			// TODO : Should Throw Exception Here.
+			if (Player != null && log.IsWarnEnabled)
+				log.WarnFormat("Character Class initializing Player when it was already initialized ! Old Player : {0} New Player : {1}", Player, player);
+			
 			Player = player;
 		}
 
