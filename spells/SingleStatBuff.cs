@@ -31,7 +31,7 @@ namespace DOL.GS.Spells
     public abstract class SingleStatBuff : PropertyChangingSpell
     {
         // bonus category
-        public override int BonusCategory1 { get { return 1; } }
+        public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
 
         /// <summary>
         /// send updates about the changes
@@ -39,26 +39,7 @@ namespace DOL.GS.Spells
         /// <param name="target"></param>
         protected override void SendUpdates(GameLiving target)
         {
-            GamePlayer player = target as GamePlayer;	// need new prop system to not worry about updates
-            if (player != null)
-            {
-                player.Out.SendCharStatsUpdate();
-                player.Out.SendUpdateWeaponAndArmorStats();
-                player.UpdateEncumberance();
-                player.UpdatePlayerStatus();
-            }
-
-            if (target.IsAlive)
-            {
-                if (target.Health < target.MaxHealth) target.StartHealthRegeneration();
-                else if (target.Health > target.MaxHealth) target.Health = target.MaxHealth;
-
-                if (target.Mana < target.MaxMana) target.StartPowerRegeneration();
-                else if (target.Mana > target.MaxMana) target.Mana = target.MaxMana;
-
-                if (target.Endurance < target.MaxEndurance) target.StartEnduranceRegeneration();
-                else if (target.Endurance > target.MaxEndurance) target.Endurance = target.MaxEndurance;
-            }
+        	target.SendLivingStatsAndRegenUpdate();
         }
 
         /// <summary>
@@ -111,7 +92,7 @@ namespace DOL.GS.Spells
 
 
         // constructor
-        public SingleStatBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+        protected SingleStatBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
 
     /// <summary>
@@ -183,13 +164,13 @@ namespace DOL.GS.Spells
     [SpellHandlerAttribute("ArmorFactorBuff")]
     public class ArmorFactorBuff : SingleStatBuff
     {
-        public override int BonusCategory1
+        public override eBuffBonusCategory BonusCategory1
         {
             get
             {
-                if (Spell.Target == "Self") return 4; // no caps for self buffs
-                if (m_spellLine.IsBaseLine) return 1; // baseline cap
-                return 4; // no caps for spec line buffs
+            	if (Spell.Target.Equals("Self", StringComparison.OrdinalIgnoreCase)) return eBuffBonusCategory.Other; // no caps for self buffs
+                if (m_spellLine.IsBaseLine) return eBuffBonusCategory.BaseBuff; // baseline cap
+                return eBuffBonusCategory.Other; // no caps for spec line buffs
             }
         }
         public override eProperty Property1 { get { return eProperty.ArmorFactor; } }
@@ -431,13 +412,13 @@ namespace DOL.GS.Spells
     [SpellHandlerAttribute("PaladinArmorFactorBuff")]
     public class PaladinArmorFactorBuff : SingleStatBuff
     {
-        public override int BonusCategory1
+        public override eBuffBonusCategory BonusCategory1
         {
             get
             {
-                if (Spell.Target == "Self") return 4; // no caps for self buffs
-                if (m_spellLine.IsBaseLine) return 1; // baseline cap
-                return 4; // no caps for spec line buffs
+                if (Spell.Target == "Self") return eBuffBonusCategory.Other; // no caps for self buffs
+                if (m_spellLine.IsBaseLine) return eBuffBonusCategory.BaseBuff; // baseline cap
+                return eBuffBonusCategory.Other; // no caps for spec line buffs
             }
         }
         public override eProperty Property1 { get { return eProperty.ArmorFactor; } }

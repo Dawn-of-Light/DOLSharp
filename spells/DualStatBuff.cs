@@ -27,11 +27,16 @@ namespace DOL.GS.Spells
 	/// </summary>	
 	public abstract class DualStatBuff : SingleStatBuff
 	{
-		public override int BonusCategory1 { get { return 2; } }
-		public override int BonusCategory2 { get { return 2; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.SpecBuff; } }
+		public override eBuffBonusCategory BonusCategory2 { get { return eBuffBonusCategory.SpecBuff; } }
 
-		// constructor
-		public DualStatBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+		/// <summary>
+		/// Default Constructor
+		/// </summary>
+		protected DualStatBuff(GameLiving caster, Spell spell, SpellLine line)
+			: base(caster, spell, line)
+		{
+		}
 	}
 
 	/// <summary>

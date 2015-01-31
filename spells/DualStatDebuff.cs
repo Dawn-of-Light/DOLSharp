@@ -27,8 +27,8 @@ namespace DOL.GS.Spells
 	/// </summary>	
 	public abstract class DualStatDebuff : SingleStatDebuff
 	{
-		public override int BonusCategory1 { get { return 3; } }
-		public override int BonusCategory2 { get { return 3; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.Debuff; } }
+		public override eBuffBonusCategory BonusCategory2 { get { return eBuffBonusCategory.Debuff; } }
 
 		// constructor
 		public DualStatDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }

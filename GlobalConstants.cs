@@ -850,6 +850,7 @@ namespace DOL.GS
 		Debuff = 3,
 		Other = 4,
 		SpecDebuff = 5,
+		AbilityBuff = 6,
 	}
 
 	/// <summary>
