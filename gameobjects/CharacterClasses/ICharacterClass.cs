@@ -106,7 +106,6 @@ namespace DOL.GS
 		GamePlayer Player
 		{
 			get;
-			set;
 		}
 
 		/// <summary>

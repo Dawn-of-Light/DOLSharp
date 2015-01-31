@@ -39,7 +39,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Source of GameTimer Event
 		/// </summary>
-		private T m_source;
+		private readonly T m_source;
 		
 		/// <summary>
 		/// Build a Stopped RegionTimerAction with GameObject Source.
