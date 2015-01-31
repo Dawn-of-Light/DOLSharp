@@ -37,13 +37,15 @@ namespace DOL.GS
 		{
 			base.Execute(living);
 			
-			var spell = Spell;
-			var line = SpellLine;
-			
-			if (line != null && spell != null)
+			if (Spell != null && SpellLine != null)
 				living.CastSpell(this);
 		}
 		
+		/// <summary>
+		/// Default Constructor
+		/// </summary>
+		/// <param name="dba"></param>
+		/// <param name="level"></param>
 		public SpellLineActiveAbility(DBAbility dba, int level)
 			: base(dba, level)
 		{
