@@ -34,12 +34,12 @@ namespace DOL.GS
 		{
 			base.Activate(living, sendUpdates);
 			
-			var spell = CurrentSpell;
-			var line = CurrentSpellLine;
+			var spell = Spell;
+			var line = SpellLine;
 			
 			if (line != null && spell != null && spell.Target.ToLower().Equals("self"))
 			{
-				living.CastSpell(spell, line);
+				living.CastSpell(this);
 			}
 		}
 		
@@ -63,19 +63,19 @@ namespace DOL.GS
 						effect.Cancel(false);
 				}
 				
-				var spell = CurrentSpell;
-				var line = CurrentSpellLine;
+				var spell = Spell;
+				var line = SpellLine;
 				if (line != null && spell != null && spell.Target.ToLower().Equals("self"))
 				{
-					m_activeLiving.CastSpell(spell, line);
+					m_activeLiving.CastSpell(this);
 				}
 			}
 		}
 		
 		public override void Deactivate(GameLiving living, bool sendUpdates)
 		{
-			var spell = CurrentSpell;
-			var line = CurrentSpellLine;
+			var spell = Spell;
+			var line = SpellLine;
 			
 			// deactivate spell
 			if (m_activeLiving != null && line != null && spell != null)

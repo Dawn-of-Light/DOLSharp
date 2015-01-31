@@ -185,7 +185,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// The ability casting the spell
 		/// </summary>
-		SkillHandler.SpellCastingAbilityHandler Ability { get;set;}
+		ISpellCastingAbilityHandler Ability { get; set; }
 
 		/// <summary>
 		/// The Spell
