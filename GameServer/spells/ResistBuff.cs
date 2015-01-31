@@ -56,7 +56,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("BodyResistBuff")]
 	public class BodyResistBuff : AbstractResistBuff
 	{
-		public override int BonusCategory1 { get { return 1; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
 		public override eProperty Property1 { get { return eProperty.Resist_Body; } }
 
 		// constructor
@@ -69,7 +69,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("ColdResistBuff")]
 	public class ColdResistBuff : AbstractResistBuff
 	{
-		public override int BonusCategory1 { get { return 1; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
 		public override eProperty Property1 { get { return eProperty.Resist_Cold; } }
 
 		// constructor
@@ -82,7 +82,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("EnergyResistBuff")]
 	public class EnergyResistBuff : AbstractResistBuff
 	{
-		public override int BonusCategory1 { get { return 1; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
 		public override eProperty Property1 { get { return eProperty.Resist_Energy; } }
 
 		// constructor
@@ -95,7 +95,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("HeatResistBuff")]
 	public class HeatResistBuff : AbstractResistBuff
 	{
-		public override int BonusCategory1 { get { return 1; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
 		public override eProperty Property1 { get { return eProperty.Resist_Heat; } }
 
 		// constructor
@@ -108,7 +108,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("MatterResistBuff")]
 	public class MatterResistBuff : AbstractResistBuff
 	{
-		public override int BonusCategory1 { get { return 1; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
 		public override eProperty Property1 { get { return eProperty.Resist_Matter; } }
 
 		// constructor
@@ -121,7 +121,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("SpiritResistBuff")]
 	public class SpiritResistBuff : AbstractResistBuff
 	{
-		public override int BonusCategory1 { get { return 1; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
 		public override eProperty Property1 { get { return eProperty.Resist_Spirit; } }
 
 		// constructor
@@ -134,9 +134,9 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("BodySpiritEnergyBuff")]
 	public class BodySpiritEnergyBuff : AbstractResistBuff
 	{
-		public override int BonusCategory1 { get { return 1; } }
-		public override int BonusCategory2 { get { return 1; } }
-		public override int BonusCategory3 { get { return 1; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
+		public override eBuffBonusCategory BonusCategory2 { get { return eBuffBonusCategory.BaseBuff; } }
+		public override eBuffBonusCategory BonusCategory3 { get { return eBuffBonusCategory.BaseBuff; } }
 
 		public override eProperty Property1 { get { return eProperty.Resist_Body; } }
 		public override eProperty Property2 { get { return eProperty.Resist_Spirit; } }
@@ -152,9 +152,9 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("HeatColdMatterBuff")]
 	public class HeatColdMatterBuff : AbstractResistBuff
 	{
-		public override int BonusCategory1 { get { return 1; } }
-		public override int BonusCategory2 { get { return 1; } }
-		public override int BonusCategory3 { get { return 1; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
+		public override eBuffBonusCategory BonusCategory2 { get { return eBuffBonusCategory.BaseBuff; } }
+		public override eBuffBonusCategory BonusCategory3 { get { return eBuffBonusCategory.BaseBuff; } }
 
 		public override eProperty Property1 { get { return eProperty.Resist_Heat; } }
 		public override eProperty Property2 { get { return eProperty.Resist_Cold; } }
@@ -170,12 +170,12 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("AllMagicResistsBuff")]
 	public class AllMagicResistsBuff : AbstractResistBuff
 	{
-		public override int BonusCategory1 { get { return 1; } }
-		public override int BonusCategory2 { get { return 1; } }
-		public override int BonusCategory3 { get { return 1; } }
-		public override int BonusCategory4 { get { return 1; } }
-		public override int BonusCategory5 { get { return 1; } }
-		public override int BonusCategory6 { get { return 1; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
+		public override eBuffBonusCategory BonusCategory2 { get { return eBuffBonusCategory.BaseBuff; } }
+		public override eBuffBonusCategory BonusCategory3 { get { return eBuffBonusCategory.BaseBuff; } }
+		public override eBuffBonusCategory BonusCategory4 { get { return eBuffBonusCategory.BaseBuff; } }
+		public override eBuffBonusCategory BonusCategory5 { get { return eBuffBonusCategory.BaseBuff; } }
+		public override eBuffBonusCategory BonusCategory6 { get { return eBuffBonusCategory.BaseBuff; } }
 		
 		public override eProperty Property1 { get { return eProperty.Resist_Heat; } }
 		public override eProperty Property2 { get { return eProperty.Resist_Cold; } }
@@ -195,9 +195,9 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("AllMeleeResistsBuff")]
 	public class CrushSlashThrustBuff : AbstractResistBuff
 	{
-		public override int BonusCategory1 { get { return 1; } }
-		public override int BonusCategory2 { get { return 1; } }
-		public override int BonusCategory3 { get { return 1; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
+		public override eBuffBonusCategory BonusCategory2 { get { return eBuffBonusCategory.BaseBuff; } }
+		public override eBuffBonusCategory BonusCategory3 { get { return eBuffBonusCategory.BaseBuff; } }
 
 		public override eProperty Property1 { get { return eProperty.Resist_Crush; } }
 		public override eProperty Property2 { get { return eProperty.Resist_Slash; } }
@@ -210,7 +210,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("CrushResistBuff")]
 	public class CrushResistBuff : AbstractResistBuff
 	{
-		public override int BonusCategory1 { get { return 1; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
 		public override eProperty Property1 { get { return eProperty.Resist_Crush; } }
 
 		// constructor
@@ -223,7 +223,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("SlashResistBuff")]
 	public class SlashResistBuff : AbstractResistBuff
 	{
-		public override int BonusCategory1 { get { return 1; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
 		public override eProperty Property1 { get { return eProperty.Resist_Slash; } }
 
 		// constructor
@@ -236,7 +236,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("ThrustResistBuff")]
 	public class ThrustResistBuff : AbstractResistBuff
 	{
-		public override int BonusCategory1 { get { return 1; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
 		public override eProperty Property1 { get { return eProperty.Resist_Thrust; } }
 
 		// constructor
@@ -249,15 +249,15 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("AllResistsBuff")]
 	public class AllResistsBuff : AbstractResistBuff
 	{
-		public override int BonusCategory1 { get { return 1; } }
-		public override int BonusCategory2 { get { return 1; } }
-		public override int BonusCategory3 { get { return 1; } }
-		public override int BonusCategory4 { get { return 1; } }
-		public override int BonusCategory5 { get { return 1; } }
-		public override int BonusCategory6 { get { return 1; } }
-		public override int BonusCategory7 { get { return 1; } }
-		public override int BonusCategory8 { get { return 1; } }
-		public override int BonusCategory9 { get { return 1; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
+		public override eBuffBonusCategory BonusCategory2 { get { return eBuffBonusCategory.BaseBuff; } }
+		public override eBuffBonusCategory BonusCategory3 { get { return eBuffBonusCategory.BaseBuff; } }
+		public override eBuffBonusCategory BonusCategory4 { get { return eBuffBonusCategory.BaseBuff; } }
+		public override eBuffBonusCategory BonusCategory5 { get { return eBuffBonusCategory.BaseBuff; } }
+		public override eBuffBonusCategory BonusCategory6 { get { return eBuffBonusCategory.BaseBuff; } }
+		public override eBuffBonusCategory BonusCategory7 { get { return eBuffBonusCategory.BaseBuff; } }
+		public override eBuffBonusCategory BonusCategory8 { get { return eBuffBonusCategory.BaseBuff; } }
+		public override eBuffBonusCategory BonusCategory9 { get { return eBuffBonusCategory.BaseBuff; } }
 
 		public override eProperty Property1 { get { return eProperty.Resist_Heat; } }
 		public override eProperty Property2 { get { return eProperty.Resist_Cold; } }

@@ -31,7 +31,7 @@ namespace DOL.GS.Spells
     // Main class for savage buffs
 	public abstract class AbstractSavageBuff : PropertyChangingSpell
 	{
-		public override int BonusCategory1 { get { return 1; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
 	
 		/// <summary>
 		/// When an applied effect starts

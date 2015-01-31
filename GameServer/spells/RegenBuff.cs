@@ -32,7 +32,7 @@ namespace DOL.GS.Spells
 	[SpellHandler("HealthRegenBuff")]
 	public class HealthRegenSpellHandler : PropertyChangingSpell
 	{
-		public override int BonusCategory1 { get { return 1; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
 		public override eProperty Property1 { get { return eProperty.HealthRegenerationRate; } }
 
 		public HealthRegenSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
@@ -52,7 +52,7 @@ namespace DOL.GS.Spells
                 || ((GamePlayer)target).CharacterClass.ID == (int)eCharacterClass.MaulerHib)) { MessageToCaster("This spell has no effect on this class!", eChatType.CT_Spell); return; }
 			base.ApplyEffectOnTarget(target, effectiveness);
 		}
-		public override int BonusCategory1 { get { return 1; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
 		public override eProperty Property1 { get { return eProperty.PowerRegenerationRate; } }
 
 		public PowerRegenSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
@@ -64,7 +64,7 @@ namespace DOL.GS.Spells
 	[SpellHandler("EnduranceRegenBuff")]
 	public class EnduranceRegenSpellHandler : PropertyChangingSpell
 	{
-		public override int BonusCategory1 { get { return 1; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
 		public override eProperty Property1 { get { return eProperty.EnduranceRegenerationRate; } }
 
 		/// <summary>
