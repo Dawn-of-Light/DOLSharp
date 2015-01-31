@@ -2156,7 +2156,7 @@
     <Compile Include="spells\BuffShear.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="spells\buff\SingleStatAbilityBuff.cs" />
+    <Compile Include="spells\buff\SingleStatAbilityBuffHandler.cs" />
     <Compile Include="spells\Cabalist\SummonSimulacrum.cs" />
     <Compile Include="spells\CCSpellHandler.cs">
       <SubType>Code</SubType>
