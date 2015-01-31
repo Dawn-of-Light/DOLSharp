@@ -211,7 +211,7 @@ namespace DOL.GS.Spells
     public abstract class MasterlevelDebuffHandling : SingleStatDebuff
     {
         // bonus category
-        public override int BonusCategory1 { get { return 3; } }
+        public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.Debuff; } }
 
         public override bool HasPositiveEffect
         {
@@ -409,7 +409,7 @@ namespace DOL.GS.Spells
     public abstract class MasterlevelBuffHandling : SingleStatBuff
     {
         // bonus category
-        public override int BonusCategory1 { get { return 1; } }
+        public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
 
         public override int CalculateSpellResistChance(GameLiving target)
         {
@@ -587,7 +587,7 @@ namespace DOL.GS.Spells
             }
         }
 
-        public MasterlevelBuffHandling(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
+        protected MasterlevelBuffHandling(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
     }
     #endregion
 
@@ -598,8 +598,8 @@ namespace DOL.GS.Spells
     public abstract class MasterlevelDualBuffHandling : DualStatBuff
     {
         // bonus category
-        public override int BonusCategory1 { get { return 1; } }
-        public override int BonusCategory2 { get { return 2; } }
+        public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
+        public override eBuffBonusCategory BonusCategory2 { get { return eBuffBonusCategory.SpecBuff; } }
 
         public override int CalculateSpellResistChance(GameLiving target)
         {
@@ -776,7 +776,7 @@ namespace DOL.GS.Spells
             }
         }
 
-        public MasterlevelDualBuffHandling(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
+        protected MasterlevelDualBuffHandling(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
     }
     #endregion
 

@@ -317,22 +317,28 @@ namespace DOL.GS.Spells
 		{
 		}
 
-		protected IPropertyIndexer GetBonusCategory(GameLiving target, int categoryid)
+		protected IPropertyIndexer GetBonusCategory(GameLiving target, eBuffBonusCategory categoryid)
 		{
 			IPropertyIndexer bonuscat = null;
 			switch (categoryid)
 			{
-				case (int)eBuffBonusCategory.BaseBuff:
+				case eBuffBonusCategory.BaseBuff:
 					bonuscat = target.BaseBuffBonusCategory;
 					break;
-				case (int)eBuffBonusCategory.SpecBuff:
+				case eBuffBonusCategory.SpecBuff:
 					bonuscat = target.SpecBuffBonusCategory;
 					break;
-				case (int)eBuffBonusCategory.Debuff:
+				case eBuffBonusCategory.Debuff:
 					bonuscat = target.DebuffCategory;
 					break;
-				case (int)eBuffBonusCategory.Other:
+				case eBuffBonusCategory.Other:
 					bonuscat = target.BuffBonusCategory4;
+					break;
+				case eBuffBonusCategory.SpecDebuff:
+					bonuscat = target.SpecDebuffCategory;
+					break;
+				case eBuffBonusCategory.AbilityBuff:
+					bonuscat = target.AbilityBonus;
 					break;
 				default:
 					if (log.IsErrorEnabled)
@@ -421,81 +427,81 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Bonus Category where to change the Property1
 		/// </summary>
-		public virtual int BonusCategory1
+		public virtual eBuffBonusCategory BonusCategory1
 		{
-			get { return 1; }
+			get { return eBuffBonusCategory.BaseBuff; }
 		}
 
 		/// <summary>
 		/// Bonus Category where to change the Property2
 		/// </summary>
-		public virtual int BonusCategory2
+		public virtual eBuffBonusCategory BonusCategory2
 		{
-			get { return 1; }
+			get { return eBuffBonusCategory.BaseBuff; }
 		}
 
 		/// <summary>
 		/// Bonus Category where to change the Property3
 		/// </summary>
-		public virtual int BonusCategory3
+		public virtual eBuffBonusCategory BonusCategory3
 		{
-			get { return 1; }
+			get { return eBuffBonusCategory.BaseBuff; }
 		}
 
 		/// <summary>
 		/// Bonus Category where to change the Property4
 		/// </summary>
-		public virtual int BonusCategory4
+		public virtual eBuffBonusCategory BonusCategory4
 		{
-			get { return 1; }
+			get { return eBuffBonusCategory.BaseBuff; }
 		}
 
 		/// <summary>
 		/// Bonus Category where to change the Property5
 		/// </summary>
-		public virtual int BonusCategory5
+		public virtual eBuffBonusCategory BonusCategory5
 		{
-			get { return 1; }
+			get { return eBuffBonusCategory.BaseBuff; }
 		}
 
 		/// <summary>
 		/// Bonus Category where to change the Property6
 		/// </summary>
-		public virtual int BonusCategory6
+		public virtual eBuffBonusCategory BonusCategory6
 		{
-			get { return 1; }
+			get { return eBuffBonusCategory.BaseBuff; }
 		}
 
 		/// <summary>
 		/// Bonus Category where to change the Property7
 		/// </summary>
-		public virtual int BonusCategory7
+		public virtual eBuffBonusCategory BonusCategory7
 		{
-			get { return 1; }
+			get { return eBuffBonusCategory.BaseBuff; }
 		}
 
 		/// <summary>
 		/// Bonus Category where to change the Property8
 		/// </summary>
-		public virtual int BonusCategory8
+		public virtual eBuffBonusCategory BonusCategory8
 		{
-			get { return 1; }
+			get { return eBuffBonusCategory.BaseBuff; }
 		}
 
 		/// <summary>
 		/// Bonus Category where to change the Property9
 		/// </summary>
-		public virtual int BonusCategory9
+		public virtual eBuffBonusCategory BonusCategory9
 		{
-			get { return 1; }
+			get { return eBuffBonusCategory.BaseBuff; }
 		}
 
 		/// <summary>
 		/// Bonus Category where to change the Property10
 		/// </summary>
-		public virtual int BonusCategory10
+		public virtual eBuffBonusCategory BonusCategory10
 		{
-			get { return 1; }
+			get { return eBuffBonusCategory.BaseBuff; }
 		}
 
 		public override void OnEffectRestored(GameSpellEffect effect, int[] vars)
@@ -545,7 +551,7 @@ namespace DOL.GS.Spells
 		/// <param name="Property"></param>
 		/// <param name="Value"></param>
 		/// <param name="IsSubstracted"></param>
-		protected void ApplyBonus(GameLiving owner,  int BonusCat, eProperty Property, int Value, bool IsSubstracted)
+		protected void ApplyBonus(GameLiving owner,  eBuffBonusCategory BonusCat, eProperty Property, int Value, bool IsSubstracted)
 		{
 			IPropertyIndexer tblBonusCat;
 			if (Property != eProperty.Undefined)

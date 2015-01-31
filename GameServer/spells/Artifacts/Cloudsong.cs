@@ -28,12 +28,12 @@ namespace DOL.GS.Spells
         /// <summary>
         /// SpecBuffBonusCategory
         /// </summary>
-		public override int BonusCategory1 { get { return 2; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.SpecBuff; } }
 
         /// <summary>
         /// BaseBuffBonusCategory
         /// </summary>
-		public override int BonusCategory2 { get { return 1; } }
+		public override eBuffBonusCategory BonusCategory2 { get { return eBuffBonusCategory.BaseBuff; } }
 
         public override eProperty Property1
         {

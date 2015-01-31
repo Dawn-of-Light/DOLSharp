@@ -30,7 +30,7 @@ namespace DOL.GS.Spells
 	public abstract class SingleStatDebuff : SingleStatBuff
 	{
 		// bonus category
-		public override int BonusCategory1 { get { return 3; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.Debuff; } }
 
 		/// <summary>
 		/// Apply effect on target or do spell action if non duration spell

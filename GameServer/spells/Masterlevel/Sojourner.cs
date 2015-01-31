@@ -153,7 +153,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("EssenceResist")]
 	public class EssenceResistHandler : AbstractResistBuff
 	{
-		public override int BonusCategory1 { get { return 1; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
 		public override eProperty Property1 { get { return eProperty.Resist_Natural; } }
 		public EssenceResistHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}

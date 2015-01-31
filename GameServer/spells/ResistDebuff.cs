@@ -41,7 +41,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Debuff category is 3 for debuffs
 		/// </summary>
-		public override int BonusCategory1 { get { return 3; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.Debuff; } }
 
 		/// <summary>
 		/// Apply effect on target or do spell action if non duration spell
@@ -316,9 +316,9 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("CrushSlashThrustDebuff")]
 	public class CrushSlashThrustDebuff : AbstractResistDebuff
 	{
-		public override int BonusCategory1 { get { return 3; } }
-		public override int BonusCategory2 { get { return 3; } }
-		public override int BonusCategory3 { get { return 3; } }
+		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.Debuff; } }
+		public override eBuffBonusCategory BonusCategory2 { get { return eBuffBonusCategory.Debuff; } }
+		public override eBuffBonusCategory BonusCategory3 { get { return eBuffBonusCategory.Debuff; } }
 		
 		public override eProperty Property1 { get { return eProperty.Resist_Crush; } }
 		public override eProperty Property2 { get { return eProperty.Resist_Slash; } }
