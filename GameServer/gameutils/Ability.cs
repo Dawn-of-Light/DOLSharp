@@ -104,12 +104,12 @@ namespace DOL.GS
 					string[] levelAndName = levelNamePair.Trim().Split('|');
 					
 					if (levelAndName.Length < 2)
-						continue;
-					
-					nameByLevel.Add(int.Parse(levelAndName[0]), levelAndName[1]);
+						nameByLevel.Add(0, levelNamePair);
+					else
+						nameByLevel.Add(int.Parse(levelAndName[0]), levelAndName[1]);
 				}
-				
-				int level = Level;
+
+				int level = Level;				
 				if (nameByLevel.ContainsKey(level))
 				{
 					name = nameByLevel[level];
@@ -117,7 +117,11 @@ namespace DOL.GS
 				else
 				{
 					var entry = nameByLevel.OrderBy(k => k.Key).FirstOrDefault(k => k.Key <= level);
-					name = entry.Value;
+					name = entry.Value ?? string.Format("??{0}", KeyName);
+					
+					// Warn about default value
+					if (entry.Value == null && log.IsWarnEnabled)
+						log.WarnFormat("Parsing ability display name: keyname='{0}' m_serializedNames='{1}', No Value for Level {2}", KeyName, m_serializedNames, level);
 				}
 				
 				string roman = getRomanLevel();

@@ -171,6 +171,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					{
 						handler.Execute(ab, player);
 					}
+					
+					ab.Execute(player);
 				}
 				else
 				{
