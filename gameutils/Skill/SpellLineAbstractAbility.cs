@@ -28,12 +28,12 @@ namespace DOL.GS
 	/// This Allow Derived Ability to Cast or Enable arbitrary Spells in Database based on Ability Level matched against Spell Line's Level Spells
 	/// Using Spell Line Level Increase it can index different Spell Effect Based on Ability Level
 	/// </summary>
-	public abstract class SpellLineAbstractAbility : Ability
+	public abstract class SpellLineAbstractAbility : Ability, ISpellCastingAbilityHandler
 	{
 		/// <summary>
 		/// Get this Ability Current Spell for Level in SpellLine
 		/// </summary>
-		public Spell CurrentSpell
+		public Spell Spell
 		{
 			get
 			{
@@ -44,7 +44,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Get this Ability Current SpellLine (Where Spell Line == Ability KeyName)
 		/// </summary>
-		public SpellLine CurrentSpellLine
+		public SpellLine SpellLine
 		{
 			get
 			{
@@ -58,13 +58,24 @@ namespace DOL.GS
 		}
 		
 		/// <summary>
+		/// Return This Ability for Interface Implementation
+		/// </summary>
+		public Ability Ability
+		{
+			get
+			{
+				return this;
+			}
+		}
+		
+		/// <summary>
 		/// Get spell attached to Ability Level.
 		/// </summary>
 		/// <param name="level"></param>
 		/// <returns></returns>
 		public Spell GetSpellForLevel(int level)
 		{
-			var line = CurrentSpellLine;
+			var line = SpellLine;
 			return line != null ? SkillBase.GetSpellList(line.KeyName).FirstOrDefault(spell => spell.Level == level) : null;
 		}
 		

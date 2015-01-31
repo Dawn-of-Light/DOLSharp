@@ -6647,6 +6647,24 @@ namespace DOL.GS
 			}
 		}
 
+		public virtual void CastSpell(ISpellCastingAbilityHandler ab)
+		{
+			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(this, ab.Spell, ab.SpellLine);
+			if (spellhandler != null)
+			{
+				// Instant cast abilities should not interfere with the spell queue
+				if (spellhandler.Spell.CastTime > 0)
+				{
+					m_runningSpellHandler = spellhandler;
+					m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+				}
+
+				spellhandler.Ability = ab;
+				spellhandler.CastSpell();
+			}
+		}
+
+		
 		/// <summary>
 		/// Whether or not the living can cast a harmful spell
 		/// at the moment.

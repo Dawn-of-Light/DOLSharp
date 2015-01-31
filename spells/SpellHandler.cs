@@ -120,7 +120,7 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Ability that casts a spell
 		/// </summary>
-		protected SpellCastingAbilityHandler m_ability = null;
+		protected ISpellCastingAbilityHandler m_ability = null;
 
 		/// <summary>
 		/// Stores the current delve info depth
@@ -2993,7 +2993,7 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 		/// <summary>
 		/// Ability to cast a spell
 		/// </summary>
-		public SpellCastingAbilityHandler Ability
+		public ISpellCastingAbilityHandler Ability
 		{
 			get { return m_ability; }
 			set { m_ability = value; }
