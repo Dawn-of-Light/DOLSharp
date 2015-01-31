@@ -8617,7 +8617,7 @@ namespace DOL.GS
 			return;
 		}
 
-		public void CastSpell(SpellCastingAbilityHandler ab)
+		public override void CastSpell(ISpellCastingAbilityHandler ab)
 		{
 			if (IsCrafting)
 			{

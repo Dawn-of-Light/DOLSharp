@@ -393,6 +393,7 @@
     <Compile Include="gameutils\ReaderWriterCollections\ReaderWriterDictionary.cs" />
     <Compile Include="gameutils\ReaderWriterCollections\ReaderWriterList.cs" />
     <Compile Include="gameutils\ServerListUpdate.cs" />
+    <Compile Include="gameutils\Skill\ISpellCastingAbilityHandler.cs" />
     <Compile Include="gameutils\Skill\Skill.cs" />
     <Compile Include="gameutils\Skill\SkillHandlerAttribute.cs" />
     <Compile Include="gameutils\Skill\SpellLineAbstractAbility.cs" />
