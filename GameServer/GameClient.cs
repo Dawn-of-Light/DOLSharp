@@ -365,7 +365,6 @@ namespace DOL.GS
 				GamePlayer oldPlayer = Interlocked.Exchange(ref m_player, value);
 				if (oldPlayer != null)
 				{
-					oldPlayer.CleanupOnDisconnect();
 					oldPlayer.Delete();
 				}
 

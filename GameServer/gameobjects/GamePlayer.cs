@@ -651,17 +651,14 @@ namespace DOL.GS
 		/// <summary>
 		/// Stop all timers, events and remove player from everywhere (group/guild/chat)
 		/// </summary>
-		public virtual void CleanupOnDisconnect()
+		protected virtual void CleanupOnDisconnect()
 		{
 			StopAttack();
 			// remove all stealth handlers
 			Stealth(false);
 			if (IsOnHorse)
 				IsOnHorse = false;
-			if (InWraithForm)
-				InWraithForm = false;
 
-			GameEventMgr.RemoveAllHandlersForObject(this);
 			GameEventMgr.RemoveAllHandlersForObject(m_inventory);
 
 			if (CraftTimer != null)
@@ -730,9 +727,6 @@ namespace DOL.GS
 					}
 				}
 			}
-
-			// Remove champion dedicated spell line
-			SkillBase.UnRegisterSpellLine(ChampionSpellLineName);
 
 			// cancel all effects until saving of running effects is done
 			try
@@ -818,7 +812,6 @@ namespace DOL.GS
 				AuditMgr.AddAuditEntry(Client, AuditType.Character, AuditSubtype.CharacterLogout, "", Name);
 
 				//Cleanup stuff
-				CleanupOnDisconnect();
 				Delete();
 			}
 			return true;
@@ -2603,12 +2596,12 @@ namespace DOL.GS
 			if (cl == null)
 			{
 				if (log.IsErrorEnabled)
-					log.Error("No CharacterClass with ID " + id + " found");
+					log.ErrorFormat("No CharacterClass with ID {0} found", id);
 				return false;
 			}
 
 			m_characterClass = cl;
-			m_characterClass.Player = this;
+			m_characterClass.Init(this);
 
 			if (Util.IsEmpty(m_characterClass.FemaleName) == false && DBCharacter.Gender == 1)
 				m_characterClass.SwitchToFemaleName();
@@ -10298,7 +10291,10 @@ namespace DOL.GS
 		/// Marks this player as deleted
 		/// </summary>
 		public override void Delete()
-		{
+		{			
+			// do some Cleanup
+			CleanupOnDisconnect();
+
 			string[] friendList = new string[]
 			{
 				Name
@@ -10324,7 +10320,7 @@ namespace DOL.GS
 			GroupMgr.RemovePlayerLooking(this);
 			if (log.IsDebugEnabled)
 			{
-				log.Debug("(" + Name + ") player.Delete()");
+				log.DebugFormat("({0}) player.Delete()", Name);
 			}
 			base.Delete();
 		}
@@ -15392,63 +15388,7 @@ namespace DOL.GS
 
 		#endregion
 
-		#region Bainshee
-		protected bool m_InWraithForm = false;
-
-		public bool InWraithForm
-		{
-			get { return m_InWraithForm; }
-			set
-			{
-				m_InWraithForm = value;
-				if (m_InWraithForm)
-				{
-					switch (Race)
-					{
-							case 9: Model = 1883; break; //Celt
-							case 11: Model = 1885; break; //Elf
-							case 12: Model = 1884; break; //Lurikeen
-
-					}
-					WraithFormTime();
-				}
-				else
-				{
-					Model = (ushort)m_client.Account.Characters[m_client.ActiveCharIndex].CreationModel;
-				}
-			}
-		}
-
-		protected RegionTimer WraithTimer;
-
-		protected virtual int WraithForm(RegionTimer timer)
-		{
-			InWraithForm = false;
-
-			timer.Stop();
-			timer = null;
-			return 0;
-		}
-
-
-		protected void WraithFormTime()
-		{
-			if (WraithTimer != null)
-			{
-				WraithTimer.Stop();
-			}
-			WraithTimer = null;
-			WraithTimer = new RegionTimer(this, new RegionTimerCallback(WraithForm), 30000);
-		}
-		#endregion
-
 		#region Champion Levels
-
-		public virtual string ChampionSpellLineName
-		{
-			get { return GlobalSpellsLines.Champion_Spells + ":" + InternalID; }
-		}
-
 		/// <summary>
 		/// The maximum champion level a player can reach
 		/// </summary>
@@ -15470,6 +15410,11 @@ namespace DOL.GS
 			256000, // xp to level 8
 			288000, // xp to level 9
 			320000, // xp to level 10
+			640000, // xp to level 11
+			640000, // xp to level 12
+			640000, // xp to level 13
+			640000, // xp to level 14
+			640000, // xp to level 15
 		};
 
 		/// <summary>
@@ -15493,24 +15438,6 @@ namespace DOL.GS
 		{
 			get { return DBCharacter != null ? DBCharacter.Champion : false; }
 			set { if (DBCharacter != null) DBCharacter.Champion = value; }
-		}
-
-		/// <summary>
-		/// Get or create the Champion spell line for this player
-		/// </summary>
-		/// <returns></returns>
-		public virtual SpellLine GetChampionSpellLine()
-		{
-			SpellLine championPlayerSpellLine = SkillBase.GetSpellLine(ChampionSpellLineName, false);
-			if (championPlayerSpellLine == null)
-			{
-				championPlayerSpellLine = new SpellLine(ChampionSpellLineName, GlobalSpellsLines.Champion_Spells, GlobalSpellsLines.Champion_Spells, true);
-				championPlayerSpellLine.Level = 50;
-				SkillBase.RegisterSpellLine(championPlayerSpellLine);
-			}
-
-			AddSpellLine(championPlayerSpellLine);
-			return championPlayerSpellLine;
 		}
 
 		/// <summary>

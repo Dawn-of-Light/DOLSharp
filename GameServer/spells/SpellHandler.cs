@@ -1824,15 +1824,6 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public virtual void FinishSpellCast(GameLiving target)
 		{
-			//turn into wraith
-			if (m_caster is GamePlayer
-			    && ((m_caster as GamePlayer).CharacterClass.ID == (int)eCharacterClass.Bainshee)
-			    && (m_caster as GamePlayer).InWraithForm == false
-			    && !HasPositiveEffect)
-			{
-				(m_caster as GamePlayer).InWraithForm = true;
-			}
-
 			if (Caster is GamePlayer && ((GamePlayer)Caster).IsOnHorse && !HasPositiveEffect)
 				((GamePlayer)Caster).IsOnHorse = false;
 			
