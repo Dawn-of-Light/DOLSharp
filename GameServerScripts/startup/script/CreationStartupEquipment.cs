@@ -77,16 +77,34 @@ namespace DOL.GS.GameEvents
 			// Init Startup Collection.
 			foreach (var equipclass in GameServer.Database.SelectAllObjects<StarterEquipment>())
 			{
-				foreach(var classID in equipclass.Class.SplitCSV(true))
+				if (equipclass.Template != null)
 				{
-					int cId;
-					if (int.TryParse(classID, out cId))
+					foreach(var classID in equipclass.Class.SplitCSV(true))
 					{
-						if (!m_cachedClassEquipment.ContainsKey((eCharacterClass)cId))
-							m_cachedClassEquipment.Add((eCharacterClass)cId, new List<ItemTemplate>());
-						
-						m_cachedClassEquipment[(eCharacterClass)cId].Add(equipclass.Template);
+						int cId;
+						if (int.TryParse(classID, out cId))
+						{
+							try
+							{
+								eCharacterClass gameClass = (eCharacterClass)cId;
+								if (!m_cachedClassEquipment.ContainsKey(gameClass))
+									m_cachedClassEquipment.Add(gameClass, new List<ItemTemplate>());
+								
+								m_cachedClassEquipment[gameClass].Add(equipclass.Template);
+							}
+							catch (Exception e)
+							{
+								if (log.IsWarnEnabled)
+									log.WarnFormat("Could not Add Starter Equipement for Record - ID: {0}, ClassID(s): {1}, Itemtemplate: {2}, while parsing {3}\n{4}",
+									               equipclass.StarterEquipmentID, equipclass.Class, equipclass.TemplateID, classID, e);
+							}
+						}
 					}
+				}
+				else
+				{
+					if (log.IsWarnEnabled)
+						log.WarnFormat("Cannot Find Item Template for Record - ID: {0}, ClassID(s): {1}, Itemtemplate: {2}", equipclass.StarterEquipmentID, equipclass.Class, equipclass.TemplateID);
 				}
 			}
 		}
