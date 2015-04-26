@@ -243,6 +243,60 @@ namespace DOL.GS.Spells
 		//If mez resisted, just rupt, dont demez
 		protected override void OnSpellResisted(GameLiving target)
 		{
+// WHRIA
+// Flute Mez (pulse>0)
+            if (this.Spell.Pulse > 0)
+            {
+                if (target != null && (!target.IsAlive))
+                {
+                    GameSpellEffect effect = SpellHandler.FindEffectOnTarget(target, this);
+                    if (effect != null)
+                    {
+                        effect.Cancel(false);//call OnEffectExpires
+                        CancelPulsingSpell(Caster, this.Spell.SpellType);
+                        MessageToCaster("You stop playing your song.", eChatType.CT_Spell);
+                    }
+                    return;
+                }
+
+                if (this.Spell.Range != 0)
+                {
+                    if (!Caster.IsWithinRadius(target, this.Spell.Range))
+                        return;
+                }
+
+                if (target != Caster.TargetObject)
+                    return;
+            }
+
+            GameSpellEffect mezz = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+            if (mezz != null)
+            {
+                MessageToCaster("Your target is already mezzed!!!", eChatType.CT_SpellResisted);
+                return;
+            }
+
+            lock (target.EffectList)
+            {
+                foreach (IGameEffect effect in target.EffectList)
+                {
+                    if (effect is GameSpellEffect)
+                    {
+                        GameSpellEffect gsp = (GameSpellEffect)effect;
+                        if (gsp is GameSpellAndImmunityEffect)
+                        {
+                            GameSpellAndImmunityEffect immunity = (GameSpellAndImmunityEffect)gsp;
+                            if (immunity.ImmunityState
+                                && target == immunity.Owner)
+                            {
+                                MessageToCaster(immunity.Owner.GetName(0, true) + " can't have that effect again yet!!!", eChatType.CT_SpellPulse);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+// END
 			SendEffectAnimation(target, 0, false, 0);
 			MessageToCaster(target.GetName(0, true) + " resists the effect!", eChatType.CT_SpellResisted);
 			target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
@@ -265,6 +319,42 @@ namespace DOL.GS.Spells
 		
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
+// WHRIA
+// Flute Mez (pulse>0)
+            if (this.Spell.Pulse > 0)
+            {
+                if (Caster.IsWithinRadius(target, this.Spell.Range * 5) == false)
+                {
+                    CancelPulsingSpell(Caster, this.Spell.SpellType);
+                    MessageToCaster("You are far away from the target. You stop playing your song.", eChatType.CT_Spell);
+                    return;
+                }
+
+                if (target != null && (!target.IsAlive)) 
+                {
+                    GameSpellEffect effect = SpellHandler.FindEffectOnTarget(target, this);
+                    if (effect != null)
+                    {
+                        effect.Cancel(false);//call OnEffectExpires
+                        CancelPulsingSpell(Caster, this.Spell.SpellType);
+                        MessageToCaster("You stop playing your song.", eChatType.CT_Spell);
+                    }
+                    return;
+                }
+
+                if (target != Caster.TargetObject)
+                    return;
+
+                if (this.Spell.Range != 0)
+                {
+                    if (!Caster.IsWithinRadius(target, this.Spell.Range))
+                        return;
+                }
+
+            }
+
+//
+
 			if (target.HasAbility(Abilities.MezzImmunity))
 			{
 				MessageToCaster(target.Name + " is immune to this effect!", eChatType.CT_SpellResisted);
@@ -284,7 +374,7 @@ namespace DOL.GS.Spells
 			if(mezz != null)
 			{
 				MessageToCaster("Your target is already mezzed!", eChatType.CT_SpellResisted);
-				SendEffectAnimation(target, 0, false, 0);
+//				SendEffectAnimation(target, 0, false, 0);
 				return;
 			}
 			GameSpellEffect mezblock = SpellHandler.FindEffectOnTarget(target, "CeremonialBracerMezz");
