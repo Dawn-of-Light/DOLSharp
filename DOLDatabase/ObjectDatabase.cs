@@ -276,7 +276,7 @@ namespace DOL.Database
 		{
 			var dataObject = FindObjectByKeyImpl<TObject>(key);
 
-			return dataObject ?? default(TObject);
+			return dataObject;
 		}
 
 
@@ -309,7 +309,7 @@ namespace DOL.Database
 			if (objs.Count > 0)
 				return objs[0];
 
-			return default(TObject);
+			return null;
 		}
 
 		public IList<TObject> SelectObjects<TObject>(string whereExpression)
