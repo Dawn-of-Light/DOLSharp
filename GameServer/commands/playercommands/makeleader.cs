@@ -86,8 +86,7 @@ namespace DOL.GS.Commands
 
 			}
 
-            client.Player.Group.MakeLeader(target);
-			client.Player.Group.SendMessageToGroupMembers(target.Name + " is new group leader.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			client.Player.Group.MakeLeader(target);
 		}
 	}
 }
