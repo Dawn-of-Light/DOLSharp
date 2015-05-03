@@ -154,7 +154,7 @@ namespace DOL.GS.PacketHandler
 		InviteToGroup = 0x87,				// 0x2F ^ 168
 		HouseEnterLeave = 0x0B,				// 0xA3 ^ 168
 		DoorRequest = 0x99,					// 0x31 ^ 168
-		DisbandFromGroup = 0xA8,			// 0x37 ^ 168
+		DisbandFromGroup = 0x9F,			// 0x37 ^ 168
 		DialogResponse = 0x82,				// 0x2A ^ 168
 		CheckLOSRequest = 0xD0,				// 0x78 ^ 168
 		UseSpell = 0x7D,					// 0xD5 ^ 168

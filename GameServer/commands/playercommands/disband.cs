@@ -18,6 +18,7 @@
  */
 using DOL.GS.PacketHandler;
 using DOL.Language;
+using System.Linq;
 
 namespace DOL.GS.Commands
 {
@@ -50,7 +51,7 @@ namespace DOL.GS.Commands
 
 				string name = args[1];
 
-				if (name == client.Player.Name)
+				if (name.Equals(client.Player.Name, System.StringComparison.OrdinalIgnoreCase))
 				{
 					client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Disband.NoYourself"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
@@ -58,14 +59,13 @@ namespace DOL.GS.Commands
 
 				int startCount = client.Player.Group.MemberCount;
 
-				foreach (GameLiving living in client.Player.Group.GetMembersInTheGroup())
+				foreach (GameLiving living in client.Player.Group.GetMembersInTheGroup().Where(gl => gl.Name.Equals(name, System.StringComparison.OrdinalIgnoreCase)))
 				{
-					if (living.Name == name)
 						client.Player.Group.RemoveMember(living);
 				}
 
 				//no target found to remove
-				if (client.Player.Group.MemberCount == startCount)
+				if (client.Player.Group != null && client.Player.Group.MemberCount == startCount)
 				{
 					client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Disband.NoPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
