@@ -249,7 +249,7 @@ namespace DOL.GS
 			}
 			
             // Update all members
-			if (MemberCount > 1 && Leader == living)
+			if (MemberCount > 1 && LivingLeader == living)
 			{
 				var newLeader = m_groupMembers.OfType<GamePlayer>().First();
 				
@@ -303,7 +303,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public bool MakeLeader(GameLiving living)
 		{
-			return m_groupMembers.FreezeWhile<bool>(l => {
+			bool allOk = m_groupMembers.FreezeWhile<bool>(l => {
 			                                        	if (!l.Contains(living))
 			                                        		return false;
 			                                        	
@@ -315,11 +315,16 @@ namespace DOL.GS
 			                                        	living.GroupIndex = 0;
 			                                        	oldLeader.GroupIndex = ind;
 			                                        	
-			                                        	// all went ok
-														UpdateGroupWindow();
-														SendMessageToGroupMembers(string.Format("{0} is the new group leader.", Leader.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			                                        	return true;
 			                                        });
+			if (allOk)
+			{
+				// all went ok
+				UpdateGroupWindow();
+				SendMessageToGroupMembers(string.Format("{0} is the new group leader.", Leader.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+
+			return allOk;
 		}
 		#endregion
 		
