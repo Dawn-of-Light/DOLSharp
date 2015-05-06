@@ -212,6 +212,8 @@ namespace DOL.GS.PacketHandler
 		SellRequest = 0x79,					// 0xD1 ^ 168
 		SetMarketPrice = 0x1A,				// 0xB2 ^ 168
 		TrainRequest = 0x7C,				// 0xD4 ^ 168
+		TrainHandler = 0x53,				// 0xFB ^ 168
+		TrainWindowHandler = 0x7B,			// 0xD3 ^ 168
 		WithDrawMerchantMoney = 0x1C,		// 0xB4 ^ 168
 		RemoveQuestRequest = 0x4F,			// 0xE7 ^ 168
 		RegionListRequest = 0x9D,			// 0x35 ^ 168

@@ -23,10 +23,7 @@ namespace DOL.GS.SkillHandler
 			set
 			{
 				// Override Setter to have Living Level Updated if available.
-				if (m_activeLiving != null)
-					base.Level = m_activeLiving.Level;
-				
-				base.Level = value;
+				base.Level = m_activeLiving == null ? value : m_activeLiving.Level;
 			}
 		}
 		
