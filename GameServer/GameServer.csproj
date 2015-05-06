@@ -2038,6 +2038,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="skillhandler\Climbing.cs" />
+    <Compile Include="skillhandler\LevelBasedStatChangingAbility.cs" />
     <Compile Include="skillhandler\StatChangingAbility.cs" />
     <Compile Include="skillhandler\FuryAbilityHandler.cs" />
     <Compile Include="skillhandler\MemoriesOfWar.cs" />
