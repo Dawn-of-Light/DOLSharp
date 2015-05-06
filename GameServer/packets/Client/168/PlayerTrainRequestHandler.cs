@@ -82,7 +82,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							client.Out.SendMessage("You already have that ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
 						}
-						if (!(skillstatus.Item1 == 2))
+						if (skillstatus.Item1 != 2)
 						{
 							client.Out.SendMessage("You do not meet the requirements for that ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return;
@@ -192,7 +192,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	/// Handles Train clicks from Trainer Window
 	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP, 0xFB ^ 168, "Handles Player Train")]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.TrainHandler, "Handles Player Train", eClientStatus.PlayerInGame)]
 	public class PlayerTrainHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)
@@ -342,7 +342,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <summary>
 		/// Summon trainer window
 		/// </summary>
-		[PacketHandlerAttribute(PacketHandlerType.TCP, 0xD3 ^ 168, "Call Player Train Window")]
+		[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.TrainWindowHandler, "Call Player Train Window", eClientStatus.PlayerInGame)]
 		public class PlayerTrainWindowHandler : IPacketHandler
 		{
 			public void HandlePacket(GameClient client, GSPacketIn packet)
