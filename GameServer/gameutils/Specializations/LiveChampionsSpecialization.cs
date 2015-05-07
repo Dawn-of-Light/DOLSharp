@@ -53,7 +53,7 @@ namespace DOL.GS
 		{
 			if (living is GamePlayer)
 			{
-				base.GetAbilitiesForLiving(living, ((GamePlayer)living).ChampionLevel);
+				return base.GetAbilitiesForLiving(living, ((GamePlayer)living).ChampionLevel);
 			}
 			
 			return new List<Ability>();

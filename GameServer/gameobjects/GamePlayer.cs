@@ -15623,29 +15623,9 @@ namespace DOL.GS
 				Mana = CalculateMaxMana(Level, 0);
 			}
 
-			if (ChampionLevel == 3)
-			{
-				switch (Realm)
-				{
-					case eRealm.Albion:
-						AddAbility(SkillBase.GetAbility(Abilities.Weapon_Slashing));
-						AddAbility(SkillBase.GetAbility(Abilities.Weapon_Thrusting));
-						AddAbility(SkillBase.GetAbility(Abilities.Weapon_Crushing));
-						break;
-					case eRealm.Midgard:
-						AddAbility(SkillBase.GetAbility(Abilities.Weapon_Axes));
-						AddAbility(SkillBase.GetAbility(Abilities.Weapon_Hammers));
-						AddAbility(SkillBase.GetAbility(Abilities.Weapon_Swords));
-						break;
-					case eRealm.Hibernia:
-						AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blades));
-						AddAbility(SkillBase.GetAbility(Abilities.Weapon_Blunt));
-						AddAbility(SkillBase.GetAbility(Abilities.Weapon_Piercing));
-						break;
-				}
-				AddAbility(SkillBase.GetAbility(Abilities.Shield, ShieldLevel.Small));
-			}
-
+			RefreshSpecDependantSkills(true);
+			Out.SendUpdatePlayerSkills();
+			
 			Notify(GamePlayerEvent.ChampionLevelUp, this);
 			Out.SendMessage("You have gained one champion level!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			Out.SendUpdatePlayer();
