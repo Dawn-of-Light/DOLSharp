@@ -794,6 +794,10 @@ namespace DOL.GS
 					if (!InitComponent(QuestMgr.Init(), "Quest Manager"))
 						return false;
 				}
+				else
+				{
+					log.InfoFormat("Not Loading Quest Manager : Obeying Server Property <load_quests> - {0}", Properties.LOAD_QUESTS);
+				}
 
 				//---------------------------------------------------------------
 				//Notify our scripts that everything went fine!

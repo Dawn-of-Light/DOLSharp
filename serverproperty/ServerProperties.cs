@@ -69,7 +69,7 @@ namespace DOL.GS.ServerProperties
 		/// Whether to use the sync timer utility or not
 		/// </summary>
 		[ServerProperty("system", "use_sync_timer", "Shall we use the sync timers utility?", true)]
-		public static readonly bool USE_SYNC_UTILITY;
+		public static bool USE_SYNC_UTILITY;
 
 		/// <summary>
 		/// Ignore too long outcoming packet or not
@@ -111,31 +111,31 @@ namespace DOL.GS.ServerProperties
 		/// Should the server load quests
 		/// </summary>
 		[ServerProperty("system", "load_quests", "Should the server load quests, values True,False", true)]
-		public static readonly bool LOAD_QUESTS;
+		public static bool LOAD_QUESTS;
 
 		/// <summary>
 		/// Should the server load Buff Tokens
 		/// </summary>
 		[ServerProperty("system", "load_buff_tokens", "Should the server load buff tokens (npc and items), values True,False", true)]
-		public static readonly bool LOAD_BUFF_TOKENS;
+		public static bool LOAD_BUFF_TOKENS;
 
 		/// <summary>
 		/// Should the server load Arrow Summoning items
 		/// </summary>
 		[ServerProperty("system", "load_arrow_summoning", "Should the server load Arrow Summoning items, values True,False", true)]
-		public static readonly bool LOAD_ARROW_SUMMONING;
+		public static bool LOAD_ARROW_SUMMONING;
 
 		/// <summary>
 		/// Should the server load Housing items
 		/// </summary>
 		[ServerProperty("system", "load_housing_items", "Should the server load Housing items, values True,False", true)]
-		public static readonly bool LOAD_HOUSING_ITEMS;
+		public static bool LOAD_HOUSING_ITEMS;
 
 		/// <summary>
 		/// Should the server load Housing NPC
 		/// </summary>
 		[ServerProperty("system", "load_housing_npc", "Should the server load Housing npc, values True,False", true)]
-		public static readonly bool LOAD_HOUSING_NPC;
+		public static bool LOAD_HOUSING_NPC;
 
 		/// <summary>
 		/// Disable Bug Reports
@@ -164,7 +164,7 @@ namespace DOL.GS.ServerProperties
 		/// A serialised list of RegionIDs that will load objects
 		/// </summary>
 		[ServerProperty("system", "debug_load_regions", "Serialized list of region IDs that will load objects, separated by semi-colon (leave this blank to load all regions normally)", "")]
-		public static readonly string DEBUG_LOAD_REGIONS;
+		public static string DEBUG_LOAD_REGIONS;
 
 		/// <summary>
 		/// A serialised list of disabled expansion IDs
@@ -176,7 +176,7 @@ namespace DOL.GS.ServerProperties
 		/// Server Language
 		/// </summary>
 		[ServerProperty("system", "server_language", "Language of your server. It can be EN, FR or DE.", "EN")]
-		public static readonly string SERV_LANGUAGE;
+		public static string SERV_LANGUAGE;
 
 		/// <summary>
 		/// allow_change_language
@@ -218,7 +218,7 @@ namespace DOL.GS.ServerProperties
 		/// Is the database translated
 		/// </summary>
 		[ServerProperty("system", "db_language", "What language is the DB", "EN")]
-		public static readonly string DB_LANGUAGE;
+		public static string DB_LANGUAGE;
 
 		[ServerProperty("system", "statprint_frequency", "How often (milliseconds) should statistics be printed on the server console.", 30000)]
 		public static int STATPRINT_FREQUENCY;
@@ -332,7 +332,7 @@ namespace DOL.GS.ServerProperties
 		/// Log Email Addresses
 		/// </summary>
 		[ServerProperty("system", "log_email_addresses", "set to the email addresses you want logs automatically emailed to, multiple addresses seperate with ;", "")]
-		public static readonly string LOG_EMAIL_ADDRESSES;
+		public static string LOG_EMAIL_ADDRESSES;
 
 		/// <summary>
 		/// Enable inventory logging (trade, loot, buy, sell, quests,...)
@@ -449,7 +449,7 @@ namespace DOL.GS.ServerProperties
 		/// Should the server load the example scripts
 		/// </summary>
 		[ServerProperty("server", "load_examples", "Should the server load the example scripts", true)]
-		public static readonly bool LOAD_EXAMPLES;
+		public static bool LOAD_EXAMPLES;
 
 		/// <summary>
 		/// Death Messages All Realms
@@ -509,7 +509,7 @@ namespace DOL.GS.ServerProperties
 		/// Set the maximum number of objects allowed in a region.  Smaller numbers offer better performance.  This is used to allocate arrays for both Regions and GamePlayers
 		/// </summary>
 		[ServerProperty("server", "region_max_objects", "Set the maximum number of objects allowed in a region.  Smaller numbers offer better performance.  This can't be changed while the server is running. (256 - 65535)", (ushort)30000)]
-		public static readonly ushort REGION_MAX_OBJECTS;
+		public static ushort REGION_MAX_OBJECTS;
 
 		/// <summary>
 		/// Show logins
@@ -1241,13 +1241,13 @@ namespace DOL.GS.ServerProperties
 		/// Load Hookpoints
 		/// </summary>
 		[ServerProperty("keeps", "load_hookpoints", "Load keep hookpoints", true)]
-		public static readonly bool LOAD_HOOKPOINTS;
+		public static bool LOAD_HOOKPOINTS;
 
 		/// <summary>
 		/// Load Keeps
 		/// </summary>
 		[ServerProperty("keeps", "load_keeps", "Load keeps", true)]
-		public static readonly bool LOAD_KEEPS;
+		public static bool LOAD_KEEPS;
 
 		/// <summary>
 		/// The level keeps start at when not claimed - please note only levels 4 and 5 are supported correctly at this time
@@ -1994,6 +1994,9 @@ namespace DOL.GS.ServerProperties
 			
 			try
 			{
+				if (field.IsInitOnly)
+					log.WarnFormat("Property {0} is ReadOnly, Value won't be changed - {1} !", key, field.GetValue(null));
+				
 				//we do this because we need "1.0" to be considered double sometimes its "1,0" in other countries
 				CultureInfo myCIintl = new CultureInfo("en-US", false);
 				IFormatProvider provider = myCIintl.NumberFormat;
