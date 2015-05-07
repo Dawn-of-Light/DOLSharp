@@ -55,6 +55,11 @@ namespace DOL.GS
 		/// Minimum Static Item Update Loop Refresh Rate. (ms)
 		/// </summary>
 		private static readonly uint MIN_ITEM_UPDATE_RATE = 10000;
+
+		/// <summary>
+		/// Minimum Housing Update Loop Refresh Rate. (ms)
+		/// </summary>
+		private static readonly uint MIN_HOUSING_UPDATE_RATE = 10000;
 		
 		/// <summary>
 		/// Minimum Player Position Update Loop Refresh Rate. (ms)
@@ -86,6 +91,15 @@ namespace DOL.GS
 		private static uint GetPlayerItemUpdateInterval
 		{
 			get { return Math.Max(ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL, MIN_ITEM_UPDATE_RATE); }
+		}
+		
+		/// <summary>
+		/// Get Player Housing Item Refresh Rate.
+		/// </summary>
+		/// <returns></returns>
+		private static uint GetPlayerHousingUpdateInterval
+		{
+			get { return Math.Max(ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL, MIN_HOUSING_UPDATE_RATE); }
 		}
 		
 		/// <summary>
@@ -419,7 +433,7 @@ namespace DOL.GS
 					House house = HouseMgr.GetHouse(houseKey.Item1, houseKey.Item2);
 					
 					// We have a House in cache that is not in vincinity
-					if (!houses.Contains(house) && (nowTicks - houseEntry.Value) >= GetPlayerItemUpdateInterval)
+					if (!houses.Contains(house) && (nowTicks - houseEntry.Value) >= (GetPlayerItemUpdateInterval >> 2))
 					{
 						long dummy;
 						player.Client.HouseUpdateArray.TryRemove(houseKey, out dummy);
@@ -446,7 +460,6 @@ namespace DOL.GS
 						// This House Needs Update
 						if ((nowTicks - lastUpdate) >= GetPlayerItemUpdateInterval)
 						{
-							player.Client.Out.SendHouse(house);
 							player.Client.Out.SendGarden(house);
 
 							if (house.IsOccupied)
