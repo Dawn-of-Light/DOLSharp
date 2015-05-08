@@ -433,7 +433,7 @@ namespace DOL.GS
 					House house = HouseMgr.GetHouse(houseKey.Item1, houseKey.Item2);
 					
 					// We have a House in cache that is not in vincinity
-					if (!houses.Contains(house) && (nowTicks - houseEntry.Value) >= (GetPlayerItemUpdateInterval >> 2))
+					if (!houses.Contains(house) && (nowTicks - houseEntry.Value) >= (GetPlayerHousingUpdateInterval >> 2))
 					{
 						long dummy;
 						player.Client.HouseUpdateArray.TryRemove(houseKey, out dummy);
@@ -458,14 +458,9 @@ namespace DOL.GS
 					if (player.Client.HouseUpdateArray.TryGetValue(new Tuple<ushort, ushort>(house.RegionID, (ushort)house.HouseNumber), out lastUpdate))
 					{
 						// This House Needs Update
-						if ((nowTicks - lastUpdate) >= GetPlayerItemUpdateInterval)
+						if ((nowTicks - lastUpdate) >= GetPlayerHousingUpdateInterval)
 						{
-							player.Client.Out.SendGarden(house);
-
-							if (house.IsOccupied)
-							{
-								player.Client.Out.SendHouseOccupied(house, true);
-							}
+							player.Client.Out.SendHouseOccupied(house, house.IsOccupied);							
 						}
 					}
 					else
@@ -473,11 +468,7 @@ namespace DOL.GS
 						// Not in cache, House entering in range !
 						player.Client.Out.SendHouse(house);
 						player.Client.Out.SendGarden(house);
-
-						if (house.IsOccupied)
-						{
-							player.Client.Out.SendHouseOccupied(house, true);
-						}
+						player.Client.Out.SendHouseOccupied(house, house.IsOccupied);
 					}
 				}
 			}
@@ -548,6 +539,8 @@ namespace DOL.GS
 				{
 					lastUpdate = 0;
 					lastRegion = player.CurrentRegion;
+					client.GameObjectUpdateArray.Clear();
+					client.HouseUpdateArray.Clear();
 				}
 				
 				// If this player need update.
@@ -563,6 +556,22 @@ namespace DOL.GS
 			}
 			
 			return false;
+		}
+		
+		private static bool IsTaskCompleted(GameClient client, IDictionary<GameClient, Tuple<long, Task, Region>> clientsUpdateTasks)
+		{
+			Tuple<long, Task, Region> clientEntry;
+			
+			// Check for existing Task
+			if(clientsUpdateTasks.TryGetValue(client, out clientEntry))
+			{
+				Task taskEntry = clientEntry.Item2;
+				
+				if (taskEntry != null)
+					return taskEntry.IsCompleted;
+			}
+			
+			return true;
 		}
 		
 		/// <summary>
@@ -598,7 +607,12 @@ namespace DOL.GS
 						if (cli == null)
 							continue;
 						
-						if (!clients.Contains(cli))
+						GamePlayer player = cli.Player;
+						
+						bool notActive = cli.ClientState != GameClient.eClientState.Playing || player == null || player.ObjectState != GameObject.eObjectState.Active;
+						bool notConnected = !clients.Contains(cli);
+						
+						if (notConnected || (notActive && IsTaskCompleted(cli, clientsUpdateTasks)))
 						{
 							clientsUpdateTasks.Remove(cli);
 							cli.GameObjectUpdateArray.Clear();
