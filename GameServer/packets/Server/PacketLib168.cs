@@ -3316,7 +3316,7 @@ namespace DOL.GS.PacketHandler
 			}
 			
 			// Update cache
-			m_gameClient.HouseUpdateArray[new Tuple<ushort, ushort>(house.RegionID, (ushort)house.HouseNumber)] = GameTimer.GetTickCount();
+			m_gameClient.HouseUpdateArray.UpdateIfExists(new Tuple<ushort, ushort>(house.RegionID, (ushort)house.HouseNumber), GameTimer.GetTickCount());
 		}
 
 		public virtual void SendGarden(House house, int i)
@@ -3335,7 +3335,7 @@ namespace DOL.GS.PacketHandler
 			}
 			
 			// Update cache
-			m_gameClient.HouseUpdateArray[new Tuple<ushort, ushort>(house.RegionID, (ushort)house.HouseNumber)] = GameTimer.GetTickCount();
+			m_gameClient.HouseUpdateArray.UpdateIfExists(new Tuple<ushort, ushort>(house.RegionID, (ushort)house.HouseNumber), GameTimer.GetTickCount());
 		}
 
 		public virtual void SendHouseOccupied(House house, bool flagHouseOccuped)
@@ -3350,7 +3350,7 @@ namespace DOL.GS.PacketHandler
 			}
 			
 			// Update cache
-			m_gameClient.HouseUpdateArray[new Tuple<ushort, ushort>(house.RegionID, (ushort)house.HouseNumber)] = GameTimer.GetTickCount();
+			m_gameClient.HouseUpdateArray.UpdateIfExists(new Tuple<ushort, ushort>(house.RegionID, (ushort)house.HouseNumber), GameTimer.GetTickCount());
 		}
 
 		public virtual void SendEnterHouse(House house)
