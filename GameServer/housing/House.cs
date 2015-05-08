@@ -329,10 +329,15 @@ namespace DOL.GS.Housing
 		/// </summary>
 		public void SendUpdate()
 		{
-			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(RegionID, X, Y, Z, HousingConstants.HouseViewingDistance))
+			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(this, HousingConstants.HouseViewingDistance))
 			{
 				player.Out.SendHouse(this);
 				player.Out.SendGarden(this);
+			}
+			
+			foreach (GamePlayer player in GetAllPlayersInHouse())
+			{
+				player.Out.SendEnterHouse(this);
 			}
 		}
 
@@ -345,7 +350,7 @@ namespace DOL.GS.Housing
 			IList<GamePlayer> list = GetAllPlayersInHouse();
 			if (list.Count == 0)
 			{
-				foreach (GamePlayer pl in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				foreach (GamePlayer pl in WorldMgr.GetPlayersCloseToSpot(this, HousingConstants.HouseViewingDistance))
 				{
 					pl.Out.SendHouseOccupied(this, true);
 				}
@@ -438,7 +443,7 @@ namespace DOL.GS.Housing
 			IList<GamePlayer> list = GetAllPlayersInHouse();
 			if (list.Count == 0)
 			{
-				foreach (GamePlayer pl in player.GetPlayersInRadius(HousingConstants.HouseViewingDistance))
+				foreach (GamePlayer pl in WorldMgr.GetPlayersCloseToSpot(this, HousingConstants.HouseViewingDistance))
 				{
 					pl.Out.SendHouseOccupied(this, false);
 				}
@@ -1055,24 +1060,8 @@ namespace DOL.GS.Housing
 
 			// save the house
 			GameServer.Database.SaveObject(_databaseItem);
-
-			if (player.InHouse)
-			{
-				// update all players in the house
-				foreach (GamePlayer p in GetAllPlayersInHouse())
-				{
-					p.Out.SendEnterHouse(this); //update rugs.
-				}
-			}
-			else
-			{
-				// update all players nearby
-				foreach (GamePlayer p in WorldMgr.GetPlayersCloseToSpot(this, HousingConstants.HouseViewingDistance))
-				{
-					p.Out.SendHouse(this); //update wall look
-					p.Out.SendGarden(this);
-				}
-			}
+			
+			SendUpdate();
 		}
 
 		#endregion
