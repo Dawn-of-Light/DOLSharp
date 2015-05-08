@@ -181,12 +181,7 @@ namespace DOL.GS.Commands
 					HouseMgr.RemoveHouseItems(houses[0] as House);
 					(houses[0] as House).Model = newModel;
 					(houses[0] as House).SaveIntoDatabase();
-
-					foreach (GamePlayer p in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-					{
-						p.Out.SendHouse(houses[0] as House);
-						p.Out.SendGarden(houses[0] as House);
-					}
+					(houses[0] as House).SendUpdate();
 
 					DisplayMessage(player.Client, "House model changed to " + newModel + "!");
 					GameServer.Instance.LogGMAction(player.Name + " changed house #" + (houses[0] as House).HouseNumber + " model to " + newModel);
