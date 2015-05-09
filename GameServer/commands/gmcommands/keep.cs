@@ -2261,6 +2261,30 @@ namespace DOL.GS.Commands
 						break;
 					}
 					#endregion KeepID
+				case "idnext":
+					{
+						if (myKeep == null)
+						{
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
+							return;
+						}
+						
+						myKeep.KeepID++;
+						DisplayMessage(client, "You change the id of the current keep to " + myKeep.KeepID);
+						break;
+					}
+				case "idprev":
+					{
+						if (myKeep == null)
+						{
+							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Keep.Remove.MustCreateKeepFirst"));
+							return;
+						}
+						
+						myKeep.KeepID--;
+						DisplayMessage(client, "You change the id of the current keep to " + myKeep.KeepID);
+						break;
+					}
 				#region Level
 				case "level":
 					{

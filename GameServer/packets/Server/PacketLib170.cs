@@ -135,6 +135,15 @@ namespace DOL.GS.PacketHandler
 				SendTCP(pak);
 			}
 		}
+		public override void SendKeepComponentRemove(IGameKeepComponent keepComponent)
+		{
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.KeepComponentRemove)))
+			{
+				pak.WriteShort((ushort)keepComponent.Keep.KeepID);
+				pak.WriteShort((ushort)keepComponent.ID);
+				SendTCP(pak);
+			}
+		}
 		public override void SendKeepComponentUpdate(IGameKeep keep, bool LevelUp)
 		{
 			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.KeepComponentUpdate)))

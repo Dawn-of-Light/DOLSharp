@@ -348,7 +348,12 @@ namespace DOL.GS.Keeps
 		public ushort KeepID
 		{
 			get	{ return (ushort)DBKeep.KeepID; }
-			set	{ DBKeep.KeepID = (ushort)value; }
+			set
+			{
+				SendRemoveKeep();
+				DBKeep.KeepID = (ushort)value;
+				SendKeepInfo();
+			}
 		}
 
 		/// <summary>
@@ -1275,6 +1280,49 @@ namespace DOL.GS.Keeps
 			foreach(GameKeepComponent keepComponent in this.KeepComponents)
 			{
 				player.Out.SendKeepComponentInfo(keepComponent);
+			}
+		}
+		
+		/// <summary>
+		/// Send Packets to Remove Keep and Components
+		/// </summary>
+		protected void SendRemoveKeep()
+		{
+			foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
+			{
+				if (client.Player == null || client.ClientState != GameClient.eClientState.Playing || client.Player.ObjectState != GameObject.eObjectState.Active)
+					continue;
+				
+				GamePlayer player = client.Player;
+				
+				// Remove Keep
+				foreach(GameKeepComponent comp in this.KeepComponents)
+				{
+					player.Out.SendKeepComponentRemove(comp);
+				}
+				player.Out.SendKeepRemove(this);
+			}
+		}
+		
+		/// <summary>
+		/// Send Packets to Add Keep and Components
+		/// </summary>
+		protected void SendKeepInfo()
+		{
+			foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
+			{
+				
+				if (client.Player == null || client.ClientState != GameClient.eClientState.Playing || client.Player.ObjectState != GameObject.eObjectState.Active)
+					continue;
+				
+				GamePlayer player = client.Player;
+				
+				// Add Keep
+				player.Out.SendKeepInfo(this);
+				foreach(GameKeepComponent comp in this.KeepComponents)
+				{
+					player.Out.SendKeepComponentInfo(comp);
+				}
 			}
 		}
 	}
