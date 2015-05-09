@@ -76,6 +76,7 @@ namespace DOL.GS.PacketHandler
 		KeepRemove = 0x6B,
 		KeepComponentInfo = 0x6C,
 		KeepComponentDetailUpdate = 0x6D,
+		KeepComponentRemove = 0x6E,
 		GroupMemberUpdate = 0x70,
 		SpellCastAnimation = 0x72,
 		InterruptSpellCast = 0x73,
@@ -748,6 +749,7 @@ namespace DOL.GS.PacketHandler
 		void SendKeepRemove(IGameKeep keep);
 		void SendKeepComponentInfo(IGameKeepComponent keepComponent);
 		void SendKeepComponentDetailUpdate(IGameKeepComponent keepComponent);
+		void SendKeepComponentRemove(IGameKeepComponent keepComponent);
 		void SendKeepClaim(IGameKeep keep, byte flag);
 		void SendKeepComponentUpdate(IGameKeep keep, bool LevelUp);
 		void SendKeepComponentInteract(IGameKeepComponent component);
