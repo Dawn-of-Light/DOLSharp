@@ -516,7 +516,7 @@ namespace DOL.GS.Keeps
 
 				foreach (AbstractGameKeep keep in m_keepList.Values)
 				{
-					if (keep.DBKeep == null || keep.DBKeep.Region != regionid)
+					if (keep == null || keep.DBKeep == null || keep.DBKeep.Region != regionid)
 						continue;
 
 					long xdiff = keep.DBKeep.X - x;

@@ -183,6 +183,7 @@ namespace DOLGameServerConsole
 		public void SendKeepRemove(IGameKeep keep) { }
 		public void SendKeepComponentInfo(IGameKeepComponent keepComponent) { }
 		public void SendKeepComponentDetailUpdate(IGameKeepComponent keepComponent) { }
+		public void SendKeepComponentRemove(IGameKeepComponent keepComponent) { }
 		public void SendKeepComponentUpdate(IGameKeep keep, bool levelup) { }
 		public void SendKeepClaim(IGameKeep keep, byte flag) { }
 		public void SendKeepComponentInteract(IGameKeepComponent component) { }

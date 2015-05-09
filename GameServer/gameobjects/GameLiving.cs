@@ -3002,9 +3002,13 @@ namespace DOL.GS
 						}
 
 						ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(ad.Attacker, procSpell, spellLine);
-						if (spellHandler != null && ad.Attacker.IsWithinRadius(ad.Target, spellHandler.CalculateSpellRange()))
+												
+						if (spellHandler != null)
 						{
-							spellHandler.StartSpell(ad.Target, weapon);
+							bool rangeCheck = spellHandler.Spell.Target.ToLower().Equals("enemy") && spellHandler.Spell.Range > 0;
+
+							if (!rangeCheck || ad.Attacker.IsWithinRadius(ad.Target, spellHandler.CalculateSpellRange()))
+								spellHandler.StartSpell(ad.Target, weapon);
 						}
 					}
 				}

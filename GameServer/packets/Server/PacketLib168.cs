@@ -3213,6 +3213,10 @@ namespace DOL.GS.PacketHandler
 		public virtual void SendKeepComponentDetailUpdate(IGameKeepComponent keepComponent)
 		{
 		}
+		
+		public virtual void SendKeepComponentRemove(IGameKeepComponent keepComponent)
+		{
+		}
 
 		public virtual void SendWarmapUpdate(ICollection<IGameKeep> list)
 		{
