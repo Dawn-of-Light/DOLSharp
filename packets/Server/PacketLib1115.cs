@@ -88,30 +88,48 @@ namespace DOL.GS.PacketHandler
 		}
 
 		
-        /// <summary>
-        /// New Item Packet Data in v1.115
-        /// </summary>
-        /// <param name="pak"></param>
-        /// <param name="item"></param>
-        protected override void WriteItemData(GSTCPPacketOut pak, InventoryItem item)
-        {
-        	if (item == null)
+		/// <summary>
+		/// New Item Packet Data in v1.115
+		/// </summary>
+		/// <param name="pak"></param>
+		/// <param name="item"></param>
+		protected override void WriteItemData(GSTCPPacketOut pak, InventoryItem item)
+		{
+			if (item == null)
 			{
 				pak.Fill(0x00, 23); // added one short in front of item data, v1.115
 				return;
 			}
 
-        	
-        	// Unknown
-        	pak.WriteShort((ushort)0);
-        	base.WriteItemData(pak, item);
-        }
-        
-        /// <summary>
-        /// Default Keep Model changed for 1.1115
-        /// </summary>
-        /// <param name="keep"></param>
-        public override void SendKeepInfo(IGameKeep keep)
+			// Unknown
+			pak.WriteShort((ushort)0);
+			base.WriteItemData(pak, item);
+		}
+		
+		/// <summary>
+		/// New Item Packet Template Data in v1.115
+		/// </summary>
+		/// <param name="pak"></param>
+		/// <param name="template"></param>
+		/// <param name="count"></param>
+		protected override void WriteTemplateData(GSTCPPacketOut pak, ItemTemplate template, int count)
+		{
+			if (template == null)
+			{
+				pak.Fill(0x00, 23); // added one short in front of item data, v1.115
+				return;
+			}
+			
+			// Unknown
+			pak.WriteShort((ushort)0);
+			base.WriteTemplateData(pak, template, count);
+		}
+		
+		/// <summary>
+		/// Default Keep Model changed for 1.1115
+		/// </summary>
+		/// <param name="keep"></param>
+		public override void SendKeepInfo(IGameKeep keep)
 		{
 			if (m_gameClient.Player == null) 
 				return;

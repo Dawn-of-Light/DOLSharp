@@ -265,6 +265,93 @@ namespace DOL.GS.PacketHandler
 			pak.WritePascalString(name);
 		}
 
+		protected override void WriteTemplateData(GSTCPPacketOut pak, ItemTemplate template, int count)
+		{
+			if (template == null)
+			{
+				pak.Fill(0x00, 20);  // 1.109 +1 byte
+				return;
+			}
+			
+			pak.WriteByte((byte)template.Level);
 
-    }
+			int value1;
+			int value2;
+
+			switch (template.Object_Type)
+			{
+				case (int)eObjectType.Arrow:
+				case (int)eObjectType.Bolt:
+				case (int)eObjectType.Poison:
+				case (int)eObjectType.GenericItem:
+					value1 = count; // Count
+					value2 = template.SPD_ABS;
+					break;
+				case (int)eObjectType.Thrown:
+					value1 = template.DPS_AF;
+					value2 = count; // Count
+					break;
+				case (int)eObjectType.Instrument:
+					value1 = (template.DPS_AF == 2 ? 0 : template.DPS_AF);
+					value2 = 0;
+					break;
+				case (int)eObjectType.Shield:
+					value1 = template.Type_Damage;
+					value2 = template.DPS_AF;
+					break;
+				case (int)eObjectType.AlchemyTincture:
+				case (int)eObjectType.SpellcraftGem:
+					value1 = 0;
+					value2 = 0;
+					/*
+					must contain the quality of gem for spell craft and think same for tincture
+					*/
+					break;
+				case (int)eObjectType.GardenObject:
+					value1 = 0;
+					value2 = template.SPD_ABS;
+					/*
+					Value2 byte sets the width, only lower 4 bits 'seem' to be used (so 1-15 only)
+
+					The byte used for "Hand" (IE: Mini-delve showing a weapon as Left-Hand
+					usabe/TwoHanded), the lower 4 bits store the height (1-15 only)
+					*/
+					break;
+
+				default:
+					value1 = template.DPS_AF;
+					value2 = template.SPD_ABS;
+					break;
+			}
+			pak.WriteByte((byte)value1);
+			pak.WriteByte((byte)value2);
+
+			if (template.Object_Type == (int)eObjectType.GardenObject)
+				pak.WriteByte((byte)(template.DPS_AF));
+			else
+				pak.WriteByte((byte)(template.Hand << 6));
+			pak.WriteByte((byte)((template.Type_Damage > 3
+				? 0
+				: template.Type_Damage << 6) | template.Object_Type));
+			pak.Fill(0x00, 1); // 1.109, +1 byte, no clue what this is  - Tolakram
+			pak.WriteShort((ushort)template.Weight);
+			pak.WriteByte(template.BaseConditionPercent);
+			pak.WriteByte(template.BaseDurabilityPercent);
+			pak.WriteByte((byte)template.Quality);
+			pak.WriteByte((byte)template.Bonus);
+			pak.WriteShort((ushort)template.Model);
+			pak.WriteByte((byte)template.Extension);
+			if (template.Emblem != 0)
+				pak.WriteShort((ushort)template.Emblem);
+			else
+				pak.WriteShort((ushort)template.Color);
+			pak.WriteByte((byte)0); // Flag
+			pak.WriteByte((byte)template.Effect);
+			if (count > 1)
+				pak.WritePascalString(String.Format("{0} {1}", count, template.Name));
+			else
+				pak.WritePascalString(template.Name);
+		}
+
+	}
 }

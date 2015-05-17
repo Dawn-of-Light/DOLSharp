@@ -127,6 +127,12 @@ namespace DOL.GS.PacketHandler
 
 		protected virtual void WriteTemplateData(GSTCPPacketOut pak, ItemTemplate template, int count)
 		{
+			if (template == null)
+			{
+				pak.Fill(0x00, 19);
+				return;
+			}
+			
 			pak.WriteByte((byte)template.Level);
 
 			int value1;
@@ -198,7 +204,8 @@ namespace DOL.GS.PacketHandler
 				pak.WriteShort((ushort)template.Emblem);
 			else
 				pak.WriteShort((ushort)template.Color);
-			pak.WriteShort((ushort)template.Effect);
+			pak.WriteByte((byte)0); // Flag
+			pak.WriteByte((byte)template.Effect);
 			if (count > 1)
 				pak.WritePascalString(String.Format("{0} {1}", count, template.Name));
 			else
@@ -238,8 +245,10 @@ namespace DOL.GS.PacketHandler
 				pak.WriteByte((byte)quest.Level);
 				pak.WriteStringBytes(quest.Name);
 				pak.WritePascalString(quest.Description);
+				int goalindex = 0;
 				foreach (RewardQuest.QuestGoal goal in quest.Goals)
 				{
+					goalindex++;
 					String goalDesc = String.Format("{0}\r", goal.Description);
 					pak.WriteShortLowEndian((ushort)goalDesc.Length);
 					pak.WriteStringBytes(goalDesc);
@@ -257,7 +266,7 @@ namespace DOL.GS.PacketHandler
 						pak.WriteByte(0x00);
 					else
 					{
-						pak.WriteByte(0x01);
+						pak.WriteByte((byte)goalindex);
 						WriteTemplateData(pak, goal.QuestItem, 1);
 					}
 				}
