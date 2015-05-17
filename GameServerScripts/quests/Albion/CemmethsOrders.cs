@@ -233,8 +233,8 @@ namespace DOL.GS.Quests.Albion
 			Rewards.AddOptionalItem(RecruitsStuddedVest);
 			Rewards.ChoiceOf = 1;
 
-			SkeletonsKilled = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.CemmethsOrders.Init.Text6"), QuestGoal.GoalType.KillTask, 1, null);
-			DecayingGhoulsKilled = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.CemmethsOrders.Init.Text7"), QuestGoal.GoalType.KillTask, 1, null);
+			SkeletonsKilled = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.CemmethsOrders.Init.Text6"), QuestGoal.GoalType.KillTask, 1, skeletonskull);
+			DecayingGhoulsKilled = AddGoal(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.CemmethsOrders.Init.Text7"), QuestGoal.GoalType.KillTask, 1, zombieskin);
 		}
 
 		[ScriptLoadedEvent]
