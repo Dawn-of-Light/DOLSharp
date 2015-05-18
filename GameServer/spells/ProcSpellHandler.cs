@@ -271,7 +271,7 @@ namespace DOL.GS.Spells
         }
 
         /// <summary>
-        /// Handler fired whenever effect target is attacked
+        /// Handler fired whenever effect target attacks
         /// </summary>
         /// <param name="e"></param>
         /// <param name="sender"></param>
@@ -279,10 +279,10 @@ namespace DOL.GS.Spells
         protected override void EventHandler(DOLEvent e, object sender, EventArgs arguments)
         {
             AttackFinishedEventArgs args = arguments as AttackFinishedEventArgs;
-            if (args == null || args.AttackData == null)
-            {
+            
+            if (args == null || args.AttackData == null || args.AttackData.AttackType == AttackData.eAttackType.Spell)
                 return;
-            }
+            
             AttackData ad = args.AttackData;
             if (ad.AttackResult != GameLiving.eAttackResult.HitUnstyled && ad.AttackResult != GameLiving.eAttackResult.HitStyle)
                 return;
@@ -291,16 +291,12 @@ namespace DOL.GS.Spells
 
             if (ad.IsMeleeAttack)
             {
-                if (sender is GamePlayer)
+                InventoryItem leftWeapon = ad.Attacker.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+                // if we can use left weapon, we have currently a weapon in left hand and we still have endurance,
+                // we can assume that we are using the two weapons.
+                if (ad.Attacker.CanUseLefthandedWeapon && leftWeapon != null && leftWeapon.Object_Type != (int)eObjectType.Shield)
                 {
-                    GamePlayer player = (GamePlayer)sender;
-                    InventoryItem leftWeapon = player.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
-                    // if we can use left weapon, we have currently a weapon in left hand and we still have endurance,
-                    // we can assume that we are using the two weapons.
-                    if (player.CanUseLefthandedWeapon && leftWeapon != null && leftWeapon.Object_Type != (int)eObjectType.Shield)
-                    {
-                        baseChance /= 2;
-                    }
+                    baseChance /= 2;
                 }
             }
 
@@ -312,53 +308,15 @@ namespace DOL.GS.Spells
                 ISpellHandler handler = ScriptMgr.CreateSpellHandler((GameLiving)sender, m_procSpell, m_procSpellLine);
                 if (handler != null)
                 {
-					if (m_procSpell.Target.ToLower() == "enemy")
-					{
-						handler.StartSpell(ad.Target);
-					}
-					else if (m_procSpell.Target.ToLower() == "self")
-					{
-						handler.StartSpell(ad.Attacker);
-					}
-					else if (m_procSpell.Target.ToLower() == "group")
-					{
-						GamePlayer player = Caster as GamePlayer;
-						if (Caster is GamePlayer)
-						{
-							if (player.Group != null)
-							{
-								foreach (GameLiving groupPlayer in player.Group.GetMembersInTheGroup())
-								{
-									if (player.IsWithinRadius(groupPlayer, m_procSpell.Range))
-									{
-										handler.StartSpell(groupPlayer);
-									}
-								}
-							}
-							else
-							{
-								handler.StartSpell(player);
-							}
-						}
-					}
-					else if (m_procSpell.Target.ToLower() == "realm")
-					{
-						GamePlayer player = Caster as GamePlayer;
-						if (player != null)
-						{
-							foreach (GameLiving realmPlayer in player.GetPlayersInRadius((ushort)m_procSpell.Radius))
-							{
-								if (GameServer.ServerRules.IsAllowedToAttack(player, realmPlayer, true) == false)
-								{
-									handler.StartSpell(realmPlayer);
-								}
-							}
-						}
-					}
-					else
-					{
-						log.Warn("Unknown spell target; skipping " + m_procSpell.Target + " proc " + m_procSpell.Name + " on " + ad.Target.Name + "; Realm = " + ad.Target.Realm);
-					}
+                	switch(m_procSpell.Target.ToLower())
+                	{
+                		case "enemy":
+                			handler.StartSpell(ad.Target);
+                			break;
+                		default:
+                			handler.StartSpell(ad.Attacker);
+                			break;
+                	}
                 }
             }
         }
@@ -398,14 +356,24 @@ namespace DOL.GS.Spells
         protected override void EventHandler(DOLEvent e, object sender, EventArgs arguments)
         {
             AttackedByEnemyEventArgs args = arguments as AttackedByEnemyEventArgs;
-            if (args == null) return;
-            if (args.AttackData == null) return;
-            if (args.AttackData.SpellHandler != null) return;
-            if (args.AttackData.AttackResult != GameLiving.eAttackResult.HitUnstyled
-                && args.AttackData.AttackResult != GameLiving.eAttackResult.HitStyle)
+            if (args == null || args.AttackData == null || args.AttackData.AttackType == AttackData.eAttackType.Spell)
+            	return;
+
+            if (args.AttackData.AttackResult != GameLiving.eAttackResult.HitUnstyled && args.AttackData.AttackResult != GameLiving.eAttackResult.HitStyle)
                 return;
 
             int baseChance = Spell.Frequency / 100;
+
+            if (args.AttackData.IsMeleeAttack)
+            {
+                InventoryItem leftWeapon = args.AttackData.Attacker.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+                // if we can use left weapon, we have currently a weapon in left hand and we still have endurance,
+                // we can assume that we are using the two weapons.
+                if (args.AttackData.Attacker.CanUseLefthandedWeapon && leftWeapon != null && leftWeapon.Object_Type != (int)eObjectType.Shield)
+                {
+                    baseChance /= 2;
+                }
+            }
 
             if (baseChance < 1)
                 baseChance = 1;
@@ -414,7 +382,17 @@ namespace DOL.GS.Spells
             {
                 ISpellHandler handler = ScriptMgr.CreateSpellHandler((GameLiving)sender, m_procSpell, m_procSpellLine);
                 if (handler != null)
-                    handler.StartSpell(args.AttackData.Attacker);
+                {
+                	switch(m_procSpell.Target.ToLower())
+                	{
+                		case "enemy":
+                			handler.StartSpell(args.AttackData.Attacker);
+                			break;
+                		default:
+                			handler.StartSpell(args.AttackData.Target);
+                			break;
+                	}
+                }
             }
         }
 
@@ -426,15 +404,6 @@ namespace DOL.GS.Spells
        public class OffensiveProcPvESpellHandler : OffensiveProcSpellHandler
        {
           /// <summary>
-          /// The event type to hook on
-          /// </summary>
-          protected override DOLEvent EventType
-          {
-             get { return GameLivingEvent.AttackFinished; }
-          }
-
-
-          /// <summary>
           /// Handler fired whenever effect target is attacked
           /// </summary>
           /// <param name="e"></param>
@@ -443,13 +412,13 @@ namespace DOL.GS.Spells
           protected override void EventHandler( DOLEvent e, object sender, EventArgs arguments )
           {
              AttackFinishedEventArgs args = arguments as AttackFinishedEventArgs;
-             if ( args == null || args.AttackData == null )
-             {
+             if (args == null || args.AttackData == null)
                 return;
-             }
 
-             if( args.AttackData.Target.Realm == eRealm.None )
-                base.EventHandler( e, sender, arguments );
+             GameNPC target = args.AttackData.Target as GameNPC;
+             
+             if(target != null && !(target.Brain is IControlledBrain && ((IControlledBrain)target.Brain).GetPlayerOwner() != null))
+                base.EventHandler(e, sender, arguments);
           }
 
           public OffensiveProcPvESpellHandler( GameLiving caster, Spell spell, SpellLine line ) : base( caster, spell, line ) { }
