@@ -246,18 +246,6 @@ namespace DOL.GS.Spells
 				}
 
 				StartSpell(m_spellTarget);
-
-				if (m_spell.SubSpellID > 0 && Spell.SpellType != "Archery" && Spell.SpellType != "Bomber" && Spell.SpellType != "SummonAnimistFnF" && Spell.SpellType != "SummonAnimistPet" && Spell.SpellType != "Grapple")
-				{
-					Spell spell = SkillBase.GetSpellByID(m_spell.SubSpellID);
-					//we need subspell ID to be 0, we don't want spells linking off the subspell
-					if (spell != null && spell.SubSpellID == 0)
-					{
-						ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
-						spellhandler.StartSpell(m_spellTarget);
-					}
-				}
-
 			}
 			else
 			{
@@ -1879,19 +1867,6 @@ namespace DOL.GS.Spells
 					effect.Cancel(false);
 			}
 
-
-			//Subspells
-			if (m_spell.SubSpellID > 0 && Spell.SpellType != "Archery" && Spell.SpellType != "Bomber" && Spell.SpellType != "SummonAnimistFnF" && Spell.SpellType != "SummonAnimistPet" && Spell.SpellType != "Grapple")
-			{
-				Spell spell = SkillBase.GetSpellByID(m_spell.SubSpellID);
-				//we need subspell ID to be 0, we don't want spells linking off the subspell
-				if (target != null && spell != null && spell.SubSpellID == 0)
-				{
-					ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
-					spellhandler.StartSpell(target);
-				}
-			}
-
 			//the quick cast is unallowed whenever you miss the spell
 			//set the time when casting to can not quickcast during a minimum time
 			if (m_caster is GamePlayer)
@@ -2352,23 +2327,16 @@ namespace DOL.GS.Spells
 		/// Cast all subspell recursively
 		/// </summary>
 		/// <param name="target"></param>
-		public void CastSubSpells(GameLiving target, SpellLine line)
+		public virtual void CastSubSpells(GameLiving target)
 		{
-			if (Spell.SubSpellID > 0 && Spell.SpellType != "Archery" && Spell.SpellType != "Bomber" && Spell.SpellType != "SummonAnimistFnF" && Spell.SpellType != "SummonAnimistPet" && Spell.SpellType != "Grapple")
+			if (m_spell.SubSpellID > 0 && Spell.SpellType != "Archery" && Spell.SpellType != "Bomber" && Spell.SpellType != "SummonAnimistFnF" && Spell.SpellType != "SummonAnimistPet" && Spell.SpellType != "Grapple")
 			{
-				List<Spell> spells = SkillBase.GetSpellList(SpellLine.KeyName);
-				foreach (Spell subSpell in spells)
+				Spell spell = SkillBase.GetSpellByID(m_spell.SubSpellID);
+				//we need subspell ID to be 0, we don't want spells linking off the subspell
+				if (target != null && spell != null && spell.SubSpellID == 0)
 				{
-					if (subSpell.ID == Spell.SubSpellID)
-					{
-						SpellHandler subSpellHandler = ScriptMgr.CreateSpellHandler(Caster, subSpell, line) as SpellHandler;
-						if (subSpellHandler != null)
-						{
-							subSpellHandler.StartSpell(target);
-							subSpellHandler.CastSubSpells(target, line);
-						}
-						break;
-					}
+					ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+					spellhandler.StartSpell(target);
 				}
 			}
 		}
@@ -2494,6 +2462,7 @@ namespace DOL.GS.Spells
 				ApplyEffectOnTarget(null, 1);
 			}
 
+			CastSubSpells(target);
 			return true;
 		}
 		/// <summary>
