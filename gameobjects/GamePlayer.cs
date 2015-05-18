@@ -9268,9 +9268,6 @@ namespace DOL.GS
 													//Spell
 													if (spellHandler.StartSpell(target, useItem))
 													{
-														//SubSpells
-														spellHandler.CastSubSpells(target, spellHandler.SpellLine);
-
 														if (useItem.Count > 1)
 														{
 															Inventory.RemoveCountFromStack(useItem, 1);
