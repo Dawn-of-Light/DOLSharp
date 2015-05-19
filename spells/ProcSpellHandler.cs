@@ -283,16 +283,8 @@ namespace DOL.GS.Spells
 
 			int baseChance = Spell.Frequency / 100;
 
-			if (ad.IsMeleeAttack)
-			{
-				InventoryItem leftWeapon = ad.Attacker.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
-				// if we can use left weapon, we have currently a weapon in left hand and we still have endurance,
-				// we can assume that we are using the two weapons.
-				if (ad.Attacker.CanUseLefthandedWeapon && leftWeapon != null && leftWeapon.Object_Type != (int)eObjectType.Shield)
-				{
-					baseChance /= 2;
-				}
-			}
+			if (ad.AttackType == AttackData.eAttackType.MeleeDualWield)
+				baseChance /= 2;
 
 			if (baseChance < 1)
 				baseChance = 1;
@@ -353,21 +345,14 @@ namespace DOL.GS.Spells
 			if (args == null || args.AttackData == null || args.AttackData.AttackType == AttackData.eAttackType.Spell)
 				return;
 
-			if (args.AttackData.AttackResult != GameLiving.eAttackResult.HitUnstyled && args.AttackData.AttackResult != GameLiving.eAttackResult.HitStyle)
+			AttackData ad = args.AttackData;
+			if (ad.AttackResult != GameLiving.eAttackResult.HitUnstyled && ad.AttackResult != GameLiving.eAttackResult.HitStyle)
 				return;
 
 			int baseChance = Spell.Frequency / 100;
 
-			if (args.AttackData.IsMeleeAttack)
-			{
-				InventoryItem leftWeapon = args.AttackData.Attacker.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
-				// if we can use left weapon, we have currently a weapon in left hand and we still have endurance,
-				// we can assume that we are using the two weapons.
-				if (args.AttackData.Attacker.CanUseLefthandedWeapon && leftWeapon != null && leftWeapon.Object_Type != (int)eObjectType.Shield)
-				{
-					baseChance /= 2;
-				}
-			}
+			if (ad.AttackType == AttackData.eAttackType.MeleeDualWield)
+				baseChance /= 2;
 
 			if (baseChance < 1)
 				baseChance = 1;
@@ -380,10 +365,10 @@ namespace DOL.GS.Spells
 					switch(m_procSpell.Target.ToLower())
 					{
 						case "enemy":
-							handler.StartSpell(args.AttackData.Attacker);
+							handler.StartSpell(ad.Attacker);
 							break;
 						default:
-							handler.StartSpell(args.AttackData.Target);
+							handler.StartSpell(ad.Target);
 							break;
 					}
 				}
