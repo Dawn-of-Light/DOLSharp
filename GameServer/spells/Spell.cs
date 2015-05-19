@@ -548,7 +548,7 @@ namespace DOL.GS
         {
         	get
         	{
-        		return SubSpellID > 0;
+        		return SubSpellID > 0 || MultipleSubSpells.Count > 0;
         	}
         }
         
@@ -636,6 +636,14 @@ namespace DOL.GS
 			get
 			{
 				return this.GetParamValue<ushort>("InternalIconID");
+			}
+		}
+		
+		public IList<int> MultipleSubSpells
+		{
+			get
+			{
+				return this.GetParamValues<int>("MultipleSubSpellID").Where(id => id > 0).ToList();
 			}
 		}
         
