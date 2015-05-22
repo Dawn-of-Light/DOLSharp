@@ -124,5 +124,13 @@ namespace DOL.GS.Spells
             bomber.Health = 0;
             bomber.Delete();
         }
+		
+		/// <summary>
+		/// Do not trigger SubSpells
+		/// </summary>
+		/// <param name="target"></param>
+		public override void CastSubSpells(GameLiving target)
+		{
+		}
     }
 }

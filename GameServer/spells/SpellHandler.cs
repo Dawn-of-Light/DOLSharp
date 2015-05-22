@@ -2330,21 +2330,18 @@ namespace DOL.GS.Spells
 		/// <param name="target"></param>
 		public virtual void CastSubSpells(GameLiving target)
 		{
-			if (Spell.SpellType != "Archery" && Spell.SpellType != "Bomber" && Spell.SpellType != "SummonAnimistFnF" && Spell.SpellType != "SummonAnimistPet" && Spell.SpellType != "Grapple")
+			List<int> subSpellList = new List<int>();
+			if (m_spell.SubSpellID > 0)
+				subSpellList.Add(m_spell.SubSpellID);
+			
+			foreach (int spellID in subSpellList.Union(m_spell.MultipleSubSpells))
 			{
-				List<int> subSpellList = new List<int>();
-				if (m_spell.SubSpellID > 0)
-					subSpellList.Add(m_spell.SubSpellID);
-				
-				foreach (int spellID in subSpellList.Union(m_spell.MultipleSubSpells))
+				Spell spell = SkillBase.GetSpellByID(spellID);
+				//we need subspell ID to be 0, we don't want spells linking off the subspell
+				if (target != null && spell != null && spell.SubSpellID == 0)
 				{
-					Spell spell = SkillBase.GetSpellByID(spellID);
-					//we need subspell ID to be 0, we don't want spells linking off the subspell
-					if (target != null && spell != null && spell.SubSpellID == 0)
-					{
-						ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
-						spellhandler.StartSpell(target);
-					}
+					ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+					spellhandler.StartSpell(target);
 				}
 			}
 		}

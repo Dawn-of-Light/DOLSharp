@@ -486,6 +486,14 @@ namespace DOL.GS.Spells
 			}
 		}
 
+		/// <summary>
+		/// Do not trigger Subspells
+		/// </summary>
+		/// <param name="target"></param>
+		public override void CastSubSpells(GameLiving target)
+		{
+		}
+		
 		public Archery(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
 }
