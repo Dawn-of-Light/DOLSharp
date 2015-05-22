@@ -143,5 +143,13 @@ namespace DOL.GS.Spells
 		{
 			return new TurretFNFBrain(owner);
 		}
+		
+		/// <summary>
+		/// Do not trigger SubSpells
+		/// </summary>
+		/// <param name="target"></param>
+		public override void CastSubSpells(GameLiving target)
+		{
+		}
 	}
 }
