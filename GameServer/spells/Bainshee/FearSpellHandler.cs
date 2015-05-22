@@ -1,12 +1,28 @@
+/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
 using System;
-using DOL.AI.Brain;
-using DOL.Database;
-using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
-using DOL.GS.SkillHandler;
 using System.Collections;
-using log4net;
-using System.Reflection;
+using System.Collections.Generic;
+
+using DOL.AI.Brain;
+using DOL.GS.Effects;
+
 namespace DOL.GS.Spells
 {
 	[SpellHandlerAttribute("Fear")]
@@ -31,9 +47,9 @@ namespace DOL.GS.Spells
 				t.WalkToSpawn();
 		}
 
-		public override IList SelectTargets(GameObject castTarget)
+		public override IList<GameLiving> SelectTargets(GameObject castTarget)
 		{
-			ArrayList list = new ArrayList();
+			var list = new List<GameLiving>();
 			GameLiving target;
 			
 			target=Caster;
@@ -53,7 +69,7 @@ namespace DOL.GS.Spells
 		{
 			if (target == null) return false;
 
-			IList targets = SelectTargets(target);
+			var targets = SelectTargets(target);
 
 			foreach (GameLiving t in targets)
 			{

@@ -123,10 +123,10 @@ namespace DOL.GS.Spells
             base.FinishSpellCast(target);
         }
 
-        public override IList SelectTargets(GameObject CasterTarget)
+        public override IList<GameLiving> SelectTargets(GameObject CasterTarget)
         {
             
-            ArrayList list = new ArrayList(8);
+            var list = new List<GameLiving>(8);
             foreach (GameNPC storms in Caster.GetNPCsInRadius(350))
             {
                 if ((storms is GameStorm) && (GameServer.ServerRules.IsSameRealm(storms, Caster, true))) list.Add(storms);
@@ -145,7 +145,7 @@ namespace DOL.GS.Spells
         public override void OnDirectEffect(GameLiving target, double effectiveness)
         {
             //base.OnDirectEffect(target, effectiveness);
-            IList targets = SelectTargets(Caster);
+            var targets = SelectTargets(Caster);
 
             if (targets == null) return;
 

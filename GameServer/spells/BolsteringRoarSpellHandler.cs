@@ -29,9 +29,9 @@ namespace DOL.GS.Spells
     [SpellHandlerAttribute("BolsteringRoar")]
     public class BolsteringRoarSpellHandler : RemoveSpellEffectHandler
     {
-        public override System.Collections.IList SelectTargets(GameObject castTarget)
+        public override IList<GameLiving> SelectTargets(GameObject castTarget)
         {
-            ArrayList list = new ArrayList();
+            var list = new List<GameLiving>();
             GameLiving target = castTarget as GameLiving;
 
             if (Caster is GamePlayer)
