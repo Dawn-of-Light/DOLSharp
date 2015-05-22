@@ -131,9 +131,9 @@ namespace DOL.GS.Spells
         {
             return 0;
         }
-        public override IList SelectTargets(GameObject castTarget)
+        public override IList<GameLiving> SelectTargets(GameObject castTarget)
         {
-            ArrayList list = new ArrayList();
+            var list = new List<GameLiving>();
             GameLiving target = Caster;
             foreach (GameNPC npc in target.GetNPCsInRadius((ushort)Spell.Radius))
             {

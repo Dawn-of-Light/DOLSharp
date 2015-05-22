@@ -19,9 +19,9 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+
 using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
-using DOL.AI.Brain;
 using DOL.GS;
 using DOL.Events;
 
@@ -179,9 +179,9 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("MonsterDoT")]
 	public class MonsterDoT : DirectDamageSpellHandler
 	{
-		public override IList SelectTargets(GameObject castTarget)
+		public override IList<GameLiving> SelectTargets(GameObject castTarget)
 		{
-			ArrayList list = new ArrayList(8);
+			var list = new List<GameLiving>(8);
 			GameLiving target = castTarget as GameLiving;
 
 			//if (target == null || Spell.Range == 0)
@@ -216,9 +216,9 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("MonsterDisease")]
 	public class MonsterDisease : DiseaseSpellHandler
 	{
-		public override IList SelectTargets(GameObject castTarget)
+		public override IList<GameLiving> SelectTargets(GameObject castTarget)
 		{
-			ArrayList list = new ArrayList(8);
+			var list = new List<GameLiving>(8);
 			GameLiving target = castTarget as GameLiving;
 
 			if (target == null || Spell.Range == 0)
