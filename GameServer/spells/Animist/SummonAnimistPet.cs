@@ -33,7 +33,7 @@ namespace DOL.GS.Spells
 	/// </summary>
 	public abstract class SummonAnimistPet : SummonSpellHandler
 	{
-		public SummonAnimistPet(GameLiving caster, Spell spell, SpellLine line)
+		protected SummonAnimistPet(GameLiving caster, Spell spell, SpellLine line)
 			: base(caster, spell, line)
 		{
 		}
@@ -128,6 +128,14 @@ namespace DOL.GS.Spells
 			z = Caster.GroundTarget.Z;
 			heading = Caster.Heading;
 			region = Caster.CurrentRegion;
+		}
+		
+		/// <summary>
+		/// Do not trigger SubSpells
+		/// </summary>
+		/// <param name="target"></param>
+		public override void CastSubSpells(GameLiving target)
+		{
 		}
 	}
 }

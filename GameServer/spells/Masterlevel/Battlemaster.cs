@@ -157,6 +157,14 @@ namespace DOL.GS.Spells
             //effect.Owner.IsDisarmed = false;
             return 0;
         }
+		
+		/// <summary>
+		/// Do not trigger SubSpells
+		/// </summary>
+		/// <param name="target"></param>
+		public override void CastSubSpells(GameLiving target)
+		{
+		}
 
         public Grapple(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
