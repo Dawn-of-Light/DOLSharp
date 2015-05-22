@@ -17,7 +17,7 @@
  *
  */
 using System;
-using System.Collections;
+
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
 using DOL.AI.Brain;
@@ -40,7 +40,7 @@ namespace DOL.GS.Spells
         /// <param name="target"></param>
         public override bool StartSpell(GameLiving target)
         {
-            IList targets = SelectTargets(target);
+            var targets = SelectTargets(target);
             if (targets.Count <= 0) return false;
 
             bool healed = false;

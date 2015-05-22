@@ -1918,9 +1918,9 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="castTarget"></param>
 		/// <returns></returns>
-		public virtual IList SelectTargets(GameObject castTarget)
+		public virtual IList<GameLiving> SelectTargets(GameObject castTarget)
 		{
-			ArrayList list = new ArrayList(8);
+			var list = new List<GameLiving>(8);
 			GameLiving target = castTarget as GameLiving;
 			bool targetchanged = false;
 			string modifiedTarget = Spell.Target.ToLower();
@@ -2378,7 +2378,7 @@ namespace DOL.GS.Spells
 
 			if (m_spellTarget == null) return false;
 
-			IList targets = SelectTargets(m_spellTarget);
+			var targets = SelectTargets(m_spellTarget);
 
 			double effectiveness = Caster.Effectiveness;
 
