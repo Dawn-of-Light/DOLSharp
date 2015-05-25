@@ -2141,10 +2141,10 @@
     <Compile Include="spells\Artifacts\Traldor.cs" />
     <Compile Include="spells\AstralPetSummon.cs" />
     <Compile Include="spells\Bainshee\BainsheePulseDmgSpellHandler.cs" />
-    <Compile Include="spells\Bainshee\BeFriendSpellHandler.cs" />
-    <Compile Include="spells\Bainshee\FearBrain.cs" />
-    <Compile Include="spells\Bainshee\FearSpellHandler.cs" />
-    <Compile Include="spells\Bainshee\FriendBrain.cs" />
+    <Compile Include="spells\negative\BeFriendSpellHandler.cs" />
+    <Compile Include="spells\negative\FearBrain.cs" />
+    <Compile Include="spells\negative\FearSpellHandler.cs" />
+    <Compile Include="spells\negative\FriendBrain.cs" />
     <Compile Include="spells\Bainshee\RangeShield.cs" />
     <Compile Include="spells\BladeturnSpellHandler.cs">
       <SubType>Code</SubType>
@@ -2841,6 +2841,7 @@
     <Folder Include="language\EN\Quests\Midgard\" />
     <Folder Include="packets\Utils" />
     <Folder Include="spells\buff" />
+    <Folder Include="spells\negative" />
     <Folder Include="spells\SpellHelpers" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
