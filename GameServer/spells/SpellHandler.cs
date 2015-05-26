@@ -2809,11 +2809,30 @@ namespace DOL.GS.Spells
 		/// <param name="target">the target that resisted the spell</param>
 		protected virtual void OnSpellResisted(GameLiving target)
 		{
-			SendEffectAnimation(target, 0, false, 0);
+			SendSpellResistAnimation(target);
+			SendSpellResistMessages(target);
+			SendSpellResistNotification(target);
+			StartSpellResistInterruptTimer(target);
+			StartSpellResistLastAttackTimer(target);
+		}
 
+		/// <summary>
+		/// Send Spell Resisted Animation
+		/// </summary>
+		/// <param name="target"></param>
+		public virtual void SendSpellResistAnimation(GameLiving target)
+		{
+			SendEffectAnimation(target, 0, false, 0);
+		}
+		
+		/// <summary>
+		/// Send Spell Resist Messages to Caster and Target
+		/// </summary>
+		/// <param name="target"></param>
+		public virtual void SendSpellResistMessages(GameLiving target)
+		{
 			// Deliver message to the target, if the target is a pet, to its
 			// owner instead.
-
 			if (target is GameNPC)
 			{
 				IControlledBrain brain = ((GameNPC)target).Brain as IControlledBrain;
@@ -2822,7 +2841,7 @@ namespace DOL.GS.Spells
 					GamePlayer owner = brain.GetPlayerOwner();
 					if (owner != null)
 					{
-						MessageToLiving(owner, "Your " + target.Name + " resists the effect!", eChatType.CT_SpellResisted);
+						this.MessageToLiving(owner, eChatType.CT_SpellResisted, "Your {0} resists the effect!", target.Name);
 					}
 				}
 			}
@@ -2832,13 +2851,18 @@ namespace DOL.GS.Spells
 			}
 
 			// Deliver message to the caster as well.
-
-			MessageToCaster(target.GetName(0, true) + " resists the effect!", eChatType.CT_SpellResisted);
-
+			this.MessageToCaster(eChatType.CT_SpellResisted, "{0} resists the effect!", target.GetName(0, true));
+		}
+		
+		/// <summary>
+		/// Send Spell Attack Data Notification to Target when Spell is Resisted
+		/// </summary>
+		/// <param name="target"></param>
+		public virtual void SendSpellResistNotification(GameLiving target)
+		{
 			// Report resisted spell attack data to any type of living object, no need
 			// to decide here what to do. For example, NPCs will use their brain.
 			// "Just the facts, ma'am, just the facts."
-
 			AttackData ad = new AttackData();
 			ad.Attacker = Caster;
 			ad.Target = target;
@@ -2847,19 +2871,27 @@ namespace DOL.GS.Spells
 			ad.AttackResult = GameLiving.eAttackResult.Missed;
 			ad.IsSpellResisted = true;
 			target.OnAttackedByEnemy(ad);
-
+			
+		}
+		
+		/// <summary>
+		/// Start Spell Interrupt Timer when Spell is Resisted
+		/// </summary>
+		/// <param name="target"></param>
+		public virtual void StartSpellResistInterruptTimer(GameLiving target)
+		{
 			// Spells that would have caused damage or are not instant will still
 			// interrupt a casting player.
-
-			/*if (target is GamePlayer)
-{
-if (target.IsCasting && (Spell.Damage > 0 || Spell.CastTime > 0))
-target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster);
-}*/
-			if(!(Spell.SpellType.ToLower().IndexOf("debuff")>=0 && Spell.CastTime==0))
-				target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster);
-
-
+			if(!(Spell.SpellType.IndexOf("debuff", StringComparison.OrdinalIgnoreCase) >= 0 && Spell.CastTime == 0))
+				target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);			
+		}
+		
+		/// <summary>
+		/// Start Last Attack Timer when Spell is Resisted
+		/// </summary>
+		/// <param name="target"></param>
+		public virtual void StartSpellResistLastAttackTimer(GameLiving target)
+		{
 			if (target.Realm == 0 || Caster.Realm == 0)
 			{
 				target.LastAttackedByEnemyTickPvE = target.CurrentRegion.Time;
@@ -2871,7 +2903,7 @@ target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster)
 				Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
 			}
 		}
-
+		
 		#region messages
 
 		/// <summary>
