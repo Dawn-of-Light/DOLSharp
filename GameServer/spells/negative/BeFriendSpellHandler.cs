@@ -17,97 +17,130 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using DOL.AI.Brain;
 using DOL.GS.Effects;
+using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
 	[SpellHandlerAttribute("BeFriend")]
 	public class BeFriendSpellHandler : SpellHandler 
 	{
+		/// <summary>
+		/// Dictionary to Keep track of Friend Brains Attached to NPC
+		/// </summary>
+		private readonly ReaderWriterDictionary<GameNPC, FriendBrain> m_NPCFriendBrain = new ReaderWriterDictionary<GameNPC, FriendBrain>();
+		
+		/// <summary>
+		/// Consume Power on Spell Start
+		/// </summary>
+		/// <param name="target"></param>
 		public override void FinishSpellCast(GameLiving target)
 		{
 			m_caster.Mana -= PowerCost(target);
 			base.FinishSpellCast (target);
 		}
 
+		/// <summary>
+		/// Select only uncontrolled GameNPC Targets
+		/// </summary>
+		/// <param name="castTarget"></param>
+		/// <returns></returns>
 		public override IList<GameLiving> SelectTargets(GameObject castTarget)
 		{
-			var list = new List<GameLiving>();
-			GameLiving target;
-			
-			target=Caster;
-			foreach (GameNPC npc in target.GetNPCsInRadius((ushort)Spell.Radius)) 
-			{
-				if(npc is GameNPC)
-					list.Add(npc);
-			}
-			
-			return list;
-		}
-
-		public virtual IList SelectRealmTargets(GameObject castTarget)
-		{
-			ArrayList list = new ArrayList();
-			
-			foreach (GamePlayer player in castTarget.GetPlayersInRadius((ushort)1000)) 
-			{
-				if(player.Realm == m_caster.Realm && player!=m_caster)
-					list.Add(player);
-			}
-
-			list.Add(m_caster);
-
-			return list;
+			return base.SelectTargets(castTarget).Where(t => t is GameNPC).ToList();
 		}
 
 		/// <summary>
 		/// called when spell effect has to be started and applied to targets
 		/// </summary>
-		public override bool StartSpell(GameLiving target)
+		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			if (target == null) return false;
-
-			var targets = SelectTargets(target);
-			IList realmtargets = SelectRealmTargets(target);
-
-			foreach (GameLiving t in targets)
+			var npcTarget = target as GameNPC;
+			if (npcTarget == null) return;
+			
+			if (npcTarget.Level > Spell.Value)
 			{
-				if(t.Level <= m_spell.Value)
-				{
-					GameNPC mob = (GameNPC)t;
-					if(mob.Brain is StandardMobBrain)
-					{
-						StandardMobBrain sBrain = (StandardMobBrain) mob.Brain;
-						//mob.StopAttack();
-
-						foreach(GamePlayer player in realmtargets)
-							sBrain.RemoveFromAggroList(player);
-
-					}
-
-					mob.AddBrain(new FriendBrain(this));
-				}
+				// Resisted
+				SendSpellResistAnimation(target);
+				this.MessageToCaster(eChatType.CT_SpellResisted, "{0} is too strong for you to charm!", target.GetName(0, true));
+				return;
 			}
-
-			return true;
+			
+			if (npcTarget.Brain is IControlledBrain)
+			{
+				SendSpellResistAnimation(target);
+				this.MessageToCaster(eChatType.CT_SpellResisted, "{0} is already under control.",  target.GetName(0, true));
+				return;
+			}
+			
+			base.ApplyEffectOnTarget(target, effectiveness);
 		}
 
+		/// <summary>
+		/// On Effect Start Replace Brain with Fear Brain.
+		/// </summary>
+		/// <param name="effect"></param>
+		public override void OnEffectStart(GameSpellEffect effect)
+		{
+			var npcTarget = effect.Owner as GameNPC;
+			
+			var currentBrain = npcTarget.Brain as IOldAggressiveBrain;
+			var friendBrain = new FriendBrain(this);
+			m_NPCFriendBrain.AddOrReplace(npcTarget, friendBrain);
+			
+			npcTarget.AddBrain(friendBrain);
+			friendBrain.Think();
+			
+			// Prevent Aggro on Effect Expires.
+			if (currentBrain != null)
+				currentBrain.ClearAggroList();
+			
+			base.OnEffectStart(effect);
+		}
+
+		/// <summary>
+		/// Called when Effect Expires
+		/// </summary>
+		/// <param name="effect"></param>
+		/// <param name="noMessages"></param>
+		/// <returns></returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
-			GameNPC mob = (GameNPC)effect.Owner;
-			mob.RemoveBrain(mob.Brain);
+			var npcTarget = effect.Owner as GameNPC;
 
-			if(mob.Brain==null)
-				mob.AddBrain(new StandardMobBrain());
+			FriendBrain fearBrain;
+			if (m_NPCFriendBrain.TryRemove(npcTarget, out fearBrain))
+			{
+				npcTarget.RemoveBrain(fearBrain);
+			}
 
-			return base.OnEffectExpires (effect, noMessages);
+			if(npcTarget.Brain == null)
+				npcTarget.AddBrain(new StandardMobBrain());
+
+			return base.OnEffectExpires(effect, noMessages);
+		}
+		
+		/// <summary>
+		/// Spell Resists don't trigger notification or interrupt
+		/// </summary>
+		/// <param name="target"></param>
+		protected override void OnSpellResisted(GameLiving target)
+		{
+			SendSpellResistAnimation(target);
+			SendSpellResistMessages(target);
+			StartSpellResistLastAttackTimer(target);
 		}
 
-
+		/// <summary>
+		/// Default Constructor
+		/// </summary>
+		/// <param name="caster"></param>
+		/// <param name="spell"></param>
+		/// <param name="line"></param>
 		public BeFriendSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
 }
