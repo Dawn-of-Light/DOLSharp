@@ -1973,7 +1973,7 @@ namespace DOL.GS
 			{
 				try
 				{
-					ArrayList asms = new ArrayList();
+					var asms = new List<Assembly>();
 					asms.Add(typeof(GameServer).Assembly);
 					asms.AddRange(ScriptMgr.Scripts);
 					ABrain brain = null;
@@ -2194,7 +2194,7 @@ namespace DOL.GS
 			if (template == null)
 				return;
 
-			IList m_templatedInventory = new ArrayList();
+			var m_templatedInventory = new List<string>();
 			this.TranslationId = template.TranslationId;
 			this.Name = template.Name;
 			this.Suffix = template.Suffix;
@@ -2296,7 +2296,7 @@ namespace DOL.GS
 						if (m_templatedInventory.Count == 1)
 							equipid = template.Inventory;
 						else
-							equipid = (string)m_templatedInventory[Util.Random(m_templatedInventory.Count - 1)];
+							equipid = m_templatedInventory[Util.Random(m_templatedInventory.Count - 1)];
 					}
 					if (equip.LoadFromDatabase(equipid))
 						equipHasItems = true;
@@ -4662,6 +4662,7 @@ namespace DOL.GS
 		public override void EnemyHealed(GameLiving enemy, GameObject healSource, GameLiving.eHealthChangeType changeType, int healAmount)
 		{
 			base.EnemyHealed(enemy, healSource, changeType, healAmount);
+			
 			if (changeType != eHealthChangeType.Spell)
 				return;
 			if (enemy == healSource)
@@ -4669,24 +4670,23 @@ namespace DOL.GS
 			if (!IsAlive)
 				return;
 
-			GamePlayer attackerPlayer = healSource as GamePlayer;
-			if (attackerPlayer == null)
+			var attackerLiving = healSource as GameLiving;
+			if (attackerLiving == null)
 				return;
 
-			Group attackerGroup = attackerPlayer.Group;
+			Group attackerGroup = attackerLiving.Group;
 			if (attackerGroup != null)
 			{
-				ArrayList xpGainers = new ArrayList(8);
 				// collect "helping" group players in range
-				foreach (GameLiving living in attackerGroup.GetMembersInTheGroup())
+				var xpGainers = attackerGroup.GetMembersInTheGroup()
+					.Where(l => this.IsWithinRadius(l, WorldMgr.MAX_EXPFORKILL_DISTANCE) && l.IsAlive && l.ObjectState == eObjectState.Active).ToArray();
+				
+				float damageAmount = (float)healAmount / xpGainers.Length;
+				
+				foreach (GameLiving living in xpGainers)
 				{
-					if (this.IsWithinRadius(living, WorldMgr.MAX_EXPFORKILL_DISTANCE) && living.IsAlive && living.ObjectState == eObjectState.Active)
-						xpGainers.Add(living);
-				}
-				// add players in range for exp to exp gainers
-				for (int i = 0; i < xpGainers.Count; i++)
-				{
-					this.AddXPGainer((GamePlayer)xpGainers[i], (float)(healAmount / xpGainers.Count));
+					// add players in range for exp to exp gainers
+					this.AddXPGainer(living, damageAmount);
 				}
 			}
 			else
