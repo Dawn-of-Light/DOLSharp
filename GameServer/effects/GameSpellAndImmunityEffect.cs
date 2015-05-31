@@ -137,14 +137,5 @@ namespace DOL.GS.Effects
 		{
 			get { return m_startedCount; }
 		}
-
-		/// <summary>
-		/// True if effect is in immunity state
-		/// </summary>
-		public bool ImmunityState
-		{
-			get { return m_expired; }
-			set { m_expired = value; }
-		}
 	}
 }
