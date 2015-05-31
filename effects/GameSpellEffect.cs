@@ -17,7 +17,6 @@
  *
  */
 using System;
-using System.Collections;
 using System.Reflection;
 using System.Text;
 
@@ -36,50 +35,188 @@ namespace DOL.GS.Effects
 	/// </summary>
 	public class GameSpellEffect : IGameEffect, IConcentrationEffect
 	{
+		#region private internal
+		
+		/// <summary>
+		/// Lock object for thread access
+		/// </summary>
 		private readonly object m_LockObject = new object(); // dummy object for thread sync - Mannen
 
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		
+		#endregion
+
+		#region Protected / Getters
 
 		/// <summary>
 		/// The spell handler of this effect
 		/// </summary>
 		protected ISpellHandler m_handler;
 		/// <summary>
+		/// associated Spell handler
+		/// </summary>
+		public ISpellHandler SpellHandler
+		{
+			get { return m_handler; }
+		}
+
+		/// <summary>
 		/// The owner of this effect
 		/// </summary>
 		protected GameLiving m_owner;
+		/// <summary>
+		/// The living to that this effect is applied to
+		/// </summary>
+		public GameLiving Owner
+		{
+			get { return m_owner; }
+		}
+		
 		/// <summary>
 		/// The internal unique ID of this effect
 		/// </summary>
 		protected ushort m_id;
 		/// <summary>
+		/// unique id for identification in effect list
+		/// </summary>
+		public ushort InternalID
+		{
+			get { return m_id; }
+			set { m_id = value; }
+		}
+
+		/// <summary>
 		/// The effect duration in milliseconds
 		/// </summary>
 		protected int m_duration;
+		/// <summary>
+		/// Duration of the spell effect in milliseconds
+		/// </summary>
+		public int Duration
+		{
+			get { return m_duration; }
+		}
+		
 		/// <summary>
 		/// The effect frequency in milliseconds
 		/// </summary>
 		protected int m_pulseFreq;
 		/// <summary>
+		/// Effect frequency
+		/// </summary>
+		public int PulseFreq
+		{
+			get { return m_pulseFreq; }
+		}
+		
+		/// <summary>
 		/// The effectiveness of this effect
 		/// </summary>
 		protected double m_effectiveness;
+		/// <summary>
+		/// Effectiveness of the spell effect 0..1
+		/// </summary>
+		public double Effectiveness
+		{
+			get { return m_effectiveness; }
+		}
+
 		/// <summary>
 		/// The flag indicating that this effect has expired
 		/// </summary>
 		protected bool m_expired;
 		/// <summary>
+		/// True if effect is in immunity state
+		/// </summary>
+		public bool ImmunityState
+		{
+			get { return m_expired; }
+			set { m_expired = value; }
+		}
+
+		/// <summary>
 		/// The timer for pulsing effects
 		/// </summary>
 		protected PulsingEffectTimer m_timer;
-        /// <summary>
+
+		/// <summary>
         /// Is it a Minotaur Relic Effect?
         /// </summary>
         protected bool m_minotaur = false;
+		#endregion
 
+		#region public Getters
+       
+        /// <summary>
+		/// Name of the effect
+		/// </summary>
+		public string Name
+		{
+			get { return m_handler.Spell.Name; }
+		}
+
+		/// <summary>
+		/// The name of the owner
+		/// </summary>
+		public string OwnerName
+		{
+			get { return m_owner.Name; }
+		}
+
+		/// <summary>
+		/// Amount of concentration used by effect
+		/// </summary>
+		public byte Concentration
+		{
+			get { return Spell.Concentration; }
+		}
+
+		/// <summary>
+		/// Icon to show on players Effects bar
+		/// </summary>
+		public virtual ushort Icon
+		{
+			get
+			{
+				if (m_handler != null && m_handler.Spell != null)
+				{
+					if (m_handler.Spell.Icon != 0) return m_handler.Spell.Icon;
+					if (m_handler.Spell.ClientEffect != 0) return m_handler.Spell.ClientEffect;
+				}			
+				return 0;
+			}
+		}
+
+		/// <summary>
+		/// Remaining Effect duration in milliseconds
+		/// </summary>
+		public int RemainingTime
+		{
+			get
+			{
+				if (m_duration == 0)
+					return 0;
+				PulsingEffectTimer timer = m_timer;
+				if (timer == null || !timer.IsAlive)
+					return 0;
+				return m_duration - timer.TimeSinceStart;
+			}
+		}
+
+		/// <summary>
+		/// Spell thats used
+		/// </summary>
+		public Spell Spell
+		{
+			get { return m_handler.Spell; }
+		}
+		
+		#endregion
+		
+		#region Constructor
 		/// <summary>
 		/// Creates a new game spell effect
 		/// </summary>
@@ -111,23 +248,9 @@ namespace DOL.GS.Effects
         {
             m_minotaur = mino;
         }
-
-		/// <summary>
-		/// Returns the string representation of the GameSpellEffect
-		/// </summary>
-		/// <returns></returns>
-		public override string ToString()
-		{
-			return new StringBuilder(64)
-				.Append("Duration=").Append(Duration)
-				.Append(", Owner.Name=").Append(Owner==null?"(null)":Owner.Name)
-				.Append(", PulseFreq=").Append(PulseFreq)
-				.Append(", RemainingTime=").Append(RemainingTime)
-				.Append(", Effectiveness=").Append(Effectiveness)
-				.Append(", m_expired=").Append(m_expired)
-				.Append("\nSpellHandler info: ").Append(SpellHandler==null?"(null)":SpellHandler.ToString())
-				.ToString();
-		}
+		#endregion
+		
+		#region effects methods
 
 		/// <summary>
 		/// Starts the effect
@@ -308,9 +431,79 @@ namespace DOL.GS.Effects
 		/// </summary>
 		protected virtual void PulseCallback()
 		{
-			m_handler.OnEffectPulse(this);
+			if (!m_expired)
+				m_handler.OnEffectPulse(this);
+		}
+		#endregion
+
+		/// <summary>
+		/// Delve information
+		/// </summary>
+		public virtual IList<string> DelveInfo
+		{
+			get
+			{
+				IList<string> list = m_handler.DelveInfo;
+
+				int seconds = RemainingTime / 1000;
+				if (seconds > 0)
+				{
+					list.Add(" "); //empty line
+					if (seconds > 60)
+						list.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.DelveInfo.MinutesRemaining", (seconds / 60), (seconds % 60).ToString("00")));
+					else
+						list.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.DelveInfo.SecondsRemaining", seconds));
+				}
+
+				return list;
+			}
 		}
 
+		public int[] RestoreVars = new int[] { };
+		public bool RestoredEffect = false;
+
+		public PlayerXEffect getSavedEffect()
+		{
+			if (this.RestoredEffect)
+			{
+				PlayerXEffect eff = new PlayerXEffect();
+				eff.Duration = this.RemainingTime;
+				eff.IsHandler = true;
+				eff.Var1 = this.RestoreVars[0];
+				eff.Var2 = this.RestoreVars[1];
+				eff.Var3 = this.RestoreVars[2];
+				eff.Var4 = this.RestoreVars[3];
+				eff.Var5 = this.RestoreVars[4];
+				eff.Var6 = this.RestoreVars[5];
+				eff.SpellLine = this.SpellHandler.SpellLine.KeyName;
+				return eff;
+			}
+			if (m_handler != null)
+			{
+				PlayerXEffect eff = m_handler.GetSavedEffect(this);
+				return eff;
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// Returns the string representation of the GameSpellEffect
+		/// </summary>
+		/// <returns></returns>
+		public override string ToString()
+		{
+			return new StringBuilder(64)
+				.Append("Duration=").Append(Duration)
+				.Append(", Owner.Name=").Append(Owner==null?"(null)":Owner.Name)
+				.Append(", PulseFreq=").Append(PulseFreq)
+				.Append(", RemainingTime=").Append(RemainingTime)
+				.Append(", Effectiveness=").Append(Effectiveness)
+				.Append(", m_expired=").Append(m_expired)
+				.Append("\nSpellHandler info: ").Append(SpellHandler==null?"(null)":SpellHandler.ToString())
+				.ToString();
+		}
+		
+		#region timer subclass		
 		/// <summary>
 		/// Handles effect pulses
 		/// </summary>
@@ -385,168 +578,6 @@ namespace DOL.GS.Effects
 					.ToString();
 			}
 		}
-
-		/// <summary>
-		/// Name of the effect
-		/// </summary>
-		public string Name
-		{
-			get { return m_handler.Spell.Name; }
-		}
-
-		/// <summary>
-		/// The name of the owner
-		/// </summary>
-		public string OwnerName
-		{
-			get { return m_owner.Name; }
-		}
-
-		/// <summary>
-		/// Amount of concentration used by effect
-		/// </summary>
-		public byte Concentration
-		{
-			get { return Spell.Concentration; }
-		}
-
-		/// <summary>
-		/// Icon to show on players Effects bar
-		/// </summary>
-		public virtual ushort Icon
-		{
-			get
-			{
-				if (m_handler != null && m_handler.Spell != null)
-				{
-					if (m_handler.Spell.Icon != 0) return m_handler.Spell.Icon;
-					if (m_handler.Spell.ClientEffect != 0) return m_handler.Spell.ClientEffect;
-				}			
-				return 0;
-			}
-		}
-
-		/// <summary>
-		/// Remaining Effect duration in milliseconds
-		/// </summary>
-		public int RemainingTime
-		{
-			get
-			{
-				if (m_duration == 0)
-					return 0;
-				PulsingEffectTimer timer = m_timer;
-				if (timer == null || !timer.IsAlive)
-					return 0;
-				return m_duration - timer.TimeSinceStart;
-			}
-		}
-
-		/// <summary>
-		/// unique id for identification in effect list
-		/// </summary>
-		public ushort InternalID
-		{
-			get { return m_id; }
-			set { m_id = value; }
-		}
-
-		/// <summary>
-		/// The living to that this effect is applied to
-		/// </summary>
-		public GameLiving Owner
-		{
-			get { return m_owner; }
-		}
-
-		/// <summary>
-		/// Effectiveness of the spell effect 0..1
-		/// </summary>
-		public double Effectiveness
-		{
-			get { return m_effectiveness; }
-		}
-
-		/// <summary>
-		/// Duration of the spell effect in milliseconds
-		/// </summary>
-		public int Duration
-		{
-			get { return m_duration; }
-		}
-
-		/// <summary>
-		/// Effect frequency
-		/// </summary>
-		public int PulseFreq
-		{
-			get { return m_pulseFreq; }
-		}
-
-		/// <summary>
-		/// associated Spell handler
-		/// </summary>
-		public ISpellHandler SpellHandler
-		{
-			get { return m_handler; }
-		}
-
-		/// <summary>
-		/// Spell thats used
-		/// </summary>
-		public Spell Spell
-		{
-			get { return m_handler.Spell; }
-		}
-
-		/// <summary>
-		/// Delve information
-		/// </summary>
-		public virtual IList<string> DelveInfo
-		{
-			get
-			{
-				IList<string> list = m_handler.DelveInfo;
-
-				int seconds = RemainingTime / 1000;
-				if (seconds > 0)
-				{
-					list.Add(" "); //empty line
-					if (seconds > 60)
-						list.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.DelveInfo.MinutesRemaining", (seconds / 60), (seconds % 60).ToString("00")));
-					else
-						list.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.DelveInfo.SecondsRemaining", seconds));
-				}
-
-				return list;
-			}
-		}
-
-		public int[] RestoreVars = new int[] { };
-		public bool RestoredEffect = false;
-
-		public PlayerXEffect getSavedEffect()
-		{
-			if (this.RestoredEffect)
-			{
-				PlayerXEffect eff = new PlayerXEffect();
-				eff.Duration = this.RemainingTime;
-				eff.IsHandler = true;
-				eff.Var1 = this.RestoreVars[0];
-				eff.Var2 = this.RestoreVars[1];
-				eff.Var3 = this.RestoreVars[2];
-				eff.Var4 = this.RestoreVars[3];
-				eff.Var5 = this.RestoreVars[4];
-				eff.Var6 = this.RestoreVars[5];
-				eff.SpellLine = this.SpellHandler.SpellLine.KeyName;
-				return eff;
-			}
-			if (m_handler != null)
-			{
-				PlayerXEffect eff = m_handler.GetSavedEffect(this);
-				return eff;
-			}
-			return null;
-		}
+		#endregion
 	}
 }
