@@ -1435,6 +1435,12 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("keeps", "teleport_login_bg_level_exceeded", "Should players that exceed BG level cap be moved out of BG when logging in?", true)]
 		public static bool TELEPORT_LOGIN_BG_LEVEL_EXCEEDED;
 
+        /// <summary>
+        /// Do you allowed player to climb towers?
+        /// </summary>
+        [ServerProperty("keeps", "allow_tower_climb", "Do you allowed player to climb towers? Set True for yes, False for not.", false)]
+        public static bool ALLOW_TOWER_CLIMB;
+
 
 		#endregion
 
