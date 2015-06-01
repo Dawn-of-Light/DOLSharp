@@ -120,8 +120,10 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-                if (m_skin == (int)eComponentSkin.Wall && !this.AbstractKeep.IsPortalKeep)
-					return true;
+                if (ServerProperties.Properties.ALLOW_TOWER_CLIMB)
+                    if (m_skin == (int)eComponentSkin.Wall || m_skin == (int)eComponentSkin.Tower && !this.AbstractKeep.IsPortalKeep) return true;
+                else
+                    if (m_skin == (int)eComponentSkin.Wall && !this.AbstractKeep.IsPortalKeep) return true;
 				return false;
 			}
 		}
