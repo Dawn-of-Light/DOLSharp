@@ -102,55 +102,11 @@ namespace DOL.GS.Keeps
 					if (keepRegion == null)
 						continue;
 
-                    //Dinberg - checking whether the keep is old or new.
-                    //The only way to do this is to examine the database entries for hookpoints and thus determine
-                    //in this manner whether the keep is old, new or 'both'. A keep will be 'both' if it is found to
-                    //have components of both sets, which is possible.
-
-                    bool hasOldComponents = false;
-                    bool hasNewComponents = false;
-
-                    //I don't want to touch the loading order of hookpoints, as i think they may depend on the
-                    //assumption keeps and towers are linked before population. So we will settle for a second
-                    //query. It's on server start, so it wont impact running performance.
+                    // Define new or old appearances keeps components to load
+					KeepComponentAppearance = ServerProperties.Properties.USE_NEW_KEEPS;
 
                     var currentKeepComponents = GameServer.Database.SelectObjects<DBKeepComponent>("`KeepID` = '" + datakeep.KeepID + "'");
 				
-                    //Pass through, and depending on the outcome of the components, determine the 'age' of the keep.
-                    foreach (DBKeepComponent comp in currentKeepComponents)
-                    {
-                        if (comp.Skin >= 0 && comp.Skin <= 20) //these are the min/max ids for old keeps.
-                            hasOldComponents = true;
-                        if (comp.Skin > 20) //any skinID greater than this are ids for new keeps.
-                            hasNewComponents = true;
-                    }
-
-
-					if (datakeep.KeepSkinType != eKeepSkinType.Any)
-					{
-						if (datakeep.KeepSkinType == eKeepSkinType.New && hasNewComponents == false)
-						{
-							continue;
-						}
-						else if (datakeep.KeepSkinType == eKeepSkinType.Old && hasOldComponents == false)
-						{
-							continue;
-						}
-					}
-					else
-					{
-						// Use server properties to determine correct keep to load
-						//"use_new_keeps", "Keeps to load. 0 for Old Keeps, 1 for new keeps, 2 for both.", 2
-
-						if (ServerProperties.Properties.USE_NEW_KEEPS == 0 && !hasOldComponents)
-							continue;
-
-						if (ServerProperties.Properties.USE_NEW_KEEPS == 1 && !hasNewComponents)
-							continue;
-					}
-
-                    //If we've got this far, we are permitted to load as per normal!
-
 					AbstractGameKeep keep;
 					if ((datakeep.KeepID >> 8) != 0 || ((datakeep.KeepID & 0xFF) > 150))
 					{
@@ -182,54 +138,41 @@ namespace DOL.GS.Keeps
 
 						if (tower.OwnerKeepID < 10)
 						{
-							log.WarnFormat("Tower.OwnerKeepID < 10 for KeepID {0}.  Doors on this tower will not be targetable! ({0} & 0xFF < 10).  Choose a different KeepID to correct this issue.", tower.KeepID);
+							log.WarnFormat("Tower.OwnerKeepID < 10 for KeepID {0}. Doors on this tower will not be targetable! ({0} & 0xFF < 10). Choose a different KeepID to correct this issue.", tower.KeepID);
 						}
 					}
 				}
 
-				bool missingKeeps = false;
+				// Hunab Ku : Disable missingkeeps
+				//bool missingKeeps = false;
 
-				var keepcomponents = GameServer.Database.SelectAllObjects<DBKeepComponent>();
+				// Hunab Ku : Error message to set to 0 or 1 if is actually set to 2
+				if (KeepComponentAppearance == 2) log.ErrorFormat("ServerProperty USE_NEW_KEEPS is actually set to 2 but it is no longer used. Loading as if he were 0 but please set to 0 or 1 !");
+				    
+				// Hunab Ku : Load only needed components about appearance
+				var keepcomponents = default(IList<DBKeepComponent>);
+				if (KeepComponentAppearance == 0 || KeepComponentAppearance == 2) keepcomponents = GameServer.Database.SelectObjects<DBKeepComponent>("Skin < 20");
+				else if (KeepComponentAppearance == 1) keepcomponents = GameServer.Database.SelectObjects<DBKeepComponent>("Skin > 20");
 				foreach (DBKeepComponent component in keepcomponents)
 				{
 					AbstractGameKeep keep = GetKeepByID(component.KeepID);
 					if (keep == null)
 					{
-						missingKeeps = true;
+						// Hunab Ku : Disable missingkeeps
+						//missingKeeps = true;
 						continue;
-					}
-
-					if (keep.DBKeep.KeepSkinType != eKeepSkinType.Any)
-					{
-						if (keep.DBKeep.KeepSkinType == eKeepSkinType.New && IsNewKeepComponent(component.Skin) == false)
-						{
-							continue;
-						}
-						else if (keep.DBKeep.KeepSkinType == eKeepSkinType.Old && IsNewKeepComponent(component.Skin))
-						{
-							continue;
-						}
-					}
-					else
-					{
-						// if use old keeps don't try to load new components
-						if (ServerProperties.Properties.USE_NEW_KEEPS == 0 && IsNewKeepComponent(component.Skin))
-							continue;
-
-						// if use new keeps don't try and load old components
-						if (ServerProperties.Properties.USE_NEW_KEEPS == 1 && !IsNewKeepComponent(component.Skin))
-							continue;
-					}
+					} 
 
 					GameKeepComponent gamecomponent = keep.CurrentRegion.CreateGameKeepComponent();
 					gamecomponent.LoadFromDatabase(component, keep);
 					keep.KeepComponents.Add(gamecomponent);
 				}
 
-				if (missingKeeps && log.IsWarnEnabled)
+				// Hunab Ku : Disable missingkeeps
+				/*if (missingKeeps && log.IsWarnEnabled)
 				{
 					log.WarnFormat("Some keeps not found while loading components, possibly old/new keeptypes.");
-				}
+				}*/
 
 				if (m_keepList.Count != 0)
 				{

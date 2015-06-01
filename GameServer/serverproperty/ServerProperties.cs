@@ -1399,11 +1399,11 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("keeps", "tower_guard_level_multiplier", "Multiplier used to determine tower guard levels.  This is applied to the bonus level (usually 4) and added after balance adjustments.", 1.0)]
 		public static double TOWER_GUARD_LEVEL_MULTIPLIER;
 
-		/// <summary>
-		/// Keeps to load. 0 for Old Keeps, 1 for new keeps, 2 for both.
-		/// </summary>
-		[ServerProperty("keeps", "use_new_keeps", "Keeps to load. 0 for Old Keeps, 1 for new keeps, 2 for both.", 2)]
-		public static int USE_NEW_KEEPS;
+        /// <summary>
+        /// Keeps to load. 0 for Old Keeps, 1 for new keeps, 2 for both.
+        /// </summary>
+        [ServerProperty("keeps", "use_new_keeps", "Appearance Keeps Components to load. 0 for Old Appearance Keeps Components, 1 for New Appearance Keeps Components. 2 is no longer used but load 0 for compatibility.", 0)]
+        public static int USE_NEW_KEEPS;
 
 		/// <summary>
 		/// Should guards loaded from db be equipped by Keepsystem? (false=load equipment from db)
