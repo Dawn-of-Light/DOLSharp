@@ -102,9 +102,6 @@ namespace DOL.GS.Keeps
 					if (keepRegion == null)
 						continue;
 
-                    // Define new or old appearances keeps components to load
-					KeepComponentAppearance = ServerProperties.Properties.USE_NEW_KEEPS;
-
                     var currentKeepComponents = GameServer.Database.SelectObjects<DBKeepComponent>("`KeepID` = '" + datakeep.KeepID + "'");
 				
 					AbstractGameKeep keep;
@@ -142,23 +139,18 @@ namespace DOL.GS.Keeps
 						}
 					}
 				}
-
-				// Hunab Ku : Disable missingkeeps
-				//bool missingKeeps = false;
-
-				// Hunab Ku : Error message to set to 0 or 1 if is actually set to 2
-				if (KeepComponentAppearance == 2) log.ErrorFormat("ServerProperty USE_NEW_KEEPS is actually set to 2 but it is no longer used. Loading as if he were 0 but please set to 0 or 1 !");
+                if (ServerProperties.Properties.USE_NEW_KEEPS == 2) log.ErrorFormat("ServerProperty USE_NEW_KEEPS is actually set to 2 but it is no longer used. Loading as if he were 0 but please set to 0 or 1 !");
 				    
-				// Hunab Ku : Load only needed components about appearance
 				var keepcomponents = default(IList<DBKeepComponent>);
-				if (KeepComponentAppearance == 0 || KeepComponentAppearance == 2) keepcomponents = GameServer.Database.SelectObjects<DBKeepComponent>("Skin < 20");
-				else if (KeepComponentAppearance == 1) keepcomponents = GameServer.Database.SelectObjects<DBKeepComponent>("Skin > 20");
+
+                if (ServerProperties.Properties.USE_NEW_KEEPS == 0 || ServerProperties.Properties.USE_NEW_KEEPS == 2) keepcomponents = GameServer.Database.SelectObjects<DBKeepComponent>("Skin < 20");
+                else if (ServerProperties.Properties.USE_NEW_KEEPS == 1) keepcomponents = GameServer.Database.SelectObjects<DBKeepComponent>("Skin > 20");
+
 				foreach (DBKeepComponent component in keepcomponents)
 				{
 					AbstractGameKeep keep = GetKeepByID(component.KeepID);
 					if (keep == null)
 					{
-						// Hunab Ku : Disable missingkeeps
 						//missingKeeps = true;
 						continue;
 					} 
@@ -168,7 +160,6 @@ namespace DOL.GS.Keeps
 					keep.KeepComponents.Add(gamecomponent);
 				}
 
-				// Hunab Ku : Disable missingkeeps
 				/*if (missingKeeps && log.IsWarnEnabled)
 				{
 					log.WarnFormat("Some keeps not found while loading components, possibly old/new keeptypes.");
