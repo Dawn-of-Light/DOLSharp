@@ -18,8 +18,12 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+
 using DOL.GS.Effects;
+
 using log4net;
 
 namespace DOL.GS.Spells
@@ -27,13 +31,18 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Holds spells that use concentration points
 	/// </summary>
-	public class ConcentrationList : IEnumerable
+	public class ConcentrationList : IEnumerable<IConcentrationEffect>
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		/// <summary>
+		/// Locking Object
+		/// </summary>
+		private readonly object m_lockObject = new object();
+		
 		/// <summary>
 		/// Holds the list owner
 		/// </summary>
@@ -49,11 +58,11 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Stores the count of BeginChanges
 		/// </summary>
-		private sbyte m_changeCounter;
+		private volatile sbyte m_changeCounter;
 		/// <summary>
 		/// Holds the list effects
 		/// </summary>
-		private ArrayList m_concSpells;
+		private List<IConcentrationEffect> m_concSpells;
 
 		/// <summary>
 		/// Constructs a new ConcentrationList
@@ -74,15 +83,15 @@ namespace DOL.GS.Spells
 		{
 			BeginChanges();
 
-			if (m_concSpells == null)
-				m_concSpells = new ArrayList(20);
-
-			lock (m_concSpells) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_lockObject) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
+				if (m_concSpells == null)
+					m_concSpells = new List<IConcentrationEffect>(20);
+				
 				if (m_concSpells.Contains(effect))
 				{
 					if (log.IsWarnEnabled)
-						log.Warn("(" + m_owner.Name + ") effect already applied " + effect.Name);
+						log.WarnFormat("({0}) concentration effect already added: {1}", m_owner.Name, effect.Name);
 				}
 				else
 				{
@@ -123,7 +132,7 @@ namespace DOL.GS.Spells
 			if (m_concSpells == null)
 				return;
 
-			lock (m_concSpells) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_lockObject) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				if (m_concSpells.Contains(effect))
 				{
@@ -152,19 +161,21 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public void CancelAll(bool leaveself)
 		{
-			ArrayList spells = null;
-			if (m_concSpells == null) return;
-			spells = (ArrayList)m_concSpells.Clone();
-			BeginChanges();
-			if (spells != null)
+			if (m_concSpells != null)
 			{
-				foreach (IConcentrationEffect fx in spells)
+				IConcentrationEffect[] concEffect = null;
+				lock (m_lockObject)
 				{
-					if (!leaveself || leaveself && fx.OwnerName != m_owner.Name)
-						fx.Cancel(false);
+					concEffect = m_concSpells.ToArray();
 				}
+				
+				BeginChanges();
+				foreach (IConcentrationEffect fx in concEffect.Where(eff => !leaveself || leaveself && eff.OwnerName != m_owner.Name))
+				{
+					fx.Cancel(false);
+				}
+				CommitChanges();
 			}
-			CommitChanges();
 		}
 
 		/// <summary>
@@ -188,9 +199,10 @@ namespace DOL.GS.Spells
 				m_changeCounter = 0;
 			}
 
-			if (m_changeCounter <= 0 && m_owner is GamePlayer)
+			GamePlayer player = m_owner as GamePlayer;
+			if (player != null && m_changeCounter <= 0)
 			{
-				((GamePlayer)m_owner).Out.SendConcentrationList();
+				player.Out.SendConcentrationList();
 			}
 		}
 
@@ -203,15 +215,11 @@ namespace DOL.GS.Spells
 		{
 			if (m_concSpells == null)
 				return null;
-			lock (m_concSpells) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			
+			lock (m_lockObject) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
-				foreach (IConcentrationEffect effect in m_concSpells)
-				{
-					if (effect.GetType().Equals(effectType))
-						return effect;
-				}
+				return m_concSpells.FirstOrDefault(eff => eff.GetType().Equals(effectType));
 			}
-			return null;
 		}
 
 		/// <summary>
@@ -219,20 +227,15 @@ namespace DOL.GS.Spells
 		/// </summary>
 		/// <param name="effectType"></param>
 		/// <returns>resulting effectlist</returns>
-		public IList GetAllOfType(Type effectType)
+		public ICollection<IConcentrationEffect> GetAllOfType(Type effectType)
 		{
-			ArrayList list = new ArrayList();
-
-			if (m_concSpells == null) return list;
-			lock (m_concSpells) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			if (m_concSpells == null)
+				return new IConcentrationEffect[0];
+			
+			lock (m_lockObject) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
-				foreach (IConcentrationEffect effect in m_concSpells)
-				{
-					if (effect.GetType().Equals(effectType))
-						list.Add(effect);
-				}
+				return m_concSpells.Where(eff => eff.GetType().Equals(effectType)).ToArray();
 			}
-			return list;
 		}
 
 		/// <summary>
@@ -242,8 +245,13 @@ namespace DOL.GS.Spells
 		{
 			get
 			{
-				if (m_concSpells == null) return null;
-				return (IConcentrationEffect)m_concSpells[index];
+				if (m_concSpells == null)
+					return null;
+				
+				lock (m_lockObject)
+				{
+					return m_concSpells[index];
+				}
 			}
 		}
 
@@ -268,20 +276,41 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public int Count
 		{
-			get { return m_concSpells == null ? 0 : m_concSpells.Count; }
+			get
+			{
+				if (m_concSpells == null)
+					return 0;
+				
+				lock (m_lockObject)
+				{
+					return m_concSpells.Count;
+				}
+			}
 		}
 
 		#region IEnumerable Members
-
 		/// <summary>
 		/// Gets the list enumerator
 		/// </summary>
 		/// <returns></returns>
-		public IEnumerator GetEnumerator()
+		public IEnumerator<IConcentrationEffect> GetEnumerator()
 		{
 			if (m_concSpells == null)
-				return new ArrayList(0).GetEnumerator();
-			return m_concSpells.GetEnumerator();
+				return new IConcentrationEffect[0].AsEnumerable().GetEnumerator();
+			
+			lock (m_lockObject)
+			{
+				return m_concSpells.ToArray().AsEnumerable().GetEnumerator();
+			}
+		}
+		
+		/// <summary>
+		/// Gets the list enumerator
+		/// </summary>
+		/// <returns></returns>
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
 		}
 
 		#endregion

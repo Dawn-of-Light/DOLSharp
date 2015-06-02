@@ -21,7 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
+
 using DOL.Database;
 using DOL.AI.Brain;
 using DOL.GS.Spells;
@@ -41,6 +41,11 @@ namespace DOL.GS.Effects
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		/// <summary>
+		/// Default Lock Object
+		/// </summary>
+		private readonly object m_lockObject = new object();
+		
 		/// <summary>
 		/// Stores all effects
 		/// </summary>
@@ -79,19 +84,20 @@ namespace DOL.GS.Effects
 		/// <returns>true if the effect was added</returns>
 		public virtual bool Add(IGameEffect effect)
 		{
+			// dead owners don't get effects
 			if (!m_owner.IsAlive || m_owner.ObjectState != GameObject.eObjectState.Active)
-				return false;	// dead owners don't get effects
+				return false;
 
-			//lock (this)
+			lock (m_lockObject)
 			{
 				if (m_effects == null)
 					m_effects = new List<IGameEffect>(5);
-			}
-			lock (m_effects)
-			{
+				
 				effect.InternalID = m_runningID++;
+				
 				if (m_runningID == 0)
 					m_runningID = 1;
+				
 				m_effects.Add(effect);
 			}
 
@@ -107,21 +113,22 @@ namespace DOL.GS.Effects
 		/// <returns>true if the effect was removed</returns>
 		public virtual bool Remove(IGameEffect effect)
 		{
-			List<IGameEffect> changedEffects = new List<IGameEffect>();
-
 			if (m_effects == null)
 				return false;
 
-			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this')
+			List<IGameEffect> changedEffects = new List<IGameEffect>();
+
+			lock (m_lockObject) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this')
 			{
 				int index = m_effects.IndexOf(effect);
+				
 				if (index < 0)
 					return false;
+				
 				m_effects.RemoveAt(index);
-				for (int i = index; i < m_effects.Count; i++)
-				{
-					changedEffects.Add(m_effects[i]);
-				}
+				
+				// Register remaining effects for change
+				changedEffects.AddRange(m_effects.Skip(index));
 			}
 
 			BeginChanges();
@@ -135,23 +142,29 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public virtual void CancelAll()
 		{
-			IList<IGameEffect> fx;
+			IGameEffect[] fx;
 
 			if (m_effects == null)
 				return;
-			lock (m_effects)
+			
+			lock (m_lockObject)
 			{
-				fx = new List<IGameEffect>(m_effects);
+				fx = m_effects.ToArray();
 				m_effects.Clear();
 			}
+			
 			BeginChanges();
 			fx.ForEach(effect => effect.Cancel(false));
 			CommitChanges();
 		}
 
+		/// <summary>
+		/// Restore All Effect From PlayerXEffect Data Table
+		/// </summary>
 		public virtual void RestoreAllEffects()
 		{
 			GamePlayer player = m_owner as GamePlayer;
+			
 			if (player == null || player.DBCharacter == null || GameServer.Database == null)
 				return;
 
@@ -200,35 +213,50 @@ namespace DOL.GS.Effects
 			}
 		}
 
+		/// <summary>
+		/// Save All Effect to PlayerXEffect Data Table
+		/// </summary>
 		public virtual void SaveAllEffects()
 		{
 			GamePlayer player = m_owner as GamePlayer;
-			if (player == null)
+			
+			if (player == null || m_effects == null)
 				return;
-			if (m_effects == null)
-				return;
-			lock (m_effects)
+
+			lock (m_lockObject)
 			{
 				if (m_effects.Count < 1)
 					return;
 
 				foreach (IGameEffect eff in m_effects)
 				{
-					if (eff is GameSpellEffect)
+					try
 					{
-						GameSpellEffect gse = eff as GameSpellEffect;
-						if (gse.Concentration > 0 && gse.SpellHandler.Caster != player)
+						var gse = eff as GameSpellEffect;
+						if (gse != null)
+						{
+							// No concentration Effect from Other Caster
+							if (gse.Concentration > 0 && gse.SpellHandler.Caster != player)
+								continue;
+						}
+						
+						PlayerXEffect effx = eff.getSavedEffect();
+						
+						if (effx == null)
 							continue;
+	
+						if (effx.SpellLine == GlobalSpellsLines.Reserved_Spells)
+							continue;
+	
+						effx.ChardID = player.DBCharacter.ObjectId;
+						
+						GameServer.Database.AddObject(effx);
 					}
-					PlayerXEffect effx = eff.getSavedEffect();
-					if (effx == null)
-						continue;
-
-					if (effx.SpellLine == GlobalSpellsLines.Reserved_Spells)
-						continue;
-
-					effx.ChardID = player.DBCharacter.ObjectId;
-					GameServer.Database.AddObject(effx);
+					catch (Exception e)
+					{
+						if (log.IsWarnEnabled)
+							log.WarnFormat("Could not save effect ({0}) on player: {1}, {2}", eff, player, e);
+					}
 				}
 			}
 		}
@@ -260,7 +288,7 @@ namespace DOL.GS.Effects
 			if (--m_changesCount < 0)
 			{
 				if (log.IsWarnEnabled)
-					log.Warn("changes count is less than zero, forgot BeginChanges()?\n" + Environment.StackTrace);
+					log.WarnFormat("changes count is less than zero, forgot BeginChanges()?\n{0}", Environment.StackTrace);
 
 				m_changesCount = 0;
 			}
@@ -292,13 +320,10 @@ namespace DOL.GS.Effects
 			if (m_effects == null)
 				return default(T);
 
-			lock (m_effects)
+			lock (m_lockObject)
 			{
-				foreach (IGameEffect effect in m_effects)
-					if (effect.GetType().Equals(typeof(T)))
-						return (T)effect;
+				return (T)m_effects.FirstOrDefault(effect => effect.GetType().Equals(typeof(T)));
 			}
-			return default(T);
 		}
 
 		/// <summary>
@@ -306,14 +331,14 @@ namespace DOL.GS.Effects
 		/// </summary>
 		/// <param name="effectType"></param>
 		/// <returns>resulting effectlist</returns>
-		public virtual IList<T> GetAllOfType<T>() where T : IGameEffect
+		public virtual ICollection<T> GetAllOfType<T>() where T : IGameEffect
 		{
 			if (m_effects == null)
-				return new List<T>();
+				return new T[0];
 
-			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this')
+			lock (m_lockObject) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this')
 			{
-				return m_effects.Where(effect => effect.GetType().Equals(typeof (T))).Cast<T>().ToList();
+				return m_effects.Where(effect => effect.GetType().Equals(typeof(T))).Cast<T>().ToArray();
 			}
 		}
 
@@ -327,7 +352,7 @@ namespace DOL.GS.Effects
 			if (m_effects == null)
 				return 0;
 
-			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this')
+			lock (m_lockObject) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this')
 			{
 				return m_effects.Count(effect => effect.GetType().Equals(typeof(T)));
 			}
@@ -343,7 +368,7 @@ namespace DOL.GS.Effects
 			if (m_effects == null)
 				return 0;
 
-			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this')
+			lock (m_lockObject) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this')
 			{
 				return m_effects.Join(types, e => e.GetType(), t => t, (e, t) => e).Count();
 			}
@@ -356,13 +381,13 @@ namespace DOL.GS.Effects
 		/// <returns>effect or null</returns>
 		public virtual IGameEffect GetOfType(Type effectType)
 		{
-			if (m_effects == null) return null;
-			lock (m_effects)
+			if (m_effects == null)
+				return null;
+			
+			lock (m_lockObject)
 			{
-				foreach (IGameEffect effect in m_effects)
-					if (effect.GetType().Equals(effectType)) return effect;
+				return m_effects.FirstOrDefault(effect => effect.GetType().Equals(effectType));
 			}
-			return null;
 		}
 
 		/// <summary>
@@ -370,18 +395,15 @@ namespace DOL.GS.Effects
 		/// </summary>
 		/// <param name="effectType"></param>
 		/// <returns>resulting effectlist</returns>
-		public virtual IList GetAllOfType(Type effectType)
+		public virtual ICollection<IGameEffect> GetAllOfType(Type effectType)
 		{
-			ArrayList list = new ArrayList();
+			if (m_effects == null)
+				return new IGameEffect[0];
 
-			if (m_effects == null) return list;
-
-			lock (m_effects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this')
+			lock (m_lockObject) // Mannen 10:56 PM 10/30/2006 - Fixing every lock ('this')
 			{
-				foreach (IGameEffect effect in m_effects)
-					if (effect.GetType().Equals(effectType)) list.Add(effect);
+				return m_effects.Where(effect => effect.GetType().Equals(effectType)).ToArray();
 			}
-			return list;
 		}
 
 		/// <summary>
@@ -389,52 +411,19 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public int Count
 		{
-			get { return m_effects == null ? 0 : m_effects.Count; }
+			get
+			{
+				if (m_effects == null)
+					return 0;
+				
+				lock (m_lockObject)
+				{
+					return m_effects.Count;
+				}
+			}
 		}
 
 		#region IEnumerable Member
-
-		/// <summary>
-		/// Thread safe iterator
-		/// </summary>
-		public struct GameEffectEnumerator : IEnumerator<IGameEffect>
-		{
-			private readonly GameEffectList _list;
-			private readonly IEnumerator<IGameEffect> _enumerator;
-
-			public GameEffectEnumerator(GameEffectList list)
-			{
-				_list = list;
-				_enumerator = _list.m_effects.GetEnumerator();
-				//Monitor.Enter(_list.m_effects);
-			}
-
-			public void Dispose()
-			{
-				try
-				{
-					_enumerator.Dispose();
-				}
-				finally 
-				{
-					//Monitor.Exit(_list.m_effects);
-				}
-			}
-
-			public bool MoveNext()
-			{
-				return _enumerator.MoveNext();
-			}
-
-			public void Reset()
-			{
-				_enumerator.Reset();
-			}
-
-			public IGameEffect Current { get { return _enumerator.Current; } }
-
-			object IEnumerator.Current { get { return _enumerator.Current; } }
-		}
 
 		/// <summary>
 		/// Returns an enumerator for the effects
@@ -443,10 +432,18 @@ namespace DOL.GS.Effects
 		public IEnumerator<IGameEffect> GetEnumerator()
 		{
 			if (m_effects == null)
-				return new List<IGameEffect>().GetEnumerator();
-			return new GameEffectEnumerator(this);
+				return new IGameEffect[0].AsEnumerable().GetEnumerator();
+			
+			lock (m_lockObject)
+			{
+				return m_effects.ToArray().AsEnumerable().GetEnumerator();
+			}
 		}
 
+		/// <summary>
+		/// Returns an enumerator for the effects
+		/// </summary>
+		/// <returns></returns>
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return GetEnumerator();

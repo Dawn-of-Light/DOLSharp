@@ -61,6 +61,7 @@ namespace DOL.GS.Effects
 		public ISpellHandler SpellHandler
 		{
 			get { return m_handler; }
+			protected set { RestoredEffect = false; m_handler = value; }
 		}
 
 		/// <summary>
@@ -73,6 +74,7 @@ namespace DOL.GS.Effects
 		public GameLiving Owner
 		{
 			get { return m_owner; }
+			protected set { m_owner = value; }
 		}
 		
 		/// <summary>
@@ -98,6 +100,7 @@ namespace DOL.GS.Effects
 		public int Duration
 		{
 			get { return m_duration; }
+			protected set { m_duration = value; }
 		}
 		
 		/// <summary>
@@ -110,6 +113,7 @@ namespace DOL.GS.Effects
 		public int PulseFreq
 		{
 			get { return m_pulseFreq; }
+			protected set { m_pulseFreq = value; }
 		}
 		
 		/// <summary>
@@ -122,40 +126,56 @@ namespace DOL.GS.Effects
 		public double Effectiveness
 		{
 			get { return m_effectiveness; }
+			protected set { m_effectiveness = value; }
+		}
+		
+		protected bool m_disabled;
+		
+		public bool IsDisabled
+		{
+			get { return m_disabled; }
+			protected set { m_disabled = value; }
 		}
 
 		/// <summary>
 		/// The flag indicating that this effect has expired
 		/// </summary>
 		protected bool m_expired;
-		/// <summary>
-		/// True if effect is in immunity state
-		/// </summary>
-		public bool ImmunityState
+		
+		public bool IsExpired
 		{
 			get { return m_expired; }
-			set { m_expired = value; }
+			protected set { m_expired = value; }
 		}
 
+		protected int m_immunityDuration = 0;
+		
+		public int ImmunityDuration
+		{
+			get { return m_immunityDuration; }
+			protected set { m_immunityDuration = value; }
+		}
+		
 		/// <summary>
 		/// The timer for pulsing effects
 		/// </summary>
 		protected PulsingEffectTimer m_timer;
-
-		/// <summary>
-        /// Is it a Minotaur Relic Effect?
-        /// </summary>
-        protected bool m_minotaur = false;
 		#endregion
 
 		#region public Getters
        
-        /// <summary>
+		/// <summary>
 		/// Name of the effect
 		/// </summary>
 		public string Name
 		{
-			get { return m_handler.Spell.Name; }
+			get 
+			{
+				if (Spell != null)
+					return Spell.Name;
+				
+				return string.Empty;
+			}
 		}
 
 		/// <summary>
@@ -163,7 +183,13 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public string OwnerName
 		{
-			get { return m_owner.Name; }
+			get
+			{
+				if (Owner != null)
+					return Owner.Name;
+				
+				return string.Empty;
+			}
 		}
 
 		/// <summary>
@@ -171,21 +197,25 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public byte Concentration
 		{
-			get { return Spell.Concentration; }
+			get 
+			{
+				if (Spell != null)
+					return Spell.Concentration;
+				
+				return 0;
+			}
 		}
 
 		/// <summary>
 		/// Icon to show on players Effects bar
 		/// </summary>
-		public virtual ushort Icon
+		public ushort Icon
 		{
 			get
 			{
-				if (m_handler != null && m_handler.Spell != null)
-				{
-					if (m_handler.Spell.Icon != 0) return m_handler.Spell.Icon;
-					if (m_handler.Spell.ClientEffect != 0) return m_handler.Spell.ClientEffect;
-				}			
+				if (Spell != null)
+					return Spell.Icon;
+
 				return 0;
 			}
 		}
@@ -197,12 +227,13 @@ namespace DOL.GS.Effects
 		{
 			get
 			{
-				if (m_duration == 0)
+				if (Duration == 0)
 					return 0;
-				PulsingEffectTimer timer = m_timer;
-				if (timer == null || !timer.IsAlive)
+
+				if (m_timer == null || !m_timer.IsAlive)
 					return 0;
-				return m_duration - timer.TimeSinceStart;
+				
+				return Duration - m_timer.TimeSinceStart;
 			}
 		}
 
@@ -211,7 +242,21 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public Spell Spell
 		{
-			get { return m_handler.Spell; }
+			get 
+			{
+				if (SpellHandler != null)
+					return SpellHandler.Spell;
+				
+				return null;				
+			}
+		}
+		
+		/// <summary>
+		/// True if effect is in immunity state
+		/// </summary>
+		public bool ImmunityState
+		{
+			get { return m_expired && m_timer != null && m_timer.IsAlive; }
 		}
 		
 		#endregion
@@ -242,12 +287,171 @@ namespace DOL.GS.Effects
 			m_effectiveness = effectiveness;
 			m_expired = true; // not started = expired
 		}
+		#endregion
+		
+		#region effect enable/disable
+		
+		/// <summary>
+		/// Enable Effect on Target Without Adding
+		/// </summary>
+		public virtual void EnableEffect()
+		{
+			// Check if need enabling
+			bool canEnable = false;
+			lock (m_LockObject)
+			{
+				if (IsDisabled && !IsExpired)
+				{
+					canEnable = true;
+					IsDisabled = false;
+				}
+			}
+			
+			if (canEnable)
+			{
+				if (RestoredEffect)
+					SpellHandler.OnEffectRestored(this, RestoreVars);
+				else
+					SpellHandler.OnEffectStart(this);
+			}
+		}
+		
+		/// <summary>
+		/// Disable Effect on Target without Removing
+		/// </summary>
+		/// <param name="noMessages"></param>
+		public virtual void DisableEffect(bool noMessages)
+		{
+			// Check if need disabling.
+			bool canDisable = false;
+			lock (m_LockObject)
+			{
+				if (!IsDisabled)
+				{
+					canDisable = true;
+					IsDisabled = true;
+				}
+			}
+						
+			if (canDisable)
+			{
+				int immunityDuration = 0;
+				if (RestoredEffect)
+					immunityDuration = SpellHandler.OnRestoredEffectExpires(this, RestoreVars, noMessages);
+				else
+					immunityDuration = SpellHandler.OnEffectExpires(this, noMessages);
 
-        public GameSpellEffect(ISpellHandler handler, int duration, int pulsefreq, bool mino)
-            : this(handler, duration, pulsefreq, 1)
-        {
-            m_minotaur = mino;
-        }
+				// Save Immunity Duration returned.
+				lock (m_LockObject)
+				{
+					ImmunityDuration = immunityDuration;
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Remove effect Completely from Owner
+		/// </summary>
+		/// <param name="noMessages"></param>
+		protected virtual void RemoveEffect(bool noMessages)
+		{
+			lock (m_LockObject)
+			{
+				StopTimers();
+				
+				// Expire Effect
+				IsExpired = true;
+				
+				// Remove concentration Effect from Caster List.
+				if (Concentration > 0 && SpellHandler != null && SpellHandler.Caster != null && SpellHandler.Caster.ConcentrationEffects != null) 
+					SpellHandler.Caster.ConcentrationEffects.Remove(this);
+				
+				// Remove effect from Owner list
+				if(Owner != null && Owner.EffectList != null) 
+					Owner.EffectList.Remove(this);
+			}
+			
+			// Try disabling Effect
+			DisableEffect(false);
+		}
+		
+		/// <summary>
+		/// Add Effect and Enable when First Starting on Target
+		/// </summary>
+		/// <param name="target"></param>
+		protected virtual void AddEffect(GameLiving target)
+		{
+			Owner.EffectList.BeginChanges();
+			try
+			{
+				lock (m_LockObject)
+				{
+					// already started ?
+					if (!IsExpired)
+					{
+						if (log.IsErrorEnabled)
+							log.ErrorFormat("Tried to start non-expired effect ({0})).\n{1}", this, Environment.StackTrace);
+						return; 
+					}
+					
+					// already added ?
+					if (Owner != null)
+					{
+						if (log.IsErrorEnabled)
+							log.ErrorFormat("Tried to start an already owned effect ({0})).\n{1}", this, Environment.StackTrace);
+						return; 
+					}
+					
+					//Enable Effect
+					Owner = target;
+					IsExpired = false;
+					
+					// Insert into Owner Effect List
+					if (!Owner.EffectList.Add(this))
+					{
+						if (log.IsWarnEnabled)
+							log.WarnFormat("{0}: effect was not added to the effects list, not starting it either. (effect class:{1} spell type:{2} spell name:'{3}')", Owner.Name, GetType().FullName, Spell.SpellType, Name);
+						return;
+					}
+					
+					// Add concentration Effect To Caster List.
+					if (Concentration > 0 && SpellHandler != null && SpellHandler.Caster != null && SpellHandler.Caster.ConcentrationEffects != null)
+						SpellHandler.Caster.ConcentrationEffects.Add(this);
+					
+					StartTimers();
+				}
+				
+				// Try Enabling Effect
+				EnableEffect();
+			}
+			finally
+			{
+				Owner.EffectList.CommitChanges();
+			}
+			
+			// Start first pulse.
+			PulseCallback();
+		}
+		
+		/// <summary>
+		/// Update Effect in Owner List
+		/// </summary>
+		protected virtual void UpdateEffect()
+		{
+			// Update effect in player display.
+			if (Owner != null && Owner.EffectList != null)
+			{
+				Owner.EffectList.BeginChanges();
+				try
+				{
+					Owner.EffectList.OnEffectsChanged(this);
+				}
+				finally
+				{
+					Owner.EffectList.CommitChanges();
+				}
+			}
+		}
 		#endregion
 		
 		#region effects methods
@@ -258,45 +462,7 @@ namespace DOL.GS.Effects
 		/// <param name="target">the target</param>
 		public virtual void Start(GameLiving target)
 		{
-			lock (m_LockObject)
-			{
-				if (!m_expired)
-				{
-					if (log.IsErrorEnabled)
-						log.Error("Tried to start non-expired effect.\n" + Environment.StackTrace);
-					return; // already started?
-				}
-
-				m_owner = target;
-				try
-				{
-					m_owner.EffectList.BeginChanges();
-
-					if (!m_owner.EffectList.Add(this))
-					{
-						if (log.IsWarnEnabled)
-							log.WarnFormat("{0}: effect was not added to the effects list, not starting it either. (effect class:{1} spell type:{2} spell name:'{3}')", target.Name, GetType().FullName, Spell.SpellType, Name);
-						return;
-					}
-
-					m_expired = false;
-					StartTimers();
-
-					if (Spell.Concentration > 0) 
-					{
-						SpellHandler.Caster.ConcentrationEffects.Add(this);
-					}
-					if (RestoredEffect)
-						m_handler.OnEffectRestored(this, RestoreVars);
-					else
-						m_handler.OnEffectStart(this);
-					m_handler.OnEffectPulse(this);
-				}
-				finally
-				{
-					m_owner.EffectList.CommitChanges();
-				}
-			}
+			AddEffect(target);
 		}
 
 		/// <summary>
@@ -305,43 +471,40 @@ namespace DOL.GS.Effects
 		/// <param name="playerCanceled">true if canceled by the player</param>
 		public virtual void Cancel(bool playerCanceled)
 		{
-			if (playerCanceled && !m_handler.HasPositiveEffect) 
-			{
-				if (Owner is GamePlayer)
-				{
-					((GamePlayer)Owner).Out.SendMessage(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "Effects.GameSpellEffect.CantRemoveEffect"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-
-				return;
-			}
-
 			lock (m_LockObject)
 			{
-				StopTimers();
-
-				if (m_expired)
-					return;
-
-				m_expired = true;
-
-				if(m_owner != null) 
+				// Player can't remove negative effect or Effect in Immunity State
+				if (playerCanceled && ((SpellHandler != null && !SpellHandler.HasPositiveEffect) || ImmunityState))
 				{
-					m_owner.EffectList.Remove(this);
-
-					if (Spell.Concentration > 0) 
-					{
-						SpellHandler.Caster.ConcentrationEffects.Remove(this);
-					}
-					if (RestoredEffect)
-					{
-						m_handler.OnRestoredEffectExpires(this, RestoreVars, false);
-					}
-					else
-					{
-						m_handler.OnEffectExpires(this, false);
-					}
+					GamePlayer player = Owner as GamePlayer;
+					if (player != null)
+						player.Out.SendMessage(LanguageMgr.GetTranslation((Owner as GamePlayer).Client, "Effects.GameSpellEffect.CantRemoveEffect"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+	
+					return;
+				}
+				
+				// Can't Cancel Immunity Effect from Alive Living
+				if (ImmunityState && Owner != null && Owner.IsAlive)
+					return;
+				
+				// Expire Effect
+				IsExpired = true;
+			}
+			
+			// Check if Immunity needed.
+			DisableEffect(false);
+			lock (m_LockObject)
+			{
+				if (m_immunityDuration > 0)
+				{
+					Duration = m_immunityDuration;
+					StartTimers();
+					UpdateEffect();
+					return;
 				}
 			}
+			
+			RemoveEffect(false);
 		}
 
 		/// <summary>
@@ -351,37 +514,50 @@ namespace DOL.GS.Effects
 		/// <param name="effect">the new effect</param>
 		public virtual void Overwrite(GameSpellEffect effect)
 		{
-			if (Spell.Concentration > 0) 
+			if (Concentration > 0) 
 			{
 
 				if (log.IsWarnEnabled)
-					log.Warn(effect.Name + " (" + effect.Spell.Name + ") is trying to overwrite " + Spell.Name + " which has concentration " + Spell.Concentration);
+					log.WarnFormat("{0} is trying to overwrite {1},  which has concentration {2}", effect.Name, Name, Concentration);
 				return;
 			}
-
+			
+			// Prevent further change to this effect.
 			lock (m_LockObject)
 			{
-				// immunity effects in immunity state are already expired
-				if (!m_expired)
-				{
-					m_expired = true;
-					m_handler.OnEffectExpires(this, true);
-				}
 				StopTimers();
-				m_handler = effect.m_handler;
-				m_duration = effect.m_duration;
-				m_pulseFreq = effect.m_pulseFreq;
-				m_effectiveness = effect.m_effectiveness;
-				StartTimers();
-				if (Spell.Concentration > 0) 
-				{
-					SpellHandler.Caster.ConcentrationEffects.Add(this);
-				}
-				m_owner.EffectList.OnEffectsChanged(this);
-				m_handler.OnEffectStart(this);
-				m_handler.OnEffectPulse(this);
-				m_expired = false;
+				IsExpired = true;
 			}
+
+			DisableEffect(true);
+			
+			lock (m_LockObject)
+			{
+				if (!IsDisabled)
+				{
+					if (log.IsWarnEnabled)
+						log.WarnFormat("{0} is trying to overwrite an enabled effect {1}", effect.Name, Name);
+					return;
+				}
+
+				SpellHandler = effect.SpellHandler;
+				Duration = effect.Duration;
+				PulseFreq = effect.PulseFreq;
+				Effectiveness = effect.Effectiveness;
+
+				// Add concentration Effect To Caster List.
+				if (Concentration > 0 && SpellHandler != null && SpellHandler.Caster != null && SpellHandler.Caster.ConcentrationEffects != null)
+					SpellHandler.Caster.ConcentrationEffects.Add(this);
+
+				// Restart Effect
+				IsExpired = false;
+				StartTimers();
+			}
+			
+			// Try Enabling Effect
+			EnableEffect();
+			PulseCallback();
+			UpdateEffect();
 		}
 
 		/// <summary>
@@ -390,11 +566,12 @@ namespace DOL.GS.Effects
 		protected virtual void StartTimers()
 		{
 			StopTimers();
-			if (m_duration > 0 || m_pulseFreq > 0)
-			{ // 0 = endless until explicit stop
+			// Duration => 0 = endless until explicit stop
+			if (Duration > 0 || PulseFreq > 0)
+			{
 				m_timer = new PulsingEffectTimer(this);
-				m_timer.Interval = m_pulseFreq;
-				m_timer.Start(m_pulseFreq == 0 ? m_duration : m_pulseFreq);
+				m_timer.Interval = PulseFreq;
+				m_timer.Start(PulseFreq == 0 ? Duration : PulseFreq);
 			}
 		}
 
@@ -415,15 +592,17 @@ namespace DOL.GS.Effects
 		/// </summary>
 		protected virtual void ExpiredCallback()
 		{
+			bool toRemove = false;
 			lock (m_LockObject)
 			{
-				if (m_expired)
-					return;
-				m_expired = true;
 				StopTimers();
+				toRemove = IsExpired;
 			}
-			m_owner.EffectList.Remove(this);
-			m_handler.OnEffectExpires(this, false);
+			
+			if (toRemove)
+				RemoveEffect(false);
+			else
+				Cancel(false);
 		}
 
 		/// <summary>
@@ -431,8 +610,15 @@ namespace DOL.GS.Effects
 		/// </summary>
 		protected virtual void PulseCallback()
 		{
-			if (!m_expired)
-				m_handler.OnEffectPulse(this);
+			bool canPulse = false;
+			lock (m_LockObject)
+			{
+				if (!IsDisabled && !IsExpired && PulseFreq > 0)
+					canPulse = true;
+			}
+			
+			if (canPulse)
+				SpellHandler.OnEffectPulse(this);
 		}
 		#endregion
 
@@ -492,15 +678,23 @@ namespace DOL.GS.Effects
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return new StringBuilder(64)
-				.Append("Duration=").Append(Duration)
-				.Append(", Owner.Name=").Append(Owner==null?"(null)":Owner.Name)
-				.Append(", PulseFreq=").Append(PulseFreq)
-				.Append(", RemainingTime=").Append(RemainingTime)
-				.Append(", Effectiveness=").Append(Effectiveness)
-				.Append(", m_expired=").Append(m_expired)
-				.Append("\nSpellHandler info: ").Append(SpellHandler==null?"(null)":SpellHandler.ToString())
-				.ToString();
+			return string.Format("Duration={0}, Owner.Name={1}, PulseFreq={2}, RemainingTime={3}, Effectiveness={4}, m_expired={5}\nSpellHandler info: {6}",
+			                     Duration, Owner == null ? "(null)" : Owner.Name, PulseFreq, RemainingTime, Effectiveness, m_expired, SpellHandler == null ? "(null)" : SpellHandler.ToString());
+		}
+		
+		/// <summary>
+		/// Restart Timers after a Region Froze
+		/// </summary>
+		public virtual void RestartTimers()
+		{
+			lock (m_LockObject)
+			{
+				if (m_timer != null)
+				{
+					Duration = (int)Math.Max(1, Duration - (GameTimer.GetTickCount() - m_timer.LastStartedTick));
+					StartTimers();
+				}
+			}
 		}
 		
 		#region timer subclass		
@@ -526,6 +720,15 @@ namespace DOL.GS.Effects
 			{
 				get { return IsAlive ? m_timeSinceStart - TimeUntilElapsed : 0; }
 			}
+			
+			/// <summary>
+			/// Get tick when effect Last Started.
+			/// </summary>
+			public long LastStartedTick
+			{
+				get;
+				private set;
+			}
 
 			/// <summary>
 			/// Constructs a new pulsing timer
@@ -546,6 +749,7 @@ namespace DOL.GS.Effects
 			{
 				base.Start(initialDelay);
 				m_timeSinceStart = initialDelay;
+				LastStartedTick = GameTimer.GetTickCount();
 			}
 
 			/// <summary>
@@ -553,7 +757,7 @@ namespace DOL.GS.Effects
 			/// </summary>
 			protected override void OnTick()
 			{
-				if (m_effect.Spell.Concentration > 0 || m_timeSinceStart < m_effect.Duration)
+				if (m_effect.Concentration > 0 || m_timeSinceStart < m_effect.Duration)
 				{
 					m_timeSinceStart += Interval;
 					if (m_timeSinceStart > m_effect.Duration)
@@ -573,9 +777,7 @@ namespace DOL.GS.Effects
 			/// <returns>Short info about the timer</returns>
 			public override string ToString()
 			{
-				return new StringBuilder(base.ToString(), 128)
-					.Append(" effect: (").Append(m_effect.ToString()).Append(')')
-					.ToString();
+				return string.Format(" effect: ({0})", m_effect);
 			}
 		}
 		#endregion

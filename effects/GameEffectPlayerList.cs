@@ -17,9 +17,9 @@
  *
  */
 using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-using DOL.AI.Brain;
 using log4net;
 
 namespace DOL.GS.Effects
@@ -36,9 +36,13 @@ namespace DOL.GS.Effects
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
+		/// Lock object for Change Update
+		/// </summary>
+		private readonly object m_changedLock = new object();		
+		/// <summary>
 		/// Holds the list of changed effects
 		/// </summary>
-		protected readonly ArrayList m_changedEffects = new ArrayList();
+		protected readonly HashSet<IGameEffect> m_changedEffects = new HashSet<IGameEffect>();
 		/// <summary>
 		/// The count of effects on last update
 		/// </summary>
@@ -59,59 +63,37 @@ namespace DOL.GS.Effects
 		{
 			if (changedEffect.Icon == 0)
 				return;
-			lock (m_changedEffects) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			
+			if (m_changesCount > 0)
 			{
-				if (!m_changedEffects.Contains(changedEffect))
-					m_changedEffects.Add(changedEffect);
+				lock (m_changedLock) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+				{
+					if (!m_changedEffects.Contains(changedEffect))
+						m_changedEffects.Add(changedEffect);
+				}
 			}
+			
 			base.OnEffectsChanged(changedEffect);
 		}
 
-		/// <summary>
-		/// add a new effect to the effectlist, it does not start the effect
-		/// </summary>
-		/// <param name="effect">The effect to add to the list</param>
-		/// <returns>true if the effect was added</returns>
-		public override bool Add(IGameEffect effect)
-		{
-			if (!base.Add(effect)) return false;
-
-			// no timer has to be updated like with top icons so it only
-			// makes sence to update group window icons on add/remove
-			GamePlayer player = m_owner as GamePlayer;
-			if (player != null && player.Group != null)
-			{
-				player.Group.UpdateMember(player, true, false);
-			}
-
-			return true;
-		}
-
-		/// <summary>
-		/// remove effect
-		/// </summary>
-		/// <param name="effect">The effect to remove from the list</param>
-		/// <returns>true if the effect was removed</returns>
-		public override bool Remove(IGameEffect effect)
-		{
-			if (!base.Remove(effect)) return false;
-
-			// no timer has to be updated like with top icons so it only
-			// makes sence to update group window icons on add/remove
-			GamePlayer player = m_owner as GamePlayer;
-			if (player != null && player.Group != null)
-			{
-				player.Group.UpdateMember(player, true, false);
-			}
-			return true;
-		}
 
 		/// <summary>
 		/// Updates changed effects to the owner.
 		/// </summary>
 		protected override void UpdateChangedEffects()
 		{
-			((GamePlayer)m_owner).Out.SendUpdateIcons(m_changedEffects, ref m_lastUpdateEffectsCount);
+			var player = m_owner as GamePlayer;
+			if (player != null)
+			{
+				// Send Modified Effects and Clear
+				player.Out.SendUpdateIcons(m_changedEffects.ToList(), ref m_lastUpdateEffectsCount);
+				m_changedEffects.Clear();
+				
+				if (player.Group != null)
+				{
+					player.Group.UpdateMember(player, true, false);
+				}
+			}
 		}
 
 	}

@@ -92,7 +92,7 @@ namespace DOL.GS.GameEvents
 					if (log.IsErrorEnabled)
 					{
 						// Tolakram: Can't do StackTrace call here.  If thread is stopping will result in UAE app stop
-						log.Error(string.Format("----- Found Frozen Region Timer -----\nName: {0} - Current Time: {1}", mgr.Name, mgr.CurrentTime));
+						log.ErrorFormat("----- Found Frozen Region Timer -----\nName: {0} - Current Time: {1}", mgr.Name, mgr.CurrentTime);
 					}
 
 					//if(mgr.Running)
@@ -113,7 +113,7 @@ namespace DOL.GS.GameEvents
 						if (clients.Player == null || clients.ClientState == GameClient.eClientState.Linkdead)
 						{
 							if(log.IsErrorEnabled)
-								log.Error(string.Format("----- Disconnected Client: {0}", clients.Account.Name));
+								log.ErrorFormat("----- Disconnected Client: {0}", clients.Account.Name);
 							if (clients.Player != null)
 							{
 								clients.Player.SaveIntoDatabase();
@@ -157,11 +157,9 @@ namespace DOL.GS.GameEvents
 										{
 											foreach (IGameEffect effect in plr.EffectList)
 											{
-												if(effect is GameSpellAndImmunityEffect)
-												{
-													(effect as GameSpellAndImmunityEffect).ImmunityState=false;
-                                                    (effect as GameSpellAndImmunityEffect).Cancel(false);
-												}
+												var gsp = effect as GameSpellEffect;
+												if (gsp != null)
+													gsp.RestartTimers();
 											}
 										}
 										catch(Exception e)
@@ -236,6 +234,8 @@ namespace DOL.GS.GameEvents
 
 				if (old_time.ContainsKey(mgr))
 					old_time[mgr] = mgr.CurrentTime;
+				else
+					old_time.Add(mgr, mgr.CurrentTime);
 			}
 		}
 
