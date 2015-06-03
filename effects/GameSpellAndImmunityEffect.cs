@@ -60,15 +60,18 @@ namespace DOL.GS.Effects
 		/// </summary>
 		protected override void StartTimers()
 		{
-			int duration = Duration;
-			int startcount = m_startedCount;
-			if (startcount > 0)
+			if (!IsExpired)
 			{
-				duration /= Math.Min(20, startcount*2);
-				if (duration < 1) duration = 1;
+				int duration = Duration;
+				int startcount = m_startedCount;
+				if (startcount > 0)
+				{
+					duration /= Math.Min(20, startcount*2);
+					if (duration < 1) duration = 1;
+				}
+				Duration = duration;
+				m_startedCount++;
 			}
-			Duration = duration;
-			m_startedCount++;
 			base.StartTimers();
 		}
 

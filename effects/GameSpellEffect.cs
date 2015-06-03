@@ -286,6 +286,7 @@ namespace DOL.GS.Effects
 			m_pulseFreq = pulseFreq;
 			m_effectiveness = effectiveness;
 			m_expired = true; // not started = expired
+			m_disabled = true; // not enabled
 		}
 		#endregion
 		
@@ -381,7 +382,7 @@ namespace DOL.GS.Effects
 		/// <param name="target"></param>
 		protected virtual void AddEffect(GameLiving target)
 		{
-			Owner.EffectList.BeginChanges();
+			bool commitChange = false;
 			try
 			{
 				lock (m_LockObject)
@@ -405,6 +406,17 @@ namespace DOL.GS.Effects
 					//Enable Effect
 					Owner = target;
 					IsExpired = false;
+					try
+					{
+						Owner.EffectList.BeginChanges();
+						commitChange = true;
+					}
+					catch (Exception ex)
+					{
+						if (log.IsWarnEnabled)
+							log.WarnFormat("Effect ({0}) Could not Begin Change in living - {1} - Spell Effect List, {2}", this, Owner, ex);
+						commitChange = false;
+					}
 					
 					// Insert into Owner Effect List
 					if (!Owner.EffectList.Add(this))
@@ -426,7 +438,8 @@ namespace DOL.GS.Effects
 			}
 			finally
 			{
-				Owner.EffectList.CommitChanges();
+				if (commitChange)
+					Owner.EffectList.CommitChanges();
 			}
 			
 			// Start first pulse.
@@ -695,6 +708,8 @@ namespace DOL.GS.Effects
 					StartTimers();
 				}
 			}
+			
+			UpdateEffect();
 		}
 		
 		#region timer subclass		

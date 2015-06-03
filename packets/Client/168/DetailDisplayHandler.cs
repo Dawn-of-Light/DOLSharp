@@ -579,6 +579,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									objectInfo.Add("Icon: " + (foundEffect as GameSpellEffect).Spell.Icon);
 									if ((foundEffect as GameSpellEffect).SpellHandler != null)
 										objectInfo.Add("HasPositiveEffect: " + (foundEffect as GameSpellEffect).SpellHandler.HasPositiveEffect);
+									objectInfo.Add("Disabled: " + (foundEffect as GameSpellEffect).IsDisabled);
 								}
 							}
 						}
