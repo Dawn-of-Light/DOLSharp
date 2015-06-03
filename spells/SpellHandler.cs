@@ -2725,6 +2725,17 @@ namespace DOL.GS.Spells
 		}
 
 		/// <summary>
+		/// Determines wether this spell can be disabled
+		/// by better versions spells that stacks without overwriting
+		/// </summary>
+		/// <param name="compare"></param>
+		/// <returns></returns>
+		public virtual bool IsCancellable(GameSpellEffect compare)
+		{
+			return false;
+		}
+
+		/// <summary>
 		/// execute non duration spell effect on target
 		/// </summary>
 		/// <param name="target"></param>

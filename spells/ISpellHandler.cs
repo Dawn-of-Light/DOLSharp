@@ -17,11 +17,9 @@
  *
  */
 using System;
-using System.Collections;
-
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
-using System.Collections.Generic;
 
 namespace DOL.GS.Spells
 {
@@ -130,6 +128,14 @@ namespace DOL.GS.Spells
 		/// <param name="compare"></param>
 		/// <returns></returns>
 		bool IsOverwritable(GameSpellEffect compare);
+
+		/// <summary>
+		/// Determines wether this spell can be disabled
+		/// by better versions spells that stacks without overwriting
+		/// </summary>
+		/// <param name="compare"></param>
+		/// <returns></returns>
+		bool IsCancellable(GameSpellEffect compare);
 
 		/// <summary>
 		/// Does this spell ignore all damage caps?
