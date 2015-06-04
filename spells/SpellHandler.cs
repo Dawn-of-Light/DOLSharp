@@ -2585,67 +2585,82 @@ namespace DOL.GS.Spells
 			if (effectiveness <= 0)
 				return; // no effect
 
+			// Apply effect for Duration Spell.
 			if ((Spell.Duration > 0 && Spell.Target.ToLower() != "area") || Spell.Concentration > 0)
 			{
 				if (!target.IsAlive)
 					return;
+				
 				eChatType noOverwrite = (Spell.Pulse == 0) ? eChatType.CT_SpellResisted : eChatType.CT_SpellPulse;
 				GameSpellEffect neweffect = CreateSpellEffect(target, effectiveness);
 				GameSpellEffect overwriteEffect = null;
-				bool foundInList = false;
-				lock (target.EffectList)
-				{
-					foreach (IGameEffect effect in target.EffectList)
+				
+				var overwritenEffects = target.EffectList.OfType<GameSpellEffect>().Where(effect => effect.SpellHandler != null && effect.SpellHandler.IsOverwritable(neweffect));
+				bool added = false;
+				foreach (var ovEffect in overwritenEffects)
+				{					
+					// If we can cancel spell effect we don't need to overwrite it
+					if (ovEffect.SpellHandler.IsCancellable(neweffect))
 					{
-						if (effect is GameSpellEffect)
+						if (IsNewEffectBetter(ovEffect, neweffect))
 						{
-							GameSpellEffect gsp = (GameSpellEffect)effect;
-							if (gsp.SpellHandler.IsOverwritable(neweffect))
-							{
-								foundInList = true;
-								if (gsp is GameSpellAndImmunityEffect)
-								{
-									GameSpellAndImmunityEffect immunity = (GameSpellAndImmunityEffect)gsp;
-									if (immunity.ImmunityState && (immunity.Owner is GamePlayer || immunity.Owner is GamePet))
-									{
-										SendEffectAnimation(target, 0, false, 0); //resisted effect
-										MessageToCaster(immunity.Owner.GetName(0, true) + " can't have that effect again yet!", noOverwrite);
-										break;
-									}
-								}
-								if (IsNewEffectBetter(gsp, neweffect))
-								{
-									overwriteEffect = gsp;
-								}
-								else
-								{
-									if (target == m_caster)
-									{
-										MessageToCaster("You already have that effect. Wait until it expires.  Spell failed.", noOverwrite);
-									}
-									else
-									{
-										MessageToCaster(target.GetName(0, true) + " already has that effect.", noOverwrite);
-										MessageToCaster("Wait until it expires.  Spell Failed.", noOverwrite);
-									}
-									// show resisted effect if spell failed
-									if (Spell.Pulse == 0)
-										SendEffectAnimation(target, 0, false, 0);
-								}
-								break;
-							}
+							// Spell is better than Cancellable
+							ovEffect.DisableEffect(false);
+						}
+						else
+						{
+							// Effect is better than Spell, start disabled
+							neweffect.Start(target);
+							neweffect.DisableEffect(false);
+							added = true;
+							break;
 						}
 					}
+					else
+					{
+						// Check for Overwriting.
+						if (ovEffect.ImmunityState)
+						{
+							// Don't even check if new effect is better when in immunity state
+							SendSpellResistAnimation(target);
+							if (target == Caster)
+							{
+								MessageToCaster("You can't have that effect again yet!", noOverwrite);
+							}
+							else
+							{
+								this.MessageToCaster(noOverwrite, "{0} can't have that effect again yet!", ovEffect.Owner != null ? ovEffect.Owner.GetName(0, true) : "(null)");
+							}
+							added = true;
+							break;
+						}
+						
+						if (IsNewEffectBetter(ovEffect, neweffect))
+						{
+							// New Spell is overwriting this one.
+							ovEffect.Overwrite(neweffect);
+							added = true;
+							break;
+						}
+						
+						// Old Spell is Better than new one
+						SendSpellResistAnimation(target);
+						if (target == Caster)
+						{
+							MessageToCaster("You already have that effect. Wait until it expires. Spell failed.", noOverwrite);
+						}
+						else
+						{
+							this.MessageToCaster(noOverwrite, "{0} already has that effect.", target.GetName(0, true));
+							MessageToCaster("Wait until it expires. Spell Failed.", noOverwrite);
+						}
+						added = true;
+						break;
+					}
 				}
-
-				if (!foundInList)
-				{
+				
+				if (!added)
 					neweffect.Start(target);
-				}
-				else if (overwriteEffect != null)
-				{
-					overwriteEffect.Overwrite(neweffect);
-				}
 			}
 			else
 			{
@@ -2833,7 +2848,8 @@ namespace DOL.GS.Spells
 		/// <param name="target"></param>
 		public virtual void SendSpellResistAnimation(GameLiving target)
 		{
-			SendEffectAnimation(target, 0, false, 0);
+			if (Spell.Pulse == 0 || !HasPositiveEffect)
+				SendEffectAnimation(target, 0, false, 0);
 		}
 		
 		/// <summary>
