@@ -136,6 +136,11 @@ namespace DOL.GS.Spells
 		/// <param name="compare"></param>
 		/// <returns></returns>
 		bool IsCancellable(GameSpellEffect compare);
+		
+		/// <summary>
+		/// Can this SpellHandler Coexist with other Overwritable Spell Effect
+		/// </summary>
+		bool AllowCoexisting { get; }
 
 		/// <summary>
 		/// Does this spell ignore all damage caps?

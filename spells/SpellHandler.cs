@@ -170,6 +170,14 @@ namespace DOL.GS.Spells
 			get { return m_useMinVariance; }
 			set { m_useMinVariance = value; }
 		}
+		
+		/// <summary>
+		/// Can this SpellHandler Coexist with other Overwritable Spell Effect
+		/// </summary>
+		public virtual bool AllowCoexisting
+		{
+			get { return Spell.AllowCoexisting; }
+		}
 
 
 		/// <summary>
@@ -2588,79 +2596,91 @@ namespace DOL.GS.Spells
 			// Apply effect for Duration Spell.
 			if ((Spell.Duration > 0 && Spell.Target.ToLower() != "area") || Spell.Concentration > 0)
 			{
-				if (!target.IsAlive)
+				if (!target.IsAlive || target.EffectList == null)
 					return;
 				
 				eChatType noOverwrite = (Spell.Pulse == 0) ? eChatType.CT_SpellResisted : eChatType.CT_SpellPulse;
 				GameSpellEffect neweffect = CreateSpellEffect(target, effectiveness);
-				GameSpellEffect overwriteEffect = null;
 				
 				var overwritenEffects = target.EffectList.OfType<GameSpellEffect>().Where(effect => effect.SpellHandler != null && effect.SpellHandler.IsOverwritable(neweffect));
 				bool added = false;
-				foreach (var ovEffect in overwritenEffects)
-				{					
-					// If we can cancel spell effect we don't need to overwrite it
-					if (ovEffect.SpellHandler.IsCancellable(neweffect))
-					{
-						if (IsNewEffectBetter(ovEffect, neweffect))
+				bool enable = true;
+				GameSpellEffect overwriteEffect = null;
+				// Register Effect list Changes
+				target.EffectList.BeginChanges();
+				try
+				{
+					foreach (var ovEffect in overwritenEffects)
+					{					
+						// If we can cancel spell effect we don't need to overwrite it
+						if (ovEffect.SpellHandler.IsCancellable(neweffect))
 						{
-							// Spell is better than Cancellable
-							ovEffect.DisableEffect(false);
+							// Spell is better than existing "Cancellable" or it should start disabled
+							if (IsNewEffectBetter(ovEffect, neweffect))
+								ovEffect.DisableEffect(false);
+							else
+								enable = false;
 						}
 						else
 						{
-							// Effect is better than Spell, start disabled
-							neweffect.Start(target);
-							neweffect.DisableEffect(false);
-							added = true;
-							break;
-						}
-					}
-					else
-					{
-						// Check for Overwriting.
-						if (ovEffect.ImmunityState)
-						{
-							// Don't even check if new effect is better when in immunity state
-							SendSpellResistAnimation(target);
-							if (target == Caster)
+							// Check for Overwriting.
+							if (IsNewEffectBetter(ovEffect, neweffect))
 							{
-								MessageToCaster("You can't have that effect again yet!", noOverwrite);
+								// New Spell is overwriting this one.
+								overwriteEffect = ovEffect;
 							}
 							else
 							{
-								this.MessageToCaster(noOverwrite, "{0} can't have that effect again yet!", ovEffect.Owner != null ? ovEffect.Owner.GetName(0, true) : "(null)");
+								// Old Spell is Better than new one
+								SendSpellResistAnimation(target);
+								if (target == Caster)
+								{
+									if (ovEffect.ImmunityState)
+										MessageToCaster("You can't have that effect again yet!", noOverwrite);
+									else
+										MessageToCaster("You already have that effect. Wait until it expires. Spell failed.", noOverwrite);
+								}
+								else
+								{
+									if (ovEffect.ImmunityState)
+									{
+										this.MessageToCaster(noOverwrite, "{0} can't have that effect again yet!", ovEffect.Owner != null ? ovEffect.Owner.GetName(0, true) : "(null)");
+									}
+									else
+									{
+										this.MessageToCaster(noOverwrite, "{0} already has that effect.", target.GetName(0, true));
+										MessageToCaster("Wait until it expires. Spell Failed.", noOverwrite);
+									}
+								}
+								// Prevent Adding.
+								added = true;
+								break;
 							}
-							added = true;
-							break;
 						}
-						
-						if (IsNewEffectBetter(ovEffect, neweffect))
+					}
+					
+					if (!added)
+					{
+						if (overwriteEffect != null)
 						{
-							// New Spell is overwriting this one.
-							ovEffect.Overwrite(neweffect);
-							added = true;
-							break;
-						}
-						
-						// Old Spell is Better than new one
-						SendSpellResistAnimation(target);
-						if (target == Caster)
-						{
-							MessageToCaster("You already have that effect. Wait until it expires. Spell failed.", noOverwrite);
+							overwriteEffect.Overwrite(neweffect);
+							
+							if (enable)
+								overwriteEffect.EnableEffect();
 						}
 						else
 						{
-							this.MessageToCaster(noOverwrite, "{0} already has that effect.", target.GetName(0, true));
-							MessageToCaster("Wait until it expires. Spell Failed.", noOverwrite);
+							if (enable)
+								neweffect.Start(target);
+							else
+								neweffect.StartDisabled(target);
 						}
-						added = true;
-						break;
 					}
 				}
-				
-				if (!added)
-					neweffect.Start(target);
+				finally
+				{
+					target.EffectList.CommitChanges();
+				}
 			}
 			else
 			{
@@ -2715,7 +2735,7 @@ namespace DOL.GS.Spells
 			if (newspell.Value < oldspell.Value)
 				return false;
 			//makes problems for immunity effects
-			if (oldeffect is GameSpellAndImmunityEffect == false || ((GameSpellAndImmunityEffect)oldeffect).ImmunityState == false)
+			if (!oldeffect.ImmunityState)
 			{
 				if (neweffect.Duration <= oldeffect.RemainingTime)
 					return false;
@@ -2747,6 +2767,11 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public virtual bool IsCancellable(GameSpellEffect compare)
 		{
+			if (compare.SpellHandler != null)
+			{
+				if ((compare.SpellHandler.AllowCoexisting || AllowCoexisting) && compare.SpellHandler.SpellLine != SpellLine)
+					return true;
+			}
 			return false;
 		}
 
@@ -2801,6 +2826,43 @@ namespace DOL.GS.Spells
 		/// <returns>immunity duration in milliseconds</returns>
 		public virtual int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
+			if (effect != null && effect.IsExpired && effect.Owner != null && effect.Owner.EffectList != null)
+			{
+				// Re-Enable Cancellable Effects.
+				var enableEffect = effect.Owner.EffectList.OfType<GameSpellEffect>().Where(eff => eff != effect && eff.SpellHandler != null && eff.SpellHandler.IsOverwritable(effect));
+				GameSpellEffect best = null;
+				foreach (var eff in enableEffect)
+				{
+					// Effect was Cancellable
+					if (eff.SpellHandler.IsCancellable(effect))
+					{
+						if (best == null)
+						{
+							best = eff;
+						}
+						else
+						{
+							// choose the best effect to enable
+							if (best.SpellHandler.IsNewEffectBetter(best, eff))
+								best = eff;
+						}
+					}
+				}
+				
+				if (best != null)
+				{
+					effect.Owner.EffectList.BeginChanges();
+					try
+					{
+						best.EnableEffect();						
+					}
+					finally
+					{
+						effect.Owner.EffectList.CommitChanges();
+					}
+				}
+			}
+			
 			return 0;
 		}
 

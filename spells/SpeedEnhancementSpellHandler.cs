@@ -121,7 +121,7 @@ namespace DOL.GS.Spells
 				SendUpdates(effect.Owner);
 			}
 
-			return 0;
+			return base.OnEffectExpires(effect, noMessages);
 		}
 
 

@@ -379,7 +379,8 @@ namespace DOL.GS.Effects
 		/// Add Effect and Enable when First Starting on Target
 		/// </summary>
 		/// <param name="target"></param>
-		protected virtual void AddEffect(GameLiving target)
+		/// <param name="enable"></param>
+		protected virtual void AddEffect(GameLiving target, bool enable)
 		{
 			bool commitChange = false;
 			try
@@ -433,7 +434,8 @@ namespace DOL.GS.Effects
 				}
 				
 				// Try Enabling Effect
-				EnableEffect();
+				if (enable)
+					EnableEffect();
 			}
 			finally
 			{
@@ -474,7 +476,16 @@ namespace DOL.GS.Effects
 		/// <param name="target">the target</param>
 		public virtual void Start(GameLiving target)
 		{
-			AddEffect(target);
+			AddEffect(target, true);
+		}
+
+		/// <summary>
+		/// Starts the effect without enabling it.
+		/// </summary>
+		/// <param name="target">the target</param>
+		public virtual void StartDisabled(GameLiving target)
+		{
+			AddEffect(target, false);
 		}
 
 		/// <summary>
@@ -534,9 +545,12 @@ namespace DOL.GS.Effects
 				return;
 			}
 			
+			bool wasEnable = true;
+			
 			// Prevent further change to this effect.
 			lock (m_LockObject)
 			{
+				wasEnable = !IsDisabled;
 				StopTimers();
 				IsExpired = true;
 			}
@@ -567,7 +581,9 @@ namespace DOL.GS.Effects
 			}
 			
 			// Try Enabling Effect
-			EnableEffect();
+			if (wasEnable)
+				EnableEffect();
+			
 			PulseCallback();
 			UpdateEffect();
 		}
