@@ -2663,10 +2663,10 @@ namespace DOL.GS.Spells
 					{
 						if (overwriteEffect != null)
 						{
-							overwriteEffect.Overwrite(neweffect);
-							
 							if (enable)
-								overwriteEffect.EnableEffect();
+								overwriteEffect.Overwrite(neweffect);
+							else
+								overwriteEffect.OverwriteDisabled(neweffect);
 						}
 						else
 						{
@@ -2769,7 +2769,8 @@ namespace DOL.GS.Spells
 		{
 			if (compare.SpellHandler != null)
 			{
-				if ((compare.SpellHandler.AllowCoexisting || AllowCoexisting) && compare.SpellHandler.SpellLine != SpellLine)
+				if ((compare.SpellHandler.AllowCoexisting || AllowCoexisting) && !compare.SpellHandler.SpellLine.KeyName.Equals(SpellLine.KeyName, StringComparison.OrdinalIgnoreCase)
+				    && compare.SpellHandler.Spell.IsInstantCast != Spell.IsInstantCast)
 					return true;
 			}
 			return false;
@@ -2826,7 +2827,7 @@ namespace DOL.GS.Spells
 		/// <returns>immunity duration in milliseconds</returns>
 		public virtual int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
-			if (effect != null && effect.IsExpired && effect.Owner != null && effect.Owner.EffectList != null)
+			if (!noMessages && effect != null && effect.IsExpired && effect.Owner != null && effect.Owner.EffectList != null)
 			{
 				// Re-Enable Cancellable Effects.
 				var enableEffect = effect.Owner.EffectList.OfType<GameSpellEffect>().Where(eff => eff != effect && eff.SpellHandler != null && eff.SpellHandler.IsOverwritable(effect));

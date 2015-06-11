@@ -535,7 +535,8 @@ namespace DOL.GS.Effects
 		/// concentration based effects should never be overwritten
 		/// </summary>
 		/// <param name="effect">the new effect</param>
-		public virtual void Overwrite(GameSpellEffect effect)
+		/// <param name="enable">Start new Effect or not</param>
+		protected virtual void ReplaceEffect(GameSpellEffect effect, bool enable)
 		{
 			if (Concentration > 0) 
 			{
@@ -544,13 +545,10 @@ namespace DOL.GS.Effects
 					log.WarnFormat("{0} is trying to overwrite {1},  which has concentration {2}", effect.Name, Name, Concentration);
 				return;
 			}
-			
-			bool wasEnable = true;
-			
+						
 			// Prevent further change to this effect.
 			lock (m_LockObject)
 			{
-				wasEnable = !IsDisabled;
 				StopTimers();
 				IsExpired = true;
 			}
@@ -581,11 +579,29 @@ namespace DOL.GS.Effects
 			}
 			
 			// Try Enabling Effect
-			if (wasEnable)
+			if (enable)
 				EnableEffect();
 			
 			PulseCallback();
 			UpdateEffect();
+		}
+		
+		/// <summary>
+		/// Overwrite existing Effect and Enable new One.
+		/// </summary>
+		/// <param name="effect"></param>
+		public virtual void Overwrite(GameSpellEffect effect)
+		{
+			ReplaceEffect(effect, true);
+		}
+
+		/// <summary>
+		/// Overwrite existing Effect without Starting.
+		/// </summary>
+		/// <param name="effect"></param>
+		public virtual void OverwriteDisabled(GameSpellEffect effect)
+		{
+			ReplaceEffect(effect, false);
 		}
 
 		/// <summary>
