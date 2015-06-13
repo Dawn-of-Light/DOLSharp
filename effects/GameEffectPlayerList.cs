@@ -64,13 +64,10 @@ namespace DOL.GS.Effects
 			if (changedEffect.Icon == 0)
 				return;
 			
-			if (m_changesCount > 0)
+			lock (m_changedLock) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
-				lock (m_changedLock) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
-				{
-					if (!m_changedEffects.Contains(changedEffect))
-						m_changedEffects.Add(changedEffect);
-				}
+				if (!m_changedEffects.Contains(changedEffect))
+					m_changedEffects.Add(changedEffect);
 			}
 			
 			base.OnEffectsChanged(changedEffect);

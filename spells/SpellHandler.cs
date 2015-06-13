@@ -2724,7 +2724,7 @@ namespace DOL.GS.Spells
 			
 			// Store Overwritable or Cancellable
 			var enable = true;
-			var cancellableEffects = new HashSet<GameSpellEffect>();
+			var cancellableEffects = new List<GameSpellEffect>(1);
 			GameSpellEffect overwriteEffect = null;
 			
 			foreach (var ovEffect in overwritenEffects)
