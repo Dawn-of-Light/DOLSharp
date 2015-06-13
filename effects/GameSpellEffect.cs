@@ -593,6 +593,8 @@ namespace DOL.GS.Effects
 			// Try Enabling Effect
 			if (enable)
 				EnableEffect();
+			else
+				UpdateEffect();
 			
 			PulseCallback();
 		}
