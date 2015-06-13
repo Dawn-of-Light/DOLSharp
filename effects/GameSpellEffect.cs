@@ -255,7 +255,7 @@ namespace DOL.GS.Effects
 		/// </summary>
 		public bool ImmunityState
 		{
-			get { return m_expired && m_timer != null && m_timer.IsAlive; }
+			get { return IsExpired && m_timer != null && m_timer.IsAlive; }
 		}
 		
 		#endregion
@@ -313,6 +313,8 @@ namespace DOL.GS.Effects
 					SpellHandler.OnEffectRestored(this, RestoreVars);
 				else
 					SpellHandler.OnEffectStart(this);
+
+				UpdateEffect();
 			}
 		}
 		
@@ -340,6 +342,8 @@ namespace DOL.GS.Effects
 					immunityDuration = SpellHandler.OnRestoredEffectExpires(this, RestoreVars, noMessages);
 				else
 					immunityDuration = SpellHandler.OnEffectExpires(this, noMessages);
+				
+				UpdateEffect();
 
 				// Save Immunity Duration returned.
 				lock (m_LockObject)
@@ -515,19 +519,27 @@ namespace DOL.GS.Effects
 			}
 			
 			// Check if Immunity needed.
-			DisableEffect(false);
-			lock (m_LockObject)
+			Owner.EffectList.BeginChanges();
+			try
 			{
-				if (m_immunityDuration > 0)
+				DisableEffect(false);
+				lock (m_LockObject)
 				{
-					Duration = m_immunityDuration;
-					StartTimers();
-					UpdateEffect();
-					return;
+					if (m_immunityDuration > 0)
+					{
+						Duration = m_immunityDuration;
+						StartTimers();
+						UpdateEffect();
+						return;
+					}
 				}
+				
+				RemoveEffect(false);
 			}
-			
-			RemoveEffect(false);
+			finally
+			{
+				Owner.EffectList.CommitChanges();
+			}
 		}
 
 		/// <summary>
@@ -583,7 +595,6 @@ namespace DOL.GS.Effects
 				EnableEffect();
 			
 			PulseCallback();
-			UpdateEffect();
 		}
 		
 		/// <summary>

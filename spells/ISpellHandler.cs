@@ -130,6 +130,14 @@ namespace DOL.GS.Spells
 		bool IsOverwritable(GameSpellEffect compare);
 
 		/// <summary>
+		/// Determines wether new spell is better than old spell and should disable it
+		/// </summary>
+		/// <param name="oldeffect"></param>
+		/// <param name="neweffect"></param>
+		/// <returns></returns>
+		bool IsCancellableEffectBetter(GameSpellEffect oldeffect, GameSpellEffect neweffect);
+		
+		/// <summary>
 		/// Determines wether this spell can be disabled
 		/// by better versions spells that stacks without overwriting
 		/// </summary>
