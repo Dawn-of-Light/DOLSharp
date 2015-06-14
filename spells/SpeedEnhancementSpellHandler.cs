@@ -40,7 +40,40 @@ namespace DOL.GS.Spells
 			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
+		
+		/// <summary>
+		/// Start event listener for Speed Effect
+		/// </summary>
+		/// <param name="effect"></param>
+		public override void OnEffectAdd(GameSpellEffect effect)
+		{
+			GamePlayer player = effect.Owner as GamePlayer;
+			
+			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
+			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackFinished, new DOLEventHandler(OnAttack));
+			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.CastFinished, new DOLEventHandler(OnAttack));
+			if (player != null)
+				GameEventMgr.AddHandler(player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(OnStealthStateChanged));
+			
+			base.OnEffectAdd(effect);
+		}
 
+		/// <summary>
+		/// Remove event listener for Speed Effect
+		/// </summary>
+		/// <param name="effect"></param>
+		/// <param name="overwrite"></param>
+		public override void OnEffectRemove(GameSpellEffect effect, bool overwrite)
+		{
+			GamePlayer player = effect.Owner as GamePlayer;
+			GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
+			GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.AttackFinished, new DOLEventHandler(OnAttack));
+			if (player != null)
+				GameEventMgr.RemoveHandler(player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(OnStealthStateChanged));
+			
+			base.OnEffectRemove(effect, overwrite);
+		}
+		
 		/// <summary>
 		/// Apply effect on target or do spell action if non duration spell
 		/// </summary>
@@ -91,12 +124,6 @@ namespace DOL.GS.Spells
 				effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, Spell.Value / 100.0);
 				SendUpdates(effect.Owner);
 			}
-
-			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
-			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackFinished, new DOLEventHandler(OnAttack));
-			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.CastFinished, new DOLEventHandler(OnAttack));
-			if (player != null)
-				GameEventMgr.AddHandler(player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(OnStealthStateChanged));
 		}
 
 		/// <summary>
@@ -108,12 +135,6 @@ namespace DOL.GS.Spells
 		/// <returns>immunity duration in milliseconds</returns>
 		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
-			GamePlayer player = effect.Owner as GamePlayer;
-			GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttack));
-			GameEventMgr.RemoveHandler(effect.Owner, GameLivingEvent.AttackFinished, new DOLEventHandler(OnAttack));
-			if (player != null)
-				GameEventMgr.RemoveHandler(player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(OnStealthStateChanged));
-
 			effect.Owner.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
 
 			if (!noMessages)

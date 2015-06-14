@@ -190,6 +190,19 @@ namespace DOL.GS.Spells
 		void OnSpellPulse(PulsingSpellEffect effect);
 
 		/// <summary>
+		/// Effect from Spell is Added to Living Effect List
+		/// </summary>
+		/// <param name="effect"></param>
+		void OnEffectAdd(GameSpellEffect effect);
+		
+		/// <summary>
+		/// Effect from Spell is Removed from Living Effect List
+		/// </summary>
+		/// <param name="effect"></param>
+		/// <param name="overwrite"></param>
+		void OnEffectRemove(GameSpellEffect effect, bool overwrite);
+		
+		/// <summary>
 		/// The Spell Caster
 		/// </summary>
 		GameLiving Caster { get; }

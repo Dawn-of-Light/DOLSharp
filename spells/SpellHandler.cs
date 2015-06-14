@@ -2805,36 +2805,48 @@ namespace DOL.GS.Spells
 		}
 		
 		/// <summary>
+		/// Called when Effect is Added to target Effect List
+		/// </summary>
+		/// <param name="effect"></param>
+		public virtual void OnEffectAdd(GameSpellEffect effect)
+		{
+		}
+		
+		/// <summary>
 		/// Check for Spell Effect Removed to Enable Best Cancellable
 		/// </summary>
 		/// <param name="effect"></param>
-		public virtual void OnDurationEffectRemove(GameSpellEffect effect)
+		/// <param name="overwrite"></param>
+		public virtual void OnEffectRemove(GameSpellEffect effect, bool overwrite)
 		{
-			// Re-Enable Cancellable Effects.
-			var enableEffect = effect.Owner.EffectList.OfType<GameSpellEffect>()
-				.Where(eff => eff != effect && eff.SpellHandler != null && eff.SpellHandler.IsOverwritable(effect) && eff.SpellHandler.IsCancellable(effect));
-			
-			// Find Best Remaining Effect
-			GameSpellEffect best = null;
-			foreach (var eff in enableEffect)
+			if (!overwrite)
 			{
-				if (best == null)
-					best = eff;
-				else if (best.SpellHandler.IsCancellableEffectBetter(best, eff))
-					best = eff;
-			}
-			
-			if (best != null)
-			{
-				effect.Owner.EffectList.BeginChanges();
-				try
+				// Re-Enable Cancellable Effects.
+				var enableEffect = effect.Owner.EffectList.OfType<GameSpellEffect>()
+					.Where(eff => eff != effect && eff.SpellHandler != null && eff.SpellHandler.IsOverwritable(effect) && eff.SpellHandler.IsCancellable(effect));
+				
+				// Find Best Remaining Effect
+				GameSpellEffect best = null;
+				foreach (var eff in enableEffect)
 				{
-					// Enable Best Effect
-					best.EnableEffect();						
+					if (best == null)
+						best = eff;
+					else if (best.SpellHandler.IsCancellableEffectBetter(best, eff))
+						best = eff;
 				}
-				finally
+				
+				if (best != null)
 				{
-					effect.Owner.EffectList.CommitChanges();
+					effect.Owner.EffectList.BeginChanges();
+					try
+					{
+						// Enable Best Effect
+						best.EnableEffect();						
+					}
+					finally
+					{
+						effect.Owner.EffectList.CommitChanges();
+					}
 				}
 			}
 		}
@@ -2890,11 +2902,6 @@ namespace DOL.GS.Spells
 		/// <returns>immunity duration in milliseconds</returns>
 		public virtual int OnEffectExpires(GameSpellEffect effect, bool noMessages)
 		{
-			if (!noMessages && effect != null && effect.IsExpired && effect.Owner != null && effect.Owner.EffectList != null)
-			{
-				OnDurationEffectRemove(effect);
-			}
-			
 			return 0;
 		}
 

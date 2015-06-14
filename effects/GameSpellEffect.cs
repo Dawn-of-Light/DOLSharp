@@ -440,6 +440,8 @@ namespace DOL.GS.Effects
 				// Try Enabling Effect
 				if (enable)
 					EnableEffect();
+				
+				SpellHandler.OnEffectAdd(this);
 			}
 			finally
 			{
@@ -523,6 +525,7 @@ namespace DOL.GS.Effects
 			try
 			{
 				DisableEffect(false);
+				SpellHandler.OnEffectRemove(this, false);
 				lock (m_LockObject)
 				{
 					if (m_immunityDuration > 0)
@@ -566,6 +569,7 @@ namespace DOL.GS.Effects
 			}
 
 			DisableEffect(true);
+			SpellHandler.OnEffectRemove(this, true);
 			
 			lock (m_LockObject)
 			{
@@ -595,6 +599,8 @@ namespace DOL.GS.Effects
 				EnableEffect();
 			else
 				UpdateEffect();
+			
+			SpellHandler.OnEffectAdd(this);
 			
 			PulseCallback();
 		}
@@ -649,14 +655,14 @@ namespace DOL.GS.Effects
 		/// </summary>
 		protected virtual void ExpiredCallback()
 		{
-			bool toRemove = false;
+			bool removeEffect = false;
 			lock (m_LockObject)
 			{
 				StopTimers();
-				toRemove = IsExpired;
+				removeEffect = IsExpired;
 			}
 			
-			if (toRemove)
+			if (removeEffect)
 				RemoveEffect(false);
 			else
 				Cancel(false);
