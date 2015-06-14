@@ -2700,7 +2700,7 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public virtual bool IsCancellableEffectBetter(GameSpellEffect oldeffect, GameSpellEffect neweffect)
 		{
-			if (neweffect.SpellHandler.Spell.Value > oldeffect.SpellHandler.Spell.Value)
+			if (neweffect.SpellHandler.Spell.Value >= oldeffect.SpellHandler.Spell.Value)
 				return true;
 			
 			return false;
