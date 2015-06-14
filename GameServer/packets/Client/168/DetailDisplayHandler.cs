@@ -579,6 +579,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 									objectInfo.Add("Icon: " + (foundEffect as GameSpellEffect).Spell.Icon);
 									if ((foundEffect as GameSpellEffect).SpellHandler != null)
 										objectInfo.Add("HasPositiveEffect: " + (foundEffect as GameSpellEffect).SpellHandler.HasPositiveEffect);
+									objectInfo.Add("Disabled: " + (foundEffect as GameSpellEffect).IsDisabled);
 								}
 							}
 						}
@@ -1108,6 +1109,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				output.Add("SharedTimerGroup: " + spell.SharedTimerGroup);
 				output.Add("EffectGroup: " + spell.EffectGroup);
 				output.Add("SpellGroup (for hybrid grouping): " + spell.Group);
+				output.Add("Spell AllowCoexisting: " + spell.AllowCoexisting);
 			}
 		}
 

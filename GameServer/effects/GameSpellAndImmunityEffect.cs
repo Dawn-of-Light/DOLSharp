@@ -31,7 +31,7 @@ namespace DOL.GS.Effects
 		/// <summary>
 		/// The amount of times this effect started
 		/// </summary>
-		protected int m_startedCount;
+		protected volatile int m_startedCount;
 
 		/// <summary>
 		/// Creates a new game spell effect
@@ -56,78 +56,23 @@ namespace DOL.GS.Effects
 		}
 
 		/// <summary>
-		/// The callback method when the effect expires
-		/// </summary>
-		protected override void ExpiredCallback()
-		{
-			if (!ImmunityState)
-			{
-				Cancel(false);
-			}
-			else
-			{
-				StopTimers();
-				m_owner.EffectList.Remove(this);
-			}
-		}
-
-		/// <summary>
 		/// Starts the timers for this effect
 		/// </summary>
 		protected override void StartTimers()
 		{
-			int duration = m_duration;
-			if (m_startedCount > 0)
+			if (!IsExpired)
 			{
-				duration /= Math.Min(20, m_startedCount*2);
-				if (duration < 1) duration = 1;
+				int duration = Duration;
+				int startcount = m_startedCount;
+				if (startcount > 0)
+				{
+					duration /= Math.Min(20, startcount*2);
+					if (duration < 1) duration = 1;
+				}
+				Duration = duration;
+				m_startedCount++;
 			}
-			m_duration = duration;
-			m_startedCount++;
 			base.StartTimers();
-		}
-
-		/// <summary>
-		/// Cancels the effect
-		/// </summary>
-		/// <param name="playerCanceled">true if canceled by the player</param>
-		public override void Cancel(bool playerCanceled)
-		{
-			if (m_owner == null) return;
-
-			if (playerCanceled)
-			{
-				if (Owner is GamePlayer)
-                    ((GamePlayer)Owner).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.CantRemoveThis"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-
-			lock (m_owner.EffectList) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
-			{
-				if (m_expired)
-				{
-					// do not allow removing immunity on alive living
-					if (!m_owner.IsAlive)
-						m_owner.EffectList.Remove(this);
-					return;
-				}
-
-				StopTimers();
-				m_expired = true;
-				int duration = m_handler.OnEffectExpires(this, false);
-				if (duration > 0)
-				{
-					m_duration = duration;
-					m_timer = new PulsingEffectTimer(this);
-					m_timer.Interval = 0;
-					m_timer.Start(duration);
-					m_owner.EffectList.OnEffectsChanged(this);
-				}
-				else
-				{
-					m_owner.EffectList.Remove(this);
-				}
-			}
 		}
 
 		/// <summary>

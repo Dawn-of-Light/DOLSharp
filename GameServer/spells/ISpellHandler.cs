@@ -17,11 +17,9 @@
  *
  */
 using System;
-using System.Collections;
-
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
-using System.Collections.Generic;
 
 namespace DOL.GS.Spells
 {
@@ -132,6 +130,27 @@ namespace DOL.GS.Spells
 		bool IsOverwritable(GameSpellEffect compare);
 
 		/// <summary>
+		/// Determines wether new spell is better than old spell and should disable it
+		/// </summary>
+		/// <param name="oldeffect"></param>
+		/// <param name="neweffect"></param>
+		/// <returns></returns>
+		bool IsCancellableEffectBetter(GameSpellEffect oldeffect, GameSpellEffect neweffect);
+		
+		/// <summary>
+		/// Determines wether this spell can be disabled
+		/// by better versions spells that stacks without overwriting
+		/// </summary>
+		/// <param name="compare"></param>
+		/// <returns></returns>
+		bool IsCancellable(GameSpellEffect compare);
+		
+		/// <summary>
+		/// Can this SpellHandler Coexist with other Overwritable Spell Effect
+		/// </summary>
+		bool AllowCoexisting { get; }
+
+		/// <summary>
 		/// Does this spell ignore all damage caps?
 		/// </summary>
 		bool IgnoreDamageCap { get; set; }
@@ -170,6 +189,19 @@ namespace DOL.GS.Spells
 		/// <param name="effect">The effect doing the pulses</param>
 		void OnSpellPulse(PulsingSpellEffect effect);
 
+		/// <summary>
+		/// Effect from Spell is Added to Living Effect List
+		/// </summary>
+		/// <param name="effect"></param>
+		void OnEffectAdd(GameSpellEffect effect);
+		
+		/// <summary>
+		/// Effect from Spell is Removed from Living Effect List
+		/// </summary>
+		/// <param name="effect"></param>
+		/// <param name="overwrite"></param>
+		void OnEffectRemove(GameSpellEffect effect, bool overwrite);
+		
 		/// <summary>
 		/// The Spell Caster
 		/// </summary>
