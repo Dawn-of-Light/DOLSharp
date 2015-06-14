@@ -1109,6 +1109,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				output.Add("SharedTimerGroup: " + spell.SharedTimerGroup);
 				output.Add("EffectGroup: " + spell.EffectGroup);
 				output.Add("SpellGroup (for hybrid grouping): " + spell.Group);
+				output.Add("Spell AllowCoexisting: " + spell.AllowCoexisting);
 			}
 		}
 

@@ -2644,14 +2644,14 @@ namespace DOL.GS.Spells
 //					Log.Warn("Spell effect compare with different types " + oldspell.SpellType + " <=> " + newspell.SpellType + "\n" + Environment.StackTrace);
 //				return false;
 //			}
-			if (oldspell.Concentration > 0)
+			if (oldspell.IsConcentration)
 				return false;
 			if (newspell.Damage < oldspell.Damage)
 				return false;
 			if (newspell.Value < oldspell.Value)
 				return false;
 			//makes problems for immunity effects
-			if (!oldeffect.ImmunityState)
+			if (!oldeffect.ImmunityState && !newspell.IsConcentration)
 			{
 				if (neweffect.Duration <= oldeffect.RemainingTime)
 					return false;
@@ -2685,8 +2685,9 @@ namespace DOL.GS.Spells
 		{
 			if (compare.SpellHandler != null)
 			{
-				if ((compare.SpellHandler.AllowCoexisting || AllowCoexisting) && !compare.SpellHandler.SpellLine.KeyName.Equals(SpellLine.KeyName, StringComparison.OrdinalIgnoreCase)
-				    && compare.SpellHandler.Spell.IsInstantCast != Spell.IsInstantCast)
+				if ((compare.SpellHandler.AllowCoexisting || AllowCoexisting)
+				    && (!compare.SpellHandler.SpellLine.KeyName.Equals(SpellLine.KeyName, StringComparison.OrdinalIgnoreCase)
+				        || compare.SpellHandler.Spell.IsInstantCast != Spell.IsInstantCast))
 					return true;
 			}
 			return false;
