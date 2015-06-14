@@ -215,17 +215,28 @@ namespace DOL.GS.Spells
         {
         }
 
-        public override bool IsOverwritable(GameSpellEffect compare)
-        {
-            if (Spell.EffectGroup != 0)
-                return Spell.EffectGroup == compare.Spell.EffectGroup;
-            if (compare.Spell.SpellType != Spell.SpellType) return false;
-            if (compare.Spell.Target != Spell.Target) return false;//Celerity buff stacks with conc one
-            return compare.SpellHandler.SpellLine.IsBaseLine == SpellLine.IsBaseLine;
-        }
-
         // constructor
         public CombatSpeedBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+    }
+    
+    /// <summary>
+    /// Haste Buff stacking with other Combat Speed Buff
+    /// </summary>
+    [SpellHandlerAttribute("HasteBuff")]
+    public class HasteBuff : CombatSpeedBuff
+    {
+        // constructor
+        public HasteBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+    }
+
+    /// <summary>
+    /// Celerity Buff stacking with other Combat Speed Buff
+    /// </summary>
+    [SpellHandlerAttribute("CelerityBuff")]
+    public class CelerityBuff : CombatSpeedBuff
+    {
+        // constructor
+        public CelerityBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
 
     /// <summary>
