@@ -61,10 +61,10 @@ namespace DOL.GS.GameEvents
 				m_timer = new Timer(new TimerCallback(PrintStats), null, 10000, 0);
 
 				// Create performance counters
-                if (m_systemCpuUsedCounter != null) m_systemCpuUsedCounter	= CreatePerformanceCounter("Processor",				"% processor time",		"_total");
-                if (m_processCpuUsedCounter != null) m_processCpuUsedCounter = CreatePerformanceCounter("Process", "% processor time", GetProcessCounterName());
-                if (m_memoryPages != null) m_memoryPages = CreatePerformanceCounter("Memory", "Pages/sec", null);
-                if (m_physycalDisk != null) m_physycalDisk = CreatePerformanceCounter("PhysicalDisk", "Disk Transfers/sec", "_Total");
+                if (m_systemCpuUsedCounter == null) m_systemCpuUsedCounter	= CreatePerformanceCounter("Processor",				"% processor time",		"_total");
+                if (m_processCpuUsedCounter == null) m_processCpuUsedCounter = CreatePerformanceCounter("Process", "% processor time", GetProcessCounterName());
+                if (m_memoryPages == null) m_memoryPages = CreatePerformanceCounter("Memory", "Pages/sec", null);
+                if (m_physycalDisk == null) m_physycalDisk = CreatePerformanceCounter("PhysicalDisk", "Disk Transfers/sec", "_Total");
 			}
 		}
 		
