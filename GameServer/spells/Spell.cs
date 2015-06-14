@@ -646,6 +646,14 @@ namespace DOL.GS
 				return this.GetParamValues<int>("MultipleSubSpellID").Where(id => id > 0).ToList();
 			}
 		}
+		
+		public bool AllowCoexisting
+		{
+			get
+			{
+				return this.GetParamValue<bool>("AllowCoexisting");
+			}
+		}
         
 		/// <summary>
 		/// Initialize Param Cache from DB Relation Collection.

@@ -125,14 +125,13 @@ namespace DOL.GS.PacketHandler
 							//						Log.DebugFormat("adding [{0}] '{1}'", fxcount-1, effect.Name);
 							pak.WriteByte((byte)(fxcount - 1)); // icon index
 							pak.WriteByte((effect is GameSpellEffect) ? (byte)(fxcount - 1) : (byte)0xff);
+
 							byte ImmunByte = 0;
-							if (effect is GameSpellEffect)
-							{
-								//if (((GameSpellEffect)effect).ImmunityState)
-								if (effect is GameSpellAndImmunityEffect && ((GameSpellAndImmunityEffect)effect).ImmunityState)
-									ImmunByte = 1;
-							}
+							var gsp = effect as GameSpellEffect;
+							if (gsp != null && gsp.IsDisabled)
+								ImmunByte = 1;
 							pak.WriteByte(ImmunByte); // new in 1.73; if non zero says "protected by" on right click
+
 							// bit 0x08 adds "more..." to right click info
 							pak.WriteShort(effect.Icon);
 							//pak.WriteShort(effect.IsFading ? (ushort)1 : (ushort)(effect.RemainingTime / 1000));
