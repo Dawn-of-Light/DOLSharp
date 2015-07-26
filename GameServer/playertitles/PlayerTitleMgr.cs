@@ -17,7 +17,9 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using log4net;
 
@@ -26,7 +28,7 @@ namespace DOL.GS.PlayerTitles
 	/// <summary>
 	/// Handles loading of player titles.
 	/// </summary>
-	public sealed class PlayerTitleMgr
+	public static class PlayerTitleMgr
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -36,7 +38,7 @@ namespace DOL.GS.PlayerTitles
 		/// <summary>
 		/// Holds all player titles.
 		/// </summary>
-		private static readonly ArrayList m_titles = new ArrayList();
+		private static readonly HashSet<IPlayerTitle> m_titles = new HashSet<IPlayerTitle>();
 		
 		/// <summary>
 		/// Holds special "empty" title instance.
@@ -52,7 +54,6 @@ namespace DOL.GS.PlayerTitles
 			m_titles.Clear();
 			foreach (Type t in ScriptMgr.GetDerivedClasses(typeof (IPlayerTitle)))
 			{
-				if (t.IsAbstract) continue;
 				if (t == ClearTitle.GetType()) continue;
 				
 				IPlayerTitle title;
@@ -62,11 +63,12 @@ namespace DOL.GS.PlayerTitles
 				}
 				catch (Exception e)
 				{
-					log.Error("Error loading player title '" + t.FullName + "': ", e);
+					log.ErrorFormat("Error loading player title '{0}': {1}", t.FullName, e);
 					continue;
 				}
+				
 				m_titles.Add(title);
-				log.DebugFormat(" loaded player title: {0}", title.GetType().FullName);
+				log.DebugFormat("Loaded player title: {0}", title.GetType().FullName);
 			}
 			
 			log.InfoFormat("Loaded {0} player titles", m_titles.Count);
@@ -81,12 +83,11 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>All title suitable for given player or an empty list if none.</returns>
 		public static ICollection GetPlayerTitles(GamePlayer player)
 		{
-			ArrayList titles = new ArrayList();
+			var titles = new HashSet<IPlayerTitle>();
+			
 			titles.Add(ClearTitle);
-			foreach (IPlayerTitle title in m_titles)
-				if (title.IsSuitable(player))
-					titles.Add(title);
-			return titles;
+			
+			return titles.Concat(m_titles.Where(t => t.IsSuitable(player))).ToArray();
 		}
 		
 		/// <summary>
@@ -96,12 +97,10 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>Found title or null.</returns>
 		public static IPlayerTitle GetTitleByTypeName(string s)
 		{
-			if (s == null)
+			if (string.IsNullOrEmpty(s))
 				return null;
-			foreach (IPlayerTitle title in m_titles)
-				if (title.GetType().FullName == s)
-					return title;
-			return null;
+			
+			return m_titles.FirstOrDefault(t => t.GetType().FullName == s);
 		}
 		
 		/// <summary>
@@ -115,11 +114,10 @@ namespace DOL.GS.PlayerTitles
 				return false;
 			
 			Type t = title.GetType();
-			foreach (IPlayerTitle ti in m_titles)
-			{
-				if (ti.GetType() == t)
-					return false;
-			}
+			
+			if (m_titles.Any(ttl => ttl.GetType() == t))
+				return false;
+			
 			m_titles.Add(title);
 			return true;
 		}

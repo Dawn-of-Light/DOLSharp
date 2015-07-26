@@ -1159,18 +1159,20 @@ namespace DOL.GS
 			if (baseType == null)
 				return new Type[0];
 
-			ArrayList types = new ArrayList();
-			ArrayList asms = new ArrayList(Scripts);
+			List<Type> types = new List<Type>();
+			List<Assembly> asms = new List<Assembly>(Scripts);
 			asms.Add(typeof(GameServer).Assembly);
 
 			foreach (Assembly asm in asms)
-				foreach (Type t in asm.GetTypes())
 			{
-				if (t.IsClass && baseType.IsAssignableFrom(t))
-					types.Add(t);
+				foreach (Type t in asm.GetTypes())
+				{
+					if (t.IsClass && !t.IsAbstract && baseType.IsAssignableFrom(t))
+						types.Add(t);
+				}
 			}
 
-			return (Type[])types.ToArray(typeof(Type));
+			return types.ToArray();
 		}
 	}
 }
