@@ -15,6 +15,7 @@ DetailDisplayHandler.HandlePacket.ChatItem:		[Chat] {0}/Objet: "{1}"
 DetailDisplayHandler.HandlePacket.CrafterName:		Artisan : {0}
 DetailDisplayHandler.HandlePacket.Damage:		Dégats: 
 DetailDisplayHandler.HandlePacket.Defense:		Défense: 
+DetailDisplayHandler.HandlePacket.Devastating:		Dévastateur
 DetailDisplayHandler.HandlePacket.DontBelongGuild:	Cela appartient à un joueur.
 DetailDisplayHandler.HandlePacket.FatigueCost:		Coût en endurance: 
 DetailDisplayHandler.HandlePacket.FollowupStyle:	Style à suivre : {0}
@@ -36,6 +37,7 @@ DetailDisplayHandler.HandlePacket.MustBeInBattleGroup:	Vous devez être dans un 
 DetailDisplayHandler.HandlePacket.NoBonus:		Aucun Bonus
 DetailDisplayHandler.HandlePacket.NoGroup:		Vous ne faites pas partie d'un groupe.
 DetailDisplayHandler.HandlePacket.NoInformation:	Aucune information spéciale !
+DetailDisplayHandler.HandlePacket.None:		Aucun
 DetailDisplayHandler.HandlePacket.NoPermissionToSpeak:	Vous n'avez pas les droits pour parler sur le canal de guilde.	
 DetailDisplayHandler.HandlePacket.OnlyModerator:	Seuls les modérateurs peuvent parler sur ce canal.
 DetailDisplayHandler.HandlePacket.Opening:		Ouverture: 

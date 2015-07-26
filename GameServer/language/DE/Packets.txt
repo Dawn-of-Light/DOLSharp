@@ -15,6 +15,7 @@ DetailDisplayHandler.HandlePacket.ChatItem:		[Chat] {0}/Item: "{1}"
 DetailDisplayHandler.HandlePacket.CrafterName:		Handwerker: {0}
 DetailDisplayHandler.HandlePacket.Damage:		Schaden: 
 DetailDisplayHandler.HandlePacket.Defense:		Defensiv: 
+DetailDisplayHandler.HandlePacket.Devastating:			Vernichtend
 DetailDisplayHandler.HandlePacket.DontBelongGuild:	Ihr gehört keiner Gilde an.
 DetailDisplayHandler.HandlePacket.FatigueCost:		Erschöpfungskosten: 
 DetailDisplayHandler.HandlePacket.FollowupStyle:	Folgekampfstil: {0}
@@ -36,6 +37,7 @@ DetailDisplayHandler.HandlePacket.MustBeInBattleGroup:	Ihr müsst in einer Battl
 DetailDisplayHandler.HandlePacket.NoBonus:		Kein Bonus
 DetailDisplayHandler.HandlePacket.NoGroup:		Ihr seid kein Mitglied einer Gruppe.
 DetailDisplayHandler.HandlePacket.NoInformation:	Keine besonderen Informationen!
+DetailDisplayHandler.HandlePacket.None:		Keiner
 DetailDisplayHandler.HandlePacket.NoPermissionToSpeak:	Ihr habt nicht das Recht um mit der Gilde zu reden.	
 DetailDisplayHandler.HandlePacket.OnlyModerator:	Nur der Moderator darf in dieser Chatgruppe reden.
 DetailDisplayHandler.HandlePacket.Opening:		Benötigt: 

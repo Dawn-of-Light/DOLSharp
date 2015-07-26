@@ -403,62 +403,27 @@ namespace DOL.GS.Styles
 				}
 				else
 				{
-					double effectivness = 1.0;
-					if (attackData.Target is GameNPC && player != null)
-					{
-						IControlledBrain brain = ((GameNPC)attackData.Target).Brain as IControlledBrain;
-						if (brain == null)
-							effectivness *= 2;
-					}
-
 					//Style worked! Print out some nice info and add the damage! :)
-					//Growth Rate * Style Spec * Effective Speed / Unstyled Damage Cap
+					//Growth * Style Spec * Effective Speed / Unstyled Damage Cap
 
-					int styledDamageCap = 0;
-					double factor = 1.0;
+					bool staticGrowth = attackData.Style.StealthRequirement;  //static growth is not a function of (effective) weapon speed
+					double absorbRatio = attackData.Damage / living.UnstyledDamageCap(weapon); //scaling factor for style damage
+					double effectiveWeaponSpeed = living.AttackSpeed(weapon) * 0.001;
+					double styleGrowth = Math.Max(0,attackData.Style.GrowthOffset + attackData.Style.GrowthRate * living.GetModifiedSpecLevel(attackData.Style.Spec));
+					double styleDamageBonus = living.GetModified(eProperty.StyleDamage) * 0.01 - 1;
 
-					//critical strike for rogue
-					// from: http://www.classesofcamelot.com/other/styles/Styles.htm
-					//Assassination styles (BS, BS2, PA) work differently than normal styles.  
-					//Since these styles can only be used as an opener from stealth, these styles have had the DPS portion coded out 
-					//and just add a static damage value.  This allows for assassins to use fast weapons and still hit hard with their assassination styles.  
-					//Furthermore, since the assassination styles add a static damage amount, faster weapons actually allow for a higher DPS than slower 
-					//weapons in this case.  Thus, one can debate the benefits of a slow assassination weapon versus a fast one.
-					//
-					//Backstab I Cap = ~5 + Critical Strike Spec * 14 / 3 + Nonstyle Cap
-					//Backstab II Cap = 45 + Critical Strike Spec * 6 + Nonstyle Cap
-					//Perforate Artery Cap = 75 + Critical Strike Spec * 9 + Nonstyle Cap
-					//
-					if (attackData.Target is GameNPC || attackData.Target is GamePlayer)
+					if (staticGrowth)
 					{
-						if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNameBackstab")))
+						if (living.AttackWeapon.Item_Type == Slot.TWOHAND)
 						{
-							factor = (5 + living.GetModifiedSpecLevel(Specs.Critical_Strike) * 14 / 3.0) / living.UnstyledDamageCap(weapon);
-							attackData.StyleDamage = (int)Math.Max(1, attackData.UncappedDamage * factor * ServerProperties.Properties.CS_OPENING_EFFECTIVENESS);
-                            styledDamageCap = (int)((5 + (living.GetModifiedSpecLevel(Specs.Critical_Strike) * 14 / 3.0 + living.UnstyledDamageCap(weapon))) * effectivness);
+							styleGrowth = styleGrowth * 1.25 + living.WeaponDamage(living.AttackWeapon) * Math.Max(0,living.AttackWeapon.SPD_ABS - 21) * 10 / 66d;
 						}
-						else if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNameBackstabII")))
-						{
-                            factor = (45 + living.GetModifiedSpecLevel(Specs.Critical_Strike) * 6) / living.UnstyledDamageCap(weapon);
-							attackData.StyleDamage = (int)Math.Max(1, attackData.UncappedDamage * factor * ServerProperties.Properties.CS_OPENING_EFFECTIVENESS);
-                            styledDamageCap = (int)((45 + (living.GetModifiedSpecLevel(Specs.Critical_Strike) * 6 + living.UnstyledDamageCap(weapon))) * effectivness);
-						}
-						else if (attackData.Style.Name == (LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "StyleProcessor.ExecuteStyle.StyleNamePerforateArtery")))
-						{
-                            factor = (75 + living.GetModifiedSpecLevel(Specs.Critical_Strike) * 9) / living.UnstyledDamageCap(weapon);
-							attackData.StyleDamage = (int)Math.Max(1, attackData.UncappedDamage * factor * ServerProperties.Properties.CS_OPENING_EFFECTIVENESS);
-                            styledDamageCap = (int)((75 + (living.GetModifiedSpecLevel(Specs.Critical_Strike) * 9 + living.UnstyledDamageCap(weapon))) * effectivness);
-						}
+						attackData.StyleDamage = (int)(absorbRatio * styleGrowth * ServerProperties.Properties.CS_OPENING_EFFECTIVENESS);
 					}
+					else
+						attackData.StyleDamage = (int)(absorbRatio * styleGrowth * effectiveWeaponSpeed);
 
-					if (styledDamageCap == 0)
-					{
-						styledDamageCap = (int)((living.UnstyledDamageCap(weapon) + (attackData.Style.GrowthRate * living.GetModifiedSpecLevel(attackData.Style.Spec) * living.AttackSpeed(weapon) * 0.001)) * effectivness);
-						factor = (attackData.Style.GrowthRate * living.GetModifiedSpecLevel(attackData.Style.Spec) * living.AttackSpeed(weapon) * 0.001) / living.UnstyledDamageCap(weapon);
-						attackData.StyleDamage = (int)Math.Max(attackData.Style.GrowthRate > 0 ? 1 : 0, attackData.UncappedDamage * factor);
-					}
-
-					attackData.StyleDamage = (int)(attackData.StyleDamage * living.GetModified(eProperty.StyleDamage) / 100.0);
+					attackData.StyleDamage += (int)(attackData.Damage * styleDamageBonus);
 
 					//Eden - style absorb bonus
 					int absorb=0;
@@ -470,9 +435,6 @@ namespace DOL.GS.Styles
 
 					//Increase regular damage by styledamage ... like on live servers
 					attackData.Damage += attackData.StyleDamage;
-
-					// apply styled damage cap
-					attackData.Damage = Math.Min(attackData.Damage, styledDamageCap);
 
 
 					if (player != null)
@@ -487,6 +449,7 @@ namespace DOL.GS.Styles
 						}
 					}
 
+					#region StyleProcs
 					if (attackData.Style.Procs.Count > 0)
 					{
 						ISpellHandler effect;
@@ -548,15 +511,16 @@ namespace DOL.GS.Styles
 							}
 						}
 					}
+					#endregion StyleProcs
 
-
+					#region Animation
 					if (weapon != null)
 						attackData.AnimationId = (weapon.Hand != 1) ? attackData.Style.Icon : attackData.Style.TwoHandAnimation; // special animation for two-hand
 					else if (living.Inventory != null)
 						attackData.AnimationId = (living.Inventory.GetItem(eInventorySlot.RightHandWeapon) != null) ? attackData.Style.Icon : attackData.Style.TwoHandAnimation; // special animation for two-hand
 					else
 						attackData.AnimationId = attackData.Style.Icon;
-
+					#endregion Animation
 
 					return true;
 				}
@@ -831,21 +795,22 @@ namespace DOL.GS.Styles
 
 			temp = LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Damage") + " ";
 
+			double tempGrowth = (style.GrowthRate * 50 + style.GrowthOffset) / 0.295; //0.295 is the rounded down style quantum that is used on Live
 
-			if (style.GrowthRate == 0)
-				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.NoBonus");
-			else if (style.GrowthRate < .1)
+			if (style.GrowthRate == 0 && style.GrowthOffset == 0)
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.None");
+			else if (tempGrowth < 49)
 				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.VeryLow");
-			else if (style.GrowthRate < .25)
+			else if (tempGrowth < 99)
 				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Low");
-			else if (style.GrowthRate < .5)
+			else if (tempGrowth < 149)
 				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Medium");
-			else if (style.GrowthRate < 1.0)
+			else if (tempGrowth < 199)
 				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.High");
-			else
+			else if (tempGrowth < 249)
 				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.VeryHigh");
-
-			temp += " (" + style.GrowthRate + ")";
+			else
+				temp += LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Devastating");
 
 			delveInfo.Add(temp);
 
@@ -910,10 +875,22 @@ namespace DOL.GS.Styles
 				SpellLine styleLine = SkillBase.GetSpellLine(GlobalSpellsLines.Combat_Styles_Effect);
 				if (styleLine != null)
 				{
+					/*check if there is a class specific style proc*/
+					bool hasClassSpecificProc = false;
+					foreach (Tuple<Spell, int, int> proc in style.Procs)
+					{
+						if (proc.Item2 == player.CharacterClass.ID)
+						{
+							hasClassSpecificProc = true;
+							break;
+						}
+					}
+
 					foreach (Tuple<Spell, int, int> proc in style.Procs)
 					{
 						// RR4: we added all the procs to the style, now it's time to check for class ID
-						if (proc.Item2 != 0 && proc.Item2 != player.CharacterClass.ID) continue;
+						if (hasClassSpecificProc && proc.Item2 != player.CharacterClass.ID) continue;
+						else if (!hasClassSpecificProc && proc.Item2 != 0) continue;
 
 						Spell spell = proc.Item1;
 						if (spell != null)
@@ -948,6 +925,7 @@ namespace DOL.GS.Styles
 				delveInfo.Add(string.Format("Spec: {0}", style.Spec));
 				delveInfo.Add(string.Format("SpecLevelRequirement: {0}", style.SpecLevelRequirement));
 				delveInfo.Add(string.Format("Level: {0}", style.Level));
+				delveInfo.Add(string.Format("GrowthOffset: {0}", style.GrowthOffset));
 				delveInfo.Add(string.Format("GrowthRate: {0}", style.GrowthRate));
 				delveInfo.Add(string.Format("Endurance: {0}", style.EnduranceCost));
 				delveInfo.Add(string.Format("StealthRequirement: {0}", style.StealthRequirement));

@@ -230,6 +230,14 @@ namespace DOL.GS.Styles
 		}
 
 		/// <summary>
+		/// (readonly) The growth offset of the style growth function
+		/// </summary>
+		public double GrowthOffset
+		{
+			get { return baseStyle.GrowthOffset; }
+		}
+
+		/// <summary>
 		/// (readonly) The growth rate of the style
 		/// </summary>
 		public double GrowthRate

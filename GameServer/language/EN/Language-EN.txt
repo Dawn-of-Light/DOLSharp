@@ -16,9 +16,6 @@ StyleProcessor.ExecuteStyle.BackStrike:			You inflict a critical strike in the b
 StyleProcessor.ExecuteStyle.ExecuteFail:		You fail to execute your {0} perfectly!
 StyleProcessor.ExecuteStyle.PerformPerfectly:		You perform your {0} perfectly! {1}
 StyleProcessor.ExecuteStyle.PerformsPerfectly:		Your {0} performs its {1} perfectly.{2}
-StyleProcessor.ExecuteStyle.StyleNameBackstab:		Backstab
-StyleProcessor.ExecuteStyle.StyleNameBackstabII:	Backstab II
-StyleProcessor.ExecuteStyle.StyleNamePerforateArtery:	Perforate Artery
 StyleProcessor.ExecuteStyle.ThroatStrike:		You inflict a critical strike in the throat of your target 
 StyleProcessor.TryToUseStyle.AlreadyPreparing:		You are already preparing to use this style! Type /cancelstyle to enable style cancelling.
 StyleProcessor.TryToUseStyle.AlreadySelectedStyles:	You have already selected your styles for this round!
@@ -57,6 +54,7 @@ DetailDisplayHandler.HandlePacket.ChatItem:		[Chat] {0}/Item: "{1}"
 DetailDisplayHandler.HandlePacket.CrafterName:		Crafter : {0}
 DetailDisplayHandler.HandlePacket.Damage:		Damage: 
 DetailDisplayHandler.HandlePacket.Defense:		Defense: 
+DetailDisplayHandler.HandlePacket.Devastating:		Devastating
 DetailDisplayHandler.HandlePacket.DontBelongGuild:	You don't belong to a player guild.
 DetailDisplayHandler.HandlePacket.FatigueCost:		Fatigue Cost: 
 DetailDisplayHandler.HandlePacket.FollowupStyle:	Followup Style: {0}
@@ -78,6 +76,7 @@ DetailDisplayHandler.HandlePacket.MustBeInBattleGroup:	You must be in a battle g
 DetailDisplayHandler.HandlePacket.NoBonus:		No Bonus
 DetailDisplayHandler.HandlePacket.NoGroup:		You are not part of a group.
 DetailDisplayHandler.HandlePacket.NoInformation:	No special information!
+DetailDisplayHandler.HandlePacket.None:		None
 DetailDisplayHandler.HandlePacket.NoPermissionToSpeak:	You don't have permission to speak on the on guild line.	
 DetailDisplayHandler.HandlePacket.OnlyModerator:	Only moderator can talk on this chat group.
 DetailDisplayHandler.HandlePacket.Opening:		Opening: 
