@@ -1234,13 +1234,27 @@ namespace DOL.GS
 		/// Holds all packet buffers.
 		/// </summary>
 		private Queue<byte[]> m_packetBufPool;
+		private object m_packetBufPoolLock = new object();
 
+		public int MaxPacketPoolSize
+		{
+			get { return Configuration.MaxClientCount*3; }
+		}
+		
 		/// <summary>
 		/// Gets the count of packet buffers in the pool.
 		/// </summary>
 		public int PacketPoolSize
 		{
-			get { return m_packetBufPool.Count; }
+			get
+			{
+				int packetBufCount = 0;
+				
+				lock(m_packetBufPoolLock)
+					packetBufCount = m_packetBufPool.Count;
+				
+				return packetBufCount;
+			}
 		}
 
 		/// <summary>
@@ -1249,14 +1263,18 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		private bool AllocatePacketBuffers()
 		{
-			int count = Configuration.MaxClientCount*3;
+			int count = MaxPacketPoolSize;
 
-			m_packetBufPool = new Queue<byte[]>(count);
-			for (int i = 0; i < count; i++)
+			lock(m_packetBufPoolLock)
 			{
-				m_packetBufPool.Enqueue(new byte[BUF_SIZE]);
+				m_packetBufPool = new Queue<byte[]>(count);
+			
+				for (int i = 0; i < count; i++)
+				{
+					m_packetBufPool.Enqueue(new byte[BUF_SIZE]);
+				}
 			}
-
+	
 			if (log.IsDebugEnabled)
 				log.DebugFormat("allocated packet buffers: {0}", count.ToString());
 
@@ -1269,7 +1287,7 @@ namespace DOL.GS
 		/// <returns>byte array that will be used as packet buffer.</returns>
 		public override byte[] AcquirePacketBuffer()
 		{
-			lock (m_packetBufPool)
+			lock (m_packetBufPoolLock)
 			{
 				if (m_packetBufPool.Count > 0)
 					return m_packetBufPool.Dequeue();
@@ -1289,9 +1307,10 @@ namespace DOL.GS
 			if (buf == null)
 				return;
 
-			lock (m_packetBufPool)
+			lock (m_packetBufPoolLock)
 			{
-				m_packetBufPool.Enqueue(buf);
+				if (m_packetBufPool.Count < MaxPacketPoolSize)
+					m_packetBufPool.Enqueue(buf);
 			}
 		}
 

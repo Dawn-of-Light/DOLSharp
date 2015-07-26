@@ -44,7 +44,8 @@ namespace DOL.Network
 		/// <summary>
 		/// Hash table of clients
 		/// </summary>
-		protected readonly Dictionary<BaseClient, BaseClient> _clients = new Dictionary<BaseClient, BaseClient>();
+		protected readonly HashSet<BaseClient> _clients = new HashSet<BaseClient>();
+		protected readonly object _clientsLock = new object();
 
 		/// <summary>
 		/// The configuration of this server
@@ -82,7 +83,17 @@ namespace DOL.Network
 		/// </summary>
 		public int ClientCount
 		{
-			get { return _clients.Count; }
+			get
+			{
+				int clientCount = 0;
+				
+				lock (_clientsLock)
+				{
+					clientCount = _clients.Count;
+				}
+				
+				return clientCount;
+			}
 		}
 
 		/// <summary>
@@ -238,8 +249,8 @@ namespace DOL.Network
 					baseClient = GetNewClient();
 					baseClient.Socket = sock;
 
-					lock (_clients)
-						_clients.Add(baseClient, baseClient);
+					lock (_clientsLock)
+						_clients.Add(baseClient);
 
 					baseClient.OnConnect();
 					baseClient.BeginReceive();
@@ -327,29 +338,27 @@ namespace DOL.Network
 					Log.Error("Stop", e);
 			}
 
-			if (_clients != null)
+			lock (_clientsLock)
 			{
-				lock (_clients)
+				try
 				{
-					try
+					foreach (var client in _clients)
 					{
-						foreach (var clientPair in _clients)
-						{
-							clientPair.Key.CloseConnections();
-						}
-
-						if (Log.IsDebugEnabled)
-							Log.Debug("Stopping server! - Cleaning up client list!");
-
-						_clients.Clear();
+						client.CloseConnections();
 					}
-					catch (Exception e)
-					{
-						if (Log.IsErrorEnabled)
-							Log.Error("Stop", e);
-					}
+
+					if (Log.IsDebugEnabled)
+						Log.Debug("Stopping server! - Cleaning up client list!");
+
+					_clients.Clear();
+				}
+				catch (Exception e)
+				{
+					if (Log.IsErrorEnabled)
+						Log.Error("Stop", e);
 				}
 			}
+			
 			if (Log.IsDebugEnabled)
 				Log.Debug("Stopping server! - End of method!");
 		}
@@ -361,9 +370,9 @@ namespace DOL.Network
 		/// <returns>True if the client was disconnected, false if it doesn't exist</returns>
 		public virtual bool Disconnect(BaseClient baseClient)
 		{
-			lock (_clients)
+			lock (_clientsLock)
 			{
-				if (!_clients.ContainsKey(baseClient))
+				if (!_clients.Contains(baseClient))
 					return false;
 
 				_clients.Remove(baseClient);
