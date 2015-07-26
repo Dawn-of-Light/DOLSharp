@@ -110,6 +110,10 @@ namespace DOL.Database
 		//		/// </summary>
 		//		protected int			m_DamageAddPerLevel;
 		/// <summary>
+		/// Offset as correction of Wyrd's former assumption
+		/// </summary>
+		private double m_growthOffset;
+		/// <summary>
 		/// GrowthRate as used in Wyrd's spreadsheet
 		/// </summary>
 		private double m_growthRate;
@@ -272,6 +276,16 @@ namespace DOL.Database
 		{
 			get { return m_WeaponTypeRequirement; }
 			set { m_WeaponTypeRequirement = value; Dirty = true; }
+		}
+
+		/// <summary>
+		/// The Style Growth Offset
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public double GrowthOffset
+		{
+			get { return m_growthOffset; }
+			set { m_growthOffset = value; Dirty = true; }
 		}
 
 		/// <summary>
