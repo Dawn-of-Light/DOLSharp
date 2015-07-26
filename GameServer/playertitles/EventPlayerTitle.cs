@@ -29,7 +29,7 @@ namespace DOL.GS.PlayerTitles
 		/// <summary>
 		/// Constructs a new EventPlayerTitle instance.
 		/// </summary>
-		public EventPlayerTitle()
+		protected EventPlayerTitle()
 		{
 			GameEventMgr.AddHandler(Event, new DOLEventHandler(EventCallback));
 		}
@@ -48,8 +48,17 @@ namespace DOL.GS.PlayerTitles
 		protected virtual void EventCallback(DOLEvent e, object sender, EventArgs arguments)
 		{
 			GamePlayer p = sender as GamePlayer;
-			if (p != null && IsSuitable(p))
-				p.AddTitle(this);
+			if (p != null)
+			{
+				if (IsSuitable(p))
+				{
+					p.AddTitle(this);
+				}
+				else
+				{
+					p.RemoveTitle(this);
+				}
+			}
 		}
 	}
 }
