@@ -1,0 +1,7 @@
+﻿# GameHastener
+
+GameHastener.BorderKeepPortOffer:		If you have to not achieved your tenth season I can transport you to the [borderkeep] so that you may assist in battleground combat. 
+GameHastener.Greeting:					Greetings,
+GameHastener.CityMovementOffer:			I am here to assist with travel. Would you like to increase your rate of [movement] for traveling within our city?
+GameHastener.DefaultMovementOffer:		I am here to assist with travel across our fair lands. Just say the word and I will gladly increase your rate of [movement] to aid your adventures!
+GameHastener.StrengthOffer:				I can also grant you extra [strength] to help you carry your wares throughout the city. 
