@@ -149,13 +149,13 @@ namespace DOL.GS
 				case "gwyntell":
 					break;	// No text?
 				case "inconnu crypt":
-					if (player.HasFinishedQuest(typeof(InconnuCrypt)) <= 0)
-					{
-						SayTo(player, String.Format("I may only send those who know the way to this {0} {1}",
-						                            "city. Seek out the path to the city and in future times I will aid you in",
-						                            "this journey."));
-						return;
-					}
+					//if (player.HasFinishedQuest(typeof(InconnuCrypt)) <= 0)
+					//{
+					//	SayTo(player, String.Format("I may only send those who know the way to this {0} {1}",
+					//	                            "city. Seek out the path to the city and in future times I will aid you in",
+					//	                            "this journey."));
+					//	return;
+					//}
 					break;
 				case "oceanus":
 					if (player.Client.Account.PrivLevel < ServerProperties.Properties.ATLANTIS_TELEPORT_PLVL)

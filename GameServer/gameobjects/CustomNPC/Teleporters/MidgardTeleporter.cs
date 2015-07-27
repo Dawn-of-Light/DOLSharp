@@ -123,13 +123,13 @@ namespace DOL.GS
 				case "knarr":
 					break;	// No text?
 				case "kobold undercity":
-					if (player.HasFinishedQuest(typeof(KoboldUndercity)) <= 0)
-					{
-						SayTo(player, String.Format("I may only send those who know the way to this {0} {1}",
-						                            "city. Seek out the path to the city and in future times I will aid you in",
-						                            "this journey."));
-						return;
-					}
+					//if (player.HasFinishedQuest(typeof(KoboldUndercity)) <= 0)
+					//{
+					//	SayTo(player, String.Format("I may only send those who know the way to this {0} {1}",
+					//	                            "city. Seek out the path to the city and in future times I will aid you in",
+					//	                            "this journey."));
+					//	return;
+					//}
 					break;
 				case "oceanus":
 					if (player.Client.Account.PrivLevel < ServerProperties.Properties.ATLANTIS_TELEPORT_PLVL)
