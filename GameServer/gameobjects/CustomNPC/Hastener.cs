@@ -45,7 +45,7 @@ namespace DOL.GS
 				return false;
 
 			// just give out speed without asking
-			TargetObject = this;
+			TargetObject = player;
 			CastSpell(SkillBase.GetSpellByID(SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
 
 			if (player.CurrentRegion.IsCapitalCity)
@@ -91,7 +91,7 @@ namespace DOL.GS
 						case "strength":
 							if (player.CurrentRegion.IsCapitalCity)
 							{
-								TargetObject = this;
+								TargetObject = player;
 								CastSpell(SkillBase.GetSpellByID(STROFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
 							}
 							break;
