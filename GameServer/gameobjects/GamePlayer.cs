@@ -3949,7 +3949,7 @@ namespace DOL.GS
 				int RR = 0;
 				
 				if (RealmLevel > 1)
-					RR = RealmLevel / 10;
+					RR = RealmLevel / 10 + 1;
 				
 				string realm = string.Empty;
 				if (Realm == eRealm.Albion)
@@ -12614,7 +12614,9 @@ namespace DOL.GS
 			m_dbCharacter.LastPlayed = DateTime.Now;
 
 			m_titles.Clear();
-			m_titles.AddRange(PlayerTitleMgr.GetPlayerTitles(this));
+			foreach(IPlayerTitle ttl in PlayerTitleMgr.GetPlayerTitles(this))
+				m_titles.Add(ttl);
+			
 			IPlayerTitle t = PlayerTitleMgr.GetTitleByTypeName(m_dbCharacter.CurrentTitleType);
 			if (t == null)
 				t = PlayerTitleMgr.ClearTitle;
@@ -14447,12 +14449,45 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds all players titles.
 		/// </summary>
-		protected readonly ArrayList m_titles = new ArrayList();
+		protected readonly HashSet<IPlayerTitle> m_titles = new HashSet<IPlayerTitle>();
 
 		/// <summary>
 		/// Holds current selected title.
 		/// </summary>
 		protected IPlayerTitle m_currentTitle = PlayerTitleMgr.ClearTitle;
+
+		/// <summary>
+		/// Gets all player's titles.
+		/// </summary>
+		public virtual HashSet<IPlayerTitle> Titles
+		{
+			get { return m_titles; }
+		}
+
+		/// <summary>
+		/// Gets/sets currently selected/active player title.
+		/// </summary>
+		public virtual IPlayerTitle CurrentTitle
+		{
+			get { return m_currentTitle; }
+			set
+			{
+				if (value == null)
+					value = PlayerTitleMgr.ClearTitle;
+				m_currentTitle = value;
+				DBCharacter.CurrentTitleType = value.GetType().FullName;
+
+				//update newTitle for all players if client is playing
+				if (ObjectState == eObjectState.Active)
+				{
+					if (value == PlayerTitleMgr.ClearTitle)
+						Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CurrentTitle.TitleCleared"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					else
+						Out.SendMessage("Your title has been set to " + value.GetDescription(this) + '.', eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				UpdateCurrentTitle();
+			}
+		}
 
 		/// <summary>
 		/// Adds the title to player.
@@ -14482,39 +14517,6 @@ namespace DOL.GS
 			m_titles.Remove(title);
 			title.OnTitleLost(this);
 			return true;
-		}
-
-		/// <summary>
-		/// Gets all player's titles.
-		/// </summary>
-		public virtual IList Titles
-		{
-			get { return m_titles; }
-		}
-
-		/// <summary>
-		/// Gets/sets currently selected/active player title.
-		/// </summary>
-		public virtual IPlayerTitle CurrentTitle
-		{
-			get { return m_currentTitle; }
-			set
-			{
-				if (value == null)
-					value = PlayerTitleMgr.ClearTitle;
-				m_currentTitle = value;
-				DBCharacter.CurrentTitleType = value.GetType().FullName;
-
-				//update newTitle for all players if client is playing
-				if (ObjectState == eObjectState.Active)
-				{
-					if (value == PlayerTitleMgr.ClearTitle)
-						Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CurrentTitle.TitleCleared"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					else
-						Out.SendMessage("Your title has been set to " + value.GetDescription(this) + '.', eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-				UpdateCurrentTitle();
-			}
 		}
 
 		/// <summary>
