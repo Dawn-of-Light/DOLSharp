@@ -84,7 +84,7 @@ namespace DOL.GS
 						case "movement":
 							if (!player.CurrentRegion.IsRvR || player.Realm == Realm)
 							{
-								TargetObject = this;
+								TargetObject = player;
 								CastSpell(SkillBase.GetSpellByID(SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
 							}
 							break;
