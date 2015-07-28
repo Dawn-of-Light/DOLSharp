@@ -17,7 +17,7 @@
  *
  */
 using System;
-using System.Collections;
+using System.Linq;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.PlayerTitles;
@@ -48,8 +48,8 @@ namespace DOL.GS.Commands
 					client.Out.SendMessage("You cannot change the current title.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				else
 				{
-					IList titles = client.Player.Titles;
-					if (index < 0 || index >= titles.Count)
+					var titles = client.Player.Titles.ToArray();
+					if (index < 0 || index >= titles.Length)
 						client.Player.CurrentTitle = PlayerTitleMgr.ClearTitle;
 					else
 						client.Player.CurrentTitle = (IPlayerTitle)titles[index];

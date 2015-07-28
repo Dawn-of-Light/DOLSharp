@@ -83,7 +83,7 @@ namespace DOL.GS.PacketHandler
 
 		public override void SendPlayerTitles()
 		{
-			IList titles = m_gameClient.Player.Titles;
+			var titles = m_gameClient.Player.Titles;
 			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.DetailWindow)))
 			{
 				pak.WriteByte(1); // new in 1.75
