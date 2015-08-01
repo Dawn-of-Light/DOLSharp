@@ -38,11 +38,12 @@ namespace DOL.GS.PlayerTitles
 		/// <summary>
 		/// The title value, shown over player's head.
 		/// </summary>
+		/// <param name="source">The player looking.</param>
 		/// <param name="player">The title owner.</param>
 		/// <returns>The title value.</returns>
-		public override string GetValue(GamePlayer player)
+		public override string GetValue(GamePlayer source, GamePlayer player)
 		{
-			return "";
+			return string.Empty;
 		}
 
 		/// <summary>

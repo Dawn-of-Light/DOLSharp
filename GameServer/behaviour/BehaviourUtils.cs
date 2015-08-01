@@ -186,7 +186,7 @@ namespace DOL.GS.Behaviour
             {
                 string title = "";
                 if (player.CurrentTitle != null)
-                    title = player.CurrentTitle.GetValue(player);
+                    title = player.CurrentTitle.GetValue(player, player);
 
                 message = message.Replace("<Title>", title);
             }

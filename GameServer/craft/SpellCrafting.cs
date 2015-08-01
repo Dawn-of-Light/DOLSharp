@@ -31,8 +31,7 @@ namespace DOL.GS
         {
             get
             {
-                return LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE,
-                    "CraftersProfession.Spellcrafter");
+                return "CraftersProfession.Spellcrafter";
             }
         }
 

@@ -182,7 +182,7 @@ namespace DOL.GS.Commands
 					resultCount++;
 					if (resultMessages.Count < MAX_LIST_SIZE && resultCount >= listStart)
 					{
-						resultMessages.Add(resultCount + ") " + FormatLine(clients.Player, client.Account.PrivLevel));
+						resultMessages.Add(resultCount + ") " + FormatLine(clients.Player, client.Account.PrivLevel, client));
 					}
 				}
 			}
@@ -206,7 +206,7 @@ namespace DOL.GS.Commands
 
 
 		// make /who line using GamePlayer
-		private string FormatLine(GamePlayer player, uint PrivLevel)
+		private string FormatLine(GamePlayer player, uint PrivLevel, GameClient source)
 		{
 			/*
 			 * /setwho class | trade
@@ -246,7 +246,7 @@ namespace DOL.GS.Commands
 			{
 				result.Append(" ");
 				AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(player.CraftingPrimarySkill);
-				result.Append(player.CraftTitle);
+				result.Append(player.CraftTitle.GetValue(source.Player, player));
 			}
 			else
 			{

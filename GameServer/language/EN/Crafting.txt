@@ -72,6 +72,7 @@ CraftersProfession.Fletcher:				Fletcher
 CraftersProfession.Tailor:					Tailor
 CraftersProfession.Weaponcrafter:			Weaponcrafter
 CraftersProfession.Siegecrafter:			Siegecrafter
+CraftersProfession.BasicCrafter:			Basic crafter
 
 # /CraftingMaster
 TailorsMaster.AcceptedByOrderName:			Tailors

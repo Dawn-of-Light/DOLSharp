@@ -23,7 +23,6 @@ using System;
 using DOL.GS;
 using DOL.Events;
 using System.Threading;
-using DOL.GS.Scripts;
 using DOL.GS.PacketHandler;
 using log4net;
 using System.Reflection;

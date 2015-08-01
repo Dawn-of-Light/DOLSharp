@@ -18,16 +18,55 @@
  */
 
 using System;
+using System.Linq;
+
 using DOL.Language;
 using DOL.Events;
 
 namespace DOL.GS.PlayerTitles
 {
   	/// <summary>
-	/// Example...
+	/// Master Level Title Handler
 	/// </summary>
 	public class MasterlevelTitle : EventPlayerTitle
 	{
+		/// <summary>
+		/// Map ML Spec on ML Translate ID
+		/// </summary>
+		/// <param name="player"></param>
+		/// <returns></returns>
+		private int GetPlayerMLLine(GamePlayer player)
+		{
+			var mlspec = player.GetSpecList().FirstOrDefault(spec => spec is IMasterLevelsSpecialization);
+			
+			if(mlspec != null)
+			{
+				switch(mlspec.KeyName)
+				{
+					case "Banelord":
+						return 1;
+					case "Battlemaster":
+						return 2;
+					case "Convoker":
+						return 3;
+					case "Perfecter":
+						return 4;
+					case "Sojourner":
+						return 5;
+					case "Spymaster":
+						return 6;
+					case "Stormlord":
+						return 7;
+					case "Warlord":
+						return 8;
+					default:
+						return 0;
+				}
+			}
+			
+			return 0;
+		}
+		
 		/// <summary>
 		/// The title description, shown in "Titles" window.
 		/// </summary>
@@ -35,17 +74,25 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title description.</returns>
 		public override string GetDescription(GamePlayer player)
 		{
-			return player.MLTitle;
+			return GetValue(player, player);
 		}
 
 		/// <summary>
 		/// The title value, shown over player's head.
 		/// </summary>
+		/// <param name="source">The player looking.</param>
 		/// <param name="player">The title owner.</param>
 		/// <returns>The title value.</returns>
-		public override string GetValue(GamePlayer player)
+		public override string GetValue(GamePlayer source, GamePlayer player)
 		{
-			return player.MLTitle;
+			if (player.MLGranted && player.MLLevel > 0)
+			{
+				// try get player ML Number
+				int mlline = GetPlayerMLLine(player);
+				return source.TryTranslateOrDefault(string.Format("!ML Title {0}!", mlline), string.Format("Titles.ML.Line{0}", mlline));
+			}
+			
+			return source.TryTranslateOrDefault("!None!", "DetailDisplayHandler.HandlePacket.None");
 		}
 		
 		/// <summary>
@@ -63,7 +110,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>true if the player is suitable for this title.</returns>
 		public override bool IsSuitable(GamePlayer player)
 		{
-			return player.MLLine > 0;
+			return player.MLGranted && player.MLLevel > 0;
 		}
 		
 		/// <summary>

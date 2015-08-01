@@ -58,46 +58,28 @@ namespace GameServerScripts.Titles
 			if (player.Gender == eGender.Female && !string.IsNullOrEmpty(GenericNames.Item3))
 				description = GenericNames.Item3;
 			
-			return Translate ? TryTranslate(description, player.Client) : description;
+			return Translate ? TryTranslate(description, player) : description;
 		}
 		
 		/// <summary>
 		/// Get Value for this Title
 		/// </summary>
+		/// <param name="source">The player looking.</param>
 		/// <param name="player"></param>
 		/// <returns></returns>
-		public override string GetValue(GamePlayer player)
+		public override string GetValue(GamePlayer source, GamePlayer player)
 		{
 			string titleValue = GenericNames.Item2;
 			
 			if (player.Gender == eGender.Female && !string.IsNullOrEmpty(GenericNames.Item4))
 				titleValue = GenericNames.Item4;
 						
-			return Translate ? TryTranslate(titleValue, player.Client) : titleValue;
+			return Translate ? TryTranslate(titleValue, source) : titleValue;
 		}
 		
-		protected string TryTranslate(string value, GameClient client)
+		protected static string TryTranslate(string value, GamePlayer source)
 		{
-			string language = string.Empty;
-			// Default
-			if (client == null || client.Account == null)
-			{
-				language = LanguageMgr.DefaultLanguage;
-			}
-			else
-			{
-				language = client.Account.Language;
-			}
-				
-			
-			string translation;
-			if (LanguageMgr.TryGetTranslation(out translation, language, value))
-				return translation;
-			
-			if (language != LanguageMgr.DefaultLanguage && LanguageMgr.TryGetTranslation(out translation, LanguageMgr.DefaultLanguage, value))
-				return translation;
-			
-			return value;
+			return source.TryTranslateOrDefault(string.Format("!{0}!", value), value);
 		}
 		
 		/// <summary>
