@@ -41,17 +41,18 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title description.</returns>
 		public override string GetDescription(GamePlayer player)
 		{
-			return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Level.Level20Info");
+			return player.TryTranslateOrDefault("!Level 20+!", "Titles.Level.Level20Info");
 		}
 
 		/// <summary>
 		/// The title value, shown over player's head.
 		/// </summary>
+		/// <param name="source">The player looking.</param>
 		/// <param name="player">The title owner.</param>
 		/// <returns>The title value.</returns>
-		public override string GetValue(GamePlayer player)
+		public override string GetValue(GamePlayer source, GamePlayer player)
 		{
-			return LanguageMgr.GetTranslation(player.Client.Account.Language, "Titles.Level.Level20", player.Level);
+			return source.TryTranslateOrDefault("!Level {0}!", "Titles.Level.Level20", player.Level);
 		}
 		
 		/// <summary>

@@ -2248,9 +2248,9 @@ namespace DOL.GS.PacketHandler
 					pak.WritePascalString("None"); //no craft skill at start
 
 				pak.WriteByte(0x0);
-				pak.WritePascalString(player.CraftTitle); //crafter title: legendary alchemist
+				pak.WritePascalString(player.CraftTitle.GetValue(player, player)); //crafter title: legendary alchemist
 				pak.WriteByte(0x0);
-				pak.WritePascalString(player.MLTitle); //ML title
+				pak.WritePascalString(player.MLTitle.GetValue(player, player)); //ML title
 				SendTCP(pak);
 			}
 		}

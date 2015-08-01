@@ -173,12 +173,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				if (Player != null)
-				{
-					return LanguageMgr.GetTranslation(Player.Client, m_profession);
-				}
-				
-				return m_profession;
+				return Player.TryTranslateOrDefault(m_profession, m_profession);
 			}
 		}
 
@@ -236,13 +231,16 @@ namespace DOL.GS
 
 		public virtual string GetTitle(GamePlayer player, int level)
 		{
+			
 			// Clamp level in 5 by 5 steps - 50 is the max available translation for now
 			int clamplevel = Math.Min(50, (level / 5) * 5);
 			
+			string none = player.TryTranslateOrDefault("!None!", "PlayerClass.GetTitle.none");
+			
 			if (clamplevel > 0)
-				return LanguageMgr.GetTranslation(player.Client, string.Format("PlayerClass.{0}.GetTitle.{1}", m_name, clamplevel));
+				return player.TryTranslateOrDefault(string.Format("!{0}!", m_name), string.Format("PlayerClass.{0}.GetTitle.{1}", m_name, clamplevel));
 
-			return LanguageMgr.GetTranslation(player.Client, "PlayerClass.GetTitle.none");
+			return none;
 		}
 
 		public virtual eClassType ClassType

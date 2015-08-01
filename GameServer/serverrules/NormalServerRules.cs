@@ -352,7 +352,7 @@ namespace DOL.GS.ServerRules
 		public override string GetPlayerTitle(GamePlayer source, GamePlayer target)
 		{
 			if (IsSameRealm(source, target, true))
-				return target.CurrentTitle.GetValue(target);
+				return target.CurrentTitle.GetValue(source, target);
 			
 			return string.Empty;
 		}

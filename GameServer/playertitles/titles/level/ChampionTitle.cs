@@ -18,6 +18,7 @@
  */
 
 using System;
+
 using DOL.Language;
 using DOL.Events;
 
@@ -35,17 +36,21 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>The title description.</returns>
 		public override string GetDescription(GamePlayer player)
 		{
-			return player.CLTitle;
+			return GetValue(player, player);
 		}
 
 		/// <summary>
 		/// The title value, shown over player's head.
 		/// </summary>
+		/// <param name="source">The player looking.</param>
 		/// <param name="player">The title owner.</param>
 		/// <returns>The title value.</returns>
-		public override string GetValue(GamePlayer player)
+		public override string GetValue(GamePlayer source, GamePlayer player)
 		{
-			return player.CLTitle;
+			if (player.Champion && player.ChampionLevel > 0)
+				return source.TryTranslateOrDefault(string.Format("!CL Title {0}!", player.ChampionLevel), string.Format("Titles.CL.Level{0}", player.ChampionLevel));
+				
+			return string.Empty;
 		}
 		
 		/// <summary>
@@ -63,7 +68,7 @@ namespace DOL.GS.PlayerTitles
 		/// <returns>true if the player is suitable for this title.</returns>
 		public override bool IsSuitable(GamePlayer player)
 		{
-			return player.Champion;
+			return player.Champion && player.ChampionLevel > 0;
 		}
 		
 		/// <summary>

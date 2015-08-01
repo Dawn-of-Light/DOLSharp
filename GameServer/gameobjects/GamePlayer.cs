@@ -13770,20 +13770,15 @@ namespace DOL.GS
 		/// <summary>
 		/// Get the craft title string of the player
 		/// </summary>
-		public virtual string CraftTitle
+		public virtual IPlayerTitle CraftTitle
 		{
 			get
 			{
-				if (CraftingPrimarySkill == eCraftingSkill.NoCrafting || !m_craftingSkills.ContainsKey(CraftingPrimarySkill))
-				{
-					return "";
-				}
-
-				AbstractCraftingSkill craftingSkill = CraftingMgr.getSkillbyEnum(CraftingPrimarySkill);
-
-				return (craftingSkill is AbstractProfession)
-					? (craftingSkill as AbstractProfession).GetTitle(this, (int)m_craftingSkills[CraftingPrimarySkill])
-					: "";
+				var title = m_titles.FirstOrDefault(ttl => ttl is CraftTitle);
+				if (title != null && title.IsSuitable(this))
+					return title;
+				
+				return PlayerTitleMgr.ClearTitle;
 			}
 		}
 
@@ -15083,14 +15078,16 @@ namespace DOL.GS
 		/// <summary>
 		/// Get the CL title string of the player
 		/// </summary>
-		public virtual string CLTitle
+		public virtual IPlayerTitle CLTitle
 		{
 			get
 			{
-				if (Champion && ChampionLevel > 0)
-					return LanguageMgr.GetTranslation(Client.Account.Language, String.Format("Titles.CL.Level{0}", ChampionLevel));
-				else
-					return "";
+				var title = m_titles.FirstOrDefault(ttl => ttl is ChampionlevelTitle);
+				
+				if (title != null && title.IsSuitable(this))
+					return title;
+				
+				return PlayerTitleMgr.ClearTitle;
 			}
 		}
 
@@ -15530,14 +15527,16 @@ namespace DOL.GS
 		/// <summary>
 		/// Get the ML title string of the player
 		/// </summary>
-		public virtual string MLTitle
+		public virtual IPlayerTitle MLTitle
 		{
 			get
 			{
-				if (MLLine > 0)
-					return LanguageMgr.GetTranslation(Client.Account.Language, String.Format("Titles.ML.Line{0}", (int)MLLine));
-				else
-					return "None";
+				var title = m_titles.FirstOrDefault(ttl => ttl is MasterlevelTitle);
+				
+				if (title != null && title.IsSuitable(this))
+					return title;
+				
+				return PlayerTitleMgr.ClearTitle;
 			}
 		}
 

@@ -20,7 +20,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Collections;
 using DOL.GS.PlayerTitles;
 using log4net;
 using DOL.GS.Housing;
@@ -185,7 +184,7 @@ namespace DOL.GS.PacketHandler
 					pak.WritePascalString("None"); //no craft skill at start
 	
 				pak.WriteByte(0x0);
-				pak.WritePascalString(player.CraftTitle); //crafter title: legendary alchemist
+				pak.WritePascalString(player.CraftTitle.GetValue(player, player)); //crafter title: legendary alchemist
 	
 				pak.WriteByte(0x0);
 				pak.WritePascalString("None"); //ML title

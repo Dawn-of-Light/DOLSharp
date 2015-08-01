@@ -91,14 +91,14 @@ namespace DOL.GS.PacketHandler
 					pak.WritePascalString("None"); //no craft skill at start
 	
 				pak.WriteByte(0x0);
-				pak.WritePascalString(player.CraftTitle); //crafter title: legendary alchemist
+				pak.WritePascalString(player.CraftTitle.GetValue(player, player)); //crafter title: legendary alchemist
 				pak.WriteByte(0x0);
-				pak.WritePascalString(player.MLTitle); //ML title
+				pak.WritePascalString(player.MLTitle.GetValue(player, player)); //ML title
 	
 				// new in 1.75
 				pak.WriteByte(0x0);
 				if (player.CurrentTitle != PlayerTitleMgr.ClearTitle)
-					pak.WritePascalString(player.CurrentTitle.GetValue(player)); // new in 1.74 - Custom title
+					pak.WritePascalString(player.CurrentTitle.GetValue(player, player)); // new in 1.74 - Custom title
 				else
 					pak.WritePascalString("None"); 
 	
@@ -107,7 +107,7 @@ namespace DOL.GS.PacketHandler
 					pak.WriteByte((byte)(player.ChampionLevel+1)); // Champion Level (+1)
 				else
 					pak.WriteByte(0x0);
-				pak.WritePascalString(player.CLTitle); // Champion Title
+				pak.WritePascalString(player.CLTitle.GetValue(player, player)); // Champion Title
 				SendTCP(pak);
 			}
 		}

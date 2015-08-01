@@ -30,7 +30,7 @@ using log4net;
 
 namespace DOL.Language
 {
-    public class LanguageMgr
+    public static class LanguageMgr
     {
         #region Variables
         private const string TRANSLATION_ID_EMPTY = "Empty translation id.";
@@ -611,6 +611,45 @@ namespace DOL.Language
         #endregion TryGetTranslation
 
         #endregion GetTranslation / TryGetTranslation
+        
+        #region utils
+        
+        /// <summary>
+        /// Try Translating some Sentence into Player target Language or Default to given String.
+        /// </summary>
+        /// <param name="player">Targeted player</param>
+        /// <param name="missingDefault">Default String if Missing Translation</param>
+        /// <param name="translationId">Translation Sentence ID</param>
+        /// <param name="args">Translation Sentence Params</param>
+        /// <returns>Translated Sentence or Default string.</returns>
+        public static string TryTranslateOrDefault(this GamePlayer player, string missingDefault, string translationId, params object[] args)
+        {
+        	string missing = missingDefault;
+        	
+        	if (args.Length > 0)
+        	{
+	        	try
+	        	{
+	        		missing = string.Format(missingDefault, args);
+	        	}
+	        	catch
+	        	{
+	        	}
+        	}
+        	
+        	if (player == null || player.Client == null || player.Client.Account == null)
+        		return missing;
+        	
+        	string retval;
+        	if (TryGetTranslation(out retval, player.Client.Account.Language, translationId, args))
+        	{
+        		return retval;
+        	}
+        	
+        	return missing;
+        }
+        
+        #endregion
 
         #region RegisterLanguageDataObject / UnregisterLanguageDataObject
 

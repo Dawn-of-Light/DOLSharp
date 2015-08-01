@@ -1681,7 +1681,7 @@ namespace DOL.GS.ServerRules
 		/// <returns>The custom title of the target</returns>
 		public virtual string GetPlayerTitle(GamePlayer source, GamePlayer target)
 		{
-			return target.CurrentTitle.GetValue(target);
+			return target.CurrentTitle.GetValue(source, target);
 		}
 
 		/// <summary>

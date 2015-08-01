@@ -6,7 +6,6 @@ using System.Reflection;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
-using DOL.GS.Scripts;
 using DOL.Events;
 using DOL.Database;
 using DOL.GS.Spells;
