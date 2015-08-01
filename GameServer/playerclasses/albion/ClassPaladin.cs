@@ -17,23 +17,22 @@
  *
  */
 using System;
-using System.Collections;
-using DOL.Language;
 using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
 	/// <summary>
-	///
+	/// Albion Paladin Class
 	/// </summary>
 	[CharacterClassAttribute((int)eCharacterClass.Paladin, "Paladin", "Fighter")]
 	public class ClassPaladin : ClassFighter
 	{
 		private static readonly string[] AutotrainableSkills = new[] { Specs.Slash, Specs.Chants };
 
-		public ClassPaladin() : base()
+		public ClassPaladin()
+			: base()
 		{
-			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.ChurchofAlbion");
+			m_profession = "PlayerClass.Profession.ChurchofAlbion";
 			m_specializationMultiplier = 20;
 			m_primaryStat = eStat.CON;
 			m_secondaryStat = eStat.PIE;
@@ -41,21 +40,6 @@ namespace DOL.GS.PlayerClass
 			m_manaStat = eStat.PIE;
 			m_wsbase = 380;
 			m_baseHP = 760;
-		}
-
-		public override string GetTitle(GamePlayer player, int level)
-		{
-			if (level >= 50) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Paladin.GetTitle.50");
-			if (level >= 45) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Paladin.GetTitle.45");
-			if (level >= 40) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Paladin.GetTitle.40");
-			if (level >= 35) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Paladin.GetTitle.35");
-			if (level >= 30) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Paladin.GetTitle.30");
-			if (level >= 25) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Paladin.GetTitle.25");
-			if (level >= 20) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Paladin.GetTitle.20");
-			if (level >= 15) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Paladin.GetTitle.15");
-			if (level >= 10) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Paladin.GetTitle.10");
-			if (level >= 5) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Paladin.GetTitle.5");
-			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
 		public override eClassType ClassType
@@ -67,7 +51,6 @@ namespace DOL.GS.PlayerClass
 		{
 			return AutotrainableSkills;
 		}
-
 
 		public override bool HasAdvancedFromBaseClass()
 		{

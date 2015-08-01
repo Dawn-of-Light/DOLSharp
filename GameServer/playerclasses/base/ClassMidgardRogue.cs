@@ -17,18 +17,18 @@
  *
  */
 using System;
-using DOL.GS;
-using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
 	/// <summary>
-	/// 
+	/// Midgard Base Rogue Class
 	/// </summary>
 	[CharacterClassAttribute((int)eCharacterClass.MidgardRogue, "Rogue", "Rogue")]
-	public class ClassMidgardRogue : DOL.GS.CharacterClassBase
+	public class ClassMidgardRogue : CharacterClassBase
 	{
-		public ClassMidgardRogue() : base() {
+		public ClassMidgardRogue()
+			: base()
+		{
 			m_specializationMultiplier = 10;
 			m_wsbase = 360; //higher than alb/hib stealthers
 			m_baseHP = 720;
@@ -36,7 +36,7 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(GamePlayer player, int level)
 		{
-			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
+			return HasAdvancedFromBaseClass() ? base.GetTitle(player, level) : base.GetTitle(player, 0);
 		}
 
 		public override eClassType ClassType

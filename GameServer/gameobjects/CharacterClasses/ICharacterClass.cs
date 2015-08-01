@@ -17,14 +17,10 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using DOL.AI.Brain;
-using DOL.Database;
 using DOL.Events;
-using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
-using DOL.Language;
 
 namespace DOL.GS
 {
@@ -33,109 +29,112 @@ namespace DOL.GS
 	/// </summary>
 	public interface ICharacterClass
 	{
-		int ID
-		{
-			get;
-		}
+		/// <summary>
+		/// Unique Class Identifier based on eCharacterClass
+		/// </summary>
+		int ID { get; }
 
-		string Name
-		{
-			get;
-		}
+		/// <summary>
+		/// ClassName (Used as Translation Key / Title Translation Key)
+		/// </summary>
+		string Name { get; }
+		/// <summary>
+		/// Class Female Name
+		/// </summary>
+		string FemaleName { get; }
 
-		string BaseName
-		{
-			get;
-		}
+		/// <summary>
+		/// Base ClassName if available
+		/// </summary>
+		string BaseName { get; }
 
-		string Profession
-		{
-			get;
-		}
+		/// <summary>
+		/// Class Profession
+		/// </summary>
+		string Profession { get; }
 
-		int BaseHP
-		{
-			get;
-		}
+		/// <summary>
+		/// Class Base Hit Points
+		/// </summary>
+		int BaseHP { get; }
 
-		int SpecPointsMultiplier
-		{
-			get;
-		}
+		/// <summary>
+		/// Class Spec Points Multiplier
+		/// </summary>
+		int SpecPointsMultiplier { get; }
 
 		/// <summary>
 		/// This is specifically used for adjusting spec points as needed for new training window
 		/// For standard DOL classes this will simply return the standard spec multiplier
 		/// </summary>
-		int AdjustedSpecPointsMultiplier
-		{
-			get;
-		}
+		int AdjustedSpecPointsMultiplier { get; }
 
-		eStat PrimaryStat
-		{
-			get;
-		}
+		/// <summary>
+		/// Class Primary Raising Stat
+		/// </summary>
+		eStat PrimaryStat { get; }
 
-		eStat SecondaryStat
-		{
-			get;
-		}
-		eStat TertiaryStat
-		{
-			get;
-		}
-		eStat ManaStat
-		{
-			get;
-		}
-		int WeaponSkillBase
-		{
-			get;
-		}
-		int WeaponSkillRangedBase
-		{
-			get;
-		}
+		/// <summary>
+		/// Class Secondary Raising Stat
+		/// </summary>
+		eStat SecondaryStat { get; }
+		
+		/// <summary>
+		/// Class Tertiary Raising Stat
+		/// </summary>
+		eStat TertiaryStat { get; }
+		
+		/// <summary>
+		/// Class Mana Stat Used for Spell
+		/// </summary>
+		eStat ManaStat { get; }
+		
+		/// <summary>
+		/// Class Weapon Skill Base
+		/// </summary>
+		int WeaponSkillBase { get; }
+		
+		/// <summary>
+		/// Class Weapon Skill Ranged Base
+		/// </summary>
+		int WeaponSkillRangedBase { get; }
 
-		eClassType ClassType
-		{
-			get;
-		}
+		/// <summary>
+		/// Class Type
+		/// </summary>
+		eClassType ClassType { get; }
 
-		GamePlayer Player
-		{
-			get;
-		}
+		/// <summary>
+		/// Instance Attached GamePlayer
+		/// </summary>
+		GamePlayer Player { get; }
 
 		/// <summary>
 		/// The maximum number of pulsing spells the class can have active simultaneously
 		/// </summary>
-		ushort MaxPulsingSpells
-		{
-			get;
-		}
+		ushort MaxPulsingSpells { get; }
+
+		/// <summary>
+		/// Wether this class can use Left Handed Weapon
+		/// </summary>
+		bool CanUseLefthandedWeapon { get; }
+		
+		/// <summary>
+		/// Group Health Percent Window Override
+		/// </summary>
+		byte HealthPercentGroupWindow { get; }
 
 		string GetTitle(GamePlayer player, int level);
 		void OnLevelUp(GamePlayer player, int previousLevel);
 		void OnRealmLevelUp(GamePlayer player);
 		void OnSkillTrained(GamePlayer player, Specialization skill);
-		bool CanUseLefthandedWeapon { get; }
 		IList<string> GetAutotrainableSkills();
-		string FemaleName
-		{
-			get;
-		}
-		void SwitchToFemaleName();
 		bool HasAdvancedFromBaseClass();
-
 		void Init(GamePlayer player);
-
 		void SetControlledBrain(IControlledBrain controlledBrain);
 		void CommandNpcRelease();
 		void OnPetReleased();
 		bool StartAttack(GameObject attackTarget);
-		byte HealthPercentGroupWindow { get; }
 		ShadeEffect CreateShadeEffect();
 		void Shade(bool state);
 		bool RemoveFromWorld();

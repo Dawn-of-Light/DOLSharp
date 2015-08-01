@@ -17,18 +17,18 @@
  *
  */
 using System;
-using DOL.GS;
-using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
 	/// <summary>
-	/// 
+	/// Albion Base Support Class Acolyte
 	/// </summary>
 	[CharacterClassAttribute((int)eCharacterClass.Acolyte, "Acolyte", "Acolyte")]
-	public class ClassAcolyte : DOL.GS.CharacterClassBase
+	public class ClassAcolyte : CharacterClassBase
 	{
-		public ClassAcolyte() : base() {
+		public ClassAcolyte()
+			: base()
+		{
 			m_specializationMultiplier = 10;
 			m_wsbase = 320;
 			m_baseHP = 720;
@@ -37,7 +37,7 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(GamePlayer player, int level)
 		{
-			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
+			return HasAdvancedFromBaseClass() ? base.GetTitle(player, level) : base.GetTitle(player, 0);
 		}
 
 		public override eClassType ClassType

@@ -17,18 +17,17 @@
  *
  */
 using System;
-using DOL.GS;
-using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
 	/// <summary>
-	/// 
+	/// Hibernia Base Caster Class Forester
 	/// </summary>
 	[CharacterClassAttribute((int)eCharacterClass.Forester, "Forester", "Forester")]
-	public class ClassForester : DOL.GS.CharacterClassBase
+	public class ClassForester : CharacterClassBase
 	{
 		public ClassForester()
+			: base()
 		{
 			m_specializationMultiplier = 10;
 			m_wsbase = 280;
@@ -38,7 +37,7 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(GamePlayer player, int level)
 		{
-			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
+			return HasAdvancedFromBaseClass() ? base.GetTitle(player, level) : base.GetTitle(player, 0);
 		}
 
 		public override eClassType ClassType

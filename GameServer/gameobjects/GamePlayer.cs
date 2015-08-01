@@ -2603,9 +2603,6 @@ namespace DOL.GS
 			m_characterClass = cl;
 			m_characterClass.Init(this);
 
-			if (Util.IsEmpty(m_characterClass.FemaleName) == false && DBCharacter.Gender == 1)
-				m_characterClass.SwitchToFemaleName();
-
 			DBCharacter.Class = m_characterClass.ID;
 
 			if (Group != null)
@@ -4931,7 +4928,7 @@ namespace DOL.GS
 			if (expTotal >= 0)
 			{
 				//Level up
-				if (Level >= 5 && CharacterClass.BaseName == CharacterClass.Name)
+				if (Level >= 5 && !CharacterClass.HasAdvancedFromBaseClass())
 				{
 					if (expTotal > 0)
 					{

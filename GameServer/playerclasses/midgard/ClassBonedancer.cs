@@ -17,25 +17,24 @@
  *
  */
 using System;
-using DOL.GS;
-using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
 	/// <summary>
-	/// 
+	/// Midgard Bonebancer Class
 	/// </summary>
 	[CharacterClassAttribute((int)eCharacterClass.Bonedancer, "Bonedancer", "Mystic")]
 	public class ClassBonedancer : CharacterClassBoneDancer
 	{
-		public ClassBonedancer() : base()
+		public ClassBonedancer()
+			: base()
 		{
 			m_specializationMultiplier = 10;
 			m_wsbase = 280;
 			m_baseHP = 560;
 			m_manaStat = eStat.PIE;
 
-			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.HouseofBodgar");
+			m_profession = "PlayerClass.Profession.HouseofBodgar";
 			m_primaryStat = eStat.PIE;
 			m_secondaryStat = eStat.DEX;
 			m_tertiaryStat = eStat.QUI;
@@ -44,21 +43,6 @@ namespace DOL.GS.PlayerClass
 		public override eClassType ClassType
 		{
 			get { return eClassType.ListCaster; }
-		}
-
-		public override string GetTitle(GamePlayer player, int level) 
-		{
-			if (level >= 50) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Bonedancer.GetTitle.50");
-			if (level >= 45) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Bonedancer.GetTitle.45");
-			if (level >= 40) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Bonedancer.GetTitle.40");
-			if (level >= 35) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Bonedancer.GetTitle.35");
-			if (level >= 30) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Bonedancer.GetTitle.30");
-			if (level >= 25) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Bonedancer.GetTitle.25");
-			if (level >= 20) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Bonedancer.GetTitle.20");
-			if (level >= 15) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Bonedancer.GetTitle.15");
-			if (level >= 10) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Bonedancer.GetTitle.10");
-			if (level >= 5) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Bonedancer.GetTitle.5");
-			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
 		public override bool HasAdvancedFromBaseClass()

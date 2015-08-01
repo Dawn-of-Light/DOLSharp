@@ -17,18 +17,18 @@
  *
  */
 using System;
-using DOL.GS;
-using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
 	/// <summary>
-	/// 
+	/// Midgard Base Fighter Class Viking
 	/// </summary>
 	[CharacterClassAttribute((int)eCharacterClass.Viking, "Viking", "Viking")]
-	public class ClassViking : DOL.GS.CharacterClassBase
+	public class ClassViking : CharacterClassBase
 	{
-		public ClassViking() : base() {
+		public ClassViking()
+			: base()
+		{
 			m_specializationMultiplier = 10;
 			m_wsbase = 440;
 			m_baseHP = 880;
@@ -36,7 +36,7 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(GamePlayer player, int level)
 		{
-			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
+			return HasAdvancedFromBaseClass() ? base.GetTitle(player, level) : base.GetTitle(player, 0);
 		}
 
 		public override eClassType ClassType
