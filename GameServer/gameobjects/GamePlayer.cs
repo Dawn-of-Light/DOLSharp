@@ -14449,7 +14449,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds all players titles.
 		/// </summary>
-		protected readonly HashSet<IPlayerTitle> m_titles = new HashSet<IPlayerTitle>();
+		protected readonly ReaderWriterHashSet<IPlayerTitle> m_titles = new ReaderWriterHashSet<IPlayerTitle>();
 
 		/// <summary>
 		/// Holds current selected title.
@@ -14459,7 +14459,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets all player's titles.
 		/// </summary>
-		public virtual HashSet<IPlayerTitle> Titles
+		public virtual ISet<IPlayerTitle> Titles
 		{
 			get { return m_titles; }
 		}
