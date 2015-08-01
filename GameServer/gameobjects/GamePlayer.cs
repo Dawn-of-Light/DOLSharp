@@ -1767,20 +1767,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// The prefix for RR 12/13 players
-		/// </summary>
-		public virtual string PrefixName
-		{
-			get
-			{
-				if (RealmLevel >= 110)
-					return RealmTitle;
-				else
-					return string.Empty;
-			}
-		}
-
-		/// <summary>
 		/// Sets or gets the model of the player. If the player is
 		/// active in the world, the modelchange will be visible
 		/// (delegate to PlayerCharacter)
