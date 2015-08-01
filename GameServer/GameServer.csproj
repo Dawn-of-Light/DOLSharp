@@ -391,6 +391,7 @@
     <Compile Include="gameutils\Params\CustomParamsExtensions.cs" />
     <Compile Include="gameutils\Params\ICustomParamsValuable.cs" />
     <Compile Include="gameutils\ReaderWriterCollections\ReaderWriterDictionary.cs" />
+    <Compile Include="gameutils\ReaderWriterCollections\ReaderWriterHashSet.cs" />
     <Compile Include="gameutils\ReaderWriterCollections\ReaderWriterList.cs" />
     <Compile Include="gameutils\ServerListUpdate.cs" />
     <Compile Include="gameutils\Skill\ISpellCastingAbilityHandler.cs" />
