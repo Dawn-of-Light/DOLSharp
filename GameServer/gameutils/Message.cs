@@ -25,7 +25,7 @@ namespace DOL.GS
 	/// <summary>
 	/// This class helps sending messages to other players
 	/// </summary>
-	public class Message
+	public static class Message
 	{
 		/// <summary>
 		/// Sends a message to the chat window of players inside

@@ -17,40 +17,24 @@
  *
  */
 using System;
-using DOL.GS;
-using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
 	/// <summary>
-	/// 
+	/// Hibernia Blademaster Class
 	/// </summary>
 	[CharacterClassAttribute((int)eCharacterClass.Blademaster, "Blademaster", "Guardian")]
 	public class ClassBlademaster : ClassGuardian
 	{
-		public ClassBlademaster() : base() 
+		public ClassBlademaster()
+			: base()
 		{
-			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.PathofHarmony");
+			m_profession = "PlayerClass.Profession.PathofHarmony";
 			m_specializationMultiplier = 20;
 			m_primaryStat = eStat.STR;
 			m_secondaryStat = eStat.DEX;
 			m_tertiaryStat = eStat.CON;
 			m_wsbase = 440;
-		}
-
-		public override string GetTitle(GamePlayer player, int level) 
-		{
-			if (level >= 50) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Blademaster.GetTitle.50");
-			if (level >= 45) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Blademaster.GetTitle.45");
-			if (level >= 40) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Blademaster.GetTitle.40");
-			if (level >= 35) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Blademaster.GetTitle.35");
-			if (level >= 30) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Blademaster.GetTitle.30");
-			if (level >= 25) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Blademaster.GetTitle.25");
-			if (level >= 20) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Blademaster.GetTitle.20");
-			if (level >= 15) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Blademaster.GetTitle.15");
-			if (level >= 10) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Blademaster.GetTitle.10");
-			if (level >= 5) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Blademaster.GetTitle.5");
-			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
 		public override bool CanUseLefthandedWeapon

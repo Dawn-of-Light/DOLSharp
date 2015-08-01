@@ -17,18 +17,18 @@
  *
  */
 using System;
-using DOL.GS;
-using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
 	/// <summary>
-	/// 
+	/// Hibernia Rogue Base Class Stalker
 	/// </summary>
 	[CharacterClassAttribute((int)eCharacterClass.Stalker, "Stalker", "Stalker")]
-	public class ClassStalker : DOL.GS.CharacterClassBase
+	public class ClassStalker : CharacterClassBase
 	{
-		public ClassStalker() : base() {
+		public ClassStalker()
+			: base()
+		{
 			m_specializationMultiplier = 10;
 			m_wsbase = 360;
 			m_baseHP = 720;
@@ -36,7 +36,7 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(GamePlayer player, int level)
 		{
-			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
+			return HasAdvancedFromBaseClass() ? base.GetTitle(player, level) : base.GetTitle(player, 0);
 		}
 
 		public override eClassType ClassType

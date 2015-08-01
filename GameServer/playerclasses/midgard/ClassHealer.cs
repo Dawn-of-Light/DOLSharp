@@ -17,39 +17,24 @@
  *
  */
 using System;
-using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
 	/// <summary>
-	/// 
+	/// Midgard Healer Class
 	/// </summary>
 	[CharacterClassAttribute((int)eCharacterClass.Healer, "Healer", "Seer")]
 	public class ClassHealer : ClassSeer
 	{
-		public ClassHealer() : base() 
+		public ClassHealer()
+			: base()
 		{
-			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.HouseofEir");
+			m_profession = "PlayerClass.Profession.HouseofEir";
 			m_specializationMultiplier = 10;
 			m_primaryStat = eStat.PIE;
 			m_secondaryStat = eStat.CON;
 			m_tertiaryStat = eStat.STR;
 			m_manaStat = eStat.PIE;
-		}
-
-		public override string GetTitle(GamePlayer player, int level) 
-		{
-			if (level >= 50) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Healer.GetTitle.50");
-			if (level >= 45) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Healer.GetTitle.45");
-			if (level >= 40) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Healer.GetTitle.40");
-			if (level >= 35) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Healer.GetTitle.35");
-			if (level >= 30) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Healer.GetTitle.30");
-			if (level >= 25) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Healer.GetTitle.25");
-			if (level >= 20) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Healer.GetTitle.20");
-			if (level >= 15) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Healer.GetTitle.15");
-			if (level >= 10) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Healer.GetTitle.10");
-			if (level >= 5) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Healer.GetTitle.5");
-			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
 		public override bool HasAdvancedFromBaseClass()

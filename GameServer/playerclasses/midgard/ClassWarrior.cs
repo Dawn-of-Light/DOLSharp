@@ -17,44 +17,27 @@
  *
  */
 using System;
-using DOL.GS;
-using DOL.Language;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
 	/// <summary>
-	/// 
+	/// Midgard Warrior Class
 	/// </summary>
 	[CharacterClassAttribute((int)eCharacterClass.Warrior, "Warrior", "Viking")]
 	public class ClassWarrior : ClassViking
 	{
 		private static readonly string[] AutotrainableSkills = new[] { Specs.Axe, Specs.Hammer, Specs.Sword };
 
-		public ClassWarrior() : base()
+		public ClassWarrior()
+			: base()
 		{
-			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.HouseofTyr");
+			m_profession = "PlayerClass.Profession.HouseofTyr";
 			m_specializationMultiplier = 20;
 			m_primaryStat = eStat.STR;
 			m_secondaryStat = eStat.CON;
 			m_tertiaryStat = eStat.DEX;
 			m_wsbase = 460;
-		}
-
-		public override string GetTitle(GamePlayer player, int level)
-		{
-			if (level >= 50) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Warrior.GetTitle.50");
-			if (level >= 45) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Warrior.GetTitle.45");
-			if (level >= 40) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Warrior.GetTitle.40");
-			if (level >= 35) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Warrior.GetTitle.35");
-			if (level >= 30) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Warrior.GetTitle.30");
-			if (level >= 25) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Warrior.GetTitle.25");
-			if (level >= 20) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Warrior.GetTitle.20");
-			if (level >= 15) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Warrior.GetTitle.15");
-			if (level >= 10) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Warrior.GetTitle.10");
-			if (level >= 5) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Warrior.GetTitle.5");
-			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
 		public override IList<string> GetAutotrainableSkills()

@@ -17,18 +17,17 @@
  *
  */
 using System;
-using DOL.GS;
-using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
 	/// <summary>
-	/// 
+	/// Hibernia Caster Base Class Magician
 	/// </summary>
 	[CharacterClassAttribute((int)eCharacterClass.Magician, "Magician", "Magician")]
-	public class ClassMagician : DOL.GS.CharacterClassBase
+	public class ClassMagician : CharacterClassBase
 	{
 		public ClassMagician()
+			: base()
 		{
 			m_specializationMultiplier = 10;
 			m_wsbase = 280;
@@ -38,7 +37,7 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(GamePlayer player, int level)
 		{
-			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
+			return HasAdvancedFromBaseClass() ? base.GetTitle(player, level) : base.GetTitle(player, 0);
 		}
 
 		public override eClassType ClassType

@@ -17,21 +17,20 @@
  *
  */
 using System;
-using DOL.GS;
-using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
 	/// <summary>
-	///
+	/// Midgard Skald Class
 	/// </summary>
 	[CharacterClassAttribute((int)eCharacterClass.Skald, "Skald", "Viking")]
 	public class ClassSkald : ClassViking
 	{
 
-		public ClassSkald() : base()
+		public ClassSkald()
+			: base()
 		{
-			m_profession = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Profession.HouseofBragi");
+			m_profession = "PlayerClass.Profession.HouseofBragi";
 			m_specializationMultiplier = 15;
 			m_primaryStat = eStat.CHR;
 			m_secondaryStat = eStat.STR;
@@ -39,21 +38,6 @@ namespace DOL.GS.PlayerClass
 			m_manaStat = eStat.CHR;
 			m_wsbase = 380;
 			m_baseHP = 760;
-		}
-
-		public override string GetTitle(GamePlayer player, int level)
-		{
-			if (level >= 50) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Skald.GetTitle.50");
-			if (level >= 45) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Skald.GetTitle.45");
-			if (level >= 40) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Skald.GetTitle.40");
-			if (level >= 35) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Skald.GetTitle.35");
-			if (level >= 30) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Skald.GetTitle.30");
-			if (level >= 25) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Skald.GetTitle.25");
-			if (level >= 20) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Skald.GetTitle.20");
-			if (level >= 15) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Skald.GetTitle.15");
-			if (level >= 10) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Skald.GetTitle.10");
-			if (level >= 5) return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.Skald.GetTitle.5");
-			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
 		}
 
 		public override eClassType ClassType

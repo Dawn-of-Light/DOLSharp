@@ -17,18 +17,18 @@
  *
  */
 using System;
-using DOL.GS;
-using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
 	/// <summary>
-	/// 
+	/// Hibernia Base Fighter Class Guardian
 	/// </summary>
 	[CharacterClassAttribute((int)eCharacterClass.Guardian, "Guardian", "Guardian")]
-	public class ClassGuardian : DOL.GS.CharacterClassBase
+	public class ClassGuardian : CharacterClassBase
 	{
-		public ClassGuardian() : base() {
+		public ClassGuardian()
+			: base()
+		{
 			m_specializationMultiplier = 10;
 			m_wsbase = 400;
 			m_baseHP = 880;
@@ -36,7 +36,7 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(GamePlayer player, int level)
 		{
-			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
+			return HasAdvancedFromBaseClass() ? base.GetTitle(player, level) : base.GetTitle(player, 0);
 		}
 
 		public override eClassType ClassType

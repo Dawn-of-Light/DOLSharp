@@ -17,13 +17,10 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using DOL.GS;
 using DOL.AI.Brain;
 using DOL.GS.Effects;
 using DOL.Events;
-using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
@@ -144,11 +141,6 @@ namespace DOL.GS
 			Player = player;
 		}
 
-		public void SwitchToFemaleName()
-		{
-			m_name = m_femaleName;
-		}
-
 		public string FemaleName
 		{
 			get { return m_femaleName; }
@@ -166,7 +158,7 @@ namespace DOL.GS
 
 		public string Name
 		{
-			get { return m_name; }
+			get { return (Player != null && Player.Gender == eGender.Female && !Util.IsEmpty(m_femaleName)) ? m_femaleName : m_name; }
 		}
 
 		public string BaseName
@@ -174,9 +166,20 @@ namespace DOL.GS
 			get { return m_basename; }
 		}
 
+		/// <summary>
+		/// Return Translated Profession
+		/// </summary>
 		public string Profession
 		{
-			get { return m_profession; }
+			get
+			{
+				if (Player != null)
+				{
+					return LanguageMgr.GetTranslation(Player.Client, m_profession);
+				}
+				
+				return m_profession;
+			}
 		}
 
 		public int SpecPointsMultiplier
@@ -233,7 +236,13 @@ namespace DOL.GS
 
 		public virtual string GetTitle(GamePlayer player, int level)
 		{
-			return "None";
+			// Clamp level in 5 by 5 steps - 50 is the max available translation for now
+			int clamplevel = Math.Min(50, (level / 5) * 5);
+			
+			if (clamplevel > 0)
+				return LanguageMgr.GetTranslation(player.Client, string.Format("PlayerClass.{0}.GetTitle.{1}", m_name, clamplevel));
+
+			return LanguageMgr.GetTranslation(player.Client, "PlayerClass.GetTitle.none");
 		}
 
 		public virtual eClassType ClassType

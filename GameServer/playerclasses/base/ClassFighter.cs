@@ -17,18 +17,17 @@
  *
  */
 using System;
-using DOL.GS;
-using DOL.Language;
 
 namespace DOL.GS.PlayerClass
 {
 	/// <summary>
-	/// 
+	/// Albion Base Fighter Class
 	/// </summary>
 	[CharacterClassAttribute((int)eCharacterClass.Fighter, "Fighter", "Fighter")]
-	public class ClassFighter : DOL.GS.CharacterClassBase
+	public class ClassFighter : CharacterClassBase
 	{
-		public ClassFighter() : base() 
+		public ClassFighter()
+			: base()
 		{
 			m_specializationMultiplier = 10;
 			m_wsbase = 440;
@@ -37,7 +36,7 @@ namespace DOL.GS.PlayerClass
 
 		public override string GetTitle(GamePlayer player, int level)
 		{
-			return LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerClass.GetTitle.none");
+			return HasAdvancedFromBaseClass() ? base.GetTitle(player, level) : base.GetTitle(player, 0);
 		}
 
 		public override eClassType ClassType
