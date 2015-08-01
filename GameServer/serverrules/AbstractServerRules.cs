@@ -1646,8 +1646,20 @@ namespace DOL.GS.ServerRules
 		/// <returns>The Realmranktitle of the target</returns>
 		public virtual string GetPlayerPrefixName(GamePlayer source, GamePlayer target)
 		{
-			if (IsSameRealm(source, target, true))
-				return target.PrefixName;
+			string language;
+			
+			try
+			{
+				language = source.Client.Account.Language;
+			}
+			catch
+			{
+				language = LanguageMgr.DefaultLanguage;
+			}
+			
+			if (IsSameRealm(source, target, true) && target.RealmLevel >= 110)
+				return target.RealmRankTitle(language);
+			
 			return string.Empty;
 		}
 
