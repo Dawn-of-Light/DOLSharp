@@ -180,6 +180,7 @@ GamePlayer.Pray.MustGetCloser:				You must get closer to your grave and sit to p
 GamePlayer.Pray.MustStandingStill:			You must be standing still to pray.		
 GamePlayer.Pray.NeedTarget:					You need to target a grave at which to pray!	
 GamePlayer.Pray.SelectGrave:				Select your gravestone to pray!	
+GamePlayer.Pray.CantPrayRiding:				You can't pray while riding!
 GamePlayer.Pronoun.Female.Objective:		her		
 GamePlayer.Pronoun.Female.Possessive:		her		
 GamePlayer.Pronoun.Female.Subjective:		she		

@@ -750,7 +750,7 @@ namespace DOL.GS
 				{
 					Release(m_releaseType, true);
 					if (log.IsInfoEnabled)
-						log.Info("Linkdead player " + Name + "(" + Client.Account.Name + ") was auto-released from death!");
+						log.InfoFormat("Linkdead player {0}({1}) was auto-released from death!", Name, Client.Account.Name);
 				}
 
 				SaveIntoDatabase();
@@ -830,7 +830,7 @@ namespace DOL.GS
 		public void OnLinkdeath()
 		{
 			if (log.IsInfoEnabled)
-				log.Info("Player " + Name + "(" + Client.Account.Name + ") went linkdead!");
+				log.InfoFormat("Player {0}({1}) went linkdead!", Name, Client.Account.Name);
 
 			// LD Necros need to be "Unshaded"
 			if (Client.Player.CharacterClass.Player.IsShade)
@@ -843,7 +843,7 @@ namespace DOL.GS
 			{
 				Release(m_releaseType, true);
 				if (log.IsInfoEnabled)
-					log.Info("Linkdead player " + Name + "(" + Client.Account.Name + ") was auto-released from death!");
+					log.InfoFormat("Linkdead player {0}({1}) was auto-released from death!", Name, Client.Account.Name);
 				SaveIntoDatabase();
 				Client.Quit();
 				return;
@@ -872,7 +872,7 @@ namespace DOL.GS
 
 			int secondsToQuit = QuitTime;
 			if (log.IsInfoEnabled)
-				log.Info("Linkdead player " + Name + "(" + Client.Account.Name + ") will quit in " + secondsToQuit);
+				log.InfoFormat("Linkdead player {0}({1}) will quit in {2}", Name, Client.Account.Name, secondsToQuit);
 			RegionTimer timer = new RegionTimer(this); // make sure it is not stopped!
 			timer.Callback = new RegionTimerCallback(LinkdeathTimerCallback);
 			timer.Start(1 + secondsToQuit * 1000);
@@ -1000,7 +1000,7 @@ namespace DOL.GS
 			}
 			catch (Exception e)
 			{
-				log.Error("Cannot cancel all effects, " + e.ToString());
+				log.ErrorFormat("Cannot cancel all effects - {0}", e);
 			}
 		}
 
@@ -1203,16 +1203,15 @@ namespace DOL.GS
 			//if we are not bound yet lets check if we are in a house where we can bind
 			if (!bound && InHouse && CurrentHouse != null) // lets do a double check, more safe
 			{
-				House house = CurrentHouse;
-				var obj = GameServer.Database.SelectObjects<DBHouseHookpointItem>("HouseNumber = '" + house.HouseNumber.ToString() + "'");
-				bool canbindhere = false;
-				foreach (DBHouseHookpointItem hpi in obj)
+				var house = CurrentHouse;
+				bool canbindhere;
+				try
 				{
-					if (hpi.ItemTemplateID.Contains("_bindstone"))
-					{
-						canbindhere = true;
-						break;
-					}
+					canbindhere = house.HousepointItems.Any(kv => ((GameObject)kv.Value.GameObject).GetName(0, false).EndsWith("bindstone", StringComparison.OrdinalIgnoreCase));
+				}
+				catch
+				{
+					canbindhere = false;
 				}
 
 				if (canbindhere)
@@ -1360,7 +1359,7 @@ namespace DOL.GS
 			if (character == null) return;
 			
 			// check if valid housebind
-			if (releaseCommand == eReleaseType.House && !(character.BindHouseRegion > 0))
+			if (releaseCommand == eReleaseType.House && character.BindHouseRegion < 1)
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Release.NoValidBindpoint"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				releaseCommand = eReleaseType.Bind;
@@ -1786,18 +1785,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// The timer that will be started when the player wants to pray
-		/// </summary>
-		protected PrayAction m_prayAction;
-		/// <summary>
-		/// The delay to wait until xp is regained, in milliseconds
-		/// </summary>
-		protected const ushort PRAY_DELAY = 5000;
-		/// <summary>
-		/// Property that saves the gravestone in the pray timer
-		/// </summary>
-		protected const string GRAVESTONE_PROPERTY = "gravestone";
-		/// <summary>
 		/// Property that saves experience lost on last death
 		/// </summary>
 		public const string DEATH_EXP_LOSS_PROPERTY = "death_exp_loss";
@@ -1806,6 +1793,15 @@ namespace DOL.GS
 		/// </summary>
 		public const string DEATH_CONSTITUTION_LOSS_PROPERTY = "death_con_loss";
 
+		#region Praying
+		/// <summary>
+		/// The timer that will be started when the player wants to pray
+		/// </summary>
+		protected RegionTimerAction<GameGravestone> m_prayAction;
+		/// <summary>
+		/// The delay to wait until xp is regained, in milliseconds
+		/// </summary>
+		protected virtual ushort PrayDelay { get { return 5000; }}
 		/// <summary>
 		/// Gets the praying-state of this living
 		/// </summary>
@@ -1819,53 +1815,46 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void Pray()
 		{
-			if (!IsAlive)
-			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Pray.CantPrayNow"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-
-			if (IsRiding)
-			{
-				Out.SendMessage("You can't pray while riding a horse!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-
+			string cantPrayMessage = string.Empty;
 			GameGravestone gravestone = TargetObject as GameGravestone;
-			if (gravestone == null)
+			
+			if (!IsAlive)
+				cantPrayMessage = "GamePlayer.Pray.CantPrayNow";
+			else if (IsRiding)
+				cantPrayMessage = "GamePlayer.Pray.CantPrayRiding";
+			else if (gravestone == null)
+				cantPrayMessage = "GamePlayer.Pray.NeedTarget";
+			else if (!gravestone.InternalID.Equals(InternalID))
+				cantPrayMessage = "GamePlayer.Pray.SelectGrave";
+			else if (!IsWithinRadius(gravestone, 2000))
+				cantPrayMessage = "GamePlayer.Pray.MustGetCloser";
+			else if (IsMoving)
+				cantPrayMessage = "GamePlayer.Pray.MustStandingStill";
+			else if (IsPraying)
+				cantPrayMessage = "GamePlayer.Pray.AlreadyPraying";
+			
+			if (cantPrayMessage != string.Empty)
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Pray.NeedTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-			if (!gravestone.InternalID.Equals(InternalID))
-			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Pray.SelectGrave"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-			if (!this.IsWithinRadius(gravestone, 2000))
-			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Pray.MustGetCloser"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-			if (IsMoving)
-			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Pray.MustStandingStill"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-
-			if (IsPraying)
-			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Pray.AlreadyPraying"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, cantPrayMessage), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			if (m_prayAction != null)
 				m_prayAction.Stop();
-			m_prayAction = new PrayAction(this, gravestone);
-			m_prayAction.Start(PRAY_DELAY);
+			
+			m_prayAction = new RegionTimerAction<GameGravestone>(gravestone, stn => {
+			                                                     	if (stn.XPValue > 0)
+			                                                     	{
+			                                                     		Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Pray.GainBack"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			                                                     		GainExperience(eXPSource.Praying, stn.XPValue);
+			                                                     	}
+			                                                     	stn.XPValue = 0;
+			                                                     	stn.Delete();
+			                                                     });
+			m_prayAction.Start(PrayDelay);
 
 			Sit(true);
-			Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Pray.Begin"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Pray.Begin"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
@@ -1884,47 +1873,7 @@ namespace DOL.GS
 			m_prayAction.Stop();
 			m_prayAction = null;
 		}
-
-		/// <summary>
-		/// The timed pray action
-		/// </summary>
-		protected class PrayAction : RegionAction
-		{
-			/// <summary>
-			/// The gravestone player is plraying at
-			/// </summary>
-			protected readonly GameGravestone m_gravestone;
-
-			/// <summary>
-			/// Constructs a new pray action
-			/// </summary>
-			/// <param name="actionSource">The action source</param>
-			/// <param name="grave">The pray grave stone</param>
-			public PrayAction(GamePlayer actionSource, GameGravestone grave)
-				: base(actionSource)
-			{
-				if (grave == null)
-					throw new ArgumentNullException("grave");
-				m_gravestone = grave;
-			}
-
-			/// <summary>
-			/// Callback method for the pray-timer
-			/// </summary>
-			protected override void OnTick()
-			{
-				GamePlayer player = (GamePlayer)m_actionSource;
-				long xp = m_gravestone.XPValue;
-				m_gravestone.XPValue = 0;
-
-				if (xp > 0)
-				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.Pray.GainBack"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-					player.GainExperience(eXPSource.Praying, xp);
-				}
-				m_gravestone.Delete();
-			}
-		}
+		#endregion
 
 		/// <summary>
 		/// Called when player revive
