@@ -765,8 +765,18 @@ namespace DOL.GS
 
 
 		#region Combat timer
-		RegionTimer noCombatTimer = null;
-
+		/// <summary>
+		/// gets the DamageRvR Memory of this player
+		/// </summary>
+		public override long DamageRvRMemory
+		{
+			get	{ return m_damageRvRMemory; }
+			set	{ m_damageRvRMemory = value; }
+		}
+		
+		/// <summary>
+		/// Override For Combat Timer Update
+		/// </summary>
 		public override long LastAttackedByEnemyTickPvE
 		{
 			set
@@ -774,13 +784,15 @@ namespace DOL.GS
 				bool wasInCombat = InCombat;
 				base.LastAttackedByEnemyTickPvE = value;
 				if (!wasInCombat && InCombat)
-				{
 					Out.SendUpdateMaxSpeed();
-				}
+				
 				ResetInCombatTimer();
 			}
 		}
 
+		/// <summary>
+		/// Override For Combat Timer Update
+		/// </summary>
 		public override long LastAttackTickPvE
 		{
 			set
@@ -788,42 +800,41 @@ namespace DOL.GS
 				bool wasInCombat = InCombat;
 				base.LastAttackTickPvE = value;
 				if (!wasInCombat && InCombat)
-				{
 					Out.SendUpdateMaxSpeed();
-				}
+				
 				ResetInCombatTimer();
 			}
 		}
 
+		/// <summary>
+		/// Expire Combat Timer Interval
+		/// </summary>
+		protected virtual int CombatTimerInterval { get { return 11000; }}
+		
+		/// <summary>
+		/// Combat Timer Lock
+		/// </summary>
+		private object m_CombatTimerLock = new object();
+		
+		/// <summary>
+		/// Combat Timer
+		/// </summary>
+		private RegionTimerAction<GamePlayer> m_CombatTimer = null;
+		
+		/// <summary>
+		/// Reset and Restart Combat Timer
+		/// </summary>
 		protected void ResetInCombatTimer()
 		{
-			if (noCombatTimer == null)
+			lock (m_CombatTimerLock)
 			{
-				noCombatTimer = new RegionTimer(this, new RegionTimerCallback(InCombatTimerExpired));
+				if (m_CombatTimer == null)
+				{
+					m_CombatTimer = new RegionTimerAction<GamePlayer>(this, p => p.Out.SendUpdateMaxSpeed());
+				}
+				m_CombatTimer.Stop();
+				m_CombatTimer.Start(CombatTimerInterval);
 			}
-			noCombatTimer.Stop();
-			noCombatTimer.Start(11000);
-		}
-
-		/// <summary>
-		/// gets the DamageRvR Memory of this player
-		/// </summary>
-		public override long DamageRvRMemory
-		{
-			get
-			{
-				return m_damageRvRMemory;
-			}
-			set
-			{
-				m_damageRvRMemory = value;
-			}
-		}
-
-		public int InCombatTimerExpired(RegionTimer timer)
-		{
-			Out.SendUpdateMaxSpeed();
-			return 0;
 		}
 		#endregion
 
@@ -1160,7 +1171,6 @@ namespace DOL.GS
 			
 			string description = string.Format("in {0}", this.GetBindSpotDescription());
 			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.LastBindPoint", description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			
 			
 			bool bound = false;
 			
