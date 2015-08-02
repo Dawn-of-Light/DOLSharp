@@ -14124,44 +14124,52 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Sets the controlled object for this player
+		/// (delegates to CharacterClass)
 		/// </summary>
 		/// <param name="controlledNpc"></param>
 		public override void SetControlledBrain(IControlledBrain controlledBrain)
 		{
 			CharacterClass.SetControlledBrain(controlledBrain);
 		}
-
+		
+		/// <summary>
+		/// Releases controlled object
+		/// (delegates to CharacterClass)
+		/// </summary>
+		public virtual void CommandNpcRelease()
+		{
+			CharacterClass.CommandNpcRelease();
+		}
+		
 		/// <summary>
 		/// Commands controlled object to attack
 		/// </summary>
 		public virtual void CommandNpcAttack()
 		{
 			IControlledBrain npc = ControlledBrain;
-			if (npc == null || npc.Body.IsConfused || !GameServer.ServerRules.IsAllowedToAttack(this, TargetObject as GameLiving, false))
+			if (npc == null || !GameServer.ServerRules.IsAllowedToAttack(this, TargetObject as GameLiving, false))
 				return;
 
-			if (!this.IsWithinRadius( TargetObject, 2000 ))
+			if (npc.Body.IsConfused)
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CommandNpcAttack.TooFarAwayForPet"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+			
+			if (!IsWithinRadius(TargetObject, 2000))
+			{
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.TooFarAwayForPet"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			if (!TargetInView)
 			{
-				Out.SendMessage("You can't see your target!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.CantSeeTarget"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to kill your target!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.KillTarget", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.Attack(TargetObject);
-		}
-
-		/// <summary>
-		/// Releases controlled object
-		/// </summary>
-		public virtual void CommandNpcRelease()
-		{
-			CharacterClass.CommandNpcRelease();
 		}
 
 		/// <summary>
@@ -14173,9 +14181,13 @@ namespace DOL.GS
 			if (npc == null)
 				return;
 
-			if (npc.Body.IsConfused) return;
+			if (npc.Body.IsConfused)
+			{
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
 
-			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to follow you!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.FollowYou", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.Follow(this);
 		}
 
@@ -14188,9 +14200,13 @@ namespace DOL.GS
 			if (npc == null)
 				return;
 
-			if (npc.Body.IsConfused) return;
+			if (npc.Body.IsConfused)
+			{
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
 
-			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to stay in this position!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.Stay", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.Stay();
 		}
 
@@ -14203,9 +14219,13 @@ namespace DOL.GS
 			if (npc == null)
 				return;
 
-			if (npc.Body.IsConfused) return;
+			if (npc.Body.IsConfused)
+			{
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
 
-			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to come to you.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.ComeHere", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.ComeHere();
 		}
 
@@ -14218,7 +14238,11 @@ namespace DOL.GS
 			if (npc == null)
 				return;
 
-			if (npc.Body.IsConfused) return;
+			if (npc.Body.IsConfused)
+			{
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
 
 			GameObject target = TargetObject;
 			if (target == null)
@@ -14226,7 +14250,8 @@ namespace DOL.GS
 				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CommandNpcGoTarget.MustSelectDestination"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to go to your target.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.GoToTarget", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.Goto(target);
 		}
 
@@ -14239,9 +14264,13 @@ namespace DOL.GS
 			if (npc == null)
 				return;
 
-			if (npc.Body.IsConfused) return;
+			if (npc.Body.IsConfused)
+			{
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
 
-			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to disengage from combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.Passive", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.SetAggressionState(eAggressionState.Passive);
 			npc.Body.StopAttack();
 			npc.Body.StopCurrentSpellcast();
@@ -14259,9 +14288,13 @@ namespace DOL.GS
 			if (npc == null)
 				return;
 
-			if (npc.Body.IsConfused) return;
+			if (npc.Body.IsConfused)
+			{
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
 
-			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to attack all enemies!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.Aggressive", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.SetAggressionState(eAggressionState.Aggressive);
 		}
 
@@ -14274,9 +14307,13 @@ namespace DOL.GS
 			if (npc == null)
 				return;
 
-			if (npc.Body.IsConfused) return;
+			if (npc.Body.IsConfused)
+			{
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
 
-			Out.SendMessage("You command " + npc.Body.GetName(0, false) + " to defend you!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.Denfensive", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.SetAggressionState(eAggressionState.Defensive);
 		}
 		#endregion
