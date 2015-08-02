@@ -219,14 +219,14 @@ namespace DOL.GS
                 string description = Description;
                 string screenDescription = description;
 
-                LanguageDataObject translation = LanguageMgr.GetTranslation(player.Client.Account.Language, this);
+                var translation = player.GetTranslation(this) as DBLanguageArea;
                 if (translation != null)
                 {
-                    if (!Util.IsEmpty(((DBLanguageArea)translation).Description))
-                        description = ((DBLanguageArea)translation).Description;
+                    if (!Util.IsEmpty(translation.Description))
+                        description = translation.Description;
 
-                    if (!Util.IsEmpty(((DBLanguageArea)translation).ScreenDescription))
-                        screenDescription = ((DBLanguageArea)translation).ScreenDescription;
+                    if (!Util.IsEmpty(translation.ScreenDescription))
+                        screenDescription = translation.ScreenDescription;
                 }
 
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "AbstractArea.Entered", description),

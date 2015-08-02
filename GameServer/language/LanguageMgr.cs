@@ -440,11 +440,16 @@ namespace DOL.Language
         #region GetTranslation / TryGetTranslation
 
         #region GetTranslation
-        public static LanguageDataObject GetTranslation(GameClient client, ITranslatableObject obj)
+        public static LanguageDataObject GetTranslation(this GameClient client, ITranslatableObject obj)
         {
             LanguageDataObject translation;
 			TryGetTranslation(out translation, client, obj);
             return translation;
+        }
+        
+        public static LanguageDataObject GetTranslation(this GamePlayer player, ITranslatableObject obj)
+        {
+        	return player.Client.GetTranslation(obj);
         }
 
         public static LanguageDataObject GetTranslation(string language, ITranslatableObject obj)

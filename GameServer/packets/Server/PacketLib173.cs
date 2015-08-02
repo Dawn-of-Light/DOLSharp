@@ -335,41 +335,9 @@ namespace DOL.GS.PacketHandler
 	
 	
 								Region reg = WorldMgr.GetRegion((ushort)characters[j].Region);
-								Zone zon = null;
-								if (reg != null) zon = reg.GetZone(characters[j].Xpos, characters[j].Ypos);
-								if (zon != null)
+								if (reg != null)
 								{
-									IList areas = zon.GetAreasOfSpot(characters[j].Xpos, characters[j].Ypos, characters[j].Zpos);
-									string description = "";
-	
-									foreach (AbstractArea area in areas)
-									{
-										if (!area.DisplayMessage)
-	                                        continue;
-	                                    
-	                                    description = area.Description;
-	
-	                                    LanguageDataObject translation = LanguageMgr.GetTranslation(m_gameClient, area);
-	                                    if (translation != null)
-	                                    {
-	                                        if (!Util.IsEmpty(((DBLanguageArea)translation).ScreenDescription)) // Thats correct!
-	                                            description = ((DBLanguageArea)translation).ScreenDescription;
-	                                    }
-										break;
-									}
-	
-	                                if (description == "")
-	                                {
-	                                    description = zon.Description;
-	
-	                                    LanguageDataObject translation = LanguageMgr.GetTranslation(m_gameClient, zon);
-	                                    if (translation != null)
-	                                    {
-	                                        if (!Util.IsEmpty(((DBLanguageZone)translation).ScreenDescription)) // Thats correct!
-	                                            description = ((DBLanguageZone)translation).ScreenDescription;
-	                                    }
-	                                }
-	
+									var description = m_gameClient.GetTranslatedSpotDescription(reg, characters[j].Xpos, characters[j].Ypos, characters[j].Zpos);
 									pak.FillString(description, 24);
 								}
 								else

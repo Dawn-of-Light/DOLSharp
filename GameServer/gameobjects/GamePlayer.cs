@@ -1139,66 +1139,36 @@ namespace DOL.GS
 				return;
 			}
 
-			string description = "";
+			string description = string.Format("in {0}", this.GetBindSpotDescription());
 
-			Region reg = WorldMgr.GetRegion((ushort)character.BindRegion);
-			Zone zon = null;
-			if (reg != null)
-				zon = reg.GetZone(character.BindXpos, character.BindYpos);
-			if (zon != null)
-			{
-				IList areas = zon.GetAreasOfSpot(character.BindXpos, character.BindYpos, character.BindZpos);
-
-				foreach (AbstractArea area in areas)
-				{
-					if (!area.DisplayMessage) continue;
-					description = area.Description;
-					break;
-				}
-			}
-			if (description == "")
-			{
-				if (zon != null)
-					description = zon.Description;
-			}
-			else
-			{
-				description += " in " + zon.Description;
-			}
-			Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Bind.LastBindPoint", description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.LastBindPoint", description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			if (!IsAlive)
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Bind.CantBindDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.CantBindDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			long lastBindTick = TempProperties.getProperty<long>(LAST_BIND_TICK);
 			long changeTime = CurrentRegion.Time - lastBindTick;
 			if (Client.Account.PrivLevel == 1 && changeTime < 60000 && changeTime > 0) //60 second rebind timer
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Bind.MustWait", (1 + (60000 - changeTime) / 1000)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.MustWait", (1 + (60000 - changeTime) / 1000)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			bool bound = false;
-			lock (CurrentAreas.SyncRoot)
+			foreach (AbstractArea area in CurrentAreas.OfType<Area.BindArea>())
 			{
-				foreach (AbstractArea area in CurrentAreas)
-				{
-					if (area is Area.BindArea)
-					{
-						if (!GameServer.ServerRules.IsAllowedToBind(this, (area as Area.BindArea).BindPoint)) continue;
-						TempProperties.setProperty(LAST_BIND_TICK, CurrentRegion.Time);
+				if (!GameServer.ServerRules.IsAllowedToBind(this, (area as Area.BindArea).BindPoint)) continue;
+				TempProperties.setProperty(LAST_BIND_TICK, CurrentRegion.Time);
 
-						bound = true;
-						character.BindRegion = CurrentRegionID;
-						character.BindHeading = Heading;
-						character.BindXpos = X;
-						character.BindYpos = Y;
-						character.BindZpos = Z;
-						GameServer.Database.SaveObject(character);
-						break;
-					}
-				}
+				bound = true;
+				character.BindRegion = CurrentRegionID;
+				character.BindHeading = Heading;
+				character.BindXpos = X;
+				character.BindYpos = Y;
+				character.BindZpos = Z;
+				GameServer.Database.SaveObject(character);
+				break;
 			}
 			//if we are not bound yet lets check if we are in a house where we can bind
 			if (!bound && InHouse && CurrentHouse != null) // lets do a double check, more safe
@@ -10518,15 +10488,15 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds all areas this player is currently within
 		/// </summary>
-		private IList m_currentAreas;
+		private ReaderWriterList<IArea> m_currentAreas = new ReaderWriterList<IArea>();
 
 		/// <summary>
 		/// Holds all areas this player is currently within
 		/// </summary>
-		public override IList CurrentAreas
+		public override IList<IArea> CurrentAreas
 		{
 			get { return m_currentAreas; }
-			set { m_currentAreas = value; }
+			set { m_currentAreas.FreezeWhile(l => { l.Clear(); l.AddRange(value); }); }
 		}
 
 		/// <summary>
@@ -15715,7 +15685,6 @@ namespace DOL.GS
 			m_isWireframe = false;
 			m_characterClass = new DefaultCharacterClass();
 			m_groupIndex = 0xFF;
-			m_currentAreas = new ArrayList();
 
 			m_saveInDB = true;
 			LoadFromDatabase(dbChar);

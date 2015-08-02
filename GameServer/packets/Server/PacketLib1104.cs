@@ -140,43 +140,11 @@ namespace DOL.GS.PacketHandler
 							pak.WriteByte((byte)c.MoodType);
 							pak.Fill(0x0, 13); //0 String
 	
-							string locationDescription = "";
+							string locationDescription = string.Empty;
 							Region region = WorldMgr.GetRegion((ushort)c.Region);
 							if (region != null)
 							{
-								Zone zone = null;
-								if ((zone = region.GetZone(c.Xpos, c.Ypos)) != null)
-								{
-									IList areas = zone.GetAreasOfSpot(c.Xpos, c.Ypos, c.Zpos);
-	
-									foreach (AbstractArea area in areas)
-									{
-										if (!area.DisplayMessage)
-											continue;
-	
-	                                    locationDescription = area.Description;
-	
-	                                    LanguageDataObject translation = LanguageMgr.GetTranslation(m_gameClient, area);
-	                                    if (translation != null)
-	                                    {
-	                                        if (!Util.IsEmpty(((DBLanguageArea)translation).ScreenDescription)) // Thats correct!
-	                                            locationDescription = ((DBLanguageArea)translation).ScreenDescription;
-	                                    }
-										break;
-									}
-	
-									if (locationDescription == "")
-									{
-	                                    locationDescription = zone.Description;
-	
-	                                    LanguageDataObject translation = LanguageMgr.GetTranslation(m_gameClient, zone);
-	                                    if (translation != null)
-	                                    {
-	                                        if (!Util.IsEmpty(((DBLanguageZone)translation).ScreenDescription)) // Thats correct!
-	                                            locationDescription = ((DBLanguageZone)translation).ScreenDescription;
-	                                    }
-									}
-								}
+								locationDescription = m_gameClient.GetTranslatedSpotDescription(region, c.Xpos, c.Ypos, c.Zpos);
 							}
 							pak.FillString(locationDescription, 24);
 	

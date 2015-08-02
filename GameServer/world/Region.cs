@@ -1408,7 +1408,7 @@ namespace DOL.GS
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        public virtual IList GetAreasOfSpot(IPoint3D point)
+        public virtual IList<IArea> GetAreasOfSpot(IPoint3D point)
         {
             Zone zone = GetZone(point.X, point.Y);
             return GetAreasOfZone(zone, point);
@@ -1422,14 +1422,14 @@ namespace DOL.GS
         /// <param name="y"></param>
         /// <param name="z"></param>
         /// <returns></returns>
-        public virtual IList GetAreasOfSpot(int x, int y, int z)
+        public virtual IList<IArea> GetAreasOfSpot(int x, int y, int z)
         {
             Zone zone = GetZone(x, y);
             Point3D p = new Point3D(x, y, z);
             return GetAreasOfZone(zone, p);
         }
 
-        public virtual IList GetAreasOfZone(Zone zone, IPoint3D p)
+        public virtual IList<IArea> GetAreasOfZone(Zone zone, IPoint3D p)
         {
             return GetAreasOfZone(zone, p, true);
         }
@@ -1441,12 +1441,12 @@ namespace DOL.GS
         /// <param name="p"></param>
         /// <param name="checkZ"></param>
         /// <returns></returns>
-        public virtual IList GetAreasOfZone(Zone zone, IPoint3D p, bool checkZ)
+        public virtual IList<IArea> GetAreasOfZone(Zone zone, IPoint3D p, bool checkZ)
         {
             lock (m_lockAreas)
             {
                 int zoneIndex = Zones.IndexOf(zone);
-                IList areas = new ArrayList();
+                var areas = new List<IArea>();
 
                 if (zoneIndex >= 0)
                 {
@@ -1471,12 +1471,12 @@ namespace DOL.GS
             }
         }
 
-        public virtual IList GetAreasOfZone(Zone zone, int x, int y, int z)
+        public virtual IList<IArea> GetAreasOfZone(Zone zone, int x, int y, int z)
         {
             lock (m_lockAreas)
             {
                 int zoneIndex = Zones.IndexOf(zone);
-                IList areas = new ArrayList();
+                var areas = new List<IArea>();
 
                 if (zoneIndex >= 0)
                 {

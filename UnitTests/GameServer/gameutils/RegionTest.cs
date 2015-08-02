@@ -67,7 +67,7 @@ namespace DOL.Server
 
 			Assert.IsNotNull(insertArea);
 
-			IList areas = region.GetAreasOfSpot(501,1000,0);			
+			var areas = region.GetAreasOfSpot(501,1000,0);			
 			Assert.IsTrue(areas.Count>0);
 
 			bool found = false;

@@ -179,14 +179,14 @@ namespace DOL.GS.PacketHandler.Client.v168
                 string description = newZone.Description;
                 string screenDescription = description;
 
-                LanguageDataObject translation = LanguageMgr.GetTranslation(client.Account.Language, newZone);
+                var translation = client.GetTranslation(newZone) as DBLanguageZone;
                 if (translation != null)
                 {
-                    if (!Util.IsEmpty(((DBLanguageZone)translation).Description))
-                        description = ((DBLanguageZone)translation).Description;
+                    if (!Util.IsEmpty(translation.Description))
+                        description = translation.Description;
 
-                    if (!Util.IsEmpty(((DBLanguageZone)translation).ScreenDescription))
-                        screenDescription = ((DBLanguageZone)translation).ScreenDescription;
+                    if (!Util.IsEmpty(translation.ScreenDescription))
+                        screenDescription = translation.ScreenDescription;
                 }
 
                 client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "PlayerPositionUpdateHandler.Entered", description),
@@ -360,12 +360,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			// Begin ---------- New Area System -----------
 			if (client.Player.CurrentRegion.Time > client.Player.AreaUpdateTick) // check if update is needed
 			{
-				IList oldAreas = client.Player.CurrentAreas;
+				var oldAreas = client.Player.CurrentAreas;
 
 				// Because we may be in an instance we need to do the area check from the current region
 				// rather than relying on the zone which is in the skinned region.  - Tolakram
 
-				IList newAreas = client.Player.CurrentRegion.GetAreasOfZone(newZone, client.Player);
+				var newAreas = client.Player.CurrentRegion.GetAreasOfZone(newZone, client.Player);
 
 				// Check for left areas
 				if (oldAreas != null)
