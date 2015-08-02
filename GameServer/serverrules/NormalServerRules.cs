@@ -313,7 +313,7 @@ namespace DOL.GS.ServerRules
 		{
 			if (IsSameRealm(source, target, true))
 				return target.Name;
-			return target.RaceName;
+			return source.RaceToTranslatedName(target.Race, target.Gender);
 		}
 
 		/// <summary>

@@ -2784,40 +2784,16 @@ namespace DOL.GS
 		#region Class/Race
 
 		/// <summary>
-		/// Returns localized race names
-		/// </summary>
-		/// <param name="client"></param>
-		/// <param name="Race"></param>
-		/// <param name="Gender"></param>
-		/// <returns></returns>
-		public static string RACENAMES(GameClient client, int Race, int Gender)
-		{
-			eRace r = (eRace)Race;
-
-			if (r != 0)
-			{
-				switch (Gender)
-				{
-					case 0:
-						return LanguageMgr.GetTranslation(client.Account.Language, "GamePlayer.PlayerRace.Male." + r.ToString("F"));
-					case 1:
-                        return LanguageMgr.GetTranslation(client.Account.Language, "GamePlayer.PlayerRace.Female." + r.ToString("F"));
-				}
-			}
-            return LanguageMgr.GetTranslation(client.Account.Language, "GamePlayer.PlayerRace." + r.ToString("F")); //Returns 'Unknown'
-		}
-
-		/// <summary>
 		/// Gets/sets the player's race name
 		/// </summary>
 		public virtual string RaceName
 		{
-			get { return RACENAMES(Client, DBCharacter.Race, DBCharacter.Gender); }
+			get { return this.RaceToTranslatedName(Race, Gender); }
 		}
 
 		/// <summary>
 		/// Gets or sets this player's race id
-		/// (delegate to PlayerCharacter)
+		/// (delegate to DBCharacter)
 		/// </summary>
 		public override short Race
 		{
@@ -4227,124 +4203,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Holds all realm rank names
-		/// sirru mod 20.11.06
-		/// </summary>
-		public static string[, ,] REALM_RANK_NAMES = new string[,,]
-		{
-			// Albion
-			{
-				// Male
-				{
-					"Guardian",
-					"Warder",
-					"Myrmidon",
-					"Gryphon Knight",
-					"Eagle Knight",
-					"Phoenix Knight",
-					"Alerion Knight",
-					"Unicorn Knight",
-					"Lion Knight",
-					"Dragon Knight",
-					"Lord",
-					"Baronet",
-					"Baron"
-				}
-				,
-				// Female
-				{
-					"Guardian",
-					"Warder",
-					"Myrmidon",
-					"Gryphon Knight",
-					"Eagle Knight",
-					"Phoenix Knight",
-					"Alerion Knight",
-					"Unicorn Knight",
-					"Lion Knight",
-					"Dragon Knight",
-					"Lady",
-					"Baronetess",
-					"Baroness"
-				}
-			}
-			,
-			// Midgard
-			{
-				// Male
-				{
-					"Skiltvakten",
-					"Isen Vakten",
-					"Flammen Vakten",
-					"Elding Vakten",
-					"Stormur Vakten",
-					"Isen Herra",
-					"Flammen Herra",
-					"Elding Herra",
-					"Stormur Herra",
-					"Einherjar",
-					"Herra",
-					"Hersir",
-					"Vicomte"
-				}
-				,
-				// Female
-				{
-					"Skiltvakten",
-					"Isen Vakten",
-					"Flammen Vakten",
-					"Elding Vakten",
-					"Stormur Vakten",
-					"Isen Fru",
-					"Flammen Fru",
-					"Elding Fru",
-					"Stormur Fru",
-					"Einherjar",
-					"Fru",
-					"Baronsfru",
-					"Vicomtessa"
-				}
-			}
-			,
-			// Hibernia
-			{
-				// Male
-				{
-					"Savant",
-					"Cosantoir",
-					"Brehon",
-					"Grove Protector",
-					"Raven Ardent",
-					"Silver Hand",
-					"Thunderer",
-					"Gilded Spear",
-					"Tiarna",
-					"Emerald Ridere",
-					"Barun",
-					"Ard Tiarna",
-					"Ciann Cath"
-				}
-				,
-				// Female
-				{
-					"Savant",
-					"Cosantoir",
-					"Brehon",
-					"Grove Protector",
-					"Raven Ardent",
-					"Silver Hand",
-					"Thunderer",
-					"Gilded Spear",
-					"Bantiarna",
-					"Emerald Ridere",
-					"Banbharun",
-					"Ard Bantiarna",
-					"Ciann Cath"
-				}
-			}
-		};
-
-		/// <summary>
 		/// Gets player realm rank name
 		/// sirru mod 20.11.06
 		/// </summary>
@@ -4357,7 +4215,7 @@ namespace DOL.GS
 
 				try
 				{
-					return REALM_RANK_NAMES[(int)Realm - 1, (int)Gender, (RealmLevel / 10)];
+					return GlobalConstants.REALM_RANK_NAMES[(int)Realm - 1, (int)Gender, (RealmLevel / 10)];
 				}
 				catch
 				{
