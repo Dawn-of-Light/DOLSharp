@@ -381,6 +381,7 @@
     <Compile Include="gameobjects\GameMythirian.cs" />
     <Compile Include="gameobjects\GameSiegeItem.cs" />
     <Compile Include="gameutils\ClientExtensions.cs" />
+    <Compile Include="gameutils\GamePlayerUtils.cs" />
     <Compile Include="gameutils\LootGeneratorAtlanteanGlass.cs" />
     <Compile Include="gameutils\LootGeneratorAurulite.cs" />
     <Compile Include="gameutils\LootGeneratorDragonscales.cs" />

@@ -379,13 +379,13 @@ namespace DOL.GS
 		/// <summary>
 		/// Holds all areas this object is currently within
 		/// </summary>
-		public virtual IList CurrentAreas
+		public virtual IList<IArea> CurrentAreas
 		{
 			get
 			{
 				if (CurrentZone != null)
 					return CurrentZone.GetAreasOfSpot(this);
-				return new ArrayList();
+				return new List<IArea>();
 			}
 			set { }
 		}

@@ -1156,17 +1156,17 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="spot"></param>
 		/// <returns></returns>
-		public IList GetAreasOfSpot(IPoint3D spot)
+		public IList<IArea> GetAreasOfSpot(IPoint3D spot)
 		{
 			return GetAreasOfSpot(spot, true);
 		}
 
-		public IList GetAreasOfSpot(int x, int y, int z)
+		public IList<IArea> GetAreasOfSpot(int x, int y, int z)
 		{
 			return m_Region.GetAreasOfZone(this, x, y, z);
 		}
 
-		public IList GetAreasOfSpot(IPoint3D spot, bool checkZ)
+		public IList<IArea> GetAreasOfSpot(IPoint3D spot, bool checkZ)
 		{
 			return m_Region.GetAreasOfZone(this, spot, checkZ);
 		}
