@@ -62,6 +62,15 @@ GamePlayer.CastSpell.CantCastMezzed:			You can't cast while mesmerized!
 GamePlayer.CastSpell.CantCastStunned:			You can't cast while stunned!		
 GamePlayer.CommandNpcAttack.TooFarAwayForPet:		Your target is too far away to attack by your pet!			
 GamePlayer.CommandNpcGoTarget.MustSelectDestination:You must select a destination for your controlled creature.				
+GamePlayer.CommandNpcAttack.KillTarget:			You command {0} to kill your target!
+GamePlayer.CommandNpcAttack.IsConfused:			Your {0} is Confused!
+GamePlayer.CommandNpcAttack.FollowYou:			You command {0} to follow you!
+GamePlayer.CommandNpcAttack.Stay:				You command {0} to stay in this position!
+GamePlayer.CommandNpcAttack.ComeHere:			You command {0} to come to you.
+GamePlayer.CommandNpcAttack.GoToTarget:			You command {0} to go to your target.
+GamePlayer.CommandNpcAttack.Passive:			You command {0} to disengage from combat!
+GamePlayer.CommandNpcAttack.Aggressive:			You command {0} to attack all enemies!
+GamePlayer.CommandNpcAttack.Denfensive:			You command {0} to defend you!
 GamePlayer.CraftItem.DontHaveAbilityMake:		You do not have the ability to make this item.			
 GamePlayer.CurrentTitle.TitleCleared:			Your title has been cleared.		
 GamePlayer.Die.CorpseLies:						{0} just died. {1} corpse lies on the ground.	
