@@ -58,25 +58,28 @@ namespace DOL.GS
 
 		#region Client/Character/VariousFlags
 
-
 		/// <summary>
 		/// This is our gameclient!
 		/// </summary>
 		protected readonly GameClient m_client;
+		
 		/// <summary>
 		/// This holds the character this player is
 		/// based on!
 		/// (renamed and private, cause if derive is needed overwrite PlayerCharacter)
 		/// </summary>
 		protected DOLCharacters m_dbCharacter;
+		
 		/// <summary>
 		/// The guild id this character belong to
 		/// </summary>
 		protected string m_guildId;
+		
 		/// <summary>
 		/// Char spec points checked on load
 		/// </summary>
 		protected bool SpecPointsOk = true;
+		
 		/// <summary>
 		/// Has this player entered the game, will be
 		/// true after the first time the char enters
@@ -88,37 +91,6 @@ namespace DOL.GS
 		/// Is this player being 'jumped' to a new location?
 		/// </summary>
 		public bool IsJumping { get; set; }
-
-		protected Dictionary<int, eDoorState> m_doorUpdateList = null;
-
-		protected ushort m_doorUpdateRegionID;
-
-		/// <summary>
-		/// Send a door state to this client
-		/// </summary>
-		/// <param name="door">the door</param>
-		/// <param name="forceUpdate">force a send of the door state regardless of status</param>
-		public void SendDoorUpdate(IDoor door, bool forceUpdate = false)
-		{
-			Out.SendObjectCreate(door as GameObject);
-
-			if (m_doorUpdateList == null || m_doorUpdateRegionID != CurrentRegionID)
-			{
-				m_doorUpdateList = new Dictionary<int,eDoorState>();
-				m_doorUpdateRegionID = CurrentRegionID;
-				m_doorUpdateList.Add(door.ObjectID, door.State);
-				Out.SendDoorState(CurrentRegion, door);
-			}
-			else if (forceUpdate || m_doorUpdateList.ContainsKey(door.ObjectID) == false || m_doorUpdateList[door.ObjectID] != door.State)
-			{
-				Out.SendDoorState(CurrentRegion, door);
-				m_doorUpdateList[door.ObjectID] = door.State;
-			}
-
-			Out.SendObjectUpdate(door as GameObject);
-		}
-
-
 
 		/// <summary>
 		/// true if the targetObject is visible
@@ -149,16 +121,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Can this living accept any item regardless of tradable or droppable?
 		/// </summary>
-		public override bool CanTradeAnyItem
-		{
-			get
-			{
-				if (Client.Account.PrivLevel > (int)ePrivLevel.Player)
-					return true;
-
-				return false;
-			}
-		}
+		public override bool CanTradeAnyItem { get { return Client.Account.PrivLevel > (int)ePrivLevel.Player; }}
 
 		/// <summary>
 		/// Gets or sets the targetObject's visibility
@@ -260,36 +223,79 @@ namespace DOL.GS
 		/// <summary>
 		/// Whether or not the player can be attacked.
 		/// </summary>
-		public override bool IsAttackable
-		{
-			get
-			{
-				return (Client.Account.PrivLevel <= (uint)ePrivLevel.Player && base.IsAttackable);
-			}
-		}
+		public override bool IsAttackable { get { return (Client.Account.PrivLevel <= (uint)ePrivLevel.Player && base.IsAttackable); }}
 
 		/// <summary>
 		/// Is this player PvP enabled
 		/// </summary>
-		public virtual bool IsPvP
-		{
-			get
-			{
-				return GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP;
-			}
-		}
+		public virtual bool IsPvP { get { return GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP; }}
 
 		/// <summary>
 		/// Can this player use cross realm items
 		/// </summary>
-		public virtual bool CanUseCrossRealmItems
-		{
-			get
-			{
-				return ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS;
-			}
-		}
+		public virtual bool CanUseCrossRealmItems { get { return ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS; }}
 
+		protected bool m_canUseSlashLevel = false;
+		public bool CanUseSlashLevel { get { return m_canUseSlashLevel; }}
+
+		/// <summary>
+		/// if player uses debug before (to prevent hack client fly mode for players using debug and then turning it off)
+		/// </summary>
+		protected bool m_canFly;
+
+		/// <summary>
+		/// Is this player allowed to fly?
+		/// This should only be set in debug command handler.  If player is flying but this flag is false then fly hack is detected
+		/// </summary>
+		public bool IsAllowedToFly
+		{
+			get { return m_canFly; }
+			set { m_canFly = value; }
+		}
+		
+		private bool m_statsAnon = false;
+
+		/// <summary>
+		/// Gets or sets the stats anon flag for the command /statsanon
+		/// (delegate to property in PlayerCharacter)
+		/// </summary>
+		public bool StatsAnonFlag
+		{
+			get { return m_statsAnon; }
+			set { m_statsAnon = value; }
+		}
+		
+		#region DoorCache
+		protected Dictionary<int, eDoorState> m_doorUpdateList = null;
+
+		protected ushort m_doorUpdateRegionID;
+
+		/// <summary>
+		/// Send a door state to this client
+		/// </summary>
+		/// <param name="door">the door</param>
+		/// <param name="forceUpdate">force a send of the door state regardless of status</param>
+		public void SendDoorUpdate(IDoor door, bool forceUpdate = false)
+		{
+			Out.SendObjectCreate(door as GameObject);
+
+			if (m_doorUpdateList == null || m_doorUpdateRegionID != CurrentRegionID)
+			{
+				m_doorUpdateList = new Dictionary<int,eDoorState>();
+				m_doorUpdateRegionID = CurrentRegionID;
+				m_doorUpdateList.Add(door.ObjectID, door.State);
+				Out.SendDoorState(CurrentRegion, door);
+			}
+			else if (forceUpdate || m_doorUpdateList.ContainsKey(door.ObjectID) == false || m_doorUpdateList[door.ObjectID] != door.State)
+			{
+				Out.SendDoorState(CurrentRegion, door);
+				m_doorUpdateList[door.ObjectID] = door.State;
+			}
+
+			Out.SendObjectUpdate(door as GameObject);
+		}
+		#endregion
+		
 		#region Database Accessor
 
 		/// <summary>
@@ -631,33 +637,9 @@ namespace DOL.GS
 
 		#endregion
 
-		private bool m_canUseSlashLevel = false;
-		public bool CanUseSlashLevel
-		{
-			get { return m_canUseSlashLevel; }
-		}
-
-		/// <summary>
-		/// if player uses debug before (to prevent hack client fly mode for players using debug and then turning it off)
-		/// </summary>
-		protected bool m_canFly;
-
-		/// <summary>
-		/// Is this player allowed to fly?
-		/// This should only be set in debug command handler.  If player is flying but this flag is false then fly hack is detected
-		/// </summary>
-		public bool IsAllowedToFly
-		{
-			get
-			{
-				return m_canFly;
-			}
-			set
-			{
-				m_canFly = value;
-			}
-		}
-
+		#endregion
+		
+		#region Player Quitting
 		/// <summary>
 		/// quit timer
 		/// </summary>
@@ -734,7 +716,10 @@ namespace DOL.GS
 			set
 			{ }
 		}
+		
+		#endregion
 
+		#region Player Linking Dead
 		/// <summary>
 		/// Callback method, called when the player went linkdead and now he is
 		/// allowed to be disconnected
@@ -762,82 +747,7 @@ namespace DOL.GS
 
 			return 0;
 		}
-
-
-		#region Combat timer
-		/// <summary>
-		/// gets the DamageRvR Memory of this player
-		/// </summary>
-		public override long DamageRvRMemory
-		{
-			get	{ return m_damageRvRMemory; }
-			set	{ m_damageRvRMemory = value; }
-		}
 		
-		/// <summary>
-		/// Override For Combat Timer Update
-		/// </summary>
-		public override long LastAttackedByEnemyTickPvE
-		{
-			set
-			{
-				bool wasInCombat = InCombat;
-				base.LastAttackedByEnemyTickPvE = value;
-				if (!wasInCombat && InCombat)
-					Out.SendUpdateMaxSpeed();
-				
-				ResetInCombatTimer();
-			}
-		}
-
-		/// <summary>
-		/// Override For Combat Timer Update
-		/// </summary>
-		public override long LastAttackTickPvE
-		{
-			set
-			{
-				bool wasInCombat = InCombat;
-				base.LastAttackTickPvE = value;
-				if (!wasInCombat && InCombat)
-					Out.SendUpdateMaxSpeed();
-				
-				ResetInCombatTimer();
-			}
-		}
-
-		/// <summary>
-		/// Expire Combat Timer Interval
-		/// </summary>
-		protected virtual int CombatTimerInterval { get { return 11000; }}
-		
-		/// <summary>
-		/// Combat Timer Lock
-		/// </summary>
-		private object m_CombatTimerLock = new object();
-		
-		/// <summary>
-		/// Combat Timer
-		/// </summary>
-		private RegionTimerAction<GamePlayer> m_CombatTimer = null;
-		
-		/// <summary>
-		/// Reset and Restart Combat Timer
-		/// </summary>
-		protected void ResetInCombatTimer()
-		{
-			lock (m_CombatTimerLock)
-			{
-				if (m_CombatTimer == null)
-				{
-					m_CombatTimer = new RegionTimerAction<GamePlayer>(this, p => p.Out.SendUpdateMaxSpeed());
-				}
-				m_CombatTimer.Stop();
-				m_CombatTimer.Start(CombatTimerInterval);
-			}
-		}
-		#endregion
-
 		public void OnLinkdeath()
 		{
 			if (log.IsInfoEnabled)
@@ -1091,31 +1001,80 @@ namespace DOL.GS
 			return true;
 		}
 
+		#endregion
+
+		#region Combat timer
 		/// <summary>
-		/// Updates Health, Mana, Sitting, Endurance, Concentration and Alive status to client
+		/// gets the DamageRvR Memory of this player
 		/// </summary>
-		public void UpdatePlayerStatus()
+		public override long DamageRvRMemory
 		{
-			Out.SendStatusUpdate();
+			get	{ return m_damageRvRMemory; }
+			set	{ m_damageRvRMemory = value; }
 		}
-
-		private bool m_statsAnon = false;
-
+		
 		/// <summary>
-		/// Gets or sets the stats anon flag for the command /statsanon
-		/// (delegate to property in PlayerCharacter)
+		/// Override For Combat Timer Update
 		/// </summary>
-		public bool StatsAnonFlag
+		public override long LastAttackedByEnemyTickPvE
 		{
-			get
+			set
 			{
-				return m_statsAnon;
-			}
-			set {
-				m_statsAnon = value;
+				bool wasInCombat = InCombat;
+				base.LastAttackedByEnemyTickPvE = value;
+				if (!wasInCombat && InCombat)
+					Out.SendUpdateMaxSpeed();
+				
+				ResetInCombatTimer();
 			}
 		}
 
+		/// <summary>
+		/// Override For Combat Timer Update
+		/// </summary>
+		public override long LastAttackTickPvE
+		{
+			set
+			{
+				bool wasInCombat = InCombat;
+				base.LastAttackTickPvE = value;
+				if (!wasInCombat && InCombat)
+					Out.SendUpdateMaxSpeed();
+				
+				ResetInCombatTimer();
+			}
+		}
+
+		/// <summary>
+		/// Expire Combat Timer Interval
+		/// </summary>
+		protected virtual int CombatTimerInterval { get { return 11000; }}
+		
+		/// <summary>
+		/// Combat Timer Lock
+		/// </summary>
+		private object m_CombatTimerLock = new object();
+		
+		/// <summary>
+		/// Combat Timer
+		/// </summary>
+		private RegionTimerAction<GamePlayer> m_CombatTimer = null;
+		
+		/// <summary>
+		/// Reset and Restart Combat Timer
+		/// </summary>
+		protected void ResetInCombatTimer()
+		{
+			lock (m_CombatTimerLock)
+			{
+				if (m_CombatTimer == null)
+				{
+					m_CombatTimer = new RegionTimerAction<GamePlayer>(this, p => p.Out.SendUpdateMaxSpeed());
+				}
+				m_CombatTimer.Stop();
+				m_CombatTimer.Start(CombatTimerInterval);
+			}
+		}
 		#endregion
 
 		#region release/bind/pray
@@ -1261,6 +1220,7 @@ namespace DOL.GS
 		}
 		#endregion
 
+		#region Releasing
 		/// <summary>
 		/// tick when player is died
 		/// </summary>
@@ -1783,6 +1743,27 @@ namespace DOL.GS
 			}
 			return 1000;
 		}
+		
+		/// <summary>
+		/// Called when player revive
+		/// </summary>
+		public virtual void OnRevive(DOLEvent e, object sender, EventArgs args)
+		{
+			GamePlayer player = (GamePlayer)sender;
+			
+			if (player.IsUnderwater && player.CanBreathUnderWater == false)
+				player.Diving(waterBreath.Holding);
+			
+			if (player.Level > 5)
+			{
+				// get illness after level 5
+				SpellLine Line = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
+				if (Line == null) return;
+				ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(player, GlobalSpells.PvERezIllness, Line);
+				spellHandler.StartSpell(player);
+			}
+			GameEventMgr.RemoveHandler(this, GamePlayerEvent.Revive, new DOLEventHandler(OnRevive));
+		}
 
 		/// <summary>
 		/// Property that saves experience lost on last death
@@ -1792,6 +1773,7 @@ namespace DOL.GS
 		/// Property that saves condition lost on last death
 		/// </summary>
 		public const string DEATH_CONSTITUTION_LOSS_PROPERTY = "death_con_loss";
+		#endregion
 
 		#region Praying
 		/// <summary>
@@ -1874,27 +1856,6 @@ namespace DOL.GS
 			m_prayAction = null;
 		}
 		#endregion
-
-		/// <summary>
-		/// Called when player revive
-		/// </summary>
-		public virtual void OnRevive(DOLEvent e, object sender, EventArgs args)
-		{
-			GamePlayer player = (GamePlayer)sender;
-			
-			if (player.IsUnderwater && player.CanBreathUnderWater == false)
-				player.Diving(waterBreath.Holding);
-			
-			if (player.Level > 5)
-			{
-				// get illness after level 5
-				SpellLine Line = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-				if (Line == null) return;
-				ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(player, GlobalSpells.PvERezIllness, Line);
-				spellHandler.StartSpell(player);
-			}
-			GameEventMgr.RemoveHandler(this, GamePlayerEvent.Revive, new DOLEventHandler(OnRevive));
-		}
 
 		#endregion
 
@@ -11200,6 +11161,13 @@ namespace DOL.GS
 			get { return m_lastUniqueLocations; }
 		}
 
+		/// <summary>
+		/// Updates Health, Mana, Sitting, Endurance, Concentration and Alive status to client
+		/// </summary>
+		public void UpdatePlayerStatus()
+		{
+			Out.SendStatusUpdate();
+		}
 		#endregion
 
 		#region Equipment/Encumberance
@@ -15669,6 +15637,7 @@ namespace DOL.GS
 
 		#endregion
 
+		#region Constructors
 		/// <summary>
 		/// Returns the string representation of the GamePlayer
 		/// </summary>
@@ -15729,8 +15698,9 @@ namespace DOL.GS
 		{
 			m_inventory = new GamePlayerInventory(this);
 		}
+		#endregion
 
-
+		#region Delving
 		/// <summary>
 		/// Player is delving an item
 		/// </summary>
@@ -15976,8 +15946,9 @@ namespace DOL.GS
 			return "+" + iBonus + str + SkillBase.GetPropertyName(((eProperty)iBonusType));
 		}
 
+		#endregion
 
-
+		#region Combat Calc (unused ?)
 		public virtual double GetEvadeChance()
 		{
 			double evadeChance = 0;
@@ -16005,6 +15976,7 @@ namespace DOL.GS
 			}
 			return Math.Round(evadeChance*10000)/100;
 		}
+		
 		public virtual double GetBlockChance()
 		{
 			double blockChance = 0;
@@ -16031,6 +16003,7 @@ namespace DOL.GS
 
 			return Math.Round(blockChance*10000)/100;
 		}
+		
 		public virtual double GetParryChance()
 		{
 			double parryChance = 0;
@@ -16053,7 +16026,9 @@ namespace DOL.GS
 			
 			return Math.Round(parryChance*10000)/100;
 		}
+		#endregion
 
+		#region Bodyguard
 		/// <summary>
 		/// True, if the player has been standing still for at least 3 seconds,
 		/// else false.
@@ -16092,5 +16067,6 @@ namespace DOL.GS
 					: null;
 			}
 		}
+		#endregion
 	}
 }
