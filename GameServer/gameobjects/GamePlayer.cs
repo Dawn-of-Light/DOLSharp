@@ -7708,34 +7708,27 @@ namespace DOL.GS
 		#endregion
 
 		#region Duel
-
-		/// <summary>
-		/// The duel target of this player
-		/// </summary>
-		protected GamePlayer m_duelTarget;
-
 		/// <summary>
 		/// Gets the duel target of this player
 		/// </summary>
-		public GamePlayer DuelTarget
-		{
-			get { return m_duelTarget; }
-		}
+		public GamePlayer DuelTarget { get { return Duel != null ? Duel.Target : null; }}
+		
+		/// <summary>
+		/// Get the GameDuel of this player
+		/// </summary>
+		protected GameDuel Duel { get; set; }
 
 		/// <summary>
 		/// Starts the duel
 		/// </summary>
 		/// <param name="duelTarget">The duel target</param>
-		public void DuelStart(GamePlayer duelTarget)
+		public virtual void DuelStart(GamePlayer duelTarget)
 		{
-			if (DuelTarget != null)
+			if (Duel != null)
 				return;
 
-			GameEventMgr.AddHandler(this, GamePlayerEvent.Quit, new DOLEventHandler(DuelOnPlayerQuit));
-			GameEventMgr.AddHandler(this, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(DuelOnAttack));
-			GameEventMgr.AddHandler(this, GameLivingEvent.AttackFinished, new DOLEventHandler(DuelOnAttack));
-			m_duelTarget = duelTarget;
-			duelTarget.DuelStart(this);
+			Duel = new GameDuel(this, duelTarget);
+			Duel.Start();
 		}
 
 		/// <summary>
@@ -7743,92 +7736,12 @@ namespace DOL.GS
 		/// </summary>
 		public void DuelStop()
 		{
-			GamePlayer target = DuelTarget;
-			if (target == null)
+			if (Duel == null)
 				return;
-
-			foreach (GameSpellEffect effect in EffectList.GetAllOfType<GameSpellEffect>())
-			{
-				if (effect.SpellHandler.Caster == target && !effect.SpellHandler.HasPositiveEffect)
-					effect.Cancel(false);
-			}
-			m_duelTarget = null;
-			GameEventMgr.RemoveHandler(this, GamePlayerEvent.Quit, new DOLEventHandler(DuelOnPlayerQuit));
-			GameEventMgr.RemoveHandler(this, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(DuelOnAttack));
-			GameEventMgr.RemoveHandler(this, GameLivingEvent.AttackFinished, new DOLEventHandler(DuelOnAttack));
-			lock (m_xpGainers.SyncRoot)
-			{
-				m_xpGainers.Clear();
-			}
-			Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.DuelStop.DuelEnds"), eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
-			target.DuelStop();
-		}
-
-		/// <summary>
-		/// Stops the duel if player attack or is attacked by anything other that duel target
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="arguments"></param>
-		private void DuelOnAttack(DOLEvent e, object sender, EventArgs arguments)
-		{
-			AttackData ad = null;
-			GameLiving target = null;
-			if (arguments is AttackFinishedEventArgs)
-			{
-				ad = ((AttackFinishedEventArgs)arguments).AttackData;
-				target = ad.Target;
-			}
-			else if (arguments is AttackedByEnemyEventArgs)
-			{
-				ad = ((AttackedByEnemyEventArgs)arguments).AttackData;
-				target = ad.Attacker;
-			}
-
-			if (ad == null)
-				return;
-
-			// check pets owner for my and enemy attacks
-			GameNPC npc = target as GameNPC;
-			if (npc != null)
-			{
-				IControlledBrain brain = npc.Brain as IControlledBrain;
-				if (brain != null)
-					target = brain.Owner;
-			}
-
-			// Duel should end if players join group and trys to attack
-			if (ad.Attacker.Group != null && ad.Attacker.Group.IsInTheGroup(ad.Target))
-			{
-				DuelStop();
-			}
 			
-			switch (ad.AttackResult)
-			{
-				case eAttackResult.Blocked:
-				case eAttackResult.Evaded:
-				case eAttackResult.Fumbled:
-				case eAttackResult.HitStyle:
-				case eAttackResult.HitUnstyled:
-				case eAttackResult.Missed:
-				case eAttackResult.Parried:
-					if (target != DuelTarget)
-						DuelStop();
-					break;
-			}
+			Duel.Stop();
+			Duel = null;
 		}
-
-		/// <summary>
-		/// Stops the duel on quit/link death
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="arguments"></param>
-		private void DuelOnPlayerQuit(DOLEvent e, object sender, EventArgs arguments)
-		{
-			DuelStop();
-		}
-
 		#endregion
 
 		#region Spell cast
