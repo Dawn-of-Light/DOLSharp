@@ -1108,10 +1108,16 @@ namespace DOL.GS
 		#endregion
 
 		#region release/bind/pray
+		#region Binding
 		/// <summary>
 		/// Property that holds tick when the player bind last time
 		/// </summary>
 		public const string LAST_BIND_TICK = "LastBindTick";
+		
+		/// <summary>
+		/// Min Allowed Interval Between Player Bind
+		/// </summary>
+		public virtual int BindAllowInterval { get { return 60000; }}
 
 		/// <summary>
 		/// Binds this player to the current location
@@ -1119,9 +1125,6 @@ namespace DOL.GS
 		/// <param name="forced">if true, can bind anywhere</param>
 		public virtual void Bind(bool forced)
 		{
-			DOLCharacters character = DBCharacter; // if property will be derived with cost-intensive code, so its only getted one time
-			if (character == null) return;
-
 			if (CurrentRegion.IsInstance)
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Bind.CantHere"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -1130,48 +1133,52 @@ namespace DOL.GS
 
 			if (forced)
 			{
-				character.BindRegion = CurrentRegionID;
-				character.BindHeading = Heading;
-				character.BindXpos = X;
-				character.BindYpos = Y;
-				character.BindZpos = Z;
-				GameServer.Database.SaveObject(character);
+				BindRegion = CurrentRegionID;
+				BindHeading = Heading;
+				BindXpos = X;
+				BindYpos = Y;
+				BindZpos = Z;
+				if (DBCharacter != null)
+					GameServer.Database.SaveObject(DBCharacter);
 				return;
 			}
-
-			string description = string.Format("in {0}", this.GetBindSpotDescription());
-
-			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.LastBindPoint", description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
+			
 			if (!IsAlive)
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.CantBindDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			long lastBindTick = TempProperties.getProperty<long>(LAST_BIND_TICK);
+
+			//60 second rebind timer
+			long lastBindTick = TempProperties.getProperty<long>(LAST_BIND_TICK, 0);
 			long changeTime = CurrentRegion.Time - lastBindTick;
-			if (Client.Account.PrivLevel == 1 && changeTime < 60000 && changeTime > 0) //60 second rebind timer
+			if (Client.Account.PrivLevel <= (uint)ePrivLevel.Player && changeTime < BindAllowInterval)
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.MustWait", (1 + (60000 - changeTime) / 1000)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.MustWait", (1 + (BindAllowInterval - changeTime) / 1000)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
+			
+			string description = string.Format("in {0}", this.GetBindSpotDescription());
+			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.LastBindPoint", description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			
+			
 			bool bound = false;
-			foreach (AbstractArea area in CurrentAreas.OfType<Area.BindArea>())
+			
+			var bindarea = CurrentAreas.OfType<Area.BindArea>().FirstOrDefault(ar => GameServer.ServerRules.IsAllowedToBind(this, ar.BindPoint));
+			if (bindarea != null)
 			{
-				if (!GameServer.ServerRules.IsAllowedToBind(this, (area as Area.BindArea).BindPoint)) continue;
-				TempProperties.setProperty(LAST_BIND_TICK, CurrentRegion.Time);
-
 				bound = true;
-				character.BindRegion = CurrentRegionID;
-				character.BindHeading = Heading;
-				character.BindXpos = X;
-				character.BindYpos = Y;
-				character.BindZpos = Z;
-				GameServer.Database.SaveObject(character);
-				break;
+				BindRegion = CurrentRegionID;
+				BindHeading = Heading;
+				BindXpos = X;
+				BindYpos = Y;
+				BindZpos = Z;
+				if (DBCharacter != null)
+					GameServer.Database.SaveObject(DBCharacter);
 			}
+			
 			//if we are not bound yet lets check if we are in a house where we can bind
-			if (!bound && InHouse && CurrentHouse != null) // lets do a double check, more safe
+			if (!bound && InHouse && CurrentHouse != null)
 			{
 				var house = CurrentHouse;
 				bool canbindhere;
@@ -1192,44 +1199,57 @@ namespace DOL.GS
 						Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Bind.CantHere"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						return;
 					}
-
-					bound = true;
-					double angle = house.Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
-					int outsideX = (int)(house.X + (0 * Math.Cos(angle) + 500 * Math.Sin(angle)));
-					int outsideY = (int)(house.Y - (500 * Math.Cos(angle) - 0 * Math.Sin(angle)));
-					ushort outsideHeading = (ushort)((house.Heading < 180 ? house.Heading + 180 : house.Heading - 180) / 0.08789);
-					character.BindHouseRegion = CurrentRegionID;
-					character.BindHouseHeading = outsideHeading;
-					character.BindHouseXpos = outsideX;
-					character.BindHouseYpos = outsideY;
-					character.BindHouseZpos = house.Z;
-					GameServer.Database.SaveObject(character);
+					else
+					{
+						bound = true;
+						double angle = house.Heading * ((Math.PI * 2) / 360); // angle*2pi/360;
+						int outsideX = (int)(house.X + (0 * Math.Cos(angle) + 500 * Math.Sin(angle)));
+						int outsideY = (int)(house.Y - (500 * Math.Cos(angle) - 0 * Math.Sin(angle)));
+						ushort outsideHeading = (ushort)((house.Heading < 180 ? house.Heading + 180 : house.Heading - 180) / 0.08789);
+						BindHouseRegion = CurrentRegionID;
+						BindHouseHeading = outsideHeading;
+						BindHouseXpos = outsideX;
+						BindHouseYpos = outsideY;
+						BindHouseZpos = house.Z;
+						if (DBCharacter != null)
+							GameServer.Database.SaveObject(DBCharacter);
+					}
 				}
 			}
+			
 			if (bound)
 			{
 				if (!IsMoving)
 				{
 					eEmote bindEmote = eEmote.Bind;
-					switch (this.Realm)
+					switch (Realm)
 					{
 							case eRealm.Albion: bindEmote = eEmote.BindAlb; break;
 							case eRealm.Midgard: bindEmote = eEmote.BindMid; break;
 							case eRealm.Hibernia: bindEmote = eEmote.BindHib; break;
 					}
+					
 					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
-						if (player == null) continue;
+						if (player == null)
+							return;
+						
 						if ((int)player.Client.Version < (int)GameClient.eClientVersion.Version187)
 							player.Out.SendEmoteAnimation(this, eEmote.Bind);
-						else player.Out.SendEmoteAnimation(this, bindEmote);
+						else
+							player.Out.SendEmoteAnimation(this, bindEmote);
 					}
 				}
+				
+				TempProperties.setProperty(LAST_BIND_TICK, CurrentRegion.Time);
 				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Bind.Bound"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 			else
+			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Bind.CantHere"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
 		}
+		#endregion
 
 		/// <summary>
 		/// tick when player is died
