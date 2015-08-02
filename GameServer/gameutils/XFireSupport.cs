@@ -30,7 +30,7 @@ namespace DOL.GS.GameEvents
 			if (player == null) return;
 			//			if (player.IsAnonymous) return; TODO check /anon and xfire
 			byte flag = 0;
-			if (player.DBCharacter.ShowXFireInfo)
+			if (player.ShowXFireInfo)
 				flag = 1;
 			player.Out.SendXFireInfo(flag);
 		}
@@ -61,13 +61,13 @@ namespace DOL.GS.Commands
 			byte flag = 0;
 			if (args[1].ToLower().Equals("on"))
 			{
-				client.Player.DBCharacter.ShowXFireInfo = true;
+				client.Player.ShowXFireInfo = true;
 				DisplayMessage(client, "Your XFire flag is ON. Your character data will be sent to the XFire service ( if you have XFire installed ). Use '/xfire off' to disable sending character data to the XFire service.");
 				flag = 1;
 			}
 			else if (args[1].ToLower().Equals("off"))
 			{
-				client.Player.DBCharacter.ShowXFireInfo = false;
+				client.Player.ShowXFireInfo = false;
 				DisplayMessage(client, "Your XFire flag is OFF. TODO correct message.");
 			}
 			else

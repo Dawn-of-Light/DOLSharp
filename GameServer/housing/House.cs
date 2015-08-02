@@ -1292,7 +1292,7 @@ namespace DOL.GS.Housing
 			if (!_databaseItem.GuildHouse)
 			{
 				// check if character is explicit owner
-				if (_databaseItem.OwnerID == player.DBCharacter.ObjectId)
+				if (_databaseItem.OwnerID == player.ObjectId)
 					return true;
 
 				// check account-wide if not a guild house

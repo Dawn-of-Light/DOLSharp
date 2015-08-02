@@ -161,7 +161,7 @@ namespace DOL.GS
 			if (text.ToLower() == "hearth")
 			{
 				// Check if player has set a house bind
-				if (!(player.DBCharacter.BindHouseRegion > 0))
+				if (!(player.BindHouseRegion > 0))
 				{
 					SayTo(player, "Sorry, you haven't set any house bind point yet.");
 					return false;
@@ -169,8 +169,8 @@ namespace DOL.GS
 
 				// Check if the house at the player's house bind location still exists
 				ArrayList houses = (ArrayList)HouseMgr.GetHousesCloseToSpot((ushort)player.
-					DBCharacter.BindHouseRegion, player.DBCharacter.BindHouseXpos, player.
-					DBCharacter.BindHouseYpos, 700);
+					BindHouseRegion, player.BindHouseXpos, player.
+					BindHouseYpos, 700);
 				if (houses.Count == 0)
 				{
 					SayTo(player, "I'm afraid I can't teleport you to your hearth since the house at your " + 
@@ -210,11 +210,11 @@ namespace DOL.GS
 				Teleport teleport = new Teleport();
 				teleport.TeleportID = "hearth";
 				teleport.Realm = (int)DestinationRealm;
-				teleport.RegionID = player.DBCharacter.BindHouseRegion;
-				teleport.X = player.DBCharacter.BindHouseXpos;
-				teleport.Y = player.DBCharacter.BindHouseYpos;
-				teleport.Z = player.DBCharacter.BindHouseZpos;
-				teleport.Heading = player.DBCharacter.BindHouseHeading;
+				teleport.RegionID = player.BindHouseRegion;
+				teleport.X = player.BindHouseXpos;
+				teleport.Y = player.BindHouseYpos;
+				teleport.Z = player.BindHouseZpos;
+				teleport.Heading = player.BindHouseHeading;
 				OnDestinationPicked(player, teleport);
 				return true;
 			}

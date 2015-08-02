@@ -719,7 +719,7 @@ namespace DOL.GS
 			public GuildMemberDisplay(GamePlayer player)
 			{
 				m_internalID = player.InternalID;
-				m_name = player.DBCharacter.Name;
+				m_name = player.Name;
 				m_level = player.Level.ToString();
 				m_characterClassID = player.CharacterClass.ID.ToString();
 				m_rank = player.GuildRank.RankLevel.ToString(); ;

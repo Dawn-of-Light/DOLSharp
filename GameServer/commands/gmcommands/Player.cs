@@ -1096,7 +1096,7 @@ namespace DOL.GS.Commands
 
                         if (args[2] == "list")
                         {
-                            string[] list = player.DBCharacter.SerializedFriendsList.Split(',');
+                            string[] list = player.SerializedFriendsList;
                             client.Out.SendCustomTextWindow(player.Name + "'s Friend List", list);
                             return;
                         }

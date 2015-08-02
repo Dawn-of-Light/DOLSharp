@@ -69,7 +69,7 @@ namespace DOL.GS.Effects
 				effectiveness = 0.5;
 
 			#region Get new classdependend effect
-			switch ((eCharacterClass)carrier.DBCharacter.Class) {
+			switch ((eCharacterClass)carrier.CharacterClass.ID) {
 				case eCharacterClass.Wizard: 
 				case eCharacterClass.Theurgist:
 				case eCharacterClass.Sorcerer:

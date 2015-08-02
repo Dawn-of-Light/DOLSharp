@@ -54,23 +54,23 @@ namespace DOL.GS.Commands
 		private void WdChange(GlobalConstants.eWebDisplay category, GamePlayer player, string state)
 		{
 			if (string.IsNullOrEmpty(state))
-				player.DBCharacter.NotDisplayedInHerald ^= (byte)category;
+				player.NotDisplayedInHerald ^= (byte)category;
 			else
 			{
 				if (state == "off")
-					player.DBCharacter.NotDisplayedInHerald |= (byte)category;
+					player.NotDisplayedInHerald |= (byte)category;
 				
 				if (state == "on")
-					player.DBCharacter.NotDisplayedInHerald &= (byte)~category;
+					player.NotDisplayedInHerald &= (byte)~category;
 			}
 			
-			log.Debug("Player " + player.Name + ": WD = " + player.DBCharacter.NotDisplayedInHerald);
+			log.Debug("Player " + player.Name + ": WD = " + player.NotDisplayedInHerald);
 		}
 
 		// Display the informations
 		private void DisplayInformations(GameClient client)
 		{
-			byte webDisplay = client.Player.DBCharacter.NotDisplayedInHerald;
+			byte webDisplay = client.Player.NotDisplayedInHerald;
 			byte webDisplayFlag;
 
 			string state = "/webdisplay <position|template|equipment|craft> [on|off]\n";
