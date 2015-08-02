@@ -1025,7 +1025,7 @@ namespace DOL.GS
 		public const string Champion_Spells = "Champion Abilities";
 	}
 
-	public class GlobalConstants
+	public static class GlobalConstants
 	{
 		private static readonly Dictionary<GameLiving.eAttackResult, byte> AttackResultByte = new Dictionary<GameLiving.eAttackResult, byte>()
 	    {
@@ -2281,7 +2281,168 @@ namespace DOL.GS
 		{
 			{eCharacterClass.Valkyrie, eGender.Female},
 			{eCharacterClass.Bainshee, eGender.Female},
-		};		
+		};
+		
+		/// <summary>
+		/// Holds all realm rank names
+		/// sirru mod 20.11.06
+		/// </summary>
+		public static string[, ,] REALM_RANK_NAMES = new string[,,]
+		{
+			// Albion
+			{
+				// Male
+				{
+					"Guardian",
+					"Warder",
+					"Myrmidon",
+					"Gryphon Knight",
+					"Eagle Knight",
+					"Phoenix Knight",
+					"Alerion Knight",
+					"Unicorn Knight",
+					"Lion Knight",
+					"Dragon Knight",
+					"Lord",
+					"Baronet",
+					"Baron"
+				}
+				,
+				// Female
+				{
+					"Guardian",
+					"Warder",
+					"Myrmidon",
+					"Gryphon Knight",
+					"Eagle Knight",
+					"Phoenix Knight",
+					"Alerion Knight",
+					"Unicorn Knight",
+					"Lion Knight",
+					"Dragon Knight",
+					"Lady",
+					"Baronetess",
+					"Baroness"
+				}
+			}
+			,
+			// Midgard
+			{
+				// Male
+				{
+					"Skiltvakten",
+					"Isen Vakten",
+					"Flammen Vakten",
+					"Elding Vakten",
+					"Stormur Vakten",
+					"Isen Herra",
+					"Flammen Herra",
+					"Elding Herra",
+					"Stormur Herra",
+					"Einherjar",
+					"Herra",
+					"Hersir",
+					"Vicomte"
+				}
+				,
+				// Female
+				{
+					"Skiltvakten",
+					"Isen Vakten",
+					"Flammen Vakten",
+					"Elding Vakten",
+					"Stormur Vakten",
+					"Isen Fru",
+					"Flammen Fru",
+					"Elding Fru",
+					"Stormur Fru",
+					"Einherjar",
+					"Fru",
+					"Baronsfru",
+					"Vicomtessa"
+				}
+			}
+			,
+			// Hibernia
+			{
+				// Male
+				{
+					"Savant",
+					"Cosantoir",
+					"Brehon",
+					"Grove Protector",
+					"Raven Ardent",
+					"Silver Hand",
+					"Thunderer",
+					"Gilded Spear",
+					"Tiarna",
+					"Emerald Ridere",
+					"Barun",
+					"Ard Tiarna",
+					"Ciann Cath"
+				}
+				,
+				// Female
+				{
+					"Savant",
+					"Cosantoir",
+					"Brehon",
+					"Grove Protector",
+					"Raven Ardent",
+					"Silver Hand",
+					"Thunderer",
+					"Gilded Spear",
+					"Bantiarna",
+					"Emerald Ridere",
+					"Banbharun",
+					"Ard Bantiarna",
+					"Ciann Cath"
+				}
+			}
+		};
+		
+		/// <summary>
+		/// Translate Given Race/Gender Combo in Client Language
+		/// </summary>
+		/// <param name="client"></param>
+		/// <param name="race"></param>
+		/// <param name="gender"></param>
+		/// <returns></returns>
+		public static string RaceToTranslatedName(this GameClient client, int race, int gender)
+		{
+			eRace r = (eRace)race;
+			string translationID = string.Format("GamePlayer.PlayerRace.{0}", r.ToString("F")); //Returns 'Unknown'
+
+			if (r != 0)
+			{
+				switch ((eGender)gender)
+				{
+					case eGender.Female:
+						translationID = string.Format("GamePlayer.PlayerRace.Female.{0}", r.ToString("F"));
+						break;
+					default:
+						translationID = string.Format("GamePlayer.PlayerRace.Male.{0}", r.ToString("F"));
+						break;
+				}
+			}
+			
+            return LanguageMgr.GetTranslation(client, translationID);
+		}
+		
+		/// <summary>
+		/// Translate Given Race/Gender Combo in Player Language
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="race"></param>
+		/// <param name="gender"></param>
+		/// <returns></returns>
+		public static string RaceToTranslatedName(this GamePlayer player, int race, eGender gender)
+		{
+			if (player.Client != null)
+				return player.Client.RaceToTranslatedName(race, (int)gender);
+			
+			return string.Format("!{0} - {1}!", ((eRace)race).ToString("F"), gender.ToString("F"));
+		}
 		#endregion
 		
 	}

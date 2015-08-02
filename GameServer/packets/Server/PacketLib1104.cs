@@ -185,7 +185,7 @@ namespace DOL.GS.PacketHandler
 								classname = ((eCharacterClass)c.Class).ToString();
 							pak.FillString(classname, 24);
 	
-							string racename = GamePlayer.RACENAMES(m_gameClient, c.Race, c.Gender);
+							string racename = m_gameClient.RaceToTranslatedName(c.Race, c.Gender);
 							pak.FillString(racename, 24);
 	
 							pak.WriteByte((byte)c.Level);
