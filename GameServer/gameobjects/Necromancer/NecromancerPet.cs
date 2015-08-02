@@ -81,7 +81,7 @@ namespace DOL.GS
 
 			// Set immunities/load equipment/etc.
 
-			switch (Name.ToLower)
+			switch (Name.ToLower())
 			{
 				case "lesser zombie servant":
 				case "zombie servant":
@@ -269,7 +269,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				switch (Name.ToLower)
+				switch (Name.ToLower())
 				{
 					case "greater necroservant":
 						return 60;
@@ -286,7 +286,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				switch (Name.ToLower)
+				switch (Name.ToLower())
 				{
 					case "greater necroservant":
 						return (short)(60 + Level / 3 + m_summonConBonus);
@@ -304,7 +304,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				switch (Name.ToLower)
+				switch (Name.ToLower())
 				{
 					case "greater necroservant":
 						return (short)(60 + Level / 2);
@@ -321,7 +321,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				switch (Name.ToLower)
+				switch (Name.ToLower())
 				{
 					case "greater necroservant":
 						return (short)(60 + Level);
@@ -342,7 +342,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				switch (Name.ToLower)
+				switch (Name.ToLower())
 				{
 					case "lesser zombie servant":
 					case "zombie servant":
@@ -361,7 +361,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override int CalculateLeftHandSwingCount()
 		{
-			switch (Name.ToLower)
+			switch (Name.ToLower())
 			{
 				case "lesser zombie servant":
 				case "zombie servant":
@@ -592,7 +592,7 @@ namespace DOL.GS
 					{
 						String taunt = "As one of the many cadaverous servants of Arawn, I am able to [taunt] your enemies so that they will focus on me instead of you.";
 						String empower = "You may also [empower] me with just a word.";
-						switch (Name.ToLower)
+						switch (Name.ToLower())
 						{
 							case "minor zombie servant":
 							case "lesser zombie servant":
