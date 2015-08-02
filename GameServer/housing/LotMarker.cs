@@ -116,7 +116,7 @@ namespace DOL.GS.Housing
 				{
                     InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, totalCost);
 					DatabaseItem.LastPaid = DateTime.Now;
-					DatabaseItem.OwnerID = player.DBCharacter.ObjectId;
+					DatabaseItem.OwnerID = player.ObjectId;
 					CreateHouse(player, 0);
 				}
 				else

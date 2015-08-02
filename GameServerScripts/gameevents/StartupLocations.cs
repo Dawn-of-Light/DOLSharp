@@ -185,7 +185,15 @@ namespace DOL.GS.GameEvents
 		
 		public static StartupLocation GetNonTutorialLocation(GamePlayer player)
 		{
-			return GetAllStartupLocationForCharacter(player.DBCharacter, player.Client.Version).First(sl => sl.ClientRegionID != TUTORIAL_REGIONID);
+			try
+			{
+				return GetAllStartupLocationForCharacter(player.Client.Account.Characters[player.Client.ActiveCharIndex], player.Client.Version).First(sl => sl.ClientRegionID != TUTORIAL_REGIONID);
+			}
+			catch
+			{
+				return null;
+			}
+				
 		}
 
 		/// <summary>

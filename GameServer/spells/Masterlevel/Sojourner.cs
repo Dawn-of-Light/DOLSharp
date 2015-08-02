@@ -413,7 +413,7 @@ namespace DOL.GS.Spells
 
         public override bool CheckBeginCast(GameLiving selectedTarget)
         {
-            if (Caster is GamePlayer && Caster.CurrentRegionID == 51 && ((GamePlayer)Caster).DBCharacter.BindRegion == 51)
+            if (Caster is GamePlayer && Caster.CurrentRegionID == 51 && ((GamePlayer)Caster).BindRegion == 51)
             {
                 if (Caster.CurrentRegionID == 51)
                 {
@@ -454,7 +454,7 @@ namespace DOL.GS.Spells
                         if (pl != null)
                         {
                             SendEffectAnimation(pl, 0, false, 1);
-                            pl.MoveTo((ushort)player.DBCharacter.BindRegion, player.DBCharacter.BindXpos, player.DBCharacter.BindYpos, player.DBCharacter.BindZpos, (ushort)player.DBCharacter.BindHeading);
+                            pl.MoveTo((ushort)player.BindRegion, player.BindXpos, player.BindYpos, player.BindZpos, (ushort)player.BindHeading);
                         }
                     }
                 }

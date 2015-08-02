@@ -89,7 +89,7 @@ namespace DOL.GS.Commands
 				DBBannedAccount b = new DBBannedAccount
 				                    {
 				                    	DateBan = DateTime.Now,
-				                    	Author = client.Player.DBCharacter.Name,
+				                    	Author = client.Player.Name,
 				                    	Ip = acc.LastLoginIP,
 				                    	Account = acc.Name
 				                    };

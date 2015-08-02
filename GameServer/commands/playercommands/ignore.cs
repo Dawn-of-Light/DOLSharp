@@ -38,7 +38,7 @@ namespace DOL.GS.Commands
         {
             if (args.Length < 2)
             {
-                string[] ignores = client.Player.DBCharacter.SerializedIgnoreList.Split(',');
+                string[] ignores = client.Player.SerializedIgnoreList;
                 client.Out.SendCustomTextWindow("Ignore List (snapshot)", ignores);
                 return;
             }

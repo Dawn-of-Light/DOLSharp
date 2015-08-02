@@ -1218,11 +1218,11 @@ namespace DOL.GS.PacketHandler
 				return;
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.MoneyUpdate)))
 			{
-				pak.WriteByte((byte) m_gameClient.Player.DBCharacter.Copper);
-				pak.WriteByte((byte) m_gameClient.Player.DBCharacter.Silver);
-				pak.WriteShort((ushort) m_gameClient.Player.DBCharacter.Gold);
-				pak.WriteShort((ushort) m_gameClient.Player.DBCharacter.Mithril);
-				pak.WriteShort((ushort) m_gameClient.Player.DBCharacter.Platinum);
+				pak.WriteByte((byte) m_gameClient.Player.Copper);
+				pak.WriteByte((byte) m_gameClient.Player.Silver);
+				pak.WriteShort((ushort) m_gameClient.Player.Gold);
+				pak.WriteShort((ushort) m_gameClient.Player.Mithril);
+				pak.WriteShort((ushort) m_gameClient.Player.Platinum);
 				SendTCP(pak);
 			}
 		}

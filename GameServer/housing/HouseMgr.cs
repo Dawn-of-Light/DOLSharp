@@ -618,7 +618,7 @@ namespace DOL.GS.Housing
 				{
 					var house = entry.Value;
 
-					if (house.OwnerID == p.DBCharacter.ObjectId)
+					if (house.OwnerID == p.ObjectId)
 						return house;
 				}
 			}

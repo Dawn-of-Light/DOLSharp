@@ -155,12 +155,12 @@ namespace DOL.GS
 
 				if (player.FreeLevelState == 2)
 				{
-					player.DBCharacter.LastFreeLevel = player.Level;
+					player.LastFreeLevel = player.Level;
 					//long xp = GameServer.ServerRules.GetExperienceForLevel(player.PlayerCharacter.LastFreeLevel + 3) - GameServer.ServerRules.GetExperienceForLevel(player.PlayerCharacter.LastFreeLevel + 2);
-					long xp = player.GetExperienceNeededForLevel(player.DBCharacter.LastFreeLevel + 1) - player.GetExperienceNeededForLevel(player.DBCharacter.LastFreeLevel);
+					long xp = player.GetExperienceNeededForLevel(player.LastFreeLevel + 1) - player.GetExperienceNeededForLevel(player.LastFreeLevel);
 					//player.PlayerCharacter.LastFreeLevel = player.Level;
 					player.GainExperience(GameLiving.eXPSource.Other, xp);
-					player.DBCharacter.LastFreeLeveled = DateTime.Now;
+					player.LastFreeLeveled = DateTime.Now;
 					player.Out.SendPlayerFreeLevelUpdate();
 				}
 			}

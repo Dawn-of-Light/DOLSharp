@@ -42,7 +42,7 @@ namespace DOL.GS.Commands
 					// NOT SURE FOR THIS MESSAGE
 					message = LanguageMgr.GetTranslation(client.Account.Language, "PLCommands.FreeLevel.Removed");
 					// we decline THIS ONE, but next level, we will gain another freelevel !!
-					client.Player.DBCharacter.LastFreeLevel = client.Player.Level - 1;
+					client.Player.LastFreeLevel = client.Player.Level - 1;
 					client.Player.Out.SendPlayerFreeLevelUpdate();
 				}
 				else
@@ -59,13 +59,13 @@ namespace DOL.GS.Commands
 			switch (client.Player.Realm)
 			{
 				case eRealm.Albion:
-					t = client.Player.DBCharacter.LastFreeLeveled.AddDays(DOL.GS.ServerProperties.Properties.FREELEVEL_DAYS_ALBION) - DateTime.Now;
+					t = client.Player.LastFreeLeveled.AddDays(DOL.GS.ServerProperties.Properties.FREELEVEL_DAYS_ALBION) - DateTime.Now;
 					break;
 				case eRealm.Midgard:
-					t = client.Player.DBCharacter.LastFreeLeveled.AddDays(DOL.GS.ServerProperties.Properties.FREELEVEL_DAYS_MIDGARD) - DateTime.Now;
+					t = client.Player.LastFreeLeveled.AddDays(DOL.GS.ServerProperties.Properties.FREELEVEL_DAYS_MIDGARD) - DateTime.Now;
 					break;
 				case eRealm.Hibernia:
-					t = client.Player.DBCharacter.LastFreeLeveled.AddDays(DOL.GS.ServerProperties.Properties.FREELEVEL_DAYS_HIBERNIA) - DateTime.Now;
+					t = client.Player.LastFreeLeveled.AddDays(DOL.GS.ServerProperties.Properties.FREELEVEL_DAYS_HIBERNIA) - DateTime.Now;
 					Console.WriteLine("derp");
 					break;
 			}

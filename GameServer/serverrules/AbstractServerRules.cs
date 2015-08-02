@@ -1333,7 +1333,7 @@ namespace DOL.GS.ServerRules
 			killedPlayer.LastDeathRealmPoints = 0;
 			// "player has been killed recently"
 			long noExpSeconds = ServerProperties.Properties.RP_WORTH_SECONDS;
-			if (killedPlayer.DBCharacter.DeathTime + noExpSeconds > killedPlayer.PlayedTime)
+			if (killedPlayer.DeathTime + noExpSeconds > killedPlayer.PlayedTime)
 			{
 				lock (killedPlayer.XPGainers.SyncRoot)
 				{

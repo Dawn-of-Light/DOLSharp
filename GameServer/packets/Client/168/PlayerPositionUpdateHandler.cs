@@ -146,11 +146,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if (realZ == 0)
 			{
 				client.Player.MoveTo(
-					(ushort)client.Player.DBCharacter.BindRegion,
-					client.Player.DBCharacter.BindXpos,
-					client.Player.DBCharacter.BindYpos,
-					(ushort)client.Player.DBCharacter.BindZpos,
-					(ushort)client.Player.DBCharacter.BindHeading
+					(ushort)client.Player.BindRegion,
+					client.Player.BindXpos,
+					client.Player.BindYpos,
+					(ushort)client.Player.BindZpos,
+					(ushort)client.Player.BindHeading
 				);
 				return;
 			}

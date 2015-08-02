@@ -62,7 +62,7 @@ namespace DOL.GS.Effects
             GamePlayer player = owner as GamePlayer;
             if (player is GamePlayer)
             {
-                player.Model = (ushort)player.DBCharacter.CreationModel;
+                player.Model = (ushort)player.CreationModel;
             }
         }
 

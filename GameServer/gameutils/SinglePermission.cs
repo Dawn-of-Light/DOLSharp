@@ -34,7 +34,7 @@ namespace DOL.GS
 
 		public static bool HasPermission(GamePlayer player,string command)
 		{
-			DataObject obj = GameServer.Database.SelectObject<DBSinglePermission>("Command = '" + GameServer.Database.Escape(command) + "' and (PlayerID = '" + GameServer.Database.Escape(player.DBCharacter.ObjectId) + "' OR PlayerID = '" + GameServer.Database.Escape(player.DBCharacter.AccountName) + "')");
+			DataObject obj = GameServer.Database.SelectObject<DBSinglePermission>("Command = '" + GameServer.Database.Escape(command) + "' and (PlayerID = '" + GameServer.Database.Escape(player.ObjectId) + "' OR PlayerID = '" + GameServer.Database.Escape(player.AccountName) + "')");
 			if (obj == null)
 				return false;
 			return true;
@@ -44,7 +44,7 @@ namespace DOL.GS
 		{
 			DBSinglePermission perm = new DBSinglePermission();
 			perm.Command = command;
-			perm.PlayerID = player.DBCharacter.ObjectId;
+			perm.PlayerID = player.ObjectId;
 			GameServer.Database.AddObject(perm);
 		}
 
@@ -52,13 +52,13 @@ namespace DOL.GS
 		{
 			DBSinglePermission perm = new DBSinglePermission();
 			perm.Command = command;
-			perm.PlayerID = player.DBCharacter.AccountName;
+			perm.PlayerID = player.AccountName;
 			GameServer.Database.AddObject(perm);
 		}
 
 		public static bool removePermission(GamePlayer player,string command)
 		{
-			DataObject obj = GameServer.Database.SelectObject<DBSinglePermission>("Command = '" + GameServer.Database.Escape(command) + "' and PlayerID = '" + GameServer.Database.Escape(player.DBCharacter.ObjectId) + "'");
+			DataObject obj = GameServer.Database.SelectObject<DBSinglePermission>("Command = '" + GameServer.Database.Escape(command) + "' and PlayerID = '" + GameServer.Database.Escape(player.ObjectId) + "'");
 			if (obj == null)
 			{
 				return false;

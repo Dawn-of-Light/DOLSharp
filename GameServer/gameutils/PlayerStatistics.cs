@@ -220,7 +220,7 @@ namespace DOL.GS
 
             foreach (GameClient c in WorldMgr.GetAllPlayingClients())
             {
-                if (c == null || c.Account.PrivLevel != 1 || c.Player.DBCharacter.IgnoreStatistics)
+                if (c == null || c.Account.PrivLevel != 1 || c.Player.IgnoreStatistics)
                     continue;
 
                 PlayerStatistics stats = c.Player.Statistics as PlayerStatistics;
@@ -501,7 +501,7 @@ namespace DOL.GS.GameEvents
 		public static uint RPsEarnedFromKill(GamePlayer killer, GamePlayer killedPlayer)
 		{
 			long noExpSeconds = ServerProperties.Properties.RP_WORTH_SECONDS;
-			if (killedPlayer.DBCharacter.DeathTime + noExpSeconds > killedPlayer.PlayedTime)
+			if (killedPlayer.DeathTime + noExpSeconds > killedPlayer.PlayedTime)
 				return 0;
 
 			float totaldmg = 0f;
