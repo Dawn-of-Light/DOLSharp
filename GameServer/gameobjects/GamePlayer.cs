@@ -12454,6 +12454,13 @@ namespace DOL.GS
 				return;
 			m_dbCharacter = (DOLCharacters)obj;
 
+			// Money
+			m_Copper = DBCharacter.Copper;
+			m_Silver = DBCharacter.Silver;
+			m_Gold = DBCharacter.Gold;
+			m_Platinum = DBCharacter.Platinum;
+			m_Mithril = DBCharacter.Mithril;
+			
 			Model = (ushort)DBCharacter.CurrentModel;
 
 			m_customFaceAttributes[(int)eCharFacePart.EyeSize] = DBCharacter.EyeSize;
