@@ -26,8 +26,8 @@ namespace DOL.GS.Spells
 
 		public override bool IsOverwritable(GameSpellEffect compare)
 		{
-			if (Spell.Group != 0)
-				return Spell.Group == compare.Spell.Group;
+			if (Spell.EffectGroup != 0 || compare.Spell.EffectGroup != 0)
+				return Spell.EffectGroup == compare.Spell.EffectGroup;
 			if (base.IsOverwritable(compare) == false) return false;
 			if (compare.Spell.Duration != Spell.Duration) return false;
 			return true;

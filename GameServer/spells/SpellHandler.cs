@@ -2668,7 +2668,7 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public virtual bool IsOverwritable(GameSpellEffect compare)
 		{
-			if (Spell.EffectGroup != 0)
+			if (Spell.EffectGroup != 0 || compare.Spell.EffectGroup != 0)
 				return Spell.EffectGroup == compare.Spell.EffectGroup;
 			if (compare.Spell.SpellType != Spell.SpellType)
 				return false;
