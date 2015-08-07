@@ -7791,35 +7791,6 @@ namespace DOL.GS
 			
 			Out.SendDisableSkill(skills);
 		}
-
-		/// <summary>
-		/// Updates all disabled skills to player
-		/// </summary>
-		public virtual void UpdateDisabledSkills()
-		{
-			var disables = new List<Tuple<Skill, int>>();
-			
-			foreach (Skill skl in GetAllUsableSkills().Select(skt => skt.Item1).Where(sk => !(sk is Specialization))
-			         .Union(GetAllUsableListSpells().SelectMany(sl => sl.Item2)))
-			{
-				disables.Add(new Tuple<Skill, int>(skl, GetSkillDisabledDuration(skl)));
-			}
-			
-			Out.SendDisableSkill(disables);
-		}
-
-		/// <summary>
-		/// Reset all disabled skills to player
-		/// </summary>
-		public virtual void ResetDisabledSkills()
-		{
-			foreach (Skill skl in GetAllDisabledSkills())
-			{
-				RemoveDisabledSkill(skl);
-			}
-			
-			UpdateDisabledSkills();
-		}
 		
 		/// <summary>
 		/// The next spell

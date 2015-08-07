@@ -30,6 +30,7 @@ namespace DOL.GS
 	/// </summary>
 	public static class GamePlayerUtils
 	{
+		#region Spot and Area Description / Translation
 		/// <summary>
 		/// Get Spot Description Checking Any Area with Description or Zone Description
 		/// </summary>
@@ -182,5 +183,32 @@ namespace DOL.GS
 		{
 			return player.GetTranslatedSpotDescription(WorldMgr.GetRegion((ushort)player.BindRegion), player.BindXpos, player.BindYpos, player.BindZpos);
 		}
+		#endregion
+		
+		#region player skills
+		/// <summary>
+		/// Updates all disabled skills to player
+		/// </summary>
+		public static void UpdateDisabledSkills(this GamePlayer player)
+		{
+			player.Out.SendDisableSkill(player.GetAllUsableSkills().Select(skt => skt.Item1).Where(sk => !(sk is Specialization))
+			         .Union(player.GetAllUsableListSpells().SelectMany(sl => sl.Item2))
+			         .Select(sk => new Tuple<Skill, int>(sk, player.GetSkillDisabledDuration(sk))).ToArray());
+		}
+
+		/// <summary>
+		/// Reset all disabled skills to player
+		/// </summary>
+		public static void ResetDisabledSkills(this GamePlayer player)
+		{
+			foreach (Skill skl in player.GetAllDisabledSkills())
+			{
+				player.RemoveDisabledSkill(skl);
+			}
+			
+			player.UpdateDisabledSkills();
+		}
+
+		#endregion
 	}
 }

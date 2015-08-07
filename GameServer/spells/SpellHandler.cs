@@ -1986,7 +1986,7 @@ namespace DOL.GS.Spells
 				}
 			}
 
-			if (modifiedTarget == "pet" && Spell.Damage > 0 && Spell.Radius > 0)
+			if (modifiedTarget == "pet" && !HasPositiveEffect)
 			{
 				modifiedTarget = "enemy";
 				//[Ganrod] Nidel: can cast TurretPBAoE on selected Pet/Turret
@@ -2438,7 +2438,7 @@ namespace DOL.GS.Spells
 					continue;
 				}
 
-				if (Spell.Radius == 0)
+				if (Spell.Radius == 0 || HasPositiveEffect)
 				{
 					ApplyEffectOnTarget(t, effectiveness);
 				}
@@ -2446,26 +2446,20 @@ namespace DOL.GS.Spells
 				{
 					int dist = t.GetDistanceTo(Caster.GroundTarget);
 					if (dist >= 0)
-					{
 						ApplyEffectOnTarget(t, (effectiveness - CalculateAreaVariance(t, dist, Spell.Radius)));
-					}
 				}
 				else if (Spell.Target.ToLower() == "cone")
 				{
 					int dist = t.GetDistanceTo(Caster);
+					//Cone spells use the range for their variance!
 					if (dist >= 0)
-					{
-						//Cone spells use the range for their variance!
 						ApplyEffectOnTarget(t, (effectiveness - CalculateAreaVariance(t, dist, Spell.Range)));
-					}
 				}
 				else
 				{
 					int dist = t.GetDistanceTo(target);
 					if (dist >= 0)
-					{
 						ApplyEffectOnTarget(t, (effectiveness - CalculateAreaVariance(t, dist, Spell.Radius)));
-					}
 				}
 			}
 
