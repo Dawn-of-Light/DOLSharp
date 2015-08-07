@@ -68,11 +68,14 @@ namespace DOL.GS
 			if (Started)
 				return;
 			
-			Target.DuelStart(Starter);
 			Started = true;
-			GameEventMgr.AddHandler(this, GamePlayerEvent.Quit, new DOLEventHandler(DuelOnPlayerQuit));
-			GameEventMgr.AddHandler(this, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(DuelOnAttack));
-			GameEventMgr.AddHandler(this, GameLivingEvent.AttackFinished, new DOLEventHandler(DuelOnAttack));
+			
+			Target.DuelStart(Starter);
+			GameEventMgr.AddHandler(Starter, GamePlayerEvent.Quit, new DOLEventHandler(DuelOnPlayerQuit));
+			GameEventMgr.AddHandler(Starter, GamePlayerEvent.Linkdeath, new DOLEventHandler(DuelOnPlayerQuit));
+			GameEventMgr.AddHandler(Starter, GamePlayerEvent.RegionChanged, new DOLEventHandler(DuelOnPlayerQuit));
+			GameEventMgr.AddHandler(Starter, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(DuelOnAttack));
+			GameEventMgr.AddHandler(Starter, GameLivingEvent.AttackFinished, new DOLEventHandler(DuelOnAttack));
 		}
 		
 		/// <summary>
@@ -80,8 +83,11 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void Stop()
 		{
-			if (!Started || Starter.DuelTarget != Target)
+			if (!Started)
 				return;
+			
+			Started = false;
+			Target.DuelStop();
 
 			var target = Target;
 			Target = null;
@@ -92,9 +98,11 @@ namespace DOL.GS
 					effect.Cancel(false);
 			}
 
-			GameEventMgr.RemoveHandler(this, GamePlayerEvent.Quit, new DOLEventHandler(DuelOnPlayerQuit));
-			GameEventMgr.RemoveHandler(this, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(DuelOnAttack));
-			GameEventMgr.RemoveHandler(this, GameLivingEvent.AttackFinished, new DOLEventHandler(DuelOnAttack));
+			GameEventMgr.RemoveHandler(Starter, GamePlayerEvent.Quit, new DOLEventHandler(DuelOnPlayerQuit));
+			GameEventMgr.RemoveHandler(Starter, GamePlayerEvent.Linkdeath, new DOLEventHandler(DuelOnPlayerQuit));
+			GameEventMgr.RemoveHandler(Starter, GamePlayerEvent.RegionChanged, new DOLEventHandler(DuelOnPlayerQuit));
+			GameEventMgr.RemoveHandler(Starter, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(DuelOnAttack));
+			GameEventMgr.RemoveHandler(Starter, GameLivingEvent.AttackFinished, new DOLEventHandler(DuelOnAttack));
 			
 			lock (Starter.XPGainers.SyncRoot)
 			{
@@ -102,8 +110,6 @@ namespace DOL.GS
 			}
 			
 			Starter.Out.SendMessage(LanguageMgr.GetTranslation(Starter.Client, "GamePlayer.DuelStop.DuelEnds"), eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
-			Started = false;
-			target.DuelStop();
 		}
 
 		/// <summary>
