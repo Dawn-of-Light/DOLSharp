@@ -83,8 +83,9 @@ namespace DOL.GS
 		/// <returns>Returns the command if it exists, otherwise the return value is null</returns>
 		public static GameCommand GetCommand(string commandName)
 		{
-			if (m_gameCommands.ContainsKey(commandName))
-				return m_gameCommands[commandName];
+			GameCommand cmd;
+			if (m_gameCommands.TryGetValue(commandName, out cmd))
+				return cmd;
 
 			return null;
 		}
@@ -96,27 +97,17 @@ namespace DOL.GS
 		/// <returns>Returns the command if it exists, otherwise the return value is null</returns>
 		public static GameCommand GuessCommand(string commandName)
 		{
-			GameCommand myCommand = GetCommand(commandName);
-			if (myCommand != null) return myCommand;
+			GameCommand cmd;
+			if (m_gameCommands.TryGetValue(commandName, out cmd))
+				return cmd;
 
 			// Trying to guess the command
-			string compareCmdStr = commandName.ToLower();
-			IDictionaryEnumerator iter = m_gameCommands.GetEnumerator();
-
-			while (iter.MoveNext())
-			{
-				GameCommand currentCommand = iter.Value as GameCommand;
-				string currentCommandStr = iter.Key as string;
-
-				if (currentCommand == null) continue;
-
-				if (currentCommandStr.ToLower().StartsWith(compareCmdStr))
-				{
-					myCommand = currentCommand;
-					break;
-				}
-			}
-			return myCommand;
+			var commands =  m_gameCommands.Where(kv => kv.Value != null && kv.Key.StartsWith(commandName, StringComparison.OrdinalIgnoreCase)).Select(kv => kv.Value);
+			
+			if (commands.Count() == 1)
+				return commands.First();
+			
+			return null;
 		}
 
 		/// <summary>
@@ -127,36 +118,9 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static string[] GetCommandList(ePrivLevel plvl, bool addDesc)
 		{
-			IDictionaryEnumerator iter = m_gameCommands.GetEnumerator();
-
-			ArrayList list = new ArrayList();
-
-			while (iter.MoveNext())
-			{
-				GameCommand cmd = iter.Value as GameCommand;
-				string cmdString = iter.Key as string;
-
-				if (cmd == null || cmdString == null)
-				{
-					continue;
-				}
-
-				if (cmdString[0] == '&')
-					cmdString = '/' + cmdString.Remove(0, 1);
-				if ((uint)plvl >= cmd.m_lvl)
-				{
-					if (addDesc)
-					{
-						list.Add(cmdString + " - " + cmd.m_desc);
-					}
-					else
-					{
-						list.Add(cmd.m_cmd);
-					}
-				}
-			}
-
-			return (string[])list.ToArray(typeof(string));
+			return m_gameCommands.Where(kv => kv.Value != null && kv.Key != null && (uint)plvl > kv.Value.m_lvl)
+				.Select(kv => string.Format("/{0}{2}{1}", kv.Key.Remove(0,1), addDesc ? kv.Value.m_desc : string.Empty, addDesc ? " - " : string.Empty))
+				.ToArray();
 		}
 
 		/// <summary>
