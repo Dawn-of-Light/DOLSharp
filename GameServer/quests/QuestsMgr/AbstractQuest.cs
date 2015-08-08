@@ -710,11 +710,11 @@ namespace DOL.GS.Quests
 			if (itemTemplate is ItemUnique)
 			{
 				GameServer.Database.AddObject(itemTemplate as ItemUnique);
-				item = GameInventoryItem.Create<ItemUnique>(itemTemplate as ItemUnique);
+				item = GameInventoryItem.Create(itemTemplate as ItemUnique);
 			}
 			else
 			{
-				item = GameInventoryItem.Create<ItemTemplate>(itemTemplate);
+				item = GameInventoryItem.Create(itemTemplate);
 			}
 
 			if (!player.ReceiveItem(source, item))

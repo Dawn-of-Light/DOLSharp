@@ -531,7 +531,7 @@ namespace DOL.GS
 			m_itemTemp.Id_nb = "GameRelic";
 			m_itemTemp.IsTradable = false;
 			m_itemTemp.ClassType = "DOL.GS.GameInventoryRelic";
-			m_item = GameInventoryItem.Create<ItemTemplate>(m_itemTemp);
+			m_item = GameInventoryItem.Create(m_itemTemp);
 		}
 		/// <summary>
 		/// Saves the current GameRelic to the database

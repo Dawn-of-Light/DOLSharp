@@ -121,7 +121,7 @@ namespace DOL.GS.Spells
 					else
 						m_pet.Inventory.RemoveItem(m_pet.Inventory.GetItem(eInventorySlot.DistanceWeapon));
 
-					m_pet.Inventory.AddItem(eInventorySlot.DistanceWeapon, GameInventoryItem.Create<ItemTemplate>(temp));
+					m_pet.Inventory.AddItem(eInventorySlot.DistanceWeapon, GameInventoryItem.Create(temp));
 				}
 				m_pet.BroadcastLivingEquipmentUpdate();
 			}

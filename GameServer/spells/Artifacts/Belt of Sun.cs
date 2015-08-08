@@ -61,127 +61,127 @@ namespace DOL.GS.Spells
             if (player.CharacterClass.ID == (int)eCharacterClass.Armsman)
             {
                 m_SunCrush = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Crush'") ?? Crush;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunCrush));
+                items.Add(GameInventoryItem.Create(m_SunCrush));
 
                 m_SunSlash = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? Slash;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
 
                 m_SunThrust = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Thrust'") ?? Thrust;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunThrust));
+                items.Add(GameInventoryItem.Create(m_SunThrust));
 
                 m_SunTwoHanded = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_TwoHanded'") ?? TwoHanded;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunTwoHanded));
+                items.Add(GameInventoryItem.Create(m_SunTwoHanded));
 
                 m_SunPolearmSpear = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Polearm'") ?? Polearm;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunPolearmSpear));
+                items.Add(GameInventoryItem.Create(m_SunPolearmSpear));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Friar)
             {
                 m_SunCrush = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Crush'") ?? Crush;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunCrush));
+                items.Add(GameInventoryItem.Create(m_SunCrush));
 
                 m_SunStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Staff'") ?? Staff;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunStaff));
+                items.Add(GameInventoryItem.Create(m_SunStaff));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Heretic)
             {
                 m_SunCrush = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Crush'") ?? Crush;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunCrush));
+                items.Add(GameInventoryItem.Create(m_SunCrush));
 
                 m_SunFlexScytheClaw = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Flex'") ?? Flex;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunFlexScytheClaw));
+                items.Add(GameInventoryItem.Create(m_SunFlexScytheClaw));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Infiltrator)
             {
                 m_SunSlash = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? Slash;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
 
                 m_SunThrust = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Thrust'") ?? Thrust;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunThrust));
+                items.Add(GameInventoryItem.Create(m_SunThrust));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Mercenary)
             {
                 m_SunCrush = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Crush'") ?? Crush;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunCrush));
+                items.Add(GameInventoryItem.Create(m_SunCrush));
 
                 m_SunSlash = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? Slash;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
 
                 m_SunThrust = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Thrust'") ?? Thrust;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunThrust));
+                items.Add(GameInventoryItem.Create(m_SunThrust));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Minstrel)
             {
                 m_SunSlash = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? Slash;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
 
                 m_SunThrust = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Thrust'") ?? Thrust;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunThrust));
+                items.Add(GameInventoryItem.Create(m_SunThrust));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Paladin)
             {
                 m_SunCrush = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Crush'") ?? Crush;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunCrush));
+                items.Add(GameInventoryItem.Create(m_SunCrush));
 
                 m_SunSlash = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? Slash;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
 
                 m_SunThrust = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Thrust'") ?? Thrust;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunThrust));
+                items.Add(GameInventoryItem.Create(m_SunThrust));
 
                 m_SunTwoHanded = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_TwoHanded'") ?? TwoHanded;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunTwoHanded));
+                items.Add(GameInventoryItem.Create(m_SunTwoHanded));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Reaver)
             {
                 m_SunCrush = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Crush'") ?? Crush;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunCrush));
+                items.Add(GameInventoryItem.Create(m_SunCrush));
 
                 m_SunSlash = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? Slash;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
 
                 m_SunThrust = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Thrust'") ?? Thrust;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunThrust));
+                items.Add(GameInventoryItem.Create(m_SunThrust));
 
                 m_SunFlexScytheClaw = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Flex'") ?? Flex;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunFlexScytheClaw));
+                items.Add(GameInventoryItem.Create(m_SunFlexScytheClaw));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Scout)
             {
                 m_SunSlash = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? Slash;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
 
                 m_SunThrust = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Thrust'") ?? Thrust;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunThrust));
+                items.Add(GameInventoryItem.Create(m_SunThrust));
 
                 m_SunBow = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Bow'") ?? Bow;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunBow));
+                items.Add(GameInventoryItem.Create(m_SunBow));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.MaulerAlb)
             {
                 m_SunMFist = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_MFist'") ?? MFist;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunMFist));
+                items.Add(GameInventoryItem.Create(m_SunMFist));
 
                 m_SunMStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_MStaff'") ?? MStaff;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunMStaff));
+                items.Add(GameInventoryItem.Create(m_SunMStaff));
                 return;
             }
             #endregion Alb
@@ -190,127 +190,127 @@ namespace DOL.GS.Spells
             if (player.CharacterClass.ID == (int)eCharacterClass.Berserker)
             {
                 m_SunCrush = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Crush'") ?? CrushM; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunCrush));
+                items.Add(GameInventoryItem.Create(m_SunCrush));
 
                 m_SunSlash = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? SlashM; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
 
                 m_SunAxe = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Axe'") ?? Axe; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunAxe));
+                items.Add(GameInventoryItem.Create(m_SunAxe));
 
                 m_SunTwoHanded = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_TwoHanded'") ?? TwoHandedM; // 2handed Sword
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunTwoHanded));
+                items.Add(GameInventoryItem.Create(m_SunTwoHanded));
 
                 m_Sun2HCrush = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_2HCrush'") ?? THCrushM;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_Sun2HCrush));
+                items.Add(GameInventoryItem.Create(m_Sun2HCrush));
 
                 m_Sun2HAxe = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_2HAxe'") ?? THAxe;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_Sun2HAxe));
+                items.Add(GameInventoryItem.Create(m_Sun2HAxe));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Hunter)
             {
                 m_SunSlash = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? SlashM; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
 
                 m_SunPolearmSpear = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Trust'") ?? SpearM; // Spear
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunPolearmSpear));
+                items.Add(GameInventoryItem.Create(m_SunPolearmSpear));
 
                 m_SunBow = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Bow'") ?? BowM; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunBow));
+                items.Add(GameInventoryItem.Create(m_SunBow));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Savage)
             {
                 m_SunCrush = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Crush'") ?? CrushM; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunCrush));
+                items.Add(GameInventoryItem.Create(m_SunCrush));
 
                 m_SunSlash = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? SlashM; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
 
                 m_SunAxe = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Axe'") ?? Axe; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunAxe));
+                items.Add(GameInventoryItem.Create(m_SunAxe));
 
                 m_SunThrust = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Claw'") ?? Claw; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunThrust));
+                items.Add(GameInventoryItem.Create(m_SunThrust));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Shadowblade)
             {
                 m_SunSlash = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? SlashM; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
 
                 m_SunAxe = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Axe'") ?? Axe; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunAxe));
+                items.Add(GameInventoryItem.Create(m_SunAxe));
 
                 m_SunLeftAxe = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_LeftAxe'") ?? LeftAxe; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunLeftAxe));
+                items.Add(GameInventoryItem.Create(m_SunLeftAxe));
 
                 m_SunTwoHanded = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_TwoHanded'") ?? TwoHandedM; // 2handed Sword
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunTwoHanded));
+                items.Add(GameInventoryItem.Create(m_SunTwoHanded));
 
                 m_Sun2HAxe = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_2HAxe'") ?? THAxe;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_Sun2HAxe));
+                items.Add(GameInventoryItem.Create(m_Sun2HAxe));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Skald)
             {
                 m_SunCrush = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Crush'") ?? CrushM; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunCrush));
+                items.Add(GameInventoryItem.Create(m_SunCrush));
 
                 m_SunSlash = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? SlashM; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
 
                 m_SunAxe = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Axe'") ?? Axe; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunAxe));
+                items.Add(GameInventoryItem.Create(m_SunAxe));
 
                 m_SunTwoHanded = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_TwoHanded'") ?? TwoHandedM; // 2handed Sword
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunTwoHanded));
+                items.Add(GameInventoryItem.Create(m_SunTwoHanded));
 
                 m_Sun2HCrush = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_2HCrush'") ?? THCrushM;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_Sun2HCrush));
+                items.Add(GameInventoryItem.Create(m_Sun2HCrush));
 
                 m_Sun2HAxe = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_2HAxe'") ?? THAxe;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_Sun2HAxe));
+                items.Add(GameInventoryItem.Create(m_Sun2HAxe));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Thane)
             {
                 m_SunCrush = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Crush'") ?? CrushM; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunCrush));
+                items.Add(GameInventoryItem.Create(m_SunCrush));
 
                 m_SunSlash = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? SlashM; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
 
                 m_SunAxe = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Axe'") ?? Axe; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunAxe));
+                items.Add(GameInventoryItem.Create(m_SunAxe));
 
                 m_SunTwoHanded = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_TwoHanded'") ?? TwoHandedM; // 2handed Sword
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunTwoHanded));
+                items.Add(GameInventoryItem.Create(m_SunTwoHanded));
 
                 m_Sun2HCrush = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_2HCrush'") ?? THCrushM;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_Sun2HCrush));
+                items.Add(GameInventoryItem.Create(m_Sun2HCrush));
 
                 m_Sun2HAxe = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_2HAxe'") ?? THAxe;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_Sun2HAxe));
+                items.Add(GameInventoryItem.Create(m_Sun2HAxe));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Thane)
             {
                 m_SunSlash = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? SlashM; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
 
                 m_SunTwoHanded = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_TwoHanded'") ?? TwoHandedM; // 2handed Sword
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunTwoHanded));
+                items.Add(GameInventoryItem.Create(m_SunTwoHanded));
 
                 m_SunPolearmSpear = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Trust'") ?? SpearM; // Spear
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunPolearmSpear));
+                items.Add(GameInventoryItem.Create(m_SunPolearmSpear));
                 return;
             }
 
@@ -318,32 +318,32 @@ namespace DOL.GS.Spells
             if (player.CharacterClass.ID == (int)eCharacterClass.Warrior)
             {
                 m_SunCrush = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Crush'") ?? CrushM; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunCrush));
+                items.Add(GameInventoryItem.Create(m_SunCrush));
 
                 m_SunSlash = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? SlashM; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
 
                 m_SunAxe = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Axe'") ?? Axe; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunAxe));
+                items.Add(GameInventoryItem.Create(m_SunAxe));
 
                 m_SunTwoHanded = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_TwoHanded'") ?? TwoHandedM; // 2handed Sword
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunTwoHanded));
+                items.Add(GameInventoryItem.Create(m_SunTwoHanded));
 
                 m_Sun2HCrush = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_2HCrush'") ?? THCrushM;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_Sun2HCrush));
+                items.Add(GameInventoryItem.Create(m_Sun2HCrush));
 
                 m_Sun2HAxe = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_2HAxe'") ?? THAxe;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_Sun2HAxe));
+                items.Add(GameInventoryItem.Create(m_Sun2HAxe));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.MaulerMid)
             {
                 m_SunMFist = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_MFist'") ?? MFist;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunMFist));
+                items.Add(GameInventoryItem.Create(m_SunMFist));
 
                 m_SunMStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_MStaff'") ?? MStaff;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunMStaff));
+                items.Add(GameInventoryItem.Create(m_SunMStaff));
                 return;
             }
 
@@ -353,115 +353,115 @@ namespace DOL.GS.Spells
             if (player.CharacterClass.ID == (int)eCharacterClass.Bard)
             {
                 m_SunCrush = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Crush'") ?? CrushH; // Blunt
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunCrush));
+                items.Add(GameInventoryItem.Create(m_SunCrush));
 
                 m_SunStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? SlashH; // Blades
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Blademaster)
             {
                 m_SunCrush = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Crush'") ?? CrushH; // Blunt
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunCrush));
+                items.Add(GameInventoryItem.Create(m_SunCrush));
 
                 m_SunStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? SlashH; // Blades
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
 
                 m_SunStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Thrust'") ?? ThrustH; // Piercing
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunThrust));
+                items.Add(GameInventoryItem.Create(m_SunThrust));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Champion)
             {
                 m_SunCrush = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Crush'") ?? CrushH; // Blunt
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunCrush));
+                items.Add(GameInventoryItem.Create(m_SunCrush));
 
                 m_SunStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? SlashH; // Blades
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
 
                 m_SunStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Thrust'") ?? ThrustH; // Piercing
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunThrust));
+                items.Add(GameInventoryItem.Create(m_SunThrust));
 
                 m_SunStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? TwoHandedH; // LargeWeapon
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunTwoHanded));
+                items.Add(GameInventoryItem.Create(m_SunTwoHanded));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Hero)
             {
                 m_SunCrush = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Crush'") ?? CrushH; // Blunt
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunCrush));
+                items.Add(GameInventoryItem.Create(m_SunCrush));
 
                 m_SunStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? SlashH; // Blades
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
 
                 m_SunStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Thrust'") ?? ThrustH; // Piercing
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunThrust));
+                items.Add(GameInventoryItem.Create(m_SunThrust));
 
                 m_SunStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? TwoHandedH; // LargeWeapon
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunTwoHanded));
+                items.Add(GameInventoryItem.Create(m_SunTwoHanded));
 
                 m_SunPolearmSpear = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Spear'") ?? SpearH; // Spear
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunPolearmSpear));
+                items.Add(GameInventoryItem.Create(m_SunPolearmSpear));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Nightshade)
             {
                 m_SunStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? SlashH; // Blades
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
 
                 m_SunStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Thrust'") ?? ThrustH; // Piercing
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunThrust));
+                items.Add(GameInventoryItem.Create(m_SunThrust));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Ranger)
             {
                 m_SunStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? SlashH; // Blades
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
 
                 m_SunStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Thrust'") ?? ThrustH; // Piercing
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunThrust));
+                items.Add(GameInventoryItem.Create(m_SunThrust));
 
                 m_SunBow = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Bow'") ?? BowH; //
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunBow));
+                items.Add(GameInventoryItem.Create(m_SunBow));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Valewalker)
             {
                 m_SunStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_FlexScythe'") ?? Scythe;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunFlexScytheClaw));
+                items.Add(GameInventoryItem.Create(m_SunFlexScytheClaw));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Valewalker)
             {
                 m_SunStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Thrust'") ?? ThrustH; // Piercing
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunThrust));
+                items.Add(GameInventoryItem.Create(m_SunThrust));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.Warden)
             {
                 m_SunCrush = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Crush'") ?? CrushH; // Blunt
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunCrush));
+                items.Add(GameInventoryItem.Create(m_SunCrush));
 
                 m_SunStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_Slash'") ?? SlashH; // Blades
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunSlash));
+                items.Add(GameInventoryItem.Create(m_SunSlash));
                 return;
             }
 
             if (player.CharacterClass.ID == (int)eCharacterClass.MaulerHib)
             {
                 m_SunMFist = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_MFist'") ?? MFist;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunMFist));
+                items.Add(GameInventoryItem.Create(m_SunMFist));
 
                 m_SunMStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Sun_MStaff'") ?? MStaff;
-                items.Add(GameInventoryItem.Create<ItemTemplate>(m_SunMStaff));
+                items.Add(GameInventoryItem.Create(m_SunMStaff));
                 return;
             }
 

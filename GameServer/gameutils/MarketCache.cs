@@ -65,7 +65,7 @@ namespace DOL.GS
 
 				foreach (InventoryItem item in list)
 				{
-					GameInventoryItem playerItem = GameInventoryItem.Create<InventoryItem>(item);
+					GameInventoryItem playerItem = GameInventoryItem.Create(item);
 					m_itemCache.Add(item.ObjectId, playerItem);
 				}
 

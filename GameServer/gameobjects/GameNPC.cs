@@ -4571,10 +4571,10 @@ namespace DOL.GS
 						if (lootTemplate is ItemUnique)
 						{
 							GameServer.Database.AddObject(lootTemplate);
-							invitem = GameInventoryItem.Create<ItemUnique>(lootTemplate as ItemUnique);
+							invitem = GameInventoryItem.Create(lootTemplate as ItemUnique);
 						}
 						else
-							invitem = GameInventoryItem.Create<ItemTemplate>(lootTemplate);
+							invitem = GameInventoryItem.Create(lootTemplate);
 						
 						loot = new WorldInventoryItem(invitem);
 						loot.X = X;

@@ -257,7 +257,7 @@ namespace DOL.GS
 				return;
 			}
 
-			Inventory.AddItem(slot, GameInventoryItem.Create<ItemTemplate>(temp));
+			Inventory.AddItem(slot, GameInventoryItem.Create(temp));
 			SwitchWeapon(aSlot);
 			AddStatsToWeapon();
 			BroadcastLivingEquipmentUpdate();

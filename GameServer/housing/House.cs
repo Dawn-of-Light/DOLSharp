@@ -779,7 +779,7 @@ namespace DOL.GS.Housing
 				var template = GameServer.Database.FindObjectByKey<ItemTemplate>(obj.OwnerID);
 				if (template != null)
 				{
-                    if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, GameInventoryItem.Create<ItemTemplate>(template)))
+                    if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, GameInventoryItem.Create(template)))
                         InventoryLogging.LogInventoryAction("(HOUSE;" + HouseNumber + ")", player, eInventoryActionType.Loot, template);
 				}
 			}

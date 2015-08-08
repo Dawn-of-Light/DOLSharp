@@ -403,7 +403,7 @@ namespace DOL.GS
 			ItemTemplate temp = GameServer.Database.FindObjectByKey<ItemTemplate>(template);
 			if (temp != null)
 			{
-				if (!player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(temp), 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+				if (!player.Inventory.AddTemplate(GameInventoryItem.Create(temp), 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.AddGift.NotEnoughSpace"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;

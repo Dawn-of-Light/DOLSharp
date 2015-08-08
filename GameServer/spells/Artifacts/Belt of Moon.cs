@@ -41,30 +41,30 @@ namespace DOL.GS.Spells
                 if (caster.Realm == eRealm.Albion)
                 {
                     m_MoonMace = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Moon_Mace'") ?? Mace;
-                    items.Add(GameInventoryItem.Create<ItemTemplate>(m_MoonMace));
+                    items.Add(GameInventoryItem.Create(m_MoonMace));
 
                     m_MoonStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Moon_Staff'") ?? Staff;
-                    items.Add(GameInventoryItem.Create<ItemTemplate>(m_MoonStaff));
+                    items.Add(GameInventoryItem.Create(m_MoonStaff));
                     return;
                 }
 
                 if (caster.Realm == eRealm.Midgard)
                 {
                     m_MoonMace = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Moon_MaceM'") ?? MaceM;
-                    items.Add(GameInventoryItem.Create<ItemTemplate>(m_MoonMace));
+                    items.Add(GameInventoryItem.Create(m_MoonMace));
 
                     m_MoonStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Moon_Staff'") ?? Staff;
-                    items.Add(GameInventoryItem.Create<ItemTemplate>(m_MoonStaff));
+                    items.Add(GameInventoryItem.Create(m_MoonStaff));
                     return;
                 }
 
                 if (caster.Realm == eRealm.Hibernia)
                 {
                     m_MoonMace = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Moon_MaceH'") ?? MaceH;
-                    items.Add(GameInventoryItem.Create<ItemTemplate>(m_MoonMace));
+                    items.Add(GameInventoryItem.Create(m_MoonMace));
 
                     m_MoonStaff = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Moon_Staff'") ?? Staff;
-                    items.Add(GameInventoryItem.Create<ItemTemplate>(m_MoonStaff));
+                    items.Add(GameInventoryItem.Create(m_MoonStaff));
                     return;
                 }
             }

@@ -206,7 +206,7 @@ namespace DOL.GS
 					return 1;
 				}
 
-				item = GameInventoryItem.Create<ItemTemplate>(template);
+				item = GameInventoryItem.Create(template);
 				item.Count = material.Count;
 				if (!player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 				{
@@ -315,7 +315,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					newItem = GameInventoryItem.Create<ItemTemplate>(rawMaterial);
+					newItem = GameInventoryItem.Create(rawMaterial);
 					newItem.Count = -countToAdd;
 					player.Inventory.AddItem((eInventorySlot)de.Key, newItem);
 					InventoryLogging.LogInventoryAction("(salvage)", player, eInventoryActionType.Craft, newItem.Template, newItem.Count);
