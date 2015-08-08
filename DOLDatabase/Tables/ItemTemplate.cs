@@ -172,10 +172,10 @@ namespace DOL.Database
 			AllowUpdate = false;
 
 			m_id_nb = m_blankItem;
-            m_translationId = string.Empty;
+			m_translationId = string.Empty;
 			m_name = "(blank item)";
-            m_examineArticle = string.Empty;
-            m_messageArticle = string.Empty;
+			m_examineArticle = string.Empty;
+			m_messageArticle = string.Empty;
 			m_level = 0;
 			m_durability = m_maxdurability = 1;
 			m_condition  = m_maxcondition = 1;
@@ -334,93 +334,56 @@ namespace DOL.Database
 		public virtual string Id_nb
 		{
 			get { return m_id_nb; }
-			set
-			{
-				m_id_nb = value;
-			}
+			set { m_id_nb = value; }
 		}
 
-        [DataElement(AllowDbNull = true)]
-        public string TranslationId
-        {
-            get { return m_translationId; }
-            set
-            {
-                Dirty = true;
-                m_translationId = value;
-            }
-        }
+		[DataElement(AllowDbNull = true)]
+		public string TranslationId
+		{
+			get { return m_translationId; }
+			set { Dirty = true; m_translationId = value; }
+		}
 
 		[DataElement(AllowDbNull = false)]
 		public string Name
 		{
 			get { return m_name; }
-			set
-			{
-				Dirty = true;
-				m_name = value;
-			}
+			set { Dirty = true; m_name = value; }
 		}
 
-        [DataElement(AllowDbNull = true)]
-        public string ExamineArticle
-        {
-            get { return m_examineArticle; }
-            set
-            {
-                Dirty = true;
-                m_examineArticle = value;
-            }
-        }
+		[DataElement(AllowDbNull = true)]
+		public string ExamineArticle
+		{
+			get { return m_examineArticle; }
+			set { Dirty = true; m_examineArticle = value; }
+		}
 
-        [DataElement(AllowDbNull = true)]
-        public string MessageArticle
-        {
-            get { return m_messageArticle; }
-            set
-            {
-                Dirty = true;
-                m_messageArticle = value;
-            }
-        }
+		[DataElement(AllowDbNull = true)]
+		public string MessageArticle
+		{
+			get { return m_messageArticle; }
+			set { Dirty = true; m_messageArticle = value; }
+		}
 
 		[DataElement(AllowDbNull = false)]
 		public int Level
 		{
 			get { return m_level; }
-			set
-			{
-				Dirty = true;
-				m_level = value;
-			}
+			set { Dirty = true; m_level = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int Durability
 		{
-			get
-			{
-				if (m_durability==0)
-					return m_maxdurability;
-				else
-					return m_durability;
-			}
-			set
-			{
-				Dirty = true;
-				m_durability = value;
-			}
+			get { return m_durability == 0 ? m_maxdurability : m_durability; }
+			set { Dirty = true; m_durability = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int MaxDurability
 		{
 			get { return m_maxdurability; }
-			set
-			{
-				Dirty = true;
-				m_maxdurability = value;
-			}
+			set { Dirty = true; m_maxdurability = value; }
 		}
 
 		/// <summary>
@@ -430,182 +393,112 @@ namespace DOL.Database
 		public bool IsNotLosingDur
 		{
 			get { return m_isNotLosingDur; }
-			set
-			{
-				Dirty = true;
-				m_isNotLosingDur = value;
-			}
+			set { Dirty = true; m_isNotLosingDur = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int Condition
 		{
-			get
-			{
-				if (m_condition==0)
-					return m_maxcondition;
-				else
-					return m_condition;
-			}
-			set
-			{
-				Dirty = true;
-				m_condition = value;
-			}
+			get { return m_condition == 0 ? m_maxcondition : m_condition; }
+			set { Dirty = true; m_condition = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int MaxCondition
 		{
 			get { return m_maxcondition; }
-			set
-			{
-				Dirty = true;
-				m_maxcondition = value;
-			}
+			set { Dirty = true; m_maxcondition = value; }
 		}
 		
 		[DataElement(AllowDbNull = true)]
 		public int Quality
 		{
 			get { return m_quality; }
-			set
-			{
-				Dirty = true;
-				m_quality = value;
-			}
+			set { Dirty = true; m_quality = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int DPS_AF
 		{
 			get { return m_dps_af; }
-			set
-			{
-				Dirty = true;
-				m_dps_af = value;
-			}
+			set { Dirty = true; m_dps_af = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int SPD_ABS
 		{
 			get { return m_spd_abs; }
-			set
-			{
-				Dirty = true;
-				m_spd_abs = value;
-			}
+			set { Dirty = true; m_spd_abs = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int Hand
 		{
 			get { return m_hand; }
-			set
-			{
-				Dirty = true;
-				m_hand = value;
-			}
+			set { Dirty = true; m_hand = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int Type_Damage
 		{
 			get { return m_type_damage; }
-			set
-			{
-				Dirty = true;
-				m_type_damage = value;
-			}
+			set { Dirty = true; m_type_damage = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int Object_Type
 		{
 			get { return m_object_type; }
-			set
-			{
-				Dirty = true;
-				m_object_type = value;
-			}
+			set { Dirty = true; m_object_type = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int Item_Type
 		{
 			get { return m_item_type; }
-			set
-			{
-				Dirty = true;
-				m_item_type = value;
-			}
+			set { Dirty = true; m_item_type = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int Color
 		{
 			get { return m_color; }
-			set
-			{
-				Dirty = true;
-				m_color = value;
-			}
+			set { Dirty = true; m_color = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int Emblem
 		{
 			get { return m_emblem; }
-			set
-			{
-				Dirty = true;
-				m_emblem = value;
-			}
+			set { Dirty = true; m_emblem = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int Effect
 		{
 			get { return m_effect; }
-			set
-			{
-				Dirty = true;
-				m_effect = value;
-			}
+			set { Dirty = true; m_effect = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int Weight
 		{
 			get { return m_weight; }
-			set
-			{
-				Dirty = true;
-				m_weight = value;
-			}
+			set { Dirty = true; m_weight = value; }
 		}
 
 		[DataElement(AllowDbNull = false)]
 		public int Model
 		{
 			get { return m_model; }
-			set
-			{
-				Dirty = true;
-				m_model = value;
-			}
+			set { Dirty = true; m_model = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public byte Extension
 		{
 			get { return m_extension; }
-			set
-			{
-				Dirty = true;
-				m_extension = value;
-			}
+			set { Dirty = true; m_extension = value; }
 		}
 
 		#region Bonuses
@@ -614,132 +507,84 @@ namespace DOL.Database
 		public int Bonus
 		{
 			get { return m_bonus; }
-			set
-			{
-				Dirty = true;
-				m_bonus = value;
-			}
+			set { Dirty = true; m_bonus = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public virtual int Bonus1
 		{
 			get { return m_bonus1; }
-			set
-			{
-				Dirty = true;
-				m_bonus1 = value;
-			}
+			set { Dirty = true; m_bonus1 = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public virtual int Bonus2
 		{
 			get { return m_bonus2; }
-			set
-			{
-				Dirty = true;
-				m_bonus2 = value;
-			}
+			set { Dirty = true; m_bonus2 = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public virtual int Bonus3
 		{
 			get { return m_bonus3; }
-			set
-			{
-				Dirty = true;
-				m_bonus3 = value;
-			}
+			set { Dirty = true; m_bonus3 = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public virtual int Bonus4
 		{
 			get { return m_bonus4; }
-			set
-			{
-				Dirty = true;
-				m_bonus4 = value;
-			}
+			set { Dirty = true; m_bonus4 = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public virtual int Bonus5
 		{
 			get { return m_bonus5; }
-			set
-			{
-				Dirty = true;
-				m_bonus5 = value;
-			}
+			set { Dirty = true; m_bonus5 = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public virtual int Bonus6
 		{
 			get { return m_bonus6; }
-			set
-			{
-				Dirty = true;
-				m_bonus6 = value;
-			}
+			set { Dirty = true; m_bonus6 = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public virtual int Bonus7
 		{
 			get { return m_bonus7; }
-			set
-			{
-				Dirty = true;
-				m_bonus7 = value;
-			}
+			set { Dirty = true; m_bonus7 = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public virtual int Bonus8
 		{
 			get { return m_bonus8; }
-			set
-			{
-				Dirty = true;
-				m_bonus8 = value;
-			}
+			set { Dirty = true; m_bonus8 = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public virtual int Bonus9
 		{
 			get { return m_bonus9; }
-			set
-			{
-				Dirty = true;
-				m_bonus9 = value;
-			}
+			set { Dirty = true; m_bonus9 = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public virtual int Bonus10
 		{
 			get { return m_bonus10; }
-			set
-			{
-				Dirty = true;
-				m_bonus10 = value;
-			}
+			set { Dirty = true; m_bonus10 = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int ExtraBonus
 		{
 			get { return m_extrabonus; }
-			set
-			{
-				Dirty = true;
-				m_extrabonus = value;
-			}
+			set { Dirty = true; m_extrabonus = value; }
 		}
 
 		#endregion
@@ -750,121 +595,77 @@ namespace DOL.Database
 		public virtual int Bonus1Type
 		{
 			get { return m_bonus1Type; }
-			set
-			{
-				Dirty = true;
-				m_bonus1Type = value;
-			}
+			set { Dirty = true; m_bonus1Type = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public virtual int Bonus2Type
 		{
 			get { return m_bonus2Type; }
-			set
-			{
-				Dirty = true;
-				m_bonus2Type = value;
-			}
+			set { Dirty = true; m_bonus2Type = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public virtual int Bonus3Type
 		{
 			get { return m_bonus3Type; }
-			set
-			{
-				Dirty = true;
-				m_bonus3Type = value;
-			}
+			set { Dirty = true; m_bonus3Type = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public virtual int Bonus4Type
 		{
 			get { return m_bonus4Type; }
-			set
-			{
-				Dirty = true;
-				m_bonus4Type = value;
-			}
+			set { Dirty = true; m_bonus4Type = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public virtual int Bonus5Type
 		{
 			get { return m_bonus5Type; }
-			set
-			{
-				Dirty = true;
-				m_bonus5Type = value;
-			}
+			set { Dirty = true; m_bonus5Type = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public virtual int Bonus6Type
 		{
 			get { return m_bonus6Type; }
-			set
-			{
-				Dirty = true;
-				m_bonus6Type = value;
-			}
+			set { Dirty = true; m_bonus6Type = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public virtual int Bonus7Type
 		{
 			get { return m_bonus7Type; }
-			set
-			{
-				Dirty = true;
-				m_bonus7Type = value;
-			}
+			set { Dirty = true; m_bonus7Type = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public virtual int Bonus8Type
 		{
 			get { return m_bonus8Type; }
-			set
-			{
-				Dirty = true;
-				m_bonus8Type = value;
-			}
+			set { Dirty = true; m_bonus8Type = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public virtual int Bonus9Type
 		{
 			get { return m_bonus9Type; }
-			set
-			{
-				Dirty = true;
-				m_bonus9Type = value;
-			}
+			set { Dirty = true; m_bonus9Type = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public virtual int Bonus10Type
 		{
 			get { return m_bonus10Type; }
-			set
-			{
-				Dirty = true;
-				m_bonus10Type = value;
-			}
+			set { Dirty = true; m_bonus10Type = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int ExtraBonusType
 		{
 			get { return m_extrabonusType; }
-			set
-			{
-				Dirty = true;
-				m_extrabonusType = value;
-			}
+			set { Dirty = true; m_extrabonusType = value; }
 		}
 
 		#endregion
@@ -875,11 +676,7 @@ namespace DOL.Database
 		public int CanUseEvery
 		{
 			get { return m_canUseEvery; }
-			set
-			{
-				Dirty = true;
-				m_canUseEvery = value;
-			}
+			set { Dirty = true; m_canUseEvery = value; }
 		}
 
 		#region first charges
@@ -891,11 +688,7 @@ namespace DOL.Database
 		public virtual int SpellID
 		{
 			get { return m_spellID; }
-			set
-			{
-				Dirty = true;
-				m_spellID = value;
-			}
+			set { Dirty = true; m_spellID = value; }
 		}
 
 		/// <summary>
@@ -905,11 +698,7 @@ namespace DOL.Database
 		public int Charges
 		{
 			get { return m_charges; }
-			set
-			{
-				Dirty = true;
-				m_charges = value;
-			}
+			set { Dirty = true; m_charges = value; }
 		}
 
 		/// <summary>
@@ -919,11 +708,7 @@ namespace DOL.Database
 		public int MaxCharges
 		{
 			get { return m_maxCharges; }
-			set
-			{
-				Dirty = true;
-				m_maxCharges = value;
-			}
+			set { Dirty = true; m_maxCharges = value; }
 		}
 
 		#endregion
@@ -936,22 +721,14 @@ namespace DOL.Database
 		public virtual int SpellID1
 		{
 			get { return m_spellID1; }
-			set
-			{
-				Dirty = true;
-				m_spellID1 = value;
-			}
+			set { Dirty = true; m_spellID1 = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int Charges1
 		{
 			get { return m_charges1; }
-			set
-			{
-				Dirty = true;
-				m_charges1 = value;
-			}
+			set { Dirty = true; m_charges1 = value; }
 		}
 
 		/// <summary>
@@ -961,11 +738,7 @@ namespace DOL.Database
 		public int MaxCharges1
 		{
 			get { return m_maxCharges1; }
-			set
-			{
-				Dirty = true;
-				m_maxCharges1 = value;
-			}
+			set { Dirty = true; m_maxCharges1 = value; }
 		}
 
 		#endregion
@@ -978,11 +751,7 @@ namespace DOL.Database
 		public virtual byte ProcChance
 		{
 			get { return m_procChance; }
-			set
-			{
-				Dirty = true;
-				m_procChance = value;
-			}
+			set { Dirty = true; m_procChance = value; }
 		}
 
 		#region first proc
@@ -994,11 +763,7 @@ namespace DOL.Database
 		public virtual int ProcSpellID
 		{
 			get { return m_procSpellID; }
-			set
-			{
-				Dirty = true;
-				m_procSpellID = value;
-			}
+			set { Dirty = true; m_procSpellID = value; }
 		}
 
 		#endregion
@@ -1008,11 +773,7 @@ namespace DOL.Database
 		public virtual int ProcSpellID1
 		{
 			get { return m_procSpellID1; }
-			set
-			{
-				Dirty = true;
-				m_procSpellID1 = value;
-			}
+			set { Dirty = true; m_procSpellID1 = value; }
 		}
 
 		#endregion
@@ -1025,33 +786,21 @@ namespace DOL.Database
 		public int PoisonSpellID
 		{
 			get { return m_poisonSpellID; }
-			set
-			{
-				Dirty = true;
-				m_poisonSpellID = value;
-			}
+			set { Dirty = true; m_poisonSpellID = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int PoisonCharges
 		{
 			get { return m_poisonCharges; }
-			set
-			{
-				Dirty = true;
-				m_poisonCharges = value;
-			}
+			set { Dirty = true; m_poisonCharges = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int PoisonMaxCharges
 		{
 			get { return m_poisonMaxCharges; }
-			set
-			{
-				Dirty = true;
-				m_poisonMaxCharges = value;
-			}
+			set { Dirty = true; m_poisonMaxCharges = value; }
 		}
 
 		#endregion
@@ -1060,55 +809,35 @@ namespace DOL.Database
 		public bool IsPickable
 		{
 			get { return m_isPickable; }
-			set
-			{
-				Dirty = true;
-				m_isPickable = value;
-			}
+			set { Dirty = true; m_isPickable = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public bool IsDropable
 		{
 			get { return m_isDropable; }
-			set
-			{
-				Dirty = true;
-				m_isDropable = value;
-			}
+			set { Dirty = true; m_isDropable = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public bool CanDropAsLoot
 		{
 			get { return m_canDropAsLoot; }
-			set
-			{
-				Dirty = true;
-				m_canDropAsLoot = value;
-			}
+			set { Dirty = true; m_canDropAsLoot = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public bool IsTradable
 		{
 			get { return m_isTradable; }
-			set
-			{
-				Dirty = true;
-				m_isTradable = value;
-			}
+			set { Dirty = true; m_isTradable = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public long Price
 		{
 			get { return m_Price; }
-			set
-			{
-				Dirty = true;
-				m_Price = value;
-			}
+			set { Dirty = true; m_Price = value; }
 		}
 
 		/// <summary>
@@ -1118,10 +847,7 @@ namespace DOL.Database
 		public int MaxCount
 		{
 			get { return m_maxCount; }
-			set {
-				Dirty = true;
-				m_maxCount = value;
-			}
+			set { Dirty = true; m_maxCount = value; }
 		}
 
 		public bool IsStackable
@@ -1135,10 +861,7 @@ namespace DOL.Database
 		[DataElement(AllowDbNull = true)]
 		public bool IsIndestructible {
 			get { return m_isIndestructible; }
-			set {
-				Dirty = true;
-				m_isIndestructible = value;
-			}
+			set { Dirty = true; m_isIndestructible = value; }
 		}
 		
 		/// <summary>
@@ -1148,21 +871,14 @@ namespace DOL.Database
 		public int PackSize
 		{
 			get { return m_packSize; }
-			set	{
-				Dirty = true;
-				m_packSize = value;
-			}
+			set	{ Dirty = true; m_packSize = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int Realm
 		{
 			get { return m_realm; }
-			set
-			{
-				Dirty = true;
-				m_realm = value;
-			}
+			set { Dirty = true; m_realm = value; }
 		}
 
 		/// <summary>
@@ -1172,89 +888,57 @@ namespace DOL.Database
 		public string AllowedClasses
 		{
 			get { return m_allowedClasses; }
-			set
-			{
-				Dirty = true;
-				m_allowedClasses = value;
-			}
+			set { Dirty = true; m_allowedClasses = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int Flags
 		{
-			get { return this.m_flags; }
-			set
-			{
-				Dirty = true;
-				this.m_flags = value;
-			}
+			get { return m_flags; }
+			set { Dirty = true; m_flags = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int BonusLevel
 		{
-			get { return this.m_bonusLevel; }
-			set
-			{
-				Dirty = true;
-				this.m_bonusLevel = value;
-			}
+			get { return m_bonusLevel; }
+			set { Dirty = true; m_bonusLevel = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int LevelRequirement
 		{
-			get { return this.m_levelRequirement; }
-			set
-			{
-				Dirty = true;
-				this.m_levelRequirement = value;
-			}
+			get { return m_levelRequirement; }
+			set { Dirty = true; m_levelRequirement = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public string PackageID
 		{
-			get { return this.m_packageID; }
-			set
-			{
-				Dirty = true;
-				this.m_packageID = value;
-			}
+			get { return m_packageID; }
+			set { Dirty = true; m_packageID = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public string Description
 		{
-			get { return this.m_description; }
-			set
-			{
-				Dirty = true;
-				this.m_description = value;
-			}
+			get { return m_description; }
+			set { Dirty = true; m_description = value; }
 		}
 
 
 		[DataElement(AllowDbNull = true, Varchar = 255)]
 		public string ClassType
 		{
-			get { return this.m_classType; }
-			set
-			{
-				Dirty = true;
-				this.m_classType = value;
-			}
+			get { return m_classType; }
+			set { Dirty = true; m_classType = value; }
 		}
 
 		[DataElement(AllowDbNull = true)]
 		public int SalvageYieldID
 		{
-			get { return this.m_salvageYieldID; }
-			set
-			{
-				Dirty = true;
-				this.m_salvageYieldID = value;
-			}
+			get { return m_salvageYieldID; }
+			set { Dirty = true; m_salvageYieldID = value; }
 		}
 
 		#endregion
