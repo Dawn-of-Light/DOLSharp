@@ -44,15 +44,15 @@ namespace DOL.GS.RealmAbilities
             WorldInventoryItem as2 = WorldInventoryItem.CreateFromTemplate(arrow_summoning_2);
             WorldInventoryItem as3 = WorldInventoryItem.CreateFromTemplate(arrow_summoning_3);
 
-            if(!player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(arrow_summoning_1),10,eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+            if(!player.Inventory.AddTemplate(GameInventoryItem.Create(arrow_summoning_1),10,eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
 				player.Out.SendMessage("You do not have enough inventory space to place this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
-			else if (!player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(arrow_summoning_2), 10, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			else if (!player.Inventory.AddTemplate(GameInventoryItem.Create(arrow_summoning_2), 10, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
                 player.Out.SendMessage("You do not have enough inventory space to place this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
-			else if (!player.Inventory.AddTemplate(GameInventoryItem.Create<ItemTemplate>(arrow_summoning_3), 10, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+			else if (!player.Inventory.AddTemplate(GameInventoryItem.Create(arrow_summoning_3), 10, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 			{
                 player.Out.SendMessage("You do not have enough inventory space to place this item!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}			

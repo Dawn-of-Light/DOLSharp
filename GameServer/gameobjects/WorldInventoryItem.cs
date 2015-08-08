@@ -147,7 +147,7 @@ namespace DOL.GS
 
 			WorldInventoryItem invItem = new WorldInventoryItem();
 
-			invItem.m_item = GameInventoryItem.Create<ItemTemplate>(template);
+			invItem.m_item = GameInventoryItem.Create(template);
 			
 			invItem.m_item.SlotPosition = 0;
 			invItem.m_item.OwnerID = null;
@@ -169,7 +169,7 @@ namespace DOL.GS
 			ItemUnique item = new ItemUnique(template);
 			GameServer.Database.AddObject(item);
 
-			invItem.m_item = GameInventoryItem.Create<ItemUnique>(item);
+			invItem.m_item = GameInventoryItem.Create(item);
 			
 			invItem.m_item.SlotPosition = 0;
 			invItem.m_item.OwnerID = null;

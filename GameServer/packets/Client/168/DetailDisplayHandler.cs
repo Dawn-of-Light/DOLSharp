@@ -503,14 +503,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							WriteUsableClasses(objectInfo, item, client);
 							WriteMagicalBonuses(objectInfo, item, client, false);
-							WriteClassicWeaponInfos(objectInfo, GameInventoryItem.Create<ItemTemplate>(item), client);
+							WriteClassicWeaponInfos(objectInfo, GameInventoryItem.Create(item), client);
 						}
 
 						if (item.Object_Type >= (int)eObjectType.Cloth && item.Object_Type <= (int)eObjectType.Scale)
 						{
 							WriteUsableClasses(objectInfo, item, client);
 							WriteMagicalBonuses(objectInfo, item, client, false);
-							WriteClassicArmorInfos(objectInfo, GameInventoryItem.Create<ItemTemplate>(item), client);
+							WriteClassicArmorInfos(objectInfo, GameInventoryItem.Create(item), client);
 						}
 
 						if (item.Object_Type == (int)eObjectType.Shield)
@@ -536,7 +536,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						//Add admin info
 						if (client.Account.PrivLevel > 1)
 						{
-							WriteTechnicalInfo(objectInfo, client, GameInventoryItem.Create<ItemTemplate>(item), item.MaxDurability, item.MaxCondition);
+							WriteTechnicalInfo(objectInfo, client, GameInventoryItem.Create(item), item.MaxDurability, item.MaxCondition);
 						}
 						break;
 
@@ -1427,7 +1427,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public void WriteMagicalBonuses(IList<string> output, ItemTemplate item, GameClient client, bool shortInfo)
 		{
-			WriteMagicalBonuses(output, GameInventoryItem.Create<ItemTemplate>(item), client, shortInfo);
+			WriteMagicalBonuses(output, GameInventoryItem.Create(item), client, shortInfo);
 		}
 
 		public void WriteMagicalBonuses(IList<string> output, InventoryItem item, GameClient client, bool shortInfo)
@@ -1866,7 +1866,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		protected void WritePoisonInfo(IList<string> list, ItemTemplate item, GameClient client)
 		{
-			WritePoisonInfo(list, GameInventoryItem.Create<ItemTemplate>(item), client);
+			WritePoisonInfo(list, GameInventoryItem.Create(item), client);
 		}
 
 		protected void WritePoisonInfo(IList<string> list, InventoryItem item, GameClient client)
@@ -1915,7 +1915,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <param name="client"></param>
 		private static void WritePotionInfo(IList<string> list, ItemTemplate item, GameClient client)
 		{
-			WritePotionInfo(list, GameInventoryItem.Create<ItemTemplate>(item), client);
+			WritePotionInfo(list, GameInventoryItem.Create(item), client);
 		}
 
 		private static void WritePotionInfo(IList<string> list, InventoryItem item, GameClient client)

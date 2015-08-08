@@ -993,11 +993,11 @@ namespace DOL.GS
 						{
 							if (sourceItem.Template is ItemUnique)
 							{
-								item = GameInventoryItem.Create<InventoryItem>(sourceItem);
+								item = GameInventoryItem.Create(sourceItem);
 							}
 							else
 							{
-								item = GameInventoryItem.Create<ItemTemplate>(sourceItem.Template);
+								item = GameInventoryItem.Create(sourceItem.Template);
 							}
 
 							item.Count = -itemCount;

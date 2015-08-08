@@ -64,7 +64,7 @@ namespace DOL.Server
 				Console.WriteLine(""+ task.Description);
 
 				// Check Notify Event handling
-				InventoryItem item = GameInventoryItem.Create<ItemTemplate>(new ItemTemplate());
+				InventoryItem item = GameInventoryItem.Create(new ItemTemplate());
 				item.Name = task.ItemName;
 
 				GameNPC mob = new GameNPC();

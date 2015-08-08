@@ -1138,5 +1138,57 @@ namespace DOL.GS
 
 			return types.ToArray();
 		}
+		
+		/// <summary>
+		/// Create new instance of ClassType, Looking through Assemblies and Scripts with given param
+		/// </summary>
+		/// <param name="classType"></param>
+		/// <param name="args"></param>
+		/// <returns></returns>
+		public static C CreateObjectFromClassType<C, T>(string classType, T args)
+			where C : class
+		{
+			foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies().Concat(ScriptMgr.Scripts))
+			{
+				try
+				{
+					C instance = assembly.CreateInstance(classType, false, BindingFlags.CreateInstance, null, new object[] { args }, null, null) as C;
+					if (instance != null)
+						return instance;
+				}
+				catch (Exception)
+				{
+				}
+
+			}
+			
+			return null;
+		}
+		
+		/// <summary>
+		/// Create new instance of ClassType, Looking through Scripts then Assemblies with given param
+		/// </summary>
+		/// <param name="classType"></param>
+		/// <param name="args"></param>
+		/// <returns></returns>
+		public static C CreateScriptObjectFromClassType<C, T>(string classType, T args)
+			where C : class
+		{
+			foreach (Assembly assembly in ScriptMgr.Scripts.Concat(AppDomain.CurrentDomain.GetAssemblies()))
+			{
+				try
+				{
+					C instance = assembly.CreateInstance(classType, false, BindingFlags.CreateInstance, null, new object[] { args }, null, null) as C;
+					if (instance != null)
+						return instance;
+				}
+				catch (Exception)
+				{
+				}
+
+			}
+			
+			return null;
+		}
 	}
 }

@@ -18,12 +18,13 @@
  */
 using System;
 using System.Reflection;
-using System.Collections;
 using System.Collections.Generic;
+
 using DOL.Language;
 using DOL.GS.PacketHandler;
 using DOL.Database;
 using DOL.GS.Spells;
+
 using log4net;
 
 namespace DOL.GS
@@ -113,6 +114,21 @@ namespace DOL.GS
 			return GameServer.ServerRules.CheckAbilityToUseItem(player, Template);
 		}
 
+		#region Create From Object Source
+		
+		/// <summary>
+		/// This is used to create a PlayerInventoryItem
+		/// ClassType will be checked and the approrpiate GameInventoryItem created
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		[Obsolete("Use Create() instead")]
+		public static GameInventoryItem Create<T>(ItemTemplate item)
+		{
+			return Create(item);
+		}
+		
 		/// <summary>
 		/// This is used to create a PlayerInventoryItem
 		/// template.ClassType will be checked and the approrpiate GameInventoryItem created
@@ -120,74 +136,69 @@ namespace DOL.GS
 		/// <typeparam name="T"></typeparam>
 		/// <param name="item"></param>
 		/// <returns></returns>
-		public static GameInventoryItem Create<T>(T item)
+		[Obsolete("Use Create() instead")]
+		public static GameInventoryItem Create<T>(InventoryItem item)
 		{
-			GameInventoryItem playerItem = null;
-			Type tItem = item.GetType();
-			PropertyInfo pClassType = tItem.GetProperty("ClassType");
-
-			string classType = "";
-
-			if (pClassType != null && pClassType.CanRead)
+			return Create(item);
+		}
+		
+		/// <summary>
+		/// This is used to create a PlayerInventoryItem
+		/// ClassType will be checked and the approrpiate GameInventoryItem created
+		/// </summary>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public static GameInventoryItem Create(ItemTemplate item)
+		{
+			string classType = item.ClassType;
+			var itemUnique = item as ItemUnique;
+			
+			if (!string.IsNullOrEmpty(classType))
 			{
-				classType = pClassType.GetValue(item, null) as string;
-
-				if (!string.IsNullOrEmpty(classType))
-				{
-					foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-					{
-						if (assembly.GetType(classType) != null)
-						{
-							try
-							{
-								playerItem = assembly.CreateInstance(classType, false, BindingFlags.CreateInstance, null, new object[] { item }, null, null) as GameInventoryItem;
-							}
-							catch (Exception)
-							{
-							}
-
-							break;
-						}
-					}
-
-					if (playerItem == null)
-					{
-						foreach (Assembly assembly in ScriptMgr.Scripts)
-						{
-							if (assembly.GetType(classType) != null)
-							{
-								try
-								{
-									playerItem = assembly.CreateInstance(classType, false, BindingFlags.CreateInstance, null, new object[] { item }, null, null) as GameInventoryItem;
-								}
-								catch (Exception)
-								{
-								}
-
-								break;
-							}
-						}
-					}
-				}
+				GameInventoryItem gameItem;
+				if (itemUnique != null)
+					gameItem = ScriptMgr.CreateObjectFromClassType<GameInventoryItem, ItemUnique>(classType, itemUnique);
+				else
+					gameItem = ScriptMgr.CreateObjectFromClassType<GameInventoryItem, ItemTemplate>(classType, item);
+				
+				if (gameItem != null)
+					return gameItem;
+				
+				if (log.IsWarnEnabled)
+					log.WarnFormat("Failed to construct game inventory item of ClassType {0}!", classType);
 			}
-			else
-			{
-				log.WarnFormat("ClassType property not found or can't be read for item of type {0}!", tItem.FullName);
-			}
-
-			if (playerItem == null)
-			{
-				if (classType != null && classType != "")
-				{
-					log.WarnFormat("Failed to construct inventory item of ClassType {0}!", classType);
-				}
-
-				playerItem = Activator.CreateInstance(typeof(GameInventoryItem), new object[] { item }) as GameInventoryItem;
-			}
-
-			return playerItem;
+			
+			if (itemUnique != null)
+				return new GameInventoryItem(itemUnique);
+				
+			return new GameInventoryItem(item);
 		}
 
+		/// <summary>
+		/// This is used to create a PlayerInventoryItem
+		/// template.ClassType will be checked and the approrpiate GameInventoryItem created
+		/// </summary>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public static GameInventoryItem Create(InventoryItem item)
+		{
+			string classType = item.Template.ClassType;
+			
+			if (!string.IsNullOrEmpty(classType))
+			{
+				GameInventoryItem gameItem = ScriptMgr.CreateObjectFromClassType<GameInventoryItem, InventoryItem>(classType, item);
+				
+				if (gameItem != null)
+					return gameItem;
+				
+				if (log.IsWarnEnabled)
+					log.WarnFormat("Failed to construct game inventory item of ClassType {0}!", classType);
+			}
+			
+			return new GameInventoryItem(item);
+		}
+
+		#endregion
 
 		/// <summary>
 		/// Player receives this item (added to players inventory)

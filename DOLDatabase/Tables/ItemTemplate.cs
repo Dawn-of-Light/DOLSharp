@@ -17,7 +17,9 @@
  *
  */
 using System;
+using System.Collections.Generic;
 using System.Reflection;
+
 using DOL.Database.Attributes;
 
 using log4net;
@@ -52,13 +54,7 @@ namespace DOL.Database
 		public override bool Dirty
 		{
 			get { return base.Dirty; }
-			set 
-			{
-				if (UnlockDirty || AllowUpdate)
-					base.Dirty = value;
-				else
-					base.Dirty = false;
-			}
+			set { base.Dirty = (UnlockDirty || AllowUpdate) && value; }
 		}
 
 		
@@ -66,7 +62,10 @@ namespace DOL.Database
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-		public static string m_blankItem = "Item_Template";
+		
+		#region members
+		
+		public const string m_blankItem = "Item_Template";
 		
 		protected string m_id_nb;
         protected string m_translationId;
@@ -165,7 +164,9 @@ namespace DOL.Database
 		protected string m_classType;
 
 		protected int m_salvageYieldID;
+		#endregion
 
+		#region constructors
 		public ItemTemplate()
 		{
 			AllowUpdate = false;
@@ -326,7 +327,9 @@ namespace DOL.Database
 			ClassType = template.ClassType;
 			SalvageYieldID = template.SalvageYieldID;
 		}
+		#endregion
 
+		#region Data Fields
 		[PrimaryKey]
 		public virtual string Id_nb
 		{
@@ -1254,8 +1257,9 @@ namespace DOL.Database
 			}
 		}
 
-
-		// Various Methods
+		#endregion
+				
+		#region various Methods
 		public virtual byte BaseDurabilityPercent
 		{
 			get
@@ -1497,5 +1501,6 @@ namespace DOL.Database
 					break;
 			}
 		}
+		#endregion
 	}
 }

@@ -117,7 +117,7 @@ namespace DOL.GS
 							}
 							else
 							{
-								GameInventoryItem playerItem = GameInventoryItem.Create<InventoryItem>(item);
+								GameInventoryItem playerItem = GameInventoryItem.Create(item);
 
 								if (playerItem.CheckValid(m_player))
 								{

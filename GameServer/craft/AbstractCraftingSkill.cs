@@ -621,18 +621,18 @@ namespace DOL.GS
 						ItemTemplate adjItemToCraft = GameServer.Database.FindObjectByKey<ItemTemplate>(adjItem);
 						if (adjItemToCraft != null)
 						{
-							newItem = GameInventoryItem.Create<ItemTemplate>(adjItemToCraft);
+							newItem = GameInventoryItem.Create(adjItemToCraft);
 						}
 						else
 						{
-							newItem = GameInventoryItem.Create<ItemTemplate>(itemToCraft);
+							newItem = GameInventoryItem.Create(itemToCraft);
 						}
 					}
 					else
 					{
 						ItemUnique unique = new ItemUnique(itemToCraft);
 						GameServer.Database.AddObject(unique);
-						newItem = GameInventoryItem.Create<ItemUnique>(unique);
+						newItem = GameInventoryItem.Create(unique);
 						newItem.Quality = GetQuality(player, recipe);
 					}
 

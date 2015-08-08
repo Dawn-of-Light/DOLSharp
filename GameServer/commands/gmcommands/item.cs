@@ -188,7 +188,7 @@ namespace DOL.GS.Commands
 									}
 								}
 
-								InventoryItem item = GameInventoryItem.Create<ItemTemplate>(template);
+								InventoryItem item = GameInventoryItem.Create(template);
 								if (item.IsStackable)
 								{
 									item.Count = count;
@@ -293,7 +293,7 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Item.Info.ItemTemplateUnknown", args[2]), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							GameInventoryItem invItem = GameInventoryItem.Create<ItemTemplate>(obj);
+							GameInventoryItem invItem = GameInventoryItem.Create(obj);
 							var objectInfo = new List<string>();
                             invItem.WriteTechnicalInfo(objectInfo, client);
 							client.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Item.Info.Informations", obj.Id_nb), objectInfo);
@@ -1811,7 +1811,7 @@ namespace DOL.GS.Commands
 										GameServer.Database.AddObject(itemTemplate);
 										Log.Debug("Added New Item Template: " + itemTemplate.Id_nb);
 										DisplayMessage(client, "Added New Item Template: " + itemTemplate.Id_nb);
-										GameInventoryItem newItem = GameInventoryItem.Create<ItemTemplate>(itemTemplate);
+										GameInventoryItem newItem = GameInventoryItem.Create(itemTemplate);
 										if (client.Player.Inventory.AddItem((eInventorySlot)slot, newItem))
 											InventoryLogging.LogInventoryAction(client.Player, client.Player, eInventoryActionType.Other, newItem.Template, newItem.Count);
 									}
@@ -1831,7 +1831,7 @@ namespace DOL.GS.Commands
 										GameServer.Database.AddObject(unique);
 										Log.Debug("Added New ItemUnique: " + unique.Id_nb + " (" + unique.ObjectId + ")");
 										DisplayMessage(client, "Added New ItemUnique: " + unique.Id_nb + " (" + unique.ObjectId + ")");
-										GameInventoryItem newItem = GameInventoryItem.Create<ItemUnique>(unique);
+										GameInventoryItem newItem = GameInventoryItem.Create(unique);
 										if (client.Player.Inventory.AddItem((eInventorySlot)slot, newItem))
 											InventoryLogging.LogInventoryAction(client.Player, client.Player, eInventoryActionType.Other, newItem.Template, newItem.Count);
 									}

@@ -1449,7 +1449,7 @@ namespace DOL.GS
 				return false;
 			}
 
-			return ReceiveItem(source, GameInventoryItem.Create<ItemTemplate>(template));
+			return ReceiveItem(source, GameInventoryItem.Create(template));
 		}
 
 		/// <summary>

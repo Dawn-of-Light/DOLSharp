@@ -11900,7 +11900,7 @@ namespace DOL.GS
 					{
 						bool good = false;
 						if (floorItem.Item.IsStackable)
-							good = Inventory.AddTemplate(GameInventoryItem.Create<InventoryItem>(floorItem.Item), floorItem.Item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
+							good = Inventory.AddTemplate(GameInventoryItem.Create(floorItem.Item), floorItem.Item.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 						else
 							good = Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, floorItem.Item);
 
@@ -12004,7 +12004,7 @@ namespace DOL.GS
 				if (houseVault.Detach(this))
 				{
 					ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(houseVault.TemplateID);
-					Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, GameInventoryItem.Create<ItemTemplate>(template));
+					Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, GameInventoryItem.Create(template));
 					InventoryLogging.LogInventoryAction("(HOUSE;" + floorObject.CurrentHouse.HouseNumber + ")", this, eInventoryActionType.Other, template);
 				}
 				return true;
@@ -15643,12 +15643,12 @@ namespace DOL.GS
 			}
 			else if (item is InventoryItem)
 			{
-				GameInventoryItem tempItem = GameInventoryItem.Create<InventoryItem>(item as InventoryItem);
+				GameInventoryItem tempItem = GameInventoryItem.Create(item as InventoryItem);
 				tempItem.Delve(delveInfo, this);
 			}
 			else if (item is ItemTemplate)
 			{
-				GameInventoryItem tempItem = GameInventoryItem.Create<ItemTemplate>(item as ItemTemplate);
+				GameInventoryItem tempItem = GameInventoryItem.Create(item as ItemTemplate);
 				tempItem.Delve(delveInfo, this);
 			}
 			else

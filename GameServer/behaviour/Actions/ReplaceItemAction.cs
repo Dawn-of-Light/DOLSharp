@@ -52,7 +52,7 @@ namespace DOL.GS.Behaviour.Actions
             if (player.Inventory.RemoveTemplate(oldItem.Id_nb, 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
             {
                 InventoryLogging.LogInventoryAction(player, NPC, eInventoryActionType.Quest, oldItem, 1);
-				InventoryItem inventoryItem = GameInventoryItem.Create<ItemTemplate>(newItem);
+				InventoryItem inventoryItem = GameInventoryItem.Create(newItem);
                 if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, inventoryItem))
                     InventoryLogging.LogInventoryAction(NPC, player, eInventoryActionType.Quest, newItem, 1);
             }

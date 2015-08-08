@@ -134,7 +134,7 @@ namespace DOL.GS
 
 				// Create the GameInventoryItem from this InventoryItem.  This simply wraps the InventoryItem, 
 				// which is still updated when this item is moved around
-				InventoryItem objectItem = GameInventoryItem.Create<InventoryItem>(fromItem);
+				InventoryItem objectItem = GameInventoryItem.Create(fromItem);
 
 				player.Inventory.AddTradeItem(toClientSlot, objectItem);
 

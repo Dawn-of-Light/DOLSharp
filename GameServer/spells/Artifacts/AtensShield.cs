@@ -35,20 +35,20 @@ namespace DOL.GS.Spells
 			if (caster.Realm == eRealm.Albion)
 			{
 				m_goldenTridentofFlame = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Golden_Trident_of_Flame'") ?? Javelin;
-				items.Add (GameInventoryItem.Create<ItemTemplate>(m_goldenTridentofFlame));
+				items.Add (GameInventoryItem.Create(m_goldenTridentofFlame));
 				return;
 			}
 
 			if (caster.Realm == eRealm.Midgard)
 			{
 				m_goldenTridentofFlame = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Golden_Trident_of_Flame'") ?? JavelinM;
-				items.Add (GameInventoryItem.Create<ItemTemplate>(m_goldenTridentofFlame));
+				items.Add (GameInventoryItem.Create(m_goldenTridentofFlame));
 				return;
 			}
 			if (caster.Realm == eRealm.Hibernia)
 			{
 				m_goldenTridentofFlame = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Golden_Trident_of_Flame'") ?? JavelinH;
-				items.Add (GameInventoryItem.Create<ItemTemplate>(m_goldenTridentofFlame));
+				items.Add (GameInventoryItem.Create(m_goldenTridentofFlame));
 				return;
 			}
 		}

@@ -496,7 +496,7 @@ namespace DOL.GS.Quests
 			TaskItems.MaxCondition = 90;
 			TaskItems.MaxDurability = 1000;
 			GameServer.Database.AddObject(TaskItems);
-			InventoryItem InvTaskItems = GameInventoryItem.Create<ItemUnique>(TaskItems);
+			InventoryItem InvTaskItems = GameInventoryItem.Create(TaskItems);
 			return InvTaskItems;
 		}
 

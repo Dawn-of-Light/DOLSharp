@@ -117,7 +117,7 @@ namespace DOL.GS.PacketHandler
 			}
 
 			// Create a GameInventoryItem so item will display correctly in inventory window
-			item = GameInventoryItem.Create<InventoryItem>(item);
+			item = GameInventoryItem.Create(item);
 
 			pak.WriteByte((byte)item.Level);
 
