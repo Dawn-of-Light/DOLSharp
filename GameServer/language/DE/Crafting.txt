@@ -82,6 +82,7 @@ CraftersProfession.Fletcher:				Bogenbauer
 CraftersProfession.Tailor:				Schneider
 CraftersProfession.Weaponcrafter:			Waffenschmied
 CraftersProfession.Siegecrafter:			Belagerer
+CraftersProfession.BasicCrafter:			Grundhandwerker
 
 # /CraftersTitle (NEW)
 CraftersTitle.Helper:					{0}gehilfe

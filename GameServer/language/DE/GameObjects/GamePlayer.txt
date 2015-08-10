@@ -71,7 +71,17 @@ GamePlayer.CastSpell.MustWaitBeforeCast:		Ihr müsst noch {0} Sekunden warten, u
 
 GamePlayer.CommandNpcAttack.TooFarAwayForPet:		Das Ziel ist zu weit entfernt für einen Angriff durch Euer Wesen!			
 
-GamePlayer.CommandNpcGoTarget.MustSelectDestination:	Ihr müsst erst ein Ziel auswählen für Euer Wesen.				
+GamePlayer.CommandNpcGoTarget.MustSelectDestination:	Ihr müsst erst ein Ziel auswählen für Euer Wesen.
+
+GamePlayer.CommandNpcAttack.KillTarget:			Ihr befehlt {0} Euer Ziel zu töten!
+GamePlayer.CommandNpcAttack.IsConfused:			Euer {0} ist verwirrt!
+GamePlayer.CommandNpcAttack.FollowYou:			Ihr befehlt {0} Euch zu folgen!
+GamePlayer.CommandNpcAttack.Stay:			Ihr befehlt {0} an dieser Stelle zu warten!
+GamePlayer.CommandNpcAttack.ComeHere:			Ihr befehlt {0} zu Euch zu kommen.
+GamePlayer.CommandNpcAttack.GoToTarget:			Ihr befehlt {0} zu Eurem Ziel zu gehen.
+GamePlayer.CommandNpcAttack.Passive:			Ihr befehlt {0} sich vom Kampf zu löden!
+GamePlayer.CommandNpcAttack.Aggressive:			Ihr befehlt {0} alle Feinde anzugreifen!
+GamePlayer.CommandNpcAttack.Denfensive:			Ihr befehlt {0} Euch zu beschützen!
 
 GamePlayer.CraftItem.DontHaveAbilityMake:		Ihr habt nicht die Fähigkeit, diesen Gegenstand herzustellen.			
 
@@ -216,7 +226,8 @@ GamePlayer.Pray.GainBack:				Durch Euer Gebet habt Ihr einen Teil Eurer Erfahrun
 GamePlayer.Pray.MustGetCloser:				Ihr müsst Euch näher an Euer Grab setzen um zu beten!	
 GamePlayer.Pray.MustStandingStill:			Ihr müsst still stehen um zu beten.		
 GamePlayer.Pray.NeedTarget:				Ihr müsst einen Grabstein auswählen, an welchen ihr beten wollt!	
-GamePlayer.Pray.SelectGrave:				Ihr müsst Euren Grabstein auswählen, um daran zu beten!	
+GamePlayer.Pray.SelectGrave:				Ihr müsst Euren Grabstein auswählen, um daran zu beten!
+GamePlayer.Pray.CantPrayRiding:				Ihr könnt nicht beten, während Ihr reitet!
 
 GamePlayer.Pronoun.Female.Objective:			ihr		
 GamePlayer.Pronoun.Female.Possessive:			ihr		
