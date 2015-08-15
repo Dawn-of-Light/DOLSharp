@@ -93,16 +93,14 @@ namespace DOL.GS.Quests.Albion
 				RecruitsCloak.Price = 0;
 				RecruitsCloak.IsPickable = true;
 				RecruitsCloak.IsDropable = false; // can't be sold to merchand
-
-				RecruitsCloak.Bonus1 = 6;
-				RecruitsCloak.Bonus1Type = (int)eProperty.MaxHealth;
+				RecruitsCloak.SetTemplateBonuses(eProperty.MaxHealth, 6);
 
 				RecruitsCloak.Quality = 100;
 				RecruitsCloak.Condition = 50000;
 				RecruitsCloak.MaxCondition = 50000;
 				RecruitsCloak.Durability = 50000;
 				RecruitsCloak.MaxDurability = 50000;
-				GameServer.Database.AddObject(RecruitsCloak);
+				RecruitsCloak.AddQuestObjectToDatabase();
 			}
 			LetterToPompin = GameServer.Database.FindObjectByKey<ItemTemplate>("letter_to_pompin");
 			if (LetterToPompin == null)
@@ -115,7 +113,7 @@ namespace DOL.GS.Quests.Albion
 				LetterToPompin.Extension = 1;
 				LetterToPompin.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.ANewHeroesWelcome.Init.Text2");
 				LetterToPompin.Id_nb = "letter_to_pompin";
-				GameServer.Database.AddObject(LetterToPompin);
+				LetterToPompin.AddQuestObjectToDatabase();
 			}
 			#endregion
 
@@ -178,8 +176,8 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 
-				if (SAVE_INTO_DATABASE)
-					MasterClaistan.SaveIntoDatabase();
+				
+				MasterClaistan.AddQuestObjectToDatabase();
 
 				MasterClaistan.AddToWorld();
 			}
@@ -219,8 +217,8 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 
-				if (SAVE_INTO_DATABASE)
-					PompinTheCrier.SaveIntoDatabase();
+				
+				PompinTheCrier.AddQuestObjectToDatabase();
 
 				PompinTheCrier.AddToWorld();
 			}

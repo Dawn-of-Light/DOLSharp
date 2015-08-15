@@ -176,8 +176,8 @@ namespace DOL.GS.Quests.Albion
                 //You don't have to store the created mob in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
-                    argusBowman.SaveIntoDatabase();
+                
+                argusBowman.AddQuestObjectToDatabase();
 
 
                 argusBowman.AddToWorld();
@@ -207,7 +207,7 @@ namespace DOL.GS.Quests.Albion
                 magicalWood.IsDropable = false;
                 magicalWood.IsPickable = false;
                 magicalWood.Weight = 5;
-                GameServer.Database.AddObject(magicalWood);
+                magicalWood.AddQuestObjectToDatabase();
             }
 
             dullBlackGem = GameServer.Database.FindObjectByKey<ItemTemplate>("dull_black_gem");
@@ -231,18 +231,14 @@ namespace DOL.GS.Quests.Albion
 
                 dullBlackGem.Bonus = 5; // default bonus
 
-                dullBlackGem.Bonus1 = 6;
-                dullBlackGem.Bonus1Type = (int)eStat.DEX;
-
-                dullBlackGem.Bonus2 = 1;
-                dullBlackGem.Bonus2Type = (int)eResist.Spirit;
-
+                dullBlackGem.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Resist_Spirit },
+                                                new []{ 6, 1 });
                 dullBlackGem.Quality = 100;
                 dullBlackGem.Condition = 1000;
                 dullBlackGem.MaxCondition = 1000;
                 dullBlackGem.Durability = 1000;
                 dullBlackGem.MaxDurability = 1000;
-                GameServer.Database.AddObject(dullBlackGem);
+                dullBlackGem.AddQuestObjectToDatabase();
             }
 
             #endregion

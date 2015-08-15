@@ -166,7 +166,7 @@ namespace DOL.GS.Quests.Hibernia
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				//ladyFelin.SaveIntoDatabase();                
+				//ladyFelin.AddQuestObjectToDatabase();                
 				//ladyFelin.AddToWorld();
 			}
 			else
@@ -205,8 +205,7 @@ namespace DOL.GS.Quests.Hibernia
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(necklaceOfDoppelganger);
+				necklaceOfDoppelganger.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -230,8 +229,7 @@ namespace DOL.GS.Quests.Hibernia
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(sluaghPlans);
+				sluaghPlans.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -260,11 +258,7 @@ namespace DOL.GS.Quests.Hibernia
 
 				recruitsBoots.Bonus = 1; // default bonus
 
-				recruitsBoots.Bonus1 = 3;
-				recruitsBoots.Bonus1Type = (int) eStat.STR;
-
-				recruitsBoots.Bonus2 = 1;
-				recruitsBoots.Bonus2Type = (int) eStat.DEX;
+				recruitsBoots.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Dexterity }, new []{ 3, 1 });
 
 				recruitsBoots.Quality = 100;
 				recruitsBoots.Condition = 1000;
@@ -275,8 +269,7 @@ namespace DOL.GS.Quests.Hibernia
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(recruitsBoots);
+				recruitsBoots.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -305,15 +298,7 @@ namespace DOL.GS.Quests.Hibernia
 
 				recruitsQuiltedBoots.Bonus = 5; // default bonus
 
-				recruitsQuiltedBoots.Bonus1 = 3;
-				recruitsQuiltedBoots.Bonus1Type = (int) eStat.CON;
-
-
-				recruitsQuiltedBoots.Bonus2 = 1;
-				recruitsQuiltedBoots.Bonus2Type = (int) eStat.STR;
-
-				recruitsQuiltedBoots.Bonus3 = 1;
-				recruitsQuiltedBoots.Bonus3Type = (int) eResist.Spirit;
+				recruitsQuiltedBoots.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Strength, eProperty.Resist_Spirit }, new []{ 3, 1, 1 });
 
 				recruitsQuiltedBoots.Quality = 100;
 				recruitsQuiltedBoots.Condition = 1000;
@@ -324,8 +309,7 @@ namespace DOL.GS.Quests.Hibernia
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(recruitsQuiltedBoots);
+				recruitsQuiltedBoots.AddQuestObjectToDatabase();
 			}
 
 			#endregion

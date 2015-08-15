@@ -192,13 +192,17 @@ namespace DOL.Database
 		}
 		protected int m_charges1;
 		[DataElement(AllowDbNull = true)]
-		public virtual int Charges1
+		public  virtual int Charges1
 		{
 			get { return m_charges1; }
 			set { Dirty = true;m_charges1 = value; }
 		}
 		
 		private DateTime m_lastUsedDateTime;	// last used DT
+		/// <summary>
+		/// Override Cooldown Getter
+		/// Changing Value change object Dirty Flag for Cooldown save
+		/// </summary>
 		public virtual int CanUseAgainIn
 		{
 			get
@@ -218,8 +222,8 @@ namespace DOL.Database
 			}
 			set
 			{
-				m_lastUsedDateTime = DateTime.Now.AddSeconds(value - Template.CanUseEvery);
 				Dirty = true;
+				m_lastUsedDateTime = DateTime.Now.AddSeconds(value - Template.CanUseEvery);
 			}
 		}
 		
@@ -228,7 +232,7 @@ namespace DOL.Database
 		public virtual int Cooldown
 		{
 			get { return CanUseAgainIn; }
-			set { Dirty =true;m_cooldown = value; }
+			set { Dirty = true; m_cooldown = value; SetCooldown(); }
 		}
 
 		[Relation(LocalField = "ITemplate_Id", RemoteField = "Id_nb", AutoLoad = true, AutoDelete=false)]
@@ -363,8 +367,8 @@ namespace DOL.Database
 			m_cooldown = template.Cooldown;
 			m_charges = template.Charges;
 			m_charges1 = template.Charges1;
-			m_poisonCharges = template.PoisonCharges ;
-			m_poisonMaxCharges = template.PoisonMaxCharges ;
+			m_poisonCharges = template.PoisonCharges;
+			m_poisonMaxCharges = template.PoisonMaxCharges;
 			m_poisonSpellID = template.PoisonSpellID;
 			m_experience = template.Experience;
 			m_ownerLot = template.OwnerLot;
@@ -372,7 +376,8 @@ namespace DOL.Database
 
 		public virtual void SetCooldown()
 		{
-			CanUseAgainIn = m_cooldown;
+			if (Template.CanUseEvery > 0)
+				CanUseAgainIn = Math.Max(0, m_cooldown - DateTime.Now.Subtract(LastTimeRowUpdated).Seconds);
 		}
 
 		/// <summary>
@@ -604,16 +609,16 @@ namespace DOL.Database
 			get { return Template.Price; }
 			set { Template.Price = value; }
 		}
+		public virtual int Bonus
+		{
+			get { return Template.Bonus; }
+			set { Template.Bonus = value; }
+		}
 
 		public virtual int ExtraBonus
 		{
 			get { return Template.ExtraBonus; }
 			set { Template.ExtraBonus = value; }
-		}
-		public virtual int Bonus
-		{
-			get { return Template.Bonus; }
-			set { Template.Bonus = value; }
 		}
 		public virtual int Bonus1
 		{
@@ -803,6 +808,52 @@ namespace DOL.Database
 
 			return str;
 		}
+		
+		#region Use / Charges Spells
+		/// <summary>
+		/// Iterate Inventory Item Template Use-Based Spells in a 1-Indexed Dictionary of Tuple SpellID, Max Charges, Current Charges (From Inventory)
+		/// </summary>
+		public SortedList<int, Tuple<int, int, int>> UseSpells
+		{
+			get
+			{
+				return new SortedList<int, Tuple<int, int, int>> {
+					{ 1, new Tuple<int, int, int>(SpellID, MaxCharges, Math.Min(MaxCharges, Charges)) },
+					{ 2, new Tuple<int, int, int>(SpellID1, MaxCharges1, Math.Min(MaxCharges1, Charges1)) },
+				};
+			}
+		}
+
+		/// <summary>
+		/// Set Charges Current Amount at Given Index
+		/// </summary>
+		/// <param name="index"></param>
+		/// <param name="amount"></param>
+		public void SetChargesAmount(int index, int amount)
+		{
+			SetChargesAmount(new []{ index }, new []{ amount });
+		}
+		
+		/// <summary>
+		/// Set All Charges Current Amount at Given Indexes
+		/// </summary>
+		/// <param name="indexes"></param>
+		/// <param name="amounts"></param>
+		public void SetChargesAmount(int[] indexes, int[] amounts)
+		{
+			for (int count = 0 ; count < indexes.Length && count < amounts.Length ; count++)
+			{
+				var index = indexes[count];
+				var amount = amounts[count];
+					
+				switch(index)
+				{
+					case 1: Charges = Math.Min(MaxCharges, Math.Max(0, amount)); break;
+					case 2: Charges1 = Math.Min(MaxCharges1, Math.Max(0, amount)); break;
+				}
+			}
+		}
+		#endregion
 
 	}
 }

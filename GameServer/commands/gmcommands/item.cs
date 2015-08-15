@@ -16,10 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 using System;
+using System.Linq;
 using System.Collections.Generic;
+
 using DOL.Database;
 using DOL.GS.PacketHandler;
-using DOL.GS.PacketHandler.Client.v168;
 using DOL.Language;
 
 namespace DOL.GS.Commands
@@ -872,71 +873,20 @@ namespace DOL.GS.Commands
 								switch (num)
 								{
 									case 0:
-										{
-											item.ExtraBonus = bonusValue;
-											item.ExtraBonusType = bonusType;
-											break;
-										}
+										item.SetTemplateBonuses(11, (eProperty)bonusType, bonusValue);
+										break;
 									case 1:
-										{
-											item.Bonus1 = bonusValue;
-											item.Bonus1Type = bonusType;
-											break;
-										}
 									case 2:
-										{
-											item.Bonus2 = bonusValue;
-											item.Bonus2Type = bonusType;
-											break;
-										}
 									case 3:
-										{
-											item.Bonus3 = bonusValue;
-											item.Bonus3Type = bonusType;
-											break;
-										}
 									case 4:
-										{
-											item.Bonus4 = bonusValue;
-											item.Bonus4Type = bonusType;
-											break;
-										}
 									case 5:
-										{
-											item.Bonus5 = bonusValue;
-											item.Bonus5Type = bonusType;
-											break;
-										}
 									case 6:
-										{
-											item.Bonus6 = bonusValue;
-											item.Bonus6Type = bonusType;
-											break;
-										}
 									case 7:
-										{
-											item.Bonus7 = bonusValue;
-											item.Bonus7Type = bonusType;
-											break;
-										}
 									case 8:
-										{
-											item.Bonus8 = bonusValue;
-											item.Bonus8Type = bonusType;
-											break;
-										}
 									case 9:
-										{
-											item.Bonus9 = bonusValue;
-											item.Bonus9Type = bonusType;
-											break;
-										}
 									case 10:
-										{
-											item.Bonus10 = bonusValue;
-											item.Bonus10Type = bonusType;
-											break;
-										}
+										item.SetTemplateBonuses(num, (eProperty)bonusType, bonusValue);
+										break;
 									default:
 										client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Item.mBonus.UnknownBonusNumber", num), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 										return;
@@ -1210,14 +1160,7 @@ namespace DOL.GS.Commands
 							int Charges = Convert.ToInt32(args[2]);
 							int MaxCharges = Convert.ToInt32(args[3]);
 							int SpellID = Convert.ToInt32(args[4]);
-							item.Charges = Charges;
-							item.MaxCharges = MaxCharges;
-							if (item.Template is ItemUnique || (item.Template is ItemTemplate && (item.Template as ItemTemplate).AllowUpdate))
-							{
-								item.Template.Charges = item.Charges;
-								item.Template.MaxCharges = item.MaxCharges;
-							}
-							item.SpellID = SpellID;
+							item.SetTemplateUseSpells(SpellID, MaxCharges, Charges);
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
@@ -1246,14 +1189,8 @@ namespace DOL.GS.Commands
 							int Charges = Convert.ToInt32(args[2]);
 							int MaxCharges = Convert.ToInt32(args[3]);
 							int SpellID1 = Convert.ToInt32(args[4]);
-							item.Charges1 = Charges;
-							item.MaxCharges1 = MaxCharges;
-							if (item.Template is ItemUnique || (item.Template is ItemTemplate && (item.Template as ItemTemplate).AllowUpdate))
-							{
-								item.Template.Charges1 = item.Charges1;
-								item.Template.MaxCharges1 = item.MaxCharges1;
-							}
-							item.SpellID1 = SpellID1;
+							var firstspell = item.GetTemplateFirstUseSpell();
+							item.SetTemplateUseSpells(new []{ firstspell.SpellID, SpellID1 }, new []{ firstspell.MaxCharges, MaxCharges }, new []{ firstspell.Charges, Charges } );
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
@@ -1279,7 +1216,7 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							item.ProcSpellID = Convert.ToInt32(args[2]);
+							item.SetTemplateProcSpells(Convert.ToInt32(args[2]), 0);
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
@@ -1305,7 +1242,8 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							item.ProcSpellID1 = Convert.ToInt32(args[2]);
+							var firstproc = item.GetTemplateFirstProcSpell();
+							item.SetTemplateProcSpells(new []{ firstproc.SpellID, Convert.ToInt32(args[2]) }, new byte[]{ firstproc.ProcChance, 0 });
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
@@ -1331,7 +1269,8 @@ namespace DOL.GS.Commands
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Item.Count.NoItemInSlot", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							item.ProcChance = Convert.ToByte(args[2]);
+							var firstproc = item.GetTemplateFirstProcSpell();
+							item.SetTemplateProcSpells(firstproc.SpellID, Convert.ToByte(args[2]));
 							client.Out.SendInventoryItemsUpdate(new InventoryItem[] { item });
 							break;
 						}
@@ -1968,10 +1907,14 @@ namespace DOL.GS.Commands
 								return;
 							}
 
-							LoadSpell(client, item.SpellID);
-							LoadSpell(client, item.SpellID1);
-							LoadSpell(client, item.ProcSpellID);
-							LoadSpell(client, item.ProcSpellID1);
+							foreach(var sp in item.GetTemplateUseSpells().Where(sp => sp.SpellID != 0))
+							{
+								LoadSpell(client, sp.SpellID);
+							}
+							foreach(var sp in item.GetTemplateProcSpells().Where(sp => sp.SpellID != 0))
+							{
+								LoadSpell(client, sp.SpellID);
+							}
 							break;
 						}
 						#endregion LoadSpells

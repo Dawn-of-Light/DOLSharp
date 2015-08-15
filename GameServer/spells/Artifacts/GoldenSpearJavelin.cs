@@ -64,9 +64,7 @@ namespace DOL.GS.Spells
                     _artefJavelin.IsTradable = false;
                     _artefJavelin.MaxCount = 1;
                     _artefJavelin.PackSize = 1;
-                    _artefJavelin.Charges = 5;
-                    _artefJavelin.MaxCharges = 5;
-                    _artefJavelin.SpellID = 38076;
+                    _artefJavelin.SetTemplateUseSpells(38076, 5);
                 }
                 return _artefJavelin;
             }

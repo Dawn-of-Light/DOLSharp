@@ -498,23 +498,15 @@ namespace DOL.GS.Spells
                     m_SunCrush.Item_Type = 11;
                     m_SunCrush.Hand = 2;
                     m_SunCrush.Model = 1916;
-                    m_SunCrush.Bonus1 = 6;
-                    m_SunCrush.Bonus2 = 27;
-                    m_SunCrush.Bonus3 = 2;
-                    m_SunCrush.Bonus4 = 2;
-                    m_SunCrush.Bonus5 = 2;
-                    m_SunCrush.Bonus1Type = 25;
-                    m_SunCrush.Bonus2Type = 1;
-                    m_SunCrush.Bonus3Type = 173;
-                    m_SunCrush.Bonus4Type = 200;
-                    m_SunCrush.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Crushing, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunCrush.IsPickable = false;
                     m_SunCrush.IsDropable = false;
                     m_SunCrush.CanDropAsLoot = false;
                     m_SunCrush.IsTradable = false;
                     m_SunCrush.MaxCount = 1;
                     m_SunCrush.PackSize = 1;
-                    m_SunCrush.ProcSpellID = 65513;
+                    m_SunCrush.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunCrush;
@@ -545,23 +537,15 @@ namespace DOL.GS.Spells
                     m_SunSlash.Item_Type = 11;
                     m_SunSlash.Hand = 2;
                     m_SunSlash.Model = 1948;
-                    m_SunSlash.Bonus1 = 6;
-                    m_SunSlash.Bonus2 = 27;
-                    m_SunSlash.Bonus3 = 2;
-                    m_SunSlash.Bonus4 = 2;
-                    m_SunSlash.Bonus5 = 2;
-                    m_SunSlash.Bonus1Type = 44;
-                    m_SunSlash.Bonus2Type = 1;
-                    m_SunSlash.Bonus3Type = 173;
-                    m_SunSlash.Bonus4Type = 200;
-                    m_SunSlash.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Slashing, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunSlash.IsPickable = false;
                     m_SunSlash.IsDropable = false;
                     m_SunSlash.CanDropAsLoot = false;
                     m_SunSlash.IsTradable = false;
                     m_SunSlash.MaxCount = 1;
                     m_SunSlash.PackSize = 1;
-                    m_SunSlash.ProcSpellID = 65513;
+                    m_SunSlash.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunSlash;
@@ -592,23 +576,15 @@ namespace DOL.GS.Spells
                     m_SunThrust.Item_Type = 11;
                     m_SunThrust.Hand = 1;
                     m_SunThrust.Model = 1948;
-                    m_SunThrust.Bonus1 = 6;
-                    m_SunThrust.Bonus2 = 27;
-                    m_SunThrust.Bonus3 = 2;
-                    m_SunThrust.Bonus4 = 2;
-                    m_SunThrust.Bonus5 = 2;
-                    m_SunThrust.Bonus1Type = 50;
-                    m_SunThrust.Bonus2Type = 1;
-                    m_SunThrust.Bonus3Type = 173;
-                    m_SunThrust.Bonus4Type = 200;
-                    m_SunThrust.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Thrusting, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunThrust.IsPickable = false;
                     m_SunThrust.IsDropable = false;
                     m_SunThrust.CanDropAsLoot = false;
                     m_SunThrust.IsTradable = false;
                     m_SunThrust.MaxCount = 1;
                     m_SunThrust.PackSize = 1;
-                    m_SunThrust.ProcSpellID = 65513;
+                    m_SunThrust.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunThrust;
@@ -639,23 +615,15 @@ namespace DOL.GS.Spells
                     m_SunFlexScytheClaw.Item_Type = 10;
                     m_SunFlexScytheClaw.Hand = 0;
                     m_SunFlexScytheClaw.Model = 1924;
-                    m_SunFlexScytheClaw.Bonus1 = 6;
-                    m_SunFlexScytheClaw.Bonus2 = 27;
-                    m_SunFlexScytheClaw.Bonus3 = 2;
-                    m_SunFlexScytheClaw.Bonus4 = 2;
-                    m_SunFlexScytheClaw.Bonus5 = 2;
-                    m_SunFlexScytheClaw.Bonus1Type = 33;
-                    m_SunFlexScytheClaw.Bonus2Type = 1;
-                    m_SunFlexScytheClaw.Bonus3Type = 173;
-                    m_SunFlexScytheClaw.Bonus4Type = 200;
-                    m_SunFlexScytheClaw.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Flexible_Weapon, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunFlexScytheClaw.IsPickable = false;
                     m_SunFlexScytheClaw.IsDropable = false;
                     m_SunFlexScytheClaw.CanDropAsLoot = false;
                     m_SunFlexScytheClaw.IsTradable = false;
                     m_SunFlexScytheClaw.MaxCount = 1;
                     m_SunFlexScytheClaw.PackSize = 1;
-                    m_SunFlexScytheClaw.ProcSpellID = 65513;
+                    m_SunFlexScytheClaw.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunFlexScytheClaw;
@@ -686,23 +654,15 @@ namespace DOL.GS.Spells
                     m_SunPolearmSpear.Item_Type = 12;
                     m_SunPolearmSpear.Hand = 1;
                     m_SunPolearmSpear.Model = 1936;
-                    m_SunPolearmSpear.Bonus1 = 6;
-                    m_SunPolearmSpear.Bonus2 = 27;
-                    m_SunPolearmSpear.Bonus3 = 2;
-                    m_SunPolearmSpear.Bonus4 = 2;
-                    m_SunPolearmSpear.Bonus5 = 2;
-                    m_SunPolearmSpear.Bonus1Type = 41;
-                    m_SunPolearmSpear.Bonus2Type = 1;
-                    m_SunPolearmSpear.Bonus3Type = 173;
-                    m_SunPolearmSpear.Bonus4Type = 200;
-                    m_SunPolearmSpear.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Polearms, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunPolearmSpear.IsPickable = false;
                     m_SunPolearmSpear.IsDropable = false;
                     m_SunPolearmSpear.CanDropAsLoot = false;
                     m_SunPolearmSpear.IsTradable = false;
                     m_SunPolearmSpear.MaxCount = 1;
                     m_SunPolearmSpear.PackSize = 1;
-                    m_SunPolearmSpear.ProcSpellID = 65513;
+                    m_SunPolearmSpear.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunPolearmSpear;
@@ -733,23 +693,15 @@ namespace DOL.GS.Spells
                     m_SunTwoHanded.Item_Type = 12;
                     m_SunTwoHanded.Hand = 1;
                     m_SunTwoHanded.Model = 1904;
-                    m_SunTwoHanded.Bonus1 = 6;
-                    m_SunTwoHanded.Bonus2 = 27;
-                    m_SunTwoHanded.Bonus3 = 2;
-                    m_SunTwoHanded.Bonus4 = 2;
-                    m_SunTwoHanded.Bonus5 = 2;
-                    m_SunTwoHanded.Bonus1Type = 20;
-                    m_SunTwoHanded.Bonus2Type = 1;
-                    m_SunTwoHanded.Bonus3Type = 173;
-                    m_SunTwoHanded.Bonus4Type = 200;
-                    m_SunTwoHanded.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Two_Handed, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunTwoHanded.IsPickable = false;
                     m_SunTwoHanded.IsDropable = false;
                     m_SunTwoHanded.CanDropAsLoot = false;
                     m_SunTwoHanded.IsTradable = false;
                     m_SunTwoHanded.MaxCount = 1;
                     m_SunTwoHanded.PackSize = 1;
-                    m_SunTwoHanded.ProcSpellID = 65513;
+                    m_SunTwoHanded.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunTwoHanded;
@@ -780,23 +732,15 @@ namespace DOL.GS.Spells
                     m_SunBow.Item_Type = 13;
                     m_SunBow.Hand = 1;
                     m_SunBow.Model = 1912;
-                    m_SunBow.Bonus1 = 6;
-                    m_SunBow.Bonus2 = 27;
-                    m_SunBow.Bonus3 = 2;
-                    m_SunBow.Bonus4 = 2;
-                    m_SunBow.Bonus5 = 2;
-                    m_SunBow.Bonus1Type = 36;
-                    m_SunBow.Bonus2Type = 1;
-                    m_SunBow.Bonus3Type = 173;
-                    m_SunBow.Bonus4Type = 200;
-                    m_SunBow.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Long_bows, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunBow.IsPickable = false;
                     m_SunBow.IsDropable = false;
                     m_SunBow.CanDropAsLoot = false;
                     m_SunBow.IsTradable = false;
                     m_SunBow.MaxCount = 1;
                     m_SunBow.PackSize = 1;
-                    m_SunBow.ProcSpellID = 65513;
+                    m_SunBow.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunBow;
@@ -827,23 +771,15 @@ namespace DOL.GS.Spells
                     m_SunStaff.Item_Type = 12;
                     m_SunStaff.Hand = 1;
                     m_SunStaff.Model = 1952;
-                    m_SunStaff.Bonus1 = 6;
-                    m_SunStaff.Bonus2 = 27;
-                    m_SunStaff.Bonus3 = 2;
-                    m_SunStaff.Bonus4 = 2;
-                    m_SunStaff.Bonus5 = 2;
-                    m_SunStaff.Bonus1Type = 48;
-                    m_SunStaff.Bonus2Type = 1;
-                    m_SunStaff.Bonus3Type = 173;
-                    m_SunStaff.Bonus4Type = 200;
-                    m_SunStaff.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Staff, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunStaff.IsPickable = false;
                     m_SunStaff.IsDropable = false;
                     m_SunStaff.CanDropAsLoot = false;
                     m_SunStaff.IsTradable = false;
                     m_SunStaff.MaxCount = 1;
                     m_SunStaff.PackSize = 1;
-                    m_SunStaff.ProcSpellID = 65513;
+                    m_SunStaff.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunStaff;
@@ -874,23 +810,15 @@ namespace DOL.GS.Spells
                     m_SunMStaff.Item_Type = 12;
                     m_SunMStaff.Hand = 1;
                     m_SunMStaff.Model = 1952;
-                    m_SunMStaff.Bonus1 = 6;
-                    m_SunMStaff.Bonus2 = 27;
-                    m_SunMStaff.Bonus3 = 2;
-                    m_SunMStaff.Bonus4 = 2;
-                    m_SunMStaff.Bonus5 = 2;
-                    m_SunMStaff.Bonus1Type = 109;
-                    m_SunMStaff.Bonus2Type = 1;
-                    m_SunMStaff.Bonus3Type = 173;
-                    m_SunMStaff.Bonus4Type = 200;
-                    m_SunMStaff.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_MaulerStaff, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunMStaff.IsPickable = false;
                     m_SunMStaff.IsDropable = false;
                     m_SunMStaff.CanDropAsLoot = false;
                     m_SunMStaff.IsTradable = false;
                     m_SunMStaff.MaxCount = 1;
                     m_SunMStaff.PackSize = 1;
-                    m_SunMStaff.ProcSpellID = 65513;
+                    m_SunMStaff.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunMStaff;
@@ -921,23 +849,15 @@ namespace DOL.GS.Spells
                     m_SunMFist.Item_Type = 11;
                     m_SunMFist.Hand = 2;
                     m_SunMFist.Model = 2028;
-                    m_SunMFist.Bonus1 = 6;
-                    m_SunMFist.Bonus2 = 27;
-                    m_SunMFist.Bonus3 = 2;
-                    m_SunMFist.Bonus4 = 2;
-                    m_SunMFist.Bonus5 = 2;
-                    m_SunMFist.Bonus1Type = 110;
-                    m_SunMFist.Bonus2Type = 1;
-                    m_SunMFist.Bonus3Type = 173;
-                    m_SunMFist.Bonus4Type = 200;
-                    m_SunMFist.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_FistWraps, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunMFist.IsPickable = false;
                     m_SunMFist.IsDropable = false;
                     m_SunMFist.CanDropAsLoot = false;
                     m_SunMFist.IsTradable = false;
                     m_SunMFist.MaxCount = 1;
                     m_SunMFist.PackSize = 1;
-                    m_SunMFist.ProcSpellID = 65513;
+                    m_SunMFist.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunMFist;
@@ -970,23 +890,15 @@ namespace DOL.GS.Spells
                     m_SunCrush.Item_Type = 10;
                     m_SunCrush.Hand = 2;
                     m_SunCrush.Model = 2044;
-                    m_SunCrush.Bonus1 = 6;
-                    m_SunCrush.Bonus2 = 27;
-                    m_SunCrush.Bonus3 = 2;
-                    m_SunCrush.Bonus4 = 2;
-                    m_SunCrush.Bonus5 = 2;
-                    m_SunCrush.Bonus1Type = 53;
-                    m_SunCrush.Bonus2Type = 1;
-                    m_SunCrush.Bonus3Type = 173;
-                    m_SunCrush.Bonus4Type = 200;
-                    m_SunCrush.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Hammer, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunCrush.IsPickable = false;
                     m_SunCrush.IsDropable = false;
                     m_SunCrush.CanDropAsLoot = false;
                     m_SunCrush.IsTradable = false;
                     m_SunCrush.MaxCount = 1;
                     m_SunCrush.PackSize = 1;
-                    m_SunCrush.ProcSpellID = 65513;
+                    m_SunCrush.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunCrush;
@@ -1017,23 +929,15 @@ namespace DOL.GS.Spells
                     m_SunSlash.Item_Type = 10;
                     m_SunSlash.Hand = 2;
                     m_SunSlash.Model = 2036;
-                    m_SunSlash.Bonus1 = 6;
-                    m_SunSlash.Bonus2 = 27;
-                    m_SunSlash.Bonus3 = 2;
-                    m_SunSlash.Bonus4 = 2;
-                    m_SunSlash.Bonus5 = 2;
-                    m_SunSlash.Bonus1Type = 52;
-                    m_SunSlash.Bonus2Type = 1;
-                    m_SunSlash.Bonus3Type = 173;
-                    m_SunSlash.Bonus4Type = 200;
-                    m_SunSlash.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Sword, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunSlash.IsPickable = false;
                     m_SunSlash.IsDropable = false;
                     m_SunSlash.CanDropAsLoot = false;
                     m_SunSlash.IsTradable = false;
                     m_SunSlash.MaxCount = 1;
                     m_SunSlash.PackSize = 1;
-                    m_SunSlash.ProcSpellID = 65513;
+                    m_SunSlash.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunSlash;
@@ -1064,23 +968,15 @@ namespace DOL.GS.Spells
                     m_SunAxe.Item_Type = 10;
                     m_SunAxe.Hand = 0;
                     m_SunAxe.Model = 2032;
-                    m_SunAxe.Bonus1 = 6;
-                    m_SunAxe.Bonus2 = 27;
-                    m_SunAxe.Bonus3 = 2;
-                    m_SunAxe.Bonus4 = 2;
-                    m_SunAxe.Bonus5 = 2;
-                    m_SunAxe.Bonus1Type = 54;
-                    m_SunAxe.Bonus2Type = 1;
-                    m_SunAxe.Bonus3Type = 173;
-                    m_SunAxe.Bonus4Type = 200;
-                    m_SunAxe.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Axe, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunAxe.IsPickable = false;
                     m_SunAxe.IsDropable = false;
                     m_SunAxe.CanDropAsLoot = false;
                     m_SunAxe.IsTradable = false;
                     m_SunAxe.MaxCount = 1;
                     m_SunAxe.PackSize = 1;
-                    m_SunAxe.ProcSpellID = 65513;
+                    m_SunAxe.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunAxe;
@@ -1111,23 +1007,15 @@ namespace DOL.GS.Spells
                     m_SunLeftAxe.Item_Type = 11;
                     m_SunLeftAxe.Hand = 2;
                     m_SunLeftAxe.Model = 2032;
-                    m_SunLeftAxe.Bonus1 = 6;
-                    m_SunLeftAxe.Bonus2 = 27;
-                    m_SunLeftAxe.Bonus3 = 2;
-                    m_SunLeftAxe.Bonus4 = 2;
-                    m_SunLeftAxe.Bonus5 = 2;
-                    m_SunLeftAxe.Bonus1Type = 55;
-                    m_SunLeftAxe.Bonus2Type = 1;
-                    m_SunLeftAxe.Bonus3Type = 173;
-                    m_SunLeftAxe.Bonus4Type = 200;
-                    m_SunLeftAxe.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Left_Axe, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunLeftAxe.IsPickable = false;
                     m_SunLeftAxe.IsDropable = false;
                     m_SunLeftAxe.CanDropAsLoot = false;
                     m_SunLeftAxe.IsTradable = false;
                     m_SunLeftAxe.MaxCount = 1;
                     m_SunLeftAxe.PackSize = 1;
-                    m_SunLeftAxe.ProcSpellID = 65513;
+                    m_SunLeftAxe.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunLeftAxe;
@@ -1158,23 +1046,15 @@ namespace DOL.GS.Spells
                     m_SunFlexScytheClaw.Item_Type = 11;
                     m_SunFlexScytheClaw.Hand = 2;
                     m_SunFlexScytheClaw.Model = 2028;
-                    m_SunFlexScytheClaw.Bonus1 = 6;
-                    m_SunFlexScytheClaw.Bonus2 = 27;
-                    m_SunFlexScytheClaw.Bonus3 = 2;
-                    m_SunFlexScytheClaw.Bonus4 = 2;
-                    m_SunFlexScytheClaw.Bonus5 = 2;
-                    m_SunFlexScytheClaw.Bonus1Type = 92;
-                    m_SunFlexScytheClaw.Bonus2Type = 1;
-                    m_SunFlexScytheClaw.Bonus3Type = 173;
-                    m_SunFlexScytheClaw.Bonus4Type = 200;
-                    m_SunFlexScytheClaw.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_HandToHand, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunFlexScytheClaw.IsPickable = false;
                     m_SunFlexScytheClaw.IsDropable = false;
                     m_SunFlexScytheClaw.CanDropAsLoot = false;
                     m_SunFlexScytheClaw.IsTradable = false;
                     m_SunFlexScytheClaw.MaxCount = 1;
                     m_SunFlexScytheClaw.PackSize = 1;
-                    m_SunFlexScytheClaw.ProcSpellID = 65513;
+                    m_SunFlexScytheClaw.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunFlexScytheClaw;
@@ -1205,23 +1085,15 @@ namespace DOL.GS.Spells
                     m_SunPolearmSpear.Item_Type = 12;
                     m_SunPolearmSpear.Hand = 1;
                     m_SunPolearmSpear.Model = 2048;
-                    m_SunPolearmSpear.Bonus1 = 6;
-                    m_SunPolearmSpear.Bonus2 = 27;
-                    m_SunPolearmSpear.Bonus3 = 2;
-                    m_SunPolearmSpear.Bonus4 = 2;
-                    m_SunPolearmSpear.Bonus5 = 2;
-                    m_SunPolearmSpear.Bonus1Type = 56;
-                    m_SunPolearmSpear.Bonus2Type = 1;
-                    m_SunPolearmSpear.Bonus3Type = 173;
-                    m_SunPolearmSpear.Bonus4Type = 200;
-                    m_SunPolearmSpear.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Spear, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunPolearmSpear.IsPickable = false;
                     m_SunPolearmSpear.IsDropable = false;
                     m_SunPolearmSpear.CanDropAsLoot = false;
                     m_SunPolearmSpear.IsTradable = false;
                     m_SunPolearmSpear.MaxCount = 1;
                     m_SunPolearmSpear.PackSize = 1;
-                    m_SunPolearmSpear.ProcSpellID = 65513;
+                    m_SunPolearmSpear.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunPolearmSpear;
@@ -1252,23 +1124,15 @@ namespace DOL.GS.Spells
                     m_SunTwoHanded.Item_Type = 12;
                     m_SunTwoHanded.Hand = 1;
                     m_SunTwoHanded.Model = 2060;
-                    m_SunTwoHanded.Bonus1 = 6;
-                    m_SunTwoHanded.Bonus2 = 27;
-                    m_SunTwoHanded.Bonus3 = 2;
-                    m_SunTwoHanded.Bonus4 = 2;
-                    m_SunTwoHanded.Bonus5 = 2;
-                    m_SunTwoHanded.Bonus1Type = 52;
-                    m_SunTwoHanded.Bonus2Type = 1;
-                    m_SunTwoHanded.Bonus3Type = 173;
-                    m_SunTwoHanded.Bonus4Type = 200;
-                    m_SunTwoHanded.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Sword, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunTwoHanded.IsPickable = false;
                     m_SunTwoHanded.IsDropable = false;
                     m_SunTwoHanded.CanDropAsLoot = false;
                     m_SunTwoHanded.IsTradable = false;
                     m_SunTwoHanded.MaxCount = 1;
                     m_SunTwoHanded.PackSize = 1;
-                    m_SunTwoHanded.ProcSpellID = 65513;
+                    m_SunTwoHanded.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunTwoHanded;
@@ -1299,23 +1163,15 @@ namespace DOL.GS.Spells
                     m_SunBow.Item_Type = 13;
                     m_SunBow.Hand = 1;
                     m_SunBow.Model = 2064;
-                    m_SunBow.Bonus1 = 6;
-                    m_SunBow.Bonus2 = 27;
-                    m_SunBow.Bonus3 = 2;
-                    m_SunBow.Bonus4 = 2;
-                    m_SunBow.Bonus5 = 2;
-                    m_SunBow.Bonus1Type = 68;
-                    m_SunBow.Bonus2Type = 1;
-                    m_SunBow.Bonus3Type = 173;
-                    m_SunBow.Bonus4Type = 200;
-                    m_SunBow.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Composite, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunBow.IsPickable = false;
                     m_SunBow.IsDropable = false;
                     m_SunBow.CanDropAsLoot = false;
                     m_SunBow.IsTradable = false;
                     m_SunBow.MaxCount = 1;
                     m_SunBow.PackSize = 1;
-                    m_SunBow.ProcSpellID = 65513;
+                    m_SunBow.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunBow;
@@ -1346,23 +1202,15 @@ namespace DOL.GS.Spells
                     m_Sun2HCrush.Item_Type = 12;
                     m_Sun2HCrush.Hand = 1;
                     m_Sun2HCrush.Model = 2056;
-                    m_Sun2HCrush.Bonus1 = 6;
-                    m_Sun2HCrush.Bonus2 = 27;
-                    m_Sun2HCrush.Bonus3 = 2;
-                    m_Sun2HCrush.Bonus4 = 2;
-                    m_Sun2HCrush.Bonus5 = 2;
-                    m_Sun2HCrush.Bonus1Type = 53;
-                    m_Sun2HCrush.Bonus2Type = 1;
-                    m_Sun2HCrush.Bonus3Type = 173;
-                    m_Sun2HCrush.Bonus4Type = 200;
-                    m_Sun2HCrush.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Hammer, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_Sun2HCrush.IsPickable = false;
                     m_Sun2HCrush.IsDropable = false;
                     m_Sun2HCrush.CanDropAsLoot = false;
                     m_Sun2HCrush.IsTradable = false;
                     m_Sun2HCrush.MaxCount = 1;
                     m_Sun2HCrush.PackSize = 1;
-                    m_Sun2HCrush.ProcSpellID = 65513;
+                    m_Sun2HCrush.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_Sun2HCrush;
@@ -1393,23 +1241,15 @@ namespace DOL.GS.Spells
                     m_Sun2HAxe.Item_Type = 12;
                     m_Sun2HAxe.Hand = 1;
                     m_Sun2HAxe.Model = 2052;
-                    m_Sun2HAxe.Bonus1 = 6;
-                    m_Sun2HAxe.Bonus2 = 27;
-                    m_Sun2HAxe.Bonus3 = 2;
-                    m_Sun2HAxe.Bonus4 = 2;
-                    m_Sun2HAxe.Bonus5 = 2;
-                    m_Sun2HAxe.Bonus1Type = 54;
-                    m_Sun2HAxe.Bonus2Type = 1;
-                    m_Sun2HAxe.Bonus3Type = 173;
-                    m_Sun2HAxe.Bonus4Type = 200;
-                    m_Sun2HAxe.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Axe, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_Sun2HAxe.IsPickable = false;
                     m_Sun2HAxe.IsDropable = false;
                     m_Sun2HAxe.CanDropAsLoot = false;
                     m_Sun2HAxe.IsTradable = false;
                     m_Sun2HAxe.MaxCount = 1;
                     m_Sun2HAxe.PackSize = 1;
-                    m_Sun2HAxe.ProcSpellID = 65513;
+                    m_Sun2HAxe.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_Sun2HAxe;
@@ -1443,23 +1283,15 @@ namespace DOL.GS.Spells
                     m_SunCrush.Item_Type = 11;
                     m_SunCrush.Hand = 2;
                     m_SunCrush.Model = 1988;
-                    m_SunCrush.Bonus1 = 6;
-                    m_SunCrush.Bonus2 = 27;
-                    m_SunCrush.Bonus3 = 2;
-                    m_SunCrush.Bonus4 = 2;
-                    m_SunCrush.Bonus5 = 2;
-                    m_SunCrush.Bonus1Type = 73;
-                    m_SunCrush.Bonus2Type = 1;
-                    m_SunCrush.Bonus3Type = 173;
-                    m_SunCrush.Bonus4Type = 200;
-                    m_SunCrush.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Blunt, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunCrush.IsPickable = false;
                     m_SunCrush.IsDropable = false;
                     m_SunCrush.CanDropAsLoot = false;
                     m_SunCrush.IsTradable = false;
                     m_SunCrush.MaxCount = 1;
                     m_SunCrush.PackSize = 1;
-                    m_SunCrush.ProcSpellID = 65513;
+                    m_SunCrush.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunCrush;
@@ -1490,23 +1322,15 @@ namespace DOL.GS.Spells
                     m_SunSlash.Item_Type = 11;
                     m_SunSlash.Hand = 2;
                     m_SunSlash.Model = 1948;
-                    m_SunSlash.Bonus1 = 6;
-                    m_SunSlash.Bonus2 = 27;
-                    m_SunSlash.Bonus3 = 2;
-                    m_SunSlash.Bonus4 = 2;
-                    m_SunSlash.Bonus5 = 2;
-                    m_SunSlash.Bonus1Type = 72;
-                    m_SunSlash.Bonus2Type = 1;
-                    m_SunSlash.Bonus3Type = 173;
-                    m_SunSlash.Bonus4Type = 200;
-                    m_SunSlash.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Blades, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunSlash.IsPickable = false;
                     m_SunSlash.IsDropable = false;
                     m_SunSlash.CanDropAsLoot = false;
                     m_SunSlash.IsTradable = false;
                     m_SunSlash.MaxCount = 1;
                     m_SunSlash.PackSize = 1;
-                    m_SunSlash.ProcSpellID = 65513;
+                    m_SunSlash.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunSlash;
@@ -1537,23 +1361,15 @@ namespace DOL.GS.Spells
                     m_SunThrust.Item_Type = 11;
                     m_SunThrust.Hand = 2;
                     m_SunThrust.Model = 1948;
-                    m_SunThrust.Bonus1 = 6;
-                    m_SunThrust.Bonus2 = 27;
-                    m_SunThrust.Bonus3 = 2;
-                    m_SunThrust.Bonus4 = 2;
-                    m_SunThrust.Bonus5 = 2;
-                    m_SunThrust.Bonus1Type = 74;
-                    m_SunThrust.Bonus2Type = 1;
-                    m_SunThrust.Bonus3Type = 173;
-                    m_SunThrust.Bonus4Type = 200;
-                    m_SunThrust.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Piercing, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunThrust.IsPickable = false;
                     m_SunThrust.IsDropable = false;
                     m_SunThrust.CanDropAsLoot = false;
                     m_SunThrust.IsTradable = false;
                     m_SunThrust.MaxCount = 1;
                     m_SunThrust.PackSize = 1;
-                    m_SunThrust.ProcSpellID = 65513;
+                    m_SunThrust.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunThrust;
@@ -1585,23 +1401,15 @@ namespace DOL.GS.Spells
                     m_SunFlexScytheClaw.Object_Type = 26;
                     m_SunFlexScytheClaw.Item_Type = 12;
                     m_SunFlexScytheClaw.Model = 2004;
-                    m_SunFlexScytheClaw.Bonus1 = 6;
-                    m_SunFlexScytheClaw.Bonus2 = 27;
-                    m_SunFlexScytheClaw.Bonus3 = 2;
-                    m_SunFlexScytheClaw.Bonus4 = 2;
-                    m_SunFlexScytheClaw.Bonus5 = 2;
-                    m_SunFlexScytheClaw.Bonus1Type = 90;
-                    m_SunFlexScytheClaw.Bonus2Type = 1;
-                    m_SunFlexScytheClaw.Bonus3Type = 173;
-                    m_SunFlexScytheClaw.Bonus4Type = 200;
-                    m_SunFlexScytheClaw.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Scythe, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunFlexScytheClaw.IsPickable = false;
                     m_SunFlexScytheClaw.IsDropable = false;
                     m_SunFlexScytheClaw.CanDropAsLoot = false;
                     m_SunFlexScytheClaw.IsTradable = false;
                     m_SunFlexScytheClaw.MaxCount = 1;
                     m_SunFlexScytheClaw.PackSize = 1;
-                    m_SunFlexScytheClaw.ProcSpellID = 65513;
+                    m_SunFlexScytheClaw.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunFlexScytheClaw;
@@ -1632,23 +1440,15 @@ namespace DOL.GS.Spells
                     m_SunPolearmSpear.Item_Type = 12;
                     m_SunPolearmSpear.Hand = 1;
                     m_SunPolearmSpear.Model = 2008;
-                    m_SunPolearmSpear.Bonus1 = 6;
-                    m_SunPolearmSpear.Bonus2 = 27;
-                    m_SunPolearmSpear.Bonus3 = 2;
-                    m_SunPolearmSpear.Bonus4 = 2;
-                    m_SunPolearmSpear.Bonus5 = 2;
-                    m_SunPolearmSpear.Bonus1Type = 82;
-                    m_SunPolearmSpear.Bonus2Type = 1;
-                    m_SunPolearmSpear.Bonus3Type = 173;
-                    m_SunPolearmSpear.Bonus4Type = 200;
-                    m_SunPolearmSpear.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Celtic_Spear, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunPolearmSpear.IsPickable = false;
                     m_SunPolearmSpear.IsDropable = false;
                     m_SunPolearmSpear.CanDropAsLoot = false;
                     m_SunPolearmSpear.IsTradable = false;
                     m_SunPolearmSpear.MaxCount = 1;
                     m_SunPolearmSpear.PackSize = 1;
-                    m_SunPolearmSpear.ProcSpellID = 65513;
+                    m_SunPolearmSpear.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunPolearmSpear;
@@ -1679,23 +1479,15 @@ namespace DOL.GS.Spells
                     m_SunTwoHanded.Item_Type = 12;
                     m_SunTwoHanded.Hand = 1;
                     m_SunTwoHanded.Model = 1984;
-                    m_SunTwoHanded.Bonus1 = 6;
-                    m_SunTwoHanded.Bonus2 = 27;
-                    m_SunTwoHanded.Bonus3 = 2;
-                    m_SunTwoHanded.Bonus4 = 2;
-                    m_SunTwoHanded.Bonus5 = 2;
-                    m_SunTwoHanded.Bonus1Type = 75;
-                    m_SunTwoHanded.Bonus2Type = 1;
-                    m_SunTwoHanded.Bonus3Type = 173;
-                    m_SunTwoHanded.Bonus4Type = 200;
-                    m_SunTwoHanded.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_Large_Weapon, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunTwoHanded.IsPickable = false;
                     m_SunTwoHanded.IsDropable = false;
                     m_SunTwoHanded.CanDropAsLoot = false;
                     m_SunTwoHanded.IsTradable = false;
                     m_SunTwoHanded.MaxCount = 1;
                     m_SunTwoHanded.PackSize = 1;
-                    m_SunTwoHanded.ProcSpellID = 65513;
+                    m_SunTwoHanded.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunTwoHanded;
@@ -1726,23 +1518,15 @@ namespace DOL.GS.Spells
                     m_SunBow.Item_Type = 13;
                     m_SunBow.Hand = 1;
                     m_SunBow.Model = 1996;
-                    m_SunBow.Bonus1 = 6;
-                    m_SunBow.Bonus2 = 27;
-                    m_SunBow.Bonus3 = 2;
-                    m_SunBow.Bonus4 = 2;
-                    m_SunBow.Bonus5 = 2;
-                    m_SunBow.Bonus1Type = 83;
-                    m_SunBow.Bonus2Type = 1;
-                    m_SunBow.Bonus3Type = 173;
-                    m_SunBow.Bonus4Type = 200;
-                    m_SunBow.Bonus5Type = 155;
+					m_SunCrush.SetTemplateBonuses(new []{ eProperty.Skill_RecurvedBow, eProperty.Strength, eProperty.MeleeDamage, eProperty.StyleDamage, eProperty.MeleeSpeed },
+                                                  new []{ 6, 27, 2, 2, 2 });
                     m_SunBow.IsPickable = false;
                     m_SunBow.IsDropable = false;
                     m_SunBow.CanDropAsLoot = false;
                     m_SunBow.IsTradable = false;
                     m_SunBow.MaxCount = 1;
                     m_SunBow.PackSize = 1;
-                    m_SunBow.ProcSpellID = 65513;
+                    m_SunBow.SetTemplateProcSpells(65513, 0);
 
                 }
                 return m_SunBow;

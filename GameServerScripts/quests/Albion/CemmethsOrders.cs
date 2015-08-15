@@ -96,15 +96,8 @@ namespace DOL.GS.Quests.Albion
 
 				RecruitsQuiltedVest.DPS_AF = 6;
 				RecruitsQuiltedVest.SPD_ABS = 0;
-				RecruitsQuiltedVest.Bonus1 = 3;
-				RecruitsQuiltedVest.Bonus1Type = (int)eProperty.Dexterity;
-				RecruitsQuiltedVest.Bonus2 = 4;
-				RecruitsQuiltedVest.Bonus2Type = (int)eProperty.Acuity;
-				RecruitsQuiltedVest.Bonus3 = 1;
-				RecruitsQuiltedVest.Bonus3Type = (int)eProperty.Resist_Spirit;
-				RecruitsQuiltedVest.Bonus4 = 1;
-				RecruitsQuiltedVest.Bonus4Type = (int)eProperty.Resist_Matter;
-
+				RecruitsQuiltedVest.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Acuity, eProperty.Resist_Spirit,eProperty.Resist_Matter },
+				                                       new []{ 3, 4, 1, 1});
 				RecruitsQuiltedVest.Quality = 100;
 				RecruitsQuiltedVest.Condition = 50000;
 				RecruitsQuiltedVest.MaxCondition = 50000;
@@ -116,7 +109,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(RecruitsQuiltedVest);
+					RecruitsQuiltedVest.AddQuestObjectToDatabase();
 			}
 			RecruitsLeatherJerkin = GameServer.Database.FindObjectByKey<ItemTemplate>("k109_recruits_leather_jerkin");
 			if (RecruitsLeatherJerkin == null)
@@ -140,15 +133,8 @@ namespace DOL.GS.Quests.Albion
 
 				RecruitsLeatherJerkin.DPS_AF = 12;
 				RecruitsLeatherJerkin.SPD_ABS = 10;
-				RecruitsLeatherJerkin.Bonus1 = 4;
-				RecruitsLeatherJerkin.Bonus1Type = (int)eProperty.Dexterity;
-				RecruitsLeatherJerkin.Bonus2 = 3;
-				RecruitsLeatherJerkin.Bonus2Type = (int)eProperty.Strength;
-				RecruitsLeatherJerkin.Bonus3 = 1;
-				RecruitsLeatherJerkin.Bonus3Type = (int)eProperty.Constitution;
-				RecruitsLeatherJerkin.Bonus4 = 1;
-				RecruitsLeatherJerkin.Bonus4Type = (int)eProperty.Resist_Spirit;
-
+				RecruitsLeatherJerkin.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Strength, eProperty.Constitution, eProperty.Resist_Spirit },
+				                                         new []{ 4, 3, 1, 1 });
 				RecruitsLeatherJerkin.Quality = 100;
 				RecruitsLeatherJerkin.Condition = 50000;
 				RecruitsLeatherJerkin.MaxCondition = 50000;
@@ -160,7 +146,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(RecruitsLeatherJerkin);
+					RecruitsLeatherJerkin.AddQuestObjectToDatabase();
 			}
 			RecruitsStuddedVest = GameServer.Database.FindObjectByKey<ItemTemplate>("k109_recruits_studded_vest");
 			if (RecruitsStuddedVest == null)
@@ -184,15 +170,8 @@ namespace DOL.GS.Quests.Albion
 
 				RecruitsStuddedVest.DPS_AF = 12;
 				RecruitsStuddedVest.SPD_ABS = 19;
-				RecruitsStuddedVest.Bonus1 = 1;
-				RecruitsStuddedVest.Bonus1Type = (int)eProperty.Dexterity;
-				RecruitsStuddedVest.Bonus2 = 4;
-				RecruitsStuddedVest.Bonus2Type = (int)eProperty.Strength;
-				RecruitsStuddedVest.Bonus3 = 3;
-				RecruitsStuddedVest.Bonus3Type = (int)eProperty.Constitution;
-				RecruitsStuddedVest.Bonus4 = 1;
-				RecruitsStuddedVest.Bonus4Type = (int)eProperty.Resist_Spirit;
-
+				RecruitsStuddedVest.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Strength, eProperty.Constitution, eProperty.Resist_Spirit },
+				                                       new []{ 1, 4, 3, 1 });
 				RecruitsStuddedVest.Quality = 100;
 				RecruitsStuddedVest.Condition = 50000;
 				RecruitsStuddedVest.MaxCondition = 50000;
@@ -204,7 +183,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(RecruitsStuddedVest);
+					RecruitsStuddedVest.AddQuestObjectToDatabase();
 			}
 			#endregion
 
@@ -281,8 +260,8 @@ namespace DOL.GS.Quests.Albion
 				CemmethBudgwold.Z = 2394;
 				CemmethBudgwold.Heading = 2275;
 
-				if (SAVE_INTO_DATABASE)
-					CemmethBudgwold.SaveIntoDatabase();
+				
+				CemmethBudgwold.AddQuestObjectToDatabase();
 
 				CemmethBudgwold.AddToWorld();
 			}

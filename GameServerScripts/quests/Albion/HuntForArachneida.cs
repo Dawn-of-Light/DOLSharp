@@ -177,8 +177,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					kealan.SaveIntoDatabase();
+				
+				kealan.AddQuestObjectToDatabase();
 
 
 				kealan.AddToWorld();
@@ -210,8 +210,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					arachneida.SaveIntoDatabase();
+				
+				arachneida.AddQuestObjectToDatabase();
 
 				arachneida.AddToWorld();
 			}
@@ -235,15 +235,7 @@ namespace DOL.GS.Quests.Albion
 				spiderSilkenRobe.Model = 58;
 
 				spiderSilkenRobe.Bonus = 5;
-				spiderSilkenRobe.Bonus1 = 3;
-				spiderSilkenRobe.Bonus1Type = (int) eStat.DEX;
-				;
-
-				spiderSilkenRobe.Bonus2 = 3;
-				spiderSilkenRobe.Bonus2Type = (int) eStat.INT;
-
-				spiderSilkenRobe.Bonus3 = 6;
-				spiderSilkenRobe.Bonus3Type = (int) eProperty.MaxHealth;
+				spiderSilkenRobe.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Intelligence, eProperty.MaxHealth }, new []{ 3, 3, 6 });
 
 				spiderSilkenRobe.DPS_AF = 18;
 				spiderSilkenRobe.SPD_ABS = 0;
@@ -266,7 +258,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(spiderSilkenRobe);
+				spiderSilkenRobe.AddQuestObjectToDatabase();
 			}
 
 			ringedSpiderChitinTunic = GameServer.Database.FindObjectByKey<ItemTemplate>("ringed_spider_chitin_tunic");
@@ -282,14 +274,7 @@ namespace DOL.GS.Quests.Albion
 				ringedSpiderChitinTunic.Model = 41;
 
 				ringedSpiderChitinTunic.Bonus = 5;
-				ringedSpiderChitinTunic.Bonus1 = 4;
-				ringedSpiderChitinTunic.Bonus1Type = (int) eStat.STR;
-
-				ringedSpiderChitinTunic.Bonus2 = 3;
-				ringedSpiderChitinTunic.Bonus2Type = (int) eStat.QUI;
-
-				ringedSpiderChitinTunic.Bonus3 = 9;
-				ringedSpiderChitinTunic.Bonus3Type = (int) eProperty.MaxHealth;
+				ringedSpiderChitinTunic.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Quickness, eProperty.MaxHealth }, new []{ 4, 3, 9 });
 
 				ringedSpiderChitinTunic.DPS_AF = 28;
 				ringedSpiderChitinTunic.SPD_ABS = 27;
@@ -312,7 +297,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(ringedSpiderChitinTunic);
+				ringedSpiderChitinTunic.AddQuestObjectToDatabase();
 			}
 
 			studdedSpiderEyeVest = GameServer.Database.FindObjectByKey<ItemTemplate>("studded_spider_eye_vest");
@@ -328,14 +313,7 @@ namespace DOL.GS.Quests.Albion
 				studdedSpiderEyeVest.Model = 51;
 
 				studdedSpiderEyeVest.Bonus = 5;
-				studdedSpiderEyeVest.Bonus1 = 3;
-				studdedSpiderEyeVest.Bonus1Type = (int) eStat.QUI;
-
-				studdedSpiderEyeVest.Bonus2 = 2;
-				studdedSpiderEyeVest.Bonus2Type = (int) eStat.PIE;
-
-				studdedSpiderEyeVest.Bonus3 = 9;
-				studdedSpiderEyeVest.Bonus3Type = (int) eProperty.MaxHealth;
+				studdedSpiderEyeVest.SetTemplateBonuses(new []{ eProperty.Quickness, eProperty.Piety, eProperty.MaxHealth }, new []{ 3, 2, 9 });
 
 				studdedSpiderEyeVest.DPS_AF = 28;
 				studdedSpiderEyeVest.SPD_ABS = 19;
@@ -358,7 +336,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(studdedSpiderEyeVest);
+				studdedSpiderEyeVest.AddQuestObjectToDatabase();
 			}
 
 			spiderEmblazonedTunic = GameServer.Database.FindObjectByKey<ItemTemplate>("spider_emblazoned_tunic");
@@ -373,14 +351,7 @@ namespace DOL.GS.Quests.Albion
 				spiderEmblazonedTunic.Model = 31;
 
 				spiderEmblazonedTunic.Bonus = 5;
-				spiderEmblazonedTunic.Bonus1 = 2;
-				spiderEmblazonedTunic.Bonus1Type = (int) eStat.STR;
-
-				spiderEmblazonedTunic.Bonus2 = 3;
-				spiderEmblazonedTunic.Bonus2Type = (int) eStat.PIE;
-
-				spiderEmblazonedTunic.Bonus3 = 9;
-				spiderEmblazonedTunic.Bonus3Type = (int) eProperty.MaxHealth;
+				spiderEmblazonedTunic.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Piety, eProperty.MaxHealth }, new []{ 2, 3, 9 });
 
 				spiderEmblazonedTunic.DPS_AF = 28;
 				spiderEmblazonedTunic.SPD_ABS = 10;
@@ -403,7 +374,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(spiderEmblazonedTunic);
+				spiderEmblazonedTunic.AddQuestObjectToDatabase();
 			}
 
 			embossedSpiderTunic = GameServer.Database.FindObjectByKey<ItemTemplate>("embossed_spider_tunic");
@@ -419,14 +390,7 @@ namespace DOL.GS.Quests.Albion
 				embossedSpiderTunic.Model = 31;
 
 				embossedSpiderTunic.Bonus = 5;
-				embossedSpiderTunic.Bonus1 = 2;
-				embossedSpiderTunic.Bonus1Type = (int) eStat.STR;
-
-				embossedSpiderTunic.Bonus2 = 2;
-				embossedSpiderTunic.Bonus2Type = (int) eStat.DEX;
-
-				embossedSpiderTunic.Bonus3 = 12;
-				embossedSpiderTunic.Bonus3Type = (int) eProperty.MaxHealth;
+				embossedSpiderTunic.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Dexterity, eProperty.MaxHealth }, new []{ 2, 2, 12 });
 
 				embossedSpiderTunic.DPS_AF = 28;
 				embossedSpiderTunic.SPD_ABS = 10;
@@ -449,7 +413,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(embossedSpiderTunic);
+				embossedSpiderTunic.AddQuestObjectToDatabase();
 			}
 
 			bloatedFang = GameServer.Database.FindObjectByKey<ItemTemplate>("bloated_spider_fang");
@@ -470,7 +434,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(bloatedFang);
+				bloatedFang.AddQuestObjectToDatabase();
 			}
 
 			spiderChitin = GameServer.Database.FindObjectByKey<ItemTemplate>("arachneida_spider_chitin");
@@ -491,7 +455,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(spiderChitin);
+				spiderChitin.AddQuestObjectToDatabase();
 			}
 
 			#endregion

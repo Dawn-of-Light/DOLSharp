@@ -158,7 +158,7 @@ namespace DOL.GS.Atlantis
 			if (spellhandler != null)
 			{
 				m_runningSpellHandler = spellhandler;
-				spellhandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+				spellhandler.CastingCompleteEvent += OnAfterSpellCastSequence;
 				spellhandler.CastSpell();
 			}
 			else

@@ -98,16 +98,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsShortSword.DPS_AF = 24;
 				RecruitsShortSword.SPD_ABS = 30;
 				RecruitsShortSword.Bonus = 5;
-				RecruitsShortSword.Bonus1 = 3;
-				RecruitsShortSword.Bonus1Type = (int)eProperty.Strength;
-				RecruitsShortSword.Bonus2 = 1;
-				RecruitsShortSword.Bonus2Type = (int)eProperty.AllMeleeWeaponSkills;
-				RecruitsShortSword.Bonus3 = 1;
-				RecruitsShortSword.Bonus3Type = (int)eProperty.Resist_Crush;
-				RecruitsShortSword.Bonus4 = 1;
-				RecruitsShortSword.Bonus4Type = (int)eProperty.Resist_Thrust;
-				RecruitsShortSword.Bonus5 = 1;
-				RecruitsShortSword.Bonus5Type = (int)eProperty.Quickness;
+				RecruitsShortSword.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.AllMeleeWeaponSkills, eProperty.Resist_Crush, eProperty.Resist_Thrust, eProperty.Quickness }, new []{ 3, 1, 1, 1, 1 });
 
 				RecruitsShortSword.Quality = 100;
 				RecruitsShortSword.Condition = 50000;
@@ -120,7 +111,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(RecruitsShortSword);
+				RecruitsShortSword.AddQuestObjectToDatabase();
 			}
 			RecruitsDirk = GameServer.Database.FindObjectByKey<ItemTemplate>("k109_recruits_dirk");
 			if (RecruitsDirk == null)
@@ -145,16 +136,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsDirk.DPS_AF = 24;
 				RecruitsDirk.SPD_ABS = 26;
 				RecruitsDirk.Bonus = 5;
-				RecruitsDirk.Bonus1 = 3;
-				RecruitsDirk.Bonus1Type = (int)eProperty.Dexterity;
-				RecruitsDirk.Bonus2 = 1;
-				RecruitsDirk.Bonus2Type = (int)eProperty.AllMeleeWeaponSkills;
-				RecruitsDirk.Bonus3 = 1;
-				RecruitsDirk.Bonus3Type = (int)eProperty.Resist_Crush;
-				RecruitsDirk.Bonus4 = 1;
-				RecruitsDirk.Bonus4Type = (int)eProperty.Resist_Thrust;
-				RecruitsDirk.Bonus5 = 1;
-				RecruitsDirk.Bonus5Type = (int)eProperty.Quickness;
+				RecruitsDirk.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.AllMeleeWeaponSkills, eProperty.Resist_Crush, eProperty.Resist_Thrust, eProperty.Quickness }, new []{ 3, 1, 1, 1, 1 });
 
 				RecruitsDirk.Quality = 100;
 				RecruitsDirk.Condition = 50000;
@@ -167,7 +149,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(RecruitsDirk);
+				RecruitsDirk.AddQuestObjectToDatabase();
 			}
 			RecruitsMace = GameServer.Database.FindObjectByKey<ItemTemplate>("k109_recruits_mace");
 			if (RecruitsMace == null)
@@ -192,16 +174,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsMace.DPS_AF = 24;
 				RecruitsMace.SPD_ABS = 30;
 				RecruitsMace.Bonus = 5;
-				RecruitsMace.Bonus1 = 3;
-				RecruitsMace.Bonus1Type = (int)eProperty.Acuity;
-				RecruitsMace.Bonus2 = 1;
-				RecruitsMace.Bonus2Type = (int)eProperty.AllMagicSkills;
-				RecruitsMace.Bonus3 = 1;
-				RecruitsMace.Bonus3Type = (int)eProperty.Resist_Crush;
-				RecruitsMace.Bonus4 = 1;
-				RecruitsMace.Bonus4Type = (int)eProperty.Resist_Thrust;
-				RecruitsMace.Bonus5 = 1;
-				RecruitsMace.Bonus5Type = (int)eProperty.Dexterity;
+				RecruitsMace.SetTemplateBonuses(new []{ eProperty.Acuity, eProperty.AllMagicSkills, eProperty.Resist_Crush, eProperty.Resist_Thrust, eProperty.Dexterity }, new []{ 3, 1, 1, 1, 1 });
 
 				RecruitsMace.Quality = 100;
 				RecruitsMace.Condition = 50000;
@@ -214,7 +187,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(RecruitsMace);
+				RecruitsMace.AddQuestObjectToDatabase();
 			}
 			RecruitsStaff = GameServer.Database.FindObjectByKey<ItemTemplate>("k109_recruits_staff");
 			if (RecruitsStaff == null)
@@ -239,18 +212,7 @@ namespace DOL.GS.Quests.Albion
 				RecruitsStaff.DPS_AF = 24;
 				RecruitsStaff.SPD_ABS = 37;
 				RecruitsStaff.Bonus = 5;
-				RecruitsStaff.Bonus1 = 3;
-				RecruitsStaff.Bonus1Type = (int)eProperty.Acuity;
-				RecruitsStaff.Bonus2 = 1;
-				RecruitsStaff.Bonus2Type = (int)eProperty.Constitution;
-				RecruitsStaff.Bonus3 = 1;
-				RecruitsStaff.Bonus3Type = (int)eProperty.Resist_Crush;
-				RecruitsStaff.Bonus4 = 1;
-				RecruitsStaff.Bonus4Type = (int)eProperty.Resist_Thrust;
-				RecruitsStaff.Bonus5 = 1;
-				RecruitsStaff.Bonus5Type = (int)eProperty.Dexterity;
-				RecruitsStaff.Bonus6 = 10;
-				RecruitsStaff.Bonus6Type = (int)eProperty.AllFocusLevels;  //Focus Spell Line?
+				RecruitsStaff.SetTemplateBonuses(new []{ eProperty.Acuity, eProperty.Constitution, eProperty.Resist_Crush, eProperty.Resist_Thrust, eProperty.Dexterity, eProperty.AllFocusLevels }, new []{ 3, 1, 1, 1, 1, 10 });  //Focus Spell Line?
 
 				RecruitsStaff.Quality = 100;
 				RecruitsStaff.Condition = 50000;
@@ -263,7 +225,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(RecruitsStaff);
+				RecruitsStaff.AddQuestObjectToDatabase();
 			}
 			#endregion
 
@@ -329,8 +291,8 @@ namespace DOL.GS.Quests.Albion
 				Rheda.Z = 2428;
 				Rheda.Heading = 3822;
 
-				if (SAVE_INTO_DATABASE)
-					Rheda.SaveIntoDatabase();
+				
+				Rheda.AddQuestObjectToDatabase();
 
 				Rheda.AddToWorld();
 			}

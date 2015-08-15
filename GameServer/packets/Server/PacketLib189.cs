@@ -326,7 +326,7 @@ namespace DOL.GS.PacketHandler
 			flag |= 0x02; // enable salvage button
 
 			AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(m_gameClient.Player.CraftingPrimarySkill);
-			if (skill != null && skill is AdvancedCraftingSkill/* && ((AdvancedCraftingSkill)skill).IsAllowedToCombine(m_gameClient.Player, item)*/)
+			if (skill is AdvancedCraftingSkill/* && ((AdvancedCraftingSkill)skill).IsAllowedToCombine(m_gameClient.Player, item)*/)
 			{
 				flag |= 0x04; // enable craft button
 			}
@@ -342,9 +342,11 @@ namespace DOL.GS.PacketHandler
 
 				if (chargeEffectsLine != null)
 				{
-					if (item.SpellID > 0/* && item.Charges > 0*/)
+					var spells = item.GetTemplateUseSpells().Take(2).ToArray();
+
+					if (spells.Length > 0 && spells[0].SpellID != 0)
 					{
-						Spell spell = SkillBase.FindSpell(item.SpellID, chargeEffectsLine);
+						var spell = SkillBase.FindSpell(spells[0].SpellID, chargeEffectsLine);
 						if (spell != null)
 						{
 							flag |= 0x08;
@@ -352,9 +354,9 @@ namespace DOL.GS.PacketHandler
 							spell_name1 = spell.Name; // or best spl.Name ?
 						}
 					}
-					if (item.SpellID1 > 0/* && item.Charges > 0*/)
+					if (spells.Length > 1 && spells[1].SpellID != 0)
 					{
-						Spell spell = SkillBase.FindSpell(item.SpellID1, chargeEffectsLine);
+						var spell = SkillBase.FindSpell(spells[1].SpellID, chargeEffectsLine);
 						if (spell != null)
 						{
 							flag |= 0x10;

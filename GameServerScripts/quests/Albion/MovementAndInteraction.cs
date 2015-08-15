@@ -133,8 +133,8 @@ namespace DOL.GS.Quests.Albion {
 				questGiver.Z = 5340;
 				questGiver.Heading = 3060;
 
-				if (SAVE_INTO_DATABASE)
-					questGiver.SaveIntoDatabase();
+				
+				questGiver.AddQuestObjectToDatabase();
 
 				questGiver.AddToWorld();
 			}
@@ -170,8 +170,8 @@ namespace DOL.GS.Quests.Albion {
 				questTarget.Z = 5248;
 				questTarget.Heading = 2878;
 
-				if (SAVE_INTO_DATABASE)
-					questTarget.SaveIntoDatabase();
+				
+				questTarget.AddQuestObjectToDatabase();
 
 				questTarget.AddToWorld();
 			}

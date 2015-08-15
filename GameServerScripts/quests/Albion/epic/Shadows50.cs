@@ -123,11 +123,8 @@ namespace DOL.GS.Quests.Albion
 				Lidmann.Z = 1954;
 				Lidmann.Heading = 1809;
 				Lidmann.AddToWorld();
-				if (SAVE_INTO_DATABASE)
-				{
-					Lidmann.SaveIntoDatabase();
-				}
-
+				
+				Lidmann.AddQuestObjectToDatabase();
 			}
 			else
 				Lidmann = npcs[0];
@@ -152,11 +149,8 @@ namespace DOL.GS.Quests.Albion
 				Uragaig.Z = 2736;
 				Uragaig.Heading = 3072;
 				Uragaig.AddToWorld();
-				if (SAVE_INTO_DATABASE)
-				{
-					Uragaig.SaveIntoDatabase();
-				}
-
+				
+				Uragaig.AddQuestObjectToDatabase();
 			}
 			else
 				Uragaig = npcs[0];
@@ -187,9 +181,9 @@ namespace DOL.GS.Quests.Albion
 				sealed_pouch.Type_Damage = 0;
 				sealed_pouch.Quality = 100;
 				sealed_pouch.Weight = 12;
-				if (SAVE_INTO_DATABASE)
+				
 				{
-					GameServer.Database.AddObject(sealed_pouch);
+					sealed_pouch.AddQuestObjectToDatabase();
 				}
 			}
 			#endregion
@@ -219,20 +213,9 @@ namespace DOL.GS.Quests.Albion
 				i.Durability = 50000;
 
 
-				i.Bonus1 = 15;
-				i.Bonus1Type = (int)eStat.DEX;
-
-				i.Bonus2 = 16;
-				i.Bonus2Type = (int)eStat.QUI;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Cold;
-
-				i.Bonus4 = 9;
-				i.Bonus4Type = (int)eStat.STR;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Quickness, eProperty.Resist_Cold, eProperty.Strength },
+				                     new []{ 15, 16, 8, 9 });
+				i.AddQuestObjectToDatabase();
 
 				MercenaryEpicBoots = i;
 
@@ -262,20 +245,9 @@ namespace DOL.GS.Quests.Albion
 				i.Durability = 50000;
 
 
-				i.Bonus1 = 16;
-				i.Bonus1Type = (int)eStat.DEX;
-
-				i.Bonus2 = 18;
-				i.Bonus2Type = (int)eStat.STR;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Body;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int)eResist.Thrust;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Strength, eProperty.Resist_Body, eProperty.Resist_Thrust },
+				                     new []{ 16, 18, 8, 8 });
+				i.AddQuestObjectToDatabase();
 
 				MercenaryEpicHelm = i;
 
@@ -305,20 +277,8 @@ namespace DOL.GS.Quests.Albion
 				i.Durability = 50000;
 
 
-				i.Bonus1 = 19;
-				i.Bonus1Type = (int)eStat.STR;
-
-				i.Bonus2 = 15;
-				i.Bonus2Type = (int)eStat.CON;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Crush;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int)eResist.Matter;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Constitution, eProperty.Resist_Crush, eProperty.Resist_Matter }, new []{ 19, 15, 8, 8 });
+				i.AddQuestObjectToDatabase();
 
 				MercenaryEpicGloves = i;
 
@@ -347,20 +307,8 @@ namespace DOL.GS.Quests.Albion
 				i.Durability = 50000;
 
 
-				i.Bonus1 = 15;
-				i.Bonus1Type = (int)eStat.DEX;
-
-				i.Bonus2 = 48;
-				i.Bonus2Type = (int)eProperty.MaxHealth;
-
-				i.Bonus3 = 4;
-				i.Bonus3Type = (int)eResist.Cold;
-
-				i.Bonus4 = 6;
-				i.Bonus4Type = (int)eResist.Thrust;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.MaxHealth, eProperty.Resist_Cold, eProperty.Resist_Thrust }, new []{ 15, 48, 4, 6 });
+				i.AddQuestObjectToDatabase();
 
 				MercenaryEpicVest = i;
 
@@ -389,20 +337,8 @@ namespace DOL.GS.Quests.Albion
 				i.Durability = 50000;
 
 
-				i.Bonus1 = 18;
-				i.Bonus1Type = (int)eStat.CON;
-
-				i.Bonus2 = 16;
-				i.Bonus2Type = (int)eStat.STR;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Heat;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int)eResist.Slash;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Strength, eProperty.Resist_Heat, eProperty.Resist_Slash }, new []{ 18, 16, 8, 8 });
+				i.AddQuestObjectToDatabase();
 
 				MercenaryEpicLegs = i;
 
@@ -431,20 +367,8 @@ namespace DOL.GS.Quests.Albion
 				i.Durability = 50000;
 
 
-				i.Bonus1 = 15;
-				i.Bonus1Type = (int)eStat.CON;
-
-				i.Bonus2 = 16;
-				i.Bonus2Type = (int)eStat.DEX;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Cold;
-
-				i.Bonus4 = 12;
-				i.Bonus4Type = (int)eStat.QUI;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.Resist_Cold, eProperty.Quickness }, new []{ 15, 16, 8, 12 });
+				i.AddQuestObjectToDatabase();
 
 				MercenaryEpicArms = i;
 			}
@@ -474,20 +398,8 @@ namespace DOL.GS.Quests.Albion
 				i.Durability = 50000;
 
 
-				i.Bonus1 = 14;
-				i.Bonus1Type = (int)eProperty.MaxMana;
-
-				i.Bonus2 = 9;
-				i.Bonus2Type = (int)eStat.STR;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Cold;
-
-				//                    i.Bonus4 = 10;
-				//                    i.Bonus4Type = (int)eResist.Energy;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.MaxMana, eProperty.Strength, eProperty.Resist_Cold, eProperty.Resist_Energy }, new []{ 14, 9, 8, 10 });
+				i.AddQuestObjectToDatabase();
 
 				ReaverEpicBoots = i;
 
@@ -517,20 +429,8 @@ namespace DOL.GS.Quests.Albion
 				i.Durability = 50000;
 
 
-				i.Bonus1 = 16;
-				i.Bonus1Type = (int)eStat.PIE;
-
-				i.Bonus2 = 6;
-				i.Bonus2Type = (int)eProperty.Skill_Flexible_Weapon;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Body;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int)eResist.Thrust;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Piety, eProperty.Skill_Flexible_Weapon, eProperty.Resist_Body, eProperty.Resist_Thrust }, new []{ 16, 6, 8, 8 });
+				i.AddQuestObjectToDatabase();
 
 				ReaverEpicHelm = i;
 
@@ -560,20 +460,8 @@ namespace DOL.GS.Quests.Albion
 				i.Durability = 50000;
 
 
-				i.Bonus1 = 19;
-				i.Bonus1Type = (int)eStat.STR;
-
-				i.Bonus2 = 15;
-				i.Bonus2Type = (int)eStat.CON;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Matter;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int)eResist.Crush;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Constitution, eProperty.Resist_Matter, eProperty.Resist_Crush }, new []{ 19, 15, 8, 8 });
+				i.AddQuestObjectToDatabase();
 
 				ReaverEpicGloves = i;
 
@@ -602,20 +490,8 @@ namespace DOL.GS.Quests.Albion
 				i.Durability = 50000;
 
 
-				i.Bonus1 = 48;
-				i.Bonus1Type = (int)eProperty.MaxHealth;
-
-				i.Bonus2 = 15;
-				i.Bonus2Type = (int)eStat.PIE;
-
-				i.Bonus3 = 4;
-				i.Bonus3Type = (int)eResist.Cold;
-
-				i.Bonus4 = 6;
-				i.Bonus4Type = (int)eResist.Thrust;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Piety, eProperty.Resist_Cold, eProperty.Resist_Thrust }, new []{ 48, 15, 4, 6 });
+				i.AddQuestObjectToDatabase();
 
 				ReaverEpicVest = i;
 
@@ -644,20 +520,8 @@ namespace DOL.GS.Quests.Albion
 				i.Durability = 50000;
 
 
-				i.Bonus1 = 18;
-				i.Bonus1Type = (int)eStat.CON;
-
-				i.Bonus2 = 16;
-				i.Bonus2Type = (int)eStat.STR;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Heat;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int)eResist.Slash;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Strength, eProperty.Resist_Heat, eProperty.Resist_Slash }, new []{ 18, 16, 8, 8 });
+				i.AddQuestObjectToDatabase();
 
 				ReaverEpicLegs = i;
 
@@ -686,20 +550,8 @@ namespace DOL.GS.Quests.Albion
 				i.Durability = 50000;
 
 
-				i.Bonus1 = 16;
-				i.Bonus1Type = (int)eStat.CON;
-
-				i.Bonus2 = 15;
-				i.Bonus2Type = (int)eStat.DEX;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Cold;
-
-				i.Bonus4 = 4;
-				i.Bonus4Type = (int)eProperty.Skill_Slashing;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.Resist_Cold, eProperty.Skill_Slashing }, new []{ 16, 15, 8, 4 });
+				i.AddQuestObjectToDatabase();
 
 				ReaverEpicArms = i;
 			}
@@ -727,21 +579,8 @@ namespace DOL.GS.Quests.Albion
 				InfiltratorEpicBoots.Condition = 50000;
 				InfiltratorEpicBoots.Durability = 50000;
 
-				InfiltratorEpicBoots.Bonus1 = 13;
-				InfiltratorEpicBoots.Bonus1Type = (int)eStat.QUI;
-
-				InfiltratorEpicBoots.Bonus2 = 13;
-				InfiltratorEpicBoots.Bonus2Type = (int)eStat.DEX;
-
-				InfiltratorEpicBoots.Bonus3 = 8;
-				InfiltratorEpicBoots.Bonus3Type = (int)eResist.Cold;
-
-				InfiltratorEpicBoots.Bonus4 = 13;
-				InfiltratorEpicBoots.Bonus4Type = (int)eStat.CON;
-				{
-					GameServer.Database.AddObject(InfiltratorEpicBoots);
-				}
-
+				InfiltratorEpicBoots.SetTemplateBonuses(new []{ eProperty.Quickness, eProperty.Dexterity, eProperty.Resist_Cold, eProperty.Constitution }, new []{ 13, 13, 8, 13 });
+				InfiltratorEpicBoots.AddQuestObjectToDatabase();
 			}
 			//end item
 			//Shadow-Woven Coif
@@ -767,21 +606,8 @@ namespace DOL.GS.Quests.Albion
 				InfiltratorEpicHelm.Condition = 50000;
 				InfiltratorEpicHelm.Durability = 50000;
 
-				InfiltratorEpicHelm.Bonus1 = 13;
-				InfiltratorEpicHelm.Bonus1Type = (int)eStat.DEX;
-
-				InfiltratorEpicHelm.Bonus2 = 13;
-				InfiltratorEpicHelm.Bonus2Type = (int)eStat.QUI;
-
-				InfiltratorEpicHelm.Bonus3 = 8;
-				InfiltratorEpicHelm.Bonus3Type = (int)eResist.Spirit;
-
-				InfiltratorEpicHelm.Bonus4 = 13;
-				InfiltratorEpicHelm.Bonus4Type = (int)eStat.STR;
-				{
-					GameServer.Database.AddObject(InfiltratorEpicHelm);
-				}
-
+				InfiltratorEpicHelm.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Quickness, eProperty.Resist_Spirit, eProperty.Strength }, new []{ 13, 13, 8, 13 });
+				InfiltratorEpicHelm.AddQuestObjectToDatabase();
 			}
 			//end item
 			//Shadow-Woven Gloves
@@ -808,21 +634,8 @@ namespace DOL.GS.Quests.Albion
 				InfiltratorEpicGloves.Durability = 50000;
 
 
-				InfiltratorEpicGloves.Bonus1 = 18;
-				InfiltratorEpicGloves.Bonus1Type = (int)eStat.STR;
-
-				InfiltratorEpicGloves.Bonus2 = 21;
-				InfiltratorEpicGloves.Bonus2Type = (int)eProperty.MaxHealth;
-
-				InfiltratorEpicGloves.Bonus3 = 3;
-				InfiltratorEpicGloves.Bonus3Type = (int)eProperty.Skill_Envenom;
-
-				InfiltratorEpicGloves.Bonus4 = 3;
-				InfiltratorEpicGloves.Bonus4Type = (int)eProperty.Skill_Critical_Strike;
-				{
-					GameServer.Database.AddObject(InfiltratorEpicGloves);
-				}
-
+				InfiltratorEpicGloves.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.MaxHealth, eProperty.Skill_Envenom, eProperty.Skill_Critical_Strike }, new []{ 18, 21, 3, 3 });
+				InfiltratorEpicGloves.AddQuestObjectToDatabase();
 			}
 			//Shadow-Woven Hauberk
 			InfiltratorEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("InfiltratorEpicVest");
@@ -847,21 +660,8 @@ namespace DOL.GS.Quests.Albion
 				InfiltratorEpicVest.Condition = 50000;
 				InfiltratorEpicVest.Durability = 50000;
 
-				InfiltratorEpicVest.Bonus1 = 36;
-				InfiltratorEpicVest.Bonus1Type = (int)eProperty.MaxHealth;
-
-				InfiltratorEpicVest.Bonus2 = 16;
-				InfiltratorEpicVest.Bonus2Type = (int)eStat.DEX;
-
-				InfiltratorEpicVest.Bonus3 = 8;
-				InfiltratorEpicVest.Bonus3Type = (int)eResist.Cold;
-
-				InfiltratorEpicVest.Bonus4 = 8;
-				InfiltratorEpicVest.Bonus4Type = (int)eResist.Body;
-				{
-					GameServer.Database.AddObject(InfiltratorEpicVest);
-				}
-
+				InfiltratorEpicVest.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Dexterity, eProperty.Resist_Cold, eProperty.Resist_Body }, new []{ 36, 16, 8, 8 });
+				InfiltratorEpicVest.AddQuestObjectToDatabase();
 			}
 			//Shadow-Woven Legs
 			InfiltratorEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("InfiltratorEpicLegs");
@@ -886,21 +686,8 @@ namespace DOL.GS.Quests.Albion
 				InfiltratorEpicLegs.Condition = 50000;
 				InfiltratorEpicLegs.Durability = 50000;
 
-				InfiltratorEpicLegs.Bonus1 = 21;
-				InfiltratorEpicLegs.Bonus1Type = (int)eStat.CON;
-
-				InfiltratorEpicLegs.Bonus2 = 16;
-				InfiltratorEpicLegs.Bonus2Type = (int)eStat.QUI;
-
-				InfiltratorEpicLegs.Bonus3 = 6;
-				InfiltratorEpicLegs.Bonus3Type = (int)eResist.Heat;
-
-				InfiltratorEpicLegs.Bonus4 = 6;
-				InfiltratorEpicLegs.Bonus4Type = (int)eResist.Crush;
-				{
-					GameServer.Database.AddObject(InfiltratorEpicLegs);
-				}
-
+				InfiltratorEpicLegs.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Quickness, eProperty.Resist_Heat, eProperty.Resist_Crush }, new []{ 21, 16, 6, 6 });
+				InfiltratorEpicLegs.AddQuestObjectToDatabase();
 			}
 			//Shadow-Woven Sleeves
 			InfiltratorEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("InfiltratorEpicArms");
@@ -925,21 +712,8 @@ namespace DOL.GS.Quests.Albion
 				InfiltratorEpicArms.Condition = 50000;
 				InfiltratorEpicArms.Durability = 50000;
 
-				InfiltratorEpicArms.Bonus1 = 21;
-				InfiltratorEpicArms.Bonus1Type = (int)eStat.DEX;
-
-				InfiltratorEpicArms.Bonus2 = 18;
-				InfiltratorEpicArms.Bonus2Type = (int)eStat.STR;
-
-				InfiltratorEpicArms.Bonus3 = 6;
-				InfiltratorEpicArms.Bonus3Type = (int)eResist.Matter;
-
-				InfiltratorEpicArms.Bonus4 = 4;
-				InfiltratorEpicArms.Bonus4Type = (int)eResist.Slash;
-				{
-					GameServer.Database.AddObject(InfiltratorEpicArms);
-				}
-
+				InfiltratorEpicArms.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Strength, eProperty.Resist_Matter, eProperty.Resist_Slash }, new []{ 21, 18, 6, 4 });
+				InfiltratorEpicArms.AddQuestObjectToDatabase();
 			}
 			#endregion
 			#region Cabalist
@@ -965,21 +739,8 @@ namespace DOL.GS.Quests.Albion
 				CabalistEpicBoots.Condition = 50000;
 				CabalistEpicBoots.Durability = 50000;
 
-				CabalistEpicBoots.Bonus1 = 22;
-				CabalistEpicBoots.Bonus1Type = (int)eStat.DEX;
-
-				CabalistEpicBoots.Bonus2 = 3;
-				CabalistEpicBoots.Bonus2Type = (int)eProperty.Skill_Matter;
-
-				CabalistEpicBoots.Bonus3 = 8;
-				CabalistEpicBoots.Bonus3Type = (int)eResist.Slash;
-
-				CabalistEpicBoots.Bonus4 = 8;
-				CabalistEpicBoots.Bonus4Type = (int)eResist.Thrust;
-				{
-					GameServer.Database.AddObject(CabalistEpicBoots);
-				}
-
+				CabalistEpicBoots.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Skill_Matter, eProperty.Resist_Slash, eProperty.Resist_Thrust }, new []{ 22, 3, 8, 8 });
+				CabalistEpicBoots.AddQuestObjectToDatabase();
 			}
 			//end item
 			//Warm of the Construct Coif
@@ -1005,20 +766,8 @@ namespace DOL.GS.Quests.Albion
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 21;
-				i.Bonus1Type = (int)eStat.INT;
-
-				i.Bonus2 = 13;
-				i.Bonus2Type = (int)eStat.DEX;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Heat;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int)eResist.Matter;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Intelligence, eProperty.Dexterity, eProperty.Resist_Heat, eProperty.Resist_Matter }, new []{ 21, 13, 8, 8 });
+				i.AddQuestObjectToDatabase();
 				CabalistEpicHelm = i;
 
 			}
@@ -1046,20 +795,8 @@ namespace DOL.GS.Quests.Albion
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 10;
-				i.Bonus1Type = (int)eStat.DEX;
-
-				i.Bonus2 = 10;
-				i.Bonus2Type = (int)eStat.INT;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eProperty.MaxMana;
-
-				i.Bonus4 = 10;
-				i.Bonus4Type = (int)eResist.Energy;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Intelligence, eProperty.MaxMana, eProperty.Resist_Energy }, new []{ 10, 10, 8, 10 });
+				i.AddQuestObjectToDatabase();
 
 				CabalistEpicGloves = i;
 
@@ -1087,20 +824,8 @@ namespace DOL.GS.Quests.Albion
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 24;
-				i.Bonus1Type = (int)eProperty.MaxHealth;
-
-				i.Bonus2 = 14;
-				i.Bonus2Type = (int)eProperty.MaxMana;
-
-				i.Bonus3 = 4;
-				i.Bonus3Type = (int)eResist.Crush;
-
-				//                    i.Bonus4 = 10;
-				//                    i.Bonus4Type = (int)eResist.Energy;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.MaxMana, eProperty.Resist_Crush, eProperty.Resist_Energy }, new []{ 24, 14, 4, 10 });
+				i.AddQuestObjectToDatabase();
 
 				CabalistEpicVest = i;
 
@@ -1129,20 +854,8 @@ namespace DOL.GS.Quests.Albion
 				i.Durability = 50000;
 
 
-				i.Bonus1 = 22;
-				i.Bonus1Type = (int)eStat.CON;
-
-				i.Bonus2 = 4;
-				i.Bonus2Type = (int)eProperty.Skill_Spirit;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Cold;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int)eResist.Matter;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Skill_Spirit, eProperty.Resist_Cold, eProperty.Resist_Matter }, new []{ 22, 4, 8, 8 });
+				i.AddQuestObjectToDatabase();
 
 				CabalistEpicLegs = i;
 
@@ -1171,20 +884,8 @@ namespace DOL.GS.Quests.Albion
 				i.Durability = 50000;
 
 
-				i.Bonus1 = 18;
-				i.Bonus1Type = (int)eStat.INT;
-
-				i.Bonus2 = 4;
-				i.Bonus2Type = (int)eProperty.Skill_Body;
-
-				i.Bonus3 = 16;
-				i.Bonus3Type = (int)eStat.DEX;
-
-				//                    i.Bonus4 = 10;
-				//                    i.Bonus4Type = (int)eResist.Energy;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Intelligence, eProperty.Skill_Body, eProperty.Dexterity, eProperty.Resist_Energy }, new []{ 18, 4, 16, 10 });
+				i.AddQuestObjectToDatabase();
 				CabalistEpicArms = i;
 
 			}
@@ -1213,20 +914,8 @@ namespace DOL.GS.Quests.Albion
 				i.Durability = 50000;
 
 
-				i.Bonus1 = 22;
-				i.Bonus1Type = (int)eStat.INT;
-
-				i.Bonus2 = 4;
-				i.Bonus2Type = (int)eProperty.Skill_Pain_working;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Slash;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int)eResist.Thrust;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Intelligence, eProperty.Skill_Pain_working, eProperty.Resist_Slash, eProperty.Resist_Thrust }, new []{ 22, 4, 8, 8 });
+				i.AddQuestObjectToDatabase();
 
 				NecromancerEpicBoots = i;
 			}
@@ -1255,20 +944,8 @@ namespace DOL.GS.Quests.Albion
 				i.Durability = 50000;
 
 
-				i.Bonus1 = 21;
-				i.Bonus1Type = (int)eStat.INT;
-
-				i.Bonus2 = 13;
-				i.Bonus2Type = (int)eStat.QUI;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Heat;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int)eResist.Matter;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Intelligence, eProperty.Quickness, eProperty.Resist_Heat, eProperty.Resist_Matter }, new []{ 21, 13, 8, 8 });
+				i.AddQuestObjectToDatabase();
 				NecromancerEpicHelm = i;
 
 			}
@@ -1297,20 +974,8 @@ namespace DOL.GS.Quests.Albion
 				i.Durability = 50000;
 
 
-				i.Bonus1 = 10;
-				i.Bonus1Type = (int)eStat.STR;
-
-				i.Bonus2 = 10;
-				i.Bonus2Type = (int)eStat.INT;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eProperty.MaxMana;
-
-				i.Bonus4 = 10;
-				i.Bonus4Type = (int)eResist.Energy;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Intelligence, eProperty.MaxMana, eProperty.Resist_Energy }, new []{ 10, 10, 8, 10 });
+				i.AddQuestObjectToDatabase();
 				NecromancerEpicGloves = i;
 
 			}
@@ -1338,20 +1003,8 @@ namespace DOL.GS.Quests.Albion
 				i.Durability = 50000;
 
 
-				i.Bonus1 = 24;
-				i.Bonus1Type = (int)eProperty.MaxHealth;
-
-				i.Bonus2 = 14;
-				i.Bonus2Type = (int)eProperty.MaxMana;
-
-				i.Bonus3 = 4;
-				i.Bonus3Type = (int)eResist.Crush;
-
-				//                    i.Bonus4 = 10;
-				//                    i.Bonus4Type = (int)eResist.Energy;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.MaxMana, eProperty.Resist_Crush, eProperty.Resist_Energy }, new []{ 24, 14, 4, 10 });
+				i.AddQuestObjectToDatabase();
 
 				NecromancerEpicVest = i;
 
@@ -1380,20 +1033,8 @@ namespace DOL.GS.Quests.Albion
 				i.Durability = 50000;
 
 
-				i.Bonus1 = 22;
-				i.Bonus1Type = (int)eStat.CON;
-
-				i.Bonus2 = 4;
-				i.Bonus2Type = (int)eProperty.Skill_Death_Servant;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Cold;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int)eResist.Matter;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Skill_Death_Servant, eProperty.Resist_Cold, eProperty.Resist_Matter }, new []{ 22, 4, 8, 8 });
+				i.AddQuestObjectToDatabase();
 				NecromancerEpicLegs = i;
 
 			}
@@ -1420,21 +1061,8 @@ namespace DOL.GS.Quests.Albion
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-
-				i.Bonus1 = 18;
-				i.Bonus1Type = (int)eStat.INT;
-
-				i.Bonus2 = 4;
-				i.Bonus2Type = (int)eProperty.Skill_DeathSight;
-
-				i.Bonus3 = 16;
-				i.Bonus3Type = (int)eStat.DEX;
-
-				//                    i.Bonus4 = 10;
-				//                    i.Bonus4Type = (int)eResist.Energy;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Intelligence, eProperty.Skill_DeathSight, eProperty.Dexterity, eProperty.Resist_Energy }, new []{ 18, 4, 16, 10 });
+				i.AddQuestObjectToDatabase();
 				NecromancerEpicArms = i;
 				//Item Descriptions End
 			}
@@ -1469,20 +1097,8 @@ namespace DOL.GS.Quests.Albion
 				 *   Heat Resist: 8%
 				 */
 
-				i.Bonus1 = 16;
-				i.Bonus1Type = (int)eStat.STR;
-
-				i.Bonus2 = 18;
-				i.Bonus2Type = (int)eStat.CON;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Slash;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int)eResist.Heat;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Constitution, eProperty.Resist_Slash, eProperty.Resist_Heat }, new []{ 16, 18, 8, 8 });
+				i.AddQuestObjectToDatabase();
 
 				HereticEpicBoots = i;
 			}
@@ -1517,20 +1133,8 @@ namespace DOL.GS.Quests.Albion
 				 *   Hits: 48 pts
 				 */
 
-				i.Bonus1 = 15;
-				i.Bonus1Type = (int)eStat.PIE;
-
-				i.Bonus2 = 6;
-				i.Bonus2Type = (int)eResist.Thrust;
-
-				i.Bonus3 = 4;
-				i.Bonus3Type = (int)eResist.Cold;
-
-				i.Bonus4 = 48;
-				i.Bonus4Type = (int)eProperty.MaxHealth;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Piety, eProperty.Resist_Thrust, eProperty.Resist_Cold, eProperty.MaxHealth }, new []{ 15, 6, 4, 48 });
+				i.AddQuestObjectToDatabase();
 				HereticEpicHelm = i;
 
 			}
@@ -1563,18 +1167,9 @@ namespace DOL.GS.Quests.Albion
 				 *   Power: 14 pts
 				 *   Cold Resist: 8%
 				 */
-				i.Bonus1 = 9;
-				i.Bonus1Type = (int)eStat.STR;
+				i.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.MaxMana, eProperty.Resist_Cold }, new []{ 9, 14, 8 });
 
-				i.Bonus2 = 14;
-				i.Bonus2Type = (int)eProperty.MaxMana;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Cold;
-
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.AddQuestObjectToDatabase();
 				HereticEpicGloves = i;
 
 			}
@@ -1608,20 +1203,8 @@ namespace DOL.GS.Quests.Albion
 				 *   Cold Resist: 8%
 				 */
 
-				i.Bonus1 = 4;
-				i.Bonus1Type = (int)eProperty.Skill_Crushing;
-
-				i.Bonus2 = 16;
-				i.Bonus2Type = (int)eStat.CON;
-
-				i.Bonus3 = 15;
-				i.Bonus3Type = (int)eStat.DEX;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int)eResist.Cold;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Skill_Crushing, eProperty.Constitution, eProperty.Dexterity, eProperty.Resist_Cold }, new []{ 4, 16, 15, 8 });
+				i.AddQuestObjectToDatabase();
 
 				HereticEpicVest = i;
 
@@ -1656,20 +1239,8 @@ namespace DOL.GS.Quests.Albion
 				 *   Matter Resist: 8%
 				 */
 
-				i.Bonus1 = 19;
-				i.Bonus1Type = (int)eStat.STR;
-
-				i.Bonus2 = 15;
-				i.Bonus2Type = (int)eStat.CON;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Crush;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int)eResist.Matter;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Constitution, eProperty.Resist_Crush, eProperty.Resist_Matter }, new []{ 19, 15, 8, 8 });
+				i.AddQuestObjectToDatabase();
 				HereticEpicLegs = i;
 
 			}
@@ -1703,20 +1274,8 @@ namespace DOL.GS.Quests.Albion
 				 *   Flexible: 6 pts
 				 */
 
-				i.Bonus1 = 16;
-				i.Bonus1Type = (int)eStat.PIE;
-
-				i.Bonus2 = 8;
-				i.Bonus2Type = (int)eResist.Thrust;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Body;
-
-				i.Bonus4 = 6;
-				i.Bonus4Type = (int)eProperty.Skill_Flexible_Weapon;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Piety, eProperty.Resist_Thrust, eProperty.Resist_Body, eProperty.Skill_Flexible_Weapon }, new []{ 16, 8, 8, 6 });
+				i.AddQuestObjectToDatabase();
 				HereticEpicArms = i;
 				//Item Descriptions End
 			}

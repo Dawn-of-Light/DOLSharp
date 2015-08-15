@@ -568,10 +568,14 @@ namespace DOL.GS
 			delve.Add("  Is pickable: " + (IsPickable ? "yes" : "no"));
 			delve.Add(" Is stackable: " + (IsStackable ? "yes" : "no"));
 			delve.Add(" Is tradeable: " + (IsTradable ? "yes" : "no"));
-			delve.Add("  ProcSpellID: " + ProcSpellID);
-			delve.Add(" ProcSpellID1: " + ProcSpellID1);
-			delve.Add("      SpellID: " + SpellID + " (" + Charges + "/" + MaxCharges + ")");
-			delve.Add("     SpellID1: " + SpellID1 + " (" + Charges1 + "/" + MaxCharges1 + ")");
+			foreach(var procsp in this.GetIndexedTemplateProcSpells())
+			{
+				delve.Add(string.Format(" ProcSpellID{0}: {1} ({2}%)", procsp.Key == 1 ? " " : (procsp.Key - 1).ToString(), procsp.Value.SpellID, procsp.Value.ProcChance));
+			}
+			foreach(var usesp in this.GetIndexedTemplateUseSpells())
+			{
+				delve.Add(string.Format("     SpellID{0}: {1} ({2}/{3})", usesp.Key == 1 ? " " : (usesp.Key - 1).ToString(), usesp.Value.SpellID, usesp.Value.Charges, usesp.Value.MaxCharges));
+			}
 			delve.Add("PoisonSpellID: " + PoisonSpellID + " (" + PoisonCharges + "/" + PoisonMaxCharges + ") ");
 
 			if (GlobalConstants.IsWeapon(Object_Type))

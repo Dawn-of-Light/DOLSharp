@@ -170,8 +170,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					nob.SaveIntoDatabase();
+				
+				nob.AddQuestObjectToDatabase();
 
 				nob.AddToWorld();
 			}
@@ -218,8 +218,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					colm.SaveIntoDatabase();
+				
+				colm.AddQuestObjectToDatabase();
 				colm.AddToWorld();
 			}
 			else
@@ -257,8 +257,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					haruld.SaveIntoDatabase();
+				
+				haruld.AddQuestObjectToDatabase();
 				haruld.AddToWorld();
 			}
 			else
@@ -291,8 +291,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					fairyDragonflyHandler.SaveIntoDatabase();
+				
+				fairyDragonflyHandler.AddQuestObjectToDatabase();
 
 				fairyDragonflyHandler.AddToWorld();
 			}
@@ -324,7 +324,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(dragonflyWhip);
+					dragonflyWhip.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -354,11 +354,7 @@ namespace DOL.GS.Quests.Albion
 
 				recruitsVest.Bonus = 5; // default bonus
 
-				recruitsVest.Bonus1 = 4;
-				recruitsVest.Bonus1Type = (int) eStat.STR;
-
-				recruitsVest.Bonus2 = 3;
-				recruitsVest.Bonus2Type = (int) eStat.CON;
+				recruitsVest.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Constitution }, new []{ 4, 3 });
 
 				recruitsVest.Quality = 100;
 				recruitsVest.Condition = 1000;
@@ -366,11 +362,7 @@ namespace DOL.GS.Quests.Albion
 				recruitsVest.Durability = 1000;
 				recruitsVest.MaxDurability = 1000;
 
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				
-					GameServer.Database.AddObject(recruitsVest);
+				recruitsVest.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -399,11 +391,7 @@ namespace DOL.GS.Quests.Albion
 
 				recruitsQuiltedVest.Bonus = 5; // default bonus
 
-				recruitsQuiltedVest.Bonus1 = 4;
-				recruitsQuiltedVest.Bonus1Type = (int) eStat.INT;
-
-				recruitsQuiltedVest.Bonus2 = 3;
-				recruitsQuiltedVest.Bonus2Type = (int) eStat.DEX;
+				recruitsQuiltedVest.SetTemplateBonuses(new []{ eProperty.Intelligence, eProperty.Dexterity }, new []{ 4, 3 });
 
 				recruitsQuiltedVest.Quality = 100;
 				recruitsQuiltedVest.Condition = 1000;
@@ -411,11 +399,7 @@ namespace DOL.GS.Quests.Albion
 				recruitsQuiltedVest.Durability = 1000;
 				recruitsQuiltedVest.MaxDurability = 1000;
 
-				//You don't have to store the created item in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				
-					GameServer.Database.AddObject(recruitsQuiltedVest);
+				recruitsQuiltedVest.AddQuestObjectToDatabase();
 			}
 
 			#endregion
@@ -636,7 +620,7 @@ namespace DOL.GS.Quests.Albion
 			//You don't have to store the created mob in the db if you don't want,
 			//it will be recreated each time it is not found, just comment the following
 			//line if you rather not modify your database
-			//dragonflyHatchling.SaveIntoDatabase();                            
+			//dragonflyHatchling.AddQuestObjectToDatabase();                            
 
 			GameEventMgr.AddHandler(dragonflyHatchling, GameLivingEvent.Interact, new DOLEventHandler(TalkToDragonflyHatchling));
 

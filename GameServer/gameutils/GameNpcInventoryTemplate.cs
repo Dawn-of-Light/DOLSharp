@@ -134,7 +134,7 @@ namespace DOL.GS
 		/// <returns>true if added</returns>
 		public bool AddNPCEquipment(eInventorySlot slot, int model, int color, int effect, int extension, int emblem = 0)
 		{
-			lock (m_items)
+			lock (m_lockItems)
 			{
 				lock (m_usedInventoryItems.SyncRoot)
 				{
@@ -159,7 +159,6 @@ namespace DOL.GS
 					if (!m_usedInventoryItems.ContainsKey(itemID))
 					{
 						item = new GameInventoryItem();
-						item.Template = new ItemTemplate();
 						item.Template.Id_nb = itemID;
 						item.Model = model;
 						item.Color = color;
@@ -184,7 +183,7 @@ namespace DOL.GS
 		/// <returns>true if removed</returns>
 		public bool RemoveNPCEquipment(eInventorySlot slot)
 		{
-			lock (m_items)
+			lock (m_lockItems)
 			{
 				slot = GetValidInventorySlot(slot);
 
@@ -210,7 +209,7 @@ namespace DOL.GS
 		/// <returns>Invetory template instance that should be used</returns>
 		public GameNpcInventoryTemplate CloseTemplate()
 		{
-			lock (m_items)
+			lock (m_lockItems)
 			{
 				lock (m_usedInventoryTemplates.SyncRoot)
 				{
@@ -249,7 +248,7 @@ namespace DOL.GS
 		/// <returns>Open copy of this template</returns>
 		public GameNpcInventoryTemplate CloneTemplate()
 		{
-			lock (m_items)
+			lock (m_lockItems)
 			{
 				var clone = new GameNpcInventoryTemplate();
 				clone.m_changedSlots = new List<eInventorySlot>(m_changedSlots);
@@ -260,7 +259,6 @@ namespace DOL.GS
 					InventoryItem oldItem = de.Value;
 
 					InventoryItem item = new GameInventoryItem();
-					item.Template = new ItemTemplate();
 					item.Template.Id_nb = oldItem.Id_nb;
 					item.Model = oldItem.Model;
 					item.Color = oldItem.Color;
@@ -295,7 +293,7 @@ namespace DOL.GS
 			if (Util.IsEmpty(templateID, true))
 				return false;
 
-			lock (m_items)
+			lock (m_lockItems)
 			{
 				IList<NPCEquipment> npcEquip;
 				
@@ -361,7 +359,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool SaveIntoDatabase(string templateID)
 		{
-			lock (m_items)
+			lock (m_lockItems)
 			{
 				try
 				{

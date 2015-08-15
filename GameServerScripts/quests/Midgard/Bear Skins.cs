@@ -137,8 +137,8 @@ using DOL.AI.Brain;
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					Helen.SaveIntoDatabase();
+				
+				Helen.AddQuestObjectToDatabase();
 					
 				Helen.AddToWorld();
 				
@@ -174,34 +174,11 @@ using DOL.AI.Brain;
 				smallmaulerskin.CanDropAsLoot = false;
 				smallmaulerskin.Color = 0;
 				smallmaulerskin.Bonus = 35; // default bonus				
-				smallmaulerskin.Bonus1 = 0;
-				smallmaulerskin.Bonus1Type = (int) 0;
-				smallmaulerskin.Bonus2 = 0;
-				smallmaulerskin.Bonus2Type = (int) 0;
-				smallmaulerskin.Bonus3 = 0;
-				smallmaulerskin.Bonus3Type = (int) 0;
-				smallmaulerskin.Bonus4 = 0;
-				smallmaulerskin.Bonus4Type = (int) 0;
-				smallmaulerskin.Bonus5 = 0;
-				smallmaulerskin.Bonus5Type = (int) 0;
-				smallmaulerskin.Bonus6 = 0;
-				smallmaulerskin.Bonus6Type = (int) 0;
-				smallmaulerskin.Bonus7 = 0;
-				smallmaulerskin.Bonus7Type = (int) 0;
-				smallmaulerskin.Bonus8 = 0;
-				smallmaulerskin.Bonus8Type = (int) 0;
-				smallmaulerskin.Bonus9 = 0;
-				smallmaulerskin.Bonus9Type = (int) 0;
-				smallmaulerskin.Bonus10 = 0;
-				smallmaulerskin.Bonus10Type = (int) 0;
-				smallmaulerskin.ExtraBonus = 0;
-				smallmaulerskin.ExtraBonusType = (int) 0;
+				smallmaulerskin.ClearTemplateBonuses();
 				smallmaulerskin.Effect = 0;
 				smallmaulerskin.Emblem = 0;
-				smallmaulerskin.Charges = 0;
-				smallmaulerskin.MaxCharges = 0;
-				smallmaulerskin.SpellID = 0;
-				smallmaulerskin.ProcSpellID = 0;
+				smallmaulerskin.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				smallmaulerskin.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				smallmaulerskin.Type_Damage = 0;
 				smallmaulerskin.Realm = 0;
 				smallmaulerskin.MaxCount = 1;
@@ -215,16 +192,12 @@ using DOL.AI.Brain;
 				smallmaulerskin.PoisonCharges = 0;
 				smallmaulerskin.PoisonMaxCharges = 0;
 				smallmaulerskin.PoisonSpellID = 0;
-				smallmaulerskin.ProcSpellID1 = 0;
-				smallmaulerskin.SpellID1 = 0;
-				smallmaulerskin.MaxCharges1 = 0;
-				smallmaulerskin.Charges1 = 0;
 				
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(smallmaulerskin);
+				
+					smallmaulerskin.AddQuestObjectToDatabase();
 				}
 			
 

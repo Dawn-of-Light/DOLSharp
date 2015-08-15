@@ -168,7 +168,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(emptyMagicBox);
+					emptyMagicBox.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -193,7 +193,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(fullMagicBox);
+					fullMagicBox.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -223,11 +223,7 @@ namespace DOL.GS.Quests.Albion
 
 				recruitsShortSword.Bonus = 1; // default bonus
 
-				recruitsShortSword.Bonus1 = 3;
-				recruitsShortSword.Bonus1Type = (int) eStat.STR;
-
-				recruitsShortSword.Bonus2 = 1;
-				recruitsShortSword.Bonus2Type = (int) eResist.Body;
+				recruitsShortSword.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Resist_Body }, new []{ 3, 1 });
 
 				recruitsShortSword.Quality = 100;
 				recruitsShortSword.Condition = 1000;
@@ -239,7 +235,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(recruitsShortSword);
+				recruitsShortSword.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -269,11 +265,7 @@ namespace DOL.GS.Quests.Albion
 
 				recruitsStaff.Bonus = 1; // default bonus
 
-				recruitsStaff.Bonus1 = 3;
-				recruitsStaff.Bonus1Type = (int) eStat.INT;
-
-				recruitsStaff.Bonus2 = 1;
-				recruitsStaff.Bonus2Type = (int) eResist.Crush;
+				recruitsStaff.SetTemplateBonuses(new []{ eProperty.Intelligence, eProperty.Resist_Crush }, new []{ 3, 1 });
 
 				recruitsStaff.Quality = 100;
 				recruitsStaff.Condition = 1000;
@@ -285,7 +277,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(recruitsStaff);
+				recruitsStaff.AddQuestObjectToDatabase();
 			}
 
 			#endregion

@@ -186,8 +186,8 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					annark.SaveIntoDatabase();
+				
+				annark.AddQuestObjectToDatabase();
 				annark.AddToWorld();
 			}
 			else
@@ -237,8 +237,8 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					idora.SaveIntoDatabase();
+				
+				idora.AddQuestObjectToDatabase();
 				idora.AddToWorld();
 			}
 			else
@@ -290,8 +290,8 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					njiedi.SaveIntoDatabase();
+				
+				njiedi.AddQuestObjectToDatabase();
 				njiedi.AddToWorld();
 			}
 			else
@@ -342,10 +342,8 @@ namespace DOL.GS.Quests.Midgard
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 
-                if (SAVE_INTO_DATABASE)
-                {
-                    griffin.SaveIntoDatabase();
-                }
+                
+                griffin.AddQuestObjectToDatabase();
 				griffin.AddToWorld();
 			}
 
@@ -378,10 +376,8 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
-                {
-                    vorgar.SaveIntoDatabase();
-                }
+                
+                vorgar.AddQuestObjectToDatabase();
 
 				vorgar.AddToWorld();
 			}
@@ -413,7 +409,7 @@ namespace DOL.GS.Quests.Midgard
 				noteForNjiedi.IsPickable = true;
 				noteForNjiedi.IsDropable = false;
 
-				GameServer.Database.AddObject(noteForNjiedi);
+				noteForNjiedi.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -434,7 +430,7 @@ namespace DOL.GS.Quests.Midgard
 				askefruerPlans.IsPickable = true;
 				askefruerPlans.IsDropable = false;
 
-				GameServer.Database.AddObject(askefruerPlans);
+				askefruerPlans.AddQuestObjectToDatabase();
 			}
 
 			translatedPlans = GameServer.Database.FindObjectByKey<ItemTemplate>("translated_askefruer_plans");
@@ -454,7 +450,7 @@ namespace DOL.GS.Quests.Midgard
 				translatedPlans.IsPickable = true;
 				translatedPlans.IsDropable = false;
 
-				GameServer.Database.AddObject(translatedPlans);
+				translatedPlans.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -483,14 +479,7 @@ namespace DOL.GS.Quests.Midgard
 
 				recruitsLegs.Bonus = 5; // default bonus
 
-				recruitsLegs.Bonus1 = 12;
-				recruitsLegs.Bonus1Type = (int) eProperty.MaxHealth; // hit
-
-				recruitsLegs.Bonus2 = 2;
-				recruitsLegs.Bonus2Type = (int) eResist.Slash;
-
-				recruitsLegs.Bonus3 = 1;
-				recruitsLegs.Bonus3Type = (int) eResist.Cold;
+				recruitsLegs.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Resist_Slash, eProperty.Resist_Cold },new []{ 12, 2, 1 }); 
 
 				recruitsLegs.Quality = 100;
 				recruitsLegs.Condition = 1000;
@@ -498,7 +487,7 @@ namespace DOL.GS.Quests.Midgard
 				recruitsLegs.Durability = 1000;
 				recruitsLegs.MaxDurability = 1000;
 
-				GameServer.Database.AddObject(recruitsLegs);
+				recruitsLegs.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -527,14 +516,7 @@ namespace DOL.GS.Quests.Midgard
 
 				recruitsPants.Bonus = 5; // default bonus
 
-				recruitsPants.Bonus1 = 12;
-				recruitsPants.Bonus1Type = (int) eProperty.MaxHealth; // hit
-
-				recruitsPants.Bonus2 = 2;
-				recruitsPants.Bonus2Type = (int) eResist.Slash;
-
-				recruitsPants.Bonus3 = 1;
-				recruitsPants.Bonus3Type = (int) eResist.Cold;
+				recruitsPants.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Resist_Slash, eProperty.Resist_Cold },new []{ 12, 2, 1 }); 
 
 				recruitsPants.Quality = 100;
 				recruitsPants.Condition = 1000;
@@ -542,7 +524,7 @@ namespace DOL.GS.Quests.Midgard
 				recruitsPants.Durability = 1000;
 				recruitsPants.MaxDurability = 1000;
 
-				GameServer.Database.AddObject(recruitsPants);
+				recruitsPants.AddQuestObjectToDatabase();
 			}
 
 			#endregion						

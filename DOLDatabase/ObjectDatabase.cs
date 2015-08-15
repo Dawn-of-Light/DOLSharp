@@ -22,15 +22,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Reflection;
-using System.Text;
 using DOL.Database.Attributes;
 using DOL.Database.Cache;
 using DOL.Database.Connection;
-using DOL.Database.Handlers;
-using DOL.Database.UniqueID;
 using log4net;
-using MySql.Data.MySqlClient;
-using MySql.Data.Types;
 using DataTable = System.Data.DataTable;
 
 namespace DOL.Database

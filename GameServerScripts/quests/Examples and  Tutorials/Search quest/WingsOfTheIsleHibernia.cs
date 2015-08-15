@@ -319,11 +319,7 @@ namespace DOL.GS.Quests.Hibernia
 				npcBaeth.Z = 5015;
 				npcBaeth.Heading = 2959;
 
-				if (SAVE_INTO_DATABASE)
-				{
-					npcBaeth.SaveIntoDatabase();
-				}
-
+				npcBaeth.AddQuestObjectToDatabase();
 				npcBaeth.AddToWorld();
 			}
 			else
@@ -353,11 +349,7 @@ namespace DOL.GS.Quests.Hibernia
 				npcJessica.Z = 5491;
 				npcJessica.Heading = 49;
 
-				if (SAVE_INTO_DATABASE)
-				{
-					npcJessica.SaveIntoDatabase();
-				}
-
+				npcJessica.AddQuestObjectToDatabase();
 				npcJessica.AddToWorld();
 			}
 			else
@@ -399,10 +391,10 @@ namespace DOL.GS.Quests.Hibernia
 				reedFlute.Durability = 5000;
 				reedFlute.MaxDurability = 5000;
 
-				reedFlute.SpellID = 65001;
+				reedFlute.SetTemplateUseSpells(65001, 0);
 				reedFlute.CanUseEvery = 300;
 
-				GameServer.Database.AddObject(reedFlute);
+				reedFlute.AddQuestObjectToDatabase();
 			}
 
 			// Add spell and npctemplate to the DB

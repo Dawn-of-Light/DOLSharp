@@ -174,8 +174,8 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 
-				if (SAVE_INTO_DATABASE)
-					godelevaDowden.SaveIntoDatabase();
+				
+					godelevaDowden.AddQuestObjectToDatabase();
 
 				godelevaDowden.AddToWorld();
 			}
@@ -215,7 +215,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(woodenBucket);
+					woodenBucket.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -247,7 +247,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(fullWoodenBucket);
+					fullWoodenBucket.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -271,10 +271,7 @@ namespace DOL.GS.Quests.Albion
 				reedBracer.IsDropable = true;
 
 				reedBracer.Bonus = 1;
-				reedBracer.Bonus1Type = (int)eProperty.MaxHealth;
-				reedBracer.Bonus1 = 8;
-				reedBracer.Bonus2Type = (int)eProperty.Resist_Cold;
-				reedBracer.Bonus2 = 1;
+				reedBracer.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Resist_Cold }, new []{ 8, 1 });
 
 				reedBracer.Quality = 100;
 				reedBracer.Condition = 1000;
@@ -287,7 +284,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(reedBracer);
+				reedBracer.AddQuestObjectToDatabase();
 			}
 
 			#endregion

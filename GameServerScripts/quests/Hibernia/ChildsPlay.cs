@@ -137,8 +137,8 @@ namespace DOL.GS.Quests.Hibernia
                 brain.AggroRange = 500;
                 Charles.SetOwnBrain(brain);
 
-                if (SAVE_INTO_DATABASE)
-                    Charles.SaveIntoDatabase();
+                
+                Charles.AddQuestObjectToDatabase();
 
                 Charles.AddToWorld();
 
@@ -173,35 +173,13 @@ namespace DOL.GS.Quests.Hibernia
                 daringpaddedboots_hib.IsTradable = true;
                 daringpaddedboots_hib.CanDropAsLoot = false;
                 daringpaddedboots_hib.Color = 0;
-                daringpaddedboots_hib.Bonus = 0; // default bonus				
-                daringpaddedboots_hib.Bonus1 = 4;
-                daringpaddedboots_hib.Bonus1Type = (int)3;
-                daringpaddedboots_hib.Bonus2 = 0;
-                daringpaddedboots_hib.Bonus2Type = (int)0;
-                daringpaddedboots_hib.Bonus3 = 0;
-                daringpaddedboots_hib.Bonus3Type = (int)0;
-                daringpaddedboots_hib.Bonus4 = 0;
-                daringpaddedboots_hib.Bonus4Type = (int)0;
-                daringpaddedboots_hib.Bonus5 = 0;
-                daringpaddedboots_hib.Bonus5Type = (int)0;
-                daringpaddedboots_hib.Bonus6 = 0;
-                daringpaddedboots_hib.Bonus6Type = (int)0;
-                daringpaddedboots_hib.Bonus7 = 0;
-                daringpaddedboots_hib.Bonus7Type = (int)0;
-                daringpaddedboots_hib.Bonus8 = 0;
-                daringpaddedboots_hib.Bonus8Type = (int)0;
-                daringpaddedboots_hib.Bonus9 = 0;
-                daringpaddedboots_hib.Bonus9Type = (int)0;
-                daringpaddedboots_hib.Bonus10 = 0;
-                daringpaddedboots_hib.Bonus10Type = (int)0;
-                daringpaddedboots_hib.ExtraBonus = 0;
-                daringpaddedboots_hib.ExtraBonusType = (int)0;
+                daringpaddedboots_hib.Bonus = 0; // default bonus
+                daringpaddedboots_hib.ClearTemplateBonuses();
+                daringpaddedboots_hib.SetTemplateBonuses(eProperty.Constitution, 4);
                 daringpaddedboots_hib.Effect = 0;
                 daringpaddedboots_hib.DPS_AF = 6;
-                daringpaddedboots_hib.Charges = 0;
-                daringpaddedboots_hib.MaxCharges = 0;
-                daringpaddedboots_hib.SpellID = 0;
-                daringpaddedboots_hib.ProcSpellID = 0;
+                daringpaddedboots_hib.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+                daringpaddedboots_hib.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
                 daringpaddedboots_hib.SPD_ABS = 0;
                 daringpaddedboots_hib.Realm = 0;
                 daringpaddedboots_hib.MaxCount = 1;
@@ -215,16 +193,12 @@ namespace DOL.GS.Quests.Hibernia
                 daringpaddedboots_hib.PoisonCharges = 0;
                 daringpaddedboots_hib.PoisonMaxCharges = 0;
                 daringpaddedboots_hib.PoisonSpellID = 0;
-                daringpaddedboots_hib.ProcSpellID1 = 0;
-                daringpaddedboots_hib.SpellID1 = 0;
-                daringpaddedboots_hib.MaxCharges1 = 0;
-                daringpaddedboots_hib.Charges1 = 0;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 
-                    GameServer.Database.AddObject(daringpaddedboots_hib);
+                daringpaddedboots_hib.AddQuestObjectToDatabase();
             }
             daringpaddedcap_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedcap_hib");
             if (daringpaddedcap_hib == null)
@@ -246,35 +220,13 @@ namespace DOL.GS.Quests.Hibernia
                 daringpaddedcap_hib.IsTradable = true;
                 daringpaddedcap_hib.CanDropAsLoot = false;
                 daringpaddedcap_hib.Color = 0;
-                daringpaddedcap_hib.Bonus = 0; // default bonus				
-                daringpaddedcap_hib.Bonus1 = 4;
-                daringpaddedcap_hib.Bonus1Type = (int)2;
-                daringpaddedcap_hib.Bonus2 = 0;
-                daringpaddedcap_hib.Bonus2Type = (int)0;
-                daringpaddedcap_hib.Bonus3 = 0;
-                daringpaddedcap_hib.Bonus3Type = (int)0;
-                daringpaddedcap_hib.Bonus4 = 0;
-                daringpaddedcap_hib.Bonus4Type = (int)0;
-                daringpaddedcap_hib.Bonus5 = 0;
-                daringpaddedcap_hib.Bonus5Type = (int)0;
-                daringpaddedcap_hib.Bonus6 = 0;
-                daringpaddedcap_hib.Bonus6Type = (int)0;
-                daringpaddedcap_hib.Bonus7 = 0;
-                daringpaddedcap_hib.Bonus7Type = (int)0;
-                daringpaddedcap_hib.Bonus8 = 0;
-                daringpaddedcap_hib.Bonus8Type = (int)0;
-                daringpaddedcap_hib.Bonus9 = 0;
-                daringpaddedcap_hib.Bonus9Type = (int)0;
-                daringpaddedcap_hib.Bonus10 = 0;
-                daringpaddedcap_hib.Bonus10Type = (int)0;
-                daringpaddedcap_hib.ExtraBonus = 0;
-                daringpaddedcap_hib.ExtraBonusType = (int)0;
+                daringpaddedcap_hib.Bonus = 0; // default bonus
+                daringpaddedcap_hib.ClearTemplateBonuses();
+                daringpaddedcap_hib.SetTemplateBonuses(eProperty.Dexterity, 4);
                 daringpaddedcap_hib.Effect = 0;
                 daringpaddedcap_hib.DPS_AF = 6;
-                daringpaddedcap_hib.Charges = 0;
-                daringpaddedcap_hib.MaxCharges = 0;
-                daringpaddedcap_hib.SpellID = 0;
-                daringpaddedcap_hib.ProcSpellID = 0;
+                daringpaddedcap_hib.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+                daringpaddedcap_hib.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
                 daringpaddedcap_hib.SPD_ABS = 0;
                 daringpaddedcap_hib.Realm = 0;
                 daringpaddedcap_hib.MaxCount = 1;
@@ -288,16 +240,12 @@ namespace DOL.GS.Quests.Hibernia
                 daringpaddedcap_hib.PoisonCharges = 0;
                 daringpaddedcap_hib.PoisonMaxCharges = 0;
                 daringpaddedcap_hib.PoisonSpellID = 0;
-                daringpaddedcap_hib.ProcSpellID1 = 0;
-                daringpaddedcap_hib.SpellID1 = 0;
-                daringpaddedcap_hib.MaxCharges1 = 0;
-                daringpaddedcap_hib.Charges1 = 0;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 
-                    GameServer.Database.AddObject(daringpaddedcap_hib);
+                daringpaddedcap_hib.AddQuestObjectToDatabase();
             }
             daringpaddedgloves_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedgloves_hib");
             if (daringpaddedgloves_hib == null)
@@ -319,35 +267,13 @@ namespace DOL.GS.Quests.Hibernia
                 daringpaddedgloves_hib.IsTradable = true;
                 daringpaddedgloves_hib.CanDropAsLoot = false;
                 daringpaddedgloves_hib.Color = 0;
-                daringpaddedgloves_hib.Bonus = 0; // default bonus				
-                daringpaddedgloves_hib.Bonus1 = 4;
-                daringpaddedgloves_hib.Bonus1Type = (int)3;
-                daringpaddedgloves_hib.Bonus2 = 0;
-                daringpaddedgloves_hib.Bonus2Type = (int)0;
-                daringpaddedgloves_hib.Bonus3 = 0;
-                daringpaddedgloves_hib.Bonus3Type = (int)0;
-                daringpaddedgloves_hib.Bonus4 = 0;
-                daringpaddedgloves_hib.Bonus4Type = (int)0;
-                daringpaddedgloves_hib.Bonus5 = 0;
-                daringpaddedgloves_hib.Bonus5Type = (int)0;
-                daringpaddedgloves_hib.Bonus6 = 0;
-                daringpaddedgloves_hib.Bonus6Type = (int)0;
-                daringpaddedgloves_hib.Bonus7 = 0;
-                daringpaddedgloves_hib.Bonus7Type = (int)0;
-                daringpaddedgloves_hib.Bonus8 = 0;
-                daringpaddedgloves_hib.Bonus8Type = (int)0;
-                daringpaddedgloves_hib.Bonus9 = 0;
-                daringpaddedgloves_hib.Bonus9Type = (int)0;
-                daringpaddedgloves_hib.Bonus10 = 0;
-                daringpaddedgloves_hib.Bonus10Type = (int)0;
-                daringpaddedgloves_hib.ExtraBonus = 0;
-                daringpaddedgloves_hib.ExtraBonusType = (int)0;
+                daringpaddedgloves_hib.Bonus = 0; // default bonus
+                daringpaddedgloves_hib.ClearTemplateBonuses();
+                daringpaddedgloves_hib.SetTemplateBonuses(eProperty.Constitution, 4);
                 daringpaddedgloves_hib.Effect = 0;
                 daringpaddedgloves_hib.DPS_AF = 6;
-                daringpaddedgloves_hib.Charges = 0;
-                daringpaddedgloves_hib.MaxCharges = 0;
-                daringpaddedgloves_hib.SpellID = 0;
-                daringpaddedgloves_hib.ProcSpellID = 0;
+                daringpaddedgloves_hib.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+                daringpaddedgloves_hib.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
                 daringpaddedgloves_hib.SPD_ABS = 0;
                 daringpaddedgloves_hib.Realm = 0;
                 daringpaddedgloves_hib.MaxCount = 1;
@@ -361,16 +287,12 @@ namespace DOL.GS.Quests.Hibernia
                 daringpaddedgloves_hib.PoisonCharges = 0;
                 daringpaddedgloves_hib.PoisonMaxCharges = 0;
                 daringpaddedgloves_hib.PoisonSpellID = 0;
-                daringpaddedgloves_hib.ProcSpellID1 = 0;
-                daringpaddedgloves_hib.SpellID1 = 0;
-                daringpaddedgloves_hib.MaxCharges1 = 0;
-                daringpaddedgloves_hib.Charges1 = 0;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 
-                    GameServer.Database.AddObject(daringpaddedgloves_hib);
+                daringpaddedgloves_hib.AddQuestObjectToDatabase();
             }
             daringpaddedpants_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedpants_hib");
             if (daringpaddedpants_hib == null)
@@ -392,35 +314,13 @@ namespace DOL.GS.Quests.Hibernia
                 daringpaddedpants_hib.IsTradable = true;
                 daringpaddedpants_hib.CanDropAsLoot = false;
                 daringpaddedpants_hib.Color = 0;
-                daringpaddedpants_hib.Bonus = 0; // default bonus				
-                daringpaddedpants_hib.Bonus1 = 4;
-                daringpaddedpants_hib.Bonus1Type = (int)2;
-                daringpaddedpants_hib.Bonus2 = 0;
-                daringpaddedpants_hib.Bonus2Type = (int)0;
-                daringpaddedpants_hib.Bonus3 = 0;
-                daringpaddedpants_hib.Bonus3Type = (int)0;
-                daringpaddedpants_hib.Bonus4 = 0;
-                daringpaddedpants_hib.Bonus4Type = (int)0;
-                daringpaddedpants_hib.Bonus5 = 0;
-                daringpaddedpants_hib.Bonus5Type = (int)0;
-                daringpaddedpants_hib.Bonus6 = 0;
-                daringpaddedpants_hib.Bonus6Type = (int)0;
-                daringpaddedpants_hib.Bonus7 = 0;
-                daringpaddedpants_hib.Bonus7Type = (int)0;
-                daringpaddedpants_hib.Bonus8 = 0;
-                daringpaddedpants_hib.Bonus8Type = (int)0;
-                daringpaddedpants_hib.Bonus9 = 0;
-                daringpaddedpants_hib.Bonus9Type = (int)0;
-                daringpaddedpants_hib.Bonus10 = 0;
-                daringpaddedpants_hib.Bonus10Type = (int)0;
-                daringpaddedpants_hib.ExtraBonus = 0;
-                daringpaddedpants_hib.ExtraBonusType = (int)0;
+                daringpaddedpants_hib.Bonus = 0; // default bonus
+                daringpaddedpants_hib.ClearTemplateBonuses();
+                daringpaddedpants_hib.SetTemplateBonuses(eProperty.Dexterity, 4);
                 daringpaddedpants_hib.Effect = 0;
                 daringpaddedpants_hib.DPS_AF = 6;
-                daringpaddedpants_hib.Charges = 0;
-                daringpaddedpants_hib.MaxCharges = 0;
-                daringpaddedpants_hib.SpellID = 0;
-                daringpaddedpants_hib.ProcSpellID = 0;
+                daringpaddedpants_hib.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+                daringpaddedpants_hib.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
                 daringpaddedpants_hib.SPD_ABS = 0;
                 daringpaddedpants_hib.Realm = 0;
                 daringpaddedpants_hib.MaxCount = 1;
@@ -434,16 +334,12 @@ namespace DOL.GS.Quests.Hibernia
                 daringpaddedpants_hib.PoisonCharges = 0;
                 daringpaddedpants_hib.PoisonMaxCharges = 0;
                 daringpaddedpants_hib.PoisonSpellID = 0;
-                daringpaddedpants_hib.ProcSpellID1 = 0;
-                daringpaddedpants_hib.SpellID1 = 0;
-                daringpaddedpants_hib.MaxCharges1 = 0;
-                daringpaddedpants_hib.Charges1 = 0;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 
-                    GameServer.Database.AddObject(daringpaddedpants_hib);
+                daringpaddedpants_hib.AddQuestObjectToDatabase();
             }
             daringpaddedsleeves_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedsleeves_hib");
             if (daringpaddedsleeves_hib == null)
@@ -465,35 +361,13 @@ namespace DOL.GS.Quests.Hibernia
                 daringpaddedsleeves_hib.IsTradable = true;
                 daringpaddedsleeves_hib.CanDropAsLoot = false;
                 daringpaddedsleeves_hib.Color = 0;
-                daringpaddedsleeves_hib.Bonus = 0; // default bonus				
-                daringpaddedsleeves_hib.Bonus1 = 4;
-                daringpaddedsleeves_hib.Bonus1Type = (int)6;
-                daringpaddedsleeves_hib.Bonus2 = 0;
-                daringpaddedsleeves_hib.Bonus2Type = (int)0;
-                daringpaddedsleeves_hib.Bonus3 = 0;
-                daringpaddedsleeves_hib.Bonus3Type = (int)0;
-                daringpaddedsleeves_hib.Bonus4 = 0;
-                daringpaddedsleeves_hib.Bonus4Type = (int)0;
-                daringpaddedsleeves_hib.Bonus5 = 0;
-                daringpaddedsleeves_hib.Bonus5Type = (int)0;
-                daringpaddedsleeves_hib.Bonus6 = 0;
-                daringpaddedsleeves_hib.Bonus6Type = (int)0;
-                daringpaddedsleeves_hib.Bonus7 = 0;
-                daringpaddedsleeves_hib.Bonus7Type = (int)0;
-                daringpaddedsleeves_hib.Bonus8 = 0;
-                daringpaddedsleeves_hib.Bonus8Type = (int)0;
-                daringpaddedsleeves_hib.Bonus9 = 0;
-                daringpaddedsleeves_hib.Bonus9Type = (int)0;
-                daringpaddedsleeves_hib.Bonus10 = 0;
-                daringpaddedsleeves_hib.Bonus10Type = (int)0;
-                daringpaddedsleeves_hib.ExtraBonus = 0;
-                daringpaddedsleeves_hib.ExtraBonusType = (int)0;
+                daringpaddedsleeves_hib.Bonus = 0; // default bonus
+                daringpaddedsleeves_hib.ClearTemplateBonuses();
+                daringpaddedsleeves_hib.SetTemplateBonuses(eProperty.Piety, 4);
                 daringpaddedsleeves_hib.Effect = 0;
                 daringpaddedsleeves_hib.DPS_AF = 6;
-                daringpaddedsleeves_hib.Charges = 0;
-                daringpaddedsleeves_hib.MaxCharges = 0;
-                daringpaddedsleeves_hib.SpellID = 0;
-                daringpaddedsleeves_hib.ProcSpellID = 0;
+                daringpaddedsleeves_hib.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+                daringpaddedsleeves_hib.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
                 daringpaddedsleeves_hib.SPD_ABS = 0;
                 daringpaddedsleeves_hib.Realm = 0;
                 daringpaddedsleeves_hib.MaxCount = 1;
@@ -507,16 +381,12 @@ namespace DOL.GS.Quests.Hibernia
                 daringpaddedsleeves_hib.PoisonCharges = 0;
                 daringpaddedsleeves_hib.PoisonMaxCharges = 0;
                 daringpaddedsleeves_hib.PoisonSpellID = 0;
-                daringpaddedsleeves_hib.ProcSpellID1 = 0;
-                daringpaddedsleeves_hib.SpellID1 = 0;
-                daringpaddedsleeves_hib.MaxCharges1 = 0;
-                daringpaddedsleeves_hib.Charges1 = 0;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 
-                    GameServer.Database.AddObject(daringpaddedsleeves_hib);
+                daringpaddedsleeves_hib.AddQuestObjectToDatabase();
             }
             daringpaddedvest_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedvest_hib");
             if (daringpaddedvest_hib == null)
@@ -538,35 +408,13 @@ namespace DOL.GS.Quests.Hibernia
                 daringpaddedvest_hib.IsTradable = true;
                 daringpaddedvest_hib.CanDropAsLoot = false;
                 daringpaddedvest_hib.Color = 0;
-                daringpaddedvest_hib.Bonus = 0; // default bonus				
-                daringpaddedvest_hib.Bonus1 = 12;
-                daringpaddedvest_hib.Bonus1Type = (int)10;
-                daringpaddedvest_hib.Bonus2 = 0;
-                daringpaddedvest_hib.Bonus2Type = (int)0;
-                daringpaddedvest_hib.Bonus3 = 0;
-                daringpaddedvest_hib.Bonus3Type = (int)0;
-                daringpaddedvest_hib.Bonus4 = 0;
-                daringpaddedvest_hib.Bonus4Type = (int)0;
-                daringpaddedvest_hib.Bonus5 = 0;
-                daringpaddedvest_hib.Bonus5Type = (int)0;
-                daringpaddedvest_hib.Bonus6 = 0;
-                daringpaddedvest_hib.Bonus6Type = (int)0;
-                daringpaddedvest_hib.Bonus7 = 0;
-                daringpaddedvest_hib.Bonus7Type = (int)0;
-                daringpaddedvest_hib.Bonus8 = 0;
-                daringpaddedvest_hib.Bonus8Type = (int)0;
-                daringpaddedvest_hib.Bonus9 = 0;
-                daringpaddedvest_hib.Bonus9Type = (int)0;
-                daringpaddedvest_hib.Bonus10 = 0;
-                daringpaddedvest_hib.Bonus10Type = (int)0;
-                daringpaddedvest_hib.ExtraBonus = 0;
-                daringpaddedvest_hib.ExtraBonusType = (int)0;
+                daringpaddedvest_hib.Bonus = 0; // default bonus
+                daringpaddedvest_hib.ClearTemplateBonuses();
+                daringpaddedvest_hib.SetTemplateBonuses(eProperty.MaxHealth, 12);
                 daringpaddedvest_hib.Effect = 0;
                 daringpaddedvest_hib.DPS_AF = 6;
-                daringpaddedvest_hib.Charges = 0;
-                daringpaddedvest_hib.MaxCharges = 0;
-                daringpaddedvest_hib.SpellID = 0;
-                daringpaddedvest_hib.ProcSpellID = 0;
+                daringpaddedvest_hib.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+                daringpaddedvest_hib.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
                 daringpaddedvest_hib.SPD_ABS = 0;
                 daringpaddedvest_hib.Realm = 0;
                 daringpaddedvest_hib.MaxCount = 1;
@@ -580,16 +428,12 @@ namespace DOL.GS.Quests.Hibernia
                 daringpaddedvest_hib.PoisonCharges = 0;
                 daringpaddedvest_hib.PoisonMaxCharges = 0;
                 daringpaddedvest_hib.PoisonSpellID = 0;
-                daringpaddedvest_hib.ProcSpellID1 = 0;
-                daringpaddedvest_hib.SpellID1 = 0;
-                daringpaddedvest_hib.MaxCharges1 = 0;
-                daringpaddedvest_hib.Charges1 = 0;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 
-                    GameServer.Database.AddObject(daringpaddedvest_hib);
+                daringpaddedvest_hib.AddQuestObjectToDatabase();
             }
             daringleatherboots_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleatherboots_hib");
             if (daringleatherboots_hib == null)
@@ -611,35 +455,13 @@ namespace DOL.GS.Quests.Hibernia
                 daringleatherboots_hib.IsTradable = true;
                 daringleatherboots_hib.CanDropAsLoot = false;
                 daringleatherboots_hib.Color = 0;
-                daringleatherboots_hib.Bonus = 0; // default bonus				
-                daringleatherboots_hib.Bonus1 = 4;
-                daringleatherboots_hib.Bonus1Type = (int)3;
-                daringleatherboots_hib.Bonus2 = 0;
-                daringleatherboots_hib.Bonus2Type = (int)0;
-                daringleatherboots_hib.Bonus3 = 0;
-                daringleatherboots_hib.Bonus3Type = (int)0;
-                daringleatherboots_hib.Bonus4 = 0;
-                daringleatherboots_hib.Bonus4Type = (int)0;
-                daringleatherboots_hib.Bonus5 = 0;
-                daringleatherboots_hib.Bonus5Type = (int)0;
-                daringleatherboots_hib.Bonus6 = 0;
-                daringleatherboots_hib.Bonus6Type = (int)0;
-                daringleatherboots_hib.Bonus7 = 0;
-                daringleatherboots_hib.Bonus7Type = (int)0;
-                daringleatherboots_hib.Bonus8 = 0;
-                daringleatherboots_hib.Bonus8Type = (int)0;
-                daringleatherboots_hib.Bonus9 = 0;
-                daringleatherboots_hib.Bonus9Type = (int)0;
-                daringleatherboots_hib.Bonus10 = 0;
-                daringleatherboots_hib.Bonus10Type = (int)0;
-                daringleatherboots_hib.ExtraBonus = 0;
-                daringleatherboots_hib.ExtraBonusType = (int)0;
+                daringleatherboots_hib.Bonus = 0; // default bonus
+                daringleatherboots_hib.ClearTemplateBonuses();
+                daringleatherboots_hib.SetTemplateBonuses(eProperty.Constitution, 4);
                 daringleatherboots_hib.Effect = 0;
                 daringleatherboots_hib.DPS_AF = 10;
-                daringleatherboots_hib.Charges = 0;
-                daringleatherboots_hib.MaxCharges = 0;
-                daringleatherboots_hib.SpellID = 0;
-                daringleatherboots_hib.ProcSpellID = 0;
+                daringleatherboots_hib.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+                daringleatherboots_hib.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
                 daringleatherboots_hib.SPD_ABS = 10;
                 daringleatherboots_hib.Realm = 0;
                 daringleatherboots_hib.MaxCount = 1;
@@ -653,16 +475,12 @@ namespace DOL.GS.Quests.Hibernia
                 daringleatherboots_hib.PoisonCharges = 0;
                 daringleatherboots_hib.PoisonMaxCharges = 0;
                 daringleatherboots_hib.PoisonSpellID = 0;
-                daringleatherboots_hib.ProcSpellID1 = 0;
-                daringleatherboots_hib.SpellID1 = 0;
-                daringleatherboots_hib.MaxCharges1 = 0;
-                daringleatherboots_hib.Charges1 = 0;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 
-                    GameServer.Database.AddObject(daringleatherboots_hib);
+                daringleatherboots_hib.AddQuestObjectToDatabase();
             }
             daringleathercap_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleathercap_hib");
             if (daringleathercap_hib == null)
@@ -684,35 +502,13 @@ namespace DOL.GS.Quests.Hibernia
                 daringleathercap_hib.IsTradable = true;
                 daringleathercap_hib.CanDropAsLoot = false;
                 daringleathercap_hib.Color = 0;
-                daringleathercap_hib.Bonus = 0; // default bonus				
-                daringleathercap_hib.Bonus1 = 4;
-                daringleathercap_hib.Bonus1Type = (int)3;
-                daringleathercap_hib.Bonus2 = 0;
-                daringleathercap_hib.Bonus2Type = (int)0;
-                daringleathercap_hib.Bonus3 = 0;
-                daringleathercap_hib.Bonus3Type = (int)0;
-                daringleathercap_hib.Bonus4 = 0;
-                daringleathercap_hib.Bonus4Type = (int)0;
-                daringleathercap_hib.Bonus5 = 0;
-                daringleathercap_hib.Bonus5Type = (int)0;
-                daringleathercap_hib.Bonus6 = 0;
-                daringleathercap_hib.Bonus6Type = (int)0;
-                daringleathercap_hib.Bonus7 = 0;
-                daringleathercap_hib.Bonus7Type = (int)0;
-                daringleathercap_hib.Bonus8 = 0;
-                daringleathercap_hib.Bonus8Type = (int)0;
-                daringleathercap_hib.Bonus9 = 0;
-                daringleathercap_hib.Bonus9Type = (int)0;
-                daringleathercap_hib.Bonus10 = 0;
-                daringleathercap_hib.Bonus10Type = (int)0;
-                daringleathercap_hib.ExtraBonus = 0;
-                daringleathercap_hib.ExtraBonusType = (int)0;
+                daringleathercap_hib.Bonus = 0; // default bonus
+                daringleathercap_hib.ClearTemplateBonuses();
+                daringleathercap_hib.SetTemplateBonuses(eProperty.Constitution, 4);
                 daringleathercap_hib.Effect = 0;
                 daringleathercap_hib.DPS_AF = 10;
-                daringleathercap_hib.Charges = 0;
-                daringleathercap_hib.MaxCharges = 0;
-                daringleathercap_hib.SpellID = 0;
-                daringleathercap_hib.ProcSpellID = 0;
+                daringleathercap_hib.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+                daringleathercap_hib.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
                 daringleathercap_hib.SPD_ABS = 10;
                 daringleathercap_hib.Realm = 0;
                 daringleathercap_hib.MaxCount = 1;
@@ -726,16 +522,12 @@ namespace DOL.GS.Quests.Hibernia
                 daringleathercap_hib.PoisonCharges = 0;
                 daringleathercap_hib.PoisonMaxCharges = 0;
                 daringleathercap_hib.PoisonSpellID = 0;
-                daringleathercap_hib.ProcSpellID1 = 0;
-                daringleathercap_hib.SpellID1 = 0;
-                daringleathercap_hib.MaxCharges1 = 0;
-                daringleathercap_hib.Charges1 = 0;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 
-                    GameServer.Database.AddObject(daringleathercap_hib);
+                daringleathercap_hib.AddQuestObjectToDatabase();
             }
             daringleathergloves_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleathergloves_hib");
             if (daringleathergloves_hib == null)
@@ -757,35 +549,13 @@ namespace DOL.GS.Quests.Hibernia
                 daringleathergloves_hib.IsTradable = true;
                 daringleathergloves_hib.CanDropAsLoot = false;
                 daringleathergloves_hib.Color = 0;
-                daringleathergloves_hib.Bonus = 0; // default bonus				
-                daringleathergloves_hib.Bonus1 = 4;
-                daringleathergloves_hib.Bonus1Type = (int)2;
-                daringleathergloves_hib.Bonus2 = 0;
-                daringleathergloves_hib.Bonus2Type = (int)0;
-                daringleathergloves_hib.Bonus3 = 0;
-                daringleathergloves_hib.Bonus3Type = (int)0;
-                daringleathergloves_hib.Bonus4 = 0;
-                daringleathergloves_hib.Bonus4Type = (int)0;
-                daringleathergloves_hib.Bonus5 = 0;
-                daringleathergloves_hib.Bonus5Type = (int)0;
-                daringleathergloves_hib.Bonus6 = 0;
-                daringleathergloves_hib.Bonus6Type = (int)0;
-                daringleathergloves_hib.Bonus7 = 0;
-                daringleathergloves_hib.Bonus7Type = (int)0;
-                daringleathergloves_hib.Bonus8 = 0;
-                daringleathergloves_hib.Bonus8Type = (int)0;
-                daringleathergloves_hib.Bonus9 = 0;
-                daringleathergloves_hib.Bonus9Type = (int)0;
-                daringleathergloves_hib.Bonus10 = 0;
-                daringleathergloves_hib.Bonus10Type = (int)0;
-                daringleathergloves_hib.ExtraBonus = 0;
-                daringleathergloves_hib.ExtraBonusType = (int)0;
+                daringleathergloves_hib.Bonus = 0; // default bonus
+                daringleathergloves_hib.ClearTemplateBonuses();
+                daringleathergloves_hib.SetTemplateBonuses(eProperty.Dexterity, 4);
                 daringleathergloves_hib.Effect = 0;
                 daringleathergloves_hib.DPS_AF = 10;
-                daringleathergloves_hib.Charges = 0;
-                daringleathergloves_hib.MaxCharges = 0;
-                daringleathergloves_hib.SpellID = 0;
-                daringleathergloves_hib.ProcSpellID = 0;
+                daringleathergloves_hib.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+                daringleathergloves_hib.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
                 daringleathergloves_hib.SPD_ABS = 10;
                 daringleathergloves_hib.Realm = 0;
                 daringleathergloves_hib.MaxCount = 1;
@@ -799,16 +569,12 @@ namespace DOL.GS.Quests.Hibernia
                 daringleathergloves_hib.PoisonCharges = 0;
                 daringleathergloves_hib.PoisonMaxCharges = 0;
                 daringleathergloves_hib.PoisonSpellID = 0;
-                daringleathergloves_hib.ProcSpellID1 = 0;
-                daringleathergloves_hib.SpellID1 = 0;
-                daringleathergloves_hib.MaxCharges1 = 0;
-                daringleathergloves_hib.Charges1 = 0;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 
-                    GameServer.Database.AddObject(daringleathergloves_hib);
+                daringleathergloves_hib.AddQuestObjectToDatabase();
             }
             daringleatherjerkin_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleatherjerkin_hib");
             if (daringleatherjerkin_hib == null)
@@ -830,35 +596,13 @@ namespace DOL.GS.Quests.Hibernia
                 daringleatherjerkin_hib.IsTradable = true;
                 daringleatherjerkin_hib.CanDropAsLoot = false;
                 daringleatherjerkin_hib.Color = 0;
-                daringleatherjerkin_hib.Bonus = 0; // default bonus				
-                daringleatherjerkin_hib.Bonus1 = 12;
-                daringleatherjerkin_hib.Bonus1Type = (int)10;
-                daringleatherjerkin_hib.Bonus2 = 0;
-                daringleatherjerkin_hib.Bonus2Type = (int)0;
-                daringleatherjerkin_hib.Bonus3 = 0;
-                daringleatherjerkin_hib.Bonus3Type = (int)0;
-                daringleatherjerkin_hib.Bonus4 = 0;
-                daringleatherjerkin_hib.Bonus4Type = (int)0;
-                daringleatherjerkin_hib.Bonus5 = 0;
-                daringleatherjerkin_hib.Bonus5Type = (int)0;
-                daringleatherjerkin_hib.Bonus6 = 0;
-                daringleatherjerkin_hib.Bonus6Type = (int)0;
-                daringleatherjerkin_hib.Bonus7 = 0;
-                daringleatherjerkin_hib.Bonus7Type = (int)0;
-                daringleatherjerkin_hib.Bonus8 = 0;
-                daringleatherjerkin_hib.Bonus8Type = (int)0;
-                daringleatherjerkin_hib.Bonus9 = 0;
-                daringleatherjerkin_hib.Bonus9Type = (int)0;
-                daringleatherjerkin_hib.Bonus10 = 0;
-                daringleatherjerkin_hib.Bonus10Type = (int)0;
-                daringleatherjerkin_hib.ExtraBonus = 0;
-                daringleatherjerkin_hib.ExtraBonusType = (int)0;
+                daringleatherjerkin_hib.Bonus = 0; // default bonus
+                daringleatherjerkin_hib.ClearTemplateBonuses();
+                daringleatherjerkin_hib.SetTemplateBonuses(eProperty.MaxHealth, 12);
                 daringleatherjerkin_hib.Effect = 0;
                 daringleatherjerkin_hib.DPS_AF = 10;
-                daringleatherjerkin_hib.Charges = 0;
-                daringleatherjerkin_hib.MaxCharges = 0;
-                daringleatherjerkin_hib.SpellID = 0;
-                daringleatherjerkin_hib.ProcSpellID = 0;
+                daringleatherjerkin_hib.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+                daringleatherjerkin_hib.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
                 daringleatherjerkin_hib.SPD_ABS = 10;
                 daringleatherjerkin_hib.Realm = 0;
                 daringleatherjerkin_hib.MaxCount = 1;
@@ -872,16 +616,12 @@ namespace DOL.GS.Quests.Hibernia
                 daringleatherjerkin_hib.PoisonCharges = 0;
                 daringleatherjerkin_hib.PoisonMaxCharges = 0;
                 daringleatherjerkin_hib.PoisonSpellID = 0;
-                daringleatherjerkin_hib.ProcSpellID1 = 0;
-                daringleatherjerkin_hib.SpellID1 = 0;
-                daringleatherjerkin_hib.MaxCharges1 = 0;
-                daringleatherjerkin_hib.Charges1 = 0;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 
-                    GameServer.Database.AddObject(daringleatherjerkin_hib);
+                daringleatherjerkin_hib.AddQuestObjectToDatabase();
             }
             daringleatherleggings_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleatherleggings_hib");
             if (daringleatherleggings_hib == null)
@@ -903,35 +643,13 @@ namespace DOL.GS.Quests.Hibernia
                 daringleatherleggings_hib.IsTradable = true;
                 daringleatherleggings_hib.CanDropAsLoot = false;
                 daringleatherleggings_hib.Color = 0;
-                daringleatherleggings_hib.Bonus = 0; // default bonus				
-                daringleatherleggings_hib.Bonus1 = 4;
-                daringleatherleggings_hib.Bonus1Type = (int)2;
-                daringleatherleggings_hib.Bonus2 = 0;
-                daringleatherleggings_hib.Bonus2Type = (int)0;
-                daringleatherleggings_hib.Bonus3 = 0;
-                daringleatherleggings_hib.Bonus3Type = (int)0;
-                daringleatherleggings_hib.Bonus4 = 0;
-                daringleatherleggings_hib.Bonus4Type = (int)0;
-                daringleatherleggings_hib.Bonus5 = 0;
-                daringleatherleggings_hib.Bonus5Type = (int)0;
-                daringleatherleggings_hib.Bonus6 = 0;
-                daringleatherleggings_hib.Bonus6Type = (int)0;
-                daringleatherleggings_hib.Bonus7 = 0;
-                daringleatherleggings_hib.Bonus7Type = (int)0;
-                daringleatherleggings_hib.Bonus8 = 0;
-                daringleatherleggings_hib.Bonus8Type = (int)0;
-                daringleatherleggings_hib.Bonus9 = 0;
-                daringleatherleggings_hib.Bonus9Type = (int)0;
-                daringleatherleggings_hib.Bonus10 = 0;
-                daringleatherleggings_hib.Bonus10Type = (int)0;
-                daringleatherleggings_hib.ExtraBonus = 0;
-                daringleatherleggings_hib.ExtraBonusType = (int)0;
+                daringleatherleggings_hib.Bonus = 0; // default bonus
+                daringleatherleggings_hib.ClearTemplateBonuses();
+                daringleatherleggings_hib.SetTemplateBonuses(eProperty.Dexterity, 4);
                 daringleatherleggings_hib.Effect = 0;
                 daringleatherleggings_hib.DPS_AF = 10;
-                daringleatherleggings_hib.Charges = 0;
-                daringleatherleggings_hib.MaxCharges = 0;
-                daringleatherleggings_hib.SpellID = 0;
-                daringleatherleggings_hib.ProcSpellID = 0;
+                daringleatherleggings_hib.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+                daringleatherleggings_hib.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
                 daringleatherleggings_hib.SPD_ABS = 10;
                 daringleatherleggings_hib.Realm = 0;
                 daringleatherleggings_hib.MaxCount = 1;
@@ -945,16 +663,12 @@ namespace DOL.GS.Quests.Hibernia
                 daringleatherleggings_hib.PoisonCharges = 0;
                 daringleatherleggings_hib.PoisonMaxCharges = 0;
                 daringleatherleggings_hib.PoisonSpellID = 0;
-                daringleatherleggings_hib.ProcSpellID1 = 0;
-                daringleatherleggings_hib.SpellID1 = 0;
-                daringleatherleggings_hib.MaxCharges1 = 0;
-                daringleatherleggings_hib.Charges1 = 0;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 
-                    GameServer.Database.AddObject(daringleatherleggings_hib);
+                daringleatherleggings_hib.AddQuestObjectToDatabase();
             }
             daringleathersleeves_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleathersleeves_hib");
             if (daringleathersleeves_hib == null)
@@ -976,35 +690,13 @@ namespace DOL.GS.Quests.Hibernia
                 daringleathersleeves_hib.IsTradable = true;
                 daringleathersleeves_hib.CanDropAsLoot = false;
                 daringleathersleeves_hib.Color = 0;
-                daringleathersleeves_hib.Bonus = 0; // default bonus				
-                daringleathersleeves_hib.Bonus1 = 4;
-                daringleathersleeves_hib.Bonus1Type = (int)1;
-                daringleathersleeves_hib.Bonus2 = 0;
-                daringleathersleeves_hib.Bonus2Type = (int)0;
-                daringleathersleeves_hib.Bonus3 = 0;
-                daringleathersleeves_hib.Bonus3Type = (int)0;
-                daringleathersleeves_hib.Bonus4 = 0;
-                daringleathersleeves_hib.Bonus4Type = (int)0;
-                daringleathersleeves_hib.Bonus5 = 0;
-                daringleathersleeves_hib.Bonus5Type = (int)0;
-                daringleathersleeves_hib.Bonus6 = 0;
-                daringleathersleeves_hib.Bonus6Type = (int)0;
-                daringleathersleeves_hib.Bonus7 = 0;
-                daringleathersleeves_hib.Bonus7Type = (int)0;
-                daringleathersleeves_hib.Bonus8 = 0;
-                daringleathersleeves_hib.Bonus8Type = (int)0;
-                daringleathersleeves_hib.Bonus9 = 0;
-                daringleathersleeves_hib.Bonus9Type = (int)0;
-                daringleathersleeves_hib.Bonus10 = 0;
-                daringleathersleeves_hib.Bonus10Type = (int)0;
-                daringleathersleeves_hib.ExtraBonus = 0;
-                daringleathersleeves_hib.ExtraBonusType = (int)0;
+                daringleathersleeves_hib.Bonus = 0; // default bonus
+                daringleathersleeves_hib.ClearTemplateBonuses();
+                daringleathersleeves_hib.SetTemplateBonuses(eProperty.Strength, 4);
                 daringleathersleeves_hib.Effect = 0;
                 daringleathersleeves_hib.DPS_AF = 10;
-                daringleathersleeves_hib.Charges = 0;
-                daringleathersleeves_hib.MaxCharges = 0;
-                daringleathersleeves_hib.SpellID = 0;
-                daringleathersleeves_hib.ProcSpellID = 0;
+                daringleathersleeves_hib.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+                daringleathersleeves_hib.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
                 daringleathersleeves_hib.SPD_ABS = 10;
                 daringleathersleeves_hib.Realm = 0;
                 daringleathersleeves_hib.MaxCount = 1;
@@ -1018,16 +710,12 @@ namespace DOL.GS.Quests.Hibernia
                 daringleathersleeves_hib.PoisonCharges = 0;
                 daringleathersleeves_hib.PoisonMaxCharges = 0;
                 daringleathersleeves_hib.PoisonSpellID = 0;
-                daringleathersleeves_hib.ProcSpellID1 = 0;
-                daringleathersleeves_hib.SpellID1 = 0;
-                daringleathersleeves_hib.MaxCharges1 = 0;
-                daringleathersleeves_hib.Charges1 = 0;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 
-                    GameServer.Database.AddObject(daringleathersleeves_hib);
+                daringleathersleeves_hib.AddQuestObjectToDatabase();
             }
             daringstuddedboots_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedboots_hib");
             if (daringstuddedboots_hib == null)
@@ -1049,35 +737,13 @@ namespace DOL.GS.Quests.Hibernia
                 daringstuddedboots_hib.IsTradable = true;
                 daringstuddedboots_hib.CanDropAsLoot = false;
                 daringstuddedboots_hib.Color = 0;
-                daringstuddedboots_hib.Bonus = 0; // default bonus				
-                daringstuddedboots_hib.Bonus1 = 4;
-                daringstuddedboots_hib.Bonus1Type = (int)3;
-                daringstuddedboots_hib.Bonus2 = 0;
-                daringstuddedboots_hib.Bonus2Type = (int)0;
-                daringstuddedboots_hib.Bonus3 = 0;
-                daringstuddedboots_hib.Bonus3Type = (int)0;
-                daringstuddedboots_hib.Bonus4 = 0;
-                daringstuddedboots_hib.Bonus4Type = (int)0;
-                daringstuddedboots_hib.Bonus5 = 0;
-                daringstuddedboots_hib.Bonus5Type = (int)0;
-                daringstuddedboots_hib.Bonus6 = 0;
-                daringstuddedboots_hib.Bonus6Type = (int)0;
-                daringstuddedboots_hib.Bonus7 = 0;
-                daringstuddedboots_hib.Bonus7Type = (int)0;
-                daringstuddedboots_hib.Bonus8 = 0;
-                daringstuddedboots_hib.Bonus8Type = (int)0;
-                daringstuddedboots_hib.Bonus9 = 0;
-                daringstuddedboots_hib.Bonus9Type = (int)0;
-                daringstuddedboots_hib.Bonus10 = 0;
-                daringstuddedboots_hib.Bonus10Type = (int)0;
-                daringstuddedboots_hib.ExtraBonus = 0;
-                daringstuddedboots_hib.ExtraBonusType = (int)0;
+                daringstuddedboots_hib.Bonus = 0; // default bonus
+                daringstuddedboots_hib.ClearTemplateBonuses();
+                daringstuddedboots_hib.SetTemplateBonuses(eProperty.Constitution, 4);
                 daringstuddedboots_hib.Effect = 0;
                 daringstuddedboots_hib.DPS_AF = 12;
-                daringstuddedboots_hib.Charges = 0;
-                daringstuddedboots_hib.MaxCharges = 0;
-                daringstuddedboots_hib.SpellID = 0;
-                daringstuddedboots_hib.ProcSpellID = 0;
+                daringstuddedboots_hib.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+                daringstuddedboots_hib.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
                 daringstuddedboots_hib.SPD_ABS = 19;
                 daringstuddedboots_hib.Realm = 0;
                 daringstuddedboots_hib.MaxCount = 1;
@@ -1091,16 +757,12 @@ namespace DOL.GS.Quests.Hibernia
                 daringstuddedboots_hib.PoisonCharges = 0;
                 daringstuddedboots_hib.PoisonMaxCharges = 0;
                 daringstuddedboots_hib.PoisonSpellID = 0;
-                daringstuddedboots_hib.ProcSpellID1 = 0;
-                daringstuddedboots_hib.SpellID1 = 0;
-                daringstuddedboots_hib.MaxCharges1 = 0;
-                daringstuddedboots_hib.Charges1 = 0;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 
-                    GameServer.Database.AddObject(daringstuddedboots_hib);
+                daringstuddedboots_hib.AddQuestObjectToDatabase();
             }
             daringstuddedcap_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedcap_hib");
             if (daringstuddedcap_hib == null)
@@ -1122,35 +784,13 @@ namespace DOL.GS.Quests.Hibernia
                 daringstuddedcap_hib.IsTradable = true;
                 daringstuddedcap_hib.CanDropAsLoot = false;
                 daringstuddedcap_hib.Color = 0;
-                daringstuddedcap_hib.Bonus = 0; // default bonus				
-                daringstuddedcap_hib.Bonus1 = 4;
-                daringstuddedcap_hib.Bonus1Type = (int)3;
-                daringstuddedcap_hib.Bonus2 = 0;
-                daringstuddedcap_hib.Bonus2Type = (int)0;
-                daringstuddedcap_hib.Bonus3 = 0;
-                daringstuddedcap_hib.Bonus3Type = (int)0;
-                daringstuddedcap_hib.Bonus4 = 0;
-                daringstuddedcap_hib.Bonus4Type = (int)0;
-                daringstuddedcap_hib.Bonus5 = 0;
-                daringstuddedcap_hib.Bonus5Type = (int)0;
-                daringstuddedcap_hib.Bonus6 = 0;
-                daringstuddedcap_hib.Bonus6Type = (int)0;
-                daringstuddedcap_hib.Bonus7 = 0;
-                daringstuddedcap_hib.Bonus7Type = (int)0;
-                daringstuddedcap_hib.Bonus8 = 0;
-                daringstuddedcap_hib.Bonus8Type = (int)0;
-                daringstuddedcap_hib.Bonus9 = 0;
-                daringstuddedcap_hib.Bonus9Type = (int)0;
-                daringstuddedcap_hib.Bonus10 = 0;
-                daringstuddedcap_hib.Bonus10Type = (int)0;
-                daringstuddedcap_hib.ExtraBonus = 0;
-                daringstuddedcap_hib.ExtraBonusType = (int)0;
+                daringstuddedcap_hib.Bonus = 0; // default bonus
+                daringstuddedcap_hib.ClearTemplateBonuses();
+                daringstuddedcap_hib.SetTemplateBonuses(eProperty.Constitution, 4);
                 daringstuddedcap_hib.Effect = 0;
                 daringstuddedcap_hib.DPS_AF = 12;
-                daringstuddedcap_hib.Charges = 0;
-                daringstuddedcap_hib.MaxCharges = 0;
-                daringstuddedcap_hib.SpellID = 0;
-                daringstuddedcap_hib.ProcSpellID = 0;
+                daringstuddedcap_hib.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+                daringstuddedcap_hib.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
                 daringstuddedcap_hib.SPD_ABS = 19;
                 daringstuddedcap_hib.Realm = 0;
                 daringstuddedcap_hib.MaxCount = 1;
@@ -1164,16 +804,12 @@ namespace DOL.GS.Quests.Hibernia
                 daringstuddedcap_hib.PoisonCharges = 0;
                 daringstuddedcap_hib.PoisonMaxCharges = 0;
                 daringstuddedcap_hib.PoisonSpellID = 0;
-                daringstuddedcap_hib.ProcSpellID1 = 0;
-                daringstuddedcap_hib.SpellID1 = 0;
-                daringstuddedcap_hib.MaxCharges1 = 0;
-                daringstuddedcap_hib.Charges1 = 0;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 
-                    GameServer.Database.AddObject(daringstuddedcap_hib);
+                daringstuddedcap_hib.AddQuestObjectToDatabase();
             }
             daringstuddedgloves_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedgloves_hib");
             if (daringstuddedgloves_hib == null)
@@ -1195,35 +831,13 @@ namespace DOL.GS.Quests.Hibernia
                 daringstuddedgloves_hib.IsTradable = true;
                 daringstuddedgloves_hib.CanDropAsLoot = false;
                 daringstuddedgloves_hib.Color = 0;
-                daringstuddedgloves_hib.Bonus = 0; // default bonus				
-                daringstuddedgloves_hib.Bonus1 = 4;
-                daringstuddedgloves_hib.Bonus1Type = (int)4;
-                daringstuddedgloves_hib.Bonus2 = 0;
-                daringstuddedgloves_hib.Bonus2Type = (int)0;
-                daringstuddedgloves_hib.Bonus3 = 0;
-                daringstuddedgloves_hib.Bonus3Type = (int)0;
-                daringstuddedgloves_hib.Bonus4 = 0;
-                daringstuddedgloves_hib.Bonus4Type = (int)0;
-                daringstuddedgloves_hib.Bonus5 = 0;
-                daringstuddedgloves_hib.Bonus5Type = (int)0;
-                daringstuddedgloves_hib.Bonus6 = 0;
-                daringstuddedgloves_hib.Bonus6Type = (int)0;
-                daringstuddedgloves_hib.Bonus7 = 0;
-                daringstuddedgloves_hib.Bonus7Type = (int)0;
-                daringstuddedgloves_hib.Bonus8 = 0;
-                daringstuddedgloves_hib.Bonus8Type = (int)0;
-                daringstuddedgloves_hib.Bonus9 = 0;
-                daringstuddedgloves_hib.Bonus9Type = (int)0;
-                daringstuddedgloves_hib.Bonus10 = 0;
-                daringstuddedgloves_hib.Bonus10Type = (int)0;
-                daringstuddedgloves_hib.ExtraBonus = 0;
-                daringstuddedgloves_hib.ExtraBonusType = (int)0;
+                daringstuddedgloves_hib.Bonus = 0; // default bonus
+                daringstuddedgloves_hib.ClearTemplateBonuses();
+                daringstuddedgloves_hib.SetTemplateBonuses(eProperty.Quickness, 4);
                 daringstuddedgloves_hib.Effect = 0;
                 daringstuddedgloves_hib.DPS_AF = 12;
-                daringstuddedgloves_hib.Charges = 0;
-                daringstuddedgloves_hib.MaxCharges = 0;
-                daringstuddedgloves_hib.SpellID = 0;
-                daringstuddedgloves_hib.ProcSpellID = 0;
+                daringstuddedgloves_hib.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+                daringstuddedgloves_hib.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
                 daringstuddedgloves_hib.SPD_ABS = 19;
                 daringstuddedgloves_hib.Realm = 0;
                 daringstuddedgloves_hib.MaxCount = 1;
@@ -1237,16 +851,12 @@ namespace DOL.GS.Quests.Hibernia
                 daringstuddedgloves_hib.PoisonCharges = 0;
                 daringstuddedgloves_hib.PoisonMaxCharges = 0;
                 daringstuddedgloves_hib.PoisonSpellID = 0;
-                daringstuddedgloves_hib.ProcSpellID1 = 0;
-                daringstuddedgloves_hib.SpellID1 = 0;
-                daringstuddedgloves_hib.MaxCharges1 = 0;
-                daringstuddedgloves_hib.Charges1 = 0;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 
-                    GameServer.Database.AddObject(daringstuddedgloves_hib);
+                daringstuddedgloves_hib.AddQuestObjectToDatabase();
             }
             daringstuddedjerkin_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedjerkin_hib");
             if (daringstuddedjerkin_hib == null)
@@ -1268,35 +878,13 @@ namespace DOL.GS.Quests.Hibernia
                 daringstuddedjerkin_hib.IsTradable = true;
                 daringstuddedjerkin_hib.CanDropAsLoot = false;
                 daringstuddedjerkin_hib.Color = 0;
-                daringstuddedjerkin_hib.Bonus = 0; // default bonus				
-                daringstuddedjerkin_hib.Bonus1 = 12;
-                daringstuddedjerkin_hib.Bonus1Type = (int)10;
-                daringstuddedjerkin_hib.Bonus2 = 0;
-                daringstuddedjerkin_hib.Bonus2Type = (int)0;
-                daringstuddedjerkin_hib.Bonus3 = 0;
-                daringstuddedjerkin_hib.Bonus3Type = (int)0;
-                daringstuddedjerkin_hib.Bonus4 = 0;
-                daringstuddedjerkin_hib.Bonus4Type = (int)0;
-                daringstuddedjerkin_hib.Bonus5 = 0;
-                daringstuddedjerkin_hib.Bonus5Type = (int)0;
-                daringstuddedjerkin_hib.Bonus6 = 0;
-                daringstuddedjerkin_hib.Bonus6Type = (int)0;
-                daringstuddedjerkin_hib.Bonus7 = 0;
-                daringstuddedjerkin_hib.Bonus7Type = (int)0;
-                daringstuddedjerkin_hib.Bonus8 = 0;
-                daringstuddedjerkin_hib.Bonus8Type = (int)0;
-                daringstuddedjerkin_hib.Bonus9 = 0;
-                daringstuddedjerkin_hib.Bonus9Type = (int)0;
-                daringstuddedjerkin_hib.Bonus10 = 0;
-                daringstuddedjerkin_hib.Bonus10Type = (int)0;
-                daringstuddedjerkin_hib.ExtraBonus = 0;
-                daringstuddedjerkin_hib.ExtraBonusType = (int)0;
+                daringstuddedjerkin_hib.Bonus = 0; // default bonus
+                daringstuddedjerkin_hib.ClearTemplateBonuses();
+                daringstuddedjerkin_hib.SetTemplateBonuses(eProperty.MaxHealth, 12);
                 daringstuddedjerkin_hib.Effect = 0;
                 daringstuddedjerkin_hib.DPS_AF = 12;
-                daringstuddedjerkin_hib.Charges = 0;
-                daringstuddedjerkin_hib.MaxCharges = 0;
-                daringstuddedjerkin_hib.SpellID = 0;
-                daringstuddedjerkin_hib.ProcSpellID = 0;
+                daringstuddedjerkin_hib.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+                daringstuddedjerkin_hib.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
                 daringstuddedjerkin_hib.SPD_ABS = 19;
                 daringstuddedjerkin_hib.Realm = 0;
                 daringstuddedjerkin_hib.MaxCount = 1;
@@ -1310,16 +898,12 @@ namespace DOL.GS.Quests.Hibernia
                 daringstuddedjerkin_hib.PoisonCharges = 0;
                 daringstuddedjerkin_hib.PoisonMaxCharges = 0;
                 daringstuddedjerkin_hib.PoisonSpellID = 0;
-                daringstuddedjerkin_hib.ProcSpellID1 = 0;
-                daringstuddedjerkin_hib.SpellID1 = 0;
-                daringstuddedjerkin_hib.MaxCharges1 = 0;
-                daringstuddedjerkin_hib.Charges1 = 0;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 
-                    GameServer.Database.AddObject(daringstuddedjerkin_hib);
+                daringstuddedjerkin_hib.AddQuestObjectToDatabase();
             }
             daringstuddedleggings_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedleggings_hib");
             if (daringstuddedleggings_hib == null)
@@ -1341,35 +925,13 @@ namespace DOL.GS.Quests.Hibernia
                 daringstuddedleggings_hib.IsTradable = true;
                 daringstuddedleggings_hib.CanDropAsLoot = false;
                 daringstuddedleggings_hib.Color = 0;
-                daringstuddedleggings_hib.Bonus = 0; // default bonus				
-                daringstuddedleggings_hib.Bonus1 = 4;
-                daringstuddedleggings_hib.Bonus1Type = (int)4;
-                daringstuddedleggings_hib.Bonus2 = 0;
-                daringstuddedleggings_hib.Bonus2Type = (int)0;
-                daringstuddedleggings_hib.Bonus3 = 0;
-                daringstuddedleggings_hib.Bonus3Type = (int)0;
-                daringstuddedleggings_hib.Bonus4 = 0;
-                daringstuddedleggings_hib.Bonus4Type = (int)0;
-                daringstuddedleggings_hib.Bonus5 = 0;
-                daringstuddedleggings_hib.Bonus5Type = (int)0;
-                daringstuddedleggings_hib.Bonus6 = 0;
-                daringstuddedleggings_hib.Bonus6Type = (int)0;
-                daringstuddedleggings_hib.Bonus7 = 0;
-                daringstuddedleggings_hib.Bonus7Type = (int)0;
-                daringstuddedleggings_hib.Bonus8 = 0;
-                daringstuddedleggings_hib.Bonus8Type = (int)0;
-                daringstuddedleggings_hib.Bonus9 = 0;
-                daringstuddedleggings_hib.Bonus9Type = (int)0;
-                daringstuddedleggings_hib.Bonus10 = 0;
-                daringstuddedleggings_hib.Bonus10Type = (int)0;
-                daringstuddedleggings_hib.ExtraBonus = 0;
-                daringstuddedleggings_hib.ExtraBonusType = (int)0;
+                daringstuddedleggings_hib.Bonus = 0; // default bonus
+                daringstuddedleggings_hib.ClearTemplateBonuses();
+                daringstuddedleggings_hib.SetTemplateBonuses(eProperty.Quickness, 4);
                 daringstuddedleggings_hib.Effect = 0;
                 daringstuddedleggings_hib.DPS_AF = 12;
-                daringstuddedleggings_hib.Charges = 0;
-                daringstuddedleggings_hib.MaxCharges = 0;
-                daringstuddedleggings_hib.SpellID = 0;
-                daringstuddedleggings_hib.ProcSpellID = 0;
+                daringstuddedleggings_hib.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+                daringstuddedleggings_hib.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
                 daringstuddedleggings_hib.SPD_ABS = 19;
                 daringstuddedleggings_hib.Realm = 0;
                 daringstuddedleggings_hib.MaxCount = 1;
@@ -1383,16 +945,12 @@ namespace DOL.GS.Quests.Hibernia
                 daringstuddedleggings_hib.PoisonCharges = 0;
                 daringstuddedleggings_hib.PoisonMaxCharges = 0;
                 daringstuddedleggings_hib.PoisonSpellID = 0;
-                daringstuddedleggings_hib.ProcSpellID1 = 0;
-                daringstuddedleggings_hib.SpellID1 = 0;
-                daringstuddedleggings_hib.MaxCharges1 = 0;
-                daringstuddedleggings_hib.Charges1 = 0;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 
-                    GameServer.Database.AddObject(daringstuddedleggings_hib);
+                daringstuddedleggings_hib.AddQuestObjectToDatabase();
             }
             daringstuddedsleeves_hib = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedsleeves_hib");
             if (daringstuddedsleeves_hib == null)
@@ -1414,35 +972,13 @@ namespace DOL.GS.Quests.Hibernia
                 daringstuddedsleeves_hib.IsTradable = true;
                 daringstuddedsleeves_hib.CanDropAsLoot = false;
                 daringstuddedsleeves_hib.Color = 0;
-                daringstuddedsleeves_hib.Bonus = 0; // default bonus				
-                daringstuddedsleeves_hib.Bonus1 = 4;
-                daringstuddedsleeves_hib.Bonus1Type = (int)1;
-                daringstuddedsleeves_hib.Bonus2 = 0;
-                daringstuddedsleeves_hib.Bonus2Type = (int)0;
-                daringstuddedsleeves_hib.Bonus3 = 0;
-                daringstuddedsleeves_hib.Bonus3Type = (int)0;
-                daringstuddedsleeves_hib.Bonus4 = 0;
-                daringstuddedsleeves_hib.Bonus4Type = (int)0;
-                daringstuddedsleeves_hib.Bonus5 = 0;
-                daringstuddedsleeves_hib.Bonus5Type = (int)0;
-                daringstuddedsleeves_hib.Bonus6 = 0;
-                daringstuddedsleeves_hib.Bonus6Type = (int)0;
-                daringstuddedsleeves_hib.Bonus7 = 0;
-                daringstuddedsleeves_hib.Bonus7Type = (int)0;
-                daringstuddedsleeves_hib.Bonus8 = 0;
-                daringstuddedsleeves_hib.Bonus8Type = (int)0;
-                daringstuddedsleeves_hib.Bonus9 = 0;
-                daringstuddedsleeves_hib.Bonus9Type = (int)0;
-                daringstuddedsleeves_hib.Bonus10 = 0;
-                daringstuddedsleeves_hib.Bonus10Type = (int)0;
-                daringstuddedsleeves_hib.ExtraBonus = 0;
-                daringstuddedsleeves_hib.ExtraBonusType = (int)0;
+                daringstuddedsleeves_hib.Bonus = 0; // default bonus
+                daringstuddedsleeves_hib.ClearTemplateBonuses();
+                daringstuddedsleeves_hib.SetTemplateBonuses(eProperty.Strength, 4);
                 daringstuddedsleeves_hib.Effect = 0;
                 daringstuddedsleeves_hib.DPS_AF = 12;
-                daringstuddedsleeves_hib.Charges = 0;
-                daringstuddedsleeves_hib.MaxCharges = 0;
-                daringstuddedsleeves_hib.SpellID = 0;
-                daringstuddedsleeves_hib.ProcSpellID = 0;
+                daringstuddedsleeves_hib.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+                daringstuddedsleeves_hib.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
                 daringstuddedsleeves_hib.SPD_ABS = 19;
                 daringstuddedsleeves_hib.Realm = 0;
                 daringstuddedsleeves_hib.MaxCount = 1;
@@ -1456,16 +992,12 @@ namespace DOL.GS.Quests.Hibernia
                 daringstuddedsleeves_hib.PoisonCharges = 0;
                 daringstuddedsleeves_hib.PoisonMaxCharges = 0;
                 daringstuddedsleeves_hib.PoisonSpellID = 0;
-                daringstuddedsleeves_hib.ProcSpellID1 = 0;
-                daringstuddedsleeves_hib.SpellID1 = 0;
-                daringstuddedsleeves_hib.MaxCharges1 = 0;
-                daringstuddedsleeves_hib.Charges1 = 0;
 
                 //You don't have to store the created item in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 
-                    GameServer.Database.AddObject(daringstuddedsleeves_hib);
+                daringstuddedsleeves_hib.AddQuestObjectToDatabase();
             }
 
 

@@ -116,6 +116,14 @@ namespace DOL.GS.Spells
 		}
 		
 		protected InventoryItem m_spellItem = null;
+		
+		/// <summary>
+		/// Return this Spell Handler Casting Item
+		/// </summary>
+		public virtual InventoryItem SpellItem
+		{
+			get { return m_spellItem; }
+		}
 
 		/// <summary>
 		/// Ability that casts a spell
@@ -690,7 +698,7 @@ namespace DOL.GS.Spells
 
 			if (m_spell.RecastDelay > 0)
 			{
-				int left = m_caster.GetSkillDisabledDuration(m_spell);
+				long left = m_caster.GetSpellDisabledDurationFromSharedTimer(m_spell);
 				if (left > 0)
 				{
 					if (m_caster is NecromancerPet && ((m_caster as NecromancerPet).Owner as GamePlayer).Client.Account.PrivLevel > (int)ePrivLevel.Player)

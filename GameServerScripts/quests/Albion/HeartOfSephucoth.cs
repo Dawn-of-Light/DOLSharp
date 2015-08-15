@@ -170,8 +170,8 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 
-				if (SAVE_INTO_DATABASE)
-					eowylnAstos.SaveIntoDatabase();
+				
+				eowylnAstos.AddQuestObjectToDatabase();
 
 				eowylnAstos.AddToWorld();
 			}
@@ -211,7 +211,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(sephucothsHeart);
+					sephucothsHeart.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -243,7 +243,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(polishedBone);
+					polishedBone.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -266,10 +266,7 @@ namespace DOL.GS.Quests.Albion
 				fieryCrystalPendant.IsPickable = true;
 				fieryCrystalPendant.IsDropable = true;
 
-				fieryCrystalPendant.Bonus1 = 1;
-				fieryCrystalPendant.Bonus1Type = (int)eProperty.Skill_Fire;
-				fieryCrystalPendant.Bonus2 = 1;
-				fieryCrystalPendant.Bonus2Type = (int)eProperty.Intelligence;
+				fieryCrystalPendant.SetTemplateBonuses(new []{ eProperty.Skill_Fire, eProperty.Intelligence }, new []{ 1, 1 });
 			
 				fieryCrystalPendant.Quality = 100;
 				fieryCrystalPendant.Condition = 1000;
@@ -282,7 +279,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(fieryCrystalPendant);
+				fieryCrystalPendant.AddQuestObjectToDatabase();
 			}
 
 			#endregion

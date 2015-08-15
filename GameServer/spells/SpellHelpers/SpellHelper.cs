@@ -461,5 +461,24 @@ namespace DOL.GS.Spells
 			                                                         && fx.SpellHandler != null && fx.SpellHandler.GetType() == spellHandler);
 		}
 		#endregion
+		
+		#region disabled spells
+		
+		/// <summary>
+		/// Get The Disabled Duration of this Spell with SharedTimerGroup Check.
+		/// </summary>
+		/// <param name="target"></param>
+		/// <param name="spell"></param>
+		/// <returns></returns>
+		public static long GetSpellDisabledDurationFromSharedTimer(this GameLiving target, Spell spell)
+		{
+			if (spell != null && spell.SharedTimerGroup != 0)
+				return target.GetAllDisabledSkillsAndDuration().Where(tp => tp.Value is Spell && ((Spell)tp.Value).SharedTimerGroup == spell.SharedTimerGroup)
+					.Max(kv => kv.Key);
+			
+			return target.GetSkillDisabledDuration(spell);
+		}
+		
+		#endregion
 	}
 }

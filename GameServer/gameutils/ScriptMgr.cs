@@ -554,22 +554,31 @@ namespace DOL.GS
 					{
 						if (err.IsWarning) continue;
 
-						StringBuilder builder = new StringBuilder();
-						builder.Append("   ");
-						builder.Append(err.FileName);
-						builder.Append(" Line:");
-						builder.Append(err.Line);
-						builder.Append(" Col:");
-						builder.Append(err.Column);
 						if (log.IsErrorEnabled)
 						{
-							log.Error("Script compilation failed because: ");
+							log.Error("Script compilation failed because:");
 							log.Error(err.ErrorText);
-							log.Error(builder.ToString());
+							log.ErrorFormat("   {0}, Line {1} Col:{2}", err.FileName, err.Line, err.Column);
 						}
 					}
 
 					return false;
+				}
+				
+				if (res.Errors.HasWarnings)
+				{
+					foreach (CompilerError warn in res.Errors)
+					{
+						if (!warn.IsWarning)
+							continue;
+						
+						if (log.IsWarnEnabled)
+						{
+							log.Warn("Script compilation Warning: ");
+							log.Warn(warn.ErrorText);
+							log.WarnFormat("   {0}, Line {1} Col:{2}", warn.FileName, warn.Line, warn.Column);
+						}
+					}
 				}
 
 				AddOrReplaceAssembly(res.CompiledAssembly);

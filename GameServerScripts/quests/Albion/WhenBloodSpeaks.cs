@@ -96,20 +96,7 @@ namespace DOL.GS.Quests.Albion
 
 				RecruitsQuiltedPants.DPS_AF = 6;
 				RecruitsQuiltedPants.SPD_ABS = 0;
-				RecruitsQuiltedPants.Bonus1 = 20;
-				RecruitsQuiltedPants.Bonus1Type = (int)eProperty.MaxHealth;
-				RecruitsQuiltedPants.Bonus2 = 1;
-				RecruitsQuiltedPants.Bonus2Type = (int)eProperty.Resist_Body;
-				RecruitsQuiltedPants.Bonus3 = 1;
-				RecruitsQuiltedPants.Bonus3Type = (int)eProperty.Resist_Cold;
-				RecruitsQuiltedPants.Bonus4 = 1;
-				RecruitsQuiltedPants.Bonus4Type = (int)eProperty.Resist_Energy;
-				RecruitsQuiltedPants.Bonus5 = 1;
-				RecruitsQuiltedPants.Bonus5Type = (int)eProperty.Resist_Heat;
-				RecruitsQuiltedPants.Bonus6 = 1;
-				RecruitsQuiltedPants.Bonus6Type = (int)eProperty.Resist_Matter;
-				RecruitsQuiltedPants.Bonus7 = 1;
-				RecruitsQuiltedPants.Bonus7Type = (int)eProperty.Resist_Spirit;
+				RecruitsQuiltedPants.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Resist_Body, eProperty.Resist_Cold, eProperty.Resist_Energy, eProperty.Resist_Heat, eProperty.Resist_Matter, eProperty.Resist_Spirit }, new []{ 20, 1, 1, 1, 1, 1, 1 });
 				RecruitsQuiltedPants.Quality = 100;
 				RecruitsQuiltedPants.Condition = 50000;
 				RecruitsQuiltedPants.MaxCondition = 50000;
@@ -120,7 +107,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(RecruitsQuiltedPants);
+					RecruitsQuiltedPants.AddQuestObjectToDatabase();
 			}
 			RecruitsLeatherLeggings = GameServer.Database.FindObjectByKey<ItemTemplate>("k109_recruits_leather_leggings");
 			if (RecruitsLeatherLeggings == null)
@@ -144,20 +131,7 @@ namespace DOL.GS.Quests.Albion
 
 				RecruitsLeatherLeggings.DPS_AF = 12;
 				RecruitsLeatherLeggings.SPD_ABS = 10;
-				RecruitsLeatherLeggings.Bonus1 = 20;
-				RecruitsLeatherLeggings.Bonus1Type = (int)eProperty.MaxHealth;
-				RecruitsLeatherLeggings.Bonus2 = 1;
-				RecruitsLeatherLeggings.Bonus2Type = (int)eProperty.Resist_Body;
-				RecruitsLeatherLeggings.Bonus3 = 1;
-				RecruitsLeatherLeggings.Bonus3Type = (int)eProperty.Resist_Cold;
-				RecruitsLeatherLeggings.Bonus4 = 1;
-				RecruitsLeatherLeggings.Bonus4Type = (int)eProperty.Resist_Energy;
-				RecruitsLeatherLeggings.Bonus5 = 1;
-				RecruitsLeatherLeggings.Bonus5Type = (int)eProperty.Resist_Heat;
-				RecruitsLeatherLeggings.Bonus6 = 1;
-				RecruitsLeatherLeggings.Bonus6Type = (int)eProperty.Resist_Matter;
-				RecruitsLeatherLeggings.Bonus7 = 1;
-				RecruitsLeatherLeggings.Bonus7Type = (int)eProperty.Resist_Spirit;
+				RecruitsLeatherLeggings.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Resist_Body, eProperty.Resist_Cold, eProperty.Resist_Energy, eProperty.Resist_Heat, eProperty.Resist_Matter, eProperty.Resist_Spirit }, new []{ 20, 1, 1, 1, 1, 1, 1 });
 
 				RecruitsLeatherLeggings.Quality = 100;
 				RecruitsLeatherLeggings.Condition = 50000;
@@ -170,7 +144,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(RecruitsLeatherLeggings);
+					RecruitsLeatherLeggings.AddQuestObjectToDatabase();
 			}
 			RecruitsStuddedLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("k109_recruits_studded_legs");
 			if (RecruitsStuddedLegs == null)
@@ -194,20 +168,7 @@ namespace DOL.GS.Quests.Albion
 
 				RecruitsStuddedLegs.DPS_AF = 12;
 				RecruitsStuddedLegs.SPD_ABS = 19;
-				RecruitsStuddedLegs.Bonus1 = 20;
-				RecruitsStuddedLegs.Bonus1Type = (int)eProperty.MaxHealth;
-				RecruitsStuddedLegs.Bonus2 = 1;
-				RecruitsStuddedLegs.Bonus2Type = (int)eProperty.Resist_Body;
-				RecruitsStuddedLegs.Bonus3 = 1;
-				RecruitsStuddedLegs.Bonus3Type = (int)eProperty.Resist_Cold;
-				RecruitsStuddedLegs.Bonus4 = 1;
-				RecruitsStuddedLegs.Bonus4Type = (int)eProperty.Resist_Energy;
-				RecruitsStuddedLegs.Bonus5 = 1;
-				RecruitsStuddedLegs.Bonus5Type = (int)eProperty.Resist_Heat;
-				RecruitsStuddedLegs.Bonus6 = 1;
-				RecruitsStuddedLegs.Bonus6Type = (int)eProperty.Resist_Matter;
-				RecruitsStuddedLegs.Bonus7 = 1;
-				RecruitsStuddedLegs.Bonus7Type = (int)eProperty.Resist_Spirit;
+				RecruitsStuddedLegs.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Resist_Body, eProperty.Resist_Cold, eProperty.Resist_Energy, eProperty.Resist_Heat, eProperty.Resist_Matter, eProperty.Resist_Spirit }, new []{ 20, 1, 1, 1, 1, 1, 1 });
 
 				RecruitsStuddedLegs.Quality = 100;
 				RecruitsStuddedLegs.Condition = 50000;
@@ -220,7 +181,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(RecruitsStuddedLegs);
+					RecruitsStuddedLegs.AddQuestObjectToDatabase();
 			}
 			#endregion
 
@@ -282,8 +243,8 @@ namespace DOL.GS.Quests.Albion
 				MasterKless.Z = 2428;
 				MasterKless.Heading = 2685;
 
-				if (SAVE_INTO_DATABASE)
-					MasterKless.SaveIntoDatabase();
+				
+				MasterKless.AddQuestObjectToDatabase();
 
 				MasterKless.AddToWorld();
 			}

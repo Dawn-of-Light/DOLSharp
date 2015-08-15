@@ -115,39 +115,38 @@ using DOL.AI.Brain;
 			{
 				if (!WorldMgr.GetRegion(100).IsDisabled)
 				{
-				Gridash = new DOL.GS.GameNPC();
-					Gridash.Model = 137;
-				Gridash.Name = "Gridash";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + Gridash.Name + ", creating ...");
-				Gridash.GuildName = "Part of " + questTitle + " Quest";
-				Gridash.Realm = eRealm.Midgard;
-				Gridash.CurrentRegionID = 100;
-				Gridash.Size = 51;
-				Gridash.Level = 21;
-				Gridash.MaxSpeedBase = 191;
-				Gridash.Faction = FactionMgr.GetFactionByID(0);
-				Gridash.X = 772795;
-				Gridash.Y = 753335;
-				Gridash.Z = 4600;
-				Gridash.Heading = 3356;
-				Gridash.RespawnInterval = -1;
-				Gridash.BodyType = 0;
-				
-
-				StandardMobBrain brain = new StandardMobBrain();
-				brain.AggroLevel = 0;
-				brain.AggroRange = 500;
-				Gridash.SetOwnBrain(brain);
-				
-				//You don't have to store the created mob in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					Gridash.SaveIntoDatabase();
+					Gridash = new DOL.GS.GameNPC();
+						Gridash.Model = 137;
+					Gridash.Name = "Gridash";
+					if (log.IsWarnEnabled)
+						log.Warn("Could not find " + Gridash.Name + ", creating ...");
+					Gridash.GuildName = "Part of " + questTitle + " Quest";
+					Gridash.Realm = eRealm.Midgard;
+					Gridash.CurrentRegionID = 100;
+					Gridash.Size = 51;
+					Gridash.Level = 21;
+					Gridash.MaxSpeedBase = 191;
+					Gridash.Faction = FactionMgr.GetFactionByID(0);
+					Gridash.X = 772795;
+					Gridash.Y = 753335;
+					Gridash.Z = 4600;
+					Gridash.Heading = 3356;
+					Gridash.RespawnInterval = -1;
+					Gridash.BodyType = 0;
 					
-				Gridash.AddToWorld();
-				
+	
+					StandardMobBrain brain = new StandardMobBrain();
+					brain.AggroLevel = 0;
+					brain.AggroRange = 500;
+					Gridash.SetOwnBrain(brain);
+					
+					//You don't have to store the created mob in the db if you don't want,
+					//it will be recreated each time it is not found, just comment the following
+					//line if you rather not modify your database
+					
+					Gridash.AddQuestObjectToDatabase();
+						
+					Gridash.AddToWorld();
 				}
 			}
 			else 
@@ -181,34 +180,11 @@ using DOL.AI.Brain;
 				bronze_short_sword.CanDropAsLoot = true;
 				bronze_short_sword.Color = 0;
 				bronze_short_sword.Bonus = 0; // default bonus				
-				bronze_short_sword.Bonus1 = 0;
-				bronze_short_sword.Bonus1Type = (int) 0;
-				bronze_short_sword.Bonus2 = 0;
-				bronze_short_sword.Bonus2Type = (int) 0;
-				bronze_short_sword.Bonus3 = 0;
-				bronze_short_sword.Bonus3Type = (int) 0;
-				bronze_short_sword.Bonus4 = 0;
-				bronze_short_sword.Bonus4Type = (int) 0;
-				bronze_short_sword.Bonus5 = 0;
-				bronze_short_sword.Bonus5Type = (int) 0;
-				bronze_short_sword.Bonus6 = 0;
-				bronze_short_sword.Bonus6Type = (int) 0;
-				bronze_short_sword.Bonus7 = 0;
-				bronze_short_sword.Bonus7Type = (int) 0;
-				bronze_short_sword.Bonus8 = 0;
-				bronze_short_sword.Bonus8Type = (int) 0;
-				bronze_short_sword.Bonus9 = 0;
-				bronze_short_sword.Bonus9Type = (int) 0;
-				bronze_short_sword.Bonus10 = 0;
-				bronze_short_sword.Bonus10Type = (int) 0;
-				bronze_short_sword.ExtraBonus = 0;
-				bronze_short_sword.ExtraBonusType = (int) 0;
+				bronze_short_sword.ClearTemplateBonuses();
 				bronze_short_sword.Effect = 0;
 				bronze_short_sword.Emblem = 0;
-				bronze_short_sword.Charges = 0;
-				bronze_short_sword.MaxCharges = 0;
-				bronze_short_sword.SpellID = 0;
-				bronze_short_sword.ProcSpellID = 0;
+				bronze_short_sword.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				bronze_short_sword.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				bronze_short_sword.Type_Damage = 2;
 				bronze_short_sword.Realm = 1;
 				bronze_short_sword.MaxCount = 1;
@@ -222,17 +198,12 @@ using DOL.AI.Brain;
 				bronze_short_sword.PoisonCharges = 0;
 				bronze_short_sword.PoisonMaxCharges = 0;
 				bronze_short_sword.PoisonSpellID = 0;
-				bronze_short_sword.ProcSpellID1 = 0;
-				bronze_short_sword.SpellID1 = 0;
-				bronze_short_sword.MaxCharges1 = 0;
-				bronze_short_sword.Charges1 = 0;
 				
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(bronze_short_sword);
-				}
+				bronze_short_sword.AddQuestObjectToDatabase();
+			}
 			sveawolftooth = GameServer.Database.FindObjectByKey<ItemTemplate>("sveawolftooth");
 			if (sveawolftooth == null)
 			{
@@ -254,34 +225,11 @@ using DOL.AI.Brain;
 				sveawolftooth.CanDropAsLoot = false;
 				sveawolftooth.Color = 0;
 				sveawolftooth.Bonus = 35; // default bonus				
-				sveawolftooth.Bonus1 = 0;
-				sveawolftooth.Bonus1Type = (int) 0;
-				sveawolftooth.Bonus2 = 0;
-				sveawolftooth.Bonus2Type = (int) 0;
-				sveawolftooth.Bonus3 = 0;
-				sveawolftooth.Bonus3Type = (int) 0;
-				sveawolftooth.Bonus4 = 0;
-				sveawolftooth.Bonus4Type = (int) 0;
-				sveawolftooth.Bonus5 = 0;
-				sveawolftooth.Bonus5Type = (int) 0;
-				sveawolftooth.Bonus6 = 0;
-				sveawolftooth.Bonus6Type = (int) 0;
-				sveawolftooth.Bonus7 = 0;
-				sveawolftooth.Bonus7Type = (int) 0;
-				sveawolftooth.Bonus8 = 0;
-				sveawolftooth.Bonus8Type = (int) 0;
-				sveawolftooth.Bonus9 = 0;
-				sveawolftooth.Bonus9Type = (int) 0;
-				sveawolftooth.Bonus10 = 0;
-				sveawolftooth.Bonus10Type = (int) 0;
-				sveawolftooth.ExtraBonus = 0;
-				sveawolftooth.ExtraBonusType = (int) 0;
+				sveawolftooth.ClearTemplateBonuses();
 				sveawolftooth.Effect = 0;
 				sveawolftooth.Emblem = 0;
-				sveawolftooth.Charges = 0;
-				sveawolftooth.MaxCharges = 0;
-				sveawolftooth.SpellID = 0;
-				sveawolftooth.ProcSpellID = 0;
+				sveawolftooth.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				sveawolftooth.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				sveawolftooth.Type_Damage = 0;
 				sveawolftooth.Realm = 0;
 				sveawolftooth.MaxCount = 1;
@@ -295,17 +243,12 @@ using DOL.AI.Brain;
 				sveawolftooth.PoisonCharges = 0;
 				sveawolftooth.PoisonMaxCharges = 0;
 				sveawolftooth.PoisonSpellID = 0;
-				sveawolftooth.ProcSpellID1 = 0;
-				sveawolftooth.SpellID1 = 0;
-				sveawolftooth.MaxCharges1 = 0;
-				sveawolftooth.Charges1 = 0;
 				
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(sveawolftooth);
-				}
+				sveawolftooth.AddQuestObjectToDatabase();
+			}
 			sveabone_hilt_sword = GameServer.Database.FindObjectByKey<ItemTemplate>("sveabone_hilt_sword");
 			if (sveabone_hilt_sword == null)
 			{
@@ -327,34 +270,11 @@ using DOL.AI.Brain;
 				sveabone_hilt_sword.CanDropAsLoot = false;
 				sveabone_hilt_sword.Color = 0;
 				sveabone_hilt_sword.Bonus = 0; // default bonus				
-				sveabone_hilt_sword.Bonus1 = 1;
-				sveabone_hilt_sword.Bonus1Type = (int) 52;
-				sveabone_hilt_sword.Bonus2 = 0;
-				sveabone_hilt_sword.Bonus2Type = (int) 0;
-				sveabone_hilt_sword.Bonus3 = 0;
-				sveabone_hilt_sword.Bonus3Type = (int) 0;
-				sveabone_hilt_sword.Bonus4 = 0;
-				sveabone_hilt_sword.Bonus4Type = (int) 0;
-				sveabone_hilt_sword.Bonus5 = 0;
-				sveabone_hilt_sword.Bonus5Type = (int) 0;
-				sveabone_hilt_sword.Bonus6 = 0;
-				sveabone_hilt_sword.Bonus6Type = (int) 0;
-				sveabone_hilt_sword.Bonus7 = 0;
-				sveabone_hilt_sword.Bonus7Type = (int) 0;
-				sveabone_hilt_sword.Bonus8 = 0;
-				sveabone_hilt_sword.Bonus8Type = (int) 0;
-				sveabone_hilt_sword.Bonus9 = 0;
-				sveabone_hilt_sword.Bonus9Type = (int) 0;
-				sveabone_hilt_sword.Bonus10 = 0;
-				sveabone_hilt_sword.Bonus10Type = (int) 0;
-				sveabone_hilt_sword.ExtraBonus = 0;
-				sveabone_hilt_sword.ExtraBonusType = (int) 0;
+				sveabone_hilt_sword.ClearTemplateBonuses();
 				sveabone_hilt_sword.Effect = 0;
 				sveabone_hilt_sword.Emblem = 0;
-				sveabone_hilt_sword.Charges = 0;
-				sveabone_hilt_sword.MaxCharges = 0;
-				sveabone_hilt_sword.SpellID = 0;
-				sveabone_hilt_sword.ProcSpellID = 0;
+				sveabone_hilt_sword.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				sveabone_hilt_sword.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				sveabone_hilt_sword.Type_Damage = 2;
 				sveabone_hilt_sword.Realm = 0;
 				sveabone_hilt_sword.MaxCount = 1;
@@ -368,17 +288,12 @@ using DOL.AI.Brain;
 				sveabone_hilt_sword.PoisonCharges = 0;
 				sveabone_hilt_sword.PoisonMaxCharges = 0;
 				sveabone_hilt_sword.PoisonSpellID = 0;
-				sveabone_hilt_sword.ProcSpellID1 = 0;
-				sveabone_hilt_sword.SpellID1 = 0;
-				sveabone_hilt_sword.MaxCharges1 = 0;
-				sveabone_hilt_sword.Charges1 = 0;
 				
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(sveabone_hilt_sword);
-				}
+				sveabone_hilt_sword.AddQuestObjectToDatabase();
+			}
 			
 
 			#endregion

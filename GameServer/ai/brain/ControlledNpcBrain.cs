@@ -490,7 +490,7 @@ namespace DOL.AI.Brain
 			{
 				foreach (Spell spell in Body.Spells)
 				{
-					if (!Body.IsBeingInterrupted && Body.GetSkillDisabledDuration(spell) == 0 && CheckDefensiveSpells(spell))
+					if (!Body.IsBeingInterrupted && Body.GetSpellDisabledDurationFromSharedTimer(spell) == 0 && CheckDefensiveSpells(spell))
 					{
 						casted = true;
 						break;
@@ -501,7 +501,7 @@ namespace DOL.AI.Brain
 			{
 				foreach (Spell spell in Body.Spells)
 				{
-					if (Body.GetSkillDisabledDuration(spell) == 0)
+					if (Body.GetSpellDisabledDurationFromSharedTimer(spell) == 0)
 					{
 						if (spell.CastTime > 0)
 						{

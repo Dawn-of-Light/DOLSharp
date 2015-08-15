@@ -165,8 +165,8 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 
-				if (SAVE_INTO_DATABASE)
-					elvarIronhand.SaveIntoDatabase();
+				
+				elvarIronhand.AddQuestObjectToDatabase();
 
 				elvarIronhand.AddToWorld();
 			}
@@ -207,7 +207,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(wellPreservedBones);
+					wellPreservedBones.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -240,7 +240,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(twoWellPreservedBones);
+					twoWellPreservedBones.AddQuestObjectToDatabase();
 			}
 
 			#endregion

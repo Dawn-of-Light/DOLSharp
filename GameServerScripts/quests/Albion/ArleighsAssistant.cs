@@ -174,8 +174,8 @@ namespace DOL.GS.Quests.Albion
                   //You don't have to store the created mob in the db if you don't want,
                   //it will be recreated each time it is not found, just comment the following
                   //line if you rather not modify your database
-                  if (SAVE_INTO_DATABASE)
-                      arleighPenn.SaveIntoDatabase();
+                  
+                  arleighPenn.AddQuestObjectToDatabase();
 
 
                   arleighPenn.AddToWorld();
@@ -206,7 +206,7 @@ namespace DOL.GS.Quests.Albion
                  spritelingToes.IsDropable = false;
                  spritelingToes.IsPickable = false;
                  spritelingToes.Weight = 2;
-                 GameServer.Database.AddObject(spritelingToes);
+                 spritelingToes.AddQuestObjectToDatabase();
              }
 
              wormRot = GameServer.Database.FindObjectByKey<ItemTemplate>("worm_rot");
@@ -222,7 +222,7 @@ namespace DOL.GS.Quests.Albion
                  spritelingToes.Model = 102; //TODO Model-ID 
                  wormRot.IsDropable = false;
                  wormRot.IsPickable = false;
-                 GameServer.Database.AddObject(wormRot);
+                 wormRot.AddQuestObjectToDatabase();
              }
 
              snakeSkin = GameServer.Database.FindObjectByKey<ItemTemplate>("green_skin");
@@ -239,7 +239,7 @@ namespace DOL.GS.Quests.Albion
                  snakeSkin.IsDropable = false;
                  snakeSkin.IsPickable = false;
                  snakeSkin.Weight = 3;
-                 GameServer.Database.AddObject(snakeSkin);
+                 snakeSkin.AddQuestObjectToDatabase();
              }
             #endregion
 

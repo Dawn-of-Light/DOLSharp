@@ -118,8 +118,8 @@ namespace DOL.GS.Quests.Albion
                 brain.AggroRange = 500;
                 GuardAlakyrr.SetOwnBrain(brain);
 
-				if (SAVE_INTO_DATABASE)
-					GuardAlakyrr.SaveIntoDatabase();
+				
+				GuardAlakyrr.AddQuestObjectToDatabase();
 
 				GuardAlakyrr.AddToWorld();
 			}
@@ -151,7 +151,7 @@ namespace DOL.GS.Quests.Albion
 				enchantedtenebrousflask.Durability = 1000;
 				enchantedtenebrousflask.MaxDurability = 1000;
 				
-					GameServer.Database.AddObject(enchantedtenebrousflask);
+					enchantedtenebrousflask.AddQuestObjectToDatabase();
 			}
             quarterfulltenebrousflask = GameServer.Database.FindObjectByKey<ItemTemplate>("quarterfulltenebrousflask");
 			if (quarterfulltenebrousflask == null)
@@ -174,7 +174,7 @@ namespace DOL.GS.Quests.Albion
 				quarterfulltenebrousflask.Durability = 1000;
 				quarterfulltenebrousflask.MaxDurability = 1000;
 
-					GameServer.Database.AddObject(quarterfulltenebrousflask);
+					quarterfulltenebrousflask.AddQuestObjectToDatabase();
 			}
             halffulltenebrousflask = GameServer.Database.FindObjectByKey<ItemTemplate>("halffulltenebrousflask");
 			if (halffulltenebrousflask == null)
@@ -197,7 +197,7 @@ namespace DOL.GS.Quests.Albion
 				halffulltenebrousflask.Durability = 1000;
 				halffulltenebrousflask.MaxDurability = 1000;
 				
-					GameServer.Database.AddObject(halffulltenebrousflask);
+					halffulltenebrousflask.AddQuestObjectToDatabase();
             }
             threequarterfulltenebrousflask = GameServer.Database.FindObjectByKey<ItemTemplate>("threequarterfulltenebrousflask");
             if (threequarterfulltenebrousflask == null)
@@ -220,7 +220,7 @@ namespace DOL.GS.Quests.Albion
                 threequarterfulltenebrousflask.Durability = 1000;
                 threequarterfulltenebrousflask.MaxDurability = 1000;
 
-                GameServer.Database.AddObject(threequarterfulltenebrousflask);
+                threequarterfulltenebrousflask.AddQuestObjectToDatabase();
             }
              fullflaskoftenebrousessence = GameServer.Database.FindObjectByKey<ItemTemplate>("fullflaskoftenebrousessence");
              if (fullflaskoftenebrousessence == null)
@@ -243,7 +243,7 @@ namespace DOL.GS.Quests.Albion
                  fullflaskoftenebrousessence.Durability = 1000;
                  fullflaskoftenebrousessence.MaxDurability = 1000;
 
-                 GameServer.Database.AddObject(fullflaskoftenebrousessence);
+                 fullflaskoftenebrousessence.AddQuestObjectToDatabase();
              }
 			
 			#endregion

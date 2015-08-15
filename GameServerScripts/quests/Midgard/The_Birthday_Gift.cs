@@ -143,8 +143,8 @@ using log4net;
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					BarkeepNognar.SaveIntoDatabase();
+				
+				BarkeepNognar.AddQuestObjectToDatabase();
 					
 				BarkeepNognar.AddToWorld();
 				
@@ -188,8 +188,8 @@ using log4net;
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					BarkeepPrugar.SaveIntoDatabase();
+				
+				BarkeepPrugar.AddQuestObjectToDatabase();
 					
 				BarkeepPrugar.AddToWorld();
 				
@@ -226,34 +226,11 @@ using log4net;
 				rattlingskeletonpendant.CanDropAsLoot = false;
 				rattlingskeletonpendant.Color = 0;
 				rattlingskeletonpendant.Bonus = 35; // default bonus				
-				rattlingskeletonpendant.Bonus1 = 0;
-				rattlingskeletonpendant.Bonus1Type = (int) 0;
-				rattlingskeletonpendant.Bonus2 = 0;
-				rattlingskeletonpendant.Bonus2Type = (int) 0;
-				rattlingskeletonpendant.Bonus3 = 0;
-				rattlingskeletonpendant.Bonus3Type = (int) 0;
-				rattlingskeletonpendant.Bonus4 = 0;
-				rattlingskeletonpendant.Bonus4Type = (int) 0;
-				rattlingskeletonpendant.Bonus5 = 0;
-				rattlingskeletonpendant.Bonus5Type = (int) 0;
-				rattlingskeletonpendant.Bonus6 = 0;
-				rattlingskeletonpendant.Bonus6Type = (int) 0;
-				rattlingskeletonpendant.Bonus7 = 0;
-				rattlingskeletonpendant.Bonus7Type = (int) 0;
-				rattlingskeletonpendant.Bonus8 = 0;
-				rattlingskeletonpendant.Bonus8Type = (int) 0;
-				rattlingskeletonpendant.Bonus9 = 0;
-				rattlingskeletonpendant.Bonus9Type = (int) 0;
-				rattlingskeletonpendant.Bonus10 = 0;
-				rattlingskeletonpendant.Bonus10Type = (int) 0;
-				rattlingskeletonpendant.ExtraBonus = 0;
-				rattlingskeletonpendant.ExtraBonusType = (int) 0;
+				rattlingskeletonpendant.ClearTemplateBonuses();
 				rattlingskeletonpendant.Effect = 0;
 				rattlingskeletonpendant.Emblem = 0;
-				rattlingskeletonpendant.Charges = 0;
-				rattlingskeletonpendant.MaxCharges = 0;
-				rattlingskeletonpendant.SpellID = 0;
-				rattlingskeletonpendant.ProcSpellID = 0;
+				rattlingskeletonpendant.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				rattlingskeletonpendant.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				rattlingskeletonpendant.Type_Damage = 0;
 				rattlingskeletonpendant.Realm = 0;
 				rattlingskeletonpendant.MaxCount = 1;
@@ -267,12 +244,8 @@ using log4net;
 				rattlingskeletonpendant.PoisonCharges = 0;
 				rattlingskeletonpendant.PoisonMaxCharges = 0;
 				rattlingskeletonpendant.PoisonSpellID = 0;
-				rattlingskeletonpendant.ProcSpellID1 = 0;
-				rattlingskeletonpendant.SpellID1 = 0;
-				rattlingskeletonpendant.MaxCharges1 = 0;
-				rattlingskeletonpendant.Charges1 = 0;
 				
-					GameServer.Database.AddObject(rattlingskeletonpendant);
+					rattlingskeletonpendant.AddQuestObjectToDatabase();
 				}
 			giftandnoteforprugar = GameServer.Database.FindObjectByKey<ItemTemplate>("giftandnoteforprugar");
 			if (giftandnoteforprugar == null)
@@ -295,34 +268,11 @@ using log4net;
 				giftandnoteforprugar.CanDropAsLoot = false;
 				giftandnoteforprugar.Color = 0;
 				giftandnoteforprugar.Bonus = 35; // default bonus				
-				giftandnoteforprugar.Bonus1 = 0;
-				giftandnoteforprugar.Bonus1Type = (int) 0;
-				giftandnoteforprugar.Bonus2 = 0;
-				giftandnoteforprugar.Bonus2Type = (int) 0;
-				giftandnoteforprugar.Bonus3 = 0;
-				giftandnoteforprugar.Bonus3Type = (int) 0;
-				giftandnoteforprugar.Bonus4 = 0;
-				giftandnoteforprugar.Bonus4Type = (int) 0;
-				giftandnoteforprugar.Bonus5 = 0;
-				giftandnoteforprugar.Bonus5Type = (int) 0;
-				giftandnoteforprugar.Bonus6 = 0;
-				giftandnoteforprugar.Bonus6Type = (int) 0;
-				giftandnoteforprugar.Bonus7 = 0;
-				giftandnoteforprugar.Bonus7Type = (int) 0;
-				giftandnoteforprugar.Bonus8 = 0;
-				giftandnoteforprugar.Bonus8Type = (int) 0;
-				giftandnoteforprugar.Bonus9 = 0;
-				giftandnoteforprugar.Bonus9Type = (int) 0;
-				giftandnoteforprugar.Bonus10 = 0;
-				giftandnoteforprugar.Bonus10Type = (int) 0;
-				giftandnoteforprugar.ExtraBonus = 0;
-				giftandnoteforprugar.ExtraBonusType = (int) 0;
+				giftandnoteforprugar.ClearTemplateBonuses();
 				giftandnoteforprugar.Effect = 0;
 				giftandnoteforprugar.Emblem = 0;
-				giftandnoteforprugar.Charges = 0;
-				giftandnoteforprugar.MaxCharges = 0;
-				giftandnoteforprugar.SpellID = 0;
-				giftandnoteforprugar.ProcSpellID = 0;
+				giftandnoteforprugar.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				giftandnoteforprugar.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				giftandnoteforprugar.Type_Damage = 0;
 				giftandnoteforprugar.Realm = 0;
 				giftandnoteforprugar.MaxCount = 1;
@@ -336,12 +286,8 @@ using log4net;
 				giftandnoteforprugar.PoisonCharges = 0;
 				giftandnoteforprugar.PoisonMaxCharges = 0;
 				giftandnoteforprugar.PoisonSpellID = 0;
-				giftandnoteforprugar.ProcSpellID1 = 0;
-				giftandnoteforprugar.SpellID1 = 0;
-				giftandnoteforprugar.MaxCharges1 = 0;
-				giftandnoteforprugar.Charges1 = 0;
 				
-					GameServer.Database.AddObject(giftandnoteforprugar);
+					giftandnoteforprugar.AddQuestObjectToDatabase();
 				}
 
 			#endregion

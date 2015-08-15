@@ -95,16 +95,9 @@ namespace DOL.GS.Quests.Albion
 				RecruitsIntelligentBelt.MaxCondition = 50000;
 				RecruitsIntelligentBelt.Durability = 50000;
 				RecruitsIntelligentBelt.MaxDurability = 50000;
-				RecruitsIntelligentBelt.Bonus1 = 3;
-				RecruitsIntelligentBelt.Bonus1Type = (int)eProperty.Acuity ;
-				RecruitsIntelligentBelt.Bonus2 = 3;
-				RecruitsIntelligentBelt.Bonus2Type = (int)eProperty.Dexterity;
-				RecruitsIntelligentBelt.Bonus3 = 1;
-				RecruitsIntelligentBelt.Bonus3Type = (int)eProperty.Constitution;
-				RecruitsIntelligentBelt.Bonus4 = 8;
-				RecruitsIntelligentBelt.Bonus4Type = (int)eProperty.MaxHealth;
+				RecruitsIntelligentBelt.SetTemplateBonuses(new []{ eProperty.Acuity , eProperty.Dexterity, eProperty.Constitution, eProperty.MaxHealth }, new []{ 3, 3, 1, 8 });
 				RecruitsIntelligentBelt.IsDropable = false;
-				GameServer.Database.AddObject(RecruitsIntelligentBelt);
+				RecruitsIntelligentBelt.AddQuestObjectToDatabase();
 			}
 			RecruitsMightyBelt = GameServer.Database.FindObjectByKey<ItemTemplate>("RecruitsMightyBelt");
 			if(RecruitsMightyBelt == null)
@@ -124,16 +117,9 @@ namespace DOL.GS.Quests.Albion
 				RecruitsMightyBelt.MaxCondition = 50000;
 				RecruitsMightyBelt.Durability = 50000;
 				RecruitsMightyBelt.MaxDurability = 50000;
-				RecruitsMightyBelt.Bonus1 = 3;
-				RecruitsMightyBelt.Bonus1Type = (int)eProperty.Strength;
-				RecruitsMightyBelt.Bonus2 = 3;
-				RecruitsMightyBelt.Bonus2Type = (int)eProperty.Dexterity;
-				RecruitsMightyBelt.Bonus3 = 1;
-				RecruitsMightyBelt.Bonus3Type = (int)eProperty.Quickness;
-				RecruitsMightyBelt.Bonus4 = 8;
-				RecruitsMightyBelt.Bonus4Type = (int)eProperty.MaxHealth;
+				RecruitsMightyBelt.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Dexterity, eProperty.Quickness, eProperty.MaxHealth }, new []{ 3, 3, 1, 8 });
 				RecruitsMightyBelt.IsDropable = false;
-				GameServer.Database.AddObject(RecruitsMightyBelt);
+				RecruitsMightyBelt.AddQuestObjectToDatabase();
 			}
 			RecruitsPiousBelt = GameServer.Database.FindObjectByKey<ItemTemplate>("RecruitsPiousBelt");
 			if(RecruitsPiousBelt == null)
@@ -153,16 +139,9 @@ namespace DOL.GS.Quests.Albion
 				RecruitsPiousBelt.MaxCondition = 50000;
 				RecruitsPiousBelt.Durability = 50000;
 				RecruitsPiousBelt.MaxDurability = 50000;
-				RecruitsPiousBelt.Bonus1 = 3;
-				RecruitsPiousBelt.Bonus1Type = (int)eProperty.Acuity;
-				RecruitsPiousBelt.Bonus2 = 1;
-				RecruitsPiousBelt.Bonus2Type = (int)eProperty.AllMagicSkills;
-				RecruitsPiousBelt.Bonus3 = 3;
-				RecruitsPiousBelt.Bonus3Type = (int)eProperty.Dexterity;
-				RecruitsPiousBelt.Bonus4 = 8;
-				RecruitsPiousBelt.Bonus4Type = (int)eProperty.MaxHealth;
+				RecruitsPiousBelt.SetTemplateBonuses(new []{ eProperty.Acuity, eProperty.AllMagicSkills, eProperty.Dexterity, eProperty.MaxHealth }, new []{ 3, 1, 3, 8 });
 				RecruitsPiousBelt.IsDropable = false;
-				GameServer.Database.AddObject(RecruitsPiousBelt);
+				RecruitsPiousBelt.AddQuestObjectToDatabase();
 			}
 			#endregion
 
@@ -215,8 +194,8 @@ namespace DOL.GS.Quests.Albion
 				LadyGrynoch.Z = 2428;
 				LadyGrynoch.Heading = 2742;
 
-				if (SAVE_INTO_DATABASE)
-					LadyGrynoch.SaveIntoDatabase();
+				
+				LadyGrynoch.AddQuestObjectToDatabase();
 
 				LadyGrynoch.AddToWorld();
 			}

@@ -246,7 +246,7 @@ namespace DOL.GS
 					m_guildBannerTemplate.IsIndestructible = true;
 					m_guildBannerTemplate.Item_Type = 41;
 					m_guildBannerTemplate.Level = 1;
-					m_guildBannerTemplate.MaxCharges = 1;
+					m_guildBannerTemplate.SetUseSpells(1, 0, 1);
 					m_guildBannerTemplate.MaxCount = 1;
 					m_guildBannerTemplate.Emblem = m_player.Guild.Emblem;
 					switch (m_player.Realm)

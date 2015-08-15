@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -501,8 +502,6 @@ namespace DOL.Database
 			set { Dirty = true; m_extension = value; }
 		}
 
-		#region Bonuses
-
 		[DataElement(AllowDbNull = true)]
 		public int Bonus
 		{
@@ -510,6 +509,7 @@ namespace DOL.Database
 			set { Dirty = true; m_bonus = value; }
 		}
 
+		#region Bonuses
 		[DataElement(AllowDbNull = true)]
 		public virtual int Bonus1
 		{
@@ -963,18 +963,7 @@ namespace DOL.Database
 		{
 			get
 			{
-				return
-					(Bonus1 != 0 && Bonus1Type != 0) ||
-					(Bonus2 != 0 && Bonus2Type != 0) ||
-					(Bonus3 != 0 && Bonus3Type != 0) ||
-					(Bonus4 != 0 && Bonus4Type != 0) ||
-					(Bonus5 != 0 && Bonus5Type != 0) ||
-					(Bonus6 != 0 && Bonus6Type != 0) ||
-					(Bonus7 != 0 && Bonus7Type != 0) ||
-					(Bonus8 != 0 && Bonus8Type != 0) ||
-					(Bonus9 != 0 && Bonus9Type != 0) ||
-					(Bonus10 != 0 && Bonus10Type != 0) ||
-					(ExtraBonus != 0 && ExtraBonusType != 0);
+				return Bonuses.Any(tp => tp.Value.Item1 != 0 && tp.Value.Item2 != 0);
 			}
 		}
 
@@ -1183,6 +1172,169 @@ namespace DOL.Database
 				case 13:
 					ProcSpellID1 = bonusType;
 					break;
+			}
+		}
+		#endregion
+		
+		#region bonuses iteration
+		/// <summary>
+		/// Iterate bonuses from a 1-Indexed Dictionary of Tuples of (Bonus Property, Bonus Amount)   
+		/// </summary>
+		public virtual SortedList<int, Tuple<int, int>> Bonuses
+		{
+			get
+			{
+				return new SortedList<int, Tuple<int, int>> {
+					{ 1, new Tuple<int, int>(Bonus1Type, Bonus1) },
+					{ 2, new Tuple<int, int>(Bonus2Type, Bonus2) },
+					{ 3, new Tuple<int, int>(Bonus3Type, Bonus3) },
+					{ 4, new Tuple<int, int>(Bonus4Type, Bonus4) },
+					{ 5, new Tuple<int, int>(Bonus5Type, Bonus5) },
+					{ 6, new Tuple<int, int>(Bonus6Type, Bonus6) },
+					{ 7, new Tuple<int, int>(Bonus7Type, Bonus7) },
+					{ 8, new Tuple<int, int>(Bonus8Type, Bonus8) },
+					{ 9, new Tuple<int, int>(Bonus9Type, Bonus9) },
+					{ 10, new Tuple<int, int>(Bonus10Type, Bonus10) },
+					{ 11, new Tuple<int, int>(ExtraBonusType, ExtraBonus) },
+				};
+			}
+		}
+		
+		/// <summary>
+		/// Set Item Template Bonus at "Index"
+		/// </summary>
+		/// <param name="index"></param>
+		/// <param name="type"></param>
+		/// <param name="amount"></param>
+		public virtual void SetBonus(int index, int type, int amount)
+		{
+			SetBonus(new []{ index }, new []{ type }, new []{ amount });
+		}
+		
+		/// <summary>
+		/// Set Multiple Item Template Bonuses at Given "Indexes"
+		/// </summary>
+		/// <param name="indexes"></param>
+		/// <param name="types"></param>
+		/// <param name="amounts"></param>
+		public virtual void SetBonus(int[] indexes, int[] types, int[] amounts)
+		{
+			for (int count = 0 ; count < indexes.Length && count < types.Length && count < amounts.Length ; count++)
+			{
+				var index = indexes[count];
+				var type = types[count];
+				var amount = amounts[count];
+					
+				switch(index)
+				{
+					case 1: Bonus1Type = type; Bonus1 = amount; break;
+					case 2: Bonus2Type = type; Bonus2 = amount; break;
+					case 3: Bonus3Type = type; Bonus3 = amount; break;
+					case 4: Bonus4Type = type; Bonus4 = amount; break;
+					case 5: Bonus5Type = type; Bonus5 = amount; break;
+					case 6: Bonus6Type = type; Bonus6 = amount; break;
+					case 7: Bonus7Type = type; Bonus7 = amount; break;
+					case 8: Bonus8Type = type; Bonus8 = amount; break;
+					case 9: Bonus9Type = type; Bonus9 = amount; break;
+					case 10: Bonus10Type = type; Bonus10 = amount; break;
+					case 11: ExtraBonusType = type; ExtraBonus = amount; break;
+				}
+			}
+		}
+		#endregion
+		#region proc spells
+		/// <summary>
+		/// Iterate Item Template Proc Based Spells in a 1-Indexed Dictionary of Tuple SpellID, Proc Chance
+		/// </summary>
+		public SortedList<int, Tuple<int, byte>> ProcSpells
+		{
+			get
+			{
+				return new SortedList<int, Tuple<int, byte>> {
+					{ 1, new Tuple<int, byte>(ProcSpellID, ProcChance) },
+					{ 2, new Tuple<int, byte>(ProcSpellID1, ProcChance) },
+				};
+			}
+		}
+		
+		/// <summary>
+		/// Set Item Template Proc Spell at Index
+		/// </summary>
+		/// <param name="index"></param>
+		/// <param name="spellID"></param>
+		/// <param name="chance"></param>
+		public virtual void SetProcSpells(int index, int spellID, byte chance)
+		{
+			SetProcSpells(new []{ index }, new []{ spellID }, new []{ chance });
+		}
+		
+		/// <summary>
+		/// Set Multiple Item Template Proc Spells at given Indexes
+		/// </summary>
+		/// <param name="indexes"></param>
+		/// <param name="spellIDs"></param>
+		/// <param name="chances"></param>
+		public virtual void SetProcSpells(int[] indexes, int[] spellIDs, byte[] chances)
+		{
+			for (int count = 0 ; count < indexes.Length && count < spellIDs.Length && count < chances.Length ; count++)
+			{
+				var index = indexes[count];
+				var spell = spellIDs[count];
+				var chance = chances[count];
+					
+				switch(index)
+				{
+					case 1: ProcSpellID = spell; ProcChance = chance; break;
+					case 2: ProcSpellID1 = spell; ProcChance = chance; break;
+				}
+			}
+		}
+		#endregion
+		#region use spells
+		/// <summary>
+		/// Iterate Item Template Use-Based Spells in a 1-Indexed Dictionary of Tuple SpellID, Max Charges
+		/// </summary>
+		public SortedList<int, Tuple<int, int>> UseSpells
+		{
+			get
+			{
+				return new SortedList<int, Tuple<int, int>> {
+					{ 1, new Tuple<int, int>(SpellID, MaxCharges) },
+					{ 2, new Tuple<int, int>(SpellID1, MaxCharges1) },
+				};
+			}
+		}
+		
+		/// <summary>
+		/// Set This Item Template Use-Based Spell at Index
+		/// </summary>
+		/// <param name="index"></param>
+		/// <param name="spellID"></param>
+		/// <param name="maxCharge"></param>
+		public virtual void SetUseSpells(int index, int spellID, int maxCharge)
+		{
+			SetUseSpells(new []{ index }, new []{ spellID }, new []{ maxCharge });
+		}
+		
+		/// <summary>
+		/// Set Multiple Item Template Use-Based Spells at given Indexes
+		/// </summary>
+		/// <param name="indexes"></param>
+		/// <param name="spellIDs"></param>
+		/// <param name="maxCharges"></param>
+		public virtual void SetUseSpells(int[] indexes, int[] spellIDs, int[] maxCharges)
+		{
+			for (int count = 0 ; count < indexes.Length && count < spellIDs.Length && count < maxCharges.Length ; count++)
+			{
+				var index = indexes[count];
+				var spell = spellIDs[count];
+				var maxCharge = maxCharges[count];
+					
+				switch(index)
+				{
+					case 1: SpellID = spell; MaxCharges = maxCharge; Charges = MaxCharges; break;
+					case 2: SpellID1 = spell; MaxCharges1 = maxCharge; Charges1 = MaxCharges1; break;
+				}
 			}
 		}
 		#endregion

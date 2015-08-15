@@ -18,7 +18,9 @@
  */
 using System;
 using System.Collections.Generic;
+
 using DOL.GS;
+using DOL.GS.Spells;
 
 namespace DOL.AI.Brain
 {
@@ -123,7 +125,7 @@ namespace DOL.AI.Brain
 		{
 			if(AggressionState == eAggressionState.Passive)
 				return false;
-			if(Body.GetSkillDisabledDuration(spell) != 0)
+			if(Body.GetSpellDisabledDurationFromSharedTimer(spell) != 0)
 			{
 				return false;
 			}

@@ -29,6 +29,7 @@ using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
 using DOL.GS.Keeps;
 using DOL.Language;
+using DOL.GS.Spells;
 using log4net;
 
 namespace DOL.AI.Brain
@@ -1073,7 +1074,7 @@ namespace DOL.AI.Brain
 				{
 					foreach (Spell spell in Body.Spells)
 					{
-						if (Body.GetSkillDisabledDuration(spell) > 0) continue;
+						if (Body.GetSpellDisabledDurationFromSharedTimer(spell) > 0) continue;
 						if (spell.Target.ToLower() == "enemy" || spell.Target.ToLower() == "area" || spell.Target.ToLower() == "cone") continue;
 						// If we have no pets
 						if (Body.ControlledBrain == null)
@@ -1117,7 +1118,7 @@ namespace DOL.AI.Brain
 					foreach (Spell spell in Body.Spells)
 					{
 
-						if (Body.GetSkillDisabledDuration(spell) == 0)
+						if (Body.GetSpellDisabledDurationFromSharedTimer(spell) == 0)
 						{
 							if (spell.CastTime > 0)
 							{
@@ -1150,7 +1151,7 @@ namespace DOL.AI.Brain
 		protected virtual bool CheckDefensiveSpells(Spell spell)
 		{
 			if (spell == null) return false;
-			if (Body.GetSkillDisabledDuration(spell) > 0) return false;
+			if (Body.GetSpellDisabledDurationFromSharedTimer(spell) > 0) return false;
 			GameObject lastTarget = Body.TargetObject;
 
 			// clear current target, set target based on spell type, cast spell, return target to original target

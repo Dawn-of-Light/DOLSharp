@@ -137,7 +137,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 						         		IsTradable = true,
 						         		Item_Type = 41,
 						         		Level = 1,
-						         		MaxCharges = 1,
 						         		MaxCount = 1,
 						         		Model = iitem.DatabaseItem.Model,
 						         		Emblem = iitem.DatabaseItem.Emblem,
@@ -145,6 +144,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						         		Realm = 0,
 						         		Quality = 100
 						         	};
+						it.SetTemplateUseSpells(0, 1);
 
 						string[] idnb = iitem.DatabaseItem.BaseItemID.Split('_');
 						it.Name = idnb[1] + "'s Banner";

@@ -117,7 +117,7 @@ namespace DOL.GS.Spells
 				spellhandler = ScriptMgr.CreateSpellHandler(caster, chamber.PrimarySpell, chamber.PrimarySpellLine);
 
 				#region Pre-checks
-				int duration = caster.GetSkillDisabledDuration(m_spell);
+				long duration = caster.GetSpellDisabledDurationFromSharedTimer(m_spell);
 				if (duration > 0)
 				{
 					MessageToCaster("You must wait " + (duration / 1000 + 1) + " seconds to use this spell!", eChatType.CT_System);
@@ -235,7 +235,7 @@ namespace DOL.GS.Spells
 			else
 			{
 				base.CastSpell ();
-				int duration = caster.GetSkillDisabledDuration(m_spell);
+				long duration = caster.GetSpellDisabledDurationFromSharedTimer(m_spell);
 				if(Caster is GamePlayer && duration == 0)
 					((GamePlayer)Caster).Out.SendMessage("Select the first spell for your " + Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}

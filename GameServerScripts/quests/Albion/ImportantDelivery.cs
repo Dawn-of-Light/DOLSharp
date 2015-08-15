@@ -164,8 +164,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					dunan.SaveIntoDatabase();
+				
+				dunan.AddQuestObjectToDatabase();
 				dunan.AddToWorld();
 			}
 			else
@@ -192,8 +192,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					bombard.SaveIntoDatabase();
+				
+				bombard.AddQuestObjectToDatabase();
 				bombard.AddToWorld();
 			}
 			else
@@ -220,8 +220,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					vuloch.SaveIntoDatabase();
+				
+				vuloch.AddQuestObjectToDatabase();
 
 				vuloch.AddToWorld();
 			}
@@ -250,8 +250,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					yaren.SaveIntoDatabase();
+				
+				yaren.AddQuestObjectToDatabase();
 				yaren.AddToWorld();
 			}
 			else
@@ -286,7 +286,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(sackOfSupplies);
+					sackOfSupplies.AddQuestObjectToDatabase();
 			}
 
 			crateOfVegetables = GameServer.Database.FindObjectByKey<ItemTemplate>("crate_of_vegetables");
@@ -310,7 +310,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(crateOfVegetables);
+					crateOfVegetables.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -336,11 +336,7 @@ namespace DOL.GS.Quests.Albion
 
 				recruitsCloak.Bonus = 1; // default bonus
 
-				recruitsCloak.Bonus1 = 1;
-				recruitsCloak.Bonus1Type = (int) eStat.CON;
-
-				recruitsCloak.Bonus2 = 1;
-				recruitsCloak.Bonus2Type = (int) eResist.Slash;
+				recruitsCloak.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Resist_Slash }, new []{ 1, 1 });
 
 				recruitsCloak.Quality = 100;
 				recruitsCloak.Condition = 1000;
@@ -352,7 +348,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(recruitsCloak);
+					recruitsCloak.AddQuestObjectToDatabase();
 			}
 
 			#endregion

@@ -240,6 +240,11 @@ namespace DOL.GS.Spells
 		byte DelveInfoDepth { get; set; }
 
 		/// <summary>
+		/// Return this Spell Handler Casting Item
+		/// </summary>
+		InventoryItem SpellItem { get; }
+		
+		/// <summary>
 		/// Event raised when casting sequence is completed and execution of spell can start
 		/// </summary>
 		event CastingCompleteCallback CastingCompleteEvent;

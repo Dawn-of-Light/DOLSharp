@@ -200,8 +200,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					dunwyn.SaveIntoDatabase();
+				
+				dunwyn.AddQuestObjectToDatabase();
 
 				dunwyn.AddToWorld();
 			}
@@ -233,8 +233,8 @@ namespace DOL.GS.Quests.Albion
 				brain.AggroRange = 1000;
 				princessObera.SetOwnBrain(brain);
 
-				if (SAVE_INTO_DATABASE)
-					princessObera.SaveIntoDatabase();
+				
+				princessObera.AddQuestObjectToDatabase();
 				princessObera.AddToWorld();
 			}
 			else
@@ -283,8 +283,8 @@ namespace DOL.GS.Quests.Albion
 					//You don't have to store the created mob in the db if you don't want,
 					//it will be recreated each time it is not found, just comment the following
 					//line if you rather not modify your database
-					if (SAVE_INTO_DATABASE)
-						fairySorceress[i].SaveIntoDatabase();
+					
+					fairySorceress[i].AddQuestObjectToDatabase();
 					fairySorceress[i].AddToWorld();
 				}
 			}
@@ -309,7 +309,7 @@ namespace DOL.GS.Quests.Albion
 				swampRatTail.Id_nb = "swamp_rat_tail";
 				swampRatTail.IsPickable = true;
 				swampRatTail.IsDropable = false;
-				GameServer.Database.AddObject(swampRatTail);
+				swampRatTail.AddQuestObjectToDatabase();
 			}
 
 			swampSlimeItem = GameServer.Database.FindObjectByKey<ItemTemplate>("swamp_slime");
@@ -328,7 +328,7 @@ namespace DOL.GS.Quests.Albion
 				swampSlimeItem.Id_nb = "swamp_slime";
 				swampSlimeItem.IsPickable = true;
 				swampSlimeItem.IsDropable = false;
-				GameServer.Database.AddObject(swampSlimeItem);
+				swampSlimeItem.AddQuestObjectToDatabase();
 			}
 
 			scrollDunwyn = GameServer.Database.FindObjectByKey<ItemTemplate>("scroll_for_dunwyn");
@@ -347,7 +347,7 @@ namespace DOL.GS.Quests.Albion
 				scrollDunwyn.Id_nb = "scroll_for_dunwyn";
 				scrollDunwyn.IsPickable = true;
 				scrollDunwyn.IsDropable = false;
-				GameServer.Database.AddObject(scrollDunwyn);
+				scrollDunwyn.AddQuestObjectToDatabase();
 			}
 
 			listDunwyn = GameServer.Database.FindObjectByKey<ItemTemplate>("list_for_dunwyn");
@@ -366,7 +366,7 @@ namespace DOL.GS.Quests.Albion
 				listDunwyn.Id_nb = "list_for_dunwyn";
 				listDunwyn.IsPickable = true;
 				listDunwyn.IsDropable = false;
-				GameServer.Database.AddObject(listDunwyn);
+				listDunwyn.AddQuestObjectToDatabase();
 			}
 
 			riverSpritlingClaw = GameServer.Database.FindObjectByKey<ItemTemplate>("river_spritling_claw");
@@ -385,7 +385,7 @@ namespace DOL.GS.Quests.Albion
 				riverSpritlingClaw.Id_nb = "river_spritling_claw";
 				riverSpritlingClaw.IsPickable = true;
 				riverSpritlingClaw.IsDropable = false;
-				GameServer.Database.AddObject(riverSpritlingClaw);
+				riverSpritlingClaw.AddQuestObjectToDatabase();
 			}
 
 			princessOberasHead = GameServer.Database.FindObjectByKey<ItemTemplate>("princess_oberas_head");
@@ -404,7 +404,7 @@ namespace DOL.GS.Quests.Albion
 				princessOberasHead.Id_nb = "princess_oberas_head";
 				princessOberasHead.IsPickable = true;
 				princessOberasHead.IsDropable = false;
-				GameServer.Database.AddObject(princessOberasHead);
+				princessOberasHead.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -433,21 +433,14 @@ namespace DOL.GS.Quests.Albion
 
 				recruitsHelm.Bonus = 5; // default bonus
 
-				recruitsHelm.Bonus1 = 4;
-				recruitsHelm.Bonus1Type = (int) eStat.DEX;
-
-				recruitsHelm.Bonus2 = 1;
-				recruitsHelm.Bonus2Type = (int) eResist.Spirit;
-
-				recruitsHelm.Bonus3 = 12;
-				recruitsHelm.Bonus3Type = (int) eProperty.MaxHealth;
-
+                recruitsHelm.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Resist_Spirit, eProperty.MaxHealth },
+                                                new []{ 4, 1, 12 });
 				recruitsHelm.Quality = 100;
 				recruitsHelm.Condition = 1000;
 				recruitsHelm.MaxCondition = 1000;
 				recruitsHelm.Durability = 1000;
 				recruitsHelm.MaxDurability = 1000;
-				GameServer.Database.AddObject(recruitsHelm);
+				recruitsHelm.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -476,21 +469,14 @@ namespace DOL.GS.Quests.Albion
 
 				recruitsCap.Bonus = 5; // default bonus
 
-				recruitsCap.Bonus1 = 4;
-				recruitsCap.Bonus1Type = (int) eStat.DEX;
-
-				recruitsCap.Bonus2 = 20;
-				recruitsCap.Bonus2Type = (int) eProperty.MaxHealth;
-
-				recruitsCap.Bonus3 = 1;
-				recruitsCap.Bonus3Type = (int) eResist.Spirit;
-
+                recruitsCap.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.MaxHealth, eProperty.Resist_Spirit },
+                                               new []{ 4, 20, 1 });
 				recruitsCap.Quality = 100;
 				recruitsCap.Condition = 1000;
 				recruitsCap.MaxCondition = 1000;
 				recruitsCap.Durability = 1000;
 				recruitsCap.MaxDurability = 1000;
-				GameServer.Database.AddObject(recruitsCap);
+				recruitsCap.AddQuestObjectToDatabase();
 			}
 
 			recruitsRing = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_silver_ring");
@@ -514,15 +500,13 @@ namespace DOL.GS.Quests.Albion
 
 				recruitsRing.Bonus = 5; // default bonus
 
-				recruitsRing.Bonus1 = 20;
-				recruitsRing.Bonus1Type = (int) eProperty.MaxHealth;
-
+                recruitsRing.SetTemplateBonuses(eProperty.MaxHealth, 20);
 				recruitsRing.Quality = 100;
 				recruitsRing.Condition = 1000;
 				recruitsRing.MaxCondition = 1000;
 				recruitsRing.Durability = 1000;
 				recruitsRing.MaxDurability = 1000;
-				GameServer.Database.AddObject(recruitsRing);
+				recruitsRing.AddQuestObjectToDatabase();
 			}
 
 			#endregion

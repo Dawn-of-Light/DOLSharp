@@ -171,8 +171,8 @@ Salvage.Proceed.GetBackMaterial:			Vous obtenez {0} {1} après le démontage de 
 SpellCrafting.ApplySpellcraftGems.ImbuedItem:		{0} à imprégné un objet.
 SpellCrafting.ApplySpellcraftGems.Failed:		L'imprégnation a échoué!
 SpellCrafting.ApplySpellcraftGems.PowerExplodes:	Le pouvoir contenu dans l'enchantement vous explose aux yeux!
-SpellCrafting.IsAllowedToCombine.AlreadyImbued:		{0} est déjà imprégné avec 4 différents enchantements!
-SpellCrafting.IsAllowedToCombine.DifferentTypes:	{0} peut seulement être imprégné par 4 différents enchantements!
+SpellCrafting.IsAllowedToCombine.AlreadyImbued:		{0} est déjà imprégné avec {1} différents enchantements!
+SpellCrafting.IsAllowedToCombine.DifferentTypes:	{0} peut seulement être imprégné par {1} différents enchantements!
 SpellCrafting.IsAllowedToCombine.FalseItem:		C'est objet ne peut pas être imprégné!
 SpellCrafting.IsAllowedToCombine.FalseMaterial:		{0} ne peut pas être utilisé pour enchanter un objet!
 SpellCrafting.IsAllowedToCombine.NoEnchanted:		Cet objet ne peut pas être enchanté!

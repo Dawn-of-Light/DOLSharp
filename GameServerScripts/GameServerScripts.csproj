@@ -222,6 +222,7 @@
     <Compile Include="quests\Examples and  Tutorials\MasterLevel encounter\ML1FireIsland.cs" />
     <Compile Include="quests\Examples and  Tutorials\Search quest\WingsOfTheIsleHibernia.cs" />
     <Compile Include="quests\Hibernia\BaseAddrirQuest.cs" />
+    <Compile Include="quests\Hibernia\BonesToBlades.cs" />
     <Compile Include="quests\Hibernia\ChildsPlay.cs" />
     <Compile Include="quests\Hibernia\CityOfTirnaNog.cs" />
     <Compile Include="quests\Hibernia\epic\Essence50.cs" />

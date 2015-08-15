@@ -83,17 +83,12 @@ namespace DOL.GS.Quests.Albion
 				RecruitsNecklaceofMight.Price  = Money.GetMoney(0,0,0,2,40);
 				RecruitsNecklaceofMight.IsPickable = false;
 				RecruitsNecklaceofMight.IsDropable = true; // can be sold to merchand
-
-				RecruitsNecklaceofMight.Bonus1 = 4;
-				RecruitsNecklaceofMight.Bonus1Type = (int)eProperty.Strength;
-				RecruitsNecklaceofMight.Bonus2 = 4;
-				RecruitsNecklaceofMight.Bonus2Type = (int)eProperty.Quickness;
-				RecruitsNecklaceofMight.Bonus3 = 1;
-				RecruitsNecklaceofMight.Bonus3Type = (int)eProperty.Resist_Body;
+				RecruitsNecklaceofMight.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Quickness, eProperty.Resist_Body },
+				                                           new []{ 4, 4, 1 });
 				RecruitsNecklaceofMight.Quality = 100;
 				RecruitsNecklaceofMight.MaxCondition = 50000;
 				RecruitsNecklaceofMight.MaxDurability = 50000;
-				GameServer.Database.AddObject(RecruitsNecklaceofMight);
+				RecruitsNecklaceofMight.AddQuestObjectToDatabase();
 			}
 			//Recruit's Necklace of Insight
 			RecruitsNecklaceofInsight = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_necklace_of_insight");
@@ -114,19 +109,14 @@ namespace DOL.GS.Quests.Albion
 				RecruitsNecklaceofInsight.Price = Money.GetMoney(0,0,0,2,40);
 				RecruitsNecklaceofInsight.IsPickable = false;
 				RecruitsNecklaceofInsight.IsDropable = true; // can be sold to merchand
-
-				RecruitsNecklaceofInsight.Bonus1 = 4;
-				RecruitsNecklaceofInsight.Bonus1Type = (int)eProperty.Acuity;
-				RecruitsNecklaceofInsight.Bonus2 = 4;
-				RecruitsNecklaceofInsight.Bonus2Type = (int)eProperty.Dexterity;
-				RecruitsNecklaceofInsight.Bonus3 = 3;
-				RecruitsNecklaceofInsight.Bonus3Type = (int)eProperty.MaxHealth;
+				RecruitsNecklaceofInsight.SetTemplateBonuses(new []{ eProperty.Acuity, eProperty.Dexterity, eProperty.MaxHealth },
+				                                             new []{ 4, 4, 3 });
 				RecruitsNecklaceofInsight.Quality = 100;
 				RecruitsNecklaceofInsight.Condition = 50000;
 				RecruitsNecklaceofInsight.MaxCondition = 50000;
 				RecruitsNecklaceofInsight.Durability = 50000;
 				RecruitsNecklaceofInsight.MaxDurability = 50000;
-				GameServer.Database.AddObject(RecruitsNecklaceofInsight);
+				RecruitsNecklaceofInsight.AddQuestObjectToDatabase();
 			}
 			//Recruit's Necklace of Faith
 			RecruitsNecklaceofFaith = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_necklace_of_faith");
@@ -148,18 +138,14 @@ namespace DOL.GS.Quests.Albion
 				RecruitsNecklaceofFaith.IsPickable = false;
 				RecruitsNecklaceofFaith.IsDropable = true; // can be sold to merchand
 
-				RecruitsNecklaceofFaith.Bonus1 = 4;
-				RecruitsNecklaceofFaith.Bonus1Type = (int)eProperty.Acuity;
-				RecruitsNecklaceofFaith.Bonus2 = 1;
-				RecruitsNecklaceofFaith.Bonus2Type = (int)eProperty.Resist_Body;
-				RecruitsNecklaceofFaith.Bonus3 = 1;
-				RecruitsNecklaceofFaith.Bonus3Type = (int)eProperty.AllMagicSkills;
+				RecruitsNecklaceofFaith.SetTemplateBonuses(new []{ eProperty.Acuity, eProperty.Resist_Body, eProperty.AllMagicSkills },
+				                                           new []{ 4, 1, 1 });
 				RecruitsNecklaceofFaith.Quality = 100;
 				RecruitsNecklaceofFaith.Condition = 50000;
 				RecruitsNecklaceofFaith.MaxCondition = 50000;
 				RecruitsNecklaceofFaith.Durability = 50000;
 				RecruitsNecklaceofFaith.MaxDurability = 50000;
-				GameServer.Database.AddObject(RecruitsNecklaceofFaith);
+				RecruitsNecklaceofFaith.AddQuestObjectToDatabase();
 			}
 
 			PunySkeletonSkull = GameServer.Database.FindObjectByKey<ItemTemplate>("puny_skeleton_skull");
@@ -173,7 +159,7 @@ namespace DOL.GS.Quests.Albion
 				PunySkeletonSkull.Model = 540;
 				PunySkeletonSkull.Extension = 1;
 				PunySkeletonSkull.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.AfterTheAccident.Init.Text4");
-				GameServer.Database.AddObject(PunySkeletonSkull);
+				PunySkeletonSkull.AddQuestObjectToDatabase();
 			}
 
 			#endregion
@@ -238,8 +224,8 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 
-				if (SAVE_INTO_DATABASE)
-					SirPrescott.SaveIntoDatabase();
+				
+				SirPrescott.AddQuestObjectToDatabase();
 
 				SirPrescott.AddToWorld();
 			}

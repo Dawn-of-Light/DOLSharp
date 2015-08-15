@@ -138,8 +138,8 @@ using log4net;
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					VikingKreimhilde.SaveIntoDatabase();
+				
+				VikingKreimhilde.AddQuestObjectToDatabase();
 					
 				VikingKreimhilde.AddToWorld();
 				
@@ -174,34 +174,11 @@ using log4net;
 				blackmaulercubpelt.CanDropAsLoot = false;
 				blackmaulercubpelt.Color = 0;
 				blackmaulercubpelt.Bonus = 35; // default bonus				
-				blackmaulercubpelt.Bonus1 = 0;
-				blackmaulercubpelt.Bonus1Type = (int) 0;
-				blackmaulercubpelt.Bonus2 = 0;
-				blackmaulercubpelt.Bonus2Type = (int) 0;
-				blackmaulercubpelt.Bonus3 = 0;
-				blackmaulercubpelt.Bonus3Type = (int) 0;
-				blackmaulercubpelt.Bonus4 = 0;
-				blackmaulercubpelt.Bonus4Type = (int) 0;
-				blackmaulercubpelt.Bonus5 = 0;
-				blackmaulercubpelt.Bonus5Type = (int) 0;
-				blackmaulercubpelt.Bonus6 = 0;
-				blackmaulercubpelt.Bonus6Type = (int) 0;
-				blackmaulercubpelt.Bonus7 = 0;
-				blackmaulercubpelt.Bonus7Type = (int) 0;
-				blackmaulercubpelt.Bonus8 = 0;
-				blackmaulercubpelt.Bonus8Type = (int) 0;
-				blackmaulercubpelt.Bonus9 = 0;
-				blackmaulercubpelt.Bonus9Type = (int) 0;
-				blackmaulercubpelt.Bonus10 = 0;
-				blackmaulercubpelt.Bonus10Type = (int) 0;
-				blackmaulercubpelt.ExtraBonus = 0;
-				blackmaulercubpelt.ExtraBonusType = (int) 0;
+				blackmaulercubpelt.ClearTemplateBonuses();
 				blackmaulercubpelt.Effect = 0;
 				blackmaulercubpelt.Emblem = 0;
-				blackmaulercubpelt.Charges = 0;
-				blackmaulercubpelt.MaxCharges = 0;
-				blackmaulercubpelt.SpellID = 0;
-				blackmaulercubpelt.ProcSpellID = 0;
+				blackmaulercubpelt.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				blackmaulercubpelt.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				blackmaulercubpelt.Type_Damage = 0;
 				blackmaulercubpelt.Realm = 0;
 				blackmaulercubpelt.MaxCount = 1;
@@ -215,12 +192,8 @@ using log4net;
 				blackmaulercubpelt.PoisonCharges = 0;
 				blackmaulercubpelt.PoisonMaxCharges = 0;
 				blackmaulercubpelt.PoisonSpellID = 0;
-				blackmaulercubpelt.ProcSpellID1 = 0;
-				blackmaulercubpelt.SpellID1 = 0;
-				blackmaulercubpelt.MaxCharges1 = 0;
-				blackmaulercubpelt.Charges1 = 0;
 				
-				GameServer.Database.AddObject(blackmaulercubpelt);
+				blackmaulercubpelt.AddQuestObjectToDatabase();
 				}
 
 			#endregion

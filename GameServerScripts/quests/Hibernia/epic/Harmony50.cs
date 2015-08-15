@@ -132,11 +132,8 @@ namespace DOL.GS.Quests.Hibernia
 				Revelin.Heading = 2127;
 				Revelin.Flags ^= GameNPC.eFlags.PEACE;
 				Revelin.AddToWorld();
-				if (SAVE_INTO_DATABASE)
-				{
-					Revelin.SaveIntoDatabase();
-				}
-
+				
+				Revelin.AddQuestObjectToDatabase();
 			}
 			else
 				Revelin = npcs[0];
@@ -161,11 +158,8 @@ namespace DOL.GS.Quests.Hibernia
 				Cailean.Z = 4569;
 				Cailean.Heading = 3319;
 				Cailean.AddToWorld();
-				if (SAVE_INTO_DATABASE)
-				{
-					Cailean.SaveIntoDatabase();
-				}
-
+				
+				Cailean.AddQuestObjectToDatabase();
 			}
 			else
 				Cailean = npcs[0];
@@ -195,10 +189,7 @@ namespace DOL.GS.Quests.Hibernia
 				Horn.Type_Damage = 0;
 				Horn.Quality = 100;
 				Horn.Weight = 12;
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(Horn);
-				}
+				Horn.AddQuestObjectToDatabase();
 
 			}
 			// end item
@@ -226,19 +217,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 9;
-				i.Bonus1Type = (int)eStat.CON;
-
-				i.Bonus2 = 9;
-				i.Bonus2Type = (int)eStat.QUI;
-
-				i.Bonus3 = 14;
-				i.Bonus3Type = (int)eResist.Body;
-
-				i.Bonus4 = 36;
-				i.Bonus4Type = (int)eProperty.MaxHealth;
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Quickness, eProperty.Resist_Body, eProperty.MaxHealth }, new []{ 9, 9, 14, 36 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 
 				DruidEpicBoots = i;
@@ -268,19 +249,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 15;
-				i.Bonus1Type = (int)eStat.EMP;
-
-				i.Bonus2 = 3;
-				i.Bonus2Type = (int)eProperty.Skill_Nurture;
-
-				i.Bonus3 = 3;
-				i.Bonus3Type = (int)eProperty.Skill_Nature;
-
-				i.Bonus4 = 27;
-				i.Bonus4Type = (int)eProperty.MaxHealth;
+				i.SetTemplateBonuses(new []{ eProperty.Empathy, eProperty.Skill_Nurture, eProperty.Skill_Nature, eProperty.MaxHealth }, new []{ 15, 3, 3, 27 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				DruidEpicHelm = i;
 
@@ -309,19 +280,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 3;
-				i.Bonus1Type = (int)eProperty.Skill_Regrowth;
-
-				i.Bonus2 = 6;
-				i.Bonus2Type = (int)eProperty.MaxMana;
-
-				i.Bonus3 = 12;
-				i.Bonus3Type = (int)eStat.DEX;
-
-				i.Bonus4 = 12;
-				i.Bonus4Type = (int)eStat.EMP;
+				i.SetTemplateBonuses(new []{ eProperty.Skill_Regrowth, eProperty.MaxMana, eProperty.Dexterity, eProperty.Empathy }, new []{ 3, 6, 12, 12 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				DruidEpicGloves = i;
 
@@ -349,19 +310,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 15;
-				i.Bonus1Type = (int)eStat.EMP;
-
-				i.Bonus2 = 3;
-				i.Bonus2Type = (int)eProperty.Skill_Nature;
-
-				i.Bonus3 = 10;
-				i.Bonus3Type = (int)eResist.Slash;
-
-				i.Bonus4 = 30;
-				i.Bonus4Type = (int)eProperty.MaxHealth;
+				i.SetTemplateBonuses(new []{ eProperty.Empathy, eProperty.Skill_Nature, eProperty.Resist_Slash, eProperty.MaxHealth }, new []{ 15, 3, 10, 30 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				DruidEpicVest = i;
 
@@ -389,19 +340,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 57;
-				i.Bonus1Type = (int)eProperty.MaxHealth;
-
-				i.Bonus2 = 8;
-				i.Bonus2Type = (int)eResist.Crush;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Spirit;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int)eResist.Cold;
+				i.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Resist_Crush, eProperty.Resist_Spirit, eProperty.Resist_Cold }, new []{ 57, 8, 8, 8 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 
 				DruidEpicLegs = i;
@@ -430,19 +371,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 13;
-				i.Bonus1Type = (int)eStat.CON;
-
-				i.Bonus2 = 13;
-				i.Bonus2Type = (int)eStat.STR;
-
-				i.Bonus3 = 13;
-				i.Bonus3Type = (int)eStat.EMP;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int)eResist.Matter;
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Strength, eProperty.Empathy, eProperty.Resist_Matter }, new []{ 13, 13, 13, 8 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 
 				DruidEpicArms = i;
@@ -471,19 +402,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 12;
-				i.Bonus1Type = (int)eStat.DEX;
-
-				i.Bonus2 = 15;
-				i.Bonus2Type = (int)eStat.QUI;
-
-				i.Bonus3 = 24;
-				i.Bonus3Type = (int)eProperty.MaxHealth;
-
-				i.Bonus4 = 10;
-				i.Bonus4Type = (int)eResist.Cold;
+				i.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Quickness, eProperty.MaxHealth, eProperty.Resist_Cold }, new []{ 12, 15, 24, 10 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				BlademasterEpicBoots = i;
 
@@ -512,19 +433,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 30;
-				i.Bonus1Type = (int)eProperty.MaxHealth;
-
-				i.Bonus2 = 10;
-				i.Bonus2Type = (int)eResist.Spirit;
-
-				i.Bonus3 = 10;
-				i.Bonus3Type = (int)eResist.Heat;
-
-				i.Bonus4 = 16;
-				i.Bonus4Type = (int)eStat.QUI;
+				i.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Resist_Spirit, eProperty.Resist_Heat, eProperty.Quickness }, new []{ 30, 10, 10, 16 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 
 				BlademasterEpicHelm = i;
@@ -554,19 +465,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 15;
-				i.Bonus1Type = (int)eStat.DEX;
-
-				i.Bonus2 = 13;
-				i.Bonus2Type = (int)eStat.STR;
-
-				i.Bonus3 = 3;
-				i.Bonus3Type = (int)eProperty.Skill_Celtic_Dual;
-
-				i.Bonus4 = 3;
-				i.Bonus4Type = (int)eProperty.Skill_Parry;
+				i.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Strength, eProperty.Skill_Celtic_Dual, eProperty.Skill_Parry }, new []{ 15, 13, 3, 3 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 
 				BlademasterEpicGloves = i;
@@ -595,19 +496,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 12;
-				i.Bonus1Type = (int)eStat.CON;
-
-				i.Bonus2 = 12;
-				i.Bonus2Type = (int)eStat.DEX;
-
-				i.Bonus3 = 33;
-				i.Bonus3Type = (int)eProperty.MaxHealth;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int)eResist.Slash;
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.MaxHealth, eProperty.Resist_Slash }, new []{ 12, 12, 33, 8 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 
 				BlademasterEpicVest = i;
@@ -636,19 +527,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 12;
-				i.Bonus1Type = (int)eStat.QUI;
-
-				i.Bonus2 = 12;
-				i.Bonus2Type = (int)eStat.STR;
-
-				i.Bonus3 = 27;
-				i.Bonus3Type = (int)eProperty.MaxHealth;
-
-				i.Bonus4 = 12;
-				i.Bonus4Type = (int)eResist.Cold;
+				i.SetTemplateBonuses(new []{ eProperty.Quickness, eProperty.Strength, eProperty.MaxHealth, eProperty.Resist_Cold }, new []{ 12, 12, 27, 12 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 
 				BlademasterEpicLegs = i;
@@ -677,19 +558,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 18;
-				i.Bonus1Type = (int)eStat.CON;
-
-				i.Bonus2 = 16;
-				i.Bonus2Type = (int)eStat.STR;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Cold;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int)eResist.Heat;
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Strength, eProperty.Resist_Cold, eProperty.Resist_Heat }, new []{ 18, 16, 8, 8 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 
 				BlademasterEpicArms = i;
@@ -717,19 +588,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 12;
-				i.Bonus1Type = (int)eStat.CON;
-
-				i.Bonus2 = 12;
-				i.Bonus2Type = (int)eStat.DEX;
-
-				i.Bonus3 = 27;
-				i.Bonus3Type = (int)eProperty.MaxHealth;
-
-				i.Bonus4 = 12;
-				i.Bonus4Type = (int)eResist.Matter;
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.MaxHealth, eProperty.Resist_Matter }, new []{ 12, 12, 27, 12 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				AnimistEpicBoots = i;
 
@@ -758,19 +619,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 18;
-				i.Bonus1Type = (int)eStat.CON;
-
-				i.Bonus2 = 4;
-				i.Bonus2Type = (int)eProperty.Skill_Arboreal;
-
-				i.Bonus3 = 21;
-				i.Bonus3Type = (int)eProperty.MaxHealth;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int)eResist.Thrust;
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Skill_Arboreal, eProperty.MaxHealth, eProperty.Resist_Thrust }, new []{ 18, 4, 21, 8 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 
 				AnimistEpicHelm = i;
@@ -800,19 +651,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 10;
-				i.Bonus1Type = (int)eStat.DEX;
-
-				i.Bonus2 = 9;
-				i.Bonus2Type = (int)eStat.INT;
-
-				i.Bonus3 = 4;
-				i.Bonus3Type = (int)eProperty.Skill_Creeping;
-
-				i.Bonus4 = 30;
-				i.Bonus4Type = (int)eProperty.MaxHealth;
+				i.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Intelligence, eProperty.Skill_Creeping, eProperty.MaxHealth }, new []{ 10, 9, 4, 30 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				AnimistEpicGloves = i;
 
@@ -840,19 +681,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 12;
-				i.Bonus1Type = (int)eStat.DEX;
-
-				i.Bonus2 = 30;
-				i.Bonus2Type = (int)eProperty.MaxHealth;
-
-				i.Bonus3 = 6;
-				i.Bonus3Type = (int)eProperty.MaxMana;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int)eResist.Body;
+				i.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.MaxHealth, eProperty.MaxMana, eProperty.Resist_Body }, new []{ 12, 30, 6, 8 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				AnimistEpicVest = i;
 
@@ -880,19 +711,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 16;
-				i.Bonus1Type = (int)eStat.CON;
-
-				i.Bonus2 = 15;
-				i.Bonus2Type = (int)eStat.DEX;
-
-				i.Bonus3 = 10;
-				i.Bonus3Type = (int)eResist.Cold;
-
-				i.Bonus4 = 10;
-				i.Bonus4Type = (int)eResist.Body;
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.Resist_Cold, eProperty.Resist_Body }, new []{ 16, 15, 10, 10 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				AnimistEpicLegs = i;
 
@@ -920,19 +741,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 10;
-				i.Bonus1Type = (int)eStat.DEX;
-
-				i.Bonus2 = 27;
-				i.Bonus2Type = (int)eProperty.MaxHealth;
-
-				i.Bonus3 = 10;
-				i.Bonus3Type = (int)eStat.INT;
-
-				i.Bonus4 = 4;
-				i.Bonus4Type = (int)eProperty.Skill_Mana;
+				i.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.MaxHealth, eProperty.Intelligence, eProperty.Skill_Mana }, new []{ 10, 27, 10, 4 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				AnimistEpicArms = i;
 
@@ -959,19 +770,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 12;
-				i.Bonus1Type = (int)eStat.CON;
-
-				i.Bonus2 = 12;
-				i.Bonus2Type = (int)eStat.DEX;
-
-				i.Bonus3 = 12;
-				i.Bonus3Type = (int)eResist.Matter;
-
-				i.Bonus4 = 27;
-				i.Bonus4Type = (int)eProperty.MaxHealth;
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.Resist_Matter, eProperty.MaxHealth }, new []{ 12, 12, 12, 27 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				MentalistEpicBoots = i;
 
@@ -1000,19 +801,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 18;
-				i.Bonus1Type = (int)eStat.INT;
-
-				i.Bonus2 = 4;
-				i.Bonus2Type = (int)eProperty.Skill_Mentalism;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int)eResist.Thrust;
-
-				i.Bonus4 = 21;
-				i.Bonus4Type = (int)eProperty.MaxHealth;
+				i.SetTemplateBonuses(new []{ eProperty.Intelligence, eProperty.Skill_Mentalism, eProperty.Resist_Thrust, eProperty.MaxHealth }, new []{ 18, 4, 8, 21 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				MentalistEpicHelm = i;
 
@@ -1041,19 +832,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 30;
-				i.Bonus1Type = (int)eProperty.MaxHealth;
-
-				i.Bonus2 = 4;
-				i.Bonus2Type = (int)eProperty.Skill_Light;
-
-				i.Bonus3 = 9;
-				i.Bonus3Type = (int)eStat.INT;
-
-				i.Bonus4 = 10;
-				i.Bonus4Type = (int)eStat.DEX;
+				i.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Skill_Light, eProperty.Intelligence, eProperty.Dexterity }, new []{ 30, 4, 9, 10 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				MentalistEpicGloves = i;
 
@@ -1081,19 +862,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 12;
-				i.Bonus1Type = (int)eStat.DEX;
-
-				i.Bonus2 = 8;
-				i.Bonus2Type = (int)eResist.Body;
-
-				i.Bonus3 = 30;
-				i.Bonus3Type = (int)eProperty.MaxHealth;
-
-				i.Bonus4 = 6;
-				i.Bonus4Type = (int)eProperty.MaxMana;
+				i.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Resist_Body, eProperty.MaxHealth, eProperty.MaxMana }, new []{ 12, 8, 30, 6 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				MentalistEpicVest = i;
 
@@ -1121,19 +892,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 16;
-				i.Bonus1Type = (int)eStat.CON;
-
-				i.Bonus2 = 15;
-				i.Bonus2Type = (int)eStat.DEX;
-
-				i.Bonus3 = 10;
-				i.Bonus3Type = (int)eResist.Cold;
-
-				i.Bonus4 = 10;
-				i.Bonus4Type = (int)eResist.Body;
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.Resist_Cold, eProperty.Resist_Body }, new []{ 16, 15, 10, 10 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				MentalistEpicLegs = i;
 
@@ -1161,19 +922,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 10;
-				i.Bonus1Type = (int)eStat.DEX;
-
-				i.Bonus2 = 27;
-				i.Bonus2Type = (int)eProperty.MaxHealth;
-
-				i.Bonus3 = 10;
-				i.Bonus3Type = (int)eStat.INT;
-
-				i.Bonus4 = 4;
-				i.Bonus4Type = (int)eProperty.Skill_Mana;
+				i.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.MaxHealth, eProperty.Intelligence, eProperty.Skill_Mana }, new []{ 10, 27, 10, 4 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				MentalistEpicArms = i;
 
@@ -1200,19 +951,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 12;
-				i.Bonus1Type = (int)eStat.CON;
-
-				i.Bonus2 = 10;
-				i.Bonus2Type = (int)eResist.Matter;
-
-				i.Bonus3 = 10;
-				i.Bonus3Type = (int)eResist.Heat;
-
-				i.Bonus4 = 33;
-				i.Bonus4Type = (int)eProperty.MaxHealth;
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Resist_Matter, eProperty.Resist_Heat, eProperty.MaxHealth }, new []{ 12, 10, 10, 33 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				ValewalkerEpicBoots = i;
 
@@ -1241,19 +982,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 3;
-				i.Bonus1Type = (int)eProperty.Skill_Arboreal;
-
-				i.Bonus2 = 6;
-				i.Bonus2Type = (int)eProperty.MaxMana;
-
-				i.Bonus3 = 12;
-				i.Bonus3Type = (int)eStat.CON;
-
-				i.Bonus4 = 12;
-				i.Bonus4Type = (int)eStat.INT;
+				i.SetTemplateBonuses(new []{ eProperty.Skill_Arboreal, eProperty.MaxMana, eProperty.Constitution, eProperty.Intelligence }, new []{ 3, 6, 12, 12 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				ValewalkerEpicHelm = i;
 
@@ -1282,19 +1013,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 3;
-				i.Bonus1Type = (int)eProperty.Skill_Parry;
-
-				i.Bonus2 = 15;
-				i.Bonus2Type = (int)eStat.CON;
-
-				i.Bonus3 = 15;
-				i.Bonus3Type = (int)eStat.DEX;
-
-				i.Bonus4 = 10;
-				i.Bonus4Type = (int)eResist.Crush;
+				i.SetTemplateBonuses(new []{ eProperty.Skill_Parry, eProperty.Constitution, eProperty.Dexterity, eProperty.Resist_Crush }, new []{ 3, 15, 15, 10 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				ValewalkerEpicGloves = i;
 
@@ -1322,19 +1043,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 13;
-				i.Bonus1Type = (int)eStat.INT;
-
-				i.Bonus2 = 13;
-				i.Bonus2Type = (int)eStat.STR;
-
-				i.Bonus3 = 4;
-				i.Bonus3Type = (int)eProperty.Skill_Arboreal;
-
-				i.Bonus4 = 10;
-				i.Bonus4Type = (int)eResist.Energy;
+				i.SetTemplateBonuses(new []{ eProperty.Intelligence, eProperty.Strength, eProperty.Skill_Arboreal, eProperty.Resist_Energy }, new []{ 13, 13, 4, 10 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				ValewalkerEpicVest = i;
 
@@ -1362,19 +1073,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 15;
-				i.Bonus1Type = (int)eStat.DEX;
-
-				i.Bonus2 = 15;
-				i.Bonus2Type = (int)eStat.CON;
-
-				i.Bonus3 = 10;
-				i.Bonus3Type = (int)eResist.Crush;
-
-				i.Bonus4 = 18;
-				i.Bonus4Type = (int)eProperty.MaxHealth;
+				i.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Constitution, eProperty.Resist_Crush, eProperty.MaxHealth }, new []{ 15, 15, 10, 18 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				ValewalkerEpicLegs = i;
 
@@ -1402,19 +1103,9 @@ namespace DOL.GS.Quests.Hibernia
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 3;
-				i.Bonus1Type = (int)eProperty.Skill_Scythe;
-
-				i.Bonus2 = 10;
-				i.Bonus2Type = (int)eStat.DEX;
-
-				i.Bonus3 = 10;
-				i.Bonus3Type = (int)eStat.INT;
-
-				i.Bonus4 = 33;
-				i.Bonus4Type = (int)eProperty.MaxHealth;
+				i.SetTemplateBonuses(new []{ eProperty.Skill_Scythe, eProperty.Dexterity, eProperty.Intelligence, eProperty.MaxHealth }, new []{ 3, 10, 10, 33 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				ValewalkerEpicArms = i;
 
@@ -1450,19 +1141,9 @@ namespace DOL.GS.Quests.Hibernia
 				 *   Hits: 24 pts
 				 */
 
-				i.Bonus1 = 12;
-				i.Bonus1Type = (int)eStat.STR;
-
-				i.Bonus2 = 15;
-				i.Bonus2Type = (int)eStat.DEX;
-
-				i.Bonus3 = 10;
-				i.Bonus3Type = (int)eResist.Thrust;
-
-				i.Bonus4 = 24;
-				i.Bonus4Type = (int)eProperty.MaxHealth;
+				i.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Dexterity, eProperty.Resist_Thrust, eProperty.MaxHealth }, new []{ 12, 15, 10, 24 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				VampiirEpicBoots = i;
 
@@ -1498,19 +1179,9 @@ namespace DOL.GS.Quests.Hibernia
 				 *   Hits: 30 pts
 				 */
 
-				i.Bonus1 = 6;
-				i.Bonus1Type = (int)eStat.STR;
-
-				i.Bonus2 = 16;
-				i.Bonus2Type = (int)eStat.CON;
-
-				i.Bonus3 = 6;
-				i.Bonus3Type = (int)eStat.DEX;
-
-				i.Bonus4 = 30;
-				i.Bonus4Type = (int)eProperty.MaxHealth;
+				i.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Constitution, eProperty.Dexterity, eProperty.MaxHealth }, new []{ 6, 16, 6, 30 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				VampiirEpicHelm = i;
 
@@ -1546,19 +1217,9 @@ namespace DOL.GS.Quests.Hibernia
 				 *   Shadow Mastery: +5 pts
 				 */
 
-				i.Bonus1 = 12;
-				i.Bonus1Type = (int)eStat.DEX;
-
-				i.Bonus2 = 13;
-				i.Bonus2Type = (int)eStat.QUI;
-
-				i.Bonus3 = 2;
-				i.Bonus3Type = (int)eProperty.Skill_Dementia;
-
-				i.Bonus4 = 5;
-				i.Bonus4Type = (int)eProperty.Skill_ShadowMastery;
+				i.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Quickness, eProperty.Skill_Dementia, eProperty.Skill_ShadowMastery }, new []{ 12, 13, 2, 5 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				VampiirEpicGloves = i;
 
@@ -1593,19 +1254,9 @@ namespace DOL.GS.Quests.Hibernia
 				 *   Hits: 30 pts
 				 */
 
-				i.Bonus1 = 10;
-				i.Bonus1Type = (int)eStat.STR;
-
-				i.Bonus2 = 10;
-				i.Bonus2Type = (int)eStat.DEX;
-
-				i.Bonus3 = 10;
-				i.Bonus3Type = (int)eStat.QUI;
-
-				i.Bonus4 = 30;
-				i.Bonus4Type = (int)eProperty.MaxHealth;
+				i.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Dexterity, eProperty.Quickness, eProperty.MaxHealth }, new []{ 10, 10, 10, 30 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				VampiirEpicVest = i;
 
@@ -1640,19 +1291,9 @@ namespace DOL.GS.Quests.Hibernia
 				 *   Slash Resist: 10%
 				 */
 
-				i.Bonus1 = 16;
-				i.Bonus1Type = (int)eStat.CON ;
-
-				i.Bonus2 = 15;
-				i.Bonus2Type = (int)eStat.DEX;
-
-				i.Bonus3 = 10;
-				i.Bonus3Type = (int)eResist.Crush;
-
-				i.Bonus4 = 10;
-				i.Bonus4Type = (int)eResist.Slash;
+				i.SetTemplateBonuses(new []{ eProperty.Constitution , eProperty.Dexterity, eProperty.Resist_Crush, eProperty.Resist_Slash }, new []{ 16, 15, 10, 10 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				VampiirEpicLegs = i;
 
@@ -1687,19 +1328,9 @@ namespace DOL.GS.Quests.Hibernia
 				 *   Vampiiric Embrace: +4 pts
 				 */
 
-				i.Bonus1 = 15;
-				i.Bonus1Type = (int)eStat.STR;
-
-				i.Bonus2 = 15;
-				i.Bonus2Type = (int)eStat.DEX;
-
-				i.Bonus3 = 6;
-				i.Bonus3Type = (int)eResist.Cold;
-
-				i.Bonus4 = 4;
-				i.Bonus4Type = (int)eProperty.Skill_VampiiricEmbrace;
+				i.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Dexterity, eProperty.Resist_Cold, eProperty.Skill_VampiiricEmbrace }, new []{ 15, 15, 6, 4 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				VampiirEpicArms = i;
 
@@ -1737,26 +1368,10 @@ namespace DOL.GS.Quests.Hibernia
 				 * hit cap 40
 				 */
 
-				i.Bonus1 = 18;
-				i.Bonus1Type = (int)eStat.INT;
-
-				i.Bonus2 = 6;
-				i.Bonus2Type = (int)eResist.Cold;
-
-				i.Bonus3 = 40;
-				i.Bonus3Type = (int)eProperty.MaxHealth;
-
-				i.Bonus4 = 6;
-				i.Bonus4Type = (int)eResist.Heat;
-
-				i.Bonus5 = 5;
-				i.Bonus5Type = (int)eProperty.IntCapBonus;
-
-				i.Bonus6 = 40;
-				i.Bonus6Type = (int)eProperty.MaxHealthCapBonus;
+				i.SetTemplateBonuses(new []{ eProperty.Intelligence, eProperty.Resist_Cold, eProperty.MaxHealth, eProperty.Resist_Heat, eProperty.IntCapBonus, eProperty.MaxHealthCapBonus }, new []{ 18, 6, 40, 6, 5, 40 });
 
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				BainsheeEpicBoots = i;
 
@@ -1794,26 +1409,9 @@ namespace DOL.GS.Quests.Hibernia
 				 *   Constitution attribute cap: 5
 				 */
 
-				i.Bonus1 = 18;
-				i.Bonus1Type = (int)eStat.CON;
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Resist_Body, eProperty.MaxHealth, eProperty.Resist_Energy, eProperty.MaxHealthCapBonus, eProperty.ConCapBonus }, new []{ 18, 6, 40, 6, 40, 5 });
 
-				i.Bonus2 = 6;
-				i.Bonus2Type = (int)eResist.Body;
-
-				i.Bonus3 = 40;
-				i.Bonus3Type = (int)eProperty.MaxHealth;
-
-				i.Bonus4 = 6;
-				i.Bonus4Type = (int)eResist.Energy;
-
-				i.Bonus5 = 40;
-				i.Bonus4Type = (int)eProperty.MaxHealthCapBonus;
-
-				i.Bonus6 = 5;
-				i.Bonus4Type = (int)eProperty.ConCapBonus;
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.AddQuestObjectToDatabase();
 				BainsheeEpicHelm = i;
 
 			}
@@ -1850,26 +1448,10 @@ namespace DOL.GS.Quests.Hibernia
 				 *   Power Pool: 6%
 				 */
 
-				i.Bonus1 = 18;
-				i.Bonus1Type = (int)eStat.DEX;
-
-				i.Bonus2 = 6;
-				i.Bonus2Type = (int)eResist.Matter;
-
-				i.Bonus3 = 6;
-				i.Bonus3Type = (int)eResist.Spirit;
-
-				i.Bonus4 = 6;
-				i.Bonus4Type = (int)eProperty.MaxMana;
-
-				i.Bonus5 = 5;
-				i.Bonus5Type = (int)eProperty.DexCapBonus;
-
-				i.Bonus6 = 6;
-				i.Bonus6Type = (int)eProperty.PowerPool;
+				i.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Resist_Matter, eProperty.Resist_Spirit, eProperty.MaxMana, eProperty.DexCapBonus, eProperty.PowerPool }, new []{ 18, 6, 6, 6, 5, 6 });
 
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				BainsheeEpicGloves = i;
 
@@ -1906,25 +1488,9 @@ namespace DOL.GS.Quests.Hibernia
 				 *   Hit Points bonus cap: 40
 				 */
 
-				i.Bonus1 = 15;
-				i.Bonus1Type = (int)eStat.INT;
-
-				i.Bonus2 = 7;
-				i.Bonus2Type = (int)eResist.Crush;
-
-				i.Bonus3 = 40;
-				i.Bonus3Type = (int)eProperty.MaxHealth;
-
-				i.Bonus4 = 3;
-				i.Bonus4Type = (int)eProperty.AllMagicSkills;
-
-				i.Bonus5 = 5;
-				i.Bonus5Type = (int)eProperty.IntCapBonus;
-
-				i.Bonus6 = 40;
-				i.Bonus6Type = (int)eProperty.MaxHealthCapBonus;
+				i.SetTemplateBonuses(new []{ eProperty.Intelligence, eProperty.Resist_Crush, eProperty.MaxHealth, eProperty.AllMagicSkills, eProperty.IntCapBonus, eProperty.MaxHealthCapBonus }, new []{ 15, 7, 40, 3, 5, 40 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				BainsheeEpicVest = i;
 
@@ -1961,25 +1527,9 @@ namespace DOL.GS.Quests.Hibernia
 				 *   Power bonus cap: 6
 				 */
 
-				i.Bonus1 = 15;
-				i.Bonus1Type = (int)eStat.CON;
-
-				i.Bonus2 = 7;
-				i.Bonus2Type = (int)eResist.Thrust;
-
-				i.Bonus3 = 6;
-				i.Bonus3Type = (int)eProperty.PowerPool;
-
-				i.Bonus4 = 5;
-				i.Bonus4Type = (int)eProperty.IntCapBonus;
-
-				i.Bonus5 = 5;
-				i.Bonus5Type = (int)eProperty.ConCapBonus;
-
-				i.Bonus6 = 6;
-				i.Bonus6Type = (int)eProperty.PowerPoolCapBonus;
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Resist_Thrust, eProperty.PowerPool, eProperty.IntCapBonus, eProperty.ConCapBonus, eProperty.PowerPoolCapBonus }, new []{ 15, 7, 6, 5, 5, 6 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				BainsheeEpicLegs = i;
 
@@ -2016,25 +1566,9 @@ namespace DOL.GS.Quests.Hibernia
 				 *   Power bonus cap: 6
 				 */
 
-				i.Bonus1 = 15;
-				i.Bonus1Type = (int)eStat.DEX;
-
-				i.Bonus2 = 7;
-				i.Bonus2Type = (int)eResist.Slash;
-
-				i.Bonus3 = 3;
-				i.Bonus3Type = (int)eProperty.AllMagicSkills;
-
-				i.Bonus4 = 6;
-				i.Bonus4Type = (int)eProperty.PowerPool;
-
-				i.Bonus5 = 7;
-				i.Bonus5Type = (int)eProperty.DexCapBonus;
-
-				i.Bonus6 = 6;
-				i.Bonus6Type = (int)eProperty.PowerPoolCapBonus;
+				i.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Resist_Slash, eProperty.AllMagicSkills, eProperty.PowerPool, eProperty.DexCapBonus, eProperty.PowerPoolCapBonus }, new []{ 15, 7, 3, 6, 7, 6 });
 				{
-					GameServer.Database.AddObject(i);
+					i.AddQuestObjectToDatabase();
 				}
 				BainsheeEpicArms = i;
 

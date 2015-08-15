@@ -139,8 +139,8 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					VikingKreimhilde.SaveIntoDatabase();
+				
+				VikingKreimhilde.AddQuestObjectToDatabase();
 					
 				VikingKreimhilde.AddToWorld();
 				
@@ -175,35 +175,13 @@ namespace DOL.GS.Quests.Midgard
 				silverringofhealth.IsTradable = false;
 				silverringofhealth.CanDropAsLoot = false;
 				silverringofhealth.Color = 0;
-				silverringofhealth.Bonus = 5; // default bonus				
-				silverringofhealth.Bonus1 = 12;
-				silverringofhealth.Bonus1Type = (int) 10;
-				silverringofhealth.Bonus2 = 0;
-				silverringofhealth.Bonus2Type = (int) 0;
-				silverringofhealth.Bonus3 = 0;
-				silverringofhealth.Bonus3Type = (int) 0;
-				silverringofhealth.Bonus4 = 0;
-				silverringofhealth.Bonus4Type = (int) 0;
-				silverringofhealth.Bonus5 = 0;
-				silverringofhealth.Bonus5Type = (int) 0;
-				silverringofhealth.Bonus6 = 0;
-				silverringofhealth.Bonus6Type = (int) 0;
-				silverringofhealth.Bonus7 = 0;
-				silverringofhealth.Bonus7Type = (int) 0;
-				silverringofhealth.Bonus8 = 0;
-				silverringofhealth.Bonus8Type = (int) 0;
-				silverringofhealth.Bonus9 = 0;
-				silverringofhealth.Bonus9Type = (int) 0;
-				silverringofhealth.Bonus10 = 0;
-				silverringofhealth.Bonus10Type = (int) 0;
-				silverringofhealth.ExtraBonus = 0;
-				silverringofhealth.ExtraBonusType = (int) 0;
+				silverringofhealth.Bonus = 5; // default bonus
+				silverringofhealth.ClearTemplateBonuses();
+				silverringofhealth.SetTemplateBonuses(eProperty.MaxHealth, 12);
 				silverringofhealth.Effect = 0;
 				silverringofhealth.Emblem = 0;
-				silverringofhealth.Charges = 0;
-				silverringofhealth.MaxCharges = 0;
-				silverringofhealth.SpellID = 0;
-				silverringofhealth.ProcSpellID = 0;
+				silverringofhealth.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				silverringofhealth.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				silverringofhealth.Type_Damage = 0;
 				silverringofhealth.Realm = 0;
 				silverringofhealth.MaxCount = 1;
@@ -217,12 +195,8 @@ namespace DOL.GS.Quests.Midgard
 				silverringofhealth.PoisonCharges = 0;
 				silverringofhealth.PoisonMaxCharges = 0;
 				silverringofhealth.PoisonSpellID = 0;
-				silverringofhealth.ProcSpellID1 = 0;
-				silverringofhealth.SpellID1 = 0;
-				silverringofhealth.MaxCharges1 = 0;
-				silverringofhealth.Charges1 = 0;
 				
-				GameServer.Database.AddObject(silverringofhealth);
+				silverringofhealth.AddQuestObjectToDatabase();
 				}
 			blackmaulercubpelt = GameServer.Database.FindObjectByKey<ItemTemplate>("blackmaulercubpelt");
 			if (blackmaulercubpelt == null)
@@ -245,34 +219,11 @@ namespace DOL.GS.Quests.Midgard
 				blackmaulercubpelt.CanDropAsLoot = false;
 				blackmaulercubpelt.Color = 0;
 				blackmaulercubpelt.Bonus = 35; // default bonus				
-				blackmaulercubpelt.Bonus1 = 0;
-				blackmaulercubpelt.Bonus1Type = (int) 0;
-				blackmaulercubpelt.Bonus2 = 0;
-				blackmaulercubpelt.Bonus2Type = (int) 0;
-				blackmaulercubpelt.Bonus3 = 0;
-				blackmaulercubpelt.Bonus3Type = (int) 0;
-				blackmaulercubpelt.Bonus4 = 0;
-				blackmaulercubpelt.Bonus4Type = (int) 0;
-				blackmaulercubpelt.Bonus5 = 0;
-				blackmaulercubpelt.Bonus5Type = (int) 0;
-				blackmaulercubpelt.Bonus6 = 0;
-				blackmaulercubpelt.Bonus6Type = (int) 0;
-				blackmaulercubpelt.Bonus7 = 0;
-				blackmaulercubpelt.Bonus7Type = (int) 0;
-				blackmaulercubpelt.Bonus8 = 0;
-				blackmaulercubpelt.Bonus8Type = (int) 0;
-				blackmaulercubpelt.Bonus9 = 0;
-				blackmaulercubpelt.Bonus9Type = (int) 0;
-				blackmaulercubpelt.Bonus10 = 0;
-				blackmaulercubpelt.Bonus10Type = (int) 0;
-				blackmaulercubpelt.ExtraBonus = 0;
-				blackmaulercubpelt.ExtraBonusType = (int) 0;
+				blackmaulercubpelt.ClearTemplateBonuses();
 				blackmaulercubpelt.Effect = 0;
 				blackmaulercubpelt.Emblem = 0;
-				blackmaulercubpelt.Charges = 0;
-				blackmaulercubpelt.MaxCharges = 0;
-				blackmaulercubpelt.SpellID = 0;
-				blackmaulercubpelt.ProcSpellID = 0;
+				blackmaulercubpelt.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				blackmaulercubpelt.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				blackmaulercubpelt.Type_Damage = 0;
 				blackmaulercubpelt.Realm = 0;
 				blackmaulercubpelt.MaxCount = 1;
@@ -286,12 +237,8 @@ namespace DOL.GS.Quests.Midgard
 				blackmaulercubpelt.PoisonCharges = 0;
 				blackmaulercubpelt.PoisonMaxCharges = 0;
 				blackmaulercubpelt.PoisonSpellID = 0;
-				blackmaulercubpelt.ProcSpellID1 = 0;
-				blackmaulercubpelt.SpellID1 = 0;
-				blackmaulercubpelt.MaxCharges1 = 0;
-				blackmaulercubpelt.Charges1 = 0;
 				
-				GameServer.Database.AddObject(blackmaulercubpelt);
+				blackmaulercubpelt.AddQuestObjectToDatabase();
 				}
 			
 

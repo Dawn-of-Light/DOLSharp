@@ -58,7 +58,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool LoadFromDatabase(string inventoryID)
 		{
-			lock (m_items)
+			lock (m_lockItems)
 			{
 				try
 				{
@@ -77,11 +77,6 @@ namespace DOL.GS
 						try
 						{
 							var itemSlot = (eInventorySlot)item.SlotPosition;
-
-							if (item.CanUseEvery > 0)
-							{
-								item.SetCooldown();
-							}
 
 							if (GetValidInventorySlot((eInventorySlot)item.SlotPosition) == eInventorySlot.Invalid)
 							{
@@ -194,7 +189,7 @@ namespace DOL.GS
 		/// <returns>success</returns>
 		public override bool SaveIntoDatabase(string inventoryID)
 		{
-			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_lockItems) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				try
 				{
@@ -589,7 +584,7 @@ namespace DOL.GS
 			InventoryItem fromItem, toItem;
 			eInventorySlot[] updatedSlots;
 
-			lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+			lock (m_lockItems) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 			{
 				fromSlot = GetValidInventorySlot(fromSlot);
 				toSlot = GetValidInventorySlot(toSlot);
@@ -1404,7 +1399,7 @@ namespace DOL.GS
 			{
 				int weight = 0;
 
-				lock (m_items) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
+				lock (m_lockItems) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
 				{
 					InventoryItem item;
 

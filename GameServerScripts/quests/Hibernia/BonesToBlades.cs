@@ -146,7 +146,7 @@ namespace DOL.GS.Quests.Hibernia
 				questGiver.Heading = 2594;
 
 				if (SAVE_INTO_DATABASE)
-					questGiver.SaveIntoDatabase();
+					questGiver.AddQuestObjectToDatabase();
 
 				questGiver.AddToWorld();
 			}
@@ -184,7 +184,7 @@ namespace DOL.GS.Quests.Hibernia
 				questTarget.Heading = 2468;
 
 				if (SAVE_INTO_DATABASE)
-					questTarget.SaveIntoDatabase();
+					questTarget.AddQuestObjectToDatabase();
 
 				questTarget.AddToWorld();
 			}
@@ -216,34 +216,11 @@ namespace DOL.GS.Quests.Hibernia
 				armBone.IsTradable = false;
 				armBone.Color = 0;
 				armBone.Bonus = 0; // default bonus				
-				armBone.Bonus1 = 0;
-				armBone.Bonus1Type = (int)0;
-				armBone.Bonus2 = 0;
-				armBone.Bonus2Type = (int)0;
-				armBone.Bonus3 = 0;
-				armBone.Bonus3Type = (int)0;
-				armBone.Bonus4 = 0;
-				armBone.Bonus4Type = (int)0;
-				armBone.Bonus5 = 0;
-				armBone.Bonus5Type = (int)0;
-				armBone.Bonus6 = 0;
-				armBone.Bonus6Type = (int)0;
-				armBone.Bonus7 = 0;
-				armBone.Bonus7Type = (int)0;
-				armBone.Bonus8 = 0;
-				armBone.Bonus8Type = (int)0;
-				armBone.Bonus9 = 0;
-				armBone.Bonus9Type = (int)0;
-				armBone.Bonus10 = 0;
-				armBone.Bonus10Type = (int)0;
-				armBone.ExtraBonus = 0;
-				armBone.ExtraBonusType = (int)0;
+				armBone.ClearTemplateBonuses();
 				armBone.Effect = 0;
 				armBone.Emblem = 0;
-				armBone.Charges = 0;
-				armBone.MaxCharges = 0;
-				armBone.SpellID = 0;
-				armBone.ProcSpellID = 0;
+				armBone.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				armBone.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				armBone.Type_Damage = 0;
 				armBone.Realm = 0;
 				armBone.MaxCount = 1;
@@ -257,16 +234,12 @@ namespace DOL.GS.Quests.Hibernia
 				armBone.PoisonCharges = 0;
 				armBone.PoisonMaxCharges = 0;
 				armBone.PoisonSpellID = 0;
-				armBone.ProcSpellID1 = 0;
-				armBone.SpellID1 = 0;
-				armBone.MaxCharges1 = 0;
-				armBone.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(armBone);
+					armBone.AddQuestObjectToDatabase();
 			}
 
 			carvedBoneHilt = GameServer.Database.FindObjectByKey<ItemTemplate>("BonesToBlades-carvedBoneHilts");
@@ -287,34 +260,11 @@ namespace DOL.GS.Quests.Hibernia
 				carvedBoneHilt.IsTradable = false;
 				carvedBoneHilt.Color = 0;
 				carvedBoneHilt.Bonus = 0; // default bonus				
-				carvedBoneHilt.Bonus1 = 0;
-				carvedBoneHilt.Bonus1Type = (int)0;
-				carvedBoneHilt.Bonus2 = 0;
-				carvedBoneHilt.Bonus2Type = (int)0;
-				carvedBoneHilt.Bonus3 = 0;
-				carvedBoneHilt.Bonus3Type = (int)0;
-				carvedBoneHilt.Bonus4 = 0;
-				carvedBoneHilt.Bonus4Type = (int)0;
-				carvedBoneHilt.Bonus5 = 0;
-				carvedBoneHilt.Bonus5Type = (int)0;
-				carvedBoneHilt.Bonus6 = 0;
-				carvedBoneHilt.Bonus6Type = (int)0;
-				carvedBoneHilt.Bonus7 = 0;
-				carvedBoneHilt.Bonus7Type = (int)0;
-				carvedBoneHilt.Bonus8 = 0;
-				carvedBoneHilt.Bonus8Type = (int)0;
-				carvedBoneHilt.Bonus9 = 0;
-				carvedBoneHilt.Bonus9Type = (int)0;
-				carvedBoneHilt.Bonus10 = 0;
-				carvedBoneHilt.Bonus10Type = (int)0;
-				carvedBoneHilt.ExtraBonus = 0;
-				carvedBoneHilt.ExtraBonusType = (int)0;
+				carvedBoneHilt.ClearTemplateBonuses();
 				carvedBoneHilt.Effect = 0;
 				carvedBoneHilt.Emblem = 0;
-				carvedBoneHilt.Charges = 0;
-				carvedBoneHilt.MaxCharges = 0;
-				carvedBoneHilt.SpellID = 0;
-				carvedBoneHilt.ProcSpellID = 0;
+				carvedBoneHilt.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				carvedBoneHilt.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				carvedBoneHilt.Type_Damage = 0;
 				carvedBoneHilt.Realm = 0;
 				carvedBoneHilt.MaxCount = 1;
@@ -328,16 +278,12 @@ namespace DOL.GS.Quests.Hibernia
 				carvedBoneHilt.PoisonCharges = 0;
 				carvedBoneHilt.PoisonMaxCharges = 0;
 				carvedBoneHilt.PoisonSpellID = 0;
-				carvedBoneHilt.ProcSpellID1 = 0;
-				carvedBoneHilt.SpellID1 = 0;
-				carvedBoneHilt.MaxCharges1 = 0;
-				carvedBoneHilt.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(carvedBoneHilt);
+					carvedBoneHilt.AddQuestObjectToDatabase();
 			}
 			#endregion
 

@@ -90,7 +90,7 @@ namespace DOL.GS
 					InventoryItem item;
 					if (Inventory != null &&
 					    (item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
-						item.ProcSpellID = (int)Procs.Stun;
+						item.SetTemplateProcSpells((int)Procs.Stun, 0);
 					break;
 				case "reanimated servant" :
 					LoadEquipmentTemplate("reanimated_servant");
@@ -102,7 +102,7 @@ namespace DOL.GS
 					LoadEquipmentTemplate("barehand_weapon");
 					if (Inventory != null &&
 					    (item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
-						item.ProcSpellID = (int)Procs.Poison;
+						item.SetTemplateProcSpells((int)Procs.Poison, 0);
 					break;
 				case "abomination":
 					LoadEquipmentTemplate("abomination_fiery_sword");
@@ -440,7 +440,7 @@ namespace DOL.GS
 				}
 
 				m_runningSpellHandler = spellhandler;
-				spellhandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+				spellhandler.CastingCompleteEvent += OnAfterSpellCastSequence;
 				spellhandler.CastSpell();
 			}
 			else
@@ -463,7 +463,7 @@ namespace DOL.GS
 			if (m_runningSpellHandler != null)
 			{
 				//prevent from relaunch
-				m_runningSpellHandler.CastingCompleteEvent -= new CastingCompleteCallback(OnAfterSpellCastSequence);
+				m_runningSpellHandler.CastingCompleteEvent -= OnAfterSpellCastSequence;
 				m_runningSpellHandler = null;
 			}
 
@@ -564,7 +564,7 @@ namespace DOL.GS
 				if (spell.SpellType == "Taunt" && spell.Level <= Level)
 					tauntSpell = spell;
 
-			if (tauntSpell != null && GetSkillDisabledDuration(tauntSpell) == 0)
+			if (tauntSpell != null && this.GetSpellDisabledDurationFromSharedTimer(tauntSpell) == 0)
 				CastSpell(tauntSpell, chantsLine);
 		}
 
@@ -618,7 +618,7 @@ namespace DOL.GS
 					if (Inventory != null &&
 					    (item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
 					{
-						item.ProcSpellID = (int)Procs.Disease;
+						item.SetTemplateProcSpells((int)Procs.Disease, 0);
 						SayTo(owner, eChatLoc.CL_SystemWindow, "As you command.");
 					}
 					return true;
@@ -630,7 +630,7 @@ namespace DOL.GS
 					if (Inventory != null &&
 					    (item = Inventory.GetItem(eInventorySlot.RightHandWeapon)) != null)
 					{
-						item.ProcSpellID = (int)Procs.Poison;
+						item.SetTemplateProcSpells((int)Procs.Poison, 0);
 						SayTo(owner, eChatLoc.CL_SystemWindow, "As you command.");
 					}
 					return true;
@@ -686,15 +686,15 @@ namespace DOL.GS
 						{
 							case "abomination_fiery_sword":
 							case "abomination_flaming_mace":
-								item.ProcSpellID = (int)Procs.Heat;
+								item.SetTemplateProcSpells((int)Procs.Heat, 0);
 								break;
 							case "abomination_icy_sword":
 							case "abomination_frozen_mace":
-								item.ProcSpellID = (int)Procs.Cold;
+								item.SetTemplateProcSpells((int)Procs.Cold, 0);
 								break;
 							case "abomination_poisonous_sword":
 							case "abomination_venomous_mace":
-								item.ProcSpellID = (int)Procs.Poison;
+								item.SetTemplateProcSpells((int)Procs.Poison, 0);
 								break;
 						}
 						SwitchWeapon(eActiveWeaponSlot.TwoHanded);

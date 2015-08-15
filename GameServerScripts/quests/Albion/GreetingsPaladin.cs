@@ -71,20 +71,13 @@ namespace DOL.GS.Quests.Albion
 				standardDagger = CreateOneHand();
 				standardDagger.Id_nb = "standard_dagger_alb";
                 standardDagger.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.GreetingsPaladin.Init.Text1");
-				standardDagger.Bonus1 = 3;
-				standardDagger.Bonus1Type = (int)eProperty.Strength;
-				standardDagger.Bonus2 = 1;
-				standardDagger.Bonus2Type = (int)eProperty.Dexterity;
-				standardDagger.Bonus3 = 1;
-				standardDagger.Bonus3Type = (int)eProperty.Quickness;
-                standardDagger.Bonus4 = 1;
-                standardDagger.Bonus4Type = (int)eProperty.AllMeleeWeaponSkills;
+				standardDagger.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Dexterity, eProperty.Quickness, eProperty.AllMeleeWeaponSkills }, new []{ 3, 1, 1, 1 });
                 standardDagger.SPD_ABS = 23;
                 standardDagger.Type_Damage = 3;
                 standardDagger.Model = 25;
                 standardDagger.Object_Type = 4;
                 standardDagger.Item_Type = 11;
-                GameServer.Database.AddObject(standardDagger);
+                standardDagger.AddQuestObjectToDatabase();
 			}
 
             ItemTemplate standardSword = GameServer.Database.FindObjectByKey<ItemTemplate>("standard_sword_alb");
@@ -93,20 +86,13 @@ namespace DOL.GS.Quests.Albion
                 standardSword = CreateOneHand();
                 standardSword.Id_nb = "standard_sword_alb";
                 standardSword.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.GreetingsPaladin.Init.Text2");
-                standardSword.Bonus1 = 3;
-                standardSword.Bonus1Type = (int)eProperty.Strength;
-                standardSword.Bonus2 = 1;
-                standardSword.Bonus2Type = (int)eProperty.Dexterity;
-                standardSword.Bonus3 = 1;
-                standardSword.Bonus3Type = (int)eProperty.Quickness;
-                standardSword.Bonus4 = 1;
-                standardSword.Bonus4Type = (int)eProperty.AllMeleeWeaponSkills;
+                standardSword.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Dexterity, eProperty.Quickness, eProperty.AllMeleeWeaponSkills }, new []{ 3, 1, 1, 1 });
                 standardSword.SPD_ABS = 25;
                 standardSword.Object_Type = 3;
                 standardSword.Type_Damage = 2;
                 standardSword.Item_Type = 10;
                 standardSword.Model = 651;
-                GameServer.Database.AddObject(standardSword);
+                standardSword.AddQuestObjectToDatabase();
             }
 
             ItemTemplate standardHammer = GameServer.Database.FindObjectByKey<ItemTemplate>("standard_hammer_alb_str");
@@ -115,20 +101,13 @@ namespace DOL.GS.Quests.Albion
                 standardHammer = CreateOneHand();
                 standardHammer.Id_nb = "standard_hammer_alb_str";
                 standardHammer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.GreetingsPaladin.Init.Text3");
-                standardHammer.Bonus1 = 3;
-                standardHammer.Bonus1Type = (int)eProperty.Strength;
-                standardHammer.Bonus2 = 1;
-                standardHammer.Bonus2Type = (int)eProperty.Dexterity;
-                standardHammer.Bonus3 = 1;
-                standardHammer.Bonus3Type = (int)eProperty.Quickness;
-                standardHammer.Bonus4 = 1;
-                standardHammer.Bonus4Type = (int)eProperty.AllMeleeWeaponSkills;
+                standardHammer.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Dexterity, eProperty.Quickness, eProperty.AllMeleeWeaponSkills }, new []{ 3, 1, 1, 1 });
                 standardHammer.SPD_ABS = 26;
                 standardHammer.Object_Type = 2;
                 standardHammer.Type_Damage = 1;
                 standardHammer.Item_Type = 10;
                 standardHammer.Model = 12;
-                GameServer.Database.AddObject(standardHammer);
+                standardHammer.AddQuestObjectToDatabase();
             }
 
             ItemTemplate standardGreatSword = GameServer.Database.FindObjectByKey<ItemTemplate>("standard_great_sword_alb");
@@ -137,18 +116,11 @@ namespace DOL.GS.Quests.Albion
                 standardGreatSword = CreateTwoHanded();
                 standardGreatSword.Id_nb = "standard_great_sword_alb";
                 standardGreatSword.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.GreetingsPaladin.Init.Text4");
-                standardGreatSword.Bonus1 = 3;
-                standardGreatSword.Bonus1Type = (int)eProperty.Strength;
-                standardGreatSword.Bonus2 = 1;
-                standardGreatSword.Bonus2Type = (int)eProperty.Dexterity;
-                standardGreatSword.Bonus3 = 1;
-                standardGreatSword.Bonus3Type = (int)eProperty.Quickness;
-                standardGreatSword.Bonus4 = 1;
-                standardGreatSword.Bonus4Type = (int)eProperty.AllMeleeWeaponSkills;
+                standardGreatSword.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Dexterity, eProperty.Quickness, eProperty.AllMeleeWeaponSkills }, new []{ 3, 1, 1, 1 });
                 standardGreatSword.SPD_ABS = 28;
                 standardGreatSword.Type_Damage = 2;
                 standardGreatSword.Model = 7;
-                GameServer.Database.AddObject(standardGreatSword);
+                standardGreatSword.AddQuestObjectToDatabase();
             }
 
             ItemTemplate standardGreatHammer = GameServer.Database.FindObjectByKey<ItemTemplate>("standard_great_Hammer_alb");
@@ -157,18 +129,11 @@ namespace DOL.GS.Quests.Albion
                 standardGreatHammer = CreateTwoHanded();
                 standardGreatHammer.Id_nb = "standard_great_Hammer_alb";
                 standardGreatHammer.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.GreetingsPaladin.Init.Text5");
-                standardGreatHammer.Bonus1 = 3;
-                standardGreatHammer.Bonus1Type = (int)eProperty.Strength;
-                standardGreatHammer.Bonus2 = 1;
-                standardGreatHammer.Bonus2Type = (int)eProperty.Dexterity;
-                standardGreatHammer.Bonus3 = 1;
-                standardGreatHammer.Bonus3Type = (int)eProperty.Quickness;
-                standardGreatHammer.Bonus4 = 1;
-                standardGreatHammer.Bonus4Type = (int)eProperty.AllMeleeWeaponSkills;
+                standardGreatHammer.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Dexterity, eProperty.Quickness, eProperty.AllMeleeWeaponSkills }, new []{ 3, 1, 1, 1 });
                 standardGreatHammer.SPD_ABS = 28;
                 standardGreatHammer.Type_Damage = 1;
                 standardGreatHammer.Model = 17;
-                GameServer.Database.AddObject(standardGreatHammer);
+                standardGreatHammer.AddQuestObjectToDatabase();
             }
 
             ItemTemplate standardMattock = GameServer.Database.FindObjectByKey<ItemTemplate>("standard_mattock");
@@ -177,18 +142,11 @@ namespace DOL.GS.Quests.Albion
                 standardMattock = CreateTwoHanded();
                 standardMattock.Id_nb = "standard_mattock";
                 standardMattock.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.GreetingsPaladin.Init.Text6");
-                standardMattock.Bonus1 = 3;
-                standardMattock.Bonus1Type = (int)eProperty.Strength;
-                standardMattock.Bonus2 = 1;
-                standardMattock.Bonus2Type = (int)eProperty.Dexterity;
-                standardMattock.Bonus3 = 1;
-                standardMattock.Bonus3Type = (int)eProperty.Quickness;
-                standardMattock.Bonus4 = 1;
-                standardMattock.Bonus4Type = (int)eProperty.AllMeleeWeaponSkills;
+                standardMattock.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Dexterity, eProperty.Quickness, eProperty.AllMeleeWeaponSkills }, new []{ 3, 1, 1, 1 });
                 standardMattock.SPD_ABS = 28;
                 standardMattock.Type_Damage = 3;
                 standardMattock.Model = 16;
-                GameServer.Database.AddObject(standardMattock);
+                standardMattock.AddQuestObjectToDatabase();
             }
 			#endregion
 
@@ -306,7 +264,7 @@ namespace DOL.GS.Quests.Albion
                 //line if you rather not modify your database
 
                 if (SAVE_INTO_DATABASE)
-                    sirStrain.SaveIntoDatabase();
+                    sirStrain.AddQuestObjectToDatabase();
 
                 sirStrain.AddToWorld();
             }

@@ -99,16 +99,7 @@ namespace DOL.GS.Quests.Albion
 
 				RecruitsQuiltedBoots.DPS_AF = 6;
 				RecruitsQuiltedBoots.SPD_ABS = 0;
-				RecruitsQuiltedBoots.Bonus1 = 3;
-				RecruitsQuiltedBoots.Bonus1Type = (int)eProperty.Dexterity;
-				RecruitsQuiltedBoots.Bonus2 = 3;
-				RecruitsQuiltedBoots.Bonus2Type = (int)eProperty.Acuity;
-				RecruitsQuiltedBoots.Bonus3 = 1;
-				RecruitsQuiltedBoots.Bonus3Type = (int)eProperty.Constitution;
-				RecruitsQuiltedBoots.Bonus4 = 1;
-				RecruitsQuiltedBoots.Bonus4Type = (int)eProperty.Resist_Thrust;
-				RecruitsQuiltedBoots.Bonus5 = 1;
-				RecruitsQuiltedBoots.Bonus5Type = (int)eProperty.AllMagicSkills;
+				RecruitsQuiltedBoots.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Acuity, eProperty.Constitution, eProperty.Resist_Thrust, eProperty.AllMagicSkills }, new []{ 3, 3, 1, 1, 1 });
 
 				RecruitsQuiltedBoots.Quality = 100;
 				RecruitsQuiltedBoots.Condition = 50000;
@@ -121,7 +112,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(RecruitsQuiltedBoots);
+				RecruitsQuiltedBoots.AddQuestObjectToDatabase();
 			}
 			RecruitsLeatherBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("k109_recruits_leather_boots");
 			if (RecruitsLeatherBoots == null)
@@ -145,18 +136,7 @@ namespace DOL.GS.Quests.Albion
 
 				RecruitsLeatherBoots.DPS_AF = 12;
 				RecruitsLeatherBoots.SPD_ABS = 10;
-				RecruitsLeatherBoots.Bonus1 = 3;
-				RecruitsLeatherBoots.Bonus1Type = (int)eProperty.Dexterity;
-				RecruitsLeatherBoots.Bonus2 = 3;
-				RecruitsLeatherBoots.Bonus2Type = (int)eProperty.Strength;
-				RecruitsLeatherBoots.Bonus3 = 1;
-				RecruitsLeatherBoots.Bonus3Type = (int)eProperty.AllMagicSkills;
-				RecruitsLeatherBoots.Bonus4 = 1;
-				RecruitsLeatherBoots.Bonus4Type = (int)eProperty.AllMeleeWeaponSkills;
-				RecruitsLeatherBoots.Bonus5 = 1;
-				RecruitsLeatherBoots.Bonus5Type = (int)eProperty.Quickness;
-				RecruitsLeatherBoots.Bonus6 = 1;
-				RecruitsLeatherBoots.Bonus6Type = (int)eProperty.Resist_Thrust;
+				RecruitsLeatherBoots.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Strength, eProperty.AllMagicSkills, eProperty.AllMeleeWeaponSkills, eProperty.Quickness, eProperty.Resist_Thrust }, new []{ 3, 3, 1, 1, 1, 1 });
 
 				RecruitsLeatherBoots.Quality = 100;
 				RecruitsLeatherBoots.Condition = 50000;
@@ -169,7 +149,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(RecruitsLeatherBoots);
+				RecruitsLeatherBoots.AddQuestObjectToDatabase();
 			}
 			RecruitsStuddedBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("k109_recruits_studded_boots");
 			if (RecruitsStuddedBoots == null)
@@ -193,18 +173,7 @@ namespace DOL.GS.Quests.Albion
 
 				RecruitsStuddedBoots.DPS_AF = 12;
 				RecruitsStuddedBoots.SPD_ABS = 19;
-				RecruitsStuddedBoots.Bonus1 = 3;
-				RecruitsStuddedBoots.Bonus1Type = (int)eProperty.Dexterity;
-				RecruitsStuddedBoots.Bonus2 = 3;
-				RecruitsStuddedBoots.Bonus2Type = (int)eProperty.Strength;
-				RecruitsStuddedBoots.Bonus3 = 1;
-				RecruitsStuddedBoots.Bonus3Type = (int)eProperty.AllMagicSkills;
-				RecruitsStuddedBoots.Bonus4 = 1;
-				RecruitsStuddedBoots.Bonus4Type = (int)eProperty.AllMeleeWeaponSkills;
-				RecruitsStuddedBoots.Bonus5 = 1;
-				RecruitsStuddedBoots.Bonus5Type = (int)eProperty.Quickness;
-				RecruitsStuddedBoots.Bonus6 = 1;
-				RecruitsStuddedBoots.Bonus6Type = (int)eProperty.Resist_Thrust;
+				RecruitsStuddedBoots.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Strength, eProperty.AllMagicSkills, eProperty.AllMeleeWeaponSkills, eProperty.Quickness, eProperty.Resist_Thrust }, new []{ 3, 3, 1, 1, 1, 1 });
 
 				RecruitsStuddedBoots.Quality = 100;
 				RecruitsStuddedBoots.Condition = 50000;
@@ -217,7 +186,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(RecruitsStuddedBoots);
+				RecruitsStuddedBoots.AddQuestObjectToDatabase();
 			}
 			#endregion
 
@@ -270,8 +239,8 @@ namespace DOL.GS.Quests.Albion
 				LadyGrynoch.Z = 2428;
 				LadyGrynoch.Heading = 2742;
 
-				if (SAVE_INTO_DATABASE)
-					LadyGrynoch.SaveIntoDatabase();
+				
+				LadyGrynoch.AddQuestObjectToDatabase();
 
 				LadyGrynoch.AddToWorld();
 			}

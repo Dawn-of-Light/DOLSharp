@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Linq;
 using System.Collections;
 using DOL.Database;
 using DOL.Language;
@@ -75,30 +76,26 @@ namespace DOL.GS
 				return false;
 			}
 
-			if((item.SpellID == 0 && item.SpellID1 == 0) ||
+			if((item.GetTemplateUseSpells().All(usesp => usesp.SpellID == 0)) ||
 				(item.Object_Type == (int)eObjectType.Poison) ||
-				(item.Object_Type == (int)eObjectType.Magical && (item.Item_Type == 40 || item.Item_Type == 41)))
+				(item.Object_Type == (int)eObjectType.Magical && (item.Item_Type == (int)eInventorySlot.FirstBackpack || item.Item_Type == (int)eInventorySlot.SecondBackpack)))
 			{
 				SayTo(player, LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.ReceiveItem.CantThat"));
 				return false;
 			}
-			if(item.Charges == item.MaxCharges && item.Charges1 == item.MaxCharges1)
+			if(item.GetTemplateUseSpells().All(usesp => usesp.isFullyCharged))
 			{
 				SayTo(player, LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.ReceiveItem.FullyCharged"));
 				return false;
 			}
 
 			long NeededMoney=0;
-			if (item.Charges < item.MaxCharges)
+			foreach(var useSpell in item.GetTemplateUseSpells()
+			        .Where(usesp => usesp.SpellID != 0 && !usesp.isFullyCharged))
 			{
-				player.TempProperties.setProperty(RECHARGE_ITEM_WEAK, new WeakRef(item));
-				NeededMoney += (item.MaxCharges - item.Charges)*Money.GetMoney(0,0,10,0,0);
+				NeededMoney += (useSpell.MaxCharges - useSpell.Charges)*Money.GetMoney(0,0,10,0,0);
 			}
-			if (item.Charges1 < item.MaxCharges1)
-			{
-				player.TempProperties.setProperty(RECHARGE_ITEM_WEAK, new WeakRef(item));
-				NeededMoney += (item.MaxCharges1 - item.Charges1)*Money.GetMoney(0,0,10,0,0);
-			}
+
 			if(NeededMoney > 0)
 			{
 				player.Client.Out.SendCustomDialog(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.ReceiveItem.Cost", Money.GetString(NeededMoney)), new CustomDialogResponse(RechargerDialogResponse));
@@ -132,14 +129,10 @@ namespace DOL.GS
 			}
 
 			long cost = 0;
-			if (item.Charges < item.MaxCharges)
+			foreach(var useSpell in item.GetTemplateUseSpells()
+			        .Where(usesp => usesp.SpellID != 0 && !usesp.isFullyCharged))
 			{
-				cost += (item.MaxCharges - item.Charges)*Money.GetMoney(0,0,10,0,0);
-			}
-
-			if (item.Charges1 < item.MaxCharges1)
-			{
-				cost += (item.MaxCharges1 - item.Charges1)*Money.GetMoney(0,0,10,0,0);
+				cost += (useSpell.MaxCharges - useSpell.Charges)*Money.GetMoney(0,0,10,0,0);
 			}
 
 			if(!player.RemoveMoney(cost))
@@ -151,8 +144,8 @@ namespace DOL.GS
 
 			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.RechargerDialogResponse.GiveMoney",
                                    GetName(0, false, player.Client.Account.Language, this), Money.GetString((long)cost)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			item.Charges = item.MaxCharges;
-			item.Charges1 = item.MaxCharges1;
+            
+            item.SetTemplateUseSpellsMaxCharges();
 
 			player.Out.SendInventoryItemsUpdate(new InventoryItem[] {item});
 			SayTo(player, LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Recharger.RechargerDialogResponse.FullyCharged"));

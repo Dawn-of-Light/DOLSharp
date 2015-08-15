@@ -100,8 +100,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(lightredclothdye);
+				
+					lightredclothdye.AddQuestObjectToDatabase();
 			}
 			lightredleatherdye = GameServer.Database.FindObjectByKey<ItemTemplate>("light_red_leather_dye");
 			if (lightredleatherdye == null)
@@ -132,7 +132,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(lightredleatherdye);
+					lightredleatherdye.AddQuestObjectToDatabase();
 			}
 			lightredenamel = GameServer.Database.FindObjectByKey<ItemTemplate>("light_red_enamel");
 			if (lightredenamel == null)
@@ -163,7 +163,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(lightredenamel);
+					lightredenamel.AddQuestObjectToDatabase();
 			}
 			#endregion
 
@@ -225,8 +225,8 @@ namespace DOL.GS.Quests.Albion
 				MasterKless.Z = 2428;
 				MasterKless.Heading = 2685;
 
-				if (SAVE_INTO_DATABASE)
-					MasterKless.SaveIntoDatabase();
+				
+				MasterKless.AddQuestObjectToDatabase();
 
 				MasterKless.AddToWorld();
 			}

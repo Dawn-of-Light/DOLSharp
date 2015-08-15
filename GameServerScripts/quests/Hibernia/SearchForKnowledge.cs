@@ -95,16 +95,7 @@ namespace DOL.GS.Quests.Hibernia
 				RecruitsCloak.IsDropable = false; // can't be sold to merchand
 
 				RecruitsCloak.Bonus = 1;
-				RecruitsCloak.Bonus1 = 1;
-				RecruitsCloak.Bonus1Type = (int)eProperty.Constitution;
-				RecruitsCloak.Bonus2 = 1;
-				RecruitsCloak.Bonus2Type = (int)eProperty.Resist_Slash;
-				RecruitsCloak.Bonus3 = 1;
-				RecruitsCloak.Bonus3Type = (int)eProperty.Strength;
-				RecruitsCloak.Bonus4 = 1;
-				RecruitsCloak.Bonus4Type = (int)eProperty.Dexterity;
-				RecruitsCloak.Bonus5 = 1;
-				RecruitsCloak.Bonus5Type = (int)eProperty.Acuity;
+				RecruitsCloak.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Resist_Slash, eProperty.Strength, eProperty.Dexterity, eProperty.Acuity }, new []{ 1, 1, 1, 1, 1 });
 
 
 				RecruitsCloak.Quality = 100;
@@ -113,8 +104,7 @@ namespace DOL.GS.Quests.Hibernia
 				RecruitsCloak.Durability = 50000;
 				RecruitsCloak.MaxDurability = 50000;
 
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(RecruitsCloak);
+				RecruitsCloak.AddQuestObjectToDatabase();
 			}
 			LetterToEpona = GameServer.Database.FindObjectByKey<ItemTemplate>("letter_to_epona");
 			if (LetterToEpona == null)
@@ -128,8 +118,7 @@ namespace DOL.GS.Quests.Hibernia
 				LetterToEpona.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Hib.SearchForKnowledge.Init.Text2");
 				LetterToEpona.Id_nb = "letter_to_epona";
 
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(LetterToEpona);
+				LetterToEpona.AddQuestObjectToDatabase();
 			}
 			#endregion
 			Level = 1;
@@ -187,8 +176,8 @@ namespace DOL.GS.Quests.Hibernia
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 
-				if (SAVE_INTO_DATABASE)
-					Blercyn.SaveIntoDatabase();
+				
+				Blercyn.AddQuestObjectToDatabase();
 
 				Blercyn.AddToWorld();
 			}
@@ -224,8 +213,8 @@ namespace DOL.GS.Quests.Hibernia
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 
-				if (SAVE_INTO_DATABASE)
-					Epona.SaveIntoDatabase();
+				
+				Epona.AddQuestObjectToDatabase();
 
 				Epona.AddToWorld();
 			}

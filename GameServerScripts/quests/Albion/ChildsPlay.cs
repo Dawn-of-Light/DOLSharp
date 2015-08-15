@@ -138,8 +138,8 @@ namespace DOL.GS.Quests.Albion
 				brain.AggroRange = 500;
 				Charles.SetOwnBrain(brain);
 
-				if (SAVE_INTO_DATABASE)
-					Charles.SaveIntoDatabase();
+				
+				Charles.AddQuestObjectToDatabase();
 
 				Charles.AddToWorld();
 
@@ -175,34 +175,12 @@ namespace DOL.GS.Quests.Albion
 				daringpaddedboots_alb.CanDropAsLoot = false;
 				daringpaddedboots_alb.Color = 0;
 				daringpaddedboots_alb.Bonus = 0; // default bonus
-				daringpaddedboots_alb.Bonus1 = 4;
-				daringpaddedboots_alb.Bonus1Type = (int)3;
-				daringpaddedboots_alb.Bonus2 = 0;
-				daringpaddedboots_alb.Bonus2Type = (int)0;
-				daringpaddedboots_alb.Bonus3 = 0;
-				daringpaddedboots_alb.Bonus3Type = (int)0;
-				daringpaddedboots_alb.Bonus4 = 0;
-				daringpaddedboots_alb.Bonus4Type = (int)0;
-				daringpaddedboots_alb.Bonus5 = 0;
-				daringpaddedboots_alb.Bonus5Type = (int)0;
-				daringpaddedboots_alb.Bonus6 = 0;
-				daringpaddedboots_alb.Bonus6Type = (int)0;
-				daringpaddedboots_alb.Bonus7 = 0;
-				daringpaddedboots_alb.Bonus7Type = (int)0;
-				daringpaddedboots_alb.Bonus8 = 0;
-				daringpaddedboots_alb.Bonus8Type = (int)0;
-				daringpaddedboots_alb.Bonus9 = 0;
-				daringpaddedboots_alb.Bonus9Type = (int)0;
-				daringpaddedboots_alb.Bonus10 = 0;
-				daringpaddedboots_alb.Bonus10Type = (int)0;
-				daringpaddedboots_alb.ExtraBonus = 0;
-				daringpaddedboots_alb.ExtraBonusType = (int)0;
+				daringpaddedboots_alb.ClearTemplateBonuses();
+				daringpaddedboots_alb.SetTemplateBonuses(eProperty.Constitution, 4);
 				daringpaddedboots_alb.Effect = 0;
 				daringpaddedboots_alb.DPS_AF = 6;
-				daringpaddedboots_alb.Charges = 0;
-				daringpaddedboots_alb.MaxCharges = 0;
-				daringpaddedboots_alb.SpellID = 0;
-				daringpaddedboots_alb.ProcSpellID = 0;
+				daringpaddedboots_alb.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				daringpaddedboots_alb.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				daringpaddedboots_alb.SPD_ABS = 0;
 				daringpaddedboots_alb.Realm = 0;
 				daringpaddedboots_alb.MaxCount = 1;
@@ -216,16 +194,12 @@ namespace DOL.GS.Quests.Albion
 				daringpaddedboots_alb.PoisonCharges = 0;
 				daringpaddedboots_alb.PoisonMaxCharges = 0;
 				daringpaddedboots_alb.PoisonSpellID = 0;
-				daringpaddedboots_alb.ProcSpellID1 = 0;
-				daringpaddedboots_alb.SpellID1 = 0;
-				daringpaddedboots_alb.MaxCharges1 = 0;
-				daringpaddedboots_alb.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(daringpaddedboots_alb);
+					daringpaddedboots_alb.AddQuestObjectToDatabase();
 			}
 			daringpaddedcap_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedcap_alb");
 			if (daringpaddedcap_alb == null)
@@ -248,34 +222,12 @@ namespace DOL.GS.Quests.Albion
 				daringpaddedcap_alb.CanDropAsLoot = false;
 				daringpaddedcap_alb.Color = 0;
 				daringpaddedcap_alb.Bonus = 0; // default bonus
-				daringpaddedcap_alb.Bonus1 = 4;
-				daringpaddedcap_alb.Bonus1Type = (int)2;
-				daringpaddedcap_alb.Bonus2 = 0;
-				daringpaddedcap_alb.Bonus2Type = (int)0;
-				daringpaddedcap_alb.Bonus3 = 0;
-				daringpaddedcap_alb.Bonus3Type = (int)0;
-				daringpaddedcap_alb.Bonus4 = 0;
-				daringpaddedcap_alb.Bonus4Type = (int)0;
-				daringpaddedcap_alb.Bonus5 = 0;
-				daringpaddedcap_alb.Bonus5Type = (int)0;
-				daringpaddedcap_alb.Bonus6 = 0;
-				daringpaddedcap_alb.Bonus6Type = (int)0;
-				daringpaddedcap_alb.Bonus7 = 0;
-				daringpaddedcap_alb.Bonus7Type = (int)0;
-				daringpaddedcap_alb.Bonus8 = 0;
-				daringpaddedcap_alb.Bonus8Type = (int)0;
-				daringpaddedcap_alb.Bonus9 = 0;
-				daringpaddedcap_alb.Bonus9Type = (int)0;
-				daringpaddedcap_alb.Bonus10 = 0;
-				daringpaddedcap_alb.Bonus10Type = (int)0;
-				daringpaddedcap_alb.ExtraBonus = 0;
-				daringpaddedcap_alb.ExtraBonusType = (int)0;
+				daringpaddedcap_alb.ClearTemplateBonuses();
+				daringpaddedcap_alb.SetTemplateBonuses(eProperty.Dexterity, 4);
 				daringpaddedcap_alb.Effect = 0;
 				daringpaddedcap_alb.DPS_AF = 6;
-				daringpaddedcap_alb.Charges = 0;
-				daringpaddedcap_alb.MaxCharges = 0;
-				daringpaddedcap_alb.SpellID = 0;
-				daringpaddedcap_alb.ProcSpellID = 0;
+				daringpaddedcap_alb.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				daringpaddedcap_alb.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				daringpaddedcap_alb.SPD_ABS = 0;
 				daringpaddedcap_alb.Realm = 0;
 				daringpaddedcap_alb.MaxCount = 1;
@@ -289,16 +241,12 @@ namespace DOL.GS.Quests.Albion
 				daringpaddedcap_alb.PoisonCharges = 0;
 				daringpaddedcap_alb.PoisonMaxCharges = 0;
 				daringpaddedcap_alb.PoisonSpellID = 0;
-				daringpaddedcap_alb.ProcSpellID1 = 0;
-				daringpaddedcap_alb.SpellID1 = 0;
-				daringpaddedcap_alb.MaxCharges1 = 0;
-				daringpaddedcap_alb.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(daringpaddedcap_alb);
+					daringpaddedcap_alb.AddQuestObjectToDatabase();
 			}
 			daringpaddedgloves_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedgloves_alb");
 			if (daringpaddedgloves_alb == null)
@@ -321,34 +269,12 @@ namespace DOL.GS.Quests.Albion
 				daringpaddedgloves_alb.CanDropAsLoot = false;
 				daringpaddedgloves_alb.Color = 0;
 				daringpaddedgloves_alb.Bonus = 0; // default bonus
-				daringpaddedgloves_alb.Bonus1 = 4;
-				daringpaddedgloves_alb.Bonus1Type = (int)3;
-				daringpaddedgloves_alb.Bonus2 = 0;
-				daringpaddedgloves_alb.Bonus2Type = (int)0;
-				daringpaddedgloves_alb.Bonus3 = 0;
-				daringpaddedgloves_alb.Bonus3Type = (int)0;
-				daringpaddedgloves_alb.Bonus4 = 0;
-				daringpaddedgloves_alb.Bonus4Type = (int)0;
-				daringpaddedgloves_alb.Bonus5 = 0;
-				daringpaddedgloves_alb.Bonus5Type = (int)0;
-				daringpaddedgloves_alb.Bonus6 = 0;
-				daringpaddedgloves_alb.Bonus6Type = (int)0;
-				daringpaddedgloves_alb.Bonus7 = 0;
-				daringpaddedgloves_alb.Bonus7Type = (int)0;
-				daringpaddedgloves_alb.Bonus8 = 0;
-				daringpaddedgloves_alb.Bonus8Type = (int)0;
-				daringpaddedgloves_alb.Bonus9 = 0;
-				daringpaddedgloves_alb.Bonus9Type = (int)0;
-				daringpaddedgloves_alb.Bonus10 = 0;
-				daringpaddedgloves_alb.Bonus10Type = (int)0;
-				daringpaddedgloves_alb.ExtraBonus = 0;
-				daringpaddedgloves_alb.ExtraBonusType = (int)0;
+				daringpaddedgloves_alb.ClearTemplateBonuses();
+				daringpaddedgloves_alb.SetTemplateBonuses(eProperty.Constitution, 4);
 				daringpaddedgloves_alb.Effect = 0;
 				daringpaddedgloves_alb.DPS_AF = 6;
-				daringpaddedgloves_alb.Charges = 0;
-				daringpaddedgloves_alb.MaxCharges = 0;
-				daringpaddedgloves_alb.SpellID = 0;
-				daringpaddedgloves_alb.ProcSpellID = 0;
+				daringpaddedgloves_alb.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				daringpaddedgloves_alb.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				daringpaddedgloves_alb.SPD_ABS = 0;
 				daringpaddedgloves_alb.Realm = 0;
 				daringpaddedgloves_alb.MaxCount = 1;
@@ -362,16 +288,12 @@ namespace DOL.GS.Quests.Albion
 				daringpaddedgloves_alb.PoisonCharges = 0;
 				daringpaddedgloves_alb.PoisonMaxCharges = 0;
 				daringpaddedgloves_alb.PoisonSpellID = 0;
-				daringpaddedgloves_alb.ProcSpellID1 = 0;
-				daringpaddedgloves_alb.SpellID1 = 0;
-				daringpaddedgloves_alb.MaxCharges1 = 0;
-				daringpaddedgloves_alb.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(daringpaddedgloves_alb);
+					daringpaddedgloves_alb.AddQuestObjectToDatabase();
 			}
 			daringpaddedpants_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedpants_alb");
 			if (daringpaddedpants_alb == null)
@@ -394,34 +316,12 @@ namespace DOL.GS.Quests.Albion
 				daringpaddedpants_alb.CanDropAsLoot = false;
 				daringpaddedpants_alb.Color = 0;
 				daringpaddedpants_alb.Bonus = 0; // default bonus
-				daringpaddedpants_alb.Bonus1 = 4;
-				daringpaddedpants_alb.Bonus1Type = (int)2;
-				daringpaddedpants_alb.Bonus2 = 0;
-				daringpaddedpants_alb.Bonus2Type = (int)0;
-				daringpaddedpants_alb.Bonus3 = 0;
-				daringpaddedpants_alb.Bonus3Type = (int)0;
-				daringpaddedpants_alb.Bonus4 = 0;
-				daringpaddedpants_alb.Bonus4Type = (int)0;
-				daringpaddedpants_alb.Bonus5 = 0;
-				daringpaddedpants_alb.Bonus5Type = (int)0;
-				daringpaddedpants_alb.Bonus6 = 0;
-				daringpaddedpants_alb.Bonus6Type = (int)0;
-				daringpaddedpants_alb.Bonus7 = 0;
-				daringpaddedpants_alb.Bonus7Type = (int)0;
-				daringpaddedpants_alb.Bonus8 = 0;
-				daringpaddedpants_alb.Bonus8Type = (int)0;
-				daringpaddedpants_alb.Bonus9 = 0;
-				daringpaddedpants_alb.Bonus9Type = (int)0;
-				daringpaddedpants_alb.Bonus10 = 0;
-				daringpaddedpants_alb.Bonus10Type = (int)0;
-				daringpaddedpants_alb.ExtraBonus = 0;
-				daringpaddedpants_alb.ExtraBonusType = (int)0;
+				daringpaddedpants_alb.ClearTemplateBonuses();
+				daringpaddedpants_alb.SetTemplateBonuses(eProperty.Dexterity, 4);
 				daringpaddedpants_alb.Effect = 0;
 				daringpaddedpants_alb.DPS_AF = 6;
-				daringpaddedpants_alb.Charges = 0;
-				daringpaddedpants_alb.MaxCharges = 0;
-				daringpaddedpants_alb.SpellID = 0;
-				daringpaddedpants_alb.ProcSpellID = 0;
+				daringpaddedpants_alb.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				daringpaddedpants_alb.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				daringpaddedpants_alb.SPD_ABS = 0;
 				daringpaddedpants_alb.Realm = 0;
 				daringpaddedpants_alb.MaxCount = 1;
@@ -435,16 +335,12 @@ namespace DOL.GS.Quests.Albion
 				daringpaddedpants_alb.PoisonCharges = 0;
 				daringpaddedpants_alb.PoisonMaxCharges = 0;
 				daringpaddedpants_alb.PoisonSpellID = 0;
-				daringpaddedpants_alb.ProcSpellID1 = 0;
-				daringpaddedpants_alb.SpellID1 = 0;
-				daringpaddedpants_alb.MaxCharges1 = 0;
-				daringpaddedpants_alb.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(daringpaddedpants_alb);
+					daringpaddedpants_alb.AddQuestObjectToDatabase();
 			}
 			daringpaddedsleeves_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedsleeves_alb");
 			if (daringpaddedsleeves_alb == null)
@@ -467,34 +363,12 @@ namespace DOL.GS.Quests.Albion
 				daringpaddedsleeves_alb.CanDropAsLoot = false;
 				daringpaddedsleeves_alb.Color = 0;
 				daringpaddedsleeves_alb.Bonus = 0; // default bonus
-				daringpaddedsleeves_alb.Bonus1 = 4;
-				daringpaddedsleeves_alb.Bonus1Type = (int)6;
-				daringpaddedsleeves_alb.Bonus2 = 0;
-				daringpaddedsleeves_alb.Bonus2Type = (int)0;
-				daringpaddedsleeves_alb.Bonus3 = 0;
-				daringpaddedsleeves_alb.Bonus3Type = (int)0;
-				daringpaddedsleeves_alb.Bonus4 = 0;
-				daringpaddedsleeves_alb.Bonus4Type = (int)0;
-				daringpaddedsleeves_alb.Bonus5 = 0;
-				daringpaddedsleeves_alb.Bonus5Type = (int)0;
-				daringpaddedsleeves_alb.Bonus6 = 0;
-				daringpaddedsleeves_alb.Bonus6Type = (int)0;
-				daringpaddedsleeves_alb.Bonus7 = 0;
-				daringpaddedsleeves_alb.Bonus7Type = (int)0;
-				daringpaddedsleeves_alb.Bonus8 = 0;
-				daringpaddedsleeves_alb.Bonus8Type = (int)0;
-				daringpaddedsleeves_alb.Bonus9 = 0;
-				daringpaddedsleeves_alb.Bonus9Type = (int)0;
-				daringpaddedsleeves_alb.Bonus10 = 0;
-				daringpaddedsleeves_alb.Bonus10Type = (int)0;
-				daringpaddedsleeves_alb.ExtraBonus = 0;
-				daringpaddedsleeves_alb.ExtraBonusType = (int)0;
+				daringpaddedsleeves_alb.ClearTemplateBonuses();
+				daringpaddedsleeves_alb.SetTemplateBonuses(eProperty.Piety, 4);
 				daringpaddedsleeves_alb.Effect = 0;
 				daringpaddedsleeves_alb.DPS_AF = 6;
-				daringpaddedsleeves_alb.Charges = 0;
-				daringpaddedsleeves_alb.MaxCharges = 0;
-				daringpaddedsleeves_alb.SpellID = 0;
-				daringpaddedsleeves_alb.ProcSpellID = 0;
+				daringpaddedsleeves_alb.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				daringpaddedsleeves_alb.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				daringpaddedsleeves_alb.SPD_ABS = 0;
 				daringpaddedsleeves_alb.Realm = 0;
 				daringpaddedsleeves_alb.MaxCount = 1;
@@ -508,16 +382,12 @@ namespace DOL.GS.Quests.Albion
 				daringpaddedsleeves_alb.PoisonCharges = 0;
 				daringpaddedsleeves_alb.PoisonMaxCharges = 0;
 				daringpaddedsleeves_alb.PoisonSpellID = 0;
-				daringpaddedsleeves_alb.ProcSpellID1 = 0;
-				daringpaddedsleeves_alb.SpellID1 = 0;
-				daringpaddedsleeves_alb.MaxCharges1 = 0;
-				daringpaddedsleeves_alb.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(daringpaddedsleeves_alb);
+					daringpaddedsleeves_alb.AddQuestObjectToDatabase();
 			}
 			daringpaddedvest_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedvest_alb");
 			if (daringpaddedvest_alb == null)
@@ -540,34 +410,12 @@ namespace DOL.GS.Quests.Albion
 				daringpaddedvest_alb.CanDropAsLoot = false;
 				daringpaddedvest_alb.Color = 0;
 				daringpaddedvest_alb.Bonus = 0; // default bonus
-				daringpaddedvest_alb.Bonus1 = 12;
-				daringpaddedvest_alb.Bonus1Type = (int)10;
-				daringpaddedvest_alb.Bonus2 = 0;
-				daringpaddedvest_alb.Bonus2Type = (int)0;
-				daringpaddedvest_alb.Bonus3 = 0;
-				daringpaddedvest_alb.Bonus3Type = (int)0;
-				daringpaddedvest_alb.Bonus4 = 0;
-				daringpaddedvest_alb.Bonus4Type = (int)0;
-				daringpaddedvest_alb.Bonus5 = 0;
-				daringpaddedvest_alb.Bonus5Type = (int)0;
-				daringpaddedvest_alb.Bonus6 = 0;
-				daringpaddedvest_alb.Bonus6Type = (int)0;
-				daringpaddedvest_alb.Bonus7 = 0;
-				daringpaddedvest_alb.Bonus7Type = (int)0;
-				daringpaddedvest_alb.Bonus8 = 0;
-				daringpaddedvest_alb.Bonus8Type = (int)0;
-				daringpaddedvest_alb.Bonus9 = 0;
-				daringpaddedvest_alb.Bonus9Type = (int)0;
-				daringpaddedvest_alb.Bonus10 = 0;
-				daringpaddedvest_alb.Bonus10Type = (int)0;
-				daringpaddedvest_alb.ExtraBonus = 0;
-				daringpaddedvest_alb.ExtraBonusType = (int)0;
+				daringpaddedvest_alb.ClearTemplateBonuses();
+				daringpaddedvest_alb.SetTemplateBonuses(eProperty.MaxHealth, 12);
 				daringpaddedvest_alb.Effect = 0;
 				daringpaddedvest_alb.DPS_AF = 6;
-				daringpaddedvest_alb.Charges = 0;
-				daringpaddedvest_alb.MaxCharges = 0;
-				daringpaddedvest_alb.SpellID = 0;
-				daringpaddedvest_alb.ProcSpellID = 0;
+				daringpaddedvest_alb.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				daringpaddedvest_alb.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				daringpaddedvest_alb.SPD_ABS = 0;
 				daringpaddedvest_alb.Realm = 0;
 				daringpaddedvest_alb.MaxCount = 1;
@@ -581,16 +429,12 @@ namespace DOL.GS.Quests.Albion
 				daringpaddedvest_alb.PoisonCharges = 0;
 				daringpaddedvest_alb.PoisonMaxCharges = 0;
 				daringpaddedvest_alb.PoisonSpellID = 0;
-				daringpaddedvest_alb.ProcSpellID1 = 0;
-				daringpaddedvest_alb.SpellID1 = 0;
-				daringpaddedvest_alb.MaxCharges1 = 0;
-				daringpaddedvest_alb.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(daringpaddedvest_alb);
+					daringpaddedvest_alb.AddQuestObjectToDatabase();
 			}
 			daringleatherboots_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleatherboots_alb");
 			if (daringleatherboots_alb == null)
@@ -613,34 +457,12 @@ namespace DOL.GS.Quests.Albion
 				daringleatherboots_alb.CanDropAsLoot = false;
 				daringleatherboots_alb.Color = 0;
 				daringleatherboots_alb.Bonus = 0; // default bonus
-				daringleatherboots_alb.Bonus1 = 4;
-				daringleatherboots_alb.Bonus1Type = (int)3;
-				daringleatherboots_alb.Bonus2 = 0;
-				daringleatherboots_alb.Bonus2Type = (int)0;
-				daringleatherboots_alb.Bonus3 = 0;
-				daringleatherboots_alb.Bonus3Type = (int)0;
-				daringleatherboots_alb.Bonus4 = 0;
-				daringleatherboots_alb.Bonus4Type = (int)0;
-				daringleatherboots_alb.Bonus5 = 0;
-				daringleatherboots_alb.Bonus5Type = (int)0;
-				daringleatherboots_alb.Bonus6 = 0;
-				daringleatherboots_alb.Bonus6Type = (int)0;
-				daringleatherboots_alb.Bonus7 = 0;
-				daringleatherboots_alb.Bonus7Type = (int)0;
-				daringleatherboots_alb.Bonus8 = 0;
-				daringleatherboots_alb.Bonus8Type = (int)0;
-				daringleatherboots_alb.Bonus9 = 0;
-				daringleatherboots_alb.Bonus9Type = (int)0;
-				daringleatherboots_alb.Bonus10 = 0;
-				daringleatherboots_alb.Bonus10Type = (int)0;
-				daringleatherboots_alb.ExtraBonus = 0;
-				daringleatherboots_alb.ExtraBonusType = (int)0;
+				daringleatherboots_alb.ClearTemplateBonuses();
+				daringleatherboots_alb.SetTemplateBonuses(eProperty.Constitution, 4);
 				daringleatherboots_alb.Effect = 0;
 				daringleatherboots_alb.DPS_AF = 10;
-				daringleatherboots_alb.Charges = 0;
-				daringleatherboots_alb.MaxCharges = 0;
-				daringleatherboots_alb.SpellID = 0;
-				daringleatherboots_alb.ProcSpellID = 0;
+				daringleatherboots_alb.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				daringleatherboots_alb.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				daringleatherboots_alb.SPD_ABS = 10;
 				daringleatherboots_alb.Realm = 0;
 				daringleatherboots_alb.MaxCount = 1;
@@ -654,16 +476,12 @@ namespace DOL.GS.Quests.Albion
 				daringleatherboots_alb.PoisonCharges = 0;
 				daringleatherboots_alb.PoisonMaxCharges = 0;
 				daringleatherboots_alb.PoisonSpellID = 0;
-				daringleatherboots_alb.ProcSpellID1 = 0;
-				daringleatherboots_alb.SpellID1 = 0;
-				daringleatherboots_alb.MaxCharges1 = 0;
-				daringleatherboots_alb.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(daringleatherboots_alb);
+					daringleatherboots_alb.AddQuestObjectToDatabase();
 			}
 			daringleathercap_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleathercap_alb");
 			if (daringleathercap_alb == null)
@@ -686,34 +504,12 @@ namespace DOL.GS.Quests.Albion
 				daringleathercap_alb.CanDropAsLoot = false;
 				daringleathercap_alb.Color = 0;
 				daringleathercap_alb.Bonus = 0; // default bonus
-				daringleathercap_alb.Bonus1 = 4;
-				daringleathercap_alb.Bonus1Type = (int)3;
-				daringleathercap_alb.Bonus2 = 0;
-				daringleathercap_alb.Bonus2Type = (int)0;
-				daringleathercap_alb.Bonus3 = 0;
-				daringleathercap_alb.Bonus3Type = (int)0;
-				daringleathercap_alb.Bonus4 = 0;
-				daringleathercap_alb.Bonus4Type = (int)0;
-				daringleathercap_alb.Bonus5 = 0;
-				daringleathercap_alb.Bonus5Type = (int)0;
-				daringleathercap_alb.Bonus6 = 0;
-				daringleathercap_alb.Bonus6Type = (int)0;
-				daringleathercap_alb.Bonus7 = 0;
-				daringleathercap_alb.Bonus7Type = (int)0;
-				daringleathercap_alb.Bonus8 = 0;
-				daringleathercap_alb.Bonus8Type = (int)0;
-				daringleathercap_alb.Bonus9 = 0;
-				daringleathercap_alb.Bonus9Type = (int)0;
-				daringleathercap_alb.Bonus10 = 0;
-				daringleathercap_alb.Bonus10Type = (int)0;
-				daringleathercap_alb.ExtraBonus = 0;
-				daringleathercap_alb.ExtraBonusType = (int)0;
+				daringleathercap_alb.ClearTemplateBonuses();
+				daringleathercap_alb.SetTemplateBonuses(eProperty.Constitution, 4);
 				daringleathercap_alb.Effect = 0;
 				daringleathercap_alb.DPS_AF = 10;
-				daringleathercap_alb.Charges = 0;
-				daringleathercap_alb.MaxCharges = 0;
-				daringleathercap_alb.SpellID = 0;
-				daringleathercap_alb.ProcSpellID = 0;
+				daringleathercap_alb.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				daringleathercap_alb.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				daringleathercap_alb.SPD_ABS = 10;
 				daringleathercap_alb.Realm = 0;
 				daringleathercap_alb.MaxCount = 1;
@@ -727,16 +523,12 @@ namespace DOL.GS.Quests.Albion
 				daringleathercap_alb.PoisonCharges = 0;
 				daringleathercap_alb.PoisonMaxCharges = 0;
 				daringleathercap_alb.PoisonSpellID = 0;
-				daringleathercap_alb.ProcSpellID1 = 0;
-				daringleathercap_alb.SpellID1 = 0;
-				daringleathercap_alb.MaxCharges1 = 0;
-				daringleathercap_alb.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(daringleathercap_alb);
+					daringleathercap_alb.AddQuestObjectToDatabase();
 			}
 			daringleathergloves_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleathergloves_alb");
 			if (daringleathergloves_alb == null)
@@ -759,34 +551,12 @@ namespace DOL.GS.Quests.Albion
 				daringleathergloves_alb.CanDropAsLoot = false;
 				daringleathergloves_alb.Color = 0;
 				daringleathergloves_alb.Bonus = 0; // default bonus
-				daringleathergloves_alb.Bonus1 = 4;
-				daringleathergloves_alb.Bonus1Type = (int)2;
-				daringleathergloves_alb.Bonus2 = 0;
-				daringleathergloves_alb.Bonus2Type = (int)0;
-				daringleathergloves_alb.Bonus3 = 0;
-				daringleathergloves_alb.Bonus3Type = (int)0;
-				daringleathergloves_alb.Bonus4 = 0;
-				daringleathergloves_alb.Bonus4Type = (int)0;
-				daringleathergloves_alb.Bonus5 = 0;
-				daringleathergloves_alb.Bonus5Type = (int)0;
-				daringleathergloves_alb.Bonus6 = 0;
-				daringleathergloves_alb.Bonus6Type = (int)0;
-				daringleathergloves_alb.Bonus7 = 0;
-				daringleathergloves_alb.Bonus7Type = (int)0;
-				daringleathergloves_alb.Bonus8 = 0;
-				daringleathergloves_alb.Bonus8Type = (int)0;
-				daringleathergloves_alb.Bonus9 = 0;
-				daringleathergloves_alb.Bonus9Type = (int)0;
-				daringleathergloves_alb.Bonus10 = 0;
-				daringleathergloves_alb.Bonus10Type = (int)0;
-				daringleathergloves_alb.ExtraBonus = 0;
-				daringleathergloves_alb.ExtraBonusType = (int)0;
+				daringleathergloves_alb.ClearTemplateBonuses();
+				daringleathergloves_alb.SetTemplateBonuses(eProperty.Dexterity, 4);
 				daringleathergloves_alb.Effect = 0;
 				daringleathergloves_alb.DPS_AF = 10;
-				daringleathergloves_alb.Charges = 0;
-				daringleathergloves_alb.MaxCharges = 0;
-				daringleathergloves_alb.SpellID = 0;
-				daringleathergloves_alb.ProcSpellID = 0;
+				daringleathergloves_alb.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				daringleathergloves_alb.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				daringleathergloves_alb.SPD_ABS = 10;
 				daringleathergloves_alb.Realm = 0;
 				daringleathergloves_alb.MaxCount = 1;
@@ -800,16 +570,12 @@ namespace DOL.GS.Quests.Albion
 				daringleathergloves_alb.PoisonCharges = 0;
 				daringleathergloves_alb.PoisonMaxCharges = 0;
 				daringleathergloves_alb.PoisonSpellID = 0;
-				daringleathergloves_alb.ProcSpellID1 = 0;
-				daringleathergloves_alb.SpellID1 = 0;
-				daringleathergloves_alb.MaxCharges1 = 0;
-				daringleathergloves_alb.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(daringleathergloves_alb);
+					daringleathergloves_alb.AddQuestObjectToDatabase();
 			}
 			daringleatherjerkin_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleatherjerkin_alb");
 			if (daringleatherjerkin_alb == null)
@@ -832,34 +598,12 @@ namespace DOL.GS.Quests.Albion
 				daringleatherjerkin_alb.CanDropAsLoot = false;
 				daringleatherjerkin_alb.Color = 0;
 				daringleatherjerkin_alb.Bonus = 0; // default bonus
-				daringleatherjerkin_alb.Bonus1 = 12;
-				daringleatherjerkin_alb.Bonus1Type = (int)10;
-				daringleatherjerkin_alb.Bonus2 = 0;
-				daringleatherjerkin_alb.Bonus2Type = (int)0;
-				daringleatherjerkin_alb.Bonus3 = 0;
-				daringleatherjerkin_alb.Bonus3Type = (int)0;
-				daringleatherjerkin_alb.Bonus4 = 0;
-				daringleatherjerkin_alb.Bonus4Type = (int)0;
-				daringleatherjerkin_alb.Bonus5 = 0;
-				daringleatherjerkin_alb.Bonus5Type = (int)0;
-				daringleatherjerkin_alb.Bonus6 = 0;
-				daringleatherjerkin_alb.Bonus6Type = (int)0;
-				daringleatherjerkin_alb.Bonus7 = 0;
-				daringleatherjerkin_alb.Bonus7Type = (int)0;
-				daringleatherjerkin_alb.Bonus8 = 0;
-				daringleatherjerkin_alb.Bonus8Type = (int)0;
-				daringleatherjerkin_alb.Bonus9 = 0;
-				daringleatherjerkin_alb.Bonus9Type = (int)0;
-				daringleatherjerkin_alb.Bonus10 = 0;
-				daringleatherjerkin_alb.Bonus10Type = (int)0;
-				daringleatherjerkin_alb.ExtraBonus = 0;
-				daringleatherjerkin_alb.ExtraBonusType = (int)0;
+				daringleatherjerkin_alb.ClearTemplateBonuses();
+				daringleatherjerkin_alb.SetTemplateBonuses(eProperty.MaxHealth, 12);
 				daringleatherjerkin_alb.Effect = 0;
 				daringleatherjerkin_alb.DPS_AF = 10;
-				daringleatherjerkin_alb.Charges = 0;
-				daringleatherjerkin_alb.MaxCharges = 0;
-				daringleatherjerkin_alb.SpellID = 0;
-				daringleatherjerkin_alb.ProcSpellID = 0;
+				daringleatherjerkin_alb.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				daringleatherjerkin_alb.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				daringleatherjerkin_alb.SPD_ABS = 10;
 				daringleatherjerkin_alb.Realm = 0;
 				daringleatherjerkin_alb.MaxCount = 1;
@@ -873,16 +617,12 @@ namespace DOL.GS.Quests.Albion
 				daringleatherjerkin_alb.PoisonCharges = 0;
 				daringleatherjerkin_alb.PoisonMaxCharges = 0;
 				daringleatherjerkin_alb.PoisonSpellID = 0;
-				daringleatherjerkin_alb.ProcSpellID1 = 0;
-				daringleatherjerkin_alb.SpellID1 = 0;
-				daringleatherjerkin_alb.MaxCharges1 = 0;
-				daringleatherjerkin_alb.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(daringleatherjerkin_alb);
+					daringleatherjerkin_alb.AddQuestObjectToDatabase();
 			}
 			daringleatherleggings_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleatherleggings_alb");
 			if (daringleatherleggings_alb == null)
@@ -905,34 +645,12 @@ namespace DOL.GS.Quests.Albion
 				daringleatherleggings_alb.CanDropAsLoot = false;
 				daringleatherleggings_alb.Color = 0;
 				daringleatherleggings_alb.Bonus = 0; // default bonus
-				daringleatherleggings_alb.Bonus1 = 4;
-				daringleatherleggings_alb.Bonus1Type = (int)2;
-				daringleatherleggings_alb.Bonus2 = 0;
-				daringleatherleggings_alb.Bonus2Type = (int)0;
-				daringleatherleggings_alb.Bonus3 = 0;
-				daringleatherleggings_alb.Bonus3Type = (int)0;
-				daringleatherleggings_alb.Bonus4 = 0;
-				daringleatherleggings_alb.Bonus4Type = (int)0;
-				daringleatherleggings_alb.Bonus5 = 0;
-				daringleatherleggings_alb.Bonus5Type = (int)0;
-				daringleatherleggings_alb.Bonus6 = 0;
-				daringleatherleggings_alb.Bonus6Type = (int)0;
-				daringleatherleggings_alb.Bonus7 = 0;
-				daringleatherleggings_alb.Bonus7Type = (int)0;
-				daringleatherleggings_alb.Bonus8 = 0;
-				daringleatherleggings_alb.Bonus8Type = (int)0;
-				daringleatherleggings_alb.Bonus9 = 0;
-				daringleatherleggings_alb.Bonus9Type = (int)0;
-				daringleatherleggings_alb.Bonus10 = 0;
-				daringleatherleggings_alb.Bonus10Type = (int)0;
-				daringleatherleggings_alb.ExtraBonus = 0;
-				daringleatherleggings_alb.ExtraBonusType = (int)0;
+				daringleatherleggings_alb.ClearTemplateBonuses();
+				daringleatherleggings_alb.SetTemplateBonuses(eProperty.Dexterity, 4);
 				daringleatherleggings_alb.Effect = 0;
 				daringleatherleggings_alb.DPS_AF = 10;
-				daringleatherleggings_alb.Charges = 0;
-				daringleatherleggings_alb.MaxCharges = 0;
-				daringleatherleggings_alb.SpellID = 0;
-				daringleatherleggings_alb.ProcSpellID = 0;
+				daringleatherleggings_alb.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				daringleatherleggings_alb.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				daringleatherleggings_alb.SPD_ABS = 10;
 				daringleatherleggings_alb.Realm = 0;
 				daringleatherleggings_alb.MaxCount = 1;
@@ -946,16 +664,12 @@ namespace DOL.GS.Quests.Albion
 				daringleatherleggings_alb.PoisonCharges = 0;
 				daringleatherleggings_alb.PoisonMaxCharges = 0;
 				daringleatherleggings_alb.PoisonSpellID = 0;
-				daringleatherleggings_alb.ProcSpellID1 = 0;
-				daringleatherleggings_alb.SpellID1 = 0;
-				daringleatherleggings_alb.MaxCharges1 = 0;
-				daringleatherleggings_alb.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(daringleatherleggings_alb);
+					daringleatherleggings_alb.AddQuestObjectToDatabase();
 			}
 			daringleathersleeves_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleathersleeves_alb");
 			if (daringleathersleeves_alb == null)
@@ -978,34 +692,12 @@ namespace DOL.GS.Quests.Albion
 				daringleathersleeves_alb.CanDropAsLoot = false;
 				daringleathersleeves_alb.Color = 0;
 				daringleathersleeves_alb.Bonus = 0; // default bonus
-				daringleathersleeves_alb.Bonus1 = 4;
-				daringleathersleeves_alb.Bonus1Type = (int)1;
-				daringleathersleeves_alb.Bonus2 = 0;
-				daringleathersleeves_alb.Bonus2Type = (int)0;
-				daringleathersleeves_alb.Bonus3 = 0;
-				daringleathersleeves_alb.Bonus3Type = (int)0;
-				daringleathersleeves_alb.Bonus4 = 0;
-				daringleathersleeves_alb.Bonus4Type = (int)0;
-				daringleathersleeves_alb.Bonus5 = 0;
-				daringleathersleeves_alb.Bonus5Type = (int)0;
-				daringleathersleeves_alb.Bonus6 = 0;
-				daringleathersleeves_alb.Bonus6Type = (int)0;
-				daringleathersleeves_alb.Bonus7 = 0;
-				daringleathersleeves_alb.Bonus7Type = (int)0;
-				daringleathersleeves_alb.Bonus8 = 0;
-				daringleathersleeves_alb.Bonus8Type = (int)0;
-				daringleathersleeves_alb.Bonus9 = 0;
-				daringleathersleeves_alb.Bonus9Type = (int)0;
-				daringleathersleeves_alb.Bonus10 = 0;
-				daringleathersleeves_alb.Bonus10Type = (int)0;
-				daringleathersleeves_alb.ExtraBonus = 0;
-				daringleathersleeves_alb.ExtraBonusType = (int)0;
+				daringleathersleeves_alb.ClearTemplateBonuses();
+				daringleathersleeves_alb.SetTemplateBonuses(eProperty.Strength, 4);
 				daringleathersleeves_alb.Effect = 0;
 				daringleathersleeves_alb.DPS_AF = 10;
-				daringleathersleeves_alb.Charges = 0;
-				daringleathersleeves_alb.MaxCharges = 0;
-				daringleathersleeves_alb.SpellID = 0;
-				daringleathersleeves_alb.ProcSpellID = 0;
+				daringleathersleeves_alb.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				daringleathersleeves_alb.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				daringleathersleeves_alb.SPD_ABS = 10;
 				daringleathersleeves_alb.Realm = 0;
 				daringleathersleeves_alb.MaxCount = 1;
@@ -1019,16 +711,12 @@ namespace DOL.GS.Quests.Albion
 				daringleathersleeves_alb.PoisonCharges = 0;
 				daringleathersleeves_alb.PoisonMaxCharges = 0;
 				daringleathersleeves_alb.PoisonSpellID = 0;
-				daringleathersleeves_alb.ProcSpellID1 = 0;
-				daringleathersleeves_alb.SpellID1 = 0;
-				daringleathersleeves_alb.MaxCharges1 = 0;
-				daringleathersleeves_alb.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(daringleathersleeves_alb);
+					daringleathersleeves_alb.AddQuestObjectToDatabase();
 			}
 			daringstuddedboots_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedboots_alb");
 			if (daringstuddedboots_alb == null)
@@ -1051,34 +739,12 @@ namespace DOL.GS.Quests.Albion
 				daringstuddedboots_alb.CanDropAsLoot = false;
 				daringstuddedboots_alb.Color = 0;
 				daringstuddedboots_alb.Bonus = 0; // default bonus
-				daringstuddedboots_alb.Bonus1 = 4;
-				daringstuddedboots_alb.Bonus1Type = (int)3;
-				daringstuddedboots_alb.Bonus2 = 0;
-				daringstuddedboots_alb.Bonus2Type = (int)0;
-				daringstuddedboots_alb.Bonus3 = 0;
-				daringstuddedboots_alb.Bonus3Type = (int)0;
-				daringstuddedboots_alb.Bonus4 = 0;
-				daringstuddedboots_alb.Bonus4Type = (int)0;
-				daringstuddedboots_alb.Bonus5 = 0;
-				daringstuddedboots_alb.Bonus5Type = (int)0;
-				daringstuddedboots_alb.Bonus6 = 0;
-				daringstuddedboots_alb.Bonus6Type = (int)0;
-				daringstuddedboots_alb.Bonus7 = 0;
-				daringstuddedboots_alb.Bonus7Type = (int)0;
-				daringstuddedboots_alb.Bonus8 = 0;
-				daringstuddedboots_alb.Bonus8Type = (int)0;
-				daringstuddedboots_alb.Bonus9 = 0;
-				daringstuddedboots_alb.Bonus9Type = (int)0;
-				daringstuddedboots_alb.Bonus10 = 0;
-				daringstuddedboots_alb.Bonus10Type = (int)0;
-				daringstuddedboots_alb.ExtraBonus = 0;
-				daringstuddedboots_alb.ExtraBonusType = (int)0;
+				daringstuddedboots_alb.ClearTemplateBonuses();
+				daringstuddedboots_alb.SetTemplateBonuses(eProperty.Constitution, 4);
 				daringstuddedboots_alb.Effect = 0;
 				daringstuddedboots_alb.DPS_AF = 12;
-				daringstuddedboots_alb.Charges = 0;
-				daringstuddedboots_alb.MaxCharges = 0;
-				daringstuddedboots_alb.SpellID = 0;
-				daringstuddedboots_alb.ProcSpellID = 0;
+				daringstuddedboots_alb.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				daringstuddedboots_alb.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				daringstuddedboots_alb.SPD_ABS = 19;
 				daringstuddedboots_alb.Realm = 0;
 				daringstuddedboots_alb.MaxCount = 1;
@@ -1092,16 +758,12 @@ namespace DOL.GS.Quests.Albion
 				daringstuddedboots_alb.PoisonCharges = 0;
 				daringstuddedboots_alb.PoisonMaxCharges = 0;
 				daringstuddedboots_alb.PoisonSpellID = 0;
-				daringstuddedboots_alb.ProcSpellID1 = 0;
-				daringstuddedboots_alb.SpellID1 = 0;
-				daringstuddedboots_alb.MaxCharges1 = 0;
-				daringstuddedboots_alb.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(daringstuddedboots_alb);
+					daringstuddedboots_alb.AddQuestObjectToDatabase();
 			}
 			daringstuddedcap_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedcap_alb");
 			if (daringstuddedcap_alb == null)
@@ -1124,34 +786,12 @@ namespace DOL.GS.Quests.Albion
 				daringstuddedcap_alb.CanDropAsLoot = false;
 				daringstuddedcap_alb.Color = 0;
 				daringstuddedcap_alb.Bonus = 0; // default bonus
-				daringstuddedcap_alb.Bonus1 = 4;
-				daringstuddedcap_alb.Bonus1Type = (int)3;
-				daringstuddedcap_alb.Bonus2 = 0;
-				daringstuddedcap_alb.Bonus2Type = (int)0;
-				daringstuddedcap_alb.Bonus3 = 0;
-				daringstuddedcap_alb.Bonus3Type = (int)0;
-				daringstuddedcap_alb.Bonus4 = 0;
-				daringstuddedcap_alb.Bonus4Type = (int)0;
-				daringstuddedcap_alb.Bonus5 = 0;
-				daringstuddedcap_alb.Bonus5Type = (int)0;
-				daringstuddedcap_alb.Bonus6 = 0;
-				daringstuddedcap_alb.Bonus6Type = (int)0;
-				daringstuddedcap_alb.Bonus7 = 0;
-				daringstuddedcap_alb.Bonus7Type = (int)0;
-				daringstuddedcap_alb.Bonus8 = 0;
-				daringstuddedcap_alb.Bonus8Type = (int)0;
-				daringstuddedcap_alb.Bonus9 = 0;
-				daringstuddedcap_alb.Bonus9Type = (int)0;
-				daringstuddedcap_alb.Bonus10 = 0;
-				daringstuddedcap_alb.Bonus10Type = (int)0;
-				daringstuddedcap_alb.ExtraBonus = 0;
-				daringstuddedcap_alb.ExtraBonusType = (int)0;
+				daringstuddedcap_alb.ClearTemplateBonuses();
+				daringstuddedcap_alb.SetTemplateBonuses(eProperty.Constitution, 4);
 				daringstuddedcap_alb.Effect = 0;
 				daringstuddedcap_alb.DPS_AF = 12;
-				daringstuddedcap_alb.Charges = 0;
-				daringstuddedcap_alb.MaxCharges = 0;
-				daringstuddedcap_alb.SpellID = 0;
-				daringstuddedcap_alb.ProcSpellID = 0;
+				daringstuddedcap_alb.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				daringstuddedcap_alb.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				daringstuddedcap_alb.SPD_ABS = 19;
 				daringstuddedcap_alb.Realm = 0;
 				daringstuddedcap_alb.MaxCount = 1;
@@ -1165,16 +805,12 @@ namespace DOL.GS.Quests.Albion
 				daringstuddedcap_alb.PoisonCharges = 0;
 				daringstuddedcap_alb.PoisonMaxCharges = 0;
 				daringstuddedcap_alb.PoisonSpellID = 0;
-				daringstuddedcap_alb.ProcSpellID1 = 0;
-				daringstuddedcap_alb.SpellID1 = 0;
-				daringstuddedcap_alb.MaxCharges1 = 0;
-				daringstuddedcap_alb.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(daringstuddedcap_alb);
+					daringstuddedcap_alb.AddQuestObjectToDatabase();
 			}
 			daringstuddedgloves_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedgloves_alb");
 			if (daringstuddedgloves_alb == null)
@@ -1197,34 +833,12 @@ namespace DOL.GS.Quests.Albion
 				daringstuddedgloves_alb.CanDropAsLoot = false;
 				daringstuddedgloves_alb.Color = 0;
 				daringstuddedgloves_alb.Bonus = 0; // default bonus
-				daringstuddedgloves_alb.Bonus1 = 4;
-				daringstuddedgloves_alb.Bonus1Type = (int)4;
-				daringstuddedgloves_alb.Bonus2 = 0;
-				daringstuddedgloves_alb.Bonus2Type = (int)0;
-				daringstuddedgloves_alb.Bonus3 = 0;
-				daringstuddedgloves_alb.Bonus3Type = (int)0;
-				daringstuddedgloves_alb.Bonus4 = 0;
-				daringstuddedgloves_alb.Bonus4Type = (int)0;
-				daringstuddedgloves_alb.Bonus5 = 0;
-				daringstuddedgloves_alb.Bonus5Type = (int)0;
-				daringstuddedgloves_alb.Bonus6 = 0;
-				daringstuddedgloves_alb.Bonus6Type = (int)0;
-				daringstuddedgloves_alb.Bonus7 = 0;
-				daringstuddedgloves_alb.Bonus7Type = (int)0;
-				daringstuddedgloves_alb.Bonus8 = 0;
-				daringstuddedgloves_alb.Bonus8Type = (int)0;
-				daringstuddedgloves_alb.Bonus9 = 0;
-				daringstuddedgloves_alb.Bonus9Type = (int)0;
-				daringstuddedgloves_alb.Bonus10 = 0;
-				daringstuddedgloves_alb.Bonus10Type = (int)0;
-				daringstuddedgloves_alb.ExtraBonus = 0;
-				daringstuddedgloves_alb.ExtraBonusType = (int)0;
+				daringstuddedgloves_alb.ClearTemplateBonuses();
+				daringstuddedgloves_alb.SetTemplateBonuses(eProperty.Quickness, 4);
 				daringstuddedgloves_alb.Effect = 0;
 				daringstuddedgloves_alb.DPS_AF = 12;
-				daringstuddedgloves_alb.Charges = 0;
-				daringstuddedgloves_alb.MaxCharges = 0;
-				daringstuddedgloves_alb.SpellID = 0;
-				daringstuddedgloves_alb.ProcSpellID = 0;
+				daringstuddedgloves_alb.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				daringstuddedgloves_alb.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				daringstuddedgloves_alb.SPD_ABS = 19;
 				daringstuddedgloves_alb.Realm = 0;
 				daringstuddedgloves_alb.MaxCount = 1;
@@ -1238,16 +852,12 @@ namespace DOL.GS.Quests.Albion
 				daringstuddedgloves_alb.PoisonCharges = 0;
 				daringstuddedgloves_alb.PoisonMaxCharges = 0;
 				daringstuddedgloves_alb.PoisonSpellID = 0;
-				daringstuddedgloves_alb.ProcSpellID1 = 0;
-				daringstuddedgloves_alb.SpellID1 = 0;
-				daringstuddedgloves_alb.MaxCharges1 = 0;
-				daringstuddedgloves_alb.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(daringstuddedgloves_alb);
+					daringstuddedgloves_alb.AddQuestObjectToDatabase();
 			}
 			daringstuddedjerkin_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedjerkin_alb");
 			if (daringstuddedjerkin_alb == null)
@@ -1270,34 +880,12 @@ namespace DOL.GS.Quests.Albion
 				daringstuddedjerkin_alb.CanDropAsLoot = false;
 				daringstuddedjerkin_alb.Color = 0;
 				daringstuddedjerkin_alb.Bonus = 0; // default bonus
-				daringstuddedjerkin_alb.Bonus1 = 12;
-				daringstuddedjerkin_alb.Bonus1Type = (int)10;
-				daringstuddedjerkin_alb.Bonus2 = 0;
-				daringstuddedjerkin_alb.Bonus2Type = (int)0;
-				daringstuddedjerkin_alb.Bonus3 = 0;
-				daringstuddedjerkin_alb.Bonus3Type = (int)0;
-				daringstuddedjerkin_alb.Bonus4 = 0;
-				daringstuddedjerkin_alb.Bonus4Type = (int)0;
-				daringstuddedjerkin_alb.Bonus5 = 0;
-				daringstuddedjerkin_alb.Bonus5Type = (int)0;
-				daringstuddedjerkin_alb.Bonus6 = 0;
-				daringstuddedjerkin_alb.Bonus6Type = (int)0;
-				daringstuddedjerkin_alb.Bonus7 = 0;
-				daringstuddedjerkin_alb.Bonus7Type = (int)0;
-				daringstuddedjerkin_alb.Bonus8 = 0;
-				daringstuddedjerkin_alb.Bonus8Type = (int)0;
-				daringstuddedjerkin_alb.Bonus9 = 0;
-				daringstuddedjerkin_alb.Bonus9Type = (int)0;
-				daringstuddedjerkin_alb.Bonus10 = 0;
-				daringstuddedjerkin_alb.Bonus10Type = (int)0;
-				daringstuddedjerkin_alb.ExtraBonus = 0;
-				daringstuddedjerkin_alb.ExtraBonusType = (int)0;
+				daringstuddedjerkin_alb.ClearTemplateBonuses();
+				daringstuddedjerkin_alb.SetTemplateBonuses(eProperty.MaxHealth, 12);
 				daringstuddedjerkin_alb.Effect = 0;
 				daringstuddedjerkin_alb.DPS_AF = 12;
-				daringstuddedjerkin_alb.Charges = 0;
-				daringstuddedjerkin_alb.MaxCharges = 0;
-				daringstuddedjerkin_alb.SpellID = 0;
-				daringstuddedjerkin_alb.ProcSpellID = 0;
+				daringstuddedjerkin_alb.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				daringstuddedjerkin_alb.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				daringstuddedjerkin_alb.SPD_ABS = 19;
 				daringstuddedjerkin_alb.Realm = 0;
 				daringstuddedjerkin_alb.MaxCount = 1;
@@ -1311,16 +899,12 @@ namespace DOL.GS.Quests.Albion
 				daringstuddedjerkin_alb.PoisonCharges = 0;
 				daringstuddedjerkin_alb.PoisonMaxCharges = 0;
 				daringstuddedjerkin_alb.PoisonSpellID = 0;
-				daringstuddedjerkin_alb.ProcSpellID1 = 0;
-				daringstuddedjerkin_alb.SpellID1 = 0;
-				daringstuddedjerkin_alb.MaxCharges1 = 0;
-				daringstuddedjerkin_alb.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(daringstuddedjerkin_alb);
+					daringstuddedjerkin_alb.AddQuestObjectToDatabase();
 			}
 			daringstuddedleggings_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedleggings_alb");
 			if (daringstuddedleggings_alb == null)
@@ -1343,34 +927,12 @@ namespace DOL.GS.Quests.Albion
 				daringstuddedleggings_alb.CanDropAsLoot = false;
 				daringstuddedleggings_alb.Color = 0;
 				daringstuddedleggings_alb.Bonus = 0; // default bonus
-				daringstuddedleggings_alb.Bonus1 = 4;
-				daringstuddedleggings_alb.Bonus1Type = (int)4;
-				daringstuddedleggings_alb.Bonus2 = 0;
-				daringstuddedleggings_alb.Bonus2Type = (int)0;
-				daringstuddedleggings_alb.Bonus3 = 0;
-				daringstuddedleggings_alb.Bonus3Type = (int)0;
-				daringstuddedleggings_alb.Bonus4 = 0;
-				daringstuddedleggings_alb.Bonus4Type = (int)0;
-				daringstuddedleggings_alb.Bonus5 = 0;
-				daringstuddedleggings_alb.Bonus5Type = (int)0;
-				daringstuddedleggings_alb.Bonus6 = 0;
-				daringstuddedleggings_alb.Bonus6Type = (int)0;
-				daringstuddedleggings_alb.Bonus7 = 0;
-				daringstuddedleggings_alb.Bonus7Type = (int)0;
-				daringstuddedleggings_alb.Bonus8 = 0;
-				daringstuddedleggings_alb.Bonus8Type = (int)0;
-				daringstuddedleggings_alb.Bonus9 = 0;
-				daringstuddedleggings_alb.Bonus9Type = (int)0;
-				daringstuddedleggings_alb.Bonus10 = 0;
-				daringstuddedleggings_alb.Bonus10Type = (int)0;
-				daringstuddedleggings_alb.ExtraBonus = 0;
-				daringstuddedleggings_alb.ExtraBonusType = (int)0;
+				daringstuddedleggings_alb.ClearTemplateBonuses();
+				daringstuddedleggings_alb.SetTemplateBonuses(eProperty.Quickness, 4);
 				daringstuddedleggings_alb.Effect = 0;
 				daringstuddedleggings_alb.DPS_AF = 12;
-				daringstuddedleggings_alb.Charges = 0;
-				daringstuddedleggings_alb.MaxCharges = 0;
-				daringstuddedleggings_alb.SpellID = 0;
-				daringstuddedleggings_alb.ProcSpellID = 0;
+				daringstuddedleggings_alb.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				daringstuddedleggings_alb.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				daringstuddedleggings_alb.SPD_ABS = 19;
 				daringstuddedleggings_alb.Realm = 0;
 				daringstuddedleggings_alb.MaxCount = 1;
@@ -1384,16 +946,12 @@ namespace DOL.GS.Quests.Albion
 				daringstuddedleggings_alb.PoisonCharges = 0;
 				daringstuddedleggings_alb.PoisonMaxCharges = 0;
 				daringstuddedleggings_alb.PoisonSpellID = 0;
-				daringstuddedleggings_alb.ProcSpellID1 = 0;
-				daringstuddedleggings_alb.SpellID1 = 0;
-				daringstuddedleggings_alb.MaxCharges1 = 0;
-				daringstuddedleggings_alb.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(daringstuddedleggings_alb);
+					daringstuddedleggings_alb.AddQuestObjectToDatabase();
 			}
 			daringstuddedsleeves_alb = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedsleeves_alb");
 			if (daringstuddedsleeves_alb == null)
@@ -1416,34 +974,12 @@ namespace DOL.GS.Quests.Albion
 				daringstuddedsleeves_alb.CanDropAsLoot = false;
 				daringstuddedsleeves_alb.Color = 0;
 				daringstuddedsleeves_alb.Bonus = 0; // default bonus
-				daringstuddedsleeves_alb.Bonus1 = 4;
-				daringstuddedsleeves_alb.Bonus1Type = (int)1;
-				daringstuddedsleeves_alb.Bonus2 = 0;
-				daringstuddedsleeves_alb.Bonus2Type = (int)0;
-				daringstuddedsleeves_alb.Bonus3 = 0;
-				daringstuddedsleeves_alb.Bonus3Type = (int)0;
-				daringstuddedsleeves_alb.Bonus4 = 0;
-				daringstuddedsleeves_alb.Bonus4Type = (int)0;
-				daringstuddedsleeves_alb.Bonus5 = 0;
-				daringstuddedsleeves_alb.Bonus5Type = (int)0;
-				daringstuddedsleeves_alb.Bonus6 = 0;
-				daringstuddedsleeves_alb.Bonus6Type = (int)0;
-				daringstuddedsleeves_alb.Bonus7 = 0;
-				daringstuddedsleeves_alb.Bonus7Type = (int)0;
-				daringstuddedsleeves_alb.Bonus8 = 0;
-				daringstuddedsleeves_alb.Bonus8Type = (int)0;
-				daringstuddedsleeves_alb.Bonus9 = 0;
-				daringstuddedsleeves_alb.Bonus9Type = (int)0;
-				daringstuddedsleeves_alb.Bonus10 = 0;
-				daringstuddedsleeves_alb.Bonus10Type = (int)0;
-				daringstuddedsleeves_alb.ExtraBonus = 0;
-				daringstuddedsleeves_alb.ExtraBonusType = (int)0;
+				daringstuddedsleeves_alb.ClearTemplateBonuses();
+				daringstuddedsleeves_alb.SetTemplateBonuses(eProperty.Strength, 4);
 				daringstuddedsleeves_alb.Effect = 0;
 				daringstuddedsleeves_alb.DPS_AF = 12;
-				daringstuddedsleeves_alb.Charges = 0;
-				daringstuddedsleeves_alb.MaxCharges = 0;
-				daringstuddedsleeves_alb.SpellID = 0;
-				daringstuddedsleeves_alb.ProcSpellID = 0;
+				daringstuddedsleeves_alb.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				daringstuddedsleeves_alb.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				daringstuddedsleeves_alb.SPD_ABS = 19;
 				daringstuddedsleeves_alb.Realm = 0;
 				daringstuddedsleeves_alb.MaxCount = 1;
@@ -1457,16 +993,12 @@ namespace DOL.GS.Quests.Albion
 				daringstuddedsleeves_alb.PoisonCharges = 0;
 				daringstuddedsleeves_alb.PoisonMaxCharges = 0;
 				daringstuddedsleeves_alb.PoisonSpellID = 0;
-				daringstuddedsleeves_alb.ProcSpellID1 = 0;
-				daringstuddedsleeves_alb.SpellID1 = 0;
-				daringstuddedsleeves_alb.MaxCharges1 = 0;
-				daringstuddedsleeves_alb.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(daringstuddedsleeves_alb);
+					daringstuddedsleeves_alb.AddQuestObjectToDatabase();
 			}
 
 

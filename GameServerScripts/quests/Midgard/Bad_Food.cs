@@ -139,8 +139,8 @@ using DOL.AI.Brain;
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					Pedra.SaveIntoDatabase();
+				
+				Pedra.AddQuestObjectToDatabase();
 					
 				Pedra.AddToWorld();
 				
@@ -181,8 +181,8 @@ using DOL.AI.Brain;
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					Kedra.SaveIntoDatabase();
+				
+				Kedra.AddQuestObjectToDatabase();
 					
 				Kedra.AddToWorld();
 				
@@ -218,34 +218,11 @@ using DOL.AI.Brain;
 				marinefungus.CanDropAsLoot = false;
 				marinefungus.Color = 0;
 				marinefungus.Bonus = 35; // default bonus				
-				marinefungus.Bonus1 = 0;
-				marinefungus.Bonus1Type = (int) 0;
-				marinefungus.Bonus2 = 0;
-				marinefungus.Bonus2Type = (int) 0;
-				marinefungus.Bonus3 = 0;
-				marinefungus.Bonus3Type = (int) 0;
-				marinefungus.Bonus4 = 0;
-				marinefungus.Bonus4Type = (int) 0;
-				marinefungus.Bonus5 = 0;
-				marinefungus.Bonus5Type = (int) 0;
-				marinefungus.Bonus6 = 0;
-				marinefungus.Bonus6Type = (int) 0;
-				marinefungus.Bonus7 = 0;
-				marinefungus.Bonus7Type = (int) 0;
-				marinefungus.Bonus8 = 0;
-				marinefungus.Bonus8Type = (int) 0;
-				marinefungus.Bonus9 = 0;
-				marinefungus.Bonus9Type = (int) 0;
-				marinefungus.Bonus10 = 0;
-				marinefungus.Bonus10Type = (int) 0;
-				marinefungus.ExtraBonus = 0;
-				marinefungus.ExtraBonusType = (int) 0;
+				marinefungus.ClearTemplateBonuses();
 				marinefungus.Effect = 0;
 				marinefungus.Emblem = 0;
-				marinefungus.Charges = 0;
-				marinefungus.MaxCharges = 0;
-				marinefungus.SpellID = 0;
-				marinefungus.ProcSpellID = 0;
+				marinefungus.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				marinefungus.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				marinefungus.Type_Damage = 0;
 				marinefungus.Realm = 0;
 				marinefungus.MaxCount = 1;
@@ -259,17 +236,12 @@ using DOL.AI.Brain;
 				marinefungus.PoisonCharges = 0;
 				marinefungus.PoisonMaxCharges = 0;
 				marinefungus.PoisonSpellID = 0;
-				marinefungus.ProcSpellID1 = 0;
-				marinefungus.SpellID1 = 0;
-				marinefungus.MaxCharges1 = 0;
-				marinefungus.Charges1 = 0;
 				
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(marinefungus);
-				}
+				marinefungus.AddQuestObjectToDatabase();
+			}
 			
 
 			#endregion

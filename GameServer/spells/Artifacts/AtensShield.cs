@@ -79,23 +79,15 @@ namespace DOL.GS.Spells
 					m_goldenTridentofFlame.Effect = 77;
 					m_goldenTridentofFlame.Model = 1004;
 					m_goldenTridentofFlame.Bonus = 35;
-					m_goldenTridentofFlame.Bonus1 = 60;
-					m_goldenTridentofFlame.Bonus2 = 19;
-					m_goldenTridentofFlame.Bonus3 = 20;
-					m_goldenTridentofFlame.Bonus4 = 3;
-					m_goldenTridentofFlame.Bonus5 = 3;
-					m_goldenTridentofFlame.Bonus1Type = 10;
-					m_goldenTridentofFlame.Bonus2Type = 1;
-					m_goldenTridentofFlame.Bonus3Type = 148;
-					m_goldenTridentofFlame.Bonus4Type = 155;
-					m_goldenTridentofFlame.Bonus5Type = 200;
+					m_goldenTridentofFlame.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Strength, eProperty.ArmorFactor, eProperty.MeleeSpeed, eProperty.StyleDamage },
+					                                          new []{ 60, 19, 20, 3, 3 });
 					m_goldenTridentofFlame.IsPickable = false;
 					m_goldenTridentofFlame.IsDropable = false;
 					m_goldenTridentofFlame.CanDropAsLoot = false;
 					m_goldenTridentofFlame.IsTradable = false;
 					m_goldenTridentofFlame.MaxCount = 1;
 					m_goldenTridentofFlame.PackSize = 1;
-					m_goldenTridentofFlame.ProcSpellID = 32116;
+					m_goldenTridentofFlame.SetTemplateProcSpells(32116, 0);
 
 				}
 				return m_goldenTridentofFlame;
@@ -128,23 +120,15 @@ namespace DOL.GS.Spells
 					m_goldenTridentofFlame.Effect = 77;
 					m_goldenTridentofFlame.Model = 1004;
 					m_goldenTridentofFlame.Bonus = 35;
-					m_goldenTridentofFlame.Bonus1 = 60;
-					m_goldenTridentofFlame.Bonus2 = 19;
-					m_goldenTridentofFlame.Bonus3 = 20;
-					m_goldenTridentofFlame.Bonus4 = 3;
-					m_goldenTridentofFlame.Bonus5 = 3;
-					m_goldenTridentofFlame.Bonus1Type = 10;
-					m_goldenTridentofFlame.Bonus2Type = 1;
-					m_goldenTridentofFlame.Bonus3Type = 148;
-					m_goldenTridentofFlame.Bonus4Type = 155;
-					m_goldenTridentofFlame.Bonus5Type = 200;
+					m_goldenTridentofFlame.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Strength, eProperty.ArmorFactor, eProperty.MeleeSpeed, eProperty.StyleDamage },
+					                                          new []{ 60, 19, 20, 3, 3 });
 					m_goldenTridentofFlame.IsPickable = false;
 					m_goldenTridentofFlame.IsDropable = false;
 					m_goldenTridentofFlame.CanDropAsLoot = false;
 					m_goldenTridentofFlame.IsTradable = false;
 					m_goldenTridentofFlame.MaxCount = 1;
 					m_goldenTridentofFlame.PackSize = 1;
-					m_goldenTridentofFlame.ProcSpellID = 32116;
+					m_goldenTridentofFlame.SetTemplateProcSpells(32116, 0);
 
 				}
 				return m_goldenTridentofFlame;
@@ -177,23 +161,15 @@ namespace DOL.GS.Spells
 					m_goldenTridentofFlame.Effect = 77;
 					m_goldenTridentofFlame.Model = 1004;
 					m_goldenTridentofFlame.Bonus = 35;
-					m_goldenTridentofFlame.Bonus1 = 60;
-					m_goldenTridentofFlame.Bonus2 = 19;
-					m_goldenTridentofFlame.Bonus3 = 20;
-					m_goldenTridentofFlame.Bonus4 = 3;
-					m_goldenTridentofFlame.Bonus5 = 3;
-					m_goldenTridentofFlame.Bonus1Type = 10;
-					m_goldenTridentofFlame.Bonus2Type = 1;
-					m_goldenTridentofFlame.Bonus3Type = 148;
-					m_goldenTridentofFlame.Bonus4Type = 155;
-					m_goldenTridentofFlame.Bonus5Type = 200;
+					m_goldenTridentofFlame.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Strength, eProperty.ArmorFactor, eProperty.MeleeSpeed, eProperty.StyleDamage },
+					                                          new []{ 60, 19, 20, 3, 3 });
 					m_goldenTridentofFlame.IsPickable = false;
 					m_goldenTridentofFlame.IsDropable = false;
 					m_goldenTridentofFlame.CanDropAsLoot = false;
 					m_goldenTridentofFlame.IsTradable = false;
 					m_goldenTridentofFlame.MaxCount = 1;
 					m_goldenTridentofFlame.PackSize = 1;
-					m_goldenTridentofFlame.ProcSpellID = 32116;
+					m_goldenTridentofFlame.SetTemplateProcSpells(32116, 0);
 
 				}
 				return m_goldenTridentofFlame;

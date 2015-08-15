@@ -18,17 +18,15 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
-using System.Text;
+
 using DOL.Database;
-using DOL.Events;
-using DOL.GS.PacketHandler;
-using log4net;
-using DOL.GS.Behaviour.Attributes;
-using DOL.GS.Behaviour;
 using DOL.GS.Quests.Atlantis;
-using System.Collections.Generic;
+
+using log4net;
+
 
 namespace DOL.GS.Quests
 {
@@ -37,7 +35,7 @@ namespace DOL.GS.Quests
 	/// must be registered here to be usable
 	/// This manager is used for scripted quests
 	/// </summary>
-    public sealed class QuestMgr
+    public static class QuestMgr
     {
 		#region Declaration
 
@@ -420,6 +418,26 @@ namespace DOL.GS.Quests
 
 		#endregion
 
+		#region quest objects extension
+		/// <summary>
+		/// Use This Method to Add Quest Intiated Object to Database
+		/// </summary>
+		/// <param name="item"></param>
+		public static void AddQuestObjectToDatabase(this ItemTemplate item)
+		{
+			GameServer.Database.AddObject(item);
+		}
+		
+		/// <summary>
+		/// Use This Method to Add Quest Intiated Object to Database
+		/// </summary>
+		/// <param name="npc"></param>
+		public static void AddQuestObjectToDatabase(this GameNPC npc)
+		{
+			if (ServerProperties.Properties.SAVE_QUEST_MOBS_INTO_DATABASE)
+				npc.SaveIntoDatabase();
+		}
+		#endregion
     }
 
 }

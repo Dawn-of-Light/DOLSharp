@@ -17,15 +17,12 @@
  *
  */
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS.PacketHandler;
+
 using DOL.Database;
-using log4net;
-using System.Reflection;
 using DOL.Events;
+using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
+using DOL.GS.Spells;
 using DOL.AI.Brain;
 
 
@@ -858,7 +855,7 @@ namespace DOL.GS
 		/// <returns>Whether or not the stun was cast.</returns>
 		public bool CheckStun(bool firstTime)
 		{
-			if (GetSkillDisabledDuration(Stun) == 0 && (firstTime || Util.Chance(StunChance)))
+			if (this.GetSpellDisabledDurationFromSharedTimer(Stun) == 0 && (firstTime || Util.Chance(StunChance)))
 			{
 				PrepareToStun();
 				return true;

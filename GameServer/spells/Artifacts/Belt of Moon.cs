@@ -102,24 +102,15 @@ namespace DOL.GS.Spells
 					m_MoonMace.Color = 43;
 					m_MoonMace.Effect = 45;
 					m_MoonMace.Model = 647;
-					m_MoonMace.Bonus1 = 24;
-					m_MoonMace.Bonus2 = 3;
-					m_MoonMace.Bonus3 = 10;
-					m_MoonMace.Bonus4 = 4;
-					m_MoonMace.Bonus1Type = 156;
-					m_MoonMace.Bonus2Type = 163;
-					m_MoonMace.Bonus3Type = 196;
-					m_MoonMace.Bonus4Type = 191;
+					m_MoonMace.SetTemplateBonuses(new []{ eProperty.Acuity, eProperty.AllMagicSkills, eProperty.PowerPool, eProperty.CastingSpeed },
+					                              new []{ 24, 3, 10, 4 });
 					m_MoonMace.IsPickable = false;
 					m_MoonMace.IsDropable = false;
 					m_MoonMace.CanDropAsLoot = false;
 					m_MoonMace.IsTradable = false;
 					m_MoonMace.MaxCount = 1;
 					m_MoonMace.PackSize = 1;
-                    m_MoonMace.SpellID = 65511;
-                    m_MoonMace.Charges = 5;
-                    m_MoonMace.MaxCharges = 5;
-
+					m_MoonMace.SetTemplateUseSpells(65511, 5);
 				}
 				return m_MoonMace;
 			}
@@ -150,24 +141,15 @@ namespace DOL.GS.Spells
                     m_MoonMace.Color = 43;
                     m_MoonMace.Effect = 45;
                     m_MoonMace.Model = 320;
-                    m_MoonMace.Bonus1 = 24;
-                    m_MoonMace.Bonus2 = 3;
-                    m_MoonMace.Bonus3 = 10;
-                    m_MoonMace.Bonus4 = 4;
-                    m_MoonMace.Bonus1Type = 156;
-                    m_MoonMace.Bonus2Type = 163;
-                    m_MoonMace.Bonus3Type = 196;
-                    m_MoonMace.Bonus4Type = 191;
+					m_MoonMace.SetTemplateBonuses(new []{ eProperty.Acuity, eProperty.AllMagicSkills, eProperty.PowerPool, eProperty.CastingSpeed },
+                                                  new []{ 24, 3, 10, 4 });
                     m_MoonMace.IsPickable = false;
                     m_MoonMace.IsDropable = false;
                     m_MoonMace.CanDropAsLoot = false;
                     m_MoonMace.IsTradable = false;
                     m_MoonMace.MaxCount = 1;
                     m_MoonMace.PackSize = 1;
-                    m_MoonMace.SpellID = 65511;
-                    m_MoonMace.Charges = 5;
-                    m_MoonMace.MaxCharges = 5;
-
+                    m_MoonMace.SetTemplateUseSpells(65511, 5);
                 }
                 return m_MoonMace;
             }
@@ -198,24 +180,15 @@ namespace DOL.GS.Spells
                     m_MoonMace.Color = 43;
                     m_MoonMace.Effect = 45;
                     m_MoonMace.Model = 461;
-                    m_MoonMace.Bonus1 = 24;
-                    m_MoonMace.Bonus2 = 3;
-                    m_MoonMace.Bonus3 = 10;
-                    m_MoonMace.Bonus4 = 4;
-                    m_MoonMace.Bonus1Type = 156;
-                    m_MoonMace.Bonus2Type = 163;
-                    m_MoonMace.Bonus3Type = 196;
-                    m_MoonMace.Bonus4Type = 191;
+					m_MoonMace.SetTemplateBonuses(new []{ eProperty.Acuity, eProperty.AllMagicSkills, eProperty.PowerPool, eProperty.CastingSpeed },
+                                                  new []{ 24, 3, 10, 4 });
                     m_MoonMace.IsPickable = false;
                     m_MoonMace.IsDropable = false;
                     m_MoonMace.CanDropAsLoot = false;
                     m_MoonMace.IsTradable = false;
                     m_MoonMace.MaxCount = 1;
                     m_MoonMace.PackSize = 1;
-                    m_MoonMace.SpellID = 65511;
-                    m_MoonMace.Charges = 5;
-                    m_MoonMace.MaxCharges = 5;
-
+                    m_MoonMace.SetTemplateUseSpells(65511, 5);
                 }
                 return m_MoonMace;
             }
@@ -249,23 +222,14 @@ namespace DOL.GS.Spells
                     m_MoonStaff.Color = 43;
                     m_MoonStaff.Effect = 45;
                     m_MoonStaff.Model = 566;
-                    m_MoonStaff.Bonus1 = 24;
-                    m_MoonStaff.Bonus2 = 3;
-                    m_MoonStaff.Bonus3 = 10;
-                    m_MoonStaff.Bonus4 = 4;
-                    m_MoonStaff.Bonus1Type = 156;
-                    m_MoonStaff.Bonus2Type = 163;
-                    m_MoonStaff.Bonus3Type = 196;
-                    m_MoonStaff.Bonus4Type = 191;
+					m_MoonMace.SetTemplateBonuses(new []{ eProperty.Acuity, eProperty.AllMagicSkills, eProperty.PowerPool, eProperty.CastingSpeed },
+                                                  new []{ 24, 3, 10, 4 });
                     m_MoonStaff.IsPickable = false;
                     m_MoonStaff.IsDropable = false;
                     m_MoonStaff.CanDropAsLoot = false;
                     m_MoonStaff.IsTradable = false;
                     m_MoonStaff.MaxCount = 1;
-                    m_MoonStaff.SpellID = 65511;
-                    m_MoonStaff.Charges = 5;
-                    m_MoonStaff.MaxCharges = 5;
-
+                    m_MoonStaff.SetTemplateUseSpells(65511, 5);
                 }
                 return m_MoonStaff;
             }

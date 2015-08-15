@@ -131,11 +131,8 @@ namespace DOL.GS.Quests.Hibernia
 				Brigit.Z = 8008;
 				Brigit.Heading = 3254;
 				Brigit.AddToWorld();
-				if (SAVE_INTO_DATABASE)
-				{
-					Brigit.SaveIntoDatabase();
-				}
-
+				
+				Brigit.AddQuestObjectToDatabase();
 			}
 			else
 				Brigit = npcs[0];
@@ -160,11 +157,8 @@ namespace DOL.GS.Quests.Hibernia
 				Caithor.Z = 4984;
 				Caithor.Heading = 3319;
 				Caithor.AddToWorld();
-				if (SAVE_INTO_DATABASE)
-				{
-					Caithor.SaveIntoDatabase();
-				}
-
+				
+				Caithor.AddQuestObjectToDatabase();
 			}
 			else
 				Caithor = npcs[0];
@@ -194,11 +188,7 @@ namespace DOL.GS.Quests.Hibernia
 				Moonstone.Type_Damage = 0;
 				Moonstone.Quality = 100;
 				Moonstone.Weight = 12;
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(Moonstone);
-				}
-
+				Moonstone.AddQuestObjectToDatabase();
 			}
 // end item			
 			BardEpicBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("BardEpicBoots");
@@ -225,23 +215,9 @@ namespace DOL.GS.Quests.Hibernia
 				BardEpicBoots.Condition = 50000;
 				BardEpicBoots.Durability = 50000;
 
-				BardEpicBoots.Bonus1 = 15;
-				BardEpicBoots.Bonus1Type = (int) eStat.QUI;
+				BardEpicBoots.SetTemplateBonuses(new []{ eProperty.Quickness, eProperty.Resist_Matter, eProperty.PowerRegenerationRate, eProperty.MaxHealth }, new []{ 15, 10, 4, 33 });
 
-				BardEpicBoots.Bonus2 = 10;
-				BardEpicBoots.Bonus2Type = (int) eResist.Matter;
-
-				BardEpicBoots.Bonus3 = 4;
-				BardEpicBoots.Bonus3Type = (int) eProperty.PowerRegenerationRate;
-
-				BardEpicBoots.Bonus4 = 33;
-				BardEpicBoots.Bonus4Type = (int) eProperty.MaxHealth;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(BardEpicBoots);
-				}
-
+				BardEpicBoots.AddQuestObjectToDatabase();
 			}
 //end item
 			//Moonsung Coif 
@@ -269,24 +245,9 @@ namespace DOL.GS.Quests.Hibernia
 				BardEpicHelm.Condition = 50000;
 				BardEpicHelm.Durability = 50000;
 
-				BardEpicHelm.Bonus1 = 18;
-				BardEpicHelm.Bonus1Type = (int) eStat.CHR;
+				BardEpicHelm.SetTemplateBonuses(new []{ eProperty.Charisma, eProperty.PowerRegenerationRate, eProperty.Skill_Regrowth, eProperty.MaxHealth }, new []{ 18, 4, 3, 21 });
 
-				BardEpicHelm.Bonus2 = 4;
-				BardEpicHelm.Bonus2Type = (int) eProperty.PowerRegenerationRate;
-
-				BardEpicHelm.Bonus3 = 3;
-				BardEpicHelm.Bonus3Type = (int) eProperty.Skill_Regrowth;
-
-				BardEpicHelm.Bonus4 = 21;
-				BardEpicHelm.Bonus4Type = (int) eProperty.MaxHealth;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(BardEpicHelm);
-				}
-
-
+				BardEpicHelm.AddQuestObjectToDatabase();
 			}
 //end item
 			//Moonsung Gloves 
@@ -314,23 +275,9 @@ namespace DOL.GS.Quests.Hibernia
 				BardEpicGloves.Condition = 50000;
 				BardEpicGloves.Durability = 50000;
 
-				BardEpicGloves.Bonus1 = 3;
-				BardEpicGloves.Bonus1Type = (int) eProperty.Skill_Nurture;
+				BardEpicGloves.SetTemplateBonuses(new []{ eProperty.Skill_Nurture, eProperty.Skill_Music, eProperty.Dexterity, eProperty.MaxHealth }, new []{ 3, 3, 12, 33 });
 
-				BardEpicGloves.Bonus2 = 3;
-				BardEpicGloves.Bonus2Type = (int) eProperty.Skill_Music;
-
-				BardEpicGloves.Bonus3 = 12;
-				BardEpicGloves.Bonus3Type = (int) eStat.DEX;
-
-				BardEpicGloves.Bonus4 = 33;
-				BardEpicGloves.Bonus4Type = (int) eProperty.MaxHealth;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(BardEpicGloves);
-				}
-
+				BardEpicGloves.AddQuestObjectToDatabase();
 			}
 			//Moonsung Hauberk 
 			BardEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("BardEpicVest");
@@ -357,23 +304,9 @@ namespace DOL.GS.Quests.Hibernia
 				BardEpicVest.Condition = 50000;
 				BardEpicVest.Durability = 50000;
 
-				BardEpicVest.Bonus1 = 3;
-				BardEpicVest.Bonus1Type = (int) eProperty.Skill_Regrowth;
+				BardEpicVest.SetTemplateBonuses(new []{ eProperty.Skill_Regrowth, eProperty.Skill_Nurture, eProperty.Constitution, eProperty.Charisma }, new []{ 3, 3, 13, 15 });
 
-				BardEpicVest.Bonus2 = 3;
-				BardEpicVest.Bonus2Type = (int) eProperty.Skill_Nurture;
-
-				BardEpicVest.Bonus3 = 13;
-				BardEpicVest.Bonus3Type = (int) eStat.CON;
-
-				BardEpicVest.Bonus4 = 15;
-				BardEpicVest.Bonus4Type = (int) eStat.CHR;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(BardEpicVest);
-				}
-
+				BardEpicVest.AddQuestObjectToDatabase();
 			}
 			//Moonsung Legs 
 			BardEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("BardEpicLegs");
@@ -400,23 +333,9 @@ namespace DOL.GS.Quests.Hibernia
 				BardEpicLegs.Condition = 50000;
 				BardEpicLegs.Durability = 50000;
 
-				BardEpicLegs.Bonus1 = 16;
-				BardEpicLegs.Bonus1Type = (int) eStat.CON;
+				BardEpicLegs.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.Resist_Body, eProperty.Resist_Matter }, new []{ 16, 15, 10, 10 });
 
-				BardEpicLegs.Bonus2 = 15;
-				BardEpicLegs.Bonus2Type = (int) eStat.DEX;
-
-				BardEpicLegs.Bonus3 = 10;
-				BardEpicLegs.Bonus3Type = (int) eResist.Body;
-
-				BardEpicLegs.Bonus4 = 10;
-				BardEpicLegs.Bonus4Type = (int) eResist.Matter;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(BardEpicLegs);
-				}
-
+				BardEpicLegs.AddQuestObjectToDatabase();
 			}
 			//Moonsung Sleeves 
 			BardEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("BardEpicArms");
@@ -443,23 +362,9 @@ namespace DOL.GS.Quests.Hibernia
 				BardEpicArms.Condition = 50000;
 				BardEpicArms.Durability = 50000;
 
-				BardEpicArms.Bonus1 = 15;
-				BardEpicArms.Bonus1Type = (int) eStat.STR;
+				BardEpicArms.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Charisma, eProperty.Constitution, eProperty.Resist_Energy }, new []{ 15, 12, 10, 12 });
 
-				BardEpicArms.Bonus2 = 12;
-				BardEpicArms.Bonus2Type = (int) eStat.CHR;
-
-				BardEpicArms.Bonus3 = 10;
-				BardEpicArms.Bonus3Type = (int) eStat.CON;
-
-				BardEpicArms.Bonus4 = 12;
-				BardEpicArms.Bonus4Type = (int) eResist.Energy;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(BardEpicArms);
-				}
-
+				BardEpicArms.AddQuestObjectToDatabase();
 			}
 //Champion Epic Sleeves End
 			ChampionEpicBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("ChampionEpicBoots");
@@ -486,23 +391,9 @@ namespace DOL.GS.Quests.Hibernia
 				ChampionEpicBoots.Condition = 50000;
 				ChampionEpicBoots.Durability = 50000;
 
-				ChampionEpicBoots.Bonus1 = 33;
-				ChampionEpicBoots.Bonus1Type = (int) eProperty.MaxHealth;
+				ChampionEpicBoots.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Resist_Heat, eProperty.Resist_Matter, eProperty.Dexterity }, new []{ 33, 10, 10, 15 });
 
-				ChampionEpicBoots.Bonus2 = 10;
-				ChampionEpicBoots.Bonus2Type = (int) eResist.Heat;
-
-				ChampionEpicBoots.Bonus3 = 10;
-				ChampionEpicBoots.Bonus3Type = (int) eResist.Matter;
-
-				ChampionEpicBoots.Bonus4 = 15;
-				ChampionEpicBoots.Bonus4Type = (int) eStat.DEX;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(ChampionEpicBoots);
-				}
-
+				ChampionEpicBoots.AddQuestObjectToDatabase();
 			}
 //end item
 			//Moonglow Coif 
@@ -530,23 +421,9 @@ namespace DOL.GS.Quests.Hibernia
 				ChampionEpicHelm.Condition = 50000;
 				ChampionEpicHelm.Durability = 50000;
 
-				ChampionEpicHelm.Bonus1 = 3;
-				ChampionEpicHelm.Bonus1Type = (int) eProperty.Skill_Valor;
+				ChampionEpicHelm.SetTemplateBonuses(new []{ eProperty.Skill_Valor, eProperty.Constitution, eProperty.Quickness, eProperty.PowerRegenerationRate }, new []{ 3, 12, 12, 6 });
 
-				ChampionEpicHelm.Bonus2 = 12;
-				ChampionEpicHelm.Bonus2Type = (int) eStat.CON;
-
-				ChampionEpicHelm.Bonus3 = 12;
-				ChampionEpicHelm.Bonus3Type = (int) eStat.QUI;
-
-				ChampionEpicHelm.Bonus4 = 6;
-				ChampionEpicHelm.Bonus4Type = (int) eProperty.PowerRegenerationRate;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(ChampionEpicHelm);
-				}
-
+				ChampionEpicHelm.AddQuestObjectToDatabase();
 			}
 //end item
 			//Moonglow Gloves 
@@ -574,23 +451,9 @@ namespace DOL.GS.Quests.Hibernia
 				ChampionEpicGloves.Condition = 50000;
 				ChampionEpicGloves.Durability = 50000;
 
-				ChampionEpicGloves.Bonus1 = 3;
-				ChampionEpicGloves.Bonus1Type = (int) eProperty.Skill_Parry;
+				ChampionEpicGloves.SetTemplateBonuses(new []{ eProperty.Skill_Parry, eProperty.Strength, eProperty.Quickness, eProperty.Resist_Crush }, new []{ 3, 15, 15, 10 });
 
-				ChampionEpicGloves.Bonus2 = 15;
-				ChampionEpicGloves.Bonus2Type = (int) eStat.STR;
-
-				ChampionEpicGloves.Bonus3 = 15;
-				ChampionEpicGloves.Bonus3Type = (int) eStat.QUI;
-
-				ChampionEpicGloves.Bonus4 = 10;
-				ChampionEpicGloves.Bonus4Type = (int) eResist.Crush;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(ChampionEpicGloves);
-				}
-
+				ChampionEpicGloves.AddQuestObjectToDatabase();
 			}
 			//Moonglow Hauberk 
 			ChampionEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("ChampionEpicVest");
@@ -617,23 +480,9 @@ namespace DOL.GS.Quests.Hibernia
 				ChampionEpicVest.Condition = 50000;
 				ChampionEpicVest.Durability = 50000;
 
-				ChampionEpicVest.Bonus1 = 4;
-				ChampionEpicVest.Bonus1Type = (int) eProperty.Skill_Valor;
+				ChampionEpicVest.SetTemplateBonuses(new []{ eProperty.Skill_Valor, eProperty.Strength, eProperty.Quickness, eProperty.Resist_Energy }, new []{ 4, 13, 13, 10 });
 
-				ChampionEpicVest.Bonus2 = 13;
-				ChampionEpicVest.Bonus2Type = (int) eStat.STR;
-
-				ChampionEpicVest.Bonus3 = 13;
-				ChampionEpicVest.Bonus3Type = (int) eStat.QUI;
-
-				ChampionEpicVest.Bonus4 = 10;
-				ChampionEpicVest.Bonus4Type = (int) eResist.Energy;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(ChampionEpicVest);
-				}
-
+				ChampionEpicVest.AddQuestObjectToDatabase();
 			}
 			//Moonglow Legs 
 			ChampionEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("ChampionEpicLegs");
@@ -660,23 +509,9 @@ namespace DOL.GS.Quests.Hibernia
 				ChampionEpicLegs.Condition = 50000;
 				ChampionEpicLegs.Durability = 50000;
 
-				ChampionEpicLegs.Bonus1 = 15;
-				ChampionEpicLegs.Bonus1Type = (int) eStat.CON;
+				ChampionEpicLegs.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.Resist_Crush, eProperty.MaxHealth }, new []{ 15, 15, 10, 18 });
 
-				ChampionEpicLegs.Bonus2 = 15;
-				ChampionEpicLegs.Bonus2Type = (int) eStat.DEX;
-
-				ChampionEpicLegs.Bonus3 = 10;
-				ChampionEpicLegs.Bonus3Type = (int) eResist.Crush;
-
-				ChampionEpicLegs.Bonus4 = 18;
-				ChampionEpicLegs.Bonus4Type = (int) eProperty.MaxHealth;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(ChampionEpicLegs);
-				}
-
+				ChampionEpicLegs.AddQuestObjectToDatabase();
 			}
 			//Moonglow Sleeves 
 			ChampionEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("ChampionEpicArms");
@@ -703,23 +538,9 @@ namespace DOL.GS.Quests.Hibernia
 				ChampionEpicArms.Condition = 50000;
 				ChampionEpicArms.Durability = 50000;
 
-				ChampionEpicArms.Bonus1 = 3;
-				ChampionEpicArms.Bonus1Type = (int) eProperty.Skill_Large_Weapon;
+				ChampionEpicArms.SetTemplateBonuses(new []{ eProperty.Skill_Large_Weapon, eProperty.Strength, eProperty.Quickness, eProperty.MaxHealth }, new []{ 3, 10, 10, 33 });
 
-				ChampionEpicArms.Bonus2 = 10;
-				ChampionEpicArms.Bonus2Type = (int) eStat.STR;
-
-				ChampionEpicArms.Bonus3 = 10;
-				ChampionEpicArms.Bonus3Type = (int) eStat.QUI;
-
-				ChampionEpicArms.Bonus4 = 33;
-				ChampionEpicArms.Bonus4Type = (int) eProperty.MaxHealth;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(ChampionEpicArms);
-				}
-
+				ChampionEpicArms.AddQuestObjectToDatabase();
 			}
 			NightshadeEpicBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("NightshadeEpicBoots");
 			if (NightshadeEpicBoots == null)
@@ -745,23 +566,9 @@ namespace DOL.GS.Quests.Hibernia
 				NightshadeEpicBoots.Condition = 50000;
 				NightshadeEpicBoots.Durability = 50000;
 
-				NightshadeEpicBoots.Bonus1 = 12;
-				NightshadeEpicBoots.Bonus1Type = (int) eStat.STR;
+				NightshadeEpicBoots.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Dexterity, eProperty.Resist_Thrust, eProperty.MaxHealth }, new []{ 12, 15, 10, 24 });
 
-				NightshadeEpicBoots.Bonus2 = 15;
-				NightshadeEpicBoots.Bonus2Type = (int) eStat.DEX;
-
-				NightshadeEpicBoots.Bonus3 = 10;
-				NightshadeEpicBoots.Bonus3Type = (int) eResist.Thrust;
-
-				NightshadeEpicBoots.Bonus4 = 24;
-				NightshadeEpicBoots.Bonus4Type = (int) eProperty.MaxHealth;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(NightshadeEpicBoots);
-				}
-
+				NightshadeEpicBoots.AddQuestObjectToDatabase();
 			}
 //end item
 			//Moonlit Coif 
@@ -789,23 +596,9 @@ namespace DOL.GS.Quests.Hibernia
 				NightshadeEpicHelm.Condition = 50000;
 				NightshadeEpicHelm.Durability = 50000;
 
-				NightshadeEpicHelm.Bonus1 = 9;
-				NightshadeEpicHelm.Bonus1Type = (int) eStat.STR;
+				NightshadeEpicHelm.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Dexterity, eProperty.Quickness, eProperty.MaxHealth }, new []{ 9, 9, 9, 39 });
 
-				NightshadeEpicHelm.Bonus2 = 9;
-				NightshadeEpicHelm.Bonus2Type = (int) eStat.DEX;
-
-				NightshadeEpicHelm.Bonus3 = 9;
-				NightshadeEpicHelm.Bonus3Type = (int) eStat.QUI;
-
-				NightshadeEpicHelm.Bonus4 = 39;
-				NightshadeEpicHelm.Bonus4Type = (int) eProperty.MaxHealth;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(NightshadeEpicHelm);
-				}
-
+				NightshadeEpicHelm.AddQuestObjectToDatabase();
 			}
 //end item
 			//Moonlit Gloves 
@@ -833,23 +626,9 @@ namespace DOL.GS.Quests.Hibernia
 				NightshadeEpicGloves.Condition = 50000;
 				NightshadeEpicGloves.Durability = 50000;
 
-				NightshadeEpicGloves.Bonus1 = 2;
-				NightshadeEpicGloves.Bonus1Type = (int) eProperty.Skill_Critical_Strike;
+				NightshadeEpicGloves.SetTemplateBonuses(new []{ eProperty.Skill_Critical_Strike, eProperty.Dexterity, eProperty.Quickness, eProperty.Skill_Envenom }, new []{ 2, 12, 13, 5 });
 
-				NightshadeEpicGloves.Bonus2 = 12;
-				NightshadeEpicGloves.Bonus2Type = (int) eStat.DEX;
-
-				NightshadeEpicGloves.Bonus3 = 13;
-				NightshadeEpicGloves.Bonus3Type = (int) eStat.QUI;
-
-				NightshadeEpicGloves.Bonus4 = 5;
-				NightshadeEpicGloves.Bonus4Type = (int) eProperty.Skill_Envenom;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(NightshadeEpicGloves);
-				}
-
+				NightshadeEpicGloves.AddQuestObjectToDatabase();
 			}
 			//Moonlit Hauberk 
 			NightshadeEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("NightshadeEpicVest");
@@ -876,20 +655,9 @@ namespace DOL.GS.Quests.Hibernia
 				NightshadeEpicVest.Condition = 50000;
 				NightshadeEpicVest.Durability = 50000;
 
-				NightshadeEpicVest.Bonus1 = 10;
-				NightshadeEpicVest.Bonus1Type = (int) eStat.STR;
+				NightshadeEpicVest.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Dexterity, eProperty.MaxHealth }, new []{ 10, 10, 30 });
 
-				NightshadeEpicVest.Bonus2 = 10;
-				NightshadeEpicVest.Bonus2Type = (int) eStat.DEX;
-
-				NightshadeEpicVest.Bonus3 = 30;
-				NightshadeEpicVest.Bonus3Type = (int) eProperty.MaxHealth;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(NightshadeEpicVest);
-				}
-
+				NightshadeEpicVest.AddQuestObjectToDatabase();
 			}
 			//Moonlit Legs 
 			NightshadeEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("NightshadeEpicLegs");
@@ -916,23 +684,9 @@ namespace DOL.GS.Quests.Hibernia
 				NightshadeEpicLegs.Condition = 50000;
 				NightshadeEpicLegs.Durability = 50000;
 
-				NightshadeEpicLegs.Bonus1 = 16;
-				NightshadeEpicLegs.Bonus1Type = (int) eStat.CON;
+				NightshadeEpicLegs.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.Resist_Crush, eProperty.Resist_Slash }, new []{ 16, 15, 10, 10 });
 
-				NightshadeEpicLegs.Bonus2 = 15;
-				NightshadeEpicLegs.Bonus2Type = (int) eStat.DEX;
-
-				NightshadeEpicLegs.Bonus3 = 10;
-				NightshadeEpicLegs.Bonus3Type = (int) eResist.Crush;
-
-				NightshadeEpicLegs.Bonus4 = 10;
-				NightshadeEpicLegs.Bonus4Type = (int) eResist.Slash;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(NightshadeEpicLegs);
-				}
-
+				NightshadeEpicLegs.AddQuestObjectToDatabase();
 			}
 			//Moonlit Sleeves 
 			NightshadeEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("NightshadeEpicArms");
@@ -959,23 +713,9 @@ namespace DOL.GS.Quests.Hibernia
 				NightshadeEpicArms.Condition = 50000;
 				NightshadeEpicArms.Durability = 50000;
 
-				NightshadeEpicArms.Bonus1 = 4;
-				NightshadeEpicArms.Bonus1Type = (int) eProperty.Skill_Celtic_Dual;
+				NightshadeEpicArms.SetTemplateBonuses(new []{ eProperty.Skill_Celtic_Dual, eProperty.Constitution, eProperty.Dexterity, eProperty.Resist_Cold }, new []{ 4, 16, 15, 6 });
 
-				NightshadeEpicArms.Bonus2 = 16;
-				NightshadeEpicArms.Bonus2Type = (int) eStat.CON;
-
-				NightshadeEpicArms.Bonus3 = 15;
-				NightshadeEpicArms.Bonus3Type = (int) eStat.DEX;
-
-				NightshadeEpicArms.Bonus4 = 6;
-				NightshadeEpicArms.Bonus4Type = (int) eResist.Cold;
-
-				if (SAVE_INTO_DATABASE)
-				{
-                    GameServer.Database.AddObject(NightshadeEpicArms);
-				}
-
+                NightshadeEpicArms.AddQuestObjectToDatabase();
 			}
 			EnchanterEpicBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("EnchanterEpicBoots");
 			if (EnchanterEpicBoots == null)
@@ -1001,23 +741,9 @@ namespace DOL.GS.Quests.Hibernia
 				EnchanterEpicBoots.Condition = 50000;
 				EnchanterEpicBoots.Durability = 50000;
 
-				EnchanterEpicBoots.Bonus1 = 12;
-				EnchanterEpicBoots.Bonus1Type = (int) eStat.CON;
+				EnchanterEpicBoots.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.Resist_Body, eProperty.MaxHealth }, new []{ 12, 12, 12, 39 });
 
-				EnchanterEpicBoots.Bonus2 = 12;
-				EnchanterEpicBoots.Bonus2Type = (int) eStat.DEX;
-
-				EnchanterEpicBoots.Bonus3 = 12;
-				EnchanterEpicBoots.Bonus3Type = (int) eResist.Body;
-
-				EnchanterEpicBoots.Bonus4 = 39;
-				EnchanterEpicBoots.Bonus4Type = (int) eProperty.MaxHealth;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(EnchanterEpicBoots);
-				}
-
+				EnchanterEpicBoots.AddQuestObjectToDatabase();
 			}
 //end item
 			//Moonspun Coif 
@@ -1045,23 +771,9 @@ namespace DOL.GS.Quests.Hibernia
 				EnchanterEpicHelm.Condition = 50000;
 				EnchanterEpicHelm.Durability = 50000;
 
-				EnchanterEpicHelm.Bonus1 = 21;
-				EnchanterEpicHelm.Bonus1Type = (int) eProperty.MaxHealth;
+				EnchanterEpicHelm.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Resist_Energy, eProperty.Skill_Enchantments, eProperty.Intelligence }, new []{ 21, 8, 4, 18 });
 
-				EnchanterEpicHelm.Bonus2 = 8;
-				EnchanterEpicHelm.Bonus2Type = (int) eResist.Energy;
-
-				EnchanterEpicHelm.Bonus3 = 4;
-				EnchanterEpicHelm.Bonus3Type = (int) eProperty.Skill_Enchantments;
-
-				EnchanterEpicHelm.Bonus4 = 18;
-				EnchanterEpicHelm.Bonus4Type = (int) eStat.INT;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(EnchanterEpicHelm);
-				}
-
+				EnchanterEpicHelm.AddQuestObjectToDatabase();
 			}
 //end item
 			//Moonspun Gloves 
@@ -1089,23 +801,9 @@ namespace DOL.GS.Quests.Hibernia
 				EnchanterEpicGloves.Condition = 50000;
 				EnchanterEpicGloves.Durability = 50000;
 
-				EnchanterEpicGloves.Bonus1 = 30;
-				EnchanterEpicGloves.Bonus1Type = (int) eProperty.MaxHealth;
+				EnchanterEpicGloves.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Skill_Mana, eProperty.Intelligence, eProperty.Dexterity }, new []{ 30, 4, 6, 13 });
 
-				EnchanterEpicGloves.Bonus2 = 4;
-				EnchanterEpicGloves.Bonus2Type = (int) eProperty.Skill_Mana;
-
-				EnchanterEpicGloves.Bonus3 = 6;
-				EnchanterEpicGloves.Bonus3Type = (int) eStat.INT;
-
-				EnchanterEpicGloves.Bonus4 = 13;
-				EnchanterEpicGloves.Bonus4Type = (int) eStat.DEX;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(EnchanterEpicGloves);
-				}
-
+				EnchanterEpicGloves.AddQuestObjectToDatabase();
 			}
 			//Moonspun Hauberk 
 			EnchanterEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("EnchanterEpicVest");
@@ -1132,20 +830,9 @@ namespace DOL.GS.Quests.Hibernia
 				EnchanterEpicVest.Condition = 50000;
 				EnchanterEpicVest.Durability = 50000;
 
-				EnchanterEpicVest.Bonus1 = 30;
-				EnchanterEpicVest.Bonus1Type = (int) eProperty.MaxHealth;
+				EnchanterEpicVest.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Intelligence, eProperty.Dexterity }, new []{ 30, 15, 15 });
 
-				EnchanterEpicVest.Bonus2 = 15;
-				EnchanterEpicVest.Bonus2Type = (int) eStat.INT;
-
-				EnchanterEpicVest.Bonus3 = 15;
-				EnchanterEpicVest.Bonus3Type = (int) eStat.DEX;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(EnchanterEpicVest);
-				}
-
+				EnchanterEpicVest.AddQuestObjectToDatabase();
 			}
 			//Moonspun Legs 
 			EnchanterEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("EnchanterEpicLegs");
@@ -1172,23 +859,9 @@ namespace DOL.GS.Quests.Hibernia
 				EnchanterEpicLegs.Condition = 50000;
 				EnchanterEpicLegs.Durability = 50000;
 
-				EnchanterEpicLegs.Bonus1 = 16;
-				EnchanterEpicLegs.Bonus1Type = (int) eStat.CON;
+				EnchanterEpicLegs.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.Resist_Heat, eProperty.Resist_Cold }, new []{ 16, 15, 10, 10 });
 
-				EnchanterEpicLegs.Bonus2 = 15;
-				EnchanterEpicLegs.Bonus2Type = (int) eStat.DEX;
-
-				EnchanterEpicLegs.Bonus3 = 10;
-				EnchanterEpicLegs.Bonus3Type = (int) eResist.Heat;
-
-				EnchanterEpicLegs.Bonus4 = 10;
-				EnchanterEpicLegs.Bonus4Type = (int) eResist.Cold;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(EnchanterEpicLegs);
-				}
-
+				EnchanterEpicLegs.AddQuestObjectToDatabase();
 			}
 			//Moonspun Sleeves 
 			EnchanterEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("EnchanterEpicArms");
@@ -1215,23 +888,9 @@ namespace DOL.GS.Quests.Hibernia
 				EnchanterEpicArms.Condition = 50000;
 				EnchanterEpicArms.Durability = 50000;
 
-				EnchanterEpicArms.Bonus1 = 27;
-				EnchanterEpicArms.Bonus1Type = (int) eProperty.MaxHealth;
+				EnchanterEpicArms.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Intelligence, eProperty.Skill_Light, eProperty.Dexterity }, new []{ 27, 10, 5, 10 });
 
-				EnchanterEpicArms.Bonus2 = 10;
-				EnchanterEpicArms.Bonus2Type = (int) eStat.INT;
-
-				EnchanterEpicArms.Bonus3 = 5;
-				EnchanterEpicArms.Bonus3Type = (int) eProperty.Skill_Light;
-
-				EnchanterEpicArms.Bonus4 = 10;
-				EnchanterEpicArms.Bonus4Type = (int) eStat.DEX;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(EnchanterEpicArms);
-				}
-
+				EnchanterEpicArms.AddQuestObjectToDatabase();
 			}
 
 //Champion Epic Sleeves End

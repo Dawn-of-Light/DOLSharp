@@ -171,8 +171,8 @@ Salvage.Proceed.GetBackMaterial:			You get back {0} {1} after salvaging the {2}.
 SpellCrafting.ApplySpellcraftGems.ImbuedItem:		{0} imbued 1 item.
 SpellCrafting.ApplySpellcraftGems.Failed:		Spellcraft failed!
 SpellCrafting.ApplySpellcraftGems.PowerExplodes:	The power of the enchantments explodes before your eyes!
-SpellCrafting.IsAllowedToCombine.AlreadyImbued:		The {0} is already imbued with 4 different types of magical properties!
-SpellCrafting.IsAllowedToCombine.DifferentTypes:	The {0} can only be imbued with 4 different types of magical properties!
+SpellCrafting.IsAllowedToCombine.AlreadyImbued:		The {0} is already imbued with {1} different types of magical properties!
+SpellCrafting.IsAllowedToCombine.DifferentTypes:	The {0} can only be imbued with {1} different types of magical properties!
 SpellCrafting.IsAllowedToCombine.FalseItem:		This item can't be used to Spellcraft!
 SpellCrafting.IsAllowedToCombine.FalseMaterial:		{0} can't be used to enchant a item!
 SpellCrafting.IsAllowedToCombine.NoEnchanted:		This item can't be enchanted!

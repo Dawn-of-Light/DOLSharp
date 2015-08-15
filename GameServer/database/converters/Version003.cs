@@ -58,16 +58,15 @@ namespace DOL.GS.DatabaseConverters
 					IList spells = SkillBase.GetSpellList(poisonLine.KeyName);
 					if (spells != null)
 					{
+						var usespell = template.GetTemplateFirstUseSpell();
 						foreach (Spell spl in spells)
 						{
-							if (spl.ID == template.SpellID)
+							if (spl.ID == usespell.SpellID)
 							{
-								template.PoisonSpellID = template.SpellID;
-								template.SpellID = 0;
-								template.PoisonCharges = template.Charges;
-								template.Charges = 0;
-								template.PoisonMaxCharges = template.MaxCharges;
-								template.MaxCharges = 0;
+								template.PoisonSpellID = usespell.SpellID;
+								template.PoisonCharges = usespell.Charges;
+								template.PoisonMaxCharges = usespell.MaxCharges;
+								template.SetTemplateUseSpells(0, 0);
 								GameServer.Database.SaveObject(template);
 								count++;
 								break;
@@ -83,28 +82,24 @@ namespace DOL.GS.DatabaseConverters
 			count = 0;
 			foreach (InventoryItem item in items)
 			{
-				foreach (ItemTemplate template in templates)
+				SpellLine poisonLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons);
+				if (poisonLine != null)
 				{
-					SpellLine poisonLine = SkillBase.GetSpellLine(GlobalSpellsLines.Mundane_Poisons);
-					if (poisonLine != null)
+					IList spells = SkillBase.GetSpellList(poisonLine.KeyName);
+					if (spells != null)
 					{
-						IList spells = SkillBase.GetSpellList(poisonLine.KeyName);
-						if (spells != null)
+						var usespell = item.GetTemplateFirstUseSpell();
+						foreach (Spell spl in spells)
 						{
-							foreach (Spell spl in spells)
+							if (spl.ID == usespell.SpellID)
 							{
-								if (spl.ID == template.SpellID)
-								{
-									template.PoisonSpellID = template.SpellID;
-									template.SpellID = 0;
-									template.PoisonCharges = template.Charges;
-									template.Charges = 0;
-									template.PoisonMaxCharges = template.MaxCharges;
-									template.MaxCharges = 0;
-									GameServer.Database.SaveObject(template);
-									count++;
-									break;
-								}
+								item.PoisonSpellID = usespell.SpellID;
+								item.PoisonCharges = usespell.Charges;
+								item.PoisonMaxCharges = usespell.MaxCharges;
+								item.SetTemplateUseSpells(0, 0);
+								GameServer.Database.SaveObject(item);
+								count++;
+								break;
 							}
 						}
 					}

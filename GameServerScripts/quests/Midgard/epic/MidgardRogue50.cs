@@ -119,11 +119,8 @@ namespace DOL.GS.Quests.Midgard
 				Masrim.Z = 4437;
 				Masrim.Heading = 2605;
 				Masrim.AddToWorld();
-				if (SAVE_INTO_DATABASE)
-				{
-					Masrim.SaveIntoDatabase();
-				}
-
+				
+				Masrim.AddQuestObjectToDatabase();
 			}
 			else
 				Masrim = npcs[0];
@@ -149,10 +146,8 @@ namespace DOL.GS.Quests.Midgard
 				Oona.Heading = 3891;
 				Oona.Flags ^= GameNPC.eFlags.GHOST;
 				Oona.AddToWorld();
-				if (SAVE_INTO_DATABASE)
-				{
-					Oona.SaveIntoDatabase();
-				}
+				
+				Oona.AddQuestObjectToDatabase();
 
 			}
 			else
@@ -178,11 +173,8 @@ namespace DOL.GS.Quests.Midgard
 				MorlinCaan.Z = 8023;
 				MorlinCaan.Heading = 523;
 				MorlinCaan.AddToWorld();
-				if (SAVE_INTO_DATABASE)
-				{
-					MorlinCaan.SaveIntoDatabase();
-				}
-
+				
+				MorlinCaan.AddQuestObjectToDatabase();
 			}
 			else
 				MorlinCaan = npcs[0];
@@ -212,11 +204,7 @@ namespace DOL.GS.Quests.Midgard
 				oona_head.Type_Damage = 0;
 				oona_head.Quality = 100;
 				oona_head.Weight = 12;
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(oona_head);
-				}
-
+				oona_head.AddQuestObjectToDatabase();
 			}
 
 			sealed_pouch = GameServer.Database.FindObjectByKey<ItemTemplate>("sealed_pouch");
@@ -239,11 +227,7 @@ namespace DOL.GS.Quests.Midgard
 				sealed_pouch.Type_Damage = 0;
 				sealed_pouch.Quality = 100;
 				sealed_pouch.Weight = 12;
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(sealed_pouch);
-				}
-
+				sealed_pouch.AddQuestObjectToDatabase();
 			}
 // end item
 
@@ -271,20 +255,9 @@ namespace DOL.GS.Quests.Midgard
 				HunterEpicBoots.Condition = 50000;
 				HunterEpicBoots.Durability = 50000;
 
-				HunterEpicBoots.Bonus1 = 19;
-				HunterEpicBoots.Bonus1Type = (int) eStat.CON;
+				HunterEpicBoots.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.Resist_Thrust }, new []{ 19, 19, 10 });
 
-				HunterEpicBoots.Bonus2 = 19;
-				HunterEpicBoots.Bonus2Type = (int) eStat.DEX;
-
-				HunterEpicBoots.Bonus3 = 10;
-				HunterEpicBoots.Bonus3Type = (int) eResist.Thrust;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(HunterEpicBoots);
-				}
-
+				HunterEpicBoots.AddQuestObjectToDatabase();
 			}
 //end item
 			//Call of the Hunt Coif 
@@ -312,23 +285,9 @@ namespace DOL.GS.Quests.Midgard
 				HunterEpicHelm.Condition = 50000;
 				HunterEpicHelm.Durability = 50000;
 
-				HunterEpicHelm.Bonus1 = 3;
-				HunterEpicHelm.Bonus1Type = (int) eProperty.Skill_Spear;
+				HunterEpicHelm.SetTemplateBonuses(new []{ eProperty.Skill_Spear, eProperty.Skill_Stealth, eProperty.Skill_Composite, eProperty.Dexterity }, new []{ 3, 3, 3, 19 });
 
-				HunterEpicHelm.Bonus2 = 3;
-				HunterEpicHelm.Bonus2Type = (int) eProperty.Skill_Stealth;
-
-				HunterEpicHelm.Bonus3 = 3;
-				HunterEpicHelm.Bonus3Type = (int) eProperty.Skill_Composite;
-
-				HunterEpicHelm.Bonus4 = 19;
-				HunterEpicHelm.Bonus4Type = (int) eStat.DEX;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(HunterEpicHelm);
-				}
-
+				HunterEpicHelm.AddQuestObjectToDatabase();
 			}
 //end item
 			//Call of the Hunt Gloves 
@@ -356,20 +315,9 @@ namespace DOL.GS.Quests.Midgard
 				HunterEpicGloves.Condition = 50000;
 				HunterEpicGloves.Durability = 50000;
 
-				HunterEpicGloves.Bonus1 = 5;
-				HunterEpicGloves.Bonus1Type = (int) eProperty.Skill_Composite;
+				HunterEpicGloves.SetTemplateBonuses(new []{ eProperty.Skill_Composite, eProperty.Quickness, eProperty.MaxHealth }, new []{ 5, 15, 33 });
 
-				HunterEpicGloves.Bonus2 = 15;
-				HunterEpicGloves.Bonus2Type = (int) eStat.QUI;
-
-				HunterEpicGloves.Bonus3 = 33;
-				HunterEpicGloves.Bonus3Type = (int) eProperty.MaxHealth;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(HunterEpicGloves);
-				}
-
+				HunterEpicGloves.AddQuestObjectToDatabase();
 			}
 			//Call of the Hunt Hauberk 
 			HunterEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("HunterEpicVest");
@@ -396,23 +344,9 @@ namespace DOL.GS.Quests.Midgard
 				HunterEpicVest.Condition = 50000;
 				HunterEpicVest.Durability = 50000;
 
-				HunterEpicVest.Bonus1 = 13;
-				HunterEpicVest.Bonus1Type = (int) eStat.STR;
+				HunterEpicVest.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Constitution, eProperty.Dexterity, eProperty.Resist_Cold }, new []{ 13, 15, 13, 6 });
 
-				HunterEpicVest.Bonus2 = 15;
-				HunterEpicVest.Bonus2Type = (int) eStat.CON;
-
-				HunterEpicVest.Bonus3 = 13;
-				HunterEpicVest.Bonus3Type = (int) eStat.DEX;
-
-				HunterEpicVest.Bonus4 = 6;
-				HunterEpicVest.Bonus4Type = (int) eResist.Cold;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(HunterEpicVest);
-				}
-
+				HunterEpicVest.AddQuestObjectToDatabase();
 			}
 			//Call of the Hunt Legs 
 			HunterEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("HunterEpicLegs");
@@ -439,23 +373,9 @@ namespace DOL.GS.Quests.Midgard
 				HunterEpicLegs.Condition = 50000;
 				HunterEpicLegs.Durability = 50000;
 
-				HunterEpicLegs.Bonus1 = 15;
-				HunterEpicLegs.Bonus1Type = (int) eStat.CON;
+				HunterEpicLegs.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.Quickness, eProperty.Resist_Matter }, new []{ 15, 15, 7, 12 });
 
-				HunterEpicLegs.Bonus2 = 15;
-				HunterEpicLegs.Bonus2Type = (int) eStat.DEX;
-
-				HunterEpicLegs.Bonus3 = 7;
-				HunterEpicLegs.Bonus3Type = (int) eStat.QUI;
-
-				HunterEpicLegs.Bonus4 = 12;
-				HunterEpicLegs.Bonus4Type = (int) eResist.Matter;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(HunterEpicLegs);
-				}
-
+				HunterEpicLegs.AddQuestObjectToDatabase();
 			}
 			//Call of the Hunt Sleeves 
 			HunterEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("HunterEpicArms");
@@ -482,23 +402,9 @@ namespace DOL.GS.Quests.Midgard
 				HunterEpicArms.Condition = 50000;
 				HunterEpicArms.Durability = 50000;
 
-				HunterEpicArms.Bonus1 = 15;
-				HunterEpicArms.Bonus1Type = (int) eStat.STR;
+				HunterEpicArms.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Quickness, eProperty.Resist_Crush, eProperty.Resist_Slash }, new []{ 15, 15, 10, 10 });
 
-				HunterEpicArms.Bonus2 = 15;
-				HunterEpicArms.Bonus2Type = (int) eStat.QUI;
-
-				HunterEpicArms.Bonus3 = 10;
-				HunterEpicArms.Bonus3Type = (int) eResist.Crush;
-
-				HunterEpicArms.Bonus4 = 10;
-				HunterEpicArms.Bonus4Type = (int) eResist.Slash;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(HunterEpicArms);
-				}
-
+				HunterEpicArms.AddQuestObjectToDatabase();
 			}
 			//Shadow Shrouded Boots 
 			ShadowbladeEpicBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("ShadowbladeEpicBoots");
@@ -525,23 +431,9 @@ namespace DOL.GS.Quests.Midgard
 				ShadowbladeEpicBoots.Condition = 50000;
 				ShadowbladeEpicBoots.Durability = 50000;
 
-				ShadowbladeEpicBoots.Bonus1 = 5;
-				ShadowbladeEpicBoots.Bonus1Type = (int) eProperty.Skill_Stealth;
+				ShadowbladeEpicBoots.SetTemplateBonuses(new []{ eProperty.Skill_Stealth, eProperty.Dexterity, eProperty.Quickness, eProperty.Resist_Heat }, new []{ 5, 13, 13, 6 });
 
-				ShadowbladeEpicBoots.Bonus2 = 13;
-				ShadowbladeEpicBoots.Bonus2Type = (int) eStat.DEX;
-
-				ShadowbladeEpicBoots.Bonus3 = 13;
-				ShadowbladeEpicBoots.Bonus3Type = (int) eStat.QUI;
-
-				ShadowbladeEpicBoots.Bonus4 = 6;
-				ShadowbladeEpicBoots.Bonus4Type = (int) eResist.Heat;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(ShadowbladeEpicBoots);
-				}
-
+				ShadowbladeEpicBoots.AddQuestObjectToDatabase();
 			}
 			//Shadow Shrouded Coif 
 			ShadowbladeEpicHelm = GameServer.Database.FindObjectByKey<ItemTemplate>("ShadowbladeEpicHelm");
@@ -568,23 +460,9 @@ namespace DOL.GS.Quests.Midgard
 				ShadowbladeEpicHelm.Condition = 50000;
 				ShadowbladeEpicHelm.Durability = 50000;
 
-				ShadowbladeEpicHelm.Bonus1 = 10;
-				ShadowbladeEpicHelm.Bonus1Type = (int) eStat.STR;
+				ShadowbladeEpicHelm.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Constitution, eProperty.Dexterity, eProperty.Quickness }, new []{ 10, 12, 10, 10 });
 
-				ShadowbladeEpicHelm.Bonus2 = 12;
-				ShadowbladeEpicHelm.Bonus2Type = (int) eStat.CON;
-
-				ShadowbladeEpicHelm.Bonus3 = 10;
-				ShadowbladeEpicHelm.Bonus3Type = (int) eStat.DEX;
-
-				ShadowbladeEpicHelm.Bonus4 = 10;
-				ShadowbladeEpicHelm.Bonus4Type = (int) eStat.QUI;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(ShadowbladeEpicHelm);
-				}
-
+				ShadowbladeEpicHelm.AddQuestObjectToDatabase();
 			}
 			//Shadow Shrouded Gloves 
 			ShadowbladeEpicGloves = GameServer.Database.FindObjectByKey<ItemTemplate>("ShadowbladeEpicGloves");
@@ -611,24 +489,10 @@ namespace DOL.GS.Quests.Midgard
 				ShadowbladeEpicGloves.Condition = 50000;
 				ShadowbladeEpicGloves.Durability = 50000;
 
-				ShadowbladeEpicGloves.Bonus1 = 2;
-				ShadowbladeEpicGloves.Bonus1Type = (int) eProperty.Skill_Critical_Strike;
-
-				ShadowbladeEpicGloves.Bonus2 = 12;
-				ShadowbladeEpicGloves.Bonus2Type = (int) eStat.QUI;
-
-				ShadowbladeEpicGloves.Bonus3 = 33;
-				ShadowbladeEpicGloves.Bonus3Type = (int) eProperty.MaxHealth;
-
-				ShadowbladeEpicGloves.Bonus4 = 4;
-				ShadowbladeEpicGloves.Bonus4Type = (int) eProperty.Skill_Envenom;
+				ShadowbladeEpicGloves.SetTemplateBonuses(new []{ eProperty.Skill_Critical_Strike, eProperty.Quickness, eProperty.MaxHealth, eProperty.Skill_Envenom }, new []{ 2, 12, 33, 4 });
 
 
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(ShadowbladeEpicGloves);
-				}
-
+				ShadowbladeEpicGloves.AddQuestObjectToDatabase();
 			}
 			//Shadow Shrouded Hauberk 
 			ShadowbladeEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("ShadowbladeEpicVest");
@@ -655,23 +519,9 @@ namespace DOL.GS.Quests.Midgard
 				ShadowbladeEpicVest.Condition = 50000;
 				ShadowbladeEpicVest.Durability = 50000;
 
-				ShadowbladeEpicVest.Bonus1 = 13;
-				ShadowbladeEpicVest.Bonus1Type = (int) eStat.STR;
+				ShadowbladeEpicVest.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Dexterity, eProperty.MaxHealth, eProperty.Resist_Heat }, new []{ 13, 13, 30, 6 });
 
-				ShadowbladeEpicVest.Bonus2 = 13;
-				ShadowbladeEpicVest.Bonus2Type = (int) eStat.DEX;
-
-				ShadowbladeEpicVest.Bonus3 = 30;
-				ShadowbladeEpicVest.Bonus3Type = (int) eProperty.MaxHealth;
-
-				ShadowbladeEpicVest.Bonus4 = 6;
-				ShadowbladeEpicVest.Bonus4Type = (int) eResist.Heat;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(ShadowbladeEpicVest);
-				}
-
+				ShadowbladeEpicVest.AddQuestObjectToDatabase();
 			}
 			//Shadow Shrouded Legs 
 			ShadowbladeEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("ShadowbladeEpicLegs");
@@ -698,23 +548,9 @@ namespace DOL.GS.Quests.Midgard
 				ShadowbladeEpicLegs.Condition = 50000;
 				ShadowbladeEpicLegs.Durability = 50000;
 
-				ShadowbladeEpicLegs.Bonus1 = 12;
-				ShadowbladeEpicLegs.Bonus1Type = (int) eStat.STR;
+				ShadowbladeEpicLegs.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Constitution, eProperty.Quickness, eProperty.Resist_Slash }, new []{ 12, 15, 12, 10 });
 
-				ShadowbladeEpicLegs.Bonus2 = 15;
-				ShadowbladeEpicLegs.Bonus2Type = (int) eStat.CON;
-
-				ShadowbladeEpicLegs.Bonus3 = 12;
-				ShadowbladeEpicLegs.Bonus3Type = (int) eStat.QUI;
-
-				ShadowbladeEpicLegs.Bonus4 = 10;
-				ShadowbladeEpicLegs.Bonus4Type = (int) eResist.Slash;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(ShadowbladeEpicLegs);
-				}
-
+				ShadowbladeEpicLegs.AddQuestObjectToDatabase();
 			}
 			//Shadow Shrouded Sleeves 
 			ShadowbladeEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("ShadowbladeEpicArms");
@@ -741,23 +577,9 @@ namespace DOL.GS.Quests.Midgard
 				ShadowbladeEpicArms.Condition = 50000;
 				ShadowbladeEpicArms.Durability = 50000;
 
-				ShadowbladeEpicArms.Bonus1 = 15;
-				ShadowbladeEpicArms.Bonus1Type = (int) eStat.CON;
+				ShadowbladeEpicArms.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.Resist_Crush, eProperty.Resist_Thrust }, new []{ 15, 16, 10, 10 });
 
-				ShadowbladeEpicArms.Bonus2 = 16;
-				ShadowbladeEpicArms.Bonus2Type = (int) eStat.DEX;
-
-				ShadowbladeEpicArms.Bonus3 = 10;
-				ShadowbladeEpicArms.Bonus3Type = (int) eResist.Crush;
-
-				ShadowbladeEpicArms.Bonus4 = 10;
-				ShadowbladeEpicArms.Bonus4Type = (int) eResist.Thrust;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(ShadowbladeEpicArms);
-				}
-
+				ShadowbladeEpicArms.AddQuestObjectToDatabase();
 			}
 //Shadowblade Epic Sleeves End
 //Item Descriptions End

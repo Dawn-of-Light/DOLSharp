@@ -137,8 +137,8 @@ using DOL.AI.Brain;
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					Aegan.SaveIntoDatabase();
+				
+				Aegan.AddQuestObjectToDatabase();
 					
 				Aegan.AddToWorld();
 				
@@ -174,34 +174,11 @@ using DOL.AI.Brain;
 				clawofblackmauler.CanDropAsLoot = false;
 				clawofblackmauler.Color = 0;
 				clawofblackmauler.Bonus = 35; // default bonus				
-				clawofblackmauler.Bonus1 = 0;
-				clawofblackmauler.Bonus1Type = (int) 0;
-				clawofblackmauler.Bonus2 = 0;
-				clawofblackmauler.Bonus2Type = (int) 0;
-				clawofblackmauler.Bonus3 = 0;
-				clawofblackmauler.Bonus3Type = (int) 0;
-				clawofblackmauler.Bonus4 = 0;
-				clawofblackmauler.Bonus4Type = (int) 0;
-				clawofblackmauler.Bonus5 = 0;
-				clawofblackmauler.Bonus5Type = (int) 0;
-				clawofblackmauler.Bonus6 = 0;
-				clawofblackmauler.Bonus6Type = (int) 0;
-				clawofblackmauler.Bonus7 = 0;
-				clawofblackmauler.Bonus7Type = (int) 0;
-				clawofblackmauler.Bonus8 = 0;
-				clawofblackmauler.Bonus8Type = (int) 0;
-				clawofblackmauler.Bonus9 = 0;
-				clawofblackmauler.Bonus9Type = (int) 0;
-				clawofblackmauler.Bonus10 = 0;
-				clawofblackmauler.Bonus10Type = (int) 0;
-				clawofblackmauler.ExtraBonus = 0;
-				clawofblackmauler.ExtraBonusType = (int) 0;
+				clawofblackmauler.ClearTemplateBonuses();
 				clawofblackmauler.Effect = 0;
 				clawofblackmauler.Emblem = 0;
-				clawofblackmauler.Charges = 0;
-				clawofblackmauler.MaxCharges = 0;
-				clawofblackmauler.SpellID = 0;
-				clawofblackmauler.ProcSpellID = 0;
+				clawofblackmauler.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				clawofblackmauler.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				clawofblackmauler.Type_Damage = 0;
 				clawofblackmauler.Realm = 0;
 				clawofblackmauler.MaxCount = 1;
@@ -215,17 +192,12 @@ using DOL.AI.Brain;
 				clawofblackmauler.PoisonCharges = 0;
 				clawofblackmauler.PoisonMaxCharges = 0;
 				clawofblackmauler.PoisonSpellID = 0;
-				clawofblackmauler.ProcSpellID1 = 0;
-				clawofblackmauler.SpellID1 = 0;
-				clawofblackmauler.MaxCharges1 = 0;
-				clawofblackmauler.Charges1 = 0;
 				
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(clawofblackmauler);
-				}
+				clawofblackmauler.AddQuestObjectToDatabase();
+			}
 			
 
 			#endregion

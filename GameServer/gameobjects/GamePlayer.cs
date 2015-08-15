@@ -108,11 +108,6 @@ namespace DOL.GS
 		public static readonly string QUICK_CAST_CHANGE_TICK = "quick_cast_change_tick";
 
 		/// <summary>
-		/// Last spell cast from a used item
-		/// </summary>
-		public static readonly string LAST_USED_ITEM_SPELL = "last_used_item_spell";
-
-		/// <summary>
 		/// Array that stores ML step completition
 		/// </summary>
 		private ArrayList m_mlSteps = new ArrayList();
@@ -6593,33 +6588,13 @@ namespace DOL.GS
 
 					if (reactiveEffectLine != null)
 					{
-						if (reactiveItem.ProcSpellID != 0)
+						foreach(var reactive in reactiveItem.GetTemplateProcSpells().Where(re => re.SpellID != 0))
 						{
-							Spell spell = SkillBase.FindSpell(reactiveItem.ProcSpellID, reactiveEffectLine);
-
+							var spell = SkillBase.FindSpell(reactive.SpellID, reactiveEffectLine);
 							if (spell != null)
 							{
-								int chance = reactiveItem.ProcChance > 0 ? reactiveItem.ProcChance : 10;
-
-								if (Util.Chance(chance))
-								{
-									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
-									if (spellHandler != null)
-									{
-										spellHandler.StartSpell(target, reactiveItem);
-									}
-								}
-							}
-						}
-
-						if (reactiveItem.ProcSpellID1 != 0)
-						{
-							Spell spell = SkillBase.FindSpell(reactiveItem.ProcSpellID1, reactiveEffectLine);
-
-							if (spell != null)
-							{
-								int chance = reactiveItem.ProcChance > 0 ? reactiveItem.ProcChance : 10;
-
+								int chance = reactive.ProcChance > 0 ? reactive.ProcChance : 10;
+								
 								if (Util.Chance(chance))
 								{
 									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, reactiveEffectLine);
@@ -7828,16 +7803,7 @@ namespace DOL.GS
 		/// <param name="handler"></param>
 		public override void OnAfterSpellCastSequence(ISpellHandler handler)
 		{
-			InventoryItem lastUsedItem = TempProperties.getProperty<InventoryItem>(LAST_USED_ITEM_SPELL, null);
-			if (lastUsedItem != null)
-			{
-				if (handler.StartReuseTimer)
-				{
-					lastUsedItem.CanUseAgainIn = lastUsedItem.CanUseEvery;
-				}
-
-				TempProperties.removeProperty(LAST_USED_ITEM_SPELL);
-			}
+			m_runningSpellHandler.CastingCompleteEvent -= OnAfterSpellCastSequence;
 
 			lock (m_spellQueueAccessMonitor)
 			{
@@ -7870,7 +7836,7 @@ namespace DOL.GS
 			}
 			if (m_runningSpellHandler != null)
 			{
-				m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+				m_runningSpellHandler.CastingCompleteEvent += OnAfterSpellCastSequence;
 				if(m_nextSpellTarget!=null)
 					m_runningSpellHandler.CastSpell(m_nextSpellTarget);
 				else
@@ -8095,13 +8061,13 @@ namespace DOL.GS
 							{
 								((ChamberSpellHandler)spellhandler).EffectSlot = ChamberSpellHandler.GetEffectSlot(spellhandler.Spell.Name);
 								m_runningSpellHandler = spellhandler;
-								m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+								m_runningSpellHandler.CastingCompleteEvent += OnAfterSpellCastSequence;
 								spellhandler.CastSpell();
 							}
 							else if (m_runningSpellHandler == null)
 							{
 								m_runningSpellHandler = spellhandler;
-								m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+								m_runningSpellHandler.CastingCompleteEvent += OnAfterSpellCastSequence;
 								spellhandler.CastSpell();
 							}
 						}
@@ -8196,7 +8162,7 @@ namespace DOL.GS
 				if (spellhandler.Spell.CastTime > 0)
 				{
 					m_runningSpellHandler = spellhandler;
-					m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+					m_runningSpellHandler.CastingCompleteEvent += OnAfterSpellCastSequence;
 				}
 
 				spellhandler.Ability = ab;
@@ -8296,7 +8262,6 @@ namespace DOL.GS
 		/// <summary>
 		/// Property that holds tick when charged item was used last time
 		/// </summary>
-		public const string LAST_CHARGED_ITEM_USE_TICK = "LastChargedItemUsedTick";
 		public const string ITEM_USE_DELAY = "ItemUseDelay";
 		public const string NEXT_POTION_AVAIL_TIME = "LastPotionItemUsedTick";
 		public const string NEXT_SPELL_AVAIL_TIME_BECAUSE_USE_POTION = "SpellAvailableTime";
@@ -8551,12 +8516,382 @@ namespace DOL.GS
 		/// <summary>
 		/// The item the player is trying to use.
 		/// </summary>
-		public InventoryItem UseItem
+		public virtual InventoryItem UseItem
 		{
 			get { return m_useItem; }
-			set { m_useItem = value; }
+			protected set { m_useItem = value; }
 		}
 
+		public enum eReasonFailedUseSlot
+		{
+			ContinueHandling,
+			NotAlive,
+			QuiverEmpty,
+			SlotEmpty,
+			Sitting,
+			CantUseFromBackpack,
+			NoMoreCharges,
+			NoUseSpell,
+			LevelRequirement,
+			ItemStacked,
+			CantUseInCombat,
+			CantUseCast,
+			UnderTimer,
+		}
+		/// <summary>
+		/// Called When Using Slot Fails for Any Reason
+		/// </summary>
+		/// <param name="slot"></param>
+		/// <param name="type"></param>
+		/// <param name="reason"></param>
+		protected virtual void FailedUseSlot(int slot, int type, eReasonFailedUseSlot reason)
+		{
+			switch (reason)
+			{
+				case eReasonFailedUseSlot.NotAlive:
+					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.CantFire"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					break;
+				case eReasonFailedUseSlot.QuiverEmpty:
+					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.QuiverEmpty", slot - (Slot.FIRSTQUIVER) + 1), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					goto default;
+				case eReasonFailedUseSlot.SlotEmpty:
+					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.IllegalSourceObject", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					break;
+				case eReasonFailedUseSlot.Sitting:
+					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.CantUseSitting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					goto default;
+				case eReasonFailedUseSlot.CantUseFromBackpack:
+					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.CantUseFromBackpack"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					goto default;
+				case eReasonFailedUseSlot.NoMoreCharges:
+					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.OutOfCharges", UseItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					goto default;
+				case eReasonFailedUseSlot.LevelRequirement:
+					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.NotEnouthPower"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					goto default;
+				case eReasonFailedUseSlot.ItemStacked:
+					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.ItemStacked"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					goto default;
+				case eReasonFailedUseSlot.CantUseInCombat:
+					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.CantUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					goto default;
+				case eReasonFailedUseSlot.CantUseCast:
+					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.CantUseCast", UseItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					goto default;
+				case eReasonFailedUseSlot.UnderTimer:
+					// Don't notice when under Timer, it could trigger item behavior.
+					break;
+				case eReasonFailedUseSlot.ContinueHandling:
+				default:
+					// notify event handlers about used slot
+					Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
+				break;
+			}
+		}
+		
+		/// <summary>
+		/// Called When Using Slot result in Weapon Switch
+		/// </summary>
+		/// <returns>True if switch was done</returns>
+		protected virtual bool UseSlotSwitchWeapon(eInventorySlot slotUsed, int type)
+		{
+			if (type != 0)
+				return false;
+			
+			eActiveWeaponSlot targetSwitch;
+			switch(slotUsed)
+			{
+				case eInventorySlot.RightHandWeapon:
+				case eInventorySlot.LeftHandWeapon:
+					targetSwitch = eActiveWeaponSlot.Standard;
+					break;
+				case eInventorySlot.TwoHandWeapon:
+					targetSwitch = eActiveWeaponSlot.TwoHanded;
+					break;
+				case eInventorySlot.DistanceWeapon:
+				default:
+					targetSwitch = eActiveWeaponSlot.Distance;
+				break;
+			}
+			
+			if (ActiveWeaponSlot == targetSwitch)
+				return false;
+			
+			SwitchWeapon(targetSwitch);
+			return true;
+		}
+		
+		/// <summary>
+		/// Called When Using Slot result in a Distance Weapon Attack
+		/// </summary>
+		protected virtual void UseSlotDistanceAttack()
+		{
+			bool newAttack = false;
+			if (!AttackState)
+			{
+				StopCurrentSpellcast();
+				StartAttack(TargetObject);
+				newAttack = true;
+			}
+
+			//Clean up range attack state/type if we are not in combat mode
+			//anymore
+			if (!AttackState)
+			{
+				RangedAttackState = eRangedAttackState.None;
+				RangedAttackType = eRangedAttackType.Normal;
+			}
+			if (!newAttack && RangedAttackState != eRangedAttackState.None)
+			{
+				if (RangedAttackState == eRangedAttackState.ReadyToFire)
+				{
+					RangedAttackState = eRangedAttackState.Fire;
+					StopCurrentSpellcast();
+					m_attackAction.Start(1);
+				}
+				else if (RangedAttackState == eRangedAttackState.Aim)
+				{
+					if (!TargetInView)
+					{
+						// Don't store last target if it's not visible
+						Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.CantSeeTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+					else
+					{
+						if (m_rangeAttackTarget.Target == null)
+						{
+							//set new target only if there was no target before
+							RangeAttackTarget = TargetObject;
+						}
+
+						RangedAttackState = eRangedAttackState.AimFire;
+						Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.AutoReleaseShot"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+				}
+				else if (RangedAttackState == eRangedAttackState.AimFire)
+				{
+					RangedAttackState = eRangedAttackState.AimFireReload;
+					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.AutoReleaseShotReload"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				else if (RangedAttackState == eRangedAttackState.AimFireReload)
+				{
+					RangedAttackState = eRangedAttackState.Aim;
+					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.NoAutoReleaseShotReload"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Called When Using Slot result in Horse Summonning / UnSummoning
+		/// </summary>
+		/// <param name="useItem">inventory item used for summoning</param>
+		protected virtual void UseSlotHorseSummon(InventoryItem useItem)
+		{
+			if (IsOnHorse)
+				IsOnHorse = false;
+			else
+			{
+				if (Level < useItem.Level)
+				{
+					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.SummonHorseLevel", useItem.Level), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return;
+				}
+				
+				string reason = GameServer.ServerRules.ReasonForDisallowMounting(this);
+				if (!String.IsNullOrEmpty(reason))
+				{
+					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, reason), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return;
+				}
+				
+				if (IsSummoningMount)
+				{
+					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.StopCallingMount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					StopWhistleTimers();
+					return;
+				}
+				Out.SendTimerWindow("Summoning Mount", 5);
+				foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				{
+					if (plr == null) continue;
+					plr.Out.SendEmoteAnimation(this, eEmote.Horse_whistle);
+				}
+				// vampiir ~
+				GameSpellEffect effects = SpellHandler.FindEffectOnTarget(this, "VampiirSpeedEnhancement");
+				GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, "SpeedEnhancement");
+				if (effects != null)
+					effects.Cancel(false);
+				if (effect != null)
+					effect.Cancel(false);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.WhistleMount"), eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+				m_whistleMountTimer = new RegionTimer(this);
+				m_whistleMountTimer.Callback = new RegionTimerCallback(WhistleMountTimerCallback);
+				m_whistleMountTimer.Start(5000);
+			}
+		}
+
+		/// <summary>
+		/// Called When Using Slot Item Start a Spell
+		/// </summary>
+		/// <param name="item"></param>
+		/// <param name="slot"></param>
+		/// <param name="type"></param>
+		/// <param name="isPotion"></param>
+		protected virtual void UseSlotItemSpell(InventoryItem item, int slot, int type, bool isPotion)
+		{
+			// Even if type = 0 (click on item) assume for /use type = 1
+			var index = Math.Max(1, type);
+			
+			// Switch Line
+			var line = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
+			if (line == null || isPotion)
+				line = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
+
+			// Get Spell
+			var itemSpells = item.GetTemplateUseSpells().Select(sp => new { Spell = sp.SpellID != 0 ? SkillBase.FindSpell(sp.SpellID, line) : null, UseValue = sp }).ToArray();
+			var usesp = itemSpells.ElementAtOrDefault(index);
+			
+			// Not Implemented
+			if (usesp == null || usesp.Spell == null)
+			{
+				FailedUseSlot(slot, type, eReasonFailedUseSlot.NoUseSpell);
+				return;
+			}
+
+			// Valid Handler ?
+			var spell = usesp.Spell;
+
+			SpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, line) as SpellHandler;
+			
+			if (spellHandler == null)
+			{
+				Out.SendMessage(string.Format("Item Spell ID {0} is not implemented yet!", spell.ID), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				FailedUseSlot(slot, type, eReasonFailedUseSlot.NoUseSpell);
+				return;
+			}
+
+			// Check if Item is Stacked and have multiple Charge or more than one spell
+			if (item.Count > 1 && (itemSpells.Length > 1 || (itemSpells.Length == 1 && itemSpells[0].UseValue.MaxCharges != 1)))
+			{
+				FailedUseSlot(slot, type, eReasonFailedUseSlot.ItemStacked);
+				return;
+			}
+			
+			// Check Timers if the item can be fired !
+			var nextChargeAvailTime = long.MaxValue;
+			if (isPotion)
+			{
+				var sharedTimerGroup = spell.SharedTimerGroup != 0 ? spell.SharedTimerGroup.ToString() : spell.SpellType;
+				// Fixed Re-use Time by Spell SharedGroup
+				nextChargeAvailTime = Math.Max(0, TempProperties.getProperty<long>(string.Format("{0}_Type-{1}", NEXT_POTION_AVAIL_TIME, sharedTimerGroup), 0L) - GameTimer.GetTickCount());
+			}
+			else
+			{
+				// Hard Delay of 2 Min + item CanUseAgainIn
+				nextChargeAvailTime = item.TemplateUseSpellCanUseAgainIn((int)Math.Max(0, TempProperties.getProperty<long>(ITEM_USE_DELAY, 0L) - GameTimer.GetTickCount()));
+			}
+
+			if (nextChargeAvailTime > 0)
+			{
+				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.MustWaitBeforeUse", nextChargeAvailTime / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				FailedUseSlot(slot, type, eReasonFailedUseSlot.UnderTimer);
+				return;
+			}			
+			
+			// No More Charges
+			if (!usesp.UseValue.HasCharges)
+			{
+				FailedUseSlot(slot, type, eReasonFailedUseSlot.NoMoreCharges);
+				return;
+			}
+			
+			// Check Item Level Requirement
+			if (Math.Max(0, Math.Min(MaxLevel, item.LevelRequirement)) > Level)
+			{
+				FailedUseSlot(slot, type, eReasonFailedUseSlot.LevelRequirement);
+				return;
+			}
+			
+			// Check for Casting And AttackState CantUseInCombat
+			if (!spell.IsInstantCast && AttackState)
+			{
+				FailedUseSlot(slot, type, eReasonFailedUseSlot.CantUseInCombat);
+				return;
+			}
+			
+			// Check for Casting and Already Casting CantUseCast
+			if (!spell.IsInstantCast && (IsCasting || m_runningSpellHandler != null))
+			{
+				FailedUseSlot(slot, type, eReasonFailedUseSlot.CantUseCast);
+				return;				
+			}
+			
+			// Cast Spell
+			m_runningSpellHandler = spellHandler;
+			m_runningSpellHandler.CastingCompleteEvent += OnAfterSpellCastSequence;
+			m_runningSpellHandler.CastingCompleteEvent += OnAfterItemSpellCastSequence;
+			if(m_runningSpellHandler.CastSpell(this.TargetObject as GameLiving, item))
+			{
+				// Cast Began !
+				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.Used", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				if (isPotion)
+				{
+					// Potion Animation + Timer if casting
+					if (spell.CastTime > 0)
+						TempProperties.setProperty(GamePlayer.NEXT_SPELL_AVAIL_TIME_BECAUSE_USE_POTION, GameTimer.GetTickCount() + 6000);
+					Emote(eEmote.Drink);
+				}
+			}
+			   
+			FailedUseSlot(slot, type, eReasonFailedUseSlot.ContinueHandling);
+		}
+
+		/// <summary>
+		/// On Ater Item Spell Cast Sequence is called when Spell Item has been used
+		/// </summary>
+		/// <param name="handler"></param>
+		protected virtual void OnAfterItemSpellCastSequence(ISpellHandler handler)
+		{
+			m_runningSpellHandler.CastingCompleteEvent -= OnAfterItemSpellCastSequence;
+			var lastUsedItem = handler.SpellItem;
+			var spell = handler.Spell;
+			var isPotion = (lastUsedItem.Item_Type >= (int)eInventorySlot.FirstBackpack || lastUsedItem.Item_Type <= (int)eInventorySlot.LastBackpack) && lastUsedItem.Item_Type != (int)eObjectType.Magical;
+			var sharedTimerGroup = spell.SharedTimerGroup != 0 ? spell.SharedTimerGroup.ToString() : spell.SpellType;
+			
+			if (lastUsedItem != null)
+			{
+				if (handler.StartReuseTimer)
+				{
+					var delay = 2 * 60 * 1000;
+					lastUsedItem.CanUseAgainIn = lastUsedItem.CanUseEvery;
+					if (isPotion)
+						// Potion Fixed Re-use Time by Spell SharedGroup
+						TempProperties.setProperty(string.Format("{0}_Type-{1}", NEXT_POTION_AVAIL_TIME, sharedTimerGroup), GameTimer.GetTickCount() + delay);
+					else
+						// Hard Delay of two minute between item use
+						TempProperties.getProperty<long>(ITEM_USE_DELAY, GameTimer.GetTickCount() + delay);
+					
+					// Consume Charges.
+					if (lastUsedItem.Count > 0)
+						Inventory.RemoveCountFromStack(lastUsedItem, 1);
+					else
+						lastUsedItem.ChangeTemplateUseSpellCharges(spell, -1);
+				}
+				else
+				{
+					// Short Delay timer to prevent spamming
+					var delay = 3 * 1000;
+					lastUsedItem.CanUseAgainIn = delay;
+					if (isPotion)
+						// Potion Fixed Re-use Time by Spell SharedGroup
+						TempProperties.setProperty(string.Format("{0}_Type-{1}", NEXT_POTION_AVAIL_TIME, sharedTimerGroup), GameTimer.GetTickCount() + delay);
+					else
+						// Hard Delay of two minute between item use
+						TempProperties.getProperty<long>(ITEM_USE_DELAY, GameTimer.GetTickCount() + delay);
+				}
+			}			
+		}
+		
 		/// <summary>
 		/// Called when the player uses an inventory in a slot
 		/// eg. by clicking on the icon in the qickbar dragged from a slot
@@ -8570,406 +8905,146 @@ namespace DOL.GS
 
 		public virtual void UseSlot(int slot, int type)
 		{
+			// Exits if Player Dead
 			if (!IsAlive)
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.CantFire"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				FailedUseSlot(slot, type, eReasonFailedUseSlot.NotAlive);
 				return;
 			}
-
-			lock (Inventory)
+			
+			InventoryItem useItem = Inventory.GetItem((eInventorySlot)slot);
+			UseItem = useItem;
+			
+			// Exits on Empty Item
+			if (useItem == null)
 			{
-				InventoryItem useItem = Inventory.GetItem((eInventorySlot)slot);
-				UseItem = useItem;
-
-				if (useItem == null)
-				{
-					if ((slot >= Slot.FIRSTQUIVER) && (slot <= Slot.FOURTHQUIVER))
-					{
-						Out.SendMessage("The quiver slot " + (slot - (Slot.FIRSTQUIVER) + 1) + " is empty!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
-					else
-					{
-						// don't allow using empty slots
-						Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.IllegalSourceObject", slot), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					}
-					return;
-				}
-
-				if (useItem is IGameInventoryItem)
-				{
-					if ((useItem as IGameInventoryItem).Use(this))
-					{
-						return;
-					}
-				}
-
-				if (useItem.Item_Type >= (int)eInventorySlot.LeftFrontSaddleBag && useItem.Item_Type <= (int)eInventorySlot.RightRearSaddleBag)
-				{
-					UseSaddleBag(useItem);
-					return;
-				}
-
-				if (useItem.Item_Type != Slot.RANGED && (slot != Slot.HORSE || type != 0))
-				{
-					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.AttemptToUse", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-
-				#region Non-backpack/vault slots
-
-				switch (slot)
-				{
-					case Slot.HORSEARMOR:
-					case Slot.HORSEBARDING:
-						return;
-					case Slot.HORSE:
-						if (type == 0)
-						{
-							if (IsOnHorse)
-								IsOnHorse = false;
-							else
-							{
-								if (Level < useItem.Level)
-								{
-									Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.SummonHorseLevel", useItem.Level), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								
-								string reason = GameServer.ServerRules.ReasonForDisallowMounting(this);
-								if (!String.IsNullOrEmpty(reason))
-								{
-									Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, reason), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								
-								if (IsSummoningMount)
-								{
-									Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.StopCallingMount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									StopWhistleTimers();
-									return;
-								}
-								Out.SendTimerWindow("Summoning Mount", 5);
-								foreach (GamePlayer plr in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-								{
-									if (plr == null) continue;
-									plr.Out.SendEmoteAnimation(this, eEmote.Horse_whistle);
-								}
-								// vampiir ~
-								GameSpellEffect effects = SpellHandler.FindEffectOnTarget(this, "VampiirSpeedEnhancement");
-								GameSpellEffect effect = SpellHandler.FindEffectOnTarget(this, "SpeedEnhancement");
-								if (effects != null)
-									effects.Cancel(false);
-								if (effect != null)
-									effect.Cancel(false);
-								Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.WhistleMount"), eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
-								m_whistleMountTimer = new RegionTimer(this);
-								m_whistleMountTimer.Callback = new RegionTimerCallback(WhistleMountTimerCallback);
-								m_whistleMountTimer.Start(5000);
-							}
-						}
-						break;
-					case Slot.RIGHTHAND:
-					case Slot.LEFTHAND:
-						if (type != 0) break;
-						if (ActiveWeaponSlot == eActiveWeaponSlot.Standard)
-							break;
-						SwitchWeapon(eActiveWeaponSlot.Standard);
-						Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
-						return;
-
-					case Slot.TWOHAND:
-						if (type != 0) break;
-						if (ActiveWeaponSlot == eActiveWeaponSlot.TwoHanded)
-							break;
-						SwitchWeapon(eActiveWeaponSlot.TwoHanded);
-						Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
-						return;
-
-					case Slot.RANGED:
-						bool newAttack = false;
-						if (ActiveWeaponSlot != eActiveWeaponSlot.Distance)
-						{
-							SwitchWeapon(eActiveWeaponSlot.Distance);
-						}
-						else if (!AttackState)
-						{
-							StopCurrentSpellcast();
-							StartAttack(TargetObject);
-							newAttack = true;
-						}
-
-						//Clean up range attack state/type if we are not in combat mode
-						//anymore
-						if (!AttackState)
-						{
-							RangedAttackState = eRangedAttackState.None;
-							RangedAttackType = eRangedAttackType.Normal;
-						}
-						if (!newAttack && RangedAttackState != eRangedAttackState.None)
-						{
-							if (RangedAttackState == eRangedAttackState.ReadyToFire)
-							{
-								RangedAttackState = eRangedAttackState.Fire;
-								StopCurrentSpellcast();
-								m_attackAction.Start(1);
-							}
-							else if (RangedAttackState == eRangedAttackState.Aim)
-							{
-								if (!TargetInView)
-								{
-									// Don't store last target if it's not visible
-									Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.CantSeeTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								}
-								else
-								{
-									if (m_rangeAttackTarget.Target == null)
-									{
-										//set new target only if there was no target before
-										RangeAttackTarget = TargetObject;
-									}
-
-									RangedAttackState = eRangedAttackState.AimFire;
-									Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.AutoReleaseShot"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								}
-							}
-							else if (RangedAttackState == eRangedAttackState.AimFire)
-							{
-								RangedAttackState = eRangedAttackState.AimFireReload;
-								Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.AutoReleaseShotReload"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							}
-							else if (RangedAttackState == eRangedAttackState.AimFireReload)
-							{
-								RangedAttackState = eRangedAttackState.Aim;
-								Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.NoAutoReleaseShotReload"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							}
-						}
-						break;
-						case Slot.FIRSTQUIVER: SwitchQuiver(eActiveQuiverSlot.First, false); break;
-						case Slot.SECONDQUIVER: SwitchQuiver(eActiveQuiverSlot.Second, false); break;
-						case Slot.THIRDQUIVER: SwitchQuiver(eActiveQuiverSlot.Third, false); break;
-						case Slot.FOURTHQUIVER: SwitchQuiver(eActiveQuiverSlot.Fourth, false); break;
-				}
-
-				#endregion
-
-				if (useItem.SpellID != 0 || useItem.SpellID1 != 0 || useItem.PoisonSpellID != 0) // don't return without firing events
-				{
-					if (IsSitting)
-					{
-						Out.SendMessage("You can't use an item while sitting!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return;
-					}
-
-					// Item with a non-charge ability.
-
-					if (useItem.Object_Type == (int)eObjectType.Magical
-					    && useItem.Item_Type == (int)eInventorySlot.FirstBackpack
-					    && useItem.SpellID > 0
-					    && useItem.MaxCharges == 0)
-					{
-						UseMagicalItem(useItem, type);
-						return;
-					}
-
-					// Artifacts don't require charges.
-
-					if ((type < 2 && useItem.SpellID > 0 && useItem.Charges < 1 && useItem.MaxCharges > -1 && !(useItem is InventoryArtifact)) ||
-					    (type == 2 && useItem.SpellID1 > 0 && useItem.Charges1 < 1 && useItem.MaxCharges1 > -1 && !(useItem is InventoryArtifact)) ||
-					    (useItem.PoisonSpellID > 0 && useItem.PoisonCharges < 1))
-					{
-						Out.SendMessage("The " + useItem.Name + " is out of charges.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return;
-					}
-					else
-					{
-						if (useItem.Object_Type == (int)eObjectType.Poison)
-						{
-							InventoryItem mainHand = AttackWeapon;
-							InventoryItem leftHand = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
-							if (mainHand != null && mainHand.PoisonSpellID == 0)
-							{
-								ApplyPoison(useItem, mainHand);
-							}
-							else if (leftHand != null && leftHand.PoisonSpellID == 0)
-							{
-								ApplyPoison(useItem, leftHand);
-							}
-						}
-						else if (useItem.SpellID > 0 && useItem.Charges > 0 && useItem.Object_Type == (int)eObjectType.Magical && (useItem.Item_Type == (int)eInventorySlot.FirstBackpack || useItem.Item_Type == 41))
-						{
-							SpellLine potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
-
-							if (useItem.Item_Type == 41)
-							{
-								potionEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-							}
-
-							Spell spell = SkillBase.FindSpell(useItem.SpellID, potionEffectLine);
-
-							if (spell != null)
-							{
-								// For potions most can be used by any player level except a few higher level ones.
-								// So for the case of potions we will only restrict the level of usage if LevelRequirement is >0 for the item
-
-								long nextPotionAvailTime = TempProperties.getProperty<long>(NEXT_POTION_AVAIL_TIME + "_Type" + (spell.SharedTimerGroup));
-
-								if (Client.Account.PrivLevel == 1 && nextPotionAvailTime > CurrentRegion.Time)
-								{
-									Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.MustWaitBeforeUse", (nextPotionAvailTime - CurrentRegion.Time) / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								}
-								else
-								{
-									if (potionEffectLine != null)
-									{
-										int requiredLevel = useItem.Template.LevelRequirement > 0 ? useItem.Template.LevelRequirement : Math.Min(MaxLevel, useItem.Level);
-
-										if (requiredLevel <= Level)
-										{
-											if (spell.CastTime > 0 && AttackState)
-											{
-												Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.CantUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-											}
-											//Eden
-											else if ((IsStunned && !(Steed != null && Steed.Name == "Forceful Zephyr")) || IsMezzed || !IsAlive)
-											{
-												Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.CantUseState", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-											}
-											else if (spell.CastTime > 0 && IsCasting)
-											{
-												Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.CantUseCast", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-											}
-											else
-											{
-												SpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, potionEffectLine) as SpellHandler;
-												if (spellHandler != null)
-												{
-													GameLiving target = TargetObject as GameLiving;
-
-													// Tobz: make sure we have the appropriate target for our charge spell,
-													// otherwise don't waste a charge.
-													if (spell.Target.ToLower() == "enemy")
-													{
-														// we need an enemy target.
-														if (!GameServer.ServerRules.IsAllowedToAttack(this, target, true))
-														{
-															// not allowed to attack, so they are not an enemy.
-															Out.SendMessage("You need a target for this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-															return;
-														}
-													}
-
-													Stealth(false);
-
-													if (useItem.Item_Type == (int)eInventorySlot.FirstBackpack)
-													{
-														Emote(eEmote.Drink);
-
-														if (spell.CastTime > 0)
-															TempProperties.setProperty(NEXT_SPELL_AVAIL_TIME_BECAUSE_USE_POTION, 6 * 1000 + CurrentRegion.Time);
-													}
-
-													//Spell
-													if (spellHandler.StartSpell(target, useItem))
-													{
-														if (useItem.Count > 1)
-														{
-															Inventory.RemoveCountFromStack(useItem, 1);
-															InventoryLogging.LogInventoryAction(this, "(potion)", eInventoryActionType.Other, useItem.Template);
-														}
-														else
-														{
-															useItem.Charges--;
-															if (useItem.Charges < 1)
-															{
-																Inventory.RemoveCountFromStack(useItem, 1);
-																InventoryLogging.LogInventoryAction(this, "(potion)", eInventoryActionType.Other, useItem.Template);
-															}
-														}
-														Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.Used", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-														TempProperties.setProperty(NEXT_POTION_AVAIL_TIME + "_Type" + (spell.SharedTimerGroup), useItem.CanUseEvery * 1000 + CurrentRegion.Time);
-													}
-													else
-													{
-														// StartItemSpell is responsible for sending failure message to player
-													}
-												}
-												else
-												{
-													Out.SendMessage("Potion effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												}
-											}
-										}
-										else
-										{
-											Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.NotEnouthPower"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-										}
-									}
-									else
-									{
-										Out.SendMessage("Potion effect line not found", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									}
-								}
-							}
-							else
-							{
-								Out.SendMessage("Potion effect spell ID " + useItem.SpellID + " not found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							}
-						}
-						else if (type > 0)
-						{
-							if (!Inventory.EquippedItems.Contains(useItem))
-							{
-								Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.CantUseFromBackpack"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							}
-							else
-							{
-								long lastChargedItemUseTick = TempProperties.getProperty<long>(LAST_CHARGED_ITEM_USE_TICK);
-								long changeTime = CurrentRegion.Time - lastChargedItemUseTick;
-								long delay = TempProperties.getProperty<long>(ITEM_USE_DELAY, 0L);
-								long itemdelay = TempProperties.getProperty<long>("ITEMREUSEDELAY" + useItem.Id_nb);
-								long itemreuse = (long)useItem.CanUseEvery * 1000;
-								if (itemdelay == 0) itemdelay = CurrentRegion.Time - itemreuse;
-
-								if ((IsStunned && !(Steed != null && Steed.Name == "Forceful Zephyr")) || IsMezzed || !IsAlive)
-								{
-									Out.SendMessage("In your state you can't discharge any object.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								}
-								else if (Client.Account.PrivLevel == 1 && (changeTime < delay || (CurrentRegion.Time - itemdelay) < itemreuse)) //2 minutes reuse timer
-								{
-									if ((CurrentRegion.Time - itemdelay) < itemreuse)
-									{
-										Out.SendMessage("You must wait " + (itemreuse - (CurrentRegion.Time - itemdelay)) / 1000 + " more second before discharge " + useItem.Name + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									}
-									else
-									{
-										Out.SendMessage("You must wait " + (delay - changeTime) / 1000 + " more second before discharge another object!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									}
-									return;
-								}
-								else
-								{
-									if (type == 1) //use1
-									{
-										if (useItem.SpellID == 0)
-											return;
-
-										UseItemCharge(useItem, type);
-									}
-									else if (type == 2) //use2
-									{
-										if (useItem.SpellID1 == 0)
-											return;
-
-										UseItemCharge(useItem, type);
-									}
-								}
-							}
-						}
-					}
-				}
-				// notify event handlers about used slot
-				Notify(GamePlayerEvent.UseSlot, this, new UseSlotEventArgs(slot, type));
+				if ((slot >= Slot.FIRSTQUIVER) && (slot <= Slot.FOURTHQUIVER))
+					FailedUseSlot(slot, type, eReasonFailedUseSlot.QuiverEmpty);
+				else
+					FailedUseSlot(slot, type, eReasonFailedUseSlot.SlotEmpty);
+				
+				return;
 			}
+			
+			// Check if Item can handle all the "Use" Behavior on its own
+			var invItem = useItem as IGameInventoryItem;
+			if (invItem != null && invItem.Use(this))
+				return;
+			
+			// Handle Saddle Bags Item
+			if (useItem.Item_Type >= (int)eInventorySlot.LeftFrontSaddleBag && useItem.Item_Type <= (int)eInventorySlot.RightRearSaddleBag)
+			{
+				UseSaddleBag(useItem);
+				return;
+			}
+			
+			// Display a use Message
+			if (useItem.Item_Type != Slot.RANGED && (slot != Slot.HORSE || type != 0))
+			{
+				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.AttemptToUse", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+			
+			#region Non-backpack / vault slots
+			eInventorySlot eslot = (eInventorySlot)slot;
+			switch (eslot)
+			{
+				// Quivers Switch
+				case eInventorySlot.FirstQuiver: SwitchQuiver(eActiveQuiverSlot.First, false); break;
+				case eInventorySlot.SecondQuiver: SwitchQuiver(eActiveQuiverSlot.Second, false); break;
+				case eInventorySlot.ThirdQuiver: SwitchQuiver(eActiveQuiverSlot.Third, false); break;
+				case eInventorySlot.FourthQuiver: SwitchQuiver(eActiveQuiverSlot.Fourth, false); break;
+				// Horse Armor Barding Notice Only ?
+				case eInventorySlot.HorseArmor:
+				case eInventorySlot.HorseBarding: FailedUseSlot(slot, type, eReasonFailedUseSlot.ContinueHandling); return;
+				// Handle Horse Summon / Stop Summoning
+				case eInventorySlot.Horse:
+					if (type == 0)
+					{
+						UseSlotHorseSummon(useItem);
+						FailedUseSlot(slot, type, eReasonFailedUseSlot.ContinueHandling);
+						return;
+					}
+					break;
+				// Handle Weapon Use
+				case eInventorySlot.RightHandWeapon:
+				case eInventorySlot.LeftHandWeapon: 
+				case eInventorySlot.TwoHandWeapon:
+					if (UseSlotSwitchWeapon(eslot, type))
+					{
+						FailedUseSlot(slot, type, eReasonFailedUseSlot.ContinueHandling);
+						return;
+					}
+					break;
+				case eInventorySlot.DistanceWeapon:
+					if (UseSlotSwitchWeapon(eslot, type))
+					{
+						FailedUseSlot(slot, type, eReasonFailedUseSlot.ContinueHandling);
+						return;
+					}
+					if (type == 0)
+					{
+						UseSlotDistanceAttack();
+						FailedUseSlot(slot, type, eReasonFailedUseSlot.ContinueHandling);
+						return;
+					}
+					break;
+			}
+			#endregion
+			
+			#region handling item use
+			if (IsSitting && (useItem.GetTemplateUseSpells().Any(u => u.SpellID != 0) || useItem.Object_Type == (int)eObjectType.Poison))
+			{
+				FailedUseSlot(slot, type, eReasonFailedUseSlot.Sitting);
+				return;
+			}
+			
+			// Check if Poison
+			if (useItem.Object_Type == (int)eObjectType.Poison)
+			{
+				var equippedWeapon = new []{ AttackWeapon, Inventory.GetItem(eInventorySlot.LeftHandWeapon), Inventory.GetItem(eInventorySlot.TwoHandWeapon) };
+				foreach(var weapon in equippedWeapon)
+				{
+					if (weapon != null && weapon.PoisonSpellID == 0)
+					{
+						ApplyPoison(useItem, weapon);
+						break;
+					}
+				}
+
+				// Poisons are not meant to be /use0 /use1 /use2 or anything else...
+				FailedUseSlot(slot, type, eReasonFailedUseSlot.ContinueHandling);
+				return;
+			}
+			
+			// Can Only Trigger Use From "Backpack" Typed Item or Equipped "Equippable" Items...
+			
+			// Check Equippable, don't handle type 0 to prevent triggering on equip macro
+			if (type != 0 && useItem.Item_Type >= (int)eInventorySlot.MinEquipable && useItem.Item_Type <= (int)eInventorySlot.MaxEquipable)
+			{
+				// Slot Called is not in equipped item
+				if (slot != useItem.Item_Type)
+				{
+					FailedUseSlot(slot, type, eReasonFailedUseSlot.CantUseFromBackpack);
+					return;
+				}
+				
+				// Start Spell
+				UseSlotItemSpell(useItem, slot, type, false);
+			}
+			
+			// Check BackPack (Item_Type should be Only 40 for Potions Like Item, or 41 for Magical Type Item !)
+			if (useItem.Item_Type >= (int)eInventorySlot.FirstBackpack || useItem.Item_Type <= (int)eInventorySlot.LastBackpack)
+			{
+				if (useItem.Item_Type == (int)eObjectType.Magical)
+					UseSlotItemSpell(useItem, slot, type, false);
+				else
+					UseSlotItemSpell(useItem, slot, type, true);
+				
+				return;
+			}
+			#endregion
+
+			FailedUseSlot(slot, type, eReasonFailedUseSlot.ContinueHandling);
 		}
 
 		/// <summary>
@@ -9111,174 +9186,6 @@ namespace DOL.GS
 			return false;
 		}
 
-
-		/// <summary>
-		/// Use a charged ability on an item
-		/// </summary>
-		/// <param name="useItem"></param>
-		/// <param name="type">1 == use1, 2 == use2</param>
-		protected virtual void UseItemCharge(InventoryItem useItem, int type)
-		{
-			int requiredLevel = useItem.Template.LevelRequirement > 0 ? useItem.Template.LevelRequirement : Math.Min(MaxLevel, useItem.Level);
-
-			if (requiredLevel > Level)
-			{
-				Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-
-			SpellLine chargeEffectLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-			Spell spell = null;
-
-			if (type == 1)
-			{
-				spell = SkillBase.FindSpell(useItem.SpellID, chargeEffectLine);
-			}
-			else
-			{
-				spell = SkillBase.FindSpell(useItem.SpellID1, chargeEffectLine);
-			}
-
-			if (spell != null)
-			{
-				ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, chargeEffectLine);
-				if (spellHandler != null)
-				{
-					if (IsOnHorse && !spellHandler.HasPositiveEffect)
-						IsOnHorse = false;
-
-					Stealth(false);
-
-					if (spellHandler.CastSpell())
-					{
-						bool castOk = spellHandler.StartReuseTimer;
-
-						if (spell.SubSpellID > 0)
-						{
-							Spell subspell = SkillBase.GetSpellByID(spell.SubSpellID);
-							if (subspell != null)
-							{
-								ISpellHandler subSpellHandler = ScriptMgr.CreateSpellHandler(this, subspell, chargeEffectLine);
-								if (subSpellHandler != null)
-								{
-									subSpellHandler.CastSpell();
-								}
-							}
-						}
-						if (useItem.MaxCharges > 0)
-						{
-							useItem.Charges--;
-						}
-
-						if (castOk)
-						{
-							TempProperties.setProperty(LAST_CHARGED_ITEM_USE_TICK, CurrentRegion.Time);
-							TempProperties.setProperty(ITEM_USE_DELAY, (long)(60000 * 2));
-							TempProperties.setProperty("ITEMREUSEDELAY" + useItem.Id_nb, CurrentRegion.Time);
-						}
-					}
-				}
-				else
-				{
-					Out.SendMessage("Charge effect ID " + spell.ID + " is not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-			}
-			else
-			{
-				if (type == 1)
-				{
-					Out.SendMessage("Charge effect ID " + useItem.SpellID + " not found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-				else
-				{
-					Out.SendMessage("Charge effect ID " + useItem.SpellID1 + " not found.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				}
-			}
-		}
-
-
-		/// <summary>
-		/// Use a magical item's spell.
-		/// </summary>
-		/// <param name="item"></param>
-		/// <param name="type"></param>
-		protected virtual bool UseMagicalItem(InventoryItem item, int type)
-		{
-			if (item == null)
-				return false;
-
-			int cooldown = item.CanUseAgainIn;
-			if (cooldown > 0 && Client.Account.PrivLevel == (uint)ePrivLevel.Player)
-			{
-				int minutes = cooldown / 60;
-				int seconds = cooldown % 60;
-				Out.SendMessage(String.Format("You must wait {0} to discharge this item!",
-				                              (minutes <= 0)
-				                              ? String.Format("{0} more seconds", seconds)
-				                              : String.Format("{0} more minutes and {1} seconds",
-				                                              minutes, seconds)),
-				                eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
-				return false;
-			}
-
-
-			//Eden
-			if (IsMezzed || (IsStunned && !(Steed != null && Steed.Name == "Forceful Zephyr")) || !IsAlive)
-			{
-				Out.SendMessage("You can't use anything in your state.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
-
-			if (m_runningSpellHandler != null)
-			{
-				Out.SendMessage("You are already casting a spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
-
-			SpellLine itemSpellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
-
-			if (itemSpellLine == null)
-				return false;
-
-			if (type == 1 || type == 0)
-			{
-				Spell spell = SkillBase.FindSpell(item.SpellID, itemSpellLine);
-
-				if (spell != null)
-				{
-					int requiredLevel = item.Template.LevelRequirement > 0 ? item.Template.LevelRequirement : Math.Min(MaxLevel, item.Level);
-
-					if (requiredLevel > Level)
-					{
-						Out.SendMessage("You are not powerful enough to use this item's spell.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return false;
-					}
-
-					Out.SendMessage(String.Format("You use {0}.", item.GetName(0, false)), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-
-					ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(this, spell, itemSpellLine);
-					if (spellHandler == null)
-						return false;
-
-					if (IsOnHorse && !spellHandler.HasPositiveEffect)
-						IsOnHorse = false;
-
-					Stealth(false);
-
-					if (spellHandler.CheckBeginCast(TargetObject as GameLiving))
-					{
-						TempProperties.setProperty(LAST_USED_ITEM_SPELL, item);
-						m_runningSpellHandler = spellHandler;
-						m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
-						spellHandler.CastSpell(item);
-						return true;
-					}
-				}
-			}
-			return false;
-		}
-
 		/// <summary>
 		/// Apply poison to weapon
 		/// </summary>
@@ -9288,6 +9195,14 @@ namespace DOL.GS
 		public bool ApplyPoison(InventoryItem poisonPotion, InventoryItem toItem)
 		{
 			if (poisonPotion == null || toItem == null) return false;
+			
+			var canuseagin = poisonPotion.CanUseAgainIn;
+			if (canuseagin > 0)
+			{
+				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.ApplyPoison.CantUsePoisonNow", canuseagin), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+			
 			int envenomSpec = GetModifiedSpecLevel(Specs.Envenom);
 			if (envenomSpec < 1)
 			{
@@ -9354,6 +9269,9 @@ namespace DOL.GS
 			Inventory.RemoveCountFromStack(poisonPotion, 1);
 			InventoryLogging.LogInventoryAction(this, "(poison)", eInventoryActionType.Other, poisonPotion.Template);
 			Out.SendMessage(string.Format("You apply {0} to {1}.", poisonPotion.GetName(0, false), toItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			foreach(var poisons in Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack)
+			        .Where(it => it != null && it.Id_nb.Equals(poisonPotion.Id_nb) && it.Object_Type == (int)eObjectType.Poison && it.CanUseEvery > 0))
+				poisons.CanUseAgainIn = poisons.CanUseEvery;
 			return true;
 		}
 
@@ -11244,71 +11162,14 @@ namespace DOL.GS
 
 			Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemEquipped.Magic", item.GetName(0, false))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
 
-			if (item.Bonus1 != 0)
+			foreach(var tpl in item.GetTemplateBonuses())
 			{
-				ItemBonus[item.Bonus1Type] += item.Bonus1;
-				if (item.Bonus1Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus1Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus2 != 0)
-			{
-				ItemBonus[item.Bonus2Type] += item.Bonus2;
-				if (item.Bonus2Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus2Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus3 != 0)
-			{
-				ItemBonus[item.Bonus3Type] += item.Bonus3;
-				if (item.Bonus3Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus3Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus4 != 0)
-			{
-				ItemBonus[item.Bonus4Type] += item.Bonus4;
-				if (item.Bonus4Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus4Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus5 != 0)
-			{
-				ItemBonus[item.Bonus5Type] += item.Bonus5;
-				if (item.Bonus5Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus5Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus6 != 0)
-			{
-				ItemBonus[item.Bonus6Type] += item.Bonus6;
-				if (item.Bonus6Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus6Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus7 != 0)
-			{
-				ItemBonus[item.Bonus7Type] += item.Bonus7;
-				if (item.Bonus7Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus7Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus8 != 0)
-			{
-				ItemBonus[item.Bonus8Type] += item.Bonus8;
-				if (item.Bonus8Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus8Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus9 != 0)
-			{
-				ItemBonus[item.Bonus9Type] += item.Bonus9;
-				if (item.Bonus9Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus9Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus10 != 0)
-			{
-				ItemBonus[item.Bonus10Type] += item.Bonus10;
-				if (item.Bonus10Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.Bonus10Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.ExtraBonus != 0)
-			{
-				ItemBonus[item.ExtraBonusType] += item.ExtraBonus;
-				//if (item.ExtraBonusType < 20)
-				//Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(item.ExtraBonusType))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+				if (tpl.Value != 0 && tpl.Eproperty != eProperty.Undefined)
+				{
+					ItemBonus[tpl.Property] += tpl.Value;
+					if (tpl.Property < 20)
+						Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemEquipped.Increased", ItemBonusName(tpl.Property))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+				}
 			}
 
 			if (ObjectState == eObjectState.Active)
@@ -11395,71 +11256,14 @@ namespace DOL.GS
 
 			if (!item.IsMagical) return;
 
-			if (item.Bonus1 != 0)
+			foreach(var tpl in item.GetTemplateBonuses())
 			{
-				ItemBonus[item.Bonus1Type] -= item.Bonus1;
-				if (item.Bonus1Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus1Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus2 != 0)
-			{
-				ItemBonus[item.Bonus2Type] -= item.Bonus2;
-				if (item.Bonus2Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus2Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus3 != 0)
-			{
-				ItemBonus[item.Bonus3Type] -= item.Bonus3;
-				if (item.Bonus3Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus3Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus4 != 0)
-			{
-				ItemBonus[item.Bonus4Type] -= item.Bonus4;
-				if (item.Bonus4Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus4Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus5 != 0)
-			{
-				ItemBonus[item.Bonus5Type] -= item.Bonus5;
-				if (item.Bonus5Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus5Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus6 != 0)
-			{
-				ItemBonus[item.Bonus6Type] -= item.Bonus6;
-				if (item.Bonus6Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus6Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus7 != 0)
-			{
-				ItemBonus[item.Bonus7Type] -= item.Bonus7;
-				if (item.Bonus7Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus7Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus8 != 0)
-			{
-				ItemBonus[item.Bonus8Type] -= item.Bonus8;
-				if (item.Bonus8Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus8Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus9 != 0)
-			{
-				ItemBonus[item.Bonus9Type] -= item.Bonus9;
-				if (item.Bonus9Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus9Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.Bonus10 != 0)
-			{
-				ItemBonus[item.Bonus10Type] -= item.Bonus10;
-				if (item.Bonus10Type < 20)
-					Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.Bonus10Type))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			}
-			if (item.ExtraBonus != 0)
-			{
-				ItemBonus[item.ExtraBonusType] -= item.ExtraBonus;
-				//if (item.ExtraBonusType < 20)
-				//Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(item.ExtraBonusType))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+				if (tpl.Value != 0 && tpl.Eproperty != eProperty.Undefined)
+				{
+					ItemBonus[tpl.Property] -= tpl.Value;
+					if (tpl.Property < 20)
+						Out.SendMessage(string.Format(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.OnItemUnequipped.Decreased", ItemBonusName(tpl.Property))), eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+				}
 			}
 
 			if (item is IGameInventoryItem)
@@ -11558,49 +11362,12 @@ namespace DOL.GS
 
 				if (item.IsMagical)
 				{
-					if (item.Bonus1 != 0)
+					foreach(var tpl in item.GetTemplateBonuses())
 					{
-						ItemBonus[item.Bonus1Type] += item.Bonus1;
-					}
-					if (item.Bonus2 != 0)
-					{
-						ItemBonus[item.Bonus2Type] += item.Bonus2;
-					}
-					if (item.Bonus3 != 0)
-					{
-						ItemBonus[item.Bonus3Type] += item.Bonus3;
-					}
-					if (item.Bonus4 != 0)
-					{
-						ItemBonus[item.Bonus4Type] += item.Bonus4;
-					}
-					if (item.Bonus5 != 0)
-					{
-						ItemBonus[item.Bonus5Type] += item.Bonus5;
-					}
-					if (item.Bonus6 != 0)
-					{
-						ItemBonus[item.Bonus6Type] += item.Bonus6;
-					}
-					if (item.Bonus7 != 0)
-					{
-						ItemBonus[item.Bonus7Type] += item.Bonus7;
-					}
-					if (item.Bonus8 != 0)
-					{
-						ItemBonus[item.Bonus8Type] += item.Bonus8;
-					}
-					if (item.Bonus9 != 0)
-					{
-						ItemBonus[item.Bonus9Type] += item.Bonus9;
-					}
-					if (item.Bonus10 != 0)
-					{
-						ItemBonus[item.Bonus10Type] += item.Bonus10;
-					}
-					if (item.ExtraBonus != 0)
-					{
-						ItemBonus[item.ExtraBonusType] += item.ExtraBonus;
+						if (tpl.Value != 0 && tpl.Eproperty != eProperty.Undefined)
+						{
+							ItemBonus[tpl.Property] += tpl.Value;
+						}
 					}
 				}
 			}
@@ -12105,11 +11872,12 @@ namespace DOL.GS
 			StringBuilder disabledSpells = new StringBuilder();
 			StringBuilder disabledAbilities = new StringBuilder();
 			
-			ICollection<Skill> disabledSkills = GetAllDisabledSkills();
+			ICollection<KeyValuePair<int, Skill>> disabledSkills = GetAllDisabledSkillsAndDuration();
 			
-			foreach (Skill skill in disabledSkills)
+			foreach (var skillduration in disabledSkills)
 			{
-				int duration = GetSkillDisabledDuration(skill);
+				var duration = skillduration.Key;
+				var skill = skillduration.Value;
 				
 				if (duration <= 0)
 					continue;

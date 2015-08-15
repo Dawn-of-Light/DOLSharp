@@ -141,8 +141,8 @@ using DOL.AI.Brain;
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					MistressLaws.SaveIntoDatabase();
+				
+				MistressLaws.AddQuestObjectToDatabase();
 					
 				MistressLaws.AddToWorld();
 				
@@ -186,8 +186,8 @@ using DOL.AI.Brain;
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					YlaineBarrett.SaveIntoDatabase();
+				
+				YlaineBarrett.AddQuestObjectToDatabase();
 					
 				YlaineBarrett.AddToWorld();
 				
@@ -223,35 +223,13 @@ using DOL.AI.Brain;
 				slimyswampgooskin.IsTradable = true;
 				slimyswampgooskin.CanDropAsLoot = false;
 				slimyswampgooskin.Color = 0;
-				slimyswampgooskin.Bonus = 0; // default bonus				
-				slimyswampgooskin.Bonus1 = 0;
-				slimyswampgooskin.Bonus1Type = (int) 0;
-				slimyswampgooskin.Bonus2 = 0;
-				slimyswampgooskin.Bonus2Type = (int) 0;
-				slimyswampgooskin.Bonus3 = 0;
-				slimyswampgooskin.Bonus3Type = (int) 0;
-				slimyswampgooskin.Bonus4 = 0;
-				slimyswampgooskin.Bonus4Type = (int) 0;
-				slimyswampgooskin.Bonus5 = 0;
-				slimyswampgooskin.Bonus5Type = (int) 0;
-				slimyswampgooskin.Bonus6 = 0;
-				slimyswampgooskin.Bonus6Type = (int) 0;
-				slimyswampgooskin.Bonus7 = 0;
-				slimyswampgooskin.Bonus7Type = (int) 0;
-				slimyswampgooskin.Bonus8 = 0;
-				slimyswampgooskin.Bonus8Type = (int) 0;
-				slimyswampgooskin.Bonus9 = 0;
-				slimyswampgooskin.Bonus9Type = (int) 0;
-				slimyswampgooskin.Bonus10 = 0;
-				slimyswampgooskin.Bonus10Type = (int) 0;
-				slimyswampgooskin.ExtraBonus = 0;
-				slimyswampgooskin.ExtraBonusType = (int) 0;
+				slimyswampgooskin.Bonus = 0; // default bonus
+				
+				slimyswampgooskin.ClearTemplateBonuses();
 				slimyswampgooskin.Effect = 0;
 				slimyswampgooskin.Emblem = 0;
-				slimyswampgooskin.Charges = 0;
-				slimyswampgooskin.MaxCharges = 0;
-				slimyswampgooskin.SpellID = 0;
-				slimyswampgooskin.ProcSpellID = 0;
+				slimyswampgooskin.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				slimyswampgooskin.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				slimyswampgooskin.Type_Damage = 0;
 				slimyswampgooskin.Realm = 0;
 				slimyswampgooskin.MaxCount = 1;
@@ -265,16 +243,12 @@ using DOL.AI.Brain;
 				slimyswampgooskin.PoisonCharges = 0;
 				slimyswampgooskin.PoisonMaxCharges = 0;
 				slimyswampgooskin.PoisonSpellID = 0;
-				slimyswampgooskin.ProcSpellID1 = 0;
-				slimyswampgooskin.SpellID1 = 0;
-				slimyswampgooskin.MaxCharges1 = 0;
-				slimyswampgooskin.Charges1 = 0;
 				
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(slimyswampgooskin);
+					slimyswampgooskin.AddQuestObjectToDatabase();
 				}
 			
 

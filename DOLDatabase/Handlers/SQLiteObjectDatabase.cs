@@ -19,16 +19,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.Reflection;
 using System.Text;
 using System.Data;
 using DOL.Database.Attributes;
 using DOL.Database.Connection;
 using DOL.Database.UniqueID;
-using System.Data.SQLite;
 
-namespace DOL.Database.Handlers
+namespace DOL.Database
 {
 	public class SQLiteObjectDatabase : ObjectDatabase
 	{				

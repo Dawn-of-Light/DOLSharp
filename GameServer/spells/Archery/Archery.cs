@@ -102,7 +102,7 @@ namespace DOL.GS.Spells
 			}
 			if (m_spell.RecastDelay > 0)
 			{
-				int left = m_caster.GetSkillDisabledDuration(m_spell);
+				long left = m_caster.GetSpellDisabledDurationFromSharedTimer(m_spell);
 				if (left > 0)
 				{
 					MessageToCaster("You must wait " + (left / 1000 + 1).ToString() + " seconds to use this spell!", eChatType.CT_System);

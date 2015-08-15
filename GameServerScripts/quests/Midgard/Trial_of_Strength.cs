@@ -146,8 +146,8 @@ namespace DOL.GS.Quests.Midgard
 					//You don't have to store the created mob in the db if you don't want,
 					//it will be recreated each time it is not found, just comment the following
 					//line if you rather not modify your database
-					if (SAVE_INTO_DATABASE)
-						ToroldSterkkriger.SaveIntoDatabase();
+					
+					ToroldSterkkriger.AddQuestObjectToDatabase();
 
 					ToroldSterkkriger.AddToWorld();
 
@@ -191,8 +191,8 @@ namespace DOL.GS.Quests.Midgard
 					//You don't have to store the created mob in the db if you don't want,
 					//it will be recreated each time it is not found, just comment the following
 					//line if you rather not modify your database
-					if (SAVE_INTO_DATABASE)
-						JorundBruttstein.SaveIntoDatabase();
+					
+					JorundBruttstein.AddQuestObjectToDatabase();
 
 					JorundBruttstein.AddToWorld();
 
@@ -229,34 +229,11 @@ namespace DOL.GS.Quests.Midgard
 				marinefungusroot.CanDropAsLoot = false;
 				marinefungusroot.Color = 0;
 				marinefungusroot.Bonus = 35; // default bonus				
-				marinefungusroot.Bonus1 = 0;
-				marinefungusroot.Bonus1Type = (int)0;
-				marinefungusroot.Bonus2 = 0;
-				marinefungusroot.Bonus2Type = (int)0;
-				marinefungusroot.Bonus3 = 0;
-				marinefungusroot.Bonus3Type = (int)0;
-				marinefungusroot.Bonus4 = 0;
-				marinefungusroot.Bonus4Type = (int)0;
-				marinefungusroot.Bonus5 = 0;
-				marinefungusroot.Bonus5Type = (int)0;
-				marinefungusroot.Bonus6 = 0;
-				marinefungusroot.Bonus6Type = (int)0;
-				marinefungusroot.Bonus7 = 0;
-				marinefungusroot.Bonus7Type = (int)0;
-				marinefungusroot.Bonus8 = 0;
-				marinefungusroot.Bonus8Type = (int)0;
-				marinefungusroot.Bonus9 = 0;
-				marinefungusroot.Bonus9Type = (int)0;
-				marinefungusroot.Bonus10 = 0;
-				marinefungusroot.Bonus10Type = (int)0;
-				marinefungusroot.ExtraBonus = 0;
-				marinefungusroot.ExtraBonusType = (int)0;
+				marinefungusroot.ClearTemplateBonuses();
 				marinefungusroot.Effect = 0;
 				marinefungusroot.Emblem = 0;
-				marinefungusroot.Charges = 0;
-				marinefungusroot.MaxCharges = 0;
-				marinefungusroot.SpellID = 0;
-				marinefungusroot.ProcSpellID = 0;
+				marinefungusroot.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				marinefungusroot.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				marinefungusroot.Type_Damage = 0;
 				marinefungusroot.Realm = 0;
 				marinefungusroot.MaxCount = 1;
@@ -270,16 +247,11 @@ namespace DOL.GS.Quests.Midgard
 				marinefungusroot.PoisonCharges = 0;
 				marinefungusroot.PoisonMaxCharges = 0;
 				marinefungusroot.PoisonSpellID = 0;
-				marinefungusroot.ProcSpellID1 = 0;
-				marinefungusroot.SpellID1 = 0;
-				marinefungusroot.MaxCharges1 = 0;
-				marinefungusroot.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(marinefungusroot);
+				marinefungusroot.AddQuestObjectToDatabase();
 			}
 
 

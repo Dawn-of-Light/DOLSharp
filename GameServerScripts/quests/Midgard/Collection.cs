@@ -178,8 +178,8 @@ namespace DOL.GS.Quests.Midgard
 					brain.AggroRange = 1000;
 					general[i].SetOwnBrain(brain);
 
-					if (SAVE_INTO_DATABASE)
-						general[i].SaveIntoDatabase();
+					
+					general[i].AddQuestObjectToDatabase();
 
 					general[i].AddToWorld();
 				}
@@ -220,7 +220,7 @@ namespace DOL.GS.Quests.Midgard
 					campfire.CurrentRegionID = generalLocations[i].RegionID;
 					
 					if (SAVE_INTO_DATABASE) 
-						campfire.SaveIntoDatabase();
+						campfire.AddQuestObjectToDatabase();
 					
 					campfire.AddToWorld();
 
@@ -249,8 +249,7 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(askefruerWings);
+				askefruerWings.AddQuestObjectToDatabase();
 			}
 
 			dustyOldMap = GameServer.Database.FindObjectByKey<ItemTemplate>("dusty_old_map");
@@ -273,8 +272,7 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(dustyOldMap);
+				dustyOldMap.AddQuestObjectToDatabase();
 			}
 
 
@@ -304,11 +302,7 @@ namespace DOL.GS.Quests.Midgard
 
 				recruitsArms.Bonus = 5; // default bonus
 
-				recruitsArms.Bonus1 = 4;
-				recruitsArms.Bonus1Type = (int) eStat.QUI;
-
-				recruitsArms.Bonus2 = 1;
-				recruitsArms.Bonus2Type = (int) eResist.Body;
+				recruitsArms.SetTemplateBonuses(new []{ eProperty.Quickness, eProperty.Resist_Body }, new []{ 4, 1 });
 
 				recruitsArms.Quality = 100;
 				recruitsArms.Condition = 1000;
@@ -319,8 +313,7 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(recruitsArms);
+				recruitsArms.AddQuestObjectToDatabase();
 			}
 
 			recruitsSleeves = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_quilted_sleeves");
@@ -348,11 +341,7 @@ namespace DOL.GS.Quests.Midgard
 
 				recruitsSleeves.Bonus = 5; // default bonus
 
-				recruitsSleeves.Bonus1 = 4;
-				recruitsSleeves.Bonus1Type = (int) eStat.DEX;
-
-				recruitsSleeves.Bonus2 = 1;
-				recruitsSleeves.Bonus2Type = (int) eResist.Body;
+				recruitsSleeves.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Resist_Body }, new []{ 4, 1 });
 
 				recruitsSleeves.Quality = 100;
 				recruitsSleeves.Condition = 1000;
@@ -363,8 +352,7 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(recruitsSleeves);
+				recruitsSleeves.AddQuestObjectToDatabase();
 			}
 
 			#endregion

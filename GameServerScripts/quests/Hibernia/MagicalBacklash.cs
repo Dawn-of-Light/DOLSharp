@@ -98,16 +98,7 @@ namespace DOL.GS.Quests.Hibernia
 				RecruitsShortSword.DPS_AF = 24;
 				RecruitsShortSword.SPD_ABS = 30;
 				RecruitsShortSword.Bonus = 1;
-				RecruitsShortSword.Bonus1 = 3;
-				RecruitsShortSword.Bonus1Type = (int)eProperty.Strength;
-				RecruitsShortSword.Bonus2 = 1;
-				RecruitsShortSword.Bonus2Type = (int)eProperty.AllMeleeWeaponSkills;
-				RecruitsShortSword.Bonus3 = 1;
-				RecruitsShortSword.Bonus3Type = (int)eProperty.Resist_Crush;
-				RecruitsShortSword.Bonus4 = 1;
-				RecruitsShortSword.Bonus4Type = (int)eProperty.Resist_Thrust;
-				RecruitsShortSword.Bonus5 = 1;
-				RecruitsShortSword.Bonus5Type = (int)eProperty.Quickness;
+				RecruitsShortSword.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.AllMeleeWeaponSkills, eProperty.Resist_Crush, eProperty.Resist_Thrust, eProperty.Quickness }, new []{ 3, 1, 1, 1, 1 });
 
 				RecruitsShortSword.Quality = 100;
 				RecruitsShortSword.Condition = 50000;
@@ -119,8 +110,7 @@ namespace DOL.GS.Quests.Hibernia
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(RecruitsShortSword);
+				RecruitsShortSword.AddQuestObjectToDatabase();
 			}
 			RecruitsDirk = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_dirk");
 			if (RecruitsDirk == null)
@@ -145,16 +135,7 @@ namespace DOL.GS.Quests.Hibernia
 				RecruitsDirk.DPS_AF = 24;
 				RecruitsDirk.SPD_ABS = 26;
 				RecruitsDirk.Bonus = 1;
-				RecruitsDirk.Bonus1 = 3;
-				RecruitsDirk.Bonus1Type = (int)eProperty.Dexterity;
-				RecruitsDirk.Bonus2 = 1;
-				RecruitsDirk.Bonus2Type = (int)eProperty.AllMeleeWeaponSkills;
-				RecruitsDirk.Bonus3 = 1;
-				RecruitsDirk.Bonus3Type = (int)eProperty.Resist_Crush;
-				RecruitsDirk.Bonus4 = 1;
-				RecruitsDirk.Bonus4Type = (int)eProperty.Resist_Thrust;
-				RecruitsDirk.Bonus5 = 1;
-				RecruitsDirk.Bonus5Type = (int)eProperty.Strength;
+				RecruitsDirk.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.AllMeleeWeaponSkills, eProperty.Resist_Crush, eProperty.Resist_Thrust, eProperty.Strength }, new []{ 3, 1, 1, 1, 1 });
 
 				RecruitsDirk.Quality = 100;
 				RecruitsDirk.Condition = 50000;
@@ -166,8 +147,7 @@ namespace DOL.GS.Quests.Hibernia
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(RecruitsDirk);
+				RecruitsDirk.AddQuestObjectToDatabase();
 			}
 			RecruitsClub = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_club");
 			if (RecruitsClub == null)
@@ -192,16 +172,7 @@ namespace DOL.GS.Quests.Hibernia
 				RecruitsClub.DPS_AF = 24;
 				RecruitsClub.SPD_ABS = 30;
 				RecruitsClub.Bonus = 1;
-				RecruitsClub.Bonus1 = 3;
-				RecruitsClub.Bonus1Type = (int)eProperty.Acuity;
-				RecruitsClub.Bonus2 = 1;
-				RecruitsClub.Bonus2Type = (int)eProperty.AllMagicSkills;
-				RecruitsClub.Bonus3 = 1;
-				RecruitsClub.Bonus3Type = (int)eProperty.Resist_Crush;
-				RecruitsClub.Bonus4 = 1;
-				RecruitsClub.Bonus4Type = (int)eProperty.Resist_Thrust;
-				RecruitsClub.Bonus5 = 1;
-				RecruitsClub.Bonus5Type = (int)eProperty.Constitution;
+				RecruitsClub.SetTemplateBonuses(new []{ eProperty.Acuity, eProperty.AllMagicSkills, eProperty.Resist_Crush, eProperty.Resist_Thrust, eProperty.Constitution }, new []{ 3, 1, 1, 1, 1 });
 
 				RecruitsClub.Quality = 100;
 				RecruitsClub.Condition = 50000;
@@ -213,8 +184,7 @@ namespace DOL.GS.Quests.Hibernia
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(RecruitsClub);
+				RecruitsClub.AddQuestObjectToDatabase();
 			}
 			RecruitsStaff = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_staff");
 			if (RecruitsStaff == null)
@@ -239,16 +209,7 @@ namespace DOL.GS.Quests.Hibernia
 				RecruitsStaff.DPS_AF = 24;
 				RecruitsStaff.SPD_ABS = 37;
 				RecruitsStaff.Bonus = 1;
-				RecruitsStaff.Bonus1 = 3;
-				RecruitsStaff.Bonus1Type = (int)eProperty.Acuity;
-				RecruitsStaff.Bonus2 = 1;
-				RecruitsStaff.Bonus2Type = (int)eProperty.Dexterity;
-				RecruitsStaff.Bonus3 = 1;
-				RecruitsStaff.Bonus3Type = (int)eProperty.Resist_Crush;
-				RecruitsStaff.Bonus4 = 1;
-				RecruitsStaff.Bonus4Type = (int)eProperty.Resist_Thrust;
-				RecruitsStaff.Bonus5 = 1;
-				RecruitsStaff.Bonus5Type = (int)eProperty.AllMagicSkills;
+				RecruitsStaff.SetTemplateBonuses(new []{ eProperty.Acuity, eProperty.Dexterity, eProperty.Resist_Crush, eProperty.Resist_Thrust, eProperty.AllMagicSkills }, new []{ 3, 1, 1, 1, 1 });
 
 				RecruitsStaff.Quality = 100;
 				RecruitsStaff.Condition = 50000;
@@ -260,8 +221,7 @@ namespace DOL.GS.Quests.Hibernia
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(RecruitsStaff);
+				RecruitsStaff.AddQuestObjectToDatabase();
 			}
 			#endregion
 
@@ -328,8 +288,7 @@ namespace DOL.GS.Quests.Hibernia
 				Josson.Z = 5247;
 				Josson.Heading = 2946;
 
-				if (SAVE_INTO_DATABASE)
-					Josson.SaveIntoDatabase();
+				Josson.AddQuestObjectToDatabase();
 
 				Josson.AddToWorld();
 			}

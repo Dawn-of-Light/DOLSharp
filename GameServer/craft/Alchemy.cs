@@ -106,7 +106,7 @@ namespace DOL.GS
 				return false;
 			}
 
-			if (item.ProcSpellID != 0 || item.SpellID != 0)
+			if (item.GetTemplateFirstProcSpell().SpellID != 0 || item.GetTemplateFirstUseSpell().SpellID != 0)
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, 
                     "Alchemy.IsAllowedToCombine.AlreadyImbued", item.Name), 
@@ -137,15 +137,16 @@ namespace DOL.GS
 			if (item == null || tincture == null) 
                 return ;
 			
-			if(tincture.ProcSpellID != 0)
+			var procspell = tincture.GetTemplateFirstProcSpell();
+			var usespell = tincture.GetTemplateFirstUseSpell();
+			
+			if(procspell.SpellID != 0)
 			{
-				item.ProcSpellID = tincture.ProcSpellID;
+				item.SetTemplateProcSpells(procspell.SpellID, 0);
 			}
 			else
 			{
-				item.MaxCharges = GetItemMaxCharges(item);
-				item.Charges = item.MaxCharges;
-				item.SpellID = tincture.SpellID;
+				item.SetTemplateUseSpells(usespell.SpellID, GetItemMaxCharges(item));
 			}
 
 			player.Inventory.RemoveCountFromStack(tincture, 1);

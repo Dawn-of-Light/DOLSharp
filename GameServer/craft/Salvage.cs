@@ -17,7 +17,7 @@
  *
  */
 using System;
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -551,9 +551,9 @@ namespace DOL.GS
 
             #region SpecialFix MerchantList
 
-            if (item.Bonus8 > 0)
-                if (item.Bonus8Type == 0 || item.Bonus8Type.ToString() == "")
-                    maxCount = item.Bonus8;
+            if (item.GetTemplateBonuses().ElementAt(8).Value > 0)
+            	if (item.GetTemplateBonuses().ElementAt(8).Eproperty == eProperty.Undefined || item.GetTemplateBonuses().ElementAt(8).Property.ToString() == "")
+                    maxCount = item.GetTemplateBonuses().ElementAt(8).Value;
 
             #endregion SpecialFix MerchantList
 

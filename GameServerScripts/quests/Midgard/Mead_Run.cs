@@ -143,8 +143,8 @@ using DOL.AI.Brain;
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					Audun.SaveIntoDatabase();
+				
+				Audun.AddQuestObjectToDatabase();
 					
 				Audun.AddToWorld();
 				
@@ -188,8 +188,8 @@ using DOL.AI.Brain;
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GuardOlja.SaveIntoDatabase();
+				
+				GuardOlja.AddQuestObjectToDatabase();
 					
 				GuardOlja.AddToWorld();
 				
@@ -226,34 +226,11 @@ using DOL.AI.Brain;
 				emptybottle.CanDropAsLoot = false;
 				emptybottle.Color = 0;
 				emptybottle.Bonus = 35; // default bonus				
-				emptybottle.Bonus1 = 0;
-				emptybottle.Bonus1Type = (int) 0;
-				emptybottle.Bonus2 = 0;
-				emptybottle.Bonus2Type = (int) 0;
-				emptybottle.Bonus3 = 0;
-				emptybottle.Bonus3Type = (int) 0;
-				emptybottle.Bonus4 = 0;
-				emptybottle.Bonus4Type = (int) 0;
-				emptybottle.Bonus5 = 0;
-				emptybottle.Bonus5Type = (int) 0;
-				emptybottle.Bonus6 = 0;
-				emptybottle.Bonus6Type = (int) 0;
-				emptybottle.Bonus7 = 0;
-				emptybottle.Bonus7Type = (int) 0;
-				emptybottle.Bonus8 = 0;
-				emptybottle.Bonus8Type = (int) 0;
-				emptybottle.Bonus9 = 0;
-				emptybottle.Bonus9Type = (int) 0;
-				emptybottle.Bonus10 = 0;
-				emptybottle.Bonus10Type = (int) 0;
-				emptybottle.ExtraBonus = 0;
-				emptybottle.ExtraBonusType = (int) 0;
+				emptybottle.ClearTemplateBonuses();
 				emptybottle.Effect = 0;
 				emptybottle.Emblem = 0;
-				emptybottle.Charges = 0;
-				emptybottle.MaxCharges = 0;
-				emptybottle.SpellID = 0;
-				emptybottle.ProcSpellID = 0;
+				emptybottle.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				emptybottle.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				emptybottle.Type_Damage = 0;
 				emptybottle.Realm = 0;
 				emptybottle.MaxCount = 1;
@@ -267,17 +244,12 @@ using DOL.AI.Brain;
 				emptybottle.PoisonCharges = 0;
 				emptybottle.PoisonMaxCharges = 0;
 				emptybottle.PoisonSpellID = 0;
-				emptybottle.ProcSpellID1 = 0;
-				emptybottle.SpellID1 = 0;
-				emptybottle.MaxCharges1 = 0;
-				emptybottle.Charges1 = 0;
 				
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(emptybottle);
-				}
+				emptybottle.AddQuestObjectToDatabase();
+			}
 			bottleofmead = GameServer.Database.FindObjectByKey<ItemTemplate>("bottleofmead");
 			if (bottleofmead == null)
 			{
@@ -299,34 +271,11 @@ using DOL.AI.Brain;
 				bottleofmead.CanDropAsLoot = false;
 				bottleofmead.Color = 0;
 				bottleofmead.Bonus = 35; // default bonus				
-				bottleofmead.Bonus1 = 0;
-				bottleofmead.Bonus1Type = (int)0;
-				bottleofmead.Bonus2 = 0;
-				bottleofmead.Bonus2Type = (int)0;
-				bottleofmead.Bonus3 = 0;
-				bottleofmead.Bonus3Type = (int)0;
-				bottleofmead.Bonus4 = 0;
-				bottleofmead.Bonus4Type = (int)0;
-				bottleofmead.Bonus5 = 0;
-				bottleofmead.Bonus5Type = (int)0;
-				bottleofmead.Bonus6 = 0;
-				bottleofmead.Bonus6Type = (int)0;
-				bottleofmead.Bonus7 = 0;
-				bottleofmead.Bonus7Type = (int)0;
-				bottleofmead.Bonus8 = 0;
-				bottleofmead.Bonus8Type = (int)0;
-				bottleofmead.Bonus9 = 0;
-				bottleofmead.Bonus9Type = (int)0;
-				bottleofmead.Bonus10 = 0;
-				bottleofmead.Bonus10Type = (int)0;
-				bottleofmead.ExtraBonus = 0;
-				bottleofmead.ExtraBonusType = (int)0;
+				bottleofmead.ClearTemplateBonuses();
 				bottleofmead.Effect = 0;
 				bottleofmead.Emblem = 0;
-				bottleofmead.Charges = 0;
-				bottleofmead.MaxCharges = 0;
-				bottleofmead.SpellID = 0;
-				bottleofmead.ProcSpellID = 0;
+				bottleofmead.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				bottleofmead.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				bottleofmead.Type_Damage = 0;
 				bottleofmead.Realm = 0;
 				bottleofmead.MaxCount = 1;
@@ -340,16 +289,11 @@ using DOL.AI.Brain;
 				bottleofmead.PoisonCharges = 0;
 				bottleofmead.PoisonMaxCharges = 0;
 				bottleofmead.PoisonSpellID = 0;
-				bottleofmead.ProcSpellID1 = 0;
-				bottleofmead.SpellID1 = 0;
-				bottleofmead.MaxCharges1 = 0;
-				bottleofmead.Charges1 = 0;
 
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(bottleofmead);
+				bottleofmead.AddQuestObjectToDatabase();
 			}
 			
 

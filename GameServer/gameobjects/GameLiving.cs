@@ -2924,18 +2924,13 @@ namespace DOL.GS
 				return;
 
 			// Proc chance is 2.5% per SPD, i.e. 10% for a 3.5 SPD weapon. - Tolakram, changed average speed to 3.5
-
-			int procChance = (int)Math.Ceiling(((weapon.ProcChance > 0 ? weapon.ProcChance : 10) * (weapon.SPD_ABS / 35.0)));
-
-			// Proc #1
-
-			if (weapon.ProcSpellID != 0 && Util.Chance(procChance))
-				StartWeaponMagicalEffect(weapon, ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects), weapon.ProcSpellID, false);
-
-			// Proc #2
-
-			if (weapon.ProcSpellID1 != 0 && Util.Chance(procChance))
-				StartWeaponMagicalEffect(weapon, ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects), weapon.ProcSpellID1, false);
+			foreach(var proc in weapon.GetTemplateProcSpells())
+			{
+				int procChance = (int)Math.Ceiling(((proc.ProcChance > 0 ? proc.ProcChance : 10) * (weapon.SPD_ABS / 35.0)));
+				// Proc
+				if (proc.SpellID != 0 && Util.Chance(procChance))
+					StartWeaponMagicalEffect(weapon, ad, SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects), proc.SpellID, false);
+			}
 
 			// Poison
 
@@ -6385,12 +6380,19 @@ namespace DOL.GS
 		{
 			lock ((m_disabledSkills as ICollection).SyncRoot)
 			{
-				List<Skill> skillList = new List<Skill>();
-				
-				foreach(KeyValuePair<long, Skill> disabled in m_disabledSkills.Values)
-					skillList.Add(disabled.Value);
-				
-				return skillList;
+				return m_disabledSkills.Values.Select(kv => kv.Value).ToArray();
+			}
+		}
+		
+		/// <summary>
+		/// Gets a copy of all disabled skills
+		/// </summary>
+		/// <returns></returns>
+		public virtual ICollection<KeyValuePair<int, Skill>> GetAllDisabledSkillsAndDuration()
+		{
+			lock ((m_disabledSkills as ICollection).SyncRoot)
+			{
+				return m_disabledSkills.Values.Select(kv => new KeyValuePair<int, Skill>((int)Math.Max(0, kv.Key - CurrentRegion.Time), kv.Value)).ToArray();
 			}
 		}
 
@@ -6401,25 +6403,13 @@ namespace DOL.GS
 		/// <param name="duration">duration of disable in milliseconds</param>
 		public virtual void DisableSkill(Skill skill, int duration)
 		{
-			lock ((m_disabledSkills as ICollection).SyncRoot)
-			{
-				KeyValuePair<int, Type> key = new KeyValuePair<int, Type>(skill.ID, skill.GetType());
-				if (duration > 0)
-				{
-					m_disabledSkills[key] = new KeyValuePair<long, Skill>(CurrentRegion.Time + duration, skill);
-				}
-				else
-				{
-					m_disabledSkills.Remove(key);
-				}
-			}
+			DisableSkill(new []{ new Tuple<Skill, int>(skill, duration) });
 		}
 		
 		/// <summary>
 		/// Grey out collection of skills on client for specified duration
 		/// </summary>
-		/// <param name="skill">the skill to disable</param>
-		/// <param name="duration">duration of disable in milliseconds</param>
+		/// <param name="skills">the skills to disable with disable duration</param>
 		public virtual void DisableSkill(ICollection<Tuple<Skill, int>> skills)
 		{
 			lock ((m_disabledSkills as ICollection).SyncRoot)
@@ -6441,7 +6431,6 @@ namespace DOL.GS
 				}
 			}
 		}
-		
 
 		/// <summary>
 		/// Removes Greyed out skills
@@ -6449,11 +6438,23 @@ namespace DOL.GS
 		/// <param name="skill">the skill to remove</param>
 		public virtual void RemoveDisabledSkill(Skill skill)
 		{
+			RemoveDisabledSkill(new []{ skill });
+		}
+		
+		/// <summary>
+		/// Removes Greyed out skills
+		/// </summary>
+		/// <param name="skills">the skills to remove</param>
+		public virtual void RemoveDisabledSkill(ICollection<Skill> skills)
+		{
 			lock ((m_disabledSkills as ICollection).SyncRoot)
 			{
-				KeyValuePair<int, Type> key = new KeyValuePair<int, Type>(skill.ID, skill.GetType());
-				if(m_disabledSkills.ContainsKey(key))
-					m_disabledSkills.Remove(key);
+				foreach(var skill in skills)
+				{
+					KeyValuePair<int, Type> key = new KeyValuePair<int, Type>(skill.ID, skill.GetType());
+					if(m_disabledSkills.ContainsKey(key))
+						m_disabledSkills.Remove(key);
+				}
 			}
 		}
 
@@ -6604,7 +6605,7 @@ namespace DOL.GS
 		/// <param name="handler"></param>
 		public virtual void OnAfterSpellCastSequence(ISpellHandler handler)
 		{
-			m_runningSpellHandler.CastingCompleteEvent -= new CastingCompleteCallback(OnAfterSpellCastSequence);
+			m_runningSpellHandler.CastingCompleteEvent -= OnAfterSpellCastSequence;
 			m_runningSpellHandler = null;
 		}
 
@@ -6640,7 +6641,7 @@ namespace DOL.GS
 			if (spellhandler != null)
 			{
 				m_runningSpellHandler = spellhandler;
-				spellhandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+				spellhandler.CastingCompleteEvent += OnAfterSpellCastSequence;
 				spellhandler.CastSpell();
 			}
 			else
@@ -6660,7 +6661,7 @@ namespace DOL.GS
 				if (spellhandler.Spell.CastTime > 0)
 				{
 					m_runningSpellHandler = spellhandler;
-					m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+					m_runningSpellHandler.CastingCompleteEvent += OnAfterSpellCastSequence;
 				}
 
 				spellhandler.Ability = ab;

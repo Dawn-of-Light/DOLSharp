@@ -71,6 +71,7 @@ namespace DOL.GS
 		MaxEquipable	  = 37,
 
 		FirstBackpack     = 40,
+		SecondBackpack    = 41,
 		LastBackpack      = 79,
 		
 		FirstBagHorse	= 80,

@@ -25,10 +25,9 @@ using System.Data;
 using DOL.Database.Attributes;
 using DOL.Database.Connection;
 using DOL.Database.UniqueID;
-using MySql.Data.MySqlClient;
 using MySql.Data.Types;
 
-namespace DOL.Database.Handlers
+namespace DOL.Database
 {
 	public class MySQLObjectDatabase : ObjectDatabase
 	{

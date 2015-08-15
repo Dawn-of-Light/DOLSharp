@@ -172,8 +172,8 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					hyndla.SaveIntoDatabase();
+				
+				hyndla.AddQuestObjectToDatabase();
 
 				hyndla.AddToWorld();
 			}
@@ -220,8 +220,8 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					njiedi.SaveIntoDatabase();
+				
+				njiedi.AddQuestObjectToDatabase();
 				njiedi.AddToWorld();
 			}
 			else
@@ -254,8 +254,8 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					askefruerTrainer.SaveIntoDatabase();
+				
+				askefruerTrainer.AddQuestObjectToDatabase();
 
 				askefruerTrainer.AddToWorld();
 			}
@@ -283,7 +283,7 @@ namespace DOL.GS.Quests.Midgard
 				trainerWhip.IsPickable = true;
 				trainerWhip.IsDropable = false;
 
-				GameServer.Database.AddObject(trainerWhip);
+				trainerWhip.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -313,14 +313,7 @@ namespace DOL.GS.Quests.Midgard
 
 				recruitsVest.Bonus = 5; // default bonus
 
-				recruitsVest.Bonus1 = 3;
-				recruitsVest.Bonus1Type = (int) eStat.STR;
-
-				recruitsVest.Bonus2 = 4;
-				recruitsVest.Bonus2Type = (int) eStat.CON;
-
-				recruitsVest.Bonus3 = 1;
-				recruitsVest.Bonus3Type = (int) eResist.Body;
+				recruitsVest.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Constitution, eProperty.Resist_Body }, new []{ 3, 4, 1 });
 
 				recruitsVest.Quality = 100;
 				recruitsVest.Condition = 1000;
@@ -328,7 +321,7 @@ namespace DOL.GS.Quests.Midgard
 				recruitsVest.Durability = 1000;
 				recruitsVest.MaxDurability = 1000;
 
-				GameServer.Database.AddObject(recruitsVest);
+				recruitsVest.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -357,11 +350,7 @@ namespace DOL.GS.Quests.Midgard
 
 				recruitsQuiltedVest.Bonus = 5; // default bonus
 
-				recruitsQuiltedVest.Bonus1 = 4;
-				recruitsQuiltedVest.Bonus1Type = (int) eStat.INT;
-
-				recruitsQuiltedVest.Bonus2 = 3;
-				recruitsQuiltedVest.Bonus2Type = (int) eStat.DEX;
+				recruitsQuiltedVest.SetTemplateBonuses(new []{ eProperty.Intelligence, eProperty.Dexterity }, new []{ 4, 3 });
 
 				recruitsQuiltedVest.Quality = 100;
 				recruitsQuiltedVest.Condition = 1000;
@@ -369,7 +358,7 @@ namespace DOL.GS.Quests.Midgard
 				recruitsQuiltedVest.Durability = 1000;
 				recruitsQuiltedVest.MaxDurability = 1000;
 
-				GameServer.Database.AddObject(recruitsQuiltedVest);
+				recruitsQuiltedVest.AddQuestObjectToDatabase();
 			}
 
 			#endregion
@@ -557,7 +546,7 @@ namespace DOL.GS.Quests.Midgard
 			//You don't have to store the created mob in the db if you don't want,
 			//it will be recreated each time it is not found, just comment the following
 			//line if you rather not modify your database
-            //grifflet.SaveIntoDatabase();                            
+            //grifflet.AddQuestObjectToDatabase();                            
 
 			GameEventMgr.AddHandler(grifflet, GameLivingEvent.Interact, new DOLEventHandler(TalkToGrifflet));
 

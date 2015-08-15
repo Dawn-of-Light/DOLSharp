@@ -186,8 +186,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					madissair.SaveIntoDatabase();
+				
+				madissair.AddQuestObjectToDatabase();
 
 				madissair.AddToWorld();
 			}
@@ -226,8 +226,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					eileenMorton.SaveIntoDatabase();
+				
+				eileenMorton.AddQuestObjectToDatabase();
 
 				eileenMorton.AddToWorld();
 			}
@@ -264,8 +264,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					scribeVeral.SaveIntoDatabase();
+				
+				scribeVeral.AddQuestObjectToDatabase();
 
 				scribeVeral.AddToWorld();
 			}
@@ -300,8 +300,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					serawen.SaveIntoDatabase();
+				
+				serawen.AddQuestObjectToDatabase();
 
 				serawen.AddToWorld();
 			}
@@ -341,7 +341,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(sealedLovePoem);
+					sealedLovePoem.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -373,7 +373,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(beautifulRedRose);
+					beautifulRedRose.AddQuestObjectToDatabase();
 
 
 				// item db check
@@ -405,7 +405,7 @@ namespace DOL.GS.Quests.Albion
 					//it will be recreated each time it is not found, just comment the following
 					//line if you rather not modify your database
 					
-						GameServer.Database.AddObject(adnilsMagicalOrb);
+						adnilsMagicalOrb.AddQuestObjectToDatabase();
 				}
 
 				#endregion

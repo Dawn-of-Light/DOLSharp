@@ -209,10 +209,8 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
-                {
-                    briedi.SaveIntoDatabase();
-                }
+                
+                briedi.AddQuestObjectToDatabase();
                 briedi.AddToWorld();
 			}
 			else
@@ -243,8 +241,8 @@ namespace DOL.GS.Quests.Midgard
 				brain.AggroRange = 1000;
 				princessAiyr.SetOwnBrain(brain);
 
-				if (SAVE_INTO_DATABASE)
-					princessAiyr.SaveIntoDatabase();
+				
+				princessAiyr.AddQuestObjectToDatabase();
 				princessAiyr.AddToWorld();
 			}
 			else
@@ -293,8 +291,8 @@ namespace DOL.GS.Quests.Midgard
 					//You don't have to store the created mob in the db if you don't want,
 					//it will be recreated each time it is not found, just comment the following
 					//line if you rather not modify your database
-					if (SAVE_INTO_DATABASE)
-						askefruerSorceress[i].SaveIntoDatabase();
+					
+					askefruerSorceress[i].AddQuestObjectToDatabase();
 					askefruerSorceress[i].AddToWorld();
 				}
 			}
@@ -323,8 +321,7 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(coastalWolfBlood);
+				coastalWolfBlood.AddQuestObjectToDatabase();
 			}
 
 			tatteredShirt = GameServer.Database.FindObjectByKey<ItemTemplate>("tattered_shirt");
@@ -347,8 +344,7 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(tatteredShirt);
+				tatteredShirt.AddQuestObjectToDatabase();
 			}
 
 			scrollBriedi = GameServer.Database.FindObjectByKey<ItemTemplate>("scroll_for_briedi");
@@ -371,8 +367,7 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(scrollBriedi);
+				scrollBriedi.AddQuestObjectToDatabase();
 			}
 
 			listBriedi = GameServer.Database.FindObjectByKey<ItemTemplate>("list_for_briedi");
@@ -395,8 +390,7 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(listBriedi);
+				listBriedi.AddQuestObjectToDatabase();
 			}
 
 			smieraGattoClaw = GameServer.Database.FindObjectByKey<ItemTemplate>("smiera_gatto_claw");
@@ -419,8 +413,7 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(smieraGattoClaw);
+				smieraGattoClaw.AddQuestObjectToDatabase();
 			}
 
 			princessAiyrHead = GameServer.Database.FindObjectByKey<ItemTemplate>("princess_ayir_head");
@@ -443,8 +436,7 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(princessAiyrHead);
+				princessAiyrHead.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -473,14 +465,7 @@ namespace DOL.GS.Quests.Midgard
 
 				recruitsHelm.Bonus = 5; // default bonus
 
-				recruitsHelm.Bonus1 = 4;
-				recruitsHelm.Bonus1Type = (int) eStat.DEX;
-
-				recruitsHelm.Bonus2 = 1;
-				recruitsHelm.Bonus2Type = (int) eResist.Spirit;
-
-				recruitsHelm.Bonus3 = 12;
-				recruitsHelm.Bonus3Type = (int) eProperty.MaxHealth;
+				recruitsHelm.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Resist_Spirit, eProperty.MaxHealth }, new []{ 4, 1, 12 });
 
 				recruitsHelm.Quality = 100;
 				recruitsHelm.Condition = 1000;
@@ -491,8 +476,7 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(recruitsHelm);
+				recruitsHelm.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -521,14 +505,7 @@ namespace DOL.GS.Quests.Midgard
 
 				recruitsCap.Bonus = 5; // default bonus
 
-				recruitsCap.Bonus1 = 4;
-				recruitsCap.Bonus1Type = (int) eStat.DEX;
-
-				recruitsCap.Bonus2 = 20;
-				recruitsCap.Bonus2Type = (int) eProperty.MaxHealth;
-
-				recruitsCap.Bonus3 = 1;
-				recruitsCap.Bonus3Type = (int) eResist.Spirit;
+				recruitsCap.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.MaxHealth, eProperty.Resist_Spirit }, new []{ 4, 20, 1 });
 
 				recruitsCap.Quality = 100;
 				recruitsCap.Condition = 1000;
@@ -539,8 +516,7 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(recruitsCap);
+				recruitsCap.AddQuestObjectToDatabase();
 			}
 
 			recruitsRing = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_pewter_ring");
@@ -564,14 +540,7 @@ namespace DOL.GS.Quests.Midgard
 
 				recruitsRing.Bonus = 5; // default bonus
 
-				recruitsRing.Bonus1 = 4;
-				recruitsRing.Bonus1Type = (int) eStat.CON;
-
-				recruitsRing.Bonus2 = 1;
-				recruitsRing.Bonus2Type = (int) eResist.Crush;
-
-				recruitsRing.Bonus3 = 12;
-				recruitsRing.Bonus3Type = (int) eProperty.MaxHealth;
+				recruitsRing.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Resist_Crush, eProperty.MaxHealth }, new []{ 4, 1, 12 });
 
 				recruitsRing.Quality = 100;
 				recruitsRing.Condition = 1000;
@@ -582,8 +551,7 @@ namespace DOL.GS.Quests.Midgard
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(recruitsRing);
+				recruitsRing.AddQuestObjectToDatabase();
 			}
 
 			#endregion

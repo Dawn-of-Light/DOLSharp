@@ -123,8 +123,8 @@ namespace DOL.GS.Quests.Albion
 				sirDorian.Z = 2344;
 				sirDorian.Heading = 2930;
 
-				if (SAVE_INTO_DATABASE)
-					sirDorian.SaveIntoDatabase();
+				
+				sirDorian.AddQuestObjectToDatabase();
 
 				sirDorian.AddToWorld();
 			}

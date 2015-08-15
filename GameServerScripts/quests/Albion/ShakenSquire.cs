@@ -172,8 +172,8 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 
-				if (SAVE_INTO_DATABASE)
-					sirJerem.SaveIntoDatabase();
+				
+				sirJerem.AddQuestObjectToDatabase();
 
 				sirJerem.AddToWorld();
 			}
@@ -211,8 +211,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					squireGalune.SaveIntoDatabase();
+				
+				squireGalune.AddQuestObjectToDatabase();
 
 				squireGalune.AddToWorld();
 			}
@@ -257,8 +257,8 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 
-				if (SAVE_INTO_DATABASE)
-					smallSpider.SaveIntoDatabase();
+				
+				smallSpider.AddQuestObjectToDatabase();
 
 				smallSpider.AddToWorld();
 			}

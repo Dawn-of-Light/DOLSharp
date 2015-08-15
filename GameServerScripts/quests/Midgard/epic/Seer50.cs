@@ -120,11 +120,8 @@ namespace DOL.GS.Quests.Midgard
 				Inaksha.Z = 4960;
 				Inaksha.Heading = 2116;
 				Inaksha.AddToWorld();
-				if (SAVE_INTO_DATABASE)
-				{
-					Inaksha.SaveIntoDatabase();
-				}
-
+				
+				Inaksha.AddQuestObjectToDatabase();
 			}
 			else
 				Inaksha = npcs[0];
@@ -149,11 +146,8 @@ namespace DOL.GS.Quests.Midgard
 				Loken.Z = 4596;
 				Loken.Heading = 3777;
 				Loken.AddToWorld();
-				if (SAVE_INTO_DATABASE)
-				{
-					Loken.SaveIntoDatabase();
-				}
-
+				
+					Loken.AddQuestObjectToDatabase();
 			}
 			else
 				Loken = npcs[0];
@@ -178,11 +172,8 @@ namespace DOL.GS.Quests.Midgard
 				Miri.Z = 8305;
 				Miri.Heading = 3037;
 				Miri.AddToWorld();
-				if (SAVE_INTO_DATABASE)
-				{
-					Miri.SaveIntoDatabase();
-				}
-
+				
+				Miri.AddQuestObjectToDatabase();
 			}
 			else
 				Miri = npcs[0];
@@ -212,10 +203,7 @@ namespace DOL.GS.Quests.Midgard
 				ball_of_flame.Type_Damage = 0;
 				ball_of_flame.Quality = 100;
 				ball_of_flame.Weight = 12;
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(ball_of_flame);
-				}
+				ball_of_flame.AddQuestObjectToDatabase();
 			}
 
 // end item
@@ -239,10 +227,7 @@ namespace DOL.GS.Quests.Midgard
 				sealed_pouch.Type_Damage = 0;
 				sealed_pouch.Quality = 100;
 				sealed_pouch.Weight = 12;
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(sealed_pouch);
-				}
+				sealed_pouch.AddQuestObjectToDatabase();
 			}
 // end item
 
@@ -271,22 +256,9 @@ namespace DOL.GS.Quests.Midgard
 				HealerEpicBoots.Condition = 50000;
 				HealerEpicBoots.Durability = 50000;
 
-				HealerEpicBoots.Bonus1 = 12;
-				HealerEpicBoots.Bonus1Type = (int) eStat.CON;
+				HealerEpicBoots.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.Quickness, eProperty.MaxHealth }, new []{ 12, 12, 12, 21 });
 
-				HealerEpicBoots.Bonus2 = 12;
-				HealerEpicBoots.Bonus2Type = (int) eStat.DEX;
-
-				HealerEpicBoots.Bonus3 = 12;
-				HealerEpicBoots.Bonus3Type = (int) eStat.QUI;
-
-				HealerEpicBoots.Bonus4 = 21;
-				HealerEpicBoots.Bonus4Type = (int) eProperty.MaxHealth;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(HealerEpicBoots);
-				}
+				HealerEpicBoots.AddQuestObjectToDatabase();
 			}
 //end item
 			//Valhalla Touched Coif 
@@ -314,23 +286,9 @@ namespace DOL.GS.Quests.Midgard
 				HealerEpicHelm.Condition = 50000;
 				HealerEpicHelm.Durability = 50000;
 
-				HealerEpicHelm.Bonus1 = 4;
-				HealerEpicHelm.Bonus1Type = (int) eProperty.Skill_Augmentation;
+				HealerEpicHelm.SetTemplateBonuses(new []{ eProperty.Skill_Augmentation, eProperty.Piety, eProperty.Resist_Slash, eProperty.PowerRegenerationRate }, new []{ 4, 18, 4, 6 });
 
-				HealerEpicHelm.Bonus2 = 18;
-				HealerEpicHelm.Bonus2Type = (int) eStat.PIE;
-
-				HealerEpicHelm.Bonus3 = 4;
-				HealerEpicHelm.Bonus3Type = (int) eResist.Slash;
-
-				HealerEpicHelm.Bonus4 = 6;
-				HealerEpicHelm.Bonus4Type = (int) eProperty.PowerRegenerationRate;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(HealerEpicHelm);
-				}
-
+				HealerEpicHelm.AddQuestObjectToDatabase();
 			}
 //end item
 			//Valhalla Touched Gloves 
@@ -358,23 +316,9 @@ namespace DOL.GS.Quests.Midgard
 				HealerEpicGloves.Condition = 50000;
 				HealerEpicGloves.Durability = 50000;
 
-				HealerEpicGloves.Bonus1 = 4;
-				HealerEpicGloves.Bonus1Type = (int) eProperty.Skill_Mending;
+				HealerEpicGloves.SetTemplateBonuses(new []{ eProperty.Skill_Mending, eProperty.Piety, eProperty.Resist_Crush, eProperty.PowerRegenerationRate }, new []{ 4, 16, 4, 6 });
 
-				HealerEpicGloves.Bonus2 = 16;
-				HealerEpicGloves.Bonus2Type = (int) eStat.PIE;
-
-				HealerEpicGloves.Bonus3 = 4;
-				HealerEpicGloves.Bonus3Type = (int) eResist.Crush;
-
-				HealerEpicGloves.Bonus4 = 6;
-				HealerEpicGloves.Bonus4Type = (int) eProperty.PowerRegenerationRate;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(HealerEpicGloves);
-				}
-
+				HealerEpicGloves.AddQuestObjectToDatabase();
 			}
 			//Valhalla Touched Hauberk 
 			HealerEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("HealerEpicVest");
@@ -401,23 +345,9 @@ namespace DOL.GS.Quests.Midgard
 				HealerEpicVest.Condition = 50000;
 				HealerEpicVest.Durability = 50000;
 
-				HealerEpicVest.Bonus1 = 16;
-				HealerEpicVest.Bonus1Type = (int) eStat.CON;
+				HealerEpicVest.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Piety, eProperty.Resist_Cold, eProperty.Resist_Heat }, new []{ 16, 16, 8, 10 });
 
-				HealerEpicVest.Bonus2 = 16;
-				HealerEpicVest.Bonus2Type = (int) eStat.PIE;
-
-				HealerEpicVest.Bonus3 = 8;
-				HealerEpicVest.Bonus3Type = (int) eResist.Cold;
-
-				HealerEpicVest.Bonus4 = 10;
-				HealerEpicVest.Bonus4Type = (int) eResist.Heat;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(HealerEpicVest);
-				}
-
+				HealerEpicVest.AddQuestObjectToDatabase();
 			}
 			//Valhalla Touched Legs 
 			HealerEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("HealerEpicLegs");
@@ -444,23 +374,9 @@ namespace DOL.GS.Quests.Midgard
 				HealerEpicLegs.Condition = 50000;
 				HealerEpicLegs.Durability = 50000;
 
-				HealerEpicLegs.Bonus1 = 15;
-				HealerEpicLegs.Bonus1Type = (int) eStat.STR;
+				HealerEpicLegs.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Constitution, eProperty.Resist_Spirit, eProperty.Resist_Energy }, new []{ 15, 16, 10, 10 });
 
-				HealerEpicLegs.Bonus2 = 16;
-				HealerEpicLegs.Bonus2Type = (int) eStat.CON;
-
-				HealerEpicLegs.Bonus3 = 10;
-				HealerEpicLegs.Bonus3Type = (int) eResist.Spirit;
-
-				HealerEpicLegs.Bonus4 = 10;
-				HealerEpicLegs.Bonus4Type = (int) eResist.Energy;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(HealerEpicLegs);
-				}
-
+				HealerEpicLegs.AddQuestObjectToDatabase();
 			}
 			//Valhalla Touched Sleeves 
 			HealerEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("HealerEpicArms");
@@ -487,23 +403,9 @@ namespace DOL.GS.Quests.Midgard
 				HealerEpicArms.Condition = 50000;
 				HealerEpicArms.Durability = 50000;
 
-				HealerEpicArms.Bonus1 = 4;
-				HealerEpicArms.Bonus1Type = (int) eProperty.Skill_Mending;
+				HealerEpicArms.SetTemplateBonuses(new []{ eProperty.Skill_Mending, eProperty.Strength, eProperty.Piety, eProperty.Resist_Matter }, new []{ 4, 13, 15, 6 });
 
-				HealerEpicArms.Bonus2 = 13;
-				HealerEpicArms.Bonus2Type = (int) eStat.STR;
-
-				HealerEpicArms.Bonus3 = 15;
-				HealerEpicArms.Bonus3Type = (int) eStat.PIE;
-
-				HealerEpicArms.Bonus4 = 6;
-				HealerEpicArms.Bonus4Type = (int) eResist.Matter;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(HealerEpicArms);
-				}
-
+				HealerEpicArms.AddQuestObjectToDatabase();
 			}
 			//Subterranean Boots 
 			ShamanEpicBoots = GameServer.Database.FindObjectByKey<ItemTemplate>("ShamanEpicBoots");
@@ -530,20 +432,9 @@ namespace DOL.GS.Quests.Midgard
 				ShamanEpicBoots.Condition = 50000;
 				ShamanEpicBoots.Durability = 50000;
 
-				ShamanEpicBoots.Bonus1 = 13;
-				ShamanEpicBoots.Bonus1Type = (int) eStat.DEX;
+				ShamanEpicBoots.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Quickness, eProperty.MaxHealth }, new []{ 13, 13, 39 });
 
-				ShamanEpicBoots.Bonus2 = 13;
-				ShamanEpicBoots.Bonus2Type = (int) eStat.QUI;
-
-				ShamanEpicBoots.Bonus3 = 39;
-				ShamanEpicBoots.Bonus3Type = (int) eProperty.MaxHealth;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(ShamanEpicBoots);
-				}
-
+				ShamanEpicBoots.AddQuestObjectToDatabase();
 			}
 			//Subterranean Coif 
 			ShamanEpicHelm = GameServer.Database.FindObjectByKey<ItemTemplate>("ShamanEpicHelm");
@@ -570,23 +461,9 @@ namespace DOL.GS.Quests.Midgard
 				ShamanEpicHelm.Condition = 50000;
 				ShamanEpicHelm.Durability = 50000;
 
-				ShamanEpicHelm.Bonus1 = 4;
-				ShamanEpicHelm.Bonus1Type = (int) eProperty.Skill_Mending;
+				ShamanEpicHelm.SetTemplateBonuses(new []{ eProperty.Skill_Mending, eProperty.Piety, eProperty.Resist_Thrust, eProperty.PowerRegenerationRate }, new []{ 4, 18, 4, 6 });
 
-				ShamanEpicHelm.Bonus2 = 18;
-				ShamanEpicHelm.Bonus2Type = (int) eStat.PIE;
-
-				ShamanEpicHelm.Bonus3 = 4;
-				ShamanEpicHelm.Bonus3Type = (int) eResist.Thrust;
-
-				ShamanEpicHelm.Bonus4 = 6;
-				ShamanEpicHelm.Bonus4Type = (int) eProperty.PowerRegenerationRate;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(ShamanEpicHelm);
-				}
-
+				ShamanEpicHelm.AddQuestObjectToDatabase();
 			}
 			//Subterranean Gloves 
 			ShamanEpicGloves = GameServer.Database.FindObjectByKey<ItemTemplate>("ShamanEpicGloves");
@@ -613,23 +490,9 @@ namespace DOL.GS.Quests.Midgard
 				ShamanEpicGloves.Condition = 50000;
 				ShamanEpicGloves.Durability = 50000;
 
-				ShamanEpicGloves.Bonus1 = 4;
-				ShamanEpicGloves.Bonus1Type = (int) eProperty.Skill_Subterranean;
+				ShamanEpicGloves.SetTemplateBonuses(new []{ eProperty.Skill_Subterranean, eProperty.Piety, eProperty.Resist_Crush, eProperty.PowerRegenerationRate }, new []{ 4, 18, 4, 6 });
 
-				ShamanEpicGloves.Bonus2 = 18;
-				ShamanEpicGloves.Bonus2Type = (int) eStat.PIE;
-
-				ShamanEpicGloves.Bonus3 = 4;
-				ShamanEpicGloves.Bonus3Type = (int) eResist.Crush;
-
-				ShamanEpicGloves.Bonus4 = 6;
-				ShamanEpicGloves.Bonus4Type = (int) eProperty.PowerRegenerationRate;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(ShamanEpicGloves);
-				}
-
+				ShamanEpicGloves.AddQuestObjectToDatabase();
 			}
 			//Subterranean Hauberk 
 			ShamanEpicVest = GameServer.Database.FindObjectByKey<ItemTemplate>("ShamanEpicVest");
@@ -656,23 +519,9 @@ namespace DOL.GS.Quests.Midgard
 				ShamanEpicVest.Condition = 50000;
 				ShamanEpicVest.Durability = 50000;
 
-				ShamanEpicVest.Bonus1 = 16;
-				ShamanEpicVest.Bonus1Type = (int) eStat.CON;
+				ShamanEpicVest.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Piety, eProperty.Resist_Matter, eProperty.Resist_Heat }, new []{ 16, 16, 10, 8 });
 
-				ShamanEpicVest.Bonus2 = 16;
-				ShamanEpicVest.Bonus2Type = (int) eStat.PIE;
-
-				ShamanEpicVest.Bonus3 = 10;
-				ShamanEpicVest.Bonus3Type = (int) eResist.Matter;
-
-				ShamanEpicVest.Bonus4 = 8;
-				ShamanEpicVest.Bonus4Type = (int) eResist.Heat;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(ShamanEpicVest);
-				}
-
+				ShamanEpicVest.AddQuestObjectToDatabase();
 			}
 			//Subterranean Legs 
 			ShamanEpicLegs = GameServer.Database.FindObjectByKey<ItemTemplate>("ShamanEpicLegs");
@@ -699,23 +548,9 @@ namespace DOL.GS.Quests.Midgard
 				ShamanEpicLegs.Condition = 50000;
 				ShamanEpicLegs.Durability = 50000;
 
-				ShamanEpicLegs.Bonus1 = 16;
-				ShamanEpicLegs.Bonus1Type = (int) eStat.CON;
+				ShamanEpicLegs.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.Resist_Cold, eProperty.Resist_Spirit }, new []{ 16, 16, 8, 10 });
 
-				ShamanEpicLegs.Bonus2 = 16;
-				ShamanEpicLegs.Bonus2Type = (int) eStat.DEX;
-
-				ShamanEpicLegs.Bonus3 = 8;
-				ShamanEpicLegs.Bonus3Type = (int) eResist.Cold;
-
-				ShamanEpicLegs.Bonus4 = 10;
-				ShamanEpicLegs.Bonus4Type = (int) eResist.Spirit;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(ShamanEpicLegs);
-				}
-
+				ShamanEpicLegs.AddQuestObjectToDatabase();
 			}
 			//Subterranean Sleeves 
 			ShamanEpicArms = GameServer.Database.FindObjectByKey<ItemTemplate>("ShamanEpicArms");
@@ -742,24 +577,10 @@ namespace DOL.GS.Quests.Midgard
 				ShamanEpicArms.Condition = 50000;
 				ShamanEpicArms.Durability = 50000;
 
-				ShamanEpicArms.Bonus1 = 4;
-				ShamanEpicArms.Bonus1Type = (int) eProperty.Skill_Augmentation;
-
-				ShamanEpicArms.Bonus2 = 12;
-				ShamanEpicArms.Bonus2Type = (int) eStat.STR;
-
-				ShamanEpicArms.Bonus3 = 18;
-				ShamanEpicArms.Bonus3Type = (int) eStat.PIE;
-
-				ShamanEpicArms.Bonus4 = 6;
-				ShamanEpicArms.Bonus4Type = (int) eResist.Energy;
+				ShamanEpicArms.SetTemplateBonuses(new []{ eProperty.Skill_Augmentation, eProperty.Strength, eProperty.Piety, eProperty.Resist_Energy }, new []{ 4, 12, 18, 6 });
 
 
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(ShamanEpicArms);
-				}
-
+				ShamanEpicArms.AddQuestObjectToDatabase();
 			}
 //Shaman Epic Sleeves End
 //Item Descriptions End

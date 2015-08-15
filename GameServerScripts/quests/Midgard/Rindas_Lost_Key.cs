@@ -145,8 +145,8 @@ using DOL.AI.Brain;
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					DwarvenGuardRinda.SaveIntoDatabase();
+				
+				DwarvenGuardRinda.AddQuestObjectToDatabase();
 					
 				DwarvenGuardRinda.AddToWorld();
 				
@@ -162,38 +162,38 @@ using DOL.AI.Brain;
 			{
 				if (!WorldMgr.GetRegion(100).IsDisabled)
 				{
-				hobgoblinsnakefinder = new DOL.GS.GameNPC();
-					hobgoblinsnakefinder.Model = 251;
-				hobgoblinsnakefinder.Name = "hobgoblin snake-finder";
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + hobgoblinsnakefinder.Name + ", creating ...");
-				hobgoblinsnakefinder.GuildName = "Part of " + questTitle + " Quest";
-				hobgoblinsnakefinder.Realm = eRealm.None;
-				hobgoblinsnakefinder.CurrentRegionID = 100;
-				hobgoblinsnakefinder.Size = 37;
-				hobgoblinsnakefinder.Level = 1;
-				hobgoblinsnakefinder.MaxSpeedBase = 191;
-				hobgoblinsnakefinder.Faction = FactionMgr.GetFactionByID(0);
-				hobgoblinsnakefinder.X = 803189;
-				hobgoblinsnakefinder.Y = 695157;
-				hobgoblinsnakefinder.Z = 4926;
-				hobgoblinsnakefinder.Heading = 125;
-				hobgoblinsnakefinder.RespawnInterval = -1;
-				hobgoblinsnakefinder.BodyType = 0;
-				
-
-				StandardMobBrain brain = new StandardMobBrain();
-				brain.AggroLevel = 0;
-				brain.AggroRange = 500;
-				hobgoblinsnakefinder.SetOwnBrain(brain);
-				
-				//You don't have to store the created mob in the db if you don't want,
-				//it will be recreated each time it is not found, just comment the following
-				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					hobgoblinsnakefinder.SaveIntoDatabase();
+					hobgoblinsnakefinder = new DOL.GS.GameNPC();
+						hobgoblinsnakefinder.Model = 251;
+					hobgoblinsnakefinder.Name = "hobgoblin snake-finder";
+					if (log.IsWarnEnabled)
+						log.Warn("Could not find " + hobgoblinsnakefinder.Name + ", creating ...");
+					hobgoblinsnakefinder.GuildName = "Part of " + questTitle + " Quest";
+					hobgoblinsnakefinder.Realm = eRealm.None;
+					hobgoblinsnakefinder.CurrentRegionID = 100;
+					hobgoblinsnakefinder.Size = 37;
+					hobgoblinsnakefinder.Level = 1;
+					hobgoblinsnakefinder.MaxSpeedBase = 191;
+					hobgoblinsnakefinder.Faction = FactionMgr.GetFactionByID(0);
+					hobgoblinsnakefinder.X = 803189;
+					hobgoblinsnakefinder.Y = 695157;
+					hobgoblinsnakefinder.Z = 4926;
+					hobgoblinsnakefinder.Heading = 125;
+					hobgoblinsnakefinder.RespawnInterval = -1;
+					hobgoblinsnakefinder.BodyType = 0;
 					
-				hobgoblinsnakefinder.AddToWorld();
+	
+					StandardMobBrain brain = new StandardMobBrain();
+					brain.AggroLevel = 0;
+					brain.AggroRange = 500;
+					hobgoblinsnakefinder.SetOwnBrain(brain);
+					
+					//You don't have to store the created mob in the db if you don't want,
+					//it will be recreated each time it is not found, just comment the following
+					//line if you rather not modify your database
+					
+					hobgoblinsnakefinder.AddQuestObjectToDatabase();
+						
+					hobgoblinsnakefinder.AddToWorld();
 				
 				}
 			}
@@ -228,34 +228,11 @@ using DOL.AI.Brain;
 				rindaskey.CanDropAsLoot = false;
 				rindaskey.Color = 0;
 				rindaskey.Bonus = 35; // default bonus				
-				rindaskey.Bonus1 = 0;
-				rindaskey.Bonus1Type = (int) 0;
-				rindaskey.Bonus2 = 0;
-				rindaskey.Bonus2Type = (int) 0;
-				rindaskey.Bonus3 = 0;
-				rindaskey.Bonus3Type = (int) 0;
-				rindaskey.Bonus4 = 0;
-				rindaskey.Bonus4Type = (int) 0;
-				rindaskey.Bonus5 = 0;
-				rindaskey.Bonus5Type = (int) 0;
-				rindaskey.Bonus6 = 0;
-				rindaskey.Bonus6Type = (int) 0;
-				rindaskey.Bonus7 = 0;
-				rindaskey.Bonus7Type = (int) 0;
-				rindaskey.Bonus8 = 0;
-				rindaskey.Bonus8Type = (int) 0;
-				rindaskey.Bonus9 = 0;
-				rindaskey.Bonus9Type = (int) 0;
-				rindaskey.Bonus10 = 0;
-				rindaskey.Bonus10Type = (int) 0;
-				rindaskey.ExtraBonus = 0;
-				rindaskey.ExtraBonusType = (int) 0;
+				rindaskey.ClearTemplateBonuses();
 				rindaskey.Effect = 0;
 				rindaskey.Emblem = 0;
-				rindaskey.Charges = 0;
-				rindaskey.MaxCharges = 0;
-				rindaskey.SpellID = 0;
-				rindaskey.ProcSpellID = 0;
+				rindaskey.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				rindaskey.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				rindaskey.Type_Damage = 0;
 				rindaskey.Realm = 0;
 				rindaskey.MaxCount = 1;
@@ -269,17 +246,12 @@ using DOL.AI.Brain;
 				rindaskey.PoisonCharges = 0;
 				rindaskey.PoisonMaxCharges = 0;
 				rindaskey.PoisonSpellID = 0;
-				rindaskey.ProcSpellID1 = 0;
-				rindaskey.SpellID1 = 0;
-				rindaskey.MaxCharges1 = 0;
-				rindaskey.Charges1 = 0;
 				
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(rindaskey);
-				}
+				rindaskey.AddQuestObjectToDatabase();
+			}
 			ironkeychain = GameServer.Database.FindObjectByKey<ItemTemplate>("ironkeychain");
 			if (ironkeychain == null)
 			{
@@ -301,34 +273,11 @@ using DOL.AI.Brain;
 				ironkeychain.CanDropAsLoot = false;
 				ironkeychain.Color = 0;
 				ironkeychain.Bonus = 35; // default bonus				
-				ironkeychain.Bonus1 = 0;
-				ironkeychain.Bonus1Type = (int) 0;
-				ironkeychain.Bonus2 = 0;
-				ironkeychain.Bonus2Type = (int) 0;
-				ironkeychain.Bonus3 = 0;
-				ironkeychain.Bonus3Type = (int) 0;
-				ironkeychain.Bonus4 = 0;
-				ironkeychain.Bonus4Type = (int) 0;
-				ironkeychain.Bonus5 = 0;
-				ironkeychain.Bonus5Type = (int) 0;
-				ironkeychain.Bonus6 = 0;
-				ironkeychain.Bonus6Type = (int) 0;
-				ironkeychain.Bonus7 = 0;
-				ironkeychain.Bonus7Type = (int) 0;
-				ironkeychain.Bonus8 = 0;
-				ironkeychain.Bonus8Type = (int) 0;
-				ironkeychain.Bonus9 = 0;
-				ironkeychain.Bonus9Type = (int) 0;
-				ironkeychain.Bonus10 = 0;
-				ironkeychain.Bonus10Type = (int) 0;
-				ironkeychain.ExtraBonus = 0;
-				ironkeychain.ExtraBonusType = (int) 0;
+				ironkeychain.ClearTemplateBonuses();
 				ironkeychain.Effect = 0;
 				ironkeychain.Emblem = 0;
-				ironkeychain.Charges = 0;
-				ironkeychain.MaxCharges = 0;
-				ironkeychain.SpellID = 0;
-				ironkeychain.ProcSpellID = 0;
+				ironkeychain.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				ironkeychain.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				ironkeychain.Type_Damage = 0;
 				ironkeychain.Realm = 0;
 				ironkeychain.MaxCount = 1;
@@ -342,17 +291,12 @@ using DOL.AI.Brain;
 				ironkeychain.PoisonCharges = 0;
 				ironkeychain.PoisonMaxCharges = 0;
 				ironkeychain.PoisonSpellID = 0;
-				ironkeychain.ProcSpellID1 = 0;
-				ironkeychain.SpellID1 = 0;
-				ironkeychain.MaxCharges1 = 0;
-				ironkeychain.Charges1 = 0;
 				
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(ironkeychain);
-				}
+				ironkeychain.AddQuestObjectToDatabase();
+			}
 			silverringofhealth = GameServer.Database.FindObjectByKey<ItemTemplate>("silverringofhealth");
 			if (silverringofhealth == null)
 			{
@@ -373,35 +317,13 @@ using DOL.AI.Brain;
 				silverringofhealth.IsTradable = false;
 				silverringofhealth.CanDropAsLoot = false;
 				silverringofhealth.Color = 0;
-				silverringofhealth.Bonus = 5; // default bonus				
-				silverringofhealth.Bonus1 = 12;
-				silverringofhealth.Bonus1Type = (int) 10;
-				silverringofhealth.Bonus2 = 0;
-				silverringofhealth.Bonus2Type = (int) 0;
-				silverringofhealth.Bonus3 = 0;
-				silverringofhealth.Bonus3Type = (int) 0;
-				silverringofhealth.Bonus4 = 0;
-				silverringofhealth.Bonus4Type = (int) 0;
-				silverringofhealth.Bonus5 = 0;
-				silverringofhealth.Bonus5Type = (int) 0;
-				silverringofhealth.Bonus6 = 0;
-				silverringofhealth.Bonus6Type = (int) 0;
-				silverringofhealth.Bonus7 = 0;
-				silverringofhealth.Bonus7Type = (int) 0;
-				silverringofhealth.Bonus8 = 0;
-				silverringofhealth.Bonus8Type = (int) 0;
-				silverringofhealth.Bonus9 = 0;
-				silverringofhealth.Bonus9Type = (int) 0;
-				silverringofhealth.Bonus10 = 0;
-				silverringofhealth.Bonus10Type = (int) 0;
-				silverringofhealth.ExtraBonus = 0;
-				silverringofhealth.ExtraBonusType = (int) 0;
+				silverringofhealth.Bonus = 5; // default bonus
+				silverringofhealth.ClearTemplateBonuses();
+				silverringofhealth.SetTemplateBonuses(eProperty.MaxHealth, 12);
 				silverringofhealth.Effect = 0;
 				silverringofhealth.Emblem = 0;
-				silverringofhealth.Charges = 0;
-				silverringofhealth.MaxCharges = 0;
-				silverringofhealth.SpellID = 0;
-				silverringofhealth.ProcSpellID = 0;
+				silverringofhealth.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				silverringofhealth.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				silverringofhealth.Type_Damage = 0;
 				silverringofhealth.Realm = 0;
 				silverringofhealth.MaxCount = 1;
@@ -415,17 +337,12 @@ using DOL.AI.Brain;
 				silverringofhealth.PoisonCharges = 0;
 				silverringofhealth.PoisonMaxCharges = 0;
 				silverringofhealth.PoisonSpellID = 0;
-				silverringofhealth.ProcSpellID1 = 0;
-				silverringofhealth.SpellID1 = 0;
-				silverringofhealth.MaxCharges1 = 0;
-				silverringofhealth.Charges1 = 0;
 				
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(silverringofhealth);
-				}
+				silverringofhealth.AddQuestObjectToDatabase();
+			}
 			
 
 			#endregion

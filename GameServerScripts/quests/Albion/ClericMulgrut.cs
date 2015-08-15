@@ -168,8 +168,8 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 
-				if (SAVE_INTO_DATABASE)
-					hughGallen.SaveIntoDatabase();
+				
+				hughGallen.AddQuestObjectToDatabase();
 
 				hughGallen.AddToWorld();
 			}
@@ -200,8 +200,7 @@ namespace DOL.GS.Quests.Albion
 				beltOfAnimation.IsPickable = true;
 				beltOfAnimation.IsDropable = false; // can't be sold to merchand
 
-				beltOfAnimation.Bonus1 = 6;
-				beltOfAnimation.Bonus1Type = (int)eProperty.MaxHealth;
+				beltOfAnimation.SetTemplateBonuses(eProperty.MaxHealth, 6);
 				
 				beltOfAnimation.Quality = 100;
 				beltOfAnimation.Condition = 1000;
@@ -214,7 +213,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(beltOfAnimation);
+					beltOfAnimation.AddQuestObjectToDatabase();
 			}
 
 			#endregion

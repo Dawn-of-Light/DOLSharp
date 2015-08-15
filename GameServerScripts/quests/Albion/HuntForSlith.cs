@@ -171,8 +171,8 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 
-				if (SAVE_INTO_DATABASE)
-					commanderBurcrif.SaveIntoDatabase();
+				
+				commanderBurcrif.AddQuestObjectToDatabase();
 
 				commanderBurcrif.AddToWorld();
 			}
@@ -203,8 +203,7 @@ namespace DOL.GS.Quests.Albion
 				slithsTail.IsPickable = true;
 				slithsTail.IsDropable = true;
 
-				slithsTail.Bonus1 = 3;
-				slithsTail.Bonus1Type = (int)eProperty.Dexterity;
+				slithsTail.SetTemplateBonuses(eProperty.Dexterity, 3);
 				
 				slithsTail.Quality = 100;
 				slithsTail.Condition = 1000;
@@ -217,7 +216,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(slithsTail);
+				slithsTail.AddQuestObjectToDatabase();
 			}
 
 			#endregion

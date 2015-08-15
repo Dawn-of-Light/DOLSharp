@@ -114,8 +114,8 @@ namespace DOL.GS.Quests.Albion
 				Roben.Heading = 3049;
 				Roben.AddToWorld();
 
-				if (SAVE_INTO_DATABASE)
-					Roben.SaveIntoDatabase();
+				
+				Roben.AddQuestObjectToDatabase();
 			}
 			else
 				Roben = npcs[0];
@@ -140,8 +140,8 @@ namespace DOL.GS.Quests.Albion
 				Blythe.Heading = 1683;
 				Blythe.AddToWorld();
 
-				if (SAVE_INTO_DATABASE)
-					Blythe.SaveIntoDatabase();
+				
+				Blythe.AddQuestObjectToDatabase();
 			}
 			else
 				Blythe = npcs[0];
@@ -171,10 +171,7 @@ namespace DOL.GS.Quests.Albion
 				statue_of_arawn.Type_Damage = 0;
 				statue_of_arawn.Quality = 100;
 				statue_of_arawn.Weight = 12;
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(statue_of_arawn);
-				}
+				statue_of_arawn.AddQuestObjectToDatabase();
 
 			}
 // end item
@@ -203,22 +200,9 @@ namespace DOL.GS.Quests.Albion
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 13;
-				i.Bonus1Type = (int) eStat.CON;
-
-				i.Bonus2 = 13;
-				i.Bonus2Type = (int) eStat.DEX;
-
-				i.Bonus3 = 13;
-				i.Bonus3Type = (int) eStat.QUI;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int) eResist.Spirit;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.Quickness, eProperty.Resist_Spirit },
+				                     new []{ 13, 13, 13, 8 });
+				i.AddQuestObjectToDatabase();
 				ClericEpicBoots = i;
 
 			}
@@ -248,23 +232,10 @@ namespace DOL.GS.Quests.Albion
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 4;
-				i.Bonus1Type = (int) eProperty.Focus_Enchantments;
+				i.SetTemplateBonuses(new []{ eProperty.Skill_Enhancement, eProperty.Constitution, eProperty.Piety, eProperty.Resist_Energy },
+				                     new []{ 4, 12, 19, 8 });
 
-				i.Bonus2 = 12;
-				i.Bonus2Type = (int) eStat.CON;
-
-				i.Bonus3 = 19;
-				i.Bonus3Type = (int) eStat.PIE;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int) eResist.Energy;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(i);
-				}
-
+				i.AddQuestObjectToDatabase();
 				ClericEpicHelm = i;
 
 			}
@@ -294,23 +265,9 @@ namespace DOL.GS.Quests.Albion
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 4;
-				i.Bonus1Type = (int) eProperty.Skill_Smiting;
-
-				i.Bonus2 = 22;
-				i.Bonus2Type = (int) eStat.PIE;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int) eResist.Crush;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int) eResist.Matter;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(i);
-				}
-
+				i.SetTemplateBonuses(new []{ eProperty.Skill_Smiting, eProperty.Piety, eProperty.Resist_Crush, eProperty.Resist_Matter },
+				                     new []{ 4, 22, 8, 8 });
+				i.AddQuestObjectToDatabase();
 				ClericEpicGloves = i;
 
 			}
@@ -339,22 +296,9 @@ namespace DOL.GS.Quests.Albion
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 4;
-				i.Bonus1Type = (int) eResist.Crush;
-
-				i.Bonus2 = 4;
-				i.Bonus2Type = (int) eResist.Spirit;
-
-				i.Bonus3 = 12;
-				i.Bonus3Type = (int) eProperty.PowerRegenerationRate;
-
-				i.Bonus4 = 27;
-				i.Bonus4Type = (int) eProperty.MaxHealth;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(i);
-				}
+				i.SetTemplateBonuses(new []{ eProperty.Resist_Crush, eProperty.Resist_Spirit, eProperty.PowerRegenerationRate, eProperty.MaxHealth },
+				                     new []{ 4, 4, 12, 27 });
+				i.AddQuestObjectToDatabase();
 				ClericEpicVest = i;
 
 			}
@@ -383,23 +327,9 @@ namespace DOL.GS.Quests.Albion
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 4;
-				i.Bonus1Type = (int) eProperty.Skill_Rejuvenation;
-
-				i.Bonus2 = 22;
-				i.Bonus2Type = (int) eStat.CON;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int) eResist.Slash;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int) eResist.Cold;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(i);
-				}
-
+				i.SetTemplateBonuses(new []{ eProperty.Skill_Rejuvenation, eProperty.Constitution, eProperty.Resist_Slash, eProperty.Resist_Cold },
+				                     new []{ 4, 22, 8, 8 });
+				i.AddQuestObjectToDatabase();
 				ClericEpicLegs = i;
 
 			}
@@ -428,23 +358,9 @@ namespace DOL.GS.Quests.Albion
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 16;
-				i.Bonus1Type = (int) eStat.STR;
-
-				i.Bonus2 = 18;
-				i.Bonus2Type = (int) eStat.PIE;
-
-				i.Bonus3 = 8;
-				i.Bonus3Type = (int) eResist.Thrust;
-
-				i.Bonus4 = 8;
-				i.Bonus4Type = (int) eResist.Heat;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(i);
-				}
-
+				i.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Piety, eProperty.Resist_Thrust, eProperty.Resist_Heat },
+				                     new []{ 16, 18, 8, 8 });
+				i.AddQuestObjectToDatabase();
 				ClericEpicArms = i;
 			}
 
@@ -472,23 +388,9 @@ namespace DOL.GS.Quests.Albion
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 18;
-				i.Bonus1Type = (int) eStat.STR;
-
-				i.Bonus2 = 19;
-				i.Bonus2Type = (int) eStat.QUI;
-
-				i.Bonus3 = 6;
-				i.Bonus3Type = (int) eResist.Slash;
-
-				i.Bonus4 = 6;
-				i.Bonus4Type = (int) eResist.Energy;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(i);
-				}
-
+				i.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Quickness, eProperty.Resist_Slash, eProperty.Resist_Energy },
+				                     new []{ 18, 19, 6, 6 });
+				i.AddQuestObjectToDatabase();
 				PaladinEpicBoots = i;
 
 			}
@@ -518,23 +420,9 @@ namespace DOL.GS.Quests.Albion
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 18;
-				i.Bonus1Type = (int) eStat.CON;
-
-				i.Bonus2 = 19;
-				i.Bonus2Type = (int) eStat.DEX;
-
-				i.Bonus3 = 6;
-				i.Bonus3Type = (int) eResist.Crush;
-
-				i.Bonus4 = 6;
-				i.Bonus4Type = (int) eResist.Matter;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(i);
-				}
-
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.Resist_Crush, eProperty.Resist_Matter },
+				                     new []{ 18, 19, 6, 6 });
+				i.AddQuestObjectToDatabase();
 				PaladinEpicHelm = i;
 
 			}
@@ -564,23 +452,9 @@ namespace DOL.GS.Quests.Albion
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 19;
-				i.Bonus1Type = (int) eStat.STR;
-
-				i.Bonus2 = 18;
-				i.Bonus2Type = (int) eStat.QUI;
-
-				i.Bonus3 = 6;
-				i.Bonus3Type = (int) eResist.Crush;
-
-				i.Bonus4 = 6;
-				i.Bonus4Type = (int) eResist.Heat;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(i);
-				}
-
+				i.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Quickness, eProperty.Resist_Crush, eProperty.Resist_Heat },
+				                     new []{ 19, 18, 6, 6 });
+				i.AddQuestObjectToDatabase();
 				PaladinEpicGloves = i;
 
 			}
@@ -609,23 +483,9 @@ namespace DOL.GS.Quests.Albion
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 15;
-				i.Bonus1Type = (int) eStat.STR;
-
-				i.Bonus2 = 6;
-				i.Bonus2Type = (int) eResist.Body;
-
-				i.Bonus3 = 6;
-				i.Bonus3Type = (int) eResist.Spirit;
-
-				i.Bonus4 = 24;
-				i.Bonus4Type = (int) eProperty.MaxHealth;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(i);
-				}
-
+				i.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Resist_Body, eProperty.Resist_Spirit, eProperty.MaxHealth },
+				                     new []{ 15, 6, 6, 24 });
+				i.AddQuestObjectToDatabase();
 				PaladinEpicVest = i;
 
 			}
@@ -654,23 +514,9 @@ namespace DOL.GS.Quests.Albion
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 22;
-				i.Bonus1Type = (int) eStat.CON;
-
-				i.Bonus2 = 15;
-				i.Bonus2Type = (int) eStat.DEX;
-
-				i.Bonus3 = 6;
-				i.Bonus3Type = (int) eResist.Crush;
-
-				i.Bonus4 = 6;
-				i.Bonus4Type = (int) eResist.Cold;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(i);
-				}
-
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.Resist_Crush, eProperty.Resist_Cold },
+				                     new []{ 22, 15, 6, 6 });
+				i.AddQuestObjectToDatabase();
 				PaladinEpicLegs = i;
 
 			}
@@ -699,23 +545,9 @@ namespace DOL.GS.Quests.Albion
 				i.Condition = 50000;
 				i.Durability = 50000;
 
-				i.Bonus1 = 19;
-				i.Bonus1Type = (int) eStat.CON;
-
-				i.Bonus2 = 15;
-				i.Bonus2Type = (int) eStat.DEX;
-
-				i.Bonus3 = 9;
-				i.Bonus3Type = (int) eStat.QUI;
-
-				i.Bonus4 = 6;
-				i.Bonus4Type = (int) eResist.Spirit;
-
-				if (SAVE_INTO_DATABASE)
-				{
-					GameServer.Database.AddObject(i);
-				}
-
+				i.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Dexterity, eProperty.Quickness, eProperty.Resist_Spirit },
+				                     new []{ 19, 15, 9, 6 });
+				i.AddQuestObjectToDatabase();
 				PaladinEpicArms = i;
 			}
 

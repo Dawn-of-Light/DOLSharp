@@ -171,8 +171,8 @@ Salvage.Proceed.GetBackMaterial:			Ihr bekommt {0} {1} durch die Verwertung von 
 SpellCrafting.ApplySpellcraftGems.ImbuedItem:		{0} verzaubert einen Gegenstand.
 SpellCrafting.ApplySpellcraftGems.Failed:		Die Verzauberung hat nicht funktioniert!
 SpellCrafting.ApplySpellcraftGems.PowerExplodes:	Die Energie der Verzauberungen explodiert vor Euren Augen!
-SpellCrafting.IsAllowedToCombine.AlreadyImbued:		{0} ist bereits mit vier verschiedenen magischen Eigenschaften verzaubert!
-SpellCrafting.IsAllowedToCombine.DifferentTypes:	{0} kann nur mit vier verschiedenen magischen Eigenschaften verzaubert werden!
+SpellCrafting.IsAllowedToCombine.AlreadyImbued:		{0} ist bereits mit {1} verschiedenen magischen Eigenschaften verzaubert!
+SpellCrafting.IsAllowedToCombine.DifferentTypes:	{0} kann nur mit {1} verschiedenen magischen Eigenschaften verzaubert werden!
 SpellCrafting.IsAllowedToCombine.FalseItem:		Dieser Gegenstand kann nicht für die Bannzauberei benutzt werden!
 SpellCrafting.IsAllowedToCombine.FalseMaterial:		{0} kann nicht verwendet werden, um einen Gegenstand zu verzaubern!
 SpellCrafting.IsAllowedToCombine.NoEnchanted:		Dieser Gegenstand kann nicht verzaubert werden!

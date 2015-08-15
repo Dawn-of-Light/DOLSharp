@@ -182,8 +182,8 @@ namespace DOL.GS.Quests.Hibernia
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					hylvian.SaveIntoDatabase();
+				
+				hylvian.AddQuestObjectToDatabase();
 
 				hylvian.AddToWorld();
 			}
@@ -212,8 +212,8 @@ namespace DOL.GS.Quests.Hibernia
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					freagus.SaveIntoDatabase();
+				
+				freagus.AddQuestObjectToDatabase();
 				freagus.AddToWorld();
 			}
 			else
@@ -241,8 +241,8 @@ namespace DOL.GS.Quests.Hibernia
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					gweonry.SaveIntoDatabase();
+				
+				gweonry.AddQuestObjectToDatabase();
 				gweonry.AddToWorld();
 			}
 			else
@@ -285,7 +285,7 @@ namespace DOL.GS.Quests.Hibernia
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(scrollHylvian);
+					scrollHylvian.AddQuestObjectToDatabase();
 			}
 
 
@@ -310,7 +310,7 @@ namespace DOL.GS.Quests.Hibernia
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(receiptFreagus);
+					receiptFreagus.AddQuestObjectToDatabase();
 			}
 
 			chestOfCoins = GameServer.Database.FindObjectByKey<ItemTemplate>("small_chest_of_coins");
@@ -334,7 +334,7 @@ namespace DOL.GS.Quests.Hibernia
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(chestOfCoins);
+					chestOfCoins.AddQuestObjectToDatabase();
 			}
 
 			letterAddrir = GameServer.Database.FindObjectByKey<ItemTemplate>("letter_for_addrir");
@@ -358,7 +358,7 @@ namespace DOL.GS.Quests.Hibernia
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(letterAddrir);
+					letterAddrir.AddQuestObjectToDatabase();
 			}
 
 			assistantNecklace = GameServer.Database.FindObjectByKey<ItemTemplate>("assistant_necklace");
@@ -383,7 +383,7 @@ namespace DOL.GS.Quests.Hibernia
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(assistantNecklace);
+					assistantNecklace.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -414,11 +414,7 @@ namespace DOL.GS.Quests.Hibernia
 
 				recruitsRoundShield.Bonus = 1; // default bonus
 
-				recruitsRoundShield.Bonus1 = 1;
-				recruitsRoundShield.Bonus1Type = (int) eStat.STR;
-
-				recruitsRoundShield.Bonus2 = 1;
-				recruitsRoundShield.Bonus2Type = (int) eResist.Body;
+				recruitsRoundShield.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Resist_Body }, new []{ 1, 1 });
 
 				recruitsRoundShield.Quality = 100;
 				recruitsRoundShield.Condition = 1000;
@@ -430,7 +426,7 @@ namespace DOL.GS.Quests.Hibernia
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(recruitsRoundShield);
+					recruitsRoundShield.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -461,11 +457,7 @@ namespace DOL.GS.Quests.Hibernia
 
 				recruitsBracer.Bonus = 1; // default bonus
 
-				recruitsBracer.Bonus1 = 8;
-				recruitsBracer.Bonus1Type = (int) eProperty.MaxHealth;
-
-				recruitsBracer.Bonus2 = 1;
-				recruitsBracer.Bonus2Type = (int) eResist.Crush;
+				recruitsBracer.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Resist_Crush }, new []{ 8, 1 });
 
 				recruitsBracer.Quality = 100;
 				recruitsBracer.Condition = 1000;
@@ -477,7 +469,7 @@ namespace DOL.GS.Quests.Hibernia
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(recruitsBracer);
+					recruitsBracer.AddQuestObjectToDatabase();
 			}
 
 			#endregion

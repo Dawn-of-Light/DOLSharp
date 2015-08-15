@@ -173,8 +173,8 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 
-				if (SAVE_INTO_DATABASE)
-					andrewWyatt.SaveIntoDatabase();
+				
+				andrewWyatt.AddQuestObjectToDatabase();
 
 				andrewWyatt.AddToWorld();
 			}
@@ -212,8 +212,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					georNadren.SaveIntoDatabase();
+				
+				georNadren.AddQuestObjectToDatabase();
 
 				georNadren.AddToWorld();
 			}
@@ -252,8 +252,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					verNuren.SaveIntoDatabase();
+				
+				verNuren.AddQuestObjectToDatabase();
 
 				verNuren.AddToWorld();
 			}
@@ -287,7 +287,7 @@ namespace DOL.GS.Quests.Albion
 				bundleOfBearSkins.MaxCondition = 1000;
 				bundleOfBearSkins.Durability = 1000;
 				bundleOfBearSkins.MaxDurability = 1000;
-				GameServer.Database.AddObject(bundleOfBearSkins);
+				bundleOfBearSkins.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -313,7 +313,7 @@ namespace DOL.GS.Quests.Albion
 				spoolOfLeatherworkingThread.MaxCondition = 1000;
 				spoolOfLeatherworkingThread.Durability = 1000;
 				spoolOfLeatherworkingThread.MaxDurability = 1000;
-				GameServer.Database.AddObject(spoolOfLeatherworkingThread);
+				spoolOfLeatherworkingThread.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -338,17 +338,14 @@ namespace DOL.GS.Quests.Albion
 				chokerOfTheBear.IsDropable = true;
 
 				chokerOfTheBear.Bonus = 1;
-				chokerOfTheBear.Bonus1Type = (int)eProperty.Strength;
-				chokerOfTheBear.Bonus1 = 4;
-				chokerOfTheBear.Bonus2Type = (int)eProperty.Resist_Thrust;
-				chokerOfTheBear.Bonus2 = 1;
-
+				chokerOfTheBear.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Resist_Thrust },
+				                                   new []{ 4, 1 });
 				chokerOfTheBear.Quality = 100;
 				chokerOfTheBear.Condition = 1000;
 				chokerOfTheBear.MaxCondition = 1000;
 				chokerOfTheBear.Durability = 1000;
 				chokerOfTheBear.MaxDurability = 1000;
-				GameServer.Database.AddObject(chokerOfTheBear);
+				chokerOfTheBear.AddQuestObjectToDatabase();
 			}
 
 			#endregion

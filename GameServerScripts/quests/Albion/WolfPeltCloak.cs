@@ -176,8 +176,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					stewardWillie.SaveIntoDatabase();
+				
+				stewardWillie.AddQuestObjectToDatabase();
 
 
 				stewardWillie.AddToWorld();
@@ -214,8 +214,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the creted mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					lynnet.SaveIntoDatabase();
+				
+				lynnet.AddQuestObjectToDatabase();
 
 				lynnet.AddToWorld();
 			}
@@ -249,8 +249,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					don.SaveIntoDatabase();
+				
+				don.AddQuestObjectToDatabase();
 
 				don.AddToWorld();
 			}
@@ -272,12 +272,7 @@ namespace DOL.GS.Quests.Albion
 				wolfPeltCloak.Weight = 3;
 				wolfPeltCloak.Model = 326;
 				wolfPeltCloak.Bonus = 1;
-				wolfPeltCloak.Bonus1 = 1;
-				wolfPeltCloak.Bonus1Type = (int) eStat.QUI;
-				;
-
-				wolfPeltCloak.Bonus2 = -1;
-				wolfPeltCloak.Bonus2Type = (int) eStat.CHR;
+				wolfPeltCloak.SetTemplateBonuses(new []{ eProperty.Quickness, eProperty.Charisma }, new []{ 1, -1 });
 
 				wolfPeltCloak.Object_Type = (int) eObjectType.Magical;
 				wolfPeltCloak.Item_Type = (int) eEquipmentItems.CLOAK;
@@ -297,7 +292,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(wolfPeltCloak);
+					wolfPeltCloak.AddQuestObjectToDatabase();
 			}
 
 			wolfFur = GameServer.Database.FindObjectByKey<ItemTemplate>("wolf_fur");
@@ -318,7 +313,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(wolfFur);
+					wolfFur.AddQuestObjectToDatabase();
 			}
 
 			wolfHeadToken = GameServer.Database.FindObjectByKey<ItemTemplate>("wolf_head_token");
@@ -339,7 +334,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(wolfHeadToken);
+					wolfHeadToken.AddQuestObjectToDatabase();
 			}
 
 			#endregion

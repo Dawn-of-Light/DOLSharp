@@ -174,8 +174,8 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 
-				if (SAVE_INTO_DATABASE)
-					ydeniaPhilpott.SaveIntoDatabase();
+				
+				ydeniaPhilpott.AddQuestObjectToDatabase();
 
 				ydeniaPhilpott.AddToWorld();
 			}
@@ -214,8 +214,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					elvarTambor.SaveIntoDatabase();
+				
+				elvarTambor.AddQuestObjectToDatabase();
 
 				elvarTambor.AddToWorld();
 			}
@@ -255,7 +255,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(letterToElvar);
+					letterToElvar.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -287,7 +287,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(letterToYdenia);
+					letterToYdenia.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -311,10 +311,7 @@ namespace DOL.GS.Quests.Albion
 				silverRingOfHealth.IsDropable = true;
 
 				silverRingOfHealth.Bonus = 1;
-				silverRingOfHealth.Bonus1Type = (int)eProperty.MaxHealth;
-				silverRingOfHealth.Bonus1 = 8;
-				silverRingOfHealth.Bonus2Type = (int)eProperty.Resist_Slash;
-				silverRingOfHealth.Bonus2 = 1;
+				silverRingOfHealth.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Resist_Slash }, new []{ 8, 1 });
 
 				silverRingOfHealth.Quality = 100;
 				silverRingOfHealth.Condition = 1000;
@@ -327,7 +324,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(silverRingOfHealth);
+					silverRingOfHealth.AddQuestObjectToDatabase();
 			}
 
 			#endregion

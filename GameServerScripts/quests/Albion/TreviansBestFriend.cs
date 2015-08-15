@@ -193,8 +193,8 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 
-				if (SAVE_INTO_DATABASE)
-					trevian.SaveIntoDatabase();
+				
+				trevian.AddQuestObjectToDatabase();
 
 				trevian.AddToWorld();
 			}
@@ -222,8 +222,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					puppy.SaveIntoDatabase();
+				
+				puppy.AddQuestObjectToDatabase();
 
 				puppy.AddToWorld();
 			}
@@ -260,8 +260,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					guardBrydus.SaveIntoDatabase();
+				
+				guardBrydus.AddQuestObjectToDatabase();
 
 				guardBrydus.AddToWorld();
 			}
@@ -302,8 +302,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					banditAbductorLeader.SaveIntoDatabase();
+				
+				banditAbductorLeader.AddQuestObjectToDatabase();
 
 				banditAbductorLeader.AddToWorld();
 
@@ -339,8 +339,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					banditAbductor1.SaveIntoDatabase();
+				
+				banditAbductor1.AddQuestObjectToDatabase();
 
 				banditAbductor1.AddToWorld();
 
@@ -370,8 +370,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					banditAbductor2.SaveIntoDatabase();
+				
+				banditAbductor2.AddQuestObjectToDatabase();
 
 				banditAbductor2.AddToWorld();
 			}
@@ -416,7 +416,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(treviansHoodedCloak);
+					treviansHoodedCloak.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -446,17 +446,7 @@ namespace DOL.GS.Quests.Albion
 
 				bootsOfRescuer.Bonus = 10; // default bonus
 
-				bootsOfRescuer.Bonus1 = 7;
-				bootsOfRescuer.Bonus1Type = (int) eStat.STR;
-
-				bootsOfRescuer.Bonus2 = 6;
-				bootsOfRescuer.Bonus2Type = (int) eStat.CON;
-
-				bootsOfRescuer.Bonus3 = 6;
-				bootsOfRescuer.Bonus3Type = (int) eStat.DEX;
-
-				bootsOfRescuer.Bonus4 = 3;
-				bootsOfRescuer.Bonus4Type = (int) eResist.Energy;
+				bootsOfRescuer.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Constitution, eProperty.Dexterity, eProperty.Resist_Energy }, new []{ 7, 6, 6, 3 });
 
 				bootsOfRescuer.Quality = 100;
 				bootsOfRescuer.Condition = 1000;
@@ -469,7 +459,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(bootsOfRescuer);
+					bootsOfRescuer.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -498,18 +488,7 @@ namespace DOL.GS.Quests.Albion
 
 				bootsOfBaneful.Bonus = 10; // default bonus
 
-				bootsOfBaneful.Bonus1 = 6;
-				bootsOfBaneful.Bonus1Type = (int) eStat.STR;
-
-
-				bootsOfBaneful.Bonus2 = 6;
-				bootsOfBaneful.Bonus2Type = (int) eStat.CON;
-
-				bootsOfBaneful.Bonus3 = 3;
-				bootsOfBaneful.Bonus3Type = (int) eResist.Body;
-
-				bootsOfBaneful.Bonus4 = 20;
-				bootsOfBaneful.Bonus4Type = 10; // Hit
+				bootsOfBaneful.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Constitution, eProperty.Resist_Body, eProperty.MaxHealth }, new []{ 6, 6, 3, 20 });
 
 				bootsOfBaneful.Quality = 100;
 				bootsOfBaneful.Condition = 1000;
@@ -522,7 +501,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(bootsOfBaneful);
+					bootsOfBaneful.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -551,17 +530,7 @@ namespace DOL.GS.Quests.Albion
 
 				bootsOfProtector.Bonus = 10; // default bonus
 
-				bootsOfProtector.Bonus1 = 6;
-				bootsOfProtector.Bonus1Type = (int) eStat.STR;
-
-				bootsOfProtector.Bonus2 = 2;
-				bootsOfProtector.Bonus2Type = (int) eResist.Body;
-
-				bootsOfProtector.Bonus3 = 3;
-				bootsOfProtector.Bonus3Type = (int) eResist.Spirit;
-
-				bootsOfProtector.Bonus4 = 24;
-				bootsOfProtector.Bonus4Type = 10; // hit
+				bootsOfProtector.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Resist_Body, eProperty.Resist_Spirit, eProperty.MaxHealth }, new []{ 6, 2, 3, 24 });
 
 				bootsOfProtector.Quality = 100;
 				bootsOfProtector.Condition = 1000;
@@ -574,7 +543,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(bootsOfProtector);
+					bootsOfProtector.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -603,14 +572,7 @@ namespace DOL.GS.Quests.Albion
 
 				bootsOfErudition.Bonus = 10; // default bonus
 
-				bootsOfErudition.Bonus1 = 9;
-				bootsOfErudition.Bonus1Type = (int) eStat.DEX;
-
-				bootsOfErudition.Bonus2 = 9;
-				bootsOfErudition.Bonus2Type = (int) eStat.INT;
-
-				bootsOfErudition.Bonus3 = 3;
-				bootsOfErudition.Bonus3Type = (int) eResist.Energy;
+				bootsOfErudition.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Intelligence, eProperty.Resist_Energy }, new []{ 9, 9, 3 });
 
 				bootsOfErudition.Quality = 100;
 				bootsOfErudition.Condition = 1000;
@@ -623,7 +585,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(bootsOfErudition);
+					bootsOfErudition.AddQuestObjectToDatabase();
 			}
 
 			bootsOfReverence = GameServer.Database.FindObjectByKey<ItemTemplate>("boots_of_reverence");
@@ -651,17 +613,7 @@ namespace DOL.GS.Quests.Albion
 
 				bootsOfReverence.Bonus = 10; // default bonus
 
-				bootsOfReverence.Bonus1 = 7;
-				bootsOfReverence.Bonus1Type = (int) eStat.PIE;
-
-				bootsOfReverence.Bonus2 = 3;
-				bootsOfReverence.Bonus2Type = (int) eResist.Body; // con
-
-				bootsOfReverence.Bonus3 = 3;
-				bootsOfReverence.Bonus3Type = (int) eResist.Cold; // resist body
-
-				bootsOfReverence.Bonus4 = 3;
-				bootsOfReverence.Bonus4Type = (int) eResist.Heat; // hp
+				bootsOfReverence.SetTemplateBonuses(new []{ eProperty.Piety, eProperty.Resist_Body, eProperty.Resist_Cold, eProperty.Resist_Heat }, new []{ 7, 3, 3 });
 
 				bootsOfReverence.Quality = 100;
 				bootsOfReverence.Condition = 1000;
@@ -674,7 +626,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(bootsOfReverence);
+					bootsOfReverence.AddQuestObjectToDatabase();
 			}
 
 			bootsOfShadow = GameServer.Database.FindObjectByKey<ItemTemplate>("boots_of_shadow");
@@ -702,17 +654,7 @@ namespace DOL.GS.Quests.Albion
 
 				bootsOfShadow.Bonus = 10; // default bonus
 
-				bootsOfShadow.Bonus1 = 7;
-				bootsOfShadow.Bonus1Type = (int) eStat.DEX;
-
-				bootsOfShadow.Bonus2 = 6;
-				bootsOfShadow.Bonus2Type = (int) eStat.QUI;
-
-				bootsOfShadow.Bonus3 = 3;
-				bootsOfShadow.Bonus3Type = (int) eResist.Body;
-
-				bootsOfShadow.Bonus4 = 3;
-				bootsOfShadow.Bonus4Type = (int) eResist.Energy;
+				bootsOfShadow.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Quickness, eProperty.Resist_Body, eProperty.Resist_Energy }, new []{ 7, 6, 3, 3 });
 
 				bootsOfShadow.Quality = 100;
 				bootsOfShadow.Condition = 1000;
@@ -725,7 +667,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(bootsOfShadow);
+					bootsOfShadow.AddQuestObjectToDatabase();
 			}
 
 			bootsOfEvanescent = GameServer.Database.FindObjectByKey<ItemTemplate>("boots_of_evanescent");
@@ -753,17 +695,7 @@ namespace DOL.GS.Quests.Albion
 
 				bootsOfEvanescent.Bonus = 10; // default bonus
 
-				bootsOfEvanescent.Bonus1 = 7;
-				bootsOfEvanescent.Bonus1Type = (int) eStat.DEX;
-
-				bootsOfEvanescent.Bonus2 = 6;
-				bootsOfEvanescent.Bonus2Type = (int) eStat.QUI;
-
-				bootsOfEvanescent.Bonus3 = 3;
-				bootsOfEvanescent.Bonus3Type = (int) eResist.Body; // resist body
-
-				bootsOfEvanescent.Bonus4 = 3;
-				bootsOfEvanescent.Bonus4Type = (int) eResist.Energy; // hp
+				bootsOfEvanescent.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Quickness, eProperty.Resist_Body, eProperty.Resist_Energy }, new []{ 7, 6, 3, 3 });
 
 				bootsOfEvanescent.Quality = 100;
 				bootsOfEvanescent.Condition = 1000;
@@ -776,7 +708,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(bootsOfEvanescent);
+					bootsOfEvanescent.AddQuestObjectToDatabase();
 			}
 
 			bootsOfInfluence = GameServer.Database.FindObjectByKey<ItemTemplate>("boots_of_influence");
@@ -804,14 +736,7 @@ namespace DOL.GS.Quests.Albion
 
 				bootsOfInfluence.Bonus = 10; // default bonus
 
-				bootsOfInfluence.Bonus1 = 9;
-				bootsOfInfluence.Bonus1Type = (int) eStat.DEX;
-
-				bootsOfInfluence.Bonus2 = 9;
-				bootsOfInfluence.Bonus2Type = (int) eStat.CHR; // con
-
-				bootsOfInfluence.Bonus3 = 3;
-				bootsOfInfluence.Bonus3Type = (int) eResist.Spirit; // resist body                
+				bootsOfInfluence.SetTemplateBonuses(new []{ eProperty.Dexterity, eProperty.Charisma, eProperty.Resist_Spirit }, new []{ 9, 9, 3 }); // con
 
 				bootsOfInfluence.Quality = 100;
 				bootsOfInfluence.Condition = 1000;
@@ -824,7 +749,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(bootsOfInfluence);
+					bootsOfInfluence.AddQuestObjectToDatabase();
 			}
 
 			bootsOfTheDevoted = GameServer.Database.FindObjectByKey<ItemTemplate>("boots_of_the_devoted");
@@ -852,17 +777,7 @@ namespace DOL.GS.Quests.Albion
 
 				bootsOfTheDevoted.Bonus = 10; // default bonus
 
-				bootsOfTheDevoted.Bonus1 = 7;
-				bootsOfTheDevoted.Bonus1Type = (int) eStat.CON;
-
-				bootsOfTheDevoted.Bonus2 = 9;
-				bootsOfTheDevoted.Bonus2Type = (int) eStat.PIE;
-
-				bootsOfTheDevoted.Bonus3 = 3;
-				bootsOfTheDevoted.Bonus3Type = (int) eResist.Cold;
-
-				bootsOfTheDevoted.Bonus4 = 2;
-				bootsOfTheDevoted.Bonus4Type = (int) eResist.Body;
+				bootsOfTheDevoted.SetTemplateBonuses(new []{ eProperty.Constitution, eProperty.Piety, eProperty.Resist_Cold, eProperty.Resist_Body }, new []{ 7, 9, 3, 2 });
 
 				bootsOfTheDevoted.Quality = 100;
 				bootsOfTheDevoted.Condition = 1000;
@@ -875,7 +790,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(bootsOfTheDevoted);
+					bootsOfTheDevoted.AddQuestObjectToDatabase();
 			}
 
 			whistleReward = GameServer.Database.FindObjectByKey<ItemTemplate>("Puppy_Whistle");

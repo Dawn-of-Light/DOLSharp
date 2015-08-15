@@ -140,8 +140,8 @@ using DOL.AI.Brain;
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					AmbientRatStatua.SaveIntoDatabase();
+				
+				AmbientRatStatua.AddQuestObjectToDatabase();
 					
 				AmbientRatStatua.AddToWorld();
 				
@@ -182,8 +182,8 @@ using DOL.AI.Brain;
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					Ballach.SaveIntoDatabase();
+				
+				Ballach.AddQuestObjectToDatabase();
 					
 				Ballach.AddToWorld();
 				
@@ -219,34 +219,11 @@ using DOL.AI.Brain;
 				enchantedflask.CanDropAsLoot = false;
 				enchantedflask.Color = 0;
 				enchantedflask.Bonus = 35; // default bonus				
-				enchantedflask.Bonus1 = 0;
-				enchantedflask.Bonus1Type = (int) 0;
-				enchantedflask.Bonus2 = 0;
-				enchantedflask.Bonus2Type = (int) 0;
-				enchantedflask.Bonus3 = 0;
-				enchantedflask.Bonus3Type = (int) 0;
-				enchantedflask.Bonus4 = 0;
-				enchantedflask.Bonus4Type = (int) 0;
-				enchantedflask.Bonus5 = 0;
-				enchantedflask.Bonus5Type = (int) 0;
-				enchantedflask.Bonus6 = 0;
-				enchantedflask.Bonus6Type = (int) 0;
-				enchantedflask.Bonus7 = 0;
-				enchantedflask.Bonus7Type = (int) 0;
-				enchantedflask.Bonus8 = 0;
-				enchantedflask.Bonus8Type = (int) 0;
-				enchantedflask.Bonus9 = 0;
-				enchantedflask.Bonus9Type = (int) 0;
-				enchantedflask.Bonus10 = 0;
-				enchantedflask.Bonus10Type = (int) 0;
-				enchantedflask.ExtraBonus = 0;
-				enchantedflask.ExtraBonusType = (int) 0;
+				enchantedflask.ClearTemplateBonuses();
 				enchantedflask.Effect = 0;
 				enchantedflask.Emblem = 0;
-				enchantedflask.Charges = 0;
-				enchantedflask.MaxCharges = 0;
-				enchantedflask.SpellID = 0;
-				enchantedflask.ProcSpellID = 0;
+				enchantedflask.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				enchantedflask.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				enchantedflask.Type_Damage = 0;
 				enchantedflask.Realm = 2;
 				enchantedflask.MaxCount = 1;
@@ -260,17 +237,12 @@ using DOL.AI.Brain;
 				enchantedflask.PoisonCharges = 0;
 				enchantedflask.PoisonMaxCharges = 0;
 				enchantedflask.PoisonSpellID = 0;
-				enchantedflask.ProcSpellID1 = 0;
-				enchantedflask.SpellID1 = 0;
-				enchantedflask.MaxCharges1 = 0;
-				enchantedflask.Charges1 = 0;
 				
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(enchantedflask);
-				}
+					enchantedflask.AddQuestObjectToDatabase();
+			}
 			Flaskofetherealessence = GameServer.Database.FindObjectByKey<ItemTemplate>("Flaskofetherealessence");
 			if (Flaskofetherealessence == null)
 			{
@@ -292,34 +264,11 @@ using DOL.AI.Brain;
 				Flaskofetherealessence.CanDropAsLoot = false;
 				Flaskofetherealessence.Color = 0;
 				Flaskofetherealessence.Bonus = 35; // default bonus				
-				Flaskofetherealessence.Bonus1 = 0;
-				Flaskofetherealessence.Bonus1Type = (int) 0;
-				Flaskofetherealessence.Bonus2 = 0;
-				Flaskofetherealessence.Bonus2Type = (int) 0;
-				Flaskofetherealessence.Bonus3 = 0;
-				Flaskofetherealessence.Bonus3Type = (int) 0;
-				Flaskofetherealessence.Bonus4 = 0;
-				Flaskofetherealessence.Bonus4Type = (int) 0;
-				Flaskofetherealessence.Bonus5 = 0;
-				Flaskofetherealessence.Bonus5Type = (int) 0;
-				Flaskofetherealessence.Bonus6 = 0;
-				Flaskofetherealessence.Bonus6Type = (int) 0;
-				Flaskofetherealessence.Bonus7 = 0;
-				Flaskofetherealessence.Bonus7Type = (int) 0;
-				Flaskofetherealessence.Bonus8 = 0;
-				Flaskofetherealessence.Bonus8Type = (int) 0;
-				Flaskofetherealessence.Bonus9 = 0;
-				Flaskofetherealessence.Bonus9Type = (int) 0;
-				Flaskofetherealessence.Bonus10 = 0;
-				Flaskofetherealessence.Bonus10Type = (int) 0;
-				Flaskofetherealessence.ExtraBonus = 0;
-				Flaskofetherealessence.ExtraBonusType = (int) 0;
+				Flaskofetherealessence.ClearTemplateBonuses();
 				Flaskofetherealessence.Effect = 0;
 				Flaskofetherealessence.Emblem = 0;
-				Flaskofetherealessence.Charges = 0;
-				Flaskofetherealessence.MaxCharges = 0;
-				Flaskofetherealessence.SpellID = 0;
-				Flaskofetherealessence.ProcSpellID = 0;
+				Flaskofetherealessence.SetTemplateUseSpells(new [] { 0, 0 }, new []{ 0, 0 });
+				Flaskofetherealessence.SetTemplateProcSpells(new [] { 0, 0 }, new byte[]{ 0, 0 });
 				Flaskofetherealessence.Type_Damage = 0;
 				Flaskofetherealessence.Realm = 2;
 				Flaskofetherealessence.MaxCount = 1;
@@ -333,17 +282,12 @@ using DOL.AI.Brain;
 				Flaskofetherealessence.PoisonCharges = 0;
 				Flaskofetherealessence.PoisonMaxCharges = 0;
 				Flaskofetherealessence.PoisonSpellID = 0;
-				Flaskofetherealessence.ProcSpellID1 = 0;
-				Flaskofetherealessence.SpellID1 = 0;
-				Flaskofetherealessence.MaxCharges1 = 0;
-				Flaskofetherealessence.Charges1 = 0;
 				
 				//You don't have to store the created item in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					GameServer.Database.AddObject(Flaskofetherealessence);
-				}
+				Flaskofetherealessence.AddQuestObjectToDatabase();
+			}
 			
 
 			#endregion

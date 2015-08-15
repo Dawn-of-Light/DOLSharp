@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using DOL.Database;
@@ -93,6 +94,8 @@ namespace DOL.GS
         private static readonly int[] OCStartPercentages = { 0, 10, 20, 30, 50, 70 };
         private static readonly int[] ItemQualOCModifiers = { 0, 0, 6, 8, 10, 18, 26 };
 
+        private static int MaxNumberOfImbueBonuses = 4;
+        
 		public SpellCrafting()
 		{
 			Icon = 0x0D;
@@ -174,25 +177,19 @@ namespace DOL.GS
 			}
 			else
 			{
-				ArrayList bonusToApply = new ArrayList(4);
-				if (item.Bonus1Type != 0)
+				var bonusToApply = new HashSet<eProperty>();
+				foreach(var kv in item.GetTemplateBonuses().Take(MaxNumberOfImbueBonuses))
 				{
-					bonusToApply.Add(item.Bonus1Type);
-					if (item.Bonus2Type != 0)
-					{
-						bonusToApply.Add(item.Bonus2Type);
-						if (item.Bonus3Type != 0)
-						{
-							bonusToApply.Add(item.Bonus3Type);
-							if (item.Bonus4Type != 0)
-							{
-								player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "SpellCrafting.IsAllowedToCombine.AlreadyImbued", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return false;
-							}
-						}
-					}
+					if (kv.Eproperty != eProperty.Undefined)
+						bonusToApply.Add(kv.Eproperty);
 				}
-
+				
+				if (bonusToApply.Count >= MaxNumberOfImbueBonuses)
+				{
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "SpellCrafting.IsAllowedToCombine.AlreadyImbued", item.Name, MaxNumberOfImbueBonuses), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					return false;
+				}
+				
 				lock (player.TradeWindow.Sync)
 				{
 					for (int i = 0; i < player.TradeWindow.ItemsCount; i++)
@@ -205,19 +202,19 @@ namespace DOL.GS
 							return false;
 						}
 
-						if (bonusToApply.Contains(currentItem.Bonus1Type))
+						if (bonusToApply.Contains(currentItem.GetTemplateFirstBonus().Eproperty))
 						{
 							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "SpellCrafting.IsAllowedToCombine.NoSameBonus"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return false;
 						}
 
-						if (bonusToApply.Count > 4)
+						if (bonusToApply.Count > MaxNumberOfImbueBonuses)
 						{
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "SpellCrafting.IsAllowedToCombine.DifferentTypes", item.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "SpellCrafting.IsAllowedToCombine.DifferentTypes", item.Name, MaxNumberOfImbueBonuses), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							return false;
 						}
 
-						bonusToApply.Add(currentItem.Bonus1Type);
+						bonusToApply.Add(currentItem.GetTemplateFirstBonus().Eproperty);
 					}
 				}
 
@@ -361,28 +358,18 @@ namespace DOL.GS
 				lock (player.TradeWindow.Sync)
 				{
 					player.Inventory.BeginChanges();
-					foreach (InventoryItem gem in (ArrayList)player.TradeWindow.TradeItems.Clone())
+					foreach (InventoryItem gem in player.TradeWindow.TradeItems.OfType<InventoryItem>().ToArray())
 					{
-						if (item.Bonus1Type == 0)
+						foreach(var kv in item.GetIndexedTemplateBonuses())
 						{
-							item.Bonus1Type = gem.Bonus1Type;
-							item.Bonus1 = gem.Bonus1;
+							if (kv.Value.Eproperty == eProperty.Undefined)
+							{
+								var gemvalue = gem.GetTemplateFirstBonus();
+								item.Template.SetTemplateBonuses(kv.Key, gemvalue.Eproperty, gemvalue.Value);
+								break;
+							}
 						}
-						else if (item.Bonus2Type == 0)
-						{
-							item.Bonus2Type = gem.Bonus1Type;
-							item.Bonus2 = gem.Bonus1;
-						}
-						else if (item.Bonus3Type == 0)
-						{
-							item.Bonus3Type = gem.Bonus1Type;
-							item.Bonus3 = gem.Bonus1;
-						}
-						else if (item.Bonus4Type == 0)
-						{
-							item.Bonus4Type = gem.Bonus1Type;
-							item.Bonus4 = gem.Bonus1;
-						}
+						
 						player.Inventory.RemoveCountFromStack(gem, 1);
 						InventoryLogging.LogInventoryAction(player, "(craft)", eInventoryActionType.Craft, gem.Template);
 					}
@@ -461,29 +448,26 @@ namespace DOL.GS
 
 			spellcraftInfos.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "SpellCrafting.ShowSpellCraftingInfos.TotalImbue", item.Name, totalItemCharges));
 			spellcraftInfos.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "SpellCrafting.ShowSpellCraftingInfos.CurrentBonus", item.Name));
-			if (item.Bonus1Type != 0)
+			
+			foreach(var tpl in item.GetTemplateBonuses().Take(MaxNumberOfImbueBonuses))
 			{
-				spellcraftInfos.Add("\t" + SkillBase.GetPropertyName((eProperty)item.Bonus1Type) + ": " + item.Bonus1 + " " + ((item.Bonus1Type >= (int)eProperty.Resist_First && item.Bonus1Type <= (int)eProperty.Resist_Last) ? "%" : " pts"));
-				if (item.Bonus2Type != 0)
-				{
-					spellcraftInfos.Add("\t" + SkillBase.GetPropertyName((eProperty)item.Bonus2Type) + ": " + item.Bonus2 + " " + ((item.Bonus2Type >= (int)eProperty.Resist_First && item.Bonus2Type <= (int)eProperty.Resist_Last) ? "%" : "pts"));
-					if (item.Bonus3Type != 0)
-					{
-						spellcraftInfos.Add("\t" + SkillBase.GetPropertyName((eProperty)item.Bonus3Type) + ": " + item.Bonus3 + " " + ((item.Bonus3Type >= (int)eProperty.Resist_First && item.Bonus3Type <= (int)eProperty.Resist_Last) ? "%" : "pts"));
-						if (item.Bonus4Type != 0)
-						{
-							spellcraftInfos.Add("\t" + SkillBase.GetPropertyName((eProperty)item.Bonus4Type) + ": " + item.Bonus4 + " " + ((item.Bonus4Type >= (int)eProperty.Resist_First && item.Bonus4Type <= (int)eProperty.Resist_Last) ? "%" : "pts"));
-						}
-					}
-				}
+				if (tpl.Eproperty != eProperty.Undefined)
+					spellcraftInfos.Add(string.Format("\t{0}: {1}{2}", SkillBase.GetPropertyName(tpl.Eproperty), tpl.Value, (tpl.Property >= (int)eProperty.Resist_First && tpl.Property <= (int)eProperty.Resist_Last) ? "%" : " pts"));
 			}
+			
 			spellcraftInfos.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "SpellCrafting.ShowSpellCraftingInfos.GemBonuses"));
 			lock (player.TradeWindow.Sync)
 			{
 				for (int i = 0; i < player.TradeWindow.ItemsCount; i++)
 				{
 					InventoryItem currentGem = (InventoryItem)player.TradeWindow.TradeItems[i];
-					spellcraftInfos.Add("\t" + currentGem.Name + " - " + SkillBase.GetPropertyName((eProperty)currentGem.Bonus1Type) + ": (" + GetGemImbuePoints(currentGem.Bonus1Type, currentGem.Bonus1) + ") " + currentGem.Bonus1 + " " + ((currentGem.Bonus1Type >= (int)eProperty.Resist_First && currentGem.Bonus1Type <= (int)eProperty.Resist_Last) ? "%" : "pts"));
+					var typevalue = currentGem.GetTemplateFirstBonus();
+					spellcraftInfos.Add(string.Format("\t{0} - {1}: ({2}) {3}{4}",
+					                                  currentGem.Name,
+					                                  SkillBase.GetPropertyName(typevalue.Eproperty),
+					                                  GetGemImbuePoints(typevalue.Property, typevalue.Value),
+					                                  typevalue.Value,
+					                                  (typevalue.Property >= (int)eProperty.Resist_First && typevalue.Property <= (int)eProperty.Resist_Last) ? "%" : " pts"));
 				}
 			}
 			spellcraftInfos.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "SpellCrafting.ShowSpellCraftingInfos.ImbueCapacity", totalGemmesCharges, totalItemCharges));
@@ -577,41 +561,34 @@ namespace DOL.GS
 		protected int GetTotalImbuePoints(GamePlayer player, InventoryItem item)
 		{
 			int totalGemBonus = 0;
-			int biggerGemCharge = 0;
+			int biggestGemCharge = 0;
 
-			if (item.Bonus1Type != 0)
+			foreach(var tpl in item.GetTemplateBonuses().Take(MaxNumberOfImbueBonuses))
 			{
-				int currentBonusImbuePoint = GetGemImbuePoints(item.Bonus1Type, item.Bonus1);
-				totalGemBonus += currentBonusImbuePoint;
-				if (currentBonusImbuePoint > biggerGemCharge) biggerGemCharge = currentBonusImbuePoint;
-
-				if (item.Bonus2Type != 0)
+				if (tpl.Eproperty != eProperty.Undefined)
 				{
-					currentBonusImbuePoint = GetGemImbuePoints(item.Bonus2Type, item.Bonus2);
+					var currentBonusImbuePoint = GetGemImbuePoints(tpl.Property, tpl.Value);
 					totalGemBonus += currentBonusImbuePoint;
-					if (currentBonusImbuePoint > biggerGemCharge) biggerGemCharge = currentBonusImbuePoint;
-
-					if (item.Bonus3Type != 0)
-					{
-						currentBonusImbuePoint = GetGemImbuePoints(item.Bonus3Type, item.Bonus3);
-						totalGemBonus += currentBonusImbuePoint;
-						if (currentBonusImbuePoint > biggerGemCharge) biggerGemCharge = currentBonusImbuePoint;
-					}
+					if (currentBonusImbuePoint > biggestGemCharge)
+						biggestGemCharge = currentBonusImbuePoint;
 				}
 			}
-
+			
 			lock (player.TradeWindow.Sync)
 			{
 				for (int i = 0; i < player.TradeWindow.TradeItems.Count; i++)
 				{
 					InventoryItem currentGem = (InventoryItem)player.TradeWindow.TradeItems[i];
-					int currentGemCharge = GetGemImbuePoints(currentGem.Bonus1Type, currentGem.Bonus1);
-					if (currentGemCharge > biggerGemCharge) biggerGemCharge = currentGemCharge;
-
+					var typevalue = currentGem.GetTemplateFirstBonus();
+					int currentGemCharge = GetGemImbuePoints(typevalue.Property, typevalue.Value);
 					totalGemBonus += currentGemCharge;
+					
+					if (currentGemCharge > biggestGemCharge)
+						biggestGemCharge = currentGemCharge;
 				}
 			}
-			totalGemBonus += biggerGemCharge;
+			
+			totalGemBonus += biggestGemCharge;
 			totalGemBonus /= 2;
 
 			return (int)Math.Floor((double)totalGemBonus);

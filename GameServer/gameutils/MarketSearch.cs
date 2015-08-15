@@ -21,14 +21,11 @@
 // Based on MarketNPC by Etaew, rewritten by Tolakram for new Inventory system
 
 using System;
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 
 using DOL.Database;
-using DOL.Database.Transaction;
 using DOL.GS;
-using DOL.GS.PacketHandler;
-using DOL.Events;
 
 using log4net;
 
@@ -133,7 +130,7 @@ namespace DOL.GS
 				if (search.playerCrafted > 0 && item.IsCrafted == false)
 					continue;
 
-				if (search.proc > 0 && item.ProcSpellID == 0 && item.ProcSpellID1 == 0)
+				if (search.proc > 0 && item.GetTemplateProcSpells().All(proc => proc.SpellID == 0))
 					continue;
 
 				if (CheckSlot(item, search.slot) == false)
@@ -212,17 +209,7 @@ namespace DOL.GS
 		{
 			if (hp > 0)
 			{
-				if ((item.ExtraBonusType == (int)eProperty.MaxHealth && item.ExtraBonus >= hp) ||
-					(item.Bonus1Type == (int)eProperty.MaxHealth && item.Bonus1 >= hp) ||
-					(item.Bonus2Type == (int)eProperty.MaxHealth && item.Bonus2 >= hp) ||
-					(item.Bonus3Type == (int)eProperty.MaxHealth && item.Bonus3 >= hp) ||
-					(item.Bonus4Type == (int)eProperty.MaxHealth && item.Bonus4 >= hp) ||
-					(item.Bonus5Type == (int)eProperty.MaxHealth && item.Bonus5 >= hp) ||
-					(item.Bonus6Type == (int)eProperty.MaxHealth && item.Bonus6 >= hp) ||
-					(item.Bonus7Type == (int)eProperty.MaxHealth && item.Bonus7 >= hp) ||
-					(item.Bonus8Type == (int)eProperty.MaxHealth && item.Bonus8 >= hp) ||
-					(item.Bonus9Type == (int)eProperty.MaxHealth && item.Bonus9 >= hp) ||
-					(item.Bonus10Type == (int)eProperty.MaxHealth && item.Bonus10 >= hp))
+				if (item.GetTemplateBonuses().Any(tpl => tpl.Eproperty == eProperty.MaxHealth && tpl.Value >= hp))
 					return true;
 			}
 
@@ -233,17 +220,7 @@ namespace DOL.GS
 		{
 			if (power > 0)
 			{
-				if ((item.ExtraBonusType == (int)eProperty.MaxMana && item.ExtraBonus >= power) ||
-					(item.Bonus1Type == (int)eProperty.MaxMana && item.Bonus1 >= power) ||
-					(item.Bonus2Type == (int)eProperty.MaxMana && item.Bonus2 >= power) ||
-					(item.Bonus3Type == (int)eProperty.MaxMana && item.Bonus3 >= power) ||
-					(item.Bonus4Type == (int)eProperty.MaxMana && item.Bonus4 >= power) ||
-					(item.Bonus5Type == (int)eProperty.MaxMana && item.Bonus5 >= power) ||
-					(item.Bonus6Type == (int)eProperty.MaxMana && item.Bonus6 >= power) ||
-					(item.Bonus7Type == (int)eProperty.MaxMana && item.Bonus7 >= power) ||
-					(item.Bonus8Type == (int)eProperty.MaxMana && item.Bonus8 >= power) ||
-					(item.Bonus9Type == (int)eProperty.MaxMana && item.Bonus9 >= power) ||
-					(item.Bonus10Type == (int)eProperty.MaxMana && item.Bonus10 >= power))
+				if(item.GetTemplateBonuses().Any(tpl => tpl.Eproperty == eProperty.MaxMana && tpl.Value >= power))
 					return true;
 			}
 
@@ -635,17 +612,7 @@ namespace DOL.GS
 		{
 			if (property > 0)
 			{
-				if ((item.ExtraBonusType == property && item.ExtraBonus >= 0) ||
-					(item.Bonus1Type == property && item.Bonus1 >= 0) ||
-					(item.Bonus2Type == property && item.Bonus2 >= 0) ||
-					(item.Bonus3Type == property && item.Bonus3 >= 0) ||
-					(item.Bonus4Type == property && item.Bonus4 >= 0) ||
-					(item.Bonus5Type == property && item.Bonus5 >= 0) ||
-					(item.Bonus6Type == property && item.Bonus6 >= 0) ||
-					(item.Bonus7Type == property && item.Bonus7 >= 0) ||
-					(item.Bonus8Type == property && item.Bonus8 >= 0) ||
-					(item.Bonus9Type == property && item.Bonus9 >= 0) ||
-					(item.Bonus10Type == property && item.Bonus10 >= 0))
+				if(item.GetTemplateBonuses().Any(tpl => tpl.Property == property && tpl.Value >= 0))
 					return true;
 			}
 

@@ -191,8 +191,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					masterVisur.SaveIntoDatabase();
+				
+				masterVisur.AddQuestObjectToDatabase();
 				masterVisur.AddToWorld();
 			}
 			else
@@ -243,8 +243,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					alice.SaveIntoDatabase();
+				
+				alice.AddQuestObjectToDatabase();
 				alice.AddToWorld();
 			}
 			else
@@ -296,8 +296,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					colm.SaveIntoDatabase();
+				
+				colm.AddQuestObjectToDatabase();
 				colm.AddToWorld();
 			}
 			else
@@ -349,8 +349,8 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 
-				if (SAVE_INTO_DATABASE)
-					dragonfly.SaveIntoDatabase();
+				
+				dragonfly.AddQuestObjectToDatabase();
 				dragonfly.AddToWorld();
 			}
 
@@ -383,8 +383,8 @@ namespace DOL.GS.Quests.Albion
 				//You don't have to store the created mob in the db if you don't want,
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
-				if (SAVE_INTO_DATABASE)
-					uliam.SaveIntoDatabase();
+				
+				uliam.AddQuestObjectToDatabase();
 
 				uliam.AddToWorld();
 			}
@@ -429,7 +429,7 @@ namespace DOL.GS.Quests.Albion
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
-                    horse.SaveIntoDatabase();
+                    horse.AddQuestObjectToDatabase();
                 horse.AddToWorld();
             }
 			 */
@@ -461,7 +461,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(noteFormColm);
+					noteFormColm.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -486,7 +486,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(fairyPlans);
+					fairyPlans.AddQuestObjectToDatabase();
 			}
 
 			translatedPlans = GameServer.Database.FindObjectByKey<ItemTemplate>("translated_ire_fairy_plans");
@@ -510,7 +510,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(translatedPlans);
+					translatedPlans.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -539,15 +539,7 @@ namespace DOL.GS.Quests.Albion
 
 				recruitsLegs.Bonus = 5; // default bonus
 
-				recruitsLegs.Bonus1 = 10;
-				recruitsLegs.Bonus1Type = (int) eProperty.MaxHealth; // hit
-
-
-				recruitsLegs.Bonus2 = 2;
-				recruitsLegs.Bonus2Type = (int) eResist.Slash;
-
-				recruitsLegs.Bonus3 = 1;
-				recruitsLegs.Bonus3Type = (int) eResist.Cold;
+				recruitsLegs.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Resist_Slash, eProperty.Resist_Cold }, new []{ 10, 2, 1 });
 
 				recruitsLegs.Quality = 100;
 				recruitsLegs.Condition = 1000;
@@ -559,7 +551,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(recruitsLegs);
+				recruitsLegs.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -588,15 +580,7 @@ namespace DOL.GS.Quests.Albion
 
 				recruitsPants.Bonus = 5; // default bonus
 
-				recruitsPants.Bonus1 = 12;
-				recruitsPants.Bonus1Type = (int) eProperty.MaxHealth; // hit
-
-
-				recruitsPants.Bonus2 = 2;
-				recruitsPants.Bonus2Type = (int) eResist.Slash;
-
-				recruitsPants.Bonus3 = 1;
-				recruitsPants.Bonus3Type = (int) eResist.Cold;
+				recruitsPants.SetTemplateBonuses(new []{ eProperty.MaxHealth, eProperty.Resist_Slash, eProperty.Resist_Cold }, new []{ 12, 2, 1 });
 
 				recruitsPants.Quality = 100;
 				recruitsPants.Condition = 1000;
@@ -608,7 +592,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(recruitsPants);
+				recruitsPants.AddQuestObjectToDatabase();
 			}
 
 			#endregion

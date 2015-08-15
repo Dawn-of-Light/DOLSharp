@@ -176,8 +176,8 @@ namespace DOL.GS.Quests.Albion
 				brain.AggroRange = 600;
 				queenTatiana.SetOwnBrain(brain);
 
-				if (SAVE_INTO_DATABASE)
-					queenTatiana.SaveIntoDatabase();
+				
+				queenTatiana.AddQuestObjectToDatabase();
 
 				queenTatiana.AddToWorld();
 			}
@@ -227,8 +227,8 @@ namespace DOL.GS.Quests.Albion
 					//You don't have to store the created mob in the db if you don't want,
 					//it will be recreated each time it is not found, just comment the following
 					//line if you rather not modify your database
-					if (SAVE_INTO_DATABASE)
-						fairySorceress[i].SaveIntoDatabase();
+					
+					fairySorceress[i].AddQuestObjectToDatabase();
 					fairySorceress[i].AddToWorld();
 				}
 			}
@@ -258,7 +258,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(queenTatianasHead);
+					queenTatianasHead.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -287,12 +287,8 @@ namespace DOL.GS.Quests.Albion
 
 				recruitsGauntlets.Bonus = 5; // default bonus
 
-				recruitsGauntlets.Bonus1 = 4;
-				recruitsGauntlets.Bonus1Type = (int) eStat.STR;
-
-				recruitsGauntlets.Bonus2 = 3;
-				recruitsGauntlets.Bonus2Type = (int) eStat.DEX;
-
+				recruitsGauntlets.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Dexterity },
+				                                     new []{ 4, 3 });
 				recruitsGauntlets.Quality = 100;
 				recruitsGauntlets.Condition = 1000;
 				recruitsGauntlets.MaxCondition = 1000;
@@ -303,7 +299,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(recruitsGauntlets);
+					recruitsGauntlets.AddQuestObjectToDatabase();
 			}
 
 			// item db check
@@ -332,12 +328,8 @@ namespace DOL.GS.Quests.Albion
 
 				recruitsGloves.Bonus = 5; // default bonus
 
-				recruitsGloves.Bonus1 = 4;
-				recruitsGloves.Bonus1Type = (int) eStat.INT;
-
-				recruitsGloves.Bonus2 = 3;
-				recruitsGloves.Bonus2Type = (int) eStat.DEX;
-
+				recruitsGloves.SetTemplateBonuses(new []{ eProperty.Intelligence, eProperty.Dexterity },
+				                                  new []{ 4, 3 });
 				recruitsGloves.Quality = 100;
 				recruitsGloves.Condition = 1000;
 				recruitsGloves.MaxCondition = 1000;
@@ -348,7 +340,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(recruitsGloves);
+					recruitsGloves.AddQuestObjectToDatabase();
 			}
 
 			recruitsJewel = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_cloudy_jewel");
@@ -372,9 +364,7 @@ namespace DOL.GS.Quests.Albion
 
 				recruitsJewel.Bonus = 5; // default bonus
 
-				recruitsJewel.Bonus1 = 6;
-				recruitsJewel.Bonus1Type = (int) eStat.STR;
-
+				recruitsJewel.SetTemplateBonuses(eProperty.Strength, 6);
 				recruitsJewel.Quality = 100;
 				recruitsJewel.Condition = 1000;
 				recruitsJewel.MaxCondition = 1000;
@@ -385,7 +375,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(recruitsJewel);
+					recruitsJewel.AddQuestObjectToDatabase();
 			}
 
 			recruitsJewelCloth = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_cloudy_jewel_cloth");
@@ -409,15 +399,8 @@ namespace DOL.GS.Quests.Albion
 
 				recruitsJewelCloth.Bonus = 5; // default bonus
 
-				recruitsJewelCloth.Bonus1 = 4;
-				recruitsJewelCloth.Bonus1Type = (int) eStat.INT;
-
-				recruitsJewelCloth.Bonus2 = 3;
-				recruitsJewelCloth.Bonus2Type = (int) eStat.CON;
-
-				recruitsJewelCloth.Bonus3 = 1;
-				recruitsJewelCloth.Bonus3Type = (int) eResist.Body;
-
+				recruitsJewelCloth.SetTemplateBonuses(new []{ eProperty.Intelligence, eProperty.Constitution, eProperty.Resist_Body },
+				                                      new []{ 4, 3, 1 });
 				recruitsJewelCloth.Quality = 100;
 				recruitsJewelCloth.Condition = 1000;
 				recruitsJewelCloth.MaxCondition = 1000;
@@ -428,7 +411,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(recruitsJewelCloth);
+					recruitsJewelCloth.AddQuestObjectToDatabase();
 			}
 
 			recruitsBracer = GameServer.Database.FindObjectByKey<ItemTemplate>("recruits_golden_bracer");
@@ -452,15 +435,8 @@ namespace DOL.GS.Quests.Albion
 
 				recruitsBracer.Bonus = 5; // default bonus
 
-				recruitsBracer.Bonus1 = 4;
-				recruitsBracer.Bonus1Type = (int) eStat.STR;
-
-				recruitsBracer.Bonus2 = 3;
-				recruitsBracer.Bonus2Type = (int) eStat.CON;
-
-				recruitsBracer.Bonus3 = 1;
-				recruitsBracer.Bonus3Type = (int) eResist.Body;
-
+				recruitsBracer.SetTemplateBonuses(new []{ eProperty.Strength, eProperty.Constitution, eProperty.Resist_Body },
+				                                  new []{ 4, 3, 1 });
 				recruitsBracer.Quality = 100;
 				recruitsBracer.Condition = 1000;
 				recruitsBracer.MaxCondition = 1000;
@@ -471,7 +447,7 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 				
-					GameServer.Database.AddObject(recruitsBracer);
+					recruitsBracer.AddQuestObjectToDatabase();
 			}
 
 			#endregion

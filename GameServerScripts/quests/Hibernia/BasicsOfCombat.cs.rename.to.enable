@@ -166,7 +166,7 @@ namespace DOL.GS.Quests.Hibernia
 				questGiver.Heading = 2912;
 
 				if (SAVE_INTO_DATABASE)
-					questGiver.SaveIntoDatabase();
+					questGiver.AddQuestObjectToDatabase();
 
 				questGiver.AddToWorld();
 			}

@@ -159,8 +159,8 @@ namespace DOL.GS.Quests.Albion
 				//it will be recreated each time it is not found, just comment the following
 				//line if you rather not modify your database
 
-				if (SAVE_INTO_DATABASE)
-					yettaFletcher.SaveIntoDatabase();
+				
+				yettaFletcher.AddQuestObjectToDatabase();
 
 				yettaFletcher.AddToWorld();
 			}
@@ -195,7 +195,7 @@ namespace DOL.GS.Quests.Albion
 				bundleOfDecayedZombieLegs.MaxCondition = 1000;
 				bundleOfDecayedZombieLegs.Durability = 1000;
 				bundleOfDecayedZombieLegs.MaxDurability = 1000;
-				GameServer.Database.AddObject(bundleOfDecayedZombieLegs);
+				bundleOfDecayedZombieLegs.AddQuestObjectToDatabase();
 			}
 
 			#endregion

@@ -171,8 +171,8 @@ namespace DOL.GS.Quests.Albion
                 //You don't have to store the created mob in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
-                    briceYarley.SaveIntoDatabase();
+                
+                briceYarley.AddQuestObjectToDatabase();
 
 
                 briceYarley.AddToWorld();
@@ -201,8 +201,8 @@ namespace DOL.GS.Quests.Albion
                 //You don't have to store the created mob in the db if you don't want,
                 //it will be recreated each time it is not found, just comment the following
                 //line if you rather not modify your database
-                if (SAVE_INTO_DATABASE)
-                    patrickYarley.SaveIntoDatabase();
+                
+                patrickYarley.AddQuestObjectToDatabase();
 
 
                 patrickYarley.AddToWorld();
@@ -232,7 +232,7 @@ namespace DOL.GS.Quests.Albion
                 elderWood.IsDropable = false;
                 elderWood.IsPickable = false;
                 elderWood.Weight = 5;
-                GameServer.Database.AddObject(elderWood);
+                elderWood.AddQuestObjectToDatabase();
             }
 
             boogeyTeeth = GameServer.Database.FindObjectByKey<ItemTemplate>("boogey_teeth");
@@ -249,7 +249,7 @@ namespace DOL.GS.Quests.Albion
                 boogeyTeeth.IsDropable = false;
                 boogeyTeeth.IsPickable = false;
                 boogeyTeeth.Weight = 4;
-                GameServer.Database.AddObject(boogeyTeeth);
+                boogeyTeeth.AddQuestObjectToDatabase();
             }
 
             #endregion
