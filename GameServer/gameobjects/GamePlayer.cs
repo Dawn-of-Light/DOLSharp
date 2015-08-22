@@ -7803,8 +7803,8 @@ namespace DOL.GS
 		/// <param name="handler"></param>
 		public override void OnAfterSpellCastSequence(ISpellHandler handler)
 		{
-			m_runningSpellHandler.CastingCompleteEvent -= OnAfterSpellCastSequence;
-
+			handler.CastingCompleteEvent -= OnAfterSpellCastSequence;
+			ISpellHandler newhandler = null;
 			lock (m_spellQueueAccessMonitor)
 			{
 				Spell nextSpell = m_nextSpell;
@@ -7832,15 +7832,16 @@ namespace DOL.GS
 				m_nextSpellTarget = null;
 
 				if (nextSpell != null)
-					m_runningSpellHandler = ScriptMgr.CreateSpellHandler(this, nextSpell, nextSpellLine);
+					newhandler = ScriptMgr.CreateSpellHandler(this, nextSpell, nextSpellLine);
 			}
-			if (m_runningSpellHandler != null)
+			if (newhandler != null)
 			{
-				m_runningSpellHandler.CastingCompleteEvent += OnAfterSpellCastSequence;
+				m_runningSpellHandler = newhandler;
+				newhandler.CastingCompleteEvent += OnAfterSpellCastSequence;
 				if(m_nextSpellTarget!=null)
-					m_runningSpellHandler.CastSpell(m_nextSpellTarget);
+					newhandler.CastSpell(m_nextSpellTarget);
 				else
-					m_runningSpellHandler.CastSpell();
+					newhandler.CastSpell();
 			}
 		}
 
@@ -8061,13 +8062,13 @@ namespace DOL.GS
 							{
 								((ChamberSpellHandler)spellhandler).EffectSlot = ChamberSpellHandler.GetEffectSlot(spellhandler.Spell.Name);
 								m_runningSpellHandler = spellhandler;
-								m_runningSpellHandler.CastingCompleteEvent += OnAfterSpellCastSequence;
+								spellhandler.CastingCompleteEvent += OnAfterSpellCastSequence;
 								spellhandler.CastSpell();
 							}
 							else if (m_runningSpellHandler == null)
 							{
 								m_runningSpellHandler = spellhandler;
-								m_runningSpellHandler.CastingCompleteEvent += OnAfterSpellCastSequence;
+								spellhandler.CastingCompleteEvent += OnAfterSpellCastSequence;
 								spellhandler.CastSpell();
 							}
 						}
@@ -8162,7 +8163,7 @@ namespace DOL.GS
 				if (spellhandler.Spell.CastTime > 0)
 				{
 					m_runningSpellHandler = spellhandler;
-					m_runningSpellHandler.CastingCompleteEvent += OnAfterSpellCastSequence;
+					spellhandler.CastingCompleteEvent += OnAfterSpellCastSequence;
 				}
 
 				spellhandler.Ability = ab;
@@ -8740,11 +8741,11 @@ namespace DOL.GS
 		protected virtual void UseSlotItemSpell(InventoryItem item, int slot, int type, bool isPotion)
 		{
 			// Even if type = 0 (click on item) assume for /use type = 1
-			var index = Math.Max(1, type);
+			var index = Math.Max(1, type) - 1;
 			
 			// Switch Line
 			var line = SkillBase.GetSpellLine(GlobalSpellsLines.Potions_Effects);
-			if (line == null || isPotion)
+			if (line == null || !isPotion)
 				line = SkillBase.GetSpellLine(GlobalSpellsLines.Item_Effects);
 
 			// Get Spell
@@ -8791,7 +8792,7 @@ namespace DOL.GS
 				nextChargeAvailTime = item.TemplateUseSpellCanUseAgainIn((int)Math.Max(0, TempProperties.getProperty<long>(ITEM_USE_DELAY, 0L) - GameTimer.GetTickCount()));
 			}
 
-			if (nextChargeAvailTime > 0)
+			if (Client.Account.PrivLevel <= (int)ePrivLevel.Player && nextChargeAvailTime > 0)
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.MustWaitBeforeUse", nextChargeAvailTime / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				FailedUseSlot(slot, type, eReasonFailedUseSlot.UnderTimer);
@@ -8799,14 +8800,14 @@ namespace DOL.GS
 			}			
 			
 			// No More Charges
-			if (!usesp.UseValue.HasCharges)
+			if (Client.Account.PrivLevel <= (int)ePrivLevel.Player && !usesp.UseValue.HasCharges)
 			{
 				FailedUseSlot(slot, type, eReasonFailedUseSlot.NoMoreCharges);
 				return;
 			}
 			
 			// Check Item Level Requirement
-			if (Math.Max(0, Math.Min(MaxLevel, item.LevelRequirement)) > Level)
+			if (Client.Account.PrivLevel <= (int)ePrivLevel.Player && Math.Max(0, Math.Min(MaxLevel, item.LevelRequirement)) > Level)
 			{
 				FailedUseSlot(slot, type, eReasonFailedUseSlot.LevelRequirement);
 				return;
@@ -8828,9 +8829,8 @@ namespace DOL.GS
 			
 			// Cast Spell
 			m_runningSpellHandler = spellHandler;
-			m_runningSpellHandler.CastingCompleteEvent += OnAfterSpellCastSequence;
-			m_runningSpellHandler.CastingCompleteEvent += OnAfterItemSpellCastSequence;
-			if(m_runningSpellHandler.CastSpell(this.TargetObject as GameLiving, item))
+			spellHandler.CastingCompleteEvent += OnAfterItemSpellCastSequence;
+			if(spellHandler.CastSpell(this.TargetObject as GameLiving, item))
 			{
 				// Cast Began !
 				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.Used", item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -8852,7 +8852,8 @@ namespace DOL.GS
 		/// <param name="handler"></param>
 		protected virtual void OnAfterItemSpellCastSequence(ISpellHandler handler)
 		{
-			m_runningSpellHandler.CastingCompleteEvent -= OnAfterItemSpellCastSequence;
+			handler.CastingCompleteEvent -= OnAfterItemSpellCastSequence;
+			m_runningSpellHandler = null;
 			var lastUsedItem = handler.SpellItem;
 			var spell = handler.Spell;
 			var isPotion = (lastUsedItem.Item_Type >= (int)eInventorySlot.FirstBackpack || lastUsedItem.Item_Type <= (int)eInventorySlot.LastBackpack) && lastUsedItem.Item_Type != (int)eObjectType.Magical;
@@ -8938,12 +8939,6 @@ namespace DOL.GS
 				return;
 			}
 			
-			// Display a use Message
-			if (useItem.Item_Type != Slot.RANGED && (slot != Slot.HORSE || type != 0))
-			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.AttemptToUse", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
-			
 			#region Non-backpack / vault slots
 			eInventorySlot eslot = (eInventorySlot)slot;
 			switch (eslot)
@@ -8990,6 +8985,13 @@ namespace DOL.GS
 					break;
 			}
 			#endregion
+			
+			// Display a use Message
+			if (((eInventorySlot)useItem.Item_Type) != eInventorySlot.DistanceWeapon && ((eInventorySlot)slot != eInventorySlot.Horse || type != 0))
+			{
+				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.AttemptToUse", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
+			
 			
 			#region handling item use
 			if (IsSitting && (useItem.GetTemplateUseSpells().Any(u => u.SpellID != 0) || useItem.Object_Type == (int)eObjectType.Poison))

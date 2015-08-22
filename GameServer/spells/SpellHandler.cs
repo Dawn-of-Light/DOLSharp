@@ -608,11 +608,11 @@ namespace DOL.GS.Spells
 
 			if (m_caster is GamePlayer)
 			{
-				long nextSpellAvailTime = m_caster.TempProperties.getProperty<long>(GamePlayer.NEXT_SPELL_AVAIL_TIME_BECAUSE_USE_POTION);
+				long nextSpellAvailTime = Math.Max(0, m_caster.TempProperties.getProperty<long>(GamePlayer.NEXT_SPELL_AVAIL_TIME_BECAUSE_USE_POTION) - GameTimer.GetTickCount());
 
-				if (nextSpellAvailTime > m_caster.CurrentRegion.Time)
+				if (nextSpellAvailTime > 0)
 				{
-					((GamePlayer)m_caster).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "GamePlayer.CastSpell.MustWaitBeforeCast", (nextSpellAvailTime - m_caster.CurrentRegion.Time) / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					((GamePlayer)m_caster).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)m_caster).Client, "GamePlayer.CastSpell.MustWaitBeforeCast", nextSpellAvailTime / 1000), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 				if (((GamePlayer)m_caster).Steed != null && ((GamePlayer)m_caster).Steed is GameSiegeRam)
@@ -2624,10 +2624,10 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public virtual void OnAfterSpellCastSequence()
 		{
-			if (CastingCompleteEvent != null)
-			{
-				CastingCompleteEvent(this);
-			}
+			var completeEvent = CastingCompleteEvent;
+			
+			if (completeEvent != null)
+				completeEvent(this);
 		}
 
 		/// <summary>

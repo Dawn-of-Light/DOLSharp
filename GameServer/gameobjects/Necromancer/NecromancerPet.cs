@@ -463,7 +463,7 @@ namespace DOL.GS
 			if (m_runningSpellHandler != null)
 			{
 				//prevent from relaunch
-				m_runningSpellHandler.CastingCompleteEvent -= OnAfterSpellCastSequence;
+				handler.CastingCompleteEvent -= OnAfterSpellCastSequence;
 				m_runningSpellHandler = null;
 			}
 

@@ -6605,7 +6605,7 @@ namespace DOL.GS
 		/// <param name="handler"></param>
 		public virtual void OnAfterSpellCastSequence(ISpellHandler handler)
 		{
-			m_runningSpellHandler.CastingCompleteEvent -= OnAfterSpellCastSequence;
+			handler.CastingCompleteEvent -= OnAfterSpellCastSequence;
 			m_runningSpellHandler = null;
 		}
 
@@ -6661,7 +6661,7 @@ namespace DOL.GS
 				if (spellhandler.Spell.CastTime > 0)
 				{
 					m_runningSpellHandler = spellhandler;
-					m_runningSpellHandler.CastingCompleteEvent += OnAfterSpellCastSequence;
+					spellhandler.CastingCompleteEvent += OnAfterSpellCastSequence;
 				}
 
 				spellhandler.Ability = ab;

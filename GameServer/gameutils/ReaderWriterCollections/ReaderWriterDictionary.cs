@@ -399,6 +399,34 @@ namespace DOL.GS
 			
 			return replaced;
 		}
+		
+		public bool UpdateIfExists(TKey key, Func<TValue, TValue> func)
+		{
+			m_rwLock.EnterUpgradeableReadLock();
+			bool replaced = false;
+			try
+			{
+				if (m_dictionary.ContainsKey(key))
+				{
+					m_rwLock.EnterWriteLock();
+					try
+					{
+						m_dictionary[key] = func(m_dictionary[key]);
+						replaced = true;
+					}
+					finally
+					{
+						m_rwLock.ExitWriteLock();
+					}
+				}
+			}
+			finally
+			{
+				m_rwLock.ExitUpgradeableReadLock();
+			}
+			
+			return replaced;
+		}
 
 		public bool TryRemove(TKey key, out TValue val)
 		{

@@ -21,7 +21,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
-using System.IO;
 using System.Reflection;
 using System.Threading;
 using Timer=System.Threading.Timer;
@@ -29,8 +28,6 @@ using Timer=System.Threading.Timer;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Utils;
-using DOL.Config;
-using DOL.GS.Housing;
 
 using log4net;
 
@@ -1892,7 +1889,7 @@ namespace DOL.GS
 			GameClient[] clientsCopy = null;
 			lock (m_clients.SyncRoot)
 			{
-				clientsCopy = (GameClient[])m_clients.Clone();
+				clientsCopy = m_clients.ToArray();
 			}
 
 			int savedCount = 0;
