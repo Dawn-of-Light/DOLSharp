@@ -14270,29 +14270,28 @@ namespace DOL.GS
 				switch (Race)
 				{
 						// Albion Models.
-						case 13: return (ushort)((byte)Gender + 1351); //Inconnu
-						case 1:  return (ushort)((byte)Gender + 1353); //Briton
-						case 2:  return (ushort)((byte)Gender + 1359); //Avalonian
-						case 3:  return (ushort)((byte)Gender + 1355); //Highlander
-						case 4:  return (ushort)((byte)Gender + 1357); //Saracen
-						
-						case 16: return (ushort)((byte)Gender + 1361); //HalfOgre
+						case (int)eRace.Inconnu: return (ushort)(DBCharacter.Gender + 1351);
+						case (int)eRace.Briton: return (ushort)(DBCharacter.Gender + 1353);
+						case (int)eRace.Avalonian: return (ushort)(DBCharacter.Gender + 1359);
+						case (int)eRace.Highlander: return (ushort)(DBCharacter.Gender + 1355);
+						case (int)eRace.Saracen: return (ushort)(DBCharacter.Gender + 1357);
+						case (int)eRace.HalfOgre: return (ushort)(DBCharacter.Gender + 1361);
 
 						// Midgard Models.
-						case 6:  return (ushort)((byte)Gender + 1363); //Troll
-						case 7:  return (ushort)((byte)Gender + 1369); //Dwarf
-						case 5:  return (ushort)((byte)Gender + 1365); //Norseman
-						case 8:  return (ushort)((byte)Gender + 1367); //Kobold
-						case 14: return (ushort)((byte)Gender + 1371); //Valkyn
-						case 17: return (ushort)((byte)Gender + 1373); //Frostalf
+						case (int)eRace.Troll: return (ushort)(DBCharacter.Gender + 1363);
+						case (int)eRace.Dwarf: return (ushort)(DBCharacter.Gender + 1369);
+						case (int)eRace.Norseman: return (ushort)(DBCharacter.Gender + 1365);
+						case (int)eRace.Kobold: return (ushort)(DBCharacter.Gender + 1367);
+						case (int)eRace.Valkyn: return (ushort)(DBCharacter.Gender + 1371);
+						case (int)eRace.Frostalf: return (ushort)(DBCharacter.Gender + 1373);
 
 						// Hibernia Models.
-						case 10: return (ushort)((byte)Gender + 1375); //Firbolg
-						case 9:  return (ushort)((byte)Gender + 1377); //Celt
-						case 12: return (ushort)((byte)Gender + 1379); //Lurikeen
-						case 11: return (ushort)((byte)Gender + 1381); //Elf
-						case 15: return (ushort)((byte)Gender + 1383); //Sylvan
-						case 18: return (ushort)((byte)Gender + 1385); //Shar
+						case (int)eRace.Firbolg: return (ushort)(DBCharacter.Gender + 1375);
+						case (int)eRace.Celt: return (ushort)(DBCharacter.Gender + 1377);
+						case (int)eRace.Lurikeen: return (ushort)(DBCharacter.Gender + 1379);
+						case (int)eRace.Elf: return (ushort)(DBCharacter.Gender + 1381);
+						case (int)eRace.Sylvan: return (ushort)(DBCharacter.Gender + 1383);
+						case (int)eRace.Shar: return (ushort)(DBCharacter.Gender + 1385);
 						
 						default: return Model;
 				}
