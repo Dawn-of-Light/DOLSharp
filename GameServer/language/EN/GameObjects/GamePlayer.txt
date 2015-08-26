@@ -6,8 +6,8 @@ GamePlayer.ApplyPoison.CantApplyRecentCombat:	You have been in combat recently a
 GamePlayer.ApplyPoison.CantPoisonWeapon:		You can't poison this weapon!			
 GamePlayer.ApplyPoison.CantUsePoison:			You can't use this poison.		
 GamePlayer.ApplyPoison.CantUsePoisons:			You can't use poisons.		
-GamePlayer.ApplyPoison.PoisonsAppliedWeapons:	Poisons can be applied only to weapons.			
-GamePlayer.Attack.AlreadyDead:				{0} is already dead!	
+GamePlayer.ApplyPoison.PoisonsAppliedWeapons:	Poisons can be applied only to weapons.
+GamePlayer.Attack.AlreadyDead:				{0} is already dead!
 GamePlayer.Attack.Blocked:					{0} blocks your attack!	
 GamePlayer.Attack.CantBeAttacked:			This can't be attacked!		
 GamePlayer.Attack.CantCritical:				You can't get a critical shot on your target, you switch to a standard shot.	
@@ -26,6 +26,7 @@ GamePlayer.Attack.Intercepted:				{0} steps in front of {1} and takes the blow!
 GamePlayer.Attack.InterceptedHit:			{0} {1}{2} but hit {3} for {4}{5} damage!		
 GamePlayer.Attack.InterceptHit:				{0} {1}{2} and hit for {3}{4} damage!	
 GamePlayer.Attack.Interrupted:				{0} is attacking you and your {1} is interrupted!	
+GamePlayer.Attack.InterruptedCrafting:			You interrupt your crafting.
 GamePlayer.Attack.Location.Arm:				arm	
 GamePlayer.Attack.Location.Foot:			foot		
 GamePlayer.Attack.Location.Hand:			hand		
@@ -49,17 +50,30 @@ GamePlayer.Attack.Type.Shot:				shot
 GamePlayer.Attack.Type.Throw:				throw	
 GamePlayer.Attack.WithYour:					with your	
 GamePlayer.Attack.YouAttack:				You attack	
-GamePlayer.Attack.YouShot:					You shot	
+GamePlayer.Attack.YouShot:					You shot
 GamePlayer.Bind.Bound:						You are now bound to this location.
 GamePlayer.Bind.CantBindDead:				You can not bind while dead!	
 GamePlayer.Bind.CantHere:					You cannot bind here!	
 GamePlayer.Bind.LastBindPoint:				Last Bind Point : {0}.	
 GamePlayer.Bind.MustWait:					You must wait {0} seconds to bind again!	
+
 GamePlayer.CastSpell.AlreadyCastFollow:			You are already casting a spell! You prepare this spell as a follow up!		
 GamePlayer.CastSpell.AlreadyCastNoQueue:		You are already casting a spell, to enable spell queueing use '/noqueue'!			
+GamePlayer.CastSpell.AlreadyChosenSpells:		You have already chosen your spells for this chamber.
 GamePlayer.CastSpell.AlreadyPlaySong:			You are already playing a song!		
 GamePlayer.CastSpell.CantCastMezzed:			You can't cast while mesmerized!		
 GamePlayer.CastSpell.CantCastStunned:			You can't cast while stunned!		
+GamePlayer.CastSpell.CantCastFumblingWords:		You are fumbling for your words, and cannot cast!
+GamePlayer.CastSpell.CantSpellDirectly:			You cannot cast this spell directly!
+GamePlayer.CastSpell.FollowSpell:			You ready a {0} as a follow up!
+GamePlayer.CastSpell.NotAFollowSpell:			You may not ready this spell as a followup!
+GamePlayer.CastSpell.PrimarySpellFirst:			You must store a primary spell first!
+GamePlayer.CastSpell.PrepareSecondarySpell:		You prepare this as a secondary spell!
+GamePlayer.CastSpell.SelectSecondSpell:			Select the second spell for your {0}.
+GamePlayer.CastSpell.SpellInChamber:			You load {0} into your {1}.
+GamePlayer.CastSpell.SpellNotInChamber:			This spell cannot be stored in this chamber.
+GamePlayer.CastSpell.OnlyASecondarySpell:		Only a secondary spell can follow up the spell your are casting!
+
 GamePlayer.CommandNpcAttack.TooFarAwayForPet:		Your target is too far away to attack by your pet!			
 GamePlayer.CommandNpcGoTarget.MustSelectDestination:You must select a destination for your controlled creature.				
 GamePlayer.CommandNpcAttack.KillTarget:			You command {0} to kill your target!
@@ -78,6 +92,7 @@ GamePlayer.Die.DeadRVR:							You died fighting for your realm and lose no exper
 GamePlayer.Die.DeathN1:							This is your first death for this level.  Your experience and constitution losses are greatly reduced.
 GamePlayer.Die.DeathN2:							This is your second death for this level.  Your experience and constitution losses are reduced.
 GamePlayer.Die.DuelDefeated:					{0} was just defeated in a duel by {1} !	
+GamePlayer.Die.DuelWinner:				 wins the duel!
 GamePlayer.Die.Killed:							{0} was just killed !
 GamePlayer.Die.KilledBy:						{0} was just killed by {1}.	
 GamePlayer.Die.KilledByLocation:				{0} was just killed by {1} in {2}.		
@@ -198,6 +213,7 @@ GamePlayer.Pronoun.Male.Possessive:			his
 GamePlayer.Pronoun.Male.Subjective:			he		
 GamePlayer.Quit.CantQuitCrafting:			You can't quit while you're crafting.		
 GamePlayer.Quit.CantQuitDead:				You can't quit now, you're dead.  Type '/release' to release your corpse.	
+GamePlayer.Quit.CantQuitInInstance:			You cannot quit in an instance!
 GamePlayer.Quit.CantQuitMount:				You have to dismount before you can quit.	
 GamePlayer.Quit.CantQuitStanding:			You must be standing still to quit.		
 GamePlayer.Quit.RecentlyInCombat:			You were recently in combat and must wait longer to quit.		
@@ -272,11 +288,13 @@ GamePlayer.Sprint.CantSprintDead:			You can't sprint when dead!
 GamePlayer.Sprint.CantSprintHidden:			You can't sprint while you are hidden!		
 GamePlayer.Sprint.NoLongerReady:			You are no longer ready to sprint.		
 GamePlayer.Sprint.PrepareSprint:			You prepare to sprint!		
-GamePlayer.Sprint.TooFatigued:				You are too fatigued to sprint!	
+GamePlayer.Sprint.TooFatigued:				You are too fatigued to sprint!
 GamePlayer.StartAttack.CannotMelee:			You cannot enter melee combat mode with an instrument!		
 GamePlayer.StartAttack.CannotWithoutWeapon:		You cannot enter combat mode without a weapon!			
 GamePlayer.StartAttack.CantAttackmesmerized:	You can't attack when you are mesmerized!			
 GamePlayer.StartAttack.CantAttackStunned:		You can't attack when you are stunned!			
+GamePlayer.StartAttack.CantDisarmed:			You are disarmed and cannot attack!
+GamePlayer.StartAttack.CantInShadeMode:			You cannot enter combat in shade mode!
 GamePlayer.StartAttack.CantUseQuiver:			You can't use the selected quiver ammo with your weapon!		
 GamePlayer.StartAttack.CombatNoTarget:			You enter combat mode but have no target!		
 GamePlayer.StartAttack.CombatTarget:			You enter combat mode and target [{0}]		

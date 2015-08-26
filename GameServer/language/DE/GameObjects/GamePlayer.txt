@@ -31,6 +31,7 @@ GamePlayer.Attack.Intercepted:				{0} stellt sich vor {1} und fängt den Schlag 
 GamePlayer.Attack.InterceptedHit:			{0} {1}{2} an aber trefft {3} für {4}{5} Schaden!
 GamePlayer.Attack.InterceptHit:				{0} {1} wird getroffen und {2} richtet {3}{4} Punkte Schaden an!	
 GamePlayer.Attack.Interrupted:				{0} greift Euch an und Euer {1} wurde unterbrochen!	
+GamePlayer.Attack.InterruptedCrafting:			Ihr unterbrecht Eure Handwerksarbeit.
 GamePlayer.Attack.Location.Arm:				Euren Arm	
 GamePlayer.Attack.Location.Foot:			Euren Fuß		
 GamePlayer.Attack.Location.Hand:			Eure Hand		
@@ -63,11 +64,22 @@ GamePlayer.Bind.LastBindPoint:				Letzter Bindepunkt: {0}.
 GamePlayer.Bind.MustWait:				Ihr müsst {0} Sekunden warten um Euch wieder zu binden!	
 
 GamePlayer.CastSpell.AlreadyCastFollow:			Ihr zaubert bereits, dieser Spruch wird jetzt als Folgezauber vorbereitet!		
-GamePlayer.CastSpell.AlreadyCastNoQueue:		Ihr zaubert bereits, um Folgezauber zu ermöglichen gebt '/noqueue' ein!			
+GamePlayer.CastSpell.AlreadyCastNoQueue:		Ihr zaubert bereits, um Folgezauber zu ermöglichen gebt '/noqueue' ein!	
+GamePlayer.CastSpell.AlreadyChosenSpells:		Ihr habt bereits Zaubersprüche für diese Kammer ausgewählt.		
 GamePlayer.CastSpell.AlreadyPlaySong:			Ihr spielt bereits ein Lied!		
+GamePlayer.CastSpell.CantCastFumblingWords:		Ihr könnt nicht zaubern, da Ihr die Worte nur noch stammelt!
 GamePlayer.CastSpell.CantCastMezzed:			Ihr könnt nichts machen, wenn Ihr hypnotisiert seid!		
 GamePlayer.CastSpell.CantCastStunned:			Ihr könnt nichts machen, wenn Ihr betäubt seid!		
+GamePlayer.CastSpell.CantSpellDirectly:			Ihr könnt diesen Zauberspruch nicht direkt anwenden!
+GamePlayer.CastSpell.FollowSpell:			Ihr bereitet {0} als Folgespruch vor!
 GamePlayer.CastSpell.MustWaitBeforeCast:		Ihr müsst noch {0} Sekunden warten, um den nächsten Zauber sprechen zukönnen!
+GamePlayer.CastSpell.NotAFollowSpell:			Ihr könnt diesen Zauberspruch nicht als einen Folgespruch vorbereiten!
+GamePlayer.CastSpell.OnlyASecondarySpell:		Nur ein zweiter Spruch kann dem Zauberspruch folgen, den Ihr gerade aussprecht!
+GamePlayer.CastSpell.PrepareSecondarySpell:		Ihr bereitet diesen als einen zweiten Zauberspruch vor!
+GamePlayer.CastSpell.PrimarySpellFirst:			Ihr müsst zuerst einen primären Zauberspruch laden!
+GamePlayer.CastSpell.SelectSecondSpell:			Wählt einen zweiten Zauberspruch aus für Euer {0}.
+GamePlayer.CastSpell.SpellInChamber:			Ihr ladet {0} in Euer {1}.
+GamePlayer.CastSpell.SpellNotInChamber:			Dieser Spruch kann nicht in diese Kammer geladen werden.
 
 GamePlayer.CommandNpcAttack.TooFarAwayForPet:		Das Ziel ist zu weit entfernt für einen Angriff durch Euer Wesen!			
 
@@ -238,6 +250,7 @@ GamePlayer.Pronoun.Male.Subjective:			er
 
 GamePlayer.Quit.CantQuitCrafting:			Ihr könnt diese Welt nicht verlassen, während Ihr arbeitet.		
 GamePlayer.Quit.CantQuitDead:				Ihr könnt diese Welt nicht verlassen, Ihr seid tot. Gebt /release ein, um wieder auf zuerstehen.	
+GamePlayer.Quit.CantQuitInInstance:			Ihr könnt diese Welt nicht verlassen, wenn Ihr in einer Instanz seid!
 GamePlayer.Quit.CantQuitMount:				Ihr müsst erst absteigen, bevor Ihr diese Welt verlassen könnt.	
 GamePlayer.Quit.CantQuitStanding:			Ihr müsst erst einmal stehen bleiben, bevor Ihr diese Welt verlassen könnt.		
 GamePlayer.Quit.RecentlyInCombat:			Ihr habt gerade noch gekämpft und müsst etwas länger warten, bevor Ihr diese Welt verlassen könnt.		
@@ -336,7 +349,9 @@ GamePlayer.StartAttack.CannotMelee:			Ihr könnt nicht mit einem Musikinstrument
 GamePlayer.StartAttack.CannotWithoutWeapon:		Ihr könnt Euch nicht kampfbereit machen ohne eine Waffe!			
 GamePlayer.StartAttack.CantAttackmesmerized:		Ihr könnt nicht angreifen, wenn Ihr hypnotisiert seid!			
 GamePlayer.StartAttack.CantAttackStunned:		Ihr könnt nicht angreifen, wenn Ihr betäubt seid!			
-GamePlayer.StartAttack.CantUseQuiver:			Ihr könnt den ausgewählten Köcher nicht mit Eurer Waffe benutzen!		
+GamePlayer.StartAttack.CantUseQuiver:			Ihr könnt den ausgewählten Köcher nicht mit Eurer Waffe benutzen!
+GamePlayer.StartAttack.CantDisarmed:			Ihr wurdet entwaffnet und könnt nicht angreifen!		
+GamePlayer.StartAttack.CantInShadeMode:			Ihr könnt nicht kämpfen, wenn Ihr getarnt seid!
 GamePlayer.StartAttack.CombatNoTarget:			Ihr macht Euch kampfbereit, aber Ihr habt kein Ziel ausgewählt!		
 GamePlayer.StartAttack.CombatTarget:			Ihr macht Euch kampfbereit. Euer Ziel ist [{0}].		
 GamePlayer.StartAttack.SelectQuiver:			Ihr müsst einen Köcherslot auswählen, aus dem Ihr ziehen wollt!		
