@@ -957,7 +957,7 @@ namespace DOL.GS
 
 				if (CurrentRegion.IsInstance)
 				{
-					Out.SendMessage("You cannot quit in an instance!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Quit.CantQuitInInstance"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
 
@@ -1115,7 +1115,7 @@ namespace DOL.GS
 			
 			if (!IsAlive)
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.CantBindDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Bind.CantBindDead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -1124,12 +1124,12 @@ namespace DOL.GS
 			long changeTime = CurrentRegion.Time - lastBindTick;
 			if (Client.Account.PrivLevel <= (uint)ePrivLevel.Player && changeTime < BindAllowInterval)
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.MustWait", (1 + (BindAllowInterval - changeTime) / 1000)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Bind.MustWait", (1 + (BindAllowInterval - changeTime) / 1000)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			
 			string description = string.Format("in {0}", this.GetBindSpotDescription());
-			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Bind.LastBindPoint", description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Bind.LastBindPoint", description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			
 			bool bound = false;
 			
@@ -1817,7 +1817,7 @@ namespace DOL.GS
 			
 			if (cantPrayMessage != string.Empty)
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, cantPrayMessage), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, cantPrayMessage), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -1827,7 +1827,7 @@ namespace DOL.GS
 			m_prayAction = new RegionTimerAction<GameGravestone>(gravestone, stn => {
 			                                                     	if (stn.XPValue > 0)
 			                                                     	{
-			                                                     		Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Pray.GainBack"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+			                                                     		Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Pray.GainBack"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			                                                     		GainExperience(eXPSource.Praying, stn.XPValue);
 			                                                     	}
 			                                                     	stn.XPValue = 0;
@@ -1836,7 +1836,7 @@ namespace DOL.GS
 			m_prayAction.Start(PrayDelay);
 
 			Sit(true);
-			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Pray.Begin"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Pray.Begin"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
@@ -5574,7 +5574,7 @@ namespace DOL.GS
 				if (ControlledBrain.Body != null)
 					if (ControlledBrain.Body is NecromancerPet)
 			{
-				Out.SendMessage("You cannot enter combat in shade mode!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+                Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.StartAttack.CantInShadeMode"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -5609,7 +5609,7 @@ namespace DOL.GS
 
 			if (IsDisarmed)
 			{
-				Out.SendMessage("You are disarmed and cannot attack!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+                Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.StartAttack.CantDisarmed"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -6200,7 +6200,7 @@ namespace DOL.GS
 		{
 			if (IsCrafting)
 			{
-				Out.SendMessage("You interrupt your crafting.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Attack.InterruptedCrafting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				CraftTimer.Stop();
 				CraftTimer = null;
 				Out.SendCloseTimerWindow();
@@ -6568,7 +6568,7 @@ namespace DOL.GS
 
 			if (IsCrafting)
 			{
-				Out.SendMessage("Your crafting is interrupted.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Attack.InterruptedCrafting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				CraftTimer.Stop();
 				CraftTimer = null;
 				Out.SendCloseTimerWindow();
@@ -7481,7 +7481,7 @@ namespace DOL.GS
 
 			if (killer is GamePlayer && killer != this)
 			{
-				((GamePlayer)killer).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)killer).Client, "GamePlayer.Die.YouKilled", GetName(0, false)), eChatType.CT_PlayerDied, eChatLoc.CL_SystemWindow);
+				((GamePlayer)killer).Out.SendMessage(LanguageMgr.GetTranslation(((GamePlayer)killer).Client.Account.Language, "GamePlayer.Die.YouKilled", GetName(0, false)), eChatType.CT_PlayerDied, eChatLoc.CL_SystemWindow);
 			}
 
 			ArrayList players = new ArrayList();
@@ -7619,10 +7619,11 @@ namespace DOL.GS
 			// sent after buffs drop
 			// GamePlayer.Die.CorpseLies:		{0} just died. {1} corpse lies on the ground.
 			Message.SystemToOthers2(this, eChatType.CT_PlayerDied, "GamePlayer.Die.CorpseLies", GetName(0, true), GetPronoun(this.Client, 1, true));
+
 			if (m_releaseType == eReleaseType.Duel)
 			{
-				Message.SystemToOthers(this, killer.Name + " wins the duel!", eChatType.CT_Emote);
-			}
+                Message.SystemToOthers(this, killer.Name + "GamePlayer.Die.DuelWinner", eChatType.CT_Emote);
+            }
 
 			// deal out exp and realm points based on server rules
 			// no other way to keep correct message order...
@@ -7882,7 +7883,7 @@ namespace DOL.GS
 		{
 			if (IsCrafting)
 			{
-				Out.SendMessage("You interrupt your crafting.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Attack.InterruptedCrafting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				CraftTimer.Stop();
 				CraftTimer = null;
 				Out.SendCloseTimerWindow();
@@ -7924,7 +7925,7 @@ namespace DOL.GS
 
 				if (IsSilenced)
 				{
-					Out.SendMessage("You are fumbling for your words, and cannot cast!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+                    Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.CantCastFumblingWords"), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 					return;
 				}
 
@@ -7934,7 +7935,7 @@ namespace DOL.GS
 				{
 					if (Util.ChanceDouble(fumbleChance))
 					{
-						Out.SendMessage("You are fumbling for your words, and cannot cast!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+                        Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.CantCastFumblingWords"), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 						return;
 					}
 				}
@@ -7960,7 +7961,7 @@ namespace DOL.GS
 							{
 								if (spell.SpellType.ToLower() == "archery")
 								{
-									Out.SendMessage("You ready a " + spell.Name + " as a follow up!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+                                    Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.FollowSpell", spell.Name), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 								}
 								else
 								{
@@ -7978,7 +7979,7 @@ namespace DOL.GS
 						{
 							if (!spell.IsSecondary)
 							{
-								Out.SendMessage("Only a secondary spell can follow up the spell your are casting!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                                Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.OnlyASecondarySpell"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 							}
 							else
 							{
@@ -8007,7 +8008,7 @@ namespace DOL.GS
 										m_nextSpell = cloneSpell;
 										m_nextSpellLine = line;
 									}
-									Out.SendMessage("You prepare a secondary spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                                    Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.PrepareSecondarySpell"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 								}
 								return;
 							}
@@ -8024,7 +8025,7 @@ namespace DOL.GS
 							{
 								if (spell.SpellType == "Bolt" && !chamber.Spell.AllowBolt)
 								{
-									Out.SendMessage("This spell cannot be stored in this chamber.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                                    Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.SpellNotInChamber"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 									return;
 								}
 								if (chamber.PrimarySpell == null)
@@ -8034,12 +8035,12 @@ namespace DOL.GS
 									cloneSpell.CostPower = false;
 									chamber.PrimarySpell = cloneSpell;
 									chamber.PrimarySpellLine = line;
-									Out.SendMessage("You load " + spell.Name + " into your " + ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									Out.SendMessage("Select the second spell for your " + ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.SpellInChamber", spell.Name, ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.SelectSecondSpell", ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								}
 								else
 								{
-									Out.SendMessage("This spell cannot be stored in this chamber.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                                    Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.SpellNotInChamber"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 								}
 							}
 							else if (spell.IsSecondary)
@@ -8054,26 +8055,24 @@ namespace DOL.GS
 										cloneSpell.OverrideRange = chamber.PrimarySpell.Range;
 										chamber.SecondarySpell = cloneSpell;
 										chamber.SecondarySpellLine = line;
-										Out.SendMessage("You load " + spell.Name + " into your " + ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
+                                        Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.SpellInChamber", spell.Name, ((ChamberSpellHandler)m_runningSpellHandler).Spell.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 									}
 									else
 									{
-										Out.SendMessage("You have already chosen your spells for this chamber.", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-
+                                        Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.AlreadyChosenSpells"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 									}
 								}
 								else
 								{
-									Out.SendMessage("You must store a primary spell first!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-
+                                    Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.PrimarySpellFirst"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 								}
 							}
 
 						}
 						else if (!(m_runningSpellHandler is ChamberSpellHandler) && spell.SpellType == "Chamber")
 						{
-							Out.SendMessage("You may not ready this spell as a followup!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                            Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.NotAFollowSpell"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 							return;
 						}
 					}
@@ -8117,7 +8116,7 @@ namespace DOL.GS
 								effect = SpellHandler.FindEffectOnTarget(this, "Uninterruptable");
 
 							if (m_runningSpellHandler == null && effect == null)
-								Out.SendMessage("You cannot cast this spell directly!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                                Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.CantSpellDirectly"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 							else if (m_runningSpellHandler != null)
 							{
 								if (m_runningSpellHandler.Spell.IsPrimary)
@@ -8126,7 +8125,7 @@ namespace DOL.GS
 									{
 										if (SpellQueue && !(m_runningSpellHandler is ChamberSpellHandler))
 										{
-											Out.SendMessage("You prepare this as a secondary spell!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                                            Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.PrepareSecondarySpell"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 											m_nextSpell = spell;
 											spell.OverrideRange = m_runningSpellHandler.Spell.Range;
 											m_nextSpellLine = line;
@@ -8134,7 +8133,8 @@ namespace DOL.GS
 									}
 								}
 								else if (!(m_runningSpellHandler is ChamberSpellHandler))
-									Out.SendMessage("You cannot cast this spell directly!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                                    Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.CantSpellDirectly"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+
 							}
 							else if (effect != null)
 							{
@@ -8183,7 +8183,7 @@ namespace DOL.GS
 		{
 			if (IsCrafting)
 			{
-				Out.SendMessage("You interrupt your crafting.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Attack.InterruptedCrafting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				CraftTimer.Stop();
 				CraftTimer = null;
 				Out.SendCloseTimerWindow();
@@ -9446,13 +9446,13 @@ namespace DOL.GS
 			{
 				if (afkmessage == "")
 				{
-					source.Out.SendMessage(LanguageMgr.GetTranslation(source.Client, "GamePlayer.SendReceive.Afk", Name),
+					source.Out.SendMessage(LanguageMgr.GetTranslation(source.Client.Account.Language, "GamePlayer.SendReceive.Afk", Name),
 					                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else
 				{
 					source.Out.SendMessage(
-						LanguageMgr.GetTranslation(source.Client, "GamePlayer.SendReceive.AfkMessage", Name, afkmessage), eChatType.CT_Say,
+						LanguageMgr.GetTranslation(source.Client.Account.Language, "GamePlayer.SendReceive.AfkMessage", Name, afkmessage), eChatType.CT_Say,
 						eChatLoc.CL_ChatWindow);
 				}
 			}
@@ -14043,23 +14043,23 @@ namespace DOL.GS
 
 			if (npc.Body.IsConfused)
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 			
 			if (!IsWithinRadius(TargetObject, 2000))
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.TooFarAwayForPet"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CommandNpcAttack.TooFarAwayForPet"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			if (!TargetInView)
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.Attack.CantSeeTarget"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Attack.CantSeeTarget"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.KillTarget", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CommandNpcAttack.KillTarget", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.Attack(TargetObject);
 		}
 
@@ -14074,11 +14074,11 @@ namespace DOL.GS
 
 			if (npc.Body.IsConfused)
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.FollowYou", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CommandNpcAttack.FollowYou", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.Follow(this);
 		}
 
@@ -14093,11 +14093,11 @@ namespace DOL.GS
 
 			if (npc.Body.IsConfused)
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.Stay", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CommandNpcAttack.Stay", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.Stay();
 		}
 
@@ -14112,11 +14112,11 @@ namespace DOL.GS
 
 			if (npc.Body.IsConfused)
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.ComeHere", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CommandNpcAttack.ComeHere", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.ComeHere();
 		}
 
@@ -14131,7 +14131,7 @@ namespace DOL.GS
 
 			if (npc.Body.IsConfused)
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -14142,7 +14142,7 @@ namespace DOL.GS
 				return;
 			}
 			
-			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.GoToTarget", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CommandNpcAttack.GoToTarget", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.Goto(target);
 		}
 
@@ -14157,11 +14157,11 @@ namespace DOL.GS
 
 			if (npc.Body.IsConfused)
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.Passive", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CommandNpcAttack.Passive", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.SetAggressionState(eAggressionState.Passive);
 			npc.Body.StopAttack();
 			npc.Body.StopCurrentSpellcast();
@@ -14181,11 +14181,11 @@ namespace DOL.GS
 
 			if (npc.Body.IsConfused)
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.Aggressive", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CommandNpcAttack.Aggressive", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.SetAggressionState(eAggressionState.Aggressive);
 		}
 
@@ -14200,11 +14200,11 @@ namespace DOL.GS
 
 			if (npc.Body.IsConfused)
 			{
-				Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CommandNpcAttack.IsConfused", npc.Body.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
-			Out.SendMessage(LanguageMgr.GetTranslation(Client, "GamePlayer.CommandNpcAttack.Denfensive", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CommandNpcAttack.Denfensive", npc.Body.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			npc.SetAggressionState(eAggressionState.Defensive);
 		}
 		#endregion
