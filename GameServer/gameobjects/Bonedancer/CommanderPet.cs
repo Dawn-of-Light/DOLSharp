@@ -81,26 +81,26 @@ namespace DOL.GS
 
 				if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Commander"))
 				{
-					if (Name == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadGuardian"))
+                    if (Name == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DreadGuardian"))
 					{
 						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.DreadGuardian", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 					}
 
-					if (Name == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadLich"))
+                    if (Name == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DreadLich"))
 					{
 						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.DreadLich", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 					}
 
-					if (Name == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadArcher"))
+                    if (Name == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DreadArcher"))
 					{
 						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.DreadArcher", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 					}
 
-					if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadCommander") ||
-					    Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DecayedCommander") ||
-					    Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.ReturnedCommander") ||
-					    Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.SkeletalCommander") ||
-					    Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.BoneCommander"))
+                    if (Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DreadCommander") ||
+                        Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DecayedCommander") ||
+                        Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.ReturnedCommander") ||
+                        Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.SkeletalCommander") ||
+                        Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.BoneCommander"))
 					{
 						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.XCommander", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 					}
@@ -145,11 +145,11 @@ namespace DOL.GS
 
 				if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Weapons"))
 				{
-					if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadCommander") &&
-					    Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DecayedCommander") &&
-					    Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.ReturnedCommander") &&
-					    Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.SkeletalCommander") &&
-					    Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.BoneCommander"))
+                    if (Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DreadCommander") &&
+                        Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DecayedCommander") &&
+                        Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.ReturnedCommander") &&
+                        Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.SkeletalCommander") &&
+                        Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.BoneCommander"))
 					{
 						break;
 					}
@@ -158,7 +158,7 @@ namespace DOL.GS
 
 				if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Spells"))
 				{
-					if (Name.ToLower() != LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadLich"))
+                    if (Name.ToLower() != LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DreadLich"))
 					{
 						return false;
 					}
@@ -167,9 +167,9 @@ namespace DOL.GS
 
 				if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Empower"))
 				{
-					if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadGuardian") ||
-					    Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadLich") ||
-					    Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadArcher"))
+                    if (Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DreadGuardian") ||
+                        Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DreadLich") ||
+                        Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DreadArcher"))
 					{
 						foreach (Spell spell in Spells)
 						{
@@ -212,7 +212,7 @@ namespace DOL.GS
 
 				if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Harm"))
 				{
-					if (Name.ToLower() != LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadGuardian"))
+                    if (Name.ToLower() != LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DreadGuardian"))
 					{
 						return false;
 					}
