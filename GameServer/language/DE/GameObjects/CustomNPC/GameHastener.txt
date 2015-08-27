@@ -1,0 +1,7 @@
+﻿# GameHastener
+
+GameHastener.BorderKeepPortOffer:	Falls Ihr die zehnte Stufe noch nicht erreicht habt, kann ich Euch zur [Borderkeep] befördern, so dass Ihr auf dem Schlachtfeld kämpfen könnt.
+GameHastener.Greeting:			Seid gegrüßt,
+GameHastener.CityMovementOffer:		Ich bin hier, um Reisenden zu helfen. Wollt Ihr die Geschwindigkeit Eurer [movement] in unserer Stadt erhöhen?
+GameHastener.DefaultMovementOffer:	Ich bin hier, um Euch bei Eurer Reise durch unser schönes Land zu helfen. Sagt an und ich werde Euch einen höheren Grad an [movement] ermöglichen, um Euer Abenteuer zu vereinfachen.
+GameHastener.StrengthOffer:		Ich kann Euch zusätzliche [strength] gewähren, damit Ihr Eure Waren durch die ganze Stadt tragen können.

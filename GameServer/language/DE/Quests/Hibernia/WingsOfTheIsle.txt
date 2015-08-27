@@ -1,0 +1,11 @@
+﻿# Quest: Wings Of The Isle
+
+Hib.WingsOfTheIsle.Story:	Entschuldigt bitte {0}. Kann ich Euch um einen Gefallen bitten? Meine Tochter Jessica hat eine schreckliche Zeit durchlitten, seit die Kämpfe ausbrachen. Früher fuhr sie gerne mit einem Boot zur Insel um zu spielen, aber jetzt schlendert sie nur noch traurig durch die  Wälder nördlich der Stadt. Vielleicht könntet Ihr Euch die Zeit nehmen, um mit ihr zu sprechen. Sie redet schon lange nicht mehr mit Ihrem Vater, aber Ihr könntet eventuell herausfinden, was sie bedrückt.
+Hib.WingsOfTheIsle.Summary:	Besucht Jessica nördlich der Stadt, findet heraus, was ihr fehlt und versucht ihr zu helfen für Baeth.
+Hib.WingsOfTheIsle.Goal1:	Findet Jessica nördlich der Stadt und sprecht mit ihr.
+Hib.WingsOfTheIsle.Goal2:	Sucht die Flöte beim Leuchtturm auf der Insel.
+Hib.WingsOfTheIsle.Goal3:	Bringt die Flöte Jessica.
+Hib.WingsOfTheIsle.Jessica1:	Hallo, es ist ein schöne Nacht nicht wahr? Die einzige Freude, die mir noch bleibt, ist, diesen Wald zu erkunden. Obwohl mein Vater es hasst, wenn ich zulange wegbleibe... Ich wünschte, ich könnte zurück auf die [island].
+Hib.WingsOfTheIsle.Jessica2:	Ich bin fast jeden Tag dorthin zu fahren; mein Vater schenkte mir eine Rohrflöte. Wenn Ihr diese in der Nähe des Wassers spielt, kommen tausende von Liebellen zu Euch. Ich [lost] sie bei meinem letzten Ausflug. 
+Hib.WingsOfTheIsle.Jessica3:	Ja ich verlor sie, als ich das letzte Mal auf der Insel war. Ich meine, ich habe sie im Leuchtturm gespielt, als mein Vater kam und mich von dort wegholte. Das war der Tag, als die Eindringlinge kamen. Wenn Ihr wollt, könnt Ihr mit meinen Wyvern zur Insel reisen?
+Hib.WingsOfTheIsle.Conclusion:	Oh ja, es ist meine alte Flöte! Wo habt Ihr sie gefunden? Ich hoffe, es war nicht zu schwer sie zufinden. Mein Vater hatte mir bereits neue gemacht. Wenn Ihr wollt, könnt Ihr meine neue Flöte haben. Ich bin so glücklich sie zurück zuhaben.

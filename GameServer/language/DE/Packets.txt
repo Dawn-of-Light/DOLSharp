@@ -126,15 +126,19 @@ DetailDisplayHandler.WritePoisonInfo.Charges:		- {0} Ladungen
 DetailDisplayHandler.WritePoisonInfo.Level:		- Stufe {0}
 DetailDisplayHandler.WritePoisonInfo.LevelRequired:	Benötigte Erfahrung:
 DetailDisplayHandler.WritePoisonInfo.MaxCharges:	- {0} Max
-#DetailDisplayHandler.WritePoisonInfo.ProcAbility:	Offensive Proc Fähigkeit:
-#DetailDisplayHandler.WritePotionInfo.ChargedMagic:	Charged Magic Fähigkeit:
+DetailDisplayHandler.WritePoisonInfo.ProcAbility:	Offensive Proc Fähigkeit:
+DetailDisplayHandler.WritePotionInfo.ChargedMagic:	Charged Magic Fähigkeit:
 DetailDisplayHandler.WritePotionInfo.Charges:		- {0} Ladungen
 DetailDisplayHandler.WritePotionInfo.Level:		- Stufe {0}
 DetailDisplayHandler.WritePotionInfo.LevelRequired:	Benötigte Erfahrung:
 DetailDisplayHandler.WritePotionInfo.MaxCharges:	- {0} Max
 DetailDisplayHandler.WritePotionInfo.NoUseInCombat:	Kann nicht im Kampf verwendet werden.
+DetailDisplayHandler.WritePotionInfo.Range:		Reichweite : {0}
+DetailDisplayHandler.WritePotionInfo.Target:		Ziel : {0}
+DetailDisplayHandler.WritePotionInfo.Type:		Typ : {0}
 DetailDisplayHandler.WritePotionInfo.UseItem2:		Wiederverwendbar jede Minute.
 DetailDisplayHandler.WritePotionInfo.UseItem3:		Kann wieder verwendet werden in: {0}
+DetailDisplayHandler.WritePotionInfo.Value:		Wert : {0}
 DetailDisplayHandler.WriteUsableClasses.UsableBy:	Geeignet für: 
 
 # /DoorRequestHandler.cs

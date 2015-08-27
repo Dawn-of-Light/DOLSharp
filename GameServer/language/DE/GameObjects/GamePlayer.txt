@@ -104,6 +104,7 @@ GamePlayer.Die.DeadRVR:					Ihr starbt im Kampf für Euer Reich und verliert des
 GamePlayer.Die.DeathN1:					Das ist Euer erster Tod auf dieser Stufe. Der Verlust Eurer Erfahrung und Konstitution ist deshalb gering.
 GamePlayer.Die.DeathN2:					Das ist Euer zweiter Tod auf dieser Stufe. Der Verlust Eurer Erfahrung und Konstitution ist deshalb etwas geringer.
 GamePlayer.Die.DuelDefeated:				{0} wurde gerade von {1} in einem Duell besiegt !	
+GamePlayer.Die.DuelWinner:				 gewinnt das Duell!
 GamePlayer.Die.Killed:					{0} wurde gerade getötet !
 GamePlayer.Die.KilledBy:				{0} wurde gerade von {1} getötet.	
 GamePlayer.Die.KilledByLocation:			{0} wurde gerade von {1} in {2} getötet.		

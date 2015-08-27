@@ -186,9 +186,9 @@ PlayerClass.Berserker.GetTitle.35:	Kampfrausch-Plünderer
 PlayerClass.Berserker.GetTitle.30:	Bärenkämpfer
 PlayerClass.Berserker.GetTitle.25:	Bärenschläger
 PlayerClass.Berserker.GetTitle.20:	Bärenplünderer
-#PlayerClass.Berserker.GetTitle.15:	Ursine Fervent
+PlayerClass.Berserker.GetTitle.15:	Bäreneiferer
 PlayerClass.Berserker.GetTitle.10:	Bärensucher
-#PlayerClass.Berserker.GetTitle.5:	Ursine Initiate
+PlayerClass.Berserker.GetTitle.5:	Bäreneingeweihter
 
 PlayerClass.Bonedancer.GetTitle.50:	Stammeshäuptling
 PlayerClass.Bonedancer.GetTitle.45:	verfechter Bodgars
@@ -342,41 +342,41 @@ PlayerClass.Animist.GetTitle.30:	Diener Gaias
 PlayerClass.Animist.GetTitle.25:	Geweihter der Wälder
 PlayerClass.Animist.GetTitle.20:	Pflanzenfreund
 PlayerClass.Animist.GetTitle.15:	Gaias Freund
-#PlayerClass.Animist.GetTitle.10:	Arboreal Apprentice
-#PlayerClass.Animist.GetTitle.5:	Grove Initiate
+PlayerClass.Animist.GetTitle.10:	Lehrling des Waldes
+PlayerClass.Animist.GetTitle.5:		Eingeweihter des Hains
 
 PlayerClass.Bainshee.GetTitle.50:	Schemen-Kriegerin
-#PlayerClass.Bainshee.GetTitle.45:	Spectral Guardian
+PlayerClass.Bainshee.GetTitle.45:	Schemen-Wächter
 PlayerClass.Bainshee.GetTitle.40:	Geister-Verfolgerin
 PlayerClass.Bainshee.GetTitle.35:	Geister-Pirscherin
 PlayerClass.Bainshee.GetTitle.30:	Äther-Kreischerin
-#PlayerClass.Bainshee.GetTitle.25:	Ethereal Wailer
+PlayerClass.Bainshee.GetTitle.25:	Äther-Klägerin
 PlayerClass.Bainshee.GetTitle.20:	Phantom-Senserin
-#PlayerClass.Bainshee.GetTitle.15:	Phantom Adept
-#PlayerClass.Bainshee.GetTitle.10:	Wraith Apprentice
-#PlayerClass.Bainshee.GetTitle.5:	Wraith Initiate
+PlayerClass.Bainshee.GetTitle.15:	Phantom-Adept
+PlayerClass.Bainshee.GetTitle.10:	Gespenst-Lehrling
+PlayerClass.Bainshee.GetTitle.5:	Gespenst-Geweihte
 
 PlayerClass.Bard.GetTitle.50:		Meister-Liedflechter
 PlayerClass.Bard.GetTitle.45:		Zaubersänger
 PlayerClass.Bard.GetTitle.40:		Liedflechter
 PlayerClass.Bard.GetTitle.35:		Barde
 PlayerClass.Bard.GetTitle.30:		Schausteller
-PlayerClass.Bard.GetTitle.25:		Melodist
+PlayerClass.Bard.GetTitle.25:		Melodiker
 PlayerClass.Bard.GetTitle.20:		Choralist
-#PlayerClass.Bard.GetTitle.15:		Caroler
-#PlayerClass.Bard.GetTitle.10:		Vocalist
-#PlayerClass.Bard.GetTitle.5:		Chanter
+PlayerClass.Bard.GetTitle.15:		Sternsinger
+PlayerClass.Bard.GetTitle.10:		Sänger
+PlayerClass.Bard.GetTitle.5:		Kantor
 
 PlayerClass.Blademaster.GetTitle.50:	Klingensänger
 PlayerClass.Blademaster.GetTitle.45:	Armigerant
-#PlayerClass.Blademaster.GetTitle.40:	Duelist
+PlayerClass.Blademaster.GetTitle.40:	Duellant
 PlayerClass.Blademaster.GetTitle.35:	Klingentänzer
-#PlayerClass.Blademaster.GetTitle.30:	Vigilante
-#PlayerClass.Blademaster.GetTitle.25:	Gallant
+PlayerClass.Blademaster.GetTitle.30:	Ordnungshüter
+PlayerClass.Blademaster.GetTitle.25:	Kavalier
 PlayerClass.Blademaster.GetTitle.20:	Klingenweber
-#PlayerClass.Blademaster.GetTitle.15:	Sabreur
-#PlayerClass.Blademaster.GetTitle.10:	Stylist
-#PlayerClass.Blademaster.GetTitle.5:	Bladist
+PlayerClass.Blademaster.GetTitle.15:	Säbelfechter
+PlayerClass.Blademaster.GetTitle.10:	Stilist
+PlayerClass.Blademaster.GetTitle.5:	Klinger
 
 PlayerClass.Champion.GetTitle.50:	Archon
 PlayerClass.Champion.GetTitle.45:	Held
