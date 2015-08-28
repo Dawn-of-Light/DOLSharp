@@ -45,7 +45,7 @@ namespace DOL.GS
 				return false;
 
 			// just give out speed without asking
-			CastSpellOnOwnerAndPets(player, SkillBase.GetSpellByID(SPEEDOFTHEREALMID));
+			GameNPCHelper.CastSpellOnOwnerAndPets(this, player, SkillBase.GetSpellByID(GameHastener.SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells), false);
 
 
 			if (player.CurrentRegion.IsCapitalCity)
@@ -83,7 +83,7 @@ namespace DOL.GS
 					{
 						case "movement":
 							if (!player.CurrentRegion.IsRvR || player.Realm == Realm)
-								CastSpellOnOwnerAndPets(player, SkillBase.GetSpellByID(SPEEDOFTHEREALMID));
+								GameNPCHelper.CastSpellOnOwnerAndPets(this, player, SkillBase.GetSpellByID(GameHastener.SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells), false);
 							break;
 						case "strength":
 							if (player.CurrentRegion.IsCapitalCity)
@@ -135,24 +135,6 @@ namespace DOL.GS
 					return true;
 			}
 			return false;
-		}
-
-		private void CastSpellOnOwnerAndPets(GamePlayer player, Spell spell)
-		{
-			TargetObject = player;
-			CastSpell(spell, SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells), false);
-			if (player.ControlledBrain != null)
-			{
-				TargetObject = player.ControlledBrain.Body;
-				CastSpell(spell, SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells), false);
-				if (player.ControlledBrain.Body.ControlledNpcList != null)
-					foreach (AI.Brain.IControlledBrain subpet in player.ControlledBrain.Body.ControlledNpcList)
-						if (subpet != null)
-						{
-							TargetObject = subpet.Body;
-							CastSpell(spell, SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells), false);
-						}
-			}
 		}
 	}
 }
