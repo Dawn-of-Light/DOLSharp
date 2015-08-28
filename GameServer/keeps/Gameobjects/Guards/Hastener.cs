@@ -54,8 +54,7 @@ namespace DOL.GS.Keeps
 				return false;
 
 			TurnTo(player, 5000);
-			TargetObject = this;
-			CastSpell(SkillBase.GetSpellByID(GameHastener.SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
+			GameNPCHelper.CastSpellOnOwnerAndPets(this, player, SkillBase.GetSpellByID(GameHastener.SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells), false);
 			return true;
 		}
 		#endregion Examine/Interact Message
