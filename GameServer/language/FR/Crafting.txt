@@ -80,7 +80,7 @@ TailorsMaster.GuildOrder:				Tailleurs
 TailorsMaster.InitialEntersentence:			Voulez-vous rejoindre la loge des [Tailleurs]? En tant que Tailleur, vous pourrez tisser du cuir et du tissu. Quand bien même vous excellerez en tissage, et que vous serez bon en empennage, vous devez vous attendre à de grosses difficultés pour ce qui est de la Forge d'Armes et de l'Armurerie. Un Tailleur bien entrainé peut également faire de la construction d'armes de sièges en cas de besoin.
 SpellCraftingMaster.AcceptedByOrderName:		Alchimistes
 SpellCraftingMaster.GuildOrder:				Alchimistes
-SpellCraftingMaster.InitialEntersentence:		Voulez-vous rejoindre l'Ordre des [Alchimistes]? Vous pourrez alors concocter des pigments, des poisons, et diverses potions, mais aussi des teintures magiques qui augmenteront le potentiel offensif et défensif des objets façonnés. Vous apprendrez un peu d'Enchantement des Arcanes et vous vous spécialiserez en joaillerie.
+SpellCraftingMaster.InitialEntersentence:		Voulez-vous rejoindre l'Ordre des [Arcanistes]? Vous pourrez alors enchanter armes et armures en les rendant magiques.
 SiegecraftingMaster.AcceptedByOrderName:		Ingénieurs
 SiegecraftingMaster.GuildOrder:				Ingénieurs
 SiegecraftingMaster.InitialEntersentence:		Aimeriez-vous rejoindre l'Ordre des [Ingénieurs]? Cela vous permettra de construire des machines de guerre élaborées pour défendre notre royaume.
