@@ -123,10 +123,14 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-                if (ServerProperties.Properties.ALLOW_TOWER_CLIMB)
-                    if (m_skin == (int)eComponentSkin.Wall || m_skin == (int)eComponentSkin.NewSkinClimbingWall || m_skin == (int)eComponentSkin.Tower || m_skin == (int)eComponentSkin.NewSkinTower && !this.AbstractKeep.IsPortalKeep) return true;
-                else
-                    if (m_skin == (int)eComponentSkin.Wall || m_skin == (int)eComponentSkin.NewSkinClimbingWall && !this.AbstractKeep.IsPortalKeep) return true;
+				if (ServerProperties.Properties.ALLOW_TOWER_CLIMB)
+				{
+					if (m_skin == (int)eComponentSkin.Wall || m_skin == (int)eComponentSkin.NewSkinClimbingWall || m_skin == (int)eComponentSkin.Tower || m_skin == (int)eComponentSkin.NewSkinTower && !this.AbstractKeep.IsPortalKeep) return true;
+				}
+				else
+				{
+					if (m_skin == (int)eComponentSkin.Wall || m_skin == (int)eComponentSkin.NewSkinClimbingWall && !this.AbstractKeep.IsPortalKeep) return true;
+				}
 				return false;
 			}
 		}
