@@ -31,9 +31,6 @@ namespace DOL.GS.RealmAbilities
             		case 1:
             			seconds = 5;
             		break;
-            		case 2 :
-            			seconds = 2;
-            		break;
             	}
             	
             	if(seconds > 0)
@@ -202,8 +199,10 @@ namespace DOL.GS.RealmAbilities
         	{
         		switch(level)
         		{
+					case 3 :
+						return 600;
         			case 4 :
-        				return 600;
+        				return 450;
         			case 5 :
         				return 300;
         			default :
