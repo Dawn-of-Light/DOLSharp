@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
 using System.Reflection;
 using DOL.GS;
@@ -247,48 +248,71 @@ namespace DOL.GS
 						log.Error("Changes count is less than 0, forgot to add m_changesCount++?\n\n" + Environment.StackTrace);
 				}
 
-				InventoryItem itemToCombine = (InventoryItem)PartnerTradeItems[0];
-                // --------------------------------------------------------------
-                // Luhz Crafting Update:
-                // Players may now have any, and all, "primary" crafting skills.
-                // AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(m_owner.CraftingPrimarySkill);
-                AbstractCraftingSkill skill = null;
-                lock (m_owner.TradeWindow.Sync)
+				InventoryItem[] tradeItems;
+				InventoryItem[] partnerTradeItems;
+				// Copy Trade Items
+            	partnerTradeItems = PartnerTradeItems.OfType<InventoryItem>().ToArray();
+            	
+            	// Trade item should be imbued object
+            	if (partnerTradeItems.Any(i => i.Object_Type == (int)eObjectType.AlchemyTincture ||  i.Object_Type == (int)eObjectType.SpellcraftGem))
+            	{
+            		partnerTradeItems = TradeItems.OfType<InventoryItem>().ToArray();
+            		var trade = TradeItems;
+            		TradeItems = PartnerTradeItems;
+            		m_itemToCombine = trade;
+            	}
+            	
+              	tradeItems = TradeItems.OfType<InventoryItem>().ToArray();
+          	           	
+            	foreach(var notGood in partnerTradeItems.Where(i => i.Object_Type == (int)eObjectType.AlchemyTincture ||  i.Object_Type == (int)eObjectType.SpellcraftGem))
+            	{
+            		PartnerTradeItems.Remove(notGood);
+            	}
+                
+                var itemToCombine = partnerTradeItems.FirstOrDefault();
+                
+                // We are effectively trying to Combine
+                if (tradeItems.Length > 0 && itemToCombine != null)
                 {
-                    foreach (InventoryItem i in (ArrayList)m_owner.TradeWindow.TradeItems.Clone())
-                    {
-                        if (i.Object_Type == (int)eObjectType.AlchemyTincture)
-                        {
-                            if (m_owner.GetCraftingSkillValue(eCraftingSkill.Alchemy) > 0)
-                            {
-                                skill = CraftingMgr.getSkillbyEnum(eCraftingSkill.Alchemy);
-                                break;
-                            }
-                        }
-                        else if (i.Object_Type == (int)eObjectType.SpellcraftGem)
-                        {
-                            if (m_owner.GetCraftingSkillValue(eCraftingSkill.SpellCrafting) > 0)
-                            {
-                                skill = CraftingMgr.getSkillbyEnum(eCraftingSkill.SpellCrafting);
-                                break;
-                            }
-                        }
-                    }
+                	AdvancedCraftingSkill alchemy = null;
+                	SpellCrafting spellcrafting = null;
+                	
+                	if (tradeItems.Any(i => i.Object_Type == (int)eObjectType.AlchemyTincture))
+                	{
+                		// Check Alchemy
+                		if (m_owner.GetCraftingSkillValue(eCraftingSkill.Alchemy) > 0)
+                		{
+                        	alchemy = CraftingMgr.getSkillbyEnum(eCraftingSkill.Alchemy) as AdvancedCraftingSkill;
+                        	if (alchemy != null)
+                        		alchemy.IsAllowedToCombine(m_owner, itemToCombine);
+                        		
+                		}
+                		else
+                		{
+                			m_owner.Out.SendMessage("You don't have enough skill to combine items.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+                		}
+                	}
+                	
+                	if (tradeItems.Any(i => i.Object_Type == (int)eObjectType.SpellcraftGem))
+                	{
+                		// Check SpellCrafting
+                		if (m_owner.GetCraftingSkillValue(eCraftingSkill.SpellCrafting) > 0)
+                		{
+                        	spellcrafting = CraftingMgr.getSkillbyEnum(eCraftingSkill.SpellCrafting) as SpellCrafting;
+                        	if (spellcrafting != null)
+                        	{
+                        		spellcrafting.IsAllowedToCombine(m_owner, itemToCombine);
+                        		spellcrafting.ShowSpellCraftingInfos(m_owner, itemToCombine);
+                        	}
+                        		
+                		}
+                		else
+                		{
+                			m_owner.Out.SendMessage("You don't have enough skill to combine items.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+                		}
+                	}
                 }
-                // --------------------------------------------------------------
-				if(skill != null && skill is AdvancedCraftingSkill && itemToCombine != null)
-				{
-					if(((AdvancedCraftingSkill)skill).IsAllowedToCombine(m_owner, itemToCombine))
-					{
-						if(skill is SpellCrafting)
-							((SpellCrafting)skill).ShowSpellCraftingInfos(m_owner, itemToCombine);
-					}
-				}
-				else
-				{
-					m_owner.Out.SendMessage("You don't have enough skill to combine items.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				}
-
+                
 				m_owner.Out.SendTradeWindow();
 			}
 		}

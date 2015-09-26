@@ -18,11 +18,8 @@
  */
 using System;
 using System.Collections;
-using System.Reflection;
 using DOL.GS;
 using DOL.Database;
-using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS
 {
