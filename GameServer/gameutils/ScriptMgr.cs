@@ -137,16 +137,24 @@ namespace DOL.GS
 			if (!path.Exists)
 				return files;
 			
-			foreach (DirectoryInfo di in path.GetDirectories())
+			if (ServerProperties.Properties.USE_MONO == 1)
 			{
-				if (di.Name.Equals("obj", StringComparison.OrdinalIgnoreCase))
-					continue;
-				
-				foreach (FileInfo fi in di.GetFiles(filter, deep ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly))
+				foreach (DirectoryInfo di in path.GetDirectories())
 				{
+					if (di.Name.Equals("obj", StringComparison.OrdinalIgnoreCase))
+						continue;
 					
-					files.Add(fi);
+					foreach (FileInfo fi in di.GetFiles(filter, deep ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly))
+					{
+						
+						files.Add(fi);
+					}
 				}
+			}
+			else
+			{
+				foreach (FileInfo fi in path.GetFiles(filter, deep ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly))
+				files.Add(fi);
 			}
 			
 			return files;
