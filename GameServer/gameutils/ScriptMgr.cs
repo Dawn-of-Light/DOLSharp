@@ -122,7 +122,7 @@ namespace DOL.GS
 				.Select(kv => string.Format("/{0}{2}{1}", kv.Key.Remove(0,1), addDesc ? kv.Value.m_desc : string.Empty, addDesc ? " - " : string.Empty))
 				.ToArray();
 		}
-
+		
 		/// <summary>
 		/// Parses a directory for all source files
 		/// </summary>
@@ -132,24 +132,10 @@ namespace DOL.GS
 		/// <returns>An ArrayList containing FileInfo's for all files in the path</returns>
 		private static IList<FileInfo> ParseDirectory(DirectoryInfo path, string filter, bool deep)
 		{
-			List<FileInfo> files = new List<FileInfo>();
-
 			if (!path.Exists)
-				return files;
-			
-			foreach (DirectoryInfo di in path.GetDirectories())
-			{
-				if (di.Name.Equals("obj", StringComparison.OrdinalIgnoreCase))
-					continue;
-				
-				foreach (FileInfo fi in di.GetFiles(filter, deep ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly))
-				{
-					
-					files.Add(fi);
-				}
-			}
-			
-			return files;
+		    return new List<FileInfo>();
+		
+		   	return path.GetFiles(filter, SearchOption.TopDirectoryOnly).Union(deep ? path.GetDirectories().Where(di => !di.Name.Equals("obj", StringComparison.OrdinalIgnoreCase)).SelectMany(di => di.GetFiles(filter, SearchOption.AllDirectories)) : new FileInfo[0]).ToList();
 		}
 
 		/// <summary>
