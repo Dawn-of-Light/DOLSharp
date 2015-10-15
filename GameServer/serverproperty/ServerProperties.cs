@@ -540,12 +540,6 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("server", "use_new_tooltip_forcedupdate", "Set to true if you wish to enable the new 1.110+ Tooltip Forced update each time the server send a skill to a new client.", true)]
 		public static bool USE_NEW_TOOLTIP_FORCEDUPDATE;
-		
-		/// <summary>
-		/// The max number of guilds in an alliance
-		/// </summary>
-		[ServerProperty("server", "use_mono", "Adapt scriptmgr code for using Mono", 0)]
-		public static int USE_MONO;
 
 		#endregion
 
