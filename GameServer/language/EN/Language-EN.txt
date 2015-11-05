@@ -1,6 +1,7 @@
 ﻿# KEEPS
 # Managers/Player Manager
 PlayerManager.BroadcastCapture.Captured:		The forces of {0} have captured {1}!
+PlayerManager.BroadcastCapture.CapturedR0:		{0} has been captured!
 PlayerManager.BroadcastClaim.Claimed:			{0} has claimed {1}!
 PlayerManager.BroadcastRaize.Razed:			{0} has been razed by the forces of {1}!
 PlayerManager.BroadcastRelease.LostControl:		{0} has lost control of {1}!
@@ -8,6 +9,7 @@ PlayerManager.BroadcastRelease.LostControl:		{0} has lost control of {1}!
 # Relics/GameRelicPad
 GameRelicPad.MountRelic.Captured:			{0} has captured the {1}.
 GameRelicPad.MountRelic.Stored:				{0} from {1} has stored the {2} to the {3}.
+GameRelicPad.OnPlayerEnter.EmptyRelicPad:		You need to find an empty {0} relic pad in order to place this relic.
 GameRelicPad.RemoveRelic.Removed:			{0} from {1} has removed the {2} from the {3}.
 
 # STYLES

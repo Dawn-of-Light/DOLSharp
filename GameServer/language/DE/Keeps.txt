@@ -1,5 +1,6 @@
 ﻿# Managers/Player Manager
 PlayerManager.BroadcastCapture.Captured:		Die Streitmacht von {0} kontrolliert nun {1}!
+PlayerManager.BroadcastCapture.CapturedR0:		{0} wurde besetzt!
 PlayerManager.BroadcastClaim.Claimed:			Die Gilde "{0}" hat {1} in Besitz genommen!
 PlayerManager.BroadcastRaize.Razed:			{0} wurde zerstört. Die Streitmacht kam aus {1}!
 PlayerManager.BroadcastRelease.LostControl:		Die Gilde "{0}" hat {1} aufgegeben!
@@ -7,5 +8,6 @@ PlayerManager.BroadcastRelease.LostControl:		Die Gilde "{0}" hat {1} aufgegeben!
 # Relics/GameRelicPad
 GameRelicPad.MountRelic.Captured:			{0} kontrolliert nun {1}.
 GameRelicPad.MountRelic.Stored:				{0} aus {1} hat {2} nach {3} gebracht.
+GameRelicPad.OnPlayerEnter.EmptyRelicPad:		Ihr müsst eine leere {0}-Reliktplatte finden, für die Aufbewahrung dieses Relikts.
 GameRelicPad.RemoveRelic.Removed:			{0} aus {1} hat {2} aus {3} entfernt.
 

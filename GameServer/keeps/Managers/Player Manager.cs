@@ -45,7 +45,7 @@ namespace DOL.GS.Keeps
 			}
 			else
 			{
-				message = string.Format("{0} has been captured!", keep.Name);
+                message = string.Format(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerManager.BroadcastCapture.CapturedR0", GlobalConstants.RealmToName((eRealm)keep.Realm), keep.Name));
 			}
 
 			/*
