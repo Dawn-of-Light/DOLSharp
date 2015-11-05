@@ -818,38 +818,6 @@ Scripts.Players.Range.NeedTarget:			Range to target: You don't have a valid targ
 Scripts.Players.Range.NotVisible:			 (Target not visible)
 Scripts.Players.Range.Result:				Range to target: {0} units. {1}
 
-# SERVERRULES
-# /AbstractServerRules/PlayerStatistics
-# /Kills
-PlayerStatistic.Kill.Title:				Kill Report
-PlayerStatistic.Kill.AlbionPlayer:			Albion Players Killed
-PlayerStatistic.Kill.HiberniaPlayer:			Hibernia Players Killed
-PlayerStatistic.Kill.MidgardPlayer:			Midgard Players Killed
-PlayerStatistic.Kill.TotalPlayers:			Total Players Killed
-
-# /Deathblows
-PlayerStatistic.Deathblows.AlbionPlayer:		Albion Deathblows
-PlayerStatistic.Deathblows.HiberniaPlayer:		Hibernia Deathblows
-PlayerStatistic.Deathblows.MidgardPlayer:		Midgard Deathblows
-PlayerStatistic.Deathblows.TotalPlayers:		Total Deathblows
-
-# /Solo
-PlayerStatistic.Solo.AlbionPlayer:			Albion Solo Killed
-PlayerStatistic.Solo.HiberniaPlayer:			Hibernia Solo Killed
-PlayerStatistic.Solo.MidgardPlayer:			Midgard Solo Killed
-PlayerStatistic.Solo.TotalPlayers:			Total Solo Killed
-
-# /Capture
-PlayerStatistic.Capture.Title:				Capture Report
-PlayerStatistic.Capture.Keeps:				Total Keeps Captured
-PlayerStatistic.Capture.Towers:				Total Towers Captured
-
-# /PvE
-PlayerStatistic.PvE.Title:				PvE Report
-PlayerStatistic.PvE.KillsDragon:			Dragon Kills
-PlayerStatistic.PvE.KillsEpic:				Epic Boss Kills
-PlayerStatistic.PvE.KillsLegion:			Legion Kills
-
 # TITLES
 # /Claim
 Titles.Claim.Frontier.FrontierChallenger:		Frontier Challenger

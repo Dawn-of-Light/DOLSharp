@@ -40,6 +40,10 @@ namespace DOL.GS.ServerRules
 		/// <returns>True if allowed</returns>
 		public bool IsAllowedToJump(ZonePoint targetPoint, GamePlayer player)
 		{
+            if (player.Client.Account.PrivLevel > 1)
+            {
+                return true;
+            }
 			if (GameServer.Instance.Configuration.ServerType != eGameServerType.GST_Normal)
 				return true;
 			if (ServerProperties.Properties.ALLOW_ALL_REALMS_DF)

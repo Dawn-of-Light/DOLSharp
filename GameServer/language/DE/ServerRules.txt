@@ -29,6 +29,9 @@ PlayerStatistic.PvE.KillsDragon:			Drachen getötet
 PlayerStatistic.PvE.KillsEpic:				Epischer Boss getötet
 PlayerStatistic.PvE.KillsLegion:			Legion getötet
 
+# /DemonsBreachJumpPoint
+DemonsBreachJumpPoint.Requirements:			Ihr erfüllt die die Anforderungen, um diese Region betreten zu dürfen!
+
 # TITLES
 # /Claim
 Titles.Claim.Frontier.FrontierChallenger:		Aufstrebender Burgherr
