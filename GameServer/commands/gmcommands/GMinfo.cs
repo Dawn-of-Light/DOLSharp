@@ -325,9 +325,7 @@ namespace DOL.GS.Commands
 				if (client.Player.TargetObject is GamePlayer)
 				{
 					var target = client.Player.TargetObject as GamePlayer;
-					
-					name = target.Name;
-					
+										
 					info.Add("PLAYER INFORMATION (Client # " + target.Client.SessionID + ")");
 					info.Add("  - Name : " + target.Name);
 					info.Add("  - Lastname : " + target.LastName);
@@ -336,7 +334,7 @@ namespace DOL.GS.Commands
 					info.Add("  - Class : " + target.CharacterClass.Name);
 					info.Add("  - Guild : " + target.GuildName);
 					info.Add(" ");
-					info.Add("  - Account Name : " + name);
+					info.Add("  - Account Name : " + target.AccountName);
 					info.Add("  - IP : " + target.Client.Account.LastLoginIP);
 					info.Add("  - Priv. Level : " + target.Client.Account.PrivLevel);
 					info.Add("  - Client Version: " + target.Client.Account.LastClientVersion);
