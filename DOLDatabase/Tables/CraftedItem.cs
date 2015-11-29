@@ -25,7 +25,7 @@ namespace DOL
 	namespace Database
 	{
 		/// <summary>
-		/// Crafted item table
+		/// Recipes table of Crafted items
 		/// </summary>
 		[DataTable(TableName="CraftedItem")]
 		public class DBCraftedItem : DataObject
@@ -128,6 +128,12 @@ namespace DOL
 					m_makeTemplated = value;
 				}
 			}
+			
+			/// <summary>
+			/// List of Ingredients
+			/// </summary>
+			[Relation(LocalField = "Id_nb", RemoteField = "CraftedItemId_nb", AutoLoad = true, AutoDelete = true)]
+			public DBCraftedXItem[] Ingredients;
 		}
 	}
 }

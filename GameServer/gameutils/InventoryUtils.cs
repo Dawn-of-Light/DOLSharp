@@ -432,7 +432,7 @@ namespace DOL.GS
 		/// <param name="increment">Amount to Add (Remove if Negative)</param>
 		public static void ChangeTemplateUseSpellCharges(this InventoryItem item, Spell spell, int increment)
 		{
-			var index = item.GetIndexedTemplateUseSpells().FirstOrDefault(sp => sp.Value.SpellID == spell.ID);
+			var index = item.GetIndexedTemplateUseSpells().FirstOrDefault(sp => sp.Value.SpellID == spell.ID && sp.Value.HasCharges);
 			item.SetChargesAmount(index.Key, index.Value.Charges + increment);
 		}
 		

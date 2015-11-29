@@ -761,6 +761,9 @@ namespace DOL.GS
 		/// </summary>
 		public virtual int GetCraftingTime(GamePlayer player, DBCraftedItem recipe, IList<DBCraftedXItem> rawMaterials)
 		{
+			if (player.Client.Account != null && player.Client.Account.PrivLevel > (uint)ePrivLevel.Player)
+				return 1;
+			
 			double baseMultiplier = (recipe.CraftingLevel / 100) + 1;
 
 			ushort materialsCount = 0;

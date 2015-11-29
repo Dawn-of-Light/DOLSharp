@@ -158,7 +158,8 @@ namespace DOL.GS
 			get { return false; }
 			set 
 			{
-				m_owner.Out.SendMessage("You cannot repair while self-crafting!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				if (value)
+					m_owner.Out.SendMessage("You cannot repair while self-crafting!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 		}
 
@@ -170,7 +171,8 @@ namespace DOL.GS
 			get { return true; }
 			set 
 			{
-				m_owner.Out.SendMessage("Combine flag is autoset while self-crafting!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+				if (!value)
+					m_owner.Out.SendMessage("Combine flag is autoset while self-crafting!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 		}
 
@@ -250,25 +252,10 @@ namespace DOL.GS
 
 				InventoryItem[] tradeItems;
 				InventoryItem[] partnerTradeItems;
+				
 				// Copy Trade Items
             	partnerTradeItems = PartnerTradeItems.OfType<InventoryItem>().ToArray();
-            	
-            	// Trade item should be imbued object
-            	if (partnerTradeItems.Any(i => i.Object_Type == (int)eObjectType.AlchemyTincture ||  i.Object_Type == (int)eObjectType.SpellcraftGem))
-            	{
-            		partnerTradeItems = TradeItems.OfType<InventoryItem>().ToArray();
-            		var trade = TradeItems;
-            		TradeItems = PartnerTradeItems;
-            		m_itemToCombine = trade;
-            	}
-            	
               	tradeItems = TradeItems.OfType<InventoryItem>().ToArray();
-          	           	
-            	foreach(var notGood in partnerTradeItems.Where(i => i.Object_Type == (int)eObjectType.AlchemyTincture ||  i.Object_Type == (int)eObjectType.SpellcraftGem))
-            	{
-            		PartnerTradeItems.Remove(notGood);
-            	}
-                
                 var itemToCombine = partnerTradeItems.FirstOrDefault();
                 
                 // We are effectively trying to Combine

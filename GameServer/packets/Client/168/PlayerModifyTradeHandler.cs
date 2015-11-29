@@ -22,54 +22,61 @@ using System.Collections;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.ModifyTrade, "Player Accepts Trade", eClientStatus.PlayerInGame)]
+	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.ModifyTrade, "Player Modify/Accepts Trade", eClientStatus.PlayerInGame)]
 	public class PlayerModifyTradeHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			byte isok =(byte) packet.ReadByte();
-			byte repair =(byte) packet.ReadByte();
-			byte combine =(byte) packet.ReadByte();
-			packet.ReadByte();//unknow
+			var status = packet.ReadByte();
+			var repair = packet.ReadByte() == 1;
+			var combine = packet.ReadByte() == 1;
+			var unk1 = packet.ReadByte(); //unknow
+			
+			var tradeSlots = new int[10];
+			for (int i = 0; i < 10; i++)
+				tradeSlots[i] = packet.ReadByte();
+			
+			var unk2 = packet.ReadShort(); //unknow
+			long money = Money.GetMoney(
+				packet.ReadShort(),
+				packet.ReadShort(),
+				packet.ReadShort(),
+				packet.ReadShort(),
+				packet.ReadShort());
 
-			ITradeWindow trade = client.Player.TradeWindow;
-			if (trade == null)
-				return;
-			if (isok==0)
+			if (client.Player != null)
 			{
-				trade.CloseTrade();
-			}
-			else if(isok==1)
-			{
-				if(trade.Repairing != (repair == 1)) trade.Repairing = (repair == 1);
-				if(trade.Combine != (combine == 1)) trade.Combine = (combine == 1);
-				
-				ArrayList tradeSlots = new ArrayList(10);
-				for (int i=0;i<10;i++)
-				{
-					int slotPosition = packet.ReadByte();
-					InventoryItem item = client.Player.Inventory.GetItem((eInventorySlot)slotPosition);
-					if(item != null && ((item.IsDropable && item.IsTradable) || (client.Player.CanTradeAnyItem || client.Player.TradeWindow.Partner.CanTradeAnyItem)))
-					{
-						tradeSlots.Add(item);
-					}
-				}
-				trade.TradeItems = tradeSlots;
-
-				packet.ReadShort();
-				
-				int[] tradeMoney = new int[5];
-				for(int i=0;i<5;i++)
-					tradeMoney[i]=packet.ReadShort();
-
-				long money = Money.GetMoney(tradeMoney[0],tradeMoney[1],tradeMoney[2],tradeMoney[3],tradeMoney[4]);
-				trade.TradeMoney = money;
-				
-				trade.TradeUpdate();
-			}
-			else if (isok == 2)
-			{
-				trade.AcceptTrade();
+				new RegionTimerAction<GamePlayer>(client.Player, pl => {
+				                                  	ITradeWindow trade = pl.TradeWindow;
+				                                  	if (trade == null)
+				                                  		return;
+				                                  	
+				                                  	if (status == 0)
+				                                  	{
+				                                  		trade.CloseTrade();
+				                                  	}
+				                                  	else if (status == 1)
+				                                  	{
+				                                  		trade.Repairing = repair;
+				                                  		trade.Combine = combine;
+				                                  		
+				                                  		var tradeItems = new ArrayList(10);
+				                                  		for (int i = 0; i < 10; i++)
+				                                  		{
+				                                  			var item = pl.Inventory.GetItem((eInventorySlot)tradeSlots[i]);
+				                                  			if(item != null && (item.IsTradable || pl.CanTradeAnyItem || pl.TradeWindow.Partner.CanTradeAnyItem))
+				                                  				tradeItems.Add(item);
+				                                  		}
+				                                  		
+				                                  		trade.TradeItems = tradeItems;
+				                                  		trade.TradeMoney = money;
+				                                  		trade.TradeUpdate();
+				                                  	}
+				                                  	else if (status == 2)
+				                                  	{
+				                                  		trade.AcceptTrade();
+				                                  	}
+				                                  }).Start(1);
 			}
 		}
 	}

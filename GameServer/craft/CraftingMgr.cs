@@ -16,9 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Reflection;
+
 using DOL.Database;
-using DOL.GS.PacketHandler;
+
 using log4net;
 
 namespace DOL.GS
@@ -49,7 +53,7 @@ namespace DOL.GS
 	/// <summary>
 	/// Description résumée de CraftingMgr.
 	/// </summary>
-	public class CraftingMgr
+	public static class CraftingMgr
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -59,8 +63,20 @@ namespace DOL.GS
 		/// <summary>
 		/// Hold all crafting skill
 		/// </summary>
-		protected static AbstractCraftingSkill[] m_craftingskills = new AbstractCraftingSkill[(int)eCraftingSkill._Last];
+		private static AbstractCraftingSkill[] m_craftingskills = new AbstractCraftingSkill[(int)eCraftingSkill._Last];
+		
+		/// <summary>
+		/// Hold all recipes
+		/// </summary>
+		private static Dictionary<ushort, DBCraftedItem> m_recipes = new Dictionary<ushort, DBCraftedItem>();
 
+		/// <summary>
+		/// Hold all recipes
+		/// </summary>
+		public static Dictionary<ushort, DBCraftedItem> Recipes
+		{
+			get { return m_recipes; }
+		}
 		/// <summary>
 		/// get a crafting skill by the enum index
 		/// </summary>
@@ -68,8 +84,10 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static AbstractCraftingSkill getSkillbyEnum(eCraftingSkill skill)
 		{
-			if (skill == eCraftingSkill.NoCrafting) return null;
-			return m_craftingskills[(int)skill - 1] as AbstractCraftingSkill;
+			if (skill == eCraftingSkill.NoCrafting)
+				return null;
+			
+			return m_craftingskills[(int)skill - 1];
 		}
 
 		/// <summary>
@@ -97,7 +115,33 @@ namespace DOL.GS
 			m_craftingskills[(int)eCraftingSkill.Alchemy - 1] = new Alchemy();
 			m_craftingskills[(int)eCraftingSkill.SpellCrafting - 1] = new SpellCrafting();
 
+			RefreshCraftingRecipes();
+			
 			return true;
+		}
+		
+		/// <summary>
+		/// Refresh Data Base Cached Recipes and Materials 
+		/// </summary>
+		/// <returns></returns>
+		[RefreshCommandAttribute]
+		public static int RefreshCraftingRecipes()
+		{
+			var recipes = GameServer.Database.SelectAllObjects<DBCraftedItem>();
+			var dict = new Dictionary<ushort, DBCraftedItem>();
+			var count = 0;
+			foreach (var recipe in recipes)
+			{
+				ushort id;
+				if (ushort.TryParse(recipe.CraftedItemID, out id))
+				{
+					dict.Add(id, recipe);
+					count++;
+				}
+			}
+			
+			m_recipes = dict;
+			return count;
 		}
 
 		#region Global craft functions

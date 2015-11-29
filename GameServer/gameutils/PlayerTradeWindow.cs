@@ -188,15 +188,18 @@ namespace DOL.GS
 		{
 			get { return m_repair; }
 			set 
-			{ 		
-				if(value == false)
+			{
+				if (value == m_repair)
+					return;
+				
+				if (value == false)
 				{
 					m_partnerWindow.m_repair = false;
 					m_repair = false;
 					return;
 				}
 
-				if(!m_recipiant)
+				if (!m_recipiant)
 				{
 					m_owner.Out.SendMessage("Only a recipient of a trade can initiate a repair.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					m_partnerWindow.m_repair = false;
@@ -204,7 +207,7 @@ namespace DOL.GS
 					return;
 				}
 
-				if(m_partnerWindow.ItemsCount != 1)
+				if (m_partnerWindow.ItemsCount != 1)
 				{
 					m_owner.Out.SendMessage("You can only repair one item at a time!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					m_partnerWindow.m_repair = false;
@@ -212,7 +215,7 @@ namespace DOL.GS
 					return;
 				}
 
-				if(ItemsCount > 0)
+				if (ItemsCount > 0)
 				{
 					m_owner.Out.SendMessage("Your trade windows side must be empty to repair!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					m_partnerWindow.m_repair = false;
@@ -221,14 +224,14 @@ namespace DOL.GS
 				}
 
 				InventoryItem itemToRepair = (InventoryItem) m_partnerWindow.TradeItems[0];
-				if(itemToRepair == null)
+				if (itemToRepair == null)
 				{
 					m_partnerWindow.m_repair = false;
 					m_repair = false;
 					return;
 				}
 
-				if(Repair.IsAllowedToBeginWork(m_owner, itemToRepair, 100))
+				if (Repair.IsAllowedToBeginWork(m_owner, itemToRepair, 100))
 				{
 					m_partnerWindow.m_repair = true;
 					m_repair = true;
@@ -250,15 +253,18 @@ namespace DOL.GS
 		{
 			get { return m_combine; }
 			set 
-			{ 
-				if(value == false)
+			{
+				if (value == m_combine)
+					return;
+				
+				if (value == false)
 				{
 					m_partnerWindow.m_combine = false;
 					m_combine = false;
 					return;
 				}
 
-				if(!m_recipiant)
+				if (!m_recipiant)
 				{
 					m_owner.Out.SendMessage("Only a recipient of a trade can initiate a combine.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 					m_partnerWindow.m_combine = false;
@@ -266,7 +272,7 @@ namespace DOL.GS
 					return;
 				}
 
-				if(m_partnerWindow.ItemsCount != 1)
+				if (m_partnerWindow.ItemsCount != 1)
 				{
 					m_owner.Out.SendMessage("You can only combine your items into one item!",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 					m_partnerWindow.m_combine = false;
@@ -275,7 +281,7 @@ namespace DOL.GS
 				}
 
 				InventoryItem itemToCombine = (InventoryItem) m_partnerWindow.TradeItems[0];
-				if(itemToCombine == null)
+				if (itemToCombine == null)
 				{
 					m_partnerWindow.m_combine = false;
 					m_combine = false;
@@ -309,7 +315,7 @@ namespace DOL.GS
 	                }
                 }
                 // --------------------------------------------------------------
-				if(skill != null && skill is AdvancedCraftingSkill)
+				if (skill != null && skill is AdvancedCraftingSkill)
 				{
 					if(((AdvancedCraftingSkill)skill).IsAllowedToCombine(m_owner, itemToCombine))
 					{

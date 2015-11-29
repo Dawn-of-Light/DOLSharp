@@ -170,7 +170,7 @@ namespace DOL.GS
 			siegeWeapon.ReleaseControl();
 			siegeWeapon.RemoveFromWorld();
 			bool error = false;
-            DBCraftedItem recipe = GameServer.Database.SelectObject<DBCraftedItem>("Id_nb ='" + siegeWeapon.ItemId + "'");
+			DBCraftedItem recipe = CraftingMgr.Recipes.Select(kv => kv.Value).FirstOrDefault(rec => rec.Id_nb == siegeWeapon.ItemId);
 
 			if (recipe == null)
             {
@@ -179,7 +179,7 @@ namespace DOL.GS
 				return 1;
             }
 
-			IList<DBCraftedXItem> rawMaterials = GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = '" + recipe.Id_nb + "'");
+			IList<DBCraftedXItem> rawMaterials = recipe.Ingredients.ToList();
 
 			if (rawMaterials == null || rawMaterials.Count == 0)
             {

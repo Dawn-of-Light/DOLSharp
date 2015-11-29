@@ -17,7 +17,9 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
+
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
@@ -157,11 +159,19 @@ namespace DOL.GS.Quests
 			int lowLevel = mediumCraftingLevel - 20;
 			int highLevel = mediumCraftingLevel + 20;
 
-			var craftitem = GameServer.Database.SelectObjects<DBCraftedItem>("CraftingSkillType=" + (int)player.CraftingPrimarySkill + " AND CraftingLevel>" + lowLevel + " AND CraftingLevel<" + highLevel);
-			int craftrnd = Util.Random(craftitem.Count);
-
-			ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(craftitem[craftrnd].Id_nb);
-			return template;
+			var craftitem = CraftingMgr.Recipes.Select(kv => kv.Value)
+				.Where(rec => rec.CraftingSkillType == (int)player.CraftingPrimarySkill && rec.CraftingLevel > lowLevel && rec.CraftingLevel < highLevel)
+				.Select(rec => GameServer.Database.FindObjectByKey<ItemTemplate>(rec.Id_nb))
+				.Where(item => item.Realm == (int)eRealm.None || item.Realm == (int)player.Realm).ToArray();
+			
+			if (craftitem.Length > 0)
+			{
+				int craftrnd = Util.Random(craftitem.Length);
+				ItemTemplate template = craftitem[craftrnd];
+				return template;
+			}
+			
+			return null;
 		}
 
 		/// <summary>

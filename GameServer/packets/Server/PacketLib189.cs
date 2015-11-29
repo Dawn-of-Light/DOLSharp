@@ -326,7 +326,7 @@ namespace DOL.GS.PacketHandler
 			flag |= 0x02; // enable salvage button
 
 			AbstractCraftingSkill skill = CraftingMgr.getSkillbyEnum(m_gameClient.Player.CraftingPrimarySkill);
-			if (skill is AdvancedCraftingSkill/* && ((AdvancedCraftingSkill)skill).IsAllowedToCombine(m_gameClient.Player, item)*/)
+			if (skill != null)
 			{
 				flag |= 0x04; // enable craft button
 			}

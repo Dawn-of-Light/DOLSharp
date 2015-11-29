@@ -16,11 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
+using System.Linq;
+using System.Collections.Generic;
 
 using DOL.Database;
 using DOL.Language;
-using System;
-using System.Collections.Generic;
 
 namespace DOL.GS
 {
@@ -87,8 +88,9 @@ namespace DOL.GS
 			if (!base.IsAllowedToCombine(player, item)) 
                 return false;
 			
-			if (((InventoryItem)player.TradeWindow.TradeItems[0]).Object_Type != 
-                (int)eObjectType.AlchemyTincture)
+			var tincture = (InventoryItem)player.TradeWindow.TradeItems[0];
+			
+			if (tincture.Object_Type != (int)eObjectType.AlchemyTincture)
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, 
                     "Alchemy.IsAllowedToCombine.AlchemyTinctures"), PacketHandler.eChatType.CT_System, 
@@ -112,6 +114,14 @@ namespace DOL.GS
                     "Alchemy.IsAllowedToCombine.AlreadyImbued", item.Name), 
                     PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
 
+				return false;
+			}
+			
+			if (player.GetCraftingSkillValue(eSkill) < (tincture.Level * 10 + 50))
+			{
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, 
+                    "SpellCrafting.IsAllowedToCombine.NotEnoughSkill", item.Name), 
+                    PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
 				return false;
 			}
 

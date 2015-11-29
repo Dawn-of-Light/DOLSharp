@@ -8873,10 +8873,18 @@ namespace DOL.GS
 						TempProperties.getProperty<long>(ITEM_USE_DELAY, GameTimer.GetTickCount() + delay);
 					
 					// Consume Charges.
-					if (lastUsedItem.Count > 0)
+					if (lastUsedItem.Count > 1)
+					{
 						Inventory.RemoveCountFromStack(lastUsedItem, 1);
+					}
 					else
+					{
 						lastUsedItem.ChangeTemplateUseSpellCharges(spell, -1);
+						
+						// Remove Depleted Potions
+						if (isPotion && lastUsedItem.GetTemplateUseSpells().All(sp => !sp.HasCharges))
+							Inventory.RemoveCountFromStack(lastUsedItem, 1);
+					}
 				}
 				else
 				{
@@ -13619,12 +13627,12 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CraftItem(ushort itemID)
 		{
-			DBCraftedItem recipe = GameServer.Database.SelectObject<DBCraftedItem>("CraftedItemID ='" + GameServer.Database.Escape(itemID.ToString()) + "'");
-			if (recipe != null)
+			DBCraftedItem recipe;
+			if (CraftingMgr.Recipes.TryGetValue(itemID, out recipe))
 			{
 				ItemTemplate itemToCraft = null;
 				itemToCraft = GameServer.Database.FindObjectByKey<ItemTemplate>(recipe.Id_nb);
-				IList<DBCraftedXItem> rawMaterials = GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = '" + recipe.Id_nb + "'");
+				IList<DBCraftedXItem> rawMaterials = recipe.Ingredients.ToList();
 				if (rawMaterials.Count > 0)
 				{
 					if (itemToCraft != null)
@@ -13641,17 +13649,17 @@ namespace DOL.GS
 					}
 					else
 					{
-						Out.SendMessage("Crafted ItemTemplate (" + recipe.Id_nb + ") not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						Out.SendMessage(string.Format("Crafted ItemTemplate ({0}) not implemented yet.", recipe.Id_nb), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 				}
 				else
 				{
-					Out.SendMessage("Craft recipe for (" + recipe.Id_nb + ") is missing raw materials!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					Out.SendMessage(string.Format("Craft recipe for ({0}) is missing raw materials!", recipe.Id_nb), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 			}
 			else
 			{
-				Out.SendMessage("CraftedItemID: (" + itemID + ") not implemented yet.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Out.SendMessage(string.Format("CraftedItemID: ({0}) not implemented yet.", itemID), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
 
