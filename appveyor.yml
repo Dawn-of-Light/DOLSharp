@@ -1,0 +1,46 @@
+version: 1.9.7.{build}
+pull_requests:
+  do_not_increment_build_number: true
+branches:
+  only:
+  - master
+skip_tags: true
+configuration:
+- Debug
+- Release
+platform: Any CPU
+
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+cache: packages -> **\packages.config
+
+before_build:
+- cmd: >-
+    git submodule update --init --recursive
+    nuget restore
+build:
+  verbosity: minimal
+after_build:
+- cmd: >-
+    7z a -tzip DOLServer_net45_%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\*
+    xcopy %APPVEYOR_BUILD_FOLDER%\sharedModules\SQLite\managedOnly\System.Data.SQLite.dll %APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\lib /y /s /q /i
+    del %APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\lib\x64 /F /S /Q
+    del %APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\lib\x86 /F /S /Q
+    7z a -tzip DOLServer_linux_net45_%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\*
+
+test: off
+
+artifacts:
+- path: '*.zip'
+  name: Release
+
+deploy:
+- provider: GitHub
+  auth_token:
+    secure: 0D/RfRV/f6GheHsPAdrIJRQT4C3EGC064X1xbq4DSzQWK5s9J/7Et4HV/51ozVe3
+  artifact: Release
+  
