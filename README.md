@@ -15,7 +15,7 @@ It does the following:
 Auto Builds
 ----
 
-MS Build: [![Build status](https://ci.appveyor.com/api/projects/status/qglqktdwnsdmx6t9?svg=true)](https://ci.appveyor.com/project/dol-leodagan/dolsharp)
+MS Build: [![Build status](https://ci.appveyor.com/api/projects/status/lwexc16e3h1u2jee?svg=true)](https://ci.appveyor.com/project/dol-leodagan/dolsharp)
 
 
 Documentation

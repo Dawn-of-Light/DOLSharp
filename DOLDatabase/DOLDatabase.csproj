@@ -68,10 +68,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
-      <HintPath>..\sharedModules\log4net\log4net.dll</HintPath>
+      <HintPath>..\packages\log4net.2.0.4\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data">
-      <HintPath>..\sharedModules\MySQL\MySql.Data.dll</HintPath>
+      <HintPath>..\packages\MySql.Data.6.9.8\lib\net45\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -86,7 +86,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data.SQLite" Condition=" '$(OS)' != 'Unix' ">
-      <HintPath>..\sharedModules\SQLite\System.Data.SQLite.dll</HintPath>
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.98.1\lib\net45\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.SQLite" Condition=" '$(OS)' == 'Unix' ">
       <HintPath>..\sharedModules\SQLite\managedOnly\System.Data.SQLite.dll</HintPath>
@@ -356,8 +356,7 @@
     <FileUpdate Files="AssemblyInfo.cs" Regex="(\d+)\.(\d+)\.(\d+)\.(\*|\d+)" ReplacementText="$1.$2.$3.$(Revision)" Condition="Exists('..\auto_version') and $(Revision)!='' and $(Revision)!=-1 and Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\') and Exists('$(ProgramFiles)\subversion\bin\svnversion.exe')" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)..\sharedModules\SQLite\*.dll" "$(ProjectDir)..\$(ConfigurationName)\lib" /y /q /i
-xcopy "$(ProjectDir)..\sharedModules\SQLite\x86" "$(ProjectDir)..\$(ConfigurationName)\lib\x86" /y /s /q /i
-xcopy "$(ProjectDir)..\sharedModules\SQLite\x64" "$(ProjectDir)..\$(ConfigurationName)\lib\x64" /y /s /q /i</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\x86" "$(ProjectDir)..\$(ConfigurationName)\lib\x86" /y /s /q /i
+xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\x64" "$(ProjectDir)..\$(ConfigurationName)\lib\x64" /y /s /q /i</PostBuildEvent>
   </PropertyGroup>
 </Project>

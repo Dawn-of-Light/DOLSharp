@@ -70,7 +70,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MySql.Data">
-      <HintPath>..\sharedModules\MySQL\MySql.Data.dll</HintPath>
+      <HintPath>..\packages\MySql.Data.6.9.8\lib\net45\MySql.Data.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -81,17 +81,13 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data.SQLite" Condition=" '$(OS)' != 'Unix' ">
-      <HintPath>..\sharedModules\SQLite\System.Data.SQLite.dll</HintPath>
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.98.1\lib\net45\System.Data.SQLite.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Data.SQLite" Condition=" '$(OS)' == 'Unix' ">
       <HintPath>..\sharedModules\SQLite\managedOnly\System.Data.SQLite.dll</HintPath>
       <Private>False</Private>
    </Reference>
-    <Reference Include="System.Data.SQLite.Linq">
-      <HintPath>..\sharedModules\SQLite\System.Data.SQLite.Linq.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
