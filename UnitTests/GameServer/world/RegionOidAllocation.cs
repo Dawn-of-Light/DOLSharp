@@ -19,12 +19,14 @@
 using System;
 using System.Threading;
 using DOL.Database;
-using DOL.Tests;
 using DOL.GS;
 using NUnit.Framework;
 
-namespace DOL.Server
+namespace DOL.Server.Tests
 {
+	/// <summary>
+	/// Unit Test for Region OID Allocation
+	/// </summary>
 	[TestFixture]
 	public class RegionOidAllocationTest : ServerTests
 	{
@@ -34,9 +36,9 @@ namespace DOL.Server
 		public volatile bool finished;
 		public int started;
 
-		[TestFixtureSetUp] public override void Init()
+		[TestFixtureSetUp]
+		public void Init()
 		{
-			base.Init();
 			RegionData data = new RegionData();
 			data.Id = 5555;
 			data.Name = "reg data1";
@@ -47,7 +49,8 @@ namespace DOL.Server
 			m_reg.StartRegionMgr();
 		}
 
-		[Test] public void AddRemoveObjects()
+		[Test, Explicit]
+		public void AddRemoveObjects()
 		{
 			const int count = 30000;
 			GameNPC[] mobs = new GameNPC[count];
@@ -100,7 +103,8 @@ namespace DOL.Server
 			}
 		}
 		
-		[Test] public void MultithreadAddRemove()
+		[Test, Explicit]
+		public void MultithreadAddRemove()
 		{
 			const int count = 10;
 			RegionOidAllocationTest[] roas = new RegionOidAllocationTest[count];

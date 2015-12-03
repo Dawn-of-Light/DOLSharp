@@ -21,13 +21,12 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS;
 using DOL.GS.Quests;
-using DOL.Tests;
 using NUnit.Framework;
 
-namespace DOL.Server
+namespace DOL.Server.Tests
 {
 	/// <summary>
-	/// Zusammenfassung für GamePlayerTest.
+	/// Unit Test for GamePlayerTest.
 	/// </summary>
 	[TestFixture]
 	public class KillTaskTest : ServerTests
@@ -36,7 +35,8 @@ namespace DOL.Server
 		{
 		}
 
-		[Test] public void CreateKillTask()
+		[Test, Explicit]
+		public void CreateKillTask()
 		{
 			GamePlayer player = CreateMockGamePlayer();
 			player.Level=5;

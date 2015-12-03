@@ -19,7 +19,7 @@
 using DOL.Network;
 using NUnit.Framework;
 
-namespace DOL.Net
+namespace DOL.Net.Tests
 {
 	[TestFixture]
 	public class uPnP
@@ -34,7 +34,7 @@ namespace DOL.Net
 			upnp = new UPnPNat();
 		}
 		
-		[Test]
+		[Test, Explicit]
 		public void Discover()
 		{
 			Assert.IsTrue(upnp.Discover());

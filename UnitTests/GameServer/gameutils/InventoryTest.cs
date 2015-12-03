@@ -17,14 +17,12 @@
  *
  */
 using System;
-using DOL;
 using DOL.Database;
 using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.Tests;
 using NUnit.Framework;
 
-namespace DOL.Server
+namespace DOL.Server.Tests
 {
 	/// <summary>
 	/// Unit tests for the new Inventory system
@@ -63,7 +61,8 @@ namespace DOL.Server
 		 * 5) check IT / IU tables
 		 * 
 		 */
-		[Test] public void InventoryFromIT()
+		[Test, Explicit]
+		public void InventoryFromIT()
 		{
 			InventoryTestCreation();
 			Console.WriteLine("Creation of Ghost Inventory entry based on ItemTemplate");
@@ -79,7 +78,9 @@ namespace DOL.Server
 			var itcheck = GameServer.Database.FindObjectByKey<ItemTemplate>(itemt.Id_nb);
 			Assert.IsNotNull(itcheck, "ii-t #4 : not deleted from db " + itemt.Id_nb);
 		}
-		[Test] public void InventoryFromIU()
+		
+		[Test, Explicit]
+		public void InventoryFromIU()
 		{
 			InventoryTestCreation();
 			Console.WriteLine("Creation of Inventory entry based on ItemUnique");
@@ -98,7 +99,9 @@ namespace DOL.Server
 			Assert.IsNull(iucheck, "ii-t #5 : deleted from db " + itemu.Id_nb);
 			
 		}
-		[Test] public void InventoryFromNull()
+		
+		[Test, Explicit]
+		public void InventoryFromNull()
 		{
 			InventoryTestCreation();
 			Console.WriteLine("Creation of Ghost Inventory entry based on ItemTemplate");

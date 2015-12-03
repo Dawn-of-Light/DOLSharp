@@ -23,7 +23,7 @@ using DOL.Database;
 using DOL.GS;
 using NUnit.Framework;
 
-namespace DOL.Tests
+namespace DOL.Server.Tests
 {
 	public class ServerTests
 	{
@@ -55,63 +55,12 @@ namespace DOL.Tests
 			
 			return client.Player;
 		}
-
-		[TestFixtureSetUp] public virtual void Init()
-		{
-			
-			Directory.SetCurrentDirectory("../../debug");
-			string CD= Directory.GetCurrentDirectory();
-			Console.WriteLine(CD);
-			if(GameServer.Instance==null)
-			{
-				FileInfo configFile = new FileInfo("./config/serverconfig.xml");
-				GameServerConfiguration config = new GameServerConfiguration();
-				if(!configFile.Exists)
-					config.SaveToXMLFile(configFile);
-				else
-					config.LoadFromXMLFile(configFile);
-				GameServer.CreateInstance(config);
-				Directory.SetCurrentDirectory(CD);
-			}
-			if (!GameServer.Instance.IsRunning)
-			{
-				Language.LanguageMgr.SetLangPath(Path.Combine(CD,"languages"));
-				Console.WriteLine("Starting GameServer");
-				if (!GameServer.Instance.Start())
-				{
-					
-					Console.WriteLine("Error init GameServer");
-				}
-			}
-			else
-			{
-				Console.WriteLine("GameServer already running, skip init of Gameserver...");
-			}
-		}
+				
 		public void cd()
 		{
 			Console.WriteLine("GC: "+Directory.GetCurrentDirectory());
 		}
-		[TestFixtureTearDown] public void Dispose()
-		{
-			// At the moment we do not stop GameServer after each test to let it be reused by all tests.
-			// TODO Find a way to Startup/Stop GameServer once for all TestCases...
-			// It could have been done with TestSuits, but they are now removed from NUnit, if I'm right.
-			
-			/*
-			if (GameServer.IsRunning)
-			{
-				GameServer.Instance.Stop();
-				Console.WriteLine("GameServer stopped");
-			}
-			else
-			{
-				Console.WriteLine("GameServer is not running, skip stop of Gameserver...");
-			}
-			 */
-			
-		}
-
+		
 		#region Watch
 
 		static long gametick;

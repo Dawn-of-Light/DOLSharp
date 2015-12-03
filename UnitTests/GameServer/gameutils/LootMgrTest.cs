@@ -19,14 +19,13 @@
 using System;
 using System.Collections;
 using DOL.Database;
-using DOL.Tests;
 using DOL.GS;
 using NUnit.Framework;
 
-namespace DOL.Server
+namespace DOL.Server.Tests
 {
 	/// <summary>
-	/// Unittest for the LootMgr Class
+	/// Unit test for the LootMgr Class
 	/// </summary>
 	[TestFixture]
 	public class LootManagerTest : ServerTests

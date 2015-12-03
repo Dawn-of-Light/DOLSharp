@@ -17,13 +17,11 @@
  *
  */
 using System;
-using DOL;
 using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.Tests;
 using NUnit.Framework;
 
-namespace DOL.Server
+namespace DOL.Server.Tests
 {
 	/// <summary>
 	/// Unit tests for the Zone Class
