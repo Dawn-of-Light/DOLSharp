@@ -17,19 +17,22 @@
  *
  */
 using System;
-using DOL;
 using DOL.GS;
-using DOL.Tests;
 using DOL.Database;
 using NUnit.Framework;
 
-namespace DOL.Server
+namespace DOL.Server.Tests
 {
+	/// <summary>
+	/// Test Inventory Class for Unit Test
+	/// </summary>
 	public class TestInventory : GameLivingInventory
 	{
-		//done that to test in direct the GameLivingInventory
 	}
 
+	/// <summary>
+	/// Unit Test for Game Living Inventory
+	/// </summary>
 	[TestFixture]
 	public class GameLivingInventoryTest : ServerTests
 	{
@@ -66,6 +69,7 @@ namespace DOL.Server
 			//here must have 10 item in a slot and 1 in another
 			
 		}
+		
 		public void PrintInventory(GameLivingInventory gameLivingInventory)
 		{
 			foreach(InventoryItem myitem in gameLivingInventory.AllItems)

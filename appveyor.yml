@@ -70,8 +70,6 @@ after_build:
 
     7z a -tzip DOLServer_linux_net45_%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%\%CONFIGURATION%\*
 
-test: off
-
 artifacts:
 
 - path: '*.zip'

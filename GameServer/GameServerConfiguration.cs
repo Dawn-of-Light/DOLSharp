@@ -418,7 +418,7 @@ namespace DOL.GS
 			{
 				return m_scriptAssemblies.Split(',')
 					.Union(new DirectoryInfo(string.Format("{0}{1}lib", RootDirectory, Path.DirectorySeparatorChar))
-					       .GetFiles("*.dll").Select(f => f.Name).Where(f => f.ToLower().Equals(new FileInfo(ScriptCompilationTarget).Name.ToLower()) == false))
+					       .EnumerateFiles("*.dll", SearchOption.TopDirectoryOnly).Select(f => f.Name).Where(f => !f.ToLower().Equals(new FileInfo(ScriptCompilationTarget).Name.ToLower())))
 					.ToArray();
 			}
 		}

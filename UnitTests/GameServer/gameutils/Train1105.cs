@@ -17,26 +17,24 @@
  *
  */
 using System;
-using DOL;
 using DOL.Database;
 using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.Tests;
 using NUnit.Framework;
 
-namespace DOL.Server
+namespace DOL.Server.Tests
 {
 	/// <summary>
-	/// Unit tests for the new Inventory system
+	/// Unit tests for the new Training System
 	/// </summary>
 	[TestFixture]
 	public class Train1105 : ServerTests
 	{
-		[Test]
-		void TrainNow()
+		[Test, Explicit]
+		public void TrainNow()
 		{
 			GamePlayer player = CreateMockGamePlayer();
-			Assert.IsNotNull (player);
+			Assert.IsNotNull(player);
 			player.Out.SendTrainerWindow();
 			return;
 		}

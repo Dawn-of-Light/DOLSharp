@@ -17,17 +17,15 @@
  *
  */
 using System;
-using DOL;
 using DOL.Database;
 using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.Tests;
 using NUnit.Framework;
 
-namespace DOL.Server
+namespace DOL.Server.Tests
 {
 	/// <summary>
-	/// Unit tests for the Zone Class
+	/// Unit tests for the Database Class
 	/// </summary>
 	[TestFixture]
 	public class DatabaseTest : ServerTests
@@ -37,7 +35,8 @@ namespace DOL.Server
 		{
 		}
 
-		[Test] public void TestSelect()
+		[Test]
+		public void TestSelect()
 		{
 			Console.WriteLine("TestSelect();");
 
