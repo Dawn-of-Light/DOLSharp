@@ -51,7 +51,6 @@ namespace DOL.Server.Tests
 			}
 			if (!GameServer.Instance.IsRunning)
 			{
-				Language.LanguageMgr.SetLangPath(Path.Combine(FakeRoot.FullName,"languages"));
 				Console.WriteLine("Starting GameServer");
 				if (!GameServer.Instance.Start())
 				{
