@@ -1,0 +1,16 @@
+language: csharp
+solution: Dawn of Light.sln
+sudo: false # Use container-based infrastructure
+
+env:
+  matrix:
+   - XBUILD_TARGET=Debug
+   - XBUILD_TARGET=Release
+
+install:
+ - travis_retry nuget restore DOLServer/packages.config -SolutionDirectory ./
+ - travis_retry nuget install NUnit.Console -OutputDirectory test -ExcludeVersion
+script:
+ - mkdir -p ./UnitTests/obj/$XBUILD_TARGET/config
+ - sed -e 's/type\=\"log4net\.Appender\.ColoredConsoleAppender\"/type\=\"log4net\.Appender\.ConsoleAppender\"/' ./GameServer/config/logconfig.xml > ./UnitTests/obj/$XBUILD_TARGET/config/logconfig.xml
+ - mono ./test/NUnit.Console/tools/nunit3-console.exe ./UnitTests/obj/$XBUILD_TARGET/lib/UnitTests.dll
