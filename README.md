@@ -15,8 +15,9 @@ It does the following:
 Auto Builds
 ----
 
-MS Build: [![Build status](https://ci.appveyor.com/api/projects/status/lwexc16e3h1u2jee?svg=true)](https://ci.appveyor.com/project/dol-leodagan/dolsharp)
+MS Build: [![Build status](https://ci.appveyor.com/api/projects/status/lwexc16e3h1u2jee?svg=true)](https://ci.appveyor.com/project/dol-leodagan/dolsharp) XBuild: [![Build status](https://api.travis-ci.org/Dawn-of-Light/DOLSharp.svg)](https://travis-ci.org/Dawn-of-Light/DOLSharp)
 
+Latest Release : https://github.com/Dawn-of-Light/DOLSharp/releases/latest
 
 Documentation
 ----
