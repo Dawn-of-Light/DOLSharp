@@ -47,6 +47,11 @@ namespace DOL.Server.Tests
 			{
 				GameServerConfiguration config = new GameServerConfiguration();
 				config.RootDirectory = FakeRoot.FullName;
+				config.Port = 0; // Auto Choosing Listen Port
+				config.UDPPort = 0; // Auto Choosing Listen Port
+				config.IP = System.Net.IPAddress.Parse("127.0.0.1");
+				config.UDPIP = System.Net.IPAddress.Parse("127.0.0.1");
+				config.RegionIP = System.Net.IPAddress.Parse("127.0.0.1");
 				GameServer.CreateInstance(config);
 			}
 			if (!GameServer.Instance.IsRunning)
