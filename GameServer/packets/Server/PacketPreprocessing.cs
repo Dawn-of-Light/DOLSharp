@@ -44,17 +44,17 @@ namespace DOL.GS.PacketHandler
 	/// with it, and thus we pass it thru. (return true)
 	/// </para>
 	/// </remarks>
-	public static class PacketPreprocessing
+	public class PacketPreprocessing
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		
-		private static readonly Dictionary<int, int> _packetIdToPreprocessMap;
-		private static readonly Dictionary<int, Func<GameClient, GSPacketIn, bool>> _preprocessors;
+		private readonly Dictionary<int, int> _packetIdToPreprocessMap;
+		private readonly Dictionary<int, Func<GameClient, GSPacketIn, bool>> _preprocessors;
 
-		static PacketPreprocessing()
+		public PacketPreprocessing()
 		{
 			_packetIdToPreprocessMap = new Dictionary<int, int>();
 			_preprocessors = new Dictionary<int, Func<GameClient, GSPacketIn, bool>>();
@@ -68,7 +68,7 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		/// <param name="packetId">the ID of the packet in question</param>
 		/// <param name="preprocessorId">the ID of the preprocessor for the given packet ID</param>
-		public static void RegisterPacketDefinition(int packetId, int preprocessorId)
+		public void RegisterPacketDefinition(int packetId, int preprocessorId)
 		{
 			// if they key doesn't exist, add it, and if it does, replace it
 			if (!_packetIdToPreprocessMap.ContainsKey(packetId))
@@ -87,7 +87,7 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		/// <param name="preprocessorId">the ID for the preprocessor</param>
 		/// <param name="preprocessorFunc">the preprocessor delegate to use</param>
-		public static void RegisterPreprocessors(int preprocessorId, Func<GameClient, GSPacketIn, bool> preprocessorFunc)
+		public void RegisterPreprocessors(int preprocessorId, Func<GameClient, GSPacketIn, bool> preprocessorFunc)
 		{
 			_preprocessors.Add(preprocessorId, preprocessorFunc);
 		}
@@ -98,7 +98,7 @@ namespace DOL.GS.PacketHandler
 		/// <param name="client">the client that sent the packet</param>
 		/// <param name="packet">the packet in question</param>
 		/// <returns>true if the packet passes all preprocessor checks; false otherwise</returns>
-		public static bool CanProcessPacket(GameClient client, GSPacketIn packet)
+		public bool CanProcessPacket(GameClient client, GSPacketIn packet)
 		{
 			int preprocessorId;
 			if(!_packetIdToPreprocessMap.TryGetValue(packet.ID, out preprocessorId))

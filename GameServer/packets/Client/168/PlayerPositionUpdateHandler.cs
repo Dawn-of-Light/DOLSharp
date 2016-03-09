@@ -620,8 +620,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 			//**************//
 
 			byte[] con168 = packet.ToArray();
-			//Riding is set here!
-			if (client.Player.Steed != null && client.Player.Steed.ObjectState == GameObject.eObjectState.Active)
+            con168[0] = (byte)(client.SessionID >> 8);
+            con168[1] = (byte)(client.SessionID & 0xff);
+
+            //Riding is set here!
+            if (client.Player.Steed != null && client.Player.Steed.ObjectState == GameObject.eObjectState.Active)
 			{
 				client.Player.Heading = client.Player.Steed.Heading;
 
