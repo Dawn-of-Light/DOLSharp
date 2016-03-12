@@ -63,7 +63,7 @@ namespace DOL.GS.PacketHandler
 		/// <summary>
 		/// Stores all packet handlers found when searching the gameserver assembly
 		/// </summary>
-		protected static readonly IPacketHandler[] m_packetHandlers = new IPacketHandler[256];
+		protected IPacketHandler[] m_packetHandlers = new IPacketHandler[256];
 
 		/// <summary>
 		/// currently active packet handler
@@ -75,21 +75,31 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		protected int m_handlerThreadID;
 
-		/// <summary>
-		/// Constructs a new PacketProcessor
-		/// </summary>
-		/// <param name="client">The processor client</param>
-		public PacketProcessor(GameClient client)
+        /// <summary>
+        /// packet preprocessor that performs initial packet checks for this Packet Processor.
+        /// </summary>
+        protected PacketPreprocessing m_packetPreprocessor;
+
+        /// <summary>
+        /// Constructs a new PacketProcessor
+        /// </summary>
+        /// <param name="client">The processor client</param>
+        public PacketProcessor(GameClient client)
 		{
 			if (client == null)
 				throw new ArgumentNullException("client");
 			m_client = client;
-			m_udpCounter = 0;
+            m_packetPreprocessor = new PacketPreprocessing();
+
+            LoadPacketHandlers(client);
+
+            m_udpCounter = 0;
 			//TODO set encoding based on client version in the future :)
 			m_encoding = new PacketEncoding168();
 			m_asyncUdpCallback = new AsyncCallback(AsyncUdpSendCallback);
 			m_tcpSendBuffer = client.Server.AcquirePacketBuffer();
 			m_udpSendBuffer = client.Server.AcquirePacketBuffer();
+            
 		}
 
 		#region Last Packets
@@ -141,40 +151,93 @@ namespace DOL.GS.PacketHandler
 			get { return m_encoding; }
 		}
 
-		/// <summary>
-		/// Callback function called when the scripts assembly has been compiled
-		/// </summary>
-		[ScriptLoadedEvent]
-		public static void OnScriptCompiled(DOLEvent ev, object sender, EventArgs args)
-		{
-			Array.Clear(m_packetHandlers, 0, m_packetHandlers.Length);
-			int count = SearchPacketHandlers("v168", Assembly.GetAssembly(typeof (GameServer)));
-			if (log.IsInfoEnabled)
-				log.Info("PacketProcessor: Loaded " + count + " handlers from GameServer Assembly!");
+        /// <summary>
+        /// Caches packet handlers loaded for a given client version (in string format, used for namespace search).
+        /// </summary>
+        private static Dictionary<string, IPacketHandler[]> m_cachedPacketHandlerSearchResults = new Dictionary<string, IPacketHandler[]>();
+        /// <summary>
+        /// Stores packet handler attributes for each version, required to load preprocessors.
+        /// </summary>
+        private static Dictionary<string, List<PacketHandlerAttribute>> m_cachedPreprocessorSearchResults = new Dictionary<string, List<PacketHandlerAttribute>>();
+        private static object m_packetHandlerCacheLock = new object();
 
-			count = 0;
-			foreach (Assembly asm in ScriptMgr.Scripts)
-			{
-				count += SearchPacketHandlers("v168", asm);
-			}
-			if (log.IsInfoEnabled)
-				log.Info("PacketProcessor: Loaded " + count + " handlers from Script Assemblys!");
-		}
+        public virtual void LoadPacketHandlers(GameClient client)
+        {
+            string baseVersion = "v168";
+            //String may seem cumbersome but I would like to leave the open of custom clients open without core modification (for this reason I cannot use eClientVersion).
+            //Also I am merely reusing some already written search functionality, which searches a namespace and thus expects a string.
+
+            List<PacketHandlerAttribute> attributes = new List<PacketHandlerAttribute>();
+            LoadPacketHandlers(baseVersion, out m_packetHandlers, out attributes);
+
+            //todo: load different handlers for cumulative client versions, overwriting duplicate entries in m_PacketHandlers with later version.
+
+            //Add preprocessors for each packet handler
+            foreach (PacketHandlerAttribute pha in attributes)
+            {
+                m_packetPreprocessor.RegisterPacketDefinition(pha.Code, pha.PreprocessorID);
+            }
+        }
+
+        /// <summary>
+        /// Loads packet handlers to be used for handling incoming data from this game client.
+        /// </summary>
+        /// <param name="client"></param>
+        public virtual void LoadPacketHandlers(string version, out IPacketHandler[] packetHandlers, out List<PacketHandlerAttribute> attributes)
+        {
+            packetHandlers = new IPacketHandler[256];
+            attributes = new List<PacketHandlerAttribute>();
+
+            Array.Clear(packetHandlers, 0, packetHandlers.Length);
+            lock (m_packetHandlerCacheLock)
+            {
+                if (!m_cachedPacketHandlerSearchResults.ContainsKey(version))
+                {
+                    int count = SearchAndAddPacketHandlers(version, Assembly.GetAssembly(typeof(GameServer)), packetHandlers);
+                    if (log.IsInfoEnabled)
+                        log.Info("PacketProcessor: Loaded " + count + " handlers from GameServer Assembly!");
+
+                    count = 0;
+                    foreach (Assembly asm in ScriptMgr.Scripts)
+                    {
+                        count += SearchAndAddPacketHandlers(version, asm, packetHandlers);
+                    }
+                    if (log.IsInfoEnabled)
+                        log.Info("PacketProcessor: Loaded " + count + " handlers from Script Assemblys!");
+
+                    //save search result for next login
+                    m_cachedPacketHandlerSearchResults.Add(version, (IPacketHandler[])packetHandlers.Clone());
+                }
+                else
+                {
+                    packetHandlers = (IPacketHandler[])m_cachedPacketHandlerSearchResults[version].Clone();
+                    int count = 0;
+                    foreach (IPacketHandler ph in packetHandlers) if (ph != null) count++;
+                    log.Info("PacketProcessor: Loaded " + count + " handlers from cache for version="+version+"!");
+                }
+
+                if (m_cachedPreprocessorSearchResults.ContainsKey(version))
+                    attributes = m_cachedPreprocessorSearchResults[version];
+                log.Info("PacketProcessor: Loaded " + attributes.Count + " preprocessors from cache for version=" + version + "!");
+            }
+        }
 
 		/// <summary>
 		/// Registers a packet handler
 		/// </summary>
 		/// <param name="handler">The packet handler to register</param>
 		/// <param name="packetCode">The packet ID to register it with</param>
-		public static void RegisterPacketHandler(int packetCode, IPacketHandler handler)
+		public void RegisterPacketHandler(int packetCode, IPacketHandler handler, IPacketHandler[] packetHandlers)
 		{
-			if (m_packetHandlers[packetCode] != null)
+			if (packetHandlers[packetCode] != null)
 			{
-				log.InfoFormat("Overwriting Client Packet Code {0}, with handler {1}", packetCode, handler.GetType().FullName);
+				log.InfoFormat("Overwriting Client Packet Code {0}, with handler {1} in PacketProcessor", packetCode, handler.GetType().FullName);
 			}
-			
-			m_packetHandlers[packetCode] = handler;
+
+            packetHandlers[packetCode] = handler;
 		}
+
+
 
 		/// <summary>
 		/// Searches an assembly for packet handlers
@@ -182,7 +245,7 @@ namespace DOL.GS.PacketHandler
 		/// <param name="version">namespace of packethandlers to search eg. 'v167'</param>
 		/// <param name="assembly">Assembly to search</param>
 		/// <returns>The number of handlers loaded</returns>
-		protected static int SearchPacketHandlers(string version, Assembly assembly)
+		protected int SearchAndAddPacketHandlers(string version, Assembly assembly, IPacketHandler[] packetHandlers)
 		{
 			int count = 0;
 
@@ -204,9 +267,11 @@ namespace DOL.GS.PacketHandler
 				if (packethandlerattribs.Length > 0)
 				{
 					count++;
-					RegisterPacketHandler(packethandlerattribs[0].Code, (IPacketHandler) Activator.CreateInstance(type));
-					PacketPreprocessing.RegisterPacketDefinition(packethandlerattribs[0].Code, packethandlerattribs[0].PreprocessorID);
-				}
+					RegisterPacketHandler(packethandlerattribs[0].Code, (IPacketHandler) Activator.CreateInstance(type), packetHandlers);
+
+                    if (!m_cachedPreprocessorSearchResults.ContainsKey(version)) m_cachedPreprocessorSearchResults.Add(version, new List<PacketHandlerAttribute>());
+                    m_cachedPreprocessorSearchResults[version].Add(packethandlerattribs[0]);
+                }
 			}
 			return count;
 		}
@@ -890,10 +955,11 @@ namespace DOL.GS.PacketHandler
 			}
 
 			// make sure we can handle this packet at this stage
-			var preprocess = PacketPreprocessing.CanProcessPacket(m_client, packet);
+			var preprocess = m_packetPreprocessor.CanProcessPacket(m_client, packet);
 			if(!preprocess)
 			{
-				// this packet can't be processed by this client right now, for whatever reason
+                // this packet can't be processed by this client right now, for whatever reason
+                log.Info("PacketPreprocessor: Preprocessor prevents handling of a packet with packet.ID=" + packet.ID);
 				return;
 			}
 

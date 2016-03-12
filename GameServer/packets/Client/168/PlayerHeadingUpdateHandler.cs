@@ -55,7 +55,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 			client.Player.TargetInView = ((flags & 0x10) != 0);
 
 			byte[] con = packet.ToArray();
-			if (!client.Player.IsAlive)
+            con[0] = (byte)(client.SessionID >> 8);
+            con[1] = (byte)(client.SessionID & 0xff);
+
+            if (!client.Player.IsAlive)
 			{
 				con[9] = 5; // set dead state
 			}
