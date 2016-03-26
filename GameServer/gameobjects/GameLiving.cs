@@ -2940,11 +2940,11 @@ namespace DOL.GS
 
                     if (procSpell == null && weapon.ProcSpellID != 0)
                     {
-                        log.Error("- Proc Not Found: " + weapon.ProcSpellID + " " + weapon.Name);
+                        log.ErrorFormat("- Proc ID {0} Not Found on item: {1} ", weapon.ProcSpellID, weapon.Template.Id_nb);
                     }
                     if (procSpell1 == null && weapon.ProcSpellID1 != 0)
                     {
-                        log.Error("- Proc1 Not Found: " + weapon.ProcSpellID1 + " " + weapon.Name);
+                        log.ErrorFormat("- Proc1 ID {0} Not Found on item: {1} ", weapon.ProcSpellID1, weapon.Template.Id_nb);
                     }
                 }
             }
