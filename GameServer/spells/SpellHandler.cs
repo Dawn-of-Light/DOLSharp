@@ -3824,10 +3824,11 @@ namespace DOL.GS.Spells
             //Falcon Eye Ability Handling for new Archery by Elcotek
             //http://camelot.allakhazam.com/ability.html?cabil=34 Increases the chance of dealing a critical hit with archery by the listed percentage amount.
             int BaseChance = ServerProperties.Properties.BOW_BASE_CRITCHANCE; //Baschance is 10% on live 
-            RAPropertyEnhancer FalconEye = ((GamePlayer)m_caster).GetAbility<FalconsEyeAbility>();
+           
 
             if (m_caster is GamePlayer)
             {
+                RAPropertyEnhancer FalconEye = ((GamePlayer)m_caster).GetAbility<FalconsEyeAbility>();
                 switch ((eCharacterClass)((GamePlayer)m_caster).CharacterClass.ID)
                 {
                     case eCharacterClass.Hunter:
