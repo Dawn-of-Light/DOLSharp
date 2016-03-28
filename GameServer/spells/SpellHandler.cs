@@ -3836,7 +3836,7 @@ namespace DOL.GS.Spells
                     case eCharacterClass.Scout:
                         {
 
-                            if (FalconEye != null && (this as Archery).wasCritical == false)//no extra Chance for Citshots
+                            if (FalconEye != null && this is ArrowSpellHandler && (this as Archery).wasCritical == false)//no extra Chance for Citshots
                             {
                                 BaseChance += FalconEye.GetAmountForLevel(((GamePlayer)m_caster).CalculateSkillLevel(FalconEye));
 
