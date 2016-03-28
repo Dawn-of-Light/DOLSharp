@@ -3820,6 +3820,37 @@ namespace DOL.GS.Spells
 				finalDamage = 0;
 
 			int criticalchance = (m_caster.SpellCriticalChance);
+
+            //Falcon Eye Ability Handling for new Archery by Elcotek
+            //http://camelot.allakhazam.com/ability.html?cabil=34 Increases the chance of dealing a critical hit with archery by the listed percentage amount.
+            int BaseChance = ServerProperties.Properties.BOW_BASE_CRITCHANCE; //Baschance is 10% on live 
+            RAPropertyEnhancer FalconEye = ((GamePlayer)m_caster).GetAbility<FalconsEyeAbility>();
+
+            if (m_caster is GamePlayer)
+            {
+                switch ((eCharacterClass)((GamePlayer)m_caster).CharacterClass.ID)
+                {
+                    case eCharacterClass.Hunter:
+                    case eCharacterClass.Ranger:
+                    case eCharacterClass.Scout:
+                        {
+
+                            if (FalconEye != null && (this as Archery).wasCritical == false)//no extra Chance for Citshots
+                            {
+                                BaseChance += FalconEye.GetAmountForLevel(((GamePlayer)m_caster).CalculateSkillLevel(FalconEye));
+
+                                criticalchance = BaseChance; //Base Chance + Falcon Eye Value
+                                break;
+                            }
+                            else
+                            {
+                                criticalchance = BaseChance; //Base Chance is on live 10%
+                                break;
+                            }
+                        }
+                }
+            }
+
 			if (Util.Chance(Math.Min(50, criticalchance)) && (finalDamage >= 1))
 			{
 				int critmax = (ad.Target is GamePlayer) ? finalDamage / 2 : finalDamage;

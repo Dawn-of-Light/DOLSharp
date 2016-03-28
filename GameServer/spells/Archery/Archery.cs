@@ -49,6 +49,9 @@ namespace DOL.GS.Spells
 			get { return false; }
 		}
 
+        //Was this shot an Critical shot ?
+        public bool wasCritical = false;
+
 		public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
 			if (m_caster.ObjectState != GameLiving.eObjectState.Active)	return false;
@@ -262,6 +265,20 @@ namespace DOL.GS.Spells
 
 			if (ad.AttackResult != GameLiving.eAttackResult.Missed)
 			{
+                switch (Spell.LifeDrainReturn)
+                {
+                    case (int)eShotType.Critical:
+                        {
+                            //Critical shots work only on Target wehre not moving and not in Combat (for later use)
+                            //if ((target is GamePlayer || target is GameNPC) && target.IsMoving == false && target.AttackState == false)
+                            {
+                                wasCritical = true;
+
+                            }
+                            break;
+                        }
+                }
+                
 				GameNPC npc = target as GameNPC;
 				if (npc != null)
 				{

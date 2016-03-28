@@ -1732,6 +1732,11 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("classes", "allow_old_archery", "Should we allow archers to be able to use arrows from their quiver?", false)]
 		public static bool ALLOW_OLD_ARCHERY;
 
+        /// <summary>
+        /// Bow Base Crit chance for new Archery
+        /// </summary>
+        [ServerProperty("rates", "bow_base_critchance", "Bows Crit base percent. ", 10)]
+        public static int BOW_BASE_CRITCHANCE;
 
 		#endregion
 
