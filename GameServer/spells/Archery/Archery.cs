@@ -49,10 +49,7 @@ namespace DOL.GS.Spells
 			get { return false; }
 		}
 
-        //Was this shot an Critical shot ?
-        public bool wasCritical = false;
-
-		public override bool CheckBeginCast(GameLiving selectedTarget)
+        public override bool CheckBeginCast(GameLiving selectedTarget)
 		{
 			if (m_caster.ObjectState != GameLiving.eObjectState.Active)	return false;
 			if (!m_caster.IsAlive)
@@ -214,90 +211,76 @@ namespace DOL.GS.Spells
 		}
 
 
-		public override AttackData CalculateDamageToTarget(GameLiving target, double effectiveness)
-		{
-			AttackData ad = base.CalculateDamageToTarget(target, effectiveness);
-			GamePlayer player;
-			GameSpellEffect bladeturn = FindEffectOnTarget(target, "Bladeturn");
-			if (bladeturn != null)
-			{
-				switch (Spell.LifeDrainReturn)
-				{
-					case (int)eShotType.Critical:
-						{
-							if (target is GamePlayer)
-							{
-								player = target as GamePlayer;
-								player.Out.SendMessage("A shot penetrated your magic barrier!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-							}
-							ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
-						}
-						break;
-
-					case (int)eShotType.Power:
-						{
-							player = target as GamePlayer;
-							player.Out.SendMessage("A shot penetrated your magic barrier!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-							ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
-							bladeturn.Cancel(false);
-						}
-						break;
-
-					case (int)eShotType.Other:
-					default:
-						{
-							if (Caster is GamePlayer)
-							{
-								player = Caster as GamePlayer;
-								player.Out.SendMessage("Your strike was absorbed by a magical barrier!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-							}
-							if (target is GamePlayer)
-							{
-								player = target as GamePlayer;
-								player.Out.SendMessage("The blow was absorbed by a magical barrier!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-								ad.AttackResult = GameLiving.eAttackResult.Missed;
-								bladeturn.Cancel(false);
-							}
-						}
-						break;
-				}
-			}
-
-			if (ad.AttackResult != GameLiving.eAttackResult.Missed)
-			{
+        public override AttackData CalculateDamageToTarget(GameLiving target, double effectiveness)
+        {
+            AttackData ad = base.CalculateDamageToTarget(target, effectiveness);
+            GamePlayer player;
+            GameSpellEffect bladeturn = FindEffectOnTarget(target, "Bladeturn");
+            if (bladeturn != null)
+            {
                 switch (Spell.LifeDrainReturn)
                 {
                     case (int)eShotType.Critical:
                         {
-                            //Critical shots work only on Target wehre not moving and not in Combat (for later use)
-                            //if ((target is GamePlayer || target is GameNPC) && target.IsMoving == false && target.AttackState == false)
+                            if (target is GamePlayer)
                             {
-                                wasCritical = true;
-
+                                player = target as GamePlayer;
+                                player.Out.SendMessage("A shot penetrated your magic barrier!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
                             }
-                            break;
+                            ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
                         }
+                        break;
+
+                    case (int)eShotType.Power:
+                        {
+                            player = target as GamePlayer;
+                            player.Out.SendMessage("A shot penetrated your magic barrier!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                            ad.AttackResult = GameLiving.eAttackResult.HitUnstyled;
+                            bladeturn.Cancel(false);
+                        }
+                        break;
+
+                    case (int)eShotType.Other:
+                    default:
+                        {
+                            if (Caster is GamePlayer)
+                            {
+                                player = Caster as GamePlayer;
+                                player.Out.SendMessage("Your strike was absorbed by a magical barrier!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                            }
+                            if (target is GamePlayer)
+                            {
+                                player = target as GamePlayer;
+                                player.Out.SendMessage("The blow was absorbed by a magical barrier!", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
+                                ad.AttackResult = GameLiving.eAttackResult.Missed;
+                                bladeturn.Cancel(false);
+                            }
+                        }
+                        break;
                 }
-                
-				GameNPC npc = target as GameNPC;
-				if (npc != null)
-				{
-					if (npc.Brain != null && (npc.Brain is IControlledBrain) == false)
-					{
-						// boost for npc damage until we find exactly where calculation is going wrong -tolakram
-						ad.Damage = (int)(ad.Damage * 1.57);
-					}
-				}
+            }
 
-				// Volley damage reduction based on live testing - tolakram
-				if (Spell.Target.ToLower() == "area")
-				{
-					ad.Damage = (int)(ad.Damage * 0.815);
-				}
-			}
+            if (ad.AttackResult != GameLiving.eAttackResult.Missed)
+            {
+                GameNPC npc = target as GameNPC;
+                if (npc != null)
+                {
+                    if (npc.Brain != null && (npc.Brain is IControlledBrain) == false)
+                    {
+                        // boost for npc damage until we find exactly where calculation is going wrong -tolakram
+                        ad.Damage = (int)(ad.Damage * 1.57);
+                    }
+                }
 
-			return ad;
-		}
+                // Volley damage reduction based on live testing - tolakram
+                if (Spell.Target.ToLower() == "area")
+                {
+                    ad.Damage = (int)(ad.Damage * 0.815);
+                }
+            }
+
+            return ad;
+        }
 
 		/// <summary>
 		/// Determines what damage type to use.  For archery the player can choose.
