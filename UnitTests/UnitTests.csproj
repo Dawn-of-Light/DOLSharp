@@ -31,31 +31,26 @@
     <NoStdLib>False</NoStdLib>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <OutputPath>obj\$(Configuration)\lib</OutputPath>
+    <OutputPath>..\build\UnitTests\$(Configuration)\lib\</OutputPath>
     <TargetFrameworkProfile />
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <IntermediateOutputPath>..\build\UnitTests\$(Configuration)\obj\</IntermediateOutputPath>
     <NoWin32Manifest>False</NoWin32Manifest>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugSymbols>true</DebugSymbols>
     <Optimize>False</Optimize>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <DebugType>Full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DefineConstants>TRACE</DefineConstants>
-    <DebugSymbols>false</DebugSymbols>
     <Optimize>true</Optimize>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <DebugType>None</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
@@ -150,11 +145,16 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\x86" "$(ProjectDir)\$(OutputPath)\x86" /y /s /q /i
-xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\x64" "$(ProjectDir)\$(OutputPath)\x64" /y /s /q /i</PostBuildEvent>
+    <PostBuildEvent>
+      xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\x86" "$(ProjectDir)\$(OutputPath)\x86" /y /s /q /i
+      xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\x64" "$(ProjectDir)\$(OutputPath)\x64" /y /s /q /i
+      xcopy "$(SolutionDir)\GameServer\language\*.txt" "$(ProjectDir)\$(OutputPath)\..\languages" /y /s /q /i
+      xcopy "$(SolutionDir)\GameServerScripts\*.cs" "$(ProjectDir)\$(OutputPath)\..\scripts" /y /s /q /i
+      xcopy "$(SolutionDir)\GameServerScripts\dbupdater\*.xml" "$(ProjectDir)\$(OutputPath)\..\scripts\dbupdater" /y /s /q /i
+    </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>..\build\UnitTests\$(Configuration)\</BaseIntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
@@ -165,7 +165,7 @@ xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\x64
       xcopy "$(SolutionDir)\GameServerScripts\dbupdater\*.xml" "$(ProjectDir)\$(OutputPath)\..\scripts\dbupdater" /y /s /q /i
     </PostBuildEvent>
     <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">
-      cd "$(SolutionDir)/GameServer/language/"; mkdir -p "$(SolutionDir)/UnitTests/obj/$(ConfigurationName)/languages/"; find ./ -name "*.txt" | xargs -i -t cp --parents -f {} "$(SolutionDir)/UnitTests/obj/$(ConfigurationName)/languages/"
-      cd "$(SolutionDir)/GameServerScripts/"; mkdir -p "$(SolutionDir)/UnitTests/obj/$(ConfigurationName)/scripts/"; find ./ -name "*.cs" | xargs -i -t cp --parents -f {} "$(SolutionDir)/UnitTests/obj/$(ConfigurationName)/scripts/"; find ./dbupdater -name "*.xml" | xargs -i -t cp --parents -f {} "$(SolutionDir)/UnitTests/obj/$(ConfigurationName)/scripts/"    </PostBuildEvent>
+      cd "$(SolutionDir)/GameServer/language/"; mkdir -p "$(ProjectDir)/$(OutputPath)/../languages/"; find ./ -name "*.txt" | xargs -i -t cp --parents -f {} "$(ProjectDir)/$(OutputPath)/../languages/"
+      cd "$(SolutionDir)/GameServerScripts/"; mkdir -p "$(ProjectDir)/$(OutputPath)/../scripts/"; find ./ -name "*.cs" | xargs -i -t cp --parents -f {} "$(ProjectDir)/$(OutputPath)/../scripts/"; find "./dbupdater" -name "*.xml" | xargs -i -t cp --parents -f {} "$(ProjectDir)/$(OutputPath)/../scripts"</PostBuildEvent>
   </PropertyGroup>
 </Project>
