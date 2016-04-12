@@ -32,32 +32,28 @@
     <WarningLevel>4</WarningLevel>
     <NoWarn>1570%3b1572%3b1573%3b1587%3b1591%3b1592</NoWarn>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <IntermediateOutputPath>..\build\GameServer\$(Configuration)\obj\</IntermediateOutputPath>
     <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\debug\lib\</OutputPath>
+    <NoWin32Manifest>False</NoWin32Manifest>
+    <OutputPath>..\$(Configuration)\lib\</OutputPath>
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>False</Optimize>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <BaseIntermediateOutputPath>..\build\GameServer\$(Configuration)\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugType>Full</DebugType>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Optimize>False</Optimize>
+    <DebugSymbols>true</DebugSymbols>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\release\lib\</OutputPath>
-    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
-    <DebugSymbols>false</DebugSymbols>
-    <Optimize>True</Optimize>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugType>None</DebugType>
-    <ErrorReport>prompt</ErrorReport>
     <DefineConstants>TRACE</DefineConstants>
+    <Optimize>True</Optimize>
+    <DebugSymbols>false</DebugSymbols>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
@@ -2805,8 +2801,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)\language\*.txt" "$(ProjectDir)..\$(ConfigurationName)\languages" /y /s /q /i</PostBuildEvent>
     <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">cd "$(ProjectDir)/language/"; mkdir -p "$(ProjectDir)../`echo $(ConfigurationName) | tr '[:upper:]' '[:lower:]'`/languages/"; find ./ -name "*.txt" | xargs -i -t cp --parents -f {} "$(ProjectDir)../`echo $(ConfigurationName) | tr '[:upper:]' '[:lower:]'`/languages/"</PostBuildEvent>
   </PropertyGroup>
