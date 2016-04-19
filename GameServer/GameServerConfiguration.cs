@@ -339,25 +339,28 @@ namespace DOL.GS
 		{
 			m_ServerName = "Dawn Of Light";
 			m_ServerNameShort = "DOLSERVER";
-			if(Assembly.GetEntryAssembly()!=null)
+			
+			if (Assembly.GetEntryAssembly() != null)
 				m_rootDirectory = new FileInfo(Assembly.GetEntryAssembly().Location).DirectoryName;
 			else
 				m_rootDirectory = new FileInfo(Assembly.GetAssembly(typeof(GameServer)).Location).DirectoryName;
 
-			m_logConfigFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "logconfig.xml";
+			m_logConfigFile = Path.Combine(Path.Combine(".", "config"), "logconfig.xml");
 
-			m_scriptCompilationTarget = "."+Path.DirectorySeparatorChar+"lib"+Path.DirectorySeparatorChar+"GameServerScripts.dll";
+			m_scriptCompilationTarget = Path.Combine(Path.Combine(".", "lib"), "GameServerScripts.dll");
 			m_scriptAssemblies = "System.dll,System.Xml.dll";
+			m_enableCompilation = true;
 			m_autoAccountCreation = true;
 			m_serverType = eGameServerType.GST_Normal;
 
 			m_cheatLoggerName = "cheats";
 			m_gmActionsLoggerName = "gmactions";
 		    InventoryLoggerName = "inventories";
-			m_invalidNamesFile = "." + Path.DirectorySeparatorChar + "config" + Path.DirectorySeparatorChar + "invalidnames.txt";
+		    m_invalidNamesFile = Path.Combine(Path.Combine(".", "config"), "invalidnames.txt");
 
 			m_dbType = ConnectionType.DATABASE_SQLITE;
-			m_dbConnectionString = "Data Source="+m_rootDirectory+Path.DirectorySeparatorChar+"dol.sqlite3.db"+";Version=3;Pooling=False;Cache Size=1073741824;Journal Mode=Off;Synchronous=Off;Foreign Keys=True;Default Timeout=60";
+			m_dbConnectionString = string.Format("Data Source={0};Version=3;Pooling=False;Cache Size=1073741824;Journal Mode=Off;Synchronous=Off;Foreign Keys=True;Default Timeout=60",
+			                                     Path.Combine(m_rootDirectory, "dol.sqlite3.db"));
 			m_autoSave = true;
 			m_saveInterval = 10;
 			m_maxClientCount = 500;
