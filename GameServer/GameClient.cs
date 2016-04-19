@@ -38,7 +38,7 @@ namespace DOL.GS
 	/// <summary>
 	/// Represents a single connection to the game server
 	/// </summary>
-	public class GameClient : BaseClient
+	public class GameClient : BaseClient, ICustomParamsValuable
 	{
 		#region eClientAddons enum
 
@@ -233,6 +233,11 @@ namespace DOL.GS
 		/// Holds the time of the last UDP ping
 		/// </summary>
 		protected long m_udpPingTime = DateTime.Now.Ticks;
+		
+		/// <summary>
+		/// Custom Account Params
+		/// </summary>
+		protected Dictionary<string, List<string>> m_customParams = new Dictionary<string, List<string>>();
 
 		/// <summary>
 		/// Holds the Player Collection of Updated Object with last update time.
@@ -350,6 +355,8 @@ namespace DOL.GS
 			set
 			{
 				m_account = value;
+				// Load Custom Params
+				this.InitFromCollection<AccountXCustomParam>(value.CustomParams, param => param.KeyName, param => param.Value);
 				GameEventMgr.Notify(GameClientEvent.AccountLoaded, this);
 			}
 		}
@@ -471,6 +478,19 @@ namespace DOL.GS
 			set { m_clientAddons = value; }
 		}
 
+		/// <summary>
+		/// Get the Custom Params from this Game Client
+		/// </summary>
+		public Dictionary<string, List<string>> CustomParamsDictionary
+		{
+			get { return m_customParams; }
+			set
+			{
+				Account.CustomParams = value.SelectMany(kv => kv.Value.Select(val => new AccountXCustomParam(Account.Name, kv.Key, val))).ToArray();
+				m_customParams = value;
+			}
+		}
+		
 		/// <summary>
 		/// Get the Game Object Update Array (Read/Write)
 		/// </summary>
