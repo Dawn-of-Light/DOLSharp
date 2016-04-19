@@ -6721,10 +6721,7 @@ namespace DOL.GS
 		{
 			try
 			{
-				ArrayList asms = new ArrayList();
-				asms.Add(typeof(GameServer).Assembly);
-				asms.AddRange(ScriptMgr.Scripts);
-				foreach (Assembly asm in asms)
+				foreach (Assembly asm in ScriptMgr.GameServerScripts)
 				{
 					foreach (Type t in asm.GetTypes())
 					{

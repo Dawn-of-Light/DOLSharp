@@ -54,6 +54,11 @@ namespace DOL.GS
 		/// The assemblies to include when compiling the scripts
 		/// </summary>
 		protected string m_scriptAssemblies;
+		
+		/// <summary>
+		/// Enable/Disable Startup Script Compilation
+		/// </summary>
+		protected bool m_enableCompilation;
 
 		/// <summary>
 		/// True if the server shall automatically create accounts
@@ -148,6 +153,7 @@ namespace DOL.GS
 
 			m_scriptCompilationTarget = root["Server"]["ScriptCompilationTarget"].GetString(m_scriptCompilationTarget);
 			m_scriptAssemblies = root["Server"]["ScriptAssemblies"].GetString(m_scriptAssemblies);
+			m_enableCompilation = root["Server"]["EnableCompilation"].GetBoolean(true);
 			m_autoAccountCreation = root["Server"]["AutoAccountCreation"].GetBoolean(m_autoAccountCreation);
 
 			string serverType = root["Server"]["GameType"].GetString("Normal");
@@ -250,6 +256,7 @@ namespace DOL.GS
 
 			root["Server"]["ScriptCompilationTarget"].Set(m_scriptCompilationTarget);
 			root["Server"]["ScriptAssemblies"].Set(m_scriptAssemblies);
+			root["Server"]["EnableCompilation"].Set(m_enableCompilation);
 			root["Server"]["AutoAccountCreation"].Set(m_autoAccountCreation);
 
 			string serverType = "Normal";
@@ -417,10 +424,19 @@ namespace DOL.GS
 			get
 			{
 				return m_scriptAssemblies.Split(',')
-					.Union(new DirectoryInfo(string.Format("{0}{1}lib", RootDirectory, Path.DirectorySeparatorChar))
-					       .EnumerateFiles("*.dll", SearchOption.TopDirectoryOnly).Select(f => f.Name).Where(f => !f.ToLower().Equals(new FileInfo(ScriptCompilationTarget).Name.ToLower())))
+					.Union(new DirectoryInfo(Path.Combine(RootDirectory, "lib"))
+					       .EnumerateFiles("*.dll", SearchOption.TopDirectoryOnly).Select(f => f.Name).Where(f => !f.Equals(new FileInfo(ScriptCompilationTarget).Name, StringComparison.OrdinalIgnoreCase)))
 					.ToArray();
 			}
+		}
+		
+		/// <summary>
+		/// Get or Set the Compilation Flag
+		/// </summary>
+		public bool EnableCompilation
+		{
+			get { return m_enableCompilation; }
+			set { m_enableCompilation = value; }
 		}
 
 		/// <summary>

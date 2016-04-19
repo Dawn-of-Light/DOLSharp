@@ -64,6 +64,12 @@
     <description>List of Script assembies</description>
   </Server>
   <Server>
+    <property>EnableCompilation</property>
+    <type>bool</type>
+    <value></value>
+    <description>Enables or Disables Startup Game Server Scripts Compilation</description>
+  </Server>
+  <Server>
     <property>EnableUPnP</property>
     <type>boolean</type>
     <value>true</value>

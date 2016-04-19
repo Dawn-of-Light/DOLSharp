@@ -295,10 +295,8 @@ namespace DOL.GS.Commands
 
 			//Create a new mob
 			GameNPC mob = null;
-			ArrayList asms = new ArrayList(ScriptMgr.Scripts);
-			asms.Add(typeof(GameServer).Assembly);
 
-			foreach (Assembly script in asms)
+			foreach (Assembly script in ScriptMgr.GameServerScripts)
 			{
 				try
 				{
@@ -2454,10 +2452,7 @@ namespace DOL.GS.Commands
 					}
 					else
 					{
-						ArrayList asms = new ArrayList(ScriptMgr.Scripts);
-						asms.Add(typeof(GameServer).Assembly);
-
-						foreach (Assembly script in asms)
+						foreach (Assembly script in ScriptMgr.GameServerScripts)
 						{
 							try
 							{

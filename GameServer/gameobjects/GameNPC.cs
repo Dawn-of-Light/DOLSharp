@@ -1973,11 +1973,8 @@ namespace DOL.GS
 			{
 				try
 				{
-					var asms = new List<Assembly>();
-					asms.Add(typeof(GameServer).Assembly);
-					asms.AddRange(ScriptMgr.Scripts);
 					ABrain brain = null;
-					foreach (Assembly asm in asms)
+					foreach (Assembly asm in ScriptMgr.GameServerScripts)
 					{
 						brain = (ABrain)asm.CreateInstance(dbMob.Brain, false);
 						if (brain != null)
