@@ -855,11 +855,34 @@ namespace DOL.GS
 		/// <returns></returns>
 		public bool CompileScripts()
 		{
-			string scriptDirectory = string.Format("{0}{1}scripts", Configuration.RootDirectory, Path.DirectorySeparatorChar);
+			string scriptDirectory = Path.Combine(Configuration.RootDirectory, "scripts");
 			if (!Directory.Exists(scriptDirectory))
 				Directory.CreateDirectory(scriptDirectory);
 			
-			if (ScriptMgr.CompileScripts(false, scriptDirectory, Configuration.ScriptCompilationTarget, Configuration.ScriptAssemblies))
+			bool compiled = false;
+			
+			// Check if Configuration Forces to use Pre-Compiled Game Server Scripts Assembly
+			if (!Configuration.EnableCompilation)
+			{
+				log.Info("Script Compilation Disabled in Server Configuration, Loading pre-compiled Assembly...");
+
+				if (File.Exists(Configuration.ScriptCompilationTarget))
+				{
+					ScriptMgr.LoadAssembly(Configuration.ScriptCompilationTarget);
+				}
+				else
+				{
+					log.WarnFormat("Compilation Disabled - Could not find pre-compiled Assembly : {0} - Server starting without Scripts Assembly!", Configuration.ScriptCompilationTarget);
+				}
+				
+				compiled = true;
+			}
+			else
+			{
+				compiled = ScriptMgr.CompileScripts(false, scriptDirectory, Configuration.ScriptCompilationTarget, Configuration.ScriptAssemblies);
+			}
+			
+			if (compiled)
 			{
 				//---------------------------------------------------------------
 				//Register Script Tables
@@ -929,9 +952,7 @@ namespace DOL.GS
 
 				//---------------------------------------------------------------
 				//Register all event handlers
-				var scripts = new ArrayList(ScriptMgr.Scripts);
-				scripts.Insert(0, typeof (GameServer).Assembly);
-				foreach (Assembly asm in scripts)
+				foreach (Assembly asm in ScriptMgr.GameServerScripts)
 				{
 					GameEventMgr.RegisterGlobalEvents(asm, typeof (GameServerStartedEventAttribute), GameServerEvent.Started);
 					GameEventMgr.RegisterGlobalEvents(asm, typeof (GameServerStoppedEventAttribute), GameServerEvent.Stopped);
@@ -1062,11 +1083,7 @@ namespace DOL.GS
 			{
 				log.Info("Checking database for updates ...");
 				
-				List<Assembly> asms = new List<Assembly>();
-				asms.Add(typeof(GameServer).Assembly);
-				asms.AddRange(ScriptMgr.Scripts);
-				
-				foreach (Assembly asm in asms)
+				foreach (Assembly asm in ScriptMgr.GameServerScripts)
 				{
 
 					foreach (Type type in asm.GetTypes())
