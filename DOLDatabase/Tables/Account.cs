@@ -237,52 +237,19 @@ namespace DOL.Database
 	/// Account Custom Params linked to Account Entry
 	/// </summary>
 	[DataTable(TableName = "AccountXCustomParam")]
-	public class AccountXCustomParam : DataObject
+	public class AccountXCustomParam : CustomParam
 	{
-		private int m_accountXCustomParamsID;
-		
-		/// <summary>
-		/// Primary Key Auto Inc
-		/// </summary>
-		[PrimaryKey(AutoIncrement = true)]
-		public int AccountXCustomParamsID {
-			get { return m_accountXCustomParamsID; }
-			set { Dirty = true; m_accountXCustomParamsID = value; }
-		}
-		
 		private string m_name;
 		
 		/// <summary>
 		/// Account Table Account Name Reference
 		/// </summary>
-		[DataElement(AllowDbNull = false, Index = true)]
+		[DataElement(AllowDbNull = false, Index = true, Varchar = 255)]
 		public string Name {
 			get { return m_name; }
 			set { Dirty = true; m_name = value; }
 		}
-		
-		private string m_keyName;
-		
-		/// <summary>
-		/// KeyName for referencing this value.
-		/// </summary>
-		[DataElement(AllowDbNull = false, Varchar = 100, Index = true)]
-		public string KeyName {
-			get { return m_keyName; }
-			set { Dirty = true; m_keyName = value; }
-		}
-		
-		private string m_value;
-		
-		/// <summary>
-		/// Value, can be converted to numeric from string value.
-		/// </summary>
-		[DataElement(AllowDbNull = true, Varchar = 255)]
-		public string Value {
-			get { return m_value; }
-			set { Dirty = true; m_value = value; }
-		}
-		
+				
 		/// <summary>
 		/// Create new instance of <see cref="AccountXCustomParam"/> linked to Account Name
 		/// </summary>
@@ -290,10 +257,9 @@ namespace DOL.Database
 		/// <param name="KeyName">Key Name</param>
 		/// <param name="Value">Value</param>
 		public AccountXCustomParam(string Name, string KeyName, string Value)
+			: base(KeyName, Value)
 		{
 			this.Name = Name;
-			this.KeyName = KeyName;
-			this.Value = Value;
 		}
 	}
 }

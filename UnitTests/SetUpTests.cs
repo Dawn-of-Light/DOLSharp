@@ -36,14 +36,18 @@ namespace DOL.Server.Tests
 		{
 		}
 		
-		[SetUp]
-		public virtual void Init()
+		/// <summary>
+		/// Create Game Server Instance for Tests
+		/// </summary>
+		public static void CreateGameServerInstance()
 		{
+			Console.WriteLine("Create Game Server Instance");
 			DirectoryInfo CodeBase = new FileInfo(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath).Directory;
 			Console.WriteLine("Code Base: " + CodeBase.FullName);
 			DirectoryInfo FakeRoot = CodeBase.Parent;
 			Console.WriteLine("Fake Root: " + FakeRoot.FullName);
-			if(GameServer.Instance==null)
+			
+			if(GameServer.Instance == null)
 			{
 				GameServerConfiguration config = new GameServerConfiguration();
 				config.RootDirectory = FakeRoot.FullName;
@@ -53,7 +57,15 @@ namespace DOL.Server.Tests
 				config.UDPIP = System.Net.IPAddress.Parse("127.0.0.1");
 				config.RegionIP = System.Net.IPAddress.Parse("127.0.0.1");
 				GameServer.CreateInstance(config);
+				Console.WriteLine("Game Server Instance Created !");
 			}
+		}
+		
+		[SetUp]
+		public virtual void Init()
+		{
+			CreateGameServerInstance();
+			
 			if (!GameServer.Instance.IsRunning)
 			{
 				Console.WriteLine("Starting GameServer");

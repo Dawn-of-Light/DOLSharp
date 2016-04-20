@@ -129,6 +129,7 @@
     <Compile Include="Connection\DataConnection.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CustomParam.cs" />
     <Compile Include="Handlers\SQLiteObjectDatabase.cs" />
     <Compile Include="Handlers\XMLObjectDatabase.cs">
       <SubType>Code</SubType>

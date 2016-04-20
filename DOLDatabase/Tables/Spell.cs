@@ -642,52 +642,30 @@ namespace DOL.Database
 	/// Spell Custom Values Table containing entries linked to spellID.
 	/// </summary>
 	[DataTable(TableName = "SpellXCustomValues")]
-	public class DBSpellXCustomValues : DataObject
+	public class DBSpellXCustomValues : CustomParam
 	{
-		private int m_spellXCustomValuesID;
-		
-		/// <summary>
-		/// Primary Key Auto Inc
-		/// </summary>
-		[PrimaryKey(AutoIncrement = true)]
-		public int SpellXCustomValuesID {
-			get { return m_spellXCustomValuesID; }
-			set { Dirty = true; m_spellXCustomValuesID = value; }
-		}
-		
 		private int m_spellID;
 		
 		/// <summary>
 		/// Spell Table SpellID Reference
 		/// </summary>
-		[DataElement(AllowDbNull = false, Index=true)]
+		[DataElement(AllowDbNull = false, Index = true)]
 		public int SpellID {
 			get { return m_spellID; }
 			set { Dirty = true; m_spellID = value; }
 		}
-		
-		private string m_keyName;
-		
+
 		/// <summary>
-		/// KeyName for referencing this value.
+		/// Create new instance of <see cref="DBSpellXCustomValues"/> linked to Account Name
 		/// </summary>
-		[DataElement(AllowDbNull = false, Varchar=100, Index=true)]
-		public string KeyName {
-			get { return m_keyName; }
-			set { Dirty = true; m_keyName = value; }
+		/// <param name="SpellID">Spell ID</param>
+		/// <param name="KeyName">Key Name</param>
+		/// <param name="Value">Value</param>
+		public DBSpellXCustomValues(int SpellID, string KeyName, string Value)
+			: base(KeyName, Value)
+		{
+			this.SpellID = SpellID;
 		}
-		
-		private string m_value;
-		
-		/// <summary>
-		/// Value, can be converted to numeric from string value.
-		/// </summary>
-		[DataElement(AllowDbNull = true, Varchar=255)]
-		public string Value {
-			get { return m_value; }
-			set { Dirty = true; m_value = value; }
-		}
-			
 	}
 	
 }
