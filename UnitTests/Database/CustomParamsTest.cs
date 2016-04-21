@@ -19,8 +19,6 @@
 using System;
 using System.Linq;
 
-using DOL.Database;
-
 using NUnit.Framework;
 
 namespace DOL.Database.Tests

@@ -24,6 +24,45 @@ using DOL.Database.Attributes;
 namespace DOL.Database.Tests
 {
 	/// <summary>
+	/// Basic Test Table
+	/// </summary>
+	[DataTable(TableName = "Test_Table")]
+	public class TestTable : DataObject
+	{
+		string m_testField;
+		[DataElement]
+		public string TestField { get { return m_testField; } set { Dirty = true; m_testField = value; } }
+		
+		public TestTable() { }
+	}
+	
+	/// <summary>
+	/// Basic Test Table with Auto Increment Primary Key
+	/// </summary>
+	[DataTable(TableName = "Test_TableAutoInc")]
+	public class TestTableAutoInc : TestTable
+	{
+		int m_primaryKey;
+		[PrimaryKey(AutoIncrement = true)]
+		public int PrimaryKey { get { return m_primaryKey; } set { Dirty = true; m_primaryKey = value; } }
+		
+		public TestTableAutoInc() { }
+	}
+	
+	/// <summary>
+	/// Basic Test Table with Unique Field
+	/// </summary>
+	[DataTable(TableName = "Test_TableUniqueField")]
+	public class TestTableUniqueField : TestTable
+	{
+		int m_unique;
+		[DataElement(Unique = true)]
+		public int Unique { get { return m_unique; } set { Dirty = true; m_unique = value; } }
+		
+		public TestTableUniqueField() { }
+	}
+	
+	/// <summary>
 	/// Test table handling Custom Params
 	/// </summary>
 	[DataTable(TableName = "Test_TableWithCustomParams")]
@@ -36,11 +75,12 @@ namespace DOL.Database.Tests
 		[Relation(LocalField = "TestValue", RemoteField = "TestValue", AutoLoad = true, AutoDelete = true)]
 		public TableCustomParams[] CustomParams;
 		
-		public TableWithCustomParams()
-		{
-		}
+		public TableWithCustomParams() { }
 	}
 	
+	/// <summary>
+	/// Test Custom Params Table for <see cref="TableWithCustomParams" />
+	/// </summary>
 	[DataTable(TableName = "Test_TableCustomParams")]
 	public class TableCustomParams : CustomParam
 	{	
@@ -48,9 +88,7 @@ namespace DOL.Database.Tests
 		[DataElement(Index = true, Varchar = 255, AllowDbNull = true)]
 		public string TestValue { get { return m_testValue; } set { Dirty = true; m_testValue = value; } }
 		
-		public TableCustomParams()
-		{
-		}
+		public TableCustomParams() { }
 		
 		public TableCustomParams(string TestValue, string KeyName, string Value)
 		{

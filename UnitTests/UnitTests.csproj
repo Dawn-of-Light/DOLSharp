@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Database\CustomParamsTest.cs" />
     <Compile Include="Database\DatabaseSetUp.cs" />
+    <Compile Include="Database\DatabaseTests.cs" />
     <Compile Include="Database\TestDataObjects.cs" />
     <Compile Include="GameServer\gameutils\ServerTest.cs" />
     <Compile Include="SetUpTests.cs" />
