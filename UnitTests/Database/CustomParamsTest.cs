@@ -17,8 +17,8 @@
  *
  */
 using System;
+using System.Linq;
 
-using DOL.GS;
 using DOL.Database;
 
 using NUnit.Framework;
@@ -36,29 +36,52 @@ namespace DOL.Database.Tests
 		}
 		
 		[Test]
-		public void AccountParamSaveLoadTest()
+		public void TableParamSaveLoadTest()
 		{
-			var TestAccount = new Account();
-			TestAccount.Name = "NUnitTestAccount";
-			TestAccount.Password = "##NUnitTestAccountPassword";
-			TestAccount.Realm = 0;
-			TestAccount.CreationDate = DateTime.Now;
-			TestAccount.LastLogin = DateTime.Now;
-			TestAccount.LastLoginIP = "";
-			TestAccount.LastClientVersion = "1109";
-			TestAccount.Language = "EN";
-			TestAccount.PrivLevel = 1;
-			TestAccount.CustomParams = new [] { new AccountXCustomParam(TestAccount.Name, "TestParam", Convert.ToString(true)) };
+			DatabaseSetUp.Database.RegisterDataObject(typeof(TableCustomParams));
+			DatabaseSetUp.Database.RegisterDataObject(typeof(TableWithCustomParams));
 			
-			bool inserted = GameServer.Database.SaveObject(TestAccount);
+			var TestData = new TableWithCustomParams();
+			TestData.TestValue = "NUnitTest";
+			TestData.CustomParams = new [] { new TableCustomParams(TestData.TestValue, "TestParam", Convert.ToString(true)) };
 			
-			Assert.IsTrue(inserted, "Test Account not inserted properly in Database !");
+			// Cleanup
+			var Cleanup = DatabaseSetUp.Database.SelectAllObjects<TableWithCustomParams>();
+			foreach (var obj in Cleanup)
+				DatabaseSetUp.Database.DeleteObject(obj);
 			
-			var RetrieveAccount = GameServer.Database.FindObjectByKey<Account>(TestAccount.Name);
+			// Check Dynamic object is not Persisted
+			Assert.IsFalse(TestData.IsPersisted, "Newly Created Data Object should not be persisted...");
+			Assert.IsFalse(TestData.CustomParams.First().IsPersisted, "Newly Created Param Object should not be persisted...");
 			
-			Assert.AreEqual(TestAccount.CustomParams.Length,
-			                RetrieveAccount.CustomParams.Length,
-			                "Saved Account and Retrieved Account doesn't have the same amount of Custom Params");
+			// Insert Object
+			var paramsInserted = TestData.CustomParams.Select(o => DatabaseSetUp.Database.AddObject(o));
+			var inserted = DatabaseSetUp.Database.AddObject(TestData);
+			
+			Assert.IsTrue(inserted, "Test Object not inserted properly in Database !");
+			Assert.IsTrue(paramsInserted.All(result => result), "Params Objects not inserted properly in Database !");
+			
+			// Check Saved Object is Persisted
+			Assert.IsTrue(TestData.IsPersisted, "Newly Created Data Object should be persisted...");
+			Assert.IsTrue(TestData.CustomParams.First().IsPersisted, "Newly Created Param Object should be persisted...");
+
+			// Retrieve Object From Database
+			var RetrieveData = DatabaseSetUp.Database.FindObjectByKey<TableWithCustomParams>(TestData.ObjectId);
+			
+			// Check Retrieved object is Persisted
+			Assert.IsTrue(RetrieveData.IsPersisted, "Retrieved Data Object should be persisted...");
+			Assert.IsTrue(RetrieveData.CustomParams.First().IsPersisted, "Retrieved Param Object should be persisted...");
+			
+			// Compare both Objects
+			Assert.AreEqual(TestData.ObjectId, RetrieveData.ObjectId, "Newly Created and Inserted Data Object should have the same ID than Retrieved Object.");
+			
+			Assert.AreEqual(TestData.CustomParams.Length,
+			                RetrieveData.CustomParams.Length,
+			                "Saved Object and Retrieved Object doesn't have the same amount of Custom Params");
+			
+			Assert.AreEqual(TestData.CustomParams.First(param => param.KeyName == "TestParam").Value,
+			                RetrieveData.CustomParams.First(param => param.KeyName == "TestParam").Value,
+			               "Both Saved Object and Retrieved Object should have similar Custom Params...");
 		}
 	}
 }

@@ -656,7 +656,7 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// Create new instance of <see cref="DBSpellXCustomValues"/> linked to Account Name
+		/// Create new instance of <see cref="DBSpellXCustomValues"/> linked to Spell ID
 		/// </summary>
 		/// <param name="SpellID">Spell ID</param>
 		/// <param name="KeyName">Key Name</param>
@@ -665,6 +665,13 @@ namespace DOL.Database
 			: base(KeyName, Value)
 		{
 			this.SpellID = SpellID;
+		}
+		
+		/// <summary>
+		/// Create new instance of <see cref="DBSpellXCustomValues"/>
+		/// </summary>
+		public DBSpellXCustomValues()
+		{
 		}
 	}
 	

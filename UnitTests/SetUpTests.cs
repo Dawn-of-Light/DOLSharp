@@ -21,6 +21,7 @@ using System.IO;
 using System.Reflection;
 
 using DOL.GS;
+using DOL.Database.Connection;
 
 using NUnit.Framework;
 
@@ -51,6 +52,9 @@ namespace DOL.Server.Tests
 			{
 				GameServerConfiguration config = new GameServerConfiguration();
 				config.RootDirectory = FakeRoot.FullName;
+				config.DBType = ConnectionType.DATABASE_SQLITE;
+				config.DBConnectionString = string.Format("Data Source={0};Version=3;Pooling=False;Cache Size=1073741824;Journal Mode=Off;Synchronous=Off;Foreign Keys=True;Default Timeout=60",
+			                                     Path.Combine(config.RootDirectory, "dol-tests-only.sqlite3.db"));
 				config.Port = 0; // Auto Choosing Listen Port
 				config.UDPPort = 0; // Auto Choosing Listen Port
 				config.IP = System.Net.IPAddress.Parse("127.0.0.1");

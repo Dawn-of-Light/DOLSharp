@@ -72,5 +72,12 @@ namespace DOL.Database
 			this.KeyName = KeyName;
 			this.Value = Value;
 		}
+		
+		/// <summary>
+		/// Default constructor for <see cref="CustomParam"/>
+		/// </summary>
+		protected CustomParam()
+		{
+		}
 	}
 }

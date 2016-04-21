@@ -242,7 +242,7 @@ namespace DOL.Database
 	public class DOLCharactersBackupXCustomParam : DOLCharactersXCustomParam
 	{
 		/// <summary>
-		/// Create new instance of <see cref="DOLCharactersBackupXCustomParam"/> linked to Account Name
+		/// Create new instance of <see cref="DOLCharactersBackupXCustomParam"/> linked to Backup'd Character ObjectId
 		/// </summary>
 		/// <param name="DOLCharactersObjectId">DOLCharacters ObjectId</param>
 		/// <param name="KeyName">Key Name</param>
@@ -252,5 +252,11 @@ namespace DOL.Database
 		{
 		}
 
+		/// <summary>
+		/// Create new instance of <see cref="DOLCharactersBackupXCustomParam"/>
+		/// </summary>
+		public DOLCharactersBackupXCustomParam()
+		{
+		}
 	}
 }

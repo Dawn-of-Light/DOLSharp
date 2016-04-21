@@ -2273,7 +2273,7 @@ namespace DOL.Database
 		}
 		
 		/// <summary>
-		/// Create new instance of <see cref="DOLCharactersXCustomParam"/> linked to Account Name
+		/// Create new instance of <see cref="DOLCharactersXCustomParam"/> linked to Character ObjectId
 		/// </summary>
 		/// <param name="DOLCharactersObjectId">DOLCharacters ObjectId</param>
 		/// <param name="KeyName">Key Name</param>
@@ -2282,6 +2282,13 @@ namespace DOL.Database
 			: base(KeyName, Value)
 		{
 			this.DOLCharactersObjectId = DOLCharactersObjectId;
+		}
+		
+		/// <summary>
+		/// Create new instance of <see cref="DOLCharactersXCustomParam"/>
+		/// </summary>
+		public DOLCharactersXCustomParam()
+		{
 		}
 	}
 }

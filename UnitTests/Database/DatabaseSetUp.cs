@@ -17,8 +17,11 @@
  *
  */
 using System;
+using System.IO;
+using System.Reflection;
 
-using DOL.GS;
+using DOL.Database;
+using DOL.Database.Connection;
 
 using NUnit.Framework;
 
@@ -34,13 +37,24 @@ namespace DOL.Database.Tests
 		{
 		}
 		
+		public static IObjectDatabase Database { get; set; }
+		
 		[SetUp]
 		public void SetUp()
 		{
-			DOL.Server.Tests.SetUpTests.CreateGameServerInstance();
+			var CodeBase = new FileInfo(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath).Directory;
+			var connectionString = string.Format("Data Source={0};Version=3;Pooling=False;Cache Size=1073741824;Journal Mode=Off;Synchronous=Off;Foreign Keys=True;Default Timeout=60",
+			                                     Path.Combine(CodeBase.Parent.FullName, "dol-database-tests-only.sqlite3.db"));
 			
-			if (GameServer.Database == null)
-				GameServer.Instance.InitDB();
+			Database = ObjectDatabase.GetObjectDatabase(ConnectionType.DATABASE_SQLITE, connectionString);
+			
+			Console.WriteLine("DB Configured : {0}, {1}", ConnectionType.DATABASE_SQLITE, connectionString);
+		}
+		
+		[TearDown]
+		public void TearDown()
+		{
+
 		}
 	}
 }

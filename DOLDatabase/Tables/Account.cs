@@ -261,5 +261,12 @@ namespace DOL.Database
 		{
 			this.Name = Name;
 		}
+		
+		/// <summary>
+		/// Create new instance of <see cref="AccountXCustomParam"/>
+		/// </summary>
+		public AccountXCustomParam()
+		{
+		}
 	}
 }
