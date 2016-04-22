@@ -61,6 +61,10 @@
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Database\CustomParamsTest.cs" />
+    <Compile Include="Database\DatabaseSetUp.cs" />
+    <Compile Include="Database\DatabaseTests.cs" />
+    <Compile Include="Database\TestDataObjects.cs" />
     <Compile Include="GameServer\gameutils\ServerTest.cs" />
     <Compile Include="SetUpTests.cs" />
     <Compile Include="UPnP.cs" />
@@ -142,6 +146,9 @@
     <Compile Include="GameServer\world\RegionOidAllocation.cs">
       <SubType>Code</SubType>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Database" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

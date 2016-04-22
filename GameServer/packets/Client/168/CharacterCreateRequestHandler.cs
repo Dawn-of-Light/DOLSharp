@@ -573,6 +573,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (Properties.BACKUP_DELETED_CHARACTERS)
 						{
 							var backupCharacter = new DOLCharactersBackup(character);
+							backupCharacter.CustomParams.ForEach(param => GameServer.Database.AddObject(param));
 							GameServer.Database.AddObject(backupCharacter);
 							
 							if (log.IsWarnEnabled)

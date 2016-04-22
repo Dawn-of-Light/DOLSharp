@@ -28,6 +28,6 @@ namespace DOL.GS
 	/// </summary>
 	public interface ICustomParamsValuable
 	{
-		Dictionary<string, List<string>> CustomParamsDictionary { get; }
+		Dictionary<string, List<string>> CustomParamsDictionary { get; set; }
 	}
 }
