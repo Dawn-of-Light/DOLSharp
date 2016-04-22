@@ -53,7 +53,7 @@ namespace DOL.Database.Tests
 			Assert.IsFalse(TestData.CustomParams.First().IsPersisted, "Newly Created Param Object should not be persisted...");
 			
 			// Insert Object
-			var paramsInserted = TestData.CustomParams.Select(o => DatabaseSetUp.Database.AddObject(o));
+			var paramsInserted = TestData.CustomParams.Select(o => DatabaseSetUp.Database.AddObject(o)).ToArray();
 			var inserted = DatabaseSetUp.Database.AddObject(TestData);
 			
 			Assert.IsTrue(inserted, "Test Object not inserted properly in Database !");

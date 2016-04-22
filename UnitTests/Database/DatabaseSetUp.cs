@@ -49,12 +49,16 @@ namespace DOL.Database.Tests
 			Database = ObjectDatabase.GetObjectDatabase(ConnectionType.DATABASE_SQLITE, connectionString);
 			
 			Console.WriteLine("DB Configured : {0}, {1}", ConnectionType.DATABASE_SQLITE, connectionString);
+			
+			log4net.Config.BasicConfigurator.Configure(
+				new log4net.Appender.ConsoleAppender {
+					Layout = new log4net.Layout.SimpleLayout()});
 		}
 		
 		[TearDown]
 		public void TearDown()
 		{
-
+			log4net.LogManager.Shutdown();
 		}
 	}
 }

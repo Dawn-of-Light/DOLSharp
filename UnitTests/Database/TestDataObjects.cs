@@ -63,6 +63,52 @@ namespace DOL.Database.Tests
 	}
 	
 	/// <summary>
+	/// Basic Test Table with Relation 1-1
+	/// </summary>
+	[DataTable(TableName = "Test_TableRelation")]
+	public class TestTableRelation : TestTable
+	{
+		[Relation(LocalField = "ObjectId", RemoteField = "Test_TableRelationEntry_ID", AutoLoad = true, AutoDelete = true)]
+		public TestTableRelationEntry Entry;
+		
+		public TestTableRelation() { }
+	}
+	
+	/// <summary>
+	/// Basic Table with Relation Entry
+	/// </summary>
+	[DataTable(TableName = "Test_TableRelationEntry")]
+	public class TestTableRelationEntry : TestTable
+	{
+		public TestTableRelationEntry() { }
+	}
+	
+	/// <summary>
+	/// Basic Test Table with Relation 1-n
+	/// </summary>
+	[DataTable(TableName = "Test_TableRelations")]
+	public class TestTableRelations : TestTable
+	{
+		[Relation(LocalField = "ObjectId", RemoteField = "ForeignTestField", AutoLoad = true, AutoDelete = true)]
+		public TestTableRelationsEntries[] Entries;
+		
+		public TestTableRelations() { }
+	}
+	
+	/// <summary>
+	/// Basic Table with Relations Entries
+	/// </summary>
+	[DataTable(TableName = "Test_TableRelationsEntries")]
+	public class TestTableRelationsEntries : TestTable
+	{
+		string m_foreignTestField;
+		[DataElement(Varchar = 255, Index = true)]
+		public string ForeignTestField { get { return m_foreignTestField; } set { Dirty = true; m_foreignTestField = value; } }
+		
+		public TestTableRelationsEntries() { }
+	}
+	
+	/// <summary>
 	/// Test table handling Custom Params
 	/// </summary>
 	[DataTable(TableName = "Test_TableWithCustomParams")]

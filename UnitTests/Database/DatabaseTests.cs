@@ -177,5 +177,204 @@ namespace DOL.Database.Tests
 			Assert.IsNotNull(retrieve, "Test Table Auto Inc Other Object could not be Retrieved through Primary Key.");
 			Assert.AreEqual(otherObj.TestField, retrieve.TestField, "Test Table Auto Inc Retrieved Object is different from Other Object.");
 		}
+		
+		/// <summary>
+		/// Test Table with Unique Field
+		/// </summary>
+		[Test]
+		public void TestTableUnique()
+		{
+			// Prepare and Cleanup
+			DatabaseSetUp.Database.RegisterDataObject(typeof(TestTableUniqueField));
+			
+			var all = DatabaseSetUp.Database.SelectAllObjects<TestTableUniqueField>();
+			
+			foreach(var obj in all)
+				DatabaseSetUp.Database.DeleteObject(obj);
+			
+			var none = DatabaseSetUp.Database.SelectAllObjects<TestTableUniqueField>();
+			
+			Assert.IsEmpty(none, "Database shouldn't have any record For TestTableUniqueField.");
+			
+			// Test Add
+			var uniqueObj = new TestTableUniqueField { TestField = "Test Value Unique", Unique = 1 };
+			
+			var inserted = DatabaseSetUp.Database.AddObject(uniqueObj);
+			
+			Assert.IsTrue(inserted, "Test Table Unique Field could not insert unique object.");
+			
+			// Try Adding with unique Value
+			var otherUniqueObj = new TestTableUniqueField { TestField = "Test Value Other Unique", Unique = 1 };
+			
+			var otherInserted = DatabaseSetUp.Database.AddObject(otherUniqueObj);
+			
+			Assert.IsFalse(otherInserted, "Test Table Unique Field with Other Object violating unique constraint should not be inserted.");
+			
+			// Try Adding with non unique Value
+			var otherNonUniqueObj = new TestTableUniqueField { TestField = "Test Value Other Non-Unique", Unique = 2 };
+			
+			var nonUniqueInserted = DatabaseSetUp.Database.AddObject(otherNonUniqueObj);
+			
+			Assert.IsTrue(nonUniqueInserted, "Test Table Unique Field with Other Non Unique Object could not be inserted");
+			
+			// Try saving with unique Value
+			var retrieved = DatabaseSetUp.Database.FindObjectByKey<TestTableUniqueField>(otherNonUniqueObj.ObjectId);
+			
+			retrieved.Unique = 1;
+			
+			var saved = DatabaseSetUp.Database.SaveObject(retrieved);
+			
+			Assert.IsFalse(saved, "Test Table Unique Field with Retrieved Object violating unique constraint should not be saved.");
+			
+			// Delete Previous Unique and Try Reinsert.
+			var deleted = DatabaseSetUp.Database.DeleteObject(uniqueObj);
+			Assert.IsTrue(deleted, "Test Table Unique Field could not delete unique object.");
+			Assert.IsTrue(uniqueObj.IsDeleted, "Test Table Unique Field unique object should have delete flag set.");
+			
+			var retrievedSaved = DatabaseSetUp.Database.SaveObject(retrieved);
+			
+			Assert.IsTrue(retrievedSaved, "Test Table Unique Field Retrieved Object could not be inserted after deleting previous constraint violating object.");
+		}
+		
+		/// <summary>
+		/// Test Table with Relation 1-1
+		/// </summary>
+		[Test]
+		public void TestTableRelation()
+		{
+			// Prepare and Cleanup
+			DatabaseSetUp.Database.RegisterDataObject(typeof(TestTableRelation));
+			DatabaseSetUp.Database.RegisterDataObject(typeof(TestTableRelationEntry));
+			
+			var all = DatabaseSetUp.Database.SelectAllObjects<TestTableRelationEntry>();
+			
+			foreach(var obj in all)
+				DatabaseSetUp.Database.DeleteObject(obj);
+			
+			var none = DatabaseSetUp.Database.SelectAllObjects<TestTableRelationEntry>();
+			
+			Assert.IsEmpty(none, "Database shouldn't have any record For TestTableRelationEntry.");
+			
+			var allrel = DatabaseSetUp.Database.SelectAllObjects<TestTableRelation>();
+			
+			foreach(var obj in allrel)
+				DatabaseSetUp.Database.DeleteObject(obj);
+			
+			var nonerel = DatabaseSetUp.Database.SelectAllObjects<TestTableRelation>();
+			
+			Assert.IsEmpty(nonerel, "Database shouldn't have any record For TestTableRelation.");
+			
+			// Try Add with no Relation
+			var noRelObj = new TestTableRelation() { TestField = "RelationTestValue" };
+			
+			var inserted = DatabaseSetUp.Database.AddObject(noRelObj);
+			
+			Assert.IsTrue(inserted, "Test Table Relation could not insert object with no relation.");
+			Assert.IsNull(noRelObj.Entry, "Test Table Relation object with no relation should have null Entry.");
+			
+			// Try Adding Relation
+			var relObj = new TestTableRelationEntry() { TestField = "RelationEntryTestValue", ObjectId = noRelObj.ObjectId };
+			
+			var relInserted = DatabaseSetUp.Database.AddObject(relObj);
+			
+			Assert.IsTrue(relInserted, "Test Table Relation Entry could not be inserted.");
+			
+			noRelObj.Entry = relObj;
+			
+			var saved = DatabaseSetUp.Database.SaveObject(noRelObj);
+			
+			Assert.IsTrue(saved, "Test Table Relation could not save Object with a new relation Added.");
+			
+			// Try Retrieving Relation
+			var retrieve = DatabaseSetUp.Database.FindObjectByKey<TestTableRelation>(noRelObj.ObjectId);
+			
+			Assert.IsNotNull(retrieve, "Test Table Relation could not retrieve relation object by ObjectId.");
+			Assert.IsNotNull(retrieve.Entry, "Test Table Relation retrieved object have no entry object.");
+			Assert.AreEqual(relObj.TestField, retrieve.Entry.TestField, "Test Table Relation retrieved object Entry Relation is different from created object.");
+			
+			// Try Deleting Relation
+			var deleted = DatabaseSetUp.Database.DeleteObject(noRelObj);
+			
+			Assert.IsTrue(deleted, "Test Table Relation could not delete object with relation.");
+			Assert.IsTrue(noRelObj.IsDeleted, "Test Table Relation deleted object should have deleted flag set.");
+			
+			// Check that Relation was deleted
+			var relRetrieve = DatabaseSetUp.Database.FindObjectByKey<TestTableRelationEntry>(relObj.ObjectId);
+			
+			Assert.IsNull(relRetrieve, "Test Table Relation Entry was not auto deleted with relation object.");
+			Assert.IsTrue(relObj.IsDeleted, "Test Table Relation Entry should have deleted flag set after auto delete.");
+		}
+
+		/// <summary>
+		/// Test Table with Relation 1-n
+		/// </summary>
+		[Test]
+		public void TestTableRelations()
+		{
+			// Prepare and Cleanup
+			DatabaseSetUp.Database.RegisterDataObject(typeof(TestTableRelations));
+			DatabaseSetUp.Database.RegisterDataObject(typeof(TestTableRelationsEntries));
+			
+			var all = DatabaseSetUp.Database.SelectAllObjects<TestTableRelationsEntries>();
+			
+			foreach(var obj in all)
+				DatabaseSetUp.Database.DeleteObject(obj);
+			
+			var none = DatabaseSetUp.Database.SelectAllObjects<TestTableRelationsEntries>();
+			
+			Assert.IsEmpty(none, "Database shouldn't have any record For TestTableRelationsEntries.");
+			
+			var allrel = DatabaseSetUp.Database.SelectAllObjects<TestTableRelations>();
+			
+			foreach(var obj in allrel)
+				DatabaseSetUp.Database.DeleteObject(obj);
+			
+			var nonerel = DatabaseSetUp.Database.SelectAllObjects<TestTableRelations>();
+			
+			Assert.IsEmpty(nonerel, "Database shouldn't have any record For TestTableRelations.");
+			
+			// Try Add With no Relation
+			var noRelObj = new TestTableRelations() { TestField = "RelationsTestValue" };
+			
+			var inserted = DatabaseSetUp.Database.AddObject(noRelObj);
+			
+			Assert.IsTrue(inserted, "Test Table Relations could not insert object with no relation.");
+			Assert.IsNull(noRelObj.Entries, "Test Table Relations object with no relation should have null Entry.");
+			
+			// Try Adding Relation
+			var testValues = new[] { "RelationsEntriesTestValue 1", "RelationsEntriesTestValue 2", "RelationsEntriesTestValue 3" };
+			
+			var relObjs = testValues.Select(val => new TestTableRelationsEntries() { TestField = val, ForeignTestField = noRelObj.ObjectId }).ToArray();
+			
+			var relInserted = relObjs.Select(o => DatabaseSetUp.Database.AddObject(o)).ToArray();
+			
+			Assert.IsTrue(relInserted.All(res => res), "Test Table Relations Entries could not be inserted.");
+			
+			noRelObj.Entries = relObjs;
+			
+			var saved = DatabaseSetUp.Database.SaveObject(noRelObj);
+			
+			Assert.IsTrue(saved, "Test Table Relations could not save Object with a new relations Added.");
+			
+			// Try Retrieving Relation
+			var retrieve = DatabaseSetUp.Database.FindObjectByKey<TestTableRelations>(noRelObj.ObjectId);
+			
+			Assert.IsNotNull(retrieve, "Test Table Relations could not retrieve relations object by ObjectId.");
+			Assert.IsNotNull(retrieve.Entries, "Test Table Relations retrieved object have no entries objects.");
+			CollectionAssert.AreEquivalent(testValues, retrieve.Entries.Select(o => o.TestField), 
+			                               "Test Table Relations retrieved objects Entries Relation are different from created objects.");
+
+			// Try Deleting Relation
+			var deleted = DatabaseSetUp.Database.DeleteObject(noRelObj);
+			
+			Assert.IsTrue(deleted, "Test Table Relations could not delete object with relations.");
+			Assert.IsTrue(noRelObj.IsDeleted, "Test Table Relations deleted object should have deleted flag set.");
+			
+			// Check that Relation was deleted
+			var relRetrieve = DatabaseSetUp.Database.SelectAllObjects<TestTableRelationsEntries>().Where(o => o.ForeignTestField == noRelObj.ObjectId);
+			
+			Assert.IsEmpty(relRetrieve, "Test Table Relations Entries were not auto deleted with relations object.");
+			Assert.IsTrue(relObjs.All(o => o.IsDeleted), "Test Table Relations Entries should have deleted flags set after auto delete.");
+		}
 	}
 }
