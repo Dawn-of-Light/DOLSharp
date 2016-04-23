@@ -249,6 +249,12 @@ namespace DOL.GS
 		/// <param name="value">Value Selector</param>
 		public static void InitFromCollection<T>(this ICustomParamsValuable obj, IEnumerable<T> collection, Func<T, string> key, Func<T, string> value)
 		{
+			if (collection == null)
+			{
+				obj .CustomParamsDictionary = new Dictionary<string, List<string>>();
+				return;
+			}
+			
 			obj.CustomParamsDictionary = collection.GroupBy(item => key(item))
 				.ToDictionary(grp => grp.Key, grp => grp.Select(item => value(item)).ToList());
 		}

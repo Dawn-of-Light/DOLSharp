@@ -18,20 +18,19 @@
  */
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Reflection;
-using System.Text;
+using DataTable = System.Data.DataTable;
+
 using DOL.Database.Attributes;
 using DOL.Database.Cache;
 using DOL.Database.Connection;
 using DOL.Database.Handlers;
-using DOL.Database.UniqueID;
+
 using log4net;
-using MySql.Data.MySqlClient;
-using MySql.Data.Types;
-using DataTable = System.Data.DataTable;
 
 namespace DOL.Database
 {
@@ -224,11 +223,11 @@ namespace DOL.Database
 			{
 				return AddObjectImpl(dataObject);
 			}
-			else
-			{
-				Log.Warn("AddObject called on DataObject when AllowAdd is False: " + dataObject.TableName + " : " + dataObject.ObjectId);
-				return false;
-			}
+			
+			if (Log.IsWarnEnabled)
+				Log.WarnFormat("AddObject called on DataObject when AllowAdd is False: {0} : {1}", dataObject.TableName, dataObject.ObjectId);
+			
+			return false;
 		}
 
 		/// <summary>
@@ -511,13 +510,7 @@ namespace DOL.Database
 
 		public string[] GetTableNameList()
 		{
-			var list = new List<string>();
-			foreach (var entry in TableDatasets)
-			{
-				list.Add(entry.Key);
-			}
-
-			return list.ToArray();
+			return TableDatasets.Keys.ToArray();
 		}
 
 		public virtual string Escape(string toEscape)
@@ -1039,12 +1032,8 @@ namespace DOL.Database
 			//  code.
 			// 
 			string name = DataObject.GetViewName(objectType);
-
-			// if not a view, we use tablename, else viewname
-			if (string.IsNullOrEmpty(name))
-				return DataObject.GetTableName(objectType);
-
-			return name;
+			
+			return string.IsNullOrEmpty(name) ? DataObject.GetTableName(objectType) : name;
 		}
 
 		private DataObject ReloadObject(DataObject dataObject)
