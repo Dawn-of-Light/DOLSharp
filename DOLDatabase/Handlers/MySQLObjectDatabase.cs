@@ -68,7 +68,7 @@ namespace DOL.Database.Handlers
 			// Check Value Type
 			if (bind.ValueType == typeof(char))
 			{
-				type = "SMALLINT UNSIGNED";
+				type = "SMALLINT(5) UNSIGNED";
 			}
 			else if (bind.ValueType == typeof(DateTime))
 			{
@@ -76,35 +76,35 @@ namespace DOL.Database.Handlers
 			}
 			else if (bind.ValueType == typeof(sbyte))
 			{
-				type = "TINYINT";
+				type = "TINYINT(3)";
 			}
 			else if (bind.ValueType == typeof(short))
 			{
-				type = "SMALLINT";
+				type = "SMALLINT(6)";
 			}
 			else if (bind.ValueType == typeof(int))
 			{
-				type = "INT";
+				type = "INT(11)";
 			}
 			else if (bind.ValueType == typeof(long))
 			{
-				type = "BIGINT";
+				type = "BIGINT(20)";
 			}
 			else if (bind.ValueType == typeof(byte))
 			{
-				type = "TINYINT UNSIGNED";
+				type = "TINYINT(3) UNSIGNED";
 			}
 			else if (bind.ValueType == typeof(ushort))
 			{
-				type = "SMALLINT UNSIGNED";
+				type = "SMALLINT(5) UNSIGNED";
 			}
 			else if (bind.ValueType == typeof(uint))
 			{
-				type = "INT UNSIGNED";
+				type = "INT(10) UNSIGNED";
 			}
 			else if (bind.ValueType == typeof(ulong))
 			{
-				type = "BIGINT UNSIGNED";
+				type = "BIGINT(20) UNSIGNED";
 			}
 			else if (bind.ValueType == typeof(float))
 			{
@@ -145,9 +145,9 @@ namespace DOL.Database.Handlers
 			if (bind.PrimaryKey != null && bind.PrimaryKey.AutoIncrement)
 			{
 				if (bind.ValueType == typeof(ulong) || bind.ValueType == typeof(long))
-					type = "BIGING";
+					type = "BIGINT(20)";
 				else
-					type = "INT";
+					type = "INT(11)";
 			}
 			
 			return type;
@@ -361,8 +361,7 @@ namespace DOL.Database.Handlers
 						    
 						    foreach(var parameter in parameters.Skip(current))
 						    {
-					    		foreach(var param in parameter)
-					    			cmd.Parameters[param.Key].Value = param.Value;
+					    		FillSQLParameter(parameter, cmd.Parameters);
 
 					    		using (var reader = cmd.ExecuteReader())
 							    {
@@ -440,8 +439,7 @@ namespace DOL.Database.Handlers
 						    
 						    foreach(var parameter in parameters.Skip(current))
 						    {
-					    		foreach(var param in parameter)
-					    			cmd.Parameters[param.Key].Value = param.Value;
+					    		FillSQLParameter(parameter, cmd.Parameters);
 					    		
 						    	var result = cmd.ExecuteNonQuery();
 							    affected.Add(result);
@@ -515,8 +513,7 @@ namespace DOL.Database.Handlers
 						    
 						    foreach(var parameter in parameters.Skip(current))
 						    {
-					    		foreach(var param in parameter)
-					    			cmd.Parameters[param.Key].Value = param.Value;
+					    		FillSQLParameter(parameter, cmd.Parameters);
 					    		
 					    		if (retrieveLastInsertID)
 					    		{

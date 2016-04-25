@@ -21,6 +21,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Reflection;
 
 using DOL.Database.Connection;
@@ -494,6 +495,22 @@ namespace DOL.Database
 				if (Log.IsErrorEnabled)
 					Log.ErrorFormat("{0}: {1} = {2} doesnt fit to {3}\n{4}", obj.TableName, bind.ColumnName, value.GetType().FullName, bind.ValueType, e);
 			}
+		}
+		
+		/// <summary>
+		/// Fill SQL Command Parameter with Converted Values.
+		/// </summary>
+		/// <param name="parameter">Parameter collection for this Command</param>
+		/// <param name="dbParams">DbParameter Object to Fill</param>
+		protected virtual void FillSQLParameter(IEnumerable<KeyValuePair<string, object>> parameter, DbParameterCollection dbParams)
+		{
+    		foreach(var param in parameter)
+    		{
+    			if (param.Value is char)
+    				dbParams[param.Key].Value = Convert.ToUInt16(param.Value);
+    			else
+    				dbParams[param.Key].Value = param.Value;
+    		}
 		}
 		#endregion
 		

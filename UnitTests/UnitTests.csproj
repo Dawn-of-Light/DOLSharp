@@ -65,6 +65,10 @@
     <Compile Include="Database\DatabaseSetUp.cs" />
     <Compile Include="Database\DatabaseTests.cs" />
     <Compile Include="Database\DatabaseTypeTests.cs" />
+    <Compile Include="Database\MySQLDBCustomParamsTest.cs" />
+    <Compile Include="Database\MySQLDBSetUp.cs" />
+    <Compile Include="Database\MySQLDBTests.cs" />
+    <Compile Include="Database\MySQLDBTypeTests.cs" />
     <Compile Include="Database\TestDataObjects.cs" />
     <Compile Include="Database\TestDataObjectType.cs" />
     <Compile Include="GameServer\gameutils\ServerTest.cs" />

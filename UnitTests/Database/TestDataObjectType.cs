@@ -37,9 +37,9 @@ namespace DOL.Database.Tests
 		char m_char;
 		[DataElement(AllowDbNull = false)]
 		public char Char { get { return m_char; } set { Dirty = true; m_char = value; } }
-		byte m_sbyte;
+		sbyte m_sbyte;
 		[DataElement(AllowDbNull = false)]
-		public byte Sbyte { get { return m_sbyte; } set { Dirty = true; m_sbyte = value; } }
+		public sbyte Sbyte { get { return m_sbyte; } set { Dirty = true; m_sbyte = value; } }
 		short m_short;
 		[DataElement(AllowDbNull = false)]
 		public short Short { get { return m_short; } set { Dirty = true; m_short = value; } }
@@ -94,9 +94,9 @@ namespace DOL.Database.Tests
 		char m_char;
 		[DataElement(AllowDbNull = true)]
 		public char Char { get { return m_char; } set { Dirty = true; m_char = value; } }
-		byte m_sbyte;
+		sbyte m_sbyte;
 		[DataElement(AllowDbNull = true)]
-		public byte Sbyte { get { return m_sbyte; } set { Dirty = true; m_sbyte = value; } }
+		public sbyte Sbyte { get { return m_sbyte; } set { Dirty = true; m_sbyte = value; } }
 		short m_short;
 		[DataElement(AllowDbNull = true)]
 		public short Short { get { return m_short; } set { Dirty = true; m_short = value; } }

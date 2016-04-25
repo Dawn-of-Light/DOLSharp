@@ -25,28 +25,26 @@ using DOL.Database.Connection;
 
 using NUnit.Framework;
 
-namespace DOL.Database.Tests
+namespace DOL.Database.MySQLTests
 {
 	/// <summary>
 	/// Database SetUp for Unit Tests
 	/// </summary>
 	[SetUpFixture]
-	public class DatabaseSetUp
+	public class MySQLDBSetUp
 	{
-		public DatabaseSetUp()
+		public MySQLDBSetUp()
 		{
 		}
-		
 		public static SQLObjectDatabase Database { get; set; }
 				
 		[SetUp]
 		public void SetUp()
 		{
 			var CodeBase = new FileInfo(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath).Directory;
-			var connectionString = string.Format("Data Source={0};Version=3;Pooling=False;Cache Size=1073741824;Journal Mode=Off;Synchronous=Off;Foreign Keys=True;Default Timeout=60",
-			                                     Path.Combine(CodeBase.Parent.FullName, "dol-database-tests-only.sqlite3.db"));
+			var connectionString = "Server=localhost;Port=3306;Database=test_dol_database;User ID=root;Password=;Treat Tiny As Boolean=False";
 			                                     
-			Database = (SQLObjectDatabase)ObjectDatabase.GetObjectDatabase(ConnectionType.DATABASE_SQLITE, connectionString);
+			Database = (SQLObjectDatabase)ObjectDatabase.GetObjectDatabase(ConnectionType.DATABASE_MYSQL, connectionString);
 			
 			Console.WriteLine("DB Configured : {0}, {1}", Database.ConnectionType, connectionString);
 			

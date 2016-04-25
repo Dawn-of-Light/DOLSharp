@@ -61,19 +61,46 @@ namespace DOL.Database.Handlers
 		{
 			string type = null;
 			// Check Value Type
-			if (bind.ValueType == typeof(char)
-			    || bind.ValueType == typeof(sbyte)
-			    || bind.ValueType == typeof(short)
-			    || bind.ValueType == typeof(int)
-			    || bind.ValueType == typeof(long)
-			    || bind.ValueType == typeof(byte)
-			    || bind.ValueType == typeof(ushort)
-			    || bind.ValueType == typeof(uint)
-			    || bind.ValueType == typeof(ulong)
-			    || bind.ValueType == typeof(bool)
-			  )
+			if (bind.ValueType == typeof(char))
 			{
-				type = "INTEGER";
+				type = "UNSIGNED SMALLINT(5)";
+			}
+			else if (bind.ValueType == typeof(sbyte))
+			{
+				// override to prevent byte conversion
+				type = "SMALLINT(3)";
+			}
+			else if (bind.ValueType == typeof(short))
+			{
+				type = "SMALLINT(6)";
+			}
+			else if (bind.ValueType == typeof(int))
+			{
+				type = "INT(11)";
+			}
+			else if (bind.ValueType == typeof(long))
+			{
+				type = "BIGINT(20)";
+			}
+			else if (bind.ValueType == typeof(byte))
+			{
+				type = "UNSIGNED TINYINT(3)";
+			}
+			else if (bind.ValueType == typeof(ushort))
+			{
+				type = "UNSIGNED SMALLINT(5)";
+			}
+			else if (bind.ValueType == typeof(uint))
+			{
+				type = "UNSIGNED INT(10)";
+			}
+			else if (bind.ValueType == typeof(ulong))
+			{
+				type = "UNSIGNED BIGINT(20)";
+			}
+			else if (bind.ValueType == typeof(bool))			  
+			{
+				type = "TINYINT(1)";
 			}
 			else if (bind.ValueType == typeof(DateTime))
 			{
@@ -411,8 +438,7 @@ namespace DOL.Database.Handlers
 					    	
 					    	foreach(var parameter in parameters.Skip(current))
 					    	{
-					    		foreach(var param in parameter)
-					    			cmd.Parameters[param.Key].Value = param.Value;
+					    		FillSQLParameter(parameter, cmd.Parameters);
 					    	
 							    using (var reader = cmd.ExecuteReader())
 							    {
@@ -493,10 +519,9 @@ namespace DOL.Database.Handlers
 					    	foreach(var keys in parameters.First().Select(kv => kv.Key))
 					    		cmd.Parameters.Add(new SQLiteParameter(keys));
 					    	
-					    	foreach(var parmeter in parameters.Skip(current))
+					    	foreach(var parameter in parameters.Skip(current))
 					    	{
-					    		foreach(var param in parmeter)
-					    			cmd.Parameters[param.Key].Value = param.Value;
+					    		FillSQLParameter(parameter, cmd.Parameters);
 					    	
 							    var result = cmd.ExecuteNonQuery();
 							    affected.Add(result);
@@ -568,10 +593,9 @@ namespace DOL.Database.Handlers
 					    	foreach(var keys in parameters.First().Select(kv => kv.Key))
 					    		cmd.Parameters.Add(new SQLiteParameter(keys));
 					    	
-					    	foreach(var parmeter in parameters.Skip(current))
+					    	foreach(var parameter in parameters.Skip(current))
 					    	{
-					    		foreach(var param in parmeter)
-					    			cmd.Parameters[param.Key].Value = param.Value;
+					    		FillSQLParameter(parameter, cmd.Parameters);
 					    		
 					    		if (retrieveLastInsertID)
 					    		{
