@@ -17,32 +17,148 @@
  *
  */
 
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Data;
+using DataTable = System.Data.DataTable;
+
 using DOL.Database.Cache;
+using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
 	/// <summary>
-	/// Zusammenfassung für DataTableHandler.
+	/// DataTableHandler
 	/// </summary>
-	public class DataTableHandler
+	public sealed class DataTableHandler
 	{
 		private readonly ICache _cache;
 		private readonly DataSet _dset;
 		private readonly Hashtable _precache;
 		private bool _hasRelations;
-
+		
 		/// <summary>
-		/// The Constructor
+		/// The Table Name for this Handler
 		/// </summary>
-		/// <param name="dataSet"></param>
-		public DataTableHandler(DataSet dataSet)
+		public string TableName { get; private set; }
+		/// <summary>
+		/// Element Bindings for this Handler
+		/// </summary>
+		public ElementBinding[] ElementBindings { get; private set; }
+		/// <summary>
+		/// Retrieve Element Bindings for DataTable Fields Only
+		/// </summary>
+		public IEnumerable<ElementBinding> FieldElementBindings 
 		{
+			get { return ElementBindings.Where(bind => bind.Relation == null); }
+		}
+		/// <summary>
+		/// Data Table Handled
+		/// </summary>
+		public DataTable Table { get; private set; }
+		
+		/// <summary>
+		/// Create new instance of <see cref="DataTableHandler"/>
+		/// </summary>
+		/// <param name="type"></param>
+		public DataTableHandler(Type type)
+		{
+			// Init Cache and Table Params
+			TableName = AttributesUtils.GetTableOrViewName(type);
+			
 			_cache = new SimpleCache();
 			_precache = new Hashtable();
-			_dset = dataSet;
+			UsesPreCaching = AttributesUtils.GetPreCachedFlag(type);
+			_dset = new DataSet();
+			_dset.DataSetName = TableName;
+			_dset.EnforceConstraints = true;
+			_dset.CaseSensitive = false;
 			_hasRelations = false;
+			
+			// Parse Table Type
+			ElementBindings = type.GetMembers().Select(member => new ElementBinding(member)).Where(bind => bind.IsDataElementBinding).ToArray();
+			
+			// If no Primary Key AutoIncrement add GUID
+			if (FieldElementBindings.Any(bind => bind.PrimaryKey != null && !bind.PrimaryKey.AutoIncrement))
+				ElementBindings = ElementBindings.Concat(new [] {
+				                                         	new ElementBinding(type.GetProperty("ObjectId"),
+				                                         	                   new DataElement(){ Unique = true },
+				                                         	                   string.Format("{0}_ID", TableName))
+				                                         }).ToArray();
+			else if (FieldElementBindings.All(bind => bind.PrimaryKey == null))
+				ElementBindings = ElementBindings.Concat(new [] {
+				                                         	new ElementBinding(type.GetProperty("ObjectId"),
+				                                         	                   new PrimaryKey(),
+				                                         	                   string.Format("{0}_ID", TableName))
+				                                         }).ToArray();
+			// Prepare Table
+			Table = new DataTable(TableName);
+			var multipleUnique = new List<ElementBinding>();
+			var indexes = new Dictionary<string, ElementBinding[]>();
+			
+			//Build Table for DataSet
+			foreach (var bind in ElementBindings)
+			{
+				if (bind.Relation != null)
+				{
+					_hasRelations = true;
+					continue;
+				}
+				
+				var column = Table.Columns.Add(bind.ColumnName, bind.ValueType);
+				
+				if (bind.PrimaryKey != null)
+				{
+					column.AutoIncrement = bind.PrimaryKey.AutoIncrement;
+					Table.PrimaryKey = new [] { column };
+				}
+				
+				if (bind.DataElement != null)
+				{
+					column.AllowDBNull = bind.DataElement.AllowDbNull;
+					
+					// Store Multi Unique for definition after table
+					// Single Unique can be defined directly.
+					if (!string.IsNullOrEmpty(bind.DataElement.UniqueColumns))
+					{
+						multipleUnique.Add(bind);
+
+					}
+					else if (bind.DataElement.Unique)
+					{
+						Table.Constraints.Add(new UniqueConstraint(string.Format("UNIQUE_{0}", bind.ColumnName), column));
+					}
+					
+					// Store Indexes for definition after table
+					if (!string.IsNullOrEmpty(bind.DataElement.IndexColumns))
+						indexes.Add(string.Format("INDEX_{0}", bind.ColumnName), bind.DataElement.IndexColumns.Split(',')
+						            .Select(col => FieldElementBindings.FirstOrDefault(ind => ind.ColumnName.Equals(col.Trim(), StringComparison.OrdinalIgnoreCase)))
+						            .Concat(new [] { bind }).ToArray());
+					else if (bind.DataElement.Index)
+						indexes.Add(string.Format("INDEX_{0}", bind.ColumnName), new [] { bind });
+					
+					if (bind.DataElement.Varchar > 0)
+						column.ExtendedProperties.Add("VARCHAR", bind.DataElement.Varchar);
+				}
+			}
+			// Set Indexes when all columns are set
+			Table.ExtendedProperties.Add("INDEXES", indexes.Select(kv => new KeyValuePair<string, DataColumn[]>(
+				kv.Key,
+				kv.Value.Select(bind => Table.Columns[bind.ColumnName]).ToArray()))
+				.ToDictionary(kv => kv.Key, kv => kv.Value));
+			
+			// Set Unique Constraints when all columns are set.
+			foreach (var bind in multipleUnique)
+			{
+				var columns = bind.DataElement.UniqueColumns.Split(',').Select(column => column.Trim()).Concat(new [] { bind.ColumnName });
+				Table.Constraints.Add(new UniqueConstraint(string.Format("UNIQUE_{0}", bind.ColumnName),
+				                                           columns.Select(column => Table.Columns[column]).ToArray()));
+			}
+			
+			// Set Table for DataSet
+			_dset.Tables.Add(Table);
 		}
 
 		/// <summary>

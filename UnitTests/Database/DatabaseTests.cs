@@ -376,5 +376,24 @@ namespace DOL.Database.Tests
 			Assert.IsEmpty(relRetrieve, "Test Table Relations Entries were not auto deleted with relations object.");
 			Assert.IsTrue(relObjs.All(o => o.IsDeleted), "Test Table Relations Entries should have deleted flags set after auto delete.");
 		}
+		
+		/// <summary>
+		/// Test Table with Multiple Unique Fields
+		/// </summary>
+		[Test]
+		public void TestTableMultiUnique()
+		{
+			// Prepare and Cleanup
+			DatabaseSetUp.Database.RegisterDataObject(typeof(TestTableMultiUnique));
+			
+			var all = DatabaseSetUp.Database.SelectAllObjects<TestTableMultiUnique>();
+			
+			foreach(var obj in all)
+				DatabaseSetUp.Database.DeleteObject(obj);
+			
+			var none = DatabaseSetUp.Database.SelectAllObjects<TestTableMultiUnique>();
+			
+			Assert.IsEmpty(none, "Database shouldn't have any record For TestTableMultiUnique.");
+		}
 	}
 }

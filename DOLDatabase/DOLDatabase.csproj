@@ -101,6 +101,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Attributes\AttributesUtils.cs" />
     <Compile Include="Attributes\ReadOnly.cs" />
     <Compile Include="Attributes\DataElement.cs">
       <SubType>Code</SubType>
@@ -126,15 +127,12 @@
     <Compile Include="Connection\ConnectionType.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Connection\DataConnection.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Connection\TableRowBindind.cs" />
     <Compile Include="CustomParam.cs" />
+    <Compile Include="ElementBinding.cs" />
     <Compile Include="Handlers\SQLiteObjectDatabase.cs" />
-    <Compile Include="Handlers\XMLObjectDatabase.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="LanguageDataObject.cs" />
+    <Compile Include="SQLObjectDatabase.cs" />
     <Compile Include="Tables\CharacterXDataQuest.cs" />
     <Compile Include="Tables\ClassXSpecialization.cs" />
     <Compile Include="Tables\HousingConsignmentMerchant.cs" />

@@ -44,19 +44,33 @@ namespace DOL.Database
 		/// </summary>
 		protected static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		/// <summary>
+		/// Number Format Info to Use for Database
+		/// </summary>
 		protected static readonly NumberFormatInfo Nfi = new CultureInfo("en-US", false).NumberFormat;
-		private readonly Dictionary<Type, BindingInfo[]> BindingInfos = new Dictionary<Type, BindingInfo[]>();
-		protected readonly DataConnection Connection;
+		
+		// TODO Remove
 		private readonly Dictionary<Type, ConstructorInfo> ConstructorByFieldType = new Dictionary<Type, ConstructorInfo>();
 		private readonly Dictionary<Type, MemberInfo[]> MemberInfoCache = new Dictionary<Type, MemberInfo[]>();
 		private readonly Dictionary<MemberInfo, Relation[]> RelationAttributes = new Dictionary<MemberInfo, Relation[]>();
 
-		protected readonly Dictionary<string, DataTableHandler> TableDatasets;
+		/// <summary>
+		/// Data Table Handlers for this Database Handler
+		/// </summary>
+		protected readonly Dictionary<string, DataTableHandler> TableDatasets = new Dictionary<string, DataTableHandler>();
 
-		protected ObjectDatabase(DataConnection connection)
+		/// <summary>
+		/// Connection String for this Database
+		/// </summary>
+		protected string ConnectionString { get; set; }
+		
+		/// <summary>
+		/// Creates a new Instance of <see cref="ObjectDatabase"/>
+		/// </summary>
+		/// <param name="ConnectionString">Database Connection String</param>
+		protected ObjectDatabase(string ConnectionString)
 		{
-			TableDatasets = new Dictionary<string, DataTableHandler>();
-			Connection = connection;
+			this.ConnectionString = ConnectionString;
 		}
 
 		#region Data tables
@@ -339,132 +353,20 @@ namespace DOL.Database
 			return dataObjects ?? new List<TObject>();
 		}
 
-		public void RegisterDataObject(Type objType)
+		/// <summary>
+		/// Register Data Object Type if not already Registered
+		/// </summary>
+		/// <param name="objType">DataObject Type</param>
+		public virtual void RegisterDataObject(Type objType)
 		{
-			if (TableDatasets.ContainsKey(GetTableOrViewName(objType)))
+			var tableName = AttributesUtils.GetTableOrViewName(objType);
+			if (TableDatasets.ContainsKey(tableName))
 				return;
+			
+			var dataTableHandler = new DataTableHandler(objType);
+			TableDatasets.Add(tableName, dataTableHandler);
 
-			bool primaryKeySpecified = false;
-			bool useAutoIncrementColumn = false;
-			bool relations = false;
-			MemberInfo primaryIndexMember = null;
-
-			string tableName = GetTableOrViewName(objType);
-			var ds = new DataSet();
-			var table = new DataTable(tableName);
-
-			MemberInfo[] myMembers = objType.GetMembers();
-
-			for (int i = 0; i < myMembers.Length; i++)
-			{
-				//object[] myAttributes = myMembers[i].GetCustomAttributes(true);
-				//object[] myAttributes = myMembers[i].GetCustomAttributes(typeof(DOL.Database.Attributes.DataElement), true);
-
-				object[] myAttributes = myMembers[i].GetCustomAttributes(typeof(PrimaryKey), true);
-
-				if (myAttributes.Length > 0)
-				{
-					primaryKeySpecified = true;
-					if (myMembers[i] is PropertyInfo)
-						table.Columns.Add(myMembers[i].Name, ((PropertyInfo)myMembers[i]).PropertyType);
-					else
-						table.Columns.Add(myMembers[i].Name, ((FieldInfo)myMembers[i]).FieldType);
-
-					table.Columns[myMembers[i].Name].AutoIncrement = ((PrimaryKey)myAttributes[0]).AutoIncrement;
-
-					useAutoIncrementColumn = table.Columns[myMembers[i].Name].AutoIncrement;
-
-					var index = new DataColumn[1];
-					index[0] = table.Columns[myMembers[i].Name];
-					primaryIndexMember = myMembers[i];
-					table.PrimaryKey = index;
-					continue;
-				}
-
-				myAttributes = myMembers[i].GetCustomAttributes(typeof(DataElement), true);
-
-				if (myAttributes.Length > 0)
-				{
-					//if(myAttributes[0] is Attributes.DataElement)
-					//{
-					if (myMembers[i] is PropertyInfo)
-					{
-						table.Columns.Add(myMembers[i].Name, ((PropertyInfo)myMembers[i]).PropertyType);
-					}
-					else
-					{
-						table.Columns.Add(myMembers[i].Name, ((FieldInfo)myMembers[i]).FieldType);
-					}
-
-					table.Columns[myMembers[i].Name].AllowDBNull = ((DataElement)myAttributes[0]).AllowDbNull;
-					if (((DataElement)myAttributes[0]).Unique)
-					{
-						table.Constraints.Add(new UniqueConstraint("UNIQUE_" + myMembers[i].Name, table.Columns[myMembers[i].Name]));
-					}
-
-					if (((DataElement)myAttributes[0]).IndexColumns != string.Empty)
-					{
-						table.Columns[myMembers[i].Name].ExtendedProperties.Add("INDEX", true);
-						table.Columns[myMembers[i].Name].ExtendedProperties.Add("INDEXCOLUMNS", ((DataElement)myAttributes[0]).IndexColumns);
-					}
-					else if (((DataElement)myAttributes[0]).Index)
-					{
-						table.Columns[myMembers[i].Name].ExtendedProperties.Add("INDEX", true);
-					}
-
-					if (((DataElement)myAttributes[0]).Varchar > 0)
-					{
-						table.Columns[myMembers[i].Name].ExtendedProperties.Add("VARCHAR", ((DataElement)myAttributes[0]).Varchar);
-					}
-
-					//if(myAttributes[0] is Attributes.PrimaryKey)
-					myAttributes = GetRelationAttributes(myMembers[i]);
-
-					//if(myAttributes[0] is Attributes.Relation)
-					if (myAttributes.Length > 0)
-					{
-						relations = true;
-					}
-				}
-			}
-
-			if (useAutoIncrementColumn == false)
-			{
-				// We define the Tablename_ID column that will always contain a generated unique ID
-
-				DataColumn idColumn = table.Columns.Add(tableName + "_ID", typeof(string));
-
-				if (primaryKeySpecified)
-				{
-					// if another primary key is defined on this table but the TableName_ID column is still being used then force
-					// the creation of a unique index on the the TableName_ID column
-					table.Constraints.Add(new UniqueConstraint(idColumn.ColumnName, idColumn));
-				}
-			}
-
-			if (primaryKeySpecified == false)
-			{
-				var index = new DataColumn[1];
-				index[0] = table.Columns[tableName + "_ID"];
-				table.PrimaryKey = index;
-			}
-
-			if (Connection.IsSQLConnection)
-			{
-				Connection.CheckOrCreateTable(table);
-			}
-
-			ds.DataSetName = tableName;
-			ds.EnforceConstraints = true;
-			ds.CaseSensitive = false;
-			ds.Tables.Add(table);
-
-			var dth = new DataTableHandler(ds);
-			dth.HasRelations = relations;
-			dth.UsesPreCaching = DataObject.GetPreCachedFlag(objType);
-
-			TableDatasets.Add(tableName, dth);
-
+			// TODO get rid of this or implement it properly
 			//if (dth.UsesPreCaching && Connection.IsSQLConnection)
 			//{
 			//    // not useful for xml connection
@@ -508,19 +410,21 @@ namespace DOL.Database
 			//}
 		}
 
-		public string[] GetTableNameList()
+		/// <summary>
+		/// escape the strange character from string
+		/// </summary>
+		/// <param name="rawInput">the string</param>
+		/// <returns>the string with escaped character</returns>
+		public abstract string Escape(string rawInput);
+		
+		/// <summary>
+		/// Execute a Raw Non-Query on the Database
+		/// </summary>
+		/// <param name="rawQuery">Raw Command</param>
+		/// <returns>True if the Command succeeded</returns>
+		public virtual bool ExecuteNonQuery(string rawQuery)
 		{
-			return TableDatasets.Keys.ToArray();
-		}
-
-		public virtual string Escape(string toEscape)
-		{
-			return Connection.Escape(toEscape);
-		}
-
-		public bool ExecuteNonQuery(string rawQuery)
-		{
-			return ExecuteNonQueryImpl(rawQuery);
+			throw new NotImplementedException();
 		}
 
 		#endregion
@@ -596,12 +500,10 @@ namespace DOL.Database
 		/// Gets the number of objects in a given table in the database based on a given set of criteria. (where clause)
 		/// </summary>
 		/// <typeparam name="TObject">the type of objects to retrieve</typeparam>
-		/// <param name="where">the where clause to filter object count on</param>
+		/// <param name="whereExpression">the where clause to filter object count on</param>
 		/// <returns>a positive integer representing the number of objects that matched the given criteria; zero if no such objects existed</returns>
-		protected abstract int GetObjectCountImpl<TObject>(string where)
+		protected abstract int GetObjectCountImpl<TObject>(string whereExpression)
 			where TObject : DataObject;
-
-		protected abstract bool ExecuteNonQueryImpl(string raqQuery);
 
 		#endregion
 
@@ -835,7 +737,7 @@ namespace DOL.Database
 
 						if (val != null && val.ToString() != string.Empty)
 						{
-							if (DataObject.GetPreCachedFlag(remoteType))
+							if (AttributesUtils.GetPreCachedFlag(remoteType))
 							{
 								elements = new DataObject[1];
 								elements[0] = FindObjectByKeyImpl(remoteType, val);
@@ -980,62 +882,6 @@ namespace DOL.Database
 			return rel;
 		}
 
-		protected BindingInfo[] GetBindingInfo(Type objectType)
-		{
-			BindingInfo[] bindingInfos;
-
-			if (!BindingInfos.TryGetValue(objectType, out bindingInfos))
-			{
-				var list = new List<BindingInfo>();
-
-				MemberInfo[] objMembers = objectType.GetMembers();
-				for (int i = 0; i < objMembers.Length; i++)
-				{
-					object[] keyAttrib = objMembers[i].GetCustomAttributes(typeof(PrimaryKey), true);
-					object[] readonlyAttrib = objMembers[i].GetCustomAttributes(typeof(ReadOnly), true);
-					object[] attrib = objMembers[i].GetCustomAttributes(typeof(DataElement), true);
-					object[] relAttrib = GetRelationAttributes(objMembers[i]);
-
-					bool usePrimaryKey = keyAttrib.Length > 0 && (keyAttrib[0] as PrimaryKey).AutoIncrement;
-
-					if (attrib.Length > 0 || keyAttrib.Length > 0 || relAttrib.Length > 0 || readonlyAttrib.Length > 0)
-					{
-						var info = new BindingInfo(objMembers[i], keyAttrib.Length > 0, usePrimaryKey, relAttrib.Length > 0, readonlyAttrib.Length > 0,
-						                           (attrib.Length > 0) ? (DataElement)attrib[0] : null);
-						list.Add(info);
-					}
-				}
-
-				bindingInfos = list.ToArray();
-				BindingInfos[objectType] = bindingInfos;
-			}
-
-			return bindingInfos;
-		}
-
-		/// <summary>
-		/// Primary Key ID of a view
-		/// </summary>
-		/// <param name="objectType"></param>
-		/// <returns></returns>
-		public static string GetTableOrViewName(Type objectType)
-		{
-			// Graveen: introducing view selection hack (before rewriting the layer :D)
-			// basically, a view must exist and is created with the following:
-			//
-			//	[DataTable(TableName="InventoryItem",ViewName = "MarketItem")]
-			//	public class SomeMarketItems : InventoryItem {};
-			//
-			//  here, we rely on the view called MarketItem,
-			//  based on the InventoryItem table. We have to tell to the code
-			//  only to bypass the id generated with FROM by the above
-			//  code.
-			// 
-			string name = DataObject.GetViewName(objectType);
-			
-			return string.IsNullOrEmpty(name) ? DataObject.GetTableName(objectType) : name;
-		}
-
 		private DataObject ReloadObject(DataObject dataObject)
 		{
 			try
@@ -1069,38 +915,12 @@ namespace DOL.Database
 
 		public static IObjectDatabase GetObjectDatabase(ConnectionType connectionType, string connectionString)
 		{
-			var connection = new DataConnection(connectionType, connectionString);
-
 			if (connectionType == ConnectionType.DATABASE_MYSQL)
-				return new MySQLObjectDatabase(connection);
+				return new MySQLObjectDatabase(connectionString);
 			if (connectionType == ConnectionType.DATABASE_SQLITE)
-				return new SQLiteObjectDatabase(connection);
+				return new SQLiteObjectDatabase(connectionString);
 
 			return null;
-		}
-
-		#endregion
-
-		#region Nested type: BindingInfo
-
-		protected class BindingInfo
-		{
-			public readonly bool HasRelation;
-			public readonly MemberInfo Member;
-			public readonly bool ReadOnly;
-			public DataElement DataElementAttribute;
-			public bool PrimaryKey;
-			public bool UsePrimaryKey;
-
-			public BindingInfo(MemberInfo member, bool primaryKey, bool usePrimaryKey, bool hasRelation, bool readOnly, DataElement attrib)
-			{
-				Member = member;
-				PrimaryKey = primaryKey;
-				UsePrimaryKey = usePrimaryKey;
-				HasRelation = hasRelation;
-				DataElementAttribute = attrib;
-				ReadOnly = readOnly;
-			}
 		}
 
 		#endregion

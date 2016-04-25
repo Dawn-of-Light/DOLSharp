@@ -109,6 +109,23 @@ namespace DOL.Database.Tests
 	}
 	
 	/// <summary>
+	/// Basic Table with Multiple Unique Constraints
+	/// </summary>
+	[DataTable(TableName = "Test_TableMultiUnique")]
+	public class TestTableMultiUnique : TestTable
+	{
+		string m_strUniquePart;
+		[DataElement(UniqueColumns="IntUniquePart")]
+		public string StrUniquePart { get { return m_strUniquePart; } set { Dirty = true; m_strUniquePart = value; } }
+		
+		int m_intUniquePart;
+		[DataElement]
+		public int IntUniquePart { get { return m_intUniquePart; } set { Dirty = true; m_intUniquePart = value; } }
+		
+		public TestTableMultiUnique() { }
+	}
+	
+	/// <summary>
 	/// Test table handling Custom Params
 	/// </summary>
 	[DataTable(TableName = "Test_TableWithCustomParams")]

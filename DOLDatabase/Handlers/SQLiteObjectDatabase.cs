@@ -19,981 +19,627 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
+using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Data;
-using DOL.Database.Attributes;
+using DataTable = System.Data.DataTable;
+
 using DOL.Database.Connection;
-using DOL.Database.UniqueID;
+using DOL.Database.Transaction;
+using IsolationLevel = DOL.Database.Transaction.IsolationLevel;
+
 using System.Data.SQLite;
+
+using log4net;
 
 namespace DOL.Database.Handlers
 {
-	public class SQLiteObjectDatabase : ObjectDatabase
-	{				
-		public SQLiteObjectDatabase(DataConnection connection)
-			: base(connection)
+	public class SQLiteObjectDatabase : SQLObjectDatabase
+	{
+		/// <summary>
+		/// Defines a logger for this class.
+		/// </summary>
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+		/// <summary>
+		/// Create a new instance of <see cref="SQLiteObjectDatabase"/>
+		/// </summary>
+		/// <param name="ConnectionString">Database Connection String</param>
+		public SQLiteObjectDatabase(string ConnectionString)
+			: base(ConnectionString)
 		{
 		}
 		
-		#region SQL implementation
-
+		#region SQLite Implementation
 		/// <summary>
-		/// Adds a new object to the database.
+		/// Convert a Table ElementBinding to Database Type string (Upper)
 		/// </summary>
-		/// <param name="dataObject">the object to add to the database</param>
-		/// <returns>true if the object was added successfully; false otherwise</returns>
-		protected override bool AddObjectImpl(DataObject dataObject)
+		/// <param name="bind">ElementBindind to Convert</param>
+		/// <param name="table">DataTableHandler for Special cases</param>
+		/// <returns>Database Type string ToUpper</returns>
+		protected virtual string GetDatabaseType(ElementBinding bind, DataTableHandler table)
 		{
-			try
+			string type = null;
+			// Check Value Type
+			if (bind.ValueType == typeof(char)
+			    || bind.ValueType == typeof(sbyte)
+			    || bind.ValueType == typeof(short)
+			    || bind.ValueType == typeof(int)
+			    || bind.ValueType == typeof(long)
+			    || bind.ValueType == typeof(byte)
+			    || bind.ValueType == typeof(ushort)
+			    || bind.ValueType == typeof(uint)
+			    || bind.ValueType == typeof(ulong)
+			    || bind.ValueType == typeof(bool)
+			  )
 			{
-				string tableName = dataObject.TableName;
-
-				var columns = new StringBuilder();
-				var values = new StringBuilder();
-
-				MemberInfo[] objMembers = dataObject.GetType().GetMembers();
-				bool hasRelations = false;
-				bool usePrimary = false;
-				object primaryKey = null;
-				string primaryColumnName = "";
-				bool firstColumn = true;
-				string dateFormat = Connection.GetDBDateFormat();
-
-				for (int i = 0; i < objMembers.Length; i++)
+				type = "INTEGER";
+			}
+			else if (bind.ValueType == typeof(DateTime))
+			{
+				type = "DATETIME";
+			}
+			else if (bind.ValueType == typeof(float))
+			{
+				type = "FLOAT";
+			}
+			else if (bind.ValueType == typeof(double))
+			{
+				type = "DOUBLE";
+			}
+			else if (bind.ValueType == typeof(string))
+			{
+				if (bind.DataElement != null && bind.DataElement.Varchar > 0)
 				{
-					bool isPrimary = false;
-
-					if (!hasRelations)
-					{
-						object[] relAttrib = GetRelationAttributes(objMembers[i]);
-						hasRelations = relAttrib.Length > 0;
-					}
-					object[] keyAttrib = objMembers[i].GetCustomAttributes(typeof(PrimaryKey), true);
-					object[] attrib = objMembers[i].GetCustomAttributes(typeof(DataElement), true);
-
-					// if a primary key field is using auto increment then use it as the key instead of the tablename_id column
-					if (keyAttrib.Length > 0 && (keyAttrib[0] as PrimaryKey).AutoIncrement)
-					{
-						usePrimary = true;
-						primaryColumnName = objMembers[i].Name;
-						isPrimary = true;
-					}
-
-					if (attrib.Length > 0 || keyAttrib.Length > 0)
-					{
-						object val = null;
-						if (objMembers[i] is PropertyInfo)
-						{
-							val = ((PropertyInfo)objMembers[i]).GetValue(dataObject, null);
-						}
-						else if (objMembers[i] is FieldInfo)
-						{
-							val = ((FieldInfo)objMembers[i]).GetValue(dataObject);
-						}
-
-						if (firstColumn == false)
-						{
-							columns.Append(", ");
-							values.Append(", ");
-						}
-
-						columns.Append("`" + objMembers[i].Name + "`");
-
-						firstColumn = false;
-
-						if (val is bool)
-						{
-							val = ((bool)val) ? (byte)1 : (byte)0;
-						}
-						else if (val is DateTime)
-						{
-							val = ((DateTime)val).ToString(dateFormat);
-						}
-						else if (val is float)
-						{
-							val = ((float)val).ToString(Nfi);
-						}
-						else if (val is double)
-						{
-							val = ((double)val).ToString(Nfi);
-						}
-						else if (val is string)
-						{
-							val = Escape(val.ToString());
-						}
+					type = string.Format("VARCHAR({0})", bind.DataElement.Varchar);
+				}
+				else if (table.Table.PrimaryKey.Any(key => key.ColumnName.Equals(bind.ColumnName, StringComparison.OrdinalIgnoreCase))
+				         || table.Table.Constraints.OfType<UniqueConstraint>().Any(cstrnt => cstrnt.Columns.Any(col => col.ColumnName.Equals(bind.ColumnName, StringComparison.OrdinalIgnoreCase)))
+				         || (table.Table.ExtendedProperties["INDEXES"] != null && (table.Table.ExtendedProperties["INDEXES"] as Dictionary<string, DataColumn[]>)
+				             .Any(kv => kv.Value.Any(col => col.ColumnName.Equals(bind.ColumnName, StringComparison.OrdinalIgnoreCase)))))
+				{
+					// If is in Primary Key Constraint or Unique Constraint or Index row, cast to Varchar.
+					type = "VARCHAR(255)";
+				}
+				else
+				{
+					type = "TEXT";
+				}
+			}
+			else
+			{
+				type = "BLOB";
+			}
+			
+			if (bind.PrimaryKey != null && bind.PrimaryKey.AutoIncrement)
+				type = "INTEGER";
+			
+			return type;
+		}
+		
+		/// <summary>
+		/// Get Database Column Definition for ElementBinding
+		/// </summary>
+		/// <param name="bind">ElementBinding for Column Definition</param>
+		/// <param name="table">DataTableHanlder for Special cases</param>
+		/// <returns>Column Definitnion string.</returns>
+		protected virtual string GetColumnDefinition(ElementBinding bind, DataTableHandler table)
+		{
+			string type = GetDatabaseType(bind, table);
+			string defaultDef = null;
 						
-						if (isPrimary && ((val is int && (int)val == 0) || (val is long && (long)val == 0)))
-						{
-							values.Append("null");
-						}
-						else
-						{
-							values.Append('\'');
-							values.Append(val);
-							values.Append('\'');
-						}
-
-						if (isPrimary)
-						{
-							if (val is int)
-							{
-								primaryKey = Convert.ToInt32(val);
-							}
-							else if (val is long)
-							{
-								primaryKey = Convert.ToInt64(val);
-							}
-							else
-							{
-								if (Log.IsErrorEnabled)
-									Log.Error("Error adding object into " + dataObject.TableName + ".  PrimaryKey with AutoIncrement must be of type int or long.");
-
-								return false;
-							}
-						}
-					}
-				}
-
-				if (usePrimary == false)
-				{
-					if (dataObject.ObjectId == null)
-					{
-						dataObject.ObjectId = IDGenerator.GenerateID();
-					}
-
-					// Add the silly Tablename_ID column
-					columns.Insert(0, "`" + tableName + "_ID`, ");
-					values.Insert(0, "'" + Escape(dataObject.ObjectId) + "', ");
-				}
-
-				string sql = "INSERT INTO `" + tableName + "` (" + columns + ") VALUES (" + values + ")";
-
-				if (Log.IsDebugEnabled)
-					Log.Debug(sql);
-
-				if (usePrimary)
-				{
-					object objID = Connection.ExecuteScalar(sql + "; SELECT LAST_INSERT_ROWID();");
-					
-					object newID;
-					bool newIDzero = false;
-					bool error = false;
-					
-					if(primaryKey is int)
-					{
-						newID = Convert.ToInt32(objID);
-						newIDzero = (int)newID == 0;
-						error = newIDzero && (int)primaryKey == 0;
-					}
-					else
-					{
-						newID = Convert.ToInt64(objID);
-						newIDzero = (long)newID == 0;
-						error = newIDzero && (long)primaryKey == 0;
-					}
-					
-					if (primaryKey == null || error)
-					{
-						if (Log.IsErrorEnabled)
-							Log.Error("Error adding object into " + dataObject.TableName + " ID=" + objID + ", UsePrimary, Query = " + sql);
-						return false;
-					}
-					else
-					{
-						if (newIDzero)
-						{
-							newID = Convert.ToInt64(primaryKey);
-						}
-
-						for (int i = 0; i < objMembers.Length; i++)
-						{
-							if (objMembers[i].Name == primaryColumnName)
-							{
-								if (objMembers[i] is PropertyInfo)
-								{
-									if (primaryKey is long)
-									{
-										((PropertyInfo)objMembers[i]).SetValue(dataObject, (long)newID, null);
-									}
-									else
-									{
-										((PropertyInfo)objMembers[i]).SetValue(dataObject, (int)newID, null);
-									}
-								}
-								else if (objMembers[i] is FieldInfo)
-								{
-									if (primaryKey is long)
-									{
-										((FieldInfo)objMembers[i]).SetValue(dataObject, (long)newID);
-									}
-									else
-									{
-										((FieldInfo)objMembers[i]).SetValue(dataObject, (int)newID);
-									}
-								}
-
-								break;
-							}
-						}
-					}
-				}
-				else
-				{
-					int res = Connection.ExecuteNonQuery(sql);
-					if (res == 0)
-					{
-						if (Log.IsErrorEnabled)
-							Log.Error("Error adding object into " + dataObject.TableName + " ID=" + dataObject.ObjectId + "Query = " + sql);
-						return false;
-					}
-				}
-
-
-				if (hasRelations)
-				{
-					SaveObjectRelations(dataObject);
-				}
-
-				dataObject.Dirty = false;
-				dataObject.IsPersisted = true;
-				dataObject.IsDeleted = false;
-
-				return true;
-			}
-			catch (Exception e)
+			// Check for Default Value depending on Constraints and Type
+			if (bind.PrimaryKey != null && bind.PrimaryKey.AutoIncrement)
 			{
-				if (Log.IsErrorEnabled)
-					Log.Error("Error while adding data object: " + dataObject.ToString(), e);
+				defaultDef = "PRIMARY KEY AUTOINCREMENT";
 			}
-
-			return false;
-		}
-
-		/// <summary>
-		/// Persists an object to the database.
-		/// </summary>
-		/// <param name="dataObject">the object to save to the database</param>
-		protected override bool SaveObjectImpl(DataObject dataObject)
-		{
-			try
+			else if (bind.DataElement != null && bind.DataElement.AllowDbNull)
 			{
-				string tableName = dataObject.TableName;
-
-				var sb = new StringBuilder("UPDATE `" + tableName + "` SET ");
-
-				BindingInfo[] bindingInfo = GetBindingInfo(dataObject.GetType());
-				bool hasRelations = false;
-				bool first = true;
-				string dateFormat = Connection.GetDBDateFormat();
-				string primaryKeyColumn = string.Empty;
-				object primaryKeyValue = null;
-
-				for (int i = 0; i < bindingInfo.Length; i++)
-				{
-					BindingInfo bind = bindingInfo[i];
-
-					if (bind.ReadOnly)
-					{
-						continue;
-					}
-
-					if (!hasRelations)
-					{
-						hasRelations = bind.HasRelation;
-					}
-
-					if (!bind.HasRelation)
-					{
-						object val = null;
-						if (bind.Member is PropertyInfo)
-						{
-							val = ((PropertyInfo)bind.Member).GetValue(dataObject, null);
-						}
-						else if (bind.Member is FieldInfo)
-						{
-							val = ((FieldInfo)bind.Member).GetValue(dataObject);
-						}
-						else
-						{
-							continue;
-						}
-
-						if (!first)
-						{
-							sb.Append(", ");
-						}
-						else
-						{
-							first = false;
-						}
-
-						if (val is bool)
-						{
-							val = ((bool)val) ? (byte)1 : (byte)0;
-						}
-						else if (val is DateTime)
-						{
-							val = ((DateTime)val).ToString(dateFormat);
-						}
-						else if (val is float)
-						{
-							val = ((float)val).ToString(Nfi);
-						}
-						else if (val is double)
-						{
-							val = ((double)val).ToString(Nfi);
-						}
-						else if (val is string)
-						{
-							val = Escape(val.ToString());
-						}
-
-						sb.Append("`" + bind.Member.Name + "` = ");
-						sb.Append('\'');
-						sb.Append(val);
-						sb.Append('\'');
-
-						if (bind.UsePrimaryKey)
-						{
-							primaryKeyColumn = bind.Member.Name;
-							primaryKeyValue = val;
-						}
-
-
-					}
-				}
-
-				if (primaryKeyColumn != string.Empty)
-				{
-					sb.Append(" WHERE `" + primaryKeyColumn + "` = '" + primaryKeyValue + "'");
-				}
-				else
-				{
-					sb.Append(" WHERE `" + tableName + "_ID` = '" + Escape(dataObject.ObjectId) + "'");
-				}
-
-				string sql = sb.ToString();
-
-				if (Log.IsDebugEnabled)
-					Log.Debug(sql);
-
-				int res = Connection.ExecuteNonQuery(sql);
-				if (res == 0)
-				{
-					if (Log.IsErrorEnabled)
-						Log.Error("Error modifying object " + dataObject.TableName + " ID=" + dataObject.ObjectId + " --- keyvalue changed? " + sql + " " + Environment.StackTrace);
-					return false;
-				}
-
-				if (hasRelations)
-				{
-					SaveObjectRelations(dataObject);
-				}
-
-				dataObject.Dirty = false;
-				dataObject.IsPersisted = true;
-				return true;
+				defaultDef = "DEFAULT NULL";
 			}
-			catch (Exception e)
+			else if (bind.ValueType == typeof(DateTime))
 			{
-				if (Log.IsErrorEnabled)
-					Log.Error("Error while saving data object: " + dataObject.ToString(), e);
-			}
-
-			return false;
-		}
-
-		/// <summary>
-		/// Deletes an object from the database.
-		/// </summary>
-		/// <param name="dataObject">the object to delete from the database</param>
-		protected override bool DeleteObjectImpl(DataObject dataObject)
-		{
-			try
-			{
-				BindingInfo[] bindingInfo = GetBindingInfo(dataObject.GetType());
-
-				string primaryKeyColumn = string.Empty;
-				object primaryKeyValue = null;
-
-				for (int i = 0; i < bindingInfo.Length; i++)
-				{
-					BindingInfo bind = bindingInfo[i];
-					object val;
-
-					if (bind.Member is PropertyInfo)
-					{
-						val = ((PropertyInfo)bind.Member).GetValue(dataObject, null);
-					}
-					else if (bind.Member is FieldInfo)
-					{
-						val = ((FieldInfo)bind.Member).GetValue(dataObject);
-					}
-					else
-					{
-						continue;
-					}
-
-					if (bind.UsePrimaryKey)
-					{
-						primaryKeyColumn = bind.Member.Name;
-						primaryKeyValue = val;
-					}
-
-				}
-
-				string sql;
-
-				if (primaryKeyColumn != string.Empty)
-				{
-					sql = "DELETE FROM `" + dataObject.TableName + "` WHERE `" + primaryKeyColumn + "` = '" + Escape(primaryKeyValue.ToString()) + "'";
-				}
-				else
-				{
-					sql = "DELETE FROM `" + dataObject.TableName + "` WHERE `" + dataObject.TableName + "_ID` = '" + Escape(dataObject.ObjectId) + "'";
-				}
-
-				if (Log.IsDebugEnabled)
-					Log.Debug(sql);
-
-				int res = Connection.ExecuteNonQuery(sql);
-				if (res == 0)
-				{
-					if (Log.IsErrorEnabled)
-						Log.Error("Deleting " + dataObject.ToString() + " object failed!" + " " + Environment.StackTrace);
-				}
-
-				dataObject.IsPersisted = false;
-
-				DeleteFromCache(dataObject.TableName, dataObject);
-				DeleteObjectRelations(dataObject);
-
-				dataObject.IsDeleted = true;
-				return true;
-			}
-			catch (Exception e)
-			{
-				throw new DatabaseException("Deleting DataObject " + dataObject.ToString() + " failed !", e);
-			}
-		}
-
-
-		protected override DataObject FindObjectByKeyImpl(Type objectType, object key)
-		{
-			MemberInfo[] members = objectType.GetMembers();
-			var ret = Activator.CreateInstance(objectType) as DataObject;
-
-			string tableName = ret.TableName;
-			DataTableHandler dth = TableDatasets[tableName];
-			string whereClause = null;
-
-			if (dth.UsesPreCaching)
-			{
-				DataObject obj = dth.GetPreCachedObject(key);
-				if (obj != null)
-					return obj;
-			}
-
-			// Escape PK value
-			key = Escape(key.ToString());
-
-			for (int i = 0; i < members.Length; i++)
-			{
-				object[] keyAttrib = members[i].GetCustomAttributes(typeof(PrimaryKey), true);
-				if (keyAttrib.Length > 0)
-				{
-					whereClause = "`" + members[i].Name + "` = '" + key + "'";
-					break;
-				}
-			}
-
-			if (whereClause == null)
-			{
-				whereClause = "`" + ret.TableName + "_ID` = '" + key + "'";
-			}
-
-			var objs = SelectObjectsImpl(objectType, whereClause, Transaction.IsolationLevel.DEFAULT);
-			if (objs.Length > 0)
-			{
-				dth.SetPreCachedObject(key, objs[0]);
-				return objs[0];
-			}
-
-			return null;
-		}
-
-		/// <summary>
-		/// Finds an object in the database by primary key.
-		/// </summary>
-		/// <param name="objectType">the type of object to retrieve</param>
-		/// <param name="key">the value of the primary key to search for</param>
-		/// <returns>a <see cref="DataObject" /> instance representing a row with the given primary key value; null if the key value does not exist</returns>
-		protected override TObject FindObjectByKeyImpl<TObject>(object key)
-		{
-			MemberInfo[] members = typeof(TObject).GetMembers();
-			var ret = (TObject)Activator.CreateInstance(typeof(TObject));
-
-			string tableName = ret.TableName;
-			DataTableHandler dth = TableDatasets[tableName];
-			string whereClause = null;
-
-			if (dth.UsesPreCaching)
-			{
-				DataObject obj = dth.GetPreCachedObject(key);
-				if (obj != null)
-					return obj as TObject;
-			}
-
-			// Escape PK value
-			key = Escape(key.ToString());
-
-			for (int i = 0; i < members.Length; i++)
-			{
-				object[] keyAttrib = members[i].GetCustomAttributes(typeof(PrimaryKey), true);
-				if (keyAttrib.Length > 0)
-				{
-					whereClause = "`" + members[i].Name + "` = '" + key + "'";
-					break;
-				}
-			}
-
-			if (whereClause == null)
-			{
-				whereClause = "`" + ret.TableName + "_ID` = '" + key + "'";
-			}
-
-			var objs = SelectObjectsImpl<TObject>(whereClause, Transaction.IsolationLevel.DEFAULT);
-			if (objs.Count > 0)
-			{
-				dth.SetPreCachedObject(key, objs[0]);
-				return objs[0];
-			}
-
-			return null;
-		}
-
-		/// <summary>
-		/// Selects objects from a given table in the database based on a given set of criteria. (where clause)
-		/// </summary>
-		/// <param name="objectType">the type of objects to retrieve</param>
-		/// <param name="whereClause">the where clause to filter object selection on</param>
-		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects that matched the given criteria</returns>
-		protected override DataObject[] SelectObjectsImpl(Type objectType, string whereClause, Transaction.IsolationLevel isolation)
-		{
-			string tableName = GetTableOrViewName(objectType);
-			var dataObjects = new List<DataObject>(64);
-
-			// build sql command
-
-			//var sb = new StringBuilder("SELECT `" + tableName + "_ID`, ");
-			var sb = new StringBuilder("");
-			bool first = true;
-			bool usePrimaryKey = false;
-
-			BindingInfo[] bindingInfo = GetBindingInfo(objectType);
-			for (int i = 0; i < bindingInfo.Length; i++)
-			{
-				if (!bindingInfo[i].HasRelation)
-				{
-					if (!first)
-					{
-						sb.Append(", ");
-					}
-					else
-					{
-						first = false;
-					}
-					sb.Append("`" + bindingInfo[i].Member.Name + "`");
-
-					if (bindingInfo[i].UsePrimaryKey)
-					{
-						usePrimaryKey = true;
-					}
-				}
-			}
-
-			if (usePrimaryKey)
-			{
-				sb.Insert(0, "SELECT ");
+				defaultDef = "NOT NULL DEFAULT '2000-01-01 00:00:00'";
 			}
 			else
 			{
-				sb.Insert(0, "SELECT `" + tableName + "_ID`, ");
+				defaultDef = "NOT NULL";
 			}
-
-			sb.Append(" FROM `" + tableName + "`");
-
-			if (whereClause != null && whereClause.Trim().Length > 0)
-			{
-				sb.Append(" WHERE " + whereClause);
-			}
-
-			string sql = sb.ToString();
-
-			if (Log.IsDebugEnabled)
-				Log.Debug("DataObject[] SelectObjectsImpl: " + sql);
-
-			int objCount = 0;
-
-			// read data and fill objects
-			Connection.ExecuteSelect(sql, delegate(IDataReader reader)
-			{
-				var data = new object[reader.FieldCount];
-				while (reader.Read())
-				{
-					objCount++;
-
-					reader.GetValues(data);
-
-					// fill new data object
-					var obj = Activator.CreateInstance(objectType) as DataObject;
-					
-					int field = 0;
-					if (usePrimaryKey == false)
-					{
-						// fill the silly TableName_ID field
-						obj.ObjectId = (string)data[0];
-						field = 1;
-					}
-
-					bool hasRelations = false;
-					// we can use hard index access because we iterate the same order here
-					for (int i = 0; i < bindingInfo.Length; i++)
-					{
-						BindingInfo bind = bindingInfo[i];
-						if (!hasRelations)
-						{
-							hasRelations = bind.HasRelation;
-						}
-
-						if (!bind.HasRelation)
-						{
-							object val = data[field++];
-							if (val != null && !val.GetType().IsInstanceOfType(DBNull.Value))
-							{
-								if (bind.Member is PropertyInfo)
-								{
-									Type type = ((PropertyInfo)bind.Member).PropertyType;
-
-									try
-									{
-										if (type == typeof(bool))
-										{
-											// special handling for bool
-											((PropertyInfo)bind.Member).SetValue(obj,
-																				  (val.ToString() == "0") ? false : true,
-																				  null);
-										}
-										else if (type == typeof(System.UInt64))
-										{
-											((PropertyInfo)bind.Member).SetValue(obj, Convert.ToUInt64(val), null);
-										}
-										else if (type == typeof(System.UInt32))
-										{
-											((PropertyInfo)bind.Member).SetValue(obj, Convert.ToUInt32(val), null);
-										}
-										else if (type == typeof(System.Int32))
-										{
-											((PropertyInfo)bind.Member).SetValue(obj, Convert.ToInt32(val), null);
-										}
-										else if (type == typeof(System.UInt16))
-										{
-											((PropertyInfo)bind.Member).SetValue(obj, Convert.ToUInt16(val), null);
-										}
-										else if (type == typeof(System.Int16))
-										{
-											((PropertyInfo)bind.Member).SetValue(obj, Convert.ToInt16(val), null);
-										}
-										else if (type == typeof(System.SByte))
-										{
-											((PropertyInfo)bind.Member).SetValue(obj, Convert.ToSByte(val), null);
-										}
-										else if (type == typeof(System.Byte))
-										{
-											((PropertyInfo)bind.Member).SetValue(obj, Convert.ToByte(val), null);
-										}
-										else
-										{
-											((PropertyInfo)bind.Member).SetValue(obj, val, null);
-										}
-									}
-									catch (Exception e)
-									{
-										if (Log.IsErrorEnabled)
-											Log.Error(
-												tableName + ": " + bind.Member.Name + " = " + val.GetType().FullName +
-												" doesnt fit to " + bind.Member.DeclaringType.FullName, e);
-										continue;
-									}
-								}
-								else if (bind.Member is FieldInfo)
-								{
-									((FieldInfo)bind.Member).SetValue(obj, val);
-								}
-							}
-						}
-					}
-
-					dataObjects.Add(obj);
-					obj.Dirty = false;
-
-					if (hasRelations)
-					{
-						FillLazyObjectRelations(obj, true);
-					}
-
-					obj.IsPersisted = true;
-				}
-			}
-			, isolation);
-
-			return dataObjects.ToArray();
+			
+			return string.Format("`{0}` {1} {2}", bind.ColumnName, type, defaultDef);
 		}
-
-		/// <summary>
-		/// Selects objects from a given table in the database based on a given set of criteria. (where clause)
-		/// </summary>
-		/// <param name="objectType">the type of objects to retrieve</param>
-		/// <param name="whereClause">the where clause to filter object selection on</param>
-		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects that matched the given criteria</returns>
-		protected override IList<TObject> SelectObjectsImpl<TObject>(string whereClause, Transaction.IsolationLevel isolation)
-		{
-			string tableName = GetTableOrViewName(typeof(TObject));
-			var dataObjects = new List<TObject>(64);
-
-			// build sql command
-			var sb = new StringBuilder("");
-			bool first = true;
-
-			bool usePrimaryKey = false;
-
-			BindingInfo[] bindingInfo = GetBindingInfo(typeof(TObject));
-			for (int i = 0; i < bindingInfo.Length; i++)
-			{
-				if (!bindingInfo[i].HasRelation)
-				{
-					if (!first)
-					{
-						sb.Append(", ");
-					}
-					else
-					{
-						first = false;
-					}
-					sb.Append("`" + bindingInfo[i].Member.Name + "`");
-
-					if (bindingInfo[i].UsePrimaryKey)
-						usePrimaryKey = true;
-				}
-			}
-
-			if (usePrimaryKey)
-			{
-				sb.Insert(0, "SELECT ");
-			}
-			else
-			{
-				sb.Insert(0, "SELECT `" + tableName + "_ID`, ");
-			}
-
-			sb.Append(" FROM `" + tableName + "`");
-
-			if (whereClause != null && whereClause.Trim().Length > 0)
-			{
-				sb.Append(" WHERE " + whereClause);
-			}
-
-			string sql = sb.ToString();
-
-			if (Log.IsDebugEnabled)
-				Log.Debug("IList<TObject> SelectObjectsImpl: " + sql);
-
-			// read data and fill objects
-			Connection.ExecuteSelect(sql, delegate(IDataReader reader)
-											{
-												var data = new object[reader.FieldCount];
-												while (reader.Read())
-												{
-													reader.GetValues(data);
-													var obj = Activator.CreateInstance(typeof(TObject)) as TObject;
-													int field = 0;
-
-													if (usePrimaryKey == false)
-													{
-														// fill the silly TableName_ID field
-														obj.ObjectId = (string)data[0];
-														field = 1;
-													}
-
-													bool hasRelations = false;
-													// we can use hard index access because we iterate the same order here
-													for (int i = 0; i < bindingInfo.Length; i++)
-													{
-														BindingInfo bind = bindingInfo[i];
-														if (!hasRelations)
-														{
-															hasRelations = bind.HasRelation;
-														}
-
-														if (!bind.HasRelation)
-														{
-															object val = data[field++];
-															if (val != null && !val.GetType().IsInstanceOfType(DBNull.Value))
-															{
-																if (bind.Member is PropertyInfo)
-																{
-																	Type type = ((PropertyInfo)bind.Member).PropertyType;
-
-																	try
-																	{
-																		if (type == typeof(bool))
-																		{
-																			// special handling for bool
-																			((PropertyInfo)bind.Member).SetValue(obj,
-																												  (val.ToString() == "0") ? false : true,
-																												  null);
-																		}
-																		else if (type == typeof(System.UInt64))
-																		{
-																			((PropertyInfo)bind.Member).SetValue(obj, Convert.ToUInt64(val), null);
-																		}
-																		else if (type == typeof(System.UInt32))
-																		{
-																			((PropertyInfo)bind.Member).SetValue(obj, Convert.ToUInt32(val), null);
-																		}
-																		else if (type == typeof(System.Int32))
-																		{
-																			((PropertyInfo)bind.Member).SetValue(obj, Convert.ToInt32(val), null);
-																		}
-																		else if (type == typeof(System.UInt16))
-																		{
-																			((PropertyInfo)bind.Member).SetValue(obj, Convert.ToUInt16(val), null);
-																		}
-																		else if (type == typeof(System.Int16))
-																		{
-																			((PropertyInfo)bind.Member).SetValue(obj, Convert.ToInt16(val), null);
-																		}
-																		else if (type == typeof(System.SByte))
-																		{
-																			((PropertyInfo)bind.Member).SetValue(obj, Convert.ToSByte(val), null);
-																		}
-																		else if (type == typeof(System.Byte))
-																		{
-																			((PropertyInfo)bind.Member).SetValue(obj, Convert.ToByte(val), null);
-																		}
-																		else
-																		{
-																			((PropertyInfo)bind.Member).SetValue(obj, val, null);
-																		}
-																	}
-																	catch (Exception e)
-																	{
-																		if (Log.IsErrorEnabled)
-																			Log.Error(
-																				tableName + ": " + bind.Member.Name + " = " + val.GetType().FullName +
-																				" doesnt fit to " + bind.Member.DeclaringType.FullName, e);
-																		continue;
-																	}
-																}
-																else if (bind.Member is FieldInfo)
-																{
-																	((FieldInfo)bind.Member).SetValue(obj, val);
-																}
-															}
-														}
-													}
-
-													dataObjects.Add(obj);
-													obj.Dirty = false;
-
-													if (hasRelations)
-													{
-														FillLazyObjectRelations(obj, true);
-													}
-
-													obj.IsPersisted = true;
-												}
-											}
-				, isolation);
-
-			return dataObjects.ToArray();
-		}
-
-		/// <summary>
-		/// Selects all objects from a given table in the database.
-		/// </summary>
-		/// <param name="objectType">the type of objects to retrieve</param>
-		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects</returns>
-		protected override IList<TObject> SelectAllObjectsImpl<TObject>(Transaction.IsolationLevel isolation)
-		{
-			return SelectObjectsImpl<TObject>("", isolation);
-		}
-
-		/// <summary>
-		/// Gets the number of objects in a given table in the database based on a given set of criteria. (where clause)
-		/// </summary>
-		/// <param name="objectType">the type of objects to count</param>
-		/// <param name="where">the where clause to filter object count on</param>
-		/// <returns>a positive integer representing the number of objects that matched the given criteria; zero if no such objects existed</returns>
-		protected override int GetObjectCountImpl<TObject>(string where)
-		{
-			string tableName = GetTableOrViewName(typeof(TObject));
-
-			if (Connection.IsSQLConnection)
-			{
-				string query = "SELECT COUNT(*) FROM " + tableName;
-				if (where != "")
-					query += " WHERE " + where;
-
-				object count = Connection.ExecuteScalar(query);
-				if (count is long)
-					return (int)((long)count);
-
-				return (int)count;
-			}
-
-			return 0;
-		}
-
-		/// <summary>
-		/// Executes a raw SQL query against the database.
-		/// </summary>
-		/// <param name="dataObject">the query to execute</param>
-		/// <returns>true if the query was run successfully; false otherwise</returns>
-		protected override bool ExecuteNonQueryImpl(string rawQuery)
-		{
-			try
-			{
-				if (Log.IsDebugEnabled)
-					Log.Debug(rawQuery);
-
-				int res = Connection.ExecuteNonQuery(rawQuery);
-				if (res == 0)
-				{
-					if (Log.IsErrorEnabled)
-						Log.Error("Error executing raw query: " + rawQuery);
-					
-					return false;
-				}
-
-				return true;
-			}
-			catch (Exception e)
-			{
-				if (Log.IsErrorEnabled)
-					Log.Error("Error while executing raw query: " + rawQuery, e);
-			}
-
-			return false;
-		}
-
 		#endregion
 		
-		public override string Escape(string toEscape)
+		#region Create / Alter Table
+		/// <summary>
+		/// Check for Table Existence, Create or Alter accordingly
+		/// </summary>
+		/// <param name="table">Table Handler</param>
+		protected override void CheckOrCreateTableImpl(DataTableHandler table)
 		{
-			return toEscape.Replace("'", "''");
+			var currentTableColumns = new List<TableRowBindind>();
+			try
+			{
+				ExecuteSelectImpl(string.Format("PRAGMA TABLE_INFO(`{0}`)", table.TableName),
+				                  reader =>
+				                  {
+				                  	while (reader.Read())
+				                  	{
+				                  		var column = reader.GetString(1);
+				                  		var colType = reader.GetString(2);
+				                  		var allowNull = !reader.GetBoolean(3);
+				                  		var primary = reader.GetInt64(5) > 0;
+				                  		currentTableColumns.Add(new TableRowBindind(column, colType, allowNull, primary));
+				                  		if (log.IsDebugEnabled)
+				                  			log.DebugFormat("CheckOrCreateTable: Found Column {0} in existing table {1}", column, table.TableName);
+				                  	}
+				                  	if (log.IsDebugEnabled)
+				                  		log.DebugFormat("CheckOrCreateTable: {0} columns in table existing", currentTableColumns.Count);
+				                  }, IsolationLevel.DEFAULT);
+			}
+			catch (Exception e)
+			{
+				if (log.IsDebugEnabled)
+					log.Debug("CheckOrCreateTable: ", e);
+
+				if (log.IsWarnEnabled)
+					log.WarnFormat("Table {0} doesn't exist, creating it...", table.TableName);
+			}
+			
+			// Create Table or Alter Table
+			if (currentTableColumns.Any())
+				AlterTable(currentTableColumns, table);
+			else
+				CreateTable(table);
+		}
+		
+		/// <summary>
+		/// Create a New Table from DataTableHandler Definition
+		/// </summary>
+		/// <param name="table">DataTableHandler Definition to Create in Database</param>
+		protected void CreateTable(DataTableHandler table)
+		{
+			var columnDef = table.FieldElementBindings
+				.Select(bind => GetColumnDefinition(bind, table));
+			
+			var primaryFields = new string[]{};
+			if (!table.FieldElementBindings.Any(bind => bind.PrimaryKey != null && bind.PrimaryKey.AutoIncrement))
+				primaryFields = new [] { string.Format("PRIMARY KEY ({0})",
+				                              string.Join(", ", table.Table.PrimaryKey.Select(pk => string.Format("`{0}`", pk.ColumnName)))) };
+			
+			// Create Table First
+			var command = string.Format("CREATE TABLE IF NOT EXISTS `{0}` ({1})", table.TableName,
+			                            string.Join(", \n", columnDef.Concat(primaryFields)));
+
+			ExecuteNonQueryImpl(command);
+			
+			// Then Indexes and Constraints
+			var uniqueFields = table.Table.Constraints.OfType<UniqueConstraint>().Where(cstrnt => !cstrnt.IsPrimaryKey)
+				.Select(cstrnt => string.Format("CREATE UNIQUE INDEX IF NOT EXISTS `{0}` ON `{2}` ({1})", cstrnt.ConstraintName,
+				                                string.Join(", ", cstrnt.Columns.Select(col => string.Format("`{0}`", col.ColumnName))),
+				                                table.TableName));
+			
+			var indexes = table.Table.ExtendedProperties["INDEXES"] as Dictionary<string, DataColumn[]>;
+			
+			var indexesFields = indexes == null ? new string[] { }
+				: indexes.Select(index => string.Format("CREATE INDEX IF NOT EXISTS `{0}` ON `{2}` ({1})", index.Key,
+			                                        string.Join(", ", index.Value.Select(col => string.Format("`{0}`", col.ColumnName))),
+			                                        table.TableName));
+
+			foreach (var commands in uniqueFields.Concat(indexesFields))
+				ExecuteNonQueryImpl(commands);
+		}
+		
+		/// <summary>
+		/// Check if this Table need Alteration
+		/// </summary>
+		/// <param name="currentColumns">Current Existing Columns</param>
+		/// <param name="table">DataTableHandler to Implement</param>
+		protected bool CheckTableAlteration(IEnumerable<TableRowBindind> currentColumns, DataTableHandler table)
+		{
+			// Check for Any differences in Columns
+			if (table.FieldElementBindings
+			    .Any(bind => {
+			         	var column = currentColumns.FirstOrDefault(col => col.ColumnName.Equals(bind.ColumnName, StringComparison.OrdinalIgnoreCase));
+			         	
+			         	if (column != null)
+			         	{
+			         		// Check Null
+			         		if ((bind.DataElement != null && bind.DataElement.AllowDbNull) != column.AllowDbNull)
+			         			return true;
+			         		
+			         		// Check Type
+			         		if (!GetDatabaseType(bind, table).Equals(column.ColumnType, StringComparison.OrdinalIgnoreCase))
+			         			return true;
+			         		
+			         		// Field are identical
+			         		return false;
+			         	}
+			         	// Field missing
+			         	return true;
+			         }))
+				return true;
+			
+			// Check for Any Difference in Primary Keys
+			if (table.Table.PrimaryKey.Count() != currentColumns.Count(col => col.Primary)
+				|| table.Table.PrimaryKey.Any(pk => {
+			                                  	var column = currentColumns.FirstOrDefault(col => col.ColumnName.Equals(pk.ColumnName, StringComparison.OrdinalIgnoreCase));
+			                                  	
+			                                  	if (column != null && column.Primary)
+			                                  		return false;
+			                                  	
+			                                  	return true;
+			                                  }))
+				return true;
+			
+			// No Alteration Needed
+			return false;
+		}
+		
+		/// <summary>
+		/// Alter an Existing Table to Match DataTableHandler Definition
+		/// </summary>
+		/// <param name="currentColumns">Current Existing Columns</param>
+		/// <param name="table">DataTableHandler to Implement</param>
+		protected void AlterTable(IEnumerable<TableRowBindind> currentColumns, DataTableHandler table)
+		{
+			// TODO : Check for Index Alteration
+			if  (!CheckTableAlteration(currentColumns, table))
+				return;
+			
+			if (log.IsDebugEnabled)
+				log.DebugFormat("Altering Table {0} this could take a few minutes...", table.TableName);
+			
+			// Rename Table
+			ExecuteNonQueryImpl(string.Format("ALTER TABLE `{0}` RENAME TO `{0}_bkp`", table.TableName));
+			
+			// Drop Indexes
+			var currentIndexes = new List<string>();
+			try
+			{
+				ExecuteSelectImpl("SELECT name FROM sqlite_master WHERE type == 'index' AND sql is not null AND tbl_name == @tableName",
+				                  new KeyValuePair<string, object>("@tableName", string.Format("{0}_bkp", table.TableName)),
+				                  reader =>
+				                  {
+				                  	while (reader.Read())
+				                  		currentIndexes.Add(reader.GetString(0));
+				                  }, IsolationLevel.DEFAULT);
+			}
+			catch (Exception e)
+			{
+				if (log.IsDebugEnabled)
+					log.Debug("AlterTableImpl: ", e);
+
+				if (log.IsWarnEnabled)
+					log.WarnFormat("AlterTableImpl: Error While Altering Table {0}, trying to rollback...", table.TableName);
+				
+				// Rename Table before any modifications
+				ExecuteNonQueryImpl(string.Format("ALTER TABLE `{0}_bkp` RENAME TO `{0}`", table.TableName));
+				throw;
+			}
+			
+			foreach(var index in currentIndexes)
+				ExecuteNonQueryImpl(string.Format("DROP INDEX `{0}`", index));
+			
+			try
+			{
+				// Create New Table with Indexes
+				CreateTable(table);
+			}
+			catch (Exception e)
+			{
+				if (log.IsDebugEnabled)
+					log.Debug("AlterTableImpl: ", e);
+				
+				if (log.IsWarnEnabled)
+					log.WarnFormat("AlterTableImpl: Error While Altering Table {0}, trying to rollback...", table.TableName);
+				
+				
+				// Rename Table as before any modifications
+				ExecuteNonQueryImpl(string.Format("ALTER TABLE `{0}_bkp` RENAME TO `{0}`", table.TableName));
+				throw;
+			}
+			
+			try
+			{
+				// Copy Data
+				var columns = table.FieldElementBindings.Where(bind => currentColumns.Any(col => col.ColumnName.Equals(bind.ColumnName, StringComparison.OrdinalIgnoreCase)))
+					.Select(bind => string.Format("`{0}`", bind.ColumnName));
+				
+				ExecuteNonQueryImpl(string.Format("INSERT INTO `{0}` ({1}) SELECT {1} FROM `{0}_bkp`", table.TableName, string.Join(", ", columns)));
+			}
+			catch (Exception e)
+			{
+				if (log.IsDebugEnabled)
+					log.Debug("AlterTableImpl: ", e);
+				
+				if (log.IsWarnEnabled)
+					log.WarnFormat("AlterTableImpl: Error While Altering Table {0}, trying to rollback...", table.TableName);
+				
+				// Roll Back Creation
+				ExecuteNonQueryImpl(string.Format("DROP TABLE `{0}`", table.TableName));
+				// Rename Table as before any modifications
+				ExecuteNonQueryImpl(string.Format("ALTER TABLE `{0}_bkp` RENAME TO `{0}`", table.TableName));
+				throw;
+			}
+			
+			// Drop Renamed Table
+			ExecuteNonQueryImpl(string.Format("DROP TABLE `{0}_bkp`", table.TableName));
+		}
+		#endregion
+
+		#region Property implementation
+		/// <summary>
+		/// The connection type to DB (xml, mysql,...)
+		/// </summary>
+		public override ConnectionType ConnectionType { get { return ConnectionType.DATABASE_SQLITE; } }
+		#endregion
+		
+		#region SQLObject Implementation
+		/// <summary>
+		/// Raw SQL Select Implementation with Parameters for Prepared Query
+		/// </summary>
+		/// <param name="SQLCommand">Command for reading</param>
+		/// <param name="parameters">Collection of Parameters for Single/Multiple Read</param>
+		/// <param name="Reader">Reader Method</param>
+		/// <param name="Isolation">Transaction Isolation</param>
+		protected override void ExecuteSelectImpl(string SQLCommand, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, Action<IDataReader> Reader, IsolationLevel Isolation)
+		{
+			if (log.IsDebugEnabled)
+				log.DebugFormat("SQL: {0}", SQLCommand);
+
+			var repeat = false;
+			var current = 0;
+			do
+			{
+				repeat = false;
+
+				using (var conn = new SQLiteConnection(ConnectionString))
+				{
+				    using (var cmd = new SQLiteCommand(SQLCommand, conn))
+					{
+						try
+						{
+					    	conn.Open();
+					    	cmd.Prepare();
+					    	
+					    	long start = (DateTime.UtcNow.Ticks / 10000);
+					    	
+					    	// Register Parameter
+					    	foreach(var keys in parameters.First().Select(kv => kv.Key))
+					    		cmd.Parameters.Add(new SQLiteParameter(keys));
+					    	
+					    	foreach(var parameter in parameters.Skip(current))
+					    	{
+					    		foreach(var param in parameter)
+					    			cmd.Parameters[param.Key].Value = param.Value;
+					    	
+							    using (var reader = cmd.ExecuteReader())
+							    {
+							    	try
+							    	{
+							        	Reader(reader);
+							    	}
+							    	catch (Exception es)
+							    	{
+							    		if(log.IsWarnEnabled)
+							    			log.Warn("Exception in Select Callback : ", es);
+							    	}
+							    	finally
+							    	{
+							    		reader.Close();
+							    	}
+							    }
+							    current++;
+					    	}
+					    
+						    if (log.IsDebugEnabled)
+								log.DebugFormat("SQL Select ({0}) exec time {1}ms", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start));
+							else if ((DateTime.UtcNow.Ticks / 10000) - start > 500 && log.IsWarnEnabled)
+								log.WarnFormat("SQL Select ({0}) took {1}ms!\n{2}", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
+						
+						}
+						catch (Exception e)
+						{
+							if (!HandleException(e))
+							{
+								if (log.IsErrorEnabled)
+									log.ErrorFormat("ExecuteSelect: \"{0}\"\n{1}", SQLCommand, e);
+								
+								throw;
+							}
+							repeat = true;
+						}
+						finally
+						{
+							conn.Close();
+						}
+				    }
+				}
+			}
+			while (repeat);
+		}
+		
+		/// <summary>
+		/// Implementation of Raw Non-Query with Parameters for Prepared Query
+		/// </summary>
+		/// <param name="SQLCommand">Raw Command</param>
+		/// <param name="parameters">Collection of Parameters for Single/Multiple Read</param>
+		/// <returns>True if the Command succeeded</returns>
+		protected override int[] ExecuteNonQueryImpl(string SQLCommand, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters)
+		{
+			if (log.IsDebugEnabled)
+				log.DebugFormat("ExecuteNonQueryImpl: {0}", SQLCommand);
+
+			var affected = new List<int>();
+			var repeat = false;
+			var current = 0;
+			do
+			{
+				repeat = false;
+
+				using (var conn = new SQLiteConnection(ConnectionString))
+				{
+					using (var cmd = new SQLiteCommand(SQLCommand, conn))
+					{
+						try
+						{
+					    	conn.Open();
+					    	cmd.Prepare();
+						    
+					    	long start = (DateTime.UtcNow.Ticks / 10000);
+						    
+					    	// Register Parameter
+					    	foreach(var keys in parameters.First().Select(kv => kv.Key))
+					    		cmd.Parameters.Add(new SQLiteParameter(keys));
+					    	
+					    	foreach(var parmeter in parameters.Skip(current))
+					    	{
+					    		foreach(var param in parmeter)
+					    			cmd.Parameters[param.Key].Value = param.Value;
+					    	
+							    var result = cmd.ExecuteNonQuery();
+							    affected.Add(result);
+							    current++;
+							    
+							    if (result < 1 && log.IsWarnEnabled)
+							    	log.WarnFormat("ExecuteNonQuery: No Change for raw query \"{0}\"", SQLCommand);
+					    	}
+						    
+						    
+						    if (log.IsDebugEnabled)
+								log.DebugFormat("SQL NonQuery exec time {0}ms", ((DateTime.UtcNow.Ticks / 10000) - start));
+							else if ((DateTime.UtcNow.Ticks / 10000) - start > 500 && log.IsWarnEnabled)
+								log.WarnFormat("SQL NonQuery took {0}ms!\n{1}", ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
+						}
+						catch (Exception e)
+						{
+							if (!HandleException(e))
+							{
+								if(log.IsErrorEnabled)
+									log.ErrorFormat("ExecuteNonQuery: \"{0}\"\n{1}", SQLCommand, e);
+								
+								throw;
+							}
+							repeat = true;
+						}
+						finally
+						{
+							conn.Close();
+						}
+					}
+				}
+			} 
+			while (repeat);
+			
+			return affected.ToArray();
+		}
+
+		/// <summary>
+		/// Implementation of Scalar Query with Parameters for Prepared Query
+		/// </summary>
+		/// <param name="SQLCommand">Scalar Command</param>
+		/// <param name="parameters">Collection of Parameters for Single/Multiple Read</param>
+		/// <param name="retrieveLastInsertID">Return Last Insert ID of each Command instead of Scalar</param>
+		/// <returns>Objects Returned by Scalar</returns>
+		protected override object[] ExecuteScalarImpl(string SQLCommand, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, bool retrieveLastInsertID)
+		{
+			if (log.IsDebugEnabled)
+				log.DebugFormat("ExecuteScalarImpl: {0}", SQLCommand);
+			
+			var obj = new List<object>();
+			var repeat = false;
+			var current = 0;
+			do
+			{
+				repeat = false;
+				
+				using (var conn = new SQLiteConnection(ConnectionString))
+				{					    
+					using (var cmd = new SQLiteCommand(SQLCommand, conn))
+					{
+						try
+						{
+						    conn.Open();
+					    	cmd.Prepare();
+						    long start = (DateTime.UtcNow.Ticks / 10000);
+
+						    // Register Parameter
+					    	foreach(var keys in parameters.First().Select(kv => kv.Key))
+					    		cmd.Parameters.Add(new SQLiteParameter(keys));
+					    	
+					    	foreach(var parmeter in parameters.Skip(current))
+					    	{
+					    		foreach(var param in parmeter)
+					    			cmd.Parameters[param.Key].Value = param.Value;
+					    		
+					    		if (retrieveLastInsertID)
+					    		{
+					    			using (var begin = new SQLiteCommand("BEGIN", conn))
+					    			{
+					    				begin.ExecuteNonQuery();
+					    			}
+					    			
+					    			cmd.ExecuteNonQuery();
+					    			
+					    			using (var lastid = new SQLiteCommand("SELECT LAST_INSERT_ROWID()", conn))
+					    			{
+					    				var result = lastid.ExecuteScalar();
+					    				obj.Add(result);
+					    			}
+					    			
+					    			using (var end = new SQLiteCommand("END", conn))
+					    			{
+					    				end.ExecuteNonQuery();
+					    			}
+					    		}
+					    		else
+					    		{
+					    			var result = cmd.ExecuteScalar();
+									obj.Add(result);
+					    		}
+								current++;
+					    	}
+
+					    	if (log.IsDebugEnabled)
+								log.DebugFormat("SQL ScalarQuery exec time {0}ms", ((DateTime.UtcNow.Ticks / 10000) - start));
+							else if ((DateTime.UtcNow.Ticks / 10000) - start > 500 && log.IsWarnEnabled)
+								log.WarnFormat("SQL ScalarQuery took {0}ms!\n{1}", ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
+						}
+						catch (Exception e)
+						{
+	
+							if (!HandleException(e))
+							{
+								if(log.IsErrorEnabled)
+									log.ErrorFormat("ExecuteScalar: \"{0}\"\n{1}", SQLCommand, e);
+								
+								throw;
+							}
+	
+							repeat = true;
+						}
+						finally
+						{
+							conn.Close();
+						}
+					}
+				}
+			} 
+			while (repeat);
+
+			return obj.ToArray();
+		}
+		#endregion
+		
+		/// <summary>
+		/// escape the strange character from string
+		/// </summary>
+		/// <param name="rawInput">the string</param>
+		/// <returns>the string with escaped character</returns>
+		public override string Escape(string rawInput)
+		{
+			return rawInput.Replace("'", "''");
 		}
 	}
 }

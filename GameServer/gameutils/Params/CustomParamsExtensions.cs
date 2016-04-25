@@ -251,7 +251,7 @@ namespace DOL.GS
 		{
 			if (collection == null)
 			{
-				obj .CustomParamsDictionary = new Dictionary<string, List<string>>();
+				obj.CustomParamsDictionary = new Dictionary<string, List<string>>();
 				return;
 			}
 			

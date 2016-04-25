@@ -37,18 +37,20 @@ namespace DOL.Database.Tests
 		{
 		}
 		
-		public static IObjectDatabase Database { get; set; }
-		
+		public static SQLObjectDatabase Database { get; set; }
+				
 		[SetUp]
 		public void SetUp()
 		{
 			var CodeBase = new FileInfo(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath).Directory;
-			var connectionString = string.Format("Data Source={0};Version=3;Pooling=False;Cache Size=1073741824;Journal Mode=Off;Synchronous=Off;Foreign Keys=True;Default Timeout=60",
-			                                     Path.Combine(CodeBase.Parent.FullName, "dol-database-tests-only.sqlite3.db"));
+			/*var connectionString = string.Format("Data Source={0};Version=3;Pooling=False;Cache Size=1073741824;Journal Mode=Off;Synchronous=Off;Foreign Keys=True;Default Timeout=60",
+			                                     Path.Combine(CodeBase.Parent.FullName, "dol-database-tests-only.sqlite3.db"));*/
+			var connectionString = "Server=localhost;Port=3306;Database=test_dol;User ID=root;Password=;Treat Tiny As Boolean=False";
+			                                     
+			//Database = (SQLObjectDatabase)ObjectDatabase.GetObjectDatabase(ConnectionType.DATABASE_SQLITE, connectionString);
+			Database = (SQLObjectDatabase)ObjectDatabase.GetObjectDatabase(ConnectionType.DATABASE_MYSQL, connectionString);
 			
-			Database = ObjectDatabase.GetObjectDatabase(ConnectionType.DATABASE_SQLITE, connectionString);
-			
-			Console.WriteLine("DB Configured : {0}, {1}", ConnectionType.DATABASE_SQLITE, connectionString);
+			Console.WriteLine("DB Configured : {0}, {1}", Database.ConnectionType, connectionString);
 			
 			log4net.Config.BasicConfigurator.Configure(
 				new log4net.Appender.ConsoleAppender {
