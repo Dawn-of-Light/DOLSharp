@@ -131,7 +131,7 @@ namespace DOL.Database.Handlers
 			// Check for Default Value depending on Constraints and Type
 			if (bind.PrimaryKey != null && bind.PrimaryKey.AutoIncrement)
 			{
-				defaultDef = "PRIMARY KEY AUTOINCREMENT";
+				defaultDef = "NOT NULL PRIMARY KEY AUTOINCREMENT";
 			}
 			else if (bind.DataElement != null && bind.DataElement.AllowDbNull)
 			{
@@ -575,22 +575,28 @@ namespace DOL.Database.Handlers
 					    		
 					    		if (retrieveLastInsertID)
 					    		{
-					    			using (var begin = new SQLiteCommand("BEGIN", conn))
+					    			using (var tran = conn.BeginTransaction(System.Data.IsolationLevel.ReadCommitted))
 					    			{
-					    				begin.ExecuteNonQuery();
-					    			}
-					    			
-					    			cmd.ExecuteNonQuery();
-					    			
-					    			using (var lastid = new SQLiteCommand("SELECT LAST_INSERT_ROWID()", conn))
-					    			{
-					    				var result = lastid.ExecuteScalar();
-					    				obj.Add(result);
-					    			}
-					    			
-					    			using (var end = new SQLiteCommand("END", conn))
-					    			{
-					    				end.ExecuteNonQuery();
+					    				try
+					    				{
+						    				cmd.Transaction = tran;
+						    				cmd.ExecuteNonQuery();
+						    				
+							    			using (var lastid = new SQLiteCommand("SELECT LAST_INSERT_ROWID()", conn))
+							    			{
+							    				var result = lastid.ExecuteScalar();
+							    				obj.Add(result);
+							    			}
+							    			
+							    			tran.Commit();
+					    				}
+					    				catch (Exception te)
+					    				{
+					    					tran.Rollback();
+					    					if (log.IsErrorEnabled)
+					    					if (log.IsErrorEnabled)
+					    						log.ErrorFormat("ExecuteScalarImpl: Error in Transaction (Rollback) for command : {0}\n{1}", SQLCommand, te);
+					    				}
 					    			}
 					    		}
 					    		else

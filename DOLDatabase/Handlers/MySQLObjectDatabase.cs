@@ -520,25 +520,30 @@ namespace DOL.Database.Handlers
 					    		
 					    		if (retrieveLastInsertID)
 					    		{
-					    			using (var begin = conn.CreateCommand())
+					    			using (var tran = conn.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted))
 					    			{
-					    				begin.CommandText = "BEGIN";
-					    				begin.ExecuteNonQuery();
-					    			}
-					    			// TODO Transaction are not working like that in mysql
-					    			cmd.ExecuteNonQuery();
-					    			
-					    			using (var lastid = conn.CreateCommand())
-					    			{
-					    				lastid.CommandText = "SELECT LAST_INSERT_ID()";
-					    				var result = lastid.ExecuteScalar();
-					    				obj.Add(result);
-					    			}
-					    			
-					    			using (var end = conn.CreateCommand())
-					    			{
-					    				end.CommandText = "END";
-					    				end.ExecuteNonQuery();
+					    				try
+					    				{
+						    				cmd.Transaction = tran;
+						    				cmd.ExecuteNonQuery();
+						    				
+							    			using (var lastid = conn.CreateCommand())
+							    			{
+							    				lastid.CommandText = "SELECT LAST_INSERT_ID()";
+							    				lastid.Transaction = tran;
+							    				var result = lastid.ExecuteScalar();
+							    				obj.Add(result);
+							    			}
+							    			
+							    			tran.Commit();
+					    				}
+					    				catch (Exception te)
+					    				{
+					    					tran.Rollback();
+					    					if (log.IsErrorEnabled)
+					    						log.ErrorFormat("ExecuteScalarImpl: Error in Transaction (Rollback) for command : {0}\n{1}", SQLCommand, te);
+					    				}
+					    				
 					    			}
 					    		}
 					    		else

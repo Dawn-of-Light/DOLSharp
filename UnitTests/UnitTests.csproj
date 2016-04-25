@@ -64,7 +64,9 @@
     <Compile Include="Database\CustomParamsTest.cs" />
     <Compile Include="Database\DatabaseSetUp.cs" />
     <Compile Include="Database\DatabaseTests.cs" />
+    <Compile Include="Database\DatabaseTypeTests.cs" />
     <Compile Include="Database\TestDataObjects.cs" />
+    <Compile Include="Database\TestDataObjectType.cs" />
     <Compile Include="GameServer\gameutils\ServerTest.cs" />
     <Compile Include="SetUpTests.cs" />
     <Compile Include="UPnP.cs" />
