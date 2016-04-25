@@ -108,7 +108,8 @@ namespace DOL.Database.Handlers
 			}
 			else if (bind.ValueType == typeof(float))
 			{
-				type = "FLOAT";
+				// Float Value have less precision than C# Single.
+				type = "DOUBLE";
 			}
 			else if (bind.ValueType == typeof(double))
 			{

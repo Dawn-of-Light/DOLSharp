@@ -504,6 +504,7 @@ namespace DOL.Database
 		/// <param name="dbParams">DbParameter Object to Fill</param>
 		protected virtual void FillSQLParameter(IEnumerable<KeyValuePair<string, object>> parameter, DbParameterCollection dbParams)
 		{
+			// Specififc Handling for Char Cast from DB Integer
     		foreach(var param in parameter)
     		{
     			if (param.Value is char)
