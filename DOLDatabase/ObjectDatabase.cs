@@ -35,7 +35,7 @@ using log4net;
 namespace DOL.Database
 {
 	/// <summary>
-	/// Database to to full Dokumentation
+	/// Default Object Database Base Implementation
 	/// </summary>
 	public abstract class ObjectDatabase : IObjectDatabase
 	{
@@ -228,11 +228,13 @@ namespace DOL.Database
 		#region Public API
 
 		/// <summary>
-		/// insert a new object into the db and save it
+		/// Insert a new DataObject into the database and save it
 		/// </summary>
-		/// <param name="dataObject"></param>
+		/// <param name="dataObject">DataObject to Add into database</param>
+		/// <returns>True if the DataObject was added.</returns>
 		public bool AddObject(DataObject dataObject)
 		{
+			// TODO Check for Relations
 			if (dataObject.AllowAdd)
 			{
 				return AddObjectImpl(dataObject);
@@ -243,13 +245,17 @@ namespace DOL.Database
 			
 			return false;
 		}
+		
+		public bool AddObjects(IEnumerable<DataObject> dataObjects) {}
 
 		/// <summary>
-		/// Saves an object to db if saving is allowed and object is dirty
+		/// Saves a DataObject to database if saving is allowed and object is dirty
 		/// </summary>
-		/// <param name="dataObject"></param>
+		/// <param name="dataObject">DataObject to Save in database</param>
+		/// <returns>True is the DataObject was saved.</returns>
 		public bool SaveObject(DataObject dataObject)
 		{
+			// TODO Check for Relations
 			if (dataObject.Dirty)
 			{
 				return SaveObjectImpl(dataObject);
@@ -259,11 +265,13 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// delete object from db
+		/// Delete a DataObject from database if deletion is allowed
 		/// </summary>
-		/// <param name="dataObject"></param>
+		/// <param name="dataObject">DataObject to Delete from database</param>
+		/// <returns>True if the DataObject was deleted.</returns>
 		public bool DeleteObject(DataObject dataObject)
 		{
+			// TODO Check for Relations
 			if (dataObject.AllowDelete)
 			{
 				return DeleteObjectImpl(dataObject);
@@ -529,7 +537,12 @@ namespace DOL.Database
 			FillObjectRelations(new [] { dataObject }, true);
 		}
 		
-		public void FillObjectRelations(IEnumerable<DataObject> dataObjects, bool force = false)
+		/// <summary>
+		/// Populate or Refresh Objects Relations
+		/// </summary>
+		/// <param name="dataObjects">Objects to Populate</param>
+		/// <param name="force">Force Refresh even if Autoload is False</param>
+		protected virtual void FillObjectRelations(IEnumerable<DataObject> dataObjects, bool force)
 		{
 			var groups = dataObjects.GroupBy(obj => obj.GetType());
 			
@@ -582,7 +595,15 @@ namespace DOL.Database
 				}
 			}
 		}
-				
+		
+		/// <summary>
+		/// Populate or Refresh Object Relation Implementation
+		/// </summary>
+		/// <param name="relationBind">Element Binding for Relation Field</param>
+		/// <param name="localBind">Local Binding for Value Match</param>
+		/// <param name="remoteBind">Remote Binding for Column Match</param>
+		/// <param name="remoteHandler">Remote Table Handler for Cache Retrieving</param>
+		/// <param name="dataObjects">DataObjects to Populate</param>
 		protected virtual void FillObjectRelationsImpl(ElementBinding relationBind, ElementBinding localBind, ElementBinding remoteBind, DataTableHandler remoteHandler, IEnumerable<DataObject> dataObjects)
 		{
 			var type = relationBind.ValueType;
@@ -628,6 +649,14 @@ namespace DOL.Database
 			}
 		}
 		
+		/// <summary>
+		/// Select Data Objects Implementation By Type
+		/// </summary>
+		/// <param name="type">Object Type</param>
+		/// <param name="whereClause">Where Clause</param>
+		/// <param name="parameters">Query Parameters</param>
+		/// <param name="isolation">Isolation Level</param>
+		/// <returns>Objects Enumerable grouped by Query</returns>
 		protected IEnumerable<IEnumerable<DataObject>> SelectObjectsImpl(Type type, string whereClause, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, Transaction.IsolationLevel isolation)
 		{
 			throw new NotImplementedException();

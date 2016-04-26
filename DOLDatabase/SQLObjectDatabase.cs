@@ -81,10 +81,10 @@ namespace DOL.Database
 		}
 		
 		/// <summary>
-		/// escape the strange character from string
+		/// Escape wrong characters from string for Database Insertion
 		/// </summary>
-		/// <param name="rawInput">the string</param>
-		/// <returns>the string with escaped character</returns>
+		/// <param name="rawInput">String to Escape</param>
+		/// <returns>Escaped String</returns>
 		public override string Escape(string rawInput)
 		{
 			rawInput = rawInput.Replace("\\", "\\\\");
@@ -592,7 +592,7 @@ namespace DOL.Database
 		{
 			try
 			{
-				return ExecuteNonQueryImpl(rawQuery) < 1;
+				return ExecuteNonQueryImpl(rawQuery) > 1;
 			}
 			catch (Exception e)
 			{

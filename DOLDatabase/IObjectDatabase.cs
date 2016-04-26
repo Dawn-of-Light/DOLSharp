@@ -21,12 +21,30 @@ using System.Collections.Generic;
 
 namespace DOL.Database
 {
+	/// <summary>
+	/// Interface for Handling Object Database API
+	/// </summary>
 	public interface IObjectDatabase
 	{
+		/// <summary>
+		/// Insert a new DataObject into the database and save it
+		/// </summary>
+		/// <param name="dataObject">DataObject to Add into database</param>
+		/// <returns>True if the DataObject was added.</returns>
 		bool AddObject(DataObject dataObject);
 
+		/// <summary>
+		/// Save a DataObject to database if saving is allowed and object is dirty
+		/// </summary>
+		/// <param name="dataObject">DataObject to Save in database</param>
+		/// <returns>True if the DataObject was saved.</returns>
 		bool SaveObject(DataObject dataObject);
 
+		/// <summary>
+		/// Delete a DataObject from database if deletion is allowed
+		/// </summary>
+		/// <param name="dataObject">DataObject to Delete from database</param>
+		/// <returns>True if the DataObject was deleted.</returns>
 		bool DeleteObject(DataObject dataObject);
 
 		TObject FindObjectByKey<TObject>(object key)
@@ -73,8 +91,19 @@ namespace DOL.Database
 		/// <param name="dataObject">DataObject to Populate</param>
 		void FillObjectRelations(IEnumerable<DataObject> dataObject);
 
+		/// <summary>
+		/// Escape wrong characters from string for Database Insertion
+		/// </summary>
+		/// <param name="rawInput">String to Escape</param>
+		/// <returns>Escaped String</returns>
 		string Escape(string rawInput);
 
+		/// <summary>
+		/// Execute a Raw Non-Query on the Database
+		/// </summary>
+		/// <param name="rawQuery">Raw Command</param>
+		/// <returns>True if the Command succeeded</returns>
+		[Obsolete("Raw Non-Query are SQL Only and don't use internal Object Database Implementations...")]
 		bool ExecuteNonQuery(string rawQuery);
 	}
 }
