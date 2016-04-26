@@ -18,7 +18,7 @@
  */
 
 using System;
-using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
@@ -36,9 +36,15 @@ namespace DOL.Database
 	{
 		private readonly ICache _cache;
 		private readonly DataSet _dset;
-		private readonly Hashtable _precache;
-		private bool _hasRelations;
 		
+		/// <summary>
+		/// Has Relations
+		/// </summary>
+		public bool HasRelations { get; private set; }
+		/// <summary>
+		/// Pre Cache Directory Handler
+		/// </summary>
+		private readonly ConcurrentDictionary<object, DataObject> _precache;		
 		/// <summary>
 		/// The Table Name for this Handler
 		/// </summary>
@@ -67,15 +73,17 @@ namespace DOL.Database
 		{
 			// Init Cache and Table Params
 			TableName = AttributesUtils.GetTableOrViewName(type);
+
+			HasRelations = false;
+			UsesPreCaching = AttributesUtils.GetPreCachedFlag(type);
+			if (UsesPreCaching)
+				_precache = new ConcurrentDictionary<object, DataObject>();
 			
 			_cache = new SimpleCache();
-			_precache = new Hashtable();
-			UsesPreCaching = AttributesUtils.GetPreCachedFlag(type);
 			_dset = new DataSet();
 			_dset.DataSetName = TableName;
 			_dset.EnforceConstraints = true;
 			_dset.CaseSensitive = false;
-			_hasRelations = false;
 			
 			// Parse Table Type
 			ElementBindings = type.GetMembers().Select(member => new ElementBinding(member)).Where(bind => bind.IsDataElementBinding).ToArray();
@@ -103,7 +111,7 @@ namespace DOL.Database
 			{
 				if (bind.Relation != null)
 				{
-					_hasRelations = true;
+					HasRelations = true;
 					continue;
 				}
 				
@@ -162,15 +170,6 @@ namespace DOL.Database
 		}
 
 		/// <summary>
-		/// Has Relations
-		/// </summary>
-		public bool HasRelations
-		{
-			get { return _hasRelations; }
-			set { _hasRelations = false; }
-		}
-
-		/// <summary>
 		/// Cache
 		/// </summary>
 		public ICache Cache
@@ -210,7 +209,8 @@ namespace DOL.Database
 		{
 			return _cache[key] as DataObject;
 		}
-
+		
+		#region PreCache Handling
 		/// <summary>
 		/// Set Pre-Cached Object
 		/// </summary>
@@ -218,7 +218,7 @@ namespace DOL.Database
 		/// <param name="obj">The value DataObject</param>
 		public void SetPreCachedObject(object key, DataObject obj)
 		{
-			_precache[key] = obj;
+			_precache.AddOrUpdate(key, obj, (k, v) => obj);
 		}
 
 		/// <summary>
@@ -228,7 +228,19 @@ namespace DOL.Database
 		/// <returns>The value DataObject</returns>
 		public DataObject GetPreCachedObject(object key)
 		{
-			return _precache[key] as DataObject;
+			DataObject obj;
+			return _precache.TryGetValue(key, out obj) ? obj : null;
 		}
+		
+		/// <summary>
+		/// Search Pre-Cached Object
+		/// </summary>
+		/// <param name="whereClause">Select Object when True</param>
+		/// <returns>IEnumerable of DataObjects</returns>
+		public IEnumerable<DataObject> SearchPreCachedObjects(Func<DataObject, bool> whereClause)
+		{
+			return _precache.Where(kv => whereClause(kv.Value)).Select(kv => kv.Value);
+		}
+		#endregion
 	}
 }

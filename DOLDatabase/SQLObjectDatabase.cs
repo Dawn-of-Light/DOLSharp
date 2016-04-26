@@ -305,7 +305,7 @@ namespace DOL.Database
 				.Select(bind => new { ColumnName = string.Format("`{0}`", bind.ColumnName), ParamName = string.Format("@{0}", bind.ColumnName), Value = key }).ToArray();
 			
 			if (!primary.Any())
-				throw new DatabaseException(string.Format("Table {0} has no primary key for deletion...", tableName));
+				throw new DatabaseException(string.Format("Table {0} has no primary key for finding by key...", tableName));
 			
 			var whereClause = string.Format("{0}",
 			                                string.Join(" AND ", primary.Select(col => string.Format("{0} = {1}", col.ColumnName, col.ParamName))));
@@ -327,6 +327,7 @@ namespace DOL.Database
 		/// <returns></returns>
 		protected override DataObject FindObjectByKeyImpl(Type objectType, object key)
 		{
+			// TODO Fixme
 			MethodInfo method = GetType().GetMethod("FindObjectByKeyImpl");
         	MethodInfo genericMethod = method.MakeGenericMethod(objectType);
         	var result = genericMethod.Invoke(this, new [] { key });
@@ -343,6 +344,7 @@ namespace DOL.Database
 		/// <returns></returns>
 		protected override DataObject[] SelectObjectsImpl(Type objectType, string whereClause, Transaction.IsolationLevel isolation)
 		{
+			// TODO Fixme
 			var methods = GetType().GetMethods();
 			var method = GetType().GetMethods()
 				.FirstOrDefault(m => m.Name == "SelectObjectsImpl" && m.IsGenericMethodDefinition &&

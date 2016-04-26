@@ -65,6 +65,10 @@ namespace DOL.Database.Attributes
 		/// <returns>View Name if available, Table Name default</returns>
 		public static string GetTableOrViewName(Type type)
 		{
+			// Check if Type is Element
+			if (type.HasElementType)
+				type = type.GetElementType();
+
 			// Graveen: introducing view selection hack (before rewriting the layer :D)
 			// basically, a view must exist and is created with the following:
 			//

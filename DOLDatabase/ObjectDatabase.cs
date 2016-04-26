@@ -508,12 +508,25 @@ namespace DOL.Database
 		#endregion
 
 		#region Relations
-		protected abstract void FillObjectsRelationsImpl(ElementBinding binding, IEnumerable<DataObject> dataObjects);
-
+		/// <summary>
+		/// Populate or Refresh Objects Relations
+		/// </summary>
+		/// <param name="dataObjects">Objects to Populate</param>
 		public void FillObjectRelations(IEnumerable<DataObject> dataObjects)
 		{
 			// Interface Call, force Refresh
 			FillObjectRelations(dataObjects, true);
+		}
+		
+		/// <summary>
+		/// Populate or Refresh Object Relations
+		/// Override to IEnumerable
+		/// </summary>
+		/// <param name="dataObject">Object to Populate</param>
+		public void FillObjectRelations(DataObject dataObject)
+		{
+			// Interface Call, force Refresh
+			FillObjectRelations(new [] { dataObject }, true);
 		}
 		
 		public void FillObjectRelations(IEnumerable<DataObject> dataObjects, bool force = false)
@@ -540,17 +553,25 @@ namespace DOL.Database
 						// Check if Loading is needed
 						if (!(relation.Relation.AutoLoad || force))
 							continue;
+						
+						var remoteName = AttributesUtils.GetTableOrViewName(relation.ValueType);						
 						try
 						{
-							// Select Object On Relation
-							// TODO Select objects on Relation
-							FillObjectRelations(relation, group.AsEnumerable());
+							DataTableHandler remoteHandler;
+							if (!TableDatasets.TryGetValue(remoteName, out remoteHandler))
+								throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", remoteName));
+
+							// Select Object On Relation Constraint
+							var localBind = tableHandler.FieldElementBindings.Single(bind => bind.ColumnName.Equals(relation.Relation.LocalField, StringComparison.OrdinalIgnoreCase));
+							var remoteBind = remoteHandler.FieldElementBindings.Single(bind => bind.ColumnName.Equals(relation.Relation.RemoteField, StringComparison.OrdinalIgnoreCase));
+							
+							FillObjectRelationsImpl(relation, localBind, remoteBind, remoteHandler, group.AsEnumerable());
 						}
 						catch (Exception re)
 						{
 							if (Log.IsErrorEnabled)
-								Log.ErrorFormat("Could not Retrieve Objects from Relation (Table {0}, Local {1}, Remote Table {2}, Remote {3})",
-								               tableName, relation.Relation.LocalField, AttributesUtils.GetTableOrViewName(relation.ValueType), relation.Relation.RemoteField);
+								Log.ErrorFormat("Could not Retrieve Objects from Relation (Table {0}, Local {1}, Remote Table {2}, Remote {3})\n{4}", tableName,
+								                relation.Relation.LocalField, AttributesUtils.GetTableOrViewName(relation.ValueType), relation.Relation.RemoteField, re);
 						}
 					}
 				}
@@ -561,17 +582,55 @@ namespace DOL.Database
 				}
 			}
 		}
-
-		/// <summary>
-		/// Populate or Refresh Object Relations
-		/// Override to IEnumerable
-		/// </summary>
-		/// <param name="dataObject">Object to Populate</param>
-		public void FillObjectRelations(DataObject dataObject)
+				
+		protected virtual void FillObjectRelationsImpl(ElementBinding relationBind, ElementBinding localBind, ElementBinding remoteBind, DataTableHandler remoteHandler, IEnumerable<DataObject> dataObjects)
 		{
-			FillObjectRelations(new [] { dataObject }, true);
-			// TODO remove
-			//FillLazyObjectRelations(dataObject, false);
+			var type = relationBind.ValueType;
+			var isElementType = false;
+			if (type.HasElementType)
+			{
+				type = type.GetElementType();
+				isElementType = true;
+			}
+			
+			var objects = dataObjects.ToArray();
+			IEnumerable<IEnumerable<DataObject>> objsResults = null;
+			
+			// Handle Cache Search if relevent
+			if (remoteHandler.UsesPreCaching)
+			{
+				// Search with Primary Key or use a Where Clause
+				objsResults = remoteHandler.Table.PrimaryKey.All(pk => pk.ColumnName.Equals(remoteBind.ColumnName, StringComparison.OrdinalIgnoreCase)) ?
+					objects.Select(obj => new [] { remoteHandler.GetPreCachedObject(remoteBind.GetValue(obj)) }) :
+					objects.Select(obj => remoteHandler.SearchPreCachedObjects(rem => {
+					                                                           	if (localBind.ValueType == typeof(string) || remoteBind.ValueType == typeof(string))
+					                                                           		return remoteBind.GetValue(rem).ToString().Equals(localBind.GetValue(obj).ToString(), StringComparison.OrdinalIgnoreCase);
+					                                                           	return remoteBind.GetValue(rem) == localBind.GetValue(obj);
+					                                                           }));
+			}
+			else
+			{
+				
+				var whereClause = string.Format("`{0}` = @{0}", remoteBind.ColumnName);
+				
+				var parameters = objects.Select(obj => new [] { new KeyValuePair<string, object>(string.Format("@{0}", remoteBind.ColumnName), localBind.GetValue(obj)) });
+				
+				objsResults = SelectObjectsImpl(type, whereClause, parameters, Transaction.IsolationLevel.DEFAULT);
+			}
+			
+			// Store Relations
+			var current = 0;
+			foreach (var objs in objsResults)
+			{
+				object relationObject = isElementType ? (object)objs.ToArray() : objs.FirstOrDefault();
+				relationBind.SetValue(objects[current], relationObject);
+				current++;
+			}
+		}
+		
+		protected IEnumerable<IEnumerable<DataObject>> SelectObjectsImpl(Type type, string whereClause, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, Transaction.IsolationLevel isolation)
+		{
+			throw new NotImplementedException();
 		}
 
 		protected void SaveObjectRelations(DataObject dataObject)
