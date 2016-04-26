@@ -508,10 +508,70 @@ namespace DOL.Database
 		#endregion
 
 		#region Relations
+		protected abstract void FillObjectsRelationsImpl(ElementBinding binding, IEnumerable<DataObject> dataObjects);
 
+		public void FillObjectRelations(IEnumerable<DataObject> dataObjects)
+		{
+			// Interface Call, force Refresh
+			FillObjectRelations(dataObjects, true);
+		}
+		
+		public void FillObjectRelations(IEnumerable<DataObject> dataObjects, bool force = false)
+		{
+			var groups = dataObjects.GroupBy(obj => obj.GetType());
+			
+			foreach (var group in groups)
+			{
+				var dataType = group.Key;
+				var tableName = AttributesUtils.GetTableOrViewName(dataType);
+				try
+				{
+					
+					DataTableHandler tableHandler;
+					if (!TableDatasets.TryGetValue(tableName, out tableHandler))
+						throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", tableName));
+					
+					if (!tableHandler.HasRelations)
+						return;
+					
+					var relations = tableHandler.ElementBindings.Where(bind => bind.Relation != null);
+					foreach (var relation in relations)
+					{
+						// Check if Loading is needed
+						if (!(relation.Relation.AutoLoad || force))
+							continue;
+						try
+						{
+							// Select Object On Relation
+							// TODO Select objects on Relation
+							FillObjectRelations(relation, group.AsEnumerable());
+						}
+						catch (Exception re)
+						{
+							if (Log.IsErrorEnabled)
+								Log.ErrorFormat("Could not Retrieve Objects from Relation (Table {0}, Local {1}, Remote Table {2}, Remote {3})",
+								               tableName, relation.Relation.LocalField, AttributesUtils.GetTableOrViewName(relation.ValueType), relation.Relation.RemoteField);
+						}
+					}
+				}
+				catch (Exception e)
+				{
+					if (Log.IsErrorEnabled)
+						Log.ErrorFormat("Could not Resolve Relations for Table {0}\n{1}", tableName, e);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Populate or Refresh Object Relations
+		/// Override to IEnumerable
+		/// </summary>
+		/// <param name="dataObject">Object to Populate</param>
 		public void FillObjectRelations(DataObject dataObject)
 		{
-			FillLazyObjectRelations(dataObject, false);
+			FillObjectRelations(new [] { dataObject }, true);
+			// TODO remove
+			//FillLazyObjectRelations(dataObject, false);
 		}
 
 		protected void SaveObjectRelations(DataObject dataObject)

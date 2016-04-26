@@ -61,7 +61,17 @@ namespace DOL.Database
 		bool UpdateInCache<TObject>(object key)
 			where TObject : DataObject;
 
+		/// <summary>
+		/// Populate or Refresh Object Relations
+		/// </summary>
+		/// <param name="dataObject">Object to Populate</param>
 		void FillObjectRelations(DataObject dataObject);
+		
+		/// <summary>
+		/// Populate or Refresh Objects Relations
+		/// </summary>
+		/// <param name="dataObject">DataObject to Populate</param>
+		void FillObjectRelations(IEnumerable<DataObject> dataObject);
 
 		string Escape(string rawInput);
 

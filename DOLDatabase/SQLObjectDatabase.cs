@@ -104,7 +104,7 @@ namespace DOL.Database
 		{
 			try
 			{
-				string tableName = dataObject.TableName;
+				var tableName = dataObject.TableName;
 				DataTableHandler tableHandler;
 				if (!TableDatasets.TryGetValue(tableName, out tableHandler))
 					throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", tableName));
@@ -343,7 +343,11 @@ namespace DOL.Database
 		/// <returns></returns>
 		protected override DataObject[] SelectObjectsImpl(Type objectType, string whereClause, Transaction.IsolationLevel isolation)
 		{
-			MethodInfo method = GetType().GetMethod("SelectAllObjectsImpl");
+			var methods = GetType().GetMethods();
+			var method = GetType().GetMethods()
+				.FirstOrDefault(m => m.Name == "SelectObjectsImpl" && m.IsGenericMethodDefinition &&
+				        (m.GetParameters().Select(p => p.ParameterType).ElementAt(0) == typeof(string)
+				         && m.GetParameters().Select(p => p.ParameterType).ElementAt(1) == typeof(Transaction.IsolationLevel)));
         	MethodInfo genericMethod = method.MakeGenericMethod(objectType);
         	var result = genericMethod.Invoke(this, new object[] { whereClause, isolation });
         	
