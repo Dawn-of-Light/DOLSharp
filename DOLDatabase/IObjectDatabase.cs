@@ -26,6 +26,7 @@ namespace DOL.Database
 	/// </summary>
 	public interface IObjectDatabase
 	{
+		#region Add Objects
 		/// <summary>
 		/// Insert a new DataObject into the database and save it
 		/// </summary>
@@ -34,6 +35,14 @@ namespace DOL.Database
 		bool AddObject(DataObject dataObject);
 
 		/// <summary>
+		/// Insert new DataObjects into the database and save them
+		/// </summary>
+		/// <param name="dataObjects">DataObjects to Add into database</param>
+		/// <returns>True if All DataObjects were added.</returns>
+		bool AddObject(IEnumerable<DataObject> dataObjects);
+		#endregion
+		#region Save Objects
+		/// <summary>
 		/// Save a DataObject to database if saving is allowed and object is dirty
 		/// </summary>
 		/// <param name="dataObject">DataObject to Save in database</param>
@@ -41,39 +50,75 @@ namespace DOL.Database
 		bool SaveObject(DataObject dataObject);
 
 		/// <summary>
+		/// Save DataObjects to database if saving is allowed and object is dirty
+		/// </summary>
+		/// <param name="dataObjects">DataObjects to Save in database</param>
+		/// <returns>True if All DataObjects were saved.</returns>
+		bool SaveObject(IEnumerable<DataObject> dataObjects);
+		#endregion
+		#region Delete Objects
+		/// <summary>
 		/// Delete a DataObject from database if deletion is allowed
 		/// </summary>
 		/// <param name="dataObject">DataObject to Delete from database</param>
 		/// <returns>True if the DataObject was deleted.</returns>
 		bool DeleteObject(DataObject dataObject);
+		
+		/// <summary>
+		/// Delete DataObjects from database if deletion is allowed
+		/// </summary>
+		/// <param name="dataObjects">DataObjects to Delete from database</param>
+		/// <returns>True if All DataObjects were deleted.</returns>
+		bool DeleteObject(IEnumerable<DataObject> dataObjects);
+		#endregion
 
+		#region Select By Key
 		TObject FindObjectByKey<TObject>(object key)
 			where TObject : DataObject;
-
+		IEnumerable<TObject> FindObjectByKey<TObject>(IEnumerable<object> key)
+			where TObject : DataObject;
+		#endregion
+		#region Select Where Clause With Parameters
+		IEnumerable<IEnumerable<TObject>> SelectObject<TObject>(string whereExpression, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters)
+			where TObject : DataObject;
+		IEnumerable<TObject> SelectObject<TObject>(string whereExpression, IEnumerable<KeyValuePair<string, object>> parameter)
+			where TObject : DataObject;
+		IEnumerable<TObject> SelectObject<TObject>(string whereExpression, KeyValuePair<string, object> param)
+			where TObject : DataObject;
+		#endregion
+		#region Select Where Clause Without Parameter
+		[Obsolete("Use Parametrized Select Queries for best perfomance")]
 		TObject SelectObject<TObject>(string whereExpression)
 			where TObject : DataObject;
-
-		TObject SelectObject<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
-			where TObject : DataObject;
-
+		[Obsolete("Use Parametrized Select Queries for best perfomance")]
 		IList<TObject> SelectObjects<TObject>(string whereExpression)
 			where TObject : DataObject;
-
+		[Obsolete("Use Parametrized Select Queries for best perfomance")]
+		TObject SelectObject<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
+			where TObject : DataObject;
+		[Obsolete("Use Parametrized Select Queries for best perfomance")]
 		IList<TObject> SelectObjects<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
 			where TObject : DataObject;
-
+		#endregion
+		#region Select All Object
 		IList<TObject> SelectAllObjects<TObject>()
 			where TObject : DataObject;
 
 		IList<TObject> SelectAllObjects<TObject>(Transaction.IsolationLevel isolation)
 			where TObject : DataObject;
-
+		#endregion
+		#region Count Objects
 		int GetObjectCount<TObject>()
 			where TObject : DataObject;
 
 		int GetObjectCount<TObject>(string whereExpression)
 			where TObject : DataObject;
-
+		#endregion
+		#region Metadata Handlers
+		/// <summary>
+		/// Register Data Object Type if not already Registered
+		/// </summary>
+		/// <param name="dataObjectType">DataObject Type</param>
 		void RegisterDataObject(Type dataObjectType);
 
 		bool UpdateInCache<TObject>(object key)
@@ -90,7 +135,8 @@ namespace DOL.Database
 		/// </summary>
 		/// <param name="dataObject">DataObject to Populate</param>
 		void FillObjectRelations(IEnumerable<DataObject> dataObject);
-
+		#endregion
+		#region Utils
 		/// <summary>
 		/// Escape wrong characters from string for Database Insertion
 		/// </summary>
@@ -105,5 +151,6 @@ namespace DOL.Database
 		/// <returns>True if the Command succeeded</returns>
 		[Obsolete("Raw Non-Query are SQL Only and don't use internal Object Database Implementations...")]
 		bool ExecuteNonQuery(string rawQuery);
+		#endregion
 	}
 }

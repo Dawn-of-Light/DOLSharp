@@ -49,14 +49,14 @@ namespace DOL.Database
 		/// <summary>
 		/// Register Data Object Type if not already Registered
 		/// </summary>
-		/// <param name="objType">DataObject Type</param>
-		public override void RegisterDataObject(Type objType)
+		/// <param name="dataObjectType">DataObject Type</param>
+		public override void RegisterDataObject(Type dataObjectType)
 		{
-			var tableName = AttributesUtils.GetTableOrViewName(objType);
+			var tableName = AttributesUtils.GetTableOrViewName(dataObjectType);
 			if (TableDatasets.ContainsKey(tableName))
 				return;
 			
-			var dataTableHandler = new DataTableHandler(objType);
+			var dataTableHandler = new DataTableHandler(dataObjectType);
 
 			try
 			{
@@ -98,9 +98,9 @@ namespace DOL.Database
 		/// <summary>
 		/// Adds a new object to the database.
 		/// </summary>
-		/// <param name="dataObject">the object to add to the database</param>
+		/// <param name="dataObjects">the object to add to the database</param>
 		/// <returns>true if the object was added successfully; false otherwise</returns>
-		protected override bool AddObjectImpl(DataObject dataObject)
+		protected override bool[] AddObjectImpl(IEnumerable<DataObject> dataObjects)
 		{
 			try
 			{

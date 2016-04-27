@@ -73,6 +73,110 @@ namespace DOL.Database
 			this.ConnectionString = ConnectionString;
 		}
 
+		#region Public Add Objects Implementation
+		/// <summary>
+		/// Insert a new DataObject into the database and save it
+		/// </summary>
+		/// <param name="dataObject">DataObject to Add into database</param>
+		/// <returns>True if the DataObject was added.</returns>
+		public bool AddObject(DataObject dataObject)
+		{
+			// TODO Check for Relations
+			if (dataObject.AllowAdd)
+			{
+				return AddObjectImpl(dataObject);
+			}
+			
+			if (Log.IsWarnEnabled)
+				Log.WarnFormat("AddObject called on DataObject when AllowAdd is False: {0} : {1}", dataObject.TableName, dataObject.ObjectId);
+			
+			return false;
+		}
+		
+		/// <summary>
+		/// Insert new DataObjects into the database and save them
+		/// </summary>
+		/// <param name="dataObjects">DataObjects to Add into database</param>
+		/// <returns>True if All DataObjects were added.</returns>
+		public virtual bool AddObject(IEnumerable<DataObject> dataObjects) {}		
+		#endregion
+		#region Public Save Objects Implementation
+		/// <summary>
+		/// Saves a DataObject to database if saving is allowed and object is dirty
+		/// </summary>
+		/// <param name="dataObject">DataObject to Save in database</param>
+		/// <returns>True is the DataObject was saved.</returns>
+		public bool SaveObject(DataObject dataObject)
+		{
+			// TODO Check for Relations
+			if (dataObject.Dirty)
+			{
+				return SaveObjectImpl(dataObject);
+			}
+
+			return true;
+		}
+		
+		/// <summary>
+		/// Save DataObjects to database if saving is allowed and object is dirty
+		/// </summary>
+		/// <param name="dataObjects">DataObjects to Save in database</param>
+		/// <returns>True if All DataObjects were saved.</returns>
+		public virtual bool SaveObject(IEnumerable<DataObject> dataObjects)
+		{
+		}
+		#endregion
+		#region Public Delete Objects Implementation
+		/// <summary>
+		/// Delete a DataObject from database if deletion is allowed
+		/// </summary>
+		/// <param name="dataObject">DataObject to Delete from database</param>
+		/// <returns>True if the DataObject was deleted.</returns>
+		public bool DeleteObject(DataObject dataObject)
+		{
+			DeleteObject(new [] { dataObject });
+		}
+		
+		/// <summary>
+		/// Delete DataObjects from database if deletion is allowed
+		/// </summary>
+		/// <param name="dataObjects">DataObjects to Delete from database</param>
+		/// <returns>True if All DataObjects were deleted.</returns>
+		public virtual bool DeleteObject(IEnumerable<DataObject> dataObjects)
+		{
+			// TODO -- Implement Relations
+			var objs = dataObjects.ToArray();
+			var allowedObjs = objs.Where(obj => obj.AllowDelete).ToArray();
+			// Delete Object where Allowed
+			var result = DeleteObjectImpl(allowedObjs);
+			
+			var success = true;
+			
+			// Display Errors and Checks Return
+			var current = 0;
+			foreach(var res in result)
+			{
+				if (!res && Log.IsErrorEnabled)
+				{
+					var obj = allowedObjs[current];
+					Log.ErrorFormat("Could not delete DataObject (Unexpected Error) - {0}", obj);
+					success = false;
+				}
+				current++;
+			}
+			
+			// Display Warnings
+			foreach(var obj in objs.Where(obj => !obj.AllowDelete))
+			{
+				if (Log.IsWarnEnabled)
+					Log.WarnFormat("Could not delete DataObject (Not Allowed) - {0}", obj);
+				success = false;
+			}
+			
+			return success;
+		}
+		#endregion
+		
 		#region Data tables
 
 		protected DataSet GetDataSet(string tableName)
@@ -226,60 +330,6 @@ namespace DOL.Database
 		#endregion
 
 		#region Public API
-
-		/// <summary>
-		/// Insert a new DataObject into the database and save it
-		/// </summary>
-		/// <param name="dataObject">DataObject to Add into database</param>
-		/// <returns>True if the DataObject was added.</returns>
-		public bool AddObject(DataObject dataObject)
-		{
-			// TODO Check for Relations
-			if (dataObject.AllowAdd)
-			{
-				return AddObjectImpl(dataObject);
-			}
-			
-			if (Log.IsWarnEnabled)
-				Log.WarnFormat("AddObject called on DataObject when AllowAdd is False: {0} : {1}", dataObject.TableName, dataObject.ObjectId);
-			
-			return false;
-		}
-		
-		public bool AddObjects(IEnumerable<DataObject> dataObjects) {}
-
-		/// <summary>
-		/// Saves a DataObject to database if saving is allowed and object is dirty
-		/// </summary>
-		/// <param name="dataObject">DataObject to Save in database</param>
-		/// <returns>True is the DataObject was saved.</returns>
-		public bool SaveObject(DataObject dataObject)
-		{
-			// TODO Check for Relations
-			if (dataObject.Dirty)
-			{
-				return SaveObjectImpl(dataObject);
-			}
-
-			return true;
-		}
-
-		/// <summary>
-		/// Delete a DataObject from database if deletion is allowed
-		/// </summary>
-		/// <param name="dataObject">DataObject to Delete from database</param>
-		/// <returns>True if the DataObject was deleted.</returns>
-		public bool DeleteObject(DataObject dataObject)
-		{
-			// TODO Check for Relations
-			if (dataObject.AllowDelete)
-			{
-				return DeleteObjectImpl(dataObject);
-			}
-
-			return false;
-		}
-
 		public int GetObjectCount<TObject>()
 			where TObject : DataObject
 		{
@@ -364,14 +414,14 @@ namespace DOL.Database
 		/// <summary>
 		/// Register Data Object Type if not already Registered
 		/// </summary>
-		/// <param name="objType">DataObject Type</param>
-		public virtual void RegisterDataObject(Type objType)
+		/// <param name="dataObjectType">DataObject Type</param>
+		public virtual void RegisterDataObject(Type dataObjectType)
 		{
-			var tableName = AttributesUtils.GetTableOrViewName(objType);
+			var tableName = AttributesUtils.GetTableOrViewName(dataObjectType);
 			if (TableDatasets.ContainsKey(tableName))
 				return;
 			
-			var dataTableHandler = new DataTableHandler(objType);
+			var dataTableHandler = new DataTableHandler(dataObjectType);
 			TableDatasets.Add(tableName, dataTableHandler);
 
 			// TODO get rid of this or implement it properly
@@ -440,23 +490,55 @@ namespace DOL.Database
 		#region Implementation
 
 		/// <summary>
-		/// Adds a new object to the database.
+		/// Adds new DataObject to the database.
 		/// </summary>
-		/// <param name="dataObject">the object to add to the database</param>
-		/// <returns>true if the object was added successfully; false otherwise</returns>
-		protected abstract bool AddObjectImpl(DataObject dataObject);
+		/// <param name="dataObject">DataObject to add to the database</param>
+		/// <returns>True if the object was added successfully; false otherwise</returns>
+		protected bool AddObjectImpl(DataObject dataObject)
+		{
+			return AddObjectImpl(new [] { dataObject }).First();
+		}
 
 		/// <summary>
-		/// Persists an object to the database.
+		/// Adds new DataObjects to the database.
 		/// </summary>
-		/// <param name="dataObject">the object to save to the database</param>
-		protected abstract bool SaveObjectImpl(DataObject dataObject);
+		/// <param name="dataObjects">DataObjects to add to the database</param>
+		/// <returns>True if objects were added successfully; false otherwise</returns>
+		protected abstract bool[] AddObjectImpl(IEnumerable<DataObject> dataObjects);
 
 		/// <summary>
-		/// Deletes an object from the database.
+		/// Saves Persisted DataObject into Database
 		/// </summary>
-		/// <param name="dataObject">the object to delete from the database</param>
-		protected abstract bool DeleteObjectImpl(DataObject dataObject);
+		/// <param name="dataObject">DataObject to Save</param>
+		/// <returns>True if the object was saved successfully; false otherwise</returns>
+		protected bool SaveObjectImpl(DataObject dataObject)
+		{
+			return SaveObjectImpl(new [] { dataObject }).First();
+		}
+		
+		/// <summary>
+		/// Saves Persisted DataObjects into Database
+		/// </summary>
+		/// <param name="dataObjects">DataObjects to Save</param>
+		/// <returns>True if objects were saved successfully; false otherwise</returns>
+		protected abstract bool[] SaveObjectImpl(IEnumerable<DataObject> dataObjects);
+
+		/// <summary>
+		/// Deletes DataObject from the database.
+		/// </summary>
+		/// <param name="dataObject">Object to delete from the database</param>
+		/// <returns>True if the object was deleted successfully; false otherwise</returns>
+		protected bool DeleteObjectImpl(DataObject dataObject)
+		{
+			return DeleteObjectImpl(new [] { dataObject }).First();
+		}
+
+		/// <summary>
+		/// Deletes DataObjects from the database.
+		/// </summary>
+		/// <param name="dataObject">DataObjects to delete from the database</param>
+		/// <returns>True if objects were deleted successfully; false otherwise</returns>
+		protected abstract bool[] DeleteObjectImpl(IEnumerable<DataObject> dataObject);
 
 		/// <summary>
 		/// Finds an object in the database by primary key.
