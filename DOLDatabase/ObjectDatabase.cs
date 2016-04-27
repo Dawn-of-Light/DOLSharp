@@ -72,6 +72,32 @@ namespace DOL.Database
 		{
 			this.ConnectionString = ConnectionString;
 		}
+		
+		/// <summary>
+		/// Helper to Retrieve Table Handler from Object Type
+		/// Return Real Table Handler for Modifications Queries
+		/// </summary>
+		/// <param name="objectType">Object Type</param>
+		/// <returns>DataTableHandler for this Object Type or null.</returns>
+		protected DataTableHandler GetTableHandler(Type objectType)
+		{
+			var tableName = AttributesUtils.GetTableName(objectType);
+			DataTableHandler handler;
+			return TableDatasets.TryGetValue(tableName, out handler) ? handler : null;
+		}
+		
+		/// <summary>
+		/// Helper to Retrieve Table or View Handler from Object Type
+		/// Return View or Table for Select Queries
+		/// </summary>
+		/// <param name="objectType">Object Type</param>
+		/// <returns>DataTableHandler for this Object Type or null.</returns>
+		protected DataTableHandler GetTableOrViewHandler(Type objectType)
+		{
+			var tableName = AttributesUtils.GetTableOrViewName(objectType);
+			DataTableHandler handler;
+			return TableDatasets.TryGetValue(tableName, out handler) ? handler : null;
+		}
 
 		#region Public Add Objects Implementation
 		/// <summary>
@@ -81,16 +107,7 @@ namespace DOL.Database
 		/// <returns>True if the DataObject was added.</returns>
 		public bool AddObject(DataObject dataObject)
 		{
-			// TODO Check for Relations
-			if (dataObject.AllowAdd)
-			{
-				return AddObjectImpl(dataObject);
-			}
-			
-			if (Log.IsWarnEnabled)
-				Log.WarnFormat("AddObject called on DataObject when AllowAdd is False: {0} : {1}", dataObject.TableName, dataObject.ObjectId);
-			
-			return false;
+			return AddObject(new [] { dataObject });
 		}
 		
 		/// <summary>
@@ -98,7 +115,63 @@ namespace DOL.Database
 		/// </summary>
 		/// <param name="dataObjects">DataObjects to Add into database</param>
 		/// <returns>True if All DataObjects were added.</returns>
-		public virtual bool AddObject(IEnumerable<DataObject> dataObjects) {}		
+		public virtual bool AddObject(IEnumerable<DataObject> dataObjects)
+		{
+			var success = true;
+			foreach (var grp in dataObjects.GroupBy(obj => obj.GetType()))
+			{
+				var tableHandler = GetTableHandler(grp.Key);
+				
+				if (tableHandler == null)
+				{
+					if (Log.IsErrorEnabled)
+						Log.ErrorFormat("AddObject: DataObject Type ({0}) not registered !", grp.Key.FullName);
+					success = false;
+					continue;
+				}
+				
+				foreach (var allowed in grp.GroupBy(item => item.AllowAdd))
+				{
+					if (allowed.Key)
+					{
+						var objs = allowed.ToArray();
+						var results = AddObjectImpl(tableHandler, objs);
+						
+						var resultsByObjs = results.Select((result, index) => new { Success = result, DataObject = objs[index] })
+							.GroupBy(obj => obj.Success);
+						
+						foreach (var resultGrp in resultsByObjs)
+						{
+							if (resultGrp.Key)
+							{
+								// Success Objects Need Relations Save
+								if (tableHandler.HasRelations)
+									success &= SaveObjectRelations(tableHandler, resultGrp.Select(obj => obj.DataObject));
+							}
+							else
+							{
+								if (Log.IsErrorEnabled)
+								{
+									foreach(var obj in resultGrp)
+										Log.ErrorFormat("AddObjects: DataObject ({0}) could not be inserted into database...", obj.DataObject);
+								}
+								success = false;
+							}
+						}
+					}
+					else
+					{
+						if (Log.IsWarnEnabled)
+						{
+							foreach (var obj in allowed)
+								Log.WarnFormat("AddObject: DataObject ({0}) not allowed to be added to Database", obj);
+						}
+						success = false;
+					}
+				}
+			}
+			return success;
+		}
 		#endregion
 		#region Public Save Objects Implementation
 		/// <summary>
@@ -108,13 +181,7 @@ namespace DOL.Database
 		/// <returns>True is the DataObject was saved.</returns>
 		public bool SaveObject(DataObject dataObject)
 		{
-			// TODO Check for Relations
-			if (dataObject.Dirty)
-			{
-				return SaveObjectImpl(dataObject);
-			}
-
-			return true;
+			return SaveObject(new [] { dataObject });
 		}
 		
 		/// <summary>
@@ -124,6 +191,38 @@ namespace DOL.Database
 		/// <returns>True if All DataObjects were saved.</returns>
 		public virtual bool SaveObject(IEnumerable<DataObject> dataObjects)
 		{
+			var success = true;
+			foreach (var grp in dataObjects.GroupBy(obj => obj.GetType()))
+			{
+				var tableHandler = GetTableHandler(grp.Key);
+				
+				if (tableHandler == null)
+				{
+					if (Log.IsErrorEnabled)
+						Log.ErrorFormat("SaveObject: DataObject Type ({0}) not registered !", grp.Key.FullName);
+					success = false;
+					continue;
+				}
+				
+				var objs = grp.Where(obj => obj.Dirty).ToArray();
+				var results = SaveObjectImpl(tableHandler, objs);
+				var resultsByObjs = results.Select((result, index) => new { Success = result, DataObject = objs[index] })
+					.GroupBy(obj => obj.Success);
+				
+				foreach (var resultGrp in resultsByObjs.Where(g => !g.Key))
+				{
+					if (Log.IsErrorEnabled)
+					{
+						foreach(var obj in resultGrp)
+							Log.ErrorFormat("SaveObject: DataObject ({0}) could not be saved into database...", obj.DataObject);
+					}
+					success = false;
+				}
+				
+				if (tableHandler.HasRelations)
+					success &= SaveObjectRelations(tableHandler, grp);				
+			}
+			return success;
 		}
 		#endregion
 		#region Public Delete Objects Implementation
@@ -144,36 +243,297 @@ namespace DOL.Database
 		/// <returns>True if All DataObjects were deleted.</returns>
 		public virtual bool DeleteObject(IEnumerable<DataObject> dataObjects)
 		{
-			// TODO -- Implement Relations
-			var objs = dataObjects.ToArray();
-			var allowedObjs = objs.Where(obj => obj.AllowDelete).ToArray();
-			// Delete Object where Allowed
-			var result = DeleteObjectImpl(allowedObjs);
-			
 			var success = true;
-			
-			// Display Errors and Checks Return
-			var current = 0;
-			foreach(var res in result)
+			foreach (var grp in dataObjects.GroupBy(obj => obj.GetType()))
 			{
-				if (!res && Log.IsErrorEnabled)
+				var tableHandler = GetTableHandler(grp.Key);
+				
+				if (tableHandler == null)
 				{
-					var obj = allowedObjs[current];
-					Log.ErrorFormat("Could not delete DataObject (Unexpected Error) - {0}", obj);
+					if (Log.IsErrorEnabled)
+						Log.ErrorFormat("DeleteObject: DataObject Type ({0}) not registered !", grp.Key.FullName);
+					success = false;
+					continue;
+				}
+				
+				foreach (var allowed in grp.GroupBy(item => item.AllowDelete))
+				{
+					if (allowed.Key)
+					{
+						var objs = allowed.ToArray();
+						var results = DeleteObjectImpl(tableHandler, objs);
+						
+						var resultsByObjs = results.Select((result, index) => new { Success = result, DataObject = objs[index] })
+							.GroupBy(obj => obj.Success);
+						
+						foreach (var resultGrp in resultsByObjs)
+						{
+							if (resultGrp.Key)
+							{
+								// Success Objects Need Relations Save
+								if (tableHandler.HasRelations)
+									success &= DeleteObjectRelations(tableHandler, resultGrp.Select(obj => obj.DataObject));
+							}
+							else
+							{
+								if (Log.IsErrorEnabled)
+								{
+									foreach(var obj in resultGrp)
+										Log.ErrorFormat("AddObjects: DataObject ({0}) could not be inserted into database...", obj.DataObject);
+								}
+								success = false;
+							}
+						}
+					}
+					else
+					{
+						if (Log.IsWarnEnabled)
+						{
+							foreach (var obj in allowed)
+								Log.WarnFormat("AddObject: DataObject ({0}) not allowed to be added to Database", obj);
+						}
+						success = false;
+					}
+				}
+			}
+			return success;
+		}
+		#endregion
+		#region Relation Update Handling
+		/// <summary>
+		/// Save Relations Objects attached to DataObjects
+		/// </summary>
+		/// <param name="tableHandler">TableHandler for Source DataObjects Relation</param>
+		/// <param name="dataObjects">DataObjects to parse</param>
+		/// <returns>True if all Relations were saved</returns>
+		protected bool SaveObjectRelations(DataTableHandler tableHandler, IEnumerable<DataObject> dataObjects)
+		{
+			var success = true;
+			foreach (var relation in tableHandler.ElementBindings.Where(bind => bind.Relation != null))
+			{
+				// Relation Check
+				var remoteHandler = GetTableHandler(relation.ValueType);
+				if (remoteHandler == null)
+				{
+					if (Log.IsErrorEnabled)
+						Log.ErrorFormat("SaveObjectRelations: Remote Table for Type ({0}) is not registered !", relation.ValueType.FullName);
+					success = false;
+					continue;
+				}
+				
+				// Check For Array Type
+				var groups = relation.ValueType.HasElementType
+					? dataObjects.Select(obj => ((IEnumerable<DataObject>)relation.GetValue(obj)).Select(rel => new { Local = obj, Remote = rel }))
+					.SelectMany(obj => obj).GroupBy(obj => obj.Remote.IsPersisted)
+					: dataObjects.Select(obj => new { Local = obj, Remote = (DataObject)relation.GetValue(obj) }).GroupBy(obj => obj.Remote.IsPersisted);
+				
+				foreach (var grp in groups)
+				{
+					var objs = grp.ToArray();
+					var results = grp.Key ? SaveObjectImpl(remoteHandler, objs.Select(obj => obj.Remote)) : AddObjectImpl(remoteHandler, objs.Select(obj => obj.Remote));
+					
+					var resultsByObjs = results.Select((result, index) => new { Success = result, RelObject = objs[index] });
+					
+					foreach (var resultGrp in resultsByObjs.GroupBy(obj => obj.Success).FirstOrDefault(g => !g.Key))
+					{
+						if (Log.IsErrorEnabled)
+							Log.ErrorFormat("SaveObjectRelations: {0} Relation ({1}) of DataObject ({2}) failed for Object ({3})", grp.Key ? "Saving" : "Adding",
+							                relation.ValueType, resultGrp.RelObject.Local, resultGrp.RelObject.Remote);
+						success = false;
+					}
+				}
+			}
+			return success;
+		}
+		
+		/// <summary>
+		/// Delete Relations Objects attached to DataObjects
+		/// </summary>
+		/// <param name="tableHandler">TableHandler for Source DataObjects Relation</param>
+		/// <param name="dataObjects">DataObjects to parse</param>
+		/// <returns>True if all Relations were deleted</returns>
+		public bool DeleteObjectRelations(DataTableHandler tableHandler, IEnumerable<DataObject> dataObjects)
+		{
+			var success = true;
+			foreach (var relation in tableHandler.ElementBindings.Where(bind => bind.Relation != null && bind.Relation.AutoDelete))
+			{
+				// Relation Check
+				var remoteHandler = GetTableHandler(relation.ValueType);
+				if (remoteHandler == null)
+				{
+					if (Log.IsErrorEnabled)
+						Log.ErrorFormat("DeleteObjectRelation: Remote Table for Type ({0}) is not registered !", relation.ValueType.FullName);
+					success = false;
+					continue;
+				}
+				
+				// Check For Array Type
+				var groups = relation.ValueType.HasElementType
+					? dataObjects.Select(obj => ((IEnumerable<DataObject>)relation.GetValue(obj)).Select(rel => new { Local = obj, Remote = rel }))
+					.SelectMany(obj => obj).Where(obj => obj.Remote.IsPersisted)
+					: dataObjects.Select(obj => new { Local = obj, Remote = (DataObject)relation.GetValue(obj) }).Where(obj => obj.Remote.IsPersisted);
+				
+				var objs = groups.ToArray();
+				var results = DeleteObjectImpl(remoteHandler, objs.Select(obj => obj.Remote));
+				
+				var resultsByObjs = results.Select((result, index) => new { Success = result, RelObject = objs[index] });
+				
+				foreach (var resultGrp in resultsByObjs.GroupBy(obj => obj.Success).FirstOrDefault(g => !g.Key))
+				{
+					if (Log.IsErrorEnabled)
+						Log.ErrorFormat("DeleteObjectRelation: Deleting Relation ({0}) of DataObject ({1}) failed for Object ({2})",
+						                relation.ValueType, resultGrp.RelObject.Local, resultGrp.RelObject.Remote);
 					success = false;
 				}
+			}
+			return success;
+		}
+		#endregion
+		#region Relation Select/Fill Handling
+		/// <summary>
+		/// Populate or Refresh Objects Relations
+		/// </summary>
+		/// <param name="dataObjects">Objects to Populate</param>
+		public void FillObjectRelations(IEnumerable<DataObject> dataObjects)
+		{
+			// Interface Call, force Refresh
+			FillObjectRelations(dataObjects, true);
+		}
+		
+		/// <summary>
+		/// Populate or Refresh Object Relations
+		/// Override to IEnumerable
+		/// </summary>
+		/// <param name="dataObject">Object to Populate</param>
+		public void FillObjectRelations(DataObject dataObject)
+		{
+			// Interface Call, force Refresh
+			FillObjectRelations(new [] { dataObject }, true);
+		}
+		
+		/// <summary>
+		/// Populate or Refresh Objects Relations
+		/// </summary>
+		/// <param name="dataObjects">Objects to Populate</param>
+		/// <param name="force">Force Refresh even if Autoload is False</param>
+		protected virtual void FillObjectRelations(IEnumerable<DataObject> dataObjects, bool force)
+		{
+			var groups = dataObjects.GroupBy(obj => obj.GetType());
+			
+			foreach (var grp in groups)
+			{
+				var dataType = grp.Key;
+				var tableName = AttributesUtils.GetTableOrViewName(dataType);
+				try
+				{
+					
+					DataTableHandler tableHandler;
+					if (!TableDatasets.TryGetValue(tableName, out tableHandler))
+						throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", tableName));
+					
+					if (!tableHandler.HasRelations)
+						return;
+					
+					var relations = tableHandler.ElementBindings.Where(bind => bind.Relation != null);
+					foreach (var relation in relations)
+					{
+						// Check if Loading is needed
+						if (!(relation.Relation.AutoLoad || force))
+							continue;
+						
+						var remoteName = AttributesUtils.GetTableOrViewName(relation.ValueType);						
+						try
+						{
+							DataTableHandler remoteHandler;
+							if (!TableDatasets.TryGetValue(remoteName, out remoteHandler))
+								throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", remoteName));
+
+							// Select Object On Relation Constraint
+							var localBind = tableHandler.FieldElementBindings.Single(bind => bind.ColumnName.Equals(relation.Relation.LocalField, StringComparison.OrdinalIgnoreCase));
+							var remoteBind = remoteHandler.FieldElementBindings.Single(bind => bind.ColumnName.Equals(relation.Relation.RemoteField, StringComparison.OrdinalIgnoreCase));
+							
+							FillObjectRelationsImpl(relation, localBind, remoteBind, remoteHandler, grp.AsEnumerable());
+						}
+						catch (Exception re)
+						{
+							if (Log.IsErrorEnabled)
+								Log.ErrorFormat("Could not Retrieve Objects from Relation (Table {0}, Local {1}, Remote Table {2}, Remote {3})\n{4}", tableName,
+								                relation.Relation.LocalField, AttributesUtils.GetTableOrViewName(relation.ValueType), relation.Relation.RemoteField, re);
+						}
+					}
+				}
+				catch (Exception e)
+				{
+					if (Log.IsErrorEnabled)
+						Log.ErrorFormat("Could not Resolve Relations for Table {0}\n{1}", tableName, e);
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Populate or Refresh Object Relation Implementation
+		/// </summary>
+		/// <param name="relationBind">Element Binding for Relation Field</param>
+		/// <param name="localBind">Local Binding for Value Match</param>
+		/// <param name="remoteBind">Remote Binding for Column Match</param>
+		/// <param name="remoteHandler">Remote Table Handler for Cache Retrieving</param>
+		/// <param name="dataObjects">DataObjects to Populate</param>
+		protected virtual void FillObjectRelationsImpl(ElementBinding relationBind, ElementBinding localBind, ElementBinding remoteBind, DataTableHandler remoteHandler, IEnumerable<DataObject> dataObjects)
+		{
+			var type = relationBind.ValueType;
+			var isElementType = false;
+			if (type.HasElementType)
+			{
+				type = type.GetElementType();
+				isElementType = true;
+			}
+			
+			var objects = dataObjects.ToArray();
+			IEnumerable<IEnumerable<DataObject>> objsResults = null;
+			
+			// Handle Cache Search if relevent
+			if (remoteHandler.UsesPreCaching)
+			{
+				// Search with Primary Key or use a Where Clause
+				objsResults = remoteHandler.Table.PrimaryKey.All(pk => pk.ColumnName.Equals(remoteBind.ColumnName, StringComparison.OrdinalIgnoreCase)) ?
+					objects.Select(obj => new [] { remoteHandler.GetPreCachedObject(remoteBind.GetValue(obj)) }) :
+					objects.Select(obj => remoteHandler.SearchPreCachedObjects(rem => {
+					                                                           	if (localBind.ValueType == typeof(string) || remoteBind.ValueType == typeof(string))
+					                                                           		return remoteBind.GetValue(rem).ToString().Equals(localBind.GetValue(obj).ToString(), StringComparison.OrdinalIgnoreCase);
+					                                                           	return remoteBind.GetValue(rem) == localBind.GetValue(obj);
+					                                                           }));
+			}
+			else
+			{
+				
+				var whereClause = string.Format("`{0}` = @{0}", remoteBind.ColumnName);
+				
+				var parameters = objects.Select(obj => new [] { new KeyValuePair<string, object>(string.Format("@{0}", remoteBind.ColumnName), localBind.GetValue(obj)) });
+				
+				objsResults = SelectObjectsImpl(type, whereClause, parameters, Transaction.IsolationLevel.DEFAULT);
+			}
+			
+			// Store Relations
+			var current = 0;
+			foreach (var objs in objsResults)
+			{
+				object relationObject = isElementType ? (object)objs.ToArray() : objs.FirstOrDefault();
+				relationBind.SetValue(objects[current], relationObject);
 				current++;
 			}
-			
-			// Display Warnings
-			foreach(var obj in objs.Where(obj => !obj.AllowDelete))
-			{
-				if (Log.IsWarnEnabled)
-					Log.WarnFormat("Could not delete DataObject (Not Allowed) - {0}", obj);
-				success = false;
-			}
-			
-			return success;
+		}
+		
+		/// <summary>
+		/// Select Data Objects Implementation By Type
+		/// </summary>
+		/// <param name="type">Object Type</param>
+		/// <param name="whereClause">Where Clause</param>
+		/// <param name="parameters">Query Parameters</param>
+		/// <param name="isolation">Isolation Level</param>
+		/// <returns>Objects Enumerable grouped by Query</returns>
+		protected IEnumerable<IEnumerable<DataObject>> SelectObjectsImpl(Type type, string whereClause, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, Transaction.IsolationLevel isolation)
+		{
+			throw new NotImplementedException();
 		}
 		#endregion
 		
@@ -488,57 +848,29 @@ namespace DOL.Database
 		#endregion
 
 		#region Implementation
-
-		/// <summary>
-		/// Adds new DataObject to the database.
-		/// </summary>
-		/// <param name="dataObject">DataObject to add to the database</param>
-		/// <returns>True if the object was added successfully; false otherwise</returns>
-		protected bool AddObjectImpl(DataObject dataObject)
-		{
-			return AddObjectImpl(new [] { dataObject }).First();
-		}
-
 		/// <summary>
 		/// Adds new DataObjects to the database.
 		/// </summary>
 		/// <param name="dataObjects">DataObjects to add to the database</param>
+		/// <param name="tableHandler">Table Handler for the DataObjects Collection</param>
 		/// <returns>True if objects were added successfully; false otherwise</returns>
-		protected abstract bool[] AddObjectImpl(IEnumerable<DataObject> dataObjects);
+		protected abstract IEnumerable<bool> AddObjectImpl(DataTableHandler tableHandler, IEnumerable<DataObject> dataObjects);
 
-		/// <summary>
-		/// Saves Persisted DataObject into Database
-		/// </summary>
-		/// <param name="dataObject">DataObject to Save</param>
-		/// <returns>True if the object was saved successfully; false otherwise</returns>
-		protected bool SaveObjectImpl(DataObject dataObject)
-		{
-			return SaveObjectImpl(new [] { dataObject }).First();
-		}
-		
 		/// <summary>
 		/// Saves Persisted DataObjects into Database
 		/// </summary>
 		/// <param name="dataObjects">DataObjects to Save</param>
+		/// <param name="tableHandler">Table Handler for the DataObjects Collection</param>
 		/// <returns>True if objects were saved successfully; false otherwise</returns>
-		protected abstract bool[] SaveObjectImpl(IEnumerable<DataObject> dataObjects);
-
-		/// <summary>
-		/// Deletes DataObject from the database.
-		/// </summary>
-		/// <param name="dataObject">Object to delete from the database</param>
-		/// <returns>True if the object was deleted successfully; false otherwise</returns>
-		protected bool DeleteObjectImpl(DataObject dataObject)
-		{
-			return DeleteObjectImpl(new [] { dataObject }).First();
-		}
+		protected abstract IEnumerable<bool> SaveObjectImpl(DataTableHandler tableHandler, IEnumerable<DataObject> dataObjects);
 
 		/// <summary>
 		/// Deletes DataObjects from the database.
 		/// </summary>
-		/// <param name="dataObject">DataObjects to delete from the database</param>
+		/// <param name="dataObjects">DataObjects to delete from the database</param>
+		/// <param name="tableHandler">Table Handler for the DataObjects Collection</param>
 		/// <returns>True if objects were deleted successfully; false otherwise</returns>
-		protected abstract bool[] DeleteObjectImpl(IEnumerable<DataObject> dataObject);
+		protected abstract IEnumerable<bool> DeleteObjectImpl(DataTableHandler tableHandler, IEnumerable<DataObject> dataObjects);
 
 		/// <summary>
 		/// Finds an object in the database by primary key.
@@ -598,231 +930,9 @@ namespace DOL.Database
 		#endregion
 
 		#region Relations
-		/// <summary>
-		/// Populate or Refresh Objects Relations
-		/// </summary>
-		/// <param name="dataObjects">Objects to Populate</param>
-		public void FillObjectRelations(IEnumerable<DataObject> dataObjects)
-		{
-			// Interface Call, force Refresh
-			FillObjectRelations(dataObjects, true);
-		}
+
+
 		
-		/// <summary>
-		/// Populate or Refresh Object Relations
-		/// Override to IEnumerable
-		/// </summary>
-		/// <param name="dataObject">Object to Populate</param>
-		public void FillObjectRelations(DataObject dataObject)
-		{
-			// Interface Call, force Refresh
-			FillObjectRelations(new [] { dataObject }, true);
-		}
-		
-		/// <summary>
-		/// Populate or Refresh Objects Relations
-		/// </summary>
-		/// <param name="dataObjects">Objects to Populate</param>
-		/// <param name="force">Force Refresh even if Autoload is False</param>
-		protected virtual void FillObjectRelations(IEnumerable<DataObject> dataObjects, bool force)
-		{
-			var groups = dataObjects.GroupBy(obj => obj.GetType());
-			
-			foreach (var group in groups)
-			{
-				var dataType = group.Key;
-				var tableName = AttributesUtils.GetTableOrViewName(dataType);
-				try
-				{
-					
-					DataTableHandler tableHandler;
-					if (!TableDatasets.TryGetValue(tableName, out tableHandler))
-						throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", tableName));
-					
-					if (!tableHandler.HasRelations)
-						return;
-					
-					var relations = tableHandler.ElementBindings.Where(bind => bind.Relation != null);
-					foreach (var relation in relations)
-					{
-						// Check if Loading is needed
-						if (!(relation.Relation.AutoLoad || force))
-							continue;
-						
-						var remoteName = AttributesUtils.GetTableOrViewName(relation.ValueType);						
-						try
-						{
-							DataTableHandler remoteHandler;
-							if (!TableDatasets.TryGetValue(remoteName, out remoteHandler))
-								throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", remoteName));
-
-							// Select Object On Relation Constraint
-							var localBind = tableHandler.FieldElementBindings.Single(bind => bind.ColumnName.Equals(relation.Relation.LocalField, StringComparison.OrdinalIgnoreCase));
-							var remoteBind = remoteHandler.FieldElementBindings.Single(bind => bind.ColumnName.Equals(relation.Relation.RemoteField, StringComparison.OrdinalIgnoreCase));
-							
-							FillObjectRelationsImpl(relation, localBind, remoteBind, remoteHandler, group.AsEnumerable());
-						}
-						catch (Exception re)
-						{
-							if (Log.IsErrorEnabled)
-								Log.ErrorFormat("Could not Retrieve Objects from Relation (Table {0}, Local {1}, Remote Table {2}, Remote {3})\n{4}", tableName,
-								                relation.Relation.LocalField, AttributesUtils.GetTableOrViewName(relation.ValueType), relation.Relation.RemoteField, re);
-						}
-					}
-				}
-				catch (Exception e)
-				{
-					if (Log.IsErrorEnabled)
-						Log.ErrorFormat("Could not Resolve Relations for Table {0}\n{1}", tableName, e);
-				}
-			}
-		}
-		
-		/// <summary>
-		/// Populate or Refresh Object Relation Implementation
-		/// </summary>
-		/// <param name="relationBind">Element Binding for Relation Field</param>
-		/// <param name="localBind">Local Binding for Value Match</param>
-		/// <param name="remoteBind">Remote Binding for Column Match</param>
-		/// <param name="remoteHandler">Remote Table Handler for Cache Retrieving</param>
-		/// <param name="dataObjects">DataObjects to Populate</param>
-		protected virtual void FillObjectRelationsImpl(ElementBinding relationBind, ElementBinding localBind, ElementBinding remoteBind, DataTableHandler remoteHandler, IEnumerable<DataObject> dataObjects)
-		{
-			var type = relationBind.ValueType;
-			var isElementType = false;
-			if (type.HasElementType)
-			{
-				type = type.GetElementType();
-				isElementType = true;
-			}
-			
-			var objects = dataObjects.ToArray();
-			IEnumerable<IEnumerable<DataObject>> objsResults = null;
-			
-			// Handle Cache Search if relevent
-			if (remoteHandler.UsesPreCaching)
-			{
-				// Search with Primary Key or use a Where Clause
-				objsResults = remoteHandler.Table.PrimaryKey.All(pk => pk.ColumnName.Equals(remoteBind.ColumnName, StringComparison.OrdinalIgnoreCase)) ?
-					objects.Select(obj => new [] { remoteHandler.GetPreCachedObject(remoteBind.GetValue(obj)) }) :
-					objects.Select(obj => remoteHandler.SearchPreCachedObjects(rem => {
-					                                                           	if (localBind.ValueType == typeof(string) || remoteBind.ValueType == typeof(string))
-					                                                           		return remoteBind.GetValue(rem).ToString().Equals(localBind.GetValue(obj).ToString(), StringComparison.OrdinalIgnoreCase);
-					                                                           	return remoteBind.GetValue(rem) == localBind.GetValue(obj);
-					                                                           }));
-			}
-			else
-			{
-				
-				var whereClause = string.Format("`{0}` = @{0}", remoteBind.ColumnName);
-				
-				var parameters = objects.Select(obj => new [] { new KeyValuePair<string, object>(string.Format("@{0}", remoteBind.ColumnName), localBind.GetValue(obj)) });
-				
-				objsResults = SelectObjectsImpl(type, whereClause, parameters, Transaction.IsolationLevel.DEFAULT);
-			}
-			
-			// Store Relations
-			var current = 0;
-			foreach (var objs in objsResults)
-			{
-				object relationObject = isElementType ? (object)objs.ToArray() : objs.FirstOrDefault();
-				relationBind.SetValue(objects[current], relationObject);
-				current++;
-			}
-		}
-		
-		/// <summary>
-		/// Select Data Objects Implementation By Type
-		/// </summary>
-		/// <param name="type">Object Type</param>
-		/// <param name="whereClause">Where Clause</param>
-		/// <param name="parameters">Query Parameters</param>
-		/// <param name="isolation">Isolation Level</param>
-		/// <returns>Objects Enumerable grouped by Query</returns>
-		protected IEnumerable<IEnumerable<DataObject>> SelectObjectsImpl(Type type, string whereClause, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, Transaction.IsolationLevel isolation)
-		{
-			throw new NotImplementedException();
-		}
-
-		protected void SaveObjectRelations(DataObject dataObject)
-		{
-			try
-			{
-				object val;
-
-				Type myType = dataObject.GetType();
-
-				MemberInfo[] myMembers = myType.GetMembers();
-
-				for (int i = 0; i < myMembers.Length; i++)
-				{
-					Relation[] myAttributes = GetRelationAttributes(myMembers[i]);
-					if (myAttributes.Length > 0)
-					{
-						//if(myAttributes[0] is Attributes.Relation)
-						//{
-						bool array = false;
-
-						Type type;
-
-						if (myMembers[i] is PropertyInfo)
-							type = ((PropertyInfo)myMembers[i]).PropertyType;
-						else
-							type = ((FieldInfo)myMembers[i]).FieldType;
-
-						if (type.HasElementType)
-						{
-							type = type.GetElementType();
-							array = true;
-						}
-
-						val = null;
-
-						if (array)
-						{
-							if (myMembers[i] is PropertyInfo)
-							{
-								val = ((PropertyInfo)myMembers[i]).GetValue(dataObject, null);
-							}
-							if (myMembers[i] is FieldInfo)
-							{
-								val = ((FieldInfo)myMembers[i]).GetValue(dataObject);
-							}
-							if (val is Array)
-							{
-								var a = val as Array;
-
-								foreach (object o in a)
-								{
-									if (o is DataObject)
-										SaveObject(o as DataObject);
-								}
-							}
-							else
-							{
-								if (val is DataObject)
-									SaveObject(val as DataObject);
-							}
-						}
-						else
-						{
-							if (myMembers[i] is PropertyInfo)
-								val = ((PropertyInfo)myMembers[i]).GetValue(dataObject, null);
-							if (myMembers[i] is FieldInfo)
-								val = ((FieldInfo)myMembers[i]).GetValue(dataObject);
-							if (val != null && val is DataObject)
-								SaveObject(val as DataObject);
-						}
-					}
-					//}
-				}
-			}
-			catch (Exception e)
-			{
-				throw new DatabaseException("Saving Relations failed !", e);
-			}
-		}
-
 		protected void DeleteObjectRelations(DataObject dataObject)
 		{
 			try

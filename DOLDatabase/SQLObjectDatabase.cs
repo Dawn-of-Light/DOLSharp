@@ -96,185 +96,201 @@ namespace DOL.Database
 		
 		#region ObjectDatabase Objects Implementations
 		/// <summary>
-		/// Adds a new object to the database.
+		/// Adds new DataObjects to the database.
 		/// </summary>
-		/// <param name="dataObjects">the object to add to the database</param>
-		/// <returns>true if the object was added successfully; false otherwise</returns>
-		protected override bool[] AddObjectImpl(IEnumerable<DataObject> dataObjects)
+		/// <param name="dataObjects">DataObjects to add to the database</param>
+		/// <param name="tableHandler">Table Handler for the DataObjects Collection</param>
+		/// <returns>True if objects were added successfully; false otherwise</returns>
+		protected override IEnumerable<bool> AddObjectImpl(DataTableHandler tableHandler, IEnumerable<DataObject> dataObjects)
 		{
+			var success = new List<bool>();
 			try
 			{
-				var tableName = dataObject.TableName;
-				DataTableHandler tableHandler;
-				if (!TableDatasets.TryGetValue(tableName, out tableHandler))
-					throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", tableName));
-				
 				// Check Primary Keys
 				var usePrimaryAutoInc = tableHandler.FieldElementBindings.Any(bind => bind.PrimaryKey != null && bind.PrimaryKey.AutoIncrement);
 				
-				if (dataObject.ObjectId == null)
-					dataObject.ObjectId = IDGenerator.GenerateID();
-				
 				// Columns
 				var columns = tableHandler.FieldElementBindings.Where(bind => bind.PrimaryKey == null || !bind.PrimaryKey.AutoIncrement)
-					.Select(bind => new { ColumnName = string.Format("`{0}`", bind.ColumnName), ParamName = string.Format("@{0}", bind.ColumnName), Value = bind.GetValue(dataObject) }).ToArray();
+					.Select(bind => new { Binding = bind, ColumnName = string.Format("`{0}`", bind.ColumnName), ParamName = string.Format("@{0}", bind.ColumnName) }).ToArray();
 				
-				var command = string.Format("INSERT INTO `{0}` ({1}) VALUES({2})", tableName,
+				// Prepare SQL Query
+				var command = string.Format("INSERT INTO `{0}` ({1}) VALUES({2})", tableHandler.TableName,
 				                            string.Join(", ", columns.Select(col => col.ColumnName)),
 				                            string.Join(", ", columns.Select(col => col.ParamName)));
 				
+				var objs = dataObjects.ToArray();
+				// Init Object Id GUID
+				foreach (var obj in objs.Where(obj => obj.ObjectId == null))
+					obj.ObjectId = IDGenerator.GenerateID();
+				// Build Parameters
+				var parameters = objs.Select(obj => columns.Select(col => new KeyValuePair<string, object>(col.ParamName, col.Binding.GetValue(obj))));
+				
+				// Primary Key Auto Inc Handler
 				if (usePrimaryAutoInc)
 				{
-					var lastId = ExecuteScalarImpl(command, columns.Select(col => new KeyValuePair<string, object>(col.ParamName, col.Value)), true);
+					var lastId = ExecuteScalarImpl(command, parameters, true);
+					
 					var binding = tableHandler.FieldElementBindings.First(bind => bind.PrimaryKey != null && bind.PrimaryKey.AutoIncrement);
+					var resultByObjects = lastId.Select((result, index) => new { Result = result, DataObject = objs[index] });
 					
-					long id = Convert.ToInt64(lastId);
-					
-					if (id == 0)
+					foreach (var result in resultByObjects)
 					{
-						if (Log.IsErrorEnabled)
-							Log.ErrorFormat("Error adding object into {0} ID={1}, UsePrimaryAutoInc, Query = {2}", tableName, lastId, command);
+						if (Convert.ToInt64(result.Result) > 0)
+						{
+							DatabaseSetValue(result.DataObject, binding, lastId);
+							result.DataObject.ObjectId = result.Result.ToString();
+							result.DataObject.Dirty = false;
+							result.DataObject.IsPersisted = true;
+							result.DataObject.IsDeleted = false;
+							success.Add(true);
+						}
+						else
+						{
+							if (Log.IsErrorEnabled)
+								Log.ErrorFormat("Error adding data object into {0} Object = {1}, UsePrimaryAutoInc, Query = {2}", tableHandler.TableName, result.DataObject, command);
 							
-						return false;
+							success.Add(false);
+						}
 					}
-					
-					DatabaseSetValue(dataObject, binding, lastId);
-					dataObject.ObjectId = id.ToString();
+
 				}
 				else
 				{
-					var affected = ExecuteNonQueryImpl(command, columns.Select(col => new KeyValuePair<string, object>(col.ParamName, col.Value)));
-					if (affected == 0)
+					var affected = ExecuteNonQueryImpl(command, parameters);
+					var resultByObjects = affected.Select((result, index) => new { Result = result, DataObject = objs[index] });
+					
+					foreach (var result in resultByObjects)
 					{
-						if (Log.IsErrorEnabled)
-							Log.ErrorFormat("Error adding object into {0} ID = {1} Query = {2}", tableName, dataObject.ObjectId, command);
-						
-						return false;
+						if (result.Result > 0)
+						{
+							result.DataObject.Dirty = false;
+							result.DataObject.IsPersisted = true;
+							result.DataObject.IsDeleted = false;
+							success.Add(true);
+						}
+						else
+						{
+							if (Log.IsErrorEnabled)
+								Log.ErrorFormat("Error adding data object into {0} Object = {1} Query = {2}", tableHandler.TableName, result.DataObject, command);
+							success.Add(false);
+						}
 					}
 				}
-
-				if (tableHandler.HasRelations)
-				{
-					SaveObjectRelations(dataObject);
-				}
-
-				dataObject.Dirty = false;
-				dataObject.IsPersisted = true;
-				dataObject.IsDeleted = false;
-
-				return true;
 			}
 			catch (Exception e)
 			{
 				if (Log.IsErrorEnabled)
-					Log.ErrorFormat("Error while adding data object: {0}\n{1}", dataObject, e);
+					Log.ErrorFormat("Error while adding data objects in table: {0}\n{1}", tableHandler.TableName, e);
 			}
 
-			return false;
+			return success;
 		}
 
 		/// <summary>
-		/// Persists an object to the database.
+		/// Saves Persisted DataObjects into Database
 		/// </summary>
-		/// <param name="dataObject">the object to save to the database</param>
-		protected override bool SaveObjectImpl(DataObject dataObject)
+		/// <param name="dataObjects">DataObjects to Save</param>
+		/// <param name="tableHandler">Table Handler for the DataObjects Collection</param>
+		/// <returns>True if objects were saved successfully; false otherwise</returns>
+		protected override IEnumerable<bool> SaveObjectImpl(DataTableHandler tableHandler, IEnumerable<DataObject> dataObjects)
 		{
+			var success = new List<bool>();
 			try
 			{
-				string tableName = dataObject.TableName;
-				DataTableHandler tableHandler;
-				if (!TableDatasets.TryGetValue(tableName, out tableHandler))
-					throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", tableName));
-				
 				// Columns
 				var columns = tableHandler.FieldElementBindings.Where(bind => bind.PrimaryKey == null)
-					.Select(bind => new { ColumnName = string.Format("`{0}`", bind.ColumnName), ParamName = string.Format("@{0}", bind.ColumnName), Value = bind.GetValue(dataObject) }).ToArray();
+					.Select(bind => new { Binding = bind, ColumnName = string.Format("`{0}`", bind.ColumnName), ParamName = string.Format("@{0}", bind.ColumnName) }).ToArray();
 				// Primary Key
 				var primary = tableHandler.FieldElementBindings.Where(bind => bind.PrimaryKey != null)
-					.Select(bind => new { ColumnName = string.Format("`{0}`", bind.ColumnName), ParamName = string.Format("@{0}", bind.ColumnName), Value = bind.GetValue(dataObject) }).ToArray();
+					.Select(bind => new { Binding = bind, ColumnName = string.Format("`{0}`", bind.ColumnName), ParamName = string.Format("@{0}", bind.ColumnName) }).ToArray();
 				
 				if (!primary.Any())
-					throw new DatabaseException(string.Format("Table {0} has no primary key for saving...", tableName));
+					throw new DatabaseException(string.Format("Table {0} has no primary key for saving...", tableHandler.TableName));
 				
-				var command = string.Format("UPDATE `{0}` SET {1} WHERE {2}", tableName,
+				var command = string.Format("UPDATE `{0}` SET {1} WHERE {2}", tableHandler.TableName,
 				                            string.Join(", ", columns.Select(col => string.Format("{0} = {1}", col.ColumnName, col.ParamName))),
 				                            string.Join(" AND ", primary.Select(col => string.Format("{0} = {1}", col.ColumnName, col.ParamName))));
 				
-				var affected = ExecuteNonQueryImpl(command, columns.Concat(primary).Select(col => new KeyValuePair<string, object>(col.ParamName, col.Value)));
-
-				if (affected == 0)
+				var objs = dataObjects.ToArray();
+				var parameters = objs.Select(obj => columns.Concat(primary).Select(col => new KeyValuePair<string, object>(col.ParamName, col.Binding.GetValue(obj))));
+				
+				var affected = ExecuteNonQueryImpl(command, parameters);
+				var resultByObjects = affected.Select((result, index) => new { Result = result, DataObject = objs[index] });
+				
+				foreach (var result in resultByObjects)
 				{
-					if (Log.IsErrorEnabled)
-						Log.ErrorFormat("Error modifying object {0} ID={1} --- keyvalue changed? {2}\n{3}", tableName, dataObject.ObjectId, command, Environment.StackTrace);
-					
-					return false;
+					if (result.Result > 0)
+					{
+						result.DataObject.Dirty = false;
+						result.DataObject.IsPersisted = true;						
+						success.Add(true);
+					}
+					else
+					{
+						if (Log.IsErrorEnabled)
+							Log.ErrorFormat("Error saving data object in table {0} Object = {1} --- keyvalue changed? {2}\n{3}", tableHandler.TableName, result.DataObject, command, Environment.StackTrace);
+						success.Add(false);
+					}
 				}
-
-				if (tableHandler.HasRelations)
-				{
-					SaveObjectRelations(dataObject);
-				}
-
-				dataObject.Dirty = false;
-				dataObject.IsPersisted = true;
-				return true;
 			}
 			catch (Exception e)
 			{
 				if (Log.IsErrorEnabled)
-					Log.ErrorFormat("Error while saving data object: {0}\n{1}", dataObject, e);
+					Log.ErrorFormat("Error while saving data object in table: {0}\n{1}", tableHandler.TableName, e);
 			}
 
-			return false;
+			return success;
 		}
 
-
 		/// <summary>
-		/// Deletes an object from the database.
+		/// Deletes DataObjects from the database.
 		/// </summary>
-		/// <param name="dataObject">the object to delete from the database</param>
-		protected override bool DeleteObjectImpl(DataObject dataObject)
+		/// <param name="dataObjects">DataObjects to delete from the database</param>
+		/// <param name="tableHandler">Table Handler for the DataObjects Collection</param>
+		/// <returns>True if objects were deleted successfully; false otherwise</returns>
+		protected override IEnumerable<bool> DeleteObjectImpl(DataTableHandler tableHandler, IEnumerable<DataObject> dataObjects)
 		{
+			var success = new List<bool>();
 			try
 			{
-				string tableName = dataObject.TableName;
-				DataTableHandler tableHandler;
-				if (!TableDatasets.TryGetValue(tableName, out tableHandler))
-					throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", tableName));
-				
-				// Primary Key
-				var primary = tableHandler.FieldElementBindings.Where(bind => bind.PrimaryKey != null)
-					.Select(bind => new { ColumnName = string.Format("`{0}`", bind.ColumnName), ParamName = string.Format("@{0}", bind.ColumnName), Value = bind.GetValue(dataObject) }).ToArray();
+				// Get Primary Keys
+				var primary = tableHandler.FieldElementBindings.Where(bind => bind.PrimaryKey != null).ToArray();
 				
 				if (!primary.Any())
-					throw new DatabaseException(string.Format("Table {0} has no primary key for deletion...", tableName));
-		
-				var command = string.Format("DELETE FROM `{0}` WHERE {1}", tableName,
-                            string.Join(" AND ", primary.Select(col => string.Format("{0} = {1}", col.ColumnName, col.ParamName))));
-
-				var affected = ExecuteNonQueryImpl(command, primary.Select(col => new KeyValuePair<string, object>(col.ParamName, col.Value)));
+					throw new DatabaseException(string.Format("Table {0} has no primary key for deletion...", tableHandler.TableName));
 				
-				if (affected == 0)
+				var command = string.Format("DELETE FROM `{0}` WHERE {1}", tableHandler.TableName,
+	                        string.Join(" AND ", primary.Select(col => string.Format("`{0}` = @{0}", col.ColumnName))));
+				
+				var objs = dataObjects.ToArray();
+				var parameters = objs.Select(obj => primary.Select(pk => new KeyValuePair<string, object>(string.Format("@{0}", pk.ColumnName), pk.GetValue(obj))));
+				
+				var affected = ExecuteNonQueryImpl(command, parameters);
+				var resultByObjects = affected.Select((result, index) => new { Result = result, DataObject = objs[index] });
+				
+				foreach (var result in resultByObjects)
 				{
-					if (Log.IsErrorEnabled)
-						Log.ErrorFormat("Error deleting object {0} ID={1} --- keyvalue changed? {2}\n{3}", tableName, dataObject.ObjectId, command, Environment.StackTrace);
+					if (result.Result > 0)
+					{
+						result.DataObject.IsPersisted = false;
+						result.DataObject.IsDeleted = true;
+						success.Add(true);
+					}
+					else
+					{
+						if (Log.IsErrorEnabled)
+							Log.ErrorFormat("Error deleting data object from table {0} Object = {1} --- keyvalue changed? {2}\n{3}", tableHandler.TableName, result.DataObject, command, Environment.StackTrace);
+						success.Add(false);
+					}
 				}
-				
-				dataObject.IsPersisted = false;
-
-				DeleteFromCache(dataObject.TableName, dataObject);
-				DeleteObjectRelations(dataObject);
-
-				dataObject.IsDeleted = true;
-				return true;
 			}
 			catch (Exception e)
 			{
 				if (Log.IsErrorEnabled)
-					Log.ErrorFormat("Error while deleting data object: {0}\n{1}", dataObject, e);
-				
-				throw new DatabaseException(string.Format("Deleting DataObject {0} failed !\n{1}", dataObject, e));
+					Log.ErrorFormat("Error while deleting data object in table: {0}\n{1}", tableHandler.TableName, e);
 			}
+			
+			return success;
 		}
 		#endregion
 		
@@ -638,7 +654,7 @@ namespace DOL.Database
 		/// <param name="SQLCommand">Raw Command</param>
 		/// <param name="parameters">Collection of Parameters for Single/Multiple Command</param>
 		/// <returns>True foreach Command that succeeded</returns>
-		protected abstract int[] ExecuteNonQueryImpl(string SQLCommand, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters);
+		protected abstract IEnumerable<int> ExecuteNonQueryImpl(string SQLCommand, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters);
 		#endregion
 		
 		#region Scalar Implementation

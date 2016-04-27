@@ -35,6 +35,10 @@ namespace DOL.Database.Attributes
 		/// <returns>Table Name from DataTable Attribute or ClassName</returns>
 		public static string GetTableName(Type type)
 		{
+			// Check if Type is Element
+			if (type.HasElementType)
+				type = type.GetElementType();
+			
 			var dataTable = type.GetCustomAttributes<DataTable>(true).FirstOrDefault();
 			
 			if (dataTable != null && !string.IsNullOrEmpty(dataTable.TableName))
@@ -50,6 +54,10 @@ namespace DOL.Database.Attributes
 		/// <returns>View Name from DataTable Attribute or null</returns>
 		public static string GetViewName(Type type)
 		{
+			// Check if Type is Element
+			if (type.HasElementType)
+				type = type.GetElementType();
+			
 			var dataTable = type.GetCustomAttributes<DataTable>(true).FirstOrDefault();
 			
 			if (dataTable != null && !string.IsNullOrEmpty(dataTable.ViewName))
@@ -65,10 +73,6 @@ namespace DOL.Database.Attributes
 		/// <returns>View Name if available, Table Name default</returns>
 		public static string GetTableOrViewName(Type type)
 		{
-			// Check if Type is Element
-			if (type.HasElementType)
-				type = type.GetElementType();
-
 			// Graveen: introducing view selection hack (before rewriting the layer :D)
 			// basically, a view must exist and is created with the following:
 			//
@@ -79,10 +83,8 @@ namespace DOL.Database.Attributes
 			//  based on the InventoryItem table. We have to tell to the code
 			//  only to bypass the id generated with FROM by the above
 			//  code.
-			// 
-			string viewName = GetViewName(type);
-			
-			return string.IsNullOrEmpty(viewName) ? GetTableName(type) : viewName;
+			// 			
+			return GetViewName(type) ?? GetTableName(type);
 		}
 		
 		/// <summary>

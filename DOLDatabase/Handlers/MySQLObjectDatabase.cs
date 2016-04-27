@@ -412,7 +412,7 @@ namespace DOL.Database.Handlers
 		/// <param name="SQLCommand">Raw Command</param>
 		/// <param name="parameters">Collection of Parameters for Single/Multiple Read</param>
 		/// <returns>True if the Command succeeded</returns>
-		protected override int[] ExecuteNonQueryImpl(string SQLCommand, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters)
+		protected override IEnumerable<int> ExecuteNonQueryImpl(string SQLCommand, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters)
 		{
 			if (log.IsDebugEnabled)
 				log.DebugFormat("ExecuteNonQueryImpl: {0}", SQLCommand);
@@ -475,7 +475,7 @@ namespace DOL.Database.Handlers
 			} 
 			while (repeat);
 
-			return affected.ToArray();
+			return affected;
 		}
 
 		/// <summary>
