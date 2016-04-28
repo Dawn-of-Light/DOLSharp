@@ -41,6 +41,7 @@ namespace DOL.Database
 		/// <returns>True if All DataObjects were added.</returns>
 		bool AddObject(IEnumerable<DataObject> dataObjects);
 		#endregion
+		
 		#region Save Objects
 		/// <summary>
 		/// Save a DataObject to database if saving is allowed and object is dirty
@@ -56,6 +57,7 @@ namespace DOL.Database
 		/// <returns>True if All DataObjects were saved.</returns>
 		bool SaveObject(IEnumerable<DataObject> dataObjects);
 		#endregion
+		
 		#region Delete Objects
 		/// <summary>
 		/// Delete a DataObject from database if deletion is allowed
@@ -122,7 +124,7 @@ namespace DOL.Database
 		/// </summary>
 		/// <param name="whereExpression">Where Expression Filter</param>
 		/// <returns>Single Object or First Object if multiple matches</returns>
-		[Obsolete("Use Parametrized Select Queries for best perfomances")]
+		//[Obsolete("Use Parametrized Select Queries for best perfomances")]
 		TObject SelectObject<TObject>(string whereExpression)
 			where TObject : DataObject;
 		/// <summary>
@@ -131,7 +133,7 @@ namespace DOL.Database
 		/// <param name="whereExpression">Where Expression Filter</param>
 		/// <param name="isolation">Isolation Level</param>
 		/// <returns>Single Object or First Object if multiple matches</returns>
-		[Obsolete("Use Parametrized Select Queries for best perfomances")]
+		//[Obsolete("Use Parametrized Select Queries for best perfomances")]
 		TObject SelectObject<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
 			where TObject : DataObject;
 		/// <summary>
@@ -139,7 +141,7 @@ namespace DOL.Database
 		/// </summary>
 		/// <param name="whereExpression">Where Expression Filter</param>
 		/// <returns>Collection of DataObjects matching filter</returns>
-		[Obsolete("Use Parametrized Select Queries for best perfomances")]
+		//[Obsolete("Use Parametrized Select Queries for best perfomances")]
 		IList<TObject> SelectObjects<TObject>(string whereExpression)
 			where TObject : DataObject;
 		/// <summary>
@@ -148,17 +150,29 @@ namespace DOL.Database
 		/// <param name="whereExpression">Where Expression Filter</param>
 		/// <param name="isolation">Isolation Level</param>
 		/// <returns>Collection of DataObjects matching filter</returns>
-		[Obsolete("Use Parametrized Select Queries for best perfomances")]
+		//[Obsolete("Use Parametrized Select Queries for best perfomances")]
 		IList<TObject> SelectObjects<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
 			where TObject : DataObject;
 		#endregion
+		
 		#region Select All Object
+		/// <summary>
+		/// Select all Objects From Table holding TObject Type
+		/// </summary>
+		/// <typeparam name="TObject">DataObject Type to Select</typeparam>
+		/// <returns>Collection of all DataObject for this Type</returns>
 		IList<TObject> SelectAllObjects<TObject>()
 			where TObject : DataObject;
-
+		/// <summary>
+		/// Select all Objects From Table holding TObject Type
+		/// </summary>
+		/// <typeparam name="TObject">DataObject Type to Select</typeparam>
+		/// <param name="isolation">Isolation Level</param>
+		/// <returns>Collection of all DataObject for this Type</returns>
 		IList<TObject> SelectAllObjects<TObject>(Transaction.IsolationLevel isolation)
 			where TObject : DataObject;
 		#endregion
+		
 		#region Count Objects
 		int GetObjectCount<TObject>()
 			where TObject : DataObject;
@@ -166,6 +180,7 @@ namespace DOL.Database
 		int GetObjectCount<TObject>(string whereExpression)
 			where TObject : DataObject;
 		#endregion
+		
 		#region Metadata Handlers
 		/// <summary>
 		/// Register Data Object Type if not already Registered
@@ -188,6 +203,7 @@ namespace DOL.Database
 		/// <param name="dataObject">DataObject to Populate</param>
 		void FillObjectRelations(IEnumerable<DataObject> dataObject);
 		#endregion
+		
 		#region Utils
 		/// <summary>
 		/// Escape wrong characters from string for Database Insertion

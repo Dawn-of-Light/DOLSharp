@@ -233,7 +233,7 @@ namespace DOL.Database
 		/// <returns>True if the DataObject was deleted.</returns>
 		public bool DeleteObject(DataObject dataObject)
 		{
-			DeleteObject(new [] { dataObject });
+			return DeleteObject(new [] { dataObject });
 		}
 		
 		/// <summary>
@@ -323,9 +323,10 @@ namespace DOL.Database
 				
 				// Check For Array Type
 				var groups = relation.ValueType.HasElementType
-					? dataObjects.Select(obj => ((IEnumerable<DataObject>)relation.GetValue(obj)).Select(rel => new { Local = obj, Remote = rel }))
-					.SelectMany(obj => obj).GroupBy(obj => obj.Remote.IsPersisted)
-					: dataObjects.Select(obj => new { Local = obj, Remote = (DataObject)relation.GetValue(obj) }).GroupBy(obj => obj.Remote.IsPersisted);
+					? dataObjects.Select(obj => ((IEnumerable<DataObject>)relation.GetValue(obj)))
+					.Where(obj => obj != null).Select(obj => obj.Select(rel => new { Local = obj, Remote = rel }))
+					.SelectMany(obj => obj).GroupBy(obj => obj.Remote != null && obj.Remote.IsPersisted)
+					: dataObjects.Select(obj => new { Local = obj, Remote = (DataObject)relation.GetValue(obj) }).GroupBy(obj => obj.Remote != null && obj.Remote.IsPersisted);
 				
 				foreach (var grp in groups)
 				{
@@ -334,12 +335,18 @@ namespace DOL.Database
 					
 					var resultsByObjs = results.Select((result, index) => new { Success = result, RelObject = objs[index] });
 					
-					foreach (var resultGrp in resultsByObjs.GroupBy(obj => obj.Success).FirstOrDefault(g => !g.Key))
+					foreach (var resultGrp in resultsByObjs.GroupBy(obj => obj.Success))
 					{
-						if (Log.IsErrorEnabled)
-							Log.ErrorFormat("SaveObjectRelations: {0} Relation ({1}) of DataObject ({2}) failed for Object ({3})", grp.Key ? "Saving" : "Adding",
-							                relation.ValueType, resultGrp.RelObject.Local, resultGrp.RelObject.Remote);
-						success = false;
+						if (!resultGrp.Key)
+						{
+							if (Log.IsErrorEnabled)
+							{
+								foreach (var result in resultGrp)
+									Log.ErrorFormat("SaveObjectRelations: {0} Relation ({1}) of DataObject ({2}) failed for Object ({3})", grp.Key ? "Saving" : "Adding",
+									                relation.ValueType, result.RelObject.Local, result.RelObject.Remote);
+							}
+							success = false;
+						}
 					}
 				}
 			}
@@ -369,20 +376,25 @@ namespace DOL.Database
 				
 				// Check For Array Type
 				var groups = relation.ValueType.HasElementType
-					? dataObjects.Select(obj => ((IEnumerable<DataObject>)relation.GetValue(obj)).Select(rel => new { Local = obj, Remote = rel }))
-					.SelectMany(obj => obj).Where(obj => obj.Remote.IsPersisted)
-					: dataObjects.Select(obj => new { Local = obj, Remote = (DataObject)relation.GetValue(obj) }).Where(obj => obj.Remote.IsPersisted);
+					? dataObjects.Select(obj => ((IEnumerable<DataObject>)relation.GetValue(obj)))
+					.Where(obj => obj != null).Select(obj => obj.Select(rel => new { Local = obj, Remote = rel }))
+					.SelectMany(obj => obj).Where(obj => obj.Remote != null && obj.Remote.IsPersisted)
+					: dataObjects.Select(obj => new { Local = obj, Remote = (DataObject)relation.GetValue(obj) }).Where(obj => obj.Remote != null && obj.Remote.IsPersisted);
 				
 				var objs = groups.ToArray();
 				var results = DeleteObjectImpl(remoteHandler, objs.Select(obj => obj.Remote));
 				
 				var resultsByObjs = results.Select((result, index) => new { Success = result, RelObject = objs[index] });
 				
-				foreach (var resultGrp in resultsByObjs.GroupBy(obj => obj.Success).FirstOrDefault(g => !g.Key))
+				foreach (var resultGrp in resultsByObjs.GroupBy(obj => obj.Success))
 				{
-					if (Log.IsErrorEnabled)
-						Log.ErrorFormat("DeleteObjectRelation: Deleting Relation ({0}) of DataObject ({1}) failed for Object ({2})",
-						                relation.ValueType, resultGrp.RelObject.Local, resultGrp.RelObject.Remote);
+					if (!resultGrp.Key)
+					{
+						foreach (var result in resultGrp)
+							if (Log.IsErrorEnabled)
+								Log.ErrorFormat("DeleteObjectRelation: Deleting Relation ({0}) of DataObject ({1}) failed for Object ({2})",
+								                relation.ValueType, result.RelObject.Local, result.RelObject.Remote);
+					}
 					success = false;
 				}
 			}
@@ -390,8 +402,6 @@ namespace DOL.Database
 		}
 		#endregion
 		#region Relation Select/Fill Handling
-		// TODO Implement These...
-		
 		/// <summary>
 		/// Populate or Refresh Objects Relations
 		/// </summary>
@@ -454,7 +464,7 @@ namespace DOL.Database
 							var localBind = tableHandler.FieldElementBindings.Single(bind => bind.ColumnName.Equals(relation.Relation.LocalField, StringComparison.OrdinalIgnoreCase));
 							var remoteBind = remoteHandler.FieldElementBindings.Single(bind => bind.ColumnName.Equals(relation.Relation.RemoteField, StringComparison.OrdinalIgnoreCase));
 							
-							FillObjectRelationsImpl(relation, localBind, remoteBind, remoteHandler, grp.AsEnumerable());
+							FillObjectRelationsImpl(relation, localBind, remoteBind, remoteHandler, grp);
 						}
 						catch (Exception re)
 						{
@@ -512,30 +522,20 @@ namespace DOL.Database
 				
 				var parameters = objects.Select(obj => new [] { new KeyValuePair<string, object>(string.Format("@{0}", remoteBind.ColumnName), localBind.GetValue(obj)) });
 				
-				objsResults = SelectObjectsImpl(type, whereClause, parameters, Transaction.IsolationLevel.DEFAULT);
+				objsResults = SelectObjectsImpl(remoteHandler, whereClause, parameters, Transaction.IsolationLevel.DEFAULT);
 			}
 			
+			var resultByObjs = objsResults.Select((obj, index) => new { DataObject = objects[index], Results = obj });
+			
 			// Store Relations
-			var current = 0;
-			foreach (var objs in objsResults)
+			foreach (var result in resultByObjs)
 			{
-				object relationObject = isElementType ? (object)objs.ToArray() : objs.FirstOrDefault();
-				relationBind.SetValue(objects[current], relationObject);
-				current++;
+				object relationObject = isElementType ? (object)result.Results.ToArray() : result.Results.SingleOrDefault();
+				relationBind.SetValue(result.DataObject, relationObject);
 			}
-		}
-		
-		/// <summary>
-		/// Select Data Objects Implementation By Type
-		/// </summary>
-		/// <param name="type">Object Type</param>
-		/// <param name="whereClause">Where Clause</param>
-		/// <param name="parameters">Query Parameters</param>
-		/// <param name="isolation">Isolation Level</param>
-		/// <returns>Objects Enumerable grouped by Query</returns>
-		protected IEnumerable<IEnumerable<DataObject>> SelectObjectsImpl(Type type, string whereClause, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, Transaction.IsolationLevel isolation)
-		{
-			throw new NotImplementedException();
+			
+			// Fill Sub Relations
+			FillObjectRelations(resultByObjs.SelectMany(result => result.Results), false);
 		}
 		#endregion
 		#region Public Object Select with Key API
@@ -567,7 +567,60 @@ namespace DOL.Database
 				return new TObject[] { };
 			}
 			
-			return FindObjectByKeyImpl(tableHandler, keys).OfType<TObject>();
+			var objs = FindObjectByKeyImpl(tableHandler, keys).OfType<TObject>().ToArray();
+			
+			FillObjectRelations(objs, false);
+			
+			return objs;
+		}
+		
+		/// <summary>
+		/// Retrieve a Collection of DataObjects from database based on their primary key values
+		/// </summary>
+		/// <param name="tableHandler">Table Handler for the DataObjects to Retrieve</param>
+		/// <param name="keys">Collection of Primary Key Values</param>
+		/// <returns>Collection of DataObject with primary key matching values</returns>
+		protected virtual IEnumerable<DataObject> FindObjectByKeyImpl(DataTableHandler tableHandler, IEnumerable<object> keys)
+		{
+			var list = new List<DataObject>();
+			if (tableHandler.UsesPreCaching)
+			{
+				foreach (var obj in keys.Select(key => tableHandler.GetPreCachedObject(key)))
+					list.Add(obj);
+				
+				return list;
+			}
+			
+			// Primary Key
+			var primary = tableHandler.FieldElementBindings.Where(bind => bind.PrimaryKey != null)
+				.Select(bind => new { ColumnName = string.Format("`{0}`", bind.ColumnName), ParamName = string.Format("@{0}", bind.ColumnName) }).ToArray();
+			
+			if (!primary.Any())
+				throw new DatabaseException(string.Format("Table {0} has no primary key for finding by key...", tableHandler.TableName));
+			
+			var whereClause = string.Format("{0}",
+			                                string.Join(" AND ", primary.Select(col => string.Format("{0} = {1}", col.ColumnName, col.ParamName))));
+			
+			var keysArray = keys.ToArray();
+			var parameters = keysArray.Select(key => primary.Select(col => new KeyValuePair<string, object>(col.ParamName, key)));
+			
+			var objs = SelectObjectsImpl(tableHandler, whereClause, parameters, Transaction.IsolationLevel.DEFAULT);
+			
+			var resultByKeys = objs.Select((results, index) => new { Key = keysArray[index], DataObject = results.SingleOrDefault() });
+			
+			foreach (var objResult in resultByKeys)
+			{
+				list.Add(objResult.DataObject);
+				if (tableHandler.UsesPreCaching)
+				{
+					if (objResult.DataObject == null)
+						tableHandler.DeletePreCachedObject(objResult.Key);
+					else
+						tableHandler.SetPreCachedObject(objResult.Key, objResult.DataObject);
+				}
+			}
+			
+			return list;
 		}
 		#endregion
 		
@@ -589,7 +642,12 @@ namespace DOL.Database
 				
 				return new [] { new TObject[] { } };
 			}
-			return SelectObjectsImpl(tableHandler, whereExpression, parameters, Transaction.IsolationLevel.DEFAULT).Select(res => res.OfType<TObject>());
+			
+			var objs = SelectObjectsImpl(tableHandler, whereExpression, parameters, Transaction.IsolationLevel.DEFAULT).Select(res => res.OfType<TObject>()).ToArray();
+			
+			FillObjectRelations(objs.SelectMany(obj => obj), false);
+			
+			return objs;
 		}
 		/// <summary>
 		/// Retrieve a Collection of DataObjects from database based on the Where Expression and Parameter Collection
@@ -659,7 +717,44 @@ namespace DOL.Database
 		public IList<TObject> SelectObjects<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
 			where TObject : DataObject
 		{
-			return SelectObjects<TObject>(whereExpression, new [] { new KeyValuePair<string, object>[] { } }, isolation).First().ToArray();
+			return SelectObjects<TObject>(whereExpression, new [] { new KeyValuePair<string, object>[] { } }).First().ToArray();
+		}
+		#endregion
+		
+		#region Public Object Select All API
+		/// <summary>
+		/// Select all Objects From Table holding TObject Type
+		/// </summary>
+		/// <typeparam name="TObject">DataObject Type to Select</typeparam>
+		/// <returns>Collection of all DataObject for this Type</returns>
+		public IList<TObject> SelectAllObjects<TObject>()
+			where TObject : DataObject
+		{
+			return SelectAllObjects<TObject>(Transaction.IsolationLevel.DEFAULT);
+		}
+		/// <summary>
+		/// Select all Objects From Table holding TObject Type
+		/// </summary>
+		/// <typeparam name="TObject">DataObject Type to Select</typeparam>
+		/// <param name="isolation">Isolation Level</param>
+		/// <returns>Collection of all DataObject for this Type</returns>
+		public IList<TObject> SelectAllObjects<TObject>(Transaction.IsolationLevel isolation)
+			where TObject : DataObject
+		{
+			var tableHandler = GetTableOrViewHandler(typeof(TObject));
+			if (tableHandler == null)
+			{
+				if (Log.IsErrorEnabled)
+					Log.ErrorFormat("SelectAllObjects: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
+				
+				return new TObject[] { };
+			}
+			
+			var dataObjects = SelectObjectsImpl(tableHandler, null, new [] { new KeyValuePair<string, object>[] { } }, isolation).Single().OfType<TObject>().ToArray();
+			
+			FillObjectRelations(dataObjects, false);
+			
+			return dataObjects;
 		}
 		#endregion
 		
@@ -674,20 +769,6 @@ namespace DOL.Database
 			where TObject : DataObject
 		{
 			return GetObjectCountImpl<TObject>(whereExpression);
-		}
-
-		public IList<TObject> SelectAllObjects<TObject>()
-			where TObject : DataObject
-		{
-			return SelectAllObjects<TObject>(Transaction.IsolationLevel.DEFAULT);
-		}
-
-		public IList<TObject> SelectAllObjects<TObject>(Transaction.IsolationLevel isolation)
-			where TObject : DataObject
-		{
-			var dataObjects = SelectAllObjectsImpl<TObject>(isolation);
-
-			return dataObjects ?? new List<TObject>();
 		}
 
 		/// <summary>
@@ -792,14 +873,6 @@ namespace DOL.Database
 		protected abstract IEnumerable<bool> DeleteObjectImpl(DataTableHandler tableHandler, IEnumerable<DataObject> dataObjects);
 
 		/// <summary>
-		/// Retrieve a Collection of DataObjects from database based on their primary key values
-		/// </summary>
-		/// <param name="tableHandler">Table Handler for the DataObjects to Retrieve</param>
-		/// <param name="keys">Collection of Primary Key Values</param>
-		/// <returns>Collection of DataObject with primary key matching values</returns>
-		protected abstract IEnumerable<DataObject> FindObjectByKeyImpl(DataTableHandler tableHandler, IEnumerable<object> keys);
-
-		/// <summary>
 		/// Retrieve a Collection of DataObjects Sets from database filtered by Parametrized Where Expression
 		/// </summary>
 		/// <param name="tableHandler">Table Handler for these DataObjects</param>
@@ -820,6 +893,7 @@ namespace DOL.Database
 		#endregion
 
 		#region Cache
+		// TODO reimplement
 		/// <summary>
 		/// Selects object from the db and updates or adds entry in the pre-cache
 		/// </summary>

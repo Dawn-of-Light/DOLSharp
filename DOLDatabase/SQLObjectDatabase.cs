@@ -137,7 +137,7 @@ namespace DOL.Database
 					{
 						if (result.Result > 0)
 						{
-							DatabaseSetValue(result.DataObject, binding, lastId);
+							DatabaseSetValue(result.DataObject, binding, result.Result);
 							result.DataObject.ObjectId = result.Result.ToString();
 							result.DataObject.Dirty = false;
 							result.DataObject.IsPersisted = true;
@@ -286,7 +286,7 @@ namespace DOL.Database
 						if (tableHandler.UsesPreCaching)
 						{
 							var autoInc = primary.FirstOrDefault(col => col.PrimaryKey.AutoIncrement);
-							tableHandler.SetPreCachedObject(autoInc == null ? result.DataObject.ObjectId : autoInc.GetValue(result.DataObject), result.DataObject);
+							tableHandler.DeletePreCachedObject(autoInc == null ? result.DataObject.ObjectId : autoInc.GetValue(result.DataObject));
 						}
 						success.Add(true);
 					}
@@ -309,105 +309,6 @@ namespace DOL.Database
 		#endregion
 		
 		#region ObjectDatabase Select Implementation
-		/// <summary>
-		/// Finds an object in the database by primary key.
-		/// </summary>
-		/// <typeparam name="TObject">the type of objects to retrieve</typeparam>
-		/// <param name="key">the value of the primary key to search for</param>
-		/// <returns>a <see cref="DataObject" /> instance representing a row with the given primary key value; null if the key value does not exist</returns>
-		protected override TObject FindObjectByKeyImpl<TObject>(object key)
-		{
-			string tableName = AttributesUtils.GetTableOrViewName(typeof(TObject));
-			DataTableHandler tableHandler;
-			if (!TableDatasets.TryGetValue(tableName, out tableHandler))
-				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", tableName));
-			
-			
-			if (tableHandler.UsesPreCaching)
-			{
-				DataObject cacheObj = tableHandler.GetPreCachedObject(key);
-				if (cacheObj != null)
-					return cacheObj as TObject;
-			}
-			
-			// Primary Key
-			var primary = tableHandler.FieldElementBindings.Where(bind => bind.PrimaryKey != null)
-				.Select(bind => new { ColumnName = string.Format("`{0}`", bind.ColumnName), ParamName = string.Format("@{0}", bind.ColumnName), Value = key }).ToArray();
-			
-			if (!primary.Any())
-				throw new DatabaseException(string.Format("Table {0} has no primary key for finding by key...", tableName));
-			
-			var whereClause = string.Format("{0}",
-			                                string.Join(" AND ", primary.Select(col => string.Format("{0} = {1}", col.ColumnName, col.ParamName))));
-			
-			var obj = SelectAllObjectsImpl<TObject>(whereClause, new [] { primary.Select(col => new KeyValuePair<string, object>(col.ParamName, col.Value)) }, Transaction.IsolationLevel.DEFAULT).FirstOrDefault();
-			
-			if (tableHandler.UsesPreCaching && obj != null)
-				tableHandler.SetPreCachedObject(key, obj);
-			
-			return obj;
-		}
-
-		/// <summary>
-		/// Finds an object in the database by primary key.
-		/// Uses cache if available
-		/// </summary>
-		/// <param name="objectType"></param>
-		/// <param name="key"></param>
-		/// <returns></returns>
-		protected override DataObject FindObjectByKeyImpl(Type objectType, object key)
-		{
-			// TODO Fixme
-			MethodInfo method = GetType().GetMethod("FindObjectByKeyImpl");
-        	MethodInfo genericMethod = method.MakeGenericMethod(objectType);
-        	var result = genericMethod.Invoke(this, new [] { key });
-        	
-        	return result as DataObject;
-		}
-
-		/// <summary>
-		/// Selects objects from a given table in the database based on a given set of criteria. (where clause)
-		/// </summary>
-		/// <param name="objectType"></param>
-		/// <param name="whereClause"></param>
-		/// <param name="isolation"></param>
-		/// <returns></returns>
-		protected override DataObject[] SelectObjectsImpl(Type objectType, string whereClause, Transaction.IsolationLevel isolation)
-		{
-			// TODO Fixme
-			var methods = GetType().GetMethods();
-			var method = GetType().GetMethods()
-				.FirstOrDefault(m => m.Name == "SelectObjectsImpl" && m.IsGenericMethodDefinition &&
-				        (m.GetParameters().Select(p => p.ParameterType).ElementAt(0) == typeof(string)
-				         && m.GetParameters().Select(p => p.ParameterType).ElementAt(1) == typeof(Transaction.IsolationLevel)));
-        	MethodInfo genericMethod = method.MakeGenericMethod(objectType);
-        	var result = genericMethod.Invoke(this, new object[] { whereClause, isolation });
-        	
-        	return (result as IEnumerable<DataObject>).ToArray();
-		}
-
-		/// <summary>
-		/// Selects objects from a given table in the database based on a given set of criteria. (where clause)
-		/// </summary>
-		/// <typeparam name="TObject">the type of objects to retrieve</typeparam>
-		/// <param name="whereClause">the where clause to filter object selection on</param>
-		/// <param name="isolation">Isolation Level</param>
-		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects that matched the given criteria</returns>
-		protected override IList<TObject> SelectObjectsImpl<TObject>(string whereClause, Transaction.IsolationLevel isolation)
-		{
-			return SelectAllObjectsImpl<TObject>(whereClause, new [] { new KeyValuePair<string, object>[] { }}, isolation);
-		}
-
-		/// <summary>
-		/// Selects all objects from a given table in the database.
-		/// </summary>
-		/// <typeparam name="TObject">the type of objects to retrieve</typeparam>
-		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects</returns>
-		protected override IList<TObject> SelectAllObjectsImpl<TObject>(Transaction.IsolationLevel isolation)
-		{
-			return SelectAllObjectsImpl<TObject>(null, new [] { new KeyValuePair<string, object>[] { }}, isolation);
-		}
-
 		/// <summary>
 		/// Gets the number of objects in a given table in the database based on a given set of criteria. (where clause)
 		/// </summary>
@@ -432,7 +333,15 @@ namespace DOL.Database
 			return count is long ? (int)((long)count) : (int)count;
 		}
 		
-		protected override IEnumerable<IEnumerable<DataObject>> SelectObjectsImpl(DataTableHandler tableHandler, string whereExpression, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, Transaction.IsolationLevel Isolation)
+		/// <summary>
+		/// Retrieve a Collection of DataObjects Sets from database filtered by Parametrized Where Expression
+		/// </summary>
+		/// <param name="tableHandler">Table Handler for these DataObjects</param>
+		/// <param name="whereExpression">Parametrized Where Expression</param>
+		/// <param name="parameters">Parameters for filtering</param>
+		/// <param name="isolation">Isolation Level</param>
+		/// <returns>Collection of DataObjects Sets matching Parametrized Where Expression</returns>
+		protected override IEnumerable<IEnumerable<DataObject>> SelectObjectsImpl(DataTableHandler tableHandler, string whereExpression, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, Transaction.IsolationLevel isolation)
 		{
 			var columns = tableHandler.FieldElementBindings.ToArray();
 			
@@ -455,7 +364,7 @@ namespace DOL.Database
 			                  	while(reader.Read())
 			                  	{
 			                  		reader.GetValues(data);
-			                  		var obj = Activator.CreateInstance(typeof(TObject)) as TObject;
+			                  		var obj = Activator.CreateInstance(tableHandler.ObjectType) as DataObject;
 			                  		
 			                  		// Fill Object
 			                  		var current = 0;
@@ -469,7 +378,7 @@ namespace DOL.Database
 									obj.Dirty = false;
 									obj.IsPersisted = true;			                  		
 			                  	}
-			                  }, Isolation);
+			                  }, isolation);
 			
 			return dataObjects.ToArray();
 		}
