@@ -38,6 +38,10 @@ namespace DOL.Database
 		private readonly DataSet _dset;
 		
 		/// <summary>
+		/// Data Object Type
+		/// </summary>
+		public Type ObjectType { get; private set; }
+		/// <summary>
 		/// Has Relations
 		/// </summary>
 		public bool HasRelations { get; private set; }
@@ -68,14 +72,15 @@ namespace DOL.Database
 		/// <summary>
 		/// Create new instance of <see cref="DataTableHandler"/>
 		/// </summary>
-		/// <param name="type"></param>
-		public DataTableHandler(Type type)
+		/// <param name="ObjectType">DataObject Type</param>
+		public DataTableHandler(Type ObjectType)
 		{
+			this.ObjectType = ObjectType;
 			// Init Cache and Table Params
-			TableName = AttributesUtils.GetTableOrViewName(type);
+			TableName = AttributesUtils.GetTableOrViewName(ObjectType);
 
 			HasRelations = false;
-			UsesPreCaching = AttributesUtils.GetPreCachedFlag(type);
+			UsesPreCaching = AttributesUtils.GetPreCachedFlag(ObjectType);
 			if (UsesPreCaching)
 				_precache = new ConcurrentDictionary<object, DataObject>();
 			
@@ -86,18 +91,18 @@ namespace DOL.Database
 			_dset.CaseSensitive = false;
 			
 			// Parse Table Type
-			ElementBindings = type.GetMembers().Select(member => new ElementBinding(member)).Where(bind => bind.IsDataElementBinding).ToArray();
+			ElementBindings = ObjectType.GetMembers().Select(member => new ElementBinding(member)).Where(bind => bind.IsDataElementBinding).ToArray();
 			
 			// If no Primary Key AutoIncrement add GUID
 			if (FieldElementBindings.Any(bind => bind.PrimaryKey != null && !bind.PrimaryKey.AutoIncrement))
 				ElementBindings = ElementBindings.Concat(new [] {
-				                                         	new ElementBinding(type.GetProperty("ObjectId"),
+				                                         	new ElementBinding(ObjectType.GetProperty("ObjectId"),
 				                                         	                   new DataElement(){ Unique = true },
 				                                         	                   string.Format("{0}_ID", TableName))
 				                                         }).ToArray();
 			else if (FieldElementBindings.All(bind => bind.PrimaryKey == null))
 				ElementBindings = ElementBindings.Concat(new [] {
-				                                         	new ElementBinding(type.GetProperty("ObjectId"),
+				                                         	new ElementBinding(ObjectType.GetProperty("ObjectId"),
 				                                         	                   new PrimaryKey(),
 				                                         	                   string.Format("{0}_ID", TableName))
 				                                         }).ToArray();
@@ -230,6 +235,12 @@ namespace DOL.Database
 		{
 			DataObject obj;
 			return _precache.TryGetValue(key, out obj) ? obj : null;
+		}
+		
+		public bool DeletePreCachedObject(object key)
+		{
+			DataObject dummy;
+			return _precache.TryRemove(key, out dummy);
 		}
 		
 		/// <summary>

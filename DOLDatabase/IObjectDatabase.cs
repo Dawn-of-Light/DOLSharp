@@ -73,30 +73,82 @@ namespace DOL.Database
 		#endregion
 
 		#region Select By Key
+		/// <summary>
+		/// Retrieve a DataObject from database based on its primary key value. 
+		/// </summary>
+		/// <param name="key">Primary Key Value</param>
+		/// <returns>Object found or null if not found</returns>
 		TObject FindObjectByKey<TObject>(object key)
 			where TObject : DataObject;
-		IEnumerable<TObject> FindObjectByKey<TObject>(IEnumerable<object> key)
+		/// <summary>
+		/// Retrieve a Collection of DataObjects from database based on their primary key values
+		/// </summary>
+		/// <param name="keys">Collection of Primary Key Values</param>
+		/// <returns>Collection of DataObject with primary key matching values</returns>
+		IEnumerable<TObject> FindObjectByKey<TObject>(IEnumerable<object> keys)
 			where TObject : DataObject;
 		#endregion
+		
 		#region Select Where Clause With Parameters
-		IEnumerable<IEnumerable<TObject>> SelectObject<TObject>(string whereExpression, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters)
+		/// <summary>
+		/// Retrieve a Collection of DataObjects from database based on the Where Expression and Parameters Collection
+		/// </summary>
+		/// <param name="whereExpression">Parametrized Where Expression</param>
+		/// <param name="parameters">Collection of Parameters</param>
+		/// <returns>Collection of Objects Sets for each matching Parametrized Query</returns>
+		IEnumerable<IEnumerable<TObject>> SelectObjects<TObject>(string whereExpression, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters)
 			where TObject : DataObject;
-		IEnumerable<TObject> SelectObject<TObject>(string whereExpression, IEnumerable<KeyValuePair<string, object>> parameter)
+		/// <summary>
+		/// Retrieve a Collection of DataObjects from database based on the Where Expression and Parameter Collection
+		/// </summary>
+		/// <param name="whereExpression">Parametrized Where Expression</param>
+		/// <param name="parameter">Collection of Parameter</param>
+		/// <returns>Collection of Objects matching Parametrized Query</returns>
+		IEnumerable<TObject> SelectObjects<TObject>(string whereExpression, IEnumerable<KeyValuePair<string, object>> parameter)
 			where TObject : DataObject;
-		IEnumerable<TObject> SelectObject<TObject>(string whereExpression, KeyValuePair<string, object> param)
+		/// <summary>
+		/// Retrieve a Collection of DataObjects from database based on the Where Expression and Parameter
+		/// </summary>
+		/// <param name="whereExpression">Parametrized Where Expression</param>
+		/// <param name="param">Single Parameter</param>
+		/// <returns>Collection of Objects matching Parametrized Query</returns>
+		IEnumerable<TObject> SelectObjects<TObject>(string whereExpression, KeyValuePair<string, object> param)
 			where TObject : DataObject;
 		#endregion
+		
 		#region Select Where Clause Without Parameter
-		[Obsolete("Use Parametrized Select Queries for best perfomance")]
+		/// <summary>
+		/// Retrieve a Single DataObject from database based on Where Expression
+		/// </summary>
+		/// <param name="whereExpression">Where Expression Filter</param>
+		/// <returns>Single Object or First Object if multiple matches</returns>
+		[Obsolete("Use Parametrized Select Queries for best perfomances")]
 		TObject SelectObject<TObject>(string whereExpression)
 			where TObject : DataObject;
-		[Obsolete("Use Parametrized Select Queries for best perfomance")]
-		IList<TObject> SelectObjects<TObject>(string whereExpression)
-			where TObject : DataObject;
-		[Obsolete("Use Parametrized Select Queries for best perfomance")]
+		/// <summary>
+		/// Retrieve a Single DataObject from database based on Where Expression
+		/// </summary>
+		/// <param name="whereExpression">Where Expression Filter</param>
+		/// <param name="isolation">Isolation Level</param>
+		/// <returns>Single Object or First Object if multiple matches</returns>
+		[Obsolete("Use Parametrized Select Queries for best perfomances")]
 		TObject SelectObject<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
 			where TObject : DataObject;
-		[Obsolete("Use Parametrized Select Queries for best perfomance")]
+		/// <summary>
+		/// Retrieve a Collection of DataObjects from database based on Where Expression
+		/// </summary>
+		/// <param name="whereExpression">Where Expression Filter</param>
+		/// <returns>Collection of DataObjects matching filter</returns>
+		[Obsolete("Use Parametrized Select Queries for best perfomances")]
+		IList<TObject> SelectObjects<TObject>(string whereExpression)
+			where TObject : DataObject;
+		/// <summary>
+		/// Retrieve a Collection of DataObjects from database based on Where Expression
+		/// </summary>
+		/// <param name="whereExpression">Where Expression Filter</param>
+		/// <param name="isolation">Isolation Level</param>
+		/// <returns>Collection of DataObjects matching filter</returns>
+		[Obsolete("Use Parametrized Select Queries for best perfomances")]
 		IList<TObject> SelectObjects<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
 			where TObject : DataObject;
 		#endregion

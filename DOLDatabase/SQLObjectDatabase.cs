@@ -131,17 +131,19 @@ namespace DOL.Database
 					var lastId = ExecuteScalarImpl(command, parameters, true);
 					
 					var binding = tableHandler.FieldElementBindings.First(bind => bind.PrimaryKey != null && bind.PrimaryKey.AutoIncrement);
-					var resultByObjects = lastId.Select((result, index) => new { Result = result, DataObject = objs[index] });
+					var resultByObjects = lastId.Select((result, index) => new { Result = Convert.ToInt64(result), DataObject = objs[index] });
 					
 					foreach (var result in resultByObjects)
 					{
-						if (Convert.ToInt64(result.Result) > 0)
+						if (result.Result > 0)
 						{
 							DatabaseSetValue(result.DataObject, binding, lastId);
 							result.DataObject.ObjectId = result.Result.ToString();
 							result.DataObject.Dirty = false;
 							result.DataObject.IsPersisted = true;
 							result.DataObject.IsDeleted = false;
+							if (tableHandler.UsesPreCaching)
+								tableHandler.SetPreCachedObject(result.Result, result.DataObject);
 							success.Add(true);
 						}
 						else
@@ -166,6 +168,8 @@ namespace DOL.Database
 							result.DataObject.Dirty = false;
 							result.DataObject.IsPersisted = true;
 							result.DataObject.IsDeleted = false;
+							if (tableHandler.UsesPreCaching)
+								tableHandler.SetPreCachedObject(result.DataObject.ObjectId, result.DataObject);
 							success.Add(true);
 						}
 						else
@@ -222,7 +226,12 @@ namespace DOL.Database
 					if (result.Result > 0)
 					{
 						result.DataObject.Dirty = false;
-						result.DataObject.IsPersisted = true;						
+						result.DataObject.IsPersisted = true;
+						if (tableHandler.UsesPreCaching)
+						{
+							var autoInc = primary.FirstOrDefault(col => col.Binding.PrimaryKey.AutoIncrement);
+							tableHandler.SetPreCachedObject(autoInc == null ? result.DataObject.ObjectId : autoInc.Binding.GetValue(result.DataObject), result.DataObject);
+						}
 						success.Add(true);
 					}
 					else
@@ -274,6 +283,11 @@ namespace DOL.Database
 					{
 						result.DataObject.IsPersisted = false;
 						result.DataObject.IsDeleted = true;
+						if (tableHandler.UsesPreCaching)
+						{
+							var autoInc = primary.FirstOrDefault(col => col.PrimaryKey.AutoIncrement);
+							tableHandler.SetPreCachedObject(autoInc == null ? result.DataObject.ObjectId : autoInc.GetValue(result.DataObject), result.DataObject);
+						}
 						success.Add(true);
 					}
 					else
@@ -418,29 +432,25 @@ namespace DOL.Database
 			return count is long ? (int)((long)count) : (int)count;
 		}
 		
-		protected virtual IList<TObject> SelectAllObjectsImpl<TObject>(string whereClause, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, Transaction.IsolationLevel Isolation)
-			where TObject : DataObject
+		protected override IEnumerable<IEnumerable<DataObject>> SelectObjectsImpl(DataTableHandler tableHandler, string whereExpression, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, Transaction.IsolationLevel Isolation)
 		{
-			string tableName = AttributesUtils.GetTableOrViewName(typeof(TObject));
-			DataTableHandler tableHandler;
-			if (!TableDatasets.TryGetValue(tableName, out tableHandler))
-				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", tableName));
-			
 			var columns = tableHandler.FieldElementBindings.ToArray();
 			
 			string command = null;
-			if (!string.IsNullOrEmpty(whereClause))
+			if (!string.IsNullOrEmpty(whereExpression))
 				command = string.Format("SELECT {0} FROM `{1}` WHERE {2}",
 				                        string.Join(", ", columns.Select(col => string.Format("`{0}`", col.ColumnName))),
-				                        tableName,
-				                        whereClause);
+				                        tableHandler.TableName,
+				                        whereExpression);
 			else
 				command = string.Format("SELECT {0} FROM `{1}`",
 				                        string.Join(", ", columns.Select(col => string.Format("`{0}`", col.ColumnName))),
-				                        tableName);
+				                        tableHandler.TableName);
 			
-			var dataObjects = new List<TObject>();
+			var dataObjects = new List<List<DataObject>>();
 			ExecuteSelectImpl(command, parameters, reader => {
+			                  	var list = new List<DataObject>();
+			                  	dataObjects.Add(list);
 			                  	var data = new object[reader.FieldCount];
 			                  	while(reader.Read())
 			                  	{
@@ -455,12 +465,8 @@ namespace DOL.Database
 			                  			current++;
 			                  		}
 			                  		
-									dataObjects.Add(obj);
+									list.Add(obj);
 									obj.Dirty = false;
-				
-									if (tableHandler.HasRelations)
-										FillLazyObjectRelations(obj, true);
-				
 									obj.IsPersisted = true;			                  		
 			                  	}
 			                  }, Isolation);

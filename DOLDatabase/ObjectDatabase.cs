@@ -390,6 +390,8 @@ namespace DOL.Database
 		}
 		#endregion
 		#region Relation Select/Fill Handling
+		// TODO Implement These...
+		
 		/// <summary>
 		/// Populate or Refresh Objects Relations
 		/// </summary>
@@ -536,159 +538,131 @@ namespace DOL.Database
 			throw new NotImplementedException();
 		}
 		#endregion
-		
-		#region Data tables
-
-		protected DataSet GetDataSet(string tableName)
-		{
-			if (!TableDatasets.ContainsKey(tableName))
-				return null;
-
-			return TableDatasets[tableName].DataSet;
-		}
-
-		protected void FillObjectWithRow<TObject>(ref TObject dataObject, DataRow row, bool reload)
+		#region Public Object Select with Key API
+		/// <summary>
+		/// Retrieve a DataObject from database based on its primary key value. 
+		/// </summary>
+		/// <param name="key">Primary Key Value</param>
+		/// <returns>Object found or null if not found</returns>
+		public TObject FindObjectByKey<TObject>(object key)
 			where TObject : DataObject
 		{
-			bool relation = false;
-
-			string tableName = dataObject.TableName;
-			Type myType = dataObject.GetType();
-			string id = row[tableName + "_ID"].ToString();
-
-			MemberInfo[] myMembers = myType.GetMembers();
-			dataObject.ObjectId = id;
-
-			for (int i = 0; i < myMembers.Length; i++)
-			{
-				object[] myAttributes = GetRelationAttributes(myMembers[i]);
-
-				if (myAttributes.Length > 0)
-				{
-					//if(myAttributes[0] is Attributes.Relation)
-					//{
-					relation = true;
-					//}
-				}
-				else
-				{
-					object[] keyAttrib = myMembers[i].GetCustomAttributes(typeof(PrimaryKey), true);
-					myAttributes = myMembers[i].GetCustomAttributes(typeof(DataElement), true);
-					if (myAttributes.Length > 0 || keyAttrib.Length > 0)
-					{
-						object val = row[myMembers[i].Name];
-						if (val != null && !val.GetType().IsInstanceOfType(DBNull.Value))
-						{
-							if (myMembers[i] is PropertyInfo)
-							{
-								((PropertyInfo)myMembers[i]).SetValue(dataObject, val, null);
-							}
-							if (myMembers[i] is FieldInfo)
-							{
-								((FieldInfo)myMembers[i]).SetValue(dataObject, val);
-							}
-						}
-					}
-				}
-			}
-
-			dataObject.Dirty = false;
-
-
-			if (relation)
-			{
-				FillLazyObjectRelations(dataObject, true);
-			}
-
-			dataObject.IsPersisted = true;
+			return FindObjectByKey<TObject>(new [] { key }).FirstOrDefault();
 		}
-
-		protected void FillRowWithObject(DataObject dataObject, DataRow row)
+		
+		/// <summary>
+		/// Retrieve a Collection of DataObjects from database based on their primary key values
+		/// </summary>
+		/// <param name="keys">Collection of Primary Key Values</param>
+		/// <returns>Collection of DataObject with primary key matching values</returns>
+		public virtual IEnumerable<TObject> FindObjectByKey<TObject>(IEnumerable<object> keys)
+			where TObject : DataObject
 		{
-			bool relation = false;
-
-			Type myType = dataObject.GetType();
-
-			row[dataObject.TableName + "_ID"] = dataObject.ObjectId;
-
-			MemberInfo[] myMembers = myType.GetMembers();
-
-			for (int i = 0; i < myMembers.Length; i++)
+			var tableHandler = GetTableOrViewHandler(typeof(TObject));
+			if (tableHandler == null)
 			{
-				object[] myAttributes = GetRelationAttributes(myMembers[i]);
-				object val = null;
-
-				if (myAttributes.Length > 0)
-				{
-					relation = true;
-				}
-				else
-				{
-					myAttributes = myMembers[i].GetCustomAttributes(typeof(DataElement), true);
-					object[] keyAttrib = myMembers[i].GetCustomAttributes(typeof(PrimaryKey), true);
-
-					if (myAttributes.Length > 0 || keyAttrib.Length > 0)
-					{
-						if (myMembers[i] is PropertyInfo)
-						{
-							val = ((PropertyInfo)myMembers[i]).GetValue(dataObject, null);
-						}
-						if (myMembers[i] is FieldInfo)
-						{
-							val = ((FieldInfo)myMembers[i]).GetValue(dataObject);
-						}
-						if (val != null)
-						{
-							row[myMembers[i].Name] = val;
-						}
-					}
-				}
-				//}
+				if (Log.IsErrorEnabled)
+					Log.ErrorFormat("FindObjectByKey: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
+				
+				return new TObject[] { };
 			}
-
-			if (relation)
-			{
-				SaveObjectRelations(dataObject);
-			}
+			
+			return FindObjectByKeyImpl(tableHandler, keys).OfType<TObject>();
 		}
-
-		protected DataRow FindRowByKey(DataObject dataObject)
-		{
-			DataRow row;
-
-			string tableName = dataObject.TableName;
-
-
-			DataTable table = GetDataSet(tableName).Tables[tableName];
-
-			Type myType = dataObject.GetType();
-
-			string key = table.PrimaryKey[0].ColumnName;
-
-			if (key.Equals(tableName + "_ID"))
-				row = table.Rows.Find(dataObject.ObjectId);
-			else
-			{
-				MemberInfo[] keymember = myType.GetMember(key);
-
-				object val = null;
-
-				if (keymember[0] is PropertyInfo)
-					val = ((PropertyInfo)keymember[0]).GetValue(dataObject, null);
-				if (keymember[0] is FieldInfo)
-					val = ((FieldInfo)keymember[0]).GetValue(dataObject);
-
-				if (val != null)
-					row = table.Rows.Find(val);
-				else
-					return null;
-			}
-
-			return row;
-		}
-
 		#endregion
+		
+		#region Public Object Select API With Parameters
+		/// <summary>
+		/// Retrieve a Collection of DataObjects from database based on the Where Expression and Parameters Collection
+		/// </summary>
+		/// <param name="whereExpression">Parametrized Where Expression</param>
+		/// <param name="parameters">Collection of Parameters</param>
+		/// <returns>Collection of Objects Sets for each matching Parametrized Query</returns>
+		public IEnumerable<IEnumerable<TObject>> SelectObjects<TObject>(string whereExpression, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters)
+			where TObject : DataObject
+		{
+			var tableHandler = GetTableOrViewHandler(typeof(TObject));
+			if (tableHandler == null)
+			{
+				if (Log.IsErrorEnabled)
+					Log.ErrorFormat("SelectObjects: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
+				
+				return new [] { new TObject[] { } };
+			}
+			return SelectObjectsImpl(tableHandler, whereExpression, parameters, Transaction.IsolationLevel.DEFAULT).Select(res => res.OfType<TObject>());
+		}
+		/// <summary>
+		/// Retrieve a Collection of DataObjects from database based on the Where Expression and Parameter Collection
+		/// </summary>
+		/// <param name="whereExpression">Parametrized Where Expression</param>
+		/// <param name="parameter">Collection of Parameter</param>
+		/// <returns>Collection of Objects matching Parametrized Query</returns>
+		public IEnumerable<TObject> SelectObjects<TObject>(string whereExpression, IEnumerable<KeyValuePair<string, object>> parameter)
+			where TObject : DataObject
+		{
+			return SelectObjects<TObject>(whereExpression, new [] { parameter }).First();
+		}
+		/// <summary>
+		/// Retrieve a Collection of DataObjects from database based on the Where Expression and Parameter
+		/// </summary>
+		/// <param name="whereExpression">Parametrized Where Expression</param>
+		/// <param name="param">Single Parameter</param>
+		/// <returns>Collection of Objects matching Parametrized Query</returns>
+		public IEnumerable<TObject> SelectObjects<TObject>(string whereExpression, KeyValuePair<string, object> param)
+			where TObject : DataObject
+		{
+			return SelectObjects<TObject>(whereExpression, new [] { new [] { param } }).First();
+		}
+		#endregion
+		
+		#region Public Object Select API Without Parameters
+		/// <summary>
+		/// Retrieve a Single DataObject from database based on Where Expression
+		/// </summary>
+		/// <param name="whereExpression">Where Expression Filter</param>
+		/// <returns>Single Object or First Object if multiple matches</returns>
+		public TObject SelectObject<TObject>(string whereExpression)
+			where TObject : DataObject
+		{
+			return SelectObject<TObject>(whereExpression, Transaction.IsolationLevel.DEFAULT);
+		}
 
+		/// <summary>
+		/// Retrieve a Single DataObject from database based on Where Expression
+		/// </summary>
+		/// <param name="whereExpression">Where Expression Filter</param>
+		/// <param name="isolation">Isolation Level</param>
+		/// <returns>Single Object or First Object if multiple matches</returns>
+		public TObject SelectObject<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
+			where TObject : DataObject
+		{
+			return SelectObjects<TObject>(whereExpression, isolation).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// Retrieve a Collection of DataObjects from database based on Where Expression
+		/// </summary>
+		/// <param name="whereExpression">Where Expression Filter</param>
+		/// <returns>Collection of DataObjects matching filter</returns>
+		public IList<TObject> SelectObjects<TObject>(string whereExpression)
+			where TObject : DataObject
+		{
+			return SelectObjects<TObject>(whereExpression, Transaction.IsolationLevel.DEFAULT);
+		}
+
+		/// <summary>
+		/// Retrieve a Collection of DataObjects from database based on Where Expression
+		/// </summary>
+		/// <param name="whereExpression">Where Expression Filter</param>
+		/// <param name="isolation">Isolation Level</param>
+		/// <returns>Collection of DataObjects matching filter</returns>
+		public IList<TObject> SelectObjects<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
+			where TObject : DataObject
+		{
+			return SelectObjects<TObject>(whereExpression, new [] { new KeyValuePair<string, object>[] { } }, isolation).First().ToArray();
+		}
+		#endregion
+		
 		#region Public API
 		public int GetObjectCount<TObject>()
 			where TObject : DataObject
@@ -700,61 +674,6 @@ namespace DOL.Database
 			where TObject : DataObject
 		{
 			return GetObjectCountImpl<TObject>(whereExpression);
-		}
-
-		public TObject FindObjectByKey<TObject>(object key)
-			where TObject : DataObject
-		{
-			var dataObject = FindObjectByKeyImpl<TObject>(key);
-
-			return dataObject;
-		}
-
-
-		/// <summary>
-		/// Selects a single object, if more than
-		/// one exist, the first is returned
-		/// </summary>
-		/// <param name="objectType">the type of the object</param>
-		/// <param name="statement">the select statement</param>
-		/// <returns>the object or null if none found</returns>
-		public TObject SelectObject<TObject>(string whereExpression)
-			where TObject : DataObject
-		{
-			return SelectObject<TObject>(whereExpression, Transaction.IsolationLevel.DEFAULT);
-		}
-
-		/// <summary>
-		/// Selects a single object, if more than
-		/// one exist, the first is returned
-		/// </summary>
-		/// <typeparam name="TObject"></typeparam>
-		/// <param name="whereExpression"></param>
-		/// <param name="isolation"></param>
-		/// <returns></returns>
-		public TObject SelectObject<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
-			where TObject : DataObject
-		{
-			var objs = SelectObjects<TObject>(whereExpression, isolation);
-
-			if (objs.Count > 0)
-				return objs[0];
-
-			return null;
-		}
-
-		public IList<TObject> SelectObjects<TObject>(string whereExpression)
-			where TObject : DataObject
-		{
-			return SelectObjects<TObject>(whereExpression, Transaction.IsolationLevel.DEFAULT);
-		}
-
-		public IList<TObject> SelectObjects<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
-			where TObject : DataObject
-		{
-			var dataObjects = SelectObjectsImpl<TObject>(whereExpression, isolation);
-
-			return dataObjects ?? new List<TObject>();
 		}
 
 		public IList<TObject> SelectAllObjects<TObject>()
@@ -873,50 +792,22 @@ namespace DOL.Database
 		protected abstract IEnumerable<bool> DeleteObjectImpl(DataTableHandler tableHandler, IEnumerable<DataObject> dataObjects);
 
 		/// <summary>
-		/// Finds an object in the database by primary key.
+		/// Retrieve a Collection of DataObjects from database based on their primary key values
 		/// </summary>
-		/// <typeparam name="TObject">the type of objects to retrieve</typeparam>
-		/// <param name="key">the value of the primary key to search for</param>
-		/// <returns>a <see cref="DataObject" /> instance representing a row with the given primary key value; null if the key value does not exist</returns>
-		protected abstract TObject FindObjectByKeyImpl<TObject>(object key)
-			where TObject : DataObject;
+		/// <param name="tableHandler">Table Handler for the DataObjects to Retrieve</param>
+		/// <param name="keys">Collection of Primary Key Values</param>
+		/// <returns>Collection of DataObject with primary key matching values</returns>
+		protected abstract IEnumerable<DataObject> FindObjectByKeyImpl(DataTableHandler tableHandler, IEnumerable<object> keys);
 
 		/// <summary>
-		/// Finds an object in the database by primary key.
-		/// Uses cache if available
+		/// Retrieve a Collection of DataObjects Sets from database filtered by Parametrized Where Expression
 		/// </summary>
-		/// <param name="objectType"></param>
-		/// <param name="key"></param>
-		/// <returns></returns>
-		protected abstract DataObject FindObjectByKeyImpl(Type objectType, object key);
-
-		/// <summary>
-		/// Selects objects from a given table in the database based on a given set of criteria. (where clause)
-		/// </summary>
-		/// <param name="objectType"></param>
-		/// <param name="whereClause"></param>
-		/// <param name="isolation"></param>
-		/// <returns></returns>
-		protected abstract DataObject[] SelectObjectsImpl(Type objectType, string whereClause, Transaction.IsolationLevel isolation);
-
-		/// <summary>
-		/// Selects objects from a given table in the database based on a given set of criteria. (where clause)
-		/// </summary>
-		/// <typeparam name="TObject">the type of objects to retrieve</typeparam>
-		/// <param name="whereClause">the where clause to filter object selection on</param>
-		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects that matched the given criteria</returns>
-		/// <returns></returns>
-		protected abstract IList<TObject> SelectObjectsImpl<TObject>(string whereClause, Transaction.IsolationLevel isolation)
-			where TObject : DataObject;
-
-		/// <summary>
-		/// Selects all objects from a given table in the database.
-		/// </summary>
-		/// <typeparam name="TObject">the type of objects to retrieve</typeparam>
-		/// <returns>an array of <see cref="DataObject" /> instances representing the selected objects</returns>
-		/// <returns></returns>
-		protected abstract IList<TObject> SelectAllObjectsImpl<TObject>(Transaction.IsolationLevel isolation)
-			where TObject : DataObject;
+		/// <param name="tableHandler">Table Handler for these DataObjects</param>
+		/// <param name="whereExpression">Parametrized Where Expression</param>
+		/// <param name="parameters">Parameters for filtering</param>
+		/// <param name="isolation">Isolation Level</param>
+		/// <returns>Collection of DataObjects Sets matching Parametrized Where Expression</returns>
+		protected abstract IEnumerable<IEnumerable<DataObject>> SelectObjectsImpl(DataTableHandler tableHandler, string whereExpression, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, Transaction.IsolationLevel isolation);
 
 		/// <summary>
 		/// Gets the number of objects in a given table in the database based on a given set of criteria. (where clause)
@@ -926,228 +817,9 @@ namespace DOL.Database
 		/// <returns>a positive integer representing the number of objects that matched the given criteria; zero if no such objects existed</returns>
 		protected abstract int GetObjectCountImpl<TObject>(string whereExpression)
 			where TObject : DataObject;
-
-		#endregion
-
-		#region Relations
-
-
-		
-		protected void DeleteObjectRelations(DataObject dataObject)
-		{
-			try
-			{
-				object val;
-
-				Type myType = dataObject.GetType();
-
-				MemberInfo[] myMembers = myType.GetMembers();
-
-				for (int i = 0; i < myMembers.Length; i++)
-				{
-					Relation[] myAttributes = GetRelationAttributes(myMembers[i]);
-					if (myAttributes.Length > 0)
-					{
-						//if(myAttributes[0] is Attributes.Relation)
-						//{
-						if (myAttributes[0].AutoDelete == false)
-							continue;
-
-						bool array = false;
-
-						Type type;
-
-						if (myMembers[i] is PropertyInfo)
-							type = ((PropertyInfo)myMembers[i]).PropertyType;
-						else
-							type = ((FieldInfo)myMembers[i]).FieldType;
-
-						if (type.HasElementType)
-						{
-							type = type.GetElementType();
-							array = true;
-						}
-
-						val = null;
-
-						if (array)
-						{
-							if (myMembers[i] is PropertyInfo)
-							{
-								val = ((PropertyInfo)myMembers[i]).GetValue(dataObject, null);
-							}
-							if (myMembers[i] is FieldInfo)
-							{
-								val = ((FieldInfo)myMembers[i]).GetValue(dataObject);
-							}
-							if (val is Array)
-							{
-								var a = val as Array;
-
-								foreach (object o in a)
-								{
-									if (o is DataObject)
-										DeleteObject(o as DataObject);
-								}
-							}
-							else
-							{
-								if (val is DataObject)
-									DeleteObject(val as DataObject);
-							}
-						}
-						else
-						{
-							if (myMembers[i] is PropertyInfo)
-								val = ((PropertyInfo)myMembers[i]).GetValue(dataObject, null);
-							if (myMembers[i] is FieldInfo)
-								val = ((FieldInfo)myMembers[i]).GetValue(dataObject);
-							if (val != null && val is DataObject)
-								DeleteObject(val as DataObject);
-						}
-						//}
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				throw new DatabaseException("Resolving Relations failed !", e);
-			}
-		}
-
-		protected void FillLazyObjectRelations(DataObject dataObject, bool autoload)
-		{
-			try
-			{
-				var dataObjectType = dataObject.GetType();
-
-				MemberInfo[] myMembers;
-				if (!MemberInfoCache.TryGetValue(dataObjectType, out myMembers))
-				{
-					myMembers = dataObjectType.GetMembers();
-					MemberInfoCache[dataObjectType] = myMembers;
-				}
-
-				for (int i = 0; i < myMembers.Length; i++)
-				{
-					Relation[] myAttributes = GetRelationAttributes(myMembers[i]);
-
-					if (myAttributes.Length > 0)
-					{
-						Relation rel = myAttributes[0];
-
-						if ((rel.AutoLoad == false) && autoload)
-							continue;
-
-						bool isArray = false;
-						Type remoteType;
-						DataObject[] elements;
-
-						string local = rel.LocalField;
-						string remote = rel.RemoteField;
-
-						if (myMembers[i] is PropertyInfo)
-						{
-							remoteType = ((PropertyInfo)myMembers[i]).PropertyType;
-						}
-						else
-						{
-							remoteType = ((FieldInfo) myMembers[i]).FieldType;
-						}
-
-						if (remoteType.HasElementType)
-						{
-							remoteType = remoteType.GetElementType();
-							isArray = true;
-						}
-
-						PropertyInfo prop = dataObjectType.GetProperty(local);
-						FieldInfo field = dataObjectType.GetField(local);
-
-						object val = 0;
-
-						if (prop != null)
-						{
-							val = prop.GetValue(dataObject, null);
-						}
-						if (field != null)
-						{
-							val = field.GetValue(dataObject);
-						}
-
-						if (val != null && val.ToString() != string.Empty)
-						{
-							if (AttributesUtils.GetPreCachedFlag(remoteType))
-							{
-								elements = new DataObject[1];
-								elements[0] = FindObjectByKeyImpl(remoteType, val);
-							}
-							else
-							{
-								elements = SelectObjectsImpl(remoteType, remote + " = '" + Escape(val.ToString()) + "'", Transaction.IsolationLevel.DEFAULT);
-							}
-
-							if ((elements != null) && (elements.Length > 0))
-							{
-								if (isArray)
-								{
-									if (myMembers[i] is PropertyInfo)
-									{
-										((PropertyInfo) myMembers[i]).SetValue(dataObject, elements, null);
-									}
-									if (myMembers[i] is FieldInfo)
-									{
-										var currentField = (FieldInfo) myMembers[i];
-										ConstructorInfo constructor;
-										if (!ConstructorByFieldType.TryGetValue(currentField.FieldType, out constructor))
-										{
-											constructor = currentField.FieldType.GetConstructor(new[] {typeof (int)});
-											ConstructorByFieldType[currentField.FieldType] = constructor;
-										}
-
-										object elementHolder = constructor.Invoke(new object[] {elements.Length});
-										var elementArray = (object[]) elementHolder;
-
-										for (int m = 0; m < elementArray.Length; m++)
-										{
-											elementArray[m] = elements[m];
-										}
-
-										currentField.SetValue(dataObject, elementArray);
-									}
-								}
-								else
-								{
-									if (myMembers[i] is PropertyInfo)
-									{
-										((PropertyInfo) myMembers[i]).SetValue(dataObject, elements[0], null);
-									}
-									if (myMembers[i] is FieldInfo)
-									{
-										((FieldInfo) myMembers[i]).SetValue(dataObject, elements[0]);
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				throw new DatabaseException("Resolving Relations for " + dataObject.TableName + " failed!", e);
-			}
-		}
-
 		#endregion
 
 		#region Cache
-
-		protected void DeleteFromCache(string tableName, DataObject obj)
-		{
-			DataTableHandler handler = TableDatasets[tableName];
-			handler.SetCacheObject(obj.ObjectId, null);
-		}
-
 		/// <summary>
 		/// Selects object from the db and updates or adds entry in the pre-cache
 		/// </summary>
@@ -1192,61 +864,6 @@ namespace DOL.Database
 			}
 
 			return false;
-		}
-
-		protected void ReloadCache(string tableName)
-		{
-			DataTableHandler handler = TableDatasets[tableName];
-
-			ICache cache = handler.Cache;
-
-			foreach (object o in cache.Keys)
-			{
-				ReloadObject(cache[o] as DataObject);
-			}
-		}
-
-		#endregion
-
-		#region Helpers
-
-		protected Relation[] GetRelationAttributes(MemberInfo info)
-		{
-			Relation[] rel;
-			if (RelationAttributes.TryGetValue(info, out rel))
-				return rel;
-
-			rel = (Relation[])info.GetCustomAttributes(typeof(Relation), true);
-			RelationAttributes[info] = rel;
-
-			return rel;
-		}
-
-		private DataObject ReloadObject(DataObject dataObject)
-		{
-			try
-			{
-				if (dataObject == null)
-					return null;
-
-				DataObject ret = dataObject;
-
-				DataRow row = FindRowByKey(ret);
-
-				if (row == null)
-					throw new DatabaseException("Reloading Databaseobject failed (Keyvalue Changed ?)!");
-
-				FillObjectWithRow(ref ret, row, true);
-
-				dataObject.Dirty = false;
-				dataObject.IsPersisted = true;
-
-				return ret;
-			}
-			catch (Exception e)
-			{
-				throw new DatabaseException("Reloading Databaseobject failed !", e);
-			}
 		}
 
 		#endregion
