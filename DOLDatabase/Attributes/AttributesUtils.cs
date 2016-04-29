@@ -83,7 +83,6 @@ namespace DOL.Database.Attributes
 			//  based on the InventoryItem table. We have to tell to the code
 			//  only to bypass the id generated with FROM by the above
 			//  code.
-			// 			
 			return GetViewName(type) ?? GetTableName(type);
 		}
 		

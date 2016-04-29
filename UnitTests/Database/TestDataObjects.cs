@@ -68,7 +68,7 @@ namespace DOL.Database.Tests
 	[DataTable(TableName = "Test_TableRelation")]
 	public class TestTableRelation : TestTable
 	{
-		[Relation(LocalField = "ObjectId", RemoteField = "Test_TableRelationEntry_ID", AutoLoad = true, AutoDelete = true)]
+		[Relation(LocalField = "Test_TableRelation_ID", RemoteField = "Test_TableRelationEntry_ID", AutoLoad = true, AutoDelete = true)]
 		public TestTableRelationEntry Entry;
 		
 		public TestTableRelation() { }
@@ -89,7 +89,7 @@ namespace DOL.Database.Tests
 	[DataTable(TableName = "Test_TableRelations")]
 	public class TestTableRelations : TestTable
 	{
-		[Relation(LocalField = "ObjectId", RemoteField = "ForeignTestField", AutoLoad = true, AutoDelete = true)]
+		[Relation(LocalField = "Test_TableRelations_ID", RemoteField = "ForeignTestField", AutoLoad = true, AutoDelete = true)]
 		public TestTableRelationsEntries[] Entries;
 		
 		public TestTableRelations() { }

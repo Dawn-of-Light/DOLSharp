@@ -279,7 +279,7 @@ namespace DOL.Database
 								if (Log.IsErrorEnabled)
 								{
 									foreach(var obj in resultGrp)
-										Log.ErrorFormat("AddObjects: DataObject ({0}) could not be inserted into database...", obj.DataObject);
+										Log.ErrorFormat("DeleteObject: DataObject ({0}) could not be deleted from database...", obj.DataObject);
 								}
 								success = false;
 							}
@@ -290,7 +290,7 @@ namespace DOL.Database
 						if (Log.IsWarnEnabled)
 						{
 							foreach (var obj in allowed)
-								Log.WarnFormat("AddObject: DataObject ({0}) not allowed to be added to Database", obj);
+								Log.WarnFormat("DeleteObject: DataObject ({0}) not allowed to be deleted from Database", obj);
 						}
 						success = false;
 					}
@@ -320,13 +320,13 @@ namespace DOL.Database
 					success = false;
 					continue;
 				}
-				
+
 				// Check For Array Type
 				var groups = relation.ValueType.HasElementType
-					? dataObjects.Select(obj => ((IEnumerable<DataObject>)relation.GetValue(obj)))
-					.Where(obj => obj != null).Select(obj => obj.Select(rel => new { Local = obj, Remote = rel }))
-					.SelectMany(obj => obj).GroupBy(obj => obj.Remote != null && obj.Remote.IsPersisted)
-					: dataObjects.Select(obj => new { Local = obj, Remote = (DataObject)relation.GetValue(obj) }).GroupBy(obj => obj.Remote != null && obj.Remote.IsPersisted);
+					? dataObjects.Select(obj => new { Source = obj, Enumerable = (IEnumerable<DataObject>)relation.GetValue(obj) })
+					.Where(obj => obj.Enumerable != null).Select(obj => obj.Enumerable.Select(rel => new { Local = obj.Source, Remote = rel }))
+					.SelectMany(obj => obj).Where(obj => obj.Remote != null).GroupBy(obj => obj.Remote.IsPersisted)
+					: dataObjects.Select(obj => new { Local = obj, Remote = (DataObject)relation.GetValue(obj) }).Where(obj => obj.Remote != null).GroupBy(obj => obj.Remote.IsPersisted);
 				
 				foreach (var grp in groups)
 				{
@@ -373,11 +373,11 @@ namespace DOL.Database
 					success = false;
 					continue;
 				}
-				
+
 				// Check For Array Type
 				var groups = relation.ValueType.HasElementType
-					? dataObjects.Select(obj => ((IEnumerable<DataObject>)relation.GetValue(obj)))
-					.Where(obj => obj != null).Select(obj => obj.Select(rel => new { Local = obj, Remote = rel }))
+					? dataObjects.Select(obj => new { Source = obj, Enumerable = (IEnumerable<DataObject>)relation.GetValue(obj) })
+					.Where(obj => obj.Enumerable != null).Select(obj => obj.Enumerable.Select(rel => new { Local = obj.Source, Remote = rel }))
 					.SelectMany(obj => obj).Where(obj => obj.Remote != null && obj.Remote.IsPersisted)
 					: dataObjects.Select(obj => new { Local = obj, Remote = (DataObject)relation.GetValue(obj) }).Where(obj => obj.Remote != null && obj.Remote.IsPersisted);
 				
@@ -391,11 +391,13 @@ namespace DOL.Database
 					if (!resultGrp.Key)
 					{
 						foreach (var result in resultGrp)
+						{
 							if (Log.IsErrorEnabled)
 								Log.ErrorFormat("DeleteObjectRelation: Deleting Relation ({0}) of DataObject ({1}) failed for Object ({2})",
 								                relation.ValueType, result.RelObject.Local, result.RelObject.Remote);
+						}
+						success = false;
 					}
-					success = false;
 				}
 			}
 			return success;
@@ -530,8 +532,16 @@ namespace DOL.Database
 			// Store Relations
 			foreach (var result in resultByObjs)
 			{
-				object relationObject = isElementType ? (object)result.Results.ToArray() : result.Results.SingleOrDefault();
-				relationBind.SetValue(result.DataObject, relationObject);
+				if (isElementType)
+				{
+					MethodInfo castMethod = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(type);
+					MethodInfo methodToArray = typeof(Enumerable).GetMethod("ToArray").MakeGenericMethod(type);
+					relationBind.SetValue(result.DataObject, methodToArray.Invoke(null, new object[] { castMethod.Invoke(null, new object[] { result.Results }) }));
+				}
+				else
+				{
+					relationBind.SetValue(result.DataObject, result.Results.SingleOrDefault());
+				}
 			}
 			
 			// Fill Sub Relations

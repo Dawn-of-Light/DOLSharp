@@ -104,6 +104,9 @@ namespace DOL.Database
 		protected override IEnumerable<bool> AddObjectImpl(DataTableHandler tableHandler, IEnumerable<DataObject> dataObjects)
 		{
 			var success = new List<bool>();
+			if (!dataObjects.Any())
+				return success;
+			
 			try
 			{
 				// Check Primary Keys
@@ -199,6 +202,9 @@ namespace DOL.Database
 		protected override IEnumerable<bool> SaveObjectImpl(DataTableHandler tableHandler, IEnumerable<DataObject> dataObjects)
 		{
 			var success = new List<bool>();
+			if (!dataObjects.Any())
+				return success;
+			
 			try
 			{
 				// Columns
@@ -260,6 +266,9 @@ namespace DOL.Database
 		protected override IEnumerable<bool> DeleteObjectImpl(DataTableHandler tableHandler, IEnumerable<DataObject> dataObjects)
 		{
 			var success = new List<bool>();
+			if (!dataObjects.Any())
+				return success;
+			
 			try
 			{
 				// Get Primary Keys

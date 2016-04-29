@@ -336,7 +336,7 @@ namespace DOL.Database.Handlers
 		protected override void ExecuteSelectImpl(string SQLCommand, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, Action<IDataReader> Reader, IsolationLevel Isolation)
 		{
 			if (log.IsDebugEnabled)
-				log.DebugFormat("SQL: {0}", SQLCommand);
+				log.DebugFormat("ExecuteSelectImpl: {0}", SQLCommand);
 
 			var repeat = false;
 			var current = 0;
@@ -373,7 +373,7 @@ namespace DOL.Database.Handlers
 							    	catch (Exception es)
 							    	{
 							    		if(log.IsWarnEnabled)
-							    			log.Warn("Exception in Select Callback : ", es);
+							    			log.Warn("ExecuteSelectImpl: Exception in Select Callback : ", es);
 							    	}
 							    	finally
 							    	{
@@ -384,9 +384,9 @@ namespace DOL.Database.Handlers
 						    }
 					    
 						    if (log.IsDebugEnabled)
-								log.DebugFormat("SQL Select ({0}) exec time {1}ms", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start));
+								log.DebugFormat("ExecuteSelectImpl: SQL Select ({0}) exec time {1}ms", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start));
 							else if ((DateTime.UtcNow.Ticks / 10000) - start > 500 && log.IsWarnEnabled)
-								log.WarnFormat("SQL Select ({0}) took {1}ms!\n{2}", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
+								log.WarnFormat("ExecuteSelectImpl: SQL Select ({0}) took {1}ms!\n{2}", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
 						
 						}
 						catch (Exception e)
@@ -394,7 +394,7 @@ namespace DOL.Database.Handlers
 							if (!HandleException(e))
 							{
 								if (log.IsErrorEnabled)
-									log.ErrorFormat("ExecuteSelect: \"{0}\"\n{1}", SQLCommand, e);
+									log.ErrorFormat("ExecuteSelectImpl: UnHandled Exception in Select Query \"{0}\"\n{1}", SQLCommand, e);
 								
 								throw;
 							}
@@ -442,25 +442,42 @@ namespace DOL.Database.Handlers
 						    {
 					    		FillSQLParameter(parameter, cmd.Parameters);
 					    		
-						    	var result = cmd.ExecuteNonQuery();
-							    affected.Add(result);
+					    		var result = 0;
+					    		try
+					    		{
+							    	result = cmd.ExecuteNonQuery();
+								    affected.Add(result);
+					    		}
+					    		catch (MySqlException sqle)
+					    		{
+					    			if (HandleSQLException(sqle))
+					    			{
+    									affected.Add(result);
+    									if (log.IsErrorEnabled)
+											log.ErrorFormat("ExecuteNonQueryImpl: Constraint Violation for raw query \"{0}\"\n{1}", SQLCommand, sqle);
+					    			}
+					    			else
+					    			{
+					    				throw;
+					    			}
+					    		}
 							    current++;
 							    
 							    if (result < 1 && log.IsWarnEnabled)
-							    	log.WarnFormat("ExecuteNonQuery: No Change for raw query \"{0}\"", SQLCommand);
+							    	log.WarnFormat("ExecuteNonQueryImpl: No Change for raw query \"{0}\"", SQLCommand);
 						    }
 						    
 						    if (log.IsDebugEnabled)
-								log.DebugFormat("SQL NonQuery exec time {0}ms", ((DateTime.UtcNow.Ticks / 10000) - start));
+								log.DebugFormat("ExecuteNonQueryImpl: SQL NonQuery exec time {0}ms", ((DateTime.UtcNow.Ticks / 10000) - start));
 							else if ((DateTime.UtcNow.Ticks / 10000) - start > 500 && log.IsWarnEnabled)
-								log.WarnFormat("SQL NonQuery took {0}ms!\n{1}", ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
+								log.WarnFormat("ExecuteNonQueryImpl: SQL NonQuery took {0}ms!\n{1}", ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
 						}
 						catch (Exception e)
 						{
 							if (!HandleException(e))
 							{
 								if(log.IsErrorEnabled)
-									log.ErrorFormat("ExecuteNonQuery: \"{0}\"\n{1}", SQLCommand, e);
+									log.ErrorFormat("ExecuteNonQueryImpl: UnHandled Exception for raw query \"{0}\"\n{1}", SQLCommand, e);
 
 								throw;
 							}
@@ -523,16 +540,31 @@ namespace DOL.Database.Handlers
 					    				try
 					    				{
 						    				cmd.Transaction = tran;
-						    				cmd.ExecuteNonQuery();
-						    				
-							    			using (var lastid = conn.CreateCommand())
-							    			{
-							    				lastid.CommandText = "SELECT LAST_INSERT_ID()";
-							    				lastid.Transaction = tran;
-							    				var result = lastid.ExecuteScalar();
-							    				obj.Add(result);
-							    			}
-							    			
+						    				try
+						    				{
+							    				cmd.ExecuteNonQuery();
+							    				
+								    			using (var lastid = conn.CreateCommand())
+								    			{
+								    				lastid.CommandText = "SELECT LAST_INSERT_ID()";
+								    				lastid.Transaction = tran;
+								    				var result = lastid.ExecuteScalar();
+								    				obj.Add(result);
+								    			}
+						    				}							    			
+								    		catch (MySqlException sqle)
+								    		{
+								    			if (HandleSQLException(sqle))
+								    			{
+			    									obj.Add(0);
+			    									if (log.IsErrorEnabled)
+														log.ErrorFormat("ExecuteScalarImpl: Constraint Violation for command \"{0}\"\n{1}", SQLCommand, sqle);
+								    			}
+								    			else
+								    			{
+								    				throw;
+								    			}
+								    		}
 							    			tran.Commit();
 					    				}
 					    				catch (Exception te)
@@ -553,16 +585,16 @@ namespace DOL.Database.Handlers
 						    }
 						    
 							if (log.IsDebugEnabled)
-								log.DebugFormat("SQL ScalarQuery exec time {0}ms", ((DateTime.UtcNow.Ticks / 10000) - start));
+								log.DebugFormat("ExecuteScalar: SQL ScalarQuery exec time {0}ms", ((DateTime.UtcNow.Ticks / 10000) - start));
 							else if ((DateTime.UtcNow.Ticks / 10000) - start > 500 && log.IsWarnEnabled)
-								log.WarnFormat("SQL ScalarQuery took {0}ms!\n{1}", ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
+								log.WarnFormat("ExecuteScalar: SQL ScalarQuery took {0}ms!\n{1}", ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
 						}
 						catch (Exception e)
 						{
 							if (!HandleException(e))
 							{
 								if (log.IsErrorEnabled)
-									log.ErrorFormat("ExecuteScalar: \"{0}\"\n{1}", SQLCommand, e);
+									log.ErrorFormat("ExecuteScalar: UnHandled Exception for command \"{0}\"\n{1}", SQLCommand, e);
 								
 								throw;
 							}
@@ -579,6 +611,22 @@ namespace DOL.Database.Handlers
 
 			return obj.ToArray();
 		}
-		#endregion		
+		#endregion
+		/// <summary>
+		/// Handle Non Fatal SQL Query Exception
+		/// </summary>
+		/// <param name="sqle">SQL Excepiton</param>
+		/// <returns>True if handled, False otherwise</returns>
+		protected static bool HandleSQLException(MySqlException sqle)
+		{
+			switch ((MySqlErrorCode)sqle.Number)
+			{
+				case MySqlErrorCode.DuplicateUnique:
+				case MySqlErrorCode.DuplicateKeyEntry:
+					return true;
+				default:
+					return false;
+			}
+		}
 	}
 }
