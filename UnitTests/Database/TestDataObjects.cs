@@ -126,6 +126,28 @@ namespace DOL.Database.Tests
 	}
 	
 	/// <summary>
+	/// Basic Table with Primary Key Constraint
+	/// </summary>
+	[DataTable(TableName = "Test_TablePrimaryKey")]
+	public class TestTablePrimaryKey : TestTable
+	{
+		string m_primaryKey;
+		[PrimaryKey]
+		public string PrimaryKey { get { return m_primaryKey; } set { Dirty = true; m_primaryKey = value; } }
+	}
+
+	/// <summary>
+	/// Basic Table with Primary Key Constraint and Unique Key Constraint
+	/// </summary>
+	[DataTable(TableName = "Test_TablePrimaryKeyUnique")]
+	public class TestTablePrimaryKeyUnique : TestTablePrimaryKey
+	{
+		string m_unique;
+		[DataElement(Unique = true)]
+		public string Unique { get { return m_unique; } set { Dirty = true; m_unique = value; } }
+	}
+	
+	/// <summary>
 	/// Test table handling Custom Params
 	/// </summary>
 	[DataTable(TableName = "Test_TableWithCustomParams")]

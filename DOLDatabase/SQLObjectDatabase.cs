@@ -473,7 +473,7 @@ namespace DOL.Database
 		/// Check for Table Existence, Create or Alter accordingly
 		/// </summary>
 		/// <param name="table">Table Handler</param>
-		protected abstract void CheckOrCreateTableImpl(DataTableHandler table);
+		public abstract void CheckOrCreateTableImpl(DataTableHandler table);
 		#endregion
 		
 		#region Select Implementation

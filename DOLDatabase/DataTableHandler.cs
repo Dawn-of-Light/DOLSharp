@@ -75,6 +75,9 @@ namespace DOL.Database
 		/// <param name="ObjectType">DataObject Type</param>
 		public DataTableHandler(Type ObjectType)
 		{
+			if (!typeof(DataObject).IsAssignableFrom(ObjectType))
+				throw new ArgumentException("DataTableHandler can only register DataObject Types", "ObjectType");
+			
 			this.ObjectType = ObjectType;
 			// Init Cache and Table Params
 			TableName = AttributesUtils.GetTableOrViewName(ObjectType);
@@ -141,16 +144,16 @@ namespace DOL.Database
 					}
 					else if (bind.DataElement.Unique)
 					{
-						Table.Constraints.Add(new UniqueConstraint(string.Format("UNIQUE_{0}", bind.ColumnName), column));
+						Table.Constraints.Add(new UniqueConstraint(string.Format("UNIQUE_{0}_{1}", TableName, bind.ColumnName), column));
 					}
 					
 					// Store Indexes for definition after table
 					if (!string.IsNullOrEmpty(bind.DataElement.IndexColumns))
-						indexes.Add(string.Format("INDEX_{0}", bind.ColumnName), bind.DataElement.IndexColumns.Split(',')
+						indexes.Add(string.Format("INDEX_{0}_{1}", TableName, bind.ColumnName), bind.DataElement.IndexColumns.Split(',')
 						            .Select(col => FieldElementBindings.FirstOrDefault(ind => ind.ColumnName.Equals(col.Trim(), StringComparison.OrdinalIgnoreCase)))
 						            .Concat(new [] { bind }).ToArray());
 					else if (bind.DataElement.Index)
-						indexes.Add(string.Format("INDEX_{0}", bind.ColumnName), new [] { bind });
+						indexes.Add(string.Format("INDEX_{0}_{1}", TableName, bind.ColumnName), new [] { bind });
 					
 					if (bind.DataElement.Varchar > 0)
 						column.ExtendedProperties.Add("VARCHAR", bind.DataElement.Varchar);
@@ -166,7 +169,7 @@ namespace DOL.Database
 			foreach (var bind in multipleUnique)
 			{
 				var columns = bind.DataElement.UniqueColumns.Split(',').Select(column => column.Trim()).Concat(new [] { bind.ColumnName });
-				Table.Constraints.Add(new UniqueConstraint(string.Format("UNIQUE_{0}", bind.ColumnName),
+				Table.Constraints.Add(new UniqueConstraint(string.Format("UNIQUE_{0}_{1}", TableName, bind.ColumnName),
 				                                           columns.Select(column => Table.Columns[column]).ToArray()));
 			}
 			

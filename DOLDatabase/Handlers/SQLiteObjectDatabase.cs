@@ -230,7 +230,7 @@ namespace DOL.Database.Handlers
 		/// Check for Table Existence, Create or Alter accordingly
 		/// </summary>
 		/// <param name="table">Table Handler</param>
-		protected override void CheckOrCreateTableImpl(DataTableHandler table)
+		public override void CheckOrCreateTableImpl(DataTableHandler table)
 		{
 			var currentTableColumns = new List<TableRowBindind>();
 			try
@@ -256,16 +256,20 @@ namespace DOL.Database.Handlers
 			{
 				if (log.IsDebugEnabled)
 					log.Debug("CheckOrCreateTable: ", e);
-
-				if (log.IsWarnEnabled)
-					log.WarnFormat("Table {0} doesn't exist, creating it...", table.TableName);
 			}
 			
 			// Create Table or Alter Table
 			if (currentTableColumns.Any())
+			{
 				AlterTable(currentTableColumns, table);
+			}
 			else
+			{
+				if (log.IsWarnEnabled)
+					log.WarnFormat("Table {0} doesn't exist, creating it...", table.TableName);
+
 				CreateTable(table);
+			}
 		}
 		
 		/// <summary>

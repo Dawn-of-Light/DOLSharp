@@ -240,6 +240,64 @@ namespace DOL.Database.Tests
 		}
 		
 		/// <summary>
+		/// Test Table with Multiple Unique Fields
+		/// </summary>
+		[Test]
+		public void TestTableMultiUnique()
+		{
+			// Prepare and Cleanup
+			Database.RegisterDataObject(typeof(TestTableMultiUnique));
+			
+			var all = Database.SelectAllObjects<TestTableMultiUnique>();
+			
+			foreach(var obj in all)
+				Database.DeleteObject(obj);
+			
+			var none = Database.SelectAllObjects<TestTableMultiUnique>();
+			
+			Assert.IsEmpty(none, "Database shouldn't have any record For TestTableMultiUnique.");
+			// Test Add
+			var uniqueObj = new TestTableMultiUnique { StrUniquePart = "Test Value Unique", IntUniquePart = 1 };
+			
+			var inserted = Database.AddObject(uniqueObj);
+			
+			Assert.IsTrue(inserted, "Test Table Unique Multiple Field could not insert unique object.");
+			
+			// Try Adding with unique Value
+			var otherUniqueObj = new TestTableMultiUnique { StrUniquePart = "Test Value Unique", IntUniquePart = 1 };
+			
+			var otherInserted = Database.AddObject(otherUniqueObj);
+			
+			Assert.IsFalse(otherInserted, "Test Table Unique Multiple Field with Other Object violating unique constraint should not be inserted.");
+			
+			// Try Adding with non unique Value
+			var otherNonUniqueObj = new TestTableMultiUnique { StrUniquePart = "Test Value Other Non-Unique", IntUniquePart = 2 };
+			
+			var nonUniqueInserted = Database.AddObject(otherNonUniqueObj);
+			
+			Assert.IsTrue(nonUniqueInserted, "Test Table Unique Multiple Field with Other Non Unique Object could not be inserted");
+			
+			// Try saving with unique Value
+			var retrieved = Database.FindObjectByKey<TestTableMultiUnique>(otherNonUniqueObj.ObjectId);
+			
+			retrieved.StrUniquePart = "Test Value Unique";
+			retrieved.IntUniquePart = 1;
+			
+			var saved = Database.SaveObject(retrieved);
+			
+			Assert.IsFalse(saved, "Test Table Unique Multiple Field with Retrieved Object violating unique constraint should not be saved.");
+			
+			// Delete Previous Unique and Try Reinsert.
+			var deleted = Database.DeleteObject(uniqueObj);
+			Assert.IsTrue(deleted, "Test Table Unique Field could not delete unique object.");
+			Assert.IsTrue(uniqueObj.IsDeleted, "Test Table Unique Field unique object should have delete flag set.");
+			
+			var retrievedSaved = Database.SaveObject(retrieved);
+			
+			Assert.IsTrue(retrievedSaved, "Test Table Unique Field Retrieved Object could not be inserted after deleting previous constraint violating object.");
+		}
+		
+		/// <summary>
 		/// Test Table with Relation 1-1
 		/// </summary>
 		[Test]
@@ -381,22 +439,120 @@ namespace DOL.Database.Tests
 		}
 		
 		/// <summary>
-		/// Test Table with Multiple Unique Fields
+		/// Test Table with Primary Key
 		/// </summary>
 		[Test]
-		public void TestTableMultiUnique()
+		public void TestTablePrimaryKey()
 		{
 			// Prepare and Cleanup
-			Database.RegisterDataObject(typeof(TestTableMultiUnique));
+			Database.RegisterDataObject(typeof(TestTablePrimaryKey));
 			
-			var all = Database.SelectAllObjects<TestTableMultiUnique>();
+			var all = Database.SelectAllObjects<TestTablePrimaryKey>();
 			
 			foreach(var obj in all)
 				Database.DeleteObject(obj);
 			
-			var none = Database.SelectAllObjects<TestTableMultiUnique>();
+			var none = Database.SelectAllObjects<TestTablePrimaryKey>();
 			
-			Assert.IsEmpty(none, "Database shouldn't have any record For TestTableMultiUnique.");
+			Assert.IsEmpty(none, "Database shouldn't have any record For TestTableUniqueField.");
+			
+			// Test Add
+			var uniqueObj = new TestTablePrimaryKey { TestField = "Test Value", PrimaryKey = "Key1" };
+			
+			var inserted = Database.AddObject(uniqueObj);
+			
+			Assert.IsTrue(inserted, "Test Table Primary Key could not insert unique key object.");
+			
+			// Try Adding with unique Value
+			var otherUniqueObj = new TestTablePrimaryKey { TestField = "Test Value Other", PrimaryKey = "Key1" };
+			
+			var otherInserted = Database.AddObject(otherUniqueObj);
+			
+			Assert.IsFalse(otherInserted, "Test Table Primary Key with Other Object violating key constraint should not be inserted.");
+			
+			// Try Adding with non unique Value
+			var otherNonUniqueObj = new TestTablePrimaryKey { TestField = "Test Value Other Non-Primary", PrimaryKey = "Key2" };
+			
+			var nonUniqueInserted = Database.AddObject(otherNonUniqueObj);
+			
+			Assert.IsTrue(nonUniqueInserted, "Test Table Primary Key with Other Non Unique Key could not be inserted");
+			
+			// Try saving with unique Value
+			var retrieved = Database.FindObjectByKey<TestTablePrimaryKey>(otherNonUniqueObj.PrimaryKey);
+			
+			retrieved.ObjectId = uniqueObj.ObjectId;
+			retrieved.TestField = "Changed Test Field";
+			
+			var saved = Database.SaveObject(retrieved);
+			
+			Assert.IsFalse(saved, "Test Table Primary Key with Retrieved Object violating key constraint should not be saved.");
+			
+			// Delete Previous Unique and Try Reinsert.
+			var deleted = Database.DeleteObject(uniqueObj);
+			Assert.IsTrue(deleted, "Test Table Primary Key could not delete unique key object.");
+			Assert.IsTrue(uniqueObj.IsDeleted, "Test Table Primary Key unique key object should have delete flag set.");
+			
+			var retrievedSaved = Database.SaveObject(retrieved);
+			
+			Assert.IsTrue(retrievedSaved, "Test Table Primary Key Retrieved Object could not be inserted after deleting previous constraint violating object.");
+		}
+		
+		/// <summary>
+		/// Test Table with Primary Key
+		/// </summary>
+		[Test]
+		public void TestTablePrimaryKeyWithUnique()
+		{
+			// Prepare and Cleanup
+			Database.RegisterDataObject(typeof(TestTablePrimaryKeyUnique));
+			
+			var all = Database.SelectAllObjects<TestTablePrimaryKeyUnique>();
+			
+			foreach(var obj in all)
+				Database.DeleteObject(obj);
+			
+			var none = Database.SelectAllObjects<TestTablePrimaryKeyUnique>();
+			
+			Assert.IsEmpty(none, "Database shouldn't have any record For TestTableUniqueField.");
+			
+			// Test Add
+			var uniqueObj = new TestTablePrimaryKeyUnique { TestField = "Test Value", PrimaryKey = "Key1", Unique = "Unique" };
+			
+			var inserted = Database.AddObject(uniqueObj);
+			
+			Assert.IsTrue(inserted, "Test Table Primary Key With Unique could not insert unique key object.");
+			
+			// Try Adding with unique Value
+			var otherUniqueObj = new TestTablePrimaryKeyUnique { TestField = "Test Value Other", PrimaryKey = "Key1", Unique = "Unique" };
+			
+			var otherInserted = Database.AddObject(otherUniqueObj);
+			
+			Assert.IsFalse(otherInserted, "Test Table Primary Key With Unique with Other Object violating key constraint should not be inserted.");
+			
+			// Try Adding with non unique Value
+			var otherNonUniqueObj = new TestTablePrimaryKeyUnique { TestField = "Test Value Other Non-Primary", PrimaryKey = "Key2", Unique = "NonUnique" };
+			
+			var nonUniqueInserted = Database.AddObject(otherNonUniqueObj);
+			
+			Assert.IsTrue(nonUniqueInserted, "Test Table Primary Key With Unique with Other Non Unique Key could not be inserted");
+			
+			// Try saving with unique Value
+			var retrieved = Database.FindObjectByKey<TestTablePrimaryKeyUnique>(otherNonUniqueObj.PrimaryKey);
+			
+			retrieved.Unique = "Unique";
+			
+			var saved = Database.SaveObject(retrieved);
+			
+			Assert.IsFalse(saved, "Test Table Primary Key With Unique with Retrieved Object violating key constraint should not be saved.");
+			
+			// Delete Previous Unique and Try Reinsert.
+			var deleted = Database.DeleteObject(uniqueObj);
+			Assert.IsTrue(deleted, "Test Table Primary Key With Unique could not delete unique key object.");
+			Assert.IsTrue(uniqueObj.IsDeleted, "Test Table Primary Key With Unique unique key object should have delete flag set.");
+			
+			var retrievedSaved = Database.SaveObject(retrieved);
+			
+			Assert.IsTrue(retrievedSaved, "Test Table Primary Key With Unique Retrieved Object could not be inserted after deleting previous constraint violating object.");
 		}
 	}
 }
