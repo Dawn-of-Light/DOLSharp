@@ -351,7 +351,7 @@
     <FileUpdate Files="AssemblyInfo.cs" Regex="(\d+)\.(\d+)\.(\d+)\.(\*|\d+)" ReplacementText="$1.$2.$3.$(Revision)" Condition="Exists('..\auto_version') and $(Revision)!='' and $(Revision)!=-1 and Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\') and Exists('$(ProgramFiles)\subversion\bin\svnversion.exe')" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\x86" "$(ProjectDir)..\$(ConfigurationName)\lib\x86" /y /s /q /i
-xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\x64" "$(ProjectDir)..\$(ConfigurationName)\lib\x64" /y /s /q /i</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.101.0\build\net45\x86" "$(ProjectDir)..\$(ConfigurationName)\lib\x86" /y /s /q /i
+xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.101.0\build\net45\x64" "$(ProjectDir)..\$(ConfigurationName)\lib\x64" /y /s /q /i</PostBuildEvent>
   </PropertyGroup>
 </Project>
