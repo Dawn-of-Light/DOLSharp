@@ -182,4 +182,12 @@ namespace DOL.Database.Tests
 			this.Value = Value;
 		}
 	}
+	
+	/// <summary>
+	/// Test table that shouldn't be registered to database
+	/// </summary>
+	public class TableNotRegistered : DataObject
+	{
+		public TableNotRegistered() { }
+	}
 }

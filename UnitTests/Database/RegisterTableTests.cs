@@ -30,7 +30,7 @@ namespace DOL.Database.Tests
 	/// <summary>
 	/// Description of RegisterTableTests.
 	/// </summary>
-	[TestFixture, Explicit]
+	[TestFixture]
 	public class RegisterTableTests
 	{
 		public RegisterTableTests()
@@ -59,8 +59,16 @@ namespace DOL.Database.Tests
 					object[] attrib = type.GetCustomAttributes(typeof(DataTable), true);
 					if (attrib.Length > 0)
 					{
-						var dth = new DataTableHandler(type);
-						Database.CheckOrCreateTableImpl(dth);
+						Assert.DoesNotThrow( () => {
+						                    	var dth = new DataTableHandler(type);
+						                    	Database.CheckOrCreateTableImpl(dth);
+						                    }, "Registering All Projects Tables should not throw Exceptions... (Failed on Type {0})", type.FullName);
+						
+						Database.RegisterDataObject(type);
+						var selectall = typeof(IObjectDatabase).GetMethod("SelectAllObjects", new Type[] { }).MakeGenericMethod(type);
+						object objs = null;
+						Assert.DoesNotThrow( () => { objs = selectall.Invoke(Database, new object[] { }); }, "Registered tables should not Throw Exception on Select All... (Failed on Type {0})", type);
+						Assert.IsNotNull(objs);
 					}
 				}
 			}

@@ -757,7 +757,7 @@ namespace DOL.Database
 				if (Log.IsErrorEnabled)
 					Log.ErrorFormat("SelectAllObjects: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
 				
-				return new TObject[] { };
+				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
 			}
 			
 			var dataObjects = SelectObjectsImpl(tableHandler, null, new [] { new KeyValuePair<string, object>[] { } }, isolation).Single().OfType<TObject>().ToArray();

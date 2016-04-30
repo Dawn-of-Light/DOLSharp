@@ -61,14 +61,13 @@ namespace DOL.Database
 			try
 			{
 				CheckOrCreateTableImpl(dataTableHandler);
+				TableDatasets.Add(tableName, dataTableHandler);
 			}
 			catch (Exception e)
 			{
 				if (Log.IsErrorEnabled)
 					Log.ErrorFormat("RegisterDataObject: Error While Registering Table \"{0}\"\n{1}", tableName, e);
 			}
-			
-			TableDatasets.Add(tableName, dataTableHandler);
 		}
 		
 		/// <summary>
@@ -382,6 +381,11 @@ namespace DOL.Database
 			                  			DatabaseSetValue(obj, column, data[current]);
 			                  			current++;
 			                  		}
+			                  		
+			                  		// Set Primary Key
+			                  		var primary = columns.FirstOrDefault(col => col.PrimaryKey != null);
+			                  		if (primary != null)
+			                  			obj.ObjectId = primary.GetValue(obj).ToString();
 			                  		
 									list.Add(obj);
 									obj.Dirty = false;
