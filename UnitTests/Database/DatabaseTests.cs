@@ -655,12 +655,11 @@ namespace DOL.Database.Tests
 			
 			var all = Database.SelectAllObjects<TestTablePrimaryKeyUnique>();
 			
-			foreach(var obj in all)
-				Database.DeleteObject(obj);
+			Database.DeleteObject(all);
 			
 			var none = Database.SelectAllObjects<TestTablePrimaryKeyUnique>();
 			
-			Assert.IsEmpty(none, "Database shouldn't have any record For TestTableUniqueField.");
+			Assert.IsEmpty(none, "Database shouldn't have any record For TestTablePrimaryKeyUnique.");
 			
 			// Test Add
 			var uniqueObj = new TestTablePrimaryKeyUnique { TestField = "Test Value", PrimaryKey = "Key1", Unique = "Unique" };
@@ -700,6 +699,176 @@ namespace DOL.Database.Tests
 			var retrievedSaved = Database.SaveObject(retrieved);
 			
 			Assert.IsTrue(retrievedSaved, "Test Table Primary Key With Unique Retrieved Object could not be inserted after deleting previous constraint violating object.");
+		}
+		
+		/// <summary>
+		/// Test Table With ReadOnly Field
+		/// </summary>
+		[Test]
+		public void TestTableWithReadOnly()
+		{
+			// Prepare and Cleanup
+			Database.RegisterDataObject(typeof(TestTableWithReadOnly));
+			
+			var all = Database.SelectAllObjects<TestTableWithReadOnly>();
+			
+			Database.DeleteObject(all);
+			
+			var none = Database.SelectAllObjects<TestTableWithReadOnly>();
+			
+			Assert.IsEmpty(none, "Database shouldn't have any record For TestTableWithReadOnly.");
+			
+			var testObj = new TestTableWithReadOnly { TestField = "Test For Read Only", ReadOnly = "ReadOnly Value" };
+			
+			var inserted = Database.AddObject(testObj);
+			
+			Assert.IsTrue(inserted, "Test Table With Readonly couldn't insert object in database.");
+			
+			// Edit Readonly
+			testObj.TestField = "Changed Test For Read Only";
+			testObj.ReadOnly = "ReadOnly Value !!CHANGED!!";
+			
+			Assert.IsTrue(testObj.Dirty, "Test Table With Readonly should set Dirty Flag when changing TestField.");
+			
+			var saved = Database.SaveObject(testObj);
+			Assert.IsTrue(saved, "Test Table With Readonly couldn't save object in database.");
+			Assert.IsFalse(testObj.Dirty, "Test Table With Readonly should no have Dirty Flag when saved.");
+			
+			// Retrieve
+			var retrieved = Database.FindObjectByKey<TestTableWithReadOnly>(testObj.ObjectId);
+			Assert.IsNotNull(retrieved, "Test Table With Readonly couldn't retrieve object in database.");
+			Assert.AreNotEqual(testObj.ReadOnly, retrieved.ReadOnly, "Test Table With ReadOnly shouldn't have saved ReadOnly Field Change.");
+			Assert.AreEqual(testObj.TestField, retrieved.TestField, "Test Table With ReadOnly should have saved Test Field Change.");
+			Assert.AreEqual("ReadOnly Value", retrieved.ReadOnly, "Test Table With ReadOnly should have the same ReadOnly Field Value as Created.");
+		}
+		
+		/// <summary>
+		/// Test Table With View
+		/// </summary>
+		[Test]
+		public void TestTableWithView()
+		{
+			Database.RegisterDataObject(typeof(TestTableBaseView));
+			Database.RegisterDataObject(typeof(TestTableAsView));
+			
+			var all = Database.SelectAllObjects<TestTableBaseView>();
+			
+			Database.DeleteObject(all);
+			
+			var none = Database.SelectAllObjects<TestTableBaseView>();
+			
+			Assert.IsEmpty(none, "Database shouldn't have any record For TestTableBaseView.");
+			
+			// Insert some Object in Base View
+			var objBase = new TestTableBaseView { TestField = "TestField for Base View", ViewValue = "This is a Value to be retrieve in View..." };
+			
+			var inserted = Database.AddObject(objBase);
+			
+			Assert.IsTrue(inserted, "Test Table With View could not insert object in database.");
+			
+			// Retrieve From View
+			var retrieve = Database.SelectAllObjects<TestTableAsView>().FirstOrDefault();
+			
+			Assert.IsNotNull(retrieve, "Test Table With View could not retrieve inserted Object from view .");
+			Assert.AreEqual(objBase.PrimaryKey, retrieve.PrimaryKey, "Test Table With View should retrieve same value from Base and View Object.");
+			Assert.AreEqual(objBase.TestField, retrieve.TestField, "Test Table With View should retrieve same value from Base and View Object.");
+			Assert.AreEqual(objBase.ViewValue, retrieve.ViewValue, "Test Table With View should retrieve same value from Base and View Object.");
+			Assert.AreEqual("Weird Indeed", retrieve.WeirdValue, "Test Table With View should retrieve View Object with 'Weird Value' set as expected from ViewAs.");
+			
+			// Try Add View Value
+			var objView = new TestTableAsView { TestField = "TestField for As View", ViewValue = "This is a Value to saved in Base...", WeirdValue = "Anything..." };
+			
+			var viewInsert = Database.AddObject(objView);
+			
+			Assert.IsTrue(viewInsert, "Test Table With View should be able to Insert View Object as Base Object in Database.");
+			
+			// Retrieve from Base
+			var baseRetrieve = Database.FindObjectByKey<TestTableBaseView>(objView.PrimaryKey);
+			
+			Assert.IsNotNull(baseRetrieve, "Test Table With View should be able to retrieve object from View Key.");
+			Assert.AreEqual(objView.PrimaryKey, baseRetrieve.PrimaryKey, "Test Table With View should retrieve same value from View and Base Object.");
+			Assert.AreEqual(objView.TestField, baseRetrieve.TestField, "Test Table With View should retrieve same value from View and Base Object.");
+			Assert.AreEqual(objView.ViewValue, baseRetrieve.ViewValue, "Test Table With View should retrieve same value from View and Base Object.");
+			
+			// Try Save Modified View Value
+			var viewRetrieve = Database.FindObjectByKey<TestTableAsView>(objView.PrimaryKey);
+			Assert.IsNotNull(viewRetrieve, "Test Table With View should be able to retrieve object from View Key.");
+			
+			viewRetrieve.TestField = "Changed TestField for As View";
+			viewRetrieve.ViewValue = "Changed Value to be saved in Base...";
+			
+			var saved = Database.SaveObject(viewRetrieve);
+			
+			Assert.IsTrue(saved, "Test Table With View should be able to Save View Object as Base Object in Database.");
+			Assert.IsFalse(viewRetrieve.Dirty, "Test Table With View should not have Dirty Flag on View Object Saved.");
+			
+			// Retrieve Saved
+			
+			var saveRetrieve = Database.FindObjectByKey<TestTableBaseView>(viewRetrieve.PrimaryKey);
+			
+			Assert.IsNotNull(saveRetrieve, "Test Table With View should be able to retrieve object from Base Key.");
+			Assert.AreEqual(viewRetrieve.PrimaryKey, saveRetrieve.PrimaryKey, "Test Table With View should retrieve same value from View and Base Object.");
+			Assert.AreEqual(viewRetrieve.TestField, saveRetrieve.TestField, "Test Table With View should retrieve same value from View and Base Object.");
+			Assert.AreEqual(viewRetrieve.ViewValue, saveRetrieve.ViewValue, "Test Table With View should retrieve same value from View and Base Object.");
+			
+			// Try Filter Match (HIDDEN)
+			var objHidden = new TestTableBaseView { TestField = "TestField for HIDDEN Base View", ViewValue = "HIDDEN" };
+			
+			var savedHidden = Database.AddObject(objHidden);
+			Assert.IsTrue(savedHidden, "Test Table With View could not insert object in database.");
+			
+			var retrieveHidden = Database.FindObjectByKey<TestTableAsView>(objHidden.PrimaryKey);
+			Assert.IsNull(retrieveHidden, "Test Table With View should not be able to retrieve object filtered out of View As Query.");
+		}
+		
+		
+		/// <summary>
+		/// Test Table With View And Relation
+		/// </summary>
+		[Test]
+		public void TestTableWithViewAndRelation()
+		{
+			Database.RegisterDataObject(typeof(TestTableBaseView));
+			Database.RegisterDataObject(typeof(TestTableRelationsEntries));
+			Database.RegisterDataObject(typeof(TestTableAsViewWithRelations));
+			
+			var all = Database.SelectAllObjects<TestTableBaseView>();
+			
+			Database.DeleteObject(all);
+			
+			var none = Database.SelectAllObjects<TestTableBaseView>();
+			
+			Assert.IsEmpty(none, "Database shouldn't have any record For TestTableBaseView.");
+			
+			var relall = Database.SelectAllObjects<TestTableRelationsEntries>();
+			
+			Database.DeleteObject(relall);
+			
+			var relnone = Database.SelectAllObjects<TestTableRelationsEntries>();
+			
+			Assert.IsEmpty(relnone, "Database shouldn't have any record For TestTableRelationsEntries.");
+			
+			// Insert some Object in Base View
+			var objBase = new TestTableBaseView { TestField = "TestField for Base View With Relation", ViewValue = "This is a Value to be retrieve in View Relation..." };
+			
+			var inserted = Database.AddObject(objBase);
+			
+			Assert.IsTrue(inserted, "Test Table With View And Relation could not insert object in database.");
+			
+			var entries = Enumerable.Range(0, 5).Select(i => new TestTableRelationsEntries { TestField = string.Format("View Relation Test Field #{0}", i), ForeignTestField = objBase.ViewValue });
+			
+			var relInserted = Database.AddObject(entries);
+			
+			Assert.IsTrue(relInserted, "Test Table With View And Relation could not insert relations object in database.");
+			
+			// Retrieve
+			var viewRetrieve = Database.FindObjectByKey<TestTableAsViewWithRelations>(objBase.PrimaryKey);
+			
+			Assert.IsNotNull(viewRetrieve, "Test Table With View And Relation could not retrieve object from database.");
+			Assert.IsNotEmpty(viewRetrieve.Entries, "Test Table With View And Relation should have Relations Populated.");
+			CollectionAssert.AreEquivalent(entries.Select(obj => obj.TestField), viewRetrieve.Entries.Select(obj => obj.TestField), "Test Table With View And Relation should have Relations similar to Created Object");
+			
+			
 		}
 	}
 }

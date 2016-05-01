@@ -81,6 +81,8 @@ namespace DOL.Database
 			this.ObjectType = ObjectType;
 			// Init Cache and Table Params
 			TableName = AttributesUtils.GetTableOrViewName(ObjectType);
+			
+			var isView = AttributesUtils.GetViewName(ObjectType) != null;
 
 			HasRelations = false;
 			UsesPreCaching = AttributesUtils.GetPreCachedFlag(ObjectType);
@@ -96,19 +98,22 @@ namespace DOL.Database
 			// Parse Table Type
 			ElementBindings = ObjectType.GetMembers().Select(member => new ElementBinding(member)).Where(bind => bind.IsDataElementBinding).ToArray();
 			
-			// If no Primary Key AutoIncrement add GUID
-			if (FieldElementBindings.Any(bind => bind.PrimaryKey != null && !bind.PrimaryKey.AutoIncrement))
-				ElementBindings = ElementBindings.Concat(new [] {
-				                                         	new ElementBinding(ObjectType.GetProperty("ObjectId"),
-				                                         	                   new DataElement(){ Unique = true },
-				                                         	                   string.Format("{0}_ID", TableName))
-				                                         }).ToArray();
-			else if (FieldElementBindings.All(bind => bind.PrimaryKey == null))
-				ElementBindings = ElementBindings.Concat(new [] {
-				                                         	new ElementBinding(ObjectType.GetProperty("ObjectId"),
-				                                         	                   new PrimaryKey(),
-				                                         	                   string.Format("{0}_ID", TableName))
-				                                         }).ToArray();
+			if (!isView)
+			{
+				// If no Primary Key AutoIncrement add GUID
+				if (FieldElementBindings.Any(bind => bind.PrimaryKey != null && !bind.PrimaryKey.AutoIncrement))
+					ElementBindings = ElementBindings.Concat(new [] {
+					                                         	new ElementBinding(ObjectType.GetProperty("ObjectId"),
+					                                         	                   new DataElement(){ Unique = true },
+					                                         	                   string.Format("{0}_ID", TableName))
+					                                         }).ToArray();
+				else if (FieldElementBindings.All(bind => bind.PrimaryKey == null))
+					ElementBindings = ElementBindings.Concat(new [] {
+					                                         	new ElementBinding(ObjectType.GetProperty("ObjectId"),
+					                                         	                   new PrimaryKey(),
+					                                         	                   string.Format("{0}_ID", TableName))
+					                                         }).ToArray();
+			}
 			// Prepare Table
 			Table = new DataTable(TableName);
 			var multipleUnique = new List<ElementBinding>();

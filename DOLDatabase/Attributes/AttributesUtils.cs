@@ -65,6 +65,25 @@ namespace DOL.Database.Attributes
 			
 			return null;
 		}
+		
+		/// <summary>
+		/// Returns the View Select As Query from Type if DataTable Attribute is found 
+		/// </summary>
+		/// <param name="type">Type inherited from DataObject</param>
+		/// <returns>View Select As Query from DataTable Attribute or null</returns>
+		public static string GetViewAs(Type type)
+		{
+			// Check if Type is Element
+			if (type.HasElementType)
+				type = type.GetElementType();
+			
+			var dataTable = type.GetCustomAttributes<DataTable>(true).FirstOrDefault();
+			
+			if (dataTable != null && !string.IsNullOrEmpty(dataTable.ViewAs))
+				return dataTable.ViewAs;
+			
+			return null;
+		}
 
 		/// <summary>
 		/// Return Table View or Table Name

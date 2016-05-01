@@ -49,6 +49,7 @@ namespace DOL.Database.Connection
 		/// <param name="ColumnName">Row Column Name</param>
 		/// <param name="ColumnType">Row Column Type</param>
 		/// <param name="AllowDbNull">Row DB Null</param>
+		/// <param name="Primary">Row Primary</param>
 		public TableRowBindind(string ColumnName, string ColumnType, bool AllowDbNull, bool Primary)
 		{
 			this.ColumnName = ColumnName;

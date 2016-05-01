@@ -171,6 +171,47 @@ namespace DOL.Database.Tests
 		public TestTableRelationsWithNoAutoDelete() { }
 	}
 	
+	/// <summary>
+	/// Basic Table with ReadOnly field
+	/// </summary>
+	[DataTable(TableName = "Test_TableReadOnly")]
+	public class TestTableWithReadOnly : TestTable
+	{
+		[ReadOnly]
+		[DataElement]
+		public string ReadOnly { get; set; }
+		
+		public TestTableWithReadOnly() { }
+	}
+	
+	/// <summary>
+	/// Basic Table for Base View
+	/// Base Table for View should better use some well defined Primary Key for DML !!
+	/// </summary>
+	[DataTable(TableName = "Test_TableBaseView")]	
+	public class TestTableBaseView : TestTableAutoInc
+	{
+		string m_viewValue;
+		[DataElement]
+		public string ViewValue { get { return m_viewValue; } set { Dirty = true; m_viewValue = value; } }
+	}
+	
+	/// <summary>
+	/// Basic Table being a View of Base View
+	/// </summary>
+	[DataTable(TableName = "Test_TableBaseView", ViewName = "Test_TableAsView", ViewAs = "SELECT *, 'Weird Indeed' as `WeirdValue` FROM {0} WHERE `ViewValue` != 'HIDDEN'")]
+	public class TestTableAsView : TestTableBaseView
+	{
+		[DataElement]
+		public string WeirdValue { get; set; }
+	}
+	
+	[DataTable(TableName = "Test_TableBaseView", ViewName = "Test_TableAsViewWithRelations", ViewAs = "SELECT * FROM {0}")]
+	public class TestTableAsViewWithRelations : TestTableBaseView
+	{
+		[Relation(LocalField = "ViewValue", RemoteField = "ForeignTestField", AutoLoad = true, AutoDelete = true)]
+		public TestTableRelationsEntries[] Entries;
+	}
 	
 	#region Custom Tables
 	

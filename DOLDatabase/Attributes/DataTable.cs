@@ -22,16 +22,17 @@ namespace DOL.Database.Attributes
 {
 	/// <summary>
 	/// Attribute to mark a Derived Class of DataObject as Table
-	/// Mainly to set the TableName differnt to Classname
+	/// Mainly to set the TableName different to Classname
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class)]
 	public class DataTable : Attribute
 	{
 		/// <summary>
-		/// Constrctor of DataTable sets the TableName-Property to null.
+		/// Constructor of DataTable sets the TableName-Property to null.
 		/// </summary>
 		public DataTable()
 		{
+			ViewName = null;
 			TableName = null;
 			PreCache = false;
 		}
@@ -43,10 +44,16 @@ namespace DOL.Database.Attributes
 		public string TableName { get; set; }
 
 		/// <summary>
-		/// The view is based on the ViewTarget table
+		/// The View Name, Make this DataObject act as View, based on the TableName table for DML
 		/// </summary>
 		public string ViewName { get; set; }
 
+		/// <summary>
+		/// The View Query, this is mandatory when handling a View !
+		/// Evaluated Params : {0} replaced by TableName
+		/// </summary>
+		public string ViewAs { get; set; }
+		
 		/// <summary>
 		/// If preloading data is required for performance in Findobjectbykey
 		/// Uses more memory then

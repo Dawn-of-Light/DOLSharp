@@ -53,6 +53,9 @@ namespace DOL.Database
 		public override void RegisterDataObject(Type dataObjectType)
 		{
 			var tableName = AttributesUtils.GetTableOrViewName(dataObjectType);
+			var isView = AttributesUtils.GetViewName(dataObjectType) != null;
+			var viewAs = AttributesUtils.GetViewAs(dataObjectType);
+			
 			if (TableDatasets.ContainsKey(tableName))
 				return;
 			
@@ -60,7 +63,16 @@ namespace DOL.Database
 
 			try
 			{
-				CheckOrCreateTableImpl(dataTableHandler);
+				if (isView && !string.IsNullOrEmpty(viewAs))
+				{
+					ExecuteNonQueryImpl(string.Format("DROP VIEW IF EXISTS `{0}`", tableName));
+					ExecuteNonQueryImpl(string.Format("CREATE VIEW `{0}` AS {1}", tableName, string.Format(viewAs, string.Format("`{0}`", AttributesUtils.GetTableName(dataObjectType)))));
+				}
+				else
+				{
+					CheckOrCreateTableImpl(dataTableHandler);
+				}
+				
 				TableDatasets.Add(tableName, dataTableHandler);
 				if (dataTableHandler.UsesPreCaching)
 					SelectObjectsImpl(dataTableHandler, "", new [] { new KeyValuePair<string, object>[] { } }, Transaction.IsolationLevel.DEFAULT);
@@ -208,8 +220,8 @@ namespace DOL.Database
 			
 			try
 			{
-				// Columns
-				var columns = tableHandler.FieldElementBindings.Where(bind => bind.PrimaryKey == null)
+				// Columns Filtering out ReadOnly
+				var columns = tableHandler.FieldElementBindings.Where(bind => bind.PrimaryKey == null && bind.ReadOnly == null)
 					.Select(bind => new { Binding = bind, ColumnName = string.Format("`{0}`", bind.ColumnName), ParamName = string.Format("@{0}", bind.ColumnName) }).ToArray();
 				// Primary Key
 				var primary = tableHandler.FieldElementBindings.Where(bind => bind.PrimaryKey != null)
