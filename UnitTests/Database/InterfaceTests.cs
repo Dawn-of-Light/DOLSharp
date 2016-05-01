@@ -583,6 +583,7 @@ namespace DOL.Database.Tests
 		public void TestSelectAllNonRegistered()
 		{
 			Assert.Throws(typeof(DatabaseException), () => Database.SelectAllObjects<TableNotRegistered>(), "Trying to Query a Non Registered Table should throw a DatabaseException...");
+			Assert.Throws(typeof(DatabaseException), () => Database.SelectAllObjects<TableNotRegistered>(DOL.Database.Transaction.IsolationLevel.DEFAULT), "Trying to Query a Non Registered Table should throw a DatabaseException...");
 		}
 		#endregion
 		
@@ -671,6 +672,22 @@ namespace DOL.Database.Tests
 			                          "Retrieve Sets from Select Objects should be Equal to Parameter Set Field Value...");
 		}
 		
+		/// <summary>
+		/// Test IObjectDatabase.SelectObject(s)`TObject()
+		/// With Non Registered Table
+		/// </summary>
+		[Test]
+		public void TestSelectObjectsNonRegistered()
+		{
+			Assert.Throws(typeof(DatabaseException), () => Database.SelectObject<TableNotRegistered>("1"), "Trying to Query a Non Registered Table should throw a DatabaseException...");
+			Assert.Throws(typeof(DatabaseException), () => Database.SelectObject<TableNotRegistered>("1", DOL.Database.Transaction.IsolationLevel.DEFAULT), "Trying to Query a Non Registered Table should throw a DatabaseException...");
+			Assert.Throws(typeof(DatabaseException), () => Database.SelectObjects<TableNotRegistered>("1"), "Trying to Query a Non Registered Table should throw a DatabaseException...");
+			Assert.Throws(typeof(DatabaseException), () => Database.SelectObjects<TableNotRegistered>("1", DOL.Database.Transaction.IsolationLevel.DEFAULT), "Trying to Query a Non Registered Table should throw a DatabaseException...");
+			Assert.Throws(typeof(DatabaseException), () => Database.SelectObjects<TableNotRegistered>("1", new KeyValuePair<string, object>()), "Trying to Query a Non Registered Table should throw a DatabaseException...");
+			Assert.Throws(typeof(DatabaseException), () => Database.SelectObjects<TableNotRegistered>("1", new [] { new KeyValuePair<string, object>() }), "Trying to Query a Non Registered Table should throw a DatabaseException...");
+			Assert.Throws(typeof(DatabaseException), () => Database.SelectObjects<TableNotRegistered>("1", new [] { new [] { new KeyValuePair<string, object>() } }), "Trying to Query a Non Registered Table should throw a DatabaseException...");
+			
+		}
 		// TODO Finish Test Select Objects
 		
 		#endregion

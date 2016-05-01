@@ -566,8 +566,11 @@ namespace DOL.Database
 				if (Log.IsErrorEnabled)
 					Log.ErrorFormat("FindObjectByKey: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
 				
-				return new TObject[] { };
+				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
 			}
+			
+			if (tableHandler.UsesPreCaching)
+				return keys.Select(key => tableHandler.GetPreCachedObject(key)).OfType<TObject>().ToArray();
 			
 			var objs = FindObjectByKeyImpl(tableHandler, keys).OfType<TObject>().ToArray();
 			
@@ -584,15 +587,6 @@ namespace DOL.Database
 		/// <returns>Collection of DataObject with primary key matching values</returns>
 		protected virtual IEnumerable<DataObject> FindObjectByKeyImpl(DataTableHandler tableHandler, IEnumerable<object> keys)
 		{
-			var list = new List<DataObject>();
-			if (tableHandler.UsesPreCaching)
-			{
-				foreach (var obj in keys.Select(key => tableHandler.GetPreCachedObject(key)))
-					list.Add(obj);
-				
-				return list;
-			}
-			
 			// Primary Key
 			var primary = tableHandler.FieldElementBindings.Where(bind => bind.PrimaryKey != null)
 				.Select(bind => new { ColumnName = string.Format("`{0}`", bind.ColumnName), ParamName = string.Format("@{0}", bind.ColumnName) }).ToArray();
@@ -610,19 +604,7 @@ namespace DOL.Database
 			
 			var resultByKeys = objs.Select((results, index) => new { Key = keysArray[index], DataObject = results.SingleOrDefault() });
 			
-			foreach (var objResult in resultByKeys)
-			{
-				list.Add(objResult.DataObject);
-				if (tableHandler.UsesPreCaching)
-				{
-					if (objResult.DataObject == null)
-						tableHandler.DeletePreCachedObject(objResult.Key);
-					else
-						tableHandler.SetPreCachedObject(objResult.Key, objResult.DataObject);
-				}
-			}
-			
-			return list;
+			return resultByKeys.Select(obj => obj.DataObject).ToArray();
 		}
 		#endregion
 		
@@ -642,7 +624,7 @@ namespace DOL.Database
 				if (Log.IsErrorEnabled)
 					Log.ErrorFormat("SelectObjects: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
 				
-				return new [] { new TObject[] { } };
+				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
 			}
 			
 			var objs = SelectObjectsImpl(tableHandler, whereExpression, parameters, Transaction.IsolationLevel.DEFAULT).Select(res => res.OfType<TObject>()).ToArray();
@@ -761,12 +743,23 @@ namespace DOL.Database
 		#endregion
 		
 		#region Public API
+		/// <summary>
+		/// Gets the number of objects in a given table in the database.
+		/// </summary>
+		/// <typeparam name="TObject">the type of objects to retrieve</typeparam>
+		/// <returns>a positive integer representing the number of objects; zero if no object exists</returns>
 		public int GetObjectCount<TObject>()
 			where TObject : DataObject
 		{
 			return GetObjectCount<TObject>("");
 		}
 
+		/// <summary>
+		/// Gets the number of objects in a given table in the database based on a given set of criteria. (where clause)
+		/// </summary>
+		/// <typeparam name="TObject">the type of objects to retrieve</typeparam>
+		/// <param name="whereExpression">the where clause to filter object count on</param>
+		/// <returns>a positive integer representing the number of objects that matched the given criteria; zero if no such objects existed</returns>
 		public int GetObjectCount<TObject>(string whereExpression)
 			where TObject : DataObject
 		{
@@ -785,49 +778,6 @@ namespace DOL.Database
 			
 			var dataTableHandler = new DataTableHandler(dataObjectType);
 			TableDatasets.Add(tableName, dataTableHandler);
-
-			// TODO get rid of this or implement it properly
-			//if (dth.UsesPreCaching && Connection.IsSQLConnection)
-			//{
-			//    // not useful for xml connection
-			//    if (Log.IsDebugEnabled)
-			//        Log.Debug("Precaching of " + table.TableName + "...");
-
-			//    var objects = SQLSelectObjects<TObject>("");
-
-			//    object key;
-			//    for (int i = 0; i < objects.Length; i++)
-			//    {
-			//        key = null;
-			//        if (primaryIndexMember == null)
-			//        {
-			//            key = objects[i].ObjectId;
-			//        }
-			//        else
-			//        {
-			//            if (primaryIndexMember is PropertyInfo)
-			//            {
-			//                key = ((PropertyInfo) primaryIndexMember).GetValue(objects[i], null);
-			//            }
-			//            else if (primaryIndexMember is FieldInfo)
-			//            {
-			//                key = ((FieldInfo) primaryIndexMember).GetValue(objects[i]);
-			//            }
-			//        }
-			//        if (key != null)
-			//        {
-			//            dth.SetPreCachedObject(key, objects[i]);
-			//        }
-			//        else
-			//        {
-			//            if (Log.IsErrorEnabled)
-			//                Log.Error("Primary key is null! " + ((primaryIndexMember != null) ? primaryIndexMember.Name : ""));
-			//        }
-			//    }
-
-			//    if (Log.IsDebugEnabled)
-			//        Log.Debug("Precaching of " + table.TableName + " finished!");
-			//}
 		}
 
 		/// <summary>
@@ -895,51 +845,50 @@ namespace DOL.Database
 		#endregion
 
 		#region Cache
-		// TODO reimplement
 		/// <summary>
-		/// Selects object from the db and updates or adds entry in the pre-cache
+		/// Selects object from the database and updates or adds entry in the pre-cache.
 		/// </summary>
-		/// <param name="objectType"></param>
-		/// <param name="key"></param>
+		/// <typeparam name="TObject">DataObject Type to Query</typeparam>
+		/// <param name="key">Key to Update</param>
+		/// <returns>True if Object was found with given key</returns>
 		public bool UpdateInCache<TObject>(object key)
 			where TObject : DataObject
 		{
-			MemberInfo[] members = typeof(TObject).GetMembers();
-			var ret = (TObject)Activator.CreateInstance(typeof(TObject));
-
-			string tableName = ret.TableName;
-			DataTableHandler dth = TableDatasets[tableName];
-			string whereClause = null;
-
-			if (!dth.UsesPreCaching || key == null)
-				return false;
-
-			// Escape PK value
-			key = Escape(key.ToString());
-
-			for (int i = 0; i < members.Length; i++)
+			return UpdateInCache<TObject>(new [] { key });
+		}
+		
+		/// <summary>
+		/// Selects objects from the database and updates or adds entries in the pre-cache.
+		/// </summary>
+		/// <typeparam name="TObject">DataObject Type to Query</typeparam>
+		/// <param name="key">Key Collection to Update</param>
+		/// <returns>True if All Objects were found with given keys</returns>
+		public bool UpdateInCache<TObject>(IEnumerable<object> key)
+			where TObject : DataObject
+		{
+			var tableHandler = GetTableOrViewHandler(typeof(TObject));
+			if (tableHandler == null)
 			{
-				object[] keyAttrib = members[i].GetCustomAttributes(typeof(PrimaryKey), true);
-				if (keyAttrib.Length > 0)
-				{
-					whereClause = "`" + members[i].Name + "` = '" + key + "'";
-					break;
-				}
+				if (Log.IsErrorEnabled)
+					Log.ErrorFormat("UpdateInCache: DataObject Type ({0}) not registered !", typeof(TObject).FullName);
+				
+				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
 			}
-
-			if (whereClause == null)
+			
+			var keysArray = key.ToArray();
+			var objs = FindObjectByKeyImpl(tableHandler, keysArray);
+			var objsByKey = objs.Select((obj, i) => new { Key = keysArray[i], DataObject = obj });
+			
+			var success = true;
+			foreach (var obj in objsByKey)
 			{
-				whereClause = "`" + ret.TableName + "_ID` = '" + key + "'";
+				if (obj.DataObject != null)
+					tableHandler.SetPreCachedObject(obj.Key, obj.DataObject);
+				else
+					success = false;
 			}
-
-			var objs = SelectObjects<TObject>(whereClause);
-			if (objs.Count > 0)
-			{
-				dth.SetPreCachedObject(key, objs[0]);
-				return true;
-			}
-
-			return false;
+			
+			return success;
 		}
 
 		#endregion

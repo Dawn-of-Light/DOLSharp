@@ -62,6 +62,8 @@ namespace DOL.Database
 			{
 				CheckOrCreateTableImpl(dataTableHandler);
 				TableDatasets.Add(tableName, dataTableHandler);
+				if (dataTableHandler.UsesPreCaching)
+					SelectObjectsImpl(dataTableHandler, "", new [] { new KeyValuePair<string, object>[] { } }, Transaction.IsolationLevel.DEFAULT);
 			}
 			catch (Exception e)
 			{
@@ -389,7 +391,9 @@ namespace DOL.Database
 			                  		
 									list.Add(obj);
 									obj.Dirty = false;
-									obj.IsPersisted = true;			                  		
+									obj.IsPersisted = true;
+									if (tableHandler.UsesPreCaching && primary != null)
+										tableHandler.SetPreCachedObject(primary.GetValue(obj), obj);
 			                  	}
 			                  }, isolation);
 			

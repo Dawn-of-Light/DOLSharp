@@ -174,9 +174,20 @@ namespace DOL.Database
 		#endregion
 		
 		#region Count Objects
+		/// <summary>
+		/// Gets the number of objects in a given table in the database.
+		/// </summary>
+		/// <typeparam name="TObject">the type of objects to retrieve</typeparam>
+		/// <returns>a positive integer representing the number of objects; zero if no object exists</returns>
 		int GetObjectCount<TObject>()
 			where TObject : DataObject;
 
+		/// <summary>
+		/// Gets the number of objects in a given table in the database based on a given set of criteria. (where clause)
+		/// </summary>
+		/// <typeparam name="TObject">the type of objects to retrieve</typeparam>
+		/// <param name="whereExpression">the where clause to filter object count on</param>
+		/// <returns>a positive integer representing the number of objects that matched the given criteria; zero if no such objects existed</returns>
 		int GetObjectCount<TObject>(string whereExpression)
 			where TObject : DataObject;
 		#endregion
@@ -188,7 +199,22 @@ namespace DOL.Database
 		/// <param name="dataObjectType">DataObject Type</param>
 		void RegisterDataObject(Type dataObjectType);
 
+		/// <summary>
+		/// Selects object from the database and updates or adds entry in the pre-cache.
+		/// </summary>
+		/// <typeparam name="TObject">DataObject Type to Query</typeparam>
+		/// <param name="key">Key to Update</param>
+		/// <returns>True if Object was found with given key</returns>
 		bool UpdateInCache<TObject>(object key)
+			where TObject : DataObject;
+		
+		/// <summary>
+		/// Selects objects from the database and updates or adds entries in the pre-cache.
+		/// </summary>
+		/// <typeparam name="TObject">DataObject Type to Query</typeparam>
+		/// <param name="key">Key Collection to Update</param>
+		/// <returns>True if All Objects were found with given keys</returns>
+		bool UpdateInCache<TObject>(IEnumerable<object> key)
 			where TObject : DataObject;
 
 		/// <summary>
