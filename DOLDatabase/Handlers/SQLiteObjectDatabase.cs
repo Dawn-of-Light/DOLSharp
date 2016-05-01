@@ -249,7 +249,7 @@ namespace DOL.Database.Handlers
 				                  			log.DebugFormat("CheckOrCreateTable: Found Column {0} in existing table {1}", column, table.TableName);
 				                  	}
 				                  	if (log.IsDebugEnabled)
-				                  		log.DebugFormat("CheckOrCreateTable: {0} columns in table existing", currentTableColumns.Count);
+				                  		log.DebugFormat("CheckOrCreateTable: {0} columns existing in table {1}", currentTableColumns.Count, table.TableName);
 				                  }, IsolationLevel.DEFAULT);
 			}
 			catch (Exception e)
@@ -356,15 +356,108 @@ namespace DOL.Database.Handlers
 		}
 		
 		/// <summary>
+		/// Check if Table Indexes Need Alteration
+		/// </summary>
+		/// <param name="table">DataTableHandler to Implement</param>
+		protected void CheckTableIndexAlteration(DataTableHandler table)
+		{
+			// Query Existing Indexes
+			var currentIndexes = new List<Tuple<string, string>>();
+			try
+			{
+				ExecuteSelectImpl("SELECT name, sql FROM sqlite_master WHERE type == 'index' AND sql is not null AND tbl_name == @tableName",
+				                  new KeyValuePair<string, object>("@tableName", table.TableName),
+				                  reader =>
+				                  {
+				                  	while (reader.Read())
+				                  		currentIndexes.Add(new Tuple<string, string>(reader.GetString(0), reader.GetString(1)));
+				                  }, IsolationLevel.DEFAULT);
+			}
+			catch (Exception e)
+			{
+				if (log.IsDebugEnabled)
+					log.Debug("CheckTableIndexAlteration: ", e);
+				
+				throw;
+			}
+			
+			var sortedIndexes = currentIndexes.Select(ind => {
+			                                          	var unique = ind.Item2.Trim().StartsWith("CREATE UNIQUE", StringComparison.OrdinalIgnoreCase);
+			                                          	var columns = ind.Item2.Substring(ind.Item2.IndexOf('(')).Split(',').Select(sp => sp.Trim('`', '(', ')', ' '));
+			                                          	return new { KeyName = ind.Item1, Unique = unique, Columns = columns.ToArray() };
+			                                          }).ToArray();
+			if (log.IsDebugEnabled)
+				log.DebugFormat("CheckTableIndexAlteration: {0} Indexes existing in table {1}", sortedIndexes.Length, table.TableName);
+
+			var tableIndexes = table.Table.ExtendedProperties["INDEXES"] as Dictionary<string, DataColumn[]>;
+			
+			var alterQueries = new List<string>();
+			
+			// Check for Index Removal
+			foreach (var existing in sortedIndexes)
+			{
+				if (log.IsDebugEnabled)
+					log.DebugFormat("CheckTableIndexAlteration: Found Index `{0}` (Unique:{1}) on ({2}) in existing table {3}", existing.KeyName, existing.Unique, string.Join(", ", existing.Columns), table.TableName);
+				
+				DataColumn[] realindex;
+				if(tableIndexes.TryGetValue(existing.KeyName, out realindex))
+				{
+					// Check for index modifications
+					if (realindex.Length != existing.Columns.Length
+					    || !realindex.All(col => existing.Columns.Any(c => c.Equals(col.ColumnName, StringComparison.OrdinalIgnoreCase))))
+					{
+						alterQueries.Add(string.Format("DROP INDEX `{0}`", existing.KeyName));
+						alterQueries.Add(string.Format("CREATE INDEX IF NOT EXISTS `{0}` ON `{2}` ({1})", existing.KeyName, string.Join(", ", realindex.Select(col => string.Format("`{0}`", col))), table.TableName));
+					}
+				}
+				else
+				{
+					// Check for Unique
+					var realunique = table.Table.Constraints.OfType<UniqueConstraint>().FirstOrDefault(cstrnt => !cstrnt.IsPrimaryKey && cstrnt.ConstraintName.Equals(existing.KeyName, StringComparison.OrdinalIgnoreCase));
+					if (realunique == null)
+						alterQueries.Add(string.Format("DROP INDEX `{0}`", existing.KeyName));
+					else if (realunique.Columns.Length != existing.Columns.Length
+					         || !realunique.Columns.All(col => existing.Columns.Any(c => c.Equals(col.ColumnName, StringComparison.OrdinalIgnoreCase))))
+					{
+						alterQueries.Add(string.Format("DROP INDEX `{0}`", existing.KeyName));
+						alterQueries.Add(string.Format("CREATE UNIQUE INDEX IF NOT EXISTS `{0}` ON `{2}` ({1})", existing.KeyName, string.Join(", ", realunique.Columns.Select(col => string.Format("`{0}`", col))), table.TableName));
+					}
+				}
+			}
+			
+			// Missing Indexes
+			foreach (var missing in tableIndexes.Where(kv => sortedIndexes.All(c => !c.KeyName.Equals(kv.Key, StringComparison.OrdinalIgnoreCase))))
+				alterQueries.Add(string.Format("CREATE INDEX IF NOT EXISTS `{0}` ON `{2}` ({1})", missing.Key, string.Join(", ", missing.Value.Select(col => string.Format("`{0}`", col))), table.TableName));
+			
+			foreach (var missing in table.Table.Constraints.OfType<UniqueConstraint>().Where(cstrnt => !cstrnt.IsPrimaryKey && sortedIndexes.All(c => !c.KeyName.Equals(cstrnt.ConstraintName, StringComparison.OrdinalIgnoreCase))))
+				alterQueries.Add(string.Format("CREATE UNIQUE INDEX IF NOT EXISTS `{0}` ON `{2}` ({1})", missing.ConstraintName, string.Join(", ", missing.Columns.Select(col => string.Format("`{0}`", col))), table.TableName));
+			
+			if (!alterQueries.Any())
+				return;
+			
+			if (log.IsDebugEnabled)
+				log.DebugFormat("Altering Table Indexes {0} this could take a few minutes...", table.TableName);
+			
+			foreach (var query in alterQueries)
+			{
+				ExecuteNonQueryImpl(query);
+			}
+		}
+		
+		/// <summary>
 		/// Alter an Existing Table to Match DataTableHandler Definition
 		/// </summary>
 		/// <param name="currentColumns">Current Existing Columns</param>
 		/// <param name="table">DataTableHandler to Implement</param>
 		protected void AlterTable(IEnumerable<TableRowBindind> currentColumns, DataTableHandler table)
 		{
-			// TODO : Check for Index Alteration
+			// If Column are not modified Alter Table is not needed...
 			if  (!CheckTableAlteration(currentColumns, table))
+			{
+				// Table not Altered check for Indexes and return
+				CheckTableIndexAlteration(table);
 				return;
+			}
 			
 			if (log.IsDebugEnabled)
 				log.DebugFormat("Altering Table {0} this could take a few minutes...", table.TableName);

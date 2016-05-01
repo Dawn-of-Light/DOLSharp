@@ -211,7 +211,7 @@ namespace DOL.Database.Handlers
 				                  			log.DebugFormat("CheckOrCreateTable: Found Column {0} in existing table {1}", column, table.TableName);
 				                  	}
 				                  	if (log.IsDebugEnabled)
-				                  		log.DebugFormat("CheckOrCreateTable: {0} columns in table existing", currentTableColumns.Count);
+				                  		log.DebugFormat("CheckOrCreateTable: {0} columns existing in table {1}", currentTableColumns.Count, table.TableName);
 				                  }, IsolationLevel.DEFAULT);
 			}
 			catch (Exception e)
@@ -310,7 +310,74 @@ namespace DOL.Database.Handlers
 				columnDefs.Add(string.Format("ADD PRIMARY KEY ({0})", string.Join(", ", table.Table.PrimaryKey.Select(pk => string.Format("`{0}`", pk.ColumnName)))));
 			}
 			
-			// TODO : Check for Indexes
+			// Check for Indexes
+			var indexes = new List<Tuple<bool, string, string>>();
+			try
+			{
+				ExecuteSelectImpl(string.Format("SHOW INDEX FROM `{0}` WHERE `Key_Name` != \"PRIMARY\"", table.TableName),
+				                  reader =>
+				                  {
+				                  	while (reader.Read())
+				                  	{
+				                  		var unique = reader.GetInt64(1) < 1;
+				                  		var indexname = reader.GetString(2);
+				                  		var column = reader.GetString(4);
+				                  		indexes.Add(new Tuple<bool, string, string>(unique, indexname, column));
+				                  		if (log.IsDebugEnabled)
+				                  			log.DebugFormat("AlterTable: Found Index `{0}` (Unique:{1}) on `{2}` in existing table {3}", indexname, unique, column, table.TableName);
+				                  	}
+				                  	if (log.IsDebugEnabled)
+				                  		log.DebugFormat("AlterTable: {0} Indexes existing in table {1}", indexes.Count, table.TableName);
+				                  }, IsolationLevel.DEFAULT);
+			}
+			catch (Exception e)
+			{
+				if (log.IsDebugEnabled)
+					log.Debug("AlterTable: ", e);
+			}
+			
+			// Sort Indexes
+			var existingIndexes = indexes.GroupBy(ind => new { KeyName = ind.Item2, Unique = ind.Item1 })
+				.Select(grp => new { grp.Key.KeyName, grp.Key.Unique, Columns = grp.Select(i => i.Item3).ToArray() }).ToArray();
+			
+			var tableIndexes = table.Table.ExtendedProperties["INDEXES"] as Dictionary<string, DataColumn[]>;
+			
+			// Check for Index Removal
+			foreach (var existing in existingIndexes)
+			{
+				DataColumn[] realindex;
+				if(tableIndexes.TryGetValue(existing.KeyName, out realindex))
+				{
+					// Check for index modifications
+					if (realindex.Length != existing.Columns.Length
+					    || !realindex.All(col => existing.Columns.Any(c => c.Equals(col.ColumnName, StringComparison.OrdinalIgnoreCase))))
+					{
+						columnDefs.Add(string.Format("DROP KEY `{0}`", existing.KeyName));
+						columnDefs.Add(string.Format("ADD KEY `{0}` ({1})", existing.KeyName, string.Join(", ", realindex.Select(col => string.Format("`{0}`", col)))));
+					}
+				}
+				else
+				{
+					// Check for Unique
+					var realunique = table.Table.Constraints.OfType<UniqueConstraint>().FirstOrDefault(cstrnt => !cstrnt.IsPrimaryKey && cstrnt.ConstraintName.Equals(existing.KeyName, StringComparison.OrdinalIgnoreCase));
+					if (realunique == null)
+						columnDefs.Add(string.Format("DROP KEY `{0}`", existing.KeyName));
+					else if (realunique.Columns.Length != existing.Columns.Length
+					         || !realunique.Columns.All(col => existing.Columns.Any(c => c.Equals(col.ColumnName, StringComparison.OrdinalIgnoreCase))))
+					{
+						columnDefs.Add(string.Format("DROP KEY `{0}`", existing.KeyName));
+						columnDefs.Add(string.Format("ADD UNIQUE KEY `{0}` ({1})", existing.KeyName, string.Join(", ", realunique.Columns.Select(col => string.Format("`{0}`", col)))));
+					}
+				}
+			}
+			
+			// Missing Indexes
+			foreach (var missing in tableIndexes.Where(kv => existingIndexes.All(c => !c.KeyName.Equals(kv.Key, StringComparison.OrdinalIgnoreCase))))
+				columnDefs.Add(string.Format("ADD KEY `{0}` ({1})", missing.Key, string.Join(", ", missing.Value.Select(col => string.Format("`{0}`", col)))));
+			
+			foreach (var missing in table.Table.Constraints.OfType<UniqueConstraint>().Where(cstrnt => !cstrnt.IsPrimaryKey && existingIndexes.All(c => !c.KeyName.Equals(cstrnt.ConstraintName, StringComparison.OrdinalIgnoreCase))))
+				columnDefs.Add(string.Format("ADD UNIQUE KEY `{0}` ({1})", missing.ConstraintName, string.Join(", ", missing.Columns.Select(col => string.Format("`{0}`", col)))));
+				
 			
 			if (!columnDefs.Any())
 				return;

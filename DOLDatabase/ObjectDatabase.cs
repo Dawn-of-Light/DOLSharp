@@ -20,13 +20,11 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Data;
 using System.Globalization;
 using System.Reflection;
 using DataTable = System.Data.DataTable;
 
 using DOL.Database.Attributes;
-using DOL.Database.Cache;
 using DOL.Database.Connection;
 using DOL.Database.Handlers;
 
@@ -48,11 +46,6 @@ namespace DOL.Database
 		/// Number Format Info to Use for Database
 		/// </summary>
 		protected static readonly NumberFormatInfo Nfi = new CultureInfo("en-US", false).NumberFormat;
-		
-		// TODO Remove
-		private readonly Dictionary<Type, ConstructorInfo> ConstructorByFieldType = new Dictionary<Type, ConstructorInfo>();
-		private readonly Dictionary<Type, MemberInfo[]> MemberInfoCache = new Dictionary<Type, MemberInfo[]>();
-		private readonly Dictionary<MemberInfo, Relation[]> RelationAttributes = new Dictionary<MemberInfo, Relation[]>();
 
 		/// <summary>
 		/// Data Table Handlers for this Database Handler
@@ -416,7 +409,6 @@ namespace DOL.Database
 		
 		/// <summary>
 		/// Populate or Refresh Object Relations
-		/// Override to IEnumerable
 		/// </summary>
 		/// <param name="dataObject">Object to Populate</param>
 		public void FillObjectRelations(DataObject dataObject)

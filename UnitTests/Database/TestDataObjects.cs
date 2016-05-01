@@ -148,6 +148,33 @@ namespace DOL.Database.Tests
 	}
 	
 	/// <summary>
+	/// Basic Table with Relations and no AutoLoad
+	/// </summary>
+	[DataTable(TableName = "Test_TableRelationsNoAutoload")]
+	public class TestTableRelationsWithNoAutoLoad : TestTable
+	{
+		[Relation(LocalField = "Test_TableRelationsNoAutoload_ID", RemoteField = "ForeignTestField", AutoLoad = false, AutoDelete = true)]
+		public TestTableRelationsEntries[] Entries;
+		
+		public TestTableRelationsWithNoAutoLoad() { }
+	}
+	
+	/// <summary>
+	/// Basic Table with Relations and no AutoLoad
+	/// </summary>
+	[DataTable(TableName = "Test_TableRelationsNoAutodelete")]
+	public class TestTableRelationsWithNoAutoDelete : TestTable
+	{
+		[Relation(LocalField = "Test_TableRelationsNoAutodelete_ID", RemoteField = "ForeignTestField", AutoLoad = true, AutoDelete = false)]
+		public TestTableRelationsEntries[] Entries;
+		
+		public TestTableRelationsWithNoAutoDelete() { }
+	}
+	
+	
+	#region Custom Tables
+	
+	/// <summary>
 	/// Test table handling Custom Params
 	/// </summary>
 	[DataTable(TableName = "Test_TableWithCustomParams")]
@@ -190,4 +217,5 @@ namespace DOL.Database.Tests
 	{
 		public TableNotRegistered() { }
 	}
+	#endregion
 }

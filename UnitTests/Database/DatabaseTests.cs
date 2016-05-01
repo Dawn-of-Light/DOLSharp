@@ -358,6 +358,7 @@ namespace DOL.Database.Tests
 			
 			Assert.IsTrue(deleted, "Test Table Relation could not delete object with relation.");
 			Assert.IsTrue(noRelObj.IsDeleted, "Test Table Relation deleted object should have deleted flag set.");
+			Assert.IsTrue(noRelObj.Entry.IsDeleted, "Test Table Relation deleted object Entry should have deleted flag set.");
 			
 			// Check that Relation was deleted
 			var relRetrieve = Database.FindObjectByKey<TestTableRelationEntry>(relObj.ObjectId);
@@ -430,12 +431,158 @@ namespace DOL.Database.Tests
 			
 			Assert.IsTrue(deleted, "Test Table Relations could not delete object with relations.");
 			Assert.IsTrue(noRelObj.IsDeleted, "Test Table Relations deleted object should have deleted flag set.");
+			Assert.IsTrue(noRelObj.Entries.All(ent => ent.IsDeleted), "Test Table Relations deleted object should have all Entries with deleted flag set.");
 			
 			// Check that Relation was deleted
 			var relRetrieve = Database.SelectAllObjects<TestTableRelationsEntries>().Where(o => o.ForeignTestField == noRelObj.ObjectId);
 			
 			Assert.IsEmpty(relRetrieve, "Test Table Relations Entries were not auto deleted with relations object.");
 			Assert.IsTrue(relObjs.All(o => o.IsDeleted), "Test Table Relations Entries should have deleted flags set after auto delete.");
+		}
+		
+		/// <summary>
+		/// Test Table with Relation 1-n No Autoload
+		/// </summary>
+		[Test]
+		public void TestTableRelationsNoAutoload()
+		{
+			// Prepare and Cleanup
+			Database.RegisterDataObject(typeof(TestTableRelationsWithNoAutoLoad));
+			Database.RegisterDataObject(typeof(TestTableRelationsEntries));
+			
+			var all = Database.SelectAllObjects<TestTableRelationsEntries>();
+			
+			Database.DeleteObject(all);
+			
+			var none = Database.SelectAllObjects<TestTableRelationsEntries>();
+			
+			Assert.IsEmpty(none, "Database shouldn't have any record For TestTableRelationsEntries.");
+			
+			var allrel = Database.SelectAllObjects<TestTableRelationsWithNoAutoLoad>();
+			
+			Database.DeleteObject(allrel);
+			
+			var nonerel = Database.SelectAllObjects<TestTableRelationsWithNoAutoLoad>();
+			
+			Assert.IsEmpty(nonerel, "Database shouldn't have any record For TestTableRelationsWithNoAutoLoad.");
+			
+			// Try Add With no Relation
+			var noRelObj = new TestTableRelationsWithNoAutoLoad() { TestField = "RelationsTestValue" };
+			
+			var inserted = Database.AddObject(noRelObj);
+			
+			Assert.IsTrue(inserted, "Test Table Relations (NoAutoLoad) could not insert object with no relation.");
+			Assert.IsNull(noRelObj.Entries, "Test Table Relations (NoAutoLoad) object with no relation should have null Entry.");
+			
+			// Try Adding Relation
+			var testValues = new[] { "RelationsEntriesTestValue 1", "RelationsEntriesTestValue 2", "RelationsEntriesTestValue 3" };
+			
+			var relObjs = testValues.Select(val => new TestTableRelationsEntries() { TestField = val, ForeignTestField = noRelObj.ObjectId }).ToArray();
+			
+			var relInserted = Database.AddObject(relObjs);
+			
+			Assert.IsTrue(relInserted, "Test Table Relations Entries could not be inserted.");
+			
+			noRelObj.Entries = relObjs;
+			
+			var saved = Database.SaveObject(noRelObj);
+			
+			Assert.IsTrue(saved, "Test Table Relations (NoAutoLoad) could not save Object with a new relations Added.");
+			
+			// Try Retrieving Relation
+			var retrieve = Database.FindObjectByKey<TestTableRelationsWithNoAutoLoad>(noRelObj.ObjectId);
+			
+			Assert.IsNotNull(retrieve, "Test Table Relations (NoAutoLoad) could not retrieve relations object by ObjectId.");
+			Assert.IsNull(retrieve.Entries, "Test Table Relations (NoAutoLoad) retrieved object should not have entries objects.");
+			
+			Database.FillObjectRelations(retrieve);
+			Assert.IsNotNull(retrieve.Entries, "Test Table Relations (NoAutoLoad) retrieved object should have entries objects.");
+			
+			CollectionAssert.AreEquivalent(testValues, retrieve.Entries.Select(o => o.TestField), 
+			                               "Test Table Relations (NoAutoLoad) retrieved objects Entries Relation are different from created objects.");
+			
+			var changedRel = Database.FindObjectByKey<TestTableRelationsEntries>(retrieve.Entries[0].ObjectId);
+			
+			changedRel.TestField = "Changed Test Value for Relation NoAutoload";
+			
+			var resaved = Database.SaveObject(changedRel);
+			
+			Assert.IsTrue(resaved, "Changed Relation (NoAutoLoad) could not be saved to database...");
+
+			var newTestValues = new[] { changedRel.TestField, testValues[1], testValues[2] };
+			
+			Database.FillObjectRelations(retrieve);
+			
+			CollectionAssert.AreEquivalent(newTestValues, retrieve.Entries.Select(obj => obj.TestField), "Test Table Relations (NoAutoLoad) refreshed objects Entries Relation are different from changed objects.");
+			
+			// Try Deleting Relation
+			var deleted = Database.DeleteObject(noRelObj);
+			
+			Assert.IsTrue(deleted, "Test Table Relations (NoAutoLoad) could not delete object with relations.");
+			Assert.IsTrue(noRelObj.IsDeleted, "Test Table Relations (NoAutoLoad) deleted object should have deleted flag set.");
+			
+			// Check that Relation was deleted
+			var relRetrieve = Database.SelectAllObjects<TestTableRelationsEntries>().Where(o => o.ForeignTestField == noRelObj.ObjectId);
+			
+			Assert.IsEmpty(relRetrieve, "Test Table Relations (NoAutoLoad) Entries were not auto deleted with relations object.");
+			Assert.IsTrue(relObjs.All(o => o.IsDeleted), "Test Table Relations (NoAutoLoad) Entries should have deleted flags set after auto delete.");
+		}
+		
+		/// <summary>
+		/// Test Table with Relation 1-n No AutoDelete
+		/// </summary>
+		[Test]
+		public void TestTableRelationsWithNoAutoDelete()
+		{
+			// Prepare and Cleanup
+			Database.RegisterDataObject(typeof(TestTableRelationsWithNoAutoDelete));
+			Database.RegisterDataObject(typeof(TestTableRelationsEntries));
+			
+			var all = Database.SelectAllObjects<TestTableRelationsEntries>();
+			
+			Database.DeleteObject(all);
+			
+			var none = Database.SelectAllObjects<TestTableRelationsEntries>();
+			
+			Assert.IsEmpty(none, "Database shouldn't have any record For TestTableRelationsEntries.");
+			
+			var allrel = Database.SelectAllObjects<TestTableRelationsWithNoAutoDelete>();
+			
+			Database.DeleteObject(allrel);
+			
+			var nonerel = Database.SelectAllObjects<TestTableRelationsWithNoAutoDelete>();
+			
+			Assert.IsEmpty(nonerel, "Database shouldn't have any record For TestTableRelationsWithNoAutoDelete.");
+			
+			// Add Relation Object
+			var relObj = new TestTableRelationsWithNoAutoDelete() { TestField = "RelationsTestValue NoAutoDelete" };
+			var testValues = new[] { "RelationsEntriesTestValue 1", "RelationsEntriesTestValue 2", "RelationsEntriesTestValue 3" };
+			
+			relObj.Entries = testValues.Select(obj => new TestTableRelationsEntries { TestField = obj, ForeignTestField = relObj.ObjectId } ).ToArray();
+			
+			var inserted = Database.AddObject(relObj);
+			
+			Assert.IsTrue(inserted, "Test Table Relations (NoAutoDelete) could not insert object with no relation.");
+			
+			// Try Retrieving Relation
+			var retrieve = Database.FindObjectByKey<TestTableRelationsWithNoAutoDelete>(relObj.ObjectId);
+			
+			Assert.IsNotNull(retrieve, "Test Table Relations (NoAutoDelete) could not retrieve relations object by ObjectId.");
+			Assert.IsNotEmpty(retrieve.Entries, "Test Table Relations (NoAutoDelete) retrieved object should have entries objects.");
+			CollectionAssert.AreEquivalent(testValues, retrieve.Entries.Select(obj => obj.TestField), "Test Table Relations (NoAutoDelete) retrieved object Entries should have same values as created.");
+			
+			// Try Deleting Relation
+			var deleted = Database.DeleteObject(relObj);
+			
+			Assert.IsTrue(deleted, "Test Table Relations (NoAutoDelete) could not delete object with relations.");
+			Assert.IsTrue(relObj.IsDeleted, "Test Table Relations (NoAutoDelete) deleted object should have deleted flag set.");
+			
+			// Check that Relation were not deleted
+			var relRetrieve = Database.SelectAllObjects<TestTableRelationsEntries>().Where(o => o.ForeignTestField == relObj.ObjectId);
+			
+			Assert.IsNotEmpty(relRetrieve, "Test Table Relations (NoAutoDelete) Entries should not be auto deleted with relations object.");
+			Assert.IsTrue(relObj.Entries.All(o => !o.IsDeleted), "Test Table Relations (NoAutoDelete) Entries should not have deleted flags set after delete.");
+			CollectionAssert.AreEquivalent(testValues, relRetrieve.Select(obj => obj.TestField), "Test Table Relations (NoAutoDelete) Entries should have the same element as created.");
 		}
 		
 		/// <summary>
