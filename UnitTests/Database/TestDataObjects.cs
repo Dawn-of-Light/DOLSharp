@@ -206,11 +206,27 @@ namespace DOL.Database.Tests
 		public string WeirdValue { get; set; }
 	}
 	
+	/// <summary>
+	/// Basic Table being a View of Base View and Implementing a Relation based on existing field.
+	/// </summary>
 	[DataTable(TableName = "Test_TableBaseView", ViewName = "Test_TableAsViewWithRelations", ViewAs = "SELECT * FROM {0}")]
 	public class TestTableAsViewWithRelations : TestTableBaseView
 	{
 		[Relation(LocalField = "ViewValue", RemoteField = "ForeignTestField", AutoLoad = true, AutoDelete = true)]
 		public TestTableRelationsEntries[] Entries;
+	}
+	
+	/// <summary>
+	/// Basic Table with Primary Key using PreCache Behavior
+	/// </summary>
+	[DataTable(TableName = "", PreCache = true)]
+	public class TestTablePrecachedPrimaryKey : TestTablePrimaryKey
+	{
+		string m_precachedValue;
+		[DataElement]
+		public string PrecachedValue { get { return m_precachedValue; } set { Dirty = true; m_precachedValue = value; } }
+		
+		public TestTablePrecachedPrimaryKey() { }
 	}
 	
 	#region Custom Tables

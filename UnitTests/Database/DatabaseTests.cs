@@ -867,8 +867,44 @@ namespace DOL.Database.Tests
 			Assert.IsNotNull(viewRetrieve, "Test Table With View And Relation could not retrieve object from database.");
 			Assert.IsNotEmpty(viewRetrieve.Entries, "Test Table With View And Relation should have Relations Populated.");
 			CollectionAssert.AreEquivalent(entries.Select(obj => obj.TestField), viewRetrieve.Entries.Select(obj => obj.TestField), "Test Table With View And Relation should have Relations similar to Created Object");
+		}
+		
+		/// <summary>
+		/// Test Table with Primary Key and Precache Enabled
+		/// Similar to ItemTemplate Table...
+		/// </summary>
+		[Test]
+		public void TestTablePrimaryKeyWithPrecache()
+		{
+			Database.RegisterDataObject(typeof(TestTablePrecachedPrimaryKey));
 			
+			var all = Database.SelectAllObjects<TestTablePrecachedPrimaryKey>();
 			
+			Database.DeleteObject(all);
+			
+			var none = Database.SelectAllObjects<TestTablePrecachedPrimaryKey>();
+			
+			Assert.IsEmpty(none, "Database shouldn't have any record For TestTablePrecachedPrimaryKey.");
+			
+			// Insert some Object
+			var obj = new TestTablePrecachedPrimaryKey { TestField = "Test For Precached Table with Primary Key", PrecachedValue = "Some Value for Precache Table With Primary Key",
+				PrimaryKey = "New_Object_Precached_With_PrimaryKey" };
+			
+			var inserted = Database.AddObject(obj);
+			
+			Assert.IsTrue(inserted, "Test Table Precached With Primary Key could not insert object in database.");
+			
+			// Find it !
+			var retrieve = Database.FindObjectByKey<TestTablePrecachedPrimaryKey>(obj.PrimaryKey);
+			
+			Assert.IsNotNull(retrieve, "Test Table Precached With Primary Key could not retrieve object from database or precache using primary key.");
+			Assert.AreEqual(obj.PrimaryKey, retrieve.PrimaryKey, "Test Table Precached With Primary Key should retrieve Object with similar primary key.");
+			
+			// Find it with case insensitive...
+			var retrieveCase = Database.FindObjectByKey<TestTablePrecachedPrimaryKey>(obj.PrimaryKey.ToUpper());
+			
+			Assert.IsNotNull(retrieveCase, "Test Table Precached With Primary Key should be able to retrieve object with primary key using different case.");
+			Assert.AreEqual(obj.PrimaryKey, retrieveCase.PrimaryKey, "Test Table Precached With Primary Key should retrieve Object with similar primary key.");
 		}
 	}
 }

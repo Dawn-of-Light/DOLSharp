@@ -24,19 +24,15 @@ using System.Linq;
 using System.Data;
 using DataTable = System.Data.DataTable;
 
-using DOL.Database.Cache;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
 	/// <summary>
-	/// DataTableHandler
+	/// DataTableHandler that keep tracks of DataObjects Definition for matching Database schema. 
 	/// </summary>
 	public sealed class DataTableHandler
 	{
-		private readonly ICache _cache;
-		private readonly DataSet _dset;
-		
 		/// <summary>
 		/// Data Object Type
 		/// </summary>
@@ -49,6 +45,10 @@ namespace DOL.Database
 		/// Pre Cache Directory Handler
 		/// </summary>
 		private readonly ConcurrentDictionary<object, DataObject> _precache;		
+		/// <summary>
+		/// Uses Precaching
+		/// </summary>
+		public bool UsesPreCaching { get; private set; }
 		/// <summary>
 		/// The Table Name for this Handler
 		/// </summary>
@@ -89,15 +89,10 @@ namespace DOL.Database
 			if (UsesPreCaching)
 				_precache = new ConcurrentDictionary<object, DataObject>();
 			
-			_cache = new SimpleCache();
-			_dset = new DataSet();
-			_dset.DataSetName = TableName;
-			_dset.EnforceConstraints = true;
-			_dset.CaseSensitive = false;
-			
 			// Parse Table Type
 			ElementBindings = ObjectType.GetMembers().Select(member => new ElementBinding(member)).Where(bind => bind.IsDataElementBinding).ToArray();
 			
+			// Views Can't Handle Auto GUID Key
 			if (!isView)
 			{
 				// If no Primary Key AutoIncrement add GUID
@@ -114,6 +109,7 @@ namespace DOL.Database
 					                                         	                   string.Format("{0}_ID", TableName))
 					                                         }).ToArray();
 			}
+			
 			// Prepare Table
 			Table = new DataTable(TableName);
 			var multipleUnique = new List<ElementBinding>();
@@ -164,6 +160,7 @@ namespace DOL.Database
 						column.ExtendedProperties.Add("VARCHAR", bind.DataElement.Varchar);
 				}
 			}
+			
 			// Set Indexes when all columns are set
 			Table.ExtendedProperties.Add("INDEXES", indexes.Select(kv => new KeyValuePair<string, DataColumn[]>(
 				kv.Key,
@@ -177,50 +174,6 @@ namespace DOL.Database
 				Table.Constraints.Add(new UniqueConstraint(string.Format("UNIQUE_{0}_{1}", TableName, bind.ColumnName),
 				                                           columns.Select(column => Table.Columns[column]).ToArray()));
 			}
-			
-			// Set Table for DataSet
-			_dset.Tables.Add(Table);
-		}
-
-		/// <summary>
-		/// Cache
-		/// </summary>
-		public ICache Cache
-		{
-			get { return _cache; }
-		}
-
-		/// <summary>
-		/// DataSet
-		/// </summary>
-		public DataSet DataSet
-		{
-			get { return _dset; }
-		}
-
-		/// <summary>
-		/// Uses Precaching
-		/// </summary>
-		public bool UsesPreCaching { get; set; }
-
-		/// <summary>
-		/// Set Cache Object
-		/// </summary>
-		/// <param name="key">The key object</param>
-		/// <param name="obj">The value DataObject</param>
-		public void SetCacheObject(object key, DataObject obj)
-		{
-			_cache[key] = obj;
-		}
-
-		/// <summary>
-		/// Get Cache Object
-		/// </summary>
-		/// <param name="key">The key object</param>
-		/// <returns>The value DataObject</returns>
-		public DataObject GetCacheObject(object key)
-		{
-			return _cache[key] as DataObject;
 		}
 		
 		#region PreCache Handling
@@ -231,6 +184,11 @@ namespace DOL.Database
 		/// <param name="obj">The value DataObject</param>
 		public void SetPreCachedObject(object key, DataObject obj)
 		{
+			// Force Case insensitive Storage...
+			var stringKey = key as string;
+			if (stringKey != null)
+				key = stringKey.ToLower();
+			
 			_precache.AddOrUpdate(key, obj, (k, v) => obj);
 		}
 
@@ -241,12 +199,27 @@ namespace DOL.Database
 		/// <returns>The value DataObject</returns>
 		public DataObject GetPreCachedObject(object key)
 		{
+			// Force Case insensitive Retrieve...
+			var stringKey = key as string;
+			if (stringKey != null)
+				key = stringKey.ToLower();
+			
 			DataObject obj;
 			return _precache.TryGetValue(key, out obj) ? obj : null;
 		}
 		
+		/// <summary>
+		/// Delete Pre-Cached Object
+		/// </summary>
+		/// <param name="key">The key object</param>
+		/// <returns>True if found and removed</returns>
 		public bool DeletePreCachedObject(object key)
 		{
+			// Force Case insensitive Retrieve...
+			var stringKey = key as string;
+			if (stringKey != null)
+				key = stringKey.ToLower();
+
 			DataObject dummy;
 			return _precache.TryRemove(key, out dummy);
 		}

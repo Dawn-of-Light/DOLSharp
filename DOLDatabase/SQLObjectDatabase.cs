@@ -62,10 +62,13 @@ namespace DOL.Database
 
 			try
 			{
-				if (isView && !string.IsNullOrEmpty(viewAs))
+				if (isView)
 				{
-					ExecuteNonQueryImpl(string.Format("DROP VIEW IF EXISTS `{0}`", tableName));
-					ExecuteNonQueryImpl(string.Format("CREATE VIEW `{0}` AS {1}", tableName, string.Format(viewAs, string.Format("`{0}`", AttributesUtils.GetTableName(dataObjectType)))));
+					if (!string.IsNullOrEmpty(viewAs))
+					{
+						ExecuteNonQueryImpl(string.Format("DROP VIEW IF EXISTS `{0}`", tableName));
+						ExecuteNonQueryImpl(string.Format("CREATE VIEW `{0}` AS {1}", tableName, string.Format(viewAs, string.Format("`{0}`", AttributesUtils.GetTableName(dataObjectType)))));
+					}
 				}
 				else
 				{
@@ -73,6 +76,7 @@ namespace DOL.Database
 				}
 				
 				TableDatasets.Add(tableName, dataTableHandler);
+				// Init PreCache
 				if (dataTableHandler.UsesPreCaching)
 					SelectObjectsImpl(dataTableHandler, "", new [] { new KeyValuePair<string, object>[] { } }, Transaction.IsolationLevel.DEFAULT);
 			}
@@ -134,9 +138,11 @@ namespace DOL.Database
 				                            string.Join(", ", columns.Select(col => col.ParamName)));
 				
 				var objs = dataObjects.ToArray();
+				
 				// Init Object Id GUID
 				foreach (var obj in objs.Where(obj => obj.ObjectId == null))
 					obj.ObjectId = IDGenerator.GenerateID();
+				
 				// Build Parameters
 				var parameters = objs.Select(obj => columns.Select(col => new KeyValuePair<string, object>(col.ParamName, col.Binding.GetValue(obj))));
 				
@@ -173,6 +179,7 @@ namespace DOL.Database
 				}
 				else
 				{
+					var primary = columns.FirstOrDefault(col => col.Binding.PrimaryKey != null);
 					var affected = ExecuteNonQueryImpl(command, parameters);
 					var resultByObjects = affected.Select((result, index) => new { Result = result, DataObject = objs[index] });
 					
@@ -183,14 +190,17 @@ namespace DOL.Database
 							result.DataObject.Dirty = false;
 							result.DataObject.IsPersisted = true;
 							result.DataObject.IsDeleted = false;
-							if (tableHandler.UsesPreCaching)
-								tableHandler.SetPreCachedObject(result.DataObject.ObjectId, result.DataObject);
+							
+							if (tableHandler.UsesPreCaching && primary != null)
+									tableHandler.SetPreCachedObject(primary.Binding.GetValue(result.DataObject), result.DataObject);
+							
 							success.Add(true);
 						}
 						else
 						{
 							if (Log.IsErrorEnabled)
 								Log.ErrorFormat("Error adding data object into {0} Object = {1} Query = {2}", tableHandler.TableName, result.DataObject, command);
+							
 							success.Add(false);
 						}
 					}
@@ -239,17 +249,17 @@ namespace DOL.Database
 				var affected = ExecuteNonQueryImpl(command, parameters);
 				var resultByObjects = affected.Select((result, index) => new { Result = result, DataObject = objs[index] });
 				
+				var primaryBinding = primary.FirstOrDefault();
+				
 				foreach (var result in resultByObjects)
 				{
 					if (result.Result > 0)
 					{
 						result.DataObject.Dirty = false;
 						result.DataObject.IsPersisted = true;
-						if (tableHandler.UsesPreCaching)
-						{
-							var autoInc = primary.FirstOrDefault(col => col.Binding.PrimaryKey.AutoIncrement);
-							tableHandler.SetPreCachedObject(autoInc == null ? result.DataObject.ObjectId : autoInc.Binding.GetValue(result.DataObject), result.DataObject);
-						}
+						if (tableHandler.UsesPreCaching && primaryBinding != null)
+							tableHandler.SetPreCachedObject(primaryBinding.Binding.GetValue(result.DataObject), result.DataObject);
+						
 						success.Add(true);
 					}
 					else
@@ -377,6 +387,7 @@ namespace DOL.Database
 				                        string.Join(", ", columns.Select(col => string.Format("`{0}`", col.ColumnName))),
 				                        tableHandler.TableName);
 			
+			var primary = columns.FirstOrDefault(col => col.PrimaryKey != null);
 			var dataObjects = new List<List<DataObject>>();
 			ExecuteSelectImpl(command, parameters, reader => {
 			                  	var list = new List<DataObject>();
@@ -396,7 +407,6 @@ namespace DOL.Database
 			                  		}
 			                  		
 			                  		// Set Primary Key
-			                  		var primary = columns.FirstOrDefault(col => col.PrimaryKey != null);
 			                  		if (primary != null)
 			                  			obj.ObjectId = primary.GetValue(obj).ToString();
 			                  		
