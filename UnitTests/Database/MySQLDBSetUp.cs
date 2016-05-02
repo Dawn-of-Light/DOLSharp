@@ -50,7 +50,9 @@ namespace DOL.Database.MySQLTests
 			
 			log4net.Config.BasicConfigurator.Configure(
 				new log4net.Appender.ConsoleAppender {
-					Layout = new log4net.Layout.SimpleLayout()});
+					Layout = new log4net.Layout.SimpleLayout(),
+					Threshold = log4net.Core.Level.Info
+				});
 		}
 		
 		[TearDown]

@@ -22,7 +22,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Reflection;
 
 using DOL.Database.Connection;
 using DOL.Database.Attributes;
