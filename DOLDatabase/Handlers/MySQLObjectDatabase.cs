@@ -382,8 +382,8 @@ namespace DOL.Database.Handlers
 			if (!columnDefs.Any())
 				return;
 			
-			if (log.IsDebugEnabled)
-				log.DebugFormat("Altering Table {0} this could take a few minutes...", table.TableName);
+			if (log.IsInfoEnabled)
+				log.InfoFormat("Altering Table {0} this could take a few minutes...", table.TableName);
 			
 			ExecuteNonQueryImpl(string.Format("ALTER TABLE `{0}` {1}", table.TableName, string.Join(", \n", columnDefs)));
 		}

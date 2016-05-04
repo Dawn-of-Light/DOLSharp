@@ -18,6 +18,8 @@
  */
 using System;
 
+using DOL.Database.Connection;
+
 using NUnit.Framework;
 
 namespace DOL.Database.MySQLTests
@@ -32,5 +34,7 @@ namespace DOL.Database.MySQLTests
 		{
 			Database = MySQLDBSetUp.Database;
 		}
+		
+		protected override SQLObjectDatabase GetDatabaseV2 { get { return (SQLObjectDatabase)ObjectDatabase.GetObjectDatabase(ConnectionType.DATABASE_MYSQL, MySQLDBSetUp.ConnectionString); } }
 	}
 }

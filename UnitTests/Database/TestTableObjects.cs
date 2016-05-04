@@ -23,18 +23,79 @@ using DOL.Database.Attributes;
 
 namespace DOL.Database.Tests
 {
+	/// <summary>
+	/// Test Table with Multiple Overlapping Index
+	/// </summary>
 	[DataTable(TableName = "Test_TableWithMultiIndexes")]
 	public class TestTableWithMultiIndexes : DataObject
 	{
-		public string m_index1;
 		[DataElement(IndexColumns = "Index2")]
 		public string Index1 { get; set; }
-		public string m_index2;
 		[DataElement(IndexColumns = "Index3")]
 		public string Index2 { get; set; }
-		public string m_index3;
 		[DataElement]
 		public string Index3 { get; set; }
 	}
 
+	/// <summary>
+	/// Test Table Migration with No Primary Key
+	/// </summary>
+	[DataTable(TableName = "Test_TableMigrationNoPrimary")]
+	public class TestTableWithNoPrimaryV1 : DataObject
+	{
+		[DataElement]
+		public string Value { get; set; }
+	}
+	
+	/// <summary>
+	/// Test Table Migration To Auto Increment Primary Key
+	/// </summary>
+	[DataTable(TableName = "Test_TableMigrationNoPrimary")]
+	public class TestTableWithNoPrimaryV2 : DataObject
+	{
+		[PrimaryKey(AutoIncrement = true)]
+		public int PrimaryKey { get; set; }
+		[DataElement]
+		public string Value { get; set; }
+	}
+	
+	/// <summary>
+	/// Test Table Migration To Auto Increment Primary Key changing name
+	/// </summary>
+	[DataTable(TableName = "Test_TableMigrationNoPrimary")]
+	public class TestTableWithNoPrimaryV3 : DataObject
+	{
+		[PrimaryKey(AutoIncrement = true)]
+		public int PrimaryKey2 { get; set; }
+		[DataElement]
+		public string Value { get; set; }
+	}
+	
+	/// <summary>
+	/// Test Table Migration with different Types
+	/// </summary>
+	[DataTable(TableName = "Test_TableMigrationTypes")]
+	public class TestTableDifferentTypesV1 : DataObject
+	{
+		[DataElement(Varchar = 100)]
+		public string StringValue { get; set; }
+		[DataElement]
+		public int IntValue { get; set; }
+		[DataElement]
+		public DateTime DateValue { get; set; }
+	}
+	
+	/// <summary>
+	/// Test Table Migration with different Types
+	/// </summary>
+	[DataTable(TableName = "Test_TableMigrationTypes")]
+	public class TestTableDifferentTypesV2 : DataObject
+	{
+		[DataElement]
+		public string StringValue { get; set; }
+		[DataElement]
+		public byte IntValue { get; set; }
+		[DataElement]
+		public string DateValue { get; set; }
+	}	
 }

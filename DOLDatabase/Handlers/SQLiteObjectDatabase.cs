@@ -273,10 +273,11 @@ namespace DOL.Database.Handlers
 		}
 		
 		/// <summary>
-		/// Create a New Table from DataTableHandler Definition
+		/// Helper Method to build Table Definition String
 		/// </summary>
-		/// <param name="table">DataTableHandler Definition to Create in Database</param>
-		protected void CreateTable(DataTableHandler table)
+		/// <param name="table"></param>
+		/// <returns></returns>
+		protected string GetTableDefinition(DataTableHandler table)
 		{
 			var columnDef = table.FieldElementBindings
 				.Select(bind => GetColumnDefinition(bind, table));
@@ -287,12 +288,18 @@ namespace DOL.Database.Handlers
 				                              string.Join(", ", table.Table.PrimaryKey.Select(pk => string.Format("`{0}`", pk.ColumnName)))) };
 			
 			// Create Table First
-			var command = string.Format("CREATE TABLE IF NOT EXISTS `{0}` ({1})", table.TableName,
+			return string.Format("CREATE TABLE IF NOT EXISTS `{0}` ({1})", table.TableName,
 			                            string.Join(", \n", columnDef.Concat(primaryFields)));
-
-			ExecuteNonQueryImpl(command);
-			
-			// Then Indexes and Constraints
+		}
+		
+		/// <summary>
+		/// Helper Method to build Table Indexes Definition String
+		/// </summary>
+		/// <param name="table"></param>
+		/// <returns></returns>
+		protected IEnumerable<string> GetIndexesDefinition(DataTableHandler table)
+		{
+			// Indexes and Constraints
 			var uniqueFields = table.Table.Constraints.OfType<UniqueConstraint>().Where(cstrnt => !cstrnt.IsPrimaryKey)
 				.Select(cstrnt => string.Format("CREATE UNIQUE INDEX IF NOT EXISTS `{0}` ON `{2}` ({1})", cstrnt.ConstraintName,
 				                                string.Join(", ", cstrnt.Columns.Select(col => string.Format("`{0}`", col.ColumnName))),
@@ -304,8 +311,19 @@ namespace DOL.Database.Handlers
 				: indexes.Select(index => string.Format("CREATE INDEX IF NOT EXISTS `{0}` ON `{2}` ({1})", index.Key,
 			                                        string.Join(", ", index.Value.Select(col => string.Format("`{0}`", col.ColumnName))),
 			                                        table.TableName));
-
-			foreach (var commands in uniqueFields.Concat(indexesFields))
+			
+			return uniqueFields.Concat(indexesFields);
+		}
+		
+		/// <summary>
+		/// Create a New Table from DataTableHandler Definition
+		/// </summary>
+		/// <param name="table">DataTableHandler Definition to Create in Database</param>
+		protected void CreateTable(DataTableHandler table)
+		{
+			ExecuteNonQueryImpl(GetTableDefinition(table));
+			
+			foreach (var commands in GetIndexesDefinition(table))
 				ExecuteNonQueryImpl(commands);
 		}
 		
@@ -459,18 +477,14 @@ namespace DOL.Database.Handlers
 				return;
 			}
 			
-			if (log.IsDebugEnabled)
-				log.DebugFormat("Altering Table {0} this could take a few minutes...", table.TableName);
+			if (log.IsInfoEnabled)
+				log.InfoFormat("Altering Table {0} this could take a few minutes...", table.TableName);
 			
-			// Rename Table
-			ExecuteNonQueryImpl(string.Format("ALTER TABLE `{0}` RENAME TO `{0}_bkp`", table.TableName));
-			
-			// Drop Indexes
 			var currentIndexes = new List<string>();
 			try
 			{
 				ExecuteSelectImpl("SELECT name FROM sqlite_master WHERE type == 'index' AND sql is not null AND tbl_name == @tableName",
-				                  new KeyValuePair<string, object>("@tableName", string.Format("{0}_bkp", table.TableName)),
+				                  new KeyValuePair<string, object>("@tableName", table.TableName),
 				                  reader =>
 				                  {
 				                  	while (reader.Read())
@@ -483,60 +497,84 @@ namespace DOL.Database.Handlers
 					log.Debug("AlterTableImpl: ", e);
 
 				if (log.IsWarnEnabled)
-					log.WarnFormat("AlterTableImpl: Error While Altering Table {0}, trying to rollback...", table.TableName);
-				
-				// Rename Table before any modifications
-				ExecuteNonQueryImpl(string.Format("ALTER TABLE `{0}_bkp` RENAME TO `{0}`", table.TableName));
+					log.WarnFormat("AlterTableImpl: Error While Altering Table {0}, no modifications...", table.TableName);
+
 				throw;
 			}
-			
-			foreach(var index in currentIndexes)
-				ExecuteNonQueryImpl(string.Format("DROP INDEX `{0}`", index));
-			
-			try
+
+			using (var conn = new SQLiteConnection(ConnectionString))
 			{
-				// Create New Table with Indexes
-				CreateTable(table);
+				conn.Open();
+				using(var tran = conn.BeginTransaction(System.Data.IsolationLevel.ReadCommitted))
+				{
+					try
+					{
+						// Delete Indexes
+						foreach(var index in currentIndexes)
+						{
+							using (var command = new SQLiteCommand(string.Format("DROP INDEX `{0}`", index), conn))
+							{
+								command.Transaction = tran;
+								command.ExecuteNonQuery();
+							}
+						}
+						
+						// Rename Table
+						using (var command = new SQLiteCommand(string.Format("ALTER TABLE `{0}` RENAME TO `{0}_bkp`", table.TableName), conn))
+						{
+							command.Transaction = tran;
+							command.ExecuteNonQuery();
+						}
+						
+						// Create New Table
+						using (var command = new SQLiteCommand(GetTableDefinition(table), conn))
+						{
+							command.Transaction = tran;
+							command.ExecuteNonQuery();
+						}
+						
+						// Create Indexes
+						foreach (var index in GetIndexesDefinition(table))
+						{
+							using (var command = new SQLiteCommand(index, conn))
+							{
+								command.Transaction = tran;
+								command.ExecuteNonQuery();
+							}
+						}
+						
+						// Copy Data
+						var columns = table.FieldElementBindings.Where(bind => currentColumns.Any(col => col.ColumnName.Equals(bind.ColumnName, StringComparison.OrdinalIgnoreCase)))
+							.Select(bind => string.Format("`{0}`", bind.ColumnName));
+						using (var command = new SQLiteCommand(string.Format("INSERT INTO `{0}` ({1}) SELECT {1} FROM `{0}_bkp`", table.TableName, string.Join(", ", columns)), conn))
+						{
+							command.Transaction = tran;
+							command.ExecuteNonQuery();
+						}
+
+						// Drop Renamed Table
+						using (var command = new SQLiteCommand(string.Format("DROP TABLE `{0}_bkp`", table.TableName), conn))
+						{
+							command.Transaction = tran;
+							command.ExecuteNonQuery();
+						}
+						
+						tran.Commit();
+						if (log.IsInfoEnabled)
+							log.InfoFormat("AlterTableImpl: Table {0} Altered...", table.TableName);
+					}
+					catch (Exception e)
+					{
+						tran.Rollback();
+						if (log.IsDebugEnabled)
+							log.Debug("AlterTableImpl: ", e);
+						
+						if (log.IsWarnEnabled)
+							log.WarnFormat("AlterTableImpl: Error While Altering Table {0}, rollback...\n{1}", table.TableName, e);
+					}
+					
+				}
 			}
-			catch (Exception e)
-			{
-				if (log.IsDebugEnabled)
-					log.Debug("AlterTableImpl: ", e);
-				
-				if (log.IsWarnEnabled)
-					log.WarnFormat("AlterTableImpl: Error While Altering Table {0}, trying to rollback...", table.TableName);
-				
-				
-				// Rename Table as before any modifications
-				ExecuteNonQueryImpl(string.Format("ALTER TABLE `{0}_bkp` RENAME TO `{0}`", table.TableName));
-				throw;
-			}
-			
-			try
-			{
-				// Copy Data
-				var columns = table.FieldElementBindings.Where(bind => currentColumns.Any(col => col.ColumnName.Equals(bind.ColumnName, StringComparison.OrdinalIgnoreCase)))
-					.Select(bind => string.Format("`{0}`", bind.ColumnName));
-				
-				ExecuteNonQueryImpl(string.Format("INSERT INTO `{0}` ({1}) SELECT {1} FROM `{0}_bkp`", table.TableName, string.Join(", ", columns)));
-			}
-			catch (Exception e)
-			{
-				if (log.IsDebugEnabled)
-					log.Debug("AlterTableImpl: ", e);
-				
-				if (log.IsWarnEnabled)
-					log.WarnFormat("AlterTableImpl: Error While Altering Table {0}, trying to rollback...", table.TableName);
-				
-				// Roll Back Creation
-				ExecuteNonQueryImpl(string.Format("DROP TABLE `{0}`", table.TableName));
-				// Rename Table as before any modifications
-				ExecuteNonQueryImpl(string.Format("ALTER TABLE `{0}_bkp` RENAME TO `{0}`", table.TableName));
-				throw;
-			}
-			
-			// Drop Renamed Table
-			ExecuteNonQueryImpl(string.Format("DROP TABLE `{0}_bkp`", table.TableName));
 		}
 		#endregion
 
