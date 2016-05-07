@@ -496,7 +496,7 @@ namespace DOL.Database.Tests
 			Assert.IsNull(retrieve.Entries, "Test Table Relations (NoAutoLoad) retrieved object should not have entries objects.");
 			
 			Database.FillObjectRelations(retrieve);
-			Assert.IsNotNull(retrieve.Entries, "Test Table Relations (NoAutoLoad) retrieved object should have entries objects.");
+			Assert.IsNotNull(retrieve.Entries, "Test Table Relations (NoAutoLoad) retrieved object should have entries objects after filling.");
 			
 			CollectionAssert.AreEquivalent(testValues, retrieve.Entries.Select(o => o.TestField), 
 			                               "Test Table Relations (NoAutoLoad) retrieved objects Entries Relation are different from created objects.");
@@ -509,7 +509,7 @@ namespace DOL.Database.Tests
 			
 			Assert.IsTrue(resaved, "Changed Relation (NoAutoLoad) could not be saved to database...");
 
-			var newTestValues = new[] { changedRel.TestField, testValues[1], testValues[2] };
+			var newTestValues = new[] { changedRel.TestField, retrieve.Entries[1].TestField, retrieve.Entries[2].TestField };
 			
 			Database.FillObjectRelations(retrieve);
 			
@@ -521,7 +521,7 @@ namespace DOL.Database.Tests
 			Assert.IsTrue(deleted, "Test Table Relations (NoAutoLoad) could not delete object with relations.");
 			Assert.IsTrue(noRelObj.IsDeleted, "Test Table Relations (NoAutoLoad) deleted object should have deleted flag set.");
 			
-			// Check that Relation was deleted
+			// Check that Relations were deleted
 			var relRetrieve = Database.SelectAllObjects<TestTableRelationsEntries>().Where(o => o.ForeignTestField == noRelObj.ObjectId);
 			
 			Assert.IsEmpty(relRetrieve, "Test Table Relations (NoAutoLoad) Entries were not auto deleted with relations object.");
@@ -906,5 +906,7 @@ namespace DOL.Database.Tests
 			Assert.IsNotNull(retrieveCase, "Test Table Precached With Primary Key should be able to retrieve object with primary key using different case.");
 			Assert.AreEqual(obj.PrimaryKey, retrieveCase.PrimaryKey, "Test Table Precached With Primary Key should retrieve Object with similar primary key.");
 		}
+		
+		// TODO Test relations with precached tables
 	}
 }

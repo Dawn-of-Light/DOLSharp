@@ -263,7 +263,7 @@ namespace DOL.Database
 						{
 							if (resultGrp.Key)
 							{
-								// Success Objects Need Relations Save
+								// Success Objects Need Relations should be deleted
 								if (tableHandler.HasRelations)
 									success &= DeleteObjectRelations(tableHandler, resultGrp.Select(obj => obj.DataObject));
 							}
@@ -514,7 +514,7 @@ namespace DOL.Database
 				
 				var whereClause = string.Format("`{0}` = @{0}", remoteBind.ColumnName);
 				
-				var parameters = objects.Select(obj => new [] { new KeyValuePair<string, object>(string.Format("@{0}", remoteBind.ColumnName), localBind.GetValue(obj)) });
+				var parameters = objects.Select(obj => new [] { new QueryParameter(string.Format("@{0}", remoteBind.ColumnName), localBind.GetValue(obj)) });
 				
 				objsResults = SelectObjectsImpl(remoteHandler, whereClause, parameters, Transaction.IsolationLevel.DEFAULT);
 			}
@@ -549,7 +549,7 @@ namespace DOL.Database
 		public TObject FindObjectByKey<TObject>(object key)
 			where TObject : DataObject
 		{
-			return FindObjectByKey<TObject>(new [] { key }).FirstOrDefault();
+			return FindObjectsByKey<TObject>(new [] { key }).FirstOrDefault();
 		}
 		
 		/// <summary>
@@ -557,7 +557,7 @@ namespace DOL.Database
 		/// </summary>
 		/// <param name="keys">Collection of Primary Key Values</param>
 		/// <returns>Collection of DataObject with primary key matching values</returns>
-		public virtual IEnumerable<TObject> FindObjectByKey<TObject>(IEnumerable<object> keys)
+		public virtual IEnumerable<TObject> FindObjectsByKey<TObject>(IEnumerable<object> keys)
 			where TObject : DataObject
 		{
 			var tableHandler = GetTableOrViewHandler(typeof(TObject));
@@ -570,11 +570,11 @@ namespace DOL.Database
 			}
 			
 			if (tableHandler.UsesPreCaching)
-				return keys.Select(key => tableHandler.GetPreCachedObject(key)).OfType<TObject>().ToArray();
+				return keys.Select(key => tableHandler.GetPreCachedObject(key)).Cast<TObject>().ToArray();
 			
-			var objs = FindObjectByKeyImpl(tableHandler, keys).OfType<TObject>().ToArray();
+			var objs = FindObjectByKeyImpl(tableHandler, keys).Cast<TObject>().ToArray();
 			
-			FillObjectRelations(objs, false);
+			FillObjectRelations(objs.Where(obj => obj != null), false);
 			
 			return objs;
 		}
@@ -598,7 +598,7 @@ namespace DOL.Database
 			                                string.Join(" AND ", primary.Select(col => string.Format("{0} = {1}", col.ColumnName, col.ParamName))));
 			
 			var keysArray = keys.ToArray();
-			var parameters = keysArray.Select(key => primary.Select(col => new KeyValuePair<string, object>(col.ParamName, key)));
+			var parameters = keysArray.Select(key => primary.Select(col => new QueryParameter(col.ParamName, key)));
 			
 			var objs = SelectObjectsImpl(tableHandler, whereClause, parameters, Transaction.IsolationLevel.DEFAULT);
 			
@@ -615,9 +615,12 @@ namespace DOL.Database
 		/// <param name="whereExpression">Parametrized Where Expression</param>
 		/// <param name="parameters">Collection of Parameters</param>
 		/// <returns>Collection of Objects Sets for each matching Parametrized Query</returns>
-		public IEnumerable<IEnumerable<TObject>> SelectObjects<TObject>(string whereExpression, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters)
+		public IEnumerable<IEnumerable<TObject>> SelectObjects<TObject>(string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters)
 			where TObject : DataObject
 		{
+			if (parameters == null)
+				throw new ArgumentNullException("parameters");
+			
 			var tableHandler = GetTableOrViewHandler(typeof(TObject));
 			if (tableHandler == null)
 			{
@@ -639,9 +642,12 @@ namespace DOL.Database
 		/// <param name="whereExpression">Parametrized Where Expression</param>
 		/// <param name="parameter">Collection of Parameter</param>
 		/// <returns>Collection of Objects matching Parametrized Query</returns>
-		public IEnumerable<TObject> SelectObjects<TObject>(string whereExpression, IEnumerable<KeyValuePair<string, object>> parameter)
+		public IEnumerable<TObject> SelectObjects<TObject>(string whereExpression, IEnumerable<QueryParameter> parameter)
 			where TObject : DataObject
 		{
+			if (parameter == null)
+				throw new ArgumentNullException("parameter");
+			
 			return SelectObjects<TObject>(whereExpression, new [] { parameter }).First();
 		}
 		/// <summary>
@@ -650,9 +656,12 @@ namespace DOL.Database
 		/// <param name="whereExpression">Parametrized Where Expression</param>
 		/// <param name="param">Single Parameter</param>
 		/// <returns>Collection of Objects matching Parametrized Query</returns>
-		public IEnumerable<TObject> SelectObjects<TObject>(string whereExpression, KeyValuePair<string, object> param)
+		public IEnumerable<TObject> SelectObjects<TObject>(string whereExpression, QueryParameter param)
 			where TObject : DataObject
 		{
+			if (param == null)
+				throw new ArgumentNullException("param");
+			
 			return SelectObjects<TObject>(whereExpression, new [] { new [] { param } }).First();
 		}
 		#endregion
@@ -701,7 +710,7 @@ namespace DOL.Database
 		public IList<TObject> SelectObjects<TObject>(string whereExpression, Transaction.IsolationLevel isolation)
 			where TObject : DataObject
 		{
-			return SelectObjects<TObject>(whereExpression, new [] { new KeyValuePair<string, object>[] { } }).First().ToArray();
+			return SelectObjects<TObject>(whereExpression, new [] { new QueryParameter[] { } }).First().ToArray();
 		}
 		#endregion
 		
@@ -734,7 +743,7 @@ namespace DOL.Database
 				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
 			}
 			
-			var dataObjects = SelectObjectsImpl(tableHandler, null, new [] { new KeyValuePair<string, object>[] { } }, isolation).Single().OfType<TObject>().ToArray();
+			var dataObjects = SelectObjectsImpl(tableHandler, null, new [] { new QueryParameter[] { } }, isolation).Single().OfType<TObject>().ToArray();
 			
 			FillObjectRelations(dataObjects, false);
 			
@@ -832,7 +841,7 @@ namespace DOL.Database
 		/// <param name="parameters">Parameters for filtering</param>
 		/// <param name="isolation">Isolation Level</param>
 		/// <returns>Collection of DataObjects Sets matching Parametrized Where Expression</returns>
-		protected abstract IEnumerable<IEnumerable<DataObject>> SelectObjectsImpl(DataTableHandler tableHandler, string whereExpression, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, Transaction.IsolationLevel isolation);
+		protected abstract IEnumerable<IEnumerable<DataObject>> SelectObjectsImpl(DataTableHandler tableHandler, string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters, Transaction.IsolationLevel isolation);
 
 		/// <summary>
 		/// Gets the number of objects in a given table in the database based on a given set of criteria. (where clause)

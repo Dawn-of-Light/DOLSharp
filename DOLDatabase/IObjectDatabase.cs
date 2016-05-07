@@ -87,7 +87,7 @@ namespace DOL.Database
 		/// </summary>
 		/// <param name="keys">Collection of Primary Key Values</param>
 		/// <returns>Collection of DataObject with primary key matching values</returns>
-		IEnumerable<TObject> FindObjectByKey<TObject>(IEnumerable<object> keys)
+		IEnumerable<TObject> FindObjectsByKey<TObject>(IEnumerable<object> keys)
 			where TObject : DataObject;
 		#endregion
 		
@@ -98,7 +98,7 @@ namespace DOL.Database
 		/// <param name="whereExpression">Parametrized Where Expression</param>
 		/// <param name="parameters">Collection of Parameters</param>
 		/// <returns>Collection of Objects Sets for each matching Parametrized Query</returns>
-		IEnumerable<IEnumerable<TObject>> SelectObjects<TObject>(string whereExpression, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters)
+		IEnumerable<IEnumerable<TObject>> SelectObjects<TObject>(string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters)
 			where TObject : DataObject;
 		/// <summary>
 		/// Retrieve a Collection of DataObjects from database based on the Where Expression and Parameter Collection
@@ -106,7 +106,7 @@ namespace DOL.Database
 		/// <param name="whereExpression">Parametrized Where Expression</param>
 		/// <param name="parameter">Collection of Parameter</param>
 		/// <returns>Collection of Objects matching Parametrized Query</returns>
-		IEnumerable<TObject> SelectObjects<TObject>(string whereExpression, IEnumerable<KeyValuePair<string, object>> parameter)
+		IEnumerable<TObject> SelectObjects<TObject>(string whereExpression, IEnumerable<QueryParameter> parameter)
 			where TObject : DataObject;
 		/// <summary>
 		/// Retrieve a Collection of DataObjects from database based on the Where Expression and Parameter
@@ -114,7 +114,7 @@ namespace DOL.Database
 		/// <param name="whereExpression">Parametrized Where Expression</param>
 		/// <param name="param">Single Parameter</param>
 		/// <returns>Collection of Objects matching Parametrized Query</returns>
-		IEnumerable<TObject> SelectObjects<TObject>(string whereExpression, KeyValuePair<string, object> param)
+		IEnumerable<TObject> SelectObjects<TObject>(string whereExpression, QueryParameter param)
 			where TObject : DataObject;
 		#endregion
 		

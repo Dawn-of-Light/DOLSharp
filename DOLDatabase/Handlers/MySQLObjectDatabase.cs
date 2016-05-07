@@ -404,7 +404,7 @@ namespace DOL.Database.Handlers
 		/// <param name="parameters">Collection of Parameters for Single/Multiple Read</param>
 		/// <param name="Reader">Reader Method</param>
 		/// <param name="Isolation">Transaction Isolation</param>
-		protected override void ExecuteSelectImpl(string SQLCommand, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, Action<IDataReader> Reader, IsolationLevel Isolation)
+		protected override void ExecuteSelectImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, Action<IDataReader> Reader, IsolationLevel Isolation)
 		{
 			if (log.IsDebugEnabled)
 				log.DebugFormat("ExecuteSelectImpl: {0}", SQLCommand);
@@ -428,7 +428,7 @@ namespace DOL.Database.Handlers
 						    long start = (DateTime.UtcNow.Ticks / 10000);
 						    
 						    // Register Parameters
-						    foreach(var keys in parameters.First().Select(kv => kv.Key))
+						    foreach(var keys in parameters.First().Select(kv => kv.Name))
 						    	cmd.Parameters.Add(new MySqlParameter() { ParameterName = keys });
 						    
 						    foreach(var parameter in parameters.Skip(current))
@@ -483,7 +483,7 @@ namespace DOL.Database.Handlers
 		/// <param name="SQLCommand">Raw Command</param>
 		/// <param name="parameters">Collection of Parameters for Single/Multiple Read</param>
 		/// <returns>True if the Command succeeded</returns>
-		protected override IEnumerable<int> ExecuteNonQueryImpl(string SQLCommand, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters)
+		protected override IEnumerable<int> ExecuteNonQueryImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters)
 		{
 			if (log.IsDebugEnabled)
 				log.DebugFormat("ExecuteNonQueryImpl: {0}", SQLCommand);
@@ -506,7 +506,7 @@ namespace DOL.Database.Handlers
 						    long start = (DateTime.UtcNow.Ticks / 10000);
 						    
 						    // Register Parameters
-						    foreach(var keys in parameters.First().Select(kv => kv.Key))
+						    foreach(var keys in parameters.First().Select(kv => kv.Name))
 						    	cmd.Parameters.Add(new MySqlParameter() { ParameterName = keys });
 						    
 						    foreach(var parameter in parameters.Skip(current))
@@ -573,7 +573,7 @@ namespace DOL.Database.Handlers
 		/// <param name="parameters">Collection of Parameters for Single/Multiple Read</param>
 		/// <param name="retrieveLastInsertID">Return Last Insert ID of each Command instead of Scalar</param>
 		/// <returns>Objects Returned by Scalar</returns>
-		protected override object[] ExecuteScalarImpl(string SQLCommand, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, bool retrieveLastInsertID)
+		protected override object[] ExecuteScalarImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, bool retrieveLastInsertID)
 		{
 			if (log.IsDebugEnabled)
 				log.DebugFormat("ExecuteScalarImpl: {0}", SQLCommand);
@@ -597,7 +597,7 @@ namespace DOL.Database.Handlers
 						    long start = (DateTime.UtcNow.Ticks / 10000);
 
 						    // Register Parameters
-						    foreach(var keys in parameters.First().Select(kv => kv.Key))
+						    foreach(var keys in parameters.First().Select(kv => kv.Name))
 						    	cmd.Parameters.Add(new MySqlParameter() { ParameterName = keys });
 						    
 						    foreach(var parameter in parameters.Skip(current))

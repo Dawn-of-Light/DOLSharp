@@ -78,7 +78,7 @@ namespace DOL.Database
 				TableDatasets.Add(tableName, dataTableHandler);
 				// Init PreCache
 				if (dataTableHandler.UsesPreCaching)
-					SelectObjectsImpl(dataTableHandler, "", new [] { new KeyValuePair<string, object>[] { } }, Transaction.IsolationLevel.DEFAULT);
+					SelectObjectsImpl(dataTableHandler, "", new [] { new QueryParameter[] { } }, Transaction.IsolationLevel.DEFAULT);
 			}
 			catch (Exception e)
 			{
@@ -144,7 +144,7 @@ namespace DOL.Database
 					obj.ObjectId = IDGenerator.GenerateID();
 				
 				// Build Parameters
-				var parameters = objs.Select(obj => columns.Select(col => new KeyValuePair<string, object>(col.ParamName, col.Binding.GetValue(obj))));
+				var parameters = objs.Select(obj => columns.Select(col => new QueryParameter(col.ParamName, col.Binding.GetValue(obj))));
 				
 				// Primary Key Auto Inc Handler
 				if (usePrimaryAutoInc)
@@ -244,7 +244,7 @@ namespace DOL.Database
 				                            string.Join(" AND ", primary.Select(col => string.Format("{0} = {1}", col.ColumnName, col.ParamName))));
 				
 				var objs = dataObjects.ToArray();
-				var parameters = objs.Select(obj => columns.Concat(primary).Select(col => new KeyValuePair<string, object>(col.ParamName, col.Binding.GetValue(obj))));
+				var parameters = objs.Select(obj => columns.Concat(primary).Select(col => new QueryParameter(col.ParamName, col.Binding.GetValue(obj))));
 				
 				var affected = ExecuteNonQueryImpl(command, parameters);
 				var resultByObjects = affected.Select((result, index) => new { Result = result, DataObject = objs[index] });
@@ -303,7 +303,7 @@ namespace DOL.Database
 	                        string.Join(" AND ", primary.Select(col => string.Format("`{0}` = @{0}", col.ColumnName))));
 				
 				var objs = dataObjects.ToArray();
-				var parameters = objs.Select(obj => primary.Select(pk => new KeyValuePair<string, object>(string.Format("@{0}", pk.ColumnName), pk.GetValue(obj))));
+				var parameters = objs.Select(obj => primary.Select(pk => new QueryParameter(string.Format("@{0}", pk.ColumnName), pk.GetValue(obj))));
 				
 				var affected = ExecuteNonQueryImpl(command, parameters);
 				var resultByObjects = affected.Select((result, index) => new { Result = result, DataObject = objs[index] });
@@ -372,7 +372,7 @@ namespace DOL.Database
 		/// <param name="parameters">Parameters for filtering</param>
 		/// <param name="isolation">Isolation Level</param>
 		/// <returns>Collection of DataObjects Sets matching Parametrized Where Expression</returns>
-		protected override IEnumerable<IEnumerable<DataObject>> SelectObjectsImpl(DataTableHandler tableHandler, string whereExpression, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, Transaction.IsolationLevel isolation)
+		protected override IEnumerable<IEnumerable<DataObject>> SelectObjectsImpl(DataTableHandler tableHandler, string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters, Transaction.IsolationLevel isolation)
 		{
 			var columns = tableHandler.FieldElementBindings.ToArray();
 			
@@ -477,15 +477,15 @@ namespace DOL.Database
 		/// </summary>
 		/// <param name="parameter">Parameter collection for this Command</param>
 		/// <param name="dbParams">DbParameter Object to Fill</param>
-		protected virtual void FillSQLParameter(IEnumerable<KeyValuePair<string, object>> parameter, DbParameterCollection dbParams)
+		protected virtual void FillSQLParameter(IEnumerable<QueryParameter> parameter, DbParameterCollection dbParams)
 		{
 			// Specififc Handling for Char Cast from DB Integer
     		foreach(var param in parameter)
     		{
     			if (param.Value is char)
-    				dbParams[param.Key].Value = Convert.ToUInt16(param.Value);
+    				dbParams[param.Name].Value = Convert.ToUInt16(param.Value);
     			else
-    				dbParams[param.Key].Value = param.Value;
+    				dbParams[param.Name].Value = param.Value;
     		}
 		}
 		#endregion
@@ -514,7 +514,7 @@ namespace DOL.Database
 		/// <param name="Isolation">Transaction Isolation</param>
 		protected void ExecuteSelectImpl(string SQLCommand, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
 		{
-			ExecuteSelectImpl(SQLCommand, new [] { new KeyValuePair<string, object>[] { } }, Reader, Isolation);
+			ExecuteSelectImpl(SQLCommand, new [] { new QueryParameter[] { } }, Reader, Isolation);
 		}
 
 		/// <summary>
@@ -524,9 +524,9 @@ namespace DOL.Database
 		/// <param name="param">Parameter for Single Read</param>
 		/// <param name="Reader">Reader Method</param>
 		/// <param name="Isolation">Transaction Isolation</param>
-		protected void ExecuteSelectImpl(string SQLCommand, KeyValuePair<string, object> param, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
+		protected void ExecuteSelectImpl(string SQLCommand, QueryParameter param, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
 		{
-			ExecuteSelectImpl(SQLCommand, new [] { new KeyValuePair<string, object>[] { param } }, Reader, Isolation);
+			ExecuteSelectImpl(SQLCommand, new [] { new [] { param } }, Reader, Isolation);
 		}
 		
 		/// <summary>
@@ -536,7 +536,7 @@ namespace DOL.Database
 		/// <param name="parameter">Collection of Parameters for Single Read</param>
 		/// <param name="Reader">Reader Method</param>
 		/// <param name="Isolation">Transaction Isolation</param>
-		protected void ExecuteSelectImpl(string SQLCommand, IEnumerable<KeyValuePair<string, object>> parameter, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
+		protected void ExecuteSelectImpl(string SQLCommand, IEnumerable<QueryParameter> parameter, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation)
 		{
 			ExecuteSelectImpl(SQLCommand, new [] { parameter }, Reader, Isolation);
 		}
@@ -548,7 +548,7 @@ namespace DOL.Database
 		/// <param name="parameters">Collection of Parameters for Single/Multiple Read</param>
 		/// <param name="Reader">Reader Method</param>
 		/// <param name="Isolation">Transaction Isolation</param>
-		protected abstract void ExecuteSelectImpl(string SQLCommand, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation);
+		protected abstract void ExecuteSelectImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, Action<IDataReader> Reader, Transaction.IsolationLevel Isolation);
 		#endregion
 		
 		#region Non Query Implementation
@@ -578,7 +578,7 @@ namespace DOL.Database
 		/// <param name="SQLCommand">Raw Command</param>
 		protected int ExecuteNonQueryImpl(string SQLCommand)
 		{
-			return ExecuteNonQueryImpl(SQLCommand, new [] { new KeyValuePair<string, object>[] { }}).First();
+			return ExecuteNonQueryImpl(SQLCommand, new [] { new QueryParameter[] { }}).First();
 		}
 		
 		/// <summary>
@@ -586,9 +586,9 @@ namespace DOL.Database
 		/// </summary>
 		/// <param name="SQLCommand">Raw Command</param>
 		/// <param name="param">Parameter for Single Command</param>
-		protected int ExecuteNonQueryImpl(string SQLCommand, KeyValuePair<string, object> param)
+		protected int ExecuteNonQueryImpl(string SQLCommand, QueryParameter param)
 		{
-			return ExecuteNonQueryImpl(SQLCommand, new [] { new KeyValuePair<string, object>[] { param }}).First();
+			return ExecuteNonQueryImpl(SQLCommand, new [] { new [] { param }}).First();
 		}
 		
 		/// <summary>
@@ -596,7 +596,7 @@ namespace DOL.Database
 		/// </summary>
 		/// <param name="SQLCommand">Raw Command</param>
 		/// <param name="parameter">Collection of Parameters for Single Command</param>
-		protected int ExecuteNonQueryImpl(string SQLCommand, IEnumerable<KeyValuePair<string, object>> parameter)
+		protected int ExecuteNonQueryImpl(string SQLCommand, IEnumerable<QueryParameter> parameter)
 		{
 			return ExecuteNonQueryImpl(SQLCommand, new [] { parameter }).First();
 		}
@@ -607,7 +607,7 @@ namespace DOL.Database
 		/// <param name="SQLCommand">Raw Command</param>
 		/// <param name="parameters">Collection of Parameters for Single/Multiple Command</param>
 		/// <returns>True foreach Command that succeeded</returns>
-		protected abstract IEnumerable<int> ExecuteNonQueryImpl(string SQLCommand, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters);
+		protected abstract IEnumerable<int> ExecuteNonQueryImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters);
 		#endregion
 		
 		#region Scalar Implementation
@@ -619,7 +619,7 @@ namespace DOL.Database
 		/// <returns>Object Returned by Scalar</returns>
 		protected object ExecuteScalarImpl(string SQLCommand, bool retrieveLastInsertID = false)
 		{
-			return ExecuteScalarImpl(SQLCommand, new [] { new KeyValuePair<string, object>[] { }}, retrieveLastInsertID).First();
+			return ExecuteScalarImpl(SQLCommand, new [] { new QueryParameter[] { }}, retrieveLastInsertID).First();
 		}
 		
 		/// <summary>
@@ -629,9 +629,9 @@ namespace DOL.Database
 		/// <param name="param">Parameter for Single Command</param>
 		/// <param name="retrieveLastInsertID">Return Last Insert ID of each Command instead of Scalar</param>
 		/// <returns>Object Returned by Scalar</returns>
-		protected object ExecuteScalarImpl(string SQLCommand, KeyValuePair<string, object> param, bool retrieveLastInsertID = false)
+		protected object ExecuteScalarImpl(string SQLCommand, QueryParameter param, bool retrieveLastInsertID = false)
 		{
-			return ExecuteScalarImpl(SQLCommand, new [] { new KeyValuePair<string, object>[] { param }}, retrieveLastInsertID).First();
+			return ExecuteScalarImpl(SQLCommand, new [] { new [] { param }}, retrieveLastInsertID).First();
 		}
 		
 		/// <summary>
@@ -641,7 +641,7 @@ namespace DOL.Database
 		/// <param name="parameter">Collection of Parameters for Single Command</param>
 		/// <param name="retrieveLastInsertID">Return Last Insert ID of each Command instead of Scalar</param>
 		/// <returns>Object Returned by Scalar</returns>
-		protected object ExecuteScalarImpl(string SQLCommand, IEnumerable<KeyValuePair<string, object>> parameter, bool retrieveLastInsertID = false)
+		protected object ExecuteScalarImpl(string SQLCommand, IEnumerable<QueryParameter> parameter, bool retrieveLastInsertID = false)
 		{
 			return ExecuteScalarImpl(SQLCommand, new [] { parameter }, retrieveLastInsertID).First();
 		}
@@ -653,7 +653,7 @@ namespace DOL.Database
 		/// <param name="parameters">Collection of Parameters for Single/Multiple Read</param>
 		/// <param name="retrieveLastInsertID">Return Last Insert ID of each Command instead of Scalar</param>
 		/// <returns>Objects Returned by Scalar</returns>
-		protected abstract object[] ExecuteScalarImpl(string SQLCommand, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, bool retrieveLastInsertID);
+		protected abstract object[] ExecuteScalarImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, bool retrieveLastInsertID);
 		#endregion
 		
 		#region Specific

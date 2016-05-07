@@ -157,7 +157,9 @@ namespace DOL.Database.Tests
 			
 			Assert.IsEmpty(Database.SelectAllObjects<TestTableDifferentTypesV1>(), "Test Table TestTableDifferentTypesV1 should be empty to begin this tests.");
 			
-			var objs = new [] { "TestObj1", "TestObj2", "TestObj3" }.Select((ent, i) => new TestTableDifferentTypesV1 { StringValue = ent, IntValue = i, DateValue = DateTime.Now }).ToArray();
+			var datenow = DateTime.UtcNow;
+			var now = new DateTime(datenow.Year, datenow.Month, datenow.Day, datenow.Hour, datenow.Minute, datenow.Second);
+			var objs = new [] { "TestObj1", "TestObj2", "TestObj3" }.Select((ent, i) => new TestTableDifferentTypesV1 { StringValue = ent, IntValue = i, DateValue = now }).ToArray();
 			
 			Database.AddObject(objs);
 			

@@ -150,20 +150,20 @@ namespace DOL.Database.Handlers
 		/// </summary>
 		/// <param name="parameter">Parameter collection for this Command</param>
 		/// <param name="dbParams">DbParameter Object to Fill</param>
-		protected override void FillSQLParameter(IEnumerable<KeyValuePair<string, object>> parameter, DbParameterCollection dbParams)
+		protected override void FillSQLParameter(IEnumerable<QueryParameter> parameter, DbParameterCollection dbParams)
 		{
 			// Specififc Handling for Char Cast from DB Integer
 			// And Non Signed Integer Handling
     		foreach(var param in parameter)
     		{
     			if (param.Value is char)
-    				dbParams[param.Key].Value = Convert.ToUInt16(param.Value);
+    				dbParams[param.Name].Value = Convert.ToUInt16(param.Value);
     			else if (param.Value is uint)
-    				dbParams[param.Key].Value = Convert.ToInt64(param.Value);
+    				dbParams[param.Name].Value = Convert.ToInt64(param.Value);
     			else if (param.Value is ulong)
-    				dbParams[param.Key].Value = unchecked((long)Convert.ToUInt64(param.Value));
+    				dbParams[param.Name].Value = unchecked((long)Convert.ToUInt64(param.Value));
     			else
-    				dbParams[param.Key].Value = param.Value;
+    				dbParams[param.Name].Value = param.Value;
     		}
 		}
 		
@@ -220,6 +220,10 @@ namespace DOL.Database.Handlers
 			{
 				defaultDef = "NOT NULL";
 			}
+			
+			// Force Case Insensitive Text Field to Match MySQL Behavior 
+			if (bind.ValueType == typeof(string))
+				defaultDef = string.Format("{0} {1}", defaultDef, "COLLATE NOCASE");
 			
 			return string.Format("`{0}` {1} {2}", bind.ColumnName, type, defaultDef);
 		}
@@ -384,7 +388,7 @@ namespace DOL.Database.Handlers
 			try
 			{
 				ExecuteSelectImpl("SELECT name, sql FROM sqlite_master WHERE type == 'index' AND sql is not null AND tbl_name == @tableName",
-				                  new KeyValuePair<string, object>("@tableName", table.TableName),
+				                  new QueryParameter("@tableName", table.TableName),
 				                  reader =>
 				                  {
 				                  	while (reader.Read())
@@ -484,7 +488,7 @@ namespace DOL.Database.Handlers
 			try
 			{
 				ExecuteSelectImpl("SELECT name FROM sqlite_master WHERE type == 'index' AND sql is not null AND tbl_name == @tableName",
-				                  new KeyValuePair<string, object>("@tableName", table.TableName),
+				                  new QueryParameter("@tableName", table.TableName),
 				                  reader =>
 				                  {
 				                  	while (reader.Read())
@@ -593,7 +597,7 @@ namespace DOL.Database.Handlers
 		/// <param name="parameters">Collection of Parameters for Single/Multiple Read</param>
 		/// <param name="Reader">Reader Method</param>
 		/// <param name="Isolation">Transaction Isolation</param>
-		protected override void ExecuteSelectImpl(string SQLCommand, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, Action<IDataReader> Reader, IsolationLevel Isolation)
+		protected override void ExecuteSelectImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, Action<IDataReader> Reader, IsolationLevel Isolation)
 		{
 			if (log.IsDebugEnabled)
 				log.DebugFormat("ExecuteSelectImpl: {0}", SQLCommand);
@@ -616,7 +620,7 @@ namespace DOL.Database.Handlers
 					    	long start = (DateTime.UtcNow.Ticks / 10000);
 					    	
 					    	// Register Parameter
-					    	foreach(var keys in parameters.First().Select(kv => kv.Key))
+					    	foreach(var keys in parameters.First().Select(kv => kv.Name))
 					    		cmd.Parameters.Add(new SQLiteParameter(keys));
 					    	
 					    	foreach(var parameter in parameters.Skip(current))
@@ -675,7 +679,7 @@ namespace DOL.Database.Handlers
 		/// <param name="SQLCommand">Raw Command</param>
 		/// <param name="parameters">Collection of Parameters for Single/Multiple Read</param>
 		/// <returns>True if the Command succeeded</returns>
-		protected override IEnumerable<int> ExecuteNonQueryImpl(string SQLCommand, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters)
+		protected override IEnumerable<int> ExecuteNonQueryImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters)
 		{
 			if (log.IsDebugEnabled)
 				log.DebugFormat("ExecuteNonQueryImpl: {0}", SQLCommand);
@@ -699,7 +703,7 @@ namespace DOL.Database.Handlers
 					    	long start = (DateTime.UtcNow.Ticks / 10000);
 						    
 					    	// Register Parameter
-					    	foreach(var keys in parameters.First().Select(kv => kv.Key))
+					    	foreach(var keys in parameters.First().Select(kv => kv.Name))
 					    		cmd.Parameters.Add(new SQLiteParameter(keys));
 					    	
 					    	foreach(var parameter in parameters.Skip(current))
@@ -766,7 +770,7 @@ namespace DOL.Database.Handlers
 		/// <param name="parameters">Collection of Parameters for Single/Multiple Read</param>
 		/// <param name="retrieveLastInsertID">Return Last Insert ID of each Command instead of Scalar</param>
 		/// <returns>Objects Returned by Scalar</returns>
-		protected override object[] ExecuteScalarImpl(string SQLCommand, IEnumerable<IEnumerable<KeyValuePair<string, object>>> parameters, bool retrieveLastInsertID)
+		protected override object[] ExecuteScalarImpl(string SQLCommand, IEnumerable<IEnumerable<QueryParameter>> parameters, bool retrieveLastInsertID)
 		{
 			if (log.IsDebugEnabled)
 				log.DebugFormat("ExecuteScalarImpl: {0}", SQLCommand);
@@ -789,7 +793,7 @@ namespace DOL.Database.Handlers
 						    long start = (DateTime.UtcNow.Ticks / 10000);
 
 						    // Register Parameter
-					    	foreach(var keys in parameters.First().Select(kv => kv.Key))
+					    	foreach(var keys in parameters.First().Select(kv => kv.Name))
 					    		cmd.Parameters.Add(new SQLiteParameter(keys));
 					    	
 					    	foreach(var parameter in parameters.Skip(current))

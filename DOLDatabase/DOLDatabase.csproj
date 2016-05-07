@@ -86,7 +86,8 @@
     </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
-    </Reference>  </ItemGroup>
+    </Reference>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -110,6 +111,7 @@
     </Compile>
     <Compile Include="Connection\TableRowBindind.cs" />
     <Compile Include="CustomParam.cs" />
+    <Compile Include="DatabaseParameter.cs" />
     <Compile Include="ElementBinding.cs" />
     <Compile Include="Handlers\SQLiteObjectDatabase.cs" />
     <Compile Include="LanguageDataObject.cs" />
