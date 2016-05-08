@@ -19,13 +19,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Linq;
 
 using DOL.Database;
-using DOL.Database.Attributes;
 using DOL.GS.DatabaseUpdate;
 using DOL.GS.ServerProperties;
 
@@ -83,12 +83,12 @@ namespace DOL.GS.DatabaseUpdate
 				log.Info("Loading Auto XML Database Updates... (this can take a few minutes)");
 			try
 			{
-				string insertdir = Path.IsPathRooted(XML_LOAD_INSERT_DIRECTORY) ? XML_LOAD_INSERT_DIRECTORY : string.Format("{0}{1}scripts{1}{2}", GameServer.Instance.Configuration.RootDirectory, Path.DirectorySeparatorChar, XML_LOAD_INSERT_DIRECTORY);
+				var insertdir = Path.IsPathRooted(XML_LOAD_INSERT_DIRECTORY) ? XML_LOAD_INSERT_DIRECTORY : string.Format("{0}{1}scripts{1}{2}", GameServer.Instance.Configuration.RootDirectory, Path.DirectorySeparatorChar, XML_LOAD_INSERT_DIRECTORY);
 					
 				if (!Directory.Exists(insertdir))
 					Directory.CreateDirectory(insertdir);
 				
-				string replacedir = Path.IsPathRooted(XML_LOAD_REPLACE_DIRECTORY) ? XML_LOAD_REPLACE_DIRECTORY : string.Format("{0}{1}scripts{1}{2}", GameServer.Instance.Configuration.RootDirectory, Path.DirectorySeparatorChar, XML_LOAD_REPLACE_DIRECTORY);
+				var replacedir = Path.IsPathRooted(XML_LOAD_REPLACE_DIRECTORY) ? XML_LOAD_REPLACE_DIRECTORY : string.Format("{0}{1}scripts{1}{2}", GameServer.Instance.Configuration.RootDirectory, Path.DirectorySeparatorChar, XML_LOAD_REPLACE_DIRECTORY);
 					
 				if (!Directory.Exists(replacedir))
 					Directory.CreateDirectory(replacedir);
@@ -117,15 +117,15 @@ namespace DOL.GS.DatabaseUpdate
 		/// <param name="replace">Replace mode if True</param>
 		private void ApplyXMLChangeForDirectory(IEnumerable<AutoXMLUpdateRecord> records, string directory, bool replace)
 		{
-			IDictionary<FileInfo, string> inserts = GetXMLPackagesForUpdate(directory);
+			var inserts = GetXMLPackagesForUpdate(directory);
 			
 			// List all file, 
 			foreach (var entry in inserts)
 			{
-				string relativeID =  GetRelativePath(entry.Key.FullName, new DirectoryInfo(directory).Parent.FullName);
+				var relativeID =  GetRelativePath(entry.Key.FullName, new DirectoryInfo(directory).Parent.FullName);
 				
-				AutoXMLUpdateRecord rec = GetAutoXMLUpdateRecordFromCollection(records, relativeID, entry.Value);
-				bool wasNull = rec.FileHash == null;
+				var rec = GetAutoXMLUpdateRecordFromCollection(records, relativeID, entry.Value);
+				var wasNull = rec.FileHash == null;
 				
 				// New or Outdated File - need to be applied !				
 				if (wasNull || !rec.FileHash.Equals(entry.Value))
@@ -159,18 +159,18 @@ namespace DOL.GS.DatabaseUpdate
 		/// <returns></returns>
 		private IDictionary<FileInfo, string> GetXMLPackagesForUpdate(string rootPath)
 		{
-			Dictionary<FileInfo, string> result = new Dictionary<FileInfo, string>();
+			var result = new Dictionary<FileInfo, string>();
 			try
 			{
-				DirectoryInfo pathInsert = new DirectoryInfo(rootPath);
+				var pathInsert = new DirectoryInfo(rootPath);
 				
-				foreach(FileInfo fi in pathInsert.GetFiles("*.xml", SearchOption.AllDirectories))
+				foreach(var fi in pathInsert.GetFiles("*.xml", SearchOption.AllDirectories))
 				{
 					string hashStr = null;
-					using (FileStream stream = fi.OpenRead())
+					using (var stream = fi.OpenRead())
 				    {
-				        SHA256Managed sha = new SHA256Managed();
-				        byte[] hash = sha.ComputeHash(stream);
+				        var sha = new SHA256Managed();
+				        var hash = sha.ComputeHash(stream);
 				        hashStr = BitConverter.ToString(hash).Replace("-", String.Empty);
 				    }
 					result.Add(fi, hashStr);
@@ -194,75 +194,81 @@ namespace DOL.GS.DatabaseUpdate
 		private bool CheckXMLPackageAndApply(FileInfo xml, bool replace)
 		{
 			
-			string packageName = string.Format("{0}{1}{2}", xml.Directory.Name, Path.DirectorySeparatorChar, xml.Name);
+			var packageName = string.Format("{0}{1}{2}", xml.Directory.Name, Path.DirectorySeparatorChar, xml.Name);
 			
 			if (log.IsInfoEnabled)
-			{
 				log.InfoFormat("Auto Loading XML File {0} into Database (Mode:{1})", packageName, replace ? "Replace" : "Insert");
-			}
 			
-			bool result = true;
+			var result = true;
 			
 			try
 			{
 				//Load the XML File
-				DataObject[] xmlTable = LoaderUnloaderXML.LoadXMLTableFromFile(xml);
+				var xmlTable = LoaderUnloaderXML.LoadXMLTableFromFile(xml);
 				if (xmlTable.Length > 0)
 				{
 					// Guess Object Type
-					Type xmlType = xmlTable.First().GetType();
+					var xmlType = xmlTable.First().GetType();
+					var tableHandler = new DataTableHandler(xmlType);
 					
 					// Find unique Fields
-					MemberInfo primaryKey;
-					IList<MemberInfo> uniqueMember = LoaderUnloaderXML.GetUniqueMembers(xmlType, out primaryKey);
+					var uniqueMember = DatabaseUtils.GetUniqueMembers(xmlType);
 					
 					// Get all object "Method" Through Reflection
-					MethodInfo classMethod = GameServer.Database.GetType().GetMethod("SelectAllObjects", Type.EmptyTypes);
-					MethodInfo genericMethod = classMethod.MakeGenericMethod(xmlType);
-					IEnumerable existingObjects = (IEnumerable)genericMethod.Invoke(GameServer.Database, new object[]{});
+					var classMethod = GameServer.Database.GetType().GetMethod("SelectAllObjects", Type.EmptyTypes);
+					var genericMethod = classMethod.MakeGenericMethod(xmlType);
+					var existingObjects = ((IEnumerable)genericMethod.Invoke(GameServer.Database, new object[]{})).Cast<DataObject>().ToArray();
+					
+					// Store Object to Alter
+					var toDelete = new ConcurrentBag<DataObject>();
+					var toAdd = new ConcurrentBag<DataObject>();
 					
 					// Check if an Object already exists
-					xmlTable.AsParallel().ForAll(obj =>
-					                             {
-
-						DataObject copy = existingObjects.Cast<DataObject>()
-							// Check all Unique Fields !
-							.Where(d => {
-							       	bool exists = false;
-							       	
-							       	foreach (MemberInfo objProp in uniqueMember)
-							       	{
-							       		if (objProp is PropertyInfo)
-							       			exists |= ((PropertyInfo)objProp).GetValue(obj, null).Equals(((PropertyInfo)objProp).GetValue(d, null));
-							       		else if (objProp is FieldInfo)
-							       			exists |= ((FieldInfo)objProp).GetValue(obj).Equals(((FieldInfo)objProp).GetValue(d));
-							       	}
-							       	
-							       	return exists;
-							       }).FirstOrDefault();
-						
-						// Store previous Add Flag
-						bool previousAllow = obj.AllowAdd;
-						obj.AllowAdd = true;
-						// Check if we have duplicate
-						if (copy != null)
-						{
-							if (replace)
-							{
-								// Replace
-								GameServer.Database.DeleteObject(copy);
-								GameServer.Database.AddObject(obj);
-							}
-							
-							// Silently ignore inserts...
-						}
-						else
-						{
-							// Insert
-							GameServer.Database.AddObject(obj);
-						}
-						obj.AllowAdd = previousAllow;
+					xmlTable.AsParallel().ForAll(obj => {
+					                             	// Check if Exists Compare Unique and Non-Generated Primary Keys
+					                             	var exists = existingObjects
+					                             		.FirstOrDefault(entry => uniqueMember
+					                             		                .Any(constraint => constraint
+					                             		                     .All(bind => bind.ValueType == typeof(string)
+					                             		                          ? bind.GetValue(entry).ToString().Equals(bind.GetValue(obj).ToString(), StringComparison.OrdinalIgnoreCase)
+					                             		                          : bind.GetValue(entry) == bind.GetValue(obj)))
+					                             		               );
+					                             	
+					                             	if (exists != null)
+					                             	{
+					                             		if (replace)
+					                             		{
+					                             			// Delete First
+					                             			toDelete.Add(exists);
+					                             			toAdd.Add(obj);
+					                             		}
+					                             		// Silently ignore duplicate inserts only...
+					                             	}
+					                             	else
+					                             	{
+					                             		toAdd.Add(obj);
+					                             	}
 					                             });
+					// Delete First
+					foreach (var obj in toDelete)
+						obj.AllowDelete = true;
+					
+					GameServer.Database.DeleteObject(toDelete);
+					
+					// Then Insert
+					var previousAllowAdd = toAdd.Select(obj => obj.AllowAdd).ToArray();
+					foreach (var obj in toAdd)
+						obj.AllowAdd = true;
+					
+					GameServer.Database.AddObject(toAdd);
+					
+					// Reset Allow Add Flag
+					var current = 0;
+					foreach (var obj in toAdd)
+					{
+						obj.AllowAdd = previousAllowAdd[current];
+						current++;
+					}
 				}
 				else
 				{
@@ -289,15 +295,15 @@ namespace DOL.GS.DatabaseUpdate
 		/// <returns></returns>
 		private string GetRelativePath(string filespec, string folder)
 		{
-			Uri pathUri = new Uri(filespec);
+			var pathUri = new Uri(filespec);
 			
 			// Folders must end in a slash
-			if (!folder.EndsWith(Path.DirectorySeparatorChar.ToString()))
+			if (!folder.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.CurrentCulture))
 			{
 				folder += Path.DirectorySeparatorChar;
 			}
 			
-			Uri folderUri = new Uri(folder);
+			var folderUri = new Uri(folder);
 			return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString());
 		}
 		
@@ -310,7 +316,7 @@ namespace DOL.GS.DatabaseUpdate
 		/// <returns></returns>
 		private AutoXMLUpdateRecord GetAutoXMLUpdateRecordFromCollection(IEnumerable<AutoXMLUpdateRecord> records, string relativeID, string hash)
 		{
-			AutoXMLUpdateRecord previous = records.Where(r => r.FilePackage.Equals(relativeID)).FirstOrDefault();
+			var previous = records.FirstOrDefault(r => r.FilePackage.Equals(relativeID));
 			
 			if (previous == null)
 			{

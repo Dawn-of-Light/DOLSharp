@@ -908,5 +908,7 @@ namespace DOL.Database.Tests
 		}
 		
 		// TODO Test relations with precached tables
+		
+		// TODO Update Cache Objects
 	}
 }

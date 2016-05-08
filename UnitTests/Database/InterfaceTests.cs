@@ -1116,5 +1116,95 @@ namespace DOL.Database.Tests
 		}
 		#endregion
 		
+		#region Test Count Objects
+		/// <summary>
+		/// Test IObjectDatabase.GetObjectCount`TObject
+		/// </summary>
+		[Test]
+		public void TestCountObject()
+		{
+			Database.RegisterDataObject(typeof(TestTable));
+			
+			Database.DeleteObject(Database.SelectAllObjects<TestTable>());
+			
+			var count = Database.GetObjectCount<TestTable>();
+			
+			Assert.AreEqual(0, count, "Test Table shouldn't Have any Object after deleting all records...");
+			
+			var objs = Enumerable.Range(0, 10).Select(i => new TestTable { TestField = string.Format("Count Object Test #{0}", i) });
+			
+			Database.AddObject(objs);
+			
+			var newCount = Database.GetObjectCount<TestTable>();
+			
+			Assert.AreEqual(10, newCount, "Test Table should return same object count as added collection...");
+			
+			var whereCount = Database.GetObjectCount<TestTable>("1");
+			
+			Assert.AreEqual(10, whereCount, "Test Table should return same object count as added collection...");
+			
+			var filterCount = Database.GetObjectCount<TestTable>("`TestField` LIKE '%1'");
+			
+			Assert.AreEqual(1, filterCount, "Test Table should return same object count as filtered collection...");
+		}
+		
+		/// <summary>
+		/// Test IObjectDatabase.GetObjectCount`TObject
+		/// with null where clause
+		/// </summary>
+		[Test]
+		public void TestCountObjectWithNull()
+		{
+			Database.RegisterDataObject(typeof(TestTable));
+			
+			Database.DeleteObject(Database.SelectAllObjects<TestTable>());
+			
+			var count = Database.GetObjectCount<TestTable>(null);
+			
+			Assert.AreEqual(0, count, "Test Table shouldn't Have any Object after deleting all records...");
+			
+			var objs = Enumerable.Range(0, 10).Select(i => new TestTable { TestField = string.Format("Count Object Test #{0}", i) });
+			
+			Database.AddObject(objs);
+			
+			var newCount = Database.GetObjectCount<TestTable>(null);
+			
+			Assert.AreEqual(10, newCount, "Test Table should return same object count as added collection...");
+		}
+		
+		/// <summary>
+		/// Test IObjectDatabase.GetObjectCount`TObject
+		/// with non registered object
+		/// </summary>
+		[Test]
+		public void TestCountObjectWithNotRegistered()
+		{
+			Assert.Throws(typeof(DatabaseException), () => Database.GetObjectCount<TableNotRegistered>(), "Get Object Count should throw exception for unregistered tables...");
+			Assert.Throws(typeof(DatabaseException), () => Database.GetObjectCount<TableNotRegistered>("1"), "Get Object Count should throw exception for unregistered tables...");
+		}
+		#endregion
+		
+		#region Test Escape
+		/// <summary>
+		/// Test IObjectDatabase.Escape(string)
+		/// </summary>
+		[Test]
+		public virtual void TestEscape()
+		{
+			var test = "'";
+			
+			Assert.AreEqual("''", Database.Escape(test), "Sqlite String Escape Test Failure...");
+		}
+		
+		/// <summary>
+		/// Test IObjectDatabase.Escape(string)
+		/// With null Value
+		/// </summary>
+		[Test]
+		public virtual void TestEscapeWithNull()
+		{
+			Assert.Throws(typeof(NullReferenceException), () => Database.Escape(null), "SQL Escape string with Null value should throw Null Reference Exception...");
+		}
+		#endregion
 	}
 }

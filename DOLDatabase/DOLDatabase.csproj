@@ -112,6 +112,7 @@
     <Compile Include="Connection\TableRowBindind.cs" />
     <Compile Include="CustomParam.cs" />
     <Compile Include="DatabaseParameter.cs" />
+    <Compile Include="DatabaseUtils.cs" />
     <Compile Include="ElementBinding.cs" />
     <Compile Include="Handlers\SQLiteObjectDatabase.cs" />
     <Compile Include="LanguageDataObject.cs" />
