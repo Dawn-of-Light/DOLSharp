@@ -265,7 +265,12 @@ namespace DOL.Database
 					else
 					{
 						if (Log.IsErrorEnabled)
-							Log.ErrorFormat("Error saving data object in table {0} Object = {1} --- keyvalue changed? {2}\n{3}", tableHandler.TableName, result.DataObject, command, Environment.StackTrace);
+						{
+							if (result.Result < 0)
+								Log.ErrorFormat("Error saving data object in table {0} Object = {1} --- constraint failed? {2}", tableHandler.TableName, result.DataObject, command);
+							else
+								Log.ErrorFormat("Error saving data object in table {0} Object = {1} --- keyvalue changed? {2}\n{3}", tableHandler.TableName, result.DataObject, command, Environment.StackTrace);
+						}
 						success.Add(false);
 					}
 				}
@@ -561,7 +566,7 @@ namespace DOL.Database
 		{
 			try
 			{
-				return ExecuteNonQueryImpl(rawQuery) > 1;
+				return ExecuteNonQueryImpl(rawQuery) > 0;
 			}
 			catch (Exception e)
 			{

@@ -461,9 +461,7 @@ namespace DOL.Database.Handlers
 				log.DebugFormat("Altering Table Indexes {0} this could take a few minutes...", table.TableName);
 			
 			foreach (var query in alterQueries)
-			{
 				ExecuteNonQueryImpl(query);
-			}
 		}
 		
 		/// <summary>
@@ -648,7 +646,7 @@ namespace DOL.Database.Handlers
 					    
 						    if (log.IsDebugEnabled)
 								log.DebugFormat("ExecuteSelectImpl: SQL Select ({0}) exec time {1}ms", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start));
-							else if ((DateTime.UtcNow.Ticks / 10000) - start > 500 && log.IsWarnEnabled)
+							else if (log.IsWarnEnabled && (DateTime.UtcNow.Ticks / 10000) - start > 500)
 								log.WarnFormat("ExecuteSelectImpl: SQL Select ({0}) took {1}ms!\n{2}", Isolation, ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
 						
 						}
@@ -709,7 +707,7 @@ namespace DOL.Database.Handlers
 					    	foreach(var parameter in parameters.Skip(current))
 					    	{
 					    		FillSQLParameter(parameter, cmd.Parameters);
-					    		var result = 0;
+					    		var result = -1;
 					    		try
 					    		{
 							    	result = cmd.ExecuteNonQuery();
@@ -730,14 +728,14 @@ namespace DOL.Database.Handlers
 					    		}
 							    current++;
 							    
-							    if (result < 1 && log.IsWarnEnabled)
-							    	log.WarnFormat("ExecuteNonQueryImpl: No Change for raw query \"{0}\"", SQLCommand);
+							    if (log.IsDebugEnabled && result < 1)
+							    	log.DebugFormat("ExecuteNonQueryImpl: No Change for raw query \"{0}\"", SQLCommand);
 					    	}
 						    
 						    
 						    if (log.IsDebugEnabled)
 								log.DebugFormat("ExecuteNonQueryImpl: SQL NonQuery exec time {0}ms", ((DateTime.UtcNow.Ticks / 10000) - start));
-							else if ((DateTime.UtcNow.Ticks / 10000) - start > 500 && log.IsWarnEnabled)
+							else if (log.IsWarnEnabled && (DateTime.UtcNow.Ticks / 10000) - start > 500)
 								log.WarnFormat("ExecuteNonQueryImpl: SQL NonQuery took {0}ms!\n{1}", ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
 						}
 						catch (Exception e)
@@ -821,7 +819,7 @@ namespace DOL.Database.Handlers
 								    		{
 								    			if (HandleSQLException(sqle))
 								    			{
-			    									obj.Add(0);
+			    									obj.Add(-1);
 			    									if (log.IsErrorEnabled)
 														log.ErrorFormat("ExecuteScalarImpl: Constraint Violation for command \"{0}\"\n{1}", SQLCommand, sqle);
 								    			}
@@ -851,7 +849,7 @@ namespace DOL.Database.Handlers
 
 					    	if (log.IsDebugEnabled)
 								log.DebugFormat("ExecuteScalarImpl: SQL ScalarQuery exec time {0}ms", ((DateTime.UtcNow.Ticks / 10000) - start));
-							else if ((DateTime.UtcNow.Ticks / 10000) - start > 500 && log.IsWarnEnabled)
+							else if (log.IsWarnEnabled && (DateTime.UtcNow.Ticks / 10000) - start > 500)
 								log.WarnFormat("ExecuteScalarImpl: SQL ScalarQuery took {0}ms!\n{1}", ((DateTime.UtcNow.Ticks / 10000) - start), SQLCommand);
 						}
 						catch (Exception e)

@@ -94,7 +94,7 @@ namespace DOL.GS.DatabaseUpdate
 					Directory.CreateDirectory(replacedir);
 
 				// Records of Played Script
-				IList<AutoXMLUpdateRecord> records = GameServer.Database.SelectAllObjects<AutoXMLUpdateRecord>();
+				var records = GameServer.Database.SelectAllObjects<AutoXMLUpdateRecord>();
 				
 				// INSERTS
 				ApplyXMLChangeForDirectory(records, insertdir, false);
