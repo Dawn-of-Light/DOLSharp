@@ -184,5 +184,64 @@ namespace DOL.Database.Tests
 			CollectionAssert.AreEquivalent(objs.Select(obj => obj.IntValue), newerObjs.Select(obj => obj.IntValue), "Test Table Migration to TestTableDifferentTypesV1 should retrieve similar values that created ones...");
 			CollectionAssert.AreEquivalent(objs.Select(obj => obj.DateValue), newerObjs.Select(obj => obj.DateValue), "Test Table Migration to TestTableDifferentTypesV1 should retrieve similar values that created ones...");
 		}
+		
+		/// <summary>
+		/// Test Precached Table With Cache Update
+		/// </summary>
+		[Test]
+		public void TestTablePrecachedUpdateCache()
+		{
+			Database.RegisterDataObject(typeof(TestTablePrecachedPrimaryKey));
+			Database.DeleteObject(Database.SelectAllObjects<TestTablePrecachedPrimaryKey>());
+			
+			Assert.IsEmpty(Database.SelectAllObjects<TestTablePrecachedPrimaryKey>(), "Test Precached Table with Update Cache need Empty table to begin tests.");
+			
+			// Get a new Database Object to Trigger Cache Invalidation
+			var DatabaseV2 = GetDatabaseV2;
+			DatabaseV2.RegisterDataObject(typeof(TestTablePrecachedPrimaryKey));
+			
+			
+			// Objects
+			var objs = Enumerable.Range(0, 10).Select(i => new TestTablePrecachedPrimaryKey { PrimaryKey = i.ToString(), TestField = string.Format("Test update cache #{0}", i), PrecachedValue = string.Format("Cache value for update {0}", i) } );
+			
+			var inserted = Database.AddObject(objs);
+			
+			Assert.IsTrue(inserted, "Test Precached Table with Update Cache could not insert test objects");
+			
+			var retrieve = DatabaseV2.SelectAllObjects<TestTablePrecachedPrimaryKey>();
+			
+			CollectionAssert.AreEquivalent(objs.Select(obj => obj.PrimaryKey), retrieve.Select(obj => obj.PrimaryKey), "Test Precached Table with Update Cache should return similar objets than created ones.");
+			CollectionAssert.AreEquivalent(objs.Select(obj => obj.TestField), retrieve.Select(obj => obj.TestField), "Test Precached Table with Update Cache should return similar objets than created ones.");
+			CollectionAssert.AreEquivalent(objs.Select(obj => obj.PrecachedValue), retrieve.Select(obj => obj.PrecachedValue), "Test Precached Table with Update Cache should return similar objets than created ones.");
+			
+			// Modify
+			foreach (var obj in retrieve)
+			{
+				obj.TestField += " changed !";
+				obj.PrecachedValue += " modified !";
+			}
+			
+			var saved = DatabaseV2.SaveObject(retrieve);
+			
+			Assert.IsTrue(saved, "Test Precached Table with Update Cache could not modify objects in database.");
+			
+			var retrievecached = Database.FindObjectsByKey<TestTablePrecachedPrimaryKey>(objs.Select(obj => obj.PrimaryKey));
+			
+			CollectionAssert.AreEquivalent(objs.Select(obj => obj.PrimaryKey), retrievecached.Select(obj => obj.PrimaryKey), "Test Precached Table with Update Cache should return similar cached objets than created ones.");
+			CollectionAssert.AreEquivalent(objs.Select(obj => obj.TestField), retrievecached.Select(obj => obj.TestField), "Test Precached Table with Update Cache should return similar cached objets than created ones.");
+			CollectionAssert.AreEquivalent(objs.Select(obj => obj.PrecachedValue), retrievecached.Select(obj => obj.PrecachedValue), "Test Precached Table with Update Cache should return similar cached objets than created ones.");
+			
+			// update
+			var updated = Database.UpdateInCache<TestTablePrecachedPrimaryKey>(objs.Select(obj => obj.PrimaryKey));
+			
+			Assert.IsTrue(updated, "Test Precached Table with Update Cache could not update objects cache from database.");
+			
+			var retrieveupdated = Database.FindObjectsByKey<TestTablePrecachedPrimaryKey>(objs.Select(obj => obj.PrimaryKey));
+			
+			CollectionAssert.AreEquivalent(retrieve.Select(obj => obj.PrimaryKey), retrieveupdated.Select(obj => obj.PrimaryKey), "Test Precached Table with Update Cache should return similar updated objets than modified ones.");
+			CollectionAssert.AreEquivalent(retrieve.Select(obj => obj.TestField), retrieveupdated.Select(obj => obj.TestField), "Test Precached Table with Update Cache should return similar updated objets than modified ones.");
+			CollectionAssert.AreEquivalent(retrieve.Select(obj => obj.PrecachedValue), retrieveupdated.Select(obj => obj.PrecachedValue), "Test Precached Table with Update Cache should return similar updated objets than modified ones.");
+		}
+
 	}
 }

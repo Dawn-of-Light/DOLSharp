@@ -160,7 +160,7 @@ namespace DOL.Database.Tests
 	}
 	
 	/// <summary>
-	/// Basic Table with Relations and no AutoLoad
+	/// Basic Table with Relations and no AutoDelete
 	/// </summary>
 	[DataTable(TableName = "Test_TableRelationsNoAutodelete")]
 	public class TestTableRelationsWithNoAutoDelete : TestTable
@@ -171,6 +171,31 @@ namespace DOL.Database.Tests
 		public TestTableRelationsWithNoAutoDelete() { }
 	}
 	
+	/// <summary>
+	/// Basic Table with Relations with Precache
+	/// </summary>
+	[DataTable(TableName = "Test_TableRelationsPrecache")]
+	public class TestTableRelationsWithPrecache : TestTable
+	{
+		[Relation(LocalField = "Test_TableRelationsPrecache_ID", RemoteField = "ForeignTestField", AutoLoad = true, AutoDelete = true)]
+		public TestTableRelationsEntriesPrecached[] Entries;
+		
+		public TestTableRelationsWithPrecache() { }
+	}
+	
+	/// <summary>
+	/// Basic Table with Relations Entries Precached
+	/// </summary>
+	[DataTable(TableName = "Test_TableRelationsEntriesPrecached", PreCache = true)]
+	public class TestTableRelationsEntriesPrecached : TestTable
+	{
+		string m_foreignTestField;
+		[DataElement(Varchar = 255, Index = true)]
+		public string ForeignTestField { get { return m_foreignTestField; } set { Dirty = true; m_foreignTestField = value; } }
+		
+		public TestTableRelationsEntriesPrecached() { }
+	}
+
 	/// <summary>
 	/// Basic Table with ReadOnly field
 	/// </summary>

@@ -907,8 +907,52 @@ namespace DOL.Database.Tests
 			Assert.AreEqual(obj.PrimaryKey, retrieveCase.PrimaryKey, "Test Table Precached With Primary Key should retrieve Object with similar primary key.");
 		}
 		
-		// TODO Test relations with precached tables
-		
-		// TODO Update Cache Objects
+		/// <summary>
+		/// Test Table with Relations to a Precached Table
+		/// Try Fill Object Relation with Precached Where Clause
+		/// </summary>
+		[Test]
+		public void TestTableRelationsWithPrecached()
+		{
+			Database.RegisterDataObject(typeof(TestTableRelationsWithPrecache));
+			Database.RegisterDataObject(typeof(TestTableRelationsEntriesPrecached));
+			
+			// Cleanup
+			Database.DeleteObject(Database.SelectAllObjects<TestTableRelationsWithPrecache>());
+			Database.DeleteObject(Database.SelectAllObjects<TestTableRelationsEntriesPrecached>());
+			
+			Assert.IsEmpty(Database.SelectAllObjects<TestTableRelationsWithPrecache>(), "Relations Test With Precache should begin with Empty Table.");
+			Assert.IsEmpty(Database.SelectAllObjects<TestTableRelationsEntriesPrecached>(), "Relations Test With Precache should begin with Empty Table.");
+			
+			// Objects
+			var objs = Enumerable.Range(0, 10).Select(i => new TestTableRelationsWithPrecache { TestField = string.Format("Test Table Relation with Precache #{0}", i) }).ToArray();
+			
+			foreach (var obj in objs)
+				obj.Entries = Enumerable.Range(0, 5).Select(i => new TestTableRelationsEntriesPrecached { ForeignTestField = obj.ObjectId, TestField = string.Format("Test Table Relation Entry with Precache #{0}", i) }).ToArray();
+			
+			var added = Database.AddObject(objs);
+			
+			Assert.IsTrue(added, "Relations Test With Precache could not insert test objects.");
+			
+			// Select
+			var retrieve = Database.SelectAllObjects<TestTableRelationsWithPrecache>();
+			
+			CollectionAssert.AreEquivalent(objs.Select(obj => obj.ObjectId), retrieve.Select(obj => obj.ObjectId), "Relations Test With Precache should retrieve object similar to created ones.");
+			CollectionAssert.AreEquivalent(objs.Select(obj => obj.TestField), retrieve.Select(obj => obj.TestField), "Relations Test With Precache should retrieve object similar to created ones.");
+			
+			foreach (var ret in retrieve)
+			{
+				CollectionAssert.AreEquivalent(objs.FirstOrDefault(obj => obj.ObjectId.Equals(ret.ObjectId)).Entries.Select(obj => obj.ObjectId), ret.Entries.Select(obj => obj.ObjectId), "Relations Test With Precache should retrieve object entries similar to created ones.");
+				CollectionAssert.AreEquivalent(objs.FirstOrDefault(obj => obj.ObjectId.Equals(ret.ObjectId)).Entries.Select(obj => obj.TestField), ret.Entries.Select(obj => obj.TestField), "Relations Test With Precache should retrieve object entries similar to created ones.");
+			}
+			
+			Database.DeleteObject(Database.SelectAllObjects<TestTableRelationsEntriesPrecached>());
+			Assert.IsEmpty(Database.SelectAllObjects<TestTableRelationsEntriesPrecached>(), "Relations Test With Precache should have Empty Entry Table for cache test.");
+			
+			Database.FillObjectRelations(objs);
+			
+			foreach (var obj in objs)
+				Assert.IsEmpty(obj.Entries, "Relation Test With Precache should have objects with empty relations after entry deletion.");		
+		}
 	}
 }
