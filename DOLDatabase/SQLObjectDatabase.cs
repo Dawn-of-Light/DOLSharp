@@ -76,9 +76,16 @@ namespace DOL.Database
 				}
 				
 				TableDatasets.Add(tableName, dataTableHandler);
+				
 				// Init PreCache
 				if (dataTableHandler.UsesPreCaching)
-					SelectObjectsImpl(dataTableHandler, "", new [] { new QueryParameter[] { } }, Transaction.IsolationLevel.DEFAULT);
+				{
+					var primary = dataTableHandler.FieldElementBindings.Single(col => col.PrimaryKey != null);
+					var objects = SelectObjectsImpl(dataTableHandler, "", new [] { new QueryParameter[] { } }, Transaction.IsolationLevel.DEFAULT).First();
+					
+					foreach (var obj in objects)
+						dataTableHandler.SetPreCachedObject(primary.GetValue(obj), obj);
+				}
 			}
 			catch (Exception e)
 			{
@@ -418,8 +425,6 @@ namespace DOL.Database
 									list.Add(obj);
 									obj.Dirty = false;
 									obj.IsPersisted = true;
-									if (tableHandler.UsesPreCaching && primary != null)
-										tableHandler.SetPreCachedObject(primary.GetValue(obj), obj);
 			                  	}
 			                  }, isolation);
 			

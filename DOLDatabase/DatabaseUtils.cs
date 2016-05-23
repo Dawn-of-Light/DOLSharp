@@ -32,11 +32,11 @@ namespace DOL.Database
 		/// <summary>
 		/// List all Unique Members of a DataTable, Using them for duplicate Matching.
 		/// </summary>
-		/// <param name="xmlType">DataObject Type</param>
+		/// <param name="objectType">DataObject Type</param>
 		/// <returns>List of MemberInfo having Unique Attributes</returns>
-		public static ElementBinding[][] GetUniqueMembers(Type xmlType)
+		public static ElementBinding[][] GetUniqueMembers(Type objectType)
 		{
-			var tableHandler = new DataTableHandler(xmlType);
+			var tableHandler = new DataTableHandler(objectType);
 			
 			var uniques = tableHandler.Table.Constraints.OfType<UniqueConstraint>().Where(constraint => !constraint.IsPrimaryKey)
 				.Select(constraint => constraint.Columns
@@ -55,15 +55,15 @@ namespace DOL.Database
 		/// List Remarkable Members of a DataTable, Using them for Default Ordering
 		/// This includes non-generated Primary Key, Unique Field, and Indexed Fields (optionnaly)
 		/// </summary>
-		/// <param name="xmlType">DataObject Type</param>
+		/// <param name="objectType">DataObject Type</param>
 		/// <param name="forceIndexes">Returns Indexes even if enough Unique type have been gathered</param>
 		/// <returns>List of Remkarkable MemberInfo of given DataObject</returns>
-		public static ElementBinding[] GetRemarkableMembers(Type xmlType, bool forceIndexes)
+		public static ElementBinding[] GetRemarkableMembers(Type objectType, bool forceIndexes)
 		{
-			var tableHandler = new DataTableHandler(xmlType);
+			var tableHandler = new DataTableHandler(objectType);
 			
 			// Find unique Fields
-			var remarkableMember = GetUniqueMembers(xmlType);
+			var remarkableMember = GetUniqueMembers(objectType);
 			
 			// We don't have enough fields, Try indexes !
 			if (remarkableMember.Length < 1 || forceIndexes)
