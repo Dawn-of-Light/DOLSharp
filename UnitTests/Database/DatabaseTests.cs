@@ -333,6 +333,10 @@ namespace DOL.Database.Tests
 			Assert.IsTrue(inserted, "Test Table Relation could not insert object with no relation.");
 			Assert.IsNull(noRelObj.Entry, "Test Table Relation object with no relation should have null Entry.");
 			
+			// Try Select
+			var selectInserted = Database.SelectAllObjects<TestTableRelation>();
+			CollectionAssert.IsNotEmpty(selectInserted, "Test Table Relation could not retrieve objects without relation.");
+			
 			// Try Adding Relation
 			var relObj = new TestTableRelationEntry() { TestField = "RelationEntryTestValue", ObjectId = noRelObj.ObjectId };
 			
@@ -402,6 +406,10 @@ namespace DOL.Database.Tests
 			
 			Assert.IsTrue(inserted, "Test Table Relations could not insert object with no relation.");
 			Assert.IsNull(noRelObj.Entries, "Test Table Relations object with no relation should have null Entry.");
+			
+			// Try Selecting
+			var selectInserted = Database.SelectAllObjects<TestTableRelations>();
+			CollectionAssert.IsNotEmpty(selectInserted, "Test Table Relations could not retrieve objects without relation.");
 			
 			// Try Adding Relation
 			var testValues = new[] { "RelationsEntriesTestValue 1", "RelationsEntriesTestValue 2", "RelationsEntriesTestValue 3" };
@@ -952,7 +960,52 @@ namespace DOL.Database.Tests
 			Database.FillObjectRelations(objs);
 			
 			foreach (var obj in objs)
-				Assert.IsEmpty(obj.Entries, "Relation Test With Precache should have objects with empty relations after entry deletion.");		
+				Assert.IsEmpty(obj.Entries, "Relation Test With Precache should have objects with empty relations after entry deletion.");
+			
+			// Try Select with no relation
+			var norel = new TestTableRelationsWithPrecache { TestField = "Test Table Relation with Precache without relations..." };
+			Database.AddObject(norel);
+			var selectInserted = Database.SelectAllObjects<TestTableRelationsWithPrecache>().Single(obj => obj.TestField.Equals(norel.TestField));
+
+			Assert.IsEmpty(selectInserted.Entries, "Relations Test With Precache should return empty for Entries stored without relation.");
+		}
+		
+		[Test]
+		public void TestTableRelationWithPrecacheAndPrimaryRemote()
+		{
+			Database.RegisterDataObject(typeof(TestTableRelationsWithPrecacheAndPrimary));
+			Database.RegisterDataObject(typeof(TestTableRelationsEntryPrecached));
+			
+			// Cleanup
+			Database.DeleteObject(Database.SelectAllObjects<TestTableRelationsWithPrecacheAndPrimary>());
+			Database.DeleteObject(Database.SelectAllObjects<TestTableRelationsEntryPrecached>());
+			
+			Assert.IsEmpty(Database.SelectAllObjects<TestTableRelationsWithPrecacheAndPrimary>(), "Relations Test With Precache and Primary should begin with Empty Table.");
+			Assert.IsEmpty(Database.SelectAllObjects<TestTableRelationsEntryPrecached>(), "Relations Test With Precache and Primary should begin with Empty Table.");
+			
+			// Add one object with no relation
+			var norel = new TestTableRelationsWithPrecacheAndPrimary { TestField = "Table Relation With Precache and Primary Remote" };
+			var added = Database.AddObject(norel);
+			
+			Assert.IsTrue(added, "Relations Test With Precache and Primary could not add test object.");
+			
+			// Try selecting
+			var retrieve = Database.SelectAllObjects<TestTableRelationsWithPrecacheAndPrimary>().Single();
+			Assert.AreEqual(norel.TestField, retrieve.TestField, "Relations Test With Precache and Primary should retrieve similar object.");
+			Assert.IsNull(retrieve.Entry, "Relations Test With Precache and Primary should not have relation set for no relation object.");
+			
+			// Add relation
+			
+			var relobj = new TestTableRelationsEntryPrecached { ForeignTestField = "Some Data", ObjectId = norel.ObjectId };
+			var reladded = Database.AddObject(relobj);
+			
+			Assert.IsTrue(reladded, "Relations Test With Precache and Primary could not add test relation entry.");
+			
+			// Try selecting
+			var relretrieve = Database.SelectAllObjects<TestTableRelationsWithPrecacheAndPrimary>().Single();
+			Assert.AreEqual(norel.TestField, relretrieve.TestField, "Relations Test With Precache and Primary should retrieve similar object.");
+			Assert.IsNotNull(relretrieve.Entry, "Relations Test With Precache and Primary should have valid relation entry.");
+			Assert.AreEqual(relobj.ForeignTestField, relretrieve.Entry.ForeignTestField, "Relations Test With Precache and Primary should retrieve similar relation object.");
 		}
 	}
 }

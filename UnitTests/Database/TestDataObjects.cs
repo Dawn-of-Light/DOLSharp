@@ -195,6 +195,31 @@ namespace DOL.Database.Tests
 		
 		public TestTableRelationsEntriesPrecached() { }
 	}
+	
+	/// <summary>
+	/// Basic Table with Relations with Precache
+	/// </summary>
+	[DataTable(TableName = "Test_TableRelationsPrecachePrimary")]
+	public class TestTableRelationsWithPrecacheAndPrimary : TestTable
+	{
+		[Relation(LocalField = "Test_TableRelationsPrecachePrimary_ID", RemoteField = "Test_TableRelationsEntryPrecached_ID", AutoLoad = true, AutoDelete = true)]
+		public TestTableRelationsEntryPrecached Entry;
+		
+		public TestTableRelationsWithPrecacheAndPrimary() { }
+	}
+	
+	/// <summary>
+	/// Basic Table with Relations Entries Precached
+	/// </summary>
+	[DataTable(TableName = "Test_TableRelationsEntryPrecached", PreCache = true)]
+	public class TestTableRelationsEntryPrecached : TestTable
+	{
+		string m_foreignTestField;
+		[DataElement(Varchar = 255, Index = true)]
+		public string ForeignTestField { get { return m_foreignTestField; } set { Dirty = true; m_foreignTestField = value; } }
+		
+		public TestTableRelationsEntryPrecached() { }
+	}
 
 	/// <summary>
 	/// Basic Table with ReadOnly field
