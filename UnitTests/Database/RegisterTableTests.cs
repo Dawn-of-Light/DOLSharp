@@ -243,5 +243,37 @@ namespace DOL.Database.Tests
 			CollectionAssert.AreEquivalent(retrieve.Select(obj => obj.PrecachedValue), retrieveupdated.Select(obj => obj.PrecachedValue), "Test Precached Table with Update Cache should return similar updated objets than modified ones.");
 		}
 
+		/// <summary>
+		/// Test Table Migration from no PK to PK Auto Inc
+		/// </summary>
+		[Test]
+		public void TestTableMigrationChangingPrimaryKey()
+		{
+			// Destroy previous table
+			Database.ExecuteNonQuery(string.Format("DROP TABLE IF EXISTS `{0}`", AttributesUtils.GetTableName(typeof(TestTableWithPrimaryChangingV1))));
+			
+			// Get a new Database Object to Trigger Migration
+			var DatabaseV2 = GetDatabaseV2;
+			
+			Database.RegisterDataObject(typeof(TestTableWithPrimaryChangingV1));
+			
+			Database.DeleteObject(Database.SelectAllObjects<TestTableWithPrimaryChangingV1>());
+			
+			Assert.IsEmpty(Database.SelectAllObjects<TestTableWithPrimaryChangingV1>(), "Test Table TestTableWithPrimaryChangingV1 should be empty to begin this tests.");
+			
+			var objs = new [] { "TestObj1", "TestObj2", "TestObj3" }.Select((ent, i) => new TestTableWithPrimaryChangingV1 { PrimaryKey = i, Value = ent }).ToArray();
+			
+			Database.AddObject(objs);
+			
+			CollectionAssert.AreEquivalent(objs.Select(obj => obj.Value), Database.SelectAllObjects<TestTableWithPrimaryChangingV1>().Select(obj => obj.Value), "Test Table TestTableWithPrimaryChangingV1 Entries should be available for this test to run.");
+			
+			// Trigger False Migration
+			DatabaseV2.RegisterDataObject(typeof(TestTableWithPrimaryChangingV2));
+			
+			var newObjs = DatabaseV2.SelectAllObjects<TestTableWithPrimaryChangingV2>().ToArray();
+			
+			CollectionAssert.AreEquivalent(objs.Select(obj => obj.Value), newObjs.Select(obj => obj.Value), "Test Table Migration to TestTableWithPrimaryChangingV2 should retrieve similar values that created ones...");
+			CollectionAssert.AreEquivalent(objs.Select(obj => obj.PrimaryKey), newObjs.Select(obj => obj.PrimaryKey), "Test Table Migration to TestTableWithPrimaryChangingV2 should retrieve similar values that created ones...");
+		}
 	}
 }

@@ -270,6 +270,7 @@ namespace DOL.Database.Handlers
 		protected void AlterTable(IEnumerable<TableRowBindind> currentColumns, DataTableHandler table)
 		{
 			var columnDefs = new List<string>();
+			var alteredColumn = new List<string>();
 			// Check for Missing Column or Wrong Type
 			foreach (var binding in table.FieldElementBindings)
 			{
@@ -283,6 +284,7 @@ namespace DOL.Database.Handlers
 					    || !GetDatabaseType(binding, table).Equals(column.ColumnType, StringComparison.OrdinalIgnoreCase))
 					{
 						columnDefs.Add(string.Format("CHANGE `{1}` {0}", GetColumnDefinition(binding, table), binding.ColumnName));
+						alteredColumn.Add(binding.ColumnName);
 					}
 
 					continue;
@@ -290,31 +292,12 @@ namespace DOL.Database.Handlers
 				
 				columnDefs.Add(string.Format("ADD {0}", GetColumnDefinition(binding, table)));
 			}
-			
-			// Check for Any Difference in Primary Keys
-			if (table.Table.PrimaryKey.Count() != currentColumns.Count(col => col.Primary)
-			   || table.Table.PrimaryKey.Any(pk => {
-			                                  	var column = currentColumns.FirstOrDefault(col => col.ColumnName.Equals(pk.ColumnName, StringComparison.OrdinalIgnoreCase));
-			                                  	
-			                                  	if (column != null && column.Primary)
-			                                  		return false;
-			                                  	
-			                                  	return true;
-			                                  }))
-			{
-				// Allow to edit Auto increment key
-				foreach(var oldkeys in currentColumns.Where(col => col.Primary))
-					columnDefs.Add(string.Format("MODIFY `{0}` {1} {2}", oldkeys.ColumnName, oldkeys.ColumnType, oldkeys.AllowDbNull ? "DEFAULT NULL" : "NOT NULL"));
-				
-				columnDefs.Add("DROP PRIMARY KEY");
-				columnDefs.Add(string.Format("ADD PRIMARY KEY ({0})", string.Join(", ", table.Table.PrimaryKey.Select(pk => string.Format("`{0}`", pk.ColumnName)))));
-			}
-			
+
 			// Check for Indexes
 			var indexes = new List<Tuple<bool, string, string>>();
 			try
 			{
-				ExecuteSelectImpl(string.Format("SHOW INDEX FROM `{0}` WHERE `Key_Name` != \"PRIMARY\"", table.TableName),
+				ExecuteSelectImpl(string.Format("SHOW INDEX FROM `{0}`", table.TableName),
 				                  reader =>
 				                  {
 				                  	while (reader.Read())
@@ -340,10 +323,34 @@ namespace DOL.Database.Handlers
 			var existingIndexes = indexes.GroupBy(ind => new { KeyName = ind.Item2, Unique = ind.Item1 })
 				.Select(grp => new { grp.Key.KeyName, grp.Key.Unique, Columns = grp.Select(i => i.Item3).ToArray() }).ToArray();
 			
+			var havePrimaryIndex = existingIndexes.FirstOrDefault(ind => ind.KeyName.Equals("PRIMARY"));
+			var currentPrimaryColumn = new string[] { };
+			if (havePrimaryIndex != null)
+				currentPrimaryColumn = havePrimaryIndex.Columns;
+			
+			// Check for Any Difference in Primary Keys
+			if (table.Table.PrimaryKey.Count() != currentPrimaryColumn.Length
+			   || table.Table.PrimaryKey.Any(pk => {
+			                                  	var column = currentPrimaryColumn.FirstOrDefault(col => col.Equals(pk.ColumnName, StringComparison.OrdinalIgnoreCase));
+			                                  	
+			                                  	return column == null;
+			                                  }))
+			{
+				// Allow to edit Auto increment key if not previously modified
+				foreach(var oldkeys in currentColumns.Where(col => col.Primary && !alteredColumn.Any(c => c.Equals(col.ColumnName, StringComparison.OrdinalIgnoreCase))))
+					columnDefs.Add(string.Format("MODIFY `{0}` {1} {2}", oldkeys.ColumnName, oldkeys.ColumnType, oldkeys.AllowDbNull ? "DEFAULT NULL" : "NOT NULL"));
+				
+				if (currentPrimaryColumn.Any())
+					columnDefs.Add("DROP PRIMARY KEY");
+				
+				columnDefs.Add(string.Format("ADD PRIMARY KEY ({0})", string.Join(", ", table.Table.PrimaryKey.Select(pk => string.Format("`{0}`", pk.ColumnName)))));
+			}
+
+			
 			var tableIndexes = table.Table.ExtendedProperties["INDEXES"] as Dictionary<string, DataColumn[]>;
 			
 			// Check for Index Removal
-			foreach (var existing in existingIndexes)
+			foreach (var existing in existingIndexes.Where(ind => !ind.KeyName.Equals("PRIMARY")))
 			{
 				DataColumn[] realindex;
 				if(tableIndexes.TryGetValue(existing.KeyName, out realindex))
@@ -444,7 +451,7 @@ namespace DOL.Database.Handlers
 							    	catch (Exception es)
 							    	{
 							    		if(log.IsWarnEnabled)
-							    			log.Warn("ExecuteSelectImpl: Exception in Select Callback : ", es);
+							    			log.WarnFormat("ExecuteSelectImpl: Exception in Select Callback : {2}{0}{2}{1}", es, Environment.StackTrace, Environment.NewLine);
 							    	}
 							    	finally
 							    	{

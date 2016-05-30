@@ -72,6 +72,53 @@ namespace DOL.Database.Tests
 	}
 	
 	/// <summary>
+	/// Test Table Migration Changing Primary Key type and column
+	/// </summary>
+	[DataTable(TableName = "Test_TableWithPrimaryChanging")]
+	public class TestTableWithPrimaryChangingV1 : DataObject
+	{
+		[PrimaryKey]
+		public int PrimaryKey { get; set; }
+		[DataElement]
+		public string Value { get; set; }
+	}
+	
+	/// <summary>
+	/// Test Table Migration Changing Primary Key type and column
+	/// </summary>
+	[DataTable(TableName = "Test_TableWithPrimaryChanging")]
+	public class TestTableWithPrimaryChangingV2 : DataObject
+	{
+		[DataElement]
+		public long PrimaryKey { get; set; }
+		[PrimaryKey]
+		public string Value { get; set; }
+	}
+	/// <summary>
+	/// Test Table Migration Broken Primary Key
+	/// </summary>
+	[DataTable(TableName = "Test_TableWithBrokenPrimary")]
+	public class TestTableWithBrokenPrimaryV1 : DataObject
+	{
+		[DataElement(Unique = true, AllowDbNull = false)]
+		public int PrimaryKey { get; set; }
+		[DataElement]
+		public string Value { get; set; }
+	}
+	
+	/// <summary>
+	/// Test Table Migration Broken Primary Key
+	/// </summary>
+	[DataTable(TableName = "Test_TableWithBrokenPrimary")]
+	public class TestTableWithBrokenPrimaryV2 : DataObject
+	{
+		[PrimaryKey]
+		public long PrimaryKey { get; set; }
+		[DataElement]
+		public string Value { get; set; }
+	}
+	
+	/// <summary>
 	/// Test Table Migration with different Types
 	/// </summary>
 	[DataTable(TableName = "Test_TableMigrationTypes")]

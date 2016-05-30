@@ -56,7 +56,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = false)]
+		[PrimaryKey]
 		public string Key
 		{
 			get

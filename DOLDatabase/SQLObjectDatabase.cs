@@ -490,7 +490,7 @@ namespace DOL.Database
 		protected virtual void FillSQLParameter(IEnumerable<QueryParameter> parameter, DbParameterCollection dbParams)
 		{
 			// Specififc Handling for Char Cast from DB Integer
-    		foreach(var param in parameter)
+			foreach(var param in parameter.Where(param => param.Name != null))
     		{
     			if (param.Value is char)
     				dbParams[param.Name].Value = Convert.ToUInt16(param.Value);

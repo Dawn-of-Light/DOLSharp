@@ -88,7 +88,7 @@ namespace DOL.Database
 		/// <summary>
 		/// All guild in this alliance
 		/// </summary>
-		[Relation(LocalField = "ObjectId", RemoteField = "AllianceID", AutoLoad = true, AutoDelete=false)]
+		[Relation(LocalField = "GuildAlliance_ID", RemoteField = "AllianceID", AutoLoad = true, AutoDelete=false)]
 		public DBGuild[] DBguilds;
 	}
 }
