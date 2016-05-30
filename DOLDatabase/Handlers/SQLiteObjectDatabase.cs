@@ -634,7 +634,7 @@ namespace DOL.Database.Handlers
 							    	catch (Exception es)
 							    	{
 							    		if(log.IsWarnEnabled)
-							    			log.Warn("ExecuteSelectImpl: Exception in Select Callback : ", es);
+							    			log.WarnFormat("ExecuteSelectImpl: Exception in Select Callback : {2}{0}{2}{1}", es, Environment.StackTrace, Environment.NewLine);
 							    	}
 							    	finally
 							    	{
