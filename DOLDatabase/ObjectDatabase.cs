@@ -502,7 +502,7 @@ namespace DOL.Database
 			{
 				// Search with Primary Key or use a Where Clause
 				objsResults = remoteHandler.Table.PrimaryKey.All(pk => pk.ColumnName.Equals(remoteBind.ColumnName, StringComparison.OrdinalIgnoreCase)) ?
-					objects.Select(obj => new [] { remoteHandler.GetPreCachedObject(remoteBind.GetValue(obj)) }) :
+					objects.Select(obj => new [] { remoteHandler.GetPreCachedObject(localBind.GetValue(obj)) }) :
 					objects.Select(obj => remoteHandler.SearchPreCachedObjects(rem => {
 					                                                           	if (localBind.ValueType == typeof(string) || remoteBind.ValueType == typeof(string))
 					                                                           		return remoteBind.GetValue(rem).ToString().Equals(localBind.GetValue(obj).ToString(), StringComparison.OrdinalIgnoreCase);
@@ -537,7 +537,7 @@ namespace DOL.Database
 			}
 			
 			// Fill Sub Relations
-			FillObjectRelations(resultByObjs.SelectMany(result => result.Results), false);
+			FillObjectRelations(resultByObjs.SelectMany(result => result.Results).Where(obj => obj != null), false);
 		}
 		#endregion
 		#region Public Object Select with Key API
