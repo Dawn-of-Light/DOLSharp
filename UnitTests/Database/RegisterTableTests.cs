@@ -54,8 +54,11 @@ namespace DOL.Database.Tests
 				// Walk through each type in the assembly
 				foreach (Type type in assembly.GetTypes())
 				{
-					object[] attrib = type.GetCustomAttributes(typeof(DataTable), false);
-					if (attrib.Length > 0)
+					if (!type.IsClass || type.IsAbstract)
+						continue;
+					
+					var attrib = type.GetCustomAttributes<DataTable>(false);
+					if (attrib.Any())
 					{
 						Assert.DoesNotThrow( () => {
 						                    	var dth = new DataTableHandler(type);

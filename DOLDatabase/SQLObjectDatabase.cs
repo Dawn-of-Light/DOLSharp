@@ -57,7 +57,12 @@ namespace DOL.Database
 			
 			DataTableHandler existingHandler;
 			if (TableDatasets.TryGetValue(tableName, out existingHandler))
-				throw new DatabaseException(string.Format("Table Handler Duplicate for Type: {2}, Table Name '{0}' Already Registered with Type : {1}", tableName, existingHandler.ObjectType, dataObjectType));
+			{
+				if (dataObjectType != existingHandler.ObjectType)
+					throw new DatabaseException(string.Format("Table Handler Duplicate for Type: {2}, Table Name '{0}' Already Registered with Type : {1}", tableName, existingHandler.ObjectType, dataObjectType));
+				
+				return;
+			}
 			
 			var dataTableHandler = new DataTableHandler(dataObjectType);
 

@@ -570,9 +570,9 @@ namespace DOL.Database
 			}
 			
 			if (tableHandler.UsesPreCaching)
-				return keys.Select(key => tableHandler.GetPreCachedObject(key)).OfType<TObject>().ToArray();
+				return keys.Select(key => tableHandler.GetPreCachedObject(key)).Cast<TObject>().ToArray();
 			
-			var objs = FindObjectByKeyImpl(tableHandler, keys).OfType<TObject>().ToArray();
+			var objs = FindObjectByKeyImpl(tableHandler, keys).Cast<TObject>().ToArray();
 			
 			FillObjectRelations(objs.Where(obj => obj != null), false);
 			
