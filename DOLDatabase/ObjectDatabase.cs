@@ -557,7 +557,7 @@ namespace DOL.Database
 		/// </summary>
 		/// <param name="keys">Collection of Primary Key Values</param>
 		/// <returns>Collection of DataObject with primary key matching values</returns>
-		public virtual IEnumerable<TObject> FindObjectsByKey<TObject>(IEnumerable<object> keys)
+		public virtual IList<TObject> FindObjectsByKey<TObject>(IEnumerable<object> keys)
 			where TObject : DataObject
 		{
 			var tableHandler = GetTableOrViewHandler(typeof(TObject));
@@ -570,9 +570,9 @@ namespace DOL.Database
 			}
 			
 			if (tableHandler.UsesPreCaching)
-				return keys.Select(key => tableHandler.GetPreCachedObject(key)).Cast<TObject>().ToArray();
+				return keys.Select(key => tableHandler.GetPreCachedObject(key)).OfType<TObject>().ToArray();
 			
-			var objs = FindObjectByKeyImpl(tableHandler, keys).Cast<TObject>().ToArray();
+			var objs = FindObjectByKeyImpl(tableHandler, keys).OfType<TObject>().ToArray();
 			
 			FillObjectRelations(objs.Where(obj => obj != null), false);
 			
@@ -615,7 +615,7 @@ namespace DOL.Database
 		/// <param name="whereExpression">Parametrized Where Expression</param>
 		/// <param name="parameters">Collection of Parameters</param>
 		/// <returns>Collection of Objects Sets for each matching Parametrized Query</returns>
-		public IEnumerable<IEnumerable<TObject>> SelectObjects<TObject>(string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters)
+		public IList<IList<TObject>> SelectObjects<TObject>(string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters)
 			where TObject : DataObject
 		{
 			if (parameters == null)
@@ -630,7 +630,7 @@ namespace DOL.Database
 				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
 			}
 			
-			var objs = SelectObjectsImpl(tableHandler, whereExpression, parameters, Transaction.IsolationLevel.DEFAULT).Select(res => res.OfType<TObject>()).ToArray();
+			var objs = SelectObjectsImpl(tableHandler, whereExpression, parameters, Transaction.IsolationLevel.DEFAULT).Select(res => res.OfType<TObject>().ToArray()).ToArray();
 			
 			FillObjectRelations(objs.SelectMany(obj => obj), false);
 			
@@ -642,7 +642,7 @@ namespace DOL.Database
 		/// <param name="whereExpression">Parametrized Where Expression</param>
 		/// <param name="parameter">Collection of Parameter</param>
 		/// <returns>Collection of Objects matching Parametrized Query</returns>
-		public IEnumerable<TObject> SelectObjects<TObject>(string whereExpression, IEnumerable<QueryParameter> parameter)
+		public IList<TObject> SelectObjects<TObject>(string whereExpression, IEnumerable<QueryParameter> parameter)
 			where TObject : DataObject
 		{
 			if (parameter == null)
@@ -656,7 +656,7 @@ namespace DOL.Database
 		/// <param name="whereExpression">Parametrized Where Expression</param>
 		/// <param name="param">Single Parameter</param>
 		/// <returns>Collection of Objects matching Parametrized Query</returns>
-		public IEnumerable<TObject> SelectObjects<TObject>(string whereExpression, QueryParameter param)
+		public IList<TObject> SelectObjects<TObject>(string whereExpression, QueryParameter param)
 			where TObject : DataObject
 		{
 			if (param == null)
@@ -841,7 +841,7 @@ namespace DOL.Database
 		/// <param name="parameters">Parameters for filtering</param>
 		/// <param name="isolation">Isolation Level</param>
 		/// <returns>Collection of DataObjects Sets matching Parametrized Where Expression</returns>
-		protected abstract IEnumerable<IEnumerable<DataObject>> SelectObjectsImpl(DataTableHandler tableHandler, string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters, Transaction.IsolationLevel isolation);
+		protected abstract IList<IList<DataObject>> SelectObjectsImpl(DataTableHandler tableHandler, string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters, Transaction.IsolationLevel isolation);
 
 		/// <summary>
 		/// Gets the number of objects in a given table in the database based on a given set of criteria. (where clause)

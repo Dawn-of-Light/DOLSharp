@@ -54,7 +54,7 @@ namespace DOL.Database.Tests
 				// Walk through each type in the assembly
 				foreach (Type type in assembly.GetTypes())
 				{
-					object[] attrib = type.GetCustomAttributes(typeof(DataTable), true);
+					object[] attrib = type.GetCustomAttributes(typeof(DataTable), false);
 					if (attrib.Length > 0)
 					{
 						Assert.DoesNotThrow( () => {

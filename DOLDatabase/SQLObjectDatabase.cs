@@ -55,8 +55,9 @@ namespace DOL.Database
 			var isView = AttributesUtils.GetViewName(dataObjectType) != null;
 			var viewAs = AttributesUtils.GetViewAs(dataObjectType);
 			
-			if (TableDatasets.ContainsKey(tableName))
-				return;
+			DataTableHandler existingHandler;
+			if (TableDatasets.TryGetValue(tableName, out existingHandler))
+				throw new DatabaseException(string.Format("Table Handler Duplicate for Type: {2}, Table Name '{0}' Already Registered with Type : {1}", tableName, existingHandler.ObjectType, dataObjectType));
 			
 			var dataTableHandler = new DataTableHandler(dataObjectType);
 
@@ -384,7 +385,7 @@ namespace DOL.Database
 		/// <param name="parameters">Parameters for filtering</param>
 		/// <param name="isolation">Isolation Level</param>
 		/// <returns>Collection of DataObjects Sets matching Parametrized Where Expression</returns>
-		protected override IEnumerable<IEnumerable<DataObject>> SelectObjectsImpl(DataTableHandler tableHandler, string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters, Transaction.IsolationLevel isolation)
+		protected override IList<IList<DataObject>> SelectObjectsImpl(DataTableHandler tableHandler, string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters, Transaction.IsolationLevel isolation)
 		{
 			var columns = tableHandler.FieldElementBindings.ToArray();
 			
@@ -400,10 +401,10 @@ namespace DOL.Database
 				                        tableHandler.TableName);
 			
 			var primary = columns.FirstOrDefault(col => col.PrimaryKey != null);
-			var dataObjects = new List<List<DataObject>>();
+			var dataObjects = new List<IList<DataObject>>();
 			ExecuteSelectImpl(command, parameters, reader => {
 			                  	var list = new List<DataObject>();
-			                  	dataObjects.Add(list);
+			                  	
 			                  	var data = new object[reader.FieldCount];
 			                  	while(reader.Read())
 			                  	{
@@ -426,6 +427,7 @@ namespace DOL.Database
 									obj.Dirty = false;
 									obj.IsPersisted = true;
 			                  	}
+			                  	dataObjects.Add(list.ToArray());
 			                  }, isolation);
 			
 			return dataObjects.ToArray();
