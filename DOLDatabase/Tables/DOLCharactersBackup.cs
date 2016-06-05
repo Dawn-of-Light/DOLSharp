@@ -174,8 +174,9 @@ namespace DOL.Database
 			this.Ypos = character.Ypos;
 			this.Zpos = character.Zpos;
 			// Copy Custom Params
-			this.CustomParams = character.CustomParams
-				.Select(param => new DOLCharactersBackupXCustomParam(param.DOLCharactersObjectId, param.KeyName, param.Value)).ToArray();
+			this.CustomParams = character.CustomParams != null
+				? character.CustomParams.Select(param => new DOLCharactersBackupXCustomParam(param.DOLCharactersObjectId, param.KeyName, param.Value)).ToArray()
+				: new DOLCharactersBackupXCustomParam[] { } ;
 		}
 
 		/// <summary>
