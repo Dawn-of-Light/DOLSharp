@@ -565,7 +565,7 @@ namespace DOL.Database
 			if (remoteHandler.UsesPreCaching)
 			{
 				// Search with Primary Key or use a Where Clause
-				objsResults = remoteHandler.Table.PrimaryKey.All(pk => pk.ColumnName.Equals(remoteBind.ColumnName, StringComparison.OrdinalIgnoreCase)) ?
+				objsResults = remoteHandler.PrimaryKeys.All(pk => pk.ColumnName.Equals(remoteBind.ColumnName, StringComparison.OrdinalIgnoreCase)) ?
 					objects.Select(obj => new [] { remoteHandler.GetPreCachedObject(localBind.GetValue(obj)) }.Where(found => found != null)) :
 					objects.Select(obj => remoteHandler.SearchPreCachedObjects(rem => {
 					                                                           	if (localBind.ValueType == typeof(string) || remoteBind.ValueType == typeof(string))
@@ -590,9 +590,16 @@ namespace DOL.Database
 			{
 				if (isElementType)
 				{
-					MethodInfo castMethod = typeof(Enumerable).GetMethod("OfType").MakeGenericMethod(type);
-					MethodInfo methodToArray = typeof(Enumerable).GetMethod("ToArray").MakeGenericMethod(type);
-					relationBind.SetValue(result.DataObject, methodToArray.Invoke(null, new object[] { castMethod.Invoke(null, new object[] { result.Results }) }));
+					if (result.Results.Any())
+					{
+						MethodInfo castMethod = typeof(Enumerable).GetMethod("OfType").MakeGenericMethod(type);
+						MethodInfo methodToArray = typeof(Enumerable).GetMethod("ToArray").MakeGenericMethod(type);
+						relationBind.SetValue(result.DataObject, methodToArray.Invoke(null, new object[] { castMethod.Invoke(null, new object[] { result.Results }) }));
+					}
+					else
+					{
+						relationBind.SetValue(result.DataObject, null);
+					}
 				}
 				else
 				{

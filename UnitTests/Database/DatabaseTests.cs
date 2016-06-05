@@ -960,14 +960,14 @@ namespace DOL.Database.Tests
 			Database.FillObjectRelations(objs);
 			
 			foreach (var obj in objs)
-				Assert.IsEmpty(obj.Entries, "Relation Test With Precache should have objects with empty relations after entry deletion.");
+				Assert.IsNull(obj.Entries, "Relation Test With Precache should have objects with null relations after entry deletion.");
 			
 			// Try Select with no relation
 			var norel = new TestTableRelationsWithPrecache { TestField = "Test Table Relation with Precache without relations..." };
 			Database.AddObject(norel);
 			var selectInserted = Database.SelectAllObjects<TestTableRelationsWithPrecache>().Single(obj => obj.TestField.Equals(norel.TestField));
 
-			Assert.IsEmpty(selectInserted.Entries, "Relations Test With Precache should return empty for Entries stored without relation.");
+			Assert.IsNull(selectInserted.Entries, "Relations Test With Precache should return null for Entries stored without relation.");
 		}
 		
 		[Test]

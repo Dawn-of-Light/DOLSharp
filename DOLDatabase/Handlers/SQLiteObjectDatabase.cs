@@ -362,7 +362,7 @@ namespace DOL.Database.Handlers
 				return true;
 			
 			// Check for Any Difference in Primary Keys
-			if (table.Table.PrimaryKey.Count() != currentColumns.Count(col => col.Primary)
+			if (table.Table.PrimaryKey.Length != currentColumns.Count(col => col.Primary)
 				|| table.Table.PrimaryKey.Any(pk => {
 			                                  	var column = currentColumns.FirstOrDefault(col => col.ColumnName.Equals(pk.ColumnName, StringComparison.OrdinalIgnoreCase));
 			                                  	
