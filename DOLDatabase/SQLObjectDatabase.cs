@@ -101,15 +101,6 @@ namespace DOL.Database
 		}
 		
 		/// <summary>
-		/// Gets the format for date times
-		/// </summary>
-		/// <returns></returns>
-		public virtual string GetDBDateFormat()
-		{
-			return "yyyy-MM-dd HH:mm:ss";
-		}
-		
-		/// <summary>
 		/// Escape wrong characters from string for Database Insertion
 		/// </summary>
 		/// <param name="rawInput">String to Escape</param>
@@ -176,8 +167,6 @@ namespace DOL.Database
 							result.DataObject.Dirty = false;
 							result.DataObject.IsPersisted = true;
 							result.DataObject.IsDeleted = false;
-							if (tableHandler.UsesPreCaching)
-								tableHandler.SetPreCachedObject(result.Result, result.DataObject);
 							success.Add(true);
 						}
 						else
@@ -192,7 +181,6 @@ namespace DOL.Database
 				}
 				else
 				{
-					var primary = columns.FirstOrDefault(col => col.Binding.PrimaryKey != null);
 					var affected = ExecuteNonQueryImpl(command, parameters);
 					var resultByObjects = affected.Select((result, index) => new { Result = result, DataObject = objs[index] });
 					
@@ -203,10 +191,6 @@ namespace DOL.Database
 							result.DataObject.Dirty = false;
 							result.DataObject.IsPersisted = true;
 							result.DataObject.IsDeleted = false;
-							
-							if (tableHandler.UsesPreCaching && primary != null)
-									tableHandler.SetPreCachedObject(primary.Binding.GetValue(result.DataObject), result.DataObject);
-							
 							success.Add(true);
 						}
 						else
@@ -262,17 +246,12 @@ namespace DOL.Database
 				var affected = ExecuteNonQueryImpl(command, parameters);
 				var resultByObjects = affected.Select((result, index) => new { Result = result, DataObject = objs[index] });
 				
-				var primaryBinding = primary.FirstOrDefault();
-				
 				foreach (var result in resultByObjects)
 				{
 					if (result.Result > 0)
 					{
 						result.DataObject.Dirty = false;
 						result.DataObject.IsPersisted = true;
-						if (tableHandler.UsesPreCaching && primaryBinding != null)
-							tableHandler.SetPreCachedObject(primaryBinding.Binding.GetValue(result.DataObject), result.DataObject);
-						
 						success.Add(true);
 					}
 					else
@@ -332,11 +311,6 @@ namespace DOL.Database
 					{
 						result.DataObject.IsPersisted = false;
 						result.DataObject.IsDeleted = true;
-						if (tableHandler.UsesPreCaching)
-						{
-							var autoInc = primary.FirstOrDefault(col => col.PrimaryKey.AutoIncrement);
-							tableHandler.DeletePreCachedObject(autoInc == null ? result.DataObject.ObjectId : autoInc.GetValue(result.DataObject));
-						}
 						success.Add(true);
 					}
 					else
@@ -358,6 +332,34 @@ namespace DOL.Database
 		#endregion
 		
 		#region ObjectDatabase Select Implementation
+		/// <summary>
+		/// Retrieve a Collection of DataObjects from database based on their primary key values
+		/// </summary>
+		/// <param name="tableHandler">Table Handler for the DataObjects to Retrieve</param>
+		/// <param name="keys">Collection of Primary Key Values</param>
+		/// <returns>Collection of DataObject with primary key matching values</returns>
+		protected override IEnumerable<DataObject> FindObjectByKeyImpl(DataTableHandler tableHandler, IEnumerable<object> keys)
+		{
+			// Primary Key
+			var primary = tableHandler.FieldElementBindings.Where(bind => bind.PrimaryKey != null)
+				.Select(bind => new { ColumnName = string.Format("`{0}`", bind.ColumnName), ParamName = string.Format("@{0}", bind.ColumnName) }).ToArray();
+			
+			if (!primary.Any())
+				throw new DatabaseException(string.Format("Table {0} has no primary key for finding by key...", tableHandler.TableName));
+			
+			var whereClause = string.Format("{0}",
+			                                string.Join(" AND ", primary.Select(col => string.Format("{0} = {1}", col.ColumnName, col.ParamName))));
+			
+			var keysArray = keys.ToArray();
+			var parameters = keysArray.Select(key => primary.Select(col => new QueryParameter(col.ParamName, key)));
+			
+			var objs = SelectObjectsImpl(tableHandler, whereClause, parameters, Transaction.IsolationLevel.DEFAULT);
+			
+			var resultByKeys = objs.Select((results, index) => new { Key = keysArray[index], DataObject = results.SingleOrDefault() });
+			
+			return resultByKeys.Select(obj => obj.DataObject).ToArray();
+		}
+
 		/// <summary>
 		/// Gets the number of objects in a given table in the database based on a given set of criteria. (where clause)
 		/// </summary>

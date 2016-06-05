@@ -212,9 +212,9 @@ namespace DOL.Database
 		/// Selects objects from the database and updates or adds entries in the pre-cache.
 		/// </summary>
 		/// <typeparam name="TObject">DataObject Type to Query</typeparam>
-		/// <param name="key">Key Collection to Update</param>
+		/// <param name="keys">Key Collection to Update</param>
 		/// <returns>True if All Objects were found with given keys</returns>
-		bool UpdateInCache<TObject>(IEnumerable<object> key)
+		bool UpdateObjsInCache<TObject>(IEnumerable<object> keys)
 			where TObject : DataObject;
 
 		/// <summary>

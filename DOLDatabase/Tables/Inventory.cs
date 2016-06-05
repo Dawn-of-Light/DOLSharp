@@ -235,14 +235,14 @@ namespace DOL.Database
 		public ItemTemplate ITWrapper
 		{
 			get { return Template as ItemTemplate; }
-			set { Template = value as ItemTemplate; }
+			set { if (value != null) Template = value as ItemTemplate; }
 		}
 
 		[Relation(LocalField = "UTemplate_Id", RemoteField = "Id_nb", AutoLoad = true, AutoDelete=true)]
 		public ItemUnique IUWrapper
 		{
 			get { return Template as ItemUnique; }
-			set { Template = value; }
+			set { if (value != null) Template = value; }
 		}
 
 		protected ItemTemplate m_item;
@@ -258,7 +258,7 @@ namespace DOL.Database
 						m_hasLoggedError = true;
 					}
 
-					return new ItemTemplate();
+					return new ItemTemplate() { AllowAdd = false };
 				}
 
 				return m_item;

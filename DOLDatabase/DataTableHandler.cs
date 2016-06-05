@@ -68,6 +68,14 @@ namespace DOL.Database
 		/// Data Table Handled
 		/// </summary>
 		public DataTable Table { get; private set; }
+		/// <summary>
+		/// Retrieve Single Primary Key Binding
+		/// </summary>
+		public ElementBinding PrimaryKey { get { return PrimaryKeys.FirstOrDefault(); } }
+		/// <summary>
+		/// Retrieve Multiple Primary Key Binding (Future Support)
+		/// </summary>
+		public ElementBinding[] PrimaryKeys { get { return Table.PrimaryKey.Select(col => ElementBindings.FirstOrDefault(bind => bind.ColumnName.Equals(col.ColumnName, StringComparison.OrdinalIgnoreCase))).ToArray(); } }
 		
 		/// <summary>
 		/// Create new instance of <see cref="DataTableHandler"/>

@@ -209,7 +209,11 @@ namespace DOL.Database.Tests
 			
 			var inserted = Database.AddObject(objs);
 			
-			Assert.IsTrue(inserted, "Test Precached Table with Update Cache could not insert test objects");
+			Assert.IsTrue(inserted, "Test Precached Table with Update Cache could not insert test objects.");
+			
+			var update = DatabaseV2.UpdateObjsInCache<TestTablePrecachedPrimaryKey>(objs.Select(o => o.PrimaryKey));
+			
+			Assert.IsTrue(update, "Test Precached Table with Update Cache could not refresh newly inserted objects.");
 			
 			var retrieve = DatabaseV2.SelectAllObjects<TestTablePrecachedPrimaryKey>();
 			
@@ -235,7 +239,7 @@ namespace DOL.Database.Tests
 			CollectionAssert.AreEquivalent(objs.Select(obj => obj.PrecachedValue), retrievecached.Select(obj => obj.PrecachedValue), "Test Precached Table with Update Cache should return similar cached objets than created ones.");
 			
 			// update
-			var updated = Database.UpdateInCache<TestTablePrecachedPrimaryKey>(objs.Select(obj => obj.PrimaryKey));
+			var updated = Database.UpdateObjsInCache<TestTablePrecachedPrimaryKey>(objs.Select(obj => obj.PrimaryKey));
 			
 			Assert.IsTrue(updated, "Test Precached Table with Update Cache could not update objects cache from database.");
 			

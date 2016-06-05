@@ -719,7 +719,7 @@ namespace DOL.Database.Handlers
 					    			{
     									affected.Add(result);
     									if (log.IsErrorEnabled)
-											log.ErrorFormat("ExecuteNonQueryImpl: Constraint Violation for raw query \"{0}\"\n{1}", SQLCommand, sqle);
+											log.ErrorFormat("ExecuteNonQueryImpl: Constraint Violation for raw query \"{0}\"\n{1}\n{2}", SQLCommand, sqle, Environment.StackTrace);
 					    			}
 					    			else
 					    			{
@@ -821,7 +821,7 @@ namespace DOL.Database.Handlers
 								    			{
 			    									obj.Add(-1);
 			    									if (log.IsErrorEnabled)
-														log.ErrorFormat("ExecuteScalarImpl: Constraint Violation for command \"{0}\"\n{1}", SQLCommand, sqle);
+														log.ErrorFormat("ExecuteScalarImpl: Constraint Violation for command \"{0}\"\n{1}\n{2}", SQLCommand, sqle, Environment.StackTrace);
 								    			}
 								    			else
 								    			{

@@ -108,7 +108,7 @@ namespace DOL.Database
 		/// </summary>
 		/// <param name="dataObjects">DataObjects to Add into database</param>
 		/// <returns>True if All DataObjects were added.</returns>
-		public virtual bool AddObject(IEnumerable<DataObject> dataObjects)
+		public bool AddObject(IEnumerable<DataObject> dataObjects)
 		{
 			var success = true;
 			foreach (var grp in dataObjects.GroupBy(obj => obj.GetType()))
@@ -137,6 +137,17 @@ namespace DOL.Database
 						{
 							if (resultGrp.Key)
 							{
+								// Save in Precache if tablehandler use it
+								if (tableHandler.UsesPreCaching)
+								{
+									var primary = tableHandler.PrimaryKey;
+									if (primary != null)
+									{
+										foreach (var successObj in resultGrp.Select(obj => obj.DataObject))
+											tableHandler.SetPreCachedObject(primary.GetValue(successObj), successObj);
+									}
+								}
+								
 								// Success Objects Need Relations Save
 								if (tableHandler.HasRelations)
 									success &= SaveObjectRelations(tableHandler, resultGrp.Select(obj => obj.DataObject));
@@ -182,7 +193,7 @@ namespace DOL.Database
 		/// </summary>
 		/// <param name="dataObjects">DataObjects to Save in database</param>
 		/// <returns>True if All DataObjects were saved.</returns>
-		public virtual bool SaveObject(IEnumerable<DataObject> dataObjects)
+		public bool SaveObject(IEnumerable<DataObject> dataObjects)
 		{
 			var success = true;
 			foreach (var grp in dataObjects.GroupBy(obj => obj.GetType()))
@@ -202,14 +213,30 @@ namespace DOL.Database
 				var resultsByObjs = results.Select((result, index) => new { Success = result, DataObject = objs[index] })
 					.GroupBy(obj => obj.Success);
 				
-				foreach (var resultGrp in resultsByObjs.Where(g => !g.Key))
+				foreach (var resultGrp in resultsByObjs)
 				{
-					if (Log.IsErrorEnabled)
+					if (resultGrp.Key)
 					{
-						foreach(var obj in resultGrp)
-							Log.ErrorFormat("SaveObject: DataObject ({0}) could not be saved into database...", obj.DataObject);
+						// Save in Precache if tablehandler use it
+						if (tableHandler.UsesPreCaching)
+						{
+							var primary = tableHandler.PrimaryKey;
+							if (primary != null)
+							{
+								foreach (var successObj in resultGrp.Select(obj => obj.DataObject))
+									tableHandler.SetPreCachedObject(primary.GetValue(successObj), successObj);
+							}
+						}
 					}
-					success = false;
+					else
+					{
+						if (Log.IsErrorEnabled)
+						{
+							foreach(var obj in resultGrp)
+								Log.ErrorFormat("SaveObject: DataObject ({0}) could not be saved into database...", obj.DataObject);
+						}
+						success = false;
+					}
 				}
 				
 				if (tableHandler.HasRelations)
@@ -234,7 +261,7 @@ namespace DOL.Database
 		/// </summary>
 		/// <param name="dataObjects">DataObjects to Delete from database</param>
 		/// <returns>True if All DataObjects were deleted.</returns>
-		public virtual bool DeleteObject(IEnumerable<DataObject> dataObjects)
+		public bool DeleteObject(IEnumerable<DataObject> dataObjects)
 		{
 			var success = true;
 			foreach (var grp in dataObjects.GroupBy(obj => obj.GetType()))
@@ -263,7 +290,18 @@ namespace DOL.Database
 						{
 							if (resultGrp.Key)
 							{
-								// Success Objects Need Relations should be deleted
+								// Delete in Precache if tablehandler use it
+								if (tableHandler.UsesPreCaching)
+								{
+									var primary = tableHandler.PrimaryKey;
+									if (primary != null)
+									{
+										foreach (var successObj in resultGrp.Select(obj => obj.DataObject))
+											tableHandler.DeletePreCachedObject(primary.GetValue(successObj));
+									}
+								}
+								
+								// Success Objects Need to check Relations that should be deleted
 								if (tableHandler.HasRelations)
 									success &= DeleteObjectRelations(tableHandler, resultGrp.Select(obj => obj.DataObject));
 							}
@@ -330,7 +368,20 @@ namespace DOL.Database
 					
 					foreach (var resultGrp in resultsByObjs.GroupBy(obj => obj.Success))
 					{
-						if (!resultGrp.Key)
+						if (resultGrp.Key)
+						{
+							// Update in Precache if tablehandler use it
+							if (remoteHandler.UsesPreCaching)
+							{
+								var primary = remoteHandler.PrimaryKey;
+								if (primary != null)
+								{
+									foreach (var successObj in resultGrp.Select(obj => obj.RelObject.Remote))
+										remoteHandler.SetPreCachedObject(primary.GetValue(successObj), successObj);
+								}
+							}
+						}
+						else
 						{
 							if (Log.IsErrorEnabled)
 							{
@@ -381,7 +432,20 @@ namespace DOL.Database
 				
 				foreach (var resultGrp in resultsByObjs.GroupBy(obj => obj.Success))
 				{
-					if (!resultGrp.Key)
+					if (resultGrp.Key)
+					{
+						// Delete in Precache if tablehandler use it
+						if (remoteHandler.UsesPreCaching)
+						{
+							var primary = remoteHandler.PrimaryKey;
+							if (primary != null)
+							{
+								foreach (var successObj in resultGrp.Select(obj => obj.RelObject.Remote))
+									remoteHandler.DeletePreCachedObject(primary.GetValue(successObj));
+							}
+						}
+					}
+					else
 					{
 						foreach (var result in resultGrp)
 						{
@@ -519,14 +583,14 @@ namespace DOL.Database
 				objsResults = SelectObjectsImpl(remoteHandler, whereClause, parameters, Transaction.IsolationLevel.DEFAULT);
 			}
 			
-			var resultByObjs = objsResults.Select((obj, index) => new { DataObject = objects[index], Results = obj });
+			var resultByObjs = objsResults.Select((obj, index) => new { DataObject = objects[index], Results = obj }).ToArray();
 			
 			// Store Relations
 			foreach (var result in resultByObjs)
 			{
 				if (isElementType)
 				{
-					MethodInfo castMethod = typeof(Enumerable).GetMethod("Cast").MakeGenericMethod(type);
+					MethodInfo castMethod = typeof(Enumerable).GetMethod("OfType").MakeGenericMethod(type);
 					MethodInfo methodToArray = typeof(Enumerable).GetMethod("ToArray").MakeGenericMethod(type);
 					relationBind.SetValue(result.DataObject, methodToArray.Invoke(null, new object[] { castMethod.Invoke(null, new object[] { result.Results }) }));
 				}
@@ -585,27 +649,7 @@ namespace DOL.Database
 		/// <param name="tableHandler">Table Handler for the DataObjects to Retrieve</param>
 		/// <param name="keys">Collection of Primary Key Values</param>
 		/// <returns>Collection of DataObject with primary key matching values</returns>
-		protected virtual IEnumerable<DataObject> FindObjectByKeyImpl(DataTableHandler tableHandler, IEnumerable<object> keys)
-		{
-			// Primary Key
-			var primary = tableHandler.FieldElementBindings.Where(bind => bind.PrimaryKey != null)
-				.Select(bind => new { ColumnName = string.Format("`{0}`", bind.ColumnName), ParamName = string.Format("@{0}", bind.ColumnName) }).ToArray();
-			
-			if (!primary.Any())
-				throw new DatabaseException(string.Format("Table {0} has no primary key for finding by key...", tableHandler.TableName));
-			
-			var whereClause = string.Format("{0}",
-			                                string.Join(" AND ", primary.Select(col => string.Format("{0} = {1}", col.ColumnName, col.ParamName))));
-			
-			var keysArray = keys.ToArray();
-			var parameters = keysArray.Select(key => primary.Select(col => new QueryParameter(col.ParamName, key)));
-			
-			var objs = SelectObjectsImpl(tableHandler, whereClause, parameters, Transaction.IsolationLevel.DEFAULT);
-			
-			var resultByKeys = objs.Select((results, index) => new { Key = keysArray[index], DataObject = results.SingleOrDefault() });
-			
-			return resultByKeys.Select(obj => obj.DataObject).ToArray();
-		}
+		protected abstract IEnumerable<DataObject> FindObjectByKeyImpl(DataTableHandler tableHandler, IEnumerable<object> keys);
 		#endregion
 		
 		#region Public Object Select API With Parameters
@@ -743,6 +787,9 @@ namespace DOL.Database
 				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
 			}
 			
+			if (tableHandler.UsesPreCaching)
+				return tableHandler.SearchPreCachedObjects(obj => obj != null).OfType<TObject>().ToArray();
+			
 			var dataObjects = SelectObjectsImpl(tableHandler, null, new [] { new QueryParameter[] { } }, isolation).Single().OfType<TObject>().ToArray();
 			
 			FillObjectRelations(dataObjects, false);
@@ -863,16 +910,16 @@ namespace DOL.Database
 		public bool UpdateInCache<TObject>(object key)
 			where TObject : DataObject
 		{
-			return UpdateInCache<TObject>(new [] { key });
+			return UpdateObjsInCache<TObject>(new [] { key });
 		}
 		
 		/// <summary>
 		/// Selects objects from the database and updates or adds entries in the pre-cache.
 		/// </summary>
 		/// <typeparam name="TObject">DataObject Type to Query</typeparam>
-		/// <param name="key">Key Collection to Update</param>
+		/// <param name="keys">Key Collection to Update</param>
 		/// <returns>True if All Objects were found with given keys</returns>
-		public bool UpdateInCache<TObject>(IEnumerable<object> key)
+		public bool UpdateObjsInCache<TObject>(IEnumerable<object> keys)
 			where TObject : DataObject
 		{
 			var tableHandler = GetTableOrViewHandler(typeof(TObject));
@@ -884,7 +931,7 @@ namespace DOL.Database
 				throw new DatabaseException(string.Format("Table {0} is not registered for Database Connection...", typeof(TObject).FullName));
 			}
 			
-			var keysArray = key.ToArray();
+			var keysArray = keys.ToArray();
 			var objs = FindObjectByKeyImpl(tableHandler, keysArray);
 			var objsByKey = objs.Select((obj, i) => new { Key = keysArray[i], DataObject = obj });
 			
