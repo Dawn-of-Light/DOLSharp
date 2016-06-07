@@ -1067,6 +1067,7 @@ namespace DOL.Database.Tests
 			
 			Assert.Throws(typeof(ArgumentNullException), () => Database.SelectObjects<TestTable>(null, new QueryParameter[][] { null }), "");
 			
+			Assert.Throws(typeof(InvalidOperationException), () => Database.SelectObjects<TestTable>(null, new QueryParameter[][] {  }), "");
 		}
 		
 		#endregion
