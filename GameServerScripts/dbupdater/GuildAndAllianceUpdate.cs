@@ -39,7 +39,7 @@ namespace DOL.GS.DatabaseUpdate
 		public void Update()
 		{
 			if (log.IsInfoEnabled)
-				log.Info("GuildAndAllianceUpdate - Start Searching for records that need update...");
+				log.Info("Start Searching for records that need update...");
 			
 			// Change the Leader Relation if Missing
 			var alliances = GameServer.Database.SelectObjects<DBAlliance>("LeaderGuildID = @LeaderGuildID OR LeaderGuildID IS NULL", new QueryParameter("@LeaderGuildID", string.Empty));
@@ -55,37 +55,37 @@ namespace DOL.GS.DatabaseUpdate
 				                                               	DBGuild lead = null;
 				                                               	try 
 				                                               	{
-				                                               		lead = gd.SingleOrDefault();
+				                                               		lead = gd.SingleOrDefault(gld => al.AllianceName.Equals(gld.GuildName));
 				                                               	}
 				                                               	catch (Exception e)
 				                                               	{
 				                                               		if (log.IsErrorEnabled)
-				                                               			log.ErrorFormat("GuildAndAllianceUpdate - Wrong records while trying to retrieve Guild Leader (AllianceID: {0}, AllianceName: {1})\n{2}", al.ObjectId, al.AllianceName, e);
+				                                               			log.ErrorFormat("Wrong records while trying to retrieve Guild Leader (AllianceID: {0}, AllianceName: {1})\n{2}", al.ObjectId, al.AllianceName, e);
 				                                               	}
 				                                               	return new { Alliance = al, Leader = lead };
 				                                               }).ToArray();
 				
 				if (log.IsInfoEnabled)
-					log.InfoFormat("GuildAndAllianceUpdate - Fixing Alliances without Leader : {0} records found.", alliancesWithLeader.Length);
+					log.InfoFormat("Fixing Alliances without Leader : {0} records found.", alliancesWithLeader.Length);
 				
 				foreach (var pair in alliancesWithLeader)
 				{
 					if (pair.Leader != null)
 						pair.Alliance.LeaderGuildID = pair.Leader.GuildID;
 					else if (log.IsWarnEnabled)
-						log.WarnFormat("GuildAndAllianceUpdate - Alliance (ID:{0}, Name:{1}) can't resolve its Leading Guild !", pair.Alliance.ObjectId, pair.Alliance.AllianceName);
+						log.WarnFormat("Alliance (ID:{0}, Name:{1}) can't resolve its Leading Guild !", pair.Alliance.ObjectId, pair.Alliance.AllianceName);
 				}
 				
 				var saved = GameServer.Database.SaveObject(alliancesWithLeader.Select(pair => pair.Alliance));
 				
 				if (saved && log.IsInfoEnabled)
-					log.InfoFormat("GuildAndAllianceUpdate - Finished saving Alliances without Leader successfully!");
+					log.InfoFormat("Finished saving Alliances without Leader successfully!");
 				if (!saved && log.IsErrorEnabled)
-					log.ErrorFormat("GuildAndAllianceUpdate - Could not save all Alliances without Leader, check logs or records...");
+					log.ErrorFormat("Could not save all Alliances without Leader, check logs or records...");
 			}
 			
 			if (log.IsInfoEnabled)
-				log.Info("GuildAndAllianceUpdate - End of Database Update...");
+				log.Info("End of Database Update...");
 		}
 	}
 }
