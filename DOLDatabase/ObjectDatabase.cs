@@ -361,35 +361,55 @@ namespace DOL.Database
 				
 				foreach (var grp in groups)
 				{
-					var objs = grp.ToArray();
-					var results = grp.Key ? SaveObjectImpl(remoteHandler, objs.Select(obj => obj.Remote)) : AddObjectImpl(remoteHandler, objs.Select(obj => obj.Remote));
-					
-					var resultsByObjs = results.Select((result, index) => new { Success = result, RelObject = objs[index] });
-					
-					foreach (var resultGrp in resultsByObjs.GroupBy(obj => obj.Success))
+					// Group by object that can be added or saved
+					foreach (var allowed in grp.GroupBy(obj => grp.Key ? obj.Remote.Dirty : obj.Remote.AllowAdd))
 					{
-						if (resultGrp.Key)
+						if (allowed.Key)
 						{
-							// Update in Precache if tablehandler use it
-							if (remoteHandler.UsesPreCaching)
+							var objs = allowed.ToArray();
+							var results = grp.Key ? SaveObjectImpl(remoteHandler, objs.Select(obj => obj.Remote)) : AddObjectImpl(remoteHandler, objs.Select(obj => obj.Remote));
+							
+							var resultsByObjs = results.Select((result, index) => new { Success = result, RelObject = objs[index] });
+							
+							foreach (var resultGrp in resultsByObjs.GroupBy(obj => obj.Success))
 							{
-								var primary = remoteHandler.PrimaryKey;
-								if (primary != null)
+								if (resultGrp.Key)
 								{
-									foreach (var successObj in resultGrp.Select(obj => obj.RelObject.Remote))
-										remoteHandler.SetPreCachedObject(primary.GetValue(successObj), successObj);
+									// Update in Precache if tablehandler use it
+									if (remoteHandler.UsesPreCaching)
+									{
+										var primary = remoteHandler.PrimaryKey;
+										if (primary != null)
+										{
+											foreach (var successObj in resultGrp.Select(obj => obj.RelObject.Remote))
+												remoteHandler.SetPreCachedObject(primary.GetValue(successObj), successObj);
+										}
+									}
+								}
+								else
+								{
+									if (Log.IsErrorEnabled)
+									{
+										foreach (var result in resultGrp)
+											Log.ErrorFormat("SaveObjectRelations: {0} Relation ({1}) of DataObject ({2}) failed for Object ({3})", grp.Key ? "Saving" : "Adding",
+											                relation.ValueType, result.RelObject.Local, result.RelObject.Remote);
+									}
+									success = false;
 								}
 							}
 						}
 						else
 						{
-							if (Log.IsErrorEnabled)
+							// Objects that could not be added can lead to failure
+							if (!grp.Key)
 							{
-								foreach (var result in resultGrp)
-									Log.ErrorFormat("SaveObjectRelations: {0} Relation ({1}) of DataObject ({2}) failed for Object ({3})", grp.Key ? "Saving" : "Adding",
-									                relation.ValueType, result.RelObject.Local, result.RelObject.Remote);
+								if (Log.IsWarnEnabled)
+								{
+									foreach (var obj in allowed)
+										Log.WarnFormat("SaveObjectRelations: DataObject ({0}) not allowed to be added to Database", obj);
+								}
+								success = false;
 							}
-							success = false;
 						}
 					}
 				}
@@ -413,7 +433,7 @@ namespace DOL.Database
 				if (remoteHandler == null)
 				{
 					if (Log.IsErrorEnabled)
-						Log.ErrorFormat("DeleteObjectRelation: Remote Table for Type ({0}) is not registered !", relation.ValueType.FullName);
+						Log.ErrorFormat("DeleteObjectRelations: Remote Table for Type ({0}) is not registered !", relation.ValueType.FullName);
 					success = false;
 					continue;
 				}
@@ -425,37 +445,54 @@ namespace DOL.Database
 					.SelectMany(obj => obj).Where(obj => obj.Remote != null && obj.Remote.IsPersisted)
 					: dataObjects.Select(obj => new { Local = obj, Remote = (DataObject)relation.GetValue(obj) }).Where(obj => obj.Remote != null && obj.Remote.IsPersisted);
 				
-				var objs = groups.ToArray();
-				var results = DeleteObjectImpl(remoteHandler, objs.Select(obj => obj.Remote));
-				
-				var resultsByObjs = results.Select((result, index) => new { Success = result, RelObject = objs[index] });
-				
-				foreach (var resultGrp in resultsByObjs.GroupBy(obj => obj.Success))
+				foreach (var grp in groups.GroupBy(obj => obj.Remote.AllowDelete))
 				{
-					if (resultGrp.Key)
+					if (grp.Key)
 					{
-						// Delete in Precache if tablehandler use it
-						if (remoteHandler.UsesPreCaching)
+						var objs = grp.ToArray();
+						var results = DeleteObjectImpl(remoteHandler, objs.Select(obj => obj.Remote));
+						
+						var resultsByObjs = results.Select((result, index) => new { Success = result, RelObject = objs[index] });
+						
+						foreach (var resultGrp in resultsByObjs.GroupBy(obj => obj.Success))
 						{
-							var primary = remoteHandler.PrimaryKey;
-							if (primary != null)
+							if (resultGrp.Key)
 							{
-								foreach (var successObj in resultGrp.Select(obj => obj.RelObject.Remote))
-									remoteHandler.DeletePreCachedObject(primary.GetValue(successObj));
+								// Delete in Precache if tablehandler use it
+								if (remoteHandler.UsesPreCaching)
+								{
+									var primary = remoteHandler.PrimaryKey;
+									if (primary != null)
+									{
+										foreach (var successObj in resultGrp.Select(obj => obj.RelObject.Remote))
+											remoteHandler.DeletePreCachedObject(primary.GetValue(successObj));
+									}
+								}
+							}
+							else
+							{
+								foreach (var result in resultGrp)
+								{
+									if (Log.IsErrorEnabled)
+										Log.ErrorFormat("DeleteObjectRelations: Deleting Relation ({0}) of DataObject ({1}) failed for Object ({2})",
+										                relation.ValueType, result.RelObject.Local, result.RelObject.Remote);
+								}
+								success = false;
 							}
 						}
 					}
 					else
 					{
-						foreach (var result in resultGrp)
+						// Objects that could not be deleted can lead to failure
+						if (Log.IsWarnEnabled)
 						{
-							if (Log.IsErrorEnabled)
-								Log.ErrorFormat("DeleteObjectRelation: Deleting Relation ({0}) of DataObject ({1}) failed for Object ({2})",
-								                relation.ValueType, result.RelObject.Local, result.RelObject.Remote);
+							foreach (var obj in grp)
+								Log.WarnFormat("DeleteObjectRelations: DataObject ({0}) not allowed to be deleted from Database", obj);
 						}
 						success = false;
 					}
 				}
+				
 			}
 			return success;
 		}

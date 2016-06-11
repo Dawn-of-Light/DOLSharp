@@ -385,6 +385,52 @@ namespace DOL.Database.Tests
 			Database.FillObjectRelations(nullObj);
 
 			Assert.IsNull(nullObj.Entry, "Test Table Relation should not have entry with null local value.");
+			
+			// Check Allow Add Restriction
+			var allowAddRestriction =  new TestTableRelation() { TestField = "RelationTestValueAllowAddRestriction" };
+			
+			allowAddRestriction.Entry = new TestTableRelationEntry() { TestField = "RelationEntryTestValueAllowAddRestriction", ObjectId = allowAddRestriction.ObjectId, AllowAdd = false };
+			
+			var restrictionAdded = Database.AddObject(allowAddRestriction);
+			
+			Assert.IsFalse(restrictionAdded, "Test Table Relation should return error when relation failed saving.");
+			Assert.IsTrue(allowAddRestriction.IsPersisted, "Test Table Relation should be persisted in database.");			
+			Assert.IsFalse(allowAddRestriction.Entry.IsPersisted, "Test Table Relation Entry should not be persisted if AllowAdd Restriction is in place.");
+			
+			// Check Dirty Restriction
+			allowAddRestriction.Entry.AllowAdd = true;
+			
+			var restrictionSaved = Database.SaveObject(allowAddRestriction);
+			
+			Assert.IsTrue(restrictionSaved, "Test Table Relation restriction test should have the restricted object seved to database.");
+			Assert.IsTrue(allowAddRestriction.Entry.IsPersisted, "Test Table Relation Entry restriction test should be persisted.");
+			
+			Assert.IsFalse(allowAddRestriction.Dirty, "Test Table Relation restriction object should not have Dirty flag after saving.");
+			
+			var modifiedText = "RelationEntryTestValueAllowAddRestrictionModified";
+			allowAddRestriction.Entry.TestField = modifiedText;
+			allowAddRestriction.Entry.Dirty = false;
+			
+			Assert.IsFalse(allowAddRestriction.Entry.Dirty, "Test Table Relation Entry need to have its Dirty flag off for this Test.");
+			
+			var modifySaved = Database.SaveObject(allowAddRestriction);
+			
+			Assert.IsTrue(modifySaved, "Test Table Relation should be saved correctly with Dirty flag off.");
+			
+			Database.FillObjectRelations(allowAddRestriction);
+			
+			Assert.AreNotEqual(modifiedText, allowAddRestriction.Entry.TestField, "Test Table Relation Entry should not have been saved with modified text.");
+			
+			// Check Allow Delete Restriction
+			var restrictionEntry = allowAddRestriction.Entry;
+			allowAddRestriction.Entry.AllowDelete = false;
+			
+			var restrictionDeleted = Database.DeleteObject(allowAddRestriction);
+			
+			Assert.IsFalse(restrictionDeleted, "Test Table Relation should not be deleted correctly.");
+			Assert.IsTrue(restrictionEntry.IsPersisted, "Test Table Relation Entry should still be Persisted.");
+			Assert.IsFalse(restrictionEntry.IsDeleted, "Test Table Relation Entry should not be deleted.");
+			Assert.IsFalse(allowAddRestriction.IsPersisted, "Test Table Relation object should not be persisted.");
 		}
 
 		/// <summary>
@@ -476,6 +522,53 @@ namespace DOL.Database.Tests
 			Database.FillObjectRelations(nullObj);
 
 			Assert.IsNull(nullObj.Entries, "Test Table Relations should have null entries with null local value.");
+			
+			// Check Allow Add Restriction
+			var allowAddRestriction =  new TestTableRelations() { TestField = "RelationTestValueAllowAddRestriction" };
+			
+			allowAddRestriction.Entries = new [] { new TestTableRelationsEntries() { TestField = "RelationsEntriesTestValueAllowAddRestriction", ForeignTestField = allowAddRestriction.ObjectId, AllowAdd = false } };
+			
+			var restrictionAdded = Database.AddObject(allowAddRestriction);
+			
+			Assert.IsFalse(restrictionAdded, "Test Table Relations should return false when missing relation adding.");
+			Assert.IsTrue(allowAddRestriction.IsPersisted, "Test Table Relations should be persisted.");
+			
+			Assert.IsFalse(allowAddRestriction.Entries[0].IsPersisted, "Test Table Relations Entries should not be persisted if AllowAdd Restriction is in place.");
+			
+			// Check Dirty Restriction
+			allowAddRestriction.Entries[0].AllowAdd = true;
+			
+			var restrictionSaved = Database.SaveObject(allowAddRestriction);
+			
+			Assert.IsTrue(restrictionSaved, "Test Table Relations restriction test should have the restricted object seved to database.");
+			Assert.IsTrue(allowAddRestriction.Entries[0].IsPersisted, "Test Table Relations Entries restriction test should be persisted.");
+			
+			Assert.IsFalse(allowAddRestriction.Dirty, "Test Table Relations restriction object should not have Dirty flag after saving.");
+			
+			var modifiedText = "RelationEntryTestValueAllowAddRestrictionModified";
+			allowAddRestriction.Entries[0].TestField = modifiedText;
+			allowAddRestriction.Entries[0].Dirty = false;
+			
+			Assert.IsFalse(allowAddRestriction.Entries[0].Dirty, "Test Table Relations Entries need to have its Dirty flag off for this Test.");
+			
+			var modifySaved = Database.SaveObject(allowAddRestriction);
+			
+			Assert.IsTrue(modifySaved, "Test Table Relations should be saved correctly with Dirty flag off.");
+			
+			Database.FillObjectRelations(allowAddRestriction);
+			
+			Assert.AreNotEqual(modifiedText, allowAddRestriction.Entries[0].TestField, "Test Table Relations Entries should not have been saved with modified text.");
+			
+			// Check Allow Delete Restriction
+			var restrictionEntry = allowAddRestriction.Entries[0];
+			allowAddRestriction.Entries[0].AllowDelete = false;
+			
+			var restrictionDeleted = Database.DeleteObject(allowAddRestriction);
+			
+			Assert.IsFalse(restrictionDeleted, "Test Table Relations should not be deleted correctly.");
+			Assert.IsTrue(restrictionEntry.IsPersisted, "Test Table Relations Entries should still be Persisted.");
+			Assert.IsFalse(restrictionEntry.IsDeleted, "Test Table Relations Entries should not be deleted.");
+			Assert.IsFalse(allowAddRestriction.IsPersisted, "Test Table Relations object should not be persisted.");
 		}
 		
 		/// <summary>
