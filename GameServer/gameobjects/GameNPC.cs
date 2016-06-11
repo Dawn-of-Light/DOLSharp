@@ -2980,7 +2980,7 @@ namespace DOL.GS
 		{
 			// list of ambient texts
 			if (!string.IsNullOrEmpty(Name))
-				ambientTexts = GameServer.Database.SelectObjects<MobXAmbientBehaviour>("`Source` ='" + GameServer.Database.Escape(Name) + "';");
+				ambientTexts = GameServer.Instance.NpcManager.AmbientBehaviour[Name];
 		}
 
 		/// <summary>

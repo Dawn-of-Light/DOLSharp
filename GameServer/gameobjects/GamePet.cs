@@ -395,7 +395,7 @@ namespace DOL.GS
 			
 			// also add the pet specific ambient texts if none found
 			if (ambientTexts.Count == 0)
-				ambientTexts = GameServer.Database.SelectObjects<MobXAmbientBehaviour>("`Source` ='pet';");
+				ambientTexts = GameServer.Instance.NpcManager.AmbientBehaviour["pet"];
 		}
 
 		public override bool IsObjectGreyCon(GameObject obj)
