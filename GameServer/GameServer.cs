@@ -58,8 +58,6 @@ namespace DOL.GS
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private bool debugMemory = true;
-
 		#region Variables
 
 		/// <summary>
@@ -177,6 +175,11 @@ namespace DOL.GS
 		{
 			get { return m_status; }
 		}
+		
+		/// <summary>
+		/// Gets the server NpcManager
+		/// </summary>
+		public NpcManager NpcManager { get; protected set; }
 
 		/// <summary>
 		/// Gets the current rules used by server
@@ -227,6 +230,14 @@ namespace DOL.GS
 		public static IObjectDatabase Database
 		{
 			get { return Instance.m_database; }
+		}
+		
+		/// <summary>
+		/// Gets this Instance's Database
+		/// </summary>
+		public IObjectDatabase IDatabase
+		{
+			get { return m_database; }
 		}
 
 		/// <summary>
@@ -610,10 +621,9 @@ namespace DOL.GS
 		{
 			try
 			{
-				//	Process pro = Process.GetCurrentProcess();
-				//	pro.ProcessorAffinity = new IntPtr(GameServer.Instance.Configuration.CPUUse);
-				if (debugMemory)
-					log.Debug("Starting Server, Memory is " + GC.GetTotalMemory(false)/1024/1024);
+				if (log.IsDebugEnabled)
+					log.DebugFormat("Starting Server, Memory is {0}MB", GC.GetTotalMemory(false)/1024/1024);
+				
 				m_status = eGameServerStatus.GSS_Closed;
 				Thread.CurrentThread.Priority = ThreadPriority.Normal;
 
@@ -663,6 +673,11 @@ namespace DOL.GS
 						return false;
 				 */
 
+				//---------------------------------------------------------------
+				//Try to initialize the NpcManager
+				if (!InitComponent(new Func<bool>(() => { NpcManager = new NpcManager(this); return true; })(), "NPC Manager Initialization"))
+					return false;
+				
 				//---------------------------------------------------------------
 				//Try to start the Language Manager
 				if (!InitComponent(LanguageMgr.Init(), "Multi Language Initialization"))
@@ -1131,14 +1146,18 @@ namespace DOL.GS
 		/// <returns>false if startup should be interrupted</returns>
 		protected bool InitComponent(bool componentInitState, string text)
 		{
-			if (debugMemory)
-				log.Debug("Start Memory " + text + ": " + GC.GetTotalMemory(false)/1024/1024);
+			if (log.IsDebugEnabled)
+				log.DebugFormat("Start Memory {0}: {1}MB", text, GC.GetTotalMemory(false)/1024/1024);
+			
 			if (log.IsInfoEnabled)
-				log.Info(text + ": " + componentInitState);
+				log.InfoFormat("{0}: {1}", text, componentInitState);
+			
 			if (!componentInitState)
 				Stop();
-			if (debugMemory)
-				log.Debug("Finish Memory " + text + ": " + GC.GetTotalMemory(false)/1024/1024);
+			
+			if (log.IsDebugEnabled)
+				log.DebugFormat("Finish Memory {0}: {1}MB", text, GC.GetTotalMemory(false)/1024/1024);
+			
 			return componentInitState;
 		}
 
