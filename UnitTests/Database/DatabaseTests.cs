@@ -19,6 +19,8 @@
 using System;
 using System.Linq;
 
+using DOL.Database.UniqueID;
+
 using NUnit.Framework;
 
 namespace DOL.Database.Tests
@@ -369,6 +371,20 @@ namespace DOL.Database.Tests
 			
 			Assert.IsNull(relRetrieve, "Test Table Relation Entry was not auto deleted with relation object.");
 			Assert.IsTrue(relObj.IsDeleted, "Test Table Relation Entry should have deleted flag set after auto delete.");
+			
+			// Check Null Relation
+			var nullObj = new TestTableRelation() { TestField = "RelationNullTestValue" };
+			
+			var nullAdded = Database.AddObject(nullObj);
+			
+			Assert.IsTrue(nullAdded, "Test Table Relation need an object for the Null Relation Test.");
+			
+			nullObj.ObjectId = null;
+			nullObj.Entry = new TestTableRelationEntry() { TestField = "RelationEntryNullTestValue" };
+			
+			Database.FillObjectRelations(nullObj);
+
+			Assert.IsNull(nullObj.Entry, "Test Table Relation should not have entry with null local value.");
 		}
 
 		/// <summary>
@@ -446,6 +462,20 @@ namespace DOL.Database.Tests
 			
 			Assert.IsEmpty(relRetrieve, "Test Table Relations Entries were not auto deleted with relations object.");
 			Assert.IsTrue(relObjs.All(o => o.IsDeleted), "Test Table Relations Entries should have deleted flags set after auto delete.");
+			
+			// Check Null Relation
+			var nullObj = new TestTableRelations() { TestField = "RelationsNullTestValue" };
+			
+			var nullAdded = Database.AddObject(nullObj);
+			
+			Assert.IsTrue(nullAdded, "Test Table Relations need an object for the Null Relation Test.");
+			
+			nullObj.ObjectId = null;
+			nullObj.Entries = new TestTableRelationsEntries[0];
+			
+			Database.FillObjectRelations(nullObj);
+
+			Assert.IsNull(nullObj.Entries, "Test Table Relations should have null entries with null local value.");
 		}
 		
 		/// <summary>
@@ -968,6 +998,22 @@ namespace DOL.Database.Tests
 			var selectInserted = Database.SelectAllObjects<TestTableRelationsWithPrecache>().Single(obj => obj.TestField.Equals(norel.TestField));
 
 			Assert.IsNull(selectInserted.Entries, "Relations Test With Precache should return null for Entries stored without relation.");
+			
+			// Try Fill with null Local Value
+			var reAddEntries = Database.AddObject(Enumerable.Range(0, 5).Select(i => new TestTableRelationsEntriesPrecached { ForeignTestField = IDGenerator.GenerateID(), TestField = string.Format("Test Table NOT Related Entry with Precache #{0}", i) }));
+			
+			Assert.IsTrue(reAddEntries, "Relations Test With Precache Relation Entries could not be inserted for testing...");
+			
+			foreach(var obj in objs)
+			{
+				obj.ObjectId = null;
+				obj.Entries = new TestTableRelationsEntriesPrecached[0];
+			}
+			
+			Database.FillObjectRelations(objs);
+			
+			foreach (var obj in objs)
+				Assert.IsNull(obj.Entries, "Relation Test With Precache should have objects with null relations with null local.");
 		}
 		
 		[Test]
@@ -1006,6 +1052,13 @@ namespace DOL.Database.Tests
 			Assert.AreEqual(norel.TestField, relretrieve.TestField, "Relations Test With Precache and Primary should retrieve similar object.");
 			Assert.IsNotNull(relretrieve.Entry, "Relations Test With Precache and Primary should have valid relation entry.");
 			Assert.AreEqual(relobj.ForeignTestField, relretrieve.Entry.ForeignTestField, "Relations Test With Precache and Primary should retrieve similar relation object.");
+			
+			// Try Null Value Relation
+			relretrieve.ObjectId = null;
+			
+			Database.FillObjectRelations(relretrieve);
+			
+			Assert.IsNull(relretrieve.Entry, "Relations Test With Precache and Primary should return null value for null local field relation...");
 		}
 	}
 }

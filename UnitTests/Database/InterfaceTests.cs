@@ -901,7 +901,7 @@ namespace DOL.Database.Tests
 
 			var allobjects = Database.SelectAllObjects<TestTable>();
 			
-			Assert.IsNotEmpty(allobjects, "This Test Need some Data to be Accurate...");
+			Assert.IsNotEmpty(allobjects, "Select Objects Test Need some Data to be Accurate...");
 			
 			var nullWhere = Database.SelectObjects<TestTable>("", new QueryParameter[] { });
 			
@@ -918,6 +918,15 @@ namespace DOL.Database.Tests
 			var complexWhere = Database.SelectObjects<TestTable>("`TestField` = @TestField AND `Test_Table_ID` = @ObjectId", new [] { new QueryParameter("@TestField", objInitial.TestField), new QueryParameter("@ObjectId", objInitial.ObjectId) });
 			
 			CollectionAssert.Contains(complexWhere.Select(obj => obj.ObjectId.ToLower()), objInitial.ObjectId.ToLower(), "Select Objects with Complex Where clause should retrieve Object similar to Created one...");
+			
+			var objNull = new TestTable { TestField = null };
+			var nullAdd = Database.AddObject(objNull);
+			
+			Assert.IsTrue(nullAdd, "Select Objects null parameter Test Need some null object to be Accurate...");
+			
+			var nullParam = Database.SelectObjects<TestTable>("`TestField` = @TestField", new QueryParameter("@TestField", null));
+			
+			CollectionAssert.IsEmpty(nullParam, "Select Objects with Null Parameter Query should not return any record...");
 		}
 		
 		/// <summary>

@@ -561,17 +561,39 @@ namespace DOL.Database
 			var objects = dataObjects.ToArray();
 			IEnumerable<IEnumerable<DataObject>> objsResults = null;
 			
-			// Handle Cache Search if relevent
+			// Handle Cache Search if relevent or use a Select Query
 			if (remoteHandler.UsesPreCaching)
 			{
 				// Search with Primary Key or use a Where Clause
-				objsResults = remoteHandler.PrimaryKeys.All(pk => pk.ColumnName.Equals(remoteBind.ColumnName, StringComparison.OrdinalIgnoreCase)) ?
-					objects.Select(obj => new [] { remoteHandler.GetPreCachedObject(localBind.GetValue(obj)) }.Where(found => found != null)) :
-					objects.Select(obj => remoteHandler.SearchPreCachedObjects(rem => {
-					                                                           	if (localBind.ValueType == typeof(string) || remoteBind.ValueType == typeof(string))
-					                                                           		return remoteBind.GetValue(rem).ToString().Equals(localBind.GetValue(obj).ToString(), StringComparison.OrdinalIgnoreCase);
-					                                                           	return remoteBind.GetValue(rem) == localBind.GetValue(obj);
-					                                                           }));
+				if (remoteHandler.PrimaryKeys.All(pk => pk.ColumnName.Equals(remoteBind.ColumnName, StringComparison.OrdinalIgnoreCase)))
+				{
+					objsResults = objects.Select(obj => {
+					                             	var local = localBind.GetValue(obj);
+					                             	if (local == null)
+					                             		return new DataObject[0];
+					                             	
+					                             	var retrieve = remoteHandler.GetPreCachedObject(local);
+					                             	if (retrieve == null)
+					                             		return new DataObject[0];
+					                             	
+					                             	return new [] { retrieve };
+					                             });
+				}
+				else
+				{
+					objsResults = objects
+						.Select(obj => remoteHandler.SearchPreCachedObjects(rem => {
+						                                                    	var local = localBind.GetValue(obj);
+						                                                    	var remote = remoteBind.GetValue(rem);
+						                                                    	if (local == null || remote == null)
+						                                                    		return false;
+						                                                    	
+						                                                    	if (localBind.ValueType == typeof(string) || remoteBind.ValueType == typeof(string))
+						                                                    		return remote.ToString().Equals(local.ToString(), StringComparison.OrdinalIgnoreCase);
+						                                                    	
+						                                                    	return remote == local;
+						                                                    }));
+				}
 			}
 			else
 			{
