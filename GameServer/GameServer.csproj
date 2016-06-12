@@ -933,6 +933,9 @@
     <Compile Include="managers\npcmanager\NpcManager.cs" />
     <Compile Include="managers\playermanager\InvalidNamesManager.cs" />
     <Compile Include="managers\playermanager\PlayerManager.cs" />
+    <Compile Include="managers\worldmanager\RegionWeather.cs" />
+    <Compile Include="managers\worldmanager\WeatherManager.cs" />
+    <Compile Include="managers\worldmanager\WorldManager.cs" />
     <Compile Include="minotaurrelics\MinotaurRelic.cs" />
     <Compile Include="minotaurrelics\MinotaurRelicManager.cs" />
     <Compile Include="minotaurrelics\Protectors\ArrektosProtector.cs" />
@@ -2804,6 +2807,7 @@
     <Folder Include="language\DE\Quests\Midgard\" />
     <Folder Include="language\EN\Quests\Midgard\" />
     <Folder Include="managers" />
+    <Folder Include="managers\worldmanager" />
     <Folder Include="managers\npcmanager" />
     <Folder Include="managers\playermanager" />
   </ItemGroup>

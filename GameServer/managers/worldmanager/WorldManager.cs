@@ -21,31 +21,31 @@ using System;
 namespace DOL.GS
 {
 	/// <summary>
-	/// GameServer Manager to Handle Player Data and restriction for this GameServer.
+	/// GameServer Manager to Handle World Data and Region events for this GameServer.
 	/// </summary>
-	public sealed class PlayerManager
+	public sealed class WorldManager
 	{
 		/// <summary>
 		/// Reference to the Instanced GameServer
 		/// </summary>
 		private GameServer GameServerInstance { get; set; }
-		
-		/// <summary>
-		/// Reference to the Invalid Names Manager
-		/// </summary>
-		public InvalidNamesManager InvalidNames { get; private set; }
 
 		/// <summary>
-		/// Create a new Instance of <see cref="PlayerManager"/>
+		/// Reference to the World Weather Manager
 		/// </summary>
-		public PlayerManager(GameServer GameServerInstance)
+		public WeatherManager WeatherManager { get; private set; }
+		
+		/// <summary>
+		/// Create a new instance of <see cref="WorldManager"/>
+		/// </summary>
+		public WorldManager(GameServer GameServerInstance)
 		{
 			if (GameServerInstance == null)
 				throw new ArgumentNullException("GameServerInstance");
-			
+
 			this.GameServerInstance = GameServerInstance;
 			
-			InvalidNames = new InvalidNamesManager(this.GameServerInstance.Configuration.InvalidNamesFile);
+			WeatherManager = new WeatherManager();
 		}
 	}
 }
