@@ -75,6 +75,18 @@ namespace DOL.GS
 		private long NowTicks { get { return GameTimer.GetTickCount(); } }
 		
 		/// <summary>
+		/// Retrieve Region Weather from Region ID
+		/// </summary>
+		public RegionWeather this[ushort regionId]
+		{
+			get
+			{
+				RegionWeather weather;
+				return RegionsWeather.TryGetValue(regionId, out weather) ? weather : null;
+			}
+		}
+		
+		/// <summary>
 		/// Create a new Instance of <see cref="WeatherManager"/>
 		/// </summary>
 		public WeatherManager()
@@ -89,6 +101,84 @@ namespace DOL.GS
 			GameEventMgr.AddHandler(RegionEvent.RegionStart, OnRegionStart);
 			GameEventMgr.AddHandler(RegionEvent.RegionStop, OnRegionStop);
 			GameEventMgr.AddHandler(RegionEvent.PlayerEnter, OnPlayerEnter);
+		}
+		
+		/// <summary>
+		/// Start a Random Weather for Region
+		/// </summary>
+		/// <param name="regionId">Region ID where weather must be changed</param>
+		/// <returns>True if weather was changed</returns>
+		public bool StartWeather(ushort regionId)
+		{
+			var weather = this[regionId];
+			
+			if (weather == null)
+				return false;
+			
+			weather.CreateWeather(NowTicks);
+			StartWeather(weather);
+			return true;
+		}
+		
+		/// <summary>
+		/// Start a Parametrized Weather for Region
+		/// </summary>
+		/// <param name="regionId">Region ID where weather must be changed</param>
+		/// <param name="position">Weather Position</param>
+		/// <param name="width">Weather Width</param>
+		/// <param name="speed">Weather Speed</param>
+		/// <param name="diffusion">Weather Diffusion</param>
+		/// <param name="intensity">Weather Intensity</param>
+		/// <returns>True if weather was changed</returns>
+		public bool StartWeather(ushort regionId, uint position, uint width, ushort speed, ushort diffusion, ushort intensity)
+		{
+			var weather = this[regionId];
+			
+			if (weather == null)
+				return false;
+			
+			weather.CreateWeather(position, width, speed, diffusion, intensity, NowTicks);
+			StartWeather(weather);
+			return true;
+		}
+		
+		/// <summary>
+		/// Restart Weather for Region
+		/// </summary>
+		/// <param name="regionId">Region ID where weather must be restarted</param>
+		/// <returns>True if weather was restarted</returns>
+		public bool RestartWeather(ushort regionId)
+		{
+			var weather = this[regionId];
+			
+			if (weather == null)
+				return false;
+			
+			if (weather.StartTime == 0)
+				return false;
+			
+			weather.CreateWeather(weather.Position, weather.Width, weather.Speed, weather.FogDiffusion, weather.Intensity, NowTicks);
+			StartWeather(weather);
+			return true;
+		}
+		
+		/// <summary>
+		/// Stop Weather for Region
+		/// </summary>
+		/// <param name="regionId">Region ID where weather must be stopped</param>
+		/// <returns>True if weather was stopped</returns>
+		public bool StopWeather(ushort regionId)
+		{
+			var weather = this[regionId];
+			
+			if (weather == null)
+				return false;
+			
+			if (weather.StartTime == 0)
+				return false;
+			
+			StopWeather(weather);
+			return true;
 		}
 		
 		#region Registering

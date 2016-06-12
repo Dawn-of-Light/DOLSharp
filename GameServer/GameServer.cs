@@ -741,11 +741,6 @@ namespace DOL.GS
 					return false;
 
 				//---------------------------------------------------------------
-				//Load all weather managers
-				if (!InitComponent(WeatherMgr.Load(), "Weather Managers"))
-					return false;
-
-				//---------------------------------------------------------------
 				//Load all crafting managers
 				if (!InitComponent(CraftingMgr.Init(), "Crafting Managers"))
 					return false;
@@ -1215,15 +1210,11 @@ namespace DOL.GS
 			//Stop all mobMgrs
 			WorldMgr.StopRegionMgrs();
 
-			//unload all weatherMgr
-			WeatherMgr.Unload();
-
 			//Stop the WorldMgr, save all players
 			//WorldMgr.SaveToDatabase();
 			SaveTimerProc(null);
 
 			WorldMgr.Exit();
-
 
 			//Save the database
 			// 2008-01-29 Kakuri - Obsolete

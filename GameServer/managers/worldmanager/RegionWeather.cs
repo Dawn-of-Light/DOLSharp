@@ -112,14 +112,34 @@ namespace DOL.GS
 		/// <param name="StartTime">StartTime of the Weather (StopWatch ms Timestamp)</param>
 		public void CreateWeather(uint Width, ushort Speed, ushort Intensity, ushort FogDiffusion, long StartTime)
 		{
+			CreateWeather(WeatherStartPosition,
+			              Math.Max(15000, Width),
+			              Math.Max((ushort)100, Speed),
+			              Math.Min((ushort)120, Intensity),
+			              Math.Max((ushort)16000, FogDiffusion),
+			              StartTime
+			             );
+		}
+		
+		/// <summary>
+		/// Create Weather for this Region
+		/// </summary>
+		/// <param name="Position">Position of the Weather (Game Unit)</param>
+		/// <param name="Width">Width of the Weather</param>
+		/// <param name="Speed">Speed of the Weather</param>
+		/// <param name="Intensity">Intensity of the Weather</param>
+		/// <param name="FogDiffusion">Fog Diffusion of the Weather</param>
+		/// <param name="StartTime">StartTime of the Weather</param>
+		public void CreateWeather(uint Position, uint Width, ushort Speed, ushort Intensity, ushort FogDiffusion, long StartTime)
+		{
 			
-			Position = WeatherStartPosition;
-			this.Width = Math.Max(15000, Width);
-			this.Speed = Math.Max((ushort)100, Speed);
-			this.Intensity = Math.Min((ushort)120, Intensity);
-			this.FogDiffusion = Math.Max((ushort)16000, FogDiffusion);
+			this.Position = Position;
+			this.Width = Width;
+			this.Speed = Math.Max((ushort)1, Speed);
+			this.Intensity = Intensity;
+			this.FogDiffusion = FogDiffusion;
 			this.StartTime = StartTime;
-			DueTime = StartTime + Convert.ToInt64(Math.Ceiling((WeatherStopPosition - WeatherStartPosition / (double)Speed) * 1000));
+			DueTime = StartTime + Convert.ToInt64(Math.Ceiling(((WeatherStopPosition - this.Position) / (double)Speed) * 1000));
 		}
 		
 		/// <summary>
@@ -153,7 +173,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return string.Format("[RegionWeather Region={0}, Position={1}, Width={2}, Speed={3}, Intensity={4}, FogDiffusion={5}, StartTime={6}, DueTime={7}, WeatherStartPosition={8}, WeatherStopPosition={9}]", Region.ID, Position, Width, Speed, Intensity, FogDiffusion, StartTime, DueTime, WeatherStartPosition, WeatherStopPosition);
+			return string.Format("[RegionWeather Region={0}, Position={1}, Width={2}, Speed={3}, Intensity={4}, FogDiffusion={5}, DurationTime={6}s, WeatherStartPosition={7}, WeatherStopPosition={8}]", Region.ID, Position, Width, Speed, Intensity, FogDiffusion, DueTime - StartTime / 1000, WeatherStartPosition, WeatherStopPosition);
 		}
 
 	}

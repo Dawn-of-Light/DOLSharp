@@ -2582,9 +2582,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="world\TeleportArea.cs" />
-    <Compile Include="world\WeatherMgr.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="world\WorldMgr.cs">
       <SubType>Code</SubType>
     </Compile>
