@@ -929,8 +929,10 @@
     <Compile Include="keeps\Relics\GameRelicPad.cs" />
     <Compile Include="language\ITranslatableObject.cs" />
     <Compile Include="language\LanguageMgr.cs" />
-    <Compile Include="managers\MobAmbientBehaviourManager.cs" />
-    <Compile Include="managers\NpcManager.cs" />
+    <Compile Include="managers\npcmanager\MobAmbientBehaviourManager.cs" />
+    <Compile Include="managers\npcmanager\NpcManager.cs" />
+    <Compile Include="managers\playermanager\InvalidNamesManager.cs" />
+    <Compile Include="managers\playermanager\PlayerManager.cs" />
     <Compile Include="minotaurrelics\MinotaurRelic.cs" />
     <Compile Include="minotaurrelics\MinotaurRelicManager.cs" />
     <Compile Include="minotaurrelics\Protectors\ArrektosProtector.cs" />
@@ -2591,6 +2593,7 @@
     <Compile Include="world\ZoneData.cs" />
     <Compile Include="world\ZonePointEffects.cs" />
     <EmbeddedResource Include="config\logconfig.xml" />
+    <EmbeddedResource Include="config\invalidnames.txt" />
     <None Include="language\DE\AI.txt" />
     <None Include="language\DE\Atlantis.txt" />
     <None Include="language\DE\Behaviour.txt" />
@@ -2801,6 +2804,8 @@
     <Folder Include="language\DE\Quests\Midgard\" />
     <Folder Include="language\EN\Quests\Midgard\" />
     <Folder Include="managers" />
+    <Folder Include="managers\npcmanager" />
+    <Folder Include="managers\playermanager" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
