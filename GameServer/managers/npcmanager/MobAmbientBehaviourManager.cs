@@ -51,6 +51,9 @@ namespace DOL.GS
 		{
 			get
 			{
+				if (string.IsNullOrEmpty(index))
+					return new MobXAmbientBehaviour[0];
+				
 				var search = index.ToLower();
 				
 				MobXAmbientBehaviour[] matches;

@@ -37,6 +37,9 @@ namespace DOL.GS
 		/// </summary>
 		public NpcManager(GameServer GameServerInstance)
 		{
+			if (GameServerInstance == null)
+				throw new ArgumentNullException("GameServerInstance");
+
 			this.GameServerInstance = GameServerInstance;
 			
 			AmbientBehaviour = new MobAmbientBehaviourManager(this.GameServerInstance.IDatabase);

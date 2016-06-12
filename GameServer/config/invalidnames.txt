@@ -1,0 +1,15 @@
+﻿#This file contains invalid name segments.
+#If a player's name contains any portion of a segment it is rejected.
+#Example: if a segment is "bob" then the name PlayerBobIsCool would be rejected
+#The # symbol at the beginning of a line means a comment and will not be read
+#Pattern enclosed in slash "/" are compiled as Regular Expressions
+#Example: if a pattern is "/bar.*/" then all names beginning with "bar" would be rejected
+
+faggot
+penis
+bitch
+asshole
+cunt
+nigger
+fuck
+shit

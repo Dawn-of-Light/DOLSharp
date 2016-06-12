@@ -17,10 +17,8 @@
  *
  */
 using System;
-using System.Collections;
-using System.Text.RegularExpressions;
-using DOL.Database;
 
+using DOL.Database;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
@@ -32,37 +30,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			string name = packet.ReadString(30);
-			string select = string.Format("Name = '{0}'", GameServer.Database.Escape(name));
-			DOLCharacters character = GameServer.Database.SelectObject<DOLCharacters>(select);
-			bool nameExists = (character != null);
+
+			var character = GameServer.Database.SelectObject<DOLCharacters>(string.Format("Name = '{0}'", GameServer.Database.Escape(name)));
+			
+			var nameExists = (character != null);
 			
 			// Bad Name check.
-			ArrayList invalidNames = GameServer.Instance.InvalidNames;
-
-			foreach(string invalidName in invalidNames)
-			{
-				if(invalidName.StartsWith("/") && invalidName.EndsWith("/"))
-				{
-					// Regex matching
-					string re = invalidName.Replace("/", "");
-					Match match = Regex.Match(name.ToLower(), re, RegexOptions.IgnoreCase);
-					if (match.Success)
-					{
-						nameExists = true;
-						break;
-					}
-				}
-				else
-				{
-					// "Normal" complete partial match
-					if(name.ToLower().Contains(invalidName.ToLower()))
-					{
-						nameExists = true;
-						break;
-					}
-				}
-			}
-
+			if (!nameExists)
+				nameExists = GameServer.Instance.PlayerManager.InvalidNames[name];
+			
 			client.Out.SendDupNameCheckReply(name, nameExists);
 		}
 	}

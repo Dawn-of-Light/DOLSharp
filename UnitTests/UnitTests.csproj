@@ -66,6 +66,8 @@
     <Compile Include="Database\DatabaseTests.cs" />
     <Compile Include="Database\TestDataObjects.cs" />
     <Compile Include="GameServer\gameutils\ServerTest.cs" />
+    <Compile Include="GameServer\InvalidNamesStartupTest.cs" />
+    <Compile Include="Managers\InvalidNamesManagerTest.cs" />
     <Compile Include="SetUpTests.cs" />
     <Compile Include="UPnP.cs" />
     <ProjectReference Include="..\DOLBase\DOLBase.csproj">
@@ -149,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Database" />
+    <Folder Include="Managers" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

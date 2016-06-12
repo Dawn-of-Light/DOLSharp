@@ -96,11 +96,6 @@ namespace DOL.GS
         protected ILog m_inventoryLog;
 
 		/// <summary>
-		/// Contains a list of invalid names
-		/// </summary>
-		protected ArrayList m_invalidNames = new ArrayList();
-
-		/// <summary>
 		/// Holds instance of current server rules
 		/// </summary>
 		protected IServerRules m_serverRules;
@@ -176,6 +171,11 @@ namespace DOL.GS
 			get { return m_status; }
 		}
 		
+		/// <summary>
+		/// Gets the server PlayerManager
+		/// </summary>
+		public PlayerManager PlayerManager { get; protected set; }
+
 		/// <summary>
 		/// Gets the server NpcManager
 		/// </summary>
@@ -254,15 +254,6 @@ namespace DOL.GS
 			}
 		}
 
-
-		/// <summary>
-		/// Gets an array of invalid player names
-		/// </summary>
-		public ArrayList InvalidNames
-		{
-			get { return m_invalidNames; }
-		}
-
 		/// <summary>
 		/// True if the server is listening
 		/// </summary>
@@ -282,7 +273,6 @@ namespace DOL.GS
 		#endregion
 
 		#region Initialization
-
 		/// <summary>
 		/// Creates the gameserver instance
 		/// </summary>
@@ -307,54 +297,6 @@ namespace DOL.GS
 			//Create the instance
 			m_instance = new GameServer(config);
 		}
-
-		/// <summary>
-		/// Loads an array of invalid names
-		/// </summary>
-		public void LoadInvalidNames()
-		{
-			try
-			{
-				m_invalidNames.Clear();
-
-				if (File.Exists(Configuration.InvalidNamesFile))
-				{
-					using (StreamReader file = File.OpenText(Configuration.InvalidNamesFile))
-					{
-						string line = null;
-						while ((line = file.ReadLine()) != null)
-						{
-							if (line.Length == 0 || line[0] == '#')
-							{
-								continue;
-							}
-
-							m_invalidNames.Add(line.ToLower());
-						}
-
-						file.Close();
-					}
-				}
-				else
-				{
-					using (StreamWriter file = File.CreateText(Configuration.InvalidNamesFile))
-					{
-						file.WriteLine("#This file contains invalid name segments.");
-						file.WriteLine("#If a player's name contains any portion of a segment it is rejected.");
-						file.WriteLine("#Example: if a segment is \"bob\" then the name PlayerBobIsCool would be rejected");
-						file.WriteLine("#The # symbol at the beginning of a line means a comment and will not be read");
-						file.Flush();
-						file.Close();
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("LoadInvalidNames", e);
-			}
-		}
-
 		#endregion
 
 		#region UDP
@@ -636,7 +578,7 @@ namespace DOL.GS
 				
 				//---------------------------------------------------------------
 				//Try to init Server Properties
-				if (!InitComponent(new Func<bool>(() => { try { Properties.InitProperties(); return true; } catch { return false; } })(), "Server Properties Lookup"))
+				if (!InitComponent(Properties.InitProperties, "Server Properties Lookup"))
 					return false;
 				
 				//---------------------------------------------------------------
@@ -674,8 +616,13 @@ namespace DOL.GS
 				 */
 
 				//---------------------------------------------------------------
+				//Try to initialize the PlayerManager
+				if (!InitComponent(() => PlayerManager = new PlayerManager(this), "NPC Manager Initialization"))
+					return false;
+
+				//---------------------------------------------------------------
 				//Try to initialize the NpcManager
-				if (!InitComponent(new Func<bool>(() => { NpcManager = new NpcManager(this); return true; })(), "NPC Manager Initialization"))
+				if (!InitComponent(() => NpcManager = new NpcManager(this), "NPC Manager Initialization"))
 					return false;
 				
 				//---------------------------------------------------------------
@@ -1161,6 +1108,34 @@ namespace DOL.GS
 			return componentInitState;
 		}
 
+		protected bool InitComponent(Action componentInitMethod, string text)
+		{
+			if (log.IsDebugEnabled)
+				log.DebugFormat("Start Memory {0}: {1}MB", text, GC.GetTotalMemory(false)/1024/1024);
+			
+			bool componentInitState = false;
+			try
+			{
+				componentInitMethod();
+				componentInitState = true;
+			}
+			catch (Exception ex)
+			{
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("{0}: Error While Initialization\n{1}", text, ex);
+			}
+
+			if (log.IsInfoEnabled)
+				log.InfoFormat("{0}: {1}", text, componentInitState);
+
+			if (!componentInitState)
+				Stop();
+			
+			if (log.IsDebugEnabled)
+				log.DebugFormat("Finish Memory {0}: {1}MB", text, GC.GetTotalMemory(false)/1024/1024);
+			
+			return componentInitState;
+		}
 		#endregion
 
 		#region Stop
@@ -1537,8 +1512,6 @@ namespace DOL.GS
 
 			try
 			{
-				LoadInvalidNames();
-
 				m_udpBuf = new byte[MAX_UDPBUF];
 				m_udpReceiveCallback = new AsyncCallback(RecvFromCallback);
 				m_udpSendCallback = new AsyncCallback(SendToCallback);
