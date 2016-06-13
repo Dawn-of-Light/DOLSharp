@@ -47,12 +47,12 @@ namespace DOL.GS
 		/// <summary>
 		/// Default Weather Check Timer Interval
 		/// </summary>
-		private int DefaultTimerInterval { get { return ServerProperties.Properties.WEATHER_CHECK_INTERVAL; } }
+		private int DefaultTimerInterval { get { return Math.Max(1000, ServerProperties.Properties.WEATHER_CHECK_INTERVAL); } }
 		
 		/// <summary>
 		/// Default Weather Chance
 		/// </summary>
-		private int DefaultWeatherChance { get { return ServerProperties.Properties.WEATHER_CHANCE; } }
+		private int DefaultWeatherChance { get { return Math.Min(99, ServerProperties.Properties.WEATHER_CHANCE); } }
 		
 		/// <summary>
 		/// Log Weather Change to Info Logger
@@ -94,10 +94,10 @@ namespace DOL.GS
 			RegionsWeather = new Dictionary<ushort, RegionWeather>();
 
 			WeatherTimer = new Timer();
+			WeatherTimer.AutoReset = false;
 			WeatherTimer.Enabled = false;			
 			WeatherTimer.Elapsed += OnWeatherTimerTick;
 			WeatherTimer.Interval = DefaultTimerInterval;
-			//WeatherTimer.AutoReset = true;
 
 			GameEventMgr.AddHandler(RegionEvent.RegionStart, OnRegionStart);
 			GameEventMgr.AddHandler(RegionEvent.RegionStop, OnRegionStop);
@@ -324,6 +324,8 @@ namespace DOL.GS
 		/// <param name="e"></param>
 		private void OnWeatherTimerTick(object source, ElapsedEventArgs e)
 		{
+			var interval = (long)DefaultTimerInterval;
+
 			lock (LockObject)
 			{
 				foreach (var entry in RegionsWeather.OrderBy(kv => kv.Value.DueTime).ToArray())
@@ -347,10 +349,13 @@ namespace DOL.GS
 					else
 					{
 						// Reschedule for next Check
-						WeatherTimer.Interval = Math.Max(150, entry.Value.DueTime - NowTicks);
+						interval = Math.Max(1000, entry.Value.DueTime - NowTicks);
 						break;
 					}
 				}
+				
+				WeatherTimer.Interval = interval;
+				WeatherTimer.Enabled = true;
 			}
 		}
 				
