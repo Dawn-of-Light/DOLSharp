@@ -173,7 +173,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return string.Format("[RegionWeather Region={0}, Position={1}, Width={2}, Speed={3}, Intensity={4}, FogDiffusion={5}, DurationTime={6}s, WeatherStartPosition={7}, WeatherStopPosition={8}]", Region.ID, Position, Width, Speed, Intensity, FogDiffusion, DueTime - StartTime / 1000, WeatherStartPosition, WeatherStopPosition);
+			return string.Format("[RegionWeather Region={0}, Position={1}, Width={2}, Speed={3}, Intensity={4}, FogDiffusion={5}, DurationTime={6}s, WeatherStartPosition={7}, WeatherStopPosition={8}]", Region.ID, Position, Width, Speed, Intensity, FogDiffusion, (DueTime - StartTime) / 1000, WeatherStartPosition, WeatherStopPosition);
 		}
 
 	}

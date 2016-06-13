@@ -94,9 +94,10 @@ namespace DOL.GS
 			RegionsWeather = new Dictionary<ushort, RegionWeather>();
 
 			WeatherTimer = new Timer();
+			WeatherTimer.Enabled = false;			
 			WeatherTimer.Elapsed += OnWeatherTimerTick;
 			WeatherTimer.Interval = DefaultTimerInterval;
-			WeatherTimer.Enabled = false;			
+			//WeatherTimer.AutoReset = true;
 
 			GameEventMgr.AddHandler(RegionEvent.RegionStart, OnRegionStart);
 			GameEventMgr.AddHandler(RegionEvent.RegionStop, OnRegionStop);
@@ -346,7 +347,7 @@ namespace DOL.GS
 					else
 					{
 						// Reschedule for next Check
-						WeatherTimer.Interval = Math.Max(entry.Value.DueTime - NowTicks, 1);
+						WeatherTimer.Interval = Math.Max(150, entry.Value.DueTime - NowTicks);
 						break;
 					}
 				}
