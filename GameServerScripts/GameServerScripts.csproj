@@ -72,12 +72,6 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data">
-      <Name>System.Data</Name>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
@@ -123,6 +117,7 @@
     </Compile>
     <Compile Include="dbupdater\AutoXMLDatabaseUpdate.cs" />
     <Compile Include="dbupdater\AutoXMLUpdateTable.cs" />
+    <Compile Include="dbupdater\GuildAndAllianceUpdate.cs" />
     <Compile Include="dbupdater\LanguageSystemUpdate.cs" />
     <Compile Include="dbupdater\LoaderUnloaderXML.cs" />
     <Compile Include="dbupdater\SalvageYieldsUpdate.cs" />

@@ -23,10 +23,10 @@ namespace DOL.Database.UniqueID
 	/// <summary>
 	/// Generates an UniqeID for every Object.
 	/// </summary>
-	public class IDGenerator
+	public static class IDGenerator
 	{
 		/// <summary>
-		/// 
+		/// Generate a new GUID String
 		/// </summary>
 		/// <returns>a new unique Key</returns>
 		public static string GenerateID()

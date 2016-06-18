@@ -30,6 +30,7 @@ namespace DOL.Database.Attributes
 		{
 			AllowDbNull = true;
 			Unique = false;
+			UniqueColumns = string.Empty;
 			Index = false;
 			IndexColumns = string.Empty;
 			Varchar = 0;
@@ -46,6 +47,12 @@ namespace DOL.Database.Attributes
 		/// </summary>
 		/// <value><c>true</c> if a Value as to be Unique</value>
 		public bool Unique { get; set; }
+
+		/// <summary>
+		/// Indicates what columns are added to an Unique Field that includes this column
+		/// </summary>
+		/// <value><c>'ColumnName,ColumnName...'</c></value>
+		public string UniqueColumns { get; set; }
 
 		/// <summary>
 		/// Indicates if the value gets indexed in sql databases

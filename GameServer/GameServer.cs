@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -1398,16 +1399,14 @@ namespace DOL.GS
 						// Walk through each type in the assembly
 						foreach (Type type in assembly.GetTypes())
 						{
-							// Pick up a class
-							// Aredhel: Ok, I know checking for InventoryArtifact type
-							// is a hack, but I currently have no better idea.
-							if (type.IsClass != true || type == typeof (InventoryArtifact))
+							if (!type.IsClass || type.IsAbstract || "DOL.Database.Tests".Equals(type.Namespace))
 								continue;
-							object[] attrib = type.GetCustomAttributes(typeof (DataTable), true);
-							if (attrib.Length > 0)
+							
+							var attrib = type.GetCustomAttributes<DataTable>(false);
+							if (attrib.Any())
 							{
 								if (log.IsInfoEnabled)
-									log.Info("Registering table: " + type.FullName);
+									log.InfoFormat("Registering table: {0}", type.FullName);
 								m_database.RegisterDataObject(type);
 							}
 						}

@@ -68,7 +68,7 @@ namespace DOL.Database.Tests
 	[DataTable(TableName = "Test_TableRelation")]
 	public class TestTableRelation : TestTable
 	{
-		[Relation(LocalField = "ObjectId", RemoteField = "Test_TableRelationEntry_ID", AutoLoad = true, AutoDelete = true)]
+		[Relation(LocalField = "Test_TableRelation_ID", RemoteField = "Test_TableRelationEntry_ID", AutoLoad = true, AutoDelete = true)]
 		public TestTableRelationEntry Entry;
 		
 		public TestTableRelation() { }
@@ -89,7 +89,7 @@ namespace DOL.Database.Tests
 	[DataTable(TableName = "Test_TableRelations")]
 	public class TestTableRelations : TestTable
 	{
-		[Relation(LocalField = "ObjectId", RemoteField = "ForeignTestField", AutoLoad = true, AutoDelete = true)]
+		[Relation(LocalField = "Test_TableRelations_ID", RemoteField = "ForeignTestField", AutoLoad = true, AutoDelete = true)]
 		public TestTableRelationsEntries[] Entries;
 		
 		public TestTableRelations() { }
@@ -107,6 +107,179 @@ namespace DOL.Database.Tests
 		
 		public TestTableRelationsEntries() { }
 	}
+	
+	/// <summary>
+	/// Basic Table with Multiple Unique Constraints
+	/// </summary>
+	[DataTable(TableName = "Test_TableMultiUnique")]
+	public class TestTableMultiUnique : TestTable
+	{
+		string m_strUniquePart;
+		[DataElement(UniqueColumns="IntUniquePart")]
+		public string StrUniquePart { get { return m_strUniquePart; } set { Dirty = true; m_strUniquePart = value; } }
+		
+		int m_intUniquePart;
+		[DataElement]
+		public int IntUniquePart { get { return m_intUniquePart; } set { Dirty = true; m_intUniquePart = value; } }
+		
+		public TestTableMultiUnique() { }
+	}
+	
+	/// <summary>
+	/// Basic Table with Primary Key Constraint
+	/// </summary>
+	[DataTable(TableName = "Test_TablePrimaryKey")]
+	public class TestTablePrimaryKey : TestTable
+	{
+		string m_primaryKey;
+		[PrimaryKey]
+		public string PrimaryKey { get { return m_primaryKey; } set { Dirty = true; m_primaryKey = value; } }
+	}
+
+	/// <summary>
+	/// Basic Table with Primary Key Constraint and Unique Key Constraint
+	/// </summary>
+	[DataTable(TableName = "Test_TablePrimaryKeyUnique")]
+	public class TestTablePrimaryKeyUnique : TestTablePrimaryKey
+	{
+		string m_unique;
+		[DataElement(Unique = true)]
+		public string Unique { get { return m_unique; } set { Dirty = true; m_unique = value; } }
+	}
+	
+	/// <summary>
+	/// Basic Table with Relations and no AutoLoad
+	/// </summary>
+	[DataTable(TableName = "Test_TableRelationsNoAutoload")]
+	public class TestTableRelationsWithNoAutoLoad : TestTable
+	{
+		[Relation(LocalField = "Test_TableRelationsNoAutoload_ID", RemoteField = "ForeignTestField", AutoLoad = false, AutoDelete = true)]
+		public TestTableRelationsEntries[] Entries;
+		
+		public TestTableRelationsWithNoAutoLoad() { }
+	}
+	
+	/// <summary>
+	/// Basic Table with Relations and no AutoDelete
+	/// </summary>
+	[DataTable(TableName = "Test_TableRelationsNoAutodelete")]
+	public class TestTableRelationsWithNoAutoDelete : TestTable
+	{
+		[Relation(LocalField = "Test_TableRelationsNoAutodelete_ID", RemoteField = "ForeignTestField", AutoLoad = true, AutoDelete = false)]
+		public TestTableRelationsEntries[] Entries;
+		
+		public TestTableRelationsWithNoAutoDelete() { }
+	}
+	
+	/// <summary>
+	/// Basic Table with Relations with Precache
+	/// </summary>
+	[DataTable(TableName = "Test_TableRelationsPrecache")]
+	public class TestTableRelationsWithPrecache : TestTable
+	{
+		[Relation(LocalField = "Test_TableRelationsPrecache_ID", RemoteField = "ForeignTestField", AutoLoad = true, AutoDelete = true)]
+		public TestTableRelationsEntriesPrecached[] Entries;
+		
+		public TestTableRelationsWithPrecache() { }
+	}
+	
+	/// <summary>
+	/// Basic Table with Relations Entries Precached
+	/// </summary>
+	[DataTable(TableName = "Test_TableRelationsEntriesPrecached", PreCache = true)]
+	public class TestTableRelationsEntriesPrecached : TestTable
+	{
+		string m_foreignTestField;
+		[DataElement(Varchar = 255, Index = true)]
+		public string ForeignTestField { get { return m_foreignTestField; } set { Dirty = true; m_foreignTestField = value; } }
+		
+		public TestTableRelationsEntriesPrecached() { }
+	}
+	
+	/// <summary>
+	/// Basic Table with Relations with Precache
+	/// </summary>
+	[DataTable(TableName = "Test_TableRelationsPrecachePrimary")]
+	public class TestTableRelationsWithPrecacheAndPrimary : TestTable
+	{
+		[Relation(LocalField = "Test_TableRelationsPrecachePrimary_ID", RemoteField = "Test_TableRelationsEntryPrecached_ID", AutoLoad = true, AutoDelete = true)]
+		public TestTableRelationsEntryPrecached Entry;
+		
+		public TestTableRelationsWithPrecacheAndPrimary() { }
+	}
+	
+	/// <summary>
+	/// Basic Table with Relations Entries Precached
+	/// </summary>
+	[DataTable(TableName = "Test_TableRelationsEntryPrecached", PreCache = true)]
+	public class TestTableRelationsEntryPrecached : TestTable
+	{
+		string m_foreignTestField;
+		[DataElement(Varchar = 255, Index = true)]
+		public string ForeignTestField { get { return m_foreignTestField; } set { Dirty = true; m_foreignTestField = value; } }
+		
+		public TestTableRelationsEntryPrecached() { }
+	}
+
+	/// <summary>
+	/// Basic Table with ReadOnly field
+	/// </summary>
+	[DataTable(TableName = "Test_TableReadOnly")]
+	public class TestTableWithReadOnly : TestTable
+	{
+		[ReadOnly]
+		[DataElement]
+		public string ReadOnly { get; set; }
+		
+		public TestTableWithReadOnly() { }
+	}
+	
+	/// <summary>
+	/// Basic Table for Base View
+	/// Base Table for View should better use some well defined Primary Key for DML !!
+	/// </summary>
+	[DataTable(TableName = "Test_TableBaseView")]	
+	public class TestTableBaseView : TestTableAutoInc
+	{
+		string m_viewValue;
+		[DataElement]
+		public string ViewValue { get { return m_viewValue; } set { Dirty = true; m_viewValue = value; } }
+	}
+	
+	/// <summary>
+	/// Basic Table being a View of Base View
+	/// </summary>
+	[DataTable(TableName = "Test_TableBaseView", ViewName = "Test_TableAsView", ViewAs = "SELECT *, 'Weird Indeed' as `WeirdValue` FROM {0} WHERE `ViewValue` != 'HIDDEN'")]
+	public class TestTableAsView : TestTableBaseView
+	{
+		[DataElement]
+		public string WeirdValue { get; set; }
+	}
+	
+	/// <summary>
+	/// Basic Table being a View of Base View and Implementing a Relation based on existing field.
+	/// </summary>
+	[DataTable(TableName = "Test_TableBaseView", ViewName = "Test_TableAsViewWithRelations", ViewAs = "SELECT * FROM {0}")]
+	public class TestTableAsViewWithRelations : TestTableBaseView
+	{
+		[Relation(LocalField = "ViewValue", RemoteField = "ForeignTestField", AutoLoad = true, AutoDelete = true)]
+		public TestTableRelationsEntries[] Entries;
+	}
+	
+	/// <summary>
+	/// Basic Table with Primary Key using PreCache Behavior
+	/// </summary>
+	[DataTable(TableName = "", PreCache = true)]
+	public class TestTablePrecachedPrimaryKey : TestTablePrimaryKey
+	{
+		string m_precachedValue;
+		[DataElement]
+		public string PrecachedValue { get { return m_precachedValue; } set { Dirty = true; m_precachedValue = value; } }
+		
+		public TestTablePrecachedPrimaryKey() { }
+	}
+	
+	#region Custom Tables
 	
 	/// <summary>
 	/// Test table handling Custom Params
@@ -143,4 +316,13 @@ namespace DOL.Database.Tests
 			this.Value = Value;
 		}
 	}
+	
+	/// <summary>
+	/// Test table that shouldn't be registered to database
+	/// </summary>
+	public class TableNotRegistered : DataObject
+	{
+		public TableNotRegistered() { }
+	}
+	#endregion
 }

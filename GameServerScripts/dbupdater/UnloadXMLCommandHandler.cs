@@ -66,12 +66,12 @@ namespace DOL.GS.DatabaseUpdate
 				return;
 			}
 			
-			IList<Type> types = LoaderUnloaderXML.GetAllDataTableTypes();
+			var types = LoaderUnloaderXML.GetAllDataTableTypes();
 			
-			string argTable = args[1].ToLower();
+			var argTable = args[1];
 			
 			// Prepare Write Path
-			string directory = Path.IsPathRooted(XML_UNLOAD_DB_DIRECTORY) ? XML_UNLOAD_DB_DIRECTORY : string.Format("{0}{1}scripts{1}{2}", GameServer.Instance.Configuration.RootDirectory, Path.DirectorySeparatorChar, XML_UNLOAD_DB_DIRECTORY);
+			var directory = Path.IsPathRooted(XML_UNLOAD_DB_DIRECTORY) ? XML_UNLOAD_DB_DIRECTORY : string.Format("{0}{1}scripts{1}{2}", GameServer.Instance.Configuration.RootDirectory, Path.DirectorySeparatorChar, XML_UNLOAD_DB_DIRECTORY);
 
 			if (!Directory.Exists(directory))
 				Directory.CreateDirectory(directory);
@@ -82,17 +82,14 @@ namespace DOL.GS.DatabaseUpdate
 				case "full":
 					foreach (Type table in types)
 					{
-						string dir = directory;
-						Type workingType = table;
+						var dir = directory;
+						var workingType = table;
 						System.Threading.Tasks.Task.Factory.StartNew(() => LoaderUnloaderXML.UnloadXMLTable(workingType, dir));
 					}
 				break;
 				default:
-				
-					Type findType = types.Where(t => t.Name.ToLower().Equals(argTable)
-				                               || t.GetCustomAttributes(typeof(DataTable), false).Cast<DataTable>()
-				                               .Where(dt => dt.TableName.ToLower().Equals(argTable)).Any())
-						                     .FirstOrDefault();
+					var finddir = directory;
+					var findType = types.FirstOrDefault(t => t.Name.Equals(argTable, StringComparison.OrdinalIgnoreCase) || AttributesUtils.GetTableName(t).Equals(argTable, StringComparison.OrdinalIgnoreCase));
 					if (findType == null)
 					{
 						DisplaySyntax(client);
@@ -101,7 +98,7 @@ namespace DOL.GS.DatabaseUpdate
 						return;
 					}
 					
-					System.Threading.Tasks.Task.Factory.StartNew(() => LoaderUnloaderXML.UnloadXMLTable(findType, directory));
+					System.Threading.Tasks.Task.Factory.StartNew(() => LoaderUnloaderXML.UnloadXMLTable(findType, finddir));
 				break;
 			}
 		}

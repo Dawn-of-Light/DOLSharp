@@ -64,7 +64,18 @@
     <Compile Include="Database\CustomParamsTest.cs" />
     <Compile Include="Database\DatabaseSetUp.cs" />
     <Compile Include="Database\DatabaseTests.cs" />
+    <Compile Include="Database\DatabaseTypeTests.cs" />
+    <Compile Include="Database\InterfaceTests.cs" />
+    <Compile Include="Database\MySQLDBCustomParamsTest.cs" />
+    <Compile Include="Database\MySQLDBInterfaceTests.cs" />
+    <Compile Include="Database\MYSQLDBRegisterTableTests.cs" />
+    <Compile Include="Database\MySQLDBSetUp.cs" />
+    <Compile Include="Database\MySQLDBTests.cs" />
+    <Compile Include="Database\MySQLDBTypeTests.cs" />
+    <Compile Include="Database\RegisterTableTests.cs" />
     <Compile Include="Database\TestDataObjects.cs" />
+    <Compile Include="Database\TestDataObjectType.cs" />
+    <Compile Include="Database\TestTableObjects.cs" />
     <Compile Include="GameServer\gameutils\ServerTest.cs" />
     <Compile Include="GameServer\InvalidNamesStartupTest.cs" />
     <Compile Include="Managers\InvalidNamesManagerTest.cs" />
@@ -155,21 +166,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-      xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\x86" "$(ProjectDir)\$(OutputPath)\x86" /y /s /q /i
-      xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\x64" "$(ProjectDir)\$(OutputPath)\x64" /y /s /q /i
-      xcopy "$(SolutionDir)\GameServer\language\*.txt" "$(ProjectDir)\$(OutputPath)\..\languages" /y /s /q /i
-      xcopy "$(SolutionDir)\GameServerScripts\*.cs" "$(ProjectDir)\$(OutputPath)\..\scripts" /y /s /q /i
-      xcopy "$(SolutionDir)\GameServerScripts\dbupdater\*.xml" "$(ProjectDir)\$(OutputPath)\..\scripts\dbupdater" /y /s /q /i
-    </PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
     <BaseIntermediateOutputPath>..\build\UnitTests\$(Configuration)\</BaseIntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">
-      xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\x86" "$(ProjectDir)\$(OutputPath)\x86" /y /s /q /i
-      xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\x64" "$(ProjectDir)\$(OutputPath)\x64" /y /s /q /i
+      xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.101.0\build\net45\x86" "$(ProjectDir)\$(OutputPath)\x86" /y /s /q /i
+      xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.101.0\build\net45\x64" "$(ProjectDir)\$(OutputPath)\x64" /y /s /q /i
       xcopy "$(SolutionDir)\GameServer\language\*.txt" "$(ProjectDir)\$(OutputPath)\..\languages" /y /s /q /i
       xcopy "$(SolutionDir)\GameServerScripts\*.cs" "$(ProjectDir)\$(OutputPath)\..\scripts" /y /s /q /i
       xcopy "$(SolutionDir)\GameServerScripts\dbupdater\*.xml" "$(ProjectDir)\$(OutputPath)\..\scripts\dbupdater" /y /s /q /i

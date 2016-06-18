@@ -31,30 +31,33 @@ namespace DOL.Database.Tests
 	{
 		public CustomParamsTest()
 		{
+			Database = DatabaseSetUp.Database;
 		}
+		
+		protected SQLObjectDatabase Database { get; set; }
 		
 		[Test]
 		public void TableParamSaveLoadTest()
 		{
-			DatabaseSetUp.Database.RegisterDataObject(typeof(TableCustomParams));
-			DatabaseSetUp.Database.RegisterDataObject(typeof(TableWithCustomParams));
+			Database.RegisterDataObject(typeof(TableCustomParams));
+			Database.RegisterDataObject(typeof(TableWithCustomParams));
 			
 			var TestData = new TableWithCustomParams();
 			TestData.TestValue = "NUnitTest";
 			TestData.CustomParams = new [] { new TableCustomParams(TestData.TestValue, "TestParam", Convert.ToString(true)) };
 			
 			// Cleanup
-			var Cleanup = DatabaseSetUp.Database.SelectAllObjects<TableWithCustomParams>();
+			var Cleanup = Database.SelectAllObjects<TableWithCustomParams>();
 			foreach (var obj in Cleanup)
-				DatabaseSetUp.Database.DeleteObject(obj);
+				Database.DeleteObject(obj);
 			
 			// Check Dynamic object is not Persisted
 			Assert.IsFalse(TestData.IsPersisted, "Newly Created Data Object should not be persisted...");
 			Assert.IsFalse(TestData.CustomParams.First().IsPersisted, "Newly Created Param Object should not be persisted...");
 			
 			// Insert Object
-			var paramsInserted = TestData.CustomParams.Select(o => DatabaseSetUp.Database.AddObject(o)).ToArray();
-			var inserted = DatabaseSetUp.Database.AddObject(TestData);
+			var paramsInserted = TestData.CustomParams.Select(o => Database.AddObject(o)).ToArray();
+			var inserted = Database.AddObject(TestData);
 			
 			Assert.IsTrue(inserted, "Test Object not inserted properly in Database !");
 			Assert.IsTrue(paramsInserted.All(result => result), "Params Objects not inserted properly in Database !");
@@ -64,7 +67,7 @@ namespace DOL.Database.Tests
 			Assert.IsTrue(TestData.CustomParams.First().IsPersisted, "Newly Created Param Object should be persisted...");
 
 			// Retrieve Object From Database
-			var RetrieveData = DatabaseSetUp.Database.FindObjectByKey<TableWithCustomParams>(TestData.ObjectId);
+			var RetrieveData = Database.FindObjectByKey<TableWithCustomParams>(TestData.ObjectId);
 			
 			// Check Retrieved object is Persisted
 			Assert.IsTrue(RetrieveData.IsPersisted, "Retrieved Data Object should be persisted...");

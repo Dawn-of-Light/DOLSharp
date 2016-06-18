@@ -78,29 +78,21 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Data.SQLite" Condition=" '$(OS)' != 'Unix' ">
-      <HintPath>..\packages\System.Data.SQLite.Core.1.0.98.1\lib\net45\System.Data.SQLite.dll</HintPath>
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.101.0\lib\net45\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.SQLite" Condition=" '$(OS)' == 'Unix' ">
       <HintPath>..\sharedModules\SQLite\managedOnly\System.Data.SQLite.dll</HintPath>
     </Reference>
-    <Reference Include="System.Drawing">
-      <Name>System.Drawing</Name>
-    </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Attributes\AttributesUtils.cs" />
     <Compile Include="Attributes\ReadOnly.cs" />
     <Compile Include="Attributes\DataElement.cs">
       <SubType>Code</SubType>
@@ -114,27 +106,17 @@
     <Compile Include="Attributes\Relation.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Cache\CacheException.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Cache\ICache.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Cache\SimpleCache.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Connection\ConnectionType.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Connection\DataConnection.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Connection\TableRowBindind.cs" />
     <Compile Include="CustomParam.cs" />
+    <Compile Include="DatabaseParameter.cs" />
+    <Compile Include="DatabaseUtils.cs" />
+    <Compile Include="ElementBinding.cs" />
     <Compile Include="Handlers\SQLiteObjectDatabase.cs" />
-    <Compile Include="Handlers\XMLObjectDatabase.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="LanguageDataObject.cs" />
+    <Compile Include="SQLObjectDatabase.cs" />
     <Compile Include="Tables\CharacterXDataQuest.cs" />
     <Compile Include="Tables\ClassXSpecialization.cs" />
     <Compile Include="Tables\HousingConsignmentMerchant.cs" />
@@ -353,7 +335,7 @@
     <FileUpdate Files="AssemblyInfo.cs" Regex="(\d+)\.(\d+)\.(\d+)\.(\*|\d+)" ReplacementText="$1.$2.$3.$(Revision)" Condition="Exists('..\auto_version') and $(Revision)!='' and $(Revision)!=-1 and Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\') and Exists('$(ProgramFiles)\subversion\bin\svnversion.exe')" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\x86" "$(ProjectDir)..\$(ConfigurationName)\lib\x86" /y /s /q /i
-xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\x64" "$(ProjectDir)..\$(ConfigurationName)\lib\x64" /y /s /q /i</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.101.0\build\net45\x86" "$(ProjectDir)..\$(ConfigurationName)\lib\x86" /y /s /q /i
+xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.101.0\build\net45\x64" "$(ProjectDir)..\$(ConfigurationName)\lib\x64" /y /s /q /i</PostBuildEvent>
   </PropertyGroup>
 </Project>
