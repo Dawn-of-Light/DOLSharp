@@ -127,6 +127,7 @@ namespace DOL.GS.Scheduler
 				StartedTicksIndex.Add(tasks.Key);
 				foreach (ScheduledTask taskEntry in tasks.Value)
 				{
+					// scope copy for thread safety
 					var timerTask = taskEntry;
 					var task = Task.Factory.StartNew(() => LaunchScheduledTask(timerTask));
 					RunningTimers.Add(new Tuple<long, Task>(Ticks, task));

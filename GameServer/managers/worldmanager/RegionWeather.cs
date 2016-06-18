@@ -68,15 +68,17 @@ namespace DOL.GS
 		/// </summary>
 		public long DueTime { get; set; }
 		
+		private uint m_weatherStartPosition;
 		/// <summary>
 		/// Weather Start Position in this Region
 		/// </summary>
-		private uint WeatherStartPosition { get; set; }
+		private uint WeatherStartPosition { get { return m_weatherStartPosition - Width; } }
 		
+		private uint m_weatherStopPosition;
 		/// <summary>
 		/// Weather Stop Position in this Region
 		/// </summary>
-		private uint WeatherStopPosition { get; set; }
+		private uint WeatherStopPosition { get { return m_weatherStopPosition + Width; } }
 		
 		/// <summary>
 		/// Weather Duration in ms
@@ -89,8 +91,8 @@ namespace DOL.GS
 		public RegionWeather(Region Region)
 		{
 			this.Region = Region;
-			WeatherStartPosition = (uint)Math.Max(0, Region.Zones.Min(z => z.XOffset) - Width);
-			WeatherStopPosition = (uint)Math.Max(0, Region.Zones.Max(z => z.XOffset + z.Width) + Width);
+			m_weatherStartPosition = (uint)Math.Max(0, Region.Zones.Min(z => z.XOffset));
+			m_weatherStopPosition = (uint)Math.Max(0, Region.Zones.Max(z => z.XOffset + z.Width));
 		}
 		
 		/// <summary>

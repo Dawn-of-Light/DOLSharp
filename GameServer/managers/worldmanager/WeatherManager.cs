@@ -126,7 +126,7 @@ namespace DOL.GS
 		/// <returns>True if weather was changed</returns>
 		public bool StartWeather(ushort regionId, uint position, uint width, ushort speed, ushort diffusion, ushort intensity)
 		{
-			return ChangeWeather(regionId, weather => weather.CreateWeather(position, width, speed, diffusion, intensity, SimpleScheduler.Ticks));
+			return ChangeWeather(regionId, weather => weather.CreateWeather(position, width, speed, intensity, diffusion, SimpleScheduler.Ticks));
 		}
 		
 		/// <summary>
@@ -136,7 +136,7 @@ namespace DOL.GS
 		/// <returns>True if weather was restarted</returns>
 		public bool RestartWeather(ushort regionId)
 		{
-			return ChangeWeather(regionId, weather => weather.CreateWeather(weather.Position, weather.Width, weather.Speed, weather.FogDiffusion, weather.Intensity, SimpleScheduler.Ticks));
+			return ChangeWeather(regionId, weather => weather.CreateWeather(weather.Position, weather.Width, weather.Speed, weather.Intensity, weather.FogDiffusion, SimpleScheduler.Ticks));
 		}
 		
 		/// <summary>
@@ -171,8 +171,11 @@ namespace DOL.GS
 				
 				change(weather);
 				
+				// scope copy for thread safety
 				var region = regionId;
 				
+				RegionsTasks.Remove(regionId);
+
 				if (weather.StartTime != 0)
 				{
 					StartWeather(weather);
@@ -337,6 +340,7 @@ namespace DOL.GS
 				{
 					try
 					{
+						// scope copy for thread safety
 						var regionId = region.ID;
 
 						RegionsWeather.Add(regionId, new RegionWeather(region));

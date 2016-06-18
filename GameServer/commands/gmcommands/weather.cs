@@ -17,7 +17,6 @@
  *
  */
 using System;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
@@ -58,7 +57,7 @@ namespace DOL.GS.Commands
 							DisplayMessage(client, "Weather (stop): Weather could not be Stopped in this Region!");
 						break;
 					case "start":
-						if (args.Length >= 7)
+						if (args.Length > 2)
 						{
 							try
 							{
@@ -116,7 +115,7 @@ namespace DOL.GS.Commands
 				if (weather.StartTime == 0)
 					DisplayMessage(client, "Weather (info): Weather is stopped for current Region...");
 				else
-					DisplayMessage(client, "Weather (info): Current Position - {0} - {1}", weather.CurrentPosition(GameTimer.GetTickCount()), weather);
+					DisplayMessage(client, "Weather (info): Current Position - {0} - {1}", weather.CurrentPosition(Scheduler.SimpleScheduler.Ticks), weather);
 			}
 		}
 	}
