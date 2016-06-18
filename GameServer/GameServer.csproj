@@ -1426,6 +1426,7 @@
     <Compile Include="serverrules\DemonsBreachJumpPoint.cs" />
     <Compile Include="serverrules\InstanceDoorJumpPoint.cs" />
     <Compile Include="serverrules\TaskDungeonJumpPoint.cs" />
+    <Compile Include="SimpleScheduler.cs" />
     <Compile Include="skillhandler\BodyguardAbilityHandler.cs" />
     <Compile Include="skillhandler\BolsteringRoarAbilityHandler.cs" />
     <Compile Include="skillhandler\CamouflageSpecHandler.cs" />

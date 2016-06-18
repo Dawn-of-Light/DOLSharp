@@ -75,6 +75,11 @@ namespace DOL.GS
 		private long NowTicks { get { return GameTimer.GetTickCount(); } }
 		
 		/// <summary>
+		/// OnTick Flag prevent running Multiple Tick concurrently
+		/// </summary>
+		private volatile bool OnTick = false;
+		
+		/// <summary>
 		/// Retrieve Region Weather from Region ID
 		/// </summary>
 		public RegionWeather this[ushort regionId]
@@ -82,7 +87,10 @@ namespace DOL.GS
 			get
 			{
 				RegionWeather weather;
-				return RegionsWeather.TryGetValue(regionId, out weather) ? weather : null;
+				lock (LockObject)
+					RegionsWeather.TryGetValue(regionId, out weather);
+				
+				return weather;
 			}
 		}
 		
@@ -189,6 +197,7 @@ namespace DOL.GS
 		/// <param name="region"></param>
 		private void RegisterRegion(Region region)
 		{
+			var success = false;
 			lock (LockObject)
 			{
 				if (!RegionsWeather.ContainsKey(region.ID))
@@ -197,14 +206,7 @@ namespace DOL.GS
 					{
 						var weather = new RegionWeather(region);
 						RegionsWeather.Add(region.ID, weather);
-						
-						if (!WeatherTimer.Enabled)
-						{
-							WeatherTimer.Enabled = true;
-							
-							if (log.IsInfoEnabled)
-								log.Info("Weather Manager Started after Registering a Region...");
-						}
+						success = true;
 					}
 					catch (Exception ex)
 					{
@@ -218,6 +220,14 @@ namespace DOL.GS
 						log.WarnFormat("Trying to Add Region {0} (ID:{1}) to WeatherManager while already Registered!", region.Description, region.ID);
 				}
 			}
+			
+			if (success && !OnTick && !WeatherTimer.Enabled)
+			{
+				WeatherTimer.Enabled = true;
+
+				if (log.IsInfoEnabled)
+					log.Info("Weather Manager Global Timer Started after Registering a Region...");
+			}
 		}
 		
 		/// <summary>
@@ -226,23 +236,12 @@ namespace DOL.GS
 		/// <param name="region"></param>
 		private void UnRegisterRegion(Region region)
 		{
+			RegionWeather current;
 			lock (LockObject)
 			{
-				RegionWeather current;
 				if (RegionsWeather.TryGetValue(region.ID, out current))
 				{
-					if (current.StartTime != 0)
-						StopWeather(current);
-					
 					RegionsWeather.Remove(region.ID);
-				
-					if (!RegionsWeather.Any())
-					{
-						WeatherTimer.Enabled = false;
-						
-						if (log.IsInfoEnabled)
-							log.Info("Weather Manager Stopped, no more Region Registered...");
-					}
 				}
 				else
 				{
@@ -250,6 +249,9 @@ namespace DOL.GS
 						log.WarnFormat("Trying to Remove Region {0} (ID:{1}) from WeatherManager but was not registered!", region.Description, region.ID);
 				}
 			}
+
+			if (current != null && current.StartTime != 0)
+				StopWeather(current);
 		}
 		#endregion
 		
@@ -265,6 +267,7 @@ namespace DOL.GS
 				log.InfoFormat("Weather Stopped in Region {0} (ID {1}) CurrentPosition : {2}\n{3}", weather.Region.Description, weather.Region.ID, weatherCurrentPosition, weather);
 
 			weather.Clear();
+			weather.DueTime = NowTicks + DefaultTimerInterval;
 			foreach (var player in weather.Region.Objects.OfType<GamePlayer>())
 			{
 				SendWeatherUpdate(weather, player);
@@ -294,8 +297,8 @@ namespace DOL.GS
 		/// <param name="player">Player</param>
 		private void SendWeatherUpdate(Region region, GamePlayer player)
 		{
-			RegionWeather current;
-			if (RegionsWeather.TryGetValue(region.ID, out current))
+			var current = this[region.ID];
+			if (current != null)
 				SendWeatherUpdate(current, player);
 		}
 		
@@ -324,38 +327,76 @@ namespace DOL.GS
 		/// <param name="e"></param>
 		private void OnWeatherTimerTick(object source, ElapsedEventArgs e)
 		{
-			var interval = (long)DefaultTimerInterval;
-
-			lock (LockObject)
+			if (OnTick)
+				return;
+			
+			OnTick = true;
+			long interval = DefaultTimerInterval;
+			var anyActive = true;
+			
+			try
 			{
-				foreach (var entry in RegionsWeather.OrderBy(kv => kv.Value.DueTime).ToArray())
+				var stopWeather = new List<RegionWeather>();
+				var startWeather = new List<RegionWeather>();
+				
+				lock (LockObject)
 				{
-					if (entry.Value.DueTime <= NowTicks)
+					anyActive = RegionsWeather.Any();
+
+					foreach (var entry in RegionsWeather.OrderBy(kv => kv.Value.DueTime).ToArray())
 					{
-						// Check for a chance of Weather or stop existing
-						if (!Util.Chance(DefaultWeatherChance))
+						if (entry.Value.DueTime <= NowTicks)
 						{
-							if (entry.Value.StartTime != 0)
-								StopWeather(entry.Value);
+							// Check for a chance of Weather or stop existing
+							if (!Util.Chance(DefaultWeatherChance))
+							{
+								if (entry.Value.StartTime != 0)
+									stopWeather.Add(entry.Value);
+								
+								entry.Value.DueTime = NowTicks + DefaultTimerInterval;
+								continue;
+							}
 							
-							entry.Value.DueTime = NowTicks + DefaultTimerInterval;
-							continue;
+							// Trigger Weather
+							entry.Value.CreateWeather(NowTicks);
+							interval = Math.Min(interval, Math.Max(1000, entry.Value.DueTime - NowTicks));
+							startWeather.Add(entry.Value);
 						}
-						
-						// Trigger Weather
-						entry.Value.CreateWeather(NowTicks);
-						StartWeather(entry.Value);
-					}
-					else
-					{
-						// Reschedule for next Check
-						interval = Math.Max(1000, entry.Value.DueTime - NowTicks);
-						break;
+						else
+						{
+							// Reschedule for next Check
+							interval = Math.Min(interval, Math.Max(1000, entry.Value.DueTime - NowTicks));
+							break;
+						}
 					}
 				}
+			
+				foreach (var weather in stopWeather)
+					StopWeather(weather);
 				
+				foreach (var weather in startWeather)
+					StartWeather(weather);
+			}
+			catch (Exception ex)
+			{
+				if (log.IsErrorEnabled)
+					log.Error("Exception in Weather Manager Timer: ", ex);
+			}
+			finally
+			{
 				WeatherTimer.Interval = interval;
-				WeatherTimer.Enabled = true;
+				OnTick = false;
+				
+				if (anyActive)
+				{
+					WeatherTimer.Enabled = true;
+				}
+				else
+				{
+					WeatherTimer.Enabled = false;
+					if (log.IsInfoEnabled)
+						log.Info("Weather Manager Global Timer Stopped, no more Region Registered...");
+				}
 			}
 		}
 				

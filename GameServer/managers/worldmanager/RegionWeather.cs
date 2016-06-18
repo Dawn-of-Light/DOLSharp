@@ -103,6 +103,21 @@ namespace DOL.GS
 		}
 		
 		/// <summary>
+		/// Create Random Weather for this Region
+		/// </summary>
+		/// <param name="StartTime">StartTime of the Weather</param>
+		public void CreateWeather(long StartTime)
+		{
+			CreateWeather(
+				(uint)Util.Random(25000, 90000),
+				(ushort)Util.Random(100, 700),
+				(ushort)Util.Random(30, 110),
+				(ushort)Util.Random(16000, 32000),
+				StartTime
+			);
+		}
+		
+		/// <summary>
 		/// Create Weather for this Region
 		/// </summary>
 		/// <param name="Width">Width of the Weather (Game Unit, Min 15000)</param>
@@ -143,28 +158,20 @@ namespace DOL.GS
 		}
 		
 		/// <summary>
-		/// Create Random Weather for this Region
-		/// </summary>
-		/// <param name="StartTime">StartTime of the Weather</param>
-		public void CreateWeather(long StartTime)
-		{
-			CreateWeather(
-				(uint)Util.Random(25000, 90000),
-				(ushort)Util.Random(100, 700),
-				(ushort)Util.Random(30, 110),
-				(ushort)Util.Random(16000, 32000),
-				StartTime
-			);
-		}
-		
-		/// <summary>
 		/// Get Current Position of this Storm
 		/// </summary>
 		/// <param name="CurrentTime"></param>
 		/// <returns></returns>
 		public uint CurrentPosition(long CurrentTime)
 		{
-			return Position + Convert.ToUInt32(Math.Ceiling((CurrentTime - StartTime / 1000.0) * Speed));
+			try
+			{
+				return Position + Convert.ToUInt32(Math.Ceiling(((CurrentTime - StartTime) / 1000.0) * Speed));
+			}
+			catch
+			{
+				return uint.MaxValue;
+			}
 		}
 		
 		/// <summary>
