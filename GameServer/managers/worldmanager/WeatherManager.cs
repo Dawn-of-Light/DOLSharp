@@ -20,7 +20,6 @@ using System;
 using System.Reflection;
 using System.Linq;
 using System.Collections.Generic;
-using System.Timers;
 
 using DOL.Events;
 using DOL.GS.PacketHandler;
@@ -330,9 +329,10 @@ namespace DOL.GS
 		#region Registering
 		/// <summary>
 		/// Register a new Region to Weather Manager
+		/// Should not be used Externally
 		/// </summary>
 		/// <param name="region"></param>
-		private void RegisterRegion(Region region)
+		public void RegisterRegion(Region region)
 		{
 			lock (LockObject)
 			{
@@ -363,9 +363,10 @@ namespace DOL.GS
 		
 		/// <summary>
 		/// UnRegister a Stopped Region from Weather Manager
+		/// Should not be used Externally
 		/// </summary>
 		/// <param name="region"></param>
-		private void UnRegisterRegion(Region region)
+		public void UnRegisterRegion(Region region)
 		{
 			lock (LockObject)
 			{
