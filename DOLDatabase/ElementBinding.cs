@@ -98,6 +98,12 @@ namespace DOL.Database
 			ReadOnly = Member.GetCustomAttributes<ReadOnly>().FirstOrDefault();
 		}
 		
+		/// <summary>
+		/// Create a custom instance of <see cref="ElementBinding"/>
+		/// </summary>
+		/// <param name="Member">MemberInfo for this ElementBinding</param>
+		/// <param name="DataElement">Custom DataElement Attached</param>
+		/// <param name="ColumnName">Custom ColumnName</param>
 		public ElementBinding(MemberInfo Member, DataElement DataElement, string ColumnName)
 			: this(Member)
 		{
@@ -105,6 +111,12 @@ namespace DOL.Database
 			this.ColumnName = ColumnName;
 		}
 		
+		/// <summary>
+		/// Create a custom instance of <see cref="ElementBinding"/> with Primary Key
+		/// </summary>
+		/// <param name="Member">MemberInfo for this ElementBinding</param>
+		/// <param name="PrimaryKey">Custom PrimaryKey Attached</param>
+		/// <param name="ColumnName">Custom ColumnName</param>
 		public ElementBinding(MemberInfo Member, PrimaryKey PrimaryKey, string ColumnName)
 			: this(Member)
 		{
