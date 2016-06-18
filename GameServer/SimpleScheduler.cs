@@ -42,7 +42,7 @@ namespace DOL.GS.Scheduler
 		/// <summary>
 		/// Retrieve Current Timestamp used by Scheduler
 		/// </summary>
-		public static long NowTicks { get { return Stopwatch.GetTimestamp() / (Stopwatch.Frequency / 1000); } }
+		public static long Ticks { get { return Stopwatch.GetTimestamp() / (Stopwatch.Frequency / 1000); } }
 		
 		/// <summary>
 		/// Internal Timer Object
@@ -50,12 +50,12 @@ namespace DOL.GS.Scheduler
 		private Timer Timer { get; set; }
 		
 		/// <summary>
-		/// Timer Task Pending for Schedule.
+		/// Timers Pending for Schedule.
 		/// </summary>
 		private ConcurrentBag<Tuple<long, ScheduledTask>> PendingTimers { get; set; }
 		
 		/// <summary>
-		/// Scheduled Task Ordered by Due Time
+		/// Scheduled Timers Ordered by Due Time
 		/// </summary>
 		private SortedDictionary<long, List<ScheduledTask>> ScheduledTimers { get; set; }
 		
@@ -67,12 +67,12 @@ namespace DOL.GS.Scheduler
 		/// <summary>
 		/// Collection Locking Object
 		/// </summary>
-		private readonly object LockObject = new object();
+		private readonly object SchedulerLock = new object();
 		
 		/// <summary>
 		/// Next Timer Tick Due Time
 		/// </summary>
-		private long NextDueTime = long.MaxValue;
+		private long NextDueTick = long.MaxValue;
 		
 		/// <summary>
 		/// Create a new Instance of <see cref="SimpleScheduler"/>
@@ -97,52 +97,54 @@ namespace DOL.GS.Scheduler
 		/// <param name="e"></param>
 		private void OnTick(object source, ElapsedEventArgs e)
 		{
-			System.Threading.Interlocked.Exchange(ref NextDueTime, long.MaxValue);
+			System.Threading.Interlocked.Exchange(ref NextDueTick, long.MaxValue);
 			
 			var nextDueTime = long.MaxValue;
-			lock (LockObject)
+			lock (SchedulerLock)
 			{
-				ResolveRunningTask();
+				ResolveRunningTimers();
 				ResolvePendingTimers();
 				
-				var LaunchedTicks = new List<long>();
-				foreach (var entry in ScheduledTimers)
-				{
-					if (entry.Key <= NowTicks)
-					{
-						// Launch Task
-						foreach (var taskEntry in entry.Value)
-						{
-							var timerTask = taskEntry;
-							var task = Task.Factory.StartNew(() => LaunchScheduledTask(timerTask));
-							RunningTimers.Add(new Tuple<long, Task>(entry.Key, task));
-						}
-						
-						LaunchedTicks.Add(entry.Key);
-					}
-					else
-					{
-						// Reschedule Next Tick
-						nextDueTime = entry.Key;
-						break;
-					}
-				}
-					
-				foreach (var key in LaunchedTicks)
-					ScheduledTimers.Remove(key);
+				ConsumePendingScheduledTasks();
+				
+				// Schedule Next Tick
+				var nextTask = ScheduledTimers.FirstOrDefault();
+				if (nextTask.Value != null)
+					nextDueTime = nextTask.Key;
 			}
 			
-			SignalNextDueTime(nextDueTime);
+			SignalNextDueTick(nextDueTime);
 		}
 		
 		/// <summary>
-		/// Start a Task Method in a Dedicated Thread
+		/// Start All Tasks
+		/// </summary>
+		private void ConsumePendingScheduledTasks()
+		{			
+			var StartedTicksIndex = new List<long>();
+			foreach (KeyValuePair<long, List<ScheduledTask>> tasks in ScheduledTimers.Where(ent => ent.Key <= Ticks))
+			{
+				StartedTicksIndex.Add(tasks.Key);
+				foreach (ScheduledTask taskEntry in tasks.Value)
+				{
+					var timerTask = taskEntry;
+					var task = Task.Factory.StartNew(() => LaunchScheduledTask(timerTask));
+					RunningTimers.Add(new Tuple<long, Task>(Ticks, task));
+				}
+			}
+			
+			foreach (var key in StartedTicksIndex)
+				ScheduledTimers.Remove(key);
+		}
+		
+		/// <summary>
+		/// Start a Task Method
 		/// </summary>
 		/// <param name="task"></param>
 		private void LaunchScheduledTask(ScheduledTask task)
 		{
 			int delay = 0;
-			var start = NowTicks;
+			var start = Ticks;
 			try
 			{
 				delay = task.Run();
@@ -155,13 +157,13 @@ namespace DOL.GS.Scheduler
 			
 			if (log.IsWarnEnabled)
 			{
-				var runningTime = NowTicks - start;
+				var runningTime = Ticks - start;
 				if (runningTime > 500)
 					log.WarnFormat("Simple Scheduler Task (interval:{1}) execution took {0}ms! ({2}.{3})", runningTime, delay, task.Method.GetMethodInfo().ReflectedType, task.Method.GetMethodInfo().Name);
 			}
 			
 			if (delay > 0 && task.Active)
-				Add(task, delay);
+				Start(task, delay);
 		}
 		
 		/// <summary>
@@ -187,9 +189,9 @@ namespace DOL.GS.Scheduler
 		}
 		
 		/// <summary>
-		/// Resolve Running Tasks and Clean Up
+		/// Resolve Running Tasks and Clean Up Timers
 		/// </summary>
-		private void ResolveRunningTask()
+		private void ResolveRunningTimers()
 		{
 			foreach(var task in RunningTimers.ToArray())
 			{
@@ -212,17 +214,17 @@ namespace DOL.GS.Scheduler
 		/// Compare Next Due Time to Value and Update Timer Interval accordingly
 		/// </summary>
 		/// <param name="value"></param>
-		private void SignalNextDueTime(long value)
+		private void SignalNextDueTick(long value)
 		{
 			long initialValue;
 			do
 			{
-				initialValue = System.Threading.Interlocked.Read(ref NextDueTime);
+				initialValue = System.Threading.Interlocked.Read(ref NextDueTick);
 				if (value >= initialValue) return;
 			}
-			while (System.Threading.Interlocked.CompareExchange(ref NextDueTime, value, initialValue) != initialValue);
+			while (System.Threading.Interlocked.CompareExchange(ref NextDueTick, value, initialValue) != initialValue);
 
-			Timer.Interval = Math.Min(int.MaxValue, Math.Max(1, value - NowTicks));
+			Timer.Interval = Math.Min(int.MaxValue, Math.Max(1, value - Ticks));
 		}
 		
 		#region Scheduler API
@@ -232,14 +234,14 @@ namespace DOL.GS.Scheduler
 		/// <param name="method">Method to be scheduled, return next interval or 0 for single run</param>
 		/// <param name="delay">delay in ms for the Method to be started</param>
 		/// <returns>The Scheduled Task Object</returns>
-		public ScheduledTask Add(Func<int> method, int delay)
+		public ScheduledTask Start(Func<int> method, int delay)
 		{
 			if (delay < 1)
 				throw new ArgumentException("Task Delay should be greater than 0.", "delay");
 			
 			var task = new ScheduledTask(method);
 			
-			Add(task, delay);
+			Start(task, delay);
 			
 			return task;
 		}
@@ -249,12 +251,25 @@ namespace DOL.GS.Scheduler
 		/// </summary>
 		/// <param name="task">Scheduled Task Object to Add</param>
 		/// <param name="delay">Delay before Scheduled Task is triggered</param>
-		private void Add(ScheduledTask task, int delay)
+		private void Start(ScheduledTask task, int delay)
 		{
-			var dueTime = NowTicks + delay;
+			var dueTime = Ticks + delay;
 			PendingTimers.Add(new Tuple<long, ScheduledTask>(dueTime, task));
 			
-			SignalNextDueTime(dueTime);
+			SignalNextDueTick(dueTime);
+		}
+		
+		/// <summary>
+		/// Shutdown the Scheduler
+		/// </summary>
+		public void Shutdown()
+		{
+			System.Threading.Interlocked.Exchange(ref NextDueTick, long.MinValue);
+			Timer.Interval = int.MaxValue;
+			Timer.Enabled = false;
+			
+			foreach (var task in RunningTimers)
+				task.Item2.Wait();
 		}
 		#endregion
 	}
@@ -301,7 +316,7 @@ namespace DOL.GS.Scheduler
 		}
 		
 		/// <summary>
-		/// Stop and Unschedule this Task
+		/// Stop and Unschedule Task
 		/// </summary>
 		public void Stop()
 		{
@@ -310,7 +325,7 @@ namespace DOL.GS.Scheduler
 		}
 		
 		/// <summary>
-		/// Run This Task Synchronously Locked
+		/// Run Task Synchronously Locked
 		/// </summary>
 		/// <returns></returns>
 		internal int Run()

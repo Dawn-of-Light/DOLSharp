@@ -172,6 +172,11 @@ namespace DOL.GS
 		}
 		
 		/// <summary>
+		/// Gets the server Scheduler
+		/// </summary>
+		public Scheduler.SimpleScheduler Scheduler { get; protected set; }
+		
+		/// <summary>
 		/// Gets the server WorldManager
 		/// </summary>
 		public WorldManager WorldManager { get; protected set; }
@@ -619,6 +624,11 @@ namespace DOL.GS
 					if (!InitComponent(CryptLib168.GenerateRSAKey(), "RSA key generation"))
 						return false;
 				 */
+
+				//---------------------------------------------------------------
+				//Try to initialize the Scheduler
+				if (!InitComponent(() => Scheduler = new Scheduler.SimpleScheduler(), "Scheduler Initialization"))
+					return false;
 
 				//---------------------------------------------------------------
 				//Try to initialize the WorldManager
@@ -1225,6 +1235,11 @@ namespace DOL.GS
 
 			m_serverRules = null;
 
+			// Stop Server Scheduler
+			if (Scheduler != null)
+				Scheduler.Shutdown();
+			Scheduler = null;
+			
 			Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
 
 			if (log.IsInfoEnabled)

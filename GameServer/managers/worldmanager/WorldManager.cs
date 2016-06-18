@@ -45,7 +45,7 @@ namespace DOL.GS
 
 			this.GameServerInstance = GameServerInstance;
 			
-			WeatherManager = new WeatherManager();
+			WeatherManager = new WeatherManager(this.GameServerInstance.Scheduler);
 		}
 	}
 }

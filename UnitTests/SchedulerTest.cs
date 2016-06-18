@@ -18,7 +18,6 @@
  */
 using System;
 using System.Linq;
-using System.Collections.Concurrent;
 
 using NUnit.Framework;
 
@@ -55,7 +54,7 @@ namespace DOL.Utils.Tests
 		{
 			var scheduler = new SimpleScheduler();
 			
-			var task = scheduler.Add(() => 0, 1);
+			var task = scheduler.Start(() => 0, 1);
 			
 			Assert.IsTrue(task.Active, "Task should be active after Scheduler Insertion...");
 		}
@@ -65,7 +64,7 @@ namespace DOL.Utils.Tests
 		{
 			var scheduler = new SimpleScheduler();
 			
-			var task = scheduler.Add(() => 1, 1);
+			var task = scheduler.Start(() => 1, 1);
 			
 			task.Stop();
 			
@@ -78,7 +77,7 @@ namespace DOL.Utils.Tests
 			var scheduler = new SimpleScheduler();
 			
 			var run = false;
-			var task = scheduler.Add(() => { run = true; return 0; }, 100);
+			var task = scheduler.Start(() => { run = true; return 0; }, 100);
 			
 			System.Threading.Thread.Sleep(50);
 			
@@ -95,7 +94,7 @@ namespace DOL.Utils.Tests
 			var scheduler = new SimpleScheduler();
 			
 			var run = false;
-			var task = scheduler.Add(() => { run = true; return 0; }, 100);
+			var task = scheduler.Start(() => { run = true; return 0; }, 100);
 			
 			System.Threading.Thread.Sleep(150);
 			
@@ -110,7 +109,7 @@ namespace DOL.Utils.Tests
 			var scheduler = new SimpleScheduler();
 			
 			int count = 0;
-			var task = scheduler.Add(() => { count++; return 1; }, 1);
+			var task = scheduler.Start(() => { count++; return 1; }, 1);
 			
 			System.Threading.Thread.Sleep(100);
 			
@@ -129,7 +128,7 @@ namespace DOL.Utils.Tests
 			var scheduler = new SimpleScheduler();
 			
 			int count = 0;
-			var task = scheduler.Add(() => { count++; return 0; }, 1);
+			var task = scheduler.Start(() => { count++; return 0; }, 1);
 			
 			System.Threading.Thread.Sleep(100);
 			
@@ -144,7 +143,7 @@ namespace DOL.Utils.Tests
 			var scheduler = new SimpleScheduler();
 			
 			int count = 0;
-			var task = scheduler.Add(() => { count++; return count == 10 ? 0 : 1; }, 1);
+			var task = scheduler.Start(() => { count++; return count == 10 ? 0 : 1; }, 1);
 			
 			System.Threading.Thread.Sleep(200);
 			
@@ -157,9 +156,9 @@ namespace DOL.Utils.Tests
 		{
 			var scheduler = new SimpleScheduler();
 			
-			var start = SimpleScheduler.NowTicks;
+			var start = SimpleScheduler.Ticks;
 			var finished = long.MaxValue;
-			var task = scheduler.Add(() => { finished = SimpleScheduler.NowTicks; return 0; }, 1);
+			var task = scheduler.Start(() => { finished = SimpleScheduler.Ticks; return 0; }, 1);
 			
 			System.Threading.Thread.Sleep(100);
 			
@@ -173,12 +172,12 @@ namespace DOL.Utils.Tests
 			var scheduler = new SimpleScheduler();
 			
 			// Long Interval Tasks
-			var longTasks = Enumerable.Range(0, 10).Select(i => scheduler.Add(() => 0, 1000)).ToArray();
+			var longTasks = Enumerable.Range(0, 10).Select(i => scheduler.Start(() => 0, 1000)).ToArray();
 
 			System.Threading.Thread.Sleep(100);
 			
 			// Short Interval Tasks
-			var shortTasks = Enumerable.Range(0, 10).Select(i => scheduler.Add(() => 0, 1)).ToArray();
+			var shortTasks = Enumerable.Range(0, 10).Select(i => scheduler.Start(() => 0, 1)).ToArray();
 			
 			System.Threading.Thread.Sleep(100);
 			
@@ -196,13 +195,13 @@ namespace DOL.Utils.Tests
 			
 			// Long Interval Tasks
 			var longCount = Enumerable.Range(0, 10).Select(i => 0).ToArray();
-			var longTasks = Enumerable.Range(0, 10).Select(i => scheduler.Add(() => { longCount[i]++; return longCount[i] == 5 ? 0 : 500; }, 500)).ToArray();
+			var longTasks = Enumerable.Range(0, 10).Select(i => scheduler.Start(() => { longCount[i]++; return longCount[i] == 5 ? 0 : 500; }, 500)).ToArray();
 
 			System.Threading.Thread.Sleep(100);
 			
 			// Short Interval Tasks
 			var shortCount = Enumerable.Range(0, 10).Select(i => 0).ToArray();
-			var shortTasks = Enumerable.Range(0, 10).Select(i => scheduler.Add(() => { shortCount[i]++; return shortCount[i] == 10 ? 0 : 100; }, 1)).ToArray();
+			var shortTasks = Enumerable.Range(0, 10).Select(i => scheduler.Start(() => { shortCount[i]++; return shortCount[i] == 10 ? 0 : 100; }, 1)).ToArray();
 			
 			System.Threading.Thread.Sleep(1100);
 			
@@ -220,7 +219,7 @@ namespace DOL.Utils.Tests
 		{
 			var scheduler = new SimpleScheduler();
 			
-			var task = scheduler.Add(() => { System.Threading.Thread.Sleep(600); return 0; }, 1);
+			var task = scheduler.Start(() => { System.Threading.Thread.Sleep(600); return 0; }, 1);
 			
 			System.Threading.Thread.Sleep(1000);
 			
@@ -232,7 +231,7 @@ namespace DOL.Utils.Tests
 		{
 			var scheduler = new SimpleScheduler();
 			
-			var task = scheduler.Add(() => { throw new Exception(); }, 1);
+			var task = scheduler.Start(() => { throw new Exception(); }, 1);
 			
 			System.Threading.Thread.Sleep(100);
 			
