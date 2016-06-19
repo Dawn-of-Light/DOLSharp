@@ -61,21 +61,6 @@
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Database\CustomParamsTest.cs" />
-    <Compile Include="Database\DatabaseSetUp.cs" />
-    <Compile Include="Database\DatabaseTests.cs" />
-    <Compile Include="Database\DatabaseTypeTests.cs" />
-    <Compile Include="Database\InterfaceTests.cs" />
-    <Compile Include="Database\MySQLDBCustomParamsTest.cs" />
-    <Compile Include="Database\MySQLDBInterfaceTests.cs" />
-    <Compile Include="Database\MYSQLDBRegisterTableTests.cs" />
-    <Compile Include="Database\MySQLDBSetUp.cs" />
-    <Compile Include="Database\MySQLDBTests.cs" />
-    <Compile Include="Database\MySQLDBTypeTests.cs" />
-    <Compile Include="Database\RegisterTableTests.cs" />
-    <Compile Include="Database\TestDataObjects.cs" />
-    <Compile Include="Database\TestDataObjectType.cs" />
-    <Compile Include="Database\TestTableObjects.cs" />
     <Compile Include="GameServer\gameutils\ServerTest.cs" />
     <Compile Include="GameServer\InvalidNamesStartupTest.cs" />
     <Compile Include="Managers\InvalidNamesManagerTest.cs" />
@@ -163,7 +148,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Database" />
     <Folder Include="Managers" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

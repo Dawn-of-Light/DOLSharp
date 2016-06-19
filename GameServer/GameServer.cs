@@ -1415,7 +1415,7 @@ namespace DOL.GS
 						// Walk through each type in the assembly
 						foreach (Type type in assembly.GetTypes())
 						{
-							if (!type.IsClass || type.IsAbstract || "DOL.Database.Tests".Equals(type.Namespace))
+							if (!type.IsClass || type.IsAbstract)
 								continue;
 							
 							var attrib = type.GetCustomAttributes<DataTable>(false);
