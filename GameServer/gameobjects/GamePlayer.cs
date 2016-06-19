@@ -12638,11 +12638,7 @@ namespace DOL.GS
 
 
 				if (m_mlSteps != null)
-				{
-					foreach (DBCharacterXMasterLevel mlstep in m_mlSteps)
-						if (mlstep != null)
-							GameServer.Database.SaveObject(mlstep);
-				}
+					GameServer.Database.SaveObject(m_mlSteps.OfType<DBCharacterXMasterLevel>());
 
 				if (log.IsInfoEnabled)
 					log.InfoFormat("{0} saved!", DBCharacter.Name);

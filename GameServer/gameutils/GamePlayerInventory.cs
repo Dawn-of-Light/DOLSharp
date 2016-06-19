@@ -251,7 +251,7 @@ namespace DOL.GS
 
 								// Check database to make sure player still owns this item before saving
 
-								InventoryItem checkItem = GameServer.Database.SelectObject<InventoryItem>("Inventory_ID = '" + currentItem.ObjectId + "'");
+								InventoryItem checkItem = GameServer.Database.FindObjectByKey<InventoryItem>(currentItem.ObjectId);
 
 								if (checkItem == null || checkItem.OwnerID != m_player.InternalID)
 								{
