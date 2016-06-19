@@ -15,3 +15,4 @@ script:
  - mkdir -p ./build/UnitTests/$XBUILD_TARGET/config
  - sed -e 's/type\=\"log4net\.Appender\.ColoredConsoleAppender\"/type\=\"log4net\.Appender\.ConsoleAppender\"/' ./GameServer/config/logconfig.xml > ./build/UnitTests/$XBUILD_TARGET/config/logconfig.xml
  - LANG=en_US.CP1252 mono ./test/NUnit.ConsoleRunner/tools/nunit3-console.exe ./build/UnitTests/$XBUILD_TARGET/lib/UnitTests.dll
+ - LANG=en_US.CP1252 mono ./test/NUnit.ConsoleRunner/tools/nunit3-console.exe ./build/DOLDatabaseTests/$XBUILD_TARGET/lib/DOLDatabaseTests.dll
