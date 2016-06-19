@@ -34,51 +34,49 @@ namespace DOL.GS
 		/// <summary>
 		/// Weather Position on X axis (from West to East)
 		/// </summary>
-		public uint Position { get; set; }
+		public uint Position { get; private set; }
 		
 		/// <summary>
 		/// Weather Width, happening on the Whole Y Axis
 		/// Width and Speed can change Weather Duration
 		/// </summary>
-		public uint Width { get; set; }
+		public uint Width { get; private set; }
 		
 		/// <summary>
 		/// Game Unit by Second the Weather travels
 		/// </summary>
-		public ushort Speed { get; set; }
+		public ushort Speed { get; private set; }
 		
 		/// <summary>
 		/// Weather Fog and Rain Intensity
 		/// Value above 120 give weird results
 		/// </summary>
-		public ushort Intensity { get; set; }
+		public ushort Intensity { get; private set; }
 		
 		/// <summary>
 		/// Fog Diffusion Value
 		/// </summary>
-		public ushort FogDiffusion { get; set; }
+		public ushort FogDiffusion { get; private set; }
 		
 		/// <summary>
 		/// Time this Weather Started
 		/// </summary>
-		public long StartTime { get; set; }
+		public long StartTime { get; private set; }
 		
 		/// <summary>
 		/// Time this Weather should be checked again
 		/// </summary>
-		public long DueTime { get; set; }
+		public long DueTime { get; private set; }
 		
-		private uint m_weatherStartPosition;
 		/// <summary>
 		/// Weather Start Position in this Region
 		/// </summary>
-		private uint WeatherStartPosition { get { return m_weatherStartPosition - Width; } }
+		private uint WeatherMinPosition { get; set; }
 		
-		private uint m_weatherStopPosition;
 		/// <summary>
 		/// Weather Stop Position in this Region
 		/// </summary>
-		private uint WeatherStopPosition { get { return m_weatherStopPosition + Width; } }
+		private uint WeatherMaxPosition { get; set; }
 		
 		/// <summary>
 		/// Weather Duration in ms
@@ -91,8 +89,8 @@ namespace DOL.GS
 		public RegionWeather(Region Region)
 		{
 			this.Region = Region;
-			m_weatherStartPosition = (uint)Math.Max(0, Region.Zones.Min(z => z.XOffset));
-			m_weatherStopPosition = (uint)Math.Max(0, Region.Zones.Max(z => z.XOffset + z.Width));
+			WeatherMinPosition = (uint)Math.Max(0, Region.Zones.Min(z => z.XOffset));
+			WeatherMaxPosition = (uint)Math.Max(0, Region.Zones.Max(z => z.XOffset + z.Width));
 		}
 		
 		/// <summary>
@@ -134,7 +132,7 @@ namespace DOL.GS
 		/// <param name="StartTime">StartTime of the Weather (StopWatch ms Timestamp)</param>
 		public void CreateWeather(uint Width, ushort Speed, ushort Intensity, ushort FogDiffusion, long StartTime)
 		{
-			CreateWeather(WeatherStartPosition,
+			CreateWeather(WeatherMinPosition,
 			              Math.Max(15000, Width),
 			              Math.Max((ushort)100, Speed),
 			              Math.Min((ushort)120, Intensity),
@@ -147,11 +145,11 @@ namespace DOL.GS
 		/// Create Weather for this Region
 		/// </summary>
 		/// <param name="Position">Position of the Weather (Game Unit)</param>
-		/// <param name="Width">Width of the Weather</param>
-		/// <param name="Speed">Speed of the Weather</param>
+		/// <param name="Width">Width of the Weather (Game Unit)</param>
+		/// <param name="Speed">Speed of the Weather (Unit/s, Min 1)</param>
 		/// <param name="Intensity">Intensity of the Weather</param>
 		/// <param name="FogDiffusion">Fog Diffusion of the Weather</param>
-		/// <param name="StartTime">StartTime of the Weather</param>
+		/// <param name="StartTime">StartTime of the Weather (StopWatch ms Timestamp)</param>
 		public void CreateWeather(uint Position, uint Width, ushort Speed, ushort Intensity, ushort FogDiffusion, long StartTime)
 		{
 			
@@ -161,7 +159,7 @@ namespace DOL.GS
 			this.Intensity = Intensity;
 			this.FogDiffusion = FogDiffusion;
 			this.StartTime = StartTime;
-			DueTime = StartTime + Convert.ToInt64(Math.Ceiling(((WeatherStopPosition - this.Position) / (double)Speed) * 1000));
+			DueTime = StartTime + Convert.ToInt64(Math.Ceiling(((WeatherMaxPosition + Width - this.Position) / (double)Speed) * 1000));
 		}
 		
 		/// <summary>
@@ -187,7 +185,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return string.Format("[RegionWeather Region={0}, Position={1}, Width={2}, Speed={3}, Intensity={4}, FogDiffusion={5}, DurationTime={6}s, WeatherStartPosition={7}, WeatherStopPosition={8}]", Region.ID, Position, Width, Speed, Intensity, FogDiffusion, Duration / 1000, WeatherStartPosition, WeatherStopPosition);
+			return string.Format("[RegionWeather Region={0}, Position={1}, Width={2}, Speed={3}, Intensity={4}, Diffusion={5}, DurationTime={6}s, MinPosition={7}, MaxPosition={8}]", Region.ID, Position, Width, Speed, Intensity, FogDiffusion, Duration / 1000, WeatherMinPosition, WeatherMaxPosition + Width);
 		}
 
 	}

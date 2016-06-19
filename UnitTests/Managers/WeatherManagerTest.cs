@@ -129,7 +129,7 @@ namespace DOL.Managers.Tests
 			weatherMgr.RegisterRegion(region);
 			
 			weatherMgr.StartWeather(1);
-			Assert.AreNotEqual(0, weatherMgr[1].StartTime);
+			Assert.Greater(weatherMgr[1].StartTime, 0);
 		}
 
 		[Test]
@@ -153,9 +153,37 @@ namespace DOL.Managers.Tests
 			var region = FakeRegion();
 			weatherMgr.RegisterRegion(region);
 			
-			weatherMgr.ChangeWeather(1, weather => weather.CreateWeather(65000, 300, 100, 16000, SimpleScheduler.Ticks));
+			weatherMgr.ChangeWeather(1, weather => weather.CreateWeather(65000, 300, 100, 16000, 0));
 
+			Assert.AreEqual((65535 + 65000) / 300, weatherMgr[1].Duration / 1000);
 			Assert.AreEqual(65000, weatherMgr[1].Width);
+		}
+
+		[Test]
+		public void WeatherManager_ChangeWeatherRegionException_WeatherEqual()
+		{
+			var weatherMgr = new WeatherManager(new SimpleScheduler());
+			
+			var region = FakeRegion();
+			weatherMgr.RegisterRegion(region);
+			
+			weatherMgr.ChangeWeather(1, weather => { weather.CreateWeather(65000, 300, 100, 16000, 0); throw new Exception(); });
+
+			Assert.AreEqual((65535 + 65000) / 300, weatherMgr[1].Duration / 1000);
+			Assert.AreEqual(65000, weatherMgr[1].Width);
+		}
+		
+		[Test]
+		public void WeatherRegion_InitWeather_MinMaxEqualZone()
+		{
+			var region = FakeRegion();
+			var weather = new RegionWeather(region);
+			weather.CreateWeather(65000, 300, 100, 16000, 0);
+			
+			var duration = (65535 + 65000) * 1000 / 300;
+			
+			Assert.AreEqual(65535 + 65000, weather.CurrentPosition(duration));
+			Assert.AreEqual(0, weather.CurrentPosition(0));
 		}
 
 	}

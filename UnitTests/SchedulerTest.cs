@@ -54,7 +54,7 @@ namespace DOL.Utils.Tests
 		{
 			var scheduler = new SimpleScheduler();
 			
-			var task = scheduler.Start(() => 0, 1);
+			var task = scheduler.Start(() => 0, 10);
 			
 			Assert.IsTrue(task.Active, "Task should be active after Scheduler Insertion...");
 		}

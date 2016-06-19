@@ -152,7 +152,7 @@ namespace DOL.GS
 		/// Change Current Weather in Region
 		/// </summary>
 		/// <param name="regionId">Region ID where weather is changed</param>
-		/// <param name="change">Weather Object</param>
+		/// <param name="change">Weather Object to change</param>
 		/// <returns>true if Weather changed</returns>
 		public bool ChangeWeather(ushort regionId, Action<RegionWeather> change)
 		{
@@ -168,7 +168,15 @@ namespace DOL.GS
 				
 				task.Stop();
 				
-				change(weather);
+				try
+				{
+					change(weather);
+				}
+				catch (Exception ex)
+				{
+					if (log.IsErrorEnabled)
+						log.Error("Exception While Changing Weather: ", ex);
+				}
 				
 				// scope copy for thread safety
 				var region = regionId;
