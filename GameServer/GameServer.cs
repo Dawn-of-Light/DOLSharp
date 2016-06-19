@@ -173,6 +173,16 @@ namespace DOL.GS
 		}
 		
 		/// <summary>
+		/// Gets the server Scheduler
+		/// </summary>
+		public Scheduler.SimpleScheduler Scheduler { get; protected set; }
+		
+		/// <summary>
+		/// Gets the server WorldManager
+		/// </summary>
+		public WorldManager WorldManager { get; protected set; }
+
+		/// <summary>
 		/// Gets the server PlayerManager
 		/// </summary>
 		public PlayerManager PlayerManager { get; protected set; }
@@ -617,8 +627,18 @@ namespace DOL.GS
 				 */
 
 				//---------------------------------------------------------------
+				//Try to initialize the Scheduler
+				if (!InitComponent(() => Scheduler = new Scheduler.SimpleScheduler(), "Scheduler Initialization"))
+					return false;
+
+				//---------------------------------------------------------------
+				//Try to initialize the WorldManager
+				if (!InitComponent(() => WorldManager = new WorldManager(this), "Instancied World Manager Initialization"))
+					return false;
+				
+				//---------------------------------------------------------------
 				//Try to initialize the PlayerManager
-				if (!InitComponent(() => PlayerManager = new PlayerManager(this), "NPC Manager Initialization"))
+				if (!InitComponent(() => PlayerManager = new PlayerManager(this), "Player Manager Initialization"))
 					return false;
 
 				//---------------------------------------------------------------
@@ -729,11 +749,6 @@ namespace DOL.GS
 				//---------------------------------------------------------------
 				//Load the relic manager
 				if (!InitComponent(RelicMgr.Init(), "Relic Manager"))
-					return false;
-
-				//---------------------------------------------------------------
-				//Load all weather managers
-				if (!InitComponent(WeatherMgr.Load(), "Weather Managers"))
 					return false;
 
 				//---------------------------------------------------------------
@@ -1206,15 +1221,11 @@ namespace DOL.GS
 			//Stop all mobMgrs
 			WorldMgr.StopRegionMgrs();
 
-			//unload all weatherMgr
-			WeatherMgr.Unload();
-
 			//Stop the WorldMgr, save all players
 			//WorldMgr.SaveToDatabase();
 			SaveTimerProc(null);
 
 			WorldMgr.Exit();
-
 
 			//Save the database
 			// 2008-01-29 Kakuri - Obsolete
@@ -1225,6 +1236,11 @@ namespace DOL.GS
 
 			m_serverRules = null;
 
+			// Stop Server Scheduler
+			if (Scheduler != null)
+				Scheduler.Shutdown();
+			Scheduler = null;
+			
 			Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
 
 			if (log.IsInfoEnabled)

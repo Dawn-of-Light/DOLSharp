@@ -603,16 +603,6 @@ namespace DOL.GS
             set { }
         }
 
-
-        /// <summary>
-        /// Get the weather manager for this region
-        /// By default use WeatherMgr
-        /// </summary>
-        public virtual void SendWeather(GamePlayer player)
-        {
-            WeatherMgr.SendWeather(WeatherMgr.GetWeatherForRegion(ID), player);
-        }
-
         /// <summary>
         /// Create the appropriate GameKeep for this region
         /// </summary>

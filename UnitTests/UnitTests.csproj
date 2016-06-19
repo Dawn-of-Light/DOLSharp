@@ -79,6 +79,8 @@
     <Compile Include="GameServer\gameutils\ServerTest.cs" />
     <Compile Include="GameServer\InvalidNamesStartupTest.cs" />
     <Compile Include="Managers\InvalidNamesManagerTest.cs" />
+    <Compile Include="Managers\WeatherManagerTest.cs" />
+    <Compile Include="SchedulerTest.cs" />
     <Compile Include="SetUpTests.cs" />
     <Compile Include="UPnP.cs" />
     <ProjectReference Include="..\DOLBase\DOLBase.csproj">
