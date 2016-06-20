@@ -17,7 +17,7 @@
  *
  */
 using System;
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 
 using DOL.Database;
@@ -392,7 +392,7 @@ namespace DOL.GS.Commands
 								if (myclient == null)
 								{
 									// Patch 1.84: look for offline players
-									obj = GameServer.Database.SelectObject<DOLCharacters>("Name='" + GameServer.Database.Escape(playername) + "'");
+									obj = GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", playername)).FirstOrDefault();
 								}
 								else
 									obj = myclient.Player;
@@ -1220,7 +1220,7 @@ namespace DOL.GS.Commands
                                 if (onlineClient == null)
                                 {
                                     // Patch 1.84: look for offline players
-                                    obj = GameServer.Database.SelectObject<DOLCharacters>("Name='" + GameServer.Database.Escape(playerName) + "'");
+                                    obj = GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", playerName)).FirstOrDefault();
                                     useDB = true;
                                 }
                                 else
@@ -1357,7 +1357,7 @@ namespace DOL.GS.Commands
 								if (myclient == null)
 								{
 									// Patch 1.84: look for offline players
-									obj = GameServer.Database.SelectObject<DOLCharacters>("Name='" + GameServer.Database.Escape(playername) + "'");
+									obj = GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", playername)).FirstOrDefault();
 								}
 								else
 									obj = myclient.Player;
@@ -1622,7 +1622,7 @@ namespace DOL.GS.Commands
 								}
 								else
 								{
-									DOLCharacters c = GameServer.Database.SelectObject<DOLCharacters>("Name = '" + GameServer.Database.Escape(playername) + "'");
+									DOLCharacters c = GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", playername)).FirstOrDefault();
 									//if (c == null)
 									//c = (Character)GameServer.Database.SelectObject<CharacterArchive>("Name = '" + GameServer.Database.Escape(playername) + "'");
 
@@ -1656,7 +1656,7 @@ namespace DOL.GS.Commands
 								}
 								else
 								{
-									DOLCharacters c = GameServer.Database.SelectObject<DOLCharacters>("Name = '" + GameServer.Database.Escape(args[2]) + "'");
+									DOLCharacters c = GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", args[2])).FirstOrDefault();
 									//if (c == null)
 									//    c = (Character)GameServer.Database.SelectObject<CharacterArchive>("Name = '" + GameServer.Database.Escape(args[2]) + "'");
 									if (c == null)

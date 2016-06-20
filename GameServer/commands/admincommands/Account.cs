@@ -17,8 +17,8 @@
  *
  */
 using System;
+using System.Linq;
 using DOL.Database;
-using DOL.GS.PacketHandler;
 using DOL.GS.PacketHandler.Client.v168;
 using DOL.Language;
 
@@ -361,7 +361,7 @@ namespace DOL.GS.Commands
 			GameClient client = WorldMgr.GetClientByAccountName(name, true);
 			if (client != null)
 				return client.Account;
-			return GameServer.Database.SelectObject<Account>("Name ='" + GameServer.Database.Escape(name) + "'");
+			return GameServer.Database.FindObjectByKey<Account>(name);
 		}
 
 		/// <summary>
@@ -374,7 +374,7 @@ namespace DOL.GS.Commands
 			GameClient client = WorldMgr.GetClientByPlayerName(charname, true, false);
 			if (client != null)
 				return client.Player.DBCharacter;
-			return GameServer.Database.SelectObject<DOLCharacters>("Name='" + GameServer.Database.Escape(charname) + "'");
+			return GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", charname)).FirstOrDefault();
 		}
 
 		/// <summary>
@@ -416,7 +416,7 @@ namespace DOL.GS.Commands
 			if (client != null)
 				return client.Account.Name;
 
-			DOLCharacters ch = GameServer.Database.SelectObject<DOLCharacters>("Name='" + GameServer.Database.Escape(charname) + "'");
+			DOLCharacters ch = GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", charname)).FirstOrDefault();
 			if (ch != null)
 				return ch.AccountName;
 			else

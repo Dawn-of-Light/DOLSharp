@@ -928,7 +928,7 @@ namespace DOL.GS.Commands
 			{
 				string raceName = string.Join(" ", args, 2, args.Length - 2);
 
-				Race npcRace = GameServer.Database.SelectObject<Race>("`Name` = '" + GameServer.Database.Escape(raceName) + "'") as Race;
+				Race npcRace = GameServer.Database.SelectObjects<Race>("`Name` = @Name", new QueryParameter("@Name", raceName)).FirstOrDefault();
 
 				if (npcRace == null)
 				{
@@ -1051,19 +1051,17 @@ namespace DOL.GS.Commands
 
 			if (args.Length > 2 && args[2] == "true")
 			{
-				var mobs = GameServer.Database.SelectObject<Mob>("Name = '" + mobName + "'");
+				var mobs = GameServer.Database.SelectObjects<Mob>("`Name` = @Name", new QueryParameter("@Name", mobName)).FirstOrDefault();
 
 				if (mobs == null)
 				{
-					var deleteLoots = GameServer.Database.SelectObjects<MobXLootTemplate>("MobName = '" + mobName + "'");
+					var deleteLoots = GameServer.Database.SelectObjects<MobXLootTemplate>("`MobName` = @MobName", new QueryParameter("@MobName", mobName));
 
-					foreach (var o in deleteLoots)
-						GameServer.Database.DeleteObject(o);
+					GameServer.Database.DeleteObject(deleteLoots);
 
-					var deleteLootTempl = GameServer.Database.SelectObjects<LootTemplate>("TemplateName = '" + mobName + "'");
-
-					foreach (var o in deleteLootTempl)
-						GameServer.Database.DeleteObject(o);
+					var deleteLootTempl = GameServer.Database.SelectObjects<LootTemplate>("`TemplateName` = @TemplateName", new QueryParameter("@TemplateName", mobName));
+					
+					GameServer.Database.DeleteObject(deleteLootTempl);
 
 					DisplayMessage(client, "Removed MobXLootTemplate and LootTemplate entries for " + mobName + " from DB.");
 				}
@@ -1926,8 +1924,7 @@ namespace DOL.GS.Commands
 		private void dropcount<T>(GameClient client, GameNPC targetMob, string[] args) where T : MobXLootTemplate
 		{
 			T mxlt =
-				GameServer.Database.SelectObject<T>("MobName = '" + GameServer.Database.Escape(targetMob.Name) +
-				                                    "' AND LootTemplateName = '" + GameServer.Database.Escape(targetMob.Name) + "'");
+				GameServer.Database.SelectObjects<T>("`MobName` = @MobName AND `LootTemplateName` = @LootTemplateName", new [] { new QueryParameter("@MobName", targetMob.Name), new QueryParameter("@LootTemplateName", targetMob.Name) }).FirstOrDefault();
 
 			if (args.Length < 3)
 			{
@@ -2037,8 +2034,8 @@ namespace DOL.GS.Commands
 				}
 
 				MobXLootType mxlt =
-					GameServer.Database.SelectObject<MobXLootType>("MobName = '" + GameServer.Database.Escape(targetMob.Name) +
-					                                               "' AND LootTemplateName = '" + GameServer.Database.Escape(name) + "'");
+					GameServer.Database.SelectObjects<MobXLootType>("`MobName` = @MobName AND `LootTemplateName` = @LootTemplateName", new [] { new QueryParameter("@MobName", targetMob.Name), new QueryParameter("@LootTemplateName", name) }).FirstOrDefault();
+
 				if (mxlt == null)
 				{
 					DisplayMessage(client,
@@ -2072,7 +2069,7 @@ namespace DOL.GS.Commands
 					return;
 				}
 
-				LootOTD otd = GameServer.Database.SelectObject<LootOTD>("MobName = '" + GameServer.Database.Escape(mobName) + "' AND ItemTemplateID = '" + GameServer.Database.Escape(itemTemplateID) + "'");
+				LootOTD otd = GameServer.Database.SelectObjects<LootOTD>("`MobName` = @MobName AND `ItemTemplateID` = @ItemTemplateID", new [] { new QueryParameter("@MobName", mobName), new QueryParameter("@ItemTemplateID", itemTemplateID) }).FirstOrDefault();
 
 				if (otd != null)
 				{
@@ -2439,9 +2436,8 @@ namespace DOL.GS.Commands
 			if (args.Length > 2)
 			{
 				string mobName = string.Join(" ", args, 2, args.Length - 2);
-				mobName = mobName.Replace("'", "''");
 
-				Mob dbMob = GameServer.Database.SelectObject<Mob>("Name = '" + mobName + "'");
+				Mob dbMob = GameServer.Database.SelectObjects<Mob>("`Name` = @Name", new QueryParameter("@Name", mobName)).FirstOrDefault();
 
 				if (dbMob != null)
 				{
@@ -2989,7 +2985,7 @@ namespace DOL.GS.Commands
 		{
 			if (args.Length > 2)
 			{
-				Mob mob = GameServer.Database.SelectObject<Mob>("Mob_ID = '" + GameServer.Database.Escape(args[2]) + "'");
+				Mob mob = GameServer.Database.FindObjectByKey<Mob>(args[2]);
 				if (mob != null)
 				{
 					Log.DebugFormat("Mob_ID {0} loaded from database.", args[2]);

@@ -17,17 +17,12 @@
  *
  */
 using System;
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
-using System.Reflection;
 
 using DOL.GS;
-using DOL.GS.ServerProperties;
 using DOL.GS.PacketHandler;
-using DOL.Language;
-using DOL.GS.Utils;
 using DOL.Database;
-using log4net;
 
 namespace DOL.GS.Commands
 {
@@ -71,7 +66,7 @@ namespace DOL.GS.Commands
 					info.Add(" Zone Waterlevel: " + client.Player.CurrentZone.Waterlevel);
 
 					zone = WorldMgr.GetZone(client.Player.CurrentZone.ID);
-					Zones dbZone = GameServer.Database.SelectObject<Zones>("`ZoneID` = '" + zone.ID + "' AND `RegionID` = '" + zone.ZoneRegion.ID + "'");
+					Zones dbZone = GameServer.Database.SelectObjects<Zones>("`ZoneID` = @ZoneID AND `RegionID` = @RegionID", new [] { new QueryParameter("@ZoneID", zone.ID), new QueryParameter("@RegionID", zone.ZoneRegion.ID) } ).FirstOrDefault();
 
 					if (dbZone != null)
 					{
@@ -105,7 +100,7 @@ namespace DOL.GS.Commands
 					else
 						zone.IsDivingEnabled = false;
 
-					Zones dbZone = GameServer.Database.SelectObject<Zones>("`ZoneID` = '" + zone.ID + "' AND `RegionID` = '" + zone.ZoneRegion.ID + "'");
+					Zones dbZone = GameServer.Database.SelectObjects<Zones>("`ZoneID` = @ZoneID AND `RegionID` = @RegionID", new [] { new QueryParameter("@ZoneID", zone.ID), new QueryParameter("@RegionID", zone.ZoneRegion.ID) } ).FirstOrDefault();
 					dbZone.DivingFlag = divingFlag;
 					GameServer.Database.SaveObject(dbZone);
 
@@ -128,7 +123,7 @@ namespace DOL.GS.Commands
 					int waterlevel = Convert.ToInt32(args[2]);
 					zone.Waterlevel = waterlevel;
 
-					Zones dbZone = GameServer.Database.SelectObject<Zones>("`ZoneID` = '" + zone.ID + "' AND `RegionID` = '" + zone.ZoneRegion.ID + "'");
+					Zones dbZone = GameServer.Database.SelectObjects<Zones>("`ZoneID` = @ZoneID AND `RegionID` = @RegionID", new [] { new QueryParameter("@ZoneID", zone.ID), new QueryParameter("@RegionID", zone.ZoneRegion.ID) } ).FirstOrDefault();
 					dbZone.WaterLevel = waterlevel;
 					GameServer.Database.SaveObject(dbZone);
 
@@ -221,7 +216,7 @@ namespace DOL.GS.Commands
             }
 
             //find the zone.
-            Zones dbZone = GameServer.Database.SelectObject<Zones>("`ZoneID` = '" + zone.ID + "' AND `RegionID` = '" + zone.ZoneRegion.ID + "'");
+            Zones dbZone = GameServer.Database.SelectObjects<Zones>("`ZoneID` = @ZoneID AND `RegionID` = @RegionID", new [] { new QueryParameter("@ZoneID", zone.ID), new QueryParameter("@RegionID", zone.ZoneRegion.ID) } ).FirstOrDefault();
             //update the zone bonuses.
             dbZone.Bountypoints = zone.BonusBountypoints;
             dbZone.Realmpoints = zone.BonusRealmpoints;

@@ -18,7 +18,7 @@
  */
 
 using System;
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
@@ -472,12 +472,12 @@ namespace DOL.GS
 					RepairRanks(myguild);
 
 					// now reload the guild to fix the relations
-					myguild = new Guild(GameServer.Database.SelectObject<DBGuild>("GuildID = '" + obj.GuildID + "'"));
+					myguild = new Guild(GameServer.Database.SelectObjects<DBGuild>("`GuildID` = @GuildID", new QueryParameter("@GuildID", obj.GuildID)).FirstOrDefault());
 				}
 
 				AddGuild(myguild);
 
-				var guildCharacters = GameServer.Database.SelectObjects<DOLCharacters>(string.Format("GuildID = '" + GameServer.Database.Escape(myguild.GuildID) + "'"));
+				var guildCharacters = GameServer.Database.SelectObjects<DOLCharacters>("`GuildID` = @GuildID", new QueryParameter("@GuildID", myguild.GuildID));
 				var tempList = new Dictionary<string, GuildMemberDisplay>(guildCharacters.Count);
 
 				foreach (DOLCharacters ch in guildCharacters)

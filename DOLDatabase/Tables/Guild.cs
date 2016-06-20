@@ -97,7 +97,7 @@ namespace DOL.Database
 		/// Name of the Guild.  This is readonly after initial creation.
 		/// </summary>
 		[ReadOnly]
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = true, Index = true)]
 		public string GuildName
 		{
 			get

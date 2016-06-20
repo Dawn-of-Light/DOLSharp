@@ -44,7 +44,7 @@ namespace DOL.Database
 			AllowAdd = false;
 		}
 
-		[DataElement( AllowDbNull = false, Index = true, Unique = true )]
+		[DataElement( AllowDbNull = false, Unique = true )]
 		public int ID
 		{
 			get { return m_ID; }
@@ -55,7 +55,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement( AllowDbNull = false, Index = true, Unique = true )]
+		[DataElement( AllowDbNull = false, Unique = true )]
 		public string Name
 		{
 			get { return m_Name; }

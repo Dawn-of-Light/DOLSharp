@@ -206,7 +206,7 @@ namespace DOL.GS
                 {
                     m_totalMoney = value;
 
-                    var merchant = GameServer.Database.SelectObject<HouseConsignmentMerchant>("HouseNumber = '" + HouseNumber + "'");
+                    var merchant = GameServer.Database.SelectObjects<HouseConsignmentMerchant>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", HouseNumber)).FirstOrDefault();
                     merchant.Money = m_totalMoney;
                     GameServer.Database.SaveObject(merchant);
                 }
@@ -750,7 +750,7 @@ namespace DOL.GS
 
 			SetInventoryTemplate();
 
-			var houseCM = GameServer.Database.SelectObject<HouseConsignmentMerchant>("HouseNumber = '" + HouseNumber + "'");
+			var houseCM = GameServer.Database.SelectObjects<HouseConsignmentMerchant>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", HouseNumber)).FirstOrDefault();
 			if (houseCM != null)
 			{
 				TotalMoney = houseCM.Money;
@@ -881,7 +881,7 @@ namespace DOL.GS
 
             if (house.DatabaseItem.GuildHouse)
             {
-                var guild = GameServer.Database.SelectObject<DBGuild>("GuildName = '" + house.DatabaseItem.GuildName + "'");
+            	var guild = GameServer.Database.SelectObjects<DBGuild>("`GuildName` = @GuildName",new QueryParameter("@GuildName", house.DatabaseItem.GuildName)).FirstOrDefault();
                 int emblem = guild.Emblem;
 
                 InventoryItem cloak = Inventory.GetItem(eInventorySlot.Cloak);

@@ -17,10 +17,13 @@
  *
  */
 using System;
+using System.Linq;
 using System.Reflection;
+
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Language;
+
 using log4net;
 
 namespace DOL.GS.Commands
@@ -65,7 +68,7 @@ namespace DOL.GS.Commands
 				gc = WorldMgr.GetClientByPlayerName(args[2], false, false);
 			}
 
-			Account acc = gc != null ? gc.Account : GameServer.Database.SelectObject<Account>("Name LIKE '" + GameServer.Database.Escape(args[2]) + "'");
+			Account acc = gc != null ? gc.Account : GameServer.Database.SelectObjects<Account>("`Name` LIKE @Name", new QueryParameter("@Name", args[2])).FirstOrDefault();
 			if (acc == null)
 			{
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.UnableToFindPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
