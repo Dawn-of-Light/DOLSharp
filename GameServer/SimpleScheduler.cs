@@ -318,6 +318,7 @@ namespace DOL.GS.Scheduler
 		
 		/// <summary>
 		/// Stop and Unschedule Task
+		/// Lock and Wait for Task End if currently Running.
 		/// </summary>
 		public void Stop()
 		{
