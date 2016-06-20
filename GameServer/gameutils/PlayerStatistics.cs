@@ -192,7 +192,7 @@ namespace DOL.GS
             {
                 if (chr.IgnoreStatistics == false)
                 {
-                    var account = GameServer.Database.SelectObject<Account>("Name = '" + chr.AccountName + "'");
+                    var account = GameServer.Database.FindObjectByKey<Account>(chr.AccountName);
 
                     if (account != null && account.PrivLevel == 1)
                     {

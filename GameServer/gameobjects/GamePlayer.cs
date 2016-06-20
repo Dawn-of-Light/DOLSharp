@@ -13265,10 +13265,10 @@ namespace DOL.GS
 			}
 
 			// Data driven quests for this player
-			var dataQuests = GameServer.Database.SelectObjects<CharacterXDataQuest>("Character_ID ='" + GameServer.Database.Escape(QuestPlayerID) + "'");
+			var dataQuests = GameServer.Database.SelectObjects<CharacterXDataQuest>("`Character_ID` = @Character_ID", new QueryParameter("@Character_ID", QuestPlayerID));
 			foreach (CharacterXDataQuest quest in dataQuests)
 			{
-				DBDataQuest dbDataQuest = GameServer.Database.SelectObject<DBDataQuest>("ID = " + quest.DataQuestID);
+				DBDataQuest dbDataQuest = GameServer.Database.FindObjectByKey<DBDataQuest>(quest.DataQuestID);
 				if (dbDataQuest != null && dbDataQuest.StartType != (byte)DataQuest.eStartType.Collection)
 				{
 					DataQuest dataQuest = new DataQuest(this, dbDataQuest, quest);
@@ -13845,12 +13845,12 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CraftItem(ushort itemID)
 		{
-			DBCraftedItem recipe = GameServer.Database.SelectObject<DBCraftedItem>("CraftedItemID ='" + GameServer.Database.Escape(itemID.ToString()) + "'");
+			DBCraftedItem recipe = GameServer.Database.FindObjectByKey<DBCraftedItem>(itemID.ToString());
 			if (recipe != null)
 			{
 				ItemTemplate itemToCraft = null;
 				itemToCraft = GameServer.Database.FindObjectByKey<ItemTemplate>(recipe.Id_nb);
-				IList<DBCraftedXItem> rawMaterials = GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = '" + recipe.Id_nb + "'");
+				IList<DBCraftedXItem> rawMaterials = GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = @CraftedItemId_nb", new QueryParameter("@CraftedItemId_nb", recipe.Id_nb));
 				if (rawMaterials.Count > 0)
 				{
 					if (itemToCraft != null)

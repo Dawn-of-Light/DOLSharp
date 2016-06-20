@@ -147,7 +147,7 @@ namespace DOL.GS.ServerRules
 			}
 			 */
 
-			Account account = GameServer.Database.SelectObject<Account>("Name ='" + GameServer.Database.Escape(username) + "'");
+			Account account = GameServer.Database.FindObjectByKey<Account>(username);
 
 			if (Properties.MAX_PLAYERS > 0)
 			{

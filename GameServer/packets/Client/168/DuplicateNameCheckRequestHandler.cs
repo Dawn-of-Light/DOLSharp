@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 
 using DOL.Database;
 
@@ -31,7 +32,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			string name = packet.ReadString(30);
 
-			var character = GameServer.Database.SelectObject<DOLCharacters>(string.Format("Name = '{0}'", GameServer.Database.Escape(name)));
+			var character = GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", name)).FirstOrDefault();
 			
 			var nameExists = (character != null);
 			

@@ -17,13 +17,14 @@
  *
  */
 using System;
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Language;
+
 using log4net;
 
 namespace DOL.GS
@@ -170,7 +171,7 @@ namespace DOL.GS
 			siegeWeapon.ReleaseControl();
 			siegeWeapon.RemoveFromWorld();
 			bool error = false;
-            DBCraftedItem recipe = GameServer.Database.SelectObject<DBCraftedItem>("Id_nb ='" + siegeWeapon.ItemId + "'");
+			DBCraftedItem recipe = GameServer.Database.SelectObjects<DBCraftedItem>("`Id_nb` = @Id_nb", new QueryParameter("@Id_nb", siegeWeapon.ItemId)).FirstOrDefault();
 
 			if (recipe == null)
             {
@@ -179,7 +180,7 @@ namespace DOL.GS
 				return 1;
             }
 
-			IList<DBCraftedXItem> rawMaterials = GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = '" + recipe.Id_nb + "'");
+			IList<DBCraftedXItem> rawMaterials = GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = @CraftedItemId_nb", new QueryParameter("@CraftedItemId_nb", recipe.Id_nb));
 
 			if (rawMaterials == null || rawMaterials.Count == 0)
             {
