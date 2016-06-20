@@ -156,17 +156,25 @@ namespace DOL.GS
 		/// <returns>true if Weather changed</returns>
 		public bool ChangeWeather(ushort regionId, Action<RegionWeather> change)
 		{
+			ScheduledTask task;
+			lock (LockObject)
+			{
+				if (RegionsTasks.TryGetValue(regionId, out task))
+					RegionsTasks.Remove(regionId);
+			}
+			
+			// Stopping Timer is locking on Task Thread
+			if (task != null)
+				task.Stop();
+			
 			lock (LockObject)
 			{
 				RegionWeather weather;
 				if (!RegionsWeather.TryGetValue(regionId, out weather))
 					return false;
 				
-				ScheduledTask task;
-				if (!RegionsTasks.TryGetValue(regionId, out task))
+				if (RegionsTasks.ContainsKey(regionId))
 					return false;
-				
-				task.Stop();
 				
 				try
 				{
@@ -181,8 +189,6 @@ namespace DOL.GS
 				// scope copy for thread safety
 				var region = regionId;
 				
-				RegionsTasks.Remove(regionId);
-
 				if (weather.StartTime != 0)
 				{
 					StartWeather(weather);
@@ -376,18 +382,22 @@ namespace DOL.GS
 		/// <param name="region"></param>
 		public void UnRegisterRegion(Region region)
 		{
+			ScheduledTask task;
+			lock (LockObject)
+			{
+				if (RegionsTasks.TryGetValue(region.ID, out task))
+					RegionsTasks.Remove(region.ID);
+			}
+			
+			// Stopping Timer is locking on Task Thread
+			if (task != null)
+				task.Stop();
+			
 			lock (LockObject)
 			{
 				RegionWeather weather;
 				if (RegionsWeather.TryGetValue(region.ID, out weather))
 				{
-					ScheduledTask task;
-					if (RegionsTasks.TryGetValue(region.ID, out task))
-					{
-					    task.Stop();
-					    RegionsTasks.Remove(region.ID);
-					}
-					
 					RegionsWeather.Remove(region.ID);
 					
 					if (weather.StartTime != 0)
