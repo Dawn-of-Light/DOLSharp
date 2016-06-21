@@ -794,7 +794,18 @@ namespace DOL.GS
         MythicalSafeFall = 233,
         MythicalDiscumbering = 234,
         MythicalCoin = 235,
-		// 236 - 246 Available
+        // 236 - 246 used for Mythical Stat Cap
+        MythicalStatCapBonus_First = 236,
+        MythicalStrCapBonus = 236,
+        MythicalDexCapBonus = 237,
+        MythicalConCapBonus = 238,
+        MythicalQuiCapBonus = 239,
+        MythicalIntCapBonus = 240,
+        MythicalPieCapBonus = 241,
+        MythicalEmpCapBonus = 242,
+        MythicalChaCapBonus = 243,
+        MythicalAcuCapBonus = 244,
+        MythicalStatCapBonus_Last = 244,
 
 		BountyPoints = 247,
 		XpPoints = 248,

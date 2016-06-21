@@ -149,6 +149,7 @@ namespace DOL.GS.PropertyCalc
             int itemBonus = living.ItemBonus[(int)property];
             int itemBonusCap = GetItemBonusCap(living, property);
 
+
             if (living is GamePlayer)
             {
 				GamePlayer player = living as GamePlayer;
@@ -163,7 +164,8 @@ namespace DOL.GS.PropertyCalc
             }
 
             int itemBonusCapIncrease = GetItemBonusCapIncrease(living, property);
-            return Math.Min(itemBonus, itemBonusCap + itemBonusCapIncrease);
+            int mythicalitemBonusCapIncrease = GetMythicalItemBonusCapIncrease(living, property);
+            return Math.Min(itemBonus, itemBonusCap + itemBonusCapIncrease + mythicalitemBonusCapIncrease);
         }
 
         /// <summary>
@@ -205,6 +207,35 @@ namespace DOL.GS.PropertyCalc
             return Math.Min(itemBonusCapIncrease, itemBonusCapIncreaseCap);
         }
 
+
+        //Forsaken Mythical Cap Increase
+        public static int GetMythicalItemBonusCapIncrease(GameLiving living, eProperty property)
+        {
+            if (living == null) return 0;
+            int MythicalitemBonusCapIncreaseCap = GetMythicalItemBonusCapIncreaseCap(living);
+            int MythicalitemBonusCapIncrease = living.ItemBonus[(int)(eProperty.MythicalStatCapBonus_First - eProperty.Stat_First + property)];
+            int itemBonusCapIncrease = GetItemBonusCapIncrease(living, property);
+            if (living is GamePlayer)
+            {
+                GamePlayer player = living as GamePlayer;
+
+                if (property == (eProperty)player.CharacterClass.ManaStat)
+                {
+                    if (player.CharacterClass.ID != (int)eCharacterClass.Scout && player.CharacterClass.ID != (int)eCharacterClass.Hunter && player.CharacterClass.ID != (int)eCharacterClass.Ranger)
+                    {
+                        MythicalitemBonusCapIncrease += living.ItemBonus[(int)eProperty.MythicalAcuCapBonus];
+                    }
+                }
+            }
+            if (MythicalitemBonusCapIncrease + itemBonusCapIncrease > 52)
+            {
+                MythicalitemBonusCapIncrease = 52 - itemBonusCapIncrease;
+            }
+
+            return Math.Min(MythicalitemBonusCapIncrease, MythicalitemBonusCapIncreaseCap);
+        }
+
+
         /// <summary>
         /// Returns the cap for stat cap increases.
         /// </summary>
@@ -214,6 +245,13 @@ namespace DOL.GS.PropertyCalc
         {
             if (living == null) return 0;
             return living.Level / 2 + 1;
+        }
+
+        //Forsaken Worlds Mythical Cap Cap
+        public static int GetMythicalItemBonusCapIncreaseCap(GameLiving living)
+        {
+            if (living == null) return 0;
+            return 52;
         }
 	}
 }
