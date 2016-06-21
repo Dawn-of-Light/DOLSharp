@@ -182,8 +182,8 @@ namespace DOL.GS
 		/// </summary>
 		public IList<InventoryItem> DBItems(GamePlayer player = null)
 		{
-			string sqlWhere = String.Format("OwnerID = '{0}' and SlotPosition >= {1} and SlotPosition <= {2}", GetOwner(player), FirstDBSlot, LastDBSlot);
-			return GameServer.Database.SelectObjects<InventoryItem>(sqlWhere);
+			return GameServer.Database.SelectObjects<InventoryItem>("`OwnerID` = @OwnerID and `SlotPosition` >= @FirstDBSlot and `SlotPosition` <= @LastDBSlot",
+			                                                        new [] { new QueryParameter("@OwnerID", GetOwner(player)), new QueryParameter("@FirstDBSlot", FirstDBSlot), new QueryParameter("@LastDBSlot", LastDBSlot) });
 		}
 
 		/// <summary>

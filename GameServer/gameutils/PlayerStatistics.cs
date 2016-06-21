@@ -18,14 +18,16 @@
  */
  
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+
 using DOL.Database;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.Events;
-using DOL.GS.Spells;
+
 using log4net;
 
 namespace DOL.GS
@@ -182,7 +184,8 @@ namespace DOL.GS
             }
 
             #region /stats top
-            var chars = GameServer.Database.SelectObjects<DOLCharacters>("RealmPoints > 213881 ORDER BY RealmPoints DESC LIMIT 100"); // assuming we can get at least 20 players
+            var chars = GameServer.Database.SelectObjects<DOLCharacters>("`RealmPoints` > @RealmPoints", new QueryParameter("@RealmPoints", 213881)).OrderByDescending(dc => dc.RealmPoints).Take(100).ToArray();
+            // assuming we can get at least 20 players
             if (toplist.Count > 0)
             {
                 toplist.Clear();

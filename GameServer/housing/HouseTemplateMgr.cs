@@ -214,7 +214,7 @@ namespace DOL.GS.Housing
 
 		private static void CheckMerchantItems(string merchantid, string[] itemids)
 		{
-			IList<MerchantItem> merchantitems =	GameServer.Database.SelectObjects<MerchantItem>("ItemListID=\'" + GameServer.Database.Escape(merchantid) + "\'");
+			IList<MerchantItem> merchantitems =	GameServer.Database.SelectObjects<MerchantItem>("`ItemListID` = @ItemListID", new QueryParameter("@ItemListID", merchantid));
 
 			int slot = 0;
 			foreach (string itemid in itemids)

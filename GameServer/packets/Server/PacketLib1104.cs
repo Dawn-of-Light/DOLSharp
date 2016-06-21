@@ -18,12 +18,12 @@
 */
 #define NOENCRYPTION
 using System;
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 
 using DOL.Database;
-using DOL.Language;
+
 using log4net;
 
 
@@ -63,24 +63,23 @@ namespace DOL.GS.PacketHandler
 				else
 				{
 					Dictionary<int, DOLCharacters> charsBySlot = new Dictionary<int, DOLCharacters>();
-					string itemQuery = "(";
 					foreach (DOLCharacters c in m_gameClient.Account.Characters)
 					{
 						try
 						{
 							charsBySlot.Add(c.AccountSlot, c);
-							itemQuery += "OwnerID = '" + c.ObjectId + "' OR ";
 						}
 						catch (Exception ex)
 						{
 							log.Error("SendCharacterOverview - Duplicate char in slot? Slot: " + c.AccountSlot + ", Account: " + c.AccountName, ex);
 						}
 					}
-					itemQuery = itemQuery.Substring(0, itemQuery.Length - 4); //remove last OR
-					itemQuery += ") AND SlotPosition >= " + ((int)eInventorySlot.MinEquipable) + " AND SlotPosition <= " + ((int)eInventorySlot.MaxEquipable);
-	
 					var itemsByOwnerID = new Dictionary<string, Dictionary<eInventorySlot, InventoryItem>>();
-					var allItems = (InventoryItem[])GameServer.Database.SelectObjects<InventoryItem>(itemQuery);
+					
+					var allItems = GameServer.Database.SelectObjects<InventoryItem>("`OwnerID` = @OwnerID AND `SlotPosition` >= @MinEquipable AND `SlotPosition` <= @MaxEquipable",
+					                                                                charsBySlot.Select(kv => new [] { new QueryParameter("@OwnerID", kv.Value.ObjectId), new QueryParameter("@MinEquipable", (int)eInventorySlot.MinEquipable), new QueryParameter("@MaxEquipable", (int)eInventorySlot.MaxEquipable) }))
+						.SelectMany(objs => objs).ToArray();
+					
 					foreach (InventoryItem item in allItems)
 					{
 	                    try

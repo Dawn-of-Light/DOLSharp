@@ -52,7 +52,7 @@ namespace DOL.GS.DatabaseConverters
 			log.Info(styles.Count + " Styles Processed");
 
 			log.Info("Converting Mobs");
-			var mobs = GameServer.Database.SelectObjects<Mob>("`Realm` = '6'");
+			var mobs = GameServer.Database.SelectObjects<Mob>("`Realm` = @Realm", new QueryParameter("@Realm", 6));
 			foreach (Mob mob in mobs)
 			{
 				if ((mob.Flags & (uint)GameNPC.eFlags.PEACE) == 0)

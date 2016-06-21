@@ -1865,7 +1865,7 @@ namespace DOL.GS.Commands
 							string name = string.Join(" ", args, 2, args.Length - 2);
 							if (name != "")
 							{
-								var items = GameServer.Database.SelectObjects<ItemTemplate>("id_nb like '%" + GameServer.Database.Escape(name) + "%'");
+								var items = GameServer.Database.SelectObjects<ItemTemplate>("`id_nb` LIKE @id_nb", new QueryParameter("@id_nb", string.Format("%{0}%", name)));
 								DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Item.FindID.MatchingIDsForX", name, items.Count), new object[] { });
 								foreach (ItemTemplate item in items)
 								{
@@ -1881,7 +1881,7 @@ namespace DOL.GS.Commands
 							string name = string.Join(" ", args, 2, args.Length - 2);
 							if (name != "")
 							{
-								var items = GameServer.Database.SelectObjects<ItemTemplate>("name like '%" + GameServer.Database.Escape(name) + "%'");
+								var items = GameServer.Database.SelectObjects<ItemTemplate>("`name` LIKE @name", new QueryParameter("@name", string.Format("%{0}%", name)));
 								DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Item.FindName.MatchingNamesForX", name, items.Count), new object[] { });
 								foreach (ItemTemplate item in items)
 								{
@@ -1914,7 +1914,7 @@ namespace DOL.GS.Commands
 							{
 								if (args[2] == "**all**") args[2] = String.Empty;
 
-								var packageItems = GameServer.Database.SelectObjects<ItemTemplate>("PackageID = '" + args[2] + "'") as ItemTemplate[];
+								var packageItems = GameServer.Database.SelectObjects<ItemTemplate>("`PackageID` = @PackageID", new QueryParameter("@", args[2]));
 
 								if (packageItems != null)
 								{

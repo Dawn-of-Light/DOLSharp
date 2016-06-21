@@ -307,7 +307,7 @@ namespace DOL.GS.Commands
 							return;
 						}
 
-                        var banacc = GameServer.Database.SelectObjects<DBBannedAccount>("((Type='A' OR Type='B') AND Account ='" + GameServer.Database.Escape(accountname) + "')");
+						var banacc = GameServer.Database.SelectObjects<DBBannedAccount>("(`Type` = @TypeA OR `Type` = @TypeB) AND `Account` = @Account", new[] { new QueryParameter("@TypeA", "A"), new QueryParameter("@TypeB", "B"), new QueryParameter("@Account", accountname) });
 						if (banacc.Count == 0)
 						{
 							DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "AdminCommands.Account.AccountNotFound", accountname));
@@ -316,8 +316,7 @@ namespace DOL.GS.Commands
 						
 						try
                         {
-                            foreach(DBBannedAccount banned in banacc)
-                                GameServer.Database.DeleteObject(banned);
+                            GameServer.Database.DeleteObject(banacc);
                         }
                         catch(Exception) { DisplaySyntax(client); return; }
 						DisplayMessage(client, "Account "+accountname+" unbanned!");

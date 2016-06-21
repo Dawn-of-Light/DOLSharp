@@ -157,7 +157,7 @@ namespace DOL.GS.Quests
 			int lowLevel = mediumCraftingLevel - 20;
 			int highLevel = mediumCraftingLevel + 20;
 
-			var craftitem = GameServer.Database.SelectObjects<DBCraftedItem>("CraftingSkillType=" + (int)player.CraftingPrimarySkill + " AND CraftingLevel>" + lowLevel + " AND CraftingLevel<" + highLevel);
+			var craftitem = GameServer.Database.SelectObjects<DBCraftedItem>("`CraftingSkillType` = @CraftingSkillType AND `CraftingLevel` > @CraftingLevelLow AND `CraftingLevel` < @CraftingLevelHigh", new[] { new QueryParameter("@CraftingSkillType", (int)player.CraftingPrimarySkill), new QueryParameter("@CraftingLevelLow", lowLevel), new QueryParameter("@CraftingLevelHigh", highLevel) });
 			int craftrnd = Util.Random(craftitem.Count);
 
 			ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(craftitem[craftrnd].Id_nb);

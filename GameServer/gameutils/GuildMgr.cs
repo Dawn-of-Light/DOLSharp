@@ -351,24 +351,17 @@ namespace DOL.GS
 				if (removeGuild == null)
 					return false;
 
-				var guilds = GameServer.Database.SelectObjects<DBGuild>("GuildName='" + GameServer.Database.Escape(guildName) + "'");
+				var guilds = GameServer.Database.SelectObjects<DBGuild>("`GuildID` = @GuildID", new QueryParameter("@GuildID", removeGuild.GuildID));
 				foreach (var guild in guilds)
 				{
-					foreach (var cha in GameServer.Database.SelectObjects<DOLCharacters>("GuildID = '" + GameServer.Database.Escape(guild.GuildID) + "'"))
-					{
+					foreach (var cha in GameServer.Database.SelectObjects<DOLCharacters>("`GuildID` = @GuildID", new QueryParameter("@GuildID", guild.GuildID)))
 						cha.GuildID = "";
-					}
-
-					GameServer.Database.DeleteObject(guild);
 				}
+				GameServer.Database.DeleteObject(guilds);
 
 				//[StephenxPimentel] We need to delete the guild specific ranks aswell!
-				var ranks = GameServer.Database.SelectObjects<DBRank>("`GuildID` = '" + removeGuild.ID + "'");
-				foreach (var guildRank in ranks)
-				{
-					GameServer.Database.DeleteObject(guildRank);
-				}
-
+				var ranks = GameServer.Database.SelectObjects<DBRank>("`GuildID` = @GuildID", new QueryParameter("@GuildID", removeGuild.GuildID));
+				GameServer.Database.DeleteObject(ranks);
 
 				lock (removeGuild.GetListOfOnlineMembers())
 				{
@@ -572,14 +565,14 @@ namespace DOL.GS
 			{
 				player.RemoveMoney(COST_RE_EMBLEM, null);
                 InventoryLogging.LogInventoryAction(player, "(GUILD;" + player.GuildName + ")", eInventoryActionType.Other, COST_RE_EMBLEM);
-				var objs = GameServer.Database.SelectObjects<InventoryItem>("Emblem = " + GameServer.Database.Escape(oldemblem.ToString()));
+                var objs = GameServer.Database.SelectObjects<InventoryItem>("`Emblem` = @Emblem", new QueryParameter("@Emblem", oldemblem));
 				
 				foreach (InventoryItem item in objs)
 				{
 					item.Emblem = newemblem;
-					GameServer.Database.SaveObject(item);
 				}
-
+				GameServer.Database.SaveObject(objs);
+				
 				// change guild house emblem
 
 				if (player.Guild.GuildOwnsHouse && player.Guild.GuildHouseNumber > 0)

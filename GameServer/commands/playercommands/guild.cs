@@ -470,7 +470,7 @@ namespace DOL.GS.Commands
 
 							string playername = String.Join(" ", args, 2, args.Length - 2);
 							// Patch 1.84: look for offline players
-							var chs = GameServer.Database.SelectObjects<DOLCharacters>("AccountName='" + GameServer.Database.Escape(playername) + "' AND GuildID='" + client.Player.GuildID + "'");
+							var chs = GameServer.Database.SelectObjects<DOLCharacters>("`AccountName` = @AccountName AND `GuildID` = @GuildID", new[] { new QueryParameter("@AccountName", playername), new QueryParameter("@GuildID", client.Player.GuildID) });
 							if (chs.Count > 0)
 							{
 								GameClient myclient = WorldMgr.GetClientByAccountName(playername, false);
@@ -1618,7 +1618,7 @@ namespace DOL.GS.Commands
 								if (targetClient != null)
 								{
 									OnCommand(client, new string[] { "gc", "remove", args[3] });
-									accountId = targetClient.Account.ObjectId;
+									accountId = targetClient.Account.Name;
 								}
 								else
 								{
@@ -1632,18 +1632,18 @@ namespace DOL.GS.Commands
 										return;
 									}
 
-									accountId = c.Name;
+									accountId = c.AccountName;
 								}
 								List<DOLCharacters> chars = new List<DOLCharacters>();
-								chars.AddRange(GameServer.Database.SelectObjects<DOLCharacters>("AccountID = '" + accountId + "'"));
+								chars.AddRange(GameServer.Database.SelectObjects<DOLCharacters>("`AccountName` = @AccountName", new QueryParameter("@AccountName", accountId)));
 								//chars.AddRange((Character[])GameServer.Database.SelectObjects<CharacterArchive>("AccountID = '" + accountId + "'"));
 
 								foreach (DOLCharacters ply in chars)
 								{
 									ply.GuildID = "";
 									ply.GuildRank = 0;
-									GameServer.Database.SaveObject(ply);
 								}
+								GameServer.Database.SaveObject(chars);
 								break;
 							}
 							else if (args.Length == 3)

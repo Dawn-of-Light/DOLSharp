@@ -112,9 +112,8 @@ namespace DOL.GS
                 return;
 
             Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
-            var staticObjs = GameServer.Database.SelectObjects<WorldObject>("Region = " + Skin);
-            var areaObjs = GameServer.Database.SelectObjects<DBArea>("Region = " + Skin);
-            
+            var staticObjs = GameServer.Database.SelectObjects<WorldObject>("`Region` = @Region", new QueryParameter("@Region", Skin));
+            var areaObjs = GameServer.Database.SelectObjects<DBArea>("`Region` = @Region", new QueryParameter("@Region", Skin));            
             
             int count = mobObjs.Length + staticObjs.Count;
             if (count > 0) PreAllocateRegionSpace(count + 100);

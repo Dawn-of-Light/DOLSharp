@@ -75,7 +75,12 @@ namespace DOL.GS
 					{
 						try
 						{
-							itemTemplates = GameServer.Database.SelectObjects<ItemTemplate>("Level>=" + (i * LEVEL_RANGE) + " AND Level<=" + ((i + 1) * LEVEL_RANGE) + " AND IsPickable = 1 AND IsDropable = 1 AND CanDropAsloot = 1");
+							itemTemplates = GameServer.Database.SelectObjects<ItemTemplate>("`Level` >= @LevelMin AND `Level` <= @LevelMax AND `IsPickable` = @IsPickable AND `IsDropable` = @IsDropable AND `CanDropAsloot` = @CanDropAsloot",
+							                                                                new[] { new QueryParameter("@LevelMin", (i * LEVEL_RANGE)),
+							                                                                	new QueryParameter("@LevelMax", ((i + 1) * LEVEL_RANGE)),
+							                                                                	new QueryParameter("@IsPickable", 1),
+							                                                                	new QueryParameter("@IsDropable", 1),
+							                                                                	new QueryParameter("@CanDropAsloot", 1) });
 						}
 						catch (Exception e)
 						{

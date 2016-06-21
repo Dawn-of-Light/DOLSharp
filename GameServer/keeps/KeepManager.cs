@@ -102,7 +102,7 @@ namespace DOL.GS.Keeps
 					if (keepRegion == null)
 						continue;
 
-                    var currentKeepComponents = GameServer.Database.SelectObjects<DBKeepComponent>("`KeepID` = '" + datakeep.KeepID + "'");
+					var currentKeepComponents = GameServer.Database.SelectObjects<DBKeepComponent>("`KeepID` = @KeepID", new QueryParameter("@KeepID", datakeep.KeepID));
 				
 					AbstractGameKeep keep;
 					if ((datakeep.KeepID >> 8) != 0 || ((datakeep.KeepID & 0xFF) > 150))
@@ -143,8 +143,10 @@ namespace DOL.GS.Keeps
 				    
 				var keepcomponents = default(IList<DBKeepComponent>);
 
-                if (ServerProperties.Properties.USE_NEW_KEEPS == 0 || ServerProperties.Properties.USE_NEW_KEEPS == 2) keepcomponents = GameServer.Database.SelectObjects<DBKeepComponent>("Skin < 20");
-                else if (ServerProperties.Properties.USE_NEW_KEEPS == 1) keepcomponents = GameServer.Database.SelectObjects<DBKeepComponent>("Skin > 20");
+                if (ServerProperties.Properties.USE_NEW_KEEPS == 0 || ServerProperties.Properties.USE_NEW_KEEPS == 2)
+                	keepcomponents = GameServer.Database.SelectObjects<DBKeepComponent>("`Skin` < @Skin", new QueryParameter("@Skin", 20));
+                else if (ServerProperties.Properties.USE_NEW_KEEPS == 1)
+                	keepcomponents = GameServer.Database.SelectObjects<DBKeepComponent>("`Skin` > @Skin", new QueryParameter("@Skin", 20));
 
 				foreach (DBKeepComponent component in keepcomponents)
 				{

@@ -75,7 +75,7 @@ namespace DOL.GS
 
 					foreach (LootOTD l in lootOTDs)
 					{
-						IList<Mob> mobs = GameServer.Database.SelectObjects<Mob>("Name = '" + GameServer.Database.Escape(l.MobName) + "'");
+						IList<Mob> mobs = GameServer.Database.SelectObjects<Mob>("`Name` = @Name", new QueryParameter("@Name", l.MobName));
 
 						if (mobs == null || mobs.Count == 0)
 						{
@@ -132,7 +132,7 @@ namespace DOL.GS
 			if (mob == null)
 				return;
 
-			IList<LootOTD> otds = GameServer.Database.SelectObjects<LootOTD>("MobName = '" + GameServer.Database.Escape(mob.Name) + "'");
+			IList<LootOTD> otds = GameServer.Database.SelectObjects<LootOTD>("`MobName` = @MobName", new QueryParameter("@MobName", mob.Name));
 
 			lock (m_mobOTDList)
 			{

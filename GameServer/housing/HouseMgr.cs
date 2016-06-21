@@ -128,7 +128,7 @@ namespace DOL.GS.Housing
 		public static string LoadHousingForRegion(ushort regionID)
 		{
 			string result = "";
-			IList<DBHouse> regionHousing = GameServer.Database.SelectObjects<DBHouse>("RegionID = " + regionID);
+			IList<DBHouse> regionHousing = GameServer.Database.SelectObjects<DBHouse>("`RegionID` = @RegionID", new QueryParameter("@RegionID", regionID));
 
 			if (regionHousing == null || regionHousing.Count == 0)
 				return "No housing found for region.";
@@ -482,25 +482,16 @@ namespace DOL.GS.Housing
 		{
 			house.RemoveConsignmentMerchant();
 
-			IList<DBHouseIndoorItem> iobjs = GameServer.Database.SelectObjects<DBHouseIndoorItem>("HouseNumber = " + house.HouseNumber);
-			foreach (DBHouseIndoorItem item in iobjs)
-			{
-				GameServer.Database.DeleteObject(item);
-			}
+			IList<DBHouseIndoorItem> iobjs = GameServer.Database.SelectObjects<DBHouseIndoorItem>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", house.HouseNumber));
+			GameServer.Database.DeleteObject(iobjs);
 			house.IndoorItems.Clear();
 
-			IList<DBHouseOutdoorItem> oobjs = GameServer.Database.SelectObjects<DBHouseOutdoorItem>("HouseNumber = " + house.HouseNumber);
-			foreach (DBHouseOutdoorItem item in oobjs)
-			{
-				GameServer.Database.DeleteObject(item);
-			}
+			IList<DBHouseOutdoorItem> oobjs = GameServer.Database.SelectObjects<DBHouseOutdoorItem>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", house.HouseNumber));
+			GameServer.Database.DeleteObject(oobjs);
 			house.OutdoorItems.Clear();
 
-			IList<DBHouseHookpointItem> hpobjs = GameServer.Database.SelectObjects<DBHouseHookpointItem>("HouseNumber = " + house.HouseNumber);
-			foreach (DBHouseHookpointItem item in hpobjs)
-			{
-				GameServer.Database.DeleteObject(item);
-			}
+			IList<DBHouseHookpointItem> hpobjs = GameServer.Database.SelectObjects<DBHouseHookpointItem>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", house.HouseNumber));
+			GameServer.Database.DeleteObject(hpobjs);
 
 			foreach (DBHouseHookpointItem item in house.HousepointItems.Values)
 			{
@@ -527,18 +518,12 @@ namespace DOL.GS.Housing
 			house.DatabaseItem.GuildHouse = false;
 			house.DatabaseItem.GuildName = null;
 
-			IList<DBHousePermissions> pobjs = GameServer.Database.SelectObjects<DBHousePermissions>("HouseNumber = " + house.HouseNumber);
-			foreach (DBHousePermissions item in pobjs)
-			{
-				GameServer.Database.DeleteObject(item);
-			}
+			IList<DBHousePermissions> pobjs = GameServer.Database.SelectObjects<DBHousePermissions>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", house.HouseNumber));
+			GameServer.Database.DeleteObject(pobjs);
 			house.PermissionLevels.Clear();
 
-			IList<DBHouseCharsXPerms> cpobjs = GameServer.Database.SelectObjects<DBHouseCharsXPerms>("HouseNumber = " + house.HouseNumber);
-			foreach (DBHouseCharsXPerms item in cpobjs)
-			{
-				GameServer.Database.DeleteObject(item);
-			}
+			IList<DBHouseCharsXPerms> cpobjs = GameServer.Database.SelectObjects<DBHouseCharsXPerms>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", house.HouseNumber));
+			GameServer.Database.DeleteObject(cpobjs);
 			house.CharXPermissions.Clear();
 		}
 

@@ -146,7 +146,7 @@ namespace DOL.GS.Commands
 					{
 						string currentID = targetMerchant.TradeItems.ItemsListID;
 
-						var itemList = GameServer.Database.SelectObjects<MerchantItem>("ItemListID = '" + currentID + "'");
+						var itemList = GameServer.Database.SelectObjects<MerchantItem>("`ItemListID` = @ItemListID", new QueryParameter("@ItemListID", currentID));
 						foreach (MerchantItem merchantItem in itemList)
 						{
 							MerchantItem item = new MerchantItem();
@@ -365,7 +365,7 @@ namespace DOL.GS.Commands
 											}
 											DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Articles.Delete.DeletingListTemp"));
 
-											var merchantitems = GameServer.Database.SelectObjects<MerchantItem>("ItemsListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "'");
+											var merchantitems = GameServer.Database.SelectObjects<MerchantItem>("`ItemListID` = @ItemListID", new QueryParameter("@ItemListID", targetMerchant.TradeItems.ItemsListID));
 											if (merchantitems.Count > 0)
 											{
 												foreach (MerchantItem item in merchantitems)

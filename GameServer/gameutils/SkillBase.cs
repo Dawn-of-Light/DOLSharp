@@ -362,7 +362,7 @@ namespace DOL.GS
 				foreach (string lineName in m_spellLineIndex.Keys)
 				{
 					// Get SpellLine X Spell relation
-					IList<DBLineXSpell> spells = GameServer.Database.SelectObjects<DBLineXSpell>("LineName LIKE '" + GameServer.Database.Escape(lineName) + "'");
+					IList<DBLineXSpell> spells = GameServer.Database.SelectObjects<DBLineXSpell>("`LineName` = @LineName", new QueryParameter("@LineName", lineName));
 					
 					// Load them if any records.
 					if (spells != null)
