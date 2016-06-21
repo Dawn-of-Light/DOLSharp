@@ -837,7 +837,7 @@ namespace DOL.GS.Keeps
 
 			if (location != "")
 			{
-				Teleport t = GameServer.Database.SelectObject<Teleport>("`TeleportID` = '" + location + "'");
+				Teleport t = GameServer.Database.SelectObjects<Teleport>("`TeleportID` = @TeleportID", new QueryParameter("@TeleportID", location)).FirstOrDefault();
 				if (t != null)
 					player.MoveTo((ushort)t.RegionID, t.X, t.Y, t.Z, (ushort)t.Heading);
 			}

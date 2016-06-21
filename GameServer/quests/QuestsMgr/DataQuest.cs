@@ -20,7 +20,7 @@
 // Tolakram, July 2010 - This represents a data driven quest that can be added and removed at runtime.  
 
 using System;
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -30,6 +30,7 @@ using DOL.Events;
 using DOL.Language;
 using DOL.GS.Behaviour;
 using DOL.GS.PacketHandler;
+
 using log4net;
 
 
@@ -981,7 +982,7 @@ namespace DOL.GS.Quests
 		/// <returns></returns>
 		public static CharacterXDataQuest GetCharacterQuest(GamePlayer player, int ID, bool create)
 		{
-			CharacterXDataQuest charQuest = GameServer.Database.SelectObject<CharacterXDataQuest>("Character_ID ='" + GameServer.Database.Escape(player.QuestPlayerID) + "' AND DataQuestID = " + ID);
+			CharacterXDataQuest charQuest = GameServer.Database.SelectObjects<CharacterXDataQuest>("`Character_ID` = @Character_ID AND `DataQuestID` = @DataQuestID", new[] { new QueryParameter("@Character_ID", player.QuestPlayerID), new QueryParameter("@DataQuestID", ID) }).FirstOrDefault();
 
 			if (charQuest == null && create)
 			{

@@ -2427,7 +2427,7 @@ namespace DOL.GS
 			m_syncLockUpdates.EnterWriteLock();
 			try
 			{
-				DBSpell dbSpell = GameServer.Database.SelectObject<DBSpell>("SpellID = " + spellID);
+				DBSpell dbSpell = GameServer.Database.SelectObjects<DBSpell>("`SpellID` = @SpellID", new QueryParameter("@SpellID", spellID)).FirstOrDefault();
 	
 				if (dbSpell != null)
 				{

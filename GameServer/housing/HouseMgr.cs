@@ -18,14 +18,17 @@
  */
 
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
+
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
 using DOL.Language;
+
 using log4net;
 
 namespace DOL.GS.Housing
@@ -403,7 +406,7 @@ namespace DOL.GS.Housing
 			}
 
 			// if there is a consignment merchant, we have to re-initialize since we changed the house
-			var merchant = GameServer.Database.SelectObject<HouseConsignmentMerchant>("HouseNumber = '" + house.HouseNumber + "'");
+			var merchant = GameServer.Database.SelectObjects<HouseConsignmentMerchant>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", house.HouseNumber)).FirstOrDefault();
 			long oldMerchantMoney = 0;
 			if (merchant != null)
 			{

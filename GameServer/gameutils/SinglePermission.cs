@@ -16,9 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
+using System.Linq;
 using DOL.Database;
-using log4net;
 
 namespace DOL.GS
 {
@@ -34,7 +33,8 @@ namespace DOL.GS
 
 		public static bool HasPermission(GamePlayer player,string command)
 		{
-			DataObject obj = GameServer.Database.SelectObject<DBSinglePermission>("Command = '" + GameServer.Database.Escape(command) + "' and (PlayerID = '" + GameServer.Database.Escape(player.ObjectId) + "' OR PlayerID = '" + GameServer.Database.Escape(player.AccountName) + "')");
+			DataObject obj = GameServer.Database.SelectObjects<DBSinglePermission>("`Command` = @Command AND (`PlayerID` = @PlayerID OR `PlayerID` = @PlayerAccount)",
+			                                                                      new[] { new QueryParameter("@Command", command), new QueryParameter("@PlayerID", player.ObjectId), new QueryParameter("@PlayerAccount", player.AccountName) }).FirstOrDefault();
 			if (obj == null)
 				return false;
 			return true;
@@ -58,7 +58,8 @@ namespace DOL.GS
 
 		public static bool removePermission(GamePlayer player,string command)
 		{
-			DataObject obj = GameServer.Database.SelectObject<DBSinglePermission>("Command = '" + GameServer.Database.Escape(command) + "' and PlayerID = '" + GameServer.Database.Escape(player.ObjectId) + "'");
+			DataObject obj = GameServer.Database.SelectObjects<DBSinglePermission>("`Command` = @Command AND `PlayerID` = @PlayerID",
+			                                                                       new[] { new QueryParameter("@Command", command), new QueryParameter("@PlayerID", player.ObjectId) }).FirstOrDefault();
 			if (obj == null)
 			{
 				return false;
@@ -69,7 +70,8 @@ namespace DOL.GS
 
         public static bool removePermissionAccount(GamePlayer player, string command)
         {
-            DataObject obj = GameServer.Database.SelectObject<DBSinglePermission>("Command = '" + GameServer.Database.Escape(command) + "' and PlayerID = '" + GameServer.Database.Escape(player.Client.Account.Name) + "'");
+            DataObject obj = GameServer.Database.SelectObjects<DBSinglePermission>("`Command` = @Command AND `PlayerID` = @PlayerID",
+			                                                                       new[] { new QueryParameter("@Command", command), new QueryParameter("@PlayerID", player.AccountName) }).FirstOrDefault();
             if (obj == null)
             {
                 return false;

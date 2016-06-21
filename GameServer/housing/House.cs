@@ -831,14 +831,14 @@ namespace DOL.GS.Housing
 				return false;
 			}
 
-			var obj = GameServer.Database.SelectObject<Mob>("HouseNumber = '" + HouseNumber + "'");
+			var obj = GameServer.Database.SelectObjects<Mob>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", HouseNumber)).FirstOrDefault();
 			if (obj != null)
 			{
 				log.DebugFormat("Add CM: Found consignment merchant in Mob table for house {0}.", HouseNumber);
 				return false;
 			}
 
-			var houseCM = GameServer.Database.SelectObject<HouseConsignmentMerchant>("HouseNumber = '" + HouseNumber + "'");
+			var houseCM = GameServer.Database.SelectObjects<HouseConsignmentMerchant>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", HouseNumber)).FirstOrDefault();
 			if (houseCM != null)
 			{
 				log.DebugFormat("Add CM: Found active consignment merchant in HousingConsignmentMerchant table for house {0}.", HouseNumber);
@@ -851,7 +851,7 @@ namespace DOL.GS.Housing
 			}
 
 			// now let's try to find a CM with this owner ID and no house and if we find it, attach
-			houseCM = GameServer.Database.SelectObject<HouseConsignmentMerchant>("OwnerID = '" + OwnerID + "'");
+			houseCM = GameServer.Database.SelectObjects<HouseConsignmentMerchant>("`OwnerID` = @OwnerID", new QueryParameter("@OwnerID", OwnerID)).FirstOrDefault();
 
 			if (houseCM != null)
 			{
@@ -935,7 +935,7 @@ namespace DOL.GS.Housing
 					log.Warn("HOUSING: Cleared OwnerLot for " + count + " items on the consignment merchant!");
 				}
 
-				var houseCM = GameServer.Database.SelectObject<HouseConsignmentMerchant>("HouseNumber = '" + HouseNumber + "'");
+				var houseCM = GameServer.Database.SelectObjects<HouseConsignmentMerchant>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", HouseNumber)).FirstOrDefault();
 				if (houseCM != null)
 				{
 					houseCM.HouseNumber = 0;

@@ -20,10 +20,12 @@ using System;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
-using System.Timers;
+using System.Linq;
+
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
+
 using log4net;
 
 namespace DOL.GS.Keeps
@@ -1247,7 +1249,8 @@ namespace DOL.GS.Keeps
 			int height = GameServer.KeepManager.GetHeightFromLevel(this.Level);
 
 			//predict Z
-			DBKeepHookPoint hp = GameServer.Database.SelectObject<DBKeepHookPoint>("HookPointID = '97' and Height = '" + height + "'");
+			DBKeepHookPoint hp = GameServer.Database.SelectObjects<DBKeepHookPoint>("`HookPointID` = @HookPointID AND `Height` = @Height",
+			                                                                        new[] { new QueryParameter("@HookPointID", 97), new QueryParameter("@Height", height) }).FirstOrDefault();
 			if (hp == null)
 				return;
 			int z = component.Z + hp.Z;

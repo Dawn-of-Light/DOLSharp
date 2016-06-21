@@ -17,10 +17,13 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
+
 using DOL.Database;
+
 using log4net;
 
 namespace DOL.GS
@@ -217,7 +220,8 @@ namespace DOL.GS
 
 				if (m_itemsListID != null && m_itemsListID.Length > 0)
 				{
-					var itemToFind = GameServer.Database.SelectObject<MerchantItem>("ItemListID = '" + GameServer.Database.Escape(m_itemsListID) + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + (int)slot + "'");
+					var itemToFind = GameServer.Database.SelectObjects<MerchantItem>("`ItemListID` = @ItemListID AND `PageNumber` = @PageNumber AND `SlotPosition` = @SlotPosition",
+					                                                                 new[] { new QueryParameter("@ItemListID", m_itemsListID), new QueryParameter("@PageNumber", page), new QueryParameter("@SlotPosition", (int)slot) }).FirstOrDefault();
 					if (itemToFind != null)
 					{
 						item = GameServer.Database.FindObjectByKey<ItemTemplate>(itemToFind.ItemTemplateID);
