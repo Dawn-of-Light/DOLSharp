@@ -80,6 +80,7 @@ namespace DOL.GS
 		public Dictionary<string, List<string>> CustomParamsDictionary
 		{
 			get { return m_paramCache; }
+			set { m_paramCache = value; }
 		}
 		
 		#region member access properties
@@ -374,7 +375,7 @@ namespace DOL.GS
             m_sharedtimergroup = dbspell.SharedTimerGroup;
             m_minotaurspell = minotaur;
             // Params
-            m_paramCache = InitParamCache(dbspell.CustomValues);
+            this.InitFromCollection<DBSpellXCustomValues>(dbspell.CustomValues, param => param.KeyName, param => param.Value);
 		}
 
 		/// <summary>
@@ -654,32 +655,7 @@ namespace DOL.GS
 				return this.GetParamValue<bool>("AllowCoexisting");
 			}
 		}
-        
-		/// <summary>
-		/// Initialize Param Cache from DB Relation Collection.
-		/// </summary>
-		/// <param name="customValues"></param>
-		protected static Dictionary<string, List<string>> InitParamCache(DBSpellXCustomValues[] customValues)
-		{
-			Dictionary<string, List<string>> paramCache = null;
-			
-			if (customValues != null && customValues.Length > 0)
-			{
-				// create dict
-				paramCache = new Dictionary<string, List<string>>();
-				
-				foreach (DBSpellXCustomValues val in customValues)
-				{
-					if (!paramCache.ContainsKey(val.KeyName))
-						paramCache.Add(val.KeyName, new List<string>());
-					
-					paramCache[val.KeyName].Add(val.Value);
-				}
-			}
-			
-			return paramCache;
-		}
-				
+
 		#endregion
 	}
 	

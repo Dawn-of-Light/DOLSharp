@@ -2441,6 +2441,7 @@ namespace DOL.GS.Commands
 				Alliance alli = new Alliance();
 				DBAlliance dballi = new DBAlliance();
 				dballi.AllianceName = inviter.Guild.Name;
+				dballi.LeaderGuildID = inviter.GuildID;
 				dballi.DBguildleader = null;
 				dballi.Motd = "";
 				alli.Dballiance = dballi;

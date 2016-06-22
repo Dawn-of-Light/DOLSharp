@@ -27,42 +27,38 @@
     <TargetFrameworkVersion Condition=" '$(OS)' != 'Unix' ">v4.5.1</TargetFrameworkVersion>
     <TargetFrameworkVersion Condition=" '$(OS)' == 'Unix' ">v4.5</TargetFrameworkVersion>
     <SourceAnalysisOverrideSettingsFile>C:\Documents and Settings\RedFish\Application Data\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <NoStdLib>false</NoStdLib>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
     <WarningLevel>4</WarningLevel>
     <NoWarn>1570%3b1572%3b1573%3b1587%3b1591%3b1592</NoWarn>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <TargetFrameworkProfile />
     <NoWin32Manifest>False</NoWin32Manifest>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <OutputPath>..\$(Configuration)\lib\</OutputPath>
+    <BaseIntermediateOutputPath>..\build\DOLDatabase\$(Configuration)\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>..\build\DOLDatabase\$(Configuration)\obj\</IntermediateOutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\debug\lib\</OutputPath>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <Optimize>False</Optimize>
     <DebugType>Full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\release\lib\</OutputPath>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DefineConstants>TRACE</DefineConstants>
-    <DebugSymbols>false</DebugSymbols>
     <Optimize>true</Optimize>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <DebugType>None</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <PlatformTarget>x86</PlatformTarget>
-    <RegisterForComInterop>false</RegisterForComInterop>
+    <RegisterForComInterop>False</RegisterForComInterop>
     <BaseAddress>285212672</BaseAddress>
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
@@ -82,29 +78,21 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Data.SQLite" Condition=" '$(OS)' != 'Unix' ">
-      <HintPath>..\packages\System.Data.SQLite.Core.1.0.98.1\lib\net45\System.Data.SQLite.dll</HintPath>
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.101.0\lib\net45\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.SQLite" Condition=" '$(OS)' == 'Unix' ">
       <HintPath>..\sharedModules\SQLite\managedOnly\System.Data.SQLite.dll</HintPath>
     </Reference>
-    <Reference Include="System.Drawing">
-      <Name>System.Drawing</Name>
-    </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Attributes\AttributesUtils.cs" />
     <Compile Include="Attributes\ReadOnly.cs" />
     <Compile Include="Attributes\DataElement.cs">
       <SubType>Code</SubType>
@@ -118,26 +106,17 @@
     <Compile Include="Attributes\Relation.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Cache\CacheException.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Cache\ICache.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Cache\SimpleCache.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Connection\ConnectionType.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Connection\DataConnection.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Connection\TableRowBindind.cs" />
+    <Compile Include="CustomParam.cs" />
+    <Compile Include="DatabaseParameter.cs" />
+    <Compile Include="DatabaseUtils.cs" />
+    <Compile Include="ElementBinding.cs" />
     <Compile Include="Handlers\SQLiteObjectDatabase.cs" />
-    <Compile Include="Handlers\XMLObjectDatabase.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="LanguageDataObject.cs" />
+    <Compile Include="SQLObjectDatabase.cs" />
     <Compile Include="Tables\CharacterXDataQuest.cs" />
     <Compile Include="Tables\ClassXSpecialization.cs" />
     <Compile Include="Tables\HousingConsignmentMerchant.cs" />
@@ -356,7 +335,7 @@
     <FileUpdate Files="AssemblyInfo.cs" Regex="(\d+)\.(\d+)\.(\d+)\.(\*|\d+)" ReplacementText="$1.$2.$3.$(Revision)" Condition="Exists('..\auto_version') and $(Revision)!='' and $(Revision)!=-1 and Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\') and Exists('$(ProgramFiles)\subversion\bin\svnversion.exe')" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\x86" "$(ProjectDir)..\$(ConfigurationName)\lib\x86" /y /s /q /i
-xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.98.1\build\net45\x64" "$(ProjectDir)..\$(ConfigurationName)\lib\x64" /y /s /q /i</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.101.0\build\net45\x86" "$(ProjectDir)..\$(ConfigurationName)\lib\x86" /y /s /q /i
+xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.101.0\build\net45\x64" "$(ProjectDir)..\$(ConfigurationName)\lib\x64" /y /s /q /i</PostBuildEvent>
   </PropertyGroup>
 </Project>

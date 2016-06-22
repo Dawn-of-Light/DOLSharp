@@ -132,7 +132,7 @@
 	<logger name="DOL.GS.GameObject">
 		<level value="INFO" />
 	</logger>
-	<logger name="DOL.Database.Connection.DataConnection">
+	<logger name="DOL.Database.Handlers">
 		<level value="INFO" />
 	</logger>
 	<logger name="DOL.GS.Zone">

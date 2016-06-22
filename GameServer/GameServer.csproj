@@ -32,32 +32,28 @@
     <WarningLevel>4</WarningLevel>
     <NoWarn>1570%3b1572%3b1573%3b1587%3b1591%3b1592</NoWarn>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <IntermediateOutputPath>..\build\GameServer\$(Configuration)\obj\</IntermediateOutputPath>
     <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\debug\lib\</OutputPath>
+    <NoWin32Manifest>False</NoWin32Manifest>
+    <OutputPath>..\$(Configuration)\lib\</OutputPath>
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>False</Optimize>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <BaseIntermediateOutputPath>..\build\GameServer\$(Configuration)\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugType>Full</DebugType>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Optimize>False</Optimize>
+    <DebugSymbols>true</DebugSymbols>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\release\lib\</OutputPath>
-    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
-    <DebugSymbols>false</DebugSymbols>
-    <Optimize>True</Optimize>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugType>None</DebugType>
-    <ErrorReport>prompt</ErrorReport>
     <DefineConstants>TRACE</DefineConstants>
+    <Optimize>True</Optimize>
+    <DebugSymbols>false</DebugSymbols>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
@@ -933,6 +929,13 @@
     <Compile Include="keeps\Relics\GameRelicPad.cs" />
     <Compile Include="language\ITranslatableObject.cs" />
     <Compile Include="language\LanguageMgr.cs" />
+    <Compile Include="managers\npcmanager\MobAmbientBehaviourManager.cs" />
+    <Compile Include="managers\npcmanager\NpcManager.cs" />
+    <Compile Include="managers\playermanager\InvalidNamesManager.cs" />
+    <Compile Include="managers\playermanager\PlayerManager.cs" />
+    <Compile Include="managers\worldmanager\RegionWeather.cs" />
+    <Compile Include="managers\worldmanager\WeatherManager.cs" />
+    <Compile Include="managers\worldmanager\WorldManager.cs" />
     <Compile Include="minotaurrelics\MinotaurRelic.cs" />
     <Compile Include="minotaurrelics\MinotaurRelicManager.cs" />
     <Compile Include="minotaurrelics\Protectors\ArrektosProtector.cs" />
@@ -1423,6 +1426,7 @@
     <Compile Include="serverrules\DemonsBreachJumpPoint.cs" />
     <Compile Include="serverrules\InstanceDoorJumpPoint.cs" />
     <Compile Include="serverrules\TaskDungeonJumpPoint.cs" />
+    <Compile Include="SimpleScheduler.cs" />
     <Compile Include="skillhandler\BodyguardAbilityHandler.cs" />
     <Compile Include="skillhandler\BolsteringRoarAbilityHandler.cs" />
     <Compile Include="skillhandler\CamouflageSpecHandler.cs" />
@@ -2579,9 +2583,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="world\TeleportArea.cs" />
-    <Compile Include="world\WeatherMgr.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="world\WorldMgr.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -2593,6 +2594,7 @@
     <Compile Include="world\ZoneData.cs" />
     <Compile Include="world\ZonePointEffects.cs" />
     <EmbeddedResource Include="config\logconfig.xml" />
+    <EmbeddedResource Include="config\invalidnames.txt" />
     <None Include="language\DE\AI.txt" />
     <None Include="language\DE\Atlantis.txt" />
     <None Include="language\DE\Behaviour.txt" />
@@ -2802,11 +2804,13 @@
     <Folder Include="gameutils\KDTree\" />
     <Folder Include="language\DE\Quests\Midgard\" />
     <Folder Include="language\EN\Quests\Midgard\" />
+    <Folder Include="managers" />
+    <Folder Include="managers\worldmanager" />
+    <Folder Include="managers\npcmanager" />
+    <Folder Include="managers\playermanager" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)\language\*.txt" "$(ProjectDir)..\$(ConfigurationName)\languages" /y /s /q /i</PostBuildEvent>
     <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">cd "$(ProjectDir)/language/"; mkdir -p "$(ProjectDir)../`echo $(ConfigurationName) | tr '[:upper:]' '[:lower:]'`/languages/"; find ./ -name "*.txt" | xargs -i -t cp --parents -f {} "$(ProjectDir)../`echo $(ConfigurationName) | tr '[:upper:]' '[:lower:]'`/languages/"</PostBuildEvent>
   </PropertyGroup>

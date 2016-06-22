@@ -21,6 +21,7 @@ using System.IO;
 using System.Reflection;
 
 using DOL.GS;
+using DOL.Database.Connection;
 
 using NUnit.Framework;
 
@@ -36,24 +37,39 @@ namespace DOL.Server.Tests
 		{
 		}
 		
-		[SetUp]
-		public virtual void Init()
+		/// <summary>
+		/// Create Game Server Instance for Tests
+		/// </summary>
+		public static void CreateGameServerInstance()
 		{
+			Console.WriteLine("Create Game Server Instance");
 			DirectoryInfo CodeBase = new FileInfo(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath).Directory;
 			Console.WriteLine("Code Base: " + CodeBase.FullName);
 			DirectoryInfo FakeRoot = CodeBase.Parent;
 			Console.WriteLine("Fake Root: " + FakeRoot.FullName);
-			if(GameServer.Instance==null)
+			
+			if(GameServer.Instance == null)
 			{
 				GameServerConfiguration config = new GameServerConfiguration();
 				config.RootDirectory = FakeRoot.FullName;
+				config.DBType = ConnectionType.DATABASE_SQLITE;
+				config.DBConnectionString = string.Format("Data Source={0};Version=3;Pooling=False;Cache Size=1073741824;Journal Mode=Off;Synchronous=Off;Foreign Keys=True;Default Timeout=60",
+			                                     Path.Combine(config.RootDirectory, "dol-tests-only.sqlite3.db"));
 				config.Port = 0; // Auto Choosing Listen Port
 				config.UDPPort = 0; // Auto Choosing Listen Port
 				config.IP = System.Net.IPAddress.Parse("127.0.0.1");
 				config.UDPIP = System.Net.IPAddress.Parse("127.0.0.1");
 				config.RegionIP = System.Net.IPAddress.Parse("127.0.0.1");
 				GameServer.CreateInstance(config);
+				Console.WriteLine("Game Server Instance Created !");
 			}
+		}
+		
+		[SetUp]
+		public virtual void Init()
+		{
+			CreateGameServerInstance();
+			
 			if (!GameServer.Instance.IsRunning)
 			{
 				Console.WriteLine("Starting GameServer");

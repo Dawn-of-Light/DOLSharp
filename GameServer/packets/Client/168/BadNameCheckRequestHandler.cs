@@ -17,7 +17,6 @@
  *
  */
 using System;
-using System.Collections;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
@@ -28,26 +27,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			string name=packet.ReadString(30);
+			string name = packet.ReadString(30);
+
 			//TODO do bad name checks here from some database with
 			//bad names, this is just a temp testthing here
-			bool bad = false;
-
-			ArrayList names = GameServer.Instance.InvalidNames;
-
-			foreach(string s in names)
-			{
-				if(name.ToLower().IndexOf(s) != -1)
-				{
-					bad = true;
-					break;
-				}
-			}
-
-			//if(bad)
-			//DOLConsole.WriteLine(String.Format("Name {0} is bad!",name));
-			//else
-			//DOLConsole.WriteLine(String.Format("Name {0} seems to be a good name!",name));
+			var bad = GameServer.Instance.PlayerManager.InvalidNames[name];
 
 			client.Out.SendBadNameCheckReply(name,bad);
 		}

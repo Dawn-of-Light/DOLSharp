@@ -5,10 +5,10 @@
 /Storm.sln
 /_ReSharper.Dawn of Light
 /auto_version
-/debug
+/[dD]ebug
 /no_versionning
 /obj
-/release
+/[rR]elease
 /Dawn of Light - Working.sln
 /Dawn of Light.sln.cache
 /desktop.ini
@@ -26,4 +26,5 @@
 /UnitTests/obj
 /GameServerScripts/.sonar
 /.vs
-/packages
+/[pP]ackages
+/[bB]uild

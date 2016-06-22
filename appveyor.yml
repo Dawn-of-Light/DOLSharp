@@ -72,7 +72,7 @@ after_build:
 
 
 
-    7z a -tzip DOLServer_UnitTests_net45_%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%\UnitTests\obj\%CONFIGURATION%\*
+    7z a -tzip DOLServer_UnitTests_net45_%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%\build\UnitTests\%CONFIGURATION%\*
 
 artifacts:
 

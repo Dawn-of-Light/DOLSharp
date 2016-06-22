@@ -17,7 +17,6 @@
  *
  */
 using System;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
@@ -32,92 +31,92 @@ namespace DOL.GS.Commands
 		"'/weather stop' to stop the storm in this region")]
 	public class WeatherCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public void PrintStormInfo(GameClient client)
-		{
-			WeatherMgr mgr = WeatherMgr.GetWeatherForRegion(client.Player.CurrentRegionID);
-			if (mgr == null)
-				return;
-			bool active = mgr.IsActive;
-			if (!active)
-			{
-				DisplayMessage(client, "WEATHERINFO: There is no storm active in this region!");
-				return;
-			}
-			DisplayMessage(client, string.Format("WEATHERINFO: Storm is at X={0}, Width={1}, Speed={2}, Fog={3}, Intensity={4}", mgr.CurrentWeatherLine, mgr.Width, mgr.Speed, mgr.FogDiffusion, mgr.Intensity));
-		}
-
+		/// <summary>
+		/// Execute Weather Command
+		/// </summary>
 		public void OnCommand(GameClient client, string[] args)
 		{
-			if (args.Length == 1)
+			if (args.Length >= 2)
 			{
-				DisplaySyntax(client);
-				return;
-			}
-
-			WeatherMgr mgr = WeatherMgr.GetWeatherForRegion(client.Player.CurrentRegionID);
-
-			if (args.Length == 2)
-			{
-				if (mgr == null)
-				{
-					DisplayMessage(client, "WEATHERINFO: There is no weather manager for this region!");
-					return;
-				}
-
-				switch (args[1])
+				var action = args[1].ToLower();
+				
+				switch (action)
 				{
 					case "info":
-						{
-							PrintStormInfo(client);
-							return;
-						}
-					case "start":
-						{
-							mgr.StartStorm();
-							DisplayMessage(client, "WEATHERINFO: A random storm has been started for this region!");
-							PrintStormInfo(client);
-							return;
-						}
+						break;
 					case "restart":
-						{
-							mgr.RestartStorm();
-							DisplayMessage(client, "WEATHERINFO: The storm has been restarted for this region!");
-							PrintStormInfo(client);
-							return;
-						}
+						if (GameServer.Instance.WorldManager.WeatherManager.RestartWeather(client.Player.CurrentRegionID))
+							DisplayMessage(client, "Weather (restart): Restarting Weather in this region!");
+						else
+							DisplayMessage(client, "Weather (restart): Weather could not be restarted in this region!");
+						break;
 					case "stop":
+						if (GameServer.Instance.WorldManager.WeatherManager.StopWeather(client.Player.CurrentRegionID))
+							DisplayMessage(client, "Weather (stop): Weather was Stopped in this Region!");
+						else
+							DisplayMessage(client, "Weather (stop): Weather could not be Stopped in this Region!");
+						break;
+					case "start":
+						if (args.Length > 2)
 						{
-							if (!mgr.IsActive)
-								DisplayMessage(client, "WEATHERINFO: There is no storm active in this region!");
-							else
+							try
 							{
-								mgr.StopStorm();
-								DisplayMessage(client, "WEATHERINFO: The storm has been stopped for this region until the next normal random interval!");
+								uint position = Convert.ToUInt32(args[2]);
+								uint width = Convert.ToUInt32(args[3]);
+								ushort speed = Convert.ToUInt16(args[4]);
+								ushort diffusion = Convert.ToUInt16(args[5]);
+								ushort intensity = Convert.ToUInt16(args[6]);
+								if (!GameServer.Instance.WorldManager.WeatherManager.StartWeather(client.Player.CurrentRegionID, position, width, speed, diffusion, intensity))
+								{
+									DisplayMessage(client, "Weather (start): Weather could not be started in this Region!");
+									break;
+								}
 							}
-							return;
+							catch
+							{
+								DisplayMessage(client, "Weather (start): Wrong Arguments...");
+								DisplaySyntax(client);
+								return;
+							}
 						}
+						else
+						{
+							if (!GameServer.Instance.WorldManager.WeatherManager.StartWeather(client.Player.CurrentRegionID))
+							{
+								DisplayMessage(client, "Weather (start): Weather could not be started in this Region!");
+								break;
+							}
+						}
+						
+						DisplayMessage(client, "Weather (start): The Weather has been started for this region!");
+						break;
 				}
+				PrintInfo(client);
+				return;
 			}
-
-			if (args.Length == 7 && args[1].Equals("start"))
-			{
-				try
-				{
-					uint line = Convert.ToUInt32(args[2]);
-					uint duration = Convert.ToUInt32(args[3]);
-					ushort speed = Convert.ToUInt16(args[4]);
-					ushort diffusion = Convert.ToUInt16(args[5]);
-					ushort intensity = Convert.ToUInt16(args[6]);
-					mgr.StartStorm(line, duration, speed, diffusion, intensity);
-					DisplayMessage(client, "WEATHERINFO: The storm has been started for this region!");
-					PrintStormInfo(client);
-					return;
-				}
-				catch
-				{
-				}
-			}
+			
 			DisplaySyntax(client);
+		}
+		
+		/// <summary>
+		/// Display Weather Info to Client
+		/// </summary>
+		/// <param name="client"></param>
+		public void PrintInfo(GameClient client)
+		{
+			var weather = GameServer.Instance.WorldManager.WeatherManager[client.Player.CurrentRegionID];
+			
+			if (weather == null)
+			{
+				DisplayMessage(client, "Weather (info): No Weather Registered for current Region...");
+			}
+			else
+			{
+				if (weather.StartTime == 0)
+					DisplayMessage(client, "Weather (info): Weather is stopped for current Region...");
+				else
+					DisplayMessage(client, "Weather (info): Current Position - {0} - {1}", weather.CurrentPosition(Scheduler.SimpleScheduler.Ticks), weather);
+			}
 		}
 	}
 }

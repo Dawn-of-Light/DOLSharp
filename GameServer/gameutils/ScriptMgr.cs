@@ -72,9 +72,42 @@ namespace DOL.GS
 		{
 			get
 			{
-				return m_compiledScripts.Values.ToArray<Assembly>();
+				return m_compiledScripts.Values.ToArray();
 			}
 		}
+
+		/// <summary>
+		/// Get an array of GameServer Assembly with all scripts assemblies
+		/// </summary>
+		public static Assembly[] GameServerScripts
+		{
+			get
+			{
+				return m_compiledScripts.Values.Concat( new[] { typeof(GameServer).Assembly } ).ToArray();
+			}
+		}
+		
+		/// <summary>
+		/// Get all loaded assemblies with Scripts First
+		/// </summary>
+		public static Assembly[] AllAssemblies
+		{
+			get
+			{
+				return Scripts.Union(AppDomain.CurrentDomain.GetAssemblies()).ToArray();
+			}
+		}		
+
+		/// <summary>
+		/// Get all loaded assemblies with Scripts Last
+		/// </summary>
+		public static Assembly[] AllAssembliesScriptsLast
+		{
+			get
+			{
+				return AppDomain.CurrentDomain.GetAssemblies().Where(asm => !Scripts.Contains(asm)).Concat(Scripts).ToArray();
+			}
+		}		
 
 		/// <summary>
 		/// Gets the requested command if it exists
@@ -146,13 +179,10 @@ namespace DOL.GS
 		{
 			m_gameCommands.Clear();
 
-			ArrayList asms = new ArrayList(Scripts);
-			asms.Add(typeof(GameServer).Assembly);
-
 			//build array of disabled commands
 			string[] disabledarray = ServerProperties.Properties.DISABLED_COMMANDS.Split(';');
 
-			foreach (Assembly script in asms)
+			foreach (Assembly script in GameServerScripts)
 			{
 				if (log.IsDebugEnabled)
 					log.Debug("ScriptMgr: Searching for commands in " + script.GetName());
@@ -472,21 +502,7 @@ namespace DOL.GS
 			//If we need no compiling, we load the existing assembly!
 			if (!recompileRequired)
 			{
-				try
-				{
-					Assembly asm = Assembly.LoadFrom(dllName);
-					AddOrReplaceAssembly(asm);
-
-					if (log.IsDebugEnabled)
-						log.Debug("Precompiled script assembly loaded: " + asm.FullName);
-				}
-				catch (Exception e)
-				{
-					if (log.IsErrorEnabled)
-						log.Error("Error loading precompiled script assembly, recompile required!", e);
-					
-					recompileRequired = true;
-				}
+				recompileRequired = !LoadAssembly(dllName);
 				
 				if (!recompileRequired)
 				{
@@ -588,6 +604,32 @@ namespace DOL.GS
 
 			return true;
 		}
+		
+		/// <summary>
+		/// Load an Assembly from DLL path.
+		/// </summary>
+		/// <param name="dllName">path to Assembly DLL File</param>
+		/// <returns>True if assembly is loaded</returns>
+		public static bool LoadAssembly(string dllName)
+		{
+			try
+			{
+				Assembly asm = Assembly.LoadFrom(dllName);
+				ScriptMgr.AddOrReplaceAssembly(asm);
+
+				if (log.IsInfoEnabled)
+					log.InfoFormat("Assembly {0} loaded successfully from path {1}", asm.FullName, dllName);
+				
+				return true;
+			}
+			catch (Exception e)
+			{
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("Error loading Assembly from path {0} - {1}", dllName, e);
+			}
+			
+			return false;
+		}
 
 		/// <summary>
 		/// Add or replace an assembly in the collection of compiled assemblies
@@ -595,15 +637,15 @@ namespace DOL.GS
 		/// <param name="assembly"></param>
 		public static void AddOrReplaceAssembly(Assembly assembly)
 		{
-			if (m_compiledScripts.ContainsKey(assembly.FullName) == false)
-			{
-				m_compiledScripts.Add(assembly.FullName, assembly);
-			}
-			else
+			if (m_compiledScripts.ContainsKey(assembly.FullName))
 			{
 				m_compiledScripts[assembly.FullName] = assembly;
 				if (log.IsDebugEnabled)
 					log.Debug("Replaced assembly " + assembly.FullName);
+			}
+			else
+			{
+				m_compiledScripts.Add(assembly.FullName, assembly);
 			}
 		}
 
@@ -700,9 +742,7 @@ namespace DOL.GS
 		/// <returns>ClassSpec that was found or null if not found</returns>
 		public static ICharacterClass FindCharacterClass(int id)
 		{
-			ArrayList asms = new ArrayList(Scripts);
-			asms.Add(typeof(GameServer).Assembly);
-			foreach (Assembly asm in asms)
+			foreach (Assembly asm in GameServerScripts)
 			{
 				foreach (Type type in asm.GetTypes())
 				{
@@ -829,9 +869,8 @@ namespace DOL.GS
 			if (m_script_guilds[(int)realm] == null)
 			{
 				Hashtable allScriptGuilds = new Hashtable();
-				ArrayList asms = new ArrayList(Scripts);
-				asms.Add(typeof(GameServer).Assembly);
-				foreach (Assembly asm in asms)
+
+				foreach (Assembly asm in GameServerScripts)
 				{
 					Hashtable scriptGuilds = FindAllNPCGuildScriptClasses(realm, asm);
 					if (scriptGuilds == null) continue;
@@ -909,9 +948,8 @@ namespace DOL.GS
 			if (handlerConstructor == null)
 			{
 				Type[] constructorParams = new Type[] { typeof(GameLiving), typeof(Spell), typeof(SpellLine) };
-				ArrayList asms = new ArrayList(Scripts);
-				asms.Add(typeof(GameServer).Assembly);
-				foreach (Assembly script in asms)
+
+				foreach (Assembly script in GameServerScripts)
 				{
 					foreach (Type type in script.GetTypes())
 					{
@@ -1110,10 +1148,8 @@ namespace DOL.GS
 				return new Type[0];
 
 			List<Type> types = new List<Type>();
-			List<Assembly> asms = new List<Assembly>(Scripts);
-			asms.Add(typeof(GameServer).Assembly);
 
-			foreach (Assembly asm in asms)
+			foreach (Assembly asm in GameServerScripts)
 			{
 				foreach (Type t in asm.GetTypes())
 				{
@@ -1134,7 +1170,7 @@ namespace DOL.GS
 		public static C CreateObjectFromClassType<C, T>(string classType, T args)
 			where C : class
 		{
-			foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies().Concat(ScriptMgr.Scripts))
+			foreach (Assembly assembly in AllAssembliesScriptsLast)
 			{
 				try
 				{
@@ -1160,7 +1196,7 @@ namespace DOL.GS
 		public static C CreateScriptObjectFromClassType<C, T>(string classType, T args)
 			where C : class
 		{
-			foreach (Assembly assembly in ScriptMgr.Scripts.Concat(AppDomain.CurrentDomain.GetAssemblies()))
+			foreach (Assembly assembly in AllAssemblies)
 			{
 				try
 				{

@@ -79,7 +79,7 @@ namespace DOL.Database
 		/// <summary>
 		/// A unique ID for the guild
 		/// </summary>
-		[DataElement(AllowDbNull = true, Index=true, Unique=true)]
+		[DataElement(AllowDbNull = true, Unique=true)]
 		public string GuildID
 		{
 			get

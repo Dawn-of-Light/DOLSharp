@@ -66,13 +66,10 @@ namespace DOL.GS.Quests
 
         public static bool Init()
         {
-            List<Assembly> assemblies = new List<Assembly>();
-            assemblies.Add(Assembly.GetAssembly(typeof(GameServer)));
-            assemblies.AddRange(ScriptMgr.Scripts);
             //We will search our assemblies for Quests by reflection so
             //it is not neccessary anymore to register new quests with the
             //server, it is done automatically!
-            foreach (Assembly assembly in assemblies)
+            foreach (Assembly assembly in ScriptMgr.GameServerScripts)
             {
                 // Walk through each type in the assembly
                 foreach (Type type in assembly.GetTypes())

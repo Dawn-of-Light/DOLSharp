@@ -80,7 +80,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				int mobs = SendMobsAndMobEquipmentToPlayer(player);
 				player.Out.SendTime();
-				WeatherMgr.UpdatePlayerWeather(player);
 
 				bool checkInstanceLogin = false;
 

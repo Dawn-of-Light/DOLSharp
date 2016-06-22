@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -58,8 +59,6 @@ namespace DOL.GS
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private bool debugMemory = true;
-
 		#region Variables
 
 		/// <summary>
@@ -96,11 +95,6 @@ namespace DOL.GS
         /// The textwrite for log operations
         /// </summary>
         protected ILog m_inventoryLog;
-
-		/// <summary>
-		/// Contains a list of invalid names
-		/// </summary>
-		protected ArrayList m_invalidNames = new ArrayList();
 
 		/// <summary>
 		/// Holds instance of current server rules
@@ -177,6 +171,26 @@ namespace DOL.GS
 		{
 			get { return m_status; }
 		}
+		
+		/// <summary>
+		/// Gets the server Scheduler
+		/// </summary>
+		public Scheduler.SimpleScheduler Scheduler { get; protected set; }
+		
+		/// <summary>
+		/// Gets the server WorldManager
+		/// </summary>
+		public WorldManager WorldManager { get; protected set; }
+
+		/// <summary>
+		/// Gets the server PlayerManager
+		/// </summary>
+		public PlayerManager PlayerManager { get; protected set; }
+
+		/// <summary>
+		/// Gets the server NpcManager
+		/// </summary>
+		public NpcManager NpcManager { get; protected set; }
 
 		/// <summary>
 		/// Gets the current rules used by server
@@ -228,6 +242,14 @@ namespace DOL.GS
 		{
 			get { return Instance.m_database; }
 		}
+		
+		/// <summary>
+		/// Gets this Instance's Database
+		/// </summary>
+		public IObjectDatabase IDatabase
+		{
+			get { return m_database; }
+		}
 
 		/// <summary>
 		/// Gets or sets the world save interval
@@ -241,15 +263,6 @@ namespace DOL.GS
 				if (m_timer != null)
 					m_timer.Change(value*MINUTE_CONV, Timeout.Infinite);
 			}
-		}
-
-
-		/// <summary>
-		/// Gets an array of invalid player names
-		/// </summary>
-		public ArrayList InvalidNames
-		{
-			get { return m_invalidNames; }
 		}
 
 		/// <summary>
@@ -271,7 +284,6 @@ namespace DOL.GS
 		#endregion
 
 		#region Initialization
-
 		/// <summary>
 		/// Creates the gameserver instance
 		/// </summary>
@@ -296,54 +308,6 @@ namespace DOL.GS
 			//Create the instance
 			m_instance = new GameServer(config);
 		}
-
-		/// <summary>
-		/// Loads an array of invalid names
-		/// </summary>
-		public void LoadInvalidNames()
-		{
-			try
-			{
-				m_invalidNames.Clear();
-
-				if (File.Exists(Configuration.InvalidNamesFile))
-				{
-					using (StreamReader file = File.OpenText(Configuration.InvalidNamesFile))
-					{
-						string line = null;
-						while ((line = file.ReadLine()) != null)
-						{
-							if (line.Length == 0 || line[0] == '#')
-							{
-								continue;
-							}
-
-							m_invalidNames.Add(line.ToLower());
-						}
-
-						file.Close();
-					}
-				}
-				else
-				{
-					using (StreamWriter file = File.CreateText(Configuration.InvalidNamesFile))
-					{
-						file.WriteLine("#This file contains invalid name segments.");
-						file.WriteLine("#If a player's name contains any portion of a segment it is rejected.");
-						file.WriteLine("#Example: if a segment is \"bob\" then the name PlayerBobIsCool would be rejected");
-						file.WriteLine("#The # symbol at the beginning of a line means a comment and will not be read");
-						file.Flush();
-						file.Close();
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("LoadInvalidNames", e);
-			}
-		}
-
 		#endregion
 
 		#region UDP
@@ -610,10 +574,9 @@ namespace DOL.GS
 		{
 			try
 			{
-				//	Process pro = Process.GetCurrentProcess();
-				//	pro.ProcessorAffinity = new IntPtr(GameServer.Instance.Configuration.CPUUse);
-				if (debugMemory)
-					log.Debug("Starting Server, Memory is " + GC.GetTotalMemory(false)/1024/1024);
+				if (log.IsDebugEnabled)
+					log.DebugFormat("Starting Server, Memory is {0}MB", GC.GetTotalMemory(false)/1024/1024);
+				
 				m_status = eGameServerStatus.GSS_Closed;
 				Thread.CurrentThread.Priority = ThreadPriority.Normal;
 
@@ -626,7 +589,7 @@ namespace DOL.GS
 				
 				//---------------------------------------------------------------
 				//Try to init Server Properties
-				if (!InitComponent(new Func<bool>(() => { try { Properties.InitProperties(); return true; } catch { return false; } })(), "Server Properties Lookup"))
+				if (!InitComponent(Properties.InitProperties, "Server Properties Lookup"))
 					return false;
 				
 				//---------------------------------------------------------------
@@ -663,6 +626,26 @@ namespace DOL.GS
 						return false;
 				 */
 
+				//---------------------------------------------------------------
+				//Try to initialize the Scheduler
+				if (!InitComponent(() => Scheduler = new Scheduler.SimpleScheduler(), "Scheduler Initialization"))
+					return false;
+
+				//---------------------------------------------------------------
+				//Try to initialize the WorldManager
+				if (!InitComponent(() => WorldManager = new WorldManager(this), "Instancied World Manager Initialization"))
+					return false;
+				
+				//---------------------------------------------------------------
+				//Try to initialize the PlayerManager
+				if (!InitComponent(() => PlayerManager = new PlayerManager(this), "Player Manager Initialization"))
+					return false;
+
+				//---------------------------------------------------------------
+				//Try to initialize the NpcManager
+				if (!InitComponent(() => NpcManager = new NpcManager(this), "NPC Manager Initialization"))
+					return false;
+				
 				//---------------------------------------------------------------
 				//Try to start the Language Manager
 				if (!InitComponent(LanguageMgr.Init(), "Multi Language Initialization"))
@@ -769,11 +752,6 @@ namespace DOL.GS
 					return false;
 
 				//---------------------------------------------------------------
-				//Load all weather managers
-				if (!InitComponent(WeatherMgr.Load(), "Weather Managers"))
-					return false;
-
-				//---------------------------------------------------------------
 				//Load all crafting managers
 				if (!InitComponent(CraftingMgr.Init(), "Crafting Managers"))
 					return false;
@@ -855,11 +833,34 @@ namespace DOL.GS
 		/// <returns></returns>
 		public bool CompileScripts()
 		{
-			string scriptDirectory = string.Format("{0}{1}scripts", Configuration.RootDirectory, Path.DirectorySeparatorChar);
+			string scriptDirectory = Path.Combine(Configuration.RootDirectory, "scripts");
 			if (!Directory.Exists(scriptDirectory))
 				Directory.CreateDirectory(scriptDirectory);
 			
-			if (ScriptMgr.CompileScripts(false, scriptDirectory, Configuration.ScriptCompilationTarget, Configuration.ScriptAssemblies))
+			bool compiled = false;
+			
+			// Check if Configuration Forces to use Pre-Compiled Game Server Scripts Assembly
+			if (!Configuration.EnableCompilation)
+			{
+				log.Info("Script Compilation Disabled in Server Configuration, Loading pre-compiled Assembly...");
+
+				if (File.Exists(Configuration.ScriptCompilationTarget))
+				{
+					ScriptMgr.LoadAssembly(Configuration.ScriptCompilationTarget);
+				}
+				else
+				{
+					log.WarnFormat("Compilation Disabled - Could not find pre-compiled Assembly : {0} - Server starting without Scripts Assembly!", Configuration.ScriptCompilationTarget);
+				}
+				
+				compiled = true;
+			}
+			else
+			{
+				compiled = ScriptMgr.CompileScripts(false, scriptDirectory, Configuration.ScriptCompilationTarget, Configuration.ScriptAssemblies);
+			}
+			
+			if (compiled)
 			{
 				//---------------------------------------------------------------
 				//Register Script Tables
@@ -929,9 +930,7 @@ namespace DOL.GS
 
 				//---------------------------------------------------------------
 				//Register all event handlers
-				var scripts = new ArrayList(ScriptMgr.Scripts);
-				scripts.Insert(0, typeof (GameServer).Assembly);
-				foreach (Assembly asm in scripts)
+				foreach (Assembly asm in ScriptMgr.GameServerScripts)
 				{
 					GameEventMgr.RegisterGlobalEvents(asm, typeof (GameServerStartedEventAttribute), GameServerEvent.Started);
 					GameEventMgr.RegisterGlobalEvents(asm, typeof (GameServerStoppedEventAttribute), GameServerEvent.Stopped);
@@ -1062,11 +1061,7 @@ namespace DOL.GS
 			{
 				log.Info("Checking database for updates ...");
 				
-				List<Assembly> asms = new List<Assembly>();
-				asms.Add(typeof(GameServer).Assembly);
-				asms.AddRange(ScriptMgr.Scripts);
-				
-				foreach (Assembly asm in asms)
+				foreach (Assembly asm in ScriptMgr.GameServerScripts)
 				{
 
 					foreach (Type type in asm.GetTypes())
@@ -1114,17 +1109,49 @@ namespace DOL.GS
 		/// <returns>false if startup should be interrupted</returns>
 		protected bool InitComponent(bool componentInitState, string text)
 		{
-			if (debugMemory)
-				log.Debug("Start Memory " + text + ": " + GC.GetTotalMemory(false)/1024/1024);
+			if (log.IsDebugEnabled)
+				log.DebugFormat("Start Memory {0}: {1}MB", text, GC.GetTotalMemory(false)/1024/1024);
+			
 			if (log.IsInfoEnabled)
-				log.Info(text + ": " + componentInitState);
+				log.InfoFormat("{0}: {1}", text, componentInitState);
+			
 			if (!componentInitState)
 				Stop();
-			if (debugMemory)
-				log.Debug("Finish Memory " + text + ": " + GC.GetTotalMemory(false)/1024/1024);
+			
+			if (log.IsDebugEnabled)
+				log.DebugFormat("Finish Memory {0}: {1}MB", text, GC.GetTotalMemory(false)/1024/1024);
+			
 			return componentInitState;
 		}
 
+		protected bool InitComponent(Action componentInitMethod, string text)
+		{
+			if (log.IsDebugEnabled)
+				log.DebugFormat("Start Memory {0}: {1}MB", text, GC.GetTotalMemory(false)/1024/1024);
+			
+			bool componentInitState = false;
+			try
+			{
+				componentInitMethod();
+				componentInitState = true;
+			}
+			catch (Exception ex)
+			{
+				if (log.IsErrorEnabled)
+					log.ErrorFormat("{0}: Error While Initialization\n{1}", text, ex);
+			}
+
+			if (log.IsInfoEnabled)
+				log.InfoFormat("{0}: {1}", text, componentInitState);
+
+			if (!componentInitState)
+				Stop();
+			
+			if (log.IsDebugEnabled)
+				log.DebugFormat("Finish Memory {0}: {1}MB", text, GC.GetTotalMemory(false)/1024/1024);
+			
+			return componentInitState;
+		}
 		#endregion
 
 		#region Stop
@@ -1194,15 +1221,11 @@ namespace DOL.GS
 			//Stop all mobMgrs
 			WorldMgr.StopRegionMgrs();
 
-			//unload all weatherMgr
-			WeatherMgr.Unload();
-
 			//Stop the WorldMgr, save all players
 			//WorldMgr.SaveToDatabase();
 			SaveTimerProc(null);
 
 			WorldMgr.Exit();
-
 
 			//Save the database
 			// 2008-01-29 Kakuri - Obsolete
@@ -1213,6 +1236,11 @@ namespace DOL.GS
 
 			m_serverRules = null;
 
+			// Stop Server Scheduler
+			if (Scheduler != null)
+				Scheduler.Shutdown();
+			Scheduler = null;
+			
 			Thread.CurrentThread.Priority = ThreadPriority.BelowNormal;
 
 			if (log.IsInfoEnabled)
@@ -1387,16 +1415,14 @@ namespace DOL.GS
 						// Walk through each type in the assembly
 						foreach (Type type in assembly.GetTypes())
 						{
-							// Pick up a class
-							// Aredhel: Ok, I know checking for InventoryArtifact type
-							// is a hack, but I currently have no better idea.
-							if (type.IsClass != true || type == typeof (InventoryArtifact))
+							if (!type.IsClass || type.IsAbstract)
 								continue;
-							object[] attrib = type.GetCustomAttributes(typeof (DataTable), true);
-							if (attrib.Length > 0)
+							
+							var attrib = type.GetCustomAttributes<DataTable>(false);
+							if (attrib.Any())
 							{
 								if (log.IsInfoEnabled)
-									log.Info("Registering table: " + type.FullName);
+									log.InfoFormat("Registering table: {0}", type.FullName);
 								m_database.RegisterDataObject(type);
 							}
 						}
@@ -1501,8 +1527,6 @@ namespace DOL.GS
 
 			try
 			{
-				LoadInvalidNames();
-
 				m_udpBuf = new byte[MAX_UDPBUF];
 				m_udpReceiveCallback = new AsyncCallback(RecvFromCallback);
 				m_udpSendCallback = new AsyncCallback(SendToCallback);

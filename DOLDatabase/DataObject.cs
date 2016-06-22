@@ -53,8 +53,7 @@ namespace DOL.Database
 		{
 			get
 			{
-				Type myType = GetType();
-				return GetTableName(myType);
+				return AttributesUtils.GetTableName(GetType());
 			}
 		}
 
@@ -66,8 +65,7 @@ namespace DOL.Database
 		{
 			get
 			{
-				Type myType = GetType();
-				return GetPreCachedFlag(myType);
+				return AttributesUtils.GetPreCachedFlag(GetType());
 			}
 		}
 
@@ -143,67 +141,9 @@ namespace DOL.Database
 
 		#endregion
 
-		/// <summary>
-		/// Returns the Tablename for an Objecttype. 
-		/// Reads the DataTable-Attribute or if
-		/// not defined returns the Classname
-		/// </summary>
-		/// <param name="myType">get the Tablename for this DataObject</param>
-		/// <returns>The </returns>
-		public static string GetTableName(Type myType)
-		{
-			object[] attri = myType.GetCustomAttributes(typeof (DataTable), true);
-
-			if ((attri.Length >= 1) && (attri[0] is DataTable))
-			{
-				var tab = attri[0] as DataTable;
-				string name = tab.TableName;
-				if (name != null)
-					return name;
-			}
-
-			return myType.Name;
-		}
-
-		public static string GetViewName(Type myType)
-		{
-			object[] attri = myType.GetCustomAttributes(typeof (DataTable), true);
-
-			if ((attri.Length >= 1) && (attri[0] is DataTable))
-			{
-				var tab = attri[0] as DataTable;
-				string name = tab.ViewName;
-				if (name != null)
-					return name;
-			}
-
-			return null;
-		}
-
-		/// <summary>
-		/// Is this table pre-cached on startup?
-		/// </summary>
-		/// <param name="myType"></param>
-		/// <returns>bool</returns>
-		public static bool GetPreCachedFlag(Type myType)
-		{
-			object[] attri = myType.GetCustomAttributes(typeof (DataTable), true);
-			if ((attri.Length >= 1) && (attri[0] is DataTable))
-			{
-				var tab = attri[0] as DataTable;
-				return tab.PreCache;
-			}
-
-			return false;
-		}
-
-
 		public override string ToString()
 		{
-			string str = "DataObject: " + TableName;
-
-			str += ", ObjectID{" + ObjectId + "}";
-			return str;
+			return string.Format("DataObject: {0}, ObjectId{{{1}}}", TableName, ObjectId);
 		}
 	}
 }
