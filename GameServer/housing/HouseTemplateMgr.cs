@@ -247,7 +247,7 @@ namespace DOL.GS.Housing
 		private static void CheckItemTemplate(string name, string id, int model, int objtype, int copper, int dps, int spd,
 		                                      int bonus, int weight, int realm)
 		{
-			var templateitem = GameServer.Database.FindObjectByKey<ItemTemplate>(GameServer.Database.Escape(id));
+			var templateitem = GameServer.Database.FindObjectByKey<ItemTemplate>(id);
 			if (templateitem == null)
 			{
 				templateitem = new ItemTemplate

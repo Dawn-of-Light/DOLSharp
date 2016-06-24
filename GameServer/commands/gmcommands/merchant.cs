@@ -368,10 +368,7 @@ namespace DOL.GS.Commands
 											var merchantitems = GameServer.Database.SelectObjects<MerchantItem>("`ItemListID` = @ItemListID", new QueryParameter("@ItemListID", targetMerchant.TradeItems.ItemsListID));
 											if (merchantitems.Count > 0)
 											{
-												foreach (MerchantItem item in merchantitems)
-												{
-													GameServer.Database.DeleteObject(item);
-												}
+												GameServer.Database.DeleteObject(merchantitems);
 											}
 											DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Articles.Delete.ListDeleted"));
 										}

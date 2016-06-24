@@ -194,10 +194,7 @@ namespace DOL.GS.Movement
 				GameServer.Database.DeleteObject(dbpath);
 			}
 
-            foreach (DBPathPoint pp in GameServer.Database.SelectObjects<DBPathPoint>("`PathID` = @PathID", new QueryParameter("@PathID", pathID)))
-            {
-                GameServer.Database.DeleteObject(pp);
-            }
+			GameServer.Database.DeleteObject(GameServer.Database.SelectObjects<DBPathPoint>("`PathID` = @PathID", new QueryParameter("@PathID", pathID)));
 
 			// Now add this path and iterate through the PathPoint linked list to add all the path points
 

@@ -90,7 +90,7 @@ namespace DOL.Database
             m_housingEnabled = false;
             m_divingEnabled = false;
             m_waterLevel = 0;
-			m_classType = "";
+			m_classType = string.Empty;
 			m_isFrontier = false;
         }
 

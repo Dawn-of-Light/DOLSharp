@@ -36,8 +36,8 @@ namespace DOL
 
 			public CharacterXOneTimeDrop()
 			{
-				m_itemTemplateID = "";
-				m_characterID = "";
+				m_itemTemplateID = string.Empty;
+				m_characterID = string.Empty;
 			}
 
 			/// <summary>

@@ -873,7 +873,7 @@ namespace DOL.Database
 		public int GetObjectCount<TObject>()
 			where TObject : DataObject
 		{
-			return GetObjectCount<TObject>("");
+			return GetObjectCount<TObject>(string.Empty);
 		}
 
 		/// <summary>

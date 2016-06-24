@@ -35,9 +35,9 @@ namespace DOL.Database
 
 		public DBBoat()
 		{
-			boat_id = "";
-			boat_owner = "";
-			boat_name = "";
+			boat_id = string.Empty;
+			boat_owner = string.Empty;
+			boat_name = string.Empty;
 			boat_model = 0;
 			boat_maxspeedbase = 0;
 		}

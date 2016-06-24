@@ -38,10 +38,10 @@ namespace DOL.Database
         #region Variables
         private int m_templateId;
         private string m_translationId = string.Empty;
-		private string m_name = "";
+		private string m_name = string.Empty;
         private string m_suffix = string.Empty;
-		private string m_classType = "";
-		private string m_guildName = "";
+		private string m_classType = string.Empty;
+		private string m_guildName = string.Empty;
         private string m_examineArticle = string.Empty;
         private string m_messageArticle = string.Empty;
 		private string m_model;
@@ -49,16 +49,16 @@ namespace DOL.Database
 		private string m_size = "50";
 		private string m_level = "0";
 		private short m_maxSpeed = 50;
-		private string m_equipmentTemplateID = "";
-		private string m_itemsListTemplateID = "";
+		private string m_equipmentTemplateID = string.Empty;
+		private string m_itemsListTemplateID = string.Empty;
 		private ushort m_flags;
 		private byte m_meleeDamageType = 1;
 		private byte m_parryChance;
 		private byte m_evadeChance;
 		private byte m_blockChance;
 		private byte m_leftHandSwingChance;
-		private string m_spells = "";
-		private string m_styles = "";
+		private string m_spells = string.Empty;
+		private string m_styles = string.Empty;
 		private int m_strength = 0;
 		private int m_constitution = 0;
 		private int m_dexterity = 0;
@@ -67,7 +67,7 @@ namespace DOL.Database
 		private int m_piety = 0;
 		private int m_empathy = 0;
 		private int m_charisma = 0;
-		private string m_abilities = "";
+		private string m_abilities = string.Empty;
 		private byte m_aggroLevel = 0;
 		private int m_aggroRange = 0;
 		private int m_race = 0;
@@ -76,7 +76,7 @@ namespace DOL.Database
 		private int m_tetherRange = 0;
 		private byte m_visibleWeaponSlots = 0;
 		private bool m_replaceMobValues =  false;
-		private string m_packageID = "";
+		private string m_packageID = string.Empty;
         #endregion Variables
 
         /// <summary>

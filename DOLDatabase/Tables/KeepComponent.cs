@@ -50,7 +50,7 @@ namespace DOL.Database
 			m_health = 0;
 			m_keepID = 0;
 			m_keepComponentID = 0;
-			m_createInfo = "";
+			m_createInfo = string.Empty;
 		}
 
 		/// <summary>

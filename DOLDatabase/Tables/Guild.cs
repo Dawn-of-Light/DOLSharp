@@ -61,8 +61,8 @@ namespace DOL.Database
 			m_realm = 0;
 			m_emblem = 0;
 			Ranks = new DBRank[10];
-			m_webpage = "";
-			m_email = "";
+			m_webpage = string.Empty;
+			m_email = string.Empty;
 			m_guildBanner = false;
 			m_guildDues = false;
 			m_guildBank = 0;

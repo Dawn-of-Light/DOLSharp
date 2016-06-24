@@ -87,7 +87,7 @@ namespace DOL.Database
 				if (dataTableHandler.UsesPreCaching)
 				{
 					var primary = dataTableHandler.PrimaryKeys.Single();
-					var objects = SelectObjectsImpl(dataTableHandler, "", new [] { new QueryParameter[] { } }, Transaction.IsolationLevel.DEFAULT).First();
+					var objects = SelectObjectsImpl(dataTableHandler, string.Empty, new [] { new QueryParameter[] { } }, Transaction.IsolationLevel.DEFAULT).First();
 					
 					foreach (var obj in objects)
 						dataTableHandler.SetPreCachedObject(primary.GetValue(obj), obj);

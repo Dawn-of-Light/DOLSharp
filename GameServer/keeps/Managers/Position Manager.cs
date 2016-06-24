@@ -372,11 +372,7 @@ namespace DOL.GS.Keeps
 				return;
 
 			pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-			foreach (DBPath pp in GameServer.Database.SelectObjects<DBPath>("`PathID` = @PathID", new QueryParameter("@PathID", pathID)))
-			{
-				GameServer.Database.DeleteObject(pp);
-			}
-
+			GameServer.Database.DeleteObject(GameServer.Database.SelectObjects<DBPath>("`PathID` = @PathID", new QueryParameter("@PathID", pathID)));
 			PathPoint root = MovementMgr.FindFirstPathPoint(path);
 
 			//Set the current pathpoint to the rootpoint!

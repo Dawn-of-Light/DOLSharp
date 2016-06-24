@@ -17,7 +17,7 @@ namespace DOL.Database
 		long m_moneyReward;
 		int m_combatTime;
 		string m_capturedBy;
-		string m_rpGainerList = "";
+		string m_rpGainerList = string.Empty;
 
 		public KeepCaptureLog()
 			: base()

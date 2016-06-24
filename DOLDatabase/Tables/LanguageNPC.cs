@@ -25,11 +25,11 @@ namespace DOL.Database
     public class DBLanguageNPC : LanguageDataObject
     {
         #region Variables
-        private string m_name = "";
-        private string m_suffix = "";
-        private string m_guildName = "";
-        private string m_examineArticle = "";
-        private string m_messageArticle = "";
+        private string m_name = string.Empty;
+        private string m_suffix = string.Empty;
+        private string m_guildName = string.Empty;
+        private string m_examineArticle = string.Empty;
+        private string m_messageArticle = string.Empty;
         #endregion Variables
 
         public DBLanguageNPC()
