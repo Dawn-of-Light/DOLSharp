@@ -76,23 +76,26 @@ namespace DOL.GS.PacketHandler
 					}
 					var itemsByOwnerID = new Dictionary<string, Dictionary<eInventorySlot, InventoryItem>>();
 					
-					var allItems = GameServer.Database.SelectObjects<InventoryItem>("`OwnerID` = @OwnerID AND `SlotPosition` >= @MinEquipable AND `SlotPosition` <= @MaxEquipable",
-					                                                                charsBySlot.Select(kv => new [] { new QueryParameter("@OwnerID", kv.Value.ObjectId), new QueryParameter("@MinEquipable", (int)eInventorySlot.MinEquipable), new QueryParameter("@MaxEquipable", (int)eInventorySlot.MaxEquipable) }))
-						.SelectMany(objs => objs).ToArray();
-					
-					foreach (InventoryItem item in allItems)
+					if (charsBySlot.Any())
 					{
-	                    try
-	                    {
-	                        if (!itemsByOwnerID.ContainsKey(item.OwnerID))
-	                            itemsByOwnerID.Add(item.OwnerID, new Dictionary<eInventorySlot, InventoryItem>());
-	
-	                        itemsByOwnerID[item.OwnerID].Add((eInventorySlot)item.SlotPosition, item);
-	                    }
-	                    catch (Exception ex)
-	                    {
-	                        log.Error("SendCharacterOverview - Duplicate item on character? OwnerID: " + item.OwnerID + ", SlotPosition: " + item.SlotPosition + ", Account: " + m_gameClient.Account.Name, ex);
-	                    }
+						var allItems = GameServer.Database.SelectObjects<InventoryItem>("`OwnerID` = @OwnerID AND `SlotPosition` >= @MinEquipable AND `SlotPosition` <= @MaxEquipable",
+						                                                                charsBySlot.Select(kv => new [] { new QueryParameter("@OwnerID", kv.Value.ObjectId), new QueryParameter("@MinEquipable", (int)eInventorySlot.MinEquipable), new QueryParameter("@MaxEquipable", (int)eInventorySlot.MaxEquipable) }))
+							.SelectMany(objs => objs);
+						
+						foreach (InventoryItem item in allItems)
+						{
+							try
+							{
+								if (!itemsByOwnerID.ContainsKey(item.OwnerID))
+									itemsByOwnerID.Add(item.OwnerID, new Dictionary<eInventorySlot, InventoryItem>());
+								
+								itemsByOwnerID[item.OwnerID].Add((eInventorySlot)item.SlotPosition, item);
+							}
+							catch (Exception ex)
+							{
+								log.Error("SendCharacterOverview - Duplicate item on character? OwnerID: " + item.OwnerID + ", SlotPosition: " + item.SlotPosition + ", Account: " + m_gameClient.Account.Name, ex);
+							}
+						}
 					}
 	
 					for (int i = firstSlot; i < (firstSlot + 10); i++)

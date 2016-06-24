@@ -1914,7 +1914,7 @@ namespace DOL.GS.Commands
 							{
 								if (args[2] == "**all**") args[2] = String.Empty;
 
-								var packageItems = GameServer.Database.SelectObjects<ItemTemplate>("`PackageID` = @PackageID", new QueryParameter("@", args[2]));
+								var packageItems = GameServer.Database.SelectObjects<ItemTemplate>("`PackageID` = @PackageID", new QueryParameter("@PackageID", args[2]));
 
 								if (packageItems != null)
 								{
