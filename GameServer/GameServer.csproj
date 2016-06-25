@@ -229,7 +229,6 @@
     <Compile Include="commands\PlayerCommands\advice.cs" />
     <Compile Include="commands\PlayerCommands\advisor.cs" />
     <Compile Include="commands\PlayerCommands\afk.cs" />
-    <Compile Include="commands\PlayerCommands\anonymous.cs" />
     <Compile Include="commands\PlayerCommands\assist.cs" />
     <Compile Include="commands\PlayerCommands\autoloot.cs" />
     <Compile Include="commands\PlayerCommands\autosplit.cs" />
