@@ -32,15 +32,15 @@ namespace DOL.Database
 		/// <summary>
 		/// Trigger Mob
 		/// </summary>
-		protected string m_mobName = "";
+		protected string m_mobName = string.Empty;
 		/// <summary>
 		/// Trigger Guild
 		/// </summary>
-		protected string m_mobGuild = "";
+		protected string m_mobGuild = string.Empty;
 		/// <summary>
 		/// Trigger Faction
 		/// </summary>
-		protected string m_mobFaction = "";
+		protected string m_mobFaction = string.Empty;
 		/// <summary>
 		/// Trigger Region
 		/// </summary>
@@ -48,7 +48,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Class of the Loot Generator
 		/// </summary>
-		protected string m_lootGeneratorClass = "";
+		protected string m_lootGeneratorClass = string.Empty;
 		/// <summary>
 		/// Exclusive Priority
 		/// </summary>

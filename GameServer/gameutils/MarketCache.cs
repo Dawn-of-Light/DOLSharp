@@ -59,9 +59,9 @@ namespace DOL.GS
 			try
 			{
 				m_itemCache = new Dictionary<string, InventoryItem>();
-				string query = "(`SlotPosition` >= " + (int)eInventorySlot.Consignment_First + " AND `SlotPosition` <= " + (int)eInventorySlot.Consignment_Last + " AND OwnerLot > 0)";
 
-				IList<InventoryItem> list = GameServer.Database.SelectObjects<InventoryItem>(query);
+				IList<InventoryItem> list = GameServer.Database.SelectObjects<InventoryItem>("`SlotPosition` >= @SlotPositionFirst AND `SlotPosition` <= @SlotPositionLast AND `OwnerLot` > @OwnerLot",
+				                                                                             new[] { new QueryParameter("@SlotPositionFirst", (int)eInventorySlot.Consignment_First), new QueryParameter("@SlotPositionLast", (int)eInventorySlot.Consignment_Last), new QueryParameter("@OwnerLot", 0) });
 
 				foreach (InventoryItem item in list)
 				{

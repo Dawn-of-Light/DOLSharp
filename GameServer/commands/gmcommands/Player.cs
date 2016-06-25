@@ -18,7 +18,9 @@
  */
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
+
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
@@ -114,8 +116,7 @@ namespace DOL.GS.Commands
                         if (player == null)
                             player = client.Player;
 
-                        String select = String.Format("Name = '{0}'", GameServer.Database.Escape(args[2]));
-                        var character = GameServer.Database.SelectObject<DOLCharacters>(select);
+                        var character = GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", args[2])).FirstOrDefault();
 
                         if (character != null)
                         {

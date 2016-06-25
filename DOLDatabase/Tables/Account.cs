@@ -177,7 +177,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The last IP logged onto this account
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = true, Index = true)]
 		public string LastLoginIP
 		{
 			get { return m_lastLoginIP; }

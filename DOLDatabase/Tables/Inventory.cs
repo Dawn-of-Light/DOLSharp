@@ -254,7 +254,7 @@ namespace DOL.Database
 				{
 					if (string.IsNullOrEmpty(OwnerID) == false && m_hasLoggedError == false)
 					{
-						log.ErrorFormat("Template null for player {0} Inventory.  Can't find template {1}{2} for item in slot {3}!", OwnerID, (ITemplate_Id == null ? "" : ITemplate_Id), (UTemplate_Id == null ? "" : UTemplate_Id), m_slot_pos);
+						log.ErrorFormat("Template null for player {0} Inventory.  Can't find template {1}{2} for item in slot {3}!", OwnerID, (ITemplate_Id == null ? string.Empty : ITemplate_Id), (UTemplate_Id == null ? string.Empty : UTemplate_Id), m_slot_pos);
 						m_hasLoggedError = true;
 					}
 

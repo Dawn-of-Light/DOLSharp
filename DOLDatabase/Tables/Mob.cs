@@ -86,15 +86,15 @@ namespace DOL.Database
 		public Mob()
 		{
 			m_type = DEFAULT_NPC_CLASSTYPE;
-			m_equipmentTemplateID = "";
+			m_equipmentTemplateID = string.Empty;
 			m_npcTemplateID = -1;
 			m_meleeDamageType = 2; // slash by default
 			m_respawnInterval = -1; // random respawn by default
-			m_guild = "";
+			m_guild = string.Empty;
 			m_bodyType = 0;
 			m_houseNumber = 0;
-			m_brain = "";
-			m_pathID = "";
+			m_brain = string.Empty;
+			m_pathID = string.Empty;
 			m_maxdistance = 0;
 			m_Constitution = 30;
 			m_Dexterity = 30;
@@ -104,7 +104,7 @@ namespace DOL.Database
 			m_Piety = 30;
 			m_Empathy = 30;
 			m_Charisma = 30;
-			m_ownerID = "";
+			m_ownerID = string.Empty;
 			m_roamingRange = -1;
 			m_gender = 0;
 		}

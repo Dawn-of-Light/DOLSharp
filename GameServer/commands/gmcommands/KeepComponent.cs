@@ -17,6 +17,8 @@
  *
  */
 using System;
+using System.Linq;
+
 using DOL.Database;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
@@ -298,7 +300,7 @@ namespace DOL.GS.Commands
                             return;
                         }
 
-                        DBKeepComponent dbcomponent = GameServer.Database.SelectObject<DBKeepComponent>("`KeepID` = '" + component.Keep.KeepID + "' AND `ID` = '" + component.ID + "'");
+                        DBKeepComponent dbcomponent = GameServer.Database.SelectObjects<DBKeepComponent>("`KeepID` = @KeepID AND `ID` = @ID", new [] { new QueryParameter("@KeepID", component.Keep.KeepID), new QueryParameter("@ID", component.ID) }).FirstOrDefault();
                         component.ComponentX = dbcomponent.X;
                         component.ComponentY = dbcomponent.Y;
                         component.ComponentHeading = dbcomponent.Heading;

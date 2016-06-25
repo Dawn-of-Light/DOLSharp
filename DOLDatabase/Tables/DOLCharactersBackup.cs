@@ -26,7 +26,7 @@ namespace DOL.Database
 	[DataTable(TableName = "DOLCharactersBackup")]
 	public class DOLCharactersBackup : DOLCharacters
 	{
-		string m_dolCharactersID = "";
+		string m_dolCharactersID = string.Empty;
 		private DateTime m_deleteDate;
 
 		public DOLCharactersBackup()

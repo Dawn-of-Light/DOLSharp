@@ -29,7 +29,7 @@ namespace DOL.Database
 		/// Constructor for an DatabaseException
 		/// </summary>
 		/// <param name="e">Baseexeption for this error</param>
-		public DatabaseException(Exception e) : base("", e)
+		public DatabaseException(Exception e) : base(string.Empty, e)
 		{
 		}
 

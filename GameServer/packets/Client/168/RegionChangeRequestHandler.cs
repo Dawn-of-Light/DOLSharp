@@ -17,12 +17,14 @@
  *
  */
 using System;
+using System.Linq;
 using System.Collections;
 using System.Reflection;
+
 using DOL.Database;
-using DOL.GS.Keeps;
 using DOL.GS.Quests;
 using DOL.GS.ServerRules;
+
 using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
@@ -55,8 +57,8 @@ namespace DOL.GS.PacketHandler.Client.v168
                 targetRealm = client.Player.CurrentZone.Realm;
 			}
 
-			var zonePoint =	GameServer.Database.SelectObject<ZonePoint>("`Id` = '" + jumpSpotID + "' AND (`Realm` = '" + (byte)targetRealm +
-			                                                            "' OR `Realm` = '0' OR `Realm` = NULL)");
+			var zonePoint =	GameServer.Database.SelectObjects<ZonePoint>("`Id` = @Id AND (`Realm` = @Realm OR `Realm` = @DefaultRealm OR `Realm` IS NULL)",
+			                                                             new [] { new QueryParameter("@Id", jumpSpotID), new QueryParameter("@Realm", (byte)targetRealm), new QueryParameter("@DefaultRealm", 0) }).FirstOrDefault();
 
 			if (zonePoint == null || zonePoint.TargetRegion == 0)
 			{

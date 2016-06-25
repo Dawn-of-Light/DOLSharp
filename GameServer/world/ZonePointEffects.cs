@@ -17,13 +17,11 @@
  *
  */
 using System;
-using System.Reflection;
-using System.Timers;
-using DOL.Events;
-using log4net;
+using System.Linq;
 using System.Collections.Generic;
+
+using DOL.Events;
 using DOL.Database;
-using DOL.Language;
 
 namespace DOL.GS.GameEvents
 {
@@ -40,7 +38,7 @@ namespace DOL.GS.GameEvents
 			NpcTemplate zp;
 			try{
 				model = (ushort)ServerProperties.Properties.ZONEPOINT_NPCTEMPLATE;
-				zp = new NpcTemplate(GameServer.Database.SelectObject<DBNpcTemplate>("TemplateId =" + model.ToString()));
+				zp = new NpcTemplate(GameServer.Database.SelectObjects<DBNpcTemplate>("`TemplateId` = @TemplateId", new QueryParameter("@TemplateId", model)).FirstOrDefault());
 				if (model <= 0 || zp == null) throw new ArgumentNullException();
 			}
 			catch {

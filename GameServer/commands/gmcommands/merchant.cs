@@ -17,8 +17,9 @@
  *
  */
 using System;
-using System.Collections;
+using System.Linq;
 using System.Reflection;
+
 using DOL.GS;
 using DOL.Database;
 using DOL.GS.PacketHandler;
@@ -145,7 +146,7 @@ namespace DOL.GS.Commands
 					{
 						string currentID = targetMerchant.TradeItems.ItemsListID;
 
-						var itemList = GameServer.Database.SelectObjects<MerchantItem>("ItemListID = '" + currentID + "'");
+						var itemList = GameServer.Database.SelectObjects<MerchantItem>("`ItemListID` = @ItemListID", new QueryParameter("@ItemListID", currentID));
 						foreach (MerchantItem merchantItem in itemList)
 						{
 							MerchantItem item = new MerchantItem();
@@ -266,7 +267,8 @@ namespace DOL.GS.Commands
 												return;
 											}
 
-											MerchantItem item = GameServer.Database.SelectObject<MerchantItem>("ItemListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + slot + "'");
+											MerchantItem item = GameServer.Database.SelectObjects<MerchantItem>("`ItemListID` = @ItemListID AND `PageNumber` = @PageNumber AND `SlotPosition` = @SlotPosition",
+											                                                                   new [] { new QueryParameter("@ItemListID", targetMerchant.TradeItems.ItemsListID), new QueryParameter("@PageNumber", page), new QueryParameter("@SlotPosition", slot) } ).FirstOrDefault();
 											if (item == null)
 											{
 												item = new MerchantItem();
@@ -325,7 +327,8 @@ namespace DOL.GS.Commands
 												return;
 											}
 
-											MerchantItem item = GameServer.Database.SelectObject<MerchantItem>("ItemListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "' AND PageNumber = '" + page + "' AND SlotPosition = '" + slot + "'");
+											MerchantItem item = GameServer.Database.SelectObjects<MerchantItem>("`ItemListID` = @ItemListID AND `PageNumber` = @PageNumber AND `SlotPosition` = @SlotPosition",
+											                                                                   new [] { new QueryParameter("@ItemListID", targetMerchant.TradeItems.ItemsListID), new QueryParameter("@PageNumber", page), new QueryParameter("@SlotPosition", slot) } ).FirstOrDefault();
 											if (item == null)
 											{
 												DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Articles.Remove.SlotInPageIsAEmpty", slot, page));
@@ -362,13 +365,10 @@ namespace DOL.GS.Commands
 											}
 											DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Articles.Delete.DeletingListTemp"));
 
-											var merchantitems = GameServer.Database.SelectObjects<MerchantItem>("ItemsListID = '" + GameServer.Database.Escape(targetMerchant.TradeItems.ItemsListID) + "'");
+											var merchantitems = GameServer.Database.SelectObjects<MerchantItem>("`ItemListID` = @ItemListID", new QueryParameter("@ItemListID", targetMerchant.TradeItems.ItemsListID));
 											if (merchantitems.Count > 0)
 											{
-												foreach (MerchantItem item in merchantitems)
-												{
-													GameServer.Database.DeleteObject(item);
-												}
+												GameServer.Database.DeleteObject(merchantitems);
 											}
 											DisplayMessage(client, LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Merchant.Articles.Delete.ListDeleted"));
 										}

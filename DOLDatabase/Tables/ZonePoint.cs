@@ -37,7 +37,7 @@ namespace DOL.Database
 		private int m_sourceY;
 		private int m_sourceZ;
 		private ushort m_sourceRegion;
-		private string	m_classType = "";
+		private string	m_classType = string.Empty;
 
 		public ZonePoint()
 		{

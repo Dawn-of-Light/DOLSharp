@@ -14,7 +14,7 @@ namespace DOL.Database
 		private int m_z;
 		private int m_radius;
 		private ushort m_region;
-		private string m_classType = "";
+		private string m_classType = string.Empty;
 		private bool m_canBroadcast;
 		private byte m_sound;
 		private bool m_checkLOS;

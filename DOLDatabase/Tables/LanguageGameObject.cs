@@ -25,8 +25,8 @@ namespace DOL.Database
     public class DBLanguageGameObject : LanguageDataObject
     {
         #region Variables
-        private string m_name = "";
-        private string m_examineArticle = "";
+        private string m_name = string.Empty;
+        private string m_examineArticle = string.Empty;
         #endregion Variables
 
         public DBLanguageGameObject()

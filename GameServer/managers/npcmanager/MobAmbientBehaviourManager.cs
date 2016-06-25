@@ -61,7 +61,7 @@ namespace DOL.GS
 				if (AmbientBehaviour.TryGetValue(search, out matches))
 					return matches.Select(obj => obj.Clone()).Cast<MobXAmbientBehaviour>().ToArray();
 				
-				var records = Database.SelectObjects<MobXAmbientBehaviour>(string.Format("`Source` = '{0}'", GameServer.Database.Escape(search)));
+				var records = Database.SelectObjects<MobXAmbientBehaviour>("`Source` = @Source", new QueryParameter("@Source", search));
 				
 				lock (LockObject)
 				{

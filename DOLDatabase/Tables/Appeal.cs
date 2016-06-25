@@ -43,12 +43,12 @@ public class DBAppeal : DataObject
 	/// <param name="text">Content of the appeal (text)</param>
 	public DBAppeal()
 	{
-		m_name = "";
-		m_account = "";
+		m_name = string.Empty;
+		m_account = string.Empty;
 		m_severity = 0;
-		m_status = "";
-		m_timestamp = "";
-		m_text = "";
+		m_status = string.Empty;
+		m_timestamp = string.Empty;
+		m_text = string.Empty;
 	}
 
 	public DBAppeal(string name, string account, int severity, string status, string timestamp, string text)

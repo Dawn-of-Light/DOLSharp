@@ -39,7 +39,7 @@ namespace DOL.Database
 		/// </summary>
 		public DBFactionAggroLevel()
 		{
-			m_characterID = "";
+			m_characterID = string.Empty;
 			m_factionID = 0;
 			m_AggroLevel = 0;
 		}

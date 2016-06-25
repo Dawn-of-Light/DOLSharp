@@ -12534,7 +12534,7 @@ namespace DOL.GS
 			LoadQuests();
 
 			// Load Task object of player ...
-			var tasks = GameServer.Database.SelectObjects<DBTask>("Character_ID ='" + GameServer.Database.Escape(InternalID) + "'");
+			var tasks = GameServer.Database.SelectObjects<DBTask>("`Character_ID` = @Character_ID", new QueryParameter("@Character_ID", InternalID));
 			if (tasks.Count == 1)
 			{
 				m_task = AbstractTask.LoadFromDatabase(this, tasks[0]);
@@ -12546,7 +12546,7 @@ namespace DOL.GS
 			}
 
 			// Load ML steps of player ...
-			var mlsteps = GameServer.Database.SelectObjects<DBCharacterXMasterLevel>("Character_ID ='" + GameServer.Database.Escape(QuestPlayerID) + "'");
+			var mlsteps = GameServer.Database.SelectObjects<DBCharacterXMasterLevel>("`Character_ID` = @Character_ID", new QueryParameter("@Character_ID", QuestPlayerID));
 			if (mlsteps.Count > 0)
 			{
 				foreach (DBCharacterXMasterLevel mlstep in mlsteps)
@@ -13251,7 +13251,7 @@ namespace DOL.GS
 			m_questListFinished.Clear();
 
 			// Scripted quests
-			var quests = GameServer.Database.SelectObjects<DBQuest>("Character_ID ='" + GameServer.Database.Escape(QuestPlayerID) + "'");
+			var quests = GameServer.Database.SelectObjects<DBQuest>("`Character_ID` = @Character_ID", new QueryParameter("@Character_ID", QuestPlayerID));
 			foreach (DBQuest dbquest in quests)
 			{
 				AbstractQuest quest = AbstractQuest.LoadFromDatabase(this, dbquest);
@@ -13265,10 +13265,10 @@ namespace DOL.GS
 			}
 
 			// Data driven quests for this player
-			var dataQuests = GameServer.Database.SelectObjects<CharacterXDataQuest>("Character_ID ='" + GameServer.Database.Escape(QuestPlayerID) + "'");
+			var dataQuests = GameServer.Database.SelectObjects<CharacterXDataQuest>("`Character_ID` = @Character_ID", new QueryParameter("@Character_ID", QuestPlayerID));
 			foreach (CharacterXDataQuest quest in dataQuests)
 			{
-				DBDataQuest dbDataQuest = GameServer.Database.SelectObject<DBDataQuest>("ID = " + quest.DataQuestID);
+				DBDataQuest dbDataQuest = GameServer.Database.FindObjectByKey<DBDataQuest>(quest.DataQuestID);
 				if (dbDataQuest != null && dbDataQuest.StartType != (byte)DataQuest.eStartType.Collection)
 				{
 					DataQuest dataQuest = new DataQuest(this, dbDataQuest, quest);
@@ -13845,12 +13845,12 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CraftItem(ushort itemID)
 		{
-			DBCraftedItem recipe = GameServer.Database.SelectObject<DBCraftedItem>("CraftedItemID ='" + GameServer.Database.Escape(itemID.ToString()) + "'");
+			DBCraftedItem recipe = GameServer.Database.FindObjectByKey<DBCraftedItem>(itemID.ToString());
 			if (recipe != null)
 			{
 				ItemTemplate itemToCraft = null;
 				itemToCraft = GameServer.Database.FindObjectByKey<ItemTemplate>(recipe.Id_nb);
-				IList<DBCraftedXItem> rawMaterials = GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = '" + recipe.Id_nb + "'");
+				IList<DBCraftedXItem> rawMaterials = GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = @CraftedItemId_nb", new QueryParameter("@CraftedItemId_nb", recipe.Id_nb));
 				if (rawMaterials.Count > 0)
 				{
 					if (itemToCraft != null)

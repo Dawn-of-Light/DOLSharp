@@ -306,7 +306,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 								// check for account bombing
 								TimeSpan ts;
-								IList<Account> allAccByIp = GameServer.Database.SelectObjects<Account>("LastLoginIP = '" + ipAddress + "'");
+								IList<Account> allAccByIp = GameServer.Database.SelectObjects<Account>("`LastLoginIP` = @LastLoginIP", new QueryParameter("@LastLoginIP", ipAddress));
 								int totalacc = 0;
 								foreach (Account ac in allAccByIp)
 								{

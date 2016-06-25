@@ -61,8 +61,8 @@ namespace DOL.Database
 			m_realm = 0;
 			m_emblem = 0;
 			Ranks = new DBRank[10];
-			m_webpage = "";
-			m_email = "";
+			m_webpage = string.Empty;
+			m_email = string.Empty;
 			m_guildBanner = false;
 			m_guildDues = false;
 			m_guildBank = 0;
@@ -97,7 +97,7 @@ namespace DOL.Database
 		/// Name of the Guild.  This is readonly after initial creation.
 		/// </summary>
 		[ReadOnly]
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = true, Index = true)]
 		public string GuildName
 		{
 			get

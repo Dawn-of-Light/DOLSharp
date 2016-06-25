@@ -585,7 +585,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 												};
 
 								// If we already have soemthing here, do not place more
-								foreach (var hpitem in GameServer.Database.SelectObjects<DBHouseHookpointItem>("HouseNumber = '" + house.HouseNumber + "'"))
+								foreach (var hpitem in GameServer.Database.SelectObjects<DBHouseHookpointItem>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", house.HouseNumber)))
 								{
 									if (hpitem.HookpointID == point.HookpointID)
 									{
@@ -733,7 +733,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 							}
 
 							// If we already have soemthing here, do not place more
-							foreach (var hpitem in GameServer.Database.SelectObjects<DBHouseHookpointItem>("HouseNumber = '" + house.HouseNumber + "'"))
+							foreach (var hpitem in GameServer.Database.SelectObjects<DBHouseHookpointItem>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", house.HouseNumber)))
 							{
 								if (hpitem.HookpointID == _position)
 								{

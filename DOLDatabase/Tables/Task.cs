@@ -35,7 +35,7 @@ namespace DOL.Database
 	[DataTable(TableName="Task")]
 	public class DBTask : DataObject
 	{
-		protected string	m_characterid = "";
+		protected string	m_characterid = string.Empty;
 		protected DateTime	m_TimeOut = DateTime.Now.AddHours(2);
 		protected String	m_TaskType = null;		// name of classname
 		protected int		m_TasksDone = 0;
