@@ -60,6 +60,9 @@ namespace DOL.GS.Friends
 		{
 			get
 			{
+				if (player == null)
+					return new string[0];
+				
 				string[] result;
 				return PlayersFriendsListsCache.TryGetValue(player, out result) ? result : new string[0];
 			}
@@ -145,8 +148,12 @@ namespace DOL.GS.Friends
 		{
 			if (Player == null)
 				throw new ArgumentNullException("Player");
+			if (Friend == null)
+				throw new ArgumentNullException("Friend");
 			
-			if (string.IsNullOrWhiteSpace(Friend))
+			Friend = Friend.Trim();
+			
+			if (string.IsNullOrEmpty(Friend))
 				throw new ArgumentException("Friend need to be a valid non-empty or white space string!", "Friend");
 			
 			var success = false;
@@ -194,8 +201,12 @@ namespace DOL.GS.Friends
 		{
 			if (Player == null)
 				throw new ArgumentNullException("Player");
+			if (Friend == null)
+				throw new ArgumentNullException("Friend");
 			
-			if (string.IsNullOrWhiteSpace(Friend))
+			Friend = Friend.Trim();
+			
+			if (string.IsNullOrEmpty(Friend))
 				throw new ArgumentException("Friend need to be a valid non-empty or white space string!", "Friend");
 			
 			var success = false;

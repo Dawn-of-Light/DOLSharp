@@ -402,8 +402,8 @@ namespace DOL.GS
 		/// </summary>
 		public string[] SerializedFriendsList
 		{
-			get { return DBCharacter != null ? DBCharacter.SerializedFriendsList.Split(',') : new string[0]; }
-			set { if (DBCharacter != null) DBCharacter.SerializedFriendsList = string.Join(",", value); }
+			get { return DBCharacter != null ? DBCharacter.SerializedFriendsList.Split(',').Select(name => name.Trim()).Where(name => !string.IsNullOrEmpty(name)).ToArray() : new string[0]; }
+			set { if (DBCharacter != null) DBCharacter.SerializedFriendsList = string.Join(",", value.Select(name => name.Trim()).Where(name => !string.IsNullOrEmpty(name))); }
 		}
 		
 		/// <summary>
