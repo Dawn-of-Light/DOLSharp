@@ -217,7 +217,15 @@ namespace DOL.GS
 		public bool IsAnonymous
 		{
 			get { return DBCharacter != null ? DBCharacter.IsAnonymous && (ServerProperties.Properties.ANON_MODIFIER != -1) : false; }
-			set { if (DBCharacter != null) DBCharacter.IsAnonymous = value; }
+			set
+			{
+				var old = IsAnonymous;
+				if (DBCharacter != null)
+					DBCharacter.IsAnonymous = value;
+				
+				if (old != IsAnonymous)
+					GameEventMgr.Notify(GamePlayerEvent.ChangeAnonymous, this);
+			}
 		}
 
 		/// <summary>
@@ -434,8 +442,8 @@ namespace DOL.GS
 		/// </summary>
 		public string[] SerializedIgnoreList
 		{
-			get { return DBCharacter != null ? DBCharacter.SerializedIgnoreList.Split(',') : new string[0]; }
-			set { if (DBCharacter != null) DBCharacter.SerializedIgnoreList = string.Join(",", value); }
+			get { return DBCharacter != null ? DBCharacter.SerializedIgnoreList.Split(',').Select(name => name.Trim()).Where(name => !string.IsNullOrEmpty(name)).ToArray() : new string[0]; }
+			set { if (DBCharacter != null) DBCharacter.SerializedIgnoreList = string.Join(",", value.Select(name => name.Trim()).Where(name => !string.IsNullOrEmpty(name))); }
 		}
 
 		/// <summary>
@@ -9893,16 +9901,7 @@ namespace DOL.GS
 		{			
 			// do some Cleanup
 			CleanupOnDisconnect();
-
-			string[] friendList = new string[]
-			{
-				Name
-			};
-			foreach (GameClient clientp in WorldMgr.GetAllPlayingClients())
-			{
-				if (clientp.Player.Friends.Contains(Name))
-					clientp.Out.SendRemoveFriends(friendList);
-			}
+			
 			if (Group != null)
 			{
 				Group.RemoveMember(this);
@@ -10256,30 +10255,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets or sets the friends of this player
-		/// </summary>
-		public List<string> Friends
-		{
-			get
-			{
-				if (SerializedFriendsList.Length > 0)
-					return new List<string>(SerializedFriendsList);
-
-				return new List<string>();
-			}
-			set
-			{
-				if (value == null)
-					SerializedIgnoreList = new string[0];
-				else
-					SerializedFriendsList = value.ToArray();
-				
-				if (DBCharacter != null)
-					GameServer.Database.SaveObject(DBCharacter);
-			}
-		}
-
-		/// <summary>
 		/// Gets or sets the IgnoreList of a Player
 		/// (delegate to PlayerCharacter)
 		/// </summary>
@@ -10302,33 +10277,6 @@ namespace DOL.GS
 					GameServer.Database.SaveObject(DBCharacter);
 			}
 		}
-
-		/// <summary>
-		/// Modifies the friend list of this player
-		/// </summary>
-		/// <param name="friendName">the friend name</param>
-		/// <param name="remove">true to remove this friend, false to add it</param>
-		public void ModifyFriend(string friendName, bool remove)
-		{
-			var currentFriends = Friends;
-			if (remove && currentFriends != null)
-			{
-				if (currentFriends.Contains(friendName))
-				{
-					currentFriends.Remove(friendName);
-					Friends = currentFriends;
-				}
-			}
-			else
-			{
-				if (!currentFriends.Contains(friendName))
-				{
-					currentFriends.Add(friendName);
-					Friends = currentFriends;
-				}
-			}
-		}
-
 
 		/// <summary>
 		/// Modifies the friend list of this player

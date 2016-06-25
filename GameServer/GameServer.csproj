@@ -931,6 +931,9 @@
     <Compile Include="language\LanguageMgr.cs" />
     <Compile Include="managers\npcmanager\MobAmbientBehaviourManager.cs" />
     <Compile Include="managers\npcmanager\NpcManager.cs" />
+    <Compile Include="managers\playermanager\FriendsManager.cs" />
+    <Compile Include="managers\playermanager\FriendsManagerExtensions.cs" />
+    <Compile Include="managers\playermanager\FriendStatus.cs" />
     <Compile Include="managers\playermanager\InvalidNamesManager.cs" />
     <Compile Include="managers\playermanager\PlayerManager.cs" />
     <Compile Include="managers\worldmanager\RegionWeather.cs" />

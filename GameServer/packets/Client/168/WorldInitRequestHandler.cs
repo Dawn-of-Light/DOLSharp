@@ -164,21 +164,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.Out.SendUpdateMoney();
 				player.Out.SendCharStatsUpdate();
 
-				var friends = player.Friends;
-				var onlineFriends = new List<string>();
-				foreach (string friendName in friends)
-				{
-					GameClient friendClient = WorldMgr.GetClientByPlayerName(friendName, true, false);
-					if (friendClient == null) 
-						continue;
-
-					if (friendClient.Player != null && friendClient.Player.IsAnonymous) 
-						continue;
-
-					onlineFriends.Add(friendName);
-				}
-
-				player.Out.SendAddFriends(onlineFriends.ToArray());
 				player.Out.SendCharResistsUpdate();
 				int effectsCount = 0;
 				player.Out.SendUpdateIcons(null, ref effectsCount);

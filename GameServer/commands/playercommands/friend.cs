@@ -16,7 +16,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.GS.PacketHandler;
+using System.Linq;
+
+using DOL.GS.Friends;
 
 namespace DOL.GS.Commands
 {
@@ -31,24 +33,15 @@ namespace DOL.GS.Commands
 		{
 			if (args.Length < 2)
 			{
-				string[] friends = client.Player.SerializedFriendsList;
-				client.Out.SendCustomTextWindow("Friends (snapshot)", friends);
+				client.Player.SendFriendsListSnapshot();
 				return;
 			}
 			else if (args.Length == 2 && args[1] == "window")
 			{
-				// "TF" - clear friend list in social
-				client.Out.SendMessage("TF", eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
-				byte ind = 0;
-				foreach (string friendName in client.Player.Friends)
-				{
-					GameClient friendClient = WorldMgr.GetClientByPlayerName(friendName, true, true);
-					if (friendClient == null || friendClient.Player == null || friendClient.Player.IsAnonymous) continue;
-					client.Out.SendMessage(string.Format("F,{0},{1},{2},{3},\"{4}\"",
-						ind++, friendClient.Player.Name, friendClient.Player.Level, friendClient.Player.CharacterClass.ID, (friendClient.Player.CurrentZone == null ? "" : friendClient.Player.CurrentZone.Description)), eChatType.CT_SocialInterface, eChatLoc.CL_SystemWindow);
-				}
+				client.Player.SendFriendsListSocial();
 				return;
 			}
+			
 			string name = string.Join(" ", args, 1, args.Length - 1);
 
 			int result = 0;
@@ -61,11 +54,9 @@ namespace DOL.GS.Commands
 			if (fclient == null)
 			{
 				name = args[1];
-				if (client.Player.Friends.Contains(name))
+				if (client.Player.GetFriends().Contains(name) && client.Player.RemoveFriend(name))
 				{
 					DisplayMessage(client, name + " was removed from your friend list!");
-					client.Player.ModifyFriend(name, true);
-					client.Out.SendRemoveFriends(new string[] {name});
 					return;
 				}
 				else
@@ -94,17 +85,13 @@ namespace DOL.GS.Commands
 						}
 
 						name = fclient.Player.Name;
-						if (client.Player.Friends.Contains(name))
+						if (client.Player.GetFriends().Contains(name) && client.Player.RemoveFriend(name))
 						{
 							DisplayMessage(client, name + " was removed from your friend list!");
-							client.Player.ModifyFriend(name, true);
-							client.Out.SendRemoveFriends(new string[] { name });
 						}
-						else
+						else if (client.Player.AddFriend(name))
 						{
 							DisplayMessage(client, name + " was added to your friend list!");
-							client.Player.ModifyFriend(name, false);
-							client.Out.SendAddFriends(new string[] { name });
 						}
 						break;
 					}

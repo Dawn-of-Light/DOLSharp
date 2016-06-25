@@ -344,6 +344,12 @@ namespace DOL.GS
 			return replaced;
 		}
 		
+		/// <summary>
+		/// Add Entry to Dictionary if key doesn't exists.
+		/// </summary>
+		/// <param name="key">Entry's Key.</param>
+		/// <param name="val">Entry's Value.</param>
+		/// <returns>True if Entry was inserted.</returns>
 		public bool AddIfNotExists(TKey key, TValue val)
 		{
 			m_rwLock.EnterUpgradeableReadLock();
@@ -372,18 +378,36 @@ namespace DOL.GS
 			return added;
 		}
 		
+		/// <summary>
+		/// Update Dictionary Entry if Key Exist.
+		/// </summary>
+		/// <param name="key">Entry's Key.</param>
+		/// <param name="val">New Entry's Value.</param>
+		/// <returns>True if Dictionary Entry was replace.</returns>
 		public bool UpdateIfExists(TKey key, TValue val)
+		{
+			return TryUpdate(key, prev => val);
+		}
+		
+		/// <summary>
+		/// Change Dictionary Entry if Key Exist.
+		/// </summary>
+		/// <param name="key">Entry's Key.</param>
+		/// <param name="update">Entry's Value Selector</param>
+		/// <returns>True if Dictionary Entry was updated.</returns>
+		public bool TryUpdate(TKey key, Func<TValue, TValue> update)
 		{
 			m_rwLock.EnterUpgradeableReadLock();
 			bool replaced = false;
 			try
 			{
-				if (m_dictionary.ContainsKey(key))
+				TValue val;
+				if (m_dictionary.TryGetValue(key, out val))
 				{
 					m_rwLock.EnterWriteLock();
 					try
 					{
-						m_dictionary[key] = val;
+						m_dictionary[key] = update(val);
 						replaced = true;
 					}
 					finally
@@ -400,6 +424,12 @@ namespace DOL.GS
 			return replaced;
 		}
 
+		/// <summary>
+		/// Try to Remove Entry from Dictionary if Key Exists.
+		/// </summary>
+		/// <param name="key">Entry's Key.</param>
+		/// <param name="val">Entry's Value.</param>
+		/// <returns>True if the Entry exists and was removed.</returns>
 		public bool TryRemove(TKey key, out TValue val)
 		{
 			m_rwLock.EnterUpgradeableReadLock();

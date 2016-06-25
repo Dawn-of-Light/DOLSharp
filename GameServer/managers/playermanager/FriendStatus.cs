@@ -18,42 +18,43 @@
  */
 using System;
 
-using DOL.GS.Friends;
-
-namespace DOL.GS
+namespace DOL.GS.Friends
 {
 	/// <summary>
-	/// GameServer Manager to Handle Player Data and restriction for this GameServer.
+	/// Offline Friend Status Object to display in Social Windows
 	/// </summary>
-	public sealed class PlayerManager
+	public sealed class FriendStatus
 	{
 		/// <summary>
-		/// Reference to the Instanced GameServer
+		/// Friend Name
 		/// </summary>
-		private GameServer GameServerInstance { get; set; }
+		public string Name { get; private set; }
+		/// <summary>
+		/// Friend Level
+		/// </summary>
+		public int Level { get; private set; }
+		/// <summary>
+		/// Friend Class ID
+		/// </summary>
+		public int ClassID { get; private set; }
+		/// <summary>
+		/// Friend LastPlayed
+		/// </summary>
+		public DateTime LastPlayed { get; private set; }
 		
 		/// <summary>
-		/// Reference to the Invalid Names Manager
+		/// Create a new instance of <see cref="FriendStatus"/>
 		/// </summary>
-		public InvalidNamesManager InvalidNames { get; private set; }
-		
-		/// <summary>
-		/// Reference to the Friends List Manager
-		/// </summary>
-		public FriendsManager Friends { get; private set; }
-
-		/// <summary>
-		/// Create a new Instance of <see cref="PlayerManager"/>
-		/// </summary>
-		public PlayerManager(GameServer GameServerInstance)
+		/// <param name="Name">Friend Name</param>
+		/// <param name="Level">Friend Level</param>
+		/// <param name="ClassID">Friend Class ID</param>
+		/// <param name="LastPlayed">Friend LastPlayed</param>
+		public FriendStatus(string Name, int Level, int ClassID, DateTime LastPlayed)
 		{
-			if (GameServerInstance == null)
-				throw new ArgumentNullException("GameServerInstance");
-			
-			this.GameServerInstance = GameServerInstance;
-			
-			InvalidNames = new InvalidNamesManager(this.GameServerInstance.Configuration.InvalidNamesFile);
-			Friends = new FriendsManager(GameServerInstance.IDatabase);
+			this.Name = Name;
+			this.Level = Level;
+			this.ClassID = ClassID;
+			this.LastPlayed = LastPlayed;
 		}
 	}
 }
