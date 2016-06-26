@@ -63,10 +63,12 @@
   <ItemGroup>
     <Compile Include="GameServer\gameutils\ServerTest.cs" />
     <Compile Include="GameServer\InvalidNamesStartupTest.cs" />
+    <Compile Include="Managers\FriendsManagerTest.cs" />
     <Compile Include="Managers\InvalidNamesManagerTest.cs" />
     <Compile Include="Managers\WeatherManagerTest.cs" />
     <Compile Include="SchedulerTest.cs" />
     <Compile Include="SetUpTests.cs" />
+    <Compile Include="TestPacketLib.cs" />
     <Compile Include="UPnP.cs" />
     <ProjectReference Include="..\DOLBase\DOLBase.csproj">
       <Name>DOLBase</Name>
@@ -79,6 +81,10 @@
       <Project>{43BFC675-13B7-4AA8-97F6-6109948849CC}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
       <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DOLServer\DOLServer.csproj">
+      <Project>{6ddf274a-91a3-4eaf-b0e3-30fd559abd51}</Project>
+      <Name>DOLServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\GameServer\GameServer.csproj">
       <Name>GameServer</Name>

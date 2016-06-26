@@ -27,6 +27,7 @@ using DOL.GS.Effects;
 using DOL.GS.Housing;
 using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
+using DOL.GS.Friends;
 
 namespace DOL.GS.Commands
 {
@@ -1114,15 +1115,13 @@ namespace DOL.GS.Commands
                         if (fclient == null)
                         {
                             name = args[2];
-                            if (player.Client.Player.Friends.Contains(name))
+                            if (player.GetFriends().Contains(name) && player.RemoveFriend(name))
                             {
                                 player.Out.SendMessage(
                                     client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has removed " + player.Name +
                                     " from your friend list!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                                 client.Out.SendMessage("Removed " + name + " from " + player.Name + "'s friend list successfully!",
                                                        eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                                player.Client.Player.ModifyFriend(name, true);
-                                player.Out.SendRemoveFriends(new[] { name });
                                 return;
                             }
                             else
@@ -1149,25 +1148,21 @@ namespace DOL.GS.Commands
                                 }
 
                                 name = fclient.Player.Name;
-                                if (player.Client.Player.Friends.Contains(name))
+                                if (player.GetFriends().Contains(name) && player.RemoveFriend(name))
                                 {
                                     player.Out.SendMessage(
                                         client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has removed " + name +
                                         " from your friend list!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                                     client.Out.SendMessage("Removed " + name + " from " + player.Name + "'s friend list successfully!",
                                                            eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                                    player.Client.Player.ModifyFriend(name, true);
-                                    player.Out.SendRemoveFriends(new[] { name });
                                 }
-                                else
+                                else if (player.AddFriend(name))
                                 {
                                     player.Out.SendMessage(
                                         client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has added " + name +
                                         " to your friend list!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                                     client.Out.SendMessage("Added " + name + " to " + player.Name + "'s friend list successfully!",
                                                            eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                                    player.Client.Player.ModifyFriend(name, false);
-                                    player.Client.Out.SendAddFriends(new[] { name });
                                 }
                                 return;
                         }
