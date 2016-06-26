@@ -9,7 +9,7 @@ env:
 
 install:
  - travis_retry nuget restore DOLServer/packages.config -SolutionDirectory ./
- - travis_retry nuget install NUnit.Console -OutputDirectory test -ExcludeVersion
+ - travis_retry nuget install NUnit.Console -Version 3.2.1 -OutputDirectory test -ExcludeVersion
 script:
  - MONO_IOMAP=case xbuild /p:Configuration=$XBUILD_TARGET "Dawn of Light.sln"
  - mkdir -p ./build/UnitTests/$XBUILD_TARGET/config
