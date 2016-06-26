@@ -316,9 +316,6 @@ namespace DOL.GS.Friends
 		/// <param name="Player">GamePlayer to notify to friends</param>
 		private void NotifyPlayerFriendsEnteringGame(GamePlayer Player)
 		{
-			if (Player.IsAnonymous)
-				return;
-			
 			var playerName = Player.Name;
 			var playerUpdate = new [] { playerName };
 			
@@ -332,12 +329,8 @@ namespace DOL.GS.Friends
 		/// Notify Friends of this Player that he exited Game
 		/// </summary>
 		/// <param name="Player">GamePlayer to notify to friends</param>
-		/// <param name="force">Force Notification if Anonymous</param>
-		private void NotifyPlayerFriendsExitingGame(GamePlayer Player, bool force = false)
+		private void NotifyPlayerFriendsExitingGame(GamePlayer Player)
 		{
-			if (!force && Player.IsAnonymous)
-				return;
-			
 			var playerName = Player.Name;
 			var playerUpdate = new [] { playerName };
 			
@@ -380,7 +373,8 @@ namespace DOL.GS.Friends
 			if (player == null)
 				return;
 			
-			NotifyPlayerFriendsEnteringGame(player);
+			if (!player.IsAnonymous)
+				NotifyPlayerFriendsEnteringGame(player);
 		}
 		
 		/// <summary>
@@ -393,7 +387,8 @@ namespace DOL.GS.Friends
 				return;
 			
 			RemovePlayerFriendsListFromCache(player);
-			NotifyPlayerFriendsExitingGame(player);
+			if (!player.IsAnonymous)
+				NotifyPlayerFriendsExitingGame(player);
 		}
 		
 		/// <summary>
@@ -406,7 +401,7 @@ namespace DOL.GS.Friends
 				return;
 			
 			if (player.IsAnonymous)
-				NotifyPlayerFriendsExitingGame(player, true);
+				NotifyPlayerFriendsExitingGame(player);
 			else
 				NotifyPlayerFriendsEnteringGame(player);
 		}

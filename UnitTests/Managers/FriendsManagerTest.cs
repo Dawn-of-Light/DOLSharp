@@ -21,7 +21,9 @@ using System;
 using DOL.GS;
 using DOL.GS.Friends;
 using DOL.Database;
-using DOLGameServerConsole;
+using DOL.Tests;
+using DOL.Events;
+
 using NUnit.Framework;
 
 namespace DOL.Server.Tests
@@ -53,11 +55,27 @@ namespace DOL.Server.Tests
 		{
 			var client = new GameClient(GameServer.Instance) {
 				Account = new Account() { Characters = new [] { new DOLCharacters() } },
-				Out = new ConsolePacketLib()
+				Out = new TestPacketLib()
 			};
 			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
 			
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
+			
+			CollectionAssert.IsEmpty(gameplayer.GetFriends());
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
+		}
+		
+		[Test]
+		public void FriendsManager_RemovePlayer_RetrieveEmptyFriendsList()
+		{
+			var client = new GameClient(GameServer.Instance) {
+				Account = new Account() { Characters = new [] { new DOLCharacters() { SerializedFriendsList = "buddy" }  } },
+				Out = new TestPacketLib()
+			};
+			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
+			
+			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 			
 			CollectionAssert.IsEmpty(gameplayer.GetFriends());
 		}
@@ -67,7 +85,7 @@ namespace DOL.Server.Tests
 		{
 			var client = new GameClient(GameServer.Instance) {
 				Account = new Account() { Characters = new [] { new DOLCharacters() { SerializedFriendsList = "buddy" } } },
-				Out = new ConsolePacketLib()
+				Out = new TestPacketLib()
 			};
 			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
 			
@@ -75,6 +93,7 @@ namespace DOL.Server.Tests
 			
 			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), new [] { client.Account.Characters[0].SerializedFriendsList });
 			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), new [] { "buddy" });
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 		}
 		
 		[Test]
@@ -82,7 +101,7 @@ namespace DOL.Server.Tests
 		{
 			var client = new GameClient(GameServer.Instance) {
 				Account = new Account() { Characters = new [] { new DOLCharacters() { SerializedFriendsList = "buddy , mate , someone" } } },
-				Out = new ConsolePacketLib()
+				Out = new TestPacketLib()
 			};
 			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
 			
@@ -90,6 +109,7 @@ namespace DOL.Server.Tests
 			
 			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), gameplayer.SerializedFriendsList);
 			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), new [] { "buddy", "mate", "someone" });
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 		}
 		
 		[Test]
@@ -97,7 +117,7 @@ namespace DOL.Server.Tests
 		{
 			var client = new GameClient(GameServer.Instance) {
 				Account = new Account() { Characters = new [] { new DOLCharacters() } },
-				Out = new ConsolePacketLib()
+				Out = new TestPacketLib()
 			};
 			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
 			
@@ -106,6 +126,7 @@ namespace DOL.Server.Tests
 
 			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), new [] { client.Account.Characters[0].SerializedFriendsList });
 			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), new [] { "buddy" });
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 		}
 		
 		[Test]
@@ -113,7 +134,7 @@ namespace DOL.Server.Tests
 		{
 			var client = new GameClient(GameServer.Instance) {
 				Account = new Account() { Characters = new [] { new DOLCharacters() } },
-				Out = new ConsolePacketLib()
+				Out = new TestPacketLib()
 			};
 			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
 			
@@ -124,6 +145,7 @@ namespace DOL.Server.Tests
 
 			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), gameplayer.SerializedFriendsList);
 			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), new [] { "buddy", "mate", "someone" });
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 		}
 		
 		[Test]
@@ -131,7 +153,7 @@ namespace DOL.Server.Tests
 		{
 			var client = new GameClient(GameServer.Instance) {
 				Account = new Account() { Characters = new [] { new DOLCharacters() } },
-				Out = new ConsolePacketLib()
+				Out = new TestPacketLib()
 			};
 			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
 			
@@ -142,6 +164,7 @@ namespace DOL.Server.Tests
 
 			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), gameplayer.SerializedFriendsList);
 			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), new [] { "buddy", "someone" });
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 		}
 		
 		[Test]
@@ -149,7 +172,7 @@ namespace DOL.Server.Tests
 		{
 			var client = new GameClient(GameServer.Instance) {
 				Account = new Account() { Characters = new [] { new DOLCharacters() } },
-				Out = new ConsolePacketLib()
+				Out = new TestPacketLib()
 			};
 			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
 			
@@ -158,6 +181,7 @@ namespace DOL.Server.Tests
 			CollectionAssert.IsNotEmpty(gameplayer.GetFriends());
 			gameplayer.RemoveFriend("buddy");
 			CollectionAssert.IsEmpty(gameplayer.GetFriends());
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 		}
 		
 		[Test]
@@ -165,7 +189,7 @@ namespace DOL.Server.Tests
 		{
 			var client = new GameClient(GameServer.Instance) {
 				Account = new Account() { Characters = new [] { new DOLCharacters() } },
-				Out = new ConsolePacketLib()
+				Out = new TestPacketLib()
 			};
 			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
 			
@@ -178,6 +202,7 @@ namespace DOL.Server.Tests
 			gameplayer.RemoveFriend("mate");
 			gameplayer.RemoveFriend("someone");
 			CollectionAssert.IsEmpty(gameplayer.GetFriends());
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 		}
 		
 		[Test]
@@ -185,7 +210,7 @@ namespace DOL.Server.Tests
 		{
 			var client = new GameClient(GameServer.Instance) {
 				Account = new Account() { Characters = new [] { new DOLCharacters() } },
-				Out = new ConsolePacketLib()
+				Out = new TestPacketLib()
 			};
 			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
 			
@@ -194,6 +219,243 @@ namespace DOL.Server.Tests
 			CollectionAssert.IsNotEmpty(gameplayer.GetFriends());
 			Assert.IsFalse(gameplayer.RemoveFriend("mate"));
 			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), new [] { "buddy" });
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
+		}
+		
+		[Test]
+		public void FriendsManager_NotifyPlayerWorldEnter_ReceivePacketEmptyList()
+		{
+			string[] received = null;
+			var client = new GameClient(GameServer.Instance) {
+				Account = new Account() { Characters = new [] { new DOLCharacters() } },
+				Out = new TestPacketLib() { SendAddFriendsMethod = (lib, friends) => received = friends }
+			};
+			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
+			client.Player = gameplayer;
+			
+			client.ClientState = GameClient.eClientState.WorldEnter;
+					
+			CollectionAssert.IsEmpty(received);
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
+		}
+		
+		[Test]
+		public void FriendsManager_NotifyPlayerWorldEnterWithFriends_ReceivePacketMateList()
+		{
+			string[] received = null;
+			var client = new GameClient(GameServer.Instance) {
+				Account = new Account() { Characters = new [] { new DOLCharacters() { SerializedFriendsList = "buddy , mate , someone" } } },
+				Out = new TestPacketLib() { SendAddFriendsMethod = (lib, friends) => received = friends }
+			};
+			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
+			client.Player = gameplayer;
+			
+			var clientMate = new GameClient(GameServer.Instance) {
+				Account = new Account() { Characters = new [] { new DOLCharacters() { Name = "mate" } } },
+				Out = new TestPacketLib()
+			};
+			var gameplayerMate = new GamePlayer(clientMate, clientMate.Account.Characters[0]);
+			
+			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayerMate);
+			
+			client.ClientState = GameClient.eClientState.WorldEnter;
+					
+			CollectionAssert.AreEquivalent(new[] { "mate" }, received);
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayerMate);
+		}
+		
+		[Test]
+		public void FriendsManager_NotifyPlayerWorldEnterWithFriendsAnon_ReceivePacketMateList()
+		{
+			string[] received = null;
+			var client = new GameClient(GameServer.Instance) {
+				Account = new Account() { Characters = new [] { new DOLCharacters() { SerializedFriendsList = "buddy , mate , someone" } } },
+				Out = new TestPacketLib() { SendAddFriendsMethod = (lib, friends) => received = friends }
+			};
+			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
+			client.Player = gameplayer;
+			
+			var clientMate = new GameClient(GameServer.Instance) {
+				Account = new Account() { Characters = new [] { new DOLCharacters() { Name = "mate" } } },
+				Out = new TestPacketLib()
+			};
+			var gameplayerMate = new GamePlayer(clientMate, clientMate.Account.Characters[0]);
+			
+			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayerMate);
+			
+			var clientBuddy = new GameClient(GameServer.Instance) {
+				Account = new Account() { Characters = new [] { new DOLCharacters() { Name = "buddy", IsAnonymous = true } } },
+				Out = new TestPacketLib()
+			};
+			var gameplayerBuddy = new GamePlayer(clientBuddy, clientBuddy.Account.Characters[0]);
+			
+			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayerBuddy);
+			
+			client.ClientState = GameClient.eClientState.WorldEnter;
+					
+			CollectionAssert.AreEquivalent(new[] { "mate" }, received);
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayerMate);
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayerBuddy);
+		}
+		
+		[Test]
+		public void FriendsManager_FriendsGetAnonymous_ReceiveRemovePacket()
+		{
+			string[] received = null;
+			var client = new GameClient(GameServer.Instance) {
+				Account = new Account() { Characters = new [] { new DOLCharacters() { SerializedFriendsList = "buddy , mate , someone" } } },
+				Out = new TestPacketLib() { SendRemoveFriendsMethod = (lib, friends) => received = friends }
+			};
+			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
+			client.Player = gameplayer;
+			
+			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
+			var clientMate = new GameClient(GameServer.Instance) {
+				Account = new Account() { Characters = new [] { new DOLCharacters() { Name = "mate" } } },
+				Out = new TestPacketLib()
+			};
+			var gameplayerMate = new GamePlayer(clientMate, clientMate.Account.Characters[0]);
+			
+			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayerMate);
+			
+			gameplayerMate.IsAnonymous = true;
+			
+			CollectionAssert.AreEquivalent(new[] { "mate" }, received);
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayerMate);
+		}
+		
+		[Test]
+		public void FriendsManager_FriendsUnsetAnonymous_ReceiveAddPacket()
+		{
+			string[] received = null;
+			var client = new GameClient(GameServer.Instance) {
+				Account = new Account() { Characters = new [] { new DOLCharacters() { SerializedFriendsList = "buddy , mate , someone" } } },
+				Out = new TestPacketLib() { SendAddFriendsMethod = (lib, friends) => received = friends }
+			};
+			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
+			client.Player = gameplayer;
+			
+			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
+			var clientMate = new GameClient(GameServer.Instance) {
+				Account = new Account() { Characters = new [] { new DOLCharacters() { Name = "mate", IsAnonymous = true } } },
+				Out = new TestPacketLib()
+			};
+			var gameplayerMate = new GamePlayer(clientMate, clientMate.Account.Characters[0]);
+			
+			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayerMate);
+			
+			gameplayerMate.IsAnonymous = false;
+			
+			CollectionAssert.AreEquivalent(new[] { "mate" }, received);
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayerMate);
+		}
+		
+		[Test]
+		public void FriendsManager_FriendsEnterGame_ReceiveAddPacket()
+		{
+			string[] received = null;
+			var client = new GameClient(GameServer.Instance) {
+				Account = new Account() { Characters = new [] { new DOLCharacters() { SerializedFriendsList = "buddy , mate , someone" } } },
+				Out = new TestPacketLib() { SendAddFriendsMethod = (lib, friends) => received = friends }
+			};
+			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
+			client.Player = gameplayer;
+			
+			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
+			var clientMate = new GameClient(GameServer.Instance) {
+				Account = new Account() { Characters = new [] { new DOLCharacters() { Name = "mate" } } },
+				Out = new TestPacketLib()
+			};
+			var gameplayerMate = new GamePlayer(clientMate, clientMate.Account.Characters[0]);
+			
+			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayerMate);
+			
+			GameEventMgr.Notify(GamePlayerEvent.GameEntered, gameplayerMate);
+			CollectionAssert.AreEquivalent(new[] { "mate" }, received);
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayerMate);
+		}
+		
+		[Test]
+		public void FriendsManager_FriendsEnterGameAnon_ReceiveNoAddPacket()
+		{
+			string[] received = null;
+			var client = new GameClient(GameServer.Instance) {
+				Account = new Account() { Characters = new [] { new DOLCharacters() { SerializedFriendsList = "buddy , mate , someone" } } },
+				Out = new TestPacketLib() { SendAddFriendsMethod = (lib, friends) => received = friends }
+			};
+			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
+			client.Player = gameplayer;
+			
+			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
+			var clientMate = new GameClient(GameServer.Instance) {
+				Account = new Account() { Characters = new [] { new DOLCharacters() { Name = "mate", IsAnonymous = true } } },
+				Out = new TestPacketLib()
+			};
+			var gameplayerMate = new GamePlayer(clientMate, clientMate.Account.Characters[0]);
+			
+			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayerMate);
+			
+			GameEventMgr.Notify(GamePlayerEvent.GameEntered, gameplayerMate);
+			Assert.IsNull(received);
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayerMate);
+		}
+		
+		[Test]
+		public void FriendsManager_FriendsExitGame_ReceiveRemovePacket()
+		{
+			string[] received = null;
+			var client = new GameClient(GameServer.Instance) {
+				Account = new Account() { Characters = new [] { new DOLCharacters() { SerializedFriendsList = "buddy , mate , someone" } } },
+				Out = new TestPacketLib() { SendRemoveFriendsMethod = (lib, friends) => received = friends }
+			};
+			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
+			client.Player = gameplayer;
+			
+			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
+			var clientMate = new GameClient(GameServer.Instance) {
+				Account = new Account() { Characters = new [] { new DOLCharacters() { Name = "mate" } } },
+				Out = new TestPacketLib()
+			};
+			var gameplayerMate = new GamePlayer(clientMate, clientMate.Account.Characters[0]);
+			
+			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayerMate);
+			
+			GameEventMgr.Notify(GamePlayerEvent.Quit, gameplayerMate);
+			CollectionAssert.AreEquivalent(new[] { "mate" }, received);
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayerMate);
+		}
+		
+		[Test]
+		public void FriendsManager_FriendsExitGame_ReceiveNoRemovePacket()
+		{
+			string[] received = null;
+			var client = new GameClient(GameServer.Instance) {
+				Account = new Account() { Characters = new [] { new DOLCharacters() { SerializedFriendsList = "buddy , mate , someone" } } },
+				Out = new TestPacketLib() { SendRemoveFriendsMethod = (lib, friends) => received = friends }
+			};
+			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
+			client.Player = gameplayer;
+			
+			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
+			var clientMate = new GameClient(GameServer.Instance) {
+				Account = new Account() { Characters = new [] { new DOLCharacters() { Name = "mate", IsAnonymous = true } } },
+				Out = new TestPacketLib()
+			};
+			var gameplayerMate = new GamePlayer(clientMate, clientMate.Account.Characters[0]);
+			
+			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayerMate);
+			
+			GameEventMgr.Notify(GamePlayerEvent.Quit, gameplayerMate);
+			Assert.IsNull(received);
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
+			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayerMate);
 		}
 		
 		[Test]
@@ -206,7 +468,7 @@ namespace DOL.Server.Tests
 			
 			var client = new GameClient(GameServer.Instance) {
 				Account = new Account() { Characters = new [] { new DOLCharacters() } },
-				Out = new ConsolePacketLib()
+				Out = new TestPacketLib()
 			};
 			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
 			
