@@ -49,9 +49,24 @@ namespace DOL.Database.Handlers
 			: base(ConnectionString)
 		{
 			// Options of MySQL connection string
-			if (!this.ConnectionString.Contains("Treat Tiny As Boolean"))
+			if (!this.ConnectionString.Contains("Treat Tiny As Boolean") && !this.ConnectionString.Contains("TreatTinyAsBoolean"))
 			{
 				this.ConnectionString += ";Treat Tiny As Boolean=False";
+			}
+
+			if (!this.ConnectionString.Contains("Ignore Prepare") && !this.ConnectionString.Contains("Ignore Prepare"))
+			{
+				this.ConnectionString += ";Ignore Prepare=False";
+			}
+
+			if (!this.ConnectionString.Contains("Allow User Variables") && !this.ConnectionString.Contains("AllowUserVariables"))
+			{
+				this.ConnectionString += ";Allow User Variables=True";
+			}
+			
+			if (!this.ConnectionString.Contains("Convert Zero Datetime") && !this.ConnectionString.Contains("ConvertZeroDateTime"))
+			{
+				this.ConnectionString += ";Convert Zero Datetime=True";
 			}
 		}
 		
@@ -430,13 +445,12 @@ namespace DOL.Database.Handlers
 						{
 						    cmd.CommandText = SQLCommand;
 							conn.Open();
-							cmd.Prepare();
-							
 						    long start = (DateTime.UtcNow.Ticks / 10000);
 						    
 						    // Register Parameters
-						    foreach(var keys in parameters.First().Select(kv => kv.Name))
-						    	cmd.Parameters.Add(new MySqlParameter() { ParameterName = keys });
+						    foreach(var param in parameters.First().Select(kv => new { kv.Name, Type = GuessQueryParameterDbType(kv) }))
+						    	cmd.Parameters.Add(param.Name, param.Type);
+							cmd.Prepare();
 						    
 						    foreach(var parameter in parameters.Skip(current))
 						    {
@@ -513,8 +527,9 @@ namespace DOL.Database.Handlers
 						    long start = (DateTime.UtcNow.Ticks / 10000);
 						    
 						    // Register Parameters
-						    foreach(var keys in parameters.First().Select(kv => kv.Name))
-						    	cmd.Parameters.Add(new MySqlParameter() { ParameterName = keys });
+						    foreach(var param in parameters.First().Select(kv => new { kv.Name, Type = GuessQueryParameterDbType(kv) }))
+						    	cmd.Parameters.Add(param.Name, param.Type);
+						    cmd.Prepare();
 						    
 						    foreach(var parameter in parameters.Skip(current))
 						    {
@@ -561,10 +576,6 @@ namespace DOL.Database.Handlers
 							}
 							repeat = true;
 						}
-						finally
-						{
-							conn.Close();
-						}
 					}
 				}
 			} 
@@ -600,12 +611,12 @@ namespace DOL.Database.Handlers
 						{
 						    cmd.CommandText = SQLCommand;
 							conn.Open();
-							cmd.Prepare();
 						    long start = (DateTime.UtcNow.Ticks / 10000);
 
 						    // Register Parameters
-						    foreach(var keys in parameters.First().Select(kv => kv.Name))
-						    	cmd.Parameters.Add(new MySqlParameter() { ParameterName = keys });
+						    foreach(var param in parameters.First().Select(kv => new { kv.Name, Type = GuessQueryParameterDbType(kv) }))
+						    	cmd.Parameters.Add(param.Name, param.Type);
+							cmd.Prepare();
 						    
 						    foreach(var parameter in parameters.Skip(current))
 						    {
@@ -621,15 +632,8 @@ namespace DOL.Database.Handlers
 						    				try
 						    				{
 							    				cmd.ExecuteNonQuery();
-							    				
-								    			using (var lastid = conn.CreateCommand())
-								    			{
-								    				lastid.CommandText = "SELECT LAST_INSERT_ID()";
-								    				lastid.Transaction = tran;
-								    				var result = lastid.ExecuteScalar();
-								    				obj.Add(result);
-								    			}
-						    				}							    			
+							    				obj.Add(cmd.LastInsertedId);
+						    				}
 								    		catch (MySqlException sqle)
 								    		{
 								    			if (HandleSQLException(sqle))
@@ -678,10 +682,6 @@ namespace DOL.Database.Handlers
 							}
 							repeat = true;
 						}
-						finally
-						{
-							conn.Close();
-						}
 					}
 				}
 			} 
@@ -690,6 +690,41 @@ namespace DOL.Database.Handlers
 			return obj.ToArray();
 		}
 		#endregion
+		protected static MySqlDbType GuessQueryParameterDbType(QueryParameter param)
+		{
+			var type = param.ValueType != null ? param.ValueType : param.Value != null ? param.Value.GetType() : null;
+			
+			if (typeof(string).IsAssignableFrom(type))
+				return MySqlDbType.Text;
+			if (typeof(DateTime).IsAssignableFrom(type))
+				return MySqlDbType.DateTime;
+			if (typeof(bool).IsAssignableFrom(type))
+				return MySqlDbType.Bit;
+			if (typeof(char).IsAssignableFrom(type))
+				return MySqlDbType.UInt16;
+			if (typeof(byte).IsAssignableFrom(type))
+				return MySqlDbType.UByte;
+			if (typeof(sbyte).IsAssignableFrom(type))
+				return MySqlDbType.Byte;
+			if (typeof(ushort).IsAssignableFrom(type))
+				return MySqlDbType.UInt16;
+			if (typeof(short).IsAssignableFrom(type))
+				return MySqlDbType.Int16;
+			if (typeof(uint).IsAssignableFrom(type))
+				return MySqlDbType.UInt32;
+			if (typeof(int).IsAssignableFrom(type))
+				return MySqlDbType.Int32;
+			if (typeof(ulong).IsAssignableFrom(type))
+				return MySqlDbType.UInt64;
+			if (typeof(long).IsAssignableFrom(type))
+				return MySqlDbType.Int64;
+			if (typeof(float).IsAssignableFrom(type))
+				return MySqlDbType.Double;
+			if (typeof(double).IsAssignableFrom(type))
+				return MySqlDbType.Double;
+			
+			return MySqlDbType.Blob;
+		}
 		/// <summary>
 		/// Handle Non Fatal SQL Query Exception
 		/// </summary>
