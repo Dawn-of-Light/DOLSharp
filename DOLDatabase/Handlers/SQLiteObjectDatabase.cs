@@ -808,12 +808,7 @@ namespace DOL.Database.Handlers
 						    				try
 						    				{
 							    				cmd.ExecuteNonQuery();
-							    				
-								    			using (var lastid = new SQLiteCommand("SELECT LAST_INSERT_ROWID()", conn))
-								    			{
-								    				var result = lastid.ExecuteScalar();
-								    				obj.Add(result);
-								    			}
+							    				obj.Add(conn.LastInsertRowId);
 						    				}
 								    		catch (SQLiteException sqle)
 								    		{

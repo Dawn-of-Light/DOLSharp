@@ -148,7 +148,7 @@ namespace DOL.Database
 					obj.ObjectId = IDGenerator.GenerateID();
 				
 				// Build Parameters
-				var parameters = objs.Select(obj => columns.Select(col => new QueryParameter(col.ParamName, col.Binding.GetValue(obj))));
+				var parameters = objs.Select(obj => columns.Select(col => new QueryParameter(col.ParamName, col.Binding.GetValue(obj), col.Binding.ValueType)));
 				
 				// Primary Key Auto Inc Handler
 				if (usePrimaryAutoInc)
@@ -241,7 +241,7 @@ namespace DOL.Database
 				                            string.Join(" AND ", primary.Select(col => string.Format("{0} = {1}", col.ColumnName, col.ParamName))));
 				
 				var objs = dataObjects.ToArray();
-				var parameters = objs.Select(obj => columns.Concat(primary).Select(col => new QueryParameter(col.ParamName, col.Binding.GetValue(obj))));
+				var parameters = objs.Select(obj => columns.Concat(primary).Select(col => new QueryParameter(col.ParamName, col.Binding.GetValue(obj), col.Binding.ValueType)));
 				
 				var affected = ExecuteNonQueryImpl(command, parameters);
 				var resultByObjects = affected.Select((result, index) => new { Result = result, DataObject = objs[index] });
@@ -300,7 +300,7 @@ namespace DOL.Database
 	                        string.Join(" AND ", primary.Select(col => string.Format("`{0}` = @{0}", col.ColumnName))));
 				
 				var objs = dataObjects.ToArray();
-				var parameters = objs.Select(obj => primary.Select(pk => new QueryParameter(string.Format("@{0}", pk.ColumnName), pk.GetValue(obj))));
+				var parameters = objs.Select(obj => primary.Select(pk => new QueryParameter(string.Format("@{0}", pk.ColumnName), pk.GetValue(obj), pk.ValueType)));
 				
 				var affected = ExecuteNonQueryImpl(command, parameters);
 				var resultByObjects = affected.Select((result, index) => new { Result = result, DataObject = objs[index] });
@@ -342,7 +342,7 @@ namespace DOL.Database
 		{
 			// Primary Key
 			var primary = tableHandler.FieldElementBindings.Where(bind => bind.PrimaryKey != null)
-				.Select(bind => new { ColumnName = string.Format("`{0}`", bind.ColumnName), ParamName = string.Format("@{0}", bind.ColumnName) }).ToArray();
+				.Select(bind => new { ColumnName = string.Format("`{0}`", bind.ColumnName), ParamName = string.Format("@{0}", bind.ColumnName), ParamType = bind.ValueType }).ToArray();
 			
 			if (!primary.Any())
 				throw new DatabaseException(string.Format("Table {0} has no primary key for finding by key...", tableHandler.TableName));
@@ -351,7 +351,7 @@ namespace DOL.Database
 			                                string.Join(" AND ", primary.Select(col => string.Format("{0} = {1}", col.ColumnName, col.ParamName))));
 			
 			var keysArray = keys.ToArray();
-			var parameters = keysArray.Select(key => primary.Select(col => new QueryParameter(col.ParamName, key)));
+			var parameters = keysArray.Select(key => primary.Select(col => new QueryParameter(col.ParamName, key, col.ParamType)));
 			
 			var objs = SelectObjectsImpl(tableHandler, whereClause, parameters, Transaction.IsolationLevel.DEFAULT);
 			
