@@ -690,6 +690,11 @@ namespace DOL.Database.Handlers
 			return obj.ToArray();
 		}
 		#endregion
+		/// <summary>
+		/// Retrieve Query Parameter DB Type from Table Type or Runtime Type
+		/// </summary>
+		/// <param name="param">Query Parameter</param>
+		/// <returns>MySqlDbType for this Query Paramter, "Blob" as default.</returns>
 		protected static MySqlDbType GuessQueryParameterDbType(QueryParameter param)
 		{
 			var type = param.ValueType != null ? param.ValueType : param.Value != null ? param.Value.GetType() : null;
