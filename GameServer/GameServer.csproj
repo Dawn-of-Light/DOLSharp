@@ -1038,6 +1038,14 @@
     <Compile Include="packets\Server\PacketLib1115.cs" />
     <Compile Include="packets\Server\PacketLib1116.cs" />
     <Compile Include="packets\Server\PacketLib1117.cs" />
+    <Compile Include="packets\Server\PacketLib1118.cs" />
+    <Compile Include="packets\Server\PacketLib1119.cs" />
+    <Compile Include="packets\Server\PacketLib1120.cs" />
+    <Compile Include="packets\Server\PacketLib1121.cs" />
+    <Compile Include="packets\Server\PacketLib1122.cs" />
+    <Compile Include="packets\Server\PacketLib1123.cs" />
+    <Compile Include="packets\Server\PacketLib1124.cs" />
+    <Compile Include="packets\Server\PacketLib1125.cs" />
     <Compile Include="packets\Server\PacketLib197.cs" />
     <Compile Include="packets\Server\PacketLib196.cs" />
     <Compile Include="packets\Server\PacketLib188.cs" />
