@@ -585,11 +585,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 							try
 							{
-								var objs = GameServer.Database.SelectObjects<InventoryItem>(string.Format("OwnerID = '{0}'", GameServer.Database.Escape(character.ObjectId)));
-								foreach (InventoryItem item in objs)
-								{
-									GameServer.Database.DeleteObject(item);
-								}
+								var objs = GameServer.Database.SelectObjects<InventoryItem>("`OwnerID` = @OwnerID", new QueryParameter("@OwnerID", character.ObjectId));
+								GameServer.Database.DeleteObject(objs);
 							}
 							catch (Exception e)
 							{
@@ -600,11 +597,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 							// delete quests
 							try
 							{
-								var objs = GameServer.Database.SelectObjects<DBQuest>(string.Format("Character_ID = '{0}'", GameServer.Database.Escape(character.ObjectId)));
-								foreach (DBQuest quest in objs)
-								{
-									GameServer.Database.DeleteObject(quest);
-								}
+								var objs = GameServer.Database.SelectObjects<DBQuest>("`Character_ID` = @Character_ID", new QueryParameter("@Character_ID", character.ObjectId));
+								GameServer.Database.DeleteObject(objs);
 							}
 							catch (Exception e)
 							{
@@ -615,11 +609,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 							// delete ML steps
 							try
 							{
-								var objs = GameServer.Database.SelectObjects<DBCharacterXMasterLevel>(string.Format("Character_ID = '{0}'", GameServer.Database.Escape(character.ObjectId)));
-								foreach (DBCharacterXMasterLevel mlstep in objs)
-								{
-									GameServer.Database.DeleteObject(mlstep);
-								}
+								var objs = GameServer.Database.SelectObjects<DBCharacterXMasterLevel>("`Character_ID` = @Character_ID", new QueryParameter("@Character_ID", character.ObjectId));
+								GameServer.Database.DeleteObject(objs);
 							}
 							catch (Exception e)
 							{

@@ -217,7 +217,15 @@ namespace DOL.GS
 		public bool IsAnonymous
 		{
 			get { return DBCharacter != null ? DBCharacter.IsAnonymous && (ServerProperties.Properties.ANON_MODIFIER != -1) : false; }
-			set { if (DBCharacter != null) DBCharacter.IsAnonymous = value; }
+			set
+			{
+				var old = IsAnonymous;
+				if (DBCharacter != null)
+					DBCharacter.IsAnonymous = value;
+				
+				if (old != IsAnonymous)
+					GameEventMgr.Notify(GamePlayerEvent.ChangeAnonymous, this);
+			}
 		}
 
 		/// <summary>
@@ -394,8 +402,8 @@ namespace DOL.GS
 		/// </summary>
 		public string[] SerializedFriendsList
 		{
-			get { return DBCharacter != null ? DBCharacter.SerializedFriendsList.Split(',') : new string[0]; }
-			set { if (DBCharacter != null) DBCharacter.SerializedFriendsList = string.Join(",", value); }
+			get { return DBCharacter != null ? DBCharacter.SerializedFriendsList.Split(',').Select(name => name.Trim()).Where(name => !string.IsNullOrEmpty(name)).ToArray() : new string[0]; }
+			set { if (DBCharacter != null) DBCharacter.SerializedFriendsList = string.Join(",", value.Select(name => name.Trim()).Where(name => !string.IsNullOrEmpty(name))); }
 		}
 		
 		/// <summary>
@@ -434,8 +442,8 @@ namespace DOL.GS
 		/// </summary>
 		public string[] SerializedIgnoreList
 		{
-			get { return DBCharacter != null ? DBCharacter.SerializedIgnoreList.Split(',') : new string[0]; }
-			set { if (DBCharacter != null) DBCharacter.SerializedIgnoreList = string.Join(",", value); }
+			get { return DBCharacter != null ? DBCharacter.SerializedIgnoreList.Split(',').Select(name => name.Trim()).Where(name => !string.IsNullOrEmpty(name)).ToArray() : new string[0]; }
+			set { if (DBCharacter != null) DBCharacter.SerializedIgnoreList = string.Join(",", value.Select(name => name.Trim()).Where(name => !string.IsNullOrEmpty(name))); }
 		}
 
 		/// <summary>
@@ -9893,16 +9901,7 @@ namespace DOL.GS
 		{			
 			// do some Cleanup
 			CleanupOnDisconnect();
-
-			string[] friendList = new string[]
-			{
-				Name
-			};
-			foreach (GameClient clientp in WorldMgr.GetAllPlayingClients())
-			{
-				if (clientp.Player.Friends.Contains(Name))
-					clientp.Out.SendRemoveFriends(friendList);
-			}
+			
 			if (Group != null)
 			{
 				Group.RemoveMember(this);
@@ -10256,30 +10255,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets or sets the friends of this player
-		/// </summary>
-		public List<string> Friends
-		{
-			get
-			{
-				if (SerializedFriendsList.Length > 0)
-					return new List<string>(SerializedFriendsList);
-
-				return new List<string>();
-			}
-			set
-			{
-				if (value == null)
-					SerializedIgnoreList = new string[0];
-				else
-					SerializedFriendsList = value.ToArray();
-				
-				if (DBCharacter != null)
-					GameServer.Database.SaveObject(DBCharacter);
-			}
-		}
-
-		/// <summary>
 		/// Gets or sets the IgnoreList of a Player
 		/// (delegate to PlayerCharacter)
 		/// </summary>
@@ -10302,33 +10277,6 @@ namespace DOL.GS
 					GameServer.Database.SaveObject(DBCharacter);
 			}
 		}
-
-		/// <summary>
-		/// Modifies the friend list of this player
-		/// </summary>
-		/// <param name="friendName">the friend name</param>
-		/// <param name="remove">true to remove this friend, false to add it</param>
-		public void ModifyFriend(string friendName, bool remove)
-		{
-			var currentFriends = Friends;
-			if (remove && currentFriends != null)
-			{
-				if (currentFriends.Contains(friendName))
-				{
-					currentFriends.Remove(friendName);
-					Friends = currentFriends;
-				}
-			}
-			else
-			{
-				if (!currentFriends.Contains(friendName))
-				{
-					currentFriends.Add(friendName);
-					Friends = currentFriends;
-				}
-			}
-		}
-
 
 		/// <summary>
 		/// Modifies the friend list of this player
@@ -12534,7 +12482,7 @@ namespace DOL.GS
 			LoadQuests();
 
 			// Load Task object of player ...
-			var tasks = GameServer.Database.SelectObjects<DBTask>("Character_ID ='" + GameServer.Database.Escape(InternalID) + "'");
+			var tasks = GameServer.Database.SelectObjects<DBTask>("`Character_ID` = @Character_ID", new QueryParameter("@Character_ID", InternalID));
 			if (tasks.Count == 1)
 			{
 				m_task = AbstractTask.LoadFromDatabase(this, tasks[0]);
@@ -12546,7 +12494,7 @@ namespace DOL.GS
 			}
 
 			// Load ML steps of player ...
-			var mlsteps = GameServer.Database.SelectObjects<DBCharacterXMasterLevel>("Character_ID ='" + GameServer.Database.Escape(QuestPlayerID) + "'");
+			var mlsteps = GameServer.Database.SelectObjects<DBCharacterXMasterLevel>("`Character_ID` = @Character_ID", new QueryParameter("@Character_ID", QuestPlayerID));
 			if (mlsteps.Count > 0)
 			{
 				foreach (DBCharacterXMasterLevel mlstep in mlsteps)
@@ -13251,7 +13199,7 @@ namespace DOL.GS
 			m_questListFinished.Clear();
 
 			// Scripted quests
-			var quests = GameServer.Database.SelectObjects<DBQuest>("Character_ID ='" + GameServer.Database.Escape(QuestPlayerID) + "'");
+			var quests = GameServer.Database.SelectObjects<DBQuest>("`Character_ID` = @Character_ID", new QueryParameter("@Character_ID", QuestPlayerID));
 			foreach (DBQuest dbquest in quests)
 			{
 				AbstractQuest quest = AbstractQuest.LoadFromDatabase(this, dbquest);
@@ -13265,10 +13213,10 @@ namespace DOL.GS
 			}
 
 			// Data driven quests for this player
-			var dataQuests = GameServer.Database.SelectObjects<CharacterXDataQuest>("Character_ID ='" + GameServer.Database.Escape(QuestPlayerID) + "'");
+			var dataQuests = GameServer.Database.SelectObjects<CharacterXDataQuest>("`Character_ID` = @Character_ID", new QueryParameter("@Character_ID", QuestPlayerID));
 			foreach (CharacterXDataQuest quest in dataQuests)
 			{
-				DBDataQuest dbDataQuest = GameServer.Database.SelectObject<DBDataQuest>("ID = " + quest.DataQuestID);
+				DBDataQuest dbDataQuest = GameServer.Database.FindObjectByKey<DBDataQuest>(quest.DataQuestID);
 				if (dbDataQuest != null && dbDataQuest.StartType != (byte)DataQuest.eStartType.Collection)
 				{
 					DataQuest dataQuest = new DataQuest(this, dbDataQuest, quest);
@@ -13845,12 +13793,12 @@ namespace DOL.GS
 		/// </summary>
 		public virtual void CraftItem(ushort itemID)
 		{
-			DBCraftedItem recipe = GameServer.Database.SelectObject<DBCraftedItem>("CraftedItemID ='" + GameServer.Database.Escape(itemID.ToString()) + "'");
+			DBCraftedItem recipe = GameServer.Database.FindObjectByKey<DBCraftedItem>(itemID.ToString());
 			if (recipe != null)
 			{
 				ItemTemplate itemToCraft = null;
 				itemToCraft = GameServer.Database.FindObjectByKey<ItemTemplate>(recipe.Id_nb);
-				IList<DBCraftedXItem> rawMaterials = GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = '" + recipe.Id_nb + "'");
+				IList<DBCraftedXItem> rawMaterials = GameServer.Database.SelectObjects<DBCraftedXItem>("`CraftedItemId_nb` = @CraftedItemId_nb", new QueryParameter("@CraftedItemId_nb", recipe.Id_nb));
 				if (rawMaterials.Count > 0)
 				{
 					if (itemToCraft != null)

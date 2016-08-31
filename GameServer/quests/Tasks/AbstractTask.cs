@@ -92,16 +92,9 @@ namespace DOL.GS.Quests
 			else // if player has no active task, load dbtask an use tasksdone
 			{
 				// Load Task object of player ...
-				var tasks = GameServer.Database.SelectObjects<DBTask>("Character_ID ='"+GameServer.Database.Escape(taskPlayer.QuestPlayerID)+"'");
-				if (tasks.Count==1)
-				{
-					dbTask = tasks[0];
-				}
-				else if (tasks.Count>1)
-				{
-					if (log.IsErrorEnabled)
-						log.Error("More than one DBTask Object found for player "+taskPlayer.Name);
-				}
+				var tasks = GameServer.Database.FindObjectByKey<DBTask>(taskPlayer.QuestPlayerID);
+				if (tasks != null)
+					dbTask = tasks;
 			}
 
 			// this should happen only if player never did a task and has no entry in DBTask.

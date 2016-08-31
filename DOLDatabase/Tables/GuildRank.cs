@@ -57,8 +57,8 @@ namespace DOL.Database
 		/// </summary>
 		public DBRank()
 		{
-			m_guildid = "";
-			m_title = "";
+			m_guildid = string.Empty;
+			m_title = string.Empty;
 			m_ranklevel = 0;
 			m_alli = false;
 			m_emblem  = false;

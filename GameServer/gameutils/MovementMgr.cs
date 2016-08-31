@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database;
@@ -82,7 +82,7 @@ namespace DOL.GS.Movement
 		{
 			log.DebugFormat("Updating path {0} in path cache.", pathID);
 
-			DBPath dbpath = GameServer.Database.SelectObject<DBPath>("PathID='" + GameServer.Database.Escape(pathID) + "'");
+			DBPath dbpath = GameServer.Database.SelectObjects<DBPath>("`PathID` = @PathID", new QueryParameter("@PathID", pathID)).FirstOrDefault();
 			if (dbpath != null)
 			{
 				if (m_pathCache.ContainsKey(pathID))
@@ -95,7 +95,7 @@ namespace DOL.GS.Movement
 				}
 			}
 
-			IList<DBPathPoint> pathPoints = GameServer.Database.SelectObjects<DBPathPoint>("PathID='" + GameServer.Database.Escape(pathID) + "'");
+			IList<DBPathPoint> pathPoints = GameServer.Database.SelectObjects<DBPathPoint>("`PathID` = @PathID", new QueryParameter("@PathID", pathID));
 			SortedList<int, DBPathPoint> pList = new SortedList<int, DBPathPoint>();
 			if (m_pathpointCache.ContainsKey(pathID))
 			{
@@ -188,16 +188,13 @@ namespace DOL.GS.Movement
 
 			// First delete any path with this pathID from the database
 
-			DBPath dbpath = GameServer.Database.SelectObject<DBPath>("PathID='" + GameServer.Database.Escape(pathID) + "'");
+			DBPath dbpath = GameServer.Database.SelectObjects<DBPath>("`PathID` = @PathID", new QueryParameter("@PathID", pathID)).FirstOrDefault();
 			if (dbpath != null)
 			{
 				GameServer.Database.DeleteObject(dbpath);
 			}
 
-            foreach (DBPathPoint pp in GameServer.Database.SelectObjects<DBPathPoint>("PathID='" + GameServer.Database.Escape(pathID) + "'"))
-            {
-                GameServer.Database.DeleteObject(pp);
-            }
+			GameServer.Database.DeleteObject(GameServer.Database.SelectObjects<DBPathPoint>("`PathID` = @PathID", new QueryParameter("@PathID", pathID)));
 
 			// Now add this path and iterate through the PathPoint linked list to add all the path points
 

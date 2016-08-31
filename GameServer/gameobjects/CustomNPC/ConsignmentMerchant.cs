@@ -206,7 +206,7 @@ namespace DOL.GS
                 {
                     m_totalMoney = value;
 
-                    var merchant = GameServer.Database.SelectObject<HouseConsignmentMerchant>("HouseNumber = '" + HouseNumber + "'");
+                    var merchant = GameServer.Database.SelectObjects<HouseConsignmentMerchant>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", HouseNumber)).FirstOrDefault();
                     merchant.Money = m_totalMoney;
                     GameServer.Database.SaveObject(merchant);
                 }
@@ -750,7 +750,7 @@ namespace DOL.GS
 
 			SetInventoryTemplate();
 
-			var houseCM = GameServer.Database.SelectObject<HouseConsignmentMerchant>("HouseNumber = '" + HouseNumber + "'");
+			var houseCM = GameServer.Database.SelectObjects<HouseConsignmentMerchant>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", HouseNumber)).FirstOrDefault();
 			if (houseCM != null)
 			{
 				TotalMoney = houseCM.Money;
@@ -782,14 +782,11 @@ namespace DOL.GS
 
 			bool isFixed = false;
 
-			String sqlWhere = String.Format("OwnerID = '{0}' and SlotPosition >= {1} and SlotPosition <= {2} and OwnerLot = 0", house.OwnerID, FirstDBSlot, LastDBSlot);
-
-			var items = GameServer.Database.SelectObjects<InventoryItem>(sqlWhere);
+			var items = GameServer.Database.SelectObjects<InventoryItem>("`OwnerID` = @OwnerID AND `SlotPosition` >= @SlotPositionMin AND `SlotPosition` <= @SlotPositionMax AND `OwnerLot` = @OwnerLot", new[] { new QueryParameter("@OwnerID", house.OwnerID), new QueryParameter("@SlotPositionMin", FirstDBSlot), new QueryParameter("@SlotPositionMax", LastDBSlot), new QueryParameter("@OwnerLot", 0) });
 
 			foreach (InventoryItem item in items)
 			{
 				item.OwnerLot = (ushort)HouseNumber;
-				GameServer.Database.SaveObject(item);
 				MarketCache.AddItem(item);
 				if (ServerProperties.Properties.MARKET_ENABLE_LOG)
 				{
@@ -797,6 +794,7 @@ namespace DOL.GS
 				}
 				isFixed = true;
 			}
+			GameServer.Database.SaveObject(items);
 
 			return isFixed;
 		}
@@ -881,7 +879,7 @@ namespace DOL.GS
 
             if (house.DatabaseItem.GuildHouse)
             {
-                var guild = GameServer.Database.SelectObject<DBGuild>("GuildName = '" + house.DatabaseItem.GuildName + "'");
+            	var guild = GameServer.Database.SelectObjects<DBGuild>("`GuildName` = @GuildName",new QueryParameter("@GuildName", house.DatabaseItem.GuildName)).FirstOrDefault();
                 int emblem = guild.Emblem;
 
                 InventoryItem cloak = Inventory.GetItem(eInventorySlot.Cloak);

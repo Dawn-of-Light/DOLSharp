@@ -18,6 +18,8 @@
  */
 using System;
 
+using DOL.GS.Friends;
+
 namespace DOL.GS
 {
 	/// <summary>
@@ -34,6 +36,11 @@ namespace DOL.GS
 		/// Reference to the Invalid Names Manager
 		/// </summary>
 		public InvalidNamesManager InvalidNames { get; private set; }
+		
+		/// <summary>
+		/// Reference to the Friends List Manager
+		/// </summary>
+		public FriendsManager Friends { get; private set; }
 
 		/// <summary>
 		/// Create a new Instance of <see cref="PlayerManager"/>
@@ -46,6 +53,7 @@ namespace DOL.GS
 			this.GameServerInstance = GameServerInstance;
 			
 			InvalidNames = new InvalidNamesManager(this.GameServerInstance.Configuration.InvalidNamesFile);
+			Friends = new FriendsManager(GameServerInstance.IDatabase);
 		}
 	}
 }

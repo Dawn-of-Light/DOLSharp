@@ -121,7 +121,7 @@ namespace DOL.GS
 			if (m_destinations.Count > 0 || GuildName == null || GuildName.Length == 0)
 				return;
 
-			m_destinations.AddRange(GameServer.Database.SelectObjects<Teleport>("Type = '" + GameServer.Database.Escape(GuildName) + "'"));
+			m_destinations.AddRange(GameServer.Database.SelectObjects<Teleport>("`Type` = @Type", new QueryParameter("@Type", GuildName)));
 		}
 
 		public override bool WhisperReceive(GameLiving source, string text)

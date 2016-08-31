@@ -35,8 +35,8 @@ namespace DOL.Database
 	[DataTable(TableName = "MobXLootTemplate")]
 	public class MobXLootTemplate : DataObject
 	{
-		private string m_MobName = "";
-		private string m_LootTemplateName = "";
+		private string m_MobName = string.Empty;
+		private string m_LootTemplateName = string.Empty;
 		private int m_dropCount;
 
 		/// <summary>
@@ -44,8 +44,8 @@ namespace DOL.Database
 		/// </summary>
 		public MobXLootTemplate()
 		{
-			m_MobName = "";
-			m_LootTemplateName = "";
+			m_MobName = string.Empty;
+			m_LootTemplateName = string.Empty;
 			m_dropCount = 1;
 		}
 

@@ -1,4 +1,24 @@
+/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
+
 using System;
+using System.Linq;
 using System.Collections;
 
 using DOL.Database;
@@ -21,7 +41,9 @@ namespace DOL.GS.Keeps
 		/// <returns>The position object</returns>
 		public static DBKeepPosition GetUsablePosition(GameKeepGuard guard)
 		{
-			return GameServer.Database.SelectObject<DBKeepPosition>("ClassType != 'DOL.GS.Keeps.Banner' and TemplateID = '" + GameServer.Database.Escape(guard.TemplateID) + "' and ComponentSkin = '" + guard.Component.Skin + "' and Height <= " + guard.Component.Height + " order by Height desc limit 0,1") as DBKeepPosition;
+			return GameServer.Database.SelectObjects<DBKeepPosition>("`ClassType` != @ClassType AND `TemplateID` = @TemplateID AND `ComponentSkin` = @ComponentSkin AND `Height` <= @Height",
+			                                                         new [] { new QueryParameter("@ClassType", "DOL.GS.Keeps.Banner"), new QueryParameter("@TemplateID", guard.TemplateID), new QueryParameter("@ComponentSkin", guard.Component.Skin), new QueryParameter("@Height", guard.Component.Height) })
+				.OrderByDescending(it => it.Height).FirstOrDefault();
 		}
 
 		/// <summary>
@@ -31,7 +53,9 @@ namespace DOL.GS.Keeps
 		/// <returns>The position object</returns>
 		public static DBKeepPosition GetUsablePosition(GameKeepBanner b)
 		{
-			return GameServer.Database.SelectObject<DBKeepPosition>("ClassType = 'DOL.GS.Keeps.Banner' and TemplateID = '" + GameServer.Database.Escape(b.TemplateID) + "' and ComponentSkin = '" + b.Component.Skin + "' and Height <= " + b.Component.Height + " order by Height desc limit 0,1") as DBKeepPosition;
+			return GameServer.Database.SelectObjects<DBKeepPosition>("`ClassType` = @ClassType AND `TemplateID` = @TemplateID AND `ComponentSkin` = @ComponentSkin AND `Height` <= @Height",
+			                                                         new [] { new QueryParameter("@ClassType", "DOL.GS.Keeps.Banner"), new QueryParameter("@TemplateID", b.TemplateID), new QueryParameter("@ComponentSkin", b.Component.Skin), new QueryParameter("@Height", b.Component.Height) })
+				.OrderByDescending(it => it.Height).FirstOrDefault();
 		}
 
 		/// <summary>
@@ -41,7 +65,8 @@ namespace DOL.GS.Keeps
 		/// <returns>The position object</returns>
 		public static DBKeepPosition GetPosition(GameKeepGuard guard)
 		{
-			return GameServer.Database.SelectObject<DBKeepPosition>("TemplateID = '" + GameServer.Database.Escape(guard.TemplateID) + "' and ComponentSkin = '" + guard.Component.Skin + "' and Height = " + guard.Component.Height) as DBKeepPosition;
+			return GameServer.Database.SelectObjects<DBKeepPosition>("`TemplateID` = @TemplateID AND `ComponentSkin` = @ComponentSkin AND `Height` <= @Height",
+			                                                        new [] { new QueryParameter("@TemplateID", guard.TemplateID), new QueryParameter("@ComponentSkin", guard.Component.Skin), new QueryParameter("@Height", guard.Component.Height) }).FirstOrDefault();
 		}
 
 
@@ -289,7 +314,7 @@ namespace DOL.GS.Keeps
 		{
 			SortedList sorted = new SortedList();
 			pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-			DBPath dbpath = GameServer.Database.SelectObject<DBPath>("PathID='" + GameServer.Database.Escape(pathID) + "'");
+			DBPath dbpath = GameServer.Database.SelectObjects<DBPath>("`PathID` = @PathID", new QueryParameter("@PathID", pathID)).FirstOrDefault();
 			IList<DBPathPoint> pathpoints = null;
 			ePathType pathType = ePathType.Once;
 
@@ -299,7 +324,7 @@ namespace DOL.GS.Keeps
 			}
 			if (pathpoints == null)
 			{
-				pathpoints = GameServer.Database.SelectObjects<DBPathPoint>("PathID='" + GameServer.Database.Escape(pathID) + "'");
+				pathpoints = GameServer.Database.SelectObjects<DBPathPoint>("`PathID` = @PathID", new QueryParameter("@PathID", pathID));
 			}
 
 			foreach (DBPathPoint point in pathpoints)
@@ -347,11 +372,7 @@ namespace DOL.GS.Keeps
 				return;
 
 			pathID.Replace('\'', '/'); // we must replace the ', found no other way yet
-			foreach (DBPath pp in GameServer.Database.SelectObjects<DBPath>("PathID='" + GameServer.Database.Escape(pathID) + "'"))
-			{
-				GameServer.Database.DeleteObject(pp);
-			}
-
+			GameServer.Database.DeleteObject(GameServer.Database.SelectObjects<DBPath>("`PathID` = @PathID", new QueryParameter("@PathID", pathID)));
 			PathPoint root = MovementMgr.FindFirstPathPoint(path);
 
 			//Set the current pathpoint to the rootpoint!

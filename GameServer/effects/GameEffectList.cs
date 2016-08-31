@@ -168,7 +168,7 @@ namespace DOL.GS.Effects
 			if (player == null || player.DBCharacter == null || GameServer.Database == null)
 				return;
 
-			var effs = GameServer.Database.SelectObjects<PlayerXEffect>("ChardID = '" + GameServer.Database.Escape(player.ObjectId) + "'");
+			var effs = GameServer.Database.SelectObjects<PlayerXEffect>("`ChardID` = @ChardID", new QueryParameter("@ChardID", player.ObjectId));
 			if (effs == null)
 				return;
 

@@ -17,8 +17,8 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+
 using DOL.Database;
 
 namespace DOL.GS
@@ -114,7 +114,7 @@ namespace DOL.GS
 
 				if (player.CurrentRegionID == throneRegionID)
 				{
-					teleport = GameServer.Database.SelectObject<Teleport>("TeleportID = '" + teleportExitID + "'");
+					teleport = GameServer.Database.SelectObjects<Teleport>("`TeleportID` = @TeleportID", new QueryParameter("@TeleportID", teleportExitID)).FirstOrDefault();
 					if (teleport == null)
 					{
 						log.ErrorFormat("Can't find throne room exit TeleportID {0}!", teleportExitID);
@@ -124,7 +124,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					teleport = GameServer.Database.SelectObject<Teleport>("TeleportID = '" + teleportThroneID + "'");
+					teleport = GameServer.Database.SelectObjects<Teleport>("`TeleportID` = @TeleportID", new QueryParameter("@TeleportID", teleportThroneID)).FirstOrDefault();
 					if (teleport == null)
 					{
 						log.ErrorFormat("Can't find throne room TeleportID {0}!", teleportThroneID);

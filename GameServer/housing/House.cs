@@ -569,9 +569,8 @@ namespace DOL.GS.Housing
 		public int GetFreeVaultNumber()
 		{
 			var usedVaults = new[] {false, false, false, false};
-			string sqlWhere = string.Format("HouseNumber = '{0}' AND ItemTemplateID LIKE '%_vault'", HouseNumber);
 
-			foreach (DBHouseHookpointItem housePointItem in GameServer.Database.SelectObjects<DBHouseHookpointItem>(sqlWhere))
+			foreach (DBHouseHookpointItem housePointItem in GameServer.Database.SelectObjects<DBHouseHookpointItem>("`HouseNumber` = @HouseNumber AND `ItemTemplateID` LIKE @ItemTemplateID", new[] { new QueryParameter("@HouseNumber", HouseNumber), new QueryParameter("@ItemTemplateID", "%_vault") }))
 			{
 				if (housePointItem.Index >= 0 && housePointItem.Index <= 3)
 				{
@@ -755,9 +754,7 @@ namespace DOL.GS.Housing
 				return;
 			}
 
-			string sqlWhere = string.Format("HookpointID = '{0}' AND HouseNumber = '{1}'", position, obj.CurrentHouse.HouseNumber);
-
-			var items = GameServer.Database.SelectObjects<DBHouseHookpointItem>(sqlWhere);
+			var items = GameServer.Database.SelectObjects<DBHouseHookpointItem>("`HookpointID` = @HookpointID AND `HouseNumber` = @HouseNumber", new[] { new QueryParameter("@HookpointID", position), new QueryParameter("@HouseNumber", obj.CurrentHouse.HouseNumber) });
 			if (items.Count == 0)
 			{
 				ChatUtil.SendSystemMessage(player, "No hookpoint item found at position " + position);
@@ -765,10 +762,7 @@ namespace DOL.GS.Housing
 			}
 
 			// clear every item from this hookpoint
-			foreach (var item in items)
-			{
-				GameServer.Database.DeleteObject(item);
-			}
+			GameServer.Database.DeleteObject(items);
 
 			obj.Delete();
 			player.CurrentHouse.HousepointItems.Remove((uint)position);
@@ -831,14 +825,14 @@ namespace DOL.GS.Housing
 				return false;
 			}
 
-			var obj = GameServer.Database.SelectObject<Mob>("HouseNumber = '" + HouseNumber + "'");
+			var obj = GameServer.Database.SelectObjects<Mob>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", HouseNumber)).FirstOrDefault();
 			if (obj != null)
 			{
 				log.DebugFormat("Add CM: Found consignment merchant in Mob table for house {0}.", HouseNumber);
 				return false;
 			}
 
-			var houseCM = GameServer.Database.SelectObject<HouseConsignmentMerchant>("HouseNumber = '" + HouseNumber + "'");
+			var houseCM = GameServer.Database.SelectObjects<HouseConsignmentMerchant>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", HouseNumber)).FirstOrDefault();
 			if (houseCM != null)
 			{
 				log.DebugFormat("Add CM: Found active consignment merchant in HousingConsignmentMerchant table for house {0}.", HouseNumber);
@@ -851,7 +845,7 @@ namespace DOL.GS.Housing
 			}
 
 			// now let's try to find a CM with this owner ID and no house and if we find it, attach
-			houseCM = GameServer.Database.SelectObject<HouseConsignmentMerchant>("OwnerID = '" + OwnerID + "'");
+			houseCM = GameServer.Database.SelectObjects<HouseConsignmentMerchant>("`OwnerID` = @OwnerID", new QueryParameter("@OwnerID", OwnerID)).FirstOrDefault();
 
 			if (houseCM != null)
 			{
@@ -935,7 +929,7 @@ namespace DOL.GS.Housing
 					log.Warn("HOUSING: Cleared OwnerLot for " + count + " items on the consignment merchant!");
 				}
 
-				var houseCM = GameServer.Database.SelectObject<HouseConsignmentMerchant>("HouseNumber = '" + HouseNumber + "'");
+				var houseCM = GameServer.Database.SelectObjects<HouseConsignmentMerchant>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", HouseNumber)).FirstOrDefault();
 				if (houseCM != null)
 				{
 					houseCM.HouseNumber = 0;
@@ -1482,26 +1476,26 @@ namespace DOL.GS.Housing
 		{
 			int i = 0;
 			_indoorItems.Clear();
-			foreach (DBHouseIndoorItem dbiitem in GameServer.Database.SelectObjects<DBHouseIndoorItem>("HouseNumber = '" + HouseNumber + "'"))
+			foreach (DBHouseIndoorItem dbiitem in GameServer.Database.SelectObjects<DBHouseIndoorItem>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", HouseNumber)))
 			{
 				_indoorItems.Add(i++, new IndoorItem(dbiitem));
 			}
 
 			i = 0;
 			_outdoorItems.Clear();
-			foreach (DBHouseOutdoorItem dboitem in GameServer.Database.SelectObjects<DBHouseOutdoorItem>("HouseNumber = '" + HouseNumber + "'"))
+			foreach (DBHouseOutdoorItem dboitem in GameServer.Database.SelectObjects<DBHouseOutdoorItem>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", HouseNumber)))
 			{
 				_outdoorItems.Add(i++, new OutdoorItem(dboitem));
 			}
 
 			_housePermissions.Clear();
-			foreach (DBHouseCharsXPerms d in GameServer.Database.SelectObjects<DBHouseCharsXPerms>("HouseNumber = '" + HouseNumber + "'"))
+			foreach (DBHouseCharsXPerms d in GameServer.Database.SelectObjects<DBHouseCharsXPerms>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", HouseNumber)))
 			{
 				_housePermissions.Add(GetOpenPermissionSlot(), d);
 			}
 
 			_permissionLevels.Clear();
-			foreach (DBHousePermissions dbperm in GameServer.Database.SelectObjects<DBHousePermissions>("HouseNumber = '" + HouseNumber + "'"))
+			foreach (DBHousePermissions dbperm in GameServer.Database.SelectObjects<DBHousePermissions>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", HouseNumber)))
 			{
 				if (_permissionLevels.ContainsKey(dbperm.PermissionLevel) == false)
 				{
@@ -1514,7 +1508,7 @@ namespace DOL.GS.Housing
 			}
 
 			HousepointItems.Clear();
-			foreach (DBHouseHookpointItem item in GameServer.Database.SelectObjects<DBHouseHookpointItem>("HouseNumber = '" + HouseNumber + "'"))
+			foreach (DBHouseHookpointItem item in GameServer.Database.SelectObjects<DBHouseHookpointItem>("`HouseNumber` = @HouseNumber", new QueryParameter("@HouseNumber", HouseNumber)))
 			{
 				if (HousepointItems.ContainsKey(item.HookpointID) == false)
 				{

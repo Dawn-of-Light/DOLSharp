@@ -87,7 +87,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 				{
 					player.EnteredGame = true;
 					player.Notify(GamePlayerEvent.GameEntered, player);
-					NotifyFriendsOfLoginIfNotAnonymous(player);
 					player.EffectList.RestoreAllEffects();
 					checkInstanceLogin = true;
 				}
@@ -169,19 +168,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 					player.IsDiving = true;
 				}
 				player.Client.ClientState = GameClient.eClientState.Playing;
-			}
-
-			private static void NotifyFriendsOfLoginIfNotAnonymous(GamePlayer player)
-			{
-				if (!player.IsAnonymous)
-				{
-					var friendList = new[] {player.Name};
-					foreach (GameClient pclient in WorldMgr.GetAllPlayingClients())
-					{
-						if (pclient.Player.Friends.Contains(player.Name))
-							pclient.Out.SendAddFriends(friendList);
-					}
-				}
 			}
 
 			private static void CheckBGLevelCapForPlayerAndMoveIfNecessary(GamePlayer player)

@@ -70,12 +70,12 @@ namespace DOL.Database
 
 		public DBKeep()
 		{
-			m_name = "";
+			m_name = string.Empty;
 			m_albionDifficultyLevel = 1;
 			m_midgardDifficultyLevel = 1;
 			m_hiberniaDifficultyLevel = 1;
 			m_type = 0; // Default = Any
-			m_createInfo = "";
+			m_createInfo = string.Empty;
 		}
 
 		/// <summary>
@@ -83,7 +83,7 @@ namespace DOL.Database
 		/// </summary>
 		public DBKeep(string createInfo)
 		{
-			m_name = "";
+			m_name = string.Empty;
 			m_albionDifficultyLevel = 1;
 			m_midgardDifficultyLevel = 1;
 			m_hiberniaDifficultyLevel = 1;

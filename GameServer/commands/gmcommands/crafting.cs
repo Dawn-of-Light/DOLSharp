@@ -68,7 +68,7 @@ namespace DOL.GS.Commands
 				{
 					List<string> list = new List<string>();
 					int salvageID = Convert.ToInt32(args[2]);
-					SalvageYield salvage = GameServer.Database.SelectObject<SalvageYield>("ID=" + salvageID);
+					SalvageYield salvage = GameServer.Database.FindObjectByKey<SalvageYield>(salvageID);
 
 					if (salvage == null)
 					{
@@ -120,7 +120,7 @@ namespace DOL.GS.Commands
 							return;
 						}
 
-						SalvageYield salvage = GameServer.Database.SelectObject<SalvageYield>("ID=" + salvageID);
+						SalvageYield salvage = GameServer.Database.FindObjectByKey<SalvageYield>(salvageID);
 
 						if (args[1].ToLower() == "salvageadd")
 						{

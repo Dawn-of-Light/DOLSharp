@@ -637,7 +637,7 @@ namespace DOL.Database
 				
 				var whereClause = string.Format("`{0}` = @{0}", remoteBind.ColumnName);
 				
-				var parameters = objects.Select(obj => new [] { new QueryParameter(string.Format("@{0}", remoteBind.ColumnName), localBind.GetValue(obj)) });
+				var parameters = objects.Select(obj => new [] { new QueryParameter(string.Format("@{0}", remoteBind.ColumnName), localBind.GetValue(obj), localBind.ValueType) });
 				
 				objsResults = SelectObjectsImpl(remoteHandler, whereClause, parameters, Transaction.IsolationLevel.DEFAULT);
 			}
@@ -873,7 +873,7 @@ namespace DOL.Database
 		public int GetObjectCount<TObject>()
 			where TObject : DataObject
 		{
-			return GetObjectCount<TObject>("");
+			return GetObjectCount<TObject>(string.Empty);
 		}
 
 		/// <summary>

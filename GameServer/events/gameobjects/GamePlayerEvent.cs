@@ -163,6 +163,11 @@ namespace DOL.Events
 		/// The ExecuteCommand event is fired when a player executes a command!
 		/// </summary>
 		public static readonly GamePlayerEvent ExecuteCommand = new GamePlayerEvent("GamePlayer.ExecuteCommand");
+		
+		/// <summary>
+		/// The ChangeAnonymous event is fired when a player change its Anonymous Status
+		/// </summary>
+		public static readonly GamePlayerEvent ChangeAnonymous = new GamePlayerEvent("GamePlayer.ExecuteCommand");
 
 		#region Statistics
 

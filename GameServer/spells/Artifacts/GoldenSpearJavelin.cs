@@ -36,7 +36,7 @@ namespace DOL.GS.Spells
         public GoldenSpearJavelin(GameLiving caster, Spell spell, SpellLine line)
             : base(caster, spell, line)
         {
-            _artefJavelin = GameServer.Database.SelectObject<ItemTemplate>("Id_nb='Artef_Javelin'") ?? Javelin;
+            _artefJavelin = GameServer.Database.FindObjectByKey<ItemTemplate>("Artef_Javelin") ?? Javelin;
             items.Add (GameInventoryItem.Create(_artefJavelin));
         }
 

@@ -35,8 +35,8 @@ namespace DOL.Database
 	[DataTable(TableName="LootTemplate")]
 	public class LootTemplate : DataObject
 	{
-		protected string	m_TemplateName = "";
-		protected string	m_ItemTemplateID = "";
+		protected string	m_TemplateName = string.Empty;
+		protected string	m_ItemTemplateID = string.Empty;
 		protected int		m_Chance = 99;
 		protected int		m_count = 1;
 		

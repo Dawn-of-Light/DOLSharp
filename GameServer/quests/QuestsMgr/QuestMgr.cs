@@ -20,15 +20,12 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using System.Text;
-using DOL.Database;
-using DOL.Events;
-using DOL.GS.PacketHandler;
+using System.Linq;
+
 using log4net;
-using DOL.GS.Behaviour.Attributes;
-using DOL.GS.Behaviour;
+
 using DOL.GS.Quests.Atlantis;
-using System.Collections.Generic;
+using DOL.Database;
 
 namespace DOL.GS.Quests
 {
@@ -146,7 +143,7 @@ namespace DOL.GS.Quests
 				string tempID = Convert.ToString(identifier);
 
                 // TODO: Dirty Hack this should be done better
-				Mob mob = GameServer.Database.SelectObject<Mob>("MobID='" + GameServer.Database.Escape(tempID) + "' OR Name='" + GameServer.Database.Escape(tempID) + "'");
+                Mob mob = GameServer.Database.SelectObjects<Mob>("`Mob_ID` = @MobID OR `Name` = @Name", new[] { new QueryParameter("@MobID", tempID), new QueryParameter("@Name", tempID) }).FirstOrDefault();
 
                 GameNPC[] livings = WorldMgr.GetNPCsByName(mob.Name,(eRealm) mob.Realm);
 
@@ -209,7 +206,7 @@ namespace DOL.GS.Quests
 			{
 				string tempID = Convert.ToString(identifier);
 
-                Mob mob = GameServer.Database.SelectObject<Mob>("MobID='" + GameServer.Database.Escape(tempID) + "' OR Name='" + GameServer.Database.Escape(tempID) + "'");
+                Mob mob = GameServer.Database.SelectObjects<Mob>("`Mob_ID` = @MobID OR `Name` = @Name", new[] { new QueryParameter("@MobID", tempID), new QueryParameter("@Name", tempID) }).FirstOrDefault();
 
 				GameNPC[] npcs = WorldMgr.GetNPCsByName(mob.Name,(eRealm) mob.Realm);
 

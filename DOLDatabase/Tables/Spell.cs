@@ -32,9 +32,9 @@ namespace DOL.Database
 		protected int m_icon;
 		protected string m_name;
 		protected string m_description;
-		protected string m_target = "";
+		protected string m_target = string.Empty;
 
-		protected string m_spelltype = "";
+		protected string m_spelltype = string.Empty;
 		protected int m_range = 0;
 		protected int m_radius = 0;
 		protected double m_value = 0;
@@ -52,10 +52,10 @@ namespace DOL.Database
 		protected int m_resmana = 0;
 		protected int m_lifedrain_return = 0;
 		protected int m_amnesia_chance = 0;
-		protected string m_message1 = "";
-		protected string m_message2 = "";
-		protected string m_message3 = "";
-		protected string m_message4 = "";
+		protected string m_message1 = string.Empty;
+		protected string m_message2 = string.Empty;
+		protected string m_message3 = string.Empty;
+		protected string m_message4 = string.Empty;
 		protected int m_instrumentRequirement;
 		protected int m_spellGroup;
 		protected int m_effectGroup;

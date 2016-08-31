@@ -55,7 +55,7 @@ namespace DOL.Database
 		/// <summary>
 		/// type of ban (I=ip, A=account, B=both)
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull=false, Index = true)]
 		public string Type
 		{
 			get
@@ -71,7 +71,7 @@ namespace DOL.Database
 		/// <summary>
 		/// IP banned
 		/// </summary>
-		[DataElement(AllowDbNull=false)]
+		[DataElement(AllowDbNull=false, Index = true)]
 		public string Ip
 		{
 			get

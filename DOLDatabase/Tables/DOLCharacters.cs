@@ -125,16 +125,16 @@ namespace DOL.Database
 		// here are skills stored. loading and saving skills of player is done automatically and
 		// these fields should NOT manipulated or used otherwise
 		// instead use the skill access methods on GamePlayer
-		private string m_abilities = "";	// comma separated string of ability keynames and pipe'd levels eg "sprint|0,evade|1"
-		private string m_specs = "";			// comma separated string of spec keynames and pipe'd levels like "earth_magic|5,slash|10"
-		private string m_realmAbilities = ""; // comma separated string of realm ability keynames and pipe'd levels eg "purge|1,ignore pain|2"
-		private string m_craftingSkills = "";// crafting skills
-		private string m_disabledSpells = "";
-		private string m_disabledAbilities = "";
+		private string m_abilities = string.Empty;	// comma separated string of ability keynames and pipe'd levels eg "sprint|0,evade|1"
+		private string m_specs = string.Empty;			// comma separated string of spec keynames and pipe'd levels like "earth_magic|5,slash|10"
+		private string m_realmAbilities = string.Empty; // comma separated string of realm ability keynames and pipe'd levels eg "purge|1,ignore pain|2"
+		private string m_craftingSkills = string.Empty;// crafting skills
+		private string m_disabledSpells = string.Empty;
+		private string m_disabledAbilities = string.Empty;
 
-		private string m_friendList = ""; //comma seperated string of friends
-		private string m_ignoreList = ""; //comma seperated string of ignored Players
-		private string m_playerTitleType = "";
+		private string m_friendList = string.Empty; //comma seperated string of friends
+		private string m_ignoreList = string.Empty; //comma seperated string of ignored Players
+		private string m_playerTitleType = string.Empty;
 
 		private bool m_flagClassName = true;
 		private ushort m_guildRank;
@@ -174,7 +174,7 @@ namespace DOL.Database
 		private bool m_noHelp;
 		private bool m_showGuildLogins;
 
-		private string m_guildNote = "";
+		private string m_guildNote = string.Empty;
 		
 		//CLs
 		private bool m_cl;

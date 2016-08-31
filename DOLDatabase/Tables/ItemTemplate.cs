@@ -239,9 +239,9 @@ namespace DOL.Database
 			m_flags = 0;
 			m_bonusLevel = 0;
 			m_levelRequirement = 0;
-			m_description = "";
-			m_packageID = "";
-			m_classType = "";
+			m_description = string.Empty;
+			m_packageID = string.Empty;
+			m_classType = string.Empty;
 			m_salvageYieldID = 0;
 		}
 
