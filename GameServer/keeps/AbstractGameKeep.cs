@@ -783,10 +783,11 @@ namespace DOL.GS.Keeps
 			{
 				banner.ChangeGuild();
 			}
-			GameEventMgr.Notify(KeepEvent.KeepClaimed, this, new KeepEventArgs(this));
-			StartDeductionTimer();
-			this.SaveIntoDatabase();
-		}
+    		this.SaveIntoDatabase();
+            LoadFromDatabase(DBKeep);
+            StartDeductionTimer();
+            GameEventMgr.Notify(KeepEvent.KeepClaimed, this, new KeepEventArgs(this));
+        }
 
 		/// <summary>
 		/// Starts the deduction timer
