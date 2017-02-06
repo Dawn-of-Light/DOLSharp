@@ -85,7 +85,7 @@ namespace DOL.GS
 			if (item != null)
 			{
 				// We want a new copy from the DB to avoid everyone sharing the same template
-				ItemTemplate template = GameServer.Database.FindObjectByKey<ItemTemplate>(Id_nb);
+				var template = item.Template.Clone() as ItemTemplate;
 
 				if (template == null)
 				{
