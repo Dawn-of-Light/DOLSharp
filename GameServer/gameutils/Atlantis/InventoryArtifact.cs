@@ -85,7 +85,7 @@ namespace DOL.GS
 			if (item != null)
 			{
 				// We want a new copy from the DB to avoid everyone sharing the same template
-				var template = item.Template.Clone() as ItemTemplate;
+				var template = item.Template != null ? item.Template.Clone() as ItemTemplate : item.Template;
 
 				if (template == null)
 				{
