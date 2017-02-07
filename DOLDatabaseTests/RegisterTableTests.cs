@@ -282,5 +282,35 @@ namespace DOL.Database.Tests
 			CollectionAssert.AreEquivalent(objs.Select(obj => obj.Value), newObjs.Select(obj => obj.Value), "Test Table Migration to TestTableWithPrimaryChangingV2 should retrieve similar values that created ones...");
 			CollectionAssert.AreEquivalent(objs.Select(obj => obj.PrimaryKey), newObjs.Select(obj => obj.PrimaryKey), "Test Table Migration to TestTableWithPrimaryChangingV2 should retrieve similar values that created ones...");
 		}
+		
+        [Test]
+        public void TestTableMigrationToNonNullValue()
+        {
+            // Destroy previous table
+            Database.ExecuteNonQuery(string.Format("DROP TABLE IF EXISTS `{0}`", AttributesUtils.GetTableName(typeof(TestTableMigrationNullToNonNull))));
+            
+            // Get a new Database Object to Trigger Migration
+            var DatabaseV2 = GetDatabaseV2;
+            
+            Database.RegisterDataObject(typeof(TestTableMigrationNullToNonNull));
+            
+            Database.DeleteObject(Database.SelectAllObjects<TestTableMigrationNullToNonNull>());
+            
+            Assert.IsEmpty(Database.SelectAllObjects<TestTableMigrationNullToNonNull>(), "Test Table TestTableMigrationNullToNonNull should be empty to begin this tests.");
+            
+            var objs = new [] { "TestObj1", null, "TestObj3" }.Select((ent, i) => new TestTableMigrationNullToNonNull { StringValue = ent }).ToArray();
+            
+            Database.AddObject(objs);
+            
+            CollectionAssert.AreEquivalent(objs.Select(obj => obj.StringValue), Database.SelectAllObjects<TestTableMigrationNullToNonNull>().Select(obj => obj.StringValue), "Test Table TestTableMigrationNullToNonNull Entries should be available for this test to run.");
+            
+            // Trigger False Migration
+            DatabaseV2.RegisterDataObject(typeof(TestTableMigrationNullFromNull));
+            
+            var newObjs = DatabaseV2.SelectAllObjects<TestTableMigrationNullFromNull>().ToArray();
+            
+            CollectionAssert.AreEquivalent(objs.Select(obj => obj.StringValue ?? string.Empty), newObjs.Select(obj => obj.StringValue), "Test Table Migration to TestTableMigrationNullFromNull should retrieve similar values that created ones...");
+            CollectionAssert.AreEqual(Enumerable.Repeat(0, 3), newObjs.Select(obj => obj.IntValue), "Test Table Migration to TestTableMigrationNullFromNull should retrieve all default int value to 0...");
+        }
 	}
 }

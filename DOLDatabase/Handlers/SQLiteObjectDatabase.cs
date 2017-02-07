@@ -216,9 +216,13 @@ namespace DOL.Database.Handlers
 			{
 				defaultDef = "NOT NULL DEFAULT '2000-01-01 00:00:00'";
 			}
+            else if (bind.ValueType == typeof(string))
+            {
+                defaultDef = "NOT NULL DEFAULT ''";
+            }
 			else
 			{
-				defaultDef = "NOT NULL";
+                defaultDef = "NOT NULL DEFAULT 0";
 			}
 			
 			// Force Case Insensitive Text Field to Match MySQL Behavior 
@@ -545,12 +549,28 @@ namespace DOL.Database.Handlers
 							}
 						}
 						
-						// Copy Data
-						var columns = table.FieldElementBindings.Where(bind => currentColumns.Any(col => col.ColumnName.Equals(bind.ColumnName, StringComparison.OrdinalIgnoreCase)))
-							.Select(bind => string.Format("`{0}`", bind.ColumnName));
-						using (var command = new SQLiteCommand(string.Format("INSERT INTO `{0}` ({1}) SELECT {1} FROM `{0}_bkp`", table.TableName, string.Join(", ", columns)), conn))
+                        // Copy Data, Convert Null to Default when needed...
+                        var matchingColumns = table.FieldElementBindings.Join(currentColumns, bind => bind.ColumnName, col => col.ColumnName, (bind, col) => new { bind, col }, StringComparer.OrdinalIgnoreCase);
+                        var columns = matchingColumns.Select(match => {
+                        if (match.bind.DataElement != null && match.bind.DataElement.AllowDbNull == false && match.col.AllowDbNull == true)
+                                                                 {
+                                                                     if (match.bind.ValueType == typeof(DateTime))
+                                                                         return new { Target = match.bind.ColumnName, Source = string.Format("IFNULL(`{0}`, {1})", match.bind.ColumnName, "'2000-01-01 00:00:00'") };
+                                                                     if (match.bind.ValueType == typeof(string))
+                                                                         return new { Target = match.bind.ColumnName, Source = string.Format("IFNULL(`{0}`, {1})", match.bind.ColumnName, "''") };
+                                                                     
+                                                                     return new { Target = match.bind.ColumnName, Source = string.Format("IFNULL(`{0}`, {1})", match.bind.ColumnName, "0") };
+                                                                 }
+                                                                 
+                                                                 return new { Target = match.bind.ColumnName, Source = string.Format("`{0}`", match.bind.ColumnName) };
+                                                             });
+                        
+                        using (var command = new SQLiteCommand(string.Format("INSERT INTO `{0}` ({1}) SELECT {2} FROM `{0}_bkp`", table.TableName, string.Join(", ", columns.Select(c => c.Target)), string.Join(", ", columns.Select(c => c.Source))), conn))
 						{
-							command.Transaction = tran;
+                            if (log.IsDebugEnabled)
+                                log.DebugFormat("AlterTableImpl, Insert/Select: {0}", command.CommandText);
+
+                            command.Transaction = tran;
 							command.ExecuteNonQuery();
 						}
 
@@ -573,6 +593,8 @@ namespace DOL.Database.Handlers
 						
 						if (log.IsWarnEnabled)
 							log.WarnFormat("AlterTableImpl: Error While Altering Table {0}, rollback...\n{1}", table.TableName, e);
+                        
+                        throw;
 					}
 					
 				}
