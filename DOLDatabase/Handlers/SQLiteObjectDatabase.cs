@@ -216,9 +216,13 @@ namespace DOL.Database.Handlers
 			{
 				defaultDef = "NOT NULL DEFAULT '2000-01-01 00:00:00'";
 			}
+            else if (bind.ValueType == typeof(string))
+            {
+                defaultDef = "NOT NULL DEFAULT ''";
+            }
 			else
 			{
-                defaultDef = "NOT NULL";
+                defaultDef = "NOT NULL DEFAULT 0";
 			}
 			
 			// Force Case Insensitive Text Field to Match MySQL Behavior 
