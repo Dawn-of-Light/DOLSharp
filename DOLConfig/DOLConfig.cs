@@ -20,6 +20,7 @@ using System;
 using System.ComponentModel;
 using System.Data;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 using MySql.Data.MySqlClient;
 using DOL.Database.Connection;
@@ -101,6 +102,13 @@ namespace DOLConfig
 				DialogResult result = MessageBox.Show("There is no configuration file present." + Environment.NewLine + "Do you want me to create the default configuration?" + Environment.NewLine + "Otherwise: Start the GameServer first.", "Config file not found", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
 				if (result == DialogResult.Yes)
 				{
+                    currentConfig = new GameServerConfiguration();
+                    try
+                    {
+                        loadConfig();
+                    }
+                    catch(System.IO.FileNotFoundException) { }
+                    
 					saveConfig();
 					DOLConfig_Load(sender, e);
 					return;
@@ -138,10 +146,15 @@ namespace DOLConfig
 					this.xml_groupbox.Enabled = false;
 					this.sp_tab.Enabled = true;
 					break;
-				case "xml":
-					this.mysql_groupbox.Enabled = false;
-					this.xml_groupbox.Enabled = true;
-					break;
+                case "xml":
+                    this.mysql_groupbox.Enabled = false;
+                    this.xml_groupbox.Enabled = true;
+                    break;
+                case "sqlite":
+                    this.mysql_groupbox.Enabled = false;
+                    this.xml_groupbox.Enabled = true;
+                    this.sp_tab.Enabled = true;
+                    break;
 			}
 		}
 		
@@ -219,7 +232,7 @@ namespace DOLConfig
 					this.xml_path_textbox.Text = currentConfig.DBConnectionString;
 					break;
 				case ConnectionType.DATABASE_SQLITE:
-					this.database_type_selectbox.SelectedItem = "SQLITE";
+					this.database_type_selectbox.SelectedItem = "SQLite";
 					this.xml_path_textbox.Text = currentConfig.DBConnectionString;
 					break;
 				case ConnectionType.DATABASE_MYSQL:
@@ -400,6 +413,7 @@ namespace DOLConfig
 					break;
 				case "sqlite":
 					currentConfig.DBType = ConnectionType.DATABASE_SQLITE;
+					currentConfig.DBConnectionString = xml_path_textbox.Text;
 					break;
 				case "mysql":
 					currentConfig.DBType = ConnectionType.DATABASE_MYSQL;
@@ -518,11 +532,13 @@ namespace DOLConfig
 		/// <param name="e"></param>
 		private void xml_database_path_button_Click(object sender, EventArgs e)
 		{
-			this.xml_database_path_select_dialog.SelectedPath = @xml_path_textbox.Text;
+		    var currentConnString = @xml_path_textbox.Text;
+		    this.xml_database_path_select_dialog.CheckFileExists = false;
+		    this.xml_database_path_select_dialog.InitialDirectory = new System.IO.FileInfo(Regex.Replace(currentConnString, ".*Data ?Source=([^;]+)(;?).*", "$1")).DirectoryName;
 			DialogResult result = this.xml_database_path_select_dialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
-				xml_path_textbox.Text = this.xml_database_path_select_dialog.SelectedPath;
+			    xml_path_textbox.Text = Regex.Replace(currentConnString, "Data ?Source=([^;]+)(;?)", string.Format("Data Source={0}$2", this.xml_database_path_select_dialog.FileName));
 			}
 		}
 		#endregion
