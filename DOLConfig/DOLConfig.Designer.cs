@@ -122,7 +122,7 @@
 			this.tv_spShow = new System.Windows.Forms.TreeView();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.toolstrip_status_label = new System.Windows.Forms.ToolStripStatusLabel();
-			this.xml_database_path_select_dialog = new System.Windows.Forms.FolderBrowserDialog();
+			this.xml_database_path_select_dialog = new System.Windows.Forms.OpenFileDialog();
 			this.mysql_test_background_worker = new System.ComponentModel.BackgroundWorker();
 			this.wrong_data_error_handler = new System.Windows.Forms.ErrorProvider(this.components);
 			this.save_config_button = new System.Windows.Forms.Button();
@@ -755,7 +755,7 @@
 			this.xml_groupbox.Size = new System.Drawing.Size(387, 56);
 			this.xml_groupbox.TabIndex = 1;
 			this.xml_groupbox.TabStop = false;
-			this.xml_groupbox.Text = "XML Database settings";
+			this.xml_groupbox.Text = "SQLite Database settings";
 			// 
 			// xml_database_path_button
 			// 
@@ -766,7 +766,7 @@
 			this.xml_database_path_button.Name = "xml_database_path_button";
 			this.xml_database_path_button.Size = new System.Drawing.Size(100, 23);
 			this.xml_database_path_button.TabIndex = 1;
-			this.xml_database_path_button.Text = "Select folder ...";
+			this.xml_database_path_button.Text = "Select file ...";
 			this.xml_database_path_button.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			this.xml_database_path_button.UseVisualStyleBackColor = true;
 			this.xml_database_path_button.Click += new System.EventHandler(this.xml_database_path_button_Click);
@@ -1258,8 +1258,8 @@
 			// 
 			// xml_database_path_select_dialog
 			// 
-			this.xml_database_path_select_dialog.Description = "XML Database path";
-			this.xml_database_path_select_dialog.SelectedPath = "C:\\DOL\\DOLSharp";
+			this.xml_database_path_select_dialog.Title = "SQLite Database path";
+			this.xml_database_path_select_dialog.InitialDirectory = "";
 			// 
 			// mysql_test_background_worker
 			// 
@@ -1883,7 +1883,7 @@
 		private System.Windows.Forms.Label label15;
 		private System.Windows.Forms.Button xml_database_path_button;
 		private System.Windows.Forms.TextBox xml_path_textbox;
-		private System.Windows.Forms.FolderBrowserDialog xml_database_path_select_dialog;
+		private System.Windows.Forms.OpenFileDialog xml_database_path_select_dialog;
 		private System.Windows.Forms.GroupBox groupBox3;
 		private System.Windows.Forms.Label label17;
 		private System.Windows.Forms.Label label16;
