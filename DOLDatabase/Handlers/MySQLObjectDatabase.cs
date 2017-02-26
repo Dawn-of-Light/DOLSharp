@@ -195,7 +195,7 @@ namespace DOL.Database.Handlers
 			}
 			else
 			{
-				defaultDef = "NOT NULL";
+                defaultDef = "NOT NULL";
 			}
 			
 			return string.Format("`{0}` {1} {2}", bind.ColumnName, type, defaultDef);
@@ -407,7 +407,59 @@ namespace DOL.Database.Handlers
 			if (log.IsInfoEnabled)
 				log.InfoFormat("Altering Table {0} this could take a few minutes...", table.TableName);
 			
-			ExecuteNonQueryImpl(string.Format("ALTER TABLE `{0}` {1}", table.TableName, string.Join(", \n", columnDefs)));
+
+            using (var conn = new MySqlConnection(ConnectionString))
+            {
+                using (var cmd = conn.CreateCommand())
+                {
+                    conn.Open();
+                    
+                    using (var tran = conn.BeginTransaction(System.Data.IsolationLevel.Serializable))
+                    {
+                        try
+                        {
+                            cmd.Transaction = tran;
+                            
+                            // Update Null Values
+                            var nullToNonNull = table.FieldElementBindings.Join(currentColumns, bind => bind.ColumnName, col => col.ColumnName, (bind, col) => new { bind, col }, StringComparer.OrdinalIgnoreCase)
+                                .Where(match => match.bind.DataElement != null && match.bind.DataElement.AllowDbNull == false && match.col.AllowDbNull == true)
+                                .Select(match => match.bind)
+                                .ToArray();
+                            
+                            if (nullToNonNull.Any())
+                            {
+                                cmd.CommandText = string.Format("UPDATE `{0}` SET {1} WHERE {2}"
+                                                                , table.TableName
+                                                                , string.Join(", ", nullToNonNull.Select(bind => string.Format("`{0}` = IFNULL(`{0}`, {1})", bind.ColumnName, bind.ValueType == typeof(DateTime)
+                                                                                                                               ? "'2000-01-01 00:00:00'"
+                                                                                                                               : bind.ValueType == typeof(string)
+                                                                                                                               ? "''"
+                                                                                                                               : "0")))
+                                                                , string.Join(" OR ", nullToNonNull.Select(bind => string.Format("`{0}` IS NULL", bind.ColumnName)))
+                                                           );
+                                cmd.ExecuteNonQuery();
+                            }
+                            
+                            // Alter Table
+                            cmd.CommandText = string.Format("ALTER TABLE `{0}` {1}", table.TableName, string.Join(", \n", columnDefs));
+                            cmd.ExecuteNonQuery();
+                            
+                            tran.Commit();
+                        }
+                        catch (Exception e)
+                        {
+                            tran.Rollback();
+                            if (log.IsDebugEnabled)
+                                log.Debug("AlterTableImpl: ", e);
+                            
+                            if (log.IsWarnEnabled)
+                                log.WarnFormat("AlterTableImpl: Error While Altering Table {0}, rollback...\n{1}", table.TableName, e);
+                            
+                            throw;
+                        }
+                    }
+                }
+            }
 		}
 		#endregion
 		
