@@ -766,7 +766,7 @@ namespace DOL.GS.Keeps
 		public virtual void Claim(GamePlayer player)
 		{
 			this.m_guild = player.Guild;
-			player.Guild.ClaimedKeeps.Add(this);
+			
 			if (ServerProperties.Properties.GUILDS_CLAIM_LIMIT > 1)
 				player.Guild.SendMessageToGuildMembers("Your guild has currently claimed " + player.Guild.ClaimedKeeps.Count + " keeps of a maximum of " + ServerProperties.Properties.GUILDS_CLAIM_LIMIT, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
 
