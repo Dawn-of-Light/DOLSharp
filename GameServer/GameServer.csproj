@@ -2605,6 +2605,7 @@
     <Compile Include="world\ZonePointEffects.cs" />
     <EmbeddedResource Include="config\logconfig.xml" />
     <EmbeddedResource Include="config\invalidnames.txt" />
+    <EmbeddedResource Include="config\logconfig_unix.xml" />
     <None Include="language\DE\AI.txt" />
     <None Include="language\DE\Atlantis.txt" />
     <None Include="language\DE\Behaviour.txt" />

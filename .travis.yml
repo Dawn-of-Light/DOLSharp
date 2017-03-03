@@ -12,7 +12,5 @@ install:
  - travis_retry nuget install NUnit.Console -Version 3.2.1 -OutputDirectory test -ExcludeVersion
 script:
  - MONO_IOMAP=case xbuild /p:Configuration=$XBUILD_TARGET "Dawn of Light.sln"
- - mkdir -p ./build/UnitTests/$XBUILD_TARGET/config
- - sed -e 's/type\=\"log4net\.Appender\.ColoredConsoleAppender\"/type\=\"log4net\.Appender\.ConsoleAppender\"/' ./GameServer/config/logconfig.xml > ./build/UnitTests/$XBUILD_TARGET/config/logconfig.xml
  - LANG=en_US.CP1252 mono ./test/NUnit.ConsoleRunner/tools/nunit3-console.exe ./build/UnitTests/$XBUILD_TARGET/lib/UnitTests.dll
  - LANG=en_US.CP1252 mono ./test/NUnit.ConsoleRunner/tools/nunit3-console.exe ./build/DOLDatabaseTests/$XBUILD_TARGET/lib/DOLDatabaseTests.dll
