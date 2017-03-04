@@ -201,9 +201,12 @@ namespace DOL.GS.RealmAbilities
 			resurrectedPlayer.Out.SendPlayerRevive(resurrectedPlayer);
 			resurrectedPlayer.UpdatePlayerStatus();
 
-			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(resurrectedPlayer, GlobalSpells.PvERessurectionIllnessSpellType);
+			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(resurrectedPlayer, GlobalSpells.PvEResurrectionIllnessSpellType);
 			if (effect != null)
 				effect.Cancel(false);
+			GameSpellEffect effecttwo = SpellHandler.FindEffectOnTarget(resurrectedPlayer, GlobalSpells.RvRResurrectionIllnessSpellType);
+			if (effecttwo != null)
+				effecttwo.Cancel(false);
 			resurrectedPlayer.Out.SendMessage("You have been resurrected by " + rezzer.GetName(0, false) + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
             //Lifeflight: this should make it so players who have been ressurected don't take damage for 5 seconds
             RezDmgImmunityEffect rezImmune = new RezDmgImmunityEffect();
