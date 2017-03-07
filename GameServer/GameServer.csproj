@@ -2175,6 +2175,7 @@
     <Compile Include="spells\Necromancer\PowerTransfer.cs" />
     <Compile Include="spells\Necromancer\PowerDrain.cs" />
     <Compile Include="spells\NightShade\NightshadeNukeSpellhandler.cs" />
+    <Compile Include="spells\RvRSicknessSpellHandler.cs" />
     <Compile Include="spells\SpellHelpers\SpellHelper.cs" />
     <Compile Include="spells\SpellHelpers\SpellMessagesHelper.cs" />
     <Compile Include="spells\SpellHelpers\StatsSpellHelper.cs" />
@@ -2815,10 +2816,6 @@
     <Folder Include="gameutils\KDTree\" />
     <Folder Include="language\DE\Quests\Midgard\" />
     <Folder Include="language\EN\Quests\Midgard\" />
-    <Folder Include="managers" />
-    <Folder Include="managers\worldmanager" />
-    <Folder Include="managers\npcmanager" />
-    <Folder Include="managers\playermanager" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

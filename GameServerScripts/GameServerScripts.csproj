@@ -149,10 +149,11 @@
     <Compile Include="globals.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="gameevents\WebUIGenerator.cs">
+    <Compile Include="web\OnlineStatusUpdate.cs" />
+    <Compile Include="web\WebUIGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="gameevents\XMLWebUIGenerator.cs">
+    <Compile Include="web\XMLWebUIGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="quests\Albion\AFewRepairs.cs" />
@@ -271,21 +272,19 @@
     <Compile Include="titles\TimeBasedTitle.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="commands\player" />
-    <Folder Include="dbupdater" />
-    <Folder Include="dbupdater\insert" />
-    <Folder Include="dbupdater\replace" />
-    <Folder Include="dbupdater\unload" />
-    <Folder Include="titles" />
-    <Folder Include="startup" />
-    <Folder Include="startup\command" />
-    <Folder Include="startup\dataobject" />
-    <Folder Include="startup\command" />
-    <Folder Include="startup\script" />
+    <Folder Include="dbupdater\insert\" />
+    <Folder Include="dbupdater\replace\" />
+    <Folder Include="dbupdater\unload\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="quests\Albion\BaseFrederickPathPoints.xml" />
     <None Include="quests\Hibernia\BaseAddrirPathPoints.xml" />
+    <None Include="web\OnlineStatusUpdateServerFiles\serverinfo.php" />
+    <None Include="web\OnlineStatusUpdateServerFiles\showplayers.php" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="web\OnlineStatusUpdateServerFiles\how to use php files.txt" />
+    <None Include="web\OnlineStatusUpdateServerFiles\players.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
