@@ -272,7 +272,6 @@
     <Compile Include="titles\TimeBasedTitle.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="dbupdater\insert\" />
     <Folder Include="dbupdater\replace\" />
     <Folder Include="dbupdater\unload\" />
   </ItemGroup>
@@ -285,6 +284,11 @@
   <ItemGroup>
     <None Include="web\OnlineStatusUpdateServerFiles\how to use php files.txt" />
     <None Include="web\OnlineStatusUpdateServerFiles\players.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="dbupdater\insert\Regions.xml" />
+    <Content Include="dbupdater\insert\StartupLocation.xml" />
+    <Content Include="dbupdater\insert\Zones.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
