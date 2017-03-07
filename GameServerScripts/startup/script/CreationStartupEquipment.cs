@@ -197,6 +197,10 @@ namespace DOL.GS.GameEvents
 											ch.ActiveWeaponSlot = (byte)GamePlayer.eActiveWeaponSlot.Distance;
 											break;
 									}
+									
+									// Save char to DB if Active Slot changed...
+									if (ch.ActiveWeaponSlot != 0)
+										GameServer.Database.SaveObject(ch);
 								}
 								
 								itemChoosen = true;

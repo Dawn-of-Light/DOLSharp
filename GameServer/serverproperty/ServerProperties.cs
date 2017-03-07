@@ -1204,6 +1204,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("pvp", "enable_warmapmgr", "Shall we enable the WarMap manager ?", false)]
 		public static bool ENABLE_WARMAPMGR;
+		
+		/// <summary>
+		/// Toggle con loss on PvP server type
+		/// </summary>
+		[ServerProperty("pvp", "pvp_death_con_loss", "Loose con on pvp death on PvP servertype", true)]
+		public static bool PVP_DEATH_CON_LOSS;
 		#endregion
 
 		#region KEEPS

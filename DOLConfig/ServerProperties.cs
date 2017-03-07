@@ -50,6 +50,8 @@ namespace DOLConfig
 			try
 			{
 				db = ObjectDatabase.GetObjectDatabase(currentConfig.DBType, currentConfig.DBConnectionString);
+                db.RegisterDataObject(typeof(ServerProperty));
+                db.RegisterDataObject(typeof(ServerPropertyCategory));
 				sp = db.SelectAllObjects<ServerProperty>().ToList();
 				sc = db.SelectAllObjects<ServerPropertyCategory>().ToList();
 			}
