@@ -888,7 +888,31 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("rates", "money_drop", "Money Drop Modifier - Edit this to change the amount of money which is dropped e.g 1.5 is 50% more 2.0 is twice the amount (100%) 0.5 is half the amount (50%)", 1.0)]
 		public static double MONEY_DROP;
-
+		
+		/// <summary>
+		/// The small chest drop chance
+		/// </summary>
+		[ServerProperty("rates", "base_smallchest_chance", "Percentage chance that a mob will drop a small chest of money", 10)]
+		public static int BASE_SMALLCHEST_CHANCE;
+		
+		/// <summary>
+		/// The math multiplier for small chest value
+		/// </summary>
+		[ServerProperty("rates", "smallchest_multiplier", "The math multiplier for small chest value. Increase for more gold", 10)]
+		public static int SMALLCHEST_MULTIPLIER;
+		
+		/// <summary>
+		/// The large chest drop chance
+		/// </summary>
+		[ServerProperty("rates", "base_largechest_chance", "Percentage chance that a mob will drop a large chest of money", 5)]
+		public static int BASE_LARGECHEST_CHANCE;
+		
+		/// <summary>
+		/// The math multiplier for small chest value
+		/// </summary>
+		[ServerProperty("rates", "largechest_multiplier", "The math multiplier for large chest value. Increase for more gold", 17)]
+		public static int LARGECHEST_MULTIPLIER;
+		
 		/// <summary>
 		/// The time until a player is worth rps again after death
 		/// </summary>
@@ -1093,7 +1117,6 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("npc", "gamenpc_randomwalk_chance", "Chance for NPC to random walk. Default is 20", 20)]
 		public static int GAMENPC_RANDOMWALK_CHANCE;
-
 		/// <summary>
 		/// How often, in milliseconds, to check follow distance.  Lower numbers make NPC follow closer but increase load on server.
 		/// </summary>
