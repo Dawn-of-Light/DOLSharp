@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using DOL.GS;
 using DOL.GS.PacketHandler;
-using System.Collections;
+using DOL.Database;
 using DOL.GS.Effects;
 using DOL.Events;
 
@@ -39,6 +39,33 @@ namespace DOL.GS.Spells
 		{
 			Caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
+		}
+		
+		/// <summary>
+		/// Calculates the effect duration in milliseconds
+		/// </summary>
+		/// <param name="target">The effect target</param>
+		/// <param name="effectiveness">The effect effectiveness</param>
+		/// <returns>The effect duration in milliseconds</returns>
+		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
+		{
+			double duration = Spell.Duration;
+			duration *= (1.0 + m_caster.GetModified(eProperty.SpellDuration) * 0.01);
+			if (Spell.InstrumentRequirement != 0)
+			{
+				InventoryItem instrument = Caster.AttackWeapon;
+				if (instrument != null)
+				{
+					duration *= 1.0 + Math.Min(1.0, instrument.Level / (double)Caster.Level); // up to 200% duration for songs
+					duration *= instrument.Condition / (double)instrument.MaxCondition * instrument.Quality / 100;
+				}
+			}
+			
+			if (duration < 1)
+				duration = 1;
+			else if (duration > (Spell.Duration * 4))
+				duration = (Spell.Duration * 4);
+			return (int)duration;
 		}
 		
 		/// <summary>

@@ -40,6 +40,7 @@ namespace DOL.GS.Spells
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			base.ApplyEffectOnTarget(target, effectiveness);
+			
 			if (target.Realm == 0 || Caster.Realm == 0)
 			{
 				target.LastAttackedByEnemyTickPvE = target.CurrentRegion.Time;
@@ -66,7 +67,8 @@ namespace DOL.GS.Spells
 		/// <returns>The effect duration in milliseconds</returns>
 		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
 		{
-			double duration = base.CalculateEffectDuration(target, effectiveness);
+			double duration = Spell.Duration;
+			duration *= (1.0 + m_caster.GetModified(eProperty.SpellDuration) * 0.01);
 			duration -= duration * target.GetResist(Spell.DamageType) * 0.01;
 
 			if (duration < 1)
