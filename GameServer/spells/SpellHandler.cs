@@ -3619,7 +3619,7 @@ namespace DOL.GS.Spells
 				spellLevel += (int)effect.Spell.Value;
 			}
 
-			if (playerCaster != null && (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect || m_spellLine.KeyName.StartsWith(GlobalSpellsLines.Champion_Spells)))
+			if (playerCaster != null && (m_spellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect || m_spellLine.KeyName.StartsWith(GlobalSpellsLines.Champion_Lines_StartWith)))
 			{
 				spellLevel = Math.Min(playerCaster.MaxLevel, target.Level);
 			}

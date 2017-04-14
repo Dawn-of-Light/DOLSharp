@@ -1033,7 +1033,7 @@ namespace DOL.GS
 		public const string Mob_Spells = "Mob Spells";
 		public const string Character_Abilities = "Character Abilities"; // dirty tricks, flurry ect...
 		public const string Item_Spells = "Item Spells";	// Combine scroll etc.
-		public const string Champion_Spells = "Champion Abilities";
+		public const string Champion_Lines_StartWith = "Champion ";
 	}
 
 	public static class GlobalConstants
