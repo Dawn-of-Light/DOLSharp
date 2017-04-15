@@ -3609,7 +3609,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override int GetModifiedSpecLevel(string keyName)
 		{
-			if (keyName == GlobalSpellsLines.Champion_Spells)
+			if (keyName.StartsWith(GlobalSpellsLines.Champion_Lines_StartWith))
 				return 50;
 
 			Specialization spec = null;
@@ -8281,7 +8281,7 @@ namespace DOL.GS
 
 			if (spell.InstrumentRequirement != 0 ||
 			    line.KeyName == GlobalSpellsLines.Item_Spells ||
-			    line.KeyName.StartsWith(GlobalSpellsLines.Champion_Spells))
+			    line.KeyName.StartsWith(GlobalSpellsLines.Champion_Lines_StartWith))
 			{
 				return ticks;
 			}
