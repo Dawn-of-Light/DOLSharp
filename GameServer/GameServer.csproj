@@ -381,6 +381,7 @@
     <Compile Include="gameutils\GamePlayerUtils.cs" />
     <Compile Include="gameutils\LootGeneratorAtlanteanGlass.cs" />
     <Compile Include="gameutils\LootGeneratorAurulite.cs" />
+	<Compile Include="gameutils\LootGeneratorChest.cs" />
     <Compile Include="gameutils\LootGeneratorDragonscales.cs" />
     <Compile Include="gameutils\LosCheckMgr.cs" />
     <Compile Include="gameutils\MarketSearch.cs" />
