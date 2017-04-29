@@ -2231,13 +2231,19 @@ namespace DOL.GS.Quests
 				}
 				if (charQuest.Count >= MaxQuestCount)
 				{
-					TryTurnTo(obj, player);
-					SendMessage(player, FinishText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					if (!string.IsNullOrEmpty(FinishText))
+					{
+					    	TryTurnTo(obj, player);					    
+							SendMessage(player, FinishText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					}
 				}
 				if (player.Level < Level)
 				{
-					TryTurnTo(obj, player);
-					SendMessage(player, m_stepTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					if (StepTexts.Count != 0)
+					{
+						TryTurnTo(obj, player);
+						SendMessage(player, m_stepTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					}
 				}
 			}
 		}
