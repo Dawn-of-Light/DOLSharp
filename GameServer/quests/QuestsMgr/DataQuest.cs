@@ -380,7 +380,7 @@ namespace DOL.GS.Quests
 
                 // check for NO_INDICATOR option
                 lastParse = m_dataQuest.SourceName;
-                if (string.IsNullOrEmpty(lastParse) == false)
+                if (!string.IsNullOrEmpty(lastParse))
                 {
                     if (lastParse.ToUpper().Contains("NO_INDICATOR"))
                     {
@@ -389,7 +389,7 @@ namespace DOL.GS.Quests
                 }
 
 				lastParse = m_dataQuest.SourceText;
-				if (string.IsNullOrEmpty(lastParse) == false)
+				if (!string.IsNullOrEmpty(lastParse))
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -399,7 +399,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.TargetName;
-				if (string.IsNullOrEmpty(lastParse) == false)
+				if (!string.IsNullOrEmpty(lastParse))
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -420,7 +420,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.TargetText;
-				if (string.IsNullOrEmpty(lastParse) == false)
+				if (!string.IsNullOrEmpty(lastParse))
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -431,7 +431,7 @@ namespace DOL.GS.Quests
 
 
 				lastParse = m_dataQuest.StepType;
-				if (string.IsNullOrEmpty(lastParse) == false)
+				if (!string.IsNullOrEmpty(lastParse))
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -441,7 +441,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.StepText;
-				if (string.IsNullOrEmpty(lastParse) == false)
+				if (!string.IsNullOrEmpty(lastParse))
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -451,7 +451,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.StepItemTemplates;
-				if (string.IsNullOrEmpty(lastParse) == false)
+				if (!string.IsNullOrEmpty(lastParse))
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -461,7 +461,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.AdvanceText;
-				if (string.IsNullOrEmpty(lastParse) == false)
+				if (!string.IsNullOrEmpty(lastParse))
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -471,7 +471,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.CollectItemTemplate;
-				if (string.IsNullOrEmpty(lastParse) == false)
+				if (!string.IsNullOrEmpty(lastParse))
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -481,7 +481,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.RewardMoney;
-				if (string.IsNullOrEmpty(lastParse) == false)
+				if (!string.IsNullOrEmpty(lastParse))
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -491,7 +491,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.RewardXP;
-				if (string.IsNullOrEmpty(lastParse) == false)
+				if (!string.IsNullOrEmpty(lastParse))
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -501,7 +501,7 @@ namespace DOL.GS.Quests
 				}
 				
 				lastParse = m_dataQuest.RewardCLXP;
-				if (string.IsNullOrEmpty(lastParse) == false)
+				if (!string.IsNullOrEmpty(lastParse))
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -511,7 +511,7 @@ namespace DOL.GS.Quests
 				}
 				
 				lastParse = m_dataQuest.RewardRP;
-				if (string.IsNullOrEmpty(lastParse) == false)
+				if (!string.IsNullOrEmpty(lastParse))
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -521,7 +521,7 @@ namespace DOL.GS.Quests
 				}
 				
 				lastParse = m_dataQuest.RewardBP;
-				if (string.IsNullOrEmpty(lastParse) == false)
+				if (!string.IsNullOrEmpty(lastParse))
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -531,13 +531,13 @@ namespace DOL.GS.Quests
 				}
 				
 				lastParse = m_dataQuest.OptionalRewardItemTemplates;
-				if (string.IsNullOrEmpty(lastParse) == false)
+				if (!string.IsNullOrEmpty(lastParse))
 				{
 					m_numOptionalRewardsChoice = Convert.ToByte(lastParse.Substring(0, 1));
 					parse1 = lastParse.Substring(1).Split('|');
 					foreach (string str in parse1)
 					{
-						if (string.IsNullOrEmpty(str) == false)
+						if (!string.IsNullOrEmpty(str))
 						{
 							ItemTemplate item = GameServer.Database.FindObjectByKey<ItemTemplate>(str);
 							if (item != null)
@@ -555,7 +555,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.FinalRewardItemTemplates;
-				if (string.IsNullOrEmpty(lastParse) == false)
+				if (!string.IsNullOrEmpty(lastParse))
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -575,7 +575,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.QuestDependency;
-				if (string.IsNullOrEmpty(lastParse) == false)
+				if (!string.IsNullOrEmpty(lastParse))
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -588,7 +588,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.AllowedClasses;
-				if (string.IsNullOrEmpty(lastParse) == false)
+				if (!string.IsNullOrEmpty(lastParse))
 				{
 					parse1 = lastParse.Split('|');
 					foreach (string str in parse1)
@@ -598,7 +598,7 @@ namespace DOL.GS.Quests
 				}
 
 				lastParse = m_dataQuest.ClassType;
-				if (string.IsNullOrEmpty(lastParse) == false)
+				if (!string.IsNullOrEmpty(lastParse))
 				{
 					parse1 = lastParse.Split('|');
 					m_classType = parse1[0];
@@ -650,7 +650,7 @@ namespace DOL.GS.Quests
 
                 lastParse = m_dataQuest.SourceName;
 
-                if (string.IsNullOrEmpty(lastParse) == false)
+                if (!string.IsNullOrEmpty(lastParse))
                 {
                     parse1 = lastParse.Split('|');
                     foreach (string str in parse1)
@@ -1016,7 +1016,6 @@ namespace DOL.GS.Quests
 			if (ExecuteCustomQuestStep(player, 0, eStepCheckType.Qualification) == false)
 				return false;
 
-
 			if (StartType == eStartType.Collection)
 			{
 				CharacterXDataQuest charQuest = GetCharacterQuest(player, ID, false);
@@ -1193,9 +1192,13 @@ namespace DOL.GS.Quests
 			get
 			{
 				try
-				{
+				{					
 					if (m_targetTexts.Count > 0)
 					{
+						if (Step < 1)
+						{
+							return m_targetTexts[0];
+						}
 						return m_targetTexts[Step - 1];
 					}
 					else
@@ -1483,7 +1486,7 @@ namespace DOL.GS.Quests
 		{
 			bool canContinue = true;
 
-			if (string.IsNullOrEmpty(m_classType) == false)
+			if (!string.IsNullOrEmpty(m_classType))
 			{
 				if (m_customQuestStep == null)
 				{
@@ -1573,7 +1576,7 @@ namespace DOL.GS.Quests
 
                     // NOTE: Original plan was to support more than one template per step, but only a single template is supported at this time
 
-					if (string.IsNullOrEmpty(StepItemTemplate) == false)
+					if (!string.IsNullOrEmpty(StepItemTemplate))
 					{
 						stepTemplates.Add(StepItemTemplate);
 					}
@@ -1611,7 +1614,7 @@ namespace DOL.GS.Quests
 					{
 						// Allow StepItemTemplate to be empty, assume quest player received item in a previous step or outside of the quest
 
-						if (string.IsNullOrEmpty(m_stepItemTemplates[Step].Trim()) == false)
+						if (!string.IsNullOrEmpty(m_stepItemTemplates[Step].Trim()))
 						{
 							stepTemplates.Add(m_stepItemTemplates[Step].Trim());
 						}
@@ -1708,7 +1711,7 @@ namespace DOL.GS.Quests
 
 					// Then say any source text for the new step
 
-					if (string.IsNullOrEmpty(SourceText) == false)
+					if (!string.IsNullOrEmpty(SourceText))
 					{
 						TryTurnTo(obj, m_questPlayer);
 
@@ -1754,7 +1757,7 @@ namespace DOL.GS.Quests
 			// log.DebugFormat("DataQuest: Notify {0}, m_questPlayer {1}", e.Name, m_questPlayer == null ? "null" : m_questPlayer.Name);
 
 			try
-			{
+			{				
 				// Interact to check quest offer
 				if (e == GameObjectEvent.Interact && StartType != eStartType.SearchStart)
 				{
@@ -2055,7 +2058,7 @@ namespace DOL.GS.Quests
 					player.AddQuest(dq);
 					if (m_sourceTexts.Count > 0)
 					{
-						if (string.IsNullOrEmpty(m_sourceTexts[0]) == false)
+						if (!string.IsNullOrEmpty(m_sourceTexts[0]))
 						{
 							TryTurnTo(obj, player);
 							SendMessage(player, m_sourceTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -2107,7 +2110,7 @@ namespace DOL.GS.Quests
                     player.AddQuest(dq);
                     if (m_sourceTexts.Count > 0)
                     {
-                        if (string.IsNullOrEmpty(m_sourceTexts[0]) == false)
+                        if (!string.IsNullOrEmpty(m_sourceTexts[0]))
                         {
                             TryTurnTo(obj, player);
                             SendMessage(player, m_sourceTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -2142,7 +2145,25 @@ namespace DOL.GS.Quests
 						}
 					}
 				}
-				else if (string.IsNullOrEmpty(Description) == false)
+				if (StartType == eStartType.Collection)
+				{
+					CharacterXDataQuest charQuest = GetCharacterQuest(player, ID, false);
+					
+					if (charQuest != null && charQuest.Count >= 1 && charQuest.Count < MaxQuestCount)
+					{
+						if (!string.IsNullOrEmpty(TargetText))
+						{
+							TryTurnTo(obj, player);
+							SendMessage(player, m_targetTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						}
+					}
+					else if (!string.IsNullOrEmpty(Description))
+					{
+						TryTurnTo(obj, player);
+						SendMessage(player, Description, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					}
+				}
+				else if (!string.IsNullOrEmpty(Description))
 				{
 					TryTurnTo(obj, player);
 					SendMessage(player, Description, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -2208,6 +2229,22 @@ namespace DOL.GS.Quests
 						SendMessage(player, "You need to unstack these first.", 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					}
 				}
+				if (charQuest.Count >= MaxQuestCount)
+				{
+					if (!string.IsNullOrEmpty(FinishText))
+					{
+					    	TryTurnTo(obj, player);					    
+							SendMessage(player, FinishText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					}
+				}
+				if (player.Level < Level)
+				{
+					if (StepTexts.Count != 0)
+					{
+						TryTurnTo(obj, player);
+						SendMessage(player, m_stepTexts[0], 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					}
+				}
 			}
 		}
 
@@ -2262,7 +2299,7 @@ namespace DOL.GS.Quests
 						{
 							TryTurnTo(obj, player);
 
-							if (string.IsNullOrEmpty(TargetText) == false)
+							if (!string.IsNullOrEmpty(TargetText))
 							{
 								SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
 							}
@@ -2300,7 +2337,7 @@ namespace DOL.GS.Quests
 
 					default:
 						{
-							if (string.IsNullOrEmpty(TargetText) == false)
+							if (!string.IsNullOrEmpty(TargetText))
 							{
 								TryTurnTo(obj, player);
 								SendMessage(m_questPlayer, TargetText, 0, eChatType.CT_System, eChatLoc.CL_PopupWindow);
@@ -2308,7 +2345,7 @@ namespace DOL.GS.Quests
 						}
 						break;
 				}
-			}
+			}			
 		}
 
 
@@ -2327,7 +2364,7 @@ namespace DOL.GS.Quests
 			   && player.Level >= Level && player.Level <= MaxLevel)
 			{
 				if (m_collectItems.Count >= Step &&
-					string.IsNullOrEmpty(m_collectItems[Step - 1]) == false &&
+					!string.IsNullOrEmpty(m_collectItems[Step - 1]) &&
 					item.Id_nb.ToLower().Contains(m_collectItems[Step - 1].ToLower()) &&
 					ExecuteCustomQuestStep(player, Step, eStepCheckType.GiveItem))
 				{
@@ -2338,7 +2375,7 @@ namespace DOL.GS.Quests
 							{
 								TryTurnTo(obj, player);
 
-								if (string.IsNullOrEmpty(TargetText) == false)
+								if (!string.IsNullOrEmpty(TargetText))
 								{
 									if (obj.Realm == eRealm.None)
 									{
@@ -2370,7 +2407,7 @@ namespace DOL.GS.Quests
 					}
 				}
 				else if (m_stepItemTemplates.Count >= Step &&
-					string.IsNullOrEmpty(m_stepItemTemplates[Step - 1]) == false &&
+					!string.IsNullOrEmpty(m_stepItemTemplates[Step - 1]) &&
 					item.Id_nb.ToLower().Contains(m_stepItemTemplates[Step - 1].ToLower()) &&
 					ExecuteCustomQuestStep(player, Step, eStepCheckType.GiveItem))
 				{
@@ -2379,7 +2416,7 @@ namespace DOL.GS.Quests
 					{
 						TryTurnTo(obj, player);
 
-						if (string.IsNullOrEmpty(TargetText) == false)
+						if (!string.IsNullOrEmpty(TargetText))
 						{
 							if (obj.Realm == eRealm.None)
 							{
@@ -2630,7 +2667,7 @@ namespace DOL.GS.Quests
 				{
 					case eStepType.Kill:
 						{
-							if (string.IsNullOrEmpty(TargetText) == false)
+							if (!string.IsNullOrEmpty(TargetText))
 							{
 								if (living.Realm == eRealm.None)
 								{
