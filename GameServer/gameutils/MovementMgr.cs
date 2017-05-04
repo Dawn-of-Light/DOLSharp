@@ -38,11 +38,11 @@ namespace DOL.GS.Movement
 
 		private static Dictionary<string, DBPath> m_pathCache = new Dictionary<string, DBPath>();
 		private static Dictionary<string, SortedList<int, DBPathPoint>> m_pathpointCache = new Dictionary<string, SortedList<int, DBPathPoint>>();
-
+		private static object LockObject = new object();
 		/// <summary>
 		/// Cache all the paths and pathpoints
 		/// </summary>
-		public static void FillPathCache()
+		private static void FillPathCache()
 		{
 			IList<DBPath> allPaths = GameServer.Database.SelectAllObjects<DBPath>();
 			foreach (DBPath path in allPaths)
@@ -119,59 +119,62 @@ namespace DOL.GS.Movement
         /// <returns>first pathpoint of path or null if not found</returns>
         public static PathPoint LoadPath(string pathID)
         {
-			if (m_pathCache.Count == 0)
-			{
-				FillPathCache();
-			}
-
-			DBPath dbpath = null;
-
-			if (m_pathCache.ContainsKey(pathID))
-			{
-				dbpath = m_pathCache[pathID];
-			}
-
-			// even if path entry not found see if pathpoints exist and try to use it
-
-            ePathType pathType = ePathType.Once;
-
-            if (dbpath != null)
-            {
-                pathType = (ePathType)dbpath.PathType;
-            }
-
-			SortedList<int, DBPathPoint> pathPoints = null;
-
-			if (m_pathpointCache.ContainsKey(pathID))
-			{
-				pathPoints = m_pathpointCache[pathID];
-			}
-			else
-			{
-				pathPoints = new SortedList<int, DBPathPoint>();
-			}
-
-            PathPoint prev = null;
-            PathPoint first = null;
-
-			foreach (DBPathPoint pp in pathPoints.Values)
-			{
-				PathPoint p = new PathPoint(pp.X, pp.Y, pp.Z, pp.MaxSpeed, pathType);
-				p.WaitTime = pp.WaitTime;
-
-				if (first == null)
+        	lock(LockObject)
+        	{
+	        	if (m_pathCache.Count == 0)
 				{
-					first = p;
+					FillPathCache();
 				}
-				p.Prev = prev;
-				if (prev != null)
+	
+				DBPath dbpath = null;
+	
+				if (m_pathCache.ContainsKey(pathID))
 				{
-					prev.Next = p;
+					dbpath = m_pathCache[pathID];
 				}
-				prev = p;
-			}
+	
+				// even if path entry not found see if pathpoints exist and try to use it
+	
+	            ePathType pathType = ePathType.Once;
+	
+	            if (dbpath != null)
+	            {
+	                pathType = (ePathType)dbpath.PathType;
+	            }
+	
+				SortedList<int, DBPathPoint> pathPoints = null;
+	
+				if (m_pathpointCache.ContainsKey(pathID))
+				{
+					pathPoints = m_pathpointCache[pathID];
+				}
+				else
+				{
+					pathPoints = new SortedList<int, DBPathPoint>();
+				}
+	
+	            PathPoint prev = null;
+	            PathPoint first = null;
+	
+				foreach (DBPathPoint pp in pathPoints.Values)
+				{
+					PathPoint p = new PathPoint(pp.X, pp.Y, pp.Z, pp.MaxSpeed, pathType);
+					p.WaitTime = pp.WaitTime;
+	
+					if (first == null)
+					{
+						first = p;
+					}
+					p.Prev = prev;
+					if (prev != null)
+					{
+						prev.Next = p;
+					}
+					prev = p;
+				}
 
-            return first;
+            	return first;
+        	}
         }
 
         /// <summary>
