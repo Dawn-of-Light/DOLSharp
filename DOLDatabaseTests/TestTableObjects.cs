@@ -132,17 +132,40 @@ namespace DOL.Database.Tests
 		public DateTime DateValue { get; set; }
 	}
 	
-	/// <summary>
-	/// Test Table Migration with different Types
-	/// </summary>
-	[DataTable(TableName = "Test_TableMigrationTypes")]
-	public class TestTableDifferentTypesV2 : DataObject
-	{
-		[DataElement]
-		public string StringValue { get; set; }
-		[DataElement]
-		public byte IntValue { get; set; }
-		[DataElement]
-		public string DateValue { get; set; }
-	}	
+    /// <summary>
+    /// Test Table Migration with different Types
+    /// </summary>
+    [DataTable(TableName = "Test_TableMigrationTypes")]
+    public class TestTableDifferentTypesV2 : DataObject
+    {
+        [DataElement]
+        public string StringValue { get; set; }
+        [DataElement]
+        public byte IntValue { get; set; }
+        [DataElement]
+        public string DateValue { get; set; }
+    }
+    
+    /// <summary>
+    /// Test Table Migration From null to non-null
+    /// </summary>
+    [DataTable(TableName = "Test_TableMigrationNull")]
+    public class TestTableMigrationNullToNonNull : DataObject
+    {
+        [DataElement(AllowDbNull = true)]
+        public string StringValue { get; set; }
+    }
+    
+    /// <summary>
+    /// Test Table Migration From null to non-null
+    /// </summary>
+    [DataTable(TableName = "Test_TableMigrationNull")]
+    public class TestTableMigrationNullFromNull : DataObject
+    {
+        [DataElement(AllowDbNull = false)]        
+        public string StringValue { get; set; }
+        
+        [DataElement(AllowDbNull = false)]
+        public int IntValue { get; set; }
+    }
 }

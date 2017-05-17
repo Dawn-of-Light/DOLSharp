@@ -360,7 +360,15 @@ namespace DOL.GS.ServerRules
 			if (defender is GameNPC)
 				if ((((GameNPC)defender).Flags & GameNPC.eFlags.PEACE) != 0)
 					return false;
-
+			// Players can't attack mobs while they have immunity
+			if (playerAttacker != null && defender != null)
+			{
+				if ((defender is GameNPC) && (playerAttacker.IsInvulnerableToAttack))
+				{
+					if (quiet == false) MessageToLiving(attacker, "You can't attack until your PvP invulnerability timer wears off!");
+						return false;
+				}
+			}
 			// Your pet can only attack stealthed players you have selected
 			if (defender.IsStealthed && attacker is GameNPC)
 				if (((attacker as GameNPC).Brain is IControlledBrain) &&

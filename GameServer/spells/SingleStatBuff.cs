@@ -41,7 +41,7 @@ namespace DOL.GS.Spells
         {
         	target.SendLivingStatsAndRegenUpdate();
         }
-
+		
         /// <summary>
         /// Apply effect on target or do spell action if non duration spell
         /// </summary>
@@ -49,22 +49,36 @@ namespace DOL.GS.Spells
         /// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
-            if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ClassType != eClassType.ListCaster && Spell.Level > 0 && ((GamePlayer)Caster).CharacterClass.ID != (int)eCharacterClass.Savage)
+            int specLevel = Caster.GetModifiedSpecLevel(m_spellLine.Spec);
+			
+			if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ClassType != eClassType.ListCaster && Spell.Level > 0 && ((GamePlayer)Caster).CharacterClass.ID != (int)eCharacterClass.Savage)
             {
-                int specLevel = Caster.GetModifiedSpecLevel(m_spellLine.Spec);
-                effectiveness = 0.75;
+                effectiveness = 0.75; // This section is for self bulfs, cleric buffs etc.
                 if (Spell.Level > 0)
                 {
                     effectiveness += (specLevel - 1.0) * 0.5 / Spell.Level;
                     effectiveness = Math.Max(0.75, effectiveness);
                     effectiveness = Math.Min(1.25, effectiveness);
-                    if (m_spell.Target == "Enemy") //debuff
-                        effectiveness *= (1.0 + m_caster.GetModified(eProperty.DebuffEffectivness) * 0.01);
-                    else //buff
-                        effectiveness *= (1.0 + m_caster.GetModified(eProperty.BuffEffectiveness) * 0.01);
+                    effectiveness *= (1.0 + m_caster.GetModified(eProperty.BuffEffectiveness) * 0.01);
                 }
             }
-            else
+            else if (Caster is GamePlayer && Spell.Level > 0 && Spell.Target == "Enemy")
+            {
+				effectiveness = 0.75; // This section is for list casters stat debuffs.
+				if (((GamePlayer)Caster).CharacterClass.ClassType == eClassType.ListCaster)
+				{
+                    effectiveness += (specLevel - 1.0) * 0.5 / Spell.Level;
+                    effectiveness = Math.Max(0.75, effectiveness);
+                    effectiveness = Math.Min(1.25, effectiveness);
+                    effectiveness *= (1.0 + m_caster.GetModified(eProperty.BuffEffectiveness) * 0.01);
+                }
+				else
+					{
+						effectiveness = 1.0; // Non list casters debuffs. Reaver curses, Champ debuffs etc.
+						effectiveness *= (1.0 + m_caster.GetModified(eProperty.DebuffEffectivness) * 0.01);
+					}
+			}
+			else
             {
                 effectiveness = 1.0;
             }

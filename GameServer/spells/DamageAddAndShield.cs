@@ -45,7 +45,7 @@ namespace DOL.GS.Spells
 		{
 			return (1.2 + 0.3 * Level) * 0.7;
 		}
-
+		
 		/// <summary>
 		/// Handler fired on every melee attack by effect target
 		/// </summary>
@@ -262,7 +262,7 @@ namespace DOL.GS.Spells
 		/// had the moment spell was casted
 		/// </summary>
 		protected int m_minDamageSpread = 50;
-
+		
 		/// <summary>
 		/// called when spell effect has to be started and applied to targets
 		/// </summary>
@@ -273,6 +273,19 @@ namespace DOL.GS.Spells
 			base.FinishSpellCast(target);
 		}
 
+		/// <summary>
+		/// Calculates the effect duration in milliseconds
+		/// </summary>
+		/// <param name="target">The effect target</param>
+		/// <param name="effectiveness">The effect effectiveness</param>
+		/// <returns>The effect duration in milliseconds</returns>
+		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
+		{
+			double duration = Spell.Duration;
+			duration *= (1.0 + m_caster.GetModified(eProperty.SpellDuration) * 0.01);
+			return (int)duration;
+		}
+		
 		/// <summary>
 		/// called when spell effect has to be started and applied to targets
 		/// </summary>

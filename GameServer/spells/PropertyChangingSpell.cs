@@ -17,12 +17,10 @@
  *
  */
 using System.Reflection;
-
 using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.PropertyCalc;
-
 using log4net;
 using DOL.AI.Brain;
 using System;
@@ -37,7 +35,7 @@ namespace DOL.GS.Spells
 	public abstract class PropertyChangingSpell : SpellHandler
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
+		
 		/// <summary>
 		/// Execute property changing spell
 		/// </summary>
@@ -47,6 +45,38 @@ namespace DOL.GS.Spells
 			m_caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
 		}
+
+		/// <summary>
+		/// Calculates the effect duration in milliseconds
+		/// </summary>
+		/// <param name="target">The effect target</param>
+		/// <param name="effectiveness">The effect effectiveness</param>
+		/// <returns>The effect duration in milliseconds</returns>
+		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
+		{
+			double duration = Spell.Duration;
+			if (HasPositiveEffect)
+			{	
+				duration *= (1.0 + m_caster.GetModified(eProperty.SpellDuration) * 0.01);
+				if (Spell.InstrumentRequirement != 0)
+				{
+					InventoryItem instrument = Caster.AttackWeapon;
+					if (instrument != null)
+					{
+						duration *= 1.0 + Math.Min(1.0, instrument.Level / (double)Caster.Level); // up to 200% duration for songs
+						duration *= instrument.Condition / (double)instrument.MaxCondition * instrument.Quality / 100;
+					}
+				}
+				if (duration < 1)
+					duration = 1;
+				else if (duration > (Spell.Duration * 4))
+					duration = (Spell.Duration * 4);
+				return (int)duration; 
+			}
+			duration = base.CalculateEffectDuration(target, effectiveness);
+			return (int)duration;
+		}
+
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
 			// vampiir, they cannot be buffed except with resists/armor factor/ haste / power regen

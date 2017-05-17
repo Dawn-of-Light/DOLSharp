@@ -199,7 +199,6 @@ namespace DOL.GS.Commands
 						case "movehere": movehere(client, targetMob, args); break;
 						case "location": location(client, targetMob, args); break;
 						case "remove": remove(client, targetMob, args); break;
-					case "transparent": // deprecated, use "ghost"
 						case "ghost": ghost(client, targetMob, args); break;
 						case "stealth": stealth(client, targetMob, args); break;
 						case "torch": torch(client, targetMob, args); break;
@@ -210,7 +209,6 @@ namespace DOL.GS.Commands
 						case "notarget": notarget(client, targetMob, args); break;
 						case "kill": kill(client, targetMob, args); break;
 						case "flags": flags(client, targetMob, args); break;
-					case "regen":  // deprecated, use "heal"
 						case "heal": heal(client, targetMob, args); break;
 						case "attack": attack(client, targetMob, args); break;
 						case "info": info(client, targetMob, args); break;
@@ -1513,39 +1511,55 @@ namespace DOL.GS.Commands
 		{
 			try
 			{
-				ABrain brain = null;
+				ABrain brains = null;
 				string brainType = args[2];
 
 				try
 				{
 					client.Out.SendDebugMessage(Assembly.GetAssembly(typeof(GameServer)).FullName);
-					brain = (ABrain)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(brainType, false);
+					brains = (ABrain)Assembly.GetAssembly(typeof(GameServer)).CreateInstance(brainType, false);
 				}
 				catch (Exception e)
 				{
 					client.Out.SendMessage(e.ToString(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				}
 
-				if (brain == null)
+				if (brains == null)
 				{
 					try
 					{
 						client.Out.SendDebugMessage(Assembly.GetExecutingAssembly().FullName);
-						brain = (ABrain)Assembly.GetExecutingAssembly().CreateInstance(brainType, false);
+						brains = (ABrain)Assembly.GetExecutingAssembly().CreateInstance(brainType, false);
 					}
 					catch (Exception e)
 					{
 						client.Out.SendMessage(e.ToString(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					}
 				}
-
-				if (brain == null)
+				if (brains == null)
 				{
-					client.Out.SendMessage("There was an error creating an instance of " + brainType + "!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					foreach (Assembly script in ScriptMgr.GameServerScripts)
+					{
+						try
+						{							
+							client.Out.SendDebugMessage(script.FullName);
+							brains = (ABrain)script.CreateInstance(brainType, false);
+							
+							if (brains != null) break;
+						}
+						catch (Exception e)
+						{
+							client.Out.SendMessage(e.ToString(), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						}
+					}
+				}
+				if (brains == null)
+				{
+					client.Out.SendMessage("Could not find brain " + brainType + ". Check spelling and script namespace (case sensitive)", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
 				else
 				{
-					targetMob.SetOwnBrain(brain);
+					targetMob.SetOwnBrain(brains);
 					targetMob.SaveIntoDatabase();
 					client.Out.SendMessage(targetMob.Name + "'s brain set to " + targetMob.Brain.ToString(), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}

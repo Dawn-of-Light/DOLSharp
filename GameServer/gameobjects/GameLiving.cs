@@ -940,7 +940,7 @@ namespace DOL.GS
 
 			if (spell.InstrumentRequirement != 0 ||
 			    line.KeyName == GlobalSpellsLines.Item_Spells ||
-			    line.KeyName.StartsWith(GlobalSpellsLines.Champion_Spells))
+			    line.KeyName.StartsWith(GlobalSpellsLines.Champion_Lines_StartWith))
 			{
 				return ticks;
 			}

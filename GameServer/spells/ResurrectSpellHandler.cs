@@ -123,7 +123,7 @@ namespace DOL.GS.Spells
 					{
 						ResurrectLiving(player); //accepted
 						//VaNaTiC->
-						#warning VaNaTiC: add this in GamePlayer.OnRevive with my RevivedEventArgs
+						//#warning VaNaTiC: add this in GamePlayer.OnRevive with my RevivedEventArgs
 						// Patch 1.56: Resurrection sickness now goes from 100% to 50% when doing a "full rez" on another player. 
 						// We have do to this here, cause we dont have any other chance to get
 						// an object-relation between the casted spell of the rezzer (here) and
@@ -131,9 +131,12 @@ namespace DOL.GS.Spells
 						// -> any better solution -> post :)
 						if ( Spell.ResurrectHealth == 100 )
 						{
-							GameSpellEffect effect = FindEffectOnTarget(player, GlobalSpells.PvERessurectionIllnessSpellType);
+							GameSpellEffect effect = SpellHandler.FindEffectOnTarget(player, GlobalSpells.PvEResurrectionIllnessSpellType);
 				            if ( effect != null )
 				            	effect.Overwrite(new GameSpellEffect(effect.SpellHandler, effect.Duration / 2, effect.PulseFreq));
+							GameSpellEffect effecttwo = SpellHandler.FindEffectOnTarget(player, GlobalSpells.RvRResurrectionIllnessSpellType);
+				            if ( effecttwo != null )
+				            	effecttwo.Overwrite(new GameSpellEffect(effecttwo.SpellHandler, effecttwo.Duration / 2, effecttwo.PulseFreq));
 						}
 						//VaNaTiC<-
 					}

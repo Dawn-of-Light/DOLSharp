@@ -381,6 +381,7 @@
     <Compile Include="gameutils\GamePlayerUtils.cs" />
     <Compile Include="gameutils\LootGeneratorAtlanteanGlass.cs" />
     <Compile Include="gameutils\LootGeneratorAurulite.cs" />
+	<Compile Include="gameutils\LootGeneratorChest.cs" />
     <Compile Include="gameutils\LootGeneratorDragonscales.cs" />
     <Compile Include="gameutils\LosCheckMgr.cs" />
     <Compile Include="gameutils\MarketSearch.cs" />
@@ -2175,6 +2176,7 @@
     <Compile Include="spells\Necromancer\PowerTransfer.cs" />
     <Compile Include="spells\Necromancer\PowerDrain.cs" />
     <Compile Include="spells\NightShade\NightshadeNukeSpellhandler.cs" />
+    <Compile Include="spells\RvRSicknessSpellHandler.cs" />
     <Compile Include="spells\SpellHelpers\SpellHelper.cs" />
     <Compile Include="spells\SpellHelpers\SpellMessagesHelper.cs" />
     <Compile Include="spells\SpellHelpers\StatsSpellHelper.cs" />
@@ -2605,6 +2607,7 @@
     <Compile Include="world\ZonePointEffects.cs" />
     <EmbeddedResource Include="config\logconfig.xml" />
     <EmbeddedResource Include="config\invalidnames.txt" />
+    <EmbeddedResource Include="config\logconfig_unix.xml" />
     <None Include="language\DE\AI.txt" />
     <None Include="language\DE\Atlantis.txt" />
     <None Include="language\DE\Behaviour.txt" />
@@ -2814,10 +2817,6 @@
     <Folder Include="gameutils\KDTree\" />
     <Folder Include="language\DE\Quests\Midgard\" />
     <Folder Include="language\EN\Quests\Midgard\" />
-    <Folder Include="managers" />
-    <Folder Include="managers\worldmanager" />
-    <Folder Include="managers\npcmanager" />
-    <Folder Include="managers\playermanager" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

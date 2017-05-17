@@ -1753,24 +1753,59 @@ namespace DOL.GS
 		}
 		
 		/// <summary>
+		/// Death types ingame
+		/// </summary>
+		public enum eDeathType
+		{
+			PvE,
+			RvR,
+			PvP,
+			None,
+		}
+		
+		/// <summary>
+		/// The current death type
+		/// </summary>
+		protected eDeathType m_deathtype;
+
+		/// <summary>
+		/// Gets the player's current death type.
+		/// </summary>
+		public eDeathType DeathType
+		{
+			get { return m_deathtype; }
+			set { m_deathtype = value; }
+		}
+		/// <summary>
 		/// Called when player revive
 		/// </summary>
 		public virtual void OnRevive(DOLEvent e, object sender, EventArgs args)
 		{
 			GamePlayer player = (GamePlayer)sender;
-			
+						
 			if (player.IsUnderwater && player.CanBreathUnderWater == false)
 				player.Diving(waterBreath.Holding);
-			
+			//We need two different sickness spells because RvR sickness is not curable by Healer NPC -Unty
 			if (player.Level > 5)
+			switch (DeathType)
 			{
-				// get illness after level 5
-				SpellLine Line = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
-				if (Line == null) return;
-				ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(player, GlobalSpells.PvERezIllness, Line);
-				spellHandler.StartSpell(player);
+				case eDeathType.RvR:
+					SpellLine rvrsick = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
+					if (rvrsick == null) return;
+					Spell rvrillness = SkillBase.FindSpell(8181, rvrsick);
+					player.CastSpell(rvrillness, rvrsick);
+					break;
+				case eDeathType.PvP: //PvP sickness is the same as PvE sickness - Curable
+				case eDeathType.PvE:
+					SpellLine pvesick = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
+					if (pvesick == null) return;
+					Spell pveillness = SkillBase.FindSpell(2435, pvesick);
+					player.CastSpell(pveillness, pvesick);
+					break;
 			}
+			
 			GameEventMgr.RemoveHandler(this, GamePlayerEvent.Revive, new DOLEventHandler(OnRevive));
+			m_deathtype = eDeathType.None;
 		}
 
 		/// <summary>
@@ -3574,7 +3609,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override int GetModifiedSpecLevel(string keyName)
 		{
-			if (keyName == GlobalSpellsLines.Champion_Spells)
+			if (keyName.StartsWith(GlobalSpellsLines.Champion_Lines_StartWith))
 				return 50;
 
 			Specialization spec = null;
@@ -7581,10 +7616,29 @@ namespace DOL.GS
 					xpLossPercent = MaxLevel - 40;
 				}
 
-				if (realmDeath)
+				if (realmDeath) //Live PvP servers have 3 con loss on pvp death, can be turned off in server properties -Unty
 				{
-					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Die.DeadRVR"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
-					xpLossPercent = 0;
+					int conpenalty = 0;
+					switch (GameServer.Instance.Configuration.ServerType)
+					{
+						case eGameServerType.GST_Normal:
+								Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Die.DeadRVR"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
+								xpLossPercent = 0;
+								m_deathtype = eDeathType.RvR;
+								break;
+								
+						case eGameServerType.GST_PvP:
+								Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Die.DeadRVR"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
+								xpLossPercent = 0;
+								m_deathtype = eDeathType.PvP;
+								if (ServerProperties.Properties.PVP_DEATH_CON_LOSS)
+								{
+									conpenalty = 3;
+									TempProperties.setProperty(DEATH_CONSTITUTION_LOSS_PROPERTY, conpenalty);
+								}
+								break;
+				 	}
+					 
 				}
 				else if (Level > 5) // under level 5 there is no penalty
 				{
@@ -7603,7 +7657,7 @@ namespace DOL.GS
 					}
 
 					DeathCount++;
-
+					m_deathtype = eDeathType.PvE;
 					long xpLoss = (ExperienceForNextLevel - ExperienceForCurrentLevel) * xpLossPercent / 1000;
 					GainExperience(eXPSource.Other, -xpLoss, 0, 0, 0, false, true);
 					TempProperties.setProperty(DEATH_EXP_LOSS_PROPERTY, xpLoss);
@@ -8227,7 +8281,7 @@ namespace DOL.GS
 
 			if (spell.InstrumentRequirement != 0 ||
 			    line.KeyName == GlobalSpellsLines.Item_Spells ||
-			    line.KeyName.StartsWith(GlobalSpellsLines.Champion_Spells))
+			    line.KeyName.StartsWith(GlobalSpellsLines.Champion_Lines_StartWith))
 			{
 				return ticks;
 			}

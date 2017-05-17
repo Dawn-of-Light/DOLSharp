@@ -27,7 +27,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Pve Resurrection Illness
 	/// </summary>
-	[SpellHandler(GlobalSpells.PvERessurectionIllnessSpellType)]
+	[SpellHandler(GlobalSpells.PvEResurrectionIllnessSpellType)]
 	public class PveResurrectionIllness : AbstractIllnessSpellHandler
 	{
 		/// <summary>
@@ -153,4 +153,5 @@ namespace DOL.GS.Spells
 		public AbstractIllnessSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 	
 	}
+		
 }

@@ -1,0 +1,9 @@
+
+1) drop the php files to your ftp server right next to index.html
+
+2) change onlineStatusUpdate.cs:
+username = "your dol server username"
+password = "your dol server password"
+then change URLENCODE(http://your-website.com/serverinfo.php?action=submit)
+
+3) paste <? include("showplayers.php"); ?> in index.html and save as .php not .html

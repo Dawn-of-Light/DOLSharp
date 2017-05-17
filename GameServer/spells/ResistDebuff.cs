@@ -44,6 +44,26 @@ namespace DOL.GS.Spells
 		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.Debuff; } }
 
 		/// <summary>
+		/// Calculates the effect duration in milliseconds
+		/// </summary>
+		/// <param name="target">The effect target</param>
+		/// <param name="effectiveness">The effect effectiveness</param>
+		/// <returns>The effect duration in milliseconds</returns>
+		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
+		{
+			double duration = Spell.Duration;
+			
+			duration *= (1.0 + m_caster.GetModified(eProperty.SpellDuration) * 0.01);		
+			duration -= duration * target.GetResist(m_spell.DamageType) * 0.01;
+			
+			if (duration < 1)
+				duration = 1;
+			else if (duration > (Spell.Duration * 4))
+				duration = (Spell.Duration * 4);
+			return (int)duration;
+		}
+		
+		/// <summary>
 		/// Apply effect on target or do spell action if non duration spell
 		/// </summary>
 		/// <param name="target">target that gets the effect</param>
@@ -52,18 +72,24 @@ namespace DOL.GS.Spells
 		{
 			//TODO: correct effectiveness formula
 			// invoke direct effect if not resisted for DD w/ debuff spells
-			if(Spell.Level > 0)
-			{
-				int specLevel = 0;
-				if (Caster is GamePlayer)
+            if (Caster is GamePlayer && Spell.Level > 0)
+            {
+                if (((GamePlayer)Caster).CharacterClass.ClassType == eClassType.ListCaster)
 				{
-					specLevel = ((GamePlayer)Caster).GetModifiedSpecLevel(m_spellLine.Spec);
-				}
-				effectiveness = 0.75 + (specLevel-1) * 0.5 / Spell.Level;
-				effectiveness = Math.Max(0.75, effectiveness);
-				effectiveness = Math.Min(1.25, effectiveness);
+					int specLevel = Caster.GetModifiedSpecLevel(m_spellLine.Spec);
+					effectiveness = 0.75;
+                    effectiveness += (specLevel - 1.0) * 0.5 / Spell.Level;
+                    effectiveness = Math.Max(0.75, effectiveness);
+                    effectiveness = Math.Min(1.25, effectiveness);
+                    effectiveness *= (1.0 + m_caster.GetModified(eProperty.BuffEffectiveness) * 0.01);
+                }
+				else
+					{
+						effectiveness = 1.0; 
+						effectiveness *= (1.0 + m_caster.GetModified(eProperty.DebuffEffectivness) * 0.01);
+					}
 			}
-
+			
 			base.ApplyEffectOnTarget(target, effectiveness);
 
 			if (target.Realm == 0 || Caster.Realm == 0)
@@ -85,25 +111,6 @@ namespace DOL.GS.Spells
 			if(Spell.CastTime>0) target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
 		}
 
-		/// <summary>
-		/// Calculates the effect duration in milliseconds
-		/// </summary>
-		/// <param name="target">The effect target</param>
-		/// <param name="effectiveness">The effect effectiveness</param>
-		/// <returns>The effect duration in milliseconds</returns>
-		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
-		{
-			//TODO: duration depends on target resists (maybe body resist for all)
-//			int resist = target.GetResist(m_spell.DamageType);
-			double duration = base.CalculateEffectDuration(target, effectiveness);
-			duration -= duration * target.GetResist(eDamageType.Body) * 0.01;
-
-			if (duration < 1)
-				duration = 1;
-			else if (duration > (Spell.Duration * 4))
-				duration = (Spell.Duration * 4);
-			return (int)duration;
-		}
 		/// <summary>
 		/// Calculates chance of spell getting resisted
 		/// </summary>
