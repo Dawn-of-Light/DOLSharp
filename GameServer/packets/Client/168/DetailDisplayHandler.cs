@@ -731,28 +731,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 						else
 						{
-							//delve on realm abilities [by Suncheck]
+							//delve on realm abilities
 							if (objectID >= 50)
 							{
 								int clientclassID = client.Player.CharacterClass.ID;
 								int sub = 50;
-								List<RealmAbility> ra_list = SkillBase.GetClassRealmAbilities(clientclassID);
-								Ability ra5abil = SkillBase.GetClassRR5Ability(clientclassID);
-								RealmAbility ab = ra_list[objectID - sub];
-								if (ra5abil != null) //check if player have rr
-								{
-									if (client.Player.RealmPoints < 513500) //player have not rr5 abilty
-										sub--;
-								}
-								for (int i = 0; i <= (objectID - sub); i++) //get all ra's at full level
-								{
-									RealmAbility raabil = ra_list[i];
-									RealmAbility playerra = (RealmAbility)client.Player.GetAbility(raabil.KeyName);
-									if (playerra != null)
-										if (playerra.Level >= playerra.MaxLevel)
-											sub--;
-								}
-								ab = ra_list[objectID - sub];
+								var ra_list = SkillBase.GetClassRealmAbilities(clientclassID).Where(ra => !(ra is RR5RealmAbility));
+								
+								RealmAbility ab = ra_list.ElementAtOrDefault((int)(objectID - sub));
+								
 								if (ab != null)
 								{
 									caption = ab.Name;
