@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using DOL.AI.Brain;
 using DOL.Database;
@@ -307,18 +308,18 @@ namespace DOL.GS.Spells
 				Spell baseSpell = null;
 							
 				GameNPC pet = ad.Attacker as GameNPC;
-				ArrayList spell_rec = new ArrayList();
+				var procSpells = new List<Spell>();
 				foreach (Spell spell in pet.Spells)
 				{
 					if (pet.GetSkillDisabledDuration(spell) == 0)
 					{
 						if (spell.SpellType.ToLower() == "offensiveproc")
-							spell_rec.Add(spell);
+							procSpells.Add(spell);
 					}
 				}
-				if (spell_rec.Count > 0)
+				if (procSpells.Count > 0)
 				{
-					baseSpell = (Spell)spell_rec[Util.Random((spell_rec.Count - 1))];					
+					baseSpell = procSpells[Util.Random((procSpells.Count - 1))];					
 				}
 				m_procSpell = SkillBase.GetSpellByID((int)baseSpell.Value);
 			}
