@@ -301,7 +301,28 @@ namespace DOL.GS.Spells
 
 			if (baseChance < 1)
 				baseChance = 1;
-
+			
+			if (ad.Attacker == ad.Attacker as GameNPC)
+			{
+				Spell baseSpell = null;
+							
+				GameNPC pet = ad.Attacker as GameNPC;
+				ArrayList spell_rec = new ArrayList();
+				foreach (Spell spell in pet.Spells)
+				{
+					if (pet.GetSkillDisabledDuration(spell) == 0)
+					{
+						if (spell.SpellType.ToLower() == "offensiveproc")
+							spell_rec.Add(spell);
+					}
+				}
+				if (spell_rec.Count > 0)
+				{
+					baseSpell = (Spell)spell_rec[Util.Random((spell_rec.Count - 1))];					
+				}
+				m_procSpell = SkillBase.GetSpellByID((int)baseSpell.Value);
+			}
+			
 			if (Util.Chance(baseChance))
 			{
 				ISpellHandler handler = ScriptMgr.CreateSpellHandler((GameLiving)sender, m_procSpell, m_procSpellLine);

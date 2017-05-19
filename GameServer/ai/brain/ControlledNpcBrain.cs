@@ -95,6 +95,7 @@ namespace DOL.AI.Brain
 		}
 
 		protected bool m_isMainPet = true;
+		private bool checkAbility;
 
 		/// <summary>
 		/// Checks if this NPC is a permanent/charmed or timed pet
@@ -388,11 +389,18 @@ namespace DOL.AI.Brain
 			if (!playerowner.Client.GameObjectUpdateArray.TryGetValue(new Tuple<ushort, ushort>(Body.CurrentRegionID, (ushort)Body.ObjectID), out lastUpdate))
 				lastUpdate = 0;
 			
+			// Load abilities on first Think cycle.
+			if (!checkAbility)
+			{
+				CheckAbilities();
+				checkAbility = true;
+			}
+			
 			if (playerowner != null && (GameTimer.GetTickCount() - lastUpdate) > ThinkInterval)
 			{
 				playerowner.Out.SendObjectUpdate(Body);
 			}
-
+			
 			//See if the pet is too far away, if so release it!
 			if (Owner is GamePlayer && IsMainPet)
 			{
@@ -517,7 +525,7 @@ namespace DOL.AI.Brain
 				}
 			}
 
-			if (!Body.AttackState && Owner != null)
+			if (!Body.AttackState && WalkState == eWalkState.Follow && Owner != null)
 			{
 				Follow(Owner);
 			}
@@ -866,7 +874,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected override void AttackMostWanted()
 		{
-			if (!IsActive) return;
+			if (!IsActive || m_aggressionState == eAggressionState.Passive) return;
 
             GameNPC owner_npc = GetNPCOwner();
             if (owner_npc != null && owner_npc.Brain is StandardMobBrain)
