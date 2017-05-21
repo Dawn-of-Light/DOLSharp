@@ -51,7 +51,7 @@ namespace DOL.GS.RealmAbilities
 						heal = 250;
 						break;					
 					case 4:
-						heal = 625;
+						heal = 325;
 						break;					
 					case 5:
 						heal = 400;

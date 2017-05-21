@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using DOL.AI.Brain;
 using DOL.Database;
@@ -85,6 +86,19 @@ namespace DOL.GS.Spells
 		{
 			m_caster.Mana -= PowerCost(target);
 			base.FinishSpellCast(target);
+		}
+
+		/// <summary>
+		/// Calculates the effect duration in milliseconds
+		/// </summary>
+		/// <param name="target">The effect target</param>
+		/// <param name="effectiveness">The effect effectiveness</param>
+		/// <returns>The effect duration in milliseconds</returns>
+		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
+		{
+			double duration = Spell.Duration;
+			duration *= (1.0 + m_caster.GetModified(eProperty.SpellDuration) * 0.01);
+			return (int)duration;
 		}
 
 		/// <summary>
@@ -288,7 +302,28 @@ namespace DOL.GS.Spells
 
 			if (baseChance < 1)
 				baseChance = 1;
-
+			
+			if (ad.Attacker == ad.Attacker as GameNPC)
+			{
+				Spell baseSpell = null;
+							
+				GameNPC pet = ad.Attacker as GameNPC;
+				var procSpells = new List<Spell>();
+				foreach (Spell spell in pet.Spells)
+				{
+					if (pet.GetSkillDisabledDuration(spell) == 0)
+					{
+						if (spell.SpellType.ToLower() == "offensiveproc")
+							procSpells.Add(spell);
+					}
+				}
+				if (procSpells.Count > 0)
+				{
+					baseSpell = procSpells[Util.Random((procSpells.Count - 1))];					
+				}
+				m_procSpell = SkillBase.GetSpellByID((int)baseSpell.Value);
+			}
+			
 			if (Util.Chance(baseChance))
 			{
 				ISpellHandler handler = ScriptMgr.CreateSpellHandler((GameLiving)sender, m_procSpell, m_procSpellLine);
