@@ -487,6 +487,8 @@ namespace DOL.AI.Brain
 		
 		public override bool CheckSpells(eCheckSpellType type)
 		{
+			// Dummy comment
+			
 			if (Body == null || Body.Spells == null || Body.Spells.Count < 1)
 				return false;
 			
