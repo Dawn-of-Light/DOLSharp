@@ -4133,7 +4133,7 @@ namespace DOL.GS
 				
 				string realm = string.Empty;
 				if (Realm == eRealm.Albion)
-					realm = "Ablion";
+					realm = "Albion";
 				else if (Realm == eRealm.Midgard)
 					realm = "Midgard";
 				else
@@ -4168,7 +4168,7 @@ namespace DOL.GS
 
 				try
 				{
-					return GlobalConstants.REALM_RANK_NAMES[(int)Realm - 1, (int)Gender, (RealmLevel / 10)];
+					return GlobalConstants.REALM_RANK_NAMES[(int)Realm - 1, (int)Gender - 1, (RealmLevel / 10)];
 				}
 				catch
 				{
