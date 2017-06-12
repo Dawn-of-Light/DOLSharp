@@ -533,7 +533,7 @@ namespace DOL.GS.Quests
 			}
 			else if (player.TempProperties.getProperty<int>(CHECK_TASK_TICK) > Environment.TickCount)
 			{
-				player.Out.SendMessage("I have no tasks for you at the moment. Come back sometime later, perhaps then you can help we with something.",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+				player.Out.SendMessage("I have no tasks for you at the moment. Come back sometime later, perhaps then you can help me with something.",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 				return false;
 			}
 			else if (Util.Chance(chanceOfSuccess))
@@ -542,7 +542,7 @@ namespace DOL.GS.Quests
 			}
 			else
 			{
-				player.Out.SendMessage("I have no tasks for you at the moment. Come back sometime later, perhaps then you can help we with something.",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+				player.Out.SendMessage("I have no tasks for you at the moment. Come back sometime later, perhaps then you can help me with something.",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 				// stored time of try to disable task for defined time.
 				player.TempProperties.setProperty(CHECK_TASK_TICK, Environment.TickCount + CHECK_TASK_DELAY);
 				return false;
