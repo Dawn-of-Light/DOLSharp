@@ -23,64 +23,72 @@ using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
-	/// <summary>
-	/// Handler for Stealth Spec clicks
-	/// </summary>
-	[SkillHandlerAttribute(Abilities.Camouflage)]
-	public class CamouflageSpecHandler : IAbilityActionHandler
-	{
-		public const int DISABLE_DURATION = 420000;
+    /// <summary>
+    /// Handler for Stealth Spec clicks
+    /// </summary>
+    [SkillHandlerAttribute(Abilities.Camouflage)]
+    public class CamouflageSpecHandler : IAbilityActionHandler
+    {
+        public const int DISABLE_DURATION = 420000;
 
-		/// <summary>
-		/// Executes the stealth ability
-		/// </summary>
-		/// <param name="ab"></param>
-		/// <param name="player"></param>
-		public void Execute(Ability ab, GamePlayer player)
-		{
+        /// <summary>
+        /// Executes the stealth ability
+        /// </summary>
+        /// <param name="ab"></param>
+        /// <param name="player"></param>
+        public void Execute(Ability ab, GamePlayer player)
+        {
 
-			#region Check
+            #region Check
 
-			if (!player.IsStealthed)
-			{
-				if (player.IsMezzed)
-				{
+            if (!player.IsStealthed)
+            {
+                if (player.IsMezzed)
+                {
                     player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.CannotUse.Camouflage.Mezzed"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     return;
-				}
+                }
 
-				if (player.IsStunned)
-				{
+                if (player.IsStunned)
+                {
                     player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.CannotUse.Camouflage.Stunned"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     return;
-				}
+                }
 
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.CannotUse.Camouflage.NotStealthed"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
-			}
-			if (!player.IsAlive)
-			{
+            }
+            if (!player.IsAlive)
+            {
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.CannotUse.Camouflage.Dead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
-			}
+            }
 
-			#endregion
+            #endregion
 
-			CamouflageEffect camouflage = player.EffectList.GetOfType<CamouflageEffect>();
-			if (camouflage != null)
-			{
-				camouflage.Cancel(false);
-				return;
-			}
-			long changeTime = player.CurrentRegion.Time - player.LastAttackTickPvP;
-			if (player.CurrentRegion.IsRvR && changeTime < DISABLE_DURATION)
-			{
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.CannotUse.Camouflage.DisableDuration", ((DISABLE_DURATION - changeTime) / 1000)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            CamouflageEffect camouflage = player.EffectList.GetOfType<CamouflageEffect>();
+            if (camouflage != null)
+            {
+                camouflage.Cancel(false);
                 return;
-			}
-			player.DisableSkill(ab, DISABLE_DURATION);
-			new CamouflageEffect().Start(player);
-		}
+            }
+            long changeTime = player.CurrentRegion.Time - player.LastAttackTickPvP;
+            if (player.CurrentRegion.IsRvR && changeTime < DISABLE_DURATION)
+            {
+                player.Out.SendMessage(
+                    LanguageMgr.GetTranslation(player.Client.Account.Language,
+                        "Skill.Ability.CannotUse.Camouflage.DisableDuration", ((DISABLE_DURATION - changeTime) / 1000)),
+                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+            if (!player.CurrentRegion.IsRvR)
+            {
+                new CamouflageEffect().Start(player);
+                return;
+            }
+            player.DisableSkill(ab, DISABLE_DURATION);
+            new CamouflageEffect().Start(player);
+        }
 
-	}
+    }
 }
