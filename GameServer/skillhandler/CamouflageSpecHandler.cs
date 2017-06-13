@@ -19,6 +19,7 @@
 using System;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
+using DOL.GS.ServerRules;
 using DOL.Language;
 
 namespace DOL.GS.SkillHandler
@@ -45,24 +46,39 @@ namespace DOL.GS.SkillHandler
             {
                 if (player.IsMezzed)
                 {
-                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.CannotUse.Camouflage.Mezzed"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(
+                        LanguageMgr.GetTranslation(player.Client.Account.Language,
+                            "Skill.Ability.CannotUse.Camouflage.Mezzed"), eChatType.CT_System,
+                        eChatLoc.CL_SystemWindow);
                     return;
                 }
 
                 if (player.IsStunned)
                 {
-                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.CannotUse.Camouflage.Stunned"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage(
+                        LanguageMgr.GetTranslation(player.Client.Account.Language,
+                            "Skill.Ability.CannotUse.Camouflage.Stunned"), eChatType.CT_System,
+                        eChatLoc.CL_SystemWindow);
                     return;
                 }
 
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.CannotUse.Camouflage.NotStealthed"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(
+                    LanguageMgr.GetTranslation(player.Client.Account.Language,
+                        "Skill.Ability.CannotUse.Camouflage.NotStealthed"), eChatType.CT_System,
+                    eChatLoc.CL_SystemWindow);
                 return;
             }
+
+
+
             if (!player.IsAlive)
             {
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.CannotUse.Camouflage.Dead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(
+                    LanguageMgr.GetTranslation(player.Client.Account.Language,
+                        "Skill.Ability.CannotUse.Camouflage.Dead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
+
 
             #endregion
 
@@ -72,7 +88,13 @@ namespace DOL.GS.SkillHandler
                 camouflage.Cancel(false);
                 return;
             }
+
+
+
             long changeTime = player.CurrentRegion.Time - player.LastAttackTickPvP;
+
+
+
             if (player.CurrentRegion.IsRvR && changeTime < DISABLE_DURATION)
             {
                 player.Out.SendMessage(
@@ -81,9 +103,20 @@ namespace DOL.GS.SkillHandler
                     eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
-            if (!player.CurrentRegion.IsRvR)
+           
+            if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP && changeTime < DISABLE_DURATION)
             {
-                new CamouflageEffect().Start(player);
+                player.Out.SendMessage(
+                    LanguageMgr.GetTranslation(player.Client.Account.Language,
+                        "Skill.Ability.CannotUse.Camouflage.DisableDuration", ((DISABLE_DURATION - changeTime) / 1000)),
+                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            if (!player.CurrentRegion.IsRvR && GameServer.Instance.Configuration.ServerType  != eGameServerType.GST_PvP)
+            {
+                
+               new CamouflageEffect().Start(player);
                 return;
             }
             player.DisableSkill(ab, DISABLE_DURATION);
@@ -92,3 +125,6 @@ namespace DOL.GS.SkillHandler
 
     }
 }
+
+
+
