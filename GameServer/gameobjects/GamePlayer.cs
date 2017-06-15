@@ -6307,15 +6307,22 @@ namespace DOL.GS
 					{
 						(weapon as GameInventoryItem).OnStrikeTarget(this, target);
 					}
-					//Camouflage
-					if (target is GamePlayer && HasAbility(Abilities.Camouflage))
+					//Camouflage - Camouflage will be disabled only when attacking a GamePlayer or ControlledNPC of a GamePlayer.
+					if (HasAbility(Abilities.Camouflage) && target is GamePlayer || (target is GameNPC && (target as GameNPC).Brain is IControlledBrain && ((target as GameNPC).Brain as IControlledBrain).GetPlayerOwner() != null))
 					{
 						CamouflageEffect camouflage = EffectList.GetOfType<CamouflageEffect>();
-						if (camouflage != null)
+												
+						if (camouflage != null) // Check if Camo is active, cancel ability and put on disable timer.
 						{
 							DisableSkill(SkillBase.GetAbility(Abilities.Camouflage), CamouflageSpecHandler.DISABLE_DURATION);
 							camouflage.Cancel(false);
 						}
+						
+						Skill camo = SkillBase.GetAbility(Abilities.Camouflage);
+						int camoDisable = GetSkillDisabledDuration(camo);
+						
+						if (camoDisable <= 0) // If camo is not active and not on disable timer, disable it.
+							DisableSkill(camo, CamouflageSpecHandler.DISABLE_DURATION);
 					}
 
 					// Multiple Hit check
