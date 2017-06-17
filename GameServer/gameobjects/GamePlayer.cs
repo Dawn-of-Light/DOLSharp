@@ -6312,16 +6312,13 @@ namespace DOL.GS
 					{
 						CamouflageEffect camouflage = EffectList.GetOfType<CamouflageEffect>();
 												
-						if (camouflage != null) // Check if Camo is active, cancel ability and put on disable timer.
-						{
-							DisableSkill(SkillBase.GetAbility(Abilities.Camouflage), CamouflageSpecHandler.DISABLE_DURATION);
-							camouflage.Cancel(false);
-						}
+						if (camouflage != null)// Check if Camo is active, if true, cancel ability.
+							camouflage.Cancel(false);						
 						
 						Skill camo = SkillBase.GetAbility(Abilities.Camouflage);
 						int camoDisable = GetSkillDisabledDuration(camo);
 						
-						if (camoDisable <= 0) // If camo is not active and not on disable timer, disable it.
+						if (camoDisable <= 0)// If camo was active or ability is not disabled, disable it.
 							DisableSkill(camo, CamouflageSpecHandler.DISABLE_DURATION);
 					}
 
