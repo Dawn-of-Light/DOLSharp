@@ -2116,6 +2116,7 @@ namespace DOL.GS
 			mob.Heading = Heading;
 			mob.Speed = MaxSpeedBase;
 			mob.Region = CurrentRegionID;
+			mob.Zone = CurrentZone.Description;
 			mob.Realm = (byte)Realm;
 			mob.Model = Model;
 			mob.Size = Size;
