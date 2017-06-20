@@ -34,6 +34,7 @@ namespace DOL.GS.Commands
 		"/mobzoneinfo load <from> <to>",
 		"<from> and <to> must be the regionID numbers you wish to export",
 		"This is done as a range, non-inclusive of <to> number.",
+		"Currently the highest regionID is 499, so <to> should not exceed 500",
 		"Example: /mobzoneinfo load 1 100 will export zone data of all of region 1 through to 99"
 		)]
 	public class MobzoneinfoCommandHandler : AbstractCommandHandler, ICommandHandler
@@ -45,7 +46,7 @@ namespace DOL.GS.Commands
 		
 		public void OnCommand(GameClient client, string[] args)
 		{
-			if (args.Length < 4)
+			if (args.Length < 4 || !(args[1].ToLower().Equals("load")))
 			{
 				DisplaySyntax(client);
 				return;
