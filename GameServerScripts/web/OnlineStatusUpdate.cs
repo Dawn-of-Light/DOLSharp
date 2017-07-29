@@ -95,8 +95,11 @@ namespace DOL.GS.GameEvents
 		[ScriptLoadedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		{
-			Init();
-		}
+		    if (ServerProperties.Properties.USE_SERVER_LIST_UPDATE_INTEGRATED.Equals(true))
+		    {
+		        Init();
+		    }
+        }
 		
 		/// <summary>
 		/// This method is called when the scripts are unloaded. 
