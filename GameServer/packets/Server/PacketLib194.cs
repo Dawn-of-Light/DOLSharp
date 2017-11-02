@@ -117,9 +117,9 @@ namespace DOL.GS.PacketHandler
 	
 					pak.WritePascalString(String.Format("{0}\r", t));
 				}
-				pak.WriteInt((uint)(0));
-				pak.WriteByte((byte)0);
-				pak.WriteByte((byte)quest.FinalRewards.Count);
+                pak.WriteInt((uint)(quest.MoneyReward()));
+                pak.WriteByte((byte)quest.ExperiencePercent(player));
+                pak.WriteByte((byte)quest.FinalRewards.Count);
 				foreach (ItemTemplate reward in quest.FinalRewards)
 				{
 					WriteItemData(pak, GameInventoryItem.Create(reward));
