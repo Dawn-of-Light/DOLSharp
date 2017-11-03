@@ -17,10 +17,13 @@
  *
  */
 using System;
-
+using System.Reflection;
 using DOL.GS;
+using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
 using DOL.Database;
+using DOL.Language;
+using log4net;
 
 namespace DOL.GS
 {
@@ -52,8 +55,8 @@ namespace DOL.GS
 				if (player == null)
 					return loot;			
 			
-				
-				ItemTemplate atlanteanGlass = new ItemTemplate(m_atlanteanglass);
+				ItemTemplate atlanteanGlass = GameServer.Database.FindObjectByKey<ItemTemplate>(m_atlanteanglass.Id_nb);
+				// ItemTemplate atlanteanGlass = new ItemTemplate(m_atlanteanglass);  Creating a new ItemTemplate throws an exception later
 
 				int killedcon = (int)player.GetConLevel(mob)+3;
 				
@@ -109,10 +112,7 @@ namespace DOL.GS
 				}
 				
 				if(maxcount > 0 && Util.Chance(ServerProperties.Properties.LOOTGENERATOR_ATLANTEANGLASS_BASE_CHANCE+Math.Max(10, killedcon)))
-				{
 					loot.AddFixed(atlanteanGlass, maxcount);
-				}
-					
 			}
 			catch
 			{

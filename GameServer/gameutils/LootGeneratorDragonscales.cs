@@ -17,10 +17,13 @@
  *
  */
 using System;
-
+using System.Reflection;
+using DOL.GS.PacketHandler;
 using DOL.GS;
 using DOL.AI.Brain;
 using DOL.Database;
+using DOL.Language;
+using log4net;
 
 namespace DOL.GS
 {
@@ -52,7 +55,8 @@ namespace DOL.GS
 					return loot;			
 			
 				
-				ItemTemplate dragonscales = new ItemTemplate(m_dragonscales);
+				// ItemTemplate dragonscales = new ItemTemplate(m_dragonscales); Creating a new ItemTemplate throws an exception later
+				ItemTemplate dragonscales = GameServer.Database.FindObjectByKey<ItemTemplate>(m_dragonscales.Id_nb);
 
 				int killedcon = (int)player.GetConLevel(mob)+3;
 				
