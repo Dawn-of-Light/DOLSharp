@@ -319,7 +319,7 @@
     <Compile Include="ObjectDatabase.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UniqueID\IDGenerator.cs">
+    <Compile Include="UniqueID\IdGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
