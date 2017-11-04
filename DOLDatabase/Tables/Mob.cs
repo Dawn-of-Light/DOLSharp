@@ -44,6 +44,7 @@ namespace DOL.Database
 		private int m_speed;
 		private ushort m_heading;
 		private ushort m_region;
+		private string m_zone;
 		private ushort m_model;
 		private byte m_size;
 		private byte m_level;
@@ -330,7 +331,24 @@ namespace DOL.Database
 				m_region = value;
 			}
 		}
-
+		
+		/// <summary>
+		/// The Mob's Zone Name
+		/// </summary>
+		[DataElement(AllowDbNull = true)]
+		public string Zone
+		{
+			get
+			{
+				return m_zone;
+			}
+			set
+			{
+				this.m_zone = value;
+				this.Dirty = true;
+			}
+		}
+		
 		/// <summary>
 		/// The Mob's Model
 		/// </summary>
