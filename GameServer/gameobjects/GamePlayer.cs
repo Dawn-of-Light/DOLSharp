@@ -671,12 +671,7 @@ namespace DOL.GS
 			if (Client.Account.PrivLevel > 1) // GMs can always insta quit
 				bInstaQuit = true;
 			else if (Client.Player.InCombat == false)  // Players can only insta quit if they aren't in combat
-			{
-				ServerProperty spInstaQuit = GameServer.Database.FindObjectByKey<ServerProperty>("remove quit timer");
-
-				if (spInstaQuit != null)
-					bInstaQuit = spInstaQuit.Value.ToLower() == "true";
-			}
+				bInstaQuit = ServerProperties.Properties.REMOVE_QUIT_TIMER;
 
 			if (bInstaQuit == false)
 			{
