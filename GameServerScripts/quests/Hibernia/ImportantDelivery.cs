@@ -78,10 +78,10 @@ namespace DOL.GS.Quests.Hibernia
 
 		private static GameNPC addrir = null;
 
-		private static GameNPC rumdor = null;
+		private static GameStableMaster rumdor = null;
 		private static GameNPC aethic = null;
-		private static GameNPC truichon = null;
-		private static GameNPC freagus = null;
+		private static GameStableMaster truichon = null;
+		private static GameStableMaster freagus = null;
 
 		private static ItemTemplate ticketToTirnamBeo = null;
 		private static ItemTemplate ticketToArdee = null;
@@ -147,6 +147,7 @@ namespace DOL.GS.Quests.Hibernia
 			addrir = GetAddrir();
 
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Aethic", eRealm.Hibernia);
+			
 			if (npcs.Length == 0)
 			{
 				aethic = new GameNPC();
@@ -172,7 +173,7 @@ namespace DOL.GS.Quests.Hibernia
 				aethic.AddToWorld();
 			}
 			else
-				aethic = npcs[0] as GameStableMaster;
+				aethic = npcs[0];
 
 			npcs = WorldMgr.GetNPCsByName("Freagus", eRealm.Hibernia);
 			if (npcs.Length == 0)
@@ -201,7 +202,7 @@ namespace DOL.GS.Quests.Hibernia
 				freagus.AddToWorld();
 			}
 			else
-				freagus = npcs[0];
+				freagus = npcs[0] as GameStableMaster;
 
 			npcs = WorldMgr.GetNPCsByName("Rumdor", eRealm.Hibernia);
 			if (npcs.Length == 0)
@@ -393,7 +394,7 @@ namespace DOL.GS.Quests.Hibernia
 			GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
 			GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
-			//We want to be notified whenever a player enters the world            
+			//We want to be notified whenever a player enters the world
 			GameEventMgr.AddHandler(addrir, GameLivingEvent.Interact, new DOLEventHandler(TalkToAddrir));
 			GameEventMgr.AddHandler(addrir, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToAddrir));
 
@@ -430,7 +431,6 @@ namespace DOL.GS.Quests.Hibernia
 			/* Removing hooks works just as adding them but instead of 
 			 * AddHandler, we call RemoveHandler, the parameters stay the same
 			 */
-
 			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
 			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
