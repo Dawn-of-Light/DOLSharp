@@ -150,7 +150,7 @@ namespace DOL.GS.Quests.Hibernia
 			
 			if (npcs.Length == 0)
 			{
-				aethic = new GameStableMaster();
+				aethic = new GameNPC();
 				aethic.Model = 361;
 				aethic.Name = "Aethic";
 				if (log.IsWarnEnabled)
