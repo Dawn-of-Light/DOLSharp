@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.Text;
 using DOL.Database;
 using DOL.Events;
-using log4net;
 using System.Reflection;
 using System.Collections;
 using DOL.AI.Brain;
