@@ -17,8 +17,8 @@
  *
  */
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using DOL.Database;
 
 namespace DOL.GS.PacketHandler
