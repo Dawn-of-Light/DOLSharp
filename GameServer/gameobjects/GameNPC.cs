@@ -1920,11 +1920,10 @@ namespace DOL.GS
 			m_loadedFromScript = false;
 			Mob dbMob = (Mob)obj;
 			INpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(dbMob.NPCTemplateID);
-			
+
 			if (npcTemplate != null && !npcTemplate.ReplaceMobValues)
-			{
 				LoadTemplate(npcTemplate);
-			}
+
 
 			TranslationId = dbMob.TranslationId;
 			Name = dbMob.Name;
@@ -1954,6 +1953,25 @@ namespace DOL.GS
 			Piety = (short)dbMob.Piety;
 			Charisma = (short)dbMob.Charisma;
 			Empathy = (short)dbMob.Empathy;
+
+			// Since AutoSetStats now checks original stats via m_template, make sure there is one.
+			if (m_template == null)
+				m_template = npcTemplate;
+			else
+			{
+				NpcTemplate tmpNew = new NpcTemplate();
+				tmpNew.Strength = Strength;
+				tmpNew.Constitution = Constitution;
+				tmpNew.Dexterity = Dexterity;
+				tmpNew.Quickness = Quickness;
+				tmpNew.Empathy = Empathy;
+				tmpNew.Intelligence = Intelligence;
+				tmpNew.Charisma = Charisma;
+
+				m_template = tmpNew; // Save the original values for 
+			}
+
+			this.AutoSetStats();
 
 			MeleeDamageType = (eDamageType)dbMob.MeleeDamageType;
 			if (MeleeDamageType == 0)
@@ -2196,6 +2214,9 @@ namespace DOL.GS
 			if (template == null)
 				return;
 
+			// Save the template for later
+			m_template = template;
+
 			var m_templatedInventory = new List<string>();
 			this.TranslationId = template.TranslationId;
 			this.Name = template.Name;
@@ -2243,21 +2264,7 @@ namespace DOL.GS
 
 			#region Stats
 			// Stats
-			if (template.Strength==0)
-			{
-				this.AutoSetStats();
-			}
-			else
-			{
-				this.Constitution = (short)template.Constitution;
-				this.Dexterity = (short)template.Dexterity;
-				this.Strength = (short)template.Strength;
-				this.Quickness = (short)template.Quickness;
-				this.Intelligence = (short)template.Intelligence;
-				this.Piety = (short)template.Piety;
-				this.Empathy = (short)template.Empathy;
-				this.Charisma = (short)template.Charisma;
-			}
+			this.AutoSetStats();
 			#endregion
 
 			#region Misc Stats
@@ -5351,6 +5358,8 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Constructs a NPC
+		/// NOTE: Most npcs are generated as GameLiving objects and then used as GameNPCs when needed.
+		/// 	As a result, this constructor is rarely called.
 		/// </summary>
 		public GameNPC()
 			: base()
@@ -5408,6 +5417,8 @@ namespace DOL.GS
 
 		/// <summary>
 		/// create npc from template
+		/// NOTE: Most npcs are generated as GameLiving objects and then used as GameNPCs when needed.
+		/// 	As a result, this constructor is rarely called.
 		/// </summary>
 		/// <param name="template">template of generator</param>
 		public GameNPC(INpcTemplate template)
@@ -5416,7 +5427,7 @@ namespace DOL.GS
 			if (template == null) return;
 
 			// save the original template so we can do calculations off the original values
-			m_template = template;
+			// m_template = template; Not needed, LoadTemplate() does this already.
 
 			LoadTemplate(template);
 		}
