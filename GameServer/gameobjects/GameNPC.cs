@@ -222,13 +222,13 @@ namespace DOL.GS
 			// Values changed by Argo, based on Tolakrams Advice for how to change the Multiplier for Auto
 			// Modified to only change stats that aren't set in the DB
 			if (m_template != null && m_template.Strength == 0)
-				Strength = (short)(Properties.MOB_AUTOSET_STR_BASE + Level * 10 * Properties.MOB_AUTOSET_STR_MULTIPLIER);
+				Strength = (short)(Properties.MOB_AUTOSET_STR_BASE + (Level-1) * 10 * Properties.MOB_AUTOSET_STR_MULTIPLIER);
 			if (m_template != null && m_template.Constitution == 0)
-				Constitution = (short)(Properties.MOB_AUTOSET_CON_BASE + Level * Properties.MOB_AUTOSET_CON_MULTIPLIER);
+				Constitution = (short)(Properties.MOB_AUTOSET_CON_BASE + (Level-1) * Properties.MOB_AUTOSET_CON_MULTIPLIER);
 			if (m_template != null && m_template.Quickness == 0)
-				Quickness = (short)(Properties.MOB_AUTOSET_QUI_BASE + Level * Properties.MOB_AUTOSET_QUI_MULTIPLIER);
+				Quickness = (short)(Properties.MOB_AUTOSET_QUI_BASE + (Level-1) * Properties.MOB_AUTOSET_QUI_MULTIPLIER);
 			if (m_template != null && m_template.Dexterity == 0)
-				Dexterity = (short)(Properties.MOB_AUTOSET_DEX_BASE + Level * Properties.MOB_AUTOSET_DEX_MULTIPLIER);
+				Dexterity = (short)(Properties.MOB_AUTOSET_DEX_BASE + (Level-1) * Properties.MOB_AUTOSET_DEX_MULTIPLIER);
 			
 			if (m_template != null && m_template.Intelligence == 0)
 				Intelligence = (short)(30);
@@ -1969,7 +1969,7 @@ namespace DOL.GS
 				tmpNew.Intelligence = Intelligence;
 				tmpNew.Charisma = Charisma;
 
-				m_template = tmpNew; // Save the original values for 
+				m_template = tmpNew;
 			}
 
 			this.AutoSetStats();
