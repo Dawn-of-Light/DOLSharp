@@ -1921,9 +1921,10 @@ namespace DOL.GS
 			Mob dbMob = (Mob)obj;
 			INpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(dbMob.NPCTemplateID);
 
+			/* This is already being called at the very bottom.  Why are we doing it twice?
 			if (npcTemplate != null && !npcTemplate.ReplaceMobValues)
 				LoadTemplate(npcTemplate);
-
+			*/
 
 			TranslationId = dbMob.TranslationId;
 			Name = dbMob.Name;
