@@ -2547,7 +2547,7 @@ namespace DOL.GS
 			 * Strength affects the amount of damage done by spells in all of the Vampiir's spell lines.
 			 * The amount of said affecting was recently increased slightly (fixing a bug), and that minor increase will go live in 1.74 next week.
 			 * 
-			 * Strength ALSO affects the size of the power pool for a Vampiir… sort of.
+			 * Strength ALSO affects the size of the power pool for a VampiirÂ… sort of.
 			 * Your INNATE strength (the number of attribute points your character has for strength) has no effect at all.
 			 * Extra points added through ITEMS, however, does increase the size of your power pool.
 
@@ -14347,7 +14347,12 @@ namespace DOL.GS
 		public virtual bool StartInvulnerabilityTimer(int duration, InvulnerabilityExpiredCallback callback)
 		{
 			if (duration < 1)
-				throw new ArgumentOutOfRangeException("duration", duration, "Immunity duration cannot be less than 1ms");
+            		{
+                		//throw new ArgumentOutOfRangeException("duration", duration, "Immunity duration cannot be less than 1ms"); This causes problems down the road, just log it instead.
+                		if (log.IsWarnEnabled)
+                    			log.Warn("GamePlayer.StartInvulnerabilityTimer(): Immunity duration cannot be less than 1ms");
+                		return false;
+            		}
 
 			long newTick = CurrentRegion.Time + duration;
 			if (newTick < m_invulnerabilityTick)
