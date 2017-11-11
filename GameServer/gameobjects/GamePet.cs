@@ -255,6 +255,7 @@ namespace DOL.GS
 				{
 						case eWeaponDamageType.Crush: return eDamageType.Crush;
 						case eWeaponDamageType.Slash: return eDamageType.Slash;
+						case eWeaponDamageType.Thrust: return eDamageType.Thrust;
 				}
 			}
 
