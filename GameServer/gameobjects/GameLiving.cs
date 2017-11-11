@@ -44,7 +44,7 @@ namespace DOL.GS
 	/// </summary>
 	public abstract class GameLiving : GameObject
 	{
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		#region Combat
 		/// <summary>
@@ -863,7 +863,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual double AttackDamage(InventoryItem weapon)
 		{
-			double effectiveness = 1.00;
+			double effectiveness = Effectiveness;
 			double damage = (1.0 + Level / 3.7 + Level * Level / 175.0) * AttackSpeed(weapon) * 0.001;
 			if (weapon == null || weapon.Item_Type == Slot.RIGHTHAND || weapon.Item_Type == Slot.LEFTHAND || weapon.Item_Type == Slot.TWOHAND)
 			{
@@ -2335,7 +2335,7 @@ namespace DOL.GS
 				}
 
 				// Store all datas which must not change during the attack
-				double effectiveness = 1.0;
+				double effectiveness = owner.Effectiveness;
 				int ticksToTarget = 1;
 				int interruptDuration = 0;
 				int leftHandSwingCount = 0;
@@ -2373,17 +2373,17 @@ namespace DOL.GS
 					{
 						case eRangedAttackType.Critical:
 							{
-								effectiveness = 2 - 0.3 * owner.GetConLevel(attackTarget);
+								effectiveness *= 2 - 0.3 * owner.GetConLevel(attackTarget);
 								if (effectiveness > 2)
-									effectiveness = 2;
+									effectiveness *= 2;
 								else if (effectiveness < 1.1)
-									effectiveness = 1.1;
+									effectiveness *= 1.1;
 							}
 							break;
 
 						case eRangedAttackType.SureShot:
 							{
-								effectiveness = 0.5;
+								effectiveness *= 0.5;
 							}
 							break;
 
@@ -2403,7 +2403,7 @@ namespace DOL.GS
 								long elapsedTime = owner.CurrentRegion.Time - owner.TempProperties.getProperty<long>(GamePlayer.RANGE_ATTACK_HOLD_START); // elapsed time before ready to fire
 								if (elapsedTime < rapidFireMaxDuration)
 								{
-									effectiveness = 0.5 + (double)elapsedTime * 0.5 / (double)rapidFireMaxDuration;
+									effectiveness *= 0.5 + (double)elapsedTime * 0.5 / (double)rapidFireMaxDuration;
 									interruptDuration = (int)(interruptDuration * effectiveness);
 								}
 							}
@@ -6663,73 +6663,6 @@ namespace DOL.GS
 			{
 				m_runningSpellHandler = spellhandler;
 				spellhandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
-
-				// Scale value and damage by pet level
-				if (this is GamePet && ServerProperties.Properties.SCALE_PET_SPELLS)
-				{
-					double dValue = 0;
-					double dDamage = 0;
-
-					switch (spellhandler.Spell.SpellType.ToLower())
-					{
-						case "damageovertime":
-							dDamage = 87; break;
-						case "damageshield":
-						case "damageadd":
-							dDamage = 10; break;
-						case "directdamage":
-							// AOE spells do less damage
-							if (spellhandler.Spell.IsAoE)
-								dDamage = 150;
-							else
-								dDamage = 209;
-							break;
-						case "directdamagewithdebuff":
-						case "lifedrain":
-						case "damagespeeddecrease":
-							// Spells with gimmicks do less damage
-							if (spellhandler.Spell.IsAoE)
-								dDamage = 130;
-							else
-								dDamage = 179;
-							break;
-						case "enduranceregenbuff":
-							dValue = 5; break;
-						case "hastebuff":
-							dValue = 20; break;
-						case "heal":
-							dValue = 230; break;
-						case "combatheal":
-							dValue = 130; break;
-						case "healthregenbuff":
-						case "stun":
-							dValue = 9; break;
-						case "constitutionbuff":
-						case "dexteritybuff":
-						case "strengthbuff":
-						case "armorfactorbuff":	
-							dValue = 50; break;
-						case "dexterityquicknessbuff":
-						case "strengthconstitutionbuff":
-							dValue = 75; break;
-						case "taunt":
-							dValue = 55; break;
-						default: break;
-					}
-
-					if (dDamage != 0)
-					{
-						spellhandler.Spell.Damage = dDamage * this.Level / 50 * ServerProperties.Properties.SCALE_PET_SPELLS_PERCENTAGE / 100.0;
-						//log.Error("Scaling pet spell " + spellhandler.Spell.ID.ToString() + " damage to " + spellhandler.Spell.Damage.ToString());
-					}
-					if (dValue != 0)
-					{
-						spellhandler.Spell.Value = dValue * this.Level / 50.0 * ServerProperties.Properties.SCALE_PET_SPELLS_PERCENTAGE / 100.0;
-						//log.Error("Scaling spell " + spellhandler.Spell.ID.ToString() + " value to " + spellhandler.Spell.Value.ToString());
-					}
-
-					//spellhandler = ScriptMgr.CreateSpellHandler(this, splPet, line); Creating a new spell handler messes up pet AI
-				}
 
 				spellhandler.CastSpell();
 			}
