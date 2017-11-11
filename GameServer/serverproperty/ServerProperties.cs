@@ -1150,14 +1150,14 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Scale pet spell values according to their level?
 		/// </summary>
-		[ServerProperty("npc", "scale_pet_spells", "Scale pet spell damage and values against their level?", false)]
-		public static bool SCALE_PET_SPELLS;
+		[ServerProperty("npc", "pet_scale_spells", "Scale pet spell damage and values against their level?", false)]
+		public static bool PET_SCALE_SPELLS;
 
-		/// <summary>
-		/// Scale pet spells to what percentage of player spells?
-		/// </summary>
-		[ServerProperty("npc", "scale_pet_spells_percentage", "Scale pet spell damage and values to what percentage of player spells?", 75)]
-		public static int SCALE_PET_SPELLS_PERCENTAGE;
+        /// <summary>
+        /// Scale pet spells to what percentage of player spells?
+        /// </summary>
+        [ServerProperty("npc", "pet_effectiveness", "Pet melee and spell effectiveness, as a percentage.", 100)]
+        public static int PET_EFFECTIVENESS;
 		#endregion
 
 		#region PVP / RVR
