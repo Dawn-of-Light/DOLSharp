@@ -379,6 +379,12 @@ namespace DOL.GS.ServerProperties
 
 		#region SERVER
 
+		/// <summary>
+		/// Disable quit timers for players?
+		/// </summary>
+		[ServerProperty("server", "remove_quit_timer", "Allow players to log out without waiting?", false)]
+		public static bool REMOVE_QUIT_TIMER;
+
         /// <summary>
         /// Enable integrated serverlistupdate script?
         /// </summary>
@@ -1141,6 +1147,17 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("npc", "gamenpc_chances_to_cast", "Change the chance to cast a spell for a mob or a pet", 25)]
 		public static int GAMENPC_CHANCES_TO_CAST;
 
+		/// <summary>
+		/// Scale pet spell values according to their level?
+		/// </summary>
+		[ServerProperty("npc", "scale_pet_spells", "Scale pet spell damage and values against their level?", false)]
+		public static bool SCALE_PET_SPELLS;
+
+		/// <summary>
+		/// Scale pet spells to what percentage of player spells?
+		/// </summary>
+		[ServerProperty("npc", "scale_pet_spells_percentage", "Scale pet spell damage and values to what percentage of player spells?", 75)]
+		public static int SCALE_PET_SPELLS_PERCENTAGE;
 		#endregion
 
 		#region PVP / RVR
