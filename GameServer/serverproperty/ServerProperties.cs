@@ -1147,6 +1147,17 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("npc", "gamenpc_chances_to_cast", "Change the chance to cast a spell for a mob or a pet", 25)]
 		public static int GAMENPC_CHANCES_TO_CAST;
 
+		/// <summary>
+		/// Scale pet spell values according to their level?
+		/// </summary>
+		[ServerProperty("npc", "pet_scale_spells", "Scale pet spell damage and values against their level?", false)]
+		public static bool PET_SCALE_SPELLS;
+
+        /// <summary>
+        /// Scale pet spells to what percentage of player spells?
+        /// </summary>
+        [ServerProperty("npc", "pet_effectiveness", "Pet melee and spell effectiveness, as a percentage.", 100)]
+        public static int PET_EFFECTIVENESS;
 		#endregion
 
 		#region PVP / RVR

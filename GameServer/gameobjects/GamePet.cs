@@ -28,7 +28,9 @@ namespace DOL.GS
 {
 	public class GamePet : GameNPC
 	{
-		public GamePet(INpcTemplate template) : base(template)
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        public GamePet(INpcTemplate template) : base(template)
 		{
 			if (Inventory != null)
 			{
@@ -94,22 +96,24 @@ namespace DOL.GS
 			}
 		}
 
-		#endregion
+        #endregion
 
-		#region Shared Melee & Spells
+        #region Shared Melee & Spells
 
-		/// <summary>
-		/// Multiplier for melee and magic.
-		/// </summary>
-		public override double Effectiveness
+        /// <summary>
+        /// Multiplier for melee and magic.
+        /// </summary>
+        public override double Effectiveness
 		{
 			get 
             {
                 GameLiving gl = (Brain as IControlledBrain).GetLivingOwner();
-                if (gl != null)
-                    return gl.Effectiveness;
+                if (gl == null)
+                    return ServerProperties.Properties.PET_EFFECTIVENESS / 100;
+                else
+                    return gl.Effectiveness * ServerProperties.Properties.PET_EFFECTIVENESS / 100;
 
-                return 1.0;
+                //return 1.0;
             }
 		}
 
@@ -133,15 +137,88 @@ namespace DOL.GS
 			}
 		}
 
-		#endregion
+        #endregion
 
-		#region Spells
+        #region Spells
 
-		/// <summary>
-		/// Called when spell has finished casting.
-		/// </summary>
-		/// <param name="handler"></param>
-		public override void OnAfterSpellCastSequence(ISpellHandler handler)
+        public override void CastSpell(Spell spell, SpellLine line)
+        {
+            // Scale value and damage by pet level
+            if (ServerProperties.Properties.PET_SCALE_SPELLS)
+            {
+                double dValue = 0;
+                double dDamage = 0;
+
+                switch (spell.SpellType.ToLower())
+                {
+                    case "damageovertime":
+                        dDamage = 87; break;
+                    case "damageshield":
+                    case "damageadd":
+                        dDamage = 10; break;
+                    case "directdamage":
+                        // AOE spells do less damage
+                        if (spell.IsAoE)
+                            dDamage = 150;
+                        else
+                            dDamage = 209;
+                        break;
+                    case "directdamagewithdebuff":
+                    case "lifedrain":
+                    case "damagespeeddecrease":
+                        // Spells with gimmicks do less damage
+                        if (spell.IsAoE)
+                            dDamage = 130;
+                        else
+                            dDamage = 179;
+                        break;
+                    case "enduranceregenbuff":
+                        dValue = 5; break;
+                    case "hastebuff":
+                        dValue = 20; break;
+                    case "heal":
+                        dValue = 230; break;
+                    case "combatheal":
+                        dValue = 130; break;
+                    case "healthregenbuff":
+                    case "stun":
+                        dValue = 9; break;
+                    case "constitutionbuff":
+                    case "dexteritybuff":
+                    case "strengthbuff":
+                    case "armorfactorbuff":
+                        dValue = 50; break;
+                    case "dexterityquicknessbuff":
+                    case "strengthconstitutionbuff":
+                        dValue = 75; break;
+                    case "taunt":
+                        dValue = 55; break;
+                    default: break;
+                }
+
+                if (dDamage != 0)
+                {
+                    spell.Damage = dDamage * this.Level / 50;
+                    log.Error("Scaling pet spell type " + spell.SpellType.ToString() + ", ID " + spell.ID.ToString() + " damage to " + spell.Damage.ToString());
+                }
+                if (dValue != 0)
+                {
+                    spell.Value = dValue * this.Level / 50.0;
+                    log.Error("Scaling spell type " + spell.SpellType.ToString() + ", ID " + spell.ID.ToString() + " value to " + spell.Value.ToString());
+                }
+
+                //spellhandler = ScriptMgr.CreateSpellHandler(this, spell, line); Creating a new spell handler messes up pet AI
+            }
+
+            base.CastSpell(spell, line);
+        }
+
+
+        /// <summary>
+        /// Called when spell has finished casting.
+        /// </summary>
+        /// <param name="handler"></param>
+        public override void OnAfterSpellCastSequence(ISpellHandler handler)
 		{
 			base.OnAfterSpellCastSequence(handler);
 			Brain.Notify(GameNPCEvent.CastFinished, this, new CastingEventArgs(handler));
@@ -255,6 +332,7 @@ namespace DOL.GS
 				{
 						case eWeaponDamageType.Crush: return eDamageType.Crush;
 						case eWeaponDamageType.Slash: return eDamageType.Slash;
+						case eWeaponDamageType.Thrust: return eDamageType.Thrust;
 				}
 			}
 
