@@ -44,7 +44,7 @@ namespace DOL.GS
 	/// </summary>
 	public abstract class GameLiving : GameObject
 	{
-		protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		#region Combat
 		/// <summary>
