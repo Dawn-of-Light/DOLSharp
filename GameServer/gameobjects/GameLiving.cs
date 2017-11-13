@@ -863,8 +863,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		public virtual double AttackDamage(InventoryItem weapon)
 		{
-			//double effectiveness = 1.00;
-			double effectiveness = Effectiveness;
+			double effectiveness = 1.00;
+			//double effectiveness = Effectiveness;
 			double damage = (1.0 + Level / 3.7 + Level * Level / 175.0) * AttackSpeed(weapon) * 0.001;
 			if (weapon == null || weapon.Item_Type == Slot.RIGHTHAND || weapon.Item_Type == Slot.LEFTHAND || weapon.Item_Type == Slot.TWOHAND)
 			{
@@ -2336,6 +2336,7 @@ namespace DOL.GS
 				}
 
 				// Store all datas which must not change during the attack
+				// double effectiveness = 1.0;
 				double effectiveness = owner.Effectiveness;
 				int ticksToTarget = 1;
 				int interruptDuration = 0;
