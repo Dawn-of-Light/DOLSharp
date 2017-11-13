@@ -3398,27 +3398,77 @@ namespace DOL.GS
 					}
 			}
 		}
-		/// <summary>
-		/// Pick a random style for now.
-		/// </summary>
-		/// <returns></returns>
-		protected override Style GetStyleToUse()
-		{
-			if (Styles != null && Styles.Count > 0 && Util.Chance(Properties.GAMENPC_CHANCES_TO_STYLE + Styles.Count))
-			{
-				Style style = (Style)Styles[Util.Random(Styles.Count - 1)];
-				if (StyleProcessor.CanUseStyle(this, style, AttackWeapon))
-					return style;
-			}
+	/// <summary>
+        /// Sorts styles by type for more efficient style selection later
+        /// </summary>
+        protected void SortStyles()
+        {
+            m_stylesAnyPos.Clear();
+            m_stylesChain.Clear();
+            m_stylesDefensive.Clear();
 
-			return base.GetStyleToUse();
-		}
+            foreach (Style s in Styles)
+            {
+                if (s.OpeningRequirementType == Style.eOpening.Defensive)
+                    m_stylesDefensive.Add(s);
+                else if (s.OpeningRequirementType == Style.eOpening.Positional)
+                    m_stylesAnyPos.Add(s);
+                else if (s.OpeningRequirementValue > 0)
+                    m_stylesChain.Add(s);
+                else
+                    m_stylesAnyPos.Add(s);
+            }
+        }
+
+	/// <summary>
+	/// Picks a style, prioritizing reactives and chains over positionals and anytimes
+	/// </summary>
+	/// <returns>Selected style</returns>
+	protected override Style GetStyleToUse()
+	{
+            bool bUseStyles = Util.Chance(Properties.GAMENPC_CHANCES_TO_STYLE);
+
+            // Use defensive styles
+            if (bUseStyles)
+                foreach (Style s in m_stylesDefensive)
+                {
+                    if (StyleProcessor.CanUseStyle(this, s, AttackWeapon))
+                        return s;
+                }
+
+            // Use chain styles whenever possible
+            // Skips the bUseStyles check as chains will be almost impossible otherwise
+            foreach (Style s in m_stylesChain)
+            {
+                if (StyleProcessor.CanUseStyle(this, s, AttackWeapon))
+                    return s;
+            }
+
+            if (bUseStyles && m_stylesAnyPos.Count > 0 )
+            {
+                Style s;
+
+                for (int i = 0; i < 3; i++) // Give up after three tries
+                {
+                    s = (Style)m_stylesAnyPos[Util.Random(m_stylesAnyPos.Count - 1)];
+
+                    if (s.OpeningRequirementType == Style.eOpening.Offensive)
+                        return s;  // Anytime style, return it
+                    else
+                        if (StyleProcessor.CanUseStyle(this, s, AttackWeapon))
+                            return s; // We can use this positional, return it
+                        // else pick another style
+                }// for
+            }
+
+	    return base.GetStyleToUse();
+	}
 		
-		/// <summary>
-		/// Adds messages to ArrayList which are sent when object is targeted
-		/// </summary>
-		/// <param name="player">GamePlayer that is examining this object</param>
-		/// <returns>list with string messages</returns>
+	/// <summary>
+	/// Adds messages to ArrayList which are sent when object is targeted
+	/// </summary>
+	/// <param name="player">GamePlayer that is examining this object</param>
+	/// <returns>list with string messages</returns>
         public override IList GetExamineMessages(GamePlayer player)
         {
             switch (player.Client.Account.Language)
@@ -4749,8 +4799,23 @@ namespace DOL.GS
 		public IList Styles
 		{
 			get { return m_styles; }
-			set { m_styles = value; }
+			set { m_styles = value; this.SortStyles(); }
 		}
+
+		/// <summary>
+		/// Defensive styles for this NPC
+		/// </summary>
+		private IList m_stylesDefensive = new ArrayList(1);
+
+		/// <summary>
+		/// Chain styles for this NPC
+		/// </summary>
+		private IList m_stylesChain = new ArrayList(1);
+
+		/// <summary>
+		/// Anytime and positional styles for this NPC
+		/// </summary>
+		private IList m_stylesAnyPos = new ArrayList(1);
 
 		/// <summary>
 		/// The Abilities for this NPC
