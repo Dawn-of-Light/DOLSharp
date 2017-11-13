@@ -3403,29 +3403,51 @@ namespace DOL.GS
         /// </summary>
         protected void SortStyles()
         {
-            m_stylesAnyPos.Clear();
-            m_stylesChain.Clear();
-            m_stylesDefensive.Clear();
+            m_stylesAnyPos = new List<Style>(4);
+            m_stylesChain = new List<Style>(4);
+            m_stylesDefensive = new List<Style>(4);
 
-            foreach (Style s in Styles)
+            foreach (Style s in m_styles)
             {
-                if (s.OpeningRequirementType == Style.eOpening.Defensive)
-                    m_stylesDefensive.Add(s);
-                else if (s.OpeningRequirementType == Style.eOpening.Positional)
-                    m_stylesAnyPos.Add(s);
-                else if (s.OpeningRequirementValue > 0)
-                    m_stylesChain.Add(s);
-                else
-                    m_stylesAnyPos.Add(s);
-            }
-        }
+                if (s == null)
+                {
+                    if (log.IsWarnEnabled)
+                    {
+                        string sError = "GameNPC.SortStyles(): NULL style for name " + Name;
+                        if (m_InternalID != null)
+                            sError += " mob_id " + this.m_InternalID.ToString();
+                        if (m_npcTemplate != null)
+                            sError +=" npctemplate " + m_npcTemplate.TemplateId.ToString();
+                        log.Warn(sError);
+                    }
+                    continue; // Keep sorting, as a later style may not be null
+                }// if (s == null)
 
-	/// <summary>
-	/// Picks a style, prioritizing reactives and chains over positionals and anytimes
-	/// </summary>
-	/// <returns>Selected style</returns>
-	protected override Style GetStyleToUse()
-	{
+                switch (s.OpeningRequirementType)
+                {
+                    case Style.eOpening.Defensive:
+                        m_stylesDefensive.Add(s); break;
+                    case Style.eOpening.Positional:
+                        m_stylesAnyPos.Add(s); break;
+                    default:
+                        if (s.OpeningRequirementValue > 0)
+                            m_stylesChain.Add(s);
+                        else
+                            m_stylesAnyPos.Add(s);
+                        break;
+                }// switch (s.OpeningRequirementType)
+            }// foreach
+        }// SortStyles()
+
+		/// <summary>
+		/// Picks a style, prioritizing reactives and chains over positionals and anytimes
+		/// </summary>
+		/// <returns>Selected style</returns>
+		protected override Style GetStyleToUse()
+		{
+            if (m_styles == null || m_styles.Count < 1)
+                return null;
+
             bool bUseStyles = Util.Chance(Properties.GAMENPC_CHANCES_TO_STYLE);
 
             // Use defensive styles
@@ -3461,8 +3483,9 @@ namespace DOL.GS
                 }// for
             }
 
-	    return base.GetStyleToUse();
-	}
+            // return base.GetStyleToUse(); // Wastes cycles if NPC doesn't have styles anyway.
+            return null;
+        } // GetStyleToUse()
 		
 	/// <summary>
 	/// Adds messages to ArrayList which are sent when object is targeted
@@ -4792,7 +4815,7 @@ namespace DOL.GS
 			set { m_spells = value != null ? value.Cast<Spell>().ToList() : null; }
 		}
 
-		private IList m_styles = new ArrayList(1);
+		private IList m_styles = new ArrayList(0);
 		/// <summary>
 		/// The Styles for this NPC
 		/// </summary>
@@ -4805,17 +4828,17 @@ namespace DOL.GS
 		/// <summary>
 		/// Defensive styles for this NPC
 		/// </summary>
-		private IList m_stylesDefensive = new ArrayList(1);
+		private IList m_stylesDefensive = null;
 
 		/// <summary>
 		/// Chain styles for this NPC
 		/// </summary>
-		private IList m_stylesChain = new ArrayList(1);
+		private IList m_stylesChain = null;
 
 		/// <summary>
 		/// Anytime and positional styles for this NPC
 		/// </summary>
-		private IList m_stylesAnyPos = new ArrayList(1);
+		private IList m_stylesAnyPos = null;
 
 		/// <summary>
 		/// The Abilities for this NPC
