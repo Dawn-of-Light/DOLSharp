@@ -175,7 +175,7 @@ namespace DOL.GS
 						{
 							if (spell.Name == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Spell.Empower"))
 							{
-								CastSpell(spell, null);
+								CastSpell(spell, m_mobSpellLine);
 								break;
 							}
 						}
