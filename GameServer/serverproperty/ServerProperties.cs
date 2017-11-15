@@ -1070,6 +1070,12 @@ namespace DOL.GS.ServerProperties
 		public static int PET_THINK_INTERVAL;
 
 		/// <summary>
+		/// Scale pet spell values according to their level?
+		/// </summary>
+		[ServerProperty("npc", "pet_scale_spell_max_level", "Disabled if 0 or less.  If greater than 0, this value is the level at which pets cast their spells at 100% effectivness, so choose spells for pets assuming they're at the level set here.  Live is max pet level, 44 or 50 depending on patch.", 0)]
+		public static int PET_SCALE_SPELL_MAX_LEVEL;		
+		
+		/// <summary>
 		/// What level to start increasing mob damage
 		/// </summary>
 		[ServerProperty("npc", "mob_damage_increase_startlevel", "What level to start increasing mob damage.", 30)]
