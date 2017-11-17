@@ -17,9 +17,11 @@ Skill.Ability.CannotUseWhileStealthed:		Ihr könnt diese Fähigkeit während des
 Skill.Ability.MinRemaining:	  		Minuten.
 Skill.Ability.SecRemaining:	  		Sekunden.
 
+
+Skill.Ability.Camouflage.UseCamo:					Ihr verschmilzt mit eurer Umgebung!
 Skill.Ability.CannotUse.Camouflage.Mezzed:				Ihr könnt Euch nicht tarnen während Ihr hypnotisiert seid!
 Skill.Ability.CannotUse.Camouflage.Stunned:				Ihr könnt Euch nicht tarnen während Ihr betäubt seid!
-Skill.Ability.CannotUse.Camouflage.NotStealthed:			Ihr könnt Euch nicht tarnen, da Ihr nicht schleicht!
+Skill.Ability.CannotUse.Camouflage.NotStealthed:			Ihr müsst schleichen, um euch zu tarnen!
 Skill.Ability.CannotUse.Camouflage.Dead:				Ihr könnt Euch nicht tarnen, da Ihr tot seid!
 Skill.Ability.CannotUse.Camouflage.DisableDuration:			Ihr müsst noch {0} Sekunden warten um Tarnung anzuwenden!
 
