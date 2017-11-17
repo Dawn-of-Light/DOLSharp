@@ -35,11 +35,11 @@ namespace DOL.GS
 		protected readonly string m_spelltype = "-";
 		protected readonly int m_range = 0;
 		protected readonly int m_radius = 0;
-		protected readonly double m_value = 0;
-		protected readonly double m_damage = 0;
+		protected double m_value = 0;
+		protected double m_damage = 0;
 		protected readonly eDamageType m_damageType = eDamageType.Natural;
 		protected readonly byte m_concentration = 0;
-		protected readonly int m_duration = 0;
+		protected int m_duration = 0;
 		protected readonly int m_frequency = 0;
 		protected readonly int m_pulse = 0;
 		protected readonly int m_pulse_power = 0;
@@ -82,10 +82,10 @@ namespace DOL.GS
 			get { return m_paramCache; }
 			set { m_paramCache = value; }
 		}
-		
-		#region member access properties
-		#region warlocks
-		public bool IsPrimary
+
+        #region member access properties
+        #region warlocks
+        public bool IsPrimary
 		{
 			get { return m_isprimary; }
 		}
@@ -174,6 +174,7 @@ namespace DOL.GS
 		public double Damage
 		{
 			get { return m_damage; }
+			set { m_damage = value; }
 		}
 
 		public eDamageType DamageType
@@ -190,6 +191,7 @@ namespace DOL.GS
 		public int Duration
 		{
 			get { return m_duration; }
+            set { m_duration = value; }
 		}
 
 		public int Frequency
@@ -230,6 +232,7 @@ namespace DOL.GS
 		public double Value
 		{
 			get { return m_value; }
+			set { m_value = value; }
 		}
 
 		public byte Concentration
