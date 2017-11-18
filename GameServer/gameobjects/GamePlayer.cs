@@ -2547,7 +2547,7 @@ namespace DOL.GS
 			 * Strength affects the amount of damage done by spells in all of the Vampiir's spell lines.
 			 * The amount of said affecting was recently increased slightly (fixing a bug), and that minor increase will go live in 1.74 next week.
 			 * 
-			 * Strength ALSO affects the size of the power pool for a Vampiir sort of.
+			 * Strength ALSO affects the size of the power pool for a Vampiir sort of.
 			 * Your INNATE strength (the number of attribute points your character has for strength) has no effect at all.
 			 * Extra points added through ITEMS, however, does increase the size of your power pool.
 
