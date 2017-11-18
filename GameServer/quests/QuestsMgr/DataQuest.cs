@@ -1482,6 +1482,30 @@ namespace DOL.GS.Quests
 			}
 		}
 		
+		/// <summary>
+        /// Gets money reward for reward quests. Used for sending packet info to dialog popup window.
+        /// </summary>
+        /// <returns></returns>
+        public long MoneyReward()
+        {        	
+        	return m_rewardMoneys[0];
+        }
+		
+		/// <summary>
+        /// Gets experience reward for reward quests. Used for sending packet info to dialog popup window.
+        /// </summary>
+        /// <returns></returns>
+        public int ExperiencePercent(GamePlayer player)
+        {
+            int currentLevel = player.Level;
+            if (currentLevel > player.MaxLevel)
+                return 0;
+            long experienceToLevel = player.GetExperienceNeededForLevel(currentLevel + 1) -
+                player.GetExperienceNeededForLevel(currentLevel);
+
+            return (int)((m_rewardXPs[0] * 100) / experienceToLevel);
+        }
+        
 		protected virtual bool ExecuteCustomQuestStep(GamePlayer player, int step, eStepCheckType stepCheckType)
 		{
 			bool canContinue = true;
@@ -1660,32 +1684,35 @@ namespace DOL.GS.Quests
 				if (advance)
 				{
 					// Since we can advance first give any rewards for the current step
-
-					if (RewardXP > 0)
+					if (StartType != eStartType.RewardQuest) // Reward quests receive rewards upon completing quest. 
 					{
-						m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, RewardXP);
+						if (RewardXP > 0)
+						{
+							m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, RewardXP);
+						}
+	
+						if (RewardRP > 0)
+						{
+							m_questPlayer.GainRealmPoints(RewardRP);
+						}
+						
+						if (RewardMoney > 0)
+						{
+							m_questPlayer.AddMoney(RewardMoney, "You are awarded {0}!");
+	                        InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, RewardMoney);
+						}
+	
+						if (RewardCLXP > 0)
+						{
+							m_questPlayer.GainChampionExperience(RewardCLXP, GameLiving.eXPSource.Quest);
+						}
+						
+						if (RewardBP > 0)
+						{
+							m_questPlayer.GainBountyPoints(RewardBP);
+						}
 					}
-
-					if (RewardRP > 0)
-					{
-						m_questPlayer.GainRealmPoints(RewardRP);
-					}
-					
-					if (RewardMoney > 0)
-					{
-						m_questPlayer.AddMoney(RewardMoney, "You are awarded {0}!");
-                        InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, RewardMoney);
-					}
-
-					if (RewardCLXP > 0)
-					{
-						m_questPlayer.GainChampionExperience(RewardCLXP, GameLiving.eXPSource.Quest);
-					}
-					
-					if (RewardBP > 0)
-					{
-						m_questPlayer.GainBountyPoints(RewardBP);
-					}
+					// Then advance step
 					
 					// Then advance step
 
@@ -2144,6 +2171,7 @@ namespace DOL.GS.Quests
 							player.Out.SendQuestOfferWindow(offerNPC, player, this);
 						}
 					}
+					return; // Return here so we dont send 'Description' in a separate popup window 
 				}
 				if (StartType == eStartType.Collection)
 				{
@@ -2799,90 +2827,178 @@ namespace DOL.GS.Quests
 			{
 				if (m_questPlayer.Inventory.IsSlotsFree(m_finalRewards.Count + m_optionalRewardChoice.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
 				{
-					long rewardXP = 0;
+					long rewardXP = 0; 
 					long rewardRP = 0;
-
-					if (m_rewardXPs.Count > 0)
+					long rewardCLXP = 0;
+					long rewardBP = 0;
+					long rewardMoney = 0;
+					const string xpError = "Your XP is turned off, you must turn it on to complete this quest!";
+					const string rpError = "Your RP is turned off, you must turn it on to complete this quest!";
+					if (StartType != eStartType.RewardQuest)
 					{
-						rewardXP = m_rewardXPs[lastStep - 1];
-					}
-
-					if (m_rewardRPs.Count > 0)
-					{
-						rewardRP = m_rewardRPs[lastStep - 1];
-					}
-
-					string xpError = "Your XP is turned off, you must turn it on to complete this quest!";
-					string rpError = "Your RP is turned off, you must turn it on to complete this quest!";
-
-					if (rewardXP > 0)
-					{
-						if (m_questPlayer.GainXP == false)
+						if (m_rewardXPs.Count > 0)
 						{
-							QuestPlayer.Out.SendMessage(xpError, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
-							return false;
+							rewardXP = m_rewardXPs[lastStep - 1];
 						}
-						else if (rewardRP > 0 && m_questPlayer.GainRP == false)
+	
+						if (m_rewardRPs.Count > 0)
 						{
-							QuestPlayer.Out.SendMessage(rpError, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
-							return false;
+							rewardRP = m_rewardRPs[lastStep - 1];
+						}						
+	
+						if (rewardXP > 0)
+						{
+							if (!m_questPlayer.GainXP)
+							{
+								QuestPlayer.Out.SendMessage(xpError, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+								return false;
+							}
+							else if (rewardRP > 0 && !m_questPlayer.GainRP)
+							{
+								QuestPlayer.Out.SendMessage(rpError, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+								return false;
+							}
+	
+							m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, rewardXP);
 						}
-
-						m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, rewardXP);
-					}
-
-					if (rewardRP > 0)
-					{
-						if (m_questPlayer.GainRP == false)
+	
+						if (rewardRP > 0)
 						{
-							QuestPlayer.Out.SendMessage(rpError, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
-							return false;
+							if (!m_questPlayer.GainRP)
+							{
+								QuestPlayer.Out.SendMessage(rpError, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+								return false;
+							}
+	
+							m_questPlayer.GainRealmPoints(rewardRP);
 						}
-
-						m_questPlayer.GainRealmPoints(rewardRP);
-					}
-
-					foreach (ItemTemplate item in m_finalRewards)
-					{
-						if (item != null)
+	
+						foreach (ItemTemplate item in m_finalRewards)
 						{
-							GiveItem(m_questPlayer, item);
+							if (item != null)
+							{
+								GiveItem(m_questPlayer, item);
+							}
+						}
+	
+						foreach (ItemTemplate item in m_optionalRewardChoice)
+						{
+							if (item != null)
+							{
+								GiveItem(m_questPlayer, item);
+							}
+						}
+	
+						if (m_rewardCLXPs.Count > 0)
+						{
+							rewardCLXP = m_rewardCLXPs[lastStep - 1];
+							if (rewardCLXP > 0)
+							{
+								m_questPlayer.GainChampionExperience(rewardCLXP, GameLiving.eXPSource.Quest);
+							}
+						}
+						
+						if (m_rewardBPs.Count > 0)
+						{
+							rewardBP = m_rewardBPs[lastStep - 1];
+							if (rewardBP > 0)
+							{
+								m_questPlayer.GainBountyPoints(rewardBP);
+							}
+						}
+						
+						if (m_rewardMoneys.Count > 0)
+						{
+							rewardMoney = m_rewardMoneys[lastStep - 1];
+							if (rewardMoney > 0)
+							{
+								m_questPlayer.AddMoney(rewardMoney, "You are awarded {0}!");
+	                            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, rewardMoney);
+							}
 						}
 					}
-
-					foreach (ItemTemplate item in m_optionalRewardChoice)
+					// Reward quest receives everything on last interactFinish step.
+					if (StartType == eStartType.RewardQuest)
 					{
-						if (item != null)
+						if (m_rewardXPs.Count > 0)
 						{
-							GiveItem(m_questPlayer, item);
+							rewardXP = m_rewardXPs[0];
 						}
-					}
-
-					if (m_rewardCLXPs.Count > 0)
-					{
-						long rewardCLXP = m_rewardCLXPs[lastStep - 1];
-						if (rewardCLXP > 0)
+	
+						if (m_rewardRPs.Count > 0)
 						{
-							m_questPlayer.GainChampionExperience(rewardCLXP, GameLiving.eXPSource.Quest);
+							rewardRP = m_rewardRPs[0];
+						}					
+	
+						if (rewardXP > 0)
+						{
+							if (!m_questPlayer.GainXP)
+							{
+								QuestPlayer.Out.SendMessage(xpError, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+								return false;
+							}
+							else if (rewardRP > 0 && !m_questPlayer.GainRP)
+							{
+								QuestPlayer.Out.SendMessage(rpError, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+								return false;
+							}
+	
+							m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, rewardXP);
 						}
-					}
-					
-					if (m_rewardBPs.Count > 0)
-					{
-						long rewardBP = m_rewardBPs[lastStep - 1];
-						if (rewardBP > 0)
+	
+						if (rewardRP > 0)
 						{
-							m_questPlayer.GainBountyPoints(rewardBP);
+							if (!m_questPlayer.GainRP)
+							{
+								QuestPlayer.Out.SendMessage(rpError, eChatType.CT_Staff, eChatLoc.CL_SystemWindow);
+								return false;
+							}
+	
+							m_questPlayer.GainRealmPoints(rewardRP);
 						}
-					}
-					
-					if (m_rewardMoneys.Count > 0)
-					{
-						long rewardMoney = m_rewardMoneys[lastStep - 1];
-						if (rewardMoney > 0)
+	
+						foreach (ItemTemplate item in m_finalRewards)
 						{
-							m_questPlayer.AddMoney(rewardMoney, "You are awarded {0}!");
-                            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, rewardMoney);
+							if (item != null)
+							{
+								GiveItem(m_questPlayer, item);
+							}
+						}
+	
+						foreach (ItemTemplate item in m_optionalRewardChoice)
+						{
+							if (item != null)
+							{
+								GiveItem(m_questPlayer, item);
+							}
+						}
+	
+						if (m_rewardCLXPs.Count > 0)
+						{
+							rewardCLXP = m_rewardCLXPs[0];
+							if (rewardCLXP > 0)
+							{
+								m_questPlayer.GainChampionExperience(rewardCLXP, GameLiving.eXPSource.Quest);
+							}
+						}
+						
+						if (m_rewardBPs.Count > 0)
+						{
+							rewardBP = m_rewardBPs[0];
+							if (rewardBP > 0)
+							{
+								m_questPlayer.GainBountyPoints(rewardBP);
+							}
+						}
+						
+						if (m_rewardMoneys.Count > 0)
+						{
+							rewardMoney = m_rewardMoneys[0];
+							if (rewardMoney > 0)
+							{
+								m_questPlayer.AddMoney(rewardMoney, "You are awarded {0}!");
+	                            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, rewardMoney);
+							}
 						}
 					}
 				}
@@ -2934,7 +3050,7 @@ namespace DOL.GS.Quests
 			{
 				m_questPlayer.Out.SendSoundEffect(11, 0, 0, 0, 0, 0);
 			}
-			else if (m_dataQuest.FinishText != null && m_dataQuest.FinishText != "")
+			if (!string.IsNullOrEmpty(m_dataQuest.FinishText)) // Give users option to have 'finish' text with rewardquest too
 			{
 				if (obj != null && obj.Realm == eRealm.None)
 				{

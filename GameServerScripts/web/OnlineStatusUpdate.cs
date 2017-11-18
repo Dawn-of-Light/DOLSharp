@@ -89,19 +89,23 @@ namespace DOL.GS.GameEvents
 		/// </summary>
 		protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		/// <summary>
-		/// This method is called when the script is loaded.
-		/// </summary>
-		[ScriptLoadedEvent]
-		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
-		{
-			Init();
-		}
-		
-		/// <summary>
-		/// This method is called when the scripts are unloaded. 
-		/// </summary>
-		[ScriptUnloadedEvent]
+        /// <summary>
+        /// This method is called when the script is loaded.
+        /// </summary>
+        [ScriptLoadedEvent]
+        public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
+        {
+            if(ServerProperties.Properties.USE_SERVER_LIST_UPDATE_INTEGRATED)
+            {
+                Init();
+                
+            }
+        }
+
+        /// <summary>
+        /// This method is called when the scripts are unloaded. 
+        /// </summary>
+        [ScriptUnloadedEvent]
 		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
 			Stop();

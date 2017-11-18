@@ -663,7 +663,7 @@ namespace DOL.GS.Quests.Albion
 					case 2:
 						return "[Step #2] Bring the fur back to Steward Willie in Humberton Fort.";
 					case 3:
-						return "[Step #3] Go to Seamstress Lynnie in Ludlow and bring her the wolf head token.";
+						return "[Step #3] Go to Seamstress Lynnet in Ludlow and bring her the wolf head token.";
 				}
 				return base.Description;
 			}

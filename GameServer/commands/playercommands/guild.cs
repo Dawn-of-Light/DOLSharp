@@ -19,7 +19,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-
+using System.Text.RegularExpressions;
 using DOL.Database;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
@@ -39,13 +39,9 @@ namespace DOL.GS.Commands
 		"/gc <option>")]
 	public class GuildCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
+		
 		private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-		/// <summary>
-		/// Contains all characters that are valid in a guild name. non case sensitive
-		/// </summary>
-		public static string AllowedGuildNameChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ��� �������������";
-
+		public long GuildFormCost = Money.GetMoney(0, 0, 1, 0, 0); //Cost to form guild : live = 1g : (mith/plat/gold/silver/copper)
 		/// <summary>
 		/// Checks if a guildname has valid characters
 		/// </summary>
@@ -53,14 +49,11 @@ namespace DOL.GS.Commands
 		/// <returns></returns>
 		public static bool IsValidGuildName(string guildName)
 		{
-			foreach (char c in guildName)
-			{
-				if (AllowedGuildNameChars.IndexOf(char.ToLower(c)) < 0)
-				{
-					return false;
-				}
-			}
+			if (!Regex.IsMatch(guildName, @"^[a-zA-Z àâäèéêëîïôœùûüÿçÀÂÄÈÉÊËÎÏÔŒÙÛÜŸÇ]+$") || guildName.Length < 0)
 
+			{
+				return false;
+			}
 			return true;
 		}
 		private static bool IsNearRegistrar(GamePlayer player)
@@ -71,6 +64,99 @@ namespace DOL.GS.Commands
 					return true;
 			}
 			return false;
+		}
+		private static bool GuildFormCheck(GamePlayer leader)
+		{
+			Group group = leader.Group;
+			#region No group check - Ensure we still have a group
+			if (group == null)
+			{
+				leader.Out.SendMessage(LanguageMgr.GetTranslation(leader.Client.Account.Language, "Scripts.Player.Guild.FormNoGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+			#endregion
+			#region Enough members to form Check - Ensure our group still has enough players in to form
+			if (group.MemberCount < Properties.GUILD_NUM)
+			{
+				leader.Out.SendMessage(LanguageMgr.GetTranslation(leader.Client.Account.Language, "Scripts.Player.Guild.FormNoMembers" + Properties.GUILD_NUM), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return false;
+			}
+			#endregion
+
+			return true;
+		}
+
+		protected void CreateGuild(GamePlayer player, byte response)
+		{
+			#region Player Declines
+			if (response != 0x01)
+			{
+				//remove all guild consider to enable re try
+				foreach (GamePlayer ply in player.Group.GetPlayersInTheGroup())
+				{
+					ply.TempProperties.removeProperty("Guild_Consider");
+				}
+				player.Group.Leader.TempProperties.removeProperty("Guild_Name");
+				player.Group.SendMessageToGroupMembers(player, "Declines to form the guild", eChatType.CT_Group, eChatLoc.CL_ChatWindow);
+				return;
+			}
+			#endregion
+			#region Player Accepts
+			player.Group.SendMessageToGroupMembers(player, "Agrees to form the guild", eChatType.CT_Group, eChatLoc.CL_ChatWindow);
+			player.TempProperties.setProperty("Guild_Consider", true);
+			var guildname = player.Group.Leader.TempProperties.getProperty<string>("Guild_Name");
+
+			var memnum = player.Group.GetPlayersInTheGroup().Count(p => p.TempProperties.getProperty<bool>("Guild_Consider"));
+
+			if (!GuildFormCheck(player) || memnum != player.Group.MemberCount) return;
+
+			if (Properties.GUILD_NUM > 1)
+			{
+				Group group = player.Group;
+				lock (group)
+				{
+					Guild newGuild = GuildMgr.CreateGuild(player.Realm, guildname, player);
+					if (newGuild == null)
+					{
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Guild.UnableToCreateLead", guildname, player.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					}
+					else
+					{
+						foreach (GamePlayer ply in group.GetPlayersInTheGroup())
+						{
+							if (ply != group.Leader)
+							{
+								newGuild.AddPlayer(ply);
+							}
+							else
+							{
+								newGuild.AddPlayer(ply, newGuild.GetRankByID(0));
+							}
+							ply.TempProperties.removeProperty("Guild_Consider");
+						}
+						player.Group.Leader.TempProperties.removeProperty("Guild_Name");
+						player.Group.Leader.RemoveMoney(10000);
+						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Guild.GuildCreated", guildname, player.Group.Leader.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+					}
+				}
+			}
+			else
+			{
+				Guild newGuild = GuildMgr.CreateGuild(player.Realm, guildname, player);
+
+				if (newGuild == null)
+				{
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Guild.UnableToCreateLead", guildname, player.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				}
+				else
+				{
+					newGuild.AddPlayer(player, newGuild.GetRankByID(0));
+					player.TempProperties.removeProperty("Guild_Name");
+					player.RemoveMoney(10000);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Scripts.Player.Guild.GuildCreated", guildname, player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+				}
+			}
+			#endregion
 		}
 
 		/// <summary>
@@ -1052,115 +1138,101 @@ namespace DOL.GS.Commands
 						// --------------------------------------------------------------------------------
 					case "form":
 						{
-							if (!IsNearRegistrar(client.Player))
-							{
-								client.Out.SendMessage("You must be near a guild registrar to use this command!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
+							Group group = client.Player.Group;
 							if (args.Length < 3)
 							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildForm"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
+							#region Near Registrar
+							if (!IsNearRegistrar(client.Player))
+							{
+								client.Out.SendMessage("You must be near a guild registrar to use this command!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							#endregion
+							#region No group Check
+							if (group == null)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.FormNoGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							#endregion
+							#region Groupleader Check
+							if (group != null && client.Player != client.Player.Group.Leader)
+							{
+								client.Out.SendMessage("Only the group leader can create a guild", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							#endregion
+							#region Enough members to form Check
+							if (group.MemberCount < Properties.GUILD_NUM)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.FormNoMembers" + Properties.GUILD_NUM), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							#endregion
+							#region Player already in guild check and Cross Realm Check
 
+							foreach (GamePlayer ply in group.GetPlayersInTheGroup())
+							{
+								if (ply.Guild != null)
+								{
+									client.Player.Group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AlreadyInGuildName", ply.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+								if (ply.Realm != client.Player.Realm && ServerProperties.Properties.ALLOW_CROSS_REALM_GUILDS == false)
+								{
+									client.Out.SendMessage("All group members must be of the same realm in order to create a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+							}
+							#endregion
+							#region Guild Length Naming Checks
+							//Check length of guild name.
 							string guildname = String.Join(" ", args, 2, args.Length - 2);
 							if (guildname.Length > 30)
 							{
 								client.Out.SendMessage("Sorry, your guild name is too long.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							guildname = GameServer.Database.Escape(guildname);
-
+							#endregion
+							#region Valid Characters Check
 							if (!IsValidGuildName(guildname))
 							{
 								// Mannen doesn't know the live server message, so someone needs to enter it . ;-)
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.InvalidLetters"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 								return;
 							}
-							else
+							#endregion
+							#region Guild Exist Checks
+							if (GuildMgr.DoesGuildExist(guildname))
 							{
-								if (!GuildMgr.DoesGuildExist(guildname))
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.GuildExists"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							#endregion
+							#region Enoguh money to form Check
+							if (client.Player.Group.Leader.GetCurrentMoney() < GuildFormCost)
+							{
+								client.Out.SendMessage("It cost 1 gold piece to create a guild", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							#endregion
+
+
+							client.Player.Group.Leader.TempProperties.setProperty("Guild_Name", guildname);
+							if (GuildFormCheck(client.Player))
+							{
+								client.Player.Group.Leader.TempProperties.setProperty("Guild_Consider", true);
+								foreach (GamePlayer p in group.GetPlayersInTheGroup().Where(p => p != @group.Leader))
 								{
-									if (Properties.GUILD_NUM > 1 && client.Account.PrivLevel == 1)
-									{
-										Group group = client.Player.Group;
-
-										if (group == null)
-										{
-											client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.FormNoGroup"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-											return;
-										}
-
-										lock (group)
-										{
-											if (group.MemberCount < Properties.GUILD_NUM)
-											{
-												client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.FormNoMembers" + Properties.GUILD_NUM), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-												return;
-											}
-
-											// a member of group have a guild already, so quit!
-											foreach (GamePlayer ply in group.GetPlayersInTheGroup())
-											{
-												if (ply.Guild != null)
-												{
-													client.Player.Group.SendMessageToGroupMembers(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.AlreadyInGuildName", ply.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-													return;
-												}
-												if (ply.Realm != client.Player.Realm && ServerProperties.Properties.ALLOW_CROSS_REALM_GUILDS == false)
-												{
-													client.Out.SendMessage("All group members must be of the same realm in order to create a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-													return;
-												}
-											}
-
-											Guild newGuild = GuildMgr.CreateGuild(client.Player.Realm, guildname, client.Player);
-											if (newGuild == null)
-											{
-												client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.UnableToCreateLead", guildname, client.Player.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-											}
-											else
-											{
-												foreach (GamePlayer ply in group.GetPlayersInTheGroup())
-												{
-													if (ply == client.Player)
-													{
-														newGuild.AddPlayer(ply, newGuild.GetRankByID(0));
-													}
-													else
-													{
-														newGuild.AddPlayer(ply);
-													}
-												}
-
-												client.Player.GuildRank = client.Player.Guild.GetRankByID(0); //creator is leader
-												client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.GuildCreated", guildname, client.Player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-											}
-										}
-									}
-									else
-									{
-                                        Guild newGuild = GuildMgr.CreateGuild(client.Player.Realm, guildname, client.Player);
-
-										if (newGuild == null)
-										{
-											client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.UnableToCreateLead", guildname, client.Player.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-										}
-										else
-										{
-											newGuild.AddPlayer(client.Player, newGuild.GetRankByID(0));
-											client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.GuildCreated", guildname, client.Player.Name), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-										}
-									}
-								}
-								else
-								{
-									client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.GuildExists"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									p.Out.SendCustomDialog(string.Format("Do you wish to create the guild {0} with {1} as Guild Leader", guildname, client.Player.Name), new CustomDialogResponse(CreateGuild));
 								}
 							}
 						}
 						break;
-						#endregion
+					#endregion
 						#region Quit
 						// --------------------------------------------------------------------------------
 						// QUIT
@@ -1177,157 +1249,157 @@ namespace DOL.GS.Commands
 						}
 						break;
 						#endregion
-                    #region Promote
-                    // --------------------------------------------------------------------------------
-                    // PROMOTE
-                    // /gc promote <rank#> [name]' to promote player to a superior rank
-                    // --------------------------------------------------------------------------------
-                    case "promote":
-                        {
-                            if (client.Player.Guild == null)
-                            {
-                                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
-                            if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Promote))
-                            {
-                                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
-
-                            if (args.Length < 3)
-                            {
-                                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildPromote"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
-
-                            object obj = null;
-                            string playerName = string.Empty;
-                            bool useDB = false;
-
-                            if (args.Length >= 4)
-                            {
-                                playerName = args[3];
-                            }
-
-                            if (playerName == string.Empty)
-                            {
-                                obj = client.Player.TargetObject as GamePlayer;
-                            }
-                            else
-                            {
-                                GameClient onlineClient = WorldMgr.GetClientByPlayerName(playerName, true, false);
-                                if (onlineClient == null)
-                                {
-                                    // Patch 1.84: look for offline players
-                                    obj = GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", playerName)).FirstOrDefault();
-                                    useDB = true;
-                                }
-                                else
-                                {
-                                    obj = onlineClient.Player;
-                                }
-                            }
-
-                            if (obj == null)
-                            {
-                                if (useDB)
-                                {
-                                    client.Out.SendMessage("No player with that name can be found!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                }
-                                else if (playerName == string.Empty)
-                                {
-                                    client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPlayerSelected"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                }
-                                else
-                                {
-                                    client.Out.SendMessage("You need to target a player or provide a player name!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                    client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildPromote"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                }
-                                return;
-                            }
-                            //First Check Routines, GuildIDControl search for player or character.
-                            string guildId = "";
-                            string plyName = "";
-                            ushort currentTargetGuildRank = 9;
-                            GamePlayer ply = obj as GamePlayer;
-                            DOLCharacters ch = obj as DOLCharacters;
-
-                            if (ply != null)
-                            {
-                                plyName = ply.Name;
-                                guildId = ply.GuildID;
-                                currentTargetGuildRank = ply.GuildRank.RankLevel;
-                            }
-                            else if (ch != null)
-                            {
-                                plyName = ch.Name;
-                                guildId = ch.GuildID;
-                                currentTargetGuildRank = ch.GuildRank;
-                            }
-                            else
-                            {
-                                client.Out.SendMessage("Error during promotion, player not found!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
-
-                            if (guildId != client.Player.GuildID)
-                            {
-                                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotInYourGuild"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
-                            //Second Check, Autorisation Checks, a player can promote another to it's own RealmRank or above only if: newrank(rank to be applied) >= commandUserGuildRank(usercommandRealmRank)
-
-                            ushort commandUserGuildRank = client.Player.GuildRank.RankLevel;
-                            ushort newrank;
-                            try
-                            {
-                                newrank = Convert.ToUInt16(args[2]);
-
-                                if (newrank > 9)
-                                {
-                                    client.Out.SendMessage("Error changing to new rank! Realm Rank have to be set to 0-9.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                    return;
-                                }
-                            }
-                            catch
-                            {
-                                client.Out.SendMessage("Error changing to new rank!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildPromote"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
-                            //if (commandUserGuildRank != 0 && (newrank < commandUserGuildRank || newrank < 0)) // Do we have to authorize Self Retrograde for GuildMaster?
-                            if ((newrank < commandUserGuildRank) || (newrank < 0))
-                            {
-                                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.PromoteHigherThanPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
-                            if (newrank > currentTargetGuildRank && commandUserGuildRank != 0)
-                            {
-                                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.PromoteHaveToUseDemote"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                                return;
-                            }
-                            if (obj is GamePlayer)
-                            {
-                                ply.GuildRank = client.Player.Guild.GetRankByID(newrank);
-                                ply.SaveIntoDatabase();
-                                ply.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.PromotedSelf", newrank.ToString()), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                            }
-                            else
-                            {
-                                ch.GuildRank = newrank;
-                                GameServer.Database.SaveObject(ch);
-                                GameServer.Database.FillObjectRelations(ch);
-                                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.PromotedOther", plyName, newrank.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
-                            }
-                            client.Player.Guild.UpdateGuildWindow();
-                        }
-                        break;
-                    #endregion							
-						#region Demote
+						#region Promote
 						// --------------------------------------------------------------------------------
-						// DEMOTE
+						// PROMOTE
+						// /gc promote <rank#> [name]' to promote player to a superior rank
 						// --------------------------------------------------------------------------------
+					case "promote":
+						{
+							if (client.Player.Guild == null)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotMember"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							if (!client.Player.Guild.HasRank(client.Player, Guild.eRank.Promote))
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPrivilages"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+
+							if (args.Length < 3)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildPromote"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+
+							object obj = null;
+							string playerName = string.Empty;
+							bool useDB = false;
+
+							if (args.Length >= 4)
+							{
+								playerName = args[3];
+							}
+
+							if (playerName == string.Empty)
+							{
+								obj = client.Player.TargetObject as GamePlayer;
+							}
+							else
+							{
+								GameClient onlineClient = WorldMgr.GetClientByPlayerName(playerName, true, false);
+								if (onlineClient == null)
+								{
+									// Patch 1.84: look for offline players
+									obj = GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", playerName)).FirstOrDefault();
+									useDB = true;
+								}
+								else
+								{
+									obj = onlineClient.Player;
+								}
+							}
+
+							if (obj == null)
+							{
+								if (useDB)
+								{
+									client.Out.SendMessage("No player with that name can be found!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								}
+								else if (playerName == string.Empty)
+								{
+									client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NoPlayerSelected"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								}
+								else
+								{
+									client.Out.SendMessage("You need to target a player or provide a player name!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildPromote"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								}
+								return;
+							}
+							//First Check Routines, GuildIDControl search for player or character.
+							string guildId = "";
+							string plyName = "";
+							ushort currentTargetGuildRank = 9;
+							GamePlayer ply = obj as GamePlayer;
+							DOLCharacters ch = obj as DOLCharacters;
+
+							if (ply != null)
+							{
+								plyName = ply.Name;
+								guildId = ply.GuildID;
+								currentTargetGuildRank = ply.GuildRank.RankLevel;
+							}
+							else if (ch != null)
+							{
+								plyName = ch.Name;
+								guildId = ch.GuildID;
+								currentTargetGuildRank = ch.GuildRank;
+							}
+							else
+							{
+								client.Out.SendMessage("Error during promotion, player not found!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+
+							if (guildId != client.Player.GuildID)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.NotInYourGuild"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							//Second Check, Autorisation Checks, a player can promote another to it's own RealmRank or above only if: newrank(rank to be applied) >= commandUserGuildRank(usercommandRealmRank)
+
+							ushort commandUserGuildRank = client.Player.GuildRank.RankLevel;
+							ushort newrank;
+							try
+							{
+								newrank = Convert.ToUInt16(args[2]);
+
+								if (newrank > 9)
+								{
+									client.Out.SendMessage("Error changing to new rank! Realm Rank have to be set to 0-9.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+									return;
+								}
+							}
+							catch
+							{
+								client.Out.SendMessage("Error changing to new rank!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.Help.GuildPromote"), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							//if (commandUserGuildRank != 0 && (newrank < commandUserGuildRank || newrank < 0)) // Do we have to authorize Self Retrograde for GuildMaster?
+							if ((newrank < commandUserGuildRank) || (newrank < 0))
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.PromoteHigherThanPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							if (newrank > currentTargetGuildRank && commandUserGuildRank != 0)
+							{
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.PromoteHaveToUseDemote"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+								return;
+							}
+							if (obj is GamePlayer)
+							{
+								ply.GuildRank = client.Player.Guild.GetRankByID(newrank);
+								ply.SaveIntoDatabase();
+								ply.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.PromotedSelf", newrank.ToString()), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+							}
+							else
+							{
+								ch.GuildRank = newrank;
+								GameServer.Database.SaveObject(ch);
+								GameServer.Database.FillObjectRelations(ch);
+								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Player.Guild.PromotedOther", plyName, newrank.ToString()), eChatType.CT_Guild, eChatLoc.CL_SystemWindow);
+							}
+							client.Player.Guild.UpdateGuildWindow();
+						}
+						break;
+					#endregion
+					#region Demote
+					// --------------------------------------------------------------------------------
+					// DEMOTE
+					// --------------------------------------------------------------------------------
 					case "demote":
 						{
 							if (client.Player.Guild == null)

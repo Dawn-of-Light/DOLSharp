@@ -379,7 +379,66 @@ namespace DOL.GS.Spells
 
 		public virtual bool CastSpell(GameLiving targetObject)
 		{
-			bool success = true;
+            // Scale spells that are cast by pets
+            if (Caster is GamePet && !(Caster is NecromancerPet) && ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL > 0)
+            {
+                switch (m_spell.SpellType.ToString().ToLower())
+                {
+                    // Scale Damage
+                    case "damageovertime":
+                    case "damageshield":
+                    case "damageadd":
+                    case "directdamage":
+                    case "directdamagewithdebuff":
+                    case "lifedrain":
+                    case "damagespeeddecrease":
+                    case "StyleBleeding": // Style Effect
+                        Spell.Damage = Spell.Damage * (double)(Caster.Level) / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL;
+                        break;
+                    // Scale Value
+                    case "enduranceregenbuff":
+                    case "combatspeedbuff":
+                    case "hastebuff":
+                    case "celeritybuff":
+                    case "combatspeeddebuff":
+                    case "hastedebuff":
+                    case "heal":
+                    case "combatheal":
+                    case "healthregenbuff":
+                    case "constitutionbuff":
+                    case "dexteritybuff":
+                    case "strengthbuff":
+                    case "constitutiondebuff":
+                    case "dexteritydebuff":
+                    case "strengthdebuff":
+                    case "armorfactordebuff":
+                    case "armorfactorbuff":
+                    case "armorabsorptionbuff":
+                    case "armorabsorptiondebuff":
+                    case "dexterityquicknessbuff":
+                    case "strengthconstitutionbuff":
+                    case "dexterityquicknessdebuff":
+                    case "strengthconstitutiondebuff":
+                    case "taunt":
+                    case "unbreakablespeeddecrease":
+                    case "SpeedDecrease":
+                    case "stylecombatspeeddebuff": // Style Effect
+                    case "stylespeeddecrease": // Style Effect
+                    //case "styletaunt":  Taunt styles already scale with damage, leave their values alone.
+                        Spell.Value = Spell.Value * (double)(Caster.Level) / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL;
+                        break;
+                    // Scale Duration
+                    case "disease":
+                    case "stun":
+                    case "Mesmerize":
+                    case "stylestun": // Style Effect
+                        Spell.Duration = (int)Math.Round(Spell.Duration * (double)(Caster.Level) / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL); ;
+                        break;
+                    default: break; // Don't mess with types we don't know
+                } // switch (m_spell.SpellType.ToString().ToLower())
+            } // if (Caster is GamePet)
+
+            bool success = true;
 
 			m_spellTarget = targetObject;
 
@@ -959,7 +1018,7 @@ namespace DOL.GS.Spells
 		/// <returns></returns>
 		public virtual bool CheckEndCast(GameLiving target)
 		{
-			if (m_caster.ObjectState != GameLiving.eObjectState.Active)
+    		if (m_caster.ObjectState != GameLiving.eObjectState.Active)
 			{
 				return false;
 			}
@@ -2348,7 +2407,7 @@ namespace DOL.GS.Spells
 				if (target != null && spell != null && spell.SubSpellID == 0)
 				{
 					ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
-					spellhandler.StartSpell(target);
+                    spellhandler.StartSpell(target);
 				}
 			}
 		}
@@ -2374,7 +2433,7 @@ namespace DOL.GS.Spells
 		/// <param name="target">The current target object</param>
 		public virtual bool StartSpell(GameLiving target)
 		{
-			// For PBAOE spells always set the target to the caster
+            // For PBAOE spells always set the target to the caster
 			if (Spell.SpellType.ToLower() != "TurretPBAoE".ToLower() && (target == null || (Spell.Radius > 0 && Spell.Range == 0)))
 			{
 				target = Caster;
@@ -2529,7 +2588,7 @@ namespace DOL.GS.Spells
 		/// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
 		public virtual void ApplyEffectOnTarget(GameLiving target, double effectiveness)
 		{
-			if (target is GamePlayer)
+            if (target is GamePlayer)
 			{
 				GameSpellEffect effect1;
 				effect1 = SpellHandler.FindEffectOnTarget(target, "Phaseshift");
@@ -2587,8 +2646,8 @@ namespace DOL.GS.Spells
 			if (effectiveness <= 0)
 				return; // no effect
 
-			// Apply effect for Duration Spell.
-			if ((Spell.Duration > 0 && Spell.Target.ToLower() != "area") || Spell.Concentration > 0)
+            // Apply effect for Duration Spell.
+            if ((Spell.Duration > 0 && Spell.Target.ToLower() != "area") || Spell.Concentration > 0)
 			{
 				OnDurationEffectApply(target, effectiveness);
 			}
@@ -2852,8 +2911,7 @@ namespace DOL.GS.Spells
 		/// <param name="target"></param>
 		/// <param name="effectiveness"></param>
 		public virtual void OnDirectEffect(GameLiving target, double effectiveness)
-		{
-		}
+		{ }
 
 		/// <summary>
 		/// When an applied effect starts
@@ -3542,7 +3600,7 @@ namespace DOL.GS.Spells
 
 			if (player != null)
 			{
-				if (Caster is GamePet)
+                if (Caster is GamePet)
 				{
 					spellDamage = CapPetSpellDamage(spellDamage, player);
 				}

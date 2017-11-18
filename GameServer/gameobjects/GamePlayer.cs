@@ -666,8 +666,14 @@ namespace DOL.GS
 				return 0;
 			}
 
-			//Gms can quit instantly
-			if (Client.Account.PrivLevel == 1)
+			bool bInstaQuit = false;
+
+			if (Client.Account.PrivLevel > 1) // GMs can always insta quit
+				bInstaQuit = true;
+			else if (Client.Player.InCombat == false)  // Players can only insta quit if they aren't in combat
+				bInstaQuit = ServerProperties.Properties.REMOVE_QUIT_TIMER;
+
+			if (bInstaQuit == false)
 			{
 				if (CraftTimer != null && CraftTimer.IsAlive)
 				{
@@ -2547,7 +2553,7 @@ namespace DOL.GS
 			 * Strength affects the amount of damage done by spells in all of the Vampiir's spell lines.
 			 * The amount of said affecting was recently increased slightly (fixing a bug), and that minor increase will go live in 1.74 next week.
 			 * 
-			 * Strength ALSO affects the size of the power pool for a Vampiir… sort of.
+			 * Strength ALSO affects the size of the power pool for a Vampiir sort of.
 			 * Your INNATE strength (the number of attribute points your character has for strength) has no effect at all.
 			 * Extra points added through ITEMS, however, does increase the size of your power pool.
 
@@ -6307,15 +6313,17 @@ namespace DOL.GS
 					{
 						(weapon as GameInventoryItem).OnStrikeTarget(this, target);
 					}
-					//Camouflage
-					if (target is GamePlayer && HasAbility(Abilities.Camouflage))
+					//Camouflage - Camouflage will be disabled only when attacking a GamePlayer or ControlledNPC of a GamePlayer.
+					if (HasAbility(Abilities.Camouflage) && target is GamePlayer || (target is GameNPC && (target as GameNPC).Brain is IControlledBrain && ((target as GameNPC).Brain as IControlledBrain).GetPlayerOwner() != null))
 					{
 						CamouflageEffect camouflage = EffectList.GetOfType<CamouflageEffect>();
-						if (camouflage != null)
+												
+						if (camouflage != null)// Check if Camo is active, if true, cancel ability.
 						{
-							DisableSkill(SkillBase.GetAbility(Abilities.Camouflage), CamouflageSpecHandler.DISABLE_DURATION);
-							camouflage.Cancel(false);
+							camouflage.Cancel(false);						
 						}
+						Skill camo = SkillBase.GetAbility(Abilities.Camouflage); // now we find the ability
+						DisableSkill(camo, CamouflageSpecHandler.DISABLE_DURATION); // and here we disable it.
 					}
 
 					// Multiple Hit check
