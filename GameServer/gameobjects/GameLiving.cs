@@ -847,8 +847,12 @@ namespace DOL.GS
 			if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 			{
 				speed *= 1.5; // mob archer speed too fast
-				// speed *= 1.0 - GetModified(eProperty.CastingSpeed) * 0.01; Why casting speed?
-				speed *= 1.0 - GetModified(eProperty.ArcherySpeed) * 0.01;
+				
+				// Old archery uses archery speed, but new archery uses casting speed
+				if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == true)
+				    speed *= 1.0 - GetModified(eProperty.ArcherySpeed) * 0.01;
+				else
+				    speed *= 1.0 - GetModified(eProperty.CastingSpeed) * 0.01;
 			}
 			else
 			{
