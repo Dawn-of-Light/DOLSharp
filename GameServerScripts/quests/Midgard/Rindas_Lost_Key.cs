@@ -112,7 +112,7 @@ using DOL.AI.Brain;
 	#region defineNPCs
 	GameNPC[] npcs;
 	
-			npcs = WorldMgr.GetNPCsByName("Dwarven Guard Rinda",(eRealm) 2);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Dwarven Guard Rinda",(eRealm) 2);
 			if (npcs.Length == 0)
 			{
 				if (!WorldMgr.GetRegion(100).IsDisabled)
@@ -157,7 +157,7 @@ using DOL.AI.Brain;
 				DwarvenGuardRinda = npcs[0];
 			}
 		
-			npcs = WorldMgr.GetNPCsByName("hobgoblin snake-finder",(eRealm) 0);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("hobgoblin snake-finder",(eRealm) 0);
 			if (npcs.Length == 0)
 			{
 				if (!WorldMgr.GetRegion(100).IsDisabled)

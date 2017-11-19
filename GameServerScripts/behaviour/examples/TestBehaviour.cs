@@ -32,8 +32,8 @@ namespace DOL.GS.Behaviour.Examples
 
             #region defineNPCs
 
-            GameNPC[] npcs = WorldMgr.GetNPCsByName("Sir Quait", eRealm.Albion);
-            npcs = WorldMgr.GetNPCsByName("Sir Quait", (eRealm)1);
+            GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Sir Quait", eRealm.Albion);
+            npcs = WorldMgr.GetObjectsByName<GameNPC>("Sir Quait", (eRealm)1);
             GameNPC SirQuait = null;
             if (npcs.Length == 0)
             {

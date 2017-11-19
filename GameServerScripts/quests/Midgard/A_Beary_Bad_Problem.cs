@@ -109,7 +109,7 @@ namespace DOL.GS.Quests.Midgard
 	#region defineNPCs
 	GameNPC[] npcs;
 	
-            npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.ABearyBadProblem.NPCKreimhilde"),(eRealm) 2);
+            npcs = WorldMgr.GetObjectsByName<GameNPC>(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.ABearyBadProblem.NPCKreimhilde"),(eRealm) 2);
 			if (npcs.Length == 0)
 			{			
 				VikingKreimhilde = new DOL.GS.GameNPC();

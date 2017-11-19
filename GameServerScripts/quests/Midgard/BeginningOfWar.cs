@@ -169,7 +169,7 @@ namespace DOL.GS.Quests.Midgard
 
 			dalikor = GetDalikor();
 
-            GameNPC[] npcs = WorldMgr.GetNPCsByName("Master Briedi", eRealm.Midgard);
+            GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Master Briedi", eRealm.Midgard);
 			if (npcs.Length == 0)
 			{
 				briedi = new GameNPC();
@@ -219,7 +219,7 @@ namespace DOL.GS.Quests.Midgard
 				briedi = npcs[0];
 
 
-			npcs = WorldMgr.GetNPCsByName("Princess Aiyr", eRealm.None);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Princess Aiyr", eRealm.None);
 			if (npcs.Length == 0)
 			{
 				princessAiyr = new GameNPC();

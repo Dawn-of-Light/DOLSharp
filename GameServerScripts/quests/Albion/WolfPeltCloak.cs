@@ -149,7 +149,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineNPCs
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Steward Willie", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Steward Willie", eRealm.Albion);
 
 			/* Whops, if the npcs array length is 0 then no Sir Quait exists in
 				* this users Mob Database, so we simply create one ;-)
@@ -187,7 +187,7 @@ namespace DOL.GS.Quests.Albion
 
 			/* Now we do the same for the Lynnet.
 			*/
-			npcs = WorldMgr.GetNPCsByName("Seamstress Lynnet", eRealm.Albion);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Seamstress Lynnet", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				lynnet = new GameNPC();
@@ -222,7 +222,7 @@ namespace DOL.GS.Quests.Albion
 			else
 				lynnet = npcs[0];
 
-			npcs = WorldMgr.GetNPCsByName("Brother Don", eRealm.Albion);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Brother Don", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				don = new GameNPC();

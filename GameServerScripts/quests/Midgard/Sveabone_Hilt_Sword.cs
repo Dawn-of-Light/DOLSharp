@@ -110,7 +110,7 @@ using DOL.AI.Brain;
 	#region defineNPCs
 	GameNPC[] npcs;
 	
-			npcs = WorldMgr.GetNPCsByName("Gridash",(eRealm) 2);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Gridash",(eRealm) 2);
 			if (npcs.Length == 0)
 			{
 				if (!WorldMgr.GetRegion(100).IsDisabled)

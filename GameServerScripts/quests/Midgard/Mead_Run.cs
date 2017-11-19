@@ -110,7 +110,7 @@ using DOL.AI.Brain;
 	#region defineNPCs
 	GameNPC[] npcs;
 	
-			npcs = WorldMgr.GetNPCsByName("Audun",(eRealm) 2);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Audun",(eRealm) 2);
 			if (npcs.Length == 0)
 			{
 				if (!WorldMgr.GetRegion(101).IsDisabled)
@@ -155,7 +155,7 @@ using DOL.AI.Brain;
 				Audun = npcs[0];
 			}
 		
-			npcs = WorldMgr.GetNPCsByName("Guard Olja",(eRealm) 2);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Guard Olja",(eRealm) 2);
 			if (npcs.Length == 0)
 			{
 				if (!WorldMgr.GetRegion(229).IsDisabled)

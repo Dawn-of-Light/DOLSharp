@@ -148,7 +148,7 @@ namespace DOL.GS.Quests.Albion
 
 			masterFrederick = GetMasterFrederick();
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Nob the Stableboy", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Nob the Stableboy", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				nob = new GameNPC();
@@ -178,7 +178,7 @@ namespace DOL.GS.Quests.Albion
 			else
 				nob = npcs[0];
 
-			npcs = (GameNPC[]) WorldMgr.GetObjectsByName("Dragonfly Handler Colm", eRealm.Albion, typeof (GameStableMaster));
+			npcs = WorldMgr.GetObjectsByName<GameStableMaster>("Dragonfly Handler Colm", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				colm = new GameStableMaster();
@@ -227,7 +227,7 @@ namespace DOL.GS.Quests.Albion
 				colm = npcs[0] as GameStableMaster;
 			}
 
-			npcs = WorldMgr.GetNPCsByName("Haruld", eRealm.Albion);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Haruld", eRealm.Albion);
 			if (npcs.Length == 0 || !(npcs[0] is GameStableMaster))
 			{
 				haruld = new GameStableMaster();
@@ -266,7 +266,7 @@ namespace DOL.GS.Quests.Albion
 				haruld = npcs[0] as GameStableMaster;
 			}
 
-			npcs = WorldMgr.GetNPCsByName("Fairy Dragonfly Handler", eRealm.None);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Fairy Dragonfly Handler", eRealm.None);
 			if (npcs.Length == 0)
 			{
 				fairyDragonflyHandler = new GameNPC();

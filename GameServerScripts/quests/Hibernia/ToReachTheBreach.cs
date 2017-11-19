@@ -202,7 +202,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			#region defineNPCS
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Richael", eRealm.Hibernia);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Richael", eRealm.Hibernia);
 
 			if (npcs.Length == 0)
 			{

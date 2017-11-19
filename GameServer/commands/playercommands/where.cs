@@ -39,7 +39,7 @@ namespace DOL.GS.Commands
 			if (targetnpc != null && CheckTargetIsGuard(targetnpc))
 			{
 				string name = String.Join(" ", args, 1, args.Length - 1);
-				GameNPC[] npcs = WorldMgr.GetNPCsByNameFromRegion(name, client.Player.CurrentRegionID, (eRealm) client.Player.Realm);
+				GameNPC[] npcs = WorldMgr.GetObjectsByNameFromRegion<GameNPC>(name, client.Player.CurrentRegionID, client.Player.Realm);
 				if (npcs == null || npcs.Length <= 0)
 				{
 					targetnpc.SayTo(client.Player, "Sorry, i do not know this person.");

@@ -153,7 +153,7 @@ namespace DOL.GS.Quests.Midgard
 
 		public static GameNPC GetDalikor()
 		{
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Dalikor", eRealm.Midgard);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Dalikor", eRealm.Midgard);
 
 			GameNPC dalikor = null;
 

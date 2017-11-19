@@ -149,6 +149,9 @@
     <Compile Include="globals.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="quests\Albion\GreetingsArmsman.cs" />
+    <Compile Include="quests\Albion\GreetingsPaladin.cs" />
+    <Compile Include="quests\Hibernia\BonesToBlades.cs" />
     <Compile Include="web\OnlineStatusUpdate.cs" />
     <Compile Include="web\WebUIGenerator.cs">
       <SubType>Code</SubType>
@@ -278,6 +281,9 @@
   <ItemGroup>
     <None Include="quests\Albion\BaseFrederickPathPoints.xml" />
     <None Include="quests\Hibernia\BaseAddrirPathPoints.xml" />
+    <None Include="quests\Hibernia\BasicsOfCombat.cs.rename.to.enable" />
+    <None Include="quests\Hibernia\MovementAndInteraction.cs.rename.to.enable" />
+    <None Include="quests\Midgard\MovementAndInteraction.cs.rename.to.enable" />
     <None Include="web\OnlineStatusUpdateServerFiles\serverinfo.php" />
     <None Include="web\OnlineStatusUpdateServerFiles\showplayers.php" />
   </ItemGroup>

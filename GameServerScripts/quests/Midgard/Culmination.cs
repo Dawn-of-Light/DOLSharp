@@ -153,7 +153,7 @@ namespace DOL.GS.Quests.Midgard
 
 			dalikor = GetDalikor();
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Queen Vuuna", eRealm.None);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Queen Vuuna", eRealm.None);
 			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)

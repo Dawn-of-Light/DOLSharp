@@ -112,7 +112,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			#region NPC Declarations
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Ainrebh", eRealm.Hibernia);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Ainrebh", eRealm.Hibernia);
 
 			if (npcs.Length == 0)
 			{
@@ -141,7 +141,7 @@ namespace DOL.GS.Quests.Hibernia
 				Ainrebh = npcs[0];
 			// end npc
 
-			npcs = WorldMgr.GetNPCsByName("Green Maw", eRealm.None);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Green Maw", eRealm.None);
 
 			if (npcs.Length == 0)
 			{

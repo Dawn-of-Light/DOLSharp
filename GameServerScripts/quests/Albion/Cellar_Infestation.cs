@@ -108,7 +108,7 @@ using DOL.AI.Brain;
 	#region defineNPCs
 	GameNPC[] npcs;
 	
-			npcs = WorldMgr.GetNPCsByName("Mistress Laws",(eRealm) 1);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Mistress Laws",(eRealm) 1);
 			if (npcs.Length == 0)
 			{
 				if (!WorldMgr.GetRegion(51).IsDisabled)
@@ -153,7 +153,7 @@ using DOL.AI.Brain;
 				MistressLaws = npcs[0];
 			}
 		
-			npcs = WorldMgr.GetNPCsByName("Ylaine Barrett",(eRealm) 1);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Ylaine Barrett",(eRealm) 1);
 			if (npcs.Length == 0)
 			{
 				if (!WorldMgr.GetRegion(51).IsDisabled)

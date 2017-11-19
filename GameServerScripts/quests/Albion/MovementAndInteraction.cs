@@ -104,7 +104,7 @@ namespace DOL.GS.Quests.Albion {
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 
 			#region defineNPCS
-			GameNPC[] npcs = WorldMgr.GetNPCsByName(questGiverName, eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>(questGiverName, eRealm.Albion);
 
 			if (npcs.Length == 0)
 			{
@@ -141,7 +141,7 @@ namespace DOL.GS.Quests.Albion {
 			else
 				questGiver = npcs[0];
 
-			npcs = WorldMgr.GetNPCsByName(questTargetName, eRealm.Albion);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>(questTargetName, eRealm.Albion);
 
 			if (npcs.Length == 0)
 			{

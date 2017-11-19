@@ -110,7 +110,7 @@ using log4net;
 	#region defineNPCs
 	GameNPC[] npcs;
 	
-            npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.NPCBarkeepNognar"), (eRealm)2);
+            npcs = WorldMgr.GetObjectsByName<GameNPC>(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.NPCBarkeepNognar"), (eRealm)2);
 
 			if (npcs.Length == 0)
 			{
@@ -155,7 +155,7 @@ using log4net;
 				BarkeepNognar = npcs[0];
 			}
 		
-            npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.NPCBarkeepPrugar"), (eRealm)2);
+            npcs = WorldMgr.GetObjectsByName<GameNPC>(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.TheBirthdayGift.NPCBarkeepPrugar"), (eRealm)2);
 
 			if (npcs.Length == 0)
 			{
