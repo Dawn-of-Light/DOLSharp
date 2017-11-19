@@ -808,9 +808,9 @@ namespace DOL.GS
 			if (m_ObjectState == eObjectState.Active)
 				return false;
 			CurrentRegionID = regionID;
-			m_x = x;
-			m_y = y;
-			m_z = z;
+			X = x;
+			Y = y;
+			Z = z;
 			m_Heading = heading;
 			return AddToWorld();
 		}
@@ -896,9 +896,9 @@ namespace DOL.GS
 
 			if (!RemoveFromWorld())
 				return false;
-			m_x = x;
-			m_y = y;
-			m_z = z;
+			X = x;
+			Y = y;
+			Z = z;
 			m_Heading = heading;
 			CurrentRegionID = regionID;
 			return AddToWorld();

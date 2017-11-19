@@ -129,11 +129,12 @@ namespace DOL.GS
 		{
 			lock (m_syncTeleport)
 			{
-				return (m_teleportLocations.ContainsKey(realm)) ?
-					(m_teleportLocations[realm].ContainsKey(teleportKey) ?
-					 m_teleportLocations[realm][teleportKey] :
-					 null) :
-					null;
+			    if (m_teleportLocations.ContainsKey(realm) && m_teleportLocations[realm].ContainsKey(teleportKey))
+			    {
+			        return m_teleportLocations[realm][teleportKey];
+			    }
+
+			    return null;
 			}
 		}
 
@@ -145,15 +146,17 @@ namespace DOL.GS
 		public static bool AddTeleportLocation(Teleport teleport)
 		{
 			eRealm realm = (eRealm)teleport.Realm;
-			String teleportKey = String.Format("{0}:{1}", teleport.Type, teleport.TeleportID);
+			String teleportKey = $"{teleport.Type}:{teleport.TeleportID}";
 
 			lock (m_syncTeleport)
 			{
 				Dictionary<String, Teleport> teleports = null;
 				if (m_teleportLocations.ContainsKey(realm))
 				{
-					if (m_teleportLocations[realm].ContainsKey(teleportKey))
-						return false;   // Double entry.
+				    if (m_teleportLocations[realm].ContainsKey(teleportKey))
+				    {
+				        return false;   // Double entry.
+                    }
 
 					teleports = m_teleportLocations[realm];
 				}
@@ -174,22 +177,16 @@ namespace DOL.GS
 		/// </summary>
 		private static readonly ReaderWriterDictionary<ushort, Region> m_regions = new ReaderWriterDictionary<ushort, Region>();
 
-		public static IDictionary<ushort, Region> Regions
-		{
-			get { return m_regions; }
-		}
+		public static IDictionary<ushort, Region> Regions => m_regions;
 
-		/// <summary>
+	    /// <summary>
 		/// This hashtable holds all zones in the world, for easy access
 		/// </summary>
 		private static readonly ReaderWriterDictionary<ushort, Zone> m_zones = new ReaderWriterDictionary<ushort, Zone>();
 
-		public static IDictionary<ushort, Zone> Zones
-		{
-			get { return m_zones; }
-		}
+		public static IDictionary<ushort, Zone> Zones => m_zones;
 
-		/// <summary>
+	    /// <summary>
 		/// This array holds all gameclients connected to the game
 		/// </summary>
 		private static GameClient[] m_clients = new GameClient[0];
@@ -315,24 +312,31 @@ namespace DOL.GS
 				hasFrontierRegion |= data.IsFrontier;
 
 				List<Mob> mobs;
-
-				if (!mobsByRegionId.TryGetValue(data.Id, out mobs))
-					data.Mobs = new Mob[0];
-				else
-					data.Mobs = mobs.ToArray();
+			    if (!mobsByRegionId.TryGetValue(data.Id, out mobs))
+			    {
+			        data.Mobs = new Mob[0];
+                }
+                else
+			    {
+			        data.Mobs = mobs.ToArray();
+			    }
 
 				regions.Add(data);
 
 				//Dinberg - save the data by ID.
 				if (m_regionData.ContainsKey(data.Id))
-					log.ErrorFormat("Duplicate key in region table - {0}, EarlyInit in WorldMgr failed.", data.Id);
-				else
-					m_regionData.Add(data.Id, data);
+				{
+				    log.Error($"Duplicate key in region table - {data.Id}, EarlyInit in WorldMgr failed.");
+				}
+                else
+				{
+				    m_regionData.Add(data.Id, data);
+				}
 			}
 
 			regions.Sort();
 
-			log.DebugFormat("{0}MB - Region Data Loaded", GC.GetTotalMemory(true) / 1024 / 1024);
+			log.Debug($"{GC.GetTotalMemory(true) / 1024 / 1024}MB - Region Data Loaded");
 
 			int cpuCount = GameServer.Instance.Configuration.CPUUse;
 			if (cpuCount < 1)
@@ -341,7 +345,7 @@ namespace DOL.GS
 			GameTimer.TimeManager[] timers = new GameTimer.TimeManager[cpuCount];
 			for (int i = 0; i < cpuCount; i++)
 			{
-				timers[i] = new GameTimer.TimeManager(string.Format("RegionTime{0}", (i + 1).ToString()));
+				timers[i] = new GameTimer.TimeManager($"RegionTime{(i + 1)}");
 			}
 
 			m_regionTimeManagers = timers;
@@ -352,7 +356,7 @@ namespace DOL.GS
 				RegisterRegion(timers[FastMath.Abs(i % (cpuCount * 2) - cpuCount) % cpuCount], region);
 			}
 
-			log.DebugFormat("{0}MB - {1} Regions Loaded", GC.GetTotalMemory(true) / 1024 / 1024, m_regions.Count);
+			log.Debug($"{GC.GetTotalMemory(true) / 1024 / 1024}MB - {m_regions.Count} Regions Loaded");
 
 			// if we don't have at least one frontier region add the default
 			if (hasFrontierRegion == false)
@@ -364,7 +368,7 @@ namespace DOL.GS
 				}
 				else
 				{
-					log.ErrorFormat("Can't find default Frontier region {0}!", Keeps.DefaultKeepManager.DEFAULT_FRONTIERS_REGION);
+					log.Error($"Can't find default Frontier region {Keeps.DefaultKeepManager.DEFAULT_FRONTIERS_REGION}!");
 				}
 			}
 
@@ -381,18 +385,20 @@ namespace DOL.GS
 				zoneData.WaterLevel = dbZone.WaterLevel;
 				zoneData.DivingFlag = dbZone.DivingFlag;
 				zoneData.IsLava = dbZone.IsLava;
-				RegisterZone(zoneData, zoneData.ZoneID, zoneData.RegionID, zoneData.Description,
-							 dbZone.Experience, dbZone.Realmpoints, dbZone.Bountypoints, dbZone.Coin, dbZone.Realm);
+			    RegisterZone(zoneData, zoneData.ZoneID, zoneData.RegionID, zoneData.Description,
+			        dbZone.Experience, dbZone.Realmpoints, dbZone.Bountypoints, dbZone.Coin, dbZone.Realm);
 
 				//Save the zonedata.
 				if (!m_zonesData.ContainsKey(zoneData.RegionID))
-					m_zonesData.Add(zoneData.RegionID, new List<ZoneData>());
+				{
+				    m_zonesData.Add(zoneData.RegionID, new List<ZoneData>());
+				}
 
 				m_zonesData[zoneData.RegionID].Add(zoneData);
 			}
 
 
-			log.DebugFormat("{0}MB - Zones Loaded for All Regions", GC.GetTotalMemory(true) / 1024 / 1024);
+			log.Debug($"{GC.GetTotalMemory(true) / 1024 / 1024}MB - Zones Loaded for All Regions");
 
 			regionsData = regions.ToArray();
 			return true;
@@ -411,26 +417,31 @@ namespace DOL.GS
 			{
 				Dictionary<string, Teleport> teleportList;
 				if (m_teleportLocations.ContainsKey((eRealm)teleport.Realm))
-					teleportList = m_teleportLocations[(eRealm)teleport.Realm];
+				{
+				    teleportList = m_teleportLocations[(eRealm)teleport.Realm];
+				}
 				else
 				{
 					teleportList = new Dictionary<string, Teleport>();
 					m_teleportLocations.Add((eRealm)teleport.Realm, teleportList);
 				}
-				String teleportKey = String.Format("{0}:{1}", teleport.Type, teleport.TeleportID);
+
+				String teleportKey = $"{teleport.Type}:{teleport.TeleportID}";
 				if (teleportList.ContainsKey(teleportKey))
 				{
-					log.Error("WorldMgr.EarlyInit teleporters - Cannot add " + teleportKey + " already exists");
+					log.Error($"WorldMgr.EarlyInit teleporters - Cannot add {teleportKey} already exists");
 					continue;
 				}
+
 				teleportList.Add(teleportKey, teleport);
+
 				if (teleport.Realm >= 1 && teleport.Realm <= 3)
-					numTeleports[teleport.Realm - 1]++;
+				{
+				    numTeleports[teleport.Realm - 1]++;
+				}
 			}
 
-			objs = null;
-
-			return String.Format("Loaded {0} Albion, {1} Midgard and {2} Hibernia teleport locations", numTeleports[0], numTeleports[1], numTeleports[2]);
+			return $"Loaded {numTeleports[0]} Albion, {numTeleports[1]} Midgard and {numTeleports[2]} Hibernia teleport locations";
 		}
 
 
@@ -458,10 +469,10 @@ namespace DOL.GS
 
 				if (log.IsInfoEnabled)
 				{
-					log.Info("Total Mobs: " + mobs);
-					log.Info("Total Merchants: " + merchants);
-					log.Info("Total Items: " + items);
-					log.Info("Total Bind Points: " + bindpoints);
+					log.Info($"Total Mobs: {mobs}");
+					log.Info($"Total Merchants: {merchants}");
+					log.Info($"Total Items: {items}");
+					log.Info($"Total Bind Points: {bindpoints}");
 				}
 
 				m_WorldUpdateThread = new Thread(new ThreadStart(WorldUpdateThread.WorldUpdateThreadStart));
@@ -484,7 +495,9 @@ namespace DOL.GS
 			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
-					log.Error("Init", e);
+				{
+				    log.Error("Init", e);
+				}
 				return false;
 			}
 			return true;
@@ -497,7 +510,11 @@ namespace DOL.GS
 		public static GameTimer.TimeManager[] GetRegionTimeManagers()
 		{
 			GameTimer.TimeManager[] timers = m_regionTimeManagers;
-			if (timers == null) return new GameTimer.TimeManager[0];
+		    if (timers == null)
+		    {
+		        return new GameTimer.TimeManager[0];
+		    }
+
 			return (GameTimer.TimeManager[])timers.Clone();
 		}
 
@@ -520,7 +537,10 @@ namespace DOL.GS
 							if (client.PingTime + PING_TIMEOUT * 1000 * 1000 * 10 < DateTime.Now.Ticks)
 							{
 								if (log.IsWarnEnabled)
-									log.Warn("Ping timeout for client " + client.Account.Name);
+								{
+								    log.Warn($"Ping timeout for client {client.Account.Name}");
+								}
+
 								GameServer.Instance.Disconnect(client);
 							}
 						}
@@ -529,8 +549,11 @@ namespace DOL.GS
 							// in all other cases client gets 10min to get wether in charscreen or playing state
 							if (client.PingTime + 10 * 60 * 10000000L < DateTime.Now.Ticks)
 							{
-								if (log.IsWarnEnabled)
-									log.Warn("Hard timeout for client " + client.Account.Name + " (" + client.ClientState + ")");
+							    if (log.IsWarnEnabled)
+							    {
+							        log.Warn($"Hard timeout for client {client.Account.Name} ({client.ClientState})");
+                                }
+
 								GameServer.Instance.Disconnect(client);
 							}
 						}
@@ -538,14 +561,18 @@ namespace DOL.GS
 					catch (Exception ex)
 					{
 						if (log.IsErrorEnabled)
-							log.Error("PingCheck", ex);
+						{
+						    log.Error("PingCheck", ex);
+						}
 					}
 				}
 			}
 			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
-					log.Error("PingCheck callback", e);
+				{
+				    log.Error("PingCheck callback", e);
+				}
 			}
 			finally
 			{
@@ -564,7 +591,7 @@ namespace DOL.GS
 
 		private static void RelocateRegions()
 		{
-			log.InfoFormat("started RelocateRegions() thread ID:{0}", Thread.CurrentThread.ManagedThreadId);
+			log.Info($"started RelocateRegions() thread ID:{Thread.CurrentThread.ManagedThreadId}");
 			while (m_relocationThread != null && m_relocationThread.IsAlive)
 			{
 				try
@@ -585,7 +612,9 @@ namespace DOL.GS
 					if (took > 500)
 					{
 						if (log.IsWarnEnabled)
-							log.WarnFormat("RelocateRegions() took {0}ms", took);
+						{
+						    log.Warn($"RelocateRegions() took {took}ms");
+						}
 					}
 				}
 				catch (ThreadAbortException)
@@ -602,7 +631,8 @@ namespace DOL.GS
 					log.Error(e.ToString());
 				}
 			}
-			log.InfoFormat("stopped RelocateRegions() thread ID:{0}", Thread.CurrentThread.ManagedThreadId);
+
+			log.Info($"stopped RelocateRegions() thread ID:{Thread.CurrentThread.ManagedThreadId}");
 		}
 
 		/// <summary>
@@ -614,7 +644,7 @@ namespace DOL.GS
 			m_dayStartTick = Environment.TickCount;
 			foreach (GameClient client in GetAllPlayingClients())
 			{
-				if (client.Player != null && client.Player.CurrentRegion != null && client.Player.CurrentRegion.UseTimeManager)
+				if (client.Player?.CurrentRegion != null && client.Player.CurrentRegion.UseTimeManager)
 				{
 					client.Out.SendTime();
 				}
@@ -633,7 +663,7 @@ namespace DOL.GS
 			if (m_dayIncrement == 0)
 			{
 				// day should stand still so pause the timer
-				m_dayStartTick = (int)(dayStart);
+				m_dayStartTick = (int)dayStart;
 				m_dayResetTimer.Change(Timeout.Infinite, Timeout.Infinite);
 			}
 			else
@@ -644,7 +674,7 @@ namespace DOL.GS
 
 			foreach (GameClient client in GetAllPlayingClients())
 			{
-				if (client.Player != null && client.Player.CurrentRegion != null && client.Player.CurrentRegion.UseTimeManager)
+				if (client.Player?.CurrentRegion != null && client.Player.CurrentRegion.UseTimeManager)
 				{
 					client.Out.SendTime();
 				}
@@ -660,7 +690,9 @@ namespace DOL.GS
 		public static uint GetCurrentGameTime(GamePlayer player)
 		{
 			if (player.CurrentRegion != null)
-				return player.CurrentRegion.GameTime;
+			{
+			    return player.CurrentRegion.GameTime;
+			}
 
 			return GetCurrentGameTime();
 		}
@@ -675,12 +707,10 @@ namespace DOL.GS
 			{
 				return (uint)m_dayStartTick;
 			}
-			else
-			{
-				long diff = Environment.TickCount - m_dayStartTick;
-				long curTime = diff * m_dayIncrement;
-				return (uint)(curTime % DAY);
-			}
+
+			long diff = Environment.TickCount - m_dayStartTick;
+			long curTime = diff * m_dayIncrement;
+			return (uint)(curTime % DAY);
 		}
 
 		/// <summary>
@@ -690,7 +720,9 @@ namespace DOL.GS
 		public static uint GetDayIncrement(GamePlayer player)
 		{
 			if (player.CurrentRegion != null)
-				return player.CurrentRegion.DayIncrement;
+			{
+			    return player.CurrentRegion.DayIncrement;
+			}
 
 			return GetDayIncrement();
 		}
@@ -723,16 +755,19 @@ namespace DOL.GS
 					m_pingCheckTimer.Dispose();
 					m_pingCheckTimer = null;
 				}
+
 				if (m_dayResetTimer != null)
 				{
 					m_dayResetTimer.Dispose();
 					m_dayResetTimer = null;
 				}
+
 				if (m_WorldUpdateThread != null)
 				{
 					m_WorldUpdateThread.Abort();
 					m_WorldUpdateThread = null;
 				}
+
 				if (m_relocationThread != null)
 				{
 					m_relocationThread.Abort();
@@ -745,7 +780,9 @@ namespace DOL.GS
 			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
-					log.Error("Exit", e);
+				{
+				    log.Error("Exit", e);
+				}
 			}
 		}
 
@@ -769,16 +806,17 @@ namespace DOL.GS
 		public static RegionEntry[] GetRegionList()
 		{
 			string ip = GameServer.Instance.Configuration.RegionIP.ToString();
-			string port = string.Format("{0:D00000}", GameServer.Instance.Configuration.RegionPort);
-			return m_regions.Select(r => new RegionEntry()
-			                        {
-			                        	id = r.Value.ID,
-			                        	ip = ip,
-			                        	toPort = port,
-			                        	name = r.Value.Name,
-			                        	fromPort = port,
-			                        	expansion = r.Value.Expansion,
-			                        }).ToArray();
+			string port = $"{GameServer.Instance.Configuration.RegionPort:D00000}";
+		    return m_regions
+		        .Select(r => new RegionEntry
+		        {
+		            id = r.Value.ID,
+		            ip = ip,
+		            toPort = port,
+		            name = r.Value.Name,
+		            fromPort = port,
+		            expansion = r.Value.Expansion,
+		        }).ToArray();
 		}
 
 		/// <summary>
@@ -800,8 +838,9 @@ namespace DOL.GS
 			{
 				if (log.IsWarnEnabled)
 				{
-					log.WarnFormat("Could not find Region {0} for Zone {1}", regionID, zoneData.Description);
+					log.Warn($"Could not find Region {regionID} for Zone {zoneData.Description}");
 				}
+
 				return;
 			}
 			
@@ -814,44 +853,34 @@ namespace DOL.GS
 			bool isDivingEnabled = region.IsRegionDivingEnabled;
 
 			if (zoneData.DivingFlag == 1)
-				isDivingEnabled = true;
+			{
+			    isDivingEnabled = true;
+			}
 			else if (zoneData.DivingFlag == 2)
-				isDivingEnabled = false;
-			
-			Zone zone = new Zone(region,
-			                     zoneID,
-			                     zoneName,
-			                     zoneData.OffX * 8192,
-			                     zoneData.OffY * 8192,
-			                     zoneData.Width * 8192,
-			                     zoneData.Height * 8192,
-			                     zoneData.ZoneID,
-			                     isDivingEnabled,
-			                     zoneData.WaterLevel,
-			                     zoneData.IsLava,
-			                     xpBonus,
-			                     rpBonus,
-			                     bpBonus,
-			                     coinBonus,
-			                     realm);
+			{
+			    isDivingEnabled = false;
+			}
 
-			//Dinberg:Instances
-			//ZoneID will always be constant as last parameter, because ZoneSkinID will effectively be a bluff, to remember
-			//the original region that spawned this one!
-
-			/*reg,
-                    zoneID,
-                    desc,
-                    offx * 8192,
-                    offy * 8192,
-                    width * 8192,
-                    height * 8192);*/
+		    Zone zone = new Zone(region,
+		        zoneID,
+		        zoneName,
+		        zoneData.OffX * 8192,
+		        zoneData.OffY * 8192,
+		        zoneData.Width * 8192,
+		        zoneData.Height * 8192,
+		        zoneData.ZoneID,
+		        isDivingEnabled,
+		        zoneData.WaterLevel,
+		        zoneData.IsLava,
+		        xpBonus,
+		        rpBonus,
+		        bpBonus,
+		        coinBonus,
+		        realm);
 
 			region.Zones.Add(zone);
-			
 			m_zones.AddOrReplace(zoneID, zone);
-
-			log.InfoFormat("Added a zone, {0}, to region {1}", zoneData.Description, region.Name);
+			log.Info($"Added a zone, {zoneData.Description}, to region {region.Name}");
 		}
 
 		/// <summary>
@@ -860,11 +889,12 @@ namespace DOL.GS
 		/// <returns>true</returns>
 		public static bool StartRegionMgrs()
 		{
-			m_regions.FreezeWhile(dict => {
-			                      	foreach (Region reg in dict.Values)
-			                      		reg.StartRegionMgr();
+		    m_regions.FreezeWhile(dict =>
+		    {
+		        foreach (Region reg in dict.Values)
+		            reg.StartRegionMgr();
+		    });
 
-			                      });			
 			return true;
 		}
 
@@ -874,16 +904,20 @@ namespace DOL.GS
 		public static void StopRegionMgrs()
 		{
 			if (log.IsDebugEnabled)
-				log.Debug("Stopping region managers...");
-			
-			m_regions.FreezeWhile(dict => {
-			                      	foreach (Region reg in dict.Values)
-			                      		reg.StopRegionMgr();
+			{
+			    log.Debug("Stopping region managers...");
+			}
 
-			                      });			
+		    m_regions.FreezeWhile(dict =>
+		    {
+		        foreach (Region reg in dict.Values)
+		            reg.StopRegionMgr();
+		    });
 
 			if (log.IsDebugEnabled)
-				log.Debug("Region managers stopped.");
+			{
+			    log.Debug("Region managers stopped.");
+			}
 		}
 
 		/// <summary>
@@ -893,14 +927,15 @@ namespace DOL.GS
 		/// <returns>Region or null if not found</returns>
 		public static Region GetRegion(ushort regionID)
 		{
-			Region reg;
-			if (m_regions.TryGetValue(regionID, out reg))
-				return reg;
+		    if (m_regions.TryGetValue(regionID, out var reg))
+			{
+			    return reg;
+			}
 			
 			return null;
 		}
 
-		public static ushort m_lastZoneError = 0;
+		public static ushort m_lastZoneError;
 
 		/// <summary>
 		/// Gets a Zone object by it's ID
@@ -909,13 +944,14 @@ namespace DOL.GS
 		/// <returns>the zone object or null</returns>
 		public static Zone GetZone(ushort zoneID)
 		{
-			Zone z;
-			if (m_zones.TryGetValue(zoneID, out z))
-				return z;
+		    if (m_zones.TryGetValue(zoneID, out var z))
+			{
+			    return z;
+			}
 			
 			if (m_lastZoneError != zoneID)
 			{
-				log.ErrorFormat("Trying to access inexistent ZoneID {0} {1}", zoneID, Environment.StackTrace);
+				log.Error($"Trying to access inexistent ZoneID {zoneID} {Environment.StackTrace}");
 				m_lastZoneError = zoneID;
 			}
 
@@ -933,13 +969,14 @@ namespace DOL.GS
 			lock (m_clients.SyncRoot)
 			{
 				for (int i = 0; i < m_clients.Length; i++)
-					if (m_clients[i] == null)
-				{
-					m_clients[i] = obj;
-					obj.SessionID = i + 1;
-					return i + 1;
-				}
+			        if (m_clients[i] == null)
+			        {
+			            m_clients[i] = obj;
+			            obj.SessionID = i + 1;
+			            return i + 1;
+			        }
 			}
+
 			return -1;
 	    }
 
@@ -952,8 +989,7 @@ namespace DOL.GS
         public static T[] GetobjectsFromRegion<T>(ushort regionId)
             where T : GameObject
         {
-            Region reg;
-		    if (!m_regions.TryGetValue(regionId, out reg))
+            if (!m_regions.TryGetValue(regionId, out var reg))
 		    {
 		        return new T[0];
             }
@@ -1002,7 +1038,10 @@ namespace DOL.GS
 		{
 			int i = id;
 			if (i <= 0 || i > m_clients.Length)
-				return null;
+			{
+			    return null;
+			}
+
 			return m_clients[i - 1];
 		}
 
@@ -1013,7 +1052,10 @@ namespace DOL.GS
 		public static void RemoveClient(GameClient entry)
 		{
 			if (entry == null)
-				return;
+			{
+			    return;
+			}
+
 			int sessionid = -1;
 			int i = 1;
 			lock (m_clients.SyncRoot)
@@ -1025,6 +1067,7 @@ namespace DOL.GS
 						sessionid = i;
 						break;
 					}
+
 					i++;
 				}
 			}
@@ -1049,12 +1092,8 @@ namespace DOL.GS
 				client = m_clients[id - 1];
 				m_clients[id - 1] = null;
 			}
-			if (client == null)
-				return;
-			if (client.Player == null)
-				return;
-			//client.Player.RemoveFromWorld();
-			client.Player.Delete();
+            
+			client?.Player?.Delete();
 		}
 
 		/// <summary>
@@ -1072,11 +1111,13 @@ namespace DOL.GS
 				{
 					if (client != null)
 					{
-						if (client.IsPlaying
-						    && client.Player != null
-						    && client.Player.ObjectState == GameObject.eObjectState.Active
-						    && client.Player.Realm == realm)
-							targetClients.Add(client);
+						if (client.IsPlaying &&
+                            client.Player != null &&
+                            client.Player.ObjectState == GameObject.eObjectState.Active &&
+                            client.Player.Realm == realm)
+						{
+						    targetClients.Add(client);
+						}
 					}
 				}
 			}
@@ -1098,11 +1139,13 @@ namespace DOL.GS
 				{
 					if (client != null)
 					{
-						if (client.IsPlaying
-						    && client.Player != null
-						    && client.Player.ObjectState == GameObject.eObjectState.Active
-						    && client.Player.CurrentRegionID == regionID)
-							count++;
+						if (client.IsPlaying &&
+                            client.Player != null &&
+                            client.Player.ObjectState == GameObject.eObjectState.Active &&
+                            client.Player.CurrentRegionID == regionID)
+						{
+						    count++;
+						}
 					}
 				}
 			}
@@ -1124,12 +1167,14 @@ namespace DOL.GS
 				{
 					if (client != null)
 					{
-						if (client.IsPlaying
-						    && client.Player != null
-						    && client.Player.ObjectState == GameObject.eObjectState.Active
-						    && client.Player.CurrentRegionID == regionID
-						    && client.Player.Realm == realm)
-							count++;
+						if (client.IsPlaying &&
+                            client.Player != null &&
+                            client.Player.ObjectState == GameObject.eObjectState.Active &&
+                            client.Player.CurrentRegionID == regionID &&
+                            client.Player.Realm == realm)
+						{
+						    count++;
+						}
 					}
 				}
 			}
@@ -1151,11 +1196,13 @@ namespace DOL.GS
 				{
 					if (client != null)
 					{
-						if (client.IsPlaying
-						    && client.Player != null
-						    && client.Player.ObjectState == GameObject.eObjectState.Active
-						    && client.Player.CurrentRegionID == regionID)
-							targetClients.Add(client);
+						if (client.IsPlaying &&
+                            client.Player != null &&
+                            client.Player.ObjectState == GameObject.eObjectState.Active &&
+                            client.Player.CurrentRegionID == regionID)
+						{
+						    targetClients.Add(client);
+						}
 					}
 				}
 			}
@@ -1173,10 +1220,12 @@ namespace DOL.GS
 		/// <returns>The found GameClient or null</returns>
 		public static GameClient GetClientByPlayerID(string playerID, bool exactMatch, bool activeRequired)
 		{
-			foreach (GameClient client in WorldMgr.GetAllPlayingClients())
+			foreach (GameClient client in GetAllPlayingClients())
 			{
 				if (client.Player.InternalID == playerID)
-					return client;
+				{
+				    return client;
+				}
 			}
 			return null;
 		}
@@ -1196,8 +1245,8 @@ namespace DOL.GS
 				{
 					if (client != null)
 					{
-						if ((exactMatch && client.Account.Name.ToLower() == accountName)
-						    || (!exactMatch && client.Account.Name.ToLower().StartsWith(accountName)))
+						if (exactMatch && client.Account.Name.ToLower() == accountName ||
+                            !exactMatch && client.Account.Name.ToLower().StartsWith(accountName))
 						{
 							return client;
 						}
@@ -1221,11 +1270,9 @@ namespace DOL.GS
 			{
 				return GetClientByPlayerNameAndRealm(playerName, 0, activeRequired);
 			}
-			else
-			{
-				int x = 0;
-				return GuessClientByPlayerNameAndRealm(playerName, 0, activeRequired, out x);
-			}
+
+			int x = 0;
+			return GuessClientByPlayerNameAndRealm(playerName, 0, activeRequired, out x);
 		}
 
 		/// <summary>
@@ -1242,10 +1289,13 @@ namespace DOL.GS
 			{
 				foreach (GameClient client in m_clients)
 				{
-					if (client != null && client.Player != null && (realm == eRealm.None || client.Player.Realm == realm))
+					if (client?.Player != null && (realm == eRealm.None || client.Player.Realm == realm))
 					{
 						if (activeRequired && (!client.IsPlaying || client.Player.ObjectState != GameObject.eObjectState.Active))
-							continue;
+						{
+						    continue;
+						}
+
 						if (0 == string.Compare(client.Player.Name, playerName, true)) // case insensitive comapre
 						{
 							return client;
@@ -1283,10 +1333,13 @@ namespace DOL.GS
 			{
 				foreach (GameClient client in m_clients)
 				{
-					if (client != null && client.Player != null)
+					if (client?.Player != null)
 					{
 						if (activeRequired && (!client.IsPlaying || client.Player.ObjectState != GameObject.eObjectState.Active))
-							continue;
+						{
+						    continue;
+						}
+
 						if (realm == eRealm.None || client.Player.Realm == realm)
 						{
 							if (client.Player.Name.ToLower().StartsWith(compareName))
@@ -1296,11 +1349,10 @@ namespace DOL.GS
 									result = 2; // name not unique
 									break;
 								}
-								else
-								{
-									result = 4; // guessed name
-									guessedClient = client;
-								}
+
+								result = 4; // guessed name
+								guessedClient = client;
+
 							}
 						}
 					}
@@ -1321,11 +1373,13 @@ namespace DOL.GS
 			{
 				foreach (GameClient client in m_clients)
 				{
-					if (client != null
-					    && client.IsPlaying
-					    && client.Player != null
-					    && client.Player.ObjectState == GameObject.eObjectState.Active)
-						targetClients.Add(client);
+					if (client != null &&
+                        client.IsPlaying &&
+                        client.Player != null &&
+                        client.Player.ObjectState == GameObject.eObjectState.Active)
+					{
+					    targetClients.Add(client);
+					}
 				}
 			}
 			return targetClients;
@@ -1342,11 +1396,13 @@ namespace DOL.GS
 			{
 				foreach (GameClient client in m_clients)
 				{
-					if (client != null
-					    && client.IsPlaying
-					    && client.Player != null
-					    && client.Player.ObjectState == GameObject.eObjectState.Active)
-						count++;
+					if (client != null &&
+                        client.IsPlaying &&
+                        client.Player != null &&
+                        client.Player.ObjectState == GameObject.eObjectState.Active)
+					{
+					    count++;
+					}
 				}
 			}
 			return count;
@@ -1373,9 +1429,7 @@ namespace DOL.GS
 		public static GameObject GetObjectByIDFromRegion(ushort regionID, ushort oID)
 		{
 			Region reg = GetRegion(regionID);
-			if (reg == null)
-				return null;
-			return reg.GetObject(oID);
+		    return reg?.GetObject(oID);
 		}
 
 		/// <summary>
@@ -1393,7 +1447,10 @@ namespace DOL.GS
 		{
 			Region reg = GetRegion(regionid);
 			if (reg == null)
-				return new Region.EmptyEnumerator();
+			{
+			    return new Region.EmptyEnumerator();
+			}
+
 			return reg.GetPlayersInRadius(x, y, z, radiusToCheck, withDistance, false);
 		}
 
@@ -1452,7 +1509,10 @@ namespace DOL.GS
 		{
 			Region reg = GetRegion(regionid);
 			if (reg == null)
-				return new Region.EmptyEnumerator();
+			{
+			    return new Region.EmptyEnumerator();
+			}
+
 			return reg.GetNPCsInRadius(x, y, z, radiusToCheck, withDistance, false);
 		}
 
@@ -1477,7 +1537,7 @@ namespace DOL.GS
 		/// <returns>The count of players saved</returns>
 		public static int SavePlayers()
 		{
-			GameClient[] clientsCopy = null;
+			GameClient[] clientsCopy;
 			lock (m_clients.SyncRoot)
 			{
 				clientsCopy = (GameClient[])m_clients.Clone();
@@ -1541,7 +1601,7 @@ namespace DOL.GS
 			//TODO: Typeof field so TaskDungeonInstance, QuestInstance etc can be created.
 			if ((instanceType.IsSubclassOf(typeof(BaseInstance)) || instanceType == typeof(BaseInstance)) == false)
 			{
-				log.Error("Invalid type given for instance creation: " + instanceType + ". Returning null instance now.");
+				log.Error($"Invalid type given for instance creation: {instanceType}. Returning null instance now.");
 				return null;
 			}
 
@@ -1552,7 +1612,7 @@ namespace DOL.GS
 
 			if (data == null)
 			{
-				log.Error("Data for region " + skinID + " not found on instance create!");
+				log.Error($"Data for region {skinID} not found on instance create!");
 				return null;
 			}
 
@@ -1576,11 +1636,11 @@ namespace DOL.GS
 
 			if (info == null)
 			{
-				log.Error("Classtype " + instanceType + " did not have a cosntructor that matched the requirement!");
+				log.Error($"Classtype {instanceType} did not have a cosntructor that matched the requirement!");
 				return null;
 			}
 
-			bool RequestedAnID = requestedID == 0 ? false : true;
+			bool RequestedAnID = requestedID != 0;
 
 			ushort ID = requestedID;
 
@@ -1592,46 +1652,51 @@ namespace DOL.GS
 
 			//I'm welcome to suggestions on how to improve this
 			//              -Dinberg.
-			if (!m_regions.FreezeWhile<bool>(regions => {
-			                                         	if (!RequestedAnID)
-			                                         	{
-			                                         		ID = DEFAULT_VALUE_FOR_INSTANCE_ID_SEARCH_START;
-			                                         		while (ID < ushort.MaxValue)
-			                                         		{
-			                                         			//Look for a space in the regions table...
-			                                         			if (!regions.ContainsKey(ID))
-			                                         				break;
-			                                         			
-			                                         			//If no space here, no worries - move quickly to the next ID and continue.
-			                                         			ID++;
-			                                         		}
-			                                         	}
-			                                         	else if (regions.ContainsKey(ID))
-			                                         	{
-			                                         		// requested ID is in use
-			                                         		return false;
-			                                         	}
-			                                         	//In the unlikely event of 65535 regions, I'd still like to be warned!
-			                                         	if (ID == ushort.MaxValue)
-			                                         	{
-			                                         		log.Warn("ID was ushort.MaxValue - Region Table is full upon instance creation! Aborting now.");
-			                                         		return false;
-			                                         	}
-			                                         	//Having selected the data we need, create the Instance.
-			                                         	try
-			                                         	{
-			                                         		instance = (BaseInstance)info.Invoke(new object[] { ID, time, data });//new Instance(ID, time, data);
-			                                         		regions.Add(ID, instance);
-			                                         	}
-			                                         	catch (Exception e)
-			                                         	{
-			                                         		log.ErrorFormat("Error on instance creation - {0}{1}", e.Message, e.StackTrace);
-			                                         		return false;
-			                                         	}
-			                                         	
-			                                         	return true;
-			                                 }))
-				return null;
+			if (!m_regions.FreezeWhile<bool>(regions =>
+			{
+			    if (!RequestedAnID)
+			    {
+			        ID = DEFAULT_VALUE_FOR_INSTANCE_ID_SEARCH_START;
+			        while (ID < ushort.MaxValue)
+			        {
+			            //Look for a space in the regions table...
+			            if (!regions.ContainsKey(ID))
+			            {
+			                break;
+			            }
+
+			            //If no space here, no worries - move quickly to the next ID and continue.
+			            ID++;
+			        }
+			    }
+			    else if (regions.ContainsKey(ID))
+			    {
+			        // requested ID is in use
+			        return false;
+			    }
+			    //In the unlikely event of 65535 regions, I'd still like to be warned!
+			    if (ID == ushort.MaxValue)
+			    {
+			        log.Warn("ID was ushort.MaxValue - Region Table is full upon instance creation! Aborting now.");
+			        return false;
+			    }
+			    //Having selected the data we need, create the Instance.
+			    try
+			    {
+			        instance = (BaseInstance) info.Invoke(new object[] {ID, time, data}); //new Instance(ID, time, data);
+			        regions.Add(ID, instance);
+			    }
+			    catch (Exception e)
+			    {
+			        log.ErrorFormat("Error on instance creation - {0}{1}", e.Message, e.StackTrace);
+			        return false;
+			    }
+
+			    return true;
+			}))
+			{
+			    return null;
+			}
 			
 			// But its not over there. We need to put a zone into the instance.
 
@@ -1654,22 +1719,28 @@ namespace DOL.GS
 			{
 				//we need to get an id for each one.
 				if (m_zones.FreezeWhile<bool>(zones =>
-				                              {
-				                              	while (zoneID <= ushort.MaxValue && zones.ContainsKey((ushort)zoneID))
-				                              		zoneID++;
-				                              	
-				                              	if (zoneID >= ushort.MaxValue)
-				                              		log.Error("Zone limit reached in instance creation!");
-				                              	
-				                              	if (zoneID > ushort.MaxValue)
-				                              		return false;
-				                              	
-				                              	// register id
-				                              	zones.Add((ushort)zoneID, null);
-				                              	return true;
-				                              }))
 				{
-	            	RegisterZone(dat, (ushort)zoneID, ID, string.Format("{0} (Instance)", dat.Description), 0, 0, 0, 0, 0);
+				    while (zoneID <= ushort.MaxValue && zones.ContainsKey((ushort) zoneID))
+				    {
+				        zoneID++;
+				    }
+
+				    if (zoneID >= ushort.MaxValue)
+				    {
+				        log.Error("Zone limit reached in instance creation!");
+				    }
+
+				    if (zoneID > ushort.MaxValue)
+				    {
+				        return false;
+				    }
+
+				    // register id
+				    zones.Add((ushort) zoneID, null);
+				    return true;
+				}))
+				{
+	            	RegisterZone(dat, (ushort)zoneID, ID, $"{dat.Description} (Instance)", 0, 0, 0, 0, 0);
 				}
 			}
 
@@ -1690,14 +1761,16 @@ namespace DOL.GS
 			m_regions.TryRemove(instance.ID, out reg);
 
 			//Remove zones
-			m_zones.FreezeWhile(zones =>
-			                    {
-			                    	foreach (Zone zn in instance.Zones)
-			                    	{
-			                    		if (zones.ContainsKey(zn.ID))
-			                    			zones.Remove(zn.ID);
-			                    	}
-			                    });
+		    m_zones.FreezeWhile(zones =>
+		    {
+		        foreach (Zone zn in instance.Zones)
+		        {
+		            if (zones.ContainsKey(zn.ID))
+		            {
+		                zones.Remove(zn.ID);
+		            }
+		        }
+		    });
 
 			instance.OnCollapse();
 

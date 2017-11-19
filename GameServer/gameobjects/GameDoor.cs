@@ -70,9 +70,9 @@ namespace DOL.GS
             CurrentRegion = curZone.ZoneRegion;
 			m_name = m_dbdoor.Name;
 			m_Heading = (ushort)m_dbdoor.Heading;
-			m_x = m_dbdoor.X;
-			m_y = m_dbdoor.Y;
-			m_z = m_dbdoor.Z;
+			X = m_dbdoor.X;
+			Y = m_dbdoor.Y;
+			Z = m_dbdoor.Z;
 			m_level = 0;
 			m_model = 0xFFFF;
 			m_doorID = m_dbdoor.InternalID;

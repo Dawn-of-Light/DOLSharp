@@ -610,9 +610,9 @@ namespace DOL.GS.Keeps
             CurrentRegion = curZone.ZoneRegion;
 			m_name = door.Name;
 			m_Heading = (ushort)door.Heading;
-			m_x = door.X;
-			m_y = door.Y;
-			m_z = door.Z;
+			X = door.X;
+			Y = door.Y;
+			Z = door.Z;
 			m_level = 0;
 			m_model = 0xFFFF;
 			m_doorID = door.InternalID;

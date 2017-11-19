@@ -767,7 +767,7 @@ namespace DOL.GS
 
 				if (TargetPosition.X != 0 || TargetPosition.Y != 0 || TargetPosition.Z != 0)
 				{
-					long expectedDistance = FastMath.Abs((long)TargetPosition.X - m_x);
+					long expectedDistance = FastMath.Abs((long)TargetPosition.X - base.X);
 
 					if (expectedDistance == 0)
 						return TargetPosition.X;
@@ -796,7 +796,7 @@ namespace DOL.GS
 
 				if (TargetPosition.X != 0 || TargetPosition.Y != 0 || TargetPosition.Z != 0)
 				{
-					long expectedDistance = FastMath.Abs((long)TargetPosition.Y - m_y);
+					long expectedDistance = FastMath.Abs((long)TargetPosition.Y - base.Y);
 
 					if (expectedDistance == 0)
 						return TargetPosition.Y;
@@ -824,7 +824,7 @@ namespace DOL.GS
 
 				if (TargetPosition.X != 0 || TargetPosition.Y != 0 || TargetPosition.Z != 0)
 				{
-					long expectedDistance = FastMath.Abs((long)TargetPosition.Z - m_z);
+					long expectedDistance = FastMath.Abs((long)TargetPosition.Z - base.Z);
 
 					if (expectedDistance == 0)
 						return TargetPosition.Z;
@@ -1026,9 +1026,9 @@ namespace DOL.GS
 					return;
 				}
 
-				double dx = (double)(TargetPosition.X - m_x) / dist;
-				double dy = (double)(TargetPosition.Y - m_y) / dist;
-				double dz = (double)(TargetPosition.Z - m_z) / dist;
+				double dx = (double)(TargetPosition.X - X) / dist;
+				double dy = (double)(TargetPosition.Y - Y) / dist;
+				double dz = (double)(TargetPosition.Z - Z) / dist;
 
 				SetTickSpeed(dx, dy, dz, CurrentSpeed);
 				return;
@@ -1927,9 +1927,9 @@ namespace DOL.GS
 			GuildName = dbMob.Guild;
 			ExamineArticle = dbMob.ExamineArticle;
 			MessageArticle = dbMob.MessageArticle;
-			m_x = dbMob.X;
-			m_y = dbMob.Y;
-			m_z = dbMob.Z;
+			X = dbMob.X;
+			Y = dbMob.Y;
+			Z = dbMob.Z;
 			m_Heading = (ushort)(dbMob.Heading & 0xFFF);
 			m_maxSpeedBase = (short)dbMob.Speed;
 			m_currentSpeed = 0;
@@ -3071,9 +3071,9 @@ namespace DOL.GS
 				}
 			}
 
-			m_x = x;
-			m_y = y;
-			m_z = z;
+			X = x;
+			Y = y;
+			Z = z;
 			m_Heading = heading;
 
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))

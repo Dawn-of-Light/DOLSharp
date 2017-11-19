@@ -28,82 +28,48 @@ namespace DOL.GS
     /// AbstractArea extend this if you wish to implement e new custom area.
     /// For examples see Area.Cricle, Area.Square
     /// </summary>
-    public abstract class AbstractArea : IArea, ITranslatableObject
+    public abstract class AbstractArea : IArea
 	{
 		protected DBArea m_dbArea = null;
-		protected bool m_canBroadcast = false;
-		/// <summary>
+
+	    /// <summary>
 		/// Variable holding whether or not players can broadcast in this area
 		/// </summary>
-		public bool CanBroadcast
-		{
-			get { return m_canBroadcast; }
-			set { m_canBroadcast = value; }
-		}
+		public bool CanBroadcast { get; set; }
 
-		protected bool m_checkLOS = false;
-		/// <summary>
+	    /// <summary>
 		/// Variable holding whether or not to check for LOS for spells in this area
 		/// </summary>
-		public bool CheckLOS
-		{
-			get { return m_checkLOS; }
-			set { m_checkLOS = value; }
-		}
+		public bool CheckLOS { get; set; }
 
-		protected bool m_displayMessage = true;
-		/// <summary>
+	    /// <summary>
 		/// Display entered message
 		/// </summary>
-		public virtual bool DisplayMessage
-		{
-			get { return m_displayMessage; }
-			set { m_displayMessage = value; }
-		}
+		public virtual bool DisplayMessage { get; set; } = true;
 
-		protected bool m_safeArea = false;
-		/// <summary>
+	    /// <summary>
 		/// Can players be attacked by other players in this area
 		/// </summary>
-		public virtual bool IsSafeArea
-		{
-			get { return m_safeArea; }
-			set { m_safeArea = value; }
-		}
+		public virtual bool IsSafeArea { get; set; } = false;
 
-		/// <summary>
+	    /// <summary>
 		/// Constant holding max number of areas per zone, increase if more ares are needed,
 		/// this will slightly increase memory usage on server
 		/// </summary>
 		public const ushort MAX_AREAS_PER_ZONE = 50;
 
-		/// <summary>
-		/// The ID of the Area eg. 15 ( == index in Region.m_areas array)
-		/// </summary>
-		protected ushort m_ID;
-
-        /// <summary>
+	    /// <summary>
         /// Holds the translation id
         /// </summary>
         protected string m_translationId;
 
-		/// <summary>
-		/// The description of the Area eg. "Camelot Hills"
-		/// </summary>
-		protected string m_Description;
-
-		/// <summary>
-		/// The area sound to play on enter/leave events
-		/// </summary>
-		protected byte m_sound;
-
-		/// <summary>
+	    /// <summary>
 		/// Constructs a new AbstractArea
 		/// </summary>
 		/// <param name="desc"></param>
 		public AbstractArea(string desc)
 		{
-			m_Description = desc;
+			Description = desc;
 		}
 
 		public AbstractArea()
@@ -114,44 +80,30 @@ namespace DOL.GS
 		/// <summary>
 		/// Returns the ID of this Area
 		/// </summary>
-		public ushort ID
-		{
-			get { return m_ID; }
-			set { m_ID = value; }
-		}
+		public ushort ID { get; set; }
 
-        public virtual LanguageDataObject.eTranslationIdentifier TranslationIdentifier
-        {
-            get { return LanguageDataObject.eTranslationIdentifier.eArea; }
-        }
+	    public virtual LanguageDataObject.eTranslationIdentifier TranslationIdentifier => LanguageDataObject.eTranslationIdentifier.eArea;
 
-        /// <summary>
+	    /// <summary>
         /// Gets or sets the translation id
         /// </summary>
         public string TranslationId
         {
             get { return m_translationId; }
-            set { m_translationId = (value == null ? "" : value); }
+            set { m_translationId = value ?? ""; }
         }
 
 		/// <summary>
 		/// Return the description of this Area
 		/// </summary>
-		public string Description
-		{
-			get { return m_Description; }
-		}
+		public string Description { get; protected set; }
 
-		/// <summary>
+	    /// <summary>
 		/// Gets or sets the area sound
 		/// </summary>
-		public byte Sound
-		{
-			get { return m_sound; }
-			set { m_sound = value; }
-		}
+		public byte Sound { get; set; }
 
-		#region Event handling
+	    #region Event handling
 
 		public void UnRegisterPlayerEnter(DOLEventHandler callback)
 		{
@@ -200,9 +152,10 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public virtual void OnPlayerLeave(GamePlayer player)
 		{
-            if (m_displayMessage && Description != null && Description != "")
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "AbstractArea.Left", Description),
-                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            if (DisplayMessage && !string.IsNullOrWhiteSpace(Description))
+            {
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "AbstractArea.Left", Description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
 
 			player.Notify(AreaEvent.PlayerLeave, this, new AreaEventArgs(this, player));
 		}
@@ -213,32 +166,38 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public virtual void OnPlayerEnter(GamePlayer player)
 		{
-			if (m_displayMessage && Description != null && Description != "")
+			if (DisplayMessage && !string.IsNullOrWhiteSpace(Description))
 			{
                 string description = Description;
                 string screenDescription = description;
 
-                var translation = player.GetTranslation(this) as DBLanguageArea;
-                if (translation != null)
+			    if (player.GetTranslation(this) is DBLanguageArea translation)
                 {
                     if (!Util.IsEmpty(translation.Description))
+                    {
                         description = translation.Description;
+                    }
 
                     if (!Util.IsEmpty(translation.ScreenDescription))
+                    {
                         screenDescription = translation.ScreenDescription;
+                    }
                 }
 
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "AbstractArea.Entered", description),
-                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "AbstractArea.Entered", description), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 				//Changed by Apo 9. August 2010: Areas never send an screen description, but we will support it with an server property
                 if (ServerProperties.Properties.DISPLAY_AREA_ENTER_SCREEN_DESC)
+                {
                     player.Out.SendMessage(screenDescription, eChatType.CT_ScreenCenterSmaller, eChatLoc.CL_SystemWindow);
+                }
 			}
+
 			if (Sound != 0)
 			{
 				player.Out.SendRegionEnterSound(Sound);
 			}
+
 			player.Notify(AreaEvent.PlayerEnter, this, new AreaEventArgs(this, player));
 		}
 

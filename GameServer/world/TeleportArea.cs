@@ -16,10 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Reflection;
-
-using DOL.GS;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 
@@ -34,12 +30,16 @@ namespace DOL.GS
 		public override void OnPlayerEnter(GamePlayer player)
 		{
 			base.OnPlayerEnter(player);
-			Teleport destination =  WorldMgr.GetTeleportLocation(player.Realm, String.Format("{0}:{1}", this.GetType(), this.Description));
+			Teleport destination =  WorldMgr.GetTeleportLocation(player.Realm, $"{GetType()}:{Description}");
 			
 			if (destination != null)
-				OnTeleport(player, destination);
-			else
-				player.Out.SendMessage("This destination is not available : "+String.Format("{0}:{1}", this.GetType(), this.Description)+".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			{
+			    OnTeleport(player, destination);
+			}
+            else
+			{
+			    player.Out.SendMessage("This destination is not available : " + $"{GetType()}:{Description}" + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			}
 		}
 		
 		/// <summary>

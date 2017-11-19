@@ -19,27 +19,28 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-
 using DOL.Events;
 using DOL.Database;
+using log4net;
 
 namespace DOL.GS.GameEvents
 {
 	public class ZonePointEffect
 	{
-		protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		protected static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		[ScriptLoadedEvent]
 		public static void OnScriptsCompiled(DOLEvent e, object sender, EventArgs args)
 		{
-
 			// What npctemplate should we use for the zonepoint ?
-			ushort model;
-			NpcTemplate zp;
+		    NpcTemplate zp;
 			try{
-				model = (ushort)ServerProperties.Properties.ZONEPOINT_NPCTEMPLATE;
+				var model = (ushort)ServerProperties.Properties.ZONEPOINT_NPCTEMPLATE;
 				zp = new NpcTemplate(GameServer.Database.SelectObjects<DBNpcTemplate>("`TemplateId` = @TemplateId", new QueryParameter("@TemplateId", model)).FirstOrDefault());
-				if (model <= 0 || zp == null) throw new ArgumentNullException();
+				if (model <= 0)
+			    {
+			        throw new ArgumentNullException();
+                }
 			}
 			catch {
 				return;
@@ -55,19 +56,25 @@ namespace DOL.GS.GameEvents
 				Region r = WorldMgr.GetRegion(z.TargetRegion);
 				if (r == null)
 				{
-					log.Warn("Zonepoint Id (" + z.Id +  ") references an inexistent target region " + z.TargetRegion + " - skipping, ZP not created");
+					log.Warn($"Zonepoint Id ({z.Id}) references an inexistent target region {z.TargetRegion} - skipping, ZP not created");
 					continue;
 				}
-				
-				GameNPC npc = new GameNPC(zp);
 
-				npc.CurrentRegionID = z.SourceRegion;
-				npc.X = z.SourceX;
-				npc.Y = z.SourceY;
-				npc.Z = z.SourceZ;
-				npc.Name = r.Description;
-				npc.GuildName = "ZonePoint (Open)";			
-				if (r.IsDisabled) npc.GuildName = "ZonePoint (Closed)";
+			    GameNPC npc = new GameNPC(zp)
+			    {
+			        CurrentRegionID = z.SourceRegion,
+			        X = z.SourceX,
+			        Y = z.SourceY,
+			        Z = z.SourceZ,
+			        Name = r.Description,
+			        GuildName = "ZonePoint (Open)"
+			    };
+
+
+			    if (r.IsDisabled)
+			    {
+			        npc.GuildName = "ZonePoint (Closed)";
+                }
 				
 				npc.AddToWorld();
 			}

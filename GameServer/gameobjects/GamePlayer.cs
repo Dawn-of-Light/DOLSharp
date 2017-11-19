@@ -12478,26 +12478,26 @@ namespace DOL.GS
 			#endregion
 
 			#region setting world-init-position (delegate to PlayerCharacter dont make sense)
-			m_x = DBCharacter.Xpos;
-			m_y = DBCharacter.Ypos;
-			m_z = DBCharacter.Zpos;
+			X = DBCharacter.Xpos;
+			Y = DBCharacter.Ypos;
+			Z = DBCharacter.Zpos;
 			m_Heading = (ushort)DBCharacter.Direction;
 			//important, use CurrentRegion property
 			//instead because it sets the Region too
 			CurrentRegionID = (ushort)DBCharacter.Region;
-			if (CurrentRegion == null || CurrentRegion.GetZone(m_x, m_y) == null)
+			if (CurrentRegion == null || CurrentRegion.GetZone(X, Y) == null)
 			{
 				log.WarnFormat("Invalid region/zone on char load ({0}): x={1} y={2} z={3} reg={4}; moving to bind point.", DBCharacter.Name, X, Y, Z, DBCharacter.Region);
-				m_x = DBCharacter.BindXpos;
-				m_y = DBCharacter.BindYpos;
-				m_z = DBCharacter.BindZpos;
+				X = DBCharacter.BindXpos;
+				Y = DBCharacter.BindYpos;
+				Z = DBCharacter.BindZpos;
 				m_Heading = (ushort)DBCharacter.BindHeading;
 				CurrentRegionID = (ushort)DBCharacter.BindRegion;
 			}
 
 			for (int i = 0; i < m_lastUniqueLocations.Length; i++)
 			{
-				m_lastUniqueLocations[i] = new GameLocation(null, CurrentRegionID, m_x, m_y, m_z);
+				m_lastUniqueLocations[i] = new GameLocation(null, CurrentRegionID, X, Y, Z);
 			}
 			#endregion
 

@@ -21,7 +21,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
-
 using DOL.Database;
 using DOL.Language;
 using DOL.GS.Utils;
@@ -49,9 +48,9 @@ namespace DOL.GS
 		/// <summary>
 		/// Number of SubZone in a Zone
 		/// </summary>
-		private const ushort SUBZONE_NBR = (ushort)(SUBZONE_NBR_ON_ZONE_SIDE * SUBZONE_NBR_ON_ZONE_SIDE);
+		private const ushort SUBZONE_NBR = (SUBZONE_NBR_ON_ZONE_SIDE * SUBZONE_NBR_ON_ZONE_SIDE);
 
-		private const ushort SUBZONE_SIZE = (ushort)(65536 / SUBZONE_NBR_ON_ZONE_SIDE);
+		private const ushort SUBZONE_SIZE = (65536 / SUBZONE_NBR_ON_ZONE_SIDE);
 
 		private static readonly ushort SUBZONE_SHIFT = (ushort)Math.Round(Math.Log(SUBZONE_SIZE) / Math.Log(2)); // to get log in base 2
 
@@ -136,75 +135,12 @@ namespace DOL.GS
 
 		private int m_objectCount;
 
-		/// <summary>
-		/// Holds a pointer to the region that is the parent of this zone
-		/// </summary>
-		private Region m_Region;
-
-		/// <summary>
-		/// The ID of the Zone eg. 15
-		/// </summary>
-		private readonly ushort m_ID;
-
-		/// <summary>
-		/// The id of the fake zone we send to the client.
-		/// This is used for instances, which also need to create fake zones aswell as regions!
-		/// </summary>
-		private ushort m_zoneSkinID;
-
-		/// <summary>
-		/// The description of the Zone eg. "Camelot Hills"
-		/// </summary>
-		private string m_Description;
-
-		/// <summary>
-		/// The XOffset of this Zone inside the region
-		/// </summary>
-		private readonly int m_XOffset;
-
-		/// <summary>
-		/// The YOffset of this Zone inside the region
-		/// </summary>
-		private readonly int m_YOffset;
-
-		/// <summary>
-		/// The Width of the Zone in Coordinates
-		/// </summary>
-		private readonly int m_Width;
-
-		/// <summary>
-		/// The Height of the Zone in Coordinates
-		/// </summary>
-		private readonly int m_Height;
-
-		/// <summary>
-		/// The waterlevel of this zone
-		/// </summary>
-		private int m_waterlevel;
-
-		/// <summary>
-		/// Does this zone support diving?
-		/// </summary>
-		private bool m_isDivingEnabled;
-
-		/// <summary>
-		/// Does this zone contain Lava
-		/// </summary>
-		private bool m_isLava;
-
-		/// <summary>
+	    /// <summary>
 		/// already initialized?
 		/// </summary>
 		private bool m_initialized = false;
 
-
-		private int m_bonusXP = 0;
-		private int m_bonusRP = 0;
-		private int m_bonusBP = 0;
-		private int m_bonusCoin = 0;
-
-        private eRealm m_realm;
-		#endregion
+	    #endregion
 
 		#region Constructor
 
@@ -221,27 +157,27 @@ namespace DOL.GS
 		/// <param name="zoneskinID">For clientside positioning in instances: The 'fake' zoneid we send to clients.</param>
 		public Zone(Region region, ushort id, string desc, int xoff, int yoff, int width, int height, ushort zoneskinID, bool isDivingEnabled, int waterlevel, bool islava, int xpBonus, int rpBonus, int bpBonus, int coinBonus, byte realm)
 		{
-			m_Region = region;
-			m_ID = id;
-			m_Description = desc;
-			m_XOffset = xoff;
-			m_YOffset = yoff;
-			m_Width = width;
-			m_Height = height;
-			m_zoneSkinID = zoneskinID;
-			m_waterlevel = waterlevel;
-			m_isDivingEnabled = isDivingEnabled;
-			m_isLava = islava;
+			ZoneRegion = region;
+			ID = id;
+			Description = desc;
+			XOffset = xoff;
+			YOffset = yoff;
+			Width = width;
+			Height = height;
+			ZoneSkinID = zoneskinID;
+			Waterlevel = waterlevel;
+			IsDivingEnabled = isDivingEnabled;
+			IsLava = islava;
 
-			m_bonusXP = xpBonus;
-			m_bonusRP = rpBonus;
-			m_bonusBP = bpBonus;
-			m_bonusCoin = coinBonus;
+			BonusExperience = xpBonus;
+			BonusRealmpoints = rpBonus;
+			BonusBountypoints = bpBonus;
+			BonusCoin = coinBonus;
 
 			// initialise subzone objects and counters
 			m_subZoneElements = new SubNodeElement[SUBZONE_NBR][];
 			m_initialized = false;
-            m_realm = (eRealm)realm;
+            Realm = (eRealm)realm;
 
 		}
 
@@ -266,8 +202,8 @@ namespace DOL.GS
 
 			m_subZoneElements = null;
 			m_subZoneTimestamps = null;
-			m_Region = null;
-			DOL.Events.GameEventMgr.RemoveAllHandlersForObject(this);
+			ZoneRegion = null;
+			Events.GameEventMgr.RemoveAllHandlersForObject(this);
 		}
 
 		private void InitializeZone()
@@ -288,30 +224,21 @@ namespace DOL.GS
 		#endregion
 
 		#region properties
-        public virtual LanguageDataObject.eTranslationIdentifier TranslationIdentifier
-        {
-            get { return LanguageDataObject.eTranslationIdentifier.eZone; }
-        }
+        public virtual LanguageDataObject.eTranslationIdentifier TranslationIdentifier => LanguageDataObject.eTranslationIdentifier.eZone;
 
-        public string TranslationId
+	    public string TranslationId
         {
             get { return ID.ToString(); }
             set { }
         }
 
-        public eRealm Realm
-        {
-            get
-            {
-                return m_realm;
-            }
-        }
+        public eRealm Realm { get; }
 
-		public bool IsDungeon
+	    public bool IsDungeon
 		{
 			get
 			{
-				switch (m_Region.ID)
+				switch (ZoneRegion.ID)
 				{
 					case 24:
 					case 65:
@@ -361,98 +288,59 @@ namespace DOL.GS
 		/// <summary>
 		/// Returns the region of this zone
 		/// </summary>
-		public Region ZoneRegion
-		{
-			get { return m_Region; }
-			set { m_Region = value; }
-		}
+		public Region ZoneRegion { get; set; }
 
-		/// <summary>
+	    /// <summary>
 		/// Returns the ID of this zone
 		/// </summary>
-		public ushort ID
-		{
-			get { return m_ID; }
-		}
+		public ushort ID { get; }
 
-		//Dinberg: added for instances.
+	    //Dinberg: added for instances.
 		/// <summary>
 		/// The ID we send to the client, for client-side positioning of gameobjects and npcs.
 		/// </summary>
-		public ushort ZoneSkinID
-		{ get { return m_zoneSkinID; } }
+		public ushort ZoneSkinID { get; }
 
-		/// <summary>
+	    /// <summary>
 		/// Return the description of this zone
 		/// </summary>
-		public string Description
-		{
-			get { return m_Description; }
-			set { m_Description = value; }
-		}
+		public string Description { get; set; }
 
-		/// <summary>
+	    /// <summary>
 		/// Returns the XOffset of this Zone
 		/// </summary>
-		public int XOffset
-		{
-			get { return m_XOffset; }
-		}
+		public int XOffset { get; }
 
-		/// <summary>
+	    /// <summary>
 		/// Returns the YOffset of this Zone
 		/// </summary>
-		public int YOffset
-		{
-			get { return m_YOffset; }
-		}
+		public int YOffset { get; }
 
-		/// <summary>
+	    /// <summary>
 		/// Returns the Width of this Zone
 		/// </summary>
-		public int Width
-		{
-			get { return m_Width; }
-		}
+		public int Width { get; }
 
-		/// <summary>
+	    /// <summary>
 		/// Returns the Height of this Zone
 		/// </summary>
-		public int Height
-		{
-			get { return m_Height; }
-		}
+		public int Height { get; }
 
-		public int Waterlevel
-		{
-			get { return m_waterlevel; }
-			set { m_waterlevel = value; }
-		}
+	    public int Waterlevel { get; set; }
 
-		public bool IsDivingEnabled
-		{
-			get { return m_isDivingEnabled; }
-			set { m_isDivingEnabled = value; }
-		}
+	    public bool IsDivingEnabled { get; set; }
 
-		/// <summary>
+	    /// <summary>
 		/// Is water in this zone lava?
 		/// </summary>
-		public virtual bool IsLava
-		{
-			get { return m_isLava; }
-			set { m_isLava = value; }
-		}
+		public virtual bool IsLava { get; set; }
 
-		/// <summary>
+	    /// <summary>
 		/// Returns the total number of objects held in the zone
 		/// </summary>
-		public int TotalNumberOfObjects
-		{
-			get { return m_objectCount; }
-		}
+		public int TotalNumberOfObjects => m_objectCount;
 
-		#endregion
+	    #endregion
 
 		#region New subzone Management function
 
@@ -470,24 +358,22 @@ namespace DOL.GS
 		/// <returns>The SubZoneIndex</returns>
 		private short GetSubZoneIndex(int p_X, int p_Y)
 		{
-			int xDiff = p_X - m_XOffset;
-			int yDiff = p_Y - m_YOffset;
+			int xDiff = p_X - XOffset;
+			int yDiff = p_Y - YOffset;
 
 			if ((xDiff < 0) || (xDiff > 65535) || (yDiff < 0) || (yDiff > 65535))
 			{
 				// the object is out of the zone
 				return -1;
 			}
-			else
-			{
-				// the object is in the zone
-				//DOLConsole.WriteWarning("GetSubZoneIndex : " + SUBZONE_NBR_ON_ZONE_SIDE + ", " + SUBZONE_NBR + ", " + SUBZONE_SHIFT + ", " + SUBZONE_ARRAY_Y_SHIFT);
 
-				xDiff >>= SUBZONE_SHIFT;
-				yDiff >>= SUBZONE_SHIFT;
+			// the object is in the zone
+			//DOLConsole.WriteWarning("GetSubZoneIndex : " + SUBZONE_NBR_ON_ZONE_SIDE + ", " + SUBZONE_NBR + ", " + SUBZONE_SHIFT + ", " + SUBZONE_ARRAY_Y_SHIFT);
 
-				return GetSubZoneOffset(yDiff, xDiff);
-			}
+			xDiff >>= SUBZONE_SHIFT;
+			yDiff >>= SUBZONE_SHIFT;
+
+			return GetSubZoneOffset(yDiff, xDiff);
 		}
 
 
@@ -521,20 +407,30 @@ namespace DOL.GS
 				//Only GamePlayer, GameNPC and GameStaticItem classes
 				//are handled.
 				if (p_Obj is GamePlayer)
-					type = (int)eGameObjectType.PLAYER;
+				{
+				    type = (int)eGameObjectType.PLAYER;
+				}
 				else if (p_Obj is GameNPC)
-					type = (int)eGameObjectType.NPC;
+				{
+				    type = (int)eGameObjectType.NPC;
+				}
 				else if (p_Obj is GameStaticItem)
-					type = (int)eGameObjectType.ITEM;
+				{
+				    type = (int)eGameObjectType.ITEM;
+				}
 				else if (p_Obj is IDoor)
-					type = (int)eGameObjectType.DOOR;
+				{
+				    type = (int)eGameObjectType.DOOR;
+				}
 
 				if (type == -1)
-					return;
+				{
+				    return;
+				}
 
 				if (log.IsDebugEnabled)
 				{
-					log.Debug("Object " + p_Obj.ObjectID + " (" + ((eGameObjectType)type) + ") entering subzone " + subZoneIndex + " in zone " + ID + " in region " + m_Region.ID);
+					log.Debug($"Object {p_Obj.ObjectID} ({((eGameObjectType) type)}) entering subzone {subZoneIndex} in zone {ID} in region {ZoneRegion.ID}");
 				}
 
 				lock (m_subZoneElements[subZoneIndex][type])
@@ -561,7 +457,7 @@ namespace DOL.GS
 
 			if (log.IsDebugEnabled)
 			{
-				log.Debug("Object " + element.data.ObjectID + "(" + objectType + ") entering (inner) subzone " + subZoneIndex + " in zone " + ID + " in region " + m_Region.ID);
+				log.Debug($"Object {element.data.ObjectID}({objectType}) entering (inner) subzone {subZoneIndex} in zone {ID} in region {ZoneRegion.ID}");
 			}
 
 			if ((subZoneIndex >= 0) && (subZoneIndex < SUBZONE_NBR))
@@ -592,14 +488,18 @@ namespace DOL.GS
 		/// <returns>partialList augmented with the new objects verigying both type and radius in the current Zone</returns>
 		internal ArrayList GetObjectsInRadius(eGameObjectType type, int x, int y, int z, ushort radius, ArrayList partialList, bool ignoreZ)
 		{
-			if (!m_initialized) InitializeZone();
+		    if (!m_initialized)
+		    {
+		        InitializeZone();
+		    }
+
 			// initialise parameters
-			uint sqRadius = (uint)radius * (uint)radius;
+			uint sqRadius = radius * (uint)radius;
 			int referenceSubzoneIndex = GetSubZoneIndex(x, y);
 			int typeIndex = (int)type;
 
-			int xInZone = x - m_XOffset; // x in zone coordinates
-			int yInZone = y - m_YOffset; // y in zone coordinates
+			int xInZone = x - XOffset; // x in zone coordinates
+			int yInZone = y - YOffset; // y in zone coordinates
 
 			int cellNbr = (radius >> SUBZONE_SHIFT) + 1; // radius in terms of subzone number
 			int xInCell = xInZone >> SUBZONE_SHIFT; // xInZone in terms of subzone coord
@@ -634,8 +534,8 @@ namespace DOL.GS
 
 			for (int currentLine = minLine; currentLine <= maxLine; ++currentLine)
 			{
-				int currentSubZoneIndex = 0;
-				SubNodeElement startElement = null;
+				int currentSubZoneIndex;
+				SubNodeElement startElement;
 
 				for (int currentColumn = minColumn; currentColumn <= maxColumn; ++currentColumn)
 				{
@@ -707,7 +607,7 @@ namespace DOL.GS
 
 				if (log.IsDebugEnabled)
 				{
-					log.Debug("Zone" + ID + " " + inZoneElements.Count + " objects moved inside zone");
+					log.Debug($"Zone{ID} {inZoneElements.Count} objects moved inside zone");
 				}
 			}
 
@@ -717,7 +617,7 @@ namespace DOL.GS
 
 				if (log.IsDebugEnabled)
 				{
-					log.Debug("Zone" + ID + " " + outOfZoneElements.Count + " objects moved outside zone");
+					log.Debug($"Zone{ID} {outOfZoneElements.Count} objects moved outside zone");
 				}
 			}
 
@@ -729,8 +629,8 @@ namespace DOL.GS
 		private void UnsafeAddToListWithoutDistanceCheck(SubNodeElement startElement, int typeIndex, int subZoneIndex, ArrayList partialList, Collections.Hashtable inZoneElements, Collections.Hashtable outOfZoneElements)
 		{
 			SubNodeElement currentElement = startElement.next;
-			SubNodeElement elementToRemove = null;
-			GameObject currentObject = null;
+			SubNodeElement elementToRemove;
+			GameObject currentObject;
 
 			do
 			{
@@ -744,7 +644,7 @@ namespace DOL.GS
 
 					if (log.IsDebugEnabled)
 					{
-						log.Debug("Zone" + ID + ": " + ((currentObject != null) ? "object " + currentObject.ObjectID : "ghost object") + " removed for subzone");
+						log.Debug($"Zone{ID}: {(currentObject != null ? $"object {currentObject.ObjectID}" : "ghost object")} removed for subzone");
 					}
 				}
 				else
@@ -779,8 +679,8 @@ namespace DOL.GS
 			// => check all distances for all objects in the subzone
 
 			SubNodeElement currentElement = startElement.next;
-			SubNodeElement elementToRemove = null;
-			GameObject currentObject = null;
+			SubNodeElement elementToRemove;
+			GameObject currentObject;
 
 			do
 			{
@@ -795,7 +695,7 @@ namespace DOL.GS
 
 					if (log.IsDebugEnabled)
 					{
-						log.Debug("Zone" + ID + ": " + ((currentObject != null) ? "object " + currentObject.ObjectID : "ghost object") + " removed for subzone");
+						log.Debug($"Zone{ID}: {(currentObject != null ? $"object {currentObject.ObjectID}" : "ghost object")} removed for subzone");
 					}
 				}
 				else
@@ -821,10 +721,9 @@ namespace DOL.GS
 			if (!m_initialized) return;
 			if (m_objectCount > 0)
 			{
-				SubNodeElement startElement = null;
-				SubNodeElement currentElement = null;
-
-				SubNodeElement elementToRemove = null;
+				SubNodeElement startElement;
+				SubNodeElement currentElement;
+				SubNodeElement elementToRemove;
 
                 Collections.Hashtable outOfZoneElements = new Collections.Hashtable();
                 Collections.Hashtable inZoneElements = new Collections.Hashtable();
@@ -858,7 +757,7 @@ namespace DOL.GS
 
 											if (log.IsDebugEnabled)
 											{
-												log.Debug("Zone" + ID + " object " + elementToRemove.data.ObjectID + " removed for subzone");
+												log.Debug($"Zone{ID} object {elementToRemove.data.ObjectID} removed for subzone");
 											}
 										}
 										else
@@ -881,7 +780,7 @@ namespace DOL.GS
 
 					if (log.IsDebugEnabled)
 					{
-						log.Debug("Zone" + ID + " " + inZoneElements.Count + " objects moved inside zone");
+						log.Debug($"Zone{ID} {inZoneElements.Count} objects moved inside zone");
 					}
 				}
 
@@ -891,7 +790,7 @@ namespace DOL.GS
 
 					if (log.IsDebugEnabled)
 					{
-						log.Debug("Zone" + ID + " " + outOfZoneElements.Count + " objects moved outside zone");
+						log.Debug($"Zone{ID} {outOfZoneElements.Count} objects moved outside zone");
 					}
 				}
 			}
@@ -919,9 +818,9 @@ namespace DOL.GS
 			bool removeElement = true;
 			GameObject currentObject = currentElement.data;
 
-			if ((currentObject != null) &&
-			    (((int)currentObject.ObjectState) == (int)GameObject.eObjectState.Active)
-			    && (currentObject.CurrentRegion == ZoneRegion))
+			if (currentObject != null &&
+			    (int)currentObject.ObjectState == (int)GameObject.eObjectState.Active &&
+                currentObject.CurrentRegion == ZoneRegion)
 			{
 				// the current object exists, is Active and still in the Region where this Zone is located
 
@@ -930,7 +829,6 @@ namespace DOL.GS
 				if (currentElementSubzoneIndex == -1)
 				{
 					// the object has moved in another Zone in the same Region
-
 					ArrayList movedElements = (ArrayList)outOfZoneElements[typeIndex];
 
 					if (movedElements == null)
@@ -946,7 +844,6 @@ namespace DOL.GS
 				else
 				{
 					// the object is still inside this Zone
-
 					if (removeElement = (currentElementSubzoneIndex != subZoneIndex))
 					{
 						// it has changed of subzone
@@ -968,7 +865,6 @@ namespace DOL.GS
 			{
 				// ghost object
 				// => remove it
-
 				Interlocked.Decrement(ref m_objectCount);
 			}
 
@@ -978,13 +874,12 @@ namespace DOL.GS
 
 		private void PlaceElementsInZone(Collections.Hashtable elements)
 		{
-            Collections.DictionaryEntry currentEntry = null;
-			ArrayList currentList = null;
-			SubNodeElement currentStartElement = null;
-			SubNodeElement currentElement = null;
+            Collections.DictionaryEntry currentEntry;
+			ArrayList currentList;
+			SubNodeElement currentStartElement;
+			SubNodeElement currentElement;
 
 			IEnumerator entryEnumerator = elements.GetEntryEnumerator();
-
 			while (entryEnumerator.MoveNext())
 			{
 				currentEntry = (Collections.DictionaryEntry)entryEnumerator.Current;
@@ -1006,21 +901,17 @@ namespace DOL.GS
 
 		private void PlaceElementsInOtherZones(Collections.Hashtable elements)
 		{
-            Collections.DictionaryEntry currentEntry = null;
-
-			int currentType = 0;
-			ArrayList currentList = null;
-
-			Zone currentZone = null;
-			SubNodeElement currentElement = null;
+            Collections.DictionaryEntry currentEntry;
+			int currentType;
+			ArrayList currentList;
+			Zone currentZone;
+			SubNodeElement currentElement;
 
 			IEnumerator entryEnumerator = elements.GetEntryEnumerator();
-
 			while (entryEnumerator.MoveNext())
 			{
 				currentEntry = (Collections.DictionaryEntry)entryEnumerator.Current;
 				currentType = (int)currentEntry.key;
-
 				currentList = (ArrayList)currentEntry.value;
 
 				for (int i = 0; i < currentList.Count; i++)
@@ -1028,10 +919,7 @@ namespace DOL.GS
 					currentElement = (SubNodeElement)currentList[i];
 					currentZone = ZoneRegion.GetZone(currentElement.data.X, currentElement.data.Y);
 
-					if (currentZone != null)
-					{
-						currentZone.ObjectEnterZone((eGameObjectType)currentType, currentElement);
-					}
+				    currentZone?.ObjectEnterZone((eGameObjectType)currentType, currentElement);
 				}
 			}
 		}
@@ -1052,7 +940,7 @@ namespace DOL.GS
 		public static bool CheckSquareDistance(int x1, int y1, int z1, int x2, int y2, int z2, uint sqDistance, bool ignoreZ)
 		{
 			int xDiff = x1 - x2;
-			long dist = ((long)xDiff) * xDiff;
+			long dist = (long)xDiff * xDiff;
 
 			if (dist > sqDistance)
 			{
@@ -1060,7 +948,7 @@ namespace DOL.GS
 			}
 
 			int yDiff = y1 - y2;
-			dist += ((long)yDiff) * yDiff;
+			dist += (long)yDiff * yDiff;
 
 			if (dist > sqDistance)
 			{
@@ -1070,15 +958,10 @@ namespace DOL.GS
 			if (ignoreZ == false)
 			{
 				int zDiff = z1 - z2;
-				dist += ((long)zDiff) * zDiff;
+				dist += (long)zDiff * zDiff;
 			}
 
-			if (dist > sqDistance)
-			{
-				return false;
-			}
-
-			return true;
+			return dist <= sqDistance;
 		}
 
 
@@ -1097,16 +980,16 @@ namespace DOL.GS
 		/// <returns>The distance</returns>
 		private bool CheckMinDistance(int x, int y, int xLeft, int xRight, int yTop, int yBottom, uint squareRadius)
 		{
-			long distance = 0;
+			long distance;
 
-			if ((y >= yTop) && (y <= yBottom))
+			if (y >= yTop && y <= yBottom)
 			{
 				int xdiff = Math.Min(FastMath.Abs(x - xLeft), FastMath.Abs(x - xRight));
 				distance = (long)xdiff * xdiff;
 			}
 			else
 			{
-				if ((x >= xLeft) && (x <= xRight))
+				if (x >= xLeft && x <= xRight)
 				{
 					int ydiff = Math.Min(FastMath.Abs(y - yTop), FastMath.Abs(y - yBottom));
 					distance = (long)ydiff * ydiff;
@@ -1119,7 +1002,7 @@ namespace DOL.GS
 				}
 			}
 
-			return (distance <= squareRadius);
+			return distance <= squareRadius;
 		}
 
 
@@ -1137,13 +1020,13 @@ namespace DOL.GS
 		/// <returns>The distance</returns>
 		private bool CheckMaxDistance(int x, int y, int xLeft, int xRight, int yTop, int yBottom, uint squareRadius)
 		{
-			long distance = 0;
+			long distance;
 
 			int xdiff = Math.Max(FastMath.Abs(x - xLeft), FastMath.Abs(x - xRight));
 			int ydiff = Math.Max(FastMath.Abs(y - yTop), FastMath.Abs(y - yBottom));
 			distance = (long)xdiff * xdiff + (long)ydiff * ydiff;
 
-			return (distance <= squareRadius);
+			return distance <= squareRadius;
 		}
 
 		#endregion
@@ -1163,12 +1046,12 @@ namespace DOL.GS
 
 		public IList<IArea> GetAreasOfSpot(int x, int y, int z)
 		{
-			return m_Region.GetAreasOfZone(this, x, y, z);
+			return ZoneRegion.GetAreasOfZone(this, x, y, z);
 		}
 
 		public IList<IArea> GetAreasOfSpot(IPoint3D spot, bool checkZ)
 		{
-			return m_Region.GetAreasOfZone(this, spot, checkZ);
+			return ZoneRegion.GetAreasOfZone(this, spot, checkZ);
 		}
 
 		#endregion
@@ -1184,8 +1067,8 @@ namespace DOL.GS
 		/// <returns></returns>
 		public GameNPC GetRandomNPCByCon(eRealm realm, int compareLevel, int conLevel)
 		{
-			List<GameNPC> npcs = GetNPCsOfZone(new eRealm[] { realm }, 0, 0, compareLevel, conLevel, true);
-			GameNPC randomNPC = (npcs.Count == 0 ? null : npcs[0]);
+			List<GameNPC> npcs = GetNPCsOfZone(new[] { realm }, 0, 0, compareLevel, conLevel, true);
+			GameNPC randomNPC = npcs.Count == 0 ? null : npcs[0];
 			return randomNPC;
 		}
 
@@ -1196,7 +1079,7 @@ namespace DOL.GS
 		/// <returns>a npc</returns>
 		public GameNPC GetRandomNPC(eRealm realm)
 		{
-			return GetRandomNPC(new eRealm[] { realm }, -1, -1);
+			return GetRandomNPC(new[] { realm }, -1, -1);
 		}
 
 
@@ -1209,7 +1092,7 @@ namespace DOL.GS
 		/// <returns>A npc</returns>
 		public GameNPC GetRandomNPC(eRealm realm, int minLevel, int maxLevel)
 		{
-			return GetRandomNPC(new eRealm[] { realm }, minLevel, maxLevel);
+			return GetRandomNPC(new[] { realm }, minLevel, maxLevel);
 		}
 
 
@@ -1234,7 +1117,7 @@ namespace DOL.GS
 		public GameNPC GetRandomNPC(eRealm[] realms, int minLevel, int maxLevel)
 		{
 			List<GameNPC> npcs = GetNPCsOfZone(realms, minLevel, maxLevel, 0, 0, true);
-			GameNPC randomNPC = (npcs.Count == 0 ? null : npcs[0]);
+			GameNPC randomNPC = npcs.Count == 0 ? null : npcs[0];
 			return randomNPC;
 		}
 
@@ -1245,7 +1128,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public List<GameNPC> GetNPCsOfZone(eRealm realm)
 		{
-			return GetNPCsOfZone(new eRealm[] { realm }, 0, 0, 0, 0, false);
+			return GetNPCsOfZone(new[] { realm }, 0, 0, 0, 0, false);
 		}
 
 
@@ -1269,7 +1152,7 @@ namespace DOL.GS
 				// select random starting subzone and iterate over all objects in subzone than in all subzone...
 				int currentSubZoneIndex = Util.Random(SUBZONE_NBR);
 				int startSubZoneIndex = currentSubZoneIndex;
-				GameNPC currentNPC = null;
+				GameNPC currentNPC;
 				bool stopSearching = false;
 				do
 				{
@@ -1293,14 +1176,22 @@ namespace DOL.GS
 										// Check for min-max level, if any specified
 										bool addToList = true;
 										if (compareLevel > 0 && conLevel > 0)
-											addToList = ((int)GameObject.GetConLevel(compareLevel, currentNPC.Level) == conLevel);
+										{
+										    addToList = (int)GameObject.GetConLevel(compareLevel, currentNPC.Level) == conLevel;
+										}
 										else
 										{
 											if (minLevel > 0 && currentNPC.Level < minLevel)
-												addToList = false;
+											{
+											    addToList = false;
+											}
+
 											if (maxLevel > 0 && currentNPC.Level > maxLevel)
-												addToList = false;
+											{
+											    addToList = false;
+											}
 										}
+
 										if (addToList)
 										{
 											list.Add(currentNPC);
@@ -1324,14 +1215,18 @@ namespace DOL.GS
 					{
 						currentSubZoneIndex = 0;
 					}
+
 					// If stop searching forced, then exit
 					if (stopSearching)
-						break;
+					{
+					    break;
+					}
+
 				} while (currentSubZoneIndex != startSubZoneIndex);
 			}
 			catch (Exception ex)
 			{
-				log.Error("GetNPCsOfZone: Caught Exception for zone " + Description + ".", ex);
+				log.Error($"GetNPCsOfZone: Caught Exception for zone {Description}.", ex);
 			}
 
 			return list;
@@ -1343,35 +1238,23 @@ namespace DOL.GS
 		/// <summary>
 		/// Bonus XP Gained (%)
 		/// </summary>
-		public int BonusExperience
-		{
-			get { return m_bonusXP; }
-			set { m_bonusXP = value; }
-		}
-		/// <summary>
+		public int BonusExperience { get; set; } = 0;
+
+	    /// <summary>
 		/// Bonus RP Gained (%)
 		/// </summary>
-		public int BonusRealmpoints
-		{
-			get { return m_bonusRP; }
-			set { m_bonusRP = value; }
-		}
-		/// <summary>
+		public int BonusRealmpoints { get; set; } = 0;
+
+	    /// <summary>
 		/// Bonus BP Gained (%)
 		/// </summary>
-		public int BonusBountypoints
-		{
-			get { return m_bonusBP; }
-			set { m_bonusBP = value; }
-		}
-		/// <summary>
+		public int BonusBountypoints { get; set; } = 0;
+
+	    /// <summary>
 		/// Bonus Money Gained (%)
 		/// </summary>
-		public int BonusCoin
-		{
-			get { return m_bonusCoin; }
-			set { m_bonusCoin = value; }
-		}
-		#endregion
+		public int BonusCoin { get; set; } = 0;
+
+	    #endregion
 	}
 }

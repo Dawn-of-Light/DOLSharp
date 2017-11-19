@@ -69,48 +69,33 @@ namespace DOL.GS
 		/// Get the Player World Update Refresh Rate.
 		/// </summary>
 		/// <returns></returns>
-		private static uint GetPlayerWorldUpdateInterval
-		{
-			get { return Math.Max(ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL, MIN_PLAYER_WORLD_UPDATE_RATE); }
-		}
-		
-		/// <summary>
+		private static uint GetPlayerWorldUpdateInterval => Math.Max(ServerProperties.Properties.WORLD_PLAYER_UPDATE_INTERVAL, MIN_PLAYER_WORLD_UPDATE_RATE);
+
+	    /// <summary>
 		/// Get Player NPC Refresh Rate.
 		/// </summary>
 		/// <returns></returns>
-		private static uint GetPlayerNPCUpdateInterval
-		{
-			get { return Math.Max(ServerProperties.Properties.WORLD_NPC_UPDATE_INTERVAL, MIN_NPC_UPDATE_RATE); }
-		}
-		
-		/// <summary>
+		private static uint GetPlayerNPCUpdateInterval => Math.Max(ServerProperties.Properties.WORLD_NPC_UPDATE_INTERVAL, MIN_NPC_UPDATE_RATE);
+
+	    /// <summary>
 		/// Get Player Static Item Refresh Rate.
 		/// </summary>
 		/// <returns></returns>
-		private static uint GetPlayerItemUpdateInterval
-		{
-			get { return Math.Max(ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL, MIN_ITEM_UPDATE_RATE); }
-		}
-		
-		/// <summary>
+		private static uint GetPlayerItemUpdateInterval => Math.Max(ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL, MIN_ITEM_UPDATE_RATE);
+
+	    /// <summary>
 		/// Get Player Housing Item Refresh Rate.
 		/// </summary>
 		/// <returns></returns>
-		private static uint GetPlayerHousingUpdateInterval
-		{
-			get { return Math.Max(ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL, MIN_HOUSING_UPDATE_RATE); }
-		}
-		
-		/// <summary>
+		private static uint GetPlayerHousingUpdateInterval => Math.Max(ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL, MIN_HOUSING_UPDATE_RATE);
+
+	    /// <summary>
 		/// Get Player to Other Player Update Rate
 		/// </summary>
 		/// <returns></returns>
-		private static uint GetPlayertoPlayerUpdateInterval
-		{
-			get { return Math.Max(ServerProperties.Properties.WORLD_PLAYERTOPLAYER_UPDATE_INTERVAL, MIN_PLAYER_UPDATE_RATE); }
-		}
-		
-		/// <summary>
+		private static uint GetPlayertoPlayerUpdateInterval => Math.Max(ServerProperties.Properties.WORLD_PLAYERTOPLAYER_UPDATE_INTERVAL, MIN_PLAYER_UPDATE_RATE);
+
+	    /// <summary>
 		/// Update all World Around Player
 		/// </summary>
 		/// <param name="player">The player needing update</param>
@@ -128,29 +113,42 @@ namespace DOL.GS
 		{
 			// Update Player Player's
 			if (ServerProperties.Properties.WORLD_PLAYERTOPLAYER_UPDATE_INTERVAL > 0)
-				UpdatePlayerOtherPlayers(player, nowTicks);
+			{
+			    UpdatePlayerOtherPlayers(player, nowTicks);
+			}
 			
 			// Update Player Mob's
 			if (ServerProperties.Properties.WORLD_NPC_UPDATE_INTERVAL > 0)
-				UpdatePlayerNPCs(player, nowTicks);
+			{
+			    UpdatePlayerNPCs(player, nowTicks);
+			}
 
 			// Update Player Static Item
 			if (ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL > 0)
-				UpdatePlayerItems(player, nowTicks);
+			{
+			    UpdatePlayerItems(player, nowTicks);
+			}
 			
 			// Update Player Doors
 			if (ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL > 0)
-				UpdatePlayerDoors(player, nowTicks);
+			{
+			    UpdatePlayerDoors(player, nowTicks);
+			}
 			
 			// Update Player Housing
 			if (ServerProperties.Properties.WORLD_OBJECT_UPDATE_INTERVAL > 0)
-				UpdatePlayerHousing(player, nowTicks);
+			{
+			    UpdatePlayerHousing(player, nowTicks);
+			}
 		}
 
 		private static void UpdatePlayerOtherPlayers(GamePlayer player, long nowTicks)
 		{
 			// Get All Player in Range
-			var players = player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE).Cast<GamePlayer>().Where(p => p != null && p.IsVisibleTo(player) && (!p.IsStealthed || player.CanDetect(p))).ToArray();
+			var players = player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE)
+                .Cast<GamePlayer>()
+                .Where(p => p != null && p.IsVisibleTo(player) && (!p.IsStealthed || player.CanDetect(p)))
+                .ToArray();
 
 			try
 			{
@@ -161,13 +159,15 @@ namespace DOL.GS
 					GameObject obj = WorldMgr.GetRegion(objKey.Item1).GetObject(objKey.Item2);
 					// We have a Player in cache that is not in vincinity
 					// For updating "out of view" we allow a halved refresh time. 
-					if (obj is GamePlayer && !players.Contains((GamePlayer)obj) && (nowTicks - objEntry.Value) >= GetPlayertoPlayerUpdateInterval)
+					if (obj is GamePlayer gamePlayer && !players.Contains(gamePlayer) && (nowTicks - objEntry.Value) >= GetPlayertoPlayerUpdateInterval)
 					{
 						long dummy;
 						
 						// Update him out of View and delete from cache
-						if (obj.IsVisibleTo(player) && (((GamePlayer)obj).IsStealthed == false || player.CanDetect((GamePlayer)obj)))
-							player.Client.Out.SendPlayerForgedPosition((GamePlayer)obj);
+						if (obj.IsVisibleTo(player) && (gamePlayer.IsStealthed == false || player.CanDetect(gamePlayer)))
+						{
+						    player.Client.Out.SendPlayerForgedPosition(gamePlayer);
+						}
 						
 						player.Client.GameObjectUpdateArray.TryRemove(objKey, out dummy);
 					}
@@ -176,7 +176,9 @@ namespace DOL.GS
 			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
-					log.ErrorFormat("Error while Cleaning OtherPlayers cache for Player : {0}, Exception : {1}", player.Name, e);
+				{
+				    log.Error($"Error while Cleaning OtherPlayers cache for Player : {player.Name}, Exception : {e}");
+				}
 			}		
 			
 			try
@@ -189,11 +191,10 @@ namespace DOL.GS
 					if (otherply != null)
 					{						
 						// Get last update time
-						long lastUpdate;
-						if (player.Client.GameObjectUpdateArray.TryGetValue(new Tuple<ushort, ushort>(otherply.CurrentRegionID, (ushort)otherply.ObjectID), out lastUpdate))
+					    if (player.Client.GameObjectUpdateArray.TryGetValue(new Tuple<ushort, ushort>(otherply.CurrentRegionID, (ushort)otherply.ObjectID), out var lastUpdate))
 						{
 							// This Player Needs Update
-							if ((nowTicks - lastUpdate) >= GetPlayertoPlayerUpdateInterval)
+							if (nowTicks - lastUpdate >= GetPlayertoPlayerUpdateInterval)
 							{
 								player.Client.Out.SendPlayerForgedPosition(otherply);
 							}
@@ -208,7 +209,9 @@ namespace DOL.GS
 			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
-					log.ErrorFormat("Error while updating OtherPlayers for Player : {0}, Exception : {1}", player.Name, e);
+				{
+				    log.Error($"Error while updating OtherPlayers for Player : {player.Name}, Exception : {e}");
+				}
 			}
 		}
 		
@@ -220,7 +223,10 @@ namespace DOL.GS
 		private static void UpdatePlayerNPCs(GamePlayer player, long nowTicks)
 		{
 			// Get All Mobs in Range
-			var npcs = player.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE).Cast<GameNPC>().Where(n => n != null && n.IsVisibleTo(player)).ToArray();
+			var npcs = player.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE)
+                .Cast<GameNPC>()
+                .Where(n => n != null && n.IsVisibleTo(player))
+                .ToArray();
 
 			try
 			{
@@ -231,15 +237,19 @@ namespace DOL.GS
 					GameObject obj = WorldMgr.GetRegion(objKey.Item1).GetObject(objKey.Item2);
 					
 					// Brain is updating to its master, no need to handle it.
-					if (obj is GameNPC && ((GameNPC)obj).Brain is IControlledBrain && ((IControlledBrain)((GameNPC)obj).Brain).GetPlayerOwner() == player)
-						continue;
+					if (obj is GameNPC npc && npc.Brain is IControlledBrain && ((IControlledBrain)npc.Brain).GetPlayerOwner() == player)
+					{
+					    continue;
+					}
 					
 					// We have a NPC in cache that is not in vincinity
-					if (obj is GameNPC && !npcs.Contains((GameNPC)obj) && (nowTicks - objEntry.Value) >= GetPlayerNPCUpdateInterval)
+					if (obj is GameNPC gameNpc && !npcs.Contains(gameNpc) && (nowTicks - objEntry.Value) >= GetPlayerNPCUpdateInterval)
 					{
 						// Update him out of View
 						if (obj.IsVisibleTo(player))
-							player.Client.Out.SendObjectUpdate(obj);
+						{
+						    player.Client.Out.SendObjectUpdate(obj);
+						}
 						
 						long dummy;
 						// this will add the object to the cache again, remove it after sending...
@@ -250,7 +260,9 @@ namespace DOL.GS
 			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
-					log.ErrorFormat("Error while Cleaning NPC cache for Player : {0}, Exception : {1}", player.Name, e);
+				{
+				    log.Error($"Error while Cleaning NPC cache for Player : {player.Name}, Exception : {e}");
+				}
 			}
 			
 			try
@@ -265,7 +277,7 @@ namespace DOL.GS
 					if (player.Client.GameObjectUpdateArray.TryGetValue(new Tuple<ushort, ushort>(npc.CurrentRegionID, (ushort)npc.ObjectID), out lastUpdate))
 					{
 						// This NPC Needs Update
-						if ((nowTicks - lastUpdate) >= GetPlayerNPCUpdateInterval)
+						if (nowTicks - lastUpdate >= GetPlayerNPCUpdateInterval)
 						{
 							player.Client.Out.SendObjectUpdate(npc);
 						}
@@ -280,7 +292,9 @@ namespace DOL.GS
 			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
-					log.ErrorFormat("Error while updating NPC for Player : {0}, Exception : {1}", player.Name, e);
+				{
+				    log.Error($"Error while updating NPC for Player : {player.Name}, Exception : {e}");
+				}
 			}
 		}
 		
@@ -292,7 +306,10 @@ namespace DOL.GS
 		private static void UpdatePlayerItems(GamePlayer player, long nowTicks)
 		{
 			// Get All Static Item in Range
-			var objs = player.GetItemsInRadius(WorldMgr.OBJ_UPDATE_DISTANCE).Cast<GameStaticItem>().Where(i => i != null && i.IsVisibleTo(player)).ToArray();
+			var objs = player.GetItemsInRadius(WorldMgr.OBJ_UPDATE_DISTANCE)
+                .Cast<GameStaticItem>()
+                .Where(i => i != null && i.IsVisibleTo(player))
+                .ToArray();
 
 			try
 			{
@@ -302,7 +319,7 @@ namespace DOL.GS
 					var objKey = objEntry.Key;
 					GameObject obj = WorldMgr.GetRegion(objKey.Item1).GetObject(objKey.Item2);
 					// We have a Static Item in cache that is not in vincinity
-					if (obj is GameStaticItem && !objs.Contains((GameStaticItem)obj) && (nowTicks - objEntry.Value) >= GetPlayerItemUpdateInterval)
+					if (obj is GameStaticItem item && !objs.Contains(item) && (nowTicks - objEntry.Value) >= GetPlayerItemUpdateInterval)
 					{
 						long dummy;
 						player.Client.GameObjectUpdateArray.TryRemove(objKey, out dummy);
@@ -312,7 +329,9 @@ namespace DOL.GS
 			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
-					log.ErrorFormat("Error while Cleaning Static Item cache for Player : {0}, Exception : {1}", player.Name, e);
+				{
+				    log.Error($"Error while Cleaning Static Item cache for Player : {player.Name}, Exception : {e}");
+				}
 			}
 			
 			try
@@ -326,7 +345,7 @@ namespace DOL.GS
 					if (player.Client.GameObjectUpdateArray.TryGetValue(new Tuple<ushort, ushort>(staticObj.CurrentRegionID, (ushort)staticObj.ObjectID), out lastUpdate))
 					{
 						// This Static Object Needs Update
-						if ((nowTicks - lastUpdate) >= GetPlayerItemUpdateInterval)
+						if (nowTicks - lastUpdate >= GetPlayerItemUpdateInterval)
 						{
 							player.Client.Out.SendObjectCreate(staticObj);
 						}
@@ -341,7 +360,9 @@ namespace DOL.GS
 			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
-					log.ErrorFormat("Error while updating Static Item for Player : {0}, Exception : {1}", player.Name, e);
+				{
+				    log.Error($"Error while updating Static Item for Player : {player.Name}, Exception : {e}");
+				}
 			}
 		}
 		
@@ -363,7 +384,7 @@ namespace DOL.GS
 					var objKey = objEntry.Key;
 					GameObject obj = WorldMgr.GetRegion(objKey.Item1).GetObject(objKey.Item2);
 					// We have a Door in cache that is not in vincinity
-					if (obj is IDoor && !doors.Contains(obj) && (nowTicks - objEntry.Value) >= GetPlayerItemUpdateInterval)
+					if (obj is IDoor && !doors.Contains(obj) && nowTicks - objEntry.Value >= GetPlayerItemUpdateInterval)
 					{
 						long dummy;
 						player.Client.GameObjectUpdateArray.TryRemove(objKey, out dummy);
@@ -373,7 +394,9 @@ namespace DOL.GS
 			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
-					log.ErrorFormat("Error while Cleaning Doors cache for Player : {0}, Exception : {1}", player.Name, e);
+				{
+				    log.Error($"Error while Cleaning Doors cache for Player : {player.Name}, Exception : {e}");
+				}
 			}
 			
 			try
@@ -388,7 +411,7 @@ namespace DOL.GS
 					if (player.Client.GameObjectUpdateArray.TryGetValue(new Tuple<ushort, ushort>(((GameObject)door).CurrentRegionID, (ushort)door.ObjectID), out lastUpdate))
 					{
 						// This Door Needs Update
-						if ((nowTicks - lastUpdate) >= GetPlayerItemUpdateInterval)
+						if (nowTicks - lastUpdate >= GetPlayerItemUpdateInterval)
 						{
 							player.SendDoorUpdate(door);
 						}
@@ -403,7 +426,9 @@ namespace DOL.GS
 			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
-					log.ErrorFormat("Error while updating Doors for Player : {0}, Exception : {1}", player.Name, e);
+				{
+				    log.Error($"Error while updating Doors for Player : {player.Name}, Exception : {e}");
+				}
 			}
 		}
 		
@@ -416,12 +441,16 @@ namespace DOL.GS
 		{
 			// If no house update needed exit.
 			if (player.CurrentRegion == null || !player.CurrentRegion.HousingEnabled)
-				return;
+			{
+			    return;
+			}
 			
 			// Get All House in Region
 			IDictionary<int, House> housesDict = HouseMgr.GetHouses(player.CurrentRegionID);
 			// Build Vincinity List
-			var houses = housesDict.Values.Where(h => h != null && player.IsWithinRadius(h, HousingConstants.HouseViewingDistance)).ToArray();
+			var houses = housesDict.Values
+                .Where(h => h != null && player.IsWithinRadius(h, HousingConstants.HouseViewingDistance))
+                .ToArray();
 			
 			try
 			{
@@ -432,7 +461,7 @@ namespace DOL.GS
 					House house = HouseMgr.GetHouse(houseKey.Item1, houseKey.Item2);
 					
 					// We have a House in cache that is not in vincinity
-					if (!houses.Contains(house) && (nowTicks - houseEntry.Value) >= (GetPlayerHousingUpdateInterval >> 2))
+					if (!houses.Contains(house) && (nowTicks - houseEntry.Value) >= GetPlayerHousingUpdateInterval >> 2)
 					{
 						long dummy;
 						player.Client.HouseUpdateArray.TryRemove(houseKey, out dummy);
@@ -442,7 +471,9 @@ namespace DOL.GS
 			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
-					log.ErrorFormat("Error while Cleaning House cache for Player : {0}, Exception : {1}", player.Name, e);
+				{
+				    log.Error($"Error while Cleaning House cache for Player : {player.Name}, Exception : {e}");
+				}
 			}
 			
 			try
@@ -457,7 +488,7 @@ namespace DOL.GS
 					if (player.Client.HouseUpdateArray.TryGetValue(new Tuple<ushort, ushort>(house.RegionID, (ushort)house.HouseNumber), out lastUpdate))
 					{
 						// This House Needs Update
-						if ((nowTicks - lastUpdate) >= GetPlayerHousingUpdateInterval)
+						if (nowTicks - lastUpdate >= GetPlayerHousingUpdateInterval)
 						{
 							player.Client.Out.SendHouseOccupied(house, house.IsOccupied);							
 						}
@@ -474,7 +505,9 @@ namespace DOL.GS
 			catch (Exception e)
 			{
 				if (log.IsErrorEnabled)
-					log.ErrorFormat("Error while updating Houses for Player : {0}, Exception : {1}", player.Name, e);
+				{
+				    log.Error($"Error while updating Houses for Player : {player.Name}, Exception : {e}");
+				}
 			}
 		}
 		
@@ -503,55 +536,54 @@ namespace DOL.GS
 				clientsUpdateTasks.Add(client, clientEntry);
 				return true;
 			}
-			else
+
+			// Get client entry data.
+			long lastUpdate = clientEntry.Item1;
+			Task taskEntry = clientEntry.Item2;
+			Region lastRegion = clientEntry.Item3;
+				
+			//Check if task finished
+			if (!taskEntry.IsCompleted)
 			{
-				// Get client entry data.
-				long lastUpdate = clientEntry.Item1;
-				Task taskEntry = clientEntry.Item2;
-				Region lastRegion = clientEntry.Item3;
-				
-				//Check if task finished
-				if (!taskEntry.IsCompleted)
+				// Check for how long
+				if (begin - lastUpdate > GetPlayerWorldUpdateInterval)
 				{
-					// Check for how long
-					if ((begin - lastUpdate) > GetPlayerWorldUpdateInterval)
+					if (log.IsWarnEnabled && (GameTimer.GetTickCount() - player.TempProperties.getProperty<long>("LAST_WORLD_UPDATE_THREAD_WARNING", 0) >= 1000))
 					{
-						if (log.IsWarnEnabled && (GameTimer.GetTickCount() - player.TempProperties.getProperty<long>("LAST_WORLD_UPDATE_THREAD_WARNING", 0) >= 1000))
-						{
-							log.WarnFormat("Player Update Task ({0}) Taking more than world update refresh rate : {1} ms (real {2} ms) - Task Status : {3}!", player.Name, GetPlayerWorldUpdateInterval, begin - lastUpdate, taskEntry.Status);
-							player.TempProperties.setProperty("LAST_WORLD_UPDATE_THREAD_WARNING", GameTimer.GetTickCount());
-						}
+						log.Warn($"Player Update Task ({player.Name}) Taking more than world update refresh rate : {GetPlayerWorldUpdateInterval} ms (real {begin - lastUpdate} ms) - Task Status : {taskEntry.Status}!");
+						player.TempProperties.setProperty("LAST_WORLD_UPDATE_THREAD_WARNING", GameTimer.GetTickCount());
 					}
-					// Don't init this client.
-					return false;
 				}
+				// Don't init this client.
+				return false;
+			}
 				
-				// Display Exception
-				if (taskEntry.IsFaulted)
+			// Display Exception
+			if (taskEntry.IsFaulted)
+			{
+				if (log.IsErrorEnabled)
 				{
-					if (log.IsErrorEnabled)
-						log.ErrorFormat("Error in World Update Thread, Player Task ({0})! Exception : {1}", player.Name, taskEntry.Exception);
+				    log.Error($"Error in World Update Thread, Player Task ({player.Name})! Exception : {taskEntry.Exception}");
 				}
+			}
 				
-				// Region Refresh
-				if (player.CurrentRegion != lastRegion)
-				{
-					lastUpdate = 0;
-					lastRegion = player.CurrentRegion;
-					client.GameObjectUpdateArray.Clear();
-					client.HouseUpdateArray.Clear();
-				}
+			// Region Refresh
+			if (player.CurrentRegion != lastRegion)
+			{
+				lastUpdate = 0;
+				lastRegion = player.CurrentRegion;
+				client.GameObjectUpdateArray.Clear();
+				client.HouseUpdateArray.Clear();
+			}
 				
-				// If this player need update.
-				if (PlayerNeedUpdate(lastUpdate))
-				{
-					// Update Time, Region and Create Task
-					var newClientEntry = new Tuple<long, Task, Region>(begin, Task.Factory.StartNew(() => UpdatePlayerWorld(player)), lastRegion);
-					// Register Tuple
-					clientsUpdateTasks[client] = newClientEntry;
-					return true;
-				}
-				
+			// If this player need update.
+			if (PlayerNeedUpdate(lastUpdate))
+			{
+				// Update Time, Region and Create Task
+				var newClientEntry = new Tuple<long, Task, Region>(begin, Task.Factory.StartNew(() => UpdatePlayerWorld(player)), lastRegion);
+				// Register Tuple
+				clientsUpdateTasks[client] = newClientEntry;
+				return true;
 			}
 			
 			return false;
@@ -567,7 +599,9 @@ namespace DOL.GS
 				Task taskEntry = clientEntry.Item2;
 				
 				if (taskEntry != null)
-					return taskEntry.IsCompleted;
+				{
+				    return taskEntry.IsCompleted;
+				}
 			}
 			
 			return true;
@@ -587,7 +621,7 @@ namespace DOL.GS
 			
 			if (log.IsInfoEnabled)
 			{
-				log.InfoFormat("World Update Thread Starting - ThreadId = {0}", Thread.CurrentThread.ManagedThreadId);
+				log.Info($"World Update Thread Starting - ThreadId = {Thread.CurrentThread.ManagedThreadId}");
 			}
 			
 			while (running)
@@ -604,14 +638,16 @@ namespace DOL.GS
 					foreach(GameClient cli in clientsUpdateTasks.Keys.ToArray())
 					{
 						if (cli == null)
-							continue;
+						{
+						    continue;
+						}
 						
 						GamePlayer player = cli.Player;
 						
 						bool notActive = cli.ClientState != GameClient.eClientState.Playing || player == null || player.ObjectState != GameObject.eObjectState.Active;
 						bool notConnected = !clients.Contains(cli);
 						
-						if (notConnected || (notActive && IsTaskCompleted(cli, clientsUpdateTasks)))
+						if (notConnected || notActive && IsTaskCompleted(cli, clientsUpdateTasks))
 						{
 							clientsUpdateTasks.Remove(cli);
 							cli.GameObjectUpdateArray.Clear();
@@ -626,14 +662,18 @@ namespace DOL.GS
 						
 						// Check that client is healthy
 						if (client == null)
-							continue;
+						{
+						    continue;
+						}
 
 						GamePlayer player = client.Player;
 						
 						if (client.ClientState == GameClient.eClientState.Playing && player == null)
 						{
 							if (log.IsErrorEnabled)
-								log.Error("account has no active player but is playing, disconnecting! => " + client.Account.Name);
+							{
+							    log.Error($"account has no active player but is playing, disconnecting! => {client.Account.Name}");
+							}
 							
 							// Disconnect buggy Client
 							GameServer.Instance.Disconnect(client);
@@ -642,7 +682,9 @@ namespace DOL.GS
 						
 						// Check that player is active.
 						if (client.ClientState != GameClient.eClientState.Playing || player == null || player.ObjectState != GameObject.eObjectState.Active)
-							continue;
+						{
+						    continue;
+						}
 						
 						// Start Update Task
 						StartPlayerUpdateTask(client, clientsUpdateTasks, begin);
@@ -653,7 +695,9 @@ namespace DOL.GS
 					if (took >= 500)
 					{
 						if (log.IsWarnEnabled)
-							log.WarnFormat("World Update Thread (NPC/Object update) took {0} ms", took);
+						{
+						    log.Warn($"World Update Thread (NPC/Object update) took {took} ms");
+						}
 					}
 
 					// relaunch update thread every 100 ms to check if any player need updates.
@@ -662,15 +706,18 @@ namespace DOL.GS
 				catch (ThreadAbortException)
 				{
 					if (log.IsInfoEnabled)
-						log.Info("World Update Thread stopping...");
+					{
+					    log.Info("World Update Thread stopping...");
+					}
 					
-					running = false;
 					break;
 				}
 				catch (Exception e)
 				{
 					if (log.IsErrorEnabled)
-						log.Error("Error in World Update (NPC/Object Update) Thread!", e);
+					{
+					    log.Error("Error in World Update (NPC/Object Update) Thread!", e);
+					}
 				}
 			}
 		}
