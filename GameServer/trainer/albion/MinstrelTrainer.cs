@@ -16,16 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.PacketHandler;
-using DOL.Language;
 
 namespace DOL.GS.Trainer
 {
-	/// <summary>
-	/// Minstrel Trainer
-	/// </summary>	
-	[NPCGuildScript("Minstrel Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Minstrel Trainer" NPC's in Albion (multiple guilds are possible for one script)
+    /// <summary>
+    /// Minstrel Trainer
+    /// </summary>	
+    [NPCGuildScript("Minstrel Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Minstrel Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class MinstrelTrainer : GameTrainer
 	{
 		public override eCharacterClass TrainedClass
@@ -52,7 +50,7 @@ namespace DOL.GS.Trainer
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
 				{
-					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the Academy] and sing our song throughout Albion as a Minstrel?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(Name + " says, \"Do you desire to [join the Academy] and sing our song throughout Albion as a Minstrel?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 					if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);

@@ -23,7 +23,7 @@ using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&chat",
 		new string[] { "&c" },
 		ePrivLevel.Player,
@@ -72,7 +72,7 @@ namespace DOL.GS.Commands
 		}
 	}
 
-	[CmdAttribute(
+	[Cmd(
 		"&chatgroup",
 		new string[] { "&cg" },
 		ePrivLevel.Player,

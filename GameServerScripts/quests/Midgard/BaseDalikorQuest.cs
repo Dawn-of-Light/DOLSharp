@@ -39,7 +39,6 @@ using System;
 using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
-using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
@@ -52,13 +51,13 @@ using log4net;
 
 namespace DOL.GS.Quests.Midgard
 {
-	/* The first thing we do, is to declare the class we create
+    /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
 	 * AbstractQuest
 	 * 	 
 	 */
 
-	public abstract class BaseDalikorQuest : BaseQuest
+    public abstract class BaseDalikorQuest : BaseQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -153,7 +152,7 @@ namespace DOL.GS.Quests.Midgard
 
 		public static GameNPC GetDalikor()
 		{
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Dalikor", eRealm.Midgard);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Dalikor", eRealm.Midgard);
 
 			GameNPC dalikor = null;
 

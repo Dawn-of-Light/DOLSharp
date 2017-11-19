@@ -1,15 +1,8 @@
-using System;
-using System.Collections;
-using System.Reflection;
-using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
-using DOL.GS.Spells;
-using DOL.Events;
 using DOL.Database;
 namespace DOL.GS.RealmAbilities
 {
-	public class VolcanicPillarAbility : TimedRealmAbility
+    public class VolcanicPillarAbility : TimedRealmAbility
 	{
 		public VolcanicPillarAbility(DBAbility dba, int level) : base(dba, level) { }
 		private int m_dmgValue = 0;
@@ -62,7 +55,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				if (i_player == m_caster)
 				{
-					i_player.MessageToSelf("You cast " + this.Name + "!", eChatType.CT_Spell);
+					i_player.MessageToSelf("You cast " + Name + "!", eChatType.CT_Spell);
 				}
 				else
 				{

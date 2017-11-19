@@ -16,18 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.Events;
-using DOL.GS;
 using DOL.GS.Keeps;
 
 namespace DOL.Events
 {
-	/// <summary>
-	/// This class holds all possible keep events.
-	/// Only constants defined here!
-	/// </summary>
-	public class KeepEvent : DOLEvent
+    /// <summary>
+    /// This class holds all possible keep events.
+    /// Only constants defined here!
+    /// </summary>
+    public class KeepEvent : DOLEvent
 	{
 		public KeepEvent(string name) : base(name)
 		{			

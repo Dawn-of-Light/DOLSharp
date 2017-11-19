@@ -1,19 +1,16 @@
 ﻿//TODO: make sunkaio do a small AOE fire attack when he's hit by a player with melee damage.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
 using DOL.Events;
-using log4net;
-using System.Reflection;
 using DOL.GS.Atlantis;
 
 namespace DOL.GS
 {
-	public class Ianetor : GameNPC
+    public class Ianetor : GameNPC
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -750,7 +747,7 @@ namespace DOL.AI.Brain
 {
 
 
-	public class AithosBrain : StandardMobBrain
+    public class AithosBrain : StandardMobBrain
 	{
 		public AithosBrain()
 			: base()

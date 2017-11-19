@@ -17,11 +17,9 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.Quests;
@@ -33,10 +31,10 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	/// <summary>
-	/// delve button shift+i = detail of spell object...
-	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.DetailRequest, "Handles detail display", eClientStatus.PlayerInGame)]
+    /// <summary>
+    /// delve button shift+i = detail of spell object...
+    /// </summary>
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.DetailRequest, "Handles detail display", eClientStatus.PlayerInGame)]
 	public class DetailDisplayHandler : IPacketHandler
 	{
 		/// <summary>

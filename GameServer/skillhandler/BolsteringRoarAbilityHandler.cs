@@ -16,9 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.PacketHandler;
-using DOL.GS;
 using DOL.GS.Effects;
 using DOL.Language;
 
@@ -27,7 +25,7 @@ namespace DOL.GS.SkillHandler
     /// <summary>
     /// Handler for Sprint Ability clicks
     /// </summary>
-    [SkillHandlerAttribute(Abilities.BolsteringRoar)]
+    [SkillHandler(Abilities.BolsteringRoar)]
     public class BolsteringRoarAbilityHandler : SpellCastingAbilityHandler
     {
 		public override long Preconditions

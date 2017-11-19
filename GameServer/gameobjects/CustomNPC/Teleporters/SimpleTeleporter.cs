@@ -18,30 +18,24 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
-using DOL.GS;
 using DOL.Database;
-using System.Collections;
-using DOL.GS.Spells;
-using log4net;
-using System.Reflection;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Simple Teleporter.
-	/// This teleporter uses the npc guild name to determine available teleport locations in the Teleport table
-	/// PackageID is used for the text displayed to the player
-	/// 
-	/// Example:
-	/// Add this npc to the world and set guild name to 'My Teleports'
-	/// Go to a location you want to teleport too and use the command /teleport 'location name' 'My Teleports'
-	/// 
-	/// You can whisper refresh to this teleporter to reload the teleport locations
-	/// </summary>
-	/// <author>Tolakram; from SI teleporter created by Aredhel</author>
-	public class SimpleTeleporter : GameTeleporter
+    /// <summary>
+    /// Simple Teleporter.
+    /// This teleporter uses the npc guild name to determine available teleport locations in the Teleport table
+    /// PackageID is used for the text displayed to the player
+    /// 
+    /// Example:
+    /// Add this npc to the world and set guild name to 'My Teleports'
+    /// Go to a location you want to teleport too and use the command /teleport 'location name' 'My Teleports'
+    /// 
+    /// You can whisper refresh to this teleporter to reload the teleport locations
+    /// </summary>
+    /// <author>Tolakram; from SI teleporter created by Aredhel</author>
+    public class SimpleTeleporter : GameTeleporter
 	{
 		protected override string Type
 		{

@@ -17,16 +17,12 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Events;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Language;
-using log4net;
 
 
 namespace DOL.GS.Spells
@@ -37,7 +33,7 @@ namespace DOL.GS.Spells
     /// Spell.Value is used for hard NPC level cap
     /// Spell.Damage is used for percent of caster level cap
     /// </summary>
-    [SpellHandlerAttribute("Charm")]
+    [SpellHandler("Charm")]
     public class CharmSpellHandler : SpellHandler
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -298,7 +294,7 @@ namespace DOL.GS.Spells
             	// base resists for all charm spells
                 int resistChance = 100 - (85 + ((Caster.Level - target.Level) / 2));
 
-                if (this.Spell.Pulse != 0) // not permanent
+                if (Spell.Pulse != 0) // not permanent
                 {
                 	
                     /*

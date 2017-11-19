@@ -17,14 +17,13 @@
  *
  */
 using System;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Marks a class as a guild wide npc script
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+    /// <summary>
+    /// Marks a class as a guild wide npc script
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 	public class NPCGuildScriptAttribute : Attribute
 	{
 		string m_guild;

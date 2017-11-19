@@ -19,7 +19,6 @@
 using System;
 using System.IO;
 using System.Net;
-using System.Net.Sockets;
 using System.Reflection;
 using System.Linq;
 
@@ -28,10 +27,10 @@ using DOL.Database.Connection;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// This is the game server configuration
-	/// </summary>
-	public class GameServerConfiguration : BaseServerConfiguration
+    /// <summary>
+    /// This is the game server configuration
+    /// </summary>
+    public class GameServerConfiguration : BaseServerConfiguration
 	{
 		#region Server
 

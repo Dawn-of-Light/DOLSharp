@@ -17,11 +17,9 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DOL.GS.Behaviour.Attributes
-{    
+{
 
     [AttributeUsage(AttributeTargets.Class)]
     public class ActionAttribute :Attribute

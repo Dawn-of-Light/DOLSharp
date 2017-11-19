@@ -17,17 +17,16 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	///
-	/// </summary>
-	[SpellHandlerAttribute("OmniLifedrain")]
+    /// <summary>
+    ///
+    /// </summary>
+    [SpellHandler("OmniLifedrain")]
 	public class OmniLifedrainSpellHandler : DirectDamageSpellHandler
 	{
 		/// <summary>

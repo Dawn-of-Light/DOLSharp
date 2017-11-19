@@ -14,26 +14,18 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-using System;
 using System.Reflection;
-using System.Collections;
-using System.Collections.Generic;
-using DOL.Events;
-using DOL.Language;
-using DOL.GS.PacketHandler;
 using DOL.Database;
-using DOL.GS.Spells;
-using DOL.GS.Effects;
 using log4net;
 
 namespace DOL.GS
 {
-        /// <summary>
-        /// Items of this class will proc on GameKeepComponent and GameKeepDoors, checked for in GameLiving-CheckWeaponMagicalEffect
-        /// Used for Bruiser, or any other item that can fire a proc on keep components.  Itemtemplates must be set to DOL.GS.GameSiegeItem
-        /// in the classtype field
-        /// </summary>
-        public class GameSiegeItem : GameInventoryItem
+    /// <summary>
+    /// Items of this class will proc on GameKeepComponent and GameKeepDoors, checked for in GameLiving-CheckWeaponMagicalEffect
+    /// Used for Bruiser, or any other item that can fire a proc on keep components.  Itemtemplates must be set to DOL.GS.GameSiegeItem
+    /// in the classtype field
+    /// </summary>
+    public class GameSiegeItem : GameInventoryItem
         {
                 private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 

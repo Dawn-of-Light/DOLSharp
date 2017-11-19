@@ -17,18 +17,14 @@
  *
  */
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	[SpellHandlerAttribute("CureNearsight")]
+    /// <summary>
+    /// 
+    /// </summary>
+    [SpellHandler("CureNearsight")]
 	public class CureNearsightSpellHandler : RemoveSpellEffectHandler
 	{
 		// constructor

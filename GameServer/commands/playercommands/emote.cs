@@ -23,7 +23,7 @@ namespace DOL.GS.Commands
 	/// <summary>
 	/// Command handler to handle emotes
 	/// </summary>
-	[CmdAttribute(
+	[Cmd(
 		"&emote", new string[] {"&em", "&e"},
 		ePrivLevel.Player,
 		"Roleplay an action or emotion", "/emote <text>")]

@@ -26,9 +26,6 @@
  * Make sure that in your scripts u define "Relic" as the correct relic so
  * the Unlock/Lock Functions work properly!
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DOL.GS
 {

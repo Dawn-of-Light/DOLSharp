@@ -16,16 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database;
 using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.WorldInitRequest, "Handles world init replies", eClientStatus.PlayerInGame)]
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.WorldInitRequest, "Handles world init replies", eClientStatus.PlayerInGame)]
 	public class WorldInitRequestHandler : IPacketHandler
 	{
 		/// <summary>

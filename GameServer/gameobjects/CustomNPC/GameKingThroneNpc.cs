@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.PacketHandler;
 using DOL.Database;
 using DOL.Language;
 
 namespace DOL.GS
 {
-	// This class has to be completed and may be inherited for scripting purpose (like quests)
-	public class KingNPC : GameNPC
+    // This class has to be completed and may be inherited for scripting purpose (like quests)
+    public class KingNPC : GameNPC
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

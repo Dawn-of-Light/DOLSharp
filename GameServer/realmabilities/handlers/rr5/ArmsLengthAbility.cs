@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
@@ -6,10 +5,10 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Arms Length Realm Ability
-	/// </summary>
-	public class ArmsLengthAbility : RR5RealmAbility
+    /// <summary>
+    /// Arms Length Realm Ability
+    /// </summary>
+    public class ArmsLengthAbility : RR5RealmAbility
 	{
 		public ArmsLengthAbility(DBAbility dba, int level) : base(dba, level) { }
 

@@ -1,13 +1,11 @@
 using System;
-using DOL.AI.Brain;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
 
 namespace DOL.GS.Spells
 {
-    [SpellHandlerAttribute("Ereine")]
+    [SpellHandler("Ereine")]
     public class Ereine : AllStatsBuff
     {
         public override void OnEffectStart(GameSpellEffect effect)
@@ -54,14 +52,14 @@ namespace DOL.GS.Spells
         }
         public Ereine(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
-	[SpellHandlerAttribute("Ereine2")]
+	[SpellHandler("Ereine2")]
     public class Ereine2 : AllStatsDebuff
     {
 		public override bool HasPositiveEffect { get { return false; } }
         public override bool IsUnPurgeAble { get { return true; } }
 		public Ereine2(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
-	[SpellHandlerAttribute("EreineProc")]
+	[SpellHandler("EreineProc")]
     public class EreineProc : SpellHandler
     {
 		public override void OnEffectStart(GameSpellEffect effect)
@@ -94,7 +92,7 @@ namespace DOL.GS.Spells
 				if(ad.Attacker is GamePlayer) (ad.Attacker as GamePlayer).Out.SendMessage("Your target' Ereine Proc absorb "+(ad.Damage+ad.CriticalDamage)+" damages", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				if(ad.Target is GamePlayer) (ad.Target as GamePlayer).Out.SendMessage("Your Ereine Proc absorb "+(ad.Damage+ad.CriticalDamage)+" damages", eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 				ad.Damage=0; ad.CriticalDamage=0;
-				GameSpellEffect effect = SpellHandler.FindEffectOnTarget(living, this);
+				GameSpellEffect effect = FindEffectOnTarget(living, this);
 				if(effect != null) effect.Cancel(false);
 			}
         }		

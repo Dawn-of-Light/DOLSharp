@@ -16,18 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 using DOL.GS.PacketHandler;
-using DOL.GS.SkillHandler;
-using DOL.Events;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// The Empty Mind Effect
-	/// </summary>
-	public class TheEmptyMindEffect : TimedEffect, IGameEffect
+    /// <summary>
+    /// The Empty Mind Effect
+    /// </summary>
+    public class TheEmptyMindEffect : TimedEffect, IGameEffect
 	{
 		private int Value
 		{

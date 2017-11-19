@@ -16,17 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 using System.Collections.Generic;
 
 namespace DOL.GS.Keeps
 {
-	
-	/// <summary>
-	/// Interface implementing needed methods for sending Game Keep Component over network.
-	/// </summary>
-	public interface IGameKeepComponent
+
+    /// <summary>
+    /// Interface implementing needed methods for sending Game Keep Component over network.
+    /// </summary>
+    public interface IGameKeepComponent
 	{
 		/// <summary>
 		/// Reference to owning Keep

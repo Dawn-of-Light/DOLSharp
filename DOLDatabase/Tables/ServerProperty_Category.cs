@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "serverproperty_category")]
+    [DataTable(TableName = "serverproperty_category")]
 	public class ServerPropertyCategory: DataObject
 	{
 		private string 	m_base_cat;

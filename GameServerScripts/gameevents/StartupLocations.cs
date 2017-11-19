@@ -32,14 +32,13 @@ using log4net;
 
 using DOL.Database;
 using DOL.Events;
-using DOL.GS;
 
 namespace DOL.GS.GameEvents
 {
-	/// <summary>
-	/// Moves new created Characters to the starting location based on region, class and race
-	/// </summary>
-	public static class StartupLocations
+    /// <summary>
+    /// Moves new created Characters to the starting location based on region, class and race
+    /// </summary>
+    public static class StartupLocations
 	{
 		/// <summary>
 		/// Declare a logger for this class.

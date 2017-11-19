@@ -1,13 +1,11 @@
 using System;
-using System.Collections;
-using DOL.GS;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
 namespace DOL.GS.Spells
 {
 
-	[SpellHandlerAttribute("HereticDamageSpeedDecrease")]
+    [SpellHandler("HereticDamageSpeedDecrease")]
 	public class HereticDamageSpeedDecrease : HereticSpeedDecreaseSpellHandler
 	{
         protected int m_lastdamage = 0;

@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Albion Mercenary Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Mercenary, "Mercenary", "Fighter")]
+    /// <summary>
+    /// Albion Mercenary Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Mercenary, "Mercenary", "Fighter")]
 	public class ClassMercenary : ClassFighter
 	{
 		private static readonly string[] AutotrainableSkills = new[] { Specs.Slash, Specs.Thrust };

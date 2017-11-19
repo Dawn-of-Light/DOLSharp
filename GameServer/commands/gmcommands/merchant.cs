@@ -19,15 +19,13 @@
 using System;
 using System.Linq;
 using System.Reflection;
-
-using DOL.GS;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&merchant",
+    [Cmd("&merchant",
 		 ePrivLevel.GM,
 		 "GMCommands.Merchant.Description",
 		 //Usage

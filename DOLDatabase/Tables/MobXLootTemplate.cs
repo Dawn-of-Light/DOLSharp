@@ -23,16 +23,14 @@
  * - Roach's modifications to add loottemplate base mobdrops
  */
 
-using System;
-using DOL.Database ;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Database Storage of Mob LootTemplate Relation
-	/// </summary>
-	[DataTable(TableName = "MobXLootTemplate")]
+    /// <summary>
+    /// Database Storage of Mob LootTemplate Relation
+    /// </summary>
+    [DataTable(TableName = "MobXLootTemplate")]
 	public class MobXLootTemplate : DataObject
 	{
 		private string m_MobName = string.Empty;

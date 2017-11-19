@@ -17,22 +17,15 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
-using System.Text;
-using DOL.AI.Brain;
-using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using DOL.GS.SkillHandler;
-using log4net;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// 
-	/// </summary>
+    /// <summary>
+    /// 
+    /// </summary>
     public class PrimerSpellHandler : SpellHandler
 	{
 		/// <summary>
@@ -81,7 +74,7 @@ namespace DOL.GS.Spells
 			if(living.IsMoving)
 			{
 				// remove speed buff if in combat
-				GameSpellEffect effect = SpellHandler.FindEffectOnTarget(living, this);
+				GameSpellEffect effect = FindEffectOnTarget(living, this);
 				if (effect != null)
 				{
 					effect.Cancel(false);

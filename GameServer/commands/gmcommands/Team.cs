@@ -17,14 +17,11 @@
  *
  */
 
-using System;
-using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.Database;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 	"&team",
 	new string[] { "&te" },
    ePrivLevel.GM,

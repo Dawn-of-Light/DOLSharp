@@ -17,10 +17,8 @@
  *
  */
 
-using System.Collections;
 using System.Collections.Generic;
 using DOL.Events;
-using DOL.GS.PacketHandler;
 using System;
 
 namespace DOL.GS.Effects

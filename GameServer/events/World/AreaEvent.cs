@@ -16,17 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.Events;
 using DOL.GS;
 
 namespace DOL.Events
 {
-	/// <summary>
-	/// This class holds all possible Area events.
-	/// Only constants defined here!
-	/// </summary>
-	public class AreaEvent : DOLEvent
+    /// <summary>
+    /// This class holds all possible Area events.
+    /// Only constants defined here!
+    /// </summary>
+    public class AreaEvent : DOLEvent
 	{
 		public AreaEvent(string name) : base(name)
 		{			

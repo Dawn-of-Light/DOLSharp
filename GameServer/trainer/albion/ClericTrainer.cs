@@ -16,16 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.PacketHandler;
-using DOL.Language;
 
 namespace DOL.GS.Trainer
 {
-	/// <summary>
-	/// Cleric Trainer
-	/// </summary>
-	[NPCGuildScript("Cleric Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Cleric Trainer" NPC's in Albion (multiple guilds are possible for one script)
+    /// <summary>
+    /// Cleric Trainer
+    /// </summary>
+    [NPCGuildScript("Cleric Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Cleric Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class ClericTrainer : GameTrainer
 	{
 		public override eCharacterClass TrainedClass
@@ -58,7 +56,7 @@ namespace DOL.GS.Trainer
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
 				{
-					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the Church of Albion] and walk the path of a Cleric?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(Name + " says, \"Do you desire to [join the Church of Albion] and walk the path of a Cleric?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 					if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);

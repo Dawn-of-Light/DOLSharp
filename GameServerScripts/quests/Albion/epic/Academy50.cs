@@ -105,7 +105,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineNPCs
 
-            GameNPC[] npcs = WorldMgr.GetNPCsByName("Master Ferowl", eRealm.Albion);
+            GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Master Ferowl", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				Ferowl = new GameNPC();
@@ -131,7 +131,7 @@ namespace DOL.GS.Quests.Albion
 				Ferowl = npcs[0];
 			// end npc
 
-			npcs = WorldMgr.GetNPCsByName("Morgana", eRealm.None);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Morgana", eRealm.None);
 			if (npcs.Length == 0)
 			{
 				Morgana = new GameNPC();
@@ -170,7 +170,7 @@ namespace DOL.GS.Quests.Albion
 			else
 				Morgana = npcs[0];
 
-			npcs = WorldMgr.GetNPCsByName("Bechard", eRealm.None);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Bechard", eRealm.None);
 			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
@@ -196,7 +196,7 @@ namespace DOL.GS.Quests.Albion
 				Bechard = npcs[0];
 			// end npc
 
-			npcs = WorldMgr.GetNPCsByName("Silcharde", eRealm.None);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Silcharde", eRealm.None);
 			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)

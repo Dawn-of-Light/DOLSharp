@@ -1,8 +1,6 @@
-using System;
-
 namespace DOL.GS
 {
-	public class RegionTestNpc : GameNPC
+    public class RegionTestNpc : GameNPC
 	{
 		public override bool WhisperReceive(GameLiving source, string text)
 		{
@@ -86,7 +84,7 @@ namespace DOL.GS
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&npcdebug", //command to handle
+    [Cmd("&npcdebug", //command to handle
 	              ePrivLevel.Admin, //minimum privelege level
 	              "Writes information of all npcs in a region to the console", //command description
 	              "/npcdebug")] //usage

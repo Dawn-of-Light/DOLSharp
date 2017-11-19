@@ -18,15 +18,13 @@
  */
 using System;
 using DOL.AI.Brain;
-using DOL.Events;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Summary description for TauntSpellHandler.
-	/// </summary>
-	[SpellHandler("Taunt")]
+    /// <summary>
+    /// Summary description for TauntSpellHandler.
+    /// </summary>
+    [SpellHandler("Taunt")]
 	public class TauntSpellHandler : SpellHandler
 	{
 		/// <summary>

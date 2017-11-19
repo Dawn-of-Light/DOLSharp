@@ -16,18 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Linq;
-
-using DOL.GS;
 using DOL.Database;
 
 namespace DOL.GS.SkillHandler
 {
-	/// <summary>
-	/// Handler for Fury shout
-	/// </summary>
-	[SkillHandlerAttribute(Abilities.ClimbSpikes)]
+    /// <summary>
+    /// Handler for Fury shout
+    /// </summary>
+    [SkillHandler(Abilities.ClimbSpikes)]
 	public class ClimbingAbilityHandler : SpellCastingAbilityHandler
 	{
 		private static int spellid = -1;

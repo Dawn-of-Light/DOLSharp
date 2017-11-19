@@ -1,19 +1,15 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Threading;
-using DOL.GS;
 using DOL.GS.Movement;
-using DOL.Events;
 using DOL.Database;
 
 namespace DOL.GS.Keeps
 {
-	/// <summary>
-	/// Class for a Guard Patrol
-	/// </summary>
-	public class Patrol
+    /// <summary>
+    /// Class for a Guard Patrol
+    /// </summary>
+    public class Patrol
 	{
 		public const int PATROL_SPEED = 250;
 

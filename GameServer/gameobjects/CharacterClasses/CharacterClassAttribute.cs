@@ -17,18 +17,13 @@
  *
  */
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using DOL.Database;
-using DOL.GS.PacketHandler;
-using DOL.Language;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Denotes a class as a DOL Character class
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+    /// <summary>
+    /// Denotes a class as a DOL Character class
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 	public class CharacterClassAttribute : Attribute
 	{
 		protected string m_name;

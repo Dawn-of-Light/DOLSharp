@@ -19,7 +19,7 @@
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&hood", //command to handle
+	[Cmd("&hood", //command to handle
 		ePrivLevel.Player, //minimum privelege level
 		"Toggles the hood on and off when wearing a hooded cloak.", //command description
 		"/hood")] //usage

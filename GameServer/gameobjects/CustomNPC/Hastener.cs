@@ -17,18 +17,13 @@
  *
  */
 
-using System;
 using System.Collections;
-using DOL.Database;
-using DOL.Database.Attributes;
-using DOL.Events;
-using DOL.GS;
 using DOL.GS.Keeps;
 using DOL.Language;
 
 namespace DOL.GS
 {
-	public class GameHastener : GameNPC
+    public class GameHastener : GameNPC
 	{
 		public GameHastener() : base() { }
 		public GameHastener(INpcTemplate template) : base(template) { }

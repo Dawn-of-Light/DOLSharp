@@ -21,15 +21,14 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
-using DOL.GS.Keeps;
 using DOL.GS.SkillHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Spell Handler for firing bolts
-	/// </summary>
-	[SpellHandlerAttribute("Bolt")]
+    /// <summary>
+    /// Spell Handler for firing bolts
+    /// </summary>
+    [SpellHandler("Bolt")]
 	public class BoltSpellHandler : SpellHandler
 	{
 		/// <summary>

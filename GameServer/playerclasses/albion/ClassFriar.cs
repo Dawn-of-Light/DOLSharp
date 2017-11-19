@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Albion Friar Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Friar, "Friar", "Acolyte")]
+    /// <summary>
+    /// Albion Friar Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Friar, "Friar", "Acolyte")]
 	public class ClassFriar : ClassAcolyte
 	{
 		public ClassFriar()

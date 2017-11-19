@@ -16,19 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Reflection;
 using DOL.Database;
 using DOL.Language;
-using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS
 {
 
-	public class LeatherCrafting : AbstractCraftingSkill
+    public class LeatherCrafting : AbstractCraftingSkill
 	{
 
 		public LeatherCrafting()

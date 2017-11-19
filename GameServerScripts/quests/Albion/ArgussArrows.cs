@@ -149,7 +149,7 @@ namespace DOL.GS.Quests.Albion
 
             #region defineNPCs
 
-            GameNPC[] npcs = WorldMgr.GetNPCsByName("Argus Bowman", eRealm.Albion);
+            GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Argus Bowman", eRealm.Albion);
 
             /* Whops, if the npcs array length is 0 then no Sir Quait exists in
                 * this users Mob Database, so we simply create one ;-)

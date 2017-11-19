@@ -16,17 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.Database;
 using DOL.GS.PacketHandler;
-using DOL.Language;
 
 namespace DOL.GS.Trainer
 {
-	/// <summary>
-	/// Fighter Trainer
-	/// </summary>
-	[NPCGuildScript("Fighter Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Fighter Trainer" NPC's in Albion (multiple guilds are possible for one script)
+    /// <summary>
+    /// Fighter Trainer
+    /// </summary>
+    [NPCGuildScript("Fighter Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Fighter Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class FighterTrainer : GameTrainer
 	{
 		public override eCharacterClass TrainedClass
@@ -62,7 +59,7 @@ namespace DOL.GS.Trainer
 				// player can be promoted
 				if (player.Level>=5)
 				{
-					player.Out.SendMessage(this.Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Armsman], [Paladin], or [Mercenary]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Armsman], [Paladin], or [Mercenary]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 				}
 				else
 				{
@@ -72,11 +69,11 @@ namespace DOL.GS.Trainer
 				// ask for basic equipment if player doesnt own it
 				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.MinEquipable, eInventorySlot.LastBackpack) == null)
 				{
-					player.Out.SendMessage(this.Name + " says, \"Do you require a [practice weapon]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(Name + " says, \"Do you require a [practice weapon]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 				}
 				if (player.Inventory.GetFirstItemByID(PRACTICE_SHIELD_ID, eInventorySlot.MinEquipable, eInventorySlot.LastBackpack) == null)
 				{
-					player.Out.SendMessage(this.Name + " says, \"Do you require a [training shield]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(Name + " says, \"Do you require a [training shield]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 				}
 			}
 			else
@@ -101,27 +98,27 @@ namespace DOL.GS.Trainer
 				case "Armsman":
 					if(player.Race == (int)eRace.Avalonian || player.Race == (int)eRace.Briton || player.Race == (int)eRace.HalfOgre || player.Race == (int)eRace.Highlander || player.Race == (int)eRace.Inconnu || player.Race == (int)eRace.Saracen || player.Race == (int)eRace.AlbionMinotaur)
 					{
-						player.Out.SendMessage(this.Name + " says, \"Ah! An Armsmen is it? Good solid fighters they are! Their fighting prowess is a great asset to Albion. To become an armsman you must enlist with the Defenders of Albion.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(Name + " says, \"Ah! An Armsmen is it? Good solid fighters they are! Their fighting prowess is a great asset to Albion. To become an armsman you must enlist with the Defenders of Albion.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 					}
 					else{
-						player.Out.SendMessage(this.Name + " says, \"The path of an Armsman is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(Name + " says, \"The path of an Armsman is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 					}
 					return true;
 				case "Mercenary":
 					if(player.Race == (int)eRace.Avalonian || player.Race == (int)eRace.Briton || player.Race == (int)eRace.HalfOgre || player.Race == (int)eRace.Highlander || player.Race == (int)eRace.Inconnu || player.Race == (int)eRace.Saracen || player.Race == (int)eRace.AlbionMinotaur)
 					{
-						player.Out.SendMessage(this.Name + " says, \"You wish to become a Mercenary do you? Roguish fighters in nature, solid warriors in battle, their ability to quickly evade enemy attacks has made them a valuable asset to the Guild of Shadows.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(Name + " says, \"You wish to become a Mercenary do you? Roguish fighters in nature, solid warriors in battle, their ability to quickly evade enemy attacks has made them a valuable asset to the Guild of Shadows.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 					}
 					else{
-						player.Out.SendMessage(this.Name + " says, \"The path of a Mercenary is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(Name + " says, \"The path of a Mercenary is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 					}
 					return true;
 				case "Paladin":
 					if(player.Race == (int) eRace.Avalonian || player.Race == (int) eRace.Briton || player.Race == (int) eRace.Highlander || player.Race == (int) eRace.Saracen){
-						player.Out.SendMessage(this.Name + " says, \"You wish to be a defender of the faith I take it? Many a Paladin has led our fighters into battle with victory not far behind. Their never-ending sacrifice proves that the Church of Albion will remain for many centuries!\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(Name + " says, \"You wish to be a defender of the faith I take it? Many a Paladin has led our fighters into battle with victory not far behind. Their never-ending sacrifice proves that the Church of Albion will remain for many centuries!\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 					}
 					else{
-						player.Out.SendMessage(this.Name + " says, \"The path of a Paladin is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(Name + " says, \"The path of a Paladin is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 					}
 					return true;
 				case "practice weapon":

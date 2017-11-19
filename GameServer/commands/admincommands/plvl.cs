@@ -22,7 +22,7 @@ using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&plvl",
 		ePrivLevel.Admin,
 		"AdminCommands.plvl.Description",

@@ -17,18 +17,16 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
 using DOL.Database;
 using DOL.Language;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Defines the realms for various packets and search functions etc.
-	/// </summary>
-	public enum eRealm : byte
+    /// <summary>
+    /// Defines the realms for various packets and search functions etc.
+    /// </summary>
+    public enum eRealm : byte
 	{
 		/// <summary>
 		/// First realm number, for use in all arrays

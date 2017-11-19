@@ -146,7 +146,7 @@ namespace DOL.GS.Quests.Midgard
 
 			dalikor = GetDalikor();
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Abohas", eRealm.Midgard);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Abohas", eRealm.Midgard);
 			if (npcs.Length == 0)
 			{
 				abohas = new GameNPC();
@@ -174,7 +174,7 @@ namespace DOL.GS.Quests.Midgard
 			else
 				abohas = npcs[0];
 
-			npcs = WorldMgr.GetNPCsByName("Harlfug", eRealm.Midgard);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Harlfug", eRealm.Midgard);
 			if (npcs.Length == 0)
 			{
 				harlfug = new GameStableMaster();
@@ -203,7 +203,7 @@ namespace DOL.GS.Quests.Midgard
 			else
 				harlfug = npcs[0];
 
-			npcs = WorldMgr.GetNPCsByName("Gularg", eRealm.Midgard);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Gularg", eRealm.Midgard);
 			if (npcs.Length == 0)
 			{
 				gularg = new GameStableMaster();
@@ -233,7 +233,7 @@ namespace DOL.GS.Quests.Midgard
 			else
 				gularg = npcs[0];
 
-			npcs = WorldMgr.GetNPCsByName("Yolafson", eRealm.Midgard);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Yolafson", eRealm.Midgard);
 			if (npcs.Length == 0)
 			{
 				yolafson = new GameStableMaster();

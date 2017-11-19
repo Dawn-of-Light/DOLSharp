@@ -1,15 +1,11 @@
-using System;
 using DOL.Database;
-using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
-using DOL.GS.SkillHandler;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Toughness
-	/// </summary>
-	public class ToughnessAbility : RAPropertyEnhancer
+    /// <summary>
+    /// Toughness
+    /// </summary>
+    public class ToughnessAbility : RAPropertyEnhancer
 	{
 		public ToughnessAbility(DBAbility dba, int level) : base(dba, level, eProperty.MaxHealth) { }
 

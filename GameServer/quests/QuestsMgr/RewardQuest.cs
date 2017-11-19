@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using DOL.Database;
 using DOL.Events;
 using DOL.Language;
@@ -26,12 +25,12 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Quests
 {
-	/// <summary>
-	/// A quest type with basic and optional item rewards using
-	/// the enhanced quest dialog.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class RewardQuest : BaseQuest
+    /// <summary>
+    /// A quest type with basic and optional item rewards using
+    /// the enhanced quest dialog.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class RewardQuest : BaseQuest
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -201,7 +200,7 @@ namespace DOL.GS.Quests
 
 				// Check if this particular quest has been finished.
 
-				if (QuestMgr.GetIDForQuestType(this.GetType()) != rewardArgs.QuestID)
+				if (QuestMgr.GetIDForQuestType(GetType()) != rewardArgs.QuestID)
 					return;
 
 				for (int reward = 0; reward < rewardArgs.CountChosen; ++reward)

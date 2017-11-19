@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.PacketHandler;
@@ -24,11 +23,11 @@ using DOL.GS.PacketHandler;
 namespace DOL.GS
 {
 
-	/// <summary>
-	/// A vault.
-	/// </summary>
-	/// <author>Aredhel, Tolakram</author>
-	public class GameVault : GameStaticItem, IGameInventoryObject
+    /// <summary>
+    /// A vault.
+    /// </summary>
+    /// <author>Aredhel, Tolakram</author>
+    public class GameVault : GameStaticItem, IGameInventoryObject
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

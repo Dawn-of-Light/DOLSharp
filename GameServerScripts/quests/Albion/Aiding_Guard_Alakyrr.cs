@@ -89,7 +89,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineNPCS
 
-            GameNPC[] npcs = WorldMgr.GetNPCsByName("Guard Alakyrr", eRealm.None);
+            GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Guard Alakyrr", eRealm.None);
 
 			if (npcs.Length == 0)
 			{

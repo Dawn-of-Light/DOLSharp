@@ -16,13 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	[DataTable(TableName="ZonePoint")]
+    [DataTable(TableName="ZonePoint")]
 	public class ZonePoint : DataObject
 	{
 

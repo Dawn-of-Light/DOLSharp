@@ -17,16 +17,15 @@
  *
  */
 
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// keep hook point in DB
-	/// </summary>
-	/// 
-	[DataTable(TableName = "KeepHookPoint")]
+    /// <summary>
+    /// keep hook point in DB
+    /// </summary>
+    /// 
+    [DataTable(TableName = "KeepHookPoint")]
 	public class DBKeepHookPoint : DataObject
 	{
 		private int m_x;

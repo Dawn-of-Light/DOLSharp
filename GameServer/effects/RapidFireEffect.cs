@@ -16,17 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// The helper effect for sure shot
-	/// </summary>
-	public class RapidFireEffect : StaticEffect, IGameEffect
+    /// <summary>
+    /// The helper effect for sure shot
+    /// </summary>
+    public class RapidFireEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// Start the effect on player

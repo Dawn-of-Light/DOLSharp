@@ -35,10 +35,7 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.Behaviour;
-using DOL.GS.Behaviour.Attributes;
 using DOL.GS.PacketHandler;
-using DOL.GS.Quests;
 using DOL.Language;
 using log4net;
 
@@ -111,7 +108,7 @@ namespace DOL.GS.Quests.Hibernia
             #region defineNPCs
             GameNPC[] npcs;
 
-            npcs = WorldMgr.GetNPCsByName("Charles", (eRealm)3);
+            npcs = WorldMgr.GetObjectsByName<GameNPC>("Charles", (eRealm)3);
             if (npcs.Length == 0)
             {
                 Charles = new DOL.GS.GameNPC();

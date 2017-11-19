@@ -18,16 +18,14 @@
  */
 using System;
 using DOL.AI.Brain;
-using DOL.Database;
 using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Debuffs a single stat
-	/// </summary>
-	public abstract class SingleStatDebuff : SingleStatBuff
+    /// <summary>
+    /// Debuffs a single stat
+    /// </summary>
+    public abstract class SingleStatDebuff : SingleStatBuff
 	{
 		// bonus category
 		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.Debuff; } }
@@ -86,7 +84,7 @@ namespace DOL.GS.Spells
         public override int CalculateSpellResistChance(GameLiving target)
         {
         	int basechance =  base.CalculateSpellResistChance(target);       	
- 			GameSpellEffect rampage = SpellHandler.FindEffectOnTarget(target, "Rampage");
+ 			GameSpellEffect rampage = FindEffectOnTarget(target, "Rampage");
             if (rampage != null)
             {
             	basechance += (int)rampage.Spell.Value;
@@ -100,7 +98,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Str stat baseline debuff
 	/// </summary>
-	[SpellHandlerAttribute("StrengthDebuff")]
+	[SpellHandler("StrengthDebuff")]
 	public class StrengthDebuff : SingleStatDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Strength; } }
@@ -112,7 +110,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Dex stat baseline debuff
 	/// </summary>
-	[SpellHandlerAttribute("DexterityDebuff")]
+	[SpellHandler("DexterityDebuff")]
 	public class DexterityDebuff : SingleStatDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Dexterity; } }	
@@ -124,7 +122,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Con stat baseline debuff
 	/// </summary>
-	[SpellHandlerAttribute("ConstitutionDebuff")]
+	[SpellHandler("ConstitutionDebuff")]
 	public class ConstitutionDebuff : SingleStatDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Constitution; } }	
@@ -136,7 +134,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Armor factor debuff
 	/// </summary>
-	[SpellHandlerAttribute("ArmorFactorDebuff")]
+	[SpellHandler("ArmorFactorDebuff")]
 	public class ArmorFactorDebuff : SingleStatDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.ArmorFactor; } }	
@@ -148,7 +146,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Armor Absorption debuff
 	/// </summary>
-	[SpellHandlerAttribute("ArmorAbsorptionDebuff")]
+	[SpellHandler("ArmorAbsorptionDebuff")]
 	public class ArmorAbsorptionDebuff : SingleStatDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.ArmorAbsorption; } }
@@ -168,7 +166,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Combat Speed debuff
 	/// </summary>
-	[SpellHandlerAttribute("CombatSpeedDebuff")]
+	[SpellHandler("CombatSpeedDebuff")]
 	public class CombatSpeedDebuff : SingleStatDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.MeleeSpeed; } }      
@@ -188,7 +186,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Melee damage debuff
 	/// </summary>
-	[SpellHandlerAttribute("MeleeDamageDebuff")]
+	[SpellHandler("MeleeDamageDebuff")]
 	public class MeleeDamageDebuff : SingleStatDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.MeleeDamage; } }      
@@ -208,7 +206,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Fatigue reduction debuff
 	/// </summary>
-	[SpellHandlerAttribute("FatigueConsumptionDebuff")]
+	[SpellHandler("FatigueConsumptionDebuff")]
 	public class FatigueConsumptionDebuff : SingleStatDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.FatigueConsumption; } }      
@@ -228,7 +226,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Fumble chance debuff
 	/// </summary>
-	[SpellHandlerAttribute("FumbleChanceDebuff")]
+	[SpellHandler("FumbleChanceDebuff")]
 	public class FumbleChanceDebuff : SingleStatDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.FumbleChance; } }      
@@ -248,7 +246,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// DPS debuff
 	/// </summary>
-	[SpellHandlerAttribute("DPSDebuff")]
+	[SpellHandler("DPSDebuff")]
 	public class DPSDebuff : SingleStatDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.DPS; } }	
@@ -259,7 +257,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Skills Debuff
 	/// </summary>
-	[SpellHandlerAttribute("SkillsDebuff")]
+	[SpellHandler("SkillsDebuff")]
 	public class SkillsDebuff : SingleStatDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.AllSkills; } }	
@@ -270,7 +268,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Acuity stat baseline debuff
 	/// </summary>
-	[SpellHandlerAttribute("AcuityDebuff")]
+	[SpellHandler("AcuityDebuff")]
 	public class AcuityDebuff : SingleStatDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Acuity; } }	
@@ -281,7 +279,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Quickness stat baseline debuff
 	/// </summary>
-	[SpellHandlerAttribute("QuicknessDebuff")]
+	[SpellHandler("QuicknessDebuff")]
 	public class QuicknessDebuff : SingleStatDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Quickness; } }	
@@ -292,7 +290,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// ToHit Skill debuff
 	/// </summary>
-	[SpellHandlerAttribute("ToHitDebuff")]
+	[SpellHandler("ToHitDebuff")]
 	public class ToHitSkillDebuff : SingleStatDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.ToHitBonus; } }	

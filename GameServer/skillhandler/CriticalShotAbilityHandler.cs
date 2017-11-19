@@ -16,17 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
-	/// <summary>
-	/// Handler for Critical Shot ability
-	/// </summary>
-	[SkillHandlerAttribute(Abilities.Critical_Shot)]
+    /// <summary>
+    /// Handler for Critical Shot ability
+    /// </summary>
+    [SkillHandler(Abilities.Critical_Shot)]
 	public class CriticalShotAbilityHandler : IAbilityActionHandler
 	{
 		public void Execute(Ability ab, GamePlayer player)

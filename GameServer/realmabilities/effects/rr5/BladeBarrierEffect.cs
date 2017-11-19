@@ -1,16 +1,13 @@
 using System;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
-using DOL.GS.RealmAbilities;
 using DOL.Events;
-using DOL.Database;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Blade Barrier
-	/// </summary>
-	public class BladeBarrierEffect : TimedEffect
+    /// <summary>
+    /// Blade Barrier
+    /// </summary>
+    public class BladeBarrierEffect : TimedEffect
 	{
 		public BladeBarrierEffect()
 			: base(30000)

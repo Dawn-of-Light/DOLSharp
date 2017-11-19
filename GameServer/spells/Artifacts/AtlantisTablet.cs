@@ -1,11 +1,8 @@
-using System;
-using DOL.GS;
-using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
 {
-	[SpellHandlerAttribute("AtlantisTabletMorph")]
+    [SpellHandler("AtlantisTabletMorph")]
 	public class AtlantisTabletMorph : OffensiveProcSpellHandler
 	{   	
 		public override void OnEffectStart(GameSpellEffect effect)

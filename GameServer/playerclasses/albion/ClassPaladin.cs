@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Albion Paladin Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Paladin, "Paladin", "Fighter")]
+    /// <summary>
+    /// Albion Paladin Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Paladin, "Paladin", "Fighter")]
 	public class ClassPaladin : ClassFighter
 	{
 		private static readonly string[] AutotrainableSkills = new[] { Specs.Slash, Specs.Chants };

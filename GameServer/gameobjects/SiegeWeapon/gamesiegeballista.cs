@@ -16,9 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.GS.Spells;
-using System.Collections;
 /*1,Ballista,1,ammo,0.46,1
 2,Catapult,2,ammo,0.39,1
 3,Trebuchet,2,ammo,1.03,1
@@ -38,10 +35,10 @@ using System.Collections;
 11,Ram Low,0,12,13,80,*/
 namespace DOL.GS
 {
-	/// <summary>
-	/// GameMovingObject is a base class for boats and siege weapons.
-	/// </summary>
-	public class GameSiegeBallista : GameSiegeWeapon
+    /// <summary>
+    /// GameMovingObject is a base class for boats and siege weapons.
+    /// </summary>
+    public class GameSiegeBallista : GameSiegeWeapon
 	{
 		public GameSiegeBallista()
 			: base()
@@ -49,8 +46,8 @@ namespace DOL.GS
 			MeleeDamageType = eDamageType.Thrust;
 			Name = "field ballista";
 			AmmoType = 0x18;
-			this.Model = 0x0A55;
-			this.Effect = 0x089A;
+            Model = 0x0A55;
+            Effect = 0x089A;
 			ActionDelay = new int[]{
 				0,//none
 				5000,//aiming

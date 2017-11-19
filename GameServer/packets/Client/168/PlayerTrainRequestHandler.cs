@@ -17,7 +17,6 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
@@ -27,11 +26,11 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	/// <summary>
-	/// handles Train clicks from Trainer Window
-	/// D4 is up to 1.104
-	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.TrainRequest, "Handles Player Train Requests", eClientStatus.PlayerInGame)]
+    /// <summary>
+    /// handles Train clicks from Trainer Window
+    /// D4 is up to 1.104
+    /// </summary>
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.TrainRequest, "Handles Player Train Requests", eClientStatus.PlayerInGame)]
 	public class PlayerTrainRequestHandler : IPacketHandler
 	{
 		/// <summary>
@@ -192,7 +191,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	/// Handles Train clicks from Trainer Window
 	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.TrainHandler, "Handles Player Train", eClientStatus.PlayerInGame)]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.TrainHandler, "Handles Player Train", eClientStatus.PlayerInGame)]
 	public class PlayerTrainHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)
@@ -342,7 +341,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// <summary>
 		/// Summon trainer window
 		/// </summary>
-		[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.TrainWindowHandler, "Call Player Train Window", eClientStatus.PlayerInGame)]
+		[PacketHandler(PacketHandlerType.TCP, eClientPackets.TrainWindowHandler, "Call Player Train Window", eClientStatus.PlayerInGame)]
 		public class PlayerTrainWindowHandler : IPacketHandler
 		{
 			public void HandlePacket(GameClient client, GSPacketIn packet)

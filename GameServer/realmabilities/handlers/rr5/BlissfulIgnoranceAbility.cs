@@ -20,7 +20,6 @@
 using System;
 using System.Collections;
 using DOL.Database;
-using DOL.GS.Effects;
 using DOL.GS.Spells;
 using System.Collections.Generic;
 

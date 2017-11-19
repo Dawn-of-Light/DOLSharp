@@ -16,17 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.Database;
 using DOL.GS.PacketHandler;
-using DOL.Language;
 
 namespace DOL.GS.Trainer
 {
-	/// <summary>
-	/// Seer Trainer
-	/// </summary>
-	[NPCGuildScript("Seer Trainer", eRealm.Midgard)]		// this attribute instructs DOL to use this script for all "Acolyte Trainer" NPC's in Albion (multiple guilds are possible for one script)
+    /// <summary>
+    /// Seer Trainer
+    /// </summary>
+    [NPCGuildScript("Seer Trainer", eRealm.Midgard)]		// this attribute instructs DOL to use this script for all "Acolyte Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class SeerTrainer : GameTrainer
 	{
 		public override eCharacterClass TrainedClass
@@ -62,7 +59,7 @@ namespace DOL.GS.Trainer
 				// player can be promoted
 				if (player.Level>=5)
 				{
-					player.Out.SendMessage(this.Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Shaman] or [Healer]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Shaman] or [Healer]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 				}
 				else
 				{
@@ -72,11 +69,11 @@ namespace DOL.GS.Trainer
 				// ask for basic equipment if player doesnt own it
 				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.MinEquipable, eInventorySlot.LastBackpack) == null)
 				{
-					player.Out.SendMessage(this.Name + " says, \"Do you require a [practice weapon]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(Name + " says, \"Do you require a [practice weapon]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 				}
 				if (player.Inventory.GetFirstItemByID(PRACTICE_SHIELD_ID, eInventorySlot.MinEquipable, eInventorySlot.LastBackpack) == null)
 				{
-					player.Out.SendMessage(this.Name + " says, \"Do you require a [training shield]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(Name + " says, \"Do you require a [training shield]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 				}
 			}
 			else
@@ -101,18 +98,18 @@ namespace DOL.GS.Trainer
 				case "Shaman":
 					if(player.Race == (int)eRace.Frostalf || player.Race == (int)eRace.Kobold || player.Race == (int)eRace.Troll || player.Race == (int)eRace.MidgardMinotaur)
 					{
-						player.Out.SendMessage(this.Name + " says, \"I can't tell you something about this class.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(Name + " says, \"I can't tell you something about this class.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 					}
 					else{
-						player.Out.SendMessage(this.Name + " says, \"The path of a Shaman is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(Name + " says, \"The path of a Shaman is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 					}
 					return true;
 				case "Healer":
 					if(player.Race == (int) eRace.Dwarf || player.Race == (int) eRace.Frostalf || player.Race == (int) eRace.Norseman){
-						player.Out.SendMessage(this.Name + " says, \"I can't tell you something about this class.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(Name + " says, \"I can't tell you something about this class.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 					}
 					else{
-						player.Out.SendMessage(this.Name + " says, \"The path of a Healer is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(Name + " says, \"The path of a Healer is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 					}
 					return true;
 				case "practice weapon":

@@ -1,15 +1,13 @@
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Mastery of Concentration RA
-	/// </summary>
-	public class BlindingDustAbility : RR5RealmAbility
+    /// <summary>
+    /// Mastery of Concentration RA
+    /// </summary>
+    public class BlindingDustAbility : RR5RealmAbility
 	{
 		public BlindingDustAbility(DBAbility dba, int level) : base(dba, level) { }
 

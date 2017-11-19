@@ -22,7 +22,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.PetWindow, "Handle Pet Window Command", eClientStatus.PlayerInGame)]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.PetWindow, "Handle Pet Window Command", eClientStatus.PlayerInGame)]
 	public class PetWindowHandler : IPacketHandler
 	{
 		/// <summary>

@@ -16,20 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.Events;
-using DOL.GS.Quests;
 using DOL.Database;
 
 namespace DOL.GS.Quests.Atlantis.Encounters
 {
-	/// <summary>
+    /// <summary>
     /// Encounter for the Flamedancer's Boots artifact.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class FlamedancersBoots : ArtifactEncounter
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class FlamedancersBoots : ArtifactEncounter
 	{
 		public FlamedancersBoots(GamePlayer questingPlayer)
 			: base(questingPlayer) { }

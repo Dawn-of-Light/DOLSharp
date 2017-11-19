@@ -1,9 +1,8 @@
-using System;
 using DOL.Database;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class WildMinionAbility : RAPropertyEnhancer
+    public class WildMinionAbility : RAPropertyEnhancer
 	{
 		public WildMinionAbility(DBAbility dba, int level)
 			: base(dba, level, eProperty.Undefined)

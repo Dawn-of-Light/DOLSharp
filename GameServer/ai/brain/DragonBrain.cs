@@ -19,7 +19,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using DOL.GS;
 using DOL.GS.Effects;
 using log4net;
@@ -29,10 +28,10 @@ using DOL.Events;
 
 namespace DOL.AI.Brain
 {
-	/// <summary>
-	/// AI for dragon like NPCs.
-	/// </summary>
-	/// <author>Aredhel</author>
+    /// <summary>
+    /// AI for dragon like NPCs.
+    /// </summary>
+    /// <author>Aredhel</author>
     public class DragonBrain : StandardMobBrain
     {
 		/// <summary>

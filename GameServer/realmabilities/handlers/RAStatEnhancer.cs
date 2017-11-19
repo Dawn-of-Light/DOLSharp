@@ -1,17 +1,14 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using DOL.Database;
 using DOL.Language;
 
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public class RAStatEnhancer : L5RealmAbility
+    /// <summary>
+    /// 
+    /// </summary>
+    public class RAStatEnhancer : L5RealmAbility
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

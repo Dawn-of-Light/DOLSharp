@@ -17,20 +17,17 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.Language;
-using log4net;
 
 namespace DOL.GS.Spells
 {
-	// Melee ablative
-	[SpellHandlerAttribute("AblativeArmor")]
+    // Melee ablative
+    [SpellHandler("AblativeArmor")]
 	public class AblativeArmorSpellHandler : SpellHandler
 	{
 		public const string ABLATIVE_HP = "ablative hp";
@@ -121,7 +118,7 @@ namespace DOL.GS.Spells
 
 			if(ablativehp <= 0)
 			{
-				GameSpellEffect effect = SpellHandler.FindEffectOnTarget(living, this);
+				GameSpellEffect effect = FindEffectOnTarget(living, this);
 				if(effect != null)
 					effect.Cancel(false);
 			}
@@ -246,7 +243,7 @@ namespace DOL.GS.Spells
 	}
 
 	// Magic Ablative
-	[SpellHandlerAttribute("MagicAblativeArmor")]
+	[SpellHandler("MagicAblativeArmor")]
 	public class MagicAblativeArmorSpellHandler : AblativeArmorSpellHandler
 	{
 		public MagicAblativeArmorSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
@@ -269,7 +266,7 @@ namespace DOL.GS.Spells
 		}
 	}
     //Both Magic/melee ablative 1.101 druids mite have a buff like this...
-    [SpellHandlerAttribute("BothAblativeArmor")]
+    [SpellHandler("BothAblativeArmor")]
     public class BothAblativeArmorSpellHandler : AblativeArmorSpellHandler
     {
         public BothAblativeArmorSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }

@@ -150,7 +150,7 @@ namespace DOL.GS.Quests.Albion
 
             #region defineNPCs
 
-            GameNPC[] npcs = WorldMgr.GetNPCsByName("Palune", eRealm.Albion);
+            GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Palune", eRealm.Albion);
             if (npcs.Length == 0)
             {
                 palune = new GameNPC();
@@ -180,7 +180,7 @@ namespace DOL.GS.Quests.Albion
             else
                 palune = npcs[0];
 
-            npcs = WorldMgr.GetNPCsByName("Guard Cynon", eRealm.Albion);
+            npcs = WorldMgr.GetObjectsByName<GameNPC>("Guard Cynon", eRealm.Albion);
             if (npcs.Length == 0)
             {
                 guardCynon = new GameNPC();

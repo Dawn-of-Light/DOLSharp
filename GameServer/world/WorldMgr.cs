@@ -21,7 +21,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
-using System.IO;
 using System.Reflection;
 using System.Threading;
 using Timer=System.Threading.Timer;
@@ -29,9 +28,6 @@ using Timer=System.Threading.Timer;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Utils;
-using DOL.Config;
-using DOL.GS.Housing;
-
 using log4net;
 
 namespace DOL.GS
@@ -229,77 +225,6 @@ namespace DOL.GS
 		/// clients after a certain intervall;
 		/// </summary>
 		private static Timer m_dayResetTimer;
-
-		/// <summary>
-		/// Region ID INI field
-		/// </summary>
-		private const string ENTRY_REG_ID = "id";
-		/// <summary>
-		/// Region IP INI field
-		/// </summary>
-		private const string ENTRY_REG_IP = "ip";
-		/// <summary>
-		/// Region port INI field
-		/// </summary>
-		private const string ENTRY_REG_PORT = "port";
-		/// <summary>
-		/// Region description INI field
-		/// </summary>
-		private const string ENTRY_REG_DESC = "description";
-		/// <summary>
-		/// Region diving enable INI field
-		/// </summary>
-		private const string ENTRY_REG_DIVING_ENABLE = "isDivingEnabled";
-		/// <summary>
-		/// Region diving enable INI field
-		/// </summary>
-		private const string ENTRY_REG_HOUSING_ENABLE = "isHousingEnabled";
-		/// <summary>
-		/// Region water level INI field
-		/// </summary>
-		private const string ENTRY_REG_WATER_LEVEL = "waterLevel";
-		/// <summary>
-		/// Region expansion INI field
-		/// </summary>
-		private const string ENTRY_REG_EXPANSION = "expansion";
-
-		/// <summary>
-		/// Zone ID INI field
-		/// </summary>
-		private const string ENTRY_ZONE_ZONEID = "zoneID";
-		/// <summary>
-		/// Zone region INI field
-		/// </summary>
-		private const string ENTRY_ZONE_REGIONID = "regionID";
-		/// <summary>
-		/// Zone description INI field
-		/// </summary>
-		private const string ENTRY_ZONE_DESC = "description";
-		/// <summary>
-		/// Zone X offset INI field
-		/// </summary>
-		private const string ENTRY_ZONE_OFFX = "offsetx";
-		/// <summary>
-		/// Zone Y offset INI field
-		/// </summary>
-		private const string ENTRY_ZONE_OFFY = "offsety";
-		/// <summary>
-		/// Zone width INI field
-		/// </summary>
-		private const string ENTRY_ZONE_WIDTH = "width";
-		/// <summary>
-		/// Zone height INI field
-		/// </summary>
-		private const string ENTRY_ZONE_HEIGHT = "height";
-		/// <summary>
-		/// Zone water level INI field
-		/// </summary>
-		private const string ENTRY_ZONE_WATER_LEVEL = "waterlevel";
-		
-		/// <summary>
-		/// Does this zone contain Lava
-		/// </summary>
-		private const string ENTRY_ZONE_LAVA = "IsLava";
 
 		/// <summary>
 		/// Relocation threads for relocation of zones
@@ -785,13 +710,6 @@ namespace DOL.GS
 			return Util.GetThreadStack(m_WorldUpdateThread);
 		}
 
-		private static uint m_lastWorldObjectUpdateTick = 0;
-		
-		public static uint LastWorldObjectUpdateTick {
-			get { return m_lastWorldObjectUpdateTick; }
-			set { m_lastWorldObjectUpdateTick = value; }
-		}
-
 		/// <summary>
 		/// Cleans up and stops all the RegionMgr tasks inside
 		/// the regions.
@@ -1023,74 +941,40 @@ namespace DOL.GS
 				}
 			}
 			return -1;
-		}
-		
-		public static object[] OfTypeAndToArray<T>(this IEnumerable<T> input, Type type)
-		{
-			MethodInfo methodOfType = typeof(Enumerable).GetMethod("OfType");
-			MethodInfo genericOfType = methodOfType.MakeGenericMethod(new Type[]{ type });
-			// Use .NET 4 covariance
-			var result = (IEnumerable<object>) genericOfType.Invoke(null, new object[] { input });
-			
-			MethodInfo methodToArray = typeof(Enumerable).GetMethod("ToArray");
-			MethodInfo genericToArray = methodToArray.MakeGenericMethod(new Type[]{ type });
-			
-			return (object[]) genericToArray.Invoke(null, new object[] { result });
-		}
+	    }
 
-		/// <summary>
-		/// Searches for all objects from a specific region
-		/// </summary>
-		/// <param name="regionID">The region to search</param>
-		/// <param name="objectType">The type of the object you search</param>
-		/// <returns>All objects with the specified parameters</returns>
-		public static GameObject[] GetobjectsFromRegion(ushort regionID, Type objectType)
-		{
-			Region reg;
-			if (!m_regions.TryGetValue(regionID, out reg))
-				return new GameObject[0];
+        /// <summary>
+        /// Searches for all objects from a specific region
+        /// </summary>
+        /// <param name="regionId">The region to search</param>
+        /// <param name="objectType">The type of the object you search</param>
+        /// <returns>All objects with the specified parameters</returns>
+        public static T[] GetobjectsFromRegion<T>(ushort regionId)
+            where T : GameObject
+        {
+            Region reg;
+		    if (!m_regions.TryGetValue(regionId, out reg))
+		    {
+		        return new T[0];
+            }
 
-			return (GameObject[]) reg.Objects.Where(obj => obj != null).OfTypeAndToArray(objectType);
-		}
-		
-		/// <summary>
-		/// Searches for all GameStaticItem from a specific region
-		/// </summary>
-		/// <param name="regionID">The region to search</param>
-		/// <returns>All NPCs with the specified parameters</returns>
-		public static GameStaticItem[] GetStaticItemFromRegion(ushort regionID)
-		{
-			return (GameStaticItem[])GetobjectsFromRegion(regionID, typeof(GameStaticItem));
+			return reg.Objects.Where(obj => obj != null).OfType<T>().ToArray();
 		}
 
 		/// <summary>
 		/// Searches for all objects with the given name, from a specific region and realm
 		/// </summary>
 		/// <param name="name">The name of the object to search</param>
-		/// <param name="regionID">The region to search</param>
+		/// <param name="regionId">The region to search</param>
 		/// <param name="realm">The realm of the object we search!</param>
 		/// <param name="objectType">The type of the object you search</param>
 		/// <returns>All objects with the specified parameters</returns>
-		public static GameObject[] GetObjectsByNameFromRegion(string name, ushort regionID, eRealm realm, Type objectType)
+		public static T[] GetObjectsByNameFromRegion<T>(string name, ushort regionId, eRealm realm)
+            where T : GameObject
 		{
-			Region reg;
-			if (!m_regions.TryGetValue(regionID, out reg))
-				return new GameObject[0];
-			
-			return (GameObject[]) reg.Objects.Where(obj => obj != null && obj.Realm == realm && obj.Name == name).OfTypeAndToArray(objectType);
-		}
-
-		/// <summary>
-		/// Returns the npcs in a given region
-		/// </summary>
-		/// <returns></returns>
-		public static GameNPC[] GetNPCsFromRegion(ushort regionID)
-		{
-			Region reg;
-			if (!m_regions.TryGetValue(regionID, out reg))
-				return new GameNPC[0];
-
-			return reg.Objects.OfType<GameNPC>().ToArray();
+			return GetobjectsFromRegion<T>(regionId)
+                .Where(obj => obj.Realm == realm && obj.Name == name)
+                .ToArray();
 		}
 
 		/// <summary>
@@ -1100,73 +984,13 @@ namespace DOL.GS
 		/// <param name="realm">The realm of the object we search!</param>
 		/// <param name="objectType">The type of the object you search</param>
 		/// <returns>All objects with the specified parameters</returns>b
-		public static GameObject[] GetObjectsByName(string name, eRealm realm, Type objectType)
+		public static T[] GetObjectsByName<T>(string name, eRealm realm)
+            where T : GameObject
 		{
-			return (GameObject[]) m_regions.Values.Select(reg => GetObjectsByNameFromRegion(name, reg.ID, realm, objectType))
-				.SelectMany(objs => objs).OfTypeAndToArray(objectType);
-		}
-
-		/// <summary>
-		/// Searches for all NPCs with the given name, from a specific region and realm
-		/// </summary>
-		/// <param name="name">The name of the object to search</param>
-		/// <param name="regionID">The region to search</param>
-		/// <param name="realm">The realm of the object we search!</param>
-		/// <returns>All NPCs with the specified parameters</returns>
-		public static GameNPC[] GetNPCsByNameFromRegion(string name, ushort regionID, eRealm realm)
-		{
-			return (GameNPC[])GetObjectsByNameFromRegion(name, regionID, realm, typeof(GameNPC));
-		}
-
-		/// <summary>
-		/// Searches for all NPCs with the given name and realm in ALL regions!
-		/// </summary>
-		/// <param name="name">The name of the object to search</param>
-		/// <param name="realm">The realm of the object we search!</param>
-		/// <returns>All NPCs with the specified parameters</returns>b
-		public static GameNPC[] GetNPCsByName(string name, eRealm realm)
-		{
-			return (GameNPC[])GetObjectsByName(name, realm, typeof(GameNPC));
-		}
-
-		/// <summary>
-		/// Searches for all NPCs with the given guild and realm in ALL regions!
-		/// </summary>
-		/// <param name="guild">The guild name for the npc</param>
-		/// <param name="realm">The realm of the npc</param>
-		/// <returns>A collection of NPCs which match the result</returns>
-		public static List<GameNPC> GetNPCsByGuild(string guild, eRealm realm)
-		{
-			return m_regions.Values.Select(r => r.Objects.OfType<GameNPC>().Where(npc => npc.Realm == realm && npc.GuildName == guild))
-				.SelectMany(objs => objs).ToList();
-		}
-
-		/// <summary>
-		/// Searches for all NPCs with the given type and realm in ALL regions!
-		/// </summary>
-		/// <param name="type"></param>
-		/// <param name="realm"></param>
-		/// <returns></returns>
-		public static List<GameNPC> GetNPCsByType(Type type, eRealm realm)
-		{
-			return m_regions.Values.Select(r => r.Objects.OfType<GameNPC>().Where(npc => npc.Realm == realm && type.IsInstanceOfType(npc)))
-				.SelectMany(objs => objs).ToList();
-		}
-
-		/// <summary>
-		/// Searches for all NPCs with the given type and realm in a specific region
-		/// </summary>
-		/// <param name="type"></param>
-		/// <param name="realm"></param>
-		/// <param name="region"></param>
-		/// <returns></returns>
-		public static List<GameNPC> GetNPCsByType(Type type, eRealm realm, ushort region)
-		{
-			Region reg;
-			if (!m_regions.TryGetValue(region, out reg))
-				return new List<GameNPC>(0);
-			
-			return reg.Objects.OfType<GameNPC>().Where(npc => npc.Realm == realm && type.IsInstanceOfType(npc)).ToList();
+			return m_regions.Values
+                .Select(reg => GetObjectsByNameFromRegion<T>(name, reg.ID, realm))
+				.SelectMany(objs => objs)
+                .ToArray();
 		}
 
 		/// <summary>
@@ -1231,173 +1055,6 @@ namespace DOL.GS
 				return;
 			//client.Player.RemoveFromWorld();
 			client.Player.Delete();
-			return;
-		}
-
-		//Various functions to get a list of players/mobs/items
-		#region getdistance
-		/// <summary>
-		/// Get's the distance of two GameObjects
-		/// </summary>
-		/// <param name="obj1">Object1</param>
-		/// <param name="obj2">Object2</param>
-		/// <returns>The distance in units or -1 if they are not the same Region</returns>
-		[Obsolete( "Use Point3D.GetDistance" )]
-		public static int GetDistance( GameObject obj1, GameObject obj2 )
-		{
-			if ( obj1 == null || obj2 == null || obj1.CurrentRegion != obj2.CurrentRegion )
-				return -1;
-			return GetDistance( obj1.X, obj1.Y, obj1.Z, obj2.X, obj2.Y, obj2.Z );
-		}
-
-		/// <summary>
-		/// Get's the distance of two GameObjects
-		/// </summary>
-		/// <param name="obj1">Object1</param>
-		/// <param name="obj2">Object2</param>
-		/// <param name="zfactor">Factor for Z distance use lower 0..1 to lower Z influence</param>
-		/// <returns>The distance in units or -1 if they are not the same Region</returns>
-		[Obsolete( "Use Point3D.GetDistance" )]
-		public static int GetDistance( GameObject obj1, GameObject obj2, double zfactor )
-		{
-			if ( obj1 == null || obj2 == null || obj1.CurrentRegion != obj2.CurrentRegion )
-				return -1;
-			return GetDistance( obj1.X, obj1.Y, obj1.Z, obj2.X, obj2.Y, obj2.Z, zfactor );
-		}
-
-		/// <summary>
-		/// Gets the distance of two arbitary points in space
-		/// </summary>
-		/// <param name="x1">X of Point1</param>
-		/// <param name="y1">Y of Point1</param>
-		/// <param name="z1">Z of Point1</param>
-		/// <param name="x2">X of Point2</param>
-		/// <param name="y2">Y of Point2</param>
-		/// <param name="z2">Z of Point2</param>
-		/// <returns>The distance</returns>
-		[Obsolete( "Use Point3D.GetDistance" )]
-		public static int GetDistance( int x1, int y1, int z1, int x2, int y2, int z2 )
-		{
-			long xdiff = (long)x1 - x2;
-			long ydiff = (long)y1 - y2;
-
-			long zdiff = (long)z1 - z2;
-			return (int)Math.Sqrt( xdiff * xdiff + ydiff * ydiff + zdiff * zdiff );
-		}
-
-		/// <summary>
-		/// Gets the distance of two arbitary points in space
-		/// </summary>
-		/// <param name="x1">X of Point1</param>
-		/// <param name="y1">Y of Point1</param>
-		/// <param name="z1">Z of Point1</param>
-		/// <param name="x2">X of Point2</param>
-		/// <param name="y2">Y of Point2</param>
-		/// <param name="z2">Z of Point2</param>
-		/// <param name="zfactor">Factor for Z distance use lower 0..1 to lower Z influence</param>
-		/// <returns>The distance</returns>
-		[Obsolete( "Use Point3D.GetDistance" )]
-		public static int GetDistance( int x1, int y1, int z1, int x2, int y2, int z2, double zfactor )
-		{
-			long xdiff = (long)x1 - x2;
-			long ydiff = (long)y1 - y2;
-
-			long zdiff = (long)( ( z1 - z2 ) * zfactor );
-			return (int)Math.Sqrt( xdiff * xdiff + ydiff * ydiff + zdiff * zdiff );
-		}
-
-		/// <summary>
-		/// Gets the distance of an Object to an arbitary point
-		/// </summary>
-		/// <param name="obj">GameObject used as Point1</param>
-		/// <param name="x">X of Point2</param>
-		/// <param name="y">Y of Point2</param>
-		/// <param name="z">Z of Point2</param>
-		/// <returns>The distance</returns>
-		[Obsolete( "Use Point3D.GetDistance" )]
-		public static int GetDistance( GameObject obj, int x, int y, int z )
-		{
-			return GetDistance( obj.X, obj.Y, obj.Z, x, y, z );
-		}
-		#endregion get distance
-
-		#region check distance
-		[Obsolete( "Use Point3D.IsWithinRadius" )]
-		public static bool CheckDistance(int x1, int y1, int z1, int x2, int y2, int z2, int radius)
-		{
-			return CheckSquareDistance(x1, y1, z1, x2, y2, z2, radius * radius);
-		}
-		[Obsolete( "Use Point3D.IsWithinRadius" )]
-		public static bool CheckDistance( IPoint3D obj, IPoint3D obj2, int radius )
-		{
-			return CheckDistance(obj.X, obj.Y, obj.Z, obj2.X, obj2.Y, obj2.Z, radius);
-		}
-		[Obsolete( "Use Point3D.IsWithinRadius" )]
-		public static bool CheckDistance( GameObject obj, int x2, int y2, int z2, int radius )
-		{
-			return CheckDistance(obj.X, obj.Y, obj.Z, x2, y2, z2, radius);
-		}
-		[Obsolete( "Use Point3D.IsWithinRadius" )]
-		public static bool CheckDistance( GameObject obj, GameObject obj2, int radius )
-		{
-			if (obj == null || obj2 == null)
-				return false;
-			if (obj.CurrentRegion != obj2.CurrentRegion)
-				return false;
-			return CheckDistance(obj.X, obj.Y, obj.Z, obj2.X, obj2.Y, obj2.Z, radius);
-		}
-		#endregion
-		#region check square distance
-		[Obsolete( "Use Point3D.IsWithinRadius" )]
-		private static bool CheckSquareDistance( int x1, int y1, int z1, int x2, int y2, int z2, int squareRadius )
-		{
-			long xdiff = (long)x1 - x2;
-			long ydiff = (long)y1 - y2;
-			long zdiff = (long)z1 - z2;
-			return (xdiff * xdiff + ydiff * ydiff + zdiff * zdiff <= squareRadius);
-		}
-		[Obsolete( "Use Point3D.IsWithinRadius" )]
-		private static bool CheckSquareDistance( IPoint3D obj, IPoint3D obj2, int squareRadius )
-		{
-			return CheckSquareDistance(obj.X, obj.Y, obj.Z, obj2.X, obj2.Y, obj2.Z, squareRadius);
-		}
-		[Obsolete( "Use Point3D.IsWithinRadius" )]
-		private static bool CheckSquareDistance( GameObject obj, int x2, int y2, int z2, int squareRadius )
-		{
-			return CheckSquareDistance(obj.X, obj.Y, obj.Z, x2, y2, z2, squareRadius);
-		}
-		[Obsolete( "Use Point3D.IsWithinRadius" )]
-		private static bool CheckSquareDistance( GameObject obj, GameObject obj2, int squareRadius )
-		{
-			if (obj.CurrentRegion != obj2.CurrentRegion)
-				return false;
-			return CheckSquareDistance(obj.X, obj.Y, obj.Z, obj2.X, obj2.Y, obj2.Z, squareRadius);
-		}
-		#endregion
-
-		/// <summary>
-		/// Returns the number of playing Clients inside a realm
-		/// </summary>
-		/// <param name="realmID">ID of Realm (1=Alb, 2=Mid, 3=Hib)</param>
-		/// <returns>Client count of that realm</returns>
-		public static int GetClientsOfRealmCount(eRealm realm)
-		{
-			int count = 0;
-			lock (m_clients.SyncRoot)
-			{
-				foreach (GameClient client in m_clients)
-				{
-					if (client != null)
-					{
-						if (client.IsPlaying
-						    && client.Player != null
-						    && client.Player.ObjectState == GameObject.eObjectState.Active
-						    && client.Player.Realm == realm)
-							count++;
-					}
-				}
-			}
-			return count;
 		}
 
 		/// <summary>
@@ -1653,22 +1310,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Find a GameClient by the Player's name from a specific region
-		/// </summary>
-		/// <param name="playerName">Name to search</param>
-		/// <param name="regionID">Region ID of region to search through</param>
-		/// <param name="exactMatch">true if the Name must match exactly</param>
-		/// <param name="activeRequired"></param>
-		/// <returns>The first found GameClient or null</returns>
-		public static GameClient GetClientByPlayerNameFromRegion(string playerName, ushort regionID, bool exactMatch, bool activeRequired)
-		{
-			GameClient client = GetClientByPlayerName(playerName, exactMatch, activeRequired);
-			if (client == null || client.Player.CurrentRegionID != regionID)
-				return null;
-			return client;
-		}
-
-		/// <summary>
 		/// Gets a copy of all playing clients
 		/// </summary>
 		/// <returns>ArrayList of playing GameClients</returns>
@@ -1724,24 +1365,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Gets a count of ALL clients no matter at what state they are
-		/// </summary>
-		/// <returns>ArrayList of GameClients</returns>
-		public static int GetAllClientsCount()
-		{
-			int count = 0;
-			lock (m_clients.SyncRoot)
-			{
-				foreach (GameClient client in m_clients)
-				{
-					if (client != null)
-						count++;
-				}
-			}
-			return count;
-		}
-
-		/// <summary>
 		/// Fetch an Object from a specific Region by it's ID
 		/// </summary>
 		/// <param name="regionID">Region ID of Region to search through</param>
@@ -1753,21 +1376,6 @@ namespace DOL.GS
 			if (reg == null)
 				return null;
 			return reg.GetObject(oID);
-		}
-
-		/// <summary>
-		/// Fetch an Object of specific type from a specific Region
-		/// </summary>
-		/// <param name="regionID">Region ID of Regin to search through</param>
-		/// <param name="oID">Object ID to search</param>
-		/// <param name="type">Type of Object to search</param>
-		/// <returns>GameObject of specific type or null if not found</returns>
-		public static GameObject GetObjectTypeByIDFromRegion(ushort regionID, ushort oID, Type type)
-		{
-			GameObject obj = GetObjectByIDFromRegion(regionID, oID);
-			if (obj == null || !type.IsInstanceOfType(obj))
-				return null;
-			return obj;
 		}
 
 		/// <summary>
@@ -1864,26 +1472,6 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Returns an IEnumerator of GameItems that are close to a certain
-		/// spot in the region
-		/// </summary>
-		/// <param name="regionid">Region to search</param>
-		/// <param name="x">X inside region</param>
-		/// <param name="y">Y inside region</param>
-		/// <param name="z">Z inside region</param>
-		/// <param name="radiusToCheck">Radius to sarch for GameItems</param>
-		/// <param name="withDistance">Wether or not to return the objects with distance</param>
-		/// <returns>IEnumerator that can be used to go through all items</returns>
-		public static IEnumerable GetItemsCloseToSpot(ushort regionid, int x, int y, int z, ushort radiusToCheck, bool withDistance)
-		{
-			Region reg = GetRegion(regionid);
-			if (reg == null)
-				return new Region.EmptyEnumerator();
-
-			return reg.GetItemsInRadius(x, y, z, radiusToCheck, withDistance);
-		}
-
-		/// <summary>
 		/// Saves all players into the database.
 		/// </summary>
 		/// <returns>The count of players saved</returns>
@@ -1919,20 +1507,10 @@ namespace DOL.GS
 		/// </summary>
 		private static Dictionary<ushort, RegionData> m_regionData;
 
-		public static IDictionary<ushort, RegionData> RegionData
-		{
-			get { return m_regionData; }
-		}
-
 		/// <summary>
 		/// Stores the zone data parsed from the zones file by RegionID.
 		/// </summary>
 		private static Dictionary<ushort, List<ZoneData>> m_zonesData;
-
-		public static Dictionary<ushort, List<ZoneData>> ZonesData
-		{
-			get { return m_zonesData; }
-		}
 
 
 		/// <summary>
@@ -2126,8 +1704,6 @@ namespace DOL.GS
 			//Destroy the region once and for all.
 			instance = null;
 		}
-
-
 		#endregion
 	}
 }

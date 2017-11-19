@@ -42,7 +42,6 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using DOL.AI.Brain;
@@ -61,13 +60,13 @@ using log4net;
 
 namespace DOL.GS.Quests.Albion
 {
-	/* The first thing we do, is to declare the class we create
+    /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
 	 * AbstractQuest
 	 * 	 
 	 */
 
-	public class BeginningOfWar : BaseFrederickQuest
+    public class BeginningOfWar : BaseFrederickQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -170,7 +169,7 @@ namespace DOL.GS.Quests.Albion
 
 			masterFrederick = GetMasterFrederick();
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Master Dunwyn", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Master Dunwyn", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
@@ -209,7 +208,7 @@ namespace DOL.GS.Quests.Albion
 				dunwyn = npcs[0];
 
 
-			npcs = WorldMgr.GetNPCsByName("Princess Obera", eRealm.None);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Princess Obera", eRealm.None);
 			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)

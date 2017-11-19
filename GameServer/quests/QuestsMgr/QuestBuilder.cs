@@ -17,9 +17,7 @@
  *
  */
 using System;
-using System.Text;
 using System.Reflection;
-using DOL.Database;
 
 namespace DOL.GS.Quests
 {
@@ -38,7 +36,7 @@ namespace DOL.GS.Quests
         public QuestBuilder(Type questType)
         {
             this.questType = questType;
-            this.addActionMethod = questType.GetMethod("AddBehaviour", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);            
+            addActionMethod = questType.GetMethod("AddBehaviour", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);            
         }                
 
         public void AddBehaviour(QuestBehaviour questPart)

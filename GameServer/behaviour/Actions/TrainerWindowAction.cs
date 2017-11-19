@@ -17,20 +17,14 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.Behaviour.Attributes;
-using DOL.GS.Behaviour;
-using DOL.Database;
-using DOL.AI.Brain;
 using log4net;
 using System.Reflection;
 
 namespace DOL.GS.Behaviour.Actions
 {
-	[ActionAttribute(ActionType = eActionType.TrainerWindow, IsNullableP = true)]
+    [Action(ActionType = eActionType.TrainerWindow, IsNullableP = true)]
 	public class TrainerWindowAction : AbstractAction<Nullable<Int32>, GameNPC>
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

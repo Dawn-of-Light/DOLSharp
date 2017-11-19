@@ -19,7 +19,6 @@
 namespace DOL.GS.Spells
 {
     using System;
-    using System.Collections;
     using Database;
     using Events;
 

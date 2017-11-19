@@ -161,7 +161,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			addrir = GetAddrir();
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Bhreagar Hylvian", eRealm.Hibernia);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Bhreagar Hylvian", eRealm.Hibernia);
 			if (npcs.Length == 0)
 			{
 				hylvian = new GameNPC();
@@ -190,7 +190,7 @@ namespace DOL.GS.Quests.Hibernia
 			else
 				hylvian = npcs[0];
 
-			npcs = WorldMgr.GetNPCsByName("Freagus", eRealm.Hibernia);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Freagus", eRealm.Hibernia);
 			if (npcs.Length == 0)
 			{
 				freagus = new GameStableMaster();
@@ -219,7 +219,7 @@ namespace DOL.GS.Quests.Hibernia
 			else
 				freagus = npcs[0];
 
-			npcs = WorldMgr.GetNPCsByName("Gweonry", eRealm.Hibernia);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Gweonry", eRealm.Hibernia);
 			if (npcs.Length == 0)
 			{
 				gweonry = new GameStableMaster();

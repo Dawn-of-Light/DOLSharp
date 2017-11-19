@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using DOL.GS.PacketHandler;
 using DOL.GS.Housing;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&knock", //command to handle
+    [Cmd("&knock", //command to handle
 		ePrivLevel.Player, //minimum privelege level
 	   "Knock on a house", //command description
 		"/knock")] //command usage

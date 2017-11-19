@@ -16,14 +16,12 @@
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 *
 */
-using System;
-using System.Collections;
 
 using DOL.GS.Quests;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.RemoveQuestRequest, "Quest Remove request Handler.", eClientStatus.PlayerInGame)]
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.RemoveQuestRequest, "Quest Remove request Handler.", eClientStatus.PlayerInGame)]
 	public class QuestRemoveRequestHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)

@@ -18,19 +18,14 @@
  * [StephenxPimentel]
  * Updated to be a skillhandler to match 1.108.
  */
-using System.Reflection;
-using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
-using log4net;
-using DOL.GS.Keeps;
-using DOL.GS.Spells;
 
 namespace DOL.GS.SkillHandler
 {
-	/// <summary>
-	/// Remedy Realm Ability
-	/// </summary>
-    [SkillHandlerAttribute(Abilities.Remedy)]
+    /// <summary>
+    /// Remedy Realm Ability
+    /// </summary>
+    [SkillHandler(Abilities.Remedy)]
 	public class RemedyAbility : IAbilityActionHandler
 	{
 		/// <summary>

@@ -16,21 +16,20 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.AI.Brain;
 
 namespace DOL.GS.PropertyCalc
 {
-	/// <summary>
-	/// The parry chance calculator. Returns 0 .. 1000 chance.
-	/// 
-	/// BuffBonusCategory1 unused
-	/// BuffBonusCategory2 unused
-	/// BuffBonusCategory3 unused
-	/// BuffBonusCategory4 unused
-	/// BuffBonusMultCategory1 unused
-	/// </summary>
-	[PropertyCalculator(eProperty.ParryChance)]
+    /// <summary>
+    /// The parry chance calculator. Returns 0 .. 1000 chance.
+    /// 
+    /// BuffBonusCategory1 unused
+    /// BuffBonusCategory2 unused
+    /// BuffBonusCategory3 unused
+    /// BuffBonusCategory4 unused
+    /// BuffBonusMultCategory1 unused
+    /// </summary>
+    [PropertyCalculator(eProperty.ParryChance)]
 	public class ParryChanceCalculator : PropertyCalculator
 	{
 		public override int CalcValue(GameLiving living, eProperty property)

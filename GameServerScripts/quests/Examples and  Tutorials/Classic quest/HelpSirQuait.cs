@@ -1,4 +1,4 @@
-﻿	
+﻿
 /*
 * DAWN OF LIGHT - The first free open source DAoC server emulator
 *
@@ -30,20 +30,18 @@ using System;
 using System.Reflection;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.PacketHandler;
 using log4net;
-using DOL.GS.Quests;
 using DOL.GS.Behaviour;
-using DOL.GS.Behaviour.Attributes;
 using DOL.AI.Brain;
 
-	namespace DOL.GS.Quests.Examples {
-	
-     /* The first thing we do, is to declare the class we create
-	 * as Quest. To do this, we derive from the abstract class
-	 * BaseQuest	  	 
-	 */
-	public class HelpSirQuait : BaseQuest
+namespace DOL.GS.Quests.Examples
+{
+
+    /* The first thing we do, is to declare the class we create
+    * as Quest. To do this, we derive from the abstract class
+    * BaseQuest	  	 
+    */
+    public class HelpSirQuait : BaseQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -108,7 +106,7 @@ using DOL.AI.Brain;
 	    #region defineNPCs
 	    GameNPC[] npcs;
 	
-		npcs = WorldMgr.GetNPCsByName("Sir Quait",(eRealm) 1);
+		npcs = WorldMgr.GetObjectsByName<GameNPC>("Sir Quait",(eRealm) 1);
 		if (npcs.Length == 0)
 		{			
 			SirQuait = new DOL.GS.GameNPC();
@@ -150,7 +148,7 @@ using DOL.AI.Brain;
 			SirQuait = npcs[0];
 		}
 	
-		npcs = WorldMgr.GetNPCsByName("Evil Thief of the Shadowclan",(eRealm) 0);
+		npcs = WorldMgr.GetObjectsByName<GameNPC>("Evil Thief of the Shadowclan",(eRealm) 0);
 		if (npcs.Length == 0)
 		{			
 			EvilThiefoftheShadowclan = new DOL.GS.GameNPC();

@@ -21,7 +21,6 @@ using System;
 using System.Reflection;
 using DOL.Database;
 using System.Collections;
-using System.Collections.Generic;
 using log4net;
 
 

@@ -32,7 +32,6 @@
 
 using System;
 using System.Reflection;
-using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
@@ -48,13 +47,13 @@ using log4net;
 
 namespace DOL.GS.Quests.Albion
 {
-	/* The first thing we do, is to declare the class we create
+    /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
 	 * AbstractQuest
 	 * 	 
 	 */
 
-	public class GreenerPastures : BaseQuest
+    public class GreenerPastures : BaseQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -139,7 +138,7 @@ namespace DOL.GS.Quests.Albion
 			
 			#region defineNPCS
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Farmer Asma", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Farmer Asma", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				farmerAsma = new GameNPC();

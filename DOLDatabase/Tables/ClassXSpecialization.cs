@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Cross Reference Table Between character Class and Specialization Careers.
-	/// </summary>
-	[DataTable(TableName="ClassXSpecialization")]
+    /// <summary>
+    /// Cross Reference Table Between character Class and Specialization Careers.
+    /// </summary>
+    [DataTable(TableName="ClassXSpecialization")]
 	public class ClassXSpecialization : DataObject
 	{
 		private int m_classXSpecializationID;

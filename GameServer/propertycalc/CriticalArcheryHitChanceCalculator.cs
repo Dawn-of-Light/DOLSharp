@@ -1,17 +1,15 @@
-using System;
-
 namespace DOL.GS.PropertyCalc
 {
-	/// <summary>
-	/// The critical hit chance calculator. Returns 0 .. 100 chance.
-	/// 
-	/// BuffBonusCategory1 unused
-	/// BuffBonusCategory2 unused
-	/// BuffBonusCategory3 unused
-	/// BuffBonusCategory4 for uncapped realm ability bonus
-	/// BuffBonusMultCategory1 unused
-	/// </summary>
-	[PropertyCalculator(eProperty.CriticalArcheryHitChance)]
+    /// <summary>
+    /// The critical hit chance calculator. Returns 0 .. 100 chance.
+    /// 
+    /// BuffBonusCategory1 unused
+    /// BuffBonusCategory2 unused
+    /// BuffBonusCategory3 unused
+    /// BuffBonusCategory4 for uncapped realm ability bonus
+    /// BuffBonusMultCategory1 unused
+    /// </summary>
+    [PropertyCalculator(eProperty.CriticalArcheryHitChance)]
 	public class CriticalArcheryHitChanceCalculator : PropertyCalculator
 	{
 		public CriticalArcheryHitChanceCalculator() {}

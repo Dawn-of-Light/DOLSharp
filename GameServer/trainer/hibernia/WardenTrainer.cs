@@ -16,16 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.PacketHandler;
-using DOL.Language;
 
 namespace DOL.GS.Trainer
 {
-	/// <summary>
-	/// Warden Trainer
-	/// </summary>
-	[NPCGuildScript("Warden Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Warden Trainer" NPC's in Albion (multiple guilds are possible for one script)
+    /// <summary>
+    /// Warden Trainer
+    /// </summary>
+    [NPCGuildScript("Warden Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Warden Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class WardenTrainer : GameTrainer
 	{
 		public override eCharacterClass TrainedClass
@@ -51,14 +49,14 @@ namespace DOL.GS.Trainer
 			// check if class matches.
 			if (player.CharacterClass.ID == (int) TrainedClass)
 			{
-				player.Out.SendMessage(this.Name + " says, \"Do you wish to learn some more, " + player.Name + "? Step up and receive your training!\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				player.Out.SendMessage(Name + " says, \"Do you wish to learn some more, " + player.Name + "? Step up and receive your training!\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			}
 			else
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
 				{
-					player.Out.SendMessage(this.Name + " says, \"Nidewst! You wish to follow the Path of Focus and train as a [Warden]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(Name + " says, \"Nidewst! You wish to follow the Path of Focus and train as a [Warden]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);

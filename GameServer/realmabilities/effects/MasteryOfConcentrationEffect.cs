@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
-using DOL.GS.SkillHandler;
-using DOL.Events;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public class MasteryofConcentrationEffect : TimedEffect, IGameEffect
+    /// <summary>
+    /// 
+    /// </summary>
+    public class MasteryofConcentrationEffect : TimedEffect, IGameEffect
 	{
 		/// <summary>
 		/// Default constructor for MasteryofConcentrationEffect

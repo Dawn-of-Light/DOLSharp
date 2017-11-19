@@ -18,18 +18,16 @@
  */
 using System;
 using System.Collections.Generic;
-using DOL.Database.Attributes;
-using DOL.GS;
 using DOL.Database;
 
 namespace DOL.GS.Styles
 {
-	/// <summary>
-	/// Holds all information needed for a Style in game.
-	/// Mainly this class contains the DBStyle class but
-	/// it converts some int values into the appropriate enums
-	/// </summary>
-	public class Style : Skill
+    /// <summary>
+    /// Holds all information needed for a Style in game.
+    /// Mainly this class contains the DBStyle class but
+    /// it converts some int values into the appropriate enums
+    /// </summary>
+    public class Style : Skill
 	{
 		/// <summary>
 		/// The opening type of a style

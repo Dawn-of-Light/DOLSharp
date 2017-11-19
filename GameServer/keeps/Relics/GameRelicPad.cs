@@ -1,9 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using DOL.Events;
-using DOL.Database;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 using System.Reflection;
@@ -11,7 +7,7 @@ using log4net;
 
 namespace DOL.GS
 {
-	public class GameRelicPad : GameStaticItem
+    public class GameRelicPad : GameStaticItem
 	{
 		const int PAD_AREA_RADIUS = 250;
 

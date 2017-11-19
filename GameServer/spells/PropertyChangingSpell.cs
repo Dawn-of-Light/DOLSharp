@@ -16,23 +16,21 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Reflection;
 using DOL.Database;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.PropertyCalc;
-using log4net;
 using DOL.AI.Brain;
 using System;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Spell to change up to 3 property bonuses at once
-	/// in one their specific given bonus category
-	/// </summary>
-	
-	public abstract class PropertyChangingSpell : SpellHandler
+    /// <summary>
+    /// Spell to change up to 3 property bonuses at once
+    /// in one their specific given bonus category
+    /// </summary>
+
+    public abstract class PropertyChangingSpell : SpellHandler
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		
@@ -106,7 +104,7 @@ namespace DOL.GS.Spells
 					}
 					if (this is ArmorFactorBuff)
 					{
-						if (SpellHandler.FindEffectOnTarget(target, "ArmorFactorBuff") != null && m_spellLine.IsBaseLine != true)
+						if (FindEffectOnTarget(target, "ArmorFactorBuff") != null && m_spellLine.IsBaseLine != true)
 						{
 							MessageToLiving(target, "You already have this effect!", eChatType.CT_SpellResisted);
 							return;
@@ -116,7 +114,7 @@ namespace DOL.GS.Spells
 				
 				if (this is HeatColdMatterBuff || this is AllMagicResistsBuff)
 				{
-					if (this.Spell.Frequency <= 0)
+					if (Spell.Frequency <= 0)
 					{
 						GameSpellEffect Matter = FindEffectOnTarget(player, "MatterResistBuff");
 						GameSpellEffect Cold = FindEffectOnTarget(player, "ColdResistBuff");
@@ -131,7 +129,7 @@ namespace DOL.GS.Spells
 				
 				if (this is BodySpiritEnergyBuff || this is AllMagicResistsBuff)
 				{
-					if (this.Spell.Frequency <= 0)
+					if (Spell.Frequency <= 0)
 					{
 						GameSpellEffect Body = FindEffectOnTarget(player, "BodyResistBuff");
 						GameSpellEffect Spirit = FindEffectOnTarget(player, "SpiritResistBuff");

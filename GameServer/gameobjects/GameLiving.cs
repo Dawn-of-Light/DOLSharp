@@ -44,7 +44,7 @@ namespace DOL.GS
 	/// </summary>
 	public abstract class GameLiving : GameObject
 	{
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		#region Combat
 		/// <summary>
@@ -1663,7 +1663,7 @@ namespace DOL.GS
 				return ad;
 			}
 			//We have no attacking distance!
-			if (!this.IsWithinRadius(ad.Target, ad.Target.ActiveWeaponSlot == eActiveWeaponSlot.Standard ? Math.Max(AttackRange, ad.Target.AttackRange) : AttackRange))
+			if (!IsWithinRadius(ad.Target, ad.Target.ActiveWeaponSlot == eActiveWeaponSlot.Standard ? Math.Max(AttackRange, ad.Target.AttackRange) : AttackRange))
 			{
 				ad.AttackResult = eAttackResult.OutOfRange;
 				return ad;
@@ -1796,11 +1796,11 @@ namespace DOL.GS
 				ad.UncappedDamage = ad.Damage;
 				ad.Damage = Math.Min(ad.Damage, (int)(UnstyledDamageCap(weapon) * effectiveness));
 
-				if ((this is GamePlayer || (this is GameNPC && (this as GameNPC).Brain is IControlledBrain && this.Realm != 0)) && target is GamePlayer)
+				if ((this is GamePlayer || (this is GameNPC && (this as GameNPC).Brain is IControlledBrain && Realm != 0)) && target is GamePlayer)
 				{
 					ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVP_MELEE_DAMAGE);
 				}
-				else if ((this is GamePlayer || (this is GameNPC && (this as GameNPC).Brain is IControlledBrain && this.Realm != 0)) && target is GameNPC)
+				else if ((this is GamePlayer || (this is GameNPC && (this as GameNPC).Brain is IControlledBrain && Realm != 0)) && target is GameNPC)
 				{
 					ad.Damage = (int)((double)ad.Damage * ServerProperties.Properties.PVE_MELEE_DAMAGE);
 				}
@@ -3309,7 +3309,7 @@ namespace DOL.GS
 					InterceptEffect inter = effect as InterceptEffect;
 					if (intercept == null && inter != null && inter.InterceptTarget == this && !inter.InterceptSource.IsStunned && !inter.InterceptSource.IsMezzed
 					    && !inter.InterceptSource.IsSitting && inter.InterceptSource.ObjectState == eObjectState.Active && inter.InterceptSource.IsAlive
-					    && this.IsWithinRadius(inter.InterceptSource, InterceptAbilityHandler.INTERCEPT_DISTANCE) && Util.Chance(inter.InterceptChance))
+					    && IsWithinRadius(inter.InterceptSource, InterceptAbilityHandler.INTERCEPT_DISTANCE) && Util.Chance(inter.InterceptChance))
 					{
 						intercept = inter;
 						continue;
@@ -4009,11 +4009,11 @@ namespace DOL.GS
 				{
 					int difference = (int)(0.25 * damageDealt); // RA absorb 25% damage
 					damageDealt -= difference;
-					GamePlayer TheMauler = (GamePlayer)(this.TempProperties.getProperty<object>("GiftOfPerizorOwner", null));
+					GamePlayer TheMauler = (GamePlayer)(TempProperties.getProperty<object>("GiftOfPerizorOwner", null));
 					if (TheMauler != null && TheMauler.IsAlive)
 					{
 						// Calculate mana using %. % is calculated with target maxhealth and damage difference, apply this % to mauler maxmana
-						double manareturned = (difference / this.MaxHealth * TheMauler.MaxMana);
+						double manareturned = (difference / MaxHealth * TheMauler.MaxMana);
 						TheMauler.ChangeMana(source, GameLiving.eManaChangeType.Spell, (int)manareturned);
 					}
 				}
@@ -4025,16 +4025,16 @@ namespace DOL.GS
 					// collect "helping" group players in range
 					foreach (GameLiving living in attackerGroup.GetMembersInTheGroup())
 					{
-						if (this.IsWithinRadius(living, WorldMgr.MAX_EXPFORKILL_DISTANCE) && living.IsAlive && living.ObjectState == eObjectState.Active)
+						if (IsWithinRadius(living, WorldMgr.MAX_EXPFORKILL_DISTANCE) && living.IsAlive && living.ObjectState == eObjectState.Active)
 							xpGainers.Add(living);
 					}
 
 					foreach (GameLiving living in xpGainers)
-						this.AddXPGainer(living, (float)(damageDealt / xpGainers.Count));
+                        AddXPGainer(living, (float)(damageDealt / xpGainers.Count));
 				}
 				else
 				{
-					this.AddXPGainer(source, (float)damageDealt);
+                    AddXPGainer(source, (float)damageDealt);
 				}
 				//DealDamage needs to be called after addxpgainer!
 			}
@@ -4093,12 +4093,12 @@ namespace DOL.GS
 			{
 				Notify(GameLivingEvent.AttackedByEnemy, this, new AttackedByEnemyEventArgs(ad));
 
-				if (this is GameNPC && ActiveWeaponSlot == eActiveWeaponSlot.Distance && this.IsWithinRadius(ad.Attacker, 150))
+				if (this is GameNPC && ActiveWeaponSlot == eActiveWeaponSlot.Distance && IsWithinRadius(ad.Attacker, 150))
 					((GameNPC)this).SwitchToMelee(ad.Attacker);
 
 				AddAttacker( ad.Attacker );
 
-				if (ad.Attacker.Realm == 0 || this.Realm == 0)
+				if (ad.Attacker.Realm == 0 || Realm == 0)
 				{
 					LastAttackedByEnemyTickPvE = CurrentRegion.Time;
 					ad.Attacker.LastAttackTickPvE = CurrentRegion.Time;
@@ -6031,7 +6031,7 @@ namespace DOL.GS
 				return false;
 			}
 			
-			if (!this.IsWithinRadius(target, WorldMgr.WHISPER_DISTANCE))
+			if (!IsWithinRadius(target, WorldMgr.WHISPER_DISTANCE))
 			{
 				return false;
 			}

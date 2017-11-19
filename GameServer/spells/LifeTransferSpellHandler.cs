@@ -28,7 +28,7 @@ namespace DOL.GS.Spells
 	/// Spell calculates a percentage of the caster's health.
 	/// Heals target for the full amount, Caster loses half that amount in health.
 	/// </summary>
-	[SpellHandlerAttribute("LifeTransfer")]
+	[SpellHandler("LifeTransfer")]
 	public class LifeTransferSpellHandler : SpellHandler
 	{
 		// constructor

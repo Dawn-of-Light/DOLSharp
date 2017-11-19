@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Mauler Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.MaulerHib, "Mauler", "Guardian")]
+    /// <summary>
+    /// Hibernia Mauler Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.MaulerHib, "Mauler", "Guardian")]
 	public class ClassMaulerHib : ClassGuardian
 	{
 		public ClassMaulerHib()

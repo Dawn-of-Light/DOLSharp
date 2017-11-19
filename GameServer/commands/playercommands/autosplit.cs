@@ -21,7 +21,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&autosplit",
+	[Cmd("&autosplit",
 		 ePrivLevel.Player,
 		 "Choose how the loot and money are split between members of group",
 		 "/autosplit on/off (Leader only: Toggles both coins and loot for entire group)",

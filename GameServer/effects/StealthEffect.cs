@@ -16,16 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 using DOL.Language;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// The helper class for the stealth ability
-	/// </summary>
-	public class StealthEffect : StaticEffect, IGameEffect
+    /// <summary>
+    /// The helper class for the stealth ability
+    /// </summary>
+    public class StealthEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// The owner of the effect

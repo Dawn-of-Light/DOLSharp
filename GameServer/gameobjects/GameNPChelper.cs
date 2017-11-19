@@ -17,15 +17,14 @@
  *
  */
 
-using System;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// GameNPC Helper Class is a collection of (static) GameNPC methods to avoid clutter in the GameNPC class itself.
-	/// </summary>
+    /// <summary>
+    /// GameNPC Helper Class is a collection of (static) GameNPC methods to avoid clutter in the GameNPC class itself.
+    /// </summary>
 
-	public static class GameNPCHelper
+    public static class GameNPCHelper
 	{
 
 		#region GameNPC cast methods

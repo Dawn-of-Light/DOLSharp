@@ -1,15 +1,11 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
-using DOL.GS.RealmAbilities;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Adrenaline Rush
-	/// </summary>
-	public class WhirlingStaffEffect : TimedEffect
+    /// <summary>
+    /// Adrenaline Rush
+    /// </summary>
+    public class WhirlingStaffEffect : TimedEffect
 	{
 		public WhirlingStaffEffect()
 			: base(6000)

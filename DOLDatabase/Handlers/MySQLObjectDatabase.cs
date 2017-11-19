@@ -22,10 +22,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Data;
-using DataTable = System.Data.DataTable;
 
 using DOL.Database.Connection;
-using DOL.Database.Transaction;
 using IsolationLevel = DOL.Database.Transaction.IsolationLevel;
 
 using MySql.Data.MySqlClient;
@@ -34,7 +32,7 @@ using log4net;
 
 namespace DOL.Database.Handlers
 {
-	public class MySQLObjectDatabase : SQLObjectDatabase
+    public class MySQLObjectDatabase : SQLObjectDatabase
 	{
 		/// <summary>
 		/// Defines a logger for this class.

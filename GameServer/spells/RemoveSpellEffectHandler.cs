@@ -16,16 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Base class for all spells that remove effects
-	/// </summary>
-	public abstract class RemoveSpellEffectHandler : SpellHandler
+    /// <summary>
+    /// Base class for all spells that remove effects
+    /// </summary>
+    public abstract class RemoveSpellEffectHandler : SpellHandler
 	{
 		/// <summary>
 		/// Stores spell effect type that will be removed

@@ -1,15 +1,9 @@
-using System;
-using System.Collections;
-using System.Reflection;
-using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
-using DOL.Events;
 using DOL.Database;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class WallOfFlameAbility : RR5RealmAbility
+    public class WallOfFlameAbility : RR5RealmAbility
 	{
 		public WallOfFlameAbility(DBAbility dba, int level) : base(dba, level) { }
 
@@ -36,7 +30,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				if (i_player == caster)
 				{
-					i_player.MessageToSelf("You cast " + this.Name + "!", eChatType.CT_Spell);
+					i_player.MessageToSelf("You cast " + Name + "!", eChatType.CT_Spell);
 				}
 				else
 				{

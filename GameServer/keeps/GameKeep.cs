@@ -64,9 +64,9 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				foreach (GameKeepTower tower in this.Towers)
+				foreach (GameKeepTower tower in Towers)
 				{
-					if (tower.Realm != this.Realm)
+					if (tower.Realm != Realm)
 						return false;
 				}
 				return true;
@@ -80,9 +80,9 @@ namespace DOL.GS.Keeps
 		public override int CalculateTimeToUpgrade()
 		{
 			if (Level < 10)
-				return UpgradeTime[this.Level + 1];
+				return UpgradeTime[Level + 1];
 			else 
-				return UpgradeTime[this.Level - 1];
+				return UpgradeTime[Level - 1];
 		}
 
 		/// <summary>

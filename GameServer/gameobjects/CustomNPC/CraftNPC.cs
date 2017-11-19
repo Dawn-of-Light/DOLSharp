@@ -16,15 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
-using System.Reflection;
 using DOL.GS.PacketHandler;
 using DOL.Language;
-using log4net;
 
 namespace DOL.GS
 {
-	public abstract class CraftNPC : GameNPC
+    public abstract class CraftNPC : GameNPC
 	{
 		public abstract string GUILD_ORDER { get; }
 

@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
@@ -25,10 +23,10 @@ using DOL.Language;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Reduce range needed to cast the sepll
-	/// </summary>
-	[SpellHandler("Nearsight")]
+    /// <summary>
+    /// Reduce range needed to cast the sepll
+    /// </summary>
+    [SpellHandler("Nearsight")]
 	public class NearsightSpellHandler : ImmunityEffectSpellHandler
 	{
         /// <summary>
@@ -53,7 +51,7 @@ namespace DOL.GS.Spells
 		/// <param name="effect"></param>
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
-			GameSpellEffect mezz = SpellHandler.FindEffectOnTarget(effect.Owner, "Mesmerize");
+			GameSpellEffect mezz = FindEffectOnTarget(effect.Owner, "Mesmerize");
  			if(mezz != null) mezz.Cancel(false);
 			// percent category
 			effect.Owner.DebuffCategory[(int)eProperty.ArcheryRange] += (int)Spell.Value;

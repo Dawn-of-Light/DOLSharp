@@ -16,23 +16,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections;
-using System.Reflection;
 
 using DOL.Database;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-
-using log4net;
 
 
 namespace DOL.GS.Keeps
 {
-	/// <summary>
-	/// relic keep door in world
-	/// </summary>
-	public class GameRelicDoor : GameLiving, IDoor
+    /// <summary>
+    /// relic keep door in world
+    /// </summary>
+    public class GameRelicDoor : GameLiving, IDoor
 	{
 		#region properties
 
@@ -156,9 +151,9 @@ namespace DOL.GS.Keeps
                 Point2D point;
 				//calculate x y
                 if ( IsObjectInFront( player, 180, false ) )
-                    point = this.GetPointFromHeading( this.Heading, -500 );
+                    point = GetPointFromHeading(Heading, -500 );
                 else
-                    point = this.GetPointFromHeading( this.Heading, 500 );
+                    point = GetPointFromHeading(Heading, 500 );
 
 				//move player
 				player.MoveTo(CurrentRegionID, point.X, point.Y, player.Z, player.Heading);
@@ -181,7 +176,7 @@ namespace DOL.GS.Keeps
 
 			IList list = base.GetExamineMessages(player);
 			string text = "You select the " + Name + ".";
-			if (this.Realm == player.Realm)
+			if (Realm == player.Realm)
 				text = text + " It belongs to your realm.";
 			else
 			{
@@ -242,7 +237,7 @@ namespace DOL.GS.Keeps
 
 			Zone curZone = WorldMgr.GetZone((ushort)(door.InternalID / 1000000));
 			if (curZone == null) return;
-			this.CurrentRegion = curZone.ZoneRegion;
+            CurrentRegion = curZone.ZoneRegion;
 			m_name = door.Name;
 			m_Heading = (ushort)door.Heading;
 			m_x = door.X;
@@ -252,7 +247,7 @@ namespace DOL.GS.Keeps
 			m_model = 0xFFFF;
 			m_doorID = door.InternalID;
 			m_state = eDoorState.Closed;
-			this.AddToWorld();
+            AddToWorld();
 
 			m_health = MaxHealth;
 			StartHealthRegeneration();

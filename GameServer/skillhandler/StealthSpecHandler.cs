@@ -20,16 +20,15 @@ using System;
 using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using System.Collections;
 using DOL.AI.Brain;
 using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
-	/// <summary>
-	/// Handler for Stealth Spec clicks
-	/// </summary>
-	[SkillHandlerAttribute(Specs.Stealth)]
+    /// <summary>
+    /// Handler for Stealth Spec clicks
+    /// </summary>
+    [SkillHandler(Specs.Stealth)]
 	public class StealthSpecHandler : ISpecActionHandler
 	{
 		/// <summary>

@@ -27,7 +27,7 @@ namespace DOL.GS.SkillHandler
 	/// <summary>
 	/// Handler for Sprint Ability clicks
 	/// </summary>
-	[SkillHandlerAttribute(Abilities.Engage)]
+	[SkillHandler(Abilities.Engage)]
 	public class EngageAbilityHandler : IAbilityActionHandler
 	{
 		/// <summary>

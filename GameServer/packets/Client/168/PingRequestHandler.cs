@@ -17,14 +17,13 @@
  *
  */
 using System;
-using System.Text;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	/// <summary>
-	/// Handles the ping packet
-	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.PingRequest, "Sends the ping reply", eClientStatus.None)]
+    /// <summary>
+    /// Handles the ping packet
+    /// </summary>
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.PingRequest, "Sends the ping reply", eClientStatus.None)]
 	public class PingRequestHandler : IPacketHandler
 	{
 		/// <summary>

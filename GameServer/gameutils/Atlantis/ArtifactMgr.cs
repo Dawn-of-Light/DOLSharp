@@ -17,9 +17,7 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using DOL.Database;
 using System.Reflection;
 using log4net;
@@ -29,11 +27,11 @@ using DOL.Events;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// The artifact manager.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public sealed class ArtifactMgr
+    /// <summary>
+    /// The artifact manager.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public sealed class ArtifactMgr
 	{
 		/// <summary>
 		/// Defines a logger for this class.

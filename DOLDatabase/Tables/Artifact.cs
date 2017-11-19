@@ -17,17 +17,15 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// An artifact.
-	/// </summary>
-	/// <author>Aredhel</author>
-	[DataTable(TableName = "Artifact")]
+    /// <summary>
+    /// An artifact.
+    /// </summary>
+    /// <author>Aredhel</author>
+    [DataTable(TableName = "Artifact")]
 	public class Artifact : DataObject
 	{
 		private String m_artifactID;

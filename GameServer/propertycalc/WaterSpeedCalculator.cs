@@ -16,22 +16,20 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.AI.Brain;
 
 namespace DOL.GS.PropertyCalc
 {
-	/// <summary>
-	/// The Character Stat calculator
-	/// 
-	/// BuffBonusCategory1 is used for all single stat buffs
-	/// BuffBonusCategory2 is used for all dual stat buffs
-	/// BuffBonusCategory3 is used for all debuffs (positive values expected here)
-	/// BuffBonusCategory4 is used for all other uncapped modifications
-	///                    category 4 kicks in at last
-	/// BuffBonusMultCategory1 used after all buffs/debuffs
-	/// </summary>
-	[PropertyCalculator(eProperty.WaterSpeed)]
+    /// <summary>
+    /// The Character Stat calculator
+    /// 
+    /// BuffBonusCategory1 is used for all single stat buffs
+    /// BuffBonusCategory2 is used for all dual stat buffs
+    /// BuffBonusCategory3 is used for all debuffs (positive values expected here)
+    /// BuffBonusCategory4 is used for all other uncapped modifications
+    ///                    category 4 kicks in at last
+    /// BuffBonusMultCategory1 used after all buffs/debuffs
+    /// </summary>
+    [PropertyCalculator(eProperty.WaterSpeed)]
 	public class WaterSpeedCalculator : PropertyCalculator
 	{
 		public WaterSpeedCalculator() { }

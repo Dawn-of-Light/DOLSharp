@@ -17,12 +17,10 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
 using DOL.Language;
-using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
@@ -33,10 +31,10 @@ using log4net;
 
 namespace DOL.GS.Styles
 {
-	/// <summary>
-	/// Processes styles and style related stuff.
-	/// </summary>
-	public class StyleProcessor
+    /// <summary>
+    /// Processes styles and style related stuff.
+    /// </summary>
+    public class StyleProcessor
 	{
 		/// <summary>
 		/// Defines a logger for this class.

@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.Scripts
 {
-	/// <summary>
-	/// PortalCeremonyExampleNPC is a sample Ceremony using "111500001" NpcTemplate and teleporting players every minutes to Emain Macha ! Using Warning Effects !
-	/// </summary>
-	public class PortalCeremonyExampleNPC : PortalCeremonyBaseNPC
+    /// <summary>
+    /// PortalCeremonyExampleNPC is a sample Ceremony using "111500001" NpcTemplate and teleporting players every minutes to Emain Macha ! Using Warning Effects !
+    /// </summary>
+    public class PortalCeremonyExampleNPC : PortalCeremonyBaseNPC
 	{
 		protected override int PortalTeleportersTemplateID
 		{

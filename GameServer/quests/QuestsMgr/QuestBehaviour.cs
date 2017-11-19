@@ -17,20 +17,16 @@
  *
  */
 using System;
-using DOL.GS.PacketHandler;
-using System.Collections;
-using DOL.Database;
 using DOL.Events;
-using DOL.AI.Brain;
 using log4net;
 using System.Reflection;
 using DOL.GS.Behaviour;
 
 namespace DOL.GS.Quests
-{    
-        			
-	/// <summary>
-	/// BaseQuestParts are the core element of the new questsystem,
+{
+
+    /// <summary>
+    /// BaseQuestParts are the core element of the new questsystem,
     /// you can add as many QuestAction to a quest as you want. 
     /// 
     /// A QuestAction contains basically 3 Things: Trigger, Requirements, Actions 
@@ -47,8 +43,8 @@ namespace DOL.GS.Quests
     /// a QuestAction will we executed one after another. Actions can be more or less anything:
     /// at the moment there are: GiveItem, TakeItem, Talk, Give Quest, Increase Quest Step, FinishQuest,
     /// etc....
-	/// </summary>
-	public class QuestBehaviour : BaseBehaviour
+    /// </summary>
+    public class QuestBehaviour : BaseBehaviour
     {
 
         public const string NUMBER_OF_EXECUTIONS = "quest.numberOfExecutions";
@@ -99,8 +95,8 @@ namespace DOL.GS.Quests
         /// <param name="executions">Maximum number of executions the questpart should be execute during one quest for each player</param>
         public QuestBehaviour(Type questType, GameNPC npc, int executions) : base (npc)
         {
-            this.questType = questType;            
-            this.maxNumberOfExecutions = executions;            
+            this.questType = questType;
+            maxNumberOfExecutions = executions;            
         }                
 
         /// <summary>
@@ -123,12 +119,12 @@ namespace DOL.GS.Quests
             AbstractQuest quest = player.IsDoingQuest(QuestType);
             
             int executions = 0;
-            if (quest != null && quest.GetCustomProperty(this.ID + "_" + NUMBER_OF_EXECUTIONS) != null)
+            if (quest != null && quest.GetCustomProperty(ID + "_" + NUMBER_OF_EXECUTIONS) != null)
             {
                 executions = Convert.ToInt32(quest.GetCustomProperty(ID + "_" + NUMBER_OF_EXECUTIONS));                
             }
 
-            if (MaxNumberOfExecutions < 0 || executions < this.MaxNumberOfExecutions)
+            if (MaxNumberOfExecutions < 0 || executions < MaxNumberOfExecutions)
             {
                 if (CheckTriggers(e, sender, args) && CheckRequirements(e, sender, args) && Actions != null)
                 {
@@ -137,7 +133,7 @@ namespace DOL.GS.Quests
                         action.Perform(e, sender, args);
                     }
                     if (quest != null)
-                        quest.SetCustomProperty(this.ID + "_" + NUMBER_OF_EXECUTIONS, Convert.ToString(executions + 1));                                                        
+                        quest.SetCustomProperty(ID + "_" + NUMBER_OF_EXECUTIONS, Convert.ToString(executions + 1));                                                        
                 }                
             }
 		}

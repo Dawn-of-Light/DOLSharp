@@ -1,8 +1,4 @@
-using System.Reflection;
-using System.Collections;
 using DOL.Database;
-using DOL.GS;
-using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 using System.Collections.Generic;

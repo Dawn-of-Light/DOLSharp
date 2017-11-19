@@ -20,7 +20,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&invite",
 		ePrivLevel.Player,
 		"Invite a specified or targeted player to join your group", "/invite <player>")]

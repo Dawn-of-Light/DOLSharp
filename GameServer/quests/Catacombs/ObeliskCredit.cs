@@ -17,18 +17,16 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.Database;
 using DOL.Events;
 
 namespace DOL.GS.Quests.Catacombs.Obelisks
 {
-	/// <summary>
-	/// Base class for quests that serve as credit only.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class ObeliskCredit : AbstractQuest
+    /// <summary>
+    /// Base class for quests that serve as credit only.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class ObeliskCredit : AbstractQuest
 	{
 		public ObeliskCredit(GamePlayer questingPlayer)
 			: base(questingPlayer) { }

@@ -17,13 +17,12 @@
  *
  */
 using System.Reflection;
-using DOL;
 using DOL.Network;
 using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.ClientCrash, "Handles client crash packets", eClientStatus.None)]
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.ClientCrash, "Handles client crash packets", eClientStatus.None)]
 	public class ClientCrashPacketHandler : IPacketHandler
 	{
 		/// <summary>

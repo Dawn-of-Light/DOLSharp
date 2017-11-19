@@ -3,11 +3,10 @@ using System.Collections;
 using System.Reflection;
 using DOL.GS.Utils;
 using log4net;
-using Hashtable = DOL.GS.Collections.Hashtable;
-using DictionaryEntry = DOL.GS.Collections.DictionaryEntry;
 
-namespace DOL.GS.Collections {
-	class DictionaryEntry {
+namespace DOL.GS.Collections
+{
+    class DictionaryEntry {
 		public object key = null;
 		public object value = null;
 	}
@@ -60,7 +59,7 @@ namespace DOL.GS.Collections {
 
 		public Hashtable(int initialSize) {
 			if (initialSize <= 0) {
-				throw new ArgumentOutOfRangeException("The initial size of a " + this.GetType() + " may not be neither 0 nor a negative number");
+				throw new ArgumentOutOfRangeException("The initial size of a " + GetType() + " may not be neither 0 nor a negative number");
 			}
 
 			if (initialSize < LIST_SIZE_THRESHOLD) {
@@ -76,7 +75,7 @@ namespace DOL.GS.Collections {
 
 		public Hashtable(int initialSize, float loadFactor) {
 			if (initialSize <= 0) {
-				throw new ArgumentOutOfRangeException("The initial size of a " + this.GetType() + " may not be neither 0 nor a negative number");
+				throw new ArgumentOutOfRangeException("The initial size of a " + GetType() + " may not be neither 0 nor a negative number");
 			}
 
 			if ((loadFactor <= 0.0f) || (loadFactor > 1.0f)) {

@@ -1,15 +1,12 @@
 using System;
-using System.Collections;
 using System.Reflection;
-
-using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS.Quests
 {
-	public class TaskDungeonMission : AbstractMission
+    public class TaskDungeonMission : AbstractMission
 	{
         /// <summary>
         /// Defines a logger for this class.

@@ -1,14 +1,11 @@
-using System.Reflection;
 using System.Collections;
-using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
 using DOL.Database;
 using DOL.GS.Spells;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class BedazzlingAuraAbility : TimedRealmAbility
+    public class BedazzlingAuraAbility : TimedRealmAbility
 	{
 		public BedazzlingAuraAbility(DBAbility dba, int level) : base(dba, level) { }
 

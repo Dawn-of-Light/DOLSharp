@@ -16,17 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.Database;
 using DOL.GS.PacketHandler;
-using DOL.Language;
 
 namespace DOL.GS.Trainer
 {
-	/// <summary>
-	/// Magician Trainer
-	/// </summary>
-	[NPCGuildScript("Magician Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Magician Trainer" NPC's in Albion (multiple guilds are possible for one script)
+    /// <summary>
+    /// Magician Trainer
+    /// </summary>
+    [NPCGuildScript("Magician Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Magician Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class MagicianTrainer : GameTrainer
 	{
 		public override eCharacterClass TrainedClass
@@ -55,7 +52,7 @@ namespace DOL.GS.Trainer
 				// player can be promoted
 				if (player.Level>=5)
 				{
-					player.Out.SendMessage(this.Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Eldritch], [Enchanter] or [Mentalist]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Eldritch], [Enchanter] or [Mentalist]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				}
 				else
 				{
@@ -65,7 +62,7 @@ namespace DOL.GS.Trainer
 				// ask for basic equipment if player doesnt own it
 				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.MinEquipable, eInventorySlot.LastBackpack) == null)
 				{
-					player.Out.SendMessage(this.Name + " says, \"Do you require a [practice staff]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(Name + " says, \"Do you require a [practice staff]?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				}
 				
 			}
@@ -90,28 +87,28 @@ namespace DOL.GS.Trainer
 			switch (text) {
 				case "Eldritch":
 					if(player.Race == (int) eRace.Elf || player.Race == (int) eRace.Lurikeen){
-						player.Out.SendMessage(this.Name + " says, \"I can't tell you something about this class.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(Name + " says, \"I can't tell you something about this class.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					}
 					else{
-						player.Out.SendMessage(this.Name + " says, \"The path of a Eldritch is not available to your race. Please choose another.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(Name + " says, \"The path of a Eldritch is not available to your race. Please choose another.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					}
 					return true;
 				case "Enchanter":
 					if(player.Race == (int) eRace.Elf || player.Race == (int) eRace.Lurikeen){
-						player.Out.SendMessage(this.Name + " says, \"I can't tell you something about this class.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(Name + " says, \"I can't tell you something about this class.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					}
 					else{
-						player.Out.SendMessage(this.Name + " says, \"The path of a Enchanter is not available to your race. Please choose another.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(Name + " says, \"The path of a Enchanter is not available to your race. Please choose another.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					}
 					return true;
 				case "Mentalist":
 					if(player.Race == (int) eRace.Celt || player.Race == (int) eRace.Elf || player.Race == (int) eRace.Lurikeen || player.Race == (int) eRace.Shar)
 					{
-						player.Out.SendMessage(this.Name + " says, \"I can't tell you something about this class.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(Name + " says, \"I can't tell you something about this class.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					}
 					else
 					{
-						player.Out.SendMessage(this.Name + " says, \"The path of a Mentalist is not available to your race. Please choose another.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(Name + " says, \"The path of a Mentalist is not available to your race. Please choose another.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					}
 					return true;
 				case "practice staff":

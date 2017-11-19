@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 using DOL.AI.Brain;
@@ -31,7 +30,7 @@ using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[Cmd("&GMinfo", ePrivLevel.GM, "Various Information", "'/GMinfo (select a target or not)")]
+    [Cmd("&GMinfo", ePrivLevel.GM, "Various Information", "'/GMinfo (select a target or not)")]
 	
 	public class GMInfoCommandHandler : AbstractCommandHandler, ICommandHandler
 	{

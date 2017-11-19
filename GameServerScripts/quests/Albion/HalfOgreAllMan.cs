@@ -31,7 +31,6 @@
 
 using System;
 using System.Reflection;
-using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
@@ -47,13 +46,13 @@ using log4net;
 
 namespace DOL.GS.Quests.Albion
 {
-	/* The first thing we do, is to declare the class we create
+    /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
 	 * AbstractQuest
 	 * 	 
 	 */
 
-	public class HalfOgreAllMan : BaseQuest
+    public class HalfOgreAllMan : BaseQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -154,7 +153,7 @@ namespace DOL.GS.Quests.Albion
 			
 			#region defineNPCS
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Madissair", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Madissair", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				madissair = new GameNPC();
@@ -195,7 +194,7 @@ namespace DOL.GS.Quests.Albion
 				madissair = npcs[0];
 
 
-			npcs = WorldMgr.GetNPCsByName("Eileen Morton", eRealm.Albion);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Eileen Morton", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				eileenMorton = new GameNPC();
@@ -235,7 +234,7 @@ namespace DOL.GS.Quests.Albion
 				eileenMorton = npcs[0];
 
 
-			npcs = WorldMgr.GetNPCsByName("Scribe Veral", eRealm.Albion);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Scribe Veral", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				scribeVeral = new GameNPC();
@@ -273,7 +272,7 @@ namespace DOL.GS.Quests.Albion
 				scribeVeral = npcs[0];
 
 
-			npcs = WorldMgr.GetNPCsByName("Serawen", eRealm.Albion);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Serawen", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				serawen = new GameNPC();

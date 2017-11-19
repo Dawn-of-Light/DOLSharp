@@ -16,17 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
-	/// <summary>
-	/// Handler for Rapid Fire ability
-	/// </summary>
-	[SkillHandlerAttribute(Abilities.RapidFire)]
+    /// <summary>
+    /// Handler for Rapid Fire ability
+    /// </summary>
+    [SkillHandler(Abilities.RapidFire)]
 	public class RapidFireAbilityHandler : IAbilityActionHandler
 	{
 		public void Execute(Ability ab, GamePlayer player)

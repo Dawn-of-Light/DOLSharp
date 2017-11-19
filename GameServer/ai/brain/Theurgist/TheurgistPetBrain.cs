@@ -17,20 +17,14 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.Events;
 using DOL.GS;
 using log4net;
 using System.Reflection;
-using System.Collections;
-using DOL.GS.Spells;
-using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
 
 namespace DOL.AI.Brain
 {
-	public class TheurgistPetBrain : StandardMobBrain, IControlledBrain
+    public class TheurgistPetBrain : StandardMobBrain, IControlledBrain
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 

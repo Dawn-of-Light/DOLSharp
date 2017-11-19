@@ -18,12 +18,11 @@
  */
 
 using System;
-using System.Text;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "BugReport")]
+    [DataTable(TableName = "BugReport")]
 	public class BugReport : DataObject
 	{
 		private int m_reportID;

@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	[SpellHandlerAttribute("CurePoison")]
+    /// <summary>
+    /// 
+    /// </summary>
+    [SpellHandler("CurePoison")]
 	public class CurePoisonSpellHandler : RemoveSpellEffectHandler
 	{
 		// constructor

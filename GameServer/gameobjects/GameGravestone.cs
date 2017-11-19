@@ -16,19 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
-using DOL.Database;
 using DOL.Language;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// This class holds all information that
-	/// EVERY object in the game world needs!
-	/// </summary>
-	public class GameGravestone : GameStaticItem
+    /// <summary>
+    /// This class holds all information that
+    /// EVERY object in the game world needs!
+    /// </summary>
+    public class GameGravestone : GameStaticItem
 	{
 		/// <summary>
 		/// how much xp are stored in this gravestone

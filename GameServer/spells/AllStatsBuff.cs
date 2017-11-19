@@ -16,15 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.AI.Brain;
-using DOL.GS;
-using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
 {
-    [SpellHandlerAttribute("AllStatsBuff")]
+    [SpellHandler("AllStatsBuff")]
     public class AllStatsBuff : SpellHandler
     {
 		public override int CalculateSpellResistChance(GameLiving target) { return 0; }

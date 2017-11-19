@@ -1,13 +1,11 @@
-using DOL.Database;
 using DOL.Database.Attributes;
-using System;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Table to hold positions of various Keep objects
-	/// </summary>
-	[DataTable(TableName = "KeepPosition")]
+    /// <summary>
+    /// Table to hold positions of various Keep objects
+    /// </summary>
+    [DataTable(TableName = "KeepPosition")]
 	public class DBKeepPosition : DataObject
 	{
 		private int m_componentSkin;

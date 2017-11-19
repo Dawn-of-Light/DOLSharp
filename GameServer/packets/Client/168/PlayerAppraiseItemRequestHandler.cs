@@ -21,7 +21,7 @@ using DOL.GS.Housing;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.PlayerAppraiseItemRequest, "Player Appraise Item Request handler.", eClientStatus.PlayerInGame)]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.PlayerAppraiseItemRequest, "Player Appraise Item Request handler.", eClientStatus.PlayerInGame)]
 	public class PlayerAppraiseItemRequestHandler : IPacketHandler
 	{
 		#region IPacketHandler Members

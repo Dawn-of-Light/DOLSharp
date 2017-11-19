@@ -131,7 +131,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineNPCS
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Sir Jerem", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Sir Jerem", eRealm.Albion);
 
 			/* Whops, if the npcs array length is 0 then no npc exists in
 				* this users Mob Database, so we simply create one ;-)
@@ -180,7 +180,7 @@ namespace DOL.GS.Quests.Albion
 			else
 				sirJerem = npcs[0];
 
-			npcs = WorldMgr.GetNPCsByName("Squire Galune", eRealm.Albion);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Squire Galune", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				squireGalune = new GameNPC();

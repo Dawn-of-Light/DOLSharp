@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Spell Table containing entry for each game SpellHandler behavior.
-	/// </summary>
-	[DataTable(TableName = "Spell")]
+    /// <summary>
+    /// Spell Table containing entry for each game SpellHandler behavior.
+    /// </summary>
+    [DataTable(TableName = "Spell")]
 	public class DBSpell : DataObject
 	{
 		protected int m_spellid;
@@ -609,12 +608,12 @@ namespace DOL.Database
 		{
 			get
 			{
-				return this.m_packageID;
+				return m_packageID;
 			}
 			set
 			{
-				this.m_packageID = value;
-				this.Dirty = true;
+                m_packageID = value;
+                Dirty = true;
 			}
 		}
 		#endregion
@@ -624,12 +623,12 @@ namespace DOL.Database
 		{
 			get
 			{
-				return this.m_tooltipId;
+				return m_tooltipId;
 			}
 			set
 			{
-				this.m_tooltipId = value;
-				this.Dirty = true;
+                m_tooltipId = value;
+                Dirty = true;
 			}
 		}
 		

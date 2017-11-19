@@ -145,7 +145,7 @@ namespace DOL.GS.Quests
                 // TODO: Dirty Hack this should be done better
                 Mob mob = GameServer.Database.SelectObjects<Mob>("`Mob_ID` = @MobID OR `Name` = @Name", new[] { new QueryParameter("@MobID", tempID), new QueryParameter("@Name", tempID) }).FirstOrDefault();
 
-                GameNPC[] livings = WorldMgr.GetNPCsByName(mob.Name,(eRealm) mob.Realm);
+                GameNPC[] livings = WorldMgr.GetObjectsByName<GameNPC>(mob.Name,(eRealm) mob.Realm);
 
                 if (livings.Length == 1)
                     living = livings[0];
@@ -208,7 +208,7 @@ namespace DOL.GS.Quests
 
                 Mob mob = GameServer.Database.SelectObjects<Mob>("`Mob_ID` = @MobID OR `Name` = @Name", new[] { new QueryParameter("@MobID", tempID), new QueryParameter("@Name", tempID) }).FirstOrDefault();
 
-				GameNPC[] npcs = WorldMgr.GetNPCsByName(mob.Name,(eRealm) mob.Realm);
+				GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>(mob.Name,(eRealm) mob.Realm);
 
                 if (npcs.Length == 1)
                 {

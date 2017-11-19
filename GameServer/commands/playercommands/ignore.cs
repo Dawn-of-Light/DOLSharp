@@ -15,14 +15,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. 
  */
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
     /// <summary>
     /// Command handler for the /ignore command
     /// </summary>
-    [CmdAttribute(
+    [Cmd(
         "&ignore",
         ePrivLevel.Player,
         "Adds/Removes a player to/from your Ignorelist!",

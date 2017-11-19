@@ -18,7 +18,7 @@
  */
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 	"&siegeweapon",
 	ePrivLevel.GM,
 	"creates siege weapons",

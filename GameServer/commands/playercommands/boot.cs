@@ -3,7 +3,7 @@ using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 	  "&boot",
 	  ePrivLevel.Player,
 	   "Kicks a player out of your house",

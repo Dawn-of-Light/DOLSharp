@@ -24,7 +24,6 @@ using System.Linq;
 
 using DOL.Database;
 using DOL.Events;
-using DOL.GS;
 using DOL.GS.ServerProperties;
 
 using log4net;
@@ -32,11 +31,11 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	/// <summary>
-	/// Character Create and Customization handler.  Please maintain all commented debug statements
-	/// in order to support future debugging. - Tolakram
-	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.CharacterCreateRequest, "Handles character creation requests", eClientStatus.LoggedIn)]
+    /// <summary>
+    /// Character Create and Customization handler.  Please maintain all commented debug statements
+    /// in order to support future debugging. - Tolakram
+    /// </summary>
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.CharacterCreateRequest, "Handles character creation requests", eClientStatus.LoggedIn)]
 	public class CharacterCreateRequestHandler : IPacketHandler
 	{
 		/// <summary>

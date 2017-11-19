@@ -17,16 +17,15 @@
  *
  */
 using System;
-using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS.Trainer
 {
-	/// <summary>
-	/// Mauler Trainer
-	/// </summary>
-	[NPCGuildScript("Mauler Trainer", eRealm.Hibernia)]
+    /// <summary>
+    /// Mauler Trainer
+    /// </summary>
+    [NPCGuildScript("Mauler Trainer", eRealm.Hibernia)]
 	public class HiberniaMaulerTrainer : GameTrainer
 	{
 		public override eCharacterClass TrainedClass
@@ -49,14 +48,14 @@ namespace DOL.GS.Trainer
 			// check if class matches.
 			if (player.CharacterClass.ID == (int) TrainedClass)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "MaulerHibTrainer.Interact.Text2", this.Name), eChatType.CT_System, eChatLoc.CL_ChatWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "MaulerHibTrainer.Interact.Text2", Name), eChatType.CT_System, eChatLoc.CL_ChatWindow);
 			}
 			else
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "MaulerHibTrainer.Interact.Text1", this.Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "MaulerHibTrainer.Interact.Text1", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 
 					if (!player.IsLevelRespecUsed)
 					{

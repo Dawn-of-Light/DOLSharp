@@ -6,7 +6,7 @@ using DOL.Events;
 namespace DOL.GS.Spells
 {
 
-	[SpellHandlerAttribute("HereticPiercingMagic")]
+	[SpellHandler("HereticPiercingMagic")]
 	public class HereticPiercingMagic : SpellHandler
 	{
         protected GameLiving focustarget = null;

@@ -17,16 +17,13 @@
  *
  */
 using System;
-using System.Collections;
-using System.Reflection;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
-using DOL.Events;
 using DOL.Database;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class MasteryofConcentrationAbility : TimedRealmAbility
+    public class MasteryofConcentrationAbility : TimedRealmAbility
 	{
         public MasteryofConcentrationAbility(DBAbility dba, int level) : base(dba, level) { }
 		public const Int32 Duration = 30 * 1000;
@@ -62,7 +59,7 @@ namespace DOL.GS.RealmAbilities
 				{
 					if (player == caster)
 					{
-						player.MessageToSelf("You cast " + this.Name + "!", eChatType.CT_Spell);
+						player.MessageToSelf("You cast " + Name + "!", eChatType.CT_Spell);
 						player.MessageToSelf("You become steadier in your casting abilities!", eChatType.CT_Spell);
 					}
 					else

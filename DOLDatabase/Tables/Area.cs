@@ -1,10 +1,8 @@
-using System;
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "Area")]
+    [DataTable(TableName = "Area")]
 	public class DBArea : DataObject
 	{
         private string m_translationId;

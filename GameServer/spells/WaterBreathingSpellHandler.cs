@@ -16,18 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  *///made by DeMAN
-using System;
-using System.Reflection;
 using DOL.GS.PacketHandler;
 using DOL.Database;
 using DOL.GS.Effects;
-using DOL.Events;
-using log4net;
 
 
 namespace DOL.GS.Spells
 {
-	[SpellHandlerAttribute("WaterBreathing")]
+    [SpellHandler("WaterBreathing")]
 	public class WaterBreathingSpellHandler : SpellHandler
 	{
 		public WaterBreathingSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }

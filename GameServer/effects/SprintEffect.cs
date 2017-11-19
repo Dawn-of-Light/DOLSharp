@@ -16,18 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using DOL.Language;
-
-using DOL.GS.RealmAbilities;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// The helper class for sprint ability
-	/// </summary>
-	public sealed class SprintEffect : StaticEffect, IGameEffect
+    /// <summary>
+    /// The helper class for sprint ability
+    /// </summary>
+    public sealed class SprintEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// The timer that reduce the endurance every interval

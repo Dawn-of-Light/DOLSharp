@@ -1,14 +1,10 @@
-using System.Reflection;
-using System.Collections;
 using System.Collections.Generic;
-using DOL.GS;
-using DOL.GS.PacketHandler;
 using DOL.Database;
 using DOL.GS.Spells;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class AngerOfTheGodsAbility : TimedRealmAbility
+    public class AngerOfTheGodsAbility : TimedRealmAbility
 	{
         private DBSpell m_dbspell;
         private Spell m_spell = null;

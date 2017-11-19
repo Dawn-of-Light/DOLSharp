@@ -16,23 +16,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.Database;
-using DOL.Events;
-using System.Reflection;
 using System.Collections;
 using DOL.AI.Brain;
 
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// The Hibernia dragon.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class Cuuldurach : GameDragon
+    /// <summary>
+    /// The Hibernia dragon.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class Cuuldurach : GameDragon
 	{
 		#region Add Spawns
 
@@ -131,7 +126,7 @@ namespace DOL.GS
 			{
 				glimmer = SpawnTimedAdd(624+Util.Random(2), Util.Random(62, 68), x + Util.Random(250), y + Util.Random(250), 120, false);
 
-				if (glimmer != null && glimmer.Brain is StandardMobBrain && this.Brain is DragonBrain)
+				if (glimmer != null && glimmer.Brain is StandardMobBrain && Brain is DragonBrain)
 				{
 					(Brain as DragonBrain).AddAggroListTo(glimmer.Brain as StandardMobBrain);
 				}

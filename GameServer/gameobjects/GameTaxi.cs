@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.AI.Brain;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public class GameTaxi : GameNPC
+    /// <summary>
+    /// 
+    /// </summary>
+    public class GameTaxi : GameNPC
 	{
 		public GameTaxi() : base()
 		{

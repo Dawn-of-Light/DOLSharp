@@ -18,13 +18,12 @@
  */
 using System;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
 using DOL.Language;
 using DOL.Database;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		"&crafting",
 		ePrivLevel.GM,
 		"GMCommands.Crafting.Description",

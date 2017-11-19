@@ -16,16 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Reduce range needed to cast the sepll
-	/// </summary>
-	[SpellHandler("Silence")]
+    /// <summary>
+    /// Reduce range needed to cast the sepll
+    /// </summary>
+    [SpellHandler("Silence")]
 	public class SilenceSpellHandler : SpellHandler
 	{
 		/// <summary>
@@ -36,7 +35,7 @@ namespace DOL.GS.Spells
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
             GameSpellEffect effect;
-            effect = SpellHandler.FindEffectOnTarget(target, "Silence");
+            effect = FindEffectOnTarget(target, "Silence");
 			if(effect!=null)
             {
 				MessageToCaster("Your target already have an effect of that type!", eChatType.CT_SpellResisted);

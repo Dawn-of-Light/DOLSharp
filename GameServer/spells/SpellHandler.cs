@@ -40,7 +40,7 @@ namespace DOL.GS.Spells
 	/// </summary>
 	public class SpellHandler : ISpellHandler
 	{
-		private static readonly ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// Maximum number of sub-spells to get delve info for.
@@ -1551,7 +1551,7 @@ namespace DOL.GS.Spells
 		public virtual int PowerCost(GameLiving target)
 		{
 			// warlock
-			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(m_caster, "Powerless");
+			GameSpellEffect effect = FindEffectOnTarget(m_caster, "Powerless");
 			if (effect != null && !m_spell.IsPrimary)
 				return 0;
 
@@ -1923,11 +1923,11 @@ namespace DOL.GS.Spells
 			//cancelling before the spell was fired.
 			if (m_spell.SpellType != "Powerless" && m_spell.SpellType != "Range" && m_spell.SpellType != "Uninterruptable")
 			{
-				GameSpellEffect effect = SpellHandler.FindEffectOnTarget(m_caster, "Powerless");
+				GameSpellEffect effect = FindEffectOnTarget(m_caster, "Powerless");
 				if (effect == null)
-					effect = SpellHandler.FindEffectOnTarget(m_caster, "Range");
+					effect = FindEffectOnTarget(m_caster, "Range");
 				if (effect == null)
-					effect = SpellHandler.FindEffectOnTarget(m_caster, "Uninterruptable");
+					effect = FindEffectOnTarget(m_caster, "Uninterruptable");
 
 				//if we found an effect, cancel it!
 				if (effect != null)
@@ -1993,7 +1993,7 @@ namespace DOL.GS.Spells
 			ushort modifiedRadius = (ushort)Spell.Radius;
 			int newtarget = 0;
 
-			GameSpellEffect TargetMod = SpellHandler.FindEffectOnTarget(m_caster, "TargetModifier");
+			GameSpellEffect TargetMod = FindEffectOnTarget(m_caster, "TargetModifier");
 			if (TargetMod != null)
 			{
 				if (modifiedTarget == "enemy" || modifiedTarget == "realm" || modifiedTarget == "group")
@@ -2591,7 +2591,7 @@ namespace DOL.GS.Spells
             if (target is GamePlayer)
 			{
 				GameSpellEffect effect1;
-				effect1 = SpellHandler.FindEffectOnTarget(target, "Phaseshift");
+				effect1 = FindEffectOnTarget(target, "Phaseshift");
 				if ((effect1 != null && (Spell.SpellType != "SpreadHeal" || Spell.SpellType != "Heal" || Spell.SpellType != "SpeedEnhancement")))
 				{
 					MessageToCaster(target.Name + " is Phaseshifted and can't be effected by this Spell!", eChatType.CT_SpellResisted);
@@ -3685,7 +3685,7 @@ namespace DOL.GS.Spells
 			int bonustohit = m_caster.GetModified(eProperty.ToHitBonus);
 
 			//Piercing Magic affects to-hit bonus too
-			GameSpellEffect resPierce = SpellHandler.FindEffectOnTarget(m_caster, "PenetrateResists");
+			GameSpellEffect resPierce = FindEffectOnTarget(m_caster, "PenetrateResists");
 			if (resPierce != null)
 				bonustohit += (int)resPierce.Spell.Value;
 
@@ -3810,7 +3810,7 @@ namespace DOL.GS.Spells
 			}
 
 			// Well the PenetrateResistBuff is NOT ResistPierce
-			GameSpellEffect penPierce = SpellHandler.FindEffectOnTarget(m_caster, "PenetrateResists");
+			GameSpellEffect penPierce = FindEffectOnTarget(m_caster, "PenetrateResists");
 			if (penPierce != null)
 			{
 				finalDamage = (int)(finalDamage * (1.0 + penPierce.Spell.Value / 100.0));

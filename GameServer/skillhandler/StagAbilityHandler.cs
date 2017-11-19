@@ -16,21 +16,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using System.Reflection;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
-using DOL.Events;
 using log4net;
 using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
-	/// <summary>
-	/// Handler for Stag Ability clicks
-	/// </summary>
-	[SkillHandler(Abilities.Stag)]
+    /// <summary>
+    /// Handler for Stag Ability clicks
+    /// </summary>
+    [SkillHandler(Abilities.Stag)]
 	public class StagAbilityHandler : IAbilityActionHandler
 	{
 		/// <summary>

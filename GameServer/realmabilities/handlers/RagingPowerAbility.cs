@@ -1,14 +1,13 @@
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Raging power, power heal
-	/// </summary>
-	public class RagingPowerAbility : TimedRealmAbility
+    /// <summary>
+    /// Raging power, power heal
+    /// </summary>
+    public class RagingPowerAbility : TimedRealmAbility
 	{
 		public RagingPowerAbility(DBAbility dba, int level) : base(dba, level) { }
 

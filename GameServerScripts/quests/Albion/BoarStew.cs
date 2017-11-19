@@ -141,7 +141,7 @@ namespace DOL.GS.Quests.Albion
 
             #region defineNPCs
 
-            GameNPC[] npcs = WorldMgr.GetNPCsByName("Master Gerol", eRealm.Albion);
+            GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Master Gerol", eRealm.Albion);
             if (npcs.Length == 0)
             {
                 masterGerol = new GameNPC();

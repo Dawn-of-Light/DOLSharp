@@ -17,7 +17,6 @@
  *
  */
 #define NOENCRYPTION
-using System;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,7 +29,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler
 {
-	[PacketLib(170, GameClient.eClientVersion.Version170)]
+    [PacketLib(170, GameClient.eClientVersion.Version170)]
 	public class PacketLib170 : PacketLib169
 	{
 		/// <summary>

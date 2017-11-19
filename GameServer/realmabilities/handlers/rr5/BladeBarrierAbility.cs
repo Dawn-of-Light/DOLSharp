@@ -1,14 +1,13 @@
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Blade Barrier
-	/// </summary>
-	public class BladeBarrierAbility : RR5RealmAbility
+    /// <summary>
+    /// Blade Barrier
+    /// </summary>
+    public class BladeBarrierAbility : RR5RealmAbility
 	{
 		public BladeBarrierAbility(DBAbility dba, int level) : base(dba, level) { }
 

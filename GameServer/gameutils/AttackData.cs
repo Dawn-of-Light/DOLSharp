@@ -16,19 +16,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
-using System.Text;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
 using DOL.Database;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Holds all data for an Attack
-	/// </summary>
-	public class AttackData
+    /// <summary>
+    /// Holds all data for an Attack
+    /// </summary>
+    public class AttackData
 	{
 		private GameLiving m_attacker = null;
 		private GameLiving m_target = null;

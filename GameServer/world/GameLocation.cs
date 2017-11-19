@@ -79,7 +79,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public int GetDistance( IGameLocation location )
 		{
-			if (this.RegionID == location.RegionID)
+			if (RegionID == location.RegionID)
 			{
 				return base.GetDistanceTo( location );
 			}

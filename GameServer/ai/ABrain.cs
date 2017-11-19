@@ -17,7 +17,6 @@
  *
  */
 using System;
-using System.Collections;
 using System.Reflection;
 using System.Text;
 using DOL.Events;
@@ -26,10 +25,10 @@ using log4net;
 
 namespace DOL.AI
 {
-	/// <summary>
-	/// This class is the base of all arteficial intelligence in game objects
-	/// </summary>
-	public abstract class ABrain
+    /// <summary>
+    /// This class is the base of all arteficial intelligence in game objects
+    /// </summary>
+    public abstract class ABrain
 	{
 		private readonly object m_LockObject = new object(); // dummy object for locking - Mannen. // use this object for locking, instead of locking on 'this'
 

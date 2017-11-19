@@ -16,18 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Heal Over Time spell handler
-	/// </summary>
-	[SpellHandlerAttribute("HpPwrEndRegen")]
+    /// <summary>
+    /// Heal Over Time spell handler
+    /// </summary>
+    [SpellHandler("HpPwrEndRegen")]
 	public class HpPwrEndRegenSpellHandler : SpellHandler
 	{
 		/// <summary>

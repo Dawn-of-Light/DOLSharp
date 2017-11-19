@@ -17,14 +17,13 @@
 USA.
 *
 */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Valewalker Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Valewalker, "Valewalker", "Forester")]
+    /// <summary>
+    /// Hibernia Valewalker Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Valewalker, "Valewalker", "Forester")]
 	public class ClassValewalker : ClassForester
 	{
 		public ClassValewalker()

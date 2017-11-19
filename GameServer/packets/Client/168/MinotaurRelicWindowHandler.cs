@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Reflection;
-using DOL.GS;
 using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-    [PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.MinotaurRelicWindow, "Handles Relic window commands", eClientStatus.PlayerInGame)]
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.MinotaurRelicWindow, "Handles Relic window commands", eClientStatus.PlayerInGame)]
     public class MinotaurRelicWindowHandler : IPacketHandler
     {
         /// <summary>

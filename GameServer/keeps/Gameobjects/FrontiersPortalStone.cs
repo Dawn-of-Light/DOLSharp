@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
 
 using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Keeps
 {
-	public class FrontiersPortalStone : GameStaticItem, IKeepItem
+    public class FrontiersPortalStone : GameStaticItem, IKeepItem
 	{
 		private string m_templateID = string.Empty;
 		public string TemplateID
@@ -51,8 +50,8 @@ namespace DOL.GS.Keeps
 				return;
 			m_component = component;
 			PositionMgr.LoadKeepItemPosition(pos, this);
-			this.m_component.AbstractKeep.TeleportStone = this;
-			this.AddToWorld();
+            m_component.AbstractKeep.TeleportStone = this;
+            AddToWorld();
 		}
 
 		public void MoveToPosition(DBKeepPosition position)
@@ -90,7 +89,7 @@ namespace DOL.GS.Keeps
 			{
 				if (player.Client.Account.PrivLevel == (int)ePrivLevel.Player)
 				{
-					if (player.Realm != this.Realm)
+					if (player.Realm != Realm)
 						return false;
 
 					if (Component != null && Component.AbstractKeep is GameKeep)
@@ -130,7 +129,7 @@ namespace DOL.GS.Keeps
 			ushort originalHeading = m_Heading;
 			m_Heading = (ushort)Util.Random((m_Heading - 500), (m_Heading + 500));
 			int distance = Util.Random(50, 150);
-            Point2D portloc = this.GetPointFromHeading( this.Heading, distance );
+            Point2D portloc = GetPointFromHeading(Heading, distance );
             x = portloc.X;
             y = portloc.Y;
 			m_Heading = originalHeading;
@@ -157,11 +156,11 @@ namespace DOL.GS.Keeps
 		{
 			if (!base.AddToWorld()) return false;
 			TeleporterEffect mob = new TeleporterEffect();
-			mob.CurrentRegion = this.CurrentRegion;
-			mob.X = this.X;
-			mob.Y = this.Y;
-			mob.Z = this.Z;
-			mob.Heading = this.Heading;
+			mob.CurrentRegion = CurrentRegion;
+			mob.X = X;
+			mob.Y = Y;
+			mob.Z = Z;
+			mob.Heading = Heading;
 			mob.Health = mob.MaxHealth;
 			mob.MaxSpeedBase = 0;
 			if (mob.AddToWorld())

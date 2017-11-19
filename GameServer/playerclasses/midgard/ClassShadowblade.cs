@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Midgard Shadowblade Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Shadowblade, "Shadowblade", "MidgardRogue")]
+    /// <summary>
+    /// Midgard Shadowblade Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Shadowblade, "Shadowblade", "MidgardRogue")]
 	public class ClassShadowblade : ClassMidgardRogue
 	{
 		private static readonly string[] AutotrainableSkills = new[] { Specs.Stealth };

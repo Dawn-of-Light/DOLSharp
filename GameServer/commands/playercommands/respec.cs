@@ -35,12 +35,11 @@
  */
 
 
-using System.Collections;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		"&respec",
 		ePrivLevel.Player,
 		"Respecs the char",

@@ -1,16 +1,12 @@
 using System;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
-using DOL.GS.SkillHandler;
-using DOL.GS.PropertyCalc;
-using DOL.Events;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Effect handler for Juggernaut
-	/// </summary>
-	public class JuggernautEffect : StaticEffect, IGameEffect
+    /// <summary>
+    /// Effect handler for Juggernaut
+    /// </summary>
+    public class JuggernautEffect : StaticEffect, IGameEffect
 	{
 		private const String m_delveString = "Increases the effective level of the pet by the listed number (capped at level 70).";
 		private GameNPC m_living;

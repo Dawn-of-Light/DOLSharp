@@ -19,17 +19,16 @@
 
 using DOL.Database;
 using DOL.GS.PacketHandler;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace DOL.GS.ServerRules
 {
-	/// <summary>
-	/// Handles Adventure Wings (Catacombs) Instance Jump Point.
-	/// Find available Instance, Create If Needed
-	/// Clean up remaining instance before timer countdown
-	/// </summary>
-	public class AdventureWingJumpPoint : IJumpPointHandler
+    /// <summary>
+    /// Handles Adventure Wings (Catacombs) Instance Jump Point.
+    /// Find available Instance, Create If Needed
+    /// Clean up remaining instance before timer countdown
+    /// </summary>
+    public class AdventureWingJumpPoint : IJumpPointHandler
 	{
 
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

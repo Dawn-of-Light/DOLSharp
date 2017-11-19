@@ -17,9 +17,7 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.Reflection;
 using System.Text;
 using System.Linq;
@@ -33,10 +31,10 @@ using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	///
-	/// </summary>
-	public class SkillBase
+    /// <summary>
+    ///
+    /// </summary>
+    public class SkillBase
 	{
 		/// <summary>
 		/// Defines a logger for this class.

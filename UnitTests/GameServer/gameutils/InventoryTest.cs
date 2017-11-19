@@ -19,15 +19,14 @@
 using System;
 using DOL.Database;
 using DOL.GS;
-using DOL.GS.PacketHandler;
 using NUnit.Framework;
 
 namespace DOL.Server.Tests
 {
-	/// <summary>
-	/// Unit tests for the new Inventory system
-	/// </summary>
-	[TestFixture]
+    /// <summary>
+    /// Unit tests for the new Inventory system
+    /// </summary>
+    [TestFixture]
 	public class InventoryTest : ServerTests
 	{
 		static GamePlayer player;

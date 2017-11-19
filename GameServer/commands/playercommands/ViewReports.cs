@@ -23,7 +23,7 @@ using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&viewreports",
 		ePrivLevel.Player,
 		"Allows you to view submitted bug reports.",

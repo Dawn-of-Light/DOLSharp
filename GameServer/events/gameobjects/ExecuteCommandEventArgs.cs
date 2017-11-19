@@ -17,15 +17,14 @@
  *
  */
 using System;
-using DOL.Database;
 using DOL.GS;
 
 namespace DOL.Events
 {
-	/// <summary>
-	/// Holds the arguments for the Execute Command Event.
-	/// </summary>
-	public class ExecuteCommandEventArgs : EventArgs
+    /// <summary>
+    /// Holds the arguments for the Execute Command Event.
+    /// </summary>
+    public class ExecuteCommandEventArgs : EventArgs
 	{
 
 		private GamePlayer source;

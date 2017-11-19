@@ -16,17 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 using DOL.Database;
 
 namespace DOL.GS.SkillHandler
 {
-	/// <summary>
-	/// Ability which Level is based on Owner Level instead of Skill Level
-	/// Each time Level is modified, it's enforced to User's Level if Applicable
-	/// </summary>
-	public class LevelBasedStatChangingAbility : StatChangingAbility
+    /// <summary>
+    /// Ability which Level is based on Owner Level instead of Skill Level
+    /// Each time Level is modified, it's enforced to User's Level if Applicable
+    /// </summary>
+    public class LevelBasedStatChangingAbility : StatChangingAbility
 	{
 		/// <summary>
 		/// Override Level Setter/Getter to Report Living Level instead of Skill Level.

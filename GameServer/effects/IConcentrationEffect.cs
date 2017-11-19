@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// An effect that can be added to concentration list
-	/// </summary>
-	public interface IConcentrationEffect
+    /// <summary>
+    /// An effect that can be added to concentration list
+    /// </summary>
+    public interface IConcentrationEffect
 	{
 		/// <summary>
 		/// Name of the effect

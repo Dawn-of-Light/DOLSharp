@@ -23,7 +23,7 @@ using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&checkappeal",
 		ePrivLevel.Player,
 		"Checks the status of your appeal or cancels it.",

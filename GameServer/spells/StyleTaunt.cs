@@ -19,14 +19,13 @@
 using System;
 using DOL.AI.Brain;
 using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Style taunt effect spell handler
-	/// </summary>
-	[SpellHandler("StyleTaunt")]
+    /// <summary>
+    /// Style taunt effect spell handler
+    /// </summary>
+    [SpellHandler("StyleTaunt")]
 	public class StyleTaunt : SpellHandler 
 	{
 		public override int CalculateSpellResistChance(GameLiving target)

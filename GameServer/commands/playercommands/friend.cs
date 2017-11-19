@@ -22,7 +22,7 @@ using DOL.GS.Friends;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&friend",
 		ePrivLevel.Player,
 		"Adds/Removes a player to/from your friendlist!",

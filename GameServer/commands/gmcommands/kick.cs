@@ -2,13 +2,12 @@
 //
 //
 using System;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		"&kick",
 		new string[] { "&k" },
 		ePrivLevel.GM,

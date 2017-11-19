@@ -16,19 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.AI.Brain;
-using DOL.Database;
-using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
-using DOL.GS.SkillHandler;
 
 namespace DOL.GS.Spells
 {
     /// <summary>
     /// Spell Handler for firing bolts
     /// </summary>
-    [SpellHandlerAttribute("ChainBolt")]
+    [SpellHandler("ChainBolt")]
     public class ChainBoltSpellHandler : BoltSpellHandler
     {
 

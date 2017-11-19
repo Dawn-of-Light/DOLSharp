@@ -16,17 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Text;
 
 using DOL.Database;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// base class for skills
-	/// </summary>
-	public abstract class Skill
+    /// <summary>
+    /// base class for skills
+    /// </summary>
+    public abstract class Skill
 	{
 		protected int m_id;
 		protected string m_name;

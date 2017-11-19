@@ -16,14 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[Cmd(
+    [Cmd(
 		"&clientlist",
 		ePrivLevel.GM,
         "Usage: /clientlist [full] - full option includes IP's and accounts",

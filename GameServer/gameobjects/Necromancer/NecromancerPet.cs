@@ -455,7 +455,7 @@ namespace DOL.GS
 		{
 			if (SpellTimer != null)
 			{
-				if (this == null || this.ObjectState != eObjectState.Active || !this.IsAlive || this.TargetObject == null || (this.TargetObject is GameLiving && this.TargetObject.ObjectState != eObjectState.Active || !(this.TargetObject as GameLiving).IsAlive))
+				if (this == null || ObjectState != eObjectState.Active || !IsAlive || TargetObject == null || (TargetObject is GameLiving && TargetObject.ObjectState != eObjectState.Active || !(TargetObject as GameLiving).IsAlive))
 					SpellTimer.Stop();
 				else
 					SpellTimer.Start(1);

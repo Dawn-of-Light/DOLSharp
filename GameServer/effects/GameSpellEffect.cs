@@ -713,18 +713,18 @@ namespace DOL.GS.Effects
 
 		public PlayerXEffect getSavedEffect()
 		{
-			if (this.RestoredEffect)
+			if (RestoredEffect)
 			{
 				PlayerXEffect eff = new PlayerXEffect();
-				eff.Duration = this.RemainingTime;
+				eff.Duration = RemainingTime;
 				eff.IsHandler = true;
-				eff.Var1 = this.RestoreVars[0];
-				eff.Var2 = this.RestoreVars[1];
-				eff.Var3 = this.RestoreVars[2];
-				eff.Var4 = this.RestoreVars[3];
-				eff.Var5 = this.RestoreVars[4];
-				eff.Var6 = this.RestoreVars[5];
-				eff.SpellLine = this.SpellHandler.SpellLine.KeyName;
+				eff.Var1 = RestoreVars[0];
+				eff.Var2 = RestoreVars[1];
+				eff.Var3 = RestoreVars[2];
+				eff.Var4 = RestoreVars[3];
+				eff.Var5 = RestoreVars[4];
+				eff.Var6 = RestoreVars[5];
+				eff.SpellLine = SpellHandler.SpellLine.KeyName;
 				return eff;
 			}
 			if (m_handler != null)

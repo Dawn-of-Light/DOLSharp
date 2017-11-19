@@ -17,12 +17,11 @@
  *
  */
 using System;
-using System.Collections;
 using DOL.Database;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.DestroyItemRequest, "Handles destroy item requests from client", eClientStatus.PlayerInGame)]
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.DestroyItemRequest, "Handles destroy item requests from client", eClientStatus.PlayerInGame)]
 	public class DestroyItemRequestHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)

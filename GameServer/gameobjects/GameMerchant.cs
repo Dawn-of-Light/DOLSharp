@@ -18,21 +18,18 @@
  */
 using System;
 using System.Collections;
-using System.Reflection;
 using System.Threading;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Language;
-using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Represents an in-game merchant
-	/// </summary>
-	public class GameMerchant : GameNPC
+    /// <summary>
+    /// Represents an in-game merchant
+    /// </summary>
+    public class GameMerchant : GameNPC
 	{
 		/// <summary>
 		/// Constructor
@@ -126,7 +123,7 @@ namespace DOL.GS
 			int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 			int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
-			ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
+			ItemTemplate template = TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
 			if (template == null) return;
 
 			//Calculate the amout of items
@@ -244,7 +241,7 @@ namespace DOL.GS
 				return;
 			}
 
-			if (!this.IsWithinRadius(player, GS.ServerProperties.Properties.WORLD_PICKUP_DISTANCE)) // tested
+			if (!IsWithinRadius(player, GS.ServerProperties.Properties.WORLD_PICKUP_DISTANCE)) // tested
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerSell.TooFarAway", GetName(0, true)), eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 				return;
@@ -373,7 +370,7 @@ namespace DOL.GS
 				merchant.AggroLevel = aggroBrain.AggroLevel;
 				merchant.AggroRange = aggroBrain.AggroRange;
 			}
-			merchant.ClassType = this.GetType().ToString();
+			merchant.ClassType = GetType().ToString();
 			merchant.EquipmentTemplateID = EquipmentTemplateID;
 			if (m_tradeItems == null)
 			{
@@ -431,7 +428,7 @@ namespace DOL.GS
 			int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 			int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
-			ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
+			ItemTemplate template = TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
 			if (template == null) return;
 
 			//Calculate the amout of items
@@ -541,7 +538,7 @@ namespace DOL.GS
 				text = MoneyItemName + "s";
 			}
 
-			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.GetExamineMessages.BuyItemsFor", this.Name, text), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+			player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.GetExamineMessages.BuyItemsFor", Name, text), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 		}
 
 		protected override void SendMerchantWindowCallback(object state)
@@ -557,7 +554,7 @@ namespace DOL.GS
 			int pagenumber = item_slot / MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 			int slotnumber = item_slot % MerchantTradeItems.MAX_ITEM_IN_TRADEWINDOWS;
 
-			ItemTemplate template = this.TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
+			ItemTemplate template = TradeItems.GetItem(pagenumber, (eMerchantWindowSlot)slotnumber);
 			if (template == null) return;
 
 			//Calculate the amout of items

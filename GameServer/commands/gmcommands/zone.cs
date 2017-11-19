@@ -19,14 +19,12 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.Database;
 
 namespace DOL.GS.Commands
 {
-    [CmdAttribute(
+    [Cmd(
         "&zone",
         ePrivLevel.GM,
 		"/zone info",

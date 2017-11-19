@@ -16,14 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DOL.Database;
 using DOL.GS.Housing;
 using DOL.GS.PacketHandler;
-using DOL.GS.PacketHandler.Client.v168;
 using log4net;
 
 namespace DOL.GS
@@ -131,7 +129,7 @@ namespace DOL.GS
 
             if (!player.IsWithinRadius(this, 500))
             {
-                ((GamePlayer)source).Out.SendMessage("You are to far away to give anything to " + this.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                ((GamePlayer)source).Out.SendMessage("You are to far away to give anything to " + Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return false;
             }
 

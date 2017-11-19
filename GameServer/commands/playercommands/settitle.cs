@@ -16,16 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Linq;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.PlayerTitles;
-using DOL.GS.Commands;
 
 namespace DOL.GS.Commands
 {
-	[Cmd(
+    [Cmd(
 		 "&settitle",
 		 ePrivLevel.Player,
 		 "Sets the current player title",

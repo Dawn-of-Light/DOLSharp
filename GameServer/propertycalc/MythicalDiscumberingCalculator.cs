@@ -18,7 +18,6 @@
  */
 
 
-using System;
 
 namespace DOL.GS.PropertyCalc
 {

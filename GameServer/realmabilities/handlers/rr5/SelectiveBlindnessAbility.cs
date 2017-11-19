@@ -17,7 +17,6 @@
  *
  */
 
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
@@ -77,7 +76,7 @@ namespace DOL.GS.RealmAbilities
                 {
 					if (radiusPlayer == m_player)
 					{
-						radiusPlayer.MessageToSelf("You cast " + this.Name + "!", eChatType.CT_Spell);
+						radiusPlayer.MessageToSelf("You cast " + Name + "!", eChatType.CT_Spell);
 					}
 					else
 					{

@@ -16,20 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Reflection;
-using DOL.Events;
 using DOL.GS;
-using DOL.GS.PacketHandler;
 using DOL.GS.Movement;
-using log4net;
 
 namespace DOL.AI.Brain
 {
-	/// <summary>
-	/// A brain that make npc walk on rounds with way point
-	/// </summary>
-	public class RoundsBrain : StandardMobBrain
+    /// <summary>
+    /// A brain that make npc walk on rounds with way point
+    /// </summary>
+    public class RoundsBrain : StandardMobBrain
 	{
 		/// <summary>
 		/// Load the path of the mob

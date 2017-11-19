@@ -17,16 +17,15 @@
  *
  */
 
-using System;
 using System.Collections.Generic;
 using DOL.Language;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Base for all GuildBannerEffects. Use CreateEffectOfClass to get instances.
-	/// </summary>
-	public abstract class GuildBannerEffect : TimedEffect
+    /// <summary>
+    /// Base for all GuildBannerEffects. Use CreateEffectOfClass to get instances.
+    /// </summary>
+    public abstract class GuildBannerEffect : TimedEffect
 	{
 		//Reference:
 		//http://support.darkageofcamelot.com/kb/article.php?id=786

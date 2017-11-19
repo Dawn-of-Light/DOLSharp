@@ -16,17 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using DOL.Database;
 using System.Collections.Generic;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public interface IGameEffect
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IGameEffect
 	{
 		/// <summary>
 		/// Effect must be canceled

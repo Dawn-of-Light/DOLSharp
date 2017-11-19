@@ -36,7 +36,7 @@ namespace DOL.Events
 		/// </summary>
 		public AttackedByEnemyEventArgs(AttackData attackData)
 		{
-			this.m_attackData=attackData;
+            m_attackData = attackData;
 		}
 
 		/// <summary>

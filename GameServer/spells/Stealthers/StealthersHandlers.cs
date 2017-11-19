@@ -16,23 +16,22 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.Spells
 {
-	[SpellHandlerAttribute("BloodRage")]
+    [SpellHandler("BloodRage")]
 	public class BloodRage : SpellHandler
 	{
 		public BloodRage(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
 
-	[SpellHandlerAttribute("HeightenedAwareness")]
+	[SpellHandler("HeightenedAwareness")]
 	public class HeightenedAwareness : SpellHandler
 	{
 		public HeightenedAwareness(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
 
-	[SpellHandlerAttribute("SubtleKills")]
+	[SpellHandler("SubtleKills")]
 	public class SubtleKills : SpellHandler
 	{
 		public SubtleKills(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }

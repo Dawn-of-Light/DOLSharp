@@ -18,13 +18,11 @@
  */
 using System;
 using System.Collections;
-using DOL.Database;
 using DOL.GS.Housing;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		"&house",
 		ePrivLevel.Player,
 		"Show various housing information"

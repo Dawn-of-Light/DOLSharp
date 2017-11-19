@@ -20,7 +20,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&xp",
 		ePrivLevel.Player,
 		"toggle receiving experience points",

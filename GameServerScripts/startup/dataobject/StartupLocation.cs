@@ -17,16 +17,15 @@
  *
  */
 
-using System;
 using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.GS.GameEvents
 {
-	/// <summary>
-	/// Table Holding Constraints for Startup Locations.
-	/// </summary>
-	[DataTable(TableName="StartupLocation")]
+    /// <summary>
+    /// Table Holding Constraints for Startup Locations.
+    /// </summary>
+    [DataTable(TableName="StartupLocation")]
 	public class StartupLocation : DataObject
 	{
 		protected int m_startupLocactionID;

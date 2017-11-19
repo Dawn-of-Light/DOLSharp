@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
- 
+
 using System;
 using System.Linq;
 using System.Collections;
@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using System.Reflection;
 
 using DOL.Database;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 
@@ -32,7 +31,7 @@ using log4net;
 
 namespace DOL.GS
 {
-	public class PlayerStatistics : IPlayerStatistics
+    public class PlayerStatistics : IPlayerStatistics
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -385,7 +384,7 @@ namespace DOL.GS
 
 namespace DOL.GS.GameEvents
 {
-	public class PlayerStatisticsEvent
+    public class PlayerStatisticsEvent
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 

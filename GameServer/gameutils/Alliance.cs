@@ -17,16 +17,15 @@
  *
  */
 using System.Collections;
-using System.Collections.Specialized;
 using System;
 using DOL.Database;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Alliance are the alliance between guild in game
-	/// </summary>
-	public class Alliance
+    /// <summary>
+    /// Alliance are the alliance between guild in game
+    /// </summary>
+    public class Alliance
 	{
 		protected ArrayList m_guilds;
 		protected DBAlliance m_dballiance;

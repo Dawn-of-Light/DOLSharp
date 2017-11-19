@@ -31,7 +31,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&roll",
 		ePrivLevel.Player,
 		"simulates a dice roll.",

@@ -18,25 +18,20 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Collections;
-using DOL.AI.Brain;
-using DOL.Language;
 using DOL.GS.PacketHandler;
 using DOL.Database;
 using DOL.GS.Housing;
 using DOL.GS.Keeps;
 using DOL.GS.Spells;
-using log4net;
-using System.Reflection;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Base class for all teleporter type NPCs.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class GameTeleporter : GameNPC
+    /// <summary>
+    /// Base class for all teleporter type NPCs.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class GameTeleporter : GameNPC
 	{
 		public GameTeleporter()
 			: base() { }
@@ -317,8 +312,8 @@ namespace DOL.GS
 			if (player.Client.Account.PrivLevel > 1)
 				player.Out.SendMessage("Uni-Portal spell not found.",
 					eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
-			
-			this.OnTeleport(player, destination);
+
+            OnTeleport(player, destination);
 		}
 
 		/// <summary>

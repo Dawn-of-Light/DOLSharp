@@ -16,17 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	[SpellHandlerAttribute("DamageSpeedDecreaseNoVariance")]
+    /// <summary>
+    /// 
+    /// </summary>
+    [SpellHandler("DamageSpeedDecreaseNoVariance")]
     public class DamageSpeedDecreaseNoVarianceSpellHandler : DamageSpeedDecreaseSpellHandler
 	{
 		public override double CalculateDamageBase(GameLiving target)
@@ -47,7 +44,7 @@ namespace DOL.GS.Spells
     /// <summary>
     /// 
     /// </summary>
-    [SpellHandlerAttribute("DirectDamageNoVariance")]
+    [SpellHandler("DirectDamageNoVariance")]
     public class DirectDamageNoVarianceSpellHandler : DirectDamageSpellHandler
     {
 		public override double CalculateDamageBase(GameLiving target)
@@ -65,10 +62,10 @@ namespace DOL.GS.Spells
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// UnresistableStun 
-	/// </summary>
-	[SpellHandlerAttribute("UnresistableStun")]
+    /// <summary>
+    /// UnresistableStun 
+    /// </summary>
+    [SpellHandler("UnresistableStun")]
 	public class UnresistableStunSpellHandler : StunSpellHandler
 	{
 

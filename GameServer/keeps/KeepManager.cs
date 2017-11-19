@@ -16,23 +16,21 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DOL.Database;
-using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS.Keeps
 {
-	/// <summary>
-	/// The default KeepManager
-	/// The manager that keeps track of the keeps and stuff.. in the future.
-	/// Right now it just has some utilities.
-	/// </summary>
-	public class DefaultKeepManager : IKeepManager
+    /// <summary>
+    /// The default KeepManager
+    /// The manager that keeps track of the keeps and stuff.. in the future.
+    /// Right now it just has some utilities.
+    /// </summary>
+    public class DefaultKeepManager : IKeepManager
 	{
 		/// <summary>
 		/// list of all keeps

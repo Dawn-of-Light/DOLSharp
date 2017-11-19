@@ -16,20 +16,19 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PropertyCalc
 {
-	/// <summary>
-	/// The block chance calculator. Returns 0 .. 1000 chance.
-	/// 
-	/// BuffBonusCategory1 unused
-	/// BuffBonusCategory2 unused
-	/// BuffBonusCategory3 unused
-	/// BuffBonusCategory4 unused
-	/// BuffBonusMultCategory1 unused
-	/// </summary>
-	[PropertyCalculator(eProperty.BlockChance)]
+    /// <summary>
+    /// The block chance calculator. Returns 0 .. 1000 chance.
+    /// 
+    /// BuffBonusCategory1 unused
+    /// BuffBonusCategory2 unused
+    /// BuffBonusCategory3 unused
+    /// BuffBonusCategory4 unused
+    /// BuffBonusMultCategory1 unused
+    /// </summary>
+    [PropertyCalculator(eProperty.BlockChance)]
 	public class BlockChanceCalculator : PropertyCalculator
 	{
 		public override int CalcValue(GameLiving living, eProperty property)

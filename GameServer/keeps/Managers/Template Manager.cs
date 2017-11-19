@@ -17,13 +17,11 @@
  *
  */
 using DOL.AI.Brain;
-using DOL.Database;
-using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS.Keeps
 {
-	public class TemplateMgr
+    public class TemplateMgr
 	{
 		public static void RefreshTemplate(GameKeepGuard guard)
 		{

@@ -17,14 +17,12 @@
  *
  */
 
-using System;
-using System.Collections;
 using DOL.Database;
 using System.Collections.Generic;
 
 namespace DOL.GS
 {
-	public enum eInventorySlot : int
+    public enum eInventorySlot : int
 	{
 		LastEmptyBagHorse	= -8,
 		FirstEmptyBagHorse	= -7,

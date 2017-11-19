@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Base Caster Class Forester
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Forester, "Forester", "Forester")]
+    /// <summary>
+    /// Hibernia Base Caster Class Forester
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Forester, "Forester", "Forester")]
 	public class ClassForester : CharacterClassBase
 	{
 		public ClassForester()

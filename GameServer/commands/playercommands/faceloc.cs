@@ -27,7 +27,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&faceloc",
 		ePrivLevel.Player,
 		"Turns and faces your character into the direction of the x, y coordinates provided (using Mythic zone coordinates).",

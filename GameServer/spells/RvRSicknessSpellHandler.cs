@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// RvR Resurrection Illness Handler
-	/// </summary>
-	[SpellHandler(GlobalSpells.RvRResurrectionIllnessSpellType)]
+    /// <summary>
+    /// RvR Resurrection Illness Handler
+    /// </summary>
+    [SpellHandler(GlobalSpells.RvRResurrectionIllnessSpellType)]
 	public class RvrResurrectionIllness : PveResurrectionIllness
 	{
 		// constructor
