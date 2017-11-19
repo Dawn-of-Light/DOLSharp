@@ -16,16 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Style bleeding effect spell handler
-	/// </summary>
-	[SpellHandler("StyleBleeding")]
+    /// <summary>
+    /// Style bleeding effect spell handler
+    /// </summary>
+    [SpellHandler("StyleBleeding")]
 	public class StyleBleeding : SpellHandler
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections.Generic;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.Database;
 using DOL.GS.Effects;
@@ -26,10 +25,10 @@ using DOL.Events;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Increases the target's movement speed.
-	/// </summary>
-	[SpellHandlerAttribute("SpeedEnhancement")]
+    /// <summary>
+    /// Increases the target's movement speed.
+    /// </summary>
+    [SpellHandler("SpeedEnhancement")]
 	public class SpeedEnhancementSpellHandler : SpellHandler
 	{
 		/// <summary>
@@ -239,7 +238,7 @@ namespace DOL.GS.Spells
 				return;
 			}
 
-			GameSpellEffect speed = SpellHandler.FindEffectOnTarget(living, this);
+			GameSpellEffect speed = FindEffectOnTarget(living, this);
 			if (speed != null)
 				speed.Cancel(false);
 		}

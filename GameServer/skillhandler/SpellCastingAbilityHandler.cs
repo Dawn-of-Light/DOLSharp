@@ -1,10 +1,9 @@
-using System.Collections;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
-	public class SpellCastingAbilityHandler : IAbilityActionHandler, ISpellCastingAbilityHandler
+    public class SpellCastingAbilityHandler : IAbilityActionHandler, ISpellCastingAbilityHandler
 	{
 		protected Ability m_ability = null;
 		public Ability Ability

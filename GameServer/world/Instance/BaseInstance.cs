@@ -20,15 +20,8 @@
 //Instance devised by Dinberg 
 //     - there will probably be questions, direct them to dinberg_darktouch@hotmail.co.uk ;)
 using System;
-using System.Text;
-using System.Reflection;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-
-using log4net;
-
-using DOL.GS;
 using DOL.Database;
 
 namespace DOL.GS
@@ -526,11 +519,11 @@ namespace DOL.GS
 			{
 				if(alive)
 				{
-					return new List<GameNPC>(from regionObjects in this.Objects where (regionObjects is GameNPC) && ((((GameNPC)regionObjects).Flags & GameNPC.eFlags.PEACE) != GameNPC.eFlags.PEACE) && ((GameNPC)regionObjects).IsAlive select (GameNPC)regionObjects);
+					return new List<GameNPC>(from regionObjects in Objects where (regionObjects is GameNPC) && ((((GameNPC)regionObjects).Flags & GameNPC.eFlags.PEACE) != GameNPC.eFlags.PEACE) && ((GameNPC)regionObjects).IsAlive select (GameNPC)regionObjects);
 				}
 				else
 				{
-					return new List<GameNPC>(from regionObjects in this.Objects where (regionObjects is GameNPC) && ((((GameNPC)regionObjects).Flags & GameNPC.eFlags.PEACE) != GameNPC.eFlags.PEACE) select (GameNPC)regionObjects);
+					return new List<GameNPC>(from regionObjects in Objects where (regionObjects is GameNPC) && ((((GameNPC)regionObjects).Flags & GameNPC.eFlags.PEACE) != GameNPC.eFlags.PEACE) select (GameNPC)regionObjects);
 				}
 			}
 		}

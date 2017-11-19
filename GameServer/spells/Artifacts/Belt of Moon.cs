@@ -18,14 +18,12 @@
 */
 namespace DOL.GS.Spells
 {
-	using System;
-	using Database;
-	using Events;
+    using System;
+    using Database;
+    using Events;
     using DOL.GS.PacketHandler;
-    using DOL.GS.Utils;
-    using System.Collections.Generic;
 
-	[SpellHandler("BeltOfMoon")]
+    [SpellHandler("BeltOfMoon")]
 	public class BeltOfMoon : SummonItemSpellHandler
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

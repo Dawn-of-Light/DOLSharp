@@ -16,21 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
 using DOL.GS.Effects;
-using log4net;
-using System.Reflection;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Summon a theurgist pet.
-	/// </summary>
-	[SpellHandler("SummonTheurgistPet")]
+    /// <summary>
+    /// Summon a theurgist pet.
+    /// </summary>
+    [SpellHandler("SummonTheurgistPet")]
 	public class SummonTheurgistPet : SummonSpellHandler
 	{
 		public SummonTheurgistPet(GameLiving caster, Spell spell, SpellLine line) 

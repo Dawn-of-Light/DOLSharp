@@ -17,16 +17,14 @@
  *
  */
 using System;
-
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.Database.Tests
 {
-	/// <summary>
-	/// Test Table with Multiple Overlapping Index
-	/// </summary>
-	[DataTable(TableName = "Test_TableWithMultiIndexes")]
+    /// <summary>
+    /// Test Table with Multiple Overlapping Index
+    /// </summary>
+    [DataTable(TableName = "Test_TableWithMultiIndexes")]
 	public class TestTableWithMultiIndexes : DataObject
 	{
 		[DataElement(IndexColumns = "Index2")]

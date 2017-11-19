@@ -18,7 +18,6 @@
  */
 using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -29,7 +28,6 @@ using System.Threading;
 using DOL.Config;
 using DOL.Database;
 using DOL.Database.Attributes;
-using DOL.Database.Connection;
 using DOL.Events;
 using DOL.GS.Behaviour;
 using DOL.GS.DatabaseUpdate;
@@ -49,10 +47,10 @@ using log4net.Core;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Class encapsulates all game server functionality
-	/// </summary>
-	public class GameServer : BaseServer
+    /// <summary>
+    /// Class encapsulates all game server functionality
+    /// </summary>
+    public class GameServer : BaseServer
 	{
 		/// <summary>
 		/// Defines a logger for this class.

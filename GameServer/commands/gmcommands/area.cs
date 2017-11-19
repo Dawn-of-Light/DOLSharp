@@ -19,12 +19,11 @@
 using System;
 using System.Reflection;
 using DOL.Database;
-using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		"&area",
 		ePrivLevel.GM,
 		"GMCommands.Area.Description",

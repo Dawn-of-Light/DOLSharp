@@ -52,7 +52,7 @@ namespace DOL.GS
 	/// </summary>
 	public class GamePlayer : GameLiving
 	{
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly log4net.ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		private readonly object m_LockObject = new object();
 
@@ -835,14 +835,14 @@ namespace DOL.GS
 
 		private void CheckIfNearEnemyKeepAndAddToRvRLinkDeathListIfNecessary()
 		{
-			AbstractGameKeep keep = GameServer.KeepManager.GetKeepCloseToSpot(this.CurrentRegionID, this, WorldMgr.VISIBILITY_DISTANCE);
-			if(keep != null && this.Client.Account.PrivLevel == 1 && GameServer.KeepManager.IsEnemy(keep, this))
+			AbstractGameKeep keep = GameServer.KeepManager.GetKeepCloseToSpot(CurrentRegionID, this, WorldMgr.VISIBILITY_DISTANCE);
+			if(keep != null && Client.Account.PrivLevel == 1 && GameServer.KeepManager.IsEnemy(keep, this))
 			{
-				if(WorldMgr.RvRLinkDeadPlayers.ContainsKey(this.m_InternalID))
+				if(WorldMgr.RvRLinkDeadPlayers.ContainsKey(m_InternalID))
 				{
-					WorldMgr.RvRLinkDeadPlayers.Remove(this.m_InternalID);
+					WorldMgr.RvRLinkDeadPlayers.Remove(m_InternalID);
 				}
-				WorldMgr.RvRLinkDeadPlayers.Add(this.m_InternalID, DateTime.Now);
+				WorldMgr.RvRLinkDeadPlayers.Add(m_InternalID, DateTime.Now);
 			}
 		}
 
@@ -874,7 +874,7 @@ namespace DOL.GS
 			if (Group != null)
 				Group.RemoveMember(this);
 
-			BattleGroup mybattlegroup = (BattleGroup)this.TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
+			BattleGroup mybattlegroup = (BattleGroup)TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
 			if (mybattlegroup != null)
 				mybattlegroup.RemoveBattlePlayer(this);
 
@@ -892,7 +892,7 @@ namespace DOL.GS
 			if (mychatgroup != null)
 				mychatgroup.RemovePlayer(this);
 
-			if (this.ControlledBrain != null)
+			if (ControlledBrain != null)
 				CommandNpcRelease();
 
 			if (SiegeWeapon != null)
@@ -4284,13 +4284,13 @@ namespace DOL.GS
 				{
 					string message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.GainRealmPoints.ReachedRankNews", Name, RealmLevel + 10, LastPositionUpdateZone.Description);
                     string newsmessage = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.GainRealmPoints.ReachedRankNews", Name, RealmLevel + 10, LastPositionUpdateZone.Description);
-                    NewsMgr.CreateNews(newsmessage, this.Realm, eNewsType.RvRLocal, true);
+                    NewsMgr.CreateNews(newsmessage, Realm, eNewsType.RvRLocal, true);
 				}
 				if (CanGenerateNews && RealmPoints >= 1000000 && RealmPoints - amount < 1000000)
 				{
 					string message = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.GainRealmPoints.Earned", Name, LastPositionUpdateZone.Description);
                     string newsmessage = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.GainRealmPoints.Earned", Name, LastPositionUpdateZone.Description);
-					NewsMgr.CreateNews(newsmessage, this.Realm, eNewsType.RvRLocal, true);
+					NewsMgr.CreateNews(newsmessage, Realm, eNewsType.RvRLocal, true);
 				}
 			}
 			Out.SendUpdatePoints();
@@ -4909,7 +4909,7 @@ namespace DOL.GS
 				}
 
 
-				if (this.CurrentRegion.IsRvR)
+				if (CurrentRegion.IsRvR)
 					expTotal = (long)(expTotal * ServerProperties.Properties.RvR_XP_RATE);
 				else
 					expTotal = (long)(expTotal * ServerProperties.Properties.XP_RATE);
@@ -5645,11 +5645,11 @@ namespace DOL.GS
 				return;
 			}
 
-			long VanishTick = this.TempProperties.getProperty<long>(VanishEffect.VANISH_BLOCK_ATTACK_TIME_KEY);
-			long changeTime = this.CurrentRegion.Time - VanishTick;
+			long VanishTick = TempProperties.getProperty<long>(VanishEffect.VANISH_BLOCK_ATTACK_TIME_KEY);
+			long changeTime = CurrentRegion.Time - VanishTick;
 			if (changeTime < 30000 && VanishTick > 0)
 			{
-				this.Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.StartAttack.YouMustWait", ((30000 - changeTime) / 1000).ToString()), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+                Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.StartAttack.YouMustWait", ((30000 - changeTime) / 1000).ToString()), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
@@ -5806,7 +5806,7 @@ namespace DOL.GS
 				string targetMsg = "";
 				if (attackTarget != null)
 				{
-					if (this.IsWithinRadius(attackTarget, AttackRange))
+					if (IsWithinRadius(attackTarget, AttackRange))
 						targetMsg = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.StartAttack.TargetInRange");
 					else
 						targetMsg = LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.StartAttack.TargetOutOfRange");
@@ -6029,7 +6029,7 @@ namespace DOL.GS
 				{
 					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "System.MustSelectTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
-				else if (!this.IsWithinRadius(target, AttackRange))
+				else if (!IsWithinRadius(target, AttackRange))
 				{
 					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Attack.TooFarAway", target.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				}
@@ -6280,9 +6280,9 @@ namespace DOL.GS
 						    && target is GameKeepDoor == false
 						    && target is GameSiegeWeapon == false)
 						{
-							int perc = Convert.ToInt32(((double)(ad.Damage + ad.CriticalDamage) / 100) * (55 - this.Level));
+							int perc = Convert.ToInt32(((double)(ad.Damage + ad.CriticalDamage) / 100) * (55 - Level));
 							perc = (perc < 1) ? 1 : ((perc > 15) ? 15 : perc);
-							this.Mana += Convert.ToInt32(Math.Ceiling(((Decimal)(perc * this.MaxMana) / 100)));
+                            Mana += Convert.ToInt32(Math.Ceiling(((Decimal)(perc * MaxMana) / 100)));
 						}
 
 						//only miss when strafing when attacking a player
@@ -6413,7 +6413,7 @@ namespace DOL.GS
 									{
 										if (obj != ad.Target)
 										{
-											this.MakeAttack(obj, attackWeapon, null, 1, ServerProperties.Properties.SPELL_INTERRUPT_DURATION, false, false);
+                                            MakeAttack(obj, attackWeapon, null, 1, ServerProperties.Properties.SPELL_INTERRUPT_DURATION, false, false);
 										}
 									}
 								}
@@ -6725,9 +6725,9 @@ namespace DOL.GS
 			#endregion PVP DAMAGE
 
 			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
-			if(this.HasAbility(Abilities.DefensiveCombatPowerRegeneration))
+			if(HasAbility(Abilities.DefensiveCombatPowerRegeneration))
 			{
-				this.Mana += (int)((damageAmount + criticalAmount) * 0.25);
+                Mana += (int)((damageAmount + criticalAmount) * 0.25);
 			}
 		}
 
@@ -7680,15 +7680,15 @@ namespace DOL.GS
 				GameEventMgr.AddHandler(this, GamePlayerEvent.Revive, new DOLEventHandler(OnRevive));
 			}
 
-			if (this.ControlledBrain != null)
+			if (ControlledBrain != null)
 				CommandNpcRelease();
 
-			if (this.SiegeWeapon != null)
+			if (SiegeWeapon != null)
 				SiegeWeapon.ReleaseControl();
 
 			// sent after buffs drop
 			// GamePlayer.Die.CorpseLies:		{0} just died. {1} corpse lies on the ground.
-			Message.SystemToOthers2(this, eChatType.CT_PlayerDied, "GamePlayer.Die.CorpseLies", GetName(0, true), GetPronoun(this.Client, 1, true));
+			Message.SystemToOthers2(this, eChatType.CT_PlayerDied, "GamePlayer.Die.CorpseLies", GetName(0, true), GetPronoun(Client, 1, true));
 
 			if (m_releaseType == eReleaseType.Duel)
 			{
@@ -7712,7 +7712,7 @@ namespace DOL.GS
 				{
 					if (player == this) continue;
 					if (enemy.Attackers.Contains(player)) continue;
-					if (this.IsWithinRadius(player, WorldMgr.MAX_EXPFORKILL_DISTANCE))
+					if (IsWithinRadius(player, WorldMgr.MAX_EXPFORKILL_DISTANCE))
 					{
 						Notify(GameLivingEvent.EnemyKilled, player, new EnemyKilledEventArgs(enemy));
 					}
@@ -7837,7 +7837,7 @@ namespace DOL.GS
 		/// <param name="duration">duration of disable in milliseconds</param>
 		public override void DisableSkill(Skill skill, int duration)
 		{
-			if (this.Client.Account.PrivLevel > 1)
+			if (Client.Account.PrivLevel > 1)
 				return;
 
 			base.DisableSkill(skill, duration);
@@ -7855,7 +7855,7 @@ namespace DOL.GS
 		/// <param name="duration">duration of disable in milliseconds</param>
 		public override void DisableSkill(ICollection<Tuple<Skill, int>> skills)
 		{
-			if (this.Client.Account.PrivLevel > 1)
+			if (Client.Account.PrivLevel > 1)
 				return;
 
 			base.DisableSkill(skills);
@@ -9922,7 +9922,7 @@ namespace DOL.GS
 				DismountSteed(true);
 				if (CurrentRegion.GetZone(X, Y) == null)
 				{
-					if (this is GamePlayer && this.Client.Account.PrivLevel < 3 && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned", false))
+					if (this is GamePlayer && Client.Account.PrivLevel < 3 && !(this as GamePlayer).TempProperties.getProperty("isbeingbanned", false))
 					{
 						GamePlayer player = this as GamePlayer;
 						player.TempProperties.setProperty("isbeingbanned", true);
@@ -9968,7 +9968,7 @@ namespace DOL.GS
 			{
 				Group.RemoveMember(this);
 			}
-			BattleGroup mybattlegroup = (BattleGroup)this.TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
+			BattleGroup mybattlegroup = (BattleGroup)TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
 			if (mybattlegroup != null)
 			{
 				mybattlegroup.RemoveBattlePlayer(this);
@@ -10116,8 +10116,8 @@ namespace DOL.GS
 
 				UpdateEquipmentAppearance();
 
-				if (this.IsUnderwater)
-					this.IsDiving = true;
+				if (IsUnderwater)
+                    IsDiving = true;
 
 				if (hasPetToMove)
 				{
@@ -10128,7 +10128,7 @@ namespace DOL.GS
 					{
 						GameNPC petBody = npc.Body;
 
-						petBody.MoveInRegion(CurrentRegionID, point.X, point.Y, this.Z + 10, (ushort)((this.Heading + 2048) % 4096), false);
+						petBody.MoveInRegion(CurrentRegionID, point.X, point.Y, Z + 10, (ushort)((Heading + 2048) % 4096), false);
 
 						if (petBody != null && petBody.ControlledNpcList != null)
 						{
@@ -10138,7 +10138,7 @@ namespace DOL.GS
 								{
 									GameNPC petBody2 = icb.Body;
 									if (petBody2 != null && originalPoint.IsWithinRadius(petBody2, 500))
-										petBody2.MoveInRegion(CurrentRegionID, point.X, point.Y, this.Z + 10, (ushort)((this.Heading + 2048) % 4096), false);
+										petBody2.MoveInRegion(CurrentRegionID, point.X, point.Y, Z + 10, (ushort)((Heading + 2048) % 4096), false);
 								}
 							}
 						}
@@ -10549,7 +10549,7 @@ namespace DOL.GS
 					if (ad != null && ad.IsMeleeAttack && (ad.AttackResult == eAttackResult.TargetNotVisible || ad.AttackResult == eAttackResult.OutOfRange))
 					{
 						//Does the target can be attacked ?
-						if (ad.Target != null && IsObjectInFront(ad.Target, 120) && this.IsWithinRadius(ad.Target, AttackRange) && m_attackAction != null)
+						if (ad.Target != null && IsObjectInFront(ad.Target, 120) && IsWithinRadius(ad.Target, AttackRange) && m_attackAction != null)
 						{
 							m_attackAction.Start(1);
 						}
@@ -10636,7 +10636,7 @@ namespace DOL.GS
 		{
 			if (!IsAlive || ObjectState != eObjectState.Active)
 				return 0;
-			if (this.Client.Account.PrivLevel == 1)
+			if (Client.Account.PrivLevel == 1)
 			{
 				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.DrowningTimerCallback.CannotBreath"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
 				Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.DrowningTimerCallback.Take5%Damage"), eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
@@ -10931,7 +10931,7 @@ namespace DOL.GS
 					if (ad != null && ad.IsMeleeAttack && (ad.AttackResult == eAttackResult.TargetNotVisible || ad.AttackResult == eAttackResult.OutOfRange))
 					{
 						//Does the target can be attacked ?
-						if (ad.Target != null && IsObjectInFront(ad.Target, 120) && this.IsWithinRadius(ad.Target, AttackRange) && m_attackAction != null)
+						if (ad.Target != null && IsObjectInFront(ad.Target, 120) && IsWithinRadius(ad.Target, AttackRange) && m_attackAction != null)
 						{
 							m_attackAction.Start(1);
 						}
@@ -11079,7 +11079,7 @@ namespace DOL.GS
 					enc *= 1 + ((double)ab.Amount / 100);
 
 				// Apply Sojourner ability
-				if (this.GetSpellLine("Sojourner") != null)
+				if (GetSpellLine("Sojourner") != null)
 				{
 					enc *= 1.25;
 				}
@@ -11764,7 +11764,7 @@ namespace DOL.GS
 			{
 				gameItem = new WorldInventoryItem(item);
 
-				Point2D itemloc = this.GetPointFromHeading(this.Heading, 30);
+				Point2D itemloc = GetPointFromHeading(Heading, 30);
 				gameItem.X = itemloc.X;
 				gameItem.Y = itemloc.Y;
 				gameItem.Z = Z;
@@ -11870,7 +11870,7 @@ namespace DOL.GS
 						{
 							if (ply.IsAlive
 							    && ply.CanSeeObject(floorObject)
-							    && this.IsWithinRadius( ply, WorldMgr.MAX_EXPFORKILL_DISTANCE )
+							    && IsWithinRadius( ply, WorldMgr.MAX_EXPFORKILL_DISTANCE )
 							    && (ply.ObjectState == eObjectState.Active)
 							    && (ply.AutoSplitLoot)
 							    && (owners.Contains(ply) || owners.Count == 0)
@@ -11997,7 +11997,7 @@ namespace DOL.GS
 			}
 			else if (floorObject is GameBoat)
 			{
-				if (!this.IsWithinRadius(floorObject, 1000))
+				if (!IsWithinRadius(floorObject, 1000))
 				{
 					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.PickupObject.TooFarFromBoat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
@@ -13109,7 +13109,7 @@ namespace DOL.GS
 				return false;
 			if (enemy.EffectList.GetOfType<VanishEffect>() != null)
 				return false;
-			if (this.Client.Account.PrivLevel > 1)
+			if (Client.Account.PrivLevel > 1)
 				return true;
 			if (enemy.Client.Account.PrivLevel > 1)
 				return false;
@@ -13126,7 +13126,7 @@ namespace DOL.GS
 			int EnemyStealthLevel = enemy.GetModifiedSpecLevel(Specs.Stealth);
 			if (EnemyStealthLevel > 50)
 				EnemyStealthLevel = 50;
-			int levelDiff = this.Level - EnemyStealthLevel;
+			int levelDiff = Level - EnemyStealthLevel;
 			if (levelDiff < 0) levelDiff = 0;
 
 			int range;
@@ -13199,7 +13199,7 @@ namespace DOL.GS
 
 			// Fin
 			// vampiir stealth range, uncomment when add eproperty stealthrange i suppose
-			return this.IsWithinRadius( enemy, range );
+			return IsWithinRadius( enemy, range );
 		}
 
 		#endregion
@@ -13235,7 +13235,7 @@ namespace DOL.GS
 			set
 			{
 				m_mission = value;
-				this.Out.SendQuestListUpdate();
+                Out.SendQuestListUpdate();
 				if (value != null) Out.SendMessage(m_mission.Description, eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 		}
@@ -15219,7 +15219,7 @@ namespace DOL.GS
 				double modifier = ServerProperties.Properties.CL_XP_RATE;
 
 				// 1 CLXP point per 333K normal XP
-				if (this.CurrentRegion.IsRvR)
+				if (CurrentRegion.IsRvR)
 				{
 					experience = (long)((double)experience * modifier / 333000);
 				}

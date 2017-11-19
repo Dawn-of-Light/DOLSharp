@@ -17,24 +17,15 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS;
 using DOL.Database;
-using System.Collections;
-using DOL.GS.Spells;
-using log4net;
-using System.Reflection;
-using DOL.GS.Quests.Catacombs.Obelisks;
-using DOL.GS.Housing;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Albion teleporter.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class AlbionTeleporter : GameTeleporter
+    /// <summary>
+    /// Albion teleporter.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class AlbionTeleporter : GameTeleporter
 	{
 		/// <summary>
 		/// Add equipment to the teleporter.

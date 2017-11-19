@@ -1,14 +1,11 @@
-using System;
 using System.Collections.Generic;
-using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	///
-	/// </summary>
-	[SpellHandlerAttribute("CureAll")]
+    /// <summary>
+    ///
+    /// </summary>
+    [SpellHandler("CureAll")]
 	public class CureAllSpellHandler : RemoveSpellEffectHandler
 	{
 		// constructor

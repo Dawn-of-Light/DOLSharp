@@ -24,7 +24,6 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 using DOL.Database;
-using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.Keeps;
 using DOL.GS.Utils;
@@ -33,13 +32,13 @@ using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// This class represents a region in DAOC. A region is everything where you
-	/// need a loadingscreen to go there. Eg. whole Albion is one Region, Midgard and
-	/// Hibernia are just one region too. Darkness Falls is a region. Each dungeon, city
-	/// is a region ... you get the clue. Each Region can hold an arbitary number of
-	/// Zones! Camelot Hills is one Zone, Tir na Nog is one Zone (and one Region)...
-	/// </summary>
+    /// <summary>
+    /// This class represents a region in DAOC. A region is everything where you
+    /// need a loadingscreen to go there. Eg. whole Albion is one Region, Midgard and
+    /// Hibernia are just one region too. Darkness Falls is a region. Each dungeon, city
+    /// is a region ... you get the clue. Each Region can hold an arbitary number of
+    /// Zones! Camelot Hills is one Zone, Tir na Nog is one Zone (and one Region)...
+    /// </summary>
     public class Region
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -741,7 +740,7 @@ namespace DOL.GS
         public void StartRegionMgr()
         {
             m_timeManager.Start();
-            this.Notify(RegionEvent.RegionStart, this);
+            Notify(RegionEvent.RegionStart, this);
         }
 
         /// <summary>
@@ -750,7 +749,7 @@ namespace DOL.GS
         public void StopRegionMgr()
         {
             m_timeManager.Stop();
-            this.Notify(RegionEvent.RegionStop, this);
+            Notify(RegionEvent.RegionStop, this);
         }
 
         /// <summary>
@@ -1279,7 +1278,7 @@ namespace DOL.GS
         {
             get
             {
-                switch (this.Skin)
+                switch (Skin)
                 {
                     case 10: return true; // Camelot City
                     case 101: return true; // Jordheim
@@ -1297,7 +1296,7 @@ namespace DOL.GS
         {
             get
             {
-                switch (this.Skin) // use the skin of the region
+                switch (Skin) // use the skin of the region
                 {
                     case 2: return true; 	// Housing alb
                     case 102: return true; 	// Housing mid

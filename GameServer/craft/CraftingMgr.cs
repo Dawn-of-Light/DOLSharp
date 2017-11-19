@@ -18,15 +18,14 @@
  */
 using System.Reflection;
 using DOL.Database;
-using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Enum of all crafting skill (related to client file)
-	/// </summary>
-	public enum eCraftingSkill : int
+    /// <summary>
+    /// Enum of all crafting skill (related to client file)
+    /// </summary>
+    public enum eCraftingSkill : int
 	{
 		NoCrafting = 0,
 		WeaponCrafting = 1,

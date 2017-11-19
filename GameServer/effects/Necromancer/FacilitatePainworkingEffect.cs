@@ -16,16 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 using DOL.GS.Spells;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// The Facilitate Painworking effect.
-	/// </summary>
-	/// <author>Aredhel</author>
+    /// <summary>
+    /// The Facilitate Painworking effect.
+    /// </summary>
+    /// <author>Aredhel</author>
     public class FacilitatePainworkingEffect : GameSpellEffect
     {
         public FacilitatePainworkingEffect(ISpellHandler handler, int duration, int pulseFreq, double effectiveness)

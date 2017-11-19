@@ -1,16 +1,13 @@
 using System;
-using System.Reflection;
 using System.Collections;
 using DOL.Events;
-using DOL.GS;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.Database;
-using log4net;
 
 namespace DOL.GS
 {
-	public enum eRelicType : int
+    public enum eRelicType : int
 	{
 		Invalid = -1,
 		Strength = 0,
@@ -346,7 +343,7 @@ namespace DOL.GS
 
 			if (ReturnRelicPad != null)
 			{
-				log.Debug("Relic " + this.Name + " is lost and returns to " + ReturnRelicPad.ToString());
+				log.Debug("Relic " + Name + " is lost and returns to " + ReturnRelicPad.ToString());
 				RemoveFromWorld();
 				RelicPadTakesOver(ReturnRelicPad, true);
 				SaveIntoDatabase();
@@ -354,7 +351,7 @@ namespace DOL.GS
 			}
 			else
 			{
-				log.Error("Relic " + this.Name + " is lost and ReturnRelicPad is null!");
+				log.Error("Relic " + Name + " is lost and ReturnRelicPad is null!");
 			}
 			m_returnRelicTimer.Stop();
 			m_returnRelicTimer = null;

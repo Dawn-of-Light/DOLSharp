@@ -1,9 +1,8 @@
 using System;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&summon", ePrivLevel.Player,"Summon horse","/summon")]
+    [Cmd("&summon", ePrivLevel.Player,"Summon horse","/summon")]
 	public class SummonHorseCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)

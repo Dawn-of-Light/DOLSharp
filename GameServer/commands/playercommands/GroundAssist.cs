@@ -20,7 +20,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&groundassist", //command to handle
+	[Cmd("&groundassist", //command to handle
 		 ePrivLevel.Player, //minimum privelege level
 		 "Show the current coordinates", //command description
 		 "/groundassist")] //command usage

@@ -1,10 +1,8 @@
-using System;
 using DOL.Database;
-using DOL.GS.PropertyCalc;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class LifterAbility : RAPropertyEnhancer
+    public class LifterAbility : RAPropertyEnhancer
 	{
 		public LifterAbility(DBAbility dba, int level)
 			: base(dba, level, eProperty.Undefined)

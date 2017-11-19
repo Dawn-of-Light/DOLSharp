@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.Reflection;
@@ -24,15 +23,14 @@ using DOL.Database;
 using DOL.Language;
 using DOL.GS.Keeps;
 using log4net;
-using DOL.GS.Housing;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Guild inside the game.
-	/// </summary>
-	public class Guild
+    /// <summary>
+    /// Guild inside the game.
+    /// </summary>
+    public class Guild
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -146,11 +144,11 @@ namespace DOL.GS
 		{
 			get
 			{
-				return this.m_DBguild.Webpage;
+				return m_DBguild.Webpage;
 			}
 			set
 			{
-				this.m_DBguild.Webpage = value;
+                m_DBguild.Webpage = value;
 			}
 		}
 
@@ -158,11 +156,11 @@ namespace DOL.GS
 		{
 			get
 			{
-				return this.m_DBguild.Ranks;
+				return m_DBguild.Ranks;
 			}
 			set
 			{
-				this.m_DBguild.Ranks = value;
+                m_DBguild.Ranks = value;
 			}
 		}
 
@@ -203,7 +201,7 @@ namespace DOL.GS
 
 		public double GetGuildBank()
 		{
-			return this.m_DBguild.Bank;
+			return m_DBguild.Bank;
 		}
 
 		public bool IsGuildDuesOn()
@@ -225,11 +223,11 @@ namespace DOL.GS
 		{
 			if (IsGuildDuesOn() == true)
 			{
-				this.m_DBguild.DuesPercent = dues;
+                m_DBguild.DuesPercent = dues;
 			}
 			else
 			{
-				this.m_DBguild.DuesPercent = 0;
+                m_DBguild.DuesPercent = 0;
 			}
 		}
 		/// <summary>
@@ -300,7 +298,7 @@ namespace DOL.GS
 		/// </summary>
 		public Guild(DBGuild dbGuild)
 		{
-			this.m_DBguild = dbGuild;
+            m_DBguild = dbGuild;
 			bannerStatus = "None";
 		}
 
@@ -308,12 +306,12 @@ namespace DOL.GS
 		{
 			get
 			{
-				return this.m_DBguild.Emblem;
+				return m_DBguild.Emblem;
 			}
 			set
 			{
-				this.m_DBguild.Emblem = value;
-				this.SaveIntoDatabase();
+                m_DBguild.Emblem = value;
+                SaveIntoDatabase();
 			}
 		}
 
@@ -321,12 +319,12 @@ namespace DOL.GS
 		{
 			get 
 			{
-				return this.m_DBguild.GuildBanner;
+				return m_DBguild.GuildBanner;
 			}
 			set
 			{
-				this.m_DBguild.GuildBanner = value;
-				this.SaveIntoDatabase();
+                m_DBguild.GuildBanner = value;
+                SaveIntoDatabase();
 			}
 		}
 
@@ -343,8 +341,8 @@ namespace DOL.GS
 			}
 			set
 			{
-				this.m_DBguild.GuildBannerLostTime = value;
-				this.SaveIntoDatabase();
+                m_DBguild.GuildBannerLostTime = value;
+                SaveIntoDatabase();
 			}
 		}
 
@@ -352,12 +350,12 @@ namespace DOL.GS
 		{
 			get
 			{
-				return this.m_DBguild.oMotd;
+				return m_DBguild.oMotd;
 			}
 			set
 			{
-				this.m_DBguild.oMotd = value;
-				this.SaveIntoDatabase();
+                m_DBguild.oMotd = value;
+                SaveIntoDatabase();
 			}
 		}
 
@@ -365,12 +363,12 @@ namespace DOL.GS
 		{
 			get
 			{
-				return this.m_DBguild.Motd;
+				return m_DBguild.Motd;
 			}
 			set
 			{
-				this.m_DBguild.Motd = value;
-				this.SaveIntoDatabase();
+                m_DBguild.Motd = value;
+                SaveIntoDatabase();
 			}
 		}
 
@@ -378,12 +376,12 @@ namespace DOL.GS
 		{
 			get
 			{
-				return this.m_DBguild.AllianceID;
+				return m_DBguild.AllianceID;
 			}
 			set
 			{
-				this.m_DBguild.AllianceID = value;
-				this.SaveIntoDatabase();
+                m_DBguild.AllianceID = value;
+                SaveIntoDatabase();
 			}
 		}
 
@@ -414,7 +412,7 @@ namespace DOL.GS
 			set 
 			{
 				m_DBguild.GuildID = value;
-				this.SaveIntoDatabase();
+                SaveIntoDatabase();
 			}
 		}
 
@@ -445,7 +443,7 @@ namespace DOL.GS
 			set 
 			{
 				m_DBguild.GuildName = value;
-				this.SaveIntoDatabase();
+                SaveIntoDatabase();
 			}
 		}
 
@@ -453,12 +451,12 @@ namespace DOL.GS
 		{
 			get 
 			{ 
-				return this.m_DBguild.RealmPoints; 
+				return m_DBguild.RealmPoints; 
 			}
 			set
 			{
-				this.m_DBguild.RealmPoints = value;
-				this.SaveIntoDatabase();
+                m_DBguild.RealmPoints = value;
+                SaveIntoDatabase();
 			}
 		}
 
@@ -466,12 +464,12 @@ namespace DOL.GS
 		{
 			get 
 			{ 
-				return this.m_DBguild.BountyPoints; 
+				return m_DBguild.BountyPoints; 
 			}
 			set
 			{
-				this.m_DBguild.BountyPoints = value;
-				this.SaveIntoDatabase();
+                m_DBguild.BountyPoints = value;
+                SaveIntoDatabase();
 			}
 		}
 
@@ -616,7 +614,7 @@ namespace DOL.GS
 				addPlayer.Guild = this;
 				addPlayer.SaveIntoDatabase();
 				GuildMgr.AddPlayerToAllGuildPlayersList(addPlayer);
-				addPlayer.Out.SendMessage("You have agreed to join " + this.Name + "!", eChatType.CT_Group, eChatLoc.CL_SystemWindow);
+				addPlayer.Out.SendMessage("You have agreed to join " + Name + "!", eChatType.CT_Group, eChatLoc.CL_SystemWindow);
 				addPlayer.Out.SendMessage("Your current rank is " + addPlayer.GuildRank.Title + "!", eChatType.CT_Group, eChatLoc.CL_SystemWindow);
 				SendMessageToGuildMembers(addPlayer.Name + " has joined the guild!", eChatType.CT_Group, eChatLoc.CL_SystemWindow);
 			}
@@ -654,7 +652,7 @@ namespace DOL.GS
 				if (removername == member.Name)
 					member.Out.SendMessage("You leave the guild.", DOL.GS.PacketHandler.eChatType.CT_System, DOL.GS.PacketHandler.eChatLoc.CL_SystemWindow);
 				else
-					member.Out.SendMessage(removername + " removed you from " + this.Name, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
+					member.Out.SendMessage(removername + " removed you from " + Name, PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
 			}
 			catch (Exception e)
 			{
@@ -803,7 +801,7 @@ namespace DOL.GS
 		{
 			try
 			{
-				foreach (DBRank rank in this.Ranks)
+				foreach (DBRank rank in Ranks)
 				{
 					if (rank.RankLevel == index)
 						return rank;
@@ -856,12 +854,12 @@ namespace DOL.GS
 		/// </summary>
 		public virtual bool RemoveBountyPoints(long amount)
 		{
-			if (amount > this.m_DBguild.BountyPoints)
+			if (amount > m_DBguild.BountyPoints)
 			{
 				return false;
 			}
-			this.m_DBguild.BountyPoints -= amount;
-			this.SaveIntoDatabase();
+            m_DBguild.BountyPoints -= amount;
+            SaveIntoDatabase();
 			return true;
 		}
 
@@ -872,12 +870,12 @@ namespace DOL.GS
 		{
 			get 
 			{
-				return this.m_DBguild.MeritPoints;
+				return m_DBguild.MeritPoints;
 			}
 			set 
 			{
-				this.m_DBguild.MeritPoints = value;
-				this.SaveIntoDatabase();
+                m_DBguild.MeritPoints = value;
+                SaveIntoDatabase();
 			}
 		}
 
@@ -903,8 +901,8 @@ namespace DOL.GS
 			}
 			set 
 			{
-				this.m_DBguild.BonusType = (byte)value;
-				this.SaveIntoDatabase();
+                m_DBguild.BonusType = (byte)value;
+                SaveIntoDatabase();
 			}
 		}
 
@@ -920,12 +918,12 @@ namespace DOL.GS
 					return new DateTime(2010, 1, 1);
 				}
 
-				return this.m_DBguild.BonusStartTime; 
+				return m_DBguild.BonusStartTime; 
 			}
 			set 
 			{
-				this.m_DBguild.BonusStartTime = value;
-				this.SaveIntoDatabase();
+                m_DBguild.BonusStartTime = value;
+                SaveIntoDatabase();
 			}
 		}
 
@@ -933,12 +931,12 @@ namespace DOL.GS
 		{
 			get
 			{
-				return this.m_DBguild.Email;
+				return m_DBguild.Email;
 			}
 			set
 			{
-				this.m_DBguild.Email = value;
-				this.SaveIntoDatabase();
+                m_DBguild.Email = value;
+                SaveIntoDatabase();
 			}
 		}
 
@@ -966,7 +964,7 @@ namespace DOL.GS
 
 		public bool AddToDatabase()
 		{
-			return GameServer.Database.AddObject(this.m_DBguild);
+			return GameServer.Database.AddObject(m_DBguild);
 		}
 		/// <summary>
 		/// Saves this guild to database

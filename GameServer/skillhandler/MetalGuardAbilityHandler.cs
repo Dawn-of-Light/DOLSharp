@@ -16,16 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.GS.PacketHandler;
-using DOL.GS;
 
 namespace DOL.GS.SkillHandler
 {
     /// <summary>
     /// Handler for Sprint Ability clicks
     /// </summary>
-    [SkillHandlerAttribute(Abilities.MetalGuard)]
+    [SkillHandler(Abilities.MetalGuard)]
     public class MetalGuardAbilityHandler : SpellCastingAbilityHandler
     {
 		public override long Preconditions

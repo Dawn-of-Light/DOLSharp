@@ -30,12 +30,11 @@ using DOL.GS.Effects;
 using DOL.GS.Keeps;
 using DOL.GS.Quests;
 using DOL.GS.Spells;
-using DOL.GS.Styles;
 using log4net;
 
 namespace DOL.GS.PacketHandler
 {
-	[PacketLib(173, GameClient.eClientVersion.Version173)]
+    [PacketLib(173, GameClient.eClientVersion.Version173)]
 	public class PacketLib173 : PacketLib172
 	{
 		/// <summary>

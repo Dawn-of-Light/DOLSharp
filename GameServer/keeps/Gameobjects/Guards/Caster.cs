@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
 
 namespace DOL.GS.Keeps
 {
-	public class GuardCaster : GameKeepGuard
+    public class GuardCaster : GameKeepGuard
 	{
 		public const int INTERVAL = 360 * 1000;
 
@@ -31,7 +30,7 @@ namespace DOL.GS.Keeps
 		{
 			if (base.IsAlive)
 			{
-				foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
 					player.Out.SendSpellCastAnimation(this, 4321, 30);
 					RegionTimer timer = new RegionTimer(player, new RegionTimerCallback(ShowEffect), 3000);
@@ -44,14 +43,14 @@ namespace DOL.GS.Keeps
 		{
 			if (base.IsAlive)
 			{
-				foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
 					player.Out.SendSpellEffectAnimation(this, this, 4321, 0, false, 1);
 				}
-				foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 				{
 
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GuardCaster.SkinsHardens", this.Name), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GuardCaster.SkinsHardens", Name), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
 
 				}
 			}

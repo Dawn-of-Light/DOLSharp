@@ -31,20 +31,18 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Behaviour;
-using DOL.GS.Behaviour.Attributes;
-using DOL.GS.PacketHandler;
-using DOL.GS.Quests;
 using DOL.Language;
 using log4net;
 
 
-	namespace DOL.GS.Quests.Midgard {
-	
-     /* The first thing we do, is to declare the class we create
-	 * as Quest. To do this, we derive from the abstract class
-	 * BaseQuest	  	 
-	 */
-	public class thebirthdaygift : BaseQuest
+namespace DOL.GS.Quests.Midgard
+{
+
+    /* The first thing we do, is to declare the class we create
+    * as Quest. To do this, we derive from the abstract class
+    * BaseQuest	  	 
+    */
+    public class thebirthdaygift : BaseQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.

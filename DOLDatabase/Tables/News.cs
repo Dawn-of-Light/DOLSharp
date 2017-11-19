@@ -17,16 +17,14 @@
  *
  */
 using System;
-
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Account table
-	/// </summary>
-	[DataTable(TableName = "News")]
+    /// <summary>
+    /// Account table
+    /// </summary>
+    [DataTable(TableName = "News")]
 	public class DBNews : DataObject
 	{
 		private DateTime m_creationDate;

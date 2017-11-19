@@ -17,15 +17,13 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS.PacketHandler;
 using DOL.Events;
-using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
+using DOL.GS.Behaviour.Attributes;
+using DOL.GS.Behaviour;
 
 namespace DOL.GS.Quests.Actions
 {
-    [ActionAttribute(ActionType = eActionType.IncQuestStep)]
+    [Action(ActionType = eActionType.IncQuestStep)]
     public class IncreaseQuestStepAction: AbstractAction<Type,Unused>
     {
 

@@ -18,8 +18,6 @@
  */
 using System;
 using System.Collections.Generic;
-
-using DOL.GS;
 using DOL.GS.Spells;
 using DOL.GS.PacketHandler;
 using DOL.Events;
@@ -29,10 +27,10 @@ using DOL.GS.PlayerClass;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// The necromancer character class.
-	/// </summary>
-	public class CharacterClassNecromancer : ClassDisciple
+    /// <summary>
+    /// The necromancer character class.
+    /// </summary>
+    public class CharacterClassNecromancer : ClassDisciple
 	{
 		public override void Init(GamePlayer player)
 		{

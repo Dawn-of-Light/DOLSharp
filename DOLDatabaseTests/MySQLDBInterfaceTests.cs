@@ -17,16 +17,15 @@
  *
  */
 
-using System;
 
 using NUnit.Framework;
 
 namespace DOL.Database.MySQLTests
 {
-	/// <summary>
-	/// Description of MySQLDBInterfaceTests.
-	/// </summary>
-	[TestFixture, Explicit]
+    /// <summary>
+    /// Description of MySQLDBInterfaceTests.
+    /// </summary>
+    [TestFixture, Explicit]
 	public class MySQLDBInterfaceTests : DOL.Database.Tests.InterfaceTests
 	{
 		public MySQLDBInterfaceTests()

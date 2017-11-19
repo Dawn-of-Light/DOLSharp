@@ -16,30 +16,26 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 
-using DOL.GS;
 using DOL.Database;
 
 using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Description of AdventureWingInstance. Based on Catacombs Instances Implementation
-	/// Used to create personal or group dungeon instance so player can play in there without being annoyed
-	/// will try to maintain owner ship of the instance so player or group can get back to it
-	/// The Instance should destroy 5 min after nobody is inside or when all mobs are down
-	/// Other manager are needed to prevent too much instance spawning (using JumpPoint for example)
-	/// </summary>
-	public class AdventureWingInstance : RegionInstance
+    /// <summary>
+    /// Description of AdventureWingInstance. Based on Catacombs Instances Implementation
+    /// Used to create personal or group dungeon instance so player can play in there without being annoyed
+    /// will try to maintain owner ship of the instance so player or group can get back to it
+    /// The Instance should destroy 5 min after nobody is inside or when all mobs are down
+    /// Other manager are needed to prevent too much instance spawning (using JumpPoint for example)
+    /// </summary>
+    public class AdventureWingInstance : RegionInstance
 	{
 		/// <summary>
 		/// Console Logger
 		/// </summary>
-		private static readonly ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		
 		/// <summary>
 		/// Group Owner
@@ -83,7 +79,7 @@ namespace DOL.GS
 		/// </summary>
 		public void UpdateInstanceOwner()
 		{
-			if(this.NumPlayers < 1) 
+			if(NumPlayers < 1) 
 			{
 				return;	
 			}
@@ -99,7 +95,7 @@ namespace DOL.GS
             if(m_group != null) 
             {
             	// check if group still inside
-				foreach(GamePlayer ininstance in this.PlayersInside) 
+				foreach(GamePlayer ininstance in PlayersInside) 
 				{
 					if(ininstance.Group != null && m_group == ininstance.Group) 
 					{
@@ -118,7 +114,7 @@ namespace DOL.GS
             // check if player owner is still inside
             if(!stillOwner && m_player != null)
             {
-            	foreach(GamePlayer ininstance in this.PlayersInside) 
+            	foreach(GamePlayer ininstance in PlayersInside) 
 				{
 					if(ininstance == m_player)
 					{
@@ -176,23 +172,23 @@ namespace DOL.GS
 		public override void OnPlayerLeaveInstance(GamePlayer player)
         {
 			// last player going out
-			if(this.NumPlayers == 1) 
+			if(NumPlayers == 1) 
 			{
 				if(player.Group != null) 
 				{
-					this.m_group = player.Group;
-					this.m_player = player.Group.Leader;
+                    m_group = player.Group;
+                    m_player = player.Group.Leader;
 				}
 				else {
-					this.m_group = null;
-					this.m_player = player;
+                    m_group = null;
+                    m_player = player;
 				}
 			}
 			
             //Decrease the amount of players
             base.OnPlayerLeaveInstance(player);
             	
-            if(this.NumPlayers > 0) 
+            if(NumPlayers > 0) 
             {
             	UpdateInstanceOwner();
             }
@@ -203,7 +199,7 @@ namespace DOL.GS
             	{
             		// there is still something => standard autoclosure + break;
 	            	log.Warn("Instance now empty, will destroy instance " + Description + ", ID: " + ID + ", type=" + GetType().ToString() + ". In " + ServerProperties.Properties.ADVENTUREWING_TIME_TO_DESTROY + " min.");
-	            	this.BeginAutoClosureCountdown(ServerProperties.Properties.ADVENTUREWING_TIME_TO_DESTROY);
+                    BeginAutoClosureCountdown(ServerProperties.Properties.ADVENTUREWING_TIME_TO_DESTROY);
                 	
                 	return;
             	}

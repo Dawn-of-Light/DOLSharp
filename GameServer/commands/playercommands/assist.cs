@@ -17,7 +17,6 @@
  *
  */
 
-using System;
 
 using DOL.Language;
 using DOL.GS.Keeps;
@@ -25,7 +24,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&assist", ePrivLevel.Player, "Assist your target", "/assist [playerName]")]
+    [Cmd("&assist", ePrivLevel.Player, "Assist your target", "/assist [playerName]")]
 	public class AssistCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)

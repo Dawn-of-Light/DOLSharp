@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	/// <summary>
-	/// Command handler to remove House player
-	/// </summary>
-	[CmdAttribute(
+    /// <summary>
+    /// Command handler to remove House player
+    /// </summary>
+    [Cmd(
 		"&removehouse",
 		ePrivLevel.GM,
 		"Remove House or you are", "/removehouse")]

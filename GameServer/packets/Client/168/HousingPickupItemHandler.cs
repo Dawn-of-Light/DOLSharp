@@ -24,7 +24,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// <summary>
 	/// Handle housing pickup item requests from the client.
 	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.PlayerPickupHouseItem, "Handle Housing Pick Up Request.", eClientStatus.PlayerInGame)]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.PlayerPickupHouseItem, "Handle Housing Pick Up Request.", eClientStatus.PlayerInGame)]
 	public class HousingPickupItemHandler : IPacketHandler
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

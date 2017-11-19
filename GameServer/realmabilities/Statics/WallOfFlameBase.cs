@@ -1,14 +1,9 @@
-using System;
-using System.Collections;
 using DOL.Database;
-using DOL.GS;
 using DOL.GS.Spells;
-using DOL.Events;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.RealmAbilities.Statics
 {
-	public class WallOfFlameBase : GenericBase
+    public class WallOfFlameBase : GenericBase
 	{
 		protected override string GetStaticName() { return "Wall Of Flame"; }
 		protected override ushort GetStaticModel() { return 2651; }

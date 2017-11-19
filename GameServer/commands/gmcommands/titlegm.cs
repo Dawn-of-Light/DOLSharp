@@ -16,17 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.PlayerTitles;
-using DOL.GS.Commands;
 
 namespace DOL.GS.Commands
 {
-	[Cmd(
+    [Cmd(
 		 "&titlegm",
 		 ePrivLevel.GM,
 		 "Changes target player's titles",

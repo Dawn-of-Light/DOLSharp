@@ -22,7 +22,7 @@ using System.Linq;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&disband",
 		ePrivLevel.Player,
 		"Disband from a group", "/disband")]

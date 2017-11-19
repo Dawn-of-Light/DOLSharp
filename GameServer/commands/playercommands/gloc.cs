@@ -16,11 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&gloc", //command to handle
+    [Cmd("&gloc", //command to handle
 		ePrivLevel.Player, //minimum privelege level
 		"Show the current coordinates", //command description
 		"/gloc")] //command usage

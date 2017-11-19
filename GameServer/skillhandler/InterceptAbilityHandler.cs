@@ -26,7 +26,7 @@ namespace DOL.GS.SkillHandler
 	/// <summary>
 	/// Handler for Intercept ability clicks
 	/// </summary>
-	[SkillHandlerAttribute(Abilities.Intercept)]
+	[SkillHandler(Abilities.Intercept)]
 	public class InterceptAbilityHandler : IAbilityActionHandler
 	{
 		/// <summary>

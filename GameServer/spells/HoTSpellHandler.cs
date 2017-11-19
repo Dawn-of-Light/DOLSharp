@@ -17,18 +17,16 @@
  *
  */
 using System;
-using System.Collections;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Heal Over Time spell handler
-	/// </summary>
-	[SpellHandlerAttribute("HealOverTime")]
+    /// <summary>
+    /// Heal Over Time spell handler
+    /// </summary>
+    [SpellHandler("HealOverTime")]
 	public class HoTSpellHandler : SpellHandler
 	{
 		/// <summary>

@@ -16,18 +16,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 
 
 namespace DOL.GS.Scripts
 {
-	/// <summary>
-	/// Portal Ceremony NPC summon Disciple based on a pre-set template ID.
-	/// It then start a timer with animation at different state to finally teleport player withing range.
-	/// Override the Destination Attribute for your own subclasses.
-	/// </summary>
-	public class PortalCeremonyBaseNPC : GameNPC
+    /// <summary>
+    /// Portal Ceremony NPC summon Disciple based on a pre-set template ID.
+    /// It then start a timer with animation at different state to finally teleport player withing range.
+    /// Override the Destination Attribute for your own subclasses.
+    /// </summary>
+    public class PortalCeremonyBaseNPC : GameNPC
 	{
 		/// <summary>
 		/// Portal Pad Model id to override

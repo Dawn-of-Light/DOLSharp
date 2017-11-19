@@ -18,19 +18,17 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 using DOL.GS.Effects;
-using DOL.GS;
 using DOL.Events;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Summary description for ReanimateCorpe.
-	/// </summary>
-	[SpellHandlerAttribute("ReanimateCorpse")]
+    /// <summary>
+    /// Summary description for ReanimateCorpe.
+    /// </summary>
+    [SpellHandler("ReanimateCorpse")]
 	public class MonsterRez : ResurrectSpellHandler
 	{
 		// Constructor
@@ -60,7 +58,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Summary description for ReanimateCorpe.
 	/// </summary>
-	[SpellHandlerAttribute("SummonMonster")]
+	[SpellHandler("SummonMonster")]
 	public class SummonMonster : SpellHandler
 	{
 		private ushort m_model = 0;
@@ -127,8 +125,8 @@ namespace DOL.GS.Spells
 			if (effect.Owner is GamePlayer)
 			{
 				GamePlayer player = effect.Owner as GamePlayer;
-				player.CastSpell(this.MonsterSpellDoT, this.MonsterSpellLine);
-				player.CastSpell(this.MonsterSpellDisease, this.MonsterSpellLine);
+				player.CastSpell(MonsterSpellDoT, MonsterSpellLine);
+				player.CastSpell(MonsterSpellDisease, MonsterSpellLine);
 			}
 
 			base.OnEffectPulse(effect);
@@ -163,7 +161,7 @@ namespace DOL.GS.Spells
 			GamePlayer player = sender as GamePlayer; //attacker
 			if (player == null) return;
 			player.Model = m_model;
-			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(player, "SummonMonster");
+			GameSpellEffect effect = FindEffectOnTarget(player, "SummonMonster");
 			if (effect != null)
 				effect.Cancel(false);
 		}
@@ -176,7 +174,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Summary description for MonsterDoT.
 	/// </summary>
-	[SpellHandlerAttribute("MonsterDoT")]
+	[SpellHandler("MonsterDoT")]
 	public class MonsterDoT : DirectDamageSpellHandler
 	{
 		public override IList<GameLiving> SelectTargets(GameObject castTarget)
@@ -213,7 +211,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Summary description for MonsterDoT.
 	/// </summary>
-	[SpellHandlerAttribute("MonsterDisease")]
+	[SpellHandler("MonsterDisease")]
 	public class MonsterDisease : DiseaseSpellHandler
 	{
 		public override IList<GameLiving> SelectTargets(GameObject castTarget)

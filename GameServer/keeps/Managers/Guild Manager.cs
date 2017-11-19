@@ -1,15 +1,12 @@
 using System;
-
-using DOL.Database;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Keeps
 {
-	/// <summary>
-	/// Class to manage all the dealings with Guilds
-	/// </summary>
-	public class KeepGuildMgr
+    /// <summary>
+    /// Class to manage all the dealings with Guilds
+    /// </summary>
+    public class KeepGuildMgr
 	{
 		/// <summary>
 		/// Sends a message to the guild informing them that a door has been destroyed

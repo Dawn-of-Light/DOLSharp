@@ -16,9 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
 using System.Collections.Generic;
-using System;
 using System.Reflection;
 
 using DOL.Database;
@@ -28,10 +26,10 @@ using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// DoorMgr is manager of all door regular door and keep door
-	/// </summary>
-	public sealed class DoorMgr
+    /// <summary>
+    /// DoorMgr is manager of all door regular door and keep door
+    /// </summary>
+    public sealed class DoorMgr
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 

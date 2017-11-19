@@ -16,18 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.Database;
 using DOL.GS;
-using DOL.GS.PacketHandler;
 using NUnit.Framework;
 
 namespace DOL.Server.Tests
 {
-	/// <summary>
-	/// Unit tests for the new Training System
-	/// </summary>
-	[TestFixture]
+    /// <summary>
+    /// Unit tests for the new Training System
+    /// </summary>
+    [TestFixture]
 	public class Train1105 : ServerTests
 	{
 		[Test, Explicit]

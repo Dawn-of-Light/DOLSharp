@@ -17,7 +17,6 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -25,7 +24,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&object", //command to handle
+    [Cmd("&object", //command to handle
 	              ePrivLevel.GM, //minimum privelege level
 	              "Various Object commands!", //command description
 	              //usage

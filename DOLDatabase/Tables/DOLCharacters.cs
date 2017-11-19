@@ -17,16 +17,14 @@
  *
  */
 using System;
-
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// The player character. Stores GamePlayer in DB
-	/// </summary>
-	[DataTable(TableName = "DOLCharacters")]
+    /// <summary>
+    /// The player character. Stores GamePlayer in DB
+    /// </summary>
+    [DataTable(TableName = "DOLCharacters")]
 	public class DOLCharacters : DataObject
 	{
 		private string m_accountName;

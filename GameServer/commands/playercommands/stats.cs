@@ -20,20 +20,10 @@
 // Eden - Darwin 06/10/2008 - Complete /stats
 // Tolakram - moved most code to PlayerStatistics to enable custom stats display
 
-using System;
-using System.Reflection;
-using System.Collections.Generic;
-using DOL.GS;
-using DOL.GS.PacketHandler;
-using DOL.Events;
-using DOL;
-using System.Collections;
-using DOL.Database;
-using log4net;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		"&stats",
 		ePrivLevel.Player,
 		"Displays player statistics")]

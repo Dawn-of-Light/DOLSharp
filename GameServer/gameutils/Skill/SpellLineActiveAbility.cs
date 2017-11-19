@@ -16,17 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 using DOL.Database;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Active Spell Line Ability Handler.
-	/// Trigger Spell Casting in Described Spell Line using spell available at given Ability Level.
-	/// </summary>
-	public class SpellLineActiveAbility : SpellLineAbstractAbility
+    /// <summary>
+    /// Active Spell Line Ability Handler.
+    /// Trigger Spell Casting in Described Spell Line using spell available at given Ability Level.
+    /// </summary>
+    public class SpellLineActiveAbility : SpellLineAbstractAbility
 	{
 		/// <summary>
 		/// Execute Handler

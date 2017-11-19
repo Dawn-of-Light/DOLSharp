@@ -17,17 +17,16 @@
  *
  */
 using System;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Spell handler for speed decreasing spells
-	/// </summary>
-	[SpellHandler("SpeedDecrease")]
+    /// <summary>
+    /// Spell handler for speed decreasing spells
+    /// </summary>
+    [SpellHandler("SpeedDecrease")]
 	public class SpeedDecreaseSpellHandler : UnbreakableSpeedDecreaseSpellHandler
 	{
 		/// <summary>
@@ -63,7 +62,7 @@ namespace DOL.GS.Spells
 			base.OnEffectStart(effect);
 			GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
 			// Cancels mezz on the effect owner, if applied
-			GameSpellEffect mezz = SpellHandler.FindEffectOnTarget(effect.Owner, "Mesmerize");
+			GameSpellEffect mezz = FindEffectOnTarget(effect.Owner, "Mesmerize");
 			if (mezz != null)
 				mezz.Cancel(false);
 		}

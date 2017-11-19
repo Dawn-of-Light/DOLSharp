@@ -1,16 +1,14 @@
-using System;
 using log4net;
 using System.Reflection;
 using DOL.GS;
 using DOL.GS.Keeps;
-using DOL.GS.Movement;
 
 namespace DOL.AI.Brain
 {
-	/// <summary>
-	/// Brain Class for Area Capture Guards
-	/// </summary>
-	public class KeepGuardBrain : StandardMobBrain
+    /// <summary>
+    /// Brain Class for Area Capture Guards
+    /// </summary>
+    public class KeepGuardBrain : StandardMobBrain
 	{
 		/// <summary>
 		/// Defines a logger for this class.

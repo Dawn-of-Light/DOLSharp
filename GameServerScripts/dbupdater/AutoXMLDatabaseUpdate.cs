@@ -26,18 +26,17 @@ using System.Security.Cryptography;
 using System.Linq;
 
 using DOL.Database;
-using DOL.GS.DatabaseUpdate;
 using DOL.GS.ServerProperties;
 
 using log4net;
 
 namespace DOL.GS.DatabaseUpdate
 {
-	/// <summary>
-	/// Automated Database Updater target at XML Package File
-	/// Will read for folder "insert" or "replace" inside Game Server Scripts to track File Package
-	/// Will try to load accordingly at Server Startup (insert as insert ignore, replace to override data)
-	/// </summary>
+    /// <summary>
+    /// Automated Database Updater target at XML Package File
+    /// Will read for folder "insert" or "replace" inside Game Server Scripts to track File Package
+    /// Will try to load accordingly at Server Startup (insert as insert ignore, replace to override data)
+    /// </summary>
     [DatabaseUpdate]
 	public class AutoXMLDatabaseUpdate : IDatabaseUpdater
 	{

@@ -17,17 +17,12 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS.PacketHandler;
 using DOL.Events;
-using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
-using DOL.Database;
-
+using DOL.GS.Behaviour.Attributes;
 namespace DOL.GS.Behaviour.Actions
 {
     // NOTE it is important that we look into the database for the npc because since it's not spawn at the moment the WorldMgr cant find it!!!
-    [ActionAttribute(ActionType = eActionType.MonsterSpawn,DefaultValueP=eDefaultValueConstants.NPC)]
+    [Action(ActionType = eActionType.MonsterSpawn,DefaultValueP=eDefaultValueConstants.NPC)]
     public class MonsterSpawnAction : AbstractAction<GameLiving,Unused>
     {               
 

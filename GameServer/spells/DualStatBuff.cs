@@ -16,16 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Buffs two stats at once, goes into specline bonus category
-	/// </summary>	
-	public abstract class DualStatBuff : SingleStatBuff
+    /// <summary>
+    /// Buffs two stats at once, goes into specline bonus category
+    /// </summary>	
+    public abstract class DualStatBuff : SingleStatBuff
 	{
 		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.SpecBuff; } }
 		public override eBuffBonusCategory BonusCategory2 { get { return eBuffBonusCategory.SpecBuff; } }
@@ -42,7 +40,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Str/Con stat specline buff
 	/// </summary>
-	[SpellHandlerAttribute("StrengthConstitutionBuff")]
+	[SpellHandler("StrengthConstitutionBuff")]
 	public class StrengthConBuff : DualStatBuff
 	{
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
@@ -65,7 +63,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Dex/Qui stat specline buff
 	/// </summary>
-	[SpellHandlerAttribute("DexterityQuicknessBuff")]
+	[SpellHandler("DexterityQuicknessBuff")]
 	public class DexterityQuiBuff : DualStatBuff
 	{
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)

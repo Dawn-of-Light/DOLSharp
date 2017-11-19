@@ -16,20 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.Events;
-using DOL.GS.Quests;
 using DOL.Database;
 
 namespace DOL.GS.Quests.Atlantis.Encounters
 {
-	/// <summary>
-	/// Encounter for the Eerie Darkness Stone artifact.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class EerieDarknessStone : ArtifactEncounter
+    /// <summary>
+    /// Encounter for the Eerie Darkness Stone artifact.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class EerieDarknessStone : ArtifactEncounter
 	{
 		public EerieDarknessStone(GamePlayer questingPlayer)
 			: base(questingPlayer) { }

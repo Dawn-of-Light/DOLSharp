@@ -16,9 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
-using System.Collections;
 
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
@@ -211,7 +209,7 @@ namespace DOL.GS.Spells
     #endregion
 
 	#region Stylhandler
-	[SpellHandlerAttribute("MLStyleHandler")]
+	[SpellHandler("MLStyleHandler")]
 	public class MLStyleHandler : MasterlevelHandling
 	{
 		public MLStyleHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
@@ -1259,7 +1257,7 @@ namespace DOL.GS.Spells
     #endregion
 
     #region TargetModifier
-    [SpellHandlerAttribute("TargetModifier")]
+    [SpellHandler("TargetModifier")]
     public class TargetModifierSpellHandler : MasterlevelHandling
     {
         public override bool HasPositiveEffect
@@ -1271,7 +1269,7 @@ namespace DOL.GS.Spells
     #endregion
 
     #region Passive
-    [SpellHandlerAttribute("PassiveSpell")]
+    [SpellHandler("PassiveSpell")]
     public class PassiveSpellHandler : MasterlevelHandling
     {
         public override bool CheckBeginCast(GameLiving selectedTarget)
@@ -1292,7 +1290,7 @@ namespace DOL.GS
         public GameDecoy()
         {
             SetOwnBrain(new BlankBrain());
-            this.MaxSpeedBase = 0;
+            MaxSpeedBase = 0;
         }
         public override void Die(GameObject killer)
         {
@@ -1318,11 +1316,11 @@ namespace DOL.GS
         public GameFont()
         {
             SetOwnBrain(new BlankBrain());
-            this.Realm = 0;
-            this.Level = 1;
-            this.MaxSpeedBase = 0;
-            this.Flags |= GameNPC.eFlags.DONTSHOWNAME;
-            this.Health = this.MaxHealth;
+            Realm = 0;
+            Level = 1;
+            MaxSpeedBase = 0;
+            Flags |= GameNPC.eFlags.DONTSHOWNAME;
+            Health = MaxHealth;
         }
 
         private GamePlayer m_owner;
@@ -1374,10 +1372,10 @@ namespace DOL.GS
     {
         public GameMine()
         {
-            this.Realm = 0;
-            this.Level = 1;
-            this.Health = this.MaxHealth;
-			this.MaxSpeedBase = 0;
+            Realm = 0;
+            Level = 1;
+            Health = MaxHealth;
+            MaxSpeedBase = 0;
         }
 
         private GamePlayer m_owner;
@@ -1405,7 +1403,7 @@ namespace DOL.GS
                 criticalAmount = 0;
             }
             if (Health - damageAmount - criticalAmount <= 0)
-                this.Delete();
+                Delete();
             else
                 Health = Health - damageAmount - criticalAmount;
 
@@ -1419,14 +1417,14 @@ namespace DOL.GS
         public GameStorm()
         {
             SetOwnBrain(new BlankBrain());
-            this.Realm = 0;
-            this.Level = 60;
-            this.MaxSpeedBase = 191;
-            this.Model = 3457;
-            this.Name = "Storm";
-            this.Flags |= GameNPC.eFlags.DONTSHOWNAME;
-			this.Flags |= GameNPC.eFlags.CANTTARGET;
-            this.Movable = true;
+            Realm = 0;
+            Level = 60;
+            MaxSpeedBase = 191;
+            Model = 3457;
+            Name = "Storm";
+            Flags |= GameNPC.eFlags.DONTSHOWNAME;
+            Flags |= GameNPC.eFlags.CANTTARGET;
+            Movable = true;
         }
 
         private GamePlayer m_owner;

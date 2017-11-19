@@ -17,13 +17,10 @@
  *
  */
 using System;
-using DOL.GS;
-using DOL.GS.PacketHandler;
-using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		"&freeze",
 		ePrivLevel.Admin,
 		"Freeze The region timer you're in. (Test purpose only)",

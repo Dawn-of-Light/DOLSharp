@@ -17,19 +17,17 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 using DOL.Events;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Damages the target and lowers their resistance to the spell's type.
-	/// </summary>
-	[SpellHandler("DirectDamageWithDebuff")]
+    /// <summary>
+    /// Damages the target and lowers their resistance to the spell's type.
+    /// </summary>
+    [SpellHandler("DirectDamageWithDebuff")]
 	public class DirectDamageDebuffSpellHandler : AbstractResistDebuff
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

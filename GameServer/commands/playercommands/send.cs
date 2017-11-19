@@ -20,7 +20,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&send",
 		new string[] { "&tell", "&t" },
 		ePrivLevel.Player,

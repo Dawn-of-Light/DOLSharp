@@ -1,14 +1,13 @@
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Arms Length Realm Ability
-	/// </summary>
-	public class AllureOfDeathAbility : RR5RealmAbility
+    /// <summary>
+    /// Arms Length Realm Ability
+    /// </summary>
+    public class AllureOfDeathAbility : RR5RealmAbility
 	{
 		public AllureOfDeathAbility(DBAbility dba, int level) : base(dba, level) { }
 

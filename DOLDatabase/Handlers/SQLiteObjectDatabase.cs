@@ -23,10 +23,8 @@ using System.Linq;
 using System.Reflection;
 using System.Data;
 using System.Data.Common;
-using DataTable = System.Data.DataTable;
 
 using DOL.Database.Connection;
-using DOL.Database.Transaction;
 using IsolationLevel = DOL.Database.Transaction.IsolationLevel;
 
 using System.Data.SQLite;
@@ -35,7 +33,7 @@ using log4net;
 
 namespace DOL.Database.Handlers
 {
-	public class SQLiteObjectDatabase : SQLObjectDatabase
+    public class SQLiteObjectDatabase : SQLObjectDatabase
 	{
 		/// <summary>
 		/// Defines a logger for this class.

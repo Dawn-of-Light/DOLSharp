@@ -16,16 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
-using DOL.GS;
 
 namespace DOL.GS.Friends
 {
-	/// <summary>
-	/// Game Player Friends List Manager Extensions
-	/// </summary>
-	public static class FriendsManagerExtensions
+    /// <summary>
+    /// Game Player Friends List Manager Extensions
+    /// </summary>
+    public static class FriendsManagerExtensions
 	{
 		/// <summary>
 		/// Get This Player Friends List

@@ -18,14 +18,11 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using DOL.Database;
-using DOL.Events;
 using DOL.Language;
 using DOL.GS.PacketHandler;
 using log4net;
 using System.Reflection;
-using System.Collections;
 
 namespace DOL.GS.Quests.Atlantis
 {
@@ -174,7 +171,7 @@ namespace DOL.GS.Quests.Atlantis
 				return false;
 			}
 
-			if (player.HasFinishedQuest(this.GetType()) != 0)
+			if (player.HasFinishedQuest(GetType()) != 0)
 			{
 				m_reasonFailQualification = "You've already completed the quest for this artifact.";
 				return false;
@@ -192,7 +189,7 @@ namespace DOL.GS.Quests.Atlantis
 				return false;
 			}
 
-			if (player.IsDoingQuest(this.GetType()) != null)
+			if (player.IsDoingQuest(GetType()) != null)
 			{
 				m_reasonFailQualification = "You've already started the quest for this artifact.";
 				return false;

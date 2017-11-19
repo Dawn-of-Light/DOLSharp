@@ -24,7 +24,7 @@ namespace DOL.GS.Commands
 	// Command handler for the various /commands used in quests
 
 
-	[CmdAttribute(
+	[Cmd(
 		"&search",
 		ePrivLevel.Player,
 		"Search the current area.",

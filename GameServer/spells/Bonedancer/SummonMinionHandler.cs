@@ -18,40 +18,35 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using DOL.Database;
 using DOL.AI.Brain;
 using DOL.Events;
-using DOL.GS;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using DOL.GS.SkillHandler;
 using DOL.Language;
-using log4net;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Pet summon spell handler
-	///
-	/// Spell.LifeDrainReturn is used for pet ID.
-	///
-	/// Spell.Value is used for hard pet level cap
-	/// Spell.Damage is used to set pet level:
-	/// less than zero is considered as a percent (0 .. 100+) of target level;
-	/// higher than zero is considered as level value.
-	/// Resulting value is limited by the Byte field type.
-	/// Spell.DamageType is used to determine which type of pet is being cast:
-	/// 0 = melee
-	/// 1 = healer
-	/// 2 = mage
-	/// 3 = debuffer
-	/// 4 = Buffer
-	/// 5 = Range
-	/// </summary>
-	[SpellHandler("SummonMinion")]
+    /// <summary>
+    /// Pet summon spell handler
+    ///
+    /// Spell.LifeDrainReturn is used for pet ID.
+    ///
+    /// Spell.Value is used for hard pet level cap
+    /// Spell.Damage is used to set pet level:
+    /// less than zero is considered as a percent (0 .. 100+) of target level;
+    /// higher than zero is considered as level value.
+    /// Resulting value is limited by the Byte field type.
+    /// Spell.DamageType is used to determine which type of pet is being cast:
+    /// 0 = melee
+    /// 1 = healer
+    /// 2 = mage
+    /// 3 = debuffer
+    /// 4 = Buffer
+    /// 5 = Range
+    /// </summary>
+    [SpellHandler("SummonMinion")]
 	public class SummonMinionHandler : SummonSpellHandler
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -160,7 +155,7 @@ namespace DOL.GS.Spells
 		protected override IControlledBrain GetPetBrain(GameLiving owner)
 		{
 			IControlledBrain controlledBrain = null;
-			BDSubPet.SubPetType type = (BDSubPet.SubPetType)(byte)this.Spell.DamageType;
+			BDSubPet.SubPetType type = (BDSubPet.SubPetType)(byte)Spell.DamageType;
 			owner = owner.ControlledBrain.Body;
 
 			switch (type)

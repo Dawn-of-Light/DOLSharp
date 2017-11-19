@@ -17,15 +17,14 @@
  *
  */
 
-using System;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Represents an in-game FaceCustomiser NPC
-	/// </summary>
-	public class FaceCustomiser : GameNPC
+    /// <summary>
+    /// Represents an in-game FaceCustomiser NPC
+    /// </summary>
+    public class FaceCustomiser : GameNPC
 	{
 		/// <summary>
 		/// Spell id of the magical effect
@@ -85,7 +84,7 @@ namespace DOL.GS
 
 			if (player.CustomisationStep == 2 && text == "change your appearance")
 			{
-				foreach(GamePlayer players in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE)) 
+				foreach(GamePlayer players in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE)) 
 				{
 					players.Out.SendSpellCastAnimation(this,EFFECT_ID,CAST_TIME);
 				}
@@ -104,7 +103,7 @@ namespace DOL.GS
 		/// <returns>new delay in milliseconds</returns>
 		protected virtual int EndCastCallback(RegionTimer callingTimer)
 		{
-			foreach(GamePlayer players in this.GetPlayersInRadius( WorldMgr.VISIBILITY_DISTANCE)) 
+			foreach(GamePlayer players in GetPlayersInRadius( WorldMgr.VISIBILITY_DISTANCE)) 
 			{
 				players.Out.SendSpellEffectAnimation(this,this,EFFECT_ID,0,false,0x01);
 			}

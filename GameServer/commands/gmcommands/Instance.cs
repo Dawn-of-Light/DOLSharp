@@ -19,7 +19,6 @@
 using System;
 using DOL.GS.PacketHandler;
 using System.Reflection;
-using System.Collections;
 using DOL.Database;
 
 //By dinberg - so its him who you blame ;)
@@ -38,7 +37,7 @@ namespace DOL.GS.Commands
 		"/instance exit")]
     public class InstanceCommandHandler : AbstractCommandHandler, ICommandHandler
     {
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public const string INSTANCE_KEY = "INSTANCE_KEY_TEMP";
 

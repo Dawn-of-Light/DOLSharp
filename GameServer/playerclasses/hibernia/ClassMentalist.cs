@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Mentalist Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Mentalist, "Mentalist", "Magician")]
+    /// <summary>
+    /// Hibernia Mentalist Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Mentalist, "Mentalist", "Magician")]
 	public class ClassMentalist : ClassMagician
 	{
 		public ClassMentalist()

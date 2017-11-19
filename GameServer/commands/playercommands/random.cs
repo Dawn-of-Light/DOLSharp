@@ -31,7 +31,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&random",
 		ePrivLevel.Player,
 		"prints out a random number between 1 and the number specified.",

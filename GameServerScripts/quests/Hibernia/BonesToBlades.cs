@@ -26,19 +26,15 @@
 */
 
 using System;
-using System.Reflection;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.PacketHandler;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Actions;
-using DOL.Language;
-using log4net;
 using DOL.GS.Behaviour.Requirements;
 
 namespace DOL.GS.Quests.Hibernia
 {
-	public class BonesToBlades : BaseQuest
+    public class BonesToBlades : BaseQuest
 	{
 		protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

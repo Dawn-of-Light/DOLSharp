@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.PacketHandler;
@@ -6,10 +5,10 @@ using DOL.GS.Effects;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Mastery of Concentration RA
-	/// </summary>
-	public class ShieldOfImmunityAbility : RR5RealmAbility
+    /// <summary>
+    /// Mastery of Concentration RA
+    /// </summary>
+    public class ShieldOfImmunityAbility : RR5RealmAbility
 	{
 		public ShieldOfImmunityAbility(DBAbility dba, int level) : base(dba, level) { }
 

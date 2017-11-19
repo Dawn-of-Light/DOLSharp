@@ -23,7 +23,7 @@ using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&freelevel", //command to handle
+	[Cmd("&freelevel", //command to handle
 	              ePrivLevel.Player, //minimum privelege level
 	              "Display state of FreeLevel", //command description
 	              "/freelevel")] //command usage

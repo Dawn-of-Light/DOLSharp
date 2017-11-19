@@ -16,24 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS;
-using DOL.GS.Spells;
 using DOL.AI.Brain;
-using DOL.Events;
-using log4net;
-using DOL.GS.PacketHandler;
-using DOL.Database;
-using System.Collections;
-using DOL.GS.Effects;
-using DOL.GS.Styles;
 
 namespace DOL.GS
 {
-	public class BDSubPet : BDPet
+    public class BDSubPet : BDPet
 	{
 		/// <summary>
 		/// Holds the different subpet ids

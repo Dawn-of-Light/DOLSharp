@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Blademaster Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Blademaster, "Blademaster", "Guardian")]
+    /// <summary>
+    /// Hibernia Blademaster Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Blademaster, "Blademaster", "Guardian")]
 	public class ClassBlademaster : ClassGuardian
 	{
 		public ClassBlademaster()

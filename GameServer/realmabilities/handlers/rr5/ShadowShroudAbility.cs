@@ -17,18 +17,17 @@
  *
  */
 
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// ShadowShroud Ability NS RR5 RA
-	/// </summary>
-	/// <author>Stexx</author>
-	public class ShadowShroudAbility : RR5RealmAbility
+    /// <summary>
+    /// ShadowShroud Ability NS RR5 RA
+    /// </summary>
+    /// <author>Stexx</author>
+    public class ShadowShroudAbility : RR5RealmAbility
 	{
 		public const int DURATION = 30 * 1000;
 		public const double ABSPERCENT = 10; // 10% damage absorb

@@ -1,19 +1,16 @@
-using System;
-using System.Collections;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
 using DOL.GS.PropertyCalc;
 using DOL.GS.Spells;
 using System.Collections.Generic;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Vanish realm ability
-	/// </summary>
-	public class VanishAbility : TimedRealmAbility
+    /// <summary>
+    /// Vanish realm ability
+    /// </summary>
+    public class VanishAbility : TimedRealmAbility
 	{		public VanishAbility(DBAbility dba, int level) : base(dba, level) { }
 
 		/// <summary>

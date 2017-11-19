@@ -19,13 +19,12 @@
 
 using DOL.Language;
 using DOL.GS.Appeal;
-using DOL.GS.ServerProperties;
 
 namespace DOL.GS.Commands
 {
     //The appeal command is really just a tool to redirect the players concerns to the proper command.
     //most of it's functionality is built into the client.
-    [CmdAttribute(
+    [Cmd(
         "&appeal",
         ePrivLevel.Player,
         "Usage: '/appeal <appeal type> <appeal text>",
@@ -131,7 +130,7 @@ namespace DOL.GS.Commands
 
     #region reportbug
     //handles /reportbug command that is issued from the client /appeal function.
-    [CmdAttribute(
+    [Cmd(
     "&reportbug",
     ePrivLevel.Player, "Use /appeal to file an appeal")]
     public class ReportBugCommandHandler : AbstractCommandHandler, ICommandHandler
@@ -175,7 +174,7 @@ namespace DOL.GS.Commands
     #endregion reportbug
     #region reportharass
     //handles /reportharass command that is issued from the client /appeal function.
-    [CmdAttribute(
+    [Cmd(
     "&reportharass",
     ePrivLevel.Player, "Use /appeal to file an appeal")]
     public class ReportHarassCommandHandler : AbstractCommandHandler, ICommandHandler
@@ -221,7 +220,7 @@ namespace DOL.GS.Commands
     #endregion reportharass
     #region reporttos
     //handles /reporttos command that is issued from the client /appeal function.
-    [CmdAttribute(
+    [Cmd(
     "&reporttos",
     ePrivLevel.Player, "Use /appeal to file an appeal")]
     public class ReportTosCommandHandler : AbstractCommandHandler, ICommandHandler
@@ -295,7 +294,7 @@ namespace DOL.GS.Commands
     #endregion reporttos
     #region reportstuck
     //handles /reportharass command that is issued from the client /appeal function.
-    [CmdAttribute(
+    [Cmd(
     "&reportstuck",
     ePrivLevel.Player, "Use /appeal to file an appeal")]
     public class ReportStuckCommandHandler : AbstractCommandHandler, ICommandHandler
@@ -341,7 +340,7 @@ namespace DOL.GS.Commands
     #endregion reportstuck
     #region emergency
     //handles /appea command that is issued from the client /appeal function (emergency appeal).
-    [CmdAttribute(
+    [Cmd(
     "&appea",
     ePrivLevel.Player, "Use /appeal to file an appeal")]
     public class EmergencyAppealCommandHandler : AbstractCommandHandler, ICommandHandler

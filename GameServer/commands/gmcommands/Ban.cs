@@ -28,7 +28,7 @@ using log4net;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&ban",
 		ePrivLevel.GM,
 		"GMCommands.Ban.Description",

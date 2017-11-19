@@ -16,18 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using DOL.AI.Brain;
-using DOL.Database;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Base class for spells with immunity like mez/root/stun/nearsight
-	/// </summary>
-	public abstract class ImmunityEffectSpellHandler : SpellHandler
+    /// <summary>
+    /// Base class for spells with immunity like mez/root/stun/nearsight
+    /// </summary>
+    public abstract class ImmunityEffectSpellHandler : SpellHandler
 	{
 		/// <summary>
 		/// called when spell effect has to be started and applied to targets

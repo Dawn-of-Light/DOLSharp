@@ -20,7 +20,6 @@
 
 //Thanks to Eden (Vico) for creating this - Edited by IST
 using System;
-using DOL.GS;
 using DOL.Events;
 using System.Threading;
 using DOL.GS.PacketHandler;
@@ -31,12 +30,11 @@ using System.Diagnostics;
 using DOL.AI.Brain;
 using DOL.GS.Movement;
 using DOL.GS.Effects;
-using DOL.GS.Spells;
 
 
 namespace DOL.GS.GameEvents
 {
-	public static class RegionTimersResynch
+    public static class RegionTimersResynch
 	{
 		const int UPDATE_INTERVAL = 15 * 1000; // 15 seconds to check freeze
 

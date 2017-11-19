@@ -1207,7 +1207,7 @@ namespace DOL.GS
 			delve.Add("");
 
 			delve.Add("         Name: " + Name);
-			delve.Add("    ClassType: " + this.GetType().FullName);
+			delve.Add("    ClassType: " + GetType().FullName);
 			delve.Add("");
 			delve.Add(" SlotPosition: " + SlotPosition);
 			if (OwnerLot != 0 || SellPrice != 0)

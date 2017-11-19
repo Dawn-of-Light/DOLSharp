@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Base Support Class Naturalist
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Naturalist, "Naturalist", "Naturalist")]
+    /// <summary>
+    /// Hibernia Base Support Class Naturalist
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Naturalist, "Naturalist", "Naturalist")]
 	public class ClassNaturalist : CharacterClassBase
 	{
 		public ClassNaturalist()

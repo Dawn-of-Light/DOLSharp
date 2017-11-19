@@ -1,15 +1,13 @@
-using DOL.Database;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Keeps
 {
-	/// <summary>
-	/// The type of interaction we check for to handle lord permission checks
-	/// </summary>
-	public enum eInteractType
+    /// <summary>
+    /// The type of interaction we check for to handle lord permission checks
+    /// </summary>
+    public enum eInteractType
 	{ 
 		/// <summary>
 		/// Claim the Area

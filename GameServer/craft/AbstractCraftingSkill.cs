@@ -19,20 +19,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Reflection;
 using DOL.Database;
 using DOL.Language;
-using DOL.GS.ServerProperties;
 using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// AbstractCraftingSkill is the base class for all crafting skill
-	/// </summary>
-	public abstract class AbstractCraftingSkill
+    /// <summary>
+    /// AbstractCraftingSkill is the base class for all crafting skill
+    /// </summary>
+    public abstract class AbstractCraftingSkill
 	{
 		protected static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 

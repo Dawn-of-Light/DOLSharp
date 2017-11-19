@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Midgard Warlock Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Warlock, "Warlock", "Mystic")]
+    /// <summary>
+    /// Midgard Warlock Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Warlock, "Warlock", "Mystic")]
 	public class ClassWarlock : ClassMystic
 	{
 		public ClassWarlock()

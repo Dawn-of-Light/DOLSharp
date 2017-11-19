@@ -29,7 +29,7 @@ namespace DOL.GS.SkillHandler
 	/// <summary>
 	/// Handler for Flurry Ability clicks
 	/// </summary>
-	[SkillHandlerAttribute(Abilities.Flurry)]
+	[SkillHandler(Abilities.Flurry)]
 	public class FlurryAbilityHandler : IAbilityActionHandler
 	{
 		/// <summary>

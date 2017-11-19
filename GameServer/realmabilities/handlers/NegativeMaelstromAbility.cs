@@ -1,15 +1,11 @@
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
 using DOL.Events;
 using DOL.Database;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class NegativeMaelstromAbility : TimedRealmAbility
+    public class NegativeMaelstromAbility : TimedRealmAbility
 	{
         public NegativeMaelstromAbility(DBAbility dba, int level) : base(dba, level) { }
 		private int dmgValue;
@@ -38,7 +34,7 @@ namespace DOL.GS.RealmAbilities
                 caster.Out.SendMessage("You are already casting an ability.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
-            this.player = caster;
+            player = caster;
             if (caster.AttackState) 
             {
                 caster.StopAttack();
@@ -73,7 +69,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				if (i_player == caster)
 				{
-					i_player.MessageToSelf("You cast " + this.Name + "!", eChatType.CT_Spell);
+					i_player.MessageToSelf("You cast " + Name + "!", eChatType.CT_Spell);
 				}
 				else
 				{

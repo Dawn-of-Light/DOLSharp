@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Vamps magical strike 
-	/// </summary>
-	[SpellHandlerAttribute("MagicalStrike")]
+    /// <summary>
+    /// Vamps magical strike 
+    /// </summary>
+    [SpellHandler("MagicalStrike")]
 	public class VampMagicalStrike : DirectDamageSpellHandler
 	{
 		public VampMagicalStrike(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }

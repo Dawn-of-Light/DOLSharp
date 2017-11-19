@@ -16,17 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.Database;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Special NPC for giving DR players items
-	/// </summary>
-	public class RoyalTreasuryClerk : GameNPC
+    /// <summary>
+    /// Special NPC for giving DR players items
+    /// </summary>
+    public class RoyalTreasuryClerk : GameNPC
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

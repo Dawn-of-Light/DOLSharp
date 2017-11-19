@@ -17,14 +17,13 @@
  *
  */
 using System;
-using DOL.GS;
 
 namespace DOL.Events
 {
-	/// <summary>
-	/// Holds the arguments for the GainedRealmPoints event of GameLivings
-	/// </summary>
-	public class GainedRealmPointsEventArgs : EventArgs
+    /// <summary>
+    /// Holds the arguments for the GainedRealmPoints event of GameLivings
+    /// </summary>
+    public class GainedRealmPointsEventArgs : EventArgs
 	{
 		private long m_realmPoints;
 

@@ -1,14 +1,13 @@
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Anger of the Gods RA
-	/// </summary>
-	public class RestorativeMindAbility : RR5RealmAbility
+    /// <summary>
+    /// Anger of the Gods RA
+    /// </summary>
+    public class RestorativeMindAbility : RR5RealmAbility
 	{
 		public RestorativeMindAbility(DBAbility dba, int level) : base(dba, level) { }
 

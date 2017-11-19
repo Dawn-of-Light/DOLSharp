@@ -16,17 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Stores battleground info
-	/// </summary>
-	[DataTable(TableName = "Battleground")]
+    /// <summary>
+    /// Stores battleground info
+    /// </summary>
+    [DataTable(TableName = "Battleground")]
 	public class Battleground : DataObject
 	{
 		private ushort m_region;

@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using DOL.GS;
-using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
@@ -9,7 +6,7 @@ using DOL.AI.Brain;
 namespace DOL.GS.Spells
 {
 
-	[SpellHandlerAttribute("HereticDamageSpeedDecreaseLOP")]
+    [SpellHandler("HereticDamageSpeedDecreaseLOP")]
 	public class HereticDamageSpeedDecreaseLostOnPulse : HereticSpeedDecreaseSpellHandler
 	{
         protected int m_lastdamage = 0;

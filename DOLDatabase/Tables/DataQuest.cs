@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Holds all the DataQuests available
-	/// </summary>
-	[DataTable(TableName = "DataQuest")]
+    /// <summary>
+    /// Holds all the DataQuests available
+    /// </summary>
+    [DataTable(TableName = "DataQuest")]
 	public class DBDataQuest : DataObject
 	{
 		private int m_id;

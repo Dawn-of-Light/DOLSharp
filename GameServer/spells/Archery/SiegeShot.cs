@@ -1,15 +1,11 @@
 //Andraste v2.0 -Vico
 
-using System;
-using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
-using DOL.Events;
 using DOL.GS.Keeps;
 
 namespace DOL.GS.Spells
 {
-	[SpellHandler("SiegeArrow")]
+    [SpellHandler("SiegeArrow")]
 	public class SiegeArrow : BoltSpellHandler
 	{
 		/// <summary>

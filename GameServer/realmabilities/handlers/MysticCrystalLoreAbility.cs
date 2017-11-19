@@ -1,14 +1,13 @@
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Mystic Crystal Lore, power heal
-	/// </summary>
-	public class MysticCrystalLoreAbility : TimedRealmAbility
+    /// <summary>
+    /// Mystic Crystal Lore, power heal
+    /// </summary>
+    public class MysticCrystalLoreAbility : TimedRealmAbility
 	{
 		public MysticCrystalLoreAbility(DBAbility dba, int level) : base(dba, level) { }
 

@@ -16,9 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.GS;
-using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Spells.Atlantis
@@ -26,7 +23,7 @@ namespace DOL.GS.Spells.Atlantis
     /// <summary>
     /// Arrogance spell handler
     /// </summary>
-    [SpellHandlerAttribute("Arrogance")]
+    [SpellHandler("Arrogance")]
     public class Arrogance : SpellHandler
     {
     	GamePlayer playertarget = null;

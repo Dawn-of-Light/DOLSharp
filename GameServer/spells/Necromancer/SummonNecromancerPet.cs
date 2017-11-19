@@ -18,22 +18,19 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using DOL.GS.Effects;
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
-using DOL.Events;
 using DOL.GS.PropertyCalc;
-using System.Collections;
 using DOL.Language;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Spell handler to summon a necromancer pet.
-	/// </summary>
-	/// <author>Aredhel</author>
-	[SpellHandler("SummonNecroPet")]
+    /// <summary>
+    /// Spell handler to summon a necromancer pet.
+    /// </summary>
+    /// <author>Aredhel</author>
+    [SpellHandler("SummonNecroPet")]
 	public class SummonNecromancerPet : SummonSpellHandler
 	{
 		public SummonNecromancerPet(GameLiving caster, Spell spell, SpellLine line) 

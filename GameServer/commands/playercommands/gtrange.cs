@@ -20,7 +20,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&gtrange",
 		ePrivLevel.Player,
 		"Gives a range to a ground target",

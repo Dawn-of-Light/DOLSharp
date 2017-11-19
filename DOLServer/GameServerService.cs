@@ -31,12 +31,12 @@ namespace DOL.DOLServer
 	{
 		public GameServerService()
 		{
-			this.ServiceName = "DOL";
-			this.AutoLog = false;
-			this.CanHandlePowerEvent = false;
-			this.CanPauseAndContinue = false;
-			this.CanShutdown = true;
-			this.CanStop = true;
+            ServiceName = "DOL";
+            AutoLog = false;
+            CanHandlePowerEvent = false;
+            CanPauseAndContinue = false;
+            CanShutdown = true;
+            CanStop = true;
 		}
 
 		private static bool StartServer()

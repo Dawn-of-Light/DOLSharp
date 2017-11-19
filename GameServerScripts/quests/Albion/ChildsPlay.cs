@@ -35,16 +35,13 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.Behaviour;
-using DOL.GS.Behaviour.Attributes;
 using DOL.GS.PacketHandler;
-using DOL.GS.Quests;
 using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Quests.Albion
 {
-	public class childsplay : BaseQuest
+    public class childsplay : BaseQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.

@@ -41,7 +41,6 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using DOL.AI.Brain;
@@ -60,13 +59,13 @@ using log4net;
 
 namespace DOL.GS.Quests.Midgard
 {
-	/* The first thing we do, is to declare the class we create
+    /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
 	 * AbstractQuest
 	 * 	 
 	 */
 
-	public class BeginningOfWar : BaseDalikorQuest
+    public class BeginningOfWar : BaseDalikorQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.

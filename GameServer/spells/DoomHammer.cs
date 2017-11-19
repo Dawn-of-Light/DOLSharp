@@ -1,19 +1,11 @@
 //Eden - Darwin
 
-using System;
-using System.Reflection;
-using DOL.Events;
-using DOL.GS;
 using DOL.GS.PacketHandler;
-using log4net;
-using System.Collections;
-using DOL.Database;
 using DOL.GS.Effects;
-using DOL.GS.Spells;
 
 namespace DOL.GS.Spells
 {
-	[SpellHandlerAttribute("DoomHammer")]
+    [SpellHandler("DoomHammer")]
 	public class DoomHammerSpellHandler : DirectDamageSpellHandler
 	{
 		public override bool CheckBeginCast(GameLiving selectedTarget)

@@ -18,15 +18,12 @@
 */
 
 // By Daeli
-using System;
-using log4net;
 
-using DOL.GS;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 	"&statsanon",
 	ePrivLevel.Player,
 	"Hides your statistics",

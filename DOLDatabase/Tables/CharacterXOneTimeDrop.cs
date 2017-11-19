@@ -16,19 +16,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL
 {
-	namespace Database
-	{
-		/// <summary>
-		/// List of characters and the one time drops they have received.
-		/// </summary>
-		[DataTable(TableName="CharacterXOneTimeDrop")]
+    namespace Database
+    {
+        /// <summary>
+        /// List of characters and the one time drops they have received.
+        /// </summary>
+        [DataTable(TableName="CharacterXOneTimeDrop")]
 		public class CharacterXOneTimeDrop : DataObject
 		{
 			private string m_characterID;

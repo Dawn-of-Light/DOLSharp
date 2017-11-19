@@ -34,7 +34,6 @@ using System;
 using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
-using DOL.GS.PacketHandler;
 using log4net;
 /* I suggest you declare yourself some namespaces for your quests
  * Like: DOL.GS.Quests.Albion
@@ -47,13 +46,13 @@ using log4net;
 
 namespace DOL.GS.Quests.Hibernia
 {
-	/* The first thing we do, is to declare the class we create
+    /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
 	 * AbstractQuest
 	 * 	 
 	 */
 
-	public abstract class BaseAddrirQuest : BaseQuest
+    public abstract class BaseAddrirQuest : BaseQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.

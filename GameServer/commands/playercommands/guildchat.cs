@@ -20,7 +20,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&gu",
 		new string[] {"&guild"},
 		ePrivLevel.Player,
@@ -53,7 +53,7 @@ namespace DOL.GS.Commands
 		}
 	}
 
-	[CmdAttribute(
+	[Cmd(
 		"&o",
 		new string[] {"&osend"},
 		ePrivLevel.Player,
@@ -93,7 +93,7 @@ namespace DOL.GS.Commands
 		}
 	}
 
-	[CmdAttribute(
+	[Cmd(
 		"&as",
 		new string[] {"&asend"},
 		ePrivLevel.Player,

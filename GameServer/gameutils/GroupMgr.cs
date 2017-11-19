@@ -16,17 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// The GroupMgr holds pointers to all groups and to players
-	/// looking for a group
-	/// </summary>
-	public static class GroupMgr
+    /// <summary>
+    /// The GroupMgr holds pointers to all groups and to players
+    /// looking for a group
+    /// </summary>
+    public static class GroupMgr
 	{
 		/// <summary>
 		/// Dictionary of all groups in the game

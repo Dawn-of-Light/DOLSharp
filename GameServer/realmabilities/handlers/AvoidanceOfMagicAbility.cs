@@ -1,13 +1,11 @@
-using System;
 using DOL.Database;
-using DOL.GS.PropertyCalc;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Avoidance of Magic RA, reduces magical damage
-	/// </summary>
-	public class AvoidanceOfMagicAbility : RAPropertyEnhancer
+    /// <summary>
+    /// Avoidance of Magic RA, reduces magical damage
+    /// </summary>
+    public class AvoidanceOfMagicAbility : RAPropertyEnhancer
 	{
 		/// <summary>
 		/// The list of properties this RA affects

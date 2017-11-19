@@ -21,12 +21,12 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&walk",
 		ePrivLevel.GM,
 		"Commands a npc to walk!",
 		"'/walk <xoff> <yoff> <zoff> <speed>' to make the npc walk to x+xoff, y+yoff, z+zoff")]
-	[CmdAttribute(
+	[Cmd(
 		"&stop",
 		ePrivLevel.GM,
 		"Stops the npc's movement!",

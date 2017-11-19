@@ -17,12 +17,8 @@
  *
  */
 using System;
-using log4net;
-using System.Reflection;
-using DOL.Events;
 using DOL.Database;
 using DOL.GS.PacketHandler;
-using DOL.GS.Housing;
 
 namespace DOL.GS
 {
@@ -407,7 +403,7 @@ namespace DOL.GS
         {
 			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.SAY_DISTANCE))
 			{
-				player.Out.SendMessage(String.Format("The {0} says, \"{1}\"", this.Name, message), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(String.Format("The {0} says, \"{1}\"", Name, message), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 
             return true;

@@ -24,7 +24,7 @@ using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
-	[SpellHandlerAttribute("TraitorsDaggerProc")]
+	[SpellHandler("TraitorsDaggerProc")]
 	public class TraitorsDaggerProc : OffensiveProcSpellHandler
 	{
 		public override void OnEffectStart(GameSpellEffect effect)

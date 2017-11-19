@@ -1,17 +1,13 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
-using DOL.GS.SkillHandler;
-using DOL.GS.PropertyCalc;
 using DOL.Events;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Effect handler for Barrier Of Fortitude
-	/// </summary>
-	public class SoldiersBarricadeEffect : StaticEffect, IGameEffect
+    /// <summary>
+    /// Effect handler for Barrier Of Fortitude
+    /// </summary>
+    public class SoldiersBarricadeEffect : StaticEffect, IGameEffect
 	{
 		private const String m_delveString = "Grants the group an absorption bonus to all forms of damage (Does not stack with Barrier of Fortitude or Bedazzling Aura).";
 		private GamePlayer m_player;

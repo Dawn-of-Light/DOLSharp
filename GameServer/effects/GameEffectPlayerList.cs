@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -24,11 +23,11 @@ using log4net;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Sends updates only for changed effects
-	/// when iterating over this effect list lock the list!
-	/// </summary>
-	public class GameEffectPlayerList : GameEffectList
+    /// <summary>
+    /// Sends updates only for changed effects
+    /// when iterating over this effect list lock the list!
+    /// </summary>
+    public class GameEffectPlayerList : GameEffectList
 	{
 		/// <summary>
 		/// Defines a logger for this class.

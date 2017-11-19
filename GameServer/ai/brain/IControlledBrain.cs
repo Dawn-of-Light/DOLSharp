@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS;
 
 namespace DOL.AI.Brain
 {
-	/// <summary>
-	/// Defines walk state when brain is not in combat
-	/// </summary>
-	public enum eWalkState
+    /// <summary>
+    /// Defines walk state when brain is not in combat
+    /// </summary>
+    public enum eWalkState
 	{
 		/// <summary>
 		/// Follow the owner

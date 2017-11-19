@@ -17,16 +17,14 @@
  *
  */
 using System;
-using log4net;
-using System.Reflection;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Djinn stone (summons ancient bound djinn).
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class SummonDjinnStone : DjinnStone
+    /// <summary>
+    /// Djinn stone (summons ancient bound djinn).
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class SummonDjinnStone : DjinnStone
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

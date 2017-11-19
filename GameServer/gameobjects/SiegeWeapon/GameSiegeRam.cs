@@ -16,16 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.Events;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// GameMovingObject is a base class for boats and siege weapons.
-	/// </summary>
-	public class GameSiegeRam : GameSiegeWeapon
+    /// <summary>
+    /// GameMovingObject is a base class for boats and siege weapons.
+    /// </summary>
+    public class GameSiegeRam : GameSiegeWeapon
 	{
 		public GameSiegeRam()
 			: base()
@@ -36,7 +34,7 @@ namespace DOL.GS
 			//AmmoType = 0x3B00;
 			//this.Effect = 0x8A1;
 			AmmoType = 0x26;
-			this.Model = 0xA2A;//0xA28
+            Model = 0xA2A;//0xA28
 			//TODO find all value for ram
 			ActionDelay = new int[]
 			{
@@ -89,7 +87,7 @@ namespace DOL.GS
 				return;
 			}
 			//todo good  distance check
-			if (!this.IsWithinRadius(target, AttackRange))
+			if (!IsWithinRadius(target, AttackRange))
 			{
 				Owner.Out.SendMessage("You are too far away to attack " + target.Name, eChatType.CT_System,
 									  eChatLoc.CL_SystemWindow);

@@ -16,19 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
-using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
-using DOL.GS.SkillHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Damage Over Time spell handler
-	/// </summary>
-	[SpellHandlerAttribute("HealthToEndurance")]
+    /// <summary>
+    /// Damage Over Time spell handler
+    /// </summary>
+    [SpellHandler("HealthToEndurance")]
 	public class HealthToEndurance : SpellHandler
 	{
 

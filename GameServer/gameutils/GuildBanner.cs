@@ -1,8 +1,5 @@
 using System;
-using System.Reflection;
-using System.Collections;
 using DOL.Events;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.Database;
 using log4net;

@@ -16,12 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Network;
 using NUnit.Framework;
 
 namespace DOL.Net.Tests
 {
-	[TestFixture]
+    [TestFixture]
 	public class uPnP
 	{
 		UPnPNat upnp;

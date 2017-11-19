@@ -14,21 +14,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-using System;
 using System.Reflection;
-using System.Collections;
-using System.Collections.Generic;
-using DOL.Events;
-using DOL.Language;
 using DOL.GS.PacketHandler;
 using DOL.Database;
 using DOL.GS.Spells;
-using DOL.GS.Effects;
 using log4net;
 
 namespace DOL.GS
 {
-	public class GameMythirian : GameInventoryItem
+    public class GameMythirian : GameInventoryItem
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -66,7 +60,7 @@ namespace DOL.GS
 
 		public override void OnEquipped(GamePlayer player)
 		{
-			if (this.Name.ToLower().Contains("ektaktos"))
+			if (Name.ToLower().Contains("ektaktos"))
 			{
 				player.CanBreathUnderWater = true;
 				player.Out.SendMessage("You find yourself able to breathe water like air!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -76,7 +70,7 @@ namespace DOL.GS
 
 		public override void OnUnEquipped(GamePlayer player)
 		{
-			if (this.Name.ToLower().Contains("ektaktos") && SpellHelper.FindEffectOnTarget(player, typeof(WaterBreathingSpellHandler)) == null)
+			if (Name.ToLower().Contains("ektaktos") && SpellHelper.FindEffectOnTarget(player, typeof(WaterBreathingSpellHandler)) == null)
 			{
 				player.CanBreathUnderWater = false;
 				player.Out.SendMessage("With a gulp and a gasp you realize that you are unable to breathe underwater any longer!", eChatType.CT_SpellExpires, eChatLoc.CL_SystemWindow);

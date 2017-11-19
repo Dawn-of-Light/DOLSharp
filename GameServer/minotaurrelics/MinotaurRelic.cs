@@ -252,7 +252,7 @@ namespace DOL.GS
 				player.Out.SendMessage("You cannot pickup " + GetName(0, false) + ". You are dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			if (this.Owner != null)
+			if (Owner != null)
 			{
 				player.Out.SendMessage("This Relic is owned by someone else!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;

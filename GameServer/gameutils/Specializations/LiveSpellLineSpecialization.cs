@@ -16,18 +16,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 
 using DOL.GS.Styles;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// This is a Live Spell Line Specialization, used for list caster, with baseline spell and specline spell appart
-	/// Purely rely on base Specialization implementation only disabling weapon style (not applicable here)
-	/// </summary>
-	public class LiveSpellLineSpecialization : Specialization
+    /// <summary>
+    /// This is a Live Spell Line Specialization, used for list caster, with baseline spell and specline spell appart
+    /// Purely rely on base Specialization implementation only disabling weapon style (not applicable here)
+    /// </summary>
+    public class LiveSpellLineSpecialization : Specialization
 	{
 		public LiveSpellLineSpecialization(string keyname, string displayname, ushort icon, int ID)
 			: base(keyname, displayname, icon, ID)

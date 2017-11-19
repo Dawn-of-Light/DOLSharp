@@ -20,26 +20,24 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
-
-using DOL.GS;
 using DOL.Database;
 
 using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Description of RegionInstance.
-	/// Clone a RegionData to a New BaseInstance
-	/// Can duplicate any "Region" of the Game into a dedicated Instance
-	/// Handle Zones and Areas, doesn't Handle Persistence.
-	/// </summary>
-	public class RegionInstance : BaseInstance
+    /// <summary>
+    /// Description of RegionInstance.
+    /// Clone a RegionData to a New BaseInstance
+    /// Can duplicate any "Region" of the Game into a dedicated Instance
+    /// Handle Zones and Areas, doesn't Handle Persistence.
+    /// </summary>
+    public class RegionInstance : BaseInstance
 	{
 		/// <summary>
 		/// Console Logger
 		/// </summary>
-		private static readonly ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 		
 		/// <summary>
 		/// List Containing players in instance
@@ -74,8 +72,8 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public override void OnPlayerEnterInstance(GamePlayer player)
 		{
-			//Add Player
-			this.m_players_in.Add(player);
+            //Add Player
+            m_players_in.Add(player);
 			//Stop the timer to prevent the region's removal.
 			base.OnPlayerEnterInstance(player);
 		}
@@ -88,7 +86,7 @@ namespace DOL.GS
         {
             //Decrease the amount of players
             base.OnPlayerLeaveInstance(player);
-            this.m_players_in.Remove(player);
+            m_players_in.Remove(player);
         }
 		
 		/// <summary>
@@ -97,9 +95,9 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public RegionInstance(ushort ID, GameTimer.TimeManager time, RegionData dat)
 			: base(ID, time, dat)
-		{	
-			this.m_players_in = new List<GamePlayer>();
-			this.DestroyWhenEmpty = false;
+		{
+            m_players_in = new List<GamePlayer>();
+            DestroyWhenEmpty = false;
 		}
 		
 		/// <summary>
@@ -218,7 +216,7 @@ namespace DOL.GS
                         	Mob clone = (Mob)mob.Clone();
                         	clone.AllowAdd = false;
                         	clone.AllowDelete = false;
-                        	clone.Region = this.ID;
+                        	clone.Region = ID;
                         	
                         	myMob.LoadFromDatabase(clone);
 
@@ -250,7 +248,7 @@ namespace DOL.GS
                 	WorldObject itemclone = (WorldObject)item.Clone();
                 	itemclone.AllowAdd = false;
                 	itemclone.AllowDelete = false;
-                	itemclone.Region = this.ID;
+                	itemclone.Region = ID;
                 	
                     GameStaticItem myItem;
                     if (!string.IsNullOrEmpty(itemclone.ClassType))
@@ -290,7 +288,7 @@ namespace DOL.GS
             	// clone DB object.
             	DBArea newDBArea = ((DBArea)area.Clone());
             	newDBArea.AllowAdd = false;
-            	newDBArea.Region = this.ID;
+            	newDBArea.Region = ID;
             	// Instantiate Area with cloned DB object and add to region
             	try
             	{
@@ -299,7 +297,7 @@ namespace DOL.GS
 					newArea.Sound = newDBArea.Sound;
 					newArea.CanBroadcast = newDBArea.CanBroadcast;
 					newArea.CheckLOS = newDBArea.CheckLOS;
-					this.AddArea(newArea);
+                    AddArea(newArea);
 					areaCnt++;
 	            }
             	catch

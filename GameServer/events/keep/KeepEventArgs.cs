@@ -44,13 +44,13 @@ namespace DOL.Events
 		/// </summary>
 		public KeepEventArgs(AbstractGameKeep keep)
 		{
-			this.m_keep = keep;
+            m_keep = keep;
 		}
 
 		public KeepEventArgs(AbstractGameKeep keep, eRealm realm)
 		{
-			this.m_keep = keep;
-			this.m_realm = realm;
+            m_keep = keep;
+            m_realm = realm;
 		}
 
 		/// <summary>

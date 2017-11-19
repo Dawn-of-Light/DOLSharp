@@ -17,13 +17,12 @@
  *
  */
 using System;
-using System.Collections;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
-	[SpellHandlerAttribute("PowerDrainPet")]
+    [SpellHandler("PowerDrainPet")]
 	public class PowerDrainPet : PowerDrain
 	{
 		public override void DrainPower(AttackData ad)

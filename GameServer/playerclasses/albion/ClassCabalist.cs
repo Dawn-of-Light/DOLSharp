@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Albion Cabalist Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Cabalist, "Cabalist", "Mage")]
+    /// <summary>
+    /// Albion Cabalist Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Cabalist, "Cabalist", "Mage")]
 	public class ClassCabalist : ClassMage
 	{
 		public ClassCabalist()

@@ -16,18 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections;
-using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
-using DOL.GS.Spells;
 
 namespace DOL.GS.Keeps
 {
-	/// <summary>
-	/// Represents a keep hastener
-	/// </summary>
-	public class FrontierHastener : GameKeepGuard
+    /// <summary>
+    /// Represents a keep hastener
+    /// </summary>
+    public class FrontierHastener : GameKeepGuard
 	{
 		public override eFlags Flags
 		{

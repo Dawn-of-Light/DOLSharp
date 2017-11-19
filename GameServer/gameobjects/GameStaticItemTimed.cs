@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Holds a static item in the world that will disappear after some interval
-	/// </summary>
-	public class GameStaticItemTimed : GameStaticItem
+    /// <summary>
+    /// Holds a static item in the world that will disappear after some interval
+    /// </summary>
+    public class GameStaticItemTimed : GameStaticItem
 	{
 		/// <summary>
 		/// How long this object can stay in the world without being removed

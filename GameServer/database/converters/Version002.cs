@@ -16,16 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using log4net;
 using DOL.Database;
 
 namespace DOL.GS.DatabaseConverters
 {
-	/// <summary>
-	/// Converts the database format to the version 2
-	/// </summary>
-	[DatabaseConverter(2)]
+    /// <summary>
+    /// Converts the database format to the version 2
+    /// </summary>
+    [DatabaseConverter(2)]
 	public class Version002 : IDatabaseConverter
 	{
 		/// <summary>

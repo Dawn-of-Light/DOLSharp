@@ -1,10 +1,8 @@
-using DOL.GS;
 using DOL.GS.Housing;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 	  "&housepoints",
 	  ePrivLevel.Player,
 	   "Toggles display of housepoints",

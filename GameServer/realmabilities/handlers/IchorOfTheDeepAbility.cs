@@ -112,7 +112,7 @@ namespace DOL.GS.RealmAbilities
 			{
 				if (i_player == caster)
 				{
-					i_player.MessageToSelf("You cast " + this.Name + "!", eChatType.CT_Spell);
+					i_player.MessageToSelf("You cast " + Name + "!", eChatType.CT_Spell);
 				}
 				else
 				{

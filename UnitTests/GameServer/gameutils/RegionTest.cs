@@ -17,19 +17,16 @@
  *
  */
 using System;
-using System.Collections;
-using System.Net.Sockets;
-using DOL.Database;
 using DOL.Events;
 using DOL.GS;
 using NUnit.Framework;
 
 namespace DOL.Server.Tests
 {
-	/// <summary>
-	/// Unit test for the Region Class
-	/// </summary>
-	[TestFixture]
+    /// <summary>
+    /// Unit test for the Region Class
+    /// </summary>
+    [TestFixture]
 	public class RegionTest : ServerTests
 	{		
 		public static bool notified = false;

@@ -24,7 +24,7 @@ using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&account",
 		ePrivLevel.Admin,
 		"AdminCommands.Account.Description",

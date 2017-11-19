@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using DOL.AI.Brain;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
@@ -25,10 +23,10 @@ using DOL.Language;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	[SpellHandlerAttribute("Amnesia")]
+    /// <summary>
+    /// 
+    /// </summary>
+    [SpellHandler("Amnesia")]
 	public class AmnesiaSpellHandler : SpellHandler
 	{
 		/// <summary>
@@ -72,7 +70,7 @@ namespace DOL.GS.Spells
                 MessageToLiving(target, LanguageMgr.GetTranslation((target as GamePlayer).Client, "Amnesia.MessageToTarget"), eChatType.CT_Spell);
 
             GameSpellEffect effect;
-            effect = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+            effect = FindEffectOnTarget(target, "Mesmerize");
             if (effect != null)
             {
                 effect.Cancel(false);

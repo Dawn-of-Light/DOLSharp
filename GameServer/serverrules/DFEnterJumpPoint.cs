@@ -19,16 +19,14 @@
 using System;
 
 using DOL.Database;
-using DOL.GS.Keeps;
-using DOL.GS.PacketHandler;
 using DOL.Events;
 
 namespace DOL.GS.ServerRules
 {
-	/// <summary>
-	/// Handles DF entrance jump point allowing only one realm to enter on Normal server type.
-	/// </summary>
-	public class DFEnterJumpPoint : IJumpPointHandler
+    /// <summary>
+    /// Handles DF entrance jump point allowing only one realm to enter on Normal server type.
+    /// </summary>
+    public class DFEnterJumpPoint : IJumpPointHandler
 	{
 		/// <summary>
 		/// Decides whether player can jump to the target point.

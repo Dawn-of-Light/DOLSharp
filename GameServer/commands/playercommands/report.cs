@@ -17,15 +17,13 @@
  *
  */
 
-using System;
 
 using DOL.GS.PacketHandler;
-using DOL.GS.GameEvents;
 using DOL.Database;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		"&report",
 		ePrivLevel.Player,
 		"'Reports a bug",

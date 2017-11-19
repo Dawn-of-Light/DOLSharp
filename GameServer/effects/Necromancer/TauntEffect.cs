@@ -16,21 +16,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Pet taunt effect. While active, the pet will keep trying
-	/// to taunt its target in case it is attacking someone else.
-	/// </summary>
-	/// <author>Aredhel</author>
-	class TauntEffect : StaticEffect, IGameEffect
+    /// <summary>
+    /// Pet taunt effect. While active, the pet will keep trying
+    /// to taunt its target in case it is attacking someone else.
+    /// </summary>
+    /// <author>Aredhel</author>
+    class TauntEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// Creates a new taunt effect.

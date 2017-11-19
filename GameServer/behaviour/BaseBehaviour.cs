@@ -17,20 +17,16 @@
  *
  */
 using System;
-using DOL.GS.PacketHandler;
-using System.Collections;
-using DOL.Database;
 using DOL.Events;
-using DOL.AI.Brain;
 using log4net;
 using System.Reflection;
 using System.Collections.Generic;
 
 namespace DOL.GS.Behaviour
-{    
-        			
-	/// <summary>
-	/// BaseQuestParts are the core element of the new questsystem,
+{
+
+    /// <summary>
+    /// BaseQuestParts are the core element of the new questsystem,
     /// you can add as many QuestAction to a quest as you want. 
     /// 
     /// A QuestAction contains basically 3 Things: Trigger, Requirements, Actions 
@@ -47,8 +43,8 @@ namespace DOL.GS.Behaviour
     /// a QuestAction will we executed one after another. Actions can be more or less anything:
     /// at the moment there are: GiveItem, TakeItem, Talk, Give Quest, Increase Quest Step, FinishQuest,
     /// etc....
-	/// </summary>
-	public class BaseBehaviour
+    /// </summary>
+    public class BaseBehaviour
     {        
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -124,9 +120,9 @@ namespace DOL.GS.Behaviour
         /// </summary>        
         /// <param name="npc">NPC associated with his behaviour typically NPC talking to or mob killing, etc...</param>                
         public BaseBehaviour(GameNPC npc)
-        {            
-            this.NPC = npc;
-            NotifyHandler = new DOLEventHandler(this.Notify);
+        {
+            NPC = npc;
+            NotifyHandler = new DOLEventHandler(Notify);
         }
 
         #region Triggers
@@ -165,7 +161,7 @@ namespace DOL.GS.Behaviour
             Type type = BehaviourMgr.GetTypeForTriggerType(triggerType);
             if (type != null)
             {
-                trigger = (IBehaviourTrigger)Activator.CreateInstance(type, new object[] { this.NPC, NotifyHandler, keyword, var });
+                trigger = (IBehaviourTrigger)Activator.CreateInstance(type, new object[] { NPC, NotifyHandler, keyword, var });
                 AddTrigger(trigger);
             }
             else
@@ -237,7 +233,7 @@ namespace DOL.GS.Behaviour
             Type type = BehaviourMgr.GetTypeForActionType(actionType);
             if (type != null)
             {                
-                action = (IBehaviourAction)Activator.CreateInstance(type, new object[] { this.NPC, p, q });
+                action = (IBehaviourAction)Activator.CreateInstance(type, new object[] { NPC, p, q });
                 AddAction(action);
             }
             else
@@ -324,7 +320,7 @@ namespace DOL.GS.Behaviour
             Type type = BehaviourMgr.GetTypeForRequirementType(requirementType);
             if (type != null)
             {                                
-                requ = (IBehaviourRequirement)Activator.CreateInstance(type, new object[] { this.NPC, requirementN, requirementV, requirementComparator });
+                requ = (IBehaviourRequirement)Activator.CreateInstance(type, new object[] { NPC, requirementN, requirementV, requirementComparator });
                 AddRequirement(requ);
             }
             else

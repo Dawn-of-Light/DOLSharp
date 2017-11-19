@@ -1,14 +1,9 @@
-using System.Collections;
-using System.Reflection;
-using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
-using DOL.Events;
 using DOL.Database;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class StaticTempestAbility : TimedRealmAbility
+    public class StaticTempestAbility : TimedRealmAbility
 	{
         public StaticTempestAbility(DBAbility dba, int level) : base(dba, level) { }
 
@@ -41,7 +36,7 @@ namespace DOL.GS.RealmAbilities
                 caster.Out.SendMessage("You target is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
-            this.m_player = caster;
+            m_player = caster;
             
             if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
             {
@@ -70,7 +65,7 @@ namespace DOL.GS.RealmAbilities
             {
 				if (i_player == caster)
 				{
-					i_player.MessageToSelf("You cast " + this.Name + "!", eChatType.CT_Spell);
+					i_player.MessageToSelf("You cast " + Name + "!", eChatType.CT_Spell);
 				}
 				else
 				{

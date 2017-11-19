@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Caster Base Class Magician
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Magician, "Magician", "Magician")]
+    /// <summary>
+    /// Hibernia Caster Base Class Magician
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Magician, "Magician", "Magician")]
 	public class ClassMagician : CharacterClassBase
 	{
 		public ClassMagician()

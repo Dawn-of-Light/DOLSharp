@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Midgard Spiritmaster Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Spiritmaster, "Spiritmaster", "Mystic")]
+    /// <summary>
+    /// Midgard Spiritmaster Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Spiritmaster, "Spiritmaster", "Mystic")]
 	public class ClassSpiritmaster : ClassMystic
 	{
 		public ClassSpiritmaster()

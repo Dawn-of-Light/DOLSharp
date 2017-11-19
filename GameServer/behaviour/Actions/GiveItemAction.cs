@@ -17,18 +17,15 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.Behaviour.Attributes;
-using DOL.GS.Behaviour;
 using DOL.Database;
 using DOL.Language;
 
 namespace DOL.GS.Behaviour.Actions
 {
-    [ActionAttribute(ActionType = eActionType.GiveItem,IsNullableQ=true)]
+    [Action(ActionType = eActionType.GiveItem,IsNullableQ=true)]
     public class GiveItemAction : AbstractAction<ItemTemplate,GameNPC>
     {               
 

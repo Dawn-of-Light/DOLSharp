@@ -18,16 +18,14 @@
  */
 
 using System;
-using System.Collections;
 using System.Threading;
 using DOL.Events;
-using DOL.GS;
 using log4net;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
-	public class GuildPlayerEvent : GamePlayerEvent
+    public class GuildPlayerEvent : GamePlayerEvent
 	{
 		/// <summary>
 		/// Constructs a new GamePlayer Event

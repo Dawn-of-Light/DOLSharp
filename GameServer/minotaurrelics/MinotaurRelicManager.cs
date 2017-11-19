@@ -17,16 +17,12 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 
 using DOL.Events;
 using DOL.Database;
-using DOL.GS.Spells;
-using DOL.GS.Effects;
 using log4net;
 
 namespace DOL.GS

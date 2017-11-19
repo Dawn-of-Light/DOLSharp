@@ -17,9 +17,8 @@
  *
  */
 using System;
-using System.Text;
 using DOL.Events;
-using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
+using DOL.GS.Behaviour.Attributes;
 using System.Reflection;
 using log4net;
 
@@ -92,7 +91,7 @@ namespace DOL.GS.Behaviour
         {
             this.defaultNPC = defaultNPC;
             this.notifyHandler = notifyHandler;
-            this.triggerType = type;
+            triggerType = type;
         }
 
 		/// <summary>
@@ -105,7 +104,7 @@ namespace DOL.GS.Behaviour
 		/// <param name="i">variable (I), meaning depends on triggertype</param>
 		public AbstractTrigger(GameLiving defaultNPC,DOLEventHandler notifyHandler, eTriggerType type, object k, object i) : this(defaultNPC,notifyHandler,type)
 		{
-            TriggerAttribute attr = BehaviourMgr.getTriggerAttribute(this.GetType());
+            TriggerAttribute attr = BehaviourMgr.getTriggerAttribute(GetType());
 
             // handle parameter K
             object defaultValueK = GetDefaultValue(attr.DefaultValueK);
@@ -143,7 +142,7 @@ namespace DOL.GS.Behaviour
                 {
                     if (log.IsWarnEnabled)
                     {
-                        log.Warn("Parameter is not used for =" + this.GetType().Name + ".\n The recieved parameter " + value + " will not be used for anthing. Check your quest code for inproper usage of parameters!");
+                        log.Warn("Parameter is not used for =" + GetType().Name + ".\n The recieved parameter " + value + " will not be used for anthing. Check your quest code for inproper usage of parameters!");
                         return false;
                     }
                 }
@@ -154,7 +153,7 @@ namespace DOL.GS.Behaviour
                 {
                     if (log.IsErrorEnabled)
                     {
-                        log.Error("Not nullable parameter was null, expected type is " + destinationType.Name + "for =" + this.GetType().Name + ".\nRecived parameter was " + value);
+                        log.Error("Not nullable parameter was null, expected type is " + destinationType.Name + "for =" + GetType().Name + ".\nRecived parameter was " + value);
                         return false;
                     }
                 }
@@ -162,7 +161,7 @@ namespace DOL.GS.Behaviour
                 {
                     if (log.IsErrorEnabled)
                     {
-                        log.Error("Parameter was not of expected type, expected type is " + destinationType.Name + "for " + this.GetType().Name + ".\nRecived parameter was " + value);
+                        log.Error("Parameter was not of expected type, expected type is " + destinationType.Name + "for " + GetType().Name + ".\nRecived parameter was " + value);
                         return false;
                     }
                 }

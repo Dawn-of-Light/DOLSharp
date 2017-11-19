@@ -52,23 +52,19 @@
  */
 
 using System;
-using System.Reflection;
-using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.Language;
-using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Quests.Hibernia
 {
-	/* The first thing we do, is to declare the class we create
+    /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
 	 * AbstractQuest
 	 * 	 
 	 */
 
-	public class WingsOfTheIsleHibernia : RewardQuest
+    public class WingsOfTheIsleHibernia : RewardQuest
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

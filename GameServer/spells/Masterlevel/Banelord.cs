@@ -1,18 +1,13 @@
-using System;
-using System.Text;
-using System.Collections;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using System.Reflection;
 using DOL.AI.Brain;
-using DOL.Events;
 
 namespace DOL.GS.Spells
 {
     //http://www.camelotherald.com/masterlevels/ma.php?ml=Banelord
     //shared timer 1
     #region Banelord-1
-    [SpellHandlerAttribute("CastingSpeedDebuff")]
+    [SpellHandler("CastingSpeedDebuff")]
     public class CastingSpeedDebuff : MasterlevelDebuffHandling
     {
         public override eProperty Property1 { get { return eProperty.CastingSpeed; } }
@@ -30,7 +25,7 @@ namespace DOL.GS.Spells
 
     //shared timer 5 for ml2 - shared timer 3 for ml8
     #region Banelord-2/8
-    [SpellHandlerAttribute("PBAEDamage")]
+    [SpellHandler("PBAEDamage")]
     public class PBAEDamage : MasterlevelHandling
     {
         // constructor
@@ -85,7 +80,7 @@ namespace DOL.GS.Spells
                 else
                     player.Endurance -= end;
 
-                GameSpellEffect effect2 = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+                GameSpellEffect effect2 = FindEffectOnTarget(target, "Mesmerize");
                 if (effect2 != null)
                 {
                     effect2.Cancel(true);
@@ -108,7 +103,7 @@ namespace DOL.GS.Spells
 
     //shared timer 3
     #region Banelord-3
-    [SpellHandlerAttribute("Oppression")]
+    [SpellHandler("Oppression")]
     public class OppressionSpellHandler : MasterlevelHandling
     {
         public override bool IsOverwritable(GameSpellEffect compare)
@@ -134,7 +129,7 @@ namespace DOL.GS.Spells
 
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
-            GameSpellEffect mezz = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+            GameSpellEffect mezz = FindEffectOnTarget(target, "Mesmerize");
             if (mezz != null)
                 mezz.Cancel(false);
             base.ApplyEffectOnTarget(target, effectiveness);
@@ -159,7 +154,7 @@ namespace DOL.GS.Spells
 
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
-            GameSpellEffect effect2 = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+            GameSpellEffect effect2 = FindEffectOnTarget(target, "Mesmerize");
             if (effect2 != null)
             {
                 effect2.Cancel(false);
@@ -186,7 +181,7 @@ namespace DOL.GS.Spells
 
     //shared timer 5
     #region Banelord-5
-    [SpellHandlerAttribute("MissHit")]
+    [SpellHandler("MissHit")]
     public class MissHit : MasterlevelBuffHandling
     {
         public override eProperty Property1 { get { return eProperty.MissHit; } }
@@ -336,7 +331,7 @@ namespace DOL.GS.Spells
 
     //shared timer 3
     #region Banelord-7
-    [SpellHandlerAttribute("BLToHit")]
+    [SpellHandler("BLToHit")]
     public class BLToHit : MasterlevelBuffHandling
     {
         public override eProperty Property1 { get { return eProperty.ToHitBonus; } }
@@ -348,7 +343,7 @@ namespace DOL.GS.Spells
 
     //shared timer 5
     #region Banelord-9
-    [SpellHandlerAttribute("EffectivenessDebuff")]
+    [SpellHandler("EffectivenessDebuff")]
     public class EffectivenessDeBuff : MasterlevelHandling
     {
         /// <summary>
@@ -402,7 +397,7 @@ namespace DOL.GS.Spells
 
     //no shared timer
     #region Banelord-10
-    [SpellHandlerAttribute("Banespike")]
+    [SpellHandler("Banespike")]
     public class BanespikeHandler : MasterlevelBuffHandling
     {
         public override eProperty Property1 { get { return eProperty.MeleeDamage; } }

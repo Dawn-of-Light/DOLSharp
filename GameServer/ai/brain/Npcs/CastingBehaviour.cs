@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS;
+﻿using DOL.GS;
 using DOL.Events;
 
 namespace DOL.AI.Brain

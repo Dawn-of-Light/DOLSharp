@@ -17,14 +17,12 @@
  *
  */
 
-using System;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 	  "&anonymous",
 	  ePrivLevel.Player,
 	  "Toggle anonymous mode (name doesn't show up in /who)",

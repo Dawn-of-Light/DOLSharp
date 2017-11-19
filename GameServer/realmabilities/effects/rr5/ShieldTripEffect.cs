@@ -1,16 +1,13 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
-using DOL.GS.RealmAbilities;
 using DOL.Events;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Adrenaline Rush
-	/// </summary>
-	public class ShieldTripDisarmEffect : TimedEffect
+    /// <summary>
+    /// Adrenaline Rush
+    /// </summary>
+    public class ShieldTripDisarmEffect : TimedEffect
 	{
 
 

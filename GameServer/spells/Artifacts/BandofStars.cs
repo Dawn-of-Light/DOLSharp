@@ -18,19 +18,13 @@
  */
 using System;
 using DOL.AI.Brain;
-using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
-using DOL.GS.Keeps;
-using DOL.GS.SkillHandler;
-
-using DOL.Events;
-using DOL.GS;
 
 
 namespace DOL.GS.Spells
 {
-	[SpellHandlerAttribute("StarsProc")]
+    [SpellHandler("StarsProc")]
 	public class StarsProc : SpellHandler
 	{		
 		public override bool CheckBeginCast(GameLiving selectedTarget)
@@ -114,7 +108,7 @@ namespace DOL.GS.Spells
 		public StarsProc(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
 	
-	[SpellHandlerAttribute("StarsProc2")]
+	[SpellHandler("StarsProc2")]
     public class StarsProc2 : SpellHandler
     {
 		public override int CalculateSpellResistChance(GameLiving target)

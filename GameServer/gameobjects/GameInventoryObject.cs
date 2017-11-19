@@ -16,20 +16,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-using System;
-using System.Collections;
 using DOL.Database;
 using System.Collections.Generic;
 
 // Tolakram - January 7, 2012
- 
+
 namespace DOL.GS
 {
-	/// <summary>
-	/// Interface for a GameInventoryObject
-	/// This is an object or NPC that can interact with a players inventory, buy, or sell items
-	/// </summary>		
-	public interface IGameInventoryObject
+    /// <summary>
+    /// Interface for a GameInventoryObject
+    /// This is an object or NPC that can interact with a players inventory, buy, or sell items
+    /// </summary>		
+    public interface IGameInventoryObject
 	{
 		object LockObject();
 

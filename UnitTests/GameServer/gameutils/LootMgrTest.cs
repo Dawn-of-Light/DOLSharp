@@ -17,17 +17,16 @@
  *
  */
 using System;
-using System.Collections;
 using DOL.Database;
 using DOL.GS;
 using NUnit.Framework;
 
 namespace DOL.Server.Tests
 {
-	/// <summary>
-	/// Unit test for the LootMgr Class
-	/// </summary>
-	[TestFixture]
+    /// <summary>
+    /// Unit test for the LootMgr Class
+    /// </summary>
+    [TestFixture]
 	public class LootManagerTest : ServerTests
 	{
 		public LootManagerTest()

@@ -18,10 +18,7 @@
  */
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using DOL.AI.Brain;
 using DOL.Database;
-using DOL.Events;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.GS.Movement;
@@ -29,10 +26,10 @@ using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	/// <summary>
-	/// Various keep guard commands
-	/// </summary>
-	[CmdAttribute(
+    /// <summary>
+    /// Various keep guard commands
+    /// </summary>
+    [Cmd(
 		"&keepguard",
 		ePrivLevel.GM,
 		"GMCommands.KeepGuard.Description",

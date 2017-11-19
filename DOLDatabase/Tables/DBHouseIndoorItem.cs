@@ -20,16 +20,14 @@
  * Last modified by Schaf on 10.12.2004 20:09
  */
 
-using System;
 
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL
 {
-	namespace Database
-	{
-		[DataTable(TableName="DBIndoorItem")]
+    namespace Database
+    {
+        [DataTable(TableName="DBIndoorItem")]
 		public class DBHouseIndoorItem : DataObject
 		{
 			//important data

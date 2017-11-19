@@ -36,7 +36,7 @@ namespace DOL.Events
 		/// </summary>
 		public EnemyKilledEventArgs(GameLiving target)
 		{
-			this.m_target=target;
+            m_target = target;
 		}
 
 		/// <summary>

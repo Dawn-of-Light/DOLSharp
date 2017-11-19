@@ -1,14 +1,13 @@
-using System.Collections;
 using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Vanish
-	/// </summary>
-	public class VanishEffect : TimedEffect
+    /// <summary>
+    /// Vanish
+    /// </summary>
+    public class VanishEffect : TimedEffect
 	{
 		public const string VANISH_BLOCK_ATTACK_TIME_KEY = "vanish_no_attack";
 

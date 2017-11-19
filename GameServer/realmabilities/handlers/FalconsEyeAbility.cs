@@ -1,14 +1,12 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using DOL.Database;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Falcon's Eye RA
-	/// </summary>
-	public class FalconsEyeAbility : RAPropertyEnhancer
+    /// <summary>
+    /// Falcon's Eye RA
+    /// </summary>
+    public class FalconsEyeAbility : RAPropertyEnhancer
 	{
 		public FalconsEyeAbility(DBAbility dba, int level)
 			: base(dba, level, eProperty.CriticalSpellHitChance)

@@ -17,15 +17,14 @@
  *
  */
 
-using System;
 using DOL.Language;
 
 namespace DOL.GS.PlayerTitles
 {
-  	/// <summary>
-	/// Craft Title Handler
-	/// </summary>
-	public class CraftTitle : SimplePlayerTitle
+    /// <summary>
+    /// Craft Title Handler
+    /// </summary>
+    public class CraftTitle : SimplePlayerTitle
 	{
 		/// <summary>
 		/// The title description, shown in "Titles" window.

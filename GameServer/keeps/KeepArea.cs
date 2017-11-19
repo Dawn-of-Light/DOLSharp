@@ -1,10 +1,9 @@
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.Database;
 
 namespace DOL.GS.Keeps
 {
-	public class KeepArea : Area.Circle
+    public class KeepArea : Area.Circle
 	{
 		public AbstractGameKeep Keep = null;
 		private const int PK_RADIUS = 4000;
@@ -58,16 +57,16 @@ namespace DOL.GS.Keeps
 				else
 				{
 					m_dbArea = new DBArea();
-					m_dbArea.CanBroadcast = this.CanBroadcast;
-					m_dbArea.CheckLOS = this.CheckLOS;
-					m_dbArea.ClassType = this.GetType().ToString();
-					m_dbArea.Description = this.Description;
-					m_dbArea.Radius = this.Radius;
-					m_dbArea.Region = (ushort)this.Keep.Region;
-					m_dbArea.Sound = this.Sound;
-					m_dbArea.X = this.X;
-					m_dbArea.Y = this.Y;
-					m_dbArea.Z = this.Z;
+					m_dbArea.CanBroadcast = CanBroadcast;
+					m_dbArea.CheckLOS = CheckLOS;
+					m_dbArea.ClassType = GetType().ToString();
+					m_dbArea.Description = Description;
+					m_dbArea.Radius = Radius;
+					m_dbArea.Region = (ushort)Keep.Region;
+					m_dbArea.Sound = Sound;
+					m_dbArea.X = X;
+					m_dbArea.Y = Y;
+					m_dbArea.Z = Z;
 
 					GameServer.Database.AddObject(m_dbArea);
 				}

@@ -17,22 +17,18 @@
  *
  */
 using System;
-
-using DOL.Database;
 using DOL.Database.Attributes;
-using System.Collections.Generic;
 using log4net;
 using System.Reflection;
-using System.Timers;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// The InventoryItem table holds all values from the
-	/// ItemTemplate table and also some more values that
-	/// are neccessary to store the inventory position
-	/// </summary>
-	[DataTable(TableName = "Inventory")]
+    /// <summary>
+    /// The InventoryItem table holds all values from the
+    /// ItemTemplate table and also some more values that
+    /// are neccessary to store the inventory position
+    /// </summary>
+    [DataTable(TableName = "Inventory")]
 	public class InventoryItem : DataObject
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

@@ -22,18 +22,17 @@ using System.Reflection;
 
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.PacketHandler;
 using System.Collections.Generic;
 
 using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// RelicManager
-	/// The manager that keeps track of the relics.
-	/// </summary>
-	public sealed class RelicMgr
+    /// <summary>
+    /// RelicManager
+    /// The manager that keeps track of the relics.
+    /// </summary>
+    public sealed class RelicMgr
 	{
 		/// <summary>
 		/// table of all relics, id as key

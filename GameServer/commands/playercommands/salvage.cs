@@ -19,7 +19,7 @@
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&salvage",
 		ePrivLevel.Player,
 		"You can salvage an item when you are a crafter",

@@ -1,25 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using DOL.GS;
-using DOL.GS.PacketHandler;
-using DOL.AI.Brain;
+﻿using DOL.GS.PacketHandler;
 using DOL.Events;
-using DOL.GS.Effects;
-using log4net;
-using System.Reflection;
-using DOL.GS.Atlantis;
-using DOL.Database;
-using DOL.Language;
 using DOL.GS.Spells;
 
 namespace DOL.GS.Atlantis
 {
-	/// <summary>
-	/// The base class that most or all ArtifactEncounter mob's should inherit from.
-	/// </summary>
-	public class BasicEncounterMob : GameNPC
+    /// <summary>
+    /// The base class that most or all ArtifactEncounter mob's should inherit from.
+    /// </summary>
+    public class BasicEncounterMob : GameNPC
 	{
 		#region Immunity
 
@@ -171,122 +159,122 @@ namespace DOL.GS.Atlantis
 		{
 			//check for Immunity to Magic or Melee damage.
 			#region Immunity
-			if ((this.IsImmuneToMagic) && (damageType == eDamageType.Body || damageType == eDamageType.Cold || damageType == eDamageType.Crush || damageType == eDamageType.Energy || damageType == eDamageType.Heat || damageType == eDamageType.Matter || damageType == eDamageType.Spirit))
+			if ((IsImmuneToMagic) && (damageType == eDamageType.Body || damageType == eDamageType.Cold || damageType == eDamageType.Crush || damageType == eDamageType.Energy || damageType == eDamageType.Heat || damageType == eDamageType.Matter || damageType == eDamageType.Spirit))
 			{
 				if (source is GamePlayer)
 				{
 					GamePlayer player = source as GamePlayer;
-					player.Out.SendMessage("The " + this.Name + " is immune to magic and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+					player.Out.SendMessage("The " + Name + " is immune to magic and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
 					return;
 				}
 				return;
 			}
 
-			if ((this.IsImmuneToMelee) && (damageType == eDamageType.Crush || damageType == eDamageType.Slash || damageType == eDamageType.Thrust || damageType == eDamageType.Natural))
+			if ((IsImmuneToMelee) && (damageType == eDamageType.Crush || damageType == eDamageType.Slash || damageType == eDamageType.Thrust || damageType == eDamageType.Natural))
 			{
 				if (source is GamePlayer)
 				{
 					GamePlayer player = source as GamePlayer;
-					player.Out.SendMessage("The " + this.Name + " is immune to melee and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+					player.Out.SendMessage("The " + Name + " is immune to melee and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
 					return;
 				}
 				return;
 			}
 
-			if ((this.IsImmuneToCrush) && (damageType == eDamageType.Crush))
+			if ((IsImmuneToCrush) && (damageType == eDamageType.Crush))
 			{
 				if (source is GamePlayer)
 				{
 					GamePlayer player = source as GamePlayer;
-					player.Out.SendMessage("The " + this.Name + " is immune to crush and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+					player.Out.SendMessage("The " + Name + " is immune to crush and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
 					return;
 				}
 				return;
 			}
 
-			if ((this.IsImmuneToSlash) && (damageType == eDamageType.Slash))
+			if ((IsImmuneToSlash) && (damageType == eDamageType.Slash))
 			{
 				if (source is GamePlayer)
 				{
 					GamePlayer player = source as GamePlayer;
-					player.Out.SendMessage("The " + this.Name + " is immune to slash and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+					player.Out.SendMessage("The " + Name + " is immune to slash and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
 					return;
 				}
 				return;
 			}
 			
-			if ((this.IsImmuneToThrust) && (damageType == eDamageType.Thrust))
+			if ((IsImmuneToThrust) && (damageType == eDamageType.Thrust))
 			{
 				if (source is GamePlayer)
 				{
 					GamePlayer player = source as GamePlayer;
-					player.Out.SendMessage("The " + this.Name + " is immune to thrust and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+					player.Out.SendMessage("The " + Name + " is immune to thrust and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
 					return;
 				}
 				return;
 			}
 
-			if ((this.IsImmuneToBody) && (damageType == eDamageType.Body))
+			if ((IsImmuneToBody) && (damageType == eDamageType.Body))
 			{
 				if (source is GamePlayer)
 				{
 					GamePlayer player = source as GamePlayer;
-					player.Out.SendMessage("The " + this.Name + " is immune to body and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+					player.Out.SendMessage("The " + Name + " is immune to body and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
 					return;
 				}
 				return;
 			}
 
-			if ((this.IsImmuneToCold) && (damageType == eDamageType.Cold))
+			if ((IsImmuneToCold) && (damageType == eDamageType.Cold))
 			{
 				if (source is GamePlayer)
 				{
 					GamePlayer player = source as GamePlayer;
-					player.Out.SendMessage("The " + this.Name + " is immune to cold and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+					player.Out.SendMessage("The " + Name + " is immune to cold and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
 					return;
 				}
 				return;
 			}
 
-			if ((this.IsImmuneToEnergy) && (damageType == eDamageType.Energy))
+			if ((IsImmuneToEnergy) && (damageType == eDamageType.Energy))
 			{
 				if (source is GamePlayer)
 				{
 					GamePlayer player = source as GamePlayer;
-					player.Out.SendMessage("The " + this.Name + " is immune to energy and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+					player.Out.SendMessage("The " + Name + " is immune to energy and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
 					return;
 				}
 				return;
 			}
 
-			if ((this.IsImmuneToHeat) && (damageType == eDamageType.Heat))
+			if ((IsImmuneToHeat) && (damageType == eDamageType.Heat))
 			{
 				if (source is GamePlayer)
 				{
 					GamePlayer player = source as GamePlayer;
-					player.Out.SendMessage("The " + this.Name + " is immune to heat and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+					player.Out.SendMessage("The " + Name + " is immune to heat and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
 					return;
 				}
 				return;
 			}
 
-			if ((this.IsImmuneToMatter) && (damageType == eDamageType.Matter))
+			if ((IsImmuneToMatter) && (damageType == eDamageType.Matter))
 			{
 				if (source is GamePlayer)
 				{
 					GamePlayer player = source as GamePlayer;
-					player.Out.SendMessage("The " + this.Name + " is immune to matter and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+					player.Out.SendMessage("The " + Name + " is immune to matter and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
 					return;
 				}
 				return;
 			}
 
-			if ((this.IsImmuneToSpirit) && (damageType == eDamageType.Spirit))
+			if ((IsImmuneToSpirit) && (damageType == eDamageType.Spirit))
 			{
 				if (source is GamePlayer)
 				{
 					GamePlayer player = source as GamePlayer;
-					player.Out.SendMessage("The " + this.Name + " is immune to spirit and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
+					player.Out.SendMessage("The " + Name + " is immune to spirit and your damage fails to effect it!", eChatType.CT_Important, eChatLoc.CL_ChatWindow);
 					return;
 				}
 				return;

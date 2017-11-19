@@ -16,17 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 
 using DOL.GS.Styles;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Description of LiveAbilitySpecialization.
-	/// </summary>
-	public class LiveAbilitySpecialization : Specialization
+    /// <summary>
+    /// Description of LiveAbilitySpecialization.
+    /// </summary>
+    public class LiveAbilitySpecialization : Specialization
 	{
 		public LiveAbilitySpecialization(string keyname, string displayname, ushort icon, int ID)
 			: base(keyname, displayname, icon, ID)

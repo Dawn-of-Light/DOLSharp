@@ -22,7 +22,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
-using DataTable = System.Data.DataTable;
 
 using DOL.Database.Attributes;
 using DOL.Database.Connection;
@@ -32,10 +31,10 @@ using log4net;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Default Object Database Base Implementation
-	/// </summary>
-	public abstract class ObjectDatabase : IObjectDatabase
+    /// <summary>
+    /// Default Object Database Base Implementation
+    /// </summary>
+    public abstract class ObjectDatabase : IObjectDatabase
 	{
 		/// <summary>
 		/// Defines a logger for this class.

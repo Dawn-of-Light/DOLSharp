@@ -18,20 +18,16 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
-using DOL.Events;
-using DOL.GS.Quests;
 using DOL.Database;
 using DOL.GS.PacketHandler;
-using System.Collections;
 
 namespace DOL.GS.Quests.Atlantis.Artifacts
 {
-	/// <summary>
-	/// Quest for the Stone of Atlantis artifact.
-	/// </summary>
-	/// <author>Aredhel</author>
-	class StoneofAtlantis : ArtifactQuest
+    /// <summary>
+    /// Quest for the Stone of Atlantis artifact.
+    /// </summary>
+    /// <author>Aredhel</author>
+    class StoneofAtlantis : ArtifactQuest
 	{
 		public StoneofAtlantis()
 			: base() { }

@@ -1,14 +1,13 @@
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Ignore Pain, healing
-	/// </summary>
-	public class IgnorePainAbility : TimedRealmAbility
+    /// <summary>
+    /// Ignore Pain, healing
+    /// </summary>
+    public class IgnorePainAbility : TimedRealmAbility
 	{
 		public IgnorePainAbility(DBAbility dba, int level) : base(dba, level) { }
 

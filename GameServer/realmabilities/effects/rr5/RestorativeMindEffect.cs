@@ -1,16 +1,11 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
-using DOL.GS.RealmAbilities;
-using DOL.GS;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Mastery of Concentration
-	/// </summary>
-	public class RestorativeMindEffect : TimedEffect
+    /// <summary>
+    /// Mastery of Concentration
+    /// </summary>
+    public class RestorativeMindEffect : TimedEffect
 	{
 
 		private GamePlayer m_playerOwner;

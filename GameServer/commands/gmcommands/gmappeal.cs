@@ -17,9 +17,7 @@
  *
  */
 
-using System.Reflection;
 using System.Collections.Generic;
-using log4net;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 using DOL.GS.Appeal;
@@ -27,7 +25,7 @@ using DOL.GS.Appeal;
 namespace DOL.GS.Commands
 {
 
-    [CmdAttribute(
+    [Cmd(
         "&gmappeal",
         new string[] { "&gmhelp" },
         ePrivLevel.GM,

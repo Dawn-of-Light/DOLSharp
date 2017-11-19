@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Enchanter Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Enchanter, "Enchanter", "Magician", "Enchantress")]
+    /// <summary>
+    /// Hibernia Enchanter Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Enchanter, "Enchanter", "Magician", "Enchantress")]
 	public class ClassEnchanter : ClassMagician
 	{
 		public ClassEnchanter()

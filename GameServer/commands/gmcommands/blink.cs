@@ -21,7 +21,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&blink",
 		ePrivLevel.GM,
 		"Makes the specified UI Part of your target or yourself blinking.",

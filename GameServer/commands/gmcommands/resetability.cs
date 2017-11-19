@@ -17,13 +17,11 @@
  *
  */
 
-using System;
 using DOL.GS.PacketHandler;
-using DOL.GS.RealmAbilities;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		"&resetability",
 		ePrivLevel.GM,
 		"/resetability - <self|target|group|cg|bg>")]

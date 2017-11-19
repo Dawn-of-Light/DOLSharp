@@ -16,20 +16,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections;
 using System.Collections.Specialized;
 using DOL.GS.Effects;
 using DOL.GS.PropertyCalc;
-using System.Reflection;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Health regeneration rate buff
-	/// </summary>
-	[SpellHandler("HealthRegenBuff")]
+    /// <summary>
+    /// Health regeneration rate buff
+    /// </summary>
+    [SpellHandler("HealthRegenBuff")]
 	public class HealthRegenSpellHandler : PropertyChangingSpell
 	{
 		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }

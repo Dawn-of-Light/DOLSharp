@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Midgard Caster Base Class Mystic
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Mystic, "Mystic", "Mystic")]
+    /// <summary>
+    /// Midgard Caster Base Class Mystic
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Mystic, "Mystic", "Mystic")]
 	public class ClassMystic : CharacterClassBase
 	{
 		public ClassMystic()

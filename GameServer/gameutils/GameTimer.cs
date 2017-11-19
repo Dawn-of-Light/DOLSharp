@@ -19,22 +19,19 @@
  *
  */
 using System;
-using System.Collections;
 using System.Diagnostics;
-using System.IO;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using log4net;
 using ThreadState = System.Threading.ThreadState;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// The GameTimer class invokes OnTick() method after
-	/// certain intervals which are defined in milliseconds
-	/// </summary>
-	public abstract class GameTimer
+    /// <summary>
+    /// The GameTimer class invokes OnTick() method after
+    /// certain intervals which are defined in milliseconds
+    /// </summary>
+    public abstract class GameTimer
 	{
 		/// <summary>
 		/// Defines a logger for this class.

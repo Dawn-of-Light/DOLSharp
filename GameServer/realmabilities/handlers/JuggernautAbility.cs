@@ -1,14 +1,11 @@
-using System.Reflection;
-using System.Collections;
 using DOL.Database;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.GS.Spells;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class JuggernautAbility : TimedRealmAbility
+    public class JuggernautAbility : TimedRealmAbility
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -76,7 +73,7 @@ namespace DOL.GS.RealmAbilities
 
 			if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
 			{
-				switch (this.Level)
+				switch (Level)
 				{
 					case 1:
 						m_value = 10;
@@ -99,7 +96,7 @@ namespace DOL.GS.RealmAbilities
 			}
 			else
 			{
-				switch (this.Level)
+				switch (Level)
 				{
 					case 1:
 						m_value = 10;

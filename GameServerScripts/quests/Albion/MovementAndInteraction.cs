@@ -26,16 +26,13 @@
 */
 
 using System;
-using System.Reflection;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.PacketHandler;
 using DOL.GS.Behaviour;
-using DOL.Language;
-using log4net;
 
-namespace DOL.GS.Quests.Albion {
-	public class MovementAndInteraction : BaseQuest
+namespace DOL.GS.Quests.Albion
+{
+    public class MovementAndInteraction : BaseQuest
 	{
 		protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

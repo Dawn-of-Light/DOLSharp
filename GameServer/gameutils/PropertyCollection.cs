@@ -17,7 +17,6 @@
  *
  */
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Reflection;
 using System.Linq;
 
@@ -25,10 +24,10 @@ using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Holds properties of different types
-	/// </summary>
-	public class PropertyCollection
+    /// <summary>
+    /// Holds properties of different types
+    /// </summary>
+    public class PropertyCollection
 	{
 		/// <summary>
 		/// Define a logger for this class.

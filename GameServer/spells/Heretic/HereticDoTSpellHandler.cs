@@ -1,13 +1,10 @@
-using System;
-using System.Collections;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
 {
 
-	[SpellHandlerAttribute("HereticDamageOverTime")]
+    [SpellHandler("HereticDamageOverTime")]
 	public class HereticDoTSpellHandler : HereticPiercingMagic
 	{
 

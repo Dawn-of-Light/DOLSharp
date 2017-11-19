@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using DOL.Database;
 using DOL.GS.Effects;

@@ -17,8 +17,6 @@
  *
  */
 using System;
-using System.Collections;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Language;
@@ -26,10 +24,10 @@ using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Damage Over Time spell handler
-	/// </summary>
-	[SpellHandlerAttribute("DamageOverTime")]
+    /// <summary>
+    /// Damage Over Time spell handler
+    /// </summary>
+    [SpellHandler("DamageOverTime")]
 	public class DoTSpellHandler : SpellHandler
 	{
 		/// <summary>
@@ -80,7 +78,7 @@ namespace DOL.GS.Spells
 		public override AttackData CalculateDamageToTarget(GameLiving target, double effectiveness)
 		{
 			AttackData ad = base.CalculateDamageToTarget(target, effectiveness);
-            if (this.SpellLine.KeyName == GlobalSpellsLines.Mundane_Poisons)
+            if (SpellLine.KeyName == GlobalSpellsLines.Mundane_Poisons)
             {
                 RealmAbilities.L3RAPropertyEnhancer ra = Caster.GetAbility<RealmAbilities.ViperAbility>();
 				if (ra != null)
@@ -90,7 +88,7 @@ namespace DOL.GS.Spells
 				}
             }
             			
-			GameSpellEffect iWarLordEffect = SpellHandler.FindEffectOnTarget(target, "CleansingAura");
+			GameSpellEffect iWarLordEffect = FindEffectOnTarget(target, "CleansingAura");
 			if (iWarLordEffect != null)
 				ad.Damage *= (int)(1.00 - (iWarLordEffect.Spell.Value * 0.01));
                        

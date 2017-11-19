@@ -21,14 +21,12 @@ using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 
-using DOL.GS;
-
 namespace DOL.GS.Commands
 {
-	/// <summary>
-	/// Refresh Command Handler to handle resetting Object using Static Cache.
-	/// </summary>
-	[Cmd("&refresh",
+    /// <summary>
+    /// Refresh Command Handler to handle resetting Object using Static Cache.
+    /// </summary>
+    [Cmd("&refresh",
 		ePrivLevel.Admin,
 		"Refresh some specific static data cache stored in scripts or other objects",
 		"/refresh list | ClassName 'dot' MethodName"

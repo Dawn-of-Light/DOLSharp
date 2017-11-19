@@ -16,18 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Reflection;
 using DOL.AI.Brain;
-using log4net;
 using DOL.Events;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Training Dummy: Can't move, fight back, or die
-	/// </summary>
-	public class GameTrainingDummy : GameNPC
+    /// <summary>
+    /// Training Dummy: Can't move, fight back, or die
+    /// </summary>
+    public class GameTrainingDummy : GameNPC
 	{
 		public GameTrainingDummy() : base()
 		{
@@ -60,7 +57,7 @@ namespace DOL.GS
 		{
 			if (ad.IsHit && ad.CausesCombat)
 			{
-				if (ad.Attacker.Realm == 0 || this.Realm == 0)
+				if (ad.Attacker.Realm == 0 || Realm == 0)
 				{
 					LastAttackedByEnemyTickPvE = CurrentRegion.Time;
 					ad.Attacker.LastAttackTickPvE = CurrentRegion.Time;

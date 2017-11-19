@@ -19,13 +19,6 @@
 using System;
 using DOL.Database;
 using DOL.GS.PacketHandler;
-using DOL.Language;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using DOL.GS.Utils;
-using DOL.GS.Quests;
-using DOL.GS.PacketHandler.Client.v168;
 using log4net;
 
 namespace DOL.GS.Commands
@@ -34,7 +27,7 @@ namespace DOL.GS.Commands
     /// A command to manage teleport destinations.
     /// </summary>
     /// <author>Aredhel</author>
-	[CmdAttribute(
+	[Cmd(
 		"&teleport",
 		ePrivLevel.GM,
         "Manage teleport destinations",
@@ -42,7 +35,7 @@ namespace DOL.GS.Commands
 		"'/teleport reload' reload all teleport locations from the db")]
     public class TeleportCommandHandler : AbstractCommandHandler, ICommandHandler
     {
-		private static readonly ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
         /// Handle command.

@@ -16,20 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.Events;
-using DOL.GS.Quests;
 using DOL.Database;
 
 namespace DOL.GS.Quests.Atlantis.Encounters
 {
-	/// <summary>
-	/// Encounter for the Gem of Lost Memories artifact.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class GemofLostMemories : ArtifactEncounter
+    /// <summary>
+    /// Encounter for the Gem of Lost Memories artifact.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class GemofLostMemories : ArtifactEncounter
 	{
 		public GemofLostMemories(GamePlayer questingPlayer)
 			: base(questingPlayer) { }

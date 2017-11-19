@@ -45,7 +45,7 @@ using System.Text;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&who",
 		ePrivLevel.Player,
 		"Shows who is online",
