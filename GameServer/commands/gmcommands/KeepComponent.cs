@@ -26,7 +26,7 @@ using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		 "&keepcomponent",
 		 ePrivLevel.GM,
 		 "GMCommands.KeepComponents.Description",

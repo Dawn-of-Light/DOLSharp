@@ -17,20 +17,13 @@
  *
  */
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Reflection;
-using System.Text;
-using DOL.Database;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using DOL.Language;
 using log4net;
 
 namespace DOL.GS.Quests
 {
-	public class QuestSearchArea : Area.Circle
+    public class QuestSearchArea : Area.Circle
 	{
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 

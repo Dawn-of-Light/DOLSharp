@@ -16,17 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
-	/// <summary>
-	/// Handler for Stealth Spec clicks
-	/// </summary>
-	[SkillHandlerAttribute(Abilities.Camouflage)]
+    /// <summary>
+    /// Handler for Stealth Spec clicks
+    /// </summary>
+    [SkillHandler(Abilities.Camouflage)]
 	public class CamouflageSpecHandler : IAbilityActionHandler
 	{
 		public const int DISABLE_DURATION = 600000;

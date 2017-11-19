@@ -16,20 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.Events;
-using DOL.GS.Quests;
 using DOL.Database;
 
 namespace DOL.GS.Quests.Atlantis.Encounters
 {
-	/// <summary>
-	/// Encounter for the Goddess Necklace artifact.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class GoddessNecklace : ArtifactEncounter
+    /// <summary>
+    /// Encounter for the Goddess Necklace artifact.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class GoddessNecklace : ArtifactEncounter
 	{
 		public GoddessNecklace(GamePlayer questingPlayer)
 			: base(questingPlayer) { }

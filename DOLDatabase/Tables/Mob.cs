@@ -16,18 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
-using DOL.Database;
 using DOL.Database.Attributes;
-using System.Collections;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// The database side of GameMob
-	/// </summary>
-	[DataTable(TableName = "Mob")]
+    /// <summary>
+    /// The database side of GameMob
+    /// </summary>
+    [DataTable(TableName = "Mob")]
 	public class Mob : DataObject
     {
         #region Variables
@@ -812,12 +809,12 @@ namespace DOL.Database
 		{
 			get
 			{
-				return this.m_packageID;
+				return m_packageID;
 			}
 			set
 			{
-				this.m_packageID = value;
-				this.Dirty = true;
+                m_packageID = value;
+                Dirty = true;
 			}
 		}
 
@@ -826,12 +823,12 @@ namespace DOL.Database
 		{
 			get
 			{
-				return this.m_visibleWeaponSlots;
+				return m_visibleWeaponSlots;
 			}
 			set
 			{
-				this.m_visibleWeaponSlots = value;
-				this.Dirty = true;
+                m_visibleWeaponSlots = value;
+                Dirty = true;
 			}
         }
         #endregion Properties

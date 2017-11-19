@@ -18,20 +18,16 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
-using DOL.Events;
-using DOL.GS.Quests;
 using DOL.Database;
 using DOL.GS.PacketHandler;
-using System.Collections;
 
 namespace DOL.GS.Quests.Atlantis.Artifacts
 {
-	/// <summary>
-	/// Quest for the Eirene's Hauberk artifact.
-	/// </summary>
-	/// <author>Aredhel</author>
-	class EirenesHauberk : ArtifactQuest
+    /// <summary>
+    /// Quest for the Eirene's Hauberk artifact.
+    /// </summary>
+    /// <author>Aredhel</author>
+    class EirenesHauberk : ArtifactQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.

@@ -17,18 +17,16 @@
  *
  */
 
-using System;
 
-using DOL.GS;
 using DOL.GS.Commands;
 using DOL.Database;
 
 namespace DOL.GS.GameEvents
 {
-	/// <summary>
-	/// StartupLocationTest Command allows to trigger some virtual startup location query with different parameters.
-	/// </summary>
-	[Cmd("&startuploctest",
+    /// <summary>
+    /// StartupLocationTest Command allows to trigger some virtual startup location query with different parameters.
+    /// </summary>
+    [Cmd("&startuploctest",
 		ePrivLevel.GM,
 		"Test a given Client configuration for starting Location Match.",
 		"/startuploctest Version RegionRequestID RealmID ClassID RaceId"

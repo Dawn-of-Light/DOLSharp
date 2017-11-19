@@ -24,7 +24,7 @@ using System.Collections.Generic;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&jump",
+	[Cmd("&jump",
 		ePrivLevel.GM,
 		"GMCommands.Jump.Description",
 		"GMCommands.Jump.Information",

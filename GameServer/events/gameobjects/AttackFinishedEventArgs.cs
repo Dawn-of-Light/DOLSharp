@@ -38,7 +38,7 @@ namespace DOL.Events
 		/// <param name="attackData">The attack data</param>
 		public AttackFinishedEventArgs(AttackData attackData)
 		{
-			this.m_attackData=attackData;
+            m_attackData = attackData;
 		}
 
 		/// <summary>

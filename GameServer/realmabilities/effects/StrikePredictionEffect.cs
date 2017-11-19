@@ -1,8 +1,4 @@
 using System;
-using System.Collections;
-using DOL.GS.PacketHandler;
-using DOL.GS.SkillHandler;
-using DOL.GS.PropertyCalc;
 using DOL.Events;
 using System.Collections.Generic;
 

@@ -16,16 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL
 {
-	namespace Database
-	{
-		[DataTable(TableName="LootOTD")]
+    namespace Database
+    {
+        [DataTable(TableName="LootOTD")]
 		public class LootOTD : DataObject
 		{
 			private string m_itemTemplateID;

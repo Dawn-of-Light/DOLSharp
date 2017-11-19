@@ -17,11 +17,7 @@
  *
  */
 using System;
-using System.Collections;
 using DOL.GS.PacketHandler;
-using DOL.Events;
-using DOL.GS.SkillHandler;
-using DOL.GS.RealmAbilities;
 using System.Collections.Generic;
 
 namespace DOL.GS.Effects

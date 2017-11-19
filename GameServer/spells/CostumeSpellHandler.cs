@@ -20,12 +20,11 @@
 using System;
 using DOL.Events;
 using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
 namespace DOL.GS.Spells
 {
-	/// Costume spell handler: Shape change on self
-	/// <author>Luhz</author>
-	[SpellHandler("Costume")]
+    /// Costume spell handler: Shape change on self
+    /// <author>Luhz</author>
+    [SpellHandler("Costume")]
 	class CostumeSpellHandler : SpellHandler
 	{
 		public override bool CheckBeginCast(GameLiving selectedTarget, bool quiet)

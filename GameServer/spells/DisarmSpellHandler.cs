@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using DOL.AI.Brain;
 using DOL.GS.Effects;
@@ -25,10 +23,10 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Simulates disarming a target by stopping their attack
-	/// </summary>
-	[SpellHandler("Disarm")]
+    /// <summary>
+    /// Simulates disarming a target by stopping their attack
+    /// </summary>
+    [SpellHandler("Disarm")]
 	public class DisarmSpellHandler : SpellHandler
 	{
 		/// <summary>

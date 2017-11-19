@@ -36,7 +36,7 @@ namespace DOL.Events
 		/// </summary>
 		public RegionPlayerEventArgs(GamePlayer player)
 		{
-			this.m_player=player;
+            m_player = player;
 		}
 
 		/// <summary>

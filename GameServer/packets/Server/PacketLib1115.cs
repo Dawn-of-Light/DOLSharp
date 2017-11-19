@@ -17,10 +17,7 @@
 *
 */
 #define NOENCRYPTION
-using System;
 using System.Reflection;
-
-using System.Collections;
 using System.Collections.Generic;
 
 using DOL.Database;

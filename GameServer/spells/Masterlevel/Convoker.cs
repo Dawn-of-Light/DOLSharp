@@ -1,22 +1,18 @@
 using System;
 using System.Collections;
-using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using DOL.GS.SkillHandler;
-using log4net;
 using DOL.Database;
-using DOL.GS.RealmAbilities;
 
 namespace DOL.GS.Spells
 {
-	//http://www.camelotherald.com/masterlevels/ma.php?ml=Convoker
-	//no shared timer
-	#region Convoker-1
-	[SpellHandlerAttribute("SummonWood")]
+    //http://www.camelotherald.com/masterlevels/ma.php?ml=Convoker
+    //no shared timer
+    #region Convoker-1
+    [SpellHandler("SummonWood")]
 	public class SummonWoodSpellHandler : SummonItemSpellHandler
 	{
 		public SummonWoodSpellHandler(GameLiving caster, Spell spell, SpellLine line)
@@ -41,7 +37,7 @@ namespace DOL.GS.Spells
 
 	//no shared timer
 	#region Convoker-2
-	[SpellHandlerAttribute("PrescienceNode")]
+	[SpellHandler("PrescienceNode")]
 	public class PrescienceNodeSpellHandler : FontSpellHandler
 	{
 		// constructor
@@ -88,7 +84,7 @@ namespace DOL.GS.Spells
 			heal = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
 		}
 	}
-	[SpellHandlerAttribute("Prescience")]
+	[SpellHandler("Prescience")]
 	public class PrescienceSpellHandler : SpellHandler
 	{
 		public override bool IsOverwritable(GameSpellEffect compare)
@@ -117,7 +113,7 @@ namespace DOL.GS.Spells
 
 	//no shared timer
 	#region Convoker-3
-	[SpellHandlerAttribute("PowerTrap")]
+	[SpellHandler("PowerTrap")]
 	public class PowerTrapSpellHandler : MineSpellHandler
 	{
 		// constructor
@@ -165,7 +161,7 @@ namespace DOL.GS.Spells
 
 	//no shared timer
 	#region Convoker-4
-	[SpellHandlerAttribute("SpeedWrapWard")]
+	[SpellHandler("SpeedWrapWard")]
 	public class SpeedWrapWardSpellHandler : FontSpellHandler
 	{
 		// constructor
@@ -213,7 +209,7 @@ namespace DOL.GS.Spells
 			heal = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
 		}
 	}
-	[SpellHandlerAttribute("SpeedWrap")]
+	[SpellHandler("SpeedWrap")]
 	public class SpeedWrapSpellHandler : SpellHandler
 	{
 		public override int CalculateSpellResistChance(GameLiving target)
@@ -238,7 +234,7 @@ namespace DOL.GS.Spells
 
 	//shared timer 1
 	#region Convoker-5
-	[SpellHandlerAttribute("SummonWarcrystal")]
+	[SpellHandler("SummonWarcrystal")]
 	public class SummonWarcrystalSpellHandler : SummonItemSpellHandler
 	{
 		public SummonWarcrystalSpellHandler(GameLiving caster, Spell spell, SpellLine line)
@@ -274,7 +270,7 @@ namespace DOL.GS.Spells
 
 	//shared timer 1
 	#region Convoker-6
-	[SpellHandlerAttribute("Battlewarder")]
+	[SpellHandler("Battlewarder")]
 	public class BattlewarderSpellHandler : SpellHandler
 	{
 		private GameNPC warder;
@@ -398,7 +394,7 @@ namespace DOL.GS.Spells
 
 	//no shared timer
 	#region Convoker-7
-	[SpellHandlerAttribute("DissonanceTrap")]
+	[SpellHandler("DissonanceTrap")]
 	public class DissonanceTrapSpellHandler : MineSpellHandler
 	{
 		// constructor
@@ -544,7 +540,7 @@ namespace DOL.GS.Spells
 
 	//no shared timer
 	#region Convoker-9
-	[SpellHandlerAttribute("SummonMastery")]
+	[SpellHandler("SummonMastery")]
 	public class Convoker9Handler : MasterlevelHandling
 		//public class Convoker9Handler : MasterlevelBuffHandling
 	{
@@ -751,7 +747,7 @@ namespace DOL.GS.Spells
 
 
 	#region PowerRend
-	[SpellHandlerAttribute("PowerRend")]
+	[SpellHandler("PowerRend")]
 	public class PowerRendSpellHandler : SpellHandler
 	{
 		public PowerRendSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
@@ -794,7 +790,7 @@ namespace DOL.GS.Spells
 #region BrittleBrain
 namespace DOL.AI.Brain
 {
-	public class BrittleBrain : ControlledNpcBrain
+    public class BrittleBrain : ControlledNpcBrain
 	{
 		public BrittleBrain(GameLiving owner)
 			: base(owner)
@@ -816,7 +812,7 @@ namespace DOL.AI.Brain
 
 namespace DOL.AI.Brain
 {
-	public class TitanBrain : ControlledNpcBrain, IControlledBrain
+    public class TitanBrain : ControlledNpcBrain, IControlledBrain
 	{
 		private GameLiving m_target;
 

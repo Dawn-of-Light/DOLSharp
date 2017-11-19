@@ -19,7 +19,7 @@
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.PlayerAttackRequest, "Handles Player Attack Request", eClientStatus.PlayerInGame)]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.PlayerAttackRequest, "Handles Player Attack Request", eClientStatus.PlayerInGame)]
 	public class PlayerAttackRequestHandler : IPacketHandler
 	{
 		#region IPacketHandler Members

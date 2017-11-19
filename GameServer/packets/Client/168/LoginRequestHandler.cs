@@ -62,7 +62,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	///		return $crypted;
 	///	}
 	/// </remarks>
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.LoginRequest, "Handles the login.", eClientStatus.None)]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.LoginRequest, "Handles the login.", eClientStatus.None)]
 	public class LoginRequestHandler : IPacketHandler
 	{
 		/// <summary>

@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// DBDoor is database of door with state of door and X,Y,Z
-	/// </summary>
-	[DataTable(TableName = "Door")]
+    /// <summary>
+    /// DBDoor is database of door with state of door and X,Y,Z
+    /// </summary>
+    [DataTable(TableName = "Door")]
 	public class DBDoor : DataObject
 	{
 		private int m_xpos;

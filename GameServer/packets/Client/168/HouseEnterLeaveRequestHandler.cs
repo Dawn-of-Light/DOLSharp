@@ -20,7 +20,7 @@ using DOL.GS.Housing;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.HouseEnterLeave, "Housing Enter Leave Request.", eClientStatus.PlayerInGame)]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.HouseEnterLeave, "Housing Enter Leave Request.", eClientStatus.PlayerInGame)]
 	public class HouseEnterLeaveHandler : IPacketHandler
 	{
 		#region IPacketHandler Members

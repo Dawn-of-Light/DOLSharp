@@ -16,16 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Debuffs two stats at once, goes into specline bonus category
-	/// </summary>	
-	public abstract class DualStatDebuff : SingleStatDebuff
+    /// <summary>
+    /// Debuffs two stats at once, goes into specline bonus category
+    /// </summary>	
+    public abstract class DualStatDebuff : SingleStatDebuff
 	{
 		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.Debuff; } }
 		public override eBuffBonusCategory BonusCategory2 { get { return eBuffBonusCategory.Debuff; } }
@@ -37,7 +34,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Str/Con stat specline debuff
 	/// </summary>
-	[SpellHandlerAttribute("StrengthConstitutionDebuff")]
+	[SpellHandler("StrengthConstitutionDebuff")]
 	public class StrengthConDebuff : DualStatDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Strength; } }
@@ -50,7 +47,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Dex/Qui stat specline debuff
 	/// </summary>
-	[SpellHandlerAttribute("DexterityQuicknessDebuff")]
+	[SpellHandler("DexterityQuicknessDebuff")]
 	public class DexterityQuiDebuff : DualStatDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Dexterity; } }
@@ -63,7 +60,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Dex/Con stat specline debuff
 	/// </summary>
-	[SpellHandlerAttribute("DexterityConstitutionDebuff")]
+	[SpellHandler("DexterityConstitutionDebuff")]
 	public class DexterityConDebuff : DualStatDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Dexterity; } }
@@ -73,7 +70,7 @@ namespace DOL.GS.Spells
 		public DexterityConDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 	}
 
-	[SpellHandlerAttribute("WeaponSkillConstitutionDebuff")]
+	[SpellHandler("WeaponSkillConstitutionDebuff")]
 	public class WeaponskillConDebuff : DualStatDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.WeaponSkill; } }

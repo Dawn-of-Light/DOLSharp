@@ -21,17 +21,14 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
-using DOL.GS.Keeps;
 using DOL.GS.SkillHandler;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Spell Handler for firing arrows
-	/// </summary>
-	public class ArrowSpellHandler : SpellHandler
+    /// <summary>
+    /// Spell Handler for firing arrows
+    /// </summary>
+    public class ArrowSpellHandler : SpellHandler
 	{
 		/// <summary>
 		/// Does this spell break stealth on start?

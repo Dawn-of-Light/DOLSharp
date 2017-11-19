@@ -16,17 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// The helper class for the engage ability
-	/// </summary>
-	public class EngageEffect : StaticEffect, IGameEffect
+    /// <summary>
+    /// The helper class for the engage ability
+    /// </summary>
+    public class EngageEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// The player that is defended by the engage source

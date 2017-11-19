@@ -19,15 +19,14 @@
 using System.Reflection;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using DOL.GS;
 using log4net;
 using DOL.Language;
 namespace DOL.GS.SkillHandler
 {
-	/// <summary>
-	/// Handler for Guard ability clicks
-	/// </summary>
-	[SkillHandler(Abilities.Guard)]
+    /// <summary>
+    /// Handler for Guard ability clicks
+    /// </summary>
+    [SkillHandler(Abilities.Guard)]
 	public class GuardAbilityHandler : IAbilityActionHandler
 	{
 		/// <summary>

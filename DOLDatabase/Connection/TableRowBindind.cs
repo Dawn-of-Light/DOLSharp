@@ -17,14 +17,13 @@
  *
  */
 
-using System;
 
 namespace DOL.Database.Connection
 {
-	/// <summary>
-	/// Existing Table Row Binding
-	/// </summary>
-	public sealed class TableRowBindind
+    /// <summary>
+    /// Existing Table Row Binding
+    /// </summary>
+    public sealed class TableRowBindind
 	{
 		/// <summary>
 		/// Column Name

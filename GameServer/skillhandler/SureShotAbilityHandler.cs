@@ -16,17 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
-	/// <summary>
-	/// Handler for Sure Shot ability
-	/// </summary>
-	[SkillHandlerAttribute(Abilities.SureShot)]
+    /// <summary>
+    /// Handler for Sure Shot ability
+    /// </summary>
+    [SkillHandler(Abilities.SureShot)]
 	public class SureShotAbilityHandler : IAbilityActionHandler
 	{
 		public void Execute(Ability ab, GamePlayer player)

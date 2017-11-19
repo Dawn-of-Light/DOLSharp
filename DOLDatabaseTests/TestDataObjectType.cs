@@ -17,17 +17,15 @@
  *
  */
 using System;
-
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.Database.Tests
 {
 
-	/// <summary>
-	/// Complex Table Implementing All Type Non Nullable
-	/// </summary>
-	[DataTable(TableName = "Test_ComplexTypeTestTable")]
+    /// <summary>
+    /// Complex Table Implementing All Type Non Nullable
+    /// </summary>
+    [DataTable(TableName = "Test_ComplexTypeTestTable")]
 	public class ComplexTypeTestTable : DataObject
 	{
 		long m_primaryKey;

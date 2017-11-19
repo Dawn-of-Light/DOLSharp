@@ -21,7 +21,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	[SpellHandlerAttribute("VampiirBolt")]
+	[SpellHandler("VampiirBolt")]
 	public class VampiirBoltSpellHandler : SpellHandler
 	{
 		public override bool CheckBeginCast(GameLiving selectedTarget)

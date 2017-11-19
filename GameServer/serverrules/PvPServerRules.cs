@@ -17,23 +17,20 @@
  *
  */
 using System;
-using System.Collections;
-using DOL;
 using DOL.Database;
 using DOL.Language;
 using DOL.AI.Brain;
 using DOL.Events;
-using DOL.GS;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using System.Collections.Generic;
 
 namespace DOL.GS.ServerRules
 {
-	/// <summary>
-	/// Set of rules for "PvP" server type.
-	/// </summary>
-	[ServerRules(eGameServerType.GST_PvP)]
+    /// <summary>
+    /// Set of rules for "PvP" server type.
+    /// </summary>
+    [ServerRules(eGameServerType.GST_PvP)]
 	public class PvPServerRules : AbstractServerRules
 	{
 		public override string RulesDescription()

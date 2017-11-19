@@ -97,7 +97,7 @@ namespace DOL.GS.Scripts
 			{
 				TurnTo(player, 5000);
 
-				player.Out.SendMessage(this.Name + " says, \"" + m_msg + "\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				player.Out.SendMessage(Name + " says, \"" + m_msg + "\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			}
 
 			return res;

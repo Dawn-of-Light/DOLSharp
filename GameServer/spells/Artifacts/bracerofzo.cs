@@ -17,7 +17,6 @@
  *
  */
 using System;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.AI.Brain;
@@ -27,7 +26,7 @@ namespace DOL.GS.Spells
     /// <summary>
     /// Zo' Arkat summoning
     /// </summary>
-    [SpellHandlerAttribute("ZoSummon")]
+    [SpellHandler("ZoSummon")]
     public class BracerOfZo : SpellHandler
     {
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -90,7 +89,7 @@ namespace DOL.GS.Spells
         public BracerOfZo(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
     
-    [SpellHandlerAttribute("Bedazzlement")]
+    [SpellHandler("Bedazzlement")]
     public class ZoDebuffSpellHandler : DualStatDebuff
     {
 		public override eProperty Property1 { get { return eProperty.FumbleChance; } }
@@ -108,7 +107,7 @@ namespace DOL.GS.Spells
 
 namespace DOL.GS
 {
-	public class ZoarkatPet : GamePet
+    public class ZoarkatPet : GamePet
 	{
 		public override int MaxHealth
         {

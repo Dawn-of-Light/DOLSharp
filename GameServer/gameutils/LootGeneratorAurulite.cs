@@ -17,19 +17,17 @@
  *
  */
 using System;
-
-using DOL.GS;
 using DOL.AI.Brain;
 using DOL.Database;
 
 namespace DOL.GS
 {
 
-	/// <summary>
-	/// LootGeneratorAurulite
-	/// At the moment this generator only adds aurulite to the loot
-	/// </summary>
-	public class LootGeneratorAurulite : LootGeneratorBase
+    /// <summary>
+    /// LootGeneratorAurulite
+    /// At the moment this generator only adds aurulite to the loot
+    /// </summary>
+    public class LootGeneratorAurulite : LootGeneratorBase
 	{
 		
 		public static ItemTemplate m_aurulite = GameServer.Database.FindObjectByKey<ItemTemplate>("aurulite");

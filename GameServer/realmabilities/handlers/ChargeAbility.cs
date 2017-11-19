@@ -1,12 +1,10 @@
-using System.Reflection;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Database;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class ChargeAbility : TimedRealmAbility
+    public class ChargeAbility : TimedRealmAbility
 	{
 		public const int DURATION = 15;
 

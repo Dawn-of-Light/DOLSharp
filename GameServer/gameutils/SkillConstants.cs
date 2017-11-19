@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// strong name constants for built in abilities
-	/// </summary>
-	public abstract class Abilities
+    /// <summary>
+    /// strong name constants for built in abilities
+    /// </summary>
+    public abstract class Abilities
 	{
 		// basics
 		/// <summary>

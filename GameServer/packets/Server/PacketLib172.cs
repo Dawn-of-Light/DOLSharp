@@ -22,12 +22,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using DOL.Database;
-using DOL.GS.Quests;
 using log4net;
 
 namespace DOL.GS.PacketHandler
 {
-	[PacketLib(172, GameClient.eClientVersion.Version172)]
+    [PacketLib(172, GameClient.eClientVersion.Version172)]
 	public class PacketLib172 : PacketLib171
 	{
 		/// <summary>

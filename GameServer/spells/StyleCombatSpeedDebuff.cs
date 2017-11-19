@@ -16,16 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Style combat speed debuff effect spell handler
-	/// </summary>
-	[SpellHandler("StyleCombatSpeedDebuff")]
+    /// <summary>
+    /// Style combat speed debuff effect spell handler
+    /// </summary>
+    [SpellHandler("StyleCombatSpeedDebuff")]
 	public class StyleCombatSpeedDebuff : CombatSpeedDebuff
 	{
 		public override int CalculateSpellResistChance(GameLiving target)

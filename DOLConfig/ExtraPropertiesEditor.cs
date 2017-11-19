@@ -29,8 +29,8 @@ namespace DOLConfig
         private string _property_name = null;
         public string propertyName
         {
-            get { return this._property_name; }
-            set { this._property_name = value; }
+            get { return _property_name; }
+            set { _property_name = value; }
         }
 
         /// <summary>
@@ -39,8 +39,8 @@ namespace DOLConfig
         private string _property_type = null;
         public string propertyType
         {
-            get { return this._property_type; }
-            set { this._property_type = value; }
+            get { return _property_type; }
+            set { _property_type = value; }
         }
 
         /// <summary>
@@ -49,8 +49,8 @@ namespace DOLConfig
         private object _property_value = null;
         public object propertyValue
         {
-            get { return this._property_value; }
-            set { this._property_value = value; }
+            get { return _property_value; }
+            set { _property_value = value; }
         }
 
         /// <summary>
@@ -59,8 +59,8 @@ namespace DOLConfig
         private string _property_description = null;
         public string propertyDescription
         {
-            get { return this._property_description; }
-            set { this._property_description = value; }
+            get { return _property_description; }
+            set { _property_description = value; }
         }
 
         /// <summary>
@@ -74,26 +74,26 @@ namespace DOLConfig
         {
             InitializeComponent();
 
-            this.propertyName = property_name;
-            this.property_name_textbox.Text = property_name;
+            propertyName = property_name;
+            property_name_textbox.Text = property_name;
 
-            if (this.property_type_selectbox.Items.Contains(property_type))
+            if (property_type_selectbox.Items.Contains(property_type))
             {
-                this.propertyType = property_type;
-                this.property_type_selectbox.SelectedItem = property_type;
+                propertyType = property_type;
+                property_type_selectbox.SelectedItem = property_type;
             }
             else
             {
-                if(property_type.Length > 0) this.edit_property_error_label.Text = "Unknown type: " + property_type;
+                if(property_type.Length > 0) edit_property_error_label.Text = "Unknown type: " + property_type;
             }
 
-            this.propertyValue = property_value;
-            this.property_value_textbox.Text = Convert.ToString(property_value);
+            propertyValue = property_value;
+            property_value_textbox.Text = Convert.ToString(property_value);
 
             if (property_description.Length > 0)
             {
-                this.propertyDescription = property_description;
-                this.property_description_label.Text = Convert.ToString(property_description);
+                propertyDescription = property_description;
+                property_description_label.Text = Convert.ToString(property_description);
             }
         }
 
@@ -106,7 +106,7 @@ namespace DOLConfig
         {
             try
             {
-                switch (this.propertyType)
+                switch (propertyType)
                 {
                     case "string":
                         Convert.ToString(propertyValue);
@@ -121,12 +121,12 @@ namespace DOLConfig
             }
             catch (FormatException)
             {
-                this.edit_property_error_label.Text = "The value must be a type of " + this.propertyType;
+                edit_property_error_label.Text = "The value must be a type of " + propertyType;
                 return;
             }
 
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         /// <summary>
@@ -136,8 +136,8 @@ namespace DOLConfig
         /// <param name="e"></param>
         private void cancel_button_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace DOLConfig
         /// <param name="e"></param>
         private void property_name_textbox_TextChanged(object sender, EventArgs e)
         {
-            this.propertyName = ((TextBox)sender).Text.Trim();
+            propertyName = ((TextBox)sender).Text.Trim();
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace DOLConfig
         /// <param name="e"></param>
         private void property_type_selectbox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.propertyType = ((ComboBox)sender).SelectedItem.ToString().Trim();
+            propertyType = ((ComboBox)sender).SelectedItem.ToString().Trim();
         }
 
 
@@ -168,7 +168,7 @@ namespace DOLConfig
         /// <param name="e"></param>
         private void property_value_textbox_TextChanged(object sender, EventArgs e)
         {
-            this.propertyValue = ((TextBox)sender).Text.Trim();
+            propertyValue = ((TextBox)sender).Text.Trim();
         }
     }
 }

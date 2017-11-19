@@ -1,14 +1,12 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using DOL.Database;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Mastery of Stealth RA
-	/// </summary>
-	public class MasteryOfStealthAbility : RAPropertyEnhancer
+    /// <summary>
+    /// Mastery of Stealth RA
+    /// </summary>
+    public class MasteryOfStealthAbility : RAPropertyEnhancer
 	{
 		public MasteryOfStealthAbility(DBAbility dba, int level)
 			: base(dba, level, eProperty.Undefined)

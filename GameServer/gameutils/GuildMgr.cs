@@ -23,17 +23,16 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
 using DOL.Database;
-using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// The GuildMgr holds pointers to all guilds, and pointers
-	/// to their members.
-	/// </summary>
-	public sealed class GuildMgr
+    /// <summary>
+    /// The GuildMgr holds pointers to all guilds, and pointers
+    /// to their members.
+    /// </summary>
+    public sealed class GuildMgr
 	{
 		/// <summary>
 		/// Defines a logger for this class.

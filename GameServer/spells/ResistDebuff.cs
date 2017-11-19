@@ -17,21 +17,17 @@
  *
  */
 using System;
-using System.Collections;
 using DOL.AI.Brain;
-using DOL.Database;
 using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
-using DOL.GS.PropertyCalc;
 using DOL.Language;
 using System.Collections.Generic;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Base class for all resist debuffs, needed to set effectiveness and duration
-	/// </summary>
-	public abstract class AbstractResistDebuff : PropertyChangingSpell
+    /// <summary>
+    /// Base class for all resist debuffs, needed to set effectiveness and duration
+    /// </summary>
+    public abstract class AbstractResistDebuff : PropertyChangingSpell
 	{
 		/// <summary>
 		/// Gets debuff type name for delve info
@@ -119,7 +115,7 @@ namespace DOL.GS.Spells
 		public override int CalculateSpellResistChance(GameLiving target)
 		{
 			int basechance = base.CalculateSpellResistChance(target);
-			GameSpellEffect rampage = SpellHandler.FindEffectOnTarget(target, "Rampage");
+			GameSpellEffect rampage = FindEffectOnTarget(target, "Rampage");
 			if (rampage != null)
 			{
 				basechance += (int)rampage.Spell.Value;
@@ -204,7 +200,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Body resistance debuff
 	/// </summary>
-	[SpellHandlerAttribute("BodyResistDebuff")]
+	[SpellHandler("BodyResistDebuff")]
 	public class BodyResistDebuff : AbstractResistDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Resist_Body; } }
@@ -217,7 +213,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Cold resistance debuff
 	/// </summary>
-	[SpellHandlerAttribute("ColdResistDebuff")]
+	[SpellHandler("ColdResistDebuff")]
 	public class ColdResistDebuff : AbstractResistDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Resist_Cold; } }
@@ -230,7 +226,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Energy resistance debuff
 	/// </summary>
-	[SpellHandlerAttribute("EnergyResistDebuff")]
+	[SpellHandler("EnergyResistDebuff")]
 	public class EnergyResistDebuff : AbstractResistDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Resist_Energy; } }
@@ -243,7 +239,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Heat resistance debuff
 	/// </summary>
-	[SpellHandlerAttribute("HeatResistDebuff")]
+	[SpellHandler("HeatResistDebuff")]
 	public class HeatResistDebuff : AbstractResistDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Resist_Heat; } }
@@ -256,7 +252,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Matter resistance debuff
 	/// </summary>
-	[SpellHandlerAttribute("MatterResistDebuff")]
+	[SpellHandler("MatterResistDebuff")]
 	public class MatterResistDebuff : AbstractResistDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Resist_Matter; } }
@@ -269,7 +265,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Spirit resistance debuff
 	/// </summary>
-	[SpellHandlerAttribute("SpiritResistDebuff")]
+	[SpellHandler("SpiritResistDebuff")]
 	public class SpiritResistDebuff : AbstractResistDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Resist_Spirit; } }
@@ -282,7 +278,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Slash resistance debuff
 	/// </summary>
-	[SpellHandlerAttribute("SlashResistDebuff")]
+	[SpellHandler("SlashResistDebuff")]
 	public class SlashResistDebuff : AbstractResistDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Resist_Slash; } }
@@ -295,7 +291,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Thrust resistance debuff
 	/// </summary>
-	[SpellHandlerAttribute("ThrustResistDebuff")]
+	[SpellHandler("ThrustResistDebuff")]
 	public class ThrustResistDebuff : AbstractResistDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Resist_Thrust; } }
@@ -308,7 +304,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Crush resistance debuff
 	/// </summary>
-	[SpellHandlerAttribute("CrushResistDebuff")]
+	[SpellHandler("CrushResistDebuff")]
 	public class CrushResistDebuff : AbstractResistDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Resist_Crush; } }
@@ -320,7 +316,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Crush/Slash/Thrust resistance debuff
 	/// </summary>
-	[SpellHandlerAttribute("CrushSlashThrustDebuff")]
+	[SpellHandler("CrushSlashThrustDebuff")]
 	public class CrushSlashThrustDebuff : AbstractResistDebuff
 	{
 		public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.Debuff; } }
@@ -337,7 +333,7 @@ namespace DOL.GS.Spells
 		public CrushSlashThrustDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
 	
-	[SpellHandlerAttribute("EssenceSear")]
+	[SpellHandler("EssenceSear")]
 	public class EssenceResistDebuff : AbstractResistDebuff
 	{
 		public override eProperty Property1 { get { return eProperty.Resist_Natural; } }

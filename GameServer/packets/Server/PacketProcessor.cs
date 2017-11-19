@@ -26,24 +26,23 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Timers;
-using DOL.Events;
 using DOL.GS.ServerProperties;
 using DOL.Network;
 using log4net;
-using Timer=System.Timers.Timer;
+using Timer = System.Timers.Timer;
 using System.Collections.Generic;
 
 namespace DOL.GS.PacketHandler
 {
-	/// <summary>
-	/// This class handles the packets, receiving and sending
-	/// </summary>
-	public class PacketProcessor
+    /// <summary>
+    /// This class handles the packets, receiving and sending
+    /// </summary>
+    public class PacketProcessor
 	{
 		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// Sync Lock Object

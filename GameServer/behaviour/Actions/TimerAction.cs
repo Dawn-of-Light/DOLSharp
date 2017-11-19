@@ -17,17 +17,12 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS.PacketHandler;
 using DOL.Events;
-using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
-using DOL.Database;
-
+using DOL.GS.Behaviour.Attributes;
 namespace DOL.GS.Behaviour.Actions
 {
 
-    [ActionAttribute(ActionType = eActionType.Timer)]
+    [Action(ActionType = eActionType.Timer)]
     public class TimerAction : AbstractAction<string,int>
     {
         /// <summary>

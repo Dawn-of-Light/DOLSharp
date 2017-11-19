@@ -17,19 +17,15 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.Events;
-using DOL.GS.Spells;
 
 namespace DOL.Events
 {
-	/// <summary>
-	/// Provides a list of item rewards that the player chose from the 
-	/// quest dialog.
-	/// </summary>
-	/// <author>Aredhel</author>
-	class QuestRewardChosenEventArgs : EventArgs
+    /// <summary>
+    /// Provides a list of item rewards that the player chose from the 
+    /// quest dialog.
+    /// </summary>
+    /// <author>Aredhel</author>
+    class QuestRewardChosenEventArgs : EventArgs
 	{
 		private int m_questGiverID;
 		private int m_questID;

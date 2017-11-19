@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Rogue Base Class Stalker
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Stalker, "Stalker", "Stalker")]
+    /// <summary>
+    /// Hibernia Rogue Base Class Stalker
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Stalker, "Stalker", "Stalker")]
 	public class ClassStalker : CharacterClassBase
 	{
 		public ClassStalker()

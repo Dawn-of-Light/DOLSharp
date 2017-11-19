@@ -19,16 +19,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using DOL.Database;
 using DOL.GS.Styles;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// callback handler for a spec that is activated by clicking on an associated icon
-	/// </summary>
-	public interface ISpecActionHandler
+    /// <summary>
+    /// callback handler for a spec that is activated by clicking on an associated icon
+    /// </summary>
+    public interface ISpecActionHandler
 	{
 		void Execute(Specialization ab, GamePlayer player);
 	}

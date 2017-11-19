@@ -18,22 +18,16 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
-using DOL.GS;
 using DOL.Database;
-using System.Collections;
-using DOL.GS.Spells;
-using log4net;
-using System.Reflection;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Albion SI teleporter.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class AlbionSITeleporter : GameTeleporter
+    /// <summary>
+    /// Albion SI teleporter.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class AlbionSITeleporter : GameTeleporter
 	{
 		/// <summary>
 		/// Add equipment to the teleporter.

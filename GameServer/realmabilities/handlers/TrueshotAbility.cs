@@ -1,13 +1,12 @@
-using System;
 using DOL.Database;
 using DOL.GS.Effects;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Trueshot RA, grants 50% more range on next archery attack
-	/// </summary>
-	public class TrueshotAbility : TimedRealmAbility
+    /// <summary>
+    /// Trueshot RA, grants 50% more range on next archery attack
+    /// </summary>
+    public class TrueshotAbility : TimedRealmAbility
 	{
 		public TrueshotAbility(DBAbility dba, int level) : base(dba, level) { }
 

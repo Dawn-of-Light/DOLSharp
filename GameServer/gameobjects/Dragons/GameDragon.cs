@@ -17,13 +17,8 @@
  *
  */
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.Database;
-using log4net;
-using System.Reflection;
 using DOL.Events;
 using DOL.GS.ServerProperties;
 using DOL.AI.Brain;
@@ -31,15 +26,15 @@ using DOL.AI.Brain;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Base class for all dragon type mobs. A dragon will use various abilities,
-	/// e.g. spells and timed mob spawns; to allow for a variety of spell types,
-	/// mob types and mob numbers you will have to derive your own dragon class
-	/// and override some of the methods and properties provided in this abstract
-	/// class.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public abstract class GameDragon : GameNPC
+    /// <summary>
+    /// Base class for all dragon type mobs. A dragon will use various abilities,
+    /// e.g. spells and timed mob spawns; to allow for a variety of spell types,
+    /// mob types and mob numbers you will have to derive your own dragon class
+    /// and override some of the methods and properties provided in this abstract
+    /// class.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public abstract class GameDragon : GameNPC
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -406,7 +401,7 @@ namespace DOL.GS
 					{
 						add.SetOwnBrain(new RetrieverMobBrain());
 					}
-					add.CurrentRegion = this.CurrentRegion;
+					add.CurrentRegion = CurrentRegion;
 					add.Heading = (ushort)(Util.Random(0, 4095));
 					add.Realm = 0;
 					add.X = x;

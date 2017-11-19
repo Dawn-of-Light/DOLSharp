@@ -19,18 +19,17 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using DOL.GS;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// TradeWindow is the object for tradewindow from the side of one trader 
-	/// with all his money and items but nothing of other trader
-	/// </summary>
-	public class PlayerTradeWindow : ITradeWindow
+    /// <summary>
+    /// TradeWindow is the object for tradewindow from the side of one trader 
+    /// with all his money and items but nothing of other trader
+    /// </summary>
+    public class PlayerTradeWindow : ITradeWindow
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -353,7 +352,7 @@ namespace DOL.GS
 			lock(Sync)
 			{
 				// allow admin and gm account opened windows to trade any item
-				if (this.m_owner.Client.Account.PrivLevel == 1)
+				if (m_owner.Client.Account.PrivLevel == 1)
 				{
 					if (!itemForTrade.IsDropable || !itemForTrade.IsPickable || itemForTrade.IsNotLosingDur || !itemForTrade.IsTradable)
 						return false;

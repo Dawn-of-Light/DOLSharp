@@ -1,8 +1,6 @@
-using DOL.GS;
-
 namespace DOL.GS.Keeps
 {
-	public class GuardStaticArcher : GuardArcher
+    public class GuardStaticArcher : GuardArcher
 	{
 
 	}

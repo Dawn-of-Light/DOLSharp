@@ -18,18 +18,14 @@
  */
 //Create by phoenix
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	[SpellHandlerAttribute("CureDisease")]
+    /// <summary>
+    /// 
+    /// </summary>
+    [SpellHandler("CureDisease")]
 	public class CureDiseaseSpellHandler : RemoveSpellEffectHandler
 	{
 		// constructor

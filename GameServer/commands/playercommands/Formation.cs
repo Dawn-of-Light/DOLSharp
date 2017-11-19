@@ -20,7 +20,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&formation",
 		ePrivLevel.Player,
 		"Change the formation of your pets!", "/formation <type>")]

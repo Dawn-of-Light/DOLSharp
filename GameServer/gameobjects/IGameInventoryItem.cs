@@ -18,16 +18,15 @@
  */
 
 using System;
-using System.Collections;
 using DOL.Database;
 using System.Collections.Generic;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Interface for a GameInventoryItem
-	/// </summary>		
-	public interface IGameInventoryItem
+    /// <summary>
+    /// Interface for a GameInventoryItem
+    /// </summary>		
+    public interface IGameInventoryItem
 	{
 		/// <summary>
 		/// Is this item valid?

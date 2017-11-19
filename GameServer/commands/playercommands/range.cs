@@ -17,11 +17,10 @@
  *
  */
 using DOL.Language;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		"&range",
 		ePrivLevel.Player,
 		"Gives a range to a target",

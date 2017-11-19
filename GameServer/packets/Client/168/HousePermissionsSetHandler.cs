@@ -21,7 +21,7 @@ using DOL.GS.Housing;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.HousePermissionSet, "Handles housing permissions changes", eClientStatus.PlayerInGame)]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.HousePermissionSet, "Handles housing permissions changes", eClientStatus.PlayerInGame)]
 	public class HousePermissionsSetHandler : IPacketHandler
 	{
 		#region IPacketHandler Members

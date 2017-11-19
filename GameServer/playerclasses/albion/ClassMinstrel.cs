@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Albion Minstrel Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Minstrel, "Minstrel", "Rogue")]
+    /// <summary>
+    /// Albion Minstrel Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Minstrel, "Minstrel", "Rogue")]
 	public class ClassMinstrel : ClassAlbionRogue
 	{
 		private static readonly string[] AutotrainableSkills = new[] { Specs.Instruments };

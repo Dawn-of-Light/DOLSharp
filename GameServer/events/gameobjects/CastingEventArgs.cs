@@ -48,7 +48,7 @@ namespace DOL.Events
 		/// </summary>
 		public CastingEventArgs(ISpellHandler handler)
 		{
-			this.m_handler = handler;
+            m_handler = handler;
 		}
 
 		/// <summary>
@@ -56,14 +56,14 @@ namespace DOL.Events
 		/// </summary>
 		public CastingEventArgs(ISpellHandler handler, GameLiving target)
 		{
-			this.m_handler = handler;
-			this.m_target = target;
+            m_handler = handler;
+            m_target = target;
 		}
 
 		public CastingEventArgs(ISpellHandler handler, GameLiving target, AttackData ad)
 		{
-			this.m_handler = handler;
-			this.m_target = target;
+            m_handler = handler;
+            m_target = target;
 			m_lastAttackData = ad;
 		}
 

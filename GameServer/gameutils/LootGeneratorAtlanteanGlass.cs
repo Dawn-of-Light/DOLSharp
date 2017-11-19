@@ -17,19 +17,17 @@
  *
  */
 using System;
-
-using DOL.GS;
 using DOL.AI.Brain;
 using DOL.Database;
 
 namespace DOL.GS
 {
 
-	/// <summary>
-	/// LootGeneratorAtlanteanGlass
-	/// At the moment this generator only adds AtlanteanGlass to the loot
-	/// </summary>
-	public class LootGeneratorAtlanteanGlass : LootGeneratorBase
+    /// <summary>
+    /// LootGeneratorAtlanteanGlass
+    /// At the moment this generator only adds AtlanteanGlass to the loot
+    /// </summary>
+    public class LootGeneratorAtlanteanGlass : LootGeneratorBase
 	{
 		
 		private static ItemTemplate m_atlanteanglass = GameServer.Database.FindObjectByKey<ItemTemplate>("atlanteanglass");

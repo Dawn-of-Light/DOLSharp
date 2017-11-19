@@ -1,15 +1,13 @@
 using System;
-using System.Collections;
-using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
- 
+
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Summary description for RangeShield.
-	/// </summary>
-	[SpellHandlerAttribute("RangeShield")]
+    /// <summary>
+    /// Summary description for RangeShield.
+    /// </summary>
+    [SpellHandler("RangeShield")]
 	public class RangeShield : BladeturnSpellHandler 
 	{
         public override void OnEffectStart(GameSpellEffect effect)

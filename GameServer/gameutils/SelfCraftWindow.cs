@@ -19,17 +19,16 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using DOL.GS;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// SelfCraftWindow is the object used to cambine item alone
-	/// </summary>
-	public class SelfCraftWindow : ITradeWindow
+    /// <summary>
+    /// SelfCraftWindow is the object used to cambine item alone
+    /// </summary>
+    public class SelfCraftWindow : ITradeWindow
 	{
 		/// <summary>
 		/// Defines a logger for this class.

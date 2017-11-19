@@ -17,20 +17,15 @@
  *
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// ChatUtil for Sending Message to Players
-	/// </summary>
-	public static class ChatUtil
+    /// <summary>
+    /// ChatUtil for Sending Message to Players
+    /// </summary>
+    public static class ChatUtil
 	{
 		public static void SendSystemMessage(GamePlayer target, string message)
 		{

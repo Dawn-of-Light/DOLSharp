@@ -16,20 +16,19 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PropertyCalc
 {
-	/// <summary>
-	/// The Skill Level calculator
-	/// 
-	/// BuffBonusCategory1 is used for buffs, uncapped
-	/// BuffBonusCategory2 unused
-	/// BuffBonusCategory3 unused
-	/// BuffBonusCategory4 unused
-	/// BuffBonusMultCategory1 unused
-	/// </summary>
-	[PropertyCalculator(eProperty.Skill_First, eProperty.Skill_Last)]
+    /// <summary>
+    /// The Skill Level calculator
+    /// 
+    /// BuffBonusCategory1 is used for buffs, uncapped
+    /// BuffBonusCategory2 unused
+    /// BuffBonusCategory3 unused
+    /// BuffBonusCategory4 unused
+    /// BuffBonusMultCategory1 unused
+    /// </summary>
+    [PropertyCalculator(eProperty.Skill_First, eProperty.Skill_Last)]
 	public class SkillLevelCalculator : PropertyCalculator
 	{
 		public SkillLevelCalculator() {}

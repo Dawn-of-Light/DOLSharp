@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Albion Sorcerer Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Sorcerer, "Sorcerer", "Mage", "Sorceress")]
+    /// <summary>
+    /// Albion Sorcerer Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Sorcerer, "Sorcerer", "Mage", "Sorceress")]
 	public class ClassSorcerer : ClassMage
 	{
 		public ClassSorcerer()

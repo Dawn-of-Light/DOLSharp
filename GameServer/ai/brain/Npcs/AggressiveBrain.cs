@@ -18,13 +18,11 @@
  */
 using System;
 using System.Collections.Generic;
-using DOL.Database;
 using DOL.GS;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
 using DOL.GS.Spells;
-using System.Collections;
 using log4net;
 using System.Reflection;
 

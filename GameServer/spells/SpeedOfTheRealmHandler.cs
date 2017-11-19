@@ -16,20 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.GS;
-using DOL.GS.PacketHandler;
-using System.Collections;
-using DOL.GS.Effects;
-using DOL.Events;
-using DOL.Database;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Increases the target's movement speed.
-	/// </summary>
-	[SpellHandlerAttribute("SpeedOfTheRealm")]
+    /// <summary>
+    /// Increases the target's movement speed.
+    /// </summary>
+    [SpellHandler("SpeedOfTheRealm")]
 	public class SpeedOfTheRealmHandler : SpeedEnhancementSpellHandler
 	{
 		private const ushort SECONDEFFECT = 2086;

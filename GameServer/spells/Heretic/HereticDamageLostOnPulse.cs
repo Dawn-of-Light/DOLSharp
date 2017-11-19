@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using DOL.GS;
-using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
@@ -9,7 +5,7 @@ using DOL.AI.Brain;
 namespace DOL.GS.Spells
 {
 
-	[SpellHandlerAttribute("HereticDoTLostOnPulse")]
+    [SpellHandler("HereticDoTLostOnPulse")]
     public class HereticDoTLostOnPulse : HereticPiercingMagic
 	{
         protected int m_lastdamage = 0;

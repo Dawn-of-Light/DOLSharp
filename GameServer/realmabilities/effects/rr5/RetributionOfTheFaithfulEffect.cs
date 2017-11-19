@@ -1,9 +1,5 @@
 using System;
 using System.Collections.Generic;
-using DOL.Database;
-using DOL.GS.Effects;
-using System.Collections;
-using DOL.GS.PacketHandler;
 using DOL.Events;
 
 namespace DOL.GS.Effects

@@ -16,19 +16,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
-using DOL.GS;
 using DOL.Events;
 using DOL.AI.Brain;
 using DOL.GS.PlayerClass;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// The Animist character class.
-	/// </summary>
-	public class CharacterClassAnimist : ClassForester
+    /// <summary>
+    /// The Animist character class.
+    /// </summary>
+    public class CharacterClassAnimist : ClassForester
 	{
 		/// <summary>
 		/// Releases controlled object

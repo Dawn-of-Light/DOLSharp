@@ -1,17 +1,13 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using DOL.Database;
-using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.Events;
 
 namespace DOL.GS.Keeps
 {
-	/// <summary>
-	/// Class to deal with spell casting for the guards
-	/// </summary>
-	public class SpellMgr
+    /// <summary>
+    /// Class to deal with spell casting for the guards
+    /// </summary>
+    public class SpellMgr
 	{
 		public static void CheckForNuke(GameKeepGuard guard)
 		{

@@ -20,23 +20,18 @@
 //Instance devised by Dinberg
 //     - there will probably be questions, direct them to dinberg_darktouch@hotmail.co.uk ;)
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using System.Reflection;
 using DOL.Database;
-using DOL.GS.Utils;
-using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// The Instance is an implementation of BaseInstance that contains additional functionality to load
-	/// a template from InstanceXElement.
-	/// </summary>
-	public class Instance : BaseInstance
+    /// <summary>
+    /// The Instance is an implementation of BaseInstance that contains additional functionality to load
+    /// a template from InstanceXElement.
+    /// </summary>
+    public class Instance : BaseInstance
 	{
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// Creates an instance object. This shouldn't be used directly - Please use WorldMgr.CreateInstance

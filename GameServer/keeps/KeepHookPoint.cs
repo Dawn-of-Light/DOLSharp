@@ -33,11 +33,11 @@ namespace DOL.GS.Keeps
 		{
 			m_index = id;
 			m_component = component;
-			m_hookpointTimer = new HookpointTimer(this, this.Component);
-			this.X = component.X;
-			this.Y = component.Y;
-			this.Z = component.Z;
-			this.Heading = component.Heading;
+			m_hookpointTimer = new HookpointTimer(this, Component);
+            X = component.X;
+            Y = component.Y;
+            Z = component.Z;
+            Heading = component.Heading;
 		}
 
 		public GameKeepHookPoint(DBKeepHookPoint dbhookPoint, GameKeepComponent component)
@@ -62,11 +62,11 @@ namespace DOL.GS.Keeps
 					Y = (int)(component.Y - Math.Cos(angle) * dbhookPoint.X - Math.Sin(angle) * dbhookPoint.Y);
 					break;
 			}
-			this.Z = component.Z + dbhookPoint.Z;
-			this.Heading = (ushort)(component.Heading + dbhookPoint.Heading);
-			this.m_index = dbhookPoint.HookPointID;
-			this.Component = component;
-			m_hookpointTimer = new HookpointTimer(this, this.Component);
+            Z = component.Z + dbhookPoint.Z;
+            Heading = (ushort)(component.Heading + dbhookPoint.Heading);
+            m_index = dbhookPoint.HookPointID;
+            Component = component;
+			m_hookpointTimer = new HookpointTimer(this, Component);
 		}
 
 		#region properties
@@ -143,7 +143,7 @@ namespace DOL.GS.Keeps
 			if (m_hookpoint.Object.ObjectState != GameObject.eObjectState.Deleted)
 			{
 				m_hookpoint.Object.Delete();
-				this.Start(300000);//5*60*1000 = 5 min
+                Start(300000);//5*60*1000 = 5 min
 			}
 			else
 				m_hookpoint.Object = null;

@@ -16,22 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Reflection;
-using System.Collections;
-using System.Collections.Generic;
-using DOL.Language;
-using DOL.GS.PacketHandler;
 using DOL.Database;
-using DOL.GS.Spells;
 using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// This class represents a relic in a players inventory
-	/// </summary>
-	public class GameInventoryRelic : GameInventoryItem
+    /// <summary>
+    /// This class represents a relic in a players inventory
+    /// </summary>
+    public class GameInventoryRelic : GameInventoryItem
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 

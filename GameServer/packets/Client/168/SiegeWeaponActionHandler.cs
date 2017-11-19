@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	/// <summary>
-	///SiegeWeaponActionHandler handler the command of player to control siege weapon
-	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP, 0xf5, "Handles Siege command Request")]
+    /// <summary>
+    ///SiegeWeaponActionHandler handler the command of player to control siege weapon
+    /// </summary>
+    [PacketHandler(PacketHandlerType.TCP, 0xf5, "Handles Siege command Request")]
 	public class SiegeWeaponActionHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)

@@ -18,16 +18,12 @@
  */
 #define NOENCRYPTION
 
-using System;
-using System.Collections;
-using DOL.Database;
 using DOL.GS.Spells;
-using DOL.GS.Styles;
 using DOL.GS.Effects;
 
 namespace DOL.GS.PacketHandler
 {
-	[PacketLib(169, GameClient.eClientVersion.Version169)]
+    [PacketLib(169, GameClient.eClientVersion.Version169)]
 	public class PacketLib169 : PacketLib168
 	{
 		/// <summary>

@@ -21,7 +21,7 @@ using DOL.GS.Housing;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&housefriend",
 		ePrivLevel.Player,
 		"Invite a specified player to your house", 

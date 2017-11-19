@@ -1,21 +1,14 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Collections;
-using System.Reflection;
-using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
-using DOL.Events;
 using DOL.Database;
 using DOL.GS.Spells;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Arms Length Realm Ability
-	/// </summary>
-	public class SonicBarrierAbility : RR5RealmAbility
+    /// <summary>
+    /// Arms Length Realm Ability
+    /// </summary>
+    public class SonicBarrierAbility : RR5RealmAbility
 	{
 		public SonicBarrierAbility(DBAbility dba, int level) : base(dba, level) { }
 

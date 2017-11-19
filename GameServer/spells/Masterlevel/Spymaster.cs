@@ -18,15 +18,11 @@
 */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using DOL.GS;
 using DOL.Events;
-using DOL.GS.Spells;
 using DOL.Database;
-using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
@@ -36,7 +32,7 @@ namespace DOL.GS.Spells
     #endregion
 
     #region Spymaster-2
-    [SpellHandlerAttribute("Decoy")]
+    [SpellHandler("Decoy")]
     public class DecoySpellHandler : SpellHandler
     {
         private GameDecoy decoy;
@@ -141,7 +137,7 @@ namespace DOL.GS.Spells
     #endregion
 
     #region Spymaster-4
-    [SpellHandlerAttribute("Sabotage")]
+    [SpellHandler("Sabotage")]
     public class SabotageSpellHandler : SpellHandler
     {
         public override void OnDirectEffect(GameLiving target, double effectiveness)
@@ -161,7 +157,7 @@ namespace DOL.GS.Spells
 
     //shared timer 1
     #region Spymaster-5
-    [SpellHandlerAttribute("TangleSnare")]
+    [SpellHandler("TangleSnare")]
     public class TangleSnareSpellHandler : MineSpellHandler
     {
         // constructor
@@ -211,7 +207,7 @@ namespace DOL.GS.Spells
 
     //shared timer 1
     #region Spymaster-6
-    [SpellHandlerAttribute("PoisonSpike")]
+    [SpellHandler("PoisonSpike")]
     public class PoisonSpikeSpellHandler : MineSpellHandler
     {
         // constructor
@@ -258,7 +254,7 @@ namespace DOL.GS.Spells
         }
     }
     #region Subspell
-    [SpellHandlerAttribute("PoisonspikeDot")]
+    [SpellHandler("PoisonspikeDot")]
     public class Spymaster6DotHandler : DoTSpellHandler
     {
         // constructor
@@ -273,7 +269,7 @@ namespace DOL.GS.Spells
     #endregion
 
     #region Spymaster-7
-    [SpellHandlerAttribute("Loockout")]
+    [SpellHandler("Loockout")]
     public class LoockoutSpellHandler : SpellHandler
     {
         private GameLiving m_target;
@@ -310,7 +306,7 @@ namespace DOL.GS.Spells
             GamePlayer player = (GamePlayer)sender;
             if (player == null) return;
             MessageToLiving((GameLiving)player, "You are moving. Your concentration fades!", eChatType.CT_SpellResisted);
-            GameSpellEffect effect = SpellHandler.FindEffectOnTarget(m_target, "Loockout");
+            GameSpellEffect effect = FindEffectOnTarget(m_target, "Loockout");
             if (effect != null) effect.Cancel(false);
             IGameEffect effect2 = SpellHandler.FindStaticEffectOnTarget(Caster, typeof(LoockoutOwner));
             if (effect2 != null) effect2.Cancel(false);
@@ -322,7 +318,7 @@ namespace DOL.GS.Spells
 
     //shared timer 1
     #region Spymaster-8
-    [SpellHandlerAttribute("SiegeWrecker")]
+    [SpellHandler("SiegeWrecker")]
     public class SiegeWreckerSpellHandler : MineSpellHandler
     {
         public override void OnEffectPulse(GameSpellEffect effect)
@@ -392,7 +388,7 @@ namespace DOL.GS.Spells
     #endregion
 
     #region Spymaster-9
-    [SpellHandlerAttribute("EssenceFlare")]
+    [SpellHandler("EssenceFlare")]
     public class EssenceFlareSpellHandler : SummonItemSpellHandler
     {
         public EssenceFlareSpellHandler(GameLiving caster, Spell spell, SpellLine line)
@@ -503,8 +499,8 @@ namespace DOL.GS.Spells
     }
     //to show an Icon & informations to the caster
     namespace DOL.GS.Effects
-    {
-        public class LoockoutOwner : StaticEffect, IGameEffect
+{
+    public class LoockoutOwner : StaticEffect, IGameEffect
         {
             public LoockoutOwner() : base() { }
             public void Start(GamePlayer player) { base.Start(player); }

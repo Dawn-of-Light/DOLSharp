@@ -16,16 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// GameMovingObject is a base class for boats and siege weapons.
-	/// </summary>
-	public class GameSiegeCatapult : GameSiegeWeapon
+    /// <summary>
+    /// GameMovingObject is a base class for boats and siege weapons.
+    /// </summary>
+    public class GameSiegeCatapult : GameSiegeWeapon
 	{
 		public GameSiegeCatapult()
 			: base()
@@ -33,8 +32,8 @@ namespace DOL.GS
 			MeleeDamageType = eDamageType.Crush;
 			Name = "field catapult";
 			AmmoType = 0x13;
-			this.Effect = 0x89C;
-			this.Model = 0xA26;
+            Effect = 0x89C;
+            Model = 0xA26;
 			ActionDelay = new int[]
 			{
 				0,//none
@@ -65,14 +64,14 @@ namespace DOL.GS
 		{
 			ArrayList list = new ArrayList(20);
 
-			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(this.CurrentRegionID, GroundTarget.X, GroundTarget.Y, GroundTarget.Z, (ushort)150))
+			foreach (GamePlayer player in WorldMgr.GetPlayersCloseToSpot(CurrentRegionID, GroundTarget.X, GroundTarget.Y, GroundTarget.Z, (ushort)150))
 			{
 				if (GameServer.ServerRules.IsAllowedToAttack(Owner, player, true))
 				{
 					list.Add(player);
 				}
 			}
-			foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(this.CurrentRegionID, GroundTarget.X, GroundTarget.Y, GroundTarget.Z, (ushort)150))
+			foreach (GameNPC npc in WorldMgr.GetNPCsCloseToSpot(CurrentRegionID, GroundTarget.X, GroundTarget.Y, GroundTarget.Z, (ushort)150))
 			{
 				if (GameServer.ServerRules.IsAllowedToAttack(Owner, npc, true))
 				{
@@ -80,9 +79,9 @@ namespace DOL.GS
 				}
 			}
 			
-			if (!list.Contains(this.TargetObject))
+			if (!list.Contains(TargetObject))
 			{
-				list.Add(this.TargetObject);
+				list.Add(TargetObject);
 			}
 			return list;
 		}
@@ -100,7 +99,7 @@ namespace DOL.GS
 			{
 				int damageAmount = 50 + Util.Random(200);
 				living.TakeDamage(Owner, eDamageType.Crush, damageAmount, 0);
-				Owner.Out.SendMessage("The " + this.Name + " hits " + living.Name + " for " + damageAmount + " damage!", eChatType.CT_YouHit,
+				Owner.Out.SendMessage("The " + Name + " hits " + living.Name + " for " + damageAmount + " damage!", eChatType.CT_YouHit,
 				                      eChatLoc.CL_SystemWindow);
 				foreach (GamePlayer player in living.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					player.Out.SendCombatAnimation(this, living, 0x0000, 0x0000, 0x00, 0x00, 0x14, living.HealthPercent);

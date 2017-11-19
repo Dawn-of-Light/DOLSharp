@@ -45,7 +45,7 @@ namespace DOL.GS
 	/// </summary>
 	public class GameNPC : GameLiving, ITranslatableObject
 	{
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// Constant for determining if already at a point
@@ -896,7 +896,7 @@ namespace DOL.GS
 			{
 				if ( TetherRange > 0 )
 				{
-					if( this.IsWithinRadius( this.SpawnPoint, TetherRange ) )
+					if(IsWithinRadius(SpawnPoint, TetherRange ) )
 						return false;
 					else
 						return true;
@@ -1018,7 +1018,7 @@ namespace DOL.GS
 
 			if (TargetPosition.X != 0 || TargetPosition.Y != 0 || TargetPosition.Z != 0)
 			{
-				double dist = this.GetDistanceTo(new Point3D(TargetPosition.X, TargetPosition.Y, TargetPosition.Z));
+				double dist = GetDistanceTo(new Point3D(TargetPosition.X, TargetPosition.Y, TargetPosition.Z));
 
 				if (dist <= 0)
 				{
@@ -1500,12 +1500,12 @@ namespace DOL.GS
 				}
 			}
 			//sirru
-			else if (m_attackers.Count == 0 && this.Spells.Count > 0 && this.TargetObject != null && GameServer.ServerRules.IsAllowedToAttack(this, (this.TargetObject as GameLiving), true))
+			else if (m_attackers.Count == 0 && Spells.Count > 0 && TargetObject != null && GameServer.ServerRules.IsAllowedToAttack(this, (TargetObject as GameLiving), true))
 			{
 				if (TargetObject.Realm == 0 || Realm == 0)
 					m_lastAttackTickPvE = m_CurrentRegion.Time;
 				else m_lastAttackTickPvP = m_CurrentRegion.Time;
-				if (this.CurrentRegion.Time - LastAttackedByEnemyTick > 10 * 1000)
+				if (CurrentRegion.Time - LastAttackedByEnemyTick > 10 * 1000)
 				{
 					// Aredhel: Erm, checking for spells in a follow method, what did we create
 					// brain classes for again?
@@ -1562,14 +1562,14 @@ namespace DOL.GS
 			{
 				StopFollowing();
 				Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
-				this.WalkToSpawn();
+                WalkToSpawn();
 				return 0;
 			}
 			int newX, newY, newZ;
 
-			if (this.Brain is StandardMobBrain)
+			if (Brain is StandardMobBrain)
 			{
-				StandardMobBrain brain = this.Brain as StandardMobBrain;
+				StandardMobBrain brain = Brain as StandardMobBrain;
 
 				//if the npc hasn't hit or been hit in a while, stop following and return home
 				if (!(Brain is IControlledBrain))
@@ -1583,8 +1583,8 @@ namespace DOL.GS
 						{
 							//StopFollow();
 							Notify(GameNPCEvent.FollowLostTarget, this, new FollowLostTargetEventArgs(followTarget));
-							//brain.ClearAggroList();
-							this.WalkToSpawn();
+                            //brain.ClearAggroList();
+                            WalkToSpawn();
 							return 0;
 						}
 					}
@@ -1605,7 +1605,7 @@ namespace DOL.GS
 			int minAllowedFollowDistance = MIN_ALLOWED_FOLLOW_DISTANCE;
 
 			// pets can follow closer.  need to implement /fdistance command to make this adjustable
-			if (this.Brain is IControlledBrain)
+			if (Brain is IControlledBrain)
 				minAllowedFollowDistance = MIN_ALLOWED_PET_FOLLOW_DISTANCE;
 
 			//Are we in range yet?
@@ -1708,7 +1708,7 @@ namespace DOL.GS
 
 			PathingNormalSpeed = speed;
 
-			if( this.IsWithinRadius( CurrentWayPoint, 100 ) )
+			if(IsWithinRadius( CurrentWayPoint, 100 ) )
 			{
 				// reaching a waypoint can start an ambient sentence
 				FireAmbientSentence(eAmbientTrigger.moving);
@@ -2131,7 +2131,7 @@ namespace DOL.GS
 			mob.Empathy = Empathy;
 			mob.Charisma = Charisma;
 
-			mob.ClassType = this.GetType().ToString();
+			mob.ClassType = GetType().ToString();
 			mob.Flags = (uint)Flags;
 			mob.Speed = MaxSpeedBase;
 			mob.RespawnInterval = m_respawnInterval / 1000;
@@ -2167,7 +2167,7 @@ namespace DOL.GS
 			mob.MaxDistance = m_maxdistance;
 			mob.IsCloakHoodUp = m_isCloakHoodUp;
 			mob.Gender = (byte)Gender;
-			mob.VisibleWeaponSlots = this.m_visibleActiveWeaponSlots;
+			mob.VisibleWeaponSlots = m_visibleActiveWeaponSlots;
 			mob.PackageID = PackageID;
 			mob.OwnerID = OwnerID;
 
@@ -2192,12 +2192,12 @@ namespace DOL.GS
 				return;
 
 			var m_templatedInventory = new List<string>();
-			this.TranslationId = template.TranslationId;
-			this.Name = template.Name;
-			this.Suffix = template.Suffix;
-			this.GuildName = template.GuildName;
-			this.ExamineArticle = template.ExamineArticle;
-			this.MessageArticle = template.MessageArticle;
+            TranslationId = template.TranslationId;
+            Name = template.Name;
+            Suffix = template.Suffix;
+            GuildName = template.GuildName;
+            ExamineArticle = template.ExamineArticle;
+            MessageArticle = template.MessageArticle;
 			
 			#region Models, Sizes, Levels, Gender
 			// Grav: this.Model/Size/Level accessors are triggering SendUpdate()
@@ -2205,7 +2205,7 @@ namespace DOL.GS
 			ushort choosenModel = 1;
 			var splitModel = template.Model.SplitCSV(true);
 			ushort.TryParse(splitModel[Util.Random(0,splitModel.Count-1)], out choosenModel);
-			this.Model = choosenModel;
+            Model = choosenModel;
 			
 			// Graveen: template.Gender is 0,1 or 2 for respectively eGender.Neutral("it"), eGender.Male ("he"), 
 			// eGender.Female ("she"). Any other value is randomly choosing a gender for current GameNPC
@@ -2214,9 +2214,9 @@ namespace DOL.GS
 			switch (choosenGender)
 			{
 				default	:
-				case 0	: this.Gender = eGender.Neutral; break;
-				case 1	: this.Gender = eGender.Male; break;
-				case 2	: this.Gender = eGender.Female; break;			
+				case 0	: Gender = eGender.Neutral; break;
+				case 1	: Gender = eGender.Male; break;
+				case 2	: Gender = eGender.Female; break;			
 			}
 			
 			byte choosenSize = 50;
@@ -2225,7 +2225,7 @@ namespace DOL.GS
 				var split = template.Size.SplitCSV(true);
 				byte.TryParse(split[Util.Random(0,split.Count-1)], out choosenSize);
 			}
-			this.Size = choosenSize;
+            Size = choosenSize;
 			
 			byte choosenLevel = 1;
 			if (!Util.IsEmpty(template.Level))
@@ -2233,40 +2233,40 @@ namespace DOL.GS
 				var split = template.Level.SplitCSV(true);
 				byte.TryParse(split[Util.Random(0,split.Count-1)], out choosenLevel);
 			}
-			this.Level = choosenLevel;
+            Level = choosenLevel;
 			#endregion
 
 			#region Stats
 			// Stats
 			if (template.Strength==0)
 			{
-				this.AutoSetStats();
+                AutoSetStats();
 			}
 			else
 			{
-				this.Constitution = (short)template.Constitution;
-				this.Dexterity = (short)template.Dexterity;
-				this.Strength = (short)template.Strength;
-				this.Quickness = (short)template.Quickness;
-				this.Intelligence = (short)template.Intelligence;
-				this.Piety = (short)template.Piety;
-				this.Empathy = (short)template.Empathy;
-				this.Charisma = (short)template.Charisma;
+                Constitution = (short)template.Constitution;
+                Dexterity = (short)template.Dexterity;
+                Strength = (short)template.Strength;
+                Quickness = (short)template.Quickness;
+                Intelligence = (short)template.Intelligence;
+                Piety = (short)template.Piety;
+                Empathy = (short)template.Empathy;
+                Charisma = (short)template.Charisma;
 			}
-			#endregion
+            #endregion
 
-			#region Misc Stats
-			this.MaxDistance = template.MaxDistance;
-			this.TetherRange = template.TetherRange;
-			this.Race = (short)template.Race;
-			this.BodyType = (ushort)template.BodyType;
-			this.MaxSpeedBase = template.MaxSpeed;
-			this.Flags = (eFlags)template.Flags;
-			this.MeleeDamageType = template.MeleeDamageType;
-			this.ParryChance = template.ParryChance;
-			this.EvadeChance = template.EvadeChance;
-			this.BlockChance = template.BlockChance;
-			this.LeftHandSwingChance = template.LeftHandSwingChance;
+            #region Misc Stats
+            MaxDistance = template.MaxDistance;
+            TetherRange = template.TetherRange;
+            Race = (short)template.Race;
+            BodyType = (ushort)template.BodyType;
+            MaxSpeedBase = template.MaxSpeed;
+            Flags = (eFlags)template.Flags;
+            MeleeDamageType = template.MeleeDamageType;
+            ParryChance = template.ParryChance;
+            EvadeChance = template.EvadeChance;
+            BlockChance = template.BlockChance;
+            LeftHandSwingChance = template.LeftHandSwingChance;
 			#endregion
 
 			#region Inventory
@@ -2342,18 +2342,18 @@ namespace DOL.GS
 				//We added some items - let's make it the new inventory
 				if (equipHasItems)
 				{
-					this.Inventory = new GameNPCInventory(equip);
-					if (this.Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
-						this.SwitchWeapon(eActiveWeaponSlot.Distance);
+                    Inventory = new GameNPCInventory(equip);
+					if (Inventory.GetItem(eInventorySlot.DistanceWeapon) != null)
+                        SwitchWeapon(eActiveWeaponSlot.Distance);
 				}
 				
 				if (template.VisibleActiveWeaponSlot > 0)
-					this.VisibleActiveWeaponSlots = template.VisibleActiveWeaponSlot;
+                    VisibleActiveWeaponSlots = template.VisibleActiveWeaponSlot;
 			}
 			#endregion
 			
-			if (template.Spells != null) this.Spells = template.Spells;
-			if (template.Styles != null) this.Styles = template.Styles;
+			if (template.Spells != null) Spells = template.Spells;
+			if (template.Styles != null) Styles = template.Styles;
 			if (template.Abilities != null)
 			{
 				lock (m_lockAbilities)
@@ -2377,7 +2377,7 @@ namespace DOL.GS
 				AggroLevel = template.AggroLevel,
 				AggroRange = template.AggroRange
 			};
-			this.NPCTemplate = template as NpcTemplate;
+            NPCTemplate = template as NpcTemplate;
 		}
 
 		/// <summary>
@@ -3415,7 +3415,7 @@ namespace DOL.GS
                     {
                         string sError = "GameNPC.SortStyles(): NULL style for name " + Name;
                         if (m_InternalID != null)
-                            sError += " mob_id " + this.m_InternalID.ToString();
+                            sError += " mob_id " + m_InternalID.ToString();
                         if (m_npcTemplate != null)
                             sError +=" npctemplate " + m_npcTemplate.TemplateId.ToString();
                         log.Warn(sError);
@@ -3750,14 +3750,14 @@ namespace DOL.GS
 
 			TargetObject = target;
 
-			long lastTick = this.TempProperties.getProperty<long>(LAST_LOS_TICK_PROPERTY);
+			long lastTick = TempProperties.getProperty<long>(LAST_LOS_TICK_PROPERTY);
 
 			if (ServerProperties.Properties.ALWAYS_CHECK_PET_LOS &&
 			    Brain != null &&
 			    Brain is IControlledBrain &&
 			    (target is GamePlayer || (target is GameNPC && (target as GameNPC).Brain != null && (target as GameNPC).Brain is IControlledBrain)))
 			{
-				GameObject lastTarget = (GameObject)this.TempProperties.getProperty<object>(LAST_LOS_TARGET_PROPERTY, null);
+				GameObject lastTarget = (GameObject)TempProperties.getProperty<object>(LAST_LOS_TARGET_PROPERTY, null);
 				if (lastTarget != null && lastTarget == target)
 				{
 					if (lastTick != 0 && CurrentRegion.Time - lastTick < ServerProperties.Properties.LOS_PLAYER_CHECK_FREQUENCY * 1000)
@@ -3776,7 +3776,7 @@ namespace DOL.GS
 				else
 				{
 					// try to find another player to use for checking line of site
-					foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+					foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 					{
 						losChecker = player;
 						break;
@@ -3815,7 +3815,7 @@ namespace DOL.GS
 
 				}
 
-				losChecker.Out.SendCheckLOS(this, target, new CheckLOSResponse(this.NPCStartAttackCheckLOS));
+				losChecker.Out.SendCheckLOS(this, target, new CheckLOSResponse(NPCStartAttackCheckLOS));
 				return;
 			}
 
@@ -4025,7 +4025,7 @@ namespace DOL.GS
 			{
 				if (CurrentRegion == null || CurrentRegion.Time - CHARMED_NOEXP_TIMEOUT < TempProperties.getProperty<long>(CHARMED_TICK_PROP))
 					return false;
-				if (this.Brain is IControlledBrain)
+				if (Brain is IControlledBrain)
 					return false;
 				lock (m_xpGainers.SyncRoot)
 				{
@@ -4065,10 +4065,10 @@ namespace DOL.GS
 
 		protected void ControlledNPC_Release()
 		{
-			if (this.ControlledBrain != null)
+			if (ControlledBrain != null)
 			{
-				//log.Info("On tue le pet !");
-				this.Notify(GameLivingEvent.PetReleased, ControlledBrain.Body);
+                //log.Info("On tue le pet !");
+                Notify(GameLivingEvent.PetReleased, ControlledBrain.Body);
 			}
 		}
 
@@ -4102,7 +4102,7 @@ namespace DOL.GS
 				if ((Faction != null) && (killer is GamePlayer))
 				{	
 					// Get All Attackers. // TODO check if this shouldn't be set to Attackers instead of XPGainers ?
-					foreach (DictionaryEntry de in this.XPGainers)
+					foreach (DictionaryEntry de in XPGainers)
 					{
 						GameLiving living = de.Key as GameLiving;
 						GamePlayer player = living as GamePlayer;
@@ -4299,11 +4299,11 @@ namespace DOL.GS
 		/// <returns></returns>
 		protected override bool OnInterruptTick(GameLiving attacker, AttackData.eAttackType attackType)
 		{
-			if (this.MaxSpeedBase == 0)
+			if (MaxSpeedBase == 0)
 			{
 				if (attackType == AttackData.eAttackType.Ranged || attackType == AttackData.eAttackType.Spell)
 				{
-					if( this.IsWithinRadius( attacker, 150 ) == false )
+					if(IsWithinRadius( attacker, 150 ) == false )
 						return false;
 				}
 			}
@@ -4411,7 +4411,7 @@ namespace DOL.GS
 		{
 			if (IsAlive) return;
 
-			if (this.Brain is IControlledBrain)
+			if (Brain is IControlledBrain)
 				return;
 
 			int respawnInt = RespawnInterval;
@@ -4749,19 +4749,19 @@ namespace DOL.GS
 			{
 				// collect "helping" group players in range
 				var xpGainers = attackerGroup.GetMembersInTheGroup()
-					.Where(l => this.IsWithinRadius(l, WorldMgr.MAX_EXPFORKILL_DISTANCE) && l.IsAlive && l.ObjectState == eObjectState.Active).ToArray();
+					.Where(l => IsWithinRadius(l, WorldMgr.MAX_EXPFORKILL_DISTANCE) && l.IsAlive && l.ObjectState == eObjectState.Active).ToArray();
 				
 				float damageAmount = (float)healAmount / xpGainers.Length;
 				
 				foreach (GameLiving living in xpGainers)
 				{
-					// add players in range for exp to exp gainers
-					this.AddXPGainer(living, damageAmount);
+                    // add players in range for exp to exp gainers
+                    AddXPGainer(living, damageAmount);
 				}
 			}
 			else
 			{
-				this.AddXPGainer(healSource, (float)healAmount);
+                AddXPGainer(healSource, (float)healAmount);
 			}
 			//DealDamage needs to be called after addxpgainer!
 		}
@@ -4822,7 +4822,7 @@ namespace DOL.GS
 		public IList Styles
 		{
 			get { return m_styles; }
-			set { m_styles = value; this.SortStyles(); }
+			set { m_styles = value; SortStyles(); }
 		}
 
 		/// <summary>
@@ -4876,7 +4876,7 @@ namespace DOL.GS
 		{
 			if (SpellTimer != null)
 			{
-				if (this == null || this.ObjectState != eObjectState.Active || !this.IsAlive || this.TargetObject == null || (this.TargetObject is GameLiving && this.TargetObject.ObjectState != eObjectState.Active || !(this.TargetObject as GameLiving).IsAlive))
+				if (this == null || ObjectState != eObjectState.Active || !IsAlive || TargetObject == null || (TargetObject is GameLiving && TargetObject.ObjectState != eObjectState.Active || !(TargetObject as GameLiving).IsAlive))
 					SpellTimer.Stop();
 				else
 				{
@@ -5402,7 +5402,7 @@ namespace DOL.GS
 			}
 
 			StandardMobBrain newBrainSMB = brain as StandardMobBrain;
-			StandardMobBrain thisBrainSMB = this.Brain as StandardMobBrain;
+			StandardMobBrain thisBrainSMB = Brain as StandardMobBrain;
 
 			if ( newBrainSMB != null && thisBrainSMB != null )
 			{

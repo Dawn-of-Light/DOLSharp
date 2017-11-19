@@ -16,16 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		"&benchmark",
 		ePrivLevel.Admin,
 		"Benchmark some aspects of DOL Server.",

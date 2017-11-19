@@ -16,16 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 using DOL.Database;
 
 namespace DOL.GS.SkillHandler
 {
-	/// <summary>
-	/// Abstract Vampiir Ability using Level Based Ability to enable stat changing with Ratio Preset.
-	/// </summary>
-	public abstract class VampiirAbility : LevelBasedStatChangingAbility
+    /// <summary>
+    /// Abstract Vampiir Ability using Level Based Ability to enable stat changing with Ratio Preset.
+    /// </summary>
+    public abstract class VampiirAbility : LevelBasedStatChangingAbility
 	{
 		/// <summary>
 		/// Multiplier for Ability Level to adjust Stats for given Ability 

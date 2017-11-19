@@ -17,23 +17,19 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using DOL.AI.Brain;
 using DOL.Events;
-using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using DOL.GS.PropertyCalc;
 using DOL.Language;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Spell handler to summon a bonedancer pet.
-	/// </summary>
-	/// <author>IST</author>
-	[SpellHandler("SummonCommander")]
+    /// <summary>
+    /// Spell handler to summon a bonedancer pet.
+    /// </summary>
+    /// <author>IST</author>
+    [SpellHandler("SummonCommander")]
 	public class SummonCommanderPet : SummonSpellHandler
 	{
 		public SummonCommanderPet(GameLiving caster, Spell spell, SpellLine line)

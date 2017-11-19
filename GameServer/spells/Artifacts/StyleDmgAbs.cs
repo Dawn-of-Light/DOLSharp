@@ -19,19 +19,15 @@
 //made by DeMAN
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Collections;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
 
-using log4net;
-
 
 namespace DOL.GS.Spells
 {
-    [SpellHandlerAttribute("StyleDmgAbs")]
+    [SpellHandler("StyleDmgAbs")]
     public class StyleDmgAbsSpellHandler : SpellHandler
     {
 

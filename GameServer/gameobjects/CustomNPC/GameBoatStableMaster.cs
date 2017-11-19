@@ -18,20 +18,18 @@
  *
  */
 using System;
-using System.Reflection;
 using DOL.Database;
 using DOL.Events;
 using DOL.Language;
 using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Stable master that sells and takes horse route tickes
-	/// </summary>
-	public class GameBoatStableMaster : GameMerchant
+    /// <summary>
+    /// Stable master that sells and takes horse route tickes
+    /// </summary>
+    public class GameBoatStableMaster : GameMerchant
 	{
 		/// <summary>
 		/// Called when the living is about to get an item from someone
@@ -54,7 +52,7 @@ namespace DOL.GS
 					{
 						if (npc is GameTaxiBoat)
 						{
-                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameBoatStableMaster.ReceiveItem.Departed", this.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameBoatStableMaster.ReceiveItem.Departed", Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
                             return false;
 						}
 					}
@@ -62,7 +60,7 @@ namespace DOL.GS
                     String destination = item.Name.Substring(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GameStableMaster.ReceiveItem.TicketTo").Length);
 					PathPoint path = MovementMgr.LoadPath(item.Id_nb);
 					//PathPoint path = MovementMgr.Instance.LoadPath(this.Name + "=>" + destination);
-                    if ((path != null) && ((Math.Abs(path.X - this.X)) < 500) && ((Math.Abs(path.Y - this.Y)) < 500))
+                    if ((path != null) && ((Math.Abs(path.X - X)) < 500) && ((Math.Abs(path.Y - Y)) < 500))
 					{
 						player.Inventory.RemoveCountFromStack(item, 1);
                         InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template);
@@ -81,12 +79,12 @@ namespace DOL.GS
 						//new MountHorseAction(player, boat).Start(400);
 						new HorseRideAction(boat).Start(30 * 1000);
 
-                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameBoatStableMaster.ReceiveItem.SummonedBoat", this.Name, destination), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameBoatStableMaster.ReceiveItem.SummonedBoat", Name, destination), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                         return true;
 					}
 					else
 					{
-                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameBoatStableMaster.ReceiveItem.UnknownWay", this.Name, destination), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameBoatStableMaster.ReceiveItem.UnknownWay", Name, destination), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					}
 				}
 			}

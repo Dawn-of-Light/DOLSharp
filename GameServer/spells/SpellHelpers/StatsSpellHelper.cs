@@ -17,16 +17,14 @@
  *
  */
 
-using System;
 
-using DOL.GS;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	///  Static Extension Class For Implementing Helper Targeted at Stat Changing Spells.
-	/// </summary>
-	public static class StatsSpellHelper
+    /// <summary>
+    ///  Static Extension Class For Implementing Helper Targeted at Stat Changing Spells.
+    /// </summary>
+    public static class StatsSpellHelper
 	{
 		/// <summary>
 		/// Send Update According Living Stats after Change made by SpellHandler

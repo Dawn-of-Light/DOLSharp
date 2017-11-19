@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Albion Base Support Class Acolyte
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Acolyte, "Acolyte", "Acolyte")]
+    /// <summary>
+    /// Albion Base Support Class Acolyte
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Acolyte, "Acolyte", "Acolyte")]
 	public class ClassAcolyte : CharacterClassBase
 	{
 		public ClassAcolyte()

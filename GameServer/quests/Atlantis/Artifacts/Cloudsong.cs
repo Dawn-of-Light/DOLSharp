@@ -18,20 +18,18 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using DOL.Events;
-using DOL.GS.Quests;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using System.Collections;
 
 namespace DOL.GS.Quests.Atlantis.Artifacts
 {
-	/// <summary>
-	/// Quest for the Cloudsong artifact.
-	/// </summary>
-	/// <author>Aredhel</author>
-	class Cloudsong : ArtifactQuest
+    /// <summary>
+    /// Quest for the Cloudsong artifact.
+    /// </summary>
+    /// <author>Aredhel</author>
+    class Cloudsong : ArtifactQuest
 	{
 		public Cloudsong()
 			: base() { }

@@ -234,7 +234,7 @@ namespace DOL.GS
 		protected virtual void OfferRespecialize(GamePlayer player)
 		{
 			player.Out.SendMessage(String.Format(LanguageMgr.GetTranslation
-			                                     (player.Client, "GameTrainer.Interact.Respecialize", this.Name, player.Name)),
+			                                     (player.Client, "GameTrainer.Interact.Respecialize", Name, player.Name)),
 			                       eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 		}
 
@@ -361,7 +361,7 @@ namespace DOL.GS
 				player.RemoveAllSpellLines();
 
 				if (messageToPlayer != "")
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.PromotePlayer.Says", this.Name, messageToPlayer), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.PromotePlayer.Says", Name, messageToPlayer), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameTrainer.PromotePlayer.Upgraded", player.CharacterClass.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 
 				player.CharacterClass.OnLevelUp(player, player.Level);

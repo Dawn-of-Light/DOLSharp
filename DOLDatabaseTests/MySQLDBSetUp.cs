@@ -19,18 +19,16 @@
 using System;
 using System.IO;
 using System.Reflection;
-
-using DOL.Database;
 using DOL.Database.Connection;
 
 using NUnit.Framework;
 
 namespace DOL.Database.MySQLTests
 {
-	/// <summary>
-	/// Database SetUp for Unit Tests
-	/// </summary>
-	[SetUpFixture]
+    /// <summary>
+    /// Database SetUp for Unit Tests
+    /// </summary>
+    [SetUpFixture]
 	public class MySQLDBSetUp
 	{
 		public MySQLDBSetUp()

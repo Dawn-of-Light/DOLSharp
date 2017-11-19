@@ -214,12 +214,12 @@ namespace DOL.GS.Quests.Albion
 		{
 			// We're not going to offer this quest if the player is already on it...
 
-			if (player.IsDoingQuest(this.GetType()) != null)
+			if (player.IsDoingQuest(GetType()) != null)
 				return false;
 
 			// ...nor will we let him do it again.
 
-			if (player.HasFinishedQuest(this.GetType()) > 0)
+			if (player.HasFinishedQuest(GetType()) > 0)
 				return false;
 
 			// Also, he needs to finish another quest first.

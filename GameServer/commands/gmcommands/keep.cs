@@ -23,7 +23,7 @@ using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&keep",
 		ePrivLevel.GM,
 		"GMCommands.Keep.Description",

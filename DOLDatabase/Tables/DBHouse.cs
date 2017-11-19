@@ -18,15 +18,13 @@
  */
 
 using System;
-
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL
 {
-	namespace Database
-	{
-		[DataTable(TableName="DBHouse")]
+    namespace Database
+    {
+        [DataTable(TableName="DBHouse")]
 		public class DBHouse : DataObject
 		{
 			private int m_housenumber;

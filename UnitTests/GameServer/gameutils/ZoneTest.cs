@@ -18,15 +18,14 @@
  */
 using System;
 using DOL.GS;
-using DOL.GS.PacketHandler;
 using NUnit.Framework;
 
 namespace DOL.Server.Tests
 {
-	/// <summary>
-	/// Unit tests for the Zone Class
-	/// </summary>
-	[TestFixture]
+    /// <summary>
+    /// Unit tests for the Zone Class
+    /// </summary>
+    [TestFixture]
 	public class ZoneTest : ServerTests
 	{
 

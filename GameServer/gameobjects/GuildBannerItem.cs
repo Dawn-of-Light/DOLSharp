@@ -18,21 +18,16 @@
  */
 using System;
 using System.Reflection;
-using System.Collections;
-using System.Collections.Generic;
-using DOL.Events;
-using DOL.Language;
 using DOL.GS.PacketHandler;
 using DOL.Database;
-using DOL.GS.Spells;
 using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// This class represents an inventory item
-	/// </summary>
-	public class GuildBannerItem : GameInventoryItem
+    /// <summary>
+    /// This class represents an inventory item
+    /// </summary>
+    public class GuildBannerItem : GameInventoryItem
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 

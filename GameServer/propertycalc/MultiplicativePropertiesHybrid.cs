@@ -17,16 +17,15 @@
  *
  */
 
-using System;
 using System.Collections;
 using System.Collections.Specialized;
 
 namespace DOL.GS.PropertyCalc
 {
-	/// <summary>
-	/// Implements multiplicative properties using HybridDictionary
-	/// </summary>
-	public sealed class MultiplicativePropertiesHybrid : IMultiplicativeProperties
+    /// <summary>
+    /// Implements multiplicative properties using HybridDictionary
+    /// </summary>
+    public sealed class MultiplicativePropertiesHybrid : IMultiplicativeProperties
 	{
 		private readonly object m_LockObject = new object();
 

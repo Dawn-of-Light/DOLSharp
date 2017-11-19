@@ -1,13 +1,9 @@
 using System;
-using System.Collections;
-using DOL.GS;
-using DOL.GS.Spells;
 using DOL.Events;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.RealmAbilities.Statics
 {
-	public abstract class GenericBase : GameStaticItem 
+    public abstract class GenericBase : GameStaticItem 
     {
 		protected abstract string GetStaticName();
 		protected abstract ushort GetStaticModel();
@@ -27,15 +23,15 @@ namespace DOL.GS.RealmAbilities.Statics
 			m_caster = caster;
 			m_radius = radius;
 			m_pulseFrequency = pulseFrequency;
-			this.Name = GetStaticName();
-			this.Model = GetStaticModel();
-			this.X = gt.X;
-			this.Y = gt.Y;
-			this.Z = gt.Z;
-			this.CurrentRegionID = m_caster.CurrentRegionID;
-			this.Level = caster.Level;
-            this.Realm = caster.Realm;
-            this.AddToWorld();
+            Name = GetStaticName();
+            Model = GetStaticModel();
+            X = gt.X;
+            Y = gt.Y;
+            Z = gt.Z;
+            CurrentRegionID = m_caster.CurrentRegionID;
+            Level = caster.Level;
+            Realm = caster.Realm;
+            AddToWorld();
 		}
 		public override bool AddToWorld() 
         {
@@ -47,18 +43,18 @@ namespace DOL.GS.RealmAbilities.Statics
         {
 			if (currentTick >= m_lifeTime || m_caster == null) 
             {
-				this.RemoveFromWorld();
+                RemoveFromWorld();
 				timer.Stop();
 				timer=null;
 				return 0;
 			}
 			if (currentTick%m_pulseFrequency==0){
 				currentPulse++;
-				foreach(GamePlayer target in this.GetPlayersInRadius(m_radius)) 
+				foreach(GamePlayer target in GetPlayersInRadius(m_radius)) 
                 {
 					CastSpell(target);
 				}
-				foreach (GameNPC npc in this.GetNPCsInRadius(m_radius))	
+				foreach (GameNPC npc in GetNPCsInRadius(m_radius))	
                 {
 					CastSpell(npc);
 				}
@@ -70,7 +66,7 @@ namespace DOL.GS.RealmAbilities.Statics
 		protected virtual void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
 		{
 			GamePlayer player = (GamePlayer)sender;
-			if (this.m_caster == player)
+			if (m_caster == player)
             {
 				currentTick = (int)m_lifeTime;
 			}

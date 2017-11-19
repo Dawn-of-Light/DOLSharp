@@ -18,7 +18,6 @@
  */
 using System;
 using DOL.AI.Brain;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
@@ -26,10 +25,10 @@ using DOL.GS.RealmAbilities;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Abstract CC spell handler
-	/// </summary>
-	public abstract class AbstractCCSpellHandler : ImmunityEffectSpellHandler
+    /// <summary>
+    /// Abstract CC spell handler
+    /// </summary>
+    public abstract class AbstractCCSpellHandler : ImmunityEffectSpellHandler
 	{
 		/// <summary>
 		/// Apply effect on target or do spell action if non duration spell
@@ -158,7 +157,7 @@ namespace DOL.GS.Spells
 		{
 			int resistvalue = 0;
 			int resist = 0;
-			GameSpellEffect fury = SpellHandler.FindEffectOnTarget(target, "Fury");
+			GameSpellEffect fury = FindEffectOnTarget(target, "Fury");
 			if (fury != null)
 			{
 				resist += (int)fury.Spell.Value;
@@ -201,7 +200,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Mezz
 	/// </summary>
-	[SpellHandlerAttribute("Mesmerize")]
+	[SpellHandler("Mesmerize")]
 	public class MesmerizeSpellHandler : AbstractCCSpellHandler
 	{
 		public override void OnEffectPulse(GameSpellEffect effect)
@@ -245,23 +244,23 @@ namespace DOL.GS.Spells
 		{
 // WHRIA
 // Flute Mez (pulse>0)
-            if (this.Spell.Pulse > 0)
+            if (Spell.Pulse > 0)
             {
                 if (target != null && (!target.IsAlive))
                 {
-                    GameSpellEffect effect = SpellHandler.FindEffectOnTarget(target, this);
+                    GameSpellEffect effect = FindEffectOnTarget(target, this);
                     if (effect != null)
                     {
                         effect.Cancel(false);//call OnEffectExpires
-                        CancelPulsingSpell(Caster, this.Spell.SpellType);
+                        CancelPulsingSpell(Caster, Spell.SpellType);
                         MessageToCaster("You stop playing your song.", eChatType.CT_Spell);
                     }
                     return;
                 }
 
-                if (this.Spell.Range != 0)
+                if (Spell.Range != 0)
                 {
-                    if (!Caster.IsWithinRadius(target, this.Spell.Range))
+                    if (!Caster.IsWithinRadius(target, Spell.Range))
                         return;
                 }
 
@@ -269,7 +268,7 @@ namespace DOL.GS.Spells
                     return;
             }
 
-            GameSpellEffect mezz = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+            GameSpellEffect mezz = FindEffectOnTarget(target, "Mesmerize");
             if (mezz != null)
             {
                 MessageToCaster("Your target is already mezzed!!!", eChatType.CT_SpellResisted);
@@ -321,22 +320,22 @@ namespace DOL.GS.Spells
 		{
 // WHRIA
 // Flute Mez (pulse>0)
-            if (this.Spell.Pulse > 0)
+            if (Spell.Pulse > 0)
             {
-                if (Caster.IsWithinRadius(target, this.Spell.Range * 5) == false)
+                if (Caster.IsWithinRadius(target, Spell.Range * 5) == false)
                 {
-                    CancelPulsingSpell(Caster, this.Spell.SpellType);
+                    CancelPulsingSpell(Caster, Spell.SpellType);
                     MessageToCaster("You are far away from the target. You stop playing your song.", eChatType.CT_Spell);
                     return;
                 }
 
                 if (target != null && (!target.IsAlive)) 
                 {
-                    GameSpellEffect effect = SpellHandler.FindEffectOnTarget(target, this);
+                    GameSpellEffect effect = FindEffectOnTarget(target, this);
                     if (effect != null)
                     {
                         effect.Cancel(false);//call OnEffectExpires
-                        CancelPulsingSpell(Caster, this.Spell.SpellType);
+                        CancelPulsingSpell(Caster, Spell.SpellType);
                         MessageToCaster("You stop playing your song.", eChatType.CT_Spell);
                     }
                     return;
@@ -345,9 +344,9 @@ namespace DOL.GS.Spells
                 if (target != Caster.TargetObject)
                     return;
 
-                if (this.Spell.Range != 0)
+                if (Spell.Range != 0)
                 {
-                    if (!Caster.IsWithinRadius(target, this.Spell.Range))
+                    if (!Caster.IsWithinRadius(target, Spell.Range))
                         return;
                 }
 
@@ -370,14 +369,14 @@ namespace DOL.GS.Spells
 				return;
 			}
 			//Do nothing when already mez, but inform caster
-			GameSpellEffect mezz = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+			GameSpellEffect mezz = FindEffectOnTarget(target, "Mesmerize");
 			if(mezz != null)
 			{
 				MessageToCaster("Your target is already mezzed!", eChatType.CT_SpellResisted);
 //				SendEffectAnimation(target, 0, false, 0);
 				return;
 			}
-			GameSpellEffect mezblock = SpellHandler.FindEffectOnTarget(target, "CeremonialBracerMezz");
+			GameSpellEffect mezblock = FindEffectOnTarget(target, "CeremonialBracerMezz");
 			if (mezblock != null)
 			{
 				mezblock.Cancel(false);
@@ -449,7 +448,7 @@ namespace DOL.GS.Spells
 
 			if (remove)
 			{
-				GameSpellEffect effect = SpellHandler.FindEffectOnTarget(living, this);
+				GameSpellEffect effect = FindEffectOnTarget(living, this);
 				if (effect != null)
 					effect.Cancel(false);//call OnEffectExpires
 			}
@@ -461,7 +460,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Stun
 	/// </summary>
-	[SpellHandlerAttribute("Stun")]
+	[SpellHandler("Stun")]
 	public class StunSpellHandler : AbstractCCSpellHandler
 	{
 		protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
@@ -533,7 +532,7 @@ namespace DOL.GS.Spells
 			//Ceremonial bracer dont intercept physical stun
 			if(Spell.SpellType.ToLower() != "stylestun" )
 			{
-				GameSpellEffect stunblock = SpellHandler.FindEffectOnTarget(target, "CeremonialBracerStun");
+				GameSpellEffect stunblock = FindEffectOnTarget(target, "CeremonialBracerStun");
 				if (stunblock != null)
 				{
 					stunblock.Cancel(false);

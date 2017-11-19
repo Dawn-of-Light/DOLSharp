@@ -16,16 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 using DOL.Language;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Player shade effect.
-	/// </summary>
-	public class ShadeEffect : StaticEffect, IGameEffect
+    /// <summary>
+    /// Player shade effect.
+    /// </summary>
+    public class ShadeEffect : StaticEffect, IGameEffect
 	{
 		/// <summary>
 		/// The effect owner

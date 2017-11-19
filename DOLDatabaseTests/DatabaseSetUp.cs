@@ -19,18 +19,16 @@
 using System;
 using System.IO;
 using System.Reflection;
-
-using DOL.Database;
 using DOL.Database.Connection;
 
 using NUnit.Framework;
 
 namespace DOL.Database.Tests
 {
-	/// <summary>
-	/// Database SetUp for Unit Tests
-	/// </summary>
-	[SetUpFixture]
+    /// <summary>
+    /// Database SetUp for Unit Tests
+    /// </summary>
+    [SetUpFixture]
 	public class DatabaseSetUp
 	{
 		public DatabaseSetUp()

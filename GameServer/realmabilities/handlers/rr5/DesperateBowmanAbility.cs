@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
@@ -6,10 +5,10 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Mastery of Concentration RA
-	/// </summary>
-	public class DesperateBowmanAbility : RR5RealmAbility
+    /// <summary>
+    /// Mastery of Concentration RA
+    /// </summary>
+    public class DesperateBowmanAbility : RR5RealmAbility
 	{
 		public DesperateBowmanAbility(DBAbility dba, int level) : base(dba, level) { }
 

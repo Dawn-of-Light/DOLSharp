@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Specialization Table
-	/// </summary>
-	[DataTable(TableName="Specialization")]
+    /// <summary>
+    /// Specialization Table
+    /// </summary>
+    [DataTable(TableName="Specialization")]
 	public class DBSpecialization : DataObject
 	{
 		protected int m_SpecializationID;

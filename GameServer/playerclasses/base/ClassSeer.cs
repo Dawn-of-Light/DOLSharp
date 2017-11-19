@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Midgard Base Support Class Seer
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Seer, "Seer", "Seer")]
+    /// <summary>
+    /// Midgard Base Support Class Seer
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Seer, "Seer", "Seer")]
 	public class ClassSeer : CharacterClassBase
 	{
 		public ClassSeer()

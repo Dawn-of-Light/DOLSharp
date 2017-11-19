@@ -16,18 +16,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace DOL.GS.PacketHandler
 {
-	/// <summary>
-	/// MiniDelveWriter is used to build v1.110+ hovering tool tip
-	/// format is : (Subject (Key "Value")(Key2 "Value2")[...](Expires "Timestamp"))
-	/// Sent to Client when hovering an icon that need some attached tool tip.
-	/// </summary>
-	public class MiniDelveWriter
+    /// <summary>
+    /// MiniDelveWriter is used to build v1.110+ hovering tool tip
+    /// format is : (Subject (Key "Value")(Key2 "Value2")[...](Expires "Timestamp"))
+    /// Sent to Client when hovering an icon that need some attached tool tip.
+    /// </summary>
+    public class MiniDelveWriter
 	{
 		/// <summary>
 		/// Max Length of resulting Delve String

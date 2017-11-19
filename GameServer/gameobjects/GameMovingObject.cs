@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// GameMovingObject is a base class for boats and siege weapons.
-	/// </summary>		
-	public abstract class GameMovingObject : GameNPC
+    /// <summary>
+    /// GameMovingObject is a base class for boats and siege weapons.
+    /// </summary>		
+    public abstract class GameMovingObject : GameNPC
 	{
 		public GameMovingObject() : base()
 		{

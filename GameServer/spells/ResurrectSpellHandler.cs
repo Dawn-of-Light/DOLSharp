@@ -17,7 +17,6 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using DOL.Events;
@@ -26,10 +25,10 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	[SpellHandlerAttribute("Resurrect")]
+    /// <summary>
+    /// 
+    /// </summary>
+    [SpellHandler("Resurrect")]
 	public class ResurrectSpellHandler : SpellHandler
 	{
 		private const string RESURRECT_CASTER_PROPERTY = "RESURRECT_CASTER";
@@ -131,10 +130,10 @@ namespace DOL.GS.Spells
 						// -> any better solution -> post :)
 						if ( Spell.ResurrectHealth == 100 )
 						{
-							GameSpellEffect effect = SpellHandler.FindEffectOnTarget(player, GlobalSpells.PvEResurrectionIllnessSpellType);
+							GameSpellEffect effect = FindEffectOnTarget(player, GlobalSpells.PvEResurrectionIllnessSpellType);
 				            if ( effect != null )
 				            	effect.Overwrite(new GameSpellEffect(effect.SpellHandler, effect.Duration / 2, effect.PulseFreq));
-							GameSpellEffect effecttwo = SpellHandler.FindEffectOnTarget(player, GlobalSpells.RvRResurrectionIllnessSpellType);
+							GameSpellEffect effecttwo = FindEffectOnTarget(player, GlobalSpells.RvRResurrectionIllnessSpellType);
 				            if ( effecttwo != null )
 				            	effecttwo.Overwrite(new GameSpellEffect(effecttwo.SpellHandler, effecttwo.Duration / 2, effecttwo.PulseFreq));
 						}

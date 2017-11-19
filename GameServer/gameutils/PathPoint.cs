@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.Database;
 
 namespace DOL.GS.Movement
 {
-	/// <summary>
-	/// represents a point in a way path
-	/// </summary>
-	public class PathPoint : Point3D
+    /// <summary>
+    /// represents a point in a way path
+    /// </summary>
+    public class PathPoint : Point3D
 	{
 		protected int m_maxspeed;
 		protected PathPoint m_next = null;

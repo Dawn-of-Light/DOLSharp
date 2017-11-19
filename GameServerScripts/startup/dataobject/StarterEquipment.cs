@@ -16,17 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.GS.GameEvents
 {
-	/// <summary>
-	/// Holds starter equipment
-	/// </summary>
-	[DataTable(TableName = "StarterEquipment")]
+    /// <summary>
+    /// Holds starter equipment
+    /// </summary>
+    [DataTable(TableName = "StarterEquipment")]
 	public class StarterEquipment : DataObject
 	{
 		private int m_starterEquipmentID;

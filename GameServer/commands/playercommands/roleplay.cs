@@ -20,7 +20,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&roleplay",
 		ePrivLevel.Player,
 	   "Flags a player with an  tag to indicate the player is a role player.",

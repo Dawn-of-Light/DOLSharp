@@ -16,20 +16,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
-using DOL.Events;
 using DOL.Language;
 using System.Collections.Generic;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// The helper class for the berserk ability
-	/// </summary>
-	public class BerserkEffect : TimedEffect, IGameEffect
+    /// <summary>
+    /// The helper class for the berserk ability
+    /// </summary>
+    public class BerserkEffect : TimedEffect, IGameEffect
 	{
 		protected ushort m_startModel = 0;
 		/// <summary>

@@ -17,14 +17,12 @@
  *
  */
 
-using System;
 
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "househookpointoffset")]
+    [DataTable(TableName = "househookpointoffset")]
 	public class HouseHookpointOffset : DataObject
 	{
 		private long m_id;

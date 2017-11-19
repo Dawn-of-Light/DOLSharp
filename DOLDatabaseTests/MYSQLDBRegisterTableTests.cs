@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 using DOL.Database.Connection;
 using DOL.Database.Attributes;
@@ -27,10 +26,10 @@ using DOL.Database.Tests;
 
 namespace DOL.Database.MySQLTests
 {
-	/// <summary>
-	/// Description of MYSQLDBRegisterTableTests.
-	/// </summary>
-	[TestFixture, Explicit]
+    /// <summary>
+    /// Description of MYSQLDBRegisterTableTests.
+    /// </summary>
+    [TestFixture, Explicit]
 	public class MYSQLDBRegisterTableTests : DOL.Database.Tests.RegisterTableTests
 	{
 		public MYSQLDBRegisterTableTests()

@@ -1,6 +1,6 @@
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&held",
 		ePrivLevel.Player,
 		"List the cards in your hand. Use 'held g' to display faceup cards held by group members.",

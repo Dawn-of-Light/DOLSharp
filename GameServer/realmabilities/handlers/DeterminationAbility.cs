@@ -1,15 +1,11 @@
-using System;
 using DOL.Database;
-using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
-using DOL.GS.SkillHandler;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Determination
-	/// </summary>
-	public class DeterminationAbility : RAPropertyEnhancer
+    /// <summary>
+    /// Determination
+    /// </summary>
+    public class DeterminationAbility : RAPropertyEnhancer
 	{
 		public static eProperty[] properties = new eProperty[]
 		{

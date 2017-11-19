@@ -16,23 +16,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.Database;
-using DOL.Events;
-using System.Reflection;
 using System.Collections;
 using DOL.AI.Brain;
 
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// The Midgard dragon.
-	/// </summary>
-	/// <author>Aredhel</author>	
-	public class Gjalpinulva : GameDragon
+    /// <summary>
+    /// The Midgard dragon.
+    /// </summary>
+    /// <author>Aredhel</author>	
+    public class Gjalpinulva : GameDragon
 	{
 		#region Add Spawns
 
@@ -135,7 +130,7 @@ namespace DOL.GS
 				isDisciple = Util.Chance(25);
 				drakulv = SpawnTimedAdd((isDisciple) ? 613 : 612, Util.Random(62, 68), x + Util.Random(250), y + Util.Random(250), 120, false);
 
-				if (drakulv != null && drakulv.Brain is StandardMobBrain && this.Brain is DragonBrain)
+				if (drakulv != null && drakulv.Brain is StandardMobBrain && Brain is DragonBrain)
 				{
 					(Brain as DragonBrain).AddAggroListTo(drakulv.Brain as StandardMobBrain);
 				}

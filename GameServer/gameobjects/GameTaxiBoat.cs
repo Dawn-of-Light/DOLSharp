@@ -16,18 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
-using System.Reflection;
 
 using DOL.AI.Brain;
-using DOL.GS.PacketHandler;
-
-using log4net;
 
 namespace DOL.GS
 {
-	/*
+    /*
 	 * These boats are very fast, and can carry up to sixteen passengers.
 	 * You have thirty seconds to board the boat before it sets sail.
 	 * You can board the boat by double clicking on it,
@@ -36,7 +30,7 @@ namespace DOL.GS
 	 * but if you wish to leave before then, just type `/disembark'.
 	 * or press the jump key
 	 */
-	public class GameTaxiBoat : GameMovingObject
+    public class GameTaxiBoat : GameMovingObject
 	{
 		public GameTaxiBoat()
 			: base()

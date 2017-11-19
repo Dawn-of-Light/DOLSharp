@@ -27,14 +27,13 @@ using log4net;
 
 using DOL.GS.Housing;
 using DOL.AI.Brain;
-using DOL.Events;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Description of WorldUpdateThread.
-	/// </summary>
-	public static class WorldUpdateThread
+    /// <summary>
+    /// Description of WorldUpdateThread.
+    /// </summary>
+    public static class WorldUpdateThread
 	{
 		/// <summary>
 		/// Defines a logger for this class.

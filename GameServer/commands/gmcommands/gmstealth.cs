@@ -16,16 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using DOL.GS.Commands;
-using DOL.GS;
-using DOL.Database;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-    [CmdAttribute(
+    [Cmd(
         "&gmstealth",
         ePrivLevel.GM,
         "Grants the ability to stealth to a gm/admin character",

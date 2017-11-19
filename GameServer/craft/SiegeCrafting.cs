@@ -18,13 +18,12 @@
  */
 using DOL.Database;
 using DOL.Language;
-using DOL.GS.PacketHandler;
 using System;
 using System.Collections.Generic;
 
 namespace DOL.GS
 {
-	public class SiegeCrafting : AbstractProfession
+    public class SiegeCrafting : AbstractProfession
 	{
 		public SiegeCrafting()
 			: base()

@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Generic;
 using DOL.Database;
-using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Mastery of Concentration RA
-	/// </summary>
-	public class DecimationTrapAbility : TimedRealmAbility
+    /// <summary>
+    /// Mastery of Concentration RA
+    /// </summary>
+    public class DecimationTrapAbility : TimedRealmAbility
 	{
 		/*private ushort region;
 		private int x;

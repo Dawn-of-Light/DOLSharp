@@ -16,17 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Objects as Tables, Lights, Bags non static in Game.
-	/// </summary>
-	[DataTable(TableName="WorldObject")]
+    /// <summary>
+    /// Objects as Tables, Lights, Bags non static in Game.
+    /// </summary>
+    [DataTable(TableName="WorldObject")]
 	public class WorldObject : DataObject
 	{
 		private string		m_type;

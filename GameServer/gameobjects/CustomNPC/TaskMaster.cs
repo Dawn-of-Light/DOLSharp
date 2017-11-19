@@ -1,11 +1,8 @@
-using System.Reflection;
-using DOL.GS;
 using DOL.GS.Quests;
-using log4net;
 
 namespace DOL.GS
 {
-	public class TaskMaster : GameNPC
+    public class TaskMaster : GameNPC
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

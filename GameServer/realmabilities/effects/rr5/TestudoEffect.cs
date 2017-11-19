@@ -1,17 +1,15 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using DOL.GS.PacketHandler;
-using DOL.GS.RealmAbilities;
 using DOL.Events;
 using DOL.Database;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Mastery of Concentration
-	/// </summary>
-	public class TestudoEffect : TimedEffect
+    /// <summary>
+    /// Mastery of Concentration
+    /// </summary>
+    public class TestudoEffect : TimedEffect
 	{
 		private GameLiving owner;
 

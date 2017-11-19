@@ -17,10 +17,7 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
 using DOL.GS.Quests.Atlantis;
 using DOL.Database;
@@ -87,7 +84,7 @@ namespace DOL.GS
 					{
 						if (text.ToLower() == "interested" && quest.CheckQuestQualification(player))
 						{
-							ArtifactTurnInQuest newQuest = new ArtifactTurnInQuest(player, this.Name);
+							ArtifactTurnInQuest newQuest = new ArtifactTurnInQuest(player, Name);
 							newQuest.Step = 0;
 							player.AddQuest(newQuest);
 							player.Out.SendQuestListUpdate();
@@ -138,7 +135,7 @@ namespace DOL.GS
 								(eCharacterClass)player.CharacterClass.ID, (eRealm)player.Realm);
 							if (versions.Count > 1)
 							{
-								this.SayTo(player, string.Format("{0}, I see that you carry {1}. If you are interested, I will exchange yours for you but there is a price to pay for the change. Any experience or levels your artifact has gained will be lost when the change occurs. Are you still [interested]?", player.CharacterClass.Name, art));
+                                SayTo(player, string.Format("{0}, I see that you carry {1}. If you are interested, I will exchange yours for you but there is a price to pay for the change. Any experience or levels your artifact has gained will be lost when the change occurs. Are you still [interested]?", player.CharacterClass.Name, art));
 							}
 						}
 						return true;

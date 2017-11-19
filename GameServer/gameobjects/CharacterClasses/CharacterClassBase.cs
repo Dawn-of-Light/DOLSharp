@@ -117,7 +117,7 @@ namespace DOL.GS
 			m_profession = "";
 
 			// initialize members from attributes
-			Attribute[] attrs = Attribute.GetCustomAttributes(this.GetType(), typeof(CharacterClassAttribute));
+			Attribute[] attrs = Attribute.GetCustomAttributes(GetType(), typeof(CharacterClassAttribute));
 			foreach (Attribute attr in attrs)
 			{
 				if (attr is CharacterClassAttribute)

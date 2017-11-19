@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Albion Reaver Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Reaver, "Reaver", "Fighter")]
+    /// <summary>
+    /// Albion Reaver Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Reaver, "Reaver", "Fighter")]
 	public class ClassReaver : ClassFighter
 	{
 		private static readonly string[] AutotrainableSkills = new[] { Specs.Slash, Specs.Flexible };

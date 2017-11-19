@@ -17,18 +17,16 @@
  *
  */
 using System;
-using System.Collections;
 using DOL.GS.PacketHandler;
-using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Handles power drain (conversion of target health to caster
-	/// power).
-	/// </summary>
-	/// <author>Aredhel</author>
-	[SpellHandlerAttribute("PowerDrain")]
+    /// <summary>
+    /// Handles power drain (conversion of target health to caster
+    /// power).
+    /// </summary>
+    /// <author>Aredhel</author>
+    [SpellHandler("PowerDrain")]
 	public class PowerDrain : DirectDamageSpellHandler
 	{
 		/// <summary>

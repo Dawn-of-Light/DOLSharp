@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 using DOL.GS;
 
@@ -24,11 +23,11 @@ using NUnit.Framework;
 
 namespace DOL.Server.Tests
 {
-	/// <summary>
-	/// Unit Test for Default Invalid Names Startup Behavior.
-	/// Need Ressource InvalidNames.txt set to Default.
-	/// </summary>
-	[TestFixture]
+    /// <summary>
+    /// Unit Test for Default Invalid Names Startup Behavior.
+    /// Need Ressource InvalidNames.txt set to Default.
+    /// </summary>
+    [TestFixture]
 	public class InvalidNamesStartupTest
 	{
 		public InvalidNamesStartupTest()

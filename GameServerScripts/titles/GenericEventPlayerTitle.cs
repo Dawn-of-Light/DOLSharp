@@ -20,16 +20,15 @@
 using System;
 
 using DOL.GS;
-using DOL.Events;
 using DOL.GS.PlayerTitles;
 using DOL.Language;
 
 namespace GameServerScripts.Titles
 {
-	/// <summary>
-	/// GenericEventPlayerTitle Allow to Implement easily custom event based player title
-	/// </summary>
-	public abstract class GenericEventPlayerTitle : EventPlayerTitle
+    /// <summary>
+    /// GenericEventPlayerTitle Allow to Implement easily custom event based player title
+    /// </summary>
+    public abstract class GenericEventPlayerTitle : EventPlayerTitle
 	{
 		/// <summary>
 		/// Tuple of String Description / Name / Female Description / Female Name 

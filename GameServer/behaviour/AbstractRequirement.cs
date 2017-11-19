@@ -17,9 +17,8 @@
  *
  */
 using System;
-using System.Text;
 using DOL.Events;
-using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
+using DOL.GS.Behaviour.Attributes;
 using log4net;
 using System.Reflection;
 
@@ -85,9 +84,9 @@ namespace DOL.GS.Behaviour
 
         public AbstractRequirement(GameNPC npc, eRequirementType type, eComparator comp)
         {
-            this.defaultNPC = npc;
+            defaultNPC = npc;
             this.type = type;
-            this.comparator = comp;
+            comparator = comp;
         }
 
 		/// <summary>
@@ -101,16 +100,16 @@ namespace DOL.GS.Behaviour
         public AbstractRequirement(GameNPC defaultNPC, eRequirementType type, Object n, Object v, eComparator comp) : this(defaultNPC,type,comp)
         {            			            
 
-            RequirementAttribute attr = BehaviourMgr.getRequirementAttribute(this.GetType());
+            RequirementAttribute attr = BehaviourMgr.getRequirementAttribute(GetType());
             // handle parameter N
-            object defaultValueN = GetDefaultValue(attr.DefaultValueN);            
-            this.N = (TypeN)BehaviourUtils.ConvertObject(n, defaultValueN, typeof(TypeN));
-            CheckParameter(this.N, attr.IsNullableN, typeof(TypeN));
+            object defaultValueN = GetDefaultValue(attr.DefaultValueN);
+            N = (TypeN)BehaviourUtils.ConvertObject(n, defaultValueN, typeof(TypeN));
+            CheckParameter(N, attr.IsNullableN, typeof(TypeN));
             
             // handle parameter V
             object defaultValueV = GetDefaultValue(attr.DefaultValueV);            
             this.v = (TypeV)BehaviourUtils.ConvertObject(v, defaultValueV, typeof(TypeV));
-            CheckParameter(this.V, attr.IsNullableV, typeof(TypeV));
+            CheckParameter(V, attr.IsNullableV, typeof(TypeV));
             
         }
 
@@ -139,7 +138,7 @@ namespace DOL.GS.Behaviour
                 {
                     if (log.IsWarnEnabled)
                     {
-                        log.Warn("Parameter is not used for =" + this.GetType().Name + ".\n The recieved parameter " + value + " will not be used for anthing. Check your quest code for inproper usage of parameters!");
+                        log.Warn("Parameter is not used for =" + GetType().Name + ".\n The recieved parameter " + value + " will not be used for anthing. Check your quest code for inproper usage of parameters!");
                         return false;
                     }
                 }
@@ -150,7 +149,7 @@ namespace DOL.GS.Behaviour
                 {
                     if (log.IsErrorEnabled)
                     {
-                        log.Error("Not nullable parameter was null, expected type is " + destinationType.Name + "for =" + this.GetType().Name + ".\nRecived parameter was " + value);
+                        log.Error("Not nullable parameter was null, expected type is " + destinationType.Name + "for =" + GetType().Name + ".\nRecived parameter was " + value);
                         return false;
                     }
                 }
@@ -158,7 +157,7 @@ namespace DOL.GS.Behaviour
                 {
                     if (log.IsErrorEnabled)
                     {
-                        log.Error("Parameter was not of expected type, expected type is " + destinationType.Name + "for " + this.GetType().Name + ".\nRecived parameter was " + value);
+                        log.Error("Parameter was not of expected type, expected type is " + destinationType.Name + "for " + GetType().Name + ".\nRecived parameter was " + value);
                         return false;
                     }
                 }

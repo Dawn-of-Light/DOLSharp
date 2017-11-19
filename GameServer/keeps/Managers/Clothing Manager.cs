@@ -1,15 +1,12 @@
-using System;
 
 using DOL.Database;
-using DOL.Events;
-using DOL.GS;
 
 namespace DOL.GS.Keeps
 {
-	/// <summary>
-	/// This is a convieniance enum for for inventory item hand flag
-	/// </summary>
-	public enum eHandFlag
+    /// <summary>
+    /// This is a convieniance enum for for inventory item hand flag
+    /// </summary>
+    public enum eHandFlag
 	{
 		/// <summary>
 		/// Right Handed Weapon

@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS;
 
 namespace DOL.Events
 {
-	/// <summary>
-	/// Holds the arguments for the Quest event of GamePlayer
-	/// </summary>
-	public class QuestEventArgs : SourceEventArgs
+    /// <summary>
+    /// Holds the arguments for the Quest event of GamePlayer
+    /// </summary>
+    public class QuestEventArgs : SourceEventArgs
 	{
 		private ushort questid;
         private GamePlayer player;

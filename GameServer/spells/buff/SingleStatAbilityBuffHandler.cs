@@ -17,18 +17,16 @@
  *
  */
 
-using System;
 
-using DOL.GS;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Buffs a single stat,
-	/// Considered as an Ability buff (regarding the bonuscategories on statproperties)
-	/// Base abstract Class for Ability Stats Buff Attached to Passive Spell-Based (Realm)Abilities
-	/// </summary>
-	public abstract class SingleStatAbilityBuffHandler : PropertyChangingSpell
+    /// <summary>
+    /// Buffs a single stat,
+    /// Considered as an Ability buff (regarding the bonuscategories on statproperties)
+    /// Base abstract Class for Ability Stats Buff Attached to Passive Spell-Based (Realm)Abilities
+    /// </summary>
+    public abstract class SingleStatAbilityBuffHandler : PropertyChangingSpell
 	{
 		/// <summary>
 		/// Bonus Category Enforced to Ability Buff Bonus Category
@@ -68,7 +66,7 @@ namespace DOL.GS.Spells
 		}
 	}
 	
-    [SpellHandlerAttribute("StrengthAbilityBuff")]
+    [SpellHandler("StrengthAbilityBuff")]
 	public class StrengthAbilityBuffHandler : SingleStatAbilityBuffHandler
 	{
 		public override eProperty Property1 { get { return eProperty.Strength; } }
@@ -79,7 +77,7 @@ namespace DOL.GS.Spells
 		}		
 	}
 	
-    [SpellHandlerAttribute("DexterityAbilityBuff")]
+    [SpellHandler("DexterityAbilityBuff")]
 	public class DexterityAbilityBuffHandler : SingleStatAbilityBuffHandler
 	{
 		public override eProperty Property1 { get { return eProperty.Dexterity; } }
@@ -90,7 +88,7 @@ namespace DOL.GS.Spells
 		}		
 	}
 	
-    [SpellHandlerAttribute("ConstitutionAbilityBuff")]
+    [SpellHandler("ConstitutionAbilityBuff")]
 	public class ConstitutionAbilityBuffHandler : SingleStatAbilityBuffHandler
 	{
 		public override eProperty Property1 { get { return eProperty.Constitution; } }
@@ -101,7 +99,7 @@ namespace DOL.GS.Spells
 		}		
 	}
 	
-    [SpellHandlerAttribute("QuicknessAbilityBuff")]
+    [SpellHandler("QuicknessAbilityBuff")]
 	public class QuicknessAbilityBuffHandler : SingleStatAbilityBuffHandler
 	{
 		public override eProperty Property1 { get { return eProperty.Quickness; } }
@@ -112,7 +110,7 @@ namespace DOL.GS.Spells
 		}		
 	}
 	
-    [SpellHandlerAttribute("AcuityAbilityBuff")]
+    [SpellHandler("AcuityAbilityBuff")]
 	public class AcuityAbilityBuffHandler : SingleStatAbilityBuffHandler
 	{
 		public override eProperty Property1 { get { return eProperty.Acuity; } }
@@ -123,7 +121,7 @@ namespace DOL.GS.Spells
 		}		
 	}
 	
-    [SpellHandlerAttribute("MaxHealthAbilityBuff")]
+    [SpellHandler("MaxHealthAbilityBuff")]
 	public class MaxHealthAbilityBuffHandler : SingleStatAbilityBuffHandler
 	{
 		public override eProperty Property1 { get { return eProperty.MaxHealth; } }

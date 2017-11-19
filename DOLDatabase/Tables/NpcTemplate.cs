@@ -23,16 +23,14 @@
  * hardcoded before.
  */
 
-using System;
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// DataTable class for NPC Templates
-	/// </summary>
-	[DataTable(TableName = "NpcTemplate")]
+    /// <summary>
+    /// DataTable class for NPC Templates
+    /// </summary>
+    [DataTable(TableName = "NpcTemplate")]
 	public class DBNpcTemplate : DataObject
     {
         #region Variables

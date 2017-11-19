@@ -22,17 +22,16 @@ using System.Linq;
 using System.Collections;
 
 using DOL.Database;
-using DOL.GS;
 using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
 using System.Collections.Generic;
 
 namespace DOL.GS.Keeps
 {
-	/// <summary>
-	/// Class to manage the guards Positions
-	/// </summary>
-	public class PositionMgr
+    /// <summary>
+    /// Class to manage the guards Positions
+    /// </summary>
+    public class PositionMgr
 	{
 		/// <summary>
 		/// Gets the most usable position directly from the database

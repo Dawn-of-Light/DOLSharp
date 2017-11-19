@@ -23,12 +23,11 @@ using System.Text;
 using System.Linq;
 
 using DOL.Database;
-using DOL.GS.Commands;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[Cmd(
+    [Cmd(
 		"&train",
 		new string[] { "&trainline", "&trainskill" }, // new aliases to work around 1.105 client /train command
 		ePrivLevel.Player,

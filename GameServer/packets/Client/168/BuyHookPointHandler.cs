@@ -21,7 +21,7 @@ using DOL.GS.Keeps;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP,eClientPackets.BuyHookPoint, "buy hookpoint siege weapon/mob", eClientStatus.PlayerInGame)]
+	[PacketHandler(PacketHandlerType.TCP,eClientPackets.BuyHookPoint, "buy hookpoint siege weapon/mob", eClientStatus.PlayerInGame)]
 	public class BuyHookPointHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)

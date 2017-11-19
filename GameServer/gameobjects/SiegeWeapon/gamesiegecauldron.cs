@@ -16,19 +16,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Collections;
 
 using DOL.Database;
 using DOL.GS.PacketHandler;
-using DOL.GS.Spells;
 using DOL.GS.Keeps;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// GameMovingObject is a base class for boats and siege weapons.
-	/// </summary>
-	public class GameSiegeCauldron : GameSiegeWeapon
+    /// <summary>
+    /// GameMovingObject is a base class for boats and siege weapons.
+    /// </summary>
+    public class GameSiegeCauldron : GameSiegeWeapon
 	{
 		public GameKeepComponent Component = null;
 
@@ -97,10 +95,10 @@ namespace DOL.GS
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	[SpellHandlerAttribute("SiegeDirectDamage")]
+    /// <summary>
+    /// 
+    /// </summary>
+    [SpellHandler("SiegeDirectDamage")]
 	public class SiegeDirectDamageSpellHandler : DirectDamageSpellHandler
 	{
 

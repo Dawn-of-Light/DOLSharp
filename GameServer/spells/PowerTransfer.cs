@@ -17,18 +17,15 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Spell handler for power trasnfer.
-	/// </summary>
-	/// <author>Aredhel</author>
-	[SpellHandlerAttribute("PowerTransfer")]
+    /// <summary>
+    /// Spell handler for power trasnfer.
+    /// </summary>
+    /// <author>Aredhel</author>
+    [SpellHandler("PowerTransfer")]
 	class PowerTransfer : SpellHandler
 	{
 		/// <summary>

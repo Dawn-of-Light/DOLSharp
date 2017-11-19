@@ -22,7 +22,7 @@ namespace DOL.GS.Commands
 	/// <summary>
 	/// Command handler for the /bind command
 	/// </summary>
-	[CmdAttribute(
+	[Cmd(
 		"&bind",
 		ePrivLevel.Player,
 		"Binds your soul to a bind location, you will start from there after you die and /release",

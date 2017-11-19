@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Defines what abilities are available at what speclevels for a given Specialization
-	/// </summary>
-	[DataTable(TableName="SpecXAbility")]
+    /// <summary>
+    /// Defines what abilities are available at what speclevels for a given Specialization
+    /// </summary>
+    [DataTable(TableName="SpecXAbility")]
 	public class DBSpecXAbility : DataObject
 	{
 		protected int m_specXabilityID;

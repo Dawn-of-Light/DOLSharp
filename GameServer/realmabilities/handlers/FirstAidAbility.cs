@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.PacketHandler;
@@ -6,10 +5,10 @@ using DOL.Language;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// First Aid, healing
-	/// </summary>
-	public class FirstAidAbility : TimedRealmAbility
+    /// <summary>
+    /// First Aid, healing
+    /// </summary>
+    public class FirstAidAbility : TimedRealmAbility
 	{
 		public FirstAidAbility(DBAbility dba, int level) : base(dba, level) { }
 

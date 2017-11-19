@@ -16,11 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PacketHandler
 {
-	public interface IPacketEncoding
+    public interface IPacketEncoding
 	{
 		byte[] DecryptPacket(byte[] content, bool udpPacket);
 		byte[] EncryptPacket(byte[] content, bool udpPacket);

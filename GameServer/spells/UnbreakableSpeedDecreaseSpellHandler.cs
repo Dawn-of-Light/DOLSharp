@@ -16,18 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Text;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Spell handler for unbreakable speed decreasing spells
-	/// </summary>
-	[SpellHandler("UnbreakableSpeedDecrease")]
+    /// <summary>
+    /// Spell handler for unbreakable speed decreasing spells
+    /// </summary>
+    [SpellHandler("UnbreakableSpeedDecrease")]
 	public class UnbreakableSpeedDecreaseSpellHandler : ImmunityEffectSpellHandler
 	{
 		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)

@@ -17,7 +17,6 @@
  *
  */
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 
 using DOL.Database.Attributes;
@@ -26,7 +25,7 @@ using log4net;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "ItemTemplate", PreCache = true)]
+    [DataTable(TableName = "ItemTemplate", PreCache = true)]
 	public class ItemTemplate : DataObject
 		
 	{

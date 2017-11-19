@@ -17,21 +17,11 @@
  *
  */
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using DOL.GS;
 using DOL.Database;
-using DOL.Language;
-using DOL.GS.Movement;
-using DOL.GS.PacketHandler;
-using log4net;
-using DOL.AI.Brain;
 
 namespace DOL.GS
 {
-	public class GameBoat : GameMovingObject
+    public class GameBoat : GameMovingObject
 	{
         private byte m_boatType = 0;
         protected DBBoat m_dbBoat;
@@ -238,7 +228,7 @@ namespace DOL.GS
         /// <returns></returns>
         public override bool Interact(GamePlayer player)
         {
-            if (this.OwnerID != "")            
+            if (OwnerID != "")            
                 return false;
               
  	        return base.Interact(player);

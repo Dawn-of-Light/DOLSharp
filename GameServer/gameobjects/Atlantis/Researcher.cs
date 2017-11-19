@@ -17,8 +17,6 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Collections;
 using DOL.AI.Brain;
 using DOL.Language;

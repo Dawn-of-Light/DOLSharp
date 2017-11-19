@@ -16,17 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
-	/// <summary>
+    /// <summary>
     /// Handler for Quick Cast Ability clicks
-	/// </summary>
-	[SkillHandlerAttribute(Abilities.Quickcast)]
+    /// </summary>
+    [SkillHandler(Abilities.Quickcast)]
 	public class QuickCastAbilityHandler : IAbilityActionHandler
 	{
 		/// <summary>

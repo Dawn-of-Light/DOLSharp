@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Albion Base Caster Class Elementalist
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Elementalist, "Elementalist", "Elementalist")]
+    /// <summary>
+    /// Albion Base Caster Class Elementalist
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Elementalist, "Elementalist", "Elementalist")]
 	public class ClassElementalist : CharacterClassBase
 	{
 		public ClassElementalist()

@@ -17,7 +17,6 @@
  *
  */
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.IO;
@@ -30,10 +29,10 @@ using log4net;
 
 namespace DOL.GS.DatabaseUpdate
 {
-	/// <summary>
-	/// UnloadXMLCommandHandler is used to Fully unload DataBase or DataTable to a Local XML file.
-	/// </summary>
-	[CmdAttribute(
+    /// <summary>
+    /// UnloadXMLCommandHandler is used to Fully unload DataBase or DataTable to a Local XML file.
+    /// </summary>
+    [Cmd(
 		"&unloadxmldb",
 		ePrivLevel.Admin,
 		"Unload your Database Tables to a local XML File Repository.",

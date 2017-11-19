@@ -16,18 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS;
 
 namespace DOL.GS.Relics
 {
-	/// <summary>
-	/// Class representing a relic pillar.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class RelicPillar : GameObject, IDoor
+    /// <summary>
+    /// Class representing a relic pillar.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class RelicPillar : GameObject, IDoor
 	{
 		/// <summary>
 		/// Creates a new relic pillar.

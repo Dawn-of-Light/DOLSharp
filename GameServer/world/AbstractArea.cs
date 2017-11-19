@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 using DOL.Database;
 using DOL.Events;
@@ -25,11 +24,11 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// AbstractArea extend this if you wish to implement e new custom area.
-	/// For examples see Area.Cricle, Area.Square
-	/// </summary>
-	public abstract class AbstractArea : IArea, ITranslatableObject
+    /// <summary>
+    /// AbstractArea extend this if you wish to implement e new custom area.
+    /// For examples see Area.Cricle, Area.Square
+    /// </summary>
+    public abstract class AbstractArea : IArea, ITranslatableObject
 	{
 		protected DBArea m_dbArea = null;
 		protected bool m_canBroadcast = false;

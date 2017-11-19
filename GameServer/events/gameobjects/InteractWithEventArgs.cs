@@ -30,7 +30,7 @@ namespace DOL.Events
 
 		public InteractWithEventArgs(GameObject target)
 		{
-			this.m_target = target;
+            m_target = target;
 		}
 
 		/// <summary>

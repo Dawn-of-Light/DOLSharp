@@ -18,10 +18,8 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using DOL.AI.Brain;
-using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
@@ -31,10 +29,10 @@ using log4net;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Base class for proc spell handler
-	/// </summary>
-	public abstract class BaseProcSpellHandler : SpellHandler
+    /// <summary>
+    /// Base class for proc spell handler
+    /// </summary>
+    public abstract class BaseProcSpellHandler : SpellHandler
 	{
 		/// <summary>
 		/// Defines a logger for this class.

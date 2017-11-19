@@ -18,17 +18,15 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Threading;
 using DOL.Database;
-using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Description rsume de GameLivingInventory.
-	/// </summary>
-	public abstract class GameLivingInventory : IGameInventory
+    /// <summary>
+    /// Description rsume de GameLivingInventory.
+    /// </summary>
+    public abstract class GameLivingInventory : IGameInventory
 	{
 		private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

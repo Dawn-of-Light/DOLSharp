@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Midgard Warrior Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Warrior, "Warrior", "Viking")]
+    /// <summary>
+    /// Midgard Warrior Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Warrior, "Warrior", "Viking")]
 	public class ClassWarrior : ClassViking
 	{
 		private static readonly string[] AutotrainableSkills = new[] { Specs.Axe, Specs.Hammer, Specs.Sword };

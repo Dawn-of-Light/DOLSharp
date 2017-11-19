@@ -19,17 +19,13 @@
 
 // Original code by Dinberg
 
-using System;
 using System.Collections.Generic;
-using System.Text;
-using DOL.GS;
-using DOL.GS.Spells;
 using DOL.AI.Brain;
 
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
+    /// <summary>
     /// This pet is purely aesthetic and can't be cast in RvR zones
     /// </summary>
     [SpellHandler("SummonNoveltyPet")]

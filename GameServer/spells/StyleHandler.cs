@@ -16,17 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
 using DOL.GS.PacketHandler.Client.v168;
 using DOL.GS.Styles;
 
 namespace DOL.GS.Spells
 {
-	[SpellHandlerAttribute("StyleHandler")]
+    [SpellHandler("StyleHandler")]
 	public class StyleHandler : SpellHandler
 	{
 		public StyleHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }

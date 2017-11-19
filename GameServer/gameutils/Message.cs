@@ -16,16 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// This class helps sending messages to other players
-	/// </summary>
-	public static class Message
+    /// <summary>
+    /// This class helps sending messages to other players
+    /// </summary>
+    public static class Message
 	{
 		/// <summary>
 		/// Sends a message to the chat window of players inside

@@ -17,23 +17,15 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS;
 using DOL.Database;
-using System.Collections;
-using DOL.GS.Spells;
-using log4net;
-using System.Reflection;
-using DOL.GS.Quests.Catacombs.Obelisks;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Midgard teleporter.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class MidgardTeleporter : GameTeleporter
+    /// <summary>
+    /// Midgard teleporter.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class MidgardTeleporter : GameTeleporter
 	{
 		/// <summary>
 		/// Player right-clicked the teleporter.

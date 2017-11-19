@@ -22,16 +22,14 @@ using System.IO;
 using System.Reflection;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.PacketHandler;
-using DOL.GS;
 using log4net;
 
 namespace DOL.GS.Scripts
 {
-	/// <summary>
-	/// Summary description for DefWebUIGenerator. This is a self contained script within the scripts assembly.
-	/// </summary>
-	public class WebUIGenerator
+    /// <summary>
+    /// Summary description for DefWebUIGenerator. This is a self contained script within the scripts assembly.
+    /// </summary>
+    public class WebUIGenerator
 	{
 		/// <summary>
 		/// Defines a logger for this class.

@@ -20,17 +20,15 @@
  * Last modified by Schaf on 10.12.2004 20:09
  */
 
-using System;
 
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// The Database Entry for an Outdoor Housing Item
-	/// </summary>
-	[DataTable(TableName = "DBOutdoorItem")]
+    /// <summary>
+    /// The Database Entry for an Outdoor Housing Item
+    /// </summary>
+    [DataTable(TableName = "DBOutdoorItem")]
 	public class DBHouseOutdoorItem : DataObject
 	{
 		private int m_housenumber;

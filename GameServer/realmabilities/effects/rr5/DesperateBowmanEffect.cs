@@ -1,15 +1,11 @@
-using System;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
-using DOL.GS.RealmAbilities;
-using DOL.Events;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Adrenaline Rush
-	/// </summary>
-	public class DesperateBowmanDisarmEffect : TimedEffect
+    /// <summary>
+    /// Adrenaline Rush
+    /// </summary>
+    public class DesperateBowmanDisarmEffect : TimedEffect
 	{
 		public DesperateBowmanDisarmEffect()
 			: base(15000)

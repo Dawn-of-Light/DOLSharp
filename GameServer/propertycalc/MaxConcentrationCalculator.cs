@@ -16,22 +16,19 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Reflection;
-using log4net;
 
 namespace DOL.GS.PropertyCalc
 {
-	/// <summary>
-	/// The Concentration point calculator
-	/// 
-	/// BuffBonusCategory1 unused
-	/// BuffBonusCategory2 unused
-	/// BuffBonusCategory3 unused
-	/// BuffBonusCategory4 unused
-	/// BuffBonusMultCategory1 unused
-	/// </summary>
-	[PropertyCalculator(eProperty.MaxConcentration)]
+    /// <summary>
+    /// The Concentration point calculator
+    /// 
+    /// BuffBonusCategory1 unused
+    /// BuffBonusCategory2 unused
+    /// BuffBonusCategory3 unused
+    /// BuffBonusCategory4 unused
+    /// BuffBonusMultCategory1 unused
+    /// </summary>
+    [PropertyCalculator(eProperty.MaxConcentration)]
 	public class MaxConcentrationCalculator : PropertyCalculator
 	{
 		public MaxConcentrationCalculator() {}

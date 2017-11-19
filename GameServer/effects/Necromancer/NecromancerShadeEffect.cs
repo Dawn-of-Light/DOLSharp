@@ -16,16 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Necromancer shade effect (grants immunity to all forms of
-	/// attack).
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class NecromancerShadeEffect : ShadeEffect
+    /// <summary>
+    /// Necromancer shade effect (grants immunity to all forms of
+    /// attack).
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class NecromancerShadeEffect : ShadeEffect
 	{
 		/// <summary>
 		/// Creates a new shade effect.

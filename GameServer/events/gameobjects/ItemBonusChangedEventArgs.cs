@@ -17,17 +17,15 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DOL.Events
 {
-	/// <summary>
-	/// Holds arguments for an item bonus change (for example when an
-	/// artifact gains a new bonus).
-	/// </summary>
-	/// <author>Aredhel</author>
-	class ItemBonusChangedEventArgs : EventArgs
+    /// <summary>
+    /// Holds arguments for an item bonus change (for example when an
+    /// artifact gains a new bonus).
+    /// </summary>
+    /// <author>Aredhel</author>
+    class ItemBonusChangedEventArgs : EventArgs
 	{
 		private int m_bonusType, m_bonusAmount;
 

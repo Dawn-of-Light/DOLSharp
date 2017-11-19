@@ -24,7 +24,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 	   "&path",
 	   ePrivLevel.GM,
 		"There are several path functions",

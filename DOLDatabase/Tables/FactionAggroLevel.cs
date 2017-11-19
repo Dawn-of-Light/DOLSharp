@@ -17,17 +17,15 @@
  *
  */
 
-using System;
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Aggro level of faction against character
-	/// </summary>
-	/// 
-	[DataTable(TableName = "FactionAggroLevel")]
+    /// <summary>
+    /// Aggro level of faction against character
+    /// </summary>
+    /// 
+    [DataTable(TableName = "FactionAggroLevel")]
 	public class DBFactionAggroLevel : DataObject
 	{
 		private string m_characterID;

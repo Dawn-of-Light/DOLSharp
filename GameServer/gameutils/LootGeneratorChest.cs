@@ -17,16 +17,15 @@
  *
  */
 
-using System;
 using DOL.Database;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// LootGeneratorChest
-	/// Adds money chests to a Mobs droppable loot based on a chance set in server properties
-	/// </summary>
-	public class LootGeneratorChest : LootGeneratorBase
+    /// <summary>
+    /// LootGeneratorChest
+    /// Adds money chests to a Mobs droppable loot based on a chance set in server properties
+    /// </summary>
+    public class LootGeneratorChest : LootGeneratorBase
 	{	
 		int SMALLCHEST_CHANCE = ServerProperties.Properties.BASE_SMALLCHEST_CHANCE;
 		int LARGECHEST_CHANCE = ServerProperties.Properties.BASE_LARGECHEST_CHANCE;

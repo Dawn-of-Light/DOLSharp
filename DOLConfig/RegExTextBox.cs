@@ -80,7 +80,7 @@ namespace RegExControls
                 string newText = base.Text.Substring(0, base.SelectionStart) + e.KeyChar.ToString() + base.Text.Substring(base.SelectionStart + base.SelectionLength);
                 if (newText != "")
                 {
-                    bool validateCheck = this.ValidateControl(newText);
+                    bool validateCheck = ValidateControl(newText);
                     if (validateCheck == false)
                     {
                         //Not allowed character, do not print it

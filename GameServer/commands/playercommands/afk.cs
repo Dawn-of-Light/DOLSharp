@@ -21,7 +21,7 @@ using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&afk",
 		ePrivLevel.Player,
 		"Toggle away from keyboard. You may optional set a message to display.", "/afk <text>")]

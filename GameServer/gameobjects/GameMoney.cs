@@ -16,17 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
-using DOL.GS;
-using DOL.Database;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Zusammenfassung für GameLoot.
-	/// </summary>
-	public class GameMoney: GameStaticItemTimed
+    /// <summary>
+    /// Zusammenfassung für GameLoot.
+    /// </summary>
+    public class GameMoney: GameStaticItemTimed
 	{
 		/// <summary>
 		/// The value of copper in this coinbag

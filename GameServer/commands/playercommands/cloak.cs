@@ -21,7 +21,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&cloak", //command to handle
+	[Cmd("&cloak", //command to handle
 		ePrivLevel.Player, //minimum privelege level
 	   "Show / hide your cloak.", //command description
 	   "Usage: /cloak [on|off].", //usage

@@ -16,18 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.Database;
 
 namespace DOL.GS.Quests.Catacombs.Obelisks
 {
-	/// <summary>
-	/// Discovery credit for the Inconnu Crypt.
-	/// </summary>
-	/// <author>Aredhel</author>
-	class InconnuCrypt : ObeliskCredit
+    /// <summary>
+    /// Discovery credit for the Inconnu Crypt.
+    /// </summary>
+    /// <author>Aredhel</author>
+    class InconnuCrypt : ObeliskCredit
 	{
 		public InconnuCrypt(GamePlayer questingPlayer)
 			: base(questingPlayer) { }

@@ -73,13 +73,13 @@ namespace DOL.GS
 
 		public void SaveAggroToFaction(string charID)
 		{
-			DBFactionAggroLevel dbfactionAggroLevel = GameServer.Database.SelectObjects<DBFactionAggroLevel>("`CharacterID` = @CharacterID AND `FactionID` = @FactionID", new[] { new QueryParameter("@CharacterID", charID), new QueryParameter("@FactionID", this.ID) }).FirstOrDefault();
+			DBFactionAggroLevel dbfactionAggroLevel = GameServer.Database.SelectObjects<DBFactionAggroLevel>("`CharacterID` = @CharacterID AND `FactionID` = @FactionID", new[] { new QueryParameter("@CharacterID", charID), new QueryParameter("@FactionID", ID) }).FirstOrDefault();
 			if (dbfactionAggroLevel == null)
 			{
 				dbfactionAggroLevel = new DBFactionAggroLevel();
 				dbfactionAggroLevel.AggroLevel = (int)m_playerxFaction[charID];
 				dbfactionAggroLevel.CharacterID = charID;
-				dbfactionAggroLevel.FactionID = this.ID;
+				dbfactionAggroLevel.FactionID = ID;
 				GameServer.Database.AddObject(dbfactionAggroLevel);
 			}
 			else
@@ -218,7 +218,7 @@ namespace DOL.GS
 		/// <param name="killer"></param>
 		public void KillMember(GamePlayer killer)
 		{
-			this.ChangeAggroLevel(killer, INCREASE_AGGRO_AMOUNT);
+            ChangeAggroLevel(killer, INCREASE_AGGRO_AMOUNT);
 			foreach (Faction faction in m_friendFactions)
 			{
 				faction.ChangeAggroLevel(killer, INCREASE_AGGRO_AMOUNT);
@@ -269,7 +269,7 @@ namespace DOL.GS
 				// save the change
 				m_playerxFaction[player.ObjectId] = newAggro;
 				// tell the player
-				string msg = "Your relationship with " + this.Name + " has ";
+				string msg = "Your relationship with " + Name + " has ";
 				if (amount > 0)
 				{
 					msg += "decreased.";

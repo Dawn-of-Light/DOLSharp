@@ -19,15 +19,14 @@
 
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Allow to handle Custom Params Valuable Interface Member as typed generic imported from string collections.
-	/// </summary>
-	public static class CustomParamsExtensions
+    /// <summary>
+    /// Allow to handle Custom Params Valuable Interface Member as typed generic imported from string collections.
+    /// </summary>
+    public static class CustomParamsExtensions
 	{
 		#region getters
 		/// <summary>

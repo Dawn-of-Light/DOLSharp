@@ -1,18 +1,15 @@
-using System;
-using System.Collections;
 using System.Reflection;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
-using DOL.Events;
 using log4net;
 using DOL.Language;
 
 namespace DOL.GS.SkillHandler
 {
-	/// <summary>
-	/// Handler for Triple Wield clicks
-	/// </summary>
-	[SkillHandler(Abilities.Triple_Wield)]
+    /// <summary>
+    /// Handler for Triple Wield clicks
+    /// </summary>
+    [SkillHandler(Abilities.Triple_Wield)]
 	public class TripleWieldAbilityHandler : IAbilityActionHandler
 	{
 		/// <summary>

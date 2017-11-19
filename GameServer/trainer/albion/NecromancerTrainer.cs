@@ -17,15 +17,14 @@
  *
  */
 using System;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Trainer
 {
-	/// <summary>
-	/// Necromancer trainer.
-	/// </summary>
-	/// <author>Aredhel</author>
-	[NPCGuildScript("Necromancer Trainer", eRealm.Albion)]
+    /// <summary>
+    /// Necromancer trainer.
+    /// </summary>
+    /// <author>Aredhel</author>
+    [NPCGuildScript("Necromancer Trainer", eRealm.Albion)]
 	public class NecromancerTrainer : GameTrainer
 	{
 		public override eCharacterClass TrainedClass

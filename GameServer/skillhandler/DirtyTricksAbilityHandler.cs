@@ -31,7 +31,7 @@ namespace DOL.GS.SkillHandler
 	/// <summary>
 	/// Handler for Sprint Ability clicks
 	/// </summary>
-	[SkillHandlerAttribute(Abilities.DirtyTricks)]
+	[SkillHandler(Abilities.DirtyTricks)]
 	public class DirtyTricksAbilityHandler : IAbilityActionHandler
 	{
 		/// <summary>

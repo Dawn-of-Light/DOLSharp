@@ -16,16 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.Database;
-using DOL.GS;
 
 namespace DOL.GS.ServerRules
 {
-	/// <summary>
-	/// Denotes a class as a jump point handler
-	/// </summary>
-	public interface IJumpPointHandler
+    /// <summary>
+    /// Denotes a class as a jump point handler
+    /// </summary>
+    public interface IJumpPointHandler
 	{
 		/// <summary>
 		/// Decides whether player can jump to the target point.

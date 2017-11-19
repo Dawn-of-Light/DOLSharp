@@ -16,9 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.GS.Effects;
 using DOL.Database;
 using DOL.Language;
@@ -26,11 +23,11 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// The spell used by classic teleporters.
-	/// </summary>
-	/// <author>Aredhel</author>
-	[SpellHandlerAttribute("UniPortal")]
+    /// <summary>
+    /// The spell used by classic teleporters.
+    /// </summary>
+    /// <author>Aredhel</author>
+    [SpellHandler("UniPortal")]
 	public class UniPortal : SpellHandler
 	{
 		private Teleport m_destination;

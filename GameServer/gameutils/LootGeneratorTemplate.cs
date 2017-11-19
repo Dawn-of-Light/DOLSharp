@@ -22,24 +22,21 @@
  * - Roach's modifications to add loottemplate base mobdrops
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using DOL.Database;
 using DOL.AI.Brain;
-using DOL.GS.Utils;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// TemplateLootGenerator
-	/// This implementation uses LootTemplates to relate loots to a specific mob type.
-	/// Used DB Tables:
-	///				MobxLootTemplate  (Relation between Mob and loottemplate
-	///				LootTemplate	(loottemplate containing possible loot items)
-	/// </summary>
-	public class LootGeneratorTemplate : LootGeneratorBase
+    /// <summary>
+    /// TemplateLootGenerator
+    /// This implementation uses LootTemplates to relate loots to a specific mob type.
+    /// Used DB Tables:
+    ///				MobxLootTemplate  (Relation between Mob and loottemplate
+    ///				LootTemplate	(loottemplate containing possible loot items)
+    /// </summary>
+    public class LootGeneratorTemplate : LootGeneratorBase
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

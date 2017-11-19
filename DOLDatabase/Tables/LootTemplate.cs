@@ -24,15 +24,14 @@
  */
 
 using System;
-using DOL.Database ;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Database Storage of Tasks
-	/// </summary>
-	[DataTable(TableName="LootTemplate")]
+    /// <summary>
+    /// Database Storage of Tasks
+    /// </summary>
+    [DataTable(TableName="LootTemplate")]
 	public class LootTemplate : DataObject
 	{
 		protected string	m_TemplateName = string.Empty;

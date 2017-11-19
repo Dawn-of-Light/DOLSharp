@@ -16,13 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.Database;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Keeps
 {
-	public class GameKeepBanner : GameStaticItem , IKeepItem
+    public class GameKeepBanner : GameStaticItem , IKeepItem
 	{
 
 		public enum eBannerType : int 
@@ -89,7 +87,7 @@ namespace DOL.GS.Keeps
 			{
 				if (Component.AbstractKeep != null)
 				{
-					Component.AbstractKeep.Banners.Remove(this.ObjectID);
+					Component.AbstractKeep.Banners.Remove(ObjectID);
 				}
 
 				Component.Delete();
@@ -105,7 +103,7 @@ namespace DOL.GS.Keeps
 		public override void LoadFromDatabase(DataObject obj)
 		{
 			base.LoadFromDatabase(obj);
-			foreach (AbstractArea area in this.CurrentAreas)
+			foreach (AbstractArea area in CurrentAreas)
 			{
 				if (area is KeepArea)
 				{
@@ -113,7 +111,7 @@ namespace DOL.GS.Keeps
 					Component = new GameKeepComponent();
 					Component.AbstractKeep = keep;
 					Component.AbstractKeep.Banners.Add(obj.ObjectId, this);
-					if (this.Model == AlbionGuildModel || this.Model == MidgardGuildModel || this.Model == HiberniaGuildModel)
+					if (Model == AlbionGuildModel || Model == MidgardGuildModel || Model == HiberniaGuildModel)
 						BannerType = eBannerType.Guild;
 					else BannerType = eBannerType.Realm;
 					if (BannerType == eBannerType.Guild && Component.AbstractKeep.Guild != null)
@@ -126,11 +124,11 @@ namespace DOL.GS.Keeps
 
 		public override void DeleteFromDatabase()
 		{
-			foreach (AbstractArea area in this.CurrentAreas)
+			foreach (AbstractArea area in CurrentAreas)
 			{
 				if (area is KeepArea)
 				{
-					Component.AbstractKeep.Banners.Remove(this.InternalID);
+					Component.AbstractKeep.Banners.Remove(InternalID);
 					break;
 				}
 			}
@@ -151,15 +149,15 @@ namespace DOL.GS.Keeps
 				{
 					ChangeGuild();
 					Z += 1500;
-					this.AddToWorld();
+                    AddToWorld();
 				}
 			}
 			else
 			{
 				ChangeRealm();
-				Z += 1000;	// this works around an issue where all banners are at keep level instead of on top
-							// with a z value > height of the keep the banners show correctly - tolakram
-				this.AddToWorld();
+				Z += 1000;  // this works around an issue where all banners are at keep level instead of on top
+                            // with a z value > height of the keep the banners show correctly - tolakram
+                AddToWorld();
 			}
 		}
 
@@ -170,37 +168,37 @@ namespace DOL.GS.Keeps
 			if (BannerType == eBannerType.Guild)
 				zAdd = 1500;
 
-			this.MoveTo(this.CurrentRegionID, this.X, this.Y, this.Z + zAdd, this.Heading);
+            MoveTo(CurrentRegionID, X, Y, Z + zAdd, Heading);
 		}
 
 		public void ChangeRealm()
 		{
-			this.Realm = this.Component.AbstractKeep.Realm;
+            Realm = Component.AbstractKeep.Realm;
 
-			switch ((eRealm)this.Realm)
+			switch ((eRealm)Realm)
 			{
 				case eRealm.None:
 					{
-						this.Model = NoRealmModel;
+                        Model = NoRealmModel;
 						break;
 					}
 				case eRealm.Albion:
 					{
-						this.Model = AlbionModel;
+                        Model = AlbionModel;
 						break;
 					}
 				case eRealm.Midgard:
 					{
-						this.Model = MidgardModel;
+                        Model = MidgardModel;
 						break;
 					}
 				case eRealm.Hibernia:
 					{
-						this.Model = HiberniaModel;
+                        Model = HiberniaModel;
 						break;
 					}
 			}
-			this.Name = GlobalConstants.RealmToName((eRealm)this.Component.AbstractKeep.Realm) + " Banner";
+            Name = GlobalConstants.RealmToName((eRealm)Component.AbstractKeep.Realm) + " Banner";
 		}
 
 		/// <summary>
@@ -210,27 +208,27 @@ namespace DOL.GS.Keeps
 		{
 			if (BannerType != eBannerType.Guild)
 				return;
-			Guild guild = this.Component.AbstractKeep.Guild;
+			Guild guild = Component.AbstractKeep.Guild;
 
 			int emblem = 0;
 			if (guild != null)
 			{
 				emblem = guild.Emblem;
-				this.AddToWorld();
+                AddToWorld();
 			}
-			else this.RemoveFromWorld();
+			else RemoveFromWorld();
 
 			ushort model = AlbionGuildModel;
-			switch (this.Component.AbstractKeep.Realm)
+			switch (Component.AbstractKeep.Realm)
 			{
 				case eRealm.None: model = AlbionGuildModel; break;
 				case eRealm.Albion: model = AlbionGuildModel; break;
 				case eRealm.Midgard: model = MidgardGuildModel; break;
 				case eRealm.Hibernia: model = HiberniaGuildModel; break;
 			}
-			this.Model = model;
-			this.Emblem = emblem;
-			this.Name = GlobalConstants.RealmToName(this.Component.AbstractKeep.Realm) + " Guild Banner";
+            Model = model;
+            Emblem = emblem;
+            Name = GlobalConstants.RealmToName(Component.AbstractKeep.Realm) + " Guild Banner";
 		}
 
 	}

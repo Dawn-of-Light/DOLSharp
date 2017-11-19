@@ -16,17 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using log4net;
 using DOL.Database;
 
 namespace DOL.GS.DatabaseUpdate
 {
-	/// <summary>
-	/// Checks and updates the new SalvageYields table
-	/// </summary>
-	[DatabaseUpdate]
+    /// <summary>
+    /// Checks and updates the new SalvageYields table
+    /// </summary>
+    [DatabaseUpdate]
 	public class SalvageYieldsUpdate : IDatabaseUpdater
 	{
 		/// <summary>

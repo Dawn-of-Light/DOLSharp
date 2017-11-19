@@ -16,16 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Factions object for database
-	/// </summary>
-	[DataTable(TableName="LinkedFaction")]
+    /// <summary>
+    /// Factions object for database
+    /// </summary>
+    [DataTable(TableName="LinkedFaction")]
 	public class DBLinkedFaction : DataObject
 	{
 		private int	m_factionID;

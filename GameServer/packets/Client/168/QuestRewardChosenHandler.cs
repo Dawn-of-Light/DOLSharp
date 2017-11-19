@@ -25,7 +25,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	/// Handler for quest reward dialog response.
 	/// </summary>
 	/// <author>Aredhel</author>
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.QuestRewardChosen, "Quest Reward Choosing Handler", eClientStatus.PlayerInGame)]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.QuestRewardChosen, "Quest Reward Choosing Handler", eClientStatus.PlayerInGame)]
 	public class QuestRewardChosenHandler : IPacketHandler
 	{
 		#region IPacketHandler Members

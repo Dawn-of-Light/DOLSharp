@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// The salvage table
-	/// </summary>
-	[DataTable(TableName="SalvageYield")]
+    /// <summary>
+    /// The salvage table
+    /// </summary>
+    [DataTable(TableName="SalvageYield")]
 	public class SalvageYield : DataObject
 	{
 		public const string LEGACY_SALVAGE_ID = "legacy_salvage_donotdelete";

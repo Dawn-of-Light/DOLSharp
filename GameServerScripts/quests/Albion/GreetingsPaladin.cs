@@ -20,15 +20,10 @@ using System;
 using DOL.Database;
 using DOL.Events;
 using DOL.Language;
-using System;
-using System.Reflection;
-using DOL.AI.Brain;
-using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Quests.Albion
 {
-	public class GreetingsPaladin : RewardQuest
+    public class GreetingsPaladin : RewardQuest
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -436,12 +431,12 @@ namespace DOL.GS.Quests.Albion
 		{
 			// We're not going to offer this quest if the player is already on it...
 
-			if (player.IsDoingQuest(this.GetType()) != null)
+			if (player.IsDoingQuest(GetType()) != null)
 				return false;
 
 			// ...nor will we let him do it again.
 
-			if (player.HasFinishedQuest(this.GetType()) > 0)
+			if (player.HasFinishedQuest(GetType()) > 0)
 				return false;
 
 			// This checks below are only performed is player isn't doing quest already

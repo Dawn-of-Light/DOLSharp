@@ -18,18 +18,16 @@
  */
 using System;
 using System.Collections.Generic;
-using DOL.Events;
-using DOL.GS.PacketHandler;
 using DOL.Database;
 
 namespace DOL.GS
-{		
-	/// <summary>
-	/// Collection of basic area shapes
-	/// Circle
-	/// Square
-	/// </summary>
-	public class Area 
+{
+    /// <summary>
+    /// Collection of basic area shapes
+    /// Circle
+    /// Square
+    /// </summary>
+    public class Area 
 	{
 		public class Square : AbstractArea
 		{

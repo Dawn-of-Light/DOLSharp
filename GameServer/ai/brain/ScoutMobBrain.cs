@@ -17,8 +17,6 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.GS;
 using System.Collections;
 using DOL.Events;
@@ -27,13 +25,13 @@ using System.Reflection;
 
 namespace DOL.AI.Brain
 {
-	/// <summary>
-	/// Brain for scout mobs. Scout mobs are NPCs that will not aggro
-	/// on a player of their own accord, instead, they'll go searching
-	/// for adds around the area and make those aggro on a player.
-	/// </summary>
-	/// <author>Aredhel</author>
-	class ScoutMobBrain : StandardMobBrain
+    /// <summary>
+    /// Brain for scout mobs. Scout mobs are NPCs that will not aggro
+    /// on a player of their own accord, instead, they'll go searching
+    /// for adds around the area and make those aggro on a player.
+    /// </summary>
+    /// <author>Aredhel</author>
+    class ScoutMobBrain : StandardMobBrain
 	{
 		/// <summary>
 		/// Defines a logger for this class.

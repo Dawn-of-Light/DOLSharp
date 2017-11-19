@@ -16,11 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		"&whisper",
 		new string[] {"&whis"}, //Important, don't remove this alias, its used for communication with mobs!
 		ePrivLevel.Player,

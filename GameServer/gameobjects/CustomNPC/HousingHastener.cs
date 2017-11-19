@@ -16,21 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections;
 using DOL.Database;
 using DOL.Language;
-using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
-using DOL.GS.Spells;
-using DOL.GS.Keeps;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Represents an in-game housing hastener NPC
-	/// </summary>
-	public class GameHousingHastener : GameMerchant
+    /// <summary>
+    /// Represents an in-game housing hastener NPC
+    /// </summary>
+    public class GameHousingHastener : GameMerchant
 	{
 		public override eFlags Flags
 		{

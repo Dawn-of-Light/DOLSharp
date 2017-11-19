@@ -16,16 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using System.Collections.Generic;
-
-using DOL.GS;
 using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
-    [SpellHandlerAttribute("MetalGuard")]
+    [SpellHandler("MetalGuard")]
     public class MetalGuardSpellHandler : ArmorAbsorptionBuff
     {
         public override IList<GameLiving> SelectTargets(GameObject castTarget)

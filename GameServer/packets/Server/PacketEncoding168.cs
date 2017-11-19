@@ -16,17 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Reflection;
 using log4net;
 
 namespace DOL.GS.PacketHandler
 {
 
-	/// <summary>
-	/// Handles the encoding and decoding of Mythic packets for 1.68
-	/// </summary>
-	public class PacketEncoding168 : IPacketEncoding
+    /// <summary>
+    /// Handles the encoding and decoding of Mythic packets for 1.68
+    /// </summary>
+    public class PacketEncoding168 : IPacketEncoding
 	{
 		/// <summary>
 		/// Defines a logger for this class.

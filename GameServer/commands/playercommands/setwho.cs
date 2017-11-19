@@ -1,9 +1,6 @@
-using System;
-using DOL.GS.PacketHandler;
-
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		"&setwho",
 		ePrivLevel.Player,
 		"Set your class or trade for /who output",
