@@ -110,7 +110,7 @@ using DOL.AI.Brain;
 	#region defineNPCs
 	GameNPC[] npcs;
 	
-			npcs = WorldMgr.GetNPCsByName("Lycla",(eRealm) 2);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Lycla",(eRealm) 2);
 			if (npcs.Length == 0)
 			{			
 				Lycla = new DOL.GS.GameNPC();
@@ -152,7 +152,7 @@ using DOL.AI.Brain;
 				Lycla = npcs[0];
 			}
 		
-			npcs = WorldMgr.GetNPCsByName("Amora",(eRealm) 2);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Amora",(eRealm) 2);
 			if (npcs.Length == 0)
 			{			
 				Amora = new DOL.GS.GameNPC();
@@ -194,7 +194,7 @@ using DOL.AI.Brain;
 				Amora = npcs[0];
 			}
 		
-			npcs = WorldMgr.GetNPCsByName("Kari",(eRealm) 2);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Kari",(eRealm) 2);
 			if (npcs.Length == 0)
 			{			
 				Kari = new GameHealer();

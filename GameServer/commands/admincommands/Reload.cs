@@ -211,7 +211,7 @@ namespace DOL.GS.Commands
 
 			int count = 0;
 
-			foreach (GameNPC mob in WorldMgr.GetNPCsFromRegion(region))
+			foreach (GameNPC mob in WorldMgr.GetobjectsFromRegion<GameNPC>(region))
 			{
 				if (!mob.LoadedFromScript)
 				{
@@ -295,7 +295,7 @@ namespace DOL.GS.Commands
 				return;
 			}
 
-			foreach (GameStaticItem staticItem in WorldMgr.GetStaticItemFromRegion(region))
+			foreach (GameStaticItem staticItem in WorldMgr.GetobjectsFromRegion<GameStaticItem>(region))
 			{
 				if (!staticItem.LoadedFromScript)
 				{

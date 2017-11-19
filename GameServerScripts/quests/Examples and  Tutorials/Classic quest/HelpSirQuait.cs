@@ -108,7 +108,7 @@ using DOL.AI.Brain;
 	    #region defineNPCs
 	    GameNPC[] npcs;
 	
-		npcs = WorldMgr.GetNPCsByName("Sir Quait",(eRealm) 1);
+		npcs = WorldMgr.GetObjectsByName<GameNPC>("Sir Quait",(eRealm) 1);
 		if (npcs.Length == 0)
 		{			
 			SirQuait = new DOL.GS.GameNPC();
@@ -150,7 +150,7 @@ using DOL.AI.Brain;
 			SirQuait = npcs[0];
 		}
 	
-		npcs = WorldMgr.GetNPCsByName("Evil Thief of the Shadowclan",(eRealm) 0);
+		npcs = WorldMgr.GetObjectsByName<GameNPC>("Evil Thief of the Shadowclan",(eRealm) 0);
 		if (npcs.Length == 0)
 		{			
 			EvilThiefoftheShadowclan = new DOL.GS.GameNPC();

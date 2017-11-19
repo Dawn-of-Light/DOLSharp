@@ -197,7 +197,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineNPCS
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.WhenGoodBrowniesGoBad.ScriptLoaded.Text1"), eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.WhenGoodBrowniesGoBad.ScriptLoaded.Text1"), eRealm.Albion);
 
 			if (npcs.Length == 0)
 			{

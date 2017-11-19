@@ -111,7 +111,7 @@ namespace DOL.GS.Quests.Midgard
             #region defineNPCs
             GameNPC[] npcs;
 
-            npcs = WorldMgr.GetNPCsByName("Charles", (eRealm)2);
+            npcs = WorldMgr.GetObjectsByName<GameNPC>("Charles", (eRealm)2);
             if (npcs.Length == 0)
             {
                 Charles = new DOL.GS.GameNPC();

@@ -104,7 +104,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region NPC Declarations
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Lidmann Halsey", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Lidmann Halsey", eRealm.Albion);
 
 			if (npcs.Length == 0)
 			{
@@ -133,7 +133,7 @@ namespace DOL.GS.Quests.Albion
 				Lidmann = npcs[0];
 			// end npc
 
-			npcs = WorldMgr.GetNPCsByName("Cailleach Uragaig", eRealm.None);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Cailleach Uragaig", eRealm.None);
 
 			if (npcs.Length == 0)
 			{

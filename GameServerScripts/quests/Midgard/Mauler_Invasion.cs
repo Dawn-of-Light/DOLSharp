@@ -107,7 +107,7 @@ using log4net;
 	#region defineNPCs
 	GameNPC[] npcs;
 	
-            npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.NPCKreimhilde"), (eRealm)2);
+            npcs = WorldMgr.GetObjectsByName<GameNPC>(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.NPCKreimhilde"), (eRealm)2);
 
 			if (npcs.Length == 0)
 			{			

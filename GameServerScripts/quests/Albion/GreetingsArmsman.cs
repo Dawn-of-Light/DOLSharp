@@ -271,7 +271,7 @@ namespace DOL.GS.Quests.Albion
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Captain Kinzee", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Captain Kinzee", eRealm.Albion);
 
             if (npcs == null || npcs.Length == 0)
             {

@@ -112,7 +112,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			#region NPC Declarations
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Revelin", eRealm.Hibernia);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Revelin", eRealm.Hibernia);
 
 			if (npcs.Length == 0)
 			{
@@ -142,7 +142,7 @@ namespace DOL.GS.Quests.Hibernia
 				Revelin = npcs[0];
 			// end npc
 
-			npcs = WorldMgr.GetNPCsByName("Cailean", eRealm.None);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Cailean", eRealm.None);
 
 			if (npcs.Length == 0)
 			{

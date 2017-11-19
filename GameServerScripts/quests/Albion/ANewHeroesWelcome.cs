@@ -140,7 +140,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineNPCS
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.ANewHeroesWelcome.ScriptLoaded.Text1"), eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.ANewHeroesWelcome.ScriptLoaded.Text1"), eRealm.Albion);
 
 			/* Whops, if the npcs array length is 0 then no npc exists in
 			 * this users Mob Database, so we simply create one ;-)
@@ -187,7 +187,7 @@ namespace DOL.GS.Quests.Albion
 				MasterClaistan = npcs[0];
 
 			//Pompin The Crier
-			npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.ANewHeroesWelcome.ScriptLoaded.Text2"), eRealm.Albion);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "Alb.ANewHeroesWelcome.ScriptLoaded.Text2"), eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				PompinTheCrier = new GameNPC();

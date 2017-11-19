@@ -110,7 +110,7 @@ using DOL.AI.Brain;
 	#region defineNPCs
 	GameNPC[] npcs;
 	
-			npcs = WorldMgr.GetNPCsByName("Ambient Rat Statua",(eRealm) 0);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Ambient Rat Statua",(eRealm) 0);
 			if (npcs.Length == 0)
 			{			
 				AmbientRatStatua = new DOL.GS.GameNPC();
@@ -151,7 +151,7 @@ using DOL.AI.Brain;
 				AmbientRatStatua = npcs[0];
 			}
 		
-			npcs = WorldMgr.GetNPCsByName("Ballach",(eRealm) 2);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Ballach",(eRealm) 2);
 			if (npcs.Length == 0)
 			{			
 				Ballach = new DOL.GS.GameNPC();

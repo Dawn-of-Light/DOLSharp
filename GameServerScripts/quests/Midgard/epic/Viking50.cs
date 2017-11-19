@@ -130,7 +130,7 @@ namespace DOL.GS.Quests.Midgard
 
 			#region defineNPCs
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Lynnleigh", eRealm.Midgard);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Lynnleigh", eRealm.Midgard);
 
 			if (npcs.Length == 0)
 			{
@@ -157,7 +157,7 @@ namespace DOL.GS.Quests.Midgard
 			else
 				Lynnleigh = npcs[0];
 			// end npc
-			npcs = WorldMgr.GetNPCsByName("Elizabeth", eRealm.Midgard);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Elizabeth", eRealm.Midgard);
 
 			if (npcs.Length == 0)
 			{
@@ -186,7 +186,7 @@ namespace DOL.GS.Quests.Midgard
 				Elizabeth = npcs[0];
 			// end npc
 
-			npcs = WorldMgr.GetNPCsByName("Ydenia of Seithkona", eRealm.None);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Ydenia of Seithkona", eRealm.None);
 
 			if (npcs.Length == 0)
 			{

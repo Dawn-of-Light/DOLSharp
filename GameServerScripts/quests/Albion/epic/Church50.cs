@@ -94,7 +94,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineNPCs
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Roben Fraomar", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Roben Fraomar", eRealm.Albion);
 
 			if (npcs.Length == 0)
 			{
@@ -121,7 +121,7 @@ namespace DOL.GS.Quests.Albion
 				Roben = npcs[0];
 			// end npc
 
-			npcs = WorldMgr.GetNPCsByName("Sister Blythe", eRealm.None);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Sister Blythe", eRealm.None);
 			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)

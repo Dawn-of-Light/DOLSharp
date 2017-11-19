@@ -141,7 +141,7 @@ namespace DOL.GS.Quests.Albion
 
 			masterFrederick = GetMasterFrederick();
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Lady Felin", eRealm.None);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Lady Felin", eRealm.None);
 			if (npcs.Length == 0)
 			{
 				//if (Log.IsWarnEnabled) Log.Warn("Could not find Lady Felin, creating her ...");

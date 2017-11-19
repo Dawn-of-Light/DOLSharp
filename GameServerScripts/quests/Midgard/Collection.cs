@@ -150,7 +150,7 @@ namespace DOL.GS.Quests.Midgard
 			GameNPC[] npcs = null;
 			for (int i = 0; i < general.Length; i++)
 			{
-				npcs = WorldMgr.GetNPCsByName(generalNames[i], eRealm.None);
+				npcs = WorldMgr.GetObjectsByName<GameNPC>(generalNames[i], eRealm.None);
 				if (npcs.Length > 0)
 					general[i] = npcs[0] as GameNPC;
 				else

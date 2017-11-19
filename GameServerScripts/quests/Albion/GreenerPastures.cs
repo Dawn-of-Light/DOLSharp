@@ -139,7 +139,7 @@ namespace DOL.GS.Quests.Albion
 			
 			#region defineNPCS
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Farmer Asma", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Farmer Asma", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				farmerAsma = new GameNPC();

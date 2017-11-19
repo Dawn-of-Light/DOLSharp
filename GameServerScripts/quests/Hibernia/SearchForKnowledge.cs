@@ -153,7 +153,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			#region defineNPCS
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Blercyn", eRealm.Hibernia);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Blercyn", eRealm.Hibernia);
 
 			/* Whops, if the npcs array length is 0 then no npc exists in
 			 * this users Mob Database, so we simply create one ;-)
@@ -196,7 +196,7 @@ namespace DOL.GS.Quests.Hibernia
 				Blercyn = npcs[0];
 
 			//Pompin The Crier
-			npcs = WorldMgr.GetNPCsByName("Epona", eRealm.Hibernia);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Epona", eRealm.Hibernia);
 			if (npcs.Length == 0)
 			{
 				Epona = new GameNPC();

@@ -106,7 +106,7 @@ using DOL.AI.Brain;
 	#region defineNPCs
 	GameNPC[] npcs;
 	
-			npcs = WorldMgr.GetNPCsByName("Helen",(eRealm) 2);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Helen",(eRealm) 2);
 			if (npcs.Length == 0)
 			{			
 				Helen = new DOL.GS.GameNPC();

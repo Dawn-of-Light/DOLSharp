@@ -87,21 +87,21 @@ namespace DOL.GS.Quests.Atlantis
 					{
 						case eRealm.Albion:
 							title = "Scholar";
-							npcs = WorldMgr.GetNPCsByName(String.Format("{0} {1}", title, scholar), realm);
+							npcs = WorldMgr.GetObjectsByName<GameNPC>(String.Format("{0} {1}", title, scholar), realm);
 							break;
 						case eRealm.Midgard:
 							title = "Loremaster";
-							npcs = WorldMgr.GetNPCsByName(String.Format("{0} {1}", title, scholar), realm);
+							npcs = WorldMgr.GetObjectsByName<GameNPC>(String.Format("{0} {1}", title, scholar), realm);
 
 							if (npcs.Length == 0)
 							{
 								title = "Loremistress";
-								npcs = WorldMgr.GetNPCsByName(String.Format("{0} {1}", title, scholar), realm);
+								npcs = WorldMgr.GetObjectsByName<GameNPC>(String.Format("{0} {1}", title, scholar), realm);
 							}
 							break;
 						case eRealm.Hibernia:
 							title = "Sage";
-							npcs = WorldMgr.GetNPCsByName(String.Format("{0} {1}", title, scholar), realm);
+							npcs = WorldMgr.GetObjectsByName<GameNPC>(String.Format("{0} {1}", title, scholar), realm);
 							break;
 						default:
 							title = "<unknown title>";

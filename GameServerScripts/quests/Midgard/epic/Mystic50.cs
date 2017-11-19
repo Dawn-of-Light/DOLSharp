@@ -117,7 +117,7 @@ namespace DOL.GS.Quests.Midgard
 
 			#region defineNPCs
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Danica", eRealm.Midgard);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Danica", eRealm.Midgard);
 
 			if (npcs.Length == 0)
 			{
@@ -145,7 +145,7 @@ namespace DOL.GS.Quests.Midgard
 				Danica = npcs[0];
 			// end npc
 
-			npcs = WorldMgr.GetNPCsByName("Kelic", eRealm.None);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Kelic", eRealm.None);
 			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)

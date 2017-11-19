@@ -113,7 +113,7 @@ namespace DOL.GS.Quests.Midgard
 			#region defineNPCs
 			GameNPC[] npcs;
 
-			npcs = WorldMgr.GetNPCsByName("Torold Sterkkriger", (eRealm)2);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Torold Sterkkriger", (eRealm)2);
 			if (npcs.Length == 0)
 			{
 				if (!WorldMgr.GetRegion(151).IsDisabled)
@@ -158,7 +158,7 @@ namespace DOL.GS.Quests.Midgard
 				ToroldSterkkriger = npcs[0];
 			}
 
-			npcs = WorldMgr.GetNPCsByName("Jorund Bruttstein", (eRealm)2);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Jorund Bruttstein", (eRealm)2);
 			if (npcs.Length == 0)
 			{
 				if (!WorldMgr.GetRegion(151).IsDisabled)

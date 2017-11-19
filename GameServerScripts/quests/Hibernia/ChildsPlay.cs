@@ -111,7 +111,7 @@ namespace DOL.GS.Quests.Hibernia
             #region defineNPCs
             GameNPC[] npcs;
 
-            npcs = WorldMgr.GetNPCsByName("Charles", (eRealm)3);
+            npcs = WorldMgr.GetObjectsByName<GameNPC>("Charles", (eRealm)3);
             if (npcs.Length == 0)
             {
                 Charles = new DOL.GS.GameNPC();
