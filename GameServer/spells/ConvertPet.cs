@@ -16,18 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Based on HealSpellHandler.cs
-	/// Spell calculates a percentage of the caster's health.
-	/// Heals target for the full amount, Caster loses half that amount in health.
-	/// </summary>
-	[SpellHandlerAttribute("PetConversion")]
+    /// <summary>
+    /// Based on HealSpellHandler.cs
+    /// Spell calculates a percentage of the caster's health.
+    /// Heals target for the full amount, Caster loses half that amount in health.
+    /// </summary>
+    [SpellHandler("PetConversion")]
 	public class PetConversionSpellHandler : SpellHandler
 	{
 		// constructor

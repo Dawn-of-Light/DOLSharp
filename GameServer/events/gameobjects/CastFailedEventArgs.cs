@@ -16,20 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.Events;
 using DOL.GS.Spells;
 
 namespace DOL.Events
 {
-	/// <summary>
-	/// Arguments for a cast failed event, stating the reason
-	/// why a particular spell cast failed.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class CastFailedEventArgs : CastingEventArgs
+    /// <summary>
+    /// Arguments for a cast failed event, stating the reason
+    /// why a particular spell cast failed.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class CastFailedEventArgs : CastingEventArgs
 	{
 		public enum Reasons
 		{
@@ -46,7 +42,7 @@ namespace DOL.Events
 		public CastFailedEventArgs(ISpellHandler handler, Reasons reason) 
 			: base(handler)
 		{
-			this.m_reason = reason;
+            m_reason = reason;
 		}
 
 		private Reasons m_reason;

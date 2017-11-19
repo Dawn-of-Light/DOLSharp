@@ -17,20 +17,19 @@
  *
  */
 
-using System;
 
 using DOL.Events;
 using DOL.Language;
 
 namespace DOL.GS
-{	
-	/// <summary>
-	/// Interface for areas within game, extend this or AbstractArea if you need to define a new area shape that isn't already defined.
-	/// Defined ones:
-	/// - Area.Cricle
-	/// - Area.Square
-	/// </summary>
-	public interface IArea : ITranslatableObject
+{
+    /// <summary>
+    /// Interface for areas within game, extend this or AbstractArea if you need to define a new area shape that isn't already defined.
+    /// Defined ones:
+    /// - Area.Cricle
+    /// - Area.Square
+    /// </summary>
+    public interface IArea : ITranslatableObject
 	{					
 		/// <summary>
 		/// Returns the ID of this zone

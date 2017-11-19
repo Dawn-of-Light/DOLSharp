@@ -17,17 +17,15 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Relation between artifacts and the actual items.
-	/// </summary>
-	/// <author>Aredhel</author>
-	[DataTable(TableName = "ArtifactXItem")]
+    /// <summary>
+    /// Relation between artifacts and the actual items.
+    /// </summary>
+    /// <author>Aredhel</author>
+    [DataTable(TableName = "ArtifactXItem")]
 	public class ArtifactXItem : DataObject
 	{
 		private String m_artifactID;

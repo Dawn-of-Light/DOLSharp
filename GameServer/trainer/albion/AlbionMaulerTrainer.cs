@@ -16,17 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.PacketHandler;
-using DOL.Language;
-using DOL.Database;
 
 namespace DOL.GS.Trainer
 {
-	/// <summary>
-	/// Mauler Trainer
-	/// </summary>
-	[NPCGuildScript("Mauler Trainer", eRealm.Albion)]
+    /// <summary>
+    /// Mauler Trainer
+    /// </summary>
+    [NPCGuildScript("Mauler Trainer", eRealm.Albion)]
 	public class AlbionMaulerTrainer : GameTrainer
 	{
 		public override eCharacterClass TrainedClass
@@ -53,7 +50,7 @@ namespace DOL.GS.Trainer
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
 				{
-					player.Out.SendMessage(this.Name + " says, \"Do you desire to [join the Temple of the Iron Fist] and fight for the glorious realm of Albion?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(Name + " says, \"Do you desire to [join the Temple of the Iron Fist] and fight for the glorious realm of Albion?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 					if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);

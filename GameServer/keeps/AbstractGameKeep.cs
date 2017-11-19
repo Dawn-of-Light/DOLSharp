@@ -77,7 +77,7 @@ namespace DOL.GS.Keeps
 				if (!InCombat)
 				{
 					bool underAttack = false;
-					foreach (GameKeepDoor door in this.Doors.Values)
+					foreach (GameKeepDoor door in Doors.Values)
 					{
 						if (door.State == eDoorState.Open)
 						{
@@ -115,7 +115,7 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				return ((this is GameKeepTower && this.KeepComponents.Count > 1) || this.BaseLevel >= 100);
+				return ((this is GameKeepTower && KeepComponents.Count > 1) || BaseLevel >= 100);
 			}
 		}
 
@@ -560,7 +560,7 @@ namespace DOL.GS.Keeps
 				CurrentRegion.AddArea(area);
 			}
 			area.Keep = this;
-			this.Area = area;
+            Area = area;
 		}
 
 		/// <summary>
@@ -627,8 +627,8 @@ namespace DOL.GS.Keeps
 				Guild myguild = GuildMgr.GetGuildByName(m_dbkeep.ClaimedGuildName);
 				if (myguild != null)
 				{
-					this.m_guild = myguild;
-					this.m_guild.ClaimedKeeps.Add(this);
+                    m_guild = myguild;
+                    m_guild.ClaimedKeeps.Add(this);
 					StartDeductionTimer();
 				}
 			}
@@ -664,7 +664,7 @@ namespace DOL.GS.Keeps
 			else
 				GameServer.Database.SaveObject(m_dbkeep);
 
-			foreach (GameKeepComponent comp in this.KeepComponents)
+			foreach (GameKeepComponent comp in KeepComponents)
 				comp.SaveIntoDatabase();
 		}
 
@@ -682,13 +682,13 @@ namespace DOL.GS.Keeps
 				return false;
 			}
 
-			if(player.Realm != this.Realm)
+			if(player.Realm != Realm)
 			{
 				player.Out.SendMessage("The keep is not owned by your realm.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
 			}
 
-			if (this.DBKeep.BaseLevel != 50)
+			if (DBKeep.BaseLevel != 50)
 			{
 				player.Out.SendMessage("This keep is not able to be claimed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
@@ -704,7 +704,7 @@ namespace DOL.GS.Keeps
 				player.Out.SendMessage("You do not have permission to claim for your guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			if (this.Guild != null)
+			if (Guild != null)
 			{
 				player.Out.SendMessage("The keep is already claimed.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
 				return false;
@@ -765,7 +765,7 @@ namespace DOL.GS.Keeps
 		/// <param name="player">the player who have claim the keep</param>
 		public virtual void Claim(GamePlayer player)
 		{
-			this.m_guild = player.Guild;
+            m_guild = player.Guild;
 			
 			if (ServerProperties.Properties.GUILDS_CLAIM_LIMIT > 1)
 				player.Guild.SendMessageToGuildMembers("Your guild has currently claimed " + player.Guild.ClaimedKeeps.Count + " keeps of a maximum of " + ServerProperties.Properties.GUILDS_CLAIM_LIMIT, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
@@ -783,7 +783,7 @@ namespace DOL.GS.Keeps
 			{
 				banner.ChangeGuild();
 			}
-    		this.SaveIntoDatabase();
+            SaveIntoDatabase();
             LoadFromDatabase(DBKeep);
             StartDeductionTimer();
             GameEventMgr.Notify(KeepEvent.KeepClaimed, this, new KeepEventArgs(this));
@@ -833,7 +833,7 @@ namespace DOL.GS.Keeps
 				return 0;
 
 			int amount = CalculRP();
-			this.Guild.RealmPoints+=amount;
+            Guild.RealmPoints+=amount;
 
 			return timer.Interval;
 		}
@@ -864,9 +864,9 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public virtual void Release()
 		{
-			this.Guild.ClaimedKeeps.Remove(this);
+            Guild.ClaimedKeeps.Remove(this);
 			PlayerMgr.BroadcastRelease(this);
-			this.m_guild = null;
+            m_guild = null;
 			StopDeductionTimer();
 			StopChangeLevelTimer();
 			ChangeLevel((byte)ServerProperties.Properties.STARTING_KEEP_LEVEL);
@@ -881,7 +881,7 @@ namespace DOL.GS.Keeps
 				banner.ChangeGuild();
 			}
 
-			this.SaveIntoDatabase();
+            SaveIntoDatabase();
 		}
 		#endregion
 
@@ -893,29 +893,29 @@ namespace DOL.GS.Keeps
 		/// <param name="targetLevel">the target level</param>
 		public virtual void ChangeLevel(byte targetLevel)
 		{
-			this.Level = targetLevel;
+            Level = targetLevel;
 
-			foreach (GameKeepComponent comp in this.KeepComponents)
+			foreach (GameKeepComponent comp in KeepComponents)
 			{
 				comp.UpdateLevel();
-				foreach (GameClient cln in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
+				foreach (GameClient cln in WorldMgr.GetClientsOfRegion(CurrentRegion.ID))
 				{
 					cln.Out.SendKeepComponentDetailUpdate(comp);
 				}
 				comp.FillPositions();
 			}
 
-			foreach (GameKeepGuard guard in this.Guards.Values)
+			foreach (GameKeepGuard guard in Guards.Values)
 			{
 				SetGuardLevel(guard);
 			}
 
-			foreach (Patrol p in this.Patrols.Values)
+			foreach (Patrol p in Patrols.Values)
 			{
 				p.ChangePatrolLevel();
 			}
 
-			foreach (GameKeepDoor door in this.Doors.Values)
+			foreach (GameKeepDoor door in Doors.Values)
 			{
 				door.UpdateLevel();
 			}
@@ -923,7 +923,7 @@ namespace DOL.GS.Keeps
 			KeepGuildMgr.SendLevelChangeMessage(this);
 			ResetPlayersOfKeep();
 
-			this.SaveIntoDatabase();
+            SaveIntoDatabase();
 		}
 
 
@@ -985,11 +985,11 @@ namespace DOL.GS.Keeps
 		{
 			if (ServerProperties.Properties.ENABLE_KEEP_UPGRADE_TIMER)
 			{
-				if (this.Level == targetLevel)
+				if (Level == targetLevel)
 					return;
 				//this.TargetLevel = targetLevel;
 				StartChangeLevelTimer();
-				if (this.Guild != null)
+				if (Guild != null)
 					KeepGuildMgr.SendChangeLevelTimeMessage(this);
 			}
 		}
@@ -1073,7 +1073,7 @@ namespace DOL.GS.Keeps
 		{
 			if (this is GameKeepTower)
 			{
-				foreach (GameKeepComponent component in this.KeepComponents)
+				foreach (GameKeepComponent component in KeepComponents)
 				{
 					/*
 					 *  - A realm can claim a razed tower, and may even set it to raise to level 10,
@@ -1093,18 +1093,18 @@ namespace DOL.GS.Keeps
 
             if (Level < maxlevel && m_guild != null)
             {
-                ChangeLevel((byte)(this.Level + 1));
+                ChangeLevel((byte)(Level + 1));
             }
             else if (Level > maxlevel && m_guild == null)
-                ChangeLevel((byte)(this.Level - 1));
+                ChangeLevel((byte)(Level - 1));
 
-			if (this.Level != 10 && this.Level != 1)
+			if (Level != 10 && Level != 1)
 			{
 				return CalculateTimeToUpgrade();
 			}
 			else
 			{
-				this.SaveIntoDatabase();
+                SaveIntoDatabase();
 				return 0;
 			}
 		}
@@ -1151,7 +1151,7 @@ namespace DOL.GS.Keeps
 				Release();
 			}
 			//we repair all keep components, but not if it is a tower and is raised
-			foreach (GameKeepComponent component in this.KeepComponents)
+			foreach (GameKeepComponent component in KeepComponents)
 			{
 				if (!component.IsRaized)
 					component.Repair(component.MaxHealth - component.Health);
@@ -1162,7 +1162,7 @@ namespace DOL.GS.Keeps
 				}
 			}
 			//change realm
-			foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
+			foreach (GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegion.ID))
 			{
 				client.Out.SendKeepComponentUpdate(this, false);
 			}
@@ -1180,7 +1180,7 @@ namespace DOL.GS.Keeps
 			{
 				if (guard is GuardLord && guard.IsAlive )
 				{
-					this.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { guard });
+                    TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { guard });
 				}
 				else if (guard is GuardLord == false)
 				{
@@ -1230,7 +1230,7 @@ namespace DOL.GS.Keeps
 
 
 			GameKeepComponent component = null;
-			foreach (GameKeepComponent c in this.KeepComponents)
+			foreach (GameKeepComponent c in KeepComponents)
 			{
 				if (c.Skin == id)
 				{
@@ -1247,7 +1247,7 @@ namespace DOL.GS.Keeps
 				return;
 
 			//calculate target height
-			int height = GameServer.KeepManager.GetHeightFromLevel(this.Level);
+			int height = GameServer.KeepManager.GetHeightFromLevel(Level);
 
 			//predict Z
 			DBKeepHookPoint hp = GameServer.Database.SelectObjects<DBKeepHookPoint>("`HookPointID` = @HookPointID AND `Height` = @Height",
@@ -1281,7 +1281,7 @@ namespace DOL.GS.Keeps
 			RegionPlayerEventArgs regionPlayerEventArgs = args as RegionPlayerEventArgs;
 			GamePlayer player = regionPlayerEventArgs.Player;
 			player.Out.SendKeepInfo(this);
-			foreach(GameKeepComponent keepComponent in this.KeepComponents)
+			foreach(GameKeepComponent keepComponent in KeepComponents)
 			{
 				player.Out.SendKeepComponentInfo(keepComponent);
 			}
@@ -1292,7 +1292,7 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		protected void SendRemoveKeep()
 		{
-			foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
+			foreach (GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegion.ID))
 			{
 				if (client.Player == null || client.ClientState != GameClient.eClientState.Playing || client.Player.ObjectState != GameObject.eObjectState.Active)
 					continue;
@@ -1300,7 +1300,7 @@ namespace DOL.GS.Keeps
 				GamePlayer player = client.Player;
 				
 				// Remove Keep
-				foreach(GameKeepComponent comp in this.KeepComponents)
+				foreach(GameKeepComponent comp in KeepComponents)
 				{
 					player.Out.SendKeepComponentRemove(comp);
 				}
@@ -1313,7 +1313,7 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		protected void SendKeepInfo()
 		{
-			foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
+			foreach (GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegion.ID))
 			{
 				
 				if (client.Player == null || client.ClientState != GameClient.eClientState.Playing || client.Player.ObjectState != GameObject.eObjectState.Active)
@@ -1323,7 +1323,7 @@ namespace DOL.GS.Keeps
 				
 				// Add Keep
 				player.Out.SendKeepInfo(this);
-				foreach(GameKeepComponent comp in this.KeepComponents)
+				foreach(GameKeepComponent comp in KeepComponents)
 				{
 					player.Out.SendKeepComponentInfo(comp);
 				}

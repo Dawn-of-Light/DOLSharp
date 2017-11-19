@@ -16,24 +16,22 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 using DOL.Database;
 using DOL.AI.Brain;
-using DOL.GS;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Disease always debuffs the target by 7.5% movement
-	/// and 15% total hit points, and prevents health regeneration.
-	/// http://www.camelotherald.com/article.php?id=63
-	/// Here they say hit points but spell description states that
-	/// it is strength, what should I use hmm...
-	/// </summary>
-	[SpellHandlerAttribute("Disease")]
+    /// <summary>
+    /// Disease always debuffs the target by 7.5% movement
+    /// and 15% total hit points, and prevents health regeneration.
+    /// http://www.camelotherald.com/article.php?id=63
+    /// Here they say hit points but spell description states that
+    /// it is strength, what should I use hmm...
+    /// </summary>
+    [SpellHandler("Disease")]
 	public class DiseaseSpellHandler : SpellHandler
 	{
 		/// <summary>
@@ -65,7 +63,7 @@ namespace DOL.GS.Spells
 				Caster.LastAttackTickPvP = Caster.CurrentRegion.Time;
 			}
 
-			GameSpellEffect mezz = SpellHandler.FindEffectOnTarget(effect.Owner, "Mesmerize");
+			GameSpellEffect mezz = FindEffectOnTarget(effect.Owner, "Mesmerize");
  			if(mezz != null) mezz.Cancel(false);
 			effect.Owner.Disease(true);
 			effect.Owner.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 0.15);
@@ -176,7 +174,7 @@ namespace DOL.GS.Spells
 
 		public override int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
 		{
-			return this.OnEffectExpires(effect, noMessages);
+			return OnEffectExpires(effect, noMessages);
 		}
 
 		// constructor

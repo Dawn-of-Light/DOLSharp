@@ -101,7 +101,7 @@ namespace DOL.GS.Quests.Midgard
 
 			#region defineNPCs
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Inaksha", eRealm.Midgard);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Inaksha", eRealm.Midgard);
 
 			if (npcs.Length == 0)
 			{
@@ -130,7 +130,7 @@ namespace DOL.GS.Quests.Midgard
 				Inaksha = npcs[0];
 			// end npc
 
-			npcs = WorldMgr.GetNPCsByName("Loken", eRealm.None);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Loken", eRealm.None);
 
 			if (npcs.Length == 0)
 			{
@@ -159,7 +159,7 @@ namespace DOL.GS.Quests.Midgard
 				Loken = npcs[0];
 			// end npc
 
-			npcs = WorldMgr.GetNPCsByName("Miri", eRealm.Midgard);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Miri", eRealm.Midgard);
 
 			if (npcs.Length == 0)
 			{

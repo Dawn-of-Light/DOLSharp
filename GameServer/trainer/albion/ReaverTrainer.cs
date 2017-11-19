@@ -16,16 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.PacketHandler;
-using DOL.Language;
 
 namespace DOL.GS.Trainer
 {
-	/// <summary>
-	/// Reaver Trainer
-	/// </summary>
-	[NPCGuildScript("Reaver Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Reaver Trainer" NPC's in Albion (multiple guilds are possible for one script)
+    /// <summary>
+    /// Reaver Trainer
+    /// </summary>
+    [NPCGuildScript("Reaver Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Reaver Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class ReaverTrainer : GameTrainer
 	{
 		public override eCharacterClass TrainedClass
@@ -56,7 +54,7 @@ namespace DOL.GS.Trainer
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
 				{
-					player.Out.SendMessage(this.Name + " says, \"You have come to seek admittance into the [Temple of Arawn] to worship the old god that your ancestors worshipped?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(Name + " says, \"You have come to seek admittance into the [Temple of Arawn] to worship the old god that your ancestors worshipped?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);

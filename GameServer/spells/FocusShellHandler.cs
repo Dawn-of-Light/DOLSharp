@@ -18,20 +18,16 @@
  */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using DOL.AI.Brain;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Base Handler for the focus shell
-	/// </summary>
-	[SpellHandlerAttribute("FocusShell")]
+    /// <summary>
+    /// Base Handler for the focus shell
+    /// </summary>
+    [SpellHandler("FocusShell")]
 	public class FocusShellHandler : SpellHandler
 	{
 		private GamePlayer FSTarget = null;

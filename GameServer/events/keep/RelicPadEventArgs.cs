@@ -41,8 +41,8 @@ namespace DOL.Events
         /// </summary>
         public RelicPadEventArgs(GamePlayer player, GameRelic relic)
         {
-            this.m_player = player;
-            this.m_relic = relic;
+            m_player = player;
+            m_relic = relic;
         }
 
         /// <summary>

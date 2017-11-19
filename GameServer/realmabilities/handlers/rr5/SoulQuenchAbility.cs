@@ -1,15 +1,13 @@
-using System;
 using System.Collections.Generic;
 using DOL.Database;
-using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Soul Quench RA
-	/// </summary>
-	public class SoulQuenchAbility : RR5RealmAbility
+    /// <summary>
+    /// Soul Quench RA
+    /// </summary>
+    public class SoulQuenchAbility : RR5RealmAbility
 	{
 		public SoulQuenchAbility(DBAbility dba, int level) : base(dba, level) { }
 

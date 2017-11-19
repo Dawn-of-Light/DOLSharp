@@ -16,15 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.Database;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	/// <summary>
-	/// EmblemDialogReponseHandler is the response of client wend when we close the emblem selection dialogue.
-	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.EmblemDialogResponse, "Handles when a player chooses a guild emblem", eClientStatus.PlayerInGame)]
+    /// <summary>
+    /// EmblemDialogReponseHandler is the response of client wend when we close the emblem selection dialogue.
+    /// </summary>
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.EmblemDialogResponse, "Handles when a player chooses a guild emblem", eClientStatus.PlayerInGame)]
 	public class EmblemDialogReponseHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)

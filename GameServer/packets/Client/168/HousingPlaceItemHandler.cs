@@ -28,7 +28,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.HousePlaceItem, "Handles things like placing indoor/outdoor items.", eClientStatus.PlayerInGame)]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.HousePlaceItem, "Handles things like placing indoor/outdoor items.", eClientStatus.PlayerInGame)]
 	public class HousingPlaceItemHandler : IPacketHandler
 	{
 		private const string DeedWeak = "deedItem";

@@ -23,11 +23,10 @@ using System.Linq;
 using System.Windows.Forms;
 
 using DOL.Database;
-using DOL.Database.Connection;
 
 namespace DOLConfig
 {
-	public partial class DolConfig : Form
+    public partial class DolConfig : Form
 	{
 		IList<ServerProperty> sp = new List<ServerProperty>();
 		IList<ServerPropertyCategory> sc = new List<ServerPropertyCategory>();

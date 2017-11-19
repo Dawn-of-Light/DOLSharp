@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
@@ -25,10 +24,10 @@ using DOL.Language;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	[SpellHandlerAttribute("Chamber")]
+    /// <summary>
+    /// 
+    /// </summary>
+    [SpellHandler("Chamber")]
 	public class ChamberSpellHandler : SpellHandler
 	{
 		private Spell m_primaryspell = null;
@@ -106,13 +105,13 @@ namespace DOL.GS.Spells
 		{
 			GamePlayer caster = (GamePlayer)m_caster;
 			m_spellTarget = caster.TargetObject as GameLiving;
-			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(caster, "Chamber", m_spell.Name);
+			GameSpellEffect effect = FindEffectOnTarget(caster, "Chamber", m_spell.Name);
 			if(effect != null && m_spell.Name == effect.Spell.Name)
 			{
 				ISpellHandler spellhandler = null;
 				ISpellHandler spellhandler2 = null;
 				ChamberSpellHandler chamber = (ChamberSpellHandler)effect.SpellHandler;
-				GameSpellEffect PhaseShift = SpellHandler.FindEffectOnTarget(m_spellTarget, "Phaseshift");
+				GameSpellEffect PhaseShift = FindEffectOnTarget(m_spellTarget, "Phaseshift");
 				SelectiveBlindnessEffect SelectiveBlindness = Caster.EffectList.GetOfType<SelectiveBlindnessEffect>();
 				spellhandler = ScriptMgr.CreateSpellHandler(caster, chamber.PrimarySpell, chamber.PrimarySpellLine);
 

@@ -1,12 +1,11 @@
-using System;
 using DOL.Database;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Serenity realm ability
-	/// </summary>
-	public class SerenityAbility : RAPropertyEnhancer
+    /// <summary>
+    /// Serenity realm ability
+    /// </summary>
+    public class SerenityAbility : RAPropertyEnhancer
 	{
 		public SerenityAbility(DBAbility dba, int level) : base(dba, level, eProperty.PowerRegenerationRate) { }
 

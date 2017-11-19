@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Midgard Mauler Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.MaulerMid, "Mauler", "Viking")]
+    /// <summary>
+    /// Midgard Mauler Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.MaulerMid, "Mauler", "Viking")]
 	public class ClassMaulerMid : ClassViking
 	{
 		public ClassMaulerMid()

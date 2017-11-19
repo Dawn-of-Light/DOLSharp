@@ -16,11 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.LookingForGroupFlag, "handle Change LFG flag", eClientStatus.PlayerInGame)]
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.LookingForGroupFlag, "handle Change LFG flag", eClientStatus.PlayerInGame)]
 	public class LookingForAGroupFlagHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)

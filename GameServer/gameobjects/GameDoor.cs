@@ -20,28 +20,14 @@ using System;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.Language;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using DOL.GS.Utils;
-using DOL.GS.Quests;
 using System.Threading;
-using DOL.AI.Brain;
-using DOL.Events;
-using DOL.GS.Effects;
-using DOL.GS.Keeps;
-using DOL.GS.PropertyCalc;
-using DOL.GS.SkillHandler;
-using DOL.GS.Spells;
-using DOL.GS.Styles;
-using DOL.GS.PacketHandler.Client.v168;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// GameDoor is class for regular door
-	/// </summary>
-	public class GameDoor : GameLiving, IDoor
+    /// <summary>
+    /// GameDoor is class for regular door
+    /// </summary>
+    public class GameDoor : GameLiving, IDoor
 	{
 		private bool m_openDead = false;
 		private static Timer m_timer;
@@ -81,12 +67,12 @@ namespace DOL.GS
 			if (m_dbdoor == null) return;
 			Zone curZone = WorldMgr.GetZone((ushort)(m_dbdoor.InternalID / 1000000));
 			if (curZone == null) return;
-			this.CurrentRegion = curZone.ZoneRegion;
+            CurrentRegion = curZone.ZoneRegion;
 			m_name = m_dbdoor.Name;
 			m_Heading = (ushort)m_dbdoor.Heading;
-			m_x = m_dbdoor.X;
-			m_y = m_dbdoor.Y;
-			m_z = m_dbdoor.Z;
+			X = m_dbdoor.X;
+			Y = m_dbdoor.Y;
+			Z = m_dbdoor.Z;
 			m_level = 0;
 			m_model = 0xFFFF;
 			m_doorID = m_dbdoor.InternalID;
@@ -98,7 +84,7 @@ namespace DOL.GS
 			m_locked = m_dbdoor.Locked;
 			m_flags = m_dbdoor.Flags;
 
-			this.AddToWorld();
+            AddToWorld();
 		}
 		/// <summary>
 		/// save this door to a door table slot
@@ -110,16 +96,16 @@ namespace DOL.GS
 				obj = GameServer.Database.FindObjectByKey<DBDoor>(InternalID);
 			if (obj == null)
 				obj = new DBDoor();
-			obj.Name = this.Name;
-			obj.InternalID = this.DoorID;
+			obj.Name = Name;
+			obj.InternalID = DoorID;
 			obj.Type = DoorID / 100000000;
-            obj.Guild = this.GuildName;
-			obj.Flags = this.Flag;
-            obj.Realm = (byte)this.Realm;
-            obj.Level = this.Level;
-            obj.MaxHealth = this.MaxHealth;
-			obj.Health = this.MaxHealth;
-			obj.Locked = this.Locked;
+            obj.Guild = GuildName;
+			obj.Flags = Flag;
+            obj.Realm = (byte)Realm;
+            obj.Level = Level;
+            obj.MaxHealth = MaxHealth;
+			obj.Health = MaxHealth;
+			obj.Locked = Locked;
 			if (InternalID == null)
 			{
 				GameServer.Database.AddObject(obj);
@@ -200,7 +186,7 @@ namespace DOL.GS
 					lock (m_LockObject)
 					{
 						m_state = value;
-						foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+						foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 						{
 							player.SendDoorUpdate(this);
 						}
@@ -217,7 +203,7 @@ namespace DOL.GS
 		public virtual void Open(GameLiving opener = null)
 		{
 			if (Locked == 0)
-				this.State = eDoorState.Open;
+                State = eDoorState.Open;
 			
 			if (HealthPercent > 40 || !m_openDead)
 			{
@@ -247,7 +233,7 @@ namespace DOL.GS
 		public virtual void Close(GameLiving closer = null)
 		{
 			if (!m_openDead)
-				this.State = eDoorState.Closed;
+                State = eDoorState.Closed;
 			m_closeDoorAction = null;
 		}
 
@@ -258,11 +244,11 @@ namespace DOL.GS
 		/// <param name="open"></param>
 		public virtual void NPCManipulateDoorRequest(GameNPC npc, bool open)
 		{
-			npc.TurnTo(this.X, this.Y);
+			npc.TurnTo(X, Y);
 			if (open && m_state != eDoorState.Open)
-				this.Open();
+                Open();
 			else if (!open && m_state != eDoorState.Closed)
-				this.Close();
+                Close();
 
 		}
 		
@@ -364,14 +350,14 @@ namespace DOL.GS
 				Close( );
 				return;
 			}
-			this.Health += this.Level*2;
+            Health += Level * 2;
 			m_healthregentimer -= 10;
 		}
 
 		public override void TakeDamage ( GameObject source, eDamageType damageType, int damageAmount, int criticalAmount )
 		{
 			
-			if( !m_openDead && this.Realm != eRealm.Door )
+			if( !m_openDead && Realm != eRealm.Door )
 			{
 				base.TakeDamage(source, damageType, damageAmount, criticalAmount);
 
@@ -381,12 +367,12 @@ namespace DOL.GS
 			GamePlayer attackerPlayer = source as GamePlayer;
 			if( attackerPlayer != null)
 			{
-				if( !m_openDead && this.Realm != eRealm.Door )
+				if( !m_openDead && Realm != eRealm.Door )
 				{
                     attackerPlayer.Out.SendMessage(LanguageMgr.GetTranslation(attackerPlayer.Client.Account.Language, "GameDoor.NowOpen", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 				}
-				if( !m_openDead && this.Realm != eRealm.Door )
+				if( !m_openDead && Realm != eRealm.Door )
 				{
 					Health -= damageAmount + criticalAmount;
 			

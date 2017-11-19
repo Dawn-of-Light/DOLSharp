@@ -17,16 +17,13 @@
  *
  */
 using System;
-using System.Reflection;
 using System.Collections;
-using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
 using DOL.Database;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class SpiritMartyrAbility : RR5RealmAbility
+    public class SpiritMartyrAbility : RR5RealmAbility
     {
 		public SpiritMartyrAbility(DBAbility dba, int level) : base(dba, level) { }
 

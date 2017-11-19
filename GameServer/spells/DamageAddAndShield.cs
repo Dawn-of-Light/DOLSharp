@@ -17,7 +17,6 @@
  *
  */
 using System;
-using System.Reflection;
 using DOL.Database;
 using DOL.AI.Brain;
 using DOL.Events;
@@ -25,15 +24,14 @@ using DOL.GS.Effects;
 using DOL.GS.Keeps;
 using DOL.GS.PacketHandler;
 using DOL.Language;
-using log4net;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Effect that stays on target and does additional
-	/// damage after each melee attack
-	/// </summary>
-	[SpellHandler("DamageAdd")]
+    /// <summary>
+    /// Effect that stays on target and does additional
+    /// damage after each melee attack
+    /// </summary>
+    [SpellHandler("DamageAdd")]
 	public class DamageAddSpellHandler : AbstractDamageAddSpellHandler
 	{
 		/// <summary>

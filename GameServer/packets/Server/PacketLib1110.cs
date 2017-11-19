@@ -17,17 +17,14 @@
 *
 */
 #define NOENCRYPTION
-using System;
 using System.IO;
 using System.Reflection;
 using System.Linq;
-using DOL.Database;
 using System.Collections;
 using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.RealmAbilities;
 using DOL.GS.Styles;
-using DOL.Language;
 using log4net;
 
 

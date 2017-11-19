@@ -18,21 +18,17 @@
  */
 #define NOENCRYPTION
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
-using DOL.GS.Commands;
-using DOL.GS.Effects;
-using DOL.Database;
 using DOL.GS.RealmAbilities;
 using DOL.GS.Styles;
 using log4net;
 
 namespace DOL.GS.PacketHandler
 {
-	
-	[PacketLib(1105, GameClient.eClientVersion.Version1105)]
+
+    [PacketLib(1105, GameClient.eClientVersion.Version1105)]
 	public class PacketLib1105 : PacketLib1104
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

@@ -16,18 +16,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 using DOL.GS.Spells;
 using DOL.Database;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// SpellLinePassiveAbility is a Specific Ability that Will trigger Self-Buff when activated based on Attached Spell Line
-	/// Level Change should trigger cast of higher level spells, and cancel previous ones
-	/// </summary>
-	public class SpellLinePassiveAbility : SpellLineAbstractAbility
+    /// <summary>
+    /// SpellLinePassiveAbility is a Specific Ability that Will trigger Self-Buff when activated based on Attached Spell Line
+    /// Level Change should trigger cast of higher level spells, and cancel previous ones
+    /// </summary>
+    public class SpellLinePassiveAbility : SpellLineAbstractAbility
 	{
 		
 		public override void Activate(GameLiving living, bool sendUpdates)

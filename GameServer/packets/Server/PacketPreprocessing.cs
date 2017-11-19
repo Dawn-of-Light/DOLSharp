@@ -18,14 +18,12 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using log4net;
 
 namespace DOL.GS.PacketHandler
 {
-	public enum eClientStatus
+    public enum eClientStatus
 	{
 		None = 0,
 		LoggedIn = 1,

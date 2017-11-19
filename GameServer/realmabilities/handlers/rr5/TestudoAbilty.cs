@@ -1,14 +1,13 @@
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Testudo Realm Ability
-	/// </summary>
-	public class TestudoAbility : RR5RealmAbility
+    /// <summary>
+    /// Testudo Realm Ability
+    /// </summary>
+    public class TestudoAbility : RR5RealmAbility
 	{
 		public TestudoAbility(DBAbility dba, int level) : base(dba, level) { }
 

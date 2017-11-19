@@ -1,16 +1,11 @@
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.GS.PropertyCalc;
 using DOL.GS.Effects;
-using DOL.Events;
 using DOL.Database;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class TheEmptyMindAbility : TimedRealmAbility
+    public class TheEmptyMindAbility : TimedRealmAbility
 	{
 		public TheEmptyMindAbility(DBAbility dba, int level) : base(dba, level) { }
 

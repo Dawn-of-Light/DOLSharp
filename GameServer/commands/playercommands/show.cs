@@ -1,6 +1,6 @@
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&show",
 		ePrivLevel.Player,
 		"Show all your cards to the other players (all cards become 'up').",

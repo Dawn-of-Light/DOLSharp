@@ -16,14 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Reflection;
 using DOL.Database.Attributes;
-using log4net;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "ItemUnique", PreCache = false)]
+    [DataTable(TableName = "ItemUnique", PreCache = false)]
 	public class ItemUnique : ItemTemplate
 	{
 		public const string UNIQUE_SEPARATOR = "#";

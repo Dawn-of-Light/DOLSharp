@@ -21,7 +21,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&advice",
 		ePrivLevel.Player,
 		"Ask for advice from an advisor",

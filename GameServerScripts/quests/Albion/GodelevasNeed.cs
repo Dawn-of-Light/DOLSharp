@@ -30,7 +30,6 @@
 
 using System;
 using System.Reflection;
-using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
@@ -46,13 +45,13 @@ using log4net;
 
 namespace DOL.GS.Quests.Albion
 {
-	/* The first thing we do, is to declare the class we create
+    /* The first thing we do, is to declare the class we create
 	 * as Quest. To do this, we derive from the abstract class
 	 * AbstractQuest
 	 * 	 
 	 */
 
-	public class GodelevasNeed : BaseQuest
+    public class GodelevasNeed : BaseQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -138,7 +137,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineNPCS
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Godeleva Dowden", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Godeleva Dowden", eRealm.Albion);
 
 			/* Whops, if the npcs array length is 0 then no npc exists in
 				* this users Mob Database, so we simply create one ;-)

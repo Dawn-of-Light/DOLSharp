@@ -17,8 +17,6 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.Events;
 
 namespace DOL.GS
@@ -115,8 +113,8 @@ namespace DOL.GS
             {
                 lock (m_syncObject)
                 {
-                    this.Model = InvisibleModel;
-                    this.AddToWorld();
+                    Model = InvisibleModel;
+                    AddToWorld();
                     m_timer.Start(7, 1000, true, DjinnEvent.Summoned);
                 }
 
@@ -128,10 +126,10 @@ namespace DOL.GS
 
                 lock (m_syncObject)
                 {
-                    this.Model = VisibleModel;
+                    Model = VisibleModel;
 
-                    foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                        player.Out.SendModelChange(this, this.Model);
+                    foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                        player.Out.SendModelChange(this, Model);
 
                     Say("Greetings, great one.");
                     m_timer.Start(150, 1000, false, DjinnEvent.Vanishing);   // 2.5mins to hiding again.
@@ -146,10 +144,10 @@ namespace DOL.GS
                 lock (m_syncObject)
                 {
                     Say("My time here is done.");
-                    this.Model = InvisibleModel;
+                    Model = InvisibleModel;
 
-                    foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                        player.Out.SendModelChange(this, this.Model);
+                    foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                        player.Out.SendModelChange(this, Model);
 
                     m_timer.Start(5, 1000, true, DjinnEvent.Vanished);
                 }
@@ -160,7 +158,7 @@ namespace DOL.GS
             {
                 lock (m_syncObject)
                 {
-                    this.RemoveFromWorld();
+                    RemoveFromWorld();
                     m_summoned = false;
                 }
 
@@ -209,9 +207,9 @@ namespace DOL.GS
             {
                 if (IsRunning)
                 {
-                    this.Stop();
+                    Stop();
                     m_ticks = 0;
-                    this.Start(100);
+                    Start(100);
                 }
             }
 
@@ -229,7 +227,7 @@ namespace DOL.GS
                 m_smoke = smoke;
                 m_event = e;
                 m_ticks = 0;
-                this.Start(100);
+                Start(100);
                 IsRunning = true;
             }
 
@@ -254,7 +252,7 @@ namespace DOL.GS
                 {
                     // We're done, stop the timer and notify owner.
 
-                    this.Stop();
+                    Stop();
                     IsRunning = false;
                     m_owner.Notify(m_event);
                 }

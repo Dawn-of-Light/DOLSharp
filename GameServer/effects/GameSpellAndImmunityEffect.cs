@@ -17,16 +17,14 @@
  *
  */
 using System;
-using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
-using DOL.Language;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Spell Effect assists SpellHandler with duration spells with immunity
-	/// </summary>
-	public class GameSpellAndImmunityEffect : GameSpellEffect
+    /// <summary>
+    /// Spell Effect assists SpellHandler with duration spells with immunity
+    /// </summary>
+    public class GameSpellAndImmunityEffect : GameSpellEffect
 	{
 		/// <summary>
 		/// The amount of times this effect started

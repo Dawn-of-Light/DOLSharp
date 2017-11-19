@@ -16,12 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.GS;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		"&webdisplay",
 		ePrivLevel.Player,
 		"Set informations displayed on the herald",

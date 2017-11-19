@@ -16,12 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.Database;
 using DOL.GS.Housing;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.HouseUserPermissionRequest, "Handles housing Users permissions requests from menu", eClientStatus.PlayerInGame)]
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.HouseUserPermissionRequest, "Handles housing Users permissions requests from menu", eClientStatus.PlayerInGame)]
 	public class HouseUsersPermissionsRequestHandler : IPacketHandler
 	{
 		#region IPacketHandler Members

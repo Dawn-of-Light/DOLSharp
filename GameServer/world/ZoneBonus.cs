@@ -16,31 +16,20 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.Database;
-using DOL.GS.PacketHandler;
-using log4net;
-using System.Reflection;
 using DOL.Language;
 
 namespace DOL.GS
 {
     public class ZoneBonus
     {
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-        #region eZoneBonusType
         public enum eZoneBonusType
         {
             XP = 0,
             RP = 1,
             BP = 2,
             COIN = 3,
-        } 
-        #endregion
-        #region Get Bonuses Methods
+        }
+
         public static int GetXPBonus(GamePlayer player)
         {
             return player.CurrentZone.BonusExperience;
@@ -56,9 +45,8 @@ namespace DOL.GS
         public static int GetCoinBonus(GamePlayer player)
         {
             return player.CurrentZone.BonusCoin;
-        } 
-        #endregion
-        #region Get Bonus Message
+        }
+
         public static string GetBonusMessage(GamePlayer player, int bonusAmount, eZoneBonusType type)
         {
             switch (type)
@@ -71,10 +59,9 @@ namespace DOL.GS
                     return LanguageMgr.GetTranslation(player.Client.Account.Language, "ZoneBonus.AdditionalBP", bonusAmount);
                 case eZoneBonusType.COIN:
                     return LanguageMgr.GetTranslation(player.Client.Account.Language, "ZoneBonus.AdditionalCoin");
-                default: return "No Bonus Type Found";
+                default:
+                    return "No Bonus Type Found";
             }
-        } 
-        #endregion
-
+        }
     }
 }

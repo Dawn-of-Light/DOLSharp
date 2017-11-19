@@ -17,10 +17,7 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using DOL.GS;
 using log4net;
 using System.Reflection;
 using DOL.Database;
@@ -30,11 +27,11 @@ using DOL.Language;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// An artifact inside an inventory.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class InventoryArtifact : GameInventoryItem
+    /// <summary>
+    /// An artifact inside an inventory.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class InventoryArtifact : GameInventoryItem
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -93,9 +90,9 @@ namespace DOL.GS
 					return;
 				}
 
-				this.Template = template;
-				this.ObjectId = item.ObjectId;	// This is the key for the 'inventoryitem' table
-				this.OwnerID = item.OwnerID;
+                Template = template;
+                ObjectId = item.ObjectId;   // This is the key for the 'inventoryitem' table
+                OwnerID = item.OwnerID;
 				CanUseEvery = ArtifactMgr.GetReuseTimer(this);
 				ArtifactID = ArtifactMgr.GetArtifactIDFromItemID(Id_nb);
 				ArtifactLevel = ArtifactMgr.GetCurrentLevel(this);

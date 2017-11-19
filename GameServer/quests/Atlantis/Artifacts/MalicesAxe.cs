@@ -18,22 +18,18 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
-using DOL.Events;
-using DOL.GS.Quests;
 using DOL.Database;
 using DOL.GS.PacketHandler;
-using System.Collections;
 using log4net;
 using System.Reflection;
 
 namespace DOL.GS.Quests.Atlantis.Artifacts
 {
-	/// <summary>
-	/// Quest for the Malice's Axe artifact.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class MalicesAxe : ArtifactQuest
+    /// <summary>
+    /// Quest for the Malice's Axe artifact.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class MalicesAxe : ArtifactQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.

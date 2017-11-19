@@ -17,7 +17,6 @@
  *
  */
 #define NOENCRYPTION
-using System;
 using System.Collections;
 using System.Reflection;
 using DOL.AI.Brain;
@@ -28,7 +27,7 @@ using System.Collections.Generic;
 
 namespace DOL.GS.PacketHandler
 {
-	[PacketLib(181, GameClient.eClientVersion.Version181)]
+    [PacketLib(181, GameClient.eClientVersion.Version181)]
 	public class PacketLib181 : PacketLib180
 	{
 		/// <summary>

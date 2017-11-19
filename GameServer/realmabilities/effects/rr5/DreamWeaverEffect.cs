@@ -1,18 +1,11 @@
-using System.Collections;
-using System;
 using System.Collections.Generic;
-using DOL;
-using DOL.GS;
-using DOL.Events;
-using DOL.Database;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Helper for charge realm ability
-	/// </summary>
-	public class DreamweaverEffect : TimedEffect
+    /// <summary>
+    /// Helper for charge realm ability
+    /// </summary>
+    public class DreamweaverEffect : TimedEffect
 	{
 		private GameLiving owner;
 		/// <summary>

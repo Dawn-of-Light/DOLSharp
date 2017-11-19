@@ -17,9 +17,6 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS.Spells;
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
 using DOL.Events;
@@ -27,12 +24,12 @@ using DOL.Language;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Handler for spells that are issued by the player, but cast
-	/// by his pet.
-	/// </summary>
-	/// <author>Aredhel</author>
-	[SpellHandler("PetSpell")]
+    /// <summary>
+    /// Handler for spells that are issued by the player, but cast
+    /// by his pet.
+    /// </summary>
+    /// <author>Aredhel</author>
+    [SpellHandler("PetSpell")]
 	class PetSpellHandler : SpellHandler
 	{
 		/// <summary>

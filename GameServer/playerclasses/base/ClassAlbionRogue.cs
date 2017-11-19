@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Albion Base Rogue Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.AlbionRogue, "Rogue", "Rogue")]
+    /// <summary>
+    /// Albion Base Rogue Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.AlbionRogue, "Rogue", "Rogue")]
 	public class ClassAlbionRogue : CharacterClassBase
 	{
 		public ClassAlbionRogue()

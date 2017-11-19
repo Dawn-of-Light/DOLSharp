@@ -16,16 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Style speed decrease effect spell handler
-	/// </summary>
-	[SpellHandler("StyleSpeedDecrease")]
+    /// <summary>
+    /// Style speed decrease effect spell handler
+    /// </summary>
+    [SpellHandler("StyleSpeedDecrease")]
 	public class StyleSpeedDecrease : SpeedDecreaseSpellHandler
 	{
 		public override int CalculateSpellResistChance(GameLiving target)

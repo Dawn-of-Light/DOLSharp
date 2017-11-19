@@ -17,17 +17,11 @@
  *
  */
 
-using System;
-using System.Collections;
-using DOL.GS;
-using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
-using DOL.Database;
-using DOL.GS.Spells;
 
 namespace DOL.GS.Spells
 {
-	[SpellHandlerAttribute("Facilis")]
+    [SpellHandler("Facilis")]
 	public class FacilisSpellHandler : SpellHandler
 	{
 		public override bool IsOverwritable(GameSpellEffect compare)

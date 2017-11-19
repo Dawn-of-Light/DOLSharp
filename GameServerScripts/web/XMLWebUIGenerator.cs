@@ -23,15 +23,14 @@ using DOL.Database;
 using DOL.Database.Attributes;
 using DOL.Database.Connection;
 using DOL.Events;
-using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS.Scripts
 {
-	/// <summary>
-	/// Generates an XML version of the web ui
-	/// </summary>
-	public class XMLWebUIGenerator
+    /// <summary>
+    /// Generates an XML version of the web ui
+    /// </summary>
+    public class XMLWebUIGenerator
 	{
 		/// <summary>
 		/// Defines a logger for this class.

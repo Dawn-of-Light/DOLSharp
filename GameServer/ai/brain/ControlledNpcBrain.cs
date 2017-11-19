@@ -26,15 +26,14 @@ using DOL.GS.Spells;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
-using DOL.GS.SkillHandler;
 using log4net;
 
 namespace DOL.AI.Brain
 {
-	/// <summary>
-	/// A brain that can be controlled
-	/// </summary>
-	public class ControlledNpcBrain : StandardMobBrain, IControlledBrain
+    /// <summary>
+    /// A brain that can be controlled
+    /// </summary>
+    public class ControlledNpcBrain : StandardMobBrain, IControlledBrain
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -823,7 +822,7 @@ namespace DOL.AI.Brain
 			{
 				if (m_orderAttackTarget.IsAlive &&
 				    m_orderAttackTarget.ObjectState == GameObject.eObjectState.Active &&
-				    GameServer.ServerRules.IsAllowedToAttack(this.Body, m_orderAttackTarget, true))
+				    GameServer.ServerRules.IsAllowedToAttack(Body, m_orderAttackTarget, true))
 				{
 					return m_orderAttackTarget;
 				}
@@ -843,7 +842,7 @@ namespace DOL.AI.Brain
 					    living.IsAlive == false ||
 					    living.ObjectState != GameObject.eObjectState.Active ||
 					    Body.GetDistanceTo(living, 0) > MAX_AGGRO_LIST_DISTANCE ||
-					    GameServer.ServerRules.IsAllowedToAttack(this.Body, living, true) == false)
+					    GameServer.ServerRules.IsAllowedToAttack(Body, living, true) == false)
 					{
 						removable.Add(living);
 					}

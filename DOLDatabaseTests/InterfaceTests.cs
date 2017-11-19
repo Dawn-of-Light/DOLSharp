@@ -21,17 +21,14 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-using DOL.Database;
-using DOL.Database.Attributes;
-
 using NUnit.Framework;
 
 namespace DOL.Database.Tests
 {
-	/// <summary>
-	/// Description of InterfaceTests.
-	/// </summary>
-	[TestFixture]
+    /// <summary>
+    /// Description of InterfaceTests.
+    /// </summary>
+    [TestFixture]
 	public class InterfaceTests
 	{
 		public InterfaceTests()

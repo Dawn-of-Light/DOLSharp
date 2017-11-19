@@ -19,7 +19,7 @@
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&helm", //command to handle
+	[Cmd("&helm", //command to handle
 		ePrivLevel.Player, //minimum privelege level
 	 "Toggles the helm on and off when wearing an helm.", //command description
 	  "/helm")] //usage

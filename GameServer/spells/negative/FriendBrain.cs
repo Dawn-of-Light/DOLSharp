@@ -1,10 +1,9 @@
 using DOL.GS;
 using DOL.GS.Spells;
-using DOL.GS.Effects;
 
 namespace DOL.AI.Brain
 {
-	public class FriendBrain : StandardMobBrain
+    public class FriendBrain : StandardMobBrain
 	{
 		SpellHandler m_spellHandler = null;
 		public FriendBrain(SpellHandler spellHandler) : base()

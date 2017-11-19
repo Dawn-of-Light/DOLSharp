@@ -21,16 +21,15 @@ using System.Reflection;
 using System.Linq;
 
 using DOL.Database;
-using DOL.Events;
 
 using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	/// <summary>
-	/// No longer used after version 1.104
-	/// </summary>
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.CharacterDeleteRequest, "Handles character delete requests", eClientStatus.LoggedIn)]
+    /// <summary>
+    /// No longer used after version 1.104
+    /// </summary>
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.CharacterDeleteRequest, "Handles character delete requests", eClientStatus.LoggedIn)]
 	public class CharacterDeleteRequestHandler : IPacketHandler
 	{
 		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

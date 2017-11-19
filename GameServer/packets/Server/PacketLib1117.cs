@@ -16,11 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PacketHandler
 {
-	[PacketLib(1117, GameClient.eClientVersion.Version1117)]
+    [PacketLib(1117, GameClient.eClientVersion.Version1117)]
 	public class PacketLib1117 : PacketLib1116
 	{
 		/// <summary>

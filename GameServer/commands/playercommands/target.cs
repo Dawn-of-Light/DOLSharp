@@ -21,7 +21,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&target", ePrivLevel.Player, "target a player by name", "/target <playerName>")]
+	[Cmd("&target", ePrivLevel.Player, "target a player by name", "/target <playerName>")]
 	public class TargetCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)

@@ -1,12 +1,10 @@
-using DOL.GS.PacketHandler;
-
 namespace DOL.GS.Keeps
 {
-	/// <summary>
-	/// Bonus for owning certain amount of keeps
-	/// The int value is the amount of keeps needed
-	/// </summary>
-	public enum eKeepBonusType : int
+    /// <summary>
+    /// Bonus for owning certain amount of keeps
+    /// The int value is the amount of keeps needed
+    /// </summary>
+    public enum eKeepBonusType : int
 	{
 		Coin_Drop_3 = 8,
 		Experience_3 = 9,

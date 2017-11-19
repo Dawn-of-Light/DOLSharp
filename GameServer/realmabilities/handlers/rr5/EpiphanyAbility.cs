@@ -1,12 +1,10 @@
-using System;
 using System.Collections.Generic;
 using DOL.Database;
-using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class EpiphanyAbility : RR5RealmAbility
+    public class EpiphanyAbility : RR5RealmAbility
 	{
 		public EpiphanyAbility(DBAbility dba, int level) : base(dba, level) { }
 

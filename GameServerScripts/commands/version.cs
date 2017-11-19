@@ -21,7 +21,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&version",
 		ePrivLevel.Player,
 		"Get the version of the GameServer",

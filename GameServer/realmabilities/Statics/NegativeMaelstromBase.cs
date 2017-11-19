@@ -1,14 +1,10 @@
 using System;
-using System.Collections;
 using DOL.Database;
-using DOL.GS;
 using DOL.GS.Spells;
-using DOL.Events;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.RealmAbilities.Statics
 {
-	public class NegativeMaelstromBase : GenericBase 
+    public class NegativeMaelstromBase : GenericBase 
     {
 		protected override string GetStaticName() {return "Negative Maelstrom";}
 		protected override ushort GetStaticModel() {return 1293;}

@@ -16,16 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Text;
 using System.Threading;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// This delegate is the callback function for RegionTimers
-	/// </summary>
-	public delegate int RegionTimerCallback(RegionTimer callingTimer);
+    /// <summary>
+    /// This delegate is the callback function for RegionTimers
+    /// </summary>
+    public delegate int RegionTimerCallback(RegionTimer callingTimer);
 
 	/// <summary>
 	/// Calls delegate on every tick

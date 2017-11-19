@@ -21,7 +21,6 @@ using System.Linq;
 using System.Reflection;
 
 using DOL.GS;
-using DOL.Database;
 using DOL.Database.Connection;
 using DOL.Database.Attributes;
 
@@ -29,10 +28,10 @@ using NUnit.Framework;
 
 namespace DOL.Database.Tests
 {
-	/// <summary>
-	/// Description of RegisterTableTests.
-	/// </summary>
-	[TestFixture]
+    /// <summary>
+    /// Description of RegisterTableTests.
+    /// </summary>
+    [TestFixture]
 	public class RegisterTableTests
 	{
 		public RegisterTableTests()

@@ -16,12 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		"&autoloot",
 		ePrivLevel.Player,
 		"automaticly pick up any loot that drops in your area",

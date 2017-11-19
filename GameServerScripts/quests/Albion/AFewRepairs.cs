@@ -150,7 +150,7 @@ namespace DOL.GS.Quests.Albion
 
             #region defineNPCs
 
-            GameNPC[] npcs = WorldMgr.GetNPCsByName("Brice Yarley", eRealm.Albion);
+            GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Brice Yarley", eRealm.Albion);
             if (npcs.Length == 0)
             {
                 briceYarley = new GameNPC();
@@ -180,7 +180,7 @@ namespace DOL.GS.Quests.Albion
             else
                 briceYarley = npcs[0];
 
-            npcs = WorldMgr.GetNPCsByName("Patrick Yarley", eRealm.Albion);
+            npcs = WorldMgr.GetObjectsByName<GameNPC>("Patrick Yarley", eRealm.Albion);
             if (npcs.Length == 0)
             {
                 patrickYarley = new GameNPC();

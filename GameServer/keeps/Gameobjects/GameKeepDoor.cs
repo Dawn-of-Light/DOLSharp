@@ -18,22 +18,17 @@
  */
 using System;
 using System.Collections;
-using System.Reflection;
 
 using DOL.Database;
-using DOL.Events;
 using DOL.GS.PacketHandler;
-using DOL.GS.ServerProperties;
-
-using log4net;
 
 
 namespace DOL.GS.Keeps
 {
-	/// <summary>
-	/// keep door in world
-	/// </summary>
-	public class GameKeepDoor : GameLiving, IDoor, IKeepItem
+    /// <summary>
+    /// keep door in world
+    /// </summary>
+    public class GameKeepDoor : GameLiving, IDoor, IKeepItem
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -104,12 +99,12 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (this.Component == null || this.Component.AbstractKeep == null)
+				if (Component == null || Component.AbstractKeep == null)
 				{
 					return eRealm.None;
 				}
 
-				return this.Component.AbstractKeep.Realm;
+				return Component.AbstractKeep.Realm;
 			}
 		}
 
@@ -142,12 +137,12 @@ namespace DOL.GS.Keeps
 		{
 			get 
 			{
-				if (this.Component == null || this.Component.AbstractKeep == null)
+				if (Component == null || Component.AbstractKeep == null)
 				{
 					return 0;
 				}
 
-				return (byte)this.Component.AbstractKeep.Level;
+				return (byte)Component.AbstractKeep.Level;
 			}
 		}
 
@@ -172,25 +167,25 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (this.Component == null || this.Component.AbstractKeep == null)
+				if (Component == null || Component.AbstractKeep == null)
 					return false;
 
-				if (this.Component.AbstractKeep is GameKeepTower)
+				if (Component.AbstractKeep is GameKeepTower)
 				{
-					if (this.DoorIndex == 1)
+					if (DoorIndex == 1)
 						return true;
 				}
-				else if (this.Component.AbstractKeep is GameKeep)
+				else if (Component.AbstractKeep is GameKeep)
 				{
-					if (this.Component.Skin == 10 || this.Component.Skin == 30) //old and new inner keep
+					if (Component.Skin == 10 || Component.Skin == 30) //old and new inner keep
 					{
-						if (this.DoorIndex == 1)
+						if (DoorIndex == 1)
 							return true;
 					}
-					if (this.Component.Skin == 0 || this.Component.Skin == 24)//old and new main gate
+					if (Component.Skin == 0 || Component.Skin == 24)//old and new main gate
 					{
-						if (this.DoorIndex == 1 ||
-							this.DoorIndex == 2)
+						if (DoorIndex == 1 ||
+                            DoorIndex == 2)
 							return true;
 					}
 				}
@@ -300,7 +295,7 @@ namespace DOL.GS.Keeps
 		{
 			if (damageAmount > 0)
 			{
-				this.Component.AbstractKeep.LastAttackedByEnemyTick = this.CurrentRegion.Time;
+                Component.AbstractKeep.LastAttackedByEnemyTick = CurrentRegion.Time;
 				base.TakeDamage(source, damageType, damageAmount, criticalAmount);
 
 				//only on hp change
@@ -329,15 +324,15 @@ namespace DOL.GS.Keeps
 
 			GameLiving source = attackData.Attacker;
 
-			if (this.Component.AbstractKeep is GameKeepTower)
+			if (Component.AbstractKeep is GameKeepTower)
 			{
 				toughness = ServerProperties.Properties.SET_TOWER_DOOR_TOUGHNESS;
 			}
 
 			if (source is GamePlayer)
 			{
-				baseDamage = (baseDamage - (baseDamage * 5 * this.Component.AbstractKeep.Level / 100)) * toughness / 100;
-				styleDamage = (styleDamage - (styleDamage * 5 * this.Component.AbstractKeep.Level / 100)) * toughness / 100;
+				baseDamage = (baseDamage - (baseDamage * 5 * Component.AbstractKeep.Level / 100)) * toughness / 100;
+				styleDamage = (styleDamage - (styleDamage * 5 * Component.AbstractKeep.Level / 100)) * toughness / 100;
 			}
 			else if (source is GameNPC)
 			{
@@ -349,8 +344,8 @@ namespace DOL.GS.Keeps
 				}
 				else
 				{
-					baseDamage = (baseDamage - (baseDamage * 5 * this.Component.AbstractKeep.Level / 100)) * toughness / 100;
-					styleDamage = (styleDamage - (styleDamage * 5 * this.Component.AbstractKeep.Level / 100)) * toughness / 100;
+					baseDamage = (baseDamage - (baseDamage * 5 * Component.AbstractKeep.Level / 100)) * toughness / 100;
+					styleDamage = (styleDamage - (styleDamage * 5 * Component.AbstractKeep.Level / 100)) * toughness / 100;
 
 					if (((GameNPC)source).Brain is DOL.AI.Brain.IControlledBrain)
 					{
@@ -416,7 +411,7 @@ namespace DOL.GS.Keeps
 					distance = 100;
 
 				//calculate Z
-				if (this.Component.AbstractKeep is GameKeepTower && !this.Component.AbstractKeep.IsPortalKeep)
+				if (Component.AbstractKeep is GameKeepTower && !Component.AbstractKeep.IsPortalKeep)
 				{
 					//when entering a tower, we need to raise Z
 					//portal keeps are considered towers too, so we check component count
@@ -441,7 +436,7 @@ namespace DOL.GS.Keeps
 						//the component for the keep and the component for the gate
 						int keepdistance = int.MaxValue;
 						int gatedistance = int.MaxValue;
-						foreach (GameKeepComponent c in this.Component.AbstractKeep.KeepComponents)
+						foreach (GameKeepComponent c in Component.AbstractKeep.KeepComponents)
 						{
 							if ((GameKeepComponent.eComponentSkin)c.Skin == GameKeepComponent.eComponentSkin.Keep)
 							{
@@ -463,9 +458,9 @@ namespace DOL.GS.Keeps
                 Point2D keepPoint;
 				//calculate x y
 				if (IsObjectInFront(player, 180, false))
-					keepPoint = GetPointFromHeading( this.Heading, -distance );
+					keepPoint = GetPointFromHeading(Heading, -distance );
 				else
-					keepPoint = GetPointFromHeading( this.Heading, distance );
+					keepPoint = GetPointFromHeading(Heading, distance );
 
 				//move player
 				player.MoveTo(CurrentRegionID, keepPoint.X, keepPoint.Y, keepz, player.Heading);
@@ -566,7 +561,7 @@ namespace DOL.GS.Keeps
 			{
 				if (Component.AbstractKeep != null)
 				{
-					Component.AbstractKeep.Doors.Remove(this.ObjectID);
+					Component.AbstractKeep.Doors.Remove(ObjectID);
 				}
 
 				Component.Delete();
@@ -612,19 +607,19 @@ namespace DOL.GS.Keeps
 
 			Zone curZone = WorldMgr.GetZone((ushort)(door.InternalID / 1000000));
 			if (curZone == null) return;
-			this.CurrentRegion = curZone.ZoneRegion;
+            CurrentRegion = curZone.ZoneRegion;
 			m_name = door.Name;
 			m_Heading = (ushort)door.Heading;
-			m_x = door.X;
-			m_y = door.Y;
-			m_z = door.Z;
+			X = door.X;
+			Y = door.Y;
+			Z = door.Z;
 			m_level = 0;
 			m_model = 0xFFFF;
 			m_doorID = door.InternalID;
 			m_state = eDoorState.Closed;
-			this.AddToWorld();
+            AddToWorld();
 
-			foreach (AbstractArea area in this.CurrentAreas)
+			foreach (AbstractArea area in CurrentAreas)
 			{
 				if (area is KeepArea)
 				{
@@ -657,7 +652,7 @@ namespace DOL.GS.Keeps
 			m_name = "Keep Door";
 			m_oldHealthPercent = HealthPercent;
 			m_doorID = GenerateDoorID();
-			this.m_model = 0xFFFF;
+            m_model = 0xFFFF;
 			m_state = eDoorState.Closed;
 
 			if (AddToWorld())
@@ -704,7 +699,7 @@ namespace DOL.GS.Keeps
 			int componentID = m_component.ID;
 
 			//index not sure yet
-			int doorIndex = this.Position.TemplateType;
+			int doorIndex = Position.TemplateType;
 			int id = 0;
 			//add door type
 			id += doortype * 100000000;
@@ -738,7 +733,7 @@ namespace DOL.GS.Keeps
 		{
 			base.Die(killer);
 
-			foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
+			foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
 				player.Out.SendMessage("The Keep Gate is broken!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
 			m_state = eDoorState.Open;

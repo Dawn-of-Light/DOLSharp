@@ -16,20 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections;
-using System.Reflection;
-using DOL.GS;
 using DOL.Database;
-using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Description résume de ITradeWindow.
-	/// </summary>
-	public interface ITradeWindow
+    /// <summary>
+    /// Description résume de ITradeWindow.
+    /// </summary>
+    public interface ITradeWindow
 	{
 		ArrayList TradeItems { get; set;}
 		ArrayList PartnerTradeItems { get; }

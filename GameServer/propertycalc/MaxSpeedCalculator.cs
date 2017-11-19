@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
@@ -25,16 +24,16 @@ using DOL.GS.Spells;
 
 namespace DOL.GS.PropertyCalc
 {
-	/// <summary>
-	/// The Max Speed calculator
-	/// 
-	/// BuffBonusCategory1 unused
-	/// BuffBonusCategory2 unused
-	/// BuffBonusCategory3 unused
-	/// BuffBonusCategory4 unused
-	/// BuffBonusMultCategory1 used for all multiplicative speed bonuses
-	/// </summary>
-	[PropertyCalculator(eProperty.MaxSpeed)]
+    /// <summary>
+    /// The Max Speed calculator
+    /// 
+    /// BuffBonusCategory1 unused
+    /// BuffBonusCategory2 unused
+    /// BuffBonusCategory3 unused
+    /// BuffBonusCategory4 unused
+    /// BuffBonusMultCategory1 used for all multiplicative speed bonuses
+    /// </summary>
+    [PropertyCalculator(eProperty.MaxSpeed)]
 	public class MaxSpeedCalculator : PropertyCalculator
 	{
 		public static readonly double SPEED1 = 1.753;

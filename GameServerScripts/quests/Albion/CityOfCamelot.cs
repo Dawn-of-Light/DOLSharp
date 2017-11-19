@@ -156,7 +156,7 @@ namespace DOL.GS.Quests.Albion
 
 			masterFrederick = GetMasterFrederick();
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Lord Urqhart", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Lord Urqhart", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
@@ -185,7 +185,7 @@ namespace DOL.GS.Quests.Albion
 			else
 				lordUrqhart = npcs[0];
 
-			npcs = WorldMgr.GetNPCsByName("Bombard", eRealm.Albion);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Bombard", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)

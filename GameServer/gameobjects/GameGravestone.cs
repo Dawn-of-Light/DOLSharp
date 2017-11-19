@@ -16,19 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
-using DOL.Database;
 using DOL.Language;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// This class holds all information that
-	/// EVERY object in the game world needs!
-	/// </summary>
-	public class GameGravestone : GameStaticItem
+    /// <summary>
+    /// This class holds all information that
+    /// EVERY object in the game world needs!
+    /// </summary>
+    public class GameGravestone : GameStaticItem
 	{
 		/// <summary>
 		/// how much xp are stored in this gravestone
@@ -45,9 +42,9 @@ namespace DOL.GS
 			m_saveInDB = false;
 			m_name = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameGravestone.GameGravestone.Grave", player.Name);
 			m_Heading = player.Heading;
-			m_x = player.X;
-			m_y = player.Y;
-			m_z = player.Z;
+			X = player.X;
+			Y = player.Y;
+			Z = player.Z;
 			CurrentRegionID = player.CurrentRegionID;
 			m_level = 0;
 

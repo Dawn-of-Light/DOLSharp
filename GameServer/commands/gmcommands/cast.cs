@@ -18,15 +18,13 @@
  */
 
 using System;
-using DOL.GS;
 using DOL.GS.Spells;
-using DOL.GS.PacketHandler;
 using DOL.Language;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		"&cast",
 		ePrivLevel.GM,
 		"GMCommands.Cast.Description",

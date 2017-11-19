@@ -17,19 +17,17 @@
  *
  */
 using System;
-using System.Reflection;
 using DOL.GS.PacketHandler;
 using DOL.Database;
-using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// This class represents an inventory item when it is
-	/// laying on the floor in the world! It is just a wraper
-	/// class around InventoryItem
-	/// </summary>
-	public class WorldInventoryItem : GameStaticItemTimed
+    /// <summary>
+    /// This class represents an inventory item when it is
+    /// laying on the floor in the world! It is just a wraper
+    /// class around InventoryItem
+    /// </summary>
+    public class WorldInventoryItem : GameStaticItemTimed
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -69,10 +67,10 @@ namespace DOL.GS
 			m_item.SlotPosition = 0;
 			m_item.OwnerID = null;
 			m_item.AllowAdd = true;
-			this.Level = (byte)item.Level;
-			this.Model = (ushort)item.Model;
-			this.Emblem = item.Emblem;
-			this.Name = item.Name;
+            Level = (byte)item.Level;
+            Model = (ushort)item.Model;
+            Emblem = item.Emblem;
+            Name = item.Name;
 
 			if (item.Template is ItemUnique && item.Template.IsPersisted == false)
 			{

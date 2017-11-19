@@ -19,24 +19,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Linq;
-
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS.Keeps;
 
-using log4net;
-
 namespace DOL.GS
 {
-	/// <summary>
-	/// LosCheckMgr is a class designed to handle LoS Checks and cache them.
-	/// If all in-game LoS check go through this class they'll obey serverproperties rules.
-	/// </summary>
-	public class LosCheckMgr
+    /// <summary>
+    /// LosCheckMgr is a class designed to handle LoS Checks and cache them.
+    /// If all in-game LoS check go through this class they'll obey serverproperties rules.
+    /// </summary>
+    public class LosCheckMgr
 	{
 		/// <summary>
 		/// For Debug purposes

@@ -17,8 +17,8 @@ namespace DOL.GS
 			try
 			{
 				Assembly gasm = Assembly.GetExecutingAssembly();
-				var DBAreas = GameServer.Database.SelectAllObjects<DBArea>();
-				foreach (DBArea thisArea in DBAreas)
+				var dbAreas = GameServer.Database.SelectAllObjects<DBArea>();
+				foreach (DBArea thisArea in dbAreas)
 				{
 					AbstractArea area = (AbstractArea)gasm.CreateInstance(thisArea.ClassType, false);
 					if (area == null)
@@ -28,20 +28,24 @@ namespace DOL.GS
 							try
 							{
 								area = (AbstractArea)asm.CreateInstance(thisArea.ClassType, false);
-								
-								if (area != null) 
-									break;
+
+                                if (area != null)
+                                {
+                                    break;
+                                }
 							}
 							catch (Exception e)
 							{
 								if (log.IsErrorEnabled)
-									log.Error("LoadAllAreas", e);
+								{
+								    log.Error("LoadAllAreas", e);
+								}
 							}
 						}
 
 						if (area == null)
 						{
-							log.Debug("area type " + thisArea.ClassType + " cannot be created, skipping");
+							log.Debug($"area type {thisArea.ClassType} cannot be created, skipping");
 							continue;
 						}
 					}
@@ -50,10 +54,14 @@ namespace DOL.GS
 					area.CanBroadcast = thisArea.CanBroadcast;
 					area.CheckLOS = thisArea.CheckLOS;
 					Region region = WorldMgr.GetRegion(thisArea.Region);
-					if (region == null)
-						continue;
+
+                    if (region == null)
+					{
+					    continue;
+					}
+
 					region.AddArea(area);
-					log.Info("Area added: " + thisArea.Description);
+					log.Info($"Area added: {thisArea.Description}");
 				}
 				return true;
 			}

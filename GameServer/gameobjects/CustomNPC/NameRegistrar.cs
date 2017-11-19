@@ -1,18 +1,14 @@
 /* 01/03/2005
    Written by Gavinius */
 
-using System;
 using System.Collections;
-using DOL;
-using DOL.Database;
-using DOL.GS;
 using DOL.GS.Commands;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS
 {
-	[NPCGuildScript("Name Registrar")]
+    [NPCGuildScript("Name Registrar")]
 	public class NameRegistrar : GameNPC
 	{
 		public override IList GetExamineMessages(GamePlayer player)

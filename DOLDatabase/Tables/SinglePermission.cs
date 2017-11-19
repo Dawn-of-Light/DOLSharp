@@ -17,13 +17,11 @@
  *
  */
 
-using System;
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	[DataTable(TableName="SinglePermission")]
+    [DataTable(TableName="SinglePermission")]
 	public class DBSinglePermission : DataObject
 	{
 		private string	m_playerID;

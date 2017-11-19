@@ -17,14 +17,13 @@
 *
 */
 #define NOENCRYPTION
-using System;
 using System.Reflection;
 using log4net;
 
 
 namespace DOL.GS.PacketHandler
 {
-	[PacketLib(1100, GameClient.eClientVersion.Version1100)]
+    [PacketLib(1100, GameClient.eClientVersion.Version1100)]
 	public class PacketLib1100 : PacketLib199
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

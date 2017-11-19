@@ -28,7 +28,7 @@ namespace DOL.GS.Spells
     /// <summary>
     /// 
     /// </summary>
-    [SpellHandlerAttribute("Heal")]
+    [SpellHandler("Heal")]
     public class HealSpellHandler : SpellHandler
     {
         // constructor
@@ -178,14 +178,14 @@ namespace DOL.GS.Spells
             GamePlayer playerTarget = target as GamePlayer;
 			if (playerTarget != null)
 			{
-				GameSpellEffect HealEffect = SpellHandler.FindEffectOnTarget(playerTarget, "EfficientHealing");
+				GameSpellEffect HealEffect = FindEffectOnTarget(playerTarget, "EfficientHealing");
 				if (HealEffect != null)
 				{
 					double HealBonus = amount * ((int)HealEffect.Spell.Value * 0.01);
 					amount += (int)HealBonus;
 					playerTarget.Out.SendMessage("Your Efficient Healing buff grants you a additional" + HealBonus + " in the Heal!", eChatType.CT_Spell, eChatLoc.CL_ChatWindow);
 				}
-				GameSpellEffect EndEffect = SpellHandler.FindEffectOnTarget(playerTarget, "EfficientEndurance");
+				GameSpellEffect EndEffect = FindEffectOnTarget(playerTarget, "EfficientEndurance");
 				if (EndEffect != null)
 				{
 					double EndBonus = amount * ((int)EndEffect.Spell.Value * 0.01);

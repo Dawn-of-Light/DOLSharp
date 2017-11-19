@@ -17,8 +17,6 @@
  *
  */
 using System;
-using DOL.GS;
-using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
 
@@ -28,9 +26,9 @@ namespace DOL.GS.Spells
     /// Dream Sphere self morph spell handler
     /// The DoT proc is a subspell, affects only caster
     /// </summary>
-    
+
     //the self dream-morph doesnt break on damage/attacked by enemy only grp-target 1 does
-    [SpellHandlerAttribute("DreamMorph")]
+    [SpellHandler("DreamMorph")]
     public class DreamMorph : OffensiveProcSpellHandler
 	{   	
 		public override void OnEffectStart(GameSpellEffect effect)
@@ -84,7 +82,7 @@ namespace DOL.GS.Spells
 
     //http://www.daoc-toa.net/img/dreamPrey.jpg
     //http://www.daoc-toa.net/img/dreamCat.jpg
-    [SpellHandlerAttribute("DreamGroupMorph")]
+    [SpellHandler("DreamGroupMorph")]
     public class DreamGroupMorph : DreamMorph
     {
     	private GameSpellEffect m_effect = null;

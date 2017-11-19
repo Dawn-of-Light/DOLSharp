@@ -18,7 +18,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using DOL.GS;
 using System.Collections;
 using System.Reflection;
@@ -30,11 +29,11 @@ using DOL.Language;
 
 namespace DOL.AI.Brain
 {
-	/// <summary>
-	/// A brain for the necromancer pets.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class NecromancerPetBrain : ControlledNpcBrain
+    /// <summary>
+    /// A brain for the necromancer pets.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class NecromancerPetBrain : ControlledNpcBrain
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -510,7 +509,7 @@ namespace DOL.AI.Brain
 
             protected override void OnTick()
             {
-                this.Interval = 1000;
+                Interval = 1000;
 
                 if (m_seconds > 0)
                 {

@@ -17,13 +17,11 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.GS;
 
 namespace DOL.Events
 {
-	class PetSpellEventArgs : EventArgs
+    class PetSpellEventArgs : EventArgs
 	{
 		private Spell m_spell;
 		private SpellLine m_spellLine;

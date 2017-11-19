@@ -16,16 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.PacketHandler;
-using DOL.Language;
 
 namespace DOL.GS.Trainer
 {
-	/// <summary>
-	/// Ranger Trainer
-	/// </summary>
-	[NPCGuildScript("Ranger Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Ranger Trainer" NPC's in Albion (multiple guilds are possible for one script)
+    /// <summary>
+    /// Ranger Trainer
+    /// </summary>
+    [NPCGuildScript("Ranger Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Ranger Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class RangerTrainer : GameTrainer
 	{
 		public override eCharacterClass TrainedClass
@@ -51,14 +49,14 @@ namespace DOL.GS.Trainer
 			// check if class matches.
 			if (player.CharacterClass.ID == (int) TrainedClass)
 			{
-				player.Out.SendMessage(this.Name + " says, \"You wish to learn more of our ways? Fine then.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				player.Out.SendMessage(Name + " says, \"You wish to learn more of our ways? Fine then.\"", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			}
 			else
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
 				{
-					player.Out.SendMessage(this.Name + " says, \"You know, the way of a [Ranger] is not for everyone. Are you sure this is your choice?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(Name + " says, \"You know, the way of a [Ranger] is not for everyone. Are you sure this is your choice?\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);

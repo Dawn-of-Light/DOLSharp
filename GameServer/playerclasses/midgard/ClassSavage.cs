@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Midgard Savage Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Savage, "Savage", "Viking")]
+    /// <summary>
+    /// Midgard Savage Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Savage, "Savage", "Viking")]
 	public class ClassSavage : ClassViking
 	{
 

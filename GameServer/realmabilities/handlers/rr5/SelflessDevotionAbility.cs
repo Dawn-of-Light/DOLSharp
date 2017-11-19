@@ -18,14 +18,13 @@
  */
 //Eden - 1.94 RR5 Paladin
 
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class SelflessDevotionAbility : RR5RealmAbility
+    public class SelflessDevotionAbility : RR5RealmAbility
 	{
 		public SelflessDevotionAbility(DBAbility dba, int level) : base(dba, level) { }
 

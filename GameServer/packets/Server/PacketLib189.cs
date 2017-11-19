@@ -20,16 +20,14 @@
 using System;
 using System.Linq;
 using log4net;
-using DOL.GS.Quests;
 using System.Reflection;
 using DOL.Database;
-using System.Collections;
 using DOL.GS.Housing;
 using System.Collections.Generic;
 
 namespace DOL.GS.PacketHandler
 {
-	[PacketLib(189, GameClient.eClientVersion.Version189)]
+    [PacketLib(189, GameClient.eClientVersion.Version189)]
 	public class PacketLib189 : PacketLib188
 	{
 		/// <summary>

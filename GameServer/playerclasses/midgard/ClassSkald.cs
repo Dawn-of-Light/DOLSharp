@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Midgard Skald Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Skald, "Skald", "Viking")]
+    /// <summary>
+    /// Midgard Skald Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Skald, "Skald", "Viking")]
 	public class ClassSkald : ClassViking
 	{
 

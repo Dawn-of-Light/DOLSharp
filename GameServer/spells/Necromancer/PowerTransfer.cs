@@ -16,18 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
-using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Spell handler for power trasnfer.
-	/// </summary>
-	/// <author>Aredhel</author>
-	[SpellHandlerAttribute("PowerTransferPet")]
+    /// <summary>
+    /// Spell handler for power trasnfer.
+    /// </summary>
+    /// <author>Aredhel</author>
+    [SpellHandler("PowerTransferPet")]
 	class PowerTransferPet : PowerTransfer
 	{
 		public override void OnDirectEffect(GameLiving target, double effectiveness)

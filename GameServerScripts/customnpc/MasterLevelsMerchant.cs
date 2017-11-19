@@ -19,18 +19,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using DOL.GS;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Scripts
 {
-	/// <summary>
-	/// MasterLevelsMerchant is responsible for selling ML Leveling Item and receiving them.
-	/// </summary>
-	public class MasterLevelsMerchant : GameBountyMerchant
+    /// <summary>
+    /// MasterLevelsMerchant is responsible for selling ML Leveling Item and receiving them.
+    /// </summary>
+    public class MasterLevelsMerchant : GameBountyMerchant
 	{
 		private static MerchantTradeItems m_offeredItems = new MerchantTradeItems("Master Level Credits");
 		

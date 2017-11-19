@@ -17,22 +17,19 @@
  *
  */
 using System;
-using System.Text;
 using DOL.Events;
-using DOL.Database;
 using log4net;
 using System.Reflection;
 using DOL.GS.Behaviour.Attributes;
-using DOL.GS.Behaviour;
 
 namespace DOL.GS.Behaviour.Triggers
-{	
+{
     /// <summary>
     /// A trigger defines the circumstances under which a certain QuestAction is fired.
     /// This can be eTriggerAction.Interact, eTriggerAction.GiveItem, eTriggerAction.Attack, etc...
     /// Additional there are two variables to add the needed parameters for the triggertype (Item to give for GiveItem, NPC to interact for Interact, etc...). To fire a QuestAction at least one of the added triggers must be fulfilled. 
     /// </summary>
-    [TriggerAttribute(TriggerType=eTriggerType.PlayerKilled,DefaultValueI=eDefaultValueConstants.NPC)]
+    [Trigger(TriggerType=eTriggerType.PlayerKilled,DefaultValueI=eDefaultValueConstants.NPC)]
     public class PlayerKilledTrigger : AbstractTrigger<Unused,GameNPC>
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

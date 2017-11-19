@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Text;
 
 namespace DOL.GS
 {
@@ -29,41 +27,24 @@ namespace DOL.GS
     /// </summary>
     public class ZoneData
     {
-        public ushort ZoneID
-        { get { return m_ZoneID; } set { m_ZoneID = value; } }
+        public ushort ZoneID { get; set; }
 
-        public ushort RegionID
-        { get { return m_RegionID; } set { m_RegionID = value; } }
+        public ushort RegionID { get; set; }
 
-        public byte OffX
-        { get { return m_OffX; } set { m_OffX = value; } }
+        public byte OffX { get; set; }
 
-        public byte OffY
-        { get { return m_OffY; } set { m_OffY = value; } }
+        public byte OffY { get; set; }
 
-        public byte Height
-        { get { return m_Height; } set { m_Height = value; } }
+        public byte Height { get; set; }
 
-        public byte Width
-        { get { return m_Width; } set { m_Width = value; } }
+        public byte Width { get; set; }
 
-        public string Description
-        { get { return m_description; } set { m_description = value; } }
+        public string Description { get; set; }
 
-        public byte DivingFlag
-        { get { return m_divingFlag; } set { m_divingFlag = value; } }
+        public byte DivingFlag { get; set; }
 
-		public int WaterLevel
-		{ get { return m_waterLevel; } set { m_waterLevel = value; } }
+        public int WaterLevel { get; set; }
 
-        public bool IsLava
-        { get { return m_IsLava; } set { m_IsLava = value; } }
-
-        private byte m_OffX, m_OffY, m_Height, m_Width;
-        private ushort m_ZoneID, m_RegionID;
-        private string m_description;
-        private int m_waterLevel;
-		private byte m_divingFlag;
-        private bool m_IsLava;
+        public bool IsLava { get; set; }
     }
 }

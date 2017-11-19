@@ -22,21 +22,20 @@ using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
 using DOL.Database;
-using DOL.Events;
 using DOL.GS.Keeps;
 
 namespace DOL.GS
 {
-	#region GameSiegeweapon
-	/// <summary>
-	/// Description résumée de GameSiegeWeapon.
-	/// </summary>
-	public class GameSiegeWeapon : GameMovingObject
+    #region GameSiegeweapon
+    /// <summary>
+    /// Description résumée de GameSiegeWeapon.
+    /// </summary>
+    public class GameSiegeWeapon : GameMovingObject
 	{
 		public GameSiegeWeapon()
 		{
 			SetOwnBrain(new BlankBrain());
-			this.Realm = 0;
+            Realm = 0;
 			Level = 1;
 			CurrentState = eState.Inactive;
 			m_ammo = new ArrayList();
@@ -170,12 +169,12 @@ namespace DOL.GS
 
 		public int DecayedHp
 		{
-			get { return 3 * (this.MaxHealth / 10); }
+			get { return 3 * (MaxHealth / 10); }
 		}
 
 		public int DeductHp
 		{
-			get { return -this.MaxHealth / 10; }
+			get { return -MaxHealth / 10; }
 		}
 
 		private string m_itemId;
@@ -263,7 +262,7 @@ namespace DOL.GS
 			if (!CanUse()) return;
 			if (!m_enableToMove) return;
 			if (Owner == null || Owner.GroundTarget == null) return;
-            if ( !this.IsWithinRadius( Owner.GroundTarget, 1000 ) )
+            if ( !IsWithinRadius( Owner.GroundTarget, 1000 ) )
 			{
 				Owner.Out.SendMessage("Ground target is too far away to move to!", eChatType.CT_System,
 									  eChatLoc.CL_SystemWindow);
@@ -365,11 +364,11 @@ namespace DOL.GS
 					return;
 				}
 				TimesRepaired = TimesRepaired + 1;
-				Health += (int)(this.MaxHealth * 0.15);
+				Health += (int)(MaxHealth * 0.15);
 			}
 			else
 			{
-				this.Owner.Out.SendMessage("The siegeweapon has decayed beyond repairs!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+                Owner.Out.SendMessage("The siegeweapon has decayed beyond repairs!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 			}
 		}
 
@@ -411,7 +410,7 @@ namespace DOL.GS
 		private int GetActionDelay(SiegeTimer.eAction action)
 		{
 			if (action == SiegeTimer.eAction.Fire && TargetObject != null)
-                return (int)( ActionDelay[(int)action] * 0.001 * this.GetDistanceTo( TargetObject ) );
+                return (int)( ActionDelay[(int)action] * 0.001 * GetDistanceTo( TargetObject ) );
 			
 			int delay = ActionDelay[(int)action];
 			//TODO: better to use a property here - discuss to implement one? dunnow if siegespeed is used at another place.
@@ -432,15 +431,15 @@ namespace DOL.GS
 			Owner.Stealth(false);
 			if (!Owner.IsAlive || Owner.IsMezzed || Owner.IsStunned)
 			{
-				this.Owner.Out.SendMessage("You can't use this siegeweapon now!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+                Owner.Out.SendMessage("You can't use this siegeweapon now!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 				return false;
 			}
 			if (Health <= DecayedHp)
 			{
-				this.Owner.Out.SendMessage("The siegeweapon needs to be repaired!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+                Owner.Out.SendMessage("The siegeweapon needs to be repaired!", eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 				return false;
 			}
-			if (!this.IsWithinRadius(this.Owner, SIEGE_WEAPON_CONTROLE_DISTANCE))
+			if (!IsWithinRadius(Owner, SIEGE_WEAPON_CONTROLE_DISTANCE))
 			{
 				Owner.Out.SendMessage("You are too far from your siege equipment to control it any longer!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return false;
@@ -496,11 +495,11 @@ namespace DOL.GS
 			base.LoadFromDatabase(obj);
 			if (!(obj is ItemTemplate)) return;
 			ItemTemplate item = (ItemTemplate)obj;
-            this.TranslationId = item.TranslationId;
-			this.Name = item.Name;
-            this.ExamineArticle = item.ExamineArticle;
-            this.MessageArticle = item.MessageArticle;
-			this.Model = (ushort)item.Model;
+            TranslationId = item.TranslationId;
+            Name = item.Name;
+            ExamineArticle = item.ExamineArticle;
+            MessageArticle = item.MessageArticle;
+            Model = (ushort)item.Model;
 		}
 
 		public bool EnableToMove
@@ -647,7 +646,7 @@ namespace DOL.GS
 
 			if (SiegeWeapon.Owner != null)
 			{
-				SiegeWeapon.Owner.Out.SendSiegeWeaponInterface(this.SiegeWeapon, 0);
+				SiegeWeapon.Owner.Out.SendSiegeWeaponInterface(SiegeWeapon, 0);
 			}
 			if ((SiegeWeapon.CurrentState & GameSiegeWeapon.eState.Armed) != GameSiegeWeapon.eState.Armed)
 				SiegeWeapon.Arm();

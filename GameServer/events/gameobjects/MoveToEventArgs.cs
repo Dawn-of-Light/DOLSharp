@@ -41,7 +41,7 @@ namespace DOL.Events
 		/// <param name="heading">the target heading</param>
 		public MoveToEventArgs(ushort regionId, int x, int y, int z, ushort heading)
 		{
-			this.regionID = regionId;
+            regionID = regionId;
 			this.x = x;
 			this.y = y;
 			this.z = z;

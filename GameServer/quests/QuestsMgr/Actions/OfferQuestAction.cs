@@ -17,16 +17,13 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.Behaviour.Attributes;
 using DOL.GS.Behaviour;
 
 namespace DOL.GS.Quests.Actions
 {
-    [ActionAttribute(ActionType = eActionType.OfferQuest)]
+    [Action(ActionType = eActionType.OfferQuest)]
     public class OfferQuestAction : AbstractAction<Type,String>
     {               
 

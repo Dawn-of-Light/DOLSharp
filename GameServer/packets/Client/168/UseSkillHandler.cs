@@ -17,7 +17,6 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using DOL.GS.Styles;
@@ -25,7 +24,7 @@ using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.UseSkill, "Handles Player Use Skill Request.", eClientStatus.PlayerInGame)]
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.UseSkill, "Handles Player Use Skill Request.", eClientStatus.PlayerInGame)]
 	public class UseSkillHandler : IPacketHandler
 	{
 		/// <summary>

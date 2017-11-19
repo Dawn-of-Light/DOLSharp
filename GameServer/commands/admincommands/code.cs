@@ -35,7 +35,7 @@ namespace DOL.GS.Commands
 		"AdminCommands.Code.Usage")]
 	public class DynCodeCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static log4net.ILog log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public static void ExecuteCode(GameClient client, string code)
 		{

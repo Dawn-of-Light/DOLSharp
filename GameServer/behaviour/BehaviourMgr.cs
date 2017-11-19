@@ -20,20 +20,15 @@ using System;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
-using System.Text;
-using DOL.Database;
-using DOL.Events;
-using DOL.GS.PacketHandler;
 using log4net;
 using DOL.GS.Behaviour.Attributes;
-using DOL.GS.Behaviour;
 
 namespace DOL.GS.Behaviour
-{				
-	/// <summary>
-	/// Declares the behaviours managed, all behaviourtypes instances
-	/// must be registered here to be usable
-	/// </summary>
+{
+    /// <summary>
+    /// Declares the behaviours managed, all behaviourtypes instances
+    /// must be registered here to be usable
+    /// </summary>
     public sealed class BehaviourMgr
     {  
 		#region Declaration

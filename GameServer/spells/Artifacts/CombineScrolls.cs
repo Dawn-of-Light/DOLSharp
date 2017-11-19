@@ -17,8 +17,6 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.Database;
 using System.Collections;
 using DOL.GS.PacketHandler;
@@ -29,7 +27,7 @@ namespace DOL.GS.Spells
     /// The spell that combines artifact scrolls.
     /// </summary>
     /// <author>Aredhel</author>
-	[SpellHandlerAttribute("CombineScrolls")]
+	[SpellHandler("CombineScrolls")]
     class CombineScrolls : SpellHandler
     {
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

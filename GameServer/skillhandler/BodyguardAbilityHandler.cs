@@ -19,7 +19,6 @@
 using System.Reflection;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using DOL.GS;
 using log4net;
 using DOL.Language;
 

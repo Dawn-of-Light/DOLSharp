@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 using DOL.Events;
 using DOL.AI.Brain;
@@ -24,10 +23,10 @@ using DOL.GS.PlayerClass;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// The Bonedancer character class.
-	/// </summary>
-	public class CharacterClassBoneDancer : ClassMystic
+    /// <summary>
+    /// The Bonedancer character class.
+    /// </summary>
+    public class CharacterClassBoneDancer : ClassMystic
 	{
 		/// <summary>
 		/// Releases controlled object

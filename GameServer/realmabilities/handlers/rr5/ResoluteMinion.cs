@@ -1,10 +1,5 @@
 //Andraste v2.0 - Vico
 
-using System;
-using System.Reflection;
-using System.Collections;
-using DOL.GS;
-using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Database;
 
@@ -12,7 +7,7 @@ using DOL.Database;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class ResoluteMinionAbility : RR5RealmAbility
+    public class ResoluteMinionAbility : RR5RealmAbility
     {
 		public const int DURATION = 60000;
 		public ResoluteMinionAbility(DBAbility dba, int level) : base(dba, level) { }
@@ -35,7 +30,7 @@ namespace DOL.GS.RealmAbilities
 
 namespace DOL.GS.Effects
 {
-	public class ResoluteMinionEffect : TimedEffect
+    public class ResoluteMinionEffect : TimedEffect
 	{
 		public ResoluteMinionEffect() : base(RealmAbilities.ResoluteMinionAbility.DURATION) { }
 		private GameNPC m_pet;

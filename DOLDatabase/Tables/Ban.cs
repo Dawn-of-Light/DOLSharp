@@ -18,15 +18,14 @@
  */
 
 using System;
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Bans table
-	/// </summary>
-	[DataTable(TableName="Ban")]
+    /// <summary>
+    /// Bans table
+    /// </summary>
+    [DataTable(TableName="Ban")]
 	public class DBBannedAccount : DataObject
 	{
 		private string	m_author;

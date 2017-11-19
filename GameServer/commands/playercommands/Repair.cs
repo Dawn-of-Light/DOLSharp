@@ -22,7 +22,7 @@ using DOL.GS.Keeps;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&repair",
 		ePrivLevel.Player,
 		"You can repair an item when you are a crafter",

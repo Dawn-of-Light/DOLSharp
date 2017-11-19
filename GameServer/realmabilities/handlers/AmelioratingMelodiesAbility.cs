@@ -1,18 +1,12 @@
-using System;
-using System.Collections;
 using DOL.Database;
-using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
-using DOL.GS.PropertyCalc;
-using DOL.GS.Spells;
 using System.Collections.Generic;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Ameliorating Melodies realm ability
-	/// </summary>
-	public class AmelioratingMelodiesAbility : TimedRealmAbility
+    /// <summary>
+    /// Ameliorating Melodies realm ability
+    /// </summary>
+    public class AmelioratingMelodiesAbility : TimedRealmAbility
 	{
 		/// <summary>
 		/// Constructs the Ameliorating Melodies handler

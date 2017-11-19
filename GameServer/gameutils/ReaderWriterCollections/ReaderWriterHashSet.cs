@@ -17,7 +17,6 @@
  *
  */
 
-using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,12 +24,12 @@ using System.Threading;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// ReaderWriterHashSet is a ISet implementaiton with ReaderWriterLockSlim for concurrent acess.
-	/// This Collection supports Multiple Reader but only one writer. Enumerator is a Snapshot of Collection.
-	/// You can use TryXXX Method to prevent race conditions between read checks and write lock acquirement.
-	/// </summary>
-	public class ReaderWriterHashSet<T> : ISet<T>
+    /// <summary>
+    /// ReaderWriterHashSet is a ISet implementaiton with ReaderWriterLockSlim for concurrent acess.
+    /// This Collection supports Multiple Reader but only one writer. Enumerator is a Snapshot of Collection.
+    /// You can use TryXXX Method to prevent race conditions between read checks and write lock acquirement.
+    /// </summary>
+    public class ReaderWriterHashSet<T> : ISet<T>
 	{
 		private readonly HashSet<T> m_set;
 		private readonly ReaderWriterLockSlim m_rwLock = new ReaderWriterLockSlim();

@@ -18,22 +18,16 @@
 *///made by Yemla, based off Alblative
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
-using log4net;
-using System.Collections;
-using DOL.GS;
-using DOL.AI.Brain;
-using DOL.GS.Keeps;
 
 
 namespace DOL.GS.Spells
 {
-	[SpellHandlerAttribute("DmgReductionAndPowerReturn")]
+    [SpellHandler("DmgReductionAndPowerReturn")]
    public class DamageReductionAndPowerReturnSpellHandler : SpellHandler
    {
 		public const string Damage_Reduction = "damage reduction";
@@ -105,7 +99,7 @@ namespace DOL.GS.Spells
 
 			if (damagereduction <= 0)
 		 {
-			GameSpellEffect effect = SpellHandler.FindEffectOnTarget(living, this);
+			GameSpellEffect effect = FindEffectOnTarget(living, this);
 			if(effect != null)
 			   effect.Cancel(false);
 		 }

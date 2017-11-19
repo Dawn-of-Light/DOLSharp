@@ -17,15 +17,11 @@
 *
 */
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
-using System.Collections;
 using DOL.Language;
-using DOL.GS.Keeps;
-using DOL.GS.ServerRules;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 	"&relics",
 	new string[] {"&relic"},
 	ePrivLevel.Player,

@@ -16,18 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using System.ComponentModel;
 using System.Configuration.Install;
 using System.ServiceProcess;
 
 namespace DOL.DOLServer
 {
-	/// <summary>
-	/// Zusammenfassung für GameServerServiceInstaller.
-	/// </summary>
-	[RunInstaller(true)]
+    /// <summary>
+    /// Zusammenfassung für GameServerServiceInstaller.
+    /// </summary>
+    [RunInstaller(true)]
 	public class GameServerServiceInstaller : Installer
 	{
 		private ServiceInstaller m_gameServerServiceInstaller;

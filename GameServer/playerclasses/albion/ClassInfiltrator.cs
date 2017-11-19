@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Albion Infiltrator Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Infiltrator, "Infiltrator", "Rogue")]
+    /// <summary>
+    /// Albion Infiltrator Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Infiltrator, "Infiltrator", "Rogue")]
 	public class ClassInfiltrator : ClassAlbionRogue
 	{
 		private static readonly string[] AutotrainableSkills = new[] { Specs.Stealth };

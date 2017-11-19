@@ -29,7 +29,7 @@ namespace DOL.GS.Spells
     /// a defensive proc (200 pt. melee health buffer).
     /// </summary>
     /// <author>Aredhel</author>
-    [SpellHandlerAttribute("ShadesOfMist")]
+    [SpellHandler("ShadesOfMist")]
     public class ShadeOfMistDefensiveProcSpellHandler : SpellHandler
     {
         private int ablativehp = 0;

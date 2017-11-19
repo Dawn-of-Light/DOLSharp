@@ -16,20 +16,19 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PropertyCalc
 {
-	/// <summary>
-	/// The power regen rate calculator
-	/// 
-	/// BuffBonusCategory1 is used for all buffs
-	/// BuffBonusCategory2 is used for all debuffs (positive values expected here)
-	/// BuffBonusCategory3 unused
-	/// BuffBonusCategory4 unused
-	/// BuffBonusMultCategory1 unused
-	/// </summary>
-	[PropertyCalculator(eProperty.PowerRegenerationRate)]
+    /// <summary>
+    /// The power regen rate calculator
+    /// 
+    /// BuffBonusCategory1 is used for all buffs
+    /// BuffBonusCategory2 is used for all debuffs (positive values expected here)
+    /// BuffBonusCategory3 unused
+    /// BuffBonusCategory4 unused
+    /// BuffBonusMultCategory1 unused
+    /// </summary>
+    [PropertyCalculator(eProperty.PowerRegenerationRate)]
 	public class PowerRegenerationRateCalculator : PropertyCalculator
 	{
 		public PowerRegenerationRateCalculator() {}

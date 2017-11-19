@@ -152,7 +152,7 @@ namespace DOL.GS.Quests.Albion
 
 			masterFrederick = GetMasterFrederick();
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Queen Tatiana", eRealm.None);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Queen Tatiana", eRealm.None);
 			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)

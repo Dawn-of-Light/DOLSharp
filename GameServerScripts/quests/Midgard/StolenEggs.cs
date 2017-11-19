@@ -150,7 +150,7 @@ namespace DOL.GS.Quests.Midgard
 
 			dalikor = GetDalikor();
 
-            GameNPC[] npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.NPCVikingHyndla"), eRealm.Midgard);
+            GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.NPCVikingHyndla"), eRealm.Midgard);
             if (npcs.Length == 0)
 			{
 				hyndla = new GameNPC();
@@ -180,7 +180,7 @@ namespace DOL.GS.Quests.Midgard
 			else
 				hyndla = npcs[0];
 
-            npcs = (GameNPC[])WorldMgr.GetObjectsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.NPCGriffinHandlerNjiedi"), eRealm.Midgard, typeof(GameStableMaster));
+            npcs = WorldMgr.GetObjectsByName<GameStableMaster>(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.NPCGriffinHandlerNjiedi"), eRealm.Midgard);
 
 			if (npcs.Length == 0)
 			{
@@ -229,8 +229,8 @@ namespace DOL.GS.Quests.Midgard
 				njiedi = npcs[0] as GameStableMaster;
 			}
 
-//			npcs = WorldMgr.GetNPCsByName("Askefruer Trainer", eRealm.None);
-            npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.NPCAskefruerTrainer"), eRealm.None);
+//			npcs = WorldMgr.GetObjectsByName<GameNPC>("Askefruer Trainer", eRealm.None);
+            npcs = WorldMgr.GetObjectsByName<GameNPC>(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.StolenEggs.NPCAskefruerTrainer"), eRealm.None);
             if (npcs.Length == 0)
 			{
 				askefruerTrainer = new GameNPC();

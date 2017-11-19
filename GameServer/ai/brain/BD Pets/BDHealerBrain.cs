@@ -18,23 +18,16 @@
  */
 using System;
 using System.Reflection;
-using System.Collections;
-using System.Collections.Generic;
 using DOL.Events;
 using DOL.GS;
-using DOL.GS.Spells;
-using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
-using DOL.GS.RealmAbilities;
-using DOL.GS.SkillHandler;
 using log4net;
 
 namespace DOL.AI.Brain
 {
-	/// <summary>
-	/// A brain that can be controlled
-	/// </summary>
-	public class BDHealerBrain : BDPetBrain
+    /// <summary>
+    /// A brain that can be controlled
+    /// </summary>
+    public class BDHealerBrain : BDPetBrain
 	{
 		/// <summary>
 		/// Defines a logger for this class.

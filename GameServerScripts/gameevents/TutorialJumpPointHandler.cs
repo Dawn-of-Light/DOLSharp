@@ -16,18 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.Database;
-using DOL.GS.PacketHandler;
-using DOL.Events;
 using DOL.GS.ServerRules;
 
 namespace DOL.GS.GameEvents
 {
-	/// <summary>
-	/// Handles Tutorial Jump Point Exits
-	/// </summary>
-	public class TutorialJumpPointHandler : IJumpPointHandler
+    /// <summary>
+    /// Handles Tutorial Jump Point Exits
+    /// </summary>
+    public class TutorialJumpPointHandler : IJumpPointHandler
 	{
 		/// <summary>
 		/// Decides whether player can jump to the target point.

@@ -17,15 +17,14 @@
  *
  */
 using System;
-using DOL.Database;
 using DOL.GS;
 
 namespace DOL.Events
 {
-	/// <summary>
-	/// Holds the arguments for the GiveMoney event of GamePlayer
-	/// </summary>
-	public class GiveMoneyEventArgs : EventArgs
+    /// <summary>
+    /// Holds the arguments for the GiveMoney event of GamePlayer
+    /// </summary>
+    public class GiveMoneyEventArgs : EventArgs
 	{
 
 		private GamePlayer m_source;

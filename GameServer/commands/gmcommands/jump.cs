@@ -24,7 +24,7 @@ using System.Collections.Generic;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&jump",
+	[Cmd("&jump",
 		ePrivLevel.GM,
 		"GMCommands.Jump.Description",
 		"GMCommands.Jump.Information",
@@ -118,7 +118,7 @@ namespace DOL.GS.Commands
 
 					if (clientc == null)
 					{
-						GameNPC[] npcs = WorldMgr.GetNPCsByName(args[2], eRealm.None);
+						GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>(args[2], eRealm.None);
 
 						if (npcs.Length > 0)
 						{
@@ -175,7 +175,7 @@ namespace DOL.GS.Commands
 						int realm = 0;
 						int.TryParse(args[3], out realm);
 
-						GameNPC[] npcs = WorldMgr.GetNPCsByName(args[2], (eRealm)realm);
+						GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>(args[2], (eRealm)realm);
 
 						if (npcs.Length > 0)
 						{

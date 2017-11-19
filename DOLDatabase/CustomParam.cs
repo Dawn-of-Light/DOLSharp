@@ -16,17 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Base Class for Custom Params Table
-	/// Implementation for <see cref="ICustomParamsValuable"/>
-	/// </summary>
-	public abstract class CustomParam : DataObject
+    /// <summary>
+    /// Base Class for Custom Params Table
+    /// Implementation for <see cref="ICustomParamsValuable"/>
+    /// </summary>
+    public abstract class CustomParam : DataObject
 	{
 		private string m_keyName;
 		

@@ -25,12 +25,7 @@ namespace DOL.GS
 	/// </summary>
 	public class Point3D : Point2D, IPoint3D
 	{
-		/// <summary>
-		/// The Z coord of this point
-		/// </summary>
-		protected int m_z;
-
-		/// <summary>
+	    /// <summary>
 		/// Constructs a new 3D point object
 		/// </summary>
 		public Point3D() : base(0, 0)
@@ -45,7 +40,7 @@ namespace DOL.GS
 		/// <param name="z">The Z coord</param>
 		public Point3D(int x, int y, int z) : base(x, y)
 		{
-			m_z = z;
+			Z = z;
 		}
 
 		/// <summary>
@@ -70,13 +65,9 @@ namespace DOL.GS
 		/// <summary>
 		/// Z coord of this point
 		/// </summary>
-		public virtual int Z
-		{
-			get { return m_z; }
-			set { m_z = value; }
-		}
+		public virtual int Z { get; set; }
 
-		public override void Clear()
+	    public override void Clear()
 		{
 			base.Clear();
 			Z = 0;
@@ -90,7 +81,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return string.Format("({0}, {1}, {2})", m_x.ToString(), m_y.ToString(), m_z.ToString());
+			return $"({X}, {Y}, {Z})";
 		}
 
 		/// <summary>
@@ -121,7 +112,7 @@ namespace DOL.GS
 		{
 			double dx = (double) X - point.X;
 			double dy = (double) Y - point.Y;
-			var dz = (double) ((Z - point.Z)*zfactor);
+			var dz = ((Z - point.Z)*zfactor);
 
 			return (int) Math.Sqrt(dx*dx + dy*dy + dz*dz);
 		}

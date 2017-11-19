@@ -18,23 +18,20 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using System.Reflection;
 using DOL.Database;
-using DOL.Events;
 using DOL.Language;
 using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS.Quests.Atlantis
 {
-	/// <summary>
-	/// Turn in Quest for changing artifact types
-	/// </summary>
-	// Serialize string: <dmgtype>;<weptype>;<stat>
-	public class ArtifactTurnInQuest : ArtifactQuest
+    /// <summary>
+    /// Turn in Quest for changing artifact types
+    /// </summary>
+    // Serialize string: <dmgtype>;<weptype>;<stat>
+    public class ArtifactTurnInQuest : ArtifactQuest
 	{
 		#region Member/Static variables
 
@@ -169,7 +166,7 @@ namespace DOL.GS.Quests.Atlantis
 
 			#region defineNPCs
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "ArtifactTurnInQuest.Init.ArtifactScholarFemale") + " Alaria", eRealm.Midgard);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "ArtifactTurnInQuest.Init.ArtifactScholarFemale") + " Alaria", eRealm.Midgard);
 			if (npcs.Length == 0)
 			{
 				m_scholarAlaria = new ArtifactScholar();
@@ -194,7 +191,7 @@ namespace DOL.GS.Quests.Atlantis
 			else
 				m_scholarAlaria = npcs[0] as ArtifactScholar;
 
-			npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "ArtifactTurnInQuest.Init.ArtifactScholarMale") + " Jarron", eRealm.Albion);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "ArtifactTurnInQuest.Init.ArtifactScholarMale") + " Jarron", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				m_scholarJarron = new ArtifactScholar();
@@ -219,7 +216,7 @@ namespace DOL.GS.Quests.Atlantis
 			else
 				m_scholarJarron = npcs[0] as ArtifactScholar;
 
-			npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "ArtifactTurnInQuest.Init.ArtifactScholarMale") + " Elmer", eRealm.Hibernia);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>(LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "ArtifactTurnInQuest.Init.ArtifactScholarMale") + " Elmer", eRealm.Hibernia);
 			if (npcs.Length == 0)
 			{
 				m_scholarElmer = new ArtifactScholar();
@@ -276,7 +273,7 @@ namespace DOL.GS.Quests.Atlantis
 			}
 
 			return (player != null &&
-			        player.IsDoingQuest(this.GetType()) == null &&
+			        player.IsDoingQuest(GetType()) == null &&
 			        artCheck);
 		}
 
@@ -544,9 +541,9 @@ namespace DOL.GS.Quests.Atlantis
 		/// </summary>
 		private void LoadProperties()
 		{
-			this.m_scholarName = GetCustomProperty("SN");
-			this.m_artifactID = GetCustomProperty("Art");
-			this.m_name = GetCustomProperty("Name");
+            m_scholarName = GetCustomProperty("SN");
+            m_artifactID = GetCustomProperty("Art");
+            m_name = GetCustomProperty("Name");
 
 			m_curTypes = new List<string>(2);
 			string combinedOptions = GetCustomProperty("Types");
@@ -559,11 +556,11 @@ namespace DOL.GS.Quests.Atlantis
 			}
 
 			//If some how the VS got messed up, reset the quest
-			if (!int.TryParse(GetCustomProperty("VS"), out this.virtualStep) || this.virtualStep > MAXNUMOFSTEPS || this.virtualStep < 0)
+			if (!int.TryParse(GetCustomProperty("VS"), out virtualStep) || virtualStep > MAXNUMOFSTEPS || virtualStep < 0)
 			{
-				//This would be a strange error - but for some reason it doesn't like Step = 0 o.O
-				//this.Step = 0;
-				this.virtualStep = 0;
+                //This would be a strange error - but for some reason it doesn't like Step = 0 o.O
+                //this.Step = 0;
+                virtualStep = 0;
 				m_curTypes.Clear();
 				m_chosenTypes = "";
 			}
@@ -579,7 +576,7 @@ namespace DOL.GS.Quests.Atlantis
 			// move quest from active list to finished list...
 			m_questPlayer.QuestList.Remove(this);
 
-			if (m_questPlayer.HasFinishedQuest(this.GetType()) == 0)
+			if (m_questPlayer.HasFinishedQuest(GetType()) == 0)
 				m_questPlayer.QuestListFinished.Add(this);
 
 			DeleteFromDatabase();

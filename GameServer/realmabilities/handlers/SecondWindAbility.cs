@@ -1,14 +1,13 @@
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.Language;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Second Wind, restores 100% endu
-	/// </summary>
-	public class SecondWindAbility : TimedRealmAbility
+    /// <summary>
+    /// Second Wind, restores 100% endu
+    /// </summary>
+    public class SecondWindAbility : TimedRealmAbility
 	{
 		public SecondWindAbility(DBAbility dba, int level) : base(dba, level) { }
 

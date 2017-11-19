@@ -1,15 +1,11 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
-using DOL.GS.RealmAbilities;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Adrenaline Rush
-	/// </summary>
-	public class FerociousWillEffect : TimedEffect
+    /// <summary>
+    /// Adrenaline Rush
+    /// </summary>
+    public class FerociousWillEffect : TimedEffect
 	{
 
 		private int m_currentBonus = 25;

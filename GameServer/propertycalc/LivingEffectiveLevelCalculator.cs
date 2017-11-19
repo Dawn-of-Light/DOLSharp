@@ -16,22 +16,20 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.AI;
 using DOL.AI.Brain;
 
 namespace DOL.GS.PropertyCalc
 {
-	/// <summary>
-	/// The Living Effective Level calculator
-	/// 
-	/// BuffBonusCategory1 is used for buffs, uncapped
-	/// BuffBonusCategory2 unused
-	/// BuffBonusCategory3 unused
-	/// BuffBonusCategory4 unused
-	/// BuffBonusMultCategory1 unused
-	/// </summary>
-	[PropertyCalculator(eProperty.LivingEffectiveLevel)]
+    /// <summary>
+    /// The Living Effective Level calculator
+    /// 
+    /// BuffBonusCategory1 is used for buffs, uncapped
+    /// BuffBonusCategory2 unused
+    /// BuffBonusCategory3 unused
+    /// BuffBonusCategory4 unused
+    /// BuffBonusMultCategory1 unused
+    /// </summary>
+    [PropertyCalculator(eProperty.LivingEffectiveLevel)]
 	public class LivingEffectiveLevelCalculator : PropertyCalculator
 	{
 		public override int CalcValue(GameLiving living, eProperty property) 

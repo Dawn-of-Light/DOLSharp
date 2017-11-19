@@ -16,12 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/*
+    /*
 	 * 	public static readonly Dictionary<string, ushort> AbilitiesClientHardcodedIDs = new Dictionary<string, ushort>()
 		{
 			// { "(nothing)", 0 },
@@ -97,10 +96,10 @@ namespace DOL.Database
 			//{ Abilities.OffensiveCombatPowerRegeneration, 70 }, missing
 		};
 	*/
-	/// <summary>
-	/// The ability table
-	/// </summary>
-	[DataTable(TableName="Ability")]
+    /// <summary>
+    /// The ability table
+    /// </summary>
+    [DataTable(TableName="Ability")]
 	public class DBAbility : DataObject
 	{
 		protected int	 m_abilityID;

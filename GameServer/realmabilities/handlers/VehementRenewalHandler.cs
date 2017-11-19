@@ -1,14 +1,13 @@
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Vehement Renewal, healing all but caster in 2000 range
-	/// </summary>
-	public class VehementRenewalAbility : TimedRealmAbility
+    /// <summary>
+    /// Vehement Renewal, healing all but caster in 2000 range
+    /// </summary>
+    public class VehementRenewalAbility : TimedRealmAbility
 	{
 		public VehementRenewalAbility(DBAbility dba, int level) : base(dba, level) { }
 

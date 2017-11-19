@@ -92,7 +92,7 @@ namespace DOL.GS
 
 		protected void HealerDialogResponse(GamePlayer player, byte response)
         {
-            if (!this.IsWithinRadius(player, WorldMgr.INTERACT_DISTANCE))
+            if (!IsWithinRadius(player, WorldMgr.INTERACT_DISTANCE))
             {
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.HealerDialogResponse.Text1",
                     GetName(0, false, player.Client.Account.Language, this)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -114,7 +114,7 @@ namespace DOL.GS
             if (player.RemoveMoney(totalCost))
             {
                 InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, totalCost);
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.HealerDialogResponse.Text3", this.Name, Money.GetString(totalCost)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Healer.HealerDialogResponse.Text3", Name, Money.GetString(totalCost)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 player.TotalConstitutionLostAtDeath -= restorePoints;
                 player.Out.SendCharStatsUpdate();
             }

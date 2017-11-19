@@ -18,16 +18,14 @@
  */
 using System;
 using System.Text;
-using DOL.GS;
-using DOL.GS.Effects;
 using DOL.GS.Spells;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Assists SpellHandler with pulsing spells 
-	/// </summary>
-	public sealed class PulsingSpellEffect : IConcentrationEffect
+    /// <summary>
+    /// Assists SpellHandler with pulsing spells 
+    /// </summary>
+    public sealed class PulsingSpellEffect : IConcentrationEffect
 	{
 		private readonly object m_LockObject = new object();
 

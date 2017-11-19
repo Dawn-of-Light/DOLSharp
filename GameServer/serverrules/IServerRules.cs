@@ -16,19 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using DOL.Database;
-using DOL.GS.Styles;
 using DOL.GS.Keeps;
 
 namespace DOL.GS.ServerRules
 {
-	/// <summary>
-	/// Interface for custom server rules
-	/// </summary>
-	public interface IServerRules
+    /// <summary>
+    /// Interface for custom server rules
+    /// </summary>
+    public interface IServerRules
 	{
 		/// <summary>
 		/// This is called when server rules are created during server startup

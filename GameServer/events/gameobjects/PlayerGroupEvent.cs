@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.Events
 {
-	/// <summary>
-	/// This class holds all possible player group events.
-	/// Only constants defined here!
-	/// </summary>
-	public class GroupEvent : DOLEvent
+    /// <summary>
+    /// This class holds all possible player group events.
+    /// Only constants defined here!
+    /// </summary>
+    public class GroupEvent : DOLEvent
 	{
 		/// <summary>
 		/// Constructs a new PlayerGroup event

@@ -17,19 +17,17 @@
  *
  */
 using System;
-
-using DOL.GS;
 using DOL.AI.Brain;
 using DOL.Database;
 
 namespace DOL.GS
 {
 
-	/// <summary>
-	/// LootGeneratorDragonscales
-	/// At the moment this generator only adds dragonscales to the loot
-	/// </summary>
-	public class LootGeneratorDragonscales : LootGeneratorBase
+    /// <summary>
+    /// LootGeneratorDragonscales
+    /// At the moment this generator only adds dragonscales to the loot
+    /// </summary>
+    public class LootGeneratorDragonscales : LootGeneratorBase
 	{
 		
 		private static ItemTemplate m_dragonscales = GameServer.Database.FindObjectByKey<ItemTemplate>("dragonscales");

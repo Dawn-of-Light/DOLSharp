@@ -143,7 +143,7 @@ namespace DOL.GS.Quests.Albion
 
 			masterFrederick = GetMasterFrederick();
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Apprentice Dunan", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Apprentice Dunan", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				dunan = new GameNPC();
@@ -171,7 +171,7 @@ namespace DOL.GS.Quests.Albion
 			else
 				dunan = npcs[0];
 
-			npcs = WorldMgr.GetNPCsByName("Bombard", eRealm.Albion);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Bombard", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				bombard = new GameStableMaster();
@@ -199,7 +199,7 @@ namespace DOL.GS.Quests.Albion
 			else
 				bombard = npcs[0];
 
-			npcs = WorldMgr.GetNPCsByName("Vuloch", eRealm.Albion);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Vuloch", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				vuloch = new GameStableMaster();
@@ -228,7 +228,7 @@ namespace DOL.GS.Quests.Albion
 			else
 				vuloch = npcs[0];
 
-			npcs = WorldMgr.GetNPCsByName("Yaren", eRealm.Albion);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Yaren", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				yaren = new GameStableMaster();

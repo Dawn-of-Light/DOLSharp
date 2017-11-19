@@ -16,17 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.Database;
 using DOL.GS.PacketHandler;
-using DOL.Language;
 
 namespace DOL.GS.Trainer
 {
-	/// <summary>
-	/// Disciple Trainer
-	/// </summary>
-	[NPCGuildScript("Disciple Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Disciple Trainer" NPC's in Albion (multiple guilds are possible for one script)
+    /// <summary>
+    /// Disciple Trainer
+    /// </summary>
+    [NPCGuildScript("Disciple Trainer", eRealm.Albion)]		// this attribute instructs DOL to use this script for all "Disciple Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class DiscipleTrainer : GameTrainer
 	{
 		public override eCharacterClass TrainedClass
@@ -54,7 +51,7 @@ namespace DOL.GS.Trainer
 				// player can be promoted
 				if (player.Level>=5)
 				{
-					player.Out.SendMessage(this.Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Necromancer]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(Name + " says, \"You must now seek your training elsewhere. Which path would you like to follow? [Necromancer]?\"", eChatType.CT_Say, eChatLoc.CL_PopupWindow);
 				}
 				else
 				{
@@ -64,7 +61,7 @@ namespace DOL.GS.Trainer
 				// ask for basic equipment if player doesnt own it
 				if (player.Inventory.GetFirstItemByID(PRACTICE_WEAPON_ID, eInventorySlot.MinEquipable, eInventorySlot.LastBackpack) == null)
 				{
-					player.Out.SendMessage(this.Name + " says, \"Do you require a [practice branch]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(Name + " says, \"Do you require a [practice branch]?\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 				}
 			}
 			else
@@ -88,10 +85,10 @@ namespace DOL.GS.Trainer
 			switch (text) {
 				case "Necromancer":
 					if(player.Race == (int) eRace.Briton || player.Race == (int) eRace.Inconnu || player.Race == (int) eRace.Saracen){
-						player.Out.SendMessage(this.Name + " says, \"So you want to become a Necromancer? As a Necromancer you can summon undeath creatures.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(Name + " says, \"So you want to become a Necromancer? As a Necromancer you can summon undeath creatures.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 					}
 					else{
-						player.Out.SendMessage(this.Name + " says, \"The path of a Necromancer is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
+						player.Out.SendMessage(Name + " says, \"The path of a Necromancer is not available to your race. Please choose another.\"",eChatType.CT_Say,eChatLoc.CL_PopupWindow);
 					}
 					return true;
 				case "practice branch":

@@ -46,17 +46,7 @@ namespace DOL.GS
 		/// </remarks>
 		public const double RADIAN_TO_HEADING = (180.0/Math.PI)*(4096.0/360.0);
 
-		/// <summary>
-		/// The X coord of this point
-		/// </summary>
-		protected int m_x;
-
-		/// <summary>
-		/// The Y coord of this point
-		/// </summary>
-		protected int m_y;
-
-		/// <summary>
+	    /// <summary>
 		/// Constructs a new 2D point object
 		/// </summary>
 		public Point2D() : this(0, 0)
@@ -70,8 +60,8 @@ namespace DOL.GS
 		/// <param name="y">The Y coord</param>
 		public Point2D(int x, int y)
 		{
-			m_x = x;
-			m_y = y;
+			X = x;
+			Y = y;
 		}
 
 		/// <summary>
@@ -87,22 +77,14 @@ namespace DOL.GS
 		/// <summary>
 		/// X coord of this point
 		/// </summary>
-		public virtual int X
-		{
-			get { return m_x; }
-			set { m_x = value; }
-		}
+		public virtual int X { get; set; }
 
-		/// <summary>
+	    /// <summary>
 		/// Y coord of this point
 		/// </summary>
-		public virtual int Y
-		{
-			get { return m_y; }
-			set { m_y = value; }
-		}
+		public virtual int Y { get; set; }
 
-		// Coordinate calculation functions in DOL are standard trigonometric functions, but
+	    // Coordinate calculation functions in DOL are standard trigonometric functions, but
 		// with some adjustments to account for the different coordinate system that DOL uses
 		// compared to the standard Cartesian coordinates used in trigonometry.
 		//
@@ -200,7 +182,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return string.Format("({0}, {1})", m_x.ToString(), m_y.ToString());
+			return $"({X}, {Y})";
 		}
 
 		/// <summary>

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.PacketHandler;
@@ -6,10 +5,10 @@ using DOL.Language;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public class StaticEffect : IGameEffect
+    /// <summary>
+    /// 
+    /// </summary>
+    public class StaticEffect : IGameEffect
 	{
 		private ushort m_id;
 		protected GameLiving m_owner = null;

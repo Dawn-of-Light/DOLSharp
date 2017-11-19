@@ -16,16 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Skin types to use for this keep
-	/// 0 = any, 1 = old, 2 = new
-	/// </summary>
-	public enum eKeepSkinType : byte
+    /// <summary>
+    /// Skin types to use for this keep
+    /// 0 = any, 1 = old, 2 = new
+    /// </summary>
+    public enum eKeepSkinType : byte
 	{
 		/// <summary>
 		/// Use server proerty to determine skin

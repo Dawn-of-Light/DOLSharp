@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Midgard Bonebancer Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Bonedancer, "Bonedancer", "Mystic")]
+    /// <summary>
+    /// Midgard Bonebancer Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Bonedancer, "Bonedancer", "Mystic")]
 	public class ClassBonedancer : CharacterClassBoneDancer
 	{
 		public ClassBonedancer()

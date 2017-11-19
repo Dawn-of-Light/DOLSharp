@@ -16,18 +16,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL.GS.DatabaseUpdate
 {
-	/// <summary>
-	/// DataTable to track already registered XML Loading Files Played
-	/// Prevent Loading XML package Multiple times on the same database.
-	/// </summary>
-	[DataTable(TableName="AutoXMLUpdate")]
+    /// <summary>
+    /// DataTable to track already registered XML Loading Files Played
+    /// Prevent Loading XML package Multiple times on the same database.
+    /// </summary>
+    [DataTable(TableName="AutoXMLUpdate")]
 	public class AutoXMLUpdateRecord : DataObject
 	{
 		protected int m_autoXMLUpdateID;

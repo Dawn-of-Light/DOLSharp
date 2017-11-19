@@ -26,7 +26,7 @@ using DOL.Language;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.DoorRequest, "Door Interact Request Handler", eClientStatus.PlayerInGame)]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.DoorRequest, "Door Interact Request Handler", eClientStatus.PlayerInGame)]
 	public class DoorRequestHandler : IPacketHandler
 	{
 		public static int m_handlerDoorID;

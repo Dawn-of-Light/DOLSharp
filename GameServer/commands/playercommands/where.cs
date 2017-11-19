@@ -21,7 +21,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&where", ePrivLevel.Player, "Ask where an NPC is from Guards", "/where <NPC Name>")]
+	[Cmd("&where", ePrivLevel.Player, "Ask where an NPC is from Guards", "/where <NPC Name>")]
 	public class WhereCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
@@ -39,7 +39,7 @@ namespace DOL.GS.Commands
 			if (targetnpc != null && CheckTargetIsGuard(targetnpc))
 			{
 				string name = String.Join(" ", args, 1, args.Length - 1);
-				GameNPC[] npcs = WorldMgr.GetNPCsByNameFromRegion(name, client.Player.CurrentRegionID, (eRealm) client.Player.Realm);
+				GameNPC[] npcs = WorldMgr.GetObjectsByNameFromRegion<GameNPC>(name, client.Player.CurrentRegionID, client.Player.Realm);
 				if (npcs == null || npcs.Length <= 0)
 				{
 					targetnpc.SayTo(client.Player, "Sorry, i do not know this person.");

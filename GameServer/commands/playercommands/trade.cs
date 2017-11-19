@@ -17,17 +17,13 @@
  *
  */
 
-using System.Collections;
-using System.Reflection;
 using DOL.Language;
-using DOL.GS;
-using DOL.GS.ServerProperties;
 using DOL.GS.PacketHandler;
 
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		 "&trade",
 		 ePrivLevel.Player,
 		 "Broadcast a trade message to other players in the same region",

@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Eldritch Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Eldritch, "Eldritch", "Magician")]
+    /// <summary>
+    /// Hibernia Eldritch Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Eldritch, "Eldritch", "Magician")]
 	public class ClassEldritch : ClassMagician
 	{
 		public ClassEldritch()

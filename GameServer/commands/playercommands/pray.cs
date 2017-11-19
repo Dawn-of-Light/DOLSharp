@@ -19,7 +19,7 @@
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&pray",
 		ePrivLevel.Player,
 		"You can pray on your gravestones to get some experience back",

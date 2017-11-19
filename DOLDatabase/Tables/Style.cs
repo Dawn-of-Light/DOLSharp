@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Weapon Spec Style description
-	/// </summary>
-	[DataTable(TableName = "Style")]
+    /// <summary>
+    /// Weapon Spec Style description
+    /// </summary>
+    [DataTable(TableName = "Style")]
 	public class DBStyle : DataObject
 	{
 		/// <summary>

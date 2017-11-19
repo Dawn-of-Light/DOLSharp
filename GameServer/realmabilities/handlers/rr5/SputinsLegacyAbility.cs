@@ -1,14 +1,13 @@
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Sputins Legacy Realm Ability
-	/// </summary>
-	public class SputinsLegacyAbility : RR5RealmAbility
+    /// <summary>
+    /// Sputins Legacy Realm Ability
+    /// </summary>
+    public class SputinsLegacyAbility : RR5RealmAbility
 	{
 		public SputinsLegacyAbility(DBAbility dba, int level) : base(dba, level) { }
 

@@ -16,16 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.GS.PacketHandler;
-using DOL.Language;
 
 namespace DOL.GS.Trainer
 {
-	/// <summary>
-	/// Nightshade Trainer
-	/// </summary>	
-	[NPCGuildScript("Nightshade Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Nightshade Trainer" NPC's in Albion (multiple guilds are possible for one script)
+    /// <summary>
+    /// Nightshade Trainer
+    /// </summary>	
+    [NPCGuildScript("Nightshade Trainer", eRealm.Hibernia)]		// this attribute instructs DOL to use this script for all "Nightshade Trainer" NPC's in Albion (multiple guilds are possible for one script)
 	public class NightshadeTrainer : GameTrainer
 	{
 		public override eCharacterClass TrainedClass
@@ -49,14 +47,14 @@ namespace DOL.GS.Trainer
 			// check if class matches.				
 			if (player.CharacterClass.ID == (int) TrainedClass)
 			{
-				player.Out.SendMessage(this.Name + " says, \"Here for a bit of training, " + player.Name + "? Step up and get it!\"", eChatType.CT_System, eChatLoc.CL_PopupWindow); //popup window on live
+				player.Out.SendMessage(Name + " says, \"Here for a bit of training, " + player.Name + "? Step up and get it!\"", eChatType.CT_System, eChatLoc.CL_PopupWindow); //popup window on live
 			} 
 			else 
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
 				{
-					player.Out.SendMessage(this.Name + " says, \"You have thought this through, I'm sure. Tell me now if you wish to train as a [Nightshade] and follow the Path of Essence.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(Name + " says, \"You have thought this through, I'm sure. Tell me now if you wish to train as a [Nightshade] and follow the Path of Essence.\"", eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);

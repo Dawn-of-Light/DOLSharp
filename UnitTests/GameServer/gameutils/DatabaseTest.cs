@@ -19,15 +19,14 @@
 using System;
 using DOL.Database;
 using DOL.GS;
-using DOL.GS.PacketHandler;
 using NUnit.Framework;
 
 namespace DOL.Server.Tests
 {
-	/// <summary>
-	/// Unit tests for the Database Class
-	/// </summary>
-	[TestFixture]
+    /// <summary>
+    /// Unit tests for the Database Class
+    /// </summary>
+    [TestFixture]
 	public class DatabaseTest : ServerTests
 	{				
 

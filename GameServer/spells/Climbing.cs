@@ -17,15 +17,11 @@
  *
  */
 
-using System;
-using System.Collections;
-using DOL.GS;
-using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
 {
-	[SpellHandlerAttribute("Climbing")]
+    [SpellHandler("Climbing")]
 	public class ClimbingHandler : SpellHandler
 	{
 		private GamePlayer gp;

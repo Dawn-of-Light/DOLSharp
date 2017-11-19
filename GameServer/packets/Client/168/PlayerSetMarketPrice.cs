@@ -16,15 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Reflection;
-using DOL.Database;
-using DOL.GS.Housing;
 using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-    [PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.SetMarketPrice, "Set Market/Consignment Merchant Price.", eClientStatus.PlayerInGame)]
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.SetMarketPrice, "Set Market/Consignment Merchant Price.", eClientStatus.PlayerInGame)]
     public class PlayerSetMarketPriceHandler : IPacketHandler
     {
         /// <summary>

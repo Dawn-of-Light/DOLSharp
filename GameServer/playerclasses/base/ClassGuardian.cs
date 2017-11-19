@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Base Fighter Class Guardian
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Guardian, "Guardian", "Guardian")]
+    /// <summary>
+    /// Hibernia Base Fighter Class Guardian
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Guardian, "Guardian", "Guardian")]
 	public class ClassGuardian : CharacterClassBase
 	{
 		public ClassGuardian()

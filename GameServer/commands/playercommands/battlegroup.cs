@@ -24,7 +24,7 @@ using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&battlechat",
 		new string[] { "&bc" },
 		ePrivLevel.Player,
@@ -94,7 +94,7 @@ namespace DOL.GS.Commands
 		}
 	}
 
-	[CmdAttribute(
+	[Cmd(
 		"&battlegroup",
 		new string[] { "&bg" },
 		ePrivLevel.Player,

@@ -1,6 +1,5 @@
 
 using System;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
@@ -9,7 +8,7 @@ using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
-	public abstract class HereticImmunityEffectSpellHandler : HereticPiercingMagic
+    public abstract class HereticImmunityEffectSpellHandler : HereticPiercingMagic
 	{
 		/// <summary>
 		/// called when spell effect has to be started and applied to targets

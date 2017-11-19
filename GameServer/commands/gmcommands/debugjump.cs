@@ -17,12 +17,11 @@
  *
  */
 using System;
-using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[Cmd(
+    [Cmd(
 		"]jump",
 		ePrivLevel.GM,
 		"GMCommands.DebugJump.Description",

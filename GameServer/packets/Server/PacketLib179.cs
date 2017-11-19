@@ -17,7 +17,6 @@
  *
  */
 #define NOENCRYPTION
-using System;
 using System.Reflection;
 using DOL.GS.PlayerTitles;
 using log4net;
@@ -25,7 +24,7 @@ using DOL.GS.Housing;
 
 namespace DOL.GS.PacketHandler
 {
-	[PacketLib(179, GameClient.eClientVersion.Version179)]
+    [PacketLib(179, GameClient.eClientVersion.Version179)]
 	public class PacketLib179 : PacketLib178
 	{
 		/// <summary>

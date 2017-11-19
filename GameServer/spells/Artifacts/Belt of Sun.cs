@@ -23,8 +23,6 @@ namespace DOL.GS.Spells
     using Database;
     using Events;
     using DOL.GS.PacketHandler;
-    using DOL.GS.Utils;
-    using System.Collections.Generic;
 
     [SpellHandler("BeltOfSun")]
     public class BeltOfSun : SummonItemSpellHandler

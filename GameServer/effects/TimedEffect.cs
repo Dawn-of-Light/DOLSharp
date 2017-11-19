@@ -16,18 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// base for all effects that are timed and should stop on itself
-	/// </summary>
-	public class TimedEffect : StaticEffect
+    /// <summary>
+    /// base for all effects that are timed and should stop on itself
+    /// </summary>
+    public class TimedEffect : StaticEffect
 	{
 		private readonly object m_LockObject = new object();
 

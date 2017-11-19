@@ -25,11 +25,7 @@ namespace DOL.GS
 	/// </summary>
 	public class GameLocation : Point3D, IGameLocation
 	{
-		protected ushort m_regionId;
-		protected ushort m_heading;
-		protected String m_name;		
-		
-		public GameLocation(String name, ushort regionId, ushort zoneId, int x, int y, int z, ushort heading) : this(name,regionId,ConvertLocalXToGlobalX(x, zoneId),ConvertLocalYToGlobalY(y, zoneId),z, heading)
+	    public GameLocation(String name, ushort regionId, ushort zoneId, int x, int y, int z, ushort heading) : this(name,regionId,ConvertLocalXToGlobalX(x, zoneId),ConvertLocalYToGlobalY(y, zoneId),z, heading)
 		{
 		}
 
@@ -39,39 +35,27 @@ namespace DOL.GS
 
 		public GameLocation(String name, ushort regionId, int x, int y, int z, ushort heading) : base(x, y, z)
 		{
-			m_regionId = regionId;
-			m_name = name;
-			m_heading = heading;
+			RegionID = regionId;
+			Name = name;
+			Heading = heading;
 		}
 
 		/// <summary>
 		/// heading of this point
 		/// </summary>
-		public ushort Heading
-		{
-			get { return m_heading; }
-			set { m_heading = value; }
-		}
+		public ushort Heading { get; set; }
 
-		/// <summary>
+	    /// <summary>
 		/// RegionID of this point
 		/// </summary>
-		public ushort RegionID
-		{
-			get { return m_regionId; }
-			set { m_regionId = value; }
-		}
+		public ushort RegionID { get; set; }
 
-		/// <summary>
+	    /// <summary>
 		/// Name of this point
 		/// </summary>
-		public String Name
-		{
-			get { return m_name; }
-			set { m_name = value; }
-		}
-	
-		/// <summary>
+		public String Name { get; set; }
+
+	    /// <summary>
 		/// calculates distance between 2 points
 		/// </summary>
 		/// <param name="p1"></param>
@@ -79,14 +63,12 @@ namespace DOL.GS
 		/// <returns></returns>
 		public int GetDistance( IGameLocation location )
 		{
-			if (this.RegionID == location.RegionID)
+			if (RegionID == location.RegionID)
 			{
-				return base.GetDistanceTo( location );
+				return GetDistanceTo( location );
 			}
-			else
-			{
-				return -1;
-			}
+
+			return -1;
 		}
 
 		public static int ConvertLocalXToGlobalX(int localX, ushort zoneId)

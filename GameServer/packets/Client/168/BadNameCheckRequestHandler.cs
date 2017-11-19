@@ -16,11 +16,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP,0x6A^168,"Checks for bad character names")]
+    [PacketHandler(PacketHandlerType.TCP,0x6A^168,"Checks for bad character names")]
 	public class BadNameCheckRequestHandler : IPacketHandler
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

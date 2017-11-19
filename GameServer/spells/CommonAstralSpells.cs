@@ -17,25 +17,20 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using DOL.GS.Spells;
-using DOL.Language;
 
 namespace DOL.GS.Spells
 {
     /// <summary>
     /// Dex/Qui/Str/Con stat specline debuff and transfers them to the caster.
     /// </summary>
-    [SpellHandlerAttribute("DexStrConQuiTap")]
+    [SpellHandler("DexStrConQuiTap")]
     public class DexStrConQuiTap : SpellHandler
     {
         private IList<eProperty> m_stats;
@@ -78,7 +73,7 @@ namespace DOL.GS.Spells
     /// <summary>
     /// A proc to lower target's ArmorFactor and ArmorAbsorption.
     /// </summary>
-    [SpellHandlerAttribute("ArmorReducingEffectiveness")]
+    [SpellHandler("ArmorReducingEffectiveness")]
     public class ArmorReducingEffectiveness : DualStatDebuff
     {
         public override eProperty Property1 { get { return eProperty.ArmorFactor; } }

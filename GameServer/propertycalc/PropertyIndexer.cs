@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PropertyCalc
 {
-	/// <summary>
-	/// helper class for memory efficient usage of property fields
-	/// it keeps integer values indexed by integer keys
-	/// </summary>
-	public sealed class PropertyIndexer : IPropertyIndexer
+    /// <summary>
+    /// helper class for memory efficient usage of property fields
+    /// it keeps integer values indexed by integer keys
+    /// </summary>
+    public sealed class PropertyIndexer : IPropertyIndexer
 	{
 		private readonly ReaderWriterDictionary<int, int> m_propDict;
 		

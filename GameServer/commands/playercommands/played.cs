@@ -26,7 +26,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&played",
 		ePrivLevel.Player,
 		"Returns the age of the character",

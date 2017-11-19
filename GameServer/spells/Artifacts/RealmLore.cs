@@ -1,21 +1,13 @@
 //Andraste v2.0 - Vico
 
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using System.Collections;
-using DOL;
-using DOL.GS;
-using DOL.GS.Spells;
-using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using log4net;
 using DOL.GS.RealmAbilities;
 
 namespace DOL.GS.Spells
 {
-	[SpellHandlerAttribute("RealmLore")]
+    [SpellHandler("RealmLore")]
 	public class RealmLore : SpellHandler
 	{
 		public override bool CheckBeginCast(GameLiving selectedTarget)

@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Albion Theurgist Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Theurgist, "Theurgist", "Elementalist")]
+    /// <summary>
+    /// Albion Theurgist Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Theurgist, "Theurgist", "Elementalist")]
 	public class ClassTheurgist : ClassElementalist
 	{
 		public ClassTheurgist()

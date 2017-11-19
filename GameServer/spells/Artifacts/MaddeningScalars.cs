@@ -16,9 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.GS;
-using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
@@ -26,7 +23,7 @@ namespace DOL.GS.Spells
     /// <summary>
     /// Maddening Scalars Defensive proc spell handler
     /// </summary>
-    [SpellHandlerAttribute("MaddeningScalars")]
+    [SpellHandler("MaddeningScalars")]
     public class MaddeningScalars : OffensiveProcSpellHandler
     {   	
    		public override void OnEffectStart(GameSpellEffect effect)

@@ -17,8 +17,6 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 
@@ -35,8 +33,8 @@ namespace DOL.GS
 
         public PermanentDjinn(DjinnStone djinnStone) : base(djinnStone)
         {
-            this.Model = VisibleModel;
-            this.AddToWorld();
+            Model = VisibleModel;
+            AddToWorld();
 
             m_timer = new EmoteTimer(this);
             m_timer.Start(100);
@@ -75,7 +73,7 @@ namespace DOL.GS
             };
 
             foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.SAY_DISTANCE))
-                player.Out.SendMessage(String.Format(emotes[Util.Random(emotes.GetUpperBound(0))], this.Name),
+                player.Out.SendMessage(String.Format(emotes[Util.Random(emotes.GetUpperBound(0))], Name),
                     eChatType.CT_System, eChatLoc.CL_SystemWindow);
         }
 

@@ -20,16 +20,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using System.Reflection;
-using log4net;
-
 namespace DOL.GS
 {
-	/// <summary>
-	/// MiniLineSpecialization are "Mini-Spec" Used to match Sub-Spec (CL ~ Subclass) Skills
-	/// They shouldn't be attached to a career, Global Champion or other Custom Career will handle them and display skills.
-	/// </summary>
-	public class MiniLineSpecialization : UntrainableSpecialization
+    /// <summary>
+    /// MiniLineSpecialization are "Mini-Spec" Used to match Sub-Spec (CL ~ Subclass) Skills
+    /// They shouldn't be attached to a career, Global Champion or other Custom Career will handle them and display skills.
+    /// </summary>
+    public class MiniLineSpecialization : UntrainableSpecialization
 	{		
 		public MiniLineSpecialization(string keyname, string displayname, ushort icon, int ID)
 			: base(keyname, displayname, icon, ID)

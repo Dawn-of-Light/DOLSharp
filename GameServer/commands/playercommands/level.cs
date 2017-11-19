@@ -16,14 +16,11 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using DOL.GS;
-using DOL.Database;
-using DOL.GS.Commands;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&level", //command to handle
+    [Cmd("&level", //command to handle
 	ePrivLevel.Player, //minimum privelege level
 	"Allows you to level 20 instantly if you have a level 50", "/level")] //usage
 	public class LevelCommandHandler : AbstractCommandHandler, ICommandHandler

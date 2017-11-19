@@ -1,4 +1,4 @@
-﻿	
+﻿
 /*
 * DAWN OF LIGHT - The first free open source DAoC server emulator
 *
@@ -32,19 +32,17 @@ using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
 using DOL.GS.Behaviour;
-using DOL.GS.Behaviour.Attributes;
-using DOL.GS.PacketHandler;
-using DOL.GS.Quests;
 using DOL.Language;
 using log4net;
 
-	namespace DOL.GS.Quests.Midgard {
-	
-     /* The first thing we do, is to declare the class we create
-	 * as Quest. To do this, we derive from the abstract class
-	 * BaseQuest	  	 
-	 */
-	public class maulerinvasion : BaseQuest
+namespace DOL.GS.Quests.Midgard
+{
+
+    /* The first thing we do, is to declare the class we create
+    * as Quest. To do this, we derive from the abstract class
+    * BaseQuest	  	 
+    */
+    public class maulerinvasion : BaseQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -107,7 +105,7 @@ using log4net;
 	#region defineNPCs
 	GameNPC[] npcs;
 	
-            npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.NPCKreimhilde"), (eRealm)2);
+            npcs = WorldMgr.GetObjectsByName<GameNPC>(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Mid.MaulerInvasion.NPCKreimhilde"), (eRealm)2);
 
 			if (npcs.Length == 0)
 			{			

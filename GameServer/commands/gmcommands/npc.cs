@@ -19,14 +19,12 @@
  */
 
 using System;
-using System.Reflection;
-using System.Collections;
 using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		"&npc",
 		ePrivLevel.GM,
 		"Various npc commands",

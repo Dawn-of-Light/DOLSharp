@@ -228,7 +228,7 @@ namespace DOL.GS.Keeps
 			{
 				case 1:
 					{
-						if (!player.RemoveMoney(Gold * 100 * 100, "You buy " + this.GetName(1, false) + "."))
+						if (!player.RemoveMoney(Gold * 100 * 100, "You buy " + GetName(1, false) + "."))
 						{
                             InventoryLogging.LogInventoryAction(player, "(keep)", eInventoryActionType.Merchant, Gold * 10000);
 							player.Out.SendMessage("You dont have enough money!", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
@@ -237,7 +237,7 @@ namespace DOL.GS.Keeps
 					} break;
 				case 2:
 					{
-						if (!player.RemoveBountyPoints(Gold, "You buy " + this.GetName(1, false) + "."))
+						if (!player.RemoveBountyPoints(Gold, "You buy " + GetName(1, false) + "."))
 						{
 							player.Out.SendMessage("You dont have enough bounty point!", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 							return;
@@ -252,7 +252,7 @@ namespace DOL.GS.Keeps
 							return;
 						}
 						else
-							player.Out.SendMessage("You buy " + this.GetName(1, false) + ".", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
+							player.Out.SendMessage("You buy " + GetName(1, false) + ".", eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);
 
 					} break;
 				case 4:
@@ -263,7 +263,7 @@ namespace DOL.GS.Keeps
 
 			}
 
-			GameLiving hookPointObj = CreateHPInstance(this.GameObjectType);
+			GameLiving hookPointObj = CreateHPInstance(GameObjectType);
 			if (hookPointObj == null) return;
 			//use default value so no need to load
 			//hookPointObj.LoadFromDatabase(this.ObjectTemplate);

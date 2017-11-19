@@ -20,7 +20,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&rp",
 		ePrivLevel.Player,
 		"toggle receiving realm points",

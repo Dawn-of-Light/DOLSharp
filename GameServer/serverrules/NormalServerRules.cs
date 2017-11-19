@@ -16,20 +16,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.Keeps;
-using DOL.GS.PacketHandler;
-using DOL.GS.Styles;
 
 namespace DOL.GS.ServerRules
 {
-	/// <summary>
-	/// Set of rules for "normal" server type.
-	/// </summary>
-	[ServerRules(eGameServerType.GST_Normal)]
+    /// <summary>
+    /// Set of rules for "normal" server type.
+    /// </summary>
+    [ServerRules(eGameServerType.GST_Normal)]
 	public class NormalServerRules : AbstractServerRules
 	{
 		public override string RulesDescription()

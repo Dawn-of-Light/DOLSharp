@@ -18,21 +18,16 @@
  */
 //#define OUTPUT_DEBUG_INFO
 using System;
-using System.Collections;
-using System.Net;
 using System.Reflection;
 using System.Text;
 
 using DOL.Database;
-using DOL.Events;
 using DOL.Language;
-using DOL.GS;
-using DOL.GS.PacketHandler;
 using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.PositionUpdate, "Handles player position updates", eClientStatus.PlayerInGame)]
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.PositionUpdate, "Handles player position updates", eClientStatus.PlayerInGame)]
 	public class PlayerPositionUpdateHandler : IPacketHandler
 	{
 		/// <summary>

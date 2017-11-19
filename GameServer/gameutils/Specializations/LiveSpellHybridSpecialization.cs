@@ -16,16 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// This is used for a Hybrid Spec Spell Line (Not List Caster)
-	/// </summary>
-	public class LiveSpellHybridSpecialization : Specialization
+    /// <summary>
+    /// This is used for a Hybrid Spec Spell Line (Not List Caster)
+    /// </summary>
+    public class LiveSpellHybridSpecialization : Specialization
 	{
 		public LiveSpellHybridSpecialization(string keyname, string displayname, ushort icon, int ID)
 			: base(keyname, displayname, icon, ID)

@@ -17,12 +17,8 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS.PacketHandler;
 using DOL.Events;
-using DOL.GS.Behaviour.Attributes;using DOL.GS.Behaviour;
-using DOL.Database;
+using DOL.GS.Behaviour.Attributes;
 using DOL.AI.Brain;
 using log4net;
 using System.Reflection;
@@ -30,7 +26,7 @@ using DOL.GS.Movement;
 
 namespace DOL.GS.Behaviour.Actions
 {
-    [ActionAttribute(ActionType = eActionType.SetMonsterPath,DefaultValueP=eDefaultValueConstants.NPC)]
+    [Action(ActionType = eActionType.SetMonsterPath,DefaultValueP=eDefaultValueConstants.NPC)]
     public class SetMonsterPathAction : AbstractAction<PathPoint,GameNPC>
     {
 

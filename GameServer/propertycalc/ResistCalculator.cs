@@ -17,21 +17,20 @@
  *
  */
 using System;
-using DOL.AI.Brain;
 
 namespace DOL.GS.PropertyCalc
 {
-	/// <summary>
-	/// The Resistance Property calculator
-	/// 
-	/// BuffBonusCategory1 is used for buffs cast on the living.
-	/// BuffBonusCategory2 is used for modified damage only (no full resist)
-	/// BuffBonusCategory3 is used for debuffs
-	/// BuffBonusCategory4 is used for buffs that have no softcap
-	/// BuffBonusMultCategory1 unused
-	/// </summary>
-	/// <author>Aredhel</author>	
-	[PropertyCalculator(eProperty.Resist_First, eProperty.Resist_Last)]
+    /// <summary>
+    /// The Resistance Property calculator
+    /// 
+    /// BuffBonusCategory1 is used for buffs cast on the living.
+    /// BuffBonusCategory2 is used for modified damage only (no full resist)
+    /// BuffBonusCategory3 is used for debuffs
+    /// BuffBonusCategory4 is used for buffs that have no softcap
+    /// BuffBonusMultCategory1 unused
+    /// </summary>
+    /// <author>Aredhel</author>	
+    [PropertyCalculator(eProperty.Resist_First, eProperty.Resist_Last)]
 	public class ResistCalculator : PropertyCalculator
 	{
 		public ResistCalculator() { }

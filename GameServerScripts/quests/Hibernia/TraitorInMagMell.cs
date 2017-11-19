@@ -141,7 +141,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			addrir = GetAddrir();
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Lady Legada", eRealm.None);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Lady Legada", eRealm.None);
 			if (npcs.Length == 0)
 			{
 				//if (Log.IsWarnEnabled) Log.Warn("Could not find Lady Felin, creating her ...");

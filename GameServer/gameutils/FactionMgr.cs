@@ -17,7 +17,6 @@
  *
  */
 
-using System;
 using System.Reflection;
 using System.Collections;
 using DOL.Database;
@@ -25,10 +24,10 @@ using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// FactionMgr manage all the faction system
-	/// </summary>
-	public class FactionMgr
+    /// <summary>
+    /// FactionMgr manage all the faction system
+    /// </summary>
+    public class FactionMgr
 	{
 		private FactionMgr(){}
 

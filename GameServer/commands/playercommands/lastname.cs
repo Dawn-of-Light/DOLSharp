@@ -2,14 +2,12 @@
    Written by Gavinius */
 
 using System;
-using DOL.GS;
-using DOL.Database;
 using DOL.GS.PacketHandler;
 
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		 "&lastname",
 		 ePrivLevel.Player,
 		 "Set/change your lastname.", "/lastname <name>")]

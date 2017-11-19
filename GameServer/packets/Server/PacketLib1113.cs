@@ -17,11 +17,7 @@
 *
 */
 #define NOENCRYPTION
-using System;
 using System.Reflection;
-using DOL.Database;
-using System.Collections;
-using System.Collections.Generic;
 using DOL.GS.PlayerTitles;
 using log4net;
 

@@ -28,7 +28,7 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&facegloc",
 		ePrivLevel.Player,
 		"Turns and faces your character into the direction of the x, y coordinates provided (using DOL region global coordinates).",

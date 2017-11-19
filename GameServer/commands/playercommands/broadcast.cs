@@ -18,15 +18,12 @@
  */
 
 using System.Collections;
-using System.Reflection;
 using DOL.Language;
-using DOL.GS;
-using DOL.GS.ServerProperties;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		 "&broadcast",
 		 new string[] { "&b" },
 		 ePrivLevel.Player,

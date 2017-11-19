@@ -16,18 +16,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.Database;
 using DOL.Database.Attributes;
 
 namespace DOL
 {
-	namespace Database
-	{
-		/// <summary>
-		/// Crafted item table
-		/// </summary>
-		[DataTable(TableName="CraftedItem")]
+    namespace Database
+    {
+        /// <summary>
+        /// Crafted item table
+        /// </summary>
+        [DataTable(TableName="CraftedItem")]
 		public class DBCraftedItem : DataObject
 		{
 			private string m_craftedItemID;

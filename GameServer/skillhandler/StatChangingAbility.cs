@@ -16,13 +16,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 using DOL.Database;
 
 namespace DOL.GS.SkillHandler
 {
-	public class StatChangingAbility : PropertyChangingAbility
+    public class StatChangingAbility : PropertyChangingAbility
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

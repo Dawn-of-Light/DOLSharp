@@ -1,14 +1,13 @@
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Mastery of Concentration RA
-	/// </summary>
-	public class RuneOfUtterAgilityAbility : RR5RealmAbility
+    /// <summary>
+    /// Mastery of Concentration RA
+    /// </summary>
+    public class RuneOfUtterAgilityAbility : RR5RealmAbility
 	{
 		public RuneOfUtterAgilityAbility(DBAbility dba, int level) : base(dba, level) { }
 

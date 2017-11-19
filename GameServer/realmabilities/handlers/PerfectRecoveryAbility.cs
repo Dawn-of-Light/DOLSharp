@@ -1,17 +1,13 @@
 using System;
-using System.Collections;
 using System.Collections.Specialized;
-using System.Reflection;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.GS.Spells;
-using DOL.Events;
 using DOL.Database;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class PerfectRecoveryAbility : TimedRealmAbility
+    public class PerfectRecoveryAbility : TimedRealmAbility
 	{
 		public PerfectRecoveryAbility(DBAbility dba, int level) : base(dba, level) { }
 		private Int32 m_resurrectValue = 5;

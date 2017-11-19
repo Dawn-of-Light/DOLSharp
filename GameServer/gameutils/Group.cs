@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
@@ -25,10 +24,10 @@ using DOL.Events;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// This class represents a Group inside the game
-	/// </summary>
-	public class Group
+    /// <summary>
+    /// This class represents a Group inside the game
+    /// </summary>
+    public class Group
 	{
 		#region constructor and members
 		/// <summary>

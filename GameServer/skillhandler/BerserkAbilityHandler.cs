@@ -27,7 +27,7 @@ namespace DOL.GS.SkillHandler
 	/// <summary>
 	/// Handler for Sprint Ability clicks
 	/// </summary>
-	[SkillHandlerAttribute(Abilities.Berserk)]
+	[SkillHandler(Abilities.Berserk)]
 	public class BerserkAbilityHandler : IAbilityActionHandler
 	{
 		/// <summary>

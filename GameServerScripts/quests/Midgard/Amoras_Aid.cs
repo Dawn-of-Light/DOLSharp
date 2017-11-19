@@ -1,4 +1,4 @@
-﻿	
+﻿
 /*
 * DAWN OF LIGHT - The first free open source DAoC server emulator
 *
@@ -30,20 +30,18 @@ using System;
 using System.Reflection;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.PacketHandler;
 using log4net;
-using DOL.GS.Quests;
 using DOL.GS.Behaviour;
-using DOL.GS.Behaviour.Attributes;
 using DOL.AI.Brain;
 
-	namespace DOL.GS.Quests.Midgard {
-	
-     /* The first thing we do, is to declare the class we create
-	 * as Quest. To do this, we derive from the abstract class
-	 * BaseQuest	  	 
-	 */
-	public class Amorasaidmistyc : BaseQuest
+namespace DOL.GS.Quests.Midgard
+{
+
+    /* The first thing we do, is to declare the class we create
+    * as Quest. To do this, we derive from the abstract class
+    * BaseQuest	  	 
+    */
+    public class Amorasaidmistyc : BaseQuest
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -110,7 +108,7 @@ using DOL.AI.Brain;
 	#region defineNPCs
 	GameNPC[] npcs;
 	
-			npcs = WorldMgr.GetNPCsByName("Lycla",(eRealm) 2);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Lycla",(eRealm) 2);
 			if (npcs.Length == 0)
 			{			
 				Lycla = new DOL.GS.GameNPC();
@@ -152,7 +150,7 @@ using DOL.AI.Brain;
 				Lycla = npcs[0];
 			}
 		
-			npcs = WorldMgr.GetNPCsByName("Amora",(eRealm) 2);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Amora",(eRealm) 2);
 			if (npcs.Length == 0)
 			{			
 				Amora = new DOL.GS.GameNPC();
@@ -194,7 +192,7 @@ using DOL.AI.Brain;
 				Amora = npcs[0];
 			}
 		
-			npcs = WorldMgr.GetNPCsByName("Kari",(eRealm) 2);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Kari",(eRealm) 2);
 			if (npcs.Length == 0)
 			{			
 				Kari = new GameHealer();

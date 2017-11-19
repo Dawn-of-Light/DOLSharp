@@ -20,7 +20,6 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
 
 using DOL.Database;
@@ -29,17 +28,14 @@ using DOL.Language;
 using DOL.GS.Quests;
 using DOL.GS.Housing;
 using DOL.GS.PacketHandler;
-using DOL.GS.Utils;
-
-using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// This class holds all information that
-	/// EVERY object in the game world needs!
-	/// </summary>
-	public abstract class GameObject : Point3D
+    /// <summary>
+    /// This class holds all information that
+    /// EVERY object in the game world needs!
+    /// </summary>
+    public abstract class GameObject : Point3D
 	{
 		/// <summary>
 		/// Defines a logger for this class.
@@ -224,7 +220,7 @@ namespace DOL.GS
         [Obsolete( "Use GetPointFromHeading" )]
         public void GetSpotFromHeading( int distance, out int tx, out int ty )
         {
-            Point2D point = GetPointFromHeading( this.Heading, distance );
+            Point2D point = GetPointFromHeading(Heading, distance );
             tx = point.X;
             ty = point.Y;
         }
@@ -237,7 +233,7 @@ namespace DOL.GS
 		/// <returns>the angle towards the spot</returns>
 		public float GetAngle( IPoint2D point )
 		{
-			float headingDifference = ( GetHeading( point ) & 0xFFF ) - ( this.Heading & 0xFFF );
+			float headingDifference = ( GetHeading( point ) & 0xFFF ) - (Heading & 0xFFF );
 
 			if (headingDifference < 0)
 				headingDifference += 4096.0f;
@@ -257,7 +253,7 @@ namespace DOL.GS
         {
 			GameObject obj = point as GameObject;
 
-			if ( obj == null || this.CurrentRegionID == obj.CurrentRegionID )
+			if ( obj == null || CurrentRegionID == obj.CurrentRegionID )
 			{
 				return base.GetDistanceTo( point );
 			}
@@ -280,7 +276,7 @@ namespace DOL.GS
         {
 			GameObject obj = point as GameObject;
 
-			if ( obj == null || this.CurrentRegionID == obj.CurrentRegionID )
+			if ( obj == null || CurrentRegionID == obj.CurrentRegionID )
 			{
 				return base.GetDistanceTo( point, zfactor );
 			}
@@ -302,7 +298,7 @@ namespace DOL.GS
 			if (obj == null)
 				return false;
 
-			if (this.CurrentRegionID != obj.CurrentRegionID)
+			if (CurrentRegionID != obj.CurrentRegionID)
 				return false;
 
 			return base.IsWithinRadius(obj, radius, ignoreZ);
@@ -320,13 +316,13 @@ namespace DOL.GS
 		{
 			if (target == null)
 				return false;
-			float angle = this.GetAngle(target);
+			float angle = GetAngle(target);
 			if (angle >= 360 - viewangle / 2 || angle < viewangle / 2)
 				return true;
 			// if target is closer than 32 units it is considered always in view
 			// tested and works this way for normal evade, parry, block (in 1.69)
 			if (rangeCheck)
-                return this.IsWithinRadius( target, 32 );
+                return IsWithinRadius( target, 32 );
 			else
                 return false;
 		}
@@ -520,7 +516,7 @@ namespace DOL.GS
         {
             get
             {
-                if (this.Realm == eRealm.None)
+                if (Realm == eRealm.None)
                     return true;
 
                 return false;
@@ -812,9 +808,9 @@ namespace DOL.GS
 			if (m_ObjectState == eObjectState.Active)
 				return false;
 			CurrentRegionID = regionID;
-			m_x = x;
-			m_y = y;
-			m_z = z;
+			X = x;
+			Y = y;
+			Z = z;
 			m_Heading = heading;
 			return AddToWorld();
 		}
@@ -900,9 +896,9 @@ namespace DOL.GS
 
 			if (!RemoveFromWorld())
 				return false;
-			m_x = x;
-			m_y = y;
-			m_z = z;
+			X = x;
+			Y = y;
+			Z = z;
 			m_Heading = heading;
 			CurrentRegionID = regionID;
 			return AddToWorld();
@@ -1067,7 +1063,7 @@ namespace DOL.GS
 		/// <returns>false if interaction is prevented</returns>
 		public virtual bool Interact(GamePlayer player)
 		{
-			if (player.Client.Account.PrivLevel == 1 && !this.IsWithinRadius(player, InteractDistance))
+			if (player.Client.Account.PrivLevel == 1 && !IsWithinRadius(player, InteractDistance))
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObject.Interact.TooFarAway", GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				Notify(GameObjectEvent.InteractFailed, this, new InteractEventArgs(player));

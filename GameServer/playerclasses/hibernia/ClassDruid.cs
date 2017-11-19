@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Druid Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Druid, "Druid", "Naturalist")]
+    /// <summary>
+    /// Hibernia Druid Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Druid, "Druid", "Naturalist")]
 	public class ClassDruid : ClassNaturalist
 	{
 		public ClassDruid()

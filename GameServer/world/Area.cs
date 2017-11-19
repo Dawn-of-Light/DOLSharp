@@ -18,86 +18,52 @@
  */
 using System;
 using System.Collections.Generic;
-using DOL.Events;
-using DOL.GS.PacketHandler;
 using DOL.Database;
 
 namespace DOL.GS
-{		
-	/// <summary>
-	/// Collection of basic area shapes
-	/// Circle
-	/// Square
-	/// </summary>
-	public class Area 
+{
+    /// <summary>
+    /// Collection of basic area shapes
+    /// Circle
+    /// Square
+    /// </summary>
+    public class Area 
 	{
 		public class Square : AbstractArea
 		{
-			/// <summary>
-			/// The X coordinate of this Area
-			/// </summary>
-			protected int m_X;
-
-			/// <summary>
-			/// The Y coordinate of this Area 
-			/// </summary>
-			protected int m_Y;
-
-			/// <summary>
-			/// The width of this Area 
-			/// </summary>
-			protected int m_Width;
-
-			/// <summary>
-			/// The height of this Area 
-			/// </summary>
-			protected int m_Height;
-
-			public Square()
+		    public Square()
 				: base()
 			{ }
 
 			public Square(string desc, int x, int y, int width, int height): base(desc)
 			{
-				m_X = x;
-				m_Y = y;
-				m_Height = height;
-				m_Width = width;
+				X = x;
+				Y = y;
+				Height = height;
+				Width = width;
 			}
 
 			/// <summary>
 			/// Returns the X Coordinate of this Area
 			/// </summary>
-			public int X
-			{
-				get { return m_X; }
-			}
+			public int X { get; protected set; }
 
-			/// <summary>
+		    /// <summary>
 			/// Returns the Y Coordinate of this Area
 			/// </summary>
-			public int Y
-			{
-				get { return m_Y; }
-			}
+			public int Y { get; protected set; }
 
-			/// <summary>
+		    /// <summary>
 			/// Returns the Width of this Area
 			/// </summary>
-			public int Width
-			{
-				get { return m_Width; }
-			}
+			public int Width { get; protected set; }
 
-			/// <summary>
+		    /// <summary>
 			/// Returns the Height of this Area
 			/// </summary>
-			public int Height
-			{
-				get { return m_Height; }
-			}
+			public int Height { get; protected set; }
 
-			/// <summary>
+		    /// <summary>
 			/// Checks wether area intersects with given zone
 			/// </summary>
 			/// <param name="zone"></param>
@@ -105,13 +71,24 @@ namespace DOL.GS
 			public override bool IsIntersectingZone(Zone zone)
 			{
 				if (X+Width < zone.XOffset)
-					return false;
+				{
+				    return false;
+				}
+
 				if (X-Width >= zone.XOffset + 65536)
-					return false;
+				{
+				    return false;
+				}
+
 				if (Y+Height < zone.YOffset)
-					return false;
+				{
+				    return false;
+				}
+
 				if (Y-Height >= zone.YOffset + 65536)
-					return false;
+				{
+				    return false;
+				}
 
 				return true;
 			}	
@@ -140,21 +117,15 @@ namespace DOL.GS
 			{
 				long m_xdiff = (long)x - X;
 				if (m_xdiff < 0 || m_xdiff > Width)
-					return false;
+				{
+				    return false;
+				}
 
 				long m_ydiff = (long)y - Y;
 				if (m_ydiff < 0 || m_ydiff > Height)
-					return false;
-
-				/*
-				//SH: Removed Z checks when one of the two Z values is zero(on ground)
-				if (Z != 0 && spotZ != 0)
 				{
-					long m_zdiff = (long) spotZ - Z;
-					if (m_zdiff> Radius)
-						return false;
+				    return false;
 				}
-				*/
 
 				return true;
 			}
@@ -163,38 +134,17 @@ namespace DOL.GS
 			{
 				m_dbArea = area;
                 m_translationId = area.TranslationId;
-				m_Description = area.Description;
-				m_X = area.X;
-				m_Y = area.Y;
-				m_Width = area.Radius;
-				m_Height = area.Radius;
+				Description = area.Description;
+				X = area.X;
+				Y = area.Y;
+				Width = area.Radius;
+				Height = area.Radius;
 			}
 		}
 
 		public class Circle : AbstractArea
 		{
-			
-			/// <summary>
-			/// The X coordinate of this Area
-			/// </summary>
-			protected int m_X;
-
-			/// <summary>
-			/// The Y coordinate of this Area
-			/// </summary>
-			protected int m_Y;
-
-			/// <summary>
-			/// The Z coordinate of this Area
-			/// </summary>
-			protected int m_Z;
-
-			/// <summary>
-			/// The radius of the area in Coordinates
-			/// </summary>
-			protected int m_Radius;
-
-			protected long m_distSq;
+		    protected long m_distSq;
 
 			public Circle()
 				: base()
@@ -203,11 +153,11 @@ namespace DOL.GS
 
 			public Circle( string desc, int x, int y, int z, int radius) : base(desc)
 			{															
-				m_Description = desc;
-				m_X = x;
-				m_Y = y;
-				m_Z= z;
-				m_Radius= radius;
+				Description = desc;
+				X = x;
+				Y = y;
+				Z= z;
+				Radius= radius;
 					
 				m_RadiusRadius = radius*radius;
 			}
@@ -215,36 +165,24 @@ namespace DOL.GS
 			/// <summary>
 			/// Returns the X Coordinate of this Area
 			/// </summary>
-			public int X
-			{
-				get { return m_X; }
-			}
+			public int X { get; protected set; }
 
-			/// <summary>
+		    /// <summary>
 			/// Returns the Y Coordinate of this Area
 			/// </summary>
-			public int Y
-			{
-				get { return m_Y; }
-			}
+			public int Y { get; protected set; }
 
-			/// <summary>
+		    /// <summary>
 			/// Returns the Width of this Area
 			/// </summary>
-			public int Z
-			{
-				get { return m_Z; }
-			}
+			public int Z { get; protected set; }
 
-			/// <summary>
+		    /// <summary>
 			/// Returns the Height of this Area
 			/// </summary>
-			public int Radius
-			{
-				get { return m_Radius; }
-			}
+			public int Radius { get; protected set; }
 
-			/// <summary>
+		    /// <summary>
 			/// Cache for radius*radius to increase performance of circle check,
 			/// radius is still needed for square check
 			/// </summary>
@@ -259,13 +197,24 @@ namespace DOL.GS
 			public override bool IsIntersectingZone(Zone zone)
 			{
 				if (X+Radius < zone.XOffset)
-					return false;
+				{
+				    return false;
+				}
+
 				if (X-Radius >= zone.XOffset + 65536)
-					return false;
+				{
+				    return false;
+				}
+
 				if (Y+Radius < zone.YOffset)
-					return false;
+				{
+				    return false;
+				}
+
 				if (Y-Radius >= zone.YOffset + 65536)
-					return false;
+				{
+				    return false;
+				}
 
 				return true;
 			}
@@ -278,25 +227,29 @@ namespace DOL.GS
 			public override bool IsContaining(int x, int y, int z, bool checkZ)
 			{
 				// spot is not in square around circle no need to check for circle...
-				long m_xdiff = (long)x - X;
-				if (m_xdiff > Radius)
-					return false;
+				long xdiff = (long)x - X;
+				if (xdiff > Radius)
+				{
+				    return false;
+				}
 
-				long m_ydiff = (long)y - Y;
-				if (m_ydiff > Radius)
-					return false;
+				long ydiff = (long)y - Y;
+				if (ydiff > Radius)
+				{
+				    return false;
+				}
 
 
 				// check if spot is in circle
-				m_distSq = m_xdiff * m_xdiff + m_ydiff * m_ydiff;
+				m_distSq = xdiff * xdiff + ydiff * ydiff;
 
 				if (Z != 0 && z != 0 && checkZ)
 				{
-					long m_zdiff = (long)z - Z;
-					m_distSq += m_zdiff * m_zdiff;
+					long zdiff = (long)z - Z;
+					m_distSq += zdiff * zdiff;
 				}
 
-				return (m_distSq <= m_RadiusRadius);
+				return m_distSq <= m_RadiusRadius;
 			}
 
 			public override bool IsContaining(int x, int y, int z)
@@ -318,11 +271,11 @@ namespace DOL.GS
 			public override void LoadFromDatabase(DBArea area)
 			{
                 m_translationId = area.TranslationId;
-				m_Description = area.Description;
-				m_X = area.X;
-				m_Y = area.Y;
-				m_Z = area.Z;
-				m_Radius = area.Radius;
+				Description = area.Description;
+				X = area.X;
+				Y = area.Y;
+				Z = area.Z;
+				Radius = area.Radius;
 				m_RadiusRadius = area.Radius * area.Radius;
 			}
 		}
@@ -330,27 +283,9 @@ namespace DOL.GS
         public class Polygon : AbstractArea
         {
             /// <summary>
-            /// The X coordinate of this Area (center, not important)
-            /// </summary>
-            protected int m_X;
-
-            /// <summary>
-            /// The Y coordinate of this Area (center, not important)
-            /// </summary>
-            protected int m_Y;
-
-            /// <summary>
-            /// Returns the Height of this Area
-            /// </summary>
-            protected int m_Radius;
-
-            /// <summary>
             /// The radius of the area in Coordinates
             /// </summary>
-            public int Radius
-            {
-                get { return m_Radius; }
-            }
+            public int Radius { get; protected set; }
 
             /// <summary>
             /// The Points string
@@ -370,28 +305,22 @@ namespace DOL.GS
             public Polygon(string desc, int x, int y, int z, int radius, string points)
                 : base(desc)
             {
-                m_Description = desc;
-                m_X = x;
-                m_Y = y;
-                m_Radius = radius;
+                Description = desc;
+                X = x;
+                Y = y;
+                Radius = radius;
                 StringPoints = points;
             }
 
             /// <summary>
             /// Returns the X Coordinate of this Area (center, not important)
             /// </summary>
-            public int X
-            {
-                get { return m_X; }
-            }
+            public int X { get; protected set; }
 
             /// <summary>
             /// Returns the Y Coordinate of this Area (center, not important)
             /// </summary>
-            public int Y
-            {
-                get { return m_Y; }
-            }
+            public int Y { get; protected set; }
 
             /// <summary>
             /// Get / Set(init) the serialized points
@@ -427,15 +356,25 @@ namespace DOL.GS
             /// <returns></returns>
             public override bool IsIntersectingZone(Zone zone)
             {
-                // TODO if needed
                 if (X + Radius < zone.XOffset)
+                {
                     return false;
+                }
+
                 if (X - Radius >= zone.XOffset + 65536)
+                {
                     return false;
+                }
+
                 if (Y + Radius < zone.YOffset)
+                {
                     return false;
+                }
+
                 if (Y - Radius >= zone.YOffset + 65536)
+                {
                     return false;
+                }
 
                 return true;
             }
@@ -457,22 +396,36 @@ namespace DOL.GS
 
             public override bool IsContaining(IPoint3D obj)
             {
-                if (m_points.Count < 3) return false;
-                Point2D p1, p2;
-                bool inside = false;
+                if (m_points.Count < 3)
+                {
+                    return false;
+                }
 
+                bool inside = false;
                 Point2D oldpt = new Point2D(m_points[m_points.Count - 1].X, m_points[m_points.Count - 1].Y);
 
                 foreach (Point2D pt in m_points)
                 {
                     Point2D newpt = new Point2D(pt.X, pt.Y);
+                    Point2D p1;
+                    Point2D p2;
 
-                    if (newpt.X > oldpt.X) { p1 = oldpt; p2 = newpt; }
-                    else { p1 = newpt; p2 = oldpt; }
+                    if (newpt.X > oldpt.X)
+                    {
+                        p1 = oldpt;
+                        p2 = newpt;
+                    }
+                    else
+                    {
+                        p1 = newpt;
+                        p2 = oldpt;
+                    }
 
-                    if ((newpt.X < obj.X) == (obj.X <= oldpt.X)
-                        && (obj.Y - p1.Y) * (p2.X - p1.X) < (p2.Y - p1.Y) * (obj.X - p1.X))
+                    if ((newpt.X < obj.X) == (obj.X <= oldpt.X) &&
+                        (obj.Y - p1.Y) * (p2.X - p1.X) < (p2.Y - p1.Y) * (obj.X - p1.X))
+                    {
                         inside = !inside;
+                    }
 
                     oldpt = newpt;
                 }
@@ -482,46 +435,43 @@ namespace DOL.GS
             public override void LoadFromDatabase(DBArea area)
             {
                 m_translationId = area.TranslationId;
-                m_Description = area.Description;
-                m_X = area.X;
-                m_Y = area.Y;
-                m_Radius = area.Radius;
+                Description = area.Description;
+                X = area.X;
+                Y = area.Y;
+                Radius = area.Radius;
                 StringPoints = area.Points;
             }
         }
 
 		public class BindArea : Circle
 		{
-			protected BindPoint m_dbBindPoint;
+		    public BindPoint BindPoint { get; protected set; }
 
-			public BindArea()
+            public BindArea()
 				: base()
 			{
-				m_displayMessage = false;
+				DisplayMessage = false;
 			}
 
 			public BindArea(string desc, BindPoint dbBindPoint)
 				: base(desc, dbBindPoint.X, dbBindPoint.Y, dbBindPoint.Z, dbBindPoint.Radius)
 			{
-				m_dbBindPoint = dbBindPoint;
-				m_displayMessage = false;
+				BindPoint = dbBindPoint;
+				DisplayMessage = false;
 			}
 
-			public BindPoint BindPoint
-			{
-				get { return m_dbBindPoint; }
-			}
-
-			public override void LoadFromDatabase(DBArea area)
+		    public override void LoadFromDatabase(DBArea area)
 			{
 				base.LoadFromDatabase(area);
 
-				m_dbBindPoint = new BindPoint();
-				m_dbBindPoint.Radius = (ushort)area.Radius;
-				m_dbBindPoint.X = area.X;
-				m_dbBindPoint.Y = area.Y;
-				m_dbBindPoint.Z = area.Z;
-				m_dbBindPoint.Region = area.Region;
+			    BindPoint = new BindPoint
+			    {
+			        Radius = (ushort) area.Radius,
+			        X = area.X,
+			        Y = area.Y,
+			        Z = area.Z,
+			        Region = area.Region
+			    };
 			}
 		}
 
@@ -530,14 +480,13 @@ namespace DOL.GS
 			public SafeArea()
 				: base()
 			{
-				m_safeArea = true;
+				IsSafeArea = true;
 			}
 
 			public SafeArea(string desc, int x, int y, int z, int radius)
-				: base
-				(desc, x, y, z, radius)
+				: base(desc, x, y, z, radius)
 			{
-				m_safeArea = true;
+				IsSafeArea = true;
 			}
 		}
 	}

@@ -287,7 +287,7 @@ namespace DOL.GS
 			obj.X = X;
 			obj.Y = Y;
 			obj.Z = Z;
-			obj.ClassType = this.GetType().ToString();
+			obj.ClassType = GetType().ToString();
 			obj.RespawnInterval = RespawnInterval;
 
 			if (InternalID == null)

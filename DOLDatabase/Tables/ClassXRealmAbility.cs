@@ -1,12 +1,11 @@
-using System;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Class => Realm abilities collection
-	/// </summary>
-	[DataTable(TableName = "ClassXRealmAbility")]
+    /// <summary>
+    /// Class => Realm abilities collection
+    /// </summary>
+    [DataTable(TableName = "ClassXRealmAbility")]
 	public class ClassXRealmAbility : DataObject
 	{
 		protected string m_abilityKey;

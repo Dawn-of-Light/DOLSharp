@@ -17,19 +17,15 @@
  *
  */
 using System;
-using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Events;
 using DOL.AI.Brain;
-
-using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace DOL.GS.Spells
 {
-	[SpellHandler("Archery")]
+    [SpellHandler("Archery")]
 	public class Archery : ArrowSpellHandler
 	{
 		public enum eShotType
@@ -59,7 +55,7 @@ namespace DOL.GS.Spells
 			}
 			
 			// Is PS ?
-			GameSpellEffect Phaseshift = SpellHandler.FindEffectOnTarget(Caster, "Phaseshift");
+			GameSpellEffect Phaseshift = FindEffectOnTarget(Caster, "Phaseshift");
 			if (Phaseshift != null && (Spell.InstrumentRequirement == 0 || Spell.SpellType == "Mesmerize"))
 			{
 				MessageToCaster("You're phaseshifted and can't cast a spell", eChatType.CT_System);

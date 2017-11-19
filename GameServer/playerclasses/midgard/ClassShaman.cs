@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Midgard Shaman Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Shaman, "Shaman", "Seer")]
+    /// <summary>
+    /// Midgard Shaman Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Shaman, "Shaman", "Seer")]
 	public class ClassShaman : ClassSeer
 	{
 		public ClassShaman()

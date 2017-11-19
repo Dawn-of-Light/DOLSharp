@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Albion Heretic Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Heretic, "Heretic", "Acolyte")]
+    /// <summary>
+    /// Albion Heretic Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Heretic, "Heretic", "Acolyte")]
 	public class ClassHeretic : ClassAcolyte
 	{
 		public ClassHeretic()

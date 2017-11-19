@@ -17,13 +17,12 @@
  *
  */
 using System;
-using DOL.GS.PacketHandler;
 using DOL.Language;
 using System.Collections.Generic;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&cmdhelp", //command to handle
+    [Cmd("&cmdhelp", //command to handle
 		ePrivLevel.Player, //minimum privelege level
 		"Displays available commands", //command description
 		//usage

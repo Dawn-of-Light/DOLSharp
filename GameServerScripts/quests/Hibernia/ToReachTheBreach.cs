@@ -26,16 +26,13 @@
  * You will receive some xp, copper and the armor of your choice.
  */
 using System;
-using System.Reflection;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.PacketHandler;
 using DOL.Language;
-using log4net;
 
 namespace DOL.GS.Quests.Hibernia
 {
-	public class ToReachTheBreach : RewardQuest
+    public class ToReachTheBreach : RewardQuest
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -202,7 +199,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			#region defineNPCS
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Richael", eRealm.Hibernia);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Richael", eRealm.Hibernia);
 
 			if (npcs.Length == 0)
 			{

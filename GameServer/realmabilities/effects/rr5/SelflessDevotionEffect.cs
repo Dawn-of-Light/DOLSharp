@@ -18,15 +18,12 @@
  */
 //Eden - 1.94 RR5 Paladin
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using DOL.GS.PacketHandler;
-using DOL.GS.RealmAbilities;
 
 namespace DOL.GS.Effects
 {
-	public class SelflessDevotionEffect : TimedEffect
+    public class SelflessDevotionEffect : TimedEffect
 	{
 		public SelflessDevotionEffect() : base(15000)
 		{

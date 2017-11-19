@@ -254,7 +254,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineNPCS
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.WhenBloodSpeaks.ScriptLoaded.Text1"), eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>(LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "Alb.WhenBloodSpeaks.ScriptLoaded.Text1"), eRealm.Albion);
 
 			if (npcs.Length == 0)
 			{

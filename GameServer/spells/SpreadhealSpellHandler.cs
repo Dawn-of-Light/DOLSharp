@@ -18,16 +18,14 @@
  */
 using System;
 using System.Collections;
-using System.Reflection;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	[SpellHandlerAttribute("SpreadHeal")]
+    /// <summary>
+    /// 
+    /// </summary>
+    [SpellHandler("SpreadHeal")]
 	public class SpreadhealSpellHandler : HealSpellHandler
 	{
 		// constructor

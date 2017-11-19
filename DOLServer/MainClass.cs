@@ -18,16 +18,15 @@
  */
 using System;
 using System.Collections;
-using System.IO;
 using System.Threading;
 using DOL.DOLServer.Actions;
 
 namespace DOL.DOLServer
 {
-	/// <summary>
-	/// Just a test to run DOL in console mode
-	/// </summary>
-	internal class MainClass
+    /// <summary>
+    /// Just a test to run DOL in console mode
+    /// </summary>
+    internal class MainClass
 	{
 		/// <summary>
 		/// Holds all the possible actions

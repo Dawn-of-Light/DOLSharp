@@ -17,23 +17,16 @@
  *
  */
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.GS;
-using System.Collections;
 using System.Reflection;
 using log4net;
-using DOL.Events;
-using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
 
 namespace DOL.AI.Brain
 {
-	/// <summary>
-	/// A brain for the commanders
-	/// </summary>
-	public class CommanderBrain : ControlledNpcBrain
+    /// <summary>
+    /// A brain for the commanders
+    /// </summary>
+    public class CommanderBrain : ControlledNpcBrain
 	{
 		/// <summary>
 		/// Defines a logger for this class.

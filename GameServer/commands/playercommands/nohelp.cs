@@ -17,11 +17,10 @@
  *
  */
 using DOL.GS.PacketHandler;
-using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		"&nohelp",
 		ePrivLevel.Player,
 		"Toggle nohelp on or off, to stop receiving help from  your realm", "/nohelp>")]

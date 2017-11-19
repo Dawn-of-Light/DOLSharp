@@ -52,14 +52,14 @@ namespace DOL.GS.Trainer
 			// check if class matches.
 			if (player.CharacterClass.ID == (int) TrainedClass)
 			{
-				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "BainsheeTrainer.Interact.Text2", this.Name, player.Name), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
+				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "BainsheeTrainer.Interact.Text2", Name, player.Name), eChatType.CT_Say, eChatLoc.CL_ChatWindow);
 			}
 			else
 			{
 				// perhaps player can be promoted
 				if (CanPromotePlayer(player))
 				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "BainsheeTrainer.Interact.Text1", this.Name, player.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
+					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "BainsheeTrainer.Interact.Text1", Name, player.Name), eChatType.CT_System, eChatLoc.CL_PopupWindow);
 					if (!player.IsLevelRespecUsed)
 					{
 						OfferRespecialize(player);

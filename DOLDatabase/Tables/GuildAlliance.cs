@@ -20,18 +20,16 @@
 // this code has been done by breeze and duff a long time ago
 //
 
-using System;
-using DOL.Database;
 using DOL.Database.Attributes;
 //using System.Collections;
 
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// DBalliance is table for alliance of guild
-	/// </summary>
-	[DataTable(TableName="GuildAlliance")]
+    /// <summary>
+    /// DBalliance is table for alliance of guild
+    /// </summary>
+    [DataTable(TableName="GuildAlliance")]
 	public class DBAlliance : DataObject
 	{
 		private string	m_allianceName;

@@ -24,16 +24,13 @@ using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
-using System.Reflection;
-using log4net;
-
 
 namespace DOL.GS.Keeps
 {
-	/// <summary>
-	/// Keep guard is gamemob with just different brain and load from other DB table
-	/// </summary>
-	public class GameKeepGuard : GameNPC, IKeepItem
+    /// <summary>
+    /// Keep guard is gamemob with just different brain and load from other DB table
+    /// </summary>
+    public class GameKeepGuard : GameNPC, IKeepItem
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -83,9 +80,9 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (this.Component != null && this.Component.AbstractKeep != null)
+				if (Component != null && Component.AbstractKeep != null)
 				{
-					return this.Component.AbstractKeep is GameKeepTower;
+					return Component.AbstractKeep is GameKeepTower;
 				}
 				return false;
 			}
@@ -95,9 +92,9 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (this.Component == null || this.Component.AbstractKeep == null)
+				if (Component == null || Component.AbstractKeep == null)
 					return false;
-				return this.Component.AbstractKeep.IsPortalKeep;
+				return Component.AbstractKeep.IsPortalKeep;
 			}
 		}
 
@@ -117,7 +114,7 @@ namespace DOL.GS.Keeps
 			}
 			set
 			{
-				if (this.IsRespawning)
+				if (IsRespawning)
 					m_level = value;
 				else
 					base.Level = value;
@@ -314,8 +311,8 @@ namespace DOL.GS.Keeps
 
 			//Prevent spam for LOS to same target multiple times
 
-			GameObject lastTarget = (GameObject)this.TempProperties.getProperty<object>(LAST_LOS_TARGET_PROPERTY, null);
-			long lastTick = this.TempProperties.getProperty<long>(LAST_LOS_TICK_PROPERTY);
+			GameObject lastTarget = (GameObject)TempProperties.getProperty<object>(LAST_LOS_TARGET_PROPERTY, null);
+			long lastTick = TempProperties.getProperty<long>(LAST_LOS_TICK_PROPERTY);
 
 			if (lastTarget != null && lastTarget == attackTarget)
 			{
@@ -335,7 +332,7 @@ namespace DOL.GS.Keeps
 			else
 			{
 				// try to find another player to use for checking line of site
-				foreach (GamePlayer player in this.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+				foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 				{
 					LOSChecker = player;
 					break;
@@ -373,7 +370,7 @@ namespace DOL.GS.Keeps
 				TargetObject = attackTarget;
 			}
 
-			LOSChecker.Out.SendCheckLOS(this, attackTarget, new CheckLOSResponse(this.GuardStartAttackCheckLOS));
+			LOSChecker.Out.SendCheckLOS(this, attackTarget, new CheckLOSResponse(GuardStartAttackCheckLOS));
 		}
 
 		/// <summary>
@@ -406,7 +403,7 @@ namespace DOL.GS.Keeps
 			}
 			else if (TargetObject != null && TargetObject is GameLiving)
 			{
-				(this.Brain as KeepGuardBrain).RemoveFromAggroList(TargetObject as GameLiving);
+				(Brain as KeepGuardBrain).RemoveFromAggroList(TargetObject as GameLiving);
 			}
 		}
 
@@ -424,7 +421,7 @@ namespace DOL.GS.Keeps
 
 				if (TargetObject != null && TargetPosition is GameLiving)
 				{
-					(this.Brain as KeepGuardBrain).RemoveFromAggroList(TargetObject as GameLiving);
+					(Brain as KeepGuardBrain).RemoveFromAggroList(TargetObject as GameLiving);
 				}
 			}
 		}
@@ -452,19 +449,19 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				if (this.ObjectState != GameObject.eObjectState.Active) return false;
+				if (ObjectState != GameObject.eObjectState.Active) return false;
 				if (this is GuardFighter) return false;
 				if (this is GuardArcher || this is GuardLord)
 				{
-					if (this.Inventory == null) return false;
-					if (this.Inventory.GetItem(eInventorySlot.DistanceWeapon) == null) return false;
-					if (this.ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.Distance) return false;
+					if (Inventory == null) return false;
+					if (Inventory.GetItem(eInventorySlot.DistanceWeapon) == null) return false;
+					if (ActiveWeaponSlot == GameLiving.eActiveWeaponSlot.Distance) return false;
 				}
 				if (this is GuardCaster || this is GuardHealer)
 				{
-					if (this.CurrentSpellHandler != null) return false;
+					if (CurrentSpellHandler != null) return false;
 				}
-				return !this.BeenAttackedRecently;
+				return !BeenAttackedRecently;
 			}
 		}
 
@@ -492,12 +489,12 @@ namespace DOL.GS.Keeps
 				if (ActiveWeaponSlot == eActiveWeaponSlot.Standard || ActiveWeaponSlot == eActiveWeaponSlot.TwoHanded)
 				{
 					//if we are targeting something, and the distance to the target object is greater than the attack range
-                    if( TargetObject != null && !this.IsWithinRadius( TargetObject, AttackRange ) )
+                    if( TargetObject != null && !IsWithinRadius( TargetObject, AttackRange ) )
 					{
 						//stop the attack
 						StopAttack();
 						//if the distance to the attacker is less than the attack range
-						if ( this.IsWithinRadius( ad.Attacker, AttackRange ) )
+						if (IsWithinRadius( ad.Attacker, AttackRange ) )
 						{
 							//attack it
 							StartAttack(ad.Attacker);
@@ -546,9 +543,9 @@ namespace DOL.GS.Keeps
 			int inArea = 0;
 			foreach (GamePlayer NearbyPlayers in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
-				if (this.Component != null)
+				if (Component != null)
 				{
-					if (GameServer.KeepManager.IsEnemy(this.Component.AbstractKeep, NearbyPlayers))
+					if (GameServer.KeepManager.IsEnemy(Component.AbstractKeep, NearbyPlayers))
 						inArea++;
 				}
 				else
@@ -590,8 +587,8 @@ namespace DOL.GS.Keeps
 			
 			if(IsPortalKeepGuard&&(Brain as KeepGuardBrain!=null))
 			{
-				(this.Brain as KeepGuardBrain).AggroRange=2000;
-				(this.Brain as KeepGuardBrain).AggroLevel=99;
+				(Brain as KeepGuardBrain).AggroRange=2000;
+				(Brain as KeepGuardBrain).AggroLevel=99;
 			}
 			
 			GameEventMgr.AddHandler(this, GameNPCEvent.AttackFinished, new DOLEventHandler(AttackFinished));
@@ -681,12 +678,12 @@ namespace DOL.GS.Keeps
 			if (Realm != eRealm.None)
 			{
                 list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameKeepGuard.GetExamineMessages.YouExamine", GetName(0, false), GetPronoun(0, true), GetAggroLevelString(player, false)));
-				if (this.Component != null)
+				if (Component != null)
 				{
 					string text = "";
-					if (this.Component.AbstractKeep.Level > 1 && this.Component.AbstractKeep.Level < 250 && GameServer.ServerRules.IsSameRealm(player, this, true))
-                        text = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameKeepGuard.GetExamineMessages.Upgraded", GetPronoun(0, true), this.Component.AbstractKeep.Level);
-					if (ServerProperties.Properties.USE_KEEP_BALANCING && this.Component.AbstractKeep.Region == 163 && !(this.Component.AbstractKeep is GameKeepTower))
+					if (Component.AbstractKeep.Level > 1 && Component.AbstractKeep.Level < 250 && GameServer.ServerRules.IsSameRealm(player, this, true))
+                        text = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameKeepGuard.GetExamineMessages.Upgraded", GetPronoun(0, true), Component.AbstractKeep.Level);
+					if (ServerProperties.Properties.USE_KEEP_BALANCING && Component.AbstractKeep.Region == 163 && !(Component.AbstractKeep is GameKeepTower))
                         text += LanguageMgr.GetTranslation(player.Client.Account.Language, "GameKeepGuard.GetExamineMessages.Balancing", GetPronoun(0, true), (Component.AbstractKeep.BaseLevel - 50).ToString());
 					if (text != "")
 						list.Add(text);
@@ -751,7 +748,7 @@ namespace DOL.GS.Keeps
 		public override void LoadFromDatabase(DataObject mobobject)
 		{
 			base.LoadFromDatabase(mobobject);
-			foreach (AbstractArea area in this.CurrentAreas)
+			foreach (AbstractArea area in CurrentAreas)
 			{
 				if (area is KeepArea)
 				{
@@ -821,7 +818,7 @@ namespace DOL.GS.Keeps
 		{
 			if (HookPoint != null && Component != null)
 			{
-				Component.AbstractKeep.Guards.Remove(this.ObjectID);
+				Component.AbstractKeep.Guards.Remove(ObjectID);
 			}
 
 			TempProperties.removeAllProperties();
@@ -831,11 +828,11 @@ namespace DOL.GS.Keeps
 
 		public override void DeleteFromDatabase()
 		{
-			foreach (AbstractArea area in this.CurrentAreas)
+			foreach (AbstractArea area in CurrentAreas)
 			{
 				if (area is KeepArea && Component != null)
 				{
-					Component.AbstractKeep.Guards.Remove(this.InternalID);
+					Component.AbstractKeep.Guards.Remove(InternalID);
 					break;
 				}
 			}
@@ -861,7 +858,7 @@ namespace DOL.GS.Keeps
 			{
 				TemplateMgr.RefreshTemplate(this);
 			}
-			this.AddToWorld();
+            AddToWorld();
 		}
 
 		/// <summary>
@@ -871,8 +868,8 @@ namespace DOL.GS.Keeps
 		public void MoveToPosition(DBKeepPosition position)
 		{
 			PositionMgr.LoadGuardPosition(position, this);
-			if (!this.InCombat)
-				this.MoveTo(this.CurrentRegionID, this.X, this.Y, this.Z, this.Heading);
+			if (!InCombat)
+                MoveTo(CurrentRegionID, X, Y, Z, Heading);
 		}
 		#endregion
 
@@ -883,24 +880,24 @@ namespace DOL.GS.Keeps
 		{
 			ClothingMgr.EquipGuard(this);
 
-			Guild guild = this.Component.AbstractKeep.Guild;
+			Guild guild = Component.AbstractKeep.Guild;
 			string guildname = "";
 			if (guild != null)
 				guildname = guild.Name;
 
-			this.GuildName = guildname;
+            GuildName = guildname;
 
-			if (this.Inventory == null)
+			if (Inventory == null)
 				return;
 
 			int emblem = 0;
 			if (guild != null)
 				emblem = guild.Emblem;
-			InventoryItem lefthand = this.Inventory.GetItem(eInventorySlot.LeftHandWeapon);
+			InventoryItem lefthand = Inventory.GetItem(eInventorySlot.LeftHandWeapon);
 			if (lefthand != null)
 				lefthand.Emblem = emblem;
 
-			InventoryItem cloak = this.Inventory.GetItem(eInventorySlot.Cloak);
+			InventoryItem cloak = Inventory.GetItem(eInventorySlot.Cloak);
 			if (cloak != null)
 			{
 				cloak.Emblem = emblem;

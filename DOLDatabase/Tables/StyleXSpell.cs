@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// (procs) Database Storage of StyleXSpell
-	/// </summary>
-	[DataTable(TableName = "StyleXSpell")]
+    /// <summary>
+    /// (procs) Database Storage of StyleXSpell
+    /// </summary>
+    [DataTable(TableName = "StyleXSpell")]
 	public class DBStyleXSpell : DataObject
 	{
 		protected int m_SpellID;

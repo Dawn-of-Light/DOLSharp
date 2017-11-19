@@ -1,8 +1,6 @@
-using DOL.GS;
-
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		"&deal",
 		ePrivLevel.Player,
 		"Deal one card to a player in your group. Cards must first be prepared with /shuffle.",

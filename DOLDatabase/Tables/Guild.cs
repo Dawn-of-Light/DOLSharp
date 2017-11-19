@@ -17,16 +17,15 @@
  *
  */
 using System;
-using DOL.Database;
 using DOL.Database.Attributes;
 
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Guild table
-	/// </summary>
-	[DataTable(TableName="Guild")]
+    /// <summary>
+    /// Guild table
+    /// </summary>
+    [DataTable(TableName="Guild")]
 	public class DBGuild : DataObject
 	{
 		private string m_guildid; //Unique id for this guild

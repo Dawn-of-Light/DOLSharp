@@ -17,18 +17,16 @@
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.Database;
 using DOL.Events;
 
 namespace DOL.GS.Quests.Atlantis
 {
-	/// <summary>
-	/// Base class for all artifact encounters.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class ArtifactEncounter : AbstractQuest
+    /// <summary>
+    /// Base class for all artifact encounters.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class ArtifactEncounter : AbstractQuest
 	{
 		public ArtifactEncounter(GamePlayer questingPlayer)
 			: base(questingPlayer) { }

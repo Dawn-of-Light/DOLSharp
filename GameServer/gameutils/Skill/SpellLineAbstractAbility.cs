@@ -16,19 +16,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Linq;
 
 using DOL.Database;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Abstract Spell Line Ability Class is a base Class to get Ability Effects based on Spell Line constraints
-	/// This Allow Derived Ability to Cast or Enable arbitrary Spells in Database based on Ability Level matched against Spell Line's Level Spells
-	/// Using Spell Line Level Increase it can index different Spell Effect Based on Ability Level
-	/// </summary>
-	public abstract class SpellLineAbstractAbility : Ability, ISpellCastingAbilityHandler
+    /// <summary>
+    /// Abstract Spell Line Ability Class is a base Class to get Ability Effects based on Spell Line constraints
+    /// This Allow Derived Ability to Cast or Enable arbitrary Spells in Database based on Ability Level matched against Spell Line's Level Spells
+    /// Using Spell Line Level Increase it can index different Spell Effect Based on Ability Level
+    /// </summary>
+    public abstract class SpellLineAbstractAbility : Ability, ISpellCastingAbilityHandler
 	{
 		/// <summary>
 		/// Get this Ability Current Spell for Level in SpellLine

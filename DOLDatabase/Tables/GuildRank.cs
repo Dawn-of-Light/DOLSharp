@@ -16,17 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.Database;
 using DOL.Database.Attributes;
 //using System.Collections;
 
 namespace DOL.Database
 {
-	/// <summary>
-	/// Rank rules in guild
-	/// </summary>
-	[DataTable(TableName="GuildRank")]
+    /// <summary>
+    /// Rank rules in guild
+    /// </summary>
+    [DataTable(TableName="GuildRank")]
 	public class DBRank : DataObject
 	{
 		private string	m_guildid;

@@ -26,19 +26,15 @@
 */
 
 using System;
-using System.Reflection;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.PacketHandler;
 using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Actions;
-using DOL.Language;
-using log4net;
 using DOL.GS.Behaviour.Requirements;
 
 namespace DOL.GS.Quests.Hibernia
 {
-	public class BonesToBlades : BaseQuest
+    public class BonesToBlades : BaseQuest
 	{
 		protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -116,7 +112,7 @@ namespace DOL.GS.Quests.Hibernia
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 
 			#region defineNPCS
-			GameNPC[] npcs = WorldMgr.GetNPCsByName(questGiverName, eRealm.Hibernia);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>(questGiverName, eRealm.Hibernia);
 			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
@@ -153,7 +149,7 @@ namespace DOL.GS.Quests.Hibernia
 			else
 				questGiver = npcs[0];
 
-			npcs = WorldMgr.GetNPCsByName(questTargetName, eRealm.Hibernia);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>(questTargetName, eRealm.Hibernia);
 
 			if (npcs.Length == 0)
 			{

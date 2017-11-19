@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
@@ -6,10 +5,10 @@ using DOL.GS.PacketHandler;
 
 namespace DOL.GS.RealmAbilities
 {
-	/// <summary>
-	/// Whirling Staff Ability
-	/// </summary>
-	public class WhirlingStaffAbility : RR5RealmAbility
+    /// <summary>
+    /// Whirling Staff Ability
+    /// </summary>
+    public class WhirlingStaffAbility : RR5RealmAbility
 	{
 		public WhirlingStaffAbility(DBAbility dba, int level) : base(dba, level) { }
 

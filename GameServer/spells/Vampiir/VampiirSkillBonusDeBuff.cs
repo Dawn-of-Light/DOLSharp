@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	[SpellHandlerAttribute("VampiirSkillBonusDeBuff")]
+    [SpellHandler("VampiirSkillBonusDeBuff")]
 	public class VampiirSkillBonusDeBuff : SpellHandler
 	{
 		public override void FinishSpellCast(GameLiving target)

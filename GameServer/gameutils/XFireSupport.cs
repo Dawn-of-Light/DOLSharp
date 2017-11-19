@@ -1,12 +1,9 @@
 using System;
-using System.Reflection;
 using DOL.Events;
-using DOL.GS.PacketHandler;
-using DOL.GS.Commands;
 
 namespace DOL.GS.GameEvents
 {
-	public class XFirePlayerEnterExit
+    public class XFirePlayerEnterExit
 	{
 		private const string XFire_Property_Flag = "XFire_Property_Flag";
 
@@ -46,7 +43,7 @@ namespace DOL.GS.GameEvents
 }
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&xfire", ePrivLevel.Player, "Xfire support", "/xfire <on|off>")]
+    [Cmd("&xfire", ePrivLevel.Player, "Xfire support", "/xfire <on|off>")]
 	public class CheckXFireCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)

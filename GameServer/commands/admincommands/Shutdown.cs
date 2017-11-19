@@ -24,7 +24,7 @@ using DOL.GS.ServerProperties;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+	[Cmd(
 		"&shutdown",
 		ePrivLevel.Admin,
 		"Shutdown the server in next minute",

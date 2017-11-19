@@ -20,62 +20,48 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
-
-using DOL.GS;
 using DOL.Database;
 
 using log4net;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// Description of RegionInstance.
-	/// Clone a RegionData to a New BaseInstance
-	/// Can duplicate any "Region" of the Game into a dedicated Instance
-	/// Handle Zones and Areas, doesn't Handle Persistence.
-	/// </summary>
-	public class RegionInstance : BaseInstance
+    /// <summary>
+    /// Description of RegionInstance.
+    /// Clone a RegionData to a New BaseInstance
+    /// Can duplicate any "Region" of the Game into a dedicated Instance
+    /// Handle Zones and Areas, doesn't Handle Persistence.
+    /// </summary>
+    public class RegionInstance : BaseInstance
 	{
 		/// <summary>
 		/// Console Logger
 		/// </summary>
-		private static readonly ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 		
 		/// <summary>
 		/// List Containing players in instance
 		/// </summary>
-		private List<GamePlayer> m_players_in;
-		
-		/// <summary>
-		/// Entrance location of Instance, needed to force exit players.
-		/// </summary>
-		protected GameLocation m_sourceentrance;
-		
-		/// <summary>
-		/// List Containing players in instance
-		/// </summary>
-		protected List<GamePlayer> PlayersInside
-		{
-			get { return m_players_in; }
-		}
+		private readonly List<GamePlayer> m_players_in;
 
-		/// <summary>
+	    /// <summary>
+		/// List Containing players in instance
+		/// </summary>
+		protected List<GamePlayer> PlayersInside => m_players_in;
+
+	    /// <summary>
 		/// Entrance location of Instance, needed to force exit players.
 		/// </summary>
-		public GameLocation SourceEntrance
-		{
-			get { return m_sourceentrance; }
-			set { m_sourceentrance = value; }
-		}
-		
-		/// <summary>
+		public GameLocation SourceEntrance { get; set; }
+
+	    /// <summary>
 		/// On Player Enter override to add him to container
 		/// </summary>
 		/// <param name="player"></param>
 		public override void OnPlayerEnterInstance(GamePlayer player)
 		{
-			//Add Player
-			this.m_players_in.Add(player);
+            //Add Player
+            m_players_in.Add(player);
 			//Stop the timer to prevent the region's removal.
 			base.OnPlayerEnterInstance(player);
 		}
@@ -88,7 +74,7 @@ namespace DOL.GS
         {
             //Decrease the amount of players
             base.OnPlayerLeaveInstance(player);
-            this.m_players_in.Remove(player);
+            m_players_in.Remove(player);
         }
 		
 		/// <summary>
@@ -97,9 +83,9 @@ namespace DOL.GS
 		/// <param name="player"></param>
 		public RegionInstance(ushort ID, GameTimer.TimeManager time, RegionData dat)
 			: base(ID, time, dat)
-		{	
-			this.m_players_in = new List<GamePlayer>();
-			this.DestroyWhenEmpty = false;
+		{
+            m_players_in = new List<GamePlayer>();
+            DestroyWhenEmpty = false;
 		}
 		
 		/// <summary>
@@ -109,7 +95,9 @@ namespace DOL.GS
 		public override void LoadFromDatabase(Mob[] mobObjs, ref long mobCount, ref long merchantCount, ref long itemCount, ref long bindCount)
         {
             if (!LoadObjects)
+            {
                 return;
+            }
 
             Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
             var staticObjs = GameServer.Database.SelectObjects<WorldObject>("`Region` = @Region", new QueryParameter("@Region", Skin));
@@ -168,7 +156,7 @@ namespace DOL.GS
                     	{
                 			classtype = template.ClassType;
                     	}
-                        else if (mob.ClassType != null && mob.ClassType.Length > 0 && mob.ClassType != Mob.DEFAULT_NPC_CLASSTYPE)
+                        else if (!string.IsNullOrWhiteSpace(mob.ClassType) && mob.ClassType != Mob.DEFAULT_NPC_CLASSTYPE)
                         {
                             classtype = mob.ClassType;
                         }
@@ -197,7 +185,9 @@ namespace DOL.GS
                                 }
 
                                 if (myMob != null)
+                                {
                                     break;
+                                }
                             }
 
                             if (myMob == null)
@@ -209,7 +199,9 @@ namespace DOL.GS
                     }
 
                     if (!allErrors.Contains(error))
-                        allErrors += " " + error + ",";
+                    {
+                        allErrors += $" {error},";
+                    }
 
                     if (myMob != null)
                     {
@@ -218,7 +210,7 @@ namespace DOL.GS
                         	Mob clone = (Mob)mob.Clone();
                         	clone.AllowAdd = false;
                         	clone.AllowDelete = false;
-                        	clone.Region = this.ID;
+                        	clone.Region = ID;
                         	
                         	myMob.LoadFromDatabase(clone);
 
@@ -234,7 +226,9 @@ namespace DOL.GS
                         catch (Exception e)
                         {
                             if (log.IsErrorEnabled)
-                                log.Error("Failed: " + myMob.GetType().FullName + ":LoadFromDatabase(" + mob.GetType().FullName + ");", e);
+                            {
+                                log.Error($"Failed: {myMob.GetType().FullName}:LoadFromDatabase({mob.GetType().FullName});", e);
+                            }
                             throw;
                         }
 
@@ -250,7 +244,7 @@ namespace DOL.GS
                 	WorldObject itemclone = (WorldObject)item.Clone();
                 	itemclone.AllowAdd = false;
                 	itemclone.AllowDelete = false;
-                	itemclone.Region = this.ID;
+                	itemclone.Region = ID;
                 	
                     GameStaticItem myItem;
                     if (!string.IsNullOrEmpty(itemclone.ClassType))
@@ -265,15 +259,23 @@ namespace DOL.GS
                                     myItem = (GameStaticItem)asm.CreateInstance(itemclone.ClassType, false);
                                 }
                                 catch { }
+
                                 if (myItem != null)
+                                {
                                     break;
+                                }
                             }
+
                             if (myItem == null)
+                            {
                                 myItem = new GameStaticItem();
+                            }
                         }
                     }
                     else
+                    {
                         myItem = new GameStaticItem();
+                    }
 
                     myItem.AddToWorld();
                 }
@@ -283,14 +285,16 @@ namespace DOL.GS
             // Add missing area
             foreach(DBArea area in areaObjs) 
             {
-            	// Don't bind in instance.
-            	if(area.ClassType.Equals("DOL.GS.Area+BindArea"))
-            		continue;
+                // Don't bind in instance.
+                if (area.ClassType.Equals("DOL.GS.Area+BindArea"))
+                {
+                    continue;
+                }
             	
             	// clone DB object.
             	DBArea newDBArea = ((DBArea)area.Clone());
             	newDBArea.AllowAdd = false;
-            	newDBArea.Region = this.ID;
+            	newDBArea.Region = ID;
             	// Instantiate Area with cloned DB object and add to region
             	try
             	{
@@ -299,12 +303,12 @@ namespace DOL.GS
 					newArea.Sound = newDBArea.Sound;
 					newArea.CanBroadcast = newDBArea.CanBroadcast;
 					newArea.CheckLOS = newDBArea.CheckLOS;
-					this.AddArea(newArea);
+                    AddArea(newArea);
 					areaCnt++;
 	            }
             	catch
             	{
-            		log.Warn("area type " + area.ClassType + " cannot be created, skipping");
+            		log.Warn($"area type {area.ClassType} cannot be created, skipping");
             		continue;
             	}
 
@@ -313,15 +317,20 @@ namespace DOL.GS
             if (myMobCount + myItemCount + myMerchantCount > 0)
             {
                 if (log.IsInfoEnabled)
-                    log.Info(String.Format("AdventureWingInstance: {0} ({1}) loaded {2} mobs, {3} merchants, {4} items, {5}/{6} areas from DB ({7})", Description, ID, myMobCount, myMerchantCount, myItemCount, areaCnt, areaObjs.Count, TimeManager.Name));
+                {
+                    log.Info($"AdventureWingInstance: {Description} ({ID}) loaded {myMobCount} mobs, {myMerchantCount} merchants, {myItemCount} items, {areaCnt}/{areaObjs.Count} areas from DB ({TimeManager.Name})");
+                }
 
-                log.Debug("Used Memory: " + GC.GetTotalMemory(false) / 1024 / 1024 + "MB");
+                log.Debug($"Used Memory: {GC.GetTotalMemory(false) / 1024 / 1024}MB");
 
                 if (allErrors != string.Empty)
-                    log.Error("Error loading the following NPC ClassType(s), GameNPC used instead:" + allErrors.TrimEnd(','));
+                {
+                    log.Error($"Error loading the following NPC ClassType(s), GameNPC used instead:{allErrors.TrimEnd(',')}");
+                }
 
                 Thread.Sleep(0);  // give up remaining thread time to other resources
             }
+
             mobCount += myMobCount;
             merchantCount += myMerchantCount;
             itemCount += myItemCount;

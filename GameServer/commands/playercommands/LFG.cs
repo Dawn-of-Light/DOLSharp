@@ -17,17 +17,13 @@
  *
  */
 
-using System.Collections;
-using System.Reflection;
 using DOL.Language;
-using DOL.GS;
-using DOL.GS.ServerProperties;
 using DOL.GS.PacketHandler;
 
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
+    [Cmd(
 		 "&lfg",
 		 ePrivLevel.Player,
 		 "Broadcast a LFG message to other players in the same region",

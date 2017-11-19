@@ -20,17 +20,16 @@ using System;
 using System.Reflection;
 using DOL.Database;
 using DOL.GS.Styles;
-using DOL.GS.Spells;
 using log4net;
 using System.Collections;
 using System.Linq;
 
 namespace DOL.GS
 {
-	/// <summary>
-	/// A npc template
-	/// </summary>
-	public class NpcTemplate : INpcTemplate
+    /// <summary>
+    /// A npc template
+    /// </summary>
+    public class NpcTemplate : INpcTemplate
 	{
 		/// <summary>
 		/// Defines a logger for this class.

@@ -1,11 +1,9 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Spells
 {
-	[SpellHandlerAttribute("EnduranceDrain")]
+    [SpellHandler("EnduranceDrain")]
 	public class EnduranceDrainSpellHandler : SpellHandler
 	{
 		public EnduranceDrainSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
