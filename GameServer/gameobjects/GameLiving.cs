@@ -847,7 +847,8 @@ namespace DOL.GS
 			if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 			{
 				speed *= 1.5; // mob archer speed too fast
-				speed *= 1.0 - GetModified(eProperty.CastingSpeed) * 0.01;
+				// speed *= 1.0 - GetModified(eProperty.CastingSpeed) * 0.01; Why casting speed?
+				speed *= 1.0 - GetModified(eProperty.ArcherySpeed) * 0.01;
 			}
 			else
 			{
@@ -2394,7 +2395,7 @@ namespace DOL.GS
 								// release 50% through the timer, you do 50% of the damage, and so forth - The faster the shot, the less damage it does.
 
 								// Source : http://www.camelotherald.com/more/901.shtml
-								// Related note about Rapid Fire – interrupts are determined by the speed of the bow is fired, meaning that the time of interruptions for each shot will be scaled
+								// Related note about Rapid Fire Â– interrupts are determined by the speed of the bow is fired, meaning that the time of interruptions for each shot will be scaled
 								// down proportionally to bow speed. If that made your eyes bleed, here's an example from someone who would know: "I fire a 5.0 spd bow. Because I am buffed and have
 								// stat bonuses, I fire that bow at 3.0 seconds. The resulting interrupt on the caster will last 3.0 seconds. If I rapid fire that same bow, I will fire at 1.5 seconds,
 								// and the resulting interrupt will last 1.5 seconds."
@@ -3219,11 +3220,11 @@ namespace DOL.GS
 			if (!IsValidTarget)
 				return eAttackResult.NoValidTarget;
 
-			//1.To-Hit modifiers on styles do not any effect on whether your opponent successfully Evades, Blocks, or Parries. – Grab Bag 2/27/03
-			//2.The correct Order of Resolution in combat is Intercept, Evade, Parry, Block (Shield), Guard, Hit/Miss, and then Bladeturn. – Grab Bag 2/27/03, Grab Bag 4/4/03
-			//3.For every person attacking a monster, a small bonus is applied to each player's chance to hit the enemy. Allowances are made for those who don't technically hit things when they are participating in the raid – for example, a healer gets credit for attacking a monster when he heals someone who is attacking the monster, because that's what he does in a battle. – Grab Bag 6/6/03
-			//4.Block, parry, and bolt attacks are affected by this code, as you know. We made a fix to how the code counts people as "in combat." Before this patch, everyone grouped and on the raid was counted as "in combat." The guy AFK getting Mountain Dew was in combat, the level five guy hovering in the back and hoovering up some exp was in combat – if they were grouped with SOMEONE fighting, they were in combat. This was a bad thing for block, parry, and bolt users, and so we fixed it. – Grab Bag 6/6/03
-			//5.Positional degrees - Side Positional combat styles now will work an extra 15 degrees towards the rear of an opponent, and rear position styles work in a 60 degree arc rather than the original 90 degree standard. This change should even out the difficulty between side and rear positional combat styles, which have the same damage bonus. Please note that front positional styles are not affected by this change. – 1.62
+			//1.To-Hit modifiers on styles do not any effect on whether your opponent successfully Evades, Blocks, or Parries. Â– Grab Bag 2/27/03
+			//2.The correct Order of Resolution in combat is Intercept, Evade, Parry, Block (Shield), Guard, Hit/Miss, and then Bladeturn. Â– Grab Bag 2/27/03, Grab Bag 4/4/03
+			//3.For every person attacking a monster, a small bonus is applied to each player's chance to hit the enemy. Allowances are made for those who don't technically hit things when they are participating in the raid Â– for example, a healer gets credit for attacking a monster when he heals someone who is attacking the monster, because that's what he does in a battle. Â– Grab Bag 6/6/03
+			//4.Block, parry, and bolt attacks are affected by this code, as you know. We made a fix to how the code counts people as "in combat." Before this patch, everyone grouped and on the raid was counted as "in combat." The guy AFK getting Mountain Dew was in combat, the level five guy hovering in the back and hoovering up some exp was in combat Â– if they were grouped with SOMEONE fighting, they were in combat. This was a bad thing for block, parry, and bolt users, and so we fixed it. Â– Grab Bag 6/6/03
+			//5.Positional degrees - Side Positional combat styles now will work an extra 15 degrees towards the rear of an opponent, and rear position styles work in a 60 degree arc rather than the original 90 degree standard. This change should even out the difficulty between side and rear positional combat styles, which have the same damage bonus. Please note that front positional styles are not affected by this change. Â– 1.62
 			//http://daoc.catacombs.com/forum.cfm?ThreadKey=511&DefMessage=681444&forum=DAOCMainForum#Defense
 
 			GuardEffect guard = null;
@@ -3761,11 +3762,11 @@ namespace DOL.GS
 		protected virtual double TryParry( AttackData ad, AttackData lastAD, double attackerConLevel, int attackerCount )
 		{
 			// Parry
-			//1.  Dual wielding does not grant more chances to parry than a single weapon. – Grab Bag 9/12/03
-			//2.  There is no hard cap on ability to Parry. – Grab Bag 8/13/02
-			//3.  Your chances of doing so are best when you are solo, trying to block or parry a style from someone who is also solo. The chances of doing so decrease with grouped, simultaneous attackers. – Grab Bag 7/19/02
-			//4.  The parry chance is divided up amongst the attackers, such that if you had a 50% chance to parry normally, and were under attack by two targets, you would get a 25% chance to parry one, and a 25% chance to parry the other. So, the more people or monsters attacking you, the lower your chances to parry any one attacker. -  – Grab Bag 11/05/04
-			//Your chance to parry is affected by the number of attackers, the size of the weapon you’re using, and your spec in parry.
+			//1.  Dual wielding does not grant more chances to parry than a single weapon. Â– Grab Bag 9/12/03
+			//2.  There is no hard cap on ability to Parry. Â– Grab Bag 8/13/02
+			//3.  Your chances of doing so are best when you are solo, trying to block or parry a style from someone who is also solo. The chances of doing so decrease with grouped, simultaneous attackers. Â– Grab Bag 7/19/02
+			//4.  The parry chance is divided up amongst the attackers, such that if you had a 50% chance to parry normally, and were under attack by two targets, you would get a 25% chance to parry one, and a 25% chance to parry the other. So, the more people or monsters attacking you, the lower your chances to parry any one attacker. -  Â– Grab Bag 11/05/04
+			//Your chance to parry is affected by the number of attackers, the size of the weapon youÂ’re using, and your spec in parry.
 			//Parry % = (5% + 0.5% * Parry) / # of Attackers
 			//Parry: (((Dex*2)-100)/40)+(Parry/2)+(Mastery of P*3)+5. < Possible relation to buffs
 			//So, if you have parry of 20 you will have a chance of parrying 15% if there is one attacker. If you have parry of 20 you will have a chance of parrying 7.5%, if there are two attackers.
@@ -3773,7 +3774,7 @@ namespace DOL.GS
 			//So, when facing a 2H weapon, you may see a penalty to your evade.
 			//
 			//http://www.camelotherald.com/more/453.php
-			//Also, before this comparison happens, the game looks to see if your opponent is in your forward arc – to determine that arc, make a 120 degree angle, and put yourself at the point.
+			//Also, before this comparison happens, the game looks to see if your opponent is in your forward arc Â– to determine that arc, make a 120 degree angle, and put yourself at the point.
 
 			double parryChance = 0;
 
@@ -3841,13 +3842,13 @@ namespace DOL.GS
 		protected virtual double TryBlock( AttackData ad, AttackData lastAD, double attackerConLevel, int attackerCount, EngageEffect engage )
 		{
 			// Block
-			//1.Quality does not affect the chance to block at this time. – Grab Bag 3/7/03
-			//2.Condition and enchantment increases the chance to block – Grab Bag 2/27/03
-			//3.There is currently no hard cap on chance to block – Grab Bag 2/27/03 and 8/16/02
-			//4.Dual Wielders (enemy) decrease the chance to block – Grab Bag 10/18/02
+			//1.Quality does not affect the chance to block at this time. Â– Grab Bag 3/7/03
+			//2.Condition and enchantment increases the chance to block Â– Grab Bag 2/27/03
+			//3.There is currently no hard cap on chance to block Â– Grab Bag 2/27/03 and 8/16/02
+			//4.Dual Wielders (enemy) decrease the chance to block Â– Grab Bag 10/18/02
 			//5.Block formula: Shield = base 5% + .5% per spec point. Then modified by dex (.1% per point of dex above 60 and below 300?). Further modified by condition, bonus and shield level
-			//8.The shield’s size only makes a difference when multiple things are attacking you – a small shield can block one attacker, a medium shield can block two at once, and a large shield can block three. – Grab Bag 4/4/03
-			//Your chance to block is affected by the number of attackers, the size of the shield you’re using, and your spec in block.
+			//8.The shieldÂ’s size only makes a difference when multiple things are attacking you Â– a small shield can block one attacker, a medium shield can block two at once, and a large shield can block three. Â– Grab Bag 4/4/03
+			//Your chance to block is affected by the number of attackers, the size of the shield youÂ’re using, and your spec in block.
 			//Shield% = (5% + 0.5% * Shield)
 			//Small Shield = 1 attacker
 			//Medium Shield = 2 attacker
@@ -3857,8 +3858,8 @@ namespace DOL.GS
 			//Block: (((Dex*2)-100)/40)+(Shield/2)+(Mastery of B*3)+5. < Possible relation to buffs
 			//
 			//http://www.camelotherald.com/more/453.php
-			//Also, before this comparison happens, the game looks to see if your opponent is in your forward arc – to determine that arc, make a 120 degree angle, and put yourself at the point.
-			//your friend is most likely using a player crafted shield. The quality of the player crafted item will make a significant difference – try it and see.
+			//Also, before this comparison happens, the game looks to see if your opponent is in your forward arc Â– to determine that arc, make a 120 degree angle, and put yourself at the point.
+			//your friend is most likely using a player crafted shield. The quality of the player crafted item will make a significant difference Â– try it and see.
 
 			double blockChance = 0;
 			GamePlayer player = this as GamePlayer;
