@@ -951,8 +951,9 @@ namespace DOL.GS
         /// <returns>All objects with the specified parameters</returns>
         public static T[] GetobjectsFromRegion<T>(ushort regionId)
             where T : GameObject
-		{
-		    if (!m_regions.TryGetValue(regionId, out var reg))
+        {
+            Region reg;
+		    if (!m_regions.TryGetValue(regionId, out reg))
 		    {
 		        return new T[0];
             }
