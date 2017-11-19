@@ -111,7 +111,7 @@ namespace DOL.GS.Quests.Albion
 			#region defineNPCs
 			GameNPC[] npcs;
 
-			npcs = WorldMgr.GetNPCsByName("Charles", (eRealm)1);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Charles", (eRealm)1);
 			if (npcs.Length == 0)
 			{
 				Charles = new DOL.GS.GameNPC();

@@ -248,7 +248,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineNPCS
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Cemmeth Budgwold", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Cemmeth Budgwold", eRealm.Albion);
 
 			if (npcs.Length == 0)
 			{

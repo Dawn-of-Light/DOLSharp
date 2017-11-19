@@ -142,7 +142,7 @@ namespace DOL.GS.Quests.Midgard
 
 			dalikor = GetDalikor();
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Lady Hinda", eRealm.None);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Lady Hinda", eRealm.None);
 			if (npcs.Length == 0)
 			{
 				//if (Log.IsWarnEnabled) Log.Warn("Could not find Lady Hinda, creating her ...");

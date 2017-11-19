@@ -116,7 +116,7 @@ namespace DOL.GS.Quests.Hibernia
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 
 			#region defineNPCS
-			GameNPC[] npcs = WorldMgr.GetNPCsByName(questGiverName, eRealm.Hibernia);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>(questGiverName, eRealm.Hibernia);
 			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
@@ -153,7 +153,7 @@ namespace DOL.GS.Quests.Hibernia
 			else
 				questGiver = npcs[0];
 
-			npcs = WorldMgr.GetNPCsByName(questTargetName, eRealm.Hibernia);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>(questTargetName, eRealm.Hibernia);
 
 			if (npcs.Length == 0)
 			{

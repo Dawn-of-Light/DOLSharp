@@ -150,7 +150,7 @@ namespace DOL.GS.Quests.Albion
 
 		public static GameNPC GetMasterFrederick()
 		{
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Master Frederick", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Master Frederick", eRealm.Albion);
 
 			GameNPC masterFrederick = null;
 

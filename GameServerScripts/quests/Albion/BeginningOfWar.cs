@@ -170,7 +170,7 @@ namespace DOL.GS.Quests.Albion
 
 			masterFrederick = GetMasterFrederick();
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Master Dunwyn", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Master Dunwyn", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
@@ -209,7 +209,7 @@ namespace DOL.GS.Quests.Albion
 				dunwyn = npcs[0];
 
 
-			npcs = WorldMgr.GetNPCsByName("Princess Obera", eRealm.None);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Princess Obera", eRealm.None);
 			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)

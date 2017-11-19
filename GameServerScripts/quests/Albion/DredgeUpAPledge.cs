@@ -93,7 +93,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineNPCS
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Sir Dorian", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Sir Dorian", eRealm.Albion);
 
 			if (npcs.Length == 0)
 			{

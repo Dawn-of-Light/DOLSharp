@@ -100,7 +100,7 @@ namespace DOL.GS.Quests.Midgard
 
 			#region defineNPCs
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Masrim", eRealm.Midgard);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Masrim", eRealm.Midgard);
 
 			if (npcs.Length == 0)
 			{
@@ -129,7 +129,7 @@ namespace DOL.GS.Quests.Midgard
 				Masrim = npcs[0];
 			// end npc
 
-			npcs = WorldMgr.GetNPCsByName("Oona", eRealm.None);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Oona", eRealm.None);
 
 			if (npcs.Length == 0)
 			{
@@ -159,7 +159,7 @@ namespace DOL.GS.Quests.Midgard
 				Oona = npcs[0];
 			// end npc
 
-			npcs = WorldMgr.GetNPCsByName("Morlin Caan", eRealm.Midgard);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Morlin Caan", eRealm.Midgard);
 
 			if (npcs.Length == 0)
 			{

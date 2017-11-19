@@ -154,7 +154,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineNPCS
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Trevian", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Trevian", eRealm.Albion);
 
 			/* Whops, if the npcs array length is 0 then no npc exists in
 				* this users Mob Database, so we simply create one ;-)
@@ -201,7 +201,7 @@ namespace DOL.GS.Quests.Albion
 			else
 				trevian = npcs[0];
 
-			npcs = WorldMgr.GetNPCsByName("Trevian's Puppy", eRealm.Albion);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Trevian's Puppy", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
@@ -230,7 +230,7 @@ namespace DOL.GS.Quests.Albion
 			else
 				puppy = npcs[0];
 
-			npcs = WorldMgr.GetNPCsByName("Guard Brydus", eRealm.Albion);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Guard Brydus", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
@@ -270,7 +270,7 @@ namespace DOL.GS.Quests.Albion
 
 
 			// mob db check
-			GameObject[] mobs = WorldMgr.GetObjectsByNameFromRegion(banditAbductorLeaderName, 1, eRealm.None, typeof (GameNPC));
+			GameObject[] mobs = WorldMgr.GetObjectsByNameFromRegion<GameNPC>(banditAbductorLeaderName, 1, eRealm.None);
 			if (mobs.Length == 0)
 			{
 				if (log.IsWarnEnabled)
@@ -311,7 +311,7 @@ namespace DOL.GS.Quests.Albion
 			else
 				banditAbductorLeader = mobs[0] as GameNPC;
 
-			mobs = WorldMgr.GetObjectsByNameFromRegion(banditAbductorName, 1, eRealm.None, typeof (GameNPC));
+			mobs = WorldMgr.GetObjectsByNameFromRegion<GameNPC>(banditAbductorName, 1, eRealm.None);
 			if (mobs.Length == 0)
 			{
 				if (log.IsWarnEnabled)

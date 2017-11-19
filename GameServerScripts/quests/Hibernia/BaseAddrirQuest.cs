@@ -141,7 +141,7 @@ namespace DOL.GS.Quests.Hibernia
 
 		public static GameNPC GetAddrir()
 		{
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Addrir", eRealm.Hibernia);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Addrir", eRealm.Hibernia);
 
 			GameNPC addrir = null;
 

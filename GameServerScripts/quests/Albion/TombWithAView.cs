@@ -244,7 +244,7 @@ namespace DOL.GS.Quests.Albion
 
 			#region defineNPCS
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Lady Grynoch", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Lady Grynoch", eRealm.Albion);
 
 			if (npcs.Length == 0)
 			{

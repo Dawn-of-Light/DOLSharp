@@ -108,7 +108,7 @@ using DOL.AI.Brain;
 	#region defineNPCs
 	GameNPC[] npcs;
 	
-			npcs = WorldMgr.GetNPCsByName("Pedra",(eRealm) 2);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Pedra",(eRealm) 2);
 			if (npcs.Length == 0)
 			{			
 				Pedra = new DOL.GS.GameNPC();
@@ -150,7 +150,7 @@ using DOL.AI.Brain;
 				Pedra = npcs[0];
 			}
 		
-			npcs = WorldMgr.GetNPCsByName("Kedra",(eRealm) 2);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Kedra",(eRealm) 2);
 			if (npcs.Length == 0)
 			{			
 				Kedra = new GameHealer();

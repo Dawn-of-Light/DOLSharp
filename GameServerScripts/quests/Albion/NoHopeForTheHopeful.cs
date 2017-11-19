@@ -187,7 +187,7 @@ namespace DOL.GS.Quests.Albion
 			if (log.IsInfoEnabled)
 				log.Info("Quest \"" + questTitle + "\" initializing ...");
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Sir Dorian", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Sir Dorian", eRealm.Albion);
 			if (npcs == null || npcs.Length == 0)
 				return;
 

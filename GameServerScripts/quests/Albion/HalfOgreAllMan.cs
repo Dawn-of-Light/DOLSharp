@@ -154,7 +154,7 @@ namespace DOL.GS.Quests.Albion
 			
 			#region defineNPCS
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Madissair", eRealm.Albion);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Madissair", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				madissair = new GameNPC();
@@ -195,7 +195,7 @@ namespace DOL.GS.Quests.Albion
 				madissair = npcs[0];
 
 
-			npcs = WorldMgr.GetNPCsByName("Eileen Morton", eRealm.Albion);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Eileen Morton", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				eileenMorton = new GameNPC();
@@ -235,7 +235,7 @@ namespace DOL.GS.Quests.Albion
 				eileenMorton = npcs[0];
 
 
-			npcs = WorldMgr.GetNPCsByName("Scribe Veral", eRealm.Albion);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Scribe Veral", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				scribeVeral = new GameNPC();
@@ -273,7 +273,7 @@ namespace DOL.GS.Quests.Albion
 				scribeVeral = npcs[0];
 
 
-			npcs = WorldMgr.GetNPCsByName("Serawen", eRealm.Albion);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Serawen", eRealm.Albion);
 			if (npcs.Length == 0)
 			{
 				serawen = new GameNPC();

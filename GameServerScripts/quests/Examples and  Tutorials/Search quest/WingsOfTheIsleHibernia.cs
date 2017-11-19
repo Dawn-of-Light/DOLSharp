@@ -292,7 +292,7 @@ namespace DOL.GS.Quests.Hibernia
 
 			#region defineNPCS
 
-			GameNPC[] npcs = WorldMgr.GetNPCsByName("Baeth", eRealm.Hibernia);
+			GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Baeth", eRealm.Hibernia);
 
 			/*  If the npcs array length is 0 then no npc exists in
 				* this users Mob Database, so we simply create one ;-)
@@ -331,7 +331,7 @@ namespace DOL.GS.Quests.Hibernia
 				npcBaeth = npcs[0];
 			}
 
-			npcs = WorldMgr.GetNPCsByName("Jessica", eRealm.Hibernia);
+			npcs = WorldMgr.GetObjectsByName<GameNPC>("Jessica", eRealm.Hibernia);
 
 			if (npcs.Length == 0)
 			{
