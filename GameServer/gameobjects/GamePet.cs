@@ -19,6 +19,7 @@
 using System;
 using DOL.AI.Brain;
 using DOL.Database;
+using DOL.GS.Effects;
 using DOL.Events;
 using DOL.GS.ServerProperties;
 using DOL.GS.Spells;
