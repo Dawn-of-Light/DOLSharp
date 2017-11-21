@@ -379,6 +379,12 @@ namespace DOL.GS.ServerProperties
 
 		#region SERVER
 
+		/// <summary>
+		/// Disable quit timers for players?
+		/// </summary>
+		[ServerProperty("server", "remove_quit_timer", "Allow players to log out without waiting?", false)]
+		public static bool REMOVE_QUIT_TIMER;
+
         /// <summary>
         /// Enable integrated serverlistupdate script?
         /// </summary>
@@ -1070,6 +1076,12 @@ namespace DOL.GS.ServerProperties
 		public static int PET_THINK_INTERVAL;
 
 		/// <summary>
+		/// Scale pet spell values according to their level?
+		/// </summary>
+		[ServerProperty("npc", "pet_scale_spell_max_level", "Disabled if 0 or less.  If greater than 0, this value is the level at which pets cast their spells at 100% effectivness, so choose spells for pets assuming they're at the level set here.  Live is max pet level, 44 or 50 depending on patch.", 0)]
+		public static int PET_SCALE_SPELL_MAX_LEVEL;		
+		
+		/// <summary>
 		/// What level to start increasing mob damage
 		/// </summary>
 		[ServerProperty("npc", "mob_damage_increase_startlevel", "What level to start increasing mob damage.", 30)]
@@ -1558,7 +1570,31 @@ namespace DOL.GS.ServerProperties
 		/// Dragon Scales Loot Generator Named Boost Count
 		/// </summary>
 		[ServerProperty("pve", "lootgenerator_dragonscales_named_count", "Increase count of Dragon Scales Loot Generator drop for Named mobs. (count * lootgenerator_dragonscales_named_count)", 1.5)]
-		public static double LOOTGENERATOR_DRAGONSCALES_NAMED_COUNT;		
+		public static double LOOTGENERATOR_DRAGONSCALES_NAMED_COUNT;	
+		
+		/// <summary>
+		/// Dreaded Seals Loot Generator Starting Level
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_dreadedseals_starting_level", "Mob level to start dropping Dreaded Glowing Seals", 25)]
+		public static int LOOTGENERATOR_DREADEDSEALS_STARTING_LEVEL;
+
+		/// <summary>
+		/// Dreaded Seals Loot Generator Drop Chance Per Level
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_dreadedseals_drop_chance_per_level", "Increase in Dreaded Glowing Seal drop chance per level, in hundredths of a percent.", 25)]
+		public static int LOOTGENERATOR_DREADEDSEALS_DROP_CHANCE_PER_LEVEL;
+
+		/// <summary>
+		/// Dreaded Seals Loot Generator Base Chance
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_dreadedseals_base_chance", "Base chance to drop a Dreaded Seal, in hundredths of a percent", 25)]
+		public static int LOOTGENERATOR_DREADEDSEALS_BASE_CHANCE;
+
+		/// <summary>
+		/// Dreaded Seals Loot Generator Named Boost Chance
+		/// </summary>
+		[ServerProperty("pve", "lootgenerator_dreadedseals_named_chance", "Increase chance of Dreaded Seals Loot Generator drop for Named mobs. (count * lootgenerator_dreadedseals_named_chance)", 1.5)]
+		public static double LOOTGENERATOR_DREADEDSEALS_NAMED_CHANCE;
 		#endregion
 
 		#region HOUSING

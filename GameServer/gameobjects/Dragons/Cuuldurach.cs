@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.Text;
 using DOL.Database;
 using DOL.Events;
-using log4net;
 using System.Reflection;
 using System.Collections;
 using DOL.AI.Brain;
@@ -229,7 +228,7 @@ namespace DOL.GS
 					spell.Value = 30;
 					spell.Duration = 30* DragonDifficulty /100;
 					spell.Damage = 0;
-					spell.DamageType = (int)eDamageType.Heat;
+					spell.DamageType = (int)eDamageType.Spirit;
 					spell.SpellID = 6023;
 					spell.Target = "Enemy";
 					spell.Type = "SpiritResistDebuff";
@@ -267,7 +266,7 @@ namespace DOL.GS
 					spell.Value = 50;
 					spell.Duration = 90* DragonDifficulty /100;
 					spell.Damage = 0;
-					spell.DamageType = (int)eDamageType.Heat;
+					spell.DamageType = (int)eDamageType.Spirit;
 					spell.SpellID = 6003;
 					spell.Target = "Enemy";
 					spell.Type = "FumbleChanceDebuff";
@@ -303,7 +302,7 @@ namespace DOL.GS
 					spell.Value = 100;
 					spell.Duration = 90* DragonDifficulty /100;
 					spell.Damage = 0;
-					spell.DamageType = (int)eDamageType.Heat;
+					spell.DamageType = (int)eDamageType.Spirit;
 					spell.SpellID = 6003;
 					spell.Target = "Enemy";
 					spell.Type = "Nearsight";
