@@ -339,7 +339,12 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public virtual int LordRespawnTime
 		{
-			get { return 5000; }
+			get
+            {
+                if (this.Realm == eRealm.None && GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE)
+                    return ServerProperties.Properties.LORD_RP_WORTH_SECONDS * 1000;
+                return 1000;
+            }
 		}
 
 
