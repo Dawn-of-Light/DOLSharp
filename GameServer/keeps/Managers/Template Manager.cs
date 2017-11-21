@@ -96,12 +96,20 @@ namespace DOL.GS.Keeps
 				}
 				else
 				{
-					guard.RespawnInterval = 5000;
+                    if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE)
+                        // In PvE servers, lords are really just mobs farmed for seals.
+                        guard.RespawnInterval = ServerProperties.Properties.LORD_RP_WORTH_SECONDS * 1000;
+                    else
+                        guard.RespawnInterval = 10000;
 				}
 			}
 			else if (guard is MissionMaster)
 			{
-				guard.RespawnInterval = 10000; // 10 seconds
+                if (guard.Realm == eRealm.None && GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE)
+                    // In PvE servers, mission masters are also just mobs.
+                    guard.RespawnInterval = ServerProperties.Properties.LORD_RP_WORTH_SECONDS * 1000;
+                else
+                    guard.RespawnInterval = 10000; // 10 seconds
 			}
 			else
 			{
