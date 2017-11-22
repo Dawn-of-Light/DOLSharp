@@ -199,10 +199,7 @@ namespace DOL.GS
 			{
 				base.Level = value;
 
-				if( Strength + Constitution + Dexterity + Quickness + Intelligence + Piety + Empathy + Charisma <= 0 )
-				{
-					AutoSetStats();
-				}
+				AutoSetStats();  // Always recalculate stats
 
 				if (!InCombat)
 					m_health = MaxHealth;
@@ -219,20 +216,28 @@ namespace DOL.GS
 			}
 		}
 
+		// Set base stats for mob, pulling from server properties if necessary.
 		public virtual void AutoSetStats()
 		{
-			// Values changed by Argo, based on Tolakrams Advice for how to change the Multiplier for Autoset str
-
-			Strength = (short)(Properties.MOB_AUTOSET_STR_BASE + Level * 10 * Properties.MOB_AUTOSET_STR_MULTIPLIER);
-			Constitution = (short)(Properties.MOB_AUTOSET_CON_BASE + Level * Properties.MOB_AUTOSET_CON_MULTIPLIER);
-			Quickness = (short)(Properties.MOB_AUTOSET_QUI_BASE + Level * Properties.MOB_AUTOSET_QUI_MULTIPLIER);
-			Dexterity = (short)(Properties.MOB_AUTOSET_DEX_BASE + Level * Properties.MOB_AUTOSET_DEX_MULTIPLIER);
+			// Values changed by Argo, based on Tolakrams Advice for how to change the Multiplier for Auto
+			// Modified to only change stats that aren't set in the DB
+			if (m_template != null && m_template.Strength == 0)
+				Strength = (short)(Properties.MOB_AUTOSET_STR_BASE + (Level-1) * 10 * Properties.MOB_AUTOSET_STR_MULTIPLIER);
+			if (m_template != null && m_template.Constitution == 0)
+				Constitution = (short)(Properties.MOB_AUTOSET_CON_BASE + (Level-1) * Properties.MOB_AUTOSET_CON_MULTIPLIER);
+			if (m_template != null && m_template.Quickness == 0)
+				Quickness = (short)(Properties.MOB_AUTOSET_QUI_BASE + (Level-1) * Properties.MOB_AUTOSET_QUI_MULTIPLIER);
+			if (m_template != null && m_template.Dexterity == 0)
+				Dexterity = (short)(Properties.MOB_AUTOSET_DEX_BASE + (Level-1) * Properties.MOB_AUTOSET_DEX_MULTIPLIER);
 			
-			Intelligence = (short)(30);
-			Empathy = (short)(30);
-			Piety = (short)(30);
-			Charisma = (short)(30);
-			
+			if (m_template != null && m_template.Intelligence == 0)
+				Intelligence = (short)(30);
+			if (m_template != null && m_template.Empathy == 0)
+				Empathy = (short)(30);
+			if (m_template != null && m_template.Piety == 0)
+				Piety = (short)(30);
+			if (m_template != null && m_template.Charisma == 0)
+				Charisma = (short)(30);
 		}
 
 		/// <summary>
@@ -1915,11 +1920,11 @@ namespace DOL.GS
 			m_loadedFromScript = false;
 			Mob dbMob = (Mob)obj;
 			INpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(dbMob.NPCTemplateID);
-			
+
+			/* This is already being called at the very bottom.  Why are we doing it twice?
 			if (npcTemplate != null && !npcTemplate.ReplaceMobValues)
-			{
 				LoadTemplate(npcTemplate);
-			}
+			*/
 
 			TranslationId = dbMob.TranslationId;
 			Name = dbMob.Name;
@@ -1949,6 +1954,25 @@ namespace DOL.GS
 			Piety = (short)dbMob.Piety;
 			Charisma = (short)dbMob.Charisma;
 			Empathy = (short)dbMob.Empathy;
+
+			// Since AutoSetStats now checks original stats via m_template, make sure there is one.
+			if (m_template == null)
+				m_template = npcTemplate;
+			else
+			{
+				NpcTemplate tmpNew = new NpcTemplate();
+				tmpNew.Strength = Strength;
+				tmpNew.Constitution = Constitution;
+				tmpNew.Dexterity = Dexterity;
+				tmpNew.Quickness = Quickness;
+				tmpNew.Empathy = Empathy;
+				tmpNew.Intelligence = Intelligence;
+				tmpNew.Charisma = Charisma;
+
+				m_template = tmpNew;
+			}
+
+			this.AutoSetStats();
 
 			MeleeDamageType = (eDamageType)dbMob.MeleeDamageType;
 			if (MeleeDamageType == 0)
@@ -2191,6 +2215,9 @@ namespace DOL.GS
 			if (template == null)
 				return;
 
+			// Save the template for later
+			m_template = template;
+
 			var m_templatedInventory = new List<string>();
 			this.TranslationId = template.TranslationId;
 			this.Name = template.Name;
@@ -2238,21 +2265,7 @@ namespace DOL.GS
 
 			#region Stats
 			// Stats
-			if (template.Strength==0)
-			{
-				this.AutoSetStats();
-			}
-			else
-			{
-				this.Constitution = (short)template.Constitution;
-				this.Dexterity = (short)template.Dexterity;
-				this.Strength = (short)template.Strength;
-				this.Quickness = (short)template.Quickness;
-				this.Intelligence = (short)template.Intelligence;
-				this.Piety = (short)template.Piety;
-				this.Empathy = (short)template.Empathy;
-				this.Charisma = (short)template.Charisma;
-			}
+			this.AutoSetStats();
 			#endregion
 
 			#region Misc Stats
@@ -5434,6 +5447,8 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Constructs a NPC
+		/// NOTE: Most npcs are generated as GameLiving objects and then used as GameNPCs when needed.
+		/// 	As a result, this constructor is rarely called.
 		/// </summary>
 		public GameNPC()
 			: base()
@@ -5469,12 +5484,30 @@ namespace DOL.GS
 				m_ownBrain = new StandardMobBrain();
 				m_ownBrain.Body = this;
 			}
+
+			// Save base stats in m_template even if there wasn't an npctemplate to begin with, as AutoSetStats() need them.
+			if (m_template == null)
+			{
+				//m_template = new NpcTemplate(this);  // This causes too many long queries and causes server startup to take FOREVER
+				NpcTemplate tmpNew = new NpcTemplate();
+				tmpNew.Strength = Strength;
+				tmpNew.Constitution = Constitution;
+				tmpNew.Dexterity = Dexterity;
+				tmpNew.Quickness = Quickness;
+				tmpNew.Empathy = Empathy;
+				tmpNew.Intelligence = Intelligence;
+				tmpNew.Charisma = Charisma;
+
+				m_template = tmpNew;
+			}
 		}
 
 		INpcTemplate m_template = null;
 
 		/// <summary>
 		/// create npc from template
+		/// NOTE: Most npcs are generated as GameLiving objects and then used as GameNPCs when needed.
+		/// 	As a result, this constructor is rarely called.
 		/// </summary>
 		/// <param name="template">template of generator</param>
 		public GameNPC(INpcTemplate template)
@@ -5483,7 +5516,7 @@ namespace DOL.GS
 			if (template == null) return;
 
 			// save the original template so we can do calculations off the original values
-			m_template = template;
+			// m_template = template; Not needed, LoadTemplate() does this already.
 
 			LoadTemplate(template);
 		}
