@@ -101,8 +101,6 @@ namespace DOL.GS.Keeps
 					Region keepRegion = WorldMgr.GetRegion(datakeep.Region);
 					if (keepRegion == null)
 						continue;
-
-					var currentKeepComponents = GameServer.Database.SelectObjects<DBKeepComponent>("`KeepID` = @KeepID", new QueryParameter("@KeepID", datakeep.KeepID));
 				
 					AbstractGameKeep keep;
 					if ((datakeep.KeepID >> 8) != 0 || ((datakeep.KeepID & 0xFF) > 150))
@@ -148,19 +146,28 @@ namespace DOL.GS.Keeps
                 else if (ServerProperties.Properties.USE_NEW_KEEPS == 1)
                 	keepcomponents = GameServer.Database.SelectObjects<DBKeepComponent>("`Skin` > @Skin", new QueryParameter("@Skin", 20));
 
-				foreach (DBKeepComponent component in keepcomponents)
-				{
-					AbstractGameKeep keep = GetKeepByID(component.KeepID);
-					if (keep == null)
-					{
-						//missingKeeps = true;
-						continue;
-					} 
+			    if (keepcomponents != null)
+			    {
+			        keepcomponents
+			            .GroupBy(x => x.KeepID)
+			            .AsParallel()
+			            .ForAll(components =>
+			            {
+			                foreach (DBKeepComponent component in components)
+			                {
+			                    AbstractGameKeep keep = GetKeepByID(component.KeepID);
+			                    if (keep == null)
+			                    {
+			                        //missingKeeps = true;
+			                        continue;
+			                    }
 
-					GameKeepComponent gamecomponent = keep.CurrentRegion.CreateGameKeepComponent();
-					gamecomponent.LoadFromDatabase(component, keep);
-					keep.KeepComponents.Add(gamecomponent);
-				}
+			                    GameKeepComponent gamecomponent = keep.CurrentRegion.CreateGameKeepComponent();
+			                    gamecomponent.LoadFromDatabase(component, keep);
+			                    keep.KeepComponents.Add(gamecomponent);
+			                }
+			            });
+			    }
 
 				/*if (missingKeeps && log.IsWarnEnabled)
 				{
