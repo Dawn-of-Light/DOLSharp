@@ -21,6 +21,7 @@ using System.Reflection;
 using DOL.GS;
 using DOL.AI.Brain;
 using DOL.Database;
+using DOL.GS.Keeps;
 using log4net;
 
 namespace DOL.GS
@@ -34,9 +35,6 @@ namespace DOL.GS
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private static readonly ItemTemplate m_DreadedSeal = GameServer.Database.FindObjectByKey<ItemTemplate>("glowing_dreaded_seal");
-
-        // LootList.AddChance() only goes to the nearest percent, we need to the nearest 0.01%.
-        private static readonly Random m_rnd = new Random(); 
                                                                                                                                                               
         /// <summary>       
         /// Generate loot for given mob
@@ -50,60 +48,57 @@ namespace DOL.GS
 
             try
             {
-                GamePlayer player = killer as GamePlayer;
+                GamePlayer player = null;
                 if (killer is GameNPC && ((GameNPC)killer).Brain is IControlledBrain)
                     player = ((ControlledNpcBrain)((GameNPC)killer).Brain).GetPlayerOwner();
                 if (player == null)
                     return loot;
 
-                // Certain epic mobs have a 100% drop chance of 10 seals at once
-                switch (mob.Brain.ToString().ToLower())
+                switch (mob)
                 {
-                    case "dragonbrain":
-                    case "lord":
+                    // Certain mobs have a 100% drop chance of multiple seals at once
+                    case GuardLord lord:
+                        if (lord.IsTowerGuard)
+                            loot.AddFixed(m_DreadedSeal, 1);  // Guaranteed drop, but towers only merit 1 seal.
+                        else
+                            loot.AddFixed(m_DreadedSeal, 10);
+                        break;
+                    case GameDragon dragon:
                         loot.AddFixed(m_DreadedSeal, 10);
                         break;
                     default:
-                        if (mob.Name.ToLower() == "lord agramon") // Another 10 seal dropper
-                        {
+                        if (mob.Name.ToLower() == "lord agramon")
                             loot.AddFixed(m_DreadedSeal, 10);
-                        }
-                        else
-                        {
 
-                            if (mob.Level < ServerProperties.Properties.LOOTGENERATOR_DREADEDSEALS_STARTING_LEVEL)
-                                return loot;
+                        if (mob.Level < ServerProperties.Properties.LOOTGENERATOR_DREADEDSEALS_STARTING_LEVEL)
+                            return loot;
 
-                            int iPercentDrop = (mob.Level - ServerProperties.Properties.LOOTGENERATOR_DREADEDSEALS_STARTING_LEVEL)
-                                * ServerProperties.Properties.LOOTGENERATOR_DREADEDSEALS_DROP_CHANCE_PER_LEVEL
-                                + ServerProperties.Properties.LOOTGENERATOR_DREADEDSEALS_BASE_CHANCE;
+                        int iPercentDrop = (mob.Level - ServerProperties.Properties.LOOTGENERATOR_DREADEDSEALS_STARTING_LEVEL)
+                            * ServerProperties.Properties.LOOTGENERATOR_DREADEDSEALS_DROP_CHANCE_PER_LEVEL
+                            + ServerProperties.Properties.LOOTGENERATOR_DREADEDSEALS_BASE_CHANCE;
 
-                            if (!mob.Name.ToLower().Equals(mob.Name)) // Named mobs are more likely to drop a seal
-                                iPercentDrop = (int)Math.Round(iPercentDrop * ServerProperties.Properties.LOOTGENERATOR_DREADEDSEALS_NAMED_CHANCE);
+                        if (!mob.Name.ToLower().Equals(mob.Name)) // Named mobs are more likely to drop a seal
+                            iPercentDrop = (int)Math.Round(iPercentDrop * ServerProperties.Properties.LOOTGENERATOR_DREADEDSEALS_NAMED_CHANCE);
+                        
+                        int iRandom = Util.Random(9999);
 
-                            int iRandom = m_rnd.Next(10000);
+                        if (iRandom < iPercentDrop)
+                            loot.AddFixed(m_DreadedSeal, 1);
 
-                            if (iRandom < iPercentDrop)
-                                // ItemTemplate dragonscales = new ItemTemplate(m_dragonscales); Creating a new ItemTemplate like this throws an exception later
-                                loot.AddFixed(m_DreadedSeal, 1);
+						/*log.Error("LootGeneratorDreadedSeal Calculations: " + "Mob level " + mob.Level.ToString()
+                            + ", Starting Level=" + ServerProperties.Properties.LOOTGENERATOR_DREADEDSEALS_STARTING_LEVEL.ToString()
+                            + ", Base chance=" + ServerProperties.Properties.LOOTGENERATOR_DREADEDSEALS_BASE_CHANCE
+                            + ", Chance per level=" + ServerProperties.Properties.LOOTGENERATOR_DREADEDSEALS_DROP_CHANCE_PER_LEVEL
+                            + ", " + (iPercentDrop / 100).ToString()
+                            + "% drop chance, rolled "
+                            + (iRandom / 100).ToString());*/
 
-                            /*log.Error("LootGeneratorDreadedSeal Calculations: " + "Mob level " + mob.Level.ToString()
-                                + ", Starting Level=" + ServerProperties.Properties.LOOTGENERATOR_DREADEDSEALS_STARTING_LEVEL.ToString()
-                                + ", Base chance=" + ServerProperties.Properties.LOOTGENERATOR_DREADEDSEALS_BASE_CHANCE
-                                + ", Chance per level=" + ServerProperties.Properties.LOOTGENERATOR_DREADEDSEALS_DROP_CHANCE_PER_LEVEL
-                                + ", " + (iPercentDrop / 100).ToString()
-                                + "% drop chance, rolled "
-                                + (iRandom / 100).ToString());*/
-
-                        }// else
-                        break;
-                }//switch
-                
+						break;
+				}// else
             }//try
             catch (Exception e)
             {
                 log.Error(e.Message);
-                return loot;
             }
 
             return loot;
