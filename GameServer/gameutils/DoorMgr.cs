@@ -35,6 +35,8 @@ namespace DOL.GS
 	{
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+        private static readonly object Lock = new object();
+
 		private static Dictionary<int, List<IDoor>> m_doors = new Dictionary<int, List<IDoor>>();
 
 		public const string WANT_TO_ADD_DOORS = "WantToAddDoors";
@@ -91,17 +93,20 @@ namespace DOL.GS
 			return true;
 		}
 
-		public static void RegisterDoor(IDoor door)
-		{
-			if (!m_doors.ContainsKey(door.DoorID))
-			{
-				List<IDoor> createDoorList = new List<IDoor>();
-				m_doors.Add(door.DoorID, createDoorList);
-			}
+	    public static void RegisterDoor(IDoor door)
+	    {
+	        lock (Lock)
+	        {
+	            if (!m_doors.ContainsKey(door.DoorID))
+	            {
+	                List<IDoor> createDoorList = new List<IDoor>();
+	                m_doors.Add(door.DoorID, createDoorList);
+	            }
 
-			List<IDoor> addDoorList = m_doors[door.DoorID] as List<IDoor>;
-			addDoorList.Add(door);
-		}
+	            List<IDoor> addDoorList = m_doors[door.DoorID];
+	            addDoorList.Add(door);
+	        }
+	    }
 
 		public static void UnRegisterDoor(int doorID)
 		{
