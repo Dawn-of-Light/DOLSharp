@@ -32,7 +32,11 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
-				long duration = (CurrentRegion.Time - m_lastKillTime) / 1000L;
+				// PvE Lords drop stacks of dreaded seals instead of giving RP directly
+                if (Realm == eRealm.None && GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE)
+                    return 0;
+
+                long duration = (CurrentRegion.Time - m_lastKillTime) / 1000L;
 
 				if (duration < ServerProperties.Properties.LORD_RP_WORTH_SECONDS)
 				{
@@ -54,6 +58,10 @@ namespace DOL.GS.Keeps
 		{
 			get
 			{
+				// PvE Lords drop stacks of dreaded seals instead of giving RP directly
+				if (Realm == eRealm.None && GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE)
+					return 0;
+
 				long duration = (CurrentRegion.Time - m_lastKillTime) / 1000L;
 				if (duration < ServerProperties.Properties.LORD_RP_WORTH_SECONDS)
 				{
