@@ -19,6 +19,7 @@
 using System;
 using DOL.AI.Brain;
 using DOL.Database;
+using DOL.GS.Effects;
 using DOL.Events;
 using DOL.GS.ServerProperties;
 using DOL.GS.Spells;
@@ -381,9 +382,34 @@ namespace DOL.GS
 
 		public override void Die(GameObject killer)
 		{
+			StripOwnerBuffs(Owner);
+		
 			GameEventMgr.Notify(GameLivingEvent.PetReleased, this);
 			base.Die(killer);
 			CurrentRegion = null;
+		}
+		
+		/// <summary>
+		/// Strips any buffs this pet cast on owner
+		/// </summary>
+		/// <param name="owner">
+		/// The target to strip buffs off of.
+		/// </param>
+		public virtual void StripOwnerBuffs(GameLiving owner)
+		{
+			if (owner != null & owner.EffectList != null)
+			{
+			   	foreach (IGameEffect effect in owner.EffectList)
+				{
+					if (effect != null && effect is GameSpellEffect)
+					{
+						GameSpellEffect spelleffect = effect as GameSpellEffect;
+						if (spelleffect.SpellHandler != null && spelleffect.SpellHandler.Caster != null
+							&& spelleffect.SpellHandler.Caster == this)
+								spelleffect.Cancel(false);
+					}
+				}
+			}
 		}
 		
 		/// <summary>
