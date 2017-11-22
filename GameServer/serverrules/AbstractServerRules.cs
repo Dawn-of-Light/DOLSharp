@@ -75,7 +75,7 @@ namespace DOL.GS.ServerRules
 			objs = GameServer.Database.SelectObjects<DBBannedAccount>("(`Type` = @TypeA OR `Type` = @TypeB) AND `Account` = @Account", new[] { new QueryParameter("@TypeA", "A"), new QueryParameter("@TypeB", "B"), new QueryParameter("@Account", username) });
 			if (objs.Count > 0)
 			{
-                client.IsConnected = false;
+				client.IsConnected = false;
 				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
 				log.Debug("IsAllowedToConnect deny access to username " + username);
 				return false;
@@ -85,8 +85,8 @@ namespace DOL.GS.ServerRules
 			string accip = GameServer.Database.Escape(client.TcpEndpointAddress);
 			objs = GameServer.Database.SelectObjects<DBBannedAccount>("(`Type` = @TypeI OR `Type` = @TypeB) AND @Ip LIKE `Ip`", new[] { new QueryParameter("@TypeI", "I"), new QueryParameter("@TypeB", "B"), new QueryParameter("@Ip", accip) });
 			if (objs.Count > 0)
-            {
-                client.IsConnected = false;
+			{
+				client.IsConnected = false;
 				client.Out.SendLoginDenied(eLoginError.AccountIsBannedFromThisServerType);
 				log.Debug("IsAllowedToConnect deny access to IP " + accip);
 				return false;
@@ -94,8 +94,8 @@ namespace DOL.GS.ServerRules
 
 			GameClient.eClientVersion min = (GameClient.eClientVersion)Properties.CLIENT_VERSION_MIN;
 			if (min != GameClient.eClientVersion.VersionNotChecked && client.Version < min)
-            {
-                client.IsConnected = false;
+			{
+				client.IsConnected = false;
 				client.Out.SendLoginDenied(eLoginError.ClientVersionTooLow);
 				log.Debug("IsAllowedToConnect deny access to client version (too low) " + client.Version);
 				return false;
@@ -103,8 +103,8 @@ namespace DOL.GS.ServerRules
 
 			GameClient.eClientVersion max = (GameClient.eClientVersion)Properties.CLIENT_VERSION_MAX;
 			if (max != GameClient.eClientVersion.VersionNotChecked && client.Version > max)
-            {
-                client.IsConnected = false;
+			{
+				client.IsConnected = false;
 				client.Out.SendLoginDenied(eLoginError.NotAuthorizedToUseExpansionVersion);
 				log.Debug("IsAllowedToConnect deny access to client version (too high) " + client.Version);
 				return false;
@@ -113,9 +113,9 @@ namespace DOL.GS.ServerRules
 			if (Properties.CLIENT_TYPE_MAX > -1)
 			{
 				GameClient.eClientType type = (GameClient.eClientType)Properties.CLIENT_TYPE_MAX;
-				if ((int)client.ClientType > (int)type )
-                {
-                    client.IsConnected = false;
+				if ((int)client.ClientType > (int)type)
+				{
+					client.IsConnected = false;
 					client.Out.SendLoginDenied(eLoginError.ExpansionPacketNotAllowed);
 					log.Debug("IsAllowedToConnect deny access to expansion pack.");
 					return false;
@@ -156,8 +156,8 @@ namespace DOL.GS.ServerRules
 					// GMs are still allowed to enter server
 					if (account == null || (account.PrivLevel == 1 && account.Status <= 0))
 					{
-                        // Normal Players will not be allowed over the max
-                        client.IsConnected = false;
+						// Normal Players will not be allowed over the max
+						client.IsConnected = false;
 						client.Out.SendLoginDenied(eLoginError.TooManyPlayersLoggedIn);
 						log.Debug("IsAllowedToConnect deny access due to too many players.");
 						return false;
@@ -171,8 +171,8 @@ namespace DOL.GS.ServerRules
 				if (account == null || account.PrivLevel == 1)
 				{
 					// GMs are still allowed to enter server
-                    // Normal Players will not be allowed to Log in
-                    client.IsConnected = false;
+					// Normal Players will not be allowed to Log in
+					client.IsConnected = false;
 					client.Out.SendLoginDenied(eLoginError.GameCurrentlyClosed);
 					log.Debug("IsAllowedToConnect deny access; staff only login");
 					return false;
@@ -191,8 +191,8 @@ namespace DOL.GS.ServerRules
 							if (cln.Account != null && cln.Account.PrivLevel > 1)
 							{
 								break;
-                            }
-                            client.IsConnected = false;
+							}
+							client.IsConnected = false;
 							client.Out.SendLoginDenied(eLoginError.AccountAlreadyLoggedIntoOtherServer);
 							log.Debug("IsAllowedToConnect deny access; dual login not allowed");
 							return false;
@@ -314,7 +314,7 @@ namespace DOL.GS.ServerRules
 				return false;
 
 			//dead things can't attack
-			if (!defender.IsAlive || !attacker.IsAlive )
+			if (!defender.IsAlive || !attacker.IsAlive)
 				return false;
 
 			GamePlayer playerAttacker = attacker as GamePlayer;
@@ -324,11 +324,11 @@ namespace DOL.GS.ServerRules
 			if (defender is GameNPC)
 				if ((defender as GameNPC).Brain is IControlledBrain)
 					playerDefender = ((defender as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
-			
+
 			if (attacker is GameNPC)
 				if ((attacker as GameNPC).Brain is IControlledBrain)
 					playerAttacker = ((attacker as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
-			
+
 			if (playerDefender != null && (playerDefender.Client.ClientState == GameClient.eClientState.WorldEnter || playerDefender.IsInvulnerableToAttack))
 			{
 				if (!quiet)
@@ -366,16 +366,16 @@ namespace DOL.GS.ServerRules
 				if ((defender is GameNPC) && (playerAttacker.IsInvulnerableToAttack))
 				{
 					if (quiet == false) MessageToLiving(attacker, "You can't attack until your PvP invulnerability timer wears off!");
-						return false;
+					return false;
 				}
 			}
 			// Your pet can only attack stealthed players you have selected
 			if (defender.IsStealthed && attacker is GameNPC)
 				if (((attacker as GameNPC).Brain is IControlledBrain) &&
-				    defender is GamePlayer &&
-				    playerAttacker.TargetObject != defender)
+					defender is GamePlayer &&
+					playerAttacker.TargetObject != defender)
 					return false;
-			
+
 			// GMs can't be attacked
 			if (playerDefender != null && playerDefender.Client.Account.PrivLevel > 1)
 				return false;
@@ -408,13 +408,13 @@ namespace DOL.GS.ServerRules
 				return false;
 
 			//Checking for shadowed necromancer, can't be attacked.
-			if(defender.ControlledBrain != null)
-				if(defender.ControlledBrain.Body != null)
-					if(defender.ControlledBrain.Body is NecromancerPet)
-			{
-				if (quiet == false) MessageToLiving(attacker, "You can't attack a shadowed necromancer!");
-				return false;
-			}
+			if (defender.ControlledBrain != null)
+				if (defender.ControlledBrain.Body != null)
+					if (defender.ControlledBrain.Body is NecromancerPet)
+					{
+						if (quiet == false) MessageToLiving(attacker, "You can't attack a shadowed necromancer!");
+						return false;
+					}
 
 			return true;
 		}
@@ -549,45 +549,45 @@ namespace DOL.GS.ServerRules
 			// pre conditions
 			if (!player.IsAlive) return "GamePlayer.UseSlot.CantMountWhileDead";
 			if (player.Steed != null) return "GamePlayer.UseSlot.MustDismountBefore";
-			
+
 			// gm/admin overrides the other checks
 			if (player.Client.Account.PrivLevel != (uint)ePrivLevel.Player) return string.Empty;
-			
+
 			// player restrictions
 			if (player.IsMoving) return "GamePlayer.UseSlot.CantMountMoving";
 			if (player.InCombat) return "GamePlayer.UseSlot.CantMountCombat";
 			if (player.IsSitting) return "GamePlayer.UseSlot.CantCallMountSeated";
 			if (player.IsStealthed) return "GamePlayer.UseSlot.CantMountStealthed";
-			
+
 			// You are carrying a relic ? You can't use a mount !
 			if (GameRelic.IsPlayerCarryingRelic(player))
 				return "GamePlayer.UseSlot.CantMountRelicCarrier";
-			
+
 			// zones checks:
 			// white list: always allows
 			string currentRegion = player.CurrentRegion.ID.ToString();
 			if (ServerProperties.Properties.ALLOW_PERSONNAL_MOUNT_IN_REGIONS.Contains(currentRegion))
 			{
-				var regions = ServerProperties.Properties.ALLOW_PERSONNAL_MOUNT_IN_REGIONS.Split(new char[]{';'},StringSplitOptions.RemoveEmptyEntries);
+				var regions = ServerProperties.Properties.ALLOW_PERSONNAL_MOUNT_IN_REGIONS.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 				foreach (var region in regions)
 					if (region == currentRegion)
 						return string.Empty;
 			}
-			
+
 			// restrictions: dungeons, instances, capitals, rvr horses
 			if (player.CurrentRegion.IsDungeon ||
-			    player.CurrentRegion.IsInstance ||
-			    player.CurrentRegion.IsCapitalCity)
+				player.CurrentRegion.IsInstance ||
+				player.CurrentRegion.IsCapitalCity)
 				return "GamePlayer.UseSlot.CantMountHere";
 			// perhaps need to be tweaked for PvPServerRules
 			if (player.CurrentRegion.IsRvR && !player.ActiveHorse.IsSummonRvR)
 				return "GamePlayer.UseSlot.CantSummonRvR";
-			
+
 			// sounds good !
 			return string.Empty;
-			
+
 		}
-		
+
 		public virtual bool CanTakeFallDamage(GamePlayer player)
 		{
 			if (player.Client.Account.PrivLevel > 1)
@@ -650,17 +650,18 @@ namespace DOL.GS.ServerRules
 			return exp;
 		}
 
+		// Can a character use this item?
 		public virtual bool CheckAbilityToUseItem(GameLiving living, ItemTemplate item)
 		{
 			if (living == null || item == null)
 				return false;
-			
+
 			GamePlayer player = living as GamePlayer;
 
 			// GMs can equip everything
-			if (player != null  && player.Client.Account.PrivLevel > (uint) ePrivLevel.Player)
+			if (player != null && player.Client.Account.PrivLevel > (uint)ePrivLevel.Player)
 				return true;
-			
+
 			// allow usage of all house items
 			if ((item.Object_Type == 0 || item.Object_Type >= (int)eObjectType._FirstHouse) && item.Object_Type <= (int)eObjectType._LastHouse)
 				return true;
@@ -671,7 +672,7 @@ namespace DOL.GS.ServerRules
 				if (item.Realm != 0 && item.Realm != (int)living.Realm)
 					return false;
 			}
-			
+
 			// classes restriction. 0 means every class
 			if (player != null && !Util.IsEmpty(item.AllowedClasses, true))
 			{
@@ -683,28 +684,42 @@ namespace DOL.GS.ServerRules
 			if (item.Object_Type >= (int)eObjectType._FirstArmor && item.Object_Type <= (int)eObjectType._LastArmor)
 			{
 				int armorAbility = -1;
-				switch ((eRealm)item.Realm)
+
+				if (ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS && item.Item_Type != (int)eEquipmentItems.HEAD)
 				{
+					switch (player.Realm) // Choose based on player rather than item region
+					{
+						case eRealm.Albion: armorAbility = living.GetAbilityLevel(Abilities.AlbArmor); break;
+						case eRealm.Hibernia: armorAbility = living.GetAbilityLevel(Abilities.HibArmor); break;
+						case eRealm.Midgard: armorAbility =  living.GetAbilityLevel(Abilities.MidArmor); break;
+						default: break;
+					}
+				}
+				else
+				{
+					switch ((eRealm)item.Realm)
+					{
 						case eRealm.Albion: armorAbility = living.GetAbilityLevel(Abilities.AlbArmor); break;
 						case eRealm.Hibernia: armorAbility = living.GetAbilityLevel(Abilities.HibArmor); break;
 						case eRealm.Midgard: armorAbility = living.GetAbilityLevel(Abilities.MidArmor); break;
-					default: // use old system
-						armorAbility = Math.Max(armorAbility, living.GetAbilityLevel(Abilities.AlbArmor));
-						armorAbility = Math.Max(armorAbility, living.GetAbilityLevel(Abilities.HibArmor));
-						armorAbility = Math.Max(armorAbility, living.GetAbilityLevel(Abilities.MidArmor));
-						break;
+						default: // use old system
+							armorAbility = Math.Max(armorAbility, living.GetAbilityLevel(Abilities.AlbArmor));
+							armorAbility = Math.Max(armorAbility, living.GetAbilityLevel(Abilities.HibArmor));
+							armorAbility = Math.Max(armorAbility, living.GetAbilityLevel(Abilities.MidArmor));
+							break;
+					}
 				}
 				switch ((eObjectType)item.Object_Type)
 				{
-						case eObjectType.GenericArmor: return armorAbility >= ArmorLevel.GenericArmor;
-						case eObjectType.Cloth: return armorAbility >= ArmorLevel.Cloth;
-						case eObjectType.Leather: return armorAbility >= ArmorLevel.Leather;
+					case eObjectType.GenericArmor: return armorAbility >= ArmorLevel.GenericArmor;
+					case eObjectType.Cloth: return armorAbility >= ArmorLevel.Cloth;
+					case eObjectType.Leather: return armorAbility >= ArmorLevel.Leather;
 					case eObjectType.Reinforced:
-						case eObjectType.Studded: return armorAbility >= ArmorLevel.Studded;
+					case eObjectType.Studded: return armorAbility >= ArmorLevel.Studded;
 					case eObjectType.Scale:
-						case eObjectType.Chain: return armorAbility >= ArmorLevel.Chain;
-						case eObjectType.Plate: return armorAbility >= ArmorLevel.Plate;
-						default: return false;
+					case eObjectType.Chain: return armorAbility >= ArmorLevel.Chain;
+					case eObjectType.Plate: return armorAbility >= ArmorLevel.Plate;
+					default: return false;
 				}
 			}
 
@@ -715,61 +730,177 @@ namespace DOL.GS.ServerRules
 			//http://dol.kitchenhost.de/files/dol/Info/itemtable.txt
 			switch ((eObjectType)item.Object_Type)
 			{
-					case eObjectType.GenericItem: return true;
-					case eObjectType.GenericArmor: return true;
-					case eObjectType.GenericWeapon: return true;
-					case eObjectType.Staff: abilityCheck = Abilities.Weapon_Staves; break;
-					case eObjectType.Fired: abilityCheck = Abilities.Weapon_Shortbows; break;
-					case eObjectType.FistWraps: abilityCheck = Abilities.Weapon_FistWraps; break;
-					case eObjectType.MaulerStaff: abilityCheck = Abilities.Weapon_MaulerStaff; break;
+				case eObjectType.GenericItem: return true;
+				case eObjectType.GenericArmor: return true;
+				case eObjectType.GenericWeapon: return true;
+				case eObjectType.Staff: abilityCheck = Abilities.Weapon_Staves; break;
+				case eObjectType.Fired: abilityCheck = Abilities.Weapon_Shortbows; break;
+				case eObjectType.FistWraps: abilityCheck = Abilities.Weapon_FistWraps; break;
+				case eObjectType.MaulerStaff: abilityCheck = Abilities.Weapon_MaulerStaff; break;
 
-					//alb
-					case eObjectType.CrushingWeapon: abilityCheck = Abilities.Weapon_Crushing; break;
-					case eObjectType.SlashingWeapon: abilityCheck = Abilities.Weapon_Slashing; break;
-					case eObjectType.ThrustWeapon: abilityCheck = Abilities.Weapon_Thrusting; break;
-					case eObjectType.TwoHandedWeapon: abilityCheck = Abilities.Weapon_TwoHanded; break;
-					case eObjectType.PolearmWeapon: abilityCheck = Abilities.Weapon_Polearms; break;
+				//alb
+				case eObjectType.CrushingWeapon:
+					if (ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS)
+						switch (living.Realm)
+						{
+							case eRealm.Albion: abilityCheck = Abilities.Weapon_Crushing; break;
+							case eRealm.Hibernia: abilityCheck = Abilities.Weapon_Blunt; break;
+							case eRealm.Midgard: abilityCheck = Abilities.Weapon_Hammers; break;
+							default: break;
+						} 
+					else abilityCheck = Abilities.Weapon_Crushing;
+					break;
+				case eObjectType.SlashingWeapon:
+					if (ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS)
+						switch (living.Realm)
+						{
+							case eRealm.Albion: abilityCheck = Abilities.Weapon_Slashing; break;
+							case eRealm.Hibernia: abilityCheck = Abilities.Weapon_Blades; break;
+							case eRealm.Midgard: abilityCheck = Abilities.Weapon_Swords; break;
+							default: break;
+						}
+					else abilityCheck = Abilities.Weapon_Slashing;
+					break;
+				case eObjectType.ThrustWeapon:
+					if (ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS && living.Realm == eRealm.Hibernia)
+						abilityCheck = Abilities.Weapon_Piercing;
+					else
+						abilityCheck = Abilities.Weapon_Thrusting;
+					break;
+				case eObjectType.TwoHandedWeapon:
+					if (ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS && living.Realm == eRealm.Hibernia)
+						abilityCheck = Abilities.Weapon_LargeWeapons;
+					else abilityCheck = Abilities.Weapon_TwoHanded;
+					break;
+				case eObjectType.PolearmWeapon:
+					if (ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS)
+						switch (living.Realm)
+						{
+							case eRealm.Albion: abilityCheck = Abilities.Weapon_Polearms; break;
+							case eRealm.Hibernia: abilityCheck = Abilities.Weapon_CelticSpear; break;
+							case eRealm.Midgard: abilityCheck = Abilities.Weapon_Spears; break;
+							default: break;
+						}
+					else abilityCheck = Abilities.Weapon_Polearms;
+					break;
 				case eObjectType.Longbow:
 					otherCheck = new string[] { Abilities.Weapon_Longbows, Abilities.Weapon_Archery };
 					break;
-					case eObjectType.Crossbow: abilityCheck = Abilities.Weapon_Crossbow; break;
-					case eObjectType.Flexible: abilityCheck = Abilities.Weapon_Flexible; break;
-					//TODO: case 5: abilityCheck = Abilities.Weapon_Thrown; break;
+				case eObjectType.Crossbow: abilityCheck = Abilities.Weapon_Crossbow; break;
+				case eObjectType.Flexible: abilityCheck = Abilities.Weapon_Flexible; break;
+				//TODO: case 5: abilityCheck = Abilities.Weapon_Thrown;break;
 
-					//mid
-					case eObjectType.Sword: abilityCheck = Abilities.Weapon_Swords; break;
-					case eObjectType.Hammer: abilityCheck = Abilities.Weapon_Hammers; break;
+				//mid
+				case eObjectType.Sword:
+					if (ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS)
+						switch (living.Realm)
+						{
+							case eRealm.Albion: abilityCheck = Abilities.Weapon_Slashing; break;
+							case eRealm.Hibernia: abilityCheck = Abilities.Weapon_Blades; break;
+							case eRealm.Midgard: abilityCheck = Abilities.Weapon_Swords; break;
+							default: break;
+						}
+					else abilityCheck = Abilities.Weapon_Swords; 
+					break;
+				case eObjectType.Hammer:
+					if (ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS)
+						switch (living.Realm)
+						{
+							case eRealm.Albion: abilityCheck = Abilities.Weapon_Crushing; break;
+							case eRealm.Midgard: abilityCheck = Abilities.Weapon_Hammers; break;
+							case eRealm.Hibernia: abilityCheck = Abilities.Weapon_Blunt; break;
+							default: break;
+						}
+					else abilityCheck = Abilities.Weapon_Hammers; 
+					break;
 				case eObjectType.LeftAxe:
-					case eObjectType.Axe: abilityCheck = Abilities.Weapon_Axes; break;
-					case eObjectType.Spear: abilityCheck = Abilities.Weapon_Spears; break;
+				case eObjectType.Axe:
+					if (ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS)
+						switch (living.Realm)
+						{
+							case eRealm.Albion: abilityCheck = Abilities.Weapon_Slashing; break;
+							case eRealm.Hibernia: abilityCheck = Abilities.Weapon_Blades; break;
+							case eRealm.Midgard: abilityCheck = Abilities.Weapon_Axes; break;
+							default: break;
+						}
+					else abilityCheck = Abilities.Weapon_Axes; 
+					break;
+				case eObjectType.Spear:
+					if (ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS)
+						switch (living.Realm)
+						{
+							case eRealm.Albion: abilityCheck = Abilities.Weapon_Polearms; break;
+							case eRealm.Hibernia: abilityCheck = Abilities.Weapon_CelticSpear; break;
+							case eRealm.Midgard: abilityCheck = Abilities.Weapon_Spears; break;
+							default: break;
+						}
+					else abilityCheck = Abilities.Weapon_Spears; 
+					break;
 				case eObjectType.CompositeBow:
 					otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Archery };
 					break;
-					case eObjectType.Thrown: abilityCheck = Abilities.Weapon_Thrown; break;
-					case eObjectType.HandToHand: abilityCheck = Abilities.Weapon_HandToHand; break;
+				case eObjectType.Thrown: abilityCheck = Abilities.Weapon_Thrown; break;
+				case eObjectType.HandToHand: abilityCheck = Abilities.Weapon_HandToHand; break;
 
-					//hib
+				//hib
 				case eObjectType.RecurvedBow:
 					otherCheck = new string[] { Abilities.Weapon_RecurvedBows, Abilities.Weapon_Archery };
 					break;
-					case eObjectType.Blades: abilityCheck = Abilities.Weapon_Blades; break;
-					case eObjectType.Blunt: abilityCheck = Abilities.Weapon_Blunt; break;
-					case eObjectType.Piercing: abilityCheck = Abilities.Weapon_Piercing; break;
-					case eObjectType.LargeWeapons: abilityCheck = Abilities.Weapon_LargeWeapons; break;
-					case eObjectType.CelticSpear: abilityCheck = Abilities.Weapon_CelticSpear; break;
-					case eObjectType.Scythe: abilityCheck = Abilities.Weapon_Scythe; break;
+				case eObjectType.Blades:
+					if (ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS)
+						switch (living.Realm)
+						{
+							case eRealm.Albion: abilityCheck = Abilities.Weapon_Slashing; break;
+							case eRealm.Hibernia: abilityCheck = Abilities.Weapon_Blades; break;
+							case eRealm.Midgard: abilityCheck = Abilities.Weapon_Swords; break;
+							default: break;
+						}
+					else abilityCheck = Abilities.Weapon_Blades; 
+					break;
+				case eObjectType.Blunt:
+					if (ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS)
+						switch (living.Realm)
+						{
+							case eRealm.Albion: abilityCheck = Abilities.Weapon_Crushing; break;
+							case eRealm.Hibernia: abilityCheck = Abilities.Weapon_Blunt; break;
+							case eRealm.Midgard: abilityCheck = Abilities.Weapon_Hammers; break;
+							default: break;
+						}
+					else abilityCheck = Abilities.Weapon_Blunt;
+					break;
+				case eObjectType.Piercing:
+					if (ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS && living.Realm == eRealm.Albion)
+						abilityCheck = Abilities.Weapon_Thrusting;
+					else abilityCheck = Abilities.Weapon_Piercing;
+					break;
+				case eObjectType.LargeWeapons:
+					if (ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS && living.Realm == eRealm.Albion)
+						abilityCheck = Abilities.Weapon_TwoHanded;
+					else abilityCheck = Abilities.Weapon_LargeWeapons; break;
+				case eObjectType.CelticSpear:
+					if (ServerProperties.Properties.ALLOW_CROSS_REALM_ITEMS)
+						switch (living.Realm)
+						{
+							case eRealm.Albion: abilityCheck = Abilities.Weapon_Polearms; break;
+							case eRealm.Hibernia: abilityCheck = Abilities.Weapon_CelticSpear; break;
+							case eRealm.Midgard: abilityCheck = Abilities.Weapon_Spears; break;
+							default: break;
+						}
+					else abilityCheck = Abilities.Weapon_CelticSpear;
+					break;
+				case eObjectType.Scythe: abilityCheck = Abilities.Weapon_Scythe; break;
 
-					//misc
-					case eObjectType.Magical: return true;
-					case eObjectType.Shield: return living.GetAbilityLevel(Abilities.Shield) >= item.Type_Damage;
-					case eObjectType.Bolt: abilityCheck = Abilities.Weapon_Crossbow; break;
-					case eObjectType.Arrow: otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Longbows, Abilities.Weapon_RecurvedBows, Abilities.Weapon_Shortbows }; break;
-					case eObjectType.Poison: return living.GetModifiedSpecLevel(Specs.Envenom) > 0;
-					case eObjectType.Instrument: return living.HasAbility(Abilities.Weapon_Instruments);
+				//misc
+				case eObjectType.Magical: return true;
+				case eObjectType.Shield: return living.GetAbilityLevel(Abilities.Shield) >= item.Type_Damage;
+				case eObjectType.Bolt: abilityCheck = Abilities.Weapon_Crossbow; break;
+				case eObjectType.Arrow: otherCheck = new string[] { Abilities.Weapon_CompositeBows, Abilities.Weapon_Longbows, Abilities.Weapon_RecurvedBows, Abilities.Weapon_Shortbows }; break;
+				case eObjectType.Poison: return living.GetModifiedSpecLevel(Specs.Envenom) > 0;
+				case eObjectType.Instrument: return living.HasAbility(Abilities.Weapon_Instruments);
 					//TODO: different shield sizes
 			}
 
-			if(abilityCheck != null && living.HasAbility(abilityCheck))
+			if (abilityCheck != null && living.HasAbility(abilityCheck))
 				return true;
 
 			foreach (string str in otherCheck)
@@ -1157,7 +1288,7 @@ namespace DOL.GS.ServerRules
 							if (keep.Guild != null && keep.Guild == player.Guild)
 								bonus = 20;
 							else if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_Normal &&
-							         keep.Realm == living.Realm)
+									 keep.Realm == living.Realm)
 								bonus = 10;
 
 							outpostXP = (xpReward / 100) * bonus;
@@ -1411,7 +1542,7 @@ namespace DOL.GS.ServerRules
 					playerBPValue = killedPlayer.BountyPointsValue;
 				long playerMoneyValue = killedPlayer.MoneyValue;
 
-				List<KeyValuePair<GamePlayer, int>> playerKillers = new List<KeyValuePair<GamePlayer,int>>();
+				List<KeyValuePair<GamePlayer, int>> playerKillers = new List<KeyValuePair<GamePlayer, int>>();
 
 				//Now deal the XP and RPs to all livings
 				foreach (DictionaryEntry de in killedPlayer.XPGainers)
@@ -1524,7 +1655,7 @@ namespace DOL.GS.ServerRules
 							if (keep.Guild != null && keep.Guild == (living as GamePlayer).Guild)
 								bonus = 20;
 							else if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_Normal &&
-							         keep.Realm == living.Realm)
+									 keep.Realm == living.Realm)
 								bonus = 10;
 
 							outpostXP = (xpReward / 100) * bonus;
@@ -1655,7 +1786,7 @@ namespace DOL.GS.ServerRules
 		public virtual string GetPlayerPrefixName(GamePlayer source, GamePlayer target)
 		{
 			string language;
-			
+
 			try
 			{
 				language = source.Client.Account.Language;
@@ -1664,10 +1795,10 @@ namespace DOL.GS.ServerRules
 			{
 				language = LanguageMgr.DefaultLanguage;
 			}
-			
+
 			if (IsSameRealm(source, target, true) && target.RealmLevel >= 110)
 				return target.RealmRankTitle(language);
-			
+
 			return string.Empty;
 		}
 
@@ -1714,7 +1845,7 @@ namespace DOL.GS.ServerRules
 		{
 			return source.Level > 19 ? Math.Max(1, source.RealmLevel) : source.RealmLevel;
 		}
-				
+
 		/// <summary>
 		/// Gets the server type color handling scheme
 		///
@@ -1953,7 +2084,7 @@ namespace DOL.GS.ServerRules
 		{
 			return target.Name;
 		}
-		
+
 		/// <summary>
 		/// Gets the NPC guild name based on server type
 		/// </summary>

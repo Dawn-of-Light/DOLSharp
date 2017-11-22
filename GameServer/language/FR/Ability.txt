@@ -19,9 +19,10 @@ Skill.Ability.SecRemaining:	 secondes restantes.
 
 Skill.Ability.CannotUse.AlreadyHaveSameEffectType:	Vous avez déjà un effet de ce type!
 
+Skill.Ability.Camouflage.UseCamo: Vous vous camoufflez dans votre entourage!
 Skill.Ability.CannotUse.Camouflage.Mezzed:	Vous ne pouvez pas utiliser 'Camouflage' en étant hypnotisé(e)!
 Skill.Ability.CannotUse.Camouflage.Stunned:	Vous ne pouvez pas utiliser 'Camouflage' en étant étourdi(e)!
-Skill.Ability.CannotUse.Camouflage.NotStealthed:	Vous ne pouvez pas utiliser 'Camouflage' sans être dissimulé(e)!
+Skill.Ability.CannotUse.Camouflage.NotStealthed:	Vous devez être furtif(ve) pour vous camoufler!
 Skill.Ability.CannotUse.Camouflage.Dead:	Vous ne pouvez pas utiliser 'Camouflage' en étant mort(e)!
 Skill.Ability.CannotUse.Camouflage.DisableDuration:	Vous devez attendre {0} secondes supplémentaires pour pouvoir vous camoufler!
 

@@ -17,9 +17,10 @@ Skill.Ability.CannotUseWhileStealthed:	You cannot use this ability while stealth
 Skill.Ability.MinRemaining:	  minutes remaining.
 Skill.Ability.SecRemaining:	  seconds remaining.
 
+Skill.Ability.Camouflage.UseCamo: You camouflage yourself into your surroundings!
 Skill.Ability.CannotUse.Camouflage.Mezzed:	You can't use camouflage while mesmerized!
 Skill.Ability.CannotUse.Camouflage.Stunned:	You can't use camouflage while stunned!
-Skill.Ability.CannotUse.Camouflage.NotStealthed:	You can't use camouflage while not stealthed!
+Skill.Ability.CannotUse.Camouflage.NotStealthed:	You must be hidden to camouflage yourself!
 Skill.Ability.CannotUse.Camouflage.Dead:	You can't use camouflage when dead!
 Skill.Ability.CannotUse.Camouflage.DisableDuration:	You must wait {0} more second to attempt to use camouflage!
 

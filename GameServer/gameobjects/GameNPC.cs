@@ -199,10 +199,7 @@ namespace DOL.GS
 			{
 				base.Level = value;
 
-				if( Strength + Constitution + Dexterity + Quickness + Intelligence + Piety + Empathy + Charisma <= 0 )
-				{
-					AutoSetStats();
-				}
+				AutoSetStats();  // Always recalculate stats
 
 				if (!InCombat)
 					m_health = MaxHealth;
@@ -219,20 +216,28 @@ namespace DOL.GS
 			}
 		}
 
+		// Set base stats for mob, pulling from server properties if necessary.
 		public virtual void AutoSetStats()
 		{
-			// Values changed by Argo, based on Tolakrams Advice for how to change the Multiplier for Autoset str
-
-			Strength = (short)(Properties.MOB_AUTOSET_STR_BASE + Level * 10 * Properties.MOB_AUTOSET_STR_MULTIPLIER);
-			Constitution = (short)(Properties.MOB_AUTOSET_CON_BASE + Level * Properties.MOB_AUTOSET_CON_MULTIPLIER);
-			Quickness = (short)(Properties.MOB_AUTOSET_QUI_BASE + Level * Properties.MOB_AUTOSET_QUI_MULTIPLIER);
-			Dexterity = (short)(Properties.MOB_AUTOSET_DEX_BASE + Level * Properties.MOB_AUTOSET_DEX_MULTIPLIER);
+			// Values changed by Argo, based on Tolakrams Advice for how to change the Multiplier for Auto
+			// Modified to only change stats that aren't set in the DB
+			if (m_template != null && m_template.Strength == 0)
+				Strength = (short)(Properties.MOB_AUTOSET_STR_BASE + (Level-1) * 10 * Properties.MOB_AUTOSET_STR_MULTIPLIER);
+			if (m_template != null && m_template.Constitution == 0)
+				Constitution = (short)(Properties.MOB_AUTOSET_CON_BASE + (Level-1) * Properties.MOB_AUTOSET_CON_MULTIPLIER);
+			if (m_template != null && m_template.Quickness == 0)
+				Quickness = (short)(Properties.MOB_AUTOSET_QUI_BASE + (Level-1) * Properties.MOB_AUTOSET_QUI_MULTIPLIER);
+			if (m_template != null && m_template.Dexterity == 0)
+				Dexterity = (short)(Properties.MOB_AUTOSET_DEX_BASE + (Level-1) * Properties.MOB_AUTOSET_DEX_MULTIPLIER);
 			
-			Intelligence = (short)(30);
-			Empathy = (short)(30);
-			Piety = (short)(30);
-			Charisma = (short)(30);
-			
+			if (m_template != null && m_template.Intelligence == 0)
+				Intelligence = (short)(30);
+			if (m_template != null && m_template.Empathy == 0)
+				Empathy = (short)(30);
+			if (m_template != null && m_template.Piety == 0)
+				Piety = (short)(30);
+			if (m_template != null && m_template.Charisma == 0)
+				Charisma = (short)(30);
 		}
 
 		/// <summary>
@@ -1915,11 +1920,11 @@ namespace DOL.GS
 			m_loadedFromScript = false;
 			Mob dbMob = (Mob)obj;
 			INpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(dbMob.NPCTemplateID);
-			
+
+			/* This is already being called at the very bottom.  Why are we doing it twice?
 			if (npcTemplate != null && !npcTemplate.ReplaceMobValues)
-			{
 				LoadTemplate(npcTemplate);
-			}
+			*/
 
 			TranslationId = dbMob.TranslationId;
 			Name = dbMob.Name;
@@ -1949,6 +1954,25 @@ namespace DOL.GS
 			Piety = (short)dbMob.Piety;
 			Charisma = (short)dbMob.Charisma;
 			Empathy = (short)dbMob.Empathy;
+
+			// Since AutoSetStats now checks original stats via m_template, make sure there is one.
+			if (m_template == null)
+				m_template = npcTemplate;
+			else
+			{
+				NpcTemplate tmpNew = new NpcTemplate();
+				tmpNew.Strength = Strength;
+				tmpNew.Constitution = Constitution;
+				tmpNew.Dexterity = Dexterity;
+				tmpNew.Quickness = Quickness;
+				tmpNew.Empathy = Empathy;
+				tmpNew.Intelligence = Intelligence;
+				tmpNew.Charisma = Charisma;
+
+				m_template = tmpNew;
+			}
+
+			this.AutoSetStats();
 
 			MeleeDamageType = (eDamageType)dbMob.MeleeDamageType;
 			if (MeleeDamageType == 0)
@@ -2191,6 +2215,9 @@ namespace DOL.GS
 			if (template == null)
 				return;
 
+			// Save the template for later
+			m_template = template;
+
 			var m_templatedInventory = new List<string>();
 			this.TranslationId = template.TranslationId;
 			this.Name = template.Name;
@@ -2238,21 +2265,7 @@ namespace DOL.GS
 
 			#region Stats
 			// Stats
-			if (template.Strength==0)
-			{
-				this.AutoSetStats();
-			}
-			else
-			{
-				this.Constitution = (short)template.Constitution;
-				this.Dexterity = (short)template.Dexterity;
-				this.Strength = (short)template.Strength;
-				this.Quickness = (short)template.Quickness;
-				this.Intelligence = (short)template.Intelligence;
-				this.Piety = (short)template.Piety;
-				this.Empathy = (short)template.Empathy;
-				this.Charisma = (short)template.Charisma;
-			}
+			this.AutoSetStats();
 			#endregion
 
 			#region Misc Stats
@@ -3398,27 +3411,100 @@ namespace DOL.GS
 					}
 			}
 		}
+	/// <summary>
+        /// Sorts styles by type for more efficient style selection later
+        /// </summary>
+        protected void SortStyles()
+        {
+            m_stylesAnyPos = new List<Style>(4);
+            m_stylesChain = new List<Style>(4);
+            m_stylesDefensive = new List<Style>(4);
+
+            foreach (Style s in m_styles)
+            {
+                if (s == null)
+                {
+                    if (log.IsWarnEnabled)
+                    {
+                        string sError = "GameNPC.SortStyles(): NULL style for name " + Name;
+                        if (m_InternalID != null)
+                            sError += " mob_id " + this.m_InternalID.ToString();
+                        if (m_npcTemplate != null)
+                            sError +=" npctemplate " + m_npcTemplate.TemplateId.ToString();
+                        log.Warn(sError);
+                    }
+                    continue; // Keep sorting, as a later style may not be null
+                }// if (s == null)
+
+                switch (s.OpeningRequirementType)
+                {
+                    case Style.eOpening.Defensive:
+                        m_stylesDefensive.Add(s); break;
+                    case Style.eOpening.Positional:
+                        m_stylesAnyPos.Add(s); break;
+                    default:
+                        if (s.OpeningRequirementValue > 0)
+                            m_stylesChain.Add(s);
+                        else
+                            m_stylesAnyPos.Add(s);
+                        break;
+                }// switch (s.OpeningRequirementType)
+            }// foreach
+        }// SortStyles()
+
 		/// <summary>
-		/// Pick a random style for now.
+		/// Picks a style, prioritizing reactives and chains over positionals and anytimes
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>Selected style</returns>
 		protected override Style GetStyleToUse()
 		{
-			if (Styles != null && Styles.Count > 0 && Util.Chance(Properties.GAMENPC_CHANCES_TO_STYLE + Styles.Count))
-			{
-				Style style = (Style)Styles[Util.Random(Styles.Count - 1)];
-				if (StyleProcessor.CanUseStyle(this, style, AttackWeapon))
-					return style;
-			}
+            if (m_styles == null || m_styles.Count < 1)
+                return null;
 
-			return base.GetStyleToUse();
-		}
+            bool bUseStyles = Util.Chance(Properties.GAMENPC_CHANCES_TO_STYLE);
+
+            // Use defensive styles
+            if (bUseStyles)
+                foreach (Style s in m_stylesDefensive)
+                {
+                    if (StyleProcessor.CanUseStyle(this, s, AttackWeapon))
+                        return s;
+                }
+
+            // Use chain styles whenever possible
+            // Skips the bUseStyles check as chains will be almost impossible otherwise
+            foreach (Style s in m_stylesChain)
+            {
+                if (StyleProcessor.CanUseStyle(this, s, AttackWeapon))
+                    return s;
+            }
+
+            if (bUseStyles && m_stylesAnyPos.Count > 0 )
+            {
+                Style s;
+
+                for (int i = 0; i < 3; i++) // Give up after three tries
+                {
+                    s = (Style)m_stylesAnyPos[Util.Random(m_stylesAnyPos.Count - 1)];
+
+                    if (s.OpeningRequirementType == Style.eOpening.Offensive)
+                        return s;  // Anytime style, return it
+                    else
+                        if (StyleProcessor.CanUseStyle(this, s, AttackWeapon))
+                            return s; // We can use this positional, return it
+                        // else pick another style
+                }// for
+            }
+
+            // return base.GetStyleToUse(); // Wastes cycles if NPC doesn't have styles anyway.
+            return null;
+        } // GetStyleToUse()
 		
-		/// <summary>
-		/// Adds messages to ArrayList which are sent when object is targeted
-		/// </summary>
-		/// <param name="player">GamePlayer that is examining this object</param>
-		/// <returns>list with string messages</returns>
+	/// <summary>
+	/// Adds messages to ArrayList which are sent when object is targeted
+	/// </summary>
+	/// <param name="player">GamePlayer that is examining this object</param>
+	/// <returns>list with string messages</returns>
         public override IList GetExamineMessages(GamePlayer player)
         {
             switch (player.Client.Account.Language)
@@ -4742,15 +4828,30 @@ namespace DOL.GS
 			set { m_spells = value != null ? value.Cast<Spell>().ToList() : null; }
 		}
 
-		private IList m_styles = new ArrayList(1);
+		private IList m_styles = new ArrayList(0);
 		/// <summary>
 		/// The Styles for this NPC
 		/// </summary>
 		public IList Styles
 		{
 			get { return m_styles; }
-			set { m_styles = value; }
+			set { m_styles = value; this.SortStyles(); }
 		}
+
+		/// <summary>
+		/// Defensive styles for this NPC
+		/// </summary>
+		private IList m_stylesDefensive = null;
+
+		/// <summary>
+		/// Chain styles for this NPC
+		/// </summary>
+		private IList m_stylesChain = null;
+
+		/// <summary>
+		/// Anytime and positional styles for this NPC
+		/// </summary>
+		private IList m_stylesAnyPos = null;
 
 		/// <summary>
 		/// The Abilities for this NPC
@@ -5346,6 +5447,8 @@ namespace DOL.GS
 
 		/// <summary>
 		/// Constructs a NPC
+		/// NOTE: Most npcs are generated as GameLiving objects and then used as GameNPCs when needed.
+		/// 	As a result, this constructor is rarely called.
 		/// </summary>
 		public GameNPC()
 			: base()
@@ -5381,12 +5484,30 @@ namespace DOL.GS
 				m_ownBrain = new StandardMobBrain();
 				m_ownBrain.Body = this;
 			}
+
+			// Save base stats in m_template even if there wasn't an npctemplate to begin with, as AutoSetStats() need them.
+			if (m_template == null)
+			{
+				//m_template = new NpcTemplate(this);  // This causes too many long queries and causes server startup to take FOREVER
+				NpcTemplate tmpNew = new NpcTemplate();
+				tmpNew.Strength = Strength;
+				tmpNew.Constitution = Constitution;
+				tmpNew.Dexterity = Dexterity;
+				tmpNew.Quickness = Quickness;
+				tmpNew.Empathy = Empathy;
+				tmpNew.Intelligence = Intelligence;
+				tmpNew.Charisma = Charisma;
+
+				m_template = tmpNew;
+			}
 		}
 
 		INpcTemplate m_template = null;
 
 		/// <summary>
 		/// create npc from template
+		/// NOTE: Most npcs are generated as GameLiving objects and then used as GameNPCs when needed.
+		/// 	As a result, this constructor is rarely called.
 		/// </summary>
 		/// <param name="template">template of generator</param>
 		public GameNPC(INpcTemplate template)
@@ -5395,7 +5516,7 @@ namespace DOL.GS
 			if (template == null) return;
 
 			// save the original template so we can do calculations off the original values
-			m_template = template;
+			// m_template = template; Not needed, LoadTemplate() does this already.
 
 			LoadTemplate(template);
 		}
