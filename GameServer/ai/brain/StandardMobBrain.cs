@@ -248,7 +248,10 @@ namespace DOL.AI.Brain
 
 				if (CalculateAggroLevelToTarget(npc) > 0)
 				{
-					AddToAggroList(npc, (npc.Level + 1) << 1);
+					if (npc is GamePet) // Required to stop pets from being aggro'd without LOS
+						AddToAggroList(npc, (npc.Level + 1) << 1, true);
+					else
+						AddToAggroList(npc, (npc.Level + 1) << 1);
 				}
 			}
 		}
