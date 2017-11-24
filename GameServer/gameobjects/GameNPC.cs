@@ -2255,7 +2255,7 @@ namespace DOL.GS
 
 			#region Stats
 			// Stats
-			tNPCTemplate = template as NpcTemplate; // AutoSetStats() pulls values from NPCTemplate, so we need to store it locally.
+			NPCTemplate = template as NpcTemplate; // AutoSetStats() pulls values from NPCTemplate, so we need to store it locally.
 			AutoSetStats();
 			#endregion
 
