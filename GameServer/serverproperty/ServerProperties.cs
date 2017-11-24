@@ -1039,13 +1039,13 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base Value to use when auto-setting pet STR stat.
 		/// </summary>
-		[ServerProperty("npc", "pet_autoset_str_base", "Base Value to use when auto-setting Pet STR stat. ", 20.0)]
+		[ServerProperty("npc", "pet_autoset_str_base", "Base Value to use when auto-setting Pet STR stat. ", 30.0)]
 		public static double PET_AUTOSET_STR_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting pet STR stat.
 		/// </summary>
-		[ServerProperty("npc", "pet_autoset_str_multiplier", "Multiplier to use when auto-setting Pet STR stat. ", 6.0)]
+		[ServerProperty("npc", "pet_autoset_str_multiplier", "Multiplier to use when auto-setting Pet STR stat. ", 1.0)]
 		public static double PET_AUTOSET_STR_MULTIPLIER;
 		
 		/// Base Value to use when auto-setting pet CON stat.
