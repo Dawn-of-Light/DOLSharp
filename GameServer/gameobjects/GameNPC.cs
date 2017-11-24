@@ -199,7 +199,8 @@ namespace DOL.GS
 			{
 				base.Level = value;
 
-				AutoSetStats();  // Always recalculate stats
+				if (value > 0)
+					AutoSetStats();  // Always recalculate stats when level changes
 
 				if (!InCombat)
 					m_health = MaxHealth;
@@ -221,23 +222,22 @@ namespace DOL.GS
 		{
 			// Values changed by Argo, based on Tolakrams Advice for how to change the Multiplier for Auto
 			// Modified to only change stats that aren't set in the DB
-			if (m_template != null && m_template.Strength == 0)
-				Strength = (short)(Properties.MOB_AUTOSET_STR_BASE + (Level-1) * 10 * Properties.MOB_AUTOSET_STR_MULTIPLIER);
-			if (m_template != null && m_template.Constitution == 0)
-				Constitution = (short)(Properties.MOB_AUTOSET_CON_BASE + (Level-1) * Properties.MOB_AUTOSET_CON_MULTIPLIER);
-			if (m_template != null && m_template.Quickness == 0)
-				Quickness = (short)(Properties.MOB_AUTOSET_QUI_BASE + (Level-1) * Properties.MOB_AUTOSET_QUI_MULTIPLIER);
-			if (m_template != null && m_template.Dexterity == 0)
-				Dexterity = (short)(Properties.MOB_AUTOSET_DEX_BASE + (Level-1) * Properties.MOB_AUTOSET_DEX_MULTIPLIER);
-			
-			if (m_template != null && m_template.Intelligence == 0)
-				Intelligence = (short)(30);
-			if (m_template != null && m_template.Empathy == 0)
-				Empathy = (short)(30);
-			if (m_template != null && m_template.Piety == 0)
-				Piety = (short)(30);
-			if (m_template != null && m_template.Charisma == 0)
-				Charisma = (short)(30);
+			if (NPCTemplate == null || NPCTemplate.Strength < 1)
+				Strength = (short)Math.Max(1, Properties.MOB_AUTOSET_STR_BASE + (Level - 1) * 10 * Properties.MOB_AUTOSET_STR_MULTIPLIER);
+			if (NPCTemplate == null || NPCTemplate.Constitution < 1)
+				Constitution = (short)Math.Max(1, Properties.MOB_AUTOSET_CON_BASE + (Level - 1) * Properties.MOB_AUTOSET_CON_MULTIPLIER);
+			if (NPCTemplate == null || NPCTemplate.Quickness < 1)
+				Quickness = (short)Math.Max(1, Properties.MOB_AUTOSET_QUI_BASE + (Level - 1) * Properties.MOB_AUTOSET_QUI_MULTIPLIER);
+			if (NPCTemplate == null || NPCTemplate.Dexterity < 1)
+				Dexterity = (short)Math.Max(1, Properties.MOB_AUTOSET_DEX_BASE + (Level - 1) * Properties.MOB_AUTOSET_DEX_MULTIPLIER);
+			if (NPCTemplate == null || NPCTemplate.Intelligence < 1)
+				Intelligence = (short)Math.Max(1, Properties.MOB_AUTOSET_INT_BASE + (Level - 1) * Properties.MOB_AUTOSET_INT_MULTIPLIER);
+			if (NPCTemplate == null || NPCTemplate.Empathy < 1)
+				Empathy = (short)(29 + Level);
+			if (NPCTemplate == null || NPCTemplate.Piety < 1)
+				Piety = (short)(29 + Level);
+			if (NPCTemplate == null || NPCTemplate.Charisma < 1)
+				Charisma = (short)(29 + Level);
 		}
 
 		/// <summary>
@@ -1946,33 +1946,23 @@ namespace DOL.GS
 			Flags = (eFlags)dbMob.Flags;
 			m_packageID = dbMob.PackageID;
 
-			Strength = (short)dbMob.Strength;
-			Constitution = (short)dbMob.Constitution;
-			Dexterity = (short)dbMob.Dexterity;
-			Quickness = (short)dbMob.Quickness;
-			Intelligence = (short)dbMob.Intelligence;
-			Piety = (short)dbMob.Piety;
-			Charisma = (short)dbMob.Charisma;
-			Empathy = (short)dbMob.Empathy;
-
-			// Since AutoSetStats now checks original stats via m_template, make sure there is one.
-			if (m_template == null)
-				m_template = npcTemplate;
-			else
+			// Since AutoSetStats now checks original stats via NPCTemplate, make sure there is one.
+			if (npcTemplate != null)
+				NPCTemplate = (npcTemplate as NpcTemplate);
+            		else
 			{
-				NpcTemplate tmpNew = new NpcTemplate();
-				tmpNew.Strength = Strength;
-				tmpNew.Constitution = Constitution;
-				tmpNew.Dexterity = Dexterity;
-				tmpNew.Quickness = Quickness;
-				tmpNew.Empathy = Empathy;
-				tmpNew.Intelligence = Intelligence;
-				tmpNew.Charisma = Charisma;
-
-				m_template = tmpNew;
+				NPCTemplate = new NpcTemplate();
+				NPCTemplate.Strength = dbMob.Strength;
+				NPCTemplate.Constitution = dbMob.Constitution;
+				NPCTemplate.Dexterity = dbMob.Dexterity;
+				NPCTemplate.Quickness = dbMob.Quickness;
+				NPCTemplate.Empathy = dbMob.Empathy;
+				NPCTemplate.Intelligence = dbMob.Intelligence;
+				NPCTemplate.Charisma = dbMob.Charisma;
+				NPCTemplate.Piety = dbMob.Piety;
 			}
 
-			this.AutoSetStats();
+			AutoSetStats();
 
 			MeleeDamageType = (eDamageType)dbMob.MeleeDamageType;
 			if (MeleeDamageType == 0)
@@ -2265,7 +2255,8 @@ namespace DOL.GS
 
 			#region Stats
 			// Stats
-			this.AutoSetStats();
+			tNPCTemplate = template as NpcTemplate; // AutoSetStats() pulls values from NPCTemplate, so we need to store it locally.
+			AutoSetStats();
 			#endregion
 
 			#region Misc Stats
