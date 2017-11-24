@@ -248,7 +248,7 @@ namespace DOL.AI.Brain
 
 				if (CalculateAggroLevelToTarget(npc) > 0)
 				{
-					if (npc is GamePet) // Required to stop pets from being aggro'd without LOS
+					if (npc.Brain is ControlledNpcBrain) // This is a pet or charmed creature, checkLOS
 						AddToAggroList(npc, (npc.Level + 1) << 1, true);
 					else
 						AddToAggroList(npc, (npc.Level + 1) << 1);
@@ -434,7 +434,14 @@ namespace DOL.AI.Brain
 			AddToAggroList(living, aggroamount, false);
 		}
 		
-		public virtual void AddToAggroList(GameLiving living, int aggroamount, bool NaturalAggro)
+		/// <summary>
+		/// Add living to the aggrolist
+		/// aggroamount can be negative to lower amount of aggro
+		/// </summary>
+		/// <param name="living"></param>
+		/// <param name="aggroamount"></param>
+		/// <param name="CheckLOS"></param>
+		public virtual void AddToAggroList(GameLiving living, int aggroamount, bool CheckLOS)
 		{
 			if (m_body.IsConfused) return;
 
@@ -449,18 +456,14 @@ namespace DOL.AI.Brain
 			
 			// Check LOS (walls, pits, etc...) before  attacking, player + pet
 			// Be sure the aggrocheck is triggered by the brain on Think() method
-			if (DOL.GS.ServerProperties.Properties.ALWAYS_CHECK_LOS && NaturalAggro)
+			if (DOL.GS.ServerProperties.Properties.ALWAYS_CHECK_LOS && CheckLOS)
 			{
 				GamePlayer thisLiving = null;
 				if (living is GamePlayer)
 					thisLiving = (GamePlayer)living;
-				
-				if (living is GamePet)
-				{
-					IControlledBrain brain = ((GamePet)living).Brain as IControlledBrain;
-					thisLiving = brain.GetPlayerOwner();
-				}
-				
+				else if (living is GameNPC && (living as GameNPC).Brain is IControlledBrain)
+					thisLiving = ((living as GameNPC).Brain as IControlledBrain).GetPlayerOwner();
+
 				if (thisLiving != null)
 				{
 					thisLiving.Out.SendCheckLOS (Body, living, new CheckLOSResponse(CheckAggroLOS));
