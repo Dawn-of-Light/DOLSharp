@@ -153,92 +153,60 @@ namespace DOL.GS
 		/// </summary>
 		public override int SpellCriticalChance
 		{
-            get { return (Brain as IControlledBrain).GetLivingOwner().GetModified(eProperty.CriticalSpellHitChance); }
+			get { return (Brain as IControlledBrain).GetLivingOwner().GetModified(eProperty.CriticalSpellHitChance); }
 			set { }
 		}
 
 		#endregion
 
 		#region Stats
-
 		/// <summary>
-		/// Pet strength is determined by using template stength as a percentage multiplier
-		/// So A template value of 50 would mean pet strength is 50% of normal, 150 = 150% of normal, etc
+		/// Set stats according to PET_AUTOSET values, then scale them according to the values in the DB
 		/// </summary>
-		public override short Strength
+		public override void AutoSetStats()
 		{
-			get
-			{
-                short str = (short)(Properties.PET_AUTOSET_STR_BASE + Level * 10 * Properties.PET_AUTOSET_STR_MULTIPLIER);
-				if (base.Strength > 0)
-				{
-					str = (short)(str * base.Strength * .01);
-				}
+			// Assign values from Autoset
+			Strength = (short)Math.Max(1, Properties.PET_AUTOSET_STR_BASE);
+			Constitution = (short)Math.Max(1, Properties.PET_AUTOSET_CON_BASE);
+			Quickness = (short)Math.Max(1, Properties.PET_AUTOSET_QUI_BASE);
+			Dexterity = (short)Math.Max(1, Properties.PET_AUTOSET_DEX_BASE);
+			Intelligence = (short)Math.Max(1,Properties.PET_AUTOSET_INT_BASE);
+			Empathy = (short)30;
+			Piety = (short)30;
+			Charisma = (short)30;
+			
+			// Now add stats for levelling
+			Strength += (short)Math.Round(10.0 * (Level - 1) * Properties.PET_AUTOSET_STR_MULTIPLIER);
+			Constitution += (short)Math.Round((Level - 1) * Properties.PET_AUTOSET_CON_MULTIPLIER);
+			Quickness += (short)Math.Round((Level - 1) * Properties.PET_AUTOSET_QUI_MULTIPLIER);
+			Dexterity += (short)Math.Round((Level - 1) * Properties.PET_AUTOSET_DEX_MULTIPLIER);
+			Intelligence += (short)Math.Round((Level - 1) * Properties.PET_AUTOSET_INT_MULTIPLIER);
+			Empathy += (short)(Level - 1);
+			Piety += (short)(Level - 1);
+			Charisma += (short)(Level - 1);
 
-				return Math.Max((short)1, str);
+			// Now scale them according to NPCTemplate values
+			if (NPCTemplate != null)
+			{
+				if (NPCTemplate.Strength > 0)
+					Strength = (short)Math.Round(Strength * (NPCTemplate.Strength / 100.0));
+				if (NPCTemplate.Constitution > 0)
+					Constitution = (short)Math.Round(Constitution * (NPCTemplate.Constitution / 100.0));
+				if (NPCTemplate.Quickness > 0)
+					Quickness = (short)Math.Round(Quickness * (NPCTemplate.Quickness / 100.0));
+				if (NPCTemplate.Dexterity > 0)
+					Dexterity = (short)Math.Round(Dexterity * (NPCTemplate.Dexterity / 100.0));
+				if (NPCTemplate.Intelligence > 0)
+					Intelligence = (short)Math.Round(Intelligence * (NPCTemplate.Intelligence / 100.0));
+				// Except for CHA, EMP, AND PIE as those don't have autoset values.
+				if (NPCTemplate.Empathy > 0)
+					Empathy = (short)NPCTemplate.Empathy;
+				if (NPCTemplate.Piety > 0)
+					Piety = (short)NPCTemplate.Piety;
+				if (NPCTemplate.Charisma > 0)
+					Charisma = (short)NPCTemplate.Charisma;
 			}
 		}
-
-        /// <summary>
-        /// Pet Base constitution.
-        /// </summary>
-        public override short Constitution
-        {
-            get
-            {
-                if (base.Constitution == 0)
-                    return 30;
-                else
-                    return (short)(Properties.PET_AUTOSET_CON_BASE + Level * Properties.PET_AUTOSET_CON_MULTIPLIER);
-            }
-        }
-
-        /// <summary>
-		/// Pet Base dexterity.
-		/// </summary>
-		public override short Dexterity
-		{
-			get
-			{
-				if (base.Dexterity == 0)
-                    return 30;
-				else
-                    return (short)(Properties.PET_AUTOSET_DEX_BASE + Level * Properties.PET_AUTOSET_DEX_MULTIPLIER);
-            }
-		}
-
-		/// <summary>
-		/// Pet Base quickness.
-		/// </summary>
-		public override short Quickness
-		{
-			get
-			{
-				if (base.Quickness == 0)
-                    return 30;
-				else
-                    return (short)(Properties.PET_AUTOSET_QUI_BASE + Level * Properties.PET_AUTOSET_QUI_MULTIPLIER);
-            }
-		}
-
-		public override int MaxHealth
-		{
-			get
-			{
-				int hp = base.MaxHealth;
-				double hpPercent = 1.0;
-
-				// apply boosted hp reduction
-				if (Constitution > 0 && Constitution < 30)
-				{
-					hpPercent = (Constitution * 3.4) * .01;
-				}
-
-				return (int)(hp * hpPercent);
-			}
-		}
-
-
 		#endregion
 
 		#region Melee
