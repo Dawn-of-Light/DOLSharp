@@ -319,33 +319,6 @@ namespace DOL.GS
 
 			return base.GetStyleToUse();
 		}
-
-		/// <summary>
-		/// Get weapon skill for the pet (for formula see Spydor's Web,
-		/// http://daoc.nisrv.com/modules.php?name=Weapon_Skill_Calc).
-		/// </summary>
-		/// <param name="weapon"></param>
-		/// <returns></returns>
-		public override double GetWeaponSkill(InventoryItem weapon)
-		{
-			if (weapon == null)
-				return base.GetWeaponSkill(weapon);
-
-			double factor = 1.9;
-			double baseWS = 380;
-			return ((GetWeaponStat(weapon) - 50) * factor + baseWS) * (1 + WeaponSpecLevel(weapon) / 100);
-		}
-
-		/// <summary>
-		/// Weapon specialisation is up to level, if a weapon is equipped.
-		/// </summary>
-		/// <param name="weapon"></param>
-		/// <returns></returns>
-		public override int WeaponSpecLevel(InventoryItem weapon)
-		{
-			return (weapon != null) ? Level : base.WeaponSpecLevel(weapon);
-		}
-
 		#endregion
 
 		public override void Die(GameObject killer)
