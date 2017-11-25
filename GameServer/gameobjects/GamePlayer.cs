@@ -7394,9 +7394,13 @@ namespace DOL.GS
 
 			if (weapon.Hand == 1) // two-hand
 			{
-				// twohanded used weapons get 2H-Bonus = 10% + (Skill / 2)%
-				int spec = WeaponSpecLevel(weapon) - 1;
-				damage *= 1.1 + spec * 0.005;
+				double specBonus = 0.0;
+
+				// Albion 2H and polearms Bonus = (Skill / 2)%
+				if (weapon.Object_Type == (int)eObjectType.TwoHandedWeapon || weapon.Object_Type == (int)eObjectType.PolearmWeapon)
+					specBonus = 0.005 * (WeaponSpecLevel(weapon));
+
+				damage *= 1.1 + specBonus;
 			}
 
 			if (weapon.Item_Type == Slot.RANGED)
