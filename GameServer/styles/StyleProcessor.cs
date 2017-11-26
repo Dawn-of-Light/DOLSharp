@@ -487,7 +487,8 @@ namespace DOL.GS.Styles
 									if (effect != null)
 									{
 										attackData.StyleEffects.Add(effect);
-										if (attackData.Style.OpeningRequirementType == Style.eOpening.Offensive || attackData.Style.OpeningRequirementType == Style.eOpening.Defensive)
+										if ((attackData.Style.OpeningRequirementType == Style.eOpening.Offensive && attackData.Style.OpeningRequirementValue > 0) 
+											|| attackData.Style.OpeningRequirementType == Style.eOpening.Defensive)
 										{
 											effect.UseMinVariance = true;
 										}
@@ -504,7 +505,8 @@ namespace DOL.GS.Styles
 							if (effect != null)
 							{
 								attackData.StyleEffects.Add(effect);
-								if (attackData.Style.OpeningRequirementType == Style.eOpening.Offensive || attackData.Style.OpeningRequirementType == Style.eOpening.Defensive)
+								if ((attackData.Style.OpeningRequirementType == Style.eOpening.Offensive && attackData.Style.OpeningRequirementValue > 0) 
+									|| attackData.Style.OpeningRequirementType == Style.eOpening.Defensive)
 								{
 									effect.UseMinVariance = true;
 								}
