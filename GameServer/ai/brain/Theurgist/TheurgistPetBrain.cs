@@ -97,21 +97,17 @@ namespace DOL.AI.Brain
 		{
 			if (!IsActive || !m_active) return;
 			if (m_target == null) m_target = (GameLiving)Body.TempProperties.getProperty<object>("target", null);
-			if (m_target == null) return;
-			GameLiving target = m_target;
-			if (target != null && target.IsAlive)
+			
+			if (m_target == null || !m_target.IsAlive)
+			{
+				Body.Die(Body);
+			}
+			else
 			{
 				Body.TargetObject = target;
 
 				if (!CheckSpells(eCheckSpellType.Offensive))
 					Body.StartAttack(target);
-			}
-			else
-			{
-				m_target = null;
-				m_active = false;
-				Body.StopMoving();
-				Body.MaxSpeedBase = 0;
 			}
 		}
 
