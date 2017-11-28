@@ -98,7 +98,7 @@ namespace DOL.AI.Brain
 			if (!IsActive || !m_active) return;
 			if (m_target == null) m_target = (GameLiving)Body.TempProperties.getProperty<object>("target", null);
 			
-			if (m_target == null || !m_target.IsAlive)
+			if (m_target == null || !m_target.IsAlive || Owner == null || !Owner.IsAlive)
 			{
 				Body.Die(Body);
 			}
