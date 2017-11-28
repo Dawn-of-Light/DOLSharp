@@ -2695,16 +2695,7 @@ namespace DOL.GS
 					return;
 				}
 
-				if (!owner.CanUseLefthandedWeapon
-				    || (mainWeapon != null && mainWeapon.Item_Type != Slot.RIGHTHAND && mainWeapon.Item_Type != Slot.LEFTHAND)
-				    || (leftWeapon == null && !(owner is GameNPC))
-				    || (leftWeapon != null && leftWeapon.Object_Type == (int)eObjectType.Shield))
-				{
-					// no left hand used, all is simple here
-					mainHandAD = owner.MakeAttack(m_target, mainWeapon, style, mainHandEffectiveness, m_interruptDuration, false);
-					leftHandSwingCount = 0;
-				}
-				else if (leftHandSwingCount > 0)
+				if (leftHandSwingCount > 0)
 				{
 					// both hands are used for attack
 					mainHandAD = owner.MakeAttack(m_target, mainWeapon, style, mainHandEffectiveness, m_interruptDuration, true);
@@ -2712,6 +2703,12 @@ namespace DOL.GS
 					{
 						mainHandAD.AnimationId = -2; // virtual code for both weapons swing animation
 					}
+				}
+				else if (mainWeapon != null)
+				{
+					// no left hand used, all is simple here
+					mainHandAD = owner.MakeAttack(m_target, mainWeapon, style, mainHandEffectiveness, m_interruptDuration, false);
+					leftHandSwingCount = 0;
 				}
 				else
 				{
