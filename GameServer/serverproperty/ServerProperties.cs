@@ -385,23 +385,23 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("server", "remove_quit_timer", "Allow players to log out without waiting?", false)]
 		public static bool REMOVE_QUIT_TIMER;
 
-        /// <summary>
-        /// Enable integrated serverlistupdate script?
-        /// </summary>
-        [ServerProperty("server", "enable_serverlistupdate", "Enable in-built serverlistupdate script?", false)]
-        public static bool USE_SERVER_LIST_UPDATE_INTEGRATED;
+		/// <summary>
+		/// Enable integrated serverlistupdate script?
+		/// </summary>
+		[ServerProperty("server", "enable_serverlistupdate", "Enable in-built serverlistupdate script?", false)]
+		public static bool USE_SERVER_LIST_UPDATE_INTEGRATED;
 
-        /// <summary>
-        /// The username for server list update.
-        /// </summary>
-        [ServerProperty("server", "serverlistupdate_user", "Username for serverlistupdate.", "")]
-        public static string SERVER_LIST_UPDATE_USER;
+		/// <summary>
+		/// The username for server list update.
+		/// </summary>
+		[ServerProperty("server", "serverlistupdate_user", "Username for serverlistupdate.", "")]
+		public static string SERVER_LIST_UPDATE_USER;
 
-        /// <summary>
-        /// The password for server list update.
-        /// </summary>
-        [ServerProperty("server", "serverlistupdate_password", "Password for serverlistupdate.", "")]
-        public static string SERVER_LIST_UPDATE_PASS;
+		/// <summary>
+		/// The password for server list update.
+		/// </summary>
+		[ServerProperty("server", "serverlistupdate_password", "Password for serverlistupdate.", "")]
+		public static string SERVER_LIST_UPDATE_PASS;
 
 		/// <summary>
 		/// Post 1.108 Passive RA 9-Tiers
@@ -1153,6 +1153,11 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("npc", "gamenpc_chances_to_cast", "Change the chance to cast a spell for a mob or a pet", 25)]
 		public static int GAMENPC_CHANCES_TO_CAST;
 
+		/// <summary>
+		/// NPCs heal when a target is below what percentage of their health?
+		/// </summary>
+		[ServerProperty("npc", "npc_heal_threshold", "NPCs, including pets, heal targets whose health falls below this percentage.", 75)]
+		public static int NPC_HEAL_THRESHOLD;
 		#endregion
 
 		#region PVP / RVR
@@ -1440,11 +1445,11 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("keeps", "tower_guard_level_multiplier", "Multiplier used to determine tower guard levels.  This is applied to the bonus level (usually 4) and added after balance adjustments.", 1.0)]
 		public static double TOWER_GUARD_LEVEL_MULTIPLIER;
 
-        /// <summary>
-        /// Keeps to load. 0 for Old Keeps, 1 for new keeps, 2 for both.
-        /// </summary>
-        [ServerProperty("keeps", "use_new_keeps", "Appearance Keeps Components to load. 0 for Old Appearance Keeps Components, 1 for New Appearance Keeps Components. 2 is no longer used but load 0 for compatibility.", 0)]
-        public static int USE_NEW_KEEPS;
+		/// <summary>
+		/// Keeps to load. 0 for Old Keeps, 1 for new keeps, 2 for both.
+		/// </summary>
+		[ServerProperty("keeps", "use_new_keeps", "Appearance Keeps Components to load. 0 for Old Appearance Keeps Components, 1 for New Appearance Keeps Components. 2 is no longer used but load 0 for compatibility.", 0)]
+		public static int USE_NEW_KEEPS;
 
 		/// <summary>
 		/// Should guards loaded from db be equipped by Keepsystem? (false=load equipment from db)
@@ -1476,13 +1481,17 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("keeps", "teleport_login_bg_level_exceeded", "Should players that exceed BG level cap be moved out of BG when logging in?", true)]
 		public static bool TELEPORT_LOGIN_BG_LEVEL_EXCEEDED;
 
-        /// <summary>
-        /// Do you allowed player to climb towers?
-        /// </summary>
-        [ServerProperty("keeps", "allow_tower_climb", "Do you allowed player to climb towers? Set True for yes, False for not.", false)]
-        public static bool ALLOW_TOWER_CLIMB;
+		/// <summary>
+		/// Do you allowed player to climb towers?
+		/// </summary>
+		[ServerProperty("keeps", "allow_tower_climb", "Do you allowed player to climb towers? Set True for yes, False for not.", false)]
+		public static bool ALLOW_TOWER_CLIMB;
 
-
+		/// <summary>
+		/// Keep guard heal when a target is below what percentage of their health?
+		/// </summary>
+		[ServerProperty("npc", "keep_heal_threshold", "Keep guards heal targets whose health falls below this value.", 60)]
+		public static int KEEP_HEAL_THRESHOLD;
 		#endregion
 
 		#region PVE / TOA
