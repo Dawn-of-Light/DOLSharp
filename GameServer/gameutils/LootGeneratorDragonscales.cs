@@ -91,12 +91,6 @@ namespace DOL.GS
 					case "wolf dragon spawn":
 						iScaleCount = 1;
 						break;
-					// Dragon Spawn
-					case "glimmer dragon spawn":
-					case "stone dragon spawn":
-					case "wolf dragon spawn":
-						iScaleCount = 1;
-						break;
 					default:
 						// Mobs range from 55 to 75, and we want an up to 10% bonus to drop chance based on that
 						// I dislike losing accuracy rounding things, and it's a lot faster to do this in 1/10ths 
