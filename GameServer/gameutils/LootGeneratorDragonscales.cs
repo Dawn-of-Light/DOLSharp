@@ -37,7 +37,7 @@ namespace DOL.GS
 		
 		private static ItemTemplate m_dragonscales = GameServer.Database.FindObjectByKey<ItemTemplate>("dragonscales");
 		/// <summary>
-        /// Generate loot for given mob
+        	/// Generate loot for given mob
 		/// </summary>
 		/// <param name="mob"></param>
 		/// <param name="killer"></param>
