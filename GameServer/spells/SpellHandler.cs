@@ -1635,6 +1635,7 @@ namespace DOL.GS.Spells
 
 		/// <summary>
 		/// Calculates the range to target needed to cast the spell
+		/// NOTE: This method returns a minimum value of 32
 		/// </summary>
 		/// <returns></returns>
 		public virtual int CalculateSpellRange()
@@ -2286,37 +2287,65 @@ namespace DOL.GS.Spells
 				case "group":
 					{
 						Group group = m_caster.Group;
-						int spellRange = CalculateSpellRange();
-						if (spellRange == 0)
+						
+						int spellRange;
+						if (Spell.Range == 0)
 							spellRange = modifiedRadius;
+						else
+							spellRange = CalculateSpellRange();
 
-						//Just add ourself
 						if (group == null)
 						{
-							list.Add(m_caster);
-
-							IControlledBrain npc = m_caster.ControlledBrain;
-							if (npc != null)
+							if (m_caster is GamePlayer)
 							{
-								//Add our first pet
-								GameNPC petBody2 = npc.Body;
-								if (m_caster.IsWithinRadius(petBody2, spellRange))
-									list.Add(petBody2);
+								list.Add(m_caster);
 
-								//Now lets add any subpets!
-								if (petBody2 != null && petBody2.ControlledNpcList != null)
+								IControlledBrain npc = m_caster.ControlledBrain;
+								if (npc != null)
 								{
-									foreach (IControlledBrain icb in petBody2.ControlledNpcList)
+									//Add our first pet
+									GameNPC petBody2 = npc.Body;
+									if (m_caster.IsWithinRadius(petBody2, spellRange))
+										list.Add(petBody2);
+
+									//Now lets add any subpets!
+									if (petBody2 != null && petBody2.ControlledNpcList != null)
 									{
-										if (icb != null && m_caster.IsWithinRadius(icb.Body, spellRange))
-											list.Add(icb.Body);
+										foreach (IControlledBrain icb in petBody2.ControlledNpcList)
+										{
+											if (icb != null && m_caster.IsWithinRadius(icb.Body, spellRange))
+												list.Add(icb.Body);
+										}
 									}
 								}
-							}
+							}// if (m_caster is GamePlayer)
+							else if (m_caster is GameNPC && (m_caster as GameNPC).Brain is ControlledNpcBrain)
+							{
+								IControlledBrain casterbrain = (m_caster as GameNPC).Brain as IControlledBrain;
 
-						}
+								GamePlayer player = casterbrain.GetPlayerOwner();
+
+								if (player != null)
+								{
+									if (player.Group == null)
+									{
+										// No group, add both the pet and owner to the list
+										list.Add(player);
+										list.Add(m_caster);
+									}
+									else
+										// Assign the owner's group so they are added to the list
+										group = player.Group;
+								}
+								else
+									list.Add(m_caster);
+							}// else if (m_caster is GameNPC...
+							else
+								list.Add(m_caster);
+						}// if (group == null)
+						
 						//We need to add the entire group
-						else
+						if (group != null)
 						{
 							foreach (GameLiving living in group.GetMembersInTheGroup())
 							{
