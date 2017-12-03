@@ -1025,15 +1025,27 @@ namespace DOL.GS.ServerProperties
 		public static double MOB_AUTOSET_DEX_MULTIPLIER;
 
 		/// <summary>
+		/// Base Value to use when auto-setting INT stat.
+		/// </summary>
+		[ServerProperty("npc", "mob_autoset_int_base", "Base Value to use when auto-setting INT stat. ", 30)]
+		public static int MOB_AUTOSET_INT_BASE;
+
+		/// <summary>
+		/// Multiplier to use when auto-setting INT stat.
+		/// </summary>
+		[ServerProperty("npc", "mob_autoset_int_multiplier", "Multiplier to use when auto-setting INT stat. ", 1.0)]
+		public static double MOB_AUTOSET_INT_MULTIPLIER;		
+		
+		/// <summary>
 		/// Base Value to use when auto-setting pet STR stat.
 		/// </summary>
-		[ServerProperty("npc", "pet_autoset_str_base", "Base Value to use when auto-setting Pet STR stat. ", 20.0)]
+		[ServerProperty("npc", "pet_autoset_str_base", "Base Value to use when auto-setting Pet STR stat. ", 30.0)]
 		public static double PET_AUTOSET_STR_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting pet STR stat.
 		/// </summary>
-		[ServerProperty("npc", "pet_autoset_str_multiplier", "Multiplier to use when auto-setting Pet STR stat. ", 6.0)]
+		[ServerProperty("npc", "pet_autoset_str_multiplier", "Multiplier to use when auto-setting Pet STR stat. ", 1.0)]
 		public static double PET_AUTOSET_STR_MULTIPLIER;
 		
 		/// Base Value to use when auto-setting pet CON stat.
@@ -1069,6 +1081,20 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("npc", "pet_autoset_qui_multiplier", "Multiplier to use when auto-setting Pet QUI stat. ", 1.0)]
 		public static double PET_AUTOSET_QUI_MULTIPLIER;
 
+		/// <summary>
+		/// Multiplier to use when auto-setting pet INT stat.
+		/// INT is the stat used for spell damage for mobs/pets
+		/// </summary>
+		[ServerProperty("npc", "pet_autoset_int_base", "Multiplier to use when auto-setting Pet INT stat. ", 30)]
+		public static double PET_AUTOSET_INT_BASE;
+
+		/// <summary>
+		/// Multiplier to use when auto-setting pet INT stat.
+		/// INT is the stat used for spell damage for mobs/pets
+		/// </summary>
+		[ServerProperty("npc", "pet_autoset_int_multiplier", "Multiplier to use when auto-setting Pet INT stat. ", 1.0)]
+		public static double PET_AUTOSET_INT_MULTIPLIER;		
+		
 		/// <summary>
 		/// How often should pets think?  Default 1500 or 1.5 seconds
 		/// </summary>

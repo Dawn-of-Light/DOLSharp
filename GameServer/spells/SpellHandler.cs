@@ -3600,9 +3600,13 @@ namespace DOL.GS.Spells
 
 			if (player != null)
 			{
-                if (Caster is GamePet)
+                		if (Caster is GamePet)
 				{
-					spellDamage = CapPetSpellDamage(spellDamage, player);
+					// There is no reason to cap pet spell damage if it's being scaled anyway.
+					if (ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL == 0)
+						spellDamage = CapPetSpellDamage(spellDamage, player);
+
+					spellDamage *= (((Caster as GamePet).Intelligence + 200) / 275.0);
 				}
 
 				if (SpellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
