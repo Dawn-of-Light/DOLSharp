@@ -670,8 +670,8 @@ namespace DOL.GS
 
 			if (Client.Account.PrivLevel > 1) // GMs can always insta quit
 				bInstaQuit = true;
-			else if (Client.Player.InCombat == false)  // Players can only insta quit if they aren't in combat
-				bInstaQuit = ServerProperties.Properties.REMOVE_QUIT_TIMER;
+			else if (ServerProperties.Properties.DISABLE_QUIT_TIMER && Client.Player.InCombat == false)  // Players can only insta quit if they aren't in combat
+				bInstaQuit = true;
 
 			if (bInstaQuit == false)
 			{
@@ -958,7 +958,7 @@ namespace DOL.GS
 					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Quit.CantQuitMount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;
 				}
-				if (IsMoving)
+				if (IsMoving && !ServerProperties.Properties.DISABLE_QUIT_TIMER)
 				{
 					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Quit.CantQuitStanding"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return false;

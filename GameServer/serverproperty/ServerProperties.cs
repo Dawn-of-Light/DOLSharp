@@ -382,8 +382,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Disable quit timers for players?
 		/// </summary>
-		[ServerProperty("server", "remove_quit_timer", "Allow players to log out without waiting?", false)]
-		public static bool REMOVE_QUIT_TIMER;
+		[ServerProperty("server", "disable_quit_timer", "Allow players to log out without waiting?", false)]
+		public static bool DISABLE_QUIT_TIMER;
 
         /// <summary>
         /// Enable integrated serverlistupdate script?
