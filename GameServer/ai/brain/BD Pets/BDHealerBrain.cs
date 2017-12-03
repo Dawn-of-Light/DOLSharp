@@ -94,7 +94,7 @@ namespace DOL.AI.Brain
 					if (player != null)
 					{
 
-						if (player.HealthPercent < 75)
+						if (player.HealthPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD)
 						{
 							Body.TargetObject = player;
 							break;
@@ -102,13 +102,13 @@ namespace DOL.AI.Brain
 					}
 					//Heal owner
 					owner = (this as IControlledBrain).Owner;
-					if (owner.HealthPercent < 75)
+					if (owner.HealthPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD)
 					{
 						Body.TargetObject = owner;
 						break;
 					}
 					//Heal self
-					if (Body.HealthPercent < 75)
+					if (Body.HealthPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD)
 					{
 						Body.TargetObject = Body;
 						break;
@@ -122,7 +122,7 @@ namespace DOL.AI.Brain
 					{
 						if (icb == null)
 							continue;
-						if (icb.Body.HealthPercent < 75)
+						if (icb.Body.HealthPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD)
 						{
 							Body.TargetObject = icb.Body;
 							break;

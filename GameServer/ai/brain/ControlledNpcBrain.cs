@@ -177,7 +177,7 @@ namespace DOL.AI.Brain
                 i++;
                 if (i > 50)
                 {
-                    log.Error("Boucle itérative dans GetNPCOwner !");
+                    log.Error("Boucle itÃ©rative dans GetNPCOwner !");
                     break;
                 }
                 if (owner.Brain is IControlledBrain)
@@ -358,7 +358,7 @@ namespace DOL.AI.Brain
 			if (!base.Start()) return false;
 			if (WalkState == eWalkState.Follow)
 				FollowOwner();
-			// [Ganrod] On supprime la cible du pet au moment  du contrôle.
+			// [Ganrod] On supprime la cible du pet au moment  du contrÃ´le.
 			Body.TargetObject = null;
 			GameEventMgr.AddHandler(Owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnOwnerAttacked));
 
@@ -712,7 +712,7 @@ namespace DOL.AI.Brain
 					if (spell.Target.ToLower() == "self")
 					{
 						// if we have a self heal and health is less than 75% then heal, otherwise return false to try another spell or do nothing
-						if (Body.HealthPercent < 75)
+						if (Body.HealthPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD)
 						{
 							Body.TargetObject = Body;
 						}
@@ -720,7 +720,7 @@ namespace DOL.AI.Brain
 					}
 
 					//Heal self
-					if (Body.HealthPercent < 75)
+					if (Body.HealthPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD)
 					{
 						Body.TargetObject = Body;
 						break;
@@ -728,7 +728,7 @@ namespace DOL.AI.Brain
 
 					//Heal owner
 					owner = (this as IControlledBrain).Owner;
-					if (owner.HealthPercent < 75)
+					if (owner.HealthPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD)
 					{
 						Body.TargetObject = owner;
 						break;
@@ -740,7 +740,8 @@ namespace DOL.AI.Brain
 					{
 						foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 						{
-							if (p.HealthPercent < 75 && Body.GetDistanceTo(p) <= spell.Range)
+							if (p.HealthPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD
+								&& Body.GetDistanceTo(p) <= spell.Range)
 							{
 								Body.TargetObject = p;
 								break;

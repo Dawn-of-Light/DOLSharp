@@ -46,7 +46,7 @@ namespace DOL.GS.Keeps
 				if(!player.IsAlive) continue;
 				if (GameServer.ServerRules.IsSameRealm(player, guard, true))
 				{
-					if (player.HealthPercent < 60)
+					if (player.HealthPercent < DOL.GS.ServerProperties.Properties.KEEP_HEAL_THRESHOLD)
 					{
 						target = player;
 						break;
@@ -61,7 +61,7 @@ namespace DOL.GS.Keeps
 					if (npc is GameSiegeWeapon) continue;
 					if (GameServer.ServerRules.IsSameRealm(npc, guard, true))
 					{
-						if (npc.HealthPercent < 60)
+						if (npc.HealthPercent < DOL.GS.ServerProperties.Properties.KEEP_HEAL_THRESHOLD)
 						{
 							target = npc;
 							break;
