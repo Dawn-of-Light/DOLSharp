@@ -334,44 +334,6 @@ namespace DOL.GS
 		#endregion
 
 		#region Melee
-
-		/// <summary>
-		/// Whether or not pet can use left hand weapon.
-		/// </summary>
-		public override bool CanUseLefthandedWeapon
-		{
-			get
-			{
-				switch (Name.ToLower())
-				{
-					case "lesser zombie servant":
-					case "zombie servant":
-					case "greater necroservant":
-						return true;
-					default:
-						return false;
-				}
-
-			}
-		}
-
-		/// <summary>
-		/// Calculates how many times left hand can swing.
-		/// </summary>
-		/// <returns></returns>
-		public override int CalculateLeftHandSwingCount()
-		{
-			switch (Name.ToLower())
-			{
-				case "lesser zombie servant":
-				case "zombie servant":
-				case "greater necroservant":
-					return 1;
-				default:
-					return 0;
-			}
-		}
-
 		/// <summary>
 		/// Toggle taunt mode on/off.
 		/// </summary>

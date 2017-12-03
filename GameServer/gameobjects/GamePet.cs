@@ -283,27 +283,6 @@ namespace DOL.GS
 			return ticks;
 		}
 
-
-		/// <summary>
-		/// Whether or not pet can use left hand weapon.
-		/// </summary>
-		public override bool CanUseLefthandedWeapon
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-		/// <summary>
-		/// Calculates how many times left hand can swing.
-		/// </summary>
-		/// <returns></returns>
-		public override int CalculateLeftHandSwingCount()
-		{
-			return 0;
-		}
-
 		/// <summary>
 		/// Pick a random style for now.
 		/// </summary>
