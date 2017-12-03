@@ -49,22 +49,22 @@ namespace DOL.AI.Brain
 			IsMainPet = false;
 		}
 
-        public virtual GameNPC GetNPCOwner()
-        {
-            return null;
-        }
-        public virtual GameLiving GetLivingOwner()
-        {
-            GamePlayer player = GetPlayerOwner();
-            if (player != null)
-                return player;
+		public virtual GameNPC GetNPCOwner()
+		{
+		    return null;
+		}
+		public virtual GameLiving GetLivingOwner()
+		{
+		    GamePlayer player = GetPlayerOwner();
+		    if (player != null)
+			return player;
 
-            GameNPC npc = GetNPCOwner();
-            if (npc != null)
-                return npc;
+		    GameNPC npc = GetNPCOwner();
+		    if (npc != null)
+			return npc;
 
-            return null;
-        }
+		    return null;
+		}
 
 		public override int ThinkInterval { get { return 1500; } }
 
@@ -97,21 +97,18 @@ namespace DOL.AI.Brain
 		{
 			if (!IsActive || !m_active) return;
 			if (m_target == null) m_target = (GameLiving)Body.TempProperties.getProperty<object>("target", null);
-			if (m_target == null) return;
-			GameLiving target = m_target;
-			if (target != null && target.IsAlive)
+			
+			if (m_target == null || !m_target.IsAlive)
 			{
+				Body.Die(Body);
+			}
+			else
+			{
+				GameLiving target = m_target;
 				Body.TargetObject = target;
 
 				if (!CheckSpells(eCheckSpellType.Offensive))
 					Body.StartAttack(target);
-			}
-			else
-			{
-				m_target = null;
-				m_active = false;
-				Body.StopMoving();
-				Body.MaxSpeedBase = 0;
 			}
 		}
 
