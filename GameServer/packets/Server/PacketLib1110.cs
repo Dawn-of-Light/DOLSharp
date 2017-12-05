@@ -236,5 +236,63 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 		
+		/// <summary>
+		/// new siege weapon animation packet 1.110
+		/// </summary>
+		public override void SendSiegeWeaponAnimation(GameSiegeWeapon siegeWeapon)
+        {
+            if (siegeWeapon == null)
+                return;
+            using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.SiegeWeaponAnimation)))
+            {
+                pak.WriteInt((uint)siegeWeapon.ObjectID);
+                pak.WriteInt(
+                    (uint)
+                    (siegeWeapon.TargetObject == null
+                     ? (siegeWeapon.GroundTarget == null ? 0 : siegeWeapon.GroundTarget.X)
+                     : siegeWeapon.TargetObject.X));
+                pak.WriteInt(
+                    (uint)
+                    (siegeWeapon.TargetObject == null
+                     ? (siegeWeapon.GroundTarget == null ? 0 : siegeWeapon.GroundTarget.Y)
+                     : siegeWeapon.TargetObject.Y));
+                pak.WriteInt(
+                    (uint)
+                    (siegeWeapon.TargetObject == null
+                     ? (siegeWeapon.GroundTarget == null ? 0 : siegeWeapon.GroundTarget.Z)
+                     : siegeWeapon.TargetObject.Z));
+                pak.WriteInt((uint)(siegeWeapon.TargetObject == null ? 0 : siegeWeapon.TargetObject.ObjectID));
+                pak.WriteShort(siegeWeapon.Effect);
+                pak.WriteShort((ushort)(siegeWeapon.SiegeWeaponTimer.TimeUntilElapsed)); // timer is no longer ( value / 100 )
+                pak.WriteByte((byte)siegeWeapon.SiegeWeaponTimer.CurrentAction);
+                pak.Fill(0, 3); // TODO : these bytes change depending on siege weapon action, to implement when different ammo types available.
+                SendTCP(pak);
+            }
+        }
+		
+		/// <summary>
+		/// new siege weapon fireanimation 1.110 // patch 0021
+		/// </summary>
+		/// <param name="siegeWeapon">The siege weapon</param>
+		/// <param name="timer">How long the animation lasts for</param>
+		public override void SendSiegeWeaponFireAnimation(GameSiegeWeapon siegeWeapon, int timer)
+		{
+			if (siegeWeapon == null)
+				return;
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.SiegeWeaponAnimation)))
+			{
+				pak.WriteInt((uint) siegeWeapon.ObjectID);
+				pak.WriteInt((uint) (siegeWeapon.TargetObject == null ? siegeWeapon.GroundTarget.X : siegeWeapon.TargetObject.X));
+				pak.WriteInt((uint) (siegeWeapon.TargetObject == null ? siegeWeapon.GroundTarget.Y : siegeWeapon.TargetObject.Y));
+				pak.WriteInt((uint) (siegeWeapon.TargetObject == null ? siegeWeapon.GroundTarget.Z + 50 : siegeWeapon.TargetObject.Z + 50));
+				pak.WriteInt((uint) (siegeWeapon.TargetObject == null ? 0 : siegeWeapon.TargetObject.ObjectID));
+				pak.WriteShort(siegeWeapon.Effect);
+				pak.WriteShort((ushort) (timer)); // timer is no longer ( value / 100 )
+				pak.WriteByte((byte) SiegeTimer.eAction.Fire);
+				pak.WriteShort(0xE134); // default ammo type, the only type currently supported on DOL
+				pak.WriteByte(0x08); // always this flag when firing
+				SendTCP(pak);				
+			}
+		}		
     }
 }
