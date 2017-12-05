@@ -547,6 +547,11 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("server", "use_new_tooltip_forcedupdate", "Set to true if you wish to enable the new 1.110+ Tooltip Forced update each time the server send a skill to a new client.", true)]
 		public static bool USE_NEW_TOOLTIP_FORCEDUPDATE;
 
+		/// <summary>
+		/// Property to enable crush/slash/thrust determining damage variance for polearms and 2H weapons
+		/// </summary>
+		[ServerProperty("server", "enable_alb_weapon_dual_spec", "Base weapon damage variance for polearms and 2H weapons on crush/slash/thrust spec?", true)]
+		public static bool ENABLE_ALB_WEAPON_DUAL_SPEC;
 		#endregion
 
 		#region WORLD
