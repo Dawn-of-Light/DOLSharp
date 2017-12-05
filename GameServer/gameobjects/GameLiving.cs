@@ -1745,24 +1745,23 @@ namespace DOL.GS
 					weaponTypeToUse.Object_Type = weapon.Object_Type;
 					weaponTypeToUse.SlotPosition = weapon.SlotPosition;
 
-					if ((this is GamePlayer) && Realm == eRealm.Albion && ServerProperties.Properties.ENABLE_ALB_WEAPON_DUAL_SPEC)
+					if ((this is GamePlayer) 
+						&& (GameServer.ServerRules.IsObjectTypesEqual((eObjectType)weapon.Object_Type, eObjectType.TwoHandedWeapon) 
+						|| GameServer.ServerRules.IsObjectTypesEqual((eObjectType)weapon.Object_Type, eObjectType.PolearmWeapon))
+						&& ServerProperties.Properties.ENABLE_ALB_WEAPON_DUAL_SPEC)
 					{
 						// Albion dual spec penalty, which sets minimum damage to the base damage spec
-
-						if (GameServer.ServerRules.IsObjectTypesEqual((eObjectType)weapon.Object_Type, eObjectType.TwoHandedWeapon) || GameServer.ServerRules.IsObjectTypesEqual((eObjectType)weapon.Object_Type, eObjectType.PolearmWeapon))
+						if (weapon.Type_Damage == (int)eDamageType.Crush)
 						{
-							if (weapon.Type_Damage == (int)eDamageType.Crush)
-							{
-								weaponTypeToUse.Object_Type = (int)eObjectType.CrushingWeapon;
-							}
-							else if (weapon.Type_Damage == (int)eDamageType.Slash)
-							{
-								weaponTypeToUse.Object_Type = (int)eObjectType.SlashingWeapon;
-							}
-							else
-							{
-								weaponTypeToUse.Object_Type = (int)eObjectType.ThrustWeapon;
-							}
+							weaponTypeToUse.Object_Type = (int)eObjectType.CrushingWeapon;
+						}
+						else if (weapon.Type_Damage == (int)eDamageType.Slash)
+						{
+							weaponTypeToUse.Object_Type = (int)eObjectType.SlashingWeapon;
+						}
+						else
+						{
+							weaponTypeToUse.Object_Type = (int)eObjectType.ThrustWeapon;
 						}
 					}
 				}
