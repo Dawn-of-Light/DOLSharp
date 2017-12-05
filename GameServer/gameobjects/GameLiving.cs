@@ -1745,7 +1745,7 @@ namespace DOL.GS
 					weaponTypeToUse.Object_Type = weapon.Object_Type;
 					weaponTypeToUse.SlotPosition = weapon.SlotPosition;
 
-					if ((this is GamePlayer) && Realm == eRealm.Albion)
+					if ((this is GamePlayer) && Realm == eRealm.Albion && ServerProperties.Properties.ENABLE_ALB_WEAPON_DUAL_SPEC)
 					{
 						// Albion dual spec penalty, which sets minimum damage to the base damage spec
 
