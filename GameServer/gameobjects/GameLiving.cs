@@ -1745,7 +1745,7 @@ namespace DOL.GS
 					weaponTypeToUse.Object_Type = weapon.Object_Type;
 					weaponTypeToUse.SlotPosition = weapon.SlotPosition;
 
-					if ((this is GamePlayer) 
+					if ((this is GamePlayer) && Realm == eRealm.Albion
 						&& (GameServer.ServerRules.IsObjectTypesEqual((eObjectType)weapon.Object_Type, eObjectType.TwoHandedWeapon) 
 						|| GameServer.ServerRules.IsObjectTypesEqual((eObjectType)weapon.Object_Type, eObjectType.PolearmWeapon))
 						&& ServerProperties.Properties.ENABLE_ALB_WEAPON_DUAL_SPEC)
