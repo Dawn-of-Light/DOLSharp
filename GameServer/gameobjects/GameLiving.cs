@@ -1748,7 +1748,7 @@ namespace DOL.GS
 					if ((this is GamePlayer) && Realm == eRealm.Albion
 						&& (GameServer.ServerRules.IsObjectTypesEqual((eObjectType)weapon.Object_Type, eObjectType.TwoHandedWeapon) 
 						|| GameServer.ServerRules.IsObjectTypesEqual((eObjectType)weapon.Object_Type, eObjectType.PolearmWeapon))
-						&& ServerProperties.Properties.ENABLE_ALB_WEAPON_DUAL_SPEC)
+						&& ServerProperties.Properties.ENABLE_ALBION_ADVANCED_WEAPON_SPEC)
 					{
 						// Albion dual spec penalty, which sets minimum damage to the base damage spec
 						if (weapon.Type_Damage == (int)eDamageType.Crush)
