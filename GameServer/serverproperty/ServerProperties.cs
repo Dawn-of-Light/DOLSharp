@@ -550,8 +550,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Property to enable crush/slash/thrust determining damage variance for polearms and 2H weapons
 		/// </summary>
-		[ServerProperty("server", "enable_alb_weapon_dual_spec", "Base weapon damage variance for polearms and 2H weapons on crush/slash/thrust spec?", true)]
-		public static bool ENABLE_ALB_WEAPON_DUAL_SPEC;
+		[ServerProperty("server", "enable_albion_advanced_weapon_spec", "Set to true to determine damage variance for polearms and 2H weapons on 1H crush/slash/thrust spec.", true)]
+		public static bool ENABLE_ALBION_ADVANCED_WEAPON_SPEC;
 		#endregion
 
 		#region WORLD
