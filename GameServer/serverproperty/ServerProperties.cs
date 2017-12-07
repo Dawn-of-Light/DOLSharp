@@ -985,7 +985,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Multiplier to use when auto-setting STR stat.
 		/// </summary>
-		[ServerProperty("npc", "mob_autoset_str_multiplier", "Multiplier to use when auto-setting STR stat. ", 1.0)]
+		[ServerProperty("npc", "mob_autoset_str_multiplier", "Multiplier to use when auto-setting STR stat. Multiplied by 10 when applied. ", 1.0)]
 		public static double MOB_AUTOSET_STR_MULTIPLIER;
 
 		/// <summary>
@@ -1045,7 +1045,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Multiplier to use when auto-setting pet STR stat.
 		/// </summary>
-		[ServerProperty("npc", "pet_autoset_str_multiplier", "Multiplier to use when auto-setting Pet STR stat. ", 1.0)]
+		[ServerProperty("npc", "pet_autoset_str_multiplier", "Multiplier to use when auto-setting Pet STR stat. Multiplied by 10 when applied. ", 1.0)]
 		public static double PET_AUTOSET_STR_MULTIPLIER;
 		
 		/// Base Value to use when auto-setting pet CON stat.
