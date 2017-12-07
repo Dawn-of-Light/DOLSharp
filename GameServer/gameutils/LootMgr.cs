@@ -65,7 +65,7 @@ namespace DOL.GS
 		// /// <summary>
 		// /// List of Lootgenerators related by mobfaction
 		// /// </summary>
-		//static readonly HybridDictionary m_mobFactionGenerators = new HybridDictionary();		
+		static readonly HybridDictionary m_mobFactionGenerators = new HybridDictionary();		
 
 		/// <summary>
 		/// Initializes the LootMgr. This function must be called
@@ -236,8 +236,43 @@ namespace DOL.GS
 				}
 			}
 
+			// Loot Generator Faction Indexed
+			if (!Util.IsEmpty(mobfaction))
+			{
+
+				try
+				{
+					// Parse CSV
+					List<string> mobFactions = Util.SplitCSV(mobfaction);
+
+					foreach (string sfaction in mobFactions)
+					{
+						try
+						{
+							int ifaction = int.Parse(sfaction);
+
+							if ((IList)m_mobFactionGenerators[ifaction] != null)
+								((IList)m_mobFactionGenerators[ifaction]).Remove(generator);
+						}
+						catch
+						{
+							if (log.IsDebugEnabled)
+								log.Debug("Could not parse faction [" + sfaction + "] into an integer.");
+						}
+					}
+
+				}
+				catch
+				{
+					if (log.IsDebugEnabled)
+					{
+						log.Debug("Could not Parse mobFactions for Removing LootGenerator : " + generator.GetType().FullName);
+					}
+				}
+			}
+
 			// Loot Generator Region Indexed
-            if (mobregion > 0)
+			if (mobregion > 0)
             {
                 IList regionList = (IList)m_mobRegionGenerators[mobregion];
                 if (regionList != null)
@@ -314,6 +349,41 @@ namespace DOL.GS
 					if (log.IsDebugEnabled)
 					{
 						log.Debug("Could not Parse mobGuilds for Registering LootGenerator : " + generator.GetType().FullName);
+					}
+				}
+			}
+
+			// Loot Generator Mob Faction Indexed
+			if (!Util.IsEmpty(mobfaction))
+			{
+				// Parse CSV
+				try
+				{
+					List<string> mobFactions = Util.SplitCSV(mobfaction);
+
+					foreach (string sfaction in mobFactions)
+					{
+						try
+						{
+							int ifaction = int.Parse(sfaction);
+
+							if ((IList)m_mobFactionGenerators[ifaction] == null)
+								m_mobFactionGenerators[ifaction] = new ArrayList();
+
+							((IList)m_mobFactionGenerators[ifaction]).Add(generator);
+						}
+						catch
+						{
+							if (log.IsDebugEnabled)
+								log.Debug("Could not parse faction string [" + sfaction + "] into an integer.");
+						}
+					}// foreach
+				}
+				catch
+				{
+					if (log.IsDebugEnabled)
+					{
+						log.Debug("Could not Parse mobFactions for Registering LootGenerator : " + generator.GetType().FullName);
 					}
 				}
 			}
@@ -397,8 +467,7 @@ namespace DOL.GS
 			IList nameGenerators = (IList)m_mobNameGenerators[mob.Name];
 			IList guildGenerators = (IList)m_mobGuildGenerators[mob.GuildName];
 			IList regionGenerators = (IList)m_mobRegionGenerators[(int)mob.CurrentRegionID];
-
-			//IList factionGenerators = m_mobFactionGenerators[mob.Faction]; not implemented
+			IList factionGenerators = (IList)m_mobFactionGenerators[mob.Faction.ID];
 
 			ArrayList allGenerators = new ArrayList();
 
@@ -410,6 +479,8 @@ namespace DOL.GS
 				allGenerators.AddRange(guildGenerators);
 			if (regionGenerators != null)
 				allGenerators.AddRange(regionGenerators);
+			if (factionGenerators != null)
+				allGenerators.AddRange(factionGenerators);
 
 			foreach (ILootGenerator generator in allGenerators)
 			{
