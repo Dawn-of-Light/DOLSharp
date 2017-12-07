@@ -165,10 +165,10 @@ namespace DOL.GS
 			return null;
 		}
 
-        public static void UnRegisterLootGenerator(ILootGenerator generator, string mobname, string mobguild, string mobfaction)
-        {
-            UnRegisterLootGenerator(generator, mobname, mobguild, mobfaction, 0);
-        }
+		public static void UnRegisterLootGenerator(ILootGenerator generator, string mobname, string mobguild, string mobfaction)
+		{
+		    UnRegisterLootGenerator(generator, mobname, mobguild, mobfaction, 0);
+		}
 
 		/// <summary>
 		/// Unregister a generator for the given parameters		
@@ -273,13 +273,13 @@ namespace DOL.GS
 
 			// Loot Generator Region Indexed
 			if (mobregion > 0)
-            {
-                IList regionList = (IList)m_mobRegionGenerators[mobregion];
-                if (regionList != null)
-                {
-                    regionList.Remove(generator);
-                }
-            }
+			{
+				IList regionList = (IList)m_mobRegionGenerators[mobregion];
+				if (regionList != null)
+				{
+					regionList.Remove(generator);
+				}
+			}
 
 			if (Util.IsEmpty(mobname) && Util.IsEmpty(mobguild) && Util.IsEmpty(mobfaction) && mobregion == 0)
 			{
@@ -289,8 +289,8 @@ namespace DOL.GS
 
 
 		/// <summary>
-        /// Register a generator for the given parameters,
-        /// If all parameters are null a global generaotr for all mobs will be registered
+		/// Register a generator for the given parameters,
+		/// If all parameters are null a global generaotr for all mobs will be registered
 		/// </summary>
 		/// <param name="generator"></param>
 		/// <param name="mobname"></param>
@@ -325,7 +325,6 @@ namespace DOL.GS
 						log.Debug("Could not Parse mobNames for Registering LootGenerator : " + generator.GetType().FullName);
 					}
 				}
-				
 			}
 
 			// Loot Generator Guild Indexed
@@ -407,12 +406,12 @@ namespace DOL.GS
 		}
 
 
-        /// <summary>
-        /// Call the refresh method for each generator to update loot, if implemented
-        /// </summary>
-        /// <param name="mob"></param>
-        public static void RefreshGenerators(GameNPC mob)
-        {
+		/// <summary>
+		/// Call the refresh method for each generator to update loot, if implemented
+		/// </summary>
+		/// <param name="mob"></param>
+		public static void RefreshGenerators(GameNPC mob)
+		{
 			if (mob != null)
 			{
 				foreach (ILootGenerator gen in m_globalGenerators)
@@ -420,7 +419,7 @@ namespace DOL.GS
 					gen.Refresh(mob);
 				}
 			}
-        }
+		}
 
 
 		/// <summary>
@@ -467,7 +466,9 @@ namespace DOL.GS
 			IList nameGenerators = (IList)m_mobNameGenerators[mob.Name];
 			IList guildGenerators = (IList)m_mobGuildGenerators[mob.GuildName];
 			IList regionGenerators = (IList)m_mobRegionGenerators[(int)mob.CurrentRegionID];
-			IList factionGenerators = (IList)m_mobFactionGenerators[mob.Faction.ID];
+			IList factionGenerators = null;
+			if (mob.Faction != null)
+				factionGenerators = (IList)m_mobFactionGenerators[mob.Faction.ID];
 
 			ArrayList allGenerators = new ArrayList();
 
