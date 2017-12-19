@@ -90,13 +90,18 @@ namespace DOL.GS
 			m_level = 0;
 			m_model = 0xFFFF;
 			m_doorID = m_dbdoor.InternalID;
-            m_guildName = m_dbdoor.Guild;
-            m_Realm = (eRealm)m_dbdoor.Realm;
-            m_level = m_dbdoor.Level;
-            m_health = m_dbdoor.MaxHealth;
-            m_maxHealth = m_dbdoor.MaxHealth;
+			m_guildName = m_dbdoor.Guild;
+			m_Realm = (eRealm)m_dbdoor.Realm;
+			m_level = m_dbdoor.Level;
+			m_health = m_dbdoor.MaxHealth;
+			m_maxHealth = m_dbdoor.MaxHealth;
 			m_locked = m_dbdoor.Locked;
 			m_flags = m_dbdoor.Flags;
+
+			// Open mile gates on PVE and PVP server types
+			if (CurrentRegion.IsFrontier && (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE
+				|| GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP))
+				State = eDoorState.Open;
 
 			this.AddToWorld();
 		}
@@ -113,11 +118,11 @@ namespace DOL.GS
 			obj.Name = this.Name;
 			obj.InternalID = this.DoorID;
 			obj.Type = DoorID / 100000000;
-            obj.Guild = this.GuildName;
+			obj.Guild = this.GuildName;
 			obj.Flags = this.Flag;
-            obj.Realm = (byte)this.Realm;
-            obj.Level = this.Level;
-            obj.MaxHealth = this.MaxHealth;
+			obj.Realm = (byte)this.Realm;
+			obj.Level = this.Level;
+			obj.MaxHealth = this.MaxHealth;
 			obj.Health = this.MaxHealth;
 			obj.Locked = this.Locked;
 			if (InternalID == null)
@@ -316,7 +321,7 @@ namespace DOL.GS
 			StartHealthRegeneration();
 		}
 
-        /// <summary>
+		/// <summary>
 		/// Broadcasts the Door Update to all players around
 		/// </summary>
 		public override void BroadcastUpdate()
@@ -392,7 +397,7 @@ namespace DOL.GS
 			
 					if( !IsAlive )
 					{
-                        attackerPlayer.Out.SendMessage(LanguageMgr.GetTranslation(attackerPlayer.Client.Account.Language, "GameDoor.NowOpen", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+						attackerPlayer.Out.SendMessage(LanguageMgr.GetTranslation(attackerPlayer.Client.Account.Language, "GameDoor.NowOpen", Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						Die(source);
 						m_openDead = true;
 						RegenDoorHealth();
