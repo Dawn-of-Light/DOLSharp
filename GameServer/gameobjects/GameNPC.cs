@@ -1,4 +1,4 @@
-﻿/*
+/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  *
  * This program is free software; you can redistribute it and/or
@@ -3887,7 +3887,8 @@ namespace DOL.GS
 
 				if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 				{
-					Follow(target, AttackRange, STICKMAXIMUMRANGE);
+					// Archer mobs sometimes bug and keep trying to fire at max range unsuccessfully so force them to get just a tad closer.
+					Follow(target, AttackRange - 10, STICKMAXIMUMRANGE);
 				}
 				else
 				{
