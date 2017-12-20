@@ -346,6 +346,19 @@ namespace DOL.GS.Spells
 		#endregion
 
 		/// <summary>
+		/// Sets the target of the spell to the caster for beneficial effects when not selecting a valid target
+		///		ie. You're in the middle of a fight with a mob and want to heal yourself.  Rather than having to switch
+		///		targets to yourself to healm and then back to the target, you can just heal yourself
+		/// </summary>
+		/// <param name="target">The current target of the spell, changed to the player if appropriate</param>
+		protected virtual void AutoSelectCaster(ref GameLiving target)
+		{
+			if (Spell.Target.ToUpper() == "REALM" && 
+				(target == null || !(target is GameNPC npc) || npc.Realm != Caster.Realm || (npc.Flags & GameNPC.eFlags.PEACE) != 0))
+				target = Caster;
+		}
+
+		/// <summary>
 		/// Cast a spell by using an item
 		/// </summary>
 		/// <param name="item"></param>
@@ -438,7 +451,9 @@ namespace DOL.GS.Spells
                 } // switch (m_spell.SpellType.ToString().ToLower())
             } // if (Caster is GamePet)
 
-            bool success = true;
+			bool success = true;
+
+			AutoSelectCaster(ref targetObject);
 
 			m_spellTarget = targetObject;
 
@@ -871,8 +886,8 @@ namespace DOL.GS.Spells
 						break;
 				}
 
-				//heals/buffs/rez need LOS only to start casting
-				if (!m_caster.TargetInView && m_spell.Target.ToLower() != "pet")
+				//heals/buffs/rez need LOS only to start casting, TargetInView only works if Caster.TargetObject == selectedTarget
+				if (selectedTarget == Caster.TargetObject && !m_caster.TargetInView && m_spell.Target.ToLower() != "pet")
 				{
 					if (!quiet) MessageToCaster("Your target is not in visible!", eChatType.CT_SpellResisted);
 					Caster.Notify(GameLivingEvent.CastFailed, new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetNotInView));
