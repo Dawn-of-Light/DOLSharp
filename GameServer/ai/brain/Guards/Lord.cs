@@ -1,5 +1,6 @@
 using DOL.GS;
 using DOL.GS.Keeps;
+using System;
 
 namespace DOL.AI.Brain
 {
@@ -41,30 +42,35 @@ namespace DOL.AI.Brain
 		/// <param name="attackData">The data associated with the puller's attack.</param>
 		protected override void BringFriends(AttackData ad)
 		{
-			GuardLord lord = Body as GuardLord;
-			long currenttime = DateTime.UtcNow.Ticks;
-			if (m_nextCallForHelpTime < currenttime && lord != null)
+			if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE)
 			{
-				// Don't call for help more than once every minute
-				m_nextCallForHelpTime = currenttime + TimeSpan.TicksPerMinute;
+				GuardLord lord = Body as GuardLord;
+				long currenttime = DateTime.UtcNow.Ticks;
 
-				int iGuardsResponding = 0;
-				foreach (GameKeepGuard guard in lord.Component.Keep.Guards.Values)
-					if (guard != null && guard.IsAlive && guard.IsAvailable && !(guard is FrontierHastener))
-					{
-						iGuardsResponding++;
-						guard.Follow(ad.Target, GameNPC.STICKMINIMUMRANGE, int.MaxValue);
-					}
+				if (m_nextCallForHelpTime < currenttime && lord != null)
+				{
+					// Don't call for help more than once every minute
+					m_nextCallForHelpTime = currenttime + TimeSpan.TicksPerMinute;
 
-				string sMessage = $"{lord.Name} bellows for assistance ";
-				if (iGuardsResponding == 0)
-					sMessage += "but no guards respond!";
-				else
-					sMessage += $"and {iGuardsResponding} guards respond!";
+					int iGuardsResponding = 0;
+					FrontierHastener hastener = guard as FrontierHastener;
+					foreach (GameKeepGuard guard in lord.Component.Keep.Guards.Values)
+						if (guard != null && guard.IsAlive && guard.IsAvailable && !(guard is FrontierHastener))
+						{
+							iGuardsResponding++;
+							guard.Follow(ad.Target, GameNPC.STICKMINIMUMRANGE, int.MaxValue);
+						}
 
-				foreach (GamePlayer player in lord.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE, true))
-					if (player != null)
-						ChatUtil.SendErrorMessage(player, sMessage);
+					string sMessage = $"{lord.Name} bellows for assistance ";
+					if (iGuardsResponding == 0)
+						sMessage += "but no guards respond!";
+					else
+						sMessage += $"and {iGuardsResponding} guards respond!";
+
+					foreach (GamePlayer player in lord.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE, true))
+						if (player != null)
+							ChatUtil.SendErrorMessage(player, sMessage);
+				}
 			}
 		}
 	}// LordBrain
