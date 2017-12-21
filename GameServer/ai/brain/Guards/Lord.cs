@@ -53,7 +53,6 @@ namespace DOL.AI.Brain
 					m_nextCallForHelpTime = currenttime + TimeSpan.TicksPerMinute;
 
 					int iGuardsResponding = 0;
-					FrontierHastener hastener = guard as FrontierHastener;
 					foreach (GameKeepGuard guard in lord.Component.Keep.Guards.Values)
 						if (guard != null && guard.IsAlive && guard.IsAvailable && !(guard is FrontierHastener))
 						{
