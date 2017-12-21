@@ -33,6 +33,7 @@ namespace DOL.AI.Brain
 			base.Think();
 		}
 		
+		private long m_nextCallForHelpTime = 0; // Used to limit how often keep lords call for help
 		/// <summary>
 		/// Bring all alive keep guards to defend the lord
 		/// </summary>
