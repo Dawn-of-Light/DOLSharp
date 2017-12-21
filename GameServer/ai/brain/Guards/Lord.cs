@@ -41,8 +41,7 @@ namespace DOL.AI.Brain
 		/// <param name="attackData">The data associated with the puller's attack.</param>
 		protected override void BringFriends(AttackData ad)
 		{
-						if (m_nextCallForHelpTime < currenttime && lord != null)
-
+			GuardLord lord = Body as GuardLord;
 			long currenttime = DateTime.UtcNow.Ticks;
 			if (m_nextCallForHelpTime < currenttime && lord != null)
 			{
