@@ -353,8 +353,9 @@ namespace DOL.GS.Spells
 		/// <param name="target">The current target of the spell, changed to the player if appropriate</param>
 		protected virtual void AutoSelectCaster(ref GameLiving target)
 		{
-			if (Caster is GamePlayer && Spell.Target.ToUpper() == "REALM" && 
-				(target == null || !(target is GameNPC npc) || npc.Realm != Caster.Realm || (npc.Flags & GameNPC.eFlags.PEACE) != 0))
+			GameNPC npc = target as GameNPC;
+			if (Spell.Target.ToUpper() == "REALM" && Caster is GamePlayer &&
+				(npc == null || npc.Realm != Caster.Realm || (npc.Flags & GameNPC.eFlags.PEACE) != 0))
 				target = Caster;
 		}
 
