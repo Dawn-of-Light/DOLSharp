@@ -138,6 +138,16 @@ namespace DOL.GS.Keeps
 		}
 
 		/// <summary>
+		/// Keep lords are narcissitic; they don't assist themselves or anyone else
+		/// </summary>
+		/// <param name="lord"></param>
+		/// <returns>Whether or not we are responding</returns>
+		public override bool AssistLord(GuardLord lord)
+		{
+			return false;
+		}
+
+		/// <summary>
 		/// When Lord dies, we update Area Mgr to call the various functions we need
 		/// And update the player stats
 		/// </summary>
