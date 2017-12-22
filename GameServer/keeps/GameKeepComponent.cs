@@ -387,22 +387,26 @@ namespace DOL.GS.Keeps
 				region = (CurrentRegion as BaseInstance).Skin;
 			}
 
-            Battleground bg = GameServer.KeepManager.GetBattleground(region);
+			Battleground bg = GameServer.KeepManager.GetBattleground(region);
 
 			this.Positions.Clear();
 
-			string query = "`ComponentSkin` = '" + this.Skin + "'";
+			List<QueryParameter> parameters = new List<QueryParameter>(3);
+			parameters.Add(new QueryParameter("@Skin", Skin));
+			string query = "`ComponentSkin` = @Skin";
 			if (Skin != (int)eComponentSkin.Keep && Skin != (int)eComponentSkin.Tower && Skin != (int)eComponentSkin.Gate)
 			{
-				query = query + " AND `ComponentRotation` = '" + this.ComponentHeading + "'";
+				parameters.Add(new QueryParameter("@Rotation", ComponentHeading));
+				query += " AND `ComponentRotation` = @Rotation";
 			}
 			if (bg != null && GameServer.Instance.Configuration.ServerType != eGameServerType.GST_PvE)
 			{
 				// Battlegrounds, ignore all but GameKeepDoor
-				query = query + " AND `ClassType` = 'DOL.GS.Keeps.GameKeepDoor'"; 
+				parameters.Add(new QueryParameter("@ClassType", "'DOL.GS.Keeps.GameKeepDoor'"));
+				query = query + " AND `ClassType` = @ClassType"; 
 			}
 
-			var DBPositions = GameServer.Database.SelectObjects<DBKeepPosition>(query);
+			var DBPositions = GameServer.Database.SelectObjects<DBKeepPosition>(query, parameters.ToArray());
 
 			foreach (DBKeepPosition position in DBPositions)
 			{
