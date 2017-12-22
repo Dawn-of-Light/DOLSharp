@@ -396,7 +396,7 @@ namespace DOL.GS.Keeps
 			{
 				query = query + " AND `ComponentRotation` = '" + this.ComponentHeading + "'";
 			}
-			if (bg != null)
+			if (bg != null && GameServer.Instance.Configuration.ServerType != eGameServerType.GST_PvE)
 			{
 				// Battlegrounds, ignore all but GameKeepDoor
 				query = query + " AND `ClassType` = 'DOL.GS.Keeps.GameKeepDoor'"; 
