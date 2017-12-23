@@ -593,42 +593,32 @@ namespace DOL.GS.Keeps
 			if (target.Client.Account.PrivLevel != 1)
 				return false;
 
-			switch (GameServer.Instance.Configuration.ServerType)
+			if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
 			{
-				case eGameServerType.GST_Normal:
-					{
-						return keep.Realm != target.Realm;
-					}
-				case eGameServerType.GST_PvP:
-					{
-						if (keep.Guild == null)
-							return ServerProperties.Properties.PVP_UNCLAIMED_KEEPS_ENEMY;
+				if (keep.Guild == null)
+					return ServerProperties.Properties.PVP_UNCLAIMED_KEEPS_ENEMY;
 
-						//friendly player in group
-						if (checkGroup && target.Group != null)
-						{
-							foreach (GamePlayer player in target.Group.GetPlayersInTheGroup())
-							{
-								if (!IsEnemy(keep, target, false))
-									return false;
-							}
-						}
-
-						//guild alliance
-						if (keep.Guild != null && keep.Guild.alliance != null)
-						{
-							if (keep.Guild.alliance.Guilds.Contains(target.Guild))
-								return false;
-						}
-
-						return keep.Guild != target.Guild;
-					}
-				case eGameServerType.GST_PvE:
+				//friendly player in group
+				if (checkGroup && target.Group != null)
+				{
+					foreach (GamePlayer player in target.Group.GetPlayersInTheGroup())
 					{
-						return !(target is GamePlayer);
+						if (!IsEnemy(keep, target, false))
+							return false;
 					}
+				}
+
+				//guild alliance
+				if (keep.Guild != null && keep.Guild.alliance != null)
+				{
+					if (keep.Guild.alliance.Guilds.Contains(target.Guild))
+						return false;
+				}
+
+				return keep.Guild != target.Guild;
 			}
-			return true;
+			
+			return keep.Realm != target.Realm;
 		}
 
 		/// <summary>
