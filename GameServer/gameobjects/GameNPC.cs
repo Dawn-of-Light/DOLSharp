@@ -945,15 +945,15 @@ namespace DOL.GS
 		/// <summary>
 		/// Property entry on follow timer, wether the follow target is in range
 		/// </summary>
-		protected const string FOLLOW_TARGET_IN_RANGE = "FollowTargetInRange";
+		protected static readonly string FOLLOW_TARGET_IN_RANGE = "FollowTargetInRange";
 		/// <summary>
 		/// Minimum allowed attacker follow distance to avoid issues with client / server resolution (herky jerky motion)
 		/// </summary>
-		protected const int MIN_ALLOWED_FOLLOW_DISTANCE = 100;
+		protected static readonly int MIN_ALLOWED_FOLLOW_DISTANCE = 100;
 		/// <summary>
 		/// Minimum allowed pet follow distance
 		/// </summary>
-		protected const int MIN_ALLOWED_PET_FOLLOW_DISTANCE = 90;
+		protected static readonly int MIN_ALLOWED_PET_FOLLOW_DISTANCE = 90;
 		/// <summary>
 		/// At what health percent will npc give up range attack and rush the attacker
 		/// </summary>
@@ -1451,8 +1451,8 @@ namespace DOL.GS
 			BroadcastUpdate();
 		}
 
-		public const int STICKMINIMUMRANGE = 100;
-		public const int STICKMAXIMUMRANGE = 5000;
+		private const int STICKMINIMUMRANGE = 100;
+		private const int STICKMAXIMUMRANGE = 5000;
 
 		/// <summary>
 		/// Follow given object
