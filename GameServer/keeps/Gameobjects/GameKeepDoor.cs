@@ -626,14 +626,14 @@ namespace DOL.GS.Keeps
 
 			foreach (AbstractArea area in this.CurrentAreas)
 			{
-				if (area is KeepArea)
+				if (area is KeepArea keepArea)
 				{
-					AbstractGameKeep keep = (area as KeepArea).Keep;
-					if (!keep.Doors.Contains(door.InternalID))
+					string sKey = door.InternalID.ToString();
+					if (!keepArea.Keep.Doors.ContainsKey(sKey))
 					{
 						Component = new GameKeepComponent();
-						Component.AbstractKeep = keep;
-						keep.Doors.Add(door.InternalID, this);
+						Component.AbstractKeep = keepArea.Keep;
+						keepArea.Keep.Doors.Add(sKey, this);
 					}
 					break;
 				}
