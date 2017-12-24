@@ -24,6 +24,7 @@ namespace DOL.GS.Keeps
 {
 	public class GameKeepBanner : GameStaticItem , IKeepItem
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		public enum eBannerType : int 
 		{
@@ -89,7 +90,7 @@ namespace DOL.GS.Keeps
 			{
 				if (Component.AbstractKeep != null)
 				{
-					Component.AbstractKeep.Banners.Remove(this.ObjectID);
+					Component.AbstractKeep.Banners.Remove(this.ObjectID.ToString());
 				}
 
 				Component.Delete();
@@ -104,34 +105,44 @@ namespace DOL.GS.Keeps
 
 		public override void LoadFromDatabase(DataObject obj)
 		{
+			if (obj == null) return;
+			
 			base.LoadFromDatabase(obj);
+			string sKey = this.InternalID; // InternalID is set to obj.ObjectID by base.LoadFromDatabase()
+
 			foreach (AbstractArea area in this.CurrentAreas)
 			{
-				if (area is KeepArea)
+				if (area is KeepArea keepArea && keepArea.Keep is AbstractGameKeep keep)
 				{
-					AbstractGameKeep keep = (area as KeepArea).Keep;
 					Component = new GameKeepComponent();
 					Component.AbstractKeep = keep;
-					Component.AbstractKeep.Banners.Add(obj.ObjectId, this);
-					if (this.Model == AlbionGuildModel || this.Model == MidgardGuildModel || this.Model == HiberniaGuildModel)
-						BannerType = eBannerType.Guild;
-					else BannerType = eBannerType.Realm;
-					if (BannerType == eBannerType.Guild && Component.AbstractKeep.Guild != null)
-						ChangeGuild();
-					else ChangeRealm();
-					break;
+
+					if (keep.Banners.ContainsKey(sKey) == false)
+					{
+						Component.AbstractKeep.Banners.Add(sKey, this);
+						if (this.Model == AlbionGuildModel || this.Model == MidgardGuildModel || this.Model == HiberniaGuildModel)
+							BannerType = eBannerType.Guild;
+						else BannerType = eBannerType.Realm;
+						if (BannerType == eBannerType.Guild && Component.AbstractKeep.Guild != null)
+							ChangeGuild();
+						else ChangeRealm();
+						break;
+					}
+					else if (log.IsWarnEnabled)
+						log.Warn($"LoadFromDatabase(): KeepID {keep.KeepID} already a banner using ObjectID {sKey}");
 				}
-			}
+			}// foreach
 		}
 
 		public override void DeleteFromDatabase()
 		{
+			string sKey = this.InternalID;
 			foreach (AbstractArea area in this.CurrentAreas)
 			{
 				if (area is KeepArea)
 				{
-					Component.AbstractKeep.Banners.Remove(this.InternalID);
-					break;
+					Component.AbstractKeep.Banners.Remove(sKey);
+					// break; This is a bad idea.  If there are multiple KeepAreas, we could end up with a banner on left on one of them that has been deleted from the DB
 				}
 			}
 			base.DeleteFromDatabase();
@@ -139,28 +150,36 @@ namespace DOL.GS.Keeps
 
 		public virtual void LoadFromPosition(DBKeepPosition pos, GameKeepComponent component)
 		{
+			if (pos == null || component == null) return;
+			
 			m_templateID = pos.TemplateID;
 			m_component = component;
 			BannerType = (eBannerType)pos.TemplateType;
 
 			PositionMgr.LoadKeepItemPosition(pos, this);
-			component.AbstractKeep.Banners[m_templateID] = this;
-			if (BannerType == eBannerType.Guild)
+			string sKey = this.TemplateID;
+			if (component.AbstractKeep.Banners.ContainsKey(sKey))
 			{
-				if (component.AbstractKeep.Guild != null)
+				component.AbstractKeep.Banners.Add(sKey, this);
+				if (BannerType == eBannerType.Guild)
 				{
-					ChangeGuild();
-					Z += 1500;
+					if (component.AbstractKeep.Guild != null)
+					{
+						ChangeGuild();
+						Z += 1500;
+						this.AddToWorld();
+					}
+				}
+				else
+				{
+					ChangeRealm();
+					Z += 1000;	// this works around an issue where all banners are at keep level instead of on top
+							// with a z value > height of the keep the banners show correctly - tolakram
 					this.AddToWorld();
 				}
 			}
-			else
-			{
-				ChangeRealm();
-				Z += 1000;	// this works around an issue where all banners are at keep level instead of on top
-							// with a z value > height of the keep the banners show correctly - tolakram
-				this.AddToWorld();
-			}
+			else if (log.IsWarnEnabled)
+				log.Warn($"LoadFromPosition(): There is already a Banner with TemplateID {this.TemplateID} on KeepID {component.Keep.KeepID}, not adding Banner for KeepPosition_ID {pos.ObjectId} on KeepComponent_ID {component.InternalID}");
 		}
 
 		public void MoveToPosition(DBKeepPosition position)
