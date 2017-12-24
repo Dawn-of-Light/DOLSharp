@@ -40,7 +40,6 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public bool HasChampion = false;
 		public bool HasCommander = false;
 		public bool HasHastener = false;
 		public bool HasLord = false;
