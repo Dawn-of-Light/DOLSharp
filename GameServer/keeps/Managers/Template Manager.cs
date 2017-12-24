@@ -1037,7 +1037,7 @@ namespace DOL.GS.Keeps
 		{
 			if (guard is GuardLord)
 			{
-				guard.Strength = (short)(Properties.LORD_AUTOSET_STR_BASE + (guard.Level * Properties.LORD_AUTOSET_STR_MULTIPLIER));
+				guard.Strength = (short)(Properties.LORD_AUTOSET_STR_BASE + (10 * guard.Level * Properties.LORD_AUTOSET_STR_MULTIPLIER));
 				guard.Dexterity = (short)(Properties.LORD_AUTOSET_DEX_BASE + (guard.Level * Properties.LORD_AUTOSET_DEX_MULTIPLIER));
 				guard.Constitution = (short)(Properties.LORD_AUTOSET_CON_BASE + (guard.Level * Properties.LORD_AUTOSET_CON_MULTIPLIER));
 				guard.Quickness = (short)(Properties.LORD_AUTOSET_QUI_BASE + (guard.Level * Properties.LORD_AUTOSET_QUI_MULTIPLIER));
@@ -1045,7 +1045,7 @@ namespace DOL.GS.Keeps
 			}
 			else
 			{
-				guard.Strength = (short)(Properties.GUARD_AUTOSET_STR_BASE + (guard.Level * Properties.GUARD_AUTOSET_STR_MULTIPLIER));
+				guard.Strength = (short)(Properties.GUARD_AUTOSET_STR_BASE + (10 * guard.Level * Properties.GUARD_AUTOSET_STR_MULTIPLIER));
 				guard.Dexterity = (short)(Properties.GUARD_AUTOSET_DEX_BASE + (guard.Level * Properties.GUARD_AUTOSET_DEX_MULTIPLIER));
 				guard.Constitution = (short)(Properties.GUARD_AUTOSET_CON_BASE + (guard.Level * Properties.GUARD_AUTOSET_CON_MULTIPLIER));
 				guard.Quickness = (short)(Properties.GUARD_AUTOSET_QUI_BASE + (guard.Level * Properties.GUARD_AUTOSET_QUI_MULTIPLIER));
