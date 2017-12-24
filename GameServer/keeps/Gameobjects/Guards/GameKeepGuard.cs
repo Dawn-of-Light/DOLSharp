@@ -750,21 +750,20 @@ namespace DOL.GS.Keeps
 		/// <param name="mobobject">The database mobobject</param>
 		public override void LoadFromDatabase(DataObject mobobject)
 		{
+			if (mobobject == null) return;
 			base.LoadFromDatabase(mobobject);
+			string sKey = mobobject.ObjectId;
 			foreach (AbstractArea area in this.CurrentAreas)
 			{
-				if (area is KeepArea)
+				if (area is KeepArea keepArea)
 				{
-					AbstractGameKeep keep = (area as KeepArea).Keep;
 					Component = new GameKeepComponent();
-					Component.AbstractKeep = keep;
+					Component.AbstractKeep = keepArea.Keep;
 					m_dataObjectID = mobobject.ObjectId;
 					// mob reload command might be reloading guard, so check to make sure it isn't already added
-					if (Component.AbstractKeep.Guards.ContainsKey(m_dataObjectID) == false)
-					{
-						Component.AbstractKeep.Guards.Add(m_dataObjectID, this);
-					}
-					break;
+					if (Component.AbstractKeep.Guards.ContainsKey(sKey) == false)
+						Component.AbstractKeep.Guards.Add(sKey, this);
+					// break; This is a bad idea.  If there are multiple KeepAreas, we should put a guard on each
 				}
 			}
 
@@ -784,22 +783,19 @@ namespace DOL.GS.Keeps
 			{
 				if (Component.AbstractKeep != null)
 				{
-					if (Component.AbstractKeep.Guards.ContainsKey(m_dataObjectID))
-					{
-						Component.AbstractKeep.Guards.Remove(m_dataObjectID);
-					}
-					else
-					{
-						log.Warn("Can't find " + Name + " in Component Guard list.");
-					}
+					string skey = m_dataObjectID;
+					if (Component.AbstractKeep.Guards.ContainsKey(skey))
+						Component.AbstractKeep.Guards.Remove(skey);
+					else if (log.IsWarnEnabled)
+						log.Warn($"Can't find {Position.ClassType} with dataObjectId {m_dataObjectID} in Component InternalID {Component.InternalID} Guard list.");
 				}
-				else
-				{
-					log.Warn("Keep is null on delete of guard " + Name + ".");
-				}
+				else if (log.IsWarnEnabled)
+					log.Warn($"Keep is null on delete of guard {Name} with dataObjectId {m_dataObjectID}");
 
 				Component.Delete();
 			}
+			else if (log.IsWarnEnabled)
+				log.Warn($"Component is null on delete of guard {Name} with dataObjectId {m_dataObjectID}");
 
 			HookPoint = null;
 			Component = null;
@@ -820,9 +816,7 @@ namespace DOL.GS.Keeps
 		public override void Delete()
 		{
 			if (HookPoint != null && Component != null)
-			{
-				Component.AbstractKeep.Guards.Remove(this.ObjectID);
-			}
+				Component.AbstractKeep.Guards.Remove(m_templateID); //Remove(this.ObjectID); LoadFromPosition() uses position.TemplateID as the insertion key
 
 			TempProperties.removeAllProperties();
 
@@ -835,8 +829,8 @@ namespace DOL.GS.Keeps
 			{
 				if (area is KeepArea && Component != null)
 				{
-					Component.AbstractKeep.Guards.Remove(this.InternalID);
-					break;
+					Component.AbstractKeep.Guards.Remove(m_dataObjectID); //Remove(this.InternalID); LoadFromDatabase() adds using m_dataObjectID
+					// break; This is a bad idea.  If there are multiple KeepAreas, we could end up with instantiated keep items that are no longer in the DB
 				}
 			}
 			base.DeleteFromDatabase();
@@ -851,16 +845,12 @@ namespace DOL.GS.Keeps
 		{
 			m_templateID = pos.TemplateID;
 			m_component = component;
-			component.AbstractKeep.Guards[m_templateID] = this;
+			component.AbstractKeep.Guards.Add(m_templateID, this);
 			PositionMgr.LoadGuardPosition(pos, this);
 			if (Component != null && Component.AbstractKeep != null)
-			{
 				Component.AbstractKeep.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { this });
-			}
 			else
-			{
 				TemplateMgr.RefreshTemplate(this);
-			}
 			this.AddToWorld();
 		}
 
