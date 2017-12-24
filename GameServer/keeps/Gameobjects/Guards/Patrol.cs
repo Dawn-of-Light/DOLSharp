@@ -81,7 +81,7 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public void InitialiseGuards()
 		{
-			Component.AbstractKeep.Patrols[PatrolID] = this;
+			Component.AbstractKeep.Patrols.Add(PatrolID, this);
 
 			//need this here becuase it's checked in add to world
 			PatrolPath = PositionMgr.LoadPatrolPath(PatrolID, Component);
@@ -146,14 +146,10 @@ namespace DOL.GS.Keeps
 		public void DeletePatrol()
 		{
 			if (Component != null && Component.AbstractKeep != null)
-			{
-				Component.AbstractKeep.Patrols.Remove(this);
-			}
+				Component.AbstractKeep.Patrols.Remove(PatrolID); // .Remove(this) - InitialiseGuards() adds patrols using PatrolID as the key
 
 			foreach (GameKeepGuard guard in PatrolGuards)
-			{
 				guard.DeleteObject();
-			}
 
 			PatrolGuards.Clear();
 			Component = null;
