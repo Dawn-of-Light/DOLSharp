@@ -1,4 +1,4 @@
-﻿/*
+/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  * 
  * This program is free software; you can redistribute it and/or
@@ -92,6 +92,36 @@ namespace DOL.Database
 		#endregion
 
 		#region Select Where Clause With Parameters
+		/// <summary>
+ +		/// Retrieve a Single DataObject from the database based on the Where Expression and Parameters Collection
+ +		/// </summary>
+ +		/// <typeparam name="TObject"></typeparam>
+ +		/// <param name="whereExpression"></param>
+ +		/// <param name="parameters"></param>
+ +		/// <returns></returns>
+ +		TObject SelectObject<TObject>(string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters)
+ +			where TObject : DataObject;
+ +
+ +		/// <summary>
+ +		/// Retrieve a Single DataObject from database based on Where Expression and Parameters
+ +		/// </summary>
+ +		/// <typeparam name="TObject"></typeparam>
+ +		/// <param name="whereExpression"></param>
+ +		/// <param name="parameter"></param>
+ +		/// <returns></returns>
+ +		TObject SelectObject<TObject>(string whereExpression, IEnumerable<QueryParameter> parameter)
+ +			where TObject : DataObject;
+ +
+ +		/// <summary>
+ +		/// Retrieve a Single DataObject from database based on Where Expression and Parameter
+ +		/// </summary>
+ +		/// <typeparam name="TObject"></typeparam>
+ +		/// <param name="whereExpression"></param>
+ +		/// <param name="param"></param>
+ +		/// <returns></returns>
+ +		TObject SelectObject<TObject>(string whereExpression, QueryParameter param)
+ +			where TObject : DataObject;
+
 		/// <summary>
 		/// Retrieve a Single DataObject from the database based on the Where Expression and Parameters Collection
 		/// </summary>
