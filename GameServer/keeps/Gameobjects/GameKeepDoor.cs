@@ -566,7 +566,7 @@ namespace DOL.GS.Keeps
 			{
 				if (Component.AbstractKeep != null)
 				{
-					Component.AbstractKeep.Doors.Remove(this.ObjectID);
+					Component.AbstractKeep.Doors.Remove(this.ObjectID.ToString());
 				}
 
 				Component.Delete();
