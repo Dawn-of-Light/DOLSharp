@@ -19,6 +19,7 @@
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.PacketHandler;
+using DOL.GS.ServerProperties;
 using DOL.Language;
 
 namespace DOL.GS.Keeps
@@ -1036,17 +1037,19 @@ namespace DOL.GS.Keeps
 		{
 			if (guard is GuardLord)
 			{
-				guard.Strength = (short)(20 + (guard.Level * 8));
-				guard.Dexterity = (short)(guard.Level * 2);
-				guard.Constitution = (short)(DOL.GS.ServerProperties.Properties.GAMENPC_BASE_CON);
-				guard.Quickness = 60;
+				guard.Strength = (short)(Properties.LORD_AUTOSET_STR_BASE + (guard.Level * Properties.LORD_AUTOSET_STR_MULTIPLIER));
+				guard.Dexterity = (short)(Properties.LORD_AUTOSET_DEX_BASE + (guard.Level * Properties.LORD_AUTOSET_DEX_MULTIPLIER));
+				guard.Constitution = (short)(Properties.LORD_AUTOSET_CON_BASE + (guard.Level * Properties.LORD_AUTOSET_CON_MULTIPLIER));
+				guard.Quickness = (short)(Properties.LORD_AUTOSET_QUI_BASE + (guard.Level * Properties.LORD_AUTOSET_QUI_MULTIPLIER));
+				guard.Intelligence = (short)(Properties.LORD_AUTOSET_INT_BASE + (guard.Level * Properties.LORD_AUTOSET_INT_MULTIPLIER));
 			}
 			else
 			{
-				guard.Strength = (short)(20 + (guard.Level * 7));
-				guard.Dexterity = (short)(guard.Level);
-				guard.Constitution = (short)(DOL.GS.ServerProperties.Properties.GAMENPC_BASE_CON);
-				guard.Quickness = 40;
+				guard.Strength = (short)(Properties.GUARD_AUTOSET_STR_BASE + (guard.Level * Properties.GUARD_AUTOSET_STR_MULTIPLIER));
+				guard.Dexterity = (short)(Properties.GUARD_AUTOSET_DEX_BASE + (guard.Level * Properties.GUARD_AUTOSET_DEX_MULTIPLIER));
+				guard.Constitution = (short)(Properties.GUARD_AUTOSET_CON_BASE + (guard.Level * Properties.GUARD_AUTOSET_CON_MULTIPLIER));
+				guard.Quickness = (short)(Properties.GUARD_AUTOSET_QUI_BASE + (guard.Level * Properties.GUARD_AUTOSET_QUI_MULTIPLIER));
+				guard.Intelligence = (short)(Properties.GUARD_AUTOSET_INT_BASE + (guard.Level * Properties.GUARD_AUTOSET_INT_MULTIPLIER));
 			}
 		}
 	}
