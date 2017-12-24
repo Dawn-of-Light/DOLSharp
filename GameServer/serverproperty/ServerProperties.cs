@@ -1600,7 +1600,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Multiplier to use when auto-setting CON stat.
 		/// </summary>
-		[ServerProperty("keeps", "guard_autoset_con_multiplier", "Multiplier to use when auto-setting CON stat. ", 0)]
+		[ServerProperty("keeps", "lord_autoset_con_multiplier", "Multiplier to use when auto-setting CON stat. ", 0)]
 		public static double LORD_AUTOSET_CON_MULTIPLIER;
 
 		/// <summary>
