@@ -464,16 +464,6 @@ namespace DOL.GS.Keeps
 									create = true;
 								}
 								break;
-							case "DOL.GS.Keeps.GuardChampion":
-								if (AbstractKeep.HasChampion && log.IsWarnEnabled)
-									log.Warn($"FillPositions(): KeepComponent_ID {this.InternalID}, KeepPosition_ID {position.ObjectId}: There is already a {position.ClassType} on Keep {AbstractKeep.KeepID}");
-
-								if (this.AbstractKeep.Guards.ContainsKey(sKey) == false)
-								{
-									AbstractKeep.HasChampion = true;
-									create = true;
-								}
-								break;
 							case "DOL.GS.Keeps.MissionMaster":
 								if (AbstractKeep.HasCommander && log.IsWarnEnabled)
 									log.Warn($"FillPositions(): KeepComponent_ID {this.InternalID}, KeepPosition_ID {position.ObjectId}: There is already a {position.ClassType} on Keep {AbstractKeep.KeepID}");
