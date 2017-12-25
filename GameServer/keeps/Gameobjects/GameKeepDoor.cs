@@ -667,7 +667,7 @@ namespace DOL.GS.Keeps
 			}
 			else
 			{
-				log.Error("Failed to load keep door from position! DoorID=" + m_doorID + ". Component SkinID=" + component.Skin + ". KeepID=" + component.AbstractKeep.KeepID);
+				log.Error("Failed to load keep door from keepposition_id =" + pos.ObjectId + ". Component SkinID=" + component.Skin + ". KeepID=" + component.AbstractKeep.KeepID);
 			}
 
 		}
