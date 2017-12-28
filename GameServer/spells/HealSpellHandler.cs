@@ -206,7 +206,8 @@ namespace DOL.GS.Spells
             if (Caster is GamePet && !(Caster is NecromancerPet) && ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL > 0)
                 amount = ScalePetHeal(amount);
 
-            int heal = target.ChangeHealth(Caster, GameLiving.eHealthChangeType.Spell, (int)Math.Round(amount));
+		amount = Math.Round(amount);
+            int heal = target.ChangeHealth(Caster, GameLiving.eHealthChangeType.Spell, (int)amount);
 
             #region PVP DAMAGE
 
@@ -237,7 +238,7 @@ namespace DOL.GS.Spells
                 ((target as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null
                 || target is GamePlayer && healedrp > 0)
             {
-                int POURCENTAGE_SOIN_RP = ServerProperties.Properties.HEAL_PVP_DAMAGE_VALUE_RP; // ...% de bonus RP pour les soins effectués
+                int POURCENTAGE_SOIN_RP = ServerProperties.Properties.HEAL_PVP_DAMAGE_VALUE_RP; // ...% de bonus RP pour les soins effectuÃ©s
 
                 if (m_spell.Pulse == 0 && m_caster.CurrentRegionID != 242 && // On Exclu zone COOP
                     m_spell.SpellType.ToLower() != "spreadheal" && target != m_caster &&
@@ -263,7 +264,7 @@ namespace DOL.GS.Spells
                             }
 
                             player.GainRealmPoints(Bonus_RP_Soin, false);
-                            player.Out.SendMessage("Vous gagnez " + Bonus_RP_Soin.ToString() + " points de royaume pour avoir soigné un membre de votre royaume.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                            player.Out.SendMessage("Vous gagnez " + Bonus_RP_Soin.ToString() + " points de royaume pour avoir soignÃ© un membre de votre royaume.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                         }
                     }
                 }
@@ -282,7 +283,7 @@ namespace DOL.GS.Spells
                         ((target as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || target is GamePlayer)
                     {
                         if (target.DamageRvRMemory > 0)
-                            target.DamageRvRMemory = 0; //Remise a zéro compteur dommages/heal rps
+                            target.DamageRvRMemory = 0; //Remise a zÃ©ro compteur dommages/heal rps
                     }
 
                     #endregion PVP DAMAGE
@@ -303,7 +304,7 @@ namespace DOL.GS.Spells
                         ((target as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || target is GamePlayer)
                     {
                         if (target.DamageRvRMemory > 0)
-                            target.DamageRvRMemory = 0; //Remise a zéro compteur dommages/heal rps
+                            target.DamageRvRMemory = 0; //Remise a zÃ©ro compteur dommages/heal rps
                     }
 
                     #endregion PVP DAMAGE
@@ -367,7 +368,7 @@ namespace DOL.GS.Spells
                         ((target as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || target is GamePlayer)
                     {
                         if (target.DamageRvRMemory > 0)
-                            target.DamageRvRMemory = 0; //Remise a zéro compteur dommages/heal rps
+                            target.DamageRvRMemory = 0; //Remise a zÃ©ro compteur dommages/heal rps
                     }
 
                     #endregion PVP DAMAGE
@@ -386,7 +387,7 @@ namespace DOL.GS.Spells
                         ((target as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || target is GamePlayer)
                     {
                         if (target.DamageRvRMemory > 0)
-                            target.DamageRvRMemory = 0; //Remise a zéro compteur dommages/heal rps
+                            target.DamageRvRMemory = 0; //Remise a zÃ©ro compteur dommages/heal rps
                     }
                 }
                 else
