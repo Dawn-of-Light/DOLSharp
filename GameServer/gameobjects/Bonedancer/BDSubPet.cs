@@ -48,6 +48,37 @@ namespace DOL.GS
 			Archer = 5
 		}
 
+		protected string m_PetSpecLine = null;
+		/// <summary>
+		/// Returns the spell line specialization this pet was summoned from
+		/// </summary>
+		public string PetSpecLine
+		{
+			get
+			{
+				// This is really inefficient, so only do it once, and only if we actually need it
+				if (m_PetSpecLine == null && Owner is CommanderPet commander && commander.Owner is GamePlayer player)
+				{
+					// Get the spell that summoned this pet
+					DBSpell dbSummoningSpell = GameServer.Database.SelectObject<DBSpell>("LifeDrainReturn=@TemplateId", new QueryParameter("@TemplateID", NPCTemplate.TemplateId));
+					if (dbSummoningSpell != null)
+					{
+						// Figure out which spell line the summoning spell is from
+						DBLineXSpell dbLineSpell = GameServer.Database.SelectObject<DBLineXSpell>("SpellID=@SpellID", new QueryParameter("@SpellID", dbSummoningSpell.SpellID));
+						if (dbLineSpell != null)
+						{
+							// Now figure out what the spec name is
+							SpellLine line = player.GetSpellLine(dbLineSpell.LineName);
+							if (line != null)
+								m_PetSpecLine = line.Spec;
+						}
+					}
+				}
+
+				return m_PetSpecLine;
+			}
+		}
+
 		/// <summary>
 		/// Create a commander.
 		/// </summary>

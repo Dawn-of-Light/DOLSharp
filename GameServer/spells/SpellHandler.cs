@@ -382,6 +382,14 @@ namespace DOL.GS.Spells
             // Scale spells that are cast by pets
             if (Caster is GamePet && !(Caster is NecromancerPet) && ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL > 0)
             {
+				double CasterLevel;
+
+				// Cap the level we scale BD minions' spell effects to the player's modified spec for the spec line the pet is from
+				if (Caster is BDSubPet subpet && subpet.Owner is CommanderPet commander && commander.Owner is GamePlayer player)
+					CasterLevel = Math.Min(subpet.Level, player.GetModifiedSpecLevel(subpet.PetSpecLine));
+				else
+					CasterLevel = Caster.Level;
+					
                 switch (m_spell.SpellType.ToString().ToLower())
                 {
                     // Scale Damage
@@ -427,7 +435,7 @@ namespace DOL.GS.Spells
                     case "stylecombatspeeddebuff": // Style Effect
                     case "stylespeeddecrease": // Style Effect
                     //case "styletaunt":  Taunt styles already scale with damage, leave their values alone.
-                        Spell.Value = Spell.Value * (double)(Caster.Level) / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL;
+						Spell.Value = Spell.Value * CasterLevel / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL;
                         break;
                     // Scale Duration
                     case "disease":
@@ -435,7 +443,7 @@ namespace DOL.GS.Spells
                     case "unrresistablenonimunitystun":
                     case "mesmerize":
                     case "stylestun": // Style Effect
-                        Spell.Duration = (int)Math.Round(Spell.Duration * (double)(Caster.Level) / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL); ;
+						Spell.Duration = (int)Math.Round(Spell.Duration * CasterLevel / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL);
                         break;
                     default: break; // Don't mess with types we don't know
                 } // switch (m_spell.SpellType.ToString().ToLower())
