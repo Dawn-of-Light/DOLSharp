@@ -1415,20 +1415,25 @@ namespace DOL.GS
 					//server, it is done automatically!
 					foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
 					{
-						// Walk through each type in the assembly
-						foreach (Type type in assembly.GetTypes())
-						{
-							if (!type.IsClass || type.IsAbstract)
-								continue;
-							
-							var attrib = type.GetCustomAttributes<DataTable>(false);
-							if (attrib.Any())
-							{
-								if (log.IsInfoEnabled)
-									log.InfoFormat("Registering table: {0}", type.FullName);
-								m_database.RegisterDataObject(type);
-							}
-						}
+                        // Walk through each type in the assembly
+					    assembly.GetTypes().AsParallel().ForAll(type =>
+					    {
+					        if (!type.IsClass || type.IsAbstract)
+					        {
+					            return;
+					        }
+
+					        var attrib = type.GetCustomAttributes<DataTable>(false);
+					        if (attrib.Any())
+					        {
+					            if (log.IsInfoEnabled)
+					            {
+					                log.InfoFormat("Registering table: {0}", type.FullName);
+					            }
+
+					            m_database.RegisterDataObject(type);
+					        }
+                        });
 					}
 				}
 				catch (DatabaseException e)

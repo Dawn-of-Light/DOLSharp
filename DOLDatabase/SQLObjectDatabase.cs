@@ -34,6 +34,8 @@ namespace DOL.Database
 	/// </summary>
 	public abstract class SQLObjectDatabase : ObjectDatabase 
 	{
+        private static readonly object Lock = new object();
+
 		/// <summary>
 		/// Create a new instance of <see cref="SQLObjectDatabase"/>
 		/// </summary>
@@ -80,8 +82,11 @@ namespace DOL.Database
 				{
 					CheckOrCreateTableImpl(dataTableHandler);
 				}
-				
-				TableDatasets.Add(tableName, dataTableHandler);
+
+			    lock (Lock)
+			    {
+			        TableDatasets.Add(tableName, dataTableHandler);
+                }
 				
 				// Init PreCache
 				if (dataTableHandler.UsesPreCaching)
