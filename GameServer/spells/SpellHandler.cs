@@ -454,7 +454,8 @@ namespace DOL.GS.Spells
 
 			bool success = true;
 
-			AutoSelectCaster(ref targetObject);
+			if (Properties.AUTOSELECT_CASTER)
+				AutoSelectCaster(ref targetObject);
 
 			m_spellTarget = targetObject;
 
