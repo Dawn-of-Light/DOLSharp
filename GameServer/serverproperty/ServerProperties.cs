@@ -547,6 +547,11 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("server", "use_new_tooltip_forcedupdate", "Set to true if you wish to enable the new 1.110+ Tooltip Forced update each time the server send a skill to a new client.", true)]
 		public static bool USE_NEW_TOOLTIP_FORCEDUPDATE;
 
+		/// <summary>
+		/// Property to cause beneficial spells to target the caster if current target isn't valid
+		/// </summary>
+		[ServerProperty("server", "AUTOSELECT_CASTER", "Set to true if you wish beneficial spells to target the caster if the current target isn't valid.  Allows self-healing without changing targets.", false)]
+		public static bool AUTOSELECT_CASTER;
 		#endregion
 
 		#region WORLD
