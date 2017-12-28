@@ -400,11 +400,12 @@ namespace DOL.GS.Spells
                     case "directdamagewithdebuff":
                     case "lifedrain":
                     case "damagespeeddecrease":
-                    case "StyleBleeding": // Style Effect
-						Spell.Damage = Spell.Damage * CasterLevel / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL;
+                    case "stylebleeding": // Style Effect
+                        Spell.Damage = Spell.Damage * (double)(Caster.Level) / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL;
                         break;
                     // Scale Value
                     case "enduranceregenbuff":
+                    case "powerregenbuff":
                     case "combatspeedbuff":
                     case "hastebuff":
                     case "celeritybuff":
@@ -413,6 +414,7 @@ namespace DOL.GS.Spells
                     case "heal":
                     case "combatheal":
                     case "healthregenbuff":
+                    case "healovertime":
                     case "constitutionbuff":
                     case "dexteritybuff":
                     case "strengthbuff":
@@ -429,7 +431,7 @@ namespace DOL.GS.Spells
                     case "strengthconstitutiondebuff":
                     case "taunt":
                     case "unbreakablespeeddecrease":
-                    case "SpeedDecrease":
+                    case "speeddecrease":
                     case "stylecombatspeeddebuff": // Style Effect
                     case "stylespeeddecrease": // Style Effect
                     //case "styletaunt":  Taunt styles already scale with damage, leave their values alone.
@@ -438,7 +440,8 @@ namespace DOL.GS.Spells
                     // Scale Duration
                     case "disease":
                     case "stun":
-                    case "Mesmerize":
+                    case "unrresistablenonimunitystun":
+                    case "mesmerize":
                     case "stylestun": // Style Effect
 						Spell.Duration = (int)Math.Round(Spell.Duration * CasterLevel / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL);
                         break;

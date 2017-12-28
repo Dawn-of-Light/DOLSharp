@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS.Effects;
@@ -149,7 +150,18 @@ namespace DOL.GS.Spells
 
 			GameSpellEffect effect = CreateSpellEffect(target, effectiveness);
 
-			IControlledBrain brain = GetPetBrain(Caster);
+			IControlledBrain brain = null;
+			if (template.ClassType != null && template.ClassType.Length > 0)
+			{
+				Assembly asm = Assembly.GetExecutingAssembly();
+				brain = (IControlledBrain)asm.CreateInstance(template.ClassType, true);
+
+				if (brain == null && log.IsWarnEnabled)
+					log.Warn($"ApplyEffectOnTarget(): ClassType {template.ClassType} on NPCTemplateID {template.TemplateId} not found, using default ControlledBrain");
+			}
+			if (brain == null)
+				brain = GetPetBrain(Caster);
+
 			m_pet = GetGamePet(template);
 			//brain.WalkState = eWalkState.Stay;
 			m_pet.SetOwnBrain(brain as AI.ABrain);

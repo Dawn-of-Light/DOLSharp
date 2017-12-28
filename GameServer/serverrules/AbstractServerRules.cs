@@ -2141,7 +2141,7 @@ namespace DOL.GS.ServerRules
 					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorCraftShopItems, eMerchantWindowType.HousingCraftingHookpoint);
 					break;
 				case eMerchantWindowType.HousingNPCHookpoint:
-					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorNPCShopItems, eMerchantWindowType.HousingNPCHookpoint);
+					player.Out.SendMerchantWindow(HouseTemplateMgr.GetNpcShopItems(player), eMerchantWindowType.HousingNPCHookpoint);
 					break;
 				case eMerchantWindowType.HousingVaultHookpoint:
 					player.Out.SendMerchantWindow(HouseTemplateMgr.IndoorVaultShopItems, eMerchantWindowType.HousingVaultHookpoint);
@@ -2181,7 +2181,7 @@ namespace DOL.GS.ServerRules
 					items = HouseTemplateMgr.IndoorCraftShopItems;
 					break;
 				case eMerchantWindowType.HousingNPCHookpoint:
-					items = HouseTemplateMgr.IndoorNPCShopItems;
+					items = HouseTemplateMgr.GetNpcShopItems(player);
 					break;
 				case eMerchantWindowType.HousingVaultHookpoint:
 					items = HouseTemplateMgr.IndoorVaultShopItems;

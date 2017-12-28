@@ -54,7 +54,7 @@ namespace DOL.GS.Spells
 			if (player == null)
 				return false;
 
-			if (player.CurrentRegion.IsRvR || player.CurrentRegion.IsInstance)
+			if ((player.CurrentRegion.IsRvR || player.CurrentRegion.IsInstance) && GameServer.Instance.Configuration.ServerType != eGameServerType.GST_PvE)
 			{
 				// Actual live message is: You can't use that item!
 				player.Out.SendMessage("You can't use that here!", DOL.GS.PacketHandler.eChatType.CT_System, DOL.GS.PacketHandler.eChatLoc.CL_SystemWindow);

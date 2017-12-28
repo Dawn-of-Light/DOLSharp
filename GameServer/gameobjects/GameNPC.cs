@@ -1,4 +1,4 @@
-﻿/*
+/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  *
  * This program is free software; you can redistribute it and/or
@@ -945,15 +945,15 @@ namespace DOL.GS
 		/// <summary>
 		/// Property entry on follow timer, wether the follow target is in range
 		/// </summary>
-		protected static readonly string FOLLOW_TARGET_IN_RANGE = "FollowTargetInRange";
+		protected const string FOLLOW_TARGET_IN_RANGE = "FollowTargetInRange";
 		/// <summary>
 		/// Minimum allowed attacker follow distance to avoid issues with client / server resolution (herky jerky motion)
 		/// </summary>
-		protected static readonly int MIN_ALLOWED_FOLLOW_DISTANCE = 100;
+		protected const int MIN_ALLOWED_FOLLOW_DISTANCE = 100;
 		/// <summary>
 		/// Minimum allowed pet follow distance
 		/// </summary>
-		protected static readonly int MIN_ALLOWED_PET_FOLLOW_DISTANCE = 90;
+		protected const int MIN_ALLOWED_PET_FOLLOW_DISTANCE = 90;
 		/// <summary>
 		/// At what health percent will npc give up range attack and rush the attacker
 		/// </summary>
@@ -1451,8 +1451,8 @@ namespace DOL.GS
 			BroadcastUpdate();
 		}
 
-		private const int STICKMINIMUMRANGE = 100;
-		private const int STICKMAXIMUMRANGE = 5000;
+		public const int STICKMINIMUMRANGE = 100;
+		public const int STICKMAXIMUMRANGE = 5000;
 
 		/// <summary>
 		/// Follow given object
@@ -3887,7 +3887,8 @@ namespace DOL.GS
 
 				if (ActiveWeaponSlot == eActiveWeaponSlot.Distance)
 				{
-					Follow(target, AttackRange, STICKMAXIMUMRANGE);
+					// Archer mobs sometimes bug and keep trying to fire at max range unsuccessfully so force them to get just a tad closer.
+					Follow(target, AttackRange - 30, STICKMAXIMUMRANGE);
 				}
 				else
 				{
