@@ -28,8 +28,8 @@ namespace DOL.GS.Keeps
 	{
 		List<IGameKeepComponent> SentKeepComponents { get; }
 		
-		Hashtable Guards { get; }
-		Hashtable Banners { get; }
+		Dictionary<string, GameKeepGuard> Guards { get; }
+		Dictionary<string, GameKeepBanner> Banners { get; }
 
 		void LoadFromDatabase(DataObject keep);
 		void SaveIntoDatabase();

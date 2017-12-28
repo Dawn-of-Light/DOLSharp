@@ -40,6 +40,21 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		public bool HasCommander = false;
+		public bool HasHastener = false;
+		public bool HasLord = false;
+
+		/// <summary>
+		/// Height of the keep
+		/// </summary>
+		public virtual int Height
+		{
+			get
+			{
+				return GameServer.KeepManager.GetHeightFromLevel(this.Level);
+			}
+		}
+
 		/// <summary>
 		/// The manager responsible for updating all guards appearance, realm, levles, stats
 		/// </summary>
@@ -184,13 +199,13 @@ namespace DOL.GS.Keeps
 		/// This hold list of all keep doors
 		/// </summary>
 		//protected ArrayList m_doors;
-		protected Hashtable m_doors;
+		protected Dictionary<string,GameKeepDoor> m_doors;
 
 		/// <summary>
 		/// keep doors
 		/// </summary>
 		//public ArrayList Doors
-		public Hashtable Doors
+		public Dictionary<string, GameKeepDoor> Doors
 		{
 			get	{ return m_doors; }
 			set { m_doors = value; }
@@ -213,12 +228,12 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// This hold list of all guards of keep
 		/// </summary>
-		protected Hashtable m_guards;
+		protected Dictionary<string,GameKeepGuard> m_guards;
 
 		/// <summary>
 		/// List of all guards of keep
 		/// </summary>
-		public Hashtable Guards
+		public Dictionary<string, GameKeepGuard> Guards
 		{
 			get	{ return m_guards; }
 		}
@@ -226,22 +241,22 @@ namespace DOL.GS.Keeps
 		/// <summary>
 		/// List of all banners
 		/// </summary>
-		protected Hashtable m_banners;
+		protected Dictionary<string, GameKeepBanner> m_banners;
 
 		/// <summary>
 		/// List of all banners
 		/// </summary>
-		public Hashtable Banners
+		public Dictionary<string, GameKeepBanner> Banners
 		{
 			get	{ return m_banners; }
 			set	{ m_banners = value; }
 		}
 
-		protected Hashtable m_patrols;
+		protected Dictionary<string, Patrol> m_patrols;
 		/// <summary>
 		/// List of all patrols
 		/// </summary>
-		public Hashtable Patrols
+		public Dictionary<string, Patrol> Patrols
 		{
 			get { return m_patrols; }
 			set { m_patrols = value; }
@@ -519,11 +534,11 @@ namespace DOL.GS.Keeps
 		/// </summary>
 		public AbstractGameKeep()
 		{
-			m_guards = new Hashtable();
+			m_guards = new Dictionary<string, GameKeepGuard>();
 			m_keepComponents = new List<GameKeepComponent>();
-			m_banners = new Hashtable();
-			m_doors = new Hashtable();
-			m_patrols = new Hashtable();
+			m_banners = new Dictionary<string, GameKeepBanner>();
+			m_doors = new Dictionary<string, GameKeepDoor>();
+			m_patrols = new Dictionary<string, Patrol>();
 		}
 
 		~AbstractGameKeep()
@@ -574,19 +589,22 @@ namespace DOL.GS.Keeps
 		/// <param name="area"></param>
 		public virtual void Remove(KeepArea area)
 		{
-			foreach (GameKeepGuard guard in (m_guards.Clone() as Hashtable).Values)
+			Dictionary<string, GameKeepGuard> guards = new Dictionary<string, GameKeepGuard>(m_guards); // Use a shallow copy
+			foreach (GameKeepGuard guard in guards.Values)
 			{
 				guard.Delete();
 				guard.DeleteFromDatabase();
 			}
 
-			foreach (GameKeepBanner banner in (m_banners.Clone() as Hashtable).Values)
+			Dictionary<string, GameKeepBanner> banners = new Dictionary<string, GameKeepBanner>(m_banners); // Use a shallow copy
+			foreach (GameKeepBanner banner in banners.Values)
 			{
 				banner.Delete();
 				banner.DeleteFromDatabase();
 			}
 
-			foreach (GameKeepDoor door in (m_doors.Clone() as Hashtable).Values)
+			Dictionary<string, GameKeepDoor> doors = new Dictionary<string, GameKeepDoor>(m_doors); // Use a shallow copy
+			foreach (GameKeepDoor door in doors.Values)
 			{
 				door.Delete();
 				GameDoor d = new GameDoor();
@@ -1251,12 +1269,9 @@ namespace DOL.GS.Keeps
 			if (hookpoint == null)
 				return;
 
-			//calculate target height
-			int height = GameServer.KeepManager.GetHeightFromLevel(this.Level);
-
 			//predict Z
 			DBKeepHookPoint hp = GameServer.Database.SelectObjects<DBKeepHookPoint>("`HookPointID` = @HookPointID AND `Height` = @Height",
-			                                                                        new[] { new QueryParameter("@HookPointID", 97), new QueryParameter("@Height", height) }).FirstOrDefault();
+			                                                                        new[] { new QueryParameter("@HookPointID", 97), new QueryParameter("@Height", Height) }).FirstOrDefault();
 			if (hp == null)
 				return;
 			int z = component.Z + hp.Z;

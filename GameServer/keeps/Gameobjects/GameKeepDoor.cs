@@ -566,7 +566,7 @@ namespace DOL.GS.Keeps
 			{
 				if (Component.AbstractKeep != null)
 				{
-					Component.AbstractKeep.Doors.Remove(this.ObjectID);
+					Component.AbstractKeep.Doors.Remove(this.ObjectID.ToString());
 				}
 
 				Component.Delete();
@@ -626,14 +626,14 @@ namespace DOL.GS.Keeps
 
 			foreach (AbstractArea area in this.CurrentAreas)
 			{
-				if (area is KeepArea)
+				if (area is KeepArea keepArea)
 				{
-					AbstractGameKeep keep = (area as KeepArea).Keep;
-					if (!keep.Doors.Contains(door.InternalID))
+					string sKey = door.InternalID.ToString();
+					if (!keepArea.Keep.Doors.ContainsKey(sKey))
 					{
 						Component = new GameKeepComponent();
-						Component.AbstractKeep = keep;
-						keep.Doors.Add(door.InternalID, this);
+						Component.AbstractKeep = keepArea.Keep;
+						keepArea.Keep.Doors.Add(sKey, this);
 					}
 					break;
 				}
@@ -667,7 +667,7 @@ namespace DOL.GS.Keeps
 			}
 			else
 			{
-				log.Error("Failed to load keep door from position! DoorID=" + m_doorID + ". Component SkinID=" + component.Skin + ". KeepID=" + component.AbstractKeep.KeepID);
+				log.Error("Failed to load keep door from keepposition_id =" + pos.ObjectId + ". Component SkinID=" + component.Skin + ". KeepID=" + component.AbstractKeep.KeepID);
 			}
 
 		}

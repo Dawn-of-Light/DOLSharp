@@ -85,8 +85,8 @@ namespace DOL.GS.Keeps
 
 			ClothingMgr.LoadTemplates();
 
-            //Dinberg - moved this here, battlegrounds must be loaded before keepcomponents are.
-            LoadBattlegroundCaps();
+			//Dinberg - moved this here, battlegrounds must be loaded before keepcomponents are.
+			LoadBattlegroundCaps();
 
 			if (!ServerProperties.Properties.LOAD_KEEPS)
 				return true;
@@ -113,7 +113,7 @@ namespace DOL.GS.Keeps
 					}
 
 					keep.Load(datakeep);
-                    RegisterKeep(datakeep.KeepID, keep);
+					RegisterKeep(datakeep.KeepID, keep);
 				}
 
 				// This adds owner keeps to towers / portal keeps
@@ -137,37 +137,39 @@ namespace DOL.GS.Keeps
 						}
 					}
 				}
-                if (ServerProperties.Properties.USE_NEW_KEEPS == 2) log.ErrorFormat("ServerProperty USE_NEW_KEEPS is actually set to 2 but it is no longer used. Loading as if he were 0 but please set to 0 or 1 !");
+				if (ServerProperties.Properties.USE_NEW_KEEPS == 2)
+					log.ErrorFormat("ServerProperty USE_NEW_KEEPS is actually set to 2 but it is no longer used. Loading as if he were 0 but please set to 0 or 1 !");
 				    
-				var keepcomponents = default(IList<DBKeepComponent>);
+				// var keepcomponents = default(IList<DBKeepComponent>); Why was this done this way rather than being strictly typed?
+				IList<DBKeepComponent> keepcomponents = null;
 
-                if (ServerProperties.Properties.USE_NEW_KEEPS == 0 || ServerProperties.Properties.USE_NEW_KEEPS == 2)
-                	keepcomponents = GameServer.Database.SelectObjects<DBKeepComponent>("`Skin` < @Skin", new QueryParameter("@Skin", 20));
-                else if (ServerProperties.Properties.USE_NEW_KEEPS == 1)
-                	keepcomponents = GameServer.Database.SelectObjects<DBKeepComponent>("`Skin` > @Skin", new QueryParameter("@Skin", 20));
+				if (ServerProperties.Properties.USE_NEW_KEEPS == 0 || ServerProperties.Properties.USE_NEW_KEEPS == 2)
+					keepcomponents = GameServer.Database.SelectObjects<DBKeepComponent>("`Skin` < @Skin", new QueryParameter("@Skin", 20));
+				else if (ServerProperties.Properties.USE_NEW_KEEPS == 1)
+					keepcomponents = GameServer.Database.SelectObjects<DBKeepComponent>("`Skin` > @Skin", new QueryParameter("@Skin", 20));
 
-			    if (keepcomponents != null)
-			    {
-			        keepcomponents
-			            .GroupBy(x => x.KeepID)
-			            .AsParallel()
-			            .ForAll(components =>
-			            {
-			                foreach (DBKeepComponent component in components)
-			                {
-			                    AbstractGameKeep keep = GetKeepByID(component.KeepID);
-			                    if (keep == null)
-			                    {
-			                        //missingKeeps = true;
-			                        continue;
-			                    }
+				if (keepcomponents != null)
+				{
+					keepcomponents
+					.GroupBy(x => x.KeepID)
+					.AsParallel()
+					.ForAll(components =>
+					{
+						foreach (DBKeepComponent component in components)
+						{
+							AbstractGameKeep keep = GetKeepByID(component.KeepID);
+							if (keep == null)
+							{
+								//missingKeeps = true;
+								continue;
+							}
 
-			                    GameKeepComponent gamecomponent = keep.CurrentRegion.CreateGameKeepComponent();
-			                    gamecomponent.LoadFromDatabase(component, keep);
-			                    keep.KeepComponents.Add(gamecomponent);
-			                }
-			            });
-			    }
+							GameKeepComponent gamecomponent = keep.CurrentRegion.CreateGameKeepComponent();
+							gamecomponent.LoadFromDatabase(component, keep);
+							keep.KeepComponents.Add(gamecomponent);
+						}
+					});
+				}
 
 				/*if (missingKeeps && log.IsWarnEnabled)
 				{
