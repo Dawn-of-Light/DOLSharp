@@ -155,6 +155,16 @@ namespace DOL.GS.Keeps
 
 		private bool m_changingPositions = false;
 
+		/// <summary>
+		/// The keep lord is under attack, go help them
+		/// </summary>
+		/// <param name="lord"></param>
+		/// <returns>Whether or not we are responding</returns>
+		public virtual bool AssistLord(GuardLord lord)
+		{
+			Follow(lord, GameNPC.STICKMINIMUMRANGE, int.MaxValue);
+			return true;
+		}
 
 		#region Combat
 
