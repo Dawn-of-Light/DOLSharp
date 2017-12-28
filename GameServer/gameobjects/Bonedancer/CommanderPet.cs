@@ -36,23 +36,25 @@ namespace DOL.GS
 		public CommanderPet(INpcTemplate npcTemplate)
 			: base(npcTemplate)
 		{
-			if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.ReturnedCommander"))
+			// Use the NpcTemplate TetherRange to determine the number of subpets the commander can have
+			if (npcTemplate.TetherRange > 0)
+			{
+				InitControlledBrainArray(npcTemplate.TetherRange);
+			}
+			else if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.ReturnedCommander"))
 			{
 				InitControlledBrainArray(0);
 			}
-
-			if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DecayedCommander") ||
+			else if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DecayedCommander") ||
 			    Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.SkeletalCommander"))
 			{
 				InitControlledBrainArray(1);
 			}
-
-			if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.BoneCommander"))
+			else if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.BoneCommander"))
 			{
 				InitControlledBrainArray(2);
 			}
-
-			if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadCommander") ||
+			else if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadCommander") ||
 			    Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadGuardian") ||
 			    Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadLich") ||
 			    Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadArcher"))
