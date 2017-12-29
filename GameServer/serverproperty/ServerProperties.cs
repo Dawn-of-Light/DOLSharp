@@ -777,6 +777,11 @@ namespace DOL.GS.ServerProperties
 		[ServerProperty("world", "losmgr_contamination_zfactor", "Line of Sight (LoS) Manager Contamination will use this to lower or raise the Z checks when updating LoS checks. 0 = Z must be exact, 1 = Z range is radius.", 0.5)]
 		public static double LOSMGR_CONTAMINATION_ZFACTOR;
 
+		/// <summary>
+		/// Property to cause beneficial spells to target the caster if current target isn't valid
+		/// </summary>
+		[ServerProperty("server", "AUTOSELECT_CASTER", "Set to true if you wish beneficial spells to target the caster if the current target isn't valid.  Allows self-healing without changing targets.", false)]
+		public static bool AUTOSELECT_CASTER;
 		#endregion
 
 		#region RATES
