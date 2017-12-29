@@ -26,6 +26,7 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
+using DOL.GS.ServerProperties;
 using DOL.GS.RealmAbilities;
 using DOL.GS.SkillHandler;
 using DOL.Language;
@@ -346,6 +347,20 @@ namespace DOL.GS.Spells
 		#endregion
 
 		/// <summary>
+		/// Sets the target of the spell to the caster for beneficial effects when not selecting a valid target
+		///		ie. You're in the middle of a fight with a mob and want to heal yourself.  Rather than having to switch
+		///		targets to yourself to healm and then back to the target, you can just heal yourself
+		/// </summary>
+		/// <param name="target">The current target of the spell, changed to the player if appropriate</param>
+		protected virtual void AutoSelectCaster(ref GameLiving target)
+		{
+			GameNPC npc = target as GameNPC;
+			if (Spell.Target.ToUpper() == "REALM" && Caster is GamePlayer &&
+				(npc == null || npc.Realm != Caster.Realm || (npc.Flags & GameNPC.eFlags.PEACE) != 0))
+				target = Caster;
+		}
+
+		/// <summary>
 		/// Cast a spell by using an item
 		/// </summary>
 		/// <param name="item"></param>
@@ -382,13 +397,13 @@ namespace DOL.GS.Spells
             // Scale spells that are cast by pets
             if (Caster is GamePet && !(Caster is NecromancerPet) && ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL > 0)
             {
-				double CasterLevel;
+		double CasterLevel;
 
-				// Cap the level we scale BD minions' spell effects to the player's modified spec for the spec line the pet is from
-				if (Caster is BDSubPet subpet && subpet.Owner is CommanderPet commander && commander.Owner is GamePlayer player)
-					CasterLevel = Math.Min(subpet.Level, player.GetModifiedSpecLevel(subpet.PetSpecLine));
-				else
-					CasterLevel = Caster.Level;
+		// Cap the level we scale BD minions' spell effects to the player's modified spec for the spec line the pet is from
+		if (Caster is BDSubPet subpet && subpet.Owner is CommanderPet commander && commander.Owner is GamePlayer player)
+			CasterLevel = Math.Min(subpet.Level, player.GetModifiedSpecLevel(subpet.PetSpecLine));
+		else
+			CasterLevel = Caster.Level;
 					
                 switch (m_spell.SpellType.ToString().ToLower())
                 {
@@ -449,7 +464,10 @@ namespace DOL.GS.Spells
                 } // switch (m_spell.SpellType.ToString().ToLower())
             } // if (Caster is GamePet)
 
-            bool success = true;
+			bool success = true;
+			
+			if (Properties.AUTOSELECT_CASTER)
+				AutoSelectCaster(ref targetObject);
 
 			m_spellTarget = targetObject;
 
@@ -882,8 +900,8 @@ namespace DOL.GS.Spells
 						break;
 				}
 
-				//heals/buffs/rez need LOS only to start casting
-				if (!m_caster.TargetInView && m_spell.Target.ToLower() != "pet")
+				//heals/buffs/rez need LOS only to start casting, TargetInView only works if selectedTarget == TargetObject
+				if (selectedTarget == Caster.TargetObject && !m_caster.TargetInView && m_spell.Target.ToLower() != "pet")
 				{
 					if (!quiet) MessageToCaster("Your target is not in visible!", eChatType.CT_SpellResisted);
 					Caster.Notify(GameLivingEvent.CastFailed, new CastFailedEventArgs(this, CastFailedEventArgs.Reasons.TargetNotInView));
