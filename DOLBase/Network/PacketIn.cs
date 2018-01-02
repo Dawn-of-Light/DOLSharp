@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
 using System.IO;
 
 namespace DOL.Network
@@ -143,7 +144,22 @@ namespace DOL.Network
 
 			return Marshal.ConvertToUInt32(v4, v3, v2, v1);
 		}
-
+		
+		/// <summary>
+		/// Reads low endian floats used in 1.124 packets
+		/// </summary>
+		/// <returns>converts it to a usable value</returns>
+		public virtual float ReadFloatLowEndian()
+        {
+            var v1 = (byte)ReadByte();
+            var v2 = (byte)ReadByte();
+            var v3 = (byte)ReadByte();
+            var v4 = (byte)ReadByte();            
+            byte[] bytes = new[] { v1, v2, v3, v4 };
+            float data = BitConverter.ToSingle(bytes, 0);
+            return data;
+        } 
+		
 		/// <summary>
 		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
 		/// </summary>
