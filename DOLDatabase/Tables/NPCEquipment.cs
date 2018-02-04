@@ -119,7 +119,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Color
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public int Color
 		{
 			get
@@ -136,7 +136,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Effect
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public int Effect
 		{
 			get
@@ -153,7 +153,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Extension
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Extension
 		{
 			get
@@ -170,7 +170,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Emblem
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Emblem
 		{
 			get

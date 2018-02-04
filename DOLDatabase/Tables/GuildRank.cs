@@ -113,7 +113,7 @@ namespace DOL.Database
 		/// <summary>
 		/// rank level between 1 and 10
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public byte RankLevel
 		{
 			get
@@ -130,7 +130,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Is player allowed to make alliance
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool Alli
 		{
 			get
@@ -147,7 +147,7 @@ namespace DOL.Database
 		/// <summary>
 		/// is member alowed to wear alliance
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool Emblem
 		{
 			get
@@ -161,7 +161,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool Buff
 		{
 			get
@@ -177,7 +177,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Can player with this rank hear guild chat
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool GcHear
 		{
 			get
@@ -194,7 +194,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Can player with this rank talk on guild chat
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool GcSpeak
 		{
 			get
@@ -211,7 +211,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Can player with this rank hear officier chat
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool OcHear
 		{
 			get
@@ -228,7 +228,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Can player with this rank talk on officier chat
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool OcSpeak
 		{
 			get
@@ -245,7 +245,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Can player with this rank hear alliance chat
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool AcHear
 		{
 			get
@@ -262,7 +262,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Can player with this rank talk on alliance chat
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool AcSpeak
 		{
 			get
@@ -279,7 +279,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Can player with this rank invite player to join the guild
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool Invite
 		{
 			get
@@ -296,7 +296,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Can player with this rank promote player in the guild
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool Promote
 		{
 			get
@@ -313,7 +313,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Can player with this rank removed player from the guild
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool Remove
 		{
 			get
@@ -330,7 +330,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Can player with this rank view player in the guild
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool View
 		{
 			get
@@ -347,7 +347,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Can player with this rank claim keep
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool Claim
 		{
 			get
@@ -364,7 +364,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Can player with this rank upgrade keep
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool Upgrade
 		{
 			get
@@ -381,7 +381,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Can player with this rank released the keep claimed
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool Release
 		{
 			get
@@ -394,7 +394,7 @@ namespace DOL.Database
 				m_release = value;
 			}
 		}
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool Dues
 		{
 			get
@@ -407,7 +407,7 @@ namespace DOL.Database
 				m_dues = value;
 			}
 		}
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool Withdraw
 		{
 			get

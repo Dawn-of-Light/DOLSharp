@@ -169,7 +169,7 @@ namespace DOL
 					m_name = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int Model
 			{
 				get
@@ -182,7 +182,7 @@ namespace DOL
 					m_model = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int Emblem
 			{
 				get
@@ -195,7 +195,7 @@ namespace DOL
 					m_emblem = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int PorchRoofColor
 			{
 				get
@@ -208,7 +208,7 @@ namespace DOL
 					m_porchroofcolor = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int PorchMaterial
 			{
 				get
@@ -221,7 +221,7 @@ namespace DOL
 					m_porchmaterial = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int RoofMaterial
 			{
 				get
@@ -234,7 +234,7 @@ namespace DOL
 					m_roofmaterial = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int DoorMaterial
 			{
 				get
@@ -247,7 +247,7 @@ namespace DOL
 					m_doormaterial = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int WallMaterial
 			{
 				get
@@ -260,7 +260,7 @@ namespace DOL
 					m_wallmaterial = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int TrussMaterial
 			{
 				get
@@ -273,7 +273,7 @@ namespace DOL
 					m_trussmaterial = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int WindowMaterial
 			{
 				get
@@ -286,7 +286,7 @@ namespace DOL
 					m_windowmaterial = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int Rug1Color
 			{
 				get
@@ -299,7 +299,7 @@ namespace DOL
 					m_rug1color = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int Rug2Color
 			{
 				get
@@ -312,7 +312,7 @@ namespace DOL
 					m_rug2color = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int Rug3Color
 			{
 				get
@@ -325,7 +325,7 @@ namespace DOL
 					m_rug3color = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int Rug4Color
 			{
 				get
@@ -338,7 +338,7 @@ namespace DOL
 					m_rug4color = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public bool IndoorGuildBanner
 			{
 				get
@@ -351,7 +351,7 @@ namespace DOL
 					m_indoorguildbanner = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public bool IndoorGuildShield
 			{
 				get
@@ -364,7 +364,7 @@ namespace DOL
 					m_indoorguildshield = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public bool OutdoorGuildBanner
 			{
 				get
@@ -377,7 +377,7 @@ namespace DOL
 					m_outdoorguildbanner = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public bool OutdoorGuildShield
 			{
 				get
@@ -390,7 +390,7 @@ namespace DOL
 					m_outdoorguildshield = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public bool Porch
 			{
 				get
@@ -432,7 +432,7 @@ namespace DOL
 				}
 			}
 
-			[DataElement(AllowDbNull = true)]
+			[DataElement(AllowDbNull = false)]
 			public long KeptMoney
 			{
 				get
@@ -446,7 +446,7 @@ namespace DOL
 				}
 			}
 
-			[DataElement(AllowDbNull = true)]
+			[DataElement(AllowDbNull = false)]
 			public bool NoPurge
 			{
 				get
@@ -460,7 +460,7 @@ namespace DOL
 				}
 			}
 
-			[DataElement(AllowDbNull = true)]
+			[DataElement(AllowDbNull = false)]
 			public bool GuildHouse
 			{
 				get
@@ -487,7 +487,7 @@ namespace DOL
 				}
 			}
 
-			[DataElement(AllowDbNull = true)]
+			[DataElement(AllowDbNull = false)]
 			public bool HasConsignment
 			{
 				get

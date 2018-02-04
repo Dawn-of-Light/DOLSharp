@@ -73,7 +73,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Type
 		{
 			get
@@ -90,7 +90,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Z position of door
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Z
 		{
 			get
@@ -107,7 +107,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Y position of door
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Y
 		{
 			get
@@ -124,7 +124,7 @@ namespace DOL.Database
 		/// <summary>
 		/// X position of door
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int X
 		{
 			get
@@ -141,7 +141,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Heading of door
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Heading
 		{
 			get
@@ -158,7 +158,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Internal index of Door
 		/// </summary>
-		[DataElement(AllowDbNull = true, Index = true)]
+		[DataElement(AllowDbNull = false, Index = true)]
 		public int InternalID
 		{
 			get
@@ -228,7 +228,7 @@ namespace DOL.Database
 			}
 		}
 		
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public uint Flags
 		{
 			get

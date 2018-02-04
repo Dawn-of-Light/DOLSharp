@@ -73,7 +73,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public byte Realm
 		{
 			get

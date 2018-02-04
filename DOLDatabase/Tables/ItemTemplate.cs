@@ -372,14 +372,14 @@ namespace DOL.Database
 			set { Dirty = true; m_level = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Durability
 		{
 			get { return m_durability == 0 ? m_maxdurability : m_durability; }
 			set { Dirty = true; m_durability = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int MaxDurability
 		{
 			get { return m_maxdurability; }
@@ -389,98 +389,98 @@ namespace DOL.Database
 		/// <summary>
 		/// Your item will not lose dur over repairs
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool IsNotLosingDur
 		{
 			get { return m_isNotLosingDur; }
 			set { Dirty = true; m_isNotLosingDur = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Condition
 		{
 			get { return m_condition == 0 ? m_maxcondition : m_condition; }
 			set { Dirty = true; m_condition = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int MaxCondition
 		{
 			get { return m_maxcondition; }
 			set { Dirty = true; m_maxcondition = value; }
 		}
 		
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Quality
 		{
 			get { return m_quality; }
 			set { Dirty = true; m_quality = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int DPS_AF
 		{
 			get { return m_dps_af; }
 			set { Dirty = true; m_dps_af = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int SPD_ABS
 		{
 			get { return m_spd_abs; }
 			set { Dirty = true; m_spd_abs = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Hand
 		{
 			get { return m_hand; }
 			set { Dirty = true; m_hand = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Type_Damage
 		{
 			get { return m_type_damage; }
 			set { Dirty = true; m_type_damage = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Object_Type
 		{
 			get { return m_object_type; }
 			set { Dirty = true; m_object_type = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Item_Type
 		{
 			get { return m_item_type; }
 			set { Dirty = true; m_item_type = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Color
 		{
 			get { return m_color; }
 			set { Dirty = true; m_color = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Emblem
 		{
 			get { return m_emblem; }
 			set { Dirty = true; m_emblem = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Effect
 		{
 			get { return m_effect; }
 			set { Dirty = true; m_effect = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Weight
 		{
 			get { return m_weight; }
@@ -494,7 +494,7 @@ namespace DOL.Database
 			set { Dirty = true; m_model = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public byte Extension
 		{
 			get { return m_extension; }
@@ -503,84 +503,84 @@ namespace DOL.Database
 
 		#region Bonuses
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Bonus
 		{
 			get { return m_bonus; }
 			set { Dirty = true; m_bonus = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Bonus1
 		{
 			get { return m_bonus1; }
 			set { Dirty = true; m_bonus1 = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Bonus2
 		{
 			get { return m_bonus2; }
 			set { Dirty = true; m_bonus2 = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Bonus3
 		{
 			get { return m_bonus3; }
 			set { Dirty = true; m_bonus3 = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Bonus4
 		{
 			get { return m_bonus4; }
 			set { Dirty = true; m_bonus4 = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Bonus5
 		{
 			get { return m_bonus5; }
 			set { Dirty = true; m_bonus5 = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Bonus6
 		{
 			get { return m_bonus6; }
 			set { Dirty = true; m_bonus6 = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Bonus7
 		{
 			get { return m_bonus7; }
 			set { Dirty = true; m_bonus7 = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Bonus8
 		{
 			get { return m_bonus8; }
 			set { Dirty = true; m_bonus8 = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Bonus9
 		{
 			get { return m_bonus9; }
 			set { Dirty = true; m_bonus9 = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Bonus10
 		{
 			get { return m_bonus10; }
 			set { Dirty = true; m_bonus10 = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int ExtraBonus
 		{
 			get { return m_extrabonus; }
@@ -591,77 +591,77 @@ namespace DOL.Database
 
 		#region BonusTypes
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Bonus1Type
 		{
 			get { return m_bonus1Type; }
 			set { Dirty = true; m_bonus1Type = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Bonus2Type
 		{
 			get { return m_bonus2Type; }
 			set { Dirty = true; m_bonus2Type = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Bonus3Type
 		{
 			get { return m_bonus3Type; }
 			set { Dirty = true; m_bonus3Type = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Bonus4Type
 		{
 			get { return m_bonus4Type; }
 			set { Dirty = true; m_bonus4Type = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Bonus5Type
 		{
 			get { return m_bonus5Type; }
 			set { Dirty = true; m_bonus5Type = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Bonus6Type
 		{
 			get { return m_bonus6Type; }
 			set { Dirty = true; m_bonus6Type = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Bonus7Type
 		{
 			get { return m_bonus7Type; }
 			set { Dirty = true; m_bonus7Type = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Bonus8Type
 		{
 			get { return m_bonus8Type; }
 			set { Dirty = true; m_bonus8Type = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Bonus9Type
 		{
 			get { return m_bonus9Type; }
 			set { Dirty = true; m_bonus9Type = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Bonus10Type
 		{
 			get { return m_bonus10Type; }
 			set { Dirty = true; m_bonus10Type = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int ExtraBonusType
 		{
 			get { return m_extrabonusType; }
@@ -684,7 +684,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Spell id for items with charge
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int SpellID
 		{
 			get { return m_spellID; }
@@ -694,7 +694,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Charge of item when he have some charge of a spell
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Charges
 		{
 			get { return m_charges; }
@@ -704,7 +704,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Max charge of item when he have some charge of a spell
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int MaxCharges
 		{
 			get { return m_maxCharges; }
@@ -717,14 +717,14 @@ namespace DOL.Database
 		/// <summary>
 		/// Spell id for items with charge
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int SpellID1
 		{
 			get { return m_spellID1; }
 			set { Dirty = true; m_spellID1 = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Charges1
 		{
 			get { return m_charges1; }
@@ -734,7 +734,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Max charge of item when he have some charge of a spell
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int MaxCharges1
 		{
 			get { return m_maxCharges1; }
@@ -747,7 +747,7 @@ namespace DOL.Database
 
 		#region Procs
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual byte ProcChance
 		{
 			get { return m_procChance; }
@@ -759,7 +759,7 @@ namespace DOL.Database
 		/// <summary>
 		/// ProcSpell id for items
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int ProcSpellID
 		{
 			get { return m_procSpellID; }
@@ -769,7 +769,7 @@ namespace DOL.Database
 		#endregion
 		#region second proc
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int ProcSpellID1
 		{
 			get { return m_procSpellID1; }
@@ -782,21 +782,21 @@ namespace DOL.Database
 
 		#region Poison
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int PoisonSpellID
 		{
 			get { return m_poisonSpellID; }
 			set { Dirty = true; m_poisonSpellID = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int PoisonCharges
 		{
 			get { return m_poisonCharges; }
 			set { Dirty = true; m_poisonCharges = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int PoisonMaxCharges
 		{
 			get { return m_poisonMaxCharges; }
@@ -805,35 +805,35 @@ namespace DOL.Database
 
 		#endregion
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool IsPickable
 		{
 			get { return m_isPickable; }
 			set { Dirty = true; m_isPickable = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool IsDropable
 		{
 			get { return m_isDropable; }
 			set { Dirty = true; m_isDropable = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool CanDropAsLoot
 		{
 			get { return m_canDropAsLoot; }
 			set { Dirty = true; m_canDropAsLoot = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool IsTradable
 		{
 			get { return m_isTradable; }
 			set { Dirty = true; m_isTradable = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public long Price
 		{
 			get { return m_Price; }
@@ -843,7 +843,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Max amount allowed in one stack
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int MaxCount
 		{
 			get { return m_maxCount; }
@@ -858,7 +858,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Your item cannot be shift + d
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool IsIndestructible {
 			get { return m_isIndestructible; }
 			set { Dirty = true; m_isIndestructible = value; }
@@ -867,14 +867,14 @@ namespace DOL.Database
 		/// <summary>
 		/// Amount of items sold at once
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int PackSize
 		{
 			get { return m_packSize; }
 			set	{ Dirty = true; m_packSize = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Realm
 		{
 			get { return m_realm; }
@@ -891,21 +891,21 @@ namespace DOL.Database
 			set { Dirty = true; m_allowedClasses = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Flags
 		{
 			get { return m_flags; }
 			set { Dirty = true; m_flags = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int BonusLevel
 		{
 			get { return m_bonusLevel; }
 			set { Dirty = true; m_bonusLevel = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int LevelRequirement
 		{
 			get { return m_levelRequirement; }
@@ -934,7 +934,7 @@ namespace DOL.Database
 			set { Dirty = true; m_classType = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int SalvageYieldID
 		{
 			get { return m_salvageYieldID; }

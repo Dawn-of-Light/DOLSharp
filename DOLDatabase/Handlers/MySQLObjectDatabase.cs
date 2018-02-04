@@ -179,6 +179,11 @@ namespace DOL.Database.Handlers
 		{
 			string type = GetDatabaseType(bind, table);
 			string defaultDef = null;
+		    Type[] numberTypes =
+		    {
+		        typeof(int), typeof(byte), typeof(bool), typeof(long), typeof(short),
+		        typeof(ushort), typeof(ulong), typeof(uint), typeof(double)
+		    };
 						
 			// Check for Default Value depending on Constraints and Type
 			if (bind.PrimaryKey != null && bind.PrimaryKey.AutoIncrement)
@@ -191,9 +196,13 @@ namespace DOL.Database.Handlers
 			}
 			else if (bind.ValueType == typeof(DateTime))
 			{
-				defaultDef = "NOT NULL DEFAULT '2000-01-01 00:00:00'";
+			    defaultDef = "NOT NULL DEFAULT '2000-01-01 00:00:00'";
 			}
-			else
+			else if (numberTypes.Contains(bind.ValueType))
+			{
+			    defaultDef = "NOT NULL DEFAULT 0";
+			}
+            else
 			{
                 defaultDef = "NOT NULL";
 			}

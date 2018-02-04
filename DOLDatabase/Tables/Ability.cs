@@ -158,7 +158,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Ability ID (new in 1.112)
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull=false)]
 		public int InternalID
 		{
 			get { return m_internalID; }

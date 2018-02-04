@@ -72,7 +72,7 @@ namespace DOL.Database
 		/// <summary>
 		/// X position of component
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public int X
 		{
 			get
@@ -89,7 +89,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Y position of component
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public int Y
 		{
 			get
@@ -106,7 +106,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Heading of component
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public int Heading
 		{
 			get
@@ -140,7 +140,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Skin of component (see enum skin in GameKeepComponent)
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public int Skin
 		{
 			get
@@ -157,7 +157,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Index of keep
 		/// </summary>
-		[DataElement(AllowDbNull=true, Index=true)]
+		[DataElement(AllowDbNull= false, Index=true)]
 		public int KeepID
 		{
 			get
@@ -174,7 +174,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Index of component
 		/// </summary>
-		[DataElement(AllowDbNull=true, Index = true)]
+		[DataElement(AllowDbNull= false, Index = true)]
 		public int ID
 		{
 			get

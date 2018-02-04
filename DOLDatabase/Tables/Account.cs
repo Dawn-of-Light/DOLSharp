@@ -125,7 +125,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The realm of this account
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull=false)]
 		public int Realm
 		{
 			get
@@ -142,7 +142,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The private level of this account (admin=3, GM=2 or player=1)
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public uint PrivLevel
 		{
 			get
@@ -159,7 +159,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Status of this account
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Status {
 			get { return m_state; }
 			set { Dirty = true; m_state = value; }
@@ -207,7 +207,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Is this account muted from public channels?
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool IsMuted
 		{
 			get { return m_isMuted; }

@@ -47,7 +47,7 @@ namespace DOL
 			{
 			}
 
-			[DataElement(AllowDbNull = true)]
+			[DataElement(AllowDbNull = false)]
 			public bool IsHandler
 			{
 				get
@@ -60,7 +60,7 @@ namespace DOL
 					m_ishandler = value;
 				}
 			}
-			[DataElement(AllowDbNull = true)]
+			[DataElement(AllowDbNull = false)]
 			public int Var6
 			{
 				get
@@ -73,7 +73,7 @@ namespace DOL
 					m_var6 = value;
 				}
 			}
-			[DataElement(AllowDbNull = true)]
+			[DataElement(AllowDbNull = false)]
 			public int Var5
 			{
 				get
@@ -86,7 +86,7 @@ namespace DOL
 					m_var5 = value;
 				}
 			}
-			[DataElement(AllowDbNull = true)]
+			[DataElement(AllowDbNull = false)]
 			public int Var4
 			{
 				get
@@ -99,7 +99,7 @@ namespace DOL
 					m_var4 = value;
 				}
 			}
-			[DataElement(AllowDbNull = true)]
+			[DataElement(AllowDbNull = false)]
 			public int Var3
 			{
 				get
@@ -112,7 +112,7 @@ namespace DOL
 					m_var3 = value;
 				}
 			}
-			[DataElement(AllowDbNull = true)]
+			[DataElement(AllowDbNull = false)]
 			public int Var2
 			{
 				get
@@ -125,7 +125,7 @@ namespace DOL
 					m_var2 = value;
 				}
 			}
-			[DataElement(AllowDbNull = true)]
+			[DataElement(AllowDbNull = false)]
 			public int Var1
 			{
 				get
@@ -138,7 +138,7 @@ namespace DOL
 					m_var1 = value;
 				}
 			}
-			[DataElement(AllowDbNull = true)]
+			[DataElement(AllowDbNull = false)]
 			public int Duration
 			{
 				get

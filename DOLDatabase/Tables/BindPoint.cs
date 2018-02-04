@@ -27,14 +27,8 @@ namespace DOL.Database
 	public class BindPoint : DataObject
 	{
 		//This needs to be uint and ushort!
-		private int	m_xpos;
-		private int	m_ypos;
-		private int	m_zpos;
-		private int		m_region;
-		private ushort	m_radius;
-		private int		m_realm;
 
-		/// <summary>
+	    /// <summary>
 		/// Create a bind point
 		/// </summary>
 		public BindPoint()
@@ -45,90 +39,36 @@ namespace DOL.Database
 		/// The X position of bind
 		/// </summary>
 		[DataElement(AllowDbNull=false)]
-		public int X
-		{
-			get
-			{
-				return m_xpos;
-			}
-			set
-			{
-				m_xpos=value;
-			}
-		}
+		public int X { get; set; }
 
-		/// <summary>
+	    /// <summary>
 		/// The Y position of bind
 		/// </summary>
 		[DataElement(AllowDbNull=false)]
-		public int Y
-		{
-			get
-			{
-				return m_ypos;
-			}
-			set
-			{
-				m_ypos=value;
-			}
-		}
+		public int Y { get; set; }
 
-		/// <summary>
+	    /// <summary>
 		/// The Z position of bind
 		/// </summary>
 		[DataElement(AllowDbNull=false)]
-		public int Z
-		{
-			get
-			{
-				return m_zpos;
-			}
-			set
-			{
-				m_zpos=value;
-			}
-		}
+		public int Z { get; set; }
 
-		/// <summary>
+	    /// <summary>
 		/// The radius of bind
 		/// </summary>
 		[DataElement(AllowDbNull=false)]
-		public ushort Radius
-		{
-			get
-			{
-				return m_radius;
-			}
-			set
-			{
-				m_radius=value;
-			}
-		}
+		public ushort Radius { get; set; }
 
-		/// <summary>
+	    /// <summary>
 		/// The region of bind
 		/// </summary>
 		[DataElement(AllowDbNull=false)]
-		public int Region
-		{
-			get
-			{
-				return m_region;
-			}
-			set
-			{
-				m_region=value;
-			}
-		}
+		public int Region { get; set; }
 
-		/// <summary>
+	    /// <summary>
 		/// The realm of this bind
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
-		public int Realm
-		{
-			get { return m_realm; }
-			set { m_realm = value; }
-		}
+		[DataElement(AllowDbNull=false)]
+		public int Realm { get; set; }
 	}
 }

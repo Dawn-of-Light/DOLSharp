@@ -32,7 +32,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Skin ID of the Keep Component the Position is assigned to
 		/// </summary>
-		[DataElement(AllowDbNull = true, Index = true)]
+		[DataElement(AllowDbNull = false, Index = true)]
 		public int ComponentSkin
 		{
 			get
@@ -49,7 +49,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Rotation of the Keep Component the Position is assigned to
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int ComponentRotation
 		{
 			get
@@ -66,7 +66,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The KeepObjectID, consider this a template ID
 		/// </summary>
-		[DataElement(AllowDbNull = true, Index = true)]
+		[DataElement(AllowDbNull = false, Index = true)]
 		public string TemplateID
 		{
 			get
@@ -83,7 +83,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Height that this position is stored for, 0,1,2,3
 		/// </summary>
-		[DataElement(AllowDbNull = true, Index = true)]
+		[DataElement(AllowDbNull = false, Index = true)]
 		public int Height
 		{
 			get
@@ -100,7 +100,7 @@ namespace DOL.Database
 		/// <summary>
 		/// X Offset Position of the object for the component
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int XOff
 		{
 			get
@@ -117,7 +117,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Y Offset Position of the object for the component
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int YOff
 		{
 			get
@@ -135,7 +135,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Z Offset Position of the object for the component
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int ZOff
 		{
 			get
@@ -152,7 +152,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Heading Offset Position of the object for the component
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int HOff
 		{
 			get
@@ -186,7 +186,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The type of object
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int TemplateType
 		{
 			get
@@ -203,7 +203,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The keep type this position belongs too
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int KeepType
 		{
 			get

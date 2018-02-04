@@ -43,7 +43,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Class ID attached to this specialization (0 = all)
 		/// </summary>
-		[DataElement(AllowDbNull=true, Index=true)]
+		[DataElement(AllowDbNull= false, Index=true)]
 		public int ClassID {
 			get { return m_classID; }
 			set { Dirty = true; m_classID = value; }
@@ -65,7 +65,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Level at which Specialization is enabled. (default 0 = always enabled)
 		/// </summary>
-		[DataElement(AllowDbNull=true, Index=true)]
+		[DataElement(AllowDbNull= false, Index=true)]
 		public int LevelAcquired {
 			get { return m_levelAcquired; }
 			set { Dirty = true; m_levelAcquired = value; }

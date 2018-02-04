@@ -67,7 +67,7 @@ namespace DOL.Database
 		/// The artifact ID.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String ArtifactID
+		public string ArtifactID
 		{
 			get { return m_artifactID; }
 			set
@@ -82,7 +82,7 @@ namespace DOL.Database
 		/// this artifact.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String EncounterID
+		public string EncounterID
 		{
 			get { return m_encounterID; }
 			set
@@ -97,7 +97,7 @@ namespace DOL.Database
 		/// to unlock this artifact.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String QuestID
+		public string QuestID
 		{
 			get { return m_questID; }
 			set
@@ -111,7 +111,7 @@ namespace DOL.Database
 		/// The zone this artifact belongs to.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String Zone
+		public string Zone
 		{
 			get { return m_zone; }
 			set
@@ -125,7 +125,7 @@ namespace DOL.Database
 		/// The scholar(s) studying this artifact.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String ScholarID
+		public string ScholarID
 		{
 			get { return m_scholarID; }
 			set
@@ -167,7 +167,7 @@ namespace DOL.Database
 		/// The book ID.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String BookID
+		public string BookID
 		{
 			get { return m_bookID; }
 			set
@@ -195,7 +195,7 @@ namespace DOL.Database
 		/// Scroll 1 name.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String Scroll1
+		public string Scroll1
 		{
 			get { return m_scroll1; }
 			set
@@ -209,7 +209,7 @@ namespace DOL.Database
 		/// Scroll 2 name.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String Scroll2
+		public string Scroll2
 		{
 			get { return m_scroll2; }
 			set
@@ -223,7 +223,7 @@ namespace DOL.Database
 		/// Scroll 3 name.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String Scroll3
+		public string Scroll3
 		{
 			get { return m_scroll3; }
 			set
@@ -237,7 +237,7 @@ namespace DOL.Database
 		/// Scrolls 1+2 name.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String Scroll12
+		public string Scroll12
 		{
 			get { return m_scroll12; }
 			set
@@ -251,7 +251,7 @@ namespace DOL.Database
 		/// Scrolls 1+3 name.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String Scroll13
+		public string Scroll13
 		{
 			get { return m_scroll13; }
 			set
@@ -265,7 +265,7 @@ namespace DOL.Database
 		/// Scrolls 2+3 name.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String Scroll23
+		public string Scroll23
 		{
 			get { return m_scroll23; }
 			set
@@ -321,7 +321,7 @@ namespace DOL.Database
 		/// Message issued when scroll is used.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String MessageUse
+		public string MessageUse
 		{
 			get { return m_messageUse; }
 			set
@@ -335,7 +335,7 @@ namespace DOL.Database
 		/// Message issued when scrolls are combined.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String MessageCombineScrolls
+		public string MessageCombineScrolls
 		{
 			get { return m_messageCombineScrolls; }
 			set
@@ -349,7 +349,7 @@ namespace DOL.Database
 		/// Message issued when book is combined.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String MessageCombineBook
+		public string MessageCombineBook
 		{
 			get { return m_messageCombineBook; }
 			set
@@ -363,7 +363,7 @@ namespace DOL.Database
 		/// Message issued when player receives scrolls.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String MessageReceiveScrolls
+		public string MessageReceiveScrolls
 		{
 			get { return m_messageReceiveScrolls; }
 			set
@@ -377,7 +377,7 @@ namespace DOL.Database
 		/// Message issued when player receives the book.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String MessageReceiveBook
+		public string MessageReceiveBook
 		{
 			get { return m_messageReceiveBook; }
 			set
@@ -391,7 +391,7 @@ namespace DOL.Database
 		/// The bounty point credit for this artifact.
 		/// </summary>
 		[DataElement(AllowDbNull = true)]
-		public String Credit
+		public string Credit
 		{
 			get { return m_credit; }
 			set

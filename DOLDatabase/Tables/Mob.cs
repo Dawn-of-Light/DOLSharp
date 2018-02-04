@@ -569,7 +569,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int NPCTemplateID
 		{
 			get
@@ -583,7 +583,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement( AllowDbNull = true )]
+		[DataElement( AllowDbNull = false)]
 		public int Race
 		{
 			get
@@ -600,7 +600,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Mob's Flags
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public uint Flags
 		{
 			get
@@ -617,7 +617,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Mob's Aggro Level
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int AggroLevel
 		{
 			get { return m_aggrolevel; }
@@ -627,7 +627,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Mob's Aggro Range
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int AggroRange
 		{
 			get { return m_aggrorange; }
@@ -637,7 +637,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Mob's Melee Damage Type
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int MeleeDamageType
 		{
 			get { return m_meleeDamageType; }
@@ -657,7 +657,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Mob's Faction ID
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int FactionID
 		{
 			get { return m_faction; }
@@ -667,7 +667,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The mob's body type
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int BodyType
 		{
 			get { return m_bodyType; }
@@ -724,7 +724,7 @@ namespace DOL.Database
 		/// if MaxDistance = 0 ... no maxdistance check
 		/// if MaxDistance less than 0 ... the amount is calculated in procent of the value and the aggrorange (in StandardMobBrain)
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int MaxDistance
 		{
 			get
@@ -760,7 +760,7 @@ namespace DOL.Database
 		/// if RoamingRange = 0 ... no roaming
 		/// if RoamingRange > 0 ... the mob's individual roaming radius
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int RoamingRange
 		{
 			get
@@ -777,7 +777,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Is cloak hood up
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool IsCloakHoodUp
 		{
 			get { return m_isCloakHoodUp; }
@@ -793,7 +793,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Gender of this mob.
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public byte Gender
 		{
 			get { return m_gender; }

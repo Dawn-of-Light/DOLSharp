@@ -73,7 +73,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public ushort Heading
 		{
 			get { return m_heading; }
@@ -99,7 +99,7 @@ namespace DOL.Database
 		/// Index of this item in case there is more than 1
 		/// of the same type.
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public byte Index
 		{
 			get { return m_index; }

@@ -81,13 +81,13 @@ namespace DOL.Database
 		/// <summary>
 		/// Maximum speed, 0 = no limit
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int MaxSpeed {
 			get { return m_maxspeed; }
 			set { m_maxspeed = value; }
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int WaitTime
 		{
 			get { return m_waitTime; }

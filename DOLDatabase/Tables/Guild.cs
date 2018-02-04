@@ -111,7 +111,7 @@ namespace DOL.Database
 		}
 
 		[ReadOnly]
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public byte Realm
 		{
 			get
@@ -124,7 +124,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool GuildBanner
 		{
 			get
@@ -194,7 +194,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Emblem
 		{
 			get
@@ -208,7 +208,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public long RealmPoints
 		{
 			get
@@ -222,7 +222,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public long BountyPoints
 		{
 			get
@@ -258,7 +258,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool Dues
 		{
 			get { return m_guildDues; }
@@ -269,7 +269,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public double Bank
 		{
 			get { return m_guildBank; }
@@ -280,7 +280,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public long DuesPercent
 		{
 			get { return m_guildDuesPercent; }
@@ -313,7 +313,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public long GuildLevel
 		{
 			get
@@ -327,7 +327,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public byte BonusType
 		{
 			get

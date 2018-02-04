@@ -66,7 +66,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement( AllowDbNull = true )]
+		[DataElement( AllowDbNull = false)]
 		public sbyte ResistBody
 		{
 			get { return m_ResistBody; }
@@ -77,7 +77,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement( AllowDbNull = true )]
+		[DataElement( AllowDbNull = false)]
 		public sbyte ResistCold
 		{
 			get { return m_ResistCold; }
@@ -88,7 +88,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement( AllowDbNull = true )]
+		[DataElement( AllowDbNull = false)]
 		public sbyte ResistCrush
 		{
 			get { return m_ResistCrush; }
@@ -99,7 +99,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement( AllowDbNull = true )]
+		[DataElement( AllowDbNull = false)]
 		public sbyte ResistEnergy
 		{
 			get { return m_ResistEnergy; }
@@ -110,7 +110,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement( AllowDbNull = true )]
+		[DataElement( AllowDbNull = false)]
 		public sbyte ResistHeat
 		{
 			get { return m_ResistHeat; }
@@ -121,7 +121,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement( AllowDbNull = true )]
+		[DataElement( AllowDbNull = false)]
 		public sbyte ResistMatter
 		{
 			get { return m_ResistMatter; }
@@ -132,7 +132,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement( AllowDbNull = true )]
+		[DataElement( AllowDbNull = false)]
 		public sbyte ResistNatural
 		{
 			get { return m_ResistNatural; }
@@ -143,7 +143,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement( AllowDbNull = true )]
+		[DataElement( AllowDbNull = false)]
 		public sbyte ResistSlash
 		{
 			get { return m_ResistSlash; }
@@ -154,7 +154,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement( AllowDbNull = true )]
+		[DataElement( AllowDbNull = false)]
 		public sbyte ResistSpirit
 		{
 			get { return m_ResistSpirit; }
@@ -165,7 +165,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement( AllowDbNull = true )]
+		[DataElement( AllowDbNull = false)]
 		public sbyte ResistThrust
 		{
 			get { return m_ResistThrust; }

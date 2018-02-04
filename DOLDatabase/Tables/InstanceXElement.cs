@@ -28,13 +28,7 @@ namespace DOL.Database
 	[DataTable(TableName = "InstanceXElement")]
 	public class DBInstanceXElement : DataObject
 	{
-		protected string m_instanceID;
-		protected string m_classType;
-		protected int m_X, m_Y, m_Z;
-		protected ushort m_Heading;
-		protected string m_NPCTemplate;
-
-		public DBInstanceXElement()
+	    public DBInstanceXElement()
 		{
 		}
 
@@ -42,58 +36,30 @@ namespace DOL.Database
 		/// The unique name of this instance. Eg 'My Task Dungeon'
 		/// </summary>
 		[DataElement(AllowDbNull = false, Index = true)]
-		public String InstanceID
-		{
-			get { return m_instanceID; }
-			set { m_instanceID = value; }
-		}
+		public string InstanceID { get; set; }
 
-		[DataElement(AllowDbNull = true)]
-		public String ClassType
-		{
-			get { return m_classType; }
-			set { m_classType = value; }
-		}
+	    [DataElement(AllowDbNull = true)]
+		public string ClassType { get; set; }
 
-		[DataElement(AllowDbNull = false)]
-		public int X
-		{
-			get { return m_X; }
-			set { m_X = value; }
-		}
+	    [DataElement(AllowDbNull = false)]
+		public int X { get; set; }
 
-		[DataElement(AllowDbNull = false)]
-		public int Y
-		{
-			get { return m_Y; }
-			set { m_Y = value; }
-		}
+	    [DataElement(AllowDbNull = false)]
+		public int Y { get; set; }
 
-		[DataElement(AllowDbNull = false)]
-		public int Z
-		{
-			get { return m_Z; }
-			set { m_Z = value; }
-		}
+	    [DataElement(AllowDbNull = false)]
+		public int Z { get; set; }
 
-		[DataElement(AllowDbNull = false)]
-		public ushort Heading
-		{
-			get { return m_Heading; }
-			set { m_Heading = value; }
-		}
+	    [DataElement(AllowDbNull = false)]
+		public ushort Heading { get; set; }
 
-		/// <summary>
+	    /// <summary>
 		/// Where applicable, the npc template to create this mob from.
 		/// </summary>
 		[DataElement(AllowDbNull = false, Varchar = 255)]
-		public string NPCTemplate
-		{
-			get { return m_NPCTemplate; }
-			set { m_NPCTemplate = value; }
-		}
+		public string NPCTemplate { get; set; }
 
-		/// <summary>
+	    /// <summary>
 		/// Convert the NPCTemplate to/from int, assuming a single ID
 		/// </summary>
 		public int NPCTemplateID

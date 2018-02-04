@@ -30,9 +30,9 @@ namespace DOL.Database
 	[DataTable(TableName = "ArtifactXItem")]
 	public class ArtifactXItem : DataObject
 	{
-		private String m_artifactID;
-		private String m_itemID;
-		private String m_version;
+		private string m_artifactID;
+		private string m_itemID;
+		private string m_version;
 		private int m_realm;
 
 		/// <summary>
@@ -54,7 +54,7 @@ namespace DOL.Database
 		/// The artifact ID.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String ArtifactID
+		public string ArtifactID
 		{
 			get { return m_artifactID; }
 			set
@@ -68,7 +68,7 @@ namespace DOL.Database
 		/// The item ID.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String ItemID
+		public string ItemID
 		{
 			get { return m_itemID; }
 			set
@@ -82,7 +82,7 @@ namespace DOL.Database
 		/// The artifact version.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String Version
+		public string Version
 		{
 			get { return m_version; }
 			set

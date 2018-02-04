@@ -63,7 +63,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The linked faction index
 		/// </summary>
-		[DataElement(AllowDbNull=true,Unique=false)]
+		[DataElement(AllowDbNull= false, Unique=false)]
 		public int LinkedFactionID
 		{
 			get
@@ -80,7 +80,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Is faction linked is friend or enemy
 		/// </summary>
-		[DataElement(AllowDbNull=true,Unique=false)]
+		[DataElement(AllowDbNull= false, Unique=false)]
 		public bool IsFriend
 		{
 			get
