@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+ 
+using System;
 using System.IO;
 
 namespace DOL.Network
@@ -128,7 +130,20 @@ namespace DOL.Network
 			WriteByte((byte) ((val >> 48) & 0xff));
 			WriteByte((byte) (val >> 56));
 		}
-
+		
+		/// <summary>
+        /// writes a float value to low endian used in 1.124 packets
+        /// </summary>        
+        public virtual void WriteFloatLowEndian(float val)
+        {
+            uint l = BitConverter.ToUInt32(BitConverter.GetBytes(val), 0);
+            byte[] bytes = BitConverter.GetBytes(l);            
+            WriteByte(bytes[0]);
+            WriteByte(bytes[1]);
+            WriteByte(bytes[2]);
+            WriteByte(bytes[3]);
+        }
+		
 		/// <summary>
 		/// Calculates the checksum for the internal buffer
 		/// </summary>
@@ -258,11 +273,7 @@ namespace DOL.Network
 
 		/// <summary>
 		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
-		/// </summary>
-		/// <returns>
-		/// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
-		/// </returns>
-		/// <filterpriority>2</filterpriority>
+		/// </summary>		
 		public override string ToString()
 		{
 			return GetType().Name;
