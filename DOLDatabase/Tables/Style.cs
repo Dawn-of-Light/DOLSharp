@@ -204,7 +204,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Spec Level Requirement
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public int SpecLevelRequirement
 		{
 			get { return m_SpecLevelRequirement; }
@@ -231,7 +231,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Stealth Requirement
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public bool StealthRequirement
 		{
 			get { return m_StealthRequirement; }
@@ -241,7 +241,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Opening Requirement Type
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public int OpeningRequirementType
 		{
 			get { return m_openingRequirementType; }
@@ -251,7 +251,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Opening Requirement Value
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public int OpeningRequirementValue
 		{
 			get { return m_openingRequirementValue; }
@@ -261,7 +261,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Attack Result Requirement
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public int AttackResultRequirement
 		{
 			get { return m_AttackResultRequirement; }
@@ -271,7 +271,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Weapon Type Requirement
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public int WeaponTypeRequirement
 		{
 			get { return m_WeaponTypeRequirement; }
@@ -281,7 +281,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Growth Offset
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public double GrowthOffset
 		{
 			get { return m_growthOffset; }
@@ -291,7 +291,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Growth Rate
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public double GrowthRate
 		{
 			get { return m_growthRate; }
@@ -301,7 +301,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Bonus To Hit
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public int BonusToHit
 		{
 			get { return m_BonusToHit; }
@@ -311,7 +311,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Bonus to Defense
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public int BonusToDefense
 		{
 			get { return m_BonusToDefense; }
@@ -321,7 +321,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The Style Two Hand Animation
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public int TwoHandAnimation
 		{
 			get { return m_TwoHandAnimation; }
@@ -331,7 +331,7 @@ namespace DOL.Database
 		/// <summary>
 		///(procs) The Style should Randomly cast a proc
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public bool RandomProc
 		{
 			get { return m_RandomProc; }
@@ -341,7 +341,7 @@ namespace DOL.Database
 		/// <summary>
 		/// What armor location should this style hit, take from eInventorySlot
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public int ArmorHitLocation
 		{
 			get { return m_armorHitLocation; }

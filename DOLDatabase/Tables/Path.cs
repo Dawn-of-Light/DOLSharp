@@ -49,7 +49,7 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull = false,Unique=true)]
-		public String PathID {
+		public string PathID {
 			get { return m_pathID; }
 			set { m_pathID = value; }
 		}
@@ -63,7 +63,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Used in PathDesigner tool, only. Not in DoL code
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public ushort RegionID
 		{
 			get { return m_region; }

@@ -141,7 +141,7 @@ namespace DOL
 					m_baseitemid = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int Color
 			{
 				get
@@ -154,7 +154,7 @@ namespace DOL
 					m_color = value;
 				}
 			}
-			[DataElement(AllowDbNull = true)]
+			[DataElement(AllowDbNull = false)]
 			public int Emblem
 			{
 				get
@@ -167,7 +167,7 @@ namespace DOL
 					m_emblem = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int Rotation
 			{
 				get
@@ -180,7 +180,7 @@ namespace DOL
 					m_rotation = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int Size
 			{
 				get

@@ -58,7 +58,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public int TargetX
 		{
 			get
@@ -72,7 +72,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public int TargetY
 		{
 			get
@@ -86,7 +86,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public int TargetZ
 		{
 			get
@@ -100,7 +100,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public ushort TargetRegion
 		{
 			get
@@ -114,7 +114,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public ushort TargetHeading
 		{
 			get
@@ -128,7 +128,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int SourceX
 		{
 			get
@@ -142,7 +142,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int SourceY
 		{
 			get
@@ -156,7 +156,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int SourceZ
 		{
 			get
@@ -170,7 +170,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public ushort SourceRegion
 		{
 			get
@@ -184,7 +184,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true, Index=true)]
+		[DataElement(AllowDbNull= false, Index=true)]
 		public ushort Realm
 		{
 			get

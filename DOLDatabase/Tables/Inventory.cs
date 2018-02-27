@@ -52,7 +52,7 @@ namespace DOL.Database
 		}
 		
 		protected ushort m_ownerLot; 		// house lot owner id
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public ushort OwnerLot
 		{
 			get{return m_ownerLot;}
@@ -75,7 +75,7 @@ namespace DOL.Database
 		}
 		
 		protected bool m_iscrafted;			// iscrafted or looted ?
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual bool IsCrafted {
 			get { return m_iscrafted; }
 			set { Dirty = true; m_iscrafted = value; }
@@ -90,7 +90,7 @@ namespace DOL.Database
 		}
 		
 		protected int m_slot_pos;			// slot in inventory
-		[DataElement(AllowDbNull = true, Index = true)]
+		[DataElement(AllowDbNull = false, Index = true)]
 		public virtual int SlotPosition
 		{
 			get{return m_slot_pos;}
@@ -98,7 +98,7 @@ namespace DOL.Database
 		}
 		
 		protected int m_count; 				// count of items, for stack
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Count
 		{
 			get{return m_count;}
@@ -106,7 +106,7 @@ namespace DOL.Database
 		}
 		
 		protected int m_sellPrice;			// sell price in CM
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int SellPrice
 		{
 			get{return m_sellPrice;}
@@ -114,7 +114,7 @@ namespace DOL.Database
 		}
 		
 		protected long m_experience;			// artefact experience
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual long Experience
 		{
 			get { return m_experience; }
@@ -124,21 +124,21 @@ namespace DOL.Database
 		// Itemtemplate fields
 		// apparence fields
 		protected int m_color;
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Color
 		{
 			get { return m_color; }
 			set {Dirty = true; m_color = value; }
 		}
 		protected int m_emblem;
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Emblem
 		{
 			get { return m_emblem; }
 			set { Dirty = true;m_emblem = value; }
 		}
 		protected byte m_extension;
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual byte Extension
 		{
 			get { return m_extension; }
@@ -163,35 +163,35 @@ namespace DOL.Database
 		
 		// poison & current charges
 		protected int m_poisonSpellID;
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int PoisonSpellID
 		{
 			get { return m_poisonSpellID; }
 			set { Dirty = true;m_poisonSpellID = value; }
 		}
 		protected int m_poisonMaxCharges;
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int PoisonMaxCharges
 		{
 			get { return m_poisonMaxCharges; }
 			set { Dirty = true;m_poisonMaxCharges = value; }
 		}
 		protected int m_poisonCharges;
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int PoisonCharges
 		{
 			get { return m_poisonCharges; }
 			set { Dirty = true;m_poisonCharges = value; }
 		}
 		protected int m_charges;
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Charges
 		{
 			get { return m_charges; }
 			set { Dirty = true;m_charges = value; }
 		}
 		protected int m_charges1;
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public virtual int Charges1
 		{
 			get { return m_charges1; }

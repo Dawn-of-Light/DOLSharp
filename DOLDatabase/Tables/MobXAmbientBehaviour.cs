@@ -75,7 +75,7 @@ public class MobXAmbientBehaviour : DataObject
 		set { m_trigger = value; }
 	}
 
-	[DataElement(AllowDbNull = true)]
+	[DataElement(AllowDbNull = false)]
 	public ushort Emote
 	{
 		get { return m_emote; }

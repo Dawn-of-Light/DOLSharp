@@ -68,7 +68,7 @@ namespace DOL.Database
 		}
 
 		[DataElement(AllowDbNull=true,Unique=false)]
-		public String TaskType
+		public string TaskType
 		{
 			get {return m_TaskType;}
 			set
@@ -78,7 +78,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull=true,Unique=false)]
+		[DataElement(AllowDbNull= false, Unique=false)]
 		public int TasksDone
 		{
 			get {return m_TasksDone;}

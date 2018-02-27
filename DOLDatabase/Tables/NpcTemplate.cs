@@ -228,7 +228,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Model
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public ushort Gender
 		{
 			get { return m_gender; }
@@ -312,7 +312,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Flags
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public ushort Flags
 		{
 			get { return m_flags; }
@@ -326,7 +326,7 @@ namespace DOL.Database
 		/// <summary>
 		/// MeleeDamageType
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public byte MeleeDamageType
 		{
 			get { return m_meleeDamageType; }
@@ -340,7 +340,7 @@ namespace DOL.Database
 		/// <summary>
 		/// ParryChance
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public byte ParryChance
 		{
 			get { return m_parryChance; }
@@ -354,7 +354,7 @@ namespace DOL.Database
 		/// <summary>
 		/// EvadeChance
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public byte EvadeChance
 		{
 			get { return m_evadeChance; }
@@ -368,7 +368,7 @@ namespace DOL.Database
 		/// <summary>
 		/// BlockChance
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public byte BlockChance
 		{
 			get { return m_blockChance; }
@@ -382,7 +382,7 @@ namespace DOL.Database
 		/// <summary>
 		/// LeftHandSwingChance
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public byte LeftHandSwingChance
 		{
 			get { return m_leftHandSwingChance; }
@@ -421,7 +421,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Strength
 		{
 			get { return m_strength; }
@@ -432,7 +432,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Constitution
 		{
 			get { return m_constitution; }
@@ -443,7 +443,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Dexterity
 		{
 			get { return m_dexterity; }
@@ -454,7 +454,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Quickness
 		{
 			get { return m_quickness; }
@@ -465,7 +465,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Intelligence
 		{
 			get { return m_intelligence; }
@@ -476,7 +476,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Piety
 		{
 			get { return m_piety; }
@@ -487,7 +487,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Charisma
 		{
 			get { return m_charisma; }
@@ -498,7 +498,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Empathy
 		{
 			get { return m_empathy; }
@@ -520,7 +520,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public byte AggroLevel
 		{
 			get { return m_aggroLevel; }
@@ -531,7 +531,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int AggroRange
 		{
 			get { return m_aggroRange; }
@@ -542,7 +542,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement( AllowDbNull = true )]
+		[DataElement( AllowDbNull = false)]
 		public int Race
 		{
 			get { return m_race; }
@@ -553,7 +553,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int BodyType
 		{
 			get { return m_bodyType; }
@@ -570,7 +570,7 @@ namespace DOL.Database
 		/// if MaxDistance = 0 ... no maxdistance check
 		/// if MaxDistance less than 0 ... the amount is calculated in procent of the value and the aggrorange (in StandardMobBrain)
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int MaxDistance
 		{
 			get
@@ -590,7 +590,7 @@ namespace DOL.Database
 		/// if TetherRange > 0 ... the amount is the normal value
 		/// if TetherRange less than or equal to 0 ... no tether check
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int TetherRange
 		{
 			get
@@ -617,7 +617,7 @@ namespace DOL.Database
 				m_visibleWeaponSlots = value;
 			}
 		}
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool ReplaceMobValues
 		{
 			get

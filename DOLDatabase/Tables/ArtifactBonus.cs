@@ -77,7 +77,7 @@ namespace DOL.Database
 		/// The book ID.
 		/// </summary>
 		[DataElement(AllowDbNull = false)]
-		public String ArtifactID
+		public string ArtifactID
 		{
 			get { return m_artifactID; }
 			set

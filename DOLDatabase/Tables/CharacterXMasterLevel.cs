@@ -76,7 +76,7 @@ namespace DOL.Database
 		}
 		
 		// ML completition flag
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool StepCompleted
 		{
 			get { return m_stepcompleted; }

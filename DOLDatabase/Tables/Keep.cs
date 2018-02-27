@@ -213,7 +213,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Realm of keep
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public byte Realm
 		{
 			get
@@ -264,7 +264,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Albion difficulty level
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int AlbionDifficultyLevel
 		{
 			get
@@ -281,7 +281,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Midgard difficulty level
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int MidgardDifficultyLevel
 		{
 			get
@@ -298,7 +298,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Hibernia difficulty level
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int HiberniaDifficultyLevel
 		{
 			get
@@ -315,7 +315,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Realm at start
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int OriginalRealm
 		{
 			get
@@ -332,7 +332,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Keep type
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int KeepType
 		{
 			get
@@ -366,7 +366,7 @@ namespace DOL.Database
 		/// Use old or new skins for this keep.  0 = any, 1 = old, 2 = new
 		/// Access via KeepSkinType
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public byte SkinType
 		{
 			get

@@ -78,7 +78,7 @@ namespace DOL.Database
 		/// base friendship/relationship/aggro level at start for playe when never it before
 		///
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int BaseAggroLevel
 		{
 			get { return m_baseAggroLevel; }

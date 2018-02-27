@@ -79,7 +79,7 @@ namespace DOL.Database
 		/// MobGuild
 		/// </summary>
 		[DataElement(AllowDbNull = true, Unique = false)]
-		public String MobGuild
+		public string MobGuild
 		{
 			get { return m_mobGuild; }
 			set
@@ -93,7 +93,7 @@ namespace DOL.Database
 		/// MobFaction
 		/// </summary>
 		[DataElement(AllowDbNull = true, Unique = false)]
-		public String MobFaction
+		public string MobFaction
 		{
 			get { return m_mobFaction; }
 			set
@@ -121,7 +121,7 @@ namespace DOL.Database
 		/// LootGeneratorClass
 		/// </summary>
 		[DataElement(AllowDbNull = false, Unique = false)]
-		public String LootGeneratorClass
+		public string LootGeneratorClass
 		{
 			get { return m_lootGeneratorClass; }
 			set

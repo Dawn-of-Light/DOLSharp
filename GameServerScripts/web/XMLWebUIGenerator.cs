@@ -107,56 +107,56 @@ namespace DOL.GS.Scripts
 				set { m_srvrStatus = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int NumClients
 			{
 				get { return m_numClients; }
 				set { m_numClients = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int NumAccounts
 			{
 				get { return m_numAccts; }
 				set { m_numAccts = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int NumMobs
 			{
 				get { return m_numMobs; }
 				set { m_numMobs = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int NumInventoryItems
 			{
 				get { return m_numInvItems; }
 				set { m_numInvItems = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int NumPlayerChars
 			{
 				get { return m_numPlrChars; }
 				set { m_numPlrChars = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int NumMerchantItems
 			{
 				get { return m_numMerchantItems; }
 				set { m_numMerchantItems = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int NumItemTemplates
 			{
 				get { return m_numItemTemplates; }
 				set { m_numItemTemplates = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int NumWorldObjects
 			{
 				get { return m_numWorldObj; }
@@ -235,21 +235,21 @@ namespace DOL.GS.Scripts
 				set { m_region = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int Level
 			{
 				get { return m_lvl; }
 				set { m_lvl = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int X
 			{
 				get { return m_x; }
 				set { m_x = value; }
 			}
 
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int Y
 			{
 				get { return m_y; }

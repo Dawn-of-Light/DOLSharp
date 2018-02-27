@@ -78,7 +78,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Z position of door
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Z
 		{
 			get
@@ -95,7 +95,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Y position of door
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Y
 		{
 			get
@@ -112,7 +112,7 @@ namespace DOL.Database
 		/// <summary>
 		/// X position of door
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int X
 		{
 			get
@@ -129,7 +129,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Heading of door
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Heading
 		{
 			get
@@ -146,7 +146,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Height of door
 		/// </summary>
-		[DataElement(AllowDbNull = true, Index = true)]
+		[DataElement(AllowDbNull = false, Index = true)]
 		public int Height
 		{
 			set

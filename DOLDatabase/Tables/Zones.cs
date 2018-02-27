@@ -198,7 +198,7 @@ namespace DOL
 					m_height = value;
 				}
 			}
-			[DataElement(AllowDbNull=true)]
+			[DataElement(AllowDbNull= false)]
 			public int Experience
 			{
 				get
@@ -211,7 +211,7 @@ namespace DOL
 					m_bonusXP = value;
 				}
 			}
-			[DataElement(AllowDbNull = true)]
+			[DataElement(AllowDbNull = false)]
 			public int Realmpoints
 			{
 				get
@@ -224,7 +224,7 @@ namespace DOL
 					m_bonusRP = value;
 				}
 			}
-			[DataElement(AllowDbNull = true)]
+			[DataElement(AllowDbNull = false)]
 			public int Bountypoints
 			{
 				get
@@ -237,7 +237,7 @@ namespace DOL
 					m_bonusBP = value;
 				}
 			}
-			[DataElement(AllowDbNull = true)]
+			[DataElement(AllowDbNull = false)]
 			public int Coin
 			{
 				get
@@ -251,7 +251,7 @@ namespace DOL
 				}
 			}
 
-            [DataElement(AllowDbNull=true)]
+            [DataElement(AllowDbNull= false)]
             public byte Realm
             {
                 get

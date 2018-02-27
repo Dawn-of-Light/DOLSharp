@@ -163,7 +163,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Range
 		{
 			get
@@ -177,7 +177,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Power
 		{
 			get
@@ -191,7 +191,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public double CastTime
 		{
 			get
@@ -205,7 +205,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public double Damage
 		{
 			get
@@ -220,7 +220,7 @@ namespace DOL.Database
 		}
 
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int DamageType
 		{
 			get
@@ -248,7 +248,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Duration
 		{
 			get
@@ -262,7 +262,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Frequency
 		{
 			get
@@ -276,7 +276,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Pulse
 		{
 			get
@@ -290,7 +290,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int PulsePower
 		{
 			get
@@ -304,7 +304,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Radius
 		{
 			get
@@ -318,7 +318,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int RecastDelay
 		{
 			get
@@ -332,7 +332,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int ResurrectHealth
 		{
 			get
@@ -346,7 +346,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int ResurrectMana
 		{
 			get
@@ -360,7 +360,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public double Value
 		{
 			get
@@ -374,7 +374,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Concentration
 		{
 			get
@@ -388,7 +388,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int LifeDrainReturn
 		{
 			get
@@ -402,7 +402,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int AmnesiaChance
 		{
 			get
@@ -460,7 +460,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int InstrumentRequirement
 		{
 			get { return m_instrumentRequirement; }
@@ -471,7 +471,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int SpellGroup
 		{
 			get
@@ -485,7 +485,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int EffectGroup
 		{
 			get
@@ -500,7 +500,7 @@ namespace DOL.Database
 		}
 
 		//Multiple spells
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int SubSpellID
 		{
 			get
@@ -514,7 +514,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool MoveCast
 		{
 			get { return m_moveCast; }
@@ -525,7 +525,7 @@ namespace DOL.Database
 			}
 		}
 
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool Uninterruptible
 		{
 			get { return m_uninterruptible; }
@@ -536,7 +536,7 @@ namespace DOL.Database
 			}
 		}
 		
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool IsFocus
 		{
 			get { return m_isfocus; }
@@ -547,7 +547,7 @@ namespace DOL.Database
 			}
 		}
 		
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int SharedTimerGroup
 		{
 			get
@@ -562,7 +562,7 @@ namespace DOL.Database
 		}
 
 		#region warlock
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool IsPrimary
 		{
 			get
@@ -576,7 +576,7 @@ namespace DOL.Database
 			}
 		}
 		
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool IsSecondary
 		{
 			get
@@ -590,7 +590,7 @@ namespace DOL.Database
 			}
 		}
 		
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public bool AllowBolt
 		{
 			get

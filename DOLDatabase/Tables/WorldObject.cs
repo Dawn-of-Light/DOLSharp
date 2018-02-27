@@ -221,7 +221,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Respawn interval, in seconds
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int RespawnInterval
 		{
 			get

@@ -102,7 +102,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Baseline or Specline ?
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public bool IsBaseLine
 		{
 			get
@@ -119,7 +119,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Class ID hint or other values used by Specialization Handler
 		/// </summary>
-		[DataElement(AllowDbNull=true)]
+		[DataElement(AllowDbNull= false)]
 		public int ClassIDHint {
 			get { return m_classIDHint; }
 			set { m_classIDHint = value; }

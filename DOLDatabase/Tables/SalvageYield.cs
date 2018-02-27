@@ -47,7 +47,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Object type of item to salvage, 0 if not used
 		/// </summary>
-		[DataElement(AllowDbNull = true, Index = true)]
+		[DataElement(AllowDbNull = false, Index = true)]
 		public int ObjectType
 		{
 			get
@@ -63,7 +63,7 @@ namespace DOL.Database
 		/// <summary>
 		/// The salvage level, 0 if not used
 		/// </summary>
-		[DataElement(AllowDbNull = true, Index = true)]
+		[DataElement(AllowDbNull = false, Index = true)]
 		public int SalvageLevel
 		{
 			get
@@ -97,7 +97,7 @@ namespace DOL.Database
 		/// <summary>
 		/// Count of material to return, 0 if calculated in the code
 		/// </summary>
-		[DataElement(AllowDbNull = true)]
+		[DataElement(AllowDbNull = false)]
 		public int Count
 		{
 			get
@@ -114,7 +114,7 @@ namespace DOL.Database
         /// <summary>
         /// Realm of item to salvage, 0 for all realms
         /// </summary>
-        [DataElement(AllowDbNull = true, Index = true)]
+        [DataElement(AllowDbNull = false, Index = true)]
         public int Realm
         {
             get
