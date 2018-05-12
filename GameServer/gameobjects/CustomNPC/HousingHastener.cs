@@ -74,7 +74,7 @@ namespace DOL.GS
 			if (item.Id_nb == "Music_Ticket")
 			{
 				TargetObject = player;
-				CastSpell(SkillBase.GetSpellByID(GameHastener.SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
+				CastSpell(SkillBase.GetSpellByID(GameHastener.SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Realm_Spells));
 				player.Inventory.RemoveItem(item);
                 InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template, item.Count);
 			}

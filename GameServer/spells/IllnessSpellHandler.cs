@@ -16,8 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
+
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
@@ -27,7 +26,7 @@ namespace DOL.GS.Spells
 	/// <summary>
 	/// Pve Resurrection Illness
 	/// </summary>
-	[SpellHandler(GlobalSpells.PvEResurrectionIllnessSpellType)]
+	[SpellHandler("PveResurrectionIllness")]
 	public class PveResurrectionIllness : AbstractIllnessSpellHandler
 	{
 		/// <summary>
@@ -92,28 +91,36 @@ namespace DOL.GS.Spells
 			}
 		}
 
-		public override void OnEffectRestored(GameSpellEffect effect, int[] vars)
+        /// <summary>
+        /// Saves the effect when player quits
+        /// </summary>        
+        public override PlayerXEffect GetSavedEffect(GameSpellEffect e)
+        {
+            PlayerXEffect eff = new PlayerXEffect();
+            eff.Var1 = Spell.ID;
+            eff.Duration = e.RemainingTime;
+            eff.IsHandler = true;
+            eff.SpellLine = SpellLine.KeyName;
+            return eff;
+        }
+
+        /// <summary>
+        /// Restart the effects of resurrection illness
+        /// </summary>        
+        public override void OnEffectRestored(GameSpellEffect effect, int[] vars)
 		{
 			OnEffectStart(effect);
 		}
 
+        /// <summary>
+        /// Remove the effects of resurrection illness 
+        /// </summary>        
 		public override int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
 		{
 			return OnEffectExpires(effect, false);
-		}
+		}		
 
-		public override PlayerXEffect GetSavedEffect(GameSpellEffect e)
-		{
-			PlayerXEffect eff = new PlayerXEffect();
-			eff.Var1 = Spell.ID;
-			eff.Duration = e.RemainingTime;
-			eff.IsHandler = true;
-			eff.SpellLine = SpellLine.KeyName;
-			return eff;
-		}
-
-		public PveResurrectionIllness(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
-	
+		public PveResurrectionIllness(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}	
 	}
 
 	/// <summary>
@@ -153,5 +160,4 @@ namespace DOL.GS.Spells
 		public AbstractIllnessSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
 	
 	}
-		
 }

@@ -1026,7 +1026,7 @@ namespace DOL.GS
 	{
 		public const string Combat_Styles_Effect = "Combat Style Effects";
 		public const string Mundane_Poisons = "Mundane Poisons";
-		public const string Reserved_Spells = "Reserved Spells"; // Resurrection illness, Speed of the realm
+		public const string Reserved_Spells = "Reserved Spells"; // Masterlevels
 		public const string SiegeWeapon_Spells = "SiegeWeapon Spells";
 		public const string Item_Effects = "Item Effects";
 		public const string Potions_Effects = "Potions";
@@ -1034,7 +1034,8 @@ namespace DOL.GS
 		public const string Character_Abilities = "Character Abilities"; // dirty tricks, flurry ect...
 		public const string Item_Spells = "Item Spells";	// Combine scroll etc.
 		public const string Champion_Lines_StartWith = "Champion ";
-	}
+        public const string Realm_Spells = "Realm Spells"; // Resurrection illness, Speed of the realm
+    }
 
 	public static class GlobalConstants
 	{
@@ -2457,64 +2458,7 @@ namespace DOL.GS
 		#endregion
 		
 	}
-
-	public static class GlobalSpells
-	{
-		public const string PvEResurrectionIllnessSpellType = "PveResurrectionIllness";
-		private static Spell m_PvERezIllness;
-		public static Spell PvERezIllness
-		{
-			get
-			{
-				if (m_PvERezIllness == null)
-				{
-					DBSpell spell = new DBSpell();
-					spell.AllowAdd = false;
-					spell.CastTime = 0;
-					spell.ClientEffect = 2435;
-					spell.Icon = 2435;
-					spell.SpellID = 2435;
-					spell.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GamePlayer.Spell.ResurrectionIllness");
-					spell.Range = 0;
-					spell.Duration = 300;
-					spell.Value = 30;
-					spell.Target = "Self";
-					spell.Type = PvEResurrectionIllnessSpellType;
-					spell.Description = "The player's effectiveness is greatly reduced due to being recently resurrected.";
-					m_PvERezIllness = new Spell(spell, 50);
-					SkillBase.AddScriptedSpell(GlobalSpellsLines.Reserved_Spells, m_PvERezIllness);
-				}
-				return m_PvERezIllness;
-			}
-		}
-		public const string RvRResurrectionIllnessSpellType = "RvrResurrectionIllness";
-		private static Spell m_RvRRezIllness;
-		public static Spell RvRRezIllness
-		{
-			get
-			{
-				if (m_RvRRezIllness == null)
-				{
-					DBSpell spelltwo = new DBSpell();
-					spelltwo.AllowAdd = false;
-					spelltwo.CastTime = 0;
-					spelltwo.ClientEffect = 2435;
-					spelltwo.Icon = 2435;
-					spelltwo.SpellID = 8181;
-					spelltwo.Name = LanguageMgr.GetTranslation(ServerProperties.Properties.DB_LANGUAGE, "GamePlayer.Spell.RvrResurrectionIllness");
-					spelltwo.Range = 0;
-					spelltwo.Duration = 300;
-					spelltwo.Value = 50;
-					spelltwo.Target = "Self";
-					spelltwo.Type = RvRResurrectionIllnessSpellType;
-					spelltwo.Description = "The player's effectiveness is greatly reduced due to being recently resurrected.";
-					m_RvRRezIllness = new Spell(spelltwo, 50);
-					SkillBase.AddScriptedSpell(GlobalSpellsLines.Reserved_Spells, m_RvRRezIllness);
-				}
-				return m_RvRRezIllness;
-			}
-		}
-	}
+	
 	public static class Constants
 	{
 		public static int USE_AUTOVALUES = -1;

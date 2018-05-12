@@ -16,12 +16,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.GS;
-using DOL.GS.PacketHandler;
-using System.Collections;
+
 using DOL.GS.Effects;
-using DOL.Events;
 using DOL.Database;
 
 namespace DOL.GS.Spells
@@ -48,6 +44,25 @@ namespace DOL.GS.Spells
 			return Spell.Duration;
 		}
 
+        public override PlayerXEffect GetSavedEffect(GameSpellEffect e)
+        {
+            PlayerXEffect eff = new PlayerXEffect();
+            eff.Var1 = Spell.ID;
+            eff.Duration = e.RemainingTime;
+            eff.IsHandler = true;
+            eff.SpellLine = SpellLine.KeyName;
+            return eff;
+        }
+
+        public override void OnEffectRestored(GameSpellEffect effect, int[] vars)
+		{
+			OnEffectStart(effect);
+		}
+
+		public override int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
+		{
+			return OnEffectExpires(effect, false);
+		}		
 
 		/// <summary>
 		/// The spell handler constructor

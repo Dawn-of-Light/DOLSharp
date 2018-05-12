@@ -54,19 +54,9 @@ namespace DOL.GS.Keeps
 				return false;
 
 			TurnTo(player, 5000);
-			GameNPCHelper.CastSpellOnOwnerAndPets(this, player, SkillBase.GetSpellByID(GameHastener.SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells), false);
+			GameNPCHelper.CastSpellOnOwnerAndPets(this, player, SkillBase.GetSpellByID(GameHastener.SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Realm_Spells), false);
 			return true;
 		}
 		#endregion Examine/Interact Message
-		
-		/// <summary>
-		/// Hasteners don't respond to calls for help
-		/// </summary>
-		/// <param name="lord"></param>
-		/// <returns>Whether or not we are responding</returns>
-		public override bool AssistLord(GuardLord lord)
-		{
-			return false;
-		}
 	}
 }

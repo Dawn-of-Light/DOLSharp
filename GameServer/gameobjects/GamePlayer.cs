@@ -1796,14 +1796,14 @@ namespace DOL.GS
 			switch (DeathType)
 			{
 				case eDeathType.RvR:
-					SpellLine rvrsick = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
+					SpellLine rvrsick = SkillBase.GetSpellLine(GlobalSpellsLines.Realm_Spells);
 					if (rvrsick == null) return;
 					Spell rvrillness = SkillBase.FindSpell(8181, rvrsick);
 					player.CastSpell(rvrillness, rvrsick);
 					break;
 				case eDeathType.PvP: //PvP sickness is the same as PvE sickness - Curable
 				case eDeathType.PvE:
-					SpellLine pvesick = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
+					SpellLine pvesick = SkillBase.GetSpellLine(GlobalSpellsLines.Realm_Spells);
 					if (pvesick == null) return;
 					Spell pveillness = SkillBase.FindSpell(2435, pvesick);
 					player.CastSpell(pveillness, pvesick);

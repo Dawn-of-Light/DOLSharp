@@ -45,7 +45,7 @@ namespace DOL.GS
 				return false;
 
 			// just give out speed without asking
-			GameNPCHelper.CastSpellOnOwnerAndPets(this, player, SkillBase.GetSpellByID(GameHastener.SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells), false);
+			GameNPCHelper.CastSpellOnOwnerAndPets(this, player, SkillBase.GetSpellByID(GameHastener.SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Realm_Spells), false);
 
 
 			if (player.CurrentRegion.IsCapitalCity)
@@ -83,7 +83,7 @@ namespace DOL.GS
 					{
 						case "movement":
 							if (!player.CurrentRegion.IsRvR || player.Realm == Realm)
-								GameNPCHelper.CastSpellOnOwnerAndPets(this, player, SkillBase.GetSpellByID(GameHastener.SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells), false);
+								GameNPCHelper.CastSpellOnOwnerAndPets(this, player, SkillBase.GetSpellByID(GameHastener.SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Realm_Spells), false);
 							break;
 						case "strength":
 							if (player.CurrentRegion.IsCapitalCity)
