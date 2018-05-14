@@ -34,9 +34,9 @@ namespace DOL.GS
 	[NPCGuildScript("Healer")]
 	public class GameHealer : GameNPC
 	{
-		private const string CURED_SPELL_TYPE = GlobalSpells.PvEResurrectionIllnessSpellType;
+		private const string CURED_SPELL_TYPE = "PveResurrectionIllness";
 
-		private const string COST_BY_PTS = "cost";
+        private const string COST_BY_PTS = "cost";
 
 		/// <summary>
 		/// Constructor
