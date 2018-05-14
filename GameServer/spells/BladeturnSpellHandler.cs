@@ -16,16 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
+
+using DOL.Database;
 using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
- 
+using DOL.GS.Effects; 
  
 namespace DOL.GS.Spells
 {
 	/// <summary>
-	/// 
+	/// Bladeturn spellhandler
 	/// </summary>
 	[SpellHandlerAttribute("Bladeturn")]
 	public class BladeturnSpellHandler : SpellHandler
@@ -65,7 +64,34 @@ namespace DOL.GS.Spells
 			return 0;
 		}
 
-		// constructor
-		public BladeturnSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
+        /// <summary>
+        /// Saves the effect on player exit
+        /// </summary>        
+        public override PlayerXEffect GetSavedEffect(GameSpellEffect e)
+        {
+            PlayerXEffect eff = new PlayerXEffect();
+            eff.Var1 = Spell.ID;
+            eff.Duration = e.RemainingTime;
+            eff.IsHandler = true;
+            eff.Var2 = (int)(Spell.Value * e.Effectiveness);
+            eff.SpellLine = SpellLine.KeyName;
+            return eff;
+        }
+
+        /// <summary>
+        /// Send messages when a restored effect expires
+        /// </summary>        
+        public override int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
+        {            
+            if (!noMessages && Spell.Pulse == 0)
+            {
+                MessageToLiving(effect.Owner, Spell.Message3, eChatType.CT_SpellExpires);
+                Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message4, effect.Owner.GetName(0, false)), eChatType.CT_SpellExpires, effect.Owner);
+            }
+            return 0;
+        }
+
+        // constructor
+        public BladeturnSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
 	}
 }

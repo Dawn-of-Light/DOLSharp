@@ -19,9 +19,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using DOL.AI.Brain;
 using DOL.Database;
+using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
@@ -185,10 +184,48 @@ namespace DOL.GS.Spells
 			return true;
 		}
 
-		/// <summary>
-		/// Delve Info
-		/// </summary>
-		public override IList<string> DelveInfo
+        /// <summary>
+        /// Saves the effect on player exit
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public override PlayerXEffect GetSavedEffect(GameSpellEffect e)
+        {
+            PlayerXEffect eff = new PlayerXEffect();
+            eff.Var1 = Spell.ID;
+            eff.Duration = e.RemainingTime;
+            eff.IsHandler = true;
+            eff.Var2 = (int)(Spell.Value * e.Effectiveness);
+            eff.SpellLine = SpellLine.KeyName;
+            return eff;
+        }
+
+        /// <summary>
+        /// Adds the handler when a proc effect is restored
+        /// </summary>        
+        public override void OnEffectRestored(GameSpellEffect effect, int[] vars)
+        {
+            GameEventMgr.AddHandler(effect.Owner, EventType, new DOLEventHandler(EventHandler));
+        }
+
+        /// <summary>
+        /// Send messages when effect expires and remove associated effect handler
+        /// </summary>        
+        public override int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
+        {
+            GameEventMgr.RemoveHandler(effect.Owner, EventType, new DOLEventHandler(EventHandler));
+            if (!noMessages && Spell.Pulse == 0)
+            {
+                MessageToLiving(effect.Owner, Spell.Message3, eChatType.CT_SpellExpires);
+                Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message4, effect.Owner.GetName(0, false)), eChatType.CT_SpellExpires, effect.Owner);
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Delve Info
+        /// </summary>
+        public override IList<string> DelveInfo
 		{
 			get
 			{
@@ -250,8 +287,8 @@ namespace DOL.GS.Spells
 				}
 
 				return list;
-			}
-		}
+			}        
+        }
 	}
 
 	/// <summary>
@@ -303,7 +340,7 @@ namespace DOL.GS.Spells
 			if (baseChance < 1)
 				baseChance = 1;
 			
-			if (ad.Attacker == ad.Attacker as GameNPC)
+			if (ad.Attacker == ad.Attacker as GameNPC) // Add support for multiple procs - Unty
 			{
 				Spell baseSpell = null;
 							
@@ -323,7 +360,6 @@ namespace DOL.GS.Spells
 				}
 				m_procSpell = SkillBase.GetSpellByID((int)baseSpell.Value);
 			}
-			
 			if (Util.Chance(baseChance))
 			{
 				ISpellHandler handler = ScriptMgr.CreateSpellHandler((GameLiving)sender, m_procSpell, m_procSpellLine);
@@ -390,7 +426,7 @@ namespace DOL.GS.Spells
 				baseChance /= 2;
 
 			if (baseChance < 1)
-				baseChance = 1;
+				baseChance = 1;			
 
 			if (Util.Chance(baseChance))
 			{
