@@ -40,7 +40,7 @@ namespace DOL.GS.PacketHandler
 		/// This is used to build a server side "Position Object"
 		/// Usually Position Packet Should only be relayed
 		/// The only purpose of this method is refreshing postion when there is Lag        
-		/// <param name="player"></param>
+		/// </summary>		
 		public override void SendPlayerForgedPosition(GamePlayer player)
         {
             using (GSUDPPacketOut pak = new GSUDPPacketOut(GetPacketCode(eServerPackets.PlayerPosition)))
