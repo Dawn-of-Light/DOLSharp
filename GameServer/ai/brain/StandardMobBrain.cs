@@ -1163,38 +1163,38 @@ namespace DOL.AI.Brain
 			// clear current target, set target based on spell type, cast spell, return target to original target
 
 			Body.TargetObject = null;
-			switch (spell.SpellType)
+			switch (spell.SpellType.ToUpper())
 			{
 					#region Buffs
-				case "StrengthConstitutionBuff":
-				case "DexterityQuicknessBuff":
-				case "StrengthBuff":
-				case "DexterityBuff":
-				case "ConstitutionBuff":
-				case "ArmorFactorBuff":
-				case "ArmorAbsorptionBuff":
-				case "CombatSpeedBuff":
-				case "MeleeDamageBuff":
-				case "AcuityBuff":
-				case "HealthRegenBuff":
-				case "DamageAdd":
-				case "DamageShield":
-				case "BodyResistBuff":
-				case "ColdResistBuff":
-				case "EnergyResistBuff":
-				case "HeatResistBuff":
-				case "MatterResistBuff":
-				case "SpiritResistBuff":
-				case "BodySpiritEnergyBuff":
-				case "HeatColdMatterBuff":
-				case "CrushSlashThrustBuff":
-				case "AllMagicResistsBuff":
-				case "AllMeleeResistsBuff":
-				case "AllResistsBuff":
-				case "OffensiveProc":
-				case "DefensiveProc":
-				case "Bladeturn":
-				case "ToHitBuff":
+				case "STRENGTHCONSTITUTIONBUFF":
+				case "DEXTERITYQUICKNESSBUFF":
+				case "STRENGTHBUFF":
+				case "DEXTERITYBUFF":
+				case "CONSTITUTIONBUFF":
+				case "ARMORFACTORBUFF":
+				case "ARMORABSORPTIONBUFF":
+				case "COMBATSPEEDBUFF":
+				case "MELEEDAMAGEBUFF":
+				case "ACUITYBUFF":
+				case "HEALTHREGENBUFF":
+				case "DAMAGEADD":
+				case "DAMAGESHIELD":
+				case "BODYRESISTBUFF":
+				case "COLDRESISTBUFF":
+				case "ENERGYRESISTBUFF":
+				case "HEATRESISTBUFF":
+				case "MATTERRESISTBUFF":
+				case "SPIRITRESISTBUFF":
+				case "BODYSPIRITENERGYBUFF":
+				case "HEATCOLDMATTERBUFF":
+				case "CRUSHSLASHTHRUSTBUFF":
+				case "ALLMAGICRESISTSBUFF":
+				case "ALLMELEERESISTSBUFF":
+				case "ALLRESISTSBUFF":
+				case "OFFENSIVEPROC":
+				case "DEFENSIVEPROC":
+				case "BLADETURN":
+				case "TOHITBUFF":
 					{
 						// Buff self, if not in melee, but not each and every mob
 						// at the same time, because it looks silly.
@@ -1213,7 +1213,7 @@ namespace DOL.AI.Brain
 					#endregion Buffs
 
 					#region Disease Cure/Poison Cure/Summon
-				case "CureDisease":
+				case "CUREDISEASE":
 					if (Body.IsDiseased)
 					{
 						Body.TargetObject = Body;
@@ -1226,7 +1226,7 @@ namespace DOL.AI.Brain
 						break;
 					}
 					break;
-				case "CurePoison":
+				case "CUREPOISON":
 					if (LivingIsPoisoned(Body))
 					{
 						Body.TargetObject = Body;
@@ -1239,10 +1239,10 @@ namespace DOL.AI.Brain
 						break;
 					}
 					break;
-				case "Summon":
+				case "SUMMON":
 					Body.TargetObject = Body;
 					break;
-				case "SummonMinion":
+				case "SUMMONMINION":
 					//If the list is null, lets make sure it gets initialized!
 					if (Body.ControlledNpcList == null)
 						Body.InitControlledBrainArray(2);
@@ -1262,11 +1262,17 @@ namespace DOL.AI.Brain
 					}
 					Body.TargetObject = Body;
 					break;
-					#endregion Disease Cure/Poison Cure/Summon
+                #endregion Disease Cure/Poison Cure/Summon
 
-					#region Heals
-				case "Heal":
-					if (spell.Target.ToLower() == "self")
+                #region Heals
+                case "COMBATHEAL":
+                case "HEAL":
+                case "HEALOVERTIME":
+                case "MERCHEAL":
+                case "OMNIHEAL":
+                case "PBAEHEAL":
+                case "SPREADHEAL":
+                    if (spell.Target.ToLower() == "self")
 					{
 						// if we have a self heal and health is less than 75% then heal, otherwise return false to try another spell or do nothing
 						if (Body.HealthPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD)
@@ -1297,13 +1303,13 @@ namespace DOL.AI.Brain
 
 					//case "SummonAnimistFnF":
 					//case "SummonAnimistPet":
-				case "SummonCommander":
-				case "SummonDruidPet":
-				case "SummonHunterPet":
-				case "SummonNecroPet":
-				case "SummonUnderhill":
-				case "SummonSimulacrum":
-				case "SummonSpiritFighter":
+				case "SUMMONCOMMANDER":
+				case "SUMMONDRUIDPET":
+				case "SUMMONHUNTERPET":
+				case "SUMMONNECROPET":
+				case "SUMMONUNDERHILL":
+				case "SUMMONSIMULACRUM":
+				case "SUMMONSPIRITFIGHTER":
 					//case "SummonTheurgistPet":
 					if (Body.ControlledBrain != null)
 						break;
@@ -1311,8 +1317,8 @@ namespace DOL.AI.Brain
 					break;
 			}
 
-			if (Body.TargetObject != null)
-			{
+			if (Body.TargetObject != null && (spell.Duration == 0 || (Body.TargetObject is GameLiving living && LivingHasEffect(living, spell) == false)))
+            {
 				if (Body.IsMoving && spell.CastTime > 0)
 					Body.StopFollowing();
 
@@ -1338,8 +1344,8 @@ namespace DOL.AI.Brain
 			if (spell.Target.ToLower() != "enemy" && spell.Target.ToLower() != "area" && spell.Target.ToLower() != "cone")
 				return false;
 
-			if (Body.TargetObject != null)
-			{
+			if (Body.TargetObject != null && (spell.Duration == 0 || (Body.TargetObject is GameLiving living && LivingHasEffect(living, spell) == false)))
+            {
 				if (Body.IsMoving && spell.CastTime > 0)
 					Body.StopFollowing();
 
@@ -1402,8 +1408,8 @@ namespace DOL.AI.Brain
 					#endregion
 			}
 
-			if (Body.TargetObject != null)
-			{
+			if (Body.TargetObject != null && (spell.Duration == 0 || (Body.TargetObject is GameLiving living && LivingHasEffect(living, spell) == false)))
+            {
 				Body.CastSpell(spell, m_mobSpellLine);
 				Body.TargetObject = lastTarget;
 				return true;
