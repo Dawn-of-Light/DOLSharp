@@ -594,11 +594,15 @@ namespace DOL.AI.Brain
                 case "SUPERIORCOURAGEBUFF":
                 case "TOHITBUFF":
                 case "WEAPONSKILLBUFF":
-					{
+                case "DAMAGEADD":
+                case "OFFENSIVEPROC":
+                case "DEFENSIVEPROC":
+                case "DAMAGESHIELD":
+                    {
 						//Buff self
 						if (!LivingHasEffect(Body, spell))
 						{
-							Body.TargetObject = Body;
+                            Body.TargetObject = Body;
 							break;
 						}
 
@@ -609,7 +613,7 @@ namespace DOL.AI.Brain
 							//Buff owner
 							if (!LivingHasEffect(owner, spell))
 							{
-								Body.TargetObject = owner;
+                                Body.TargetObject = owner;
 								break;
 							}
 
@@ -622,7 +626,7 @@ namespace DOL.AI.Brain
 										continue;
 									if (!LivingHasEffect(icb.Body, spell))
 									{
-										Body.TargetObject = icb.Body;
+                                        Body.TargetObject = icb.Body;
 										break;
 									}
 								}
@@ -635,7 +639,7 @@ namespace DOL.AI.Brain
 							{
 								if (!LivingHasEffect(player, spell))
 								{
-									Body.TargetObject = player;
+                                    Body.TargetObject = player;
 									break;
 								}
 
@@ -645,7 +649,7 @@ namespace DOL.AI.Brain
 									{
 										if (!LivingHasEffect(p, spell) && Body.GetDistanceTo(p) <= spell.Range)
 										{
-											Body.TargetObject = p;
+                                            Body.TargetObject = p;
 											break;
 										}
 									}
