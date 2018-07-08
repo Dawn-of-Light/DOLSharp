@@ -543,38 +543,57 @@ namespace DOL.AI.Brain
 
 			// clear current target, set target based on spell type, cast spell, return target to original target
 
-			switch (spell.SpellType)
+			switch (spell.SpellType.ToUpper())
 			{
-					#region Buffs
-				case "StrengthConstitutionBuff":
-				case "DexterityQuicknessBuff":
-				case "StrengthBuff":
-				case "DexterityBuff":
-				case "ConstitutionBuff":
-				case "ArmorFactorBuff":
-				case "ArmorAbsorptionBuff":
-				case "CombatSpeedBuff":
-				case "MeleeDamageBuff":
-				case "AcuityBuff":
-				case "HealthRegenBuff":
-				case "DamageAdd":
-				case "DamageShield":
-				case "BodyResistBuff":
-				case "ColdResistBuff":
-				case "EnergyResistBuff":
-				case "HeatResistBuff":
-				case "MatterResistBuff":
-				case "SpiritResistBuff":
-				case "BodySpiritEnergyBuff":
-				case "HeatColdMatterBuff":
-				case "CrushSlashThrustBuff":
-				case "AllMagicResistsBuff":
-				case "AllMeleeResistsBuff":
-				case "AllResistsBuff":
-				case "OffensiveProc":
-				case "DefensiveProc":
-				case "Bladeturn":
-				case "ToHitBuff":
+                #region Buffs
+                case "AcuityBuff":
+                case "AFHITSBUFF":
+                case "ALLMAGICRESISTSBUFF":
+                case "ARMORABSORPTIONBUFF":
+                case "ARMORFACTORBUFF":
+                case "BODYRESISTBUFF":
+                case "BODYSPIRITENERGYBUFF":
+                case "BUFF":
+                case "CELERITYBUFF":
+                case "COLDRESISTBUFF":
+                case "COMBATSPEEDBUFF":
+                case "CONSTITUTIONBUFF":
+                case "COURAGEBUFF":
+                case "CRUSHSLASHTHRUSTBUFF":
+                case "DEXTERITYBUFF":
+                case "DEXTERITYQUICKNESSBUFF":
+                case "EFFECTIVENESSBUFF":
+                case "ENDURANCEREGENBUFF":
+                case "ENERGYRESISTBUFF":
+                case "FATIGUECONSUMPTIONBUFF":
+                case "FELXIBLESKILLBUFF":
+                case "HASTEBUFF":
+                case "HEALTHREGENBUFF":
+                case "HEATCOLDMATTERBUFF":
+                case "HEATRESISTBUFF":
+                case "HEROISMBUFF":
+                case "KEEPDAMAGEBUFF":
+                case "MAGICRESISTSBUFF":
+                case "MATTERRESISTBUFF":
+                case "MELEEDAMAGEBUFF":
+                case "MESMERIZEDURATIONBUFF":
+                case "MLABSBUFF":
+                case "PALADINARMORFACTORBUFF":
+                case "PARRYBUFF":
+                case "POWERHEALTHENDURANCEREGENBUFF":
+                case "POWERREGENBUFF":
+                case "SAVAGECOMBATSPEEDBUFF":
+                case "SAVAGECRUSHRESISTANCEBUFF":
+                case "SAVAGEDPSBUFF":
+                case "SAVAGEPARRYBUFF":
+                case "SAVAGESLASHRESISTANCEBUFF":
+                case "SAVAGETHRUSTRESISTANCEBUFF":
+                case "SPIRITRESISTBUFF":
+                case "STRENGTHBUFF":
+                case "STRENGTHCONSTITUTIONBUFF":
+                case "SUPERIORCOURAGEBUFF":
+                case "TOHITBUFF":
+                case "WEAPONSKILLBUFF":
 					{
 						//Buff self
 						if (!LivingHasEffect(Body, spell))
@@ -638,7 +657,7 @@ namespace DOL.AI.Brain
 					#endregion Buffs
 
 					#region Disease Cure/Poison Cure/Summon
-				case "CureDisease":
+				case "CUREDISEASE":
 					//Cure self
 					if (Body.IsDiseased)
 					{
@@ -670,7 +689,7 @@ namespace DOL.AI.Brain
 						}
 					}
 					break;
-				case "CurePoison":
+				case "CUREPOISON":
 					//Cure self
 					if (LivingIsPoisoned(Body))
 					{
@@ -702,14 +721,20 @@ namespace DOL.AI.Brain
 						}
 					}
 					break;
-				case "Summon":
+				case "SUMMON":
 					Body.TargetObject = Body;
 					break;
-					#endregion
+                #endregion
 
-					#region Heals
-				case "Heal":
-					if (spell.Target.ToLower() == "self")
+                #region Heals
+                case "COMBATHEAL":
+                case "HEAL":
+                case "HEALOVERTIME":
+                case "MERCHEAL":
+                case "OMNIHEAL":
+                case "PBAEHEAL":
+                case "SPREADHEAL":
+                    if (spell.Target.ToLower() == "self")
 					{
 						// if we have a self heal and health is less than 75% then heal, otherwise return false to try another spell or do nothing
 						if (Body.HealthPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD)
@@ -752,8 +777,8 @@ namespace DOL.AI.Brain
 					#endregion
 			}
 
-			if (Body.TargetObject != null)
-			{
+			if (Body.TargetObject != null && (spell.Duration == 0 || (Body.TargetObject is GameLiving living && LivingHasEffect(living, spell) == false)))
+            {
 				if (Body.IsMoving)
 					Body.StopFollowing();
 
