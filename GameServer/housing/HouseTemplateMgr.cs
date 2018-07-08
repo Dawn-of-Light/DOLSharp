@@ -148,6 +148,7 @@ namespace DOL.GS.Housing
             CheckItemTemplate("Hibernia mansion deed", "housing_hib_mansion_deed", 498, 0, 250000000, 0, 0, 0, 0, 3);
             CheckItemTemplate("Porch deed", "housing_porch_deed", 498, 0, 5000000, 0, 0, 0, 0, 0);
             CheckItemTemplate("Porch remove deed", "housing_porch_remove_deed", 498, 0, 500000, 0, 0, 0, 0, 0);
+            CheckItemTemplate("Consignment Merchant", "housing_consignment_deed", 593, 0, 1000000, 0, 0, 0, 0, 0);
             CheckItemTemplate("deed of guild transfer", "housing_deed_of_guild_transfer", 498, 0, 500000, 0, 0, 0, 0, 0);
             CheckItemTemplate("House removal deed", "housing_house_removal_deed", 498, 0, 50000000, 0, 0, 0, 0, 0);
 
@@ -199,19 +200,19 @@ namespace DOL.GS.Housing
             //lot markers
             string[] alblotmarkeritems = {
                                              "housing_alb_cottage_deed", "housing_alb_house_deed", "housing_alb_villa_deed", "housing_alb_mansion_deed",
-                                             "housing_porch_deed", "housing_porch_remove_deed", //"housing_deed_of_guild_transfer"
+                                             "housing_porch_deed", "housing_porch_remove_deed", "housing_consignment_deed",//"housing_deed_of_guild_transfer"
 			                             };
             CheckMerchantItems("housing_alb_lotmarker", alblotmarkeritems);
 
             string[] midlotmarkeritems = {
                                              "housing_mid_cottage_deed", "housing_mid_house_deed", "housing_mid_villa_deed", "housing_mid_mansion_deed",
-                                             "housing_porch_deed", "housing_porch_remove_deed", //"housing_deed_of_guild_transfer"
+                                             "housing_porch_deed", "housing_porch_remove_deed", "housing_consignment_deed",//"housing_deed_of_guild_transfer"
 			                             };
             CheckMerchantItems("housing_mid_lotmarker", midlotmarkeritems);
 
             string[] hiblotmarkeritems = {
                                              "housing_hib_cottage_deed", "housing_hib_house_deed", "housing_hib_villa_deed", "housing_hib_mansion_deed",
-                                             "housing_porch_deed", "housing_porch_remove_deed", //"housing_deed_of_guild_transfer"
+                                             "housing_porch_deed", "housing_porch_remove_deed", "housing_consignment_deed",//"housing_deed_of_guild_transfer"
 			                             };
             CheckMerchantItems("housing_hib_lotmarker", hiblotmarkeritems);
 
@@ -219,7 +220,7 @@ namespace DOL.GS.Housing
                                              "housing_alb_cottage_deed", "housing_alb_house_deed", "housing_alb_villa_deed", "housing_alb_mansion_deed",
                                              "housing_hib_cottage_deed", "housing_hib_house_deed", "housing_hib_villa_deed", "housing_hib_mansion_deed",
                                              "housing_mid_cottage_deed", "housing_mid_house_deed", "housing_mid_villa_deed", "housing_mid_mansion_deed",
-                                             "housing_porch_deed", "housing_porch_remove_deed", //"housing_deed_of_guild_transfer"
+                                             "housing_porch_deed", "housing_porch_remove_deed", "housing_consignment_deed", //"housing_deed_of_guild_transfer"
 			                             };
             CheckMerchantItems("housing_custom_lotmarker", customlotmarkeritems);
 
