@@ -1,58 +1,53 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Base Caster Class Forester
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Forester, "Forester", "Forester")]
-	public class ClassForester : CharacterClassBase
-	{
-		public ClassForester()
-			: base()
-		{
-			m_specializationMultiplier = 10;
-			m_wsbase = 280;
-			m_baseHP = 560;
-			m_manaStat = eStat.INT;
-		}
+    /// <summary>
+    /// Hibernia Base Caster Class Forester
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Forester, "Forester", "Forester")]
+    public class ClassForester : CharacterClassBase
+    {
+        public ClassForester()
+        {
+            SpecPointsMultiplier = 10;
+            WeaponSkillBase = 280;
+            BaseHP = 560;
+            ManaStat = eStat.INT;
+        }
 
-		public override string GetTitle(GamePlayer player, int level)
-		{
-			return HasAdvancedFromBaseClass() ? base.GetTitle(player, level) : base.GetTitle(player, 0);
-		}
+        public override string GetTitle(GamePlayer player, int level)
+        {
+            return HasAdvancedFromBaseClass() ? base.GetTitle(player, level) : base.GetTitle(player, 0);
+        }
 
-		public override eClassType ClassType
-		{
-			get { return eClassType.ListCaster; }
-		}
+        public override eClassType ClassType => eClassType.ListCaster;
 
-		public override GameTrainer.eChampionTrainerType ChampionTrainerType()
-		{
-			return GameTrainer.eChampionTrainerType.Forester;
-		}
+        public override GameTrainer.eChampionTrainerType ChampionTrainerType()
+        {
+            return GameTrainer.eChampionTrainerType.Forester;
+        }
 
-		public override bool HasAdvancedFromBaseClass()
-		{
-			return false;
-		}
-	}
+        public override bool HasAdvancedFromBaseClass()
+        {
+            return false;
+        }
+    }
 }

@@ -13,37 +13,35 @@
 *
 * You should have received a copy of the GNU General Public License
 * along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, 
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307,
 USA.
 *
 */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Valewalker Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Valewalker, "Valewalker", "Forester")]
-	public class ClassValewalker : ClassForester
-	{
-		public ClassValewalker()
-			: base()
-		{
-			m_profession = "PlayerClass.Profession.PathofAffinity";
-			m_specializationMultiplier = 15;
-			m_primaryStat = eStat.STR;
-			m_secondaryStat = eStat.INT;
-			m_tertiaryStat = eStat.CON;
-			m_manaStat = eStat.INT;
-			m_wsbase = 400;
-			m_baseHP = 720;
-		}
+    /// <summary>
+    /// Hibernia Valewalker Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Valewalker, "Valewalker", "Forester")]
+    public class ClassValewalker : ClassForester
+    {
+        public ClassValewalker()
+        {
+            Profession = "PlayerClass.Profession.PathofAffinity";
+            SpecPointsMultiplier = 15;
+            PrimaryStat = eStat.STR;
+            SecondaryStat = eStat.INT;
+            TertiaryStat = eStat.CON;
+            ManaStat = eStat.INT;
+            WeaponSkillBase = 400;
+            BaseHP = 720;
+        }
 
-		public override bool HasAdvancedFromBaseClass()
-		{
-			return true;
-		}
-	}
+        public override bool HasAdvancedFromBaseClass()
+        {
+            return true;
+        }
+    }
 }
 

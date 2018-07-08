@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
-using DOL.GS.SkillHandler;
-using DOL.GS.PropertyCalc;
 using DOL.Events;
 
 namespace DOL.GS.Effects
@@ -12,16 +9,15 @@ namespace DOL.GS.Effects
     /// </summary>
     public class BadgeOfValorEffect : TimedEffect
     {
-        //http://daocpedia.de/index.php/Abzeichen_des_Mutes    
+        // http://daocpedia.de/index.php/Abzeichen_des_Mutes
 
         /// <summary>
         /// Default constructor for AmelioratingMelodiesEffect
         /// </summary>
-		public BadgeOfValorEffect()
-			: base(20000)
-		{
-
-		}
+        public BadgeOfValorEffect()
+            : base(20000)
+        {
+        }
 
         /// <summary>
         /// Called when effect is to be started
@@ -29,11 +25,9 @@ namespace DOL.GS.Effects
         /// <param name="living"></param>
         public override void Start(GameLiving living)
         {
-			base.Start(living);
-            GameEventMgr.AddHandler(m_owner, GamePlayerEvent.AttackFinished, new DOLEventHandler(AttackFinished));
+            base.Start(living);
+            GameEventMgr.AddHandler(m_owner, GameLivingEvent.AttackFinished, new DOLEventHandler(AttackFinished));
         }
-
-
 
         /// <summary>
         /// Called when a player is inflicted in an combat action
@@ -44,25 +38,32 @@ namespace DOL.GS.Effects
         private void AttackFinished(DOLEvent e, object sender, EventArgs args)
         {
             AttackFinishedEventArgs afea = (AttackFinishedEventArgs)args;
-            
+
             if (m_owner != afea.AttackData.Attacker || afea.AttackData.AttackType == AttackData.eAttackType.Spell)
+            {
                 return;
-            //only affect this onto players
+            }
+
+            // only affect this onto players
             if (!(afea.AttackData.Target is GamePlayer))
+            {
                 return;
-            GamePlayer target = afea.AttackData.Target as GamePlayer;
-            
+            }
+
+            GamePlayer target = (GamePlayer) afea.AttackData.Target;
+
             Database.InventoryItem armor = target.Inventory.GetItem((eInventorySlot)((int)afea.AttackData.ArmorHitLocation));
-            
+
             if (armor == null || armor.SPD_ABS == 0)
+            {
                 return;
-            //cap at 50%
+            }
+
+            // cap at 50%
             int bonusPercent = Math.Min(armor.SPD_ABS,50);
-                        
 
-            //add 2times percentual of abs, one time will be substracted later
-            afea.AttackData.Damage = (int)(armor.SPD_ABS*(bonusPercent*2 + 100)*0.01 );
-
+            // add 2times percentual of abs, one time will be substracted later
+            afea.AttackData.Damage = (int)(armor.SPD_ABS * (bonusPercent * 2 + 100) * 0.01);
         }
 
         /// <summary>
@@ -70,32 +71,19 @@ namespace DOL.GS.Effects
         /// </summary>
         public override void Stop()
         {
-			base.Stop();
-            GameEventMgr.RemoveHandler(m_owner, GamePlayerEvent.AttackFinished, new DOLEventHandler(AttackFinished));
+            base.Stop();
+            GameEventMgr.RemoveHandler(m_owner, GameLivingEvent.AttackFinished, new DOLEventHandler(AttackFinished));
         }
-
 
         /// <summary>
         /// Name of the effect
         /// </summary>
-        public override string Name
-        {
-            get
-            {
-                return "Badge of Valor";
-            }
-        }
+        public override string Name => "Badge of Valor";
 
         /// <summary>
         /// Icon ID
         /// </summary>
-        public override UInt16 Icon
-        {
-            get
-            {
-                return 3056;
-            }
-        }
+        public override ushort Icon => 3056;
 
         /// <summary>
         /// Delve information
@@ -104,15 +92,17 @@ namespace DOL.GS.Effects
         {
             get
             {
-                var delveInfoList = new List<string>();
-                delveInfoList.Add("Melee damage for the next 20 seconds will be INCREASED by the targets armor-based ABS instead of decreased.");
-                delveInfoList.Add(" ");
+                var delveInfoList = new List<string>
+                {
+                    "Melee damage for the next 20 seconds will be INCREASED by the targets armor-based ABS instead of decreased.",
+                    " "
+                };
 
-                int seconds = (int) RemainingTime/1000;
+                int seconds = RemainingTime / 1000;
                 if (seconds > 0)
                 {
                     delveInfoList.Add(" ");
-                    delveInfoList.Add("- " + seconds + " seconds remaining.");
+                    delveInfoList.Add($"- {seconds} seconds remaining.");
                 }
 
                 return delveInfoList;

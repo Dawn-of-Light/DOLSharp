@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -19,7 +19,6 @@
 using System.Reflection;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using DOL.GS;
 using log4net;
 using DOL.Language;
 
@@ -34,7 +33,7 @@ namespace DOL.GS.SkillHandler
         /// <summary>
         /// Defines a logger for this class.
         /// </summary>
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// The guard distance
@@ -43,31 +42,38 @@ namespace DOL.GS.SkillHandler
 
         public void Execute(Ability ab, GamePlayer player)
         {
+            if (player == null)
+            {
+                if (Log.IsWarnEnabled)
+                {
+                    Log.Warn("Could not retrieve player in BodyguardAbilityHandler.");
+                }
+
+                return;
+            }
+
             if (!player.IsAlive)
             {
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.CannotUse.Bodyguard.Dead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                return;
-            }
-            if (player == null)
-            {
-                if (log.IsWarnEnabled)
-                    log.Warn("Could not retrieve player in BodyguardAbilityHandler.");
                 return;
             }
 
             GameObject targetObject = player.TargetObject;
             if (targetObject == null)
             {
-				foreach (BodyguardEffect bg in player.EffectList.GetAllOfType<BodyguardEffect>())
+                foreach (BodyguardEffect bg in player.EffectList.GetAllOfType<BodyguardEffect>())
                 {
                     if (bg.GuardSource == player)
+                    {
                         bg.Cancel(false);
+                    }
                 }
+
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.CannotUse.Bodyguard.Dead"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
 
-            // You cannot guard attacks on yourself            
+            // You cannot guard attacks on yourself
             GamePlayer guardTarget = player.TargetObject as GamePlayer;
             if (guardTarget == player)
             {
@@ -75,7 +81,7 @@ namespace DOL.GS.SkillHandler
                 return;
             }
 
-            // Only attacks on other players may be guarded. 
+            // Only attacks on other players may be guarded.
             // guard may only be used on other players in group
             Group group = player.Group;
             if (guardTarget == null || group == null || !group.IsInTheGroup(guardTarget))
@@ -85,32 +91,39 @@ namespace DOL.GS.SkillHandler
             }
 
             // check if someone is guarding the target
-			foreach (BodyguardEffect bg in guardTarget.EffectList.GetAllOfType<BodyguardEffect>())
+            foreach (BodyguardEffect bg in guardTarget.EffectList.GetAllOfType<BodyguardEffect>())
             {
-                if (bg.GuardTarget != guardTarget) continue;
+                if (bg.GuardTarget != guardTarget)
+                {
+                    continue;
+                }
+
                 if (bg.GuardSource == player)
                 {
                     bg.Cancel(false);
                     return;
                 }
+
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.CannotUse.Bodyguard.GuardTargetAlreadyBodyGuarded", bg.GuardSource.GetName(0, true), bg.GuardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
 
-			foreach (BodyguardEffect bg in player.EffectList.GetAllOfType<BodyguardEffect>())
+            foreach (BodyguardEffect bg in player.EffectList.GetAllOfType<BodyguardEffect>())
             {
-                    if (bg != null && player == bg.GuardTarget)
-                    {
-                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.CannotUse.Bodyguard.GuardSourceBodyGuarded"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                        return;
-                    }
+                if (bg != null && player == bg.GuardTarget)
+                {
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.CannotUse.Bodyguard.GuardSourceBodyGuarded"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return;
+                }
             }
 
             // cancel all guard effects by this player before adding a new one
-			foreach (BodyguardEffect bg in player.EffectList.GetAllOfType<BodyguardEffect>())
+            foreach (BodyguardEffect bg in player.EffectList.GetAllOfType<BodyguardEffect>())
             {
                 if (bg.GuardSource == player)
+                {
                     bg.Cancel(false);
+                }
             }
 
             new BodyguardEffect().Start(player, guardTarget);

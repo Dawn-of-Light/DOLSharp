@@ -22,45 +22,47 @@ using DOL.GS;
 
 namespace DOL.AI.Brain
 {
-	public class BomberBrain : ControlledNpcBrain
-	{
-		public BomberBrain(GameLiving owner) : base(owner) { }
+    public class BomberBrain : ControlledNpcBrain
+    {
+        public BomberBrain(GameLiving owner) : base(owner) { }
 
-		public override int ThinkInterval
-		{
-			get { return 700; }
-		}
+        public override int ThinkInterval
+        {
+            get { return 700; }
+        }
 
-		protected override bool CheckDefensiveSpells(Spell spell)
-		{
-			return true;
-		}
+        protected override bool CheckDefensiveSpells(Spell spell)
+        {
+            return true;
+        }
 
-		protected override bool CheckOffensiveSpells(Spell spell)
-		{
-			return true;
-		}
+        protected override bool CheckOffensiveSpells(Spell spell)
+        {
+            return true;
+        }
 
-		#region Think
-		public override void Think()
-		{
-			GameLiving living = Body.TempProperties.getProperty<object>("bombertarget", null) as GameLiving;
-			if(living == null) return;
-			if(Body.IsWithinRadius( living, 150 ))
-			{
-				Body.Notify(GameNPCEvent.ArriveAtTarget, Body);
-			}
-		}
-		
-		/// <summary>
-		/// Don't follow owner
-		/// </summary>
-		public override void FollowOwner() { }
-		#endregion
+        public override void Think()
+        {
+            GameLiving living = Body.TempProperties.getProperty<object>("bombertarget", null) as GameLiving;
+            if (living == null)
+            {
+                return;
+            }
 
-		/// <summary>
-		/// Updates the pet window
-		/// </summary>
-		public override void UpdatePetWindow() { }
-	}
+            if (Body.IsWithinRadius(living, 150))
+            {
+                Body.Notify(GameNPCEvent.ArriveAtTarget, Body);
+            }
+        }
+
+        /// <summary>
+        /// Don't follow owner
+        /// </summary>
+        public override void FollowOwner() { }
+
+        /// <summary>
+        /// Updates the pet window
+        /// </summary>
+        public override void UpdatePetWindow() { }
+    }
 }

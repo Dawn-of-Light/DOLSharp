@@ -1,156 +1,204 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
 using DOL.Events;
 using DOL.GS.Keeps;
 
 namespace DOL.GS.Quests
 {
-	public class CaptureMission : AbstractMission
-	{
-		private AbstractGameKeep m_keep = null;
+    public class CaptureMission : AbstractMission
+    {
+        private readonly AbstractGameKeep _keep;
 
-		public enum eCaptureType : int
-		{ 
-			Tower = 1,
-			Keep = 2,
-		}
+        public enum eCaptureType
+        {
+            Tower = 1,
+            Keep = 2,
+        }
 
-		public CaptureMission(eCaptureType type, object owner, string hint)
-			: base(owner)
-		{
-			eRealm realm = eRealm.None;
-			if (owner is Group)
-				realm = (owner as Group).Leader.Realm;
-			else if (owner is GamePlayer)
-				realm = (owner as GamePlayer).Realm;
+        public CaptureMission(eCaptureType type, object owner, string hint)
+            : base(owner)
+        {
+            eRealm realm = eRealm.None;
+            if (owner is Group group)
+            {
+                realm = group.Leader.Realm;
+            }
+            else if (owner is GamePlayer)
+            {
+                realm = ((GamePlayer) owner).Realm;
+            }
 
-			ArrayList list = new ArrayList();
+            ArrayList list = new ArrayList();
 
-			switch (type)
-			{
-				case eCaptureType.Tower:
-					{
-						ICollection<AbstractGameKeep> keeps;
-						if (owner is Group)
-							keeps = GameServer.KeepManager.GetKeepsOfRegion((owner as Group).Leader.CurrentRegionID);
-						else if (owner is GamePlayer)
-							keeps = GameServer.KeepManager.GetKeepsOfRegion((owner as GamePlayer).CurrentRegionID);
-						else keeps = new List<AbstractGameKeep>();
+            switch (type)
+            {
+                case eCaptureType.Tower:
+                    {
+                        ICollection<AbstractGameKeep> keeps;
+                        if (owner is Group group1)
+                        {
+                            keeps = GameServer.KeepManager.GetKeepsOfRegion(group1.Leader.CurrentRegionID);
+                        }
+                        else if (owner is GamePlayer)
+                        {
+                            keeps = GameServer.KeepManager.GetKeepsOfRegion(((GamePlayer) owner).CurrentRegionID);
+                        }
+                        else
+                        {
+                            keeps = new List<AbstractGameKeep>();
+                        }
 
-						foreach (AbstractGameKeep keep in keeps)
-						{
-							if (keep.IsPortalKeep)
-								continue;
-							if (keep is GameKeepTower && keep.Realm != realm)
-								list.Add(keep);
-						}
-						break;
-					}
-				case eCaptureType.Keep:
-					{
-						ICollection<AbstractGameKeep> keeps;
-						if (owner is Group)
-							keeps = GameServer.KeepManager.GetKeepsOfRegion((owner as Group).Leader.CurrentRegionID);
-						else if (owner is GamePlayer)
-							keeps = GameServer.KeepManager.GetKeepsOfRegion((owner as GamePlayer).CurrentRegionID);
-						else keeps = new List<AbstractGameKeep>();
+                        foreach (AbstractGameKeep keep in keeps)
+                        {
+                            if (keep.IsPortalKeep)
+                            {
+                                continue;
+                            }
 
-						foreach (AbstractGameKeep keep in keeps)
-						{
-							if (keep.IsPortalKeep)
-								continue;
-							if (keep is GameKeep && keep.Realm != realm)
-								list.Add(keep);
-						}
-						break;
-					}
-			}
+                            if (keep is GameKeepTower && keep.Realm != realm)
+                            {
+                                list.Add(keep);
+                            }
+                        }
 
-			if (list.Count > 0)
-			{
-				if (hint != "")
-				{
-					foreach (AbstractGameKeep keep in list)
-					{
-						if (keep.Name.ToLower().Contains(hint))
-						{
-							m_keep = keep;
-							break;
-						}
-					}
-				}
+                        break;
+                    }
 
-				if (m_keep == null)
-					m_keep = list[Util.Random(list.Count - 1)] as AbstractGameKeep;
-			}
+                case eCaptureType.Keep:
+                    {
+                        ICollection<AbstractGameKeep> keeps;
+                        if (owner is Group group1)
+                        {
+                            keeps = GameServer.KeepManager.GetKeepsOfRegion(group1.Leader.CurrentRegionID);
+                        }
+                        else if (owner is GamePlayer gOwner)
+                        {
+                            keeps = GameServer.KeepManager.GetKeepsOfRegion(gOwner.CurrentRegionID);
+                        }
+                        else
+                        {
+                            keeps = new List<AbstractGameKeep>();
+                        }
 
-			GameEventMgr.AddHandler(KeepEvent.KeepTaken, new DOLEventHandler(Notify));
-		}
+                        foreach (AbstractGameKeep keep in keeps)
+                        {
+                            if (keep.IsPortalKeep)
+                            {
+                                continue;
+                            }
 
-		public override void Notify(DOLEvent e, object sender, EventArgs args)
-		{
-			if (e != KeepEvent.KeepTaken)
-				return;
+                            if (keep is GameKeep && keep.Realm != realm)
+                            {
+                                list.Add(keep);
+                            }
+                        }
 
-			KeepEventArgs kargs = args as KeepEventArgs;
+                        break;
+                    }
+            }
 
-			if (kargs.Keep != m_keep)
-				return;
+            if (list.Count > 0)
+            {
+                if (hint != string.Empty)
+                {
+                    foreach (AbstractGameKeep keep in list)
+                    {
+                        if (keep.Name.ToLower().Contains(hint))
+                        {
+                            _keep = keep;
+                            break;
+                        }
+                    }
+                }
 
-			GamePlayer testPlayer = null;
-			if (m_owner is GamePlayer)
-				testPlayer = m_owner as GamePlayer;
-			else if (m_owner is Group)
-				testPlayer = (m_owner as Group).Leader;
+                if (_keep == null)
+                {
+                    _keep = list[Util.Random(list.Count - 1)] as AbstractGameKeep;
+                }
+            }
 
-			if (testPlayer != null)
-			{
-				foreach (AbstractArea area in testPlayer.CurrentAreas)
-				{
-					if (area is KeepArea && (area as KeepArea).Keep == m_keep)
-					{
-						FinishMission();
-					}
-				}
-			}
+            GameEventMgr.AddHandler(KeepEvent.KeepTaken, new DOLEventHandler(Notify));
+        }
 
-			ExpireMission();
-		}
+        public override void Notify(DOLEvent e, object sender, EventArgs args)
+        {
+            if (e != KeepEvent.KeepTaken)
+            {
+                return;
+            }
 
-		public override void FinishMission()
-		{
-			base.FinishMission();
-			GameEventMgr.RemoveHandler(KeepEvent.KeepTaken, new DOLEventHandler(Notify));
-		}
+            if (args is KeepEventArgs kargs && kargs.Keep != _keep)
+            {
+                return;
+            }
 
-		public override void ExpireMission()
-		{
-			base.ExpireMission();
-			GameEventMgr.RemoveHandler(KeepEvent.KeepTaken, new DOLEventHandler(Notify));
-		}
+            GamePlayer testPlayer = null;
+            if (Owner is GamePlayer player)
+            {
+                testPlayer = player;
+            }
+            else if (Owner is Group gOwner)
+            {
+                testPlayer = gOwner.Leader;
+            }
 
-		public override string Description
-		{
-			get
-			{
-				if (m_keep == null)
-					return "Keep is null when trying to send the description";
-				else return "Capture " + m_keep.Name;
-			}
-		}
+            if (testPlayer != null)
+            {
+                foreach (var area1 in testPlayer.CurrentAreas)
+                {
+                    var area = (AbstractArea) area1;
+                    if (area is KeepArea && (area as KeepArea).Keep == _keep)
+                    {
+                        FinishMission();
+                    }
+                }
+            }
 
-		public override long RewardRealmPoints
-		{
-			get
-			{
-				if (m_keep is GameKeep)
-					return 1500;
-				else if (m_keep is GameKeepTower)
-					return 250 + (m_keep.Level * 50);
-				else return 0;
-			}
-		}
-	}
+            ExpireMission();
+        }
+
+        public override void FinishMission()
+        {
+            base.FinishMission();
+            GameEventMgr.RemoveHandler(KeepEvent.KeepTaken, new DOLEventHandler(Notify));
+        }
+
+        public override void ExpireMission()
+        {
+            base.ExpireMission();
+            GameEventMgr.RemoveHandler(KeepEvent.KeepTaken, new DOLEventHandler(Notify));
+        }
+
+        public override string Description
+        {
+            get
+            {
+                if (_keep == null)
+                {
+                    return "Keep is null when trying to send the description";
+                }
+
+                return $"Capture {_keep.Name}";
+            }
+        }
+
+        public override long RewardRealmPoints
+        {
+            get
+            {
+                if (_keep is GameKeep)
+                {
+                    return 1500;
+                }
+
+                if (_keep is GameKeepTower)
+                {
+                    return 250 + _keep.Level * 50;
+                }
+
+                return 0;
+            }
+        }
+    }
 }

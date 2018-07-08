@@ -16,46 +16,41 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Midgard Shadowblade Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Shadowblade, "Shadowblade", "MidgardRogue")]
-	public class ClassShadowblade : ClassMidgardRogue
-	{
-		private static readonly string[] AutotrainableSkills = new[] { Specs.Stealth };
+    /// <summary>
+    /// Midgard Shadowblade Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Shadowblade, "Shadowblade", "MidgardRogue")]
+    public class ClassShadowblade : ClassMidgardRogue
+    {
+        private static readonly string[] AutotrainableSkills = { Specs.Stealth };
 
-		public ClassShadowblade()
-			: base()
-		{
-			m_profession = "PlayerClass.Profession.Loki";
-			m_specializationMultiplier = 22;
-			m_primaryStat = eStat.DEX;
-			m_secondaryStat = eStat.QUI;
-			m_tertiaryStat = eStat.STR;
-			m_baseHP = 760;
-		}
+        public ClassShadowblade()
+        {
+            Profession = "PlayerClass.Profession.Loki";
+            SpecPointsMultiplier = 22;
+            PrimaryStat = eStat.DEX;
+            SecondaryStat = eStat.QUI;
+            TertiaryStat = eStat.STR;
+            BaseHP = 760;
+        }
 
-		/// <summary>
-		/// Checks whether player has ability to use lefthanded weapons
-		/// </summary>
-		public override bool CanUseLefthandedWeapon
-		{
-			get { return true; }
-		}
+        /// <summary>
+        /// Checks whether player has ability to use lefthanded weapons
+        /// </summary>
+        public override bool CanUseLefthandedWeapon => true;
 
-		public override IList<string> GetAutotrainableSkills()
-		{
-			return AutotrainableSkills;
-		}
+        public override IList<string> GetAutotrainableSkills()
+        {
+            return AutotrainableSkills;
+        }
 
-		public override bool HasAdvancedFromBaseClass()
-		{
-			return true;
-		}
-	}
+        public override bool HasAdvancedFromBaseClass()
+        {
+            return true;
+        }
+    }
 }

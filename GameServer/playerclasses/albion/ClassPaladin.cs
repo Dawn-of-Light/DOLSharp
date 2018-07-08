@@ -16,50 +16,43 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
+
 using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Albion Paladin Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Paladin, "Paladin", "Fighter")]
-	public class ClassPaladin : ClassFighter
-	{
-		private static readonly string[] AutotrainableSkills = new[] { Specs.Slash, Specs.Chants };
+    /// <summary>
+    /// Albion Paladin Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Paladin, "Paladin", "Fighter")]
+    public class ClassPaladin : ClassFighter
+    {
+        private static readonly string[] AutotrainableSkills = { Specs.Slash, Specs.Chants };
 
-		public ClassPaladin()
-			: base()
-		{
-			m_profession = "PlayerClass.Profession.ChurchofAlbion";
-			m_specializationMultiplier = 20;
-			m_primaryStat = eStat.CON;
-			m_secondaryStat = eStat.PIE;
-			m_tertiaryStat = eStat.STR;
-			m_manaStat = eStat.PIE;
-			m_wsbase = 380;
-			m_baseHP = 760;
-		}
+        public ClassPaladin()
+        {
+            Profession = "PlayerClass.Profession.ChurchofAlbion";
+            SpecPointsMultiplier = 20;
+            PrimaryStat = eStat.CON;
+            SecondaryStat = eStat.PIE;
+            TertiaryStat = eStat.STR;
+            ManaStat = eStat.PIE;
+            WeaponSkillBase = 380;
+            BaseHP = 760;
+        }
 
-		public override eClassType ClassType
-		{
-			get { return eClassType.Hybrid; }
-		}
+        public override eClassType ClassType => eClassType.Hybrid;
 
-		public override IList<string> GetAutotrainableSkills()
-		{
-			return AutotrainableSkills;
-		}
+        public override IList<string> GetAutotrainableSkills()
+        {
+            return AutotrainableSkills;
+        }
 
-		public override bool HasAdvancedFromBaseClass()
-		{
-			return true;
-		}
+        public override bool HasAdvancedFromBaseClass()
+        {
+            return true;
+        }
 
-		public override ushort MaxPulsingSpells
-		{
-			get { return 2; }
-		}
-	}
+        public override ushort MaxPulsingSpells => 2;
+    }
 }

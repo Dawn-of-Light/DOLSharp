@@ -16,17 +16,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.WarmapBonusRequest, "Show warmap bonuses", eClientStatus.PlayerInGame)]
-	public class WarmapBonusesRequestHandler : IPacketHandler
-	{
-		public void HandlePacket(GameClient client, GSPacketIn packet)
-		{
-			client.Out.SendWarmapBonuses();
-		}
-	}
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.WarmapBonusRequest, "Show warmap bonuses", eClientStatus.PlayerInGame)]
+    public class WarmapBonusesRequestHandler : IPacketHandler
+    {
+        public void HandlePacket(GameClient client, GSPacketIn packet)
+        {
+            client.Out.SendWarmapBonuses();
+        }
+    }
 }

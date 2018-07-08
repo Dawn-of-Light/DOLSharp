@@ -76,32 +76,36 @@ namespace DOL.GS.Effects
         public void Start(GamePlayer guardSource, GamePlayer guardTarget)
         {
             if (guardSource == null || guardTarget == null)
+            {
                 return;
+            }
 
             m_playerGroup = guardSource.Group;
 
             if (m_playerGroup != guardTarget.Group)
+            {
                 return;
+            }
 
             m_guardSource = guardSource;
             m_guardTarget = guardTarget;
-			m_owner = m_guardSource;
+            m_owner = m_guardSource;
 
             GameEventMgr.AddHandler(m_playerGroup, GroupEvent.MemberDisbanded, new DOLEventHandler(GroupDisbandCallback1));
 
             m_guardSource.EffectList.Add(this);
             m_guardTarget.EffectList.Add(this);
 
-			if (!guardSource.IsWithinRadius(guardTarget, BodyguardAbilityHandler.BODYGUARD_DISTANCE))
-			{
-				guardSource.Out.SendMessage(LanguageMgr.GetTranslation(guardSource.Client, "Effects.BodyguardEffect.NowBGXButSC", guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				guardTarget.Out.SendMessage(LanguageMgr.GetTranslation(guardTarget.Client, "Effects.BodyguardEffect.XNowBGYouButSC", guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
-			else
-			{
-				guardSource.Out.SendMessage(LanguageMgr.GetTranslation(guardSource.Client, "Effects.BodyguardEffect.YouAreNowBGX", guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				guardTarget.Out.SendMessage(LanguageMgr.GetTranslation(guardTarget.Client, "Effects.BodyguardEffect.XIsBGYou", guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			}
+            if (!guardSource.IsWithinRadius(guardTarget, BodyguardAbilityHandler.BODYGUARD_DISTANCE))
+            {
+                guardSource.Out.SendMessage(LanguageMgr.GetTranslation(guardSource.Client, "Effects.BodyguardEffect.NowBGXButSC", guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                guardTarget.Out.SendMessage(LanguageMgr.GetTranslation(guardTarget.Client, "Effects.BodyguardEffect.XNowBGYouButSC", guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
+            else
+            {
+                guardSource.Out.SendMessage(LanguageMgr.GetTranslation(guardSource.Client, "Effects.BodyguardEffect.YouAreNowBGX", guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                guardTarget.Out.SendMessage(LanguageMgr.GetTranslation(guardTarget.Client, "Effects.BodyguardEffect.XIsBGYou", guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            }
         }
 
         /// <summary>
@@ -113,7 +117,11 @@ namespace DOL.GS.Effects
         protected void GroupDisbandCallback1(DOLEvent e, object sender, EventArgs args)
         {
             MemberDisbandedEventArgs eArgs = args as MemberDisbandedEventArgs;
-            if (eArgs == null) return;
+            if (eArgs == null)
+            {
+                return;
+            }
+
             if (eArgs.Member == GuardTarget || eArgs.Member == GuardSource)
             {
                 Cancel(false);
@@ -123,15 +131,15 @@ namespace DOL.GS.Effects
         /// <summary>
         /// Called when effect must be canceled
         /// </summary>
-		/// <param name="playerCancel"></param>
+        /// <param name="playerCancel"></param>
         public override void Cancel(bool playerCancel)
         {
             GameEventMgr.RemoveHandler(m_playerGroup, GroupEvent.MemberDisbanded, new DOLEventHandler(GroupDisbandCallback1));
             m_guardSource.EffectList.Remove(this);
             m_guardTarget.EffectList.Remove(this);
 
-			m_guardSource.Out.SendMessage(LanguageMgr.GetTranslation(m_guardSource.Client, "Effects.BodyguardEffect.YouAreNoLongerBGX", m_guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-			m_guardTarget.Out.SendMessage(LanguageMgr.GetTranslation(m_guardTarget.Client, "Effects.BodyguardEffect.XIsNoLongerBGYou", m_guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            m_guardSource.Out.SendMessage(LanguageMgr.GetTranslation(m_guardSource.Client, "Effects.BodyguardEffect.YouAreNoLongerBGX", m_guardTarget.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            m_guardTarget.Out.SendMessage(LanguageMgr.GetTranslation(m_guardTarget.Client, "Effects.BodyguardEffect.XIsNoLongerBGYou", m_guardSource.GetName(0, true)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
             m_playerGroup = null;
         }
@@ -142,11 +150,14 @@ namespace DOL.GS.Effects
         public override string Name
         {
             get
-			{
-				if (m_guardSource != null && m_guardTarget != null)
-					return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BodyguardEffect.BodyguardedByName", m_guardTarget.GetName(0, false), m_guardSource.GetName(0, false));
-				return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BodyguardEffect.Name");
-			}
+            {
+                if (m_guardSource != null && m_guardTarget != null)
+                {
+                    return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BodyguardEffect.BodyguardedByName", m_guardTarget.GetName(0, false), m_guardSource.GetName(0, false));
+                }
+
+                return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BodyguardEffect.Name");
+            }
         }
 
         /// <summary>
@@ -172,10 +183,10 @@ namespace DOL.GS.Effects
         {
             get
             {
-            	var delveInfoList = new List<string>(4);
-				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BodyguardEffect.InfoEffect"));
+                var delveInfoList = new List<string>(4);
+                delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BodyguardEffect.InfoEffect"));
                 delveInfoList.Add(" ");
-				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BodyguardEffect.XIsBodyguardingY", GuardSource.GetName(0, true), GuardTarget.GetName(0, false)));
+                delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.BodyguardEffect.XIsBodyguardingY", GuardSource.GetName(0, true), GuardTarget.GetName(0, false)));
 
                 return delveInfoList;
             }

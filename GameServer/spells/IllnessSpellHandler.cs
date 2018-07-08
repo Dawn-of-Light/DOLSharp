@@ -1,163 +1,154 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Pve Resurrection Illness
-	/// </summary>
-	[SpellHandler("PveResurrectionIllness")]
-	public class PveResurrectionIllness : AbstractIllnessSpellHandler
-	{
-		/// <summary>
-		/// When an applied effect starts
-		/// duration spells only
-		/// </summary>
-		/// <param name="effect"></param>
-		public override void OnEffectStart(GameSpellEffect effect)
-		{
-			GamePlayer player = effect.Owner as GamePlayer;
-			if (player != null)
-			{
-				player.Effectiveness -= Spell.Value * 0.01;
-				player.Out.SendUpdateWeaponAndArmorStats();
-				player.Out.SendStatusUpdate();
-			}
-		}
-		
-		/// <summary>
-		/// When an applied effect expires.
-		/// Duration spells only.
-		/// </summary>
-		/// <param name="effect">The expired effect</param>
-		/// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-		/// <returns>immunity duration in milliseconds</returns>
-		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
-		{
-			GamePlayer player = effect.Owner as GamePlayer;
-			if (player != null)
-			{
-				player.Effectiveness += Spell.Value * 0.01;
-				player.Out.SendUpdateWeaponAndArmorStats();
-				player.Out.SendStatusUpdate();
-			}
-			return 0;
-		}
-
-		/// <summary>
-		/// Delve Info
-		/// </summary>
-		public override IList<string> DelveInfo 
-		{
-			get 
-			{
-				/*
-				<Begin Info: Rusurrection Illness>
- 
-				The player's effectiveness is greatly reduced due to being recently resurrected.
- 
-				- Effectiveness penality: 50%
-				- 4:56 remaining time
- 
-				<End Info>
-				*/
-				var list = new List<string>();
-
-				list.Add(" "); //empty line
-				list.Add(Spell.Description);
-				list.Add(" "); //empty line
-				list.Add("- Effectiveness penality: "+Spell.Value+"%");
-				return list;
-			}
-		}
-
+    /// <summary>
+    /// Pve Resurrection Illness
+    /// </summary>
+    [SpellHandler(GlobalSpells.PvEResurrectionIllnessSpellType)]
+    public class PveResurrectionIllness : AbstractIllnessSpellHandler
+    {
         /// <summary>
-        /// Saves the effect when player quits
-        /// </summary>        
-        public override PlayerXEffect GetSavedEffect(GameSpellEffect e)
+        /// When an applied effect starts
+        /// duration spells only
+        /// </summary>
+        /// <param name="effect"></param>
+        public override void OnEffectStart(GameSpellEffect effect)
         {
-            PlayerXEffect eff = new PlayerXEffect();
-            eff.Var1 = Spell.ID;
-            eff.Duration = e.RemainingTime;
-            eff.IsHandler = true;
-            eff.SpellLine = SpellLine.KeyName;
-            return eff;
+            if (effect.Owner is GamePlayer player)
+            {
+                player.Effectiveness -= Spell.Value * 0.01;
+                player.Out.SendUpdateWeaponAndArmorStats();
+                player.Out.SendStatusUpdate();
+            }
         }
 
         /// <summary>
-        /// Restart the effects of resurrection illness
-        /// </summary>        
-        public override void OnEffectRestored(GameSpellEffect effect, int[] vars)
-		{
-			OnEffectStart(effect);
-		}
+        /// When an applied effect expires.
+        /// Duration spells only.
+        /// </summary>
+        /// <param name="effect">The expired effect</param>
+        /// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
+        /// <returns>immunity duration in milliseconds</returns>
+        public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
+        {
+            if (effect.Owner is GamePlayer player)
+            {
+                player.Effectiveness += Spell.Value * 0.01;
+                player.Out.SendUpdateWeaponAndArmorStats();
+                player.Out.SendStatusUpdate();
+            }
+
+            return 0;
+        }
 
         /// <summary>
-        /// Remove the effects of resurrection illness 
-        /// </summary>        
-		public override int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
-		{
-			return OnEffectExpires(effect, false);
-		}		
+        /// Delve Info
+        /// </summary>
+        public override IList<string> DelveInfo
+        {
+            get
+            {
+                /*
+                <Begin Info: Rusurrection Illness>
 
-		public PveResurrectionIllness(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}	
-	}
+                The player's effectiveness is greatly reduced due to being recently resurrected.
 
-	/// <summary>
-	/// Contains all common code for illness spell handlers (and negative spell effects without animation) 
-	/// </summary>
-	public class AbstractIllnessSpellHandler : SpellHandler
-	{
-		public override bool HasPositiveEffect 
-		{
-			get 
-			{ 
-				return false;
-			}
-		}
+                - Effectiveness penality: 50%
+                - 4:56 remaining time
 
-		public override int CalculateSpellResistChance(GameLiving target)
-		{
-			return 0;
-		}
+                <End Info>
+                */
+                var list = new List<string>
+                {
+                    " ",
+                    Spell.Description,
+                    " ",
+                    $"- Effectiveness penality: {Spell.Value}%"
+                };
 
-		/// <summary>
-		/// Calculates the effect duration in milliseconds
-		/// </summary>
-		/// <param name="target">The effect target</param>
-		/// <param name="effectiveness">The effect effectiveness</param>
-		/// <returns>The effect duration in milliseconds</returns>
-		protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
-		{
-			double modifier = 1.0;
-			RealmAbilities.VeilRecoveryAbility ab = target.GetAbility<RealmAbilities.VeilRecoveryAbility>();
-			if (ab != null)
-				modifier -= ((double)ab.Amount / 100);
+                // empty line
+                // empty line
+                return list;
+            }
+        }
 
-			return (int)((double)Spell.Duration * modifier); 
-		}
+        public override void OnEffectRestored(GameSpellEffect effect, int[] vars)
+        {
+            OnEffectStart(effect);
+        }
 
-		public AbstractIllnessSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) {}
-	
-	}
+        public override int OnRestoredEffectExpires(GameSpellEffect effect, int[] vars, bool noMessages)
+        {
+            return OnEffectExpires(effect, false);
+        }
+
+        public override PlayerXEffect GetSavedEffect(GameSpellEffect e)
+        {
+            PlayerXEffect eff = new PlayerXEffect
+            {
+                Var1 = Spell.ID,
+                Duration = e.RemainingTime,
+                IsHandler = true,
+                SpellLine = SpellLine.KeyName
+            };
+
+            return eff;
+        }
+
+        public PveResurrectionIllness(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
+    }
+
+    /// <summary>
+    /// Contains all common code for illness spell handlers (and negative spell effects without animation)
+    /// </summary>
+    public class AbstractIllnessSpellHandler : SpellHandler
+    {
+        public override bool HasPositiveEffect => false;
+
+        public override int CalculateSpellResistChance(GameLiving target)
+        {
+            return 0;
+        }
+
+        /// <summary>
+        /// Calculates the effect duration in milliseconds
+        /// </summary>
+        /// <param name="target">The effect target</param>
+        /// <param name="effectiveness">The effect effectiveness</param>
+        /// <returns>The effect duration in milliseconds</returns>
+        protected override int CalculateEffectDuration(GameLiving target, double effectiveness)
+        {
+            double modifier = 1.0;
+            RealmAbilities.VeilRecoveryAbility ab = target.GetAbility<RealmAbilities.VeilRecoveryAbility>();
+            if (ab != null)
+            {
+                modifier -= (double)ab.Amount / 100;
+            }
+
+            return (int)(Spell.Duration * modifier);
+        }
+
+        public AbstractIllnessSpellHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
+    }
 }

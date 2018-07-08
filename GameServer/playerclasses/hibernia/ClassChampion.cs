@@ -1,52 +1,47 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Hibernia Champion Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Champion, "Champion", "Guardian")]
-	public class ClassChampion : ClassGuardian
-	{
-		public ClassChampion()
-			: base()
-		{
-			m_profession = "PlayerClass.Profession.PathofEssence";
-			m_specializationMultiplier = 20;
-			m_primaryStat = eStat.STR;
-			m_secondaryStat = eStat.INT;
-			m_tertiaryStat = eStat.DEX;
-			m_manaStat = eStat.INT; //TODO: not sure
-			m_wsbase = 380;
-			m_baseHP = 760;
-		}
+    /// <summary>
+    /// Hibernia Champion Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Champion, "Champion", "Guardian")]
+    public class ClassChampion : ClassGuardian
+    {
+        public ClassChampion()
+        {
+            Profession = "PlayerClass.Profession.PathofEssence";
+            SpecPointsMultiplier = 20;
+            PrimaryStat = eStat.STR;
+            SecondaryStat = eStat.INT;
+            TertiaryStat = eStat.DEX;
+            ManaStat = eStat.INT; // TODO: not sure
+            WeaponSkillBase = 380;
+            BaseHP = 760;
+        }
 
-		public override eClassType ClassType
-		{
-			get { return eClassType.Hybrid; }
-		}
+        public override eClassType ClassType => eClassType.Hybrid;
 
-		public override bool HasAdvancedFromBaseClass()
-		{
-			return true;
-		}
-	}
+        public override bool HasAdvancedFromBaseClass()
+        {
+            return true;
+        }
+    }
 }

@@ -16,47 +16,47 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System.Reflection;
 using DOL.GS.Housing;
-using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.HouseUserPermissionSet, "Handles housing Users permissions requests", eClientStatus.PlayerInGame)]
-	public class HouseUsersPermissionsSetHandler : IPacketHandler
-	{
-		#region IPacketHandler Members
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.HouseUserPermissionSet, "Handles housing Users permissions requests", eClientStatus.PlayerInGame)]
+    public class HouseUsersPermissionsSetHandler : IPacketHandler
+    {
+        public void HandlePacket(GameClient client, GSPacketIn packet)
+        {
+            int permissionSlot = packet.ReadByte();
+            int newPermissionLevel = packet.ReadByte();
+            ushort houseNumber = packet.ReadShort();
 
-		public void HandlePacket(GameClient client, GSPacketIn packet)
-		{
-			int permissionSlot = packet.ReadByte();
-			int newPermissionLevel = packet.ReadByte();
-			ushort houseNumber = packet.ReadShort();
+            // house is null, return
+            var house = HouseMgr.GetHouse(houseNumber);
+            if (house == null)
+            {
+                return;
+            }
 
-			// house is null, return
-			var house = HouseMgr.GetHouse(houseNumber);
-			if (house == null)
-				return;
+            // player is null, return
+            if (client.Player == null)
+            {
+                return;
+            }
 
-			// player is null, return
-			if (client.Player == null)
-				return;
+            // can't set permissions unless you're the owner.
+            if (!house.HasOwnerPermissions(client.Player) && client.Account.PrivLevel <= 1)
+            {
+                return;
+            }
 
-			// can't set permissions unless you're the owner.
-			if (!house.HasOwnerPermissions(client.Player) && client.Account.PrivLevel <= 1)
-				return;
-
-			// check if we're setting or removing permissions
-			if (newPermissionLevel == 100)
-			{
-				house.RemovePermission(permissionSlot);
-			}
-			else
-			{
-				house.AdjustPermissionSlot(permissionSlot, newPermissionLevel);
-			}
-		}
-
-		#endregion
-	}
+            // check if we're setting or removing permissions
+            if (newPermissionLevel == 100)
+            {
+                house.RemovePermission(permissionSlot);
+            }
+            else
+            {
+                house.AdjustPermissionSlot(permissionSlot, newPermissionLevel);
+            }
+        }
+    }
 }

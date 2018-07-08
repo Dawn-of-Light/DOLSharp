@@ -16,31 +16,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.GS.PacketHandler;
-using DOL.GS;
 
 namespace DOL.GS.SkillHandler
 {
     /// <summary>
     /// Handler for Rampage Shout
     /// </summary>
-    [SkillHandlerAttribute(Abilities.Rampage)]
+    [SkillHandler(Abilities.Rampage)]
     public class RampageAbilityHandler : SpellCastingAbilityHandler
     {
-		public override long Preconditions
-		{
-			get
-			{
-				return DEAD | SITTING | MEZZED | STUNNED;
-			}
-		}
- 		public override int SpellID
-		{
-			get
-			{
-				return 14373;
-			}
-		}      
+        public override long Preconditions => DEAD | SITTING | MEZZED | STUNNED;
+
+        public override int SpellID => 14373;
     }
 }

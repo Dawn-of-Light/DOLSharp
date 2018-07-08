@@ -1104,7 +1104,7 @@
     <DivingEnabled>true</DivingEnabled>
     <WaterLevel>7879</WaterLevel>
     <ClassType />
-    <IsFrontier>true</IsFrontier>
+    <IsFrontier>false</IsFrontier>
   </DBRegions>
   <DBRegions>
     <LastTimeRowUpdated>2014-12-09T17:40:23.7995692Z</LastTimeRowUpdated>

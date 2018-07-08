@@ -17,7 +17,6 @@
  *
  */
 using System;
-using System.Linq;
 
 namespace DOL.GS.Scripts
 {
@@ -30,13 +29,22 @@ namespace DOL.GS.Scripts
 
         public override void BroadcastUpdate()
         {
-            if (ObjectState != eObjectState.Active) return;
+            if (ObjectState != eObjectState.Active)
+            {
+                return;
+            }
+
             foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
             {
-                if (player == null) continue;
+                if (player == null)
+                {
+                    continue;
+                }
+
                 player.Out.SendObjectUpdate(this);
                 player.Out.SendModelChange(this, GetClientVisualModel(player.Client));
             }
+
             m_lastUpdateTickCount = (uint)Environment.TickCount;
         }
     }

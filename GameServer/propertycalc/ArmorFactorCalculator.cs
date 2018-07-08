@@ -22,56 +22,64 @@ using DOL.GS.Keeps;
 
 namespace DOL.GS.PropertyCalc
 {
-	/// <summary>
-	/// The Armor Factor calculator
-	///
-	/// BuffBonusCategory1 is used for base buffs directly in player.GetArmorAF because it must be capped by item AF cap
-	/// BuffBonusCategory2 is used for spec buffs, level*1.875 cap for players
-	/// BuffBonusCategory3 is used for debuff, uncapped
-	/// BuffBonusCategory4 is used for buffs, uncapped
-	/// BuffBonusMultCategory1 unused
-	/// ItemBonus is used for players TOA bonuse, living.Level cap
-	/// </summary>
-	[PropertyCalculator(eProperty.ArmorFactor)]
-	public class ArmorFactorCalculator : PropertyCalculator
-	{
-		public override int CalcValue(GameLiving living, eProperty property)
-		{
-			if (living is GamePlayer)
-			{
-				int af;
+    /// <summary>
+    /// The Armor Factor calculator
+    ///
+    /// BuffBonusCategory1 is used for base buffs directly in player.GetArmorAF because it must be capped by item AF cap
+    /// BuffBonusCategory2 is used for spec buffs, level*1.875 cap for players
+    /// BuffBonusCategory3 is used for debuff, uncapped
+    /// BuffBonusCategory4 is used for buffs, uncapped
+    /// BuffBonusMultCategory1 unused
+    /// ItemBonus is used for players TOA bonuse, living.Level cap
+    /// </summary>
+    [PropertyCalculator(eProperty.ArmorFactor)]
+    public class ArmorFactorCalculator : PropertyCalculator
+    {
+        public override int CalcValue(GameLiving living, eProperty property)
+        {
+            if (living is GamePlayer)
+            {
+                // 1.5*1.25 spec line buff cap
+                var af = Math.Min((int)(living.Level * 1.875), living.SpecBuffBonusCategory[(int)property]);
 
-				// 1.5*1.25 spec line buff cap
-				af = Math.Min((int)(living.Level * 1.875), living.SpecBuffBonusCategory[(int)property]);
-				// debuff
-				af -= living.DebuffCategory[(int)property];
-				// TrialsOfAtlantis af bonus
-				af += Math.Min(living.Level, living.ItemBonus[(int)property]);
-				// uncapped category
-				af += living.BuffBonusCategory4[(int)property];
+                // debuff
+                af -= living.DebuffCategory[(int)property];
 
-				return af;
-			}
-			else if (living is GameKeepDoor || living is GameKeepComponent)
-			{
-				GameKeepComponent component = null;
-				if (living is GameKeepDoor)
-					component = (living as GameKeepDoor).Component;
-				if (living is GameKeepComponent)
-					component = living as GameKeepComponent;
+                // TrialsOfAtlantis af bonus
+                af += Math.Min(living.Level, living.ItemBonus[(int)property]);
 
-				int amount = component.AbstractKeep.BaseLevel;
-				if (component.Keep is GameKeep)
-					return amount;
-				else return amount / 2;
-			}
-			else
-			{
-				return (int)((1 + (living.Level / 170.0)) * (living.Level << 1) * 4.67)
-				+ living.SpecBuffBonusCategory[(int)property]
-				- living.DebuffCategory[(int)property]
-				+ living.BuffBonusCategory4[(int)property];
-			}
-		}
-	}
+                // uncapped category
+                af += living.BuffBonusCategory4[(int)property];
+
+                return af;
+            }
+
+            if (living is GameKeepDoor || living is GameKeepComponent)
+            {
+                GameKeepComponent component = null;
+                if (living is GameKeepDoor)
+                {
+                    component = (living as GameKeepDoor).Component;
+                }
+
+                if (living is GameKeepComponent)
+                {
+                    component = living as GameKeepComponent;
+                }
+
+                int amount = component.AbstractKeep.BaseLevel;
+                if (component.Keep is GameKeep)
+                {
+                    return amount;
+                }
+
+                return amount / 2;
+            }
+
+            return (int) ((1 + (living.Level / 170.0)) * (living.Level << 1) * 4.67)
+                   + living.SpecBuffBonusCategory[(int) property]
+                   - living.DebuffCategory[(int) property]
+                   + living.BuffBonusCategory4[(int) property];
+        }
+    }
 }

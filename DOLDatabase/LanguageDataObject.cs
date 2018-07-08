@@ -1,16 +1,16 @@
 ﻿/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -23,7 +23,6 @@ namespace DOL.Database
 {
     public abstract class LanguageDataObject : DataObject
     {
-        #region Enums
         public enum eTranslationIdentifier
             : byte
         {
@@ -35,17 +34,13 @@ namespace DOL.Database
             eSystem = 5,
             eZone = 6
         }
-        #endregion Enums
 
-        #region Variables
-        private string m_lng = "";
-        private string m_tid = "";
-        private string m_tag = "";
-        #endregion Variables
+        private string m_lng = string.Empty;
+        private string m_tid = string.Empty;
+        private string m_tag = string.Empty;
 
         public LanguageDataObject() { }
 
-        #region Properties
         public abstract eTranslationIdentifier TranslationIdentifier
         {
             get;
@@ -58,6 +53,7 @@ namespace DOL.Database
         public string TranslationId
         {
             get { return m_tid; }
+
             set
             {
                 Dirty = true;
@@ -72,6 +68,7 @@ namespace DOL.Database
         public string Language
         {
             get { return m_lng; }
+
             set
             {
                 Dirty = true;
@@ -86,12 +83,12 @@ namespace DOL.Database
         public string Tag
         {
             get { return m_tag; }
+
             set
             {
                 Dirty = true;
                 m_tag = value;
             }
         }
-        #endregion Properties
     }
 }

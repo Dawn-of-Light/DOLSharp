@@ -1,54 +1,76 @@
-//Andraste v2.0 - Vico
+// Andraste v2.0 - Vico
 
-using System;
-using System.Reflection;
-using System.Collections;
-using DOL.GS;
-using DOL.GS.PacketHandler;
 using DOL.GS.Effects;
 using DOL.Database;
 
-//using log4net;
-
+// using log4net;
 namespace DOL.GS.RealmAbilities
 {
-	public class ResoluteMinionAbility : RR5RealmAbility
+    public class ResoluteMinionAbility : RR5RealmAbility
     {
-		public const int DURATION = 60000;
-		public ResoluteMinionAbility(DBAbility dba, int level) : base(dba, level) { }
+        public ResoluteMinionAbility(DBAbility dba, int level) : base(dba, level) { }
+
         public override void Execute(GameLiving living)
-		{
-			if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
-			GamePlayer player = living as GamePlayer;
-			if (player == null) return;
-			if (player.ControlledBrain == null) return;
-			if (player.ControlledBrain.Body == null) return;
-			player.ControlledBrain.Body.AddAbility(SkillBase.GetAbility(Abilities.CCImmunity));
-			new ResoluteMinionEffect().Start(player.ControlledBrain.Body);
-			foreach (GamePlayer visPlayer in player.GetPlayersInRadius((ushort)WorldMgr.VISIBILITY_DISTANCE))
-				visPlayer.Out.SendSpellEffectAnimation(player, player.ControlledBrain.Body, 7047, 0, false, 0x01);
-			DisableSkill(living);
+        {
+            if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED))
+            {
+                return;
+            }
+
+            if (!(living is GamePlayer player))
+            {
+                return;
+            }
+
+            if (player.ControlledBrain?.Body == null)
+            {
+                return;
+            }
+
+            player.ControlledBrain.Body.AddAbility(SkillBase.GetAbility(Abilities.CCImmunity));
+            new ResoluteMinionEffect().Start(player.ControlledBrain.Body);
+            foreach (GamePlayer visPlayer in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+            {
+                visPlayer.Out.SendSpellEffectAnimation(player, player.ControlledBrain.Body, 7047, 0, false, 0x01);
+            }
+
+            DisableSkill(living);
         }
-		public override int GetReUseDelay(int level) { return 300; }
+
+        public override int GetReUseDelay(int level) { return 300; }
     }
 }
 
 namespace DOL.GS.Effects
 {
-	public class ResoluteMinionEffect : TimedEffect
-	{
-		public ResoluteMinionEffect() : base(RealmAbilities.ResoluteMinionAbility.DURATION) { }
-		private GameNPC m_pet;
-		public void Start(GameNPC controllednpc) { base.Start(controllednpc); m_pet = controllednpc; }
-		public override void Stop()
-		{
-			if (m_pet != null)
-			{
-				if (m_pet.EffectList.GetOfType<ResoluteMinionEffect>() != null) m_pet.EffectList.Remove(this);
-				if (m_pet.HasAbility(Abilities.CCImmunity)) m_pet.RemoveAbility("CCImmunity");
-			}
-			base.Stop();
-		}
-		public override ushort Icon { get { return 7047; } }
-	}
+    public class ResoluteMinionEffect : TimedEffect
+    {
+        private const int Duration = 60000;
+
+        public ResoluteMinionEffect() : base(Duration) { }
+
+        private GameNPC _pet;
+
+        public void Start(GameNPC controllednpc) { base.Start(controllednpc); _pet = controllednpc; }
+
+        public override void Stop()
+        {
+            if (_pet != null)
+            {
+                if (_pet.EffectList.GetOfType<ResoluteMinionEffect>() != null)
+                {
+                    _pet.EffectList.Remove(this);
+                }
+
+                if (_pet.HasAbility(Abilities.CCImmunity))
+                {
+                    _pet.RemoveAbility("CCImmunity");
+                }
+            }
+
+            base.Stop();
+        }
+
+        public override ushort Icon => 7047;
+    }
 }

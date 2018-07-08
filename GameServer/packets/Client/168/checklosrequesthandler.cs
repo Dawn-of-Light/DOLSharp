@@ -19,89 +19,80 @@
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.CheckLOSRequest, "Handles a LoS Check Response", eClientStatus.PlayerInGame)]
-	public class CheckLOSResponseHandler : IPacketHandler
-	{
-		#region IPacketHandler Members
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.CheckLOSRequest, "Handles a LoS Check Response", eClientStatus.PlayerInGame)]
+    public class CheckLOSResponseHandler : IPacketHandler
+    {
+        public void HandlePacket(GameClient client, GSPacketIn packet)
+        {
+            ushort checkerOid = packet.ReadShort();
+            ushort targetOid = packet.ReadShort();
+            ushort response = packet.ReadShort();
+            packet.ReadShort();
 
-		public void HandlePacket(GameClient client, GSPacketIn packet)
-		{
-			ushort checkerOID = packet.ReadShort();
-			ushort targetOID = packet.ReadShort();
-			ushort response = packet.ReadShort();
-			ushort unknow = packet.ReadShort();
+            new HandleCheckAction(client.Player, checkerOid, targetOid, response).Start(1);
+        }
 
-			new HandleCheckAction(client.Player, checkerOID, targetOID, response).Start(1);
-		}
+        /// <summary>
+        /// Handles the LOS check response
+        /// </summary>
+        protected class HandleCheckAction : RegionAction
+        {
+            /// <summary>
+            /// The LOS source OID
+            /// </summary>
+            private readonly int _checkerOid;
 
-		#endregion
+            /// <summary>
+            /// The request response
+            /// </summary>
+            private readonly int _response;
 
-		#region Nested type: HandleCheckAction
+            /// <summary>
+            /// The LOS target OID
+            /// </summary>
+            private readonly int _targetOid;
 
-		/// <summary>
-		/// Handles the LOS check response
-		/// </summary>
-		protected class HandleCheckAction : RegionAction
-		{
-			/// <summary>
-			/// The LOS source OID
-			/// </summary>
-			protected readonly int m_checkerOid;
+            /// <summary>
+            /// Constructs a new HandleCheckAction
+            /// </summary>
+            /// <param name="actionSource">The player received the packet</param>
+            /// <param name="checkerOid">The LOS source OID</param>
+            /// <param name="targetOid">The LOS target OID</param>
+            /// <param name="response">The request response</param>
+            public HandleCheckAction(GamePlayer actionSource, int checkerOid, int targetOid, int response) : base(actionSource)
+            {
+                _checkerOid = checkerOid;
+                _targetOid = targetOid;
+                _response = response;
+            }
 
-			/// <summary>
-			/// The request response
-			/// </summary>
-			protected readonly int m_response;
+            /// <summary>
+            /// Called on every timer tick
+            /// </summary>
+            protected override void OnTick()
+            {
+                // Check for Old Callback first
+                string key = $"LOS C:0x{_checkerOid} T:0x{_targetOid}";
 
-			/// <summary>
-			/// The LOS target OID
-			/// </summary>
-			protected readonly int m_targetOid;
+                GamePlayer player = (GamePlayer)m_actionSource;
 
-			/// <summary>
-			/// Constructs a new HandleCheckAction
-			/// </summary>
-			/// <param name="actionSource">The player received the packet</param>
-			/// <param name="checkerOid">The LOS source OID</param>
-			/// <param name="targetOid">The LOS target OID</param>
-			/// <param name="response">The request response</param>
-			public HandleCheckAction(GamePlayer actionSource, int checkerOid, int targetOid, int response) : base(actionSource)
-			{
-				m_checkerOid = checkerOid;
-				m_targetOid = targetOid;
-				m_response = response;
-			}
+                CheckLOSResponse callback = player.TempProperties.getProperty<CheckLOSResponse>(key, null);
+                if (callback != null)
+                {
+                    callback(player, (ushort)_response, (ushort)_targetOid);
+                    player.TempProperties.removeProperty(key);
+                }
 
-			/// <summary>
-			/// Called on every timer tick
-			/// </summary>
-			protected override void OnTick()
-			{
-				// Check for Old Callback first
-				
-				string key = string.Format("LOS C:0x{0} T:0x{1}", m_checkerOid, m_targetOid);
+                string newkey = $"LOSMGR C:0x{_checkerOid} T:0x{_targetOid}";
 
-				GamePlayer player = (GamePlayer) m_actionSource;
+                CheckLOSMgrResponse newCallback = player.TempProperties.getProperty<CheckLOSMgrResponse>(newkey, null);
 
-				CheckLOSResponse callback = player.TempProperties.getProperty<CheckLOSResponse>(key, null);
-				if (callback != null) 
-				{
-					callback(player, (ushort) m_response, (ushort) m_targetOid);
-					player.TempProperties.removeProperty(key);
-				}
-				
-				string newkey = string.Format("LOSMGR C:0x{0} T:0x{1}", m_checkerOid, m_targetOid);
-				
-				CheckLOSMgrResponse new_callback = player.TempProperties.getProperty<CheckLOSMgrResponse>(newkey, null);
-				
-				if(new_callback != null)
-				{
-					new_callback(player, (ushort) m_response,  (ushort) m_checkerOid, (ushort) m_targetOid);
-					player.TempProperties.removeProperty(newkey);
-				}
-			}
-		}
-
-		#endregion
-	}
+                if (newCallback != null)
+                {
+                    newCallback(player, (ushort)_response,  (ushort)_checkerOid, (ushort)_targetOid);
+                    player.TempProperties.removeProperty(newkey);
+                }
+            }
+        }
+    }
 }

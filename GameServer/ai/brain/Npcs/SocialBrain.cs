@@ -16,9 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.GS;
 
 namespace DOL.AI.Brain
@@ -41,7 +38,9 @@ namespace DOL.AI.Brain
             base.OnLivingAttacked(target, attacker);
 
             if (target.IsWithinRadius(Body, AggressionRange))
+            {
                 EngageOn(attacker);
+            }
         }
     }
 }

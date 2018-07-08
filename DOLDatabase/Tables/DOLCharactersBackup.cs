@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -23,178 +23,180 @@ using DOL.Database.Attributes;
 
 namespace DOL.Database
 {
-	[DataTable(TableName = "DOLCharactersBackup")]
-	public class DOLCharactersBackup : DOLCharacters
-	{
-		string m_dolCharactersID = string.Empty;
-		private DateTime m_deleteDate;
+    [DataTable(TableName = "DOLCharactersBackup")]
+    public class DOLCharactersBackup : DOLCharacters
+    {
+        string m_dolCharactersID = string.Empty;
+        private DateTime m_deleteDate;
 
-		public DOLCharactersBackup()
-			: base()
-		{
-			m_deleteDate = DateTime.Now;
-		}
+        public DOLCharactersBackup()
+            : base()
+        {
+            m_deleteDate = DateTime.Now;
+        }
 
-		public DOLCharactersBackup(DOLCharacters character)
-			: base()
-		{
-			DOLCharacters_ID = character.ObjectId;
-			DeleteDate = DateTime.Now;
+        public DOLCharactersBackup(DOLCharacters character)
+            : base()
+        {
+            DOLCharacters_ID = character.ObjectId;
+            DeleteDate = DateTime.Now;
 
-			this.AccountName = character.AccountName;
-			this.AccountSlot = character.AccountSlot;
-			this.ActiveWeaponSlot = character.ActiveWeaponSlot;
-            this.ActiveSaddleBags = character.ActiveSaddleBags;
-			this.Advisor = character.Advisor;
-			this.Autoloot = character.Autoloot;
-			this.BindHeading = character.BindHeading;
-			this.BindHouseHeading = character.BindHouseHeading;
-			this.BindHouseRegion = character.BindHouseRegion;
-			this.BindHouseXpos = character.BindHouseXpos;
-			this.BindHouseYpos = character.BindHouseYpos;
-			this.BindHouseZpos = character.BindHouseZpos;
-			this.BindRegion = character.BindRegion;
-			this.BindXpos = character.BindXpos;
-			this.BindYpos = character.BindYpos;
-			this.BindZpos = character.BindZpos;
-			this.BountyPoints = character.BountyPoints;
-			this.CancelStyle = character.CancelStyle;
-			this.CapturedKeeps = character.CapturedKeeps;
-			this.CapturedRelics = character.CapturedRelics;
-			this.CapturedTowers = character.CapturedTowers;
-			this.Champion = character.Champion;
-			this.ChampionExperience = character.ChampionExperience;
-			this.ChampionLevel = character.ChampionLevel;
-			this.Charisma = character.Charisma;
-			this.Class = character.Class;
-			this.Concentration = character.Concentration;
-			this.ConLostAtDeath = character.ConLostAtDeath;
-			this.Constitution = character.Constitution;
-			this.Copper = character.Copper;
-			this.CraftingPrimarySkill = character.CraftingPrimarySkill;
-			this.CreationDate = character.CreationDate;
-			this.CreationModel = character.CreationModel;
-			this.CurrentModel = character.CurrentModel;
-			this.CurrentTitleType = character.CurrentTitleType;
-			this.CustomisationStep = character.CustomisationStep;
-			this.DeathCount = character.DeathCount;
-			this.DeathsPvP = character.DeathsPvP;
-			this.DeathTime = character.DeathTime;
-			this.Dexterity = character.Dexterity;
-			this.Direction = character.Direction;
-			this.DisabledAbilities = character.DisabledAbilities;
-			this.DisabledSpells = character.DisabledSpells;
-			this.Empathy = character.Empathy;
-			this.Endurance = character.Endurance;
-			this.Experience = character.Experience;
-			this.EyeColor = character.EyeColor;
-			this.EyeSize = character.EyeSize;
-			this.FaceType = character.FaceType;
-			this.FlagClassName = character.FlagClassName;
-			this.GainRP = character.GainRP;
-			this.GainXP = character.GainXP;
-			this.Gender = character.Gender;
-			this.Gold = character.Gold;
-			this.GravestoneRegion = character.GravestoneRegion;
-			this.GuildID = character.GuildID;
-			this.GuildNote = character.GuildNote;
-			this.GuildRank = character.GuildRank;
-			this.HairColor = character.HairColor;
-			this.HairStyle = character.HairStyle;
-			this.HasGravestone = character.HasGravestone;
-			this.Health = character.Health;
-            this.IgnoreStatistics = character.IgnoreStatistics;
-            this.Intelligence = character.Intelligence;
-			this.IsAnonymous = character.IsAnonymous;
-			this.IsCloakHoodUp = character.IsCloakHoodUp;
-			this.IsCloakInvisible = character.IsCloakInvisible;
-			this.IsHelmInvisible = character.IsHelmInvisible;
-			this.IsLevelRespecUsed = character.IsLevelRespecUsed;
-			this.IsLevelSecondStage = character.IsLevelSecondStage;
-			this.KillsAlbionDeathBlows = character.KillsAlbionDeathBlows;
-			this.KillsAlbionPlayers = character.KillsAlbionPlayers;
-			this.KillsAlbionSolo = character.KillsAlbionSolo;
-			this.KillsDragon = character.KillsDragon;
-			this.KillsEpicBoss = character.KillsEpicBoss;
-			this.KillsHiberniaDeathBlows = character.KillsHiberniaDeathBlows;
-			this.KillsHiberniaPlayers = character.KillsHiberniaPlayers;
-			this.KillsHiberniaSolo = character.KillsHiberniaSolo;
-			this.KillsLegion = character.KillsLegion;
-			this.KillsMidgardDeathBlows = character.KillsMidgardDeathBlows;
-			this.KillsMidgardPlayers = character.KillsMidgardPlayers;
-			this.KillsMidgardSolo = character.KillsMidgardSolo;
-			this.LastFreeLevel = character.LastFreeLevel;
-			this.LastFreeLeveled = character.LastFreeLeveled;
-			this.LastName = character.LastName;
-			this.LastPlayed = character.LastPlayed;
-			this.Level = character.Level;
-			this.LipSize = character.LipSize;
-			this.Mana = character.Mana;
-			this.MaxEndurance = character.MaxEndurance;
-			this.MaxSpeed = character.MaxSpeed;
-			this.Mithril = character.Mithril;
-			this.ML = character.ML;
-			this.MLExperience = character.MLExperience;
-			this.MLGranted = character.MLGranted;
-			this.MLLevel = character.MLLevel;
-			this.MoodType = character.MoodType;
-			this.Name = character.Name;
-			this.NoHelp = character.NoHelp;
-            this.NotDisplayedInHerald = character.NotDisplayedInHerald;
-			this.Piety = character.Piety;
-			this.Platinum = character.Platinum;
-			this.PlayedTime = character.PlayedTime;
-			this.Quickness = character.Quickness;
-			this.Race = character.Race;
-			this.Realm = character.Realm;
-			this.RealmLevel = character.RealmLevel;
-			this.RealmPoints = character.RealmPoints;
-			this.Region = character.Region;
-			this.RespecAmountAllSkill = character.RespecAmountAllSkill;
-			this.RespecAmountChampionSkill = character.RespecAmountChampionSkill;
-			this.RespecAmountDOL = character.RespecAmountDOL;
-			this.RespecAmountRealmSkill = character.RespecAmountRealmSkill;
-			this.RespecAmountSingleSkill = character.RespecAmountSingleSkill;
-			this.RespecBought = character.RespecBought;
-			this.RPFlag = character.RPFlag;
-			this.SafetyFlag = character.SafetyFlag;
-			this.SerializedAbilities = character.SerializedAbilities;
-			this.SerializedCraftingSkills = character.SerializedCraftingSkills;
-			this.SerializedFriendsList = character.SerializedFriendsList;
-			this.SerializedIgnoreList = character.SerializedIgnoreList;
-			this.SerializedRealmAbilities = character.SerializedRealmAbilities;
-			this.SerializedSpecs = character.SerializedSpecs;
-			this.ShowGuildLogins = character.ShowGuildLogins;
-			this.ShowXFireInfo = character.ShowXFireInfo;
-			this.Silver = character.Silver;
-			this.SpellQueue = character.SpellQueue;
-			this.Strength = character.Strength;
-			this.UsedLevelCommand = character.UsedLevelCommand;
-			this.Xpos = character.Xpos;
-			this.Ypos = character.Ypos;
-			this.Zpos = character.Zpos;
-			// Copy Custom Params
-			this.CustomParams = character.CustomParams != null
-				? character.CustomParams.Select(param => new DOLCharactersBackupXCustomParam(param.DOLCharactersObjectId, param.KeyName, param.Value)).ToArray()
-				: new DOLCharactersBackupXCustomParam[] { } ;
-		}
+            AccountName = character.AccountName;
+            AccountSlot = character.AccountSlot;
+            ActiveWeaponSlot = character.ActiveWeaponSlot;
+            ActiveSaddleBags = character.ActiveSaddleBags;
+            Advisor = character.Advisor;
+            Autoloot = character.Autoloot;
+            BindHeading = character.BindHeading;
+            BindHouseHeading = character.BindHouseHeading;
+            BindHouseRegion = character.BindHouseRegion;
+            BindHouseXpos = character.BindHouseXpos;
+            BindHouseYpos = character.BindHouseYpos;
+            BindHouseZpos = character.BindHouseZpos;
+            BindRegion = character.BindRegion;
+            BindXpos = character.BindXpos;
+            BindYpos = character.BindYpos;
+            BindZpos = character.BindZpos;
+            BountyPoints = character.BountyPoints;
+            CancelStyle = character.CancelStyle;
+            CapturedKeeps = character.CapturedKeeps;
+            CapturedRelics = character.CapturedRelics;
+            CapturedTowers = character.CapturedTowers;
+            Champion = character.Champion;
+            ChampionExperience = character.ChampionExperience;
+            ChampionLevel = character.ChampionLevel;
+            Charisma = character.Charisma;
+            Class = character.Class;
+            Concentration = character.Concentration;
+            ConLostAtDeath = character.ConLostAtDeath;
+            Constitution = character.Constitution;
+            Copper = character.Copper;
+            CraftingPrimarySkill = character.CraftingPrimarySkill;
+            CreationDate = character.CreationDate;
+            CreationModel = character.CreationModel;
+            CurrentModel = character.CurrentModel;
+            CurrentTitleType = character.CurrentTitleType;
+            CustomisationStep = character.CustomisationStep;
+            DeathCount = character.DeathCount;
+            DeathsPvP = character.DeathsPvP;
+            DeathTime = character.DeathTime;
+            Dexterity = character.Dexterity;
+            Direction = character.Direction;
+            DisabledAbilities = character.DisabledAbilities;
+            DisabledSpells = character.DisabledSpells;
+            Empathy = character.Empathy;
+            Endurance = character.Endurance;
+            Experience = character.Experience;
+            EyeColor = character.EyeColor;
+            EyeSize = character.EyeSize;
+            FaceType = character.FaceType;
+            FlagClassName = character.FlagClassName;
+            GainRP = character.GainRP;
+            GainXP = character.GainXP;
+            Gender = character.Gender;
+            Gold = character.Gold;
+            GravestoneRegion = character.GravestoneRegion;
+            GuildID = character.GuildID;
+            GuildNote = character.GuildNote;
+            GuildRank = character.GuildRank;
+            HairColor = character.HairColor;
+            HairStyle = character.HairStyle;
+            HasGravestone = character.HasGravestone;
+            Health = character.Health;
+            IgnoreStatistics = character.IgnoreStatistics;
+            Intelligence = character.Intelligence;
+            IsAnonymous = character.IsAnonymous;
+            IsCloakHoodUp = character.IsCloakHoodUp;
+            IsCloakInvisible = character.IsCloakInvisible;
+            IsHelmInvisible = character.IsHelmInvisible;
+            IsLevelRespecUsed = character.IsLevelRespecUsed;
+            IsLevelSecondStage = character.IsLevelSecondStage;
+            KillsAlbionDeathBlows = character.KillsAlbionDeathBlows;
+            KillsAlbionPlayers = character.KillsAlbionPlayers;
+            KillsAlbionSolo = character.KillsAlbionSolo;
+            KillsDragon = character.KillsDragon;
+            KillsEpicBoss = character.KillsEpicBoss;
+            KillsHiberniaDeathBlows = character.KillsHiberniaDeathBlows;
+            KillsHiberniaPlayers = character.KillsHiberniaPlayers;
+            KillsHiberniaSolo = character.KillsHiberniaSolo;
+            KillsLegion = character.KillsLegion;
+            KillsMidgardDeathBlows = character.KillsMidgardDeathBlows;
+            KillsMidgardPlayers = character.KillsMidgardPlayers;
+            KillsMidgardSolo = character.KillsMidgardSolo;
+            LastFreeLevel = character.LastFreeLevel;
+            LastFreeLeveled = character.LastFreeLeveled;
+            LastName = character.LastName;
+            LastPlayed = character.LastPlayed;
+            Level = character.Level;
+            LipSize = character.LipSize;
+            Mana = character.Mana;
+            MaxEndurance = character.MaxEndurance;
+            MaxSpeed = character.MaxSpeed;
+            Mithril = character.Mithril;
+            ML = character.ML;
+            MLExperience = character.MLExperience;
+            MLGranted = character.MLGranted;
+            MLLevel = character.MLLevel;
+            MoodType = character.MoodType;
+            Name = character.Name;
+            NoHelp = character.NoHelp;
+            NotDisplayedInHerald = character.NotDisplayedInHerald;
+            Piety = character.Piety;
+            Platinum = character.Platinum;
+            PlayedTime = character.PlayedTime;
+            Quickness = character.Quickness;
+            Race = character.Race;
+            Realm = character.Realm;
+            RealmLevel = character.RealmLevel;
+            RealmPoints = character.RealmPoints;
+            Region = character.Region;
+            RespecAmountAllSkill = character.RespecAmountAllSkill;
+            RespecAmountChampionSkill = character.RespecAmountChampionSkill;
+            RespecAmountDOL = character.RespecAmountDOL;
+            RespecAmountRealmSkill = character.RespecAmountRealmSkill;
+            RespecAmountSingleSkill = character.RespecAmountSingleSkill;
+            RespecBought = character.RespecBought;
+            RPFlag = character.RPFlag;
+            SafetyFlag = character.SafetyFlag;
+            SerializedAbilities = character.SerializedAbilities;
+            SerializedCraftingSkills = character.SerializedCraftingSkills;
+            SerializedFriendsList = character.SerializedFriendsList;
+            SerializedIgnoreList = character.SerializedIgnoreList;
+            SerializedRealmAbilities = character.SerializedRealmAbilities;
+            SerializedSpecs = character.SerializedSpecs;
+            ShowGuildLogins = character.ShowGuildLogins;
+            ShowXFireInfo = character.ShowXFireInfo;
+            Silver = character.Silver;
+            SpellQueue = character.SpellQueue;
+            Strength = character.Strength;
+            UsedLevelCommand = character.UsedLevelCommand;
+            Xpos = character.Xpos;
+            Ypos = character.Ypos;
+            Zpos = character.Zpos;
 
-		/// <summary>
-		/// The old character ID
-		/// </summary>
-		[DataElement(AllowDbNull = false, Varchar=255)]
-		public string DOLCharacters_ID
-		{
-			get
-			{
-				return m_dolCharactersID;
-			}
-			set
-			{
-				Dirty = true;
-				m_dolCharactersID = value;
-			}
-		}
+            // Copy Custom Params
+            CustomParams = character.CustomParams != null
+                ? character.CustomParams.Select(param => new DOLCharactersBackupXCustomParam(param.DOLCharactersObjectId, param.KeyName, param.Value)).ToArray()
+                : new DOLCharactersBackupXCustomParam[] { } ;
+        }
+
+        /// <summary>
+        /// The old character ID
+        /// </summary>
+        [DataElement(AllowDbNull = false, Varchar=255)]
+        public string DOLCharacters_ID
+        {
+            get
+            {
+                return m_dolCharactersID;
+            }
+
+            set
+            {
+                Dirty = true;
+                m_dolCharactersID = value;
+            }
+        }
 
         /// <summary>
         /// Name of this character - indexed but not unique for backups
@@ -206,58 +208,60 @@ namespace DOL.Database
             {
                 return base.Name;
             }
+
             set
             {
                 base.Name = value;
             }
         }
 
-		/// <summary>
-		/// The deletion date of this character
-		/// </summary>
-		[DataElement(AllowDbNull = false)]
-		public DateTime DeleteDate
-		{
-			get
-			{
-				return m_deleteDate;
-			}
-			set
-			{
-				Dirty = true;
-				m_deleteDate = value;
-			}
-		}
-		
-		/// <summary>
-		/// List of Custom Params for this Character Backup
-		/// </summary>
-		[Relation(LocalField = "DOLCharacters_ID", RemoteField = "DOLCharactersObjectId", AutoLoad = true, AutoDelete = true)]
-		public new DOLCharactersBackupXCustomParam[] CustomParams;
-	}
-	
-	/// <summary>
-	/// DOL Characters Backup Custom Params linked to Character Backup Entry
-	/// </summary>
-	[DataTable(TableName = "DOLCharactersBackupXCustomParam")]
-	public class DOLCharactersBackupXCustomParam : DOLCharactersXCustomParam
-	{
-		/// <summary>
-		/// Create new instance of <see cref="DOLCharactersBackupXCustomParam"/> linked to Backup'd Character ObjectId
-		/// </summary>
-		/// <param name="DOLCharactersObjectId">DOLCharacters ObjectId</param>
-		/// <param name="KeyName">Key Name</param>
-		/// <param name="Value">Value</param>
-		public DOLCharactersBackupXCustomParam(string DOLCharactersObjectId, string KeyName, string Value)
-			: base(DOLCharactersObjectId, KeyName, Value)
-		{
-		}
+        /// <summary>
+        /// The deletion date of this character
+        /// </summary>
+        [DataElement(AllowDbNull = false)]
+        public DateTime DeleteDate
+        {
+            get
+            {
+                return m_deleteDate;
+            }
 
-		/// <summary>
-		/// Create new instance of <see cref="DOLCharactersBackupXCustomParam"/>
-		/// </summary>
-		public DOLCharactersBackupXCustomParam()
-		{
-		}
-	}
+            set
+            {
+                Dirty = true;
+                m_deleteDate = value;
+            }
+        }
+
+        /// <summary>
+        /// List of Custom Params for this Character Backup
+        /// </summary>
+        [Relation(LocalField = "DOLCharacters_ID", RemoteField = "DOLCharactersObjectId", AutoLoad = true, AutoDelete = true)]
+        public new DOLCharactersBackupXCustomParam[] CustomParams;
+    }
+
+    /// <summary>
+    /// DOL Characters Backup Custom Params linked to Character Backup Entry
+    /// </summary>
+    [DataTable(TableName = "DOLCharactersBackupXCustomParam")]
+    public class DOLCharactersBackupXCustomParam : DOLCharactersXCustomParam
+    {
+        /// <summary>
+        /// Create new instance of <see cref="DOLCharactersBackupXCustomParam"/> linked to Backup'd Character ObjectId
+        /// </summary>
+        /// <param name="DOLCharactersObjectId">DOLCharacters ObjectId</param>
+        /// <param name="KeyName">Key Name</param>
+        /// <param name="Value">Value</param>
+        public DOLCharactersBackupXCustomParam(string DOLCharactersObjectId, string KeyName, string Value)
+            : base(DOLCharactersObjectId, KeyName, Value)
+        {
+        }
+
+        /// <summary>
+        /// Create new instance of <see cref="DOLCharactersBackupXCustomParam"/>
+        /// </summary>
+        public DOLCharactersBackupXCustomParam()
+        {
+        }
+    }
 }

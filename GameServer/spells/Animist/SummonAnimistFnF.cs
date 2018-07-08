@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -26,130 +26,146 @@ using DOL.Language;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	/// Summon a fnf animist pet.
-	/// </summary>
-	[SpellHandler("SummonAnimistFnF")]
-	public class SummonAnimistFnF : SummonAnimistPet
-	{
-		public SummonAnimistFnF(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+    /// <summary>
+    /// Summon a fnf animist pet.
+    /// </summary>
+    [SpellHandler("SummonAnimistFnF")]
+    public class SummonAnimistFnF : SummonAnimistPet
+    {
+        public SummonAnimistFnF(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		public override bool CheckBeginCast(GameLiving selectedTarget)
-		{
-			int nCount = 0;
+        public override bool CheckBeginCast(GameLiving selectedTarget)
+        {
+            int nCount = 0;
 
-			Region rgn = WorldMgr.GetRegion(Caster.CurrentRegion.ID);
+            Region rgn = WorldMgr.GetRegion(Caster.CurrentRegion.ID);
 
-			if (rgn == null || rgn.GetZone(Caster.GroundTarget.X, Caster.GroundTarget.Y) == null)
-			{
-                if (Caster is GamePlayer)
-                    MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistFnF.CheckBeginCast.NoGroundTarget"), eChatType.CT_SpellResisted);
+            if (rgn?.GetZone(Caster.GroundTarget.X, Caster.GroundTarget.Y) == null)
+            {
+                if (Caster is GamePlayer player)
+                {
+                    MessageToCaster(LanguageMgr.GetTranslation(player.Client, "SummonAnimistFnF.CheckBeginCast.NoGroundTarget"), eChatType.CT_SpellResisted);
+                }
+
                 return false;
-			}
+            }
 
-			foreach (GameNPC npc in Caster.CurrentRegion.GetNPCsInRadius(Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Properties.TURRET_AREA_CAP_RADIUS, false, true))
-				if (npc.Brain is TurretFNFBrain)
-					nCount++;
+            foreach (GameNPC npc in Caster.CurrentRegion.GetNPCsInRadius(Caster.GroundTarget.X, Caster.GroundTarget.Y, Caster.GroundTarget.Z, (ushort)Properties.TURRET_AREA_CAP_RADIUS, false, true))
+            {
+                if (npc.Brain is TurretFNFBrain)
+                {
+                    nCount++;
+                }
+            }
 
-			if (nCount >= Properties.TURRET_AREA_CAP_COUNT)
-			{
-                if (Caster is GamePlayer)
-                    MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistFnF.CheckBeginCast.TurretAreaCap"), eChatType.CT_SpellResisted);
+            if (nCount >= Properties.TURRET_AREA_CAP_COUNT)
+            {
+                if (Caster is GamePlayer player)
+                {
+                    MessageToCaster(LanguageMgr.GetTranslation(player.Client, "SummonAnimistFnF.CheckBeginCast.TurretAreaCap"), eChatType.CT_SpellResisted);
+                }
+
                 return false;
-			}
+            }
 
-			if (Caster.PetCount >= Properties.TURRET_PLAYER_CAP_COUNT)
-			{
-                if (Caster is GamePlayer)
-                    MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistFnF.CheckBeginCast.TurretPlayerCap"), eChatType.CT_SpellResisted);
+            if (Caster.PetCount >= Properties.TURRET_PLAYER_CAP_COUNT)
+            {
+                if (Caster is GamePlayer player)
+                {
+                    MessageToCaster(LanguageMgr.GetTranslation(player.Client, "SummonAnimistFnF.CheckBeginCast.TurretPlayerCap"), eChatType.CT_SpellResisted);
+                }
+
                 return false;
-			}
+            }
 
-			return base.CheckBeginCast(selectedTarget);
-		}
+            return base.CheckBeginCast(selectedTarget);
+        }
 
-		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
-		{
-			base.ApplyEffectOnTarget(target, effectiveness);
+        public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+        {
+            base.ApplyEffectOnTarget(target, effectiveness);
 
-			if (Spell.SubSpellID > 0 && SkillBase.GetSpellByID(Spell.SubSpellID) != null)
-			{
-				m_pet.Spells.Add(SkillBase.GetSpellByID(Spell.SubSpellID));
-			}
+            if (Spell.SubSpellId > 0 && SkillBase.GetSpellByID(Spell.SubSpellId) != null)
+            {
+                m_pet.Spells.Add(SkillBase.GetSpellByID(Spell.SubSpellId));
+            }
 
-			(m_pet.Brain as TurretBrain).IsMainPet = false;
+            ((TurretBrain) m_pet.Brain).IsMainPet = false;
 
-			(m_pet.Brain as IOldAggressiveBrain).AddToAggroList(target, 1);
-			(m_pet.Brain as TurretBrain).Think();
-			//[Ganrod] Nidel: Set only one spell.
-			(m_pet as TurretPet).TurretSpell = m_pet.Spells[0] as Spell;
-			Caster.PetCount++;
-		}
+            ((IOldAggressiveBrain) m_pet.Brain)?.AddToAggroList(target, 1);
+            (m_pet.Brain as TurretBrain).Think();
 
-		protected override void SetBrainToOwner(IControlledBrain brain)
-		{
-		}
+            // [Ganrod] Nidel: Set only one spell.
+            ((TurretPet) m_pet).TurretSpell = m_pet.Spells[0] as Spell;
+            Caster.PetCount++;
+        }
 
-		/// <summary>
-		/// [Ganrod] Nidel: Can remove TurretFNF
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="arguments"></param>
-		protected override void OnNpcReleaseCommand(DOLEvent e, object sender, EventArgs arguments)
-		{
-			m_pet = sender as GamePet;
-			if (m_pet == null)
-				return;
+        protected override void SetBrainToOwner(IControlledBrain brain)
+        {
+        }
 
-			if ((m_pet.Brain as TurretFNFBrain) == null)
-				return;
+        /// <summary>
+        /// [Ganrod] Nidel: Can remove TurretFNF
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="sender"></param>
+        /// <param name="arguments"></param>
+        protected override void OnNpcReleaseCommand(DOLEvent e, object sender, EventArgs arguments)
+        {
+            m_pet = sender as GamePet;
 
-			if (Caster.ControlledBrain == null)
-			{
-				((GamePlayer)Caster).Out.SendPetWindow(null, ePetWindowAction.Close, 0, 0);
-			}
+            if (!(m_pet?.Brain is TurretFNFBrain))
+            {
+                return;
+            }
 
-			GameEventMgr.RemoveHandler(m_pet, GameLivingEvent.PetReleased, OnNpcReleaseCommand);
+            if (Caster.ControlledBrain == null)
+            {
+                ((GamePlayer)Caster).Out.SendPetWindow(null, ePetWindowAction.Close, 0, 0);
+            }
 
-			GameSpellEffect effect = FindEffectOnTarget(m_pet, this);
-			if (effect != null)
-				effect.Cancel(false);
-		}
+            GameEventMgr.RemoveHandler(m_pet, GameLivingEvent.PetReleased, OnNpcReleaseCommand);
 
-		protected override byte GetPetLevel()
-		{
-			byte level = base.GetPetLevel();
-			if (level > 44)
-				level = 44;
-			return level;
-		}
+            GameSpellEffect effect = FindEffectOnTarget(m_pet, this);
+            effect?.Cancel(false);
+        }
 
-		/// <summary>
-		/// When an applied effect expires.
-		/// Duration spells only.
-		/// </summary>
-		/// <param name="effect">The expired effect</param>
-		/// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
-		/// <returns>immunity duration in milliseconds</returns>
-		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
-		{
-			Caster.PetCount--;
+        protected override byte GetPetLevel()
+        {
+            byte level = base.GetPetLevel();
+            if (level > 44)
+            {
+                level = 44;
+            }
 
-			return base.OnEffectExpires(effect, noMessages);
-		}
+            return level;
+        }
 
-		protected override IControlledBrain GetPetBrain(GameLiving owner)
-		{
-			return new TurretFNFBrain(owner);
-		}
-		
-		/// <summary>
-		/// Do not trigger SubSpells
-		/// </summary>
-		/// <param name="target"></param>
-		public override void CastSubSpells(GameLiving target)
-		{
-		}
-	}
+        /// <summary>
+        /// When an applied effect expires.
+        /// Duration spells only.
+        /// </summary>
+        /// <param name="effect">The expired effect</param>
+        /// <param name="noMessages">true, when no messages should be sent to player and surrounding</param>
+        /// <returns>immunity duration in milliseconds</returns>
+        public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
+        {
+            Caster.PetCount--;
+
+            return base.OnEffectExpires(effect, noMessages);
+        }
+
+        protected override IControlledBrain GetPetBrain(GameLiving owner)
+        {
+            return new TurretFNFBrain(owner);
+        }
+
+        /// <summary>
+        /// Do not trigger SubSpells
+        /// </summary>
+        /// <param name="target"></param>
+        public override void CastSubSpells(GameLiving target)
+        {
+        }
+    }
 }

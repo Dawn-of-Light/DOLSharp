@@ -1,16 +1,16 @@
 ﻿/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -28,15 +28,14 @@ namespace DOL.GS.DatabaseUpdate
     [DatabaseUpdate]
     public class LanguageSystemUpdate : IDatabaseUpdater
     {
-        #region DBLanguage table structure
         private class language : DataObject
         {
             protected string m_translationid;
-            protected string m_EN = "";
-            protected string m_DE = "";
-            protected string m_FR = "";
-            protected string m_IT = "";
-            protected string m_CU = "";
+            protected string m_EN = string.Empty;
+            protected string m_DE = string.Empty;
+            protected string m_FR = string.Empty;
+            protected string m_IT = string.Empty;
+            protected string m_CU = string.Empty;
             protected string m_packageID;
 
             public language() { }
@@ -90,7 +89,6 @@ namespace DOL.GS.DatabaseUpdate
                 set { Dirty = true; m_packageID = value; }
             }
         }
-        #endregion DBLanguage table structure
 
         /// <summary>
         /// Defines a logger for this class.
@@ -111,12 +109,16 @@ namespace DOL.GS.DatabaseUpdate
                     foreach (language obj in objs)
                     {
                         if (Util.IsEmpty(obj.TranslationID))
+                        {
                             continue;
+                        }
 
                         // This kind of row will later be readded by the LanguageMgr
                         // with it's updated values.
                         if (obj.TranslationID.Contains("System.LanguagesName."))
+                        {
                             continue;
+                        }
 
                         DBLanguageSystem lngObj = null;
 
@@ -180,8 +182,10 @@ namespace DOL.GS.DatabaseUpdate
                         GameServer.Database.AddObject(lngObj);
 
                         if (log.IsWarnEnabled)
+                        {
                             log.Warn("Moving sentence from 'language' to 'languagesystem'. ( Language <" + lngObj.Language +
                                      "> - TranslationId <" + lngObj.TranslationId + "> )");
+                        }
                     }
                 }
             }
@@ -194,10 +198,14 @@ namespace DOL.GS.DatabaseUpdate
             foreach (DBLanguageSystem lngObj in list)
             {
                 if (lngObj.TranslationId != translationId)
+                {
                     continue;
+                }
 
                 if (lngObj.Language != language)
+                {
                     continue;
+                }
 
                 contains = true;
                 break;

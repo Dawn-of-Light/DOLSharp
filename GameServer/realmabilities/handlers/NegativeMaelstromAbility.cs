@@ -1,128 +1,144 @@
 using System;
-using System.Collections;
-using System.Reflection;
-using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.GS.Effects;
 using DOL.Events;
 using DOL.Database;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class NegativeMaelstromAbility : TimedRealmAbility
-	{
+    public class NegativeMaelstromAbility : TimedRealmAbility
+    {
         public NegativeMaelstromAbility(DBAbility dba, int level) : base(dba, level) { }
-		private int dmgValue;
-		private uint duration;
-		private GamePlayer player;
-        private const string IS_CASTING = "isCasting";
-        private const string NM_CAST_SUCCESS = "NMCasting";
+
+        private int _dmgValue;
+        private uint _duration;
+        private GamePlayer _player;
+        private const string IsCasting = "isCasting";
+        private const string NmCastSuccess = "NMCasting";
 
         public override void Execute(GameLiving living)
         {
-            if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
-            GamePlayer caster = living as GamePlayer;
-			if (caster.IsMoving)
-			{
-				caster.Out.SendMessage("You must be standing still to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
-
-            if ( caster.GroundTarget == null || !caster.IsWithinRadius( caster.GroundTarget, 1500 ) )
+            if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED))
             {
-				caster.Out.SendMessage("You groundtarget is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
+                return;
             }
-            if (caster.TempProperties.getProperty(IS_CASTING, false))
+
+            if (!(living is GamePlayer caster))
+            {
+                return;
+            }
+
+            if (caster.IsMoving)
+            {
+                caster.Out.SendMessage("You must be standing still to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            if (caster.GroundTarget == null || !caster.IsWithinRadius(caster.GroundTarget, 1500))
+            {
+                caster.Out.SendMessage("You groundtarget is too far away to use this ability!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+
+            if (caster.TempProperties.getProperty(IsCasting, false))
             {
                 caster.Out.SendMessage("You are already casting an ability.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
-            this.player = caster;
-            if (caster.AttackState) 
+
+            _player = caster;
+            if (caster.AttackState)
             {
                 caster.StopAttack();
             }
+
             caster.StopCurrentSpellcast();
 
-            if(ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
+            if (ServerProperties.Properties.USE_NEW_ACTIVES_RAS_SCALING)
             {
-	            switch (Level)
-				{
-					case 1: dmgValue = 175; break;
-					case 2: dmgValue = 260; break;
-					case 3: dmgValue = 350; break;
-					case 4: dmgValue = 425; break;
-					case 5: dmgValue = 500; break;
-					default: return;
-				}
+                switch (Level)
+                {
+                    case 1: _dmgValue = 175; break;
+                    case 2: _dmgValue = 260; break;
+                    case 3: _dmgValue = 350; break;
+                    case 4: _dmgValue = 425; break;
+                    case 5: _dmgValue = 500; break;
+                    default: return;
+                }
             }
             else
             {
-	            switch (Level)
-				{
-					case 1: dmgValue = 120; break;
-					case 2: dmgValue = 240; break;
-					case 3: dmgValue = 360; break;
-					default: return;
-				}
+                switch (Level)
+                {
+                    case 1: _dmgValue = 120; break;
+                    case 2: _dmgValue = 240; break;
+                    case 3: _dmgValue = 360; break;
+                    default: return;
+                }
             }
-            
-			duration = 30;
-			foreach (GamePlayer i_player in caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
-			{
-				if (i_player == caster)
-				{
-					i_player.MessageToSelf("You cast " + this.Name + "!", eChatType.CT_Spell);
-				}
-				else
-				{
-					i_player.MessageFromArea(caster, caster.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-				}
 
-				i_player.Out.SendSpellCastAnimation(caster, 7027, 20);
-			}
-            caster.TempProperties.setProperty(IS_CASTING, true);
-            caster.TempProperties.setProperty(NM_CAST_SUCCESS, true);
-            GameEventMgr.AddHandler(caster, GamePlayerEvent.Moving, new DOLEventHandler(CastInterrupted));
-            GameEventMgr.AddHandler(caster, GamePlayerEvent.AttackFinished, new DOLEventHandler(CastInterrupted));
-            GameEventMgr.AddHandler(caster, GamePlayerEvent.Dying, new DOLEventHandler(CastInterrupted));
-            if (caster != null)
+            _duration = 30;
+            foreach (GamePlayer iPlayer in caster.GetPlayersInRadius(WorldMgr.INFO_DISTANCE))
             {
-                new RegionTimer(caster, new RegionTimerCallback(EndCast), 2000);
+                if (iPlayer == caster)
+                {
+                    iPlayer.MessageToSelf("You cast " + Name + "!", eChatType.CT_Spell);
+                }
+                else
+                {
+                    iPlayer.MessageFromArea(caster, caster.Name + " casts a spell!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+                }
+
+                iPlayer.Out.SendSpellCastAnimation(caster, 7027, 20);
             }
-		}
-		protected virtual int EndCast(RegionTimer timer)
-		{
-            bool castWasSuccess = player.TempProperties.getProperty(NM_CAST_SUCCESS, false);
-            player.TempProperties.removeProperty(IS_CASTING);
-            GameEventMgr.RemoveHandler(player, GamePlayerEvent.Moving, new DOLEventHandler(CastInterrupted));
-            GameEventMgr.RemoveHandler(player, GamePlayerEvent.AttackFinished, new DOLEventHandler(CastInterrupted));
-            GameEventMgr.RemoveHandler(player, GamePlayerEvent.Dying, new DOLEventHandler(CastInterrupted));
-            if (player.IsMezzed || player.IsStunned || player.IsSitting)
-                return 0;
-            if (!castWasSuccess)
-                return 0;
-			Statics.NegativeMaelstromBase nm = new Statics.NegativeMaelstromBase(dmgValue);
-			nm.CreateStatic(player, player.GroundTarget, duration, 5, 350);
-            DisableSkill(player); 
-			timer.Stop();
-			timer = null;
-			return 0;
-		}
-        private void CastInterrupted(DOLEvent e, object sender, EventArgs arguments) 
+
+            caster.TempProperties.setProperty(IsCasting, true);
+            caster.TempProperties.setProperty(NmCastSuccess, true);
+            GameEventMgr.AddHandler(caster, GameLivingEvent.Moving, new DOLEventHandler(CastInterrupted));
+            GameEventMgr.AddHandler(caster, GameLivingEvent.AttackFinished, new DOLEventHandler(CastInterrupted));
+            GameEventMgr.AddHandler(caster, GameLivingEvent.Dying, new DOLEventHandler(CastInterrupted));
+            new RegionTimer(caster, new RegionTimerCallback(EndCast), 2000);
+        }
+
+        protected virtual int EndCast(RegionTimer timer)
         {
-            AttackFinishedEventArgs attackFinished = arguments as AttackFinishedEventArgs;
-            if (attackFinished != null && attackFinished.AttackData.Attacker != sender)
+            bool castWasSuccess = _player.TempProperties.getProperty(NmCastSuccess, false);
+            _player.TempProperties.removeProperty(IsCasting);
+            GameEventMgr.RemoveHandler(_player, GameLivingEvent.Moving, new DOLEventHandler(CastInterrupted));
+            GameEventMgr.RemoveHandler(_player, GameLivingEvent.AttackFinished, new DOLEventHandler(CastInterrupted));
+            GameEventMgr.RemoveHandler(_player, GameLivingEvent.Dying, new DOLEventHandler(CastInterrupted));
+            if (_player.IsMezzed || _player.IsStunned || _player.IsSitting)
+            {
+                return 0;
+            }
+
+            if (!castWasSuccess)
+            {
+                return 0;
+            }
+
+            Statics.NegativeMaelstromBase nm = new Statics.NegativeMaelstromBase(_dmgValue);
+            nm.CreateStatic(_player, _player.GroundTarget, _duration, 5, 350);
+            DisableSkill(_player);
+            timer.Stop();
+            return 0;
+        }
+
+        private void CastInterrupted(DOLEvent e, object sender, EventArgs arguments)
+        {
+            if (arguments is AttackFinishedEventArgs attackFinished && attackFinished.AttackData.Attacker != sender)
+            {
                 return;
-            player.TempProperties.setProperty(NM_CAST_SUCCESS, false);
-            foreach (GamePlayer i_player in player.GetPlayersInRadius(WorldMgr.INFO_DISTANCE)) {
-                i_player.Out.SendInterruptAnimation(player);
+            }
+
+            _player.TempProperties.setProperty(NmCastSuccess, false);
+            foreach (GamePlayer iPlayer in _player.GetPlayersInRadius(WorldMgr.INFO_DISTANCE)) {
+                iPlayer.Out.SendInterruptAnimation(_player);
             }
         }
+
         public override int GetReUseDelay(int level)
         {
             return 900;
         }
-	}
+    }
 }

@@ -16,13 +16,13 @@ namespace DOL.GS
 
         public override void DropLoot(GameObject killer)
         {
-            //Guards dont drop loot when they die
+            // Guards dont drop loot when they die
         }
 
         public override IList GetExamineMessages(GamePlayer player)
         {
             IList list = new ArrayList(4);
-            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameGuard.GetExamineMessages.Examine", 
+            list.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameGuard.GetExamineMessages.Examine",
                                                 GetName(0, true, player.Client.Account.Language, this), GetPronoun(0, true, player.Client.Account.Language),
                                                 GetAggroLevelString(player, false)));
             return list;
@@ -35,6 +35,7 @@ namespace DOL.GS
             foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.SAY_DISTANCE))
             {
                 if (player != null)
+                {
                     switch (Realm)
                     {
                         case eRealm.Albion:
@@ -44,6 +45,7 @@ namespace DOL.GS
                         case eRealm.Hibernia:
                             player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameGuard.Hibernia.StartAttackSay"), eChatType.CT_System, eChatLoc.CL_SystemWindow); break;
                     }
+                }
             }
         }
     }

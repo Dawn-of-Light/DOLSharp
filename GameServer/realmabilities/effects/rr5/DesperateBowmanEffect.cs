@@ -1,86 +1,84 @@
-using System;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
-using DOL.GS.RealmAbilities;
-using DOL.Events;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Adrenaline Rush
-	/// </summary>
-	public class DesperateBowmanDisarmEffect : TimedEffect
-	{
-		public DesperateBowmanDisarmEffect()
-			: base(15000)
-		{
-			;
-		}
+    /// <summary>
+    /// Adrenaline Rush
+    /// </summary>
+    public class DesperateBowmanDisarmEffect : TimedEffect
+    {
+        public DesperateBowmanDisarmEffect()
+            : base(15000)
+        {
+        }
 
-		public override void Start(GameLiving target)
-		{
-			base.Start(target);
+        public override void Start(GameLiving target)
+        {
+            base.Start(target);
             target.DisarmedTime = target.CurrentRegion.Time + m_duration;
             target.SilencedTime = target.CurrentRegion.Time + m_duration;
-			target.StopAttack();
-			target.StopCurrentSpellcast();
-		}
+            target.StopAttack();
+            target.StopCurrentSpellcast();
+        }
 
-		public override string Name { get { return "Desperate Bowman"; } }
+        public override string Name => "Desperate Bowman";
 
-		public override ushort Icon { get { return 3060; } }
+        public override ushort Icon => 3060;
 
-		public override IList<string> DelveInfo
-		{
-			get
-			{
-				var list = new List<string>();
-				list.Add("Disarms you for 15 seconds!");
-				return list;
-			}
-		}
-	}
+        public override IList<string> DelveInfo
+        {
+            get
+            {
+                var list = new List<string>
+                {
+                    "Disarms you for 15 seconds!"
+                };
 
-	public class DesperateBowmanStunEffect : TimedEffect
-	{
-		public DesperateBowmanStunEffect()
-			: base(5000)
-		{
-		}
+                return list;
+            }
+        }
+    }
 
-		public override void Start(GameLiving target)
-		{
-			base.Start(target);
-			target.IsStunned = true;
-			target.StopAttack();
-			target.StopCurrentSpellcast();
-			target.DisableTurning(true);
-			if (target is GamePlayer)
-				(target as GamePlayer).Out.SendUpdateMaxSpeed();
-		}
+    public class DesperateBowmanStunEffect : TimedEffect
+    {
+        public DesperateBowmanStunEffect()
+            : base(5000)
+        {
+        }
 
-		public override void Stop()
-		{
-			base.Stop();
-			m_owner.IsStunned = false;
-			m_owner.DisableTurning(false);
-			if (m_owner is GamePlayer)
-				(m_owner as GamePlayer).Out.SendUpdateMaxSpeed();
-		}
+        public override void Start(GameLiving target)
+        {
+            base.Start(target);
+            target.IsStunned = true;
+            target.StopAttack();
+            target.StopCurrentSpellcast();
+            target.DisableTurning(true);
+            (target as GamePlayer)?.Out.SendUpdateMaxSpeed();
+        }
 
-		public override string Name { get { return "Desperate Bowman"; } }
+        public override void Stop()
+        {
+            base.Stop();
+            m_owner.IsStunned = false;
+            m_owner.DisableTurning(false);
+            (m_owner as GamePlayer)?.Out.SendUpdateMaxSpeed();
+        }
 
-		public override ushort Icon { get { return 3060; } }
+        public override string Name => "Desperate Bowman";
 
-		public override IList<string> DelveInfo
-		{
-			get
-			{
-				var list = new List<string>();
-				list.Add("Stun Effect");
-				return list;
-			}
-		}
-	}
+        public override ushort Icon => 3060;
 
+        public override IList<string> DelveInfo
+        {
+            get
+            {
+                var list = new List<string>
+                {
+                    "Stun Effect"
+                };
+
+                return list;
+            }
+        }
+    }
 }

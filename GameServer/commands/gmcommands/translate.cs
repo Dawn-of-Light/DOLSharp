@@ -1,30 +1,24 @@
 ﻿/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 using DOL.Database;
 using DOL.Language;
-using DOL.GS.Keeps;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
 {
@@ -41,7 +35,8 @@ namespace DOL.GS.Commands
          "Use '/translate selectsave [Text]' to refresh the text of the selected translation and to save it's language object into the database.",
          "Use '/translate selectshow' to show the language, translation id and the text of your selected language object.",
          "Use '/translate show [Language] [TranslationId]' to show the translated text of the given language and translation id.")]
-    //"Use '/translate showlist [showall or Language]' to show a sorted list of all registered translations or to show a list of all translations of a language.")]
+
+    // "Use '/translate showlist [showall or Language]' to show a sorted list of all registered translations or to show a list of all translations of a language.")]
     public class TranslateCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         private const string LANGUAGEMGR_MEM_LNG_OBJ = "LANGUAGEMGR_MEM_LNG_OBJ";
@@ -50,7 +45,9 @@ namespace DOL.GS.Commands
         public void OnCommand(GameClient client, string[] args)
         {
             if (IsSpammingCommand(client.Player, "translate"))
+            {
                 return;
+            }
 
             if (args.Length < 2)
             {
@@ -60,7 +57,6 @@ namespace DOL.GS.Commands
 
             switch (args[1].ToLower())
             {
-                #region add
                 case "add":
                     {
                         if (client.Account.PrivLevel != (uint)ePrivLevel.Player)
@@ -91,9 +87,7 @@ namespace DOL.GS.Commands
 
                         return;
                     }
-                #endregion add
 
-                #region debug
                 case "debug":
                     {
                         bool debug = client.Player.TempProperties.getProperty("LANGUAGEMGR-DEBUG", false);
@@ -102,30 +96,33 @@ namespace DOL.GS.Commands
                         DisplayMessage(client, "[Language-Manager] Debug mode: " + (debug ? "ON" : "OFF"));
                         return;
                     }
-                #endregion debug
 
-                #region memadd
                 case "memadd":
                     {
                         // This sub command adds a new language object to your temp properties which will "pre save" the given translation id
                         // and language. Use this sub command if the translation id or text of your new translation requires more room
                         // as the DAoC chat allows you to use in one line. Use the memsave sub command to add a text to this language object
                         // and to save it into the database - or use "memclear" to remove the language object from your temp properties.
-
                         if (args.Length < 4)
+                        {
                             DisplayMessage(client, "[Language-Manager] Usage: '/translate memadd [Language] [TranslationId]'");
+                        }
                         else
                         {
                             LanguageDataObject lngObj = (LanguageDataObject)client.Player.TempProperties.getProperty<object>(LANGUAGEMGR_MEM_LNG_OBJ, null);
 
                             if (lngObj != null)
+                            {
                                 DisplayMessage(client, "[Language-Manager] Can't add language object, there is already another one!");
+                            }
                             else
                             {
                                 lngObj = LanguageMgr.GetLanguageDataObject(args[2].ToUpper(), args[3], LanguageDataObject.eTranslationIdentifier.eSystem);
 
                                 if (lngObj != null)
+                                {
                                     DisplayMessage(client, "[Language-Manager] The combination of the given TranslationId <" + args[3] + "> and Language <" + args[2].ToUpper() + "> is already in use!");
+                                }
                                 else
                                 {
                                     lngObj = new DBLanguageSystem();
@@ -140,16 +137,16 @@ namespace DOL.GS.Commands
 
                         return;
                     }
-                #endregion memadd
 
-                #region memclear
                 case "memclear":
                     {
                         // Removes the language object from your temp properties you've previously added with the "memadd" sub command.
                         LanguageDataObject lngObj = (LanguageDataObject)client.Player.TempProperties.getProperty<object>(LANGUAGEMGR_MEM_LNG_OBJ, null);
 
                         if (lngObj == null)
+                        {
                             DisplayMessage(client, "[Language-Manager] No language object found.");
+                        }
                         else
                         {
                             client.Player.TempProperties.removeProperty(LANGUAGEMGR_MEM_LNG_OBJ);
@@ -158,29 +155,37 @@ namespace DOL.GS.Commands
 
                         return;
                     }
-                #endregion memclear
 
-                #region memsave
                 case "memsave":
                     {
                         // See "memadd" sub command for a description.
                         if (args.Length < 3)
+                        {
                             DisplayMessage(client, "[Language-Manager] Usage: '/translate memsave [Text]'");
+                        }
                         else
                         {
                             LanguageDataObject lngObj = (LanguageDataObject)client.Player.TempProperties.getProperty<object>(LANGUAGEMGR_MEM_LNG_OBJ, null);
 
                             if (lngObj == null)
+                            {
                                 DisplayMessage(client, "[Language-Manager] No language object found.");
+                            }
                             else
                             {
                                 if (args.Length > 3)
+                                {
                                     ((DBLanguageSystem)lngObj).Text = string.Join(" ", args, 2, args.Length - 2);
+                                }
                                 else
+                                {
                                     ((DBLanguageSystem)lngObj).Text = args[2];
+                                }
 
                                 if (!LanguageMgr.RegisterLanguageDataObject(lngObj))
+                                {
                                     DisplayMessage(client, "[Language-Manager] Can't register language object in LanguageMgr, there is already another one!");
+                                }
                                 else
                                 {
                                     GameServer.Database.AddObject(lngObj);
@@ -192,33 +197,37 @@ namespace DOL.GS.Commands
 
                         return;
                     }
-                #endregion memsave
 
-                #region memshow
                 case "memshow":
                     {
                         LanguageDataObject lngObj = (LanguageDataObject)client.Player.TempProperties.getProperty<object>(LANGUAGEMGR_MEM_LNG_OBJ, null);
 
                         if (lngObj == null)
+                        {
                             DisplayMessage(client, "[Language-Manager] No language object found.");
+                        }
                         else
+                        {
                             DisplayMessage(client, "[Language-Manager] Language object info: Language <" + lngObj.Language + "> TranslationId <" + lngObj.TranslationId + ">");
+                        }
 
                         return;
                     }
-                #endregion memshow
 
-                #region refresh
                 case "refresh":
                     {
                         if (args.Length < 5)
+                        {
                             DisplayMessage(client, "[Language-Manager] Usage: '/translate refresh [Language] [TranslationId] [Text]'");
+                        }
                         else
                         {
                             LanguageDataObject lngObj = LanguageMgr.GetLanguageDataObject(args[2].ToUpper(), args[3], LanguageDataObject.eTranslationIdentifier.eSystem);
 
                             if (lngObj == null)
+                            {
                                 DisplayMessage(client, "[Language-Manager] Can't find TranslationId <" + args[3] + "> (Language <" + args[2].ToUpper() + "> !");
+                            }
                             else
                             {
                                 ((DBLanguageSystem)lngObj).Text = args[3];
@@ -229,13 +238,13 @@ namespace DOL.GS.Commands
 
                         return;
                     }
-                #endregion refresh
 
-                #region select
                 case "select":
                     {
                         if (args.Length < 4)
+                        {
                             DisplayMessage(client, "[Language-Manager] Usage: '/translate select [Language] [TranslationId]'");
+                        }
                         else
                         {
                             LanguageDataObject lngObj = (LanguageDataObject)client.Player.TempProperties.getProperty<object>(LANGUAGEMGR_SEL_LNG_OBJ, null);
@@ -265,16 +274,16 @@ namespace DOL.GS.Commands
 
                         return;
                     }
-                #endregion select
 
-                #region selectclear
                 case "selectclear":
                     {
                         // Removes the language object from your temp properties you've previously selected with the "select" sub command.
                         LanguageDataObject lngObj = (LanguageDataObject)client.Player.TempProperties.getProperty<object>(LANGUAGEMGR_SEL_LNG_OBJ, null);
 
                         if (lngObj == null)
+                        {
                             DisplayMessage(client, "[Language-Manager] No language object selected!");
+                        }
                         else
                         {
                             client.Player.TempProperties.removeProperty(LANGUAGEMGR_SEL_LNG_OBJ);
@@ -285,25 +294,31 @@ namespace DOL.GS.Commands
 
                         return;
                     }
-                #endregion selectclear
 
-                #region selectsave
                 case "selectsave":
                     {
                         if (args.Length < 3)
+                        {
                             DisplayMessage(client, "[Language-Manager] Usage: '/translate selectsave [Text]'");
+                        }
                         else
                         {
                             LanguageDataObject lngObj = (LanguageDataObject)client.Player.TempProperties.getProperty<object>(LANGUAGEMGR_SEL_LNG_OBJ, null);
 
                             if (lngObj == null)
+                            {
                                 DisplayMessage(client, "[Language-Manager] No language object selected!");
+                            }
                             else
                             {
                                 if (args.Length > 3)
+                                {
                                     ((DBLanguageSystem)lngObj).Text = string.Join(" ", args, 2, args.Length - 2);
+                                }
                                 else
+                                {
                                     ((DBLanguageSystem)lngObj).Text = args[2];
+                                }
 
                                 GameServer.Database.SaveObject(lngObj);
                                 client.Player.TempProperties.removeProperty(LANGUAGEMGR_SEL_LNG_OBJ);
@@ -316,46 +331,51 @@ namespace DOL.GS.Commands
 
                         return;
                     }
-                #endregion selectsave
 
-                #region selectshow
                 case "selectshow":
                     {
                         LanguageDataObject lngObj = (LanguageDataObject)client.Player.TempProperties.getProperty<object>(LANGUAGEMGR_SEL_LNG_OBJ, null);
 
                         if (lngObj == null)
+                        {
                             DisplayMessage(client, "[Language-Manager] No language object selected!");
+                        }
                         else
+                        {
                             DisplayMessage(client, "[Language-Manager] Language object info: Language <" + lngObj.Language + "> - TranslationId <" + lngObj.TranslationId +
                                                    "> - Text <" + ((DBLanguageSystem)lngObj).Text + ">");
+                        }
+
                         return;
                     }
-                #endregion selectshow
 
-                #region show
                 case "show":
                     {
                         if (args.Length < 4)
+                        {
                             DisplayMessage(client, "[Language-Manager] Usage: '/translate show [Language] [TranslationId]'");
+                        }
                         else
                         {
                             LanguageDataObject lngObj = LanguageMgr.GetLanguageDataObject(args[2].ToUpper(), args[3], LanguageDataObject.eTranslationIdentifier.eSystem);
 
                             if (lngObj == null)
+                            {
                                 DisplayMessage(client, "[Language-Manager] Can't find language object. ( Language <" + args[2].ToUpper() +
                                                        "> - TranslationId <" + args[3] + "> )");
+                            }
                             else
+                            {
                                 DisplayMessage(client, "[Language-Manager] " + ((DBLanguageSystem)lngObj).Text);
+                            }
                         }
 
                         return;
                     }
-                #endregion show
 
-                #region showlist
                 /*
                  * The code works fine, but DAoC does not support a such huge list.
-                 * 
+                 *
                  * case "showlist":
                     {
                         if (args.Length < 3)
@@ -467,7 +487,6 @@ namespace DOL.GS.Commands
 
                         return;
                     }*/
-                #endregion showlist
 
                 default:
                     {

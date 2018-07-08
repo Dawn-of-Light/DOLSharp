@@ -1,23 +1,22 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
 using System;
-using System.Text;
 using DOL.Events;
 
 namespace DOL.GS.Behaviour
@@ -39,10 +38,11 @@ namespace DOL.GS.Behaviour
         /// No Triggertype at all, needed since triggertype cannot be null when passed as an argument
         /// </summary>
         None = 0x00,
-        //ATTA : Monster acquires a target and initiate an attack                 
+
+        // ATTA : Monster acquires a target and initiate an attack
         /// <summary>
         /// AQST : player accepts quest I:Type[Typename:string](Current Quest)
-        /// </summary>       
+        /// </summary>
         /// <remarks>Tested</remarks>
         AcceptQuest = 0x01,
         /// <summary>
@@ -64,9 +64,10 @@ namespace DOL.GS.Behaviour
         /// </summary>
         /// <remarks>Tested</remarks>
         AbortQuest = 0x05,
-        //INRA : player enters interaction radius (checked each second, please use timers)
+
+        // INRA : player enters interaction radius (checked each second, please use timers)
         /// <summary>
-        /// player enters area I:IArea        
+        /// player enters area I:IArea
         /// </summary>
         /// <remarks>Tested</remarks>
         EnterArea = 0x06,
@@ -90,7 +91,7 @@ namespace DOL.GS.Behaviour
         ///     triggerkeyword = name of monster
         /// else
         ///     I = monster object
-        /// </summary>        
+        /// </summary>
         EnemyKilled = 0x0A,
         /// <summary>
         /// TAKE : Player gives item I:ItemTemplate[Item's Id_nb:string] to K:GameLiving[GameLiving's Id or Name:string](NPC)
@@ -102,7 +103,8 @@ namespace DOL.GS.Behaviour
         /// </summary>
         /// <remarks>Tested</remarks>
         Whisper = 0x0C,
-        //TIME : ingame time reaches I
+
+        // TIME : ingame time reaches I
         /// <summary>
         /// TMR# :  timer with id K:string has finished
         /// </summary>
@@ -141,8 +143,8 @@ namespace DOL.GS.Behaviour
     /// <summary>
     /// A trigger defines the circumstances under which a certain QuestAction is fired.
     /// This can be eTriggerAction.Interact, eTriggerAction.GiveItem, eTriggerAction.Attack, etc...
-    /// Additional there are two variables to add the needed parameters for the triggertype (Item to give for GiveItem, NPC to interact for Interact, etc...). To fire a QuestAction at least one of the added triggers must be fulfilled. 
-    /// </summary>        
+    /// Additional there are two variables to add the needed parameters for the triggertype (Item to give for GiveItem, NPC to interact for Interact, etc...). To fire a QuestAction at least one of the added triggers must be fulfilled.
+    /// </summary>
     public interface IBehaviourTrigger
     {
         /// <summary>
@@ -151,26 +153,26 @@ namespace DOL.GS.Behaviour
         /// </summary>
         /// <param name="e">DolEvent of notify call</param>
         /// <param name="sender">Sender of notify call</param>
-        /// <param name="args">EventArgs of notify call</param>        
+        /// <param name="args">EventArgs of notify call</param>
         /// <returns>true if QuestPart should be executes, else false</returns>
         bool Check(DOLEvent e, object sender, EventArgs args);
 
         /// <summary>
-        /// Registers the trigger within dol to be notified if possible trigger event occurs        
+        /// Registers the trigger within dol to be notified if possible trigger event occurs
         /// </summary>
         /// <remarks>
         /// This method will be called multiple times, so use AddHandlerUnique to make
         /// sure only one handler is actually registered
-        /// </remarks>        
+        /// </remarks>
         void Register();
-        
+
         /// <summary>
         /// Unregister all added triggers that are no longer needed.
         /// </summary>
         /// <remarks>
         /// Don't remove handlers that will be used by other triggers etc.
         /// This is rather difficult since we don't know which events other triggers use.
-        /// </remarks>        
+        /// </remarks>
         void Unregister();
     }
 }

@@ -1,23 +1,25 @@
-using System;
 using DOL.Database;
-using DOL.GS.PropertyCalc;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class LifterAbility : RAPropertyEnhancer
-	{
-		public LifterAbility(DBAbility dba, int level)
-			: base(dba, level, eProperty.Undefined)
-		{
-		}
+    public class LifterAbility : RAPropertyEnhancer
+    {
+        public LifterAbility(DBAbility dba, int level)
+            : base(dba, level, eProperty.Undefined)
+        {
+        }
 
-		protected override string ValueUnit { get { return "%"; } }
+        protected override string ValueUnit => "%";
 
-		public override int GetAmountForLevel(int level)
-		{
+        public override int GetAmountForLevel(int level)
+        {
             if (ServerProperties.Properties.USE_NEW_PASSIVES_RAS_SCALING)
             {
-                if (level < 1) return 0;
+                if (level < 1)
+                {
+                    return 0;
+                }
+
                 switch (level)
                 {
                     case 1: return 10;
@@ -32,18 +34,16 @@ namespace DOL.GS.RealmAbilities
                     default: return 90;
                 }
             }
-            else
+
+            switch (level)
             {
-                switch (level)
-                {
-                    case 1: return 10;
-                    case 2: return 25;
-                    case 3: return 45;
-                    case 4: return 70;
-                    case 5: return 95;
-                    default: return 0;
-                }
+                case 1: return 10;
+                case 2: return 25;
+                case 3: return 45;
+                case 4: return 70;
+                case 5: return 95;
+                default: return 0;
             }
-		}
-	}
+        }
+    }
 }

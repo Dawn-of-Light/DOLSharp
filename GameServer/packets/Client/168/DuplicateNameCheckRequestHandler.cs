@@ -16,31 +16,30 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Linq;
-
 using DOL.Database;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.DuplicateNameCheck, "Checks if a character name already exists", eClientStatus.LoggedIn)]
-	public class DupNameCheckRequestHandler : IPacketHandler
-	{
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.DuplicateNameCheck, "Checks if a character name already exists", eClientStatus.LoggedIn)]
+    public class DupNameCheckRequestHandler : IPacketHandler
+    {
+        public void HandlePacket(GameClient client, GSPacketIn packet)
+        {
+            string name = packet.ReadString(30);
+            byte result = 0x00;
+            var character = GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", name)).FirstOrDefault();
 
-		public void HandlePacket(GameClient client, GSPacketIn packet)
-		{
-			string name = packet.ReadString(30);
+            if (character != null)
+            {
+                result = 0x02;
+            }
+            else if (GameServer.Instance.PlayerManager.InvalidNames[name])
+            {
+                result = 0x01;
+            }
 
-			var character = GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", name)).FirstOrDefault();
-			
-			var nameExists = (character != null);
-			
-			// Bad Name check.
-			if (!nameExists)
-				nameExists = GameServer.Instance.PlayerManager.InvalidNames[name];
-			
-			client.Out.SendDupNameCheckReply(name, nameExists);
-		}
-	}
+            client.Out.SendDupNameCheckReply(name, result);
+        }
+    }
 }

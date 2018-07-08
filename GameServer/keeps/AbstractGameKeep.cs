@@ -30,1324 +30,1392 @@ using log4net;
 
 namespace DOL.GS.Keeps
 {
-	/// <summary>
-	/// AbstractGameKeep is the keep or a tower in game in RVR
-	/// </summary>
-	public abstract class AbstractGameKeep : IGameKeep
-	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+    /// <summary>
+    /// AbstractGameKeep is the keep or a tower in game in RVR
+    /// </summary>
+    public abstract class AbstractGameKeep : IGameKeep
+    {
+        /// <summary>
+        /// Defines a logger for this class.
+        /// </summary>
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public bool HasCommander = false;
-		public bool HasHastener = false;
-		public bool HasLord = false;
+        /// <summary>
+        /// The manager responsible for updating all guards appearance, realm, levles, stats
+        /// </summary>
+        public virtual Type TemplateManager
+        {
+            get { return typeof(TemplateMgr); }
+        }
 
-		/// <summary>
-		/// Height of the keep
-		/// </summary>
-		public virtual int Height
-		{
-			get
-			{
-				return GameServer.KeepManager.GetHeightFromLevel(this.Level);
-			}
-		}
+        public FrontiersPortalStone TeleportStone;
+        public KeepArea Area;
 
-		/// <summary>
-		/// The manager responsible for updating all guards appearance, realm, levles, stats
-		/// </summary>
-		public virtual Type TemplateManager
-		{
-			get { return typeof(TemplateMgr); }
-		}
+        /// <summary>
+        /// The time interval in milliseconds that defines how
+        /// often guild bounty points should be removed
+        /// </summary>
+        protected readonly int CLAIM_CALLBACK_INTERVAL = 60 * 60 * 1000;
 
-		public FrontiersPortalStone TeleportStone;
-		public KeepArea Area;
+        /// <summary>
+        /// Timer to remove bounty point and add realm point to guild which own keep
+        /// </summary>
+        protected RegionTimer m_claimTimer;
 
-		/// <summary>
-		/// The time interval in milliseconds that defines how
-		/// often guild bounty points should be removed
-		/// </summary>
-		protected readonly int CLAIM_CALLBACK_INTERVAL = 60 * 60 * 1000;
+        /// <summary>
+        /// Timerto upgrade the keep level
+        /// </summary>
+        protected RegionTimer m_changeLevelTimer;
 
-		/// <summary>
-		/// Timer to remove bounty point and add realm point to guild which own keep
-		/// </summary>
-		protected RegionTimer m_claimTimer;
+        protected long m_lastAttackedByEnemyTick = 0;
 
-		/// <summary>
-		/// Timerto upgrade the keep level
-		/// </summary>
-		protected RegionTimer m_changeLevelTimer;
+        public long LastAttackedByEnemyTick
+        {
+            get { return m_lastAttackedByEnemyTick; }
 
-		protected long m_lastAttackedByEnemyTick = 0;
-		public long LastAttackedByEnemyTick
-		{
-			get { return m_lastAttackedByEnemyTick; }
-			set 
-			{
-				// if we aren't currently in combat then treat this attack as the beginning of combat
-				if (!InCombat)
-				{
-					bool underAttack = false;
-					foreach (GameKeepDoor door in this.Doors.Values)
-					{
-						if (door.State == eDoorState.Open)
-						{
-							underAttack = true;
-							break;
-						}
-					}
-
-					if (!underAttack || StartCombatTick == 0)
-						StartCombatTick = value;
-				}
-
-				m_lastAttackedByEnemyTick = value;
-			}
-		}
-
-		protected long m_startCombatTick = 0;
-		public long StartCombatTick
-		{
-			get { return m_startCombatTick; }
-			set { m_startCombatTick = value; }
-		}
-
-		public bool InCombat
-		{
-			get
-			{
-				if (m_lastAttackedByEnemyTick == 0)
-					return false;
-				return m_currentRegion.Time - m_lastAttackedByEnemyTick < (5 * 60 * 1000); 
-			}
-		}
-
-		public virtual bool IsPortalKeep
-		{
-			get
-			{
-				return ((this is GameKeepTower && this.KeepComponents.Count > 1) || this.BaseLevel >= 100);
-			}
-		}
-
-		/// <summary>
-		/// The Keep Type
-		/// This enum holds type of keep related to shape - Repurposed this due to game changes that eliminated melee/magic... keep types
-		/// </summary>
-		public enum eKeepType: byte
-		{
-			/*
-				update keep set keeptype = 0 where keeptype = 1;
-				update keep set keeptype = 1 where name = 'Dun Crauchon' or name = 'Bledmeer Faste' or name = 'Caer Benowyc';
-				update keep set keeptype = 2 where name = 'Dun Crimthain' or name = 'Nottmoor Faste' or name = 'Caer Berkstead';
-				update keep set keeptype = 3 where name = 'Dun Bolg' or name = 'Hlidskialf Faste' or name = 'Caer Erasleigh';
-				update keep set keeptype = 4 where name = 'Dun nGed' or name = 'Glenlock Faste' or name = 'Caer Boldiam';
-				update keep set keeptype = 5 where name = 'Dun Da Behnn' or name = 'Blendrake Faste' or name = 'Caer Sursbrooke';
-				update keep set keeptype = 6 where name = 'Dun Scathaig' or name = 'Fensalir Faste' or name = 'Caer Renaris';
-				update keep set keeptype = 7 where name = 'Dun Ailinne' or name = 'Arvakr Faste' or name = 'Caer Hurbury';
-			*/
-			Any = 0,
-			Crauchon_Bledmeer_Benowyc = 1,
-			Crimthain_Nottmoor_Berkstead = 2,
-			Bolg_Hlidskialf_Erasleigh = 3,
-			nGed_Glenlock_Boldiam = 4,
-			DaBehnn_Blendrake_Sursbrooke = 5,
-			Scathaig_Fensalir_Renaris = 6,
-			Ailinne_Arvakr_Hurbury = 7,
-		}
-
-		#region Properties
-
-		/// <summary>
-		/// This hold all keep components
-		/// </summary>
-		protected List<GameKeepComponent> m_keepComponents;
-
-		public List<GameKeepComponent> KeepComponents
-		{
-			get { return m_keepComponents; }
-			set { m_keepComponents = value; }
-		}
-		
-		/// <summary>
-		/// Keep components ( wall, tower, gate,...)
-		/// </summary>
-		public List<IGameKeepComponent> SentKeepComponents
-		{
-			get	
-			{
-				List<IGameKeepComponent> ret = new List<IGameKeepComponent>();
-				foreach(GameKeepComponent comp in m_keepComponents)
-					ret.Add(comp);
-				
-				return ret; 
-			}
-			set 
-			{
-				List<GameKeepComponent> newList = new List<GameKeepComponent>();
-				foreach(IGameKeepComponent comp in value)
-					newList.Add((GameKeepComponent)comp);
-				m_keepComponents = newList;
-			}
-		}
-
-		/// <summary>
-		/// This hold list of all keep doors
-		/// </summary>
-		//protected ArrayList m_doors;
-		protected Dictionary<string,GameKeepDoor> m_doors;
-
-		/// <summary>
-		/// keep doors
-		/// </summary>
-		//public ArrayList Doors
-		public Dictionary<string, GameKeepDoor> Doors
-		{
-			get	{ return m_doors; }
-			set { m_doors = value; }
-		}
-
-		/// <summary>
-		/// the keep db object
-		/// </summary>
-		protected DBKeep m_dbkeep;
-
-		/// <summary>
-		/// the keepdb object
-		/// </summary>
-		public DBKeep DBKeep
-		{
-			get	{ return m_dbkeep; }
-			set { m_dbkeep = value;}
-		}
-
-		/// <summary>
-		/// This hold list of all guards of keep
-		/// </summary>
-		protected Dictionary<string,GameKeepGuard> m_guards;
-
-		/// <summary>
-		/// List of all guards of keep
-		/// </summary>
-		public Dictionary<string, GameKeepGuard> Guards
-		{
-			get	{ return m_guards; }
-		}
-
-		/// <summary>
-		/// List of all banners
-		/// </summary>
-		protected Dictionary<string, GameKeepBanner> m_banners;
-
-		/// <summary>
-		/// List of all banners
-		/// </summary>
-		public Dictionary<string, GameKeepBanner> Banners
-		{
-			get	{ return m_banners; }
-			set	{ m_banners = value; }
-		}
-
-		protected Dictionary<string, Patrol> m_patrols;
-		/// <summary>
-		/// List of all patrols
-		/// </summary>
-		public Dictionary<string, Patrol> Patrols
-		{
-			get { return m_patrols; }
-			set { m_patrols = value; }
-		}
-
-		/// <summary>
-		/// region of the keep
-		/// </summary>
-		protected Region m_currentRegion;
-
-		/// <summary>
-		/// region of the keep
-		/// </summary>
-		public Region CurrentRegion
-		{
-			get	{ return m_currentRegion; }
-			set	{ m_currentRegion = value; }
-		}
-
-		/// <summary>
-		/// zone of the keep
-		/// </summary>
-		public Zone CurrentZone
-		{
-			get
-			{
-				if (m_currentRegion != null)
-				{
-					return m_currentRegion.GetZone(X, Y);
-				}
-				return null;
-			}
-		}
-
-		/// <summary>
-		/// This hold the guild which has claimed the keep
-		/// </summary>
-		protected Guild m_guild = null;
-
-		/// <summary>
-		/// The guild which has claimed the keep
-		/// </summary>
-		public Guild Guild
-		{
-			get	{ return m_guild; }
-			set { m_guild = value; }
-		}
-
-		/// <summary>
-		/// Difficulty level of keep for each realm
-		/// the keep is more difficult the guild which have claimed gain more bonus
-		/// </summary>
-		protected int[] m_difficultyLevel = new int[3];
-
-		/// <summary>
-		/// Difficulty level of keep for each realm
-		/// the keep is more difficult the guild which have claimed gain more bonus
-		/// </summary>
-		public int DifficultyLevel
-		{
-			get
-			{
-				return m_difficultyLevel[(int)Realm - 1];
-			}
-		}
-
-		public virtual int RealmPointsValue()
-		{
-			return GameServer.ServerRules.GetRealmPointsForKeep(this);
-		}
-
-		public virtual int BountyPointsValue()
-		{
-			return GameServer.ServerRules.GetBountyPointsForKeep(this);
-		}
-
-		public virtual long ExperiencePointsValue()
-		{
-			return GameServer.ServerRules.GetExperienceForKeep(this);
-		}
-
-		public virtual double ExceedXPCapAmount()
-		{
-			return GameServer.ServerRules.GetExperienceCapForKeep(this);
-		}
-
-		public virtual long MoneyValue()
-		{
-			return GameServer.ServerRules.GetMoneyValueForKeep(this);
-		}
-
-
-		/// <summary>
-		/// Respawn time for the lord of this keep (milliseconds)
-		/// </summary>
-		public virtual int LordRespawnTime
-		{
-			get
+            set
             {
-                if (this.Realm == eRealm.None && GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE)
-                    return ServerProperties.Properties.LORD_RP_WORTH_SECONDS * 1000;
-                return 1000;
+                // if we aren't currently in combat then treat this attack as the beginning of combat
+                if (!InCombat)
+                {
+                    bool underAttack = false;
+                    foreach (GameKeepDoor door in Doors.Values)
+                    {
+                        if (door.State == eDoorState.Open)
+                        {
+                            underAttack = true;
+                            break;
+                        }
+                    }
+
+                    if (!underAttack || StartCombatTick == 0)
+                    {
+                        StartCombatTick = value;
+                    }
+                }
+
+                m_lastAttackedByEnemyTick = value;
             }
-		}
+        }
 
+        protected long m_startCombatTick = 0;
 
-		#region DBKeep Properties
-		/// <summary>
-		/// The Keep ID linked to the DBKeep
-		/// </summary>
-		public ushort KeepID
-		{
-			get	{ return (ushort)DBKeep.KeepID; }
-			set
-			{
-				SendRemoveKeep();
-				DBKeep.KeepID = (ushort)value;
-				SendKeepInfo();
-			}
-		}
+        public long StartCombatTick
+        {
+            get { return m_startCombatTick; }
+            set { m_startCombatTick = value; }
+        }
 
-		/// <summary>
-		/// The Keep Level linked to the DBKeep (0 - 10)
-		/// </summary>
-		public byte Level
-		{
-			get	{ return DBKeep.Level; }
-			set	{ DBKeep.Level = value; }
-		}
+        public bool InCombat
+        {
+            get
+            {
+                if (m_lastAttackedByEnemyTick == 0)
+                {
+                    return false;
+                }
 
-		protected byte m_baseLevel = 0;
+                return m_currentRegion.Time - m_lastAttackedByEnemyTick < (5 * 60 * 1000);
+            }
+        }
 
-		/// <summary>
-		/// The Base Keep Level, typically 50 or the BG cap level
-		/// </summary>
-		public byte BaseLevel
-		{
-			get
-			{
-				if (m_baseLevel == 0)
-					m_baseLevel = DBKeep.BaseLevel;
-				return m_baseLevel;
-			}
-			set
-			{
-				m_baseLevel = value;
-				//DBKeep.BaseLevel = value;
-			}
-		}
+        public virtual bool IsPortalKeep
+        {
+            get
+            {
+                return (this is GameKeepTower && KeepComponents.Count > 1) || BaseLevel >= 100;
+            }
+        }
 
-		/// <summary>
-		/// calculate the effective level from a keep level
-		/// </summary>
-		public byte EffectiveLevel(byte level)
-		{
-			return (byte)Math.Max(0, level - 1);
-		}
+        /// <summary>
+        /// The Keep Type
+        /// This enum holds type of keep related to shape - Repurposed this due to game changes that eliminated melee/magic... keep types
+        /// </summary>
+        public enum eKeepType: byte
+        {
+            /*
+                update keep set keeptype = 0 where keeptype = 1;
+                update keep set keeptype = 1 where name = 'Dun Crauchon' or name = 'Bledmeer Faste' or name = 'Caer Benowyc';
+                update keep set keeptype = 2 where name = 'Dun Crimthain' or name = 'Nottmoor Faste' or name = 'Caer Berkstead';
+                update keep set keeptype = 3 where name = 'Dun Bolg' or name = 'Hlidskialf Faste' or name = 'Caer Erasleigh';
+                update keep set keeptype = 4 where name = 'Dun nGed' or name = 'Glenlock Faste' or name = 'Caer Boldiam';
+                update keep set keeptype = 5 where name = 'Dun Da Behnn' or name = 'Blendrake Faste' or name = 'Caer Sursbrooke';
+                update keep set keeptype = 6 where name = 'Dun Scathaig' or name = 'Fensalir Faste' or name = 'Caer Renaris';
+                update keep set keeptype = 7 where name = 'Dun Ailinne' or name = 'Arvakr Faste' or name = 'Caer Hurbury';
+            */
+            Any = 0,
+            Crauchon_Bledmeer_Benowyc = 1,
+            Crimthain_Nottmoor_Berkstead = 2,
+            Bolg_Hlidskialf_Erasleigh = 3,
+            nGed_Glenlock_Boldiam = 4,
+            DaBehnn_Blendrake_Sursbrooke = 5,
+            Scathaig_Fensalir_Renaris = 6,
+            Ailinne_Arvakr_Hurbury = 7,
+        }
 
-		string m_name = "";
+        /// <summary>
+        /// This hold all keep components
+        /// </summary>
+        protected List<GameKeepComponent> m_keepComponents;
 
-		/// <summary>
-		/// The Keep Name linked to the DBKeep
-		/// </summary>
-		public virtual string Name
-		{
-			get	
-			{
-				if (DBKeep != null)
-				{
-					string name = DBKeep.Name;
+        public List<GameKeepComponent> KeepComponents
+        {
+            get { return m_keepComponents; }
+            set { m_keepComponents = value; }
+        }
 
-					if (ServerProperties.Properties.ENABLE_DEBUG)
-					{
-						name += string.Format(" KID: {0}", KeepID);
-					}
+        /// <summary>
+        /// Keep components ( wall, tower, gate,...)
+        /// </summary>
+        public List<IGameKeepComponent> SentKeepComponents
+        {
+            get
+            {
+                List<IGameKeepComponent> ret = new List<IGameKeepComponent>();
+                foreach (GameKeepComponent comp in m_keepComponents)
+                {
+                    ret.Add(comp);
+                }
 
-					m_name = name;
-				}
+                return ret;
+            }
 
-				return m_name;
-			}
-			set	{ DBKeep.Name = value; }
-		}
+            set
+            {
+                List<GameKeepComponent> newList = new List<GameKeepComponent>();
+                foreach (IGameKeepComponent comp in value)
+                {
+                    newList.Add((GameKeepComponent)comp);
+                }
 
-		/// <summary>
-		/// The Keep Region ID linked to the DBKeep
-		/// </summary>
-		public ushort Region
-		{
-			get	{ return DBKeep.Region; }
-			set	{ DBKeep.Region = value; }
-		}
+                m_keepComponents = newList;
+            }
+        }
 
-		/// <summary>
-		/// The Keep X linked to the DBKeep
-		/// </summary>
-		public int X
-		{
-			get	{ return DBKeep.X; }
-			set	{ DBKeep.X = value; }
-		}
+        /// <summary>
+        /// This hold list of all keep doors
+        /// </summary>
+        // protected ArrayList m_doors;
+        protected Hashtable m_doors;
 
-		/// <summary>
-		/// The Keep Y linked to the DBKeep
-		/// </summary>
-		public int Y
-		{
-			get	{ return DBKeep.Y; }
-			set	{ DBKeep.Y = value; }
-		}
+        /// <summary>
+        /// keep doors
+        /// </summary>
+        // public ArrayList Doors
+        public Hashtable Doors
+        {
+            get { return m_doors; }
+            set { m_doors = value; }
+        }
 
-		/// <summary>
-		/// The Keep Z linked to the DBKeep
-		/// </summary>
-		public int Z
-		{
-			get	{ return DBKeep.Z; }
-			set	{ DBKeep.Z = value; }
-		}
+        /// <summary>
+        /// the keep db object
+        /// </summary>
+        protected DBKeep m_dbkeep;
 
-		/// <summary>
-		/// The Keep Heading linked to the DBKeep
-		/// </summary>
-		public ushort Heading
-		{
-			get	{ return DBKeep.Heading; }
-			set	{ DBKeep.Heading = value; }
-		}
+        /// <summary>
+        /// the keepdb object
+        /// </summary>
+        public DBKeep DBKeep
+        {
+            get { return m_dbkeep; }
+            set { m_dbkeep = value; }
+        }
 
-		/// <summary>
-		/// The Keep Realm linked to the DBKeep
-		/// </summary>
-		public eRealm Realm
-		{
-			get	{ return (eRealm)DBKeep.Realm; }
-			set	{ DBKeep.Realm = (byte)value; }
-		}
+        /// <summary>
+        /// This hold list of all guards of keep
+        /// </summary>
+        protected Hashtable m_guards;
 
-		/// <summary>
-		/// The Original Keep Realm linked to the DBKeep
-		/// </summary>
-		public eRealm OriginalRealm
-		{
-			get	{ return (eRealm)DBKeep.OriginalRealm; }
-		}
+        /// <summary>
+        /// List of all guards of keep
+        /// </summary>
+        public Hashtable Guards
+        {
+            get { return m_guards; }
+        }
 
-		protected string m_InternalID;
-		/// <summary>
-		/// The Keep Internal ID
-		/// </summary>
-		public string InternalID
-		{
-			get { return m_InternalID; }
-			set { m_InternalID = value; }
-		}
+        /// <summary>
+        /// List of all banners
+        /// </summary>
+        protected Hashtable m_banners;
 
-		/// <summary>
-		/// The Keep Type, related to shape for NF keeps, 0 for everything else
-		/// </summary>
-		public eKeepType KeepType
-		{
-			get	{ return (eKeepType)DBKeep.KeepType; }
-			set
-			{
-				DBKeep.KeepType = (int)value;
-			}
-		}
+        /// <summary>
+        /// List of all banners
+        /// </summary>
+        public Hashtable Banners
+        {
+            get { return m_banners; }
+            set { m_banners = value; }
+        }
 
-		#endregion
+        protected Hashtable m_patrols;
+        /// <summary>
+        /// List of all patrols
+        /// </summary>
+        public Hashtable Patrols
+        {
+            get { return m_patrols; }
+            set { m_patrols = value; }
+        }
 
-		#endregion
+        /// <summary>
+        /// region of the keep
+        /// </summary>
+        protected Region m_currentRegion;
 
-		/// <summary>
-		/// AbstractGameKeep constructor
-		/// </summary>
-		public AbstractGameKeep()
-		{
-			m_guards = new Dictionary<string, GameKeepGuard>();
-			m_keepComponents = new List<GameKeepComponent>();
-			m_banners = new Dictionary<string, GameKeepBanner>();
-			m_doors = new Dictionary<string, GameKeepDoor>();
-			m_patrols = new Dictionary<string, Patrol>();
-		}
+        /// <summary>
+        /// region of the keep
+        /// </summary>
+        public Region CurrentRegion
+        {
+            get { return m_currentRegion; }
+            set { m_currentRegion = value; }
+        }
 
-		~AbstractGameKeep()
-		{
-			log.Debug("AbstractGameKeep destructor called for " + Name);
-		}
+        /// <summary>
+        /// zone of the keep
+        /// </summary>
+        public Zone CurrentZone
+        {
+            get
+            {
+                if (m_currentRegion != null)
+                {
+                    return m_currentRegion.GetZone(X, Y);
+                }
 
+                return null;
+            }
+        }
 
-		#region LOAD/UNLOAD
+        /// <summary>
+        /// This hold the guild which has claimed the keep
+        /// </summary>
+        protected Guild m_guild = null;
 
-		/// <summary>
-		/// load keep from Db object and load keep component and object of keep
-		/// </summary>
-		/// <param name="keep"></param>
-		public virtual void Load(DBKeep keep)
-		{
-			CurrentRegion = WorldMgr.GetRegion((ushort)keep.Region);
-			InitialiseTimers();
-			LoadFromDatabase(keep);
-			GameEventMgr.AddHandler(CurrentRegion, RegionEvent.PlayerEnter, new DOLEventHandler(SendKeepInit));
-			KeepArea area = null;
-			//see if any keep areas for this keep have already been added via DBArea
-			foreach (AbstractArea a in CurrentRegion.GetAreasOfSpot(keep.X, keep.Y, keep.Z))
-			{
-				if (a is KeepArea && a.Description == keep.Name)
-				{
-					log.Debug("Found a DBArea entry for " + keep.Name + ", loading that instead of creating a new one.");
-					area = a as KeepArea;
-					area.Keep = this;
-					break;
-				}
-			}
+        /// <summary>
+        /// The guild which has claimed the keep
+        /// </summary>
+        public Guild Guild
+        {
+            get { return m_guild; }
+            set { m_guild = value; }
+        }
 
-			if (area == null)
-			{
-				area = new KeepArea(this);
-				area.CanBroadcast = true;
-				area.CheckLOS = true;
-				CurrentRegion.AddArea(area);
-			}
-			area.Keep = this;
-			this.Area = area;
-		}
+        /// <summary>
+        /// Difficulty level of keep for each realm
+        /// the keep is more difficult the guild which have claimed gain more bonus
+        /// </summary>
+        protected int[] m_difficultyLevel = new int[3];
 
-		/// <summary>
-		/// Remove a keep from the database
-		/// </summary>
-		/// <param name="area"></param>
-		public virtual void Remove(KeepArea area)
-		{
-			Dictionary<string, GameKeepGuard> guards = new Dictionary<string, GameKeepGuard>(m_guards); // Use a shallow copy
-			foreach (GameKeepGuard guard in guards.Values)
-			{
-				guard.Delete();
-				guard.DeleteFromDatabase();
-			}
+        /// <summary>
+        /// Difficulty level of keep for each realm
+        /// the keep is more difficult the guild which have claimed gain more bonus
+        /// </summary>
+        public int DifficultyLevel
+        {
+            get
+            {
+                return m_difficultyLevel[(int)Realm - 1];
+            }
+        }
 
-			Dictionary<string, GameKeepBanner> banners = new Dictionary<string, GameKeepBanner>(m_banners); // Use a shallow copy
-			foreach (GameKeepBanner banner in banners.Values)
-			{
-				banner.Delete();
-				banner.DeleteFromDatabase();
-			}
+        public virtual int RealmPointsValue()
+        {
+            return GameServer.ServerRules.GetRealmPointsForKeep(this);
+        }
 
-			Dictionary<string, GameKeepDoor> doors = new Dictionary<string, GameKeepDoor>(m_doors); // Use a shallow copy
-			foreach (GameKeepDoor door in doors.Values)
-			{
-				door.Delete();
-				GameDoor d = new GameDoor();
-				d.CurrentRegionID = door.CurrentRegionID;
-				d.DoorID = door.DoorID;
-				d.Heading = door.Heading;
-				d.Level = door.Level;
-				d.Model = door.Model;
-				d.Name = "door";
-				d.Realm = door.Realm;
-				d.State = eDoorState.Closed;
-				d.X = door.X;
-				d.Y = door.Y;
-				d.Z = door.Z;
-				DoorMgr.RegisterDoor(door);
-				d.AddToWorld();
-			}
+        public virtual int BountyPointsValue()
+        {
+            return GameServer.ServerRules.GetBountyPointsForKeep(this);
+        }
 
-			UnloadTimers();
-			GameEventMgr.RemoveHandler(CurrentRegion, RegionEvent.PlayerEnter, new DOLEventHandler(SendKeepInit));
-			if (area != null)
-			{
-				CurrentRegion.RemoveArea(area);
-			}
+        public virtual long ExperiencePointsValue()
+        {
+            return GameServer.ServerRules.GetExperienceForKeep(this);
+        }
 
-			RemoveFromDatabase();
-			GameServer.KeepManager.Keeps[KeepID] = null;
-		}
+        public virtual double ExceedXPCapAmount()
+        {
+            return GameServer.ServerRules.GetExperienceCapForKeep(this);
+        }
 
-		/// <summary>
-		/// load keep from DB
-		/// </summary>
-		/// <param name="keep"></param>
-		public virtual void LoadFromDatabase(DataObject keep)
-		{
-			m_dbkeep = keep as DBKeep;
-			InternalID = keep.ObjectId;
-			m_difficultyLevel[0] = m_dbkeep.AlbionDifficultyLevel;
-			m_difficultyLevel[1] = m_dbkeep.MidgardDifficultyLevel;
-			m_difficultyLevel[2] = m_dbkeep.HiberniaDifficultyLevel;
-			if (m_dbkeep.ClaimedGuildName != null && m_dbkeep.ClaimedGuildName != "")
-			{
-				Guild myguild = GuildMgr.GetGuildByName(m_dbkeep.ClaimedGuildName);
-				if (myguild != null)
-				{
-					this.m_guild = myguild;
-					this.m_guild.ClaimedKeeps.Add(this);
-					StartDeductionTimer();
-				}
-			}
-			if (Level < ServerProperties.Properties.MAX_KEEP_LEVEL && m_guild != null)
-				StartChangeLevel((byte)ServerProperties.Properties.MAX_KEEP_LEVEL);
-			else if (Level <= ServerProperties.Properties.MAX_KEEP_LEVEL && Level > ServerProperties.Properties.STARTING_KEEP_LEVEL && m_guild == null)
-				StartChangeLevel((byte)ServerProperties.Properties.STARTING_KEEP_LEVEL);
-		}
+        public virtual long MoneyValue()
+        {
+            return GameServer.ServerRules.GetMoneyValueForKeep(this);
+        }
 
-		/// <summary>
-		/// remove keep from DB
-		/// </summary>
-		public virtual void RemoveFromDatabase()
-		{
-			GameServer.Database.DeleteObject(m_dbkeep);
-			log.Warn("Keep ID " + KeepID + " removed from database!");
-		}
+        /// <summary>
+        /// Respawn time for the lord of this keep (milliseconds)
+        /// </summary>
+        public virtual int LordRespawnTime
+        {
+            get { return 5000; }
+        }
 
-		/// <summary>
-		/// save keep in DB
-		/// </summary>
-		public virtual void SaveIntoDatabase()
-		{
-			if (m_guild != null)
-				m_dbkeep.ClaimedGuildName = m_guild.Name;
-			else
-				m_dbkeep.ClaimedGuildName = "";
-			if(InternalID == null)
-			{
-				GameServer.Database.AddObject(m_dbkeep);
-				InternalID = m_dbkeep.ObjectId;
-			}
-			else
-				GameServer.Database.SaveObject(m_dbkeep);
+        /// <summary>
+        /// The Keep ID linked to the DBKeep
+        /// </summary>
+        public ushort KeepID
+        {
+            get { return (ushort)DBKeep.KeepID; }
 
-			foreach (GameKeepComponent comp in this.KeepComponents)
-				comp.SaveIntoDatabase();
-		}
+            set
+            {
+                SendRemoveKeep();
+                DBKeep.KeepID = (ushort)value;
+                SendKeepInfo();
+            }
+        }
 
+        /// <summary>
+        /// The Keep Level linked to the DBKeep (0 - 10)
+        /// </summary>
+        public byte Level
+        {
+            get { return DBKeep.Level; }
+            set { DBKeep.Level = value; }
+        }
 
-		#endregion
+        protected byte m_baseLevel = 0;
 
-		#region Claim
+        /// <summary>
+        /// The Base Keep Level, typically 50 or the BG cap level
+        /// </summary>
+        public byte BaseLevel
+        {
+            get
+            {
+                if (m_baseLevel == 0)
+                {
+                    m_baseLevel = DBKeep.BaseLevel;
+                }
 
-		public virtual bool CheckForClaim(GamePlayer player)
-		{
-			if (InCombat)
-			{
-				player.Out.SendMessage(Name + " is under attack and can't be claimed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				log.DebugFormat("KEEPWARNING: {0} attempted to claim {1} while in combat.", player.Name, Name);
-				return false;
-			}
+                return m_baseLevel;
+            }
 
-			if(player.Realm != this.Realm)
-			{
-				player.Out.SendMessage("The keep is not owned by your realm.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				return false;
-			}
+            set
+            {
+                m_baseLevel = value;
 
-			if (this.DBKeep.BaseLevel != 50)
-			{
-				player.Out.SendMessage("This keep is not able to be claimed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
+                // DBKeep.BaseLevel = value;
+            }
+        }
 
-			if (player.Guild == null)
-			{
-				player.Out.SendMessage("You must be in a guild to claim a keep.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				return false;
-			}
-			if (!player.Guild.HasRank(player, Guild.eRank.Claim))
-			{
-				player.Out.SendMessage("You do not have permission to claim for your guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
-			if (this.Guild != null)
-			{
-				player.Out.SendMessage("The keep is already claimed.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				return false;
-			}
-			switch (ServerProperties.Properties.GUILDS_CLAIM_LIMIT)
-			{
-				case 0:
-					{
-						player.Out.SendMessage("Keep claiming is disabled!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return false;
-					}
-				case 1:
-					{
-						if (player.Guild.ClaimedKeeps.Count == 1)
-						{
-							player.Out.SendMessage("Your guild already owns a keep.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return false;
-						}
-						break;
-					}
-				default:
-					{
-						if (player.Guild.ClaimedKeeps.Count >= ServerProperties.Properties.GUILDS_CLAIM_LIMIT)
-						{
-							player.Out.SendMessage("Your guild already owns the limit of keeps (" + ServerProperties.Properties.GUILDS_CLAIM_LIMIT + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-							return false;
-						}
-						break;
-					}
-			}
+        /// <summary>
+        /// calculate the effective level from a keep level
+        /// </summary>
+        public byte EffectiveLevel(byte level)
+        {
+            return (byte)Math.Max(0, level - 1);
+        }
 
-			if (player.Group != null)
-			{
-				int count = 0;
-				foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
-				{
-					if (GameServer.KeepManager.GetKeepCloseToSpot(p.CurrentRegionID, p, WorldMgr.VISIBILITY_DISTANCE) == this)
-						count++;
-				}
+        string m_name = string.Empty;
 
-				int needed = ServerProperties.Properties.CLAIM_NUM;
-				if (this is GameKeepTower)
-					needed = needed / 2;
-				if (player.Client.Account.PrivLevel > 1)
-					needed = 0;
-				if (count < needed)
-				{
-					player.Out.SendMessage("Not enough group members are near the keep. You have " + count + "/" + needed + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return false;
-				}
-			}
-			return true;
-		}
+        /// <summary>
+        /// The Keep Name linked to the DBKeep
+        /// </summary>
+        public virtual string Name
+        {
+            get
+            {
+                if (DBKeep != null)
+                {
+                    string name = DBKeep.Name;
 
-		/// <summary>
-		/// claim the keep to a guild
-		/// </summary>
-		/// <param name="player">the player who have claim the keep</param>
-		public virtual void Claim(GamePlayer player)
-		{
-			this.m_guild = player.Guild;
-			
-			if (ServerProperties.Properties.GUILDS_CLAIM_LIMIT > 1)
-				player.Guild.SendMessageToGuildMembers("Your guild has currently claimed " + player.Guild.ClaimedKeeps.Count + " keeps of a maximum of " + ServerProperties.Properties.GUILDS_CLAIM_LIMIT, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
+                    if (ServerProperties.Properties.ENABLE_DEBUG)
+                    {
+                        name += string.Format(" KID: {0}", KeepID);
+                    }
 
-			ChangeLevel((byte)ServerProperties.Properties.STARTING_KEEP_CLAIM_LEVEL);
+                    m_name = name;
+                }
 
-			PlayerMgr.BroadcastClaim(this);
+                return m_name;
+            }
 
-			foreach (GameKeepGuard guard in Guards.Values)
-			{
-				guard.ChangeGuild();
-			}
+            set { DBKeep.Name = value; }
+        }
 
-			foreach (GameKeepBanner banner in Banners.Values)
-			{
-				banner.ChangeGuild();
-			}
-    		this.SaveIntoDatabase();
+        /// <summary>
+        /// The Keep Region ID linked to the DBKeep
+        /// </summary>
+        public ushort Region
+        {
+            get { return DBKeep.Region; }
+            set { DBKeep.Region = value; }
+        }
+
+        /// <summary>
+        /// The Keep X linked to the DBKeep
+        /// </summary>
+        public int X
+        {
+            get { return DBKeep.X; }
+            set { DBKeep.X = value; }
+        }
+
+        /// <summary>
+        /// The Keep Y linked to the DBKeep
+        /// </summary>
+        public int Y
+        {
+            get { return DBKeep.Y; }
+            set { DBKeep.Y = value; }
+        }
+
+        /// <summary>
+        /// The Keep Z linked to the DBKeep
+        /// </summary>
+        public int Z
+        {
+            get { return DBKeep.Z; }
+            set { DBKeep.Z = value; }
+        }
+
+        /// <summary>
+        /// The Keep Heading linked to the DBKeep
+        /// </summary>
+        public ushort Heading
+        {
+            get { return DBKeep.Heading; }
+            set { DBKeep.Heading = value; }
+        }
+
+        /// <summary>
+        /// The Keep Realm linked to the DBKeep
+        /// </summary>
+        public eRealm Realm
+        {
+            get { return (eRealm)DBKeep.Realm; }
+            set { DBKeep.Realm = (byte)value; }
+        }
+
+        /// <summary>
+        /// The Original Keep Realm linked to the DBKeep
+        /// </summary>
+        public eRealm OriginalRealm
+        {
+            get { return (eRealm)DBKeep.OriginalRealm; }
+        }
+
+        protected string m_InternalID;
+        /// <summary>
+        /// The Keep Internal ID
+        /// </summary>
+        public string InternalID
+        {
+            get { return m_InternalID; }
+            set { m_InternalID = value; }
+        }
+
+        /// <summary>
+        /// The Keep Type, related to shape for NF keeps, 0 for everything else
+        /// </summary>
+        public eKeepType KeepType
+        {
+            get { return (eKeepType)DBKeep.KeepType; }
+
+            set
+            {
+                DBKeep.KeepType = (int)value;
+            }
+        }
+
+        /// <summary>
+        /// AbstractGameKeep constructor
+        /// </summary>
+        public AbstractGameKeep()
+        {
+            m_guards = new Hashtable();
+            m_keepComponents = new List<GameKeepComponent>();
+            m_banners = new Hashtable();
+            m_doors = new Hashtable();
+            m_patrols = new Hashtable();
+        }
+
+        ~AbstractGameKeep()
+        {
+            log.Debug("AbstractGameKeep destructor called for " + Name);
+        }
+
+        /// <summary>
+        /// load keep from Db object and load keep component and object of keep
+        /// </summary>
+        /// <param name="keep"></param>
+        public virtual void Load(DBKeep keep)
+        {
+            CurrentRegion = WorldMgr.GetRegion((ushort)keep.Region);
+            InitialiseTimers();
+            LoadFromDatabase(keep);
+            GameEventMgr.AddHandler(CurrentRegion, RegionEvent.PlayerEnter, new DOLEventHandler(SendKeepInit));
+            KeepArea area = null;
+
+            // see if any keep areas for this keep have already been added via DBArea
+            foreach (AbstractArea a in CurrentRegion.GetAreasOfSpot(keep.X, keep.Y, keep.Z))
+            {
+                if (a is KeepArea && a.Description == keep.Name)
+                {
+                    log.Debug("Found a DBArea entry for " + keep.Name + ", loading that instead of creating a new one.");
+                    area = a as KeepArea;
+                    area.Keep = this;
+                    break;
+                }
+            }
+
+            if (area == null)
+            {
+                area = new KeepArea(this);
+                area.CanBroadcast = true;
+                area.CheckLOS = true;
+                CurrentRegion.AddArea(area);
+            }
+
+            area.Keep = this;
+            Area = area;
+        }
+
+        /// <summary>
+        /// Remove a keep from the database
+        /// </summary>
+        /// <param name="area"></param>
+        public virtual void Remove(KeepArea area)
+        {
+            foreach (GameKeepGuard guard in (m_guards.Clone() as Hashtable).Values)
+            {
+                guard.Delete();
+                guard.DeleteFromDatabase();
+            }
+
+            foreach (GameKeepBanner banner in (m_banners.Clone() as Hashtable).Values)
+            {
+                banner.Delete();
+                banner.DeleteFromDatabase();
+            }
+
+            foreach (GameKeepDoor door in (m_doors.Clone() as Hashtable).Values)
+            {
+                door.Delete();
+                GameDoor d = new GameDoor();
+                d.CurrentRegionID = door.CurrentRegionID;
+                d.DoorID = door.DoorID;
+                d.Heading = door.Heading;
+                d.Level = door.Level;
+                d.Model = door.Model;
+                d.Name = "door";
+                d.Realm = door.Realm;
+                d.State = eDoorState.Closed;
+                d.X = door.X;
+                d.Y = door.Y;
+                d.Z = door.Z;
+                DoorMgr.RegisterDoor(door);
+                d.AddToWorld();
+            }
+
+            UnloadTimers();
+            GameEventMgr.RemoveHandler(CurrentRegion, RegionEvent.PlayerEnter, new DOLEventHandler(SendKeepInit));
+            if (area != null)
+            {
+                CurrentRegion.RemoveArea(area);
+            }
+
+            RemoveFromDatabase();
+            GameServer.KeepManager.Keeps[KeepID] = null;
+        }
+
+        /// <summary>
+        /// load keep from DB
+        /// </summary>
+        /// <param name="keep"></param>
+        public virtual void LoadFromDatabase(DataObject keep)
+        {
+            m_dbkeep = keep as DBKeep;
+            InternalID = keep.ObjectId;
+            m_difficultyLevel[0] = m_dbkeep.AlbionDifficultyLevel;
+            m_difficultyLevel[1] = m_dbkeep.MidgardDifficultyLevel;
+            m_difficultyLevel[2] = m_dbkeep.HiberniaDifficultyLevel;
+            if (m_dbkeep.ClaimedGuildName != null && m_dbkeep.ClaimedGuildName != string.Empty)
+            {
+                Guild myguild = GuildMgr.GetGuildByName(m_dbkeep.ClaimedGuildName);
+                if (myguild != null)
+                {
+                    m_guild = myguild;
+                    m_guild.ClaimedKeeps.Add(this);
+                    StartDeductionTimer();
+                }
+            }
+
+            if (Level < ServerProperties.Properties.MAX_KEEP_LEVEL && m_guild != null)
+            {
+                StartChangeLevel((byte)ServerProperties.Properties.MAX_KEEP_LEVEL);
+            }
+            else if (Level <= ServerProperties.Properties.MAX_KEEP_LEVEL && Level > ServerProperties.Properties.STARTING_KEEP_LEVEL && m_guild == null)
+            {
+                StartChangeLevel((byte)ServerProperties.Properties.STARTING_KEEP_LEVEL);
+            }
+        }
+
+        /// <summary>
+        /// remove keep from DB
+        /// </summary>
+        public virtual void RemoveFromDatabase()
+        {
+            GameServer.Database.DeleteObject(m_dbkeep);
+            log.Warn("Keep ID " + KeepID + " removed from database!");
+        }
+
+        /// <summary>
+        /// save keep in DB
+        /// </summary>
+        public virtual void SaveIntoDatabase()
+        {
+            if (m_guild != null)
+            {
+                m_dbkeep.ClaimedGuildName = m_guild.Name;
+            }
+            else
+            {
+                m_dbkeep.ClaimedGuildName = string.Empty;
+            }
+
+            if (InternalID == null)
+            {
+                GameServer.Database.AddObject(m_dbkeep);
+                InternalID = m_dbkeep.ObjectId;
+            }
+            else
+            {
+                GameServer.Database.SaveObject(m_dbkeep);
+            }
+
+            foreach (GameKeepComponent comp in KeepComponents)
+            {
+                comp.SaveIntoDatabase();
+            }
+        }
+
+        public virtual bool CheckForClaim(GamePlayer player)
+        {
+            if (InCombat)
+            {
+                player.Out.SendMessage(Name + " is under attack and can't be claimed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                log.DebugFormat("KEEPWARNING: {0} attempted to claim {1} while in combat.", player.Name, Name);
+                return false;
+            }
+
+            if (player.Realm != Realm)
+            {
+                player.Out.SendMessage("The keep is not owned by your realm.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+                return false;
+            }
+
+            if (DBKeep.BaseLevel != 50)
+            {
+                player.Out.SendMessage("This keep is not able to be claimed.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return false;
+            }
+
+            if (player.Guild == null)
+            {
+                player.Out.SendMessage("You must be in a guild to claim a keep.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+                return false;
+            }
+
+            if (!player.Guild.HasRank(player, Guild.eRank.Claim))
+            {
+                player.Out.SendMessage("You do not have permission to claim for your guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return false;
+            }
+
+            if (Guild != null)
+            {
+                player.Out.SendMessage("The keep is already claimed.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+                return false;
+            }
+
+            switch (ServerProperties.Properties.GUILDS_CLAIM_LIMIT)
+            {
+                case 0:
+                    {
+                        player.Out.SendMessage("Keep claiming is disabled!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        return false;
+                    }
+
+                case 1:
+                    {
+                        if (player.Guild.ClaimedKeeps.Count == 1)
+                        {
+                            player.Out.SendMessage("Your guild already owns a keep.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return false;
+                        }
+
+                        break;
+                    }
+
+                default:
+                    {
+                        if (player.Guild.ClaimedKeeps.Count >= ServerProperties.Properties.GUILDS_CLAIM_LIMIT)
+                        {
+                            player.Out.SendMessage("Your guild already owns the limit of keeps (" + ServerProperties.Properties.GUILDS_CLAIM_LIMIT + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            return false;
+                        }
+
+                        break;
+                    }
+            }
+
+            if (player.Group != null)
+            {
+                int count = 0;
+                foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
+                {
+                    if (GameServer.KeepManager.GetKeepCloseToSpot(p.CurrentRegionID, p, WorldMgr.VISIBILITY_DISTANCE) == this)
+                    {
+                        count++;
+                    }
+                }
+
+                int needed = ServerProperties.Properties.CLAIM_NUM;
+                if (this is GameKeepTower)
+                {
+                    needed = needed / 2;
+                }
+
+                if (player.Client.Account.PrivLevel > 1)
+                {
+                    needed = 0;
+                }
+
+                if (count < needed)
+                {
+                    player.Out.SendMessage("Not enough group members are near the keep. You have " + count + "/" + needed + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// claim the keep to a guild
+        /// </summary>
+        /// <param name="player">the player who have claim the keep</param>
+        public virtual void Claim(GamePlayer player)
+        {
+            m_guild = player.Guild;
+
+            if (ServerProperties.Properties.GUILDS_CLAIM_LIMIT > 1)
+            {
+                player.Guild.SendMessageToGuildMembers("Your guild has currently claimed " + player.Guild.ClaimedKeeps.Count + " keeps of a maximum of " + ServerProperties.Properties.GUILDS_CLAIM_LIMIT, eChatType.CT_Guild, eChatLoc.CL_ChatWindow);
+            }
+
+            ChangeLevel((byte)ServerProperties.Properties.STARTING_KEEP_CLAIM_LEVEL);
+
+            PlayerMgr.BroadcastClaim(this);
+
+            foreach (GameKeepGuard guard in Guards.Values)
+            {
+                guard.ChangeGuild();
+            }
+
+            foreach (GameKeepBanner banner in Banners.Values)
+            {
+                banner.ChangeGuild();
+            }
+
+            SaveIntoDatabase();
             LoadFromDatabase(DBKeep);
             StartDeductionTimer();
             GameEventMgr.Notify(KeepEvent.KeepClaimed, this, new KeepEventArgs(this));
         }
 
-		/// <summary>
-		/// Starts the deduction timer
-		/// </summary>
-		public void StartDeductionTimer()
-		{
-			m_claimTimer.Start(1);
-		}
+        /// <summary>
+        /// Starts the deduction timer
+        /// </summary>
+        public void StartDeductionTimer()
+        {
+            m_claimTimer.Start(1);
+        }
 
-		/// <summary>
-		/// Stops the deduction timer
-		/// </summary>
-		public void StopDeductionTimer()
-		{
-			m_claimTimer.Stop();
-		}
+        /// <summary>
+        /// Stops the deduction timer
+        /// </summary>
+        public void StopDeductionTimer()
+        {
+            m_claimTimer.Stop();
+        }
 
-		protected void InitialiseTimers()
-		{
-			m_changeLevelTimer = new RegionTimer(CurrentRegion.TimeManager);
-			m_changeLevelTimer.Callback = new RegionTimerCallback(ChangeLevelTimerCallback);
-			m_claimTimer = new RegionTimer(CurrentRegion.TimeManager);
-			m_claimTimer.Callback = new RegionTimerCallback(ClaimCallBack);
-			m_claimTimer.Interval = CLAIM_CALLBACK_INTERVAL;
-		}
+        protected void InitialiseTimers()
+        {
+            m_changeLevelTimer = new RegionTimer(CurrentRegion.TimeManager);
+            m_changeLevelTimer.Callback = new RegionTimerCallback(ChangeLevelTimerCallback);
+            m_claimTimer = new RegionTimer(CurrentRegion.TimeManager);
+            m_claimTimer.Callback = new RegionTimerCallback(ClaimCallBack);
+            m_claimTimer.Interval = CLAIM_CALLBACK_INTERVAL;
+        }
 
-		protected void UnloadTimers()
-		{
-			m_changeLevelTimer.Stop();
-			m_changeLevelTimer = null;
-			m_claimTimer.Stop();
-			m_claimTimer = null;
-		}
+        protected void UnloadTimers()
+        {
+            m_changeLevelTimer.Stop();
+            m_changeLevelTimer = null;
+            m_claimTimer.Stop();
+            m_claimTimer = null;
+        }
 
-		/// <summary>
-		/// Callback method for the claim timer, it deducts bounty points and gains realm points for a guild
-		/// </summary>
-		/// <param name="timer"></param>
-		/// <returns></returns>
-		public int ClaimCallBack(RegionTimer timer)
-		{
-			if (Guild == null)
-				return 0;
+        /// <summary>
+        /// Callback method for the claim timer, it deducts bounty points and gains realm points for a guild
+        /// </summary>
+        /// <param name="timer"></param>
+        /// <returns></returns>
+        public int ClaimCallBack(RegionTimer timer)
+        {
+            if (Guild == null)
+            {
+                return 0;
+            }
 
-			int amount = CalculRP();
-			this.Guild.RealmPoints+=amount;
+            int amount = CalculRP();
+            Guild.RealmPoints += amount;
 
-			return timer.Interval;
-		}
+            return timer.Interval;
+        }
 
-		public virtual int CalculRP()
-		{
-			return 0;
-		}
+        public virtual int CalculRP()
+        {
+            return 0;
+        }
 
-		#endregion
+        public virtual bool CheckForRelease(GamePlayer player)
+        {
+            if (InCombat)
+            {
+                player.Out.SendMessage(Name + " is under attack and can't be released.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                log.DebugFormat("KEEPWARNING: {0} attempted to release {1} while in combat.", player.Name, Name);
+                return false;
+            }
 
-		#region Release
+            return true;
+        }
 
-		public virtual bool CheckForRelease(GamePlayer player)
-		{
-			if (InCombat)
-			{
-				player.Out.SendMessage(Name + " is under attack and can't be released.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				log.DebugFormat("KEEPWARNING: {0} attempted to release {1} while in combat.", player.Name, Name);
-				return false;
-			}
+        /// <summary>
+        /// released the keep of the guild
+        /// </summary>
+        public virtual void Release()
+        {
+            Guild.ClaimedKeeps.Remove(this);
+            PlayerMgr.BroadcastRelease(this);
+            m_guild = null;
+            StopDeductionTimer();
+            StopChangeLevelTimer();
+            ChangeLevel((byte)ServerProperties.Properties.STARTING_KEEP_LEVEL);
 
-			return true;
-		}
+            foreach (GameKeepGuard guard in Guards.Values)
+            {
+                guard.ChangeGuild();
+            }
 
-		/// <summary>
-		/// released the keep of the guild
-		/// </summary>
-		public virtual void Release()
-		{
-			this.Guild.ClaimedKeeps.Remove(this);
-			PlayerMgr.BroadcastRelease(this);
-			this.m_guild = null;
-			StopDeductionTimer();
-			StopChangeLevelTimer();
-			ChangeLevel((byte)ServerProperties.Properties.STARTING_KEEP_LEVEL);
+            foreach (GameKeepBanner banner in Banners.Values)
+            {
+                banner.ChangeGuild();
+            }
 
-			foreach (GameKeepGuard guard in Guards.Values)
-			{
-				guard.ChangeGuild();
-			}
+            SaveIntoDatabase();
+        }
 
-			foreach (GameKeepBanner banner in Banners.Values)
-			{
-				banner.ChangeGuild();
-			}
+        /// <summary>
+        /// upgrade keep to a target level
+        /// </summary>
+        /// <param name="targetLevel">the target level</param>
+        public virtual void ChangeLevel(byte targetLevel)
+        {
+            Level = targetLevel;
 
-			this.SaveIntoDatabase();
-		}
-		#endregion
+            foreach (GameKeepComponent comp in KeepComponents)
+            {
+                comp.UpdateLevel();
+                foreach (GameClient cln in WorldMgr.GetClientsOfRegion(CurrentRegion.ID))
+                {
+                    cln.Out.SendKeepComponentDetailUpdate(comp);
+                }
 
-		#region Upgrade
+                comp.FillPositions();
+            }
 
-		/// <summary>
-		/// upgrade keep to a target level
-		/// </summary>
-		/// <param name="targetLevel">the target level</param>
-		public virtual void ChangeLevel(byte targetLevel)
-		{
-			this.Level = targetLevel;
+            foreach (GameKeepGuard guard in Guards.Values)
+            {
+                SetGuardLevel(guard);
+            }
 
-			foreach (GameKeepComponent comp in this.KeepComponents)
-			{
-				comp.UpdateLevel();
-				foreach (GameClient cln in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
-				{
-					cln.Out.SendKeepComponentDetailUpdate(comp);
-				}
-				comp.FillPositions();
-			}
+            foreach (Patrol p in Patrols.Values)
+            {
+                p.ChangePatrolLevel();
+            }
 
-			foreach (GameKeepGuard guard in this.Guards.Values)
-			{
-				SetGuardLevel(guard);
-			}
+            foreach (GameKeepDoor door in Doors.Values)
+            {
+                door.UpdateLevel();
+            }
 
-			foreach (Patrol p in this.Patrols.Values)
-			{
-				p.ChangePatrolLevel();
-			}
+            KeepGuildMgr.SendLevelChangeMessage(this);
+            ResetPlayersOfKeep();
 
-			foreach (GameKeepDoor door in this.Doors.Values)
-			{
-				door.UpdateLevel();
-			}
+            SaveIntoDatabase();
+        }
 
-			KeepGuildMgr.SendLevelChangeMessage(this);
-			ResetPlayersOfKeep();
+        public virtual byte GetBaseLevel(GameKeepGuard guard)
+        {
+            if (guard.Component == null)
+            {
+                if (guard is GuardLord)
+                {
+                    return 75;
+                }
+                else
+                {
+                    return 65;
+                }
+            }
 
-			this.SaveIntoDatabase();
-		}
+            if (guard is GuardLord)
+            {
+                if (guard.Component.AbstractKeep is GameKeep)
+                {
+                    return (byte)(guard.Component.AbstractKeep.BaseLevel + ((guard.Component.AbstractKeep.BaseLevel / 10) + 1) * 2);
+                }
+                else
+                {
+                    return (byte)(guard.Component.AbstractKeep.BaseLevel + 2); // flat increase for tower captains
+                }
+            }
 
+            if (guard.Component.AbstractKeep is GameKeep)
+            {
+                return (byte)(guard.Component.AbstractKeep.BaseLevel + 1);
+            }
 
-		public virtual byte GetBaseLevel(GameKeepGuard guard)
-		{
-			if (guard.Component == null)
-			{
-				if (guard is GuardLord)
-					return 75;
-				else
-					return 65;
-			}
+            return guard.Component.AbstractKeep.BaseLevel;
+        }
 
-			if (guard is GuardLord)
-			{
-				if (guard.Component.AbstractKeep is GameKeep)
-					return (byte)(guard.Component.AbstractKeep.BaseLevel + ((guard.Component.AbstractKeep.BaseLevel / 10) + 1) * 2);
-				else
-					return (byte)(guard.Component.AbstractKeep.BaseLevel + 2); // flat increase for tower captains
-			}
+        public virtual void SetGuardLevel(GameKeepGuard guard)
+        {
+            if (guard is FrontierHastener)
+            {
+                guard.Level = 1;
+            }
+            else
+            {
+                int bonusLevel = 0;
+                double multiplier = ServerProperties.Properties.KEEP_GUARD_LEVEL_MULTIPLIER;
 
-			if (guard.Component.AbstractKeep is GameKeep)
-				return (byte)(guard.Component.AbstractKeep.BaseLevel + 1);
+                if (guard.Component != null)
+                {
+                    // level is usually 4 unless upgraded, BaseLevel is usually 50
+                    bonusLevel = guard.Component.AbstractKeep.Level;
 
-			return guard.Component.AbstractKeep.BaseLevel;
-		}
+                    if (guard.Component.AbstractKeep is GameKeepTower)
+                    {
+                        multiplier = ServerProperties.Properties.TOWER_GUARD_LEVEL_MULTIPLIER;
+                    }
+                }
 
+                guard.Level = (byte)(GetBaseLevel(guard) + (bonusLevel * multiplier));
+            }
+        }
 
-		public virtual void SetGuardLevel(GameKeepGuard guard)
-		{
-			if (guard is FrontierHastener)
-			{
-				guard.Level = 1;
-			}
-			else
-			{
-				int bonusLevel = 0;
-				double multiplier = ServerProperties.Properties.KEEP_GUARD_LEVEL_MULTIPLIER;
+        /// <summary>
+        /// Start changing the keeps level to a target level
+        /// </summary>
+        /// <param name="targetLevel">The target level</param>
+        public void StartChangeLevel(byte targetLevel)
+        {
+            if (ServerProperties.Properties.ENABLE_KEEP_UPGRADE_TIMER)
+            {
+                if (Level == targetLevel)
+                {
+                    return;
+                }
 
-				if (guard.Component != null)
-				{
-					// level is usually 4 unless upgraded, BaseLevel is usually 50
-					bonusLevel = guard.Component.AbstractKeep.Level;
+                // this.TargetLevel = targetLevel;
+                StartChangeLevelTimer();
+                if (Guild != null)
+                {
+                    KeepGuildMgr.SendChangeLevelTimeMessage(this);
+                }
+            }
+        }
 
-					if (guard.Component.AbstractKeep is GameKeepTower)
-						multiplier = ServerProperties.Properties.TOWER_GUARD_LEVEL_MULTIPLIER;
-				}
+        /// <summary>
+        /// Time remaining for the single level change
+        /// </summary>
+        public TimeSpan ChangeLevelTimeRemaining
+        {
+            get
+            {
+                int totalsec = m_changeLevelTimer.TimeUntilElapsed / 1000;
+                int min = (totalsec / 60) % 60;
+                int hours = (totalsec / 3600) % 24;
+                return new TimeSpan(0, hours, min + 1, totalsec % 60);
+            }
+        }
 
-				guard.Level = (byte)(GetBaseLevel(guard) + (bonusLevel * multiplier));
-			}
-		}
+        /// <summary>
+        /// Time remaining for total level change
+        /// </summary>
+        public TimeSpan TotalChangeLevelTimeRemaining
+        {
+            get
+            {
+                // TODO
+                return new TimeSpan();
+            }
+        }
 
+        /// <summary>
+        /// Starts the Change Level Timer
+        /// </summary>
+        public void StartChangeLevelTimer()
+        {
+            int newinterval = CalculateTimeToUpgrade();
 
-		/// <summary>
-		/// Start changing the keeps level to a target level
-		/// </summary>
-		/// <param name="targetLevel">The target level</param>
-		public void StartChangeLevel(byte targetLevel)
-		{
-			if (ServerProperties.Properties.ENABLE_KEEP_UPGRADE_TIMER)
-			{
-				if (this.Level == targetLevel)
-					return;
-				//this.TargetLevel = targetLevel;
-				StartChangeLevelTimer();
-				if (this.Guild != null)
-					KeepGuildMgr.SendChangeLevelTimeMessage(this);
-			}
-		}
+            if (m_changeLevelTimer.IsAlive)
+            {
+                int timeelapsed = m_changeLevelTimer.Interval - m_changeLevelTimer.TimeUntilElapsed;
 
-		/// <summary>
-		/// Time remaining for the single level change
-		/// </summary>
-		public TimeSpan ChangeLevelTimeRemaining
-		{
-			get
-			{
-				int totalsec = m_changeLevelTimer.TimeUntilElapsed / 1000;
-				int min = (totalsec/60)%60;
-				int hours = (totalsec/3600)%24;
-				return new TimeSpan(0, hours, min + 1, totalsec%60);
-			}
-		}
+                // if timer has run for more then we need, run event instantly
+                if (timeelapsed > m_changeLevelTimer.Interval)
+                {
+                    newinterval = 1;
+                }
 
-		/// <summary>
-		/// Time remaining for total level change
-		/// </summary>
-		public TimeSpan TotalChangeLevelTimeRemaining
-		{
-			get
-			{
-				//TODO
-				return new TimeSpan();
-			}
-		}
+                // change timer to the value we need
+                else if (timeelapsed < newinterval)
+                {
+                    newinterval = m_changeLevelTimer.Interval - timeelapsed;
+                }
 
-		/// <summary>
-		/// Starts the Change Level Timer
-		/// </summary>
-		public void StartChangeLevelTimer()
-		{
-			int newinterval = CalculateTimeToUpgrade();
+                m_changeLevelTimer.Interval = newinterval;
+            }
 
-			if (m_changeLevelTimer.IsAlive)
-			{
-				int timeelapsed = m_changeLevelTimer.Interval - m_changeLevelTimer.TimeUntilElapsed;
-				//if timer has run for more then we need, run event instantly
-				if (timeelapsed > m_changeLevelTimer.Interval)
-					newinterval = 1;
-				//change timer to the value we need
-				else if (timeelapsed < newinterval)
-					newinterval = m_changeLevelTimer.Interval - timeelapsed;
-				m_changeLevelTimer.Interval = newinterval;
-				
-			}
-			m_changeLevelTimer.Stop();
-			m_changeLevelTimer.Start(newinterval);
-		}
+            m_changeLevelTimer.Stop();
+            m_changeLevelTimer.Start(newinterval);
+        }
 
-		/// <summary>
-		/// Stops the Change Level Timer
-		/// </summary>
-		public void StopChangeLevelTimer()
-		{
-			m_changeLevelTimer.Stop();
-			m_changeLevelTimer.Interval = 1;
-		}
+        /// <summary>
+        /// Stops the Change Level Timer
+        /// </summary>
+        public void StopChangeLevelTimer()
+        {
+            m_changeLevelTimer.Stop();
+            m_changeLevelTimer.Interval = 1;
+        }
 
-		/// <summary>
-		/// Destroys the Change Level Timer
-		/// </summary>
-		public void DestroyChangeLevelTimer()
-		{
-			if (m_changeLevelTimer != null)
-			{
-				m_changeLevelTimer.Stop();
-				m_changeLevelTimer = null;
-			}
-		}
+        /// <summary>
+        /// Destroys the Change Level Timer
+        /// </summary>
+        public void DestroyChangeLevelTimer()
+        {
+            if (m_changeLevelTimer != null)
+            {
+                m_changeLevelTimer.Stop();
+                m_changeLevelTimer = null;
+            }
+        }
 
-		/// <summary>
-		/// Change Level Timer Callback, this method handles the the action part of the change level timer
-		/// </summary>
-		/// <param name="timer"></param>
-		/// <returns></returns>
-		public int ChangeLevelTimerCallback(RegionTimer timer)
-		{
-			if (this is GameKeepTower)
-			{
-				foreach (GameKeepComponent component in this.KeepComponents)
-				{
-					/*
-					 *  - A realm can claim a razed tower, and may even set it to raise to level 10,
-					 * but will have to wait until the tower is repaired to 75% before 
-					 * it will begin upgrading normally.
-					 */
-					if (component.HealthPercent < 75)
-						return 5 * 60 * 1000;
-				}
-			}
+        /// <summary>
+        /// Change Level Timer Callback, this method handles the the action part of the change level timer
+        /// </summary>
+        /// <param name="timer"></param>
+        /// <returns></returns>
+        public int ChangeLevelTimerCallback(RegionTimer timer)
+        {
+            if (this is GameKeepTower)
+            {
+                foreach (GameKeepComponent component in KeepComponents)
+                {
+                    /*
+                     *  - A realm can claim a razed tower, and may even set it to raise to level 10,
+                     * but will have to wait until the tower is repaired to 75% before
+                     * it will begin upgrading normally.
+                     */
+                    if (component.HealthPercent < 75)
+                    {
+                        return 5 * 60 * 1000;
+                    }
+                }
+            }
+
             byte maxlevel = 0;
             if (m_guild != null)
+            {
                 maxlevel = (byte)ServerProperties.Properties.MAX_KEEP_LEVEL;
+            }
             else
+            {
                 maxlevel = (byte)ServerProperties.Properties.STARTING_KEEP_LEVEL;
-
+            }
 
             if (Level < maxlevel && m_guild != null)
             {
-                ChangeLevel((byte)(this.Level + 1));
+                ChangeLevel((byte)(Level + 1));
             }
             else if (Level > maxlevel && m_guild == null)
-                ChangeLevel((byte)(this.Level - 1));
+            {
+                ChangeLevel((byte)(Level - 1));
+            }
 
-			if (this.Level != 10 && this.Level != 1)
-			{
-				return CalculateTimeToUpgrade();
-			}
-			else
-			{
-				this.SaveIntoDatabase();
-				return 0;
-			}
-		}
+            if (Level != 10 && Level != 1)
+            {
+                return CalculateTimeToUpgrade();
+            }
+            else
+            {
+                SaveIntoDatabase();
+                return 0;
+            }
+        }
 
-		/// <summary>
-		/// calculate time to upgrade keep, in milliseconds
-		/// </summary>
-		/// <returns></returns>
-		public virtual int CalculateTimeToUpgrade()
-		{
-			//todo : relik owner to modify formulat
-			/*
-			0 Relics owned - Upgrade time from level 5 to level 10 is 3.2 hours
-			1 Relic owned - Upgrade time from level 5 to level 10 is 8 hours
-			2 Relics owned - Upgrade time from level 5 to level 10 is 24 hours
-			3 or 4 Relics owned - Upgrade time from level 5 to level 10 remains unchanged (32 hours)
-			5 Relics owned - Upgrade time from level 5 to level 10 is 48 hours
-			6 Relics owned - Upgrade time from level 5 to level 10 is 64 hours
-			*/
-			return 0;
-		}
-		#endregion
+        /// <summary>
+        /// calculate time to upgrade keep, in milliseconds
+        /// </summary>
+        /// <returns></returns>
+        public virtual int CalculateTimeToUpgrade()
+        {
+            // todo : relik owner to modify formulat
+            /*
+            0 Relics owned - Upgrade time from level 5 to level 10 is 3.2 hours
+            1 Relic owned - Upgrade time from level 5 to level 10 is 8 hours
+            2 Relics owned - Upgrade time from level 5 to level 10 is 24 hours
+            3 or 4 Relics owned - Upgrade time from level 5 to level 10 remains unchanged (32 hours)
+            5 Relics owned - Upgrade time from level 5 to level 10 is 48 hours
+            6 Relics owned - Upgrade time from level 5 to level 10 is 64 hours
+            */
+            return 0;
+        }
 
-		#region Reset
+        /// <summary>
+        /// reset the realm when the lord have been killed
+        /// </summary>
+        /// <param name="realm"></param>
+        public virtual void Reset(eRealm realm)
+        {
+            LastAttackedByEnemyTick = 0;
+            StartCombatTick = 0;
 
-		/// <summary>
-		/// reset the realm when the lord have been killed
-		/// </summary>
-		/// <param name="realm"></param>
-		public virtual void Reset(eRealm realm)
-		{
-			LastAttackedByEnemyTick = 0;
-			StartCombatTick = 0;
+            Realm = realm;
 
-			Realm = realm;
-
-			PlayerMgr.BroadcastCapture(this);
+            PlayerMgr.BroadcastCapture(this);
 
             Level = (byte)ServerProperties.Properties.STARTING_KEEP_LEVEL;
 
-			//if a guild holds the keep, we release it
-			if (Guild != null)
-			{
-				Release();
-			}
-			//we repair all keep components, but not if it is a tower and is raised
-			foreach (GameKeepComponent component in this.KeepComponents)
-			{
-				if (!component.IsRaized)
-					component.Repair(component.MaxHealth - component.Health);
-				foreach (GameKeepHookPoint hp in component.KeepHookPoints.Values)
-				{
-					if (hp.Object != null)
-						hp.Object.Die(null);
-				}
-			}
-			//change realm
-			foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
-			{
-				client.Out.SendKeepComponentUpdate(this, false);
-			}
-			//we reset all doors
-			foreach(GameKeepDoor door in Doors.Values)
-			{
-				door.Reset(realm);
-			}
+            // if a guild holds the keep, we release it
+            if (Guild != null)
+            {
+                Release();
+            }
 
-			//we make sure all players are not in the air
-			ResetPlayersOfKeep();
+            // we repair all keep components, but not if it is a tower and is raised
+            foreach (GameKeepComponent component in KeepComponents)
+            {
+                if (!component.IsRaized)
+                {
+                    component.Repair(component.MaxHealth - component.Health);
+                }
 
-			//we reset the guards
-			foreach (GameKeepGuard guard in Guards.Values)
-			{
-				if (guard is GuardLord && guard.IsAlive )
-				{
-					this.TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { guard });
-				}
-				else if (guard is GuardLord == false)
-				{
-					guard.Die(guard);
-				}
-			}
+                foreach (GameKeepHookPoint hp in component.KeepHookPoints.Values)
+                {
+                    if (hp.Object != null)
+                    {
+                        hp.Object.Die(null);
+                    }
+                }
+            }
 
-			//we reset the banners
-			foreach (GameKeepBanner banner in Banners.Values)
-			{
-				banner.ChangeRealm();
-			}
+            // change realm
+            foreach (GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegion.ID))
+            {
+                client.Out.SendKeepComponentUpdate(this, false);
+            }
 
-			//update guard level for every keep
-			if (!IsPortalKeep && ServerProperties.Properties.USE_KEEP_BALANCING)
-				GameServer.KeepManager.UpdateBaseLevels();
+            // we reset all doors
+            foreach (GameKeepDoor door in Doors.Values)
+            {
+                door.Reset(realm);
+            }
 
-			//update the counts of keeps for the bonuses
-			if (ServerProperties.Properties.USE_LIVE_KEEP_BONUSES)
-				KeepBonusMgr.UpdateCounts();
+            // we make sure all players are not in the air
+            ResetPlayersOfKeep();
 
-			SaveIntoDatabase();
+            // we reset the guards
+            foreach (GameKeepGuard guard in Guards.Values)
+            {
+                if (guard is GuardLord && guard.IsAlive)
+                {
+                    TemplateManager.GetMethod("RefreshTemplate").Invoke(null, new object[] { guard });
+                }
+                else if (guard is GuardLord == false)
+                {
+                    guard.Die(guard);
+                }
+            }
 
-			GameEventMgr.Notify(KeepEvent.KeepTaken, new KeepEventArgs(this));
+            // we reset the banners
+            foreach (GameKeepBanner banner in Banners.Values)
+            {
+                banner.ChangeRealm();
+            }
 
-		}
+            // update guard level for every keep
+            if (!IsPortalKeep && ServerProperties.Properties.USE_KEEP_BALANCING)
+            {
+                GameServer.KeepManager.UpdateBaseLevels();
+            }
 
-		/// <summary>
-		/// This method is important, because players could fall through air
-		/// if they are on the top of a keep when it is captured because
-		/// the keep size will reset
-		/// </summary>
-		protected void ResetPlayersOfKeep()
-		{
-			ushort distance = 0;
-			int id = 0;
-			if (this is GameKeepTower)
-			{
-				distance = 750;
-				id = 11;
-			}
-			else
-			{
-				distance = 1500;
-				id = 10;
-			}
+            // update the counts of keeps for the bonuses
+            if (ServerProperties.Properties.USE_LIVE_KEEP_BONUSES)
+            {
+                KeepBonusMgr.UpdateCounts();
+            }
 
+            SaveIntoDatabase();
 
-			GameKeepComponent component = null;
-			foreach (GameKeepComponent c in this.KeepComponents)
-			{
-				if (c.Skin == id)
-				{
-					component = c;
-					break;
-				}
-			}
-			if (component == null)
-				return;
+            GameEventMgr.Notify(KeepEvent.KeepTaken, new KeepEventArgs(this));
+        }
 
-			GameKeepHookPoint hookpoint = component.KeepHookPoints[97] as GameKeepHookPoint;
+        /// <summary>
+        /// This method is important, because players could fall through air
+        /// if they are on the top of a keep when it is captured because
+        /// the keep size will reset
+        /// </summary>
+        protected void ResetPlayersOfKeep()
+        {
+            ushort distance = 0;
+            int id = 0;
+            if (this is GameKeepTower)
+            {
+                distance = 750;
+                id = 11;
+            }
+            else
+            {
+                distance = 1500;
+                id = 10;
+            }
 
-			if (hookpoint == null)
-				return;
+            GameKeepComponent component = null;
+            foreach (GameKeepComponent c in KeepComponents)
+            {
+                if (c.Skin == id)
+                {
+                    component = c;
+                    break;
+                }
+            }
 
-			//predict Z
-			DBKeepHookPoint hp = GameServer.Database.SelectObjects<DBKeepHookPoint>("`HookPointID` = @HookPointID AND `Height` = @Height",
-			                                                                        new[] { new QueryParameter("@HookPointID", 97), new QueryParameter("@Height", Height) }).FirstOrDefault();
-			if (hp == null)
-				return;
-			int z = component.Z + hp.Z;
+            if (component == null)
+            {
+                return;
+            }
 
-			foreach (GamePlayer player in component.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-			{
-                int d = hookpoint.GetDistance( player as IPoint2D );
-				if (d > distance)
-					continue;
+            GameKeepHookPoint hookpoint = component.KeepHookPoints[97] as GameKeepHookPoint;
 
-				if (player.Z > z)
-					player.MoveTo(player.CurrentRegionID, player.X, player.Y, z, player.Heading);
-			}
-		}
+            if (hookpoint == null)
+            {
+                return;
+            }
 
+            // calculate target height
+            int height = GameServer.KeepManager.GetHeightFromLevel(Level);
 
-		#endregion
+            // predict Z
+            DBKeepHookPoint hp = GameServer.Database.SelectObjects<DBKeepHookPoint>(
+                "`HookPointID` = @HookPointID AND `Height` = @Height",
+                                                                                    new[] { new QueryParameter("@HookPointID", 97), new QueryParameter("@Height", height) }).FirstOrDefault();
+            if (hp == null)
+            {
+                return;
+            }
 
-		/// <summary>
-		/// send keep init when player enter in region
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="args"></param>
-		protected void SendKeepInit(DOLEvent e, object sender, EventArgs args)
-		{
-			RegionPlayerEventArgs regionPlayerEventArgs = args as RegionPlayerEventArgs;
-			GamePlayer player = regionPlayerEventArgs.Player;
-			player.Out.SendKeepInfo(this);
-			foreach(GameKeepComponent keepComponent in this.KeepComponents)
-			{
-				player.Out.SendKeepComponentInfo(keepComponent);
-			}
-		}
-		
-		/// <summary>
-		/// Send Packets to Remove Keep and Components
-		/// </summary>
-		protected void SendRemoveKeep()
-		{
-			foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
-			{
-				if (client.Player == null || client.ClientState != GameClient.eClientState.Playing || client.Player.ObjectState != GameObject.eObjectState.Active)
-					continue;
-				
-				GamePlayer player = client.Player;
-				
-				// Remove Keep
-				foreach(GameKeepComponent comp in this.KeepComponents)
-				{
-					player.Out.SendKeepComponentRemove(comp);
-				}
-				player.Out.SendKeepRemove(this);
-			}
-		}
-		
-		/// <summary>
-		/// Send Packets to Add Keep and Components
-		/// </summary>
-		protected void SendKeepInfo()
-		{
-			foreach (GameClient client in WorldMgr.GetClientsOfRegion(this.CurrentRegion.ID))
-			{
-				
-				if (client.Player == null || client.ClientState != GameClient.eClientState.Playing || client.Player.ObjectState != GameObject.eObjectState.Active)
-					continue;
-				
-				GamePlayer player = client.Player;
-				
-				// Add Keep
-				player.Out.SendKeepInfo(this);
-				foreach(GameKeepComponent comp in this.KeepComponents)
-				{
-					player.Out.SendKeepComponentInfo(comp);
-				}
-			}
-		}
-	}
+            int z = component.Z + hp.Z;
+
+            foreach (GamePlayer player in component.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+            {
+                int d = hookpoint.GetDistance(player as IPoint2D);
+                if (d > distance)
+                {
+                    continue;
+                }
+
+                if (player.Z > z)
+                {
+                    player.MoveTo(player.CurrentRegionID, player.X, player.Y, z, player.Heading);
+                }
+            }
+        }
+
+        /// <summary>
+        /// send keep init when player enter in region
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        protected void SendKeepInit(DOLEvent e, object sender, EventArgs args)
+        {
+            RegionPlayerEventArgs regionPlayerEventArgs = args as RegionPlayerEventArgs;
+            GamePlayer player = regionPlayerEventArgs.Player;
+            player.Out.SendKeepInfo(this);
+            foreach (GameKeepComponent keepComponent in KeepComponents)
+            {
+                player.Out.SendKeepComponentInfo(keepComponent);
+            }
+        }
+
+        /// <summary>
+        /// Send Packets to Remove Keep and Components
+        /// </summary>
+        protected void SendRemoveKeep()
+        {
+            foreach (GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegion.ID))
+            {
+                if (client.Player == null || client.ClientState != GameClient.eClientState.Playing || client.Player.ObjectState != GameObject.eObjectState.Active)
+                {
+                    continue;
+                }
+
+                GamePlayer player = client.Player;
+
+                // Remove Keep
+                foreach (GameKeepComponent comp in KeepComponents)
+                {
+                    player.Out.SendKeepComponentRemove(comp);
+                }
+
+                player.Out.SendKeepRemove(this);
+            }
+        }
+
+        /// <summary>
+        /// Send Packets to Add Keep and Components
+        /// </summary>
+        protected void SendKeepInfo()
+        {
+            foreach (GameClient client in WorldMgr.GetClientsOfRegion(CurrentRegion.ID))
+            {
+
+                if (client.Player == null || client.ClientState != GameClient.eClientState.Playing || client.Player.ObjectState != GameObject.eObjectState.Active)
+                {
+                    continue;
+                }
+
+                GamePlayer player = client.Player;
+
+                // Add Keep
+                player.Out.SendKeepInfo(this);
+                foreach (GameKeepComponent comp in KeepComponents)
+                {
+                    player.Out.SendKeepComponentInfo(comp);
+                }
+            }
+        }
+    }
 }

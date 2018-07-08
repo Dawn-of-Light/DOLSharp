@@ -1,23 +1,22 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
 using System;
-using System.Text;
 using DOL.Events;
 
 namespace DOL.GS.Behaviour
@@ -26,7 +25,7 @@ namespace DOL.GS.Behaviour
     /// <summary>
     /// Requirementtype defines a list of requirements to be used with questparts.
     /// Depending on requirmenttype V and N will have special
-    /// meaning look at documentation of each requirementtype for details    
+    /// meaning look at documentation of each requirementtype for details
     /// </summary>
     ///<remarks>
     /// Syntax: ... V:eEmote(eEmote.Yes) ... Parameter V must be of Type
@@ -45,15 +44,17 @@ namespace DOL.GS.Behaviour
         /// </summary>
         /// <remarks>Tested</remarks>
         InventoryItem,
+
         // AREQ : checks requirement list r##n# (requirement lists described further)
         /// <summary>
         /// CLAS : checks for player class N:int[string]
         /// </summary>
         Class,
+
         // /// <summary>
         // /// COMB : checks for player combat skill N at level V:int[string]
         // /// </summary>
-        //CombatSkill = 0x04,
+        // CombatSkill = 0x04,
         /// <summary>
         /// CQST : checks for quest N:Type[Typename:string](Current Quest) completed V:int[string] times
         /// </summary>
@@ -66,10 +67,11 @@ namespace DOL.GS.Behaviour
         /// MENC : compares player's maximum encumbrance value with N:int[string]
         /// </summary>
         EncumbranceMax,
+
         // // <summary>
         // /// FACT : checks for faction N at level N
         // /// </summary>
-        //Faction=0x07,	
+        // Faction=0x07,
         /// <summary>
         /// FATG : compares player's fatigue value with N:int[string] using eComparator
         /// </summary>
@@ -78,10 +80,11 @@ namespace DOL.GS.Behaviour
         /// MFAT : compares player's maximum fatigue value with N:int[string] using eComparator
         /// </summary>
         EnduranceMax,
+
         // // <summary>
         // /// GLEV : compares guild level with N:int[string] (not player's guilds) using eComparator
         // /// </summary>
-        //GuildLevel=0x09,
+        // GuildLevel=0x09,
         /// <summary>
         /// GNDR : compares player's gender with N:int[string] {0=male,1=female}
         /// </summary>
@@ -163,7 +166,8 @@ namespace DOL.GS.Behaviour
         STAT : checks for stat r##n# at value r##v#
         STYL : checks for style r##n# at level r##v#
         */
-        //TIMR : checks when timer indicated by r##n# meet time r##v# (player side)
+
+        // TIMR : checks when timer indicated by r##n# meet time r##v# (player side)
         /// <summary>
         /// QUES : checks for player's quest N:Type[Typename:string](Current Quest) at step V:int[string] using eComparator
         /// </summary>
@@ -211,12 +215,12 @@ namespace DOL.GS.Behaviour
         /// usable with QuestPending, QuestGivable
         /// </summary>
         Not = 5
-    }	 
+    }
 
     /// <summary>
     /// Requirements describe what must be true to allow a QuestAction to fire.
     /// Level of player, Step of Quest, Class of Player, etc... There are also some variables to add
-    /// additional parameters. To fire a QuestAction ALL requirements must be fulfilled.         
+    /// additional parameters. To fire a QuestAction ALL requirements must be fulfilled.
     /// </summary>
     public interface IBehaviourRequirement
     {

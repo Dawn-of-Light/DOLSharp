@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -29,607 +29,637 @@ using DOL.GS.Spells;
 
 namespace DOL.GS
 {
-	public class MinotaurRelic : GameStaticItem
-	{
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    public class MinotaurRelic : GameStaticItem
+    {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		#region constructor
-		public MinotaurRelic() : base() { m_saveInDB = true; }
-
-		public MinotaurRelic(DBMinotaurRelic obj)
-			: this()
-		{
-			LoadFromDatabase(obj);
-		}
-		#endregion
-
-		#region Declarations
-		DBMinotaurRelic m_dbRelic;
-		Timer timer = null;
-		public RegionTimer respawntimer = null;
-		protected int m_spawny;
-		protected int m_spawnx;
-		protected int m_spawnz;
-		protected int m_spawnheading;
-		protected int m_spawnregion;
-		protected int m_relicSpellID;
-		protected Spell m_relicSpell;
-		protected string m_relicTarget;
-		protected double m_xp;
-		protected GamePlayer m_owner;
-		protected int m_effect;
-		protected int m_relicID;
-		protected ISpellHandler m_spellHandler;
-		protected GameSpellEffect m_gameSpellEffect;
-		public IList<GamePlayer> Playerlist = new List<GamePlayer>();
-        protected string m_protectorClassType;
-        protected bool m_spawnLocked;
-
-		/// <summary>
-		/// gets or sets the current Owner of this Relic
-		/// </summary>
-		public GamePlayer Owner
-		{
-			get { return m_owner; }
-			set { m_owner = value; }
-		}
-
-		public int RelicID
-		{
-			get { return m_relicID; }
-			set { m_relicID = value; }
-		}
-
-        public string ProtectorClassType
+        public MinotaurRelic()
         {
-            get { return m_protectorClassType; }
-            set { m_protectorClassType = value; }
+            m_saveInDB = true;
         }
-        public bool SpawnLocked
+
+        public MinotaurRelic(DBMinotaurRelic obj)
+            : this()
         {
-            get { return m_spawnLocked; }
-            set { m_spawnLocked = value; }
+            LoadFromDatabase(obj);
         }
-		/// <summary>
-		/// gets or sets the current XP of this Relic
-		/// </summary>
-		public double XP
-		{
-			get { return m_xp; }
-			set { m_xp = value; }
-		}
 
-		/// <summary>
-		/// Get the RelicType
-		/// </summary>
-		public Spell RelicSpell
-		{
-			get { return m_relicSpell; }
-			set { m_relicSpell = value; }
-		}
+        public RegionTimer Respawntimer { get; set; }
 
-		/// <summary>
-		/// Get the RelicType
-		/// </summary>
-		public int RelicSpellID
-		{
-			get { return m_relicSpellID; }
-			set { m_relicSpellID = value; }
-		}
+        private DBMinotaurRelic _dbRelic;
+        private Timer _timer;
+        private ISpellHandler _spellHandler;
+        private GameSpellEffect _gameSpellEffect;
+        public IList<GamePlayer> Playerlist = new List<GamePlayer>();
 
-		/// <summary>
-		/// Get the RelicTarget
-		/// </summary>
-		public string RelicTarget
-		{
-			get { return m_relicTarget; }
-			set { m_relicTarget = value; }
-		}
+        /// <summary>
+        /// gets or sets the current Owner of this Relic
+        /// </summary>
+        public GamePlayer Owner { get; set; }
 
-		public int SpawnX
-		{
-			get { return m_spawnx; }
-			set { m_spawnx = value; }
-		}
+        public int RelicId { get; set; }
 
-		public int SpawnY
-		{
-			get { return m_spawny; }
-			set { m_spawny = value; }
-		}
+        public string ProtectorClassType { get; set; }
 
-		public int SpawnZ
-		{
-			get { return m_spawnz; }
-			set { m_spawnz = value; }
-		}
+        public bool SpawnLocked { get; set; }
 
-		public int SpawnHeading
-		{
-			get { return m_spawnheading; }
-			set { m_spawnheading = value; }
-		}
+        /// <summary>
+        /// gets or sets the current XP of this Relic
+        /// </summary>
+        public double Xp { get; set; }
 
-		public int SpawnRegion
-		{
-			get { return m_spawnregion; }
-			set { m_spawnregion = value; }
-		}
+        /// <summary>
+        /// Get the RelicType
+        /// </summary>
+        public Spell RelicSpell { get; set; }
 
-		public int Effect
-		{
-			get { return m_effect; }
-			set { m_effect = value; }
-		}
-		#endregion
+        /// <summary>
+        /// Get the RelicType
+        /// </summary>
+        public int RelicSpellId { get; set; }
 
-		#region database load/save
-		/// <summary>
-		/// Loads the GameRelic from Database
-		/// </summary>
-		/// <param name="obj">The DBRelic-object for this relic</param>
-		public override void LoadFromDatabase(DataObject obj)
-		{
-			InternalID = obj.ObjectId;
-			m_dbRelic = obj as DBMinotaurRelic;
-			RelicID = m_dbRelic.RelicID;
+        /// <summary>
+        /// Get the RelicTarget
+        /// </summary>
+        public string RelicTarget { get; set; }
 
-			Heading = (ushort)m_dbRelic.SpawnHeading;
-			CurrentRegionID = (ushort)m_dbRelic.SpawnRegion;
-			X = m_dbRelic.SpawnX;
-			Y = m_dbRelic.SpawnY;
-			Z = m_dbRelic.SpawnZ;
+        public int SpawnX { get; set; }
 
-			SpawnHeading = m_dbRelic.SpawnHeading;
-			SpawnRegion = m_dbRelic.SpawnRegion;
-			Effect = m_dbRelic.Effect;
-			SpawnX = m_dbRelic.SpawnX;
-			SpawnY = m_dbRelic.SpawnY;
-			SpawnZ = m_dbRelic.SpawnZ;
+        public int SpawnY { get; set; }
 
-			RelicSpellID = m_dbRelic.relicSpell;
-			RelicSpell = SkillBase.GetSpellByID(m_dbRelic.relicSpell);
-			RelicTarget = m_dbRelic.relicTarget;
+        public int SpawnZ { get; set; }
 
-			Name = m_dbRelic.Name;
-			Model = m_dbRelic.Model;
+        public int SpawnHeading { get; set; }
 
-			XP = MinotaurRelicManager.MAX_RELIC_EXP;
+        public int SpawnRegion { get; set; }
 
-            ProtectorClassType = m_dbRelic.ProtectorClassType;
-            SpawnLocked = m_dbRelic.SpawnLocked;
+        public int Effect { get; set; }
 
-			//set still empty fields
-			Emblem = 0;
-			Level = 99;
-		}
+        /// <summary>
+        /// Loads the GameRelic from Database
+        /// </summary>
+        /// <param name="obj">The DBRelic-object for this relic</param>
+        public override void LoadFromDatabase(DataObject obj)
+        {
+            _dbRelic = obj as DBMinotaurRelic;
 
-		/// <summary>
-		/// Saves the current MinotaurRelic to the database
-		/// </summary>
-		public override void SaveIntoDatabase()
-		{
-			m_dbRelic.SpawnHeading = Heading;
-			m_dbRelic.SpawnRegion = CurrentRegionID;
-			m_dbRelic.SpawnX = X;
-			m_dbRelic.SpawnY = Y;
-			m_dbRelic.SpawnZ = Z;
+            if (_dbRelic == null)
+            {
+                return;
+            }
 
-			m_dbRelic.Effect = Effect;
+            InternalID = obj.ObjectId;
+            RelicId = _dbRelic.RelicID;
 
-			m_dbRelic.Name = Name;
-			m_dbRelic.Model = Model;
-			m_dbRelic.relicSpell = RelicSpellID;
-            m_dbRelic.ProtectorClassType = ProtectorClassType;
-            m_dbRelic.SpawnLocked = SpawnLocked;
+            Heading = (ushort)_dbRelic.SpawnHeading;
+            CurrentRegionID = (ushort)_dbRelic.SpawnRegion;
+            X = _dbRelic.SpawnX;
+            Y = _dbRelic.SpawnY;
+            Z = _dbRelic.SpawnZ;
 
-			if (InternalID == null)
-			{
-				GameServer.Database.AddObject(m_dbRelic);
-				InternalID = m_dbRelic.ObjectId;
-			}
-			else
-				GameServer.Database.SaveObject(m_dbRelic);
-		}
-		#endregion
+            SpawnHeading = _dbRelic.SpawnHeading;
+            SpawnRegion = _dbRelic.SpawnRegion;
+            Effect = _dbRelic.Effect;
+            SpawnX = _dbRelic.SpawnX;
+            SpawnY = _dbRelic.SpawnY;
+            SpawnZ = _dbRelic.SpawnZ;
 
-		#region Interact
-		public override bool Interact(GamePlayer player)
-		{
-			if (!base.Interact(player)) return false;
+            RelicSpellId = _dbRelic.relicSpell;
+            RelicSpell = SkillBase.GetSpellByID(_dbRelic.relicSpell);
+            RelicTarget = _dbRelic.relicTarget;
+
+            Name = _dbRelic.Name;
+            Model = _dbRelic.Model;
+
+            Xp = MinotaurRelicManager.MaxRelicExp;
+
+            ProtectorClassType = _dbRelic.ProtectorClassType;
+            SpawnLocked = _dbRelic.SpawnLocked;
+
+            // set still empty fields
+            Emblem = 0;
+            Level = 99;
+        }
+
+        /// <summary>
+        /// Saves the current MinotaurRelic to the database
+        /// </summary>
+        public override void SaveIntoDatabase()
+        {
+            _dbRelic.SpawnHeading = Heading;
+            _dbRelic.SpawnRegion = CurrentRegionID;
+            _dbRelic.SpawnX = X;
+            _dbRelic.SpawnY = Y;
+            _dbRelic.SpawnZ = Z;
+
+            _dbRelic.Effect = Effect;
+
+            _dbRelic.Name = Name;
+            _dbRelic.Model = Model;
+            _dbRelic.relicSpell = RelicSpellId;
+            _dbRelic.ProtectorClassType = ProtectorClassType;
+            _dbRelic.SpawnLocked = SpawnLocked;
+
+            if (InternalID == null)
+            {
+                GameServer.Database.AddObject(_dbRelic);
+                InternalID = _dbRelic.ObjectId;
+            }
+            else
+            {
+                GameServer.Database.SaveObject(_dbRelic);
+            }
+        }
+
+        public override bool Interact(GamePlayer player)
+        {
+            if (!base.Interact(player))
+            {
+                return false;
+            }
 
             foreach (GameNPC npc in GetNPCsInRadius(100))
             {
                 if (npc.Model == 1583)
                 {
-                    player.Out.SendMessage("You cannot pickup " + GetName(0, false) + ". It is locked!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    player.Out.SendMessage($"You cannot pickup {GetName(0, false)}. It is locked!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     return false;
                 }
             }
 
-			if (!player.IsAlive)
-			{
-				player.Out.SendMessage("You cannot pickup " + GetName(0, false) + ". You are dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
-			if (this.Owner != null)
-			{
-				player.Out.SendMessage("This Relic is owned by someone else!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
-			if (player.MinotaurRelic != null)
-			{
-				player.Out.SendMessage("You already have a Relic!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return false;
-			}
-			if (player.Group != null)
-			{
-				foreach (GamePlayer pl in player.Group.GetPlayersInTheGroup())
-				{
-					if (pl.MinotaurRelic != null)
-					{
-						player.Out.SendMessage("Someone in your group already have a Relic!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						return false;
-					}
-				}
-			}
-			if (player.IsStealthed)
-				player.Stealth(false);
-			PlayerTakesRelic(player);
-			return true;
-		}
-		#endregion
+            if (!player.IsAlive)
+            {
+                player.Out.SendMessage($"You cannot pickup {GetName(0, false)}. You are dead!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return false;
+            }
 
-		#region Relic Actions
-		/// <summary>
-		/// Called when a Players picks up a Relic
-		/// </summary>
-		/// <param name="player"></param>
-		protected virtual void PlayerTakesRelic(GamePlayer player)
-		{
-			if (player == null) return;
-			RemoveFromWorld();
-			SetHandlers(player, true);
-			player.MinotaurRelic = this;
-			Owner = player;
+            if (Owner != null)
+            {
+                player.Out.SendMessage("This Relic is owned by someone else!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return false;
+            }
 
-			foreach (GamePlayer pl in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				pl.Out.SendMinotaurRelicWindow(player, Effect, true);
+            if (player.MinotaurRelic != null)
+            {
+                player.Out.SendMessage("You already have a Relic!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return false;
+            }
 
-			player.Out.SendMinotaurRelicBarUpdate(player, (int)XP);
+            if (player.Group != null)
+            {
+                foreach (GamePlayer pl in player.Group.GetPlayersInTheGroup())
+                {
+                    if (pl.MinotaurRelic != null)
+                    {
+                        player.Out.SendMessage("Someone in your group already have a Relic!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        return false;
+                    }
+                }
+            }
 
-			m_spellHandler = ScriptMgr.CreateSpellHandler(m_owner, RelicSpell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
-			if (m_spellHandler != null)
-				m_gameSpellEffect = new GameSpellEffect(m_spellHandler, RelicSpell.Duration, 0);
+            if (player.IsStealthed)
+            {
+                player.Stealth(false);
+            }
 
-			timer = new Timer(new TimerCallback(XPTimerCallBack), null, 3000, 0);
+            PlayerTakesRelic(player);
+            return true;
+        }
 
-			ApplyRelicEffect();
-		}
+        /// <summary>
+        /// Called when a Players picks up a Relic
+        /// </summary>
+        /// <param name="player"></param>
+        private void PlayerTakesRelic(GamePlayer player)
+        {
+            if (player == null)
+            {
+                return;
+            }
 
-		protected void ApplyRelicEffect()
-		{
-			if (RelicSpell == null || m_spellHandler==null || m_gameSpellEffect==null) return;
+            RemoveFromWorld();
+            SetHandlers(player, true);
+            player.MinotaurRelic = this;
+            Owner = player;
 
-			IList<GamePlayer> newPlayerlist = new List<GamePlayer>();
+            foreach (GamePlayer pl in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+            {
+                pl.Out.SendMinotaurRelicWindow(player, Effect, true);
+            }
 
-			if (m_owner != null)
-			{
-				switch (RelicTarget.ToLower())
-				{
-					case "self":
-						newPlayerlist.Add(m_owner);
-						break;
-					case "group":
-						if (m_owner.Group == null)
-						{
-							newPlayerlist.Add(m_owner);
-							break;
-						}
-						else
-						{
-							foreach (GamePlayer plr in m_owner.Group.GetPlayersInTheGroup())
-								if (plr != null && !newPlayerlist.Contains(plr) && m_owner.IsWithinRadius( plr, WorldMgr.VISIBILITY_DISTANCE ))
-									newPlayerlist.Add(plr);
-						}
-						break;
-					case "realm":
-						foreach (GamePlayer plr in m_owner.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-						{
-							if (plr != null && GameServer.ServerRules.IsAllowedToAttack(m_owner, plr, true) == false && !newPlayerlist.Contains(plr))
-								newPlayerlist.Add(plr);
-						}
-						break;
-				}
-			}
-			lock (Playerlist)
-			{
-				foreach (GamePlayer plr in Playerlist)
-				{
-					if(plr == null) continue;
-					if (!newPlayerlist.Contains(plr))
-					{
-						try
-						{
-							lock (plr.EffectList)
-							{
-								GameSpellEffect check = SpellHandler.FindEffectOnTarget(plr, m_gameSpellEffect.Spell.SpellType);
-								if (check != null)
-									check.Cancel(false);
-							}
-						}
-						catch(Exception e)
-						{
-							if (log.IsErrorEnabled)
-								log.Error("Minotaur Relics : Effect Cancel : " + e);
-						}
-					}
-				}
-				foreach (GamePlayer plr in newPlayerlist)
-				{
-					if (plr == null) continue;
-					try
-					{
-						lock (plr.EffectList)
-						{
-							GameSpellEffect check = SpellHandler.FindEffectOnTarget(plr, m_gameSpellEffect.Spell.SpellType);
-							if (check == null)
-							{
-								ISpellHandler handler = ScriptMgr.CreateSpellHandler(plr, RelicSpell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
-								GameSpellEffect plreffect = null;
-								if (handler != null)
-									plreffect = new GameSpellEffect(handler, RelicSpell.Duration, 0);
-								if (plreffect != null)
-									plreffect.Start(plr);
-							}
-						}
-					}
-					catch(Exception e)
-					{
-						if (log.IsErrorEnabled)
-							log.Error("Minotaur Relics : Effect Start : " + e);
-					}
-				}
-				Playerlist = newPlayerlist;
-			}
-		}
-		protected void StopRelicEffect()
-		{
-			if (RelicSpell == null || m_spellHandler == null || m_gameSpellEffect == null) return;
+            player.Out.SendMinotaurRelicBarUpdate(player, (int)Xp);
 
-			lock (Playerlist)
-			{
-				foreach (GamePlayer plr in Playerlist)
-				{
-					if (plr == null) continue;
-					try
-					{
-						lock (plr.EffectList)
-						{
-							GameSpellEffect check = SpellHandler.FindEffectOnTarget(plr, m_gameSpellEffect.Spell.SpellType);
-							if (check != null)
-								check.Cancel(false);
-						}
-					}
-					catch (Exception e)
-					{
-						if (log.IsErrorEnabled)
-							log.Error("Minotaur Relics : Stop Relic Effect : " + e);
-					}
-				}
-				Playerlist.Clear();
-			}
-		}
+            _spellHandler = ScriptMgr.CreateSpellHandler(Owner, RelicSpell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+            if (_spellHandler != null)
+            {
+                _gameSpellEffect = new GameSpellEffect(_spellHandler, RelicSpell.Duration, 0);
+            }
 
-		/// <summary>
-		/// Is called whenever the CurrentCarrier is supposed to loose the relic.
-		/// </summary>
-		/// <param name="player">the player who loses the relic</param>
-		/// <param name="stop">True when we should stop the XP timer</param>
-		public virtual void PlayerLoosesRelic(GamePlayer player, bool stop)
-		{
-			StopRelicEffect();
-			player.Out.SendMinotaurRelicWindow(player, 0, false);
-			Update(player);
-			SetHandlers(player, false);
-			player.MinotaurRelic = null;
-			Owner = null;
-			if (stop && timer != null)
-			{
-				timer.Dispose();
-				timer = null;
-			}
-			foreach (GamePlayer pl in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-				pl.Out.SendMinotaurRelicWindow(player, 0, false);
+            _timer = new Timer(XpTimerCallBack, null, 3000, 0);
 
-			AddToWorld();
-		}
+            ApplyRelicEffect();
+        }
 
-		/// <summary>
-		/// Called when the Timer is reached
-		/// </summary>
-		/// <param name="state"></param>
-		/// <returns></returns>
-		protected void XPTimerCallBack(object state)
-		{
-			ApplyRelicEffect();
-			
-			if (XP - MinotaurRelicManager.XP_LOSS_PER_TICK < 0)
-				XP = 0;
-			else
-				XP -= MinotaurRelicManager.XP_LOSS_PER_TICK;
+        private void ApplyRelicEffect()
+        {
+            if (RelicSpell == null || _spellHandler == null || _gameSpellEffect == null)
+            {
+                return;
+            }
 
-			if (Owner != null)
-			{
-				Update(Owner);
-				Owner.Out.SendMinotaurRelicBarUpdate(Owner, (int)XP);
-			}
-			if (XP == 0)
-			{
-				RelicDispose();
-				return;
-			}
-			if (timer != null)
-				timer.Change(3000, Timeout.Infinite);
-		}
+            IList<GamePlayer> newPlayerlist = new List<GamePlayer>();
 
-		/// <summary>
-		/// Called when the Relic has reached 0 XP and drops
-		/// </summary>
-		public virtual void RelicDispose()
-		{
-			if (timer != null)
-			{
-				timer.Dispose();
-				timer = null;
-			}
+            if (Owner != null)
+            {
+                switch (RelicTarget.ToLower())
+                {
+                    case "self":
+                        newPlayerlist.Add(Owner);
+                        break;
+                    case "group":
+                        if (Owner.Group == null)
+                        {
+                            newPlayerlist.Add(Owner);
+                        }
+                        else
+                        {
+                            foreach (GamePlayer plr in Owner.Group.GetPlayersInTheGroup())
+                            {
+                                if (plr != null && !newPlayerlist.Contains(plr) && Owner.IsWithinRadius(plr, WorldMgr.VISIBILITY_DISTANCE))
+                                {
+                                    newPlayerlist.Add(plr);
+                                }
+                            }
+                        }
 
-			if (Owner != null)
-				PlayerLoosesRelic(Owner, true);
+                        break;
+                    case "realm":
+                        foreach (GamePlayer plr in Owner.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                        {
+                            if (plr != null && GameServer.ServerRules.IsAllowedToAttack(Owner, plr, true) == false && !newPlayerlist.Contains(plr))
+                            {
+                                newPlayerlist.Add(plr);
+                            }
+                        }
 
-			RemoveFromWorld();
+                        break;
+                }
+            }
 
-			if (respawntimer != null)
-			{
-				respawntimer.Stop();
-				respawntimer = null;
-			}
-			respawntimer = new RegionTimer(this, new RegionTimerCallback(RespawnTimerCallback),
-			                               Util.Random(MinotaurRelicManager.MIN_RESPAWN_TIMER, MinotaurRelicManager.MAX_RESPAWN_TIMER));
-		}
+            lock (Playerlist)
+            {
+                foreach (GamePlayer plr in Playerlist)
+                {
+                    if (plr == null)
+                    {
+                        continue;
+                    }
 
-		/// <summary>
-		/// Called when the Respawntimer is reached
-		/// </summary>
-		/// <param name="respawnTimer"></param>
-		/// <returns></returns>
-		protected override int RespawnTimerCallback(RegionTimer respawnTimer)
-		{
-			if (respawntimer != null)
-			{
-				respawntimer.Stop();
-				respawntimer = null;
-			}
+                    if (!newPlayerlist.Contains(plr))
+                    {
+                        try
+                        {
+                            lock (plr.EffectList)
+                            {
+                                GameSpellEffect check = SpellHandler.FindEffectOnTarget(plr, _gameSpellEffect.Spell.SpellType);
+                                check?.Cancel(false);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            if (Log.IsErrorEnabled)
+                            {
+                                Log.Error($"Minotaur Relics : Effect Cancel : {e}");
+                            }
+                        }
+                    }
+                }
 
-			if (ObjectState == eObjectState.Active) return 0;
-			X = SpawnX;
-			Y = SpawnY;
-			Z = SpawnZ;
-			Heading = (ushort)SpawnHeading;
-			CurrentRegionID = (ushort)SpawnRegion;
-			XP = MinotaurRelicManager.MAX_RELIC_EXP;
-			AddToWorld();
-			return 0;
-		}
+                foreach (GamePlayer plr in newPlayerlist)
+                {
+                    if (plr == null)
+                    {
+                        continue;
+                    }
 
-		public virtual void ManualRespawn()
-		{
-			if (respawntimer != null)
-			{
-				respawntimer.Stop();
-				respawntimer = null;
-			}
-			if (ObjectState == eObjectState.Active) return;
-			X = SpawnX;
-			Y = SpawnY;
-			Z = SpawnZ;
-			Heading = (ushort)SpawnHeading;
-			CurrentRegionID = (ushort)SpawnRegion;
-			XP = MinotaurRelicManager.MAX_RELIC_EXP;
-			AddToWorld();
-		}
+                    try
+                    {
+                        lock (plr.EffectList)
+                        {
+                            GameSpellEffect check = SpellHandler.FindEffectOnTarget(plr, _gameSpellEffect.Spell.SpellType);
+                            if (check == null)
+                            {
+                                ISpellHandler handler = ScriptMgr.CreateSpellHandler(plr, RelicSpell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+                                GameSpellEffect plreffect = null;
+                                if (handler != null)
+                                {
+                                    plreffect = new GameSpellEffect(handler, RelicSpell.Duration, 0);
+                                }
 
-		/// <summary>
-		/// Updates the Relic on the Warmap and such
-		/// </summary>
-		/// <param name="living"></param>
-		protected virtual void Update(GameLiving living)
-		{
-			if (living == null) return;
-			CurrentRegionID = living.CurrentRegionID;
-			X = living.X;
-			Y = living.Y;
-			Z = living.Z;
-			Heading = living.Heading;
-			foreach (GameClient clt in WorldMgr.GetClientsOfRegion(CurrentRegionID))
-			{
-				if (clt == null || clt.Player == null) continue;
-				if (XP > 0)
-					clt.Player.Out.SendMinotaurRelicMapUpdate((byte)RelicID, CurrentRegionID, X, Y, Z);
-				else
-					clt.Player.Out.SendMinotaurRelicMapRemove((byte)RelicID);
-			}
-		}
-		#endregion
+                                plreffect?.Start(plr);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        if (Log.IsErrorEnabled)
+                        {
+                            Log.Error($"Minotaur Relics : Effect Start : {e}");
+                        }
+                    }
+                }
 
-		#region Events
-		/// <summary>
-		/// Called to set the Events to the Carrier
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="start"></param>
-		protected virtual void SetHandlers(GamePlayer player, bool start)
-		{
-			if (start)
-			{
-				GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerAbsence));
-				GameEventMgr.AddHandler(player, GamePlayerEvent.Dying, new DOLEventHandler(PlayerAbsence));
-				GameEventMgr.AddHandler(player, GamePlayerEvent.Linkdeath, new DOLEventHandler(PlayerAbsence));
-				GameEventMgr.AddHandler(player, GamePlayerEvent.GainedRealmPoints, new DOLEventHandler(RealmPointGain));
-				GameEventMgr.AddHandler(player, GamePlayerEvent.RegionChanged, new DOLEventHandler(PlayerAbsence));
-				GameEventMgr.AddHandler(player, GamePlayerEvent.RegionChanging, new DOLEventHandler(PlayerAbsence));
-				GameEventMgr.AddHandler(player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(PlayerAbsence));
-				GameEventMgr.AddHandler(player, GamePlayerEvent.AcceptGroup, new DOLEventHandler(PlayerAbsence));
-			}
-			else
-			{
-				GameEventMgr.RemoveHandler(player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerAbsence));
-				GameEventMgr.RemoveHandler(player, GamePlayerEvent.Dying, new DOLEventHandler(PlayerAbsence));
-				GameEventMgr.RemoveHandler(player, GamePlayerEvent.Linkdeath, new DOLEventHandler(PlayerAbsence));
-				GameEventMgr.RemoveHandler(player, GamePlayerEvent.GainedRealmPoints, new DOLEventHandler(RealmPointGain));
-				GameEventMgr.RemoveHandler(player, GamePlayerEvent.RegionChanged, new DOLEventHandler(PlayerAbsence));
-				GameEventMgr.RemoveHandler(player, GamePlayerEvent.RegionChanging, new DOLEventHandler(PlayerAbsence));
-				GameEventMgr.RemoveHandler(player, GamePlayerEvent.StealthStateChanged, new DOLEventHandler(PlayerAbsence));
-				GameEventMgr.RemoveHandler(player, GamePlayerEvent.AcceptGroup, new DOLEventHandler(PlayerAbsence));
-			}
-		}
+                Playerlist = newPlayerlist;
+            }
+        }
 
-		protected void RealmPointGain(DOLEvent e, object sender, EventArgs args)
-		{
-			if (sender is GamePlayer && args is GainedRealmPointsEventArgs)
-			{
-				GamePlayer player = sender as GamePlayer;
-				GainedRealmPointsEventArgs arg = args as GainedRealmPointsEventArgs;
+        private void StopRelicEffect()
+        {
+            if (RelicSpell == null || _spellHandler == null || _gameSpellEffect == null)
+            {
+                return;
+            }
 
-				if (player.MinotaurRelic == null || arg == null) return;
+            lock (Playerlist)
+            {
+                foreach (GamePlayer plr in Playerlist)
+                {
+                    if (plr == null)
+                    {
+                        continue;
+                    }
 
-				if (player.MinotaurRelic.XP < MinotaurRelicManager.MAX_RELIC_EXP)
-					player.MinotaurRelic.XP += (int)arg.RealmPoints / 6;
-			}
-		}
+                    try
+                    {
+                        lock (plr.EffectList)
+                        {
+                            GameSpellEffect check = SpellHandler.FindEffectOnTarget(plr, _gameSpellEffect.Spell.SpellType);
+                            check?.Cancel(false);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        if (Log.IsErrorEnabled)
+                        {
+                            Log.Error($"Minotaur Relics : Stop Relic Effect : {e}");
+                        }
+                    }
+                }
 
-		protected void PlayerAbsence(DOLEvent e, object sender, EventArgs args)
-		{
-			if (!(sender is GamePlayer)) return;
-			GamePlayer player = sender as GamePlayer;
+                Playerlist.Clear();
+            }
+        }
 
-			if (e == GamePlayerEvent.AcceptGroup)
-			{
-				if (player.Group == null) return;
-				foreach (GamePlayer pl in player.Group.GetPlayersInTheGroup())
-				{
-					if (pl.MinotaurRelic != null)
-					{
-						player.Out.SendMessage("Someone in your group already has a Relic!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-						PlayerLoosesRelic(player, false);
-						return;
-					}
-				}
-				if (RelicTarget.ToLower() != "self") return;
-			}
-			PlayerLoosesRelic(player, false);
-		}
-		#endregion
+        /// <summary>
+        /// Is called whenever the CurrentCarrier is supposed to loose the relic.
+        /// </summary>
+        /// <param name="player">the player who loses the relic</param>
+        /// <param name="stop">True when we should stop the XP timer</param>
+        public virtual void PlayerLoosesRelic(GamePlayer player, bool stop)
+        {
+            StopRelicEffect();
+            player.Out.SendMinotaurRelicWindow(player, 0, false);
+            Update(player);
+            SetHandlers(player, false);
+            player.MinotaurRelic = null;
+            Owner = null;
+            if (stop && _timer != null)
+            {
+                _timer.Dispose();
+                _timer = null;
+            }
+
+            foreach (GamePlayer pl in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+            {
+                pl.Out.SendMinotaurRelicWindow(player, 0, false);
+            }
+
+            AddToWorld();
+        }
+
+        /// <summary>
+        /// Called when the Timer is reached
+        /// </summary>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        private void XpTimerCallBack(object state)
+        {
+            ApplyRelicEffect();
+
+            if (Xp - MinotaurRelicManager.XpLossPerTick < 0)
+            {
+                Xp = 0;
+            }
+            else
+            {
+                Xp -= MinotaurRelicManager.XpLossPerTick;
+            }
+
+            if (Owner != null)
+            {
+                Update(Owner);
+                Owner.Out.SendMinotaurRelicBarUpdate(Owner, (int)Xp);
+            }
+
+            if (Xp == 0)
+            {
+                RelicDispose();
+                return;
+            }
+
+            _timer?.Change(3000, Timeout.Infinite);
+        }
+
+        /// <summary>
+        /// Called when the Relic has reached 0 XP and drops
+        /// </summary>
+        public virtual void RelicDispose()
+        {
+            if (_timer != null)
+            {
+                _timer.Dispose();
+                _timer = null;
+            }
+
+            if (Owner != null)
+            {
+                PlayerLoosesRelic(Owner, true);
+            }
+
+            RemoveFromWorld();
+
+            if (Respawntimer != null)
+            {
+                Respawntimer.Stop();
+                Respawntimer = null;
+            }
+
+            Respawntimer = new RegionTimer(this, RespawnTimerCallback, Util.Random(MinotaurRelicManager.MinRespawnTimer, MinotaurRelicManager.MaxRespawnTimer));
+        }
+
+        /// <summary>
+        /// Called when the Respawntimer is reached
+        /// </summary>
+        /// <param name="respawnTimer"></param>
+        /// <returns></returns>
+        protected override int RespawnTimerCallback(RegionTimer respawnTimer)
+        {
+            if (Respawntimer != null)
+            {
+                Respawntimer.Stop();
+                Respawntimer = null;
+            }
+
+            if (ObjectState == eObjectState.Active)
+            {
+                return 0;
+            }
+
+            X = SpawnX;
+            Y = SpawnY;
+            Z = SpawnZ;
+            Heading = (ushort)SpawnHeading;
+            CurrentRegionID = (ushort)SpawnRegion;
+            Xp = MinotaurRelicManager.MaxRelicExp;
+            AddToWorld();
+            return 0;
+        }
+
+        public virtual void ManualRespawn()
+        {
+            if (Respawntimer != null)
+            {
+                Respawntimer.Stop();
+                Respawntimer = null;
+            }
+
+            if (ObjectState == eObjectState.Active)
+            {
+                return;
+            }
+
+            X = SpawnX;
+            Y = SpawnY;
+            Z = SpawnZ;
+            Heading = (ushort)SpawnHeading;
+            CurrentRegionID = (ushort)SpawnRegion;
+            Xp = MinotaurRelicManager.MaxRelicExp;
+            AddToWorld();
+        }
+
+        /// <summary>
+        /// Updates the Relic on the Warmap and such
+        /// </summary>
+        /// <param name="living"></param>
+        protected virtual void Update(GameLiving living)
+        {
+            if (living == null)
+            {
+                return;
+            }
+
+            CurrentRegionID = living.CurrentRegionID;
+            X = living.X;
+            Y = living.Y;
+            Z = living.Z;
+            Heading = living.Heading;
+            foreach (GameClient clt in WorldMgr.GetClientsOfRegion(CurrentRegionID))
+            {
+                if (clt?.Player == null)
+                {
+                    continue;
+                }
+
+                if (Xp > 0)
+                {
+                    clt.Player.Out.SendMinotaurRelicMapUpdate((byte)RelicId, CurrentRegionID, X, Y, Z);
+                }
+                else
+                {
+                    clt.Player.Out.SendMinotaurRelicMapRemove((byte)RelicId);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called to set the Events to the Carrier
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="start"></param>
+        protected virtual void SetHandlers(GamePlayer player, bool start)
+        {
+            if (start)
+            {
+                GameEventMgr.AddHandler(player, GamePlayerEvent.Quit, PlayerAbsence);
+                GameEventMgr.AddHandler(player, GameLivingEvent.Dying, PlayerAbsence);
+                GameEventMgr.AddHandler(player, GamePlayerEvent.Linkdeath, PlayerAbsence);
+                GameEventMgr.AddHandler(player, GameLivingEvent.GainedRealmPoints, RealmPointGain);
+                GameEventMgr.AddHandler(player, GamePlayerEvent.RegionChanged, PlayerAbsence);
+                GameEventMgr.AddHandler(player, GameLivingEvent.RegionChanging, PlayerAbsence);
+                GameEventMgr.AddHandler(player, GamePlayerEvent.StealthStateChanged, PlayerAbsence);
+                GameEventMgr.AddHandler(player, GamePlayerEvent.AcceptGroup, PlayerAbsence);
+            }
+            else
+            {
+                GameEventMgr.RemoveHandler(player, GamePlayerEvent.Quit, PlayerAbsence);
+                GameEventMgr.RemoveHandler(player, GameLivingEvent.Dying, PlayerAbsence);
+                GameEventMgr.RemoveHandler(player, GamePlayerEvent.Linkdeath, PlayerAbsence);
+                GameEventMgr.RemoveHandler(player, GameLivingEvent.GainedRealmPoints, RealmPointGain);
+                GameEventMgr.RemoveHandler(player, GamePlayerEvent.RegionChanged, PlayerAbsence);
+                GameEventMgr.RemoveHandler(player, GameLivingEvent.RegionChanging, PlayerAbsence);
+                GameEventMgr.RemoveHandler(player, GamePlayerEvent.StealthStateChanged, PlayerAbsence);
+                GameEventMgr.RemoveHandler(player, GamePlayerEvent.AcceptGroup, PlayerAbsence);
+            }
+        }
+
+        private void RealmPointGain(DOLEvent e, object sender, EventArgs args)
+        {
+            if (sender is GamePlayer player && args is GainedRealmPointsEventArgs arg)
+            {
+                if (player.MinotaurRelic == null)
+                {
+                    return;
+                }
+
+                if (player.MinotaurRelic.Xp < MinotaurRelicManager.MaxRelicExp)
+                {
+                    player.MinotaurRelic.Xp += (int)arg.RealmPoints / 6;
+                }
+            }
+        }
+
+        private void PlayerAbsence(DOLEvent e, object sender, EventArgs args)
+        {
+            if (!(sender is GamePlayer player))
+            {
+                return;
+            }
+
+            if (e == GamePlayerEvent.AcceptGroup)
+            {
+                if (player.Group == null)
+                {
+                    return;
+                }
+
+                foreach (GamePlayer pl in player.Group.GetPlayersInTheGroup())
+                {
+                    if (pl.MinotaurRelic != null)
+                    {
+                        player.Out.SendMessage("Someone in your group already has a Relic!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        PlayerLoosesRelic(player, false);
+                        return;
+                    }
+                }
+
+                if (RelicTarget.ToLower() != "self")
+                {
+                    return;
+                }
+            }
+
+            PlayerLoosesRelic(player, false);
+        }
 
         public override bool AddToWorld()
         {
@@ -639,23 +669,20 @@ namespace DOL.GS
                 {
                     if (ProtectorClassType != string.Empty)
                     {
-                        GameObject protector = (GameObject)(GetType().Assembly.CreateInstance(ProtectorClassType, false));
-                        if (protector.GetType() != null)
+                        GameObject protector = (GameObject)GetType().Assembly.CreateInstance(ProtectorClassType, false);
+                        if (protector != null)
                         {
-                            //each individual protector will need to have all info needed to add to world
-                            //location, name, model, level, etc. hard coded into its class type (script)
-                            //aswell as adding the Locked effect on the relic where it spawns, and removing
-                            //the effect when dead.
+                            // each individual protector will need to have all info needed to add to world
+                            // location, name, model, level, etc. hard coded into its class type (script)
+                            // aswell as adding the Locked effect on the relic where it spawns, and removing
+                            // the effect when dead.
                             protector.AddToWorld();
 
                             return base.AddToWorld();
                         }
-                        else
-                        {
-                            log.Debug(string.Format("[Minotaur Relic] ClassType: {0} was not found, Relic not loaded!", ProtectorClassType));
-                            return false;
-                        }
 
+                        Log.Debug($"[Minotaur Relic] ClassType: {ProtectorClassType} was not found, Relic not loaded!");
+                        return false;
                     }
                 }
             }
@@ -663,19 +690,23 @@ namespace DOL.GS
             return base.AddToWorld();
         }
 
-		public override string ToString()
-		{
-			StringBuilder sb = new StringBuilder();
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
 
-			sb.Append("name: ").Append(Name).Append("\n")
-				.Append("RelicID: ").Append(RelicID).Append("\n");
+            sb.Append("name: ").Append(Name).Append("\n")
+                .Append("RelicID: ").Append(RelicId).Append("\n");
 
-			if (Owner != null)
-				sb.Append("Owner: " + Owner.Name);
-			else
-				sb.Append("Owner: No Owner");
+            if (Owner != null)
+            {
+                sb.Append($"Owner: {Owner.Name}");
+            }
+            else
+            {
+                sb.Append("Owner: No Owner");
+            }
 
-			return sb.ToString();
-		}
-	}
+            return sb.ToString();
+        }
+    }
 }

@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -24,12 +24,12 @@ using DOL.Language;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// The helper class for the stag ability
-	/// </summary>
-	public class StagEffect : TimedEffect, IGameEffect
-	{
-		/*
+    /// <summary>
+    /// The helper class for the stag ability
+    /// </summary>
+    public class StagEffect : TimedEffect
+    {
+        /*
         1.42
         Hibernian Heroes have receieved a new ability - "Spirit of the Hunt".
         Whenever this ability is used, the Hero will shapeshift into a fearsome
@@ -46,113 +46,137 @@ namespace DOL.GS.Effects
         male and female Heroes will both shapeshift into the same creature.
         */
 
-		// some time after a lurikeen model was added for luri's
+        // some time after a lurikeen model was added for luri's
 
-		/// <summary>
-		/// The amount of max health gained
-		/// </summary>
-		protected int m_amount;
+        /// <summary>
+        /// The ability effect duration in milliseconds
+        /// </summary>
+        private const int Duration = 30 * 1000; // 30 seconds
 
-		protected ushort m_originalModel;
+        /// <summary>
+        /// The amount of max health gained
+        /// </summary>
+        protected int m_amount;
 
-		protected int m_level;
+        protected ushort m_originalModel;
 
-		/// <summary>
-		/// Creates a new stag effect
-		/// </summary>
-		public StagEffect(int level)
-			: base(StagAbilityHandler.DURATION)
-		{
-			m_level = level;
-		}
+        protected int m_level;
 
-		/// <summary>
-		/// Start the stag on player
-		/// </summary>
-		/// <param name="living">The living object the effect is being started on</param>
-		public override void Start(GameLiving living)
-		{
-			base.Start(living);
+        /// <summary>
+        /// Creates a new stag effect
+        /// </summary>
+        public StagEffect(int level)
+            : base(Duration)
+        {
+            m_level = level;
+        }
 
-			m_originalModel = living.Model;
+        /// <summary>
+        /// Start the stag on player
+        /// </summary>
+        /// <param name="living">The living object the effect is being started on</param>
+        public override void Start(GameLiving living)
+        {
+            base.Start(living);
 
-			if (living is GamePlayer)
-			{
-				if ((living as GamePlayer).Race == (int)eRace.Lurikeen)
-					living.Model = 859;
-				else living.Model = 583;
-			}			
+            m_originalModel = living.Model;
 
+            if (living is GamePlayer)
+            {
+                if ((living as GamePlayer).Race == (int)eRace.Lurikeen)
+                {
+                    living.Model = 859;
+                }
+                else
+                {
+                    living.Model = 583;
+                }
+            }
 
-			double m_amountPercent = (m_level + 0.5 + Util.RandomDouble()) / 10; //+-5% random
-			if (living is GamePlayer)
-				m_amount = (int)((living as GamePlayer).CalculateMaxHealth(living.Level, living.GetModified(eProperty.Constitution)) * m_amountPercent);
-			else m_amount = (int)(living.MaxHealth * m_amountPercent);
+            double m_amountPercent = (m_level + 0.5 + Util.RandomDouble()) / 10; // +-5% random
+            if (living is GamePlayer)
+            {
+                m_amount = (int)((living as GamePlayer).CalculateMaxHealth(living.Level, living.GetModified(eProperty.Constitution)) * m_amountPercent);
+            }
+            else
+            {
+                m_amount = (int)(living.MaxHealth * m_amountPercent);
+            }
 
-			living.BaseBuffBonusCategory[(int)eProperty.MaxHealth] += m_amount;
-			living.Health += (int)(living.GetModified(eProperty.MaxHealth) * m_amountPercent);
-			if (living.Health > living.MaxHealth) living.Health = living.MaxHealth;
+            living.BaseBuffBonusCategory[(int)eProperty.MaxHealth] += m_amount;
+            living.Health += (int)(living.GetModified(eProperty.MaxHealth) * m_amountPercent);
+            if (living.Health > living.MaxHealth)
+            {
+                living.Health = living.MaxHealth;
+            }
 
-			living.Emote(eEmote.StagFrenzy);
+            living.Emote(eEmote.StagFrenzy);
 
-			if (living is GamePlayer)
-			{
-				(living as GamePlayer).Out.SendUpdatePlayer();
-				(living as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((living as GamePlayer).Client, "Effects.StagEffect.HuntsSpiritChannel"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-			}
-		}
+            if (living is GamePlayer)
+            {
+                (living as GamePlayer).Out.SendUpdatePlayer();
+                (living as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((living as GamePlayer).Client, "Effects.StagEffect.HuntsSpiritChannel"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+            }
+        }
 
-		public override void Stop()
-		{
-			base.Stop();
-			m_owner.Model = m_originalModel;
+        public override void Stop()
+        {
+            base.Stop();
+            m_owner.Model = m_originalModel;
 
-			double m_amountPercent = m_amount / m_owner.GetModified(eProperty.MaxHealth);
-			int playerHealthPercent = m_owner.HealthPercent;
-			m_owner.BaseBuffBonusCategory[(int)eProperty.MaxHealth] -= m_amount;
-			if (m_owner.IsAlive)
-				m_owner.Health = (int)Math.Max(1, 0.01 * m_owner.MaxHealth * playerHealthPercent);
+            double m_amountPercent = m_amount / m_owner.GetModified(eProperty.MaxHealth);
+            int playerHealthPercent = m_owner.HealthPercent;
+            m_owner.BaseBuffBonusCategory[(int)eProperty.MaxHealth] -= m_amount;
+            if (m_owner.IsAlive)
+            {
+                m_owner.Health = (int)Math.Max(1, 0.01 * m_owner.MaxHealth * playerHealthPercent);
+            }
 
-			if (m_owner is GamePlayer)
-			{
-				(m_owner as GamePlayer).Out.SendUpdatePlayer();
-				// there is no animation on end of the effect
-				(m_owner as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((m_owner as GamePlayer).Client, "Effects.StagEffect.YourHuntsSpiritEnds"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
-			}
-		}
+            if (m_owner is GamePlayer)
+            {
+                (m_owner as GamePlayer).Out.SendUpdatePlayer();
 
-		/// <summary>
-		/// Name of the effect
-		/// </summary>
-		public override string Name { get { return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.StagEffect.Name"); } }
+                // there is no animation on end of the effect
+                (m_owner as GamePlayer).Out.SendMessage(LanguageMgr.GetTranslation((m_owner as GamePlayer).Client, "Effects.StagEffect.YourHuntsSpiritEnds"), eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+            }
+        }
 
-		/// <summary>
-		/// Icon to show on players, can be id
-		/// </summary>
-		public override ushort Icon { get { return 480; } }
+        /// <summary>
+        /// Name of the effect
+        /// </summary>
+        public override string Name { get { return LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.StagEffect.Name"); } }
 
-		/// <summary>
-		/// Delve Info
-		/// </summary>
-		public override IList<string> DelveInfo
-		{
-			get
-			{
-				var delveInfoList = new List<string>(4);
-				delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.StagEffect.InfoEffect"));
+        /// <summary>
+        /// Icon to show on players, can be id
+        /// </summary>
+        public override ushort Icon { get { return 480; } }
 
-				int seconds = RemainingTime / 1000;
-				if (seconds > 0)
-				{
-					delveInfoList.Add(" "); //empty line
-					if (seconds > 60)
-						delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.DelveInfo.MinutesRemaining", (seconds / 60), (seconds % 60).ToString("00")));
-					else
-						delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.DelveInfo.SecondsRemaining", seconds));
-				}
+        /// <summary>
+        /// Delve Info
+        /// </summary>
+        public override IList<string> DelveInfo
+        {
+            get
+            {
+                var delveInfoList = new List<string>(4);
+                delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.StagEffect.InfoEffect"));
 
-				return delveInfoList;
-			}
-		}
-	}
+                int seconds = RemainingTime / 1000;
+                if (seconds > 0)
+                {
+                    delveInfoList.Add(" "); // empty line
+                    if (seconds > 60)
+                    {
+                        delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.DelveInfo.MinutesRemaining", seconds / 60, (seconds % 60).ToString("00")));
+                    }
+                    else
+                    {
+                        delveInfoList.Add(LanguageMgr.GetTranslation(((GamePlayer)Owner).Client, "Effects.DelveInfo.SecondsRemaining", seconds));
+                    }
+                }
+
+                return delveInfoList;
+            }
+        }
+    }
 }

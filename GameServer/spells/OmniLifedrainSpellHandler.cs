@@ -17,155 +17,189 @@
  *
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	///
-	/// </summary>
-	[SpellHandlerAttribute("OmniLifedrain")]
-	public class OmniLifedrainSpellHandler : DirectDamageSpellHandler
-	{
-		/// <summary>
-		/// execute direct effect
-		/// </summary>
-		/// <param>target that gets the damage</param>
-		/// <param>factor from 0..1 (0%-100%)</param>
-		public override void OnDirectEffect(GameLiving target, double effectiveness)
-		{
-			if (target == null) return;
-			if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
+    /// <summary>
+    ///
+    /// </summary>
+    [SpellHandler("OmniLifedrain")]
+    public class OmniLifedrainSpellHandler : DirectDamageSpellHandler
+    {
+        /// <summary>
+        /// execute direct effect
+        /// </summary>
+        /// <param>target that gets the damage</param>
+        /// <param>factor from 0..1 (0%-100%)</param>
+        public override void OnDirectEffect(GameLiving target, double effectiveness)
+        {
+            if (target == null)
+            {
+                return;
+            }
 
-			// calc damage and healing
-			AttackData ad = CalculateDamageToTarget(target, effectiveness);
-			SendDamageMessages(ad);
-			DamageTarget(ad, true);
-			StealLife(ad);
-			StealEndo(ad);
-			StealPower(ad);
-			target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster);
-		}
+            if (!target.IsAlive || target.ObjectState != GameObject.eObjectState.Active)
+            {
+                return;
+            }
 
-		/// <summary>
-		/// Uses percent of damage to heal the caster
-		/// </summary>
-		public virtual void StealLife(AttackData ad)
-		{
-			if (ad == null) return;
-			if (!m_caster.IsAlive) return;
+            // calc damage and healing
+            AttackData ad = CalculateDamageToTarget(target, effectiveness);
+            SendDamageMessages(ad);
+            DamageTarget(ad, true);
+            StealLife(ad);
+            StealEndo(ad);
+            StealPower(ad);
+            target.StartInterruptTimer(target.SpellInterruptDuration, ad.AttackType, Caster);
+        }
 
-			int heal = (ad.Damage + ad.CriticalDamage)* Spell.LifeDrainReturn / 100; // % factor on all drains
-			if (m_caster.IsDiseased)
-			{
-				MessageToCaster("You are diseased!", eChatType.CT_SpellResisted);
-				heal >>= 1;
-			}
+        /// <summary>
+        /// Uses percent of damage to heal the caster
+        /// </summary>
+        public virtual void StealLife(AttackData ad)
+        {
+            if (ad == null)
+            {
+                return;
+            }
 
-            heal = m_caster.ChangeHealth(m_caster, GameLiving.eHealthChangeType.Spell, heal);
+            if (!Caster.IsAlive)
+            {
+                return;
+            }
 
-			if (heal > 0)
-			{
-				MessageToCaster("You steal " + heal + " hit point" + (heal == 1 ? "." : "s."), eChatType.CT_Spell);
+            int heal = (ad.Damage + ad.CriticalDamage) * Spell.LifeDrainReturn / 100; // % factor on all drains
+            if (Caster.IsDiseased)
+            {
+                MessageToCaster("You are diseased!", eChatType.CT_SpellResisted);
+                heal >>= 1;
+            }
 
+            heal = Caster.ChangeHealth(Caster, GameLiving.eHealthChangeType.Spell, heal);
 
-                #region PVP DAMAGE
+            if (heal > 0)
+            {
+                MessageToCaster($"You steal {heal} hit point{(heal == 1 ? "." : "s.")}", eChatType.CT_Spell);
 
-                if (m_caster is NecromancerPet && ((m_caster as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || m_caster is GamePlayer)
+                if (((Caster as NecromancerPet)?.Brain as IControlledBrain)?.GetPlayerOwner() != null || Caster is GamePlayer)
                 {
-                    if (m_caster.DamageRvRMemory > 0)
-                        m_caster.DamageRvRMemory -= (long)Math.Max(heal, 0);
+                    if (Caster.DamageRvRMemory > 0)
+                    {
+                        Caster.DamageRvRMemory -= Math.Max(heal, 0);
+                    }
+                }
+            }
+            else
+            {
+                MessageToCaster("You cannot absorb any more life.", eChatType.CT_SpellResisted);
+
+                if (((Caster as NecromancerPet)?.Brain as IControlledBrain)?.GetPlayerOwner() != null || Caster is GamePlayer)
+                {
+                    if (Caster.DamageRvRMemory > 0)
+                    {
+                        Caster.DamageRvRMemory = 0; // Remise a zéro compteur dommages/heal rps
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Uses percent of damage to renew endurance
+        /// </summary>
+        public virtual void StealEndo(AttackData ad)
+        {
+            if (ad == null)
+            {
+                return;
+            }
+
+            if (!Caster.IsAlive)
+            {
+                return;
+            }
+
+            int renew = (ad.Damage + ad.CriticalDamage) * Spell.ResurrectHealth / 100 * Spell.LifeDrainReturn / 100; // %endo returned
+            renew = Caster.ChangeEndurance(Caster, GameLiving.eEnduranceChangeType.Spell, renew);
+            if (renew > 0)
+            {
+                MessageToCaster($"You steal {renew} endurance.", eChatType.CT_Spell);
+            }
+            else
+            {
+                MessageToCaster("You cannot steal any more endurance.", eChatType.CT_SpellResisted);
+            }
+        }
+
+        /// <summary>
+        /// Uses percent of damage to replenish power
+        /// </summary>
+        public virtual void StealPower(AttackData ad)
+        {
+            if (ad == null)
+            {
+                return;
+            }
+
+            if (!Caster.IsAlive)
+            {
+                return;
+            }
+
+            int replenish = (ad.Damage + ad.CriticalDamage) * Spell.ResurrectMana / 100 * Spell.LifeDrainReturn / 100; // %mana returned
+            replenish = Caster.ChangeMana(Caster, GameLiving.eManaChangeType.Spell, replenish);
+            if (replenish > 0)
+            {
+                MessageToCaster($"You steal {replenish} power.", eChatType.CT_Spell);
+            }
+            else
+            {
+                MessageToCaster("Your power is already full.", eChatType.CT_SpellResisted);
+            }
+        }
+
+        /// <summary>
+        /// Calculates the base 100% spell damage which is then modified by damage variance factors
+        /// </summary>
+        /// <returns></returns>
+        public override double CalculateDamageBase(GameLiving target)
+        {
+            double spellDamage = Spell.Damage;
+            return spellDamage;
+        }
+
+        // constructor
+        public OmniLifedrainSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        public override IList<string> DelveInfo
+        {
+            get
+            {
+                var list = new List<string>();
+
+                // Name
+                list.Add("omni-lifedrain \n");
+
+                // Description
+                list.Add("Damages the target. A portion of damage is returned to the caster as health, power, and endurance.\n");
+                list.Add($"Damage: {Spell.Damage}");
+                list.Add($"Health returned: {Spell.LifeDrainReturn}% of damage dealt \n Power returned: {Spell.ResurrectMana}% of damage dealt \n Endurance returned: {Spell.ResurrectHealth}% of damage dealt");
+                list.Add($"Target: {Spell.Target}");
+                if (Spell.Range != 0)
+                {
+                    list.Add($"Range: {Spell.Range}");
                 }
 
-                #endregion PVP DAMAGE
-
-			}
-			else
-			{
-				MessageToCaster("You cannot absorb any more life.", eChatType.CT_SpellResisted);
-
-                #region PVP DAMAGE
-
-                if (m_caster is NecromancerPet && ((m_caster as NecromancerPet).Brain as IControlledBrain).GetPlayerOwner() != null || m_caster is GamePlayer)
+                list.Add($"Casting time: {Spell.CastTime * 0.001:0.0## sec;-0.0## sec;'instant'}");
+                if (Spell.DamageType != eDamageType.Natural)
                 {
-                    if (m_caster.DamageRvRMemory > 0)
-                        m_caster.DamageRvRMemory = 0; //Remise a zéro compteur dommages/heal rps
+                    list.Add($"Damage: {GlobalConstants.DamageTypeToName(Spell.DamageType)}");
                 }
-                #endregion PVP DAMAGE
-			}
-		}
-		/// <summary>
-		/// Uses percent of damage to renew endurance
-		/// </summary>
-		public virtual void StealEndo(AttackData ad)
-		{
-			if (ad == null) return;
-			if (!m_caster.IsAlive) return;
 
-			int renew = ((ad.Damage + ad.CriticalDamage) * Spell.ResurrectHealth / 100) * Spell.LifeDrainReturn / 100; // %endo returned
-            renew = m_caster.ChangeEndurance(m_caster, GameLiving.eEnduranceChangeType.Spell, renew);
-			if (renew > 0)
-			{
-				MessageToCaster("You steal " + renew + " endurance.", eChatType.CT_Spell);
-			}
-			else
-			{
-				MessageToCaster("You cannot steal any more endurance.", eChatType.CT_SpellResisted);
-			}
-		}
-		/// <summary>
-		/// Uses percent of damage to replenish power
-		/// </summary>
-		public virtual void StealPower(AttackData ad)
-		{
-			if (ad == null) return;
-			if (!m_caster.IsAlive) return;
-
-			int replenish = ((ad.Damage + ad.CriticalDamage) * Spell.ResurrectMana  / 100) * Spell.LifeDrainReturn / 100; // %mana returned
-            replenish = m_caster.ChangeMana(m_caster, GameLiving.eManaChangeType.Spell, replenish);
-			if (replenish > 0)
-			{
-				MessageToCaster("You steal " + replenish + " power.", eChatType.CT_Spell);
-			}
-			else
-			{
-				MessageToCaster("Your power is already full.", eChatType.CT_SpellResisted);
-			}
-		}
-
-		/// <summary>
-		/// Calculates the base 100% spell damage which is then modified by damage variance factors
-		/// </summary>
-		/// <returns></returns>
-		public override double CalculateDamageBase(GameLiving target)
-		{
-			double spellDamage = Spell.Damage;
-			return spellDamage;
-		}
-
-		// constructor
-		public OmniLifedrainSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-		public override IList<string> DelveInfo
-		{
-			get
-			{
-				var list = new List<string>();
-				//Name
-				list.Add("omni-lifedrain \n");
-				//Description
-				list.Add("Damages the target. A portion of damage is returned to the caster as health, power, and endurance.\n");
-				list.Add("Damage: " + Spell.Damage);
-                list.Add("Health returned: " + Spell.LifeDrainReturn + "% of damage dealt \n Power returned: " + Spell.ResurrectMana  + "% of damage dealt \n Endurance returned: "+ Spell.ResurrectHealth  +"% of damage dealt");
-				list.Add("Target: " + Spell.Target);
-				if (Spell.Range != 0) list.Add("Range: " + Spell.Range);
-				list.Add("Casting time: " + (Spell.CastTime * 0.001).ToString("0.0## sec;-0.0## sec;'instant'"));
-				if (Spell.DamageType != eDamageType.Natural)
-					list.Add("Damage: " + GlobalConstants.DamageTypeToName(Spell.DamageType));
-				return list;
-			}
-		}
-	}
+                return list;
+            }
+        }
+    }
 }

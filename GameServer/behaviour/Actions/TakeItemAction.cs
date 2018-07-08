@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -18,31 +18,25 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.Events;
 using DOL.GS.Behaviour.Attributes;
-using DOL.GS.Behaviour;
 using DOL.Database;
-using System.Collections;
 using DOL.Language;
 
 namespace DOL.GS.Behaviour.Actions
 {
-    [ActionAttribute(ActionType = eActionType.TakeItem,DefaultValueQ=1)]
+    [Action(ActionType = eActionType.TakeItem,DefaultValueQ=1)]
     public class TakeItemAction : AbstractAction<ItemTemplate, int>
     {
 
-        public TakeItemAction(GameNPC defaultNPC,  Object p, Object q)
+        public TakeItemAction(GameNPC defaultNPC,  object p, object q)
             : base(defaultNPC, eActionType.TakeItem, p, q)
         {
         }
 
-
         public TakeItemAction(GameNPC defaultNPC,   ItemTemplate itemTemplate, int quantity)
-            : this(defaultNPC, (object)itemTemplate,(object) quantity) { }
-
-
+            : this(defaultNPC, (object)itemTemplate, (object)quantity) { }
 
         public override void Perform(DOLEvent e, object sender, EventArgs args)
         {
@@ -50,7 +44,7 @@ namespace DOL.GS.Behaviour.Actions
             int count = Q;
             ItemTemplate itemToRemove = P;
 
-			Dictionary<InventoryItem, int?> dataSlots = new Dictionary<InventoryItem, int?>(10);
+            Dictionary<InventoryItem, int?> dataSlots = new Dictionary<InventoryItem, int?>(10);
             lock (player.Inventory)
             {
                 var allBackpackItems = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
@@ -73,6 +67,7 @@ namespace DOL.GS.Behaviour.Actions
                                 {
                                     dataSlots.Add(item, count);
                                 }
+
                                 result = true;
                                 break;
                             }
@@ -97,6 +92,7 @@ namespace DOL.GS.Behaviour.Actions
                         }
                     }
                 }
+
                 if (result == false)
                 {
                     return;
@@ -104,13 +100,13 @@ namespace DOL.GS.Behaviour.Actions
 
                 GamePlayerInventory playerInventory = player.Inventory as GamePlayerInventory;
                 playerInventory.BeginChanges();
-				Dictionary<InventoryItem, int?>.Enumerator enumerator = dataSlots.GetEnumerator();
+                Dictionary<InventoryItem, int?>.Enumerator enumerator = dataSlots.GetEnumerator();
                 while (enumerator.MoveNext())
                 {
-		
-		KeyValuePair<InventoryItem, int?> de = enumerator.Current;
-                    
-		if (de.Value.HasValue)
+
+        KeyValuePair<InventoryItem, int?> de = enumerator.Current;
+
+        if (de.Value.HasValue)
                     {
                         playerInventory.RemoveItem(de.Key);
                         InventoryLogging.LogInventoryAction(player, NPC, eInventoryActionType.Quest, de.Key.Template, de.Key.Count);
@@ -121,6 +117,7 @@ namespace DOL.GS.Behaviour.Actions
                         InventoryLogging.LogInventoryAction(player, NPC, eInventoryActionType.Quest, de.Key.Template, de.Value.Value);
                     }
                 }
+
                 playerInventory.CommitChanges();
 
                 if (NPC != null)

@@ -16,32 +16,30 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Albion Heretic Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Heretic, "Heretic", "Acolyte")]
-	public class ClassHeretic : ClassAcolyte
-	{
-		public ClassHeretic()
-			: base()
-		{
-			m_profession = "PlayerClass.Profession.TempleofArawn";
-			m_specializationMultiplier = 20;
-			m_primaryStat = eStat.PIE;
-			m_secondaryStat = eStat.DEX;
-			m_tertiaryStat = eStat.CON;
-			m_manaStat = eStat.PIE;
-			m_wsbase = 360;
-			m_baseHP = 720;
-		}
+    /// <summary>
+    /// Albion Heretic Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Heretic, "Heretic", "Acolyte")]
+    public class ClassHeretic : ClassAcolyte
+    {
+        public ClassHeretic()
+        {
+            Profession = "PlayerClass.Profession.TempleofArawn";
+            SpecPointsMultiplier = 20;
+            PrimaryStat = eStat.PIE;
+            SecondaryStat = eStat.DEX;
+            TertiaryStat = eStat.CON;
+            ManaStat = eStat.PIE;
+            WeaponSkillBase = 360;
+            BaseHP = 720;
+        }
 
-		public override bool HasAdvancedFromBaseClass()
-		{
-			return true;
-		}
-	}
+        public override bool HasAdvancedFromBaseClass()
+        {
+            return true;
+        }
+    }
 }

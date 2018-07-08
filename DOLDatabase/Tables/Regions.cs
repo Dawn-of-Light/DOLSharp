@@ -1,16 +1,16 @@
 ﻿/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -69,15 +69,15 @@ namespace DOL.Database
         /// </summary>
         private int m_waterLevel;
 
-		/// <summary>
-		/// The class of this region
-		/// </summary>
-		private string m_classType;
+        /// <summary>
+        /// The class of this region
+        /// </summary>
+        private string m_classType;
 
-		/// <summary>
-		/// Should this region be treated as the Frontiers?
-		/// </summary>
-		private bool m_isFrontier;
+        /// <summary>
+        /// Should this region be treated as the Frontiers?
+        /// </summary>
+        private bool m_isFrontier;
 
         public DBRegions()
         {
@@ -90,8 +90,8 @@ namespace DOL.Database
             m_housingEnabled = false;
             m_divingEnabled = false;
             m_waterLevel = 0;
-			m_classType = string.Empty;
-			m_isFrontier = false;
+            m_classType = string.Empty;
+            m_isFrontier = false;
         }
 
         /// <summary>
@@ -101,6 +101,7 @@ namespace DOL.Database
         public ushort RegionID
         {
             get { return m_regionID; }
+
             set
             {
                 Dirty = true;
@@ -115,6 +116,7 @@ namespace DOL.Database
         public string Name
         {
             get { return m_name; }
+
             set
             {
                 Dirty = true;
@@ -129,6 +131,7 @@ namespace DOL.Database
         public string Description
         {
             get { return m_description; }
+
             set
             {
                 Dirty = true;
@@ -143,6 +146,7 @@ namespace DOL.Database
         public string IP
         {
             get { return m_ip; }
+
             set
             {
                 Dirty = true;
@@ -157,6 +161,7 @@ namespace DOL.Database
         public ushort Port
         {
             get { return m_port; }
+
             set
             {
                 Dirty = true;
@@ -171,6 +176,7 @@ namespace DOL.Database
         public int Expansion
         {
             get { return m_expansion; }
+
             set
             {
                 Dirty = true;
@@ -185,6 +191,7 @@ namespace DOL.Database
         public bool HousingEnabled
         {
             get { return m_housingEnabled; }
+
             set
             {
                 Dirty = true;
@@ -199,6 +206,7 @@ namespace DOL.Database
         public bool DivingEnabled
         {
             get { return m_divingEnabled; }
+
             set
             {
                 Dirty = true;
@@ -213,6 +221,7 @@ namespace DOL.Database
         public int WaterLevel
         {
             get { return m_waterLevel; }
+
             set
             {
                 Dirty = true;
@@ -220,32 +229,34 @@ namespace DOL.Database
             }
         }
 
-		/// <summary>
-		/// Gets or sets the region class.
-		/// </summary>
-		[DataElement(AllowDbNull = false, Varchar = 200)]
-		public string ClassType
-		{
-			get { return m_classType; }
-			set
-			{
-				Dirty = true;
-				m_classType = value;
-			}
-		}
+        /// <summary>
+        /// Gets or sets the region class.
+        /// </summary>
+        [DataElement(AllowDbNull = false, Varchar = 200)]
+        public string ClassType
+        {
+            get { return m_classType; }
 
-		/// <summary>
-		/// Should the keep manager manage keeps in this region?
-		/// </summary>
-		[DataElement(AllowDbNull = false)]
-		public bool IsFrontier
-		{
-			get { return m_isFrontier; }
-			set
-			{
-				Dirty = true;
-				m_isFrontier = value;
-			}
-		}
-	}
+            set
+            {
+                Dirty = true;
+                m_classType = value;
+            }
+        }
+
+        /// <summary>
+        /// Should the keep manager manage keeps in this region?
+        /// </summary>
+        [DataElement(AllowDbNull = false)]
+        public bool IsFrontier
+        {
+            get { return m_isFrontier; }
+
+            set
+            {
+                Dirty = true;
+                m_isFrontier = value;
+            }
+        }
+    }
 }

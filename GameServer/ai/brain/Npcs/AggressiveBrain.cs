@@ -18,13 +18,11 @@
  */
 using System;
 using System.Collections.Generic;
-using DOL.Database;
 using DOL.GS;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerProperties;
 using DOL.GS.Spells;
-using System.Collections;
 using log4net;
 using System.Reflection;
 
@@ -44,7 +42,7 @@ namespace DOL.AI.Brain
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public AggressiveBrain()
-        {           
+        {
         }
 
         /// <summary>
@@ -62,15 +60,19 @@ namespace DOL.AI.Brain
         public override void Think()
         {
             if (Body.IsIncapacitated || Body.IsReturningToSpawnPoint)
+            {
                 return;
+            }
 
             if (IsEngaged)
+            {
                 PickTarget();
+            }
             else
+            {
                 OnIdle();
+            }
         }
-
-        #region Behaviour
 
         private object m_syncBehaviour = new object();
 
@@ -83,7 +85,9 @@ namespace DOL.AI.Brain
                 lock (m_syncBehaviour)
                 {
                     if (m_passiveBehaviour == null)
+                    {
                         m_passiveBehaviour = new PassiveBehaviour();
+                    }
                 }
 
                 return m_passiveBehaviour;
@@ -99,7 +103,9 @@ namespace DOL.AI.Brain
                 lock (m_syncBehaviour)
                 {
                     if (m_meleeBehaviour == null)
+                    {
                         m_meleeBehaviour = new MeleeBehaviour(Body);
+                    }
                 }
 
                 return m_meleeBehaviour;
@@ -115,7 +121,9 @@ namespace DOL.AI.Brain
                 lock (m_syncBehaviour)
                 {
                     if (m_castingBehaviour == null)
+                    {
                         m_castingBehaviour = new CastingBehaviour(Body);
+                    }
                 }
 
                 return m_castingBehaviour;
@@ -134,7 +142,9 @@ namespace DOL.AI.Brain
                 lock (m_syncBehaviour)
                 {
                     if (m_attackBehaviour == null)
+                    {
                         m_attackBehaviour = PassiveBehaviour;
+                    }
                 }
 
                 return m_attackBehaviour;
@@ -143,13 +153,11 @@ namespace DOL.AI.Brain
             set
             {
                 lock (m_syncBehaviour)
+                {
                     m_attackBehaviour = value;
+                }
             }
         }
-
-        #endregion
-
-        #region Idle handler.
 
         /// <summary>
         /// The NPC has nothing to do.
@@ -157,7 +165,9 @@ namespace DOL.AI.Brain
         protected virtual void OnIdle()
         {
             if (Body == null)
+            {
                 return;
+            }
 
             foreach (GamePlayer player in Body.GetPlayersInRadius(AggressionRange))
             {
@@ -187,7 +197,7 @@ namespace DOL.AI.Brain
 
         /// <summary>
         /// Chance to aggro on this living; the default implementation
-        /// is a flat chance if the living is attackable. A custom implementation 
+        /// is a flat chance if the living is attackable. A custom implementation
         /// could make this dependent on distance, faction, whatever.
         /// </summary>
         /// <param name="living"></param>
@@ -199,17 +209,15 @@ namespace DOL.AI.Brain
                 : (ushort)0;
         }
 
-        #endregion
-
-        #region Aggression handler.
-
         /// <summary>
         /// Pick the next target.
         /// </summary>
         private void PickTarget()
         {
             if (Body.IsIncapacitated)
+            {
                 return;
+            }
 
             GameLiving target = Aggression.PrimaryTarget;
 
@@ -225,15 +233,19 @@ namespace DOL.AI.Brain
             {
                 if (AttackBehaviour is PassiveBehaviour)
                 {
-                    AttackBehaviour = (Body.CanCastHarmfulSpells)
+                    AttackBehaviour = Body.CanCastHarmfulSpells
                         ? CastingBehaviour
                         : MeleeBehaviour;
                 }
                 else
                 {
                     if (AttackBehaviour is MeleeBehaviour)
+                    {
                         if (Body.CanCastHarmfulSpells && Util.Chance(Properties.GAMENPC_CHANCES_TO_CAST))
+                        {
                             AttackBehaviour = CastingBehaviour;
+                        }
+                    }
                 }
 
                 AttackBehaviour.Attack(target);
@@ -248,12 +260,16 @@ namespace DOL.AI.Brain
         protected virtual void OnAttacked(AttackData attackData)
         {
             if (attackData == null)
+            {
                 return;
+            }
 
             if (attackData.Target == Body)
             {
                 if (Body.IsReturningToSpawnPoint)
+                {
                     Body.CancelWalkToSpawn();
+                }
 
                 if (!attackData.IsMeleeAttack)
                 {
@@ -295,10 +311,14 @@ namespace DOL.AI.Brain
         protected virtual void OnEnemyHealed(GameObject source, int amount)
         {
             if (source == null)
+            {
                 return;
+            }
 
             if (source is GameLiving && amount > 1)
+            {
                 Aggression.Raise(source as GameLiving, amount / 2);
+            }
 
             // TODO: Track the source of the heal, e.g. if the heal originated
             //       from an object, find out who the owner is.
@@ -312,7 +332,9 @@ namespace DOL.AI.Brain
         protected virtual void OnEnemyKilled(GameLiving living)
         {
             if (living == null)
+            {
                 return;
+            }
 
             Aggression.Remove(living);
         }
@@ -338,10 +360,6 @@ namespace DOL.AI.Brain
             }
         }
 
-        #endregion
-
-        #region Notify handler.
-
         /// <summary>
         /// Process game events.
         /// </summary>
@@ -353,7 +371,6 @@ namespace DOL.AI.Brain
             base.Notify(e, sender, args);
 
             // Process body only related events first.
-
             if (sender == Body)
             {
                 if (e == GameNPCEvent.ArriveAtSpawnPoint)
@@ -370,7 +387,7 @@ namespace DOL.AI.Brain
                     return;
                 }
 
-                if (e == GameLivingEvent.CastFinished || e == GameNPCEvent.CastFinished || 
+                if (e == GameLivingEvent.CastFinished || e == GameNPCEvent.CastFinished ||
                     e == GameLivingEvent.CrowdControlExpired ||
                     e == GameLivingEvent.InterruptExpired)
                 {
@@ -401,9 +418,11 @@ namespace DOL.AI.Brain
                 if (args is EnemyHealedEventArgs)
                 {
                     EnemyHealedEventArgs healed = args as EnemyHealedEventArgs;
-                    
+
                     if (IsEnemy(healed.Enemy))
+                    {
                         OnEnemyHealed(healed.HealSource, healed.HealAmount);
+                    }
                 }
 
                 return;
@@ -416,7 +435,9 @@ namespace DOL.AI.Brain
                     EnemyKilledEventArgs killed = args as EnemyKilledEventArgs;
 
                     if (IsEnemy(killed.Target))
+                    {
                         OnEnemyKilled(killed.Target);
+                    }
                 }
 
                 return;
@@ -431,23 +452,22 @@ namespace DOL.AI.Brain
             if (e == GameLivingEvent.Dying)
             {
                 if (sender == Body)
+                {
                     Aggression.Clear();
+                }
 
                 // Aredhel: Although GameLivingEvent.Dying clearly is a GameLiving
                 // event, DyingEventArgs.Killer is a mere GameObject. It might make
                 // sense to send this event for GameObjects if, for example, the
                 // GameObjects belonged to this brain's body and could be re-summoned.
-
                 if (args is DyingEventArgs)
+                {
                     OnDying(sender as GameObject, (args as DyingEventArgs).Killer);
+                }
 
                 return;
             }
         }
-
-        #endregion
-
-        #region Other handlers
 
         /// <summary>
         /// Living is low on health. This could be the body (decide to
@@ -458,12 +478,15 @@ namespace DOL.AI.Brain
         protected virtual void OnLowHealth(GameLiving living)
         {
             // This is just a bogus implementation for testing purposes.
-
             if (living == Body)
             {
                 foreach (GamePlayer player in Body.GetPlayersInRadius(500))
-                    player.Out.SendMessage(String.Format("{0} is low on health!",
+                {
+                    player.Out.SendMessage(
+                        string.Format(
+                        "{0} is low on health!",
                         Body.Name), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+                }
             }
         }
 
@@ -471,12 +494,8 @@ namespace DOL.AI.Brain
         {
         }
 
-        #endregion
-
-        #region Aggression management
-
         private InternalAggression m_aggression;
-        
+
         /// <summary>
         /// This brain's aggression towards various targets.
         /// </summary>
@@ -485,7 +504,9 @@ namespace DOL.AI.Brain
             get
             {
                 if (m_aggression == null)
+                {
                     m_aggression = new InternalAggression();
+                }
 
                 return m_aggression;
             }
@@ -503,7 +524,9 @@ namespace DOL.AI.Brain
         protected void EngageOn(GameLiving living)
         {
             if (!IsEnemy(living))
+            {
                 Aggression.Raise(living, InternalAggression.Initial);
+            }
         }
 
         /// <summary>
@@ -528,7 +551,7 @@ namespace DOL.AI.Brain
         {
             return (living == null)
                 ? false
-                : (Aggression.IsEnemy(living));
+                : Aggression.IsEnemy(living);
         }
 
         /// <summary>
@@ -548,7 +571,9 @@ namespace DOL.AI.Brain
             public bool IsEnemy(GameLiving living)
             {
                 lock (m_syncObject)
+                {
                     return m_aggression.ContainsKey(living);
+                }
             }
 
             /// <summary>
@@ -562,7 +587,9 @@ namespace DOL.AI.Brain
                     {
                         IList<GameLiving> targets = new List<GameLiving>(m_aggression.Count);
                         foreach (GameLiving target in m_aggression.Keys)
+                        {
                             targets.Add(target);
+                        }
 
                         return targets;
                     }
@@ -591,12 +618,16 @@ namespace DOL.AI.Brain
             public void Raise(GameLiving living, long amount)
             {
                 if (living == null || amount < 0)
+                {
                     return;
+                }
 
                 lock (m_syncObject)
                 {
                     if (m_aggression.ContainsKey(living))
+                    {
                         m_aggression[living] += amount;
+                    }
                     else
                     {
                         m_aggression.Add(living, (amount < Initial) ? Initial : amount);
@@ -606,9 +637,15 @@ namespace DOL.AI.Brain
                             Group group = (living as GamePlayer).Group;
 
                             if (group != null)
+                            {
                                 foreach (GamePlayer player in group.GetPlayersInTheGroup())
+                                {
                                     if (!m_aggression.ContainsKey(player))
+                                    {
                                         m_aggression.Add(player, Minimum);
+                                    }
+                                }
+                            }
 
                             // TODO: Pets.
                         }
@@ -616,7 +653,8 @@ namespace DOL.AI.Brain
 
                     if (living is GamePlayer)
                     {
-                        (living as GamePlayer).Out.SendMessage(String.Format("Aggression = {0}", m_aggression[living]),
+                        (living as GamePlayer).Out.SendMessage(
+                            string.Format("Aggression = {0}", m_aggression[living]),
                             eChatType.CT_Alliance, eChatLoc.CL_SystemWindow);
                     }
                 }
@@ -630,7 +668,9 @@ namespace DOL.AI.Brain
             public void Lower(GameLiving living, long amount)
             {
                 if (living == null || amount <= 0)
+                {
                     return;
+                }
 
                 lock (m_syncObject)
                 {
@@ -651,7 +691,9 @@ namespace DOL.AI.Brain
                 lock (m_syncObject)
                 {
                     if (living != null && m_aggression.ContainsKey(living))
+                    {
                         m_aggression.Remove(living);
+                    }
                 }
             }
 
@@ -661,7 +703,9 @@ namespace DOL.AI.Brain
             public void Clear()
             {
                 lock (m_syncObject)
+                {
                     m_aggression.Clear();
+                }
             }
 
             /// <summary>
@@ -690,7 +734,5 @@ namespace DOL.AI.Brain
                 }
             }
         }
-
-        #endregion
     }
 }

@@ -16,24 +16,23 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.GS;
-using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute("&cancelstyle", ePrivLevel.Player, "Toggle cancelstyle flag.", "/cancelstyle")]
-	public class CancelStyleCommandHandler : AbstractCommandHandler, ICommandHandler
-	{
-		public void OnCommand(GameClient client, string[] args)
-		{
-			if (IsSpammingCommand(client.Player, "cancelstyle"))
-				return;
+    [Cmd("&cancelstyle", ePrivLevel.Player, "Toggle cancelstyle flag.", "/cancelstyle")]
+    public class CancelStyleCommandHandler : AbstractCommandHandler, ICommandHandler
+    {
+        public void OnCommand(GameClient client, string[] args)
+        {
+            if (IsSpammingCommand(client.Player, "cancelstyle"))
+            {
+                return;
+            }
 
-			client.Player.CancelStyle = !client.Player.CancelStyle;
-			DisplayMessage(client, string.Format(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Cancelstyle.Set",
-				(client.Player.CancelStyle ? LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Cancelstyle.On") : LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Cancelstyle.Off")))));
-		}
-	}
+            client.Player.CancelStyle = !client.Player.CancelStyle;
+            DisplayMessage(client, string.Format(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Cancelstyle.Set",
+                client.Player.CancelStyle ? LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Cancelstyle.On") : LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Cancelstyle.Off"))));
+        }
+    }
 }

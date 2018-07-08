@@ -16,82 +16,38 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS;
-using DOL.GS.Spells;
 using DOL.AI.Brain;
-using DOL.Events;
-using log4net;
-using DOL.GS.PacketHandler;
-using DOL.Database;
-using System.Collections;
-using DOL.GS.Effects;
-using DOL.GS.Styles;
 
 namespace DOL.GS
 {
-	public class BDSubPet : BDPet
-	{
-		/// <summary>
-		/// Holds the different subpet ids
-		/// </summary>
-		public enum SubPetType : byte
-		{
-			Melee = 0,
-			Healer = 1,
-			Caster = 2,
-			Debuffer = 3,
-			Buffer = 4,
-			Archer = 5
-		}
+    public class BDSubPet : BDPet
+    {
+        /// <summary>
+        /// Holds the different subpet ids
+        /// </summary>
+        public enum SubPetType : byte
+        {
+            Melee = 0,
+            Healer = 1,
+            Caster = 2,
+            Debuffer = 3,
+            Buffer = 4,
+            Archer = 5
+        }
 
-		protected string m_PetSpecLine = null;
-		/// <summary>
-		/// Returns the spell line specialization this pet was summoned from
-		/// </summary>
-		public string PetSpecLine
-		{
-			get
-			{
-				// This is really inefficient, so only do it once, and only if we actually need it
-				if (m_PetSpecLine == null && Owner is CommanderPet commander && commander.Owner is GamePlayer player)
-				{
-					// Get the spell that summoned this pet
-					DBSpell dbSummoningSpell = GameServer.Database.SelectObject<DBSpell>("LifeDrainReturn=@TemplateId", new QueryParameter("@TemplateID", NPCTemplate.TemplateId));
-					if (dbSummoningSpell != null)
-					{
-						// Figure out which spell line the summoning spell is from
-						DBLineXSpell dbLineSpell = GameServer.Database.SelectObject<DBLineXSpell>("SpellID=@SpellID", new QueryParameter("@SpellID", dbSummoningSpell.SpellID));
-						if (dbLineSpell != null)
-						{
-							// Now figure out what the spec name is
-							SpellLine line = player.GetSpellLine(dbLineSpell.LineName);
-							if (line != null)
-								m_PetSpecLine = line.Spec;
-						}
-					}
-				}
+        /// <summary>
+        /// Create a commander.
+        /// </summary>
+        /// <param name="npcTemplate"></param>
+        /// <param name="owner"></param>
+        public BDSubPet(INpcTemplate npcTemplate) : base(npcTemplate) { }
 
-				return m_PetSpecLine;
-			}
-		}
-
-		/// <summary>
-		/// Create a commander.
-		/// </summary>
-		/// <param name="npcTemplate"></param>
-		/// <param name="owner"></param>
-		public BDSubPet(INpcTemplate npcTemplate) : base(npcTemplate) { }
-
-		public override short MaxSpeed
-		{
-			get
-			{
-				return (Brain as IControlledBrain).Owner.MaxSpeed;
-			}
-		}
-	}
+        public override short MaxSpeed
+        {
+            get
+            {
+                return (Brain as IControlledBrain).Owner.MaxSpeed;
+            }
+        }
+    }
 }

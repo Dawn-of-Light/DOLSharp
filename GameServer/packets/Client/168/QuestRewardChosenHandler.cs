@@ -21,83 +21,76 @@ using DOL.Events;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	/// <summary>
-	/// Handler for quest reward dialog response.
-	/// </summary>
-	/// <author>Aredhel</author>
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.QuestRewardChosen, "Quest Reward Choosing Handler", eClientStatus.PlayerInGame)]
-	public class QuestRewardChosenHandler : IPacketHandler
-	{
-		#region IPacketHandler Members
+    /// <summary>
+    /// Handler for quest reward dialog response.
+    /// </summary>
+    /// <author>Aredhel</author>
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.QuestRewardChosen, "Quest Reward Choosing Handler", eClientStatus.PlayerInGame)]
+    public class QuestRewardChosenHandler : IPacketHandler
+    {
+        public void HandlePacket(GameClient client, GSPacketIn packet)
+        {
+            var response = (byte)packet.ReadByte();
+            if (response != 1) // confirm
+            {
+                return;
+            }
 
-		public void HandlePacket(GameClient client, GSPacketIn packet)
-		{
-			var response = (byte) packet.ReadByte();
-			if (response != 1) // confirm
-				return;
+            var countChosen = (byte)packet.ReadByte();
 
-			var countChosen = (byte) packet.ReadByte();
+            var itemsChosen = new int[8];
+            for (int i = 0; i < 8; ++i)
+            {
+                itemsChosen[i] = packet.ReadByte();
+            }
 
-			var itemsChosen = new int[8];
-			for (int i = 0; i < 8; ++i)
-				itemsChosen[i] = packet.ReadByte();
+            packet.ReadShort(); // unknown
+            packet.ReadShort(); // unknown
+            packet.ReadShort(); // unknown
 
-			ushort data2 = packet.ReadShort(); // unknown
-			ushort data3 = packet.ReadShort(); // unknown
-			ushort data4 = packet.ReadShort(); // unknown
+            ushort questId = packet.ReadShort();
+            ushort questGiverId = packet.ReadShort();
 
-			ushort questID = packet.ReadShort();
-			ushort questGiverID = packet.ReadShort();
+            new QuestRewardChosenAction(client.Player, countChosen, itemsChosen, questGiverId, questId).Start(1);
+        }
 
-			new QuestRewardChosenAction(client.Player, countChosen, itemsChosen, questGiverID, questID).Start(1);
-		}
+        /// <summary>
+        /// Send dialog response via Notify().
+        /// </summary>
+        private class QuestRewardChosenAction : RegionAction
+        {
+            private readonly int _countChosen;
+            private readonly int[] _itemsChosen;
+            private readonly int _questGiverId;
+            private readonly int _questId;
 
-		#endregion
+            /// <summary>
+            /// Constructs a new QuestRewardChosenAction.
+            /// </summary>
+            /// <param name="actionSource">The responding player,</param>
+            /// <param name="countChosen">Number of items chosen from the dialog.</param>
+            /// <param name="itemsChosen">List of items chosen from the dialog.</param>
+            /// <param name="questGiverId">ID of the quest NPC.</param>
+            /// <param name="questId">ID of the quest.</param>
+            public QuestRewardChosenAction(GamePlayer actionSource, int countChosen, int[] itemsChosen, int questGiverId, int questId)
+                : base(actionSource)
+            {
+                _countChosen = countChosen;
+                _itemsChosen = itemsChosen;
+                _questGiverId = questGiverId;
+                _questId = questId;
+            }
 
-		#region Nested type: QuestRewardChosenAction
+            /// <summary>
+            /// Called on every timer tick
+            /// </summary>
+            protected override void OnTick()
+            {
+                var player = (GamePlayer)m_actionSource;
 
-		/// <summary>
-		/// Send dialog response via Notify().
-		/// </summary>
-		protected class QuestRewardChosenAction : RegionAction
-		{
-			private readonly int m_countChosen;
-			private readonly int[] m_itemsChosen;
-			private readonly int m_questGiverID;
-			private readonly int m_questID;
-
-			/// <summary>
-			/// Constructs a new QuestRewardChosenAction.
-			/// </summary>
-			/// <param name="actionSource">The responding player,</param>
-			/// <param name="countChosen">Number of items chosen from the dialog.</param>
-			/// <param name="itemsChosen">List of items chosen from the dialog.</param>
-			/// <param name="questGiverID">ID of the quest NPC.</param>
-			/// <param name="questID">ID of the quest.</param>
-			public QuestRewardChosenAction(GamePlayer actionSource, int countChosen, int[] itemsChosen,
-			                               int questGiverID, int questID)
-				: base(actionSource)
-			{
-				m_countChosen = countChosen;
-				m_itemsChosen = itemsChosen;
-				m_questGiverID = questGiverID;
-				m_questID = questID;
-			}
-
-			/// <summary>
-			/// Called on every timer tick
-			/// </summary>
-			protected override void OnTick()
-			{
-				var player = (GamePlayer) m_actionSource;
-
-				player.Notify(GamePlayerEvent.QuestRewardChosen, player,
-				              new QuestRewardChosenEventArgs(m_questGiverID, m_questID, m_countChosen, m_itemsChosen));
-
-				return;
-			}
-		}
-
-		#endregion
-	}
+                player.Notify(GamePlayerEvent.QuestRewardChosen, player,
+                              new QuestRewardChosenEventArgs(_questGiverId, _questId, _countChosen, _itemsChosen));
+            }
+        }
+    }
 }

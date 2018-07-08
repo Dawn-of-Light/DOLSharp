@@ -159,6 +159,7 @@
     <None Include="DOLServer.exe.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />

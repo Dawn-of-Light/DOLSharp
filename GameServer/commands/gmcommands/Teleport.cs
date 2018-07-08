@@ -19,13 +19,6 @@
 using System;
 using DOL.Database;
 using DOL.GS.PacketHandler;
-using DOL.Language;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using DOL.GS.Utils;
-using DOL.GS.Quests;
-using DOL.GS.PacketHandler.Client.v168;
 using log4net;
 
 namespace DOL.GS.Commands
@@ -34,17 +27,17 @@ namespace DOL.GS.Commands
     /// A command to manage teleport destinations.
     /// </summary>
     /// <author>Aredhel</author>
-	[CmdAttribute(
-		"&teleport",
-		ePrivLevel.GM,
+    [Cmd(
+        "&teleport",
+        ePrivLevel.GM,
         "Manage teleport destinations",
         "'/teleport add <ID> <type>' add a teleport destination",
-		"'/teleport reload' reload all teleport locations from the db")]
+        "'/teleport reload' reload all teleport locations from the db")]
     public class TeleportCommandHandler : AbstractCommandHandler, ICommandHandler
     {
-		private static readonly ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		/// <summary>
+        /// <summary>
         /// Handle command.
         /// </summary>
         /// <param name="client"></param>
@@ -67,30 +60,31 @@ namespace DOL.GS.Commands
                             return;
                         }
 
-                        if (args[2] == "")
+                        if (args[2] == string.Empty)
                         {
                             client.Out.SendMessage("You must specify a teleport ID.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                             return;
                         }
 
-                        String teleportType = (args.Length < 4)
-                            ? "" : args[3];
+                        string teleportType = (args.Length < 4)
+                            ? string.Empty : args[3];
 
                         AddTeleport(client, args[2], teleportType);
                     }
+
                     break;
 
-				case "reload":
+                case "reload":
 
-					string results = WorldMgr.LoadTeleports();
-					log.Info(results);
-					client.Out.SendMessage(results, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					break;
+                    string results = WorldMgr.LoadTeleports();
+                    log.Info(results);
+                    client.Out.SendMessage(results, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    break;
 
                 default:
                     DisplaySyntax(client);
                     break;
-            }    
+            }
         }
 
         /// <summary>
@@ -100,14 +94,15 @@ namespace DOL.GS.Commands
         /// <param name="client"></param>
         /// <param name="teleportID"></param>
         /// <param name="type"></param>
-        private void AddTeleport(GameClient client, String teleportID, String type)
+        private void AddTeleport(GameClient client, string teleportID, string type)
         {
             GamePlayer player = client.Player;
             eRealm realm = player.Realm;
 
-            if (WorldMgr.GetTeleportLocation(realm, String.Format("{0}:{1}", type, teleportID)) != null)
+            if (WorldMgr.GetTeleportLocation(realm, string.Format("{0}:{1}", type, teleportID)) != null)
             {
-                client.Out.SendMessage(String.Format("Teleport ID [{0}] already exists!", teleportID), 
+                client.Out.SendMessage(
+                    string.Format("Teleport ID [{0}] already exists!", teleportID),
                     eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
@@ -124,13 +119,15 @@ namespace DOL.GS.Commands
 
             if (!WorldMgr.AddTeleportLocation(teleport))
             {
-                client.Out.SendMessage(String.Format("Failed to add teleport ID [{0}] in memory!", teleportID), 
+                client.Out.SendMessage(
+                    string.Format("Failed to add teleport ID [{0}] in memory!", teleportID),
                     eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
 
             GameServer.Database.AddObject(teleport);
-            client.Out.SendMessage(String.Format("Teleport ID [{0}] successfully added.", teleportID),
+            client.Out.SendMessage(
+                string.Format("Teleport ID [{0}] successfully added.", teleportID),
                 eChatType.CT_System, eChatLoc.CL_SystemWindow);
         }
     }

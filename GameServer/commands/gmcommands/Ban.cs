@@ -28,143 +28,147 @@ using log4net;
 
 namespace DOL.GS.Commands
 {
-	[CmdAttribute(
-		"&ban",
-		ePrivLevel.GM,
-		"GMCommands.Ban.Description",
-		"GMCommands.Ban.Usage.IP",
-		"GMCommands.Ban.Usage.Account",
-		"GMCommands.Ban.Usage.Both",
-		"#<ClientID> can be used in place of player name.  Use /clientlist to see playing clients."
-	)]
-	public class BanCommandHandler : AbstractCommandHandler, ICommandHandler
-	{
-		private static ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+    [Cmd(
+        "&ban",
+        ePrivLevel.GM,
+        "GMCommands.Ban.Description",
+        "GMCommands.Ban.Usage.IP",
+        "GMCommands.Ban.Usage.Account",
+        "GMCommands.Ban.Usage.Both",
+        "#<ClientID> can be used in place of player name.  Use /clientlist to see playing clients.")]
+    public class BanCommandHandler : AbstractCommandHandler, ICommandHandler
+    {
+        private static ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public void OnCommand(GameClient client, string[] args)
-		{
-			if (args.Length < 3)
-			{
-				DisplaySyntax(client);
-				return;
-			}
+        public void OnCommand(GameClient client, string[] args)
+        {
+            if (args.Length < 3)
+            {
+                DisplaySyntax(client);
+                return;
+            }
 
-			GameClient gc = null;
+            GameClient gc = null;
 
-			if (args[2].StartsWith("#"))
-			{
-				try
-				{
-					int sessionID = Convert.ToInt32(args[1].Substring(1));
-					gc = WorldMgr.GetClientFromID(sessionID);
-				}
-				catch
-				{
-					DisplayMessage(client, "Invalid client ID");
-				}
-			}
-			else
-			{
-				gc = WorldMgr.GetClientByPlayerName(args[2], false, false);
-			}
+            if (args[2].StartsWith("#"))
+            {
+                try
+                {
+                    int sessionID = Convert.ToInt32(args[1].Substring(1));
+                    gc = WorldMgr.GetClientFromID(sessionID);
+                }
+                catch
+                {
+                    DisplayMessage(client, "Invalid client ID");
+                }
+            }
+            else
+            {
+                gc = WorldMgr.GetClientByPlayerName(args[2], false, false);
+            }
 
-			Account acc = gc != null ? gc.Account : GameServer.Database.SelectObjects<Account>("`Name` LIKE @Name", new QueryParameter("@Name", args[2])).FirstOrDefault();
-			if (acc == null)
-			{
-				client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.UnableToFindPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				return;
-			}
+            Account acc = gc != null ? gc.Account : GameServer.Database.SelectObjects<Account>("`Name` LIKE @Name", new QueryParameter("@Name", args[2])).FirstOrDefault();
+            if (acc == null)
+            {
+                client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.UnableToFindPlayer"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
 
-			if (client.Account.PrivLevel < acc.PrivLevel)
-			{
-				DisplayMessage(client, "Your privlevel is not high enough to ban this player.");
-				return;
-			}
+            if (client.Account.PrivLevel < acc.PrivLevel)
+            {
+                DisplayMessage(client, "Your privlevel is not high enough to ban this player.");
+                return;
+            }
 
-			if (client.Account.Name == acc.Name)
-			{
-				DisplayMessage(client, "Your can't ban yourself!");
-				return;
-			}
+            if (client.Account.Name == acc.Name)
+            {
+                DisplayMessage(client, "Your can't ban yourself!");
+                return;
+            }
 
-			try
-			{
-				DBBannedAccount b = new DBBannedAccount
-				                    {
-				                    	DateBan = DateTime.Now,
-				                    	Author = client.Player.Name,
-				                    	Ip = acc.LastLoginIP,
-				                    	Account = acc.Name
-				                    };
+            try
+            {
+                DBBannedAccount b = new DBBannedAccount
+                                    {
+                                        DateBan = DateTime.Now,
+                                        Author = client.Player.Name,
+                                        Ip = acc.LastLoginIP,
+                                        Account = acc.Name
+                                    };
 
-				if (args.Length >= 4)
-					b.Reason = String.Join(" ", args, 3, args.Length - 3);
-				else
-					b.Reason = "No Reason.";
+                if (args.Length >= 4)
+                {
+                    b.Reason = string.Join(" ", args, 3, args.Length - 3);
+                }
+                else
+                {
+                    b.Reason = "No Reason.";
+                }
 
-				switch (args[1].ToLower())
-				{
-						#region Account
-					case "account":
-						var acctBans = GameServer.Database.SelectObjects<DBBannedAccount>("(`Type` = @TypeA OR `Type` = @TypeB) AND `Account` = @Account", new[] { new QueryParameter("@TypeA", "A"), new QueryParameter("@TypeB", "B"), new QueryParameter("@Account", acc.Name) });
-						if (acctBans.Count > 0)
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.AAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-							return;
-						}
+                switch (args[1].ToLower())
+                {
+                    case "account":
+                        var acctBans = GameServer.Database.SelectObjects<DBBannedAccount>("(`Type` = @TypeA OR `Type` = @TypeB) AND `Account` = @Account", new[] { new QueryParameter("@TypeA", "A"), new QueryParameter("@TypeB", "B"), new QueryParameter("@Account", acc.Name) });
+                        if (acctBans.Count > 0)
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.AAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                            return;
+                        }
 
-						b.Type = "A";
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.ABanned", acc.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-						break;
-						#endregion Account
-						#region IP
-					case "ip":
-						var ipBans = GameServer.Database.SelectObjects<DBBannedAccount>("(`Type` = @TypeI OR `Type` = @TypeB) AND `Ip` = @Ip", new[] { new QueryParameter("@TypeI", "I"), new QueryParameter("@TypeB", "B"), new QueryParameter("@Ip", acc.LastLoginIP) });
-						if (ipBans.Count > 0)
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.IAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-							return;
-						}
+                        b.Type = "A";
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.ABanned", acc.Name), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                        break;
 
-						b.Type = "I";
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.IBanned", acc.LastLoginIP), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-						break;
-						#endregion IP
-						#region Both
-					case "both":
-						var acctIpBans = GameServer.Database.SelectObjects<DBBannedAccount>("`Type` = @Type AND `Account` = @Account AND `Ip` = @Ip", new[] { new QueryParameter("@Type", "B"), new QueryParameter("@Account", acc.Name), new QueryParameter("@Ip", acc.LastLoginIP) });
-						if (acctIpBans.Count > 0)
-						{
-							client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.BAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-							return;
-						}
+                    case "ip":
+                        var ipBans = GameServer.Database.SelectObjects<DBBannedAccount>("(`Type` = @TypeI OR `Type` = @TypeB) AND `Ip` = @Ip", new[] { new QueryParameter("@TypeI", "I"), new QueryParameter("@TypeB", "B"), new QueryParameter("@Ip", acc.LastLoginIP) });
+                        if (ipBans.Count > 0)
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.IAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                            return;
+                        }
 
-						b.Type = "B";
-						client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.BBanned", acc.Name, acc.LastLoginIP), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-						break;
-						#endregion Both
-						#region Default
-					default:
-						{
-							DisplaySyntax(client);
-							return;
-						}
-						#endregion Default
-				}
-				GameServer.Database.AddObject(b);
+                        b.Type = "I";
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.IBanned", acc.LastLoginIP), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                        break;
 
-				if (log.IsInfoEnabled)
-					log.Info("Ban added [" + args[1].ToLower() + "]: " + acc.Name + "(" + acc.LastLoginIP + ")");
-				return;
-			}
-			catch (Exception e)
-			{
-				if (log.IsErrorEnabled)
-					log.Error("/ban Exception", e);
-			}
+                    case "both":
+                        var acctIpBans = GameServer.Database.SelectObjects<DBBannedAccount>("`Type` = @Type AND `Account` = @Account AND `Ip` = @Ip", new[] { new QueryParameter("@Type", "B"), new QueryParameter("@Account", acc.Name), new QueryParameter("@Ip", acc.LastLoginIP) });
+                        if (acctIpBans.Count > 0)
+                        {
+                            client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.BAlreadyBanned"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                            return;
+                        }
 
-			// if not returned here, there is an error
-			DisplaySyntax(client);
-		}
-	}
+                        b.Type = "B";
+                        client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Ban.BBanned", acc.Name, acc.LastLoginIP), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                        break;
+
+                    default:
+                        {
+                            DisplaySyntax(client);
+                            return;
+                        }
+                }
+
+                GameServer.Database.AddObject(b);
+
+                if (log.IsInfoEnabled)
+                {
+                    log.Info("Ban added [" + args[1].ToLower() + "]: " + acc.Name + "(" + acc.LastLoginIP + ")");
+                }
+
+                return;
+            }
+            catch (Exception e)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("/ban Exception", e);
+                }
+            }
+
+            // if not returned here, there is an error
+            DisplaySyntax(client);
+        }
+    }
 }

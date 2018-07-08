@@ -17,10 +17,8 @@
  *
  */
 using System;
-using System.Reflection;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using log4net;
 
 namespace DOL.GS.Spells
 {
@@ -31,7 +29,7 @@ namespace DOL.GS.Spells
     public abstract class SingleStatBuff : PropertyChangingSpell
     {
         // bonus category
-        public override eBuffBonusCategory BonusCategory1 { get { return eBuffBonusCategory.BaseBuff; } }
+        public override eBuffBonusCategory BonusCategory1 => eBuffBonusCategory.BaseBuff;
 
         /// <summary>
         /// send updates about the changes
@@ -39,9 +37,9 @@ namespace DOL.GS.Spells
         /// <param name="target"></param>
         protected override void SendUpdates(GameLiving target)
         {
-        	target.SendLivingStatsAndRegenUpdate();
+            target.SendLivingStatsAndRegenUpdate();
         }
-		
+
         /// <summary>
         /// Apply effect on target or do spell action if non duration spell
         /// </summary>
@@ -49,9 +47,9 @@ namespace DOL.GS.Spells
         /// <param name="effectiveness">factor from 0..1 (0%-100%)</param>
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
-            int specLevel = Caster.GetModifiedSpecLevel(m_spellLine.Spec);
-			
-			if (Caster is GamePlayer && ((GamePlayer)Caster).CharacterClass.ClassType != eClassType.ListCaster && Spell.Level > 0 && ((GamePlayer)Caster).CharacterClass.ID != (int)eCharacterClass.Savage)
+            int specLevel = Caster.GetModifiedSpecLevel(SpellLine.Spec);
+
+            if (Caster is GamePlayer player && player.CharacterClass.ClassType != eClassType.ListCaster && Spell.Level > 0 && player.CharacterClass.ID != (int)eCharacterClass.Savage)
             {
                 effectiveness = 0.75; // This section is for self bulfs, cleric buffs etc.
                 if (Spell.Level > 0)
@@ -59,26 +57,26 @@ namespace DOL.GS.Spells
                     effectiveness += (specLevel - 1.0) * 0.5 / Spell.Level;
                     effectiveness = Math.Max(0.75, effectiveness);
                     effectiveness = Math.Min(1.25, effectiveness);
-                    effectiveness *= (1.0 + m_caster.GetModified(eProperty.BuffEffectiveness) * 0.01);
+                    effectiveness *= 1.0 + Caster.GetModified(eProperty.BuffEffectiveness) * 0.01;
                 }
             }
             else if (Caster is GamePlayer && Spell.Level > 0 && Spell.Target == "Enemy")
             {
-				effectiveness = 0.75; // This section is for list casters stat debuffs.
-				if (((GamePlayer)Caster).CharacterClass.ClassType == eClassType.ListCaster)
-				{
+                effectiveness = 0.75; // This section is for list casters stat debuffs.
+                if (((GamePlayer)Caster).CharacterClass.ClassType == eClassType.ListCaster)
+                {
                     effectiveness += (specLevel - 1.0) * 0.5 / Spell.Level;
                     effectiveness = Math.Max(0.75, effectiveness);
                     effectiveness = Math.Min(1.25, effectiveness);
-                    effectiveness *= (1.0 + m_caster.GetModified(eProperty.BuffEffectiveness) * 0.01);
+                    effectiveness *= 1.0 + Caster.GetModified(eProperty.BuffEffectiveness) * 0.01;
                 }
-				else
-					{
-						effectiveness = 1.0; // Non list casters debuffs. Reaver curses, Champ debuffs etc.
-						effectiveness *= (1.0 + m_caster.GetModified(eProperty.DebuffEffectivness) * 0.01);
-					}
-			}
-			else
+                else
+                    {
+                        effectiveness = 1.0; // Non list casters debuffs. Reaver curses, Champ debuffs etc.
+                        effectiveness *= 1.0 + Caster.GetModified(eProperty.DebuffEffectivness) * 0.01;
+                    }
+            }
+            else
             {
                 effectiveness = 1.0;
             }
@@ -96,14 +94,22 @@ namespace DOL.GS.Spells
         public override bool IsOverwritable(GameSpellEffect compare)
         {
             if (Spell.EffectGroup != 0 || compare.Spell.EffectGroup != 0)
+            {
                 return Spell.EffectGroup == compare.Spell.EffectGroup;
-            if (base.IsOverwritable(compare) == false) return false;
-            if (Spell.Duration > 0 && compare.Concentration > 0)
-                return compare.Spell.Value >= Spell.Value;
-            return compare.SpellHandler.SpellLine.IsBaseLine ==
-                SpellLine.IsBaseLine;
-        }
+            }
 
+            if (base.IsOverwritable(compare) == false)
+            {
+                return false;
+            }
+
+            if (Spell.Duration > 0 && compare.Concentration > 0)
+            {
+                return compare.Spell.Value >= Spell.Value;
+            }
+
+            return compare.SpellHandler.SpellLine.IsBaseLine == SpellLine.IsBaseLine;
+        }
 
         // constructor
         protected SingleStatBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
@@ -112,7 +118,7 @@ namespace DOL.GS.Spells
     /// <summary>
     /// Str stat baseline buff
     /// </summary>
-    [SpellHandlerAttribute("StrengthBuff")]
+    [SpellHandler("StrengthBuff")]
     public class StrengthBuff : SingleStatBuff
     {
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
@@ -122,9 +128,11 @@ namespace DOL.GS.Spells
                 MessageToCaster("Your target already has an effect of that type!", eChatType.CT_Spell);
                 return;
             }
+
             base.ApplyEffectOnTarget(target, effectiveness);
         }
-        public override eProperty Property1 { get { return eProperty.Strength; } }
+
+        public override eProperty Property1 => eProperty.Strength;
 
         // constructor
         public StrengthBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
@@ -133,7 +141,7 @@ namespace DOL.GS.Spells
     /// <summary>
     /// Dex stat baseline buff
     /// </summary>
-    [SpellHandlerAttribute("DexterityBuff")]
+    [SpellHandler("DexterityBuff")]
     public class DexterityBuff : SingleStatBuff
     {
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
@@ -143,9 +151,11 @@ namespace DOL.GS.Spells
                 MessageToCaster("Your target already has an effect of that type!", eChatType.CT_Spell);
                 return;
             }
+
             base.ApplyEffectOnTarget(target, effectiveness);
         }
-        public override eProperty Property1 { get { return eProperty.Dexterity; } }
+
+        public override eProperty Property1 => eProperty.Dexterity;
 
         // constructor
         public DexterityBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
@@ -154,7 +164,7 @@ namespace DOL.GS.Spells
     /// <summary>
     /// Con stat baseline buff
     /// </summary>
-    [SpellHandlerAttribute("ConstitutionBuff")]
+    [SpellHandler("ConstitutionBuff")]
     public class ConstitutionBuff : SingleStatBuff
     {
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
@@ -164,9 +174,11 @@ namespace DOL.GS.Spells
                 MessageToCaster("Your target already has an effect of that type!", eChatType.CT_Spell);
                 return;
             }
+
             base.ApplyEffectOnTarget(target, effectiveness);
         }
-        public override eProperty Property1 { get { return eProperty.Constitution; } }
+
+        public override eProperty Property1 => eProperty.Constitution;
 
         // constructor
         public ConstitutionBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
@@ -175,19 +187,28 @@ namespace DOL.GS.Spells
     /// <summary>
     /// Armor factor buff
     /// </summary>
-    [SpellHandlerAttribute("ArmorFactorBuff")]
+    [SpellHandler("ArmorFactorBuff")]
     public class ArmorFactorBuff : SingleStatBuff
     {
         public override eBuffBonusCategory BonusCategory1
         {
             get
             {
-            	if (Spell.Target.Equals("Self", StringComparison.OrdinalIgnoreCase)) return eBuffBonusCategory.Other; // no caps for self buffs
-                if (m_spellLine.IsBaseLine) return eBuffBonusCategory.BaseBuff; // baseline cap
+                if (Spell.Target.Equals("Self", StringComparison.OrdinalIgnoreCase))
+                {
+                    return eBuffBonusCategory.Other; // no caps for self buffs
+                }
+
+                if (SpellLine.IsBaseLine)
+                {
+                    return eBuffBonusCategory.BaseBuff; // baseline cap
+                }
+
                 return eBuffBonusCategory.Other; // no caps for spec line buffs
             }
         }
-        public override eProperty Property1 { get { return eProperty.ArmorFactor; } }
+
+        public override eProperty Property1 => eProperty.ArmorFactor;
 
         // constructor
         public ArmorFactorBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
@@ -196,10 +217,10 @@ namespace DOL.GS.Spells
     /// <summary>
     /// Armor Absorption buff
     /// </summary>
-    [SpellHandlerAttribute("ArmorAbsorptionBuff")]
+    [SpellHandler("ArmorAbsorptionBuff")]
     public class ArmorAbsorptionBuff : SingleStatBuff
     {
-        public override eProperty Property1 { get { return eProperty.ArmorAbsorption; } }
+        public override eProperty Property1 => eProperty.ArmorAbsorption;
 
         /// <summary>
         /// send updates about the changes
@@ -216,10 +237,10 @@ namespace DOL.GS.Spells
     /// <summary>
     /// Combat speed buff
     /// </summary>
-    [SpellHandlerAttribute("CombatSpeedBuff")]
+    [SpellHandler("CombatSpeedBuff")]
     public class CombatSpeedBuff : SingleStatBuff
     {
-        public override eProperty Property1 { get { return eProperty.MeleeSpeed; } }
+        public override eProperty Property1 => eProperty.MeleeSpeed;
 
         /// <summary>
         /// send updates about the changes
@@ -232,11 +253,11 @@ namespace DOL.GS.Spells
         // constructor
         public CombatSpeedBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
-    
+
     /// <summary>
     /// Haste Buff stacking with other Combat Speed Buff
     /// </summary>
-    [SpellHandlerAttribute("HasteBuff")]
+    [SpellHandler("HasteBuff")]
     public class HasteBuff : CombatSpeedBuff
     {
         // constructor
@@ -246,7 +267,7 @@ namespace DOL.GS.Spells
     /// <summary>
     /// Celerity Buff stacking with other Combat Speed Buff
     /// </summary>
-    [SpellHandlerAttribute("CelerityBuff")]
+    [SpellHandler("CelerityBuff")]
     public class CelerityBuff : CombatSpeedBuff
     {
         // constructor
@@ -256,10 +277,10 @@ namespace DOL.GS.Spells
     /// <summary>
     /// Fatigue reduction buff
     /// </summary>
-    [SpellHandlerAttribute("FatigueConsumptionBuff")]
+    [SpellHandler("FatigueConsumptionBuff")]
     public class FatigueConsumptionBuff : SingleStatBuff
     {
-        public override eProperty Property1 { get { return eProperty.FatigueConsumption; } }
+        public override eProperty Property1 => eProperty.FatigueConsumption;
 
         /// <summary>
         /// send updates about the changes
@@ -276,10 +297,10 @@ namespace DOL.GS.Spells
     /// <summary>
     /// Melee damage buff
     /// </summary>
-    [SpellHandlerAttribute("MeleeDamageBuff")]
+    [SpellHandler("MeleeDamageBuff")]
     public class MeleeDamageBuff : SingleStatBuff
     {
-        public override eProperty Property1 { get { return eProperty.MeleeDamage; } }
+        public override eProperty Property1 => eProperty.MeleeDamage;
 
         /// <summary>
         /// send updates about the changes
@@ -296,10 +317,10 @@ namespace DOL.GS.Spells
     /// <summary>
     /// Mesmerize duration buff
     /// </summary>
-    [SpellHandlerAttribute("MesmerizeDurationBuff")]
+    [SpellHandler("MesmerizeDurationBuff")]
     public class MesmerizeDurationBuff : SingleStatBuff
     {
-        public override eProperty Property1 { get { return eProperty.MesmerizeDurationReduction; } }
+        public override eProperty Property1 => eProperty.MesmerizeDurationReduction;
 
         /// <summary>
         /// send updates about the changes
@@ -313,14 +334,13 @@ namespace DOL.GS.Spells
         public MesmerizeDurationBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
 
-
     /// <summary>
     /// Acuity buff
     /// </summary>
-    [SpellHandlerAttribute("AcuityBuff")]
+    [SpellHandler("AcuityBuff")]
     public class AcuityBuff : SingleStatBuff
     {
-        public override eProperty Property1 { get { return eProperty.Acuity; } }
+        public override eProperty Property1 => eProperty.Acuity;
 
         // constructor
         public AcuityBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
@@ -329,10 +349,10 @@ namespace DOL.GS.Spells
     /// <summary>
     /// Quickness buff
     /// </summary>
-    [SpellHandlerAttribute("QuicknessBuff")]
+    [SpellHandler("QuicknessBuff")]
     public class QuicknessBuff : SingleStatBuff
     {
-        public override eProperty Property1 { get { return eProperty.Quickness; } }
+        public override eProperty Property1 => eProperty.Quickness;
 
         // constructor
         public QuicknessBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
@@ -341,10 +361,10 @@ namespace DOL.GS.Spells
     /// <summary>
     /// DPS buff
     /// </summary>
-    [SpellHandlerAttribute("DPSBuff")]
+    [SpellHandler("DPSBuff")]
     public class DPSBuff : SingleStatBuff
     {
-        public override eProperty Property1 { get { return eProperty.DPS; } }
+        public override eProperty Property1 => eProperty.DPS;
 
         // constructor
         public DPSBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
@@ -353,100 +373,116 @@ namespace DOL.GS.Spells
     /// <summary>
     /// Evade chance buff
     /// </summary>
-    [SpellHandlerAttribute("EvadeBuff")]
+    [SpellHandler("EvadeBuff")]
     public class EvadeChanceBuff : SingleStatBuff
     {
-        public override eProperty Property1 { get { return eProperty.EvadeChance; } }
+        public override eProperty Property1 => eProperty.EvadeChance;
 
         // constructor
         public EvadeChanceBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
+
     /// <summary>
     /// Parry chance buff
     /// </summary>
-    [SpellHandlerAttribute("ParryBuff")]
+    [SpellHandler("ParryBuff")]
     public class ParryChanceBuff : SingleStatBuff
     {
-        public override eProperty Property1 { get { return eProperty.ParryChance; } }
+        public override eProperty Property1 => eProperty.ParryChance;
 
         // constructor
         public ParryChanceBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
+
     /// <summary>
     /// WeaponSkill buff
     /// </summary>
-    [SpellHandlerAttribute("WeaponSkillBuff")]
+    [SpellHandler("WeaponSkillBuff")]
     public class WeaponSkillBuff : SingleStatBuff
     {
-        public override eProperty Property1 { get { return eProperty.WeaponSkill; } }
+        public override eProperty Property1 => eProperty.WeaponSkill;
 
         // constructor
         public WeaponSkillBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
+
     /// <summary>
     /// Stealth Skill buff
     /// </summary>
-    [SpellHandlerAttribute("StealthSkillBuff")]
+    [SpellHandler("StealthSkillBuff")]
     public class StealthSkillBuff : SingleStatBuff
     {
-        public override eProperty Property1 { get { return eProperty.Skill_Stealth; } }
+        public override eProperty Property1 => eProperty.Skill_Stealth;
 
         // constructor
         public StealthSkillBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
+
     /// <summary>
     /// To Hit buff
     /// </summary>
-    [SpellHandlerAttribute("ToHitBuff")]
+    [SpellHandler("ToHitBuff")]
     public class ToHitSkillBuff : SingleStatBuff
     {
-        public override eProperty Property1 { get { return eProperty.ToHitBonus; } }
+        public override eProperty Property1 => eProperty.ToHitBonus;
 
         // constructor
         public ToHitSkillBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
+
     /// <summary>
     /// Magic Resists Buff
     /// </summary>
-    [SpellHandlerAttribute("MagicResistsBuff")]
+    [SpellHandler("MagicResistsBuff")]
     public class MagicResistsBuff : SingleStatBuff
     {
-        public override eProperty Property1 { get { return eProperty.MagicAbsorption; } }
+        public override eProperty Property1 => eProperty.MagicAbsorption;
 
         // constructor
         public MagicResistsBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
 
-    [SpellHandlerAttribute("StyleAbsorbBuff")]
+    [SpellHandler("StyleAbsorbBuff")]
     public class StyleAbsorbBuff : SingleStatBuff
     {
-        public override eProperty Property1 { get { return eProperty.StyleAbsorb; } }
+        public override eProperty Property1 => eProperty.StyleAbsorb;
+
         public StyleAbsorbBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
 
-    [SpellHandlerAttribute("ExtraHP")]
+    [SpellHandler("ExtraHP")]
     public class ExtraHP : SingleStatBuff
     {
-        public override eProperty Property1 { get { return eProperty.ExtraHP; } }
+        public override eProperty Property1 => eProperty.ExtraHP;
+
         public ExtraHP(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
 
     /// <summary>
     /// Paladin Armor factor buff
     /// </summary>
-    [SpellHandlerAttribute("PaladinArmorFactorBuff")]
+    [SpellHandler("PaladinArmorFactorBuff")]
     public class PaladinArmorFactorBuff : SingleStatBuff
     {
         public override eBuffBonusCategory BonusCategory1
         {
             get
             {
-                if (Spell.Target == "Self") return eBuffBonusCategory.Other; // no caps for self buffs
-                if (m_spellLine.IsBaseLine) return eBuffBonusCategory.BaseBuff; // baseline cap
+                if (Spell.Target == "Self")
+                {
+                    return eBuffBonusCategory.Other; // no caps for self buffs
+                }
+
+                if (SpellLine.IsBaseLine)
+                {
+                    return eBuffBonusCategory.BaseBuff; // baseline cap
+                }
+
                 return eBuffBonusCategory.Other; // no caps for spec line buffs
             }
         }
-        public override eProperty Property1 { get { return eProperty.ArmorFactor; } }
+
+        public override eProperty Property1 => eProperty.ArmorFactor;
 
         // constructor
         public PaladinArmorFactorBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
@@ -455,10 +491,11 @@ namespace DOL.GS.Spells
     /// <summary>
     /// Flexible skill buff
     /// </summary>
-    [SpellHandlerAttribute("FelxibleSkillBuff")]
+    [SpellHandler("FelxibleSkillBuff")]
     public class FelxibleSkillBuff : SingleStatBuff
     {
-        public override eProperty Property1 { get { return eProperty.Skill_Flexible_Weapon; } }
+        public override eProperty Property1 => eProperty.Skill_Flexible_Weapon;
+
         public FelxibleSkillBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
 }

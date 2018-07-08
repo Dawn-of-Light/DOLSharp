@@ -1,21 +1,23 @@
-using System;
 using DOL.Database;
-using DOL.GS.PropertyCalc;
 
 namespace DOL.GS.RealmAbilities
 {
-	public class VeilRecoveryAbility : RAPropertyEnhancer
-	{
-		public VeilRecoveryAbility(DBAbility dba, int level)
-			: base(dba, level, eProperty.Undefined)
-		{
-		}
+    public class VeilRecoveryAbility : RAPropertyEnhancer
+    {
+        public VeilRecoveryAbility(DBAbility dba, int level)
+            : base(dba, level, eProperty.Undefined)
+        {
+        }
 
-		protected override string ValueUnit { get { return "%"; } }
+        protected override string ValueUnit => "%";
 
-		public override int GetAmountForLevel(int level)
-		{
-			if (level < 1) return 0;
+        public override int GetAmountForLevel(int level)
+        {
+            if (level < 1)
+            {
+                return 0;
+            }
+
             if (ServerProperties.Properties.USE_NEW_PASSIVES_RAS_SCALING)
             {
                 switch (level)
@@ -32,18 +34,16 @@ namespace DOL.GS.RealmAbilities
                     default: return 80;
                 }
             }
-            else
+
+            switch (level)
             {
-                switch (level)
-                {
-                    case 1: return 10;
-                    case 2: return 20;
-                    case 3: return 40;
-                    case 4: return 60;
-                    case 5: return 80;
-                    default: return 0;
-                }
+                case 1: return 10;
+                case 2: return 20;
+                case 3: return 40;
+                case 4: return 60;
+                case 5: return 80;
+                default: return 0;
             }
-		}
-	}
+        }
+    }
 }

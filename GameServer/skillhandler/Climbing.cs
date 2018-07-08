@@ -16,51 +16,39 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Linq;
-
-using DOL.GS;
 using DOL.Database;
 
 namespace DOL.GS.SkillHandler
 {
-	/// <summary>
-	/// Handler for Fury shout
-	/// </summary>
-	[SkillHandlerAttribute(Abilities.ClimbSpikes)]
-	public class ClimbingAbilityHandler : SpellCastingAbilityHandler
-	{
-		private static int spellid = -1;
-		
-		public override long Preconditions
-		{
-			get
-			{
-				return DEAD | SITTING | MEZZED | STUNNED;
-			}
-		}
-		public override int SpellID
-		{
-			get
-			{
-				return spellid;
-			}
-		}
+    /// <summary>
+    /// Handler for Fury shout
+    /// </summary>
+    [SkillHandler(Abilities.ClimbSpikes)]
+    public class ClimbingAbilityHandler : SpellCastingAbilityHandler
+    {
+        private static int _spellid = -1;
 
-		public ClimbingAbilityHandler()
-		{
-			// Graveen: crappy, but not hardcoded. if we except by the ability name ofc...
-			// problems are: 
-			// 		- matching vs ability name / spell name needed
-			//		- spell name is not indexed
-			// perhaps a basis to think about, but definitively not the design we want.
-			if (spellid == -1)
-			{
-				spellid=0;
-				DBSpell climbSpell = GameServer.Database.SelectObjects<DBSpell>("`Name` = @Name", new QueryParameter("@Name", Abilities.ClimbSpikes)).FirstOrDefault();
-				if (climbSpell != null)
-					spellid = climbSpell.SpellID;
-			}
-		}
-	}
+        public override long Preconditions => DEAD | SITTING | MEZZED | STUNNED;
+
+        public override int SpellID => _spellid;
+
+        public ClimbingAbilityHandler()
+        {
+            // Graveen: crappy, but not hardcoded. if we except by the ability name ofc...
+            // problems are:
+            //      - matching vs ability name / spell name needed
+            //      - spell name is not indexed
+            // perhaps a basis to think about, but definitively not the design we want.
+            if (_spellid == -1)
+            {
+                _spellid = 0;
+                DBSpell climbSpell = GameServer.Database.SelectObjects<DBSpell>("`Name` = @Name", new QueryParameter("@Name", Abilities.ClimbSpikes)).FirstOrDefault();
+                if (climbSpell != null)
+                {
+                    _spellid = climbSpell.SpellID;
+                }
+            }
+        }
+    }
 }

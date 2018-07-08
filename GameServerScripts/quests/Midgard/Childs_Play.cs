@@ -18,15 +18,15 @@
 */
 
 /*
-* Author:	Lamyuras
+* Author:   Lamyuras
 * Edited by: k109
-* Date:		11/26/07
+* Date:     11/26/07
 *
 * Notes: Changed this quest to work like live server.
 * UPDATE:  You must edit the Database if you want this quest to work correctly.
 * remove any reference in the DB to "Statue Demons Breach", there will be 200+ if using rev 818DB
 * also run this script: update mob set aggrolevel = 0 where flags = 12 and region = 489;
-* the ambient corpses are all agro, and will attack if you get to close. 
+* the ambient corpses are all agro, and will attack if you get to close.
 */
 
 using System;
@@ -34,10 +34,7 @@ using System.Reflection;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.Behaviour;
-using DOL.GS.Behaviour.Attributes;
 using DOL.GS.PacketHandler;
-using DOL.GS.Quests;
 using DOL.Language;
 using log4net;
 
@@ -75,7 +72,8 @@ namespace DOL.GS.Quests.Midgard
         private static ItemTemplate daringstuddedjerkin = null;
         private static ItemTemplate daringstuddedleggings = null;
         private static ItemTemplate daringstuddedsleeves = null;
-        //private static AbstractArea Statua = null;
+
+        // private static AbstractArea Statua = null;
         private static GameLocation Mid_Statue = new GameLocation("Childs Play (Mid)", 489, 27580, 40006, 14483);
 
         private static IArea Mid_Statue_Area = null;
@@ -104,22 +102,29 @@ namespace DOL.GS.Quests.Midgard
         public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
         {
             if (!ServerProperties.Properties.LOAD_QUESTS)
+            {
                 return;
-            if (log.IsInfoEnabled)
-                log.Info("Quest \"" + questTitle + "\" (Mid) initializing ...");
+            }
 
-            #region defineNPCs
+            if (log.IsInfoEnabled)
+            {
+                log.Info("Quest \"" + questTitle + "\" (Mid) initializing ...");
+            }
+
             GameNPC[] npcs;
 
-            npcs = WorldMgr.GetNPCsByName("Charles", (eRealm)2);
+            npcs = WorldMgr.GetObjectsByName<GameNPC>("Charles", (eRealm)2);
             if (npcs.Length == 0)
             {
                 Charles = new DOL.GS.GameNPC();
                 Charles.Model = 142;
                 Charles.Name = "Charles";
                 if (log.IsWarnEnabled)
+                {
                     log.Warn("Could not find " + Charles.Name + ", creating ...");
-                //Charles.GuildName = "Part of " + questTitle + " Quest";
+                }
+
+                // Charles.GuildName = "Part of " + questTitle + " Quest";
                 Charles.Realm = eRealm.Midgard;
                 Charles.CurrentRegionID = 100;
                 Charles.Size = 37;
@@ -133,27 +138,22 @@ namespace DOL.GS.Quests.Midgard
                 Charles.RespawnInterval = -1;
                 Charles.BodyType = 0;
 
-
                 StandardMobBrain brain = new StandardMobBrain();
                 brain.AggroLevel = 0;
                 brain.AggroRange = 500;
                 Charles.SetOwnBrain(brain);
 
                 if (SAVE_INTO_DATABASE)
+                {
                     Charles.SaveIntoDatabase();
+                }
 
                 Charles.AddToWorld();
-
             }
             else
             {
                 Charles = npcs[0];
             }
-
-
-            #endregion
-
-            #region defineItems
 
             daringpaddedboots = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedboots");
             if (daringpaddedboots == null)
@@ -161,7 +161,10 @@ namespace DOL.GS.Quests.Midgard
                 daringpaddedboots = new ItemTemplate();
                 daringpaddedboots.Name = "Daring Padded Boots";
                 if (log.IsWarnEnabled)
+                {
                     log.Warn("Could not find " + daringpaddedboots.Name + ", creating it ...");
+                }
+
                 daringpaddedboots.Level = 5;
                 daringpaddedboots.Weight = 8;
                 daringpaddedboots.Model = 249;
@@ -175,7 +178,7 @@ namespace DOL.GS.Quests.Midgard
                 daringpaddedboots.IsTradable = true;
                 daringpaddedboots.CanDropAsLoot = false;
                 daringpaddedboots.Color = 0;
-                daringpaddedboots.Bonus = 0; // default bonus				
+                daringpaddedboots.Bonus = 0; // default bonus
                 daringpaddedboots.Bonus1 = 4;
                 daringpaddedboots.Bonus1Type = (int)3;
                 daringpaddedboots.Bonus2 = 0;
@@ -222,19 +225,25 @@ namespace DOL.GS.Quests.Midgard
                 daringpaddedboots.MaxCharges1 = 0;
                 daringpaddedboots.Charges1 = 0;
 
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
+                // You don't have to store the created item in the db if you don't want,
+                // it will be recreated each time it is not found, just comment the following
+                // line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
+                {
                     GameServer.Database.AddObject(daringpaddedboots);
+                }
             }
+
             daringpaddedcap = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedcap");
             if (daringpaddedcap == null)
             {
                 daringpaddedcap = new ItemTemplate();
                 daringpaddedcap.Name = "Daring Padded Cap";
                 if (log.IsWarnEnabled)
+                {
                     log.Warn("Could not find " + daringpaddedcap.Name + ", creating it ...");
+                }
+
                 daringpaddedcap.Level = 5;
                 daringpaddedcap.Weight = 8;
                 daringpaddedcap.Model = 825;
@@ -248,7 +257,7 @@ namespace DOL.GS.Quests.Midgard
                 daringpaddedcap.IsTradable = true;
                 daringpaddedcap.CanDropAsLoot = false;
                 daringpaddedcap.Color = 0;
-                daringpaddedcap.Bonus = 0; // default bonus				
+                daringpaddedcap.Bonus = 0; // default bonus
                 daringpaddedcap.Bonus1 = 4;
                 daringpaddedcap.Bonus1Type = (int)2;
                 daringpaddedcap.Bonus2 = 0;
@@ -295,19 +304,25 @@ namespace DOL.GS.Quests.Midgard
                 daringpaddedcap.MaxCharges1 = 0;
                 daringpaddedcap.Charges1 = 0;
 
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
+                // You don't have to store the created item in the db if you don't want,
+                // it will be recreated each time it is not found, just comment the following
+                // line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
+                {
                     GameServer.Database.AddObject(daringpaddedcap);
+                }
             }
+
             daringpaddedgloves = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedgloves");
             if (daringpaddedgloves == null)
             {
                 daringpaddedgloves = new ItemTemplate();
                 daringpaddedgloves.Name = "Daring Padded Gloves";
                 if (log.IsWarnEnabled)
+                {
                     log.Warn("Could not find " + daringpaddedgloves.Name + ", creating it ...");
+                }
+
                 daringpaddedgloves.Level = 5;
                 daringpaddedgloves.Weight = 8;
                 daringpaddedgloves.Model = 248;
@@ -321,7 +336,7 @@ namespace DOL.GS.Quests.Midgard
                 daringpaddedgloves.IsTradable = true;
                 daringpaddedgloves.CanDropAsLoot = false;
                 daringpaddedgloves.Color = 0;
-                daringpaddedgloves.Bonus = 0; // default bonus				
+                daringpaddedgloves.Bonus = 0; // default bonus
                 daringpaddedgloves.Bonus1 = 4;
                 daringpaddedgloves.Bonus1Type = (int)3;
                 daringpaddedgloves.Bonus2 = 0;
@@ -368,19 +383,25 @@ namespace DOL.GS.Quests.Midgard
                 daringpaddedgloves.MaxCharges1 = 0;
                 daringpaddedgloves.Charges1 = 0;
 
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
+                // You don't have to store the created item in the db if you don't want,
+                // it will be recreated each time it is not found, just comment the following
+                // line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
+                {
                     GameServer.Database.AddObject(daringpaddedgloves);
+                }
             }
+
             daringpaddedpants = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedpants");
             if (daringpaddedpants == null)
             {
                 daringpaddedpants = new ItemTemplate();
                 daringpaddedpants.Name = "Daring Padded Pants";
                 if (log.IsWarnEnabled)
+                {
                     log.Warn("Could not find " + daringpaddedpants.Name + ", creating it ...");
+                }
+
                 daringpaddedpants.Level = 5;
                 daringpaddedpants.Weight = 14;
                 daringpaddedpants.Model = 246;
@@ -394,7 +415,7 @@ namespace DOL.GS.Quests.Midgard
                 daringpaddedpants.IsTradable = true;
                 daringpaddedpants.CanDropAsLoot = false;
                 daringpaddedpants.Color = 0;
-                daringpaddedpants.Bonus = 0; // default bonus				
+                daringpaddedpants.Bonus = 0; // default bonus
                 daringpaddedpants.Bonus1 = 4;
                 daringpaddedpants.Bonus1Type = (int)2;
                 daringpaddedpants.Bonus2 = 0;
@@ -441,19 +462,25 @@ namespace DOL.GS.Quests.Midgard
                 daringpaddedpants.MaxCharges1 = 0;
                 daringpaddedpants.Charges1 = 0;
 
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
+                // You don't have to store the created item in the db if you don't want,
+                // it will be recreated each time it is not found, just comment the following
+                // line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
+                {
                     GameServer.Database.AddObject(daringpaddedpants);
+                }
             }
+
             daringpaddedsleeves = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedsleeves");
             if (daringpaddedsleeves == null)
             {
                 daringpaddedsleeves = new ItemTemplate();
                 daringpaddedsleeves.Name = "Daring Padded Sleeves";
                 if (log.IsWarnEnabled)
+                {
                     log.Warn("Could not find " + daringpaddedsleeves.Name + ", creating it ...");
+                }
+
                 daringpaddedsleeves.Level = 5;
                 daringpaddedsleeves.Weight = 12;
                 daringpaddedsleeves.Model = 247;
@@ -461,13 +488,13 @@ namespace DOL.GS.Quests.Midgard
                 daringpaddedsleeves.Item_Type = 28;
                 daringpaddedsleeves.Id_nb = "daringpaddedsleeves";
                 daringpaddedsleeves.Hand = 0;
-                daringpaddedsleeves.Price= 0;
+                daringpaddedsleeves.Price = 0;
                 daringpaddedsleeves.IsPickable = true;
                 daringpaddedsleeves.IsDropable = true;
                 daringpaddedsleeves.IsTradable = true;
                 daringpaddedsleeves.CanDropAsLoot = false;
                 daringpaddedsleeves.Color = 0;
-                daringpaddedsleeves.Bonus = 0; // default bonus				
+                daringpaddedsleeves.Bonus = 0; // default bonus
                 daringpaddedsleeves.Bonus1 = 4;
                 daringpaddedsleeves.Bonus1Type = (int)6;
                 daringpaddedsleeves.Bonus2 = 0;
@@ -514,19 +541,25 @@ namespace DOL.GS.Quests.Midgard
                 daringpaddedsleeves.MaxCharges1 = 0;
                 daringpaddedsleeves.Charges1 = 0;
 
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
+                // You don't have to store the created item in the db if you don't want,
+                // it will be recreated each time it is not found, just comment the following
+                // line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
+                {
                     GameServer.Database.AddObject(daringpaddedsleeves);
+                }
             }
+
             daringpaddedvest = GameServer.Database.FindObjectByKey<ItemTemplate>("daringpaddedvest");
             if (daringpaddedvest == null)
             {
                 daringpaddedvest = new ItemTemplate();
                 daringpaddedvest.Name = "Daring Padded Vest";
                 if (log.IsWarnEnabled)
+                {
                     log.Warn("Could not find " + daringpaddedvest.Name + ", creating it ...");
+                }
+
                 daringpaddedvest.Level = 5;
                 daringpaddedvest.Weight = 20;
                 daringpaddedvest.Model = 245;
@@ -540,7 +573,7 @@ namespace DOL.GS.Quests.Midgard
                 daringpaddedvest.IsTradable = true;
                 daringpaddedvest.CanDropAsLoot = false;
                 daringpaddedvest.Color = 0;
-                daringpaddedvest.Bonus = 0; // default bonus				
+                daringpaddedvest.Bonus = 0; // default bonus
                 daringpaddedvest.Bonus1 = 12;
                 daringpaddedvest.Bonus1Type = (int)10;
                 daringpaddedvest.Bonus2 = 0;
@@ -587,19 +620,25 @@ namespace DOL.GS.Quests.Midgard
                 daringpaddedvest.MaxCharges1 = 0;
                 daringpaddedvest.Charges1 = 0;
 
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
+                // You don't have to store the created item in the db if you don't want,
+                // it will be recreated each time it is not found, just comment the following
+                // line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
+                {
                     GameServer.Database.AddObject(daringpaddedvest);
+                }
             }
+
             daringleatherboots = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleatherboots");
             if (daringleatherboots == null)
             {
                 daringleatherboots = new ItemTemplate();
                 daringleatherboots.Name = "Daring Leather Boots";
                 if (log.IsWarnEnabled)
+                {
                     log.Warn("Could not find " + daringleatherboots.Name + ", creating it ...");
+                }
+
                 daringleatherboots.Level = 5;
                 daringleatherboots.Weight = 16;
                 daringleatherboots.Model = 284;
@@ -613,7 +652,7 @@ namespace DOL.GS.Quests.Midgard
                 daringleatherboots.IsTradable = true;
                 daringleatherboots.CanDropAsLoot = false;
                 daringleatherboots.Color = 0;
-                daringleatherboots.Bonus = 0; // default bonus				
+                daringleatherboots.Bonus = 0; // default bonus
                 daringleatherboots.Bonus1 = 4;
                 daringleatherboots.Bonus1Type = (int)3;
                 daringleatherboots.Bonus2 = 0;
@@ -660,19 +699,25 @@ namespace DOL.GS.Quests.Midgard
                 daringleatherboots.MaxCharges1 = 0;
                 daringleatherboots.Charges1 = 0;
 
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
+                // You don't have to store the created item in the db if you don't want,
+                // it will be recreated each time it is not found, just comment the following
+                // line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
+                {
                     GameServer.Database.AddObject(daringleatherboots);
+                }
             }
+
             daringleathercap = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleathercap");
             if (daringleathercap == null)
             {
                 daringleathercap = new ItemTemplate();
                 daringleathercap.Name = "Daring Leather Cap";
                 if (log.IsWarnEnabled)
+                {
                     log.Warn("Could not find " + daringleathercap.Name + ", creating it ...");
+                }
+
                 daringleathercap.Level = 5;
                 daringleathercap.Weight = 16;
                 daringleathercap.Model = 337;
@@ -686,7 +731,7 @@ namespace DOL.GS.Quests.Midgard
                 daringleathercap.IsTradable = true;
                 daringleathercap.CanDropAsLoot = false;
                 daringleathercap.Color = 0;
-                daringleathercap.Bonus = 0; // default bonus				
+                daringleathercap.Bonus = 0; // default bonus
                 daringleathercap.Bonus1 = 4;
                 daringleathercap.Bonus1Type = (int)3;
                 daringleathercap.Bonus2 = 0;
@@ -733,19 +778,25 @@ namespace DOL.GS.Quests.Midgard
                 daringleathercap.MaxCharges1 = 0;
                 daringleathercap.Charges1 = 0;
 
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
+                // You don't have to store the created item in the db if you don't want,
+                // it will be recreated each time it is not found, just comment the following
+                // line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
+                {
                     GameServer.Database.AddObject(daringleathercap);
+                }
             }
+
             daringleathergloves = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleathergloves");
             if (daringleathergloves == null)
             {
                 daringleathergloves = new ItemTemplate();
                 daringleathergloves.Name = "Daring Leather Gloves";
                 if (log.IsWarnEnabled)
+                {
                     log.Warn("Could not find " + daringleathergloves.Name + ", creating it ...");
+                }
+
                 daringleathergloves.Level = 5;
                 daringleathergloves.Weight = 16;
                 daringleathergloves.Model = 283;
@@ -759,7 +810,7 @@ namespace DOL.GS.Quests.Midgard
                 daringleathergloves.IsTradable = true;
                 daringleathergloves.CanDropAsLoot = false;
                 daringleathergloves.Color = 0;
-                daringleathergloves.Bonus = 0; // default bonus				
+                daringleathergloves.Bonus = 0; // default bonus
                 daringleathergloves.Bonus1 = 4;
                 daringleathergloves.Bonus1Type = (int)2;
                 daringleathergloves.Bonus2 = 0;
@@ -806,19 +857,25 @@ namespace DOL.GS.Quests.Midgard
                 daringleathergloves.MaxCharges1 = 0;
                 daringleathergloves.Charges1 = 0;
 
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
+                // You don't have to store the created item in the db if you don't want,
+                // it will be recreated each time it is not found, just comment the following
+                // line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
+                {
                     GameServer.Database.AddObject(daringleathergloves);
+                }
             }
+
             daringleatherjerkin = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleatherjerkin");
             if (daringleatherjerkin == null)
             {
                 daringleatherjerkin = new ItemTemplate();
                 daringleatherjerkin.Name = "Daring Leather Jerkin";
                 if (log.IsWarnEnabled)
+                {
                     log.Warn("Could not find " + daringleatherjerkin.Name + ", creating it ...");
+                }
+
                 daringleatherjerkin.Level = 5;
                 daringleatherjerkin.Weight = 16;
                 daringleatherjerkin.Model = 280;
@@ -832,7 +889,7 @@ namespace DOL.GS.Quests.Midgard
                 daringleatherjerkin.IsTradable = true;
                 daringleatherjerkin.CanDropAsLoot = false;
                 daringleatherjerkin.Color = 0;
-                daringleatherjerkin.Bonus = 0; // default bonus				
+                daringleatherjerkin.Bonus = 0; // default bonus
                 daringleatherjerkin.Bonus1 = 12;
                 daringleatherjerkin.Bonus1Type = (int)10;
                 daringleatherjerkin.Bonus2 = 0;
@@ -879,19 +936,25 @@ namespace DOL.GS.Quests.Midgard
                 daringleatherjerkin.MaxCharges1 = 0;
                 daringleatherjerkin.Charges1 = 0;
 
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
+                // You don't have to store the created item in the db if you don't want,
+                // it will be recreated each time it is not found, just comment the following
+                // line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
+                {
                     GameServer.Database.AddObject(daringleatherjerkin);
+                }
             }
+
             daringleatherleggings = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleatherleggings");
             if (daringleatherleggings == null)
             {
                 daringleatherleggings = new ItemTemplate();
                 daringleatherleggings.Name = "Daring Leather Leggings";
                 if (log.IsWarnEnabled)
+                {
                     log.Warn("Could not find " + daringleatherleggings.Name + ", creating it ...");
+                }
+
                 daringleatherleggings.Level = 5;
                 daringleatherleggings.Weight = 16;
                 daringleatherleggings.Model = 281;
@@ -905,7 +968,7 @@ namespace DOL.GS.Quests.Midgard
                 daringleatherleggings.IsTradable = true;
                 daringleatherleggings.CanDropAsLoot = false;
                 daringleatherleggings.Color = 0;
-                daringleatherleggings.Bonus = 0; // default bonus				
+                daringleatherleggings.Bonus = 0; // default bonus
                 daringleatherleggings.Bonus1 = 4;
                 daringleatherleggings.Bonus1Type = (int)2;
                 daringleatherleggings.Bonus2 = 0;
@@ -952,19 +1015,25 @@ namespace DOL.GS.Quests.Midgard
                 daringleatherleggings.MaxCharges1 = 0;
                 daringleatherleggings.Charges1 = 0;
 
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
+                // You don't have to store the created item in the db if you don't want,
+                // it will be recreated each time it is not found, just comment the following
+                // line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
+                {
                     GameServer.Database.AddObject(daringleatherleggings);
+                }
             }
+
             daringleathersleeves = GameServer.Database.FindObjectByKey<ItemTemplate>("daringleathersleeves");
             if (daringleathersleeves == null)
             {
                 daringleathersleeves = new ItemTemplate();
                 daringleathersleeves.Name = "Daring Leather Sleeves";
                 if (log.IsWarnEnabled)
+                {
                     log.Warn("Could not find " + daringleathersleeves.Name + ", creating it ...");
+                }
+
                 daringleathersleeves.Level = 5;
                 daringleathersleeves.Weight = 16;
                 daringleathersleeves.Model = 282;
@@ -978,7 +1047,7 @@ namespace DOL.GS.Quests.Midgard
                 daringleathersleeves.IsTradable = true;
                 daringleathersleeves.CanDropAsLoot = false;
                 daringleathersleeves.Color = 0;
-                daringleathersleeves.Bonus = 0; // default bonus				
+                daringleathersleeves.Bonus = 0; // default bonus
                 daringleathersleeves.Bonus1 = 4;
                 daringleathersleeves.Bonus1Type = (int)1;
                 daringleathersleeves.Bonus2 = 0;
@@ -1025,19 +1094,25 @@ namespace DOL.GS.Quests.Midgard
                 daringleathersleeves.MaxCharges1 = 0;
                 daringleathersleeves.Charges1 = 0;
 
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
+                // You don't have to store the created item in the db if you don't want,
+                // it will be recreated each time it is not found, just comment the following
+                // line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
+                {
                     GameServer.Database.AddObject(daringleathersleeves);
+                }
             }
+
             daringstuddedboots = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedboots");
             if (daringstuddedboots == null)
             {
                 daringstuddedboots = new ItemTemplate();
                 daringstuddedboots.Name = "Daring Studded Boots";
                 if (log.IsWarnEnabled)
+                {
                     log.Warn("Could not find " + daringstuddedboots.Name + ", creating it ...");
+                }
+
                 daringstuddedboots.Level = 5;
                 daringstuddedboots.Weight = 24;
                 daringstuddedboots.Model = 234;
@@ -1051,7 +1126,7 @@ namespace DOL.GS.Quests.Midgard
                 daringstuddedboots.IsTradable = true;
                 daringstuddedboots.CanDropAsLoot = false;
                 daringstuddedboots.Color = 0;
-                daringstuddedboots.Bonus = 0; // default bonus				
+                daringstuddedboots.Bonus = 0; // default bonus
                 daringstuddedboots.Bonus1 = 4;
                 daringstuddedboots.Bonus1Type = (int)3;
                 daringstuddedboots.Bonus2 = 0;
@@ -1098,19 +1173,25 @@ namespace DOL.GS.Quests.Midgard
                 daringstuddedboots.MaxCharges1 = 0;
                 daringstuddedboots.Charges1 = 0;
 
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
+                // You don't have to store the created item in the db if you don't want,
+                // it will be recreated each time it is not found, just comment the following
+                // line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
+                {
                     GameServer.Database.AddObject(daringstuddedboots);
+                }
             }
+
             daringstuddedcap = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedcap");
             if (daringstuddedcap == null)
             {
                 daringstuddedcap = new ItemTemplate();
                 daringstuddedcap.Name = "Daring Studded Cap";
                 if (log.IsWarnEnabled)
+                {
                     log.Warn("Could not find " + daringstuddedcap.Name + ", creating it ...");
+                }
+
                 daringstuddedcap.Level = 5;
                 daringstuddedcap.Weight = 24;
                 daringstuddedcap.Model = 829;
@@ -1124,7 +1205,7 @@ namespace DOL.GS.Quests.Midgard
                 daringstuddedcap.IsTradable = true;
                 daringstuddedcap.CanDropAsLoot = false;
                 daringstuddedcap.Color = 0;
-                daringstuddedcap.Bonus = 0; // default bonus				
+                daringstuddedcap.Bonus = 0; // default bonus
                 daringstuddedcap.Bonus1 = 4;
                 daringstuddedcap.Bonus1Type = (int)3;
                 daringstuddedcap.Bonus2 = 0;
@@ -1171,19 +1252,25 @@ namespace DOL.GS.Quests.Midgard
                 daringstuddedcap.MaxCharges1 = 0;
                 daringstuddedcap.Charges1 = 0;
 
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
+                // You don't have to store the created item in the db if you don't want,
+                // it will be recreated each time it is not found, just comment the following
+                // line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
+                {
                     GameServer.Database.AddObject(daringstuddedcap);
+                }
             }
+
             daringstuddedgloves = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedgloves");
             if (daringstuddedgloves == null)
             {
                 daringstuddedgloves = new ItemTemplate();
                 daringstuddedgloves.Name = "Daring Studded Gloves";
                 if (log.IsWarnEnabled)
+                {
                     log.Warn("Could not find " + daringstuddedgloves.Name + ", creating it ...");
+                }
+
                 daringstuddedgloves.Level = 5;
                 daringstuddedgloves.Weight = 24;
                 daringstuddedgloves.Model = 233;
@@ -1197,7 +1284,7 @@ namespace DOL.GS.Quests.Midgard
                 daringstuddedgloves.IsTradable = true;
                 daringstuddedgloves.CanDropAsLoot = false;
                 daringstuddedgloves.Color = 0;
-                daringstuddedgloves.Bonus = 0; // default bonus				
+                daringstuddedgloves.Bonus = 0; // default bonus
                 daringstuddedgloves.Bonus1 = 4;
                 daringstuddedgloves.Bonus1Type = (int)4;
                 daringstuddedgloves.Bonus2 = 0;
@@ -1244,19 +1331,25 @@ namespace DOL.GS.Quests.Midgard
                 daringstuddedgloves.MaxCharges1 = 0;
                 daringstuddedgloves.Charges1 = 0;
 
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
+                // You don't have to store the created item in the db if you don't want,
+                // it will be recreated each time it is not found, just comment the following
+                // line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
+                {
                     GameServer.Database.AddObject(daringstuddedgloves);
+                }
             }
+
             daringstuddedjerkin = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedjerkin");
             if (daringstuddedjerkin == null)
             {
                 daringstuddedjerkin = new ItemTemplate();
                 daringstuddedjerkin.Name = "Daring Studded Jerkin";
                 if (log.IsWarnEnabled)
+                {
                     log.Warn("Could not find " + daringstuddedjerkin.Name + ", creating it ...");
+                }
+
                 daringstuddedjerkin.Level = 5;
                 daringstuddedjerkin.Weight = 60;
                 daringstuddedjerkin.Model = 230;
@@ -1270,7 +1363,7 @@ namespace DOL.GS.Quests.Midgard
                 daringstuddedjerkin.IsTradable = true;
                 daringstuddedjerkin.CanDropAsLoot = false;
                 daringstuddedjerkin.Color = 0;
-                daringstuddedjerkin.Bonus = 0; // default bonus				
+                daringstuddedjerkin.Bonus = 0; // default bonus
                 daringstuddedjerkin.Bonus1 = 12;
                 daringstuddedjerkin.Bonus1Type = (int)10;
                 daringstuddedjerkin.Bonus2 = 0;
@@ -1317,19 +1410,25 @@ namespace DOL.GS.Quests.Midgard
                 daringstuddedjerkin.MaxCharges1 = 0;
                 daringstuddedjerkin.Charges1 = 0;
 
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
+                // You don't have to store the created item in the db if you don't want,
+                // it will be recreated each time it is not found, just comment the following
+                // line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
+                {
                     GameServer.Database.AddObject(daringstuddedjerkin);
+                }
             }
+
             daringstuddedleggings = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedleggings");
             if (daringstuddedleggings == null)
             {
                 daringstuddedleggings = new ItemTemplate();
                 daringstuddedleggings.Name = "Daring Studded Leggings";
                 if (log.IsWarnEnabled)
+                {
                     log.Warn("Could not find " + daringstuddedleggings.Name + ", creating it ...");
+                }
+
                 daringstuddedleggings.Level = 5;
                 daringstuddedleggings.Weight = 42;
                 daringstuddedleggings.Model = 231;
@@ -1343,7 +1442,7 @@ namespace DOL.GS.Quests.Midgard
                 daringstuddedleggings.IsTradable = true;
                 daringstuddedleggings.CanDropAsLoot = false;
                 daringstuddedleggings.Color = 0;
-                daringstuddedleggings.Bonus = 0; // default bonus				
+                daringstuddedleggings.Bonus = 0; // default bonus
                 daringstuddedleggings.Bonus1 = 4;
                 daringstuddedleggings.Bonus1Type = (int)4;
                 daringstuddedleggings.Bonus2 = 0;
@@ -1390,19 +1489,25 @@ namespace DOL.GS.Quests.Midgard
                 daringstuddedleggings.MaxCharges1 = 0;
                 daringstuddedleggings.Charges1 = 0;
 
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
+                // You don't have to store the created item in the db if you don't want,
+                // it will be recreated each time it is not found, just comment the following
+                // line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
+                {
                     GameServer.Database.AddObject(daringstuddedleggings);
+                }
             }
+
             daringstuddedsleeves = GameServer.Database.FindObjectByKey<ItemTemplate>("daringstuddedsleeves");
             if (daringstuddedsleeves == null)
             {
                 daringstuddedsleeves = new ItemTemplate();
                 daringstuddedsleeves.Name = "Daring Studded Sleeves";
                 if (log.IsWarnEnabled)
+                {
                     log.Warn("Could not find " + daringstuddedsleeves.Name + ", creating it ...");
+                }
+
                 daringstuddedsleeves.Level = 5;
                 daringstuddedsleeves.Weight = 36;
                 daringstuddedsleeves.Model = 232;
@@ -1416,7 +1521,7 @@ namespace DOL.GS.Quests.Midgard
                 daringstuddedsleeves.IsTradable = true;
                 daringstuddedsleeves.CanDropAsLoot = false;
                 daringstuddedsleeves.Color = 0;
-                daringstuddedsleeves.Bonus = 0; // default bonus				
+                daringstuddedsleeves.Bonus = 0; // default bonus
                 daringstuddedsleeves.Bonus1 = 4;
                 daringstuddedsleeves.Bonus1Type = (int)1;
                 daringstuddedsleeves.Bonus2 = 0;
@@ -1463,21 +1568,17 @@ namespace DOL.GS.Quests.Midgard
                 daringstuddedsleeves.MaxCharges1 = 0;
                 daringstuddedsleeves.Charges1 = 0;
 
-                //You don't have to store the created item in the db if you don't want,
-                //it will be recreated each time it is not found, just comment the following
-                //line if you rather not modify your database
+                // You don't have to store the created item in the db if you don't want,
+                // it will be recreated each time it is not found, just comment the following
+                // line if you rather not modify your database
                 if (SAVE_INTO_DATABASE)
+                {
                     GameServer.Database.AddObject(daringstuddedsleeves);
+                }
             }
 
-
-            #endregion
-
-            #region defineAreas
-            Mid_Statue_Area = WorldMgr.GetRegion(Mid_Statue.RegionID).AddArea(new Area.Circle("", Mid_Statue.X, Mid_Statue.Y, Mid_Statue.Z, 500));
+            Mid_Statue_Area = WorldMgr.GetRegion(Mid_Statue.RegionID).AddArea(new Area.Circle(string.Empty, Mid_Statue.X, Mid_Statue.Y, Mid_Statue.Z, 500));
             Mid_Statue_Area.RegisterPlayerEnter(new DOLEventHandler(PlayerEnterStatueArea));
-
-            #endregion
 
             GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
             GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
@@ -1487,21 +1588,29 @@ namespace DOL.GS.Quests.Midgard
 
             Charles.AddQuestToGive(typeof(childsplay));
             if (log.IsInfoEnabled)
+            {
                 log.Info("Quest \"" + questTitle + "\" initialized");
+            }
         }
 
         [ScriptUnloadedEvent]
         public static void ScriptUnloaded(DOLEvent e, object sender, EventArgs args)
         {
             if (!ServerProperties.Properties.LOAD_QUESTS)
+            {
                 return;
-            //Region StatuaRegion = WorldMgr.GetRegion(489);
-            //if (StatuaRegion != null)
+            }
+
+            // Region StatuaRegion = WorldMgr.GetRegion(489);
+            // if (StatuaRegion != null)
             //    StatuaRegion.RemoveArea(Statua);
             Mid_Statue_Area.UnRegisterPlayerEnter(new DOLEventHandler(PlayerEnterStatueArea));
             WorldMgr.GetRegion(Mid_Statue.RegionID).RemoveArea(Mid_Statue_Area);
             if (Charles == null)
+            {
                 return;
+            }
+
             GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
             GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
@@ -1515,10 +1624,14 @@ namespace DOL.GS.Quests.Midgard
         {
             GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
             if (player == null)
+            {
                 return;
+            }
 
             if (Charles.CanGiveQuest(typeof(childsplay), player) <= 0)
+            {
                 return;
+            }
 
             childsplay quest = player.IsDoingQuest(typeof(childsplay)) as childsplay;
 
@@ -1531,49 +1644,54 @@ namespace DOL.GS.Quests.Midgard
                     Charles.SayTo(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text1", player.CharacterClass.BaseName));
                     return;
                 }
+
                 if (quest.Step == 2)
                 {
                     Charles.SayTo(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text2"));
 
-                    //k109:  Until I can get the quest dialog from live, I reward based on class, feel free to edit.
+                    // k109:  Until I can get the quest dialog from live, I reward based on class, feel free to edit.
                     player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text3", questTitle), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
 
                     if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Viking"))
                     {
-                        GiveItem(Charles, quest.m_questPlayer, daringstuddedboots);
-                        GiveItem(Charles, quest.m_questPlayer, daringstuddedcap);
-                        GiveItem(Charles, quest.m_questPlayer, daringstuddedgloves);
-                        GiveItem(Charles, quest.m_questPlayer, daringstuddedjerkin);
-                        GiveItem(Charles, quest.m_questPlayer, daringstuddedleggings);
-                        GiveItem(Charles, quest.m_questPlayer, daringstuddedsleeves);
+                        GiveItem(Charles, quest.QuestPlayer, daringstuddedboots);
+                        GiveItem(Charles, quest.QuestPlayer, daringstuddedcap);
+                        GiveItem(Charles, quest.QuestPlayer, daringstuddedgloves);
+                        GiveItem(Charles, quest.QuestPlayer, daringstuddedjerkin);
+                        GiveItem(Charles, quest.QuestPlayer, daringstuddedleggings);
+                        GiveItem(Charles, quest.QuestPlayer, daringstuddedsleeves);
                     }
+
                     if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Mystic"))
                     {
-                        GiveItem(Charles, quest.m_questPlayer, daringpaddedboots);
-                        GiveItem(Charles, quest.m_questPlayer, daringpaddedcap);
-                        GiveItem(Charles, quest.m_questPlayer, daringpaddedgloves);
-                        GiveItem(Charles, quest.m_questPlayer, daringpaddedpants);
-                        GiveItem(Charles, quest.m_questPlayer, daringpaddedsleeves);
-                        GiveItem(Charles, quest.m_questPlayer, daringpaddedvest);
+                        GiveItem(Charles, quest.QuestPlayer, daringpaddedboots);
+                        GiveItem(Charles, quest.QuestPlayer, daringpaddedcap);
+                        GiveItem(Charles, quest.QuestPlayer, daringpaddedgloves);
+                        GiveItem(Charles, quest.QuestPlayer, daringpaddedpants);
+                        GiveItem(Charles, quest.QuestPlayer, daringpaddedsleeves);
+                        GiveItem(Charles, quest.QuestPlayer, daringpaddedvest);
                     }
+
                     if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.MidgardRogue"))
                     {
-                        GiveItem(Charles, quest.m_questPlayer, daringleatherboots);
-                        GiveItem(Charles, quest.m_questPlayer, daringleathercap);
-                        GiveItem(Charles, quest.m_questPlayer, daringleathergloves);
-                        GiveItem(Charles, quest.m_questPlayer, daringleatherjerkin);
-                        GiveItem(Charles, quest.m_questPlayer, daringleatherleggings);
-                        GiveItem(Charles, quest.m_questPlayer, daringleathersleeves);
+                        GiveItem(Charles, quest.QuestPlayer, daringleatherboots);
+                        GiveItem(Charles, quest.QuestPlayer, daringleathercap);
+                        GiveItem(Charles, quest.QuestPlayer, daringleathergloves);
+                        GiveItem(Charles, quest.QuestPlayer, daringleatherjerkin);
+                        GiveItem(Charles, quest.QuestPlayer, daringleatherleggings);
+                        GiveItem(Charles, quest.QuestPlayer, daringleathersleeves);
                     }
+
                     if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Seer"))
                     {
-                        GiveItem(Charles, quest.m_questPlayer, daringleatherboots);
-                        GiveItem(Charles, quest.m_questPlayer, daringleathercap);
-                        GiveItem(Charles, quest.m_questPlayer, daringleathergloves);
-                        GiveItem(Charles, quest.m_questPlayer, daringleatherjerkin);
-                        GiveItem(Charles, quest.m_questPlayer, daringleatherleggings);
-                        GiveItem(Charles, quest.m_questPlayer, daringleathersleeves);
+                        GiveItem(Charles, quest.QuestPlayer, daringleatherboots);
+                        GiveItem(Charles, quest.QuestPlayer, daringleathercap);
+                        GiveItem(Charles, quest.QuestPlayer, daringleathergloves);
+                        GiveItem(Charles, quest.QuestPlayer, daringleatherjerkin);
+                        GiveItem(Charles, quest.QuestPlayer, daringleatherleggings);
+                        GiveItem(Charles, quest.QuestPlayer, daringleathersleeves);
                     }
+
                     quest.FinishQuest();
                 }
             }
@@ -1582,8 +1700,8 @@ namespace DOL.GS.Quests.Midgard
                 WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs)args;
                 if (quest == null)
                 {
-                    //k109:  This is the "old" way of doing quests, by clicking on keywords, but have to use this until I can get the new quest dialog window.
-                    String lowerCase = wArgs.Text.ToLower();
+                    // k109:  This is the "old" way of doing quests, by clicking on keywords, but have to use this until I can get the new quest dialog window.
+                    string lowerCase = wArgs.Text.ToLower();
 
                     if (lowerCase == LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.CaseText1"))
                     {
@@ -1602,6 +1720,7 @@ namespace DOL.GS.Quests.Midgard
                 }
             }
         }
+
         /// <summary>
         /// This method checks if a player qualifies for this quest
         /// </summary>
@@ -1609,10 +1728,14 @@ namespace DOL.GS.Quests.Midgard
         public override bool CheckQuestQualification(GamePlayer player)
         {
             if (player.IsDoingQuest(typeof(childsplay)) != null)
+            {
                 return true;
+            }
 
             if (player.Level < minimumLevel || player.Level > maximumLevel)
+            {
                 return false;
+            }
 
             return true;
         }
@@ -1622,7 +1745,9 @@ namespace DOL.GS.Quests.Midgard
             childsplay quest = player.IsDoingQuest(typeof(childsplay)) as childsplay;
 
             if (quest == null)
+            {
                 return;
+            }
 
             if (response == 0x00)
             {
@@ -1639,16 +1764,25 @@ namespace DOL.GS.Quests.Midgard
         {
             QuestEventArgs qargs = args as QuestEventArgs;
             if (qargs == null)
+            {
                 return;
+            }
 
             if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(childsplay)))
+            {
                 return;
+            }
 
             if (e == GamePlayerEvent.AcceptQuest)
+            {
                 CheckPlayerAcceptQuest(qargs.Player, 0x01);
+            }
             else if (e == GamePlayerEvent.DeclineQuest)
+            {
                 CheckPlayerAcceptQuest(qargs.Player, 0x00);
+            }
         }
+
         protected static void PlayerEnterStatueArea(DOLEvent e, object sender, EventArgs args)
         {
             AreaEventArgs aargs = args as AreaEventArgs;
@@ -1661,13 +1795,18 @@ namespace DOL.GS.Quests.Midgard
                 quest.Step = 2;
             }
         }
+
         private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
         {
             if (Charles.CanGiveQuest(typeof(childsplay), player) <= 0)
+            {
                 return;
+            }
 
             if (player.IsDoingQuest(typeof(childsplay)) != null)
+            {
                 return;
+            }
 
             if (response == 0x00)
             {
@@ -1676,7 +1815,10 @@ namespace DOL.GS.Quests.Midgard
             else
             {
                 if (!Charles.GiveQuest(typeof(childsplay), player, 1))
+                {
                     return;
+                }
+
                 SendReply(player, LanguageMgr.GetTranslation(player.Client, "ChildsPlay.CheckPlayerAcceptQuest.Text2"));
             }
         }
@@ -1690,14 +1832,14 @@ namespace DOL.GS.Quests.Midgard
         {
             get
             {
-                //k109: Update each time a kill is made.
+                // k109: Update each time a kill is made.
                 if (Step == 1)
                 {
-                    return LanguageMgr.GetTranslation(m_questPlayer.Client, "Mid.ChildsPlay.Description.Text1");
+                    return LanguageMgr.GetTranslation(QuestPlayer.Client, "Mid.ChildsPlay.Description.Text1");
                 }
                 else if (Step == 2)
                 {
-                    return LanguageMgr.GetTranslation(m_questPlayer.Client, "Mid.ChildsPlay.Description.Text2");
+                    return LanguageMgr.GetTranslation(QuestPlayer.Client, "Mid.ChildsPlay.Description.Text2");
                 }
 
                 return base.Description;
@@ -1706,17 +1848,17 @@ namespace DOL.GS.Quests.Midgard
 
         public override void AbortQuest()
         {
-            base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+            base.AbortQuest(); // Defined in Quest, changes the state, stores in DB etc ...
         }
 
         public override void FinishQuest()
         {
-            base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+            base.FinishQuest(); // Defined in Quest, changes the state, stores in DB etc ...
 
-            //k109: xp and money Rewards...
-			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 2, true);
-            m_questPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, 67), LanguageMgr.GetTranslation(m_questPlayer.Client, "ChildsPlay.FinishQuest.Text1"));
-            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, 67);
+            // k109: xp and money Rewards...
+            QuestPlayer.GainExperience(GameLiving.eXPSource.Quest, 2, true);
+            QuestPlayer.AddMoney(Money.GetMoney(0, 0, 0, 0, 67), LanguageMgr.GetTranslation(QuestPlayer.Client, "ChildsPlay.FinishQuest.Text1"));
+            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", QuestPlayer, eInventoryActionType.Quest, 67);
         }
     }
 }

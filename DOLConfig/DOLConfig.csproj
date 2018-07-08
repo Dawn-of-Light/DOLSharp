@@ -198,8 +198,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="DOLConfig.exe.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

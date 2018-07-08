@@ -1,28 +1,19 @@
-using System.Collections;
-using System;
 using System.Collections.Generic;
-using DOL;
-using DOL.GS;
-using DOL.Events;
-using DOL.Database;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Effects
 {
 
     public class FungalUnionEffect : TimedEffect
     {
-        private GameLiving owner;
+        private GameLiving _owner;
 
         public FungalUnionEffect() : base(60000) { }
-
 
         public override void Start(GameLiving target)
         {
             base.Start(target);
-            owner = target;
-            GamePlayer player = target as GamePlayer;
-            if (player != null)
+            _owner = target;
+            if (target is GamePlayer player)
             {
                 player.Model = 1648;
             }
@@ -31,26 +22,25 @@ namespace DOL.GS.Effects
         public override void Stop()
         {
             base.Stop();
-            GamePlayer player = owner as GamePlayer;
-            if (player is GamePlayer)
+            if (_owner is GamePlayer player)
             {
-                player.Model = (ushort)player.CreationModel;
+                player.Model = player.CreationModel;
             }
         }
 
+        public override string Name => "Fungal Union";
 
-        public override string Name { get { return "Fungal Union"; } }
-
-
-        public override ushort Icon { get { return 3061; } }
-
+        public override ushort Icon => 3061;
 
         public override IList<string> DelveInfo
         {
             get
             {
-                var list = new List<string>();
-                list.Add("Turns the animist into a mushroom for 60 seconds. Does not break on attack. Grants the animist a 10% chance of not spending power for each spell cast during the duration.");
+                var list = new List<string>
+                {
+                    "Turns the animist into a mushroom for 60 seconds. Does not break on attack. Grants the animist a 10% chance of not spending power for each spell cast during the duration."
+                };
+
                 return list;
             }
         }

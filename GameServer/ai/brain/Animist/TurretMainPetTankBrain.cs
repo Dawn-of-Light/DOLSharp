@@ -25,59 +25,66 @@ namespace DOL.AI.Brain
   {
     public TurretMainPetTankBrain(GameLiving owner) : base(owner) { }
 
-	public override void Notify(DOLEvent e, object sender, System.EventArgs args)
-	{
-		base.Notify(e, sender, args);
-		if(AggressionState != eAggressionState.Passive)
-		{
-			if(e == GameLivingEvent.CastFinished || e == GameLivingEvent.AttackFinished)
-			{
-				TurretPet pet = sender as TurretPet;
-				if(pet == null || pet != Body || !(pet.Brain is TurretMainPetTankBrain))
-					return;
+    public override void Notify(DOLEvent e, object sender, System.EventArgs args)
+    {
+        base.Notify(e, sender, args);
+        if (AggressionState != eAggressionState.Passive)
+        {
+            if (e == GameLivingEvent.CastFinished || e == GameLivingEvent.AttackFinished)
+            {
+                TurretPet pet = sender as TurretPet;
+                if (pet == null || pet != Body || !(pet.Brain is TurretMainPetTankBrain))
+                    {
+                        return;
+                    }
 
-				if(e == GameLivingEvent.CastFinished)
-				{
-					if(Body.TargetObject != null)
-					{
-						//Force to stop spell casting
-						if(Body.IsCasting)
-						{
-							Body.StopCurrentSpellcast();
-						}
-						if(Body.SpellTimer != null && Body.SpellTimer.IsAlive)
-						{
-							Body.SpellTimer.Stop();
-						}
-						Body.StartAttack(Body.TargetObject);
-					}
-					return;
-				}
-				if(e == GameLivingEvent.AttackFinished)
-				{
-					Body.StopAttack();
-					AttackMostWanted();
-				}
-			}
-		}
-	}
+                    if (e == GameLivingEvent.CastFinished)
+                {
+                    if (Body.TargetObject != null)
+                    {
+                        // Force to stop spell casting
+                        if (Body.IsCasting)
+                        {
+                            Body.StopCurrentSpellcast();
+                        }
 
-  	protected override void AttackMostWanted()
-	{
-		// Force to wait body attack before casting.
-		if(Body.AttackState)
-		{
-			return;
-		}
-		CheckSpells(eCheckSpellType.Offensive);
-	}
+                        if (Body.SpellTimer != null && Body.SpellTimer.IsAlive)
+                        {
+                            Body.SpellTimer.Stop();
+                        }
 
-  	protected override void OnAttackedByEnemy(AttackData ad)
-	{
-	  if (AggressionState != eAggressionState.Passive)
-	  {
-		AddToAggroList(ad.Attacker, (ad.Attacker.Level + 1) << 1);
-	  }
-	}
+                        Body.StartAttack(Body.TargetObject);
+                    }
+
+                    return;
+                }
+
+                if (e == GameLivingEvent.AttackFinished)
+                {
+                    Body.StopAttack();
+                    AttackMostWanted();
+                }
+            }
+        }
+    }
+
+    protected override void AttackMostWanted()
+    {
+        // Force to wait body attack before casting.
+        if (Body.AttackState)
+        {
+            return;
+        }
+
+        CheckSpells(eCheckSpellType.Offensive);
+    }
+
+    protected override void OnAttackedByEnemy(AttackData ad)
+    {
+      if (AggressionState != eAggressionState.Passive)
+      {
+        AddToAggroList(ad.Attacker, (ad.Attacker.Level + 1) << 1);
+      }
+    }
   }
 }

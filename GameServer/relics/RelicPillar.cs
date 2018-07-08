@@ -16,112 +16,92 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS;
 
 namespace DOL.GS.Relics
 {
-	/// <summary>
-	/// Class representing a relic pillar.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class RelicPillar : GameObject, IDoor
-	{
-		/// <summary>
-		/// Creates a new relic pillar.
-		/// </summary>
-		public RelicPillar() : base()
-		{
-			Realm = 0;
-			Close();
-		}
+    /// <summary>
+    /// Class representing a relic pillar.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class RelicPillar : GameObject, IDoor
+    {
+        /// <summary>
+        /// Creates a new relic pillar.
+        /// </summary>
+        public RelicPillar()
+        {
+            Realm = 0;
+            Close();
+        }
 
-		/// <summary>
-		/// Object used for thread synchronization.
-		/// </summary>
-		private object m_syncPillar = new object();
+        /// <summary>
+        /// Object used for thread synchronization.
+        /// </summary>
+        private static readonly object Lock = new object();
 
-		#region IDoor Implementation
+        /// <summary>
+        /// ID for this pillar.
+        /// </summary>
+        public int DoorID { get; set; }
 
-		private int m_pillarID;
+        /// <summary>
+        /// Get the ZoneID of this door
+        /// </summary>
+        public ushort ZoneID => (ushort)(DoorID / 1000000);
 
-		/// <summary>
-		/// ID for this pillar.
-		/// </summary>
-		public int DoorID
-		{
-			get { return m_pillarID; }
-			set { m_pillarID = value; }
-		}
+        /// <summary>
+        /// Pillars behave like regular doors.
+        /// </summary>
+        public uint Flag => 0;
 
-		/// <summary>
-		/// Get the ZoneID of this door
-		/// </summary>
-		public ushort ZoneID
-		{
-			get { return (ushort)(DoorID / 1000000); }
-		}
+        private eDoorState _pillarState;
 
-		/// <summary>
-		/// Pillars behave like regular doors.
-		/// </summary>
-		public uint Flag
-		{
-			get { return 0; }
-		}
+        /// <summary>
+        /// State of this pillar (up == closed, down == open).
+        /// </summary>
+        public eDoorState State
+        {
+            get => _pillarState;
+            set
+            {
+                if (_pillarState != value)
+                {
+                    lock (Lock)
+                    {
+                        _pillarState = value;
 
-		private eDoorState m_pillarState;
+                        foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                        {
+                            player.SendDoorUpdate(this);
+                        }
+                    }
+                }
+            }
+        }
 
-		/// <summary>
-		/// State of this pillar (up == closed, down == open).
-		/// </summary>
-		public eDoorState State
-		{
-			get { return m_pillarState; }
-			set
-			{
-				if (m_pillarState != value)
-				{
-					lock (m_syncPillar)
-					{
-						m_pillarState = value;
+        /// <summary>
+        /// Make the pillar start moving down.
+        /// </summary>
+        public void Open(GameLiving opener = null)
+        {
+            State = eDoorState.Open;
+        }
 
-						foreach (GamePlayer player in GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-						{
-							player.SendDoorUpdate(this);
-						}
-					}
-				}
-			}
-		}
+        /// <summary>
+        /// Reset pillar.
+        /// </summary>
+        public void Close(GameLiving closer = null)
+        {
+            State = eDoorState.Closed;
+        }
 
-		/// <summary>
-		/// Make the pillar start moving down.
-		/// </summary>
-		public void Open(GameLiving opener = null)
-		{
-			State = eDoorState.Open;
-		}
-
-		/// <summary>
-		/// Reset pillar.
-		/// </summary>
-		public void Close(GameLiving closer = null)
-		{
-			State = eDoorState.Closed;
-		}
-
-		/// <summary>
-		/// NPCs cannot make pillars move.
-		/// </summary>
-		/// <param name="npc"></param>
-		/// <param name="open"></param>
-		public void NPCManipulateDoorRequest(GameNPC npc, bool open)
-		{
-		}
-
-		#endregion
-	}
+        /// <summary>
+        /// NPCs cannot make pillars move.
+        /// </summary>
+        /// <param name="npc"></param>
+        /// <param name="open"></param>
+        public void NPCManipulateDoorRequest(GameNPC npc, bool open)
+        {
+        }
+    }
 }

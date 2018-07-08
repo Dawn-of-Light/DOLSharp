@@ -1,56 +1,67 @@
 using System;
-using System.Collections;
 using DOL.Database;
-using DOL.GS;
 using DOL.GS.Spells;
-using DOL.Events;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.RealmAbilities.Statics
 {
-	public class NegativeMaelstromBase : GenericBase 
+    public class NegativeMaelstromBase : GenericBase
     {
-		protected override string GetStaticName() {return "Negative Maelstrom";}
-		protected override ushort GetStaticModel() {return 1293;}
-		protected override ushort GetStaticEffect() {return 7027;}
-		private DBSpell dbs;
-		private Spell   s;
-		private SpellLine sl;
-		int damage;		
-		public NegativeMaelstromBase(int damage) 
+        protected override string GetStaticName() { return "Negative Maelstrom"; }
+
+        protected override ushort GetStaticModel() { return 1293; }
+
+        protected override ushort GetStaticEffect() { return 7027; }
+
+        private readonly DBSpell _dbSpell;
+        private readonly SpellLine _spellLine;
+        private readonly int _damage;
+        private Spell _spell;
+
+        public NegativeMaelstromBase(int damage)
         {
-			this.damage = damage;
-			dbs = new DBSpell();
-			dbs.Name = GetStaticName();
-			dbs.Icon = GetStaticEffect();
-			dbs.ClientEffect = GetStaticEffect();
-			dbs.Damage = damage;
-			dbs.DamageType = (int)eDamageType.Cold;
-			dbs.Target = "Enemy";
-			dbs.Radius = 0;
-            dbs.Type = "DirectDamageNoVariance";
-			dbs.Value =0;
-			dbs.Duration = 0;
-			dbs.Pulse = 0;
-			dbs.PulsePower = 0;
-			dbs.Power = 0;
-			dbs.CastTime = 0;
-			dbs.Range = WorldMgr.VISIBILITY_DISTANCE;
-			sl = new SpellLine("RAs","RealmAbilitys","RealmAbilitys",true);
-		}
-		protected override void CastSpell (GameLiving target)
-        {
-            if (!target.IsAlive) return;
-			if (GameServer.ServerRules.IsAllowedToAttack(m_caster, target, true))
+            _damage = damage;
+            _dbSpell = new DBSpell
             {
-				int dealDamage =damage;
-				if (getCurrentPulse()<=6)
-					dealDamage = (int)Math.Round(((double)getCurrentPulse()/6*damage));
-				dbs.Damage = dealDamage;				
-				s = new Spell(dbs,1);
-				ISpellHandler dd = ScriptMgr.CreateSpellHandler(m_caster, s, sl);
-				dd.StartSpell(target);
-			}
-		}
-	}
+                Name = GetStaticName(),
+                Icon = GetStaticEffect(),
+                ClientEffect = GetStaticEffect(),
+                Damage = damage,
+                DamageType = (int) eDamageType.Cold,
+                Target = "Enemy",
+                Radius = 0,
+                Type = "DirectDamageNoVariance",
+                Value = 0,
+                Duration = 0,
+                Pulse = 0,
+                PulsePower = 0,
+                Power = 0,
+                CastTime = 0,
+                Range = WorldMgr.VISIBILITY_DISTANCE
+            };
+
+            _spellLine = new SpellLine("RAs","RealmAbilitys","RealmAbilitys",true);
+        }
+
+        protected override void CastSpell(GameLiving target)
+        {
+            if (!target.IsAlive)
+            {
+                return;
+            }
+
+            if (GameServer.ServerRules.IsAllowedToAttack(Caster, target, true))
+            {
+                int dealDamage = _damage;
+                if (CurrentPulse<= 6)
+                {
+                    dealDamage = (int)Math.Round((double)CurrentPulse/ 6 * _damage);
+                }
+
+                _dbSpell.Damage = dealDamage;
+                _spell = new Spell(_dbSpell, 1);
+                ISpellHandler dd = ScriptMgr.CreateSpellHandler(Caster, _spell, _spellLine);
+                dd.StartSpell(target);
+            }
+        }
+    }
 }

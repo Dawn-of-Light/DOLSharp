@@ -24,327 +24,372 @@ using DOL.Language;
 
 namespace DOL.GS
 {
-	public class CommanderPet : BDPet
-	{
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    public class CommanderPet : BDPet
+    {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		/// <summary>
-		/// Create a commander.
-		/// </summary>
-		/// <param name="npcTemplate"></param>
-		/// <param name="owner"></param>
-		public CommanderPet(INpcTemplate npcTemplate)
-			: base(npcTemplate)
-		{
-			// Use the NpcTemplate TetherRange to determine the number of subpets the commander can have
-			if (npcTemplate.TetherRange > 0)
-			{
-				InitControlledBrainArray(npcTemplate.TetherRange);
-			}
-			else if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.ReturnedCommander"))
-			{
-				InitControlledBrainArray(0);
-			}
-			else if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DecayedCommander") ||
-			    Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.SkeletalCommander"))
-			{
-				InitControlledBrainArray(1);
-			}
-			else if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.BoneCommander"))
-			{
-				InitControlledBrainArray(2);
-			}
-			else if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadCommander") ||
-			    Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadGuardian") ||
-			    Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadLich") ||
-			    Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadArcher"))
-			{
-				InitControlledBrainArray(3);
-			}
-		}
+        /// <summary>
+        /// Create a commander.
+        /// </summary>
+        /// <param name="npcTemplate"></param>
+        /// <param name="owner"></param>
+        public CommanderPet(INpcTemplate npcTemplate)
+            : base(npcTemplate)
+        {
+            if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.ReturnedCommander"))
+            {
+                InitControlledBrainArray(0);
+            }
 
-		/// <summary>
-		/// Called when owner sends a whisper to the pet
-		/// </summary>
-		/// <param name="e"></param>
-		/// <param name="sender"></param>
-		/// <param name="arguments"></param>
-		public override bool WhisperReceive(GameLiving source, string str)
-		{
-			GamePlayer player = source as GamePlayer;
-			if (player == null || player != (Brain as IControlledBrain).Owner)
-				return false;
+            if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DecayedCommander") ||
+                Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.SkeletalCommander"))
+            {
+                InitControlledBrainArray(1);
+            }
 
-			string[] strargs = str.ToLower().Split(' ');
+            if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.BoneCommander"))
+            {
+                InitControlledBrainArray(2);
+            }
 
-			for (int i = 0; i < strargs.Length; i++)
-			{
-				String curStr = strargs[i];
+            if (Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadCommander") ||
+                Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadGuardian") ||
+                Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadLich") ||
+                Name.ToLower() == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "GameObjects.CommanderPet.DreadArcher"))
+            {
+                InitControlledBrainArray(3);
+            }
+        }
 
-				if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Commander"))
-				{
+        /// <summary>
+        /// Called when owner sends a whisper to the pet
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="sender"></param>
+        /// <param name="arguments"></param>
+        public override bool WhisperReceive(GameLiving source, string str)
+        {
+            GamePlayer player = source as GamePlayer;
+            if (player == null || player != (Brain as IControlledBrain).Owner)
+            {
+                return false;
+            }
+
+            string[] strargs = str.ToLower().Split(' ');
+
+            for (int i = 0; i < strargs.Length; i++)
+            {
+                string curStr = strargs[i];
+
+                if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Commander"))
+                {
                     if (Name == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DreadGuardian"))
-					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.DreadGuardian", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					}
+                    {
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.DreadGuardian", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                    }
 
                     if (Name == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DreadLich"))
-					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.DreadLich", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					}
+                    {
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.DreadLich", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                    }
 
                     if (Name == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DreadArcher"))
-					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.DreadArcher", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					}
+                    {
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.DreadArcher", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                    }
 
                     if (Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DreadCommander") ||
                         Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DecayedCommander") ||
                         Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.ReturnedCommander") ||
                         Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.SkeletalCommander") ||
                         Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.BoneCommander"))
-					{
-						player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.XCommander", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-					}
+                    {
+                        player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.XCommander", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                    }
+                }
 
-				}
+                if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Combat"))
+                {
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Combat", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                }
 
-				if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Combat"))
-				{
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Combat", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				}
+                if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Assist"))
+                {
+                    // TODO: implement this - I have no idea how to do that...
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Assist.Text"), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                }
 
-				if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Assist"))
-				{
-					//TODO: implement this - I have no idea how to do that...
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Assist.Text"), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				}
+                if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Taunt"))
+                {
+                    bool found = false;
+                    foreach (Spell spell in Spells)
+                    {
+                        // If the taunt spell's ID is changed - this needs to be changed
+                        if (spell.ID == 60127)
+                        {
+                            Spells.Remove(spell);
+                            player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.CommNoTaunt"), eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+                            found = true;
+                            break;
+                        }
+                    }
 
-				if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Taunt"))
-				{
-					bool found = false;
-					foreach (Spell spell in Spells)
-					{
-						//If the taunt spell's ID is changed - this needs to be changed
-						if (spell.ID == 60127)
-						{
-							Spells.Remove(spell);
-							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.CommNoTaunt"), eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-							found = true;
-							break;
-						}
-					}
-					if (found) break;
-					//TODO: change this so it isn't hardcoded
-					Spell tauntspell = SkillBase.GetSpellByID(60127);
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.CommStartTaunt"), eChatType.CT_Say, eChatLoc.CL_SystemWindow);
-					if (tauntspell != null)
-						Spells.Add(tauntspell);
-					else
-						Console.WriteLine("Couldn't find BD pet's taunt spell");
-					break;
-				}
+                    if (found)
+                    {
+                        break;
+                    }
 
-				if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Weapons"))
-				{
+                    // TODO: change this so it isn't hardcoded
+                    Spell tauntspell = SkillBase.GetSpellByID(60127);
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.CommStartTaunt"), eChatType.CT_Say, eChatLoc.CL_SystemWindow);
+                    if (tauntspell != null)
+                    {
+                        Spells.Add(tauntspell);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Couldn't find BD pet's taunt spell");
+                    }
+
+                    break;
+                }
+
+                if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Weapons"))
+                {
                     if (Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DreadCommander") &&
                         Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DecayedCommander") &&
                         Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.ReturnedCommander") &&
                         Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.SkeletalCommander") &&
                         Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.BoneCommander"))
-					{
-						break;
-					}
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.DiffCommander", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				}
+                    {
+                        break;
+                    }
 
-				if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Spells"))
-				{
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.DiffCommander", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                }
+
+                if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Spells"))
+                {
                     if (Name.ToLower() != LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DreadLich"))
-					{
-						return false;
-					}
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.DreadLich2", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				}
+                    {
+                        return false;
+                    }
 
-				if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Empower"))
-				{
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.DreadLich2", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                }
+
+                if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Empower"))
+                {
                     if (Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DreadGuardian") ||
                         Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DreadLich") ||
                         Name.ToLower() == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DreadArcher"))
-					{
-						foreach (Spell spell in Spells)
-						{
-							if (spell.Name == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Spell.Empower"))
-							{
-								CastSpell(spell, SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
-								break;
-							}
-						}
-					}
-				}
+                    {
+                        foreach (Spell spell in Spells)
+                        {
+                            if (spell.Name == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Spell.Empower"))
+                            {
+                                CastSpell(spell, SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells));
+                                break;
+                            }
+                        }
+                    }
+                }
 
-				if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Snares"))
-				{
-				}
+                if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Snares"))
+                {
+                }
 
-				if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Debilitating"))
-				{
-				}
+                if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Debilitating"))
+                {
+                }
 
-				if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Damage"))
-				{
-				}
+                if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Damage"))
+                {
+                }
 
-				if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.One"))
-				{
-					i++;
-					if (i + 1 >= strargs.Length)
-						return false;
-					CommanderSwitchWeapon(eInventorySlot.RightHandWeapon, eActiveWeaponSlot.Standard, strargs[++i]);
-				}
+                if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.One"))
+                {
+                    i++;
+                    if (i + 1 >= strargs.Length)
+                    {
+                        return false;
+                    }
 
-				if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Two"))
-				{
-					i++;
-					if (i + 1 >= strargs.Length)
-						return false;
-					CommanderSwitchWeapon(eInventorySlot.TwoHandWeapon, eActiveWeaponSlot.TwoHanded, strargs[++i]);
-				}
+                    CommanderSwitchWeapon(eInventorySlot.RightHandWeapon, eActiveWeaponSlot.Standard, strargs[++i]);
+                }
 
-				if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Harm"))
-				{
+                if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Two"))
+                {
+                    i++;
+                    if (i + 1 >= strargs.Length)
+                    {
+                        return false;
+                    }
+
+                    CommanderSwitchWeapon(eInventorySlot.TwoHandWeapon, eActiveWeaponSlot.TwoHanded, strargs[++i]);
+                }
+
+                if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Harm"))
+                {
                     if (Name.ToLower() != LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.DreadGuardian"))
-					{
-						return false;
-					}
-					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.DreadGuardian2", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
-				}
+                    {
+                        return false;
+                    }
 
-				if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Drain"))
-				{
-				}
+                    player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.DreadGuardian2", Name), eChatType.CT_Say, eChatLoc.CL_PopupWindow);
+                }
 
-				if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Suppress"))
-				{
-				}
-			}
-			return base.WhisperReceive(source, str);
-		}
+                if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Drain"))
+                {
+                }
 
-		/// <summary>
-		/// Changes the commander's weapon to the specified type
-		/// </summary>
-		/// <param name="slot"></param>
-		/// <param name="aSlot"></param>
-		/// <param name="weaponType"></param>
-		protected void CommanderSwitchWeapon(eInventorySlot slot, eActiveWeaponSlot aSlot, string weaponType)
-		{
-			if (Inventory == null)
-				return;
+                if (curStr == LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.Const.Suppress"))
+                {
+                }
+            }
 
-			string itemId = string.Format("BD_Commander_{0}_{1}", slot.ToString(), weaponType);
-			//all weapons removed before
-			InventoryItem item = Inventory.GetItem(eInventorySlot.RightHandWeapon);
-			if (item != null) Inventory.RemoveItem(item);
-			item = Inventory.GetItem(eInventorySlot.TwoHandWeapon);
-			if (item != null) Inventory.RemoveItem(item);
+            return base.WhisperReceive(source, str);
+        }
 
-			ItemTemplate temp = GameServer.Database.FindObjectByKey<ItemTemplate>(itemId);
+        /// <summary>
+        /// Changes the commander's weapon to the specified type
+        /// </summary>
+        /// <param name="slot"></param>
+        /// <param name="aSlot"></param>
+        /// <param name="weaponType"></param>
+        protected void CommanderSwitchWeapon(eInventorySlot slot, eActiveWeaponSlot aSlot, string weaponType)
+        {
+            if (Inventory == null)
+            {
+                return;
+            }
 
-			if (temp == null)
-			{
-				if (log.IsErrorEnabled)
-					log.Error(string.Format("Unable to find Bonedancer item: {0}", itemId));
-				return;
-			}
+            string itemId = string.Format("BD_Commander_{0}_{1}", slot.ToString(), weaponType);
 
-			Inventory.AddItem(slot, GameInventoryItem.Create(temp));
-			SwitchWeapon(aSlot);
-			AddStatsToWeapon();
-			BroadcastLivingEquipmentUpdate();
-		}
+            // all weapons removed before
+            InventoryItem item = Inventory.GetItem(eInventorySlot.RightHandWeapon);
+            if (item != null)
+            {
+                Inventory.RemoveItem(item);
+            }
 
-		/// <summary>
-		/// Adds a pet to the current array of pets
-		/// </summary>
-		/// <param name="controlledNpc">The brain to add to the list</param>
-		/// <returns>Whether the pet was added or not</returns>
-		public override bool AddControlledNpc(IControlledBrain controlledNpc)
-		{
-			IControlledBrain[] brainlist = ControlledNpcList;
-			if (brainlist == null) return false;
-			foreach (IControlledBrain icb in brainlist)
-			{
-				if (icb == controlledNpc)
-					return false;
-			}
+            item = Inventory.GetItem(eInventorySlot.TwoHandWeapon);
+            if (item != null)
+            {
+                Inventory.RemoveItem(item);
+            }
 
-			if (controlledNpc.Owner != this)
-				throw new ArgumentException("ControlledNpc with wrong owner is set (player=" + Name + ", owner=" + controlledNpc.Owner.Name + ")", "controlledNpc");
+            ItemTemplate temp = GameServer.Database.FindObjectByKey<ItemTemplate>(itemId);
 
-			//Find the next spot for this new pet
-			int i = 0;
-			for (; i < brainlist.Length; i++)
-			{
-				if (brainlist[i] == null)
-					break;
-			}
-			//If we didn't find a spot return false
-			if (i >= m_controlledBrain.Length)
-				return false;
-			m_controlledBrain[i] = controlledNpc;
-			PetCount++;
-			return base.AddControlledNpc(controlledNpc);
-		}
+            if (temp == null)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error(string.Format("Unable to find Bonedancer item: {0}", itemId));
+                }
 
-		/// <summary>
-		/// Removes the brain from
-		/// </summary>
-		/// <param name="controlledNpc">The brain to find and remove</param>
-		/// <returns>Whether the pet was removed</returns>
-		public override bool RemoveControlledNpc(IControlledBrain controlledNpc)
-		{
-			bool found = false;
-			lock (ControlledNpcList)
-			{
-				if (controlledNpc == null) return false;
-				IControlledBrain[] brainlist = ControlledNpcList;
-				int i = 0;
-				//Try to find the minion in the list
-				for (; i < brainlist.Length; i++)
-				{
-					//Found it
-					if (brainlist[i] == controlledNpc)
-					{
-						found = true;
-						break;
-					}
-				}
+                return;
+            }
 
-				//Found it, lets remove it
-				if (found)
-				{
-					if (controlledNpc.Body != null && controlledNpc.Body is GamePet)
-                    			{
-						GamePet minion = controlledNpc.Body as GamePet;
-						minion.StripOwnerBuffs(this); // Strip buffs off commander
-						minion.StripOwnerBuffs(Owner); // Strip buffs off player
-                    			}
-				
-					//First lets store the brain to kill it
-					IControlledBrain tempBrain = m_controlledBrain[i];
-					//Lets get rid of the brain asap
-					m_controlledBrain[i] = null;
+            Inventory.AddItem(slot, GameInventoryItem.Create(temp));
+            SwitchWeapon(aSlot);
+            AddStatsToWeapon();
+            BroadcastLivingEquipmentUpdate();
+        }
 
-					//Only decrement, we just lost one pet
-					PetCount--;
+        /// <summary>
+        /// Adds a pet to the current array of pets
+        /// </summary>
+        /// <param name="controlledNpc">The brain to add to the list</param>
+        /// <returns>Whether the pet was added or not</returns>
+        public override bool AddControlledNpc(IControlledBrain controlledNpc)
+        {
+            IControlledBrain[] brainlist = ControlledNpcList;
+            if (brainlist == null)
+            {
+                return false;
+            }
 
-					return base.RemoveControlledNpc(controlledNpc);
-				}
-			}
+            foreach (IControlledBrain icb in brainlist)
+            {
+                if (icb == controlledNpc)
+                {
+                    return false;
+                }
+            }
 
-			return found;
-		}
-	}
+            if (controlledNpc.Owner != this)
+            {
+                throw new ArgumentException("ControlledNpc with wrong owner is set (player=" + Name + ", owner=" + controlledNpc.Owner.Name + ")", "controlledNpc");
+            }
+
+            // Find the next spot for this new pet
+            int i = 0;
+            for (; i < brainlist.Length; i++)
+            {
+                if (brainlist[i] == null)
+                {
+                    break;
+                }
+            }
+
+            // If we didn't find a spot return false
+            if (i >= m_controlledBrain.Length)
+            {
+                return false;
+            }
+
+            m_controlledBrain[i] = controlledNpc;
+            PetCount++;
+            return base.AddControlledNpc(controlledNpc);
+        }
+
+        /// <summary>
+        /// Removes the brain from
+        /// </summary>
+        /// <param name="controlledNpc">The brain to find and remove</param>
+        /// <returns>Whether the pet was removed</returns>
+        public override bool RemoveControlledNpc(IControlledBrain controlledNpc)
+        {
+            bool found = false;
+            lock (ControlledNpcList)
+            {
+                if (controlledNpc == null)
+                {
+                    return false;
+                }
+
+                IControlledBrain[] brainlist = ControlledNpcList;
+                int i = 0;
+
+                // Try to find the minion in the list
+                for (; i < brainlist.Length; i++)
+                {
+                    // Found it
+                    if (brainlist[i] == controlledNpc)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                // Found it, lets remove it
+                if (found)
+                {
+                    // First lets store the brain to kill it
+                    IControlledBrain tempBrain = m_controlledBrain[i];
+
+                    // Lets get rid of the brain asap
+                    m_controlledBrain[i] = null;
+
+                    // Only decrement, we just lost one pet
+                    PetCount--;
+
+                    return base.RemoveControlledNpc(controlledNpc);
+                }
+            }
+
+            return found;
+        }
+    }
 }

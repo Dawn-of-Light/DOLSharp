@@ -18,260 +18,276 @@
 */
 
 /*
-* Author:	uhlersoth (uhlersoth@gmail.com)
-* Date:		2010-05-10
+* Author:   uhlersoth (uhlersoth@gmail.com)
+* Date:     2010-05-10
 *
 * Notes:
 *  http://camelot.allakhazam.com/quests.html?cquest=3615
 */
 
 using System;
-using System.Reflection;
 using DOL.Database;
 using DOL.Events;
-using DOL.GS.PacketHandler;
 using DOL.GS.Behaviour;
-using DOL.Language;
-using log4net;
 
-namespace DOL.GS.Quests.Albion {
-	public class MovementAndInteraction : BaseQuest
-	{
-		protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+namespace DOL.GS.Quests.Albion
+{
+    public class MovementAndInteraction : BaseQuest
+    {
+        protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		protected const string questTitle = "Movement and Interaction";
-		private const int minimumLevel = 1;
-		private const int maximumLevel = 10;
+        protected const string questTitle = "Movement and Interaction";
+        private const int minimumLevel = 1;
+        private const int maximumLevel = 10;
 
-		private const string questGiverName = "Lord Stamford";
-		private const string zoneName = "Caer Stamford";
+        private const string questGiverName = "Lord Stamford";
+        private const string zoneName = "Caer Stamford";
 
-		private const string questTargetName = "Master Gethin";
-		private static GameNPC questGiver = null;
-		private static GameNPC questTarget = null;
+        private const string questTargetName = "Master Gethin";
+        private static GameNPC questGiver = null;
+        private static GameNPC questTarget = null;
 
-		private static GameLocation targetLocation = new GameLocation("Tutorial", 27, 94789, 101439, 5248);
-		private static IArea targetArea = null;
+        private static GameLocation targetLocation = new GameLocation("Tutorial", 27, 94789, 101439, 5248);
+        private static IArea targetArea = null;
 
-		public MovementAndInteraction() : base()
-		{
-			Init();
-		}
+        public MovementAndInteraction() : base()
+        {
+            Init();
+        }
 
-		public MovementAndInteraction(GamePlayer questingPlayer) : this(questingPlayer, 1)
-		{
-			Init();
-		}
+        public MovementAndInteraction(GamePlayer questingPlayer) : this(questingPlayer, 1)
+        {
+            Init();
+        }
 
-		public MovementAndInteraction(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
-		{
-			Init();
-		}
+        public MovementAndInteraction(GamePlayer questingPlayer, int step) : base(questingPlayer, step)
+        {
+            Init();
+        }
 
-		public MovementAndInteraction(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
-		{
-			Init();
-		}
+        public MovementAndInteraction(GamePlayer questingPlayer, DBQuest dbQuest) : base(questingPlayer, dbQuest)
+        {
+            Init();
+        }
 
-		private void Init()
-		{
-			Level = 1;
-		}
+        private void Init()
+        {
+            Level = 1;
+        }
 
-		public override int Level
-		{
-			get
-			{
-				return minimumLevel;
-			}
-		}
+        public override int Level
+        {
+            get
+            {
+                return minimumLevel;
+            }
+        }
 
-		public override string Name
-		{
-			get
-			{
-				return questTitle;
-			}
-		}
+        public override string Name
+        {
+            get
+            {
+                return questTitle;
+            }
+        }
 
-		[ScriptLoadedEvent]
-		public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
-		{
-			if (!ServerProperties.Properties.LOAD_QUESTS)
-				return;
+        [ScriptLoadedEvent]
+        public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
+        {
+            if (!ServerProperties.Properties.LOAD_QUESTS)
+            {
+                return;
+            }
 
-			if (log.IsInfoEnabled)
-				log.Info("Quest \"" + questTitle + "\" initializing ...");
+            if (log.IsInfoEnabled)
+            {
+                log.Info("Quest \"" + questTitle + "\" initializing ...");
+            }
 
-			#region defineNPCS
-			GameNPC[] npcs = WorldMgr.GetNPCsByName(questGiverName, eRealm.Albion);
+            GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>(questGiverName, eRealm.Albion);
 
-			if (npcs.Length == 0)
-			{
-				questGiver = new GameNPC();
-				questGiver.Model = 1960;
-				questGiver.Name = questGiverName;
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + questGiver.Name + ", creating him ...");
-				questGiver.Realm = eRealm.Albion;
-				questGiver.CurrentRegionID = 27;
+            if (npcs.Length == 0)
+            {
+                questGiver = new GameNPC();
+                questGiver.Model = 1960;
+                questGiver.Name = questGiverName;
+                if (log.IsWarnEnabled)
+                {
+                    log.Warn("Could not find " + questGiver.Name + ", creating him ...");
+                }
 
-				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
-				template.AddNPCEquipment(eInventorySlot.HandsArmor, 691, 0);		//Slot 22
-				template.AddNPCEquipment(eInventorySlot.FeetArmor, 692, 0);			//Slot 23
-				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 688, 0);		//Slot 25
-				template.AddNPCEquipment(eInventorySlot.Cloak, 676, 0);				//Slot 26
-				template.AddNPCEquipment(eInventorySlot.LegsArmor, 689, 0);			//Slot 27
-				template.AddNPCEquipment(eInventorySlot.ArmsArmor, 690, 0);			//Slot 28
-				questGiver.Inventory = template.CloseTemplate();
-				questGiver.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
+                questGiver.Realm = eRealm.Albion;
+                questGiver.CurrentRegionID = 27;
 
-				questGiver.Size = 55;
-				questGiver.Level = 70;
-				questGiver.X = 95510;
-				questGiver.Y = 101313;
-				questGiver.Z = 5340;
-				questGiver.Heading = 3060;
+                GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+                template.AddNPCEquipment(eInventorySlot.HandsArmor, 691, 0);        // Slot 22
+                template.AddNPCEquipment(eInventorySlot.FeetArmor, 692, 0);         // Slot 23
+                template.AddNPCEquipment(eInventorySlot.TorsoArmor, 688, 0);        // Slot 25
+                template.AddNPCEquipment(eInventorySlot.Cloak, 676, 0);             // Slot 26
+                template.AddNPCEquipment(eInventorySlot.LegsArmor, 689, 0);         // Slot 27
+                template.AddNPCEquipment(eInventorySlot.ArmsArmor, 690, 0);         // Slot 28
+                questGiver.Inventory = template.CloseTemplate();
+                questGiver.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
 
-				if (SAVE_INTO_DATABASE)
-					questGiver.SaveIntoDatabase();
+                questGiver.Size = 55;
+                questGiver.Level = 70;
+                questGiver.X = 95510;
+                questGiver.Y = 101313;
+                questGiver.Z = 5340;
+                questGiver.Heading = 3060;
 
-				questGiver.AddToWorld();
-			}
-			else
-				questGiver = npcs[0];
+                if (SAVE_INTO_DATABASE)
+                {
+                    questGiver.SaveIntoDatabase();
+                }
 
-			npcs = WorldMgr.GetNPCsByName(questTargetName, eRealm.Albion);
+                questGiver.AddToWorld();
+            }
+            else
+            {
+                questGiver = npcs[0];
+            }
 
-			if (npcs.Length == 0)
-			{
-				questTarget = new GameNPC();
-				questTarget.Model = 73;
-				questTarget.Name = questTargetName;
-				if (log.IsWarnEnabled)
-					log.Warn("Could not find " + questTarget.Name + ", creating him ...");
-				questTarget.Realm = eRealm.Albion;
-				questTarget.CurrentRegionID = 27;
+            npcs = WorldMgr.GetObjectsByName<GameNPC>(questTargetName, eRealm.Albion);
 
-				GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
-				template.AddNPCEquipment(eInventorySlot.HandsArmor, 665, 0);		//Slot 22
-				template.AddNPCEquipment(eInventorySlot.FeetArmor, 666, 0);			//Slot 23
-				template.AddNPCEquipment(eInventorySlot.TorsoArmor, 662, 0);		//Slot 25
-				template.AddNPCEquipment(eInventorySlot.Cloak, 676, 0);				//Slot 26
-				template.AddNPCEquipment(eInventorySlot.LegsArmor, 663, 0);			//Slot 27
-				template.AddNPCEquipment(eInventorySlot.ArmsArmor, 664, 0);			//Slot 28
-				questTarget.Inventory = template.CloseTemplate();
-				questTarget.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
+            if (npcs.Length == 0)
+            {
+                questTarget = new GameNPC();
+                questTarget.Model = 73;
+                questTarget.Name = questTargetName;
+                if (log.IsWarnEnabled)
+                {
+                    log.Warn("Could not find " + questTarget.Name + ", creating him ...");
+                }
 
-				questTarget.Size = 50;
-				questTarget.Level = 38;
-				questTarget.X = 94789;
-				questTarget.Y = 101439;
-				questTarget.Z = 5248;
-				questTarget.Heading = 2878;
+                questTarget.Realm = eRealm.Albion;
+                questTarget.CurrentRegionID = 27;
 
-				if (SAVE_INTO_DATABASE)
-					questTarget.SaveIntoDatabase();
+                GameNpcInventoryTemplate template = new GameNpcInventoryTemplate();
+                template.AddNPCEquipment(eInventorySlot.HandsArmor, 665, 0);        // Slot 22
+                template.AddNPCEquipment(eInventorySlot.FeetArmor, 666, 0);         // Slot 23
+                template.AddNPCEquipment(eInventorySlot.TorsoArmor, 662, 0);        // Slot 25
+                template.AddNPCEquipment(eInventorySlot.Cloak, 676, 0);             // Slot 26
+                template.AddNPCEquipment(eInventorySlot.LegsArmor, 663, 0);         // Slot 27
+                template.AddNPCEquipment(eInventorySlot.ArmsArmor, 664, 0);         // Slot 28
+                questTarget.Inventory = template.CloseTemplate();
+                questTarget.SwitchWeapon(GameLiving.eActiveWeaponSlot.Standard);
 
-				questTarget.AddToWorld();
-			}
-			else
-				questTarget = npcs[0];
-			#endregion
+                questTarget.Size = 50;
+                questTarget.Level = 38;
+                questTarget.X = 94789;
+                questTarget.Y = 101439;
+                questTarget.Z = 5248;
+                questTarget.Heading = 2878;
 
-			#region defineAreas
-			targetArea = WorldMgr.GetRegion(targetLocation.RegionID).AddArea(new Area.Circle("", targetLocation.X, targetLocation.Y, targetLocation.Z, 200));
-			#endregion
+                if (SAVE_INTO_DATABASE)
+                {
+                    questTarget.SaveIntoDatabase();
+                }
 
-			#region defineBehaviours
-			QuestBuilder builder = QuestMgr.getBuilder(typeof(MovementAndInteraction));
-			QuestBehaviour a = null;
-			string message1 = "Welcome to " + zoneName + ", <Class>. Here you will learn the basic skills needed to defend yourself as you explore our realm and grow in power and wisdom. Now, without further delay, let's get you started on your [training].";
-			string message2 = "If you exit through the doors behind me, you will enter the courtyard. In the courtyard, you will find Master Gethin, who will be your training instructor. Go now and speak to Master Gethin.";
+                questTarget.AddToWorld();
+            }
+            else
+            {
+                questTarget = npcs[0];
+            }
 
-			a = builder.CreateBehaviour(questGiver, -1);
-			a.AddTrigger(eTriggerType.Interact, null, questGiver);
-			a.AddRequirement(eRequirementType.QuestPending, typeof(MovementAndInteraction), null, (eComparator)5);
-			a.AddAction(eActionType.GiveQuest, typeof(MovementAndInteraction), questGiver);
-			AddBehaviour(a);
+            targetArea = WorldMgr.GetRegion(targetLocation.RegionID).AddArea(new Area.Circle(string.Empty, targetLocation.X, targetLocation.Y, targetLocation.Z, 200));
 
-			a = builder.CreateBehaviour(questGiver, -1);
-			a.AddTrigger(eTriggerType.Interact, null, questGiver);
-			a.AddRequirement(eRequirementType.QuestStep, typeof(MovementAndInteraction), 1, (eComparator)3);
-			a.AddAction(eActionType.Talk, message1, questGiver);
-			AddBehaviour(a);
+            QuestBuilder builder = QuestMgr.GetBuilder(typeof(MovementAndInteraction));
+            QuestBehaviour a = null;
+            string message1 = "Welcome to " + zoneName + ", <Class>. Here you will learn the basic skills needed to defend yourself as you explore our realm and grow in power and wisdom. Now, without further delay, let's get you started on your [training].";
+            string message2 = "If you exit through the doors behind me, you will enter the courtyard. In the courtyard, you will find Master Gethin, who will be your training instructor. Go now and speak to Master Gethin.";
 
-			a = builder.CreateBehaviour(questGiver, -1);
-			a.AddTrigger(eTriggerType.Whisper, "training", questGiver);
-			a.AddRequirement(eRequirementType.QuestStep, typeof(MovementAndInteraction), 1, (eComparator)3);
-			a.AddAction(eActionType.IncQuestStep, typeof(MovementAndInteraction), null);
-			a.AddAction(eActionType.Talk, message2, questGiver);
-			AddBehaviour(a);
+            a = builder.CreateBehaviour(questGiver, -1);
+            a.AddTrigger(eTriggerType.Interact, null, questGiver);
+            a.AddRequirement(eRequirementType.QuestPending, typeof(MovementAndInteraction), null, (eComparator)5);
+            a.AddAction(eActionType.GiveQuest, typeof(MovementAndInteraction), questGiver);
+            AddBehaviour(a);
 
-			a = builder.CreateBehaviour(questGiver, -1);
-			a.AddTrigger(eTriggerType.Interact, null, questGiver);
-			a.AddRequirement(eRequirementType.QuestStep, typeof(MovementAndInteraction), 2, (eComparator)3);
-			a.AddAction(eActionType.Talk, message2, questGiver);
-			AddBehaviour(a);
+            a = builder.CreateBehaviour(questGiver, -1);
+            a.AddTrigger(eTriggerType.Interact, null, questGiver);
+            a.AddRequirement(eRequirementType.QuestStep, typeof(MovementAndInteraction), 1, (eComparator)3);
+            a.AddAction(eActionType.Talk, message1, questGiver);
+            AddBehaviour(a);
 
-			a = builder.CreateBehaviour(questGiver, -1);
-			a.AddTrigger(eTriggerType.EnterArea, null, targetArea);
-			a.AddRequirement(eRequirementType.QuestStep, typeof(MovementAndInteraction), 2, (eComparator)3);
-			a.AddAction(eActionType.IncQuestStep, typeof(MovementAndInteraction), null);
-			AddBehaviour(a);
+            a = builder.CreateBehaviour(questGiver, -1);
+            a.AddTrigger(eTriggerType.Whisper, "training", questGiver);
+            a.AddRequirement(eRequirementType.QuestStep, typeof(MovementAndInteraction), 1, (eComparator)3);
+            a.AddAction(eActionType.IncQuestStep, typeof(MovementAndInteraction), null);
+            a.AddAction(eActionType.Talk, message2, questGiver);
+            AddBehaviour(a);
 
-			a = builder.CreateBehaviour(questTarget, -1);
-			a.AddTrigger(eTriggerType.Interact, null, questTarget);
-			a.AddRequirement(eRequirementType.QuestStep, typeof(MovementAndInteraction), 3, (eComparator)3);
-			a.AddAction(eActionType.FinishQuest, typeof(MovementAndInteraction), null);
-			AddBehaviour(a);
-			#endregion
+            a = builder.CreateBehaviour(questGiver, -1);
+            a.AddTrigger(eTriggerType.Interact, null, questGiver);
+            a.AddRequirement(eRequirementType.QuestStep, typeof(MovementAndInteraction), 2, (eComparator)3);
+            a.AddAction(eActionType.Talk, message2, questGiver);
+            AddBehaviour(a);
 
-			questGiver.AddQuestToGive(typeof(MovementAndInteraction));
+            a = builder.CreateBehaviour(questGiver, -1);
+            a.AddTrigger(eTriggerType.EnterArea, null, targetArea);
+            a.AddRequirement(eRequirementType.QuestStep, typeof(MovementAndInteraction), 2, (eComparator)3);
+            a.AddAction(eActionType.IncQuestStep, typeof(MovementAndInteraction), null);
+            AddBehaviour(a);
 
-			if (log.IsInfoEnabled)
-				log.Info("Quest \"" + questTitle + "\" initialized");
-		}
+            a = builder.CreateBehaviour(questTarget, -1);
+            a.AddTrigger(eTriggerType.Interact, null, questTarget);
+            a.AddRequirement(eRequirementType.QuestStep, typeof(MovementAndInteraction), 3, (eComparator)3);
+            a.AddAction(eActionType.FinishQuest, typeof(MovementAndInteraction), null);
+            AddBehaviour(a);
 
-		[ScriptUnloadedEvent]
-		public static void ScriptUnloaded(DOLEvent e, object sender, EventArgs args)
-		{
-			if (questGiver == null)
-				return;
+            questGiver.AddQuestToGive(typeof(MovementAndInteraction));
 
-			questGiver.RemoveQuestToGive(typeof(MovementAndInteraction));
-		}
+            if (log.IsInfoEnabled)
+            {
+                log.Info("Quest \"" + questTitle + "\" initialized");
+            }
+        }
 
-		public override string Description
-		{
-			get
-			{
-				switch (Step)
-				{
-					case 1:
-						return "Speak with " + questGiverName + " about your [training].";
-					case 2:
-						return "Left-click on the large doors behind " + questGiverName + " to open them, then enter the courtyard of the keep. Look for Master Gethin, and when you find him, right-click on him.";
-					case 3:
-						return "Master Gethin, the training instructor of " + zoneName + ", is waiting to speak with you. Right-click on him begin a conversation.";
-					default:
-						return "No Queststep Description available.";
-				}
-			}
-		}
+        [ScriptUnloadedEvent]
+        public static void ScriptUnloaded(DOLEvent e, object sender, EventArgs args)
+        {
+            if (questGiver == null)
+            {
+                return;
+            }
 
-		public override bool CheckQuestQualification(GamePlayer player)
-		{
-			// If the player is already doing the quest his level is no longer of relevance
-			if (player.IsDoingQuest(typeof(MovementAndInteraction)) != null)
-				return true;
+            questGiver.RemoveQuestToGive(typeof(MovementAndInteraction));
+        }
 
-			// The checks below are only performed if the player isn't doing the quest already
+        public override string Description
+        {
+            get
+            {
+                switch (Step)
+                {
+                    case 1:
+                        return "Speak with " + questGiverName + " about your [training].";
+                    case 2:
+                        return "Left-click on the large doors behind " + questGiverName + " to open them, then enter the courtyard of the keep. Look for Master Gethin, and when you find him, right-click on him.";
+                    case 3:
+                        return "Master Gethin, the training instructor of " + zoneName + ", is waiting to speak with you. Right-click on him begin a conversation.";
+                    default:
+                        return "No Queststep Description available.";
+                }
+            }
+        }
 
-			if (player.Level < minimumLevel || player.Level > maximumLevel)
-				return false;
+        public override bool CheckQuestQualification(GamePlayer player)
+        {
+            // If the player is already doing the quest his level is no longer of relevance
+            if (player.IsDoingQuest(typeof(MovementAndInteraction)) != null)
+            {
+                return true;
+            }
 
-			return true;
-		}
-	}
+            // The checks below are only performed if the player isn't doing the quest already
+            if (player.Level < minimumLevel || player.Level > maximumLevel)
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
 }

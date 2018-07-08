@@ -1,139 +1,123 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using DOL.GS.PacketHandler;
-using DOL.GS.RealmAbilities;
 using DOL.Events;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Adrenaline Rush
-	/// </summary>
-	public class ShieldTripDisarmEffect : TimedEffect
-	{
+    /// <summary>
+    /// Adrenaline Rush
+    /// </summary>
+    public class ShieldTripDisarmEffect : TimedEffect
+    {
 
+        public ShieldTripDisarmEffect()
+            : base(15000)
+        {
+        }
 
-		public ShieldTripDisarmEffect()
-			: base(15000)
-		{
-			;
-		}
+        public override void Start(GameLiving target)
+        {
+            base.Start(target);
 
-		private GameLiving owner;
-
-		public override void Start(GameLiving target)
-		{
-			base.Start(target);
-			owner = target;
-			//target.IsDisarmed = true;
+            // target.IsDisarmed = true;
             target.DisarmedTime = target.CurrentRegion.Time + m_duration;
-			target.StopAttack();
+            target.StopAttack();
+        }
 
-		}
+        public override string Name => "Shield Trip";
 
-		public override string Name { get { return "Shield Trip"; } }
+        public override ushort Icon { get; } = 3045;
 
-		public override ushort Icon { get { return 3045; } }
+        public int SpellEffectiveness => 100;
 
-		public override void Stop()
-		{
-			//owner.IsDisarmed = false;
-			base.Stop();
-		}
+        public override IList<string> DelveInfo
+        {
+            get
+            {
+                var list = new List<string>
+                {
+                    "Disarms you for 15 seconds!"
+                };
 
-		public int SpellEffectiveness
-		{
-			get { return 100; }
-		}
+                return list;
+            }
+        }
+    }
 
-		public override IList<string> DelveInfo
-		{
-			get
-			{
-				var list = new List<string>();
-				list.Add("Disarms you for 15 seconds!");
-				return list;
-			}
-		}
-	}
+    public class ShieldTripRootEffect : TimedEffect
+    {
+        private GameLiving _owner;
 
-	public class ShieldTripRootEffect : TimedEffect
-	{
-		private GameLiving owner;
+        public ShieldTripRootEffect()
+            : base(10000)
+        {
+        }
 
+        public override void Start(GameLiving target)
+        {
+            base.Start(target);
+            target.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 99 * 0.01);
+            _owner = target;
+            GameEventMgr.AddHandler(target, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
+            if (_owner is GamePlayer player)
+            {
+                player.Out.SendUpdateMaxSpeed();
+            }
+            else
+            {
+                _owner.CurrentSpeed = _owner.MaxSpeed;
+            }
+        }
 
-		public ShieldTripRootEffect()
-			: base(10000)
-		{
-		}
+        public override void Stop()
+        {
+            _owner.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
+            GameEventMgr.RemoveHandler(_owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
+            if (_owner is GamePlayer player)
+            {
+                player.Out.SendUpdateMaxSpeed();
+            }
+            else
+            {
+                _owner.CurrentSpeed = _owner.MaxSpeed;
+            }
 
-		public override void Start(GameLiving target)
-		{
-			base.Start(target);
-			target.BuffBonusMultCategory1.Set((int)eProperty.MaxSpeed, this, 1.0 - 99 * 0.01);
-			owner = target;
-			GameEventMgr.AddHandler(target, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
-			GamePlayer player = owner as GamePlayer;
-			if (player != null)
-			{
-				player.Out.SendUpdateMaxSpeed();
-			}
-			else
-			{
-				owner.CurrentSpeed = owner.MaxSpeed;
-			}
+            base.Stop();
+        }
 
-		}
+        protected virtual void OnAttacked(DOLEvent e, object sender, EventArgs arguments)
+        {
+            if (!(arguments is AttackedByEnemyEventArgs attackArgs))
+            {
+                return;
+            }
 
-		public override void Stop()
-		{
-			owner.BuffBonusMultCategory1.Remove((int)eProperty.MaxSpeed, this);
-			GameEventMgr.RemoveHandler(owner, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(OnAttacked));
-			GamePlayer player = owner as GamePlayer;
-			if (player != null)
-			{
-				player.Out.SendUpdateMaxSpeed();
-			}
-			else
-			{
-				owner.CurrentSpeed = owner.MaxSpeed;
-			}
-			base.Stop();
-		}
+            switch (attackArgs.AttackData.AttackResult)
+            {
+                case GameLiving.eAttackResult.HitStyle:
+                case GameLiving.eAttackResult.HitUnstyled:
+                    Stop();
+                    break;
+            }
+        }
 
-		protected virtual void OnAttacked(DOLEvent e, object sender, EventArgs arguments)
-		{
-			AttackedByEnemyEventArgs attackArgs = arguments as AttackedByEnemyEventArgs;
-			if (attackArgs == null) return;
-			switch (attackArgs.AttackData.AttackResult)
-			{
-				case GameLiving.eAttackResult.HitStyle:
-				case GameLiving.eAttackResult.HitUnstyled:
-					Stop();
-					break;
-			}
+        public override string Name => "Shield Trip";
 
-		}
+        public override ushort Icon => 7046;
 
-		public override string Name { get { return "Shield Trip"; } }
+        public int SpellEffectiveness => 0;
 
-		public override ushort Icon { get { return 7046; } }
+        public override IList<string> DelveInfo
+        {
+            get
+            {
+                var list = new List<string>
+                {
+                    "Root Effect"
+                };
 
-		public int SpellEffectiveness
-		{
-			get { return 0; }
-		}
-
-		public override IList<string> DelveInfo
-		{
-			get
-			{
-				var list = new List<string>();
-				list.Add("Root Effect");
-				return list;
-			}
-		}
-	}
-
+                return list;
+            }
+        }
+    }
 }

@@ -1,25 +1,23 @@
-/* 
+/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
 
-using System.Reflection;
 using System.Collections.Generic;
-using log4net;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 using DOL.GS.Appeal;
@@ -27,7 +25,7 @@ using DOL.GS.Appeal;
 namespace DOL.GS.Commands
 {
 
-    [CmdAttribute(
+    [Cmd(
         "&gmappeal",
         new string[] { "&gmhelp" },
         ePrivLevel.GM,
@@ -62,8 +60,6 @@ namespace DOL.GS.Commands
 
             switch (args[1])
             {
-
-                #region gmappeal assist
                 case "assist":
                     {
                         if (args.Length < 3)
@@ -71,6 +67,7 @@ namespace DOL.GS.Commands
                             DisplaySyntax(client);
                             return;
                         }
+
                         int result = 0;
                         string targetName = args[2];
                         GameClient targetClient = WorldMgr.GuessClientByPlayerNameAndRealm(targetName, 0, false, out result);
@@ -110,11 +107,10 @@ namespace DOL.GS.Commands
                                 break;
                             }
                         }
+
                         AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.DoesntHaveAppeal"));
                         break;
                     }
-                #endregion gmappeal assist
-                #region gmappeal view
 
                 case "view":
                     {
@@ -123,6 +119,7 @@ namespace DOL.GS.Commands
                             DisplaySyntax(client);
                             return;
                         }
+
                         int result = 0;
                         string targetName = args[2];
                         GameClient targetClient = WorldMgr.GuessClientByPlayerNameAndRealm(targetName, 0, false, out result);
@@ -136,6 +133,7 @@ namespace DOL.GS.Commands
                             case 4: // guessed name
                                 break;
                         }
+
                         if (targetClient == null)
                         {
 
@@ -143,10 +141,11 @@ namespace DOL.GS.Commands
                             AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.PlayerNotFound", targetName));
                             return;
                         }
+
                         DBAppeal appeal = AppealMgr.GetAppealByPlayerName(targetClient.Player.Name);
                         if (appeal != null)
                         {
-                            //Let's view it.
+                            // Let's view it.
                             List<string> msg = new List<string>();
                             msg.Add("[Appeal]: " + appeal.Name + ", [Status]: " + appeal.Status + ", [Priority]: " + appeal.SeverityToName + " [Issue]: " + appeal.Text + ", [Time]: " + appeal.Timestamp + ".\n");
                             msg.Add("To assist them with the appeal use /gmappeal assist <player name>.\n");
@@ -155,11 +154,11 @@ namespace DOL.GS.Commands
                             client.Out.SendCustomTextWindow("Viewing " + appeal.Name + "'s Appeal", msg);
                             return;
                         }
+
                         AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.DoesntHaveAppeal"));
                         break;
                     }
-                #endregion gmappeal view
-                #region gmappeal release
+
                 case "release":
                     {
                         if (args.Length < 3)
@@ -167,6 +166,7 @@ namespace DOL.GS.Commands
                             DisplaySyntax(client);
                             return;
                         }
+
                         int result = 0;
                         string targetName = args[2];
                         GameClient targetClient = WorldMgr.GuessClientByPlayerNameAndRealm(targetName, 0, false, out result);
@@ -203,11 +203,11 @@ namespace DOL.GS.Commands
                                 return;
                             }
                         }
+
                         AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.DoesntHaveAppeal"));
                         return;
                     }
-                #endregion gmappeal release
-                #region gmappeal list
+
                 case "list":
                 case "listall":
                     {
@@ -255,6 +255,7 @@ namespace DOL.GS.Commands
                                     break;
                             }
                         }
+
                         int total = appeallist.Count;
                         msg.Add(LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.CurrentStaffAvailable", AppealMgr.StaffList.Count, total) + "\n");
                         msg.Add("Appeals ordered by severity: ");
@@ -270,6 +271,7 @@ namespace DOL.GS.Commands
                                 }
                             }
                         }
+
                         if (high > 0)
                         {
                             msg.Add("High priority appeals:\n");
@@ -281,6 +283,7 @@ namespace DOL.GS.Commands
                                 }
                             }
                         }
+
                         if (med > 0)
                         {
                             msg.Add("Medium priority Appeals:\n");
@@ -292,6 +295,7 @@ namespace DOL.GS.Commands
                                 }
                             }
                         }
+
                         if (low > 0)
                         {
                             msg.Add("Low priority appeals:\n");
@@ -303,12 +307,12 @@ namespace DOL.GS.Commands
                                 }
                             }
                         }
+
                         client.Out.SendCustomTextWindow(caption, msg);
                     }
 
                     break;
-                #endregion gmappeal list
-                #region gmappeal close
+
                 case "close":
                     {
                         if (args.Length < 3)
@@ -316,6 +320,7 @@ namespace DOL.GS.Commands
                             DisplaySyntax(client);
                             return;
                         }
+
                         int result = 0;
                         string targetName = args[2];
                         GameClient targetClient = WorldMgr.GuessClientByPlayerNameAndRealm(targetName, 0, false, out result);
@@ -343,13 +348,12 @@ namespace DOL.GS.Commands
                             AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.DoesntHaveAppeal"));
                             return;
                         }
+
                         AppealMgr.CloseAppeal(client.Player.Name, targetClient.Player, appeal);
                         client.Player.TempProperties.removeProperty("AppealAssist");
                         return;
                     }
 
-                #endregion gmappeal close
-                #region gmappeal closeoffline
                 case "closeoffline":
                     {
                         if (args.Length < 3)
@@ -357,6 +361,7 @@ namespace DOL.GS.Commands
                             DisplaySyntax(client);
                             return;
                         }
+
                         string targetName = args[2];
                         DBAppeal appeal = AppealMgr.GetAppealByPlayerName(targetName);
                         if (appeal == null)
@@ -364,9 +369,10 @@ namespace DOL.GS.Commands
                             AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.CantFindAppeal"));
                             return;
                         }
+
                         AppealMgr.CloseAppeal(client.Player.Name, appeal);
 
-                        //just incase the player is actually online let's check so we can handle it properly
+                        // just incase the player is actually online let's check so we can handle it properly
                         string targetNameTwo = args[2];
                         int resultTwo = 0;
                         GameClient targetClient = WorldMgr.GuessClientByPlayerNameAndRealm(targetNameTwo, 0, false, out resultTwo);
@@ -379,6 +385,7 @@ namespace DOL.GS.Commands
                             case 4: // guessed name
                                 break;
                         }
+
                         if (targetClient == null)
                         {
 
@@ -387,16 +394,15 @@ namespace DOL.GS.Commands
                         }
                         else
                         {
-                            //cleaning up the player since he really was online.
+                            // cleaning up the player since he really was online.
                             AppealMgr.MessageToClient(targetClient, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.StaffClosedYourAppeal", client.Player.Name));
                             targetClient.Out.SendPlaySound(eSoundType.Craft, 0x02);
                             targetClient.Player.TempProperties.setProperty("HasPendingAppeal", false);
                         }
+
                         return;
                     }
 
-                #endregion gmappeal closeoffline
-                #region gmappeal jumpto
                 case "jumpto":
                     {
                         try
@@ -408,6 +414,7 @@ namespace DOL.GS.Commands
                                 client.Player.TempProperties.setProperty("AppealJumpOld", oldlocation);
                                 client.Player.MoveTo(p.CurrentRegionID, p.X, p.Y, p.Z, p.Heading);
                             }
+
                             break;
                         }
                         catch
@@ -416,6 +423,7 @@ namespace DOL.GS.Commands
                             break;
                         }
                     }
+
                 case "jumpback":
                     {
                         GameLocation jumpback = client.Player.TempProperties.getProperty<GameLocation>("AppealJumpOld");
@@ -423,18 +431,18 @@ namespace DOL.GS.Commands
                         if (jumpback != null)
                         {
                             client.Player.MoveTo(jumpback);
-                            //client.Player.TempProperties.removeProperty("AppealJumpOld");
+
+                            // client.Player.TempProperties.removeProperty("AppealJumpOld");
                             break;
                         }
                         else
                         {
                             AppealMgr.MessageToClient(client, LanguageMgr.GetTranslation(client.Account.Language, "Scripts.Players.Appeal.NoLocationToJump"));
                         }
+
                         break;
                     }
 
-                #endregion gmappeal jumpto
-                #region gmappeal mute
                 case "mute":
                     {
                         bool mute = client.Player.TempProperties.getProperty<bool>("AppealMute");
@@ -455,12 +463,11 @@ namespace DOL.GS.Commands
 
                         break;
                     }
-                #endregion gmappeal mute
-                #region gmappeal commands
+
                 case "commands":
                 case "cmds":
                 case "help":
-                    //List all the commands in a pop up window
+                    // List all the commands in a pop up window
                     List<string> helpmsg = new List<string>();
                     helpmsg.Add("Commands for server staff to assist players with their Appeals.");
                     helpmsg.Add("/gmappeal view <player name> - Views the appeal of a specific player.");
@@ -475,13 +482,13 @@ namespace DOL.GS.Commands
                     helpmsg.Add("/gmappeal mute - Toggles receiving appeal notices, for yourself, for this session.");
                     client.Out.SendCustomTextWindow("/gmappeal commands list", helpmsg);
                     break;
-                #endregion gmappeal commands
                 default:
                     {
                         DisplaySyntax(client);
                         return;
                     }
             }
+
             return;
         }
     }

@@ -20,26 +20,26 @@ using System;
 
 namespace DOL.GS.PropertyCalc
 {
-	/// <summary>
-	/// The ranged damage bonus percent calculator
-	///
-	/// BuffBonusCategory1 is used for buffs
-	/// BuffBonusCategory2 unused
-	/// BuffBonusCategory3 is used for debuff
-	/// BuffBonusCategory4 unused
-	/// BuffBonusMultCategory1 unused
-	/// </summary>
-	[PropertyCalculator(eProperty.RangedDamage)]
-	public class RangedDamagePercentCalculator : PropertyCalculator
-	{
-		public override int CalcValue(GameLiving living, eProperty property)
-		{
-			// Hardcap 10%
-			int percent = Math.Min(10, living.BaseBuffBonusCategory[(int)property]
-				-living.DebuffCategory[(int)property]
-				+living.ItemBonus[(int)property]);
+    /// <summary>
+    /// The ranged damage bonus percent calculator
+    ///
+    /// BuffBonusCategory1 is used for buffs
+    /// BuffBonusCategory2 unused
+    /// BuffBonusCategory3 is used for debuff
+    /// BuffBonusCategory4 unused
+    /// BuffBonusMultCategory1 unused
+    /// </summary>
+    [PropertyCalculator(eProperty.RangedDamage)]
+    public class RangedDamagePercentCalculator : PropertyCalculator
+    {
+        public override int CalcValue(GameLiving living, eProperty property)
+        {
+            // Hardcap 10%
+            int percent = Math.Min(10, living.BaseBuffBonusCategory[(int)property]
+                - living.DebuffCategory[(int)property]
+                + living.ItemBonus[(int)property]);
 
-			return percent;
-		}
-	}
+            return percent;
+        }
+    }
 }

@@ -16,17 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DOL.GS.Relics
 {
-	/// <summary>
-	/// Class representing a relic.
-	/// </summary>
-	/// <author>Aredhel</author>
-	public class Relic
-	{
-	}
+    /// <summary>
+    /// Class representing a relic.
+    /// </summary>
+    /// <author>Aredhel</author>
+    public class Relic
+    {
+    }
 }

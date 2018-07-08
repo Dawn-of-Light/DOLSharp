@@ -1,23 +1,22 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
 
-using System;
 using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Effects;
@@ -30,8 +29,6 @@ namespace DOL.GS.RealmAbilities
     /// </summary>
     public class SearingPetAbility : RR5RealmAbility
     {
-        public const int DURATION = 19 * 1000;
-
         public SearingPetAbility(DBAbility dba, int level) : base(dba, level) { }
 
         /// <summary>
@@ -40,18 +37,23 @@ namespace DOL.GS.RealmAbilities
         /// <param name="living"></param>
         public override void Execute(GameLiving living)
         {
-            if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED)) return;
+            if (CheckPreconditions(living, DEAD | SITTING | MEZZED | STUNNED))
+            {
+                return;
+            }
 
             GamePlayer player = living as GamePlayer;
-            if (player != null && player.ControlledBrain != null && player.ControlledBrain.Body != null)
+            if (player != null && player.ControlledBrain?.Body != null)
             {
-                GameNPC pet = player.ControlledBrain.Body as GameNPC;
+                GameNPC pet = player.ControlledBrain.Body;
                 if (pet.IsAlive)
                 {
-					SearingPetEffect SearingPet = pet.EffectList.GetOfType<SearingPetEffect>();
-                    if (SearingPet != null) SearingPet.Cancel(false);
+                    SearingPetEffect SearingPet = pet.EffectList.GetOfType<SearingPetEffect>();
+                    SearingPet?.Cancel(false);
+
                     new SearingPetEffect(player).Start(pet);
                 }
+
                 DisableSkill(living);
             }
             else if (player != null)
@@ -69,12 +71,11 @@ namespace DOL.GS.RealmAbilities
         public override void AddEffectsInfo(IList<string> list)
         {
             list.Add(" PBAoE Pet pulsing effect, 350units, 25 damage, 6 ticks, 2min RUT.");
-            list.Add("");
+            list.Add(string.Empty);
             list.Add("Target: Pet");
             list.Add("Duration: 18s");
             list.Add("Casting time: Instant");
         }
-
     }
 }
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DOL.GS
+﻿namespace DOL.GS
 {
     public interface IPlayerStatistics
     {

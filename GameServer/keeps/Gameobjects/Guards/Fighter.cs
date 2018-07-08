@@ -1,7 +1,6 @@
 namespace DOL.GS.Keeps
 {
-	public class GuardFighter : GameKeepGuard
-	{
-
-	}
+    public class GuardFighter : GameKeepGuard
+    {
+    }
 }

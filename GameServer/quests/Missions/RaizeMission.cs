@@ -7,75 +7,103 @@ using DOL.GS.Keeps;
 
 namespace DOL.GS.Quests
 {
-	public class RaizeMission : AbstractMission
-	{
-		private AbstractGameKeep m_keep = null;
+    public class RaizeMission : AbstractMission
+    {
+        private readonly AbstractGameKeep _keep;
 
-		public RaizeMission(object owner)
-			: base(owner)
-		{
-			eRealm realm = 0;
-			if (owner is Group)
-				realm = (owner as Group).Leader.Realm;
-			else if (owner is GamePlayer)
-				realm = (owner as GamePlayer).Realm;
+        public RaizeMission(object owner)
+            : base(owner)
+        {
+            eRealm realm = 0;
+            if (owner is Group group1)
+            {
+                realm = group1.Leader.Realm;
+            }
+            else if (owner is GamePlayer)
+            {
+                realm = ((GamePlayer) owner).Realm;
+            }
 
-			ArrayList list = new ArrayList();
+            ArrayList list = new ArrayList();
 
-			ICollection<AbstractGameKeep> keeps;
-			if (owner is Group)
-				keeps = GameServer.KeepManager.GetKeepsOfRegion((owner as Group).Leader.CurrentRegionID);
-			else if (owner is GamePlayer)
-				keeps = GameServer.KeepManager.GetKeepsOfRegion((owner as GamePlayer).CurrentRegionID);
-			else keeps = new List<AbstractGameKeep>();
+            ICollection<AbstractGameKeep> keeps;
+            if (owner is Group group)
+            {
+                keeps = GameServer.KeepManager.GetKeepsOfRegion(group.Leader.CurrentRegionID);
+            }
+            else if (owner is GamePlayer)
+            {
+                keeps = GameServer.KeepManager.GetKeepsOfRegion(((GamePlayer) owner).CurrentRegionID);
+            }
+            else
+            {
+                keeps = new List<AbstractGameKeep>();
+            }
 
-			foreach (AbstractGameKeep keep in keeps)
-			{
-				if (keep.IsPortalKeep)
-					continue;
-				if (keep is GameKeepTower && keep.Realm != realm)
-					list.Add(keep);
-			}
+            foreach (AbstractGameKeep keep in keeps)
+            {
+                if (keep.IsPortalKeep)
+                {
+                    continue;
+                }
 
-			if (list.Count > 0)
-				m_keep = list[Util.Random(list.Count - 1)] as AbstractGameKeep;
+                if (keep is GameKeepTower && keep.Realm != realm)
+                {
+                    list.Add(keep);
+                }
+            }
 
-			GameEventMgr.AddHandler(KeepEvent.TowerRaized, new DOLEventHandler(Notify));
-		}
+            if (list.Count > 0)
+            {
+                _keep = list[Util.Random(list.Count - 1)] as AbstractGameKeep;
+            }
 
-		public override void Notify(DOLEvent e, object sender, EventArgs args)
-		{
-			if (e != KeepEvent.TowerRaized)
-				return;
+            GameEventMgr.AddHandler(KeepEvent.TowerRaized, new DOLEventHandler(Notify));
+        }
 
-			KeepEventArgs kargs = args as KeepEventArgs;
+        public override void Notify(DOLEvent e, object sender, EventArgs args)
+        {
+            if (e != KeepEvent.TowerRaized)
+            {
+                return;
+            }
 
-			if (kargs.Keep != m_keep)
-				return;
+            if (!(args is KeepEventArgs kargs))
+            {
+                return;
+            }
 
-			FinishMission();
-		}
+            if (kargs.Keep != _keep)
+            {
+                return;
+            }
 
-		public override void FinishMission()
-		{
-			base.FinishMission();
-			GameEventMgr.RemoveHandler(KeepEvent.TowerRaized, new DOLEventHandler(Notify));
-		}
+            FinishMission();
+        }
 
-		public override void ExpireMission()
-		{
-			base.ExpireMission();
-			GameEventMgr.RemoveHandler(KeepEvent.TowerRaized, new DOLEventHandler(Notify));
-		}
+        public override void FinishMission()
+        {
+            base.FinishMission();
+            GameEventMgr.RemoveHandler(KeepEvent.TowerRaized, new DOLEventHandler(Notify));
+        }
 
-		public override string Description
-		{
-			get
-			{
-				if (m_keep == null)
-					return "Keep is null when trying to send the description";
-				else return "Raize " + m_keep.Name;
-			}
-		}
-	}
+        public override void ExpireMission()
+        {
+            base.ExpireMission();
+            GameEventMgr.RemoveHandler(KeepEvent.TowerRaized, new DOLEventHandler(Notify));
+        }
+
+        public override string Description
+        {
+            get
+            {
+                if (_keep == null)
+                {
+                    return "Keep is null when trying to send the description";
+                }
+
+                return $"Raize {_keep.Name}";
+            }
+        }
+    }
 }

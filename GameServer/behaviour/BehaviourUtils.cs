@@ -1,24 +1,22 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DOL.GS.PacketHandler;
 using DOL.Database;
 using DOL.GS.Movement;
@@ -28,7 +26,7 @@ using DOL.GS.Quests;
 namespace DOL.GS.Behaviour
 {
     public enum eDefaultValueConstants
-    {        
+    {
         NPC
     }
 
@@ -55,7 +53,7 @@ namespace DOL.GS.Behaviour
         public static object ConvertObject(object obj, Type destinationType)
         {
             return ConvertObject(obj, null, destinationType);
-        }        
+        }
 
         public static object ConvertObject(object obj,object defaultValue, Type destinationType)
         {
@@ -66,20 +64,20 @@ namespace DOL.GS.Behaviour
                 {
                     result = obj;
                 }
-                else if (!String.IsNullOrEmpty(Convert.ToString(obj)))
+                else if (!string.IsNullOrEmpty(Convert.ToString(obj)))
                 {
                     result = ScriptMgr.GetType(Convert.ToString(obj));
                 }
             }
-            else if (destinationType == typeof(Int32))
+            else if (destinationType == typeof(int))
             {
                 result = Convert.ToInt32(obj);
             }
-            else if (destinationType == typeof(Nullable<Int32>))
+            else if (destinationType == typeof(Nullable<int>))
             {
-                result = new Nullable<Int32>(Convert.ToInt32(obj));
+                result = new Nullable<int>(Convert.ToInt32(obj));
             }
-            else if (destinationType == typeof(Int64))
+            else if (destinationType == typeof(long))
             {
                 result = Convert.ToInt64(obj);
             }
@@ -101,7 +99,9 @@ namespace DOL.GS.Behaviour
             else if (destinationType == typeof(ItemTemplate))
             {
                 if (obj is ItemTemplate)
+                {
                     result = obj;
+                }
                 else
                 {
                     result = GameServer.Database.FindObjectByKey<ItemTemplate>(Convert.ToString(obj));
@@ -122,7 +122,7 @@ namespace DOL.GS.Behaviour
             else if (destinationType == typeof(PathPoint))
             {
                 result = (PathPoint)obj;
-            }                  
+            }
             else
             {
                 result = obj;
@@ -146,7 +146,9 @@ namespace DOL.GS.Behaviour
         public static string GetPersonalizedMessage(string message, GamePlayer player)
         {
             if (message == null || player == null)
+            {
                 return message;
+            }
 
             int playerIndex = message.IndexOf(PLAYER);
             if (playerIndex == 0)
@@ -175,18 +177,22 @@ namespace DOL.GS.Behaviour
 
             if (message.Contains("<Guild>"))
             {
-                string guild = "";
+                string guild = string.Empty;
                 if (player.Guild != null)
+                {
                     guild = player.GuildName;
+                }
 
                 message = message.Replace("<Guild>", guild);
             }
 
             if (message.Contains("<Title>"))
             {
-                string title = "";
+                string title = string.Empty;
                 if (player.CurrentTitle != null)
+                {
                     title = player.CurrentTitle.GetValue(player, player);
+                }
 
                 message = message.Replace("<Title>", title);
             }
@@ -198,7 +204,9 @@ namespace DOL.GS.Behaviour
         {
             GamePlayer player = null;
             if (sender is GamePlayer)
+            {
                 player = sender as GamePlayer;
+            }
             else if (e == GameLivingEvent.WhisperReceive || e == GameObjectEvent.Interact)
             {
                 player = ((SourceEventArgs)args).Source as GamePlayer;

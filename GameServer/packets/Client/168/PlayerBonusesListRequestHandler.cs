@@ -16,38 +16,44 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 using System.Reflection;
-using DOL.GS;
 using DOL.Language;
 using log4net;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.BonusesListRequest, "Handles player bonuses button clicks", eClientStatus.PlayerInGame)]
-	public class PlayerBonusesListRequestHandler : IPacketHandler
-	{
-		/// <summary>
-		/// Defines a logger for this class.
-		/// </summary>
-		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.BonusesListRequest, "Handles player bonuses button clicks", eClientStatus.PlayerInGame)]
+    public class PlayerBonusesListRequestHandler : IPacketHandler
+    {
+        /// <summary>
+        /// Defines a logger for this class.
+        /// </summary>
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public void HandlePacket(GameClient client, GSPacketIn packet)
-		{
-			if (client.Player == null)
-				return;
+        public void HandlePacket(GameClient client, GSPacketIn packet)
+        {
+            if (client.Player == null)
+            {
+                return;
+            }
 
-			int code = packet.ReadByte();
-			if (code != 0)
-			{
-				if (log.IsWarnEnabled)
-					log.WarnFormat("bonuses button: code is other than zero ({0})", code);
-			}
+            int code = packet.ReadByte();
+            if (code != 0)
+            {
+                if (Log.IsWarnEnabled)
+                {
+                    Log.Warn($"bonuses button: code is other than zero ({code})");
+                }
+            }
 
-			new RegionTimerAction<GamePlayer>(client.Player,
-			                                  p => p.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client.Account.Language, "PlayerBonusesListRequestHandler.HandlePacket.Bonuses")
-			                                                                  , new List<string>(client.Player.GetBonuses()))).Start(1);
-		}
-	}
+            new RegionTimerAction<GamePlayer>(
+                    client.Player,
+                    p => p.Out.SendCustomTextWindow(
+                        LanguageMgr.GetTranslation(client.Account.Language,
+                            "PlayerBonusesListRequestHandler.HandlePacket.Bonuses"),
+                        new List<string>(client.Player.GetBonuses())))
+                .Start(1);
+        }
+    }
 }

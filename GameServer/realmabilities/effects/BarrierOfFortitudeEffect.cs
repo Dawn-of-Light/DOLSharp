@@ -4,174 +4,156 @@ using DOL.Events;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Effect handler for Barrier Of Fortitude
-	/// </summary>
-	public class BarrierOfFortitudeEffect : StaticEffect, IGameEffect
-	{
-		private const String m_delveString = "Grants the group a melee absorption bonus (Does not stack with Soldier's Barricade or Bedazzling Aura).";
-		private GamePlayer m_player;
-		private Int32 m_effectDuration;
-		private RegionTimer m_expireTimer;
-		private int m_value;
+    /// <summary>
+    /// Effect handler for Barrier Of Fortitude
+    /// </summary>
+    public class BarrierOfFortitudeEffect : StaticEffect
+    {
+        private const string DelveString = "Grants the group a melee absorption bonus (Does not stack with Soldier's Barricade or Bedazzling Aura).";
+        private GamePlayer _player;
+        private int _effectDuration;
+        private RegionTimer _expireTimer;
+        private int _value;
 
+        /// <summary>
+        /// Called when effect is to be started
+        /// </summary>
+        /// <param name="player">The player to start the effect for</param>
+        /// <param name="duration">The effectduration in secounds</param>
+        /// <param name="value">The percentage additional value for melee absorb</param>
+        public void Start(GamePlayer player, int duration, int value)
+        {
+            _player = player;
+            _effectDuration = duration;
+            _value = value;
 
+            if (player.TempProperties.getProperty(RealmAbilities.BarrierOfFortitudeAbility.BofBaSb, false))
+            {
+                return;
+            }
 
-		/// <summary>
-		/// Default constructor for AmelioratingMelodiesEffect
-		/// </summary>
-		public BarrierOfFortitudeEffect()
-		{
+            StartTimers();
 
-		}
+            GameEventMgr.AddHandler(_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
 
-		/// <summary>
-		/// Called when effect is to be started
-		/// </summary>
-		/// <param name="player">The player to start the effect for</param>
-		/// <param name="duration">The effectduration in secounds</param>
-		/// <param name="value">The percentage additional value for melee absorb</param>
-		public void Start(GamePlayer player, int duration, int value)
-		{
-			m_player = player;
-			m_effectDuration = duration;
-			m_value = value;
+            _player.AbilityBonus[(int)eProperty.ArmorAbsorption] += _value;
 
-			if (player.TempProperties.getProperty(RealmAbilities.BarrierOfFortitudeAbility.BofBaSb, false))
-				return;
+            _player.EffectList.Add(this);
+            player.TempProperties.setProperty(RealmAbilities.BarrierOfFortitudeAbility.BofBaSb, true);
+        }
 
-			StartTimers();
+        /// <summary>
+        /// Called when a player leaves the game
+        /// </summary>
+        /// <param name="e">The event which was raised</param>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="args">EventArgs associated with the event</param>
+        private static void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
+        {
+            if (sender is GamePlayer player)
+            {
+                BarrierOfFortitudeEffect boFEffect = player.EffectList.GetOfType<BarrierOfFortitudeEffect>();
+                boFEffect?.Cancel(false);
+            }
+        }
 
-			GameEventMgr.AddHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+        /// <summary>
+        /// Called when effect is to be cancelled
+        /// </summary>
+        /// <param name="playerCancel">Whether or not effect is player cancelled</param>
+        public override void Cancel(bool playerCancel)
+        {
 
-			m_player.AbilityBonus[(int)eProperty.ArmorAbsorption] += m_value;
+            StopTimers();
+            _player.AbilityBonus[(int)eProperty.ArmorAbsorption] -= _value;
+            _player.EffectList.Remove(this);
+            GameEventMgr.RemoveHandler(_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+            _player.TempProperties.removeProperty(RealmAbilities.BarrierOfFortitudeAbility.BofBaSb);
+        }
 
-			m_player.EffectList.Add(this);
-			player.TempProperties.setProperty(RealmAbilities.BarrierOfFortitudeAbility.BofBaSb, true);
-		}
+        /// <summary>
+        /// Starts the timers for this effect
+        /// </summary>
+        private void StartTimers()
+        {
+            StopTimers();
+            _expireTimer = new RegionTimer(_player, new RegionTimerCallback(ExpireCallback), _effectDuration * 1000);
+        }
 
-		/// <summary>
-		/// Called when a player leaves the game
-		/// </summary>
-		/// <param name="e">The event which was raised</param>
-		/// <param name="sender">Sender of the event</param>
-		/// <param name="args">EventArgs associated with the event</param>
-		private static void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
-		{
-			GamePlayer player = (GamePlayer)sender;
+        /// <summary>
+        /// Stops the timers for this effect
+        /// </summary>
+        private void StopTimers()
+        {
 
-			BarrierOfFortitudeEffect BoFEffect = player.EffectList.GetOfType<BarrierOfFortitudeEffect>();
-			if (BoFEffect != null)
-			{
-				BoFEffect.Cancel(false);
-			}
-		}
+            if (_expireTimer != null)
+            {
+                _expireTimer.Stop();
+                _expireTimer = null;
+            }
+        }
 
-		/// <summary>
-		/// Called when effect is to be cancelled
-		/// </summary>
-		/// <param name="playerCancel">Whether or not effect is player cancelled</param>
-		public override void Cancel(bool playerCancel)
-		{
+        /// <summary>
+        /// The callback for when the effect expires
+        /// </summary>
+        /// <param name="timer">The ObjectTimerCallback object</param>
+        private int ExpireCallback(RegionTimer timer)
+        {
+            Cancel(false);
 
-			StopTimers();
-			m_player.AbilityBonus[(int)eProperty.ArmorAbsorption] -= m_value;
-			m_player.EffectList.Remove(this);
-			GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
-			m_player.TempProperties.removeProperty(RealmAbilities.BarrierOfFortitudeAbility.BofBaSb);
-		}
+            return 0;
+        }
 
-		/// <summary>
-		/// Starts the timers for this effect
-		/// </summary>
-		private void StartTimers()
-		{
-			StopTimers();
-			m_expireTimer = new RegionTimer(m_player, new RegionTimerCallback(ExpireCallback), m_effectDuration * 1000);
-		}
+        /// <summary>
+        /// Name of the effect
+        /// </summary>
+        public override string Name => "Barrier of Fortitude";
 
-		/// <summary>
-		/// Stops the timers for this effect
-		/// </summary>
-		private void StopTimers()
-		{
+        /// <summary>
+        /// Remaining time of the effect in milliseconds
+        /// </summary>
+        public override int RemainingTime
+        {
+            get
+            {
+                RegionTimer timer = _expireTimer;
+                if (timer == null || !timer.IsAlive)
+                {
+                    return 0;
+                }
 
-			if (m_expireTimer != null)
-			{
-				m_expireTimer.Stop();
-				m_expireTimer = null;
-			}
-		}
+                return timer.TimeUntilElapsed;
+            }
+        }
 
-		/// <summary>
-		/// The callback for when the effect expires
-		/// </summary>
-		/// <param name="timer">The ObjectTimerCallback object</param>
-		private int ExpireCallback(RegionTimer timer)
-		{
-			Cancel(false);
+        /// <summary>
+        /// Icon ID
+        /// </summary>
+        public override ushort Icon => 3015;
 
-			return 0;
-		}
+        /// <summary>
+        /// Delve information
+        /// </summary>
+        public override IList<string> DelveInfo
+        {
+            get
+            {
+                var delveInfoList = new List<string>
+                {
+                    DelveString,
+                    " ",
+                    $"Value: {_value}%"
+                };
 
+                int seconds = RemainingTime / 1000;
+                if (seconds > 0)
+                {
+                    delveInfoList.Add(" ");
+                    delveInfoList.Add($"- {seconds} seconds remaining.");
+                }
 
-		/// <summary>
-		/// Name of the effect
-		/// </summary>
-		public override string Name
-		{
-			get
-			{
-				return "Barrier of Fortitude";
-			}
-		}
-
-		/// <summary>
-		/// Remaining time of the effect in milliseconds
-		/// </summary>
-		public override Int32 RemainingTime
-		{
-			get
-			{
-				RegionTimer timer = m_expireTimer;
-				if (timer == null || !timer.IsAlive)
-					return 0;
-				return timer.TimeUntilElapsed;
-			}
-		}
-
-		/// <summary>
-		/// Icon ID
-		/// </summary>
-		public override UInt16 Icon
-		{
-			get
-			{
-				return 3015;
-			}
-		}
-
-		/// <summary>
-		/// Delve information
-		/// </summary>
-		public override IList<string> DelveInfo
-		{
-			get
-			{
-				var delveInfoList = new List<string>(8);
-				delveInfoList.Add(m_delveString);
-				delveInfoList.Add(" ");
-				delveInfoList.Add("Value: " + m_value + "%");
-
-				int seconds = (int)(RemainingTime / 1000);
-				if (seconds > 0)
-				{
-					delveInfoList.Add(" ");
-					delveInfoList.Add("- " + seconds + " seconds remaining.");
-				}
-
-				return delveInfoList;
-			}
-		}
-	}
+                return delveInfoList;
+            }
+        }
+    }
 }

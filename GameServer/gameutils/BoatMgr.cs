@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -22,7 +22,6 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Reflection;
 using DOL.Database;
-using DOL.Events;
 using DOL.GS.PacketHandler;
 using log4net;
 
@@ -56,7 +55,9 @@ namespace DOL.GS
         public static bool AddBoat(GameBoat boat)
         {
             if (boat == null)
+            {
                 return false;
+            }
 
             lock (m_boats.SyncRoot)
             {
@@ -79,13 +80,16 @@ namespace DOL.GS
         public static bool RemoveBoat(GameBoat boat)
         {
             if (boat == null)
+            {
                 return false;
+            }
 
             lock (m_boats.SyncRoot)
             {
                 m_boats.Remove(boat.Name);
                 m_boatids.Remove(boat.InternalID);
             }
+
             return true;
         }
 
@@ -99,7 +103,10 @@ namespace DOL.GS
             lock (m_boats.SyncRoot)
             {
                 if (m_boats.Contains(boatName))
+                {
                     return true;
+                }
+
                 return false;
             }
         }
@@ -111,23 +118,30 @@ namespace DOL.GS
         public static GameBoat CreateBoat(GamePlayer creator, GameBoat boat)
         {
             if (log.IsDebugEnabled)
+            {
                 log.Debug("Create boat; boat name=\"" + boat.Name + "\"");
+            }
+
             try
             {
                 // Does boat exist, if so return null
                 if (DoesBoatExist(boat.Name) == true)
                 {
                     if (creator != null)
+                    {
                         creator.Out.SendMessage(boat.Name + " already exists!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    }
+
                     return null;
                 }
 
                 // Check if client exists
                 if (creator == null)
+                {
                     return null;
+                }
 
-
-                //create table of GameBoat
+                // create table of GameBoat
                 boat.theBoatDB = new DBBoat();
                 boat.theBoatDB.BoatOwner = creator.InternalID;
                 boat.theBoatDB.BoatID = boat.BoatID;
@@ -144,7 +158,10 @@ namespace DOL.GS
             catch (Exception e)
             {
                 if (log.IsErrorEnabled)
+                {
                     log.Error("CreateBoat", e);
+                }
+
                 return null;
             }
         }
@@ -158,6 +175,7 @@ namespace DOL.GS
             try
             {
                 GameBoat removeBoat = GetBoatByName(boatName);
+
                 // Does boat exist, if not return null
                 if (removeBoat == null)
                 {
@@ -174,7 +192,10 @@ namespace DOL.GS
             catch (Exception e)
             {
                 if (log.IsErrorEnabled)
+                {
                     log.Error("DeleteBoat", e);
+                }
+
                 return false;
             }
         }
@@ -185,7 +206,11 @@ namespace DOL.GS
         /// <returns>Boat</returns>
         public static GameBoat GetBoatByName(string boatName)
         {
-            if (boatName == null) return null;
+            if (boatName == null)
+            {
+                return null;
+            }
+
             lock (m_boats.SyncRoot)
             {
                 return (GameBoat)m_boats[boatName];
@@ -198,11 +223,17 @@ namespace DOL.GS
         /// <returns>Boat</returns>
         public static GameBoat GetBoatByBoatID(string boatid)
         {
-            if (boatid == null) return null;
+            if (boatid == null)
+            {
+                return null;
+            }
 
             lock (m_boatids.SyncRoot)
             {
-                if (m_boatids[boatid] == null) return null;
+                if (m_boatids[boatid] == null)
+                {
+                    return null;
+                }
 
                 lock (m_boats.SyncRoot)
                 {
@@ -219,7 +250,10 @@ namespace DOL.GS
         {
             GameBoat b = GetBoatByName(boatName);
             if (b == null)
-                return "";
+            {
+                return string.Empty;
+            }
+
             return b.BoatID;
         }
 
@@ -229,19 +263,25 @@ namespace DOL.GS
         /// <returns>Boat</returns>
         public static GameBoat GetBoatByOwner(string owner)
         {
-            if (owner == null) return null;
+            if (owner == null)
+            {
+                return null;
+            }
 
             lock (m_boatids.SyncRoot)
             {
                 foreach (GameBoat boat in m_boats.Values)
                 {
                     if (boat.OwnerID == owner)
+                    {
                         return boat;
+                    }
                 }
             }
+
             return null;
         }
-        
+
         /// <summary>
         /// Returns a list of boats by their status
         /// </summary>
@@ -261,7 +301,7 @@ namespace DOL.GS
                 m_boats.Clear();
             }
 
-            //load boats
+            // load boats
             var objs = GameServer.Database.SelectAllObjects<DBBoat>();
             foreach (var obj in objs)
             {
@@ -279,7 +319,10 @@ namespace DOL.GS
         public static void SaveAllBoats()
         {
             if (log.IsDebugEnabled)
+            {
                 log.Debug("Saving all boats...");
+            }
+
             try
             {
                 lock (m_boats.SyncRoot)
@@ -293,7 +336,9 @@ namespace DOL.GS
             catch (Exception e)
             {
                 if (log.IsErrorEnabled)
+                {
                     log.Error("Error saving boatss.", e);
+                }
             }
         }
 
@@ -307,18 +352,25 @@ namespace DOL.GS
                     boats.Add(boat);
                 }
             }
+
             return boats;
         }
 
         public static bool IsBoatOwner(string playerstrID, GameBoat boat)
         {
             if (playerstrID == null || boat == null)
+            {
                 return false;
+            }
 
             if (playerstrID == boat.OwnerID)
+            {
                 return true;
+            }
             else
+            {
                 return false;
+            }
         }
     }
 }

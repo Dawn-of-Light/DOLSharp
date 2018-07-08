@@ -1,15 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using DOL.GS.Behaviour;
 using DOL.GS.Behaviour.Actions;
 using DOL.GS.Behaviour.Triggers;
 using log4net;
 using System.Reflection;
 using DOL.Events;
-using DOL.GS;
-using DOL.GS.Quests;
-using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
 
 namespace DOL.GS.Behaviour.Examples
@@ -28,12 +23,12 @@ namespace DOL.GS.Behaviour.Examples
         public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
         {
             if (!ServerProperties.Properties.LOAD_EXAMPLES)
+            {
                 return;
+            }
 
-            #region defineNPCs
-
-            GameNPC[] npcs = WorldMgr.GetNPCsByName("Sir Quait", eRealm.Albion);
-            npcs = WorldMgr.GetNPCsByName("Sir Quait", (eRealm)1);
+            GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Sir Quait", eRealm.Albion);
+            npcs = WorldMgr.GetObjectsByName<GameNPC>("Sir Quait", (eRealm)1);
             GameNPC SirQuait = null;
             if (npcs.Length == 0)
             {
@@ -41,7 +36,10 @@ namespace DOL.GS.Behaviour.Examples
                 SirQuait.Model = 40;
                 SirQuait.Name = "Sir Quait";
                 if (log.IsWarnEnabled)
-                    log.Warn("Could not find " + SirQuait.Name + ", creating ...");                
+                {
+                    log.Warn("Could not find " + SirQuait.Name + ", creating ...");
+                }
+
                 SirQuait.Realm = eRealm.Albion;
                 SirQuait.CurrentRegionID = 1;
                 SirQuait.Size = 50;
@@ -55,22 +53,17 @@ namespace DOL.GS.Behaviour.Examples
                 SirQuait.RespawnInterval = 0;
                 SirQuait.BodyType = 0;
 
-
                 StandardMobBrain brain = new StandardMobBrain();
                 brain.AggroLevel = 0;
                 brain.AggroRange = 0;
                 SirQuait.SetOwnBrain(brain);
-                
+
                 SirQuait.AddToWorld();
             }
             else
             {
                 SirQuait = npcs[0];
             }
-
-            #endregion
-
-            #region defineBehaviours
 
             BaseBehaviour b = new BaseBehaviour(SirQuait);
             MessageAction a = new MessageAction(SirQuait,"This is just a simple test bahaviour.",eTextType.Emote);
@@ -80,8 +73,6 @@ namespace DOL.GS.Behaviour.Examples
 
             // store the behaviour in a list so it won't be garbage collected
             behaviours.Add(b);
-
-            #endregion
 
             log.Info("Simple Test Behaviour added");
         }

@@ -1,8 +1,4 @@
 using System;
-using System.Collections;
-using DOL.GS.PacketHandler;
-using DOL.GS.SkillHandler;
-using DOL.GS.PropertyCalc;
 using DOL.Events;
 using System.Collections.Generic;
 
@@ -11,13 +7,13 @@ namespace DOL.GS.Effects
     /// <summary>
     /// Effect handler for Barrier Of Fortitude
     /// </summary>
-	public class StrikePredictionEffect : StaticEffect, IGameEffect
+    public class StrikePredictionEffect : StaticEffect
     {
-        private const String m_delveString = "Grants all group members a chance to evade all melee and arrow attacks for 30 seconds.";
-        private GamePlayer m_player;
-        private Int32 m_effectDuration;
-        private RegionTimer m_expireTimer;
-        private int m_value;
+        private const string DelveString = "Grants all group members a chance to evade all melee and arrow attacks for 30 seconds.";
+        private GamePlayer _player;
+        private int _effectDuration;
+        private RegionTimer _expireTimer;
+        private int _value;
 
         /// <summary>
         /// Called when effect is to be started
@@ -27,16 +23,16 @@ namespace DOL.GS.Effects
         /// <param name="value">The percentage additional value for melee absorb</param>
         public void Start(GamePlayer player, int duration, int value)
         {
-            m_player = player;
-            m_effectDuration = duration;
-            m_value = value;
+            _player = player;
+            _effectDuration = duration;
+            _value = value;
 
             StartTimers();
 
-            GameEventMgr.AddHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
-            m_player.AbilityBonus[(int)eProperty.EvadeChance] += m_value;
+            GameEventMgr.AddHandler(_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+            _player.AbilityBonus[(int)eProperty.EvadeChance] += _value;
 
-            m_player.EffectList.Add(this);
+            _player.EffectList.Add(this);
         }
 
         /// <summary>
@@ -47,12 +43,10 @@ namespace DOL.GS.Effects
         /// <param name="args">EventArgs associated with the event</param>
         private static void PlayerLeftWorld(DOLEvent e, object sender, EventArgs args)
         {
-            GamePlayer player = (GamePlayer)sender;
-
-        	StrikePredictionEffect SPEffect = player.EffectList.GetOfType<StrikePredictionEffect>();
-            if (SPEffect != null)
+            if (sender is GamePlayer player)
             {
-                SPEffect.Cancel(false);
+                StrikePredictionEffect spEffect = player.EffectList.GetOfType<StrikePredictionEffect>();
+                spEffect?.Cancel(false);
             }
         }
 
@@ -63,9 +57,9 @@ namespace DOL.GS.Effects
         public override void Cancel(bool playerCancel)
         {
             StopTimers();
-            m_player.AbilityBonus[(int)eProperty.EvadeChance] -= m_value;
-            m_player.EffectList.Remove(this);
-            GameEventMgr.RemoveHandler(m_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
+            _player.AbilityBonus[(int)eProperty.EvadeChance] -= _value;
+            _player.EffectList.Remove(this);
+            GameEventMgr.RemoveHandler(_player, GamePlayerEvent.Quit, new DOLEventHandler(PlayerLeftWorld));
         }
 
         /// <summary>
@@ -74,7 +68,7 @@ namespace DOL.GS.Effects
         private void StartTimers()
         {
             StopTimers();
-            m_expireTimer = new RegionTimer(m_player, new RegionTimerCallback(ExpireCallback), m_effectDuration * 1000);
+            _expireTimer = new RegionTimer(_player, new RegionTimerCallback(ExpireCallback), _effectDuration * 1000);
         }
 
         /// <summary>
@@ -83,10 +77,10 @@ namespace DOL.GS.Effects
         private void StopTimers()
         {
 
-            if (m_expireTimer != null)
+            if (_expireTimer != null)
             {
-                m_expireTimer.Stop();
-                m_expireTimer = null;
+                _expireTimer.Stop();
+                _expireTimer = null;
             }
         }
 
@@ -101,28 +95,24 @@ namespace DOL.GS.Effects
             return 0;
         }
 
-
         /// <summary>
         /// Name of the effect
         /// </summary>
-        public override string Name
-        {
-            get
-            {
-                return "Strike Prediction";
-            }
-        }
+        public override string Name => "Strike Prediction";
 
         /// <summary>
         /// Remaining time of the effect in milliseconds
         /// </summary>
-        public override Int32 RemainingTime
+        public override int RemainingTime
         {
             get
             {
-                RegionTimer timer = m_expireTimer;
+                RegionTimer timer = _expireTimer;
                 if (timer == null || !timer.IsAlive)
+                {
                     return 0;
+                }
+
                 return timer.TimeUntilElapsed;
             }
         }
@@ -130,13 +120,7 @@ namespace DOL.GS.Effects
         /// <summary>
         /// Icon ID
         /// </summary>
-        public override UInt16 Icon
-        {
-            get
-            {
-                return 3036;
-            }
-        }
+        public override ushort Icon => 3036;
 
         /// <summary>
         /// Delve information
@@ -145,16 +129,18 @@ namespace DOL.GS.Effects
         {
             get
             {
-				var delveInfoList = new List<string>();
-                delveInfoList.Add(m_delveString);
-                delveInfoList.Add(" ");
-                delveInfoList.Add("Value: " + m_value + "%");
+                var delveInfoList = new List<string>
+                {
+                    DelveString,
+                    " ",
+                    $"Value: {_value}%"
+                };
 
-                int seconds = (int)(RemainingTime / 1000);
+                int seconds = RemainingTime / 1000;
                 if (seconds > 0)
                 {
                     delveInfoList.Add(" ");
-                    delveInfoList.Add("- " + seconds + " seconds remaining.");
+                    delveInfoList.Add($"- {seconds} seconds remaining.");
                 }
 
                 return delveInfoList;

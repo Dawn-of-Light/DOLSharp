@@ -225,6 +225,7 @@ namespace DOL.GS.PacketHandler
 		WarmapBonusRequest = 0x66,			// 0xCE ^ 168
 		ShowWarmapRequest = 0x48,			// 0xE0 ^ 168
 		WorldInitRequest = 0xD4,			// 0x7C ^ 168
+		UseJournalItemRequest = 0x41, 		// patch 0031
 	}
 
 	/// <summary>
@@ -545,6 +546,7 @@ namespace DOL.GS.PacketHandler
 		MasterLevelWindow = 0x19,
 		KeepClaim = 0x1A,
 		BuyRespec = 0x20,
+        NewQuestSubscribe = 0x22, // Unty test new quest window
 		WarmapWindowHibernia = 0x30,
 		WarmapWindowAlbion = 0x31,
 		WarmapWindowMidgard = 0x32,
@@ -625,7 +627,7 @@ namespace DOL.GS.PacketHandler
 		void SendPingReply(ulong timestamp, ushort sequence);
 		void SendRealm(eRealm realm);
 		void SendCharacterOverview(eRealm realm);
-		void SendDupNameCheckReply(string name, bool nameExists);
+		void SendDupNameCheckReply(string name, byte result); // patch 0061
 		void SendBadNameCheckReply(string name, bool bad);
 		void SendAttackMode(bool attackState);
 		void SendCharCreateReply(string name);
@@ -675,6 +677,7 @@ namespace DOL.GS.PacketHandler
 		                   bool autoWrapText, string message);
 
 		void SendCustomDialog(string msg, CustomDialogResponse callback);
+		void SendCustomDialog(string msg, CustomDialogResponse callback, bool customFormat); // patch 0017
 		void SendCheckLOS(GameObject Checker, GameObject Target, CheckLOSResponse callback);
 		void SendCheckLOS(GameObject source, GameObject target, CheckLOSMgrResponse callback);
 		void SendGuildLeaveCommand(GamePlayer invitingPlayer, string inviteMessage);
@@ -683,6 +686,10 @@ namespace DOL.GS.PacketHandler
 		void SendQuestRewardWindow(GameNPC questNPC, GamePlayer player, RewardQuest quest);
 		void SendQuestOfferWindow(GameNPC questNPC, GamePlayer player, DataQuest quest);
 		void SendQuestRewardWindow(GameNPC questNPC, GamePlayer player, DataQuest quest);
+        /* TO BE ADDED SOON
+		void SendQuestOfferWindow(GameNPC questNPC, GamePlayer player, DQRewardQ quest); // added as patch 0026
+		void SendQuestRewardWindow(GameNPC questNPC, GamePlayer player, DQRewardQ quest); // added as patch 0026
+        */ 
 		void SendQuestSubscribeCommand(GameNPC invitingNPC, ushort questid, string inviteMessage);
 		void SendQuestAbortCommand(GameNPC abortingNPC, ushort questid, string abortMessage);
 		void SendGroupWindowUpdate();

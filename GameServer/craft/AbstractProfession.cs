@@ -1,16 +1,16 @@
 ﻿/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -27,15 +27,14 @@ namespace DOL.GS
     /// </summary>
     public abstract class AbstractProfession : AbstractCraftingSkill
     {
-        #region Title
+        protected abstract string Profession { get; }
 
-        protected abstract String Profession { get; }
-
-        public static String GetTitleFormat(int skillLevel)
+        public static string GetTitleFormat(int skillLevel)
         {
             if (skillLevel < 0)
+            {
                 throw new ArgumentOutOfRangeException("skillLevel");
-
+            }
 
             switch (skillLevel / 100)
             {
@@ -54,19 +53,17 @@ namespace DOL.GS
             }
         }
 
-        public String GetTitle(GamePlayer player, int skillLevel)
+        public string GetTitle(GamePlayer player, int skillLevel)
         {
-        	string profession = player.TryTranslateOrDefault("!Profession!", Profession);
+            string profession = player.TryTranslateOrDefault("!Profession!", Profession);
             try
             {
-            	return player.TryTranslateOrDefault("!None {0}!", GetTitleFormat(skillLevel), profession);
+                return player.TryTranslateOrDefault("!None {0}!", GetTitleFormat(skillLevel), profession);
             }
             catch
             {
                 return "<you may want to check your Crafting.txt language file>";
             }
         }
-
-        #endregion
     }
 }

@@ -16,47 +16,42 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections;
-using DOL.GS.Effects;
-using DOL.GS.PacketHandler;
-using DOL.GS.Spells;
 
 namespace DOL.GS.Keeps
 {
-	/// <summary>
-	/// Represents a keep hastener
-	/// </summary>
-	public class FrontierHastener : GameKeepGuard
-	{
-		public override eFlags Flags
-		{
-			get { return eFlags.PEACE; }
-		}
+    /// <summary>
+    /// Represents a keep hastener
+    /// </summary>
+    public class FrontierHastener : GameKeepGuard
+    {
+        public override eFlags Flags
+        {
+            get { return eFlags.PEACE; }
+        }
 
-		#region Examine/Interact Message
+        /// <summary>
+        /// Adds messages to ArrayList which are sent when object is targeted
+        /// </summary>
+        /// <param name="player">GamePlayer that is examining this object</param>
+        /// <returns>list with string messages</returns>
+        public override IList GetExamineMessages(GamePlayer player)
+        {
+            IList list = new ArrayList();
+            list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a hastener.");
+            return list;
+        }
 
-		/// <summary>
-		/// Adds messages to ArrayList which are sent when object is targeted
-		/// </summary>
-		/// <param name="player">GamePlayer that is examining this object</param>
-		/// <returns>list with string messages</returns>
-		public override IList GetExamineMessages(GamePlayer player)
-		{
-			IList list = new ArrayList();
-			list.Add("You examine " + GetName(0, false) + ".  " + GetPronoun(0, true) + " is " + GetAggroLevelString(player, false) + " and is a hastener.");
-			return list;
-		}
+        public override bool Interact(GamePlayer player)
+        {
+            if (!base.Interact(player))
+            {
+                return false;
+            }
 
-		public override bool Interact(GamePlayer player)
-		{
-			if (!base.Interact(player))
-				return false;
-
-			TurnTo(player, 5000);
-			GameNPCHelper.CastSpellOnOwnerAndPets(this, player, SkillBase.GetSpellByID(GameHastener.SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Realm_Spells), false);
-			return true;
-		}
-		#endregion Examine/Interact Message
-	}
+            TurnTo(player, 5000);
+            GameNPCHelper.CastSpellOnOwnerAndPets(this, player, SkillBase.GetSpellByID(GameHastener.SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells), false);
+            return true;
+        }
+    }
 }

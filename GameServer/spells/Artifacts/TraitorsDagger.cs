@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -24,45 +24,48 @@ using DOL.AI.Brain;
 
 namespace DOL.GS.Spells
 {
-	[SpellHandlerAttribute("TraitorsDaggerProc")]
-	public class TraitorsDaggerProc : OffensiveProcSpellHandler
-	{
-		public override void OnEffectStart(GameSpellEffect effect)
-		{
-			base.OnEffectStart(effect);
-			if (effect.Owner is GamePlayer)
-			{
-				GamePlayer player = effect.Owner as GamePlayer;
-				foreach (GameSpellEffect Effect in player.EffectList.GetAllOfType<GameSpellEffect>())
+    [SpellHandler("TraitorsDaggerProc")]
+    public class TraitorsDaggerProc : OffensiveProcSpellHandler
+    {
+        public override void OnEffectStart(GameSpellEffect effect)
+        {
+            base.OnEffectStart(effect);
+            if (effect.Owner is GamePlayer)
+            {
+                GamePlayer player = effect.Owner as GamePlayer;
+                foreach (GameSpellEffect Effect in player.EffectList.GetAllOfType<GameSpellEffect>())
                 {
-                    if (Effect.SpellHandler.Spell.SpellType.Equals("ShadesOfMist") || 
+                    if (Effect.SpellHandler.Spell.SpellType.Equals("ShadesOfMist") ||
                         Effect.SpellHandler.Spell.SpellType.Equals("DreamMorph") ||
                         Effect.SpellHandler.Spell.SpellType.Equals("DreamGroupMorph") ||
                         Effect.SpellHandler.Spell.SpellType.Equals("MaddeningScalars") ||
                         Effect.SpellHandler.Spell.SpellType.Equals("AtlantisTabletMorph") ||
                         Effect.SpellHandler.Spell.SpellType.Equals("AlvarusMorph"))
                     {
-                        player.Out.SendMessage("You already have an active morph!", DOL.GS.PacketHandler.eChatType.CT_SpellResisted, DOL.GS.PacketHandler.eChatLoc.CL_ChatWindow);
+                        player.Out.SendMessage("You already have an active morph!", PacketHandler.eChatType.CT_SpellResisted, PacketHandler.eChatLoc.CL_ChatWindow);
                         return;
                     }
                 }
-				player.Shade(true);
+
+                player.Shade(true);
                 player.Out.SendUpdatePlayer();
-			}
-		}
-		public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
-		{
-			if (effect.Owner is GamePlayer)
-			{
-				GamePlayer player = effect.Owner as GamePlayer;
-				player.Shade(false);
+            }
+        }
+
+        public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
+        {
+            if (effect.Owner is GamePlayer)
+            {
+                GamePlayer player = effect.Owner as GamePlayer;
+                player.Shade(false);
                 player.Out.SendUpdatePlayer();
-			}
-			return base.OnEffectExpires(effect, noMessages);
-		}
-   
-		public TraitorsDaggerProc(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-	}
+            }
+
+            return base.OnEffectExpires(effect, noMessages);
+        }
+
+        public TraitorsDaggerProc(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+    }
 
     [SpellHandler("DdtProcDd")]
     public class DdtProcDd:DirectDamageSpellHandler
@@ -83,29 +86,35 @@ namespace DOL.GS.Spells
 
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
-            //Set pet infos & Brain
+            // Set pet infos & Brain
             base.ApplyEffectOnTarget(target, effectiveness);
-            ProcPetBrain petBrain = (ProcPetBrain) m_pet.Brain;
+            ProcPetBrain petBrain = (ProcPetBrain)m_pet.Brain;
             petBrain.AddToAggroList(target, 1);
             petBrain.Think();
         }
 
         protected override GamePet GetGamePet(INpcTemplate template) { return new TraitorDaggerPet(template); }
+
         protected override IControlledBrain GetPetBrain(GameLiving owner) { return new ProcPetBrain(owner); }
+
         protected override void SetBrainToOwner(IControlledBrain brain) { }
+
         protected override void AddHandlers() { GameEventMgr.AddHandler(m_pet, GameLivingEvent.AttackFinished, EventHandler); }
 
         protected void EventHandler(DOLEvent e, object sender, EventArgs arguments)
         {
-            AttackFinishedEventArgs args = arguments as AttackFinishedEventArgs;
-            if(args == null || args.AttackData == null)
+            if (!(arguments is AttackFinishedEventArgs args) || args.AttackData == null)
+            {
                 return;
+            }
+
             // Spirit procs lifetap when hitting ennemy
-            if(_trap == null)
+            if (_trap == null)
             {
                 _trap = MakeTrap();
             }
-            if(Util.Chance(50))
+
+            if (Util.Chance(50))
             {
                 _trap.CastSpell(args.AttackData.Target);
             }
@@ -113,24 +122,27 @@ namespace DOL.GS.Spells
 
         private ISpellHandler MakeTrap()
         {
-            DBSpell dbs = new DBSpell();
-            dbs.Name = "Increased Essence Consumption";
-            dbs.Icon = 11020;
-            dbs.ClientEffect = 11020;
-            dbs.DamageType = 10;
-            dbs.Target = "Enemy";
-            dbs.Radius = 0;
-            dbs.Type = "PetLifedrain";
-            dbs.Damage = 70;
-            dbs.LifeDrainReturn = 100;
-            dbs.Value = -100;
-            dbs.Duration = 0;
-            dbs.Frequency = 0;
-            dbs.Pulse = 0;
-            dbs.PulsePower = 0;
-            dbs.Power = 0;
-            dbs.CastTime = 0;
-            dbs.Range = 350;
+            DBSpell dbs = new DBSpell
+            {
+                Name = "Increased Essence Consumption",
+                Icon = 11020,
+                ClientEffect = 11020,
+                DamageType = 10,
+                Target = "Enemy",
+                Radius = 0,
+                Type = "PetLifedrain",
+                Damage = 70,
+                LifeDrainReturn = 100,
+                Value = -100,
+                Duration = 0,
+                Frequency = 0,
+                Pulse = 0,
+                PulsePower = 0,
+                Power = 0,
+                CastTime = 0,
+                Range = 350
+            };
+
             Spell s = new Spell(dbs, 50);
             SpellLine sl = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
             return ScriptMgr.CreateSpellHandler(m_pet, s, sl);
@@ -143,13 +155,12 @@ namespace DOL.GS.Spells
 
 namespace DOL.GS
 {
-	public class TraitorDaggerPet : GamePet
-	{
-		public override int MaxHealth
-		{
-			get { return Level * 15; }
-		}
-		public override void OnAttackedByEnemy(AttackData ad) { }
-		public TraitorDaggerPet(INpcTemplate npcTemplate) : base(npcTemplate) { }
-	}
+    public class TraitorDaggerPet : GamePet
+    {
+        public override int MaxHealth => Level * 15;
+
+        public override void OnAttackedByEnemy(AttackData ad) { }
+
+        public TraitorDaggerPet(INpcTemplate npcTemplate) : base(npcTemplate) { }
+    }
 }

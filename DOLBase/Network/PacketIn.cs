@@ -145,12 +145,12 @@ namespace DOL.Network
 
 			return Marshal.ConvertToUInt32(v4, v3, v2, v1);
 		}
-		
-		/// <summary>
-		/// Reads low endian floats used in 1.124 packets
-		/// </summary>
-		/// <returns>converts it to a usable value</returns>
-		public virtual float ReadFloatLowEndian()
+
+        /// <summary>
+        /// Reads low endian floats used in 1.124 packets
+        /// </summary>
+        /// <returns>converts it to a usable value</returns>
+        public virtual float ReadFloatLowEndian()
         {
             var v1 = (byte)ReadByte();
             var v2 = (byte)ReadByte();
@@ -159,7 +159,7 @@ namespace DOL.Network
             byte[] bytes = new[] { v1, v2, v3, v4 };
             float data = BitConverter.ToSingle(bytes, 0);
             return data;
-        } 
+        }        
 		
 		/// <summary>
 		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.

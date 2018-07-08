@@ -1,36 +1,28 @@
-using System;
-using System.Text;
-using System.Collections;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
-using System.Reflection;
 using DOL.AI.Brain;
-using DOL.Events;
 
 namespace DOL.GS.Spells
 {
-    //http://www.camelotherald.com/masterlevels/ma.php?ml=Banelord
-    //shared timer 1
-    #region Banelord-1
-    [SpellHandlerAttribute("CastingSpeedDebuff")]
+    // http://www.camelotherald.com/masterlevels/ma.php?ml=Banelord
+    // shared timer 1
+    [SpellHandler("CastingSpeedDebuff")]
     public class CastingSpeedDebuff : MasterlevelDebuffHandling
     {
-        public override eProperty Property1 { get { return eProperty.CastingSpeed; } }
-		
-		public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
-		{
-			base.ApplyEffectOnTarget(target, effectiveness);
-			target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
-		}
+        public override eProperty Property1 => eProperty.CastingSpeed;
+
+        public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
+        {
+            base.ApplyEffectOnTarget(target, effectiveness);
+            target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
+        }
 
         // constructor
         public CastingSpeedDebuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
-    #endregion
 
-    //shared timer 5 for ml2 - shared timer 3 for ml8
-    #region Banelord-2/8
-    [SpellHandlerAttribute("PBAEDamage")]
+    // shared timer 5 for ml2 - shared timer 3 for ml8
+    [SpellHandler("PBAEDamage")]
     public class PBAEDamage : MasterlevelHandling
     {
         // constructor
@@ -38,63 +30,79 @@ namespace DOL.GS.Spells
 
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
-            //For Banelord ML 8, it drains Life from the Caster
+            Caster.Mana -= PowerCost(target);
+
+            // For Banelord ML 8, it drains Life from the Caster
             if (Spell.Damage > 0)
             {
-                int chealth;
-                chealth = (m_caster.Health * (int)Spell.Damage) / 100;
+                var chealth = Caster.Health * (int)Spell.Damage / 100;
 
-                if (m_caster.Health < chealth)
+                if (Caster.Health < chealth)
+                {
                     chealth = 0;
+                }
 
-                m_caster.Health -= chealth;
+                Caster.Health -= chealth;
             }
+
             base.FinishSpellCast(target);
         }
 
         public override void OnDirectEffect(GameLiving target, double effectiveness)
         {
-            if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
+            if (!target.IsAlive || target.ObjectState != GameObject.eObjectState.Active)
+            {
+                return;
+            }
 
             GamePlayer player = target as GamePlayer;
             if (target is GamePlayer)
             {
-                int mana;
-                int health;
-                int end;
-
                 int value = (int)Spell.Value;
-                mana = (player.Mana * value) / 100;
-                end = (player.Endurance * value) / 100;
-                health = (player.Health * value) / 100;
+                var mana = player.Mana * value / 100;
+                var end = player.Endurance * value / 100;
+                var health = player.Health * value / 100;
 
-                //You don't gain RPs from this Spell
+                // You don't gain RPs from this Spell
                 if (player.Health < health)
+                {
                     player.Health = 1;
+                }
                 else
+                {
                     player.Health -= health;
+                }
 
                 if (player.Mana < mana)
+                {
                     player.Mana = 1;
+                }
                 else
+                {
                     player.Mana -= mana;
+                }
 
                 if (player.Endurance < end)
+                {
                     player.Endurance = 1;
+                }
                 else
+                {
                     player.Endurance -= end;
+                }
 
-                GameSpellEffect effect2 = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+                GameSpellEffect effect2 = FindEffectOnTarget(target, "Mesmerize");
                 if (effect2 != null)
                 {
                     effect2.Cancel(true);
                     return;
                 }
-                foreach (GamePlayer ply in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+
+                foreach (GamePlayer _ in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
                 {
                     SendEffectAnimation(player, 0, false, 1);
                 }
+
                 player.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
             }
         }
@@ -104,73 +112,80 @@ namespace DOL.GS.Spells
             return 25;
         }
     }
-    #endregion
 
-    //shared timer 3
-    #region Banelord-3
-    [SpellHandlerAttribute("Oppression")]
+    // shared timer 3
+    [SpellHandler("Oppression")]
     public class OppressionSpellHandler : MasterlevelHandling
     {
         public override bool IsOverwritable(GameSpellEffect compare)
         {
             return true;
         }
+
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            Caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
+
         public override int CalculateSpellResistChance(GameLiving target)
         {
             return 0;
         }
+
         public override void OnEffectStart(GameSpellEffect effect)
         {
             base.OnEffectStart(effect);
-            if (effect.Owner is GamePlayer)
-                ((GamePlayer)effect.Owner).UpdateEncumberance();
-			effect.Owner.StartInterruptTimer(effect.Owner.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
+            if (effect.Owner is GamePlayer player)
+            {
+                player.UpdateEncumberance();
+            }
+
+            effect.Owner.StartInterruptTimer(effect.Owner.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
         }
 
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
-            GameSpellEffect mezz = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
-            if (mezz != null)
-                mezz.Cancel(false);
+            GameSpellEffect mezz = FindEffectOnTarget(target, "Mesmerize");
+            mezz?.Cancel(false);
+
             base.ApplyEffectOnTarget(target, effectiveness);
         }
 
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-            if (effect.Owner is GamePlayer)
-                ((GamePlayer)effect.Owner).UpdateEncumberance();
+            if (effect.Owner is GamePlayer player)
+            {
+                player.UpdateEncumberance();
+            }
+
             return base.OnEffectExpires(effect, noMessages);
         }
+
         public OppressionSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
-    #endregion
 
-    //shared timer 1
-    #region Banelord-4
+    // shared timer 1
     [SpellHandler("MLFatDebuff")]
     public class MLFatDebuffHandler : MasterlevelDebuffHandling
     {
-        public override eProperty Property1 { get { return eProperty.FatigueConsumption; } }	
+        public override eProperty Property1 => eProperty.FatigueConsumption;
 
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
-            GameSpellEffect effect2 = SpellHandler.FindEffectOnTarget(target, "Mesmerize");
+            GameSpellEffect effect2 = FindEffectOnTarget(target, "Mesmerize");
             if (effect2 != null)
             {
                 effect2.Cancel(false);
                 return;
             }
+
             base.ApplyEffectOnTarget(target, effectiveness);
         }
 
         public override void OnEffectStart(GameSpellEffect effect)
         {
-			effect.Owner.StartInterruptTimer(effect.Owner.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
+            effect.Owner.StartInterruptTimer(effect.Owner.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
             base.OnEffectStart(effect);
         }
 
@@ -182,23 +197,19 @@ namespace DOL.GS.Spells
         // constructor
         public MLFatDebuffHandler(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, spell, spellLine) { }
     }
-    #endregion
 
-    //shared timer 5
-    #region Banelord-5
-    [SpellHandlerAttribute("MissHit")]
+    // shared timer 5
+    [SpellHandler("MissHit")]
     public class MissHit : MasterlevelBuffHandling
     {
-        public override eProperty Property1 { get { return eProperty.MissHit; } }
+        public override eProperty Property1 => eProperty.MissHit;
 
         // constructor
         public MissHit(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
-    #endregion
 
-    //shared timer 1
-    #region Banelord-6
-    #region ML6Snare
+    // shared timer 1
+
     [SpellHandler("MLUnbreakableSnare")]
     public class MLUnbreakableSnare : BanelordSnare
     {
@@ -206,9 +217,14 @@ namespace DOL.GS.Spells
         {
             int duration = Spell.Duration;
             if (duration < 1)
+            {
                 duration = 1;
+            }
             else if (duration > (Spell.Duration * 4))
-                duration = (Spell.Duration * 4);
+            {
+                duration = Spell.Duration * 4;
+            }
+
             return duration;
         }
 
@@ -222,20 +238,19 @@ namespace DOL.GS.Spells
         {
         }
     }
-    #endregion
-    #region ML6Stun
+
     [SpellHandler("UnrresistableNonImunityStun")]
     public class UnrresistableNonImunityStun : MasterlevelHandling
     {
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            Caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
 
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
-            if (target.HasAbility(Abilities.CCImmunity)||target.HasAbility(Abilities.StunImmunity))
+            if (target.HasAbility(Abilities.CCImmunity) || target.HasAbility(Abilities.StunImmunity))
             {
                 MessageToCaster(target.Name + " is immune to this effect!", eChatType.CT_SpellResisted);
                 return;
@@ -255,14 +270,12 @@ namespace DOL.GS.Spells
 
             MessageToLiving(effect.Owner, Spell.Message1, eChatType.CT_Spell);
             MessageToCaster(Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, true)), eChatType.CT_Spell);
-            Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, true)), eChatType.CT_Spell, effect.Owner, m_caster);
+            Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message2, effect.Owner.GetName(0, true)), eChatType.CT_Spell, effect.Owner, Caster);
 
-            GamePlayer player = effect.Owner as GamePlayer;
-            if (player != null)
+            if (effect.Owner is GamePlayer player)
             {
                 player.Client.Out.SendUpdateMaxSpeed();
-                if (player.Group != null)
-                    player.Group.UpdateMember(player, false, false);
+                player.Group?.UpdateMember(player, false, false);
             }
             else
             {
@@ -277,26 +290,24 @@ namespace DOL.GS.Spells
             effect.Owner.IsStunned = false;
             effect.Owner.DisableTurning(false);
 
-            if (effect.Owner == null) return 0;
+            if (effect.Owner == null)
+            {
+                return 0;
+            }
 
-            GamePlayer player = effect.Owner as GamePlayer;
-
-            if (player != null)
+            if (effect.Owner is GamePlayer player)
             {
                 player.Client.Out.SendUpdateMaxSpeed();
-                if (player.Group != null)
-                    player.Group.UpdateMember(player, false, false);
+                player.Group?.UpdateMember(player, false, false);
             }
             else
             {
-                GameNPC npc = effect.Owner as GameNPC;
-                if (npc != null)
+                if (effect.Owner is GameNPC npc && npc.Brain is IOldAggressiveBrain aggroBrain)
                 {
-                    IOldAggressiveBrain aggroBrain = npc.Brain as IOldAggressiveBrain;
-                    if (aggroBrain != null)
-                        aggroBrain.AddToAggroList(Caster, 1);
+                    aggroBrain.AddToAggroList(Caster, 1);
                 }
             }
+
             return 0;
         }
 
@@ -308,8 +319,15 @@ namespace DOL.GS.Spells
         public override bool IsOverwritable(GameSpellEffect compare)
         {
             if (Spell.EffectGroup != 0 || compare.Spell.EffectGroup != 0)
+            {
                 return Spell.EffectGroup == compare.Spell.EffectGroup;
-            if (compare.Spell.SpellType == "UnrresistableNonImunityStun") return true;
+            }
+
+            if (compare.Spell.SpellType == "UnrresistableNonImunityStun")
+            {
+                return true;
+            }
+
             return base.IsOverwritable(compare);
         }
 
@@ -318,37 +336,26 @@ namespace DOL.GS.Spells
             return 0;
         }
 
-        public override bool HasPositiveEffect
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool HasPositiveEffect => false;
 
         public UnrresistableNonImunityStun(GameLiving caster, Spell spell, SpellLine line)
             : base(caster, spell, line)
         {
         }
     }
-    #endregion
-    #endregion
 
-    //shared timer 3
-    #region Banelord-7
-    [SpellHandlerAttribute("BLToHit")]
+    // shared timer 3
+    [SpellHandler("BLToHit")]
     public class BLToHit : MasterlevelBuffHandling
     {
-        public override eProperty Property1 { get { return eProperty.ToHitBonus; } }
+        public override eProperty Property1 => eProperty.ToHitBonus;
 
         // constructor
         public BLToHit(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
-    #endregion
 
-    //shared timer 5
-    #region Banelord-9
-    [SpellHandlerAttribute("EffectivenessDebuff")]
+    // shared timer 5
+    [SpellHandler("EffectivenessDebuff")]
     public class EffectivenessDeBuff : MasterlevelHandling
     {
         /// <summary>
@@ -356,10 +363,9 @@ namespace DOL.GS.Spells
         /// </summary>
         public override void FinishSpellCast(GameLiving target)
         {
-            m_caster.Mana -= PowerCost(target);
+            Caster.Mana -= PowerCost(target);
             base.FinishSpellCast(target);
         }
-
 
         /// <summary>
         /// When an applied effect starts
@@ -368,8 +374,7 @@ namespace DOL.GS.Spells
         /// <param name="effect"></param>
         public override void OnEffectStart(GameSpellEffect effect)
         {
-            GamePlayer player = effect.Owner as GamePlayer;
-            if (player != null)
+            if (effect.Owner is GamePlayer player)
             {
                 player.Effectiveness -= Spell.Value * 0.01;
                 player.Out.SendUpdateWeaponAndArmorStats();
@@ -386,33 +391,29 @@ namespace DOL.GS.Spells
         /// <returns>immunity duration in milliseconds</returns>
         public override int OnEffectExpires(GameSpellEffect effect, bool noMessages)
         {
-            GamePlayer player = effect.Owner as GamePlayer;
-            if (player != null)
+            if (effect.Owner is GamePlayer player)
             {
                 player.Effectiveness += Spell.Value * 0.01;
                 player.Out.SendUpdateWeaponAndArmorStats();
                 player.Out.SendStatusUpdate();
             }
+
             return 0;
         }
 
         public EffectivenessDeBuff(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
-    #endregion
 
-    //no shared timer
-    #region Banelord-10
-    [SpellHandlerAttribute("Banespike")]
+    // no shared timer
+    [SpellHandler("Banespike")]
     public class BanespikeHandler : MasterlevelBuffHandling
     {
-        public override eProperty Property1 { get { return eProperty.MeleeDamage; } }
+        // ReSharper disable once ArrangeAccessorOwnerBody
+        public override eProperty Property1 => eProperty.MeleeDamage;
 
         public BanespikeHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
     }
-    #endregion
 }
-
-#region MisshitCalc
 
 namespace DOL.GS.PropertyCalc
 {
@@ -430,13 +431,10 @@ namespace DOL.GS.PropertyCalc
     {
         public override int CalcValue(GameLiving living, eProperty property)
         {
-            return (int)(
-                +living.BaseBuffBonusCategory[(int)property]
-                + living.SpecBuffBonusCategory[(int)property]
-                - living.DebuffCategory[(int)property]
-                + living.BuffBonusCategory4[(int)property]);
+            return +living.BaseBuffBonusCategory[(int)property]
+                   + living.SpecBuffBonusCategory[(int)property]
+                   - living.DebuffCategory[(int)property]
+                   + living.BuffBonusCategory4[(int)property];
         }
     }
 }
-
-#endregion

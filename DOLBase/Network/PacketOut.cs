@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
- 
 using System;
 using System.IO;
 
@@ -97,13 +96,13 @@ namespace DOL.Network
 			WriteByte((byte) ((val & 0xffff) >> 8));
 			WriteByte((byte) ((val >> 16) & 0xff));
 			WriteByte((byte) (val >> 24));
-		}
+		}        
 
-		/// <summary>
-		/// Writes a 8 byte value to the stream in host byte order
-		/// </summary>
-		/// <param name="val">Value to write</param>
-		public virtual void WriteLong(ulong val)
+        /// <summary>
+        /// Writes a 8 byte value to the stream in host byte order
+        /// </summary>
+        /// <param name="val">Value to write</param>
+        public virtual void WriteLong(ulong val)
 		{
 			WriteByte((byte) (val >> 56));
 			WriteByte((byte) ((val >> 48) & 0xff));
@@ -129,9 +128,9 @@ namespace DOL.Network
 			WriteByte((byte) ((val >> 40) & 0xff));
 			WriteByte((byte) ((val >> 48) & 0xff));
 			WriteByte((byte) (val >> 56));
-		}
-		
-		/// <summary>
+		}        
+
+        /// <summary>
         /// writes a float value to low endian used in 1.124 packets
         /// </summary>        
         public virtual void WriteFloatLowEndian(float val)
@@ -143,12 +142,12 @@ namespace DOL.Network
             WriteByte(bytes[2]);
             WriteByte(bytes[3]);
         }
-		
-		/// <summary>
-		/// Calculates the checksum for the internal buffer
-		/// </summary>
-		/// <returns>The checksum of the internal buffer</returns>
-		public virtual byte GetChecksum()
+
+        /// <summary>
+        /// Calculates the checksum for the internal buffer
+        /// </summary>
+        /// <returns>The checksum of the internal buffer</returns>
+        public virtual byte GetChecksum()
 		{
 			byte val = 0;
 			byte[] buf = GetBuffer();
@@ -273,7 +272,11 @@ namespace DOL.Network
 
 		/// <summary>
 		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
-		/// </summary>		
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+		/// </returns>
+		/// <filterpriority>2</filterpriority>
 		public override string ToString()
 		{
 			return GetType().Name;

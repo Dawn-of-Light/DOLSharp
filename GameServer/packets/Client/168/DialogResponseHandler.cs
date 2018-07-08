@@ -23,353 +23,364 @@ using DOL.GS.Keeps;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.DialogResponse, "Response Packet from a Question Dialog", eClientStatus.PlayerInGame)]
-	public class DialogResponseHandler : IPacketHandler
-	{
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    [PacketHandler(PacketHandlerType.TCP, eClientPackets.DialogResponse, "Response Packet from a Question Dialog", eClientStatus.PlayerInGame)]
+    public class DialogResponseHandler : IPacketHandler
+    {
+        public void HandlePacket(GameClient client, GSPacketIn packet)
+        {
+            ushort data1 = packet.ReadShort();
+            ushort data2 = packet.ReadShort();
+            ushort data3 = packet.ReadShort();
+            var messageType = (byte)packet.ReadByte();
+            var response = (byte)packet.ReadByte();
 
-		public void HandlePacket(GameClient client, GSPacketIn packet)
-		{
-			ushort data1 = packet.ReadShort();
-			ushort data2 = packet.ReadShort();
-			ushort data3 = packet.ReadShort();
-			var messageType = (byte) packet.ReadByte();
-			var response = (byte) packet.ReadByte();
+            new DialogBoxResponseAction(client.Player, data1, data2, data3, messageType, response).Start(1);
+        }
 
-			new DialogBoxResponseAction(client.Player, data1, data2, data3, messageType, response).Start(1);
-		}
+        /// <summary>
+        /// Handles dialog responses from players
+        /// </summary>
+        protected class DialogBoxResponseAction : RegionAction
+        {
+            /// <summary>
+            /// The general data field
+            /// </summary>
+            private readonly int _data1;
 
-		/// <summary>
-		/// Handles dialog responses from players
-		/// </summary>
-		protected class DialogBoxResponseAction : RegionAction
-		{
-			/// <summary>
-			/// The general data field
-			/// </summary>
-			protected readonly int m_data1;
+            /// <summary>
+            /// The general data field
+            /// </summary>
+            private readonly int _data2;
 
-			/// <summary>
-			/// The general data field
-			/// </summary>
-			protected readonly int m_data2;
+            /// <summary>
+            /// The general data field
+            /// </summary>
+            private readonly int _data3;
 
-			/// <summary>
-			/// The general data field
-			/// </summary>
-			protected readonly int m_data3;
+            /// <summary>
+            /// The dialog type
+            /// </summary>
+            private readonly int _messageType;
 
-			/// <summary>
-			/// The dialog type
-			/// </summary>
-			protected readonly int m_messageType;
+            /// <summary>
+            /// The players response
+            /// </summary>
+            private readonly byte _response;
 
-			/// <summary>
-			/// The players response
-			/// </summary>
-			protected readonly byte m_response;
+            /// <summary>
+            /// Constructs a new DialogBoxResponseAction
+            /// </summary>
+            /// <param name="actionSource">The responding player</param>
+            /// <param name="data1">The general data field</param>
+            /// <param name="data2">The general data field</param>
+            /// <param name="data3">The general data field</param>
+            /// <param name="messageType">The dialog type</param>
+            /// <param name="response">The players response</param>
+            public DialogBoxResponseAction(GamePlayer actionSource, int data1, int data2, int data3, int messageType, byte response)
+                : base(actionSource)
+            {
+                _data1 = data1;
+                _data2 = data2;
+                _data3 = data3;
+                _messageType = messageType;
+                _response = response;
+            }
 
-			/// <summary>
-			/// Constructs a new DialogBoxResponseAction
-			/// </summary>
-			/// <param name="actionSource">The responding player</param>
-			/// <param name="data1">The general data field</param>
-			/// <param name="data2">The general data field</param>
-			/// <param name="data3">The general data field</param>
-			/// <param name="messageType">The dialog type</param>
-			/// <param name="response">The players response</param>
-			public DialogBoxResponseAction(GamePlayer actionSource, int data1, int data2, int data3, int messageType, byte response)
-				: base(actionSource)
-			{
-				m_data1 = data1;
-				m_data2 = data2;
-				m_data3 = data3;
-				m_messageType = messageType;
-				m_response = response;
-			}
+            /// <summary>
+            /// Called on every timer tick
+            /// </summary>
+            protected override void OnTick()
+            {
+                var player = (GamePlayer)m_actionSource;
 
-			/// <summary>
-			/// Called on every timer tick
-			/// </summary>
-			protected override void OnTick()
-			{
-				var player = (GamePlayer) m_actionSource;
+                if (player == null)
+                {
+                    return;
+                }
+                
+                switch ((eDialogCode)_messageType)
+                {
+                    case eDialogCode.CustomDialog:
+                        {
+                            if (_data2 == 0x01)
+                            {
+                                CustomDialogResponse callback;
+                                lock (player)
+                                {
+                                    callback = player.CustomDialogCallback;
+                                    player.CustomDialogCallback = null;
+                                }
 
-				if (player == null)
-					return;
+                                if (callback == null)
+                                {
+                                    return;
+                                }
 
-				// log.DebugFormat("Dialog - response: {0}, messageType: {1}, data1: {2}, data2: {3}, data3: {4}", m_response, m_messageType, m_data1, m_data2, m_data3);
+                                callback(player, _response);
+                            }
 
-				switch ((eDialogCode) m_messageType)
-				{
-					case eDialogCode.CustomDialog:
-						{
-							if (m_data2 == 0x01)
-							{
-								CustomDialogResponse callback;
-								lock (player)
-								{
-									callback = player.CustomDialogCallback;
-									player.CustomDialogCallback = null;
-								}
+                            break;
+                        }
 
-								if (callback == null)
-									return;
+                    case eDialogCode.GuildInvite:
+                        {
+                            var guildLeader = WorldMgr.GetObjectByIDFromRegion(player.CurrentRegionID, (ushort)_data1) as GamePlayer;
+                            if (_response == 0x01) // accept
+                            {
+                                if (guildLeader == null)
+                                {
+                                    player.Out.SendMessage("You need to be in the same region as the guild leader to accept an invitation.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return;
+                                }
 
-								callback(player, m_response);
-							}
-							break;
-						}
-					case eDialogCode.GuildInvite:
-						{
-							var guildLeader = WorldMgr.GetObjectByIDFromRegion(player.CurrentRegionID, (ushort) m_data1) as GamePlayer;
-							if (m_response == 0x01) //accept
-							{
-								if (guildLeader == null)
-								{
-									player.Out.SendMessage("You need to be in the same region as the guild leader to accept an invitation.",
-									                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								if (player.Guild != null)
-								{
-									player.Out.SendMessage("You are still in a guild, you'll have to leave it first.", eChatType.CT_System,
-									                       eChatLoc.CL_SystemWindow);
-									return;
-								}
-								if (guildLeader.Guild != null)
-								{
-									guildLeader.Guild.AddPlayer(player);
-									return;
-								}
+                                if (player.Guild != null)
+                                {
+                                    player.Out.SendMessage("You are still in a guild, you'll have to leave it first.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return;
+                                }
 
-								player.Out.SendMessage("Player doing the invite is not in a guild!", eChatType.CT_System,
-								                       eChatLoc.CL_SystemWindow);
-								return;
-							}
+                                if (guildLeader.Guild != null)
+                                {
+                                    guildLeader.Guild.AddPlayer(player);
+                                    return;
+                                }
 
-							if (guildLeader != null)
-							{
-								guildLeader.Out.SendMessage(player.Name + " declined your invite.", eChatType.CT_System,
-								                            eChatLoc.CL_SystemWindow);
-							}
-							return;
-						}
-					case eDialogCode.GuildLeave:
-						{
-							if (m_response == 0x01) //accepte
-							{
-								if (player.Guild == null)
-								{
-									player.Out.SendMessage("You are not in a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
+                                player.Out.SendMessage("Player doing the invite is not in a guild!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                return;
+                            }
 
-								player.Guild.RemovePlayer(player.Name, player);
-							}
-							else
-							{
-								player.Out.SendMessage("You decline to quit your guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								return;
-							}
-							break;
-						}
-					case eDialogCode.QuestSubscribe:
-						{
-							var questNPC = (GameLiving) WorldMgr.GetObjectByIDFromRegion(player.CurrentRegionID, (ushort) m_data2);
-							if (questNPC == null)
-								return;
+                            guildLeader?.Out.SendMessage(player.Name + " declined your invite.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-							var args = new QuestEventArgs(questNPC, player, (ushort) m_data1);
-							if (m_response == 0x01) //accept
-							{
-								//TODO add quest to player
-								//Note: This is done withing quest code since we have to check requirements, etc for each quest individually
-								// i'm reusing the questsubscribe command for quest abort since its 99% the same, only different event dets fired
-								if (m_data3 == 0x01)
-									player.Notify(GamePlayerEvent.AbortQuest, player, args);
-								else
-									player.Notify(GamePlayerEvent.AcceptQuest, player, args);
-								return;
-							}
-							if (m_data3 == 0x01)
-							{
-								player.Notify(GamePlayerEvent.ContinueQuest, player, args);
-							}
-							else
-							{
-								player.Notify(GamePlayerEvent.DeclineQuest, player, args);
-							}
-							return;
-						}
-					case eDialogCode.GroupInvite:
-						{
-							if (m_response == 0x01)
-							{
-								GameClient cln = WorldMgr.GetClientFromID(m_data1);
-								if (cln == null)
-									return;
+                            return;
+                        }
 
-								GamePlayer groupLeader = cln.Player;
-								if (groupLeader == null)
-									return;
+                    case eDialogCode.GuildLeave:
+                        {
+                            if (_response == 0x01) // accepte
+                            {
+                                if (player.Guild == null)
+                                {
+                                    player.Out.SendMessage("You are not in a guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return;
+                                }
 
-								if (player.Group != null)
-								{
-									player.Out.SendMessage("You are still in a group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								if (!GameServer.ServerRules.IsAllowedToGroup(groupLeader, player, false))
-								{
-									return;
-								}
-								if (player.InCombatPvE)
-								{
-									player.Out.SendMessage("You can't join a group while in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
-								if (groupLeader.Group != null)
-								{
-									if (groupLeader.Group.Leader != groupLeader) return;
+                                player.Guild.RemovePlayer(player.Name, player);
+                            }
+                            else
+                            {
+                                player.Out.SendMessage("You decline to quit your guild.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            }
+
+                            break;
+                        }
+
+                    case eDialogCode.QuestSubscribe:
+                        {
+                            var questNpc = (GameLiving)WorldMgr.GetObjectByIDFromRegion(player.CurrentRegionID, (ushort)_data2);
+                            if (questNpc == null)
+                            {
+                                return;
+                            }
+
+                            var args = new QuestEventArgs(questNpc, player, (ushort)_data1);
+                            GamePlayerEvent action;
+                            if (_response == 0x01) // accept
+                            {
+                                // TODO add quest to player
+                                // Note: This is done withing quest code since we have to check requirements, etc for each quest individually
+                                // i'm reusing the questsubscribe command for quest abort since its 99% the same, only different event dets fired
+                                action = _data3 == 0x01 ? GamePlayerEvent.AbortQuest : GamePlayerEvent.AcceptQuest;
+                                player.Notify(action, player, args);
+
+                                return;
+                            }
+
+                            action = _data3 == 0x01 ? GamePlayerEvent.ContinueQuest : GamePlayerEvent.DeclineQuest;
+                            player.Notify(action, player, args);
+
+                            return;
+                        }
+
+                    case eDialogCode.GroupInvite:
+                        {
+                            if (_response == 0x01)
+                            {
+                                GameClient cln = WorldMgr.GetClientFromID(_data1);
+
+                                GamePlayer groupLeader = cln?.Player;
+                                if (groupLeader == null)
+                                {
+                                    return;
+                                }
+
+                                if (player.Group != null)
+                                {
+                                    player.Out.SendMessage("You are still in a group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return;
+                                }
+
+                                if (!GameServer.ServerRules.IsAllowedToGroup(groupLeader, player, false))
+                                {
+                                    return;
+                                }
+
+                                if (player.InCombatPvE)
+                                {
+                                    player.Out.SendMessage("You can't join a group while in combat!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return;
+                                }
+
+                                if (groupLeader.Group != null)
+                                {
+                                    if (groupLeader.Group.Leader != groupLeader)
+                                    {
+                                        return;
+                                    }
+
                                     if (groupLeader.Group.MemberCount >= ServerProperties.Properties.GROUP_MAX_MEMBER)
-									{
-										player.Out.SendMessage("The group is full.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-										return;
-									}
-									groupLeader.Group.AddMember(player);
-									GameEventMgr.Notify(GamePlayerEvent.AcceptGroup, player);
-									return;
-								}
+                                    {
+                                        player.Out.SendMessage("The group is full.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                        return;
+                                    }
 
-								var group = new Group(groupLeader);
-								GroupMgr.AddGroup(group);
+                                    groupLeader.Group.AddMember(player);
+                                    GameEventMgr.Notify(GamePlayerEvent.AcceptGroup, player);
+                                    return;
+                                }
 
-								group.AddMember(groupLeader);
-								group.AddMember(player);
+                                var group = new Group(groupLeader);
+                                GroupMgr.AddGroup(group);
 
-								GameEventMgr.Notify(GamePlayerEvent.AcceptGroup, player);
+                                group.AddMember(groupLeader);
+                                group.AddMember(player);
 
-								return;
-							}
-							break;
-						}
-					case eDialogCode.KeepClaim:
-						{
-							if (m_response == 0x01)
-							{
-								if (player.Guild == null)
-								{
-									player.Out.SendMessage("You have to be a member of a guild, before you can use any of the commands!",
-									                       eChatType.CT_System, eChatLoc.CL_SystemWindow);
-									return;
-								}
+                                GameEventMgr.Notify(GamePlayerEvent.AcceptGroup, player);
+                            }
 
-								AbstractGameKeep keep = GameServer.KeepManager.GetKeepCloseToSpot(player.CurrentRegionID, player, WorldMgr.VISIBILITY_DISTANCE);
-								if (keep == null)
-								{
-									player.Out.SendMessage("You have to be near the keep to claim it.", eChatType.CT_System,
-									                       eChatLoc.CL_SystemWindow);
-									return;
-								}
+                            break;
+                        }
 
-								if (keep.CheckForClaim(player))
-								{
-									keep.Claim(player);
-								}
-								break;
-							}
-							break;
-						}
-					case eDialogCode.HousePayRent:
-						{
-							if (m_response == 0x00)
-							{
-								if (player.TempProperties.getProperty<long>(HousingConstants.MoneyForHouseRent, -1) != -1)
-								{
-									player.TempProperties.removeProperty(HousingConstants.MoneyForHouseRent);
-								}
+                    case eDialogCode.KeepClaim:
+                        {
+                            if (_response == 0x01)
+                            {
+                                if (player.Guild == null)
+                                {
+                                    player.Out.SendMessage("You have to be a member of a guild, before you can use any of the commands!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return;
+                                }
 
-								if (player.TempProperties.getProperty<long>(HousingConstants.BPsForHouseRent, -1) != -1)
-								{
-									player.TempProperties.removeProperty(HousingConstants.BPsForHouseRent);
-								}
+                                AbstractGameKeep keep = GameServer.KeepManager.GetKeepCloseToSpot(player.CurrentRegionID, player, WorldMgr.VISIBILITY_DISTANCE);
+                                if (keep == null)
+                                {
+                                    player.Out.SendMessage("You have to be near the keep to claim it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                    return;
+                                }
 
-								player.TempProperties.removeProperty(HousingConstants.HouseForHouseRent);
+                                if (keep.CheckForClaim(player))
+                                {
+                                    keep.Claim(player);
+                                }
+                            }
 
-								return;
-							}
+                            break;
+                        }
 
-							var house = player.TempProperties.getProperty<House>(HousingConstants.HouseForHouseRent, null);
-							var moneyToAdd = player.TempProperties.getProperty<long>(HousingConstants.MoneyForHouseRent, -1);
-							var bpsToMoney = player.TempProperties.getProperty<long>(HousingConstants.BPsForHouseRent, -1);
+                    case eDialogCode.HousePayRent:
+                        {
+                            if (_response == 0x00)
+                            {
+                                if (player.TempProperties.getProperty<long>(HousingConstants.MoneyForHouseRent, -1) != -1)
+                                {
+                                    player.TempProperties.removeProperty(HousingConstants.MoneyForHouseRent);
+                                }
 
-							if (moneyToAdd != -1)
-							{
-								// if we're giving money and already have some in the lockbox, make sure we don't
-								// take more than what would cover 4 weeks of rent.
-								if (moneyToAdd + house.KeptMoney > HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS)
-									moneyToAdd = (HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS) - house.KeptMoney;
+                                if (player.TempProperties.getProperty<long>(HousingConstants.BPsForHouseRent, -1) != -1)
+                                {
+                                    player.TempProperties.removeProperty(HousingConstants.BPsForHouseRent);
+                                }
 
-								// take the money from the player
-								if (!player.RemoveMoney(moneyToAdd))
-									return;
-								InventoryLogging.LogInventoryAction(player, "(HOUSE;" + house.HouseNumber + ")", eInventoryActionType.Other, moneyToAdd);
+                                player.TempProperties.removeProperty(HousingConstants.HouseForHouseRent);
 
-								// add the money to the lockbox
-								house.KeptMoney += moneyToAdd;
+                                return;
+                            }
 
-								// save the house and the player
-								house.SaveIntoDatabase();
-								player.SaveIntoDatabase();
+                            var house = player.TempProperties.getProperty<House>(HousingConstants.HouseForHouseRent, null);
+                            var moneyToAdd = player.TempProperties.getProperty<long>(HousingConstants.MoneyForHouseRent, -1);
+                            var bpsToMoney = player.TempProperties.getProperty<long>(HousingConstants.BPsForHouseRent, -1);
 
-								// notify the player of what we took and how long they are prepaid for
-								player.Out.SendMessage("You deposit " + Money.GetString(moneyToAdd) + " in the lockbox.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								player.Out.SendMessage("The lockbox now has " + Money.GetString(house.KeptMoney) + " in it.  The weekly payment is " +
-									Money.GetString(HouseMgr.GetRentByModel(house.Model)) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								player.Out.SendMessage("The house is now prepaid for the next " + (house.KeptMoney/HouseMgr.GetRentByModel(house.Model)) +
-									" payments.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                            if (moneyToAdd != -1)
+                            {
+                                // if we're giving money and already have some in the lockbox, make sure we don't
+                                // take more than what would cover 4 weeks of rent.
+                                if (moneyToAdd + house.KeptMoney > HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS)
+                                {
+                                    moneyToAdd = (HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS) - house.KeptMoney;
+                                }
 
-								// clean up
-								player.TempProperties.removeProperty(HousingConstants.MoneyForHouseRent);
-							}
-							else
-							{
-								if (bpsToMoney + house.KeptMoney > HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS)
-									bpsToMoney = (HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS) - house.KeptMoney;
+                                // take the money from the player
+                                if (!player.RemoveMoney(moneyToAdd))
+                                {
+                                    return;
+                                }
 
-								if (!player.RemoveBountyPoints(Money.GetGold(bpsToMoney)))
-									return;
+                                InventoryLogging.LogInventoryAction(player, $"(HOUSE;{house.HouseNumber})", eInventoryActionType.Other, moneyToAdd);
 
-								// add the bps to the lockbox
-								house.KeptMoney += bpsToMoney;
+                                // add the money to the lockbox
+                                house.KeptMoney += moneyToAdd;
 
-								// save the house and the player
-								house.SaveIntoDatabase();
-								player.SaveIntoDatabase();
+                                // save the house and the player
+                                house.SaveIntoDatabase();
+                                player.SaveIntoDatabase();
 
-								// notify the player of what we took and how long they are prepaid for
-								player.Out.SendMessage("You deposit " + Money.GetString(bpsToMoney) + " in the lockbox.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								player.Out.SendMessage("The lockbox now has " + Money.GetString(house.KeptMoney) + " in it.  The weekly payment is " +
-									Money.GetString(HouseMgr.GetRentByModel(house.Model)) + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-								player.Out.SendMessage("The house is now prepaid for the next " + (house.KeptMoney/HouseMgr.GetRentByModel(house.Model)) +
-									" payments.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                // notify the player of what we took and how long they are prepaid for
+                                player.Out.SendMessage($"You deposit {Money.GetString(moneyToAdd)} in the lockbox.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                player.Out.SendMessage($"The lockbox now has {Money.GetString(house.KeptMoney)} in it.  The weekly payment is {Money.GetString(HouseMgr.GetRentByModel(house.Model))}.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                player.Out.SendMessage($"The house is now prepaid for the next {(house.KeptMoney / HouseMgr.GetRentByModel(house.Model))} payments.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-								// clean up
-								player.TempProperties.removeProperty(HousingConstants.BPsForHouseRent);
-							}
+                                // clean up
+                                player.TempProperties.removeProperty(HousingConstants.MoneyForHouseRent);
+                            }
+                            else
+                            {
+                                if (bpsToMoney + house.KeptMoney > HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS)
+                                {
+                                    bpsToMoney = (HouseMgr.GetRentByModel(house.Model) * ServerProperties.Properties.RENT_LOCKBOX_PAYMENTS) - house.KeptMoney;
+                                }
 
-							// clean up
-							player.TempProperties.removeProperty(HousingConstants.MoneyForHouseRent);
-							break;
-						}
-					case eDialogCode.MasterLevelWindow:
-						{
-							player.Out.SendMasterLevelWindow(m_response);
-							break;
-						}
-				}
-			}
-		}
+                                if (!player.RemoveBountyPoints(Money.GetGold(bpsToMoney)))
+                                {
+                                    return;
+                                }
 
-	}
+                                // add the bps to the lockbox
+                                house.KeptMoney += bpsToMoney;
+
+                                // save the house and the player
+                                house.SaveIntoDatabase();
+                                player.SaveIntoDatabase();
+
+                                // notify the player of what we took and how long they are prepaid for
+                                player.Out.SendMessage($"You deposit {Money.GetString(bpsToMoney)} in the lockbox.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                player.Out.SendMessage($"The lockbox now has {Money.GetString(house.KeptMoney)} in it.  The weekly payment is {Money.GetString(HouseMgr.GetRentByModel(house.Model))}.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                player.Out.SendMessage($"The house is now prepaid for the next {(house.KeptMoney / HouseMgr.GetRentByModel(house.Model))} payments.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+                                // clean up
+                                player.TempProperties.removeProperty(HousingConstants.BPsForHouseRent);
+                            }
+
+                            // clean up
+                            player.TempProperties.removeProperty(HousingConstants.MoneyForHouseRent);
+                            break;
+                        }
+
+                    case eDialogCode.MasterLevelWindow:
+                        {
+                            player.Out.SendMasterLevelWindow(_response);
+                            break;
+                        }
+                }
+            }
+        }
+    }
 }

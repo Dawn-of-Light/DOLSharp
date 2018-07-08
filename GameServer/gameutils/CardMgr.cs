@@ -13,11 +13,15 @@ namespace DOL.GS
             private uint m_id;
             private bool m_faceup;
             private string m_name;
-            private GameClient m_dealer;       
+            private GameClient m_dealer;
 
             public bool Init(uint num, bool up, GameClient dealer)
             {
-                if(num < 0 || num > 51) return false;
+                if (num < 0 || num > 51)
+                {
+                    return false;
+                }
+
                 m_id = num;
                 m_faceup = up;
                 m_dealer = dealer;
@@ -49,7 +53,7 @@ namespace DOL.GS
             private string GetCardName(uint num)
             {
                 string res = null;
-                switch(num%13)
+                switch (num % 13)
                 {
                     case 0: res = "Ace of "; break;
                     case 1: res = "Two of "; break;
@@ -65,16 +69,20 @@ namespace DOL.GS
                     case 11: res = "Queen of "; break;
                     case 12: res = "King of "; break;
                 }
-                switch (num/13)
+
+                switch (num / 13)
                 {
                     case 0: res += "Hearts"; return res;
                     case 1: res += "Diamonds"; return res;
                     case 2: res += "Clubs"; return res;
                     case 3: res += "Spades"; return res;
                 }
+
                 return "CARD ERROR OMG!";
             }
-        };
+        }
+
+;
 
         /* Maintains deck(s) of cards for a dealer */
         private class DealerDeck
@@ -87,26 +95,33 @@ namespace DOL.GS
             {
                 int i,j,tmp,swap;
                 uint [] cards;
-                Card  c;
+                Card c;
 
-                if(numDecks < 1) return false;
+                if (numDecks < 1)
+                {
+                    return false;
+                }
 
                 /* Initialize Member Variables */
                 m_dealer = Dealer;
                 m_numCards = numDecks * 52;
 
                 /* Initialize the array of 'Cards' and the card queue */
-                try{ cards = new uint[52*numDecks]; m_Cards = new Queue((int)(52*numDecks));}
-                catch(Exception) { return false; }
+                try { cards = new uint[52 * numDecks]; m_Cards = new Queue((int)(52 * numDecks)); }
+                catch (Exception) { return false; }
 
                 /* Initialize card IDs for numDecks */
-                for(i=0; i<numDecks; i++)
-                for(j=0; j<52; j++)
-                cards[i*52+j] = (uint)j;
+                for (i = 0; i < numDecks; i++)
+                {
+                    for (j = 0; j < 52; j++)
+                    {
+                        cards[i * 52 + j] = (uint)j;
+                    }
+                }
 
                 /* Decks have been initialized, shuffle them */
                 j = (int)m_numCards;
-                for(i=0; i<m_numCards; i++)
+                for (i = 0; i < m_numCards; i++)
                 {
                     swap = Util.Random(j - 1);
                     tmp = (int)cards[i];
@@ -115,7 +130,7 @@ namespace DOL.GS
                 }
 
                 /* Place the cards in Queue */
-                for(i=0; i<m_numCards; i++)
+                for (i = 0; i < m_numCards; i++)
                 {
                     c = new Card();
                     c.Init(cards[i], false, m_dealer);
@@ -128,14 +143,14 @@ namespace DOL.GS
 
             public bool HasCard()
             {
-                return m_Cards.Count > 0; 
-            }    
+                return m_Cards.Count > 0;
+            }
 
             public Card GetCard()
             {
                 Card card;
                 try { card = (Card)m_Cards.Dequeue(); }
-                catch(Exception) { return null; }
+                catch (Exception) { return null; }
                 return card;
             }
 
@@ -149,11 +164,13 @@ namespace DOL.GS
             {
                 get { return m_dealer; }
             }
-        };
+        }
+
+;
 
         /* Maintains the hand of cards for a player */
         private class PlayerHand
-        {    
+        {
             private GameClient m_owner;
             private ArrayList m_hand;
 
@@ -171,7 +188,7 @@ namespace DOL.GS
 
             public void Show(GameClient Player)
             {
-                foreach(Card c in m_hand)
+                foreach (Card c in m_hand)
                 {
                     c.Up = true;
                 }
@@ -184,10 +201,16 @@ namespace DOL.GS
                     source.Out.SendMessage((source == m_owner ? "You have " : m_owner.Player.Name + " has ") + "no cards.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     return;
                 }
-                string cards = "";
+
+                string cards = string.Empty;
                 foreach (Card c in m_hand)
-                    if(source == m_owner || c.Up) 
+                {
+                    if (source == m_owner || c.Up)
+                    {
                         cards += c.Id + " - " + c.Name + "\n";
+                    }
+                }
+
                 source.Out.SendMessage((source == m_owner ? "You are holding " : m_owner.Player.Name + " is holding ") + m_hand.Count + (m_hand.Count > 1 ? " cards." : " card."), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 source.Out.SendMessage(cards, eChatType.CT_System, eChatLoc.CL_SystemWindow);
             }
@@ -203,8 +226,14 @@ namespace DOL.GS
                         {
                             foreach (GamePlayer Groupee in m_owner.Player.Group.GetPlayersInTheGroup())
                             {
-                                if(Groupee == m_owner.Player) m_owner.Out.SendMessage("You discard the " + c.Name + " from your hand.", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
-                                else Groupee.Client.Out.SendMessage(m_owner.Player.Name + " discards " + (c.Up ? "the " + c.Name : "a card") + " from their hand.", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+                                if (Groupee == m_owner.Player)
+                                {
+                                    m_owner.Out.SendMessage("You discard the " + c.Name + " from your hand.", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+                                }
+                                else
+                                {
+                                    Groupee.Client.Out.SendMessage(m_owner.Player.Name + " discards " + (c.Up ? "the " + c.Name : "a card") + " from their hand.", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+                                }
                             }
                         }
                         else
@@ -213,9 +242,11 @@ namespace DOL.GS
                             DiscardAll();
                             return null;
                         }
+
                         return c;
                     }
                 }
+
                 m_owner.Out.SendMessage("No card with ID " + selection + " exists in your hand!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return null;
             }
@@ -224,14 +255,23 @@ namespace DOL.GS
             {
                 ArrayList cards = (ArrayList)m_hand.Clone();
                 m_hand.Clear();
-                if(m_owner.Player.Group == null)
+                if (m_owner.Player.Group == null)
+                {
                     m_owner.Out.SendMessage("You discard all your cards.", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+                }
                 else
-                    foreach(GamePlayer Groupee in m_owner.Player.Group.GetPlayersInTheGroup())
-                        Groupee.Client.Out.SendMessage((Groupee.Client == m_owner ? "You discard all your cards." : m_owner.Player + " discards all their cards."), eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+                {
+                    foreach (GamePlayer Groupee in m_owner.Player.Group.GetPlayersInTheGroup())
+                    {
+                        Groupee.Client.Out.SendMessage(Groupee.Client == m_owner ? "You discard all your cards." : m_owner.Player + " discards all their cards.", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+                    }
+                }
+
                 return cards;
             }
-        };
+        }
+
+;
 
         private static Hashtable m_dealerDecks = new Hashtable();
         private static Hashtable m_playerHands = new Hashtable();
@@ -240,9 +280,19 @@ namespace DOL.GS
         private static GameClient GroupDealer(GameClient player)
         {
             GameClient Dealer = null;
-            if (player.Player.Group == null) return null;
-            foreach(GamePlayer Groupee in player.Player.Group.GetPlayersInTheGroup())
-                if(IsDealer(Groupee.Client)) Dealer = Groupee.Client;
+            if (player.Player.Group == null)
+            {
+                return null;
+            }
+
+            foreach (GamePlayer Groupee in player.Player.Group.GetPlayersInTheGroup())
+            {
+                if (IsDealer(Groupee.Client))
+                {
+                    Dealer = Groupee.Client;
+                }
+            }
+
             return Dealer;
         }
 
@@ -261,7 +311,7 @@ namespace DOL.GS
         /* Removes dealer rights from the player */
         public static void QuitDealing(GameClient player)
         {
-            if(IsDealer(player))
+            if (IsDealer(player))
             {
                 m_dealerDecks.Remove(player.Player.ObjectId);
             }
@@ -270,7 +320,10 @@ namespace DOL.GS
         /* Removes the player's hand from the manager, use when player leaves the server! */
         public static void QuitPlaying(GameClient player)
         {
-            if (IsPlayer(player)) m_playerHands.Remove(player.Player.ObjectId);
+            if (IsPlayer(player))
+            {
+                m_playerHands.Remove(player.Player.ObjectId);
+            }
         }
 
         /* Makes the player the group dealer and prepares the decks */
@@ -287,25 +340,35 @@ namespace DOL.GS
             DealerDeck newDecks;
 
             /* First clear out any previous decks for the group */
-            if(Dealer != null)
+            if (Dealer != null)
             {
                 QuitDealing(Dealer);
             }
 
             newDecks = new DealerDeck();
-            if(!newDecks.Init(player, numDecks)) { return; }
+            if (!newDecks.Init(player, numDecks)) { return; }
             try
             {
-                if (player.Player.Group == null) return;
+                if (player.Player.Group == null)
+                {
+                    return;
+                }
+
                 m_dealerDecks.Add(player.Player.ObjectId, newDecks);
                 foreach (GamePlayer Groupee in player.Player.Group.GetPlayersInTheGroup())
                 {
                     DiscardAll(Groupee.Client);
-                    if (Groupee == player.Player) player.Out.SendMessage("You shuffle " + numDecks + (numDecks > 1 ? " decks " : " deck ") + "of cards.", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
-                    else Groupee.Client.Out.SendMessage(player.Player.Name + " shuffles " + numDecks + (numDecks > 1 ? " decks " : " deck ") + "of cards.", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+                    if (Groupee == player.Player)
+                    {
+                        player.Out.SendMessage("You shuffle " + numDecks + (numDecks > 1 ? " decks " : " deck ") + "of cards.", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+                    }
+                    else
+                    {
+                        Groupee.Client.Out.SendMessage(player.Player.Name + " shuffles " + numDecks + (numDecks > 1 ? " decks " : " deck ") + "of cards.", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+                    }
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return;
             }
@@ -320,9 +383,9 @@ namespace DOL.GS
 
             if (!dealer.Player.Group.IsInTheGroup(player.Player))
             { dealer.Out.SendMessage(player.Player.Name + " must be in your group to play cards!", eChatType.CT_System, eChatLoc.CL_SystemWindow); return; }
-            if(!IsDealer(dealer))
+            if (!IsDealer(dealer))
             { dealer.Out.SendMessage("You must use /shuffle to prepare cards before dealing!", eChatType.CT_System, eChatLoc.CL_SystemWindow); return; }
-            if(!IsPlayer(player))
+            if (!IsPlayer(player))
             {
                 hand = new PlayerHand(player);
                 m_playerHands.Add(player.Player.ObjectId, hand);
@@ -331,35 +394,45 @@ namespace DOL.GS
             {
                 hand = (PlayerHand)m_playerHands[player.Player.ObjectId];
             }
+
             deck = (DealerDeck)m_dealerDecks[dealer.Player.ObjectId];
-            if(!deck.HasCard()) { return; }
+            if (!deck.HasCard()) { return; }
             c = deck.GetCard();
             if (c == null)
             {
                 dealer.Out.SendMessage("There are no cards left in the deck. Use /shuffle to prepare a new deck.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
+
             hand.AddCard(c, up);
             foreach (GamePlayer Groupee in dealer.Player.Group.GetPlayersInTheGroup())
             {
                 if (Groupee == dealer.Player)
+                {
                     dealer.Out.SendMessage("You deal " + (player == dealer ? "yourself" : player.Player.Name) + (up ? " the " + c.Name : " a card face down") + ".", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+                }
                 else if (Groupee == player.Player)
+                {
                     player.Out.SendMessage(dealer.Player.Name + " deals you the " + c.Name + ".", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+                }
                 else
+                {
                     Groupee.Client.Out.SendMessage(dealer.Player.Name + " deals " + (player == dealer ? "themself" : player.Player.Name) + (up ? " the " + c.Name : " a card face down") + ".", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+                }
             }
+
             return;
         }
 
         /* Returns a string of the cards held by Target as requested by Source */
         public static void Held(GameClient source, GameClient target)
-        { 
-            if(!IsPlayer(target)) 
+        {
+            if (!IsPlayer(target))
             {
                 source.Player.Out.SendMessage((source == target ? "You have" : target.Player.Name + " has") + " no cards.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
+
             (m_playerHands[target.Player.ObjectId] as PlayerHand).Held(source);
             return;
         }
@@ -367,16 +440,24 @@ namespace DOL.GS
         /* Show Player's hand to their group */
         public static void Show(GameClient player)
         {
-            if (player.Player.Group == null) return;
+            if (player.Player.Group == null)
+            {
+                return;
+            }
+
             if (!IsPlayer(player)) { player.Out.SendMessage("You have no cards.", eChatType.CT_System, eChatLoc.CL_SystemWindow); return; }
 
             foreach (GamePlayer Groupee in player.Player.Group.GetPlayersInTheGroup())
             {
                 if (Groupee == player.Player)
+                {
                     player.Out.SendMessage("You show your hand.", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
+                }
                 else
+                {
                     Groupee.Client.Out.SendMessage(player.Player.Name + " shows their hand.", eChatType.CT_Emote, eChatLoc.CL_SystemWindow);
-            } 
+                }
+            }
         }
 
         /* Player discards selection, returning it back to the bottom of group's deck */
@@ -388,7 +469,10 @@ namespace DOL.GS
             c = (m_playerHands[player.Player.ObjectId] as PlayerHand).Discard(selection);
             if (c != null)
             {
-                if(IsDealer(c.Dealer)) (m_dealerDecks[c.Dealer.Player.ObjectId] as DealerDeck).ReturnCard(c);
+                if (IsDealer(c.Dealer))
+                {
+                    (m_dealerDecks[c.Dealer.Player.ObjectId] as DealerDeck).ReturnCard(c);
+                }
             }
         }
 
@@ -397,10 +481,24 @@ namespace DOL.GS
         {
             GameClient Dealer = null;
             DealerDeck deck = null;
-            if (!IsPlayer(player)) return;
-            if ((Dealer = GroupDealer(player)) != null) deck = (DealerDeck)m_dealerDecks[Dealer.Player.ObjectId];
+            if (!IsPlayer(player))
+            {
+                return;
+            }
+
+            if ((Dealer = GroupDealer(player)) != null)
+            {
+                deck = (DealerDeck)m_dealerDecks[Dealer.Player.ObjectId];
+            }
+
             foreach (Card c in (m_playerHands[player.Player.ObjectId] as PlayerHand).DiscardAll())
-                if(deck != null && c.Dealer == Dealer) deck.ReturnCard(c);
+            {
+                if (deck != null && c.Dealer == Dealer)
+                {
+                    deck.ReturnCard(c);
+                }
+            }
+
             return;
         }
     }

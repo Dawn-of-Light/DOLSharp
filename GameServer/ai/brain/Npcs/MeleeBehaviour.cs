@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS;
+﻿using DOL.GS;
 
 namespace DOL.AI.Brain
 {
@@ -14,8 +11,6 @@ namespace DOL.AI.Brain
 
         private GameLiving Body { get; set; }
 
-        #region IAttackBehaviour Members
-
         public void Attack(GameObject target)
         {
             Body.StartAttack(target);
@@ -25,7 +20,5 @@ namespace DOL.AI.Brain
         {
             Body.StopAttack();
         }
-
-        #endregion
     }
 }

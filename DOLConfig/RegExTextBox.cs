@@ -1,16 +1,16 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -22,7 +22,7 @@ using System.Text.RegularExpressions;
 
 namespace RegExControls
 {
-    public partial class RegExTextBox : TextBox 
+    public partial class RegExTextBox : TextBox
     {
         private string mRegularExpression;
 
@@ -32,6 +32,7 @@ namespace RegExControls
             {
                 return mRegularExpression;
             }
+
             set
             {
                 mRegularExpression = value;
@@ -73,22 +74,22 @@ namespace RegExControls
 
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
-            //On key press
-            if (Char.IsControl(e.KeyChar) == false)
+            // On key press
+            if (char.IsControl(e.KeyChar) == false)
             {
-                //If it is a character
+                // If it is a character
                 string newText = base.Text.Substring(0, base.SelectionStart) + e.KeyChar.ToString() + base.Text.Substring(base.SelectionStart + base.SelectionLength);
-                if (newText != "")
+                if (newText != string.Empty)
                 {
-                    bool validateCheck = this.ValidateControl(newText);
+                    bool validateCheck = ValidateControl(newText);
                     if (validateCheck == false)
                     {
-                        //Not allowed character, do not print it
+                        // Not allowed character, do not print it
                         e.Handled = true;
                     }
-                }                 
+                }
             }
-            
+
             base.OnKeyPress(e);
         }
     }

@@ -16,131 +16,127 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
 using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Midgard Hunter Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Hunter, "Hunter", "MidgardRogue", "Huntress")]
-	public class ClassHunter : ClassMidgardRogue
-	{
-		private static readonly string[] AutotrainableSkills = new[] { Specs.Archery, Specs.CompositeBow };
+    /// <summary>
+    /// Midgard Hunter Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Hunter, "Hunter", "MidgardRogue", "Huntress")]
+    public class ClassHunter : ClassMidgardRogue
+    {
+        private static readonly string[] AutotrainableSkills = { Specs.Archery, Specs.CompositeBow };
 
-		public ClassHunter()
-			: base()
-		{
-			m_profession = "PlayerClass.Profession.HouseofSkadi";
-			m_specializationMultiplier = 20;
-			m_primaryStat = eStat.DEX;
-			m_secondaryStat = eStat.QUI;
-			m_tertiaryStat = eStat.STR;
-			m_wsbase = 380;
-			m_manaStat = eStat.DEX; 
-		}
+        public ClassHunter()
+        {
+            Profession = "PlayerClass.Profession.HouseofSkadi";
+            SpecPointsMultiplier = 20;
+            PrimaryStat = eStat.DEX;
+            SecondaryStat = eStat.QUI;
+            TertiaryStat = eStat.STR;
+            WeaponSkillBase = 380;
+            ManaStat = eStat.DEX;
+        }
 
-		public override IList<string> GetAutotrainableSkills()
-		{
-			return AutotrainableSkills;
-		}
+        public override IList<string> GetAutotrainableSkills()
+        {
+            return AutotrainableSkills;
+        }
 
-		public override eClassType ClassType
-		{
-			get { return eClassType.Hybrid; }
-		}
+        public override eClassType ClassType => eClassType.Hybrid;
 
-		/// <summary>
+        /// <summary>
         /// Add all spell-lines and other things that are new when this skill is trained
         /// FIXME : this should be in database
-		/// </summary>
-		/// <param name="player"></param>
-		/// <param name="skill"></param>
-		public override void OnSkillTrained(GamePlayer player, Specialization skill)
-		{
-			base.OnSkillTrained(player, skill);
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="skill"></param>
+        public override void OnSkillTrained(GamePlayer player, Specialization skill)
+        {
+            base.OnSkillTrained(player, skill);
 
-			switch (skill.KeyName)
-			{
-				case Specs.CompositeBow:
-					if (ServerProperties.Properties.ALLOW_OLD_ARCHERY == true)
-					{
-						if (skill.Level < 3)
-						{
-							// do nothing
-						}
-						else if (skill.Level < 6)
-						{
-							player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 1));
-						}
-						else if (skill.Level < 9)
-						{
-							player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 2));
-						}
-						else if (skill.Level < 12)
-						{
-							player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 3));
-						}
-						else if (skill.Level < 15)
-						{
-							player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 4));
-						}
-						else if (skill.Level < 18)
-						{
-							player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 5));
-						}
-						else if (skill.Level < 21)
-						{
-							player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 6));
-						}
-						else if (skill.Level < 24)
-						{
-							player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 7));
-						}
-						else if (skill.Level < 27)
-						{
-							player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 8));
-						}
-						else if (skill.Level >= 27)
-						{
-							player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 9));
-						}
+            switch (skill.KeyName)
+            {
+                case Specs.CompositeBow:
+                    if (ServerProperties.Properties.ALLOW_OLD_ARCHERY)
+                    {
+                        if (skill.Level < 3)
+                        {
+                            // do nothing
+                        }
+                        else if (skill.Level < 6)
+                        {
+                            player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 1));
+                        }
+                        else if (skill.Level < 9)
+                        {
+                            player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 2));
+                        }
+                        else if (skill.Level < 12)
+                        {
+                            player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 3));
+                        }
+                        else if (skill.Level < 15)
+                        {
+                            player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 4));
+                        }
+                        else if (skill.Level < 18)
+                        {
+                            player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 5));
+                        }
+                        else if (skill.Level < 21)
+                        {
+                            player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 6));
+                        }
+                        else if (skill.Level < 24)
+                        {
+                            player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 7));
+                        }
+                        else if (skill.Level < 27)
+                        {
+                            player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 8));
+                        }
+                        else if (skill.Level >= 27)
+                        {
+                            player.AddAbility(SkillBase.GetAbility(Abilities.Critical_Shot, 9));
+                        }
 
-						if (skill.Level >= 45)
-						{
-							player.AddAbility(SkillBase.GetAbility(Abilities.RapidFire, 2));
-						}
-						else if (skill.Level >= 35)
-						{
-							player.AddAbility(SkillBase.GetAbility(Abilities.RapidFire, 1));
-						}
+                        if (skill.Level >= 45)
+                        {
+                            player.AddAbility(SkillBase.GetAbility(Abilities.RapidFire, 2));
+                        }
+                        else if (skill.Level >= 35)
+                        {
+                            player.AddAbility(SkillBase.GetAbility(Abilities.RapidFire, 1));
+                        }
 
-						if (skill.Level >= 45)
-						{
-							player.AddAbility(SkillBase.GetAbility(Abilities.SureShot));
-						}
+                        if (skill.Level >= 45)
+                        {
+                            player.AddAbility(SkillBase.GetAbility(Abilities.SureShot));
+                        }
 
-						if (skill.Level >= 50)
-						{
-							player.AddAbility(SkillBase.GetAbility(Abilities.PenetratingArrow, 3));
-						}
-						else if (skill.Level >= 40)
-						{
-							player.AddAbility(SkillBase.GetAbility(Abilities.PenetratingArrow, 2));
-						}
-						else if (skill.Level >= 30)
-						{
-							player.AddAbility(SkillBase.GetAbility(Abilities.PenetratingArrow, 1));
-						}
-					}
-					break;
-			}
-		}
+                        if (skill.Level >= 50)
+                        {
+                            player.AddAbility(SkillBase.GetAbility(Abilities.PenetratingArrow, 3));
+                        }
+                        else if (skill.Level >= 40)
+                        {
+                            player.AddAbility(SkillBase.GetAbility(Abilities.PenetratingArrow, 2));
+                        }
+                        else if (skill.Level >= 30)
+                        {
+                            player.AddAbility(SkillBase.GetAbility(Abilities.PenetratingArrow, 1));
+                        }
+                    }
 
-		public override bool HasAdvancedFromBaseClass()
-		{
-			return true;
-		}
-	}
+                    break;
+            }
+        }
+
+        public override bool HasAdvancedFromBaseClass()
+        {
+            return true;
+        }
+    }
 }

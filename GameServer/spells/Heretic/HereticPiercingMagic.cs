@@ -3,49 +3,61 @@ using System.Collections;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.Events;
+
 namespace DOL.GS.Spells
 {
 
-	[SpellHandlerAttribute("HereticPiercingMagic")]
-	public class HereticPiercingMagic : SpellHandler
-	{
-        protected GameLiving focustarget = null;
-        protected ArrayList m_focusTargets = null;
+    [SpellHandler("HereticPiercingMagic")]
+    public class HereticPiercingMagic : SpellHandler
+    {
+        protected GameLiving focustarget;
+        protected ArrayList m_focusTargets;
+
         public override void FinishSpellCast(GameLiving target)
         {
             base.FinishSpellCast(target);
             focustarget = target;
         }
+
         public override void OnEffectStart(GameSpellEffect effect)
         {
             base.OnEffectStart(effect);
             if (m_focusTargets == null)
+            {
                 m_focusTargets = new ArrayList();
-            GameLiving living = effect.Owner as GameLiving;
+            }
+            
             lock (m_focusTargets.SyncRoot)
             {
                 if (!m_focusTargets.Contains(effect.Owner))
+                {
                     m_focusTargets.Add(effect.Owner);
+                }
 
                 MessageToCaster("You concentrated on the spell!", eChatType.CT_Spell);
             }
         }
+
         protected virtual void BeginEffect()
         {
-            GameEventMgr.AddHandler(m_caster, GamePlayerEvent.AttackFinished, new DOLEventHandler(EventAction));
-            GameEventMgr.AddHandler(m_caster, GamePlayerEvent.CastStarting, new DOLEventHandler(EventAction));
-            GameEventMgr.AddHandler(m_caster, GamePlayerEvent.Moving, new DOLEventHandler(EventAction));
-            GameEventMgr.AddHandler(m_caster, GamePlayerEvent.Dying, new DOLEventHandler(EventAction));
-            GameEventMgr.AddHandler(m_caster, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(EventAction));
+            GameEventMgr.AddHandler(Caster, GameLivingEvent.AttackFinished, new DOLEventHandler(EventAction));
+            GameEventMgr.AddHandler(Caster, GameLivingEvent.CastStarting, new DOLEventHandler(EventAction));
+            GameEventMgr.AddHandler(Caster, GameLivingEvent.Moving, new DOLEventHandler(EventAction));
+            GameEventMgr.AddHandler(Caster, GameLivingEvent.Dying, new DOLEventHandler(EventAction));
+            GameEventMgr.AddHandler(Caster, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(EventAction));
         }
+
         public void EventAction(DOLEvent e, object sender, EventArgs args)
         {
-            GameLiving player = sender as GameLiving;
+            if (!(sender is GameLiving))
+            {
+                return;
+            }
 
-            if (player == null) return;
             MessageToCaster("You lose your concentration!", eChatType.CT_SpellExpires);
             RemoveEffect();
         }
+
         protected virtual void RemoveEffect()
         {
             if (m_focusTargets != null)
@@ -55,26 +67,28 @@ namespace DOL.GS.Spells
                     foreach (GameLiving living in m_focusTargets)
                     {
                         GameSpellEffect effect = FindEffectOnTarget(living, this);
-                        if (effect != null)
-                            effect.Cancel(false);
+                        effect?.Cancel(false);
                     }
                 }
             }
+
             MessageToCaster("You lose your concentration!", eChatType.CT_Spell);
             if (Spell.Pulse != 0 && Spell.Frequency > 0)
-                CancelPulsingSpell(Caster, Spell.SpellType);
-
-            GameEventMgr.RemoveHandler(m_caster, GamePlayerEvent.AttackFinished, new DOLEventHandler(EventAction));
-            GameEventMgr.RemoveHandler(m_caster, GamePlayerEvent.CastStarting, new DOLEventHandler(EventAction));
-            GameEventMgr.RemoveHandler(m_caster, GamePlayerEvent.Moving, new DOLEventHandler(EventAction));
-            GameEventMgr.RemoveHandler(m_caster, GamePlayerEvent.Dying, new DOLEventHandler(EventAction));
-            GameEventMgr.RemoveHandler(m_caster, GamePlayerEvent.AttackedByEnemy, new DOLEventHandler(EventAction));
-            foreach (GamePlayer player in m_caster.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
             {
-                player.Out.SendInterruptAnimation(m_caster);
+                CancelPulsingSpell(Caster, Spell.SpellType);
+            }
+
+            GameEventMgr.RemoveHandler(Caster, GameLivingEvent.AttackFinished, new DOLEventHandler(EventAction));
+            GameEventMgr.RemoveHandler(Caster, GameLivingEvent.CastStarting, new DOLEventHandler(EventAction));
+            GameEventMgr.RemoveHandler(Caster, GameLivingEvent.Moving, new DOLEventHandler(EventAction));
+            GameEventMgr.RemoveHandler(Caster, GameLivingEvent.Dying, new DOLEventHandler(EventAction));
+            GameEventMgr.RemoveHandler(Caster, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(EventAction));
+            foreach (GamePlayer player in Caster.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+            {
+                player.Out.SendInterruptAnimation(Caster);
             }
         }
-	
-		public HereticPiercingMagic(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) {}
-	}
+
+        public HereticPiercingMagic(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+    }
 }

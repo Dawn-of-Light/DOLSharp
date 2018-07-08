@@ -17,44 +17,49 @@
  *
  */
 using System;
-using System.Collections;
 using DOL.GS.PacketHandler;
 using DOL.Language;
 
 namespace DOL.GS.Spells
 {
-	/// <summary>
-	///Handlers for the savage's special endurance heal that takes health instead of mana
-	/// </summary>
-	[SpellHandlerAttribute("SavageEnduranceHeal")]
-	public class SavageEnduranceHeal : EnduranceHealSpellHandler
-	{
-		public SavageEnduranceHeal(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+    /// <summary>
+    ///Handlers for the savage's special endurance heal that takes health instead of mana
+    /// </summary>
+    [SpellHandler("SavageEnduranceHeal")]
+    public class SavageEnduranceHeal : EnduranceHealSpellHandler
+    {
+        public SavageEnduranceHeal(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
-		protected override void RemoveFromStat(int value)
-		{
-			m_caster.Health -= value;
-		}
+        protected override void RemoveFromStat(int value)
+        {
+            Caster.Health -= value;
+        }
 
-		public override int PowerCost(GameLiving target)
-		{
-			int cost = 0;
-			if (m_spell.Power < 0)
-				cost = (int)(m_caster.MaxHealth * Math.Abs(m_spell.Power) * 0.01);
-			else
-				cost = m_spell.Power;
-			return cost;
-		}
+        public override int PowerCost(GameLiving target)
+        {
+            int cost = 0;
+            if (Spell.Power < 0)
+            {
+                cost = (int)(Caster.MaxHealth * Math.Abs(Spell.Power) * 0.01);
+            }
+            else
+            {
+                cost = Spell.Power;
+            }
 
-		public override bool CheckBeginCast(GameLiving selectedTarget)
-		{
-			int cost = PowerCost(Caster);
-			if (Caster.Health < cost)
-			{
+            return cost;
+        }
+
+        public override bool CheckBeginCast(GameLiving selectedTarget)
+        {
+            int cost = PowerCost(Caster);
+            if (Caster.Health < cost)
+            {
                 MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SavageEnduranceHeal.CheckBeginCast.InsuffiscientHealth"), eChatType.CT_SpellResisted);
                 return false;
-			}
-			return base.CheckBeginCast(Caster);
-		}
-	}
+            }
+
+            return base.CheckBeginCast(Caster);
+        }
+    }
 }

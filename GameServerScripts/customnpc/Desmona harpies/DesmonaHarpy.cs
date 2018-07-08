@@ -16,8 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Linq;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Styles;
@@ -28,7 +26,7 @@ namespace DOL.GS.Scripts
     {
         public override ushort GetClientVisualModel(GameClient client)
         {
-            //Battlegroup Support.
+            // Battlegroup Support.
             BattleGroup battleGroup = client.Player.TempProperties.getProperty<BattleGroup>(BattleGroup.BATTLEGROUP_PROPERTY, null);
             if (battleGroup != null)
             {
@@ -37,13 +35,14 @@ namespace DOL.GS.Scripts
                     foreach (GameInventoryItem item in player.Inventory.AllItems)
                     {
                         if (item is DesmonaCoin)
-                            return Model; //Livelike models for this mob are 990-992.
+                        {
+                            return Model; // Livelike models for this mob are 990-992.
+                        }
                     }
                 }
-
             }
 
-            //Group Support.
+            // Group Support.
             if (client.Player.Group != null)
             {
                 foreach (GamePlayer player in client.Player.Group.GetPlayersInTheGroup())
@@ -51,25 +50,32 @@ namespace DOL.GS.Scripts
                     foreach (GameInventoryItem item in player.Inventory.AllItems)
                     {
                         if (item is DesmonaCoin)
-                            return Model; //Livelike models for this mob are 990-992.
+                        {
+                            return Model; // Livelike models for this mob are 990-992.
+                        }
                     }
                 }
             }
 
-            //Solo Player Support.
+            // Solo Player Support.
             foreach (GameInventoryItem item in client.Player.Inventory.AllItems)
             {
                 if (item is DesmonaCoin)
-                    return Model; //Livelike models for this mob are 990-992.
+                {
+                    return Model; // Livelike models for this mob are 990-992.
+                }
             }
 
-            //GMs should always be able to target/see mobs
-            //so we make it invisible still, but targetable with its name.
+            // GMs should always be able to target/see mobs
+            // so we make it invisible still, but targetable with its name.
             if (client.Account.PrivLevel >= (int)ePrivLevel.GM)
+            {
                 return 665;
+            }
 
-            return 666; //Invisible Model.
+            return 666; // Invisible Model.
         }
+
         protected override AttackData MakeAttack(GameObject target, InventoryItem weapon, Style style, double effectiveness, int interruptDuration, bool dualWield)
         {
             if (target is GamePlayer)
@@ -82,6 +88,7 @@ namespace DOL.GS.Scripts
 
             return base.MakeAttack(target, weapon, style, effectiveness, interruptDuration, dualWield);
         }
+
         public void StealToken(GamePlayer player)
         {
             foreach (GameInventoryItem item in player.Inventory.AllItems)

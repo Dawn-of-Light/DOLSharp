@@ -1,30 +1,29 @@
 /*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
 using System;
-using System.Text;
 using DOL.Events;
 
 namespace DOL.GS.Behaviour
 {
 
     /// <summary>
-    /// Type of textoutput this one is used for general text messages within questpart.   
+    /// Type of textoutput this one is used for general text messages within questpart.
     /// </summary>
     public enum eTextType : byte
     {
@@ -49,24 +48,24 @@ namespace DOL.GS.Behaviour
         /// READ : open a description (bracket) windows saying what is written on the item
         /// </summary>
         Read = 0x05,
-		/// <summary>
-		/// NPC says something
-		/// </summary>
-		Say = 0x06,
-		/// <summary>
-		/// NPC yells something
-		/// </summary>
-		Yell = 0x07,
-		/// <summary>
-		/// NPC says something to target
-		/// </summary>
-		SayTo = 0x08,
+        /// <summary>
+        /// NPC says something
+        /// </summary>
+        Say = 0x06,
+        /// <summary>
+        /// NPC yells something
+        /// </summary>
+        Yell = 0x07,
+        /// <summary>
+        /// NPC says something to target
+        /// </summary>
+        SayTo = 0x08,
     }
 
     /// <summary>
     /// Actiontype defines a list of actiontypes to be used qith questparts.
     /// Depending on actiontype P and Q will have special
-    /// meaning look at documentation of each actiontype for details       
+    /// meaning look at documentation of each actiontype for details
     /// </summary>
     ///<remarks>
     /// Syntax: ... P:eEmote(eEmote.Yes) ... Parameter P must be of Type
@@ -88,19 +87,19 @@ namespace DOL.GS.Behaviour
         Attack,
         /// <summary>
         /// GameNPC Q:GameNPC(NPC)[NPC's ID:string] walks to point P:GameLocation(player)
-        /// </summary>        
+        /// </summary>
         WalkTo,
         /// <summary>
         /// GameNPC Q:GameNPC(NPC)[NPC's ID:string] walks to spawnpoint
-        /// </summary>        
+        /// </summary>
         WalkToSpawn,
         /// <summary>
         /// GameLiving Q:GameLiving(NPC)[NPC's ID:string] jumps immediatly to point P:GameLocation(player)
-        /// </summary>        
+        /// </summary>
         MoveTo,
         /*
-        CAST : monster's p## spell is casted, or entire q## monster index casts its        
-        CINV : p## item is created and placed in player's backback  // q## (functional ?)         
+        CAST : monster's p## spell is casted, or entire q## monster index casts its
+        CINV : p## item is created and placed in player's backback  // q## (functional ?)
         CLAS : class is set to p##
         DEGE : p## monster index degenerates
          * */
@@ -111,22 +110,25 @@ namespace DOL.GS.Behaviour
         /// <remarks>Tested</remarks>
         CustomDialog,
         /// <summary>
-        /// DINV : destroys Q:int(1)[string] instances of item P:ItemTemplate[Item's ID_nb:string] in inventory        
+        /// DINV : destroys Q:int(1)[string] instances of item P:ItemTemplate[Item's ID_nb:string] in inventory
         /// </summary>
         DestroyItem,
-        //DORM : enters dormant mode (unused)        
+
+        // DORM : enters dormant mode (unused)
         /// <summary>
         /// DROP : item P:ItemTemplate[Item's ID_nb:string] is dropped on the ground
         /// </summary>
         DropItem,
-        // FGEN : forces monster index p## to spawn one monster from slot q## (uncheck max)        
+
+        // FGEN : forces monster index p## to spawn one monster from slot q## (uncheck max)
         /// <summary>
         /// FQST : quest P:Type[Typename:string](Current Quest) is set as completed for player
         /// </summary>
         /// <remarks>Tested</remarks>
         FinishQuest,
+
         // // <summary>
-        // /// GCAP : gives cap experience p## times (q## should be set to 1 to avoid bugs)                         
+        // /// GCAP : gives cap experience p## times (q## should be set to 1 to avoid bugs)
         // /// </summary>
         // GiveXPCap,
         /// <summary>
@@ -154,7 +156,7 @@ namespace DOL.GS.Behaviour
         /// <remarks>Tested</remarks>
         TakeItem,
         /// <summary>
-        /// QST : Q:GameNPC(NPC) assigns quest P:Type[Typename:string](Current Quest) to player        
+        /// QST : Q:GameNPC(NPC) assigns quest P:Type[Typename:string](Current Quest) to player
         /// </summary>
         /// <remarks>Tested</remarks>
         GiveQuest,
@@ -171,10 +173,10 @@ namespace DOL.GS.Behaviour
         /// <remarks>Tested</remarks>
         OfferQuestAbort,
         /*
-            GSPE : monster index p## speed is set to q##            
+            GSPE : monster index p## speed is set to q##
             IATK : monster index p## attacks player, or first monster from monster index q##
             INFC : reduces faction p## by q## points
-            IPFC : increases faction p## by q## points            
+            IPFC : increases faction p## by q## points
          * */
         /// <summary>
         /// GUIL : guild of Q:GameLiving(NPC)[NPC's ID:string] is set to P:string (not player's guilds)
@@ -191,14 +193,15 @@ namespace DOL.GS.Behaviour
         SetQuestStep,
         /// <summary>
         /// KQST : Aborts quest P:Type[Typename:string](Current Quest)
-        /// </summary>  
+        /// </summary>
         /// <remarks>Tested</remarks>
         AbortQuest,
         /// <summary>
         /// MES : Displays a message P:string of Texttype Q:TextType(Emote)
         /// </summary>
         Message,
-        //    LIST : activates action list p## (action lists described in a following section)
+
+        // LIST : activates action list p## (action lists described in a following section)
         /// <summary>
         /// MGEN : Monster P:GameLiving[NPC's ID:string] will spawn considering all its requirements
         /// </summary>
@@ -213,10 +216,10 @@ namespace DOL.GS.Behaviour
             NFAC : sets faction p## to a negative value specified by q##
             ORDE : changes trade order to p## one (???)
             PATH : path is set to p##
-            PFAC : sets faction p## to a positive value specified by q##		
+            PFAC : sets faction p## to a positive value specified by q##
             RUMO : says a random quest teaser from zones p## and q##
             UOUT : set the fort p## to the realm q##
-            SGEN : monster index p## will spawn slot q## up to its max        
+            SGEN : monster index p## will spawn slot q## up to its max
          * */
         /// <summary>
         /// SINV : Item P:ItemTemplate[Item's Id_nb:string] is replaceb by item Q:ItemTemplate[Item's Id_nb:string] in inventory of player
@@ -238,7 +241,7 @@ namespace DOL.GS.Behaviour
         /// </summary>
         Teleport,
         /// <summary>
-        /// TIMR : regiontimer P:RegionTimer starts to count Q:int[string] milliseconds        
+        /// TIMR : regiontimer P:RegionTimer starts to count Q:int[string] milliseconds
         /// </summary>
         CustomTimer,
         /// <summary>
@@ -246,21 +249,23 @@ namespace DOL.GS.Behaviour
         /// </summary>
         /// <remarks>Tested</remarks>
         Timer,
-        //TREA : drops treasure index p##        
-		/// <summary>
-		/// Display a trainer window
-		/// </summary>
-		TrainerWindow,
+
+        // TREA : drops treasure index p##
+        /// <summary>
+        /// Display a trainer window
+        /// </summary>
+        TrainerWindow,
         /// <summary>
         /// WHIS : Q:GameLiving(NPC) whispers message P:string to player
         /// </summary>
         Whisper,
-        //XFER : changes to talk index p##. MUST be placed in entry 19 ! 
-		/// <summary>
-		/// WHIS: P:ushort(SoundID), Q:eSoundType(SoundType)
-		/// </summary>
-		PlaySound
-    }    
+
+        // XFER : changes to talk index p##. MUST be placed in entry 19 !
+        /// <summary>
+        /// WHIS: P:ushort(SoundID), Q:eSoundType(SoundType)
+        /// </summary>
+        PlaySound
+    }
 
     /// <summary>
     /// If one trigger and all requirements are fulfilled the corresponding actions of
@@ -271,12 +276,12 @@ namespace DOL.GS.Behaviour
     public interface IBehaviourAction
     {
         /// <summary>
-        /// Action performed 
+        /// Action performed
         /// Can be used in subclasses to define special behaviour of actions
         /// </summary>
         /// <param name="e">DolEvent of notify call</param>
         /// <param name="sender">Sender of notify call</param>
-        /// <param name="args">EventArgs of notify call</param>        
+        /// <param name="args">EventArgs of notify call</param>
         void Perform(DOLEvent e, object sender, EventArgs args);
     }
 }

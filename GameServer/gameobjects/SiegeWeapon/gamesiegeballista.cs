@@ -16,9 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using DOL.GS.Spells;
-using System.Collections;
 /*1,Ballista,1,ammo,0.46,1
 2,Catapult,2,ammo,0.39,1
 3,Trebuchet,2,ammo,1.03,1
@@ -38,55 +35,55 @@ using System.Collections;
 11,Ram Low,0,12,13,80,*/
 namespace DOL.GS
 {
-	/// <summary>
-	/// GameMovingObject is a base class for boats and siege weapons.
-	/// </summary>
-	public class GameSiegeBallista : GameSiegeWeapon
-	{
-		public GameSiegeBallista()
-			: base()
-		{
-			MeleeDamageType = eDamageType.Thrust;
-			Name = "field ballista";
-			AmmoType = 0x18;
-			this.Model = 0x0A55;
-			this.Effect = 0x089A;
-			ActionDelay = new int[]{
-				0,//none
-				5000,//aiming
-				10000,//arming
-				0,//loading
-				1100//fireing
-			};//en ms
-			/*SpellLine siegeWeaponSpellLine = SkillBase.GetSpellLine(GlobalSpellsLines.SiegeWeapon_Spells);
-			IList spells = SkillBase.GetSpellList(siegeWeaponSpellLine.KeyName);
-			if (spells != null)
-			{
-				foreach (Spell spell in spells)
-				{
-					if (spell.ID == 2430) //TODO good id for balista
-					{
-						if(spell.Level <= Level)
-						{
-							m_spellHandler = ScriptMgr.CreateSpellHandler(this, spell, siegeWeaponSpellLine);
-						}
-						break;
-					}
-				}
-			}*/
-		}
+    /// <summary>
+    /// GameMovingObject is a base class for boats and siege weapons.
+    /// </summary>
+    public class GameSiegeBallista : GameSiegeWeapon
+    {
+        public GameSiegeBallista()
+            : base()
+        {
+            MeleeDamageType = eDamageType.Thrust;
+            Name = "field ballista";
+            AmmoType = 0x18;
+            Model = 0x0A55;
+            Effect = 0x089A;
+            ActionDelay = new int[] {
+                0,// none
+                5000,// aiming
+                10000,// arming
+                0,// loading
+                1100// fireing
+            };// en ms
+            /*SpellLine siegeWeaponSpellLine = SkillBase.GetSpellLine(GlobalSpellsLines.SiegeWeapon_Spells);
+            IList spells = SkillBase.GetSpellList(siegeWeaponSpellLine.KeyName);
+            if (spells != null)
+            {
+                foreach (Spell spell in spells)
+                {
+                    if (spell.ID == 2430) //TODO good id for balista
+                    {
+                        if(spell.Level <= Level)
+                        {
+                            m_spellHandler = ScriptMgr.CreateSpellHandler(this, spell, siegeWeaponSpellLine);
+                        }
+                        break;
+                    }
+                }
+            }*/
+        }
 
-		public override void DoDamage()
-		{
-			//todo remove ammo + spell in db and uncomment
-			//m_spellHandler.StartSpell(player);
-			base.DoDamage();//anim mut be called after damage
-		}
-		public override bool ReceiveItem(GameLiving source, DOL.Database.InventoryItem item)
-		{
-			//todo check if bullet
-			return base.ReceiveItem(source, item);
-		}
+        public override void DoDamage()
+        {
+            // todo remove ammo + spell in db and uncomment
+            // m_spellHandler.StartSpell(player);
+            base.DoDamage();// anim mut be called after damage
+        }
 
-	}
+        public override bool ReceiveItem(GameLiving source, DOL.Database.InventoryItem item)
+        {
+            // todo check if bullet
+            return base.ReceiveItem(source, item);
+        }
+    }
 }

@@ -1,31 +1,31 @@
 ﻿/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
 /*
- * Author:		Cletus
- * Date:		19. 10. 2006	
+ * Author:      Cletus
+ * Date:        19. 10. 2006
  * Directory: /scripts/quests/albion/
  *
  * Description:
- * Here follows a new quest in Albion Camelot, as per patch 1.76, available in Prydwen Keep. 
+ * Here follows a new quest in Albion Camelot, as per patch 1.76, available in Prydwen Keep.
  * This particular quest is intended as a low-level replacement for the old Camdene's Components.
- * 
- * Speak to Arleigh Penn, a dye merchant, who can be found amongst all the merchants 
+ *
+ * Speak to Arleigh Penn, a dye merchant, who can be found amongst all the merchants
  * around the back of the central building.
  */
 
@@ -49,7 +49,7 @@ namespace DOL.GS.Quests.Albion
     /* The first thing we do, is to declare the class we create
      * as Quest. To do this, we derive from the abstract class
      * AbstractQuest
-     * 
+     *
      * This quest for example will be stored in the database with
      * the name: DOL.GS.Quests.Albion.ArleighsAssistant
      */
@@ -62,13 +62,13 @@ namespace DOL.GS.Quests.Albion
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         /* Declare the variables we need inside our quest.
-         * You can declare static variables here, which will be available in 
+         * You can declare static variables here, which will be available in
          * ALL instance of your quest and should be initialized ONLY ONCE inside
          * the OnScriptLoaded method.
-         * 
+         *
          * Or declare nonstatic variables here which can be unique for each Player
          * and change through the quest journey...
-         * 
+         *
          * We store our two mobs as static variables, since we need them
          */
 
@@ -76,7 +76,7 @@ namespace DOL.GS.Quests.Albion
         protected const int minimumLevel = 6;
         protected const int maximumLevel = 50;
 
-        /* 
+        /*
          * Start NPC
          */
         private static GameNPC arleighPenn = null;
@@ -111,43 +111,46 @@ namespace DOL.GS.Quests.Albion
         {
         }
 
-
         /* The following method is called automatically when this quest class
          * is loaded. You might notice that this method is the same as in standard
          * game events. And yes, quests basically are game events for single players
-         * 
-         * To make this method automatically load, we have to declare it static
-         * and give it the [ScriptLoadedEvent] attribute. 
          *
-         * Inside this method we initialize the quest. This is neccessary if we 
+         * To make this method automatically load, we have to declare it static
+         * and give it the [ScriptLoadedEvent] attribute.
+         *
+         * Inside this method we initialize the quest. This is neccessary if we
          * want to set the quest hooks to the NPCs.
-         * 
+         *
          * If you want, you can however add a quest to the player from ANY place
          * inside your code, from events, from custom items, from anywhere you
          * want. We will do it the standard way here ... and make Sir Quait wail
-         * a bit about the loss of his sword! 
+         * a bit about the loss of his sword!
          */
 
         [ScriptLoadedEvent]
         public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
-		{
-			if (!ServerProperties.Properties.LOAD_QUESTS)
-				return;
+        {
+            if (!ServerProperties.Properties.LOAD_QUESTS)
+            {
+                return;
+            }
+
             if (log.IsInfoEnabled)
+            {
                 log.Info("Quest \"" + questTitle + "\" initializing ...");
+            }
+
             /* First thing we do in here is to search for the NPCs inside
-            * the world who comes from the certain Realm. If we find a the players,
-            * this means we don't have to create a new one.
-            * 
-            * NOTE: You can do anything you want in this method, you don't have
-            * to search for NPC's ... you could create a custom item, place it
-            * on the ground and if a player picks it up, he will get the quest!
-            * Just examples, do anything you like and feel comfortable with :)
-            */
+* the world who comes from the certain Realm. If we find a the players,
+* this means we don't have to create a new one.
+*
+* NOTE: You can do anything you want in this method, you don't have
+* to search for NPC's ... you could create a custom item, place it
+* on the ground and if a player picks it up, he will get the quest!
+* Just examples, do anything you like and feel comfortable with :)
+*/
 
-            #region defineNPCs
-
-            GameNPC[] npcs = WorldMgr.GetNPCsByName("Arleigh Penn", eRealm.Albion);
+            GameNPC[] npcs = WorldMgr.GetObjectsByName<GameNPC>("Arleigh Penn", eRealm.Albion);
 
             /* Whops, if the npcs array length is 0 then no Sir Quait exists in
                 * this users Mob Database, so we simply create one ;-)
@@ -160,8 +163,11 @@ namespace DOL.GS.Quests.Albion
                   arleighPenn.Model = 8;
                   arleighPenn.Name = "Arleigh Penn";
                   if (log.IsWarnEnabled)
-                      log.Warn("Could not find " + arleighPenn.Name + ", creating him ...");
-                  arleighPenn.GuildName = "Dye Merchant";
+                {
+                    log.Warn("Could not find " + arleighPenn.Name + ", creating him ...");
+                }
+
+                arleighPenn.GuildName = "Dye Merchant";
                   arleighPenn.Realm = eRealm.Albion;
                   arleighPenn.CurrentRegionID = 1;
                   arleighPenn.Size = 51;
@@ -171,38 +177,35 @@ namespace DOL.GS.Quests.Albion
                   arleighPenn.Z = 2896;
                   arleighPenn.Heading = 2468;
 
-                  //You don't have to store the created mob in the db if you don't want,
-                  //it will be recreated each time it is not found, just comment the following
-                  //line if you rather not modify your database
+                  // You don't have to store the created mob in the db if you don't want,
+                  // it will be recreated each time it is not found, just comment the following
+                  // line if you rather not modify your database
                   if (SAVE_INTO_DATABASE)
-                      arleighPenn.SaveIntoDatabase();
+                {
+                    arleighPenn.SaveIntoDatabase();
+                }
 
-
-                  arleighPenn.AddToWorld();
-                 
+                arleighPenn.AddToWorld();
             }
             else
+            {
                 arleighPenn = npcs[0];
-                
-            
-            
-            #endregion
-
-            #region defineItems
-
-
+            }
 
             spritelingToes = GameServer.Database.FindObjectByKey<ItemTemplate>("spriteling_toes");
             if (spritelingToes == null)
              {
                  if (log.IsWarnEnabled)
-                     log.Warn("Could not find Spriteling Toes, creating it ...");
-                 spritelingToes = new ItemTemplate();
+                {
+                    log.Warn("Could not find Spriteling Toes, creating it ...");
+                }
+
+                spritelingToes = new ItemTemplate();
                  spritelingToes.Object_Type = 0;
                  spritelingToes.Id_nb = "spriteling_toes";
                  spritelingToes.Name = "Spriteling Toes";
                  spritelingToes.Level = 1;
-                 spritelingToes.Model = 508; 
+                 spritelingToes.Model = 508;
                  spritelingToes.IsDropable = false;
                  spritelingToes.IsPickable = false;
                  spritelingToes.Weight = 2;
@@ -213,13 +216,16 @@ namespace DOL.GS.Quests.Albion
              if (wormRot == null)
              {
                  if (log.IsWarnEnabled)
-                     log.Warn("Could not find Worm Rot, creating it ...");
-                 wormRot = new ItemTemplate();
+                {
+                    log.Warn("Could not find Worm Rot, creating it ...");
+                }
+
+                wormRot = new ItemTemplate();
                  wormRot.Object_Type = 0;
                  wormRot.Id_nb = "worm_rot";
                  wormRot.Name = "Worm Rot";
                  wormRot.Level = 1;
-                 spritelingToes.Model = 102; //TODO Model-ID 
+                 spritelingToes.Model = 102; // TODO Model-ID
                  wormRot.IsDropable = false;
                  wormRot.IsPickable = false;
                  GameServer.Database.AddObject(wormRot);
@@ -229,29 +235,31 @@ namespace DOL.GS.Quests.Albion
              if (snakeSkin == null)
              {
                  if (log.IsWarnEnabled)
-                     log.Warn("Could not find Green Skin, creating it ...");
-                 snakeSkin = new ItemTemplate();
+                {
+                    log.Warn("Could not find Green Skin, creating it ...");
+                }
+
+                snakeSkin = new ItemTemplate();
                  snakeSkin.Object_Type = 0;
                  snakeSkin.Id_nb = "green_skin";
                  snakeSkin.Name = "Green Skin";
                  snakeSkin.Level = 1;
-                 snakeSkin.Model = 107; 
+                 snakeSkin.Model = 107;
                  snakeSkin.IsDropable = false;
                  snakeSkin.IsPickable = false;
                  snakeSkin.Weight = 3;
                  GameServer.Database.AddObject(snakeSkin);
              }
-            #endregion
 
             /* Now we add some hooks to the Sir Quait we found.
-				* Actually, we want to know when a player interacts with him.
-				* So, we hook the right-click (interact) and the whisper method
-				* of Sir Quait and set the callback method to the "TalkToXXX"
-				* method. This means, the "TalkToXXX" method is called whenever
-				* a player right clicks on him or when he whispers to him.
-				*/
-			 GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
-			 GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+                * Actually, we want to know when a player interacts with him.
+                * So, we hook the right-click (interact) and the whisper method
+                * of Sir Quait and set the callback method to the "TalkToXXX"
+                * method. This means, the "TalkToXXX" method is called whenever
+                * a player right clicks on him or when he whispers to him.
+                */
+             GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+             GameEventMgr.AddHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
             GameEventMgr.AddHandler(arleighPenn, GameLivingEvent.Interact, new DOLEventHandler(TalkToArleighPenn));
             GameEventMgr.AddHandler(arleighPenn, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToArleighPenn));
@@ -260,12 +268,14 @@ namespace DOL.GS.Quests.Albion
             arleighPenn.AddQuestToGive(typeof(ArleighsAssistant));
 
             if (log.IsInfoEnabled)
+            {
                 log.Info("Quest \"" + questTitle + "\" initialized");
+            }
         }
 
         /* The following method is called automatically when this quest class
-         * is unloaded. 
-         * 
+         * is unloaded.
+         *
          * Since we set hooks in the load method, it is good practice to remove
          * those hooks again!
          */
@@ -277,14 +287,16 @@ namespace DOL.GS.Quests.Albion
              * hooks from him ;-)
              */
             if (arleighPenn == null)
+            {
                 return;
+            }
 
-            /* Removing hooks works just as adding them but instead of 
+            /* Removing hooks works just as adding them but instead of
              * AddHandler, we call RemoveHandler, the parameters stay the same
              */
 
-			GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
-			GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
+            GameEventMgr.RemoveHandler(GamePlayerEvent.AcceptQuest, new DOLEventHandler(SubscribeQuest));
+            GameEventMgr.RemoveHandler(GamePlayerEvent.DeclineQuest, new DOLEventHandler(SubscribeQuest));
 
             GameEventMgr.RemoveHandler(arleighPenn, GameObjectEvent.Interact, new DOLEventHandler(TalkToArleighPenn));
             GameEventMgr.RemoveHandler(arleighPenn, GameLivingEvent.WhisperReceive, new DOLEventHandler(TalkToArleighPenn));
@@ -300,50 +312,64 @@ namespace DOL.GS.Quests.Albion
 
         protected static void TalkToArleighPenn(DOLEvent e, object sender, EventArgs args)
         {
-            //We get the player from the event arguments and check if he qualifies		
+            // We get the player from the event arguments and check if he qualifies
             GamePlayer player = ((SourceEventArgs)args).Source as GamePlayer;
             if (player == null)
+            {
                 return;
+            }
 
             if (arleighPenn.CanGiveQuest(typeof(ArleighsAssistant), player) <= 0)
+            {
                 return;
+            }
 
-            //We also check if the player is already doing the quest
+            // We also check if the player is already doing the quest
             ArleighsAssistant quest = player.IsDoingQuest(typeof(ArleighsAssistant)) as ArleighsAssistant;
 
             arleighPenn.TurnTo(player);
-            //Did the player rightclick on arleighPenn?
+
+            // Did the player rightclick on arleighPenn?
             if (e == GameObjectEvent.Interact)
             {
-                //We check if the player is already doing the quest
+                // We check if the player is already doing the quest
                 if (quest != null)
                 {
-                    //If the player is already doing the quest, we look if he has the items:
+                    // If the player is already doing the quest, we look if he has the items:
                     if ((quest.Step == 4) || (quest.Step == 5))
                     {
                         arleighPenn.SayTo(player, "Welcome back, my friend " + player.Name + ". I can tell already you've had luck finding the items I requested. How about you hand over those spriteling toes? Arthw is getting very low on the light green dye.");
                         quest.Step = 5;
                     }
+
                     if (quest.Step == 6)
+                    {
                         arleighPenn.SayTo(player, "Now, do you have the worm rot for me? I'm getting very low on dark gray dye.");
+                    }
+
                     if (quest.Step == 7)
+                    {
                         arleighPenn.SayTo(player, "Now for the final item, the green skin.");
+                    }
+
                     return;
                 }
                 else
                 {
                     SendSystemMessage(player, "Arleigh does a little dance of celebration.");
-                    //Player hasn't the quest:
+
+                    // Player hasn't the quest:
                     arleighPenn.SayTo(player, "Greetings and salutations, my fine friend. I am the one, the only, Arleigh, dyemaster extraordinaire! I have just finished developing a vast collection of [new dyes] through my refinement of the arts!");
                     return;
                 }
             }
+
             // The player whispered to Sir Quait (clicked on the text inside the [])
             else if (e == GameLivingEvent.WhisperReceive)
             {
                 WhisperReceiveEventArgs wArgs = (WhisperReceiveEventArgs)args;
 
-                //We also check if the player is already doing the quest
+                // We also check if the player is already doing the quest
                 if (quest == null)
                 {
                     switch (wArgs.Text)
@@ -357,9 +383,10 @@ namespace DOL.GS.Quests.Albion
                         case "a small problem":
                             arleighPenn.SayTo(player, "When I was gathering materials to create these new, exciting dyes, I only gathered enough to create a test lot. That lot is almost gone, and Arthw and I have been so busy that neither of us has had time to go collecting. If you would be so kind as to gather a few things for me, I will give you a pot of dye free of charge, plus throw in a few coins for your trouble. Does that [sound good] to you?");
                             break;
-                        //If the player offered his "help", we send the quest dialog now!
+
+                        // If the player offered his "help", we send the quest dialog now!
                         case "sound good":
-							player.Out.SendQuestSubscribeCommand(arleighPenn, QuestMgr.GetIDForQuestType(typeof(ArleighsAssistant)), "Will you help Arleigh find the components he needs for new dyes?");
+                            player.Out.SendQuestSubscribeCommand(arleighPenn, QuestMgr.GetIDForQuestType(typeof(ArleighsAssistant)), "Will you help Arleigh find the components he needs for new dyes?");
                             break;
                     }
                 }
@@ -382,24 +409,31 @@ namespace DOL.GS.Quests.Albion
                             break;
                     }
                 }
-
             }
         }
 
-		protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
-		{
-			QuestEventArgs qargs = args as QuestEventArgs;
-			if (qargs == null)
-				return;
+        protected static void SubscribeQuest(DOLEvent e, object sender, EventArgs args)
+        {
+            QuestEventArgs qargs = args as QuestEventArgs;
+            if (qargs == null)
+            {
+                return;
+            }
 
-			if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(ArleighsAssistant)))
-				return;
+            if (qargs.QuestID != QuestMgr.GetIDForQuestType(typeof(ArleighsAssistant)))
+            {
+                return;
+            }
 
-			if (e == GamePlayerEvent.AcceptQuest)
-				CheckPlayerAcceptQuest(qargs.Player, 0x01);
-			else if (e == GamePlayerEvent.DeclineQuest)
-				CheckPlayerAcceptQuest(qargs.Player, 0x00);
-		}
+            if (e == GamePlayerEvent.AcceptQuest)
+            {
+                CheckPlayerAcceptQuest(qargs.Player, 0x01);
+            }
+            else if (e == GamePlayerEvent.DeclineQuest)
+            {
+                CheckPlayerAcceptQuest(qargs.Player, 0x00);
+            }
+        }
 
         /// <summary>
         /// This method checks if a player qualifies for this quest
@@ -409,16 +443,18 @@ namespace DOL.GS.Quests.Albion
         {
             // if the player is already doing the quest his level is no longer of relevance
             if (player.IsDoingQuest(typeof(ArleighsAssistant)) != null)
+            {
                 return true;
+            }
 
             // This checks below are only performed is player isn't doing quest already
-
             if (player.Level < minimumLevel || player.Level > maximumLevel)
+            {
                 return false;
+            }
 
             return true;
         }
-
 
         /* This is our callback hook that will be called when the player clicks
          * on any button in the quest offer dialog. We check if he accepts or
@@ -430,7 +466,9 @@ namespace DOL.GS.Quests.Albion
             ArleighsAssistant quest = player.IsDoingQuest(typeof(ArleighsAssistant)) as ArleighsAssistant;
 
             if (quest == null)
+            {
                 return;
+            }
 
             if (response == 0x00)
             {
@@ -450,13 +488,17 @@ namespace DOL.GS.Quests.Albion
 
         private static void CheckPlayerAcceptQuest(GamePlayer player, byte response)
         {
-            //We recheck the qualification, because we don't talk to players
-            //who are not doing the quest
+            // We recheck the qualification, because we don't talk to players
+            // who are not doing the quest
             if (arleighPenn.CanGiveQuest(typeof(ArleighsAssistant), player) <= 0)
+            {
                 return;
+            }
 
             if (player.IsDoingQuest(typeof(ArleighsAssistant)) != null)
+            {
                 return;
+            }
 
             if (response == 0x00)
             {
@@ -464,9 +506,11 @@ namespace DOL.GS.Quests.Albion
             }
             else
             {
-                //Check if we can add the quest
+                // Check if we can add the quest
                 if (!arleighPenn.GiveQuest(typeof(ArleighsAssistant), player, 1))
+                {
                     return;
+                }
 
                 arleighPenn.SayTo(player, "Wonderful! Now I only need three things really simple things to make these dyes. Each one can be found around here. Shall I [list them] for you?");
             }
@@ -503,13 +547,14 @@ namespace DOL.GS.Quests.Albion
                         return "[Step #3] Get some green skin from an emerald snake. They can be found in the grass one the other side of Salisbury Bridge.";
                     case 4:
                         return "[Step #4] Return to Dyemaster Arleigh Penn in Prydwen Keep. Take the spriteling toes, worm rot, and green skin with you.";
-                    case 5: 
+                    case 5:
                         return "[Step #5] Turn in the spriteling toes to Arleigh.";
                     case 6:
                         return "[Step #6] Turn in the worm rot to Arleigh.";
                     case 7:
                         return "[Step #7] Turn in the green skin to Arleigh.";
                     }
+
                 return base.Description;
             }
         }
@@ -519,11 +564,15 @@ namespace DOL.GS.Quests.Albion
             GamePlayer player = sender as GamePlayer;
 
             if (player == null)
+            {
                 return;
-            if (player.IsDoingQuest(typeof(ArleighsAssistant)) == null)
-                return;
+            }
 
-            
+            if (player.IsDoingQuest(typeof(ArleighsAssistant)) == null)
+            {
+                return;
+            }
+
             if (Step == 1 && e == GameLivingEvent.EnemyKilled)
             {
                 EnemyKilledEventArgs gArgs = (EnemyKilledEventArgs)args;
@@ -599,18 +648,18 @@ namespace DOL.GS.Quests.Albion
 
         public override void AbortQuest()
         {
-            base.AbortQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+            base.AbortQuest(); // Defined in Quest, changes the state, stores in DB etc ...
 
-            RemoveItem(m_questPlayer, spritelingToes, false);
-            RemoveItem(m_questPlayer, wormRot, false);
-            RemoveItem(m_questPlayer, snakeSkin, false);
+            RemoveItem(QuestPlayer, spritelingToes, false);
+            RemoveItem(QuestPlayer, wormRot, false);
+            RemoveItem(QuestPlayer, snakeSkin, false);
         }
 
-        private static String getRandomDyeColor()
+        private static string getRandomDyeColor()
         {
             int number = Util.Random(9);
             switch (number)
-            { 
+            {
                 case 0:
                     return "blue";
                 case 1:
@@ -631,25 +680,25 @@ namespace DOL.GS.Quests.Albion
                     return "turquoise";
                 case 9:
                     return "yellow";
-                default: return "";
+                default: return string.Empty;
             }
-
         }
 
         public override void FinishQuest()
         {
-            base.FinishQuest(); //Defined in Quest, changes the state, stores in DB etc ...
+            base.FinishQuest(); // Defined in Quest, changes the state, stores in DB etc ...
 
-            //Give reward to player here ...
+            // Give reward to player here ...
             ItemTemplate dye = GameServer.Database.FindObjectByKey<ItemTemplate>("light_" + getRandomDyeColor() + "_cloth_dye");
             if (dye != null)
-                GiveItem(arleighPenn, m_questPlayer, dye);
+            {
+                GiveItem(arleighPenn, QuestPlayer, dye);
+            }
 
-			m_questPlayer.GainExperience(GameLiving.eXPSource.Quest, 2560, true);
+            QuestPlayer.GainExperience(GameLiving.eXPSource.Quest, 2560, true);
             long money = Money.GetMoney(0, 0, 0, 0, 30 + Util.Random(50));
-            m_questPlayer.AddMoney(money, "You recieve {0} for your service.");
-            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", m_questPlayer, eInventoryActionType.Quest, money);
+            QuestPlayer.AddMoney(money, "You recieve {0} for your service.");
+            InventoryLogging.LogInventoryAction("(QUEST;" + Name + ")", QuestPlayer, eInventoryActionType.Quest, money);
         }
-
     }
 }

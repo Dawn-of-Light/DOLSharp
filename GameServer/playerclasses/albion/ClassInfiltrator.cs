@@ -16,43 +16,39 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
+
 using System.Collections.Generic;
 
 namespace DOL.GS.PlayerClass
 {
-	/// <summary>
-	/// Albion Infiltrator Class
-	/// </summary>
-	[CharacterClassAttribute((int)eCharacterClass.Infiltrator, "Infiltrator", "Rogue")]
-	public class ClassInfiltrator : ClassAlbionRogue
-	{
-		private static readonly string[] AutotrainableSkills = new[] { Specs.Stealth };
+    /// <summary>
+    /// Albion Infiltrator Class
+    /// </summary>
+    [CharacterClass((int)eCharacterClass.Infiltrator, "Infiltrator", "Rogue")]
+    public class ClassInfiltrator : ClassAlbionRogue
+    {
+        private static readonly string[] AutotrainableSkills = { Specs.Stealth };
 
-		public ClassInfiltrator()
-			: base()
-		{
-			m_profession = "PlayerClass.Profession.GuildofShadows";
-			m_specializationMultiplier = 25;
-			m_primaryStat = eStat.DEX;
-			m_secondaryStat = eStat.QUI;
-			m_tertiaryStat = eStat.STR;
-			m_baseHP = 720;
-		}
+        public ClassInfiltrator()
+        {
+            Profession = "PlayerClass.Profession.GuildofShadows";
+            SpecPointsMultiplier = 25;
+            PrimaryStat = eStat.DEX;
+            SecondaryStat = eStat.QUI;
+            TertiaryStat = eStat.STR;
+            BaseHP = 720;
+        }
 
-		public override bool CanUseLefthandedWeapon
-		{
-			get { return true; }
-		}
+        public override bool CanUseLefthandedWeapon => true;
 
-		public override IList<string> GetAutotrainableSkills()
-		{
-			return AutotrainableSkills;
-		}
+        public override IList<string> GetAutotrainableSkills()
+        {
+            return AutotrainableSkills;
+        }
 
-		public override bool HasAdvancedFromBaseClass()
-		{
-			return true;
-		}
-	}
+        public override bool HasAdvancedFromBaseClass()
+        {
+            return true;
+        }
+    }
 }

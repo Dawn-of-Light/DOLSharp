@@ -153,9 +153,7 @@
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Managers" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <BaseIntermediateOutputPath>..\build\UnitTests\$(Configuration)\</BaseIntermediateOutputPath>

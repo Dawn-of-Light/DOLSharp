@@ -1,77 +1,71 @@
-using System.Collections;
-using System;
 using System.Collections.Generic;
-using DOL;
-using DOL.GS;
-using DOL.Events;
-using DOL.Database;
-using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Effects
 {
-	/// <summary>
-	/// Helper for charge realm ability
-	/// </summary>
-	public class DreamweaverEffect : TimedEffect
-	{
-		private GameLiving owner;
-		/// <summary>
-		/// </summary>
-		public DreamweaverEffect() : base(300000) { }
+    /// <summary>
+    /// Helper for charge realm ability
+    /// </summary>
+    public class DreamweaverEffect : TimedEffect
+    {
+        private GameLiving _owner;
 
-		/// <summary>
-		/// Start the effect on player
-		/// </summary>
-		/// <param>The effect target</param>
-		public override void Start(GameLiving target)
-		{
-			base.Start(target);
-			owner = target;
-			GamePlayer player = target as GamePlayer;
-			if (player != null)
-			{
-				player.Model = GetRandomMorph();
-			}
-		}
+        /// <summary>
+        /// </summary>
+        public DreamweaverEffect() : base(300000) { }
 
-		public override void Stop()
-		{
-			base.Stop();
-			GamePlayer player = owner as GamePlayer;
-			if (player is GamePlayer)
-			{
-				player.Model = (ushort)player.CreationModel;
-			}
-		}
+        /// <summary>
+        /// Start the effect on player
+        /// </summary>
+        /// <param>The effect target</param>
+        public override void Start(GameLiving target)
+        {
+            base.Start(target);
+            _owner = target;
+            if (target is GamePlayer player)
+            {
+                player.Model = GetRandomMorph();
+            }
+        }
 
-		/// <summary>
-		/// Name of the effect
-		/// </summary>
-		public override string Name { get { return "Dreamweaver"; } }
+        public override void Stop()
+        {
+            base.Stop();
+            if (_owner is GamePlayer player)
+            {
+                player.Model = player.CreationModel;
+            }
+        }
 
-		/// <summary>
-		/// Icon to show on players, can be id
-		/// </summary>
-		public override ushort Icon { get { return 3051; } }
+        /// <summary>
+        /// Name of the effect
+        /// </summary>
+        public override string Name => "Dreamweaver";
 
-		/// <summary>
-		/// Delve Info
-		/// </summary>
-		public override IList<string> DelveInfo
-		{
-			get
-			{
-				var list = new List<string>();
-				list.Add("Transforms you into a random morph for 5 minutes.");
-				return list;
-			}
-		}
+        /// <summary>
+        /// Icon to show on players, can be id
+        /// </summary>
+        public override ushort Icon => 3051;
 
-		public static ushort GetRandomMorph()
-		{
-			return (ushort)Util.Random(1649, 1668);
-			// Returns random morph/gender (like live..)
-		}
+        /// <summary>
+        /// Delve Info
+        /// </summary>
+        public override IList<string> DelveInfo
+        {
+            get
+            {
+                var list = new List<string>
+                {
+                    "Transforms you into a random morph for 5 minutes."
+                };
 
-	}
+                return list;
+            }
+        }
+
+        public static ushort GetRandomMorph()
+        {
+            // Returns random morph/gender (like live..)
+            return (ushort)Util.Random(1649, 1668);
+        }
+    }
 }

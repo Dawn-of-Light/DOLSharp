@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DOL.GS;
+﻿using DOL.GS;
 using DOL.Events;
 
 namespace DOL.AI.Brain
@@ -23,8 +20,6 @@ namespace DOL.AI.Brain
             }
         }
 
-        #region IAttackBehaviour Members
-
         public void Attack(GameObject target)
         {
             foreach (Spell spell in Body.HarmfulSpells)
@@ -45,7 +40,5 @@ namespace DOL.AI.Brain
         public void Retreat()
         {
         }
-
-        #endregion
     }
 }
