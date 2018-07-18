@@ -1214,6 +1214,10 @@ namespace DOL.AI.Brain
                 case "SUPERIORCOURAGEBUFF":
                 case "TOHITBUFF":
                 case "WEAPONSKILLBUFF":
+                case "DAMAGEADD":
+                case "OFFENSIVEPROC":
+                case "DEFENSIVEPROC":
+                case "DAMAGESHIELD":
                     {
 						// Buff self, if not in melee, but not each and every mob
 						// at the same time, because it looks silly.
@@ -1224,7 +1228,7 @@ namespace DOL.AI.Brain
 						}
 						if (Body.ControlledBrain != null && Body.ControlledBrain.Body != null && Util.Chance(40) && Body.GetDistanceTo(Body.ControlledBrain.Body) <= spell.Range && !LivingHasEffect(Body.ControlledBrain.Body, spell) && spell.Target.ToLower() != "self")
 						{
-							Body.TargetObject = Body.ControlledBrain.Body;
+                            Body.TargetObject = Body.ControlledBrain.Body;
 							break;
 						}
 						break;
@@ -1480,11 +1484,6 @@ namespace DOL.AI.Brain
 					//if the effect effectgroup is the same as the checking spells effectgroup then these are considered the same
 					if (speffect.Spell.EffectGroup == spell.EffectGroup)
 						return true;
-
-					//otherwise continue unless the SpellType is the same
-					if (speffect.Spell.SpellType == spell.SpellType)
-						return true;
-
 				}
 			}
 
