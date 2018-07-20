@@ -55,8 +55,16 @@ namespace DOL.AI.Brain
 				return;
 			}
 
-			if ((guard is GuardArcher || guard is GuardLord))
+			if ((guard is GuardArcher || guard is GuardStaticArcher || guard is GuardLord))
 			{
+				// Drop aggro and disengage if the target is out of range.
+				if (Body.IsAttacking && Body.TargetObject is GameLiving living && Body.IsWithinRadius(Body.TargetObject, AggroRange, false) == false)
+				{
+					Body.StopAttack();
+					RemoveFromAggroList(living);
+					Body.TargetObject = null;
+				}
+
 				if (guard.AttackState && guard.CanUseRanged)
 				{
 					guard.SwitchToRanged(guard.TargetObject);
