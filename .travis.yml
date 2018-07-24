@@ -14,3 +14,4 @@ script:
  - MONO_IOMAP=case xbuild /p:Configuration=$XBUILD_TARGET "Dawn of Light.sln"
  - LANG=en_US.CP1252 mono ./test/NUnit.ConsoleRunner/tools/nunit3-console.exe ./build/IntegrationTests/$XBUILD_TARGET/lib/IntegrationTests.dll
  - LANG=en_US.CP1252 mono ./test/NUnit.ConsoleRunner/tools/nunit3-console.exe ./build/IntegrationTests_Database/$XBUILD_TARGET/lib/IntegrationTests_Database.dll
+ - LANG=en_US.CP1252 mono ./test/NUnit.ConsoleRunner/tools/nunit3-console.exe ./build/UnitTests/$XBUILD_TARGET/lib/UnitTests.dll
