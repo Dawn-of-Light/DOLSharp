@@ -2768,7 +2768,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the player's character class
 		/// </summary>
-		public ICharacterClass CharacterClass
+		public virtual ICharacterClass CharacterClass
 		{
 			get { return m_characterClass; }
 		}
