@@ -10,7 +10,7 @@ namespace DOL.UnitTests.Gameserver
     {
         #region CalculateDamageVariance
         [TestCase]
-        public void CalculateDamageVariance_TargetIsGameLiving_MinIs1_25()
+        public void CalculateDamageVariance_TargetIsGameLiving_MinIs125Percent()
         {
             var target = Substitute.For<GameLiving>();
             var spellLine = new SpellLine("", "", "", false);
@@ -22,7 +22,7 @@ namespace DOL.UnitTests.Gameserver
         }
 
         [TestCase]
-        public void CalculateDamageVariance_TargetIsGameLiving_MaxIs1_25()
+        public void CalculateDamageVariance_TargetIsGameLiving_MaxIs125Percent()
         {
             var target = Substitute.For<GameLiving>();
             var spellLine = new SpellLine("", "", "", false);
@@ -34,7 +34,7 @@ namespace DOL.UnitTests.Gameserver
         }
 
         [TestCase]
-        public void CalculateDamageVariance_SpellLineIsItemEffects_MinIsOne()
+        public void CalculateDamageVariance_SpellLineIsItemEffects_MinIs100Percent()
         {
             var spellLine = new SpellLine("Item Effects", "", "", false);
             var spellHandler = new SpellHandler(null, null, spellLine);
@@ -45,7 +45,7 @@ namespace DOL.UnitTests.Gameserver
         }
 
         [TestCase]
-        public void CalculateDamageVariance_SpellLineIsCombatStyleEffects_MinIsOne()
+        public void CalculateDamageVariance_SpellLineIsCombatStyleEffects_MinIs100Percent()
         {
             var spellLine = new SpellLine("Combat Style Effects", "", "", false);
             var spellHandler = new SpellHandler(null, null, spellLine);
@@ -56,7 +56,7 @@ namespace DOL.UnitTests.Gameserver
         }
 
         [TestCase]
-        public void CalculateDamageVariance_SpellLineIsCombatStyleEffects_MaxIs1_5()
+        public void CalculateDamageVariance_SpellLineIsCombatStyleEffects_MaxIs150Percent()
         {
             var spellLine = new SpellLine("Combat Style Effects", "", "", false);
             var spellHandler = new SpellHandler(null, null, spellLine);
@@ -67,7 +67,7 @@ namespace DOL.UnitTests.Gameserver
         }
 
         [TestCase]
-        public void CalculateDamageVariance_SpellLineIsReservedSpells_MinAndMaxIsOne()
+        public void CalculateDamageVariance_SpellLineIsReservedSpells_MinAndMaxIs100Percent()
         {
             var spellLine = new SpellLine("Reserved Spells", "", "", false);
             var spellHandler = new SpellHandler(null, null, spellLine);
@@ -79,7 +79,7 @@ namespace DOL.UnitTests.Gameserver
         }
 
         [TestCase]
-        public void CalculateDamageVariance_SourceAndTargetLevel30AndSpecLevel16_MinIsOnePointTwoFive()
+        public void CalculateDamageVariance_SourceAndTargetLevel30AndSpecLevel16_MinIs75Percent()
         {
             var source = new FakePlayer();
             var target = Substitute.For<GameLiving>();
@@ -95,7 +95,7 @@ namespace DOL.UnitTests.Gameserver
         }
 
         [TestCase]
-        public void CalculateDamageVariance_SameLevelButNoSpec_MinIsZeroPointTwoFive()
+        public void CalculateDamageVariance_SameLevelButNoSpec_MinIs25Percent()
         {
             var source = new FakePlayer();
             var target = Substitute.For<GameLiving>();
@@ -111,7 +111,7 @@ namespace DOL.UnitTests.Gameserver
         }
 
         [TestCase]
-        public void CalculateDamageVariance_SameLevelButFiveSpecLevelOverTargetLevel_MinIsOnePointTwoSeven()
+        public void CalculateDamageVariance_SameLevelButFiveSpecLevelOverTargetLevel_MinIs127Percent()
         {
             var source = new FakePlayer();
             var target = Substitute.For<GameLiving>();
@@ -127,7 +127,7 @@ namespace DOL.UnitTests.Gameserver
         }
 
         [TestCase]
-        public void CalculateDamageVariance_NoSpecButSourceHasTwiceTheTargetLevel_MinIsZeroPointFiveFive()
+        public void CalculateDamageVariance_NoSpecButSourceHasTwiceTheTargetLevel_MinIs55Percent()
         {
             var source = new FakePlayer();
             var target = Substitute.For<GameLiving>();
@@ -143,7 +143,7 @@ namespace DOL.UnitTests.Gameserver
         }
 
         [TestCase]
-        public void CalculateDamageVariance_NoSpecButSourceHasTwiceTheTargetLevel_MaxIsOnePointFiveFive()
+        public void CalculateDamageVariance_NoSpecButSourceHasTwiceTheTargetLevel_MaxIs155Percente()
         {
             var source = new FakePlayer();
             var target = Substitute.For<GameLiving>();
@@ -161,7 +161,7 @@ namespace DOL.UnitTests.Gameserver
 
         #region CalculateDamageBase
         [TestCase]
-        public void CalculateDamageBase_SpellIsCombatStyleEffect_ReturnAround72()
+        public void CalculateDamageBase_SpellDamageIs100AndCombatStyleEffect_ReturnAround72()
         {
             var spell = Create.DamageSpell(100);
             var source = Create.FakePlayer();
@@ -176,7 +176,7 @@ namespace DOL.UnitTests.Gameserver
         }
 
         [TestCase]
-        public void CalculateDamageBase_SourceIsAnimist_ReturnAround109()
+        public void CalculateDamageBase_SpellDamageIs100SourceIsAnimistWith100Int_ReturnAround109()
         {
             var spell = Create.DamageSpell(100);
             var source = Create.FakePlayer(new CharacterClassAnimist());
@@ -192,7 +192,7 @@ namespace DOL.UnitTests.Gameserver
         }
 
         [TestCase]
-        public void CalculateDamageBase_SourceIsAnimistPetWithAndHas100IntAsWellAsOwner_ReturnAround119()
+        public void CalculateDamageBase_SpellDamageIs100SourceIsAnimistPetWith100IntAndOwnerWith100Int_ReturnAround119()
         {
             var spell = Create.DamageSpell(100);
             var owner = Create.FakePlayer(new CharacterClassAnimist());
@@ -212,7 +212,7 @@ namespace DOL.UnitTests.Gameserver
         }
 
         [TestCase]
-        public void CalculateDamageBase_Level50GameNPCWithoutOwner_ReturnAround119()
+        public void CalculateDamageBase_SpellDamageIs100FromGameNPCWithoutOwner_ReturnAround119()
         {
             GameLiving.LoadCalculators(); //temporal coupling and global state
             var spell = Create.DamageSpell(100);
