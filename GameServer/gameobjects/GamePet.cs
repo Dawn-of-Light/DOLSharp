@@ -24,6 +24,7 @@ using DOL.Events;
 using DOL.GS.ServerProperties;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
+using DOL.AI;
 
 namespace DOL.GS
 {
@@ -43,6 +44,11 @@ namespace DOL.GS
 			AddStatsToWeapon();
 			BroadcastLivingEquipmentUpdate();
 		}
+
+        public GamePet(ABrain brain) : base(brain)
+        {
+
+        }
 
 		public GameLiving Owner
 		{
