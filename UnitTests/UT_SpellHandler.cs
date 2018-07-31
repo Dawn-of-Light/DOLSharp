@@ -180,7 +180,7 @@ namespace DOL.UnitTests.Gameserver
         {
             var spell = Create.DamageSpell(100);
             var source = Create.FakePlayer(new CharacterClassAnimist());
-            source.intelligence = 100;
+            source.modifiedIntelligence = 100;
             var target = Create.FakePlayer();
             var spellLine = new SpellLine("", "", "", false);
             var spellHandler = new SpellHandler(source, spell, spellLine);
@@ -196,7 +196,7 @@ namespace DOL.UnitTests.Gameserver
         {
             var spell = Create.DamageSpell(100);
             var owner = Create.FakePlayer(new CharacterClassAnimist());
-            owner.intelligence = 100;
+            owner.modifiedIntelligence = 100;
             owner.Level = 50;
             GamePet source = Create.Pet(owner);
             source.Level = 50; //temporal coupling through AutoSetStat()
@@ -216,7 +216,7 @@ namespace DOL.UnitTests.Gameserver
         {
             GameLiving.LoadCalculators(); //temporal coupling and global state
             var spell = Create.DamageSpell(100);
-            var source = Create.NPC();
+            var source = Create.FakeNPC();
             source.Level = 50;
             source.Intelligence = 100;
             var target = Create.FakePlayer();
@@ -229,5 +229,122 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(expected, actual, 0.001);
         }
         #endregion CalculateDamageBase
+
+        #region CalculateToHitChance
+        [Test]
+        public void CalculateToHitChance_BaseChance_Return85()
+        {
+            var spell = Create.Spell();
+            var source = Create.FakePlayer();
+            var target = Create.FakePlayer();
+            var spellLine = new SpellLine("", "", "", false);
+            var spellHandler = new SpellHandler(source, spell, spellLine);
+
+            int actual = spellHandler.CalculateToHitChance(target);
+
+            Assert.AreEqual(85, actual);
+        }
+
+        [Test]
+        public void CalculateToHitChance_SpellLevelIs50TargetLevelIsZero_Return110()
+        {
+            var spell = Create.Spell();
+            spell.Level = 50;
+            var source = Create.FakePlayer();
+            var target = Create.FakePlayer();
+            target.Level = 0;
+            var spellLine = new SpellLine("", "", "", false);
+            var spellHandler = new SpellHandler(source, spell, spellLine);
+
+            int actual = spellHandler.CalculateToHitChance(target);
+
+            Assert.AreEqual(110, actual);
+        }
+
+        [Test]
+        public void CalculateToHitChance_SpellBonusIsTen_Return90()
+        {
+            var spell = Create.Spell();
+            var source = Create.FakePlayer();
+            source.modifiedSpellLevel = 10; //spellBonus
+            var target = Create.FakePlayer();
+            var spellLine = new SpellLine("", "", "", false);
+            var spellHandler = new SpellHandler(source, spell, spellLine);
+
+            int actual = spellHandler.CalculateToHitChance(target);
+
+            Assert.AreEqual(90, actual);
+        }
+
+        [Test]
+        public void CalculateToHitChance_SpellBonusIsSeven_Return88()
+        {
+            var spell = Create.Spell();
+            var source = Create.FakePlayer();
+            source.modifiedSpellLevel = 7; //spellBonus
+            var target = Create.FakePlayer();
+            var spellLine = new SpellLine("", "", "", false);
+            var spellHandler = new SpellHandler(source, spell, spellLine);
+
+            int actual = spellHandler.CalculateToHitChance(target);
+
+            Assert.AreEqual(88, actual);
+        }
+
+        [Test]
+        public void CalculateToHitChance_SourceSpellBonusIsTenSpellLevelAndTargetLevelAre50_Return85()
+        {
+            var spell = Create.Spell();
+            spell.Level = 50;
+            var source = Create.FakePlayer();
+            source.modifiedSpellLevel = 10; //spellBonus
+            source.modiefiedToHitBonus = 0;
+            var target = Create.FakePlayer();
+            target.Level = 50;
+            var spellLine = new SpellLine("", "", "", false);
+            var spellHandler = new SpellHandler(source, spell, spellLine);
+
+            int actual = spellHandler.CalculateToHitChance(target);
+
+            Assert.AreEqual(85, actual);
+        }
+
+        [Test]
+        public void CalculateToHitChance_SameTargetAndSpellLevelWithFiveToHitBonus_Return90()
+        {
+            var spell = Create.Spell();
+            spell.Level = 50;
+            var source = Create.FakePlayer();
+            source.modifiedSpellLevel = 0; //spellBonus
+            source.modiefiedToHitBonus = 5;
+            var target = Create.FakePlayer();
+            target.Level = 50;
+            var spellLine = new SpellLine("", "", "", false);
+            var spellHandler = new SpellHandler(source, spell, spellLine);
+
+            int actual = spellHandler.CalculateToHitChance(target);
+
+            Assert.AreEqual(90, actual);
+        }
+
+        [Test]
+        public void CalculateToHitChance_TargetIsNPCLevel50SourceIsLevel50PlayerAndSpellLevelIs40_Return80()
+        {
+            GS.ServerProperties.Properties.PVE_SPELL_CONHITPERCENT = 10;
+            var spell = Create.Spell();
+            spell.Level = 40;
+            var source = Create.FakePlayer();
+            source.modifiedEffectiveLevel = 50;
+            var target = Create.FakeNPC();
+            target.Level = 50;
+            target.modifiedEffectiveLevel = 50;
+            var spellLine = new SpellLine("", "", "", false);
+            var spellHandler = new SpellHandler(source, spell, spellLine);
+
+            int actual = spellHandler.CalculateToHitChance(target);
+
+            Assert.AreEqual(80, actual);
+        }
+        #endregion
     }
 }

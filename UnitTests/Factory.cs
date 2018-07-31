@@ -8,6 +8,11 @@ namespace DOL.UnitTests.Gameserver
 {
     public static class Create
     {
+        public static Spell Spell()
+        {
+            return new Spell(new DBSpell(), 0);
+        }
+
         public static Spell DamageSpell(double damage)
         {
             var spell = new Spell(new DBSpell(), 0);
@@ -27,10 +32,10 @@ namespace DOL.UnitTests.Gameserver
             return player;
         }
 
-        public static GameNPC NPC()
+        public static FakeNPC FakeNPC()
         {
             var brain = Substitute.For<ABrain>();
-            var npc = new GameNPC(brain);
+            var npc = new FakeNPC(brain);
             return npc;
         }
 

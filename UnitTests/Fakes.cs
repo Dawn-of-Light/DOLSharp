@@ -1,4 +1,6 @@
-﻿using DOL.Database;
+﻿using System;
+using DOL.AI;
+using DOL.Database;
 using DOL.GS;
 
 namespace DOL.UnitTests.Gameserver
@@ -7,7 +9,10 @@ namespace DOL.UnitTests.Gameserver
     {
         public int modifiedSpecLevel;
         public ICharacterClass characterClass;
-        public int intelligence;
+        public int modifiedIntelligence;
+        public int modiefiedToHitBonus;
+        public int modifiedSpellLevel;
+        public int modifiedEffectiveLevel;
 
         public override ICharacterClass CharacterClass { get { return characterClass; } }
 
@@ -24,7 +29,42 @@ namespace DOL.UnitTests.Gameserver
 
         public override int GetModified(eProperty property)
         {
-            return intelligence;
+            switch (property)
+            {
+                case eProperty.Intelligence:
+                    return modifiedIntelligence;
+                case eProperty.SpellLevel:
+                    return modifiedSpellLevel;
+                case eProperty.ToHitBonus:
+                    return modiefiedToHitBonus;
+                case eProperty.LivingEffectiveLevel:
+                    return modifiedEffectiveLevel;
+                default: throw new ArgumentException("There is no property with that name");
+            }
+        }
+    }
+
+    public class FakeNPC : GameNPC
+    {
+        public int modifiedEffectiveLevel;
+
+        public FakeNPC(ABrain defaultBrain) : base(defaultBrain)
+        {
+        }
+
+        public override int GetModified(eProperty property)
+        {
+            switch(property)
+            {
+                case eProperty.LivingEffectiveLevel:
+                    return modifiedEffectiveLevel;
+                case eProperty.MaxHealth:
+                    return 0;
+                case eProperty.Intelligence:
+                    return Intelligence;
+                default:
+                    throw new ArgumentException("There is no property with that name");
+            }
         }
     }
 }

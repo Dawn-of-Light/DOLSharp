@@ -10,7 +10,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValueFromBuffs_GameNPCWith100ConstBaseBuff_Return100()
         {
-            GameNPC npc = Create.NPC();
+            var npc = Create.FakeNPC();
             npc.BaseBuffBonusCategory[eProperty.Constitution] = 100;
             StatCalculator statCalc = createStatCalculator();
 
@@ -50,7 +50,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValueFromBuffs_BaseBuff3AndSpecBuff4_Return7()
         {
-            GameNPC npc = Create.NPC();
+            var npc = Create.FakeNPC();
             npc.BaseBuffBonusCategory[eProperty.Constitution] = 3;
             npc.SpecBuffBonusCategory[eProperty.Constitution] = 4;
             StatCalculator statCalc = createStatCalculator();
@@ -99,7 +99,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValue_GameNPCWith100Constitution_Return100()
         {
-            GameNPC npc = Create.NPC();
+            var npc = Create.FakeNPC();
             npc.Constitution = 100;
             StatCalculator statCalc = createStatCalculator();
 
@@ -111,7 +111,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValue_GameNPCWith100Intelligence_Return100()
         {
-            GameNPC npc = Create.NPC();
+            var npc = Create.FakeNPC();
             npc.Intelligence = 100;
             StatCalculator statCalc = createStatCalculator();
 
