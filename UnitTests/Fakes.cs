@@ -13,6 +13,8 @@ namespace DOL.UnitTests.Gameserver
         public int modiefiedToHitBonus;
         public int modifiedSpellLevel;
         public int modifiedEffectiveLevel;
+        public int baseStat;
+        private int totalConLostOnDeath;
 
         public override ICharacterClass CharacterClass { get { return characterClass; } }
 
@@ -41,6 +43,17 @@ namespace DOL.UnitTests.Gameserver
                     return modifiedEffectiveLevel;
                 default: throw new ArgumentException("There is no property with that name");
             }
+        }
+
+        public override int GetBaseStat(eStat stat)
+        {
+            return baseStat;
+        }
+
+        public override int TotalConstitutionLostAtDeath
+        {
+            get { return totalConLostOnDeath; }
+            set { totalConLostOnDeath = value; }
         }
     }
 

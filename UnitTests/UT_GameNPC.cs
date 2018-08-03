@@ -9,10 +9,15 @@ namespace DOL.UnitTests.Gameserver
     [TestFixture]
     class UT_GameNPC
     {
+        [TestFixtureSetUp]
+        public void init()
+        {
+            GameLiving.LoadCalculators();
+        }
+
         [Test]
         public void GetModified_GameNPCWith75Constitution_Return75()
         {
-            GameLiving.LoadCalculators(); //temporal coupling and global state
             var brain = Substitute.For<ABrain>();
             var npc = new GameNPC(brain);
             npc.Constitution = 75;
