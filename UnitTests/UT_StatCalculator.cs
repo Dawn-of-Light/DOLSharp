@@ -86,8 +86,7 @@ namespace DOL.UnitTests.Gameserver
         {
             var player = Create.FakePlayer();
             player.Level = 50;
-            //eProperty casted to int, otherwise method calls wrong value
-            player.ItemBonus[(int)eProperty.Constitution] = 100;
+            player.ItemBonus[eProperty.Constitution] = 100;
             StatCalculator statCalc = createStatCalculator();
 
             int actual = statCalc.CalcValueFromItems(player, eProperty.Constitution);
@@ -97,7 +96,111 @@ namespace DOL.UnitTests.Gameserver
         }
 
         [Test]
-        public void CalcValue_GameNPCWith100Constitution_Return100()
+        public void CalcValueFromItems_Level50NPC100ConstFromItems_ReturnCapAt75()
+        {
+            var stat = eProperty.Constitution;
+            var npc = Create.FakeNPC();
+            npc.Level = 50;
+            npc.ItemBonus[stat] = 100;
+            StatCalculator statCalc = createStatCalculator();
+
+            int actual = statCalc.CalcValueFromItems(npc, stat);
+
+            int expected = (int)(1.5 * 50);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void CalcValueFromItems_IntelligenceOfLevel50AnimistWith50AcuityFromItems_Return50()
+        {
+            var player = Create.FakePlayer(new CharacterClassAnimist());
+            player.Level = 50;
+            player.ItemBonus[eProperty.Acuity] = 50;
+            StatCalculator statCalc = createStatCalculator();
+
+            int actual = statCalc.CalcValueFromItems(player, eProperty.Intelligence);
+            
+            Assert.AreEqual(50, actual);
+        }
+
+        [Test]
+        public void CalcValueFromItems_Level50Player150ConAnd100MythicalConCap_ReturnCapAt127()
+        {
+            var player = Create.FakePlayer();
+            player.Level = 50;
+            player.ItemBonus[eProperty.MythicalConCapBonus] = 100;
+            player.ItemBonus[eProperty.Constitution] = 150;
+            StatCalculator statCalc = createStatCalculator();
+
+            int actual = statCalc.CalcValueFromItems(player, eProperty.Constitution);
+
+            Assert.AreEqual(127, actual);
+        }
+
+        [Test]
+        public void CalcValueFromItems_Level50PlayerWith5MythicalConCap100ConCap_ReturnCapAt106()
+        {
+            var player = Create.FakePlayer();
+            player.Level = 50;
+            player.ItemBonus[eProperty.MythicalConCapBonus] = 5;
+            player.ItemBonus[eProperty.ConCapBonus] = 100;
+            player.ItemBonus[eProperty.Constitution] = 150;
+            StatCalculator statCalc = createStatCalculator();
+
+            int actual = statCalc.CalcValueFromItems(player, eProperty.Constitution);
+
+            Assert.AreEqual(106, actual);
+        }
+
+        [Test]
+        public void GetItemBonusCapIncrease_Level50Player100ConstCap_ReturnCapAt26()
+        {
+            var player = Create.FakePlayer();
+            player.Level = 50;
+            player.ItemBonus[eProperty.ConCapBonus] = 100;
+
+            int actual = StatCalculator.GetItemBonusCapIncrease(player, eProperty.Constitution);
+
+            int expected = (int)(50 / 2.0 + 1);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GetItemBonusCapIncrease_Level50Player10ConstCap_Return10()
+        {
+            var player = Create.FakePlayer();
+            player.Level = 50;
+            player.ItemBonus[eProperty.ConCapBonus] = 10;
+
+            int actual = StatCalculator.GetItemBonusCapIncrease(player, eProperty.Constitution);
+
+            Assert.AreEqual(10, actual);
+        }
+
+        [Test]
+        public void GetMythicalItemBonusCapIncrease_PlayerWith100MythicalConCap_ReturnCapAt52()
+        {
+            var player = Create.FakePlayer();
+            player.ItemBonus[eProperty.MythicalConCapBonus] = 100;
+
+            int actual = StatCalculator.GetMythicalItemBonusCapIncrease(player, eProperty.Constitution);
+
+            Assert.AreEqual(52, actual);
+        }
+
+        [Test]
+        public void GetMythicalItemBonusCapIncrease_PlayerWith10MythicalConCap_Return10()
+        {
+            var player = Create.FakePlayer();
+            player.ItemBonus[eProperty.MythicalConCapBonus] = 10;
+
+            int actual = StatCalculator.GetMythicalItemBonusCapIncrease(player, eProperty.Constitution);
+
+            Assert.AreEqual(10, actual);
+        }
+
+        [Test]
+        public void CalcValue_NPCWith100Constitution_Return100()
         {
             var npc = Create.FakeNPC();
             npc.Constitution = 100;
@@ -109,7 +212,7 @@ namespace DOL.UnitTests.Gameserver
         }
 
         [Test]
-        public void CalcValue_GameNPCWith100Intelligence_Return100()
+        public void CalcValue_NPCWith100Intelligence_Return100()
         {
             var npc = Create.FakeNPC();
             npc.Intelligence = 100;
@@ -118,6 +221,114 @@ namespace DOL.UnitTests.Gameserver
             int actual = statCalc.CalcValue(npc, eProperty.Intelligence);
 
             Assert.AreEqual(100, actual);
+        }
+
+        [Test]
+        public void CalcValue_GetIntelligenceFromLevel50AnimistWith50Acuity_Return50()
+        {
+            var player = Create.FakePlayer(new CharacterClassAnimist());
+            player.Level = 50;
+            player.BaseBuffBonusCategory[(int)eProperty.Acuity] = 50;
+            StatCalculator statCalc = createStatCalculator();
+
+            int actual = statCalc.CalcValue(player, eProperty.Intelligence);
+
+            Assert.AreEqual(50, actual);
+        }
+
+        [Test]
+        public void CalcValue_200ConstitutionAbilityBonus_Return200()
+        {
+            var player = Create.FakePlayer();
+            player.AbilityBonus[eProperty.Constitution] = 200;
+            StatCalculator statCalc = createStatCalculator();
+
+            int actual = statCalc.CalcValue(player, eProperty.Constitution);
+
+            Assert.AreEqual(200, actual);
+        }
+
+        [Test]
+        public void CalcValue_200ConstitutionDebuff_Return1()
+        {
+            var player = Create.FakePlayer();
+            player.DebuffCategory[eProperty.Constitution] = 200;
+            StatCalculator statCalc = createStatCalculator();
+
+            int actual = statCalc.CalcValue(player, eProperty.Constitution);
+
+            Assert.AreEqual(1, actual);
+        }
+
+        [Test]
+        public void CalcValue_200ConAbilityBonusAnd50ConDebuff_Return200()
+        {
+            var player = Create.FakePlayer();
+            player.AbilityBonus[eProperty.Constitution] = 200;
+            player.DebuffCategory[eProperty.Constitution] = 50;
+            StatCalculator statCalc = createStatCalculator();
+
+            int actual = statCalc.CalcValue(player, eProperty.Constitution);
+
+            Assert.AreEqual(200, actual);
+        }
+
+        [Test]
+        public void CalcValue_70ConBuffBonusAnd50ConDebuff_Return20()
+        {
+            var player = Create.FakePlayer();
+            player.Level = 50;
+            player.SpecBuffBonusCategory[eProperty.Constitution] = 70;
+            player.DebuffCategory[eProperty.Constitution] = 50;
+            StatCalculator statCalc = createStatCalculator();
+
+            int actual = statCalc.CalcValue(player, eProperty.Constitution);
+
+            Assert.AreEqual(20, actual);
+        }
+
+        [Test]
+        public void CalcValue_70ConItemBonusAnd50ConDebuff_Return45()
+        {
+            var player = Create.FakePlayer();
+            player.Level = 50;
+            player.ItemBonus[eProperty.Constitution] = 70;
+            player.DebuffCategory[eProperty.Constitution] = 50;
+            StatCalculator statCalc = createStatCalculator();
+
+            int actual = statCalc.CalcValue(player, eProperty.Constitution);
+
+            int expected = 70 - (50 / 2);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void CalcValue_70ConBaseStatAnd50ConDebuff_Return45()
+        {
+            var player = Create.FakePlayer();
+            player.Level = 50;
+            player.baseStat = 70;
+            player.DebuffCategory[eProperty.Constitution] = 50;
+            StatCalculator statCalc = createStatCalculator();
+
+            int actual = statCalc.CalcValue(player, eProperty.Constitution);
+
+            int expected = 70 - (50 / 2);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void CalcValue_70ConBaseStatAnd3ConLostOnDeath_Return67()
+        {
+            var player = Create.FakePlayer();
+            player.Level = 50;
+            player.baseStat = 70;
+            player.TotalConstitutionLostAtDeath = 3;
+            StatCalculator statCalc = createStatCalculator();
+
+            int actual = statCalc.CalcValue(player, eProperty.Constitution);
+            
+            Assert.AreEqual(67, actual);
         }
 
         public static StatCalculator createStatCalculator()
