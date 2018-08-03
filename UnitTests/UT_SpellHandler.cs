@@ -9,7 +9,7 @@ namespace DOL.UnitTests.Gameserver
     class UT_SpellHandler
     {
         #region CalculateDamageVariance
-        [TestCase]
+        [Test]
         public void CalculateDamageVariance_TargetIsGameLiving_MinIs125Percent()
         {
             var target = Substitute.For<GameLiving>();
@@ -21,7 +21,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(1.25, actual);
         }
 
-        [TestCase]
+        [Test]
         public void CalculateDamageVariance_TargetIsGameLiving_MaxIs125Percent()
         {
             var target = Substitute.For<GameLiving>();
@@ -33,7 +33,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(1.25, actual);
         }
 
-        [TestCase]
+        [Test]
         public void CalculateDamageVariance_SpellLineIsItemEffects_MinIs100Percent()
         {
             var spellLine = new SpellLine("Item Effects", "", "", false);
@@ -44,7 +44,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(1.00, actual);
         }
 
-        [TestCase]
+        [Test]
         public void CalculateDamageVariance_SpellLineIsCombatStyleEffects_MinIs100Percent()
         {
             var spellLine = new SpellLine("Combat Style Effects", "", "", false);
@@ -55,7 +55,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(1.00, actual);
         }
 
-        [TestCase]
+        [Test]
         public void CalculateDamageVariance_SpellLineIsCombatStyleEffects_MaxIs150Percent()
         {
             var spellLine = new SpellLine("Combat Style Effects", "", "", false);
@@ -66,7 +66,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(1.5, actual);
         }
 
-        [TestCase]
+        [Test]
         public void CalculateDamageVariance_SpellLineIsReservedSpells_MinAndMaxIs100Percent()
         {
             var spellLine = new SpellLine("Reserved Spells", "", "", false);
@@ -78,7 +78,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(1.0, actualMax);
         }
 
-        [TestCase]
+        [Test]
         public void CalculateDamageVariance_SourceAndTargetLevel30AndSpecLevel16_MinIs75Percent()
         {
             var source = new FakePlayer();
@@ -94,7 +94,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(0.75, actual);
         }
 
-        [TestCase]
+        [Test]
         public void CalculateDamageVariance_SameLevelButNoSpec_MinIs25Percent()
         {
             var source = new FakePlayer();
@@ -110,7 +110,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(0.25, actual);
         }
 
-        [TestCase]
+        [Test]
         public void CalculateDamageVariance_SameLevelButFiveSpecLevelOverTargetLevel_MinIs127Percent()
         {
             var source = new FakePlayer();
@@ -126,7 +126,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(1.27, actual);
         }
 
-        [TestCase]
+        [Test]
         public void CalculateDamageVariance_NoSpecButSourceHasTwiceTheTargetLevel_MinIs55Percent()
         {
             var source = new FakePlayer();
@@ -142,7 +142,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(0.55, actual);
         }
 
-        [TestCase]
+        [Test]
         public void CalculateDamageVariance_NoSpecButSourceHasTwiceTheTargetLevel_MaxIs155Percente()
         {
             var source = new FakePlayer();
@@ -160,7 +160,7 @@ namespace DOL.UnitTests.Gameserver
         #endregion CalculateDamageVariance
 
         #region CalculateDamageBase
-        [TestCase]
+        [Test]
         public void CalculateDamageBase_SpellDamageIs100AndCombatStyleEffect_ReturnAround72()
         {
             var spell = Create.DamageSpell(100);
@@ -175,7 +175,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(expected, actual);
         }
 
-        [TestCase]
+        [Test]
         public void CalculateDamageBase_SpellDamageIs100SourceIsAnimistWith100Int_ReturnAround109()
         {
             var spell = Create.DamageSpell(100);
@@ -191,7 +191,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(expected, actual, 0.001);
         }
 
-        [TestCase]
+        [Test]
         public void CalculateDamageBase_SpellDamageIs100SourceIsAnimistPetWith100IntAndOwnerWith100Int_ReturnAround119()
         {
             var spell = Create.DamageSpell(100);
@@ -211,7 +211,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(expected, actual, 0.001);
         }
 
-        [TestCase]
+        [Test]
         public void CalculateDamageBase_SpellDamageIs100FromGameNPCWithoutOwner_ReturnAround119()
         {
             GameLiving.LoadCalculators(); //temporal coupling and global state

@@ -9,7 +9,7 @@ namespace DOL.UnitTests.Gameserver
     [TestFixture]
     class UT_GameNPC
     {
-        [TestCase]
+        [Test]
         public void GetModified_GameNPCWith75Constitution_Return75()
         {
             GameLiving.LoadCalculators(); //temporal coupling and global state

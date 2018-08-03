@@ -10,7 +10,7 @@ namespace DOL.UnitTests.Gameserver
     [TestFixture]
     class UT_GameEffectList
     {
-        [TestCase]
+        [Test]
         public void Add_OwnerIsNotAlive_ReturnFalse()
         {
             var owner = Substitute.For<GameLiving>();
@@ -23,7 +23,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(false, actual);
         }
 
-        [TestCase]
+        [Test]
         public void Add_OwnerIsInactiveObject_ReturnFalse()
         {
             var owner = Substitute.For<GameLiving>();
@@ -37,7 +37,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(false, actual);
         }
 
-        [TestCase]
+        [Test]
         public void Add_OwnerIsActiveObjectAndAlive_ReturnTrue()
         {
             var owner = Substitute.For<GameLiving>();
@@ -51,7 +51,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(true, actual);
         }
 
-        [TestCase]
+        [Test]
         public void Add_ToFreshListAndOwnerIsAliveAndActiveObject_ListCountIsOne()
         {
             var owner = Substitute.For<GameLiving>();
@@ -66,7 +66,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(1, actual);
         }
 
-        [TestCase]
+        [Test]
         public void Add_ToFreshListAndOwnerIsNotAlive_ListCountRemainsZero()
         {
             var owner = Substitute.For<GameLiving>();
@@ -80,7 +80,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(0, actual);
         }
 
-        [TestCase]
+        [Test]
         public void Remove_EffectFromFreshList_ReturnFalse()
         {
             var owner = Substitute.For<GameLiving>();
@@ -92,7 +92,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(false, actual);
         }
 
-        [TestCase]
+        [Test]
         public void Remove_EffectFromListContainingSameEffect_ReturnTrue()
         {
             var owner = Substitute.For<GameLiving>();
@@ -107,7 +107,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(true, actual);
         }
 
-        [TestCase]
+        [Test]
         public void Remove_EffectFromListContainingDifferentEffect_ReturnFalse()
         {
             GameEffectList effectList = createEffectListWithValidOwner();
@@ -120,7 +120,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(false, actual);
         }
 
-        [TestCase]
+        [Test]
         public void Remove_EffectFromListContainingSameEffect_ListCountIsZero()
         {
             GameEffectList effectList = createEffectListWithValidOwner();
@@ -133,7 +133,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(0, actual);
         }
 
-        [TestCase]
+        [Test]
         public void CancelAll_EffectContainsOneEffect_EffectIsCancelled()
         {
             GameEffectList effectList = createEffectListWithValidOwner();
@@ -145,7 +145,7 @@ namespace DOL.UnitTests.Gameserver
             effect.Received().Cancel(false);
         }
 
-        [TestCase]
+        [Test]
         public void OnEffectsChanged_NoOpenChanges_NPCupdatePetWindowIsCalled()
         {
             var brain = Substitute.For<ABrain, IControlledBrain>();
@@ -157,7 +157,7 @@ namespace DOL.UnitTests.Gameserver
             (owner.Brain as IControlledBrain).Received().UpdatePetWindow();
         }
 
-        [TestCase]
+        [Test]
         public void OnEffectsChanged_OpenChanges_NPCupdatePetWindowIsNotCalled()
         {
             var brain = Substitute.For<ABrain, IControlledBrain>();
@@ -170,7 +170,7 @@ namespace DOL.UnitTests.Gameserver
             (owner.Brain as IControlledBrain).DidNotReceive().UpdatePetWindow();
         }
 
-        [TestCase]
+        [Test]
         public void CommitChanges_NoOpenChanges_NPCupdatePetWindowIsCalled()
         {
             var brain = Substitute.For<ABrain, IControlledBrain>();
@@ -182,7 +182,7 @@ namespace DOL.UnitTests.Gameserver
             (owner.Brain as IControlledBrain).Received().UpdatePetWindow();
         }
 
-        [TestCase]
+        [Test]
         public void CommitChanges_OpenChanges_NPCupdatePetWindowIsNotCalled()
         {
             var brain = Substitute.For<ABrain, IControlledBrain>();
@@ -195,7 +195,7 @@ namespace DOL.UnitTests.Gameserver
             (owner.Brain as IControlledBrain).DidNotReceive().UpdatePetWindow();
         }
 
-        [TestCase]
+        [Test]
         public void GetOfType_FreshList_ReturnNull()
         {
             var owner = Substitute.For<GameLiving>();
@@ -206,7 +206,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(null, actual);
         }
 
-        [TestCase]
+        [Test]
         public void GetOfType_ListWithOneItemOfGivenType_ReturnListWithThatOneItem()
         {
             GameEffectList effectList = createEffectListWithValidOwner();
