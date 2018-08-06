@@ -4905,7 +4905,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="stat"></param>
 		/// <returns></returns>
-		public int GetBaseStat(eStat stat)
+		public virtual int GetBaseStat(eStat stat)
 		{
 			return m_charStat[stat - eStat._First];
 		}

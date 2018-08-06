@@ -7,7 +7,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <OutputType>Library</OutputType>
     <RootNamespace>DOLDatabaseTests</RootNamespace>
-    <AssemblyName>DOLDatabaseTests</AssemblyName>
+    <AssemblyName>IntegrationTests_Database</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <NoWin32Manifest>False</NoWin32Manifest>
@@ -15,10 +15,10 @@
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <BaseIntermediateOutputPath>..\build\DOLDatabaseTests\$(Configuration)\</BaseIntermediateOutputPath>
-    <IntermediateOutputPath>..\build\DOLDatabaseTests\$(Configuration)\obj\</IntermediateOutputPath>
+    <BaseIntermediateOutputPath>..\build\IntegrationTests_Database\$(Configuration)\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>..\build\IntegrationTests_Database\$(Configuration)\obj\</IntermediateOutputPath>
     <WarningLevel>4</WarningLevel>
-    <OutputPath>..\build\DOLDatabaseTests\$(Configuration)\lib\</OutputPath>
+    <OutputPath>..\build\IntegrationTests_Database\$(Configuration)\lib\</OutputPath>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">

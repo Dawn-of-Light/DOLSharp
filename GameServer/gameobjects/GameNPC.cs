@@ -5645,56 +5645,60 @@ namespace DOL.GS
 		/// 	As a result, this constructor is rarely called.
 		/// </summary>
 		public GameNPC()
-			: base()
+			: this(new StandardMobBrain())
 		{
-			Level = 1; // health changes when GameNPC.Level changes
-			m_Realm = 0;
-			m_name = "new mob";
-			m_model = 408;
-			//Fill the living variables
-			//			CurrentSpeed = 0; // cause position addition recalculation
-			MaxSpeedBase = 200;
-			GuildName = "";
-
-			m_brainSync = m_brains.SyncRoot;
-			m_followTarget = new WeakRef(null);
-
-			m_size = 50; //Default size
-			TargetPosition = new Point3D();
-			m_followMinDist = 100;
-			m_followMaxDist = 3000;
-			m_flags = 0;
-			m_maxdistance = 0;
-			m_roamingRange = 0; // default to non roaming - tolakram
-			m_ownerID = "";
-
-			if ( m_spawnPoint == null )
-				m_spawnPoint = new Point3D();
-
-			//m_factionName = "";
-			LinkedFactions = new ArrayList(1);
-			if (m_ownBrain == null)
-			{
-				m_ownBrain = new StandardMobBrain();
-				m_ownBrain.Body = this;
-			}
-
-			// Save base stats in m_template even if there wasn't an npctemplate to begin with, as AutoSetStats() need them.
-			if (m_template == null)
-			{
-				//m_template = new NpcTemplate(this);  // This causes too many long queries and causes server startup to take FOREVER
-				NpcTemplate tmpNew = new NpcTemplate();
-				tmpNew.Strength = Strength;
-				tmpNew.Constitution = Constitution;
-				tmpNew.Dexterity = Dexterity;
-				tmpNew.Quickness = Quickness;
-				tmpNew.Empathy = Empathy;
-				tmpNew.Intelligence = Intelligence;
-				tmpNew.Charisma = Charisma;
-
-				m_template = tmpNew;
-			}
 		}
+
+        public GameNPC(ABrain defaultBrain) : base()
+        {
+            Level = 1; // health changes when GameNPC.Level changes
+            m_Realm = 0;
+            m_name = "new mob";
+            m_model = 408;
+            //Fill the living variables
+            //			CurrentSpeed = 0; // cause position addition recalculation
+            MaxSpeedBase = 200;
+            GuildName = "";
+
+            m_brainSync = m_brains.SyncRoot;
+            m_followTarget = new WeakRef(null);
+
+            m_size = 50; //Default size
+            TargetPosition = new Point3D();
+            m_followMinDist = 100;
+            m_followMaxDist = 3000;
+            m_flags = 0;
+            m_maxdistance = 0;
+            m_roamingRange = 0; // default to non roaming - tolakram
+            m_ownerID = "";
+
+            if (m_spawnPoint == null)
+                m_spawnPoint = new Point3D();
+
+            //m_factionName = "";
+            LinkedFactions = new ArrayList(1);
+            if (m_ownBrain == null)
+            {
+                m_ownBrain = defaultBrain;
+                m_ownBrain.Body = this;
+            }
+
+            // Save base stats in m_template even if there wasn't an npctemplate to begin with, as AutoSetStats() need them.
+            if (m_template == null)
+            {
+                //m_template = new NpcTemplate(this);  // This causes too many long queries and causes server startup to take FOREVER
+                NpcTemplate tmpNew = new NpcTemplate();
+                tmpNew.Strength = Strength;
+                tmpNew.Constitution = Constitution;
+                tmpNew.Dexterity = Dexterity;
+                tmpNew.Quickness = Quickness;
+                tmpNew.Empathy = Empathy;
+                tmpNew.Intelligence = Intelligence;
+                tmpNew.Charisma = Charisma;
+
+                m_template = tmpNew;
+            }
+        }
 
 		INpcTemplate m_template = null;
 

@@ -2149,7 +2149,7 @@ namespace DOL.GS
 		/// Gets/sets the player efficacy percent
 		/// (delegate to PlayerCharacter)
 		/// </summary>
-		public int TotalConstitutionLostAtDeath
+		public virtual int TotalConstitutionLostAtDeath
 		{
 			get { return DBCharacter != null ? DBCharacter.ConLostAtDeath : 0; }
 			set { if (DBCharacter != null) DBCharacter.ConLostAtDeath = value; }
@@ -2768,7 +2768,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the player's character class
 		/// </summary>
-		public ICharacterClass CharacterClass
+		public virtual ICharacterClass CharacterClass
 		{
 			get { return m_characterClass; }
 		}
@@ -15587,6 +15587,15 @@ namespace DOL.GS
 				.Append('(').Append(CharacterClass.ID.ToString()).Append(')')
 				.ToString();
 		}
+
+        public static GamePlayer CreateTestableGamePlayer() { return CreateTestableGamePlayer(new DefaultCharacterClass()); }
+
+        public static GamePlayer CreateTestableGamePlayer(ICharacterClass charClass) { return new GamePlayer(charClass); }
+
+        private GamePlayer(ICharacterClass charClass) : base()
+        {
+            m_characterClass = charClass;
+        }
 
 		/// <summary>
 		/// Creates a new player
