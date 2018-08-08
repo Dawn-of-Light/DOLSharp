@@ -3928,28 +3928,28 @@ namespace DOL.GS
 				}
 				
 				// Add Songs
+				int songIndex = -1;
 				foreach (Specialization spec in specs.Where(item => item.HybridSpellList))
-				{
-					int index = -1;
+				{					
 					foreach(KeyValuePair<SpellLine, List<Skill>> sl in spec.GetLinesSpellsForLiving(this))
 					{
 						foreach (Spell sp in sl.Value.Where(it => (it is Spell) && ((Spell)it).NeedInstrument).Cast<Spell>())
 						{
-							if (index < innerList.Count)
-								index = innerList.FindIndex(index + 1, e => (e.Item1 is Spell) && ((Spell)e.Item1).NeedInstrument);
+							if (songIndex < innerList.Count)
+								songIndex = innerList.FindIndex(songIndex + 1, e => (e.Item1 is Spell) && ((Spell)e.Item1).NeedInstrument);
 							
-							if (index < 0 || index >= innerList.Count)
+							if (songIndex < 0 || songIndex >= innerList.Count)
 							{
 								// add
 								innerList.Add(new Tuple<Skill, Skill>(sp, sl.Key));
 								// disable replace
-								index = innerList.Count;
+								songIndex = innerList.Count;
 							}
 							else
 							{
-								copylist.Remove(innerList[index]);
+								copylist.Remove(innerList[songIndex]);
 								// replace
-								innerList[index] = new Tuple<Skill, Skill>(sp, sl.Key);
+								innerList[songIndex] = new Tuple<Skill, Skill>(sp, sl.Key);
 							}
 						}
 					}
