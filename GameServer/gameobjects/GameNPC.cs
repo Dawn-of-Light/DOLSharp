@@ -3407,9 +3407,12 @@ namespace DOL.GS
         /// </summary>
         protected void SortStyles()
         {
-            m_stylesAnyPos = new List<Style>(4);
-            m_stylesChain = new List<Style>(4);
-            m_stylesDefensive = new List<Style>(4);
+            if (m_stylesAnyPos != null)
+                m_stylesAnyPos.Clear();
+            if (m_stylesChain != null)
+                m_stylesChain.Clear();
+            if (m_stylesDefensive != null)
+                m_stylesDefensive.Clear();
 
             foreach (Style s in m_styles)
             {
@@ -3430,14 +3433,28 @@ namespace DOL.GS
                 switch (s.OpeningRequirementType)
                 {
                     case Style.eOpening.Defensive:
-                        m_stylesDefensive.Add(s); break;
+                        if (m_stylesDefensive == null)
+                            m_stylesDefensive = new ArrayList(1);
+                        m_stylesDefensive.Add(s);
+                        break;
                     case Style.eOpening.Positional:
-                        m_stylesAnyPos.Add(s); break;
+                        if (m_stylesAnyPos == null)
+                            m_stylesAnyPos = new ArrayList(1);
+                        m_stylesAnyPos.Add(s);
+                        break;
                     default:
                         if (s.OpeningRequirementValue > 0)
+                        {
+                            if (m_stylesChain == null)
+	                            m_stylesChain = new ArrayList(1);
                             m_stylesChain.Add(s);
+                        }
                         else
+                        {
+                            if (m_stylesAnyPos == null)
+	                            m_stylesAnyPos = new ArrayList(1);
                             m_stylesAnyPos.Add(s);
+                        }
                         break;
                 }// switch (s.OpeningRequirementType)
             }// foreach
@@ -3455,7 +3472,7 @@ namespace DOL.GS
             bool bUseStyles = Util.Chance(Properties.GAMENPC_CHANCES_TO_STYLE);
 
             // Use defensive styles
-            if (bUseStyles)
+            if (bUseStyles && m_stylesDefensive != null)
                 foreach (Style s in m_stylesDefensive)
                 {
                     if (StyleProcessor.CanUseStyle(this, s, AttackWeapon))
@@ -3464,13 +3481,14 @@ namespace DOL.GS
 
             // Use chain styles whenever possible
             // Skips the bUseStyles check as chains will be almost impossible otherwise
-            foreach (Style s in m_stylesChain)
-            {
-                if (StyleProcessor.CanUseStyle(this, s, AttackWeapon))
-                    return s;
-            }
+            if (m_stylesChain != null)
+                foreach (Style s in m_stylesChain)
+                {
+	                if (StyleProcessor.CanUseStyle(this, s, AttackWeapon))
+		                return s;
+                }
 
-            if (bUseStyles && m_stylesAnyPos.Count > 0 )
+            if (bUseStyles && m_stylesAnyPos != null && m_stylesAnyPos.Count > 0 )
             {
                 Style s;
 
@@ -4775,6 +4793,58 @@ namespace DOL.GS
 
 		#region Spell
 
+		private List<Spell> m_spells = new List<Spell>(0);
+		/// <summary>
+		/// property of spell array of NPC
+		/// </summary>
+		public virtual IList Spells
+		{
+			get { return m_spells; }
+			set
+			{
+				if (value == null)
+				{
+					m_spells.Clear();
+					m_HarmfulSpells = null;
+				}
+				else
+				{
+					m_spells = value != null ? value.Cast<Spell>().ToList() : null;
+					SortSpells();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Harmful spell list and accessor
+		/// </summary>
+		private List<Spell> m_HarmfulSpells = null;
+		public override IList<Spell> HarmfulSpells
+		{
+			get
+			{
+				if (m_HarmfulSpells == null)
+					return new List<Spell>(0);
+				else
+					return m_HarmfulSpells;
+			}
+		}
+
+		/// <summary>
+		/// Instant harmful spell list and accessor
+		/// </summary>
+		private List<Spell> m_HarmfulInstantSpells = null;
+		public IList<Spell> HarmfulInstantSpells
+		{
+			get
+			{
+				if (m_HarmfulInstantSpells == null)
+					return new List<Spell>(0);
+				else
+					return m_HarmfulInstantSpells;
+			}
+		}
+
 		/// <summary>
 		/// Whether or not the NPC can cast harmful spells
 		/// at the moment.
@@ -4786,48 +4856,180 @@ namespace DOL.GS
 				if (!base.CanCastHarmfulSpells)
 					return false;
 
-				IList<Spell> harmfulSpells = HarmfulSpells;
-
-				foreach (Spell harmfulSpell in harmfulSpells)
-					if (harmfulSpell.CastTime == 0)
-						return true;
-
-				return (harmfulSpells.Count > 0 && !IsBeingInterrupted);
+				return (m_HarmfulSpells != null && m_HarmfulSpells.Count > 0 && !IsBeingInterrupted) 
+                    || (m_HarmfulInstantSpells != null && m_HarmfulInstantSpells.Count > 0);
 			}
 		}
 
-		public override IList<Spell> HarmfulSpells
+		/// <summary>
+		/// Healing spell list and accessor
+		/// </summary>
+		private List<Spell> m_HealSpells = null;
+		public IList<Spell> HealSpells
 		{
 			get
 			{
-				IList<Spell> harmfulSpells = new List<Spell>();
-
-				foreach (Spell spell in Spells)
-					if (spell.IsHarmful)
-						harmfulSpells.Add(spell);
-
-				return harmfulSpells;
+				if (m_HealSpells == null)
+					return new List<Spell>(0);
+				else
+					return m_HealSpells;
 			}
 		}
 
-		private List<Spell> m_spells = new List<Spell>();
 		/// <summary>
-		/// property of spell array of NPC
+		/// Instant healing spell list and accessor
 		/// </summary>
-		public virtual IList Spells
+		private List<Spell> m_HealInstantSpells = null;
+		public IList<Spell> HealInstantSpells
 		{
-			get { return m_spells; }
-			set { m_spells = value != null ? value.Cast<Spell>().ToList() : null; }
+			get
+			{
+				if (m_HealInstantSpells == null)
+					return new List<Spell>(0);
+				else
+					return m_HealInstantSpells;
+			}
 		}
 
-		private IList m_styles = new ArrayList(0);
 		/// <summary>
-		/// The Styles for this NPC
+		/// Whether or not the NPC can cast healing spells
+		/// at the moment.
 		/// </summary>
+		public bool CanCastHealSpells
+		{
+			get
+			{
+				return (m_HealSpells != null &&m_HealSpells.Count > 0 && !IsBeingInterrupted) 
+                    || (m_HealInstantSpells != null && m_HealInstantSpells.Count > 0 );
+			}
+		}
+
+		/// <summary>
+		/// Miscellaneous spell list and accessor
+		/// </summary>
+		private List<Spell> m_MiscSpells = null;
+		public IList<Spell> MiscSpells
+		{
+			get
+			{
+				if (m_MiscSpells == null)
+					return new List<Spell>(0);
+				else
+					return m_MiscSpells;
+			}
+		}
+
+		/// <summary>
+		/// Instant miscellaneous spell list and accessor
+		/// </summary>
+		private List<Spell> m_MiscInstantSpells = null;
+		public IList<Spell> MiscInstantSpells
+		{
+			get
+			{
+				if (m_MiscInstantSpells == null)
+					return new List<Spell>(0);
+				else
+					return m_MiscInstantSpells;
+			}
+		}
+
+		/// <summary>
+		/// Whether or not the NPC can cast miscellaneous spells
+		/// at the moment.
+		/// </summary>
+		public bool CanCastMiscSpells
+		{
+			get
+			{
+				return (m_MiscSpells != null && m_MiscSpells.Count > 0 && !IsBeingInterrupted) 
+                    || (m_MiscInstantSpells != null && m_MiscInstantSpells.Count > 0);
+			}
+		}
+
+		/// <summary>
+		/// Sort spells into specific lists
+		/// </summary>
+		private void SortSpells()
+		{
+			// Clear the lists
+			if (m_HarmfulInstantSpells != null)
+				m_HarmfulInstantSpells.Clear();
+			if (m_HarmfulSpells != null)
+				m_HarmfulSpells.Clear();
+			if (m_HealInstantSpells != null)
+				m_HealInstantSpells.Clear();
+			if (m_HealSpells != null)
+				m_HealSpells.Clear();
+			if (m_HarmfulInstantSpells != null)
+				m_HarmfulInstantSpells.Clear();
+			if (m_MiscInstantSpells != null)
+				m_MiscInstantSpells.Clear();
+
+			// Sort spells into lists
+			foreach (Spell spell in m_spells)
+			{
+				if (spell.IsHarmful)
+				{
+					if (spell.IsInstantCast)
+					{
+						if (m_HarmfulInstantSpells == null)
+							m_HarmfulInstantSpells = new List<Spell>(1);
+						m_HarmfulInstantSpells.Add(spell);
+					}
+					else
+					{
+						if (m_HarmfulSpells == null)
+							m_HarmfulSpells = new List<Spell>(1);
+						m_HarmfulSpells.Add(spell);
+					}
+				}
+				else if (spell.IsHealing)
+				{
+					if (spell.IsInstantCast)
+					{
+						if (m_HealInstantSpells == null)
+							m_HealInstantSpells = new List<Spell>(1);
+						m_HealInstantSpells.Add(spell);
+					}
+					else
+					{
+						if (m_HealSpells == null)
+							m_HealSpells = new List<Spell>(1);
+						m_HealSpells.Add(spell);
+					}
+				}
+				else
+				{
+					if (spell.IsInstantCast)
+					{
+						if (m_MiscInstantSpells == null)
+							m_MiscInstantSpells = new List<Spell>(1);
+						m_MiscInstantSpells.Add(spell);
+					}
+					else
+					{
+						if (m_MiscSpells == null)
+							m_MiscSpells = new List<Spell>(1);
+						m_MiscSpells.Add(spell);
+					}
+				}
+			}
+		}
+		#endregion
+
+		#region Styles
+		/// <summary>
+		/// Styles for this NPC
+		/// </summary>
+		private IList m_styles = new ArrayList(0);
 		public IList Styles
 		{
 			get { return m_styles; }
-			set { m_styles = value; this.SortStyles(); }
+			set {
+				m_styles = value;
+				this.SortStyles();
+			}
 		}
 
 		/// <summary>
@@ -5443,56 +5645,60 @@ namespace DOL.GS
 		/// 	As a result, this constructor is rarely called.
 		/// </summary>
 		public GameNPC()
-			: base()
+			: this(new StandardMobBrain())
 		{
-			Level = 1; // health changes when GameNPC.Level changes
-			m_Realm = 0;
-			m_name = "new mob";
-			m_model = 408;
-			//Fill the living variables
-			//			CurrentSpeed = 0; // cause position addition recalculation
-			MaxSpeedBase = 200;
-			GuildName = "";
-
-			m_brainSync = m_brains.SyncRoot;
-			m_followTarget = new WeakRef(null);
-
-			m_size = 50; //Default size
-			TargetPosition = new Point3D();
-			m_followMinDist = 100;
-			m_followMaxDist = 3000;
-			m_flags = 0;
-			m_maxdistance = 0;
-			m_roamingRange = 0; // default to non roaming - tolakram
-			m_ownerID = "";
-
-			if ( m_spawnPoint == null )
-				m_spawnPoint = new Point3D();
-
-			//m_factionName = "";
-			LinkedFactions = new ArrayList(1);
-			if (m_ownBrain == null)
-			{
-				m_ownBrain = new StandardMobBrain();
-				m_ownBrain.Body = this;
-			}
-
-			// Save base stats in m_template even if there wasn't an npctemplate to begin with, as AutoSetStats() need them.
-			if (m_template == null)
-			{
-				//m_template = new NpcTemplate(this);  // This causes too many long queries and causes server startup to take FOREVER
-				NpcTemplate tmpNew = new NpcTemplate();
-				tmpNew.Strength = Strength;
-				tmpNew.Constitution = Constitution;
-				tmpNew.Dexterity = Dexterity;
-				tmpNew.Quickness = Quickness;
-				tmpNew.Empathy = Empathy;
-				tmpNew.Intelligence = Intelligence;
-				tmpNew.Charisma = Charisma;
-
-				m_template = tmpNew;
-			}
 		}
+
+        public GameNPC(ABrain defaultBrain) : base()
+        {
+            Level = 1; // health changes when GameNPC.Level changes
+            m_Realm = 0;
+            m_name = "new mob";
+            m_model = 408;
+            //Fill the living variables
+            //			CurrentSpeed = 0; // cause position addition recalculation
+            MaxSpeedBase = 200;
+            GuildName = "";
+
+            m_brainSync = m_brains.SyncRoot;
+            m_followTarget = new WeakRef(null);
+
+            m_size = 50; //Default size
+            TargetPosition = new Point3D();
+            m_followMinDist = 100;
+            m_followMaxDist = 3000;
+            m_flags = 0;
+            m_maxdistance = 0;
+            m_roamingRange = 0; // default to non roaming - tolakram
+            m_ownerID = "";
+
+            if (m_spawnPoint == null)
+                m_spawnPoint = new Point3D();
+
+            //m_factionName = "";
+            LinkedFactions = new ArrayList(1);
+            if (m_ownBrain == null)
+            {
+                m_ownBrain = defaultBrain;
+                m_ownBrain.Body = this;
+            }
+
+            // Save base stats in m_template even if there wasn't an npctemplate to begin with, as AutoSetStats() need them.
+            if (m_template == null)
+            {
+                //m_template = new NpcTemplate(this);  // This causes too many long queries and causes server startup to take FOREVER
+                NpcTemplate tmpNew = new NpcTemplate();
+                tmpNew.Strength = Strength;
+                tmpNew.Constitution = Constitution;
+                tmpNew.Dexterity = Dexterity;
+                tmpNew.Quickness = Quickness;
+                tmpNew.Empathy = Empathy;
+                tmpNew.Intelligence = Intelligence;
+                tmpNew.Charisma = Charisma;
+
+                m_template = tmpNew;
+            }
+        }
 
 		INpcTemplate m_template = null;
 

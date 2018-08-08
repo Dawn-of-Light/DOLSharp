@@ -1,5 +1,7 @@
 version: 1.9.7.{build}
 
+image: Visual Studio 2017
+
 pull_requests:
 
   do_not_increment_build_number: true
@@ -72,7 +74,7 @@ after_build:
 
 
 
-    7z a -tzip DOLServer_UnitTests_net45_%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%\build\UnitTests\%CONFIGURATION%\*
+    7z a -tzip DOLServer_UnitTests_net45_%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%\build\IntegrationTests\%CONFIGURATION%\*
 
 artifacts:
 

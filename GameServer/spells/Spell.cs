@@ -316,6 +316,19 @@ namespace DOL.GS
             }
         }
         
+		/// <summary>
+		/// Whether or not this is a healing spell
+		/// </summary>
+		public bool IsHealing
+		{
+			get
+			{
+				return (Target.ToUpper() == "COMBATHEAL" || Target.ToUpper() == "HEAL" || Target.ToUpper() == "HEALOVERTIME" || Target.ToUpper() == "HEALTHREGENBUFF" 
+					|| Target.ToUpper() == "MERCHEAL" || Target.ToUpper() == "OMNIHEAL" || Target.ToUpper() == "PBAEHEAL" || Target.ToUpper() == "SPREADHEAL" 
+					|| Target.ToUpper() == "SUMMONHEALINGELEMENTAL");
+			}
+		}
+
 		#endregion
 
 		/// <summary>

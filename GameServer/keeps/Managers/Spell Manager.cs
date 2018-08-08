@@ -246,9 +246,10 @@ namespace DOL.GS.Keeps
 					spell.Name = "Guard Heal";
 					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
 					spell.SpellID = 90001;
-					spell.Target = "Realm";
+					spell.Target = "Self";
 					spell.Type = "Heal";
-					spell.Uninterruptible = true;
+                    if (GameServer.Instance.Configuration.ServerType != eGameServerType.GST_PvE)
+					    spell.Uninterruptible = true;
 					m_albLordHealSpell = new Spell(spell, 50);
 				}
 				return m_albLordHealSpell;
@@ -272,9 +273,10 @@ namespace DOL.GS.Keeps
 					spell.Name = "Guard Heal";
 					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
 					spell.SpellID = 90002;
-					spell.Target = "Realm";
+					spell.Target = "Self";
 					spell.Type = "Heal";
-					spell.Uninterruptible = true;
+                    if (GameServer.Instance.Configuration.ServerType != eGameServerType.GST_PvE)
+                        spell.Uninterruptible = true;
 					m_midLordHealSpell = new Spell(spell, 50);
 				}
 				return m_midLordHealSpell;
@@ -298,9 +300,10 @@ namespace DOL.GS.Keeps
 					spell.Name = "Guard Heal";
 					spell.Range = WorldMgr.VISIBILITY_DISTANCE;
 					spell.SpellID = 90003;
-					spell.Target = "Realm";
+					spell.Target = "Self";
 					spell.Type = "Heal";
-					spell.Uninterruptible = true;
+                    if (GameServer.Instance.Configuration.ServerType != eGameServerType.GST_PvE)
+                        spell.Uninterruptible = true;
 					m_hibLordHealSpell = new Spell(spell, 50);
 				}
 				return m_hibLordHealSpell;
