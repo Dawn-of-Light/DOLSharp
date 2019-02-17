@@ -12522,9 +12522,21 @@ namespace DOL.GS
 			SwitchQuiver((eActiveQuiverSlot)(DBCharacter.ActiveWeaponSlot & 0xF0), false);
 			SwitchWeapon((eActiveWeaponSlot)(DBCharacter.ActiveWeaponSlot & 0x0F));
 
-			Health = DBCharacter.Health;
-			Mana = DBCharacter.Mana;
-			Endurance = DBCharacter.Endurance; // has to be set after max, same applies to other values with max properties
+
+            if (DBCharacter.PlayedTime < 1) //added to make character start with 100% Health and Mana/Endurance when DB Start Lvl >1 :Loki
+            {
+                Health = MaxHealth;
+                Mana = MaxMana;
+                Endurance = MaxEndurance;
+            }
+            else
+            {
+                Health = DBCharacter.Health;
+                Mana = DBCharacter.Mana;
+                Endurance = DBCharacter.Endurance; // has to be set after max, same applies to other values with max properties
+            }
+
+            
 
 			if (Health <= 0)
 			{
