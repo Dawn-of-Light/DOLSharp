@@ -70,6 +70,16 @@ namespace DOL.GS.Commands
 	[CmdAttribute("&lookfar", ePrivLevel.Player, "Lets you look into the distance", "/lookfar")]
 	[CmdAttribute("&smile", ePrivLevel.Player, "Make a big smile", "/smile")]
 	[CmdAttribute("&stench", ePrivLevel.Player, "Wave away the local stench", "/stench")]
+	//New
+	[Cmd("&howl", ePrivLevel.Player, "Howl with rage", "/howl")]
+    [Cmd("&diabolical", ePrivLevel.Player, "Sneer diabolically", "/diabolical")]
+    [Cmd("&brandish", ePrivLevel.Player, "Brandish your weapon", "/brandish")]
+    [Cmd("&startled", ePrivLevel.Player, "Be startled", "/startled")]
+    [Cmd("&talk", ePrivLevel.Player, "Talk", "/talk")]
+    [Cmd("&monty", ePrivLevel.Player, "Think Camelot is a silly place", "/monty")]
+    [Cmd("&loco", ePrivLevel.Player, "Think this is crazy", "/loco")]
+    [Cmd("&cower", ePrivLevel.Player, "Cower", "/cower")]
+	
 	public class EmoteCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		private const ushort EMOTE_RANGE_TO_TARGET = 2048; // 2064 was out of range and 2020 in range;
@@ -314,6 +324,39 @@ namespace DOL.GS.Commands
 					emoteID = eEmote.Drink;
 					emoteMessages = EMOTE_MESSAGES_DRINK;
 					break;
+				// new
+                case "&howl":
+                    emoteID = eEmote.Howl;
+                    emoteMessages = EMOTE_MESSAGES_HOWL;
+                    break;
+                case "&diabolical":
+                    emoteID = eEmote.Diabolical;
+                    emoteMessages = EMOTE_MESSAGES_DIABOLICAL;
+                    break;
+                case "&brandish":
+                    emoteID = eEmote.Brandish;
+                    emoteMessages = EMOTE_MESSAGES_BRANDISH;
+                    break;
+                case "&startled":
+                    emoteID = eEmote.Startled;
+                    emoteMessages = EMOTE_MESSAGES_STARTLED;
+                    break;
+                case "&talk":
+                    emoteID = eEmote.Talk;
+                    emoteMessages = EMOTE_MESSAGES_TALK;
+                    break;
+                case "&monty":
+                    emoteID = eEmote.Monty;
+                    emoteMessages = EMOTE_MESSAGES_MONTY;
+                    break;
+                case "&loco":
+                    emoteID = eEmote.Loco;
+                    emoteMessages = EMOTE_MESSAGES_LOCO;
+                    break;
+                //case "&cower": // unknown for now
+                //    emoteID = eEmote.Cower;
+                //    emoteMessages = EMOTE_MESSAGES_COWER;
+                //    break;
 				default:
 					return;
 			}
@@ -704,5 +747,54 @@ namespace DOL.GS.Commands
 			"You smile at {0}.",
 			"{0} smiles at {1}.",
 		};
+		// new
+        private readonly string[] EMOTE_MESSAGES_HOWL = {
+            "You howl with rage.",
+            "{0} howls with rage.",
+            "You howl with rage at {0}.",
+            "{0} howls with rage at {1}.",
+        };
+        private readonly string[] EMOTE_MESSAGES_DIABOLICAL = {
+            "You sneer diabolically.",
+            "{0} sneer diabolically.",
+            "You sneer diabolically at {0}.",
+            "{0} sneer diabolically at {1}.",
+        };
+        private readonly string[] EMOTE_MESSAGES_BRANDISH = {
+            "You brandish your weapon.",
+            "{0} brandishes their weapon.",
+            "You brandish your weapon at {0}.",
+            "{0} brandishes their weapon at {1}.",
+        };
+        private readonly string[] EMOTE_MESSAGES_STARTLED = {
+            "You are startled.",
+            "{0} is startled.",
+            "You are startled by {0}.",
+            "{0} is startled by {1}.",
+        };
+        private readonly string[] EMOTE_MESSAGES_TALK = {
+            "You start talking with the hope that someone will listen.",
+            "{0} starts talking with the hope that someone will listen.",
+            "You talk to {0}.",
+            "{0} talks to {1}.",
+        };
+        private readonly string[] EMOTE_MESSAGES_MONTY = {
+            "You think Camelot is a silly place.",
+            "{0} thinks Camelot is a silly place.",
+            "You inform {0} that Camelot is a silly place.",
+            "{0} informs {0} that Camelot is a silly place.",
+        };
+        private readonly string[] EMOTE_MESSAGES_LOCO = {
+            "You think this is crazy.",
+            "{0} thinks this is crazy.",
+            "You think {0} is crazy.",
+            "{0} thinks {1} is crazy.",
+        };
+        private readonly string[] EMOTE_MESSAGES_COWER = {
+            "You cower.",
+            "{0} cowers.",
+            "You cower before {0}.",
+            "{0} cowers before {1}.",
+        };
 	}
 }
