@@ -40,7 +40,7 @@ namespace DOL.GS.PropertyCalc
 			if(debuff > 0)
 			{
 				GameSpellEffect nsreduction = SpellHandler.FindEffectOnTarget(living, "NearsightReduction");
-				if(nsreduction!=null) debuff *= (int)(1.00 - nsreduction.Spell.Value * 0.01);
+				if(nsreduction!=null) debuff = (int)(debuff * (1.00 - nsreduction.Spell.Value * 0.01));
 			}
 			
 			int item = Math.Max(0, 100
