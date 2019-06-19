@@ -1613,7 +1613,7 @@ namespace DOL.GS
 
 			if (Realm != eRealm.None)
 			{
-				if (Level > 5)
+				if (Level >= ServerProperties.Properties.PVE_EXP_LOSS_LEVEL)
 				{
 					// actual lost exp, needed for 2nd stage deaths
 					long lostExp = Experience;
@@ -1651,7 +1651,7 @@ namespace DOL.GS
 				}
 			}
 
-			if (Level > 10)
+			if (Level >= ServerProperties.Properties.PVE_CON_LOSS_LEVEL)
 			{
 				int deathConLoss = TempProperties.getProperty<int>(DEATH_CONSTITUTION_LOSS_PROPERTY); // get back constitution lost at death
 				if (deathConLoss > 0)
@@ -1792,23 +1792,23 @@ namespace DOL.GS
 			if (player.IsUnderwater && player.CanBreathUnderWater == false)
 				player.Diving(waterBreath.Holding);
 			//We need two different sickness spells because RvR sickness is not curable by Healer NPC -Unty
-			if (player.Level > 5)
-			switch (DeathType)
-			{
-				case eDeathType.RvR:
-					SpellLine rvrsick = SkillBase.GetSpellLine(GlobalSpellsLines.Realm_Spells);
-					if (rvrsick == null) return;
-					Spell rvrillness = SkillBase.FindSpell(8181, rvrsick);
-					player.CastSpell(rvrillness, rvrsick);
-					break;
-				case eDeathType.PvP: //PvP sickness is the same as PvE sickness - Curable
-				case eDeathType.PvE:
-					SpellLine pvesick = SkillBase.GetSpellLine(GlobalSpellsLines.Realm_Spells);
-					if (pvesick == null) return;
-					Spell pveillness = SkillBase.FindSpell(2435, pvesick);
-					player.CastSpell(pveillness, pvesick);
-					break;
-			}
+			if (player.Level >= ServerProperties.Properties.RESS_SICKNESS_LEVEL)
+			    switch (DeathType)
+			    {
+				    case eDeathType.RvR:
+					    SpellLine rvrsick = SkillBase.GetSpellLine(GlobalSpellsLines.Realm_Spells);
+					    if (rvrsick == null) return;
+					    Spell rvrillness = SkillBase.FindSpell(8181, rvrsick);
+					    player.CastSpell(rvrillness, rvrsick);
+					    break;
+				    case eDeathType.PvP: //PvP sickness is the same as PvE sickness - Curable
+				    case eDeathType.PvE:
+					    SpellLine pvesick = SkillBase.GetSpellLine(GlobalSpellsLines.Realm_Spells);
+					    if (pvesick == null) return;
+					    Spell pveillness = SkillBase.FindSpell(2435, pvesick);
+					    player.CastSpell(pveillness, pvesick);
+					    break;
+			    }
 			
 			GameEventMgr.RemoveHandler(this, GamePlayerEvent.Revive, new DOLEventHandler(OnRevive));
 			m_deathtype = eDeathType.None;
@@ -4617,12 +4617,12 @@ namespace DOL.GS
 		public static readonly int[] prcRestore =
 		{
 			// http://www.silicondragon.com/Gaming/DAoC/Misc/XPs.htm
-			0,//0
-			0,//1
-			0,//2
-			0,//3
-			0,//4
-			0,//5
+			1,//0
+			3,//1
+			6,//2
+			10,//3
+			15,//4
+			21,//5
 			33,//6
 			53,//7
 			82,//8
@@ -7648,34 +7648,40 @@ namespace DOL.GS
 				 	}
 					 
 				}
-				else if (Level > 5) // under level 5 there is no penalty
+				else
 				{
-					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Die.LoseExperience"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
-					// if this is the first death in level, you lose only half the penalty
-					switch (DeathCount)
-					{
-						case 0:
-							Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Die.DeathN1"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
-							xpLossPercent /= 3;
-							break;
-						case 1:
-							Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Die.DeathN2"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
-							xpLossPercent = xpLossPercent * 2 / 3;
-							break;
-					}
+                    if (Level >= ServerProperties.Properties.PVE_EXP_LOSS_LEVEL)
+                    {
+                        Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Die.LoseExperience"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
+                        // if this is the first death in level, you lose only half the penalty
+                        switch (DeathCount)
+                        {
+                            case 0:
+                                Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Die.DeathN1"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
+                                xpLossPercent /= 3;
+                                break;
+                            case 1:
+                                Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Die.DeathN2"), eChatType.CT_YouDied, eChatLoc.CL_SystemWindow);
+                                xpLossPercent = xpLossPercent * 2 / 3;
+                                break;
+                        }
 
-					DeathCount++;
-					m_deathtype = eDeathType.PvE;
-					long xpLoss = (ExperienceForNextLevel - ExperienceForCurrentLevel) * xpLossPercent / 1000;
-					GainExperience(eXPSource.Other, -xpLoss, 0, 0, 0, false, true);
-					TempProperties.setProperty(DEATH_EXP_LOSS_PROPERTY, xpLoss);
+                        DeathCount++;
+                        m_deathtype = eDeathType.PvE;
+                        long xpLoss = (ExperienceForNextLevel - ExperienceForCurrentLevel) * xpLossPercent / 1000;
+                        GainExperience(eXPSource.Other, -xpLoss, 0, 0, 0, false, true);
+                        TempProperties.setProperty(DEATH_EXP_LOSS_PROPERTY, xpLoss);
+                    }
 
-					int conLoss = DeathCount;
-					if (conLoss > 3)
-						conLoss = 3;
-					else if (conLoss < 1)
-						conLoss = 1;
-					TempProperties.setProperty(DEATH_CONSTITUTION_LOSS_PROPERTY, conLoss);
+                    if (Level >= ServerProperties.Properties.PVE_CON_LOSS_LEVEL)
+                    {
+                        int conLoss = DeathCount;
+                        if (conLoss > 3)
+                            conLoss = 3;
+                        else if (conLoss < 1)
+                            conLoss = 1;
+                        TempProperties.setProperty(DEATH_CONSTITUTION_LOSS_PROPERTY, conLoss);
+                    }
 				}
 				GameEventMgr.AddHandler(this, GamePlayerEvent.Revive, new DOLEventHandler(OnRevive));
 			}
