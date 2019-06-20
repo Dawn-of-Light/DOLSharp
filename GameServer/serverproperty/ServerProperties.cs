@@ -1648,6 +1648,18 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("keeps", "lord_autoset_int_multiplier", "Multiplier to use when auto-setting INT stat. ", 1.0)]
 		public static double LORD_AUTOSET_INT_MULTIPLIER;
+		
+		/// <summary>
+		/// Respawn time for keep guards in minutes.
+		/// </summary>
+		[ServerProperty("keeps", "guard_respawn", "Respawn time for keep guards in minutes.", 15)]
+		public static int GUARD_RESPAWN;
+
+		/// <summary>
+		/// Respawn variance for keep guards in minutes.
+		/// </summary>
+		[ServerProperty("keeps", "guard_respawn_variance", "Respawn variance for keep guards in minutes.", 10)]
+		public static int GUARD_RESPAWN_VARIANCE;
 		#endregion
 
 		#region PVE / TOA
