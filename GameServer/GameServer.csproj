@@ -372,6 +372,7 @@
     <Compile Include="gameobjects\CharacterClasses\CharacterClassBase.cs" />
     <Compile Include="gameobjects\CharacterClasses\Midgard\CharacterClassBoneDancer.cs" />
     <Compile Include="gameobjects\CustomNPC\BuffMerchant.cs" />
+    <Compile Include="gameobjects\CustomNPC\DreadedSealCollector.cs" />
     <Compile Include="gameobjects\GameInventoryObject.cs" />
     <Compile Include="gameobjects\GameMythirian.cs" />
     <Compile Include="gameobjects\GameNPChelper.cs" />
@@ -381,8 +382,9 @@
     <Compile Include="gameutils\GamePlayerUtils.cs" />
     <Compile Include="gameutils\LootGeneratorAtlanteanGlass.cs" />
     <Compile Include="gameutils\LootGeneratorAurulite.cs" />
-	<Compile Include="gameutils\LootGeneratorChest.cs" />
+    <Compile Include="gameutils\LootGeneratorChest.cs" />
     <Compile Include="gameutils\LootGeneratorDragonscales.cs" />
+    <Compile Include="gameutils\LootGeneratorDreadedSeals.cs" />
     <Compile Include="gameutils\LosCheckMgr.cs" />
     <Compile Include="gameutils\MarketSearch.cs" />
     <Compile Include="gameutils\InventoryLogging.cs" />
