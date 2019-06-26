@@ -1,4 +1,5 @@
 using System;
+using DOL.AI.Brain;
 
 namespace DOL.GS.PropertyCalc
 {
@@ -19,13 +20,27 @@ namespace DOL.GS.PropertyCalc
 
 		public override int CalcValue(GameLiving living, eProperty property) 
 		{
-			int chance = 0;
-			if (living is GamePlayer)
+			int chance = living.AbilityBonus[(int)property];
+
+			if (living is GamePlayer player)
 			{
-				if ((living as GamePlayer).CharacterClass.ClassType == eClassType.ListCaster)
+				if (player.CharacterClass.ClassType == eClassType.ListCaster)
 					chance += 10;
 			}
-			chance += living.AbilityBonus[(int)property];
+			else if (living is NecromancerPet petNecro)
+			{
+				if (petNecro.Brain is IControlledBrain brainNecro && brainNecro.GetPlayerOwner() is GamePlayer necro
+					&& necro.GetAbility<RealmAbilities.WildPowerAbility>() is RealmAbilities.WildPowerAbility raWP)
+					chance += raWP.Amount;
+			}
+			else if (living is GamePet pet)
+			{
+				if (ServerProperties.Properties.EXPAND_WILD_MINION
+					&& pet.Brain is IControlledBrain brainPet && brainPet.GetPlayerOwner() is GamePlayer playerOwner
+					&& playerOwner.GetAbility<RealmAbilities.WildMinionAbility>() is RealmAbilities.WildMinionAbility raWM)
+					chance += raWM.Amount;
+			}
+			
 			return Math.Min(chance, 50);
 		}
 	}

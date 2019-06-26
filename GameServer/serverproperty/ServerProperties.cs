@@ -1194,6 +1194,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("npc", "npc_heal_threshold", "NPCs, including pets, heal targets whose health falls below this percentage.", 75)]
 		public static int NPC_HEAL_THRESHOLD;
+		
+		/// <summary>
+		/// Expand the Wild Minion RA to also improve crit chance for ranged and spell attacks?
+		/// </summary>
+		[ServerProperty("npc", "expand_wild_minion", "Expand the Wild Minion RA to also improve crit chance for ranged and spell attacks?", false)]
+		public static bool EXPAND_WILD_MINION;
 		#endregion
 
 		#region PVP / RVR
