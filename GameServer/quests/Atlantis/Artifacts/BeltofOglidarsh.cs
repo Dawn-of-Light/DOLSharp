@@ -33,6 +33,43 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 	/// <author>Aredhel</author>
 	class BeltofOglidarsh : ArtifactQuest
 	{
+		/// <summary>
+		/// The name of the quest (not necessarily the same as
+		/// the name of the reward).
+		/// </summary>
+		public override string Name
+		{
+			get { return "Belt of Oglidarsh"; }
+		}
+
+		/// <summary>
+		/// The reward for this quest.
+		/// </summary>
+		private static String m_artifactID = "Belt of Oglidarsh";
+		public override String ArtifactID
+		{
+			get { return m_artifactID; }
+		}
+
+		/// <summary>
+		/// Description for the current step.
+		/// </summary>
+		public override string Description
+		{
+			get
+			{
+				switch (Step)
+				{
+					case 1:
+						return "Defeat Snatcher.";
+					case 2:
+						return "Turn in the completed book.";
+					default:
+						return base.Description;
+				}
+			}
+		}
+
 		public BeltofOglidarsh()
 			: base() { }
 
@@ -52,7 +89,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// </summary>
 		public static void Init()
 		{
-            ArtifactQuest.Init("Belt of Oglidarsh", typeof(BeltofOglidarsh));
+            ArtifactQuest.Init(m_artifactID, typeof(BeltofOglidarsh));
 		}
 
         /// <summary>
@@ -135,42 +172,6 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 			}
 
 			return false;
-		}
-
-		/// <summary>
-		/// Description for the current step.
-		/// </summary>
-		public override string Description
-		{
-			get
-			{
-				switch (Step)
-				{
-					case 1:
-						return "Defeat Snatcher.";
-					case 2:
-						return "Turn in the completed book.";
-					default:
-						return base.Description;
-				}
-			}
-		}
-
-		/// <summary>
-		/// The name of the quest (not necessarily the same as
-		/// the name of the reward).
-		/// </summary>
-		public override string Name
-		{
-            get { return "Belt of Oglidarsh"; }
-		}
-
-		/// <summary>
-		/// The reward for this quest.
-		/// </summary>
-		public override String ArtifactID
-		{
-            get { return "Belt of Oglidarsh"; }
 		}
 	}
 }

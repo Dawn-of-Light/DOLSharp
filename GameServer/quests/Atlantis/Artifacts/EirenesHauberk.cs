@@ -34,11 +34,49 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 	class EirenesHauberk : ArtifactQuest
 	{
 		/// <summary>
+		/// The name of the quest (not necessarily the same as
+		/// the name of the reward).
+		/// </summary>
+		public override string Name
+		{
+			get { return "Eirene's Hauberk"; }
+		}
+
+		/// <summary>
+		/// The reward for this quest.
+		/// </summary>
+		private static String m_artifactID = "Eirene's Chestpiece";
+		public override String ArtifactID
+		{
+			get { return m_artifactID; }
+		}
+
+		/// <summary>
+		/// Description for the current step.
+		/// </summary>
+		public override string Description
+		{
+			get
+			{
+				switch (Step)
+				{
+					case 1:
+						return "Defeat Linos.";
+					case 2:
+						return "Turn in Eirene's Journal in the Hall of Heroes or the Oceanus Haven.";
+					case 3:
+						return "Choose the version of Eirene's Chestpiece you would like to have.";
+					default:
+						return base.Description;
+				}
+			}
+		}
+
+		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-
+		
 		public EirenesHauberk()
 			: base() { }
 
@@ -58,7 +96,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// </summary>
 		public static void Init()
 		{
-			ArtifactQuest.Init("Eirene's Chestpiece", typeof(EirenesHauberk));
+			ArtifactQuest.Init(m_artifactID, typeof(EirenesHauberk));
 		}
 
         /// <summary>
@@ -214,44 +252,6 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 			}
 
 			return false;
-		}
-
-		/// <summary>
-		/// Description for the current step.
-		/// </summary>
-		public override string Description
-		{
-			get
-			{
-				switch (Step)
-				{
-					case 1:
-						return "Defeat Linos.";
-					case 2:
-						return "Turn in Eirene's Journal in the Hall of Heroes or the Oceanus Haven.";
-					case 3:
-						return "Choose the version of Eirene's Chestpiece you would like to have.";
-					default:
-						return base.Description;
-				}
-			}
-		}
-
-		/// <summary>
-		/// The name of the quest (not necessarily the same as
-		/// the name of the reward).
-		/// </summary>
-		public override string Name
-		{
-			get { return "Eirene's Hauberk"; }
-		}
-
-		/// <summary>
-		/// The reward for this quest.
-		/// </summary>
-		public override String ArtifactID
-		{
-			get { return "Eirene's Chestpiece"; }
 		}
 	}
 }

@@ -31,7 +31,44 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
     /// <author>Aredhel</author>
     public class MaddeningScalars : ArtifactQuest
     {
-        public MaddeningScalars()
+		/// <summary>
+		/// The name of the quest (not necessarily the same as
+		/// the name of the reward).
+		/// </summary>
+		public override string Name
+		{
+			get { return "Maddening Scalars"; }
+		}
+
+		/// <summary>
+		/// The reward for this quest.
+		/// </summary>
+		private static String m_artifactID = "Maddening Scalars";
+		public override String ArtifactID
+		{
+			get { return m_artifactID; }
+		}
+
+		/// <summary>
+		/// Description for the current step.
+		/// </summary>
+		public override string Description
+		{
+			get
+			{
+				switch (Step)
+				{
+					case 1:
+						return "Defeat Ylyssan.";
+					case 2:
+						return "Turn in the completed book.";
+					default:
+						return base.Description;
+				}
+			}
+		}
+
+		public MaddeningScalars()
 			: base() { }
 
 		public MaddeningScalars(GamePlayer questingPlayer)
@@ -50,7 +87,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// </summary>
 		public static void Init()
 		{
-            ArtifactQuest.Init("Maddening Scalars", typeof(MaddeningScalars));
+            ArtifactQuest.Init(m_artifactID, typeof(MaddeningScalars));
 		}
 
         /// <summary>
@@ -134,42 +171,6 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 			}
 
 			return false;
-		}
-
-		/// <summary>
-		/// Description for the current step.
-		/// </summary>
-		public override string Description
-		{
-			get
-			{
-				switch (Step)
-				{
-					case 1:
-						return "Defeat Ylyssan.";
-					case 2:
-						return "Turn in the completed book.";
-					default:
-						return base.Description;
-				}
-			}
-		}
-
-		/// <summary>
-		/// The name of the quest (not necessarily the same as
-		/// the name of the reward).
-		/// </summary>
-		public override string Name
-		{
-            get { return "Maddening Scalars"; }
-		}
-
-		/// <summary>
-		/// The reward for this quest.
-		/// </summary>
-		public override String ArtifactID
-		{
-            get { return "Maddening Scalars"; }
 		}
     }
 }

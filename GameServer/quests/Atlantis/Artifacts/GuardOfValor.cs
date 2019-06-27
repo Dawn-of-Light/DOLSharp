@@ -36,6 +36,44 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 	public class GuardOfValor : ArtifactQuest
 	{
 		/// <summary>
+		/// The name of the quest (not necessarily the same as
+		/// the name of the reward).
+		/// </summary>
+		public override string Name
+		{
+			get { return "A Gift of Love"; }
+		}
+
+		/// <summary>
+		/// The artifact ID.
+		/// </summary>
+		private static String m_artifactID = "Guard of Valor";
+		public override String ArtifactID
+		{
+			get { return m_artifactID; }
+		}
+
+		/// <summary>
+		/// Description for the current step.
+		/// </summary>
+		public override string Description
+		{
+			get
+			{
+				switch (Step)
+				{
+					case 1:
+						return "Defeat Danos.";
+					case 2:
+						// TODO: Get correct description.
+						return "Turn in the complete Love Story.";
+					default:
+						return base.Description;
+				}
+			}
+		}
+
+		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -53,8 +91,6 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// <param name="dbQuest"></param>
 		public GuardOfValor(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest) { }
-
-		private static String m_artifactID = "Guard of Valor";
 
 		/// <summary>
 		/// Quest initialisation.
@@ -154,43 +190,6 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 			}
 
 			return false;
-		}
-
-		/// <summary>
-		/// Description for the current step.
-		/// </summary>
-		public override string Description
-		{
-			get
-			{
-				switch (Step)
-				{
-					case 1:
-						return "Defeat Danos.";
-					case 2 :
-						// TODO: Get correct description.
-						return "Turn in the complete Love Story.";
-					default :
-						return base.Description;
-				}
-			}
-		}
-
-		/// <summary>
-		/// The name of the quest (not necessarily the same as
-		/// the name of the reward).
-		/// </summary>
-		public override string Name
-		{
-			get { return "A Gift of Love"; }
-		}
-
-		/// <summary>
-		/// The artifact ID.
-		/// </summary>
-		public override String ArtifactID
-		{
-			get { return m_artifactID; }
 		}
 	}
 }
