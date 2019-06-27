@@ -31,7 +31,44 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
     /// <author>Aredhel</author>
     public class TartarosStaff : ArtifactQuest
     {
-        public TartarosStaff()
+		/// <summary>
+		/// The name of the quest (not necessarily the same as
+		/// the name of the reward).
+		/// </summary>
+		public override string Name
+		{
+			get { return "Tartaros' Gift"; }
+		}
+
+		/// <summary>
+		/// The reward for this quest.
+		/// </summary>
+		private static String m_artifactID = "Tartaros' Gift";
+		public override String ArtifactID
+		{
+			get { return m_artifactID; }
+		}
+
+		/// <summary>
+		/// Description for the current step.
+		/// </summary>
+		public override string Description
+		{
+			get
+			{
+				switch (Step)
+				{
+					case 1:
+						return "Defeat Akil.";
+					case 2:
+						return "Turn in the completed book.";
+					default:
+						return base.Description;
+				}
+			}
+		}
+
+		public TartarosStaff()
 			: base() { }
 
 		public TartarosStaff(GamePlayer questingPlayer)
@@ -50,7 +87,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// </summary>
 		public static void Init()
 		{
-            ArtifactQuest.Init("Tartaros' Gift", typeof(TartarosStaff));
+            ArtifactQuest.Init(m_artifactID, typeof(TartarosStaff));
 		}
 
         /// <summary>
@@ -134,42 +171,6 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 			}
 
 			return false;
-		}
-
-		/// <summary>
-		/// Description for the current step.
-		/// </summary>
-		public override string Description
-		{
-			get
-			{
-				switch (Step)
-				{
-					case 1:
-						return "Defeat Akil.";
-					case 2:
-						return "Turn in the completed book.";
-					default:
-						return base.Description;
-				}
-			}
-		}
-
-		/// <summary>
-		/// The name of the quest (not necessarily the same as
-		/// the name of the reward).
-		/// </summary>
-		public override string Name
-		{
-            get { return "Tartaros' Gift"; }
-		}
-
-		/// <summary>
-		/// The reward for this quest.
-		/// </summary>
-		public override String ArtifactID
-		{
-            get { return "Tartaros' Gift"; }
 		}
     }
 }

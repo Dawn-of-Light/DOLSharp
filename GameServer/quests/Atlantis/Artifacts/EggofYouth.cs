@@ -33,6 +33,42 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 	/// <author>Aredhel</author>
 	class EggofYouth : ArtifactQuest
 	{
+		/// <summary>
+		/// The name of the quest (not necessarily the same as
+		/// the name of the reward).
+		/// </summary>
+		public override string Name
+		{
+			get { return "Egg of Youth"; }
+		}
+
+		/// <summary>
+		/// The reward for this quest.
+		/// </summary>
+		private static String m_artifactID = "Egg of Youth";
+		public override String ArtifactID
+		{
+			get { return m_artifactID; }
+		}
+
+		/// <summary>
+		/// Description for the current step.
+		/// </summary>
+		public override string Description
+		{
+			get
+			{
+				switch (Step)
+				{
+					case 1:
+						return "Defeat Sililia.";
+					case 2:
+						return "Turn in the completed book.";
+					default:
+						return base.Description;
+				}
+			}
+		}
 		public EggofYouth()
 			: base() { }
 
@@ -52,7 +88,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// </summary>
 		public static void Init()
 		{
-            ArtifactQuest.Init("Egg of Youth", typeof(EggofYouth));
+            ArtifactQuest.Init(m_artifactID, typeof(EggofYouth));
 		}
 
         /// <summary>
@@ -135,42 +171,6 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 			}
 
 			return false;
-		}
-
-		/// <summary>
-		/// Description for the current step.
-		/// </summary>
-		public override string Description
-		{
-			get
-			{
-				switch (Step)
-				{
-					case 1:
-						return "Defeat Sililia.";
-					case 2:
-						return "Turn in the completed book.";
-					default:
-						return base.Description;
-				}
-			}
-		}
-
-		/// <summary>
-		/// The name of the quest (not necessarily the same as
-		/// the name of the reward).
-		/// </summary>
-		public override string Name
-		{
-            get { return "Egg of Youth"; }
-		}
-
-		/// <summary>
-		/// The reward for this quest.
-		/// </summary>
-		public override String ArtifactID
-		{
-            get { return "Egg of Youth"; }
 		}
 	}
 }

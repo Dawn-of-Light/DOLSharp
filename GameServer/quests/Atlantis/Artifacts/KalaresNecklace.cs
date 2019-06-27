@@ -33,6 +33,43 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 	/// <author>Aredhel</author>
 	class KalaresNecklace : ArtifactQuest
 	{
+		/// <summary>
+		/// The name of the quest (not necessarily the same as
+		/// the name of the reward).
+		/// </summary>
+		public override string Name
+		{
+			get { return "Kalare's Necklace"; }
+		}
+
+		/// <summary>
+		/// The reward for this quest.
+		/// </summary>
+		private static String m_artifactID = "Kalare's Necklace";
+		public override String ArtifactID
+		{
+			get { return m_artifactID; }
+		}
+
+		/// <summary>
+		/// Description for the current step.
+		/// </summary>
+		public override string Description
+		{
+			get
+			{
+				switch (Step)
+				{
+					case 1:
+						return "Defeat the Warrior of Stone and escape with the necklace.";
+					case 2:
+						return "Turn in the completed book.";
+					default:
+						return base.Description;
+				}
+			}
+		}
+
 		public KalaresNecklace()
 			: base() { }
 
@@ -52,7 +89,7 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// </summary>
 		public static void Init()
 		{
-            ArtifactQuest.Init("Kalare's Necklace", typeof(KalaresNecklace));
+            ArtifactQuest.Init(m_artifactID, typeof(KalaresNecklace));
 		}
 
         /// <summary>
@@ -135,42 +172,6 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 			}
 
 			return false;
-		}
-
-		/// <summary>
-		/// Description for the current step.
-		/// </summary>
-		public override string Description
-		{
-			get
-			{
-				switch (Step)
-				{
-					case 1:
-						return "Defeat the Warrior of Stone and escape with the necklace.";
-					case 2:
-						return "Turn in the completed book.";
-					default:
-						return base.Description;
-				}
-			}
-		}
-
-		/// <summary>
-		/// The name of the quest (not necessarily the same as
-		/// the name of the reward).
-		/// </summary>
-		public override string Name
-		{
-            get { return "Kalare's Necklace"; }
-		}
-
-		/// <summary>
-		/// The reward for this quest.
-		/// </summary>
-		public override String ArtifactID
-		{
-            get { return "Kalare's Necklace"; }
 		}
 	}
 }
