@@ -36,6 +36,48 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 	public class Battler : ArtifactQuest
 	{
 		/// <summary>
+		/// The name of the quest (not necessarily the same as
+		/// the name of the reward).
+		/// </summary>
+		public override string Name
+		{
+			get { return "Battler"; }
+		}
+
+		/// <summary>
+		/// The artifact ID.
+		/// </summary>
+		private static String m_artifactID = "Battler";
+		public override String ArtifactID
+		{
+			get { return m_artifactID; }
+		}
+
+		/// <summary>
+		/// Description for the current step.
+		/// </summary>
+		public override string Description
+		{
+			// TODO: Get correct journal entries!
+			get
+			{
+				switch (Step)
+				{
+					case 1:
+						return "Defeat Battler.";
+					case 2:
+						return "Turn in the completed book.";
+					case 3:
+						return "Choose between a [slashing] version of Battler or a [crushing] one. Both one-handed and two-handed versions are available for both.";
+					case 4:
+						return "Choose between one handed or two handed versions.";
+					default:
+						return base.Description;
+				}
+			}
+		}
+
+		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -53,8 +95,6 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// <param name="dbQuest"></param>
 		public Battler(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest) { }
-
-		private static String m_artifactID = "Battler";
 
 		/// <summary>
 		/// Quest initialisation.
@@ -192,47 +232,6 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 			}
 
 			return false;
-		}
-
-		/// <summary>
-		/// Description for the current step.
-		/// </summary>
-		public override string Description
-		{
-			// TODO: Get correct journal entries!
-			get
-			{
-				switch (Step)
-				{
-					case 1:
-						return "Defeat Battler.";
-					case 2:
-						return "Turn in the completed book.";
-					case 3:
-						return "Choose between a [slashing] version of Battler or a [crushing] one. Both one-handed and two-handed versions are available for both.";
-					case 4:
-						return "Choose between one handed or two handed versions.";
-					default:
-						return base.Description;
-				}
-			}
-		}
-
-		/// <summary>
-		/// The name of the quest (not necessarily the same as
-		/// the name of the reward).
-		/// </summary>
-		public override string Name
-		{
-			get { return "Battler"; }
-		}
-
-		/// <summary>
-		/// The artifact ID.
-		/// </summary>
-		public override String ArtifactID
-		{
-			get { return m_artifactID; }
 		}
 	}
 }

@@ -36,6 +36,47 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 	public class MalicesAxe : ArtifactQuest
 	{
 		/// <summary>
+		/// The name of the quest (not necessarily the same as
+		/// the name of the reward).
+		/// </summary>
+		public override string Name
+		{
+			get { return "Malice's Axe"; }
+		}
+
+		/// <summary>
+		/// The artifact ID.
+		/// </summary>
+		private static String m_artifactID = "Malice's Axe";
+		public override String ArtifactID
+		{
+			get { return m_artifactID; }
+		}
+
+		/// <summary>
+		/// Description for the current step.
+		/// </summary>
+		public override string Description
+		{
+			get
+			{
+				switch (Step)
+				{
+					case 1:
+						return "Defeat Malamis.";
+					case 2:
+						return "Turn in the completed book.";
+					case 3:
+						return "Choose between a [slashing] version of Malice's Axe or a [crushing] one. Both one-handed and two-handed versions are available for both.";
+					case 4:
+						return "Choose between one handed or two handed versions.";
+					default:
+						return base.Description;
+				}
+			}
+		}
+
+		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -53,8 +94,6 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// <param name="dbQuest"></param>
 		public MalicesAxe(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest) { }
-
-		private static String m_artifactID = "Malice's Axe";
 
 		/// <summary>
 		/// Quest initialisation.
@@ -194,46 +233,6 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 			}
 
 			return false;
-		}
-
-		/// <summary>
-		/// Description for the current step.
-		/// </summary>
-		public override string Description
-		{
-			get
-			{
-				switch (Step)
-				{
-					case 1:
-						return "Defeat Malamis.";
-					case 2:
-						return "Turn in the completed book.";
-					case 3:
-						return "Choose between a [slashing] version of Malice's Axe or a [crushing] one. Both one-handed and two-handed versions are available for both.";
-					case 4:
-						return "Choose between one handed or two handed versions.";
-					default:
-						return base.Description;
-				}
-			}
-		}
-
-		/// <summary>
-		/// The name of the quest (not necessarily the same as
-		/// the name of the reward).
-		/// </summary>
-		public override string Name
-		{
-			get { return "Malice's Axe"; }
-		}
-
-		/// <summary>
-		/// The artifact ID.
-		/// </summary>
-		public override String ArtifactID
-		{
-			get { return m_artifactID; }
 		}
 	}
 }
