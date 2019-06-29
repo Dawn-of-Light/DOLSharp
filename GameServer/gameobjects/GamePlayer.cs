@@ -3175,7 +3175,8 @@ namespace DOL.GS
 		public virtual int RespecSingle(Specialization specLine)
 		{
 			int specPoints = RespecSingleLine(specLine); // Wipe skills and styles.
-			RespecAmountSingleSkill--; // Decriment players respecs available.
+			if (!ServerProperties.Properties.FREE_RESPEC))
+				RespecAmountSingleSkill--; // Decriment players respecs available.
 			if (Level == 20 || Level == 40)
 			{
 				IsLevelRespecUsed = true;
@@ -3191,8 +3192,8 @@ namespace DOL.GS
 				RemoveAbility(ab.KeyName);
 			
 			m_realmAbilities.Clear();
-			
-			RespecAmountRealmSkill--;
+			if (!ServerProperties.Properties.FREE_RESPEC)
+				RespecAmountRealmSkill--;
 			return any;
 		}
 
