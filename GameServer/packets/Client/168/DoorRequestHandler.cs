@@ -128,7 +128,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 							return;
 						}
 
-						if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
+						if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP ||
+                            GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE)
 						{
 							if (door.Realm != 0)
 							{
@@ -136,8 +137,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 								return;
 							}
 						}
-
-						if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_Normal)
+						else
 						{
 							if (client.Player.Realm == (eRealm) door.Realm || door.Realm == 6)
 							{
@@ -147,16 +147,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 					}
 				}
-
-				if (client.Account.PrivLevel > 1)
+                else if (client.Account.PrivLevel > 1)
 				{
 					client.Out.SendDebugMessage("GM: Forcing locked door open.");
 					new ChangeDoorAction(client.Player, doorID, doorState, radius).Start(1);
 					return;
 				}
 			}
-
-			if (door == null)
+            else // door == null
 			{
 				if (doorType != 9 && client.Account.PrivLevel > 1 && client.Player.CurrentRegion.IsInstance == false)
 				{

@@ -1194,6 +1194,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("npc", "npc_heal_threshold", "NPCs, including pets, heal targets whose health falls below this percentage.", 75)]
 		public static int NPC_HEAL_THRESHOLD;
+		
+		/// <summary>
+		/// Expand the Wild Minion RA to also improve crit chance for ranged and spell attacks?
+		/// </summary>
+		[ServerProperty("npc", "expand_wild_minion", "Expand the Wild Minion RA to also improve crit chance for ranged and spell attacks?", false)]
+		public static bool EXPAND_WILD_MINION;
 		#endregion
 
 		#region PVP / RVR
@@ -1648,6 +1654,18 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("keeps", "lord_autoset_int_multiplier", "Multiplier to use when auto-setting INT stat. ", 1.0)]
 		public static double LORD_AUTOSET_INT_MULTIPLIER;
+		
+		/// <summary>
+		/// Respawn time for keep guards in minutes.
+		/// </summary>
+		[ServerProperty("keeps", "guard_respawn", "Respawn time for keep guards in minutes.", 15)]
+		public static int GUARD_RESPAWN;
+
+		/// <summary>
+		/// Respawn variance for keep guards in minutes.
+		/// </summary>
+		[ServerProperty("keeps", "guard_respawn_variance", "Respawn variance for keep guards in minutes.", 10)]
+		public static int GUARD_RESPAWN_VARIANCE;
 		#endregion
 
 		#region PVE / TOA
@@ -1760,13 +1778,26 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("pve", "lootgenerator_dreadedseals_named_chance", "Increase chance of Dreaded Seals Loot Generator drop for Named mobs. (count * lootgenerator_dreadedseals_named_chance)", 1.5)]
 		public static double LOOTGENERATOR_DREADEDSEALS_NAMED_CHANCE;
-		#endregion
 
-		#region HOUSING
-		/// <summary>
-		/// Maximum number of houses supported on this server.  Limits the size of the housing array used for updates
-		/// </summary>
-		[ServerProperty("housing", "max_num_houses", "Max number of houses supported on this server.", 5000)]
+        /// <summary>
+        /// PvE Experience Loss Start Level
+        /// </summary>
+        [ServerProperty("pve", "pve_exp_loss_level", "Which level should players killed in PvE start losing experience?", (byte)6)]
+        public static byte PVE_EXP_LOSS_LEVEL;
+
+        /// <summary>
+        /// PvE Conn Loss Start Level
+        /// </summary>
+        [ServerProperty("pve", "pve_con_loss_level", "Which level should players killed in PvE start losing constitution?", (byte)6)]
+        public static byte PVE_CON_LOSS_LEVEL;
+
+        #endregion
+
+        #region HOUSING
+        /// <summary>
+        /// Maximum number of houses supported on this server.  Limits the size of the housing array used for updates
+        /// </summary>
+        [ServerProperty("housing", "max_num_houses", "Max number of houses supported on this server.", 5000)]
 		public static int MAX_NUM_HOUSES;
 
 		/// <summary>
@@ -1957,20 +1988,25 @@ namespace DOL.GS.ServerProperties
 		public static int SLASH_LEVEL_REQUIREMENT;
 
 		/// <summary>
-		/// Should the server start characters as Base Class?
+		/// Should we allow archers to be able to use arrows from their quiver?
 		/// </summary>
 		[ServerProperty("classes", "allow_old_archery", "Should we allow archers to be able to use arrows from their quiver?", false)]
 		public static bool ALLOW_OLD_ARCHERY;
 
+        /// <summary>
+        /// Level at which res sickness starts to apply
+        /// </summary>
+        [ServerProperty("classes", "ress_sickness_level", "What level should ress sickness start to apply?", (byte)6)]
+        public static byte RESS_SICKNESS_LEVEL;
 
-		#endregion
+        #endregion
 
-		#region SPELLS
+        #region SPELLS
 
-		/// <summary>
-		/// Spells-related properties
-		/// </summary>
-		[ServerProperty("spells", "spell_interrupt_duration", "", 4500)]
+        /// <summary>
+        /// Spells-related properties
+        /// </summary>
+        [ServerProperty("spells", "spell_interrupt_duration", "", 4500)]
 		public static int SPELL_INTERRUPT_DURATION;
 
 		[ServerProperty("spells", "spell_interrupt_recast", "", 2000)]

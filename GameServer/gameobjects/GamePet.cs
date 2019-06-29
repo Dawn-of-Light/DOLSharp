@@ -153,16 +153,6 @@ namespace DOL.GS
 			base.OnAfterSpellCastSequence(handler);
 			Brain.Notify(GameNPCEvent.CastFinished, this, new CastingEventArgs(handler));
 		}
-
-		/// <summary>
-		/// Returns the chance for a critical hit with a spell.
-		/// </summary>
-		public override int SpellCriticalChance
-		{
-			get { return (Brain as IControlledBrain).GetLivingOwner().GetModified(eProperty.CriticalSpellHitChance); }
-			set { }
-		}
-
 		#endregion
 
 		#region Stats

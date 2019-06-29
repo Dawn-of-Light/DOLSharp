@@ -36,6 +36,45 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 	public class Bruiser : ArtifactQuest
 	{
 		/// <summary>
+		/// The name of the quest (not necessarily the same as
+		/// the name of the reward).
+		/// </summary>
+		public override string Name
+		{
+			get { return "Bruiser"; }
+		}
+
+		/// <summary>
+		/// The artifact ID.
+		/// </summary>
+		private static String m_artifactID = "Bruiser";
+		public override String ArtifactID
+		{
+			get { return m_artifactID; }
+		}
+
+		/// <summary>
+		/// Description for the current step.
+		/// </summary>
+		public override string Description
+		{
+			get
+			{
+				switch (Step)
+				{
+					case 1:
+						return "Kill Taur Warlord.";
+					case 2:
+						return "Turn in the completed book.";
+					case 3:
+						return "Do you want a [single] or [double] handed version?";
+					default:
+						return base.Description;
+				}
+			}
+		}
+
+		/// <summary>
 		/// Defines a logger for this class.
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -53,8 +92,6 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 		/// <param name="dbQuest"></param>
 		public Bruiser(GamePlayer questingPlayer, DBQuest dbQuest)
 			: base(questingPlayer, dbQuest) { }
-
-		private static String m_artifactID = "Bruiser";
 
 		/// <summary>
 		/// Quest initialisation.
@@ -187,44 +224,6 @@ namespace DOL.GS.Quests.Atlantis.Artifacts
 			}
 
 			return false;
-		}
-
-		/// <summary>
-		/// Description for the current step.
-		/// </summary>
-		public override string Description
-		{
-			get
-			{
-				switch (Step)
-				{
-					case 1:
-						return "Kill Taur Warlord.";
-					case 2:
-						return "Turn in the completed book.";
-					case 3:
-						return "Do you want a [single] or [double] handed version?";
-					default:
-						return base.Description;
-				}
-			}
-		}
-
-		/// <summary>
-		/// The name of the quest (not necessarily the same as
-		/// the name of the reward).
-		/// </summary>
-		public override string Name
-		{
-			get { return "Bruiser"; }
-		}
-
-		/// <summary>
-		/// The artifact ID.
-		/// </summary>
-		public override String ArtifactID
-		{
-			get { return m_artifactID; }
 		}
 	}
 }

@@ -17,6 +17,7 @@
     *
     */
     using System;
+	using DOL.AI.Brain;
     using DOL.GS.Effects;
 
 namespace DOL.GS.PropertyCalc
@@ -47,28 +48,22 @@ namespace DOL.GS.PropertyCalc
 			}
 
 			// base 10% chance of critical for all with melee weapons plus ra bonus
-			int chance = 10 + living.BuffBonusCategory4[(int)property] + living.AbilityBonus[(int)property];
+			int chance = living.BuffBonusCategory4[(int)property] + living.AbilityBonus[(int)property];
 
-			if (living is GameNPC && (living as GameNPC).Brain is AI.Brain.IControlledBrain)
+			if (living is NecromancerPet necroPet)
 			{
-				GamePlayer player = ((living as GameNPC).Brain as AI.Brain.IControlledBrain).GetPlayerOwner();
-				if (player != null)
-				{
-					RealmAbilities.WildMinionAbility ab = player.GetAbility<RealmAbilities.WildMinionAbility>();
-					if (ab != null)
-					{
-						chance += ab.Amount;
-					}
-					if (living is NecromancerPet)
-					{
-						RealmAbilities.MasteryOfPain mop = player.GetAbility<RealmAbilities.MasteryOfPain>();
-						if (mop != null)
-						{
-							chance += mop.Amount;
-						}
-					}
-				}
+				if (necroPet.Brain is IControlledBrain necroPetBrain && necroPetBrain.GetPlayerOwner() is GamePlayer necro
+					&& necro.GetAbility<RealmAbilities.MasteryOfPain>() is RealmAbilities.MasteryOfPain raMoP)
+					chance += raMoP.Amount;
 			}
+			else if (living is GamePet pet)
+			{
+				if (pet.Brain is IControlledBrain petBrain && petBrain.GetPlayerOwner() is GamePlayer player
+					&& player.GetAbility<RealmAbilities.WildMinionAbility>() is RealmAbilities.WildMinionAbility raWM)
+					chance += raWM.Amount;
+			}
+			else // not a pet
+				chance += 10;
 
 			//50% hardcap
 			return Math.Min(chance, 50);

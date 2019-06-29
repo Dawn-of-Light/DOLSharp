@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
+using System;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.PacketHandler;
@@ -97,24 +98,42 @@ namespace DOL.GS.Keeps
 				}
 				else
 				{
-                    if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE)
-                        // In PvE servers, lords are really just mobs farmed for seals.
-                        guard.RespawnInterval = ServerProperties.Properties.LORD_RP_WORTH_SECONDS * 1000;
-                    else
-                        guard.RespawnInterval = 10000;
+					if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE
+						|| GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP)
+					{
+						// In PvE & PvP servers, lords are really just mobs farmed for seals.
+						int iVariance = 1000 * Math.Abs(ServerProperties.Properties.GUARD_RESPAWN_VARIANCE);
+						int iRespawn = 60 * ((Math.Abs(ServerProperties.Properties.GUARD_RESPAWN) * 1000) +
+							(Util.Random(-iVariance, iVariance)));
+
+						guard.RespawnInterval = (iRespawn > 1000) ? iRespawn : 1000; // Make sure we don't end up with an impossibly low respawn interval.
+					}
+					else
+						guard.RespawnInterval = 10000; // 10 seconds
 				}
 			}
 			else if (guard is MissionMaster)
 			{
-                if (guard.Realm == eRealm.None && GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE)
-                    // In PvE servers, mission masters are also just mobs.
-                    guard.RespawnInterval = ServerProperties.Properties.LORD_RP_WORTH_SECONDS * 1000;
-                else
-                    guard.RespawnInterval = 10000; // 10 seconds
+				if (guard.Realm == eRealm.None && (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE ||
+				GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvP))
+				{
+					// In PvE & PvP servers, lords are really just mobs farmed for seals.
+					int iVariance = 1000 * Math.Abs(ServerProperties.Properties.GUARD_RESPAWN_VARIANCE);
+					int iRespawn = 60 * ((Math.Abs(ServerProperties.Properties.GUARD_RESPAWN) * 1000) +
+						(Util.Random(-iVariance, iVariance)));
+
+					guard.RespawnInterval = (iRespawn > 1000) ? iRespawn : 1000; // Make sure we don't end up with an impossibly low respawn interval.
+				}
+				else
+					guard.RespawnInterval = 10000; // 10 seconds
 			}
 			else
 			{
-				guard.RespawnInterval = Util.Random(5, 25) * 60 * 1000;
+				int iVariance = 1000 * Math.Abs(ServerProperties.Properties.GUARD_RESPAWN_VARIANCE);
+				int iRespawn = 60 * ((Math.Abs(ServerProperties.Properties.GUARD_RESPAWN) * 1000) +
+					(Util.Random(-iVariance, iVariance)));
+
+				guard.RespawnInterval = (iRespawn > 1000) ? iRespawn : 1000; // Make sure we don't end up with an impossibly low respawn interval.
 			}
 		}
 
