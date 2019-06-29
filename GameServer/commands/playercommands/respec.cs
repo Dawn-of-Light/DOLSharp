@@ -52,11 +52,22 @@ namespace DOL.GS.Commands
 		const string LINE_RESPEC = "line_respec";
 		const string DOL_RESPEC = "dol_respec";
 		const string BUY_RESPEC = "buy_respec";
+		const string CHAMP_RESPEC = "champion_respec";
 		
 		public void OnCommand(GameClient client, string[] args)
 		{
 			if (args.Length < 2)
 			{
+				if (ServerProperties.Properties.FREE_RESPEC)
+				{
+					DisplayMessage(client, "Target any trainer and use:");
+					DisplayMessage(client, "/respec ALL or /respec DOL to respec all skills");
+					DisplayMessage(client, "/respec <line name> to respec a single skill line");
+					DisplayMessage(client, "/respec REALM to respec realm abilities");
+					DisplayMessage(client, "/respec CHAMPION to respec champion abilities");
+					return;
+				}
+				
 				// Check for respecs.
 				if (client.Player.RespecAmountAllSkill < 1
 					&& client.Player.RespecAmountSingleSkill < 1
@@ -104,6 +115,9 @@ namespace DOL.GS.Commands
 			{
 				case "buy":
 					{
+						if (ServerProperties.Properties.FREE_RESPEC)
+							return;
+
 						// Buy respec
 						if (client.Player.CanBuyRespec == false || client.Player.RespecCost < 0)
 						{
@@ -124,7 +138,8 @@ namespace DOL.GS.Commands
 				case "all":
 					{
 						// Check for full respecs.
-						if (client.Player.RespecAmountAllSkill < 1)
+						if (client.Player.RespecAmountAllSkill < 1
+							&& !ServerProperties.Properties.FREE_RESPEC)
 						{
 							DisplayMessage(client, "You don't seem to have any full skill respecs available.");
 							return;
@@ -137,7 +152,8 @@ namespace DOL.GS.Commands
 				case "dol":
 					{
 						// Check for DOL respecs.
-						if (client.Player.RespecAmountDOL < 1)
+						if (client.Player.RespecAmountDOL < 1
+							&& !ServerProperties.Properties.FREE_RESPEC)
 						{
 							DisplayMessage(client, "You don't seem to have any DOL respecs available.");
 							return;
@@ -149,7 +165,8 @@ namespace DOL.GS.Commands
 					}
 				case "realm":
 					{
-						if (client.Player.RespecAmountRealmSkill < 1)
+						if (client.Player.RespecAmountRealmSkill < 1
+							&& !ServerProperties.Properties.FREE_RESPEC)
 						{
 							DisplayMessage(client, "You don't seem to have any realm skill respecs available.");
 							return;
@@ -159,10 +176,21 @@ namespace DOL.GS.Commands
 						client.Player.TempProperties.setProperty(RA_RESPEC, true);
 						break;
 					}
+				case "champion":
+					{
+						if (ServerProperties.Properties.FREE_RESPEC)
+						{
+							client.Out.SendCustomDialog("CAUTION: All respec changes are final with no second chance. Proceed carefully!", new CustomDialogResponse(RespecDialogResponse));
+							client.Player.TempProperties.setProperty(CHAMP_RESPEC, true);
+							break;
+						}
+						return;
+					}
 				default:
 					{
 						// Check for single-line respecs.
-						if (client.Player.RespecAmountSingleSkill < 1)
+						if (client.Player.RespecAmountSingleSkill < 1
+							&& !ServerProperties.Properties.FREE_RESPEC)
 						{
 							DisplayMessage(client, "You don't seem to have any single-line respecs available.");
 							return;
@@ -211,6 +239,11 @@ namespace DOL.GS.Commands
 			{
 				player.RespecRealm();
 				player.TempProperties.removeProperty(RA_RESPEC);
+			}
+			if (player.TempProperties.getProperty(CHAMP_RESPEC, false))
+			{
+				player.RespecChampionSkills();
+				player.TempProperties.removeProperty(CHAMP_RESPEC);
 			}
 			if (player.TempProperties.getProperty<object>(LINE_RESPEC, null) != null)
 			{
