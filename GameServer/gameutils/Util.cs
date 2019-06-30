@@ -33,8 +33,12 @@ namespace DOL.GS
 	/// <summary>
 	/// Generic purpose utility collection
 	/// </summary>
-	public static class Util
+	public class Util
 	{
+		private static Util soleInstance = new Util();
+
+		public static void LoadTestDouble(Util testDouble) { soleInstance = testDouble; }
+
 		#region Random
 		/// <summary>
 		/// Holds the random number generator instance
@@ -228,7 +232,7 @@ namespace DOL.GS
 		/// <param name="str">the string to parse</param>
 		/// <param name="rangeCheck">the ranges are burst and put into the list</param>
 		/// <returns>a List of strings with the values parsed</returns>
-		public static List<string> SplitCSV (this string str, bool rangeCheck = false)
+		public static List<string> SplitCSV (string str, bool rangeCheck = false)
 		{
 			
 			if (str==null) return null;
@@ -315,7 +319,7 @@ namespace DOL.GS
 		/// <param name="str"></param>
 		/// <param name="args"></param>
 		/// <returns></returns>
-		public static IList<string> ContainsKey(this string str, string startKey, params string[] args)
+		public static IList<string> ContainsKey(string str, string startKey, params string[] args)
 		{
 			if (str.Trim().ToLower().StartsWith(startKey.ToLower()))
 			{
@@ -498,7 +502,7 @@ namespace DOL.GS
 		/// This can help for Loot Randomizing.
 		/// </summary>
 		/// <param name="list"></param>
-		public static void Shuffle<T>(this IList<T> list)  
+		public static void Shuffle<T>(IList<T> list)  
 		{  
 		    int n = list.Count; 
 		    while (n > 1)
@@ -516,7 +520,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="list"></param>
 		/// <param name="addList"></param>
-		public static void AddRange<T>(this IList<T> list, IList<T> addList)
+		public static void AddRange<T>(IList<T> list, IList<T> addList)
 		{
 			foreach (T item in addList)
 			{
@@ -529,7 +533,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="array"></param>
 		/// <param name="action"></param>
-        public static void ForEach<T>(this IEnumerable<T> array, Action<T> action)
+        public static void ForEach<T>(IEnumerable<T> array, Action<T> action)
         {
             foreach (var cur in array)
                 action(cur);

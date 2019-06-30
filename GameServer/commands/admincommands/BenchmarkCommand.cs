@@ -46,7 +46,7 @@ namespace DOL.GS.Commands
 			
 				case "listskills":
 					start = GameTimer.GetTickCount();
-					Enumerable.Range(0, 1000).AsParallel().ForEach(i =>
+					Util.ForEach(Enumerable.Range(0, 1000).AsParallel(), i =>
 					{
 						var tmp = client.Player.GetAllUsableSkills(true);
 					}
@@ -58,7 +58,7 @@ namespace DOL.GS.Commands
 				break;
 				case "listspells":
 					start = GameTimer.GetTickCount();
-					Enumerable.Range(0, 1000).AsParallel().ForEach(i =>
+					Util.ForEach(Enumerable.Range(0, 1000).AsParallel(), i =>
 					{
 						var tmp = client.Player.GetAllUsableListSpells(true);
 					}

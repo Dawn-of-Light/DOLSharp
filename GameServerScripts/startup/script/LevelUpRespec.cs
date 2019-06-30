@@ -73,7 +73,7 @@ namespace DOL.GS.GameEvents
 				return;
 			
 			// Graveen: give a DOL respec on the GIVE_DOL_RESPEC_ON_LEVELS levels
-			foreach (string str in GIVE_DOL_RESPEC_AT_LEVEL.SplitCSV(true))
+			foreach (string str in Util.SplitCSV(GIVE_DOL_RESPEC_AT_LEVEL, true))
 			{
 				byte level_respec = 0;
 				

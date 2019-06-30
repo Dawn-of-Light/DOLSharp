@@ -912,7 +912,7 @@ namespace DOL.GS.Styles
 								temp += spell.Name;
 								delveInfo.Add(temp);
 								delveInfo.Add(" ");//empty line
-								delveInfo.AddRange(spellHandler.DelveInfo);
+								Util.AddRange(delveInfo, spellHandler.DelveInfo);
 							}
 						}
 					}

@@ -321,7 +321,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			// Is class disabled ?
 			int occurences = 0;
-			List<string> disabled_classes = Properties.DISABLED_CLASSES.SplitCSV(true);
+			List<string> disabled_classes = Util.SplitCSV(Properties.DISABLED_CLASSES, true);
 			occurences = (from j in disabled_classes
 						  where j == ch.Class.ToString()
 						  select j).Count();
@@ -335,7 +335,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 			// check if race disabled
-			List<string> disabled_races = Properties.DISABLED_RACES.SplitCSV(true);
+			List<string> disabled_races = Util.SplitCSV(Properties.DISABLED_RACES, true);
 			occurences = (from j in disabled_races
 						  where j == ch.Race.ToString()
 						  select j).Count();
@@ -579,7 +579,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						if (Properties.BACKUP_DELETED_CHARACTERS)
 						{
 							var backupCharacter = new DOLCharactersBackup(character);
-							backupCharacter.CustomParams.ForEach(param => GameServer.Database.AddObject(param));
+							Util.ForEach(backupCharacter.CustomParams, param => GameServer.Database.AddObject(param));
 							GameServer.Database.AddObject(backupCharacter);
 
 							if (log.IsWarnEnabled)
@@ -986,7 +986,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			log.Debug($"Creation {client.Version} character, class:{ch.Class}, realm:{ch.Realm}");
 
 			// Is class disabled ?
-			List<string> disabledClasses = Properties.DISABLED_CLASSES.SplitCSV(true);
+			List<string> disabledClasses = Util.SplitCSV(Properties.DISABLED_CLASSES, true);
 			var occurences = disabledClasses.Count(j => j == ch.Class.ToString());
 			if (occurences > 0 && (ePrivLevel)client.Account.PrivLevel == ePrivLevel.Player)
 			{
@@ -995,7 +995,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 			// check if race disabled
-			List<string> disabledRaces = Properties.DISABLED_RACES.SplitCSV(true);
+			List<string> disabledRaces = Util.SplitCSV(Properties.DISABLED_RACES, true);
 			occurences = disabledRaces.Count(j => j == ch.Race.ToString());
 			if (occurences > 0 && (ePrivLevel)client.Account.PrivLevel == ePrivLevel.Player)
 			{

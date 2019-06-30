@@ -246,7 +246,7 @@ namespace DOL.GS
             List<string> list = null;
 
             if (ServerProperties.Properties.DEBUG_LOAD_REGIONS != string.Empty)
-                list = ServerProperties.Properties.DEBUG_LOAD_REGIONS.SplitCSV(true);
+                list = Util.SplitCSV(ServerProperties.Properties.DEBUG_LOAD_REGIONS, true);
 
             if (list != null && list.Count > 0)
             {
@@ -262,7 +262,7 @@ namespace DOL.GS
                 }
             }
 
-            list = ServerProperties.Properties.DISABLED_REGIONS.SplitCSV(true);
+            list = Util.SplitCSV(ServerProperties.Properties.DISABLED_REGIONS, true);
             foreach (string region in list)
             {
                 if (region.ToString() == ID.ToString())
@@ -272,7 +272,7 @@ namespace DOL.GS
                 }
             }
 
-            list = ServerProperties.Properties.DISABLED_EXPANSIONS.SplitCSV(true);
+            list = Util.SplitCSV(ServerProperties.Properties.DISABLED_EXPANSIONS, true);
             foreach (string expansion in list)
             {
                 if (expansion.ToString() == m_regionData.Expansion.ToString())
