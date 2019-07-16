@@ -552,6 +552,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("server", "enable_albion_advanced_weapon_spec", "Set to true to determine damage variance for polearms and 2H weapons on 1H crush/slash/thrust spec.", true)]
 		public static bool ENABLE_ALBION_ADVANCED_WEAPON_SPEC;
+		
+		/// <summary>
+		/// Property to enable free respecs
+		/// </summary>
+		[ServerProperty("server", "free_respec", "Set to true to always allow respecs", false)]
+		public static bool FREE_RESPEC;
 		#endregion
 
 		#region WORLD
