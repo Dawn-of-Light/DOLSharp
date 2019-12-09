@@ -45,8 +45,6 @@ namespace DOL.Network
 		{
 		}
 
-		#region IPacket Members
-
 		/// <summary>
 		/// Generates a human-readable dump of the packet contents.
 		/// </summary>
@@ -56,13 +54,11 @@ namespace DOL.Network
 			return Marshal.ToHexDump(ToString(), ToArray());
 		}
 
-		#endregion
-
 		/// <summary>
 		/// Reads in 2 bytes and converts it from network to host byte order
 		/// </summary>
 		/// <returns>A 2 byte (short) value</returns>
-		public virtual ushort ReadShort()
+		public ushort ReadShort()
 		{
 			var v1 = (byte) ReadByte();
 			var v2 = (byte) ReadByte();
@@ -74,7 +70,7 @@ namespace DOL.Network
 		/// Reads in 2 bytes
 		/// </summary>
 		/// <returns>A 2 byte (short) value in network byte order</returns>
-		public virtual ushort ReadShortLowEndian()
+		public ushort ReadShortLowEndian()
 		{
 			var v1 = (byte) ReadByte();
 			var v2 = (byte) ReadByte();
@@ -86,7 +82,7 @@ namespace DOL.Network
 		/// Reads in 4 bytes and converts it from network to host byte order
 		/// </summary>
 		/// <returns>A 4 byte value</returns>
-		public virtual uint ReadInt()
+		public uint ReadInt()
 		{
 			var v1 = (byte) ReadByte();
 			var v2 = (byte) ReadByte();
@@ -110,7 +106,7 @@ namespace DOL.Network
 		/// </summary>
 		/// <param name="maxlen">Maximum number of bytes to read in</param>
 		/// <returns>A string of maxlen or less</returns>
-		public virtual string ReadString(int maxlen)
+		public string ReadString(int maxlen)
 		{
 			var buf = new byte[maxlen];
 			Read(buf, 0, maxlen);
@@ -122,7 +118,7 @@ namespace DOL.Network
 		/// Reads in a pascal style string
 		/// </summary>
 		/// <returns>A string from the stream</returns>
-		public virtual string ReadPascalString()
+		public string ReadPascalString()
 		{
 			return ReadString(ReadByte());
 		}
@@ -131,12 +127,17 @@ namespace DOL.Network
 		/// Reads in a pascal style string, with header count formatted as a Low Endian Short.
 		/// </summary>
 		/// <returns>A string from the stream</returns>
-		public virtual string ReadLowEndianShortPascalString()
+		public string ReadShortPascalStringLowEndian()
 		{
 			return ReadString(ReadShortLowEndian());
 		}
-		
-		public virtual uint ReadIntLowEndian()
+
+		public string ReadIntPascalStringLowEndian()
+		{
+			return ReadString((int)ReadIntLowEndian());
+		}
+
+		public uint ReadIntLowEndian()
 		{
 			var v1 = (byte) ReadByte();
 			var v2 = (byte) ReadByte();
@@ -150,7 +151,7 @@ namespace DOL.Network
 		/// Reads low endian floats used in 1.124 packets
 		/// </summary>
 		/// <returns>converts it to a usable value</returns>
-		public virtual float ReadFloatLowEndian()
+		public float ReadFloatLowEndian()
         {
             var v1 = (byte)ReadByte();
             var v2 = (byte)ReadByte();

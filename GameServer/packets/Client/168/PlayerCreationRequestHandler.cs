@@ -32,23 +32,31 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			ushort id = packet.ReadShort();
+			uint id = 0;
+			if (client.Version >= GameClient.eClientVersion.Version1126)
+				id = packet.ReadIntLowEndian();
+			else
+				id = packet.ReadShort();
 			GameClient target = WorldMgr.GetClientFromID(id);
-			if(target==null)
+			if (target == null)
 			{
-				if (log.IsWarnEnabled)
-					log.Warn(string.Format("Client {0}:{1} account {2} requested invalid client {3} --- disconnecting", client.SessionID, client.TcpEndpointAddress, client.Account == null ? "null" : client.Account.Name, id));
+				log.Warn($"Client {client.SessionID}:{client.TcpEndpointAddress} account {client.Account?.Name ?? "null"} requested invalid client {id} --- disconnecting");
 
 				client.Disconnect();
 				return;
 			}
 
-			//DOLConsole.WriteLine("player creation request "+target.Player.Name);
-			if(target.IsPlaying && target.Player!=null && target.Player.ObjectState==GameObject.eObjectState.Active)
+			// DOLConsole.WriteLine("player creation request "+target.Player.Name);
+			if (target.IsPlaying && target.Player != null && target.Player.ObjectState == GameObject.eObjectState.Active)
 			{
 				client.Out.SendPlayerCreate(target.Player);
 				client.Out.SendLivingEquipmentUpdate(target.Player);
 			}
+		}
+
+		public void _HandlePacket1126(GameClient client, GSPacketIn packet)
+		{
+			var id = packet.ReadIntLowEndian();
 		}
 	}
 }

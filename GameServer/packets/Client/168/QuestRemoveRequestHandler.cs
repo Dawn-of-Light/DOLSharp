@@ -54,8 +54,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 			}
 
-			if (quest != null)
-				quest.AbortQuest();
+			quest?.AbortQuest();
 		}
 	}
 }

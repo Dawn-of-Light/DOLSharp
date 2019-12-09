@@ -34,21 +34,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			foreach (GameStaticItem item in client.Player.GetItemsInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
-			{
 				client.Out.SendObjectCreate(item);
-			}
 
 			foreach (IDoor door in client.Player.GetDoorsInRadius(WorldMgr.OBJ_UPDATE_DISTANCE))
-			{
 				client.Player.SendDoorUpdate(door);
-			}
-			
 
 			//housing
 			if (client.Player.CurrentRegion.HousingEnabled)
-			{
 				WorldUpdateThread.UpdatePlayerHousing(client.Player, GameTimer.GetTickCount()+60000);
-			}
 		}
 	}
 }

@@ -28,10 +28,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			packet.ReadShort();//unk
+			packet.ReadShort(); // unk
 			int action = packet.ReadByte();
-			int ammo = packet.ReadByte();//(ammo type if command = 'select ammo' ?)
-			if (client.Player.SiegeWeapon == null) return;
+			int ammo = packet.ReadByte(); // (ammo type if command = 'select ammo' ?)
+			if (client.Player.SiegeWeapon == null)
+				return;
 			if (client.Player.IsStealthed)
 			{
 				client.Out.SendMessage("You can't control a siege weapon while hidden!", eChatType.CT_System, eChatLoc.CL_SystemWindow);

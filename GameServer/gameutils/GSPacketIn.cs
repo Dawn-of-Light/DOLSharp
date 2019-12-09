@@ -121,7 +121,8 @@ namespace DOL.GS
 			m_sequence = (ushort)((buf[offset + 2] << 8) | buf[offset + 3]);
 			m_sessionID = (ushort)((buf[offset + 4] << 8) | buf[offset + 5]);
 			m_parameter = (ushort)((buf[offset + 6] << 8) | buf[offset + 7]);
-			m_id = (ushort)((buf[offset + 8] << 8) | buf[offset + 9]);
+			// m_id = (ushort)((buf[offset + 8] << 8) | buf[offset + 9]);
+			m_id = buf[offset + 9];
 
 			Position = 0;
 			Write(buf, offset + 10, count - HDR_SIZE);

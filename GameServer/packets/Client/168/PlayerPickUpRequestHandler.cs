@@ -32,8 +32,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return;
 			uint X = packet.ReadInt();
 			uint Y = packet.ReadInt();
-			ushort id =(ushort) packet.ReadShort();
-			ushort obj=(ushort) packet.ReadShort();
+			ushort id = packet.ReadShort();
+			ushort obj = packet.ReadShort();
 
 			GameObject target = client.Player.TargetObject;
 			if (target == null)
@@ -46,7 +46,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "PlayerPickUpRequestHandler.HandlePacket.InvalidTarget"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				return;
 			}
-			
+
 			client.Player.PickupObject(target, false);
 		}
 	}

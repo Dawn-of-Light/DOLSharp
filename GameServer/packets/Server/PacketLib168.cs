@@ -361,7 +361,7 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public virtual void SendDupNameCheckReply(string name, bool nameExists)
+		public virtual void SendDupNameCheckReply(string name, byte nameExists)
 		{
 			if (m_gameClient == null || m_gameClient.Account == null)
 				return;
@@ -370,7 +370,7 @@ namespace DOL.GS.PacketHandler
 			{
 				pak.FillString(name, 30);
 				pak.FillString(m_gameClient.Account.Name, 20);
-				pak.WriteByte((byte) (nameExists ? 0x1 : 0x0));
+				pak.WriteByte(nameExists);
 				pak.Fill(0x0, 3);
 				SendTCP(pak);
 			}
@@ -3021,9 +3021,14 @@ namespace DOL.GS.PacketHandler
 				m_gameClient.GameObjectUpdateArray.TryRemove(new Tuple<ushort, ushort>(obj.CurrentRegionID, (ushort)obj.ObjectID), out dummy);
 			}
 
+			SendObjectDelete((ushort)obj.ObjectID);
+		}
+
+		public void SendObjectDelete(ushort oid)
+		{
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.ObjectDelete)))
 			{
-				pak.WriteShort((ushort) obj.ObjectID);
+				pak.WriteShort(oid);
 				pak.WriteShort(1); //TODO: unknown
 				SendTCP(pak);
 			}

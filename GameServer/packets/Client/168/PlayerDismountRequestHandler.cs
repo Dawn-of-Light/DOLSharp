@@ -22,16 +22,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.PlayerDismountRequest, "Handles Player Dismount Request.", eClientStatus.PlayerInGame)]
 	public class PlayerDismountRequestHandler : IPacketHandler
 	{
-		#region IPacketHandler Members
-
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			new DismountRequestHandler(client.Player).Start(1);
 		}
-
-		#endregion
-
-		#region Nested type: DismountRequestHandler
 
 		/// <summary>
 		/// Handles player dismount requests
@@ -62,7 +56,5 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.DismountSteed(false);
 			}
 		}
-
-		#endregion
 	}
 }

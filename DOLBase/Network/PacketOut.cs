@@ -130,19 +130,15 @@ namespace DOL.Network
 			WriteByte((byte) ((val >> 48) & 0xff));
 			WriteByte((byte) (val >> 56));
 		}
-		
+
 		/// <summary>
-        /// writes a float value to low endian used in 1.124 packets
-        /// </summary>        
-        public virtual void WriteFloatLowEndian(float val)
-        {
-            uint l = BitConverter.ToUInt32(BitConverter.GetBytes(val), 0);
-            byte[] bytes = BitConverter.GetBytes(l);            
-            WriteByte(bytes[0]);
-            WriteByte(bytes[1]);
-            WriteByte(bytes[2]);
-            WriteByte(bytes[3]);
-        }
+		/// writes a float value to low endian used in 1.124 packets
+		/// </summary>
+		public virtual void WriteFloatLowEndian(float val)
+		{
+			var bytes = BitConverter.GetBytes(val);
+			Write(bytes, 0, bytes.Length);
+		}
 		
 		/// <summary>
 		/// Calculates the checksum for the internal buffer
@@ -204,6 +200,20 @@ namespace DOL.Network
 			byte[] bytes = Constants.DefaultEncoding.GetBytes(str);
 			WriteByte((byte) bytes.Length);
 			Write(bytes, 0, bytes.Length);
+		}
+
+		public void WritePascalStringIntLE(string str)
+		{
+			if (str == null || str.Length <= 0)
+			{
+				WriteIntLowEndian(0);
+				return;
+			}
+
+			byte[] bytes = Constants.DefaultEncoding.GetBytes(str);
+			WriteIntLowEndian((uint)bytes.Length + 1);
+			Write(bytes, 0, bytes.Length);
+			WriteByte(0);
 		}
 
 		/// <summary>

@@ -47,15 +47,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 				int itemCount = Math.Max(1, item.Count);
 				int packSize = Math.Max(1, item.PackSize);
 
-				if (client.Player.TargetObject is GameMerchant)
+				if (client.Player.TargetObject is GameMerchant merchant)
 				{
 					//Let the merchant choos how to handle the trade.
-					((GameMerchant)client.Player.TargetObject).OnPlayerSell(client.Player, item);
+					merchant.OnPlayerSell(client.Player, item);
 
 				}
-				else if (client.Player.TargetObject is GameLotMarker)
+				else if (client.Player.TargetObject is GameLotMarker lot)
 				{
-					((GameLotMarker)client.Player.TargetObject).OnPlayerSell(client.Player, item);
+					lot.OnPlayerSell(client.Player, item);
 				}
 			}
 		}

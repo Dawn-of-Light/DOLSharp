@@ -26,18 +26,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.RemoveConcentrationEffect, "Handles Concentration Effect Remove Request", eClientStatus.PlayerInGame)]
 	public class RemoveConcentrationEffectHandler : IPacketHandler
 	{
-		#region IPacketHandler Members
-
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int index = packet.ReadByte();
 
 			new CancelEffectHandler(client.Player, index).Start(1);
 		}
-
-		#endregion
-
-		#region Nested type: CancelEffectHandler
 
 		/// <summary>
 		/// Handles player cancel effect requests
@@ -76,13 +70,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 				}
 
-				if (effect != null)
-				{
-					effect.Cancel(true);
-				}
+				effect?.Cancel(true);
 			}
 		}
-
-		#endregion
 	}
 }

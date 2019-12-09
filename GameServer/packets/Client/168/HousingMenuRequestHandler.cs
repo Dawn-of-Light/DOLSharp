@@ -25,8 +25,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		#region IPacketHandler Members
-
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int housenumber = packet.ReadShort();
@@ -117,7 +115,5 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 		}
-
-		#endregion
 	}
 }

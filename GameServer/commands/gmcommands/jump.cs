@@ -104,7 +104,7 @@ namespace DOL.GS.Commands
 					{
 						try
 						{
-							int sessionID = Convert.ToInt32(args[2].Substring(1));
+							var sessionID = Convert.ToUInt32(args[2].Substring(1));
 							clientc = WorldMgr.GetClientFromID(sessionID);
 						}
 						catch

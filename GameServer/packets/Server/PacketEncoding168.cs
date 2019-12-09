@@ -33,88 +33,123 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public enum eEncryptionState
-		{
-			NotEncrypted = 0,
-			RSAEncrypted = 1,
-			PseudoRC4Encrypted = 2
-		}
-
-		protected eEncryptionState	m_encryptionState;
-		protected byte[]						m_sbox = null;
+		protected eEncryptionState m_encryptionState;
+		protected byte[] _sbox = null;
 
 		public PacketEncoding168()
 		{
 			m_encryptionState = eEncryptionState.NotEncrypted;
-			m_sbox = new byte[256];
+			_sbox = new byte[256];
 		}
 
 		/// <summary>
 		/// Gets or sets the SBox for this encoding
 		/// </summary>
 		public byte[] SBox
-	  {
-	    get { return m_sbox; }
-			set { m_sbox = value; }
-	  }
+		{
+			get { return _sbox; }
+			set { _sbox = value; }
+		}
 
 		/// <summary>
 		/// Gets or sets the Encryption State of this encoding
 		/// </summary>
-	  public eEncryptionState EncryptionState
-	  {
-	    get { return m_encryptionState; }
-	    set { m_encryptionState = value; }
-	  }
+		public eEncryptionState EncryptionState
+		{
+			get { return m_encryptionState; }
+			set { m_encryptionState = value; }
+		}
 
-	  /// <summary>
+		/// <summary>
 		/// Decrypts a 1.68 packet
 		/// </summary>
 		/// <param name="content">the content to be decrypted</param>
 		/// <param name="udpPacket">true if the packet an udp packet</param>
 		/// <returns>the decrypted packet</returns>
-		public byte[] DecryptPacket(byte[] content, bool udpPacket)
+		public byte[] DecryptPacket(byte[] buf, bool udpPacket)
 		{
-			/* No Cryptlib currently!
-			if(m_encryptionState == eEncryptionState.RSAEncrypted)
+			if (buf == null)
+				return null;
+			if (_sbox == null || m_encryptionState == eEncryptionState.NotEncrypted)
+				return buf;
+			byte[] tmpsbox = new byte[_sbox.Length];
+			Array.Copy(_sbox, 0, tmpsbox, 0, _sbox.Length);
+			byte i = 0;
+			byte j = 0;
+			ushort len = (ushort)((buf[0] << 8) | buf[1] + 10); //+10 byte for packet#,session,param,code,checksum
+			int k;
+			for (k = (len / 2) + 2; k < len + 2; k++)
 			{
-				byte[] output = new byte[content.Length];
-				UInt32 outLen = CryptLib168.DecodeMythicRSAPacket(content,(UInt32)content.Length,output,(UInt32)output.Length);
-				if(outLen==0)
-				{
-					if (Log.IsErrorEnabled)
-						Log.Error("Failed to decrypt RSA packet!");
-					return content;
-				}
-				byte[] newPacket = new byte[outLen];
-				Array.Copy(output,0,newPacket,0,outLen);
-				return newPacket;
+				i++;
+				byte tmp = tmpsbox[i];
+				j += tmp;
+				tmpsbox[i] = tmpsbox[j];
+				tmpsbox[j] = tmp;
+				byte xorKey = tmpsbox[(byte)(tmpsbox[i] + tmpsbox[j])];
+				buf[k] ^= xorKey;
+				j += buf[k];
 			}
-			if(m_encryptionState == eEncryptionState.PseudoRC4Encrypted && m_sbox != null)			
+			for (k = 2; k < (len / 2) + 2; k++)
 			{
-			  CryptLib168.DecodeMythicRC4Packet(content,m_sbox);
-				return content;
+				i++;
+				byte tmp = tmpsbox[i];
+				j += tmp;
+				tmpsbox[i] = tmpsbox[j];
+				tmpsbox[j] = tmp;
+				byte xorKey = tmpsbox[(byte)(tmpsbox[i] + tmpsbox[j])];
+				buf[k] ^= xorKey;
+				j += buf[k];
 			}
-			*/
-			return content;
+			log.Debug($"Decrypted {buf.Length} bytes (udp: {udpPacket})");
+			return buf;
 		}
-		
+
 		/// <summary>
 		/// Encrypts a 1.68 packet
 		/// </summary>
 		/// <param name="content">the content to encrypt</param>
 		/// <param name="udpPacket">true if the packet is an udp packet</param>
 		/// <returns>the encrypted packet</returns>
-		public byte[] EncryptPacket(byte[] content, bool udpPacket)
+		public byte[] EncryptPacket(byte[] buf, bool udpPacket)
 		{
-			/* No Cryptlib currently!
-			if(m_encryptionState == eEncryptionState.PseudoRC4Encrypted && m_sbox != null)			
+			if (buf == null)
+				return null;
+			if (_sbox == null || m_encryptionState == eEncryptionState.NotEncrypted)
+				return buf;
+			byte[] tmpsbox = new byte[_sbox.Length];
+			Array.Copy(_sbox, 0, tmpsbox, 0, _sbox.Length);
+			byte i = 0;
+			byte j = 0;
+			ushort len = (ushort)((buf[0] << 8) | buf[1]);
+			len += 1; // +1 byte for packet code
+			if (udpPacket)
+				len += 2; //+2 byte for packet-count
+
+			int k;
+			for (k = (len / 2) + 2; k < len + 2; k++)
 			{
-			  CryptLib168.EncodeMythicRC4Packet(content,m_sbox,udpPacket);
-				return content;
+				i++;
+				byte tmp = tmpsbox[i];
+				j += tmp;
+				tmpsbox[i] = tmpsbox[j];
+				tmpsbox[j] = tmp;
+				byte xorKey = tmpsbox[(byte)(tmpsbox[i] + tmpsbox[j])];
+				j += buf[k];
+				buf[k] ^= xorKey;
 			}
-			*/
-			return content;
+			for (k = 2; k < (len / 2) + 2; k++)
+			{
+				i++;
+				byte tmp = tmpsbox[i];
+				j += tmp;
+				tmpsbox[i] = tmpsbox[j];
+				tmpsbox[j] = tmp;
+				byte xorKey = tmpsbox[(byte)(tmpsbox[i] + tmpsbox[j])];
+				j += buf[k];
+				buf[k] ^= xorKey;
+			}
+			log.Debug($"Encrypted {buf.Length} bytes (udp: {udpPacket})");
+			return buf;
 		}
 	}
 }

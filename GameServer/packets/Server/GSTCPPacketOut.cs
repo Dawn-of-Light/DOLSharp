@@ -55,5 +55,10 @@ namespace DOL.GS.PacketHandler
 			base.WriteShort(0x00); //reserved for size
 			base.WriteByte(packetCode);
 		}
+
+		public override string ToString()
+		{
+			return base.ToString() + $": Size={Length - 3} ID=0x{m_packetCode:X2}";
+		}
 	}
 }
