@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using DOL.GS;
-using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
@@ -14,7 +10,6 @@ namespace DOL.GS.Spells
 	{
         protected int m_lastdamage = 0;
         protected int m_pulsedamage = 0;
-    //    protected int m_pulsecount = -1;
         
         public override void FinishSpellCast(GameLiving target)
         {
@@ -76,25 +71,6 @@ namespace DOL.GS.Spells
             // damage is not reduced with distance
             return new GameSpellEffect(this, m_spell.Duration, m_spellLine.IsBaseLine ? 3000 : 2000, 1);
         }
-
-    /*    public override void OnSpellPulse(PulsingSpellEffect effect)
-        {
-            if (m_pulsecount == -1)
-                m_pulsecount = m_spell.Pulse;
-
-            if (m_pulsecount > 0)
-            {
-                if (m_pulsecount == m_spell.Pulse)
-                    m_pulsecount -= 1;
-
-                m_pulsecount -= 1;
-                base.OnSpellPulse(effect);
-            }
-            else
-            {
-                RemoveEffect();
-            }
-        }*/
 
         public override void OnEffectStart(GameSpellEffect effect)
         {
