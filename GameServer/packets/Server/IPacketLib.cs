@@ -403,8 +403,9 @@ namespace DOL.GS.PacketHandler
         Startled = 0x50,
         Talk = 0x51,        
         Monty = 0x54,
-        Loco = 0x55
-        //Cower = ?? unknown for now
+		Loco = 0x55,
+		Cower = 0x5B,
+		SiegeWeaponEmote = 0xc9,
 	};
 
 	public enum ePreActionType : byte

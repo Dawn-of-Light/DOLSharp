@@ -353,10 +353,10 @@ namespace DOL.GS.Commands
                     emoteID = eEmote.Loco;
                     emoteMessages = EMOTE_MESSAGES_LOCO;
                     break;
-                //case "&cower": // unknown for now
-                //    emoteID = eEmote.Cower;
-                //    emoteMessages = EMOTE_MESSAGES_COWER;
-                //    break;
+                case "&cower":
+                    emoteID = eEmote.Cower;
+                    emoteMessages = EMOTE_MESSAGES_COWER;
+                    break;
 				default:
 					return;
 			}
