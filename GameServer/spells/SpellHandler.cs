@@ -2725,6 +2725,10 @@ namespace DOL.GS.Spells
 				ad.IsSpellResisted = false;
 
 				m_lastAttackData = ad;
+
+				// Treat non-damaging effects as attacks to trigger an immediate response and BAF
+				if (target is GameNPC npc)
+					npc.OnAttackedByEnemy(ad);
 			}
 		}
 
@@ -3940,6 +3944,7 @@ namespace DOL.GS.Spells
 				finalDamage = 0;
 
 			int criticalchance = (m_caster.SpellCriticalChance);
+
 			if (Util.Chance(Math.Min(50, criticalchance)) && (finalDamage >= 1))
 			{
 				int critmax = (ad.Target is GamePlayer) ? finalDamage / 2 : finalDamage;
