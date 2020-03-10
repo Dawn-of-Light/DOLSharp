@@ -1676,6 +1676,18 @@ namespace DOL.GS.ServerProperties
 
 		#region PVE / TOA
 		/// <summary>
+		/// Initial percent chance of a mob BAFing for a single attacker
+		/// </summary>
+		[ServerProperty("pve", "baf_initial_chance", "Percent chance for a mob to bring a friend when attacked by a single attacker.  Each multiples of 100 guarantee an add, so a cumulative chance of 250% guarantees two adds with a 50% chance of a third.", 0)]
+		public static int BAF_INITIAL_CHANCE;
+
+		/// <summary>
+		/// Added percent chance of a mob BAFing for each attacker past the first
+		/// </summary>
+		[ServerProperty("pve", "baf_additional_chance", "Percent chance for a mob to bring a friend for each additional attacker.  Each multiples of 100 guarantee an add, so a cumulative chance of 250% guarantees two adds with a 50% chance of a third.", 50)]
+		public static int BAF_ADDITIONAL_CHANCE;			
+
+		/// <summary>
 		/// Adjustment to missrate per number of attackers
 		/// </summary>
 		[ServerProperty("pve", "missrate_reduction_per_attackers", "Adjustment to missrate per number of attackers", 0)]
