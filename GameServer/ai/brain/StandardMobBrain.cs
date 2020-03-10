@@ -450,10 +450,6 @@ namespace DOL.AI.Brain
 
 			if (living == null) return;
 
-			//Handle trigger to say sentance on first aggro.
-			if (m_aggroTable.Count < 1)
-				Body.FireAmbientSentence(GameNPC.eAmbientTrigger.aggroing, living);
-			
 			// Check LOS (walls, pits, etc...) before  attacking, player + pet
 			// Be sure the aggrocheck is triggered by the brain on Think() method
 			if (DOL.GS.ServerProperties.Properties.ALWAYS_CHECK_LOS && CheckLOS)
@@ -470,7 +466,15 @@ namespace DOL.AI.Brain
 					if (!AggroLOS) return;
 				}
 			}
-			
+
+			BringFriends(living);
+
+			//Handle trigger to say sentance on first aggro.
+			if (m_aggroTable.Count < 1)
+			{
+				Body.FireAmbientSentence(GameNPC.eAmbientTrigger.aggroing, living);
+			}
+
 			// only protect if gameplayer and aggroamout > 0
 			if (living is GamePlayer && aggroamount > 0)
 			{
@@ -555,7 +559,6 @@ namespace DOL.AI.Brain
 					{
 						m_aggroTable[living] = 1L;
 					}
-
 				}
 			}
 		}
@@ -594,6 +597,8 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public virtual void ClearAggroList()
 		{
+			m_canBAF = true; // Mobs that drop out of combat can BAF again
+
 			lock ((m_aggroTable as ICollection).SyncRoot)
 			{
 				m_aggroTable.Clear();
@@ -876,175 +881,131 @@ namespace DOL.AI.Brain
 				}
 
 				Body.StartAttack(ad.Attacker);
-				BringFriends(ad);
 			}
 		}
 
 		#endregion
 
 		#region Bring a Friend
+		/// <summary>
+		/// Initial range to try to get BAFs from.
+		/// May be overloaded for specific brain types, ie. dragons or keep guards
+		/// </summary>
+		protected const ushort m_BAFInitialRange = 250;
 
 		/// <summary>
-		/// Mobs within this range will be called upon to add on a group
-		/// of players inside of a dungeon.
+		/// Max range to try to get BAFs from.
+		/// May be overloaded for specific brain types, ie.dragons or keep guards
 		/// </summary>
-		protected static ushort m_BAFReinforcementsRange = 1000; //2000
+		protected const ushort m_BAFMaxRange = 2000;
 
 		/// <summary>
-		/// Players within this range around the puller will be subject
-		/// to attacks from adds.
+		/// Can the mob bring a friend?
+		/// Set to false when a mob BAFs or is brought by a friend.
 		/// </summary>
-		protected static ushort m_BAFTargetPlayerRange = 1500; //3000
+		protected bool m_canBAF = true;
 
 		/// <summary>
-		/// BAF range for adds close to the pulled mob.
+		/// Can the mob bring a friend?
+		/// Set to false when a mob BAFs or is brought by a friend.
 		/// </summary>
-		public virtual ushort BAFCloseRange
+		public bool canBAF
 		{
-			get { return (ushort)((AggroRange * 2) / 5); }
+			get { return m_canBAF;  }
 		}
 
 		/// <summary>
-		/// BAF range for group adds in dungeons.
+		/// Bring friends when this mob aggros
 		/// </summary>
-		public virtual ushort BAFReinforcementsRange
+		/// <param name="attacker">Whoever triggered the BAF</param>
+		protected virtual void BringFriends(GameLiving attacker)
 		{
-			get { return m_BAFReinforcementsRange; }
-			set { m_BAFReinforcementsRange = (value > 0) ? (ushort)value : (ushort)0; }
-		}
+			if (!m_canBAF)
+				return;
 
-		/// <summary>
-		/// Range for potential targets around the puller.
-		/// </summary>
-		public virtual ushort BAFTargetPlayerRange
-		{
-			get { return m_BAFTargetPlayerRange; }
-			set { m_BAFTargetPlayerRange = (value > 0) ? (ushort)value : (ushort)0; }
-		}
+			GamePlayer trigger;	// player that triggered the BAF
 
-		/// <summary>
-		/// Bring friends when this living is attacked. There are 2
-		/// different mechanisms for BAF:
-		/// 1) Any mobs of the same faction within a certain (short) range
-		///    around the pulled mob will add on the puller, anywhere.
-		/// 2) In dungeons, group size is taken into account as well, the
-		///    bigger the group, the more adds will come, even if they are
-		///    not close to the pulled mob.
-		/// </summary>
-		/// <param name="attackData">The data associated with the puller's attack.</param>
-		protected virtual void BringFriends(AttackData attackData)
-		{
-			// Only add on players.
-
-			GameLiving attacker = attackData.Attacker;
+			// Only add on players and pets of players
 			if (attacker is GamePlayer)
+				trigger = (GamePlayer)attacker;
+			else if (attacker is GamePet pet && pet.Owner is GamePlayer owner)
+				trigger = owner;
+			else
+				return;
+
+			m_canBAF = false; // Mobs only BAF once per fight
+
+			ArrayList victims = null; // List of potential victims, only used if trigger is in a group 
+			int numAttackers;
+
+			if (trigger.Group == null)
+				numAttackers = 1;
+			else
 			{
-				BringCloseFriends(attackData);
-				if (attacker.CurrentRegion.IsDungeon)
-					BringReinforcements(attackData);
-			}
-		}
+				victims = new ArrayList(trigger.Group.MemberCount);
 
-		/// <summary>
-		/// Get mobs close to the pulled mob to add on the puller and his
-		/// group as well.
-		/// </summary>
-		/// <param name="attackData">The data associated with the puller's attack.</param>
-		protected virtual void BringCloseFriends(AttackData attackData)
-		{
-			// Have every friend within close range add on the attacker's
-			// group.
-
-			GamePlayer attacker = (GamePlayer)attackData.Attacker;
-
-			foreach (GameNPC npc in Body.GetNPCsInRadius(BAFCloseRange))
-			{
-				if (npc.IsFriend(Body) && npc.IsAvailable && npc.IsAggressive)
+				// Only count the trigger and froup members near them
+				foreach (GamePlayer player in trigger.Group.GetPlayersInTheGroup())
 				{
-					StandardMobBrain brain = (StandardMobBrain)npc.Brain;
-					brain.AddToAggroList(PickTarget(attacker), 1);
-					brain.AttackMostWanted();
+					if (player.InternalID == trigger.InternalID)
+						victims.Add(player);
+					else if (trigger.IsWithinRadius(player, m_BAFMaxRange))
+						victims.Add(player);
 				}
-			}
-		}
 
-		/// <summary>
-		/// Get mobs to add on the puller's group, their numbers depend on the
-		/// group's size.
-		/// </summary>
-		/// <param name="attackData">The data associated with the puller's attack.</param>
-		protected virtual void BringReinforcements(AttackData attackData)
-		{
-			// Determine how many friends to bring, as a rule of thumb, allow for
-			// max 2 players dealing with 1 mob. Only players from the group the
-			// original attacker is in will be taken into consideration.
-			// Example: A group of 3 or 4 players will get 1 add, a group of 7 or 8
-			// players will get 3 adds.
+				numAttackers = victims.Count;
+			} // else
 
-			GamePlayer attacker = (GamePlayer)attackData.Attacker;
-			Group attackerGroup = attacker.Group;
-			int numAttackers = (attackerGroup == null) ? 1 : attackerGroup.MemberCount;
-			int maxAdds = (numAttackers + 1) / 2 - 1;
+			// Chance of bringing a friend is exposed to end users by server properties
+			int percentBAF = DOL.GS.ServerProperties.Properties.BAF_INITIAL_CHANCE
+				+ ((numAttackers - 1) * DOL.GS.ServerProperties.Properties.BAF_ADDITIONAL_CHANCE);
+
+			int maxAdds; // How many mobs to BAF
+
+			// Multiple of 100 are guaranteed adds
+			maxAdds = percentBAF / 100;
+
+			// Calculate chance of an addition add
+			percentBAF = percentBAF % 100;
+			if (Util.Random(99) < percentBAF)
+				maxAdds++;
+
 			if (maxAdds > 0)
 			{
-				// Bring friends, try mobs in the neighbourhood first. If there
-				// aren't any, try getting some from farther away.
+				int numAdds = 0; // Number of mobs currently BAFed
+				ushort range = (ushort)AggroRange; // How far away to look for friends
 
-				int numAdds = 0;
-				ushort range = 250;
-
-				while (numAdds < maxAdds && range <= BAFReinforcementsRange)
+				// Try to bring closer friends before distant ones.
+				while (numAdds < maxAdds && range <= m_BAFMaxRange)
 				{
 					foreach (GameNPC npc in Body.GetNPCsInRadius(range))
 					{
-						if (numAdds >= maxAdds) break;
+						if (numAdds >= maxAdds)
+							break;
 
-						// If it's a friend, have it attack a random target in the
-						// attacker's group.
-
-						if (npc.IsFriend(Body) && npc.IsAggressive && npc.IsAvailable)
+						// If it's a friend, have it attack
+						if (npc.IsFriend(Body) && npc.IsAggressive && npc.IsAvailable && npc.Brain is StandardMobBrain brain)
 						{
-							StandardMobBrain brain = (StandardMobBrain)npc.Brain;
-							brain.AddToAggroList(PickTarget(attacker), 1);
+							brain.m_canBAF = false; // Mobs brought cannot bring friends of their own
+
+							GamePlayer target;
+							if (numAttackers > 1)
+								// Attack a random victim
+								target = (GamePlayer)victims[Util.Random(victims.Count - 1)];
+							else
+								target = trigger;
+
+							brain.AddToAggroList(target, 1);
 							brain.AttackMostWanted();
-							++numAdds;
+							numAdds++;
 						}
-					}
+					}// foreach
 
 					// Increase the range for finding friends to join the fight.
-
 					range *= 2;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Pick a random target from the attacker's group that is within a certain
-		/// range of the original puller.
-		/// </summary>
-		/// <param name="attacker">The original attacker.</param>
-		/// <returns></returns>
-		protected virtual GamePlayer PickTarget(GamePlayer attacker)
-		{
-			Group attackerGroup = attacker.Group;
-
-			// If no group, pick the attacker himself.
-
-			if (attackerGroup == null) return attacker;
-
-			// Make a list of all players in the attacker's group within
-			// a certain range around the puller.
-
-			ArrayList attackersInRange = new ArrayList();
-
-			foreach (GamePlayer player in attackerGroup.GetPlayersInTheGroup())
-				if (attacker.IsWithinRadius(player, BAFTargetPlayerRange))
-					attackersInRange.Add(player);
-
-			// Pick a random player from the list.
-
-			return (GamePlayer)(attackersInRange[Util.Random(1, attackersInRange.Count) - 1]);
-		}
+				} // while
+			} // if (maxAdds > 0)
+		} // BringFriends()
 
 		#endregion
 
