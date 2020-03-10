@@ -1029,7 +1029,7 @@ namespace DOL.AI.Brain
 			AttackMostWanted();
 		}
 
-		protected override void BringFriends(AttackData ad)
+		protected override void BringFriends(GameLiving trigger)
 		{
 			// don't
 		}
