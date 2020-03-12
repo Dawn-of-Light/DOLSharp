@@ -41,7 +41,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-            if (client.Account.PrivLevel == (int)ePrivLevel.Player)
+            if (!DOL.GS.ServerProperties.Properties.ALLOW_TRAIN_ANYWHERE && client.Account.PrivLevel == (int)ePrivLevel.Player)
             {
                 GameTrainer trainer = client.Player.TargetObject as DOL.GS.GameTrainer;
                 if (trainer == null || (trainer.CanTrain(client.Player) == false && trainer.CanTrainChampionLevels(client.Player) == false))
@@ -197,7 +197,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-            if (client.Account.PrivLevel == (int)ePrivLevel.Player)
+            if (!DOL.GS.ServerProperties.Properties.ALLOW_TRAIN_ANYWHERE && client.Account.PrivLevel == (int)ePrivLevel.Player)
             {
                 // A trainer of the appropriate class must be around (or global trainer, with TrainedClass = eCharacterClass.Unknow
                 GameTrainer trainer = client.Player.TargetObject as DOL.GS.GameTrainer;
@@ -347,7 +347,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			public void HandlePacket(GameClient client, GSPacketIn packet)
 			{
-                if (client.Account.PrivLevel == (int)ePrivLevel.Player)
+				if (!DOL.GS.ServerProperties.Properties.ALLOW_TRAIN_ANYWHERE && client.Account.PrivLevel == (int)ePrivLevel.Player)
                 {
                     GameTrainer trainer = client.Player.TargetObject as DOL.GS.GameTrainer;
                     if (trainer == null || (trainer.CanTrain(client.Player) == false && trainer.CanTrainChampionLevels(client.Player) == false))
