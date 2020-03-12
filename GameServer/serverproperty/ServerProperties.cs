@@ -1923,6 +1923,11 @@ namespace DOL.GS.ServerProperties
 		#endregion
 
 		#region CLASSES
+		/// <summary>
+		/// Disable some classes from being created
+		/// </summary>
+		[ServerProperty("classes", "allow_train_anywhere", "Allow players to use the /train command to open a trainer window anywhere in the world?", false)]
+		public static bool ALLOW_TRAIN_ANYWHERE;
 
 		/// <summary>
 		/// Disable some classes from being created
