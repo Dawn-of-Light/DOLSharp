@@ -748,47 +748,6 @@ namespace DOL.GS.Spells
 		}
 	}
 	#endregion
-
-
-	#region PowerRend
-	[SpellHandlerAttribute("PowerRend")]
-	public class PowerRendSpellHandler : SpellHandler
-	{
-		public PowerRendSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-
-
-		public override void FinishSpellCast(GameLiving target)
-		{
-			m_caster.Mana -= PowerCost(target);
-			base.FinishSpellCast(target);
-		}
-
-		public override void OnDirectEffect(GameLiving target, double effectiveness)
-		{
-			if (target == null) return;
-			if (!target.IsAlive || target.ObjectState != GameLiving.eObjectState.Active) return;
-			//spell damage shood be 50-100 (thats the ammmount power tapped on use)
-			int mana = (int)(Spell.Damage);
-			target.ChangeMana(target, GameLiving.eManaChangeType.Spell, (-mana));
-			//~yemla~Power rend shouldn't inrupt if im correct? A.k ML9 Perfector Power Drainging Ward Please more info on it.
-			//target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
-		}
-
-		public virtual void SendCasterMessage(GameLiving target, int mana)
-		{
-			MessageToCaster(string.Format("You steal {0} for {1} power!", target.Name, mana), eChatType.CT_YouHit);
-			if (mana > 0)
-			{
-				MessageToCaster("You steal " + mana + " power points" + (mana == 1 ? "." : "s."), eChatType.CT_Spell);
-			}
-			else
-			{
-				MessageToCaster("You cannot absorb any more power.", eChatType.CT_SpellResisted);
-			}
-		}
-	}
-	#endregion
 }
 
 #region BrittleBrain

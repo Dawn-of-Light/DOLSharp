@@ -1121,7 +1121,7 @@
     <Compile Include="propertycalc\XPPointsCalculator.cs" />
     <Compile Include="quests\Atlantis\ArtifactEncounter.cs" />
     <Compile Include="quests\Atlantis\ArtifactQuest.cs" />
-<Compile Include="quests\Atlantis\Artifacts\AFlask.cs" />
+    <Compile Include="quests\Atlantis\Artifacts\AFlask.cs" />
     <Compile Include="quests\Atlantis\Artifacts\AHealersEmbrace.cs" />
     <Compile Include="quests\Atlantis\Artifacts\AlvarusLeggings.cs" />
     <Compile Include="quests\Atlantis\Artifacts\ArmsOfTheWinds.cs" />
@@ -2203,6 +2203,7 @@
     <Compile Include="spells\Necromancer\PowerTransfer.cs" />
     <Compile Include="spells\Necromancer\PowerDrain.cs" />
     <Compile Include="spells\NightShade\NightshadeNukeSpellhandler.cs" />
+    <Compile Include="spells\Valkyrie\PowerRendSpellHandler.cs" />
     <Compile Include="spells\RvRSicknessSpellHandler.cs" />
     <Compile Include="spells\SpellHelpers\SpellHelper.cs" />
     <Compile Include="spells\SpellHelpers\SpellMessagesHelper.cs" />
