@@ -180,8 +180,8 @@ namespace DOL.AI.Brain
             }
             else if (e == GameLivingEvent.CastFailed)
             {
-				// Tell owner why cast has failed.
-				switch ((args as CastFailedEventArgs).Reason)
+                // Tell owner why cast has failed.
+                switch ((args as CastFailedEventArgs).Reason)
                 {
                     case CastFailedEventArgs.Reasons.TargetTooFarAway:
 
