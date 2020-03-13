@@ -72,20 +72,14 @@ namespace DOL.AI.Brain
 			{
 				GamePlayer playerowner = GetPlayerOwner();
 
-			if (playerowner != null && (GameTimer.GetTickCount() - playerowner.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(Body.CurrentRegionID, (ushort)Body.ObjectID)]) > ThinkInterval)
+				if (playerowner != null && (GameTimer.GetTickCount() - playerowner.Client.GameObjectUpdateArray[new Tuple<ushort, ushort>(Body.CurrentRegionID, (ushort)Body.ObjectID)]) > ThinkInterval)
 				{
 					playerowner.Out.SendObjectUpdate(Body);
 				}
 
 				if (SpellsQueued)
-				{
 					// if spells are queued then handle them first
-
-					if (!Body.IsCasting)
-					{
-						CheckSpellQueue();
-					}
-				}
+					CheckSpellQueue();
 				else if (AggressionState == eAggressionState.Aggressive)
 				{
 					CheckPlayerAggro();
@@ -112,11 +106,11 @@ namespace DOL.AI.Brain
 		#region Events
 
 		/// <summary>
-        /// Process events.
-        /// </summary>
-        /// <param name="e"></param>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
+		/// Process events.
+		/// </summary>
+		/// <param name="e"></param>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
 		public override void Notify(DOL.Events.DOLEvent e, object sender, EventArgs args)
 		{
 			base.Notify(e, sender, args);
@@ -132,13 +126,15 @@ namespace DOL.AI.Brain
 					hadQueuedSpells = true;
 				}
 
-				AddToSpellQueue(petSpell.Spell, petSpell.SpellLine, petSpell.Target);
+				// Instant spells bypass the queue
+				if (petSpell.Spell.IsInstantCast)
+					CastSpell(petSpell.Spell, petSpell.SpellLine, petSpell.Target);
+				else // Necro pets can always try to cast in combat
+					AddToSpellQueue(petSpell.Spell, petSpell.SpellLine, petSpell.Target);
 
-				// immediate casts are ok if we're not doing anything else
-				if (hadQueuedSpells == false && Body.AttackState == false && Body.IsCasting == false)
-				{
+				// Immediately cast if this was the first spell added
+				if (hadQueuedSpells == false && !Body.IsCasting)
 					CheckSpellQueue();
-				}
 			}
             else if (e == GameLivingEvent.Dying)
             {
@@ -152,35 +148,30 @@ namespace DOL.AI.Brain
             }
             else if (e == GameLivingEvent.CastFinished)
             {
-                // Remove the spell that has finished casting from the queue, if
-                // there are more, keep casting.
-
-                RemoveSpellFromQueue();
-				AttackMostWanted();
-
-                if (SpellsQueued)
-                {
-                    DebugMessageToOwner("+ Cast finished, more spells to cast");
-				}
-                else
-                {
-                    DebugMessageToOwner("- Cast finished, no more spells to cast");
-                }
-
-                Owner.Notify(GamePlayerEvent.CastFinished, Owner, args);
-
-				if (SpellsQueued && Body.CurrentRegion.Time - Body.LastAttackedByEnemyTick > 5 * 1000)
+				// Instant cast spells bypass the queue
+				if (args is CastingEventArgs cArgs && !cArgs.SpellHandler.Spell.IsInstantCast)
 				{
-					CheckSpellQueue();
+					// Remove the spell that has finished casting from the queue, if
+					// there are more, keep casting.
+					RemoveSpellFromQueue();
+					AttackMostWanted();
+
+					if (SpellsQueued)
+					{
+						DebugMessageToOwner("+ Cast finished, more spells to cast");
+						CheckSpellQueue();
+					}
+					else
+						DebugMessageToOwner("- Cast finished, no more spells to cast");
 				}
 
-            }
-            else if (e == GameLivingEvent.CastFailed)
-            {
-                // Tell owner why cast has failed.
-
-                switch ((args as CastFailedEventArgs).Reason)
-                {
+				Owner.Notify(GamePlayerEvent.CastFinished, Owner, args);
+			}
+			else if (e == GameLivingEvent.CastFailed)
+			{
+				// Tell owner why cast has failed.
+				switch ((args as CastFailedEventArgs).Reason)
+				{
                     case CastFailedEventArgs.Reasons.TargetTooFarAway:
 
                         MessageToOwner(LanguageMgr.GetTranslation((Owner as GamePlayer).Client.Account.Language, 
@@ -303,47 +294,56 @@ namespace DOL.AI.Brain
 		#endregion
 
 		#region Spell Queue
-
 		/// <summary>
         /// See if there are any spells queued up and if so, get the first one
         /// and cast it.
         /// </summary>
 		private void CheckSpellQueue()
 		{
-			SpellQueueEntry spellQueueEntry = GetSpellFromQueue();
-			if (spellQueueEntry != null)
+			SpellQueueEntry entry = GetSpellFromQueue();
+			if (entry != null)
+				if (!CastSpell(entry.Spell, entry.SpellLine, entry.Target))
+					// If the spell can't be cast, remove it from the queue
+					RemoveSpellFromQueue();
+		}
+
+		/// <summary>
+		/// Try to cast a spell, returning true if the spell started to cast
+		/// </summary>
+		/// <returns>Whether or not the spell started to cast</returns>
+		private bool CastSpell(Spell spell, SpellLine line, GameObject target)
+		{
+			GameLiving spellTarget = target as GameLiving;
+
+			// Cast spell on the target, but don't automatically
+			// make it our new target.
+
+			// Target must be alive, or this is a self spell, or this is a pbaoe spell
+			if ((spellTarget != null && spellTarget.IsAlive) || spell.Target.ToLower() == "self" || spell.Range == 0)
 			{
 				GameObject previousTarget = Body.TargetObject;
-                GameLiving spellTarget = spellQueueEntry.Target;
-                Spell spell = spellQueueEntry.Spell;
+				Body.TargetObject = spellTarget;
 
-				// Cast spell on the target, but don't automatically
-				// make it our new target.
+				if (spellTarget != null && spellTarget != Body)
+					Body.TurnTo(spellTarget);
 
-				// Target must be alive, or this is a self spell, or this is a pbaoe spell
-                if ((spellTarget != null && spellTarget.IsAlive) || spell.Target.ToLower() == "self" || spell.Range == 0)
-				{
-					Body.TargetObject = spellTarget;
+				Body.CastSpell(spell, line);
 
-					if (spellTarget != Body)
-						Body.TurnTo(spellTarget);
+				if (previousTarget != null)
+					Body.TargetObject = previousTarget;
 
-					Body.CastSpell(spell, spellQueueEntry.SpellLine);
-
-					if (previousTarget != null)
-						Body.TargetObject = previousTarget;
-				}
-				else
-				{
-                    DebugMessageToOwner(String.Format("Invalid target for spell '{0}', removing it...", m_spellQueue.Peek().Spell.Name));
-					RemoveSpellFromQueue();
-				}
+				return true;
+			}
+			else
+			{
+				DebugMessageToOwner("Invalid target for spell '" + spell.Name + "'");
+				return false;
 			}
 		}
 
-        /// <summary>
-        /// This class holds a single entry for the spell queue.
-        /// </summary>
+		/// <summary>
+		/// This class holds a single entry for the spell queue.
+		/// </summary>
 		private class SpellQueueEntry
 		{
 			private Spell m_spell;
@@ -380,6 +380,15 @@ namespace DOL.AI.Brain
 		private Queue<SpellQueueEntry> m_spellQueue = new Queue<SpellQueueEntry>(2);
 
 		/// <summary>
+		/// Clears the spell queue
+		/// </summary>
+		public void ClearSpellQueue()
+		{
+			lock (m_spellQueue)
+				m_spellQueue.Clear();
+		}
+
+		/// <summary>
 		/// Fetches a spell from the queue without removing it; the spell is
         /// removed *after* the spell has finished casting.
 		/// </summary>
@@ -400,7 +409,7 @@ namespace DOL.AI.Brain
 		/// <summary>
 		/// Whether or not any spells are queued.
 		/// </summary>
-		private bool SpellsQueued
+		public bool SpellsQueued
 		{
 			get
 			{
@@ -532,7 +541,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="chatType"></param>
-		private void MessageToOwner(String message, eChatType chatType)
+		public void MessageToOwner(String message, eChatType chatType)
 		{
 			GamePlayer owner = Owner as GamePlayer;
 			if ((owner != null) && (message.Length > 0))
