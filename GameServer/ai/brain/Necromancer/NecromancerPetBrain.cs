@@ -81,10 +81,8 @@ namespace DOL.AI.Brain
 				{
 					// if spells are queued then handle them first
 
-					if (!Body.IsCasting)
-					{
-						CheckSpellQueue();
-					}
+					//if (!Body.IsCasting) // IsCasting doesn't work for necro pets
+					CheckSpellQueue();
 				}
 				else if (AggressionState == eAggressionState.Aggressive)
 				{
@@ -112,11 +110,11 @@ namespace DOL.AI.Brain
 		#region Events
 
 		/// <summary>
-        /// Process events.
-        /// </summary>
-        /// <param name="e"></param>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
+		/// Process events.
+		/// </summary>
+		/// <param name="e"></param>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
 		public override void Notify(DOL.Events.DOLEvent e, object sender, EventArgs args)
 		{
 			base.Notify(e, sender, args);
@@ -132,13 +130,18 @@ namespace DOL.AI.Brain
 					hadQueuedSpells = true;
 				}
 
-				AddToSpellQueue(petSpell.Spell, petSpell.SpellLine, petSpell.Target);
+				// Instant spells bypass the queue
+				if (petSpell.Spell.IsInstantCast)
+					CastSpell(petSpell.Spell, petSpell.SpellLine, petSpell.Target);
+				// Make sure the pet can actually cast the spell before queuing it
+				else if (!Body.IsBeingInterrupted || Body.HasEffect(typeof(FacilitatePainworkingEffect)))
+					AddToSpellQueue(petSpell.Spell, petSpell.SpellLine, petSpell.Target);
+				else
+					MessageToOwner("You pet is under attack and cannot cast spells!", eChatType.CT_SpellResisted);
 
-				// immediate casts are ok if we're not doing anything else
-				if (hadQueuedSpells == false && Body.AttackState == false && Body.IsCasting == false)
-				{
+				// immediate casts are ok if we're not doing anything else.
+				if (hadQueuedSpells == false && Body.AttackState == false && SpellsQueued) // IsCasting doesn't work for necro pets
 					CheckSpellQueue();
-				}
 			}
             else if (e == GameLivingEvent.Dying)
             {
@@ -177,9 +180,8 @@ namespace DOL.AI.Brain
             }
             else if (e == GameLivingEvent.CastFailed)
             {
-                // Tell owner why cast has failed.
-
-                switch ((args as CastFailedEventArgs).Reason)
+				// Tell owner why cast has failed.
+				switch ((args as CastFailedEventArgs).Reason)
                 {
                     case CastFailedEventArgs.Reasons.TargetTooFarAway:
 
@@ -303,47 +305,59 @@ namespace DOL.AI.Brain
 		#endregion
 
 		#region Spell Queue
-
 		/// <summary>
         /// See if there are any spells queued up and if so, get the first one
         /// and cast it.
         /// </summary>
 		private void CheckSpellQueue()
 		{
-			SpellQueueEntry spellQueueEntry = GetSpellFromQueue();
-			if (spellQueueEntry != null)
+			SpellQueueEntry entry = GetSpellFromQueue();
+			if (entry != null)
+				if (!CastSpell(entry.Spell, entry.SpellLine, entry.Target))
+					// If the spell can't be cast, remove it from the queue
+					RemoveSpellFromQueue();
+		}
+
+		/// <summary>
+		/// Try to cast a spell, returning true if the spell started to cast
+		/// </summary>
+		/// <param name="spell"></param>
+		/// <param name="line"></param>
+		/// <param name="target"></param>
+		/// <returns>Whether or not the spell started to cast</returns>
+		private bool CastSpell(Spell spell, SpellLine line, GameObject target)
+		{
+			GameLiving spellTarget = target as GameLiving;
+
+			// Cast spell on the target, but don't automatically
+			// make it our new target.
+
+			// Target must be alive, or this is a self spell, or this is a pbaoe spell
+			if ((spellTarget != null && spellTarget.IsAlive) || spell.Target.ToLower() == "self" || spell.Range == 0)
 			{
 				GameObject previousTarget = Body.TargetObject;
-                GameLiving spellTarget = spellQueueEntry.Target;
-                Spell spell = spellQueueEntry.Spell;
+				Body.TargetObject = spellTarget;
 
-				// Cast spell on the target, but don't automatically
-				// make it our new target.
+				if (spellTarget != null && spellTarget != Body)
+					Body.TurnTo(spellTarget);
 
-				// Target must be alive, or this is a self spell, or this is a pbaoe spell
-                if ((spellTarget != null && spellTarget.IsAlive) || spell.Target.ToLower() == "self" || spell.Range == 0)
-				{
-					Body.TargetObject = spellTarget;
+				Body.CastSpell(spell, line);
 
-					if (spellTarget != Body)
-						Body.TurnTo(spellTarget);
+				if (previousTarget != null)
+					Body.TargetObject = previousTarget;
 
-					Body.CastSpell(spell, spellQueueEntry.SpellLine);
-
-					if (previousTarget != null)
-						Body.TargetObject = previousTarget;
-				}
-				else
-				{
-                    DebugMessageToOwner(String.Format("Invalid target for spell '{0}', removing it...", m_spellQueue.Peek().Spell.Name));
-					RemoveSpellFromQueue();
-				}
+				return true;
+			}
+			else
+			{
+				DebugMessageToOwner("Invalid target for spell '" + spell.Name + "'");
+				return false;
 			}
 		}
 
-        /// <summary>
-        /// This class holds a single entry for the spell queue.
-        /// </summary>
+		/// <summary>
+		/// This class holds a single entry for the spell queue.
+		/// </summary>
 		private class SpellQueueEntry
 		{
 			private Spell m_spell;
@@ -380,6 +394,15 @@ namespace DOL.AI.Brain
 		private Queue<SpellQueueEntry> m_spellQueue = new Queue<SpellQueueEntry>(2);
 
 		/// <summary>
+		/// Clears the spell queue
+		/// </summary>
+		public void ClearSpellQueue()
+		{
+			lock (m_spellQueue)
+				m_spellQueue.Clear();
+		}
+
+		/// <summary>
 		/// Fetches a spell from the queue without removing it; the spell is
         /// removed *after* the spell has finished casting.
 		/// </summary>
@@ -400,7 +423,7 @@ namespace DOL.AI.Brain
 		/// <summary>
 		/// Whether or not any spells are queued.
 		/// </summary>
-		private bool SpellsQueued
+		public bool SpellsQueued
 		{
 			get
 			{
@@ -532,7 +555,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="chatType"></param>
-		private void MessageToOwner(String message, eChatType chatType)
+		public void MessageToOwner(String message, eChatType chatType)
 		{
 			GamePlayer owner = Owner as GamePlayer;
 			if ((owner != null) && (message.Length > 0))
