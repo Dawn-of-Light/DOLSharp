@@ -24,6 +24,7 @@ using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
+using DOL.GS.Styles;
 
 namespace DOL.GS
 {
@@ -112,7 +113,6 @@ namespace DOL.GS
 					break;
 			}
 		}
-
 		#region Stats
 
 		/// <summary>
@@ -366,6 +366,38 @@ namespace DOL.GS
 		#endregion
 
 		#region Spells
+		/// <summary>
+		/// Called when necro pet is hit to see if spellcasting is interrupted
+		/// </summary>
+		/// <param name="ad">information about the attack</param>
+		public override void OnAttackedByEnemy(AttackData ad)
+		{
+			if (Brain is NecromancerPetBrain necroBrain && necroBrain.SpellsQueued && !HasEffect(typeof(FacilitatePainworkingEffect)) 
+				&& ad != null && ad.Attacker != null && ChanceSpellInterrupt(ad.Attacker))
+			{
+				StopCurrentSpellcast();
+				necroBrain.ClearSpellQueue();
+				necroBrain.MessageToOwner("Your pet was attacked by " + ad.Attacker.Name + " and their spell was interrupted!", eChatType.CT_SpellResisted);
+			}
+
+			base.OnAttackedByEnemy(ad);
+		}
+
+		/// <summary>
+		/// Called when the necro pet attacks, which interrupts current spells being cast
+		/// </summary>
+		protected override AttackData MakeAttack(GameObject target, InventoryItem weapon, Style style, double effectiveness, int interruptDuration, bool dualWield, bool ignoreLOS)
+		{
+			if (Brain is NecromancerPetBrain necroBrain && necroBrain.SpellsQueued && !HasEffect(typeof(FacilitatePainworkingEffect)))
+			{
+				StopCurrentSpellcast();
+				necroBrain.ClearSpellQueue();
+
+				necroBrain.MessageToOwner("Your pet attacked and interrupted their spell!", eChatType.CT_SpellResisted);
+			}
+
+			return base.MakeAttack(target, weapon, style, effectiveness, interruptDuration, dualWield, ignoreLOS);
+		}
 
 		/// <summary>
 		/// Pet-only insta spells.
