@@ -112,7 +112,6 @@ namespace DOL.GS
 					break;
 			}
 		}
-
 		#region Stats
 
 		/// <summary>
@@ -366,6 +365,24 @@ namespace DOL.GS
 		#endregion
 
 		#region Spells
+		/// <summary>
+		/// This method is called at the end of the attack sequence to
+		/// notify objects if they have been attacked/hit by an attack
+		/// </summary>
+		/// <param name="ad">information about the attack</param>
+		public override void OnAttackedByEnemy(AttackData ad)
+		{
+			// IsCasting doesn't work for necro pets
+			if (Brain is NecromancerPetBrain necroBrain && necroBrain.SpellsQueued && !HasEffect(typeof(FacilitatePainworkingEffect)) 
+				&& ad != null && ad.Attacker != null && ChanceSpellInterrupt(ad.Attacker))
+			{
+				StopCurrentSpellcast();
+				necroBrain.ClearSpellQueue();
+				necroBrain.MessageToOwner("Your pet was attacked by " + ad.Attacker.Name + " and their spell was interrupted!", eChatType.CT_SpellResisted);
+			}
+
+			base.OnAttackedByEnemy(ad);
+		}
 
 		/// <summary>
 		/// Pet-only insta spells.
