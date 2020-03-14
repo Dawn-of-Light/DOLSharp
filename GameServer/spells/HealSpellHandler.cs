@@ -201,12 +201,7 @@ namespace DOL.GS.Spells
                 amount += (int) ((amount*flaskHeal.Spell.Value)*0.01);
             }
 
-
-            // Scale spells that are cast by pets
-            if (Caster is GamePet && !(Caster is NecromancerPet) && ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL > 0)
-                amount = ScalePetHeal(amount);
-
-		amount = Math.Round(amount);
+            amount = Math.Round(amount);
             int heal = target.ChangeHealth(Caster, GameLiving.eHealthChangeType.Spell, (int)amount);
 
             #region PVP DAMAGE
@@ -348,10 +343,6 @@ namespace DOL.GS.Spells
 			// no healing of keep components
 			if (target is Keeps.GameKeepComponent || target is Keeps.GameKeepDoor)
 				return false;
-
-            // Scale spells that are cast by pets
-            if (Caster is GamePet && !(Caster is NecromancerPet) && ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL > 0)
-                    amount = ScalePetHeal(amount);
 
 			int heal = target.ChangeHealth(Caster, GameLiving.eHealthChangeType.Spell, (int)Math.Round(amount));
 
@@ -504,11 +495,6 @@ namespace DOL.GS.Spells
             min = lowerLimit;
             max = upperLimit;
             return;
-        }
-
-        private double ScalePetHeal(double amount)
-        {
-            return amount * (double)(Caster.Level) / (double)(ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL);
         }
     }
 }
