@@ -30,6 +30,8 @@ namespace DOL.GS
 {
 	public class GamePet : GameNPC
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		public GamePet(INpcTemplate template) : base(template)
 		{
 			if (Inventory != null)
@@ -153,6 +155,90 @@ namespace DOL.GS
 			base.OnAfterSpellCastSequence(handler);
 			Brain.Notify(GameNPCEvent.CastFinished, this, new CastingEventArgs(handler));
 		}
+
+		/// <summary>
+		/// Scale the passed spell according to PET_SCALE_SPELL_MAX_LEVEL
+		/// </summary>
+		/// <param name="spell">The spell to scale</param>
+		/// <returns>The scaled spell</returns>
+		public Spell ScalePetSpell(Spell spell)
+		{
+			if (ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL <= 0)
+				return spell;
+
+			Spell scaledSpell = spell;
+			double CasterLevel = Level;
+
+			// Cap the level we scale BD minions' spell effects to the player's modified spec for the spec line the pet is from
+			if (this is BDSubPet subpet && subpet.Owner is CommanderPet commander && commander.Owner is GamePlayer player)
+				CasterLevel = Math.Min(subpet.Level, player.GetModifiedSpecLevel(subpet.PetSpecLine));
+
+			switch (spell.SpellType.ToString().ToLower())
+			{
+				// Scale Damage
+				case "damageovertime":
+				case "damageshield":
+				case "damageadd":
+				case "directdamage":
+				case "directdamagewithdebuff":
+				case "lifedrain":
+				case "damagespeeddecrease":
+				case "stylebleeding": // Style Effect
+					scaledSpell.Damage *= CasterLevel / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL;
+					break;
+				// Scale Value
+				case "enduranceregenbuff":
+				case "enduranceheal":
+				case "endurancedrain":
+				case "powerregenbuff":
+				case "powerheal":
+				case "powerdrain":
+				case "powerhealthenduranceregenbuff":
+				case "combatspeedbuff":
+				case "hastebuff":
+				case "celeritybuff":
+				case "combatspeeddebuff":
+				case "hastedebuff":
+				case "heal":
+				case "combatheal":
+				case "healthregenbuff":
+				case "healovertime":
+				case "constitutionbuff":
+				case "dexteritybuff":
+				case "strengthbuff":
+				case "constitutiondebuff":
+				case "dexteritydebuff":
+				case "strengthdebuff":
+				case "armorfactordebuff":
+				case "armorfactorbuff":
+				case "armorabsorptionbuff":
+				case "armorabsorptiondebuff":
+				case "dexterityquicknessbuff":
+				case "strengthconstitutionbuff":
+				case "dexterityquicknessdebuff":
+				case "strengthconstitutiondebuff":
+				case "taunt":
+				case "unbreakablespeeddecrease":
+				case "speeddecrease":
+				case "stylecombatspeeddebuff": // Style Effect
+				case "stylespeeddecrease": // Style Effect
+				//case "styletaunt":  Taunt styles already scale with damage, leave their values alone.
+					scaledSpell.Value *= CasterLevel / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL;
+					break;
+				// Scale Duration
+				case "disease":
+				case "stun":
+				case "unrresistablenonimunitystun":
+				case "mesmerize":
+				case "stylestun": // Style Effect
+					scaledSpell.Duration = (int)Math.Ceiling(spell.Duration * CasterLevel / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL);
+					break;
+				default: break; // Don't mess with types we don't know
+			} // switch (m_spell.SpellType.ToString().ToLower())
+
+			return scaledSpell;
+		}
+
 		#endregion
 
 		#region Stats
