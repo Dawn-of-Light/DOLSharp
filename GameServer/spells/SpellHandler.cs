@@ -41,7 +41,7 @@ namespace DOL.GS.Spells
 	/// </summary>
 	public class SpellHandler : ISpellHandler
 	{
-		private static readonly ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		protected static readonly ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// Maximum number of sub-spells to get delve info for.
@@ -394,76 +394,6 @@ namespace DOL.GS.Spells
 
 		public virtual bool CastSpell(GameLiving targetObject)
 		{
-            // Scale spells that are cast by pets
-            if (Caster is GamePet && !(Caster is NecromancerPet) && ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL > 0)
-            {
-		double CasterLevel;
-
-		// Cap the level we scale BD minions' spell effects to the player's modified spec for the spec line the pet is from
-		if (Caster is BDSubPet subpet && subpet.Owner is CommanderPet commander && commander.Owner is GamePlayer player)
-			CasterLevel = Math.Min(subpet.Level, player.GetModifiedSpecLevel(subpet.PetSpecLine));
-		else
-			CasterLevel = Caster.Level;
-					
-                switch (m_spell.SpellType.ToString().ToLower())
-                {
-                    // Scale Damage
-                    case "damageovertime":
-                    case "damageshield":
-                    case "damageadd":
-                    case "directdamage":
-                    case "directdamagewithdebuff":
-                    case "lifedrain":
-                    case "damagespeeddecrease":
-                    case "stylebleeding": // Style Effect
-                        Spell.Damage = Spell.Damage * (double)(Caster.Level) / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL;
-                        break;
-                    // Scale Value
-                    case "enduranceregenbuff":
-                    case "powerregenbuff":
-                    case "combatspeedbuff":
-                    case "hastebuff":
-                    case "celeritybuff":
-                    case "combatspeeddebuff":
-                    case "hastedebuff":
-                    case "heal":
-                    case "combatheal":
-                    case "healthregenbuff":
-                    case "healovertime":
-                    case "constitutionbuff":
-                    case "dexteritybuff":
-                    case "strengthbuff":
-                    case "constitutiondebuff":
-                    case "dexteritydebuff":
-                    case "strengthdebuff":
-                    case "armorfactordebuff":
-                    case "armorfactorbuff":
-                    case "armorabsorptionbuff":
-                    case "armorabsorptiondebuff":
-                    case "dexterityquicknessbuff":
-                    case "strengthconstitutionbuff":
-                    case "dexterityquicknessdebuff":
-                    case "strengthconstitutiondebuff":
-                    case "taunt":
-                    case "unbreakablespeeddecrease":
-                    case "speeddecrease":
-                    case "stylecombatspeeddebuff": // Style Effect
-                    case "stylespeeddecrease": // Style Effect
-                    //case "styletaunt":  Taunt styles already scale with damage, leave their values alone.
-						Spell.Value = Spell.Value * CasterLevel / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL;
-                        break;
-                    // Scale Duration
-                    case "disease":
-                    case "stun":
-                    case "unrresistablenonimunitystun":
-                    case "mesmerize":
-                    case "stylestun": // Style Effect
-						Spell.Duration = (int)Math.Round(Spell.Duration * CasterLevel / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL);
-                        break;
-                    default: break; // Don't mess with types we don't know
-                } // switch (m_spell.SpellType.ToString().ToLower())
-            } // if (Caster is GamePet)
-
 			bool success = true;
 			
 			if (Properties.AUTOSELECT_CASTER)
@@ -2464,6 +2394,10 @@ namespace DOL.GS.Spells
 				//we need subspell ID to be 0, we don't want spells linking off the subspell
 				if (target != null && spell != null && spell.SubSpellID == 0)
 				{
+					// We have to scale pet subspells when cast
+					if (Caster is GamePet pet && !(Caster is NecromancerPet))
+						spell = pet.ScalePetSpell(spell);
+
 					ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
                     spellhandler.StartSpell(target);
 				}
@@ -3662,13 +3596,13 @@ namespace DOL.GS.Spells
 
 			if (player != null)
 			{
-                		if (Caster is GamePet)
+				if (Caster is GamePet pet)
 				{
 					// There is no reason to cap pet spell damage if it's being scaled anyway.
-					if (ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL == 0)
+					if (ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL <= 0)
 						spellDamage = CapPetSpellDamage(spellDamage, player);
 
-					spellDamage *= (((Caster as GamePet).Intelligence + 200) / 275.0);
+					spellDamage *= ((pet.Intelligence + 200) / 275.0);
 				}
 
 				if (SpellLine.KeyName == GlobalSpellsLines.Combat_Styles_Effect)
