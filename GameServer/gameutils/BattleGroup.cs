@@ -174,13 +174,12 @@ namespace DOL.GS
         
         public GamePlayer[] GetPlayersInTheBattleGroup()
         {
-            ArrayList players = new ArrayList(ServerProperties.Properties.BATTLEGROUP_MAX_MEMBER);
+            ArrayList players;
             lock (m_battlegroupMembers.SyncRoot) // Mannen 10:56 PM 10/30/2006 - Fixing every lock(this)
             {
-                for (int i = 0; i < m_battlegroupMembers.Count; i++)
-                {
-                    players.Add((GamePlayer)m_battlegroupMembers[i]);
-                }
+                players = new ArrayList(m_battlegroupMembers.Keys.Count);
+                foreach (GamePlayer player in m_battlegroupMembers.Keys)
+                    players.Add(player);
             }
             return (GamePlayer[])players.ToArray(typeof(GamePlayer));
         }

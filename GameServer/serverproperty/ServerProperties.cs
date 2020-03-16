@@ -1682,6 +1682,12 @@ namespace DOL.GS.ServerProperties
 		public static int BAF_INITIAL_CHANCE;
 
 		/// <summary>
+		/// Do BAF mobs attack random players near the puller?
+		/// </summary>
+		[ServerProperty("pve", "baf_mobs_attack_random_players", "Do mobs brought by friends attack random nearby players in the puller's group or battlegroup?  If false, additional mobs attack the puller as on live.", false)]
+		public static bool BAF_MOBS_ATTACK_RANDOM_PLAYERS;
+
+		/// <summary>
 		/// Added percent chance of a mob BAFing for each attacker past the first
 		/// </summary>
 		[ServerProperty("pve", "baf_additional_chance", "Percent chance for a mob to bring a friend for each additional attacker.  Each multiples of 100 guarantee an add, so a cumulative chance of 250% guarantees two adds with a 50% chance of a third.", 50)]
