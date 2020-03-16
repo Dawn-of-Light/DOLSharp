@@ -41,14 +41,16 @@ namespace DOL.GS.Spells
 			if (targets.Count <= 0) return false;
 
 			bool healed = false;
-			int minHeal;
-			int maxHeal;
-			CalculateHealVariance(out minHeal, out maxHeal);
+
+			int spellValue = (int)Math.Round(Spell.Value);
 
 			foreach (GameLiving healTarget in targets)
 			{
-				int heal = Util.Random(minHeal, maxHeal);
-				healed |= HealTarget(healTarget, heal);
+				if (Spell.Value < 0)
+					// Restore a percentage of the target's endurance
+					spellValue = (int)Math.Round(Spell.Value * -0.01) * target.MaxEndurance;
+
+				healed |= HealTarget(healTarget, spellValue);
 			}
 
 			// group heals seem to use full power even if no heals
@@ -130,25 +132,6 @@ namespace DOL.GS.Spells
 					MessageToCaster(target.GetName(0, true) + " endurance is full.", eChatType.CT_Spell);
 			}
 			return true;
-		}
-
-		/// <summary>
-		/// Calculates heal variance based on spec
-		/// </summary>
-		/// <param name="min">store min variance here</param>
-		/// <param name="max">store max variance here</param>
-		public virtual void CalculateHealVariance(out int min, out int max)
-		{
-			double spellValue = m_spell.Value;
-			GamePlayer casterPlayer = m_caster as GamePlayer;
-
-			// percents if less than zero
-			if (spellValue < 0)
-			{
-				spellValue = (spellValue * -0.01) * m_caster.MaxEndurance;
-			}
-			min = max = (int)(spellValue);
-			return;
 		}
 
 		public override bool CheckBeginCast(GameLiving selectedTarget)
