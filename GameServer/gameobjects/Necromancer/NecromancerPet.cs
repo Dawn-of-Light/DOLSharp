@@ -263,71 +263,36 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Base strength.
+		/// Set stats according to necro pet server properties
 		/// </summary>
-		public override short Strength
+		public override void AutoSetStats()
 		{
-			get
-			{
-				switch (Name.ToLower())
-				{
-					case "greater necroservant":
-						return 60;
-					default:
-						return (short)(60 + Level);
-				}
-			}
-		}
+			// Use normal pet stats for Cha, Emp, Int, and Pie.
+			base.AutoSetStats();
 
-		/// <summary>
-		/// Base constitution.
-		/// </summary>
-		public override short Constitution
-		{
-			get
+			if (Name.ToUpper() == "GREATER NECROSERVANT")
 			{
-				switch (Name.ToLower())
-				{
-					case "greater necroservant":
-						return (short)(60 + Level / 3 + m_summonConBonus);
-					default:
-						return (short)(60 + Level / 2 + m_summonConBonus);
-				}
+				Strength = (short)(ServerProperties.Properties.NECRO_GREATER_PET_STR_BASE
+					+ (short)(Math.Round(ServerProperties.Properties.NECRO_GREATER_PET_STR_MULTIPLIER * Level)));
+				Constitution = (short)(ServerProperties.Properties.NECRO_GREATER_PET_CON_BASE
+					+ (short)(Math.Round(ServerProperties.Properties.NECRO_GREATER_PET_CON_MULTIPLIER * Level))
+					+ m_summonConBonus);
+				Dexterity = (short)(ServerProperties.Properties.NECRO_GREATER_PET_DEX_BASE
+					+ (short)(Math.Round(ServerProperties.Properties.NECRO_GREATER_PET_DEX_MULTIPLIER * Level)));
+				Quickness = (short)(ServerProperties.Properties.NECRO_GREATER_PET_QUI_BASE
+					+ (short)(Math.Round(ServerProperties.Properties.NECRO_GREATER_PET_QUI_MULTIPLIER * Level)));
 			}
-		}
-
-		/// <summary>
-		/// Base dexterity. Make greater necroservant slightly more dextrous than
-		/// all the other pets.
-		/// </summary>
-		public override short Dexterity
-		{
-			get
+			else
 			{
-				switch (Name.ToLower())
-				{
-					case "greater necroservant":
-						return (short)(60 + Level / 2);
-					default:
-						return 60;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Base quickness.
-		/// </summary>
-		public override short Quickness
-		{
-			get
-			{
-				switch (Name.ToLower())
-				{
-					case "greater necroservant":
-						return (short)(60 + Level);
-					default:
-						return (short)(60 + Level / 3);
-				}
+				Strength = (short)(ServerProperties.Properties.NECRO_PET_STR_BASE
+					+ (short)(Math.Round(ServerProperties.Properties.NECRO_PET_STR_MULTIPLIER * Level)));
+				Constitution = (short)(ServerProperties.Properties.NECRO_PET_CON_BASE
+					+ (short)(Math.Round(ServerProperties.Properties.NECRO_PET_CON_MULTIPLIER * Level))
+					+ m_summonConBonus);
+				Dexterity = (short)(ServerProperties.Properties.NECRO_PET_DEX_BASE
+					+ (short)(Math.Round(ServerProperties.Properties.NECRO_PET_DEX_MULTIPLIER * Level)));
+				Quickness = (short)(ServerProperties.Properties.NECRO_PET_QUI_BASE
+					+ (short)(Math.Round(ServerProperties.Properties.NECRO_PET_QUI_MULTIPLIER * Level)));
 			}
 		}
 

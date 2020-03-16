@@ -1110,7 +1110,106 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("npc", "pet_autoset_int_multiplier", "Multiplier to use when auto-setting Pet INT stat. ", 1.0)]
 		public static double PET_AUTOSET_INT_MULTIPLIER;		
-		
+
+		// Necro pet stat properties
+
+		/// <summary>
+		/// Base value to use when setting strength for most necromancer pets.
+		/// </summary>
+		[ServerProperty("npc", "necro_pet_str_base", "Base value to use when setting strength for most necromancer pets.", 60)]
+		public static int NECRO_PET_STR_BASE;
+
+		/// <summary>
+		/// Multiplier to use when setting strength for most necromancer pets.
+		/// </summary>
+		[ServerProperty("npc", "necro_pet_str_multiplier", "Multiplier to use when setting strength for most necromancer pets.", 1.0)]
+		public static double NECRO_PET_STR_MULTIPLIER;
+
+		/// <summary>
+		/// Base value to use when setting constitution for most necromancer pets.
+		/// </summary>
+		[ServerProperty("npc", "necro_pet_con_base", "Base value to use when setting constitution for most necromancer pets.", 60)]
+		public static int NECRO_PET_CON_BASE;
+
+		/// <summary>
+		/// Multiplier to use when setting constitution for most necromancer pets.
+		/// </summary>
+		[ServerProperty("npc", "necro_pet_con_multiplier", "Multiplier to use when setting constitution for most necromancer pets.", 0.5)]
+		public static double NECRO_PET_CON_MULTIPLIER;
+
+		/// <summary>
+		/// Base value to use when setting dexterity for most necromancer pets.
+		/// </summary>
+		[ServerProperty("npc", "necro_pet_dex_base", "Base value to use when setting dexterity for most necromancer pets.", 60)]
+		public static int NECRO_PET_DEX_BASE;
+
+		/// <summary>
+		/// Multiplier to use when setting dexterity for most necromancer pets.
+		/// </summary>
+		[ServerProperty("npc", "necro_pet_dex_multiplier", "Multiplier to use when setting dexterity for most necromancer pets.", 0.0)]
+		public static double NECRO_PET_DEX_MULTIPLIER;
+
+		/// <summary>
+		/// Base value to use when setting quickness for most necromancer pets.
+		/// </summary>
+		[ServerProperty("npc", "necro_pet_qui_base", "Base value to use when setting quickness for most necromancer pets.", 60)]
+		public static int NECRO_PET_QUI_BASE;
+
+		/// <summary>
+		/// Multiplier to use when setting quickness for most necromancer pets.
+		/// </summary>
+		[ServerProperty("npc", "necro_pet_qui_multiplier", "Multiplier to use when setting quickness for most necromancer pets.", 0.3333)]
+		public static double NECRO_PET_QUI_MULTIPLIER;
+
+		/// <summary>
+		/// Base value to use when setting strength for greater necroservant pets.
+		/// </summary>
+		[ServerProperty("npc", "necro_greater_pet_str_base", "Base value to use when setting strength for greater necroservant pets.", 60)]
+		public static int NECRO_GREATER_PET_STR_BASE;
+
+		/// <summary>
+		/// Multiplier to use when setting strength for greater necroservant pets.
+		/// </summary>
+		[ServerProperty("npc", "necro_greater_pet_str_multiplier", "Multiplier to use when setting strength for greater necroservant pets.", 0.0)]
+		public static double NECRO_GREATER_PET_STR_MULTIPLIER;
+
+		/// <summary>
+		/// Base value to use when setting constitution forgreater necroservant pets.
+		/// </summary>
+		[ServerProperty("npc", "necro_greater_pet_con_base", "Base value to use when setting constitution for greater necroservant pets.", 60)]
+		public static int NECRO_GREATER_PET_CON_BASE;
+
+		/// <summary>
+		/// Multiplier to use when setting constitution for greater necroservant pets.
+		/// </summary>
+		[ServerProperty("npc", "necro_greater_pet_con_multiplier", "Multiplier to use when setting constitution for greater necroservant pets.", 0.3333)]
+		public static double NECRO_GREATER_PET_CON_MULTIPLIER;
+
+		/// <summary>
+		/// Base value to use when setting dexterity for greater necroservant pets.
+		/// </summary>
+		[ServerProperty("npc", "necro_greater_pet_dex_base", "Base value to use when setting dexterity for greater necroservant pets.", 60)]
+		public static int NECRO_GREATER_PET_DEX_BASE;
+
+		/// <summary>
+		/// Multiplier to use when setting dexterity for greater necroservant pets.
+		/// </summary>
+		[ServerProperty("npc", "necro_greater_pet_dex_multiplier", "Multiplier to use when setting dexterity for greater necroservant pets.", 0.5)]
+		public static double NECRO_GREATER_PET_DEX_MULTIPLIER;
+
+		/// <summary>
+		/// Base value to use when setting quickness for greater necroservant pets.
+		/// </summary>
+		[ServerProperty("npc", "necro_greater_pet_qui_base", "Base value to use when setting quickness for greater necroservant pets.", 60)]
+		public static int NECRO_GREATER_PET_QUI_BASE;
+
+		/// <summary>
+		/// Multiplier to use when setting quickness for greater necroservant pets.
+		/// </summary>
+		[ServerProperty("npc", "necro_greater_pet_qui_multiplier", "Multiplier to use when setting quickness for greater necroservant pets.", 1.0)]
+		public static double NECRO_GREATER_PET_QUI_MULTIPLIER;
+
+
 		/// <summary>
 		/// How often should pets think?  Default 1500 or 1.5 seconds
 		/// </summary>
