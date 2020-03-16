@@ -313,19 +313,23 @@ namespace DOL.GS
 		/// </param>
 		public virtual void StripOwnerBuffs(GameLiving owner)
 		{
-			if (owner != null & owner.EffectList != null)
-			{
-			   	foreach (IGameEffect effect in owner.EffectList)
+			if (owner == null)
+				return;
+
+			if (owner.Group is Group group)
+				// Strip all buffs from this pet off the group, and off other pets
+				foreach (GamePlayer player in group.GetPlayersInTheGroup())
 				{
-					if (effect != null && effect is GameSpellEffect)
-					{
-						GameSpellEffect spelleffect = effect as GameSpellEffect;
-						if (spelleffect.SpellHandler != null && spelleffect.SpellHandler.Caster != null
-							&& spelleffect.SpellHandler.Caster == this)
-								spelleffect.Cancel(false);
-					}
+					if (player.EffectList != null)
+						foreach (IGameEffect effect in player.EffectList)
+							if (effect is GameSpellEffect spellEffect && spellEffect.SpellHandler != null && spellEffect.SpellHandler.Caster != null && spellEffect.SpellHandler.Caster == this)
+								effect.Cancel(false);
 				}
-			}
+			else if (owner.EffectList != null)
+				// Owner not in a group, only strip buffs from the owner
+				foreach (IGameEffect effect in owner.EffectList)
+					if (effect is GameSpellEffect spellEffect && spellEffect.SpellHandler != null && spellEffect.SpellHandler.Caster != null && spellEffect.SpellHandler.Caster == this)
+						effect.Cancel(false);
 		}
 		
 		/// <summary>
