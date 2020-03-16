@@ -41,16 +41,16 @@ namespace DOL.GS.GameEvents
 		/// <summary>
         /// Gets the DAoCPortal UserName to authenticate with - Add your server username
 		/// </summary>
-		protected static string UserName = "";
+		protected static string UserName = ServerProperties.Properties.SERVER_LIST_UPDATE_USER;
 
 		/// <summary>
 		/// Gets the DAoCPortal Password to authenticate with - Add your server password
 		/// </summary>
-		protected static string Password = "";
+		protected static string Password = ServerProperties.Properties.SERVER_LIST_UPDATE_PASS;
 
-        /// <summary>
-        /// Gets player count - Don't edit this one.
-        protected static string ClientCount = WorldMgr.GetAllPlayingClientsCount().ToString();
+		/// <summary>
+		/// Gets player count - Don't edit this one.
+		protected static string ClientCount = WorldMgr.GetAllPlayingClientsCount().ToString();
         /// </summary>
        
 
