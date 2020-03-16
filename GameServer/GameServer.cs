@@ -800,9 +800,16 @@ namespace DOL.GS
 				GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
 
 				//---------------------------------------------------------------
-				//Open the server, players can now connect!
+				//Open the server, players can now connect if webhook, inform Discord!
 				m_status = eGameServerStatus.GSS_Open;
 
+				if (Properties.DISCORD_ACTIVE && (!string.IsNullOrEmpty(Properties.DISCORD_WEBHOOK_ID)))
+				{
+
+					var hook = new DolWebHook(Properties.DISCORD_WEBHOOK_ID);					
+					hook.SendMessage("Server open for connections");
+				}
+								
 				if (log.IsInfoEnabled)
 					log.Info("GameServer is now open for connections!");
 

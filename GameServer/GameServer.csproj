@@ -79,6 +79,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Web.Extensions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -352,6 +353,7 @@
     <Compile Include="database\converters\Version005.cs" />
     <Compile Include="database\updaters\DatabaseUpdateAttribute.cs" />
     <Compile Include="database\updaters\IDatabaseUpdater.cs" />
+    <Compile Include="DolWebHook.cs" />
     <Compile Include="effects\DummyEffect.cs" />
     <Compile Include="events\gameobjects\ExecuteCommandEventArgs.cs" />
     <Compile Include="events\gameobjects\InterruptedEventArgs.cs" />
@@ -1121,7 +1123,7 @@
     <Compile Include="propertycalc\XPPointsCalculator.cs" />
     <Compile Include="quests\Atlantis\ArtifactEncounter.cs" />
     <Compile Include="quests\Atlantis\ArtifactQuest.cs" />
-<Compile Include="quests\Atlantis\Artifacts\AFlask.cs" />
+    <Compile Include="quests\Atlantis\Artifacts\AFlask.cs" />
     <Compile Include="quests\Atlantis\Artifacts\AHealersEmbrace.cs" />
     <Compile Include="quests\Atlantis\Artifacts\AlvarusLeggings.cs" />
     <Compile Include="quests\Atlantis\Artifacts\ArmsOfTheWinds.cs" />
