@@ -386,6 +386,18 @@ namespace DOL.GS.ServerProperties
 		public static bool DISABLE_QUIT_TIMER;
 
 		/// <summary>
+		/// Enable Discord Webhook?
+		/// </summary>
+		[ServerProperty("server", "Discord_Webhook_Active", "Enable Discord webhook?", false)]
+		public static bool DISCORD_ACTIVE;
+
+		/// <summary>
+		/// Webhook ID
+		/// </summary>
+		[ServerProperty("server", "Discord_Webhook_ID", "The id of the webhook", "")]
+		public static string DISCORD_WEBHOOK_ID;		
+
+		/// <summary>
 		/// Enable integrated serverlistupdate script?
 		/// </summary>
 		[ServerProperty("server", "enable_serverlistupdate", "Enable in-built serverlistupdate script?", false)]
