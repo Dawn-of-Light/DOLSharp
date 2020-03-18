@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using DOL.AI.Brain;
@@ -41,7 +42,7 @@ namespace DOL.GS.Spells
 	/// </summary>
 	public abstract class SummonSpellHandler : SpellHandler
 	{
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		new private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		protected GamePet m_pet = null;
 
@@ -181,6 +182,12 @@ namespace DOL.GS.Spells
 			m_pet.CurrentSpeed = 0;
 			m_pet.Realm = Caster.Realm;
 			m_pet.Level = GetPetLevel();
+
+			// Scale pet spells
+			for (int i = 0; i < m_pet.Spells.Count; i++)
+				if (m_pet.Spells[i] is Spell spell)
+						m_pet.Spells[i] = m_pet.ScalePetSpell(spell);
+			m_pet.SortSpells(); // Do a sort of the scaled spells
 
 			if (m_isSilent)
 				m_pet.IsSilent = true;
