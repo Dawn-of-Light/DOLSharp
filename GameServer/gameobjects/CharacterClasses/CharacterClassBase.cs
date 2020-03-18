@@ -350,11 +350,9 @@ namespace DOL.GS
 			GameNPC npc = controlledBrain.Body;
 			if (npc == null)
 				return;
-			else if (npc is GamePet)
-            		{
-				GamePet pet = npc as GamePet;
-				pet.StripOwnerBuffs(pet.Owner);
-            		}
+			
+			if (npc is GamePet pet)
+				pet.StripBuffs();
 
 			Player.Notify(GameLivingEvent.PetReleased, npc);
 		}
