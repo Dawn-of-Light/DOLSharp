@@ -22,49 +22,31 @@ namespace DOL.GS
 		/// <param name="PlayerRealm">Realm to display destinations for</param>
 		public String DisplayTeleportDestinations(eRealm DestinationRealm)
 		{
-			String sRet = null;	
+			StringBuilder sRet = new StringBuilder("");
 
 			switch (DestinationRealm)
 			{
 				case eRealm.Albion:
-					sRet = String.Format("Greetings. I can channel the energies of this place to send you {0} {1} {2} {3} {4} {5} {6} {7}",
-										 "to far away lands. If you wish to fight in the Frontiers I can send you to [Forest Sauvage] or to the",
-										 "border keeps [Castle Sauvage] and [Snowdonia Fortress]. Maybe you wish to undertake the Trials of",
-										 "Atlantis in [Albion Oceanus] haven or wish to visit the harbor of [Gothwaite] and the [Albion Shrouded Isles]?",
-										 "You could explore the [Avalon Marsh] or perhaps you would prefer the comforts of the [housing] regions.",
-										 "Perhaps the fierce [Battlegrounds] are more to your liking or do you wish to meet the citizens inside",
-										 "the great city of [Camelot] or the [Inconnu Crypt]?",
-										 "Or perhaps you are interested in porting to our training camp [Holtham]?",
-										 "Or would you prefer to teleport to [Hibernia] or [Midgard]?");
+					sRet.Append("Would you like to teleport to?\n[Camelot]\n[Albion frontiers] or [Battlegrounds]\n[Albion Darkness Falls]\n");
+					sRet.Append("[Albion Mainland]\n[Albion Dungeons]\n[Albion Shrouded Isles]\n[Albion Oceanus]\n");
+					sRet.Append("[Housing]\n[Hibernia] or [Midgard]");
 					break;
 				case eRealm.Midgard:
-					sRet = String.Format("Greetings. I can channel the energies of this place to send you {0} {1} {2} {3} {4} {5} {6} {7}",
-										 "to far away lands. If you wish to fight in the Frontiers I can send you to [Uppland] or to the",
-										 "border keeps [Svasud Faste] and [Vindsaul Faste]. Maybe you wish to undertake the Trials of",
-										 "Atlantis in [Midgard Oceanus] haven or wish to visit the [City of Aegirhamn] and the [Midgard Shrouded Isles]?",
-										 "You could explore the [Gotar] or perhaps you would prefer the comforts of the [housing] regions.",
-										 "Perhaps the fierce [Battlegrounds] are more to your liking or do you wish to meet the citizens inside",
-										 "the great city of [Jordheim] or the [Kobold Undercity]?",
-										 "Or perhaps you are interested in porting to our training camp [Hafheim]?",
-										 "Or would you prefer to teleport to [Albion] or [Hibernia]?");
+					sRet.Append("Would you like to teleport to?\n[Jordheim]\n[Midgard frontiers] or [Battlegrounds]\n[Midgard Darkness Falls]\n");
+					sRet.Append("[Midgard mainland]\n[Midgard dungeons]\n[Midgard Shrouded Isles]\n[Midgard Oceanus]\n");
+					sRet.Append("[Housing]\n[Albion] or [Hibernia]");
 					break;
 				case eRealm.Hibernia:
-					sRet = String.Format("Greetings. I can channel the energies of this place to send you {0} {1} {2} {3} {4} {5} {6} {7}",
-										 "to far away lands. If you wish to fight in the Frontiers I can send you to [Cruachan Gorge] or to the",
-										 "border keeps [Druim Ligen] and [Druim Cain]. Maybe you wish to undertake the Trials of",
-										 "Atlantis in [Hibernia Oceanus] haven or wish to visit the mysterious Grove of [Domnann] and the [Hibernia Shrouded Isles]?",
-										 "You could explore the [Shannon Estuary] or perhaps you would prefer the comforts of the [housing] regions.",
-										 "Perhaps the fierce [Battlegrounds] are more to your liking or do you wish to meet the citizens inside",
-										 "the great city of [Tir na Nog] or the [Shar Labyrinth]?",
-										 "Or perhaps you are interested in porting to our training camp [Fintain]?",
-										 "Or would you prefer to teleport to [Albion] or [Midgard]?");
+					sRet.Append("Would you like to teleport to?\n[Tir na Nog]\n[Hibernia frontiers] or [Battlegrounds]\n[Hibernia Darkness Falls]\n");
+					sRet.Append("[Hibernia mainland]\n[Hibernia dungeons]\n[Hibernia Shrouded Isles]\n[Hibernia Oceanus]\n");
+					sRet.Append("[Housing]\n[Albion] or [Midgard]");
 					break;
 				default:
 					log.Warn(String.Format("DisplayTeleportDestinations does not handle player realm [{0}]",DestinationRealm.ToString()));
 					break;
 			}
 
-			return sRet;
+			return sRet.ToString();
 		}
 
 		/// <summary>
@@ -96,49 +78,148 @@ namespace DOL.GS
 			if (player == null)
 				return false;
 
-			eRealm realmTarget;
+			eRealm realmTarget = player.Realm;
 
-			switch (text.ToLower())
+			StringBuilder sRet = new StringBuilder();
+
+			switch (text.ToUpper())
 			{
 				// Realm specific menus
-				case "albion":
+				case "ALBION":
 					SayTo(player, DisplayTeleportDestinations(eRealm.Albion));
 					return true;
-				case "midgard":
+				case "MIDGARD":
 					SayTo(player, DisplayTeleportDestinations(eRealm.Midgard));
 					return true;
-				case "hibernia":
+				case "HIBERNIA":
 					SayTo(player, DisplayTeleportDestinations(eRealm.Hibernia));
 					return true;
-				case "albion shrouded isles":
-					String sReplyASI = String.Format("The isles of Avalon are an excellent choice. {0} {1}",
-						"Would you prefer the harbor of [Gothwaite] or perhaps one of the outlying towns",
-						"like [Wearyall] Village, Fort [Gwyntell], or Caer [Diogel]?");
-					SayTo(player, sReplyASI);
+
+				case "ALBION FRONTIERS":
+					sRet.Append("Where in the frontiers would you like to go?\n[Forest Sauvage]\n[Castle Sauvage]\n[Snowdonia Fortress]\n");
+					sRet.Append("[Albion Agramon]");
+					SayTo(player, sRet.ToString());
 					return true;
-				case "midgard shrouded isles":
-					String sReplyMSI = String.Format("The isles of Aegir are an excellent choice. {0} {1}",
-						"Would you prefer the city of [Aegirhamn] or perhaps one of the outlying towns",
-						"like [Bjarken], [Hagall], or [Knarr]?");
-					SayTo(player, sReplyMSI);
+				case "ALBION MAINLAND":
+					sRet.Append("Where in Albion would you like to go?\n");
+					if (!ServerProperties.Properties.DISABLE_TUTORIAL && player.Level <= 15)
+						sRet.Append("[Holtham] (Levels 1-9)\n");
+					sRet.Append("[Cotswold Village] (Levels 10-14)\n[Prydwen Keep] (Levels 15-19)\n");
+					sRet.Append("[Caer Ulfwych] (Levels 20-24)\n[Campacorentin Station] (Levels 25-29)\n[Adribard's Retreat] (Levels 30-34)\n");
+					sRet.Append("[Cornwall Station] (Levels 35+)\n[Swanton Keep] (Levels 35+)\n[Lyonesse] (Levels 45+)\n[Dartmoor] (Levels 45+) \n");
+					sRet.Append("[Inconnu Crypt]");
+					SayTo(player, sRet.ToString());
 					return true;
-				case "hibernia shrouded isles":
-					String sReplyHSI = String.Format("The isles of Hy Brasil are an excellent choice. {0} {1}",
-						"Would you prefer the grove of [Domnann] or perhaps one of the outlying towns",
-						"like [Droighaid], [Aalid Feie], or [Necht]?");
-					SayTo(player, sReplyHSI);
+				case "ALBION DUNGEONS":
+					sRet.Append("Which dungeon would you like to teleport to?\n");
+					sRet.Append("[Tomb of Mithra] (Levels 10-18)\n[Keltoi Fogou] (Levels 18-26)\n[Tepok's Mine] (Levels 26-34)\n");
+					sRet.Append("[Catacombs of Cardova] (Levels 34-42)\n[Stonehenge Barrows] (Levels 42-50)\n");
+					sRet.Append("[Krondon] (Levels 50+)\n[Avalon City] (Epic)\n[Caer Sidi] (Epic)");
+					SayTo(player, sRet.ToString());
 					return true;
-				case "housing":
-					String sReplyH = String.Format("I can send you to your [personal] house. If you do {0} {1} {2} {3}",
-						"not have a personal house or wish to be sent to the housing [entrance] then you will",
-						"arrive just inside the housing area. I can also send you to your [guild] house. If your",
-						"guild does not own a house then you will not be transported. You may go to your [Hearth] bind",
-						"as well if you are bound inside a house.");
-					SayTo(player, sReplyH);
+				case "ALBION SHROUDED ISLES":
+					sRet.Append("Where in Avalon would you like to go?\n");
+					sRet.Append("[Caer Gothwaite]\n[Wearyall Village]\n[Fort Gwyntell]\n[Caer Diogel]");
+					SayTo(player, sRet.ToString());
 					return true;
 
+				case "MIDGARD FRONTIERS":
+					sRet.Append("Where in the frontiers would you like to go?\n[Uppland]\n[Svasud Faste]\n[Vindsaul Faste]\n");
+					sRet.Append("[Midgard Agramon]");
+					SayTo(player, sRet.ToString());
+					return true;
+				case "MIDGARD MAINLAND":
+					sRet.Append("Where in Midgard would you like to go?\n");
+					if (!ServerProperties.Properties.DISABLE_TUTORIAL && player.Level <= 15)
+						sRet.Append("[Hafheim] (Levels 1-9)\n");
+					sRet.Append("[Mularn] (Levels 10-14)\n[Fort Veldon] (Levels 15-19)\n");
+					sRet.Append("[Audliten] (Levels 20-24)\n[Huginfell] (Levels 25-29)\n[Fort Atla] (Levels 30-34)\n");
+					sRet.Append("[Gna Faste] (Levels 35+)\n[Vindsaul Faste] (Levels 35+)\n[Raumarik] (Levels 45+)\n[Malmohus] (Levels 45+)\n");
+					sRet.Append("[Kobold Undercity]");
+					SayTo(player, sRet.ToString());
+					return true;
+				case "MIDGARD DUNGEONS":
+					sRet.Append("Which dungeon would you like to teleport to?\n");
+					sRet.Append("[Nisse's Lair] (Levels 10-18)\n[Cursed Tomb] (Levels 18-26)\n[Vendo Caverns] (Levels 26-34)\n");
+					sRet.Append("[Varulvhamn] (Levels 34-42)\n[Spindelhalla ] (Levels 42-50),\n");
+					sRet.Append("[Iarnvidiur's Lair] (Levels 50+)\n[Trollheim] (Epic)\n[Tuscaren Glacier] (Epic)");
+					SayTo(player, sRet.ToString());
+					return true;
+				case "MIDGARD SHROUDED ISLES":
+					sRet.Append("Where in Aegir would you like to go?\n");
+					sRet.Append("[Aegirhamn]\n[Bjarken]\n[Hagall]\n[Knarr]");
+					SayTo(player, sRet.ToString());
+					return true;
+
+				case "HIBERNIA FRONTIERS":
+					sRet.Append("Where in the frontiers would you like to go?\n[Cruachan Gorge]\n[Druim Ligen]\n[Druim Cain]\n");
+					sRet.Append("[Hibernia Agramon]");
+					SayTo(player, sRet.ToString());
+					return true;
+				case "HIBERNIA MAINLAND":
+					sRet.Append("Where in Hibernia would you like to go?\n");
+					if (!ServerProperties.Properties.DISABLE_TUTORIAL && player.Level <= 15)
+						sRet.Append("[Fintain] (Levels 1-9)\n");
+					sRet.Append("[Mag Mell] (Levels 10-14)\n[Tir na mBeo] (Levels 15-19)\n");
+					sRet.Append("[Ardagh] (Levels 20-24)\n[Howth] (Levels 25-29)\n[Connla] (Levels 30-34)\n");
+					sRet.Append("[Innis Carthaig] (Levels 35+)\n[Druim Cain] (Levels 35+)\n[Cursed Forest] (Levels 45+)\n[Sheeroe Hills] (Levels 45+)\n");
+					sRet.Append("[Shar Labyrinth]");
+					SayTo(player, sRet.ToString());
+					return true;
+				case "HIBERNIA DUNGEONS":
+					sRet.Append("Which dungeon would you like to teleport to?\n");
+					sRet.Append("[Muire Tomb] (Levels 10-18)\n[Spraggon Den] (Levels 18-26)\n[Koalinth Caverns] (Levels 26-34)\n");
+					sRet.Append("[Treibh Caillte] (Levels 34-42)\n[Coruscating Mine] (Levels 42-50)\n");
+					sRet.Append("[Tur Suil] (Levels 50+)\n[Fomor] (Epic)\n[Galladoria] (Epic)");
+					SayTo(player, sRet.ToString());
+					return true;
+
+				case "HIBERNIA SHROUDED ISLES":
+					sRet.Append("Where in Hy Brasil would you like to go?\n");
+					sRet.Append("[Domnann]\n[Droighaid]\n[Aalid Feie]\n[Necht]");
+					SayTo(player, sRet.ToString());
+					return true;
+
+				case "HOUSING":
+					sRet.Append("\nI can send you to:\n Your [personal] house, if you have one,\n");
+					sRet.Append("The housing [entrance],\nYour [guild] house,\nor your [Hearth] bind.");
+					SayTo(player, sRet.ToString());
+					return true;
+
+				// DF locations
+				case "ALBION DARKNESS FALLS":
+					realmTarget = eRealm.Albion;
+					text = "Darkness Falls";
+					break;
+				case "MIDGARD DARKNESS FALLS":
+					realmTarget = eRealm.Midgard;
+					text = "Darkness Falls";
+					break;
+				case "HIBERNIA DARKNESS FALLS":
+					realmTarget = eRealm.Hibernia;
+					text = "Darkness Falls";
+					break;
+
+				// Agramon
+				case "ALBION AGRAMON":
+					realmTarget = eRealm.Albion;
+					text = "Agramon";
+					break;
+				case "MIDGARD AGRAMON":
+					realmTarget = eRealm.Midgard;
+					text = "Agramon";
+					break;
+				case "HIBERNIA AGRAMON":
+					realmTarget = eRealm.Hibernia;
+					text = "Agramon";
+					break;
+
 				// Albion destinations
-				case "albion oceanus":
+				case "CAMELOT":
+					SayTo(player, "The great city awaits!");
+					realmTarget = eRealm.Albion;
+					break;
+				case "ALBION OCEANUS":
 					if (player.Client.Account.PrivLevel < ServerProperties.Properties.ATLANTIS_TELEPORT_PLVL)
 					{
 						SayTo(player, "I'm sorry, but you are not authorized to enter Atlantis at this time.");
@@ -148,33 +229,54 @@ namespace DOL.GS
 					realmTarget = eRealm.Albion;
 					text = "Oceanus";
 					break;
-				case "avalon marsh":
-					SayTo(player, "You shall soon arrive in the Avalon Marsh.");
-					realmTarget = eRealm.Albion;
-					break;
-				case "camelot":
-					SayTo(player, "The great city awaits!");
-					realmTarget = eRealm.Albion;
-					break;
-				case "castle sauvage":
-					SayTo(player, "Castle Sauvage is what you seek, and Castle Sauvage is what you shall find.");
-					realmTarget = eRealm.Albion;
-					break;
-				case "diogel":
-					realmTarget = eRealm.Albion;
-					break;  // No text?
-				case "forest sauvage":
-					SayTo(player, "Now to the Frontiers for the glory of the realm!");
-					realmTarget = eRealm.Albion;
-					break;
-				case "gothwaite":
+				// SI cities
+				case "GOTHWAITE":
+				case "DIOGEL":
+				case "GWYNTELL":
+				case "WEARYALL":
 					SayTo(player, "The Shrouded Isles await you.");
 					realmTarget = eRealm.Albion;
 					break;
-				case "gwyntell":
+				// Mainland destinations
+				case "COTSWOLD VILLAGE":
+				case "PRYDWEN KEEP":
+				case "CAER ULFWYCH":
+				case "CAMPACORENTIN STATION":
+				case "ADRIBARD'S RETREAT":
+				case "CORNWALL STATION":
+				case "SWANTON KEEP":
+				case "LYONESSE":
+				case "DARTMOOR":
+				case "AVALON MARSH":
+				// Dungeon destinations
+				case "TOMB OF MITHRA":
+				case "KELTOI FOGOU":
+				case "TEPOK'S MINE":
+				case "CATACOMBS OF CARDOVA":
+				case "STONEHENGE BARROWS":
+				case "KRONDON":
+				case "AVALON CITY":
+				case "CAER SIDI":
+					sRet.Append("You shall soon arrive in ");
+					sRet.Append(text);
+					sRet.Append(".");
+					SayTo(player, sRet.ToString());
 					realmTarget = eRealm.Albion;
-					break;  // No text?
-				case "inconnu crypt":
+					break;
+				case "FOREST SAUVAGE":
+					SayTo(player, "Now to the Frontiers for the glory of the realm!");
+					realmTarget = eRealm.Albion;
+					break;
+				case "CASTLE SAUVAGE":
+				case "SNOWDONIA FORTRESS":
+					sRet.Append(text);
+					sRet.Append(" is what you seek, and ");
+					sRet.Append(text);
+					sRet.Append(" is what you shall find.");
+					SayTo(player, sRet.ToString());
+					realmTarget = eRealm.Albion;
+					break;
+				case "INCONNU CRYPT":
 					//if (player.HasFinishedQuest(typeof(InconnuCrypt)) <= 0)
 					//{
 					//	SayTo(player, String.Format("I may only send those who know the way to this {0} {1}",
@@ -184,30 +286,24 @@ namespace DOL.GS
 					//}
 					realmTarget = eRealm.Albion;
 					break;
-				case "snowdonia fortress":
-					SayTo(player, "Snowdonia Fortress is what you seek, and Snowdonia Fortress is what you shall find.");
-					realmTarget = eRealm.Albion;
-					break;
-				// text for the following ?
-				case "wearyall":
-					realmTarget = eRealm.Albion;
-					break;
-				case "holtham":
+				case "HOLTHAM":
 					if (ServerProperties.Properties.DISABLE_TUTORIAL)
-					{
 						SayTo(player, "Sorry, this place is not available for now !");
-						return true;
-					}
-					if (player.Level > 15)
-					{
+					else if (player.Level > 15)
 						SayTo(player, "Sorry, you are far too experienced to enjoy this place !");
-						return true;
+					else
+					{
+						realmTarget = eRealm.Albion;
+						break;
 					}
-					realmTarget = eRealm.Albion;
-					break;
+					return true;
 
 				// Midgard
-				case "midgard oceanus":
+				case "JORDHEIM":
+					SayTo(player, "The great city awaits!");
+					realmTarget = eRealm.Midgard;
+					break;
+				case "MIDGARD OCEANUS":
 					if (player.Client.Account.PrivLevel < ServerProperties.Properties.ATLANTIS_TELEPORT_PLVL)
 					{
 						SayTo(player, "I'm sorry, but you are not authorized to enter Atlantis at this time.");
@@ -217,28 +313,40 @@ namespace DOL.GS
 					realmTarget = eRealm.Midgard;
 					text = "Oceanus";
 					break;
-				case "bjarken":
-					realmTarget = eRealm.Midgard;
-					break;  // No text?
-				case "city of aegirhamn":
+				// SI cities
+				case "AEGIRHAMN":
+				case "BJARKEN":
+				case "HAGALL":
+				case "KNARR":
 					SayTo(player, "The Shrouded Isles await you.");
 					realmTarget = eRealm.Midgard;
 					break;
-				case "gotar":
-					SayTo(player, "You shall soon arrive in the Gotar.");
+				// Mainland destinations
+				case "MULARN":
+				case "FORT VELDON":
+				case "AUDLITEN":
+				case "HUGINFELL":
+				case "FORT ATLA":
+				case "GNA FASTE":
+				case "RAUMARIK":
+				case "MALMOHUS":
+				case "GOTAR":
+				// Dungeon destinations
+				case "NISSE'S LAIR":
+				case "CURSED TOMB":
+				case "VENDO CAVERNS":
+				case "VARULVHAMN":
+				case "SPINDELHALLA":
+				case "IARNVIDIUR'S LAIR":
+				case "TROLLHEIM":
+				case "TUSCAREN GLACIER":
+					sRet.Append("You shall soon arrive in ");
+					sRet.Append(text);
+					sRet.Append(".");
+					SayTo(player, sRet.ToString());
 					realmTarget = eRealm.Midgard;
 					break;
-				case "hagall":
-					realmTarget = eRealm.Midgard;
-					break;  // No text?
-				case "jordheim":
-					SayTo(player, "The great city awaits!");
-					realmTarget = eRealm.Midgard;
-					break;
-				case "knarr":
-					realmTarget = eRealm.Midgard;
-					break;  // No text?
-				case "kobold undercity":
+				case "KOBOLD UNDERCITY":
 					//if (player.HasFinishedQuest(typeof(KoboldUndercity)) <= 0)
 					//{
 					//	SayTo(player, String.Format("I may only send those who know the way to this {0} {1}",
@@ -248,33 +356,37 @@ namespace DOL.GS
 					//}
 					realmTarget = eRealm.Midgard;
 					break;
-				case "svasud faste":
-					SayTo(player, "Svasud Faste is what you seek, and Svasud Faste is what you shall find.");
-					realmTarget = eRealm.Midgard;
-					break;
-				case "uppland":
+				case "UPPLAND":
 					SayTo(player, "Now to the Frontiers for the glory of the realm!");
 					realmTarget = eRealm.Midgard;
 					break;
-				case "vindsaul faste":
-					SayTo(player, "Vindsaul Faste is what you seek, and Vindsaul Faste is what you shall find.");
+				case "SVASUD FASTE":
+				case "VINDSAUL FASTE":
+					sRet.Append(text);
+					sRet.Append(" is what you seek, and ");
+					sRet.Append(text);
+					sRet.Append(" is what you shall find.");
+					SayTo(player, sRet.ToString());
 					realmTarget = eRealm.Midgard;
 					break;
-				case "hafheim":
+				case "HAFHEIM":
 					if (ServerProperties.Properties.DISABLE_TUTORIAL)
-					{
 						SayTo(player, "Sorry, this place is not available for now !");
-						return true;
-					}
-					if (player.Level > 15)
-					{
+					else if (player.Level > 15)
 						SayTo(player, "Sorry, you are far too experienced to enjoy this place !");
-						return true;
+					else
+					{
+						realmTarget = eRealm.Midgard;
+						break;
 					}
-					realmTarget = eRealm.Midgard;
-					break;
+					return true;
+
 				// Hibernia
-				case "hibernia oceanus":
+				case "TIR NA NOG":
+					SayTo(player, "The great city awaits!");
+					realmTarget = eRealm.Hibernia;
+					break;
+				case "HIBERNIA OCEANUS":
 					if (player.Client.Account.PrivLevel < ServerProperties.Properties.ATLANTIS_TELEPORT_PLVL)
 					{
 						SayTo(player, "I'm sorry, but you are not authorized to enter Atlantis at this time.");
@@ -284,36 +396,53 @@ namespace DOL.GS
 					realmTarget = eRealm.Hibernia;
 					text = "Oceanus";
 					break;
-				case "aalid feie":
-					realmTarget = eRealm.Hibernia;
-					break;  // No text?
-				case "cruachan gorge":
-					SayTo(player, "Now to the Frontiers for the glory of the realm!");
-					realmTarget = eRealm.Hibernia;
-					break;
-				case "domnann":
+				// SI locations
+				case "DOMNANN":
+				case "NECHT":
+				case "AALID FEIE":
+				case "DROIGHAID":
 					SayTo(player, "The Shrouded Isles await you.");
 					realmTarget = eRealm.Hibernia;
 					break;
-				case "droighaid":
-					realmTarget = eRealm.Hibernia;
-					break;  // No text?
-				case "druim cain":
-					SayTo(player, "Druim Cain is what you seek, and Druim Cain is what you shall find.");
+				// Mainland locations
+				case "MAG MELL":
+				case "TIR NA MBEO":
+				case "ARDAGH":
+				case "HOWTH":
+				case "CONNLA":
+				case "INNIS CARTHAIG":
+				case "CURSED FOREST":
+				case "SHEEROE HILLS":
+				case "SHANNON ESTUARY":
+				// Dungeon destinations
+				case "MUIRE TOMB":
+				case "SPRAGGON DEN":
+				case "KOALINTH CAVERNS":
+				case "TREIBH CAILLTE":
+				case "CORUSCATING MINE":
+				case "TUR SUIL":
+				case "FOMOR":
+				case "GALLADORIA":
+					sRet.Append("You shall soon arrive in ");
+					sRet.Append(text);
+					sRet.Append(".");
+					SayTo(player, sRet.ToString());
 					realmTarget = eRealm.Hibernia;
 					break;
-				case "druim ligen":
-					SayTo(player, "Druim Ligen is what you seek, and Druim Ligen is what you shall find.");
+				case "CRUACHAN GORGE":
+					SayTo(player, "Now to the Frontiers for the glory of the realm!");
 					realmTarget = eRealm.Hibernia;
 					break;
-				case "necht":
-					realmTarget = eRealm.Hibernia;
-					break;  // No text?
-				case "shannon estuary":
-					SayTo(player, "You shall soon arrive in the Shannon Estuary.");
+				case "DRUIM CAIN":
+				case "DRUIM LIGEN":
+					sRet.Append(text);
+					sRet.Append(" is what you seek, and ");
+					sRet.Append(text);
+					sRet.Append(" is what you shall find.");
+					SayTo(player, sRet.ToString());
 					realmTarget = eRealm.Hibernia;
 					break;
-				case "shar labyrinth":
+				case "SHAR LABYRINTH":
 					//if (player.HasFinishedQuest(typeof(SharLabyrinth)) <= 0)
 					//{
 					//	SayTo(player, String.Format("I may only send those who know the way to this {0} {1}",
@@ -323,36 +452,32 @@ namespace DOL.GS
 					//}
 					realmTarget = eRealm.Hibernia;
 					break;
-				case "tir na nog":
-					SayTo(player, "The great city awaits!");
-					realmTarget = eRealm.Hibernia;
-					break;
-				case "fintain":
+				case "FINTAIN":
 					if (ServerProperties.Properties.DISABLE_TUTORIAL)
-					{
 						SayTo(player, "Sorry, this place is not available for now !");
-						return true;
-					}
-					if (player.Level > 15)
-					{
+					else if (player.Level > 15)
 						SayTo(player, "Sorry, you are far too experienced to enjoy this place !");
-						return true;
+					else
+					{
+						text = "Fintain";
+						realmTarget = eRealm.Hibernia;
+						break;
 					}
-					realmTarget = eRealm.Hibernia;
-					break;
+					return true;
 				// All realms
-				case "battlegrounds":
+				case "BATTLEGROUNDS":
 					if (!ServerProperties.Properties.BG_ZONES_OPENED && player.Client.Account.PrivLevel == (uint)ePrivLevel.Player)
 					{
 						SayTo(player, ServerProperties.Properties.BG_ZONES_CLOSED_MESSAGE);
 						return true;
 					}
+
 					SayTo(player, "I will teleport you to the appropriate battleground for your level and Realm Rank. If you exceed the Realm Rank for a battleground, you will not teleport. Please gain more experience to go to the next battleground.");
-					realmTarget = eRealm.Hibernia;
 					break;
-				case "entrance":
-				case "personal":
-				case "hearth":
+				case "AGRAMON":
+				case "ENTRANCE":
+				case "PERSONAL":
+				case "HEARTH":
 					realmTarget = player.Realm;
 					break;
 				default:
