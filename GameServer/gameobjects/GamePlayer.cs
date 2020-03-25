@@ -13833,21 +13833,26 @@ namespace DOL.GS
 							{
 								if (IsCraftingSkillDefined(Convert.ToInt32(values[0])))
 								{
-									m_craftingSkills.Add((eCraftingSkill)i, Convert.ToInt32(values[1]));
+									if (DOL.GS.ServerProperties.Properties.CRAFTING_MAX_SKILLS)
+										m_craftingSkills.Add((eCraftingSkill)i, AbstractCraftingSkill.subSkillCap);
+									else
+										m_craftingSkills.Add((eCraftingSkill)i, Convert.ToInt32(values[1]));
 								}
 								else
 								{
 									log.Error("Tried to load invalid CraftingSkill :" + values[0]);
 								}
 							}
-
 						}
 						//Load by number
 						else if (!m_craftingSkills.ContainsKey((eCraftingSkill)Convert.ToInt32(values[0])))
 						{
 							if(IsCraftingSkillDefined(Convert.ToInt32(values[0])))
 							{
-								m_craftingSkills.Add((eCraftingSkill)Convert.ToInt32(values[0]), Convert.ToInt32(values[1]));
+								if (DOL.GS.ServerProperties.Properties.CRAFTING_MAX_SKILLS)
+									m_craftingSkills.Add((eCraftingSkill)Convert.ToInt32(values[0]), AbstractCraftingSkill.subSkillCap);
+								else
+									m_craftingSkills.Add((eCraftingSkill)Convert.ToInt32(values[0]), Convert.ToInt32(values[1]));
 							}
 							else
 							{
