@@ -72,7 +72,7 @@ namespace DOL.GS
 		/// </summary>
 		public const string RECIPE_RAW_MATERIAL_LIST = "RECIPE_RAW_MATERIAL_LIST";
 
-		protected const int subSkillCap = 1300;
+		public const int subSkillCap = 1300;
 
 		public virtual string CRAFTER_TITLE_PREFIX
 		{
