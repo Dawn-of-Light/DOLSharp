@@ -1793,16 +1793,28 @@ namespace DOL.GS.ServerProperties
 		public static int BAF_INITIAL_CHANCE;
 
 		/// <summary>
-		/// Do BAF mobs attack random players near the puller?
-		/// </summary>
-		[ServerProperty("pve", "baf_mobs_attack_random_players", "Do mobs brought by friends attack random nearby players in the puller's group or battlegroup?  If false, additional mobs attack the puller as on live.", false)]
-		public static bool BAF_MOBS_ATTACK_RANDOM_PLAYERS;
-
-		/// <summary>
 		/// Added percent chance of a mob BAFing for each attacker past the first
 		/// </summary>
 		[ServerProperty("pve", "baf_additional_chance", "Percent chance for a mob to bring a friend for each additional attacker.  Each multiples of 100 guarantee an add, so a cumulative chance of 250% guarantees two adds with a 50% chance of a third.", 50)]
-		public static int BAF_ADDITIONAL_CHANCE;			
+		public static int BAF_ADDITIONAL_CHANCE;
+
+		/// <summary>
+		/// Do BAF mobs attack the player who pulled?
+		/// </summary>
+		[ServerProperty("pve", "baf_mobs_attack_puller", "Do mobs brought by friends only attack the character who pulled them?  If false, mobs attack random players near the puller.", false)]
+		public static bool BAF_MOBS_ATTACK_PULLER;
+
+		/// <summary>
+		/// Do BAF mobs attack characters in the same BG as the pulling character?
+		/// </summary>
+		[ServerProperty("pve", "baf_mobs_attack_bg_members", "Do mobs brought by friends attack random nearby players in the puller's battlegroup?  If false, mobs only attack characters in the pulling player's group.", false)]
+		public static bool BAF_MOBS_ATTACK_BG_MEMBERS;
+
+		/// <summary>
+		/// Is the number of mobs added by BAF based on the number of nearby players in the puller's BG?
+		/// </summary>
+		[ServerProperty("pve", "baf_mobs_count_bg_members", "Is the number of mobs brought by a friend based on the number of nearby players in the pulling player's battlegroup?  If false, the number of mobs brought is determined by the number of players in the pulling player's group.", false)]
+		public static bool BAF_MOBS_COUNT_BG_MEMBERS;			
 
 		/// <summary>
 		/// Adjustment to missrate per number of attackers
@@ -2270,6 +2282,12 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("craft", "allow_craft_norealm_items", "Allow any realm to craft items with 0 (no) realm.", false)]
 		public static bool ALLOW_CRAFT_NOREALM_ITEMS;
+
+		/// <summary>
+		/// Max character crafting skill?
+		/// </summary>
+		[ServerProperty("craft", "crafting_max_skills", "Set character crafting skills to max level.", false)]
+		public static bool CRAFTING_MAX_SKILLS;
 
 		/// <summary>
 		/// Use salvage per realm and get back material to use in chars realm

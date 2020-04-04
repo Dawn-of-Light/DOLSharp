@@ -20,7 +20,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-
 using DOL.Events;
 using DOL.GS;
 using DOL.GS.Effects;
@@ -597,7 +596,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public virtual void ClearAggroList()
 		{
-			m_canBAF = true; // Mobs that drop out of combat can BAF again
+			CanBAF = true; // Mobs that drop out of combat can BAF again
 
 			lock ((m_aggroTable as ICollection).SyncRoot)
 			{
@@ -891,28 +890,34 @@ namespace DOL.AI.Brain
 		/// Initial range to try to get BAFs from.
 		/// May be overloaded for specific brain types, ie. dragons or keep guards
 		/// </summary>
-		protected const ushort m_BAFInitialRange = 250;
+		protected virtual ushort BAFInitialRange
+		{
+			get { return 250; }
+		}
 
 		/// <summary>
 		/// Max range to try to get BAFs from.
 		/// May be overloaded for specific brain types, ie.dragons or keep guards
 		/// </summary>
-		protected const ushort m_BAFMaxRange = 2000;
-
-		/// <summary>
-		/// Can the mob bring a friend?
-		/// Set to false when a mob BAFs or is brought by a friend.
-		/// </summary>
-		protected bool m_canBAF = true;
-
-		/// <summary>
-		/// Can the mob bring a friend?
-		/// Set to false when a mob BAFs or is brought by a friend.
-		/// </summary>
-		public bool canBAF
+		protected virtual ushort BAFMaxRange
 		{
-			get { return m_canBAF;  }
+			get { return 2000; }
 		}
+
+		/// <summary>
+		/// Max range to try to look for nearby players.
+		/// May be overloaded for specific brain types, ie.dragons or keep guards
+		/// </summary>
+		protected virtual ushort BAFPlayerRange
+		{
+			get { return 5000; }
+		}
+
+		/// <summary>
+		/// Can the mob bring a friend?
+		/// Set to false when a mob BAFs or is brought by a friend.
+		/// </summary>
+		public virtual bool CanBAF { get; set; } = true;
 
 		/// <summary>
 		/// Bring friends when this mob aggros
@@ -920,108 +925,109 @@ namespace DOL.AI.Brain
 		/// <param name="attacker">Whoever triggered the BAF</param>
 		protected virtual void BringFriends(GameLiving attacker)
 		{
-			if (!canBAF)
+			if (!CanBAF)
 				return;
-
-			GamePlayer trigger;	// player that triggered the BAF
+			
+			GamePlayer puller;  // player that triggered the BAF
 
 			// Only BAF on players and pets of players
 			if (attacker is GamePlayer)
-				trigger = (GamePlayer)attacker;
+				puller = (GamePlayer)attacker;
 			else if (attacker is GamePet pet && pet.Owner is GamePlayer owner)
-				trigger = owner;
+				puller = owner;
+			else if (attacker is BDSubPet bdSubPet && bdSubPet.Owner is GamePet bdPet && bdPet.Owner is GamePlayer bdOwner)
+				puller = bdOwner;
 			else
 				return;
 
-			m_canBAF = false; // Mobs only BAF once per fight
+			CanBAF = false; // Mobs only BAF once per fight
 
-			ArrayList victims = null; // List of potential victims, only used if there are multiple possible targets for mobs to attack
 			int numAttackers = 0;
 
-			BattleGroup battleGroup = (BattleGroup)trigger.TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null);
-			if (battleGroup != null)
+			List<GamePlayer> victims = null; // Only instantiated if we're tracking potential victims
+			
+			// These are only used if we have to check for duplicates
+			HashSet<String> countedVictims = null;
+			HashSet<String> countedAttackers = null;
+
+			BattleGroup bg = puller.TempProperties.getProperty<object>(BattleGroup.BATTLEGROUP_PROPERTY, null) as BattleGroup;
+
+			// Check group first to minimize the number of HashSet.Add() calls
+			if (puller.Group is Group group)
 			{
-				// Look for nearby players in the battlegroup
-				if (DOL.GS.ServerProperties.Properties.BAF_MOBS_ATTACK_RANDOM_PLAYERS)
+				if (DOL.GS.ServerProperties.Properties.BAF_MOBS_COUNT_BG_MEMBERS && bg != null)
+					countedAttackers = new HashSet<String>(); // We have to check for duplicates when counting attackers
+
+				if (!DOL.GS.ServerProperties.Properties.BAF_MOBS_ATTACK_PULLER)
 				{
-					victims = new ArrayList(battleGroup.PlayerCount);
-
-					// Add the trigger and battlegroup members near them to the victims list
-					foreach (GamePlayer player in battleGroup.GetPlayersInTheBattleGroup())
-						if (player != null)
-						{
-							if (player.InternalID == trigger.InternalID)
-								// Players are always within range of themselves
-								victims.Add(player);
-							else if (player.IsWithinRadius(trigger, m_BAFMaxRange, true))
-								victims.Add(player);
-						}
-
-					numAttackers = victims.Count;
+					if (DOL.GS.ServerProperties.Properties.BAF_MOBS_ATTACK_BG_MEMBERS && bg != null)
+					{
+						// We need a large enough victims list for group and BG, and also need to check for duplicate victims
+						victims = new List<GamePlayer>(group.MemberCount + bg.PlayerCount - 1);
+						countedVictims = new HashSet<String>();
+					}
+					else
+						victims = new List<GamePlayer>(group.MemberCount);
 				}
-				else
-					// Count the trigger and battlegroup members near them
-					foreach (GamePlayer player in battleGroup.GetPlayersInTheBattleGroup())
-						if (player != null)
-						{
-							if (player.InternalID == trigger.InternalID)
-								// Players are always within range of themselves
-								numAttackers++;
-							else if (player.IsWithinRadius(trigger, m_BAFMaxRange, true))
-								numAttackers++;
-						}
-			}
-			else if (trigger.Group is Group group)
-			{
-				// Look for nearby players in the group
-				if (DOL.GS.ServerProperties.Properties.BAF_MOBS_ATTACK_RANDOM_PLAYERS)
-				{
-					victims = new ArrayList(group.MemberCount);
 
-					// Add the trigger and group members near them to the victims list
-					foreach (GamePlayer player in group.GetPlayersInTheGroup())
-						if (player.InternalID == trigger.InternalID)
-							// Players are always within range of themselves
-							victims.Add(player);
-						else if (player.IsWithinRadius(trigger, m_BAFMaxRange, true))
+				foreach (GamePlayer player in group.GetPlayersInTheGroup())
+					if (player != null && (player.InternalID == puller.InternalID || player.IsWithinRadius(puller, BAFPlayerRange, true)))
+					{
+						numAttackers++;
+
+						if (countedAttackers != null)
+							countedAttackers.Add(player.InternalID);
+
+						if (victims != null)
+						{
 							victims.Add(player);
 
-					numAttackers = victims.Count;
-				}
-				else
-					// Count the trigger and group members near them
-					foreach (GamePlayer player in group.GetPlayersInTheGroup())
-						if (player.InternalID == trigger.InternalID)
-							// Players are always within range of themselves
-							numAttackers++;
-						else if (player.IsWithinRadius(trigger, m_BAFMaxRange, true))
-							numAttackers++;
-			}
-			else
-				// Player is on their own
+							if (countedVictims != null)
+								countedVictims.Add(player.InternalID);
+						}
+					}
+			} // if (puller.Group is Group group)
+
+			// Do we have to count BG members, or add them to victims list?
+			if ((bg != null) && (DOL.GS.ServerProperties.Properties.BAF_MOBS_COUNT_BG_MEMBERS
+				|| (DOL.GS.ServerProperties.Properties.BAF_MOBS_ATTACK_BG_MEMBERS && !DOL.GS.ServerProperties.Properties.BAF_MOBS_ATTACK_PULLER)))
+			{
+				if (victims == null && DOL.GS.ServerProperties.Properties.BAF_MOBS_ATTACK_BG_MEMBERS && !DOL.GS.ServerProperties.Properties.BAF_MOBS_ATTACK_PULLER)
+					// Puller isn't in a group, so we have to create the victims list for the BG
+					victims = new List<GamePlayer>(bg.PlayerCount);
+
+				foreach (GamePlayer player in bg.GetPlayersInTheBattleGroup())
+					if (player != null && (player.InternalID == puller.InternalID || player.IsWithinRadius(puller, BAFPlayerRange, true)))
+					{
+						if (DOL.GS.ServerProperties.Properties.BAF_MOBS_COUNT_BG_MEMBERS
+							&& (countedAttackers == null || !countedAttackers.Contains(player.InternalID)))
+								numAttackers++;
+
+						if (victims != null && (countedVictims == null || !countedVictims.Contains(player.InternalID)))
+							victims.Add(player);
+					}
+			} // if ((bg != null) ...
+
+			if (numAttackers == 0)
+				// Player is alone
 				numAttackers = 1;
 
-			// Chance of bringing a friend is exposed by server properties
 			int percentBAF = DOL.GS.ServerProperties.Properties.BAF_INITIAL_CHANCE
 				+ ((numAttackers - 1) * DOL.GS.ServerProperties.Properties.BAF_ADDITIONAL_CHANCE);
 
-			int maxAdds; // How many mobs to BAF
-
-			// Multiple of 100 are guaranteed adds
-			maxAdds = percentBAF / 100;
+			int maxAdds = percentBAF / 100; // Multiple of 100 are guaranteed BAFs
 
 			// Calculate chance of an addition add based on the remainder
-			percentBAF %= 100;
-			if (Util.Chance(percentBAF))
+			if (Util.Chance(percentBAF % 100))
 				maxAdds++;
 
 			if (maxAdds > 0)
 			{
 				int numAdds = 0; // Number of mobs currently BAFed
-				ushort range = (ushort)AggroRange; // How far away to look for friends
+				ushort range = BAFInitialRange; // How far away to look for friends
 
 				// Try to bring closer friends before distant ones.
-				while (numAdds < maxAdds && range <= m_BAFMaxRange)
+				while (numAdds < maxAdds && range <= BAFMaxRange)
 				{
 					foreach (GameNPC npc in Body.GetNPCsInRadius(range))
 					{
@@ -1031,14 +1037,13 @@ namespace DOL.AI.Brain
 						// If it's a friend, have it attack
 						if (npc.IsFriend(Body) && npc.IsAggressive && npc.IsAvailable && npc.Brain is StandardMobBrain brain)
 						{
-							brain.m_canBAF = false; // Mobs brought cannot bring friends of their own
+							brain.CanBAF = false; // Mobs brought cannot bring friends of their own
 
 							GamePlayer target;
 							if (victims != null && victims.Count > 0)
-								// Attack a random victim
-								target = (GamePlayer)victims[Util.Random(victims.Count - 1)];
+								target = victims[Util.Random(0, victims.Count - 1)];
 							else
-								target = trigger;
+								target = puller;
 
 							brain.AddToAggroList(target, 1);
 							brain.AttackMostWanted();

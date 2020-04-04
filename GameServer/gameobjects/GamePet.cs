@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Collections.Generic;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.Effects;
@@ -30,7 +31,7 @@ namespace DOL.GS
 {
 	public class GamePet : GameNPC
 	{
-		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		new private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		public GamePet(INpcTemplate template) : base(template)
 		{
@@ -129,17 +130,12 @@ namespace DOL.GS
 		/// <returns>The specialisation level.</returns>
 		public override int GetModifiedSpecLevel(string keyName)
 		{
-			switch (keyName)
-			{
-				case Specs.Slash:
-				case Specs.Crush:
-				case Specs.Two_Handed:
-				case Specs.Shields:
-				case Specs.Critical_Strike:
-				case Specs.Large_Weapons:
-					return Level;
-                default: return (Brain as IControlledBrain).GetLivingOwner().GetModifiedSpecLevel(keyName);
-			}
+			int spec = (Brain as IControlledBrain).GetLivingOwner().GetModifiedSpecLevel(keyName);
+
+			if (spec <= 0)
+				return Level;
+
+			return spec;
 		}
 
 		#endregion
@@ -364,58 +360,50 @@ namespace DOL.GS
 
 			return ticks;
 		}
-
-		/// <summary>
-		/// Pick a random style for now.
-		/// </summary>
-		/// <returns></returns>
-		protected override Style GetStyleToUse()
-		{
-			if (Styles != null && Styles.Count > 0 && Util.Chance(Properties.GAMENPC_CHANCES_TO_STYLE + Styles.Count))
-			{
-				Style style = (Style)Styles[Util.Random(Styles.Count - 1)];
-				if (StyleProcessor.CanUseStyle(this, style, AttackWeapon))
-					return style;
-			}
-
-			return base.GetStyleToUse();
-		}
 		#endregion
 
 		public override void Die(GameObject killer)
 		{
-			StripOwnerBuffs(Owner);
+			StripBuffs();
 		
 			GameEventMgr.Notify(GameLivingEvent.PetReleased, this);
 			base.Die(killer);
 			CurrentRegion = null;
 		}
-		
+
 		/// <summary>
-		/// Strips any buffs this pet cast on owner
+		/// Targets the pet has buffed, to allow correct buff removal when the pet dies
 		/// </summary>
-		/// <param name="owner">
-		/// The target to strip buffs off of.
-		/// </param>
-		public virtual void StripOwnerBuffs(GameLiving owner)
+		private List<GameLiving> m_buffedTargets = null;
+
+		/// <summary>
+		/// Add a target to the pet's list of buffed targets
+		/// </summary>
+		/// <param name="living">Target to add to the list</param>
+		public void AddBuffedTarget(GameLiving living)
 		{
-			if (owner == null)
+			if (living == this)
 				return;
 
-			if (owner.Group is Group group)
-				// Strip all buffs from this pet off the group, and off other pets
-				foreach (GamePlayer player in group.GetPlayersInTheGroup())
-				{
-					if (player.EffectList != null)
-						foreach (IGameEffect effect in player.EffectList)
-							if (effect is GameSpellEffect spellEffect && spellEffect.SpellHandler != null && spellEffect.SpellHandler.Caster != null && spellEffect.SpellHandler.Caster == this)
+			if (m_buffedTargets == null)
+				m_buffedTargets = new List<GameLiving>(1);
+
+			if (!m_buffedTargets.Contains(living))
+				m_buffedTargets.Add(living);
+		}
+
+		/// <summary>
+		/// Strips any buffs this pet cast
+		/// </summary>
+		public virtual void StripBuffs()
+		{
+			if (m_buffedTargets != null)
+				foreach (GameLiving living in m_buffedTargets)
+					if (living != this && living.EffectList != null)
+						foreach (IGameEffect effect in living.EffectList)
+							if (effect is GameSpellEffect spellEffect && spellEffect.SpellHandler != null 
+								&& spellEffect.SpellHandler.Caster != null && spellEffect.SpellHandler.Caster == this)
 								effect.Cancel(false);
-				}
-			else if (owner.EffectList != null)
-				// Owner not in a group, only strip buffs from the owner
-				foreach (IGameEffect effect in owner.EffectList)
-					if (effect is GameSpellEffect spellEffect && spellEffect.SpellHandler != null && spellEffect.SpellHandler.Caster != null && spellEffect.SpellHandler.Caster == this)
-						effect.Cancel(false);
 		}
 		
 		/// <summary>

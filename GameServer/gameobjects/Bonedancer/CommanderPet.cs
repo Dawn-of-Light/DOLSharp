@@ -325,12 +325,8 @@ namespace DOL.GS
 				//Found it, lets remove it
 				if (found)
 				{
-					if (controlledNpc.Body != null && controlledNpc.Body is GamePet)
-                    			{
-						GamePet minion = controlledNpc.Body as GamePet;
-						minion.StripOwnerBuffs(this); // Strip buffs off commander
-						minion.StripOwnerBuffs(Owner); // Strip buffs off player
-                    			}
+					if (controlledNpc.Body is GamePet minion)
+						minion.StripBuffs();
 				
 					//First lets store the brain to kill it
 					IControlledBrain tempBrain = m_controlledBrain[i];
