@@ -2202,7 +2202,7 @@ namespace DOL.GS
 				return;
 
 			// Save the template for later
-			m_template = template;
+			m_npcTemplate = template as NpcTemplate;
 
 			// These stats aren't found in the mob table, so always get them from the template
 			this.TetherRange = template.TetherRange;
@@ -5714,25 +5714,7 @@ namespace DOL.GS
 				m_ownBrain = defaultBrain;
 				m_ownBrain.Body = this;
 			}
-
-			// Save base stats in m_template even if there wasn't an npctemplate to begin with, as AutoSetStats() need them.
-			if (m_template == null)
-			{
-				//m_template = new NpcTemplate(this);  // This causes too many long queries and causes server startup to take FOREVER
-				NpcTemplate tmpNew = new NpcTemplate();
-				tmpNew.Strength = Strength;
-				tmpNew.Constitution = Constitution;
-				tmpNew.Dexterity = Dexterity;
-				tmpNew.Quickness = Quickness;
-				tmpNew.Empathy = Empathy;
-				tmpNew.Intelligence = Intelligence;
-				tmpNew.Charisma = Charisma;
-
-				m_template = tmpNew;
-			}
 		}
-
-		INpcTemplate m_template = null;
 
 		/// <summary>
 		/// create npc from template
