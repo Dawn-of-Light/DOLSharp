@@ -17,6 +17,7 @@
  *
  */
 using System;
+using System.Collections.Generic;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS.PacketHandler;
@@ -129,6 +130,8 @@ namespace DOL.GS
 						if (spell.ID == 60127)
 						{
 							Spells.Remove(spell);
+							if (InstantHarmfulSpells != null)
+								InstantHarmfulSpells.Remove(spell);
 							player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.CommNoTaunt"), eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 							found = true;
 							break;
@@ -139,7 +142,14 @@ namespace DOL.GS
 					Spell tauntspell = SkillBase.GetSpellByID(60127);
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameObjects.CommanderPet.WR.CommStartTaunt"), eChatType.CT_Say, eChatLoc.CL_SystemWindow);
 					if (tauntspell != null)
+					{
 						Spells.Add(tauntspell);
+
+						if (InstantHarmfulSpells == null)
+							InstantHarmfulSpells = new List<Spell>(1);
+
+						InstantHarmfulSpells.Add(tauntspell);
+					}
 					else
 						Console.WriteLine("Couldn't find BD pet's taunt spell");
 					break;
