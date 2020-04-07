@@ -31,7 +31,7 @@ namespace DOL.GS
 {
 	public class GamePet : GameNPC
 	{
-		new private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		public GamePet(INpcTemplate template) : base(template)
 		{
@@ -122,25 +122,19 @@ namespace DOL.GS
                 return 1.0;
             }
 		}
-
-		/// <summary>
-		/// Specialisation level including item bonuses and RR.
-		/// </summary>
-		/// <param name="keyName">The specialisation line.</param>
-		/// <returns>The specialisation level.</returns>
-		public override int GetModifiedSpecLevel(string keyName)
-		{
-			int spec = (Brain as IControlledBrain).GetLivingOwner().GetModifiedSpecLevel(keyName);
-
-			if (spec <= 0)
-				return Level;
-
-			return spec;
-		}
-
 		#endregion
 
 		#region Spells
+
+		/// <summary>
+		/// Can this living cast the given spell while in combat?
+		/// </summary>
+		/// <param name="spell"></param>
+		/// <returns></returns>
+		public override bool CanCastInCombat(Spell spell)
+		{
+			return spell == null || spell.IsInstantCast || spell.Uninterruptible;
+		}
 
 		/// <summary>
 		/// Called when spell has finished casting.
@@ -156,13 +150,11 @@ namespace DOL.GS
 		/// Scale the passed spell according to PET_SCALE_SPELL_MAX_LEVEL
 		/// </summary>
 		/// <param name="spell">The spell to scale</param>
-		/// <returns>The scaled spell</returns>
-		public Spell ScalePetSpell(Spell spell)
+		public void ScalePetSpell(Spell spell)
 		{
 			if (ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL <= 0)
-				return spell;
+				return;
 
-			Spell scaledSpell = spell;
 			double CasterLevel = Level;
 
 			// Cap the level we scale BD minions' spell effects to the player's modified spec for the spec line the pet is from
@@ -180,7 +172,7 @@ namespace DOL.GS
 				case "lifedrain":
 				case "damagespeeddecrease":
 				case "stylebleeding": // Style Effect
-					scaledSpell.Damage *= CasterLevel / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL;
+					spell.Damage *= CasterLevel / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL;
 					break;
 				// Scale Value
 				case "enduranceregenbuff":
@@ -216,23 +208,24 @@ namespace DOL.GS
 				case "taunt":
 				case "unbreakablespeeddecrease":
 				case "speeddecrease":
-				case "stylecombatspeeddebuff": // Style Effect
-				case "stylespeeddecrease": // Style Effect
-				//case "styletaunt":  Taunt styles already scale with damage, leave their values alone.
-					scaledSpell.Value *= CasterLevel / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL;
+				case "stylecombatspeeddebuff": // Style attack speed debuff
+					spell.Value *= CasterLevel / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL;
 					break;
 				// Scale Duration
 				case "disease":
 				case "stun":
 				case "unrresistablenonimunitystun":
 				case "mesmerize":
-				case "stylestun": // Style Effect
-					scaledSpell.Duration = (int)Math.Ceiling(spell.Duration * CasterLevel / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL);
+				case "stylestun": // Style stun effect
+				case "stylespeeddecrease": // Style hinder effect
+					spell.Duration = (int)Math.Ceiling(spell.Duration * CasterLevel / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL);
 					break;
-				default: break; // Don't mess with types we don't know
+				case "styletaunt": // Taunt styles already scale with damage
+						break;
+				default:
+					log.Warn("ScalePetSpell(): unrecognized spell type " + spell.SpellType);
+					break; // Don't mess with types we don't know
 			} // switch (m_spell.SpellType.ToString().ToLower())
-
-			return scaledSpell;
 		}
 
 		#endregion
