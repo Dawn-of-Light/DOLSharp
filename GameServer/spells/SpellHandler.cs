@@ -2396,7 +2396,7 @@ namespace DOL.GS.Spells
 				{
 					// We have to scale pet subspells when cast
 					if (Caster is GamePet pet && !(Caster is NecromancerPet))
-						spell = pet.ScalePetSpell(spell);
+						pet.ScalePetSpell(spell);
 
 					ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(m_caster, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
                     spellhandler.StartSpell(target);
