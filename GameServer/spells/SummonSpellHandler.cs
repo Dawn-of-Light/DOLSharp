@@ -184,10 +184,13 @@ namespace DOL.GS.Spells
 			m_pet.Level = GetPetLevel();
 
 			// Scale pet spells
-			for (int i = 0; i < m_pet.Spells.Count; i++)
-				if (m_pet.Spells[i] is Spell spell)
-						m_pet.Spells[i] = m_pet.ScalePetSpell(spell);
-			m_pet.SortSpells(); // Do a sort of the scaled spells
+			if (DOL.GS.ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL > 0)
+			{
+				foreach (Spell spell in m_pet.Spells)
+					m_pet.ScalePetSpell(spell);
+
+				m_pet.SortSpells(); // Do a sort of the scaled spells
+			}
 
 			if (m_isSilent)
 				m_pet.IsSilent = true;

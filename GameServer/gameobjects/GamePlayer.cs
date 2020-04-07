@@ -7163,14 +7163,16 @@ namespace DOL.GS
 		/// <returns></returns>
 		public override bool CanCastInCombat(Spell spell)
 		{
-			if (CharacterClass is PlayerClass.ClassVampiir ||
-			    CharacterClass is PlayerClass.ClassMaulerAlb ||
-			    CharacterClass is PlayerClass.ClassMaulerMid ||
-			    CharacterClass is PlayerClass.ClassMaulerHib ||
-			    (CharacterClass is PlayerClass.ClassWarden && spell.SpellType == "HealOverTime") ||
-			    (CharacterClass is PlayerClass.ClassFriar && spell.SpellType == "HealOverTime"))
-			{
+			if (spell == null || spell.IsInstantCast)
 				return true;
+
+			switch (CharacterClass)
+			{
+				case PlayerClass.ClassVampiir vampiir:
+				case PlayerClass.ClassMaulerAlb maulerAlb:
+				case PlayerClass.ClassMaulerMid maulerMid:
+				case PlayerClass.ClassMaulerHib maulerHib:
+					return true;
 			}
 
 			return false;
@@ -7956,8 +7958,16 @@ namespace DOL.GS
 			}
 		}
 
-		public override void CastSpell(Spell spell, SpellLine line)
+		/// <summary>
+		/// Cast a specific spell from given spell line
+		/// </summary>
+		/// <param name="spell">spell to cast</param>
+		/// <param name="line">Spell line of the spell (for bonus calculations)</param>
+		/// <returns>Whether the spellcast started successfully</returns>
+		public override bool CastSpell(Spell spell, SpellLine line)
 		{
+			bool casted = false;
+
 			if (IsCrafting)
 			{
                 Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Attack.InterruptedCrafting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -7984,7 +7994,7 @@ namespace DOL.GS
 				if (handler != null)
 				{
 					handler.Execute(ab, this);
-					return;
+					return true;
 				}
 			}
 			else
@@ -7992,18 +8002,18 @@ namespace DOL.GS
 				if (IsStunned)
 				{
 					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.CantCastStunned"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-					return;
+					return false;
 				}
 				if (IsMezzed)
 				{
 					Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.CantCastMezzed"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-					return;
+					return false;
 				}
 
 				if (IsSilenced)
 				{
                     Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.CantCastFumblingWords"), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-					return;
+					return false;
 				}
 
 				double fumbleChance = GetModified(eProperty.SpellFumbleChance);
@@ -8013,7 +8023,7 @@ namespace DOL.GS
 					if (Util.ChanceDouble(fumbleChance))
 					{
                         Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.CantCastFumblingWords"), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-						return;
+						return false;
 					}
 				}
 
@@ -8024,7 +8034,7 @@ namespace DOL.GS
 						if (m_runningSpellHandler.CanQueue == false)
 						{
 							m_runningSpellHandler.CasterMoves();
-							return;
+							return false;
 						}
 
 						if (spell.CastTime > 0 && !(m_runningSpellHandler is ChamberSpellHandler) && spell.SpellType != "Chamber")
@@ -8032,7 +8042,7 @@ namespace DOL.GS
 							if (m_runningSpellHandler.Spell.InstrumentRequirement != 0)
 							{
 								Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.AlreadyPlaySong"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-								return;
+								return false;
 							}
 							if (SpellQueue)
 							{
@@ -8048,9 +8058,11 @@ namespace DOL.GS
 								m_nextSpell = spell;
 								m_nextSpellLine = line;
 								m_nextSpellTarget = TargetObject as GameLiving;
+								return true;
 							}
 							else Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.AlreadyCastNoQueue"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-							return;
+							
+							return false;
 						}
 						else if (m_runningSpellHandler is PrimerSpellHandler)
 						{
@@ -8069,6 +8081,7 @@ namespace DOL.GS
 										cloneSpell.CostPower = false;
 										m_nextSpell = cloneSpell;
 										m_nextSpellLine = line;
+										casted = true;
 									}
 									else if (m_runningSpellHandler is RangeSpellHandler)
 									{
@@ -8077,6 +8090,7 @@ namespace DOL.GS
 										cloneSpell.OverrideRange = m_runningSpellHandler.Spell.Range;
 										m_nextSpell = cloneSpell;
 										m_nextSpellLine = line;
+										casted = true;
 									}
 									else if (m_runningSpellHandler is UninterruptableSpellHandler)
 									{
@@ -8084,10 +8098,11 @@ namespace DOL.GS
 										cloneSpell.CostPower = false;
 										m_nextSpell = cloneSpell;
 										m_nextSpellLine = line;
+										casted = true;
 									}
                                     Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.PrepareSecondarySpell"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
 								}
-								return;
+								return casted;
 							}
 						}
 						else if (m_runningSpellHandler is ChamberSpellHandler)
@@ -8096,14 +8111,14 @@ namespace DOL.GS
 							if (IsMoving || IsStrafing)
 							{
 								m_runningSpellHandler = null;
-								return;
+								return false;
 							}
 							if (spell.IsPrimary)
 							{
 								if (spell.SpellType == "Bolt" && !chamber.Spell.AllowBolt)
 								{
                                     Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.SpellNotInChamber"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-									return;
+									return false;
 								}
 								if (chamber.PrimarySpell == null)
 								{
@@ -8150,7 +8165,7 @@ namespace DOL.GS
 						else if (!(m_runningSpellHandler is ChamberSpellHandler) && spell.SpellType == "Chamber")
 						{
                             Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.CastSpell.NotAFollowSpell"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-							return;
+							return false;
 						}
 					}
 				}
@@ -8163,7 +8178,7 @@ namespace DOL.GS
 
 						if (effect != null && spell.Name == effect.Spell.Name)
 						{
-							spellhandler.CastSpell();
+							casted = spellhandler.CastSpell();
 						}
 						else
 						{
@@ -8172,13 +8187,13 @@ namespace DOL.GS
 								((ChamberSpellHandler)spellhandler).EffectSlot = ChamberSpellHandler.GetEffectSlot(spellhandler.Spell.Name);
 								m_runningSpellHandler = spellhandler;
 								m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
-								spellhandler.CastSpell();
+								casted = spellhandler.CastSpell();
 							}
 							else if (m_runningSpellHandler == null)
 							{
 								m_runningSpellHandler = spellhandler;
 								m_runningSpellHandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
-								spellhandler.CastSpell();
+								casted = spellhandler.CastSpell();
 							}
 						}
 					}
@@ -8206,6 +8221,7 @@ namespace DOL.GS
 											m_nextSpell = spell;
 											spell.OverrideRange = m_runningSpellHandler.Spell.Range;
 											m_nextSpellLine = line;
+											casted = true;
 										}
 									}
 								}
@@ -8221,7 +8237,7 @@ namespace DOL.GS
 									cloneSpell = spell.Copy();
 									cloneSpell.CostPower = false;
 									spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
-									spellhandler.CastSpell();
+									casted = spellhandler.CastSpell();
 									effect.Cancel(false);
 								}
 								else if (effect.SpellHandler is RangeSpellHandler)
@@ -8230,7 +8246,7 @@ namespace DOL.GS
 									cloneSpell.CostPower = false;
 									cloneSpell.OverrideRange = effect.Spell.Range;
 									spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
-									spellhandler.CastSpell();
+									casted = spellhandler.CastSpell();
 									effect.Cancel(false);
 								}
 								else if (effect.SpellHandler is UninterruptableSpellHandler)
@@ -8238,7 +8254,7 @@ namespace DOL.GS
 									cloneSpell = spell.Copy();
 									cloneSpell.CostPower = false;
 									spellhandler = ScriptMgr.CreateSpellHandler(this, cloneSpell, line);
-									spellhandler.CastSpell();
+									casted = spellhandler.CastSpell();
 									effect.Cancel(false);
 								}
 							}
@@ -8250,14 +8266,16 @@ namespace DOL.GS
 				else
 				{
 					Out.SendMessage(spell.Name + " not implemented yet (" + spell.SpellType + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					return;
+					return false;
 				}
 			}
-			return;
+			return casted;
 		}
 
-		public override void CastSpell(ISpellCastingAbilityHandler ab)
+		public override bool CastSpell(ISpellCastingAbilityHandler ab)
 		{
+			bool casted = false;
+
 			if (IsCrafting)
 			{
                 Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Attack.InterruptedCrafting"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -8277,12 +8295,14 @@ namespace DOL.GS
 				}
 
 				spellhandler.Ability = ab;
-				spellhandler.CastSpell();
+				casted = spellhandler.CastSpell();
 			}
 			else
 			{
 				Out.SendMessage(ab.Spell.Name + " not implemented yet (" + ab.Spell.SpellType + ")", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
+
+			return casted;
 		}
 
 		/// <summary>

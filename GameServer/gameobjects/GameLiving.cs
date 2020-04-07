@@ -6647,41 +6647,47 @@ namespace DOL.GS
 				m_runningSpellHandler.InterruptCasting();
 		}
 
+
 		/// <summary>
 		/// Cast a specific spell from given spell line
 		/// </summary>
 		/// <param name="spell">spell to cast</param>
 		/// <param name="line">Spell line of the spell (for bonus calculations)</param>
-		public virtual void CastSpell(Spell spell, SpellLine line)
+		/// <returns>Whether the spellcast started successfully</returns>
+		public virtual bool CastSpell(Spell spell, SpellLine line)
 		{
 			if (IsStunned || IsMezzed)
 			{
 				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.CrowdControlled));
-				return;
+				return false;
 			}
 
 			if ((m_runningSpellHandler != null && spell.CastTime > 0))
 			{
 				Notify(GameLivingEvent.CastFailed, this, new CastFailedEventArgs(null, CastFailedEventArgs.Reasons.AlreadyCasting));
-				return;
+				return false;
 			}
 
 			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(this, spell, line);
 			if (spellhandler != null)
 			{
-				m_runningSpellHandler = spellhandler;
-				spellhandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
-				spellhandler.CastSpell();
+				if (spell.CastTime > 0)
+				{
+					m_runningSpellHandler = spellhandler;
+					spellhandler.CastingCompleteEvent += new CastingCompleteCallback(OnAfterSpellCastSequence);
+				}
+				return spellhandler.CastSpell();
 			}
 			else
 			{
 				if (log.IsWarnEnabled)
 					log.Warn(Name + " wants to cast but spell " + spell.Name + " not implemented yet");
-				return;
 			}
+
+			return false;
 		}
 
-		public virtual void CastSpell(ISpellCastingAbilityHandler ab)
+		public virtual bool CastSpell(ISpellCastingAbilityHandler ab)
 		{
 			ISpellHandler spellhandler = ScriptMgr.CreateSpellHandler(this, ab.Spell, ab.SpellLine);
 			if (spellhandler != null)
@@ -6694,29 +6700,9 @@ namespace DOL.GS
 				}
 
 				spellhandler.Ability = ab;
-				spellhandler.CastSpell();
+				return spellhandler.CastSpell();
 			}
-		}
-
-		
-		/// <summary>
-		/// Whether or not the living can cast a harmful spell
-		/// at the moment.
-		/// </summary>
-		public virtual bool CanCastHarmfulSpells
-		{
-			get
-			{
-				return (!IsIncapacitated);
-			}
-		}
-
-		public virtual IList<Spell> HarmfulSpells
-		{
-			get
-			{
-				return new List<Spell>();
-			}
+			return false;
 		}
 
 		#endregion

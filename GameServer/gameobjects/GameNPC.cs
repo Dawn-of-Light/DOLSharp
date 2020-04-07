@@ -217,26 +217,34 @@ namespace DOL.GS
 			}
 		}
 
-		// Set base stats for mob, pulling from server properties if necessary.
+		/// <summary>
+		/// Auto set any stats which haven't already been assigned a value;
+		/// </summary>
 		public virtual void AutoSetStats()
 		{
-			// Values changed by Argo, based on Tolakrams Advice for how to change the Multiplier for Auto
-			// Modified to only change stats that aren't set in the DB
-			if (NPCTemplate == null || NPCTemplate.Strength < 1)
+			// We have to check both the current values and the template to account for mobs leveling up
+			if (Strength < 1 || (m_npcTemplate != null && m_npcTemplate.ReplaceMobValues && m_npcTemplate.Strength < 1))
 				Strength = (short)Math.Max(1, Properties.MOB_AUTOSET_STR_BASE + (Level - 1) * 10 * Properties.MOB_AUTOSET_STR_MULTIPLIER);
-			if (NPCTemplate == null || NPCTemplate.Constitution < 1)
+			
+			if (Constitution < 1 || (m_npcTemplate != null && m_npcTemplate.ReplaceMobValues && m_npcTemplate.Constitution < 1))
 				Constitution = (short)Math.Max(1, Properties.MOB_AUTOSET_CON_BASE + (Level - 1) * Properties.MOB_AUTOSET_CON_MULTIPLIER);
-			if (NPCTemplate == null || NPCTemplate.Quickness < 1)
+			
+			if (Quickness < 1 || (m_npcTemplate != null && m_npcTemplate.ReplaceMobValues && m_npcTemplate.Quickness < 1))
 				Quickness = (short)Math.Max(1, Properties.MOB_AUTOSET_QUI_BASE + (Level - 1) * Properties.MOB_AUTOSET_QUI_MULTIPLIER);
-			if (NPCTemplate == null || NPCTemplate.Dexterity < 1)
+			
+			if (Dexterity < 1 || (m_npcTemplate != null && m_npcTemplate.ReplaceMobValues && m_npcTemplate.Dexterity < 1))
 				Dexterity = (short)Math.Max(1, Properties.MOB_AUTOSET_DEX_BASE + (Level - 1) * Properties.MOB_AUTOSET_DEX_MULTIPLIER);
-			if (NPCTemplate == null || NPCTemplate.Intelligence < 1)
+			
+			if (Intelligence < 1 || (m_npcTemplate != null && m_npcTemplate.ReplaceMobValues && m_npcTemplate.Intelligence < 1))
 				Intelligence = (short)Math.Max(1, Properties.MOB_AUTOSET_INT_BASE + (Level - 1) * Properties.MOB_AUTOSET_INT_MULTIPLIER);
-			if (NPCTemplate == null || NPCTemplate.Empathy < 1)
+			
+			if (Empathy < 1 || (m_npcTemplate != null && m_npcTemplate.ReplaceMobValues && m_npcTemplate.Empathy < 1))
 				Empathy = (short)(29 + Level);
-			if (NPCTemplate == null || NPCTemplate.Piety < 1)
+			
+			if (Piety < 1 || (m_npcTemplate != null && m_npcTemplate.ReplaceMobValues && m_npcTemplate.Piety < 1))
 				Piety = (short)(29 + Level);
-			if (NPCTemplate == null || NPCTemplate.Charisma < 1)
+			
+			if (Charisma < 1 || (m_npcTemplate != null && m_npcTemplate.ReplaceMobValues && m_npcTemplate.Charisma < 1))
 				Charisma = (short)(29 + Level);
 		}
 
@@ -1845,7 +1853,7 @@ namespace DOL.GS
 		#endregion
 
 		#region Inventory/LoadfromDB
-		private NpcTemplate m_npcTemplate;
+		private NpcTemplate m_npcTemplate = null;
 		/// <summary>
 		/// The NPC's template
 		/// </summary>
@@ -1921,11 +1929,6 @@ namespace DOL.GS
 			Mob dbMob = (Mob)obj;
 			INpcTemplate npcTemplate = NpcTemplateMgr.GetTemplate(dbMob.NPCTemplateID);
 
-			/* This is already being called at the very bottom.  Why are we doing it twice?
-			if (npcTemplate != null && !npcTemplate.ReplaceMobValues)
-				LoadTemplate(npcTemplate);
-			*/
-
 			TranslationId = dbMob.TranslationId;
 			Name = dbMob.Name;
 			Suffix = dbMob.Suffix;
@@ -1946,22 +1949,14 @@ namespace DOL.GS
 			Flags = (eFlags)dbMob.Flags;
 			m_packageID = dbMob.PackageID;
 
-			// Since AutoSetStats now checks original stats via NPCTemplate, make sure there is one.
-			if (npcTemplate != null)
-				NPCTemplate = (npcTemplate as NpcTemplate);
-			else
-			{
-				NPCTemplate = new NpcTemplate();
-				NPCTemplate.Strength = dbMob.Strength;
-				NPCTemplate.Constitution = dbMob.Constitution;
-				NPCTemplate.Dexterity = dbMob.Dexterity;
-				NPCTemplate.Quickness = dbMob.Quickness;
-				NPCTemplate.Empathy = dbMob.Empathy;
-				NPCTemplate.Intelligence = dbMob.Intelligence;
-				NPCTemplate.Charisma = dbMob.Charisma;
-				NPCTemplate.Piety = dbMob.Piety;
-			}
-
+			Strength = (short)dbMob.Strength;
+			Constitution = (short)dbMob.Constitution;
+			Dexterity = (short)dbMob.Dexterity;
+			Quickness = (short)dbMob.Quickness;
+			Empathy = (short)dbMob.Empathy;
+			Intelligence = (short)dbMob.Intelligence;
+			Charisma = (short)dbMob.Charisma;
+			Piety = (short)dbMob.Piety;
 			AutoSetStats();
 
 			MeleeDamageType = (eDamageType)dbMob.MeleeDamageType;
@@ -2056,7 +2051,7 @@ namespace DOL.GS
 			Gender = (eGender)dbMob.Gender;
 			OwnerID = dbMob.OwnerID;
 
-			if (npcTemplate != null && npcTemplate.ReplaceMobValues)
+			if (npcTemplate != null)
 				LoadTemplate(npcTemplate);
 			/*
 						if (Inventory != null)
@@ -2207,7 +2202,29 @@ namespace DOL.GS
 				return;
 
 			// Save the template for later
-			m_template = template;
+			m_npcTemplate = template as NpcTemplate;
+
+			// These stats aren't found in the mob table, so always get them from the template
+			this.TetherRange = template.TetherRange;
+			this.ParryChance = template.ParryChance;
+			this.EvadeChance = template.EvadeChance;
+			this.BlockChance = template.BlockChance;
+			this.LeftHandSwingChance = template.LeftHandSwingChance;
+
+			if (template.Spells != null) this.Spells = template.Spells;
+			if (template.Styles != null) this.Styles = template.Styles;
+			if (template.Abilities != null)
+			{
+				lock (m_lockAbilities)
+				{
+					foreach (Ability ab in template.Abilities)
+						m_abilities[ab.KeyName] = ab;
+				}
+			}
+
+			// Everything below this point is already in the mob table
+			if (!template.ReplaceMobValues)
+				return;
 
 			var m_templatedInventory = new List<string>();
 			this.TranslationId = template.TranslationId;
@@ -2255,23 +2272,24 @@ namespace DOL.GS
 			#endregion
 
 			#region Stats
-			// Stats
-			NPCTemplate = template as NpcTemplate; // AutoSetStats() pulls values from NPCTemplate, so we need to store it locally.
+			Strength = (short)template.Strength;
+			Constitution = (short)template.Constitution;
+			Dexterity = (short)template.Dexterity;
+			Quickness = (short)template.Quickness;
+			Empathy = (short)template.Empathy;
+			Intelligence = (short)template.Intelligence;
+			Charisma = (short)template.Charisma;
+			Piety = (short)template.Piety;
 			AutoSetStats();
 			#endregion
 
 			#region Misc Stats
 			this.MaxDistance = template.MaxDistance;
-			this.TetherRange = template.TetherRange;
 			this.Race = (short)template.Race;
 			this.BodyType = (ushort)template.BodyType;
 			this.MaxSpeedBase = template.MaxSpeed;
 			this.Flags = (eFlags)template.Flags;
 			this.MeleeDamageType = template.MeleeDamageType;
-			this.ParryChance = template.ParryChance;
-			this.EvadeChance = template.EvadeChance;
-			this.BlockChance = template.BlockChance;
-			this.LeftHandSwingChance = template.LeftHandSwingChance;
 			#endregion
 
 			#region Inventory
@@ -2357,16 +2375,6 @@ namespace DOL.GS
 			}
 			#endregion
 
-			if (template.Spells != null) this.Spells = template.Spells;
-			if (template.Styles != null) this.Styles = template.Styles;
-			if (template.Abilities != null)
-			{
-				lock (m_lockAbilities)
-				{
-					foreach (Ability ab in template.Abilities)
-						m_abilities[ab.KeyName] = ab;
-				}
-			}
 			BuffBonusCategory4[(int)eStat.STR] += template.Strength;
 			BuffBonusCategory4[(int)eStat.DEX] += template.Dexterity;
 			BuffBonusCategory4[(int)eStat.CON] += template.Constitution;
@@ -2382,7 +2390,6 @@ namespace DOL.GS
 				AggroLevel = template.AggroLevel,
 				AggroRange = template.AggroRange
 			};
-			this.NPCTemplate = template as NpcTemplate;
 		}
 
 		/// <summary>
@@ -4692,7 +4699,6 @@ namespace DOL.GS
 		#endregion
 
 		#region Spell
-
 		private List<Spell> m_spells = new List<Spell>(0);
 		/// <summary>
 		/// property of spell array of NPC
@@ -4702,14 +4708,19 @@ namespace DOL.GS
 			get { return m_spells; }
 			set
 			{
-				if (value == null)
+				if (value == null || value.Count < 1)
 				{
 					m_spells.Clear();
-					m_HarmfulSpells = null;
+					InstantHarmfulSpells = null;
+					HarmfulSpells = null;
+					InstantHealSpells = null;
+					HealSpells = null;
+					InstantMiscSpells = null;
+					MiscSpells = null;
 				}
 				else
 				{
-					m_spells = value != null ? value.Cast<Spell>().ToList() : null;
+					m_spells = value.Cast<Spell>().ToList();
 					SortSpells();
 				}
 			}
@@ -4718,133 +4729,79 @@ namespace DOL.GS
 		/// <summary>
 		/// Harmful spell list and accessor
 		/// </summary>
-		private List<Spell> m_HarmfulSpells = null;
-		public override IList<Spell> HarmfulSpells
+		public List<Spell> HarmfulSpells { get; set; } = null;
+
+		/// <summary>
+		/// Whether or not the NPC can cast harmful spells with a cast time.
+		/// </summary>
+		public bool CanCastHarmfulSpells
 		{
-			get
-			{
-				if (m_HarmfulSpells == null)
-					return new List<Spell>(0);
-				else
-					return m_HarmfulSpells;
-			}
+			get { return (HarmfulSpells != null && HarmfulSpells.Count > 0); }
 		}
 
 		/// <summary>
 		/// Instant harmful spell list and accessor
 		/// </summary>
-		private List<Spell> m_HarmfulInstantSpells = null;
-		public IList<Spell> HarmfulInstantSpells
-		{
-			get
-			{
-				if (m_HarmfulInstantSpells == null)
-					return new List<Spell>(0);
-				else
-					return m_HarmfulInstantSpells;
-			}
-		}
+		public List<Spell> InstantHarmfulSpells { get; set; } = null;
 
 		/// <summary>
-		/// Whether or not the NPC can cast harmful spells
-		/// at the moment.
+		/// Whether or not the NPC can cast harmful instant spells.
 		/// </summary>
-		public override bool CanCastHarmfulSpells
+		public bool CanCastInstantHarmfulSpells
 		{
-			get
-			{
-				if (!base.CanCastHarmfulSpells)
-					return false;
-
-				return (m_HarmfulSpells != null && m_HarmfulSpells.Count > 0 && !IsBeingInterrupted)
-					|| (m_HarmfulInstantSpells != null && m_HarmfulInstantSpells.Count > 0);
-			}
+			get { return (InstantHarmfulSpells != null && InstantHarmfulSpells.Count > 0); }
 		}
 
 		/// <summary>
 		/// Healing spell list and accessor
 		/// </summary>
-		private List<Spell> m_HealSpells = null;
-		public IList<Spell> HealSpells
+		public List<Spell> HealSpells { get; set; } = null;
+
+		/// <summary>
+		/// Whether or not the NPC can cast heal spells with a cast time.
+		/// </summary>
+		public bool CanCastHealSpells
 		{
-			get
-			{
-				if (m_HealSpells == null)
-					return new List<Spell>(0);
-				else
-					return m_HealSpells;
-			}
+			get { return (HealSpells != null && HealSpells.Count > 0); }
 		}
 
 		/// <summary>
 		/// Instant healing spell list and accessor
 		/// </summary>
-		private List<Spell> m_HealInstantSpells = null;
-		public IList<Spell> HealInstantSpells
-		{
-			get
-			{
-				if (m_HealInstantSpells == null)
-					return new List<Spell>(0);
-				else
-					return m_HealInstantSpells;
-			}
-		}
+		public List<Spell> InstantHealSpells { get; set; } = null;
 
 		/// <summary>
-		/// Whether or not the NPC can cast healing spells
-		/// at the moment.
+		/// Whether or not the NPC can cast instant healing spells.
 		/// </summary>
-		public bool CanCastHealSpells
+		public bool CanCastInstantHealSpells
 		{
-			get
-			{
-				return (m_HealSpells != null && m_HealSpells.Count > 0 && !IsBeingInterrupted)
-					|| (m_HealInstantSpells != null && m_HealInstantSpells.Count > 0);
-			}
+			get { return (InstantHealSpells != null && InstantHealSpells.Count > 0); }
 		}
 
 		/// <summary>
 		/// Miscellaneous spell list and accessor
 		/// </summary>
-		private List<Spell> m_MiscSpells = null;
-		public IList<Spell> MiscSpells
+		public List<Spell> MiscSpells { get; set; } = null;
+
+		/// <summary>
+		/// Whether or not the NPC can cast miscellaneous spells with a cast time.
+		/// </summary>
+		public bool CanCastMiscSpells
 		{
-			get
-			{
-				if (m_MiscSpells == null)
-					return new List<Spell>(0);
-				else
-					return m_MiscSpells;
-			}
+			get { return (MiscSpells != null && MiscSpells.Count > 0); }
 		}
 
 		/// <summary>
 		/// Instant miscellaneous spell list and accessor
 		/// </summary>
-		private List<Spell> m_MiscInstantSpells = null;
-		public IList<Spell> MiscInstantSpells
-		{
-			get
-			{
-				if (m_MiscInstantSpells == null)
-					return new List<Spell>(0);
-				else
-					return m_MiscInstantSpells;
-			}
-		}
+		public List<Spell> InstantMiscSpells { get; set; } = null;
 
 		/// <summary>
-		/// Whether or not the NPC can cast miscellaneous spells
-		/// at the moment.
+		/// Whether or not the NPC can cast miscellaneous instant spells.
 		/// </summary>
-		public bool CanCastMiscSpells
+		public bool CanCastInstantMiscSpells
 		{
-			get
-			{
-				return (m_MiscSpells != null && m_MiscSpells.Count > 0 && !IsBeingInterrupted)
-					|| (m_MiscInstantSpells != null && m_MiscInstantSpells.Count > 0);
-			}
+			get { return (InstantMiscSpells != null && InstantMiscSpells.Count > 0); }
 		}
 
 		/// <summary>
@@ -4853,68 +4810,73 @@ namespace DOL.GS
 		public void SortSpells()
 		{
 			// Clear the lists
-			if (m_HarmfulInstantSpells != null)
-				m_HarmfulInstantSpells.Clear();
-			if (m_HarmfulSpells != null)
-				m_HarmfulSpells.Clear();
-			if (m_HealInstantSpells != null)
-				m_HealInstantSpells.Clear();
-			if (m_HealSpells != null)
-				m_HealSpells.Clear();
-			if (m_MiscInstantSpells != null)
-				m_MiscInstantSpells.Clear();
-			if (m_MiscSpells != null)
-				m_MiscSpells.Clear();
+			if (InstantHarmfulSpells != null)
+				InstantHarmfulSpells.Clear();
+			if (HarmfulSpells != null)
+				HarmfulSpells.Clear();
+
+			if (InstantHealSpells != null)
+				InstantHealSpells.Clear();
+			if (HealSpells != null)
+				HealSpells.Clear();
+
+			if (InstantMiscSpells != null)
+				InstantMiscSpells.Clear();
+			if (MiscSpells != null)
+				MiscSpells.Clear();
 
 			// Sort spells into lists
 			foreach (Spell spell in m_spells)
 			{
+				if (spell == null)
+					continue;
+
 				if (spell.IsHarmful)
 				{
 					if (spell.IsInstantCast)
 					{
-						if (m_HarmfulInstantSpells == null)
-							m_HarmfulInstantSpells = new List<Spell>(1);
-						m_HarmfulInstantSpells.Add(spell);
+						if (InstantHarmfulSpells == null)
+							InstantHarmfulSpells = new List<Spell>(1);
+						InstantHarmfulSpells.Add(spell);
 					}
 					else
 					{
-						if (m_HarmfulSpells == null)
-							m_HarmfulSpells = new List<Spell>(1);
-						m_HarmfulSpells.Add(spell);
+						if (HarmfulSpells == null)
+							HarmfulSpells = new List<Spell>(1);
+						HarmfulSpells.Add(spell);
 					}
 				}
 				else if (spell.IsHealing)
 				{
 					if (spell.IsInstantCast)
 					{
-						if (m_HealInstantSpells == null)
-							m_HealInstantSpells = new List<Spell>(1);
-						m_HealInstantSpells.Add(spell);
+						if (InstantHealSpells == null)
+							InstantHealSpells = new List<Spell>(1);
+						InstantHealSpells.Add(spell);
 					}
 					else
 					{
-						if (m_HealSpells == null)
-							m_HealSpells = new List<Spell>(1);
-						m_HealSpells.Add(spell);
+						if (HealSpells == null)
+							HealSpells = new List<Spell>(1);
+						HealSpells.Add(spell);
 					}
 				}
 				else
 				{
 					if (spell.IsInstantCast)
 					{
-						if (m_MiscInstantSpells == null)
-							m_MiscInstantSpells = new List<Spell>(1);
-						m_MiscInstantSpells.Add(spell);
+						if (InstantMiscSpells == null)
+							InstantMiscSpells = new List<Spell>(1);
+						InstantMiscSpells.Add(spell);
 					}
 					else
 					{
-						if (m_MiscSpells == null)
-							m_MiscSpells = new List<Spell>(1);
-						m_MiscSpells.Add(spell);
+						if (MiscSpells == null)
+							MiscSpells = new List<Spell>(1);
+						MiscSpells.Add(spell);
 					}
 				}
-			}
+			} // foreach
 		}
 		#endregion
 
@@ -5276,16 +5238,16 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="spell"></param>
 		/// <param name="line"></param>
-		public override void CastSpell(Spell spell, SpellLine line)
+ 		/// <returns>Whether the spellcast started successfully</returns>
+		public override bool CastSpell(Spell spell, SpellLine line)
 		{
 			if (IsIncapacitated)
-				return;
+				return false;
 
-			if (m_runningSpellHandler != null || TempProperties.getProperty<Spell>(LOSCURRENTSPELL, null) != null)
-			{
-				return;
-			}
+			if ( (m_runningSpellHandler != null && !spell.IsInstantCast) || TempProperties.getProperty<Spell>(LOSCURRENTSPELL, null) != null)
+				return false;
 
+			bool casted = false;
 			Spell spellToCast = null;
 
 			if (line.KeyName == GlobalSpellsLines.Mob_Spells)
@@ -5305,6 +5267,15 @@ namespace DOL.GS
 			if (tempProp <= 0)
 			{
 				GamePlayer LOSChecker = TargetObject as GamePlayer;
+
+				if (LOSChecker == null && this is GamePet pet)
+				{
+					if (pet.Owner is GamePlayer player)
+						LOSChecker = player;
+					else if (pet.Owner is CommanderPet petComm && petComm.Owner is GamePlayer owner)
+						LOSChecker = owner;
+				}
+
 				if (LOSChecker == null)
 				{
 					foreach (GamePlayer ply in GetPlayersInRadius(350))
@@ -5320,7 +5291,7 @@ namespace DOL.GS
 				if (LOSChecker == null)
 				{
 					TempProperties.setProperty(LOSTEMPCHECKER, 0);
-					base.CastSpell(spellToCast, line);
+					casted = base.CastSpell(spellToCast, line);
 				}
 				else
 				{
@@ -5329,15 +5300,13 @@ namespace DOL.GS
 					TempProperties.setProperty(LOSCURRENTLINE, line);
 					TempProperties.setProperty(LOSSPELLTARGET, TargetObject);
 					LOSChecker.Out.SendCheckLOS(LOSChecker, this, new CheckLOSResponse(StartSpellAttackCheckLOS));
+					casted = true;
 				}
 			}
 			else
-			{
 				TempProperties.setProperty(LOSTEMPCHECKER, tempProp - 1);
-			}
 
-			return;
-
+			return casted;
 		}
 
 		public void StartSpellAttackCheckLOS(GamePlayer player, ushort response, ushort targetOID)
@@ -5745,25 +5714,7 @@ namespace DOL.GS
 				m_ownBrain = defaultBrain;
 				m_ownBrain.Body = this;
 			}
-
-			// Save base stats in m_template even if there wasn't an npctemplate to begin with, as AutoSetStats() need them.
-			if (m_template == null)
-			{
-				//m_template = new NpcTemplate(this);  // This causes too many long queries and causes server startup to take FOREVER
-				NpcTemplate tmpNew = new NpcTemplate();
-				tmpNew.Strength = Strength;
-				tmpNew.Constitution = Constitution;
-				tmpNew.Dexterity = Dexterity;
-				tmpNew.Quickness = Quickness;
-				tmpNew.Empathy = Empathy;
-				tmpNew.Intelligence = Intelligence;
-				tmpNew.Charisma = Charisma;
-
-				m_template = tmpNew;
-			}
 		}
-
-		INpcTemplate m_template = null;
 
 		/// <summary>
 		/// create npc from template
@@ -5776,8 +5727,9 @@ namespace DOL.GS
 		{
 			if (template == null) return;
 
-			// save the original template so we can do calculations off the original values
-			// m_template = template; Not needed, LoadTemplate() does this already.
+			// When creating a new mob from a template, we have to get all values from the template
+			if (template is NpcTemplate npcTemplate)
+				npcTemplate.ReplaceMobValues = true;
 
 			LoadTemplate(template);
 		}
