@@ -1248,8 +1248,17 @@ namespace DOL.GS.Quests.Albion
 			if (player == null)
 				return;
 
-			if(Lidmann.CanGiveQuest(typeof (Defenders_50), player)  <= 0)
+			if (Lidmann.CanGiveQuest(typeof(Defenders_50), player) <= 0)
 				return;
+
+			// player is not allowed to start this quest until the quest rewards are available
+			if (player.CharacterClass.ID == (byte)eCharacterClass.MaulerAlb &&
+				(MaulerAlbEpicArms == null || MaulerAlbEpicBoots == null || MaulerAlbEpicGloves == null ||
+				MaulerAlbEpicHelm == null || MaulerAlbEpicLegs == null || MaulerAlbEpicVest == null))
+			{
+				Lidmann.SayTo(player, "This quest is not available to Maulers yet.");
+				return;
+			}
 
 			//We also check if the player is already doing the quest
 			Defenders_50 quest = player.IsDoingQuest(typeof (Defenders_50)) as Defenders_50;
@@ -1429,15 +1438,6 @@ namespace DOL.GS.Quests.Albion
 
             if (Step == 2 && e == GamePlayerEvent.GiveItem)
             {
-                // Graveen: if not existing maulerepic in DB
-                // player is not allowed to finish this quest until we fix this problem
-                if (MaulerAlbEpicArms == null || MaulerAlbEpicBoots == null || MaulerAlbEpicGloves == null ||
-                    MaulerAlbEpicHelm == null || MaulerAlbEpicLegs == null || MaulerAlbEpicVest == null)
-                    {
-                    Lidmann.SayTo(player, "Dark forces are still voiding this quest, your armor is not ready.");
-                    return;
-                }
-
                 GiveItemEventArgs gArgs = (GiveItemEventArgs)args;
 				if (gArgs.Target.Name == Lidmann.Name && gArgs.Item.Id_nb == sealed_pouch.Id_nb)
 				{
