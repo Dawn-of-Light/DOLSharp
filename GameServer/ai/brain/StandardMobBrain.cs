@@ -1169,9 +1169,11 @@ namespace DOL.AI.Brain
 		{
 			if (spell == null) return false;
 			if (Body.GetSkillDisabledDuration(spell) > 0) return false;
-			GameObject lastTarget = Body.TargetObject;
+
+			bool casted = false;
 
 			// clear current target, set target based on spell type, cast spell, return target to original target
+			GameObject lastTarget = Body.TargetObject;
 
 			Body.TargetObject = null;
 			switch (spell.SpellType.ToUpper())
@@ -1349,25 +1351,29 @@ namespace DOL.AI.Brain
 						break;
 					Body.TargetObject = Body;
 					break;
+
+				default:
+					//log.Warn($"CheckDefensiveSpells() encountered an unknown spell type [{spell.SpellType}]");
+					break;
 			}
 
 			if (Body.TargetObject != null && (spell.Duration == 0 || (Body.TargetObject is GameLiving living && LivingHasEffect(living, spell) == false)))
             {
-				if (Body.IsMoving && spell.CastTime > 0)
-					Body.StopFollowing();
+				casted = Body.CastSpell(spell, m_mobSpellLine);
 
-				if (Body.TargetObject != Body && spell.CastTime > 0)
-					Body.TurnTo(Body.TargetObject);
+				if (casted && spell.CastTime > 0)
+				{
+					if (Body.IsMoving)
+						Body.StopFollowing();
 
-				Body.CastSpell(spell, m_mobSpellLine);
-
-				Body.TargetObject = lastTarget;
-				return true;
+					if (Body.TargetObject != Body)
+						Body.TurnTo(Body.TargetObject);
+				}
 			}
 
 			Body.TargetObject = lastTarget;
 
-			return false;
+			return casted;
 		}
 
 		/// <summary>
@@ -1378,18 +1384,20 @@ namespace DOL.AI.Brain
 			if (spell.Target.ToLower() != "enemy" && spell.Target.ToLower() != "area" && spell.Target.ToLower() != "cone")
 				return false;
 
+			bool casted = false;
+
 			if (Body.TargetObject != null && (spell.Duration == 0 || (Body.TargetObject is GameLiving living && LivingHasEffect(living, spell) == false)))
             {
-				if (Body.IsMoving && spell.CastTime > 0)
-					Body.StopFollowing();
-
-				if (Body.TargetObject != Body && spell.CastTime > 0)
+				// Offensive spells require the caster to be facing the target
+				if (Body.TargetObject != Body)
 					Body.TurnTo(Body.TargetObject);
 
-				Body.CastSpell(spell, m_mobSpellLine);
-				return true;
+				casted = Body.CastSpell(spell, m_mobSpellLine);
+
+				if (casted && spell.CastTime > 0 && Body.IsMoving)
+					Body.StopFollowing();
 			}
-			return false;
+			return casted;
 		}
 
 		/// <summary>
@@ -1461,7 +1469,7 @@ namespace DOL.AI.Brain
 		/// <param name="target">The target living object</param>
 		/// <param name="spell">The spell to check</param>
 		/// <returns>True if the living has the effect</returns>
-		protected bool LivingHasEffect(GameLiving target, Spell spell)
+		public static bool LivingHasEffect(GameLiving target, Spell spell)
 		{
 			if (target == null)
 				return true;

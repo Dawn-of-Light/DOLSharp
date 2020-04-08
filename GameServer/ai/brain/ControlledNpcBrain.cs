@@ -384,7 +384,7 @@ namespace DOL.AI.Brain
 		public override void Think()
 		{
 			GamePlayer playerowner = GetPlayerOwner();
-			
+
 			long lastUpdate;
 			if (!playerowner.Client.GameObjectUpdateArray.TryGetValue(new Tuple<ushort, ushort>(Body.CurrentRegionID, (ushort)Body.ObjectID), out lastUpdate))
 				lastUpdate = 0;
@@ -397,34 +397,24 @@ namespace DOL.AI.Brain
 			}
 			
 			if (playerowner != null && (GameTimer.GetTickCount() - lastUpdate) > ThinkInterval)
-			{
 				playerowner.Out.SendObjectUpdate(Body);
-			}
 			
 			//See if the pet is too far away, if so release it!
-			if (Owner is GamePlayer && IsMainPet)
-			{
-				if (!Body.IsWithinRadius(Owner, MAX_OWNER_FOLLOW_DIST))
-					(Owner as GamePlayer).CommandNpcRelease();
-			}
+			if (Owner is GamePlayer && IsMainPet && !Body.IsWithinRadius(Owner, MAX_OWNER_FOLLOW_DIST))
+				(Owner as GamePlayer).CommandNpcRelease();
 
 			// if pet is in agressive mode then check aggressive spells and attacks first
-			if (AggressionState == eAggressionState.Aggressive)
+			if (!Body.AttackState && AggressionState == eAggressionState.Aggressive)
 			{
 				CheckPlayerAggro();
 				CheckNPCAggro();
 				AttackMostWanted();
 			}
 
-			if (Body.IsCasting == false && Body.IsAttacking == false)
-			{
-				// Check for buffs, heals, etc
-				// Only prevent casting if we are ordering pet to come to us or go to target
-				if (Owner is GameNPC || (Owner is GamePlayer && WalkState != eWalkState.ComeHere && WalkState != eWalkState.GoTarget))
-				{
-					CheckSpells(eCheckSpellType.Defensive);
-				}
-			}
+			// Check for buffs, heals, etc, interrupting melee if not being interrupted
+			// Only prevent casting if we are ordering pet to come to us or go to target
+			if (Owner is GameNPC || (Owner is GamePlayer && WalkState != eWalkState.ComeHere && WalkState != eWalkState.GoTarget))
+				CheckSpells(eCheckSpellType.Defensive);
 
 			// Stop hunting player entering in steath
 			if ( Body.TargetObject != null && Body.TargetObject is GamePlayer)
@@ -441,6 +431,10 @@ namespace DOL.AI.Brain
 				previousIsStealthed = player.IsStealthed;
 			}
 
+			// Always check offensive spells, or pets in melee will keep blindly melee attacking,
+			//	when they should be stopping to cast offensive spells.
+			if (IsActive && m_aggressionState != eAggressionState.Passive)
+				CheckSpells(eCheckSpellType.Offensive);
 		}
 
 		/// <summary>
@@ -484,51 +478,68 @@ namespace DOL.AI.Brain
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Checks if any spells need casting
+		/// </summary>
+		/// <param name="type">Which type should we go through and check for?</param>
+		/// <returns>True if we are begin to cast or are already casting</returns>
 		public override bool CheckSpells(eCheckSpellType type)
 		{
 			if (Body == null || Body.Spells == null || Body.Spells.Count < 1) return false;
 			
-			if (Body.IsCasting) return true;
-			
 			bool casted = false;
 			if (type == eCheckSpellType.Defensive)
 			{
-				foreach (Spell spell in Body.Spells)
+				// Check instant spells, but only cast one of each type to prevent spamming
+				if (Body.CanCastInstantHealSpells)
+					foreach (Spell spell in Body.InstantHealSpells)
+						if (CheckDefensiveSpells(spell))
+							break;
+
+				if (Body.CanCastInstantMiscSpells)
+					foreach (Spell spell in Body.InstantMiscSpells)
+						if (CheckDefensiveSpells(spell))
+							break;
+
+				if (!Body.IsCasting)
 				{
-					if (!Body.IsBeingInterrupted && Body.GetSkillDisabledDuration(spell) == 0 && CheckDefensiveSpells(spell))
-					{
-						casted = true;
-						break;
-					}
-				}
-			}
-			else
-			{
-				foreach (Spell spell in Body.Spells)
-				{
-					if (Body.GetSkillDisabledDuration(spell) == 0)
-					{
-						if (spell.CastTime > 0)
-						{
-							if (!Body.IsBeingInterrupted && CheckOffensiveSpells(spell))
+					// Check spell lists, prioritizing healing
+					if (Body.CanCastHealSpells)
+						foreach (Spell spell in Body.HealSpells)
+							if (CheckDefensiveSpells(spell))
 							{
 								casted = true;
 								break;
 							}
-						}
-						else
-							CheckInstantSpells(spell);
-					}
+
+					if (!casted && Body.CanCastMiscSpells)
+						foreach (Spell spell in Body.MiscSpells)
+							if (CheckDefensiveSpells(spell))
+							{
+								casted = true;
+								break;
+							}
 				}
 			}
-
-			if (!Body.AttackState && WalkState == eWalkState.Follow && Owner != null)
+			else if (Body.TargetObject != null) // Check offensive spells
 			{
-				Follow(Owner);
+				// Check instant spells, but only cast one to prevent spamming
+				if (Body.CanCastInstantHarmfulSpells)
+					foreach (Spell spell in Body.InstantHarmfulSpells)
+						if (CheckOffensiveSpells(spell))
+							break;
+
+				if (!Body.IsCasting && Body.CanCastHarmfulSpells)
+					foreach (Spell spell in Body.HarmfulSpells)
+						if (CheckOffensiveSpells(spell))
+						{
+							casted = true;
+							break;
+						}
 			}
 
-			return casted;
+			return casted || Body.IsCasting;
 		}
 
 		/// <summary>
@@ -536,17 +547,29 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected override bool CheckDefensiveSpells(Spell spell)
 		{
+			if (Body == null || spell == null || spell.IsHarmful)
+				return false;
+
+			// Make sure we're currently able to cast the spell
+			if (spell.CastTime > 0 && (Body.IsCasting || (Body.IsBeingInterrupted && !spell.Uninterruptible)))
+				return false;
+
+			// Make sure the spell isn't disabled
+			if (spell.HasRecastDelay && Body.GetSkillDisabledDuration(spell) > 0)
+				return false;
+
+			bool casted = false;
+
+			// clear current target, set target based on spell type, cast spell, return target to original target
 			GameObject lastTarget = Body.TargetObject;
 			Body.TargetObject = null;
 			GamePlayer player = null;
 			GameLiving owner = null;
 
-			// clear current target, set target based on spell type, cast spell, return target to original target
-
 			switch (spell.SpellType.ToUpper())
 			{
                 #region Buffs
-                case "AcuityBuff":
+                case "ACUITYBUFF":
                 case "AFHITSBUFF":
                 case "ALLMAGICRESISTSBUFF":
                 case "ARMORABSORPTIONBUFF":
@@ -606,25 +629,25 @@ namespace DOL.AI.Brain
 							break;
 						}
 
-						if (spell.Target == "Realm" || spell.Target == "Group")
+						String target = spell.Target.ToUpper();
+						if (target == "REALM" || target == "GROUP")
 						{
 							owner = (this as IControlledBrain).Owner;
 							player = null;
 							//Buff owner
-							if (!LivingHasEffect(owner, spell))
+							if (!LivingHasEffect(owner, spell) && Body.IsWithinRadius(owner, spell.Range))
 							{
                                 Body.TargetObject = owner;
 								break;
 							}
 
-							if (owner is GameNPC)
+							if (owner is GameNPC npc)
 							{
 								//Buff other minions
-								foreach (IControlledBrain icb in ((GameNPC)owner).ControlledNpcList)
+								foreach (IControlledBrain icb in npc.ControlledNpcList)
 								{
-									if (icb == null)
-										continue;
-									if (!LivingHasEffect(icb.Body, spell))
+									if (icb != null && icb.Body != null && !LivingHasEffect(icb.Body, spell) 
+										&& Body.IsWithinRadius(icb.Body, spell.Range))
 									{
                                         Body.TargetObject = icb.Body;
 										break;
@@ -647,7 +670,7 @@ namespace DOL.AI.Brain
 								{
 									foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 									{
-										if (!LivingHasEffect(p, spell) && Body.GetDistanceTo(p) <= spell.Range)
+										if (!LivingHasEffect(p, spell) && Body.IsWithinRadius(p, spell.Range))
 										{
                                             Body.TargetObject = p;
 											break;
@@ -662,13 +685,6 @@ namespace DOL.AI.Brain
 
 					#region Disease Cure/Poison Cure/Summon
 				case "CUREDISEASE":
-					//Cure self
-					if (Body.IsDiseased)
-					{
-						Body.TargetObject = Body;
-						break;
-					}
-
 					//Cure owner
 					owner = (this as IControlledBrain).Owner;
 					if (owner.IsDiseased)
@@ -677,6 +693,13 @@ namespace DOL.AI.Brain
 						break;
 					}
 
+					//Cure self
+					if (Body.IsDiseased)
+					{
+						Body.TargetObject = Body;
+						break;
+					}
+
 					// Cure group members
 
 					player = GetPlayerOwner();
@@ -685,7 +708,7 @@ namespace DOL.AI.Brain
 					{
 						foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 						{
-							if (p.IsDiseased && Body.GetDistanceTo(p) <= spell.Range)
+							if (p.IsDiseased && Body.IsWithinRadius(p, spell.Range))
 							{
 								Body.TargetObject = p;
 								break;
@@ -694,18 +717,18 @@ namespace DOL.AI.Brain
 					}
 					break;
 				case "CUREPOISON":
-					//Cure self
-					if (LivingIsPoisoned(Body))
-					{
-						Body.TargetObject = Body;
-						break;
-					}
-
 					//Cure owner
 					owner = (this as IControlledBrain).Owner;
 					if (LivingIsPoisoned(owner))
 					{
 						Body.TargetObject = owner;
+						break;
+					}
+
+					//Cure self
+					if (LivingIsPoisoned(Body))
+					{
+						Body.TargetObject = Body;
 						break;
 					}
 
@@ -717,7 +740,7 @@ namespace DOL.AI.Brain
 					{
 						foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
 						{
-							if (LivingIsPoisoned(p) && Body.GetDistanceTo(p) <= spell.Range)
+							if (LivingIsPoisoned(p) && Body.IsWithinRadius(p, spell.Range))
 							{
 								Body.TargetObject = p;
 								break;
@@ -738,39 +761,91 @@ namespace DOL.AI.Brain
                 case "OMNIHEAL":
                 case "PBAEHEAL":
                 case "SPREADHEAL":
-                    if (spell.Target.ToLower() == "self")
+					// Heal seriously injured targets first
+					int emergencyThreshold = DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD / 2;
+
+					String spellTarget = spell.Target.ToUpper();
+					int bodyPercent = Body.HealthPercent;
+					if (spellTarget == "SELF")
+					{
+						if (bodyPercent < emergencyThreshold && !spell.TargetHasEffect(Body))
+							Body.TargetObject = Body;
+
+						break;
+					}
+
+					//Heal owner
+					owner = (this as IControlledBrain).Owner;
+					int ownerPercent = owner.HealthPercent;
+					if (ownerPercent < emergencyThreshold && !spell.TargetHasEffect(owner) && Body.IsWithinRadius(owner, spell.Range))
+					{
+						Body.TargetObject = owner;
+						break;
+					}
+
+					//Heal self
+					if (bodyPercent < emergencyThreshold
+						&& !spell.TargetHasEffect(Body))
+					{
+						Body.TargetObject = Body;
+						break;
+					}
+
+					// Heal group
+					player = GetPlayerOwner();
+					ICollection<GamePlayer> playerGroup = null;
+					if (player.Group != null && (spellTarget == "REALM" || spellTarget == "GROUP"))
+					{
+						playerGroup = player.Group.GetPlayersInTheGroup();
+
+						foreach (GamePlayer p in playerGroup)
+						{
+							if (p.HealthPercent < emergencyThreshold && !spell.TargetHasEffect(p)
+								&& Body.IsWithinRadius(p, spell.Range))
+							{
+								Body.TargetObject = p;
+								break;
+							}
+						}
+					}
+
+					// Now check for targets which aren't seriously injured
+
+					if (spellTarget == "SELF")
 					{
 						// if we have a self heal and health is less than 75% then heal, otherwise return false to try another spell or do nothing
-						if (Body.HealthPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD)
+						if (bodyPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD
+							&& !spell.TargetHasEffect(Body))
 						{
 							Body.TargetObject = Body;
 						}
 						break;
 					}
 
-					//Heal self
-					if (Body.HealthPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD)
-					{
-						Body.TargetObject = Body;
-						break;
-					}
-
 					//Heal owner
 					owner = (this as IControlledBrain).Owner;
-					if (owner.HealthPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD)
+					if (ownerPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD
+						&& !spell.TargetHasEffect(owner) && Body.IsWithinRadius(owner, spell.Range))
 					{
 						Body.TargetObject = owner;
 						break;
 					}
 
-					player = GetPlayerOwner();
-
-					if (player.Group != null && (spell.Target.ToLower() == "realm" || spell.Target.ToLower() == "group"))
+					//Heal self
+					if (bodyPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD
+						&& !spell.TargetHasEffect(Body))
 					{
-						foreach (GamePlayer p in player.Group.GetPlayersInTheGroup())
+						Body.TargetObject = Body;
+						break;
+					}
+
+					// Heal group
+					if (playerGroup != null)
+					{
+						foreach (GamePlayer p in playerGroup)
 						{
-							if (p.HealthPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD
-								&& Body.GetDistanceTo(p) <= spell.Range)
+							if (p.HealthPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD 
+								&& !spell.TargetHasEffect(p) && Body.IsWithinRadius(p, spell.Range))
 							{
 								Body.TargetObject = p;
 								break;
@@ -778,25 +853,50 @@ namespace DOL.AI.Brain
 						}
 					}
 					break;
-					#endregion
+				#endregion
+
+				default:
+					log.Warn($"CheckDefensiveSpells() encountered an unknown spell type [{spell.SpellType}], calling base method");
+					return base.CheckDefensiveSpells(spell);
 			}
 
-			if (Body.TargetObject != null && (spell.Duration == 0 || (Body.TargetObject is GameLiving living && LivingHasEffect(living, spell) == false)))
+			if (Body.TargetObject != null)
             {
-				if (Body.IsMoving)
-					Body.StopFollowing();
+				casted = Body.CastSpell(spell, m_mobSpellLine);
 
-				if (Body.TargetObject != Body && spell.CastTime > 0)
-					Body.TurnTo(Body.TargetObject);
+				if (casted && spell.CastTime > 0)
+				{
+					if (Body.IsMoving)
+						Body.StopFollowing();
 
-				Body.CastSpell(spell, m_mobSpellLine);
-				Body.TargetObject = lastTarget;
-				return true;
+					if (Body.TargetObject != Body)
+						Body.TurnTo(Body.TargetObject);
+				}
 			}
 
 			Body.TargetObject = lastTarget;
 
-			return false;
+			return casted;
+		}
+
+		// Temporary until StandardMobBrain is updated
+		protected override bool CheckOffensiveSpells(Spell spell)
+		{
+			if (Body == null || Body.TargetObject == null || spell == null || spell.IsHelpful)
+				return false;
+
+			// Make sure we're currently able to cast the spell
+			if (spell.CastTime > 0 && (Body.IsCasting || (Body.IsBeingInterrupted && !spell.Uninterruptible)))
+				return false;
+
+			// Make sure the spell isn't disabled
+			if (spell.HasRecastDelay && Body.GetSkillDisabledDuration(spell) > 0)
+				return false;
+
+			if (!Body.IsWithinRadius(Body.TargetObject, spell.Range))
+				return false;
+
+			return base.CheckOffensiveSpells(spell);
 		}
 
 		/// <summary>

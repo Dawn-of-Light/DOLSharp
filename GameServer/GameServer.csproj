@@ -187,6 +187,7 @@
     <Compile Include="commands\gmcommands\cast.cs" />
     <Compile Include="commands\gmcommands\ClientList.cs" />
     <Compile Include="commands\gmcommands\gmstealth.cs" />
+    <Compile Include="commands\gmcommands\ServerReboot.cs" />
     <Compile Include="commands\gmcommands\translate.cs" />
     <Compile Include="commands\gmcommands\zone.cs" />
     <Compile Include="commands\gmcommands\crafting.cs" />
