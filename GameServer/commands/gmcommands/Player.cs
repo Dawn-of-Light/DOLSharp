@@ -38,7 +38,8 @@ namespace DOL.GS.Commands
 		"/player name <newName>",
 		"/player lastname <change|reset> <newLastName>",
 		"/player level <newLevel>",
-		"/player reset - Reset and re-level a player to their current level.",
+        "/player levelup",
+        "/player reset - Reset and re-level a player to their current level.",
 		"/player realm <newRealm>",
 		"/player inventory [wear|bag|vault|house|cons]",
 		"/player <rps|bps|xp|xpa|clxp|mlxp> <amount>",
@@ -191,7 +192,41 @@ namespace DOL.GS.Commands
                 #endregion
 
                 #region level / reset
+                case "levelup":
+                    var pToLevel = client.Player.TargetObject as GamePlayer;
+                    if (pToLevel == null)
+                        pToLevel = client.Player;
 
+                    if (pToLevel.Level != byte.MaxValue)
+                    {
+                        if (pToLevel.Level < 40 || pToLevel.IsLevelSecondStage)
+                        {
+                            pToLevel.Level++;
+
+                            client.Out.SendMessage("You gave " + pToLevel.Name + " a free level!",
+                                                       eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+
+                            if (pToLevel != client.Player)
+                                pToLevel.Out.SendMessage(
+                                    client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has given you a free level!",
+                                    eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                        }
+                        else
+                        {
+                            pToLevel.GainExperience(GameLiving.eXPSource.Other, pToLevel.ExperienceForCurrentLevelSecondStage - pToLevel.Experience);
+
+                            client.Out.SendMessage("You gave " + pToLevel.Name + " a free half level!",
+                                                       eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+
+                            if (pToLevel != client.Player)
+                                pToLevel.Out.SendMessage(
+                                    client.Player.Name + "(PrivLevel: " + client.Account.PrivLevel + ") has given you a free half level!",
+                                    eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                        }
+                        
+                    }
+
+                    break;
                 case "reset":
                 case "level":
                     {
@@ -1179,7 +1214,7 @@ namespace DOL.GS.Commands
                     {
                         var player = client.Player.TargetObject as GamePlayer;
 
-                        if (args.Length > 4)
+                        if (args.Length < 2 || args.Length > 4)
                         {
                             DisplaySyntax(client);
                             return;
