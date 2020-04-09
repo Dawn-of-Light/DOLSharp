@@ -1906,6 +1906,15 @@ namespace DOL.GS.Quests.Midgard
 			if(Lynnleigh.CanGiveQuest(typeof (Viking_50), player)  <= 0)
 				return;
 
+			// player is not allowed to start this quest until the quest rewards are available
+			if (player.CharacterClass.ID == (byte)eCharacterClass.MaulerMid &&
+				(MaulerMidEpicArms == null || MaulerMidEpicBoots == null || MaulerMidEpicGloves == null ||
+				MaulerMidEpicHelm == null || MaulerMidEpicLegs == null || MaulerMidEpicVest == null))
+			{
+				Elizabeth.SayTo(player, "This quest is not available to Maulers yet.");
+				return;
+			}
+
 			//We also check if the player is already doing the quest
 			Viking_50 quest = player.IsDoingQuest(typeof (Viking_50)) as Viking_50;
 
@@ -1970,17 +1979,6 @@ namespace DOL.GS.Quests.Midgard
 					{
                         case 4:
                             {
-                                // Graveen: if not existing maulerepic in DB
-                                // player is not allowed to finish this quest until we fix this problem
-//                                if (MaulerMidEpicArms == null || MaulerMidEpicBoots == null || MaulerMidEpicGloves == null ||
-//                                    MaulerMidEpicHelm == null || MaulerMidEpicLegs == null || MaulerMidEpicVest == null)
-                                if (MaulerMidEpicArms == null || MaulerMidEpicBoots == null || MaulerMidEpicGloves == null ||
-                                    MaulerMidEpicHelm == null || MaulerMidEpicLegs == null || MaulerMidEpicVest == null)
-                                {
-                                    Elizabeth.SayTo(player, "Dark forces are still voiding this quest, your armor is not ready.");
-                                    return;
-                                }
-
                                 Elizabeth.SayTo(player, "There are six parts to your reward, so make sure you have room for them. Just let me know when you are ready, and then you can [take them] with our thanks!");
                                 break;
                             }
