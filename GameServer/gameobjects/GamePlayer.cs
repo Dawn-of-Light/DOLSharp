@@ -24,6 +24,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
+using DOL.AI;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
@@ -3229,6 +3230,17 @@ namespace DOL.GS
 			}
 			else specLine.Level = 1;
 
+			// If BD subpet spells scaled and capped by BD spec, respecing a spell line
+			//	requires re-scaling the spells for all subpets from that line.
+			if (CharacterClass is CharacterClassBoneDancer
+				&& DOL.GS.ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL > 0
+				&& DOL.GS.ServerProperties.Properties.PET_CAP_BD_MINION_SPELL_SCALING_BY_SPEC
+				&& ControlledBrain is IControlledBrain brain && brain.Body is GamePet pet
+				&& pet.ControlledNpcList != null)
+					foreach (ABrain subBrain in pet.ControlledNpcList)
+						if (subBrain != null && subBrain.Body is BDSubPet subPet && subPet.PetSpecLine == specLine.KeyName)
+							subPet.SortSpells();
+
 			return specPoints;
 		}
 
@@ -5231,6 +5243,27 @@ namespace DOL.GS
 				Task.SaveIntoDatabase();
 			}
 			
+			// Level up pets and subpets
+			if (DOL.GS.ServerProperties.Properties.PET_LEVELS_WITH_OWNER &&
+				ControlledBrain is ControlledNpcBrain brain && brain.Body is GamePet pet)
+			{
+				if (pet.SetPetLevel())
+				{
+					if (DOL.GS.ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL > 0 && pet.Spells.Count > 0)
+						pet.SortSpells();
+
+					brain.UpdatePetWindow();
+				}
+
+				// subpets
+				if (pet.ControlledNpcList != null)
+					foreach (ABrain subBrain in pet.ControlledNpcList)
+						if (subBrain != null && subBrain.Body is GamePet subPet)
+							if (subPet.SetPetLevel()) // Levels up subpet
+								if (DOL.GS.ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL > 0)
+									subPet.SortSpells();
+			}
+
 			// save player to database
 			SaveIntoDatabase();
 		}
@@ -14398,13 +14431,16 @@ namespace DOL.GS
 		/// <returns>true if invulnerability was set (smaller than old invulnerability)</returns>
 		public virtual bool StartInvulnerabilityTimer(int duration, InvulnerabilityExpiredCallback callback)
 		{
+			if (GameServer.Instance.Configuration.ServerType == eGameServerType.GST_PvE)
+				return false;
+
 			if (duration < 1)
-            		{
-                		//throw new ArgumentOutOfRangeException("duration", duration, "Immunity duration cannot be less than 1ms"); This causes problems down the road, just log it instead.
-                		if (log.IsWarnEnabled)
-                    			log.Warn("GamePlayer.StartInvulnerabilityTimer(): Immunity duration cannot be less than 1ms");
-                		return false;
-            		}
+            {
+                //throw new ArgumentOutOfRangeException("duration", duration, "Immunity duration cannot be less than 1ms"); This causes problems down the road, just log it instead.
+                if (log.IsWarnEnabled)
+                    	log.Warn("GamePlayer.StartInvulnerabilityTimer(): Immunity duration cannot be less than 1ms");
+                return false;
+            }
 
 			long newTick = CurrentRegion.Time + duration;
 			if (newTick < m_invulnerabilityTick)
