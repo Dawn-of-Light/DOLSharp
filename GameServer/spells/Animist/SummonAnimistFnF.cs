@@ -117,14 +117,6 @@ namespace DOL.GS.Spells
 				effect.Cancel(false);
 		}
 
-		protected override byte GetPetLevel()
-		{
-			byte level = base.GetPetLevel();
-			if (level > 44)
-				level = 44;
-			return level;
-		}
-
 		/// <summary>
 		/// When an applied effect expires.
 		/// Duration spells only.
