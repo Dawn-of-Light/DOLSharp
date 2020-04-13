@@ -30,7 +30,7 @@ namespace DOL.GS.Quests
 	/// </summary>
 	public class CraftTask : AbstractTask
 	{
-		protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		public const string RECIEVER_ZONE = "recieverZone";
 

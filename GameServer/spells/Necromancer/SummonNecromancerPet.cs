@@ -145,24 +145,5 @@ namespace DOL.GS.Spells
 		{
 			return new NecromancerPet(template, m_summonConBonus, m_summonHitsBonus);
 		}
-
-		protected override byte GetPetLevel()
-		{
-			// Pet level will be 88% of the level of the caster +1, except for
-			// the minor zombie servant, which will cap out at level 2 (patch 1.87).
-			byte level;
-
-			if (Spell.Damage < 0)
-			{
-				double petLevel = Caster.Level * Spell.Damage * -0.01 + 1;
-				level = (byte)((m_pet.Name == "minor zombie servant")	? Math.Min(2, petLevel) : petLevel);
-			}
-			else
-			{
-				level = (byte)Spell.Damage;
-			}
-
-			return Math.Max((byte)1, level);
-		}
 	}
 }

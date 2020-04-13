@@ -1,6 +1,9 @@
 ﻿using DOL.Database;
-using log4net;
+using DOL.GS.Housing;
+using DOL.GS.Keeps;
+using DOL.GS.PacketHandler;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,16 +18,16 @@ namespace DOL.GS
 	public class AllRealmsTeleporter : GameTeleporter
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
+		
 		/// <summary>
 		/// Display teleport destinations for passed realm
 		/// </summary>
-		/// <param name="PlayerRealm">Realm to display destinations for</param>
-		public String DisplayTeleportDestinations(eRealm DestinationRealm)
+		/// <param name="destRealm">Realm to display destinations for</param>
+		public String DisplayTeleportDestinations(eRealm destRealm)
 		{
 			StringBuilder sRet = new StringBuilder("");
 
-			switch (DestinationRealm)
+			switch (destRealm)
 			{
 				case eRealm.Albion:
 					sRet.Append("Would you like to teleport to?\n[Camelot]\n[Albion Frontiers] or [Battlegrounds]\n[Albion Darkness Falls]\n");
@@ -42,7 +45,7 @@ namespace DOL.GS
 					sRet.Append("[Housing]\n[Albion] or [Midgard]");
 					break;
 				default:
-					log.Warn(String.Format("DisplayTeleportDestinations does not handle player realm [{0}]",DestinationRealm.ToString()));
+					log.Warn(String.Format("DisplayTeleportDestinations does not handle player realm [{0}]", destRealm.ToString()));
 					break;
 			}
 
@@ -484,13 +487,163 @@ namespace DOL.GS
 			} // switch (text.ToLower())
 
 			// Find the teleport location in the database.
-			Teleport port = WorldMgr.GetTeleportLocation(realmTarget, String.Format(":{0}",text));
+			Teleport port = GetTeleportLocation(player, text, realmTarget);
 			if (port != null)
 				OnTeleportSpell(player, port);
 			else
 				SayTo(player, "This destination is not yet supported.");
 
 			return true;
+		}
+
+		protected Teleport GetTeleportLocation(GamePlayer player, string text, eRealm realm)
+		{
+			// Battlegrounds are specials, as the teleport location depends on
+			// the level of the player, so let's deal with that first.
+			if (text.ToLower() == "battlegrounds")
+			{
+				if (!ServerProperties.Properties.BG_ZONES_OPENED && player.Client.Account.PrivLevel == (uint)ePrivLevel.Player)
+				{
+					SayTo(player, ServerProperties.Properties.BG_ZONES_CLOSED_MESSAGE);
+				}
+				else
+				{
+					AbstractGameKeep portalKeep = GameServer.KeepManager.GetBGPK(player);
+					if (portalKeep != null)
+					{
+						Teleport teleport = new Teleport();
+						teleport.TeleportID = "battlegrounds";
+						teleport.Realm = (byte)portalKeep.Realm;
+						teleport.RegionID = portalKeep.Region;
+						teleport.X = portalKeep.X;
+						teleport.Y = portalKeep.Y;
+						teleport.Z = portalKeep.Z;
+						teleport.Heading = 0;
+						return teleport;
+					}
+					else
+					{
+						if (player.Client.Account.PrivLevel > (uint)ePrivLevel.Player)
+						{
+							player.Out.SendMessage("No portal keep found.", eChatType.CT_Skill, eChatLoc.CL_SystemWindow);
+						}
+						return null;
+					}
+				}
+			}
+
+			// Another special case is personal house, as there is no location
+			// that will work for every player.
+			if (text.ToLower() == "personal")
+			{
+				House house = HouseMgr.GetHouseByPlayer(player);
+
+				if (house == null)
+				{
+					text = "entrance";  // Fall through, port to housing entrance.
+				}
+				else
+				{
+					IGameLocation location = house.OutdoorJumpPoint;
+					Teleport teleport = new Teleport();
+					teleport.TeleportID = "personal";
+					teleport.Realm = (int)player.Realm;
+					teleport.RegionID = location.RegionID;
+					teleport.X = location.X;
+					teleport.Y = location.Y;
+					teleport.Z = location.Z;
+					teleport.Heading = location.Heading;
+					return teleport;
+				}
+			}
+
+			// Yet another special case the port to the 'hearth' what means
+			// that the player will be ported to the defined house bindstone
+			if (text.ToLower() == "hearth")
+			{
+				// Check if player has set a house bind
+				if (!(player.BindHouseRegion > 0))
+				{
+					SayTo(player, "Sorry, you haven't set any house bind point yet.");
+					return null;
+				}
+
+				// Check if the house at the player's house bind location still exists
+				ArrayList houses = (ArrayList)HouseMgr.GetHousesCloseToSpot((ushort)player.
+					BindHouseRegion, player.BindHouseXpos, player.
+					BindHouseYpos, 700);
+				if (houses.Count == 0)
+				{
+					SayTo(player, "I'm afraid I can't teleport you to your hearth since the house at your " +
+						"house bind location has been torn down.");
+					return null;
+				}
+
+				// Check if the house at the player's house bind location contains a bind stone
+				House targetHouse = (House)houses[0];
+				IDictionary<uint, DBHouseHookpointItem> hookpointItems = targetHouse.HousepointItems;
+				Boolean hasBindstone = false;
+
+				foreach (KeyValuePair<uint, DBHouseHookpointItem> targetHouseItem in hookpointItems)
+				{
+					if (((GameObject)targetHouseItem.Value.GameObject).GetName(0, false).ToLower().EndsWith("bindstone"))
+					{
+						hasBindstone = true;
+						break;
+					}
+				}
+
+				if (!hasBindstone)
+				{
+					SayTo(player, "I'm sorry to tell that the bindstone of your current house bind location " +
+						"has been removed, so I'm not able to teleport you there.");
+					return null;
+				}
+
+				// Check if the player has the permission to bind at the house bind stone
+				if (!targetHouse.CanBindInHouse(player))
+				{
+					SayTo(player, "You're no longer allowed to bind at the house bindstone you've previously " +
+						"chosen, hence I'm not allowed to teleport you there.");
+					return null;
+				}
+
+				Teleport teleport = new Teleport();
+				teleport.TeleportID = "hearth";
+				teleport.Realm = (int)player.Realm;
+				teleport.RegionID = player.BindHouseRegion;
+				teleport.X = player.BindHouseXpos;
+				teleport.Y = player.BindHouseYpos;
+				teleport.Z = player.BindHouseZpos;
+				teleport.Heading = player.BindHouseHeading;
+				return teleport;
+			}
+
+			if (text.ToLower() == "guild")
+			{
+				House house = HouseMgr.GetGuildHouseByPlayer(player);
+
+				if (house == null)
+				{
+					return null;  // no teleport when guild house not found
+				}
+				else
+				{
+					IGameLocation location = house.OutdoorJumpPoint;
+					Teleport teleport = new Teleport();
+					teleport.TeleportID = "guild house";
+					teleport.Realm = (int)player.Realm;
+					teleport.RegionID = location.RegionID;
+					teleport.X = location.X;
+					teleport.Y = location.Y;
+					teleport.Z = location.Z;
+					teleport.Heading = location.Heading;
+					return teleport;
+				}
+			}
+
+			// Find the teleport location in the database.
+			return WorldMgr.GetTeleportLocation(realm, String.Format(":{0}", text));
 		}
 	}
 }

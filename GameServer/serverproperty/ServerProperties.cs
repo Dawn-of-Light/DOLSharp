@@ -1007,8 +1007,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base Value to use when auto-setting STR stat.
 		/// </summary>
-		[ServerProperty("npc", "mob_autoset_str_base", "Base Value to use when auto-setting STR stat. ", 30.0)]
-		public static double MOB_AUTOSET_STR_BASE;
+		[ServerProperty("npc", "mob_autoset_str_base", "Base Value to use when auto-setting STR stat. ", (short)30)]
+		public static short MOB_AUTOSET_STR_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting STR stat.
@@ -1019,8 +1019,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base Value to use when auto-setting CON stat.
 		/// </summary>
-		[ServerProperty("npc", "mob_autoset_con_base", "Base Value to use when auto-setting CON stat. ", 30.0)]
-		public static double MOB_AUTOSET_CON_BASE;
+		[ServerProperty("npc", "mob_autoset_con_base", "Base Value to use when auto-setting CON stat. ", (short)30)]
+		public static short MOB_AUTOSET_CON_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting CON stat.
@@ -1031,8 +1031,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base Value to use when auto-setting QUI stat.
 		/// </summary>
-		[ServerProperty("npc", "mob_autoset_qui_base", "Base Value to use when auto-setting qui stat. ", 30.0)]
-		public static double MOB_AUTOSET_QUI_BASE;
+		[ServerProperty("npc", "mob_autoset_qui_base", "Base Value to use when auto-setting qui stat. ", (short)30)]
+		public static short MOB_AUTOSET_QUI_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting QUI stat.
@@ -1043,8 +1043,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base Value to use when auto-setting DEX stat.
 		/// </summary>
-		[ServerProperty("npc", "mob_autoset_dex_base", "Base Value to use when auto-setting DEX stat. ", 30.0)]
-		public static double MOB_AUTOSET_DEX_BASE;
+		[ServerProperty("npc", "mob_autoset_dex_base", "Base Value to use when auto-setting DEX stat. ", (short)30)]
+		public static short MOB_AUTOSET_DEX_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting DEX stat.
@@ -1055,20 +1055,26 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base Value to use when auto-setting INT stat.
 		/// </summary>
-		[ServerProperty("npc", "mob_autoset_int_base", "Base Value to use when auto-setting INT stat. ", 30)]
-		public static int MOB_AUTOSET_INT_BASE;
+		[ServerProperty("npc", "mob_autoset_int_base", "Base Value to use when auto-setting INT stat. ", (short)30)]
+		public static short MOB_AUTOSET_INT_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting INT stat.
 		/// </summary>
 		[ServerProperty("npc", "mob_autoset_int_multiplier", "Multiplier to use when auto-setting INT stat. ", 1.0)]
-		public static double MOB_AUTOSET_INT_MULTIPLIER;		
-		
+		public static double MOB_AUTOSET_INT_MULTIPLIER;
+
+		/// <summary>
+		/// Do pets level up with their owner?
+		/// </summary>
+		[ServerProperty("npc", "pet_levels_with_owner", "Do pets level up with their owner? ", false)]
+		public static bool PET_LEVELS_WITH_OWNER;
+
 		/// <summary>
 		/// Base Value to use when auto-setting pet STR stat.
 		/// </summary>
-		[ServerProperty("npc", "pet_autoset_str_base", "Base Value to use when auto-setting Pet STR stat. ", 30.0)]
-		public static double PET_AUTOSET_STR_BASE;
+		[ServerProperty("npc", "pet_autoset_str_base", "Base Value to use when auto-setting Pet STR stat. ", (short)30)]
+		public static short PET_AUTOSET_STR_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting pet STR stat.
@@ -1078,8 +1084,8 @@ namespace DOL.GS.ServerProperties
 		
 		/// Base Value to use when auto-setting pet CON stat.
 		/// </summary>
-		[ServerProperty("npc", "pet_autoset_con_base", "Base Value to use when auto-setting Pet CON stat. ", 30.0)]
-		public static double PET_AUTOSET_CON_BASE;
+		[ServerProperty("npc", "pet_autoset_con_base", "Base Value to use when auto-setting Pet CON stat. ", (short)30)]
+		public static short PET_AUTOSET_CON_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting pet CON stat.
@@ -1089,8 +1095,8 @@ namespace DOL.GS.ServerProperties
 
 		/// Base Value to use when auto-setting Pet DEX stat.
 		/// </summary>
-		[ServerProperty("npc", "pet_autoset_dex_base", "Base Value to use when auto-setting Pet DEX stat. ", 30.0)]
-		public static double PET_AUTOSET_DEX_BASE;
+		[ServerProperty("npc", "pet_autoset_dex_base", "Base Value to use when auto-setting Pet DEX stat. ", (short)30)]
+		public static short PET_AUTOSET_DEX_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting pet DEX stat.
@@ -1100,8 +1106,8 @@ namespace DOL.GS.ServerProperties
 
 		/// Base Value to use when auto-setting Pet QUI stat.
 		/// </summary>
-		[ServerProperty("npc", "pet_autoset_qui_base", "Base Value to use when auto-setting Pet QUI stat. ", 30.0)]
-		public static double PET_AUTOSET_QUI_BASE;
+		[ServerProperty("npc", "pet_autoset_qui_base", "Base Value to use when auto-setting Pet QUI stat. ", (short)30)]
+		public static short PET_AUTOSET_QUI_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting pet QUI stat.
@@ -1113,8 +1119,8 @@ namespace DOL.GS.ServerProperties
 		/// Multiplier to use when auto-setting pet INT stat.
 		/// INT is the stat used for spell damage for mobs/pets
 		/// </summary>
-		[ServerProperty("npc", "pet_autoset_int_base", "Multiplier to use when auto-setting Pet INT stat. ", 30)]
-		public static double PET_AUTOSET_INT_BASE;
+		[ServerProperty("npc", "pet_autoset_int_base", "Multiplier to use when auto-setting Pet INT stat. ", (short)30)]
+		public static short PET_AUTOSET_INT_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting pet INT stat.
@@ -1128,8 +1134,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base value to use when setting strength for most necromancer pets.
 		/// </summary>
-		[ServerProperty("npc", "necro_pet_str_base", "Base value to use when setting strength for most necromancer pets.", 60)]
-		public static int NECRO_PET_STR_BASE;
+		[ServerProperty("npc", "necro_pet_str_base", "Base value to use when setting strength for most necromancer pets.", (short)60)]
+		public static short NECRO_PET_STR_BASE;
 
 		/// <summary>
 		/// Multiplier to use when setting strength for most necromancer pets.
@@ -1140,8 +1146,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base value to use when setting constitution for most necromancer pets.
 		/// </summary>
-		[ServerProperty("npc", "necro_pet_con_base", "Base value to use when setting constitution for most necromancer pets.", 60)]
-		public static int NECRO_PET_CON_BASE;
+		[ServerProperty("npc", "necro_pet_con_base", "Base value to use when setting constitution for most necromancer pets.", (short)60)]
+		public static short NECRO_PET_CON_BASE;
 
 		/// <summary>
 		/// Multiplier to use when setting constitution for most necromancer pets.
@@ -1152,8 +1158,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base value to use when setting dexterity for most necromancer pets.
 		/// </summary>
-		[ServerProperty("npc", "necro_pet_dex_base", "Base value to use when setting dexterity for most necromancer pets.", 60)]
-		public static int NECRO_PET_DEX_BASE;
+		[ServerProperty("npc", "necro_pet_dex_base", "Base value to use when setting dexterity for most necromancer pets.", (short)60)]
+		public static short NECRO_PET_DEX_BASE;
 
 		/// <summary>
 		/// Multiplier to use when setting dexterity for most necromancer pets.
@@ -1164,8 +1170,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base value to use when setting quickness for most necromancer pets.
 		/// </summary>
-		[ServerProperty("npc", "necro_pet_qui_base", "Base value to use when setting quickness for most necromancer pets.", 60)]
-		public static int NECRO_PET_QUI_BASE;
+		[ServerProperty("npc", "necro_pet_qui_base", "Base value to use when setting quickness for most necromancer pets.", (short)60)]
+		public static short NECRO_PET_QUI_BASE;
 
 		/// <summary>
 		/// Multiplier to use when setting quickness for most necromancer pets.
@@ -1176,8 +1182,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base value to use when setting strength for greater necroservant pets.
 		/// </summary>
-		[ServerProperty("npc", "necro_greater_pet_str_base", "Base value to use when setting strength for greater necroservant pets.", 60)]
-		public static int NECRO_GREATER_PET_STR_BASE;
+		[ServerProperty("npc", "necro_greater_pet_str_base", "Base value to use when setting strength for greater necroservant pets.", (short)60)]
+		public static short NECRO_GREATER_PET_STR_BASE;
 
 		/// <summary>
 		/// Multiplier to use when setting strength for greater necroservant pets.
@@ -1188,8 +1194,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base value to use when setting constitution forgreater necroservant pets.
 		/// </summary>
-		[ServerProperty("npc", "necro_greater_pet_con_base", "Base value to use when setting constitution for greater necroservant pets.", 60)]
-		public static int NECRO_GREATER_PET_CON_BASE;
+		[ServerProperty("npc", "necro_greater_pet_con_base", "Base value to use when setting constitution for greater necroservant pets.", (short)60)]
+		public static short NECRO_GREATER_PET_CON_BASE;
 
 		/// <summary>
 		/// Multiplier to use when setting constitution for greater necroservant pets.
@@ -1200,8 +1206,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base value to use when setting dexterity for greater necroservant pets.
 		/// </summary>
-		[ServerProperty("npc", "necro_greater_pet_dex_base", "Base value to use when setting dexterity for greater necroservant pets.", 60)]
-		public static int NECRO_GREATER_PET_DEX_BASE;
+		[ServerProperty("npc", "necro_greater_pet_dex_base", "Base value to use when setting dexterity for greater necroservant pets.", (short)60)]
+		public static short NECRO_GREATER_PET_DEX_BASE;
 
 		/// <summary>
 		/// Multiplier to use when setting dexterity for greater necroservant pets.
@@ -1212,8 +1218,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base value to use when setting quickness for greater necroservant pets.
 		/// </summary>
-		[ServerProperty("npc", "necro_greater_pet_qui_base", "Base value to use when setting quickness for greater necroservant pets.", 60)]
-		public static int NECRO_GREATER_PET_QUI_BASE;
+		[ServerProperty("npc", "necro_greater_pet_qui_base", "Base value to use when setting quickness for greater necroservant pets.", (short)60)]
+		public static short NECRO_GREATER_PET_QUI_BASE;
 
 		/// <summary>
 		/// Multiplier to use when setting quickness for greater necroservant pets.
@@ -1232,8 +1238,14 @@ namespace DOL.GS.ServerProperties
 		/// Scale pet spell values according to their level?
 		/// </summary>
 		[ServerProperty("npc", "pet_scale_spell_max_level", "Disabled if 0 or less.  If greater than 0, this value is the level at which pets cast their spells at 100% effectivness, so choose spells for pets assuming they're at the level set here.  Live is max pet level, 44 or 50 depending on patch.", 0)]
-		public static int PET_SCALE_SPELL_MAX_LEVEL;		
-		
+		public static int PET_SCALE_SPELL_MAX_LEVEL;
+
+		/// <summary>
+		/// Scale pet spell values according to their level?
+		/// </summary>
+		[ServerProperty("npc", "pet_cap_bd_minion_spell_scaling_by_spec", "When scaling BD minion spells, do we cap the level they scale do by the BD's spec level?  This provides an incentive to spec darkness and suppression and use items that boost them.", false)]
+		public static bool PET_CAP_BD_MINION_SPELL_SCALING_BY_SPEC;
+
 		/// <summary>
 		/// What level to start increasing mob damage
 		/// </summary>
@@ -1655,8 +1667,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base Value to use when auto-setting STR stat.
 		/// </summary>
-		[ServerProperty("keeps", "guard_autoset_str_base", "Base Value to use when auto-setting STR stat. ", 20)]
-		public static int GUARD_AUTOSET_STR_BASE;
+		[ServerProperty("keeps", "guard_autoset_str_base", "Base Value to use when auto-setting STR stat. ", (short)20)]
+		public static short GUARD_AUTOSET_STR_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting STR stat.
@@ -1667,8 +1679,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base Value to use when auto-setting CON stat.
 		/// </summary>
-		[ServerProperty("keeps", "guard_autoset_con_base", "Base Value to use when auto-setting CON stat. ", 30)]
-		public static int GUARD_AUTOSET_CON_BASE;
+		[ServerProperty("keeps", "guard_autoset_con_base", "Base Value to use when auto-setting CON stat. ", (short)30)]
+		public static short GUARD_AUTOSET_CON_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting CON stat.
@@ -1679,8 +1691,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base Value to use when auto-setting QUI stat.
 		/// </summary>
-		[ServerProperty("keeps", "guard_autoset_qui_base", "Base Value to use when auto-setting qui stat. ", 40)]
-		public static int GUARD_AUTOSET_QUI_BASE;
+		[ServerProperty("keeps", "guard_autoset_qui_base", "Base Value to use when auto-setting qui stat. ", (short)40)]
+		public static short GUARD_AUTOSET_QUI_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting QUI stat.
@@ -1691,8 +1703,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base Value to use when auto-setting DEX stat.
 		/// </summary>
-		[ServerProperty("keeps", "guard_autoset_dex_base", "Base Value to use when auto-setting DEX stat. ", 1)]
-		public static int GUARD_AUTOSET_DEX_BASE;
+		[ServerProperty("keeps", "guard_autoset_dex_base", "Base Value to use when auto-setting DEX stat. ", (short)1)]
+		public static short GUARD_AUTOSET_DEX_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting DEX stat.
@@ -1703,8 +1715,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base Value to use when auto-setting INT stat.
 		/// </summary>
-		[ServerProperty("keeps", "guard_autoset_int_base", "Base Value to use when auto-setting INT stat. ", 30)]
-		public static int GUARD_AUTOSET_INT_BASE;
+		[ServerProperty("keeps", "guard_autoset_int_base", "Base Value to use when auto-setting INT stat. ", (short)30)]
+		public static short GUARD_AUTOSET_INT_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting INT stat.
@@ -1715,8 +1727,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base Value to use when auto-setting STR stat.
 		/// </summary>
-		[ServerProperty("keeps", "lord_autoset_str_base", "Base Value to use when auto-setting STR stat. ", 20)]
-		public static int LORD_AUTOSET_STR_BASE;
+		[ServerProperty("keeps", "lord_autoset_str_base", "Base Value to use when auto-setting STR stat. ", (short)20)]
+		public static short LORD_AUTOSET_STR_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting STR stat.
@@ -1727,8 +1739,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base Value to use when auto-setting CON stat.
 		/// </summary>
-		[ServerProperty("keeps", "lord_autoset_con_base", "Base Value to use when auto-setting CON stat. ", 30)]
-		public static int LORD_AUTOSET_CON_BASE;
+		[ServerProperty("keeps", "lord_autoset_con_base", "Base Value to use when auto-setting CON stat. ", (short)30)]
+		public static short LORD_AUTOSET_CON_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting CON stat.
@@ -1739,8 +1751,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base Value to use when auto-setting QUI stat.
 		/// </summary>
-		[ServerProperty("keeps", "lord_autoset_qui_base", "Base Value to use when auto-setting qui stat. ", 60)]
-		public static int LORD_AUTOSET_QUI_BASE;
+		[ServerProperty("keeps", "lord_autoset_qui_base", "Base Value to use when auto-setting qui stat. ", (short)60)]
+		public static short LORD_AUTOSET_QUI_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting QUI stat.
@@ -1751,8 +1763,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base Value to use when auto-setting DEX stat.
 		/// </summary>
-		[ServerProperty("keeps", "lord_autoset_dex_base", "Base Value to use when auto-setting DEX stat. ", 2)]
-		public static int LORD_AUTOSET_DEX_BASE;
+		[ServerProperty("keeps", "lord_autoset_dex_base", "Base Value to use when auto-setting DEX stat. ", (short)2)]
+		public static short LORD_AUTOSET_DEX_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting DEX stat.
@@ -1763,8 +1775,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Base Value to use when auto-setting INT stat.
 		/// </summary>
-		[ServerProperty("keeps", "lord_autoset_int_base", "Base Value to use when auto-setting INT stat. ", 30)]
-		public static int LORD_AUTOSET_INT_BASE;
+		[ServerProperty("keeps", "lord_autoset_int_base", "Base Value to use when auto-setting INT stat. ", (short)30)]
+		public static short LORD_AUTOSET_INT_BASE;
 
 		/// <summary>
 		/// Multiplier to use when auto-setting INT stat.

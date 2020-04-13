@@ -27,7 +27,7 @@ namespace DOL.GS.GameEvents
 {
 	public class ZonePointEffect
 	{
-		protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		[ScriptLoadedEvent]
 		public static void OnScriptsCompiled(DOLEvent e, object sender, EventArgs args)

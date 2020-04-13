@@ -60,7 +60,7 @@ namespace DOL.GS.Spells
            // m_pet.CurrentSpeed = 0;
             m_pet.Realm = Caster.Realm;
             m_pet.Race = 0;
-            m_pet.Level = 44; // lowered in patch 1109b
+            m_pet.Level = 44; // lowered in patch 1109b, also calls AutoSetStats()
             m_pet.AddToWorld();
             //Check for buffs
             if (brain is ControlledNpcBrain)
@@ -68,7 +68,7 @@ namespace DOL.GS.Spells
 
             AddHandlers();
             SetBrainToOwner(brain);
-            m_pet.AutoSetStats();
+
             effect.Start(m_pet);
             //Set pet infos & Brain
         }

@@ -59,14 +59,14 @@ namespace DOL.GS
 		protected ushort m_flags;
 		protected string m_inventory;
 		protected eDamageType m_meleeDamageType;
-		protected int m_strength;
-		protected int m_constitution;
-		protected int m_dexterity;
-		protected int m_quickness;
-		protected int m_piety;
-		protected int m_intelligence;
-		protected int m_empathy;
-		protected int m_charisma;
+		protected short m_strength;
+		protected short m_constitution;
+		protected short m_dexterity;
+		protected short m_quickness;
+		protected short m_piety;
+		protected short m_intelligence;
+		protected short m_empathy;
+		protected short m_charisma;
 		protected IList m_styles;
 		protected IList m_spells;
 		protected IList m_spelllines;
@@ -548,49 +548,49 @@ namespace DOL.GS
 			set { m_abilities = value; }
 		}
 
-		public int Strength
+		public short Strength
 		{
 			get { return m_strength; }
 			set { m_strength = value; }
 		}
 
-		public int Constitution
+		public short Constitution
 		{
 			get { return m_constitution; }
 			set { m_constitution = value; }
 		}
 
-		public int Dexterity
+		public short Dexterity
 		{
 			get { return m_dexterity; }
 			set { m_dexterity = value; }
 		}
 
-		public int Quickness
+		public short Quickness
 		{
 			get { return m_quickness; }
 			set { m_quickness = value; }
 		}
 
-		public int Piety
+		public short Piety
 		{
 			get { return m_piety; }
 			set { m_piety = value; }
 		}
 
-		public int Intelligence
+		public short Intelligence
 		{
 			get { return m_intelligence; }
 			set { m_intelligence = value; }
 		}
 
-		public int Empathy
+		public short Empathy
 		{
 			get { return m_empathy; }
 			set { m_empathy = value; }
 		}
 
-		public int Charisma
+		public short Charisma
 		{
 			get { return m_charisma; }
 			set { m_charisma = value; }
