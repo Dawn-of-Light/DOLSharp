@@ -437,7 +437,7 @@ namespace DOL.GS
 		/// <summary>
 		/// The level of the Object
 		/// </summary>
-		protected byte m_level;
+		protected byte m_level = 0; // Default to 0 to force AutoSetStats() to be called when level set
 
 		/// <summary>
 		/// The name of the Object
