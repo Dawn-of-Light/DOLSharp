@@ -35,6 +35,8 @@ namespace DOL.GS
 {
 	public class BDSubPet : BDPet
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 		/// <summary>
 		/// Holds the different subpet ids
 		/// </summary>
@@ -92,6 +94,62 @@ namespace DOL.GS
 			{
 				return (Brain as IControlledBrain).Owner.MaxSpeed;
 			}
+		}
+
+		/// <summary>
+		/// Sort spells into specific lists, scaling pet spell as appropriate
+		/// </summary>
+		public override void SortSpells()
+		{
+			if (Spells.Count < 1 || Level < 1)
+				return;
+
+			if (DOL.GS.ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL < 1)
+				base.SortSpells();
+			else
+			{
+				int scaleLevel = Level;
+
+				// Some minions have multiple spells, so only grab their owner's spec once per pet.
+				if (DOL.GS.ServerProperties.Properties.PET_CAP_BD_MINION_SPELL_SCALING_BY_SPEC
+					&& Brain is IControlledBrain brain && brain.GetPlayerOwner() is GamePlayer BD)
+				{
+					int spec = BD.GetModifiedSpecLevel(PetSpecLine);
+
+					if (spec > 0 && spec < scaleLevel)
+						scaleLevel = spec;
+				}
+
+				SortSpells(scaleLevel);
+			}
+		}
+
+		/// <summary>
+		/// Scale the passed spell according to PET_SCALE_SPELL_MAX_LEVEL, capping by BD spec if appropriate
+		/// </summary>
+		/// <param name="spell">The spell to scale</param>
+		/// <param name="casterLevel">The level to scale the pet spell to, 0 to use pet level</param>
+		public override void ScalePetSpell(Spell spell, int casterLevel = 0)
+		{
+			if (ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL < 1 || spell == null || Level < 1)
+				return;
+
+			if (casterLevel < 1)
+			{
+				casterLevel = Level;
+
+				// Style procs and subspells can't be scaled in advance, so we need to check BD spec here as well				
+				if (DOL.GS.ServerProperties.Properties.PET_CAP_BD_MINION_SPELL_SCALING_BY_SPEC
+					&& Brain is IControlledBrain brain && brain.GetPlayerOwner() is GamePlayer BD)
+				{
+					int spec = BD.GetModifiedSpecLevel(PetSpecLine);
+
+					if (spec > 0 && spec < casterLevel)
+						casterLevel = spec;
+				}
+			}
+
+			base.ScalePetSpell(spell, casterLevel);
 		}
 	}
 }

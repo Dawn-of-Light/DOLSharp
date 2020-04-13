@@ -89,14 +89,14 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the template npc stats
 		///</summary>
-		int Strength { get; }
-		int Constitution { get; }
-		int Dexterity { get; }
-		int Quickness { get; }
-		int Piety { get; }
-		int Intelligence { get; }
-		int Empathy { get; }
-		int Charisma { get; }
+		short Strength { get; }
+		short Constitution { get; }
+		short Dexterity { get; }
+		short Quickness { get; }
+		short Piety { get; }
+		short Intelligence { get; }
+		short Empathy { get; }
+		short Charisma { get; }
 
 		/// <summary>
 		/// Gets the template npc aggro values

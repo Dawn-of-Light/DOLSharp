@@ -208,19 +208,6 @@ namespace DOL.GS.Spells
 			Caster.ControlledBrain.Body.AddControlledNpc(brain);
 		}
 
-		protected override byte GetPetLevel()
-		{
-			byte level = base.GetPetLevel();
-
-			//edit for BD
-			//Patch 1.87: subpets have been increased by one level to make them blue
-			//to a level 50
-			if (level == 37 && (m_pet.Brain as IControlledBrain).Owner.Level >= 41)
-				level = 41;
-
-			return level;
-		}
-
 		/// <summary>
 		/// Delve Info
 		/// </summary>
