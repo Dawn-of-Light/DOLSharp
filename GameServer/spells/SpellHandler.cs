@@ -41,7 +41,7 @@ namespace DOL.GS.Spells
 	/// </summary>
 	public class SpellHandler : ISpellHandler
 	{
-		protected static readonly ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// Maximum number of sub-spells to get delve info for.
