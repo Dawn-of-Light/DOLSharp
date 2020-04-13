@@ -31,7 +31,7 @@ namespace DOL.GS
 	/// </summary>
 	public abstract class CharacterClassBase : ICharacterClass
 	{
-		protected static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// id of class in Client
