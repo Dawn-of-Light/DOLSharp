@@ -318,7 +318,6 @@ namespace DOL.GS
 				case "damagespeeddecrease":
 				case "stylebleeding": // Style bleed effect
 					spell.Damage *= (double)casterLevel / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL;
-					log.Error($"TEGS: ScalePetSpell() scaled spell {spell.Name} to Damage {spell.Damage}");
 					break;
 				// Scale Value
 				case "enduranceregenbuff":
@@ -356,7 +355,6 @@ namespace DOL.GS
 				case "speeddecrease":
 				case "stylecombatspeeddebuff": // Style attack speed debuff
 					spell.Value *= (double)casterLevel / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL;
-					log.Error($"TEGS: ScalePetSpell() scaled spell {spell.Name} to Value {spell.Value}");
 					break;
 				// Scale Duration
 				case "disease":
@@ -366,7 +364,6 @@ namespace DOL.GS
 				case "stylestun": // Style stun effect
 				case "stylespeeddecrease": // Style hinder effect
 					spell.Duration = (int)Math.Ceiling(spell.Duration * (double)casterLevel / ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL);
-					log.Error($"TEGS: ScalePetSpell() scaled spell {spell.Name} to Duration {spell.Duration}");
 					break;
 				case "styletaunt": // Style taunt effects already scale with damage
 				case "curepoison":
