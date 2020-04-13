@@ -55,6 +55,7 @@ namespace DOL.GS.Spells
         public override void ApplyEffectOnTarget(GameLiving target, double effectiveness)
         {
             base.ApplyEffectOnTarget(target, effectiveness);
+            m_pet.Level = Caster.Level; // No bomber class to override SetPetLevel() in, so set level here
             m_pet.TempProperties.setProperty(BOMBERTARGET, target);
             m_pet.Name = Spell.Name;
 			m_pet.Flags ^= GameNPC.eFlags.DONTSHOWNAME;
@@ -70,11 +71,6 @@ namespace DOL.GS.Spells
         protected override void RemoveHandlers()
         {
             GameEventMgr.RemoveHandler(m_pet, GameNPCEvent.ArriveAtTarget, BomberArriveAtTarget);
-        }
-
-        protected override byte GetPetLevel()
-        {
-            return Caster.Level;
         }
 
         protected override IControlledBrain GetPetBrain(GameLiving owner)
