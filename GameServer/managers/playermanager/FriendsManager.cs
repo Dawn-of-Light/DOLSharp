@@ -113,7 +113,7 @@ namespace DOL.GS.Friends
 			}
 			
 		}
-		
+
 		/// <summary>
 		/// Remove Player from Friends Manager Cache
 		/// </summary>
@@ -123,21 +123,25 @@ namespace DOL.GS.Friends
 			if (Player == null)
 				throw new ArgumentNullException("Player");
 
-			string[] friends;
-			if (!PlayersFriendsListsCache.TryRemove(Player, out friends))
+			string[] friends = null;
+			//<**loki**>
+			if (friends != null)
 			{
-				if (log.IsWarnEnabled)
-					log.WarnFormat("Gameplayer ({0}) was not registered in Friends Manager Cache while trying to remove!", Player);
-			}
-			
-			FriendStatus[] offlineFriends;
-			if (!PlayersFriendsStatusCache.TryRemove(Player, out offlineFriends))
-			{
-				if (log.IsWarnEnabled)
-					log.WarnFormat("Gameplayer ({0}) was not registered in Friends Manager Status Cache while trying to remove!", Player);
+				if (!PlayersFriendsListsCache.TryRemove(Player, out friends))
+				{
+					if (log.IsWarnEnabled)
+						log.WarnFormat("Gameplayer ({0}) was not registered in Friends Manager Cache while trying to remove!", Player);
+				}
+
+				FriendStatus[] offlineFriends;
+				if (!PlayersFriendsStatusCache.TryRemove(Player, out offlineFriends))
+				{
+					if (log.IsWarnEnabled)
+						log.WarnFormat("Gameplayer ({0}) was not registered in Friends Manager Status Cache while trying to remove!", Player);
+				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Add a Friend Entry to GamePlayer Friends List.
 		/// </summary>

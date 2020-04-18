@@ -380,6 +380,18 @@ namespace DOL.GS.ServerProperties
 		#region SERVER
 
 		/// <summary>
+		/// Enable/Disable Autokick Timer
+		/// </summary>
+		[ServerProperty("server", "player idle kick", "Enable auto kick for inactive players", false)]
+		public static bool KICK_IDLE_PLAYER_STATUS;
+
+		/// <summary>
+		/// How long before kicking inactive player
+		/// </summary>
+		[ServerProperty("server", "minutes to kick", "How many minutes before kicking inactive player to char screen <Default 1hr> ", 60)]
+		public static int KICK_IDLE_PLAYER_TIME;
+
+		/// <summary>
 		/// Disable quit timers for players?
 		/// </summary>
 		[ServerProperty("server", "disable_quit_timer", "Allow players to log out without waiting?", false)]
