@@ -1,47 +1,58 @@
 # Bonedancer
 
-#GameObjects.CommanderPet.BoneCommander:		bone commander
-#GameObjects.CommanderPet.DecayedCommander:		decayed commander
-#GameObjects.CommanderPet.DreadArcher:			dread archer
-#GameObjects.CommanderPet.DreadCommander:		dread commander
-#GameObjects.CommanderPet.DreadGuardian:		dread guardian
-#GameObjects.CommanderPet.DreadLich:			dread lich
-#GameObjects.CommanderPet.ReturnedCommander:		returned commander
-#GameObjects.CommanderPet.SkeletalCommander:		skeletal commander
-
-GameObjects.CommanderPet.WR.Assist.Text:		Diese Funktion wurde noch nicht implementiert!
-GameObjects.CommanderPet.WR.Combat:			Der {0} sagt: "Meine Untergebenen werden mich [unterstützen] und die von Euch vorgegebenen Ziele zusammen mit mir angreifen oder für sich kämpfen und eigene Ziele wählen. Ich kann zudem versuchen, Eure Gegner so zu [verärgern], dass diese mich statt Euch angreifen."
-GameObjects.CommanderPet.WR.CommNoTaunt:		Euer Kommandant wird nicht länger die Feinde verärgern!
-GameObjects.CommanderPet.WR.CommStartTaunt:		Euer Kommandant wird jetzt die Feinde verärgern!
-GameObjects.CommanderPet.WR.Const.1HandedSword:		Einhandschwert
-GameObjects.CommanderPet.WR.Const.2HandedSword:		Zweihandschwert
-GameObjects.CommanderPet.WR.Const.1HandedHammer:	Einhandhammer
-GameObjects.CommanderPet.WR.Const.2HandedHammer:	Zweihandhammer
-GameObjects.CommanderPet.WR.Const.1HandedAxe:		Einhandaxt
-GameObjects.CommanderPet.WR.Const.2HandedAxe:		Zweihandaxt
-GameObjects.CommanderPet.WR.Const.Assist:		unterstützen
-GameObjects.CommanderPet.WR.Const.Combat:		kampf
-GameObjects.CommanderPet.WR.Const.Commander:		kommandant
-GameObjects.CommanderPet.WR.Const.Damage:		schaden
-GameObjects.CommanderPet.WR.Const.Debilitating:		schwächenden
-#GameObjects.CommanderPet.WR.Const.Drain:		drain
-#GameObjects.CommanderPet.WR.Const.Empower:		empower
-#GameObjects.CommanderPet.WR.Const.Harm:		harm
-#GameObjects.CommanderPet.WR.Const.One:			one
-#GameObjects.CommanderPet.WR.Const.Snares:		snare
-GameObjects.CommanderPet.WR.Const.Spells:		zaubersprüche
-#GameObjects.CommanderPet.WR.Const.Suppress:		suppress
-GameObjects.CommanderPet.WR.Const.Taunt:		verärgern
-#GameObjects.CommanderPet.WR.Const.Two:			two
-GameObjects.CommanderPet.WR.Const.Weapons:		waffen
-GameObjects.CommanderPet.WR.DiffCommander:		Ein {0} sagt: "Ich beherrsche das Einhänderschwert[one handed sword], das Zweihänderschwert[two handed sword], den Einhänderhammer[one handed hammer], den Zweihänderhammer[two handed hammer], die Einhänderaxt[one handed axe] und die Zweihänderaxt[two handed axe]."
-GameObjects.CommanderPet.WR.DreadArcher:		Der {0} sagt: "As one of Bogdar's favored archers, you can [empower] me to be more effective with my bow. I also have various [combat] tactics at your disposal."
-GameObjects.CommanderPet.WR.DreadGuardian:		Der {0} sagt: "As one of Bogdar's chosen guardians, I have mastered the ability to [harm] his enemies and [empower] myself with extra defenses.  I also have various [combat] tactics at your disposal."
-GameObjects.CommanderPet.WR.DreadGuardian2:		Der {0} sagt: "Bogdar has granted me with the ability to [drain] the life of our enemies or to [suppress] and hurt their spirit. I cast spirit damaging spells when first summoned but you can command me to cast a particular type of spell if you so desire."
-GameObjects.CommanderPet.WR.DreadLich:			Der {0} sagt: "As one of Bogdar's mystics, I have mastered many dark [spells].  I also have the means to [empower] my spells to be more effective.  I also have various [combat] tactics at your disposal."
-GameObjects.CommanderPet.WR.DreadLich2:			Der {0} sagt: "Mein Arsenal besteht aus [snare]-, [schwächenden] und reinen [Schaden]-Zaubersprüchen. Wenn ich das erste Mal gerufe werde, wende ich schwächende Zaubersprüche an, aber Ihr könnt mir auch befehlen, andere Zaubersprucharten anzuwenden."
-#GameObjects.CommanderPet.WR.Spell.Empower:		Empower
-GameObjects.CommanderPet.WR.XCommander:			Ein {0} sagt: "Als einer von Bogdars Kommandanten beherrsche ich viele der verknöcherten [Waffen] in seiner Knochenarmee. Welche Waffe soll ich tragen? Mir stehen auch mehrere [Kampf]-Taktiken zur Verfügung."
-
+GameObjects.CommanderPet.BoneCommander:		bone commander			
+GameObjects.CommanderPet.DecayedCommander:		decayed commander			
+GameObjects.CommanderPet.DreadArcher:			dread archer		
+GameObjects.CommanderPet.DreadCommander:		dread commander			
+GameObjects.CommanderPet.DreadGuardian:		dread guardian			
+GameObjects.CommanderPet.DreadLich:			dread lich		
+GameObjects.CommanderPet.DreadLord:		        dread lord
+GameObjects.CommanderPet.ReturnedCommander:		returned commander			
+GameObjects.CommanderPet.SkeletalCommander:		skeletal commander			
+GameObjects.CommanderPet.WR.Assist.Off:         Your commander will no longer be assisted by its minions.					
+GameObjects.CommanderPet.WR.Assist.On:          Your commander will now be assisted by its minions.								
+GameObjects.CommanderPet.WR.Combat:			Der {0} sagt: "Meine Untergebenen werden mich [{1}] und die von Euch vorgegebenen Ziele zusammen mit mir angreifen oder für sich kämpfen und eigene Ziele wählen. Ich kann zudem versuchen, Eure Gegner so zu [{2}], dass diese mich statt Euch angreifen."		
+GameObjects.CommanderPet.WR.CombatNoMinions:    Der {0} sagt: "Ich kann zudem versuchen, Eure Gegner so zu [{1}], dass diese mich statt Euch angreifen."		
+GameObjects.CommanderPet.WR.CommNoTaunt:		Euer Kommandant wird nicht länger die Feinde verärgern!			
+GameObjects.CommanderPet.WR.CommStartTaunt:		Euer Kommandant wird jetzt die Feinde verärgern!			
+GameObjects.CommanderPet.WR.Const.1HandedAxe:		Einhandaxt			
+GameObjects.CommanderPet.WR.Const.1HandedHammer:	Einhandhammer				
+GameObjects.CommanderPet.WR.Const.1HandedSword:		Einhandschwert			
+GameObjects.CommanderPet.WR.Const.2HandedAxe:		Zweihandaxt			
+GameObjects.CommanderPet.WR.Const.2HandedHammer:	Zweihandhammer				
+GameObjects.CommanderPet.WR.Const.2HandedSword:		Zweihandschwert			
+GameObjects.CommanderPet.WR.Const.Assist:		unterstutzen			
+GameObjects.CommanderPet.WR.Const.Combat:		kampf			
+GameObjects.CommanderPet.WR.Const.Commander:		kommandant			
+GameObjects.CommanderPet.WR.Const.Damage:		schaden			
+GameObjects.CommanderPet.WR.Const.Debilitating:		schwachenden			
+GameObjects.CommanderPet.WR.Const.Drain:		drain			
+GameObjects.CommanderPet.WR.Const.Empower:		empower			
+GameObjects.CommanderPet.WR.Const.Harm:		harm			
+GameObjects.CommanderPet.WR.Const.One:			zwei		
+GameObjects.CommanderPet.WR.Const.Snares:		snare			
+GameObjects.CommanderPet.WR.Const.Spells:		zauberspruche			
+GameObjects.CommanderPet.WR.Const.Spell.NotAvailable:	This spell is not available yet.
+GameObjects.CommanderPet.WR.Const.Suppress:		suppress			
+GameObjects.CommanderPet.WR.Const.Taunt:		verargern			
+GameObjects.CommanderPet.WR.Const.Two:			ein
+GameObjects.CommanderPet.WR.Const.Weapons:		waffen			
+GameObjects.CommanderPet.WR.DreadArcher:		Der {0} sagt: "As one of Bogdar's favored archers, you can [{1}] me to be more effective with my bow. I also have various [{2}] tactics at your disposal."			
+GameObjects.CommanderPet.WR.DreadGuardian.Drain:		The {0} says, "I will now cast spells that drain the life of our enemies."			
+GameObjects.CommanderPet.WR.DreadGuardian.Suppress:		The {0} says, "I will now cast spells that suppress the spirit of our enemies."			
+GameObjects.CommanderPet.WR.DreadGuardian:		Der {0} sagt: "As one of Bogdar's chosen guardians, I have mastered the ability to [{1}] his enemies and [{2}] myself with extra defenses.  I also have various [{3}] tactics at your disposal."			
+GameObjects.CommanderPet.WR.DreadGuardian2:		Der {0} sagt: "Bogdar has granted me with the ability to [{1}] the life of our enemies or to [{2}] and hurt their spirit. I cast spirit damaging spells when first summoned but you can command me to cast a particular type of spell if you so desire."			
+GameObjects.CommanderPet.WR.DreadLich.Damage:   The {0} says, "I will now only cast damage spells."					
+GameObjects.CommanderPet.WR.DreadLich.Debilitating: The {0} says, "I will now cast debilitating spells before casting damage spells."					
+GameObjects.CommanderPet.WR.DreadLich.Snare:    The {0} says, "I will now only cast snare spells."					
+GameObjects.CommanderPet.WR.DreadLich:			Der {0} sagt: "As one of Bogdar's mystics, I have mastered many dark [{1}].  I also have the means to [{2}] my spells to be more effective.  I also have various [{3}] tactics at your disposal."		
+GameObjects.CommanderPet.WR.DreadLich2:			Der {0} sagt: "Mein Arsenal besteht aus [{1}]-, [{2}] und reinen [{3}]-Zaubersprüchen. Wenn ich das erste Mal gerufe werde, wende ich schwächende Zaubersprüche an, aber Ihr könnt mir auch befehlen, andere Zaubersprucharten anzuwenden."		
+GameObjects.CommanderPet.WR.Spell.Empower:		Empower			
+GameObjects.CommanderPet.WR.Weapons.All:		Ein {0} sagt: "Ich beherrsche die [{1}], den [{2}], das [{3}], die [{4}], den [{5}], und das [{6}]."			
+GameObjects.CommanderPet.WR.Weapons.Limited:	Ein {0} sagt: "Ich beherrsche die [{1}], den [{2}], und das [{3}]."			
+GameObjects.CommanderPet.WR.XCommander:			Ein {0} sagt: "Als einer von Bogdars Kommandanten beherrsche ich viele der verknöcherten [{1}] in seiner Knochenarmee. Welche Waffe soll ich tragen? Mir stehen auch mehrere [{2}]-Taktiken zur Verfügung."		
 GameObjects.Master:					Meister
 GameObjects.Mistress:					Meisterin
+
+					
+				
