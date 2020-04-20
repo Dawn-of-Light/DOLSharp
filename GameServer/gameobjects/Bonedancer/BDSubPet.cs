@@ -50,6 +50,11 @@ namespace DOL.GS
 			Archer = 5
 		}
 
+		public bool MinionsAssisting
+		{ 
+			get { return Owner is CommanderPet commander && commander.MinionsAssisting; } 
+		}
+
 		protected string m_PetSpecLine = null;
 		/// <summary>
 		/// Returns the spell line specialization this pet was summoned from
@@ -59,7 +64,7 @@ namespace DOL.GS
 			get
 			{
 				// This is really inefficient, so only do it once, and only if we actually need it
-				if (m_PetSpecLine == null && Owner is CommanderPet commander && commander.Owner is GamePlayer player)
+				if (m_PetSpecLine == null && Brain is IControlledBrain brain && brain.GetPlayerOwner() is GamePlayer player)
 				{
 					// Get the spell that summoned this pet
 					DBSpell dbSummoningSpell = GameServer.Database.SelectObject<DBSpell>("LifeDrainReturn=@TemplateId", new QueryParameter("@TemplateID", NPCTemplate.TemplateId));
@@ -82,7 +87,7 @@ namespace DOL.GS
 		}
 
 		/// <summary>
-		/// Create a commander.
+		/// Create a minion.
 		/// </summary>
 		/// <param name="npcTemplate"></param>
 		/// <param name="owner"></param>
@@ -93,6 +98,31 @@ namespace DOL.GS
 			get
 			{
 				return (Brain as IControlledBrain).Owner.MaxSpeed;
+			}
+		}
+
+		/// <summary>
+		/// Changes the commander's weapon to the specified weapon template
+		/// </summary>
+		public void MinionGetWeapon(CommanderPet.eWeaponType weaponType)
+		{
+			ItemTemplate itemTemp = CommanderPet.GetWeaponTemplate(weaponType);
+
+			if (itemTemp == null)
+				return;
+
+			InventoryItem weapon;
+
+			weapon = GameInventoryItem.Create(itemTemp);
+			if (weapon != null)
+			{
+				if (Inventory == null)
+					Inventory = new GameNPCInventory(new GameNpcInventoryTemplate());
+				else
+					Inventory.RemoveItem(Inventory.GetItem((eInventorySlot)weapon.Item_Type));
+
+				Inventory.AddItem((eInventorySlot)weapon.Item_Type, weapon);
+				SwitchWeapon((eActiveWeaponSlot)weapon.Hand);
 			}
 		}
 

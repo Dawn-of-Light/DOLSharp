@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections.Generic;
+using DOL.AI.Brain;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.SkillHandler;
@@ -68,8 +69,16 @@ namespace DOL.GS.Effects
 		{
 			get
 			{
-				if (InterceptSource.Name.ToLower().Contains("brittle guard"))
+				GamePet pet = InterceptSource as GamePet;
+				if (pet.Brain is BrittleBrain)
 					return 100;
+				else if (pet is BDSubPet)
+					// Patch 1.123: The intercept chance on the Fossil Defender has been reduced by 20%.
+					// Can't find documentation for previous intercept chance, so assuming 50%
+					return 30;
+				else if (pet != null)
+					// Patch 1.125: Reduced the spirit warrior's intercept chance from 75% to 60% and intercept radius from 150 to 125
+					return 60;
 				else
 					return 50;
 			}

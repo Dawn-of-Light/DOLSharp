@@ -26,8 +26,10 @@ using DOL.AI;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
+using DOL.GS;
 using DOL.GS.Effects;
 using DOL.GS.Housing;
+using DOL.GS.Keeps;
 using DOL.GS.Movement;
 using DOL.GS.PacketHandler;
 using DOL.GS.Quests;
@@ -5002,7 +5004,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Sorts styles by type for more efficient style selection later
 		/// </summary>
-		public void SortStyles()
+		public virtual void SortStyles()
 		{
 			if (StylesChain != null)
 				StylesChain.Clear();
@@ -5090,12 +5092,28 @@ namespace DOL.GS
 		}// SortStyles()
 
 		/// <summary>
-		/// Picks a style, prioritizing reactives and chains over positionals and anytimes
+		/// Can we use this style without spamming a stun style?
+		/// </summary>
+		/// <param name="style">The style to check.</param>
+		/// <returns>True if we should use the style, false if it would be spamming a stun effect.</returns>
+		protected bool CheckStyleStun(Style style)
+		{
+			if (TargetObject is GameLiving living && style.Procs.Count > 0)
+				foreach (Tuple<Spell, int, int> t in style.Procs)
+					if (t != null && t.Item1 is Spell spell
+						&& spell.SpellType.ToUpper() == "STYLESTUN" && living.HasEffect(t.Item1))
+							return false;
+
+			return true;
+		}
+
+		/// <summary>
+		/// Picks a style, prioritizing reactives an	d chains over positionals and anytimes
 		/// </summary>
 		/// <returns>Selected style</returns>
 		protected override Style GetStyleToUse()
 		{
-			if (m_styles == null || m_styles.Count < 1)
+			if (m_styles == null || m_styles.Count < 1 || TargetObject == null)
 				return null;
 
 			// Chain and defensive styles skip the GAMENPC_CHANCES_TO_STYLE,
@@ -5109,7 +5127,8 @@ namespace DOL.GS
 
 			if (StylesDefensive != null && StylesDefensive.Count > 0)
 				foreach (Style s in StylesDefensive)
-					if (StyleProcessor.CanUseStyle(this, s, AttackWeapon))
+					if (StyleProcessor.CanUseStyle(this, s, AttackWeapon)
+						&& CheckStyleStun(s)) // Make sure we don't spam stun styles like Brutalize
 						return s;
 
 			if (Util.Chance(Properties.GAMENPC_CHANCES_TO_STYLE))
