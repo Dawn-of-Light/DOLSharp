@@ -4551,6 +4551,17 @@ namespace DOL.GS
 			53714390,	// for level 118
 			59622973,	// for level 119
 			66181501,	// for level 120
+			73461466,	// for level 121
+			81542227,	// for level 122
+			90511872,	// for level 123
+			100468178,	// for level 124
+			111519678,	// for level 125
+			123786843,	// for level 126
+			137403395,	// for level 127
+			152517769,	// for level 128
+			169294723,	// for level 129
+			187917143,	// for level 130
+
 		};
 
 		/// <summary>
