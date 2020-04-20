@@ -193,8 +193,6 @@ namespace DOL.GS
 		/// <returns>True, if string needs further processing.</returns>
 		public override bool WhisperReceive(GameLiving source, string str)
 		{
-			log.Error("WhisperReceive checking input string " + str);
-
 			if (!(source is GamePlayer player) || player != Owner)
 				return false;
 
