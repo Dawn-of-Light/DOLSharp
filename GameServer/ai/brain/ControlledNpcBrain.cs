@@ -26,7 +26,6 @@ using DOL.GS.Spells;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
-using DOL.GS.SkillHandler;
 using log4net;
 
 namespace DOL.AI.Brain
@@ -120,7 +119,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		public override int ThinkInterval
 		{
-			get { return DOL.GS.ServerProperties.Properties.PET_THINK_INTERVAL; }
+			get { return GS.ServerProperties.Properties.PET_THINK_INTERVAL; }
 		}
 
 		#region Control
@@ -416,22 +415,30 @@ namespace DOL.AI.Brain
 				{
 					switch (ab.KeyName)
 					{
-						case GS.Abilities.Intercept:
+						case Abilities.Intercept:
 							{
-								GamePlayer player = Owner as GamePlayer;
-								//the pet should intercept even if a player is till intercepting for the owner
-								new InterceptEffect().Start(Body, player);
+								if (GetPlayerOwner() is GamePlayer player)
+									//the pet should intercept even if a player is till intercepting for the owner
+									new InterceptEffect().Start(Body, player);
 								break;
 							}
-						case GS.Abilities.Guard:
+						case Abilities.Guard:
 							{
-								GamePlayer player = Owner as GamePlayer;
-								new GuardEffect().Start(Body, player);
+								if (GetPlayerOwner() is GamePlayer player)
+									new GuardEffect().Start(Body, player);
+								break;
+							}
+						case Abilities.Protect:
+							{
+								if (GetPlayerOwner() is GamePlayer player)
+									new ProtectEffect().Start(player);
 								break;
 							}
 						case Abilities.ChargeAbility:
 							{
-								if ( !Body.IsWithinRadius( Body.TargetObject, 500 ) )
+								if ( Body.TargetObject is GameLiving target
+									&& GameServer.ServerRules.IsAllowedToAttack(Body, target, true) 
+									&& !Body.IsWithinRadius( target, 500 ) )
 								{
 									ChargeAbility charge = Body.GetAbility<ChargeAbility>();
 									if (charge != null && Body.GetSkillDisabledDuration(charge) <= 0)
@@ -489,7 +496,7 @@ namespace DOL.AI.Brain
 							}
 				}
 			}
-			else if (Body.TargetObject != null) // Check offensive spells
+			else if (Body.TargetObject is GameLiving living && living.IsAlive)
 			{
 				// Check instant spells, but only cast one to prevent spamming
 				if (Body.CanCastInstantHarmfulSpells)
@@ -514,7 +521,7 @@ namespace DOL.AI.Brain
 		/// </summary>
 		protected override bool CheckDefensiveSpells(Spell spell)
 		{
-			if (Body == null || spell == null || spell.IsHarmful)
+			if (spell == null || spell.IsHarmful)
 				return false;
 
 			// Make sure we're currently able to cast the spell
@@ -590,6 +597,8 @@ namespace DOL.AI.Brain
                 case "DAMAGESHIELD":
 				case "BLADETURN":
                     {
+						String target;
+
 						//Buff self
 						if (!LivingHasEffect(Body, spell))
 						{
@@ -597,7 +606,11 @@ namespace DOL.AI.Brain
 							break;
 						}
 
-						String target = spell.Target.ToUpper();
+						target = spell.Target.ToUpper();
+							
+						if (target == "SELF")
+							break;
+						
 						if (target == "REALM" || target == "GROUP")
 						{
 							owner = (this as IControlledBrain).Owner;
@@ -729,18 +742,19 @@ namespace DOL.AI.Brain
                 case "OMNIHEAL":
                 case "PBAEHEAL":
                 case "SPREADHEAL":
-					// Heal seriously injured targets first
-					int emergencyThreshold = DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD / 2;
-
 					String spellTarget = spell.Target.ToUpper();
 					int bodyPercent = Body.HealthPercent;
+					
 					if (spellTarget == "SELF")
 					{
-						if (bodyPercent < emergencyThreshold && !spell.TargetHasEffect(Body))
+						if (bodyPercent < GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD && !spell.TargetHasEffect(Body))
 							Body.TargetObject = Body;
 
 						break;
 					}
+
+					// Heal seriously injured targets first
+					int emergencyThreshold = GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD / 2;
 
 					//Heal owner
 					owner = (this as IControlledBrain).Owner;
@@ -782,7 +796,7 @@ namespace DOL.AI.Brain
 					if (spellTarget == "SELF")
 					{
 						// if we have a self heal and health is less than 75% then heal, otherwise return false to try another spell or do nothing
-						if (bodyPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD
+						if (bodyPercent < GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD
 							&& !spell.TargetHasEffect(Body))
 						{
 							Body.TargetObject = Body;
@@ -792,7 +806,7 @@ namespace DOL.AI.Brain
 
 					//Heal owner
 					owner = (this as IControlledBrain).Owner;
-					if (ownerPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD
+					if (ownerPercent < GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD
 						&& !spell.TargetHasEffect(owner) && Body.IsWithinRadius(owner, spell.Range))
 					{
 						Body.TargetObject = owner;
@@ -800,7 +814,7 @@ namespace DOL.AI.Brain
 					}
 
 					//Heal self
-					if (bodyPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD
+					if (bodyPercent < GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD
 						&& !spell.TargetHasEffect(Body))
 					{
 						Body.TargetObject = Body;
@@ -812,7 +826,7 @@ namespace DOL.AI.Brain
 					{
 						foreach (GamePlayer p in playerGroup)
 						{
-							if (p.HealthPercent < DOL.GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD 
+							if (p.HealthPercent < GS.ServerProperties.Properties.NPC_HEAL_THRESHOLD 
 								&& !spell.TargetHasEffect(p) && Body.IsWithinRadius(p, spell.Range))
 							{
 								Body.TargetObject = p;
@@ -850,7 +864,7 @@ namespace DOL.AI.Brain
 		// Temporary until StandardMobBrain is updated
 		protected override bool CheckOffensiveSpells(Spell spell)
 		{
-			if (Body == null || Body.TargetObject == null || spell == null || spell.IsHelpful)
+			if (spell == null || spell.IsHelpful || !(Body.TargetObject is GameLiving living) || !living.IsAlive)
 				return false;
 
 			// Make sure we're currently able to cast the spell

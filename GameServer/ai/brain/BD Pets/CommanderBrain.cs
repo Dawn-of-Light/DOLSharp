@@ -45,6 +45,11 @@ namespace DOL.AI.Brain
 		{
 		}
 
+		public bool MinionsAssisting
+		{
+			get { return Body is CommanderPet commander && commander.MinionsAssisting; }
+		}
+
 		/// <summary>
 		/// Determines if a given controlled brain is part of the commanders subpets
 		/// </summary>
@@ -65,7 +70,7 @@ namespace DOL.AI.Brain
 		}
 
 		/// <summary>
-		/// Direct the subpets to attack too
+		/// Attack the target on command
 		/// </summary>
 		/// <param name="target">The target to attack</param>
 		public override void Attack(GameObject target)
@@ -73,7 +78,8 @@ namespace DOL.AI.Brain
 			base.Attack(target);
 			//Check for any abilities
 			CheckAbilities();
-			if (Body.ControlledNpcList != null)
+
+			if (MinionsAssisting && Body.ControlledNpcList != null)
 			{
 				lock (Body.ControlledNpcList)
 				{
@@ -82,6 +88,16 @@ namespace DOL.AI.Brain
 							icb.Attack(target);
 				}
 			}
+		}
+		
+		/// <summary>
+		/// Defend a minion that is being attacked
+		/// </summary>
+		/// <param name="ad"></param>
+		public void DefendMinion(GameLiving attacker)
+		{
+			AddToAggroList(attacker, 1);
+			AttackMostWanted();
 		}
 
 		/// <summary>
@@ -150,6 +166,69 @@ namespace DOL.AI.Brain
 							icb.SetAggressionState(state);
 				}
 			}
+		}
+
+		/// <summary>
+		/// Checks if any spells need casting
+		/// </summary>
+		/// <param name="type">Which type should we go through and check for?</param>
+		/// <returns></returns>
+		public override bool CheckSpells(eCheckSpellType type)
+		{
+			bool casted = false;
+
+			if (type == eCheckSpellType.Offensive && Body is CommanderPet pet
+				&& pet.PreferredSpell != CommanderPet.eCommanderPreferredSpell.None
+				&& !pet.IsCasting && !pet.IsBeingInterrupted && pet.TargetObject is GameLiving living && living.IsAlive)
+
+			{
+				Spell spellDamage = pet.CommSpellDamage;
+				Spell spellDamageDebuff = pet.CommSpellDamageDebuff;
+				Spell spellDot = pet.CommSpellDot;
+				Spell spellDebuff = pet.CommSpellDebuff;
+				Spell spellOther = pet.CommSpellOther;
+
+				Spell cast = null;
+				switch (pet.PreferredSpell)
+				{
+					case CommanderPet.eCommanderPreferredSpell.Debuff:
+						if (spellDebuff != null && !living.HasEffect(spellDebuff))
+							cast = spellDebuff;
+						break;
+					case CommanderPet.eCommanderPreferredSpell.Other:
+						cast = spellOther;
+						break;
+				}
+
+				if (cast == null)
+				{
+					// Pick a damage spell
+					if (spellDot != null && !living.HasEffect(spellDot))
+						cast = spellDot;
+					else if (spellDamageDebuff != null && (!living.HasEffect(spellDamageDebuff) || spellDamage == null))
+						cast = spellDamageDebuff;
+					else if (spellDamage != null)
+						cast = spellDamage;
+				}
+
+				if (cast != null)
+					casted = CheckOffensiveSpells(cast);
+			}
+
+			if(casted)
+			{
+				// Check instant spells, but only cast one to prevent spamming
+				if (Body.CanCastInstantHarmfulSpells)
+					foreach (Spell spell in Body.InstantHarmfulSpells)
+						if (CheckOffensiveSpells(spell))
+							break;
+			}
+			else
+				// Only call base method if we didn't cast anything, 
+				//	otherwise it tries to cast a second offensive spell
+				casted = base.CheckSpells(type);
+
+			return casted;
 		}
 	}
 }

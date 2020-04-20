@@ -109,22 +109,28 @@ namespace DOL.GS.Spells
 
 			base.ApplyEffectOnTarget(target, effectiveness);
 
-			if (m_pet.Brain is BDArcherBrain)
-			{
-				ItemTemplate temp = GameServer.Database.FindObjectByKey<ItemTemplate>("BD_Archer_Distance_bow") as ItemTemplate;
-				if (temp == null)
-					log.Error("Unable to find Bonedancer Archer's Bow");
-				else
-				{
-					if (m_pet.Inventory == null)
-						m_pet.Inventory = new GameNPCInventory(new GameNpcInventoryTemplate());
-					else
-						m_pet.Inventory.RemoveItem(m_pet.Inventory.GetItem(eInventorySlot.DistanceWeapon));
+			if (m_pet.Brain is BDPetBrain brain && !brain.MinionsAssisting)
+				brain.SetAggressionState(eAggressionState.Passive);
 
-					m_pet.Inventory.AddItem(eInventorySlot.DistanceWeapon, GameInventoryItem.Create(temp));
+			// Assign weapons
+			if (m_pet is BDSubPet subPet)
+				switch (subPet.Brain)
+				{
+					case BDArcherBrain archer:
+						subPet.MinionGetWeapon(CommanderPet.eWeaponType.OneHandSword);
+						subPet.MinionGetWeapon(CommanderPet.eWeaponType.Bow);
+						break;
+					case BDDebufferBrain debuffer:
+						subPet.MinionGetWeapon(CommanderPet.eWeaponType.OneHandHammer);
+						break;
+					case BDBufferBrain buffer:
+					case BDCasterBrain caster:
+						subPet.MinionGetWeapon(CommanderPet.eWeaponType.Staff);
+						break;
+					case BDMeleeBrain melee:
+						subPet.MinionGetWeapon((CommanderPet.eWeaponType)Util.Random((int)CommanderPet.eWeaponType.TwoHandAxe, (int)CommanderPet.eWeaponType.TwoHandSword));
+						break;
 				}
-				m_pet.BroadcastLivingEquipmentUpdate();
-			}
 		}
 
 		/// <summary>
