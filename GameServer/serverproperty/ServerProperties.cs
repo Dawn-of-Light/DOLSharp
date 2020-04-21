@@ -1079,7 +1079,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Enable 2H weapon damage bonus for mobs?
 		/// </summary>
-		[ServerProperty("npc", "mob_2h_bonus_damage", "If true, mobs that use a 2H weapon and have a block chance get bonus damage equal to their block chance to compensate for not being able to block. ", true)]
+		[ServerProperty("npc", "mob_2h_bonus_damage", "If true, mobs that use a 2H weapon and have a block chance get bonus damage equal to their block chance to compensate for not being able to block. ", false)]
 		public static bool MOB_2H_BONUS_DAMAGE;
 
 		/// <summary>
