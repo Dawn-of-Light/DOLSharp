@@ -3965,6 +3965,35 @@ namespace DOL.GS
 		}
 
 		/// <summary>
+		/// Returns the Damage this NPC does on an attack, adding 2H damage bonus if appropriate
+		/// </summary>
+		/// <param name="weapon">the weapon used for attack</param>
+		/// <returns></returns>
+		public override double AttackDamage(InventoryItem weapon)
+		{
+			double damage = base.AttackDamage(weapon);
+
+			if (ActiveWeaponSlot == eActiveWeaponSlot.TwoHanded && m_blockChance > 0)
+				switch (this)
+				{
+					case Keeps.GameKeepGuard guard:
+						if (ServerProperties.Properties.GUARD_2H_BONUS_DAMAGE)
+							damage = (100 + m_blockChance) / 100.00;
+						break;
+					case GamePet pet:
+						if (ServerProperties.Properties.PET_2H_BONUS_DAMAGE)
+							damage = (100 + m_blockChance) / 100.00;
+						break;
+					default:
+						if (ServerProperties.Properties.MOB_2H_BONUS_DAMAGE)
+							damage = (100 + m_blockChance) / 100.00;
+						break;
+				}
+
+			return damage;
+		}
+
+		/// <summary>
 		/// Gets/sets the object health
 		/// </summary>
 		public override int Health
