@@ -1077,6 +1077,12 @@ namespace DOL.GS.ServerProperties
 		public static double MOB_AUTOSET_INT_MULTIPLIER;
 
 		/// <summary>
+		/// Enable 2H weapon damage bonus for mobs?
+		/// </summary>
+		[ServerProperty("npc", "mob_2h_bonus_damage", "If true, mobs that use a 2H weapon and have a block chance get bonus damage equal to their block chance to compensate for not being able to block. ", true)]
+		public static bool MOB_2H_BONUS_DAMAGE;
+
+		/// <summary>
 		/// Do pets level up with their owner?
 		/// </summary>
 		[ServerProperty("npc", "pet_levels_with_owner", "Do pets level up with their owner? ", false)]
@@ -1090,7 +1096,7 @@ namespace DOL.GS.ServerProperties
 
 		/// <summary>
 		/// Multiplier to use when auto-setting pet STR stat.
-		/// </summary>
+		/// </summary> 
 		[ServerProperty("npc", "pet_autoset_str_multiplier", "Multiplier to use when auto-setting Pet STR stat. Multiplied by 10 when applied. ", 1.0)]
 		public static double PET_AUTOSET_STR_MULTIPLIER;
 		
@@ -1139,7 +1145,13 @@ namespace DOL.GS.ServerProperties
 		/// INT is the stat used for spell damage for mobs/pets
 		/// </summary>
 		[ServerProperty("npc", "pet_autoset_int_multiplier", "Multiplier to use when auto-setting Pet INT stat. ", 1.0)]
-		public static double PET_AUTOSET_INT_MULTIPLIER;		
+		public static double PET_AUTOSET_INT_MULTIPLIER;
+
+		/// <summary>
+		/// Enable 2H weapon damage bonus for pets?
+		/// </summary>
+		[ServerProperty("npc", "pet_2h_bonus_damage", "If true, pets that use a 2H weapon and have a block chance get bonus damage equal to their block chance to compensate for not being able to block. ", true)]
+		public static bool PET_2H_BONUS_DAMAGE;
 
 		// Necro pet stat properties
 
@@ -1795,7 +1807,13 @@ namespace DOL.GS.ServerProperties
 		/// </summary>
 		[ServerProperty("keeps", "lord_autoset_int_multiplier", "Multiplier to use when auto-setting INT stat. ", 1.0)]
 		public static double LORD_AUTOSET_INT_MULTIPLIER;
-		
+
+		/// <summary>
+		/// Enable 2H weapon damage bonus for keep guards?
+		/// </summary>
+		[ServerProperty("keeps", "guard_2h_bonus_damage", "If true, keep guards that use a 2H weapon and have a block chance get bonus damage equal to their block chance to compensate for not being able to block. ", true)]
+		public static bool GUARD_2H_BONUS_DAMAGE;
+
 		/// <summary>
 		/// Respawn time for keep guards in minutes.
 		/// </summary>
