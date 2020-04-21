@@ -27,7 +27,7 @@ GameObjects.CommanderPet.WR.Const.Commander:		kommandant
 GameObjects.CommanderPet.WR.Const.Damage:		schaden			
 GameObjects.CommanderPet.WR.Const.Debilitating:		schwachenden			
 GameObjects.CommanderPet.WR.Const.Drain:		drain			
-GameObjects.CommanderPet.WR.Const.Empower:		ermächtigen			
+GameObjects.CommanderPet.WR.Const.Empower:		ermachtigen			
 GameObjects.CommanderPet.WR.Const.Harm:		Schaden		
 GameObjects.CommanderPet.WR.Const.One:			zwei		
 GameObjects.CommanderPet.WR.Const.Snares:		verlangsamen			
