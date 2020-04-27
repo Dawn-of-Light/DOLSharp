@@ -2819,6 +2819,7 @@
   <ItemGroup>
     <None Include="language\NL\NL - AdminCommands.txt" />
     <None Include="language\CZ\CZ - General.txt" />
+    <Content Include="language\DE\GameObjects\CustomNPC\CommanderPet.txt" />
     <Content Include="language\DE\GameObjects\GameDoor.txt" />
     <Content Include="language\DE\GameObjects\GameGuard.txt" />
     <Content Include="language\DE\PlayerRealmTitles.txt" />
