@@ -518,12 +518,13 @@ namespace DOL.GS.Spells
 			 * Debuffs will use SpecDebuffCategory, so we can tell which buffs are applied here.
 			 */
 
-			if (!(effect.Owner is GameNPC owner)
+			if (!(effect.Owner is GameNPC)
 				|| (effect.Owner is GamePet && ServerProperties.Properties.PET_BUFF_EFFECT_MULTIPLIER <= 0)
 				|| (effect.Owner is Keeps.GameKeepGuard && ServerProperties.Properties.GUARD_BUFF_EFFECT_MULTIPLIER <= 0)
 				|| (effect.Owner is GameNPC && ServerProperties.Properties.MOB_BUFF_EFFECT_MULTIPLIER <= 0))
 				return false;
 
+			GameNPC owner = effect.Owner as GameNPC;
 			int percent;
 
 			// Only calculate the buff/debuff percentages when we absolutely have to
