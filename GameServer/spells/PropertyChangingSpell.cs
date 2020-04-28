@@ -519,7 +519,7 @@ namespace DOL.GS.Spells
 			 */
 
 			if (!(effect.Owner is GameNPC owner)
-				|| (effect.Owner is GamePet && ServerProperties.Properties.PET_BUFF_EFFECT_MULTIPIER <= 0)
+				|| (effect.Owner is GamePet && ServerProperties.Properties.PET_BUFF_EFFECT_MULTIPLIER <= 0)
 				|| (effect.Owner is Keeps.GameKeepGuard && ServerProperties.Properties.GUARD_BUFF_EFFECT_MULTIPLIER <= 0)
 				|| (effect.Owner is GameNPC && ServerProperties.Properties.MOB_BUFF_EFFECT_MULTIPLIER <= 0))
 				return false;
@@ -531,7 +531,7 @@ namespace DOL.GS.Spells
 			{
 				double multiplier;
 				if (owner is GamePet)
-					multiplier = ServerProperties.Properties.PET_BUFF_EFFECT_MULTIPIER;
+					multiplier = ServerProperties.Properties.PET_BUFF_EFFECT_MULTIPLIER;
 				else if (owner is Keeps.GameKeepGuard)
 					multiplier = ServerProperties.Properties.GUARD_BUFF_EFFECT_MULTIPLIER;
 				else
