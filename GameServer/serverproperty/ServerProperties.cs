@@ -1085,7 +1085,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Multiplier for mob buff/debuff effects
 		/// </summary>
-		[ServerProperty("npc", "mob_buff_effect_multiplier", "How many stats buffed/debuffed are needed to change a pet's damage or resists by 1%? Set to 0 or less to apply buffs normally rather than using livelike pet buff/debuff effects. ", 13)]
+		[ServerProperty("npc", "mob_buff_effect_multiplier", "Determines effectiveness of buff/debuff effects on mobs.  Debuff effects are multiplier * stat / level, buffs effects are half that. ", 13)]
 		public static double MOB_BUFF_EFFECT_MULTIPLIER;
 
 		/// <summary>
@@ -1162,8 +1162,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Multiplier for pet buff/debuff effects
 		/// </summary>
-		[ServerProperty("npc", "pet_buff_effect_multipier", "How many stats buffed / debuffed are needed to change a pet's damage or resists by 1%? Set to 0 or less to apply buffs normally rather than using livelike pet buff/debuff effects. ", 13)]
-		public static double PET_BUFF_EFFECT_MULTIPIER;
+		[ServerProperty("npc", "pet_buff_effect_multiplier", "Determines effectiveness of buff/debuff effects on pets.  Debuff effects are multiplier * stat / level, buffs effects are half that. ", 13)]
+		public static double PET_BUFF_EFFECT_MULTIPLIER;
 
 		// Necro pet stat properties
 
@@ -1835,7 +1835,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Multiplier for keep guard buff/debuff effects
 		/// </summary>
-		[ServerProperty("npc", "guard_buff_effect_multiplier", "How many stats buffed/debuffed are needed to change a keep guard's damage or resists by 1%? Set to 0 or less to apply buffs normally rather than using livelike pet buff/debuff effects. ", 13)]
+		[ServerProperty("npc", "guard_buff_effect_multiplier", "Determines effectiveness of buff/debuff effects on keep guards.  Debuff effects are multiplier * stat / level, buffs effects are half that. ", 13)]
 		public static double GUARD_BUFF_EFFECT_MULTIPLIER;
 
 		/// <summary>
