@@ -1219,6 +1219,10 @@ namespace DOL.GS.Commands
 
 			info.Add(" + Class: " + targetMob.GetType().ToString());
 			info.Add(" + Realm: " + GlobalConstants.RealmToName(targetMob.Realm));
+
+			if (targetMob.Faction != null)
+				info.Add($" + Faction: {targetMob.Faction.Name} [{targetMob.Faction.ID}]");
+
 			info.Add(" + Level: " + targetMob.Level);
 			info.Add(" + Brain: " + (targetMob.Brain == null ? "(null)" : targetMob.Brain.GetType().ToString()));
 

@@ -3589,7 +3589,7 @@ namespace DOL.GS
 		public override bool Interact(GamePlayer player)
 		{
 			if (!base.Interact(player)) return false;
-			if (!GameServer.ServerRules.IsSameRealm(this, player, true))
+			if (!GameServer.ServerRules.IsSameRealm(this, player, true) && Faction.GetAggroToFaction(player) > 25)
 			{
 				player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameNPC.Interact.DirtyLook",
 					GetName(0, true, player.Client.Account.Language, this)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -3964,6 +3964,35 @@ namespace DOL.GS
 				if (!SpellTimer.IsAlive)
 					SpellTimer.Start(1);
 			}
+		}
+
+		/// <summary>
+		/// Returns the Damage this NPC does on an attack, adding 2H damage bonus if appropriate
+		/// </summary>
+		/// <param name="weapon">the weapon used for attack</param>
+		/// <returns></returns>
+		public override double AttackDamage(InventoryItem weapon)
+		{
+			double damage = base.AttackDamage(weapon);
+
+			if (ActiveWeaponSlot == eActiveWeaponSlot.TwoHanded && m_blockChance > 0)
+				switch (this)
+				{
+					case Keeps.GameKeepGuard guard:
+						if (ServerProperties.Properties.GUARD_2H_BONUS_DAMAGE)
+							damage = (100 + m_blockChance) / 100.00;
+						break;
+					case GamePet pet:
+						if (ServerProperties.Properties.PET_2H_BONUS_DAMAGE)
+							damage = (100 + m_blockChance) / 100.00;
+						break;
+					default:
+						if (ServerProperties.Properties.MOB_2H_BONUS_DAMAGE)
+							damage = (100 + m_blockChance) / 100.00;
+						break;
+				}
+
+			return damage;
 		}
 
 		/// <summary>
