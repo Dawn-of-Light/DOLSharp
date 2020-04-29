@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using DOL.GS;
+using DOL.GS.ServerProperties;
 using DOL.GS.PropertyCalc;
 
 namespace DOL.UnitTests.Gameserver
@@ -16,7 +17,10 @@ namespace DOL.UnitTests.Gameserver
 
             int actual = statCalc.CalcValueFromBuffs(npc, eProperty.Constitution);
 
-            Assert.AreEqual(100, actual);
+            if (Properties.MOB_BUFF_EFFECT_MULTIPLIER > 0)
+                Assert.AreEqual(0, actual);
+            else
+                Assert.AreEqual(100, actual);
         }
 
         [Test]
@@ -58,6 +62,9 @@ namespace DOL.UnitTests.Gameserver
             int actual = statCalc.CalcValueFromBuffs(npc, eProperty.Constitution);
 
             int expected = 3 + 4;
+            if (Properties.MOB_BUFF_EFFECT_MULTIPLIER > 0)
+                expected = 0;
+
             Assert.AreEqual(expected, actual);
         }
 
@@ -270,7 +277,7 @@ namespace DOL.UnitTests.Gameserver
 
             int actual = statCalc.CalcValue(player, eProperty.Constitution);
 
-            Assert.AreEqual(200, actual);
+            Assert.AreEqual(200 - (50/2), actual);
         }
 
         [Test]
