@@ -375,7 +375,9 @@
     <Compile Include="gameobjects\CharacterClasses\CharacterClassBase.cs" />
     <Compile Include="gameobjects\CharacterClasses\Midgard\CharacterClassBoneDancer.cs" />
     <Compile Include="gameobjects\CustomNPC\BuffMerchant.cs" />
+    <Compile Include="gameobjects\CustomNPC\Doppelganger.cs" />
     <Compile Include="gameobjects\CustomNPC\DreadedSealCollector.cs" />
+    <Compile Include="gameobjects\CustomNPC\GameSummoner.cs" />
     <Compile Include="gameobjects\GameInventoryObject.cs" />
     <Compile Include="gameobjects\GameMythirian.cs" />
     <Compile Include="gameobjects\GameNPChelper.cs" />
