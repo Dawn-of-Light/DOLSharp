@@ -154,17 +154,20 @@ namespace DOL.GS.Spells
 		/// <param name="effect"></param>
 		public override void OnEffectStart(GameSpellEffect effect)
 		{
-			ApplyBonus(effect.Owner , BonusCategory1, Property1, (int) (Spell.Value*effect.Effectiveness), false);
-			ApplyBonus(effect.Owner , BonusCategory2, Property2, (int) (Spell.Value*effect.Effectiveness), false);
-			ApplyBonus(effect.Owner , BonusCategory3, Property3, (int) (Spell.Value*effect.Effectiveness), false);
-			ApplyBonus(effect.Owner , BonusCategory4, Property4, (int) (Spell.Value*effect.Effectiveness), false);
-			ApplyBonus(effect.Owner , BonusCategory5, Property5, (int) (Spell.Value*effect.Effectiveness), false);
-			ApplyBonus(effect.Owner , BonusCategory6, Property6, (int) (Spell.Value*effect.Effectiveness), false);
-			ApplyBonus(effect.Owner, BonusCategory7, Property7, (int)(Spell.Value * effect.Effectiveness), false);
-			ApplyBonus(effect.Owner, BonusCategory8, Property8, (int)(Spell.Value * effect.Effectiveness), false);
-			ApplyBonus(effect.Owner, BonusCategory9, Property9, (int)(Spell.Value * effect.Effectiveness), false);
-			ApplyBonus(effect.Owner, BonusCategory10, Property10, (int)(Spell.Value * effect.Effectiveness), false);
-			
+			if (!ApplyNpcEffect(effect, false))
+			{
+				ApplyBonus(effect.Owner, BonusCategory1, Property1, (int)(Spell.Value * effect.Effectiveness), false);
+				ApplyBonus(effect.Owner, BonusCategory2, Property2, (int)(Spell.Value * effect.Effectiveness), false);
+				ApplyBonus(effect.Owner, BonusCategory3, Property3, (int)(Spell.Value * effect.Effectiveness), false);
+				ApplyBonus(effect.Owner, BonusCategory4, Property4, (int)(Spell.Value * effect.Effectiveness), false);
+				ApplyBonus(effect.Owner, BonusCategory5, Property5, (int)(Spell.Value * effect.Effectiveness), false);
+				ApplyBonus(effect.Owner, BonusCategory6, Property6, (int)(Spell.Value * effect.Effectiveness), false);
+				ApplyBonus(effect.Owner, BonusCategory7, Property7, (int)(Spell.Value * effect.Effectiveness), false);
+				ApplyBonus(effect.Owner, BonusCategory8, Property8, (int)(Spell.Value * effect.Effectiveness), false);
+				ApplyBonus(effect.Owner, BonusCategory9, Property9, (int)(Spell.Value * effect.Effectiveness), false);
+				ApplyBonus(effect.Owner, BonusCategory10, Property10, (int)(Spell.Value * effect.Effectiveness), false);
+			}
+
 			SendUpdates(effect.Owner);
 
 			eChatType toLiving = eChatType.CT_SpellPulse;
@@ -226,17 +229,20 @@ namespace DOL.GS.Spells
 				MessageToLiving(effect.Owner, Spell.Message3, eChatType.CT_SpellExpires);
 				Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message4, effect.Owner.GetName(0, false)), eChatType.CT_SpellExpires, effect.Owner);
 			}
-			
-			ApplyBonus(effect.Owner , BonusCategory1, Property1, (int) (Spell.Value*effect.Effectiveness), true);
-			ApplyBonus(effect.Owner , BonusCategory2, Property2, (int) (Spell.Value*effect.Effectiveness), true);
-			ApplyBonus(effect.Owner , BonusCategory3, Property3, (int) (Spell.Value*effect.Effectiveness), true);
-			ApplyBonus(effect.Owner , BonusCategory4, Property4, (int) (Spell.Value*effect.Effectiveness), true);
-			ApplyBonus(effect.Owner , BonusCategory5, Property5, (int) (Spell.Value*effect.Effectiveness), true);
-			ApplyBonus(effect.Owner , BonusCategory6, Property6, (int) (Spell.Value*effect.Effectiveness), true);
-			ApplyBonus(effect.Owner, BonusCategory7, Property7, (int)(Spell.Value * effect.Effectiveness), true);
-			ApplyBonus(effect.Owner, BonusCategory8, Property8, (int)(Spell.Value * effect.Effectiveness), true);
-			ApplyBonus(effect.Owner, BonusCategory9, Property9, (int)(Spell.Value * effect.Effectiveness), true);
-			ApplyBonus(effect.Owner, BonusCategory10, Property10, (int)(Spell.Value * effect.Effectiveness), true);
+
+			if (!ApplyNpcEffect(effect, true))
+			{
+				ApplyBonus(effect.Owner, BonusCategory1, Property1, (int)(Spell.Value * effect.Effectiveness), true);
+				ApplyBonus(effect.Owner, BonusCategory2, Property2, (int)(Spell.Value * effect.Effectiveness), true);
+				ApplyBonus(effect.Owner, BonusCategory3, Property3, (int)(Spell.Value * effect.Effectiveness), true);
+				ApplyBonus(effect.Owner, BonusCategory4, Property4, (int)(Spell.Value * effect.Effectiveness), true);
+				ApplyBonus(effect.Owner, BonusCategory5, Property5, (int)(Spell.Value * effect.Effectiveness), true);
+				ApplyBonus(effect.Owner, BonusCategory6, Property6, (int)(Spell.Value * effect.Effectiveness), true);
+				ApplyBonus(effect.Owner, BonusCategory7, Property7, (int)(Spell.Value * effect.Effectiveness), true);
+				ApplyBonus(effect.Owner, BonusCategory8, Property8, (int)(Spell.Value * effect.Effectiveness), true);
+				ApplyBonus(effect.Owner, BonusCategory9, Property9, (int)(Spell.Value * effect.Effectiveness), true);
+				ApplyBonus(effect.Owner, BonusCategory10, Property10, (int)(Spell.Value * effect.Effectiveness), true);
+			}
 
 			SendUpdates(effect.Owner);
 
@@ -442,16 +448,19 @@ namespace DOL.GS.Spells
 
 		public override void OnEffectRestored(GameSpellEffect effect, int[] vars)
 		{
-			ApplyBonus (effect.Owner, BonusCategory1,Property1, vars[1], false);
-			ApplyBonus (effect.Owner, BonusCategory2,Property2, vars[1], false);
-			ApplyBonus (effect.Owner, BonusCategory3,Property3, vars[1], false);
-			ApplyBonus (effect.Owner, BonusCategory4,Property4, vars[1], false);
-			ApplyBonus (effect.Owner, BonusCategory5,Property5, vars[1], false);
-			ApplyBonus (effect.Owner, BonusCategory6,Property6, vars[1], false);
-			ApplyBonus(effect.Owner, BonusCategory7, Property7, vars[1], false);
-			ApplyBonus(effect.Owner, BonusCategory8, Property8, vars[1], false);
-			ApplyBonus(effect.Owner, BonusCategory9, Property9, vars[1], false);
-			ApplyBonus(effect.Owner, BonusCategory10, Property10, vars[1], false);
+			if (!ApplyNpcEffect(effect, false))
+			{
+				ApplyBonus(effect.Owner, BonusCategory1, Property1, vars[1], false);
+				ApplyBonus(effect.Owner, BonusCategory2, Property2, vars[1], false);
+				ApplyBonus(effect.Owner, BonusCategory3, Property3, vars[1], false);
+				ApplyBonus(effect.Owner, BonusCategory4, Property4, vars[1], false);
+				ApplyBonus(effect.Owner, BonusCategory5, Property5, vars[1], false);
+				ApplyBonus(effect.Owner, BonusCategory6, Property6, vars[1], false);
+				ApplyBonus(effect.Owner, BonusCategory7, Property7, vars[1], false);
+				ApplyBonus(effect.Owner, BonusCategory8, Property8, vars[1], false);
+				ApplyBonus(effect.Owner, BonusCategory9, Property9, vars[1], false);
+				ApplyBonus(effect.Owner, BonusCategory10, Property10, vars[1], false);
+			}
 
 			SendUpdates(effect.Owner);
 		}
@@ -464,19 +473,217 @@ namespace DOL.GS.Spells
 				Message.SystemToArea(effect.Owner, Util.MakeSentence(Spell.Message4, effect.Owner.GetName(0, false)), eChatType.CT_SpellExpires, effect.Owner);
 			}
 
-			ApplyBonus (effect.Owner, BonusCategory1,Property1, vars[1], true);
-			ApplyBonus (effect.Owner, BonusCategory2,Property2, vars[1], true);
-			ApplyBonus (effect.Owner, BonusCategory3,Property3, vars[1], true);
-			ApplyBonus (effect.Owner, BonusCategory4,Property4, vars[1], true);
-			ApplyBonus (effect.Owner, BonusCategory5,Property5, vars[1], true);
-			ApplyBonus (effect.Owner, BonusCategory6,Property6, vars[1], true);
-			ApplyBonus(effect.Owner, BonusCategory7, Property7, vars[1], true);
-			ApplyBonus(effect.Owner, BonusCategory8, Property8, vars[1], true);
-			ApplyBonus(effect.Owner, BonusCategory9, Property9, vars[1], true);
-			ApplyBonus(effect.Owner, BonusCategory10, Property10, vars[1], true);
+			if (!ApplyNpcEffect(effect, true))
+			{
+				ApplyBonus(effect.Owner, BonusCategory1, Property1, vars[1], true);
+				ApplyBonus(effect.Owner, BonusCategory2, Property2, vars[1], true);
+				ApplyBonus(effect.Owner, BonusCategory3, Property3, vars[1], true);
+				ApplyBonus(effect.Owner, BonusCategory4, Property4, vars[1], true);
+				ApplyBonus(effect.Owner, BonusCategory5, Property5, vars[1], true);
+				ApplyBonus(effect.Owner, BonusCategory6, Property6, vars[1], true);
+				ApplyBonus(effect.Owner, BonusCategory7, Property7, vars[1], true);
+				ApplyBonus(effect.Owner, BonusCategory8, Property8, vars[1], true);
+				ApplyBonus(effect.Owner, BonusCategory9, Property9, vars[1], true);
+				ApplyBonus(effect.Owner, BonusCategory10, Property10, vars[1], true);
+			}
 
 			SendUpdates(effect.Owner);
 			return 0;
+		}
+
+		/// <summary>
+		/// Apply npc specific spell effects
+		/// </summary>
+		/// <param name="effect">The effect to apply</param>
+		/// <param name="isSubtracted">Are we removing the effect?</param>
+		/// <returns>True if we handled the effect, false if it still needs to be processed.</returns>
+		protected bool ApplyNpcEffect(GameSpellEffect effect, bool isSubtracted)
+		{
+			/* Friday Grab Bag - 10/12/2003, repeated in 05/05/2017 Grab Bag
+			 * Q: How do player concentration buffs affect pets? (ie: druid base/specs on an enchanter's pet)
+			 * A: Strength buffs increase a pet’s melee damage.
+			 * Constitution buffs decrease damage done to a pet.
+			 * Dexterity buffs reduce a pet’s spell cast timer, decrease damage done to the pet and increase its chance to hit with archery and bolts.
+			 * Quickness buffs reduce a pet’s melee attack timer. */
+
+			/* Tested on live on 4/21/2020 with a Champion:
+			 *	Confirmed Con debuffs increase melee and spell damage taken, but dex only increases melee damage taken.
+			 *	Debuffs are incredibly powerful: Str/Con + Dex/Qui increase melee damage taken by 47% and increase spell damage by 23%
+			 *	Live no longer allow pets to be buffed, might be an EC restriction. 
+			 *
+			 * If we use the same multiplier for buffs as debuffs, a fully Str, Con, Dex, Str/Con & Dex/Qui buffed pet will do
+			 *	40% more melee damage, have 81% melee damage resistance, and have 40% spell resistance.  That's crazy, so we halve
+			 *	the effectiveness of buffs.
+			 *	
+			 * Debuffs will use SpecDebuffCategory, so we can tell which buffs are applied here.
+			 */
+
+			if (!(effect.Owner is GameNPC)
+				|| (effect.Owner is GamePet && ServerProperties.Properties.PET_BUFF_EFFECT_MULTIPLIER <= 0)
+				|| (effect.Owner is Keeps.GameKeepGuard && ServerProperties.Properties.GUARD_BUFF_EFFECT_MULTIPLIER <= 0)
+				|| (effect.Owner is GameNPC && ServerProperties.Properties.MOB_BUFF_EFFECT_MULTIPLIER <= 0))
+				return false;
+
+			GameNPC owner = effect.Owner as GameNPC;
+			int percent;
+
+			// Only calculate the buff/debuff percentages when we absolutely have to
+			void CalculatePercentage(bool specCap)
+			{
+				double multiplier;
+				if (owner is GamePet)
+					multiplier = ServerProperties.Properties.PET_BUFF_EFFECT_MULTIPLIER;
+				else if (owner is Keeps.GameKeepGuard)
+					multiplier = ServerProperties.Properties.GUARD_BUFF_EFFECT_MULTIPLIER;
+				else
+					multiplier = ServerProperties.Properties.MOB_BUFF_EFFECT_MULTIPLIER;
+
+				// We have to cap both buffs and debuffs, or bad things happen with high level buffs/debuffs on low level NPCs.
+				double cap;
+				if (specCap)
+					cap = owner.Level * 1.5;
+				else
+					cap = owner.Level;
+
+				if (cap < Spell.Value)
+					percent = (int)(multiplier * cap / owner.Level * effect.Effectiveness);
+				else
+					percent = (int)(multiplier * Spell.Value / owner.Level * effect.Effectiveness);
+
+				if (Spell.IsHelpful) // Halve cap buffs
+					percent = percent >> 1;
+
+				if (isSubtracted)
+					percent = -percent;
+			} // CalculatePercentage()
+
+			switch (this)
+			{
+				case ArmorFactorBuff _:
+					// Only baseline AF buffs are allowed on pets, specifically because cleric 
+					//	base+spec AF buffs were making necro pets nigh indestructible on live.
+					// See 07/06/2018 Grab Bag for details on why caster AF self buffs are so high.  NPCs
+					//	already have a high base AF, so we cap caster self AF buffs on them as well.
+					if (Spell.EffectGroup == 1)
+					{
+						if (Spell.Value <= owner.Level)
+							owner.BaseBuffBonusCategory[(int)eProperty.ArmorFactor] += (int)(Spell.Value * effect.Effectiveness);
+						else
+							owner.BaseBuffBonusCategory[(int)eProperty.ArmorFactor] += (int)(owner.Level * effect.Effectiveness);
+					}
+					return true;
+				// Let ArmorFactorDebuffs apply normally.
+
+				case StrengthBuff _:
+					CalculatePercentage(false);
+					owner.BaseBuffBonusCategory[(int)eProperty.MeleeDamage] += percent;
+					return true;
+				case StrengthDebuff _:
+					CalculatePercentage(false);
+					owner.SpecDebuffCategory[(int)eProperty.MeleeDamage] += percent;
+					return true;
+
+				case ConstitutionBuff _:
+					CalculatePercentage(false);
+					owner.BaseBuffBonusCategory[(int)eProperty.Resist_Crush] += percent;
+					owner.BaseBuffBonusCategory[(int)eProperty.Resist_Slash] += percent;
+					owner.BaseBuffBonusCategory[(int)eProperty.Resist_Thrust] += percent;
+					owner.BaseBuffBonusCategory[(int)eProperty.MagicAbsorption] += percent;
+					return true;
+				case ConstitutionDebuff _:
+					CalculatePercentage(false);
+					owner.SpecDebuffCategory[(int)eProperty.Resist_Crush] += percent;
+					owner.SpecDebuffCategory[(int)eProperty.Resist_Slash] += percent;
+					owner.SpecDebuffCategory[(int)eProperty.Resist_Thrust] += percent;
+					owner.SpecDebuffCategory[(int)eProperty.MagicAbsorption] += percent;
+					return true;
+
+				case StrengthConBuff _:
+					CalculatePercentage(true);
+					owner.BaseBuffBonusCategory[(int)eProperty.MeleeDamage] += percent;
+					owner.BaseBuffBonusCategory[(int)eProperty.Resist_Crush] += percent;
+					owner.BaseBuffBonusCategory[(int)eProperty.Resist_Slash] += percent;
+					owner.BaseBuffBonusCategory[(int)eProperty.Resist_Thrust] += percent;
+					owner.BaseBuffBonusCategory[(int)eProperty.MagicAbsorption] += percent;
+					return true;
+				case StrengthConDebuff _:
+					CalculatePercentage(true);
+					owner.SpecDebuffCategory[(int)eProperty.MeleeDamage] += percent;
+					owner.SpecDebuffCategory[(int)eProperty.Resist_Crush] += percent;
+					owner.SpecDebuffCategory[(int)eProperty.Resist_Slash] += percent;
+					owner.SpecDebuffCategory[(int)eProperty.Resist_Thrust] += percent;
+					owner.SpecDebuffCategory[(int)eProperty.MagicAbsorption] += percent;
+					return true;
+
+				// Dex also affects cast speed and ranged weapon skill, so we need to apply it normally as well.
+				case DexterityBuff _:
+					if (isSubtracted)
+						owner.BaseBuffBonusCategory[(int)eProperty.Dexterity] -= (int)(Spell.Value * effect.Effectiveness);
+					else
+						owner.BaseBuffBonusCategory[(int)eProperty.Dexterity] += (int)(Spell.Value * effect.Effectiveness);
+					CalculatePercentage(false);
+					owner.BaseBuffBonusCategory[(int)eProperty.Resist_Crush] += percent;
+					owner.BaseBuffBonusCategory[(int)eProperty.Resist_Slash] += percent;
+					owner.BaseBuffBonusCategory[(int)eProperty.Resist_Thrust] += percent;
+					return true;
+				case DexterityDebuff _:
+					if (isSubtracted)
+						owner.DebuffCategory[(int)eProperty.Dexterity] -= (int)(Spell.Value * effect.Effectiveness);
+					else
+						owner.DebuffCategory[(int)eProperty.Dexterity] += (int)(Spell.Value * effect.Effectiveness);
+					CalculatePercentage(false);
+					owner.SpecDebuffCategory[(int)eProperty.Resist_Crush] += percent;
+					owner.SpecDebuffCategory[(int)eProperty.Resist_Slash] += percent;
+					owner.SpecDebuffCategory[(int)eProperty.Resist_Thrust] += percent;
+					return true;
+
+				case DexterityQuiBuff _:
+					if (isSubtracted)
+						owner.SpecBuffBonusCategory[(int)eProperty.Dexterity] -= (int)(Spell.Value * effect.Effectiveness);
+					else
+						owner.SpecBuffBonusCategory[(int)eProperty.Dexterity] += (int)(Spell.Value * effect.Effectiveness);
+					CalculatePercentage(true);
+					owner.BaseBuffBonusCategory[(int)eProperty.Resist_Crush] += percent;
+					owner.BaseBuffBonusCategory[(int)eProperty.Resist_Slash] += percent;
+					owner.BaseBuffBonusCategory[(int)eProperty.Resist_Thrust] += percent;
+					owner.BaseBuffBonusCategory[(int)eProperty.MeleeSpeed] += percent;
+					return true;
+				case DexterityQuiDebuff _:
+					if (isSubtracted)
+						owner.DebuffCategory[(int)eProperty.Dexterity] -= (int)(Spell.Value * effect.Effectiveness);
+					else
+						owner.DebuffCategory[(int)eProperty.Dexterity] += (int)(Spell.Value * effect.Effectiveness);
+					CalculatePercentage(true);
+					owner.SpecDebuffCategory[(int)eProperty.Resist_Crush] += percent;
+					owner.SpecDebuffCategory[(int)eProperty.Resist_Slash] += percent;
+					owner.SpecDebuffCategory[(int)eProperty.Resist_Thrust] += percent;
+					owner.SpecDebuffCategory[(int)eProperty.MeleeSpeed] += percent;
+					return true;
+
+				case DexterityConDebuff _:
+					CalculatePercentage(true);
+					if (percent > 0)
+						owner.DebuffCategory[(int)eProperty.Dexterity] += (int)(Spell.Value * effect.Effectiveness);
+					else
+						owner.DebuffCategory[(int)eProperty.Dexterity] -= (int)(Spell.Value * effect.Effectiveness);
+					// Melee resist gets reduced by both Con and Dex
+					owner.SpecDebuffCategory[(int)eProperty.Resist_Crush] += 2 * percent;
+					owner.SpecDebuffCategory[(int)eProperty.Resist_Slash] += 2 * percent;
+					owner.SpecDebuffCategory[(int)eProperty.Resist_Thrust] += 2 * percent;
+					owner.SpecDebuffCategory[(int)eProperty.MagicAbsorption] += percent;
+					return true;
+
+				case WeaponskillConDebuff _:
+					CalculatePercentage(true);
+					owner.SpecDebuffCategory[(int)eProperty.WeaponSkill] += percent;
+					owner.SpecDebuffCategory[(int)eProperty.Resist_Crush] += percent;
+					owner.SpecDebuffCategory[(int)eProperty.Resist_Slash] += percent;
+					owner.SpecDebuffCategory[(int)eProperty.Resist_Thrust] += percent;
+					owner.SpecDebuffCategory[(int)eProperty.MagicAbsorption] += percent;
+					return true;
+			}
+
+			return false;
 		}
 
 		/// <summary>

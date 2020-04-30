@@ -78,12 +78,10 @@ namespace DOL.GS.PropertyCalc
 			int unbuffedBonus = baseStat + itemBonus;
 			buffBonus -= Math.Abs(debuff);
 
-			if (buffBonus < 0)
+			if (living is GamePlayer && buffBonus < 0)
 			{
 				unbuffedBonus += buffBonus / 2;
 				buffBonus = 0;
-				if (unbuffedBonus < 0)
-					unbuffedBonus = 0;
 			}
 
 			// Add up and apply any multiplicators.
