@@ -1041,7 +1041,6 @@ namespace DOL.GS.ServerRules
 		{
 			lock (killedNPC.XPGainers.SyncRoot)
 			{
-				log.Error($"TEGS: killedNpc={killedNPC.Name}, charmed tick prop={killedNPC.TempProperties.getProperty<long>(GameNPC.CHARMED_TICK_PROP)}");
 				#region Worth no experience
 				//"This monster has been charmed recently and is worth no experience."
 				string message = "You gain no experience from this kill!";
