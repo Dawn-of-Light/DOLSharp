@@ -1041,6 +1041,7 @@ namespace DOL.GS.ServerRules
 		{
 			lock (killedNPC.XPGainers.SyncRoot)
 			{
+				log.Error($"TEGS: killedNpc={killedNPC.Name}, charmed tick prop={killedNPC.TempProperties.getProperty<long>(GameNPC.CHARMED_TICK_PROP)}");
 				#region Worth no experience
 				//"This monster has been charmed recently and is worth no experience."
 				string message = "You gain no experience from this kill!";
@@ -1146,7 +1147,7 @@ namespace DOL.GS.ServerRules
 						}
 					}
 
-					if (realmPoints > rpCap)
+					if (realmPoints > rpCap && !(killedNPC is Doppelganger))
 						realmPoints = rpCap;
 
 					if (realmPoints > 0)
@@ -1171,7 +1172,7 @@ namespace DOL.GS.ServerRules
 						bountyPoints = (int)(npcBPValue * damagePercent);
 					}
 
-					if (bountyPoints > bpCap)
+					if (bountyPoints > bpCap && !(killedNPC is Doppelganger))
 						bountyPoints = bpCap;
 					if (bountyPoints > 0)
 						living.GainBountyPoints(bountyPoints);
