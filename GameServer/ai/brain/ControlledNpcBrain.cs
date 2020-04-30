@@ -354,17 +354,17 @@ namespace DOL.AI.Brain
 			long lastUpdate;
 			if (!playerowner.Client.GameObjectUpdateArray.TryGetValue(new Tuple<ushort, ushort>(Body.CurrentRegionID, (ushort)Body.ObjectID), out lastUpdate))
 				lastUpdate = 0;
-			
+
 			// Load abilities on first Think cycle.
 			if (!checkAbility)
 			{
 				CheckAbilities();
 				checkAbility = true;
 			}
-			
+
 			if (playerowner != null && (GameTimer.GetTickCount() - lastUpdate) > ThinkInterval)
 				playerowner.Out.SendObjectUpdate(Body);
-			
+
 			//See if the pet is too far away, if so release it!
 			if (Owner is GamePlayer && IsMainPet && !Body.IsWithinRadius(Owner, MAX_OWNER_FOLLOW_DIST))
 				(Owner as GamePlayer).CommandNpcRelease();
@@ -383,7 +383,7 @@ namespace DOL.AI.Brain
 				CheckSpells(eCheckSpellType.Defensive);
 
 			// Stop hunting player entering in steath
-			if ( Body.TargetObject != null && Body.TargetObject is GamePlayer)
+			if (Body.TargetObject != null && Body.TargetObject is GamePlayer)
 			{
 				GamePlayer player = Body.TargetObject as GamePlayer;
 				if (Body.IsAttacking && player.IsStealthed && !previousIsStealthed)
@@ -401,6 +401,9 @@ namespace DOL.AI.Brain
 			//	when they should be stopping to cast offensive spells.
 			if (IsActive && m_aggressionState != eAggressionState.Passive)
 				CheckSpells(eCheckSpellType.Offensive);
+
+			if (!Body.AttackState && WalkState == eWalkState.Follow && Owner != null)
+				Follow(Owner);
 		}
 
 		/// <summary>

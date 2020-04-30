@@ -1077,6 +1077,12 @@ namespace DOL.GS.ServerProperties
 		public static double MOB_AUTOSET_INT_MULTIPLIER;
 
 		/// <summary>
+		/// Multiplier for mob buff/debuff effects
+		/// </summary>
+		[ServerProperty("npc", "mob_buff_effect_multiplier", "Determines effectiveness of buff/debuff effects on mobs.  Debuff effects are multiplier * stat / level, buffs effects are half that. ", 13)]
+		public static double MOB_BUFF_EFFECT_MULTIPLIER;
+
+		/// <summary>
 		/// Enable 2H weapon damage bonus for mobs?
 		/// </summary>
 		[ServerProperty("npc", "mob_2h_bonus_damage", "If true, mobs that use a 2H weapon and have a block chance get bonus damage equal to their block chance to compensate for not being able to block. ", false)]
@@ -1148,6 +1154,11 @@ namespace DOL.GS.ServerProperties
 		public static double PET_AUTOSET_INT_MULTIPLIER;
 
 		/// <summary>
+		/// Multiplier for pet buff/debuff effects
+		/// </summary>
+		[ServerProperty("npc", "pet_buff_effect_multiplier", "Determines effectiveness of buff/debuff effects on pets.  Debuff effects are multiplier * stat / level, buffs effects are half that. ", 13)]
+		public static double PET_BUFF_EFFECT_MULTIPLIER;
+
 		/// Enable 2H weapon damage bonus for pets?
 		/// </summary>
 		[ServerProperty("npc", "pet_2h_bonus_damage", "If true, pets that use a 2H weapon and have a block chance get bonus damage equal to their block chance to compensate for not being able to block. ", true)]
@@ -1815,6 +1826,11 @@ namespace DOL.GS.ServerProperties
 		public static double LORD_AUTOSET_INT_MULTIPLIER;
 
 		/// <summary>
+		/// Multiplier for keep guard buff/debuff effects
+		/// </summary>
+		[ServerProperty("npc", "guard_buff_effect_multiplier", "Determines effectiveness of buff/debuff effects on keep guards.  Debuff effects are multiplier * stat / level, buffs effects are half that. ", 13)]
+		public static double GUARD_BUFF_EFFECT_MULTIPLIER;
+
 		/// Enable 2H weapon damage bonus for keep guards?
 		/// </summary>
 		[ServerProperty("keeps", "guard_2h_bonus_damage", "If true, keep guards that use a 2H weapon and have a block chance get bonus damage equal to their block chance to compensate for not being able to block. ", true)]

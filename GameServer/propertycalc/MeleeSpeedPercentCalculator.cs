@@ -34,9 +34,25 @@ namespace DOL.GS.PropertyCalc
 	{
 		public override int CalcValue(GameLiving living, eProperty property)
 		{
+			if (living is GameNPC)
+			{
+				// NPC buffs effects are halved compared to debuffs, so it takes 2% debuff to mitigate 1% buff
+				// See PropertyChangingSpell.ApplyNpcEffect() for details.
+				int buffs = living.BaseBuffBonusCategory[property] << 1;
+				int debuff = Math.Abs(living.DebuffCategory[property]);
+				int specDebuff = Math.Abs(living.SpecDebuffCategory[property]);
+
+				buffs -= specDebuff;
+				if (buffs > 0)
+					buffs = buffs >> 1;
+				buffs -= debuff;
+
+				return 100 - buffs;
+			}
+
 			return Math.Max(1, 100
 				-living.BaseBuffBonusCategory[(int)property] // less is faster = buff
-				+living.DebuffCategory[(int)property] // more is slower = debuff
+				+Math.Abs(living.DebuffCategory[(int)property]) // more is slower = debuff
 				-Math.Min(10, living.ItemBonus[(int)property])); // http://www.camelotherald.com/more/1325.shtml
 		}
 	}

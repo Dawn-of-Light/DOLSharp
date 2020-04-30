@@ -17,6 +17,7 @@
  *
  */
 using System;
+using DOL.GS.Keeps;
 
 namespace DOL.GS.PropertyCalc
 {
@@ -34,9 +35,25 @@ namespace DOL.GS.PropertyCalc
 	{
 		public override int CalcValue(GameLiving living, eProperty property)
 		{
+			if (living is GameNPC)
+			{
+                // NPC buffs effects are halved compared to debuffs, so it takes 2% debuff to mitigate 1% buff
+                // See PropertyChangingSpell.ApplyNpcEffect() for details.
+				int buffs = living.BaseBuffBonusCategory[property] << 1;
+				int debuff = Math.Abs(living.DebuffCategory[property]);
+				int specDebuff = Math.Abs(living.SpecDebuffCategory[property]);
+
+				buffs -= specDebuff;
+				if (buffs > 0)
+					buffs = buffs >> 1;
+				buffs -= debuff;
+
+				return living.AbilityBonus[property] + buffs;
+			}
+
 			//hardcap at 10%
 			int itemPercent = Math.Min(10, living.ItemBonus[(int)property]);
-			int debuffPercent = Math.Min(10, living.DebuffCategory[(int)property]);
+			int debuffPercent = Math.Min(10, Math.Abs(living.DebuffCategory[(int)property]));
 			int percent = living.BaseBuffBonusCategory[(int)property] + living.SpecBuffBonusCategory[(int)property] + itemPercent - debuffPercent;
 
 			// Apply RA bonus
