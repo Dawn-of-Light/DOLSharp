@@ -33,7 +33,7 @@ namespace DOL.GS
         /// </summary>
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        override public int SummonThreshold { get { return 50; } }
+        override public int PetSummonThreshold { get { return 50; } }
 
         override public NpcTemplate PetTemplate { get { return m_petTemplate; } }
         static private NpcTemplate m_petTemplate = null;
@@ -103,7 +103,6 @@ namespace DOL.GS
         {
             base.LoadFromDatabase(obj);
 
-            Flags = Flags | eFlags.TORCH;
             Disguise();
         }
 

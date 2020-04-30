@@ -32,7 +32,7 @@ namespace DOL.GS
         /// <summary>
         /// Percent health remaining to summon pet
         /// </summary>
-        abstract public int SummonThreshold { get; }
+        abstract public int PetSummonThreshold { get; }
 
         /// <summary>
         /// Template to base summon on
@@ -44,15 +44,15 @@ namespace DOL.GS
         /// </summary>
         abstract public byte PetLevel { get; }
 
+        // Optional modifiers.
         virtual public int PetTetherRange { get { return 0; } }
         virtual public int PetMaxDistance { get { return 1500; } }
         virtual public byte PetSize {  get { return 0; } }
         virtual public int PetSummonDistance {  get { return 100; } }
+        virtual public long PetResummonTime { get { return 60000; } }
 
-        /// <summary>
-        /// Health threshold to summon pet at
-        /// </summary>
         private GameNPC m_pet = null;
+        private long m_resummonTime = 0;
 
         public GameSummoner() : base() { }
         public GameSummoner(ABrain defaultBrain) : base(defaultBrain) { }
@@ -68,11 +68,67 @@ namespace DOL.GS
             {
                 base.Health = value;
 
-                if (Health <= 0 || Health >= MaxHealth)
+                if (value >= MaxHealth)
+                {
+                    if (PetSummonThreshold > 100)
+                    {
+                        // Release and resummon the pet if it's dead
+                        if (m_pet != null && !m_pet.IsAlive)
+                            ReleasePet();
+
+                        SummonPet();
+                    }
+                    else
+                    {
+                        ReleasePet();
+                        m_resummonTime = 0;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+		/// This living takes damage
+		/// </summary>
+		/// <param name="ad">AttackData containing damage details</param>
+        public override void TakeDamage(AttackData ad)
+        {
+            // If people kill the pet first, the owner summons a new one when attacked.
+            if (Health >= MaxHealth)
+                m_resummonTime = 0;
+
+            base.TakeDamage(ad);
+
+            if (!IsAlive)
+                ReleasePet();
+            else if (HealthPercent < PetSummonThreshold)
+            {
+                if (m_pet != null && !m_pet.IsAlive && CurrentRegion.Time > m_resummonTime)
                     ReleasePet();
-                else if (HealthPercent <= SummonThreshold)
+
+                if (m_pet == null)
                     SummonPet();
             }
+
+            if (m_pet != null && m_pet.IsAlive && !m_pet.InCombat && m_pet.Brain is StandardMobBrain petBrain)
+            {
+                petBrain.AddToAggroList(ad.Attacker, 1);
+                petBrain.Think();
+             }
+        }
+
+        /// <summary>
+        /// Adds the npc to the world
+        /// </summary>
+        /// <returns>true if the npc has been successfully added</returns>
+        public override bool AddToWorld()
+        {
+            bool ret = base.AddToWorld();
+
+            if (PetSummonThreshold > 100)
+                SummonPet();
+
+            return ret;
         }
 
         /// <summary>
@@ -102,6 +158,7 @@ namespace DOL.GS
                     m_pet.MaxDistance = PetMaxDistance;
                     m_pet.TetherRange = PetTetherRange;
                     m_pet.RespawnInterval = -1;
+                    m_pet.IsWorthReward = false;
 
                     if (PetSize > 0)
                         m_pet.Size = PetSize;
@@ -120,6 +177,8 @@ namespace DOL.GS
                     }
 
                     m_pet.AddToWorld();
+
+                    m_resummonTime = CurrentRegion.Time + PetResummonTime;
                 }
             }
         }
