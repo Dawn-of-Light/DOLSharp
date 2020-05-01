@@ -1016,6 +1016,18 @@ namespace DOL.GS
 		/// handler is set before calling the WalkTo function
 		/// </summary>
 		protected ArriveAtTargetAction m_arriveAtTargetAction;
+
+		/// <summary>
+		/// Is the mob roaming towards a target?
+		/// </summary>
+		public bool IsRoaming
+		{
+			get
+			{
+				return m_arriveAtTargetAction != null && m_arriveAtTargetAction.IsAlive;
+			}
+		}
+
 		/// <summary>
 		/// Timer to be set if an OnCloseToTarget
 		/// handler is set before calling the WalkTo function
