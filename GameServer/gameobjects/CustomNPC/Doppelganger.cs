@@ -85,7 +85,7 @@ namespace DOL.GS
                     if (Model == doppelModel)
                         Disguise();
                 }
-                else if (Model != doppelModel)
+                else if (value <= MaxHealth >> 1 && Model != doppelModel)
                 {
                     Model = doppelModel;
                     Name = "doppelganger";
