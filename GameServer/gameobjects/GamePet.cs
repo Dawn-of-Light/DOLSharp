@@ -116,7 +116,7 @@ namespace DOL.GS
 			else if (RootOwner is GameLiving summoner)
 				newLevel = (byte)(summoner.Level * SummonSpellDamage * -0.01);
 
-			if (newLevel > SummonSpellValue)
+			if (SummonSpellValue > 0  && newLevel > SummonSpellValue)
 				newLevel = (byte)SummonSpellValue;
 
 			if (newLevel < 1)

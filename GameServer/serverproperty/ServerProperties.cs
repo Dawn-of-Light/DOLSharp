@@ -1017,6 +1017,18 @@ namespace DOL.GS.ServerProperties
 
 		#region NPCs
 		/// <summary>
+		/// Doppelganger realm point value
+		/// </summary>
+		[ServerProperty("npc", "doppelganger_realm_points", "Realm point value of doppelgangers. ", 400)]
+		public static int DOPPELGANGER_REALM_POINTS;
+
+		/// <summary>
+		/// Doppelganger bounty point value
+		/// </summary>
+		[ServerProperty("npc", "doppelganger_bounty_points", "Bounty point value of doppelgangers. ", 250)]
+		public static int DOPPELGANGER_BOUNTY_POINTS;
+
+		/// <summary>
 		/// Base Value to use when auto-setting STR stat.
 		/// </summary>
 		[ServerProperty("npc", "mob_autoset_str_base", "Base Value to use when auto-setting STR stat. ", (short)30)]
