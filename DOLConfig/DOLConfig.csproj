@@ -107,7 +107,9 @@
       <DependentUpon>DOLConfig.cs</DependentUpon>
     </Compile>
     <Compile Include="DOLConfigParser.cs" />
-    <Compile Include="Resources.Designer.cs">
+    <Compile Include="Resources1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ServerProperties.cs">
