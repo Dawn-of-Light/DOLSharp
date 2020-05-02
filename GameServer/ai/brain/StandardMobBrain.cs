@@ -127,7 +127,7 @@ namespace DOL.AI.Brain
 			}
 
 			//If this NPC can randomly walk around, we allow it to walk around
-			if (!Body.AttackState && CanRandomWalk && Util.Chance(DOL.GS.ServerProperties.Properties.GAMENPC_RANDOMWALK_CHANCE))
+			if (!Body.AttackState && CanRandomWalk && !Body.IsRoaming && Util.Chance(DOL.GS.ServerProperties.Properties.GAMENPC_RANDOMWALK_CHANCE))
 			{
 				IPoint3D target = CalcRandomWalkTarget();
 				if (target != null)
@@ -1555,21 +1555,12 @@ namespace DOL.AI.Brain
 		public virtual IPoint3D CalcRandomWalkTarget()
 		{
 			int maxRoamingRadius = Body.CurrentRegion.IsDungeon ? 5 : 500;
-			int minRoamingRadius = Body.CurrentRegion.IsDungeon ? 1 : 100;
 
 			if (Body.RoamingRange > 0)
-			{
 				maxRoamingRadius = Body.RoamingRange;
 
-				if (minRoamingRadius >= maxRoamingRadius)
-					minRoamingRadius = maxRoamingRadius / 3;
-			}
-
-			int roamingRadius = Util.Random(minRoamingRadius, maxRoamingRadius);
-
-			double angle = Util.Random(0, 360) / (2 * Math.PI);
-			double targetX = Body.SpawnPoint.X + Util.Random( -roamingRadius, roamingRadius );
-			double targetY = Body.SpawnPoint.Y + Util.Random( -roamingRadius, roamingRadius );
+			double targetX = Body.SpawnPoint.X + Util.Random( -maxRoamingRadius, maxRoamingRadius);
+			double targetY = Body.SpawnPoint.Y + Util.Random( -maxRoamingRadius, maxRoamingRadius);
 
 			return new Point3D( (int)targetX, (int)targetY, Body.SpawnPoint.Z );
 		}
