@@ -48,7 +48,7 @@ namespace DOL.GS.PlayerTitles
 		public override string GetValue(GamePlayer source, GamePlayer player)
 		{
 			if (player.Champion && player.ChampionLevel > 0)
-				return source.TryTranslateOrDefault(string.Format("!CL Title {0}!", player.ChampionLevel), string.Format("Titles.CL.Level{0}", player.ChampionLevel));
+				return LanguageMgr.TryTranslateOrDefault(source, string.Format("!CL Title {0}!", player.ChampionLevel), string.Format("Titles.CL.Level{0}", player.ChampionLevel));
 				
 			return string.Empty;
 		}

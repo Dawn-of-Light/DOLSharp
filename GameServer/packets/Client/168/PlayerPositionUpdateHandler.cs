@@ -162,7 +162,7 @@ namespace DOL.GS.PacketHandler.Client.v168
                 string description = newZone.Description;
                 string screenDescription = description;
 
-                var translation = client.GetTranslation(newZone) as DBLanguageZone;
+                var translation = LanguageMgr.GetTranslation(client, newZone) as DBLanguageZone;
                 if (translation != null)
                 {
                     if (!Util.IsEmpty(translation.Description))
@@ -853,7 +853,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				string description = newZone.Description;
 				string screenDescription = description;
 
-				var translation = client.GetTranslation(newZone) as DBLanguageZone;
+				var translation = LanguageMgr.GetTranslation(client, newZone) as DBLanguageZone;
 				if (translation != null)
 				{
 					if (!Util.IsEmpty(translation.Description))
