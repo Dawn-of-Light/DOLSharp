@@ -1,6 +1,7 @@
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.AI.Brain;
+using System;
 
 namespace DOL.GS.Spells
 {
@@ -8,8 +9,7 @@ namespace DOL.GS.Spells
 	[SpellHandlerAttribute("HereticDoTLostOnPulse")]
     public class HereticDoTLostOnPulse : HereticPiercingMagic
 	{
-        protected int m_lastdamage = 0;
-        protected int m_pulsedamage = 0;
+        protected int tickCount = 0;
         
         public override void FinishSpellCast(GameLiving target)
         {
@@ -133,22 +133,17 @@ namespace DOL.GS.Spells
             if (Util.Chance(CalculateSpellResistChance(target)))
             {
                 OnSpellResist(target);
+                tickCount += 1;
                 return;
             }
             AttackData ad = CalculateDamageToTarget(target, effectiveness);
 
-            if (m_lastdamage <= 0)
-            {
-                m_lastdamage = ad.Damage;
-            }
-            else
-            {
-                m_pulsedamage = m_lastdamage / 4;
-                if (target == focustarget) 
-                m_lastdamage += m_pulsedamage;
-            }
-
-            ad.Damage = m_lastdamage;
+            int growthPercent = this.Spell.LifeDrainReturn;
+            int growthCapPercent = this.Spell.AmnesiaChance;
+            int damageIncreaseInPercent = tickCount * growthPercent;
+            damageIncreaseInPercent = Math.Min(damageIncreaseInPercent, growthCapPercent);
+            ad.Damage = ad.Damage + (ad.Damage * damageIncreaseInPercent) / 100;
+            tickCount += 1;
 
             SendEffectAnimation(target, 0, false, 1);
             SendDamageMessages(ad);
@@ -157,7 +152,6 @@ namespace DOL.GS.Spells
 
         protected virtual void OnSpellResist(GameLiving target)
         {
-			m_lastdamage -= m_lastdamage / 4;
             SendEffectAnimation(target, 0, false, 0);
             if (target is GameNPC)
             {
