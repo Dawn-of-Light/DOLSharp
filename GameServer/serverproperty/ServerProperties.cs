@@ -412,8 +412,8 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Enable integrated serverlistupdate script?
 		/// </summary>
-		[ServerProperty("server", "enable_serverlistupdate", "Enable in-built serverlistupdate script?", false)]
-		public static bool USE_SERVER_LIST_UPDATE_INTEGRATED;
+		[ServerProperty("server", "serverlistupdate_enabled", "Enable in-built serverlistupdate script?", false)]
+		public static bool SERVERLISTUPDATE_ENABLED;
 
 		/// <summary>
 		/// The username for server list update.
@@ -810,7 +810,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Property to cause beneficial spells to target the caster if current target isn't valid
 		/// </summary>
-		[ServerProperty("server", "AUTOSELECT_CASTER", "Set to true if you wish beneficial spells to target the caster if the current target isn't valid.  Allows self-healing without changing targets.", false)]
+		[ServerProperty("server", "autoselect_caster", "Set to True if you wish beneficial spells to target the caster if the current target isn't valid.  Allows self-healing without changing targets.", false)]
 		public static bool AUTOSELECT_CASTER;
 		#endregion
 

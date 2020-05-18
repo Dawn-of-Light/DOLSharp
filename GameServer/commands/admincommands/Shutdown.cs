@@ -95,6 +95,9 @@ namespace DOL.GS.Commands
 
 				string msg = "Automated server restart in " + m_counter / 60 + " mins! (Restart at " + date.ToString("HH:mm \"GMT\" zzz") + ")";
 				log.Warn(msg);
+
+				// You have an IRC Bot
+				//if (ServerIRC.IRCBot != null) ServerIRC.IRCBot.SendMessage(ServerIRC.CHANNEL, msg);
 			}
 			else
 			{

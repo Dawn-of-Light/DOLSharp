@@ -56,7 +56,7 @@ namespace DOL.GS.GameEvents
 		[GameServerStartedEvent]
 		public static void OnScriptCompiled(DOLEvent e, object sender, EventArgs args)
 		{
-            if(Properties.USE_SERVER_LIST_UPDATE_INTEGRATED)
+            if(Properties.SERVERLISTUPDATE_ENABLED)
 			    Init();
 		}
 		
@@ -66,7 +66,7 @@ namespace DOL.GS.GameEvents
 		[GameServerStoppedEvent]
 		public static void OnScriptUnloaded(DOLEvent e, object sender, EventArgs args)
 		{
-            if (Properties.USE_SERVER_LIST_UPDATE_INTEGRATED)
+            if (Properties.SERVERLISTUPDATE_ENABLED)
                 Stop();
 		}
 
