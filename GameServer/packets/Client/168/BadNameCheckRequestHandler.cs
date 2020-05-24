@@ -20,7 +20,7 @@ using System;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandler(PacketHandlerType.TCP,0x6A^168,"Checks for bad character names")]
+	[PacketHandler(PacketHandlerType.TCP, 0x6A ^ 168, "Checks for bad character names")]
 	public class BadNameCheckRequestHandler : IPacketHandler
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -29,11 +29,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 		{
 			string name = packet.ReadString(30);
 
-			//TODO do bad name checks here from some database with
-			//bad names, this is just a temp testthing here
+			//TODO do bad name checks here from some database with bad names, this is just a temp test thing here
 			var bad = GameServer.Instance.PlayerManager.InvalidNames[name];
 
-			client.Out.SendBadNameCheckReply(name,bad);
+			client.Out.SendBadNameCheckReply(name, bad);
 		}
 	}
 }

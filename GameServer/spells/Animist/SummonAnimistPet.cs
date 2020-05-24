@@ -84,6 +84,13 @@ namespace DOL.GS.Spells
                 return;
 			}
 
+			if (!Caster.GroundTargetInView)
+			{
+				if (Caster is GamePlayer)
+					MessageToCaster(LanguageMgr.GetTranslation((Caster as GamePlayer).Client, "SummonAnimistPet.CheckBeginCast.GroundTargetNotInView"), eChatType.CT_SpellResisted);
+				return;
+			}
+
 			if (!Caster.IsWithinRadius(Caster.GroundTarget, CalculateSpellRange()))
 			{
                 if (Caster is GamePlayer)

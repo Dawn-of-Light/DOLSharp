@@ -33,20 +33,22 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		#region IPacketHandler Members
-
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
+			if (client.Version >= GameClient.eClientVersion.Version1124)
+			{
+				client.Player.X = (int)packet.ReadFloatLowEndian();
+				client.Player.Y = (int)packet.ReadFloatLowEndian();
+				client.Player.Z = (int)packet.ReadFloatLowEndian();
+				client.Player.CurrentSpeed = (short)packet.ReadFloatLowEndian();
+				client.Player.Heading = packet.ReadShort();
+			}
 			int flagSpeedData = packet.ReadShort();
 			int index = packet.ReadByte();
 			int type = packet.ReadByte();
 
 			new UseSkillAction(client.Player, flagSpeedData, index, type).Start(1);
 		}
-
-		#endregion
-
-		#region Nested type: UseSkillAction
 
 		/// <summary>
 		/// Handles player use skill actions
@@ -200,7 +202,5 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 			}
 		}
-
-		#endregion
 	}
 }

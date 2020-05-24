@@ -42,11 +42,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// </summary>
 		protected readonly Hashtable m_customJumpPointHandlers = new Hashtable();
 
-		#region IPacketHandler Members
-
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			ushort jumpSpotID = packet.ReadShort();
+			ushort jumpSpotId = packet.ReadShort();
 
 			eRealm targetRealm = client.Player.Realm;
 
@@ -57,20 +55,26 @@ namespace DOL.GS.PacketHandler.Client.v168
                 targetRealm = client.Player.CurrentZone.Realm;
 			}
 
-			var zonePoint =	GameServer.Database.SelectObjects<ZonePoint>("`Id` = @Id AND (`Realm` = @Realm OR `Realm` = @DefaultRealm OR `Realm` IS NULL)",
-			                                                             new [] { new QueryParameter("@Id", jumpSpotID), new QueryParameter("@Realm", (byte)targetRealm), new QueryParameter("@DefaultRealm", 0) }).FirstOrDefault();
+			var zonePoint =	GameServer.Database.SelectObjects<ZonePoint>(
+				"`Id` = @Id AND (`Realm` = @Realm OR `Realm` = @DefaultRealm OR `Realm` IS NULL)",
+				new [] {
+					new QueryParameter("@Id", jumpSpotId),
+					new QueryParameter("@Realm", (byte)targetRealm),
+					new QueryParameter("@DefaultRealm", 0)
+				})
+				.FirstOrDefault();
 
 			if (zonePoint == null || zonePoint.TargetRegion == 0)
 			{
-				ChatUtil.SendDebugMessage(client, "Invalid Jump (ZonePoint table): [" + jumpSpotID + "]" + ((zonePoint == null) ? ". Entry missing!" : ". TargetRegion is 0!"));
+				ChatUtil.SendDebugMessage(client, $"Invalid Jump (ZonePoint table): [{jumpSpotId}]{((zonePoint == null) ? ". Entry missing!" : ". TargetRegion is 0!")}");
 				zonePoint = new ZonePoint();
-				zonePoint.Id = jumpSpotID;
+				zonePoint.Id = jumpSpotId;
 			}
 
 			if (client.Account.PrivLevel > 1)
 			{
-				client.Out.SendMessage("JumpSpotID = " + jumpSpotID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				client.Out.SendMessage("ZonePoint Target: Region = " + zonePoint.TargetRegion + ", ClassType = '" + zonePoint.ClassType + "'", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage($"JumpSpotID = {jumpSpotId}", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				client.Out.SendMessage($"ZonePoint Target: Region = {zonePoint.TargetRegion}, ClassType = \'{zonePoint.ClassType}\'", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			}
 
 			//Dinberg: Fix - some jump points are handled code side, such as instances.
@@ -90,9 +94,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 						{
 							client.Out.SendMessage("This region has been disabled!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 							if (client.Account.PrivLevel == 1)
-							{
 								return;
-							}
 						}
 					}
 				}
@@ -166,10 +168,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			new RegionChangeRequestHandler(client.Player, zonePoint, customHandler).Start(1);
 		}
-
-		#endregion
-
-		#region Nested type: RegionChangeRequestHandler
 
 		/// <summary>
 		/// Handles player region change requests
@@ -260,7 +258,5 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.MoveTo(m_zonePoint.TargetRegion, m_zonePoint.TargetX, m_zonePoint.TargetY, m_zonePoint.TargetZ, m_zonePoint.TargetHeading);
 			}
 		}
-
-		#endregion
 	}
 }

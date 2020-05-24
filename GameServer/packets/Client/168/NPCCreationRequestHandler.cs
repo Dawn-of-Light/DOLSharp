@@ -25,12 +25,19 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			ushort id = packet.ReadShort();
-//			GameNPC npc = (GameNPC)WorldMgr.GetObjectTypeByIDFromRegion(client.Player.CurrentRegionID, id, typeof(GameNPC));
-			if(client.Player==null) return;
+			if (client.Player == null)
+				return;
 			Region region = client.Player.CurrentRegion;
-			if (region == null) return;
+			if (region == null)
+				return;
+
+			ushort id = packet.ReadShort();
 			GameNPC npc = region.GetObject(id) as GameNPC;
+			if (npc == null)
+			{
+				client.Out.SendObjectDelete(id);
+				return;
+			}
 
 			if(npc != null)
 			{

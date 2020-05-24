@@ -35,7 +35,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			if (client == null || client.Player == null)
+			if (client?.Player == null)
 				return;
 
 			client.UdpConfirm = false;

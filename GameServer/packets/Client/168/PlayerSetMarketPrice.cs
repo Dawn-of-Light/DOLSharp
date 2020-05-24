@@ -42,8 +42,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			ushort unk2 = packet.ReadShort();
 			uint price = packet.ReadInt();
 
-			// ChatUtil.SendDebugMessage(client.Player, "PlayerSetMarketPriceHandler");
-
 			// only IGameInventoryObjects can handle set price commands
 			if (client.Player.TargetObject == null || (client.Player.TargetObject is IGameInventoryObject) == false)
 				return;

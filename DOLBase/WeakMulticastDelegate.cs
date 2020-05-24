@@ -302,13 +302,14 @@ namespace DOL
 
 				try
 				{
+					var target = current._weakRef?.Target;
 					if (current._weakRef == null)
 					{
 						current._method.Invoke(null, args);
 					}
-					else if (current._weakRef.IsAlive)
+					else if (target != null && current._weakRef.IsAlive)
 					{
-						current._method.Invoke(current._weakRef.Target, args);
+						current._method.Invoke(target, args);
 					}
 				}
 				catch (Exception ex)

@@ -36,8 +36,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 		private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 		private int _position;
 
-		#region IPacketHandler Members
-
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			try
@@ -771,8 +769,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 				client.Out.SendInventorySlotsUpdate(null);
 			}
 		}
-
-		#endregion
 
 		private static bool IsSuitableForWall(InventoryItem item)
 		{

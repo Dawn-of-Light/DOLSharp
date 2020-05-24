@@ -21,16 +21,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.InviteToGroup, "Handle Invite to Group Request.", eClientStatus.PlayerInGame)]
 	public class InviteToGroupHandler : IPacketHandler
 	{
-		#region IPacketHandler Members
-
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			new HandleGroupInviteAction(client.Player).Start(1);
 		}
-
-		#endregion
-
-		#region Nested type: HandleGroupInviteAction
 
 		/// <summary>
 		/// Handles group invlite actions
@@ -95,7 +89,5 @@ namespace DOL.GS.PacketHandler.Client.v168
 				                           player.Name + " has invited you to join " + player.GetPronoun(1, false) + " group.");
 			}
 		}
-
-		#endregion
 	}
 }

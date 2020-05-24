@@ -18,6 +18,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using DOL.GS;
 using DOL.Language;
@@ -40,14 +41,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			int code = packet.ReadByte();
 			if (code != 0)
-			{
-				if (log.IsWarnEnabled)
-					log.WarnFormat("bonuses button: code is other than zero ({0})", code);
-			}
+				log.Warn($"bonuses button: code is other than zero ({code})");
 
-			new RegionTimerAction<GamePlayer>(client.Player,
-			                                  p => p.Out.SendCustomTextWindow(LanguageMgr.GetTranslation(client.Account.Language, "PlayerBonusesListRequestHandler.HandlePacket.Bonuses")
-			                                                                  , new List<string>(client.Player.GetBonuses()))).Start(1);
+			new RegionTimerAction<GamePlayer>(
+				client.Player,
+				p => p.Out.SendCustomTextWindow(
+						LanguageMgr.GetTranslation(client.Account.Language, "PlayerBonusesListRequestHandler.HandlePacket.Bonuses"),
+						client.Player.GetBonuses().ToList()
+					)
+				).Start(1);
 		}
 	}
 }

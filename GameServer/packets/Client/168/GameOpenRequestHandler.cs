@@ -31,8 +31,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			client.Out.SendGameOpenReply();
 			client.Out.SendStatusUpdate(); // based on 1.74 logs
 			client.Out.SendUpdatePoints(); // based on 1.74 logs
-			if (client.Player != null)
-				client.Player.UpdateDisabledSkills(); // based on 1.74 logs
+			client.Player?.UpdateDisabledSkills(); // based on 1.74 logs
 		}
 	}
 }

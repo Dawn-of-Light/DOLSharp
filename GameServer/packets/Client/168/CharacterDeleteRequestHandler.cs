@@ -40,15 +40,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 			string charName = packet.ReadString(30);
 			DOLCharacters[] chars = client.Account.Characters;
 
-			if (chars == null)
-				return;
-			
-			var foundChar = chars.FirstOrDefault(ch => ch.Name.Equals(charName, StringComparison.OrdinalIgnoreCase));
-			
+			var foundChar = chars?.FirstOrDefault(ch => ch.Name.Equals(charName, StringComparison.OrdinalIgnoreCase));
 			if (foundChar != null)
 			{
 				var slot = foundChar.AccountSlot;
-				
 				CharacterCreateRequestHandler.CheckForDeletedCharacter(foundChar.AccountName, client, slot);
 			}
 		}

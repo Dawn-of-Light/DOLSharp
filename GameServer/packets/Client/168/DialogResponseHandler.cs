@@ -47,7 +47,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// <summary>
 			/// The general data field
 			/// </summary>
-			protected readonly int m_data1;
+			protected readonly uint m_data1;
 
 			/// <summary>
 			/// The general data field
@@ -78,7 +78,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// <param name="data3">The general data field</param>
 			/// <param name="messageType">The dialog type</param>
 			/// <param name="response">The players response</param>
-			public DialogBoxResponseAction(GamePlayer actionSource, int data1, int data2, int data3, int messageType, byte response)
+			public DialogBoxResponseAction(GamePlayer actionSource, uint data1, int data2, int data3, int messageType, byte response)
 				: base(actionSource)
 			{
 				m_data1 = data1;
@@ -176,30 +176,20 @@ namespace DOL.GS.PacketHandler.Client.v168
 						}
 					case eDialogCode.QuestSubscribe:
 						{
-							var questNPC = (GameLiving) WorldMgr.GetObjectByIDFromRegion(player.CurrentRegionID, (ushort) m_data2);
+							var questNPC = (GameLiving)WorldMgr.GetObjectByIDFromRegion(player.CurrentRegionID, (ushort) m_data2);
 							if (questNPC == null)
 								return;
 
 							var args = new QuestEventArgs(questNPC, player, (ushort) m_data1);
-							if (m_response == 0x01) //accept
+							if (m_response == 0x01) // accept
 							{
-								//TODO add quest to player
-								//Note: This is done withing quest code since we have to check requirements, etc for each quest individually
+								// TODO add quest to player
+								// Note: This is done withing quest code since we have to check requirements, etc for each quest individually
 								// i'm reusing the questsubscribe command for quest abort since its 99% the same, only different event dets fired
-								if (m_data3 == 0x01)
-									player.Notify(GamePlayerEvent.AbortQuest, player, args);
-								else
-									player.Notify(GamePlayerEvent.AcceptQuest, player, args);
+								player.Notify(m_data3 == 0x01 ? GamePlayerEvent.AbortQuest : GamePlayerEvent.AcceptQuest, player, args);
 								return;
 							}
-							if (m_data3 == 0x01)
-							{
-								player.Notify(GamePlayerEvent.ContinueQuest, player, args);
-							}
-							else
-							{
-								player.Notify(GamePlayerEvent.DeclineQuest, player, args);
-							}
+							player.Notify(m_data3 == 0x01 ? GamePlayerEvent.ContinueQuest : GamePlayerEvent.DeclineQuest, player, args);
 							return;
 						}
 					case eDialogCode.GroupInvite:

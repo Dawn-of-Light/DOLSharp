@@ -38,16 +38,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		#region IPacketHandler Members
-
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			new PlayerInitRequestAction(client.Player).Start(1);
 		}
-
-		#endregion
-
-		#region Nested type: PlayerInitRequestAction
 
 		/// <summary>
 		/// Handles player init requests
@@ -321,7 +315,5 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return mobs;
 			}
 		}
-
-		#endregion
 	}
 }

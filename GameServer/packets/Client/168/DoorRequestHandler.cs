@@ -31,8 +31,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		public static int m_handlerDoorID;
 
-		#region IPacketHandler Members
-
 		/// <summary>
 		/// door index which is unique
 		/// </summary>
@@ -41,17 +39,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 			var doorID = (int) packet.ReadInt();
 			m_handlerDoorID = doorID;
 			var doorState = (byte) packet.ReadByte();
-			int doorType = doorID/100000000;
+			int doorType = doorID / 100000000;
 
-			int radius = ServerProperties.Properties.WORLD_PICKUP_DISTANCE * 2;
-			int zoneDoor = (int)(doorID / 1000000);
+			int radius = Properties.WORLD_PICKUP_DISTANCE * 2;
+			int zoneDoor = doorID / 1000000;
 
 			string debugText = "";
 
 			// For ToA the client always sends the same ID so we need to construct an id using the current zone
 			if (client.Player.CurrentRegion.Expansion == (int)eClientExpansion.TrialsOfAtlantis)
 			{
-				debugText = "ToA DoorID: " + doorID + " ";
+				debugText = $"ToA DoorID:{doorID} ";
 
 				doorID -= zoneDoor * 1000000;
 				zoneDoor = client.Player.CurrentZone.ID;
@@ -68,14 +66,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				if (doorType == 7)
 				{
-					int ownerKeepId = (doorID/100000)%1000;
-					int towerNum = (doorID/10000)%10;
-					int keepID = ownerKeepId + towerNum*256;
-					int componentID = (doorID/100)%100;
-					int doorIndex = doorID%10;
-					client.Out.SendDebugMessage(
-						"Keep Door ID: {0} state:{1} (Owner Keep: {6} KeepID:{2} ComponentID:{3} DoorIndex:{4} TowerNumber:{5})", doorID,
-						doorState, keepID, componentID, doorIndex, towerNum, ownerKeepId);
+					int ownerKeepId = (doorID / 100000) % 1000;
+					int towerNum = (doorID / 10000) % 10;
+					int keepID = ownerKeepId + towerNum * 256;
+					int componentID = (doorID / 100) % 100;
+					int doorIndex = doorID % 10;
+					client.Out.SendDebugMessage($"Keep Door ID:{doorID} state:{doorState} (Owner Keep:{ownerKeepId} KeepID:{keepID} ComponentID:{componentID} DoorIndex:{doorIndex} TowerNumber:{towerNum})");
 
 					if (keepID > 255 && ownerKeepId < 10)
 					{
@@ -84,32 +80,27 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 				else if (doorType == 9)
 				{
-					int doorIndex = doorID - doorType*10000000;
-					client.Out.SendDebugMessage("House DoorID:{0} state:{1} (doorType:{2} doorIndex:{3})", doorID, doorState, doorType,
-					                            doorIndex);
+					int doorIndex = doorID - doorType * 10000000;
+					client.Out.SendDebugMessage($"House DoorID:{doorID} state:{doorState} (doorType:{doorType} doorIndex:{doorIndex})");
 				}
 				else
 				{
-					int fixture = (doorID - zoneDoor*1000000);
+					int fixture = (doorID - zoneDoor * 1000000);
 					int fixturePiece = fixture;
 					fixture /= 100;
-					fixturePiece = fixturePiece - fixture*100;
+					fixturePiece = fixturePiece - fixture * 100;
 
-					client.Out.SendDebugMessage("{6}DoorID:{0} state:{1} zone:{2} fixture:{3} fixturePiece:{4} Type:{5}",
-												doorID, doorState, zoneDoor, fixture, fixturePiece, doorType, debugText);
+					client.Out.SendDebugMessage($"{debugText}DoorID:{doorID} state:{doorState} zone:{zoneDoor} fixture:{fixture} fixturePiece:{fixturePiece} Type:{doorType}");
 				}
 			}
 
-			var target = client.Player.TargetObject as GameDoor;
-
-			if (target != null && !client.Player.IsWithinRadius(target, radius))
+			if (client.Player.TargetObject is GameDoor target && !client.Player.IsWithinRadius(target, radius))
 			{
 				client.Player.Out.SendMessage("You are too far to open this door", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 				return;
 			}
 
 			var door = GameServer.Database.SelectObjects<DBDoor>("`InternalID` = @InternalID", new QueryParameter("@InternalID", doorID)).FirstOrDefault();
-
 			if (door != null)
 			{
 				if (doorType == 7 || doorType == 9)
@@ -176,7 +167,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 		}
 
-		#endregion
 
 		public void AddingDoor(GamePlayer player, byte response)
 		{
@@ -211,8 +201,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 				DoorMgr.Init();
 			}
 		}
-
-		#region Nested type: ChangeDoorAction
 
 		/// <summary>
 		/// Handles the door state change actions
@@ -318,7 +306,5 @@ namespace DOL.GS.PacketHandler.Client.v168
 				}
 			}
 		}
-
-		#endregion
 	}
 }

@@ -46,7 +46,7 @@ namespace DOL.GS.Commands
 			{
 				try
 				{
-					int sessionID = Convert.ToInt32(args[1].Substring(1));
+					var sessionID = Convert.ToUInt32(args[1].Substring(1));
 					playerClient = WorldMgr.GetClientFromID(sessionID);
 				}
 				catch

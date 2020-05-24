@@ -48,6 +48,11 @@ namespace DOL.GS
 			m_z = z;
 		}
 
+		public Point3D(float x, float y, float z) : this((int)x, (int)y, (int)z)
+		{
+
+		}
+
 		/// <summary>
 		/// Constructs a new 3D point object
 		/// </summary>

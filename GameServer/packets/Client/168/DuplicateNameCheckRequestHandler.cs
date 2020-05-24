@@ -33,14 +33,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 			string name = packet.ReadString(30);
 
 			var character = GameServer.Database.SelectObjects<DOLCharacters>("`Name` = @Name", new QueryParameter("@Name", name)).FirstOrDefault();
-			
-			var nameExists = (character != null);
-			
+			byte result = 0;
 			// Bad Name check.
-			if (!nameExists)
-				nameExists = GameServer.Instance.PlayerManager.InvalidNames[name];
-			
-			client.Out.SendDupNameCheckReply(name, nameExists);
+			if (character != null)
+				result = 0x02;
+			else if (GameServer.Instance.PlayerManager.InvalidNames[name])
+				result = 0x01;
+
+			client.Out.SendDupNameCheckReply(name, result);
 		}
 	}
 }

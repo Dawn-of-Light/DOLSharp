@@ -27,8 +27,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.PlayerTarget, "Handle Player Target Change.", eClientStatus.PlayerInGame)]
 	public class PlayerTargetHandler : IPacketHandler
 	{
-		#region IPacketHandler Members
-
 		/// <summary>
 		/// Handles every received packet
 		/// </summary>
@@ -49,10 +47,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			new ChangeTargetAction(client.Player, targetID, (flags & (0x4000 | 0x2000)) != 0, (flags & 0x8000) != 0).Start(1);
 		}
-
-		#endregion
-
-		#region Nested type: ChangeTargetAction
 
 		/// <summary>
 		/// Changes players target
@@ -126,8 +120,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					var gravestone = myTarget as GameGravestone;
 					if (gravestone == null || !gravestone.InternalID.Equals(player.InternalID))
 					{
-						player.Out.SendMessage("You are no longer targetting your grave. Your prayers fail.", eChatType.CT_System,
-						                       eChatLoc.CL_SystemWindow);
+						player.Out.SendMessage("You are no longer targetting your grave. Your prayers fail.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 						player.PrayTimerStop();
 					}
 				}
@@ -135,7 +128,5 @@ namespace DOL.GS.PacketHandler.Client.v168
 				GameEventMgr.Notify(GamePlayerEvent.ChangeTarget, player, null);
 			}
 		}
-
-		#endregion
 	}
 }

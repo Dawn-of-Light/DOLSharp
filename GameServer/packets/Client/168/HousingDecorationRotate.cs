@@ -23,8 +23,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.HouseDecorationRotate, "Handles housing decoration rotation", eClientStatus.PlayerInGame)]
 	public class HousingDecorationRotateHandler : IPacketHandler
 	{
-		#region IPacketHandler Members
-
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int unk1 = packet.ReadByte();
@@ -84,7 +82,5 @@ namespace DOL.GS.PacketHandler.Client.v168
 				plr.Client.Out.SendFurniture(house, position);
 			}
 		}
-
-		#endregion
 	}
 }

@@ -22,21 +22,15 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.CheckLOSRequest, "Handles a LoS Check Response", eClientStatus.PlayerInGame)]
 	public class CheckLOSResponseHandler : IPacketHandler
 	{
-		#region IPacketHandler Members
-
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			ushort checkerOID = packet.ReadShort();
 			ushort targetOID = packet.ReadShort();
 			ushort response = packet.ReadShort();
-			ushort unknow = packet.ReadShort();
+			packet.ReadShort();
 
 			new HandleCheckAction(client.Player, checkerOID, targetOID, response).Start(1);
 		}
-
-		#endregion
-
-		#region Nested type: HandleCheckAction
 
 		/// <summary>
 		/// Handles the LOS check response
@@ -78,30 +72,28 @@ namespace DOL.GS.PacketHandler.Client.v168
 			protected override void OnTick()
 			{
 				// Check for Old Callback first
-				
-				string key = string.Format("LOS C:0x{0} T:0x{1}", m_checkerOid, m_targetOid);
 
-				GamePlayer player = (GamePlayer) m_actionSource;
+				string key = $"LOS C:0x{m_checkerOid} T:0x{m_targetOid}";
+
+				GamePlayer player = (GamePlayer)m_actionSource;
 
 				CheckLOSResponse callback = player.TempProperties.getProperty<CheckLOSResponse>(key, null);
-				if (callback != null) 
+				if (callback != null)
 				{
-					callback(player, (ushort) m_response, (ushort) m_targetOid);
+					callback(player, (ushort)m_response, (ushort)m_targetOid);
 					player.TempProperties.removeProperty(key);
 				}
-				
-				string newkey = string.Format("LOSMGR C:0x{0} T:0x{1}", m_checkerOid, m_targetOid);
-				
+
+				string newkey = $"LOSMGR C:0x{m_checkerOid} T:0x{m_targetOid}";
+
 				CheckLOSMgrResponse new_callback = player.TempProperties.getProperty<CheckLOSMgrResponse>(newkey, null);
-				
-				if(new_callback != null)
+
+				if (new_callback != null)
 				{
-					new_callback(player, (ushort) m_response,  (ushort) m_checkerOid, (ushort) m_targetOid);
+					new_callback(player, (ushort)m_response, (ushort)m_checkerOid, (ushort)m_targetOid);
 					player.TempProperties.removeProperty(newkey);
 				}
 			}
 		}
-
-		#endregion
 	}
 }

@@ -31,10 +31,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			if(!ScriptMgr.HandleCommand(client, cmdLine))
 			{
 				if (cmdLine[0] == '&')
-				{
-					cmdLine = '/' + cmdLine.Remove(0, 1);
-				}
-				client.Out.SendMessage("No such command ("+cmdLine+")",eChatType.CT_System,eChatLoc.CL_SystemWindow);
+					cmdLine = "/" + cmdLine.Remove(0, 1);
+				client.Out.SendMessage($"No such command ({cmdLine})", eChatType.CT_System,eChatLoc.CL_SystemWindow);
 			}
 		}
 	}
