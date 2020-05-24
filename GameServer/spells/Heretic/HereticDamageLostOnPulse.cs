@@ -10,9 +10,11 @@ namespace DOL.GS.Spells
     public class HereticDoTLostOnPulse : HereticPiercingMagic
 	{
         protected int tickCount = 0;
+        protected int focusDuration;
         
         public override void FinishSpellCast(GameLiving target)
         {
+            focusDuration = this.CalculateEffectDuration(target, Caster.Effectiveness);
             BeginEffect();
             base.FinishSpellCast(target);
         }
@@ -95,6 +97,11 @@ namespace DOL.GS.Spells
 				return;
 			}
             if (!m_caster.TargetInView)
+            {
+                RemoveEffect();
+                return;
+            }
+            if ( tickCount >= (focusDuration/Spell.Frequency) )
             {
                 RemoveEffect();
                 return;
