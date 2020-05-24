@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.PacketHandler.Client.v168;
+using DOL.GS.Spells;
 using DOL.Language;
 
 namespace DOL.GS.Commands
@@ -108,10 +109,12 @@ namespace DOL.GS.Commands
 						#region Blank
 					case "blank":
 						{
-							ItemTemplate newTemplate = new ItemTemplate();
-							newTemplate.Name = "(blank item)";
-							newTemplate.Id_nb = InventoryItem.BLANK_ITEM;
-							GameInventoryItem item = new GameInventoryItem(newTemplate);
+                            ItemTemplate newTemplate = new ItemTemplate
+                            {
+                                Name = "(blank item)",
+                                Id_nb = InventoryItem.BLANK_ITEM
+                            };
+                            GameInventoryItem item = new GameInventoryItem(newTemplate);
 							if (client.Player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
 							{
 								client.Out.SendMessage(LanguageMgr.GetTranslation(client.Account.Language, "GMCommands.Item.Blank.ItemCreated"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -719,7 +722,7 @@ namespace DOL.GS.Commands
 								return;
 							}
 							
-							updateAllowed(item, client);
+							UpdateAllowed(item, client);
 							int con = Convert.ToInt32(args[2]);
 							int maxcon = Convert.ToInt32(args[3]);
 							item.Condition = con;
@@ -754,7 +757,7 @@ namespace DOL.GS.Commands
 								return;
 							}
 							
-							updateAllowed(item, client);
+							UpdateAllowed(item, client);
 							int Dur = Convert.ToInt32(args[2]);
 							int MaxDur = Convert.ToInt32(args[3]);
 							item.Durability = Dur;
@@ -1567,23 +1570,30 @@ namespace DOL.GS.Commands
 							int salvageLevel = CraftingMgr.GetItemCraftLevel(item) / 100;
 							if (salvageLevel > 9) salvageLevel = 9; // max 9
 
+							List<QueryParameter> qp = new List<QueryParameter>();
+
 							if (item.SalvageYieldID == 0)
 							{
-								sql = "ObjectType=" + item.Object_Type + " AND SalvageLevel=" + salvageLevel;
+								sql = "`ObjectType` = @objectype AND `SalvageLevel` = @salvagelvl";
+								qp.Add(new QueryParameter("@objectype", item.Object_Type));
+								qp.Add(new QueryParameter("@salvagelvl", salvageLevel));
 							}
 							else
 							{
-								sql = "ID=" + item.SalvageYieldID;
+								sql = "`ID` = @salvageyieldid";
+								qp.Add(new QueryParameter("@salvageyieldid", item.SalvageYieldID));
 								calculated = false;
 							}
 
 							if (ServerProperties.Properties.USE_SALVAGE_PER_REALM)
 							{
 								// Some items use realm, some do not, so allow a find of either a set realm, or 0
-								sql += " AND (Realm=" + item.Realm + " OR Realm=0)";
+								sql += " AND (`Realm` = 0 OR `Realm` = @realm )";
+								qp.Add(new QueryParameter("@realm", item.Realm));
 							}
 
-							salvageYield = GameServer.Database.SelectObject<SalvageYield>(sql);
+							salvageYield = GameServer.Database.SelectObject<SalvageYield>(sql, qp);
+
 							SalvageYield yield = null;
 
 							if (salvageYield != null)
@@ -1668,7 +1678,7 @@ namespace DOL.GS.Commands
 								return;
 							}
 
-							updateAllowed(item, client);
+							UpdateAllowed(item, client);
 							break;
 						}
 						#endregion Update
@@ -1806,9 +1816,11 @@ namespace DOL.GS.Commands
 									try
 									{
 										client.Player.Inventory.RemoveItem(item);
-										ItemTemplate itemTemplate = new ItemTemplate(item.Template);
-										itemTemplate.Id_nb = idnb;
-										GameServer.Database.AddObject(itemTemplate);
+                                        ItemTemplate itemTemplate = new ItemTemplate(item.Template)
+                                        {
+                                            Id_nb = idnb
+                                        };
+                                        GameServer.Database.AddObject(itemTemplate);
 										Log.Debug("Added New Item Template: " + itemTemplate.Id_nb);
 										DisplayMessage(client, "Added New Item Template: " + itemTemplate.Id_nb);
 										GameInventoryItem newItem = GameInventoryItem.Create(itemTemplate);
@@ -1826,9 +1838,11 @@ namespace DOL.GS.Commands
 									try
 									{
 										client.Player.Inventory.RemoveItem(item);
-										ItemUnique unique = new ItemUnique(item.Template);
-										unique.Id_nb = idnb;
-										GameServer.Database.AddObject(unique);
+                                        ItemUnique unique = new ItemUnique(item.Template)
+                                        {
+                                            Id_nb = idnb
+                                        };
+                                        GameServer.Database.AddObject(unique);
 										Log.Debug("Added New ItemUnique: " + unique.Id_nb + " (" + unique.ObjectId + ")");
 										DisplayMessage(client, "Added New ItemUnique: " + unique.Id_nb + " (" + unique.ObjectId + ")");
 										GameInventoryItem newItem = GameInventoryItem.Create(unique);
@@ -1983,7 +1997,7 @@ namespace DOL.GS.Commands
 			}
 		}
 		
-		private void updateAllowed(InventoryItem item, GameClient client)
+		private void UpdateAllowed(InventoryItem item, GameClient client)
 		{
 			if (item.Template is ItemUnique)
 			{

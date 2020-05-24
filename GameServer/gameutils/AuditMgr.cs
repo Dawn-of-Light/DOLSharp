@@ -59,6 +59,10 @@ namespace DOL.GS
 			// tobz: this is not ready for prime-time yet.
 			// PushTimer.Start();
 
+			// Graveen: indeed, AuditMgr is not activated. Nowadays GMActions.log is preferred, and Audit is not scaling correctly under heavy load
+			// it makes sense in some situation, eg querying by GM from ingame, or remove the need of Inventories.log.
+			// Not to mention GMActions is not covering the whole scope of Audit, so this legacy code will stay as is
+
 			_updateLock = new SpinWaitLock();
 		}
 
@@ -109,7 +113,8 @@ namespace DOL.GS
 					// build query string and execute
 					string queryString = queryBuilder.ToString();
 
-					GameServer.Database.ExecuteNonQuery(queryString);
+					// Graveen: if AuditMgr is debuggued one day, this should be in ORM format: GS.Database.AddObject<AuditEntry> ...
+					//GameServer.Database.ExecuteNonQuery(queryString);
 
 					// get new query builder
 					queryBuilder = GetEntryQueryBuilder();
@@ -127,10 +132,13 @@ namespace DOL.GS
 			queryBuilder.Remove(queryBuilder.Length - 1, 1);
 			queryBuilder.Append(';');
 
+			/* Graveen: if AuditMgr is debuggued one day, this should be in ORM format: GS.Database.AddObject<AuditEntry> ...
+			
 			// build query string and execute
 			string entryQuery = queryBuilder.ToString();
-
+			
 			GameServer.Database.ExecuteNonQuery(entryQuery);
+			*/
 
 			// restart timer
 			PushTimer.Start();

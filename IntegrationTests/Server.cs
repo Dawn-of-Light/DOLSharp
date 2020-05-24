@@ -34,7 +34,7 @@ namespace DOL.Server.Tests
 		protected GamePlayer CreateMockGamePlayer()
 		{
 			DOLCharacters character= null;
-			Account account = GameServer.Database.SelectObject<Account>("");
+			Account account = GameServer.Database.SelectObject<Account>("", new QueryParameter());
 			Assert.IsNotNull(account);
 
 			foreach (DOLCharacters charact in account.Characters)

@@ -58,6 +58,8 @@ namespace DOL.GS.GameEvents
         /// Gets the URL from your ftp server - Edit the URL
         /// Example: http://www.bifrostgaming.com/daocbifrost/serverinfo.php
 		/// The following URL is the one for DAoCPortal with default parameters
+		/// but you should provide different paramters than the one in GameUtils\ServerListUpdate.cs
+		/// Notice this script is on a 3mins basis, while ServerListUpdate is on a 10mins basis
         /// </summary>
 		protected static string UpdateUrl = UrlEncode("http://portal.dolserver.net/serverlist.php?action=submit&username=" + UserName + "&password=" + Password + "&totalclients=" + ClientCount + "&version=" + ScriptVersion);
 
