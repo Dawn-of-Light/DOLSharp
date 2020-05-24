@@ -75,22 +75,28 @@ namespace DOL.GS
 
 			string sql = "";
 
+			List<QueryParameter> qp = new List<QueryParameter>();
+
 			if (item.SalvageYieldID == 0)
 			{
-				sql = "ObjectType=" + item.Object_Type + " AND SalvageLevel=" + salvageLevel;
+				sql = "`ObjectType` = @objectype AND `SalvageLevel` = @salvagelvl";
+				qp.Add(new QueryParameter("@objectype", item.Object_Type));
+				qp.Add(new QueryParameter("@salvagelvl", salvageLevel));
 			}
 			else
 			{
-				sql = "ID=" + item.SalvageYieldID;
+				sql = "`ID` = @salvageyieldid";
+				qp.Add(new QueryParameter("@salvageyieldid", item.SalvageYieldID));
 			}
 
 			if (ServerProperties.Properties.USE_SALVAGE_PER_REALM)
 			{
 				// Some items use realm, some do not, so allow a find of either a set realm, or 0
-				sql += " AND (Realm=" + item.Realm + " OR Realm=0)";
+				sql += " AND (`Realm` = 0 OR `Realm` = @realm )";
+				qp.Add(new QueryParameter("@realm", item.Realm));
 			}
 
-			salvageYield = GameServer.Database.SelectObject<SalvageYield>(sql);
+			salvageYield = GameServer.Database.SelectObject<SalvageYield>(sql, qp);
 			ItemTemplate material = null;
 
 			if (salvageYield != null && string.IsNullOrEmpty(salvageYield.MaterialId_nb) == false)
@@ -147,9 +153,11 @@ namespace DOL.GS
 			}
 
 			player.Out.SendTimerWindow(LanguageMgr.GetTranslation(player.Client.Account.Language, "Salvage.BeginWork.Salvaging", item.Name), yield.Count);
-			player.CraftTimer = new RegionTimer(player);
-			player.CraftTimer.Callback = new RegionTimerCallback(Proceed);
-			player.CraftTimer.Properties.setProperty(AbstractCraftingSkill.PLAYER_CRAFTER, player);
+            player.CraftTimer = new RegionTimer(player)
+            {
+                Callback = new RegionTimerCallback(Proceed)
+            };
+            player.CraftTimer.Properties.setProperty(AbstractCraftingSkill.PLAYER_CRAFTER, player);
 			player.CraftTimer.Properties.setProperty(SALVAGED_ITEM, item);
 			player.CraftTimer.Properties.setProperty(SALVAGE_YIELD, yield);
 
@@ -295,12 +303,11 @@ namespace DOL.GS
 				{
 					eInventorySlot firstEmptySlot = player.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
 					changedSlots.Add((int)firstEmptySlot, -count); // Create the item in the free slot (always at least one)
-					count = 0;
 				}
 				
 			}
 
-			InventoryItem newItem = null;
+			InventoryItem newItem;
 
 			player.Inventory.BeginChanges();
 			Dictionary<int, int>.Enumerator enumerator = changedSlots.GetEnumerator();
@@ -395,7 +402,7 @@ namespace DOL.GS
         /// <summary>
         /// Calculate the count per Object_Type
         /// </summary>
-        public static int GetCountForSalvage(InventoryItem item, SalvageYield salvage, ItemTemplate rawMaterial)
+        public static int GetCountForSalvage(InventoryItem item, ItemTemplate rawMaterial)
         {
             long maxCount = 0;
 
@@ -542,8 +549,7 @@ namespace DOL.GS
 
             if (item.Price > 300000 && !item.IsCrafted)
             {
-                long i = item.Price;
-                i = item.Price / 100000;
+                long i = item.Price / 100000;
                 toadd += (int)i;
             }
 
@@ -579,14 +585,14 @@ namespace DOL.GS
 		/// </summary>
 		public static int GetMaterialYield(GamePlayer player, InventoryItem item, SalvageYield salvageYield, ItemTemplate rawMaterial)
 		{
-            int maxCount = 0;
+            int maxCount;
 
 			if (rawMaterial == null)
 				return 0;
 
 			if (ServerProperties.Properties.USE_NEW_SALVAGE)
 			{
-				maxCount = GetCountForSalvage(item, salvageYield, rawMaterial);
+				maxCount = GetCountForSalvage(item, rawMaterial);
 			}
 			else
 			{
