@@ -24,8 +24,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.HouseUserPermissionRequest, "Handles housing Users permissions requests from menu", eClientStatus.PlayerInGame)]
 	public class HouseUsersPermissionsRequestHandler : IPacketHandler
 	{
-		#region IPacketHandler Members
-
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int unk1 = packet.ReadByte();
@@ -48,7 +46,5 @@ namespace DOL.GS.PacketHandler.Client.v168
 			// build the packet
 			client.Out.SendHouseUsersPermissions(house);
 		}
-
-		#endregion
 	}
 }

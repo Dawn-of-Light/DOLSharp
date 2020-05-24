@@ -26,24 +26,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.PlayerCancelsEffect, "Handle Player Effect Cancel Request.", eClientStatus.PlayerInGame)]
 	public class PlayerCancelsEffectHandler : IPacketHandler
 	{
-		#region IPacketHandler Members
-
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			int effectID = packet.ReadShort();
 			if (client.Version <= GameClient.eClientVersion.Version1109)
-			{
 				new CancelEffectHandler(client.Player, effectID).Start(1);
-			}
 			else
-			{
 				new CancelEffectHandler1110(client.Player, effectID).Start(1);
-			}
 		}
-
-		#endregion
-
-		#region Nested type: CancelEffectHandler
 
 		/// <summary>
 		/// Handles players cancel effect actions
@@ -85,9 +75,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 				}
 				if (found != null)
-				{
 					found.Cancel(true);
-				}
 			}
 		}
 
@@ -131,12 +119,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 				}
 				if (found != null)
-				{
 					found.Cancel(true);
-				}
 			}
 		}
-
-		#endregion
 	}
 }

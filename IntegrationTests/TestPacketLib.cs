@@ -140,8 +140,8 @@ namespace DOL.Tests
 		{
 			if (SendCharacterOverviewMethod != null) SendCharacterOverviewMethod(this, realm);
 		}
-		public Action<TestPacketLib, string, bool> SendDupNameCheckReplyMethod { get; set; }
-		public void SendDupNameCheckReply(string name, bool nameExists)
+		public Action<TestPacketLib, string, byte> SendDupNameCheckReplyMethod { get; set; }
+		public void SendDupNameCheckReply(string name, byte nameExists)
 		{
 			if (SendDupNameCheckReplyMethod != null) SendDupNameCheckReplyMethod(this, name, nameExists);
 		}
@@ -592,6 +592,11 @@ namespace DOL.Tests
 		public void SendObjectDelete(GameObject obj)
 		{
 			if (SendObjectDeleteMethod != null) SendObjectDeleteMethod(this, obj);
+		}
+		public Action<TestPacketLib, ushort> SendObjectIdDeleteMethod { get; set; }
+		public void SendObjectDelete(ushort objId)
+		{
+			if (SendObjectIdDeleteMethod != null) SendObjectIdDeleteMethod(this, objId);
 		}
 		public Action<TestPacketLib, GameObject> SendObjectUpdateMethod { get; set; }
 		public void SendObjectUpdate(GameObject obj)

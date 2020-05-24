@@ -29,8 +29,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		#region IPacketHandler Members
-
 		/// <summary>
 		/// Handle the packet
 		/// </summary>
@@ -193,12 +191,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 		}
 
-		#endregion
-
 		private static bool GetItemBack(InventoryItem item)
 		{
-			#region item types
-
 			switch (item.Object_Type)
 			{
 				case (int) eObjectType.Axe:
@@ -230,8 +224,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 				default:
 					return true;
 			}
-
-			#endregion
 		}
 	}
 }

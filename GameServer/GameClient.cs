@@ -160,7 +160,8 @@ namespace DOL.GS
 			Version1123 = 1123,
 			Version1124 = 1124,
 			Version1125 = 1125,
-			_LastVersion = 1125,
+			Version1126 = 1126,
+			_LastVersion = 1126,
 		}
 
 		#endregion
@@ -477,6 +478,10 @@ namespace DOL.GS
 			set { m_clientType = value; }
 		}
 
+		public string MinorRev = "";
+		public byte MajorBuild = 0;
+		public byte MinorBuild = 0;
+
 		/// <summary>
 		/// Gets/sets installed client addons (housing/new frontiers)
 		/// </summary>
@@ -574,7 +579,7 @@ namespace DOL.GS
 				}
 				else
 				{
-                    log.Info("Incoming connection from " + TcpEndpointAddress + " using client version " + version);
+					log.Info("Incoming connection from " + TcpEndpointAddress + " using client version " + version);
 					Version = ver;
 					Out = lib;
 					PacketProcessor = new PacketProcessor(this);
@@ -634,23 +639,37 @@ namespace DOL.GS
 		{
 			LoadPlayer(accountindex, Properties.PLAYER_CLASS);
 		}
+		public void LoadPlayer(DOLCharacters dolChar)
+		{
+			LoadPlayer(dolChar, Properties.PLAYER_CLASS);
+		}
+
+		public void LoadPlayer(int accountindex, string playerClass)
+		{
+			// refreshing Account to load any changes from the DB
+			GameServer.Database.FillObjectRelations(m_account);
+			DOLCharacters dolChar = m_account.Characters[accountindex];
+			LoadPlayer(dolChar, playerClass);
+		}
+
 
 		/// <summary>
 		/// Loads a player from the DB
 		/// </summary>
 		/// <param name="accountindex">Index of the character within the account</param>
-		public void LoadPlayer(int accountindex, string playerClass)
+		public void LoadPlayer(DOLCharacters dolChar, string playerClass)
 		{
-			m_activeCharIndex = accountindex;
-			GamePlayer player = null;
-
-			// refreshing Account to load any changes from the DB
-			GameServer.Database.FillObjectRelations(m_account);
-
-			DOLCharacters dolChar = m_account.Characters[m_activeCharIndex];
+			m_activeCharIndex = 0;
+			foreach (var ch in Account.Characters)
+			{
+				if (ch.ObjectId == dolChar.ObjectId)
+					break;
+				m_activeCharIndex++;
+			}
 
 			Assembly gasm = Assembly.GetAssembly(typeof(GameServer));
 
+			GamePlayer player = null;
 			try
 			{
 				player = (GamePlayer)gasm.CreateInstance(playerClass, false, BindingFlags.CreateInstance, null, new object[] { this, dolChar }, null, null);
@@ -697,7 +716,7 @@ namespace DOL.GS
 		{
 			try
 			{
-				if (m_activeCharIndex != -1 && m_player != null)
+				if (m_player != null)
 				{
 					//<**loki**>
 					if (Properties.KICK_IDLE_PLAYER_STATUS)

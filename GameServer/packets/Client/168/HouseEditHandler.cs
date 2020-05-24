@@ -25,11 +25,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 	{
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-		#region IPacketHandler Members
-
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			ushort playerID = packet.ReadShort(); // no use for that.
+			packet.ReadShort(); // playerId no use for that.
 
 			// house is null, return
 			var house = client.Player.CurrentHouse;
@@ -44,18 +42,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 				int change = packet.ReadByte();
 
 				if (swtch != 255)
-				{
 					changes.Add(change);
-				}
 			}
 
 			// apply changes
 			if (changes.Count > 0)
-			{
 				house.Edit(client.Player, changes);
-			}
 		}
-
-		#endregion
 	}
 }

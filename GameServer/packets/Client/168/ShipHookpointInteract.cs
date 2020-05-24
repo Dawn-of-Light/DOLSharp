@@ -64,7 +64,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					}
 				default:
 					{
-						GameServer.KeepManager.Log.Error(string.Format("Unhandled ShipHookpointInteract client to server packet unk1 {0} objectOid {1} unk2 {2} slot {3} flag {4} currency {5} unk3 {6} unk4 {7} type {8} unk5 {9} unk6 {10}", unk1, objectOid, unk2, slot, flag, currency, unk3, unk4, type, unk5, unk6));
+						GameServer.KeepManager.Log.Error($"Unhandled ShipHookpointInteract client to server packet unk1 {unk1} objectOid {objectOid} unk2 {unk2} slot {slot} flag {flag} currency {currency} unk3 {unk3} unk4 {unk4} type {type} unk5 {unk5} unk6 {unk6}");
 						break;
 					}
 			}

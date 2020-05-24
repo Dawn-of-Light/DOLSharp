@@ -1056,6 +1056,7 @@
     <Compile Include="packets\Server\PacketLib1123.cs" />
     <Compile Include="packets\Server\PacketLib1124.cs" />
     <Compile Include="packets\Server\PacketLib1125.cs" />
+    <Compile Include="packets\Server\PacketLib1126.cs" />
     <Compile Include="packets\Server\PacketLib197.cs" />
     <Compile Include="packets\Server\PacketLib196.cs" />
     <Compile Include="packets\Server\PacketLib188.cs" />

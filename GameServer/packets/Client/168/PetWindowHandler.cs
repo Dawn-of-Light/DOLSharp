@@ -30,8 +30,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		#region IPacketHandler Members
-
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			var aggroState = (byte) packet.ReadByte(); // 1-Aggressive, 2-Deffensive, 3-Passive
@@ -59,10 +57,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 		}
 
-		#endregion
-
-		#region Nested type: HandlePetCommandAction
-
 		/// <summary>
 		/// Handles pet command actions
 		/// </summary>
@@ -71,17 +65,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// <summary>
 			/// The pet aggro state
 			/// </summary>
-			protected readonly int m_aggroState;
+			protected readonly int _aggroState;
 
 			/// <summary>
 			/// The pet command
 			/// </summary>
-			protected readonly int m_command;
+			protected readonly int _command;
 
 			/// <summary>
 			/// The pet walk state
 			/// </summary>
-			protected readonly int m_walkState;
+			protected readonly int _walkState;
 
 			/// <summary>
 			/// Constructs a new HandlePetCommandAction
@@ -93,9 +87,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			public HandlePetCommandAction(GamePlayer actionSource, int aggroState, int walkState, int command)
 				: base(actionSource)
 			{
-				m_aggroState = aggroState;
-				m_walkState = walkState;
-				m_command = command;
+				_aggroState = aggroState;
+				_walkState = walkState;
+				_command = command;
 			}
 
 			/// <summary>
@@ -103,9 +97,9 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// </summary>
 			protected override void OnTick()
 			{
-				var player = (GamePlayer) m_actionSource;
+				var player = (GamePlayer)m_actionSource;
 
-				switch (m_aggroState)
+				switch (_aggroState)
 				{
 					case 0:
 						break; // ignore
@@ -119,12 +113,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 						player.CommandNpcPassive();
 						break;
 					default:
-						if (Log.IsWarnEnabled)
-							Log.Warn("unknown aggro state " + m_aggroState + ", player=" + player.Name + "  version=" + player.Client.Version +
-							         "  client type=" + player.Client.ClientType);
+						Log.Warn($"unknown aggro state {_aggroState}, player={player.Name}  version={player.Client.Version}  client type={player.Client.ClientType}");
 						break;
 				}
-				switch (m_walkState)
+				switch (_walkState)
 				{
 					case 0:
 						break; // ignore
@@ -141,12 +133,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 						player.CommandNpcComeHere();
 						break;
 					default:
-						if (Log.IsWarnEnabled)
-							Log.Warn("unknown walk state " + m_walkState + ", player=" + player.Name + "  version=" + player.Client.Version +
-							         "  client type=" + player.Client.ClientType);
+						Log.Warn($"unknown walk state {_walkState}, player={player.Name}  version={player.Client.Version}  client type={player.Client.ClientType}");
 						break;
 				}
-				switch (m_command)
+				switch (_command)
 				{
 					case 0:
 						break; // ignore
@@ -157,14 +147,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 						player.CommandNpcRelease();
 						break;
 					default:
-						if (Log.IsWarnEnabled)
-							Log.Warn("unknown command state " + m_command + ", player=" + player.Name + "  version=" + player.Client.Version +
-							         "  client type=" + player.Client.ClientType);
+						Log.Warn($"unknown command state {_command}, player={player.Name}  version={player.Client.Version}  client type={player.Client.ClientType}");
 						break;
 				}
 			}
 		}
-
-		#endregion
 	}
 }

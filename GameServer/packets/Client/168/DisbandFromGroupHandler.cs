@@ -24,16 +24,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.DisbandFromGroup, "Disband From Group Request Handler", eClientStatus.PlayerInGame)]
 	public class DisbandFromGroupHandler : IPacketHandler
 	{
-		#region IPacketHandler Members
-
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			new PlayerDisbandAction(client.Player).Start(1);
 		}
-
-		#endregion
-
-		#region Nested type: PlayerDisbandAction
 
 		/// <summary>
 		/// Handles players disband actions
@@ -72,7 +66,5 @@ namespace DOL.GS.PacketHandler.Client.v168
 				player.Group.RemoveMember(disbandMember);
 			}
 		}
-
-		#endregion
 	}
 }

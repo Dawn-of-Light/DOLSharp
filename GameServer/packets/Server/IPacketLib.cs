@@ -95,6 +95,7 @@ namespace DOL.GS.PacketHandler
 		Weather = 0x92,
 		DoorState = 0x99,
 		ClientRegions = 0x9E,
+		ClientRegion = 0xB1,
 		ObjectUpdate = 0xA1,
 		RemoveObject = 0xA2,
 		Quit = 0xA4,
@@ -139,6 +140,7 @@ namespace DOL.GS.PacketHandler
 		EmoteAnimation = 0xF9,
 		MoneyUpdate = 0xFA,
 		StatsUpdate = 0xFB,
+		CharacterOverview1126 = 0xFC,
 		CharacterOverview = 0xFD,
 		Realm = 0xFE,
 		MasterLevelWindow = 0x13,
@@ -633,7 +635,7 @@ namespace DOL.GS.PacketHandler
 		void SendPingReply(ulong timestamp, ushort sequence);
 		void SendRealm(eRealm realm);
 		void SendCharacterOverview(eRealm realm);
-		void SendDupNameCheckReply(string name, bool nameExists);
+		void SendDupNameCheckReply(string name, byte result);
 		void SendBadNameCheckReply(string name, bool bad);
 		void SendAttackMode(bool attackState);
 		void SendCharCreateReply(string name);
@@ -732,6 +734,7 @@ namespace DOL.GS.PacketHandler
 		void SendWeather(uint x, uint width, ushort speed, ushort fogdiffusion, ushort intensity);
 		void SendPlayerModelTypeChange(GamePlayer player, byte modelType);
 		void SendObjectDelete(GameObject obj);
+		void SendObjectDelete(ushort oid);
 		void SendObjectUpdate(GameObject obj);
 		void SendQuestListUpdate();
 		void SendQuestUpdate(AbstractQuest quest);

@@ -35,46 +35,57 @@ namespace DOL.GS.PacketHandler.Client.v168
 		/// </summary>
 		private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		#region IPacketHandler Members
-
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			int flagSpeedData = packet.ReadShort();
-			int heading = packet.ReadShort();
-
-			if (client.Version > GameClient.eClientVersion.Version171)
+			int flagSpeedData;
+			int spellLevel;
+			int spellLineIndex;
+			if (client.Version >= GameClient.eClientVersion.Version1124)
 			{
-				int xOffsetInZone = packet.ReadShort();
-				int yOffsetInZone = packet.ReadShort();
-				int currentZoneID = packet.ReadShort();
-				int realZ = packet.ReadShort();
-
-				Zone newZone = WorldMgr.GetZone((ushort) currentZoneID);
-				if (newZone == null)
-				{
-					if (Log.IsWarnEnabled)
-						Log.Warn("Unknown zone in UseSpellHandler: " + currentZoneID + " player: " + client.Player.Name);
-				}
-				else
-				{
-					client.Player.X = newZone.XOffset + xOffsetInZone;
-					client.Player.Y = newZone.YOffset + yOffsetInZone;
-					client.Player.Z = realZ;
-					client.Player.MovementStartTick = Environment.TickCount;
-				}
+				client.Player.X = (int)packet.ReadFloatLowEndian();
+				client.Player.Y = (int)packet.ReadFloatLowEndian();
+				client.Player.Z = (int)packet.ReadFloatLowEndian();
+				client.Player.CurrentSpeed = (short)packet.ReadFloatLowEndian();
+				client.Player.Heading = packet.ReadShort();
+				flagSpeedData = packet.ReadShort(); // target visible ? 0xA000 : 0x0000
+				spellLevel = packet.ReadByte();
+				spellLineIndex = packet.ReadByte();
+				// two bytes at end, not sure what for
 			}
+			else
+			{
+				flagSpeedData = packet.ReadShort();
+				int heading = packet.ReadShort();
 
-			int spellLevel = packet.ReadByte();
-			int spellLineIndex = packet.ReadByte();
+				if (client.Version > GameClient.eClientVersion.Version171)
+				{
+					int xOffsetInZone = packet.ReadShort();
+					int yOffsetInZone = packet.ReadShort();
+					int currentZoneID = packet.ReadShort();
+					int realZ = packet.ReadShort();
 
-			client.Player.Heading = (ushort) (heading & 0xfff);
+					Zone newZone = WorldMgr.GetZone((ushort)currentZoneID);
+					if (newZone == null)
+					{
+						Log.Warn($"Unknown zone in UseSpellHandler: {currentZoneID} player: {client.Player.Name}");
+					}
+					else
+					{
+						client.Player.X = newZone.XOffset + xOffsetInZone;
+						client.Player.Y = newZone.YOffset + yOffsetInZone;
+						client.Player.Z = realZ;
+						client.Player.MovementStartTick = Environment.TickCount;
+					}
+				}
+
+				spellLevel = packet.ReadByte();
+				spellLineIndex = packet.ReadByte();
+
+				client.Player.Heading = (ushort)(heading & 0xfff);
+			}
 
 			new UseSpellAction(client.Player, flagSpeedData, spellLevel, spellLineIndex).Start(1);
 		}
-
-		#endregion
-
-		#region Nested type: UseSpellAction
 
 		/// <summary>
 		/// Handles player use spell actions
@@ -185,7 +196,5 @@ namespace DOL.GS.PacketHandler.Client.v168
 				
 			}
 		}
-
-		#endregion
 	}
 }

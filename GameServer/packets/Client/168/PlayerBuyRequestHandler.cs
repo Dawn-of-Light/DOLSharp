@@ -62,14 +62,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 							return;
 
 						//Forward the buy process to the merchant
-						if (client.Player.TargetObject is GameMerchant)
+						if (client.Player.TargetObject is GameMerchant merchant)
 						{
 							//Let merchant choose what happens
-							((GameMerchant)client.Player.TargetObject).OnPlayerBuy(client.Player, item_slot, item_count);
+							merchant.OnPlayerBuy(client.Player, item_slot, item_count);
 						}
-						else if (client.Player.TargetObject is GameLotMarker)
+						else if (client.Player.TargetObject is GameLotMarker lot)
 						{
-							((GameLotMarker)client.Player.TargetObject).OnPlayerBuy(client.Player, item_slot, item_count);
+							lot.OnPlayerBuy(client.Player, item_slot, item_count);
 						}
 						break;
 					}

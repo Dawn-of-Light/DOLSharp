@@ -21,8 +21,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.ObjectInteractRequest, "Handles Client Interact Request", eClientStatus.PlayerInGame)]
 	public class ObjectInteractRequestHandler : IPacketHandler
 	{
-		#region IPacketHandler Members
-
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
 			// packet.Skip(10);
@@ -35,10 +33,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			new InteractActionHandler(client.Player, targetOid).Start(1);
 		}
 
-		#endregion
-
-		#region Nested type: InteractActionHandler
-
 		/// <summary>
 		/// Handles player interact actions
 		/// </summary>
@@ -47,14 +41,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 			/// <summary>
 			/// The interact target OID
 			/// </summary>
-			protected readonly int m_targetOid;
+			protected readonly ushort m_targetOid;
 
 			/// <summary>
 			/// Constructs a new InterractActionHandler
 			/// </summary>
 			/// <param name="actionSource">The action source</param>
 			/// <param name="targetOid">The interact target OID</param>
-			public InteractActionHandler(GamePlayer actionSource, int targetOid) : base(actionSource)
+			public InteractActionHandler(GamePlayer actionSource, ushort targetOid) : base(actionSource)
 			{
 				m_targetOid = targetOid;
 			}
@@ -69,14 +63,12 @@ namespace DOL.GS.PacketHandler.Client.v168
 				if (region == null)
 					return;
 
-				GameObject obj = region.GetObject((ushort) m_targetOid);
+				GameObject obj = region.GetObject(m_targetOid);
 				if (obj == null)
-					return;
-
-				obj.Interact(player);
+					player.Out.SendObjectDelete(m_targetOid);
+				else
+					obj.Interact(player);
 			}
 		}
-
-		#endregion
 	}
 }

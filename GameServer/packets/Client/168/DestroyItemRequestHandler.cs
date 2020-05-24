@@ -34,8 +34,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 			{
 				if (item.IsIndestructible)
 				{
-					client.Out.SendMessage(String.Format("You can't destroy {0}!",
-						item.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage($"You can't destroy {item.GetName(0, false)}!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
 				}
 
@@ -53,7 +52,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 				if (client.Player.Inventory.RemoveItem(item))
 				{
-					client.Out.SendMessage("You destroy the " + item.Name + ".", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+					client.Out.SendMessage($"You destroy the {item.Name}.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					InventoryLogging.LogInventoryAction(client.Player, "(destroy)", eInventoryActionType.Other, item.Template, item.Count);
 				}
 			}

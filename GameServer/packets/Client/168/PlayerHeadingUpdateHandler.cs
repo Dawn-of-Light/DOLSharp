@@ -34,10 +34,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 		public void HandlePacket(GameClient client, GSPacketIn packet)
 		{
-			if (client == null || client.Player == null)
+			if (client?.Player == null)
 				return;
-
-			if (client.Player.ObjectState != GameObject.eObjectState.Active) return;
+			if (client.Player.ObjectState != GameObject.eObjectState.Active)
+				return;
 
 			ushort sessionId = packet.ReadShort(); // session ID
 			if (client.SessionID != sessionId)
@@ -47,73 +47,82 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 
 			ushort head = packet.ReadShort();
+			var unk1 = (byte)packet.ReadByte(); // unknown
+			var flags = (byte)packet.ReadByte();
+			var steedSlot = (byte) packet.ReadByte();
+			var ridingFlag = (byte)packet.ReadByte();
+
 			client.Player.Heading = (ushort)(head & 0xFFF);
-			packet.Skip(1); // unknown
-			int flags = packet.ReadByte();
-//			client.Player.PetInView = ((flags & 0x04) != 0); // TODO
+			// client.Player.PetInView = ((flags & 0x04) != 0); // TODO
 			client.Player.GroundTargetInView = ((flags & 0x08) != 0);
 			client.Player.TargetInView = ((flags & 0x10) != 0);
 
-			byte[] con = packet.ToArray();
-            con[0] = (byte)(client.SessionID >> 8);
-            con[1] = (byte)(client.SessionID & 0xff);
-
-            if (!client.Player.IsAlive)
-			{
-				con[9] = 5; // set dead state
-			}
+			byte state = 0;
+			if (!client.Player.IsAlive)
+				state = 5; // set dead state
 			else if (client.Player.Steed != null && client.Player.Steed.ObjectState == GameObject.eObjectState.Active)
 			{
 				client.Player.Heading = client.Player.Steed.Heading;
-				con[9] = 6; // Set ride state
-				con[7] = (byte)(client.Player.Steed.RiderSlot(client.Player)); // there rider slot this player
-				con[2] = (byte)(client.Player.Steed.ObjectID >> 8); //heading = steed ID
-				con[3] = (byte)(client.Player.Steed.ObjectID & 0xFF);
+				state = 6; // Set ride state
+				steedSlot = (byte)client.Player.Steed.RiderSlot(client.Player); // there rider slot this player
+				head = (ushort)client.Player.Steed.ObjectID; // heading = steed ID
 			}
-			con[5] &= 0xC0; //11 00 00 00 = 0x80(Torch) + 0x40(Unknown), all other in view check's not need send anyone
+			else
+			{
+				if (client.Player.IsSwimming)
+					state = 1;
+				if (client.Player.IsClimbing)
+					state = 7;
+				if (client.Player.IsSitting)
+					state = 4;
+				if (client.Player.IsStrafing)
+					state |= 8;
+			}
+
+			byte flagcontent = 0;
 			if (client.Player.IsWireframe)
-			{
-				con[5] |= 0x01;
-			}
-			//stealth is set here
+				flagcontent |= 0x01;
 			if (client.Player.IsStealthed)
-			{
-				con[5] |= 0x02;
-			}
-			con[8] = (byte)((con[8] & 0x80) | client.Player.HealthPercent);
+				flagcontent |= 0x02;
+			if (client.Player.IsDiving)
+				flagcontent |= 0x04;
+			if (client.Player.IsTorchLighted)
+				flagcontent |= 0x80;
+
+			GSUDPPacketOut outpak190 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerHeading));
+			outpak190.WriteShort((ushort) client.SessionID);
+			outpak190.WriteShort(head);
+			outpak190.WriteByte(unk1); // unknown
+			outpak190.WriteByte(flagcontent);
+			outpak190.WriteByte(steedSlot);
+			outpak190.WriteByte(ridingFlag);
+			outpak190.WriteByte((byte)(client.Player.HealthPercent + (client.Player.AttackState ? 0x80 : 0)));
+			outpak190.WriteByte(state);
+			outpak190.WriteByte(client.Player.ManaPercent);
+			outpak190.WriteByte(client.Player.EndurancePercent);
+			outpak190.WritePacketLength();
 
 			GSUDPPacketOut outpak = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerHeading));
-			//Now copy the whole content of the packet
-			outpak.Write(con, 0, /*con.Length*/10);
+			outpak.WriteShort((ushort)client.SessionID);
+			outpak.WriteShort(head);
+			outpak.WriteByte(steedSlot);
+			outpak.WriteByte(flagcontent);
+			outpak.WriteByte(0);
+			outpak.WriteByte(ridingFlag);
+			outpak.WriteByte((byte)(client.Player.HealthPercent + (client.Player.AttackState ? 0x80 : 0)));
+			outpak.WriteByte(client.Player.ManaPercent);
+			outpak.WriteByte(client.Player.EndurancePercent);
+			outpak.WriteByte(0); // unknown
 			outpak.WritePacketLength();
 
-			GSUDPPacketOut outpak190 = null;
-
-//			byte[] outp = outpak.GetBuffer();
-//			outpak = null;
-
-			foreach(GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			foreach (GamePlayer player in client.Player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
 			{
 				if(player != null && player != client.Player)
 				{
-					if (player.Client.Version >= GameClient.eClientVersion.Version190)
-					{
-						if (outpak190 == null)
-						{
-	 						outpak190 = new GSUDPPacketOut(client.Out.GetPacketCode(eServerPackets.PlayerHeading));
-	 						byte[] con190 = (byte[]) con.Clone();
-							//Now copy the whole content of the packet
-							outpak190.Write(con190, 0, /*con190.Lenght*/10);
-							outpak190.WriteByte(client.Player.ManaPercent);
-							outpak190.WriteByte(client.Player.EndurancePercent);
-							outpak190.WritePacketLength();
-//							byte[] outp190 = outpak190.GetBuffer();
-//							outpak190 = null;// ?
-						}
-						player.Out.SendUDPRaw(outpak190);
-					}
+					if (player.Client.Version >= GameClient.eClientVersion.Version1124)
+						player.Out.SendUDP(outpak);
 					else
-						player.Out.SendUDPRaw(outpak);
+						player.Out.SendUDP(outpak190);
 				}
 			}
 		}

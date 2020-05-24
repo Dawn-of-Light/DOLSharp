@@ -62,5 +62,10 @@ namespace DOL.GS.PacketHandler
 
 			return (ushort)(Length-5);
 		}
+
+		public override string ToString()
+		{
+			return base.ToString() + $": Size={Length - 5} ID=0x{m_packetCode:X2}";
+		}
 	}
 }

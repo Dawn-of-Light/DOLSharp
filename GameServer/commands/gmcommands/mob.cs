@@ -2522,89 +2522,86 @@ namespace DOL.GS.Commands
 			{
 				mob.LoadTemplate(targetMob.NPCTemplate);
 			}
-			else
+
+			//Fill the object variables
+			mob.X = client.Player.X;
+			mob.Y = client.Player.Y;
+			mob.Z = client.Player.Z;
+			mob.CurrentRegion = client.Player.CurrentRegion;
+			mob.Heading = client.Player.Heading;
+			mob.Level = targetMob.Level;
+			mob.Realm = targetMob.Realm;
+			mob.Name = targetMob.Name;
+			mob.Model = targetMob.Model;
+			mob.Flags = targetMob.Flags;
+			mob.MeleeDamageType = targetMob.MeleeDamageType;
+			mob.RespawnInterval = targetMob.RespawnInterval;
+			mob.RoamingRange = targetMob.RoamingRange;
+			mob.MaxDistance = targetMob.MaxDistance;
+			mob.BodyType = targetMob.BodyType;
+
+			// also copies the stats
+
+			mob.Strength = targetMob.Strength;
+			mob.Constitution = targetMob.Constitution;
+			mob.Dexterity = targetMob.Dexterity;
+			mob.Quickness = targetMob.Quickness;
+			mob.Intelligence = targetMob.Intelligence;
+			mob.Empathy = targetMob.Empathy;
+			mob.Piety = targetMob.Piety;
+			mob.Charisma = targetMob.Charisma;
+
+			//Fill the living variables
+			mob.CurrentSpeed = 0;
+			mob.MaxSpeedBase = targetMob.MaxSpeedBase;
+			mob.GuildName = targetMob.GuildName;
+			mob.Size = targetMob.Size;
+			mob.Race = targetMob.Race;
+
+			mob.Inventory = targetMob.Inventory;
+			if (mob.Inventory != null)
+				mob.SwitchWeapon(targetMob.ActiveWeaponSlot);
+
+			mob.EquipmentTemplateID = targetMob.EquipmentTemplateID;
+
+			if (mob is GameMerchant)
 			{
+				((GameMerchant)mob).TradeItems = ((GameMerchant)targetMob).TradeItems;
+			}
 
-				//Fill the object variables
-				mob.X = client.Player.X;
-				mob.Y = client.Player.Y;
-				mob.Z = client.Player.Z;
-				mob.CurrentRegion = client.Player.CurrentRegion;
-				mob.Heading = client.Player.Heading;
-				mob.Level = targetMob.Level;
-				mob.Realm = targetMob.Realm;
-				mob.Name = targetMob.Name;
-				mob.Model = targetMob.Model;
-				mob.Flags = targetMob.Flags;
-				mob.MeleeDamageType = targetMob.MeleeDamageType;
-				mob.RespawnInterval = targetMob.RespawnInterval;
-				mob.RoamingRange = targetMob.RoamingRange;
-				mob.MaxDistance = targetMob.MaxDistance;
-				mob.BodyType = targetMob.BodyType;
+			ABrain brain = null;
+			foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+			{
+				brain = (ABrain)assembly.CreateInstance(targetMob.Brain.GetType().FullName, true);
+				if (brain != null)
+					break;
+			}
 
-				// also copies the stats
+			if (brain == null)
+			{
+				client.Out.SendMessage("Cannot create brain, standard brain being applied", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				mob.SetOwnBrain(new StandardMobBrain());
+			}
+			else if (brain is StandardMobBrain)
+			{
+				StandardMobBrain sbrain = (StandardMobBrain)brain;
+				StandardMobBrain tsbrain = (StandardMobBrain)targetMob.Brain;
+				sbrain.AggroLevel = tsbrain.AggroLevel;
+				sbrain.AggroRange = tsbrain.AggroRange;
+				mob.SetOwnBrain(sbrain);
+			}
 
-				mob.Strength = targetMob.Strength;
-				mob.Constitution = targetMob.Constitution;
-				mob.Dexterity = targetMob.Dexterity;
-				mob.Quickness = targetMob.Quickness;
-				mob.Intelligence = targetMob.Intelligence;
-				mob.Empathy = targetMob.Empathy;
-				mob.Piety = targetMob.Piety;
-				mob.Charisma = targetMob.Charisma;
+			mob.PackageID = targetMob.PackageID;
+			mob.OwnerID = targetMob.OwnerID;
 
-				//Fill the living variables
-				mob.CurrentSpeed = 0;
-				mob.MaxSpeedBase = targetMob.MaxSpeedBase;
-				mob.GuildName = targetMob.GuildName;
-				mob.Size = targetMob.Size;
-				mob.Race = targetMob.Race;
-
-				mob.Inventory = targetMob.Inventory;
-				if (mob.Inventory != null)
-					mob.SwitchWeapon(targetMob.ActiveWeaponSlot);
-
-				mob.EquipmentTemplateID = targetMob.EquipmentTemplateID;
-
-				if (mob is GameMerchant)
-				{
-					((GameMerchant)mob).TradeItems = ((GameMerchant)targetMob).TradeItems;
-				}
-
-				ABrain brain = null;
-				foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-				{
-					brain = (ABrain)assembly.CreateInstance(targetMob.Brain.GetType().FullName, true);
-					if (brain != null)
-						break;
-				}
-
-				if (brain == null)
-				{
-					client.Out.SendMessage("Cannot create brain, standard brain being applied", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-					mob.SetOwnBrain(new StandardMobBrain());
-				}
-				else if (brain is StandardMobBrain)
-				{
-					StandardMobBrain sbrain = (StandardMobBrain)brain;
-					StandardMobBrain tsbrain = (StandardMobBrain)targetMob.Brain;
-					sbrain.AggroLevel = tsbrain.AggroLevel;
-					sbrain.AggroRange = tsbrain.AggroRange;
-					mob.SetOwnBrain(sbrain);
-				}
-
-				mob.PackageID = targetMob.PackageID;
-				mob.OwnerID = targetMob.OwnerID;
-
-				mob.AddToWorld();
-				mob.LoadedFromScript = false;
-				mob.SaveIntoDatabase();
-				client.Out.SendMessage("Mob created: OID=" + mob.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				if ((mob.Flags & GameNPC.eFlags.PEACE) != 0)
-				{
-					// because copying 100 mobs with their peace flag set is not fun
-					client.Out.SendMessage("This mobs PEACE flag is set!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-				}
+			mob.AddToWorld();
+			mob.LoadedFromScript = false;
+			mob.SaveIntoDatabase();
+			client.Out.SendMessage("Mob created: OID=" + mob.ObjectID, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			if ((mob.Flags & GameNPC.eFlags.PEACE) != 0)
+			{
+				// because copying 100 mobs with their peace flag set is not fun
+				client.Out.SendMessage("This mobs PEACE flag is set!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
 			}
 		}
 
