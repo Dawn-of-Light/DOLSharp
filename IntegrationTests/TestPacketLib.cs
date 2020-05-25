@@ -406,12 +406,12 @@ namespace DOL.Tests
 		public Action<TestPacketLib, bool, bool, GameLiving> SendGroupMemberUpdateMethod { get; set; }
 		public void SendGroupMemberUpdate(bool updateIcons, bool updateMap, GameLiving living)
 		{
-			if (SendGroupMemberUpdateMethod != null) SendGroupMemberUpdateMethod(this, updateIcons, living);
+			if (SendGroupMemberUpdateMethod != null) SendGroupMemberUpdateMethod(this, updateIcons, true, living);
 		}
 		public Action<TestPacketLib, bool, bool> SendGroupMembersUpdateMethod { get; set; }
 		public void SendGroupMembersUpdate(bool updateIcons, bool updateMap)
 		{
-			if (SendGroupMembersUpdateMethod != null) SendGroupMembersUpdateMethod(this, updateIcons);
+			if (SendGroupMembersUpdateMethod != null) SendGroupMembersUpdateMethod(this, updateIcons, true);
 		}
 		public Action<TestPacketLib, ICollection<InventoryItem>> SendInventoryItemsUpdateMethod { get; set; }
 		public void SendInventoryItemsUpdate(ICollection<InventoryItem> itemsToUpdate)
