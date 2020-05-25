@@ -59,7 +59,7 @@ namespace DOL.Network
 		/// Writes a 2 byte (short) value to the stream in network byte order
 		/// </summary>
 		/// <param name="val">Value to write</param>
-		public virtual void WriteShort(ushort val)
+		public void WriteShort(ushort val)
 		{
 			WriteByte((byte) (val >> 8));
 			WriteByte((byte) (val & 0xff));
@@ -69,7 +69,7 @@ namespace DOL.Network
 		/// Writes a 2 byte (short) value to the stream in host byte order
 		/// </summary>
 		/// <param name="val">Value to write</param>
-		public virtual void WriteShortLowEndian(ushort val)
+		public void WriteShortLowEndian(ushort val)
 		{
 			WriteByte((byte) (val & 0xff));
 			WriteByte((byte) (val >> 8));
@@ -79,7 +79,7 @@ namespace DOL.Network
 		/// Writes a 4 byte value to the stream in host byte order
 		/// </summary>
 		/// <param name="val">Value to write</param>
-		public virtual void WriteInt(uint val)
+		public void WriteInt(uint val)
 		{
 			WriteByte((byte) (val >> 24));
 			WriteByte((byte) ((val >> 16) & 0xff));
@@ -91,7 +91,7 @@ namespace DOL.Network
 		/// Writes a 4 byte value to the stream in host byte order
 		/// </summary>
 		/// <param name="val">Value to write</param>
-		public virtual void WriteIntLowEndian(uint val)
+		public void WriteIntLowEndian(uint val)
 		{
 			WriteByte((byte) ((val & 0xffff) & 0xff));
 			WriteByte((byte) ((val & 0xffff) >> 8));
@@ -103,7 +103,7 @@ namespace DOL.Network
 		/// Writes a 8 byte value to the stream in host byte order
 		/// </summary>
 		/// <param name="val">Value to write</param>
-		public virtual void WriteLong(ulong val)
+		public void WriteLong(ulong val)
 		{
 			WriteByte((byte) (val >> 56));
 			WriteByte((byte) ((val >> 48) & 0xff));
@@ -119,7 +119,7 @@ namespace DOL.Network
 		/// Writes a 8 byte value to the stream in host byte order
 		/// </summary>
 		/// <param name="val">Value to write</param>
-		public virtual void WriteLongLowEndian(ulong val)
+		public void WriteLongLowEndian(ulong val)
 		{
 			WriteByte((byte) (val & 0xff));
 			WriteByte((byte) ((val >> 8) & 0xff));
@@ -134,7 +134,7 @@ namespace DOL.Network
 		/// <summary>
 		/// writes a float value to low endian used in 1.124 packets
 		/// </summary>
-		public virtual void WriteFloatLowEndian(float val)
+		public void WriteFloatLowEndian(float val)
 		{
 			var bytes = BitConverter.GetBytes(val);
 			Write(bytes, 0, bytes.Length);
@@ -162,7 +162,7 @@ namespace DOL.Network
 		/// </summary>
 		/// <param name="val">Value to write</param>
 		/// <param name="num">Number of bytes to write</param>
-		public virtual void Fill(byte val, int num)
+		public void Fill(byte val, int num)
 		{
 			for (int i = 0; i < num; ++i)
 			{
@@ -189,7 +189,7 @@ namespace DOL.Network
 		/// Writes a pascal style string to the stream
 		/// </summary>
 		/// <param name="str">String to write</param>
-		public virtual void WritePascalString(string str)
+		public void WritePascalString(string str)
 		{
 			if (str == null || str.Length <= 0)
 			{
@@ -220,7 +220,7 @@ namespace DOL.Network
 		/// Writes a C-style string to the stream
 		/// </summary>
 		/// <param name="str">String to write</param>
-		public virtual void WriteString(string str)
+		public void WriteString(string str)
 		{
 			WriteStringBytes(str);
 			WriteByte(0x0);
@@ -231,7 +231,7 @@ namespace DOL.Network
 		/// Writes exactly the bytes from the string without any trailing 0
 		/// </summary>
 		/// <param name="str">the string to write</param>
-		public virtual void WriteStringBytes(string str)
+		public void WriteStringBytes(string str)
 		{
 			if (str.Length <= 0)
 				return;
@@ -245,7 +245,7 @@ namespace DOL.Network
 		/// </summary>
 		/// <param name="str">String to write</param>
 		/// <param name="maxlen">Maximum number of bytes to be written</param>
-		public virtual void WriteString(string str, int maxlen)
+		public void WriteString(string str, int maxlen)
 		{
 			if (str.Length <= 0)
 				return;
@@ -259,7 +259,7 @@ namespace DOL.Network
 		/// </summary>
 		/// <param name="str">String to write</param>
 		/// <param name="len">Number of bytes to write</param>
-		public virtual void FillString(string str, int len)
+		public void FillString(string str, int len)
 		{
 			long pos = Position;
 

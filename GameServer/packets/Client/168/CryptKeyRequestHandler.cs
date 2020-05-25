@@ -51,18 +51,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 					client.Out.SendVersionAndCryptKey();
 				}
 			}
-			else if (client.Version < GameClient.eClientVersion.Version1124) // Dre: don't know if this part works, I tested only with 1.109 & 1.125c
+			else
 			{
-				// we don't handle Encryption for 1.115c
-				// the rc4 secret can't be unencrypted from RSA.
-
 				// if the DataSize is above 7 then the RC4 key is bundled
 				if (packet.DataSize > 7)
 				{
 					var length = packet.ReadIntLowEndian();
 					packet.Read(client.PacketProcessor.Encoding.SBox, 0, (int)length);
+					// in 1.126 the second packet has random values for clientType, addons, etc
 					return;
 				}
+
 				// register client type
 				byte clientType = (byte)packet.ReadByte();
 				client.ClientType = (GameClient.eClientType)(clientType & 0x0F);
@@ -73,27 +72,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				packet.Skip(3); // skip the numbers in the version
 				client.MinorRev = packet.ReadString(1); // get the minor revision letter // 1125d support
 				packet.Skip(2); // build
-				//Send the crypt key to the client
-				client.Out.SendVersionAndCryptKey();
-			}
-			else // 1.124+ (maybe 1.125+)
-			{
-				// register client type
-				byte clientType = (byte)packet.ReadByte();
-				client.ClientType = (GameClient.eClientType)(clientType & 0x0F);
-				client.ClientAddons = (GameClient.eClientAddons)(clientType & 0xF0);
-				packet.Skip(3); // skip the numbers in the version
-				client.MinorRev = packet.ReadString(1); // get the minor revision letter // 1125d support
-				client.MajorBuild = (byte)packet.ReadByte();
-				client.MinorBuild = (byte)packet.ReadByte();
 
-				// if the DataSize is above 7 then the RC4 key is bundled
-				if (packet.DataSize > 7)
-				{
-					ushort length = packet.ReadShortLowEndian();
-					packet.Read(client.PacketProcessor.Encoding.SBox, 0, length);
-					return;
-				}
 
 				//Send the crypt key to the client
 				client.Out.SendVersionAndCryptKey();

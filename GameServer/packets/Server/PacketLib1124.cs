@@ -4732,82 +4732,69 @@ namespace DOL.GS.PacketHandler
 				}
 			}
 		}
-		protected virtual void WriteGroupMemberUpdate(GSTCPPacketOut pak, bool updateIcons, GameLiving living)
+		protected virtual void WriteGroupMemberUpdate(GSTCPPacketOut pak, bool updateIcons, bool updateMap, GameLiving living)
 		{
 			pak.WriteByte((byte)(living.GroupIndex + 1)); // From 1 to 8
-			bool sameRegion = living.CurrentRegion == m_gameClient.Player.CurrentRegion;
-			GamePlayer player = null;
-
-			if (sameRegion)
+			if (living.CurrentRegion != m_gameClient.Player.CurrentRegion)
 			{
-
-				player = living as GamePlayer;
-
-				if (player != null)
-					pak.WriteByte(player.CharacterClass.HealthPercentGroupWindow);
-				else
-					pak.WriteByte(living.HealthPercent);
-
-				pak.WriteByte(living.ManaPercent);
-				pak.WriteByte(living.EndurancePercent); // new in 1.69
-
-				byte playerStatus = 0;
-				if (!living.IsAlive)
-					playerStatus |= 0x01;
-				if (living.IsMezzed)
-					playerStatus |= 0x02;
-				if (living.IsDiseased)
-					playerStatus |= 0x04;
-				if (SpellHelper.FindEffectOnTarget(living, "DamageOverTime") != null)
-					playerStatus |= 0x08;
-				if (living is GamePlayer)
-				{
-					if ((living as GamePlayer).Client.ClientState == GameClient.eClientState.Linkdead)
-						playerStatus |= 0x10;
-				}
-				if (!sameRegion)
-					playerStatus |= 0x20;
-				if (living.DebuffCategory[(int)eProperty.SpellRange] != 0 || living.DebuffCategory[(int)eProperty.ArcheryRange] != 0)
-					playerStatus |= 0x40;
-
-				pak.WriteByte(playerStatus);
-				// 0x00 = Normal , 0x01 = Dead , 0x02 = Mezzed , 0x04 = Diseased ,
-				// 0x08 = Poisoned , 0x10 = Link Dead , 0x20 = In Another Region, 0x40 - NS
-
-				if (updateIcons)
-				{
-					pak.WriteByte((byte)(0x80 | living.GroupIndex));
-					lock (living.EffectList)
-					{
-						byte i = 0;
-						foreach (IGameEffect effect in living.EffectList)
-							if (effect is GameSpellEffect)
-								i++;
-						pak.WriteByte(i);
-						foreach (IGameEffect effect in living.EffectList)
-							if (effect is GameSpellEffect)
-							{
-								pak.WriteByte(0);
-								pak.WriteShort(effect.Icon);
-							}
-					}
-				}
-				WriteGroupMemberMapUpdate(pak, living);
-			}
-			else
-			{
-				pak.WriteInt(0x20);
+				pak.WriteByte(0x00); // health
+				pak.WriteByte(0x00); // mana
+				pak.WriteByte(0x00); // endu
+				pak.WriteByte(0x20); // player state (0x20 = another region)
 				if (updateIcons)
 				{
 					pak.WriteByte((byte)(0x80 | living.GroupIndex));
 					pak.WriteByte(0);
 				}
+				return;
 			}
+			var player = living as GamePlayer;
+
+			pak.WriteByte(player?.CharacterClass?.HealthPercentGroupWindow ?? living.HealthPercent);
+			pak.WriteByte(living.ManaPercent);
+			pak.WriteByte(living.EndurancePercent); // new in 1.69
+
+			byte playerStatus = 0;
+			if (!living.IsAlive)
+				playerStatus |= 0x01;
+			if (living.IsMezzed)
+				playerStatus |= 0x02;
+			if (living.IsDiseased)
+				playerStatus |= 0x04;
+			if (SpellHelper.FindEffectOnTarget(living, "DamageOverTime") != null)
+				playerStatus |= 0x08;
+			if (player?.Client?.ClientState == GameClient.eClientState.Linkdead)
+				playerStatus |= 0x10;
+			if (living.DebuffCategory[(int)eProperty.SpellRange] != 0 || living.DebuffCategory[(int)eProperty.ArcheryRange] != 0)
+				playerStatus |= 0x40;
+			pak.WriteByte(playerStatus);
+			// 0x00 = Normal , 0x01 = Dead , 0x02 = Mezzed , 0x04 = Diseased ,
+			// 0x08 = Poisoned , 0x10 = Link Dead , 0x20 = In Another Region, 0x40 - NS
+
+			if (updateIcons)
+			{
+				pak.WriteByte((byte)(0x80 | living.GroupIndex));
+				lock (living.EffectList)
+				{
+					byte i = 0;
+					foreach (IGameEffect effect in living.EffectList)
+						if (effect is GameSpellEffect)
+							i++;
+					pak.WriteByte(i);
+					foreach (IGameEffect effect in living.EffectList)
+						if (effect is GameSpellEffect)
+						{
+							pak.WriteByte(0);
+							pak.WriteShort(effect.Icon);
+						}
+				}
+			}
+			if (updateMap)
+				WriteGroupMemberMapUpdate(pak, living);
 		}
 		protected virtual void WriteGroupMemberMapUpdate(GSTCPPacketOut pak, GameLiving living)
 		{
-			bool sameRegion = living.CurrentRegion == m_gameClient.Player.CurrentRegion;
-			if (sameRegion && living.CurrentSpeed != 0)//todo : find a better way to detect when player change coord
+			if (living.CurrentSpeed != 0)
 			{
 				Zone zone = living.CurrentZone;
 				if (zone == null)
@@ -5666,7 +5653,7 @@ namespace DOL.GS.PacketHandler
 			if (old_callback != null)
 				old_callback(m_gameClient.Player, 0, 0, 0);
 
-			using (var pak = new GSTCPPacketOut(0xD0))
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CheckLOSRequest)))
 			{
 				pak.WriteShort((ushort)SourceOID);
 				pak.WriteShort((ushort)TargetOID);
@@ -5676,14 +5663,12 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
-		public void SendGroupMemberUpdate(bool updateIcons, GameLiving living)
+		public void SendGroupMemberUpdate(bool updateIcons, bool updateMap, GameLiving living)
 		{
-			if (m_gameClient.Player == null)
-				return;
-			Group group = m_gameClient.Player.Group;
-			if (group == null)
+			if (m_gameClient.Player?.Group == null)
 				return;
 
+			var group = m_gameClient.Player.Group;
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.GroupMemberUpdate)))
 			{
 				lock (group)
@@ -5691,25 +5676,22 @@ namespace DOL.GS.PacketHandler
 					// make sure group is not modified before update is sent else player index could change _before_ update
 					if (living.Group != group)
 						return;
-					WriteGroupMemberUpdate(pak, updateIcons, living);
+					WriteGroupMemberUpdate(pak, updateIcons, updateMap, living);
 					pak.WriteByte(0x00);
-					SendTCP(pak);
 				}
+				SendTCP(pak);
 			}
 		}
 
-		public void SendGroupMembersUpdate(bool updateIcons)
+		public void SendGroupMembersUpdate(bool updateIcons, bool updateMap)
 		{
-			if (m_gameClient.Player == null)
+			if (m_gameClient.Player?.Group == null)
 				return;
 
-			Group group = m_gameClient.Player.Group;
-			if (group == null)
-				return;
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.GroupMemberUpdate)))
 			{
-				foreach (GameLiving living in group.GetMembersInTheGroup())
-					WriteGroupMemberUpdate(pak, updateIcons, living);
+				foreach (var living in m_gameClient.Player.Group.GetMembersInTheGroup())
+					WriteGroupMemberUpdate(pak, updateIcons, updateMap, living);
 				pak.WriteByte(0x00);
 				SendTCP(pak);
 			}
