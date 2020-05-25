@@ -46,7 +46,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 				localPort = packet.ReadShort();
 			}
 			client.LocalIP = localIP;
-			client.UdpEndPoint = new IPEndPoint(IPAddress.Parse(localIP), localPort);
+			// client.UdpEndPoint = new IPEndPoint(IPAddress.Parse(localIP), localPort);
 			client.Out.SendUDPInitReply();
 		}
 	}

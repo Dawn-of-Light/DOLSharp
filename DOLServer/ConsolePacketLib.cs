@@ -130,8 +130,8 @@ namespace DOLGameServerConsole
 		public void SendQuestRewardWindow(GameNPC questNPC, GamePlayer player, DataQuest quest) { }
 		public void SendQuestAbortCommand(GameNPC abortingNPC, ushort questid, string abortMessage) { }
 		public void SendGroupWindowUpdate() { }
-		public void SendGroupMemberUpdate(bool updateIcons, GameLiving living) { }
-		public void SendGroupMembersUpdate(bool updateIcons) { }
+		public void SendGroupMemberUpdate(bool updateIcons, bool updateMap, GameLiving living) { }
+		public void SendGroupMembersUpdate(bool updateIcons, bool updateMap) { }
 		public void SendInventoryItemsUpdate(ICollection<InventoryItem> itemsToUpdate) { }
 		public void SendInventorySlotsUpdate(ICollection<int> slots) { }
 		public void SendInventoryItemsUpdate(eInventoryWindowType windowType, ICollection<InventoryItem> itemsToUpdate) { }

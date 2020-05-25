@@ -17,6 +17,8 @@
  *
  */
 using DOL.Database;
+using DOL.GS.Effects;
+using DOL.GS.Spells;
 using log4net;
 using System;
 using System.Collections;
@@ -68,7 +70,7 @@ namespace DOL.GS.PacketHandler
 				pak.WritePascalString(GameServer.Instance.Configuration.ServerNameShort); //server name
 				pak.WriteByte(0x05); //Server ID, seems irrelevant
 				pak.WriteByte(color); // 00 normal type?, 01 mordred type, 03 gaheris type, 07 ywain type
-				pak.WriteByte(0x01); // always sent as 0x01 , unsure of significance
+				pak.WriteByte(0x00); // Trial switch 0x00 - subbed, 0x01 - trial acc 
 				SendTCP(pak);
 			}
 		}
@@ -401,6 +403,96 @@ namespace DOL.GS.PacketHandler
 			}
 		}
 
+		public override void SendGroupWindowUpdate()
+		{
+			if (m_gameClient.Player == null)
+				return;
+
+			using (GSTCPPacketOut pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate)))
+			{
+				pak.WriteByte(0x06); // subcode - player group window
+									 // a 06 00 packet is sent when logging in.
+				var group = m_gameClient.Player.Group;
+				if (group == null)
+				{
+					pak.WriteByte(0x00); // a 06 00 packet is sent when logging in.
+				}
+				else
+				{
+					pak.WriteByte(group.MemberCount);
+					foreach (GameLiving living in group.GetMembersInTheGroup())
+					{
+						pak.WritePascalString(living.Name);
+						pak.WritePascalString(living is GamePlayer ? ((GamePlayer)living).CharacterClass.Name : "NPC");
+						pak.WriteShort((ushort)living.ObjectID); //or session id?
+						pak.WriteByte(living.Level);
+					}
+				}
+
+				SendTCP(pak);
+			}
+		}
+
+		protected override void WriteGroupMemberUpdate(GSTCPPacketOut pak, bool updateIcons, bool updateMap, GameLiving living)
+		{
+			pak.WriteByte((byte)(0x20 | living.GroupIndex)); // From 1 to 8 // 0x20 is player status code
+			if (living.CurrentRegion != m_gameClient.Player.CurrentRegion)
+			{
+				pak.WriteByte(0x00); // health
+				pak.WriteByte(0x00); // mana
+				pak.WriteByte(0x00); // endu
+				pak.WriteByte(0x20); // player state (0x20 = another region)
+				if (updateIcons)
+				{
+					pak.WriteByte((byte)(0x80 | living.GroupIndex));
+					pak.WriteByte(0);
+				}
+				return;
+			}
+
+			var player = living as GamePlayer;
+
+			pak.WriteByte(player?.CharacterClass?.HealthPercentGroupWindow ?? living.HealthPercent);
+			pak.WriteByte(living.ManaPercent);
+			pak.WriteByte(living.EndurancePercent); // new in 1.69
+
+			byte playerStatus = 0;
+			if (!living.IsAlive)
+				playerStatus |= 0x01;
+			if (living.IsMezzed)
+				playerStatus |= 0x02;
+			if (living.IsDiseased)
+				playerStatus |= 0x04;
+			if (SpellHelper.FindEffectOnTarget(living, "DamageOverTime") != null)
+				playerStatus |= 0x08;
+			if (player?.Client?.ClientState == GameClient.eClientState.Linkdead)
+				playerStatus |= 0x10;
+			if (living.DebuffCategory[(int)eProperty.SpellRange] != 0 || living.DebuffCategory[(int)eProperty.ArcheryRange] != 0)
+				playerStatus |= 0x40;
+			pak.WriteByte(playerStatus);
+			// 0x00 = Normal , 0x01 = Dead , 0x02 = Mezzed , 0x04 = Diseased ,
+			// 0x08 = Poisoned , 0x10 = Link Dead , 0x20 = In Another Region, 0x40 - NS
+
+			if (updateMap)
+				WriteGroupMemberMapUpdate(pak, living);
+
+			if (updateIcons)
+			{
+				pak.WriteByte((byte)(0x80 | living.GroupIndex));
+				lock (living.EffectList)
+				{
+					pak.WriteByte((byte)living.EffectList.OfType<GameSpellEffect>().Count());
+					foreach (var effect in living.EffectList)
+					{
+						if (effect is GameSpellEffect)
+						{
+							pak.WriteByte(0);
+							pak.WriteShort(effect.Icon);
+						}
+					}
+				}
+			}
+		}
 
 		/// <summary>
 		/// 1125d+ Market Explorer

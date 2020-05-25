@@ -696,8 +696,8 @@ namespace DOL.GS.PacketHandler
 		void SendQuestSubscribeCommand(GameNPC invitingNPC, ushort questid, string inviteMessage);
 		void SendQuestAbortCommand(GameNPC abortingNPC, ushort questid, string abortMessage);
 		void SendGroupWindowUpdate();
-		void SendGroupMemberUpdate(bool updateIcons, GameLiving living);
-		void SendGroupMembersUpdate(bool updateIcons);
+		void SendGroupMemberUpdate(bool updateIcons, bool updateMap, GameLiving living);
+		void SendGroupMembersUpdate(bool updateIcons, bool updateMap);
 		void SendInventoryItemsUpdate(ICollection<InventoryItem> itemsToUpdate);
 		void SendInventorySlotsUpdate(ICollection<int> slots);
 		void SendInventoryItemsUpdate(eInventoryWindowType windowType, ICollection<InventoryItem> itemsToUpdate);
