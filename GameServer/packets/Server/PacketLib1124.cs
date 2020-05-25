@@ -2530,6 +2530,7 @@ namespace DOL.GS.PacketHandler
 		{
 			// doesn't work in 1.124+
 			return;
+
 			using (GSUDPPacketOut pak = new GSUDPPacketOut(GetPacketCode(eServerPackets.PlayerPosition)))
 			{
 				int heading = 4096 + player.Heading;
