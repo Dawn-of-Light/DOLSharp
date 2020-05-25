@@ -50,11 +50,8 @@ namespace DOL.GS.PacketHandler
 			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.CryptKey)))
 			{
 				//Disable encryption (1110+ always encrypt)
-				var key = new byte[32];
-				for (int i = 0; i < key.Length; ++i)
-					key[i] = (byte)i;
-				pak.WriteIntLowEndian((uint)key.Length);
-				pak.Write(key, 0, key.Length);
+				pak.WriteIntLowEndian(0);
+				// pak.Write(key, 0, key.Length);
 
 				// From now on we expect RSA!
 				// _gameClient.PacketProcessor.Encoding.EncryptionState = eEncryptionState.PseudoRC4Encrypted; // disabled by the launcher
@@ -311,6 +308,45 @@ namespace DOL.GS.PacketHandler
 				pak.WritePascalStringIntLE(ip);
 				pak.WriteIntLowEndian(region.ServerPort);
 				pak.WriteIntLowEndian(region.ServerPort);
+				SendTCP(pak);
+			}
+		}
+
+		/// <summary>
+		/// This packet may have been updated anywhere from 1125b-1126a - not sure
+		/// </summary>
+		public override void SendUpdateWeaponAndArmorStats()
+		{
+			if (m_gameClient.Player == null)
+			{
+				return;
+			}
+
+			using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.VariousUpdate)))
+			{
+				pak.WriteByte(0x05); //subcode
+				pak.WriteByte(6); //number of entries
+				pak.WriteByte(0x00); //subtype
+				pak.WriteByte(0x00); //unk
+
+				// weapondamage
+				var wd = (int)(m_gameClient.Player.WeaponDamage(m_gameClient.Player.AttackWeapon) * 100.0);
+				pak.WriteByte((byte)(wd / 100));
+				pak.WriteByte(0x00);
+				pak.WriteByte((byte)(wd % 100));
+				pak.WriteByte(0x00);
+				// weaponskill
+				int ws = m_gameClient.Player.DisplayedWeaponSkill;
+				pak.WriteByte((byte)(ws >> 8));
+				pak.WriteByte(0x00);
+				pak.WriteByte((byte)(ws & 0xff));
+				pak.WriteByte(0x00);
+				// overall EAF
+				int eaf = m_gameClient.Player.EffectiveOverallAF;
+				pak.WriteByte((byte)(eaf >> 8));
+				pak.WriteByte(0x00);
+				pak.WriteByte((byte)(eaf & 0xff));
+				pak.WriteByte(0x00);
 				SendTCP(pak);
 			}
 		}

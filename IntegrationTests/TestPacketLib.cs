@@ -403,13 +403,13 @@ namespace DOL.Tests
 		{
 			if (SendGroupWindowUpdateMethod != null) SendGroupWindowUpdateMethod(this);
 		}
-		public Action<TestPacketLib, bool, GameLiving> SendGroupMemberUpdateMethod { get; set; }
-		public void SendGroupMemberUpdate(bool updateIcons, GameLiving living)
+		public Action<TestPacketLib, bool, bool, GameLiving> SendGroupMemberUpdateMethod { get; set; }
+		public void SendGroupMemberUpdate(bool updateIcons, bool updateMap, GameLiving living)
 		{
 			if (SendGroupMemberUpdateMethod != null) SendGroupMemberUpdateMethod(this, updateIcons, living);
 		}
-		public Action<TestPacketLib, bool> SendGroupMembersUpdateMethod { get; set; }
-		public void SendGroupMembersUpdate(bool updateIcons)
+		public Action<TestPacketLib, bool, bool> SendGroupMembersUpdateMethod { get; set; }
+		public void SendGroupMembersUpdate(bool updateIcons, bool updateMap)
 		{
 			if (SendGroupMembersUpdateMethod != null) SendGroupMembersUpdateMethod(this, updateIcons);
 		}

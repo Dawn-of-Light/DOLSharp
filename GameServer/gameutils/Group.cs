@@ -200,7 +200,7 @@ namespace DOL.GS
 			// update all icons for just joined player
 			var player = living as GamePlayer;
 			if (player != null)
-				player.Out.SendGroupMembersUpdate(true);
+				player.Out.SendGroupMembersUpdate(true, true);
 
 			SendMessageToGroupMembers(string.Format("{0} has joined the group.", living.Name), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 			GameEventMgr.Notify(GroupEvent.MemberJoined, this, new MemberJoinedEventArgs(living));
@@ -379,7 +379,7 @@ namespace DOL.GS
 			foreach (var player in GetPlayersInTheGroup())
 			{
 				if (updateOtherRegions || player.CurrentRegion == living.CurrentRegion)
-					player.Out.SendGroupMemberUpdate(updateIcons, living);
+					player.Out.SendGroupMemberUpdate(updateIcons, true, living);
 			}
 		}
 		
@@ -398,7 +398,7 @@ namespace DOL.GS
 			{
 				if (updateOtherRegions || living.CurrentRegion == player.CurrentRegion)
 				{
-					player.Out.SendGroupMemberUpdate(updateIcons, living);
+					player.Out.SendGroupMemberUpdate(updateIcons, true, living);
 				}
 			}
 		}
