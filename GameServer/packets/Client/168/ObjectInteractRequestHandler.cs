@@ -64,7 +64,7 @@ namespace DOL.GS.PacketHandler.Client.v168
 					return;
 
 				GameObject obj = region.GetObject(m_targetOid);
-				if (obj == null)
+				if (obj == null || !player.IsWithinRadius(obj, WorldMgr.OBJ_UPDATE_DISTANCE))
 					player.Out.SendObjectDelete(m_targetOid);
 				else
 					obj.Interact(player);
