@@ -39,6 +39,16 @@ namespace DOL.GS
 
 		public static void LoadTestDouble(Util testDouble) { soleInstance = testDouble; }
 
+		protected virtual double RandomDoubleImpl()
+		{
+			return RandomGen.NextDouble();
+		}
+
+        protected virtual int RandomImpl(int min, int max)
+        {
+            return RandomGen.Next(min, max + 1);
+        }
+
 		#region Random
 		/// <summary>
 		/// Holds the random number generator instance
@@ -185,7 +195,7 @@ namespace DOL.GS
 		/// <returns></returns>
 		public static int Random(int min, int max)
 		{
-			return RandomGen.Next(min, max + 1);
+            return soleInstance.RandomImpl(min, max);
 		}
 
 		/// <summary>
@@ -197,7 +207,7 @@ namespace DOL.GS
 		/// </returns>
 		public static double RandomDouble()
 		{
-			return RandomGen.NextDouble();
+			return soleInstance.RandomDoubleImpl();
 		}
 
 		/// <summary>
