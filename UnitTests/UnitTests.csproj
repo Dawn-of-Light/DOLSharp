@@ -41,6 +41,7 @@
     <Compile Include="UT_GameEffectList.cs" />
     <Compile Include="UT_GameNPC.cs" />
     <Compile Include="UT_GamePlayer.cs" />
+    <Compile Include="UT_HereticFocusSpells.cs" />
     <Compile Include="UT_SpellHandler.cs" />
     <Compile Include="UT_StatCalculator.cs" />
   </ItemGroup>

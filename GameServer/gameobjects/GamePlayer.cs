@@ -1078,7 +1078,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Reset and Restart Combat Timer
 		/// </summary>
-		protected void ResetInCombatTimer()
+		protected virtual void ResetInCombatTimer()
 		{
 			lock (m_CombatTimerLock)
 			{
