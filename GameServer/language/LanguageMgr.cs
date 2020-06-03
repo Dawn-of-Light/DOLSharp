@@ -64,12 +64,21 @@ namespace DOL.Language
         /// Holds all translations (object translations and system sentence translations).
         /// </summary>
         private static IDictionary<string, IDictionary<LanguageDataObject.eTranslationIdentifier, IList<LanguageDataObject>>> m_translations;
-        //                         lang                              identifier                            translations
 
         /// <summary>
         /// Give a way to change or relocate the lang files
         /// </summary>
-        private static string LangPath = Path.Combine(GameServer.Instance.Configuration.RootDirectory, "languages");
+        private static string LangPath { 
+            get
+            {
+                if (soleInstance.LangPathImpl == "")
+                {
+                    soleInstance.LangPathImpl = Path.Combine(GameServer.Instance.Configuration.RootDirectory, "languages");
+                }
+                return soleInstance.LangPathImpl;
+            }
+        }
+        protected string LangPathImpl = "";
         #endregion Variables
 
         #region Properties
@@ -95,9 +104,10 @@ namespace DOL.Language
             }
         }
 
+        [Obsolete("Unused and will be deleted.")]
         public static void SetLangPath(string path)
         {
-            LangPath = path;
+            soleInstance.LangPathImpl = path;
         }
 
         /// <summary>
