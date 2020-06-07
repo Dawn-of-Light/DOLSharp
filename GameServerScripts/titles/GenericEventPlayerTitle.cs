@@ -79,7 +79,7 @@ namespace GameServerScripts.Titles
 		
 		protected static string TryTranslate(string value, GamePlayer source)
 		{
-			return source.TryTranslateOrDefault(string.Format("!{0}!", value), value);
+			return LanguageMgr.TryTranslateOrDefault(source, string.Format("!{0}!", value), value);
 		}
 		
 		/// <summary>

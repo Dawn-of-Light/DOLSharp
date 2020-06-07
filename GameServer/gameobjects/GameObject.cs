@@ -1197,7 +1197,7 @@ namespace DOL.GS
 		/// </summary>
 		/// <param name="radiusToCheck">the radius to check</param>
 		/// <returns>An enumerator</returns>
-		public IEnumerable GetPlayersInRadius(ushort radiusToCheck)
+		public virtual IEnumerable GetPlayersInRadius(ushort radiusToCheck)
 		{
 			return GetPlayersInRadius(false, radiusToCheck, false, false);
 		}

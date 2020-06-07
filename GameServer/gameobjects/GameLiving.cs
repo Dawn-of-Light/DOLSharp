@@ -6538,7 +6538,7 @@ namespace DOL.GS
 				temp = new List<GameObject>(m_attackers);
 				m_attackers.Clear();
 			}
-			temp.OfType<GameLiving>().ForEach(o => o.EnemyKilled(this));
+			Util.ForEach(temp.OfType<GameLiving>(), o => o.EnemyKilled(this));
 			StopHealthRegeneration();
 			StopPowerRegeneration();
 			StopEnduranceRegeneration();

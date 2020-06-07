@@ -101,7 +101,7 @@ namespace DOL.GS
 				// Try Translate Area First
 				if (area != null)
 				{
-					var lng = client.GetTranslation(area) as DBLanguageArea;
+					var lng = LanguageMgr.GetTranslation(client, area) as DBLanguageArea;
 					
 					if (lng != null && !Util.IsEmpty(lng.ScreenDescription))
 						return lng.ScreenDescription;
@@ -114,7 +114,7 @@ namespace DOL.GS
 				// Try Translate Zone
 				if (zone != null)
 				{
-					var lng = client.GetTranslation(zone) as DBLanguageZone;
+					var lng = LanguageMgr.GetTranslation(client, zone) as DBLanguageZone;
 					if (lng != null)
 						return lng.ScreenDescription;
 					

@@ -30,8 +30,63 @@ using log4net;
 
 namespace DOL.Language
 {
-    public static class LanguageMgr
+    public class LanguageMgr
     {
+        private static LanguageMgr soleInstance = new LanguageMgr();
+
+        public static void LoadTestDouble(LanguageMgr testDouble) { soleInstance = testDouble; }
+
+        protected virtual bool TryGetTranslationImpl(out string translation, ref string language, string translationId, ref object[] args)
+        {
+            translation = "";
+
+            if (Util.IsEmpty(translationId))
+            {
+                translation = TRANSLATION_ID_EMPTY;
+                return false;
+            }
+
+            if (Util.IsEmpty(language) || !m_translations.ContainsKey(language))
+            {
+                language = DefaultLanguage;
+            }
+
+            LanguageDataObject result = GetLanguageDataObject(language, translationId, LanguageDataObject.eTranslationIdentifier.eSystem);
+            if (result == null)
+            {
+                translation = GetTranslationErrorText(language, translationId);
+                return false;
+            }
+            else
+            {
+                if (!Util.IsEmpty(((DBLanguageSystem)result).Text))
+                {
+                    translation = ((DBLanguageSystem)result).Text;
+                }
+                else
+                {
+                    translation = GetTranslationErrorText(language, translationId);
+                    return false;
+                }
+            }
+
+            if (args == null)
+            {
+                args = new object[0];
+            }
+
+            try
+            {
+                if (args.Length > 0)
+                    translation = string.Format(translation, args);
+            }
+            catch
+            {
+                log.ErrorFormat("[Language-Manager] Parameter number incorrect: {0} for language {1}, Arg count = {2}, sentence = '{3}', args[0] = '{4}'", translationId, language, args.Length, translation, args.Length > 0 ? args[0] : "null");
+            }
+            return true;
+        }
+
         #region Variables
         private const string TRANSLATION_ID_EMPTY = "Empty translation id.";
         private const string TRANSLATION_NULL = "NULL";
@@ -60,12 +115,21 @@ namespace DOL.Language
         /// Holds all translations (object translations and system sentence translations).
         /// </summary>
         private static IDictionary<string, IDictionary<LanguageDataObject.eTranslationIdentifier, IList<LanguageDataObject>>> m_translations;
-        //                         lang                              identifier                            translations
 
         /// <summary>
         /// Give a way to change or relocate the lang files
         /// </summary>
-        private static string LangPath = Path.Combine(GameServer.Instance.Configuration.RootDirectory, "languages");
+        private static string LangPath { 
+            get
+            {
+                if (soleInstance.LangPathImpl == "")
+                {
+                    soleInstance.LangPathImpl = Path.Combine(GameServer.Instance.Configuration.RootDirectory, "languages");
+                }
+                return soleInstance.LangPathImpl;
+            }
+        }
+        protected string LangPathImpl = "";
         #endregion Variables
 
         #region Properties
@@ -91,9 +155,10 @@ namespace DOL.Language
             }
         }
 
+        [Obsolete("Unused and will be deleted.")]
         public static void SetLangPath(string path)
         {
-            LangPath = path;
+            soleInstance.LangPathImpl = path;
         }
 
         /// <summary>
@@ -288,10 +353,10 @@ namespace DOL.Language
                 log.Info("[Language-Manager] Loading object translations...");
 
             IList<LanguageDataObject> lngObjs = new List<LanguageDataObject>();
-            lngObjs.AddRange((IList<LanguageDataObject>)GameServer.Database.SelectAllObjects<DBLanguageArea>());
-            lngObjs.AddRange((IList<LanguageDataObject>)GameServer.Database.SelectAllObjects<DBLanguageGameObject>());
-            lngObjs.AddRange((IList<LanguageDataObject>)GameServer.Database.SelectAllObjects<DBLanguageNPC>());
-            lngObjs.AddRange((IList<LanguageDataObject>)GameServer.Database.SelectAllObjects<DBLanguageZone>());
+			Util.AddRange(lngObjs, (IList<LanguageDataObject>)GameServer.Database.SelectAllObjects<DBLanguageArea>());
+			Util.AddRange(lngObjs, (IList<LanguageDataObject>)GameServer.Database.SelectAllObjects<DBLanguageGameObject>());
+			Util.AddRange(lngObjs, (IList<LanguageDataObject>)GameServer.Database.SelectAllObjects<DBLanguageNPC>());
+			Util.AddRange(lngObjs, (IList<LanguageDataObject>)GameServer.Database.SelectAllObjects<DBLanguageZone>());
 
             foreach (LanguageDataObject lngObj in lngObjs)
                 RegisterLanguageDataObject(lngObj);
@@ -440,16 +505,16 @@ namespace DOL.Language
         #region GetTranslation / TryGetTranslation
 
         #region GetTranslation
-        public static LanguageDataObject GetTranslation(this GameClient client, ITranslatableObject obj)
+        public static LanguageDataObject GetTranslation(GameClient client, ITranslatableObject obj)
         {
             LanguageDataObject translation;
 			TryGetTranslation(out translation, client, obj);
             return translation;
         }
         
-        public static LanguageDataObject GetTranslation(this GamePlayer player, ITranslatableObject obj)
+        public static LanguageDataObject GetTranslation(GamePlayer player, ITranslatableObject obj)
         {
-        	return player.Client.GetTranslation(obj);
+        	return GetTranslation(player.Client, obj);
         }
 
         public static LanguageDataObject GetTranslation(string language, ITranslatableObject obj)
@@ -565,60 +630,14 @@ namespace DOL.Language
 
         public static bool TryGetTranslation(out string translation, string language, string translationId, params object[] args)
         {
-			translation = "";
-
-            if (Util.IsEmpty(translationId))
-            {
-                translation = TRANSLATION_ID_EMPTY;
-                return false;
-            }
-
-			if (Util.IsEmpty(language) || !m_translations.ContainsKey(language))
-			{
-				language = DefaultLanguage;
-			}
-
-            LanguageDataObject result = GetLanguageDataObject(language, translationId, LanguageDataObject.eTranslationIdentifier.eSystem);
-            if (result == null)
-            {
-                translation = GetTranslationErrorText(language, translationId);
-                return false;
-            }
-            else
-            {
-				if (!Util.IsEmpty(((DBLanguageSystem)result).Text))
-				{
-					translation = ((DBLanguageSystem)result).Text;
-				}
-				else
-				{
-					translation = GetTranslationErrorText(language, translationId);
-					return false;
-				}
-            }
-
-			if (args == null)
-			{
-				args = new object[0];
-			}
-
-            try
-            {
-                if (args.Length > 0)
-                    translation = string.Format(translation, args);
-            }
-            catch
-            {
-                log.ErrorFormat("[Language-Manager] Parameter number incorrect: {0} for language {1}, Arg count = {2}, sentence = '{3}', args[0] = '{4}'", translationId, language, args.Length, translation, args.Length > 0 ? args[0] : "null");
-            }
-            return true;
+            return soleInstance.TryGetTranslationImpl(out translation, ref language, translationId, ref args);
         }
         #endregion TryGetTranslation
 
         #endregion GetTranslation / TryGetTranslation
-        
+
         #region utils
-        
+
         /// <summary>
         /// Try Translating some Sentence into Player target Language or Default to given String.
         /// </summary>
@@ -627,7 +646,7 @@ namespace DOL.Language
         /// <param name="translationId">Translation Sentence ID</param>
         /// <param name="args">Translation Sentence Params</param>
         /// <returns>Translated Sentence or Default string.</returns>
-        public static string TryTranslateOrDefault(this GamePlayer player, string missingDefault, string translationId, params object[] args)
+        public static string TryTranslateOrDefault(GamePlayer player, string missingDefault, string translationId, params object[] args)
         {
         	string missing = missingDefault;
         	

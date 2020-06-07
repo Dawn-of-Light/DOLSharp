@@ -96,7 +96,7 @@ namespace DOL.GS
 			{
 				string name = m_serializedNames;
 				var nameByLevel = new Dictionary<int, string>();
-				foreach (string levelNamePair in name.Trim().SplitCSV())
+				foreach (string levelNamePair in Util.SplitCSV(name.Trim()))
 				{
 					if (levelNamePair.Trim().Length <= 0)
 						continue;

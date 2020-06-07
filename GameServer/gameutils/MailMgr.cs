@@ -170,7 +170,7 @@ namespace DOL.Mail
 			{
 				MailMessage mail = new MailMessage();
 
-				foreach (string str in to.SplitCSV())
+				foreach (string str in Util.SplitCSV(to))
 					mail.To.Add(str);
 				mail.Subject = subject;
 
@@ -282,7 +282,7 @@ namespace DOL.Mail
 					// Build the mail.
 					MailMessage mail = new MailMessage();
 
-					foreach (string str in to.SplitCSV())
+					foreach (string str in Util.SplitCSV(to))
 						if (!String.IsNullOrEmpty(str.Trim())) mail.To.Add(str);
 					mail.Subject = "[ Logs ] " + DateTime.Now.ToString();
 					mail.From = new MailAddress(m_emailAddress, GameServer.Instance.Configuration.ServerName);

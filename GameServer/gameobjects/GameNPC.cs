@@ -2309,7 +2309,7 @@ namespace DOL.GS
 				byte choosenLevel = 1;
 				if (!Util.IsEmpty(template.Level))
 				{
-					var split = template.Level.SplitCSV(true);
+					var split = Util.SplitCSV(template.Level, true);
 					byte.TryParse(split[Util.Random(0, split.Count - 1)], out choosenLevel);
 				}
 				this.Level = choosenLevel; // Also calls AutosetStats()
@@ -2342,7 +2342,7 @@ namespace DOL.GS
 			// Grav: this.Model/Size/Level accessors are triggering SendUpdate()
 			// so i must use them, and not directly use private variables
 			ushort choosenModel = 1;
-			var splitModel = template.Model.SplitCSV(true);
+			var splitModel = Util.SplitCSV(template.Model, true);
 			ushort.TryParse(splitModel[Util.Random(0, splitModel.Count - 1)], out choosenModel);
 			this.Model = choosenModel;
 
@@ -2361,7 +2361,7 @@ namespace DOL.GS
 			byte choosenSize = 50;
 			if (!Util.IsEmpty(template.Size))
 			{
-				var split = template.Size.SplitCSV(true);
+				var split = Util.SplitCSV(template.Size, true);
 				byte.TryParse(split[Util.Random(0, split.Count - 1)], out choosenSize);
 			}
 			this.Size = choosenSize;
@@ -2384,7 +2384,7 @@ namespace DOL.GS
 				GameNpcInventoryTemplate equip = new GameNpcInventoryTemplate();
 				//First let's try to reach the npcequipment table and load that!
 				//We use a ';' split to allow npctemplates to support more than one equipmentIDs
-				var equipIDs = template.Inventory.SplitCSV();
+				var equipIDs = Util.SplitCSV(template.Inventory);
 				if (!template.Inventory.Contains(":"))
 				{
 
