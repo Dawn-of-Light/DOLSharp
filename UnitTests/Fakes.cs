@@ -1,6 +1,7 @@
 ﻿using DOL.AI;
 using DOL.Database;
 using DOL.GS;
+using DOL.GS.PacketHandler;
 
 namespace DOL.UnitTests.Gameserver
 {
@@ -15,6 +16,7 @@ namespace DOL.UnitTests.Gameserver
         public int modifiedSpellDamage = 0;
         public int baseStat;
         private int totalConLostOnDeath;
+        public int LastDamageDealt { get; private set; } = -1;
 
         public override ICharacterClass CharacterClass { get { return characterClass; } }
 
@@ -30,6 +32,8 @@ namespace DOL.UnitTests.Gameserver
         public override void LoadFromDatabase(DataObject obj)
         {
         }
+
+        public override IPacketLib Out => new FakePacketLib();
 
         public override int GetModifiedSpecLevel(string keyName)
         {
@@ -61,6 +65,12 @@ namespace DOL.UnitTests.Gameserver
             return baseStat;
         }
 
+        public override void DealDamage(AttackData ad)
+        {
+            base.DealDamage(ad);
+            LastDamageDealt = ad.Damage;
+        }
+
         public override int TotalConstitutionLostAtDeath
         {
             get { return totalConLostOnDeath; }
@@ -75,6 +85,18 @@ namespace DOL.UnitTests.Gameserver
         }
 
         protected override void ResetInCombatTimer() { }
+
+        public override bool TargetInView { get; set; } = true;
+    }
+
+    public class FakePacketLib : PacketLib1124
+    {
+        public FakePacketLib() : base(null) { }
+
+        public override void SendCheckLOS(GameObject Checker, GameObject Target, CheckLOSResponse callback)
+        {
+            //nothing
+        }
     }
 
     public class FakeNPC : GameNPC

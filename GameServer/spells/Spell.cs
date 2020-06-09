@@ -195,12 +195,12 @@ namespace DOL.GS
             set { m_duration = value; }
 		}
 
-		public int Frequency
+		public virtual int Frequency
 		{
 			get { return m_frequency; }
 		}
 
-		public int Pulse
+		public virtual int Pulse
 		{
 			get { return m_pulse; }
 		}
@@ -291,7 +291,7 @@ namespace DOL.GS
 			get { return m_uninterruptible; }
 		}
 		
-		public bool IsFocus
+		public virtual bool IsFocus
 		{
 			get { return m_isfocus; }
 		}

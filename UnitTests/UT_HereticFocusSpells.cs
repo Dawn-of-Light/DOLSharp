@@ -2,7 +2,7 @@
 using DOL.GS.Spells;
 using DOL.GS;
 using DOL.Database;
-using System;
+using DOL.GS.ServerRules;
 
 namespace DOL.UnitTests.Gameserver
 {
@@ -16,28 +16,11 @@ namespace DOL.UnitTests.Gameserver
             GS.ServerProperties.Properties.DISABLED_REGIONS = "";
             GS.ServerProperties.Properties.DISABLED_EXPANSIONS = "";
             GS.ServerProperties.Properties.PVE_SPELL_DAMAGE = 1;
+            GameServer.LoadTestDouble(new FakeServer());
         }
 
         [Test]
-        public void OnDirectEffect_100InitialDamage_OneSuccessfulTick_Does100Damage()
-        {
-            double initialDamage = 100;
-            var spell = createHereticFocusDamageSpell(initialDamage, 0);
-            var source = createIdealL50Player();
-            var target = Create.FakeNPC();
-            var spellLine = createGenericSpellLine();
-            var damageFocus = new HereticDoTLostOnPulse(source, spell, spellLine);
-            var effectiveness = 1;
-
-            damageFocus.FinishSpellCast(target);
-            Util.LoadTestDouble(new ChanceAlwaysHundredPercent());
-            damageFocus.OnDirectEffect(target, effectiveness);
-
-            Assert.AreEqual(100, source.lastDealtDamage);
-        }
-
-        [Test]
-        public void OnDirectEffect_100InitialDamageAnd25PercentGrowth_ResistTickTick_LastTickDoes150Damage()
+        public void OnDirectEffect_100InitialDamage_NoTick_FirstTickDoes100Damage()
         {
             double initialDamage = 100;
             int growthPercent = 25;
@@ -45,21 +28,19 @@ namespace DOL.UnitTests.Gameserver
             var source = createIdealL50Player();
             var target = Create.FakeNPC();
             var spellLine = createGenericSpellLine();
-            var damageFocus = new HereticDoTLostOnPulse(source, spell, spellLine);
+            var damageFocus = new RampingDamageFocus(source, spell, spellLine);
             var effectiveness = 1;
 
-            damageFocus.FinishSpellCast(target);
-            Util.LoadTestDouble(new ChanceAlwaysZero()); //always resists
-            damageFocus.OnDirectEffect(target, effectiveness);
             Util.LoadTestDouble(new ChanceAlwaysHundredPercent());
             damageFocus.OnDirectEffect(target, effectiveness);
-            damageFocus.OnDirectEffect(target, effectiveness);
 
-            Assert.AreEqual(150, source.lastDealtDamage);
+            var actual = source.LastDamageDealt;
+            var expected = 100;
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void OnDirectEffect_100InitialDamageAnd25PercentGrowth_TickResistTick_LastTickDoes150Damage()
+        public void OnDirectEffect_100InitialDamageAnd25PercentGrowth_TickTwice_NextTickDoes150Damage()
         {
             double initialDamage = 100;
             int growthPercent = 25;
@@ -67,43 +48,21 @@ namespace DOL.UnitTests.Gameserver
             var source = createIdealL50Player();
             var target = Create.FakeNPC();
             var spellLine = createGenericSpellLine();
-            var damageFocus = new HereticDoTLostOnPulse(source, spell, spellLine);
+            var damageFocus = new RampingDamageFocus(source, spell, spellLine);
             var effectiveness = 1;
 
-            damageFocus.FinishSpellCast(target);
             Util.LoadTestDouble(new ChanceAlwaysHundredPercent());
-            damageFocus.OnDirectEffect(target, effectiveness);
-            Util.LoadTestDouble(new ChanceAlwaysZero());
-            damageFocus.OnDirectEffect(target, effectiveness);
-            Util.LoadTestDouble(new ChanceAlwaysHundredPercent());
+            damageFocus.OnSpellPulse(null);
+            damageFocus.OnSpellPulse(null);
             damageFocus.OnDirectEffect(target, effectiveness);
 
-            Assert.AreEqual(150, source.lastDealtDamage);
+            var actual = source.LastDamageDealt;
+            var expected = 150;
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void OnDirectEffect_100InitialDamageAnd25PercentGrowth_TickThreeTimes_LastTickDoes150Damage()
-        {
-            double initialDamage = 100;
-            int growthPercent = 25;
-            var spell = createHereticFocusDamageSpell(initialDamage, growthPercent);
-            var source = createIdealL50Player();
-            var target = Create.FakeNPC();
-            var spellLine = createGenericSpellLine();
-            var damageFocus = new HereticDoTLostOnPulse(source, spell, spellLine);
-            var effectiveness = 1;
-
-            damageFocus.FinishSpellCast(target);
-            Util.LoadTestDouble(new ChanceAlwaysHundredPercent());
-            damageFocus.OnDirectEffect(target, effectiveness);
-            damageFocus.OnDirectEffect(target, effectiveness);
-            damageFocus.OnDirectEffect(target, effectiveness);
-
-            Assert.AreEqual(150, source.lastDealtDamage);
-        }
-
-        [Test]
-        public void OnDirectEffect_100InitialDamageAnd50PercentGrowth_TickTwice_LastTickDoes150Damage()
+        public void OnDirectEffect_100InitialDamageAnd50PercentGrowth_OneTick_NextTickDoes150Damage()
         {
             double initialDamage = 100;
             int growthPercent = 50;
@@ -111,19 +70,20 @@ namespace DOL.UnitTests.Gameserver
             var source = createIdealL50Player();
             var target = Create.FakeNPC();
             var spellLine = createGenericSpellLine();
-            var damageFocus = new HereticDoTLostOnPulse(source, spell, spellLine);
+            var damageFocus = new RampingDamageFocus(source, spell, spellLine);
             var effectiveness = 1;
 
-            damageFocus.FinishSpellCast(target);
             Util.LoadTestDouble(new ChanceAlwaysHundredPercent());
-            damageFocus.OnDirectEffect(target, effectiveness);
+            damageFocus.OnSpellPulse(null);
             damageFocus.OnDirectEffect(target, effectiveness);
 
-            Assert.AreEqual(150, source.lastDealtDamage);
+            var actual = source.LastDamageDealt;
+            var expected = 150;
+            Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void OnDirectEffect_100InitialDamageAnd50PercentGrowthAnd70PercentGrowthCap_TickThreeTimes_LastTickDoes170Damage()
+        public void OnDirectEffect_100InitialDamageAnd50PercentGrowthAnd70PercentGrowthCap_TickTwice_NextTickDoes170Damage()
         {
             double initialDamage = 100;
             int growthPercent = 50;
@@ -132,16 +92,17 @@ namespace DOL.UnitTests.Gameserver
             var source = createIdealL50Player();
             var target = Create.FakeNPC();
             var spellLine = createGenericSpellLine();
-            var damageFocus = new HereticDoTLostOnPulse(source, spell, spellLine);
+            var damageFocus = new RampingDamageFocus(source, spell, spellLine);
             var effectiveness = 1;
 
-            damageFocus.FinishSpellCast(target);
             Util.LoadTestDouble(new ChanceAlwaysHundredPercent());
-            damageFocus.OnDirectEffect(target, effectiveness);
-            damageFocus.OnDirectEffect(target, effectiveness);
+            damageFocus.OnSpellPulse(null);
+            damageFocus.OnSpellPulse(null);
             damageFocus.OnDirectEffect(target, effectiveness);
 
-            Assert.AreEqual(170, source.lastDealtDamage);
+            var actual = source.LastDamageDealt;
+            var expected = 170;
+            Assert.AreEqual(expected, actual);
         }
 
         private Spell createHereticFocusDamageSpell(double initialDamage, int growthPercent)
@@ -155,6 +116,7 @@ namespace DOL.UnitTests.Gameserver
             var dbspell = new DBSpell();
             dbspell.LifeDrainReturn = growthPercent;
             dbspell.AmnesiaChance = growthCapPercent;
+            dbspell.Target = "Enemy";
             var spell = new Spell(dbspell, 1);
             spell.Damage = initialDamage;
             spell.Level = 50;
@@ -166,29 +128,14 @@ namespace DOL.UnitTests.Gameserver
             return new SpellLine("keyname", "lineName", "specName", true);
         }
 
-        private MockPlayer createIdealL50Player()
+        private FakePlayer createIdealL50Player()
         {
-            var player = new MockPlayer();
+            var player = new FakePlayer();
+            player.characterClass = new DefaultCharacterClass();
             player.Level = 50;
             player.modifiedEffectiveLevel = 50;
             player.modifiedIntelligence = 60;
             return player;
-        }
-
-        private class MockPlayer : FakePlayer
-        {
-            public int lastDealtDamage = -1;
-
-            public MockPlayer()
-            {
-                this.characterClass = new DefaultCharacterClass();
-            }
-
-            public override void DealDamage(AttackData ad)
-            {
-                lastDealtDamage = ad.Damage;
-            }
-
         }
 
         private class ChanceAlwaysHundredPercent : Util
@@ -199,11 +146,17 @@ namespace DOL.UnitTests.Gameserver
             }
         }
 
-        private class ChanceAlwaysZero : Util
+        private class FakeServer : GameServer
         {
-            protected override int RandomImpl(int min, int max)
+            protected override IServerRules ServerRulesImpl => new FakeServerRules();
+            protected override void CheckAndInitDB() { }
+
+            private class FakeServerRules : NormalServerRules
             {
-                return -1;
+                public override bool IsAllowedToAttack(GameLiving attacker, GameLiving defender, bool quiet)
+                {
+                    return true;
+                }
             }
         }
 	}

@@ -63,6 +63,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DOLBase\DOLBase.csproj">
+      <Project>{A4A0FB22-124C-45CA-A653-2887DE0CC3E0}</Project>
+      <Name>DOLBase</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DOLDatabase\DOLDatabase.csproj">
       <Project>{43bfc675-13b7-4aa8-97f6-6109948849cc}</Project>
       <Name>DOLDatabase</Name>

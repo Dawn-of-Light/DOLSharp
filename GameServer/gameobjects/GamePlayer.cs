@@ -178,7 +178,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Returns the PacketSender for this player
 		/// </summary>
-		public IPacketLib Out
+		public virtual IPacketLib Out
 		{
 			get { return Client.Out; }
 		}
