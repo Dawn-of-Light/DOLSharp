@@ -89,10 +89,10 @@ namespace DOL.GS.PlayerTitles
 			{
 				// try get player ML Number
 				int mlline = GetPlayerMLLine(player);
-				return source.TryTranslateOrDefault(string.Format("!ML Title {0}!", mlline), string.Format("Titles.ML.Line{0}", mlline));
+				return LanguageMgr.TryTranslateOrDefault(source, string.Format("!ML Title {0}!", mlline), string.Format("Titles.ML.Line{0}", mlline));
 			}
 			
-			return source.TryTranslateOrDefault("!None!", "DetailDisplayHandler.HandlePacket.None");
+			return LanguageMgr.TryTranslateOrDefault(source, "!None!", "DetailDisplayHandler.HandlePacket.None");
 		}
 		
 		/// <summary>

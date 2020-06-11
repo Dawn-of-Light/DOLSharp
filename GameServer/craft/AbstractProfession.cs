@@ -56,10 +56,10 @@ namespace DOL.GS
 
         public String GetTitle(GamePlayer player, int skillLevel)
         {
-        	string profession = player.TryTranslateOrDefault("!Profession!", Profession);
+        	string profession = LanguageMgr.TryTranslateOrDefault(player, "!Profession!", Profession);
             try
             {
-            	return player.TryTranslateOrDefault("!None {0}!", GetTitleFormat(skillLevel), profession);
+            	return LanguageMgr.TryTranslateOrDefault(player, "!None {0}!", GetTitleFormat(skillLevel), profession);
             }
             catch
             {

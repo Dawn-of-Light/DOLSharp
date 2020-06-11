@@ -207,7 +207,7 @@ namespace DOL.GS
 			if (artifactID != null)
 				lock (m_artifacts)
 					if (m_artifacts.ContainsKey(artifactID))
-						return m_artifacts[artifactID].ScholarID.SplitCSV().ToArray();
+						return Util.SplitCSV(m_artifacts[artifactID].ScholarID).ToArray();
 
 			return null;
 		}
@@ -479,7 +479,7 @@ namespace DOL.GS
 					}
 					else
 					{
-						foreach (String classID in  itemTemplate.AllowedClasses.SplitCSV(true))
+						foreach (String classID in Util.SplitCSV(itemTemplate.AllowedClasses, true))
 						{
 							try
 							{

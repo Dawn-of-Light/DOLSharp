@@ -787,7 +787,7 @@ namespace DOL.GS.Quests
 			lock(m_customProperties)
 			{
 				m_customProperties.Clear();
-				foreach(string property in m_dbQuest.CustomPropertiesString.SplitCSV())
+				foreach(string property in Util.SplitCSV(m_dbQuest.CustomPropertiesString))
 				if(property.Length>0)
 				{
 					string[] values = property.Split('=');

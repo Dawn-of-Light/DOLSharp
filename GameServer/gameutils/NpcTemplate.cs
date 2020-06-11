@@ -163,7 +163,7 @@ namespace DOL.GS
 
 			if (data.Abilities != null && data.Abilities.Length > 0)
 			{
-				foreach (string splitab in data.Abilities.SplitCSV())
+				foreach (string splitab in Util.SplitCSV(data.Abilities))
 				{
 					string[] ab = splitab.Split('|');
 					if (splitab.Trim().Length == 0) continue;

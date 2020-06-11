@@ -154,7 +154,7 @@ namespace DOL.GS.Effects
 			}
 			
 			BeginChanges();
-			fx.ForEach(effect => effect.Cancel(false));
+			Util.ForEach(fx, effect => effect.Cancel(false));
 			CommitChanges();
 		}
 

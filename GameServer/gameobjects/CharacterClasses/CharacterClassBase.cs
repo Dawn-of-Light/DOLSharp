@@ -173,7 +173,7 @@ namespace DOL.GS
 		{
 			get
 			{
-				return Player.TryTranslateOrDefault(m_profession, m_profession);
+				return LanguageMgr.TryTranslateOrDefault(Player, m_profession, m_profession);
 			}
 		}
 
@@ -235,10 +235,10 @@ namespace DOL.GS
 			// Clamp level in 5 by 5 steps - 50 is the max available translation for now
 			int clamplevel = Math.Min(50, (level / 5) * 5);
 			
-			string none = player.TryTranslateOrDefault("!None!", "PlayerClass.GetTitle.none");
+			string none = LanguageMgr.TryTranslateOrDefault(player, "!None!", "PlayerClass.GetTitle.none");
 			
 			if (clamplevel > 0)
-				return player.TryTranslateOrDefault(string.Format("!{0}!", m_name), string.Format("PlayerClass.{0}.GetTitle.{1}", m_name, clamplevel));
+				return LanguageMgr.TryTranslateOrDefault(player, string.Format("!{0}!", m_name), string.Format("PlayerClass.{0}.GetTitle.{1}", m_name, clamplevel));
 
 			return none;
 		}

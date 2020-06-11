@@ -517,7 +517,7 @@ namespace DOL.GS
 
             output.Add(LanguageMgr.GetTranslation(client.Account.Language, "DetailDisplayHandler.WriteUsableClasses.UsableBy"));
 
-			foreach (string allowed in AllowedClasses.SplitCSV(true))
+			foreach (string allowed in Util.SplitCSV(AllowedClasses, true))
 			{
 				int classID = -1;
 				if (int.TryParse(allowed, out classID))
@@ -619,7 +619,7 @@ namespace DOL.GS
 							ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, procSpell, line);
 							if (spellHandler != null)
 							{
-								output.AddRange(spellHandler.DelveInfo);
+								Util.AddRange(output, spellHandler.DelveInfo);
 								output.Add(" ");
 							}
 							else
@@ -666,7 +666,7 @@ namespace DOL.GS
 							ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, procSpell, line);
 							if (spellHandler != null)
 							{
-								output.AddRange(spellHandler.DelveInfo);
+								Util.AddRange(output, spellHandler.DelveInfo);
 								output.Add(" ");
 							}
 							else
@@ -710,7 +710,7 @@ namespace DOL.GS
 									output.Add(" ");
 								}
 
-								output.AddRange(spellHandler.DelveInfo);
+								Util.AddRange(output, spellHandler.DelveInfo);
 								output.Add(" ");
                                 output.Add("- This spell is cast when the item is used.");
 							}
@@ -749,7 +749,7 @@ namespace DOL.GS
 									output.Add(" ");
 								}
 
-								output.AddRange(spellHandler.DelveInfo);
+								Util.AddRange(output, spellHandler.DelveInfo);
 								output.Add(" ");
                                 output.Add("- This spell is cast when the item is used.");
 							}
@@ -792,7 +792,7 @@ namespace DOL.GS
 									ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, poisonLine);
 									if (spellHandler != null)
 									{
-										output.AddRange(spellHandler.DelveInfo);
+										Util.AddRange(output, spellHandler.DelveInfo);
 										output.Add(" ");
 									}
 									else
@@ -833,7 +833,7 @@ namespace DOL.GS
 								ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, chargeEffectsLine);
 								if (spellHandler != null)
 								{
-									output.AddRange(spellHandler.DelveInfo);
+									Util.AddRange(output, spellHandler.DelveInfo);
 									output.Add(" ");
 								}
 								else
@@ -957,7 +957,7 @@ namespace DOL.GS
 							ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spl, poisonLine);
 							if (spellHandler != null)
 							{
-								list.AddRange(spellHandler.DelveInfo);
+								Util.AddRange(list, spellHandler.DelveInfo);
 							}
 							else
 							{

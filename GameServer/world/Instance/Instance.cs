@@ -129,7 +129,7 @@ namespace DOL.GS
 				//By default, we ignore npctemplate if its set to 0.
 				if ((GameNPC)obj != null && !Util.IsEmpty(entry.NPCTemplate, true))
 				{
-					var listTemplate = entry.NPCTemplate.SplitCSV(true);
+					var listTemplate = Util.SplitCSV(entry.NPCTemplate, true);
 					int template = 0;
 					
 					if (int.TryParse(listTemplate[Util.Random(listTemplate.Count-1)], out template) && template > 0)

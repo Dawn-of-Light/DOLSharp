@@ -445,7 +445,7 @@ namespace DOL.GS
 				if (disabled_classes == null)
 				{
 					// creation of disabled_classes list.
-					disabled_classes = ServerProperties.Properties.DISABLED_CLASSES.SplitCSV().ToList();
+					disabled_classes = Util.SplitCSV(ServerProperties.Properties.DISABLED_CLASSES).ToList();
 				}
 
 				if (disabled_classes.Contains(TrainedClass.ToString()))
