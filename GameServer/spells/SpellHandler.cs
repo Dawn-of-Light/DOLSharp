@@ -446,7 +446,13 @@ namespace DOL.GS.Spells
 			if (Spell.Pulse != 0 && CancelPulsingSpell(Caster, Spell.SpellType))
 			{
 				if (Spell.InstrumentRequirement == 0)
+				{
+					if (Spell.IsFocus)
+					{
+						FocusSpellAction(null, Caster, null);
+					}
 					MessageToCaster("You cancel your effect.", eChatType.CT_Spell);
+				}
 				else
 					MessageToCaster("You stop playing your song.", eChatType.CT_Spell);
 			}
@@ -3154,10 +3160,8 @@ namespace DOL.GS.Spells
 			GameEventMgr.RemoveHandler(currentEffect.Owner, GameLivingEvent.Dying, new DOLEventHandler(FocusSpellAction));
 			Caster.TempProperties.removeProperty(FOCUS_SPELL);
 
-			if (currentEffect.Spell.Pulse != 0)
-				CancelPulsingSpell(Caster, currentEffect.Spell.SpellType);
-			else
-				currentEffect.Cancel(false);
+			CancelPulsingSpell(Caster, currentEffect.Spell.SpellType);
+			currentEffect.Cancel(false);
 
 			MessageToCaster(String.Format("You lose your focus on your {0} spell.", currentEffect.Spell.Name), eChatType.CT_SpellExpires);
 
