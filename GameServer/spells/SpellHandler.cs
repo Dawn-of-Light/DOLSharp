@@ -2664,8 +2664,12 @@ namespace DOL.GS.Spells
 				m_lastAttackData = ad;
 
 				// Treat non-damaging effects as attacks to trigger an immediate response and BAF
-				if (target is GameNPC npc)
-					npc.OnAttackedByEnemy(ad);
+				if (ad.Damage == 0 && ad.Target is GameNPC)
+				{
+					IOldAggressiveBrain aggroBrain = ((GameNPC)ad.Target).Brain as IOldAggressiveBrain;
+					if (aggroBrain != null)
+						aggroBrain.AddToAggroList(Caster, 1);
+				}
 			}
 		}
 
