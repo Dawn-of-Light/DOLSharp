@@ -58,7 +58,8 @@ namespace DOL.GS
 			//	trains, we have to re-scale spells for subpets from that spec.
 			if (DOL.GS.ServerProperties.Properties.PET_SCALE_SPELL_MAX_LEVEL > 0
 				&& DOL.GS.ServerProperties.Properties.PET_CAP_BD_MINION_SPELL_SCALING_BY_SPEC
-				&& player.ControlledBrain != null && player.ControlledBrain.Body is GamePet pet)
+				&& player.ControlledBrain != null && player.ControlledBrain.Body is GamePet pet
+				&& pet.ControlledNpcList != null)
 					foreach (ABrain subBrain in pet.ControlledNpcList)
 						if (subBrain != null && subBrain.Body is BDSubPet subPet && subPet.PetSpecLine == skill.KeyName)
 							subPet.SortSpells();
