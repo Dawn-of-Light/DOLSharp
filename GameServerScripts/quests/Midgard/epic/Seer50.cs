@@ -103,7 +103,15 @@ namespace DOL.GS.Quests.Midgard
 
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Inaksha", eRealm.Midgard);
 
-			if (npcs.Length == 0)
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 100 && npc.X == 805929 && npc.Y == 702449)
+					{
+						Inaksha = npc;
+						break;
+					}
+
+			if (Inaksha == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Inaksha , creating it ...");
@@ -124,15 +132,20 @@ namespace DOL.GS.Quests.Midgard
 				{
 					Inaksha.SaveIntoDatabase();
 				}
-
 			}
-			else
-				Inaksha = npcs[0];
 			// end npc
 
 			npcs = WorldMgr.GetNPCsByName("Loken", eRealm.None);
 
-			if (npcs.Length == 0)
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 100 && npc.X == 636784 && npc.Y == 762433)
+					{
+						Loken = npc;
+						break;
+					}
+
+			if (Loken == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Loken , creating it ...");
@@ -153,15 +166,20 @@ namespace DOL.GS.Quests.Midgard
 				{
 					Loken.SaveIntoDatabase();
 				}
-
 			}
-			else
-				Loken = npcs[0];
 			// end npc
 
 			npcs = WorldMgr.GetNPCsByName("Miri", eRealm.Midgard);
 
-			if (npcs.Length == 0)
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 101 && npc.X == 30641 && npc.Y == 32093)
+					{
+						Miri = npc;
+						break;
+					}
+
+			if (Miri == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Miri , creating it ...");
@@ -182,10 +200,7 @@ namespace DOL.GS.Quests.Midgard
 				{
 					Miri.SaveIntoDatabase();
 				}
-
 			}
-			else
-				Miri = npcs[0];
 			// end npc
 
 			#endregion
