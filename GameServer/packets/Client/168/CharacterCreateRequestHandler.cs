@@ -813,9 +813,11 @@ namespace DOL.GS.PacketHandler.Client.v168
 
 			public CreationCharacterData1124(GameClient client, GSPacketIn packet)
 			{
+				Region = 0;
+
 				CharacterSlot = packet.ReadByte();
 				CharName = packet.ReadIntPascalStringLowEndian();
-				packet.Skip(4); // 0x18 0x00 0x00 0x00
+				packet.Skip(4); // 0x18 0x00 0x00 0x00 -- array size
 				CustomMode = packet.ReadByte();
 				EyeSize = packet.ReadByte();
 				LipSize = packet.ReadByte();
@@ -830,15 +832,25 @@ namespace DOL.GS.PacketHandler.Client.v168
 				CustomizeType = packet.ReadByte(); // 1 = face 2 = attributes 3 = both
 				packet.Skip(2); // last two bytes in the supposed int
 								// the following are now low endian int pascal strings
-				packet.Skip(5); //Location string
-				packet.Skip(5); //Skip class name
-				packet.Skip(5); //Skip race name
-				packet.Skip(1); // not sure what this is? previous pak says level, but its unused anyway
+				// end array 0x18
+
+				packet.ReadIntPascalStringLowEndian(); //Location string
+				packet.ReadIntPascalStringLowEndian(); //Skip class name
+				packet.ReadIntPascalStringLowEndian(); //Skip race name
+
+				if (client.Version < GameClient.eClientVersion.Version1126)
+					packet.Skip(1);
+
 				Class = packet.ReadByte();
 				Realm = packet.ReadByte();
 				if (Realm > 0) // put inside this, as when a char is deleted, there is no realm sent TODO redo how account slot is stored in DB perhaps
 				{
 					CharacterSlot -= (Realm - 1) * 10; // calc to get character slot into same format used in database.
+				}
+				else if (Realm == 0 && Operation == 3) // set correct character slot and realm
+				{
+					Realm = (CharacterSlot / 10) + 1;
+					CharacterSlot -= (Realm - 1) * 10;
 				}
 				//The following byte contains
 				//1bit=start location ... in ShroudedIsles you can choose ...
@@ -849,11 +861,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 				byte startRaceGender1 = (byte)packet.ReadByte();
 				Race = startRaceGender1 & 0x1F;
 				Gender = ((startRaceGender1 >> 7) & 0x01);
-				//SIStartLocation = ((startRaceGender1 >> 7) != 0);
 				CreationModel = packet.ReadShortLowEndian();
-				Region = packet.ReadByte();
-				packet.Skip(1); //TODO second byte of region unused currently
-				packet.Skip(4); //TODO Unknown Int / last used?
+				if (client.Version < GameClient.eClientVersion.Version1126)
+				{
+					Region = packet.ReadByte();
+					packet.Skip(1); //TODO second byte of region unused currently
+					packet.Skip(4); //TODO Unknown Int / last used?
+				}
 				Strength = packet.ReadByte();
 				Dexterity = packet.ReadByte();
 				Constitution = packet.ReadByte();
@@ -862,17 +876,22 @@ namespace DOL.GS.PacketHandler.Client.v168
 				Piety = packet.ReadByte();
 				Empathy = packet.ReadByte();
 				Charisma = packet.ReadByte();
-				packet.Skip(40); //TODO equipment                    
-				packet.Skip(3); // explained above
-								// New constitution must be read before skipping 4 bytes
-				NewConstitution = packet.ReadByte(); // 0x9F
-													 // trailing 0x00
+				packet.Skip(16 * 2); // skip 16 ushorts
+				packet.Skip(4 * 2); // skip 4 ushorts
+
+				if (client.Version >= GameClient.eClientVersion.Version1126)
+					Region = packet.ReadByte();
+
+				packet.Skip(3); // ??
+				NewConstitution = packet.ReadByte();
 			}
 		}
 
 		private void _HandlePacket1124(GameClient client, GSPacketIn packet)
 		{
 			var pakdata = new CreationCharacterData1124(client, packet);
+
+			
 
 			// Graveen: changed the following to allow GMs to have special chars in their names (_,-, etc..)
 			var nameCheck = new Regex("^[A-Z][a-zA-Z]");
@@ -897,7 +916,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 					if (string.IsNullOrEmpty(pakdata.CharName))
 					{
 						// Deletion in 1.104+ check for removed character.
-						needRefresh |= CheckForDeletedCharacter(client.Account.Name, client, pakdata.CharacterSlot);
+						var slot = pakdata.CharacterSlot + pakdata.Realm * 100;
+						needRefresh |= CheckForDeletedCharacter(client.Account.Name, client, slot);
 					}
 					break;
 				case 2: // Customize face or stats
