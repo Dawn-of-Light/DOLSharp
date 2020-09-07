@@ -3992,15 +3992,15 @@ namespace DOL.GS
 				{
 					case Keeps.GameKeepGuard guard:
 						if (ServerProperties.Properties.GUARD_2H_BONUS_DAMAGE)
-							damage = (100 + m_blockChance) / 100.00;
+							damage *= (100 + m_blockChance) / 100.00;
 						break;
 					case GamePet pet:
 						if (ServerProperties.Properties.PET_2H_BONUS_DAMAGE)
-							damage = (100 + m_blockChance) / 100.00;
+							damage *= (100 + m_blockChance) / 100.00;
 						break;
 					default:
 						if (ServerProperties.Properties.MOB_2H_BONUS_DAMAGE)
-							damage = (100 + m_blockChance) / 100.00;
+							damage *= (100 + m_blockChance) / 100.00;
 						break;
 				}
 
