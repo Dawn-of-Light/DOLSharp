@@ -119,7 +119,15 @@ namespace DOL.GS.Quests.Midgard
 
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Danica", eRealm.Midgard);
 
-			if (npcs.Length == 0)
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 100 && npc.X == 802818 && npc.Y == 727413)
+					{
+						Danica = npc;
+						break;
+					}
+
+			if (Danica == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Danica , creating it ...");
@@ -131,9 +139,9 @@ namespace DOL.GS.Quests.Midgard
 				Danica.CurrentRegionID = 100;
 				Danica.Size = 51;
 				Danica.Level = 50;
-				Danica.X = 804440;
-				Danica.Y = 722267;
-				Danica.Z = 4719;
+				Danica.X = 802818;
+				Danica.Y = 727413;
+				Danica.Z = 4760;
 				Danica.Heading = 2116;
 				Danica.AddToWorld();
 				if (SAVE_INTO_DATABASE)
@@ -141,12 +149,19 @@ namespace DOL.GS.Quests.Midgard
 					Danica.SaveIntoDatabase();
 				}
 			}
-			else
-				Danica = npcs[0];
 			// end npc
 
 			npcs = WorldMgr.GetNPCsByName("Kelic", eRealm.None);
-			if (npcs.Length == 0)
+
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 100 && npc.X == 621577 && npc.Y == 745848)
+					{
+						Kelic = npc;
+						break;
+					}
+
+			if (Kelic == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Kelic , creating it ...");
@@ -170,15 +185,13 @@ namespace DOL.GS.Quests.Midgard
 					Kelic.SaveIntoDatabase();
 				}
 			}
-			else
-				Kelic = npcs[0];
 			// end npc
 
-			#endregion
+				#endregion
 
-			#region defineItems
+				#region defineItems
 
-			kelics_totem = GameServer.Database.FindObjectByKey<ItemTemplate>("kelics_totem");
+				kelics_totem = GameServer.Database.FindObjectByKey<ItemTemplate>("kelics_totem");
 			if (kelics_totem == null)
 			{
 				if (log.IsWarnEnabled)

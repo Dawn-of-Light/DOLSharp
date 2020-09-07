@@ -97,7 +97,15 @@ namespace DOL.GS.Quests.Albion
 
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Lidmann Halsey", eRealm.Albion);
 
-			if (npcs.Length == 0)
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 1 && npc.X == 466464 && npc.Y == 634554)
+					{
+						Lidmann = npc;
+						break;
+					}
+
+			if (Lidmann == null)
 			{
 
 				Lidmann = new GameNPC();
@@ -123,13 +131,19 @@ namespace DOL.GS.Quests.Albion
 				}
 
 			}
-			else
-				Lidmann = npcs[0];
 			// end npc
 
 			npcs = WorldMgr.GetNPCsByName("Cailleach Uragaig", eRealm.None);
 
-			if (npcs.Length == 0)
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 1 && npc.X == 316218 && npc.Y == 664484)
+					{
+						Uragaig = npc;
+						break;
+					}
+
+			if (Uragaig == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Uragaig , creating it ...");
@@ -152,8 +166,6 @@ namespace DOL.GS.Quests.Albion
 				}
 
 			}
-			else
-				Uragaig = npcs[0];
 			// end npc
 
 			#endregion

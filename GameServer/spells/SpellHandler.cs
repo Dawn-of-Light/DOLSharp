@@ -3134,7 +3134,7 @@ namespace DOL.GS.Spells
 		/// <param name="e"></param>
 		/// <param name="sender"></param>
 		/// <param name="args"></param>
-		protected void FocusSpellAction(DOLEvent e, object sender, EventArgs args)
+		protected virtual void FocusSpellAction(DOLEvent e, object sender, EventArgs args)
 		{
 			GameLiving living = sender as GameLiving;
 			if (living == null) return;

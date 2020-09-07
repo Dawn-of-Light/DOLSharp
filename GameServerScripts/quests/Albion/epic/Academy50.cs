@@ -106,7 +106,16 @@ namespace DOL.GS.Quests.Albion
 			#region defineNPCs
 
             GameNPC[] npcs = WorldMgr.GetNPCsByName("Master Ferowl", eRealm.Albion);
-			if (npcs.Length == 0)
+
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 1 && npc.X == 559690 && npc.Y == 510258)
+					{
+						Ferowl = npc;
+						break;
+					}
+
+			if (Ferowl == null)
 			{
 				Ferowl = new GameNPC();
 				Ferowl.Model = 61;
@@ -118,8 +127,8 @@ namespace DOL.GS.Quests.Albion
 				Ferowl.CurrentRegionID = 1;
 				Ferowl.Size = 51;
 				Ferowl.Level = 40;
-				Ferowl.X = 559716;
-				Ferowl.Y = 510733;
+				Ferowl.X = 559690;
+				Ferowl.Y = 510258;
 				Ferowl.Z = 2720;
 				Ferowl.Heading = 703;
 				Ferowl.AddToWorld();
@@ -127,12 +136,19 @@ namespace DOL.GS.Quests.Albion
 				if (SAVE_INTO_DATABASE)
 					Ferowl.SaveIntoDatabase();
 			}
-			else
-				Ferowl = npcs[0];
 			// end npc
 
 			npcs = WorldMgr.GetNPCsByName("Morgana", eRealm.None);
-			if (npcs.Length == 0)
+
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 1 && npc.X == 306056 && npc.Y == 670106)
+					{
+						Morgana = npc;
+						break;
+					}
+
+			if (Morgana == null)
 			{
 				Morgana = new GameNPC();
 				Morgana.Model = 283;
@@ -167,11 +183,19 @@ namespace DOL.GS.Quests.Albion
 				if (SAVE_INTO_DATABASE)
 					Morgana.SaveIntoDatabase();
 			}
-			else
-				Morgana = npcs[0];
+			// end npc
 
 			npcs = WorldMgr.GetNPCsByName("Bechard", eRealm.None);
-			if (npcs.Length == 0)
+
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 1 && npc.X == 306025 && npc.Y == 670473)
+					{
+						Bechard = npc;
+						break;
+					}
+
+			if (Bechard == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Bechard , creating it ...");
@@ -192,12 +216,19 @@ namespace DOL.GS.Quests.Albion
 				if (SAVE_INTO_DATABASE)
 					Bechard.SaveIntoDatabase();
 			}
-			else
-				Bechard = npcs[0];
 			// end npc
 
 			npcs = WorldMgr.GetNPCsByName("Silcharde", eRealm.None);
-			if (npcs.Length == 0)
+
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 1 && npc.X == 306252 && npc.Y == 670274)
+					{
+						Silcharde = npc;
+						break;
+					}
+
+			if (Silcharde == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Silcharde , creating it ...");
@@ -217,10 +248,7 @@ namespace DOL.GS.Quests.Albion
 
 				if (SAVE_INTO_DATABASE)
 					Silcharde.SaveIntoDatabase();
-
 			}
-			else
-				Silcharde = npcs[0];
 			// end npc
 
 			#endregion
