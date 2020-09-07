@@ -114,7 +114,15 @@ namespace DOL.GS.Quests.Hibernia
 
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Ainrebh", eRealm.Hibernia);
 
-			if (npcs.Length == 0)
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 200 && npc.X == 421281 && npc.Y == 516273)
+					{
+						Ainrebh = npc;
+						break;
+					}
+
+			if (Ainrebh == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Ainrebh , creating it ...");
@@ -135,15 +143,20 @@ namespace DOL.GS.Quests.Hibernia
 				{
 					Ainrebh.SaveIntoDatabase();
 				}
-
 			}
-			else
-				Ainrebh = npcs[0];
 			// end npc
 
 			npcs = WorldMgr.GetNPCsByName("Green Maw", eRealm.None);
 
-			if (npcs.Length == 0)
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 200 && npc.X == 488306 && npc.Y == 521440)
+					{
+						GreenMaw = npc;
+						break;
+					}
+
+			if (GreenMaw == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find GreenMaw , creating it ...");
@@ -164,10 +177,7 @@ namespace DOL.GS.Quests.Hibernia
 				{
 					GreenMaw.SaveIntoDatabase();
 				}
-
 			}
-			else
-				GreenMaw = npcs[0];
 			// end npc
 
 			#endregion

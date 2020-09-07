@@ -96,7 +96,15 @@ namespace DOL.GS.Quests.Albion
 
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Roben Fraomar", eRealm.Albion);
 
-			if (npcs.Length == 0)
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 1 && npc.X == 408557 && npc.Y == 651675)
+					{
+						Roben = npc;
+						break;
+					}
+
+			if (Roben == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Roben , creating it ...");
@@ -117,12 +125,19 @@ namespace DOL.GS.Quests.Albion
 				if (SAVE_INTO_DATABASE)
 					Roben.SaveIntoDatabase();
 			}
-			else
-				Roben = npcs[0];
 			// end npc
 
 			npcs = WorldMgr.GetNPCsByName("Sister Blythe", eRealm.None);
-			if (npcs.Length == 0)
+
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 1 && npc.X == 322231 && npc.Y == 671546)
+					{
+						Blythe = npc;
+						break;
+					}
+
+			if (Blythe == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Blythe , creating it ...");
@@ -143,8 +158,6 @@ namespace DOL.GS.Quests.Albion
 				if (SAVE_INTO_DATABASE)
 					Blythe.SaveIntoDatabase();
 			}
-			else
-				Blythe = npcs[0];
 			// end npc
 
 			#endregion

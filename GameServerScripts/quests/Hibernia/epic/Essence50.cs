@@ -114,7 +114,15 @@ namespace DOL.GS.Quests.Hibernia
 
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Brigit", eRealm.Hibernia);
 
-			if (npcs.Length == 0)
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 201 && npc.X == 32927 && npc.Y == 32743)
+					{
+						Brigit = npc;
+						break;
+					}
+
+			if (Brigit == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Brigit , creating it ...");
@@ -126,8 +134,8 @@ namespace DOL.GS.Quests.Hibernia
 				Brigit.CurrentRegionID = 201;
 				Brigit.Size = 51;
 				Brigit.Level = 50;
-				Brigit.X = 33131;
-				Brigit.Y = 32922;
+				Brigit.X = 32927;
+				Brigit.Y = 32743;
 				Brigit.Z = 8008;
 				Brigit.Heading = 3254;
 				Brigit.AddToWorld();
@@ -135,15 +143,20 @@ namespace DOL.GS.Quests.Hibernia
 				{
 					Brigit.SaveIntoDatabase();
 				}
-
 			}
-			else
-				Brigit = npcs[0];
 			// end npc
 
 			npcs = WorldMgr.GetNPCsByName("Caithor", eRealm.None);
 
-			if (npcs.Length == 0)
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 200 && npc.X == 470547 && npc.Y == 531497)
+					{
+						Caithor = npc;
+						break;
+					}
+
+			if (Caithor == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Caithor , creating it ...");
@@ -166,8 +179,6 @@ namespace DOL.GS.Quests.Hibernia
 				}
 
 			}
-			else
-				Caithor = npcs[0];
 			// end npc
 
 			#endregion

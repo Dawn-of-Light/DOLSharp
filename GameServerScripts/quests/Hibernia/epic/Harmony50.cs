@@ -114,7 +114,15 @@ namespace DOL.GS.Quests.Hibernia
 
 			GameNPC[] npcs = WorldMgr.GetNPCsByName("Revelin", eRealm.Hibernia);
 
-			if (npcs.Length == 0)
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 200 && npc.X == 343442 && npc.Y == 706235)
+					{
+						Revelin = npc;
+						break;
+					}
+
+			if (Revelin == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Revelin , creating it ...");
@@ -126,9 +134,9 @@ namespace DOL.GS.Quests.Hibernia
 				Revelin.CurrentRegionID = 200;
 				Revelin.Size = 42;
 				Revelin.Level = 20;
-				Revelin.X = 344387;
-				Revelin.Y = 706197;
-				Revelin.Z = 6351;
+				Revelin.X = 343442;
+				Revelin.Y = 706235;
+				Revelin.Z = 6336;
 				Revelin.Heading = 2127;
 				Revelin.Flags ^= GameNPC.eFlags.PEACE;
 				Revelin.AddToWorld();
@@ -136,15 +144,20 @@ namespace DOL.GS.Quests.Hibernia
 				{
 					Revelin.SaveIntoDatabase();
 				}
-
 			}
-			else
-				Revelin = npcs[0];
 			// end npc
 
 			npcs = WorldMgr.GetNPCsByName("Cailean", eRealm.None);
 
-			if (npcs.Length == 0)
+			if (npcs.Length > 0)
+				foreach (GameNPC npc in npcs)
+					if (npc.CurrentRegionID == 200 && npc.X == 479042 && npc.Y == 508134)
+					{
+						Cailean = npc;
+						break;
+					}
+
+			if (Cailean == null)
 			{
 				if (log.IsWarnEnabled)
 					log.Warn("Could not find Cailean , creating it ...");
@@ -165,10 +178,7 @@ namespace DOL.GS.Quests.Hibernia
 				{
 					Cailean.SaveIntoDatabase();
 				}
-
 			}
-			else
-				Cailean = npcs[0];
 			// end npc
 
 			#endregion
@@ -2227,7 +2237,7 @@ namespace DOL.GS.Quests.Hibernia
 				switch (Step)
 				{
 					case 1:
-						return "[Step #1] Seek out Cailean in Cursed Forest Loc 28k,24k kill him!";
+						return "[Step #1] Seek out Cailean in Cursed Forest Loc 26k, 23k and kill him!";
 					case 2:
 						return "[Step #2] Return to Revelin and give the Horn!";
 				}
