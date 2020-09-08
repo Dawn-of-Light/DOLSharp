@@ -228,6 +228,7 @@
     <Compile Include="commands\gmcommands\titlegm.cs" />
     <Compile Include="commands\gmcommands\walk.cs" />
     <Compile Include="commands\gmcommands\weather.cs" />
+    <Compile Include="commands\playercommands\sell.cs" />
     <Compile Include="commands\RefreshCommandAttribute.cs" />
     <Compile Include="commands\playercommands\advice.cs" />
     <Compile Include="commands\playercommands\advisor.cs" />
