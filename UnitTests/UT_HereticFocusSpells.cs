@@ -2,7 +2,6 @@
 using DOL.GS.Spells;
 using DOL.GS;
 using DOL.Database;
-using DOL.GS.ServerRules;
 
 namespace DOL.UnitTests.Gameserver
 {
@@ -16,7 +15,7 @@ namespace DOL.UnitTests.Gameserver
             GS.ServerProperties.Properties.DISABLED_REGIONS = "";
             GS.ServerProperties.Properties.DISABLED_EXPANSIONS = "";
             GS.ServerProperties.Properties.PVE_SPELL_DAMAGE = 1;
-            GameServer.LoadTestDouble(new FakeServer());
+            FakeServer.LoadAndReturn().FakeServerRules.fakeIsAllowedToAttack = true;
         }
 
         [Test]
@@ -131,10 +130,8 @@ namespace DOL.UnitTests.Gameserver
         private FakePlayer NewL50Player()
         {
             var player = new FakePlayer();
-            player.characterClass = new DefaultCharacterClass();
+            player.fakeCharacterClass = new DefaultCharacterClass();
             player.Level = 50;
-            player.modifiedEffectiveLevel = 50;
-            player.modifiedIntelligence = 60;
             return player;
         }
 
@@ -146,6 +143,6 @@ namespace DOL.UnitTests.Gameserver
             }
         }
 
-        private static FakeNPC NewFakeNPC() => Create.FakeNPC;
+        private static FakeNPC NewFakeNPC() => new FakeNPC();
     }
 }

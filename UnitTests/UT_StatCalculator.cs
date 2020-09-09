@@ -120,7 +120,8 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValueFromItems_IntelligenceOfLevel50AnimistWith50AcuityFromItems_Return50()
         {
-            var player = NewFakePlayerAnimist();
+            var player = NewFakePlayer();
+            player.fakeCharacterClass = new CharacterClassAnimist();
             player.Level = 50;
             player.ItemBonus[eProperty.Acuity] = 50;
             StatCalculator statCalc = createStatCalculator();
@@ -233,7 +234,8 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValue_GetIntelligenceFromLevel50AnimistWith50Acuity_Return50()
         {
-            var player = NewFakePlayerAnimist();
+            var player = NewFakePlayer();
+            player.fakeCharacterClass = new CharacterClassAnimist();
             player.Level = 50;
             player.BaseBuffBonusCategory[(int)eProperty.Acuity] = 50;
             StatCalculator statCalc = createStatCalculator();
@@ -343,8 +345,7 @@ namespace DOL.UnitTests.Gameserver
             return new StatCalculator();
         }
 
-        private static FakePlayer NewFakePlayer() => Create.FakePlayer;
-        private static FakeNPC NewFakeNPC() => Create.FakeNPC;
-        private static FakePlayer NewFakePlayerAnimist() => Create.FakePlayerAnimist;
+        private static FakePlayer NewFakePlayer() => new FakePlayer();
+        private static FakeNPC NewFakeNPC() => new FakeNPC();
     }
 }

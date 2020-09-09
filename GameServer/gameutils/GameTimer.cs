@@ -186,7 +186,7 @@ namespace DOL.GS
 		/// when it is started, that cylces through all GameTimers and
 		/// executes them at the right moment.
 		/// </summary>
-		public sealed class TimeManager
+		public class TimeManager
 		{
 			private readonly object m_lockObject = new object();
 			/// <summary>
@@ -333,7 +333,7 @@ namespace DOL.GS
 			/// <summary>
 			/// Gets the current manager time in milliseconds
 			/// </summary>
-			public long CurrentTime
+			public virtual long CurrentTime
 			{
 				get { return m_time; }
 				set { m_time = value; }
@@ -535,7 +535,7 @@ namespace DOL.GS
 			/// Starts the time manager if not started already
 			/// </summary>
 			/// <returns>success</returns>
-			public bool Start()
+			public virtual bool Start()
 			{
 				lock (m_lockObject)
 				{

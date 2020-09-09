@@ -36,7 +36,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Factory.cs" />
     <Compile Include="FakeGameObjects.cs" />
     <Compile Include="FakeServer.cs" />
     <Compile Include="UT_GameEffectList.cs" />

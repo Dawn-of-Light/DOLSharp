@@ -46,7 +46,7 @@ namespace DOL.Events
 		/// <summary>
 		/// Holds a list of event handler collections for single gameobjects
 		/// </summary>
-		private static Dictionary<object, DOLEventHandlerCollection> m_gameObjectEventCollections;
+		protected static Dictionary<object, DOLEventHandlerCollection> m_gameObjectEventCollections;
 
 		public static int NumObjectHandlers
 		{
@@ -83,7 +83,7 @@ namespace DOL.Events
 
 		private static ReaderWriterLockSlim Lock => soleInstance.m_lock;
 
-		private GameEventMgr()
+		protected GameEventMgr()
 		{
 			m_lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
 			m_gameObjectEventCollections = new Dictionary<object, DOLEventHandlerCollection>();

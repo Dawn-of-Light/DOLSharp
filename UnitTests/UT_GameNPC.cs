@@ -16,7 +16,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void GetModified_GameNPCWith75Constitution_Return75()
         {
-            var brain = NewNullBrain();
+            var brain = NewFakeBrain();
             var npc = new GameNPC(brain);
             npc.Constitution = 75;
 
@@ -25,6 +25,6 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(75, actual);
         }
 
-        private static ABrain NewNullBrain() => new NullBrain();
+        private static ABrain NewFakeBrain() => new FakeControlledBrain();
     }
 }

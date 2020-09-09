@@ -35,7 +35,6 @@ namespace DOL.GS.Spells
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		private GameLiving Target;
 		private int pulseCount = 0;
-		private const string LOSEFFECTIVENESS = "LOS Effectivness";
 
 		public RampingDamageFocus(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, new FocusSpell(spell), spellLine) { }
 
@@ -164,7 +163,6 @@ namespace DOL.GS.Spells
 				}
 			}
 			
-
 			GameEventMgr.RemoveHandler(Caster, GameLivingEvent.AttackFinished, new DOLEventHandler(FocusSpellAction));
 			GameEventMgr.RemoveHandler(Caster, GameLivingEvent.CastStarting, new DOLEventHandler(FocusSpellAction));
 			GameEventMgr.RemoveHandler(Caster, GameLivingEvent.Moving, new DOLEventHandler(FocusSpellAction));

@@ -8,38 +8,29 @@ namespace DOL.UnitTests.Gameserver
 {
     public class FakePlayer : GamePlayer
     {
+        public ICharacterClass fakeCharacterClass = new DefaultCharacterClass();
         public int modifiedSpecLevel;
-        public ICharacterClass characterClass;
         public int modifiedIntelligence;
-        public int modiefiedToHitBonus;
+        public int modifiedToHitBonus;
         public int modifiedSpellLevel;
         public int modifiedEffectiveLevel;
         public int modifiedSpellDamage = 0;
         public int baseStat;
         private int totalConLostOnDeath;
         public int LastDamageDealt { get; private set; } = -1;
+        public FakeRegion fakeRegion = new FakeRegion();
 
         public FakePlayer() : base(null, null)
         {
             this.ObjectState = eObjectState.Active;
         }
 
-        public override ICharacterClass CharacterClass { get { return characterClass; } }
-
+        public override ICharacterClass CharacterClass { get { return fakeCharacterClass; } }
         public override byte Level { get; set; }
-
-        public override Region CurrentRegion { get { return new FakeRegion(); } set { } }
-
-        public override void LoadFromDatabase(DataObject obj)
-        {
-        }
-
+        public override Region CurrentRegion { get { return fakeRegion; } set { } }
         public override IPacketLib Out => new FakePacketLib();
-
-        public override int GetModifiedSpecLevel(string keyName)
-        {
-            return modifiedSpecLevel;
-        }
+        public override int GetBaseStat(eStat stat) => baseStat;
+        public override int GetModifiedSpecLevel(string keyName) => modifiedSpecLevel;
 
         public override int GetModified(eProperty property)
         {
@@ -50,21 +41,17 @@ namespace DOL.UnitTests.Gameserver
                 case eProperty.SpellLevel:
                     return modifiedSpellLevel;
                 case eProperty.ToHitBonus:
-                    return modiefiedToHitBonus;
+                    return modifiedToHitBonus;
                 case eProperty.LivingEffectiveLevel:
                     return modifiedEffectiveLevel;
                 case eProperty.SpellDamage:
                     return modifiedSpellDamage;
                 default:
                     return base.GetModified(property);
-                    //throw new ArgumentException("There is no property: " + property);
             }
         }
 
-        public override int GetBaseStat(eStat stat)
-        {
-            return baseStat;
-        }
+        public override void LoadFromDatabase(DataObject obj) { }
 
         public override void DealDamage(AttackData ad)
         {
@@ -99,6 +86,8 @@ namespace DOL.UnitTests.Gameserver
             this.ObjectState = eObjectState.Active;
         }
 
+        public FakeNPC() : this(new FakeBrain()) { }
+
         public override Region CurrentRegion { get { return new FakeRegion(); } set { } }
         public override bool IsAlive => true;
         public override int GetModified(eProperty property)
@@ -121,16 +110,16 @@ namespace DOL.UnitTests.Gameserver
         }
     }
 
-    public class FakeGameLiving : GameLiving
+    public class FakeLiving : GameLiving
     {
-        public bool mockIsAlive = true;
-        public eObjectState mockObjectState = eObjectState.Active;
+        public bool fakeIsAlive = true;
+        public eObjectState fakeObjectState = eObjectState.Active;
 
-        public override bool IsAlive => mockIsAlive;
-        public override eObjectState ObjectState => mockObjectState;
+        public override bool IsAlive => fakeIsAlive;
+        public override eObjectState ObjectState => fakeObjectState;
     }
 
-    public class NullControlledBrain : ABrain, IControlledBrain
+    public class FakeControlledBrain : ABrain, IControlledBrain
     {
         public GameLiving fakeOwner;
         public bool receivedUpdatePetWindow = false;
@@ -154,7 +143,7 @@ namespace DOL.UnitTests.Gameserver
         public override void Think() { }
     }
 
-    public class NullBrain : ABrain
+    public class FakeBrain : ABrain
     {
         public override void Think() { }
     }

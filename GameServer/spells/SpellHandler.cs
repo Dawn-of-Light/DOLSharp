@@ -611,7 +611,7 @@ namespace DOL.GS.Spells
 
 			if (!m_caster.IsAlive)
 			{
-				if(!quiet) MessageToCaster("You are dead and can't cast!", eChatType.CT_System);
+				if (!quiet) MessageToCaster("You are dead and can't cast!", eChatType.CT_System);
 				return false;
 			}
 

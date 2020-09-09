@@ -1,6 +1,9 @@
 ﻿using NUnit.Framework;
 using DOL.GS;
 using DOL.GS.Spells;
+using DOL.Events;
+using System;
+using DOL.Database;
 
 namespace DOL.UnitTests.Gameserver
 {
@@ -33,17 +36,7 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual((caster.lastNotifiedEventArgs as CastingEventArgs).SpellHandler, spellHandler);
         }
 
-        //[Test]
-        //public void CheckBeginCast_NPCTarget_True()
-        //{
-        //    var caster = new FakePlayerNotifySpy();
-        //    var spell = GenericSpell;
-        //    var spellHandler = new SpellHandler(caster, spell, null);
 
-        //    var actual = spellHandler.CheckBeginCast(GenericFakeNPC);
-
-        //    Assert.IsTrue(actual);
-        //}
         #endregion CastSpell
 
         private class FakePlayerNotifySpy : FakePlayer
@@ -69,7 +62,7 @@ namespace DOL.UnitTests.Gameserver
         public void CalculateDamageVariance_TargetIsGameLiving_MinIs125Percent()
         {
             var target = NewFakeLiving();
-            var spellLine = new SpellLine("", "", "", false);
+            var spellLine = NewSpellLine();
             var spellHandler = new SpellHandler(null, null, spellLine);
 
             spellHandler.CalculateDamageVariance(target, out double actual, out double ignoredValue);
@@ -81,7 +74,7 @@ namespace DOL.UnitTests.Gameserver
         public void CalculateDamageVariance_TargetIsGameLiving_MaxIs125Percent()
         {
             var target = NewFakeLiving();
-            var spellLine = new SpellLine("", "", "", false);
+            var spellLine = NewSpellLine();
             var spellHandler = new SpellHandler(null, null, spellLine);
 
             spellHandler.CalculateDamageVariance(target, out double ignoredValue, out double actual);
@@ -142,7 +135,7 @@ namespace DOL.UnitTests.Gameserver
             source.modifiedSpecLevel = 16;
             source.Level = 30;
             target.Level = 30;
-            var spellLine = new SpellLine("", "", "", false);
+            var spellLine = NewSpellLine();
             var spellHandler = new SpellHandler(source, null, spellLine);
 
             spellHandler.CalculateDamageVariance(target, out double actual, out double ignoredValue);
@@ -158,7 +151,7 @@ namespace DOL.UnitTests.Gameserver
             source.modifiedSpecLevel = 1;
             source.Level = 30;
             target.Level = 30;
-            var spellLine = new SpellLine("", "", "", false);
+            var spellLine = NewSpellLine();
             var spellHandler = new SpellHandler(source, null, spellLine);
 
             spellHandler.CalculateDamageVariance(target, out double actual, out double ignoredValue);
@@ -174,7 +167,7 @@ namespace DOL.UnitTests.Gameserver
             source.modifiedSpecLevel = 35;
             source.Level = 30;
             target.Level = 30;
-            var spellLine = new SpellLine("", "", "", false);
+            var spellLine = NewSpellLine();
             var spellHandler = new SpellHandler(source, null, spellLine);
 
             spellHandler.CalculateDamageVariance(target, out double actual, out double ignoredValue);
@@ -190,7 +183,7 @@ namespace DOL.UnitTests.Gameserver
             source.modifiedSpecLevel = 1;
             source.Level = 30;
             target.Level = 15;
-            var spellLine = new SpellLine("", "", "", false);
+            var spellLine = NewSpellLine();
             var spellHandler = new SpellHandler(source, null, spellLine);
 
             spellHandler.CalculateDamageVariance(target, out double actual, out double ignoredValue);
@@ -206,7 +199,7 @@ namespace DOL.UnitTests.Gameserver
             source.modifiedSpecLevel = 1;
             source.Level = 30;
             target.Level = 15;
-            var spellLine = new SpellLine("", "", "", false);
+            var spellLine = NewSpellLine();
             var spellHandler = new SpellHandler(source, null, spellLine);
 
             spellHandler.CalculateDamageVariance(target, out double ignoredValue, out double actual);
@@ -219,7 +212,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalculateDamageBase_SpellDamageIs100AndCombatStyleEffect_ReturnAround72()
         {
-            var spell = NewGenericSpell();
+            var spell = NewFakeSpell();
             spell.Damage = 100;
             var source = NewFakePlayer();
             var target = NewFakePlayer();
@@ -235,12 +228,13 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalculateDamageBase_SpellDamageIs100SourceIsAnimistWith100Int_ReturnAround109()
         {
-            var spell = NewGenericSpell();
+            var spell = NewFakeSpell();
             spell.Damage = 100;
-            var source = NewFakePlayerAnimist();
+            var source = NewFakePlayer();
+            source.fakeCharacterClass = new CharacterClassAnimist();
             source.modifiedIntelligence = 100;
             var target = NewFakePlayer();
-            var spellLine = new SpellLine("", "", "", false);
+            var spellLine = NewSpellLine();
             var spellHandler = new SpellHandler(source, spell, spellLine);
 
             double actual = spellHandler.CalculateDamageBase(target);
@@ -252,16 +246,19 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalculateDamageBase_SpellDamageIs100SourceIsAnimistPetWith100IntAndOwnerWith100Int_ReturnAround119()
         {
-            var spell = NewGenericSpell();
+            var spell = NewFakeSpell();
             spell.Damage = 100;
-            var owner = NewFakePlayerAnimist();
+            var owner = NewFakePlayer();
+            owner.fakeCharacterClass = new CharacterClassAnimist();
             owner.modifiedIntelligence = 100;
-            owner.Level = 50;
-            GamePet source = Create.GenericRealPet(owner);
+            owner.Level = 50; 
+            var brain = new FakeControlledBrain();
+            brain.fakeOwner = owner;
+            GamePet source = new GamePet(brain);
             source.Level = 50; //temporal coupling through AutoSetStat()
             source.Intelligence = 100;
             var target = NewFakePlayer();
-            var spellLine = new SpellLine("", "", "", false);
+            var spellLine = NewSpellLine();
             var spellHandler = new SpellHandler(source, spell, spellLine);
 
             double actual = spellHandler.CalculateDamageBase(target);
@@ -274,13 +271,13 @@ namespace DOL.UnitTests.Gameserver
         public void CalculateDamageBase_SpellDamageIs100FromGameNPCWithoutOwner_ReturnAround119()
         {
             GameLiving.LoadCalculators(); //temporal coupling and global state
-            var spell = NewGenericSpell();
+            var spell = NewFakeSpell();
             spell.Damage = 100;
             var source = NewFakeNPC();
             source.Level = 50;
             source.Intelligence = 100;
             var target = NewFakePlayer();
-            var spellLine = new SpellLine("", "", "", false);
+            var spellLine = NewSpellLine();
             var spellHandler = new SpellHandler(source, spell, spellLine);
 
             double actual = spellHandler.CalculateDamageBase(target);
@@ -294,10 +291,10 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalculateToHitChance_BaseChance_Return85()
         {
-            var spell = NewGenericSpell();
+            var spell = NewFakeSpell();
             var source = NewFakePlayer();
             var target = NewFakePlayer();
-            var spellLine = new SpellLine("", "", "", false);
+            var spellLine = NewSpellLine();
             var spellHandler = new SpellHandler(source, spell, spellLine);
 
             int actual = spellHandler.CalculateToHitChance(target);
@@ -308,12 +305,12 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalculateToHitChance_SpellLevelIs50TargetLevelIsZero_Return110()
         {
-            var spell = NewGenericSpell();
+            var spell = NewFakeSpell();
             spell.Level = 50;
             var source = NewFakePlayer();
             var target = NewFakePlayer();
             target.Level = 0;
-            var spellLine = new SpellLine("", "", "", false);
+            var spellLine = NewSpellLine();
             var spellHandler = new SpellHandler(source, spell, spellLine);
 
             int actual = spellHandler.CalculateToHitChance(target);
@@ -324,11 +321,11 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalculateToHitChance_SpellBonusIsTen_Return90()
         {
-            var spell = NewGenericSpell();
+            var spell = NewFakeSpell();
             var source = NewFakePlayer();
             source.modifiedSpellLevel = 10; //spellBonus
             var target = NewFakePlayer();
-            var spellLine = new SpellLine("", "", "", false);
+            var spellLine = NewSpellLine();
             var spellHandler = new SpellHandler(source, spell, spellLine);
 
             int actual = spellHandler.CalculateToHitChance(target);
@@ -339,11 +336,11 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalculateToHitChance_SpellBonusIsSeven_Return88()
         {
-            var spell = NewGenericSpell();
+            var spell = NewFakeSpell();
             var source = NewFakePlayer();
             source.modifiedSpellLevel = 7; //spellBonus
             var target = NewFakePlayer();
-            var spellLine = new SpellLine("", "", "", false);
+            var spellLine = NewSpellLine();
             var spellHandler = new SpellHandler(source, spell, spellLine);
 
             int actual = spellHandler.CalculateToHitChance(target);
@@ -354,14 +351,14 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalculateToHitChance_SourceSpellBonusIsTenSpellLevelAndTargetLevelAre50_Return85()
         {
-            var spell = NewGenericSpell();
+            var spell = NewFakeSpell();
             spell.Level = 50;
             var source = NewFakePlayer();
             source.modifiedSpellLevel = 10; //spellBonus
             source.modifiedToHitBonus = 0;
             var target = NewFakePlayer();
             target.Level = 50;
-            var spellLine = new SpellLine("", "", "", false);
+            var spellLine = NewSpellLine();
             var spellHandler = new SpellHandler(source, spell, spellLine);
 
             int actual = spellHandler.CalculateToHitChance(target);
@@ -372,14 +369,14 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalculateToHitChance_SameTargetAndSpellLevelWithFiveToHitBonus_Return90()
         {
-            var spell = NewGenericSpell();
+            var spell = NewFakeSpell();
             spell.Level = 50;
             var source = NewFakePlayer();
             source.modifiedSpellLevel = 0; //spellBonus
             source.modifiedToHitBonus = 5;
             var target = NewFakePlayer();
             target.Level = 50;
-            var spellLine = new SpellLine("", "", "", false);
+            var spellLine = NewSpellLine();
             var spellHandler = new SpellHandler(source, spell, spellLine);
 
             int actual = spellHandler.CalculateToHitChance(target);
@@ -391,14 +388,14 @@ namespace DOL.UnitTests.Gameserver
         public void CalculateToHitChance_TargetIsNPCLevel50SourceIsLevel50PlayerAndSpellLevelIs40_Return80()
         {
             GS.ServerProperties.Properties.PVE_SPELL_CONHITPERCENT = 10;
-            var spell = NewGenericSpell();
+            var spell = NewFakeSpell();
             spell.Level = 40;
             var source = NewFakePlayer();
             source.modifiedEffectiveLevel = 50;
             var target = NewFakeNPC();
             target.Level = 50;
             target.modifiedEffectiveLevel = 50;
-            var spellLine = new SpellLine("", "", "", false);
+            var spellLine = NewSpellLine();
             var spellHandler = new SpellHandler(source, spell, spellLine);
 
             int actual = spellHandler.CalculateToHitChance(target);
@@ -408,10 +405,60 @@ namespace DOL.UnitTests.Gameserver
 
         #endregion
 
-        private static GameLiving NewFakeLiving() => Create.FakeLiving;
-        private static FakePlayer NewFakePlayer() => Create.FakePlayer;
-        private static FakeNPC NewFakeNPC() => Create.FakeNPC;
-        private static FakePlayer NewFakePlayerAnimist() => Create.FakePlayerAnimist;
-        private static Spell NewGenericSpell() => Create.Spell;
+        private static GameLiving NewFakeLiving() => new FakeLiving();
+        private static FakePlayerSpy NewFakePlayer() => new FakePlayerSpy();
+        private static FakeNPC NewFakeNPC() => new FakeNPC();
+        private static FakeSpell NewFakeSpell() => new FakeSpell();
+        private static SpellLine NewSpellLine() => new SpellLine("", "", "", false);
+
+        private class FakeSpell : Spell
+        {
+            public bool fakeIsFocus = false;
+            public string fakeTarget = "";
+            public int fakeFrequency = 0;
+            public string fakeSpellType = "";
+            public int fakePulse = 0;
+            public int fakeRange = 0;
+
+            public FakeSpell() : base(new DBSpell(), 0) { }
+
+            public override int Pulse => fakePulse;
+            public override string SpellType => fakeSpellType;
+            public override bool IsFocus => fakeIsFocus;
+            public override string Target => fakeTarget;
+            public override int Frequency => fakeFrequency;
+            public override int Range => fakeRange;
+        }
+
+        private class FakePlayerSpy : FakePlayer
+        {
+            public DOLEvent lastNotifiedEvent;
+            public EventArgs lastNotifiedEventArgs;
+
+            public FakePlayerSpy() : base()
+            {
+                fakeCharacterClass = new DefaultCharacterClass();
+                fakeRegion.fakeElapsedTime = 0;
+            }
+
+            public override void Notify(DOLEvent e, object sender, EventArgs args)
+            {
+                lastNotifiedEvent = e;
+                lastNotifiedEventArgs = args;
+                base.Notify(e, sender, args);
+            }
+        }
+
+        private class GameEventMgrSpy : GameEventMgr
+        {
+            public System.Collections.Generic.Dictionary<object, DOLEventHandlerCollection> GameObjectEventCollection => m_gameObjectEventCollections;
+        
+            public static GameEventMgrSpy LoadAndReturn()
+            {
+                var spy = new GameEventMgrSpy();
+                LoadTestDouble(spy);
+                return spy;
+            }
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace DOL.UnitTests.Gameserver
         public void Add_OwnerIsNotAlive_ReturnFalse()
         {
             var owner = NewFakeLiving();
-            owner.mockIsAlive = false;
+            owner.fakeIsAlive = false;
             var effectList = NewGameEffectList(owner);
             var effect = NewFakeEffect();
 
@@ -26,8 +26,8 @@ namespace DOL.UnitTests.Gameserver
         public void Add_OwnerIsInactiveObject_ReturnFalse()
         {
             var owner = NewFakeLiving();
-            owner.mockIsAlive = true;
-            owner.mockObjectState = GameObject.eObjectState.Inactive;
+            owner.fakeIsAlive = true;
+            owner.fakeObjectState = GameObject.eObjectState.Inactive;
             var effectList = NewGameEffectList(owner);
             var effect = NewFakeEffect();
 
@@ -40,8 +40,8 @@ namespace DOL.UnitTests.Gameserver
         public void Add_OwnerIsActiveObjectAndAlive_ReturnTrue()
         {
             var owner = NewFakeLiving();
-            owner.mockIsAlive = true;
-            owner.mockObjectState = GameObject.eObjectState.Active;
+            owner.fakeIsAlive = true;
+            owner.fakeObjectState = GameObject.eObjectState.Active;
             var effectList = NewGameEffectList(owner);
             var effect = NewFakeEffect();
 
@@ -54,8 +54,8 @@ namespace DOL.UnitTests.Gameserver
         public void Add_ToFreshListAndOwnerIsAliveAndActiveObject_ListCountIsOne()
         {
             var owner = NewFakeLiving();
-            owner.mockIsAlive = true;
-            owner.mockObjectState = GameObject.eObjectState.Active;
+            owner.fakeIsAlive = true;
+            owner.fakeObjectState = GameObject.eObjectState.Active;
             var effectList = NewGameEffectList(owner);
             var effect = NewFakeEffect();
 
@@ -69,7 +69,7 @@ namespace DOL.UnitTests.Gameserver
         public void Add_ToFreshListAndOwnerIsNotAlive_ListCountRemainsZero()
         {
             var owner = NewFakeLiving();
-            owner.mockIsAlive = false;
+            owner.fakeIsAlive = false;
             var effectList = NewGameEffectList(owner);
             var effect = NewFakeEffect();
 
@@ -107,7 +107,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void Remove_EffectFromListContainingDifferentEffect_ReturnFalse()
         {
-            GameEffectList effectList = createEffectListWithValidOwner();
+            GameEffectList effectList = NewGameEffectList();
             var effect = NewFakeEffect();
             var differentEffect = NewFakeEffect();
             effectList.Add(differentEffect);
@@ -120,7 +120,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void Remove_EffectFromListContainingSameEffect_ListCountIsZero()
         {
-            GameEffectList effectList = createEffectListWithValidOwner();
+            GameEffectList effectList = NewGameEffectList();
             var effect = NewFakeEffect();
             effectList.Add(effect);
 
@@ -133,7 +133,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CancelAll_EffectContainsOneEffect_EffectIsCancelled()
         {
-            GameEffectList effectList = createEffectListWithValidOwner();
+            GameEffectList effectList = NewGameEffectList();
             var effect = NewFakeEffect();
             effectList.Add(effect);
 
@@ -145,7 +145,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void OnEffectsChanged_NoOpenChanges_NPCupdatePetWindowIsCalled()
         {
-            var brain = NewNullControlledBrain();
+            var brain = NewFakeControlledBrain();
             var owner = new GameNPC(brain);
             var effectList = NewGameEffectList(owner);
             
@@ -157,7 +157,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void OnEffectsChanged_OpenChanges_NPCupdatePetWindowIsNotCalled()
         {
-            var brain = NewNullControlledBrain();
+            var brain = NewFakeControlledBrain();
             var owner = new GameNPC(brain);
             var effectList = NewGameEffectList(owner);
 
@@ -170,7 +170,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CommitChanges_NoOpenChanges_NPCupdatePetWindowIsCalled()
         {
-            var brain = NewNullControlledBrain();
+            var brain = NewFakeControlledBrain();
             var owner = new GameNPC(brain);
             var effectList = NewGameEffectList(owner);
             
@@ -182,7 +182,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CommitChanges_OpenChanges_NPCupdatePetWindowIsNotCalled()
         {
-            var brain = NewNullControlledBrain();
+            var brain = NewFakeControlledBrain();
             var owner = new GameNPC(brain);
             var effectList = NewGameEffectList(owner);
 
@@ -206,7 +206,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void GetOfType_ListWithOneItemOfGivenType_ReturnListWithThatOneItem()
         {
-            GameEffectList effectList = createEffectListWithValidOwner();
+            GameEffectList effectList = NewGameEffectList();
             var effect = new GameSpellEffect(null, 0, 0);
             effectList.Add(effect);
 
@@ -219,17 +219,11 @@ namespace DOL.UnitTests.Gameserver
 
         //SaveAllEffects calls Database
 
-        private static GameEffectList createEffectListWithValidOwner()
-        {
-            var owner = Create.FakeNPC;
-            var effectList = new GameEffectList(owner);
-            return effectList;
-        }
-
+        private static GameEffectList NewGameEffectList() => NewGameEffectList(new FakeNPC());
         private static GameEffectList NewGameEffectList(GameLiving owner) => new GameEffectList(owner);
-        private static FakeGameLiving NewFakeLiving() => Create.FakeLiving;
+        private static FakeLiving NewFakeLiving() => new FakeLiving();
         private static FakeGameEffect NewFakeEffect() => new FakeGameEffect();
-        private static NullControlledBrain NewNullControlledBrain() => new NullControlledBrain();
+        private static FakeControlledBrain NewFakeControlledBrain() => new FakeControlledBrain();
 
         private class FakeGameEffect : IGameEffect
         {

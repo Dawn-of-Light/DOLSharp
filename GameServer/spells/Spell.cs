@@ -134,12 +134,12 @@ namespace DOL.GS
             get { return m_sharedtimergroup; }
         }
 
-		public string Target
+		public virtual string Target
 		{
 			get { return m_target; }
 		}
 
-		public int Range
+		public virtual int Range
 		{
 			get
 			{
@@ -184,7 +184,7 @@ namespace DOL.GS
 
 		}
 
-		public string SpellType
+		public virtual string SpellType
 		{
 			get { return m_spelltype; }
 		}
