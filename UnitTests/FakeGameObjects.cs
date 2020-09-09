@@ -2,6 +2,7 @@
 using DOL.Database;
 using DOL.GS;
 using DOL.GS.PacketHandler;
+using NSubstitute;
 
 namespace DOL.UnitTests.Gameserver
 {
@@ -18,12 +19,19 @@ namespace DOL.UnitTests.Gameserver
         private int totalConLostOnDeath;
         public int LastDamageDealt { get; private set; } = -1;
 
-        public override ICharacterClass CharacterClass { get { return characterClass; } }
+        public static FakePlayer CreateGeneric()
+        {
+            var player = new FakePlayer();
+            player.characterClass = new DefaultCharacterClass();
+            return player;
+        }
 
         public FakePlayer() : base(null, null)
         {
             this.ObjectState = eObjectState.Active;
         }
+
+        public override ICharacterClass CharacterClass { get { return characterClass; } }
 
         public override byte Level { get; set; }
 
@@ -89,19 +97,16 @@ namespace DOL.UnitTests.Gameserver
         public override bool TargetInView { get; set; } = true;
     }
 
-    public class FakePacketLib : PacketLib1124
-    {
-        public FakePacketLib() : base(null) { }
-
-        public override void SendCheckLOS(GameObject Checker, GameObject Target, CheckLOSResponse callback)
-        {
-            //nothing
-        }
-    }
-
     public class FakeNPC : GameNPC
     {
         public int modifiedEffectiveLevel;
+
+        public static FakeNPC CreateGeneric()
+        {
+            var brain = Substitute.For<ABrain>();
+            var npc = new FakeNPC(brain);
+            return npc;
+        }
 
         public FakeNPC(ABrain defaultBrain) : base(defaultBrain)
         {
@@ -114,7 +119,7 @@ namespace DOL.UnitTests.Gameserver
 
         public override int GetModified(eProperty property)
         {
-            switch(property)
+            switch (property)
             {
                 case eProperty.LivingEffectiveLevel:
                     return modifiedEffectiveLevel;
@@ -131,19 +136,5 @@ namespace DOL.UnitTests.Gameserver
         {
             return new System.Collections.Generic.List<int>();
         }
-    }
-
-    public class FakeRegion : Region
-    {
-
-        public FakeRegion() : base(null, new RegionData()) { }
-
-        public override long Time => -1;
-
-        public override ushort ID => 0;
-    }
-
-    public class FakeRegionData : RegionData
-    {
     }
 }

@@ -26,7 +26,7 @@ namespace DOL.UnitTests.Gameserver
             int growthPercent = 25;
             var spell = createHereticFocusDamageSpell(initialDamage, growthPercent);
             var source = createIdealL50Player();
-            var target = Create.FakeNPC();
+            var target = createGenericNPC();
             var spellLine = createGenericSpellLine();
             var damageFocus = new RampingDamageFocus(source, spell, spellLine);
             var effectiveness = 1;
@@ -46,7 +46,7 @@ namespace DOL.UnitTests.Gameserver
             int growthPercent = 25;
             var spell = createHereticFocusDamageSpell(initialDamage, growthPercent);
             var source = createIdealL50Player();
-            var target = Create.FakeNPC();
+            var target = createGenericNPC();
             var spellLine = createGenericSpellLine();
             var damageFocus = new RampingDamageFocus(source, spell, spellLine);
             var effectiveness = 1;
@@ -68,7 +68,7 @@ namespace DOL.UnitTests.Gameserver
             int growthPercent = 50;
             var spell = createHereticFocusDamageSpell(initialDamage, growthPercent);
             var source = createIdealL50Player();
-            var target = Create.FakeNPC();
+            var target = createGenericNPC();
             var spellLine = createGenericSpellLine();
             var damageFocus = new RampingDamageFocus(source, spell, spellLine);
             var effectiveness = 1;
@@ -90,7 +90,7 @@ namespace DOL.UnitTests.Gameserver
             int growthCapPercent = 70;
             var spell = createHereticFocusDamageSpell(initialDamage, growthPercent, growthCapPercent);
             var source = createIdealL50Player();
-            var target = Create.FakeNPC();
+            var target = createGenericNPC();
             var spellLine = createGenericSpellLine();
             var damageFocus = new RampingDamageFocus(source, spell, spellLine);
             var effectiveness = 1;
@@ -146,18 +146,6 @@ namespace DOL.UnitTests.Gameserver
             }
         }
 
-        private class FakeServer : GameServer
-        {
-            protected override IServerRules ServerRulesImpl => new FakeServerRules();
-            protected override void CheckAndInitDB() { }
-
-            private class FakeServerRules : NormalServerRules
-            {
-                public override bool IsAllowedToAttack(GameLiving attacker, GameLiving defender, bool quiet)
-                {
-                    return true;
-                }
-            }
-        }
-	}
+        private static FakeNPC createGenericNPC() { return FakeNPC.CreateGeneric(); }
+    }
 }

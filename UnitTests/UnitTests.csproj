@@ -37,7 +37,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Factory.cs" />
-    <Compile Include="Fakes.cs" />
+    <Compile Include="FakeGameObjects.cs" />
+    <Compile Include="FakeServer.cs" />
     <Compile Include="UT_GameEffectList.cs" />
     <Compile Include="UT_GameNPC.cs" />
     <Compile Include="UT_GamePlayer.cs" />

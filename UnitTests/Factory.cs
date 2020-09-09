@@ -8,38 +8,23 @@ namespace DOL.UnitTests.Gameserver
 {
     public static class Create
     {
-        public static Spell Spell()
+        public static Spell Spell => new Spell(new DBSpell(), 0);
+
+        public static FakePlayer GenericFakePlayer => FakePlayer.CreateGeneric();
+
+        public static FakePlayer FakePlayerAnimist
         {
-            return new Spell(new DBSpell(), 0);
+            get
+            {
+                var player = GenericFakePlayer;
+                player.characterClass = new CharacterClassAnimist();
+                return player;
+            }
         }
 
-        public static Spell DamageSpell(double damage)
-        {
-            var spell = new Spell(new DBSpell(), 0);
-            spell.Damage = 100;
-            return spell;
-        }
+        public static FakeNPC GenericFakeNPC => FakeNPC.CreateGeneric();
 
-        public static FakePlayer FakePlayer()
-        {
-            return Create.FakePlayer(new DefaultCharacterClass());
-        }
-
-        public static FakePlayer FakePlayer(ICharacterClass charClass)
-        {
-            var player = new FakePlayer();
-            player.characterClass = charClass;
-            return player;
-        }
-
-        public static FakeNPC FakeNPC()
-        {
-            var brain = Substitute.For<ABrain>();
-            var npc = new FakeNPC(brain);
-            return npc;
-        }
-
-        public static GamePet Pet(GameLiving owner)
+        public static GamePet GenericRealPet(GameLiving owner)
         {
             var brain = Substitute.For<ABrain, IControlledBrain>();
             var npcTemplate = Substitute.For<INpcTemplate>();
