@@ -2135,6 +2135,12 @@ namespace DOL.GS.ServerProperties
 		public static bool ALLOW_TRAIN_ANYWHERE;
 
 		/// <summary>
+		/// Allow players to /train without having a trainer present
+		/// </summary>
+		[ServerProperty("classes", "allow_vault_command", "Allow players to use the /vault command to open the player's vault anywhere in the world?", false)]
+		public static bool ALLOW_VAULT_COMMAND;
+
+		/// <summary>
 		/// Disable some classes from being created
 		/// </summary>
 		[ServerProperty("classes", "disabled_classes", "Serialized list of disabled classes, separated by semi-colon or a range with a dash (ie 1-5;7;9)", "")]
