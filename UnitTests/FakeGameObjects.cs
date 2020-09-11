@@ -1,8 +1,8 @@
 ﻿using DOL.AI;
+using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS;
 using DOL.GS.PacketHandler;
-using NSubstitute;
 
 namespace DOL.UnitTests.Gameserver
 {
@@ -18,13 +18,6 @@ namespace DOL.UnitTests.Gameserver
         public int baseStat;
         private int totalConLostOnDeath;
         public int LastDamageDealt { get; private set; } = -1;
-
-        public static FakePlayer CreateGeneric()
-        {
-            var player = new FakePlayer();
-            player.characterClass = new DefaultCharacterClass();
-            return player;
-        }
 
         public FakePlayer() : base(null, null)
         {
@@ -101,22 +94,13 @@ namespace DOL.UnitTests.Gameserver
     {
         public int modifiedEffectiveLevel;
 
-        public static FakeNPC CreateGeneric()
-        {
-            var brain = Substitute.For<ABrain>();
-            var npc = new FakeNPC(brain);
-            return npc;
-        }
-
         public FakeNPC(ABrain defaultBrain) : base(defaultBrain)
         {
             this.ObjectState = eObjectState.Active;
         }
 
         public override Region CurrentRegion { get { return new FakeRegion(); } set { } }
-
         public override bool IsAlive => true;
-
         public override int GetModified(eProperty property)
         {
             switch (property)
@@ -131,10 +115,47 @@ namespace DOL.UnitTests.Gameserver
                     return base.GetModified(property);
             }
         }
-
         public override System.Collections.IEnumerable GetPlayersInRadius(ushort radiusToCheck)
         {
             return new System.Collections.Generic.List<int>();
         }
+    }
+
+    public class FakeGameLiving : GameLiving
+    {
+        public bool mockIsAlive = true;
+        public eObjectState mockObjectState = eObjectState.Active;
+
+        public override bool IsAlive => mockIsAlive;
+        public override eObjectState ObjectState => mockObjectState;
+    }
+
+    public class NullControlledBrain : ABrain, IControlledBrain
+    {
+        public GameLiving fakeOwner;
+        public bool receivedUpdatePetWindow = false;
+
+        public GameLiving Owner => fakeOwner;
+        public void UpdatePetWindow() { receivedUpdatePetWindow = true; }
+
+        public eWalkState WalkState { get; }
+        public eAggressionState AggressionState { get; set; }
+        public bool IsMainPet { get; set; }
+        public void Attack(GameObject target) { }
+        public void ComeHere() { }
+        public void Follow(GameObject target) { }
+        public void FollowOwner() { }
+        public GameLiving GetLivingOwner() { return null; }
+        public GameNPC GetNPCOwner() { return null; }
+        public GamePlayer GetPlayerOwner() { return null; }
+        public void Goto(GameObject target) { }
+        public void SetAggressionState(eAggressionState state) { }
+        public void Stay() { }
+        public override void Think() { }
+    }
+
+    public class NullBrain : ABrain
+    {
+        public override void Think() { }
     }
 }
