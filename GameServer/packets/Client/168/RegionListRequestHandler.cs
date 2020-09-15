@@ -21,7 +21,7 @@ using System.Linq;
 
 namespace DOL.GS.PacketHandler.Client.v168
 {
-	[PacketHandlerAttribute(PacketHandlerType.TCP, eClientPackets.RegionListRequest, "Handles sending the region overview", eClientStatus.None)]
+	[PacketHandler(PacketHandlerType.TCP, eClientPackets.RegionListRequest, "Handles sending the region overview", eClientStatus.None)]
 	public class RegionListRequestHandler : IPacketHandler
 	{
 		public void HandlePacket(GameClient client, GSPacketIn packet)
@@ -34,7 +34,6 @@ namespace DOL.GS.PacketHandler.Client.v168
 			else
 				slot += 100;
 			var character = client.Account.Characters.FirstOrDefault(c => c.AccountSlot == slot);
-			client.LoadPlayer(character);
 
 			client.Out.SendRegions();
 		}
