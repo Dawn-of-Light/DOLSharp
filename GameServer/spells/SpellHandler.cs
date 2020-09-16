@@ -947,6 +947,10 @@ namespace DOL.GS.Spells
 			if (Caster is GamePlayer)
 			{
 				MessageToCaster("You can't see your target from here!", eChatType.CT_SpellResisted);
+				if(Spell.IsFocus && Spell.IsHarmful)
+				{
+					FocusSpellAction(null, Caster, null);
+				}
 			}
 
 			InterruptCasting();
