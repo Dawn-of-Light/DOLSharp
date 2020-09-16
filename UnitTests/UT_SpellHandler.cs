@@ -17,18 +17,31 @@ namespace DOL.UnitTests.Gameserver
             GS.ServerProperties.Properties.DISABLED_REGIONS = "";
             GS.ServerProperties.Properties.DISABLED_EXPANSIONS = "";
             GS.ServerProperties.Properties.PVE_SPELL_DAMAGE = 1;
-            GameServer.LoadTestDouble(new FakeServer());
         }
 
         #region CastSpell
         [Test]
-        public void CastSpell_GenericTarget_CastStartingEventFired()
+        public void CastSpell_OnNPCTarget_True()
         {
-            var caster = new FakePlayerNotifySpy();
-            var spell = NewGenericSpell();
+            var caster = NewFakePlayer();
+            var target = NewFakeNPC();
+            var spell = NewFakeSpell();
             var spellHandler = new SpellHandler(caster, spell, null);
 
-            spellHandler.CastSpell(NewFakeNPC());
+            bool isCastSpellSuccessful = spellHandler.CastSpell(target);
+
+            Assert.IsTrue(isCastSpellSuccessful);
+        }
+
+        [Test]
+        public void CastSpell_OnNPCTarget_CastStartingEventFired()
+        {
+            var caster = NewFakePlayer();
+            var target = NewFakeNPC();
+            var spell = NewFakeSpell();
+            var spellHandler = new SpellHandler(caster, spell, null);
+
+            spellHandler.CastSpell(target);
 
             var actual = caster.lastNotifiedEvent;
             var expected = GameLivingEvent.CastStarting;
@@ -36,26 +49,90 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual((caster.lastNotifiedEventArgs as CastingEventArgs).SpellHandler, spellHandler);
         }
 
-
-        #endregion CastSpell
-
-        private class FakePlayerNotifySpy : FakePlayer
+        [Test]
+        public void CastSpell_FocusSpell_FiveEventsOnCasterAndOneEventOnTarget()
         {
-            public DOLEvent lastNotifiedEvent;
-            public EventArgs lastNotifiedEventArgs;
+            var caster = NewFakePlayer();
+            var target = NewFakePlayer();
+            var spell = NewFakeSpell();
+            spell.fakeIsFocus = true;
+            spell.fakeTarget = "Enemy";
+            spell.Duration = 20;
+            var spellHandler = new SpellHandler(caster, spell, NewSpellLine());
+            var gameEventMgrSpy = GameEventMgrSpy.LoadAndReturn();
+            FakeServer.LoadAndReturn().FakeServerRules.fakeIsAllowedToAttack = true;
+            UtilChanceIsHundredPercent.Enable();
 
-            public FakePlayerNotifySpy() : base()
-            {
-                characterClass = new DefaultCharacterClass();
-            }
+            spellHandler.CastSpell(target);
 
-            public override void Notify(DOLEvent e, object sender, EventArgs args)
-            {
-                lastNotifiedEvent = e;
-                lastNotifiedEventArgs = args;
-                base.Notify(e, sender, args);
-            }
+            var eventNumberOnCaster = gameEventMgrSpy.GameObjectEventCollection[caster].Count;
+            var eventNumberOnTarget = gameEventMgrSpy.GameObjectEventCollection[target].Count;
+            Assert.AreEqual(5, eventNumberOnCaster, "Caster has not the right amount of event subscriptions");
+            Assert.AreEqual(1, eventNumberOnTarget, "Target has not the right amount of event subscriptions");
         }
+
+        [Test]
+        public void CastSpell_FocusSpellAndCasterMoves_AllEventsRemoved()
+        {
+            var caster = NewFakePlayer();
+            var target = NewFakeNPC();
+            var spell = NewFakeSpell();
+            spell.fakeIsFocus = true;
+            spell.fakeTarget = "realm";
+            spell.Duration = 20;
+            var spellHandler = new SpellHandler(caster, spell, NewSpellLine());
+            var gameEventMgrSpy = GameEventMgrSpy.LoadAndReturn();
+            FakeServer.LoadAndReturn().FakeServerRules.fakeIsAllowedToAttack = false;
+            UtilChanceIsHundredPercent.Enable();
+
+            spellHandler.CastSpell(target);
+            caster.OnPlayerMove();
+
+            var eventNumberOnCaster = gameEventMgrSpy.GameObjectEventCollection[caster].Count;
+            var eventNumberOnTarget = gameEventMgrSpy.GameObjectEventCollection[target].Count;
+            Assert.AreEqual(0, eventNumberOnCaster, "Caster has not the right amount of event subscriptions");
+            Assert.AreEqual(0, eventNumberOnTarget, "Target has not the right amount of event subscriptions");
+        }
+
+        [Test]
+        public void CastSpell_FocusSpellCastAndTicksOnce_AllEventsRemoved()
+        {
+            var caster = NewFakePlayer();
+            var target = NewFakePlayer();
+            var spell = NewFakeSpell();
+            spell.fakeIsFocus = true;
+            spell.fakeTarget = "Realm";
+            spell.Duration = 20;
+            spell.fakeFrequency = 20;
+            spell.fakeSpellType = "DamageShield";
+            spell.fakePulse = 1;
+            var spellHandler = new SpellHandler(caster, spell, NewSpellLine());
+            var gameEventMgrSpy = GameEventMgrSpy.LoadAndReturn();
+            FakeServer.LoadAndReturn().FakeServerRules.fakeIsAllowedToAttack = false;
+
+            Assert.IsTrue(spellHandler.CastSpell(target));
+            target.fakeRegion.fakeElapsedTime = 2;
+            spellHandler.StartSpell(target); //tick
+            caster.OnPlayerMove();
+
+            var eventNumberOnCaster = gameEventMgrSpy.GameObjectEventCollection[caster].Count;
+            var eventNumberOnTarget = gameEventMgrSpy.GameObjectEventCollection[target].Count;
+            Assert.AreEqual(0, eventNumberOnCaster, "Caster has not the right amount of event subscriptions");
+            Assert.AreEqual(0, eventNumberOnTarget, "Target has not the right amount of event subscriptions");
+        }
+
+        [Test]
+        public void CheckBeginCast_NPCTarget_True()
+        {
+            var caster = NewFakePlayer();
+            var spell = NewFakeSpell();
+            var spellHandler = new SpellHandler(caster, spell, null);
+
+            bool isBeginCastSuccessful = spellHandler.CheckBeginCast(NewFakeNPC());
+            Console.WriteLine(caster.CurrentRegion.Time);
+            Assert.IsTrue(isBeginCastSuccessful);
+        }
+        #endregion CastSpell
 
         #region CalculateDamageVariance
         [Test]
