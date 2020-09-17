@@ -82,7 +82,7 @@ namespace DOL.GS
 		/// Returns the current state of the object.
 		/// Object's with state "Deleted" should not be used!
 		/// </summary>
-		public eObjectState ObjectState
+		public virtual eObjectState ObjectState
 		{
 			get { return m_ObjectState; }
 			set

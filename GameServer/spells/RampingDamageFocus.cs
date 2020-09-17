@@ -24,7 +24,6 @@ using DOL.Events;
 using DOL.GS.Effects;
 using DOL.GS.PacketHandler;
 using DOL.GS.RealmAbilities;
-using DOL.GS.ServerProperties;
 using DOL.Language;
 
 namespace DOL.GS.Spells
@@ -35,9 +34,12 @@ namespace DOL.GS.Spells
 		private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		private GameLiving Target;
 		private int pulseCount = 0;
-		private const string LOSEFFECTIVENESS = "LOS Effectivness";
+		private ISpellHandler snareSubSpell;
 
-		public RampingDamageFocus(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, new FocusSpell(spell), spellLine) { }
+		public RampingDamageFocus(GameLiving caster, Spell spell, SpellLine spellLine) : base(caster, new FocusSpell(spell), spellLine) 
+		{
+			snareSubSpell = Spell.Value > 0 ? CreateSnare() : null;
+		}
 
 		public override void FinishSpellCast(GameLiving target)
 		{
@@ -105,22 +107,6 @@ namespace DOL.GS.Spells
 			return new GameSpellEffect(this, CalculateEffectDuration(target, effectiveness), 0, effectiveness);
 		}
 
-		public override void OnEffectStart(GameSpellEffect effect)
-		{
-			if (Spell.Pulse == 0)
-				SendEffectAnimation(effect.Owner, 0, false, 1);
-			if (Spell.IsFocus) // Add Event handlers for focus spell
-			{
-				Caster.TempProperties.setProperty(FOCUS_SPELL, effect);
-				GameEventMgr.AddHandler(Caster, GameLivingEvent.AttackFinished, new DOLEventHandler(FocusSpellAction));
-				GameEventMgr.AddHandler(Caster, GameLivingEvent.CastStarting, new DOLEventHandler(FocusSpellAction));
-				GameEventMgr.AddHandler(Caster, GameLivingEvent.Moving, new DOLEventHandler(FocusSpellAction));
-				GameEventMgr.AddHandler(Caster, GameLivingEvent.Dying, new DOLEventHandler(FocusSpellAction));
-				GameEventMgr.AddHandler(Caster, GameLivingEvent.AttackedByEnemy, new DOLEventHandler(FocusSpellAction));
-				GameEventMgr.AddHandler(effect.Owner, GameLivingEvent.Dying, new DOLEventHandler(FocusSpellAction));
-			}
-		}
-
 		public override bool CasterIsAttacked(GameLiving attacker)
 		{
 			if (Spell.Uninterruptible && Caster.GetDistanceTo(attacker) > 200)
@@ -138,12 +124,6 @@ namespace DOL.GS.Spells
 				}
 			}
 			return false;
-		}
-
-		public override void OnEffectRemove(GameSpellEffect effect, bool overwrite)
-		{
-			FocusSpellAction(null, Caster, null);
-			base.OnEffectRemove(effect, overwrite);
 		}
 
 		protected override void FocusSpellAction(DOLEvent e, object sender, EventArgs args)
@@ -164,7 +144,6 @@ namespace DOL.GS.Spells
 				}
 			}
 			
-
 			GameEventMgr.RemoveHandler(Caster, GameLivingEvent.AttackFinished, new DOLEventHandler(FocusSpellAction));
 			GameEventMgr.RemoveHandler(Caster, GameLivingEvent.CastStarting, new DOLEventHandler(FocusSpellAction));
 			GameEventMgr.RemoveHandler(Caster, GameLivingEvent.Moving, new DOLEventHandler(FocusSpellAction));
@@ -189,30 +168,6 @@ namespace DOL.GS.Spells
 			MessageToCaster(String.Format("You lose your focus on your {0} spell.", currentEffect.Spell.Name), eChatType.CT_SpellExpires);
 		}
 
-		public override void CheckLOSPlayerToTarget(GamePlayer player, ushort response, ushort targetOID)
-		{
-			if (player == null) // Hmm
-				return;
-
-			bool isInView = (response & 0x100) == 0x100;
-			if (isInView)
-				return;
-
-			if (Properties.ENABLE_DEBUG)
-			{
-				MessageToCaster("LoS Interrupt in CheckLOSPlayerToTarget", eChatType.CT_System);
-				log.Debug("LoS Interrupt in CheckLOSPlayerToTarget");
-			}
-
-			if (Caster is GamePlayer)
-			{
-				MessageToCaster("You can't see your target from here!", eChatType.CT_Important);
-				FocusSpellAction(null, Caster, null);
-			}
-
-			InterruptCasting();
-		}
-
 		public override void OnDirectEffect(GameLiving target, double effectiveness)
 		{
 			if (target == null) return;
@@ -231,19 +186,7 @@ namespace DOL.GS.Spells
 
 				if (Spell.Value > 0)
 				{
-					DBSpell dbSpell = new DBSpell();
-					dbSpell.ClientEffect = Spell.ClientEffect;
-					dbSpell.Icon = Spell.Icon;
-					dbSpell.Type = "SpeedDecrease";
-					dbSpell.Duration = (Spell.Radius == 0) ? 10 : 3;
-					dbSpell.Target = "Enemy";
-					dbSpell.Range = 1500;
-					dbSpell.Value = Spell.Value;
-					dbSpell.Name = Spell.Name + " Snare";
-					dbSpell.DamageType = (int)Spell.DamageType;
-					Spell subSpell = new Spell(dbSpell, Spell.Level);
-					ISpellHandler subSpellHandler = new SnareWithoutImmunity(Caster, subSpell, SpellLine);
-					subSpellHandler.StartSpell(t);
+					snareSubSpell.StartSpell(t);
 				}
 			}
 		}
@@ -294,6 +237,23 @@ namespace DOL.GS.Spells
 
 				return list;
 			}
+		}
+
+		private ISpellHandler CreateSnare()
+		{
+			DBSpell dbSpell = new DBSpell();
+			dbSpell.ClientEffect = Spell.ClientEffect;
+			dbSpell.Icon = Spell.Icon;
+			dbSpell.Type = "SpeedDecrease";
+			dbSpell.Duration = (Spell.Radius == 0) ? 10 : 3;
+			dbSpell.Target = "Enemy";
+			dbSpell.Range = 1500;
+			dbSpell.Value = Spell.Value;
+			dbSpell.Name = Spell.Name + " Snare";
+			dbSpell.DamageType = (int)Spell.DamageType;
+			Spell subSpell = new Spell(dbSpell, Spell.Level);
+			ISpellHandler subSpellHandler = new SnareWithoutImmunity(Caster, subSpell, SpellLine);
+			return subSpellHandler;
 		}
 	}
 

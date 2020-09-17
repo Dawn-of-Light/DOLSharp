@@ -27,8 +27,12 @@ namespace DOL.Events
 	/// <summary>
 	/// Manages per-object and global event handlers.
 	/// </summary>
-	public static class GameEventMgr
+	public class GameEventMgr
 	{
+		private static GameEventMgr soleInstance = new GameEventMgr();
+
+		public static void LoadTestDouble(GameEventMgr testDouble) { soleInstance = testDouble; }
+
 		/// <summary>
 		/// How long to wait for a lock acquisition before failing.
 		/// </summary>
@@ -42,7 +46,7 @@ namespace DOL.Events
 		/// <summary>
 		/// Holds a list of event handler collections for single gameobjects
 		/// </summary>
-		private static Dictionary<object, DOLEventHandlerCollection> m_gameObjectEventCollections;
+		protected static Dictionary<object, DOLEventHandlerCollection> m_gameObjectEventCollections;
 
 		public static int NumObjectHandlers
 		{
@@ -60,35 +64,28 @@ namespace DOL.Events
 			}
 		}
 
-		/// <summary>
-		/// Holds a list of all global eventhandlers
-		/// </summary>
-		private static readonly DOLEventHandlerCollection m_globalHandlerCollection;
+		private readonly DOLEventHandlerCollection m_globalHandlerCollection;
 
-		/// <summary>
-		/// Get all global event handlers
-		/// </summary>
-		public static DOLEventHandlerCollection GlobalHandlerCollection
-		{
-			get { return m_globalHandlerCollection; }
-		}
+		private static DOLEventHandlerCollection GlobalHandlerCollection => soleInstance.m_globalHandlerCollection;
 
 		/// <summary>
 		/// Get the number of global event handlers
 		/// </summary>
 		public static int NumGlobalHandlers
 		{
-			get { return m_globalHandlerCollection.Count; }
+			get { return GlobalHandlerCollection.Count; }
 		}
 
 		/// <summary>
 		/// A lock used to access the event collections of livings
 		/// </summary>
-		private static readonly ReaderWriterLockSlim Lock;
+		private readonly ReaderWriterLockSlim m_lock;
 
-		static GameEventMgr()
+		private static ReaderWriterLockSlim Lock => soleInstance.m_lock;
+
+		protected GameEventMgr()
 		{
-			Lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+			m_lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
 			m_gameObjectEventCollections = new Dictionary<object, DOLEventHandlerCollection>();
 			m_globalHandlerCollection = new DOLEventHandlerCollection();
 		}
@@ -121,7 +118,7 @@ namespace DOL.Events
 					{
 						try
 						{
-							m_globalHandlerCollection.AddHandler(e, (DOLEventHandler) Delegate.CreateDelegate(typeof(DOLEventHandler), mInfo));
+							GlobalHandlerCollection.AddHandler(e, (DOLEventHandler) Delegate.CreateDelegate(typeof(DOLEventHandler), mInfo));
 						}
 						catch(Exception ex)
 						{
@@ -197,11 +194,11 @@ namespace DOL.Events
 
 			if(unique)
 			{
-				m_globalHandlerCollection.AddHandlerUnique(e, del);
+				GlobalHandlerCollection.AddHandlerUnique(e, del);
 			}
 			else
 			{
-				m_globalHandlerCollection.AddHandler(e, del);
+				GlobalHandlerCollection.AddHandler(e, del);
 			}
 		}
 
@@ -315,7 +312,7 @@ namespace DOL.Events
 			if(del == null)
 				throw new ArgumentNullException("del", "No event handler given!");
 
-			m_globalHandlerCollection.RemoveHandler(e, del);
+			GlobalHandlerCollection.RemoveHandler(e, del);
 		}
 
 		/// <summary>
@@ -435,7 +432,7 @@ namespace DOL.Events
 				}
 			}
 
-			m_globalHandlerCollection.RemoveAllHandlers();
+			GlobalHandlerCollection.RemoveAllHandlers();
 		}
 
 		/// <summary>
@@ -513,7 +510,7 @@ namespace DOL.Events
 			}
 
 			// notify globally-bound handler
-			m_globalHandlerCollection.Notify(e, sender, eArgs);
+			GlobalHandlerCollection.Notify(e, sender, eArgs);
 		}
 	}
 }
