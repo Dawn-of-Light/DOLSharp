@@ -41,7 +41,7 @@ namespace DOL.GS.Spells
 		/// <param name="target"></param>
 		protected override void SendUpdates(GameLiving target)
 		{
-			target.SendLivingStatsAndRegenUpdate();
+			target.UpdateHealthManaEndu();
 		}
 		
 		/// <summary>

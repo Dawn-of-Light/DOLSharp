@@ -5734,6 +5734,21 @@ namespace DOL.GS
 			}
 		}
 
+		public virtual void UpdateHealthManaEndu()
+		{
+			if (IsAlive)
+			{
+				if (Health < MaxHealth) StartHealthRegeneration();
+				else if (Health > MaxHealth) Health = MaxHealth;
+
+				if (Mana < MaxMana) StartPowerRegeneration();
+				else if (Mana > MaxMana) Mana = MaxMana;
+
+				if (Endurance < MaxEndurance) StartEnduranceRegeneration();
+				else if (Endurance > MaxEndurance) Endurance = MaxEndurance;
+			}
+		}
+
 		/// <summary>
 		/// Set the tick speed, that is the distance covered in one tick.
 		/// </summary>

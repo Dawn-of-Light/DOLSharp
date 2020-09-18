@@ -262,11 +262,11 @@ namespace DOL.GS
 			/// The cached bucket with 1ms granularity.
 			/// All intervals that fit this array don't need sorting.
 			/// </summary>
-			private readonly CacheBucket[] m_cachedBucket = new CacheBucket[1 << CACHE_BITS];
+			protected CacheBucket[] m_cachedBucket;
 			/// <summary>
             /// Stores all timers. Array index = (TimerTick>>BUCKET_BITS)&TABLE_MASK
 			/// </summary>
-			private readonly GameTimer[] m_buckets = new GameTimer[1 << TABLE_BITS];
+			protected GameTimer[] m_buckets;
 			/// <summary>
 			/// The count of active timers in the manager
 			/// </summary>
@@ -279,7 +279,7 @@ namespace DOL.GS
 			/// <summary>
 			/// Holds the first and the last timers in the chain
 			/// </summary>
-			private struct CacheBucket
+			protected struct CacheBucket
 			{
 				/// <summary>
 				/// The first timer in the chain
@@ -304,6 +304,7 @@ namespace DOL.GS
 				if (name == null)
 					throw new ArgumentNullException("name");
 				m_name = name;
+				Init();
 #if MonitorCallbacks
 				FileStream stream = new FileStream("logs\\delays-" + m_name + ".log", FileMode.Append, FileAccess.Write, FileShare.Read);
 				m_delayLog = new StreamWriter(stream);
@@ -311,6 +312,12 @@ namespace DOL.GS
 				m_delayLog.WriteLine("=== new log "+DateTime.Now.ToString());
 				m_delayLog.WriteLine("===============================\n\n\n");
 #endif
+			}
+
+			protected virtual void Init()
+			{
+				m_cachedBucket = new CacheBucket[1 << CACHE_BITS];
+				m_buckets = new GameTimer[1 << TABLE_BITS];
 			}
 
 			/// <summary>
@@ -627,7 +634,7 @@ namespace DOL.GS
 			/// </summary>
 			/// <param name="t">The timer to insert</param>
 			/// <param name="offsetTick">The offset from current tick. min value=1, max value&lt;MaxInterval</param>
-			internal void InsertTimer(GameTimer t, int offsetTick)
+			internal protected virtual void InsertTimer(GameTimer t, int offsetTick)
 			{
 				if (offsetTick > MaxInterval || offsetTick < 1)
 					throw new ArgumentOutOfRangeException("offsetTick", offsetTick.ToString(), "Offset must be in range from 1 to "+MaxInterval);
@@ -692,7 +699,7 @@ namespace DOL.GS
 			/// Removes the timer from the table.
 			/// </summary>
 			/// <param name="timer">The timer to remove</param>
-			internal void RemoveTimer(GameTimer timer)
+			internal protected virtual void RemoveTimer(GameTimer timer)
 			{
 				lock (m_buckets)
 				{
