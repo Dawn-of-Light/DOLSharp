@@ -66,7 +66,7 @@ namespace DOL.Events
 
 		private readonly DOLEventHandlerCollection m_globalHandlerCollection;
 
-		private static DOLEventHandlerCollection GlobalHandlerCollection => soleInstance.m_globalHandlerCollection;
+		public static DOLEventHandlerCollection GlobalHandlerCollection => soleInstance.m_globalHandlerCollection;
 
 		/// <summary>
 		/// Get the number of global event handlers
