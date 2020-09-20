@@ -1,8 +1,6 @@
 ﻿using NUnit.Framework;
-using NSubstitute;
 using DOL.GS;
 using DOL.AI;
-using DOL.GS.PropertyCalc;
 
 namespace DOL.UnitTests.Gameserver
 {
@@ -10,7 +8,7 @@ namespace DOL.UnitTests.Gameserver
     class UT_GameNPC
     {
         [TestFixtureSetUp]
-        public void init()
+        public void Init()
         {
             GameLiving.LoadCalculators();
         }
@@ -18,7 +16,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void GetModified_GameNPCWith75Constitution_Return75()
         {
-            var brain = Substitute.For<ABrain>();
+            var brain = NewFakeBrain();
             var npc = new GameNPC(brain);
             npc.Constitution = 75;
 
@@ -26,5 +24,7 @@ namespace DOL.UnitTests.Gameserver
             
             Assert.AreEqual(75, actual);
         }
+
+        private static ABrain NewFakeBrain() => new FakeControlledBrain();
     }
 }

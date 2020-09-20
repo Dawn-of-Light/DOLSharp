@@ -2,7 +2,6 @@
 using DOL.GS.Spells;
 using DOL.GS;
 using DOL.Database;
-using DOL.GS.ServerRules;
 
 namespace DOL.UnitTests.Gameserver
 {
@@ -16,7 +15,7 @@ namespace DOL.UnitTests.Gameserver
             GS.ServerProperties.Properties.DISABLED_REGIONS = "";
             GS.ServerProperties.Properties.DISABLED_EXPANSIONS = "";
             GS.ServerProperties.Properties.PVE_SPELL_DAMAGE = 1;
-            GameServer.LoadTestDouble(new FakeServer());
+            FakeServer.LoadAndReturn().FakeServerRules.fakeIsAllowedToAttack = true;
         }
 
         [Test]
@@ -24,10 +23,10 @@ namespace DOL.UnitTests.Gameserver
         {
             double initialDamage = 100;
             int growthPercent = 25;
-            var spell = createHereticFocusDamageSpell(initialDamage, growthPercent);
-            var source = createIdealL50Player();
-            var target = Create.FakeNPC();
-            var spellLine = createGenericSpellLine();
+            var spell = NewHereticFocusDamageSpell(initialDamage, growthPercent);
+            var source = NewL50Player();
+            var target = NewFakeNPC();
+            var spellLine = NewGenericSpellLine();
             var damageFocus = new RampingDamageFocus(source, spell, spellLine);
             var effectiveness = 1;
 
@@ -44,10 +43,10 @@ namespace DOL.UnitTests.Gameserver
         {
             double initialDamage = 100;
             int growthPercent = 25;
-            var spell = createHereticFocusDamageSpell(initialDamage, growthPercent);
-            var source = createIdealL50Player();
-            var target = Create.FakeNPC();
-            var spellLine = createGenericSpellLine();
+            var spell = NewHereticFocusDamageSpell(initialDamage, growthPercent);
+            var source = NewL50Player();
+            var target = NewFakeNPC();
+            var spellLine = NewGenericSpellLine();
             var damageFocus = new RampingDamageFocus(source, spell, spellLine);
             var effectiveness = 1;
 
@@ -66,10 +65,10 @@ namespace DOL.UnitTests.Gameserver
         {
             double initialDamage = 100;
             int growthPercent = 50;
-            var spell = createHereticFocusDamageSpell(initialDamage, growthPercent);
-            var source = createIdealL50Player();
-            var target = Create.FakeNPC();
-            var spellLine = createGenericSpellLine();
+            var spell = NewHereticFocusDamageSpell(initialDamage, growthPercent);
+            var source = NewL50Player();
+            var target = NewFakeNPC();
+            var spellLine = NewGenericSpellLine();
             var damageFocus = new RampingDamageFocus(source, spell, spellLine);
             var effectiveness = 1;
 
@@ -88,10 +87,10 @@ namespace DOL.UnitTests.Gameserver
             double initialDamage = 100;
             int growthPercent = 50;
             int growthCapPercent = 70;
-            var spell = createHereticFocusDamageSpell(initialDamage, growthPercent, growthCapPercent);
-            var source = createIdealL50Player();
-            var target = Create.FakeNPC();
-            var spellLine = createGenericSpellLine();
+            var spell = NewHereticFocusDamageSpell(initialDamage, growthPercent, growthCapPercent);
+            var source = NewL50Player();
+            var target = NewFakeNPC();
+            var spellLine = NewGenericSpellLine();
             var damageFocus = new RampingDamageFocus(source, spell, spellLine);
             var effectiveness = 1;
 
@@ -105,13 +104,13 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(expected, actual);
         }
 
-        private Spell createHereticFocusDamageSpell(double initialDamage, int growthPercent)
+        private Spell NewHereticFocusDamageSpell(double initialDamage, int growthPercent)
         {
             int noCap = int.MaxValue;
-            return createHereticFocusDamageSpell(initialDamage, growthPercent, noCap);
+            return NewHereticFocusDamageSpell(initialDamage, growthPercent, noCap);
         }
 
-        private Spell createHereticFocusDamageSpell(double initialDamage, int growthPercent, int growthCapPercent)
+        private Spell NewHereticFocusDamageSpell(double initialDamage, int growthPercent, int growthCapPercent)
         {
             var dbspell = new DBSpell();
             dbspell.LifeDrainReturn = growthPercent;
@@ -123,18 +122,16 @@ namespace DOL.UnitTests.Gameserver
             return spell;
         }
 
-        private SpellLine createGenericSpellLine()
+        private SpellLine NewGenericSpellLine()
         {
             return new SpellLine("keyname", "lineName", "specName", true);
         }
 
-        private FakePlayer createIdealL50Player()
+        private FakePlayer NewL50Player()
         {
             var player = new FakePlayer();
-            player.characterClass = new DefaultCharacterClass();
+            player.fakeCharacterClass = new DefaultCharacterClass();
             player.Level = 50;
-            player.modifiedEffectiveLevel = 50;
-            player.modifiedIntelligence = 60;
             return player;
         }
 
@@ -146,18 +143,6 @@ namespace DOL.UnitTests.Gameserver
             }
         }
 
-        private class FakeServer : GameServer
-        {
-            protected override IServerRules ServerRulesImpl => new FakeServerRules();
-            protected override void CheckAndInitDB() { }
-
-            private class FakeServerRules : NormalServerRules
-            {
-                public override bool IsAllowedToAttack(GameLiving attacker, GameLiving defender, bool quiet)
-                {
-                    return true;
-                }
-            }
-        }
-	}
+        private static FakeNPC NewFakeNPC() => new FakeNPC();
+    }
 }

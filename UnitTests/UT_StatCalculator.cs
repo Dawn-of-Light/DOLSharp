@@ -11,7 +11,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValueFromBuffs_GameNPCWith100ConstBaseBuff_Return100()
         {
-            var npc = Create.FakeNPC();
+            var npc = NewFakeNPC();
             npc.BaseBuffBonusCategory[eProperty.Constitution] = 100;
             StatCalculator statCalc = createStatCalculator();
 
@@ -26,7 +26,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValueFromBuffs_Level50PlayerWith100ConstBaseBuff_ReturnCapAt62()
         {
-            var player = Create.FakePlayer();
+            var player = NewFakePlayer();
             player.Level = 50;
             player.BaseBuffBonusCategory[eProperty.Constitution] = 100;
             var statCalc = createStatCalculator();
@@ -40,7 +40,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValueFromBuffs_Level50PlayerWith100ConstSpecBuff_ReturnCapAt93()
         {
-            var player = Create.FakePlayer();
+            var player = NewFakePlayer();
             player.Level = 50;
             player.SpecBuffBonusCategory[eProperty.Constitution] = 100;
             var statCalc = createStatCalculator();
@@ -54,7 +54,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValueFromBuffs_BaseBuff3AndSpecBuff4_Return7()
         {
-            var npc = Create.FakeNPC();
+            var npc = NewFakeNPC();
             npc.BaseBuffBonusCategory[eProperty.Constitution] = 3;
             npc.SpecBuffBonusCategory[eProperty.Constitution] = 4;
             StatCalculator statCalc = createStatCalculator();
@@ -91,7 +91,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValueFromItems_Level50Player100ConstFromItems_ReturnCapAt75()
         {
-            var player = Create.FakePlayer();
+            var player = NewFakePlayer();
             player.Level = 50;
             player.ItemBonus[eProperty.Constitution] = 100;
             StatCalculator statCalc = createStatCalculator();
@@ -106,7 +106,7 @@ namespace DOL.UnitTests.Gameserver
         public void CalcValueFromItems_Level50NPC100ConstFromItems_ReturnCapAt75()
         {
             var stat = eProperty.Constitution;
-            var npc = Create.FakeNPC();
+            var npc = NewFakeNPC();
             npc.Level = 50;
             npc.ItemBonus[stat] = 100;
             StatCalculator statCalc = createStatCalculator();
@@ -120,7 +120,8 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValueFromItems_IntelligenceOfLevel50AnimistWith50AcuityFromItems_Return50()
         {
-            var player = Create.FakePlayer(new CharacterClassAnimist());
+            var player = NewFakePlayer();
+            player.fakeCharacterClass = new CharacterClassAnimist();
             player.Level = 50;
             player.ItemBonus[eProperty.Acuity] = 50;
             StatCalculator statCalc = createStatCalculator();
@@ -133,7 +134,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValueFromItems_Level50Player150ConAnd100MythicalConCap_ReturnCapAt127()
         {
-            var player = Create.FakePlayer();
+            var player = NewFakePlayer();
             player.Level = 50;
             player.ItemBonus[eProperty.MythicalConCapBonus] = 100;
             player.ItemBonus[eProperty.Constitution] = 150;
@@ -147,7 +148,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValueFromItems_Level50PlayerWith5MythicalConCap100ConCap_ReturnCapAt106()
         {
-            var player = Create.FakePlayer();
+            var player = NewFakePlayer();
             player.Level = 50;
             player.ItemBonus[eProperty.MythicalConCapBonus] = 5;
             player.ItemBonus[eProperty.ConCapBonus] = 100;
@@ -162,7 +163,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void GetItemBonusCapIncrease_Level50Player100ConstCap_ReturnCapAt26()
         {
-            var player = Create.FakePlayer();
+            var player = NewFakePlayer();
             player.Level = 50;
             player.ItemBonus[eProperty.ConCapBonus] = 100;
 
@@ -175,7 +176,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void GetItemBonusCapIncrease_Level50Player10ConstCap_Return10()
         {
-            var player = Create.FakePlayer();
+            var player = NewFakePlayer();
             player.Level = 50;
             player.ItemBonus[eProperty.ConCapBonus] = 10;
 
@@ -187,7 +188,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void GetMythicalItemBonusCapIncrease_PlayerWith100MythicalConCap_ReturnCapAt52()
         {
-            var player = Create.FakePlayer();
+            var player = NewFakePlayer();
             player.ItemBonus[eProperty.MythicalConCapBonus] = 100;
 
             int actual = StatCalculator.GetMythicalItemBonusCapIncrease(player, eProperty.Constitution);
@@ -198,7 +199,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void GetMythicalItemBonusCapIncrease_PlayerWith10MythicalConCap_Return10()
         {
-            var player = Create.FakePlayer();
+            var player = NewFakePlayer();
             player.ItemBonus[eProperty.MythicalConCapBonus] = 10;
 
             int actual = StatCalculator.GetMythicalItemBonusCapIncrease(player, eProperty.Constitution);
@@ -209,7 +210,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValue_NPCWith100Constitution_Return100()
         {
-            var npc = Create.FakeNPC();
+            var npc = NewFakeNPC();
             npc.Constitution = 100;
             StatCalculator statCalc = createStatCalculator();
 
@@ -221,7 +222,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValue_NPCWith100Intelligence_Return100()
         {
-            var npc = Create.FakeNPC();
+            var npc = NewFakeNPC();
             npc.Intelligence = 100;
             StatCalculator statCalc = createStatCalculator();
 
@@ -233,7 +234,8 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValue_GetIntelligenceFromLevel50AnimistWith50Acuity_Return50()
         {
-            var player = Create.FakePlayer(new CharacterClassAnimist());
+            var player = NewFakePlayer();
+            player.fakeCharacterClass = new CharacterClassAnimist();
             player.Level = 50;
             player.BaseBuffBonusCategory[(int)eProperty.Acuity] = 50;
             StatCalculator statCalc = createStatCalculator();
@@ -246,7 +248,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValue_200ConstitutionAbilityBonus_Return200()
         {
-            var player = Create.FakePlayer();
+            var player = NewFakePlayer();
             player.AbilityBonus[eProperty.Constitution] = 200;
             StatCalculator statCalc = createStatCalculator();
 
@@ -258,7 +260,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValue_200ConstitutionDebuff_Return1()
         {
-            var player = Create.FakePlayer();
+            var player = NewFakePlayer();
             player.DebuffCategory[eProperty.Constitution] = 200;
             StatCalculator statCalc = createStatCalculator();
 
@@ -270,7 +272,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValue_200ConAbilityBonusAnd50ConDebuff_Return200()
         {
-            var player = Create.FakePlayer();
+            var player = NewFakePlayer();
             player.AbilityBonus[eProperty.Constitution] = 200;
             player.DebuffCategory[eProperty.Constitution] = 50;
             StatCalculator statCalc = createStatCalculator();
@@ -283,7 +285,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValue_70ConBuffBonusAnd50ConDebuff_Return20()
         {
-            var player = Create.FakePlayer();
+            var player = NewFakePlayer();
             player.Level = 50;
             player.SpecBuffBonusCategory[eProperty.Constitution] = 70;
             player.DebuffCategory[eProperty.Constitution] = 50;
@@ -297,7 +299,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValue_70ConItemBonusAnd50ConDebuff_Return45()
         {
-            var player = Create.FakePlayer();
+            var player = NewFakePlayer();
             player.Level = 50;
             player.ItemBonus[eProperty.Constitution] = 70;
             player.DebuffCategory[eProperty.Constitution] = 50;
@@ -312,7 +314,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValue_70ConBaseStatAnd50ConDebuff_Return45()
         {
-            var player = Create.FakePlayer();
+            var player = NewFakePlayer();
             player.Level = 50;
             player.baseStat = 70;
             player.DebuffCategory[eProperty.Constitution] = 50;
@@ -327,7 +329,7 @@ namespace DOL.UnitTests.Gameserver
         [Test]
         public void CalcValue_70ConBaseStatAnd3ConLostOnDeath_Return67()
         {
-            var player = Create.FakePlayer();
+            var player = NewFakePlayer();
             player.Level = 50;
             player.baseStat = 70;
             player.TotalConstitutionLostAtDeath = 3;
@@ -342,5 +344,8 @@ namespace DOL.UnitTests.Gameserver
         {
             return new StatCalculator();
         }
+
+        private static FakePlayer NewFakePlayer() => new FakePlayer();
+        private static FakeNPC NewFakeNPC() => new FakeNPC();
     }
 }

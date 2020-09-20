@@ -1,4 +1,5 @@
 ﻿using DOL.AI;
+using DOL.AI.Brain;
 using DOL.Database;
 using DOL.GS;
 using DOL.GS.PacketHandler;
@@ -7,38 +8,29 @@ namespace DOL.UnitTests.Gameserver
 {
     public class FakePlayer : GamePlayer
     {
+        public ICharacterClass fakeCharacterClass = new DefaultCharacterClass();
         public int modifiedSpecLevel;
-        public ICharacterClass characterClass;
         public int modifiedIntelligence;
-        public int modiefiedToHitBonus;
+        public int modifiedToHitBonus;
         public int modifiedSpellLevel;
         public int modifiedEffectiveLevel;
         public int modifiedSpellDamage = 0;
         public int baseStat;
         private int totalConLostOnDeath;
         public int LastDamageDealt { get; private set; } = -1;
-
-        public override ICharacterClass CharacterClass { get { return characterClass; } }
+        public FakeRegion fakeRegion = new FakeRegion();
 
         public FakePlayer() : base(null, null)
         {
             this.ObjectState = eObjectState.Active;
         }
 
+        public override ICharacterClass CharacterClass { get { return fakeCharacterClass; } }
         public override byte Level { get; set; }
-
-        public override Region CurrentRegion { get { return new FakeRegion(); } set { } }
-
-        public override void LoadFromDatabase(DataObject obj)
-        {
-        }
-
+        public override Region CurrentRegion { get { return fakeRegion; } set { } }
         public override IPacketLib Out => new FakePacketLib();
-
-        public override int GetModifiedSpecLevel(string keyName)
-        {
-            return modifiedSpecLevel;
-        }
+        public override int GetBaseStat(eStat stat) => baseStat;
+        public override int GetModifiedSpecLevel(string keyName) => modifiedSpecLevel;
 
         public override int GetModified(eProperty property)
         {
@@ -49,21 +41,17 @@ namespace DOL.UnitTests.Gameserver
                 case eProperty.SpellLevel:
                     return modifiedSpellLevel;
                 case eProperty.ToHitBonus:
-                    return modiefiedToHitBonus;
+                    return modifiedToHitBonus;
                 case eProperty.LivingEffectiveLevel:
                     return modifiedEffectiveLevel;
                 case eProperty.SpellDamage:
                     return modifiedSpellDamage;
                 default:
                     return base.GetModified(property);
-                    //throw new ArgumentException("There is no property: " + property);
             }
         }
 
-        public override int GetBaseStat(eStat stat)
-        {
-            return baseStat;
-        }
+        public override void LoadFromDatabase(DataObject obj) { }
 
         public override void DealDamage(AttackData ad)
         {
@@ -89,16 +77,6 @@ namespace DOL.UnitTests.Gameserver
         public override bool TargetInView { get; set; } = true;
     }
 
-    public class FakePacketLib : PacketLib1124
-    {
-        public FakePacketLib() : base(null) { }
-
-        public override void SendCheckLOS(GameObject Checker, GameObject Target, CheckLOSResponse callback)
-        {
-            //nothing
-        }
-    }
-
     public class FakeNPC : GameNPC
     {
         public int modifiedEffectiveLevel;
@@ -108,13 +86,13 @@ namespace DOL.UnitTests.Gameserver
             this.ObjectState = eObjectState.Active;
         }
 
+        public FakeNPC() : this(new FakeBrain()) { }
+
         public override Region CurrentRegion { get { return new FakeRegion(); } set { } }
-
         public override bool IsAlive => true;
-
         public override int GetModified(eProperty property)
         {
-            switch(property)
+            switch (property)
             {
                 case eProperty.LivingEffectiveLevel:
                     return modifiedEffectiveLevel;
@@ -126,24 +104,47 @@ namespace DOL.UnitTests.Gameserver
                     return base.GetModified(property);
             }
         }
-
         public override System.Collections.IEnumerable GetPlayersInRadius(ushort radiusToCheck)
         {
             return new System.Collections.Generic.List<int>();
         }
     }
 
-    public class FakeRegion : Region
+    public class FakeLiving : GameLiving
     {
+        public bool fakeIsAlive = true;
+        public eObjectState fakeObjectState = eObjectState.Active;
 
-        public FakeRegion() : base(null, new RegionData()) { }
-
-        public override long Time => -1;
-
-        public override ushort ID => 0;
+        public override bool IsAlive => fakeIsAlive;
+        public override eObjectState ObjectState => fakeObjectState;
     }
 
-    public class FakeRegionData : RegionData
+    public class FakeControlledBrain : ABrain, IControlledBrain
     {
+        public GameLiving fakeOwner;
+        public bool receivedUpdatePetWindow = false;
+
+        public GameLiving Owner => fakeOwner;
+        public void UpdatePetWindow() { receivedUpdatePetWindow = true; }
+
+        public eWalkState WalkState { get; }
+        public eAggressionState AggressionState { get; set; }
+        public bool IsMainPet { get; set; }
+        public void Attack(GameObject target) { }
+        public void ComeHere() { }
+        public void Follow(GameObject target) { }
+        public void FollowOwner() { }
+        public GameLiving GetLivingOwner() { return null; }
+        public GameNPC GetNPCOwner() { return null; }
+        public GamePlayer GetPlayerOwner() { return null; }
+        public void Goto(GameObject target) { }
+        public void SetAggressionState(eAggressionState state) { }
+        public void Stay() { }
+        public override void Think() { }
+    }
+
+    public class FakeBrain : ABrain
+    {
+        public override void Think() { }
     }
 }

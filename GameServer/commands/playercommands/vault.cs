@@ -1,4 +1,4 @@
-/*
+﻿/*
  * DAWN OF LIGHT - The first free open source DAoC server emulator
  * 
  * This program is free software; you can redistribute it and/or
@@ -16,26 +16,23 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-using System.Linq;
+using DOL.Database;
+using DOL.GS.PacketHandler;
+using System.Collections;
 
-namespace DOL.GS.PacketHandler.Client.v168
+namespace DOL.GS.Commands
 {
-	[PacketHandler(PacketHandlerType.TCP, eClientPackets.RegionListRequest, "Handles sending the region overview", eClientStatus.None)]
-	public class RegionListRequestHandler : IPacketHandler
+	[CmdAttribute(
+		"&vault",
+		ePrivLevel.Player,
+		"Open the player's inventory.")]
+	public class VaultCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
-		public void HandlePacket(GameClient client, GSPacketIn packet)
+		public void OnCommand(GameClient client, string[] args)
 		{
-			var slot = packet.ReadByte();
-			if (slot >= 0x14)
-				slot += 300 - 0x14;
-			else if (slot >= 0x0A)
-				slot += 200 - 0x0A;
-			else
-				slot += 100;
-			var character = client.Account.Characters.FirstOrDefault(c => c.AccountSlot == slot);
-
-			client.Out.SendRegions();
+			if ((ServerProperties.Properties.ALLOW_VAULT_COMMAND || client.Account.PrivLevel > 1)
+				&& client.Player is GamePlayer player && player.Inventory is IGameInventory inventory)
+					player.Out.SendInventoryItemsUpdate(eInventoryWindowType.PlayerVault, inventory.AllItems);
 		}
 	}
 }

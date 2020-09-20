@@ -760,7 +760,7 @@ Scripts.Player.Guild.MotdSet:				You have set the motd for the guild.
 Scripts.Player.Guild.NoKeep:				You must have a keep before using that command.	
 Scripts.Player.Guild.NoPlayerSelected:			You must select a player.	
 Scripts.Player.Guild.NoPlayersInAcc:			There are no players from this account in your guild.	
-Scripts.Player.Guild.NoPrivilages:			You do not have high enough privilage in the guild to use that command.	
+Scripts.Player.Guild.NoPrivilages:			You do not have high enough privilege in the guild to use that command.	
 Scripts.Player.Guild.NoteSet:				You set your guild note to: {0}	
 Scripts.Player.Guild.NotInYourGuild:			That player is not in your guild.	
 Scripts.Player.Guild.NotMember:				You must be in a guild before you can use any guild commands.	
