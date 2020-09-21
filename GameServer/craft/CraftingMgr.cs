@@ -103,6 +103,77 @@ namespace DOL.GS
 		#region Global craft functions
 
 		/// <summary>
+		/// Return the crafting skill which created the item
+		/// </summary>
+		public static eCraftingSkill GetCraftingSkill(InventoryItem item)
+		{
+			if (!item.IsCrafted)
+				return eCraftingSkill.NoCrafting;
+
+			switch (item.Object_Type)
+			{
+				case (int)eObjectType.Cloth:
+				case (int)eObjectType.Leather:
+					return eCraftingSkill.Tailoring;
+
+				case (int)eObjectType.Studded:
+				case (int)eObjectType.Reinforced:
+				case (int)eObjectType.Chain:
+				case (int)eObjectType.Scale:
+				case (int)eObjectType.Plate:
+					return eCraftingSkill.ArmorCrafting;
+
+				// all weapon
+				case (int)eObjectType.Axe:
+				case (int)eObjectType.Blades:
+				case (int)eObjectType.Blunt:
+				case (int)eObjectType.CelticSpear:
+				case (int)eObjectType.CrushingWeapon:
+				case (int)eObjectType.Flexible:
+				case (int)eObjectType.Hammer:
+				case (int)eObjectType.HandToHand:
+				case (int)eObjectType.LargeWeapons:
+				case (int)eObjectType.LeftAxe:
+				case (int)eObjectType.Piercing:
+				case (int)eObjectType.PolearmWeapon:
+				case (int)eObjectType.Scythe:
+				case (int)eObjectType.Shield:
+				case (int)eObjectType.SlashingWeapon:
+				case (int)eObjectType.Spear:
+				case (int)eObjectType.Sword:
+				case (int)eObjectType.ThrustWeapon:
+				case (int)eObjectType.TwoHandedWeapon:
+					return eCraftingSkill.WeaponCrafting;
+
+				case (int)eObjectType.CompositeBow:
+				case (int)eObjectType.Crossbow:
+				case (int)eObjectType.Fired:
+				case (int)eObjectType.Instrument:
+				case (int)eObjectType.Longbow:
+				case (int)eObjectType.RecurvedBow:
+				case (int)eObjectType.Staff:
+					return eCraftingSkill.Fletching;
+
+				case (int)eObjectType.AlchemyTincture:
+				case (int)eObjectType.Poison:
+					return eCraftingSkill.Alchemy;
+
+				case (int)eObjectType.SpellcraftGem:
+					return eCraftingSkill.SpellCrafting;
+
+				case (int)eObjectType.SiegeBalista:
+				case (int)eObjectType.SiegeCatapult:
+				case (int)eObjectType.SiegeCauldron:
+				case (int)eObjectType.SiegeRam:
+				case (int)eObjectType.SiegeTrebuchet:
+					return eCraftingSkill.SiegeCrafting;
+
+				default:
+					return eCraftingSkill.NoCrafting;
+			}
+		}
+
+		/// <summary>
 		/// Return the crafting skill needed to work on the item
 		/// </summary>
 		public static eCraftingSkill GetSecondaryCraftingSkillToWorkOnItem(InventoryItem item)
