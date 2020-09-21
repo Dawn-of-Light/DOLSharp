@@ -9,12 +9,14 @@ namespace DOL.UnitTests.Gameserver
         public FakePacketLib() : base(null) { }
 
         public override void SendCheckLOS(GameObject Checker, GameObject Target, CheckLOSResponse callback) { }
-
         public override void SendMessage(string msg, eChatType type, eChatLoc loc) { }
-
         public override void SendUpdateIcons(System.Collections.IList changedEffects, ref int lastUpdateEffectsCount) { }
-
         public override void SendConcentrationList() { }
+        public override void SendCharStatsUpdate() { }
+        public override void SendUpdateWeaponAndArmorStats() { }
+        public override void SendUpdateMaxSpeed() { }
+        public override void SendEncumberance() { }
+        public override void SendStatusUpdate() { }
     }
 
     public class FakeRegion : Region
@@ -39,6 +41,10 @@ namespace DOL.UnitTests.Gameserver
 
         public override long CurrentTime => fakeTime;
         public override bool Start() => true;
+        protected override void InsertTimer(GameTimer t, int offsetTick) { }
+        protected override void RemoveTimer(GameTimer t) { }
+
+        protected override void Init() { }
     }
 
     public class FakeServer : GameServer

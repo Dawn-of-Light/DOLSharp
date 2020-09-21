@@ -64,7 +64,8 @@ namespace DOL.UnitTests.Gameserver
             get { return totalConLostOnDeath; }
             set { totalConLostOnDeath = value; }
         }
-
+        public override void StartHealthRegeneration() { }
+        public override void StartEnduranceRegeneration() { }
         public override void MessageToSelf(string message, GS.PacketHandler.eChatType chatType) { }
 
         public override System.Collections.IEnumerable GetPlayersInRadius(ushort radiusToCheck)

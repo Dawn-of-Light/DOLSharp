@@ -11218,6 +11218,15 @@ namespace DOL.GS
 			Out.SendEncumberance();
 		}
 
+		public override void UpdateHealthManaEndu()
+		{
+			Out.SendCharStatsUpdate();
+			Out.SendUpdateWeaponAndArmorStats();
+			UpdateEncumberance();
+			UpdatePlayerStatus();
+			base.UpdateHealthManaEndu();
+		}
+
 		/// <summary>
 		/// Get the bonus names
 		/// </summary>
