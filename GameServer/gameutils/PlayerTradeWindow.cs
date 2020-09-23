@@ -323,10 +323,6 @@ namespace DOL.GS
 						return;
 					}
 				}
-				else
-				{
-					m_owner.Out.SendMessage("You don't have enough skill to combine items.",eChatType.CT_System,eChatLoc.CL_SystemWindow);
-				}
 
 				m_partnerWindow.m_combine = false;
 				m_combine = false;
