@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="GameServer\gameutils\ServerTest.cs" />
     <Compile Include="GameServer\InvalidNamesStartupTest.cs" />
+    <Compile Include="GameServer\quests\Test_DataQuest.cs" />
     <Compile Include="Managers\FriendsManagerTest.cs" />
     <Compile Include="Managers\InvalidNamesManagerTest.cs" />
     <Compile Include="Managers\WeatherManagerTest.cs" />
@@ -85,6 +86,10 @@
       <Project>{ACB92917-3D42-4F40-97F9-EA904A41DE36}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
       <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\UnitTests\UnitTests.csproj">
+      <Project>{A3C658E1-F837-49A5-9333-0CA35BA58480}</Project>
+      <Name>UnitTests</Name>
     </ProjectReference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.4\lib\net45-full\log4net.dll</HintPath>
@@ -147,9 +152,7 @@
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Managers" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <BaseIntermediateOutputPath>..\build\UnitTests\$(Configuration)\</BaseIntermediateOutputPath>

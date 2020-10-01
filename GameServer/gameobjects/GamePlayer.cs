@@ -13395,7 +13395,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the questlist of this player
 		/// </summary>
-		public List<AbstractQuest> QuestList
+		public virtual List<AbstractQuest> QuestList
 		{
 			get { return m_questList; }
 		}
@@ -13403,7 +13403,7 @@ namespace DOL.GS
 		/// <summary>
 		/// Gets the finished quests of this player
 		/// </summary>
-		public List<AbstractQuest> QuestListFinished
+		public virtual List<AbstractQuest> QuestListFinished
 		{
 			get { return m_questListFinished; }
 		}
