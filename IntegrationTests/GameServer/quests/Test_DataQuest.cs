@@ -89,6 +89,7 @@ namespace DOL.Integration.GameServer
                 Assert.AreEqual(new string[] { "step1", "step2", "step3", "step4", "step5"}[index], dataQuest.StepTexts[index]);
                 Assert.AreEqual(new string[] { "item1", "item2", "item3", "item4", "item5" }[index], dataQuest.SpyStepItemTemplate);
             }
+            GS.GameServer.LoadTestDouble(null);
         }
 
         private class DataQuestSpy : DataQuest
