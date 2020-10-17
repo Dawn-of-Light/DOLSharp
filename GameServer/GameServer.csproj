@@ -2858,7 +2858,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)\language\*.txt" "$(ProjectDir)..\$(ConfigurationName)\languages" /y /s /q /i</PostBuildEvent>
-    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">cd "$(ProjectDir)/language/"; mkdir -p "$(ProjectDir)../`echo $(ConfigurationName) | tr '[:upper:]' '[:lower:]'`/languages/"; find ./ -name "*.txt" | xargs -i -t cp --parents -f {} "$(ProjectDir)../`echo $(ConfigurationName) | tr '[:upper:]' '[:lower:]'`/languages/"</PostBuildEvent>
+    <PostBuildEvent Condition=" '$(OS)' == 'Unix' ">cd "$(ProjectDir)/language/"; mkdir -p "$(ProjectDir)../$(ConfigurationName)/languages/"; find ./ -name "*.txt" | xargs -i -t cp --parents -f {} "$(ProjectDir)../$(ConfigurationName)/languages/"</PostBuildEvent>
   </PropertyGroup>
   <!-- Graveen: the following is replacing the rev number in the asembly.info file by the SVN rev number of the current project. -->
   <!-- You must work on project under SVN version control, have msbuild community tasks assemblies installed and subversion client -->
