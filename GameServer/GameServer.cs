@@ -233,13 +233,18 @@ namespace DOL.GS
 			}
 		}
 
+		protected virtual IObjectDatabase DataBaseImpl
+		{
+			get
+			{
+				return Instance.m_database;
+			}
+		}
+
 		/// <summary>
 		/// Gets the database instance
 		/// </summary>
-		public static IObjectDatabase Database
-		{
-			get { return Instance.m_database; }
-		}
+		public static IObjectDatabase Database => m_instance.DataBaseImpl;
 		
 		/// <summary>
 		/// Gets this Instance's Database

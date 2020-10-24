@@ -2327,7 +2327,7 @@ namespace DOL.GS
 			}
 
 			// Everything below this point is already in the mob table
-			if (!template.ReplaceMobValues)
+			if (!template.ReplaceMobValues && !LoadedFromScript)
 				return;
 
 			var m_templatedInventory = new List<string>();

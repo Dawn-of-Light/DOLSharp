@@ -1481,15 +1481,19 @@ namespace DOL.GS.Quests
 				return 0;
 			}
 		}
-		
+
 		/// <summary>
-        /// Gets money reward for reward quests. Used for sending packet info to dialog popup window.
-        /// </summary>
-        /// <returns></returns>
-        public long MoneyReward()
-        {        	
-        	return m_rewardMoneys[0];
-        }
+		/// Gets money reward for reward quests. Used for sending packet info to dialog popup window.
+		/// </summary>
+		/// <returns></returns>
+		public long MoneyReward()
+		{
+			if (m_rewardMoneys.Count < 1)
+			{
+				return 0;
+			}
+			return m_rewardMoneys[0];
+		}
 		
 		/// <summary>
         /// Gets experience reward for reward quests. Used for sending packet info to dialog popup window.
@@ -1497,6 +1501,10 @@ namespace DOL.GS.Quests
         /// <returns></returns>
         public int ExperiencePercent(GamePlayer player)
         {
+			if(m_rewardXPs.Count < 1)
+			{
+				return 0;
+			}
             int currentLevel = player.Level;
             if (currentLevel > player.MaxLevel)
                 return 0;

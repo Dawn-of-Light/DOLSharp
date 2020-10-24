@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="FakeGameObjects.cs" />
     <Compile Include="FakeServer.cs" />
+    <Compile Include="UT_DataQuest.cs" />
     <Compile Include="UT_GameEffectList.cs" />
     <Compile Include="UT_GameNPC.cs" />
     <Compile Include="UT_GamePlayer.cs" />

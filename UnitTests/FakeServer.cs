@@ -1,6 +1,10 @@
-﻿using DOL.GS;
+﻿using DOL.Database;
+using DOL.Database.Transaction;
+using DOL.GS;
 using DOL.GS.PacketHandler;
 using DOL.GS.ServerRules;
+using System;
+using System.Collections.Generic;
 
 namespace DOL.UnitTests.Gameserver
 {
@@ -50,8 +54,10 @@ namespace DOL.UnitTests.Gameserver
     public class FakeServer : GameServer
     {
         public FakeServerRules FakeServerRules = new FakeServerRules();
+        public FakeDatabase fakeDatabase = new FakeDatabase();
 
         protected override IServerRules ServerRulesImpl => FakeServerRules;
+        protected override IObjectDatabase DataBaseImpl => fakeDatabase;
         protected override void CheckAndInitDB() { }
 
         public static FakeServer LoadAndReturn()
@@ -70,6 +76,41 @@ namespace DOL.UnitTests.Gameserver
         {
             return fakeIsAllowedToAttack;
         }
+    }
+
+    public class FakeDatabase : IObjectDatabase
+    {
+        public IList<CharacterXDataQuest> SelectObjectReturns { get; set; } = new List<CharacterXDataQuest>();
+
+        public bool AddObject(DataObject dataObject) => throw new NotImplementedException();
+        public bool AddObject(IEnumerable<DataObject> dataObjects) => throw new NotImplementedException();
+        public bool DeleteObject(DataObject dataObject) => throw new NotImplementedException();
+        public bool DeleteObject(IEnumerable<DataObject> dataObjects) => throw new NotImplementedException();
+        public string Escape(string rawInput) => throw new NotImplementedException();
+        public bool ExecuteNonQuery(string rawQuery) => throw new NotImplementedException();
+        public void FillObjectRelations(DataObject dataObject) => throw new NotImplementedException();
+        public void FillObjectRelations(IEnumerable<DataObject> dataObject) => throw new NotImplementedException();
+        public TObject FindObjectByKey<TObject>(object key) where TObject : DataObject => throw new NotImplementedException();
+        public IList<TObject> FindObjectsByKey<TObject>(IEnumerable<object> keys) where TObject : DataObject => throw new NotImplementedException();
+        public int GetObjectCount<TObject>() where TObject : DataObject => throw new NotImplementedException();
+        public int GetObjectCount<TObject>(string whereExpression) where TObject : DataObject => throw new NotImplementedException();
+        public void RegisterDataObject(Type dataObjectType) => throw new NotImplementedException();
+        public bool SaveObject(DataObject dataObject) => true;
+        public bool SaveObject(IEnumerable<DataObject> dataObjects) => throw new NotImplementedException();
+        public IList<TObject> SelectAllObjects<TObject>() where TObject : DataObject => throw new NotImplementedException();
+        public IList<TObject> SelectAllObjects<TObject>(IsolationLevel isolation) where TObject : DataObject => throw new NotImplementedException();
+        public TObject SelectObject<TObject>(string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters) where TObject : DataObject => throw new NotImplementedException();
+        public TObject SelectObject<TObject>(string whereExpression, IEnumerable<QueryParameter> parameter) where TObject : DataObject => throw new NotImplementedException();
+        public TObject SelectObject<TObject>(string whereExpression, QueryParameter param) where TObject : DataObject => throw new NotImplementedException();
+        public TObject SelectObject<TObject>(string whereExpression) where TObject : DataObject => throw new NotImplementedException();
+        public TObject SelectObject<TObject>(string whereExpression, IsolationLevel isolation) where TObject : DataObject => throw new NotImplementedException();
+        public IList<IList<TObject>> SelectObjects<TObject>(string whereExpression, IEnumerable<IEnumerable<QueryParameter>> parameters) where TObject : DataObject => throw new NotImplementedException();
+        public IList<TObject> SelectObjects<TObject>(string whereExpression, IEnumerable<QueryParameter> parameter) where TObject : DataObject => (IList<TObject>)SelectObjectReturns;
+        public IList<TObject> SelectObjects<TObject>(string whereExpression, QueryParameter param) where TObject : DataObject => throw new NotImplementedException();
+        public IList<TObject> SelectObjects<TObject>(string whereExpression) where TObject : DataObject => throw new NotImplementedException();
+        public IList<TObject> SelectObjects<TObject>(string whereExpression, IsolationLevel isolation) where TObject : DataObject => throw new NotImplementedException();
+        public bool UpdateInCache<TObject>(object key) where TObject : DataObject => throw new NotImplementedException();
+        public bool UpdateObjsInCache<TObject>(IEnumerable<object> keys) where TObject : DataObject => throw new NotImplementedException();
     }
 
     public class UtilChanceIsHundredPercent : Util
