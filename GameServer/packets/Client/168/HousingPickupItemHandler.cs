@@ -176,11 +176,22 @@ namespace DOL.GS.PacketHandler.Client.v168
 					house.IndoorItems.Remove(position);
 
 					var pak = new GSTCPPacketOut(client.Out.GetPacketCode(eServerPackets.HousingItem));
-					pak.WriteShort((ushort) housenumber);
-					pak.WriteByte(0x01);
-					pak.WriteByte(0x00);
-					pak.WriteByte((byte) position);
-					pak.WriteByte(0x00);
+					if (client.Version >= GameClient.eClientVersion.Version1125)
+                    {
+                        pak.WriteShortLowEndian((ushort)housenumber);
+                        pak.WriteByte(0x01);
+                        pak.WriteByte(0x00);
+                        pak.WriteByte((byte)position);
+                        pak.Fill(0x00, 11);
+                    }
+                    else
+                    {
+                        pak.WriteShort((ushort)housenumber);
+                        pak.WriteByte(0x01);
+                        pak.WriteByte(0x00);
+                        pak.WriteByte((byte)position);
+                        pak.WriteByte(0x00);
+                    }
 
 					foreach (GamePlayer plr in house.GetAllPlayersInHouse())
 					{
