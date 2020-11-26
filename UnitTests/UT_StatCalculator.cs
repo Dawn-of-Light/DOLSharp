@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using DOL.GS;
-using DOL.GS.ServerProperties;
 using DOL.GS.PropertyCalc;
 
 namespace DOL.UnitTests.Gameserver
@@ -8,6 +7,13 @@ namespace DOL.UnitTests.Gameserver
     [TestFixture]
     public class UT_StatCalculator
     {
+        [SetUp]
+        public void Init()
+        {
+            GS.ServerProperties.Properties.DISABLED_REGIONS = "";
+            GS.ServerProperties.Properties.DISABLED_EXPANSIONS = "";
+        }
+
         [Test]
         public void CalcValueFromBuffs_GameNPCWith100ConstBaseBuff_Return100()
         {
@@ -16,11 +22,7 @@ namespace DOL.UnitTests.Gameserver
             StatCalculator statCalc = createStatCalculator();
 
             int actual = statCalc.CalcValueFromBuffs(npc, eProperty.Constitution);
-
-            if (Properties.MOB_BUFF_EFFECT_MULTIPLIER > 0)
-                Assert.AreEqual(0, actual);
-            else
-                Assert.AreEqual(100, actual);
+            Assert.AreEqual(100, actual);
         }
 
         [Test]
@@ -61,10 +63,7 @@ namespace DOL.UnitTests.Gameserver
 
             int actual = statCalc.CalcValueFromBuffs(npc, eProperty.Constitution);
 
-            int expected = 3 + 4;
-            if (Properties.MOB_BUFF_EFFECT_MULTIPLIER > 0)
-                expected = 0;
-
+            int expected = 7;
             Assert.AreEqual(expected, actual);
         }
 
