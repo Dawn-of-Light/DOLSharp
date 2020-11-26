@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using DOL.GS;
-using DOL.AI;
 
 namespace DOL.UnitTests.Gameserver
 {
@@ -14,10 +13,9 @@ namespace DOL.UnitTests.Gameserver
         }
 
         [Test]
-        public void GetModified_GameNPCWith75Constitution_Return75()
+        public void GetModified_Constitution_GameNPCWith75Constitution_75()
         {
-            var brain = NewFakeBrain();
-            var npc = new GameNPC(brain);
+            var npc = NewRealNPC();
             npc.Constitution = 75;
 
             int actual = npc.GetModified(eProperty.Constitution);
@@ -25,6 +23,6 @@ namespace DOL.UnitTests.Gameserver
             Assert.AreEqual(75, actual);
         }
 
-        private static ABrain NewFakeBrain() => new FakeControlledBrain();
+        private static GameNPC NewRealNPC() => new FakeNPC(new FakeControlledBrain());
     }
 }
