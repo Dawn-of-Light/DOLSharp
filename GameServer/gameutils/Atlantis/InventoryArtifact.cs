@@ -59,6 +59,7 @@ namespace DOL.GS
 			: base(template)
 			
 		{
+			Template = Template.Clone() as ItemTemplate;
 			ArtifactID = ArtifactMgr.GetArtifactIDFromItemID(template.Id_nb);
 			ArtifactLevel = 0;
 			m_levelRequirements = ArtifactMgr.GetLevelRequirements(ArtifactID);
