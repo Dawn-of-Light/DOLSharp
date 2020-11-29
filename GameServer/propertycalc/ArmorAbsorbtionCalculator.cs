@@ -58,7 +58,7 @@ namespace DOL.GS.PropertyCalc
 			double consitutionBuffAbsorb = (constitutionBuffBonus - constitutionDebuffMalus * debuffBuffRatio) / constitutionPerAbsorptionPercent / 100;
 			constitutionAbsorb += baseConstitutionAbsorb + consitutionBuffAbsorb;
 
-			//Note: On Live SpecBuffs do nothing => Cap to Live baseAF cap;
+			//Note: On Live SpecAFBuffs do nothing => Cap to Live baseAF cap;
 			double afPerAbsorptionPercent = 6;
 			double liveBaseAFcap = 150 * 1.25 * 1.25;
 			double afBuffBonus = Math.Min(liveBaseAFcap, living.BaseBuffBonusCategory[eProperty.ArmorFactor] + living.SpecBuffBonusCategory[eProperty.ArmorFactor]);

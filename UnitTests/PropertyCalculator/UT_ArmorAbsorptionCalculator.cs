@@ -18,7 +18,7 @@ namespace DOL.UnitTests.Gameserver.PropertyCalc
         }
 
         [Test]
-        public void CalcValue_L30NPCwith60BaseAnd120BaseBuffConstitution_30()
+        public void CalcValue_LevelZeroNPCwith60BaseAnd120BaseBuffConstitution_30()
         {
             var npc = NewNPC();
             npc.Constitution = 60;
@@ -44,7 +44,7 @@ namespace DOL.UnitTests.Gameserver.PropertyCalc
         }
 
         [Test]
-        public void CalcValue_FreshNPCWith50ConDebuff_Minus25()
+        public void CalcValue_LevelZeroNPCWith50ConDebuff_Minus25()
         {
             var npc = NewNPC();
             npc.Constitution = 60;

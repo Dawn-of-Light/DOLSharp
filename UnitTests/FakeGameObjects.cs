@@ -66,7 +66,7 @@ namespace DOL.UnitTests.Gameserver
         }
         public override void StartHealthRegeneration() { }
         public override void StartEnduranceRegeneration() { }
-        public override void MessageToSelf(string message, GS.PacketHandler.eChatType chatType) { }
+        public override void MessageToSelf(string message, DOL.GS.PacketHandler.eChatType chatType) { }
 
         public override System.Collections.IEnumerable GetPlayersInRadius(ushort radiusToCheck)
         {

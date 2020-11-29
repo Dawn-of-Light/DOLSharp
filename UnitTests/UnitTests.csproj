@@ -43,8 +43,8 @@
     <Compile Include="PropertyCalculator\UT_ResistCalculator.cs" />
     <Compile Include="UT_DataQuest.cs" />
     <Compile Include="UT_GameEffectList.cs" />
-    <Compile Include="UT_GameNPC.cs" />
-    <Compile Include="UT_GamePlayer.cs" />
+    <Compile Include="GameObject\UT_GameNPC.cs" />
+    <Compile Include="GameObject\UT_GamePlayer.cs" />
     <Compile Include="UT_HereticFocusSpells.cs" />
     <Compile Include="UT_PropertyChangingSpell.cs" />
     <Compile Include="UT_SpellHandler.cs" />
