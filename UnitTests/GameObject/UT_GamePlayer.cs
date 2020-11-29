@@ -6,8 +6,8 @@ namespace DOL.UnitTests.Gameserver
     [TestFixture]
     class UT_GamePlayer
     {
-        [TestFixtureSetUp]
-        public void init()
+        [SetUp]
+        public void Init()
         {
             GameLiving.LoadCalculators();
         }
