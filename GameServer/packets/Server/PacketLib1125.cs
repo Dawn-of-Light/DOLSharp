@@ -18,6 +18,7 @@
  */
 using DOL.Database;
 using DOL.GS.Effects;
+using DOL.GS.Housing;
 using DOL.GS.Spells;
 using log4net;
 using System;
@@ -741,5 +742,100 @@ namespace DOL.GS.PacketHandler
 				}
 			}
 		}
+		/// <summary>
+        /// short to low endian
+        /// </summary> 
+        public override void SendFurniture(House house)
+        {
+            using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HousingItem)))
+            {
+                pak.WriteShortLowEndian((ushort)house.HouseNumber);
+                pak.WriteByte((byte)house.IndoorItems.Count);
+                pak.WriteByte(0x80); //0x00 = update, 0x80 = complete package
+
+                foreach (var entry in house.IndoorItems.OrderBy(entry => entry.Key))
+                {
+                    var item = entry.Value;
+                    WriteHouseFurniture(pak, item, entry.Key);
+                }
+
+                SendTCP(pak);
+            }
+        }
+
+        /// <summary>
+        /// short to low endian
+        /// </summary>        
+        public override void SendFurniture(House house, int i)
+        {
+            using (var pak = new GSTCPPacketOut(GetPacketCode(eServerPackets.HousingItem)))
+            {
+                pak.WriteShortLowEndian((ushort)house.HouseNumber);
+                pak.WriteByte(0x01); //cnt
+                pak.WriteByte(0x00); //upd
+                var item = (IndoorItem)house.IndoorItems[i];
+                WriteHouseFurniture(pak, item, i);
+                SendTCP(pak);
+            }
+        }
+
+        /// <summary>
+        /// Shorts changed to low endian
+        /// </summary>        
+        protected override void WriteHouseFurniture(GSTCPPacketOut pak, IndoorItem item, int index)
+        {
+            pak.WriteByte((byte)index);
+            byte type = 0;
+            if (item.Emblem > 0)
+            {
+                item.Color = item.Emblem;
+            }
+
+            if (item.Color > 0)
+            {
+                if (item.Color <= 0xFF)
+                {
+                    type |= 1; // colored
+                }
+                else if (item.Color <= 0xFFFF)
+                {
+                    type |= 2; // old emblem
+                }
+                else
+                {
+                    type |= 6; // new emblem
+                }
+            }
+            if (item.Size != 0)
+            {
+                type |= 8; // have size
+            }
+
+            pak.WriteByte(type);
+            pak.WriteShortLowEndian((ushort)item.Model);
+            if ((type & 1) == 1)
+            {
+                pak.WriteByte((byte)item.Color);
+            }
+            else if ((type & 6) == 2)
+            {
+                pak.WriteShortLowEndian((ushort)item.Color);
+            }
+            else if ((type & 6) == 6)
+            {
+                pak.WriteShortLowEndian((ushort)(item.Color & 0xFFFF));
+            }
+
+            pak.WriteShortLowEndian((ushort)item.X);
+            pak.WriteShortLowEndian((ushort)item.Y);
+            pak.WriteShortLowEndian((ushort)item.Rotation);
+            if ((type & 8) == 8)
+            {
+                pak.WriteByte((byte)item.Size);
+            }
+
+            pak.WriteByte((byte)item.Position);
+            pak.WriteByte((byte)(item.PlacementMode - 2));
+        }
 	}
 }
