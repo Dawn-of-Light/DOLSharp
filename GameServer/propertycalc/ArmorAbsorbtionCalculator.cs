@@ -20,36 +20,17 @@ using System;
 
 namespace DOL.GS.PropertyCalc
 {
-	/// <summary>
-	/// The Armor Absorption calculator
-	/// 
-	/// BuffBonusCategory1 is used for buffs, uncapped
-	/// BuffBonusCategory2 unused
-	/// BuffBonusCategory3 is used for debuffs
-	/// BuffBonusCategory4 unused
-	/// BuffBonusMultCategory1 unused
-	/// </summary>
 	[PropertyCalculator(eProperty.ArmorAbsorption)]
 	public class ArmorAbsorptionCalculator : PropertyCalculator
 	{
 		public override int CalcValue(GameLiving living, eProperty property)
 		{
-			int abs = Math.Min(living.BaseBuffBonusCategory[(int)property]
-				- Math.Abs(living.DebuffCategory[(int)property])
-				+ living.ItemBonus[(int)property]
-				+ living.AbilityBonus[(int)property], 50);
-
-			if (living is GameNPC)
-			{
-				if (living.Level >= 30) abs += 27;
-				else if (living.Level >= 20) abs += 19;
-				else if (living.Level >= 10) abs += 10;
-
-				abs += (living.GetModified(eProperty.Constitution)
-					+ living.GetModified(eProperty.Dexterity) - 120) / 12;
-			}
-
-			return abs;
+			int buffBonus = living.BaseBuffBonusCategory[property];
+			int debuffMalus = Math.Abs(living.DebuffCategory[property]);
+			int itemBonus = living.ItemBonus[property];
+			int abilityBonus = living.AbilityBonus[property];
+			int hardCap = 50;
+			return Math.Min(hardCap, (buffBonus - debuffMalus + itemBonus + abilityBonus));
 		}
 	}
 }

@@ -38,14 +38,16 @@
   <ItemGroup>
     <Compile Include="FakeGameObjects.cs" />
     <Compile Include="FakeServer.cs" />
+    <Compile Include="PropertyCalculator\UT_MeleeDamagePercentCalculator.cs" />
+    <Compile Include="PropertyCalculator\UT_ResistCalculator.cs" />
     <Compile Include="UT_DataQuest.cs" />
     <Compile Include="UT_GameEffectList.cs" />
-    <Compile Include="UT_GameNPC.cs" />
-    <Compile Include="UT_GamePlayer.cs" />
+    <Compile Include="GameObject\UT_GameNPC.cs" />
+    <Compile Include="GameObject\UT_GamePlayer.cs" />
     <Compile Include="UT_HereticFocusSpells.cs" />
     <Compile Include="UT_PropertyChangingSpell.cs" />
     <Compile Include="UT_SpellHandler.cs" />
-    <Compile Include="UT_StatCalculator.cs" />
+    <Compile Include="PropertyCalculator\UT_StatCalculator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
