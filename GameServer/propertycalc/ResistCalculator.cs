@@ -17,32 +17,14 @@
  *
  */
 using System;
-using DOL.AI.Brain;
 
 namespace DOL.GS.PropertyCalc
 {
-	/// <summary>
-	/// The Resistance Property calculator
-	/// 
-	/// BuffBonusCategory1 is used for buffs cast on the living.
-	/// BuffBonusCategory2 is used for modified damage only (no full resist)
-	/// BuffBonusCategory3 is used for debuffs
-	/// BuffBonusCategory4 is used for buffs that have no softcap
-	/// BuffBonusMultCategory1 unused
-	/// </summary>
-	/// <author>Aredhel</author>	
 	[PropertyCalculator(eProperty.Resist_First, eProperty.Resist_Last)]
 	public class ResistCalculator : PropertyCalculator
 	{
 		public ResistCalculator() { }
 
-        /// <summary>
-        /// Calculate the actual resist amount for the given living and the given
-        /// resist type, applying all possible caps and cap increases.
-        /// </summary>
-        /// <param name="living">The living the resist amount is to be determined for.</param>
-        /// <param name="property">The resist type.</param>
-        /// <returns>The actual resist amount.</returns>
         public override int CalcValue(GameLiving living, eProperty property)
         {
             int propertyIndex = (int)property;
@@ -74,27 +56,11 @@ namespace DOL.GS.PropertyCalc
 
             if (living is GameNPC)
             {
-                // NPC buffs effects are halved compared to debuffs, so it takes 2% debuff to mitigate 1% buff
-                // See PropertyChangingSpell.ApplyNpcEffect() for details.
-                buffBonus = buffBonus << 1;
-                int specDebuff = Math.Abs(living.SpecDebuffCategory[property]);
-
-                switch (property)
-                {
-                    case eProperty.Resist_Body:
-                    case eProperty.Resist_Cold:
-                    case eProperty.Resist_Energy:
-                    case eProperty.Resist_Heat:
-                    case eProperty.Resist_Matter:
-                    case eProperty.Resist_Natural:
-                    case eProperty.Resist_Spirit:
-                        specDebuff += Math.Abs(living.SpecDebuffCategory[eProperty.MagicAbsorption]);
-                        break;
-                }
-
-                buffBonus -= specDebuff;
-                if (buffBonus > 0)
-                    buffBonus = buffBonus >> 1;
+                double constitutionPerMagicAbsorptionPercent = 8;
+                var constitutionBuffBonus = living.BaseBuffBonusCategory[eProperty.Constitution] + living.SpecBuffBonusCategory[eProperty.Constitution];
+                var constitutionDebuffMalus = Math.Abs(living.DebuffCategory[eProperty.Constitution] + living.SpecDebuffCategory[eProperty.Constitution]);
+                var magicAbsorptionFromConstitution = (int)((constitutionBuffBonus - constitutionDebuffMalus) / constitutionPerMagicAbsorptionPercent);
+                buffBonus += magicAbsorptionFromConstitution;
             }
 
             buffBonus -= Math.Abs(debuff);
