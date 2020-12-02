@@ -443,7 +443,14 @@ namespace DOL.Database
 
 		public virtual int Weight
 		{
-			get { return Template.Weight * m_count; }
+			get
+			{
+				if (Template.PackSize > 1)
+				{
+					return (int)((double)Template.Weight / (double)Template.PackSize * (double)m_count);
+				}
+				return Template.Weight * m_count;
+			}
 			set { Template.Weight = value; }
 		}
 
