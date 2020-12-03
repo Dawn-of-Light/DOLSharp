@@ -8,7 +8,7 @@ env:
    - XBUILD_TARGET=Release
 
 install:
- - travis_retry nuget restore DOLServer/packages.config -SolutionDirectory ./
+ - travis_retry nuget restore
  - travis_retry nuget install NUnit.Console -Version 3.11.1 -OutputDirectory test -ExcludeVersion
 script:
  - MONO_IOMAP=case xbuild /p:Configuration=$XBUILD_TARGET "Dawn of Light.sln"
