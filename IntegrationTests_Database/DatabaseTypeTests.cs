@@ -36,7 +36,7 @@ namespace DOL.Database.Tests
 		
 		protected SQLObjectDatabase Database { get; set; }
 		
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void SetUp()
 		{
 			Database.RegisterDataObject(typeof(ComplexTypeTestTable));

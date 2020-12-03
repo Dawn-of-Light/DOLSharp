@@ -36,7 +36,7 @@ namespace DOL.Server.Tests
 		public volatile bool finished;
 		public int started;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init()
 		{
 			RegionData data = new RegionData();

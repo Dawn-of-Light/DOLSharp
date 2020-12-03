@@ -7,7 +7,7 @@ namespace DOL.UnitTests.Gameserver
     [TestFixture]
     class UT_GameNPC
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void Init()
         {
             GameLiving.LoadCalculators();
