@@ -79,9 +79,9 @@ after_build:
 test:
     assemblies:
         only:
-            - '%APPVEYOR_BUILD_FOLDER%\build\UnitTests\%CONFIGURATION%\lib\UnitTests.dll'
-            - '%APPVEYOR_BUILD_FOLDER%\build\IntegrationTests\%CONFIGURATION%\lib\IntegrationTests.dll'
-            - '%APPVEYOR_BUILD_FOLDER%\build\IntegrationTests_Database\%CONFIGURATION%\lib\IntegrationTests_Database.dll'
+            - '.\build\UnitTests\%CONFIGURATION%\lib\UnitTests.dll'
+            - '.\build\IntegrationTests\%CONFIGURATION%\lib\IntegrationTests.dll'
+            - '.\build\IntegrationTests_Database\%CONFIGURATION%\lib\IntegrationTests_Database.dll'
 
 
 artifacts:
