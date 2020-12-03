@@ -1538,7 +1538,18 @@ namespace DOL.GS.Quests.Midgard
                     //k109:  Until I can get the quest dialog from live, I reward based on class, feel free to edit.
                     player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client, "ChildsPlay.TalkToCharles.Text3", questTitle), eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
 
-                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Viking"))
+                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.MidgardRogue")
+                        || player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Seer")
+                        || player.CharacterClass.Name == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Mauler_Mid"))
+                    {
+                        GiveItem(Charles, quest.m_questPlayer, daringleatherboots);
+                        GiveItem(Charles, quest.m_questPlayer, daringleathercap);
+                        GiveItem(Charles, quest.m_questPlayer, daringleathergloves);
+                        GiveItem(Charles, quest.m_questPlayer, daringleatherjerkin);
+                        GiveItem(Charles, quest.m_questPlayer, daringleatherleggings);
+                        GiveItem(Charles, quest.m_questPlayer, daringleathersleeves);
+                    }
+                    else if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Viking"))
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringstuddedboots);
                         GiveItem(Charles, quest.m_questPlayer, daringstuddedcap);
@@ -1547,7 +1558,7 @@ namespace DOL.GS.Quests.Midgard
                         GiveItem(Charles, quest.m_questPlayer, daringstuddedleggings);
                         GiveItem(Charles, quest.m_questPlayer, daringstuddedsleeves);
                     }
-                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Mystic"))
+                    else
                     {
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedboots);
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedcap);
@@ -1556,24 +1567,7 @@ namespace DOL.GS.Quests.Midgard
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedsleeves);
                         GiveItem(Charles, quest.m_questPlayer, daringpaddedvest);
                     }
-                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.MidgardRogue"))
-                    {
-                        GiveItem(Charles, quest.m_questPlayer, daringleatherboots);
-                        GiveItem(Charles, quest.m_questPlayer, daringleathercap);
-                        GiveItem(Charles, quest.m_questPlayer, daringleathergloves);
-                        GiveItem(Charles, quest.m_questPlayer, daringleatherjerkin);
-                        GiveItem(Charles, quest.m_questPlayer, daringleatherleggings);
-                        GiveItem(Charles, quest.m_questPlayer, daringleathersleeves);
-                    }
-                    if (player.CharacterClass.BaseName == LanguageMgr.GetTranslation(ServerProperties.Properties.SERV_LANGUAGE, "PlayerClass.Name.Seer"))
-                    {
-                        GiveItem(Charles, quest.m_questPlayer, daringleatherboots);
-                        GiveItem(Charles, quest.m_questPlayer, daringleathercap);
-                        GiveItem(Charles, quest.m_questPlayer, daringleathergloves);
-                        GiveItem(Charles, quest.m_questPlayer, daringleatherjerkin);
-                        GiveItem(Charles, quest.m_questPlayer, daringleatherleggings);
-                        GiveItem(Charles, quest.m_questPlayer, daringleathersleeves);
-                    }
+                    
                     quest.FinishQuest();
                 }
             }
