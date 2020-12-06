@@ -23,16 +23,10 @@ using NUnit.Framework;
 
 namespace DOL.Integration.Server
 {
-	/// <summary>
-	/// Test Inventory Class for Unit Test
-	/// </summary>
 	public class TestInventory : GameLivingInventory
 	{
 	}
 
-	/// <summary>
-	/// Unit Test for Game Living Inventory
-	/// </summary>
 	[TestFixture]
 	public class GameLivingInventoryTest : ServerTests
 	{

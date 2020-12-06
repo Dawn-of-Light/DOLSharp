@@ -24,9 +24,6 @@ using NUnit.Framework;
 
 namespace DOL.Integration.Database
 {
-	/// <summary>
-	/// Unit tests for the Database Custom Params
-	/// </summary>
 	[TestFixture]
 	public class CustomParamsTest
 	{

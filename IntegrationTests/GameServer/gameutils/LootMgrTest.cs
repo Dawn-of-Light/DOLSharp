@@ -17,7 +17,6 @@
  *
  */
 using System;
-using System.Collections;
 using DOL.Database;
 using DOL.GS;
 using NUnit.Framework;

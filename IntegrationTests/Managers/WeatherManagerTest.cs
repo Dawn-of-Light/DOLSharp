@@ -20,7 +20,6 @@ using System;
 
 using DOL.GS;
 using DOL.GS.Scheduler;
-
 using NUnit.Framework;
 
 namespace DOL.Integration.Managers

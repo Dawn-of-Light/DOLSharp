@@ -17,18 +17,12 @@
  *
  */
 using System;
-using System.Collections;
-using System.Net.Sockets;
-using DOL.Database;
 using DOL.Events;
 using DOL.GS;
 using NUnit.Framework;
 
 namespace DOL.Integration.Server
 {
-	/// <summary>
-	/// Unit test for the Region Class
-	/// </summary>
 	[TestFixture]
 	public class RegionTest : ServerTests
 	{		

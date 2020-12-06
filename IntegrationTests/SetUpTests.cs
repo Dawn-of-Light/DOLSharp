@@ -19,13 +19,12 @@
 using System;
 using System.IO;
 using System.Reflection;
-
-using DOL.GS;
-using DOL.Database.Connection;
+using System.Linq;
 
 using NUnit.Framework;
+using DOL.GS;
 using DOL.Database;
-using System.Linq;
+using DOL.Database.Connection;
 using DOL.Database.Attributes;
 
 namespace DOL.Integration.Server

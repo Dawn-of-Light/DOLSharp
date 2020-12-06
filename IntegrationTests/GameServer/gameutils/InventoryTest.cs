@@ -19,21 +19,16 @@
 using System;
 using DOL.Database;
 using DOL.GS;
-using DOL.GS.PacketHandler;
 using NUnit.Framework;
 
 namespace DOL.Integration.Server
 {
-	/// <summary>
-	/// Unit tests for the new Inventory system
-	/// </summary>
 	[TestFixture]
 	public class InventoryTest : ServerTests
 	{
 		static GamePlayer player;
 		static ItemTemplate itemt;
 		static ItemUnique itemu;
-		static ItemTemplate itema;
 		
 		public InventoryTest() {}
 		
@@ -49,7 +44,7 @@ namespace DOL.Integration.Server
 			itemu.Id_nb = "tunik"+DateTime.Now.Ticks;
 			GameServer.Database.AddObject(itemu);
 			Assert.IsNotNull(itemu, "ItemUnique is created !");
-			itema = GameServer.Database.SelectObject<ItemTemplate>("`id_nb`= @ddt", new QueryParameter("@ddt","traitors_dagger_hib"));
+			_ = GameServer.Database.SelectObject<ItemTemplate>("`id_nb`= @ddt", new QueryParameter("@ddt","traitors_dagger_hib"));
 		}
 
 		/* Tests for items - 1/ IT 2/ IU 3/ Ghost

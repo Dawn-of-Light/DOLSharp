@@ -27,9 +27,6 @@ using NUnit.Framework;
 
 namespace DOL.Integration.Database.MySQL
 {
-	/// <summary>
-	/// Database SetUp for Unit Tests
-	/// </summary>
 	[SetUpFixture]
 	public class MySQLDBSetUp
 	{

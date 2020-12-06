@@ -1,10 +1,8 @@
 ﻿using DOL.Database;
-using DOL.Events;
 using DOL.GS;
 using DOL.GS.PlayerClass;
 using DOL.GS.Quests;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 
 namespace DOL.UnitTests.Gameserver

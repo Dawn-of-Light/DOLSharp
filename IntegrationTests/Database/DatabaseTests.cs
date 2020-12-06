@@ -26,9 +26,6 @@ using NUnit.Framework;
 
 namespace DOL.Integration.Database
 {
-	/// <summary>
-	/// Basic Database Tests
-	/// </summary>
 	[TestFixture]
 	public class DatabaseTests
 	{
@@ -39,9 +36,6 @@ namespace DOL.Integration.Database
 		
 		protected SQLObjectDatabase Database { get; set; }
 		
-		/// <summary>
-		/// Basic Tests For a Test Table
-		/// </summary>
 		[Test]
 		public void TestTable()
 		{

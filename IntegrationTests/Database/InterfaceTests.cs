@@ -22,15 +22,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 using DOL.Database;
-using DOL.Database.Attributes;
-
 using NUnit.Framework;
 
 namespace DOL.Integration.Database
 {
-	/// <summary>
-	/// Description of InterfaceTests.
-	/// </summary>
 	[TestFixture]
 	public class InterfaceTests
 	{

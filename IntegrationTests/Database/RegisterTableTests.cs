@@ -28,9 +28,6 @@ using NUnit.Framework;
 
 namespace DOL.Integration.Database
 {
-	/// <summary>
-	/// Description of RegisterTableTests.
-	/// </summary>
 	[TestFixture]
 	public class RegisterTableTests
 	{

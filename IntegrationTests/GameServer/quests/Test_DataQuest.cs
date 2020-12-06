@@ -2,7 +2,6 @@
 using DOL.GS.Quests;
 using DOL.UnitTests.Gameserver;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 
 namespace DOL.Integration.Gameserver

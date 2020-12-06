@@ -19,14 +19,10 @@
 using System;
 
 using DOL.GS;
-
 using NUnit.Framework;
 
 namespace DOL.Integration.Server
 {
-	/// <summary>
-	/// Unit Test for GameServer.
-	/// </summary>
 	[TestFixture]
 	public class ServerTest
 	{

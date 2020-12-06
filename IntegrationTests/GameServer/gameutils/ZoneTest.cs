@@ -18,7 +18,6 @@
  */
 using System;
 using DOL.GS;
-using DOL.GS.PacketHandler;
 using NUnit.Framework;
 
 namespace DOL.Integration.Server

@@ -24,9 +24,6 @@ using DOL.Database;
 
 namespace DOL.Integration.Database.MySQL
 {
-	/// <summary>
-	/// Description of MYSQLDBRegisterTableTests.
-	/// </summary>
 	[TestFixture, Explicit]
 	public class MYSQLDBRegisterTableTests : RegisterTableTests
 	{

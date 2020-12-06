@@ -27,9 +27,6 @@ using NUnit.Framework;
 
 namespace DOL.Integration.Database
 {
-	/// <summary>
-	/// Database SetUp for Unit Tests
-	/// </summary>
 	[SetUpFixture]
 	public class DatabaseSetUp
 	{

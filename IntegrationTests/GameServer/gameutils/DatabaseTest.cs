@@ -23,9 +23,6 @@ using NUnit.Framework;
 
 namespace DOL.Integration.Server
 {
-	/// <summary>
-	/// Unit tests for the Database Class
-	/// </summary>
 	[TestFixture]
 	public class DatabaseTest : ServerTests
 	{				

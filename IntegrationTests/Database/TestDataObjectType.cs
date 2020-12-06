@@ -23,7 +23,6 @@ using DOL.Database.Attributes;
 
 namespace DOL.Integration.Database
 {
-
 	/// <summary>
 	/// Complex Table Implementing All Type Non Nullable
 	/// </summary>

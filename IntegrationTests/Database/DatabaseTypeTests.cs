@@ -24,9 +24,6 @@ using NUnit.Framework;
 
 namespace DOL.Integration.Database
 {
-	/// <summary>
-	/// Description of DatabaseTypeTests.
-	/// </summary>
 	[TestFixture]
 	public class DatabaseTypeTests
 	{
