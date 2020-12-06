@@ -26,9 +26,9 @@
     <NoStdLib>False</NoStdLib>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <OutputPath>..\build\IntegrationTests\$(Configuration)\lib\</OutputPath>
+    <OutputPath>..\build\Tests\$(Configuration)\lib\</OutputPath>
     <TargetFrameworkProfile />
-    <IntermediateOutputPath>..\build\IntegrationTests\$(Configuration)\obj\</IntermediateOutputPath>
+    <IntermediateOutputPath>..\build\Tests\$(Configuration)\obj\</IntermediateOutputPath>
     <NoWin32Manifest>False</NoWin32Manifest>
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <NuGetPackageImportStamp>
