@@ -1,0 +1,18 @@
+<Playlist Version="2.0">
+  <Rule Name="Includes" Match="Any">
+    <Rule Match="All">
+      <Property Name="Solution" />
+      <Rule Match="Any">
+        <Rule Match="All">
+          <Property Name="Project" Value="Tests" />
+          <Rule Match="All">
+            <Property Name="Namespace" Match="Contains" Value="DOL.Integration" />
+            <Rule Match="Not">
+              <Property Name="Trait" Value="Explicit" />
+            </Rule>
+          </Rule>
+        </Rule>
+      </Rule>
+    </Rule>
+  </Rule>
+</Playlist>

@@ -2,7 +2,6 @@
 using DOL.GS;
 using DOL.GS.Spells;
 using NUnit.Framework;
-using System;
 
 namespace DOL.UnitTests.Gameserver
 {
