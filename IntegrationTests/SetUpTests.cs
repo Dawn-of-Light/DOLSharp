@@ -28,7 +28,7 @@ using DOL.Database;
 using System.Linq;
 using DOL.Database.Attributes;
 
-namespace DOL.Server.Tests
+namespace DOL.Integration.Server
 {
 	/// <summary>
 	/// SetUpTests Start The Needed Environnement for Unit Tests

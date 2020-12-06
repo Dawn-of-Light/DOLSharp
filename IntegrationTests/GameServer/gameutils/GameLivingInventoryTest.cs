@@ -21,7 +21,7 @@ using DOL.GS;
 using DOL.Database;
 using NUnit.Framework;
 
-namespace DOL.Server.Tests
+namespace DOL.Integration.Server
 {
 	/// <summary>
 	/// Test Inventory Class for Unit Test

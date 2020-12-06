@@ -24,7 +24,7 @@ using DOL.Events;
 using DOL.GS;
 using NUnit.Framework;
 
-namespace DOL.Server.Tests
+namespace DOL.Integration.Server
 {
 	/// <summary>
 	/// Unit test for the Region Class

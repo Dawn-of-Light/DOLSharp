@@ -23,7 +23,7 @@ using NUnit.Framework;
 
 using DOL.GS.Scheduler;
 
-namespace DOL.Utils.Tests
+namespace DOL.Integration.Utils
 {
 	/// <summary>
 	/// DOL Simple Scheduler Unit Test.

@@ -26,7 +26,7 @@ using DOL.Database.Attributes;
 
 using NUnit.Framework;
 
-namespace DOL.Database.Tests
+namespace DOL.Integration.Database
 {
 	/// <summary>
 	/// Description of InterfaceTests.

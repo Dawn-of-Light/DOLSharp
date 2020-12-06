@@ -19,11 +19,12 @@
 using System;
 using System.Linq;
 
+using DOL.Database;
 using DOL.Database.UniqueID;
 
 using NUnit.Framework;
 
-namespace DOL.Database.Tests
+namespace DOL.Integration.Database
 {
 	/// <summary>
 	/// Basic Database Tests

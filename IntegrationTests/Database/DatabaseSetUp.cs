@@ -25,7 +25,7 @@ using DOL.Database.Connection;
 
 using NUnit.Framework;
 
-namespace DOL.Database.Tests
+namespace DOL.Integration.Database
 {
 	/// <summary>
 	/// Database SetUp for Unit Tests

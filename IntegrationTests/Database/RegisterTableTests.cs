@@ -20,14 +20,13 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-using DOL.GS;
 using DOL.Database;
 using DOL.Database.Connection;
 using DOL.Database.Attributes;
 
 using NUnit.Framework;
 
-namespace DOL.Database.Tests
+namespace DOL.Integration.Database
 {
 	/// <summary>
 	/// Description of RegisterTableTests.
@@ -49,7 +48,7 @@ namespace DOL.Database.Tests
 		[Test]
 		public void TestAllAvailableTables()
 		{
-			foreach (Assembly assembly in new [] { typeof(GameServer).Assembly, typeof(DataObject).Assembly })
+			foreach (Assembly assembly in new [] { typeof(GS.GameServer).Assembly, typeof(DataObject).Assembly })
 			{
 				// Walk through each type in the assembly
 				foreach (Type type in assembly.GetTypes())

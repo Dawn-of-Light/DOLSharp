@@ -20,13 +20,13 @@ using System;
 
 using NUnit.Framework;
 
-namespace DOL.Database.MySQLTests
+namespace DOL.Integration.Database.MySQL
 {
 	/// <summary>
 	/// Description of MySQLDBCustomParamsTest.
 	/// </summary>
 	[TestFixture, Explicit]
-	public class MySQLDBCustomParamsTest : DOL.Database.Tests.CustomParamsTest
+	public class MySQLDBCustomParamsTest : CustomParamsTest
 	{
 		public MySQLDBCustomParamsTest()
 		{

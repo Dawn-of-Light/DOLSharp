@@ -21,7 +21,7 @@ using System;
 using DOL.Database;
 using DOL.Database.Attributes;
 
-namespace DOL.Database.Tests
+namespace DOL.Integration.Database
 {
 
 	/// <summary>

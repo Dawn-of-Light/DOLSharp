@@ -26,7 +26,7 @@ using DOL.Events;
 
 using NUnit.Framework;
 
-namespace DOL.Server.Tests
+namespace DOL.Integration.Server
 {
 	/// <summary>
 	/// FriendsManager Unit Tests.
@@ -58,7 +58,7 @@ namespace DOL.Server.Tests
 				Out = new TestPacketLib()
 			};
 			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
-			
+
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
 			
 			CollectionAssert.IsEmpty(gameplayer.GetFriends());
@@ -73,7 +73,7 @@ namespace DOL.Server.Tests
 				Out = new TestPacketLib()
 			};
 			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
-			
+
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
 			GameServer.Instance.PlayerManager.Friends.RemovePlayerFriendsListFromCache(gameplayer);
 			
@@ -88,7 +88,7 @@ namespace DOL.Server.Tests
 				Out = new TestPacketLib()
 			};
 			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
-			
+
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
 			
 			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), new [] { client.Account.Characters[0].SerializedFriendsList });
@@ -104,7 +104,7 @@ namespace DOL.Server.Tests
 				Out = new TestPacketLib()
 			};
 			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
-			
+
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
 			
 			CollectionAssert.AreEquivalent(gameplayer.GetFriends(), gameplayer.SerializedFriendsList);
@@ -120,7 +120,7 @@ namespace DOL.Server.Tests
 				Out = new TestPacketLib()
 			};
 			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
-			
+
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
 			gameplayer.AddFriend("buddy");
 
@@ -137,7 +137,7 @@ namespace DOL.Server.Tests
 				Out = new TestPacketLib()
 			};
 			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
-			
+
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
 			gameplayer.AddFriend("buddy");
 			gameplayer.AddFriend("mate");
@@ -156,7 +156,7 @@ namespace DOL.Server.Tests
 				Out = new TestPacketLib()
 			};
 			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
-			
+
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
 			gameplayer.AddFriend("buddy");
 			Assert.IsFalse(gameplayer.AddFriend("buddy"));
@@ -175,7 +175,7 @@ namespace DOL.Server.Tests
 				Out = new TestPacketLib()
 			};
 			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
-			
+
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
 			gameplayer.AddFriend("buddy");
 			CollectionAssert.IsNotEmpty(gameplayer.GetFriends());
@@ -192,7 +192,7 @@ namespace DOL.Server.Tests
 				Out = new TestPacketLib()
 			};
 			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
-			
+
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
 			gameplayer.AddFriend("buddy");
 			gameplayer.AddFriend("mate");
@@ -213,7 +213,7 @@ namespace DOL.Server.Tests
 				Out = new TestPacketLib()
 			};
 			var gameplayer = new GamePlayer(client, client.Account.Characters[0]);
-			
+
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayer);
 			gameplayer.AddFriend("buddy");
 			CollectionAssert.IsNotEmpty(gameplayer.GetFriends());
@@ -255,7 +255,7 @@ namespace DOL.Server.Tests
 				Out = new TestPacketLib()
 			};
 			var gameplayerMate = new GamePlayer(clientMate, clientMate.Account.Characters[0]);
-			
+
 			GameServer.Instance.PlayerManager.Friends.AddPlayerFriendsListToCache(gameplayerMate);
 			
 			client.ClientState = GameClient.eClientState.WorldEnter;

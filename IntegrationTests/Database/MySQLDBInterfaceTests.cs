@@ -21,13 +21,13 @@ using System;
 
 using NUnit.Framework;
 
-namespace DOL.Database.MySQLTests
+namespace DOL.Integration.Database.MySQL
 {
 	/// <summary>
 	/// Description of MySQLDBInterfaceTests.
 	/// </summary>
 	[TestFixture, Explicit]
-	public class MySQLDBInterfaceTests : DOL.Database.Tests.InterfaceTests
+	public class MySQLDBInterfaceTests : InterfaceTests
 	{
 		public MySQLDBInterfaceTests()
 		{

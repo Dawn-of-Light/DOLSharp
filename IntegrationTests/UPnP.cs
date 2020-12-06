@@ -19,7 +19,7 @@
 using DOL.Network;
 using NUnit.Framework;
 
-namespace DOL.Net.Tests
+namespace DOL.Integration.Net
 {
 	[TestFixture]
 	public class uPnP

@@ -16,22 +16,19 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-using System;
-
 using DOL.Database.Connection;
 using DOL.Database.Attributes;
 
 using NUnit.Framework;
+using DOL.Database;
 
-using DOL.Database.Tests;
-
-namespace DOL.Database.MySQLTests
+namespace DOL.Integration.Database.MySQL
 {
 	/// <summary>
 	/// Description of MYSQLDBRegisterTableTests.
 	/// </summary>
 	[TestFixture, Explicit]
-	public class MYSQLDBRegisterTableTests : DOL.Database.Tests.RegisterTableTests
+	public class MYSQLDBRegisterTableTests : RegisterTableTests
 	{
 		public MYSQLDBRegisterTableTests()
 		{

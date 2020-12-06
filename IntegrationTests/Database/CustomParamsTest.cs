@@ -19,9 +19,10 @@
 using System;
 using System.Linq;
 
+using DOL.Database;
 using NUnit.Framework;
 
-namespace DOL.Database.Tests
+namespace DOL.Integration.Database
 {
 	/// <summary>
 	/// Unit tests for the Database Custom Params

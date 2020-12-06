@@ -20,13 +20,13 @@ using System;
 
 using NUnit.Framework;
 
-namespace DOL.Database.MySQLTests
+namespace DOL.Integration.Database.MySQL
 {
 	/// <summary>
 	/// Description of MySQLDBTests.
 	/// </summary>
 	[TestFixture, Explicit]
-	public class MySQLDBTests : DOL.Database.Tests.DatabaseTests
+	public class MySQLDBTests : DatabaseTests
 	{
 		public MySQLDBTests()
 		{

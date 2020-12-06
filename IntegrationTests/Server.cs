@@ -23,7 +23,7 @@ using DOL.Database;
 using DOL.GS;
 using NUnit.Framework;
 
-namespace DOL.Server.Tests
+namespace DOL.Integration.Server
 {
 	public class ServerTests
 	{

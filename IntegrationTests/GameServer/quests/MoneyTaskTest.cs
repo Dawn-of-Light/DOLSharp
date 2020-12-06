@@ -23,7 +23,7 @@ using DOL.GS;
 using DOL.GS.Quests;
 using NUnit.Framework;
 
-namespace DOL.Server.Tests
+namespace DOL.Integration.Server
 {
 	/// <summary>
 	/// Unit Test for Money Task.

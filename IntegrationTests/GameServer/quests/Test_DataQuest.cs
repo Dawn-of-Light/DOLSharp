@@ -5,7 +5,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace DOL.Integration.GameServer
+namespace DOL.Integration.Gameserver
 {
     [TestFixture]
     class Test_DataQuest

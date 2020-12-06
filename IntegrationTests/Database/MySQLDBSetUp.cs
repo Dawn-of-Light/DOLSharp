@@ -25,7 +25,7 @@ using DOL.Database.Connection;
 
 using NUnit.Framework;
 
-namespace DOL.Database.MySQLTests
+namespace DOL.Integration.Database.MySQL
 {
 	/// <summary>
 	/// Database SetUp for Unit Tests
