@@ -77,8 +77,8 @@ after_build:
     7z a -tzip DOLServer_UnitTests_net45_%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%\build\Tests\%CONFIGURATION%\*
 
 test_script:
-    - nunit3-console '.\build\Tests\%CONFIGURATION%\lib\Tests.dll' --where "namespace =~ 'DOL.UnitTests' and category != 'Explicit'" --result=myresults.xml;format=AppVeyor
-    - nunit3-console '.\build\Tests\%CONFIGURATION%\lib\Tests.dll' --where "namespace =~ 'DOL.Integration' and category != 'Explicit'" --result=myresults.xml;format=AppVeyor
+    - nunit3-console ".\build\Tests\%CONFIGURATION%\lib\Tests.dll" --where "namespace =~ 'DOL.UnitTests' and category != 'Explicit'" --result=myresults.xml;format=AppVeyor
+    - nunit3-console ".\build\Tests\%CONFIGURATION%\lib\Tests.dll" --where "namespace =~ 'DOL.Integration' and category != 'Explicit'" --result=myresults.xml;format=AppVeyor
 
 
 artifacts:
