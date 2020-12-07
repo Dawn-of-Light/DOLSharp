@@ -35,7 +35,7 @@ namespace DOL.Utils.Tests
 		{
 		}
 		
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void SetUp()
 		{
 			log4net.Config.BasicConfigurator.Configure(
@@ -43,7 +43,7 @@ namespace DOL.Utils.Tests
 					Layout = new log4net.Layout.SimpleLayout()});
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void TearDown()
 		{
 			log4net.LogManager.Shutdown();

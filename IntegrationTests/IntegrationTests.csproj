@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="..\packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('..\packages\NUnit.3.12.0\build\NUnit.props')" />
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>9.0.21022</ProductVersion>
@@ -30,6 +31,8 @@
     <IntermediateOutputPath>..\build\IntegrationTests\$(Configuration)\obj\</IntermediateOutputPath>
     <NoWin32Manifest>False</NoWin32Manifest>
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -94,10 +97,8 @@
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.4\lib\net45-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework">
-      <Name>nunit.framework</Name>
-      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="nunit.framework, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -152,7 +153,9 @@
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <BaseIntermediateOutputPath>..\build\UnitTests\$(Configuration)\</BaseIntermediateOutputPath>
@@ -169,4 +172,10 @@
       cd "$(SolutionDir)/GameServer/language/"; mkdir -p "$(ProjectDir)/$(OutputPath)/../languages/"; find ./ -name "*.txt" | xargs -i -t cp --parents -f {} "$(ProjectDir)/$(OutputPath)/../languages/"
       cd "$(SolutionDir)/GameServerScripts/"; mkdir -p "$(ProjectDir)/$(OutputPath)/../scripts/"; find ./ -name "*.cs" | xargs -i -t cp --parents -f {} "$(ProjectDir)/$(OutputPath)/../scripts/"; find "./dbupdater" -name "*.xml" | xargs -i -t cp --parents -f {} "$(ProjectDir)/$(OutputPath)/../scripts"</PostBuildEvent>
   </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\NUnit.3.12.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit.3.12.0\build\NUnit.props'))" />
+  </Target>
 </Project>

@@ -40,7 +40,7 @@ namespace DOL.Database.MySQLTests
 		public static SQLObjectDatabase Database { get; set; }
 		public static string ConnectionString { get; set; }
 				
-		[SetUp]
+		[OneTimeSetUp]
 		public void SetUp()
 		{
 			var CodeBase = new FileInfo(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath).Directory;
@@ -57,7 +57,7 @@ namespace DOL.Database.MySQLTests
 				});
 		}
 		
-		[TearDown]
+		[OneTimeTearDown]
 		public void TearDown()
 		{
 			log4net.LogManager.Shutdown();

@@ -65,7 +65,7 @@ namespace DOL.Server.Tests
 			}
 		}
 		
-		[SetUp]
+		[OneTimeSetUp]
 		public virtual void Init()
 		{
 			CreateGameServerInstance();
@@ -84,7 +84,7 @@ namespace DOL.Server.Tests
 			}
 		}
 
-		[TearDown]
+		[OneTimeTearDown]
 		public void Dispose()
 		{
 			GameServer.Instance.Stop();

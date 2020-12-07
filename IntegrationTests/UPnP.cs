@@ -28,7 +28,7 @@ namespace DOL.Net.Tests
 		
 		public uPnP(){}
 		
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void init()
 		{
 			upnp = new UPnPNat();

@@ -129,7 +129,6 @@ namespace DOL.UnitTests.Gameserver
             var spellHandler = new SpellHandler(caster, spell, null);
 
             bool isBeginCastSuccessful = spellHandler.CheckBeginCast(NewFakeNPC());
-            Console.WriteLine(caster.CurrentRegion.Time);
             Assert.IsTrue(isBeginCastSuccessful);
         }
         #endregion CastSpell

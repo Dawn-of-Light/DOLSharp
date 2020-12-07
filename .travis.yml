@@ -8,8 +8,8 @@ env:
    - XBUILD_TARGET=Release
 
 install:
- - travis_retry nuget restore DOLServer/packages.config -SolutionDirectory ./
- - travis_retry nuget install NUnit.Console -Version 3.2.1 -OutputDirectory test -ExcludeVersion
+ - travis_retry nuget restore
+ - travis_retry nuget install NUnit.Console -Version 3.11.1 -OutputDirectory test -ExcludeVersion
 script:
  - MONO_IOMAP=case xbuild /p:Configuration=$XBUILD_TARGET "Dawn of Light.sln"
  - LANG=en_US.CP1252 mono ./test/NUnit.ConsoleRunner/tools/nunit3-console.exe ./build/IntegrationTests/$XBUILD_TARGET/lib/IntegrationTests.dll

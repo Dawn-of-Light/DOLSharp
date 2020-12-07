@@ -76,6 +76,14 @@ after_build:
 
     7z a -tzip DOLServer_UnitTests_net45_%CONFIGURATION%.zip %APPVEYOR_BUILD_FOLDER%\build\IntegrationTests\%CONFIGURATION%\*
 
+test:
+    assemblies:
+        only:
+            - '.\build\UnitTests\%CONFIGURATION%\lib\UnitTests.dll'
+            - '.\build\IntegrationTests\%CONFIGURATION%\lib\IntegrationTests.dll'
+            - '.\build\IntegrationTests_Database\%CONFIGURATION%\lib\IntegrationTests_Database.dll'
+
+
 artifacts:
 
 - path: '*.zip'
