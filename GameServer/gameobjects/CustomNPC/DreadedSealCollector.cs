@@ -1,11 +1,25 @@
-﻿using System;
-//using System.Reflection;
-//using DOL.AI.Brain;
+﻿/*
+ * DAWN OF LIGHT - The first free open source DAoC server emulator
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ */
+
+using System;
 using DOL.Database;
-//using DOL.Events;
-using DOL.GS;
 using DOL.GS.PacketHandler;
-using DOL.Language;
 
 namespace DOL.GS
 {
@@ -15,9 +29,6 @@ namespace DOL.GS
     /// </summary>
     public class DreadedSealCollector : GameNPC
     {
-        private int m_count; // count of items, for stack
-        private long amount = 0;
-
         private void SendReply(GamePlayer target, string msg)
         {
             target.Out.SendMessage(msg, eChatType.CT_System, eChatLoc.CL_ChatWindow);
@@ -34,6 +45,18 @@ namespace DOL.GS
             return true;
         }
 
+        protected static readonly string[] SealKeys =
+            {
+                "glowing_dreaded_seal",
+                "sanguine_dreaded_seal",
+                "lambent_dreaded_seal",
+                "lambent_dreaded_seal2",
+                "fulgent_dreaded_seal",
+                "effulgent_dreaded_seal"
+            };
+
+        protected static readonly long[] SealValues = { 1, 1, 10, 10, 50, 250 };
+
         public override bool ReceiveItem(GameLiving source, InventoryItem item)
         {
             GamePlayer player = source as GamePlayer;
@@ -48,64 +71,65 @@ namespace DOL.GS
                 return false;
             }
 
-            if (player != null && item != null && currentrps < maxrps && item.Id_nb == "glowing_dreaded_seal"
-                || item.Id_nb == "sanguine_dreaded_seal"
-                || item.Id_nb == "lambent_dreaded_seal"
-                || item.Id_nb == "lambent_dreaded_seal2"
-                || item.Id_nb == "fulgent_dreaded_seal"
-                || item.Id_nb == "effulgent_dreaded_seal")
+            if (player != null && item != null)
             {
-                m_count = item.Count;
+                int index = Array.IndexOf(SealKeys, item.Id_nb);
+
+                if (index < 0)
+                    return base.ReceiveItem(source, item);
+
+                long amount = SealValues[index];
+
                 if (Level <= 20)
                 {
                     ((GamePlayer)source).Out.SendMessage("You are too young yet to make use of these items "
                     + player.Name + ". Come back in " + (21 - Level) + " levels.", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
                     return false;
                 }
-                else if (Level > 20 & Level < 26)
+                else if (Level < 26)
                 {
-                    amount += (item.Price / 150) * m_count; // At level 21 to 25 you get 20 Realm Points per set of seals.
+                    amount *= 20 * item.Count; // At level 21 to 25 you get 20 Realm Points per set of seals.
                     player.GainBountyPoints(1);             // Force a +1 BP gain
                 }
-                else if (Level > 25 & Level < 31)
+                else if (Level < 31)
                 {
-                    amount += (item.Price / 100) * m_count; // At level 26 to 30 you get 30 Realm Points per set of seals.
+                    amount *= 30 * item.Count; // At level 26 to 30 you get 30 Realm Points per set of seals.
                     player.GainBountyPoints(2);             // Force a +2 BP gain
                 }
-                else if (Level > 30 & Level < 36)
+                else if (Level < 36)
                 {
-                    amount += (item.Price / 60) * m_count; // At level 31 to 35 you get 50 Realm Points per set of seals.
+                    amount *= 50 * item.Count; // At level 31 to 35 you get 50 Realm Points per set of seals.
                     player.GainBountyPoints(3);            // Force a +3 BP gain
                 }
-                else if (Level > 35 & Level < 41)
-                    amount += (item.Price / 10) * m_count; // At level 36 to 40 you get 300 Realm Points per set of seals.
-                else if (Level > 40 & Level < 46)
-                    amount += (item.Price / 4) * m_count; // At level 41 to 45 you get 700 Realm Points per set of seals.
-                else if (Level > 45 & Level < 50)
-                    amount += (item.Price / 2) * m_count; // At level 46 to 49 you get 1500 Realm Points per set of seals.
-                else if (Level > 49)
-                    amount += item.Price * m_count; // At level 50 you get 3000 Realm Points per set of seals.
+                else if (Level < 41)
+                    amount *= 300 * item.Count; // At level 36 to 40 you get 300 Realm Points per set of seals.
+                else if (Level < 46)
+                    amount *= 700 * item.Count; // At level 41 to 45 you get 700 Realm Points per set of seals.
+                else if (Level < 50)
+                    amount *= 1500 * item.Count; // At level 46 to 49 you get 1500 Realm Points per set of seals.
+                else
+                    amount *= 3000 * item.Count; // At level 50 you get 3000 Realm Points per set of seals.
 
-                if (amount + currentrps > maxrps)
-                    amount = maxrps - currentrps; // only give enough realm points to reach max
+                if (currentrps < maxrps)
+                {
+                    if (amount + currentrps > maxrps)
+                        amount = maxrps - currentrps; // only give enough realm points to reach max
 
-                player.GainRealmPoints(amount);
+                    player.GainRealmPoints(amount);
+                }
 
                 if (Level > 35)
                 {
                     player.GainBountyPoints(amount / 55);
                 } // Only BP+ those of 36+ to prevent double BP gains
+
                 player.Inventory.RemoveItem(item);
                 player.Out.SendUpdatePoints();
-                amount = 0;
-                m_count = 0;
-                currentrps = 0;
-                return base.ReceiveItem(source, item);
+
+                return true;
             }
 
-            ((GamePlayer)source).Out.SendMessage("I am not interested in that item, come back with something useful "
-            + player.Name + ".", eChatType.CT_Say, eChatLoc.CL_ChatWindow);
-            return false;
+            return base.ReceiveItem(source, item);
         }
     }
 }
