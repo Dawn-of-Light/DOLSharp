@@ -1847,6 +1847,18 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Initial percent chance of a mob BAFing for a single attacker
 		/// </summary>
+		[ServerProperty("pve", "allow_currency_exchange", "Allow players to exchange aurulite/blood seals/glass/scales by giving them to a merchant who takes the desired currency, i.e. you can give glass to dragon merchants to get scales.", true)]
+		public static bool ALLOW_CURRENCY_EXCHANGE;
+
+		/// <summary>
+		/// Initial percent chance of a mob BAFing for a single attacker
+		/// </summary>
+		[ServerProperty("pve", "allow_bp_exchange", "Allow players to exchange aurulite and Atlantean glass for BPs by giving them to BP merchants.", true)]
+		public static bool ALLOW_BP_EXCHANGE;
+
+		/// <summary>
+		/// Initial percent chance of a mob BAFing for a single attacker
+		/// </summary>
 		[ServerProperty("pve", "baf_initial_chance", "Percent chance for a mob to bring a friend when attacked by a single attacker.  Each multiples of 100 guarantee an add, so a cumulative chance of 250% guarantees two adds with a 50% chance of a third.", 0)]
 		public static int BAF_INITIAL_CHANCE;
 
