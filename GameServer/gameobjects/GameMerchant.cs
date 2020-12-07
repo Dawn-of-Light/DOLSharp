@@ -41,7 +41,7 @@ namespace DOL.GS
 			: base()
 		{
         }
-        
+
         #region GetExamineMessages / Interact
 
         /// <summary>
@@ -469,6 +469,34 @@ namespace DOL.GS
 			}
 
 		}
+
+		/// <summary>
+		/// Grant BPs when given Atlantean Glass or Aurulite
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public override bool ReceiveItem(GameLiving source, InventoryItem item)
+		{
+			GamePlayer player = source as GamePlayer;
+
+			if (player != null && item != null && ServerProperties.Properties.ALLOW_BP_EXCHANGE)
+			{
+				switch (item.Id_nb)
+                {
+					case GameAtlanteanGlassMerchant.MoneyKey:
+						player.GainBountyPoints(item.Count);
+						player.Inventory.RemoveItem(item);
+						break;
+					case GameAuruliteMerchant.MoneyKey:
+						player.GainBountyPoints(4 * item.Count);
+						player.Inventory.RemoveItem(item);
+						break;
+				}
+			}
+
+			return base.ReceiveItem(source, item);
+		}
 	}
 
 	public class GameChampionMerchant : GameMerchant
@@ -612,6 +640,76 @@ namespace DOL.GS
 		}
 	}
 
+	public class GameBloodSealsMerchant : GameItemCurrencyMerchant
+	{
+		public const string MoneyKey = "BloodSeal";
+		protected ItemTemplate m_itemTemplate;
+
+		public GameBloodSealsMerchant()
+			: base()
+		{
+			m_itemTemplate = GameServer.Database.FindObjectByKey<ItemTemplate>(MoneyKey);
+			m_moneyItem = WorldInventoryItem.CreateFromTemplate(m_itemTemplate);
+		}
+
+		/// <summary>
+		/// Exchange for Blood Seals
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public override bool ReceiveItem(GameLiving source, InventoryItem item)
+		{
+			GamePlayer player = source as GamePlayer;
+
+            if (player != null && item != null && ServerProperties.Properties.ALLOW_CURRENCY_EXCHANGE)
+            {
+				int perCost = 0;
+
+				/* From https://darkageofcamelot.com/content/1124-live-patch-notes
+				 * Blood Seals:
+				 * 20 Blood Seals = 500 Dragon Scales
+				 * 20 Blood Seals = 20,000 Atlantean Glass
+				 * 20 Blood Seals = 5,000 Aurulite
+				*/
+				switch (item.Id_nb)
+                {
+                    case GameDragonMerchant.MoneyKey:
+						perCost = 500 / 20;
+                        break;
+                    case GameAtlanteanGlassMerchant.MoneyKey:
+						perCost = 20000 / 20;
+                        break;
+                    case GameAuruliteMerchant.MoneyKey:
+						perCost = 5000 / 20;
+						break;
+                }
+
+				if (perCost > 0)
+				{
+					InventoryItem newItem = GameInventoryItem.Create(m_itemTemplate);
+					newItem.OwnerID = player.InternalID;
+					newItem.Count = item.Count / perCost;
+
+					// Remove given items
+					InventoryItem playerItem = player.Inventory.GetItem((eInventorySlot)item.SlotPosition);
+					playerItem.Count -= newItem.Count * perCost;
+
+					if (playerItem.Count < 1)
+						player.Inventory.RemoveItem(item);
+
+					// Add new item
+					if (!player.Inventory.AddTemplate(newItem, newItem.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+						player.CreateItemOnTheGround(newItem);
+
+					return true;
+				}
+			}
+
+			return base.ReceiveItem(source, item);
+		}
+	}
+
 	public class GameDiamondSealsMerchant : GameItemCurrencyMerchant
 	{
 		public GameDiamondSealsMerchant()
@@ -642,28 +740,207 @@ namespace DOL.GS
 
 	public class GameAuruliteMerchant : GameItemCurrencyMerchant
 	{
+		public const string MoneyKey = "aurulite";
+		protected ItemTemplate m_itemTemplate;
+
 		public GameAuruliteMerchant()
 			: base()
 		{
-			m_moneyItem = WorldInventoryItem.CreateFromTemplate("aurulite");
+			m_itemTemplate = GameServer.Database.FindObjectByKey<ItemTemplate>(MoneyKey);
+			m_moneyItem = WorldInventoryItem.CreateFromTemplate(m_itemTemplate);
+		}
+
+		/// <summary>
+		/// Exchange for Aurulite
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public override bool ReceiveItem(GameLiving source, InventoryItem item)
+		{
+			GamePlayer player = source as GamePlayer;
+
+			if (player != null && item != null && ServerProperties.Properties.ALLOW_CURRENCY_EXCHANGE)
+			{
+				int perCost = 0; /// in 1000ths
+
+				/* From https://darkageofcamelot.com/content/1124-live-patch-notes
+				 * Aurulite:
+				 * 5,000 Aurulite = 20 Blood Seals
+				 * 5,000 Aurulite = 20,000 Atlantean Glass
+				 * 5,000 Aurulite = 500 Dragon Scales
+				*/
+				switch (item.Id_nb)
+				{
+					case GameBloodSealsMerchant.MoneyKey:
+						perCost = 1000 * 20 / 5000; // 4
+						break;
+					case GameAtlanteanGlassMerchant.MoneyKey:
+						perCost = 1000 * 20000 / 5000; // 4000
+						break;
+					case GameDragonMerchant.MoneyKey:
+						perCost = 1000 * 500 / 5000; // 100
+						break;
+				}
+
+				if (perCost > 0)
+				{
+					InventoryItem newItem = GameInventoryItem.Create(m_itemTemplate);
+					newItem.OwnerID = player.InternalID;
+					newItem.Count = item.Count * 1000 / perCost;
+
+					// Remove given items
+					InventoryItem playerItem = player.Inventory.GetItem((eInventorySlot)item.SlotPosition);
+					playerItem.Count -= newItem.Count * perCost / 1000;
+
+					if (playerItem.Count < 1)
+						player.Inventory.RemoveItem(item);
+
+					// Add new item
+					if (!player.Inventory.AddTemplate(newItem, newItem.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+						player.CreateItemOnTheGround(newItem);
+
+					return true;
+				}
+			}
+
+			return base.ReceiveItem(source, item);
 		}
 	}
 	
 	public class GameAtlanteanGlassMerchant : GameItemCurrencyMerchant
 	{
+		public const string MoneyKey = "atlanteanglass";
+		protected ItemTemplate m_itemTemplate;
+
 		public GameAtlanteanGlassMerchant()
 			: base()
 		{
-			m_moneyItem = WorldInventoryItem.CreateFromTemplate("atlanteanglass");
+			m_itemTemplate = GameServer.Database.FindObjectByKey<ItemTemplate>(MoneyKey);
+			m_moneyItem = WorldInventoryItem.CreateFromTemplate(m_itemTemplate);
+		}
+
+		/// <summary>
+		/// Exchange for Atlantean Glass
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public override bool ReceiveItem(GameLiving source, InventoryItem item)
+		{
+			GamePlayer player = source as GamePlayer;
+
+			if (player != null && item != null && ServerProperties.Properties.ALLOW_CURRENCY_EXCHANGE)
+			{
+				int perCost = 0;
+
+				/* From https://darkageofcamelot.com/content/1124-live-patch-notes
+				 * Aurulite:
+				 * 20,000 Atlantean Glass = 5,000 Aurulite
+				 * 20,000 Atlantean Glass = 20 Blood Seals
+				 * 20,000 Atlantean Glass = 500 Dragon Scales
+				*/
+				switch (item.Id_nb)
+				{
+					case GameAuruliteMerchant.MoneyKey:
+						perCost = 20000 / 5000; // 4
+						break;
+					case GameBloodSealsMerchant.MoneyKey:
+						perCost = 20000 / 20; // 1000
+						break;
+					case GameDragonMerchant.MoneyKey:
+						perCost = 20000 / 500; // 40
+						break;
+				}
+
+				if (perCost > 0)
+				{
+					InventoryItem newItem = GameInventoryItem.Create(m_itemTemplate);
+					newItem.OwnerID = player.InternalID;
+					newItem.Count = item.Count * perCost;
+
+					// Remove given items
+					player.Inventory.RemoveItem(item);
+
+					// Add new item
+					if (!player.Inventory.AddTemplate(newItem, newItem.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+						player.CreateItemOnTheGround(newItem);
+
+					return true;
+				}
+			}
+
+			return base.ReceiveItem(source, item);
 		}
 	}
 	
 	public class GameDragonMerchant : GameItemCurrencyMerchant
 	{
+		public const string MoneyKey = "dragonscales";
+		protected ItemTemplate m_itemTemplate;
+
 		public GameDragonMerchant()
 			: base()
 		{
-			m_moneyItem = WorldInventoryItem.CreateFromTemplate("dragonscales");
+			m_itemTemplate = GameServer.Database.FindObjectByKey<ItemTemplate>(MoneyKey);
+			m_moneyItem = WorldInventoryItem.CreateFromTemplate(m_itemTemplate);
+		}
+
+		/// <summary>
+		/// Exchange for Dragon Scales
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public override bool ReceiveItem(GameLiving source, InventoryItem item)
+		{
+			GamePlayer player = source as GamePlayer;
+
+			if (player != null && item != null && ServerProperties.Properties.ALLOW_CURRENCY_EXCHANGE)
+			{
+				int perCost = 0; /// in 100ths
+
+				/* From https://darkageofcamelot.com/content/1124-live-patch-notes
+				 * Blood Seals:
+				 * 500 Dragon Scales = 20 Blood Seals
+				 * 500 Dragon Scales = 20,000 Atlantean Glass
+				 * 500 Dragon Scales = 5,000 Aurulite
+				*/
+				switch (item.Id_nb)
+				{
+					case GameBloodSealsMerchant.MoneyKey:
+						perCost = 100 * 20 / 500; // 4
+						break;
+					case GameAtlanteanGlassMerchant.MoneyKey:
+						perCost = 100 * 20000 / 500; // 4000
+						break;
+					case GameAuruliteMerchant.MoneyKey:
+						perCost = 100 * 5000 / 500; // 1000
+						break;
+				}
+
+				if (perCost > 0)
+				{
+					InventoryItem newItem = GameInventoryItem.Create(m_itemTemplate);
+					newItem.OwnerID = player.InternalID;
+					newItem.Count = item.Count * 100 / perCost;
+
+					// Remove given items
+					InventoryItem playerItem = player.Inventory.GetItem((eInventorySlot)item.SlotPosition);
+					playerItem.Count -= newItem.Count * perCost / 100;
+
+					if (playerItem.Count < 1)
+						player.Inventory.RemoveItem(item);
+
+					// Add new item
+					if (! player.Inventory.AddTemplate(newItem, newItem.Count, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+						player.CreateItemOnTheGround(newItem);
+
+					return true;
+				}
+			}
+
+			return base.ReceiveItem(source, item);
 		}
 	}
 }
