@@ -1845,16 +1845,28 @@ namespace DOL.GS.ServerProperties
 
 		#region PVE / TOA
 		/// <summary>
-		/// Initial percent chance of a mob BAFing for a single attacker
+		/// Allow currency exchange?
 		/// </summary>
-		[ServerProperty("pve", "allow_currency_exchange", "Allow players to exchange aurulite/blood seals/glass/scales by giving them to a merchant who takes the desired currency, i.e. you can give glass to dragon merchants to get scales.", true)]
-		public static bool ALLOW_CURRENCY_EXCHANGE;
+		[ServerProperty("pve", "currency_exchange_allow", "Allow players to exchange aurulite/blood seals/glass/scales by giving them to a merchant who takes the desired currency, i.e. you can give glass to dragon merchants to get scales?", true)]
+		public static bool CURRENCY_EXCHANGE_ALLOW;
 
 		/// <summary>
-		/// Initial percent chance of a mob BAFing for a single attacker
+		/// Currency exchange values, i.e. you need 10 aurulite to get 1 dragon scale.
 		/// </summary>
-		[ServerProperty("pve", "allow_bp_exchange", "Allow players to exchange aurulite and Atlantean glass for BPs by giving them to BP merchants.", true)]
-		public static bool ALLOW_BP_EXCHANGE;
+		[ServerProperty("pve", "currency_exchange_values", "Value of special currencies for currency conversion.", "atlanteanglass|1;aurulite|4;dragonscales|40;BloodSeal|1000")]
+		public static string CURRENCY_EXCHANGE_VALUES;
+
+		/// <summary>
+		/// Allow currencies to be exchanged for BPs?
+		/// </summary>
+		[ServerProperty("pve", "bp_exchange_allow", "Allow players to exchange special currencies for BPs by giving them to BP merchants?", true)]
+		public static bool BP_EXCHANGE_ALLOW;
+
+		/// <summary>
+		/// BP exchange values.  Each item grants x BPs.
+		/// </summary>
+		[ServerProperty("pve", "bp_exchange_values", "Value of special currencies in BPs.", "atlanteanglass|1;aurulite|4;dragonscales|40;BloodSeal|1000")]
+		public static string BP_EXCHANGE_VALUES;
 
 		/// <summary>
 		/// Initial percent chance of a mob BAFing for a single attacker
