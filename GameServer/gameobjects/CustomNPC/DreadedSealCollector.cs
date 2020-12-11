@@ -33,8 +33,8 @@ namespace DOL.GS
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         protected static List<Tuple<int, int>> m_levelMultipliers = ParseMultipliers(ServerProperties.Properties.DREADEDSEALS_LEVEL_MULTIPLIER);
-        protected static Dictionary<string, float> m_BPValues = ParseValues(ServerProperties.Properties.DREADEDSEALS_BP_VALUES, true);
-        protected static Dictionary<string, float> m_RPValues = ParseValues(ServerProperties.Properties.DREADEDSEALS_RP_VALUES, false);
+        protected static Dictionary<string, float> m_BPValues = ParseValues(ServerProperties.Properties.DREADEDSEALS_BP_VALUES);
+        protected static Dictionary<string, float> m_RPValues = ParseValues(ServerProperties.Properties.DREADEDSEALS_RP_VALUES);
 
         /// <summary>
         /// Parse a server property string level multiplier values
@@ -62,7 +62,7 @@ namespace DOL.GS
         /// </summary>
         /// <param name="serverProperty"></param>
         /// <returns></returns>
-        protected static Dictionary<string, float> ParseValues(string serverProperty, bool dbl)
+        protected static Dictionary<string, float> ParseValues(string serverProperty)
         {
             Dictionary<string, float> dict = new Dictionary<string, float>();
 
