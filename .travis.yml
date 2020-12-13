@@ -12,6 +12,5 @@ install:
  - travis_retry nuget install NUnit.Console -Version 3.11.1 -OutputDirectory test -ExcludeVersion
 script:
  - MONO_IOMAP=case xbuild /p:Configuration=$XBUILD_TARGET "Dawn of Light.sln"
- - LANG=en_US.CP1252 mono ./test/NUnit.ConsoleRunner/tools/nunit3-console.exe ./build/IntegrationTests/$XBUILD_TARGET/lib/IntegrationTests.dll
- - LANG=en_US.CP1252 mono ./test/NUnit.ConsoleRunner/tools/nunit3-console.exe ./build/IntegrationTests_Database/$XBUILD_TARGET/lib/IntegrationTests_Database.dll
- - LANG=en_US.CP1252 mono ./test/NUnit.ConsoleRunner/tools/nunit3-console.exe ./build/UnitTests/$XBUILD_TARGET/lib/UnitTests.dll
+ - LANG=en_US.CP1252 mono ./test/NUnit.ConsoleRunner/tools/nunit3-console.exe ./build/Tests/$XBUILD_TARGET/lib/Tests.dll --where "namespace =~ 'DOL.UnitTests' and category!='Explicit'"
+ - LANG=en_US.CP1252 mono ./test/NUnit.ConsoleRunner/tools/nunit3-console.exe ./build/Tests/$XBUILD_TARGET/lib/Tests.dll --where "namespace =~ 'DOL.Integration' and category!='Explicit'"
