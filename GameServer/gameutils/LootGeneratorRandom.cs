@@ -43,15 +43,15 @@ namespace DOL.GS
 		protected const int LEVEL_RANGE = 5; // 
 		protected const int LEVEL_SIZE = 10; // 10*LEVEL_RANGE = up to level 50
 
-		public LootGeneratorRandom() : base()
-		{ }
 
-		/// <summary>
-		/// Loads the loottemplates
-		/// </summary>
 		static LootGeneratorRandom()
+        {
+			PreloadItemTemplates();
+
+		}
+
+		static void PreloadItemTemplates()
 		{
-			// ** find our loot template **
 			IList<ItemTemplate> itemTemplates = null;
 
 			for (int i = 0; i <= LEVEL_SIZE; i++)
@@ -74,37 +74,34 @@ namespace DOL.GS
 					return;
 				}
 
-				if (itemTemplates != null) // did we find a loot template
-				{
-					List<ItemTemplate> templatesAlb = new List<ItemTemplate>();
-					List<ItemTemplate> templatesHib = new List<ItemTemplate>();
-					List<ItemTemplate> templatesMid = new List<ItemTemplate>();
+				List<ItemTemplate> templatesAlb = new List<ItemTemplate>();
+				List<ItemTemplate> templatesHib = new List<ItemTemplate>();
+				List<ItemTemplate> templatesMid = new List<ItemTemplate>();
 
-					foreach (ItemTemplate itemTemplate in itemTemplates)
+				foreach (ItemTemplate itemTemplate in itemTemplates)
+				{
+					switch (itemTemplate.Realm)
 					{
-						switch (itemTemplate.Realm)
-						{
-							case (int)eRealm.Albion:
+						case (int)eRealm.Albion:
+							templatesAlb.Add(itemTemplate);
+							break;
+						case (int)eRealm.Hibernia:
+							templatesHib.Add(itemTemplate);
+							break;
+						case (int)eRealm.Midgard:
+							templatesMid.Add(itemTemplate);
+							break;
+						default:
 								templatesAlb.Add(itemTemplate);
-								break;
-							case (int)eRealm.Hibernia:
 								templatesHib.Add(itemTemplate);
-								break;
-							case (int)eRealm.Midgard:
 								templatesMid.Add(itemTemplate);
 								break;
-							default:
-									templatesAlb.Add(itemTemplate);
-									templatesHib.Add(itemTemplate);
-									templatesMid.Add(itemTemplate);
-									break;
-						}
 					}
-
-					m_itemTemplatesAlb[i] = templatesAlb.ToArray();
-					m_itemTemplatesHib[i] = templatesHib.ToArray();
-					m_itemTemplatesMid[i] = templatesMid.ToArray();
 				}
+
+				m_itemTemplatesAlb[i] = templatesAlb.ToArray();
+				m_itemTemplatesHib[i] = templatesHib.ToArray();
+				m_itemTemplatesMid[i] = templatesMid.ToArray();
 			} // for
 		}
 
