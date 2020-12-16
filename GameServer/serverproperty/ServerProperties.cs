@@ -1987,7 +1987,7 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Dreaded Seal multipliers by level
 		/// </summary>
-		[ServerProperty("pve", "dreadedseals_level_multiplier", "Level based multipliers for RPs and BPs awarded when turning in dreaded seals.", "1|0;21|2;26|3;31|5;36|30;41|70;46|150;50|300")]
+		[ServerProperty("pve", "dreadedseals_level_multiplier", "Level based multipliers for RPs and BPs awarded when turning in dreaded seals.", "21|2;26|3;31|5;36|30;41|70;46|150;50|300")]
 		public static string DREADEDSEALS_LEVEL_MULTIPLIER;
 
 		/// <summary>
