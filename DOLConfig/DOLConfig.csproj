@@ -9,8 +9,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>DOLConfig</RootNamespace>
     <AssemblyName>DOLConfig</AssemblyName>
-    <TargetFrameworkVersion Condition=" '$(OS)' != 'Unix' ">v4.5.1</TargetFrameworkVersion>
-    <TargetFrameworkVersion Condition=" '$(OS)' == 'Unix' ">v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>4096</FileAlignment>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <IsWebBootstrapper>false</IsWebBootstrapper>
