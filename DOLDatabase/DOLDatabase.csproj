@@ -62,30 +62,13 @@
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.4\lib\net45-full\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="MySql.Data">
-      <HintPath>..\packages\MySql.Data.6.9.8\lib\net45\MySql.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="System">
-      <Name>System</Name>
-    </Reference>
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data">
-      <Name>System.Data</Name>
-    </Reference>
-    <Reference Include="System.Data.SQLite" Condition=" '$(OS)' != 'Unix' ">
-      <HintPath>..\packages\System.Data.SQLite.Core.1.0.101.0\lib\net45\System.Data.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite" Condition=" '$(OS)' == 'Unix' ">
-      <HintPath>..\sharedModules\SQLite\managedOnly\System.Data.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml">
-      <Name>System.XML</Name>
-    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.101.0" PrivateAssets="All" />
+    <PackageReference Include="log4net" Version="2.0.4" PrivateAssets="All" />
+    <PackageReference Include="MySql.Data" Version="6.9.8" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs">
@@ -333,8 +316,4 @@
     </SvnVersion>
     <FileUpdate Files="AssemblyInfo.cs" Regex="(\d+)\.(\d+)\.(\d+)\.(\*|\d+)" ReplacementText="$1.$2.$3.$(Revision)" Condition="Exists('..\auto_version') and $(Revision)!='' and $(Revision)!=-1 and Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\') and Exists('$(ProgramFiles)\subversion\bin\svnversion.exe')" />
   </Target>
-  <PropertyGroup>
-    <PostBuildEvent Condition=" '$(OS)' != 'Unix' ">xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.101.0\build\net45\x86" "$(ProjectDir)..\$(ConfigurationName)\lib\x86" /y /s /q /i
-xcopy "$(ProjectDir)..\packages\System.Data.SQLite.Core.1.0.101.0\build\net45\x64" "$(ProjectDir)..\$(ConfigurationName)\lib\x64" /y /s /q /i</PostBuildEvent>
-  </PropertyGroup>
 </Project>
